@@ -1,0 +1,196 @@
+-------------------------------------------------------------------
+--
+-- Fichier              :       PIECE_HISTO.CP
+-- Auteur               :       Fabry JF
+-- Date                 :       22/09/2016
+--
+-- Commentaires         :       Table permanente des pièces pour memoire dem/recp.
+--
+-------------------------------------------------------------------
+
+
+--------------------------------------------------------------------
+--
+-- Proc‚dure            :       PS_IU_PIECE_HISTO
+-- Auteur               :       JFF
+-- Date                 :       22/04/2016
+-- Libelle              : 	[VDOC21884]
+-- Commentaires         :       
+-- References           :  (Non appelé, pas prod, car reportée en TRIGGER sur w_piece)
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_IU_PIECE_HISTO' AND type = 'P' )
+        DROP procedure sysadm.PS_IU_PIECE_HISTO
+GO
+
+CREATE procedure sysadm.PS_IU_PIECE_HISTO
+  @adcIdSin     Decimal (10),
+  @dtValideLe   DateTime -- [PI062]
+AS
+
+-- Piece reçues : Présence dans sysadm.piece_histo et absence dans w_piece
+Update	sysadm.piece_histo
+Set		dte_reception = @dtValideLe,
+		maj_le = @dtValideLe,
+		@dtValideLe= @dtValideLe
+From	sysadm.piece_histo ph
+Where	ph.id_sin = @adcIdSin
+And		ph.dte_reception is null
+And		Not exists ( 
+			Select	Top 1 1 
+			From	sysadm.w_piece wp
+			Where	wp.id_sin = ph.id_sin
+			And		wp.id_gti = ph.id_gti
+			And		wp.id_detail = ph.id_detail
+			And		wp.id_pce = ph.id_pce
+		)
+
+-- Piece demandées : Absence dans sysadm.piece_histo et présence dans w_piece
+Insert into sysadm.piece_histo
+Select	wp.id_sin,
+		wp.id_gti,
+		wp.id_detail,
+		wp.id_pce,
+		wp.id_i,
+		wp.id_para,      
+		wp.cree_le,
+		null,
+		wp.cree_le,     
+		wp.maj_le,      
+		wp.maj_par,     
+		@dtValideLe,    
+		wp.maj_par
+ 
+From	sysadm.w_piece wp
+Where   wp.id_sin = @adcIdSin
+And		Not exists ( 
+			Select	Top 1 1 
+			From	sysadm.piece_histo ph
+			Where	ph.id_sin = wp.id_sin
+			And		ph.id_gti = wp.id_gti
+			And		ph.id_detail = wp.id_detail
+			And		ph.id_pce = wp.id_pce
+			And     ph.dte_reception is null
+		)
+
+Go
+
+
+
+--------------------------------------------------------------------
+--
+-- Procedure            :       PS_REDRESS_PIECE_HISTO
+-- Auteur               :       Fabry JF
+-- Date                 :       28/04/2017
+-- Libelle              :       
+-- Commentaires         :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_REDRESS_PIECE_HISTO' AND type = 'P' )
+        DROP procedure sysadm.PS_REDRESS_PIECE_HISTO
+GO
+
+CREATE procedure sysadm.PS_REDRESS_PIECE_HISTO
+AS
+
+DECLARE @tb TABLE 
+	( id_seq	integer identity,
+	  id_sin	decimal (10 ),
+	  marquage	integer null 
+	)
+
+Declare @dcIdSin decimal (10 )
+Declare @dtValideLe DateTime
+Declare @iIdSeq integer
+
+Set @dtValideLe = GetDate()
+
+Insert into @tb
+Select distinct 
+	   id_sin,
+	   0  
+from sysadm.w_piece wp
+where not exists ( 
+		Select top 1 1 from sysadm.piece_histo ph 
+		where ph.id_sin = wp.id_sin
+	)
+
+
+While Exists ( Select Top 1 1 From @tb where marquage = 0 )
+ Begin
+	Select 	Top 1 
+		@iIdSeq = id_seq,
+		@dcIdSin = id_sin
+	From	@tb
+	Where	marquage = 0
+
+	Exec sysadm.PS_IU_PIECE_HISTO @dcIdSin, @dtValideLe
+
+	Update @tb Set marquage = 1 Where id_seq = @iIdSeq
+ End
+Go
+
+
+--------------------------------------------------------------------
+--
+-- Procedure            :       PS_U_MAJ_ETAT_PCE_SHERPA
+-- Auteur               :       Fabry JF
+-- Date                 :       06/01/2020
+-- Libelle              :       
+-- Commentaires         :       [PC192290]
+--
+-- Arguments            :       
+--
+-- Retourne             :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_MAJ_ETAT_PCE_SHERPA' AND type = 'P' )
+        DROP procedure sysadm.PS_U_MAJ_ETAT_PCE_SHERPA
+GO
+
+CREATE procedure sysadm.PS_U_MAJ_ETAT_PCE_SHERPA
+	@adcIdSin Decimal ( 10 ),
+	@asChaineTrt1 VarChar ( 255 ),
+	@asChaineTrt2 VarChar ( 255 ),
+	@asChaineTrt3 VarChar ( 255 )
+AS
+
+Declare @iIdSin Int
+
+Set @iIdSin = Convert ( Integer, @adcIdSin )
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+	BEGIN
+		EXEC SHERPA_PRO.sysadm.PS_U_ARCHIVE_PIECE @iIdSin, @asChaineTrt1, @asChaineTrt2, @asChaineTrt3
+	END
+ELSE
+	BEGIN
+		EXEC SHERPA_SIM.sysadm.PS_U_ARCHIVE_PIECE @iIdSin, @asChaineTrt1, @asChaineTrt2, @asChaineTrt3
+	END	
+
+Declare @sZnDS_pceSherpaRacine Varchar ( 50 )
+Declare @sZnDS_pceSherpa Varchar ( 50 )
+Declare @iZnDS_pceSherpa integer 
+
+
+Set @sZnDS_pceSherpaRacine = 'sznds_pcesherpa_'
+Set @iZnDS_pceSherpa = 1 
+Set @sZnDS_pceSherpa = @sZnDS_pceSherpaRacine + Convert ( varchar ( 10),  @iZnDS_pceSherpa ) 
+
+While Exists ( Select Top 1 1 From sysadm.div_sin Where id_sin = @adcIdSin and nom_zone = @sZnDS_pceSherpa ) Or 
+	  Exists ( Select Top 1 1 From sysadm.w_div_sin Where id_sin = @adcIdSin and nom_zone = @sZnDS_pceSherpa ) 
+ Begin
+	Delete sysadm.div_sin Where id_sin = @adcIdSin and nom_zone = @sZnDS_pceSherpa
+	Delete sysadm.w_div_sin Where id_sin = @adcIdSin and nom_zone = @sZnDS_pceSherpa
+
+	Set @iZnDS_pceSherpa = @iZnDS_pceSherpa  + 1 
+	Set @sZnDS_pceSherpa = @sZnDS_pceSherpaRacine + Convert ( varchar ( 10),  @iZnDS_pceSherpa ) 
+ End 
+
+Go
+
+

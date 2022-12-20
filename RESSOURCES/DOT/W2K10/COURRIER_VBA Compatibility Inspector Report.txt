@@ -1,0 +1,95 @@
+SUMMARY:
+========
+
+Document scanned:		K:\WYNIWYG\FMU\Office2010\Modeles\Simpa2\W2K10\COURRIER.DOT
+Date scanned:			mardi 12 octobre 2010
+Total lines scanned:		1295
+Total items found:  		10
+Deprecated items:   		2
+Changed items:       		8
+Redesigned items:   		0
+References Found:    		0
+
+DETAILS:
+========
+
+MODULE:		EditerCourrier
+FUNCTION:	Main
+LINE:		76
+TYPE:		CHANGE
+ITEM:		[wrd]Documents.Add
+URL:		http://go.microsoft.com/?linkid=9718419
+CODE:		Set DocPrincipal = Documents.Add(Template:=sModele, Visible:=False)
+
+MODULE:		EditerCourrier
+FUNCTION:	Main
+LINE:		109
+TYPE:		CHANGE
+ITEM:		[wrd]Documents.Add
+URL:		http://go.microsoft.com/?linkid=9718419
+CODE:		Set DocPrincipal = Documents.Add(Template:=sModele, Visible:=False)
+
+MODULE:		Fonctions_SPB
+FUNCTION:	uf_GenererComposition
+LINE:		43
+TYPE:		CHANGE
+ITEM:		[wrd]Documents.Open
+URL:		http://go.microsoft.com/?linkid=9718420
+CODE:		Set docParagraphe = Documents.Open(sPara, Visible:=False)
+
+MODULE:		Fonctions_SPB
+FUNCTION:	uf_CommencerFusion
+LINE:		115
+TYPE:		CHANGE
+ITEM:		[wrd]Documents.Open
+URL:		http://go.microsoft.com/?linkid=9718420
+CODE:		Set docEntete = Documents.Open(sEntete, Visible:=False)
+
+MODULE:		Fonctions_SPB
+FUNCTION:	uf_CommencerFusion
+LINE:		153
+TYPE:		DEPRECATION
+ITEM:		[wrd]Document.SaveAs
+URL:		http://go.microsoft.com/?linkid=9718414
+CODE:		ActiveDocument.SaveAs FileName:=sFicSauve, FileFormat:=wdFormatDocument
+
+MODULE:		Fonctions_SPB
+FUNCTION:	uf_Regroupement
+LINE:		215
+TYPE:		CHANGE
+ITEM:		[wrd]Documents.Open
+URL:		http://go.microsoft.com/?linkid=9718420
+CODE:		Set docRegroupement = Documents.Open(sNomDoc, Visible:=False)
+
+MODULE:		Fonctions_SPB
+FUNCTION:	uf_Regroupement
+LINE:		270
+TYPE:		DEPRECATION
+ITEM:		[mso]AnswerWizardFiles.Count
+URL:		http://go.microsoft.com/?linkid=171733
+CODE:		iSectionCount = aDocPrincipal.Sections.Count
+
+MODULE:		Duplicata
+FUNCTION:	Main
+LINE:		32
+TYPE:		CHANGE
+ITEM:		[wrd]Documents.Open
+URL:		http://go.microsoft.com/?linkid=9718420
+CODE:		Set DocPrincipal = Documents.Open(sDuplicata, Visible:=False)
+
+MODULE:		Duplicata
+FUNCTION:	Main
+LINE:		60
+TYPE:		CHANGE
+ITEM:		[wrd]Documents.Open
+URL:		http://go.microsoft.com/?linkid=9718420
+CODE:		Documents.Open (sDuplicata)
+
+MODULE:		EditerCourrierNouvMethode
+FUNCTION:	Main
+LINE:		46
+TYPE:		CHANGE
+ITEM:		[wrd]Documents.Open
+URL:		http://go.microsoft.com/?linkid=9718420
+CODE:		Set DocPrincipal = Documents.Open(sNomFic, Visible:=False)
+

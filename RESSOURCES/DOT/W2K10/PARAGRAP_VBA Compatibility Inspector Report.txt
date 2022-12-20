@@ -1,0 +1,63 @@
+SUMMARY:
+========
+
+Document scanned:		K:\WYNIWYG\FMU\Office2010\Modeles\Simpa2\W2K10\PARAGRAP.DOT
+Date scanned:			mardi 12 octobre 2010
+Total lines scanned:		679
+Total items found:  		6
+Deprecated items:   		1
+Changed items:       		5
+Redesigned items:   		0
+References Found:    		0
+
+DETAILS:
+========
+
+MODULE:		EditerCourrier
+FUNCTION:	Main
+LINE:		62
+TYPE:		CHANGE
+ITEM:		[wrd]Documents.Add
+URL:		http://go.microsoft.com/?linkid=9718419
+CODE:		Set DocPrincipal = Documents.Add(Template:=sModele, Visible:=False)
+
+MODULE:		EditerCourrier
+FUNCTION:	Main
+LINE:		94
+TYPE:		CHANGE
+ITEM:		[wrd]Documents.Add
+URL:		http://go.microsoft.com/?linkid=9718419
+CODE:		Set DocPrincipal = Documents.Add(Template:=sModele, Visible:=False)
+
+MODULE:		Fonctions_SPB
+FUNCTION:	uf_GenererComposition
+LINE:		43
+TYPE:		CHANGE
+ITEM:		[wrd]Documents.Open
+URL:		http://go.microsoft.com/?linkid=9718420
+CODE:		Set docParagraphe = Documents.Open(sPara, Visible:=False)
+
+MODULE:		Fonctions_SPB
+FUNCTION:	uf_CommencerFusion
+LINE:		106
+TYPE:		CHANGE
+ITEM:		[wrd]Documents.Open
+URL:		http://go.microsoft.com/?linkid=9718420
+CODE:		Set docEntete = Documents.Open(sEntete, Visible:=False)
+
+MODULE:		Fonctions_SPB
+FUNCTION:	uf_CommencerFusion
+LINE:		144
+TYPE:		DEPRECATION
+ITEM:		[wrd]Document.SaveAs
+URL:		http://go.microsoft.com/?linkid=9718414
+CODE:		ActiveDocument.SaveAs FileName:=sFicSauve, FileFormat:=wdFormatDocument
+
+MODULE:		Fonctions_SPB
+FUNCTION:	uf_Regroupement
+LINE:		196
+TYPE:		CHANGE
+ITEM:		[wrd]Documents.Open
+URL:		http://go.microsoft.com/?linkid=9718420
+CODE:		Set docRegroupement = Documents.Open(sNomDoc, Visible:=False)
+
