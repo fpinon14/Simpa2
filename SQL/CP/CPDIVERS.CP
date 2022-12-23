@@ -5489,7 +5489,7 @@ While @iNbreTour <= 2
 				When left ( upper ( nom_ws), 30 ) = 'PM506 - LUTTE ANTI BLANCHIMENT' -- [PM506]
 					Then left ( upper ( nom_ws), 30 ) -- [PM506]
 			End,
-			url_ws,
+			Left ( url_ws, 87),
 			@iDelaiMinParam * @iNbreTour,
 			count(*),
 			0
@@ -5522,7 +5522,7 @@ While @iNbreTour <= 2
 				When left ( upper ( nom_ws), 30 ) = 'PM506 - LUTTE ANTI BLANCHIMENT' -- [PM506]
 					Then left ( upper ( nom_ws), 30 ) -- [PM506]
 			End,
-			url_ws
+			Left ( url_ws, 87)
 
 	Set @iNbreTour = @iNbreTour + 1
 
