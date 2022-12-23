@@ -113,6 +113,7 @@
 --     JFF 02/09/2019   [DT424]
 --     JFF 04/10/2019   [PM462-1][V3]
 --     JFF 22/10/2019   [PI087_PM473_2]
+--	   JFF 19/12/2022   [RS4093_EVOL_ELD]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U01_COMMANDE' AND type = 'P' )
         DROP procedure sysadm.PS_U01_COMMANDE
@@ -215,6 +216,7 @@ Declare @dtDteRcpMobCliActuelBCV DateTime
 Declare @sTypAppSin Varchar ( 20 )
 Declare @lVal Integer
 Declare @sMtPaiementPayBox varchar ( 50 )
+Declare @sNumCCElDRet VarChar ( 30 )
 
 Set @iCasPropoAutoO2m = 0 -- [PC877]
 Set @iTraite = 0 
@@ -1006,6 +1008,51 @@ Begin
 	And	commande.id_seq = @iIdSeq
 End
 
+
+-- [RS4093_EVOL_ELD]
+If sysadm.FN_CLE_NUMERIQUE ( 'RS4093_EVOL_ELD') > 0 
+ Begin
+	If @sIdFour = 'ELD' 
+	  Begin
+
+		Set @sNumCCElDRet = sysadm.FN_CLE_VAL ( 'NUM_CC_ELD_RET', @sInfoFrnSpbCpltActuel, ';' ) -- "Actuel" car déjà maj avec les valeurs entrantes
+
+		-- Maj du numéro de CC à son emplacement original d'avant
+		Update 	sysadm.w_commande
+		Set	info_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'NUM_CC_ELD', @sNumCCElDRet, rtrim ( ltrim ( info_spb_frn_cplt ) ), ';')
+		Where	w_commande.id_sin = @dcIdSin
+		And	w_commande.id_seq = @iIdSeq
+
+		Update 	sysadm.commande
+		Set	info_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'NUM_CC_ELD', @sNumCCElDRet, rtrim ( ltrim ( info_spb_frn_cplt ) ), ';')
+		Where	commande.id_sin = @dcIdSin
+		And	commande.id_seq = @iIdSeq
+
+		If Exists ( Select * From sysadm.w_sin ws Where ws.id_sin = @dcIdSin  )	
+			Begin
+				If Exists ( Select * From sysadm.w_div_sin wds Where wds.id_sin = @dcIdSin And nom_zone = 'num_carte_cadeau')
+					Begin
+						Update sysadm.w_div_sin Set val_car = @sNumCCElDRet, maj_le = GETDATE(), maj_par = 'AUTO' Where id_sin = @dcIdSin And nom_zone = 'num_carte_cadeau'
+					End 
+				Else
+					Begin	 
+						Insert into sysadm.w_div_sin values ( @dcIdSin, 'num_carte_cadeau', 'Numéro de carte cadeau ELD', '-1', 'N', 'C', 'N', 'N', 120, null, null, null, @sNumCCElDRet, 1, getdate(), getdate(), 'AUTO' ) 
+					End
+			End
+
+		If Exists ( Select * From sysadm.sinistre ws Where ws.id_sin = @dcIdSin  )	
+			Begin
+				If Exists ( Select * From sysadm.div_sin wds Where wds.id_sin = @dcIdSin And nom_zone = 'num_carte_cadeau')
+					Begin
+						Update sysadm.div_sin Set val_car = @sNumCCElDRet, maj_le = GETDATE(), maj_par = 'AUTO' Where id_sin = @dcIdSin And nom_zone = 'num_carte_cadeau'
+					End 
+				Else
+					Begin	 
+						Insert into sysadm.div_sin values ( @dcIdSin, 'num_carte_cadeau', 'Numéro de carte cadeau ELD', '-1', 'N', 'C', 'N', 'N', 120, null, null, null, @sNumCCElDRet, getdate(), getdate(), 'AUTO', getdate(), 'AUTO' ) 
+					End
+			End			
+	  End 
+ End 
 
 
 -- [PM82][LOT1]
@@ -2788,8 +2835,7 @@ IF       ( ( CharIndex ( '[BNV]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[BNV]',
 	 And @iStatusGc = 21
   BEGIN
   
-	Set @sMess = 'Message automatique suite retour fournisseur [' + @sLibFour + '] : Attention, appareil en bris non visible, ce qui entraîne un renvoi de l''appareil systématique à l''assuré par le prestataire et un refus de prise en charge. Vous pouvez con
-tinuer l''instruction du dossier'
+	Set @sMess = 'Message automatique suite retour fournisseur [' + @sLibFour + '] : Attention, appareil en bris non visible, ce qui entraîne un renvoi de l''appareil systématique à l''assuré par le prestataire et un refus de prise en charge. Vous pouvez continuer l''instruction du dossier'
 	Set @sIRR = 'OK'
 
 	-- [PC929_CDISCOUNT][PC929-2-V3]

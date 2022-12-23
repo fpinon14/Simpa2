@@ -1434,14 +1434,19 @@ CREATE procedure sysadm.PS_CORRECTION_BASE_TEMPS_2
 --
 -------------------------------------------------------------------
 -- JFF 23/04/2019 - Redressement des cmde ELD sur le num CC manquant.
+-- JFF 19/12/2022   [RS4093_EVOL_ELD]
 -------------------------------------------------------------------
 
 AS
 
 SET NOCOUNT ON
 
--- JFF 23/04/2019 - Redressement des cmde ELD sur le num CC manquant.
-Exec sysadm.PS_U_COMMANDE_ELD_NUM_CC_REDRESS
+-- [RS4093_EVOL_ELD]
+If NOT sysadm.FN_CLE_NUMERIQUE ( 'RS4093_EVOL_ELD') > 0 
+ Begin
+	-- JFF 23/04/2019 - Redressement des cmde ELD sur le num CC manquant.
+	Exec sysadm.PS_U_COMMANDE_ELD_NUM_CC_REDRESS
+ End
 
 ----------------------------------------------------------------------------------
 -- Nouveau bug peu fréquent : Par moment l'enregistrement reste sur w_cour_blob --
@@ -1583,9 +1588,9 @@ And Not exists (
 )
 
 
-Update sysadm.w_inter 
+Update sysadm.w_inter_encrypt 
 Set alt_part = 'N' , id_cour = null , id_nat_cour = null
-from sysadm.w_inter wi with (nolock), sysadm.w_sin ws with (nolock)
+from sysadm.w_inter_encrypt wi with (nolock), sysadm.w_sin ws with (nolock)
 where ws.id_sin = wi.id_sin
 and ( wi.alt_part = 'O' or wi.id_cour = 'APART1' or wi.id_nat_cour = 'APART1' )
 and 
@@ -1963,9 +1968,11 @@ select oper.id_oper,
 	'FPI'
 from (select distinct p.id_corb from sysadm.produit p with (nolock)) corb,
 	@tbCorb oper
-where not exists (select * from sysadm.corb_oper c with (nolock)
-	where c.id_oper=oper.id_oper and c.id_corb=corb.id_corb)
-		
+where not exists
+	 (select * from sysadm.corb_oper c with (nolock)
+	  where c.id_oper=oper.id_oper and c.id_corb=corb.id_corb)
+And corb.id_corb not in ( 291 ) -- PMO77 Retrait Corbeille Securipanne/Securishopping
+	
 -- Corbeille 998 a la factu
 Insert into sysadm.corb_oper
 select
@@ -2660,6 +2667,9 @@ Update sysadm.code_car set lib_code = ltrim (rtrim ( lib_code ))
 
 -- Suite ISM 242201
 Exec sysadm.PS_IU_REDRESS_PRS_153_154
+
+-- Cette table doit être vide
+Delete sysadm.w_reg_frais_annexe_frn
 
 GO
 

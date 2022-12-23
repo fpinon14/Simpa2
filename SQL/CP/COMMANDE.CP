@@ -6806,6 +6806,7 @@ Go
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
 -- JFF      04/02/2019   [PM421-3]
+-- JFF      19/12/2022   [RS4093_EVOL_ELD]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_COMMANDE_ELD_NUM_CC' AND type = 'P' )
         DROP procedure sysadm.PS_U_COMMANDE_ELD_NUM_CC
@@ -6826,15 +6827,35 @@ Declare @dtDteNaiss Datetime
 Declare @sRefIdemn VarChar ( 30 )
 
 -- Carte Cadeau
-Set @sPartieFixeELD = 'K9447595051'
 
-EXEC sysadm.PS_X_INCREMENTER 'ID_CC_ELD', @idTrt OUTPUT 
+-- [RS4093_EVOL_ELD] 
+If sysadm.FN_CLE_NUMERIQUE ( 'RS4093_EVOL_ELD') > 0 
+ Begin
+	Set @sNumCCElD = CONVERT ( Varchar ( 10 ), @dcIdSin ) + '-' + CONVERT ( Varchar ( 2 ), @iIdSeq ) 
 
-Set @sPartieFixeVariable = Right ( REPLICATE ( '0', 8 ) + CONVERT ( VarChar ( 20 ) , @idTrt ), 8 )
+	Update sysadm.commande 
+	Set info_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'RS4093', 'OUI', RTRIM( info_spb_frn_cplt ) , ';' )
+	Where id_sin = @dcIdSin
+	And id_seq = @iIdSeq
 
-Set @sNumCCElD = @sPartieFixeELD + @sPartieFixeVariable 
-If @sNumCCElD is null Set @sNumCCElD = ''
+	Update sysadm.w_commande 
+	Set info_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'RS4093', 'OUI', RTRIM( info_spb_frn_cplt ) , ';' )
+	Where id_sin = @dcIdSin
+	And id_seq = @iIdSeq
+ End 
+Else 
+ Begin
+	Set @sPartieFixeELD = 'K9447595051'
 
+	EXEC sysadm.PS_X_INCREMENTER 'ID_CC_ELD', @idTrt OUTPUT 
+
+	Set @sPartieFixeVariable = Right ( REPLICATE ( '0', 8 ) + CONVERT ( VarChar ( 20 ) , @idTrt ), 8 )
+
+	Set @sNumCCElD = @sPartieFixeELD + @sPartieFixeVariable 
+	If @sNumCCElD is null Set @sNumCCElD = ''
+ End 
+
+ 	
 Update sysadm.commande 
 Set info_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'NUM_CC_ELD', @sNumCCElD, RTRIM( info_spb_frn_cplt ) , ';' )
 Where id_sin = @dcIdSin
@@ -6845,30 +6866,35 @@ Set info_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'NUM_CC_ELD', @sNumCCElD, RTRIM( i
 Where id_sin = @dcIdSin
 And id_seq = @iIdSeq
 
--- [PM421-3]
-If Exists ( Select * From sysadm.w_sin ws Where ws.id_sin = @dcIdSin  )	
-	Begin
-		If Exists ( Select * From sysadm.w_div_sin wds Where wds.id_sin = @dcIdSin And nom_zone = 'num_carte_cadeau')
-			Begin
-				Update sysadm.w_div_sin Set val_car = @sNumCCElD, maj_le = GETDATE(), maj_par = 'AUTO' Where id_sin = @dcIdSin And nom_zone = 'num_carte_cadeau'
-			End 
-		Else
-			Begin	 
-				Insert into sysadm.w_div_sin values ( @dcIdSin, 'num_carte_cadeau', 'Numéro de carte cadeau ELD', '-1', 'N', 'C', 'N', 'N', 120, null, null, null, @sNumCCElD, 1, getdate(), getdate(), 'AUTO' ) 
-			End
-	End
 
-If Exists ( Select * From sysadm.sinistre ws Where ws.id_sin = @dcIdSin  )	
-	Begin
-		If Exists ( Select * From sysadm.div_sin wds Where wds.id_sin = @dcIdSin And nom_zone = 'num_carte_cadeau')
-			Begin
-				Update sysadm.div_sin Set val_car = @sNumCCElD, maj_le = GETDATE(), maj_par = 'AUTO' Where id_sin = @dcIdSin And nom_zone = 'num_carte_cadeau'
-			End 
-		Else
-			Begin	 
-				Insert into sysadm.div_sin values ( @dcIdSin, 'num_carte_cadeau', 'Numéro de carte cadeau ELD', '-1', 'N', 'C', 'N', 'N', 120, null, null, null, @sNumCCElD, getdate(), getdate(), 'AUTO', getdate(), 'AUTO' ) 
-			End
-	End	
+-- [PM421-3]
+-- [RS4093_EVOL_ELD] 
+If NOT sysadm.FN_CLE_NUMERIQUE ( 'RS4093_EVOL_ELD') > 0 
+ Begin
+	If Exists ( Select * From sysadm.w_sin ws Where ws.id_sin = @dcIdSin  )	
+		Begin
+			If Exists ( Select * From sysadm.w_div_sin wds Where wds.id_sin = @dcIdSin And nom_zone = 'num_carte_cadeau')
+				Begin
+					Update sysadm.w_div_sin Set val_car = @sNumCCElD, maj_le = GETDATE(), maj_par = 'AUTO' Where id_sin = @dcIdSin And nom_zone = 'num_carte_cadeau'
+				End 
+			Else
+				Begin	 
+					Insert into sysadm.w_div_sin values ( @dcIdSin, 'num_carte_cadeau', 'Numéro de carte cadeau ELD', '-1', 'N', 'C', 'N', 'N', 120, null, null, null, @sNumCCElD, 1, getdate(), getdate(), 'AUTO' ) 
+				End
+		End
+
+	If Exists ( Select * From sysadm.sinistre ws Where ws.id_sin = @dcIdSin  )	
+		Begin
+			If Exists ( Select * From sysadm.div_sin wds Where wds.id_sin = @dcIdSin And nom_zone = 'num_carte_cadeau')
+				Begin
+					Update sysadm.div_sin Set val_car = @sNumCCElD, maj_le = GETDATE(), maj_par = 'AUTO' Where id_sin = @dcIdSin And nom_zone = 'num_carte_cadeau'
+				End 
+			Else
+				Begin	 
+					Insert into sysadm.div_sin values ( @dcIdSin, 'num_carte_cadeau', 'Numéro de carte cadeau ELD', '-1', 'N', 'C', 'N', 'N', 120, null, null, null, @sNumCCElD, getdate(), getdate(), 'AUTO', getdate(), 'AUTO' ) 
+				End
+		End	
+ End 
 
 -- Ref idemnisation
 Select @sPartAleatoire = Replace ( Right ( convert ( VarChar ( 50 ) , GETDATE(), 113 ), 5 ), ':', '' )
@@ -6973,6 +6999,7 @@ Go
 --
 -------------------------------------------------------------------
 -- JFF      06/11/2018   [PM451-1]
+-- JFF      19/12/2022   [RS4093_EVOL_ELD]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_COUR_CARTE_CADEAU_ELD_KSL' AND type = 'P' )
         DROP procedure sysadm.PS_S_COUR_CARTE_CADEAU_ELD_KSL
@@ -7011,6 +7038,7 @@ Insert into sysadm.w_cour_xml_orangev3 (
 	  ref_indemnisation,
 	  id_seq_cmde,
 	  code_chq_cadeau,
+	  code_acces_securise, -- [RS4093_EVOL_ELD]
 	  app_marque,
       app_modele
 	)
@@ -7051,6 +7079,7 @@ Select
 	sysadm.FN_CLE_VAL ( 'REF_INDEM', rtrim(c.info_spb_frn_cplt), ';' ) As ref_indemnisation,
 	c.id_seq,
 	sysadm.FN_CLE_VAL ( 'NUM_CC_ELD', rtrim( c.info_spb_frn_cplt), ';' ) As code_chq_cadeau,
+	sysadm.FN_CLE_VAL ( 'CODE_SECURITE', rtrim( c.info_frn_spb_cplt), ';' ) As code_acces_securise, -- [RS4093_EVOL_ELD]
 	s.marq_port,
 	s.modl_port
 	

@@ -45,7 +45,9 @@ CREATE procedure sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01
 		@asCodOper	VarChar ( 4 ) -- [PM80_FA12_FRANEX]
 AS
 
-	Delete sysadm.w_reg_frais_annexe_frn where id_sin = @adcIdSin and id_gti = @adcIdGti and id_detail = @adcIdDetail
+	-- Delete sysadm.w_reg_frais_annexe_frn where id_sin = @adcIdSin and id_gti = @adcIdGti and id_detail = @adcIdDetail
+	Delete sysadm.w_reg_frais_annexe_frn where id_sin = @adcIdSin 
+
 	If @@Error <> 0 Return @@Error
 
 	DECLARE @tb TABLE 
