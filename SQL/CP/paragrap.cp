@@ -205,3 +205,39 @@ Else
     
    End   
 Go
+
+
+--------------------------------------------------------------------
+--
+-- Procédure            :   PS_S_PARA_REELS_REP_COURRIER
+-- Auteur               :   Fabry JF
+-- Date                 :   26/12/2022
+-- Libellé              :   Sélection des paragraphes et fichier rééls du rep COURRIER
+-- Commentaires         :   
+-- Références           :   
+-- Arguments            :   
+-- Retourne             :   
+--                          
+--------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_PARA_REELS_REP_COURRIER' AND type = 'P' )
+            DROP procedure sysadm.PS_S_PARA_REELS_REP_COURRIER
+GO
+
+CREATE PROC sysadm.PS_S_PARA_REELS_REP_COURRIER
+AS
+
+
+Select	rtrim ( p.id_para ) + '.' + rtrim ( p.cpt_ver) 'NOM_FIC',
+		rtrim ( p.cpt_ver ) 'EXT',
+		''
+From sysadm.paragraphe p with (nolock) 
+Union all
+Select	rtrim ( c.lib_code ) , 
+		RIGHT ( rtrim ( c.lib_code) , 3 ), 
+		''
+From sysadm.code c with (nolock) 
+where c.id_typ_code = '-W8'
+and id_code > 0
+Order by 2 desc
+
+Go
