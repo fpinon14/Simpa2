@@ -6374,3 +6374,133 @@ END
 
 GO
 
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_RS4166_CTRLE_DATA_PND_CORUS
+-- Auteur               :       Fabry JF
+-- Date                 :       03/01/2023
+-- Libellé              :        
+-- Commentaires         :       
+-- Références           :       [RS_4166_PND_CORUS]
+
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+-- JFF      12/02/2016   [PI062]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_RS4166_CTRLE_DATA_PND_CORUS' AND type = 'P' )
+        DROP procedure sysadm.PS_S_RS4166_CTRLE_DATA_PND_CORUS
+GO
+
+CREATE procedure sysadm.PS_S_RS4166_CTRLE_DATA_PND_CORUS
+	@adcIdSin	Decimal (10),
+	@adcIdInter  Decimal (2),
+	@adcIdDoc    Decimal (2),
+	@asCodInter  VarChar  ( 1 ),
+	@asIdCour    VarChar  ( 6 ),
+	@adtDteEdit  DateTime,
+	@asDetRetPnd VarChar ( 10 ) output,
+	@asCreelePnd VarChar ( 10 ) output
+AS
+
+If Not Exists ( 
+    Select	Top 1 1 
+	From	sysadm.archive a with (nolock)
+	Where a.id_sin = @adcIdSin
+	And   a.id_inter = @adcIdInter
+	And   a.id_doc = @adcIdDoc
+	And   a.cod_inter = @asCodInter
+	And   ( a.id_cour = @asIdCour OR a.id_cour_orig = @asIdCour )
+	And   ( Convert ( DateTime, CONVERT ( varchar ( 10 ), a.dte_edit, 103 )) = @adtDteEdit
+			OR 
+			Convert ( DateTime, CONVERT ( varchar ( 10 ), a.dte_conf, 103 )) = @adtDteEdit
+		  )
+) 
+ Begin
+	Return -1
+ End 
+
+Select	@asDetRetPnd = Convert ( VarChar ( 10 ), p.dte_ret_pnd, 103 ) ,
+		@asCreelePnd = Convert ( VarChar ( 10 ), p.cree_le, 103 ) 
+From	sysadm.pnd p with (nolock)
+Where p.id_sin = @adcIdSin
+And   p.id_inter = @adcIdInter
+And   p.id_doc = @adcIdDoc
+
+If @@Rowcount > 0 
+ Begin
+	Return 2
+ End 
+
+Return 1
+
+Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_RS4166_CONSULT_COURR_DETAIL
+-- Auteur               :       Fabry JF
+-- Date                 :       03/01/2023
+-- Libellé              :        
+-- Commentaires         :       
+-- Références           :       [RS_4166_PND_CORUS]
+
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_RS4166_CONSULT_COURR_DETAIL' AND type = 'P' )
+        DROP procedure sysadm.PS_S_RS4166_CONSULT_COURR_DETAIL
+GO
+
+CREATE procedure sysadm.PS_S_RS4166_CONSULT_COURR_DETAIL
+	@adcIdSin	Decimal (10)
+AS
+
+Select	a.id_sin, 
+		a.id_inter,
+		a.id_doc,
+		a.id_arch,
+		a.id_cour,
+		sysadm.FN_CODE_CAR ( a.id_cour, '-CC' ) lib_cour,
+		a.id_cour_orig, 
+		sysadm.FN_CODE_CAR ( a.id_cour, '-CC' ) lib_cour_orig,
+		( Select rtrim ( i.nom ) From sysadm.inter i where i.id_sin = a.id_sin and i.id_i = a.id_inter ) nom_dest,
+		sysadm.FN_CODE_CAR ( a.cod_inter, '-IN' ) type_dest,  
+		Case 
+			When sysadm.FN_CLE_VAL ( 'TRT_PAR', a.txt_compo2, ';') = 'KSL'
+				Then 'SAGA2/KSL (PM407)'
+			Else 'SIMPA2'
+		End courrier_construit_par,
+		Case 
+			When IsNull ( a.id_canal, 'CO') = 'CO' Then 'Voie postale'
+			Else sysadm.FN_CODE_CAR ( a.id_canal, '-MS') 
+		End media_envoi,
+		Case 
+			When IsNull ( a.id_canal, 'CO') = 'CO' And 
+				 Exists ( Select top 1 1 
+						  From sysadm.trace_edt_decentralisee_pm425 te 
+						  Where te.id_sin = a.id_sin 
+						  And te.id_i = a.id_inter 
+						  And te.id_doc = a.id_doc
+						  )
+				Then 'CORUS'
+			When IsNull ( a.id_canal, 'CO') = 'CO' Then 'SPB'
+			Else ''
+		End edt_par,
+		a.dte_edit, 
+		a.dte_conf,
+		a.id_doc_edt,
+		p.dte_ret_pnd,
+		p.motif_pnd,
+		sysadm.FN_LIB_PROD ( a.id_prod ) lib_prod,
+		( Select rtrim ( p.nom ) + ' ' + RTRIM ( p.prenom ) From sysadm.personne p where p.id_ordre = s.id_ordre ) nom_ass
+			
+
+
+From sysadm.archive a with (nolock)
+	 Left outer Join sysadm.sinistre s with (nolock) On s.id_sin = a.id_sin
+	 Left outer Join sysadm.pnd p with (nolock) On p.id_sin = a.id_sin And p.id_inter = a.id_inter And p.id_doc = a.id_doc
+Where a.id_sin = @adcIdSin
+Order by 1, 2, 3
+
+Go

@@ -1659,6 +1659,16 @@ DECLARE @dcIdSin        Decimal (10),  -- [PI062]
 		@iRet			Integer,
 		@iCtpSecu		Integer
 
+Declare @sDIR Varchar ( 100 )
+Declare @TbRepCour Table ( id_seq integer identity, nom_fic varchar ( 100) INDEX IX1 CLUSTERED, marquage int  ) 
+Declare @TbRepCour2 Table ( nom_fic varchar ( 100) INDEX IX1 CLUSTERED ) 
+Declare @TbLstFicBase Table ( nom_fic varchar ( 100) INDEX IX1 CLUSTERED ) 
+Declare @sRepCourDest VarChar ( 200 )
+Declare @iIdSeq Integer
+Declare @iIdCode Integer
+Declare @sNomFic VarChar ( 100 ) 
+
+
 -------------------------------------------------------------
 -- Bug du règlement non attaché à un RN (JFF le 05/02/2010)--
 -------------------------------------------------------------
@@ -1751,6 +1761,41 @@ If @@Rowcount > 0
 
 -- /MOUCHARD_REFUS
 
+-- Maintence option dp/W8 automatique pour les *.DOT
+Set @sRepCourDest = '\\SPB.LAN\APPLIS\SPB\SIMPA2\COURRIER\'
+Set @sDIR = 'DIR "' + @sRepCourDest + '*.DOT" /b'
+
+-- @TbRepCour se charge avec la liste des fichiers du répertoire
+Insert into @TbRepCour2 EXEC master.dbo.xp_cmdshell @sDIR 
+Delete @TbRepCour2 where nom_fic is null
+Update @TbRepCour2 Set nom_fic = Upper ( nom_fic )
+Insert into @TbRepCour Select nom_fic, 0  From @TbRepCour2
+
+-- @@TbLstFicBase se charge avec la liste des fichiers de la base
+Insert into @TbLstFicBase Select rtrim ( c.lib_code ) From sysadm.code c where c.id_typ_code = '-W8'  and id_code > 0 and Right ( rtrim ( c.lib_code), 4 ) = '.DOT'
+Update @TbLstFicBase Set nom_fic = Upper ( nom_fic )
+
+While Exists ( Select Top 1 1 From @TbRepCour where marquage = 0 )
+ Begin
+	Select 	Top 1 
+		@iIdSeq  = id_seq,
+		@sNomFic = nom_fic
+	From	@TbRepCour 
+	Where	marquage = 0
+
+	If Not Exists ( 
+		Select Top 1 1 
+		From @TbLstFicBase tl
+		Where tl.nom_fic = @sNomFic
+	  )
+	 Begin
+	    Select @iIdCode = IsNull ( max ( id_code ), 0 ) + 1 From sysadm.code where id_typ_code = '-W8'
+		Insert into sysadm.code values ( '-W8', @iIdCode , @sNomFic, GetDate(), Getdate(), 'SQL' )
+	 End 
+
+	Update @TbRepCour Set marquage = 1 Where id_seq = @iIdSeq
+ End
+ 
 GO
 SET QUOTED_IDENTIFIER OFF 
 GO

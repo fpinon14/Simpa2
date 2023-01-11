@@ -48,35 +48,64 @@ Go
 -- Références           :       
 --
 -------------------------------------------------------------------
-
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_DATE_PIVOT_CTRLE_REP_COURRIER' AND type = 'P' )
-        DROP procedure sysadm.PS_U_DATE_PIVOT_CTRLE_REP_COURRIER
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_DATE_PIVOT_CTRLE_REP_COURRIER_V01' AND type = 'P' )
+        DROP procedure sysadm.PS_U_DATE_PIVOT_CTRLE_REP_COURRIER_V01
 GO
 
-CREATE procedure sysadm.PS_U_DATE_PIVOT_CTRLE_REP_COURRIER
+CREATE procedure sysadm.PS_U_DATE_PIVOT_CTRLE_REP_COURRIER_V01
 	@asCle   VarChar (50),
-	@aiFrequenceMin integer
+	@aiFrequenceMin integer,
+	@asRepCourDest VarChar ( 200 )
 AS
-
-Declare @dtDt1 DateTime 
-
 -- Retour 1 : Ok pour lancer Trt redressement + Commit en PB
 -- Retour 0 : Pas de lancement Trt redressement
+
+Declare @dtDt1 DateTime 
  
 Select	@dtDt1 = dp.dte_1
-From	sysadm.date_pivot dp
+From	sysadm.date_pivot dp with (nolock)
 Where   dp.id_cle = @asCle
 
-If @dtDt1 is null Return 1
+If @dtDt1 is null Return 0
 
 If @dtDt1 < DATEADD ( minute, @aiFrequenceMin * (-1), Getdate()) 
   Begin
+	Declare @sDIR Varchar ( 100 )
+	Declare @TbRepCour Table ( nom_fic varchar ( 100) INDEX IX1 CLUSTERED ) 
+	Declare @TbLstFicBase Table ( nom_fic varchar ( 100) INDEX IX1 CLUSTERED, ext varchar (3), autre varchar ( 10) ) 
+	Set @sDIR = 'DIR "' + @asRepCourDest + '*.*" /b'
+
+	-- Garantie qu'un autre GT ne lancera pas le traitement
 	Update sysadm.date_pivot
 	Set dte_1 = GETDATE ()
 	Where id_cle = @asCle
 
-	Return 1
-	
+	-- @TbRepCour se charge avec la liste des fichiers du répertoire
+	Insert into @TbRepCour EXEC master.dbo.xp_cmdshell @sDIR 
+	Delete @TbRepCour where nom_fic is null
+	Update @TbRepCour Set nom_fic = Upper ( nom_fic )
+
+	-- @@TbLstFicBase se charge avec la liste des fichiers de la base
+	Insert into @TbLstFicBase EXEC sysadm.PS_S_PARA_REELS_REP_COURRIER
+	Update @TbLstFicBase Set nom_fic = Upper ( nom_fic )
+
+	-- S'il existe un fichier de la liste base absent du répertoire alors...
+	If Exists ( 
+		Select Top 1 1 
+		From @TbLstFicBase Tl
+		Where Not exists ( 
+				Select Top 1 1 
+				From @TbRepCour Tr
+				Where Tr.nom_fic = Tl.nom_fic
+			  )
+	  )
+	  Begin 
+		Return 1
+	  End 
+	Else
+	  Begin
+		Return 0
+	  End 
   End 
 
 Return 0

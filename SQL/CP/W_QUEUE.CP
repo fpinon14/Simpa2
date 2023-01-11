@@ -2977,5 +2977,71 @@ Declare @iIdCt			integer
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Proc‚dure            :       PS_I_RS4166_CTC_TRV_PND_CORUS
+-- Auteur               :       JFF
+-- Date                 :       04/01/2023
+-- Libell‚              :        
+-- Commentaires         :       -- [RS_4166_PND_CORUS]
+--
+-- Arguments            :       Rien
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_RS4166_CTC_TRV_PND_CORUS' AND type = 'P' )
+        DROP procedure sysadm.PS_I_RS4166_CTC_TRV_PND_CORUS
+GO
+
+CREATE procedure sysadm.PS_I_RS4166_CTC_TRV_PND_CORUS
+	@adcIdSin	Decimal (10),
+	@adcIdInter  Decimal (2),
+	@adcIdDoc    Decimal (2),
+	@asLibInter  VarChar ( 100 ),
+	@asIdCour    VarChar  ( 6 ),
+	@asDteEdit  VarChar  ( 10 ),
+	@asDteRetPnd VarChar  ( 10 ),
+	@asMotif VarChar ( 100 ),
+	@asCodOper Varchar ( 4 )
+AS
+
+Declare @sMess			VarChar ( 2000 )
+Declare @sErr			Varchar(60)
+Declare @iIdCt			integer
+Declare @iIdArch		Integer
+
+Select @iIdArch = a.id_arch
+From sysadm.archive a with (nolock)
+Where a.id_sin = @adcIdSin
+And	  a.id_inter = @adcIdInter
+And   a.id_doc = @adcIdDoc
+
+If @iIdArch is null Set @iIdArch = -1
+
+Insert into sysadm.pnd values ( @adcIdSin, @adcIdInter, @adcIdDoc, @iIdArch, @asDteRetPnd, @asMotif, GETDATE(), GETDATE(), @asCodOper ) 
+
+Set @sMess = 'Retour PND CORUS du ' + @asDteRetPnd + ' avec les infos suivantes :' + CHAR ( 10 ) 
+Set @sMess = @sMess + 'Sinistre ' + CONVERT ( Varchar ( 10), @adcIdSin ) + ', '
+Set @sMess = @sMess + 'Inter ' + @asLibInter + ' (Id_inter) ' + CONVERT ( Varchar ( 5), @adcIdInter ) + ', ' 
+Set @sMess = @sMess + 'Numéro courrier (id_doc) ' + CONVERT ( Varchar ( 5), @adcIdDoc ) + ', '+ ' (clé=>' + CONVERT ( Varchar ( 10), @adcIdSin ) + '/' + CONVERT ( Varchar ( 5), @adcIdInter ) + '/' + CONVERT ( Varchar ( 5), @adcIdDoc ) + ')'+ CHAR ( 10 ) 
+Set @sMess = @sMess + 'Courrier ' + @asIdCour + ' du ' + @asDteEdit + ', ' + CHAR ( 10 ) 
+Set @sMess = @sMess + 'Identifiant courrier (id_arch) : ' + IIF ( @iIdArch < 0, 'Aucun', CONVERT ( Varchar ( 15), @iIdArch )) + ', '+ CHAR ( 10 )  
+Set @sMess = @sMess + 'Motif du rejet par CORUS : ' + @asMotif + CHAR ( 10 )  
+Set @sMess = @sMess + 'Action : Merci de renvoyer ce courrier à l''assuré, voyez avec votre cellule support pour la manipulation.' + CHAR ( 10 )  
+
+Set @asCodOper = 'PND' -- J'écrase le trg de l'opérateur par ce trigramme technique.
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) = 'PRO'
+BEGIN
+	EXEC SHERPA_PRO.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @adcIdSin, 2, @sMess, @asCodOper, @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C'
+END
+ELSE
+BEGIN
+	EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @adcIdSin, 2, @sMess, @asCodOper, @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C'
+END
+
+Go
+
 
 

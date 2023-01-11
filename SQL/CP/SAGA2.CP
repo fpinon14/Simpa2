@@ -806,6 +806,7 @@ Declare @iCpt integer
 Declare @sGenCodeWrk VarChar ( 16 ) 
 Declare @iEnvoiMail Integer
 Declare @sLibPrestaExterne VarChar ( 35 ) 
+Declare @sFrom varchar ( 50 )
 
 Set @asMarqueIfrRetour = ''
 Set @asModeleIfrRetour = ''
@@ -894,8 +895,8 @@ If @asMarqueIfrRetour is null Set @asMarqueIfrRetour = ''
 If @asModeleIfrRetour is null Set @asModeleIfrRetour = ''
 If @adcMtPrixPublicIFR is null Set @adcMtPrixPublicIFR = 0
 
---RS3917
-If @asModeleIfrRetour <> '' And CharIndex ( 'RECONDITIONN', @asModeleDescripExterneOuIfr ) > 0 Set @asModeleIfrRetour = @asModeleIfrRetour + ' [REC]'
+--RS3917 Particularité FREE
+If @asCodeSpbPrestaExterne = 'FRE' And @asModeleIfrRetour <> '' And CharIndex ( 'RECONDITIONN', @asModeleDescripExterneOuIfr ) > 0 Set @asModeleIfrRetour = @asModeleIfrRetour + ' [REC]'
 
 If @asMarqueIfrRetour <> '' And @asModeleIfrRetour <> ''
   Begin
@@ -998,12 +999,14 @@ If Not Exists (
 	Set @sMessage = @sMessage + 'Siège social : 71, quai Colbert - CS 90000 - 76600 Le Havre. Tél. : +33 (0)2 32 74 20 20' + CHAR ( 10 )
 	Set @sMessage = @sMessage + 'N° RCS 305 109 779 (Le Havre) – N°ORIAS 07 002 642 (www.orias.fr).' + CHAR ( 10 )
 
+	Set @sFrom = 'Lien_IFR_' + @asCodeSpbPrestaExterne
+
 	EXEC master.dbo.SPB_PS_MAIL 
 			@sRetourErrMail OUTPUT, 
 			'sloison@spb.eu', -- 'jff@spb.fr'
 			@sMessage, 
 			@sObjet, 
-			'Lien_IFR', 
+			@sFrom, 
 			'',
 			@sFicOut, 
 			NULL, 
