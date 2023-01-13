@@ -6914,3 +6914,200 @@ If @aiIdScriptDeb <= 0 Set @aiIdScriptDeb = 0
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_RS4166_CTRLE_ADH_FFM
+-- Auteur               :       JFF
+-- Date                 :       11/01/2023
+-- Libell‚              :       
+--								
+--
+-- Références           :       [RS4166]
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_RS4166_CTRLE_ADH_FFM' AND type = 'P' )
+        DROP procedure sysadm.PS_S_RS4166_CTRLE_ADH_FFM
+GO
+
+CREATE PROCEDURE sysadm.PS_S_RS4166_CTRLE_ADH_FFM
+	@asIdLot		VarChar ( 200 ),
+	@alIdProdAdh	Int,
+	@alIdAdh		Int,
+	@aiIdCLi		Int OutPut,
+	@aiIdEts		Int OutPut,
+	@aiIdsdos		Int OutPut
+
+As
+
+Declare @iRowCount Int
+Declare @asDetRetPnd Varchar ( 10 ) 
+Declare @asCreelePnd Varchar ( 10 ) 
+
+-- Produit non éligible au trt (donné par Sophie Didier)
+If @alIdProdAdh Not in ( 87 ) Return 4
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+BEGIN
+	Select distinct id_cli,id_ets from SHERPA_PRO.sysadm.adhesion with (nolock) where id_prod_adh = @alIdProdAdh and id_adh = @alIdAdh and id_status in ( 0, 2, 3, 8 ) and id_exist <> 0 
+	Set @iRowCount = @@RowCount 
+	If @iRowCount <= 0 Return -1	
+	If @iRowCount > 1 Return 2
+	
+	Select @aiIdCLi = id_cli,
+		   @aiIdEts = id_ets,
+		   @aiIdsdos = id_sdos
+	from	SHERPA_PRO.sysadm.adhesion with (nolock)
+	where	id_prod_adh = @alIdProdAdh
+	And		id_adh = @alIdAdh
+	And		id_status in ( 0, 2, 3, 8 ) 
+	And		id_exist = 1 
+
+
+	Select	@asDetRetPnd = Convert ( VarChar ( 10 ), p.dte_ret_pnd, 103 ) ,
+			@asCreelePnd = Convert ( VarChar ( 10 ), p.cree_le, 103 ) 
+	From	sysadm.pnd_adh_ksl p with (nolock)
+	Where p.id_lot = @asIdLot
+
+	If @@Rowcount > 0 
+		Begin
+			Return 3
+		End 
+
+	Return 1
+	 
+END
+ELSE
+BEGIN
+	Select distinct id_cli,id_ets from SHERPA_SIM.sysadm.adhesion with (nolock) where id_prod_adh = @alIdProdAdh and id_adh = @alIdAdh and id_status in ( 0, 2, 3, 8 ) and id_exist <> 0  
+	Set @iRowCount = @@RowCount 
+	If @iRowCount <= 0 Return -1	
+	If @iRowCount > 1 Return -2
+	
+	Select @aiIdCLi = id_cli,
+		   @aiIdEts = id_ets,
+		   @aiIdsdos = id_sdos
+	from	SHERPA_SIM.sysadm.adhesion with (nolock)
+	where	id_prod_adh = @alIdProdAdh
+	And		id_adh = @alIdAdh
+	And		id_status in ( 0, 2, 3, 8 ) 
+	And		id_exist = 1 
+
+	Set @asIdLot = Replace ( @asIdLot, '''', '''''' )
+
+	Select	@asDetRetPnd = Convert ( VarChar ( 10 ), p.dte_ret_pnd, 103 ) ,
+			@asCreelePnd = Convert ( VarChar ( 10 ), p.cree_le, 103 ) 
+	From	sysadm.pnd_adh_ksl p with (nolock)
+	Where p.id_lot = @asIdLot
+
+	If @@Rowcount > 0 
+		Begin
+			Return 3
+		End 
+
+	Return 1
+End 
+
+Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_I_RS4166_CTC_TRV_PND_CORUS_FFM_KSL
+-- Auteur               :       JFF
+-- Date                 :       11/01/2023
+-- Libell‚              :       
+--								
+--
+-- Références           :       [RS4166]
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_RS4166_CTC_TRV_PND_CORUS_FFM_KSL' AND type = 'P' )
+        DROP procedure sysadm.PS_I_RS4166_CTC_TRV_PND_CORUS_FFM_KSL
+GO
+
+CREATE procedure sysadm.PS_I_RS4166_CTC_TRV_PND_CORUS_FFM_KSL
+	@asIdLot		VarChar ( 200 ),
+	@alIdProdAdh	Int,
+	@alIdAdh		Int,
+	@aiIdCLi		Int,
+	@aiIdEts		Int,
+	@aiIdsdos		Int,
+	@asDteRetPnd VarChar  ( 10 ),
+	@asMotif VarChar ( 100 ),
+	@asCodOper Varchar ( 4 )
+AS
+
+Declare @sMess			VarChar ( 2000 )
+Declare @sErr			Varchar(60)
+Declare @iIdCt			integer
+Declare @iIdContact	    integer
+Declare @asIdAdh		VarChar ( 19 )
+Declare @dGetDate	    DateTime 
+
+Set @dGetDate = Getdate()
+
+Set @asIdAdh = Convert ( varchar ( 19 ), @alIdAdh ) 
+Set @asIdLot = Replace ( @asIdLot, '''', '''''' )
+
+Insert into sysadm.pnd_adh_ksl values ( @asIdLot, @aiIdCLi, @alIdProdAdh, @aiIdEts, @alIdAdh, @aiIdsdos, @asDteRetPnd, @asMotif, @dGetDate, @dGetDate, @asCodOper ) 
+
+
+Set @sMess = 'Retour PND CORUS KSL FMM du ' + @asDteRetPnd + ' avec les infos suivantes :' + CHAR ( 10 ) 
+Set @sMess = @sMess + 'Lot : ' + @asIdLot + ', ' + CHAR ( 10 ) 
+Set @sMess = @sMess + 'Client Sherpa : ' + CONVERT ( Varchar ( 20), @aiIdCLi ) + ', ' + CHAR ( 10 ) 
+Set @sMess = @sMess + 'Produit Adhésion/Ets/Adh/sDossier :  ' + CONVERT ( Varchar ( 10), @alIdProdAdh ) + '/' + CONVERT ( Varchar ( 5), @aiIdEts ) + '/' + CONVERT ( Varchar ( 20), @alIdAdh ) + '/' + CONVERT ( Varchar ( 5), @aiIdsdos )
+Set @sMess = @sMess + 'Motif du rejet par CORUS : ' + @asMotif + CHAR ( 10 )  
+Set @sMess = @sMess + 'Action : Merci de renvoyer ce courrier à l''assuré, voyez avec votre cellule support pour la manipulation.' + CHAR ( 10 )  
+
+Set @asCodOper = 'PND' -- J'écrase le trg de l'opérateur par ce trigramme technique.
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) = 'PRO'
+BEGIN
+
+	EXEC SHERPA_PRO.sysadm.Demat_Contact_Creer_wfa_V100
+		@aiIdCLi,					-- N° de client
+		@iIdContact OUTPUT,			-- N° du contact créé
+		'B',						-- Identifiant du canal (B=Batch)
+		@alIdProdAdh,				-- N° de produit adhésion ou sinistre
+		@aiIdEts,					-- N° d'établissement
+		@asIdAdh,					-- N° d'adhésion
+		@aiIdsdos,					-- N° de sous dossier
+		'A',						-- Code interlocuteur  (Je mets Assuré par défaut ,je n'ai pas d'autres infos)
+		@sMess,						-- Message du contact
+		1,							-- Type de tache 1=Vdc, 2=Ad nouvelle
+		@dGetDate,					-- Date de réception le contact        
+		'PND',						-- Trigramme du gestionnaire destinataire du contact
+		'PND',						-- Créer par 
+		1,							-- Type de famille (adhésion : 1, autre : 3)
+		0,							-- Pôle de gestion
+		@sErr OUTPUT				-- Message d'erreur	
+END
+ELSE
+BEGIN
+	EXEC SHERPA_SIM.sysadm.Demat_Contact_Creer_wfa_V100
+		@aiIdCLi,					-- N° de client
+		@iIdContact OUTPUT,			-- N° du contact créé
+		'B'	,						-- Identifiant du canal (B=Batch)
+		@alIdProdAdh,				-- N° de produit adhésion ou sinistre
+		@aiIdEts,					-- N° d'établissement
+		@asIdAdh,					-- N° d'adhésion
+		@aiIdsdos,					-- N° de sous dossier
+		'A',						-- Code interlocuteur  (Je mets Assuré par défaut ,je n'ai pas d'autres infos)
+		@sMess,						-- Message du contact
+		1,							-- Type de tache 1=Vdc, 2=Ad nouvelle
+		@dGetDate,					-- Date de réception le contact        
+		'PND',						-- Trigramme du gestionnaire destinataire du contact
+		'PND',						-- Créer par 
+		1,							-- Type de famille (adhésion : 1, autre : 3)
+		0,							-- Pôle de gestion
+		@sErr OUTPUT				-- Message d'erreur	
+END
+
+Go

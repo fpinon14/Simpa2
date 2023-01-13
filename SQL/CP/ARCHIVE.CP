@@ -6463,7 +6463,7 @@ Select	a.id_sin,
 		a.id_cour,
 		sysadm.FN_CODE_CAR ( a.id_cour, '-CC' ) lib_cour,
 		a.id_cour_orig, 
-		sysadm.FN_CODE_CAR ( a.id_cour, '-CC' ) lib_cour_orig,
+		sysadm.FN_CODE_CAR ( a.id_cour_orig, '-CC' ) lib_cour_orig,
 		( Select rtrim ( i.nom ) From sysadm.inter i where i.id_sin = a.id_sin and i.id_i = a.id_inter ) nom_dest,
 		sysadm.FN_CODE_CAR ( a.cod_inter, '-IN' ) type_dest,  
 		Case 

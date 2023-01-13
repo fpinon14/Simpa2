@@ -5675,7 +5675,7 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 		Begin
 			EXEC master.dbo.SPB_PS_MAIL 
 					@sRetourErrMail OUTPUT, 
-					'GG_DSI-DO-UTIL@spb.eu,GG_DSI-DO-PI@spb.eu,jff@spb.fr,fsale@spb.eu,GG_DSI-DO-TELCO@spb.eu,vclapson@spb.eu,cbourdoiseau@spb.eu,rpo@spb.eu,YOUACHAOU@spb.eu,JALLIX@spb.eu',
+					'GG_DSI-DO-UTIL@spb.eu,GG_DSI-DO-PI@spb.eu,jff@spb.fr,fsale@spb.eu,GG_DSI-DO-TELCO@spb.eu,vclapson@spb.eu,cbourdoiseau@spb.eu,rpo@spb.eu,YOUACHAOU@spb.eu,JALLIX@spb.eu,HLIEGEARD@spb.eu',
 --					'jff@spb.fr',
 					@sMailBody, 
 					@sObjet, 
