@@ -13416,12 +13416,14 @@ go
 -- V02 - VDOC 14942 - ajout des 3 dernières colonnes
 -- JFF      12/02/2016   [PI062]
 -- V03		28/11/2017	[VDoc25230] ajout des 2 dernières colonnes IMEI
+-- JFF  13/01/2023  [RS4402] ajout mt_pec
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S01_VDOC8285_V03' AND type = 'P' )
-        DROP procedure sysadm.PS_S01_VDOC8285_V03
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S01_VDOC8285_V04' AND type = 'P' )
+        DROP procedure sysadm.PS_S01_VDOC8285_V04
 GO
 
-CREATE procedure sysadm.PS_S01_VDOC8285_V03
+
+CREATE procedure sysadm.PS_S01_VDOC8285_V04
 	@sListeIdSin	Varchar(8000)
 As
 
@@ -13446,7 +13448,10 @@ Declare @t2 TABLE (
 		    mt_tot_reg_du_RM decimal (11,2 ),
 		    assureur varchar ( 35 ),
 		    process int,
-		    lib_process varchar ( 35 )
+		    lib_process varchar ( 35 ),
+			num_imei_port varchar(60),
+			id_serie_nouv  varchar(60),
+			mt_pec decimal (11,2) -- [RS4402]
 		  )
 
 Declare @iPos int, @iPos2 int
@@ -13518,10 +13523,12 @@ Select	T.id_sin,
 		c.info_spb_frn as process,	    
 		sysadm.FN_CODE_NUM(c.info_spb_frn,'-IF') as lib_process,
 		s.num_imei_port,
-		c.id_serie_nouv
+		c.id_serie_nouv,
+		d.val_mt  -- [RS4402] mt_pec lié au détail
 From @t as T
 	left outer join sysadm.commande c on c.id_sin = T.id_sin  And   c.id_seq = T.id_seq
 	left outer join sysadm.sinistre s on s.id_sin=T.id_sin
+	left outer join sysadm.div_det d on d.id_sin = c.id_sin and d.id_gti = c.id_gti and d.id_detail = c.id_detail and d.nom_zone = 'mt_pec'  -- [RS4402]
 Order by T.ordre_fic
 
 Select * from @t2
