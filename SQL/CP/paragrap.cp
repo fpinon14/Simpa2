@@ -241,3 +241,51 @@ and id_code > 0
 Order by 2 desc
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :   PS_S_PARA_REELS_REP_COUR_JUSTE_LES_MANQUANTS
+-- Auteur               :   Fabry JF
+-- Date                 :   16/01/2023
+-- Libellé              :   Sélection des paragraphes et fichier rééls du rep COURRIER
+-- Commentaires         :   
+-- Références           :   
+-- Arguments            :   
+-- Retourne             :   PS_S_PARA_REELS_REP_COUR_JUSTE_LES_MANQUANTS
+--                          
+--------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_PARA_REELS_REP_COUR_JUSTE_LES_MANQUANTS' AND type = 'P' )
+            DROP procedure sysadm.PS_S_PARA_REELS_REP_COUR_JUSTE_LES_MANQUANTS
+GO
+
+CREATE PROC sysadm.PS_S_PARA_REELS_REP_COUR_JUSTE_LES_MANQUANTS
+	@asRepCourDest VarChar ( 200 )
+AS
+
+	Declare @sDIR Varchar ( 100 )
+	Declare @TbRepCour Table ( nom_fic varchar ( 100) INDEX IX1 CLUSTERED ) 
+	Declare @TbLstFicBase Table ( nom_fic varchar ( 100) INDEX IX1 CLUSTERED, ext varchar (3), autre varchar ( 10) ) 
+	Set @sDIR = 'DIR "' + @asRepCourDest + '*.*" /b'
+
+	-- @TbRepCour se charge avec la liste des fichiers du répertoire
+	Insert into @TbRepCour EXEC master.dbo.xp_cmdshell @sDIR 
+	Delete @TbRepCour where nom_fic is null
+	Update @TbRepCour Set nom_fic = Upper ( nom_fic )
+
+	-- @@TbLstFicBase se charge avec la liste des fichiers de la base
+	Insert into @TbLstFicBase EXEC sysadm.PS_S_PARA_REELS_REP_COURRIER
+	Update @TbLstFicBase Set nom_fic = Upper ( nom_fic )
+
+	-- Retour des fichier manquant uniquement
+	Select  Tl.nom_fic,
+			Tl.ext,
+			''
+	From @TbLstFicBase Tl
+	Where Not exists ( 
+			Select Top 1 1 
+			From @TbRepCour Tr
+			Where Tr.nom_fic = Tl.nom_fic
+		)
+
+Go
+
