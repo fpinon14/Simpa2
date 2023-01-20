@@ -25,7 +25,7 @@
 -- Arguments            :   Aucun
 -- Retourne             :   ResultSet
 --                          
---------------------------------------------------------------------
+------------------ --------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'DD_S04_PARAGRAPHE' AND type = 'P' )
             DROP procedure sysadm.DD_S04_PARAGRAPHE
 GO
