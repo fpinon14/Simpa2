@@ -1264,8 +1264,13 @@ SET NOCOUNT ON
 
 -- PM234-7 Mantis 22824 JFF 07/12/16
 Exec sysadm.PS_I_ERR_TRAVAIL_ABSENT
+
 -- JFF 28/04/2017
 Exec sysadm.PS_REDRESS_PIECE_HISTO
+
+-- Détecte les objets SQL supprimé de façon malveillante
+Exec sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
+
 
 ------------------------------------------------------
 -- Nettoyage de w_queue si  non présence dans w_sin --
@@ -1615,6 +1620,10 @@ Or not exists
 )
 --And ws.maj_le >= dateadd ( day, -2, getdate() )
 
+-- Détecte les objets SQL supprimé de façon malveillante
+Exec sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
+
+
 GO
 SET QUOTED_IDENTIFIER OFF 
 GO
@@ -1795,6 +1804,10 @@ While Exists ( Select Top 1 1 From @TbRepCour where marquage = 0 )
 
 	Update @TbRepCour Set marquage = 1 Where id_seq = @iIdSeq
  End
+
+-- Détecte les objets SQL supprimé de façon malveillante
+Exec sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
+
  
 GO
 SET QUOTED_IDENTIFIER OFF 
@@ -1910,6 +1923,9 @@ And i.marque = ws.marq_port
 And i.reference = ws.modl_port
 and i.dern_maj_prix_dte < DateAdd ( month, i.per_rev_prix_mois * (-1), getdate() )
 And i.dern_maj_prix_trt not in ( 'URGE', 'FERM' ) 
+
+-- Détecte les objets SQL supprimé de façon malveillante
+Exec sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
 
 GO
 SET QUOTED_IDENTIFIER OFF 
@@ -2417,12 +2433,16 @@ Exec sysadm.PS_S_NBRE_SIN_SANDRINE
 -- JFF pour FS et CBO le 24/02/2016
 Exec [sysadm].[Iwd_Queue_Recycler_Etat]
 
--- Param Soldage à 5 ans (60 mois) si absence de param de soldage, suaf pour PM407 SAGA dp/323
+-- Param Soldage à 5 ans (60 mois) si absence de param de soldage, sauf pour PM407 SAGA dp/323
 Update p
 Set alt_sold = 'O', dur_sold_pc = 24, unt_sold_pc = 'M', maj_le = getdate(), maj_par = 'AUTO' 
 From sysadm.produit p
 Where p.dur_sold_pc <= 0
 And Not Exists ( Select Top 1 1 From sysadm.det_pro dp where dp.id_prod = p.id_prod and id_code_dp = 323 ) 
+
+-- Détecte les objets SQL supprimé de façon malveillante
+Exec sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
+
 
 GO
 
@@ -2715,6 +2735,9 @@ Exec sysadm.PS_IU_REDRESS_PRS_153_154
 
 -- Cette table doit être vide
 Delete sysadm.w_reg_frais_annexe_frn
+
+-- Détecte les objets SQL supprimé de façon malveillante
+Exec sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
 
 GO
 
@@ -3647,7 +3670,6 @@ IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_CONTROLE_VERSION_CLUSTER
         DROP procedure sysadm.PS_S_CONTROLE_VERSION_CLUSTER
 GO
 
-
 CREATE procedure sysadm.PS_S_CONTROLE_VERSION_CLUSTER
 
 As 
@@ -3668,7 +3690,7 @@ Declare	@DteDernCnx Varchar ( 10 ),
 		@NbreCnx	integer,
 		@iCpt		integer,
 		@iCount		integer,
-		@sChaine    VarChar ( 100 )
+		@sChaine    VarChar ( 1500 )
 
 Declare @sObjet VarChar ( 255 )
 Declare @sMessage VarChar ( 8000 )
@@ -3716,8 +3738,7 @@ While @iCpt <= @iCount
 		Set @iCpt = @iCpt + 1
 		Continue
 	  End 
-
-	Select @sChaine = @sChaine + @DteDernCnx + '  ' + @Appli + '  ' + Convert ( VarChar ( 10 ), @RevSvn ) + '  ' + Convert ( VarChar ( 10 ), @NbreCnx ) + Char ( 10 )
+	Select @sChaine = @sChaine + @DteDernCnx + '         | ' + @Appli + '                  | ' + Convert ( VarChar ( 10 ), @RevSvn ) + '                           | ' + Convert ( VarChar ( 10 ), @NbreCnx ) + Char ( 10 )
 
 	If @NbreCnx > 10 
 	  Begin
@@ -3730,15 +3751,25 @@ While @iCpt <= @iCount
 
 Set @sObjet = 'Problème version SIMPA2 sur les Cluster/TS'
 
-Set @sMessage = @sChaine
+Set @sMessage = 'Bonjour,' + Char ( 10 ) + Char ( 10 )
+Set @sMessage = @sMessage + 'Un ou plusieurs TS/SERVER n''ont été servis par la recopie des livrables (EXE) PowerBuilder cette nuit.' + Char ( 10 ) + Char ( 10 )
+Set @sMessage = @sMessage + 'Date Dern Cnx | SIMPA2	| Révision EXE SIMPA2 | Nbre User dessus' + Char ( 10 )
+Set @sMessage = @sMessage + @sChaine + Char ( 10 ) + Char ( 10 )
+Set @sMessage = @sMessage + CHAR ( 10 )
+Set @sMessage = @sMessage + 'Cordialement,'
+Set @sMessage = @sMessage + CHAR ( 10 )
+Set @sMessage = @sMessage + CHAR ( 10 )
+Set @sMessage = @sMessage + 'Fabry Jean-François'
+Set @sMessage = @sMessage + CHAR ( 10 )
+Set @sMessage = @sMessage + 'DSI/Etudes SIMPA2'
+
 
 EXEC master.dbo.SPB_PS_MAIL 
 		@sRetourErrMail OUTPUT, 
-		-- 'jff@spb.fr',
-		'jff@spb.fr,fpinon@spb.eu',
+		'jff@spb.fr',
 		@sMessage, 
 		@sObjet, 
-		'', 
+		'jff@spb.fr', 
 		'', 
 		NULL, 
 		NULL, 
@@ -3755,10 +3786,10 @@ If @NbreFoisSupAn >= 2
 
 	EXEC master.dbo.SPB_PS_MAIL 
 			@sRetourErrMail OUTPUT, 
-			'jff@spb.fr,fpinon@spb.eu,GG_DSI-DO-INFRA-SERVEUR@spb.eu',
+			'jff@spb.fr,GG_DSI-DO-INFRA-SERVEUR@spb.eu,fs@spb.fr,cbo@spb.eu',
 			@sMessage, 
 			@sObjet, 
-			'', 
+			'jff@spb.fr', 
 			'', 
 			NULL, 
 			NULL, 
@@ -6123,4 +6154,135 @@ And   c.id_seq = t.id_seq_cmde
 
 GO
 
+--------------------------------------------------------------------
+--
+-- Procedure            :       PS_SI_DETECTEUR_SUPP_OBJ_SQL
+-- Auteur               :       Fabry JF
+-- Date                 :       23/01/2023
+-- Libelle              :       
+-- Commentaires         :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       
+--
+-------------------------------------------------------------------
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_SI_DETECTEUR_SUPP_OBJ_SQL' AND type = 'P' )
+        DROP procedure sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
+GO
+
+CREATE procedure sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
+AS
+
+Declare @Tb Table (
+	id_seq	int identity,
+	nom	    Varchar ( 255 ),
+	type    Varchar ( 5 ),
+	marquage int
+)
+
+Declare @iIdSeq integer
+Declare @sNom VarChar ( 255 )
+Declare @sRetourErrMail VarChar ( 255 )
+Declare @sFicOut VarChar ( 255 )
+Declare @sMailBody VarChar ( 8000 ) 
+Declare @sChaineObjAbs Varchar ( 3000 ) 
+Declare @sObjet VarChar ( 255 ) 
+Declare @sExpediteur Varchar ( 128 )
+Declare @iRowCount Integer
+Declare @sType varchar ( 5 ) 
+Declare @iCpt integer
+
+-- Maj tab Ref
+Insert into sysadm.objet_sql
+Select	name, 
+		type, 
+		getdate(), 
+		getdate(), 
+		'SQL' 
+from sys.objects sob
+Where Not Exists ( 
+	Select Top 1 1
+	From sysadm.objet_sql osq
+	Where osq.nom = sob.name
+)
+
+-- Contrôle
+Insert into @Tb
+Select distinct 
+		osq.nom, 
+		osq.type,
+		0
+From sysadm.objet_sql osq
+Where Not Exists ( 
+	Select Top 1 1
+	From sys.objects sob
+	Where osq.nom = sob.name
+)
+
+Set @iRowCount = @@RowCount 
+If @iRowCount <= 0 Return
+
+Set @sChaineObjAbs = ''
+Set @iCpt = 1
+
+While Exists ( Select Top 1 1 From @Tb where marquage = 0 )
+ Begin
+	Select 	Top 1 
+		@iIdSeq = id_seq,
+		@sNom = nom,
+		@sType = type
+	From	@Tb
+	Where	marquage = 0
+
+	Set @sChaineObjAbs = @sChaineObjAbs  + Convert ( Varchar ( 5 ), @iCpt ) + '/ ' + @sNom + ', de type ' + @sType + Char ( 10 ) 
+
+	Update @Tb Set marquage = 1 Where id_seq = @iIdSeq
+	Set @iCpt = @iCpt + 1 
+ End
+
+Set @sMailBody = 'Bonjour, ' + Char (10) + Char ( 10 )
+Set @sMailBody = @sMailBody + convert ( varchar(10), @iRowCount ) + ' objet' + IIF ( @iRowCount > 1,'s','') + ' SQL ' + IIF ( @iRowCount > 1,'ont','a') + ' été supprimé' + IIF ( @iRowCount > 1,'s','')
+Set @sMailBody = @sMailBody + ' de la base SIMPA2_PRO de façon malveillante (relevé le ' + convert ( varchar ( 10 ) , Getdate(), 103 ) + ' à ' + convert ( varchar ( 10 ) , Getdate(), 108 ) + ').' + Char (10) + Char ( 10 ) 
+Set @sMailBody = @sMailBody + @sChaineObjAbs + Char (10) 
+
+Set @sMailBody = @sMailBody + CHAR ( 10 )
+Set @sMailBody = @sMailBody + CHAR ( 10 )
+Set @sMailBody = @sMailBody + 'Cordialement,'
+Set @sMailBody = @sMailBody + CHAR ( 10 )
+Set @sMailBody = @sMailBody + CHAR ( 10 )
+Set @sMailBody = @sMailBody + 'Fabry Jean-François'
+Set @sMailBody = @sMailBody + CHAR ( 10 )
+Set @sMailBody = @sMailBody + 'DSI/Etudes SIMPA2'
+
+Set @sObjet = '[ALERTE] ' + convert ( varchar(10), @iRowCount ) + ' objet' + IIF ( @iRowCount > 1,'s','') + ' SQL supprimé' + IIF ( @iRowCount > 1,'s','') + ' de la base SIMPA2_PRO'
+
+-- On casse la chaine objet et la chaine expediteur
+Set @sObjet = Left ( @sObjet + space ( 255 ), 255 )
+Exec sysadm.PS_CASSER_REGLE_CHAINE @sObjet Output, '_', ' ' 
+
+Set @sExpediteur = 'SQLSERVER'
+
+Set @sExpediteur = Left ( @sExpediteur + space ( 128 ), 128)
+Exec sysadm.PS_CASSER_REGLE_CHAINE @sExpediteur Output, '_', ' ' 
+Set @sExpediteur = @sExpediteur  + '<jff@spb.fr>'
+
+EXEC master.dbo.SPB_PS_MAIL 
+		@sRetourErrMail OUTPUT, 
+		'jff@spb.fr,GG_DSI-DO-PI@spb.eu,fsale@spb.eu,cbourdoiseau@spb.eu',
+		--'jff@spb.fr',
+		@sMailBody, 
+		@sObjet, 
+		@sExpediteur, 
+		'', 
+		@sFicOut, 
+		NULL, 
+		NULL, 
+		NULL, 
+		NULL
+
+
+Go
 
