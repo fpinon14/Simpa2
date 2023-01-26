@@ -7059,11 +7059,11 @@ Set @asIdLot = Replace ( @asIdLot, '''', '''''' )
 Insert into sysadm.pnd_adh_ksl values ( @asIdLot, @aiIdCLi, @alIdProdAdh, @aiIdEts, @alIdAdh, @aiIdsdos, @asDteRetPnd, @asMotif, @dGetDate, @dGetDate, @asCodOper ) 
 
 
-Set @sMess = 'Retour PND CORUS KSL FMM du ' + @asDteRetPnd + ' avec les infos suivantes :' + CHAR ( 10 ) 
+Set @sMess = 'Retour PND CORUS KSL FMM du ' + @asDteRetPnd + CHAR ( 10 ) 
+Set @sMess = @sMess + 'Motif : ' + @asMotif + CHAR ( 10 )  
 Set @sMess = @sMess + 'Lot : ' + @asIdLot + ', ' + CHAR ( 10 ) 
 Set @sMess = @sMess + 'Client Sherpa : ' + CONVERT ( Varchar ( 20), @aiIdCLi ) + ', ' + CHAR ( 10 ) 
 Set @sMess = @sMess + 'Produit Adhésion/Ets/Adh/sDossier :  ' + CONVERT ( Varchar ( 10), @alIdProdAdh ) + '/' + CONVERT ( Varchar ( 5), @aiIdEts ) + '/' + CONVERT ( Varchar ( 20), @alIdAdh ) + '/' + CONVERT ( Varchar ( 5), @aiIdsdos )
-Set @sMess = @sMess + 'Motif du rejet par CORUS : ' + @asMotif + CHAR ( 10 )  
 Set @sMess = @sMess + 'Action : Merci de renvoyer ce courrier à l''assuré, voyez avec votre cellule support pour la manipulation.' + CHAR ( 10 )  
 
 Set @asCodOper = 'PND' -- J'écrase le trg de l'opérateur par ce trigramme technique.

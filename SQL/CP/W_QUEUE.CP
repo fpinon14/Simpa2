@@ -3021,13 +3021,13 @@ If @iIdArch is null Set @iIdArch = -1
 
 Insert into sysadm.pnd values ( @adcIdSin, @adcIdInter, @adcIdDoc, @iIdArch, @asDteRetPnd, @asMotif, GETDATE(), GETDATE(), @asCodOper ) 
 
-Set @sMess = 'Retour PND CORUS du ' + @asDteRetPnd + ' avec les infos suivantes :' + CHAR ( 10 ) 
+Set @sMess = 'Retour PND CORUS du ' + @asDteRetPnd + CHAR ( 10 ) 
+Set @sMess = @sMess + 'Motif : ' + @asMotif + CHAR ( 10 ) 
 Set @sMess = @sMess + 'Sinistre ' + CONVERT ( Varchar ( 10), @adcIdSin ) + ', '
 Set @sMess = @sMess + 'Inter ' + @asLibInter + ' (Id_inter) ' + CONVERT ( Varchar ( 5), @adcIdInter ) + ', ' 
 Set @sMess = @sMess + 'Numéro courrier (id_doc) ' + CONVERT ( Varchar ( 5), @adcIdDoc ) + ', '+ ' (clé=>' + CONVERT ( Varchar ( 10), @adcIdSin ) + '/' + CONVERT ( Varchar ( 5), @adcIdInter ) + '/' + CONVERT ( Varchar ( 5), @adcIdDoc ) + ')'+ CHAR ( 10 ) 
 Set @sMess = @sMess + 'Courrier ' + @asIdCour + ' du ' + @asDteEdit + ', ' + CHAR ( 10 ) 
 Set @sMess = @sMess + 'Identifiant courrier (id_arch) : ' + IIF ( @iIdArch < 0, 'Aucun', CONVERT ( Varchar ( 15), @iIdArch )) + ', '+ CHAR ( 10 )  
-Set @sMess = @sMess + 'Motif du rejet par CORUS : ' + @asMotif + CHAR ( 10 )  
 Set @sMess = @sMess + 'Action : Merci de renvoyer ce courrier à l''assuré, voyez avec votre cellule support pour la manipulation.' + CHAR ( 10 )  
 
 Set @asCodOper = 'PND' -- J'écrase le trg de l'opérateur par ce trigramme technique.
