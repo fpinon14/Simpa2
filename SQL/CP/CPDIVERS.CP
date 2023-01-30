@@ -2739,6 +2739,9 @@ Delete sysadm.w_reg_frais_annexe_frn
 -- Détecte les objets SQL supprimé de façon malveillante
 Exec sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
 
+-- Nettoyage Corbeille
+Exec sysadm.PS_DU_NETTOYAGE_CORBEILLES
+
 GO
 
 grant execute on sysadm.PS_CORRECTION_BASE_NUIT_2 to rolebddsinistres
@@ -6286,3 +6289,89 @@ EXEC master.dbo.SPB_PS_MAIL
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procedure            :       PS_DU_NETTOYAGE_CORBEILLES
+-- Auteur               :       Fabry JF
+-- Date                 :       27/01/2023
+-- Libelle              :       
+-- Commentaires         :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       
+--
+-------------------------------------------------------------------
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_DU_NETTOYAGE_CORBEILLES' AND type = 'P' )
+        DROP procedure sysadm.PS_DU_NETTOYAGE_CORBEILLES
+GO
+
+CREATE procedure sysadm.PS_DU_NETTOYAGE_CORBEILLES
+AS
+
+Update p
+Set id_corb = 998
+from sysadm.produit p
+where p.cree_le < DateAdd ( month, -3, Getdate() )
+And not exists ( 
+       Select Top 1 1 
+       From sysadm.code co 
+       Where co.id_typ_code = '-CO'
+	   and co.id_code = p.id_corb
+	   )
+
+Delete fa
+from sysadm.famille fa
+where fa.id_typ_code = '-CO'
+And fa.cree_le < DateAdd ( month, -3, Getdate() )
+And not exists ( 
+       Select Top 1 1 
+       From sysadm.produit p 
+       Where p.id_corb = fa.id_code ) 
+
+Delete fa
+from sysadm.famille fa,
+	 sysadm.code co
+where co.id_typ_code = '-CO'
+And fa.id_typ_code = co.id_typ_code
+And fa.id_code = co.id_code
+And co.id_code not in ( 997, 998, 999 )
+And co.cree_le < DateAdd ( month, -3, Getdate() )
+And not exists ( 
+       Select Top 1 1 
+       From sysadm.produit p 
+       Where p.id_corb = co.id_code ) 
+
+Delete co
+from sysadm.code co
+where co.id_typ_code = '-CO'
+And co.cree_le < DateAdd ( month, -3, Getdate() )
+And co.id_code not in ( 997, 998, 999 )
+And not exists ( 
+       Select Top 1 1 
+       From sysadm.produit p 
+       Where p.id_corb = co.id_code ) 
+
+Delete coop
+From sysadm.corb_oper coop
+Where coop.cree_le < DateAdd ( month, -3, Getdate() )
+And   Not Exists ( 
+       Select Top 1 1 
+       From sysadm.code co 
+       Where co.id_typ_code = '-CO'
+	   and co.id_code = coop.id_corb	
+)
+
+Update p
+Set id_corb = 998
+from sysadm.produit p
+where p.cree_le < DateAdd ( month, -3, Getdate() )
+And not exists ( 
+       Select Top 1 1 
+       From sysadm.code co 
+       Where co.id_typ_code = '-CO'
+	   and co.id_code = p.id_corb
+	   )
+Go
