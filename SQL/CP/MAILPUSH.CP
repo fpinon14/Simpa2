@@ -1694,715 +1694,729 @@ Go
 --     JFF  17/04/2018   [DT288-4] 
 --     JFF  25/01/2019   [VDOC27477] Stéph. Delesque
 --     JFF  21/08/2019   [DT361-1]
+--     JFF  31/01/2023   [ISM344831] On n'envoie pas si CAF
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S03_MAILPUSH_ENVTEL_REMP_REPAR_V03' AND type = 'P' )
         DROP procedure sysadm.PS_S03_MAILPUSH_ENVTEL_REMP_REPAR_V03
 GO
 
-CREATE procedure sysadm.PS_S03_MAILPUSH_ENVTEL_REMP_REPAR_V03
-	@asIdAppli	varchar (20),
-	@asBase		varchar (20),
-	@adcIdSin      	Decimal (10), -- [PI062]
-	@aiIdSeq      	Integer,
-	@adtDteEnvCli   DateTime,
-	@asDestCli	VarChar	(20),	
-	@asNumBonTrsp   VarChar	(50),
-	@aiStatusGc   Integer,
-	@asCommentFrn VarChar ( 255), -- [DT100]
-	@asChaine	 VarChar ( 255 ), -- [DT141]
-	@asCasRetour    VarChar (50) OUTPUT
-AS
-Declare 
-  @dcIdProd     Decimal (7), 
-  @dcIdEts 	Decimal (7), 
-  @sNumProd     VarChar (20),   
-  @sLibProd     VarChar (255), 
-  @sCiv		VarChar (100), 
-  @sNom		VarChar (50), 
-  @sMailFrom	VarChar (128), 
-  @sMailSend	VarChar (128), 
-  @sMailCc	VarChar (128),
-  @sMailObjet	VarChar ( 255 ),
-  @sMailBody	VarChar ( 7000 ),
-  @sAltQuarant  VarChar (1),	
-  @asHREFURL	VarChar (300),		
-  @sSaut	VarChar (10), 
-  @sMarque	VarChar (35),
-  @sModele	VarChar (35),  
-  @sCodeEtat	VarChar (10),
-  @sIdFour	VarChar (10),
-  @iRet		Integer,
-  @iIdSin 	Integer,
-  @iIdProd 	Integer,
-  @iIdEts 	Integer,
-  @iOptionDP    Integer,
-  @dtDteEnvCliActuel DateTime,
-  @sBoiteMail   VarChar (35),
-  @sNomTrsp	VarChar (35), -- #3 [DCMP080399] 
-  @sAltSuiviSMS VarChar ( 1 ),  -- #5 [FNAC_PROD_ECH_TECH].[SMS]  
-  @sNumGsmSMS   VarChar ( 20 ),  -- #5 [FNAC_PROD_ECH_TECH].[SMS]  
-  @iVarianteSMS Integer,
-  @sTopSMS	Integer,
-  @iLongMaxSMS  Integer,
-  @sVal VarChar ( 255 ),
-  @sLogin VarChar ( 255 ),
-  @sMdPasse VarChar ( 255 ),
-  @sCodeTrt VarChar ( 255 ),
-  @sSmsBody VarChar ( 255 ),
-  @sIdTypArt VarChar ( 3 ),
-  @MailRep	Integer, -- [PM246]
-  @sAdrCodCiv VarChar ( 35 ),
-  @sAdrNom VarChar ( 35 ),
-  @sAdrPrenom VarChar ( 35 ),
-  @sAdrLivr1 VarChar ( 35 ),
-  @sAdrLivr2 VarChar ( 35 ),
-  @sAdrLivrCpl VarChar ( 35 ),
-  @sAdrCp VarChar ( 35 ),
-  @sAdrVille VarChar ( 35 ),
-  @sCodePickUp VarChar ( 35 ), -- [PM255]
-  @sInfoSpbFrnCplt VarChar ( 255 ),
-  @iIrreparable Integer, -- [DT100]
-  @iPresencePret Integer, -- [PM250-2]
-  @iCasSwapDiagPrincipeV3 Integer, -- [PM250-2]
-  @iSwap Integer, -- [PM250-2]
-  @sMarqApp VarChar ( 35), -- [DT288-4] 
-  @sModlApp VarChar ( 35), -- [PM250-2]
-  @iInfoSpbFrn Integer , -- [MANTIS14477]
-  @sIdRefFour VarChar ( 20 ), -- [DT141]
-  @sNumBonTrspActuel VarChar ( 50 ), -- [DT288-4]
-  @sNumImeiNouv VarChar ( 30 ) -- [DT361-1]
-
-  Set @asCasRetour = ''
-  Set @sMailBody = ''
-  Set @asHREFURL = ''
-  Set @sSaut = Char (10)
-  Set @iRet = 0
-  Set @asIdAppli = Upper ( @asIdAppli )
-  Set @sTopSMS	= 0 -- [PC877]
-  Set @iLongMaxSMS = 160
-  Set @iVarianteSMS = 0
-  Set @iSwap = 0 -- [PM250-2]
   
-  Set @sNumImeiNouv = sysadm.FN_CLE_VAL ( 'NUM_IMEI_NOU', @asChaine, ';' ) -- [DT361-1]
+CREATE procedure sysadm.PS_S03_MAILPUSH_ENVTEL_REMP_REPAR_V03  
+ @asIdAppli varchar (20),  
+ @asBase  varchar (20),  
+ @adcIdSin       Decimal (10), -- [PI062]  
+ @aiIdSeq       Integer,  
+ @adtDteEnvCli   DateTime,  
+ @asDestCli VarChar (20),   
+ @asNumBonTrsp   VarChar (50),  
+ @aiStatusGc   Integer,  
+ @asCommentFrn VarChar ( 255), -- [DT100]  
+ @asChaine  VarChar ( 255 ), -- [DT141]  
+ @asCasRetour    VarChar (50) OUTPUT  
+AS  
+Declare   
+  @dcIdProd     Decimal (7),   
+  @dcIdEts  Decimal (7),   
+  @sNumProd     VarChar (20),     
+  @sLibProd     VarChar (255),   
+  @sCiv  VarChar (100),   
+  @sNom  VarChar (50),   
+  @sMailFrom VarChar (128),   
+  @sMailSend VarChar (128),   
+  @sMailCc VarChar (128),  
+  @sMailObjet VarChar ( 255 ),  
+  @sMailBody VarChar ( 7000 ),  
+  @sAltQuarant  VarChar (1),   
+  @asHREFURL VarChar (300),    
+  @sSaut VarChar (10),   
+  @sMarque VarChar (35),  
+  @sModele VarChar (35),    
+  @sCodeEtat VarChar (10),  
+  @sIdFour VarChar (10),  
+  @iRet  Integer,  
+  @iIdSin  Integer,  
+  @iIdProd  Integer,  
+  @iIdEts  Integer,  
+  @iOptionDP    Integer,  
+  @dtDteEnvCliActuel DateTime,  
+  @sBoiteMail   VarChar (35),  
+  @sNomTrsp VarChar (35), -- #3 [DCMP080399]   
+  @sAltSuiviSMS VarChar ( 1 ),  -- #5 [FNAC_PROD_ECH_TECH].[SMS]    
+  @sNumGsmSMS   VarChar ( 20 ),  -- #5 [FNAC_PROD_ECH_TECH].[SMS]    
+  @iVarianteSMS Integer,  
+  @sTopSMS Integer,  
+  @iLongMaxSMS  Integer,  
+  @sVal VarChar ( 255 ),  
+  @sLogin VarChar ( 255 ),  
+  @sMdPasse VarChar ( 255 ),  
+  @sCodeTrt VarChar ( 255 ),  
+  @sSmsBody VarChar ( 255 ),  
+  @sIdTypArt VarChar ( 3 ),  
+  @MailRep Integer, -- [PM246]  
+  @sAdrCodCiv VarChar ( 35 ),  
+  @sAdrNom VarChar ( 35 ),  
+  @sAdrPrenom VarChar ( 35 ),  
+  @sAdrLivr1 VarChar ( 35 ),  
+  @sAdrLivr2 VarChar ( 35 ),  
+  @sAdrLivrCpl VarChar ( 35 ),  
+  @sAdrCp VarChar ( 35 ),  
+  @sAdrVille VarChar ( 35 ),  
+  @sCodePickUp VarChar ( 35 ), -- [PM255]  
+  @sInfoSpbFrnCplt VarChar ( 255 ),  
+  @iIrreparable Integer, -- [DT100]  
+  @iPresencePret Integer, -- [PM250-2]  
+  @iCasSwapDiagPrincipeV3 Integer, -- [PM250-2]  
+  @iSwap Integer, -- [PM250-2]  
+  @sMarqApp VarChar ( 35), -- [DT288-4]   
+  @sModlApp VarChar ( 35), -- [PM250-2]  
+  @iInfoSpbFrn Integer , -- [MANTIS14477]  
+  @sIdRefFour VarChar ( 20 ), -- [DT141]  
+  @sNumBonTrspActuel VarChar ( 50 ), -- [DT288-4]  
+  @sNumImeiNouv VarChar ( 30 ) -- [DT361-1]  
 
-  -- Option de déclenchement du mail -DP
-  Set @iOptionDP = 50
-
-  If ( @adtDteEnvCli is null ) Or ( @asDestCli is null ) Or ( sysadm.FN_TRIM ( @asDestCli ) = '' )
-   Begin
-	Set @asCasRetour = 'PARAM_NON_RENSEIGNES'
-	Return 0
-   End
-
-  -- Récupération des données standard nécessaires à l'envoi du mail
-  Exec @iRet = sysadm.PS_S01_RECUP_DONNEES_MAIL 
-	@adcIdSin,
-	@asBase,
- 	@iOptionDP,
-	@dcIdProd   OUTPUT, 
-	@sLibProd   OUTPUT, 
-	@sNumProd   OUTPUT,   
-	@dcIdEts    OUTPUT, 
-	@sCiv	    OUTPUT, 
-	@sNom	    OUTPUT, 
-    @sMailFrom  OUTPUT, 
-	@sMailSend  OUTPUT, 
-	@sMailCc    OUTPUT,
-	@sAltQuarant OUTPUT,
-	@sBoiteMail OUTPUT, -- #2
-	@sAltSuiviSMS OUTPUT, -- #4 [FNAC_PROD_ECH_TECH].[SMS]
-	@sNumGsmSMS  OUTPUT -- #4 [FNAC_PROD_ECH_TECH].[SMS]
-
- 
-	Set @MailRep = 1 
-
-
-  -- [PM246]
-  If @iRet = -7 
-    Begin
-		If @MailRep > 0 
-		 Begin
-			-- Le but pour Orange V3 et de toujours mettre une adresse mail si l'adresse réél n'est pas là, pour justement
-			-- déclencher l'échec de distribution et donc envoyer le courrier en automatique.
-			Set @sMailSend = 'DeclEchecDistrib@spb.fr'
-			Set @iRet = 0			
-		 End
-		Else
-		 Begin
-			 Set @asCasRetour = 'ADRESSE_MAIL_ABSENTE'
-			 Return 0				 
-		 End 
-	End
-
-
-  -- Cas de retour n'étant pas des erreurs
-  If @iRet in ( -9, -10 )
-   Begin
-	Select @asCasRetour =
-	Case @iRet
---		When -7 Then 'ADRESSE_MAIL_ABSENTE'
-		When -9 Then 'OPTION_DP_NON_PARAM'
-		When -10 Then 'BASE_NON_PRO_SUR_SERVEUR_PRO'
-	End 
-	Return 0
-   End
-
-  -- Problème suite éxécution
-  If @iRet <> 0 Return @iRet
-
-  -- Si ce n'est pas un envoi au client, il n'y a pas de mail à envoyer
-  If Upper ( sysadm.FN_TRIM ( @asDestCli ) ) <> 'CLIENT'
-   Begin
-	Set @asCasRetour = 'ENVOI_AUTRE_QUE_CLIENT'
-	Return 0
-   End
-
-
-  -- [MANTIS11464]
-  -- [DT100]
-
-  If Not Exists (
-					Select 1
-					from sysadm.commande c1
-					Where c1.id_sin = @adcIdSin
-					and	  c1.id_seq = @aiIdSeq
-					and ( c1.id_typ_art not in ( 'DEV', 'AEF', 'CAS', 'SMS', 'BAM', 'ALE', 'ACC', 'PCM', 'MAI', 'REL', 'PST', 'RES', 'REA', 'PRS', 'EDI', 'RST' )		
-						  Or 
-						  ( c1.id_typ_art in ( 'RST' ) And sysadm.FN_CLE_VAL ( 'RST_CMDE+SUIVI', rtrim ( c1.info_spb_frn_cplt), ';'  ) = 'OUI' )
-						  Or 
-						  ( @MailRep > 0 And c1.id_typ_art = 'PRS' And @aiStatusGc = 2 )
-						  Or 
-						  ( c1.id_typ_art in ( 'PST' ) And sysadm.FN_CLE_VAL ( 'TYP_RELAI', rtrim ( c1.info_spb_frn_cplt), ';'  ) = 'PRET' )
-						  Or 
-						  ( c1.id_ref_four = 'REFUSE_A_REEXP' and @aiStatusGc = 155 ) -- [DT288-4]
-						  Or 
-						  (	    sysadm.FN_CLE_VAL ( 'APP_SWAP', @asChaine, ';' )= 'OUI' ) -- [DT288-4]
-						)
-					and   @aiStatusGc not in ( 176, 239 ) -- [DT94][MANTIS12366)
-				)
-	Begin
-		Set @asCasRetour = 'CAS_NON_ELIGIBLE'
-		Return 0
-	End 
-
- -- [PC202553_SELECTRA][CDCSINV3][MANTIS33658]
-    If Exists ( 
-		Select Top 1 1 
-		From sysadm.det_pro dp
-		Where dp.id_prod = @dcIdProd
-		And dp.id_code_dp = 356
-		And sysadm.FN_CLE_VAL ( 'ID_FOUR', rtrim ( val_car ) + rtrim ( val_car2 ), ';' ) = @sIdFour
-		And sysadm.FN_CLE_VAL ( 'ID_TYP_ART', rtrim ( val_car ) + rtrim ( val_car2 ), ';' ) = @sIdTypArt 
-	  )
-	  Begin
-		Set @asCasRetour = 'DP356_BLOQUANTE'
-		Return 0
-	  End 
-
-  -- y a-t-il eu déjà un envoi à l'assuré
-  Select @dtDteEnvCliActuel = c.dte_env_cli,
-	 @sIdFour = c.id_four,
-	 @sIdRefFour = IsNull ( sysadm.FN_TRIM (c.id_ref_four ), ''), -- [DT141]
-	 @sMarque = IsNull ( sysadm.FN_TRIM ( c.id_marq_art ), ''), -- [DT141]
-	 @sModele = IsNull ( sysadm.FN_TRIM ( c.id_modl_art ), ''), -- [DT141]
-	 @sCodeEtat = sysadm.FN_TRIM ( c.cod_etat ),
-	 @sNomTrsp  = sysadm.FN_TRIM ( c.adrfc_nom ), -- #3 [DCMP080399] Le nom de transporteur est dans adrfc_nom
-	 @sIdTypArt = c.id_typ_art,
-	 @sAdrCodCiv = IsNull ( sysadm.FN_CODE_NUM ( c.adr_cod_civ, '-CI'), '') ,
-	 @sAdrNom = IsNull ( c.adr_nom, ''),
-	 @sAdrPrenom = IsNull ( c.adr_prenom, ''),
-	 @sAdrLivr1 = IsNull ( c.adr_livr1, ''),
-	 @sAdrLivr2 = IsNull ( c.adr_livr2, ''),	 
-	 @sAdrLivrCpl = IsNull ( c.adr_livr_cpl, ''),
-	 @sAdrCp =IsNull ( c.adr_cp, ''),
-	 @sAdrVille = IsNull ( c.adr_ville, ''),
-	 @sAltQuarant = Convert ( Varchar (5), c.id_seq), -- [PM246]
-	 @sCodePickUp = sysadm.FN_CLE_VAL ( 'CODE_PICK_UP', RTRIM( c.info_spb_frn_cplt ), ';' ), -- [PM255]
-	 @sInfoSpbFrnCplt = c.info_spb_frn_cplt,
-	 @iInfoSpbFrn = c.info_spb_frn, -- [MANTIS14477]
-	 @iIrreparable = 0,
-	 @sMarqApp = s.marq_port, -- [DT288-4]
-	 @sModlApp = s.modl_port, -- [PM250-2]
-	 @sNumBonTrspActuel = c.id_bon_transp -- [DT288-4]
-
-  From   sysadm.commande c,
-		 sysadm.sinistre s
-  Where  c.id_sin = @adcIdSin
-  And    c.id_seq = @aiIdSeq
-  And    s.id_sin = c.id_sin
-
-  If sysadm.FN_CLE_VAL ( 'APP_SWAP', @asChaine, ';' )= 'OUI' 
-	Begin 
-		Set @sMarque = sysadm.FN_CLE_VAL ( 'MARQSW', @asChaine, ';' )
-		Set @sModele = sysadm.FN_CLE_VAL ( 'MODLSW', @asChaine, ';' )
-	End 
-
-  If CharIndex ( 'STOCK', @sMarque, 1 ) > 0 Set @sMarque = ''
-  If CharIndex ( 'STOCK', @sModele, 1 ) > 0 Set @sModele = ''  
-
-  -- [DT141][MANTIS15361]
-  If @sIdRefFour = 'CMDE_A_CPLTER'
-   Begin
-	 Set @sMarque = sysadm.FN_CLE_VAL ( 'MARQ_REMPL', rtrim ( @asChaine ) , ';')
-	 Set @sModele = sysadm.FN_CLE_VAL ( 'MODL_REMPL', rtrim ( @asChaine ) , ';')
-   End        
-  
-  -- [DT361]
-  -- Pour les fournisseurs qui remette la marque dans leur modele, on vire la marque du modèle
-  Set @sModele = Replace ( @sModele, @sMarque, '' ) 
+  Set @asCasRetour = ''  
+  Set @sMailBody = ''  
+  Set @asHREFURL = ''  
+  Set @sSaut = Char (10)  
+  Set @iRet = 0  
+  Set @asIdAppli = Upper ( @asIdAppli )  
+  Set @sTopSMS = 0 -- [PC877]  
+  Set @iLongMaxSMS = 160  
+  Set @iVarianteSMS = 0  
+  Set @iSwap = 0 -- [PM250-2]  
    
-  -- [PM250-2]
-  	Set @iPresencePret = 0
-	If Exists ( 
-		Select 1
-		From   sysadm.commande c
-		Where  c.id_sin = @adcIdSin
-		And c.id_typ_art = 'PST'
-		And Len ( sysadm.FN_CLE_VAL ( 'TYP_APP_PRET', RTRIM( c.info_spb_frn_cplt ), ';' )) > 0 
-		And c.cod_etat <> 'ANN'
-		)
-		Begin 
-			Set @iPresencePret = 1
-		End 
-
-  -- [PM250-2]
-  Set @iCasSwapDiagPrincipeV3 = 0
-	If Exists ( 
-		Select 1
-		From   sysadm.commande c,
-			   sysadm.commande c1,
-			   sysadm.sinistre s,
-			   sysadm.det_pro dp
-		Where  s.id_sin = @adcIdSin
-		And	   dp.id_prod = s.id_prod
-		And	   dp.id_code_dp = 239
-		And	   c.id_sin = s.id_sin
-		And    c.id_ref_four = 'A_DIAGNOSTIQUER'
-		And	   c.cod_etat <> 'ANN'
-		And	   c1.id_sin = s.id_sin
-		And    sysadm.FN_A_COMMANDER ( c1.id_sin, c1.id_seq, 'P' ) = 'A_COMMANDER'
-		And	   c1.cod_etat <> 'ANN'
-		And	   Not Exists ( 
-				Select 1
-				From	sysadm.commande c2
-				Where   c2.id_sin = s.id_sin
-				And		c2.id_typ_art = 'PRS'
-			   )
-		)
-		Begin 
-			Set @iCasSwapDiagPrincipeV3 = 1
-		End 		
-	 
--- [PC938_ORANGE_V3]
-  If Upper ( @sIdTypArt ) in ( 'REL' )
-   Begin
-	Set @asCasRetour = 'TYP_ART_NON_AUTORISE'
-	Return 0
-   End
+  Set @sNumImeiNouv = sysadm.FN_CLE_VAL ( 'NUM_IMEI_NOU', @asChaine, ';' ) -- [DT361-1]  
+  
+  -- Option de déclenchement du mail -DP  
+  Set @iOptionDP = 50  
+  
+  If ( @adtDteEnvCli is null ) Or ( @asDestCli is null ) Or ( sysadm.FN_TRIM ( @asDestCli ) = '' )  
+   Begin  
+ Set @asCasRetour = 'PARAM_NON_RENSEIGNES'  
+ Return 0  
+   End  
+  
+  -- Récupération des données standard nécessaires à l'envoi du mail  
+  Exec @iRet = sysadm.PS_S01_RECUP_DONNEES_MAIL   
+ @adcIdSin,  
+ @asBase,  
+  @iOptionDP,  
+ @dcIdProd   OUTPUT,   
+ @sLibProd   OUTPUT,   
+ @sNumProd   OUTPUT,     
+ @dcIdEts    OUTPUT,   
+ @sCiv     OUTPUT,   
+ @sNom     OUTPUT,   
+    @sMailFrom  OUTPUT,   
+ @sMailSend  OUTPUT,   
+ @sMailCc    OUTPUT,  
+ @sAltQuarant OUTPUT,  
+ @sBoiteMail OUTPUT, -- #2  
+ @sAltSuiviSMS OUTPUT, -- #4 [FNAC_PROD_ECH_TECH].[SMS]  
+ @sNumGsmSMS  OUTPUT -- #4 [FNAC_PROD_ECH_TECH].[SMS]  
+  
+   
+ Set @MailRep = 1   
+  
+  
+  -- [PM246]  
+  If @iRet = -7   
+    Begin  
+  If @MailRep > 0   
+   Begin  
+   -- Le but pour Orange V3 et de toujours mettre une adresse mail si l'adresse réél n'est pas là, pour justement  
+   -- déclencher l'échec de distribution et donc envoyer le courrier en automatique.  
+   Set @sMailSend = 'DeclEchecDistrib@spb.fr'  
+   Set @iRet = 0     
+   End  
+  Else  
+   Begin  
+    Set @asCasRetour = 'ADRESSE_MAIL_ABSENTE'  
+    Return 0       
+   End   
+ End  
+  
+  
+  -- Cas de retour n'étant pas des erreurs  
+  If @iRet in ( -9, -10 )  
+   Begin  
+ Select @asCasRetour =  
+ Case @iRet  
+--  When -7 Then 'ADRESSE_MAIL_ABSENTE'  
+  When -9 Then 'OPTION_DP_NON_PARAM'  
+  When -10 Then 'BASE_NON_PRO_SUR_SERVEUR_PRO'  
+ End   
+ Return 0  
+   End  
+  
+  -- Problème suite éxécution  
+  If @iRet <> 0 Return @iRet  
+  
+  -- Si ce n'est pas un envoi au client, il n'y a pas de mail à envoyer  
+  If Upper ( sysadm.FN_TRIM ( @asDestCli ) ) <> 'CLIENT'  
+   Begin  
+ Set @asCasRetour = 'ENVOI_AUTRE_QUE_CLIENT'  
+ Return 0  
+   End  
+  
+  
+  -- [MANTIS11464]  
+  -- [DT100]  
+  
+  If Not Exists (  
+     Select 1  
+     from sysadm.commande c1  
+     Where c1.id_sin = @adcIdSin  
+     and   c1.id_seq = @aiIdSeq  
+     and ( c1.id_typ_art not in ( 'DEV', 'AEF', 'CAS', 'SMS', 'BAM', 'ALE', 'ACC', 'PCM', 'MAI', 'REL', 'PST', 'RES', 'REA', 'PRS', 'EDI', 'RST' )    
+        Or   
+        ( c1.id_typ_art in ( 'RST' ) And sysadm.FN_CLE_VAL ( 'RST_CMDE+SUIVI', rtrim ( c1.info_spb_frn_cplt), ';'  ) = 'OUI' )  
+        Or   
+        ( @MailRep > 0 And c1.id_typ_art = 'PRS' And @aiStatusGc = 2 )  
+        Or   
+        ( c1.id_typ_art in ( 'PST' ) And sysadm.FN_CLE_VAL ( 'TYP_RELAI', rtrim ( c1.info_spb_frn_cplt), ';'  ) = 'PRET' )  
+        Or   
+        ( c1.id_ref_four = 'REFUSE_A_REEXP' and @aiStatusGc = 155 ) -- [DT288-4]  
+        Or   
+        (     sysadm.FN_CLE_VAL ( 'APP_SWAP', @asChaine, ';' )= 'OUI' ) -- [DT288-4]  
+      )  
+     and   @aiStatusGc not in ( 176, 239 ) -- [DT94][MANTIS12366)  
+    )  
+ Begin  
+  Set @asCasRetour = 'CAS_NON_ELIGIBLE'  
+  Return 0  
+ End   
+  
  
-  -- La date actuelle lu de la base n'est pas nulle et l'état est différent de RSP, donc le mobile a déjà été envoyé au client.
-  -- [DT288-4]
-	If ( @dtDteEnvCliActuel is not null ) And ( @sCodeEtat <> 'RSP' ) And ( ( @asNumBonTrsp = @sNumBonTrspActuel And @asNumBonTrsp is not null and @sNumBonTrspActuel is not null ) )
-	 Begin
-		Set @asCasRetour = 'MOB_DEJA_ENVOYE'
-		Return 0
-	 End 
-  -- Gestion de la civilité "Madame, Monsieur"
-  If @sNom <> ''
+  -- y a-t-il eu déjà un envoi à l'assuré  
+  Select @dtDteEnvCliActuel = c.dte_env_cli,  
+  @sIdFour = c.id_four,  
+  @sIdRefFour = IsNull ( sysadm.FN_TRIM (c.id_ref_four ), ''), -- [DT141]  
+  @sMarque = IsNull ( sysadm.FN_TRIM ( c.id_marq_art ), ''), -- [DT141]  
+  @sModele = IsNull ( sysadm.FN_TRIM ( c.id_modl_art ), ''), -- [DT141]  
+  @sCodeEtat = sysadm.FN_TRIM ( c.cod_etat ),  
+  @sNomTrsp  = sysadm.FN_TRIM ( c.adrfc_nom ), -- #3 [DCMP080399] Le nom de transporteur est dans adrfc_nom  
+  @sIdTypArt = c.id_typ_art,  
+  @sAdrCodCiv = IsNull ( sysadm.FN_CODE_NUM ( c.adr_cod_civ, '-CI'), '') ,  
+  @sAdrNom = IsNull ( c.adr_nom, ''),  
+  @sAdrPrenom = IsNull ( c.adr_prenom, ''),  
+  @sAdrLivr1 = IsNull ( c.adr_livr1, ''),  
+  @sAdrLivr2 = IsNull ( c.adr_livr2, ''),    
+  @sAdrLivrCpl = IsNull ( c.adr_livr_cpl, ''),  
+  @sAdrCp =IsNull ( c.adr_cp, ''),  
+  @sAdrVille = IsNull ( c.adr_ville, ''),  
+  @sAltQuarant = Convert ( Varchar (5), c.id_seq), -- [PM246]  
+  @sCodePickUp = sysadm.FN_CLE_VAL ( 'CODE_PICK_UP', RTRIM( c.info_spb_frn_cplt ), ';' ), -- [PM255]  
+  @sInfoSpbFrnCplt = c.info_spb_frn_cplt,  
+  @iInfoSpbFrn = c.info_spb_frn, -- [MANTIS14477]  
+  @iIrreparable = 0,  
+  @sMarqApp = s.marq_port, -- [DT288-4]  
+  @sModlApp = s.modl_port, -- [PM250-2]  
+  @sNumBonTrspActuel = c.id_bon_transp -- [DT288-4]  
+  
+  From   sysadm.commande c,  
+   sysadm.sinistre s  
+  Where  c.id_sin = @adcIdSin  
+  And    c.id_seq = @aiIdSeq  
+  And    s.id_sin = c.id_sin  
+
+  -- [ISM344831]
+  If @sIdTypArt = 'CAF'
    Begin
-    Set @sCiv = @sCiv + ' ' + @sNom + ','
+	  -- On n'envoie pas le mail dans ce cas car il se formate mal par rapport au contexte.
+	  -- Mais on simule que l'envoi ait bien fonctionné pour ne rien faire dysfonctionner derrière
+	  Set @asCasRetour = 'MAIL_ENVOYE'  
+	  Return 0  
    End 
 
-  -- Armement de l'objet du mail
- Set @sMailObjet = 'Votre dossier n°' + sysadm.FN_TRIM ( Right ( Replicate ( '0', 10 ) + Convert ( VarChar, @adcIdSin ), 10 ) ) + ' ' + @sLibProd -- [PI062]
+ -- [PC202553_SELECTRA][CDCSINV3][MANTIS33658]  
+  If Exists (   
+  Select Top 1 1   
+  From sysadm.det_pro dp  
+  Where dp.id_prod = @dcIdProd  
+  And dp.id_code_dp = 356  
+  And sysadm.FN_CLE_VAL ( 'ID_FOUR', rtrim ( val_car ) + rtrim ( val_car2 ), ';' ) = @sIdFour  
+  And sysadm.FN_CLE_VAL ( 'ID_TYP_ART', rtrim ( val_car ) + rtrim ( val_car2 ), ';' ) = @sIdTypArt   
+   )  
+   Begin  
+	  Set @asCasRetour = 'DP356_BLOQUANTE'  
+	  Return 0  
+   End   
 
-  -- Armement du corps du mail
-  Set @sMailBody  = @sMailBody  + @sCiv
-  Set @sMailBody  = @sMailBody  + @sSaut
-  Set @sMailBody  = @sMailBody  + @sSaut
-  -- #3 [DCMP080399] Le nom de transporteur est dans adr_fc_nom
-  -- Set @sMailBody  = @sMailBody  + 'Votre mobile ' + @sMarque + ' ' + @sModele + ' vous a été envoyé le ' + Convert ( VarChar, @adtDteEnvCli, 103 ) + '.'
-  -- remplacé par :
-
-	  If @MailRep > 0 And @sIdTypArt = 'PRS' And @aiStatusGc = 2
-		Begin
-		  	Set @sMailBody  = @sMailBody  + 'Nous avons le plaisir de vous informer que votre appareil ' + @sMarque + ' ' + @sModele + ' réparé va vous être renvoyé à l''adresse suivante :'
-		  	
-			-- [MANTIS14477]		  	
-			If @iInfoSpbFrn = 957
-			 Begin
-			  	Set @sMailBody  = @sMailBody  + 'Nous avons le plaisir de vous informer que votre appareil ' + @sMarque + ' ' + @sModele + ' a été réparé à l''adresse suivante :'
-			 End 
-		  	
-			Set @sMailBody  = @sMailBody  + @sSaut
-			Set @sMailBody  = @sMailBody  + @sSaut			
-			Set @sMailBody  = @sMailBody  + rtrim ( @sAdrCodCiv ) + ' ' + rtrim( @sAdrNom )
-			
-			--[DT191-2][MANTIS20745]
-			If Len ( @sCodePickUp ) > 0 
-			 Begin
-				Set @sMailBody  = @sMailBody  + @sSaut
-			 End
-			Else
-			 Begin
-				Set @sMailBody  = @sMailBody  + ' ' 
-			 End 
-
-			Set @sMailBody  = @sMailBody  + rTrim ( @sAdrPrenom ) + @sSaut
-			--/[DT191-2][MANTIS20745]
-
-			Set @sMailBody  = @sMailBody  + rtrim ( @sAdrLivr1 ) + @sSaut
-			
-			If @sAdrLivr2 is not null and LEN ( sysadm.FN_TRIM (  @sAdrLivr2 ) ) > 0 
-			 Begin
-				Set @sMailBody  = @sMailBody  + rtrim (@sAdrLivr2 )  + @sSaut
-			 End
-			
-			If  @sAdrLivrCpl is not null and LEN ( sysadm.FN_TRIM (  @sAdrLivrCpl ) ) > 0 
-			 Begin
-				Set @sMailBody  = @sMailBody  + rtrim (@sAdrLivrCpl) + @sSaut
-			 End
-			 
-			Set @sMailBody  = @sMailBody  + @sAdrCp + @sSaut
-			Set @sMailBody  = @sMailBody  + @sAdrVille + @sSaut	 
-			
-			-- [PM255]
-			If Len ( @sCodePickUp ) > 0 
-			 Begin
-				Set @sMailBody  = @sMailBody  + @sSaut
-				Set @sMailBody  = @sMailBody  + @sSaut					
-				Set @sMailBody  = @sMailBody  + 'Cette adresse correspond à un point relais Pick Up.'
-				Set @sMailBody  = @sMailBody  + @sSaut
-				Set @sMailBody  = @sMailBody  + 'Il vous sera demandé de présenter une pièce d''identité.'
-			 End 
-			 
-			If @iPresencePret > 0 
-			 Begin
-				-- [PM250-2]
-				Set @sMailBody  = @sMailBody  + @sSaut
-				Set @sMailBody  = @sMailBody  + @sSaut
-				Set @sMailBody  = @sMailBody  + 'En échange, vous devrez redonner l''appareil de prêt (et ses accessoires) dont vous avez bénéficié dans le cadre de votre contrat.'			 				
-				Set @sMailBody  = @sMailBody  + @sSaut
-				Set @sMailBody  = @sMailBody  + 'Pour cela vous recevrez dans un second mail une fiche d''instruction - bon d''échange.'			 
-				Set @sMailBody  = @sMailBody  + @sSaut
-				Set @sMailBody  = @sMailBody  + 'Nous vous demandons de bien vouloir l''imprimer, la signer et la remettre au chauffeur Chronopost lors de l''échange des appareils.'
-				Set @sMailBody  = @sMailBody  + @sSaut				
-
-				-- [PM250-2]
-				Exec sysadm.PS_I_MAIL_RETOUR_PRET_FICHE_14 @asIdAppli, @asBase, @iOptionDP, @adcIdSin
-				
-			 End 			 
-		End 
-	  Else
-	    Begin
-
-			-- [DT100]
-			If @sIdTypArt = 'PST' And Len ( sysadm.FN_CLE_VAL ( 'TYP_APP_PRET', RTRIM( @sInfoSpbFrnCplt ), ';' )) > 0 
-				Begin
-				 -- [PM250-2]
-				 Set @sMailBody  = @sMailBody  + 'Nous avons le plaisir de vous informer que votre appareil de prêt vous a été envoyé le ' + Convert ( VarChar, @adtDteEnvCli, 103 ) + ' à l''adresse suivante :'			 
-				End 
-			Else
-				Begin
-				 -- [DT288-4]
-					 If @sIdRefFour = 'REFUSE_A_REEXP'
-					   Begin
-						 Set @sMailBody  = @sMailBody  + 'Nous vous informons que votre appareil sinistré ' + @sMarqApp + ' ' + @sModlApp + ' vous a été renvoyé le ' + Convert ( VarChar, @adtDteEnvCli, 103 ) + ' à l''adresse suivante :'
-					   End 
-					 Else
-					   Begin
-						 Set @iSwap = 1 -- [PM250-2]
-						 Set @sMailBody  = @sMailBody  + 'Nous avons le plaisir de vous informer que votre appareil de remplacement ' + @sMarque + ' ' + @sModele + ' vous a été envoyé le ' + Convert ( VarChar, @adtDteEnvCli, 103 ) + ' à l''adresse suivante :'
-
-						-- Gestion SAMSUNG ? => Trt part
-						If Exists (	Select * 
-									from sysadm.det_pro dp,
-											sysadm.w_sin s
-									Where s.id_sin = @adcIdSin 
-									And   dp.id_prod = s.id_prod
-									And   dp.id_code_dp = 294
-							)
-							Begin
-								Exec sysadm.PS_S_MAILPUSH_DT361_INFO_REMPL @adcIdSin, @aiIdSeq, @sMarque, @sModele, @sNumImeiNouv, @asCasRetour OUTPUT
-							End 
-						ENd 
-				End 
-
-			 
-			Set @sMailBody  = @sMailBody  + @sSaut
-			Set @sMailBody  = @sMailBody  + @sSaut			
-			Set @sMailBody  = @sMailBody  + rtrim ( @sAdrCodCiv ) + ' ' + rtrim( @sAdrNom ) + ' ' 
-			
-			-- [DT191-1]
-			If Len ( @sCodePickUp ) > 0 
-			 Begin			
-				Set @sMailBody  = @sMailBody  + @sSaut
-			 End 
-
-			Set @sMailBody  = @sMailBody  + rTrim ( @sAdrPrenom ) + @sSaut
-			Set @sMailBody  = @sMailBody  + rtrim ( @sAdrLivr1 ) + @sSaut
-			
-			If @sAdrLivr2 is not null and LEN ( sysadm.FN_TRIM (  @sAdrLivr2 ) ) > 0 
-			 Begin
-				Set @sMailBody  = @sMailBody  + rtrim (@sAdrLivr2 )  + @sSaut
-			 End
-			
-			If  @sAdrLivrCpl is not null and LEN ( sysadm.FN_TRIM (  @sAdrLivrCpl ) ) > 0 
-			 Begin
-				Set @sMailBody  = @sMailBody  + rtrim (@sAdrLivrCpl) + @sSaut
-			 End
-			 
-			Set @sMailBody  = @sMailBody  + @sAdrCp + @sSaut
-			Set @sMailBody  = @sMailBody  + @sAdrVille + @sSaut	 			 
-		 
-			 
-			-- [PM255]
-			If Len ( @sCodePickUp ) > 0 
-			 Begin			
-				Set @sMailBody  = @sMailBody  + @sSaut
-				Set @sMailBody  = @sMailBody  + @sSaut					
-				Set @sMailBody  = @sMailBody  + 'Cette adresse correspond à un point relais Pick Up.'
-				Set @sMailBody  = @sMailBody  + @sSaut
-				Set @sMailBody  = @sMailBody  + 'Il vous sera demandé de présenter une pièce d''identité.'
-				Set @sMailBody  = @sMailBody  + @sSaut
-
-			 End
-			 
-			If @sIdTypArt = 'PST' And Len ( sysadm.FN_CLE_VAL ( 'TYP_APP_PRET', RTRIM( @sInfoSpbFrnCplt ), ';' )) > 0 
-			 Begin
-				-- [PM250-2]
-				Set @sMailBody  = @sMailBody  + @sSaut
-				Set @sMailBody  = @sMailBody  + 'Vous recevrez dans un second mail une fiche d''instruction - bon d''échange.'			 
-				Set @sMailBody  = @sMailBody  + @sSaut
-				Set @sMailBody  = @sMailBody  + 'Nous vous demandons de bien vouloir l''imprimer, la signer et la remettre au chauffeur Chronopost lors de l''échange des appareils.'
-				Set @sMailBody  = @sMailBody  + @sSaut				
-
-				-- [PM250-2]
-				Exec sysadm.PS_I_MAIL_PRET_FICHE_15 @asIdAppli, @asBase, @iOptionDP, @adcIdSin
-				
-			 End 
-
-			-- [PM250-2]
-			If @iCasSwapDiagPrincipeV3 > 0 And @iSwap > 0 And CHARINDEX ( 'IPHONE', Upper( @sModlApp ) ) > 0
-			  Begin
-				-- [PM250-2]
-				Set @sMailBody  = @sMailBody  + @sSaut
-				Set @sMailBody  = @sMailBody  + 'Vous recevrez dans un second mail une fiche d''instruction - bon d''échange.'			 
-				Set @sMailBody  = @sMailBody  + @sSaut
-				Set @sMailBody  = @sMailBody  + 'Nous vous demandons de bien vouloir l''imprimer, la signer et la remettre au chauffeur Chronopost lors de l''échange des appareils.'
-				Set @sMailBody  = @sMailBody  + @sSaut				
-					  
-				Exec sysadm.PS_I_MAIL_SWAP_FICHE_19 @asIdAppli, @asBase, @iOptionDP, @adcIdSin
-			  End 
-		 
-	    End
+  
+  If sysadm.FN_CLE_VAL ( 'APP_SWAP', @asChaine, ';' )= 'OUI'   
+ Begin   
+  Set @sMarque = sysadm.FN_CLE_VAL ( 'MARQSW', @asChaine, ';' )  
+  Set @sModele = sysadm.FN_CLE_VAL ( 'MODLSW', @asChaine, ';' )  
+ End   
+  
+  If CharIndex ( 'STOCK', @sMarque, 1 ) > 0 Set @sMarque = ''  
+  If CharIndex ( 'STOCK', @sModele, 1 ) > 0 Set @sModele = ''    
+  
+  -- [DT141][MANTIS15361]  
+  If @sIdRefFour = 'CMDE_A_CPLTER'  
+   Begin  
+  Set @sMarque = sysadm.FN_CLE_VAL ( 'MARQ_REMPL', rtrim ( @asChaine ) , ';')  
+  Set @sModele = sysadm.FN_CLE_VAL ( 'MODL_REMPL', rtrim ( @asChaine ) , ';')  
+ End          
     
-  Set @sMailBody  = @sMailBody  + @sSaut
- 
-  Select @asHREFURL = @asHREFURL + 
-	Case
-
-		-- #3 [DCMP080399] UPS => Lien non directement clickable, l'utilisateur saisira son N° de colis.
-		-- [PM255]
-		/* [DDE_HELENE_20170320] modif url chronopost
-		When Len ( @sCodePickUp ) > 0 
-		 Then 'http://www.chronopost.fr/transport-express/livraison-colis/searchChronoRelais?pid=' + RTRIM ( @sCodePickUp )
-		 */
-
-		When @sNomTrsp = 'UPS'
-		 Then 'http://www.ups.com/content/fr/fr/index.jsx + ( N° Colis : ' + @asNumBonTrsp + ' )'
-
-		-- ChronoPost AA931798942FR
-		-- [DT288-4]
-		When IsNumeric ( Left (@asNumBonTrsp, 2) ) = 0 And IsNumeric ( Right (@asNumBonTrsp, 2) ) = 0 And Len ( @asNumBonTrsp ) = 13
-		 Then 'https://www.chronopost.fr/fr/chrono_suivi_search?listeNumerosLT=' + @asNumBonTrsp
-
-		-- Coliposte 8L41585398663
-		When IsNumeric ( Left (@asNumBonTrsp, 2) ) = 0 And IsNumeric ( Right (@asNumBonTrsp, 2) ) = 1 And Len ( @asNumBonTrsp ) = 13
-		 Then 'http://www.coliposte.net/gp/services/main.jsp?m=10003005&amp;colispart=' + @asNumBonTrsp
-
-		-- Ciblex 24955001116149
-		When isNumeric ( @asNumBonTrsp ) = 1 And Len ( @asNumBonTrsp ) = 14
-		 Then 'http://www.ciblex.fr/extranet/client/corps.php?module=colis&amp;colis=' + @asNumBonTrsp
-
-		Else null
-	End 
-
-  If ( @asHREFURL is not null ) And sysadm.FN_TRIM ( @asHREFURL ) <> '' 
-   Begin 
-    Set @sMailBody  = @sMailBody  + 'Pour suivre l''envoi de votre appareil, cliquez sur le lien ci-dessous : ' 
-    Set @sMailBody  = @sMailBody  + @sSaut
-    Set @sMailBody  = @sMailBody  + @sSaut    
-    Set @sMailBody  = @sMailBody  + @asHREFURL 
-    Set @sMailBody  = @sMailBody  + @sSaut
-    Set @sMailBody  = @sMailBody  + @sSaut        
-   End 
-
-
-  -- [VDOC27477] Stéph. Delesque
-  Set @sMailBody  = @sMailBody + 'Prenez le temps d''ouvrir votre colis, d''examiner et de vérifier l''état de votre appareil lors de la remise de celui-ci. En cas d''anomalie (colis vide, appareil endommagé….) refusez le aussitôt en présence du transporteur ou en point relais puis contactez-nous dans les 48h. Si vous avez accepté le colis sans émettre de réserve sur le bon de transport, aucune anomalie de transport ne pourra être prise en charge.'	
-  Set @sMailBody  = @sMailBody  + @sSaut
-  Set @sMailBody  = @sMailBody  + @sSaut        
-
-  Set @sMailBody  = @sMailBody  + @sSaut
-  Set @sMailBody  = @sMailBody  + 'Nous restons à votre entière disposition pour tout renseignement complémentaire et vous prions d’agréer, ' + @sCiv + ' nos salutations distinguées.'
-  Set @sMailBody  = @sMailBody  + @sSaut
-
-	-- [DT262]
-  Set @sMailBody  = @sMailBody  + @sSaut
-  Set @sMailBody  = @sMailBody  + @sSaut
-  Set @sMailBody  = @sMailBody  + 'Si votre contrat d''assurance dispose d''un site web de gestion de sinistre, vous pouvez à tout moment consulter et télécharger la ou les pièce(s) de votre dossier sur ce site communiqué par notre gestionnaire lors de votre déclaration.'
+  -- [DT361]  
+  -- Pour les fournisseurs qui remette la marque dans leur modele, on vire la marque du modèle  
+  Set @sModele = Replace ( @sModele, @sMarque, '' )   
+     
+  -- [PM250-2]  
+   Set @iPresencePret = 0  
+ If Exists (   
+  Select 1  
+  From   sysadm.commande c  
+  Where  c.id_sin = @adcIdSin  
+  And c.id_typ_art = 'PST'  
+  And Len ( sysadm.FN_CLE_VAL ( 'TYP_APP_PRET', RTRIM( c.info_spb_frn_cplt ), ';' )) > 0   
+  And c.cod_etat <> 'ANN'  
+  )  
+  Begin   
+   Set @iPresencePret = 1  
+  End   
   
-  Set @sMailBody  = @sMailBody  + @sSaut
-  Set @sMailBody  = @sMailBody  + @sSaut
-  Set @sMailBody  = @sMailBody  + '****************************************************************'
-  Set @sMailBody  = @sMailBody  + @sSaut
-  Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'
-  Set @sMailBody  = @sMailBody  + @sSaut
-  Set @sMailBody  = @sMailBody  + '****************************************************************'
-  Set @sMailBody  = @sMailBody  + @sSaut
-  Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'
-
-
---------------------------------------------------------------------------------------------------------------------
--- Gestion des SMS.
---------------------------------------------------------------------------------------------------------------------
-  If @iVarianteSMS between 1 and 100 -- #5 [FNAC_PROD_ECH_TECH].[SMS]
-   Begin
-	Set @sTopSMS = 1 
-
-	-- 1/ Confirmation réception appareil en atelier : 
-	-- Récup lib produit -DP/66
-	Select @sVal = IsNull ( sysadm.FN_TRIM ( d.val_car ), '')
-	From   sysadm.det_pro d
-	Where  d.id_prod = @dcIdProd
-	And    d.id_code_dp = 228 -- [PC877]
-
-	If @sVal is null Or sysadm.FN_TRIM (@sVal) = '' Set @sVal = ''
-	If Len ( @sVal ) > 0 Set @sVal = @sVal + '.'
-
-	If @iVarianteSMS = 1
-	  Begin
-	    Set @sSmsBody = @sVal + 'Bonjour, votre appareil a été envoyé à votre adresse ce jour. Nous vous en souhaitons d’avance bonne réception. SPB'
-	  End
-   End
-
-
-  -- On convertit pour l'appel de la PS
-  Set @iIdSin  = Convert ( integer, @adcIdSin )
-  Set @iIdProd = Convert ( integer, @dcIdProd )
-  Set @iIdEts  = Convert ( integer, @dcIdEts )
+  -- [PM250-2]  
+  Set @iCasSwapDiagPrincipeV3 = 0  
+ If Exists (   
+  Select 1  
+  From   sysadm.commande c,  
+      sysadm.commande c1,  
+      sysadm.sinistre s,  
+      sysadm.det_pro dp  
+  Where  s.id_sin = @adcIdSin  
+  And    dp.id_prod = s.id_prod  
+  And    dp.id_code_dp = 239  
+  And    c.id_sin = s.id_sin  
+  And    c.id_ref_four = 'A_DIAGNOSTIQUER'  
+  And    c.cod_etat <> 'ANN'  
+  And    c1.id_sin = s.id_sin  
+  And    sysadm.FN_A_COMMANDER ( c1.id_sin, c1.id_seq, 'P' ) = 'A_COMMANDER'  
+  And    c1.cod_etat <> 'ANN'  
+  And    Not Exists (   
+    Select 1  
+    From sysadm.commande c2  
+    Where   c2.id_sin = s.id_sin  
+    And  c2.id_typ_art = 'PRS'  
+      )  
+  )  
+  Begin   
+   Set @iCasSwapDiagPrincipeV3 = 1  
+  End     
+    
+-- [PC938_ORANGE_V3]  
+  If Upper ( @sIdTypArt ) in ( 'REL' )  
+   Begin  
+ Set @asCasRetour = 'TYP_ART_NON_AUTORISE'  
+ Return 0  
+   End  
    
-  If @sTopSMS = 1 
-    Begin
-	If @iVarianteSMS between 1 and 100
- 	  Begin
-	   -- Param lié à la variante
-		Set @sLogin   = 'spbCD'
-		Set @sMdPasse = 'i3m2i2d2'
-		Set @sCodeTrt = 'NETSIZE'
-	  End 
-    End
+  -- La date actuelle lu de la base n'est pas nulle et l'état est différent de RSP, donc le mobile a déjà été envoyé au client.  
+  -- [DT288-4]  
+ If ( @dtDteEnvCliActuel is not null ) And ( @sCodeEtat <> 'RSP' ) And ( ( @asNumBonTrsp = @sNumBonTrspActuel And @asNumBonTrsp is not null and @sNumBonTrspActuel is not null ) )  
+  Begin  
+  Set @asCasRetour = 'MOB_DEJA_ENVOYE'  
+  Return 0  
+  End   
+  -- Gestion de la civilité "Madame, Monsieur"  
+  If @sNom <> ''  
+   Begin  
+    Set @sCiv = @sCiv + ' ' + @sNom + ','  
+   End   
+  
+  -- Armement de l'objet du mail  
+ Set @sMailObjet = 'Votre dossier n°' + sysadm.FN_TRIM ( Right ( Replicate ( '0', 10 ) + Convert ( VarChar, @adcIdSin ), 10 ) ) + ' ' + @sLibProd -- [PI062]  
+  
+  -- Armement du corps du mail  
+  Set @sMailBody  = @sMailBody  + @sCiv  
+  Set @sMailBody  = @sMailBody  + @sSaut  
+  Set @sMailBody  = @sMailBody  + @sSaut  
+  -- #3 [DCMP080399] Le nom de transporteur est dans adr_fc_nom  
+  -- Set @sMailBody  = @sMailBody  + 'Votre mobile ' + @sMarque + ' ' + @sModele + ' vous a été envoyé le ' + Convert ( VarChar, @adtDteEnvCli, 103 ) + '.'  
+  -- remplacé par :  
+  
+   If @MailRep > 0 And @sIdTypArt = 'PRS' And @aiStatusGc = 2  
+  Begin  
+     Set @sMailBody  = @sMailBody  + 'Nous avons le plaisir de vous informer que votre appareil ' + @sMarque + ' ' + @sModele + ' réparé va vous être renvoyé à l''adresse suivante :'  
+       
+   -- [MANTIS14477]       
+   If @iInfoSpbFrn = 957  
+    Begin  
+      Set @sMailBody  = @sMailBody  + 'Nous avons le plaisir de vous informer que votre appareil ' + @sMarque + ' ' + @sModele + ' a été réparé à l''adresse suivante :'  
+    End   
+       
+   Set @sMailBody  = @sMailBody  + @sSaut  
+   Set @sMailBody  = @sMailBody  + @sSaut     
+   Set @sMailBody  = @sMailBody  + rtrim ( @sAdrCodCiv ) + ' ' + rtrim( @sAdrNom )  
+     
+   --[DT191-2][MANTIS20745]  
+   If Len ( @sCodePickUp ) > 0   
+    Begin  
+    Set @sMailBody  = @sMailBody  + @sSaut  
+    End  
+   Else  
+    Begin  
+    Set @sMailBody  = @sMailBody  + ' '   
+    End   
+  
+   Set @sMailBody  = @sMailBody  + rTrim ( @sAdrPrenom ) + @sSaut  
+   --/[DT191-2][MANTIS20745]  
+  
+   Set @sMailBody  = @sMailBody  + rtrim ( @sAdrLivr1 ) + @sSaut  
+     
+   If @sAdrLivr2 is not null and LEN ( sysadm.FN_TRIM (  @sAdrLivr2 ) ) > 0   
+    Begin  
+    Set @sMailBody  = @sMailBody  + rtrim (@sAdrLivr2 )  + @sSaut  
+    End  
+     
+   If  @sAdrLivrCpl is not null and LEN ( sysadm.FN_TRIM (  @sAdrLivrCpl ) ) > 0   
+    Begin  
+    Set @sMailBody  = @sMailBody  + rtrim (@sAdrLivrCpl) + @sSaut  
+    End  
+      
+   Set @sMailBody  = @sMailBody  + @sAdrCp + @sSaut  
+   Set @sMailBody  = @sMailBody  + @sAdrVille + @sSaut    
+     
+   -- [PM255]  
+   If Len ( @sCodePickUp ) > 0   
+    Begin  
+    Set @sMailBody  = @sMailBody  + @sSaut  
+    Set @sMailBody  = @sMailBody  + @sSaut       
+    Set @sMailBody  = @sMailBody  + 'Cette adresse correspond à un point relais Pick Up.'  
+    Set @sMailBody  = @sMailBody  + @sSaut  
+    Set @sMailBody  = @sMailBody  + 'Il vous sera demandé de présenter une pièce d''identité.'  
+    End   
+      
+   If @iPresencePret > 0   
+    Begin  
+    -- [PM250-2]  
+    Set @sMailBody  = @sMailBody  + @sSaut  
+    Set @sMailBody  = @sMailBody  + @sSaut  
+    Set @sMailBody  = @sMailBody  + 'En échange, vous devrez redonner l''appareil de prêt (et ses accessoires) dont vous avez bénéficié dans le cadre de votre contrat.'          
+    Set @sMailBody  = @sMailBody  + @sSaut  
+    Set @sMailBody  = @sMailBody  + 'Pour cela vous recevrez dans un second mail une fiche d''instruction - bon d''échange.'      
+    Set @sMailBody  = @sMailBody  + @sSaut  
+    Set @sMailBody  = @sMailBody  + 'Nous vous demandons de bien vouloir l''imprimer, la signer et la remettre au chauffeur Chronopost lors de l''échange des appareils.'  
+    Set @sMailBody  = @sMailBody  + @sSaut      
+  
+    -- [PM250-2]  
+    Exec sysadm.PS_I_MAIL_RETOUR_PRET_FICHE_14 @asIdAppli, @asBase, @iOptionDP, @adcIdSin  
+      
+    End       
+  End   
+   Else  
+     Begin  
+  
+   -- [DT100]  
+   If @sIdTypArt = 'PST' And Len ( sysadm.FN_CLE_VAL ( 'TYP_APP_PRET', RTRIM( @sInfoSpbFrnCplt ), ';' )) > 0   
+    Begin  
+     -- [PM250-2]  
+     Set @sMailBody  = @sMailBody  + 'Nous avons le plaisir de vous informer que votre appareil de prêt vous a été envoyé le ' + Convert ( VarChar, @adtDteEnvCli, 103 ) + ' à l''adresse suivante :'      
+    End   
+   Else  
+    Begin  
+     -- [DT288-4]  
+      If @sIdRefFour = 'REFUSE_A_REEXP'  
+        Begin  
+       Set @sMailBody  = @sMailBody  + 'Nous vous informons que votre appareil sinistré ' + @sMarqApp + ' ' + @sModlApp + ' vous a été renvoyé le ' + Convert ( VarChar, @adtDteEnvCli, 103 ) + ' à l''adresse suivante :'  
+        End   
+      Else  
+        Begin  
+       Set @iSwap = 1 -- [PM250-2]  
+       Set @sMailBody  = @sMailBody  + 'Nous avons le plaisir de vous informer que votre appareil de remplacement ' + @sMarque + ' ' + @sModele + ' vous a été envoyé le ' + Convert ( VarChar, @adtDteEnvCli, 103 ) + ' à l''adresse suivante :'  
+  
+      -- Gestion SAMSUNG ? => Trt part  
+      If Exists ( Select *   
+         from sysadm.det_pro dp,  
+           sysadm.w_sin s  
+         Where s.id_sin = @adcIdSin   
+         And   dp.id_prod = s.id_prod  
+         And   dp.id_code_dp = 294  
+       )  
+       Begin  
+        Exec sysadm.PS_S_MAILPUSH_DT361_INFO_REMPL @adcIdSin, @aiIdSeq, @sMarque, @sModele, @sNumImeiNouv, @asCasRetour OUTPUT  
+       End   
+      ENd   
+    End   
+  
+      
+   Set @sMailBody  = @sMailBody  + @sSaut  
+   Set @sMailBody  = @sMailBody  + @sSaut     
+   Set @sMailBody  = @sMailBody  + rtrim ( @sAdrCodCiv ) + ' ' + rtrim( @sAdrNom ) + ' '   
+     
+   -- [DT191-1]  
+   If Len ( @sCodePickUp ) > 0   
+    Begin     
+    Set @sMailBody  = @sMailBody  + @sSaut  
+    End   
+  
+   Set @sMailBody  = @sMailBody  + rTrim ( @sAdrPrenom ) + @sSaut  
+   Set @sMailBody  = @sMailBody  + rtrim ( @sAdrLivr1 ) + @sSaut  
+     
+   If @sAdrLivr2 is not null and LEN ( sysadm.FN_TRIM (  @sAdrLivr2 ) ) > 0   
+    Begin  
+    Set @sMailBody  = @sMailBody  + rtrim (@sAdrLivr2 )  + @sSaut  
+    End  
+     
+   If  @sAdrLivrCpl is not null and LEN ( sysadm.FN_TRIM (  @sAdrLivrCpl ) ) > 0   
+    Begin  
+    Set @sMailBody  = @sMailBody  + rtrim (@sAdrLivrCpl) + @sSaut  
+    End  
+      
+   Set @sMailBody  = @sMailBody  + @sAdrCp + @sSaut  
+   Set @sMailBody  = @sMailBody  + @sAdrVille + @sSaut        
+     
+      
+   -- [PM255]  
+   If Len ( @sCodePickUp ) > 0   
+    Begin     
+    Set @sMailBody  = @sMailBody  + @sSaut  
+    Set @sMailBody  = @sMailBody  + @sSaut       
+    Set @sMailBody  = @sMailBody  + 'Cette adresse correspond à un point relais Pick Up.'  
+    Set @sMailBody  = @sMailBody  + @sSaut  
+    Set @sMailBody  = @sMailBody  + 'Il vous sera demandé de présenter une pièce d''identité.'  
+    Set @sMailBody  = @sMailBody  + @sSaut  
+  
+    End  
+      
+   If @sIdTypArt = 'PST' And Len ( sysadm.FN_CLE_VAL ( 'TYP_APP_PRET', RTRIM( @sInfoSpbFrnCplt ), ';' )) > 0   
+    Begin  
+    -- [PM250-2]  
+    Set @sMailBody  = @sMailBody  + @sSaut  
+    Set @sMailBody  = @sMailBody  + 'Vous recevrez dans un second mail une fiche d''instruction - bon d''échange.'      
+    Set @sMailBody  = @sMailBody  + @sSaut  
+    Set @sMailBody  = @sMailBody  + 'Nous vous demandons de bien vouloir l''imprimer, la signer et la remettre au chauffeur Chronopost lors de l''échange des appareils.'  
+    Set @sMailBody  = @sMailBody  + @sSaut      
+  
+    -- [PM250-2]  
+    Exec sysadm.PS_I_MAIL_PRET_FICHE_15 @asIdAppli, @asBase, @iOptionDP, @adcIdSin  
+      
+    End   
+  
+   -- [PM250-2]  
+   If @iCasSwapDiagPrincipeV3 > 0 And @iSwap > 0 And CHARINDEX ( 'IPHONE', Upper( @sModlApp ) ) > 0  
+     Begin  
+    -- [PM250-2]  
+    Set @sMailBody  = @sMailBody  + @sSaut  
+    Set @sMailBody  = @sMailBody  + 'Vous recevrez dans un second mail une fiche d''instruction - bon d''échange.'      
+    Set @sMailBody  = @sMailBody  + @sSaut  
+    Set @sMailBody  = @sMailBody  + 'Nous vous demandons de bien vouloir l''imprimer, la signer et la remettre au chauffeur Chronopost lors de l''échange des appareils.'  
+    Set @sMailBody  = @sMailBody  + @sSaut      
+         
+    Exec sysadm.PS_I_MAIL_SWAP_FICHE_19 @asIdAppli, @asBase, @iOptionDP, @adcIdSin  
+     End   
+     
+     End  
+      
+  Set @sMailBody  = @sMailBody  + @sSaut  
+   
+  Select @asHREFURL = @asHREFURL +   
+ Case  
+  
+  -- #3 [DCMP080399] UPS => Lien non directement clickable, l'utilisateur saisira son N° de colis.  
+  -- [PM255]  
+  /* [DDE_HELENE_20170320] modif url chronopost  
+  When Len ( @sCodePickUp ) > 0   
+   Then 'http://www.chronopost.fr/transport-express/livraison-colis/searchChronoRelais?pid=' + RTRIM ( @sCodePickUp )  
+   */  
+  
+  When @sNomTrsp = 'UPS'  
+   Then 'http://www.ups.com/content/fr/fr/index.jsx + ( N° Colis : ' + @asNumBonTrsp + ' )'  
+  
+  -- ChronoPost AA931798942FR  
+  -- [DT288-4]  
+  When IsNumeric ( Left (@asNumBonTrsp, 2) ) = 0 And IsNumeric ( Right (@asNumBonTrsp, 2) ) = 0 And Len ( @asNumBonTrsp ) = 13  
+   Then 'https://www.chronopost.fr/fr/chrono_suivi_search?listeNumerosLT=' + @asNumBonTrsp  
+  
+  -- Coliposte 8L41585398663  
+  When IsNumeric ( Left (@asNumBonTrsp, 2) ) = 0 And IsNumeric ( Right (@asNumBonTrsp, 2) ) = 1 And Len ( @asNumBonTrsp ) = 13  
+   Then 'http://www.coliposte.net/gp/services/main.jsp?m=10003005&amp;colispart=' + @asNumBonTrsp  
+  
+  -- Ciblex 24955001116149  
+  When isNumeric ( @asNumBonTrsp ) = 1 And Len ( @asNumBonTrsp ) = 14  
+   Then 'http://www.ciblex.fr/extranet/client/corps.php?module=colis&amp;colis=' + @asNumBonTrsp  
+  
+  Else null  
+ End   
+  
+  If ( @asHREFURL is not null ) And sysadm.FN_TRIM ( @asHREFURL ) <> ''   
+   Begin   
+    Set @sMailBody  = @sMailBody  + 'Pour suivre l''envoi de votre appareil, cliquez sur le lien ci-dessous : '   
+    Set @sMailBody  = @sMailBody  + @sSaut  
+    Set @sMailBody  = @sMailBody  + @sSaut      
+    Set @sMailBody  = @sMailBody  + @asHREFURL   
+    Set @sMailBody  = @sMailBody  + @sSaut  
+    Set @sMailBody  = @sMailBody  + @sSaut          
+   End   
+  
+  
+  -- [VDOC27477] Stéph. Delesque  
+  Set @sMailBody  = @sMailBody + 'Prenez le temps d''ouvrir votre colis, d''examiner et de vérifier l''état de votre appareil lors de la remise de celui-ci. En cas d''anomalie (colis vide, appareil endommagé….) refusez le aussitôt en présence du transporteur ou en point relais puis contactez-nous dans les 48h. Si vous avez accepté le colis sans émettre de réserve sur le bon de transport, aucune anomalie de transport ne pourra être prise en charge.'   
+  Set @sMailBody  = @sMailBody  + @sSaut  
+  Set @sMailBody  = @sMailBody  + @sSaut          
+  
+  Set @sMailBody  = @sMailBody  + @sSaut  
+  Set @sMailBody  = @sMailBody  + 'Nous restons à votre entière disposition pour tout renseignement complémentaire et vous prions d’agréer, ' + @sCiv + ' nos salutations distinguées.'  
+  Set @sMailBody  = @sMailBody  + @sSaut  
+  
+ -- [DT262]  
+  Set @sMailBody  = @sMailBody  + @sSaut  
+  Set @sMailBody  = @sMailBody  + @sSaut  
+  Set @sMailBody  = @sMailBody  + 'Si votre contrat d''assurance dispose d''un site web de gestion de sinistre, vous pouvez à tout moment consulter et télécharger la ou les pièce(s) de votre dossier sur ce site communiqué par notre gestionnaire lors de votre déclaration.'  
+    
+  Set @sMailBody  = @sMailBody  + @sSaut  
+  Set @sMailBody  = @sMailBody  + @sSaut  
+  Set @sMailBody  = @sMailBody  + '****************************************************************'  
+  Set @sMailBody  = @sMailBody  + @sSaut  
+  Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'  
+  Set @sMailBody  = @sMailBody  + @sSaut  
+  Set @sMailBody  = @sMailBody  + '****************************************************************'  
+  Set @sMailBody  = @sMailBody  + @sSaut  
+  Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'  
+  
+  
+--------------------------------------------------------------------------------------------------------------------  
+-- Gestion des SMS.  
+--------------------------------------------------------------------------------------------------------------------  
+  If @iVarianteSMS between 1 and 100 -- #5 [FNAC_PROD_ECH_TECH].[SMS]  
+   Begin  
+ Set @sTopSMS = 1   
+  
+ -- 1/ Confirmation réception appareil en atelier :   
+ -- Récup lib produit -DP/66  
+ Select @sVal = IsNull ( sysadm.FN_TRIM ( d.val_car ), '')  
+ From   sysadm.det_pro d  
+ Where  d.id_prod = @dcIdProd  
+ And    d.id_code_dp = 228 -- [PC877]  
+  
+ If @sVal is null Or sysadm.FN_TRIM (@sVal) = '' Set @sVal = ''  
+ If Len ( @sVal ) > 0 Set @sVal = @sVal + '.'  
+  
+ If @iVarianteSMS = 1  
+   Begin  
+     Set @sSmsBody = @sVal + 'Bonjour, votre appareil a été envoyé à votre adresse ce jour. Nous vous en souhaitons d’avance bonne réception. SPB'  
+   End  
+   End  
+  
+  
+  -- On convertit pour l'appel de la PS  
+  Set @iIdSin  = Convert ( integer, @adcIdSin )  
+  Set @iIdProd = Convert ( integer, @dcIdProd )  
+  Set @iIdEts  = Convert ( integer, @dcIdEts )  
+     
+  If @sTopSMS = 1   
+    Begin  
+ If @iVarianteSMS between 1 and 100  
+    Begin  
+    -- Param lié à la variante  
+  Set @sLogin   = 'spbCD'  
+  Set @sMdPasse = 'i3m2i2d2'  
+  Set @sCodeTrt = 'NETSIZE'  
+   End   
+    End  
+  
+  
+  If @@servername = master.dbo.SPB_FN_ServerName ('PRO')  
+  
+   Begin  -- TRACE_MAIL_PRO : Début écriture  
+  
+   Exec @iRet = TRACE_MAIL_PRO.sysadm.PS_I01_MAIL_PUSH_V00   
+  @asIdAppli,  
+  @iIdSin,   
+  @iIdProd,   
+  @sLibProd,   
+  @iIdEts,   
+     @sMailFrom,   
+  @sMailSend,   
+  @sMailCc,  
+  @sMailObjet,  
+  @sMailBody,  
+  @sAltQuarant,  
+  @sBoiteMail, --#2  
+  'M3', -- #2  
+  2 -- #2    
+    
+    
+          If @sTopSMS = 1 -- [PC877]  
+            Begin  
+      
+    -- Au tout dernier moment avant l'envoi, on tronque par la gauche et on  
+    -- ne conserve la partie pertinente sur le droite.  
+    Set @sSmsBody = Right ( @sSmsBody, @iLongMaxSMS )   
+      
+    Exec TRACE_MAIL_PRO.sysadm.PS_I01_SMS_PUSH_V00   
+   @asIdAppli,  
+   @iIdSin,  
+   @iIdProd,  
+   @sLibProd,  
+   @iIdEts,  
+   @sNumGsmSMS,  
+   @sLogin,  
+   @sMdPasse,  
+   @sSmsBody,  
+   @sCodeTrt,  
+   'M3',   
+   2  
+            End   
+    
+  
+   End    -- TRACE_MAIL_PRO : Fin écriture  
+  
+  Else  
+  
+   Begin  -- TRACE_MAIL_TRT : Début écriture  
+  
+   Exec @iRet = TRACE_MAIL_TRT.sysadm.PS_I01_MAIL_PUSH_V00   
+  @asIdAppli,  
+  @iIdSin,   
+  @iIdProd,   
+  @sLibProd,   
+  @iIdEts,   
+         @sMailFrom,   
+  @sMailSend,   
+  @sMailCc,  
+  @sMailObjet,  
+  @sMailBody,  
+  @sAltQuarant,  
+  @sBoiteMail, --#2  
+  'M3', -- #2  
+  2 -- #2  
+    
+    
+          If @sTopSMS = 1 -- [PC877]  
+            Begin  
+  
+    -- Au tout dernier moment avant l'envoi, on tronque par la gauche et on  
+    -- ne conserve la partie pertinente sur le droite.  
+    Set @sSmsBody = Right ( @sSmsBody, @iLongMaxSMS ) -- #5 [FNAC_PROD_ECH_TECH].[SMS]    
+  
+  
+    Exec TRACE_MAIL_TRT.sysadm.PS_I01_SMS_PUSH_V00   
+   @asIdAppli,  
+   @iIdSin,  
+   @iIdProd,  
+   @sLibProd,  
+   @iIdEts,  
+   @sNumGsmSMS,  
+   @sLogin,  
+   @sMdPasse,  
+   @sSmsBody,  
+   @sCodeTrt,  
+   'M3',   
+   2  
+     End  
+  
+   End    -- TRACE_MAIL_TRT : Fin écriture  
+  
+  -- Problème suite éxécution  
+  If @iRet <> 0 Return -20  
+  
+  -- Fin de traitement  
+  Set @asCasRetour = 'MAIL_ENVOYE'  
+  Return 0  
 
-
-  If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
-
-   Begin  -- TRACE_MAIL_PRO : Début écriture
-
-	  Exec @iRet = TRACE_MAIL_PRO.sysadm.PS_I01_MAIL_PUSH_V00 
-		@asIdAppli,
-		@iIdSin, 
-		@iIdProd, 
-		@sLibProd, 
-		@iIdEts, 
-	    @sMailFrom, 
-		@sMailSend, 
-		@sMailCc,
-		@sMailObjet,
-		@sMailBody,
-		@sAltQuarant,
-		@sBoiteMail, --#2
-		'M3', -- #2
-		2 -- #2		
-		
-		
-          If @sTopSMS = 1 -- [PC877]
-            Begin
-		  
-		  -- Au tout dernier moment avant l'envoi, on tronque par la gauche et on
-		  -- ne conserve la partie pertinente sur le droite.
-		  Set @sSmsBody = Right ( @sSmsBody, @iLongMaxSMS ) 
-		  
-		  Exec TRACE_MAIL_PRO.sysadm.PS_I01_SMS_PUSH_V00 
-			@asIdAppli,
-			@iIdSin,
-			@iIdProd,
-			@sLibProd,
-			@iIdEts,
-			@sNumGsmSMS,
-			@sLogin,
-			@sMdPasse,
-			@sSmsBody,
-			@sCodeTrt,
-			'M3', 
-			2
-            End 
-		
-
-   End    -- TRACE_MAIL_PRO : Fin écriture
-
-  Else
-
-   Begin  -- TRACE_MAIL_TRT : Début écriture
-
-	  Exec @iRet = TRACE_MAIL_TRT.sysadm.PS_I01_MAIL_PUSH_V00 
-		@asIdAppli,
-		@iIdSin, 
-		@iIdProd, 
-		@sLibProd, 
-		@iIdEts, 
-	        @sMailFrom, 
-		@sMailSend, 
-		@sMailCc,
-		@sMailObjet,
-		@sMailBody,
-		@sAltQuarant,
-		@sBoiteMail, --#2
-		'M3', -- #2
-		2 -- #2
-		
-		
-          If @sTopSMS = 1 -- [PC877]
-            Begin
-
-		  -- Au tout dernier moment avant l'envoi, on tronque par la gauche et on
-		  -- ne conserve la partie pertinente sur le droite.
-		  Set @sSmsBody = Right ( @sSmsBody, @iLongMaxSMS ) -- #5 [FNAC_PROD_ECH_TECH].[SMS]  
-
-
-		  Exec TRACE_MAIL_TRT.sysadm.PS_I01_SMS_PUSH_V00 
-			@asIdAppli,
-			@iIdSin,
-			@iIdProd,
-			@sLibProd,
-			@iIdEts,
-			@sNumGsmSMS,
-			@sLogin,
-			@sMdPasse,
-			@sSmsBody,
-			@sCodeTrt,
-			'M3', 
-			2
-	    End
-
-   End    -- TRACE_MAIL_TRT : Fin écriture
-
-  -- Problème suite éxécution
-  If @iRet <> 0 Return -20
-
-  -- Fin de traitement
-  Set @asCasRetour = 'MAIL_ENVOYE'
-  Return 0
 Go
 
 --------------------------------------------------------------------
