@@ -1695,6 +1695,7 @@ Go
 --     JFF  25/01/2019   [VDOC27477] Stéph. Delesque
 --     JFF  21/08/2019   [DT361-1]
 --     JFF  31/01/2023   [ISM344831] On n'envoie pas si CAF
+--     JFF  03/02/2023   [RS4521] Modif Push mail BA Physique RDC-Carrefour
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S03_MAILPUSH_ENVTEL_REMP_REPAR_V03' AND type = 'P' )
         DROP procedure sysadm.PS_S03_MAILPUSH_ENVTEL_REMP_REPAR_V03
@@ -1772,7 +1773,9 @@ Declare
   @iInfoSpbFrn Integer , -- [MANTIS14477]  
   @sIdRefFour VarChar ( 20 ), -- [DT141]  
   @sNumBonTrspActuel VarChar ( 50 ), -- [DT288-4]  
-  @sNumImeiNouv VarChar ( 30 ) -- [DT361-1]  
+  @sNumImeiNouv VarChar ( 30 ), -- [DT361-1]  
+  @dcMtTTCcmde Decimal ( 11, 2 ), -- [RS4521]
+  @sBA_PhysiqueCMA VarChar ( 30 ) -- [RS4521]
 
   Set @asCasRetour = ''  
   Set @sMailBody = ''  
@@ -1886,7 +1889,6 @@ Declare
   Set @asCasRetour = 'CAS_NON_ELIGIBLE'  
   Return 0  
  End   
-  
  
   -- y a-t-il eu déjà un envoi à l'assuré  
   Select @dtDteEnvCliActuel = c.dte_env_cli,  
@@ -1912,7 +1914,9 @@ Declare
   @iIrreparable = 0,  
   @sMarqApp = s.marq_port, -- [DT288-4]  
   @sModlApp = s.modl_port, -- [PM250-2]  
-  @sNumBonTrspActuel = c.id_bon_transp -- [DT288-4]  
+  @sNumBonTrspActuel = c.id_bon_transp, -- [DT288-4]  
+  @dcMtTTCcmde = c.mt_ttc_cmde, -- [RS4521]
+  @sBA_PhysiqueCMA = sysadm.FN_CLE_VAL ( 'TYPE_ENVOI', rtrim ( c.info_spb_frn_cplt ), ';') -- [RS4521]
   
   From   sysadm.commande c,  
    sysadm.sinistre s  
@@ -1920,14 +1924,18 @@ Declare
   And    c.id_seq = @aiIdSeq  
   And    s.id_sin = c.id_sin  
 
-  -- [ISM344831]
-  If @sIdTypArt = 'CAF'
+  -- [ISM344831] @sBA_PhysiqueCMA 
+  If @sIdTypArt = 'CAF' And Not ( @sIdFour = ( 'CMA' ) and @sBA_PhysiqueCMA = 'PHYSIQUE' ) 
    Begin
 	  -- On n'envoie pas le mail dans ce cas car il se formate mal par rapport au contexte.
 	  -- Mais on simule que l'envoi ait bien fonctionné pour ne rien faire dysfonctionner derrière
 	  Set @asCasRetour = 'MAIL_ENVOYE'  
 	  Return 0  
    End 
+   
+
+
+
 
  -- [PC202553_SELECTRA][CDCSINV3][MANTIS33658]  
   If Exists (   
@@ -2014,12 +2022,13 @@ Declare
    End  
    
   -- La date actuelle lu de la base n'est pas nulle et l'état est différent de RSP, donc le mobile a déjà été envoyé au client.  
-  -- [DT288-4]  
+  -- [DT288-4]
  If ( @dtDteEnvCliActuel is not null ) And ( @sCodeEtat <> 'RSP' ) And ( ( @asNumBonTrsp = @sNumBonTrspActuel And @asNumBonTrsp is not null and @sNumBonTrspActuel is not null ) )  
   Begin  
-  Set @asCasRetour = 'MOB_DEJA_ENVOYE'  
-  Return 0  
+	  Set @asCasRetour = 'MOB_DEJA_ENVOYE'  
+	  Return 0  
   End   
+
   -- Gestion de la civilité "Madame, Monsieur"  
   If @sNom <> ''  
    Begin  
@@ -2122,23 +2131,33 @@ Declare
         Begin  
        Set @sMailBody  = @sMailBody  + 'Nous vous informons que votre appareil sinistré ' + @sMarqApp + ' ' + @sModlApp + ' vous a été renvoyé le ' + Convert ( VarChar, @adtDteEnvCli, 103 ) + ' à l''adresse suivante :'  
         End   
-      Else  
-        Begin  
-       Set @iSwap = 1 -- [PM250-2]  
-       Set @sMailBody  = @sMailBody  + 'Nous avons le plaisir de vous informer que votre appareil de remplacement ' + @sMarque + ' ' + @sModele + ' vous a été envoyé le ' + Convert ( VarChar, @adtDteEnvCli, 103 ) + ' à l''adresse suivante :'  
+      Else
+        Begin
+		  -- [RS4521]
+		  If @sIdTypArt = 'CAF' And @sIdFour = 'CMA'  
+		   Begin
+				Set @sMailBody = @sMailBody + 'Nous allons vous faire parvenir d''ici quelques jours par courrier votre/vos bon(s) d''achat Carrefour pour un '
+				Set @sMailBody = @sMailBody + 'montant total de ' + convert ( VarChar ( 20 ), @dcMtTTCcmde ) + '€, correspondant au montant de l’indemnité qui vous est due au titre du contrat GARANTIE ' 
+				Set @sMailBody = @sMailBody + @sLibProd + ' à l''adresse suivante :'
+		   End 
+		  Else
+		   Begin
+			   Set @iSwap = 1 -- [PM250-2]  
+			   Set @sMailBody  = @sMailBody + 'Nous avons le plaisir de vous informer que votre appareil de remplacement ' + @sMarque + ' ' + @sModele + ' vous a été envoyé le ' + Convert ( VarChar, @adtDteEnvCli, 103 ) + ' à l''adresse suivante :'  
   
-      -- Gestion SAMSUNG ? => Trt part  
-      If Exists ( Select *   
-         from sysadm.det_pro dp,  
-           sysadm.w_sin s  
-         Where s.id_sin = @adcIdSin   
-         And   dp.id_prod = s.id_prod  
-         And   dp.id_code_dp = 294  
-       )  
-       Begin  
-        Exec sysadm.PS_S_MAILPUSH_DT361_INFO_REMPL @adcIdSin, @aiIdSeq, @sMarque, @sModele, @sNumImeiNouv, @asCasRetour OUTPUT  
-       End   
-      ENd   
+			  -- Gestion SAMSUNG ? => Trt part  
+			  If Exists ( Select *   
+				 from sysadm.det_pro dp,  
+				   sysadm.w_sin s  
+				 Where s.id_sin = @adcIdSin   
+				 And   dp.id_prod = s.id_prod  
+				 And   dp.id_code_dp = 294  
+			   )  
+			   Begin  
+				Exec sysadm.PS_S_MAILPUSH_DT361_INFO_REMPL @adcIdSin, @aiIdSeq, @sMarque, @sModele, @sNumImeiNouv, @asCasRetour OUTPUT  
+			   End   
+			End
+		ENd   
     End   
   
       
@@ -2207,8 +2226,18 @@ Declare
          
     Exec sysadm.PS_I_MAIL_SWAP_FICHE_19 @asIdAppli, @asBase, @iOptionDP, @adcIdSin  
      End   
-     
-     End  
+	
+	-- [RS4521]
+	If @sIdTypArt = 'CAF' And @sIdFour = 'CMA'  
+	  Begin
+		Set @sMailBody  = @sMailBody  + @sSaut      
+		Set @sMailBody  = @sMailBody  + 'Votre/Vos bons d''achat est/sont valable(s) 1 (un) an dans tous les magasins Carrefour situés en France métropolitaine (Corse comprise).' 
+		Set @sMailBody  = @sMailBody  + @sSaut      
+		Set @sMailBody  = @sMailBody  + @sSaut      
+		Set @sMailBody  = @sMailBody  + 'Nous vous rappelons que suite au sinistre garanti de l''appareil assuré cette indemnité vous est versée en vue de son remplacement.'
+
+	  End
+   End  
       
   Set @sMailBody  = @sMailBody  + @sSaut  
    
@@ -2232,7 +2261,8 @@ Declare
   
   -- Coliposte 8L41585398663  
   When IsNumeric ( Left (@asNumBonTrsp, 2) ) = 0 And IsNumeric ( Right (@asNumBonTrsp, 2) ) = 1 And Len ( @asNumBonTrsp ) = 13  
-   Then 'http://www.coliposte.net/gp/services/main.jsp?m=10003005&amp;colispart=' + @asNumBonTrsp  
+   -- Then 'http://www.coliposte.net/gp/services/main.jsp?m=10003005&amp;colispart=' + @asNumBonTrsp  
+   Then 'https://www.laposte.fr/outils/suivre-vos-envois?code=' + @asNumBonTrsp  
   
   -- Ciblex 24955001116149  
   When isNumeric ( @asNumBonTrsp ) = 1 And Len ( @asNumBonTrsp ) = 14  
@@ -2243,7 +2273,16 @@ Declare
   
   If ( @asHREFURL is not null ) And sysadm.FN_TRIM ( @asHREFURL ) <> ''   
    Begin   
-    Set @sMailBody  = @sMailBody  + 'Pour suivre l''envoi de votre appareil, cliquez sur le lien ci-dessous : '   
+
+	If @sIdTypArt = 'CAF' And @sIdFour = 'CMA'  
+	  Begin
+		Set @sMailBody  = @sMailBody  + 'Pour suivre l''envoi de votre/vos bon(s) d''achat Carrefour, cliquez sur le lien ci-dessous : '   
+	  End 
+	Else
+	  Begin
+		Set @sMailBody  = @sMailBody  + 'Pour suivre l''envoi de votre appareil, cliquez sur le lien ci-dessous : '   
+	  End 
+
     Set @sMailBody  = @sMailBody  + @sSaut  
     Set @sMailBody  = @sMailBody  + @sSaut      
     Set @sMailBody  = @sMailBody  + @asHREFURL   
@@ -2251,21 +2290,32 @@ Declare
     Set @sMailBody  = @sMailBody  + @sSaut          
    End   
   
+	If @sIdTypArt = 'CAF' And @sIdFour = 'CMA'  
+	  Begin
+	   Set @sMailBody  = @sMailBody + 'Nous vous souhaitons bonne réception de la présente et vous remercions de la confiance que vous nous accordez.'
+	   Set @sMailBody  = @sMailBody  + @sSaut  
+	   Set @sMailBody  = @sMailBody  + @sSaut          
+	   Set @sMailBody  = @sMailBody  + @sSaut          
+	   Set @sMailBody  = @sMailBody  + 'Votre gestionnaire'
+
+	  End 
+	Else 
+	  Begin
+		  -- [VDOC27477] Stéph. Delesque  
+		  Set @sMailBody  = @sMailBody + 'Prenez le temps d''ouvrir votre colis, d''examiner et de vérifier l''état de votre appareil lors de la remise de celui-ci. En cas d''anomalie (colis vide, appareil endommagé….) refusez le aussitôt en présence du transporteur ou en point relais puis contactez-nous dans les 48h. Si vous avez accepté le colis sans émettre de réserve sur le bon de transport, aucune anomalie de transport ne pourra être prise en charge.'   
+		  Set @sMailBody  = @sMailBody  + @sSaut  
+		  Set @sMailBody  = @sMailBody  + @sSaut          
   
-  -- [VDOC27477] Stéph. Delesque  
-  Set @sMailBody  = @sMailBody + 'Prenez le temps d''ouvrir votre colis, d''examiner et de vérifier l''état de votre appareil lors de la remise de celui-ci. En cas d''anomalie (colis vide, appareil endommagé….) refusez le aussitôt en présence du transporteur ou en point relais puis contactez-nous dans les 48h. Si vous avez accepté le colis sans émettre de réserve sur le bon de transport, aucune anomalie de transport ne pourra être prise en charge.'   
-  Set @sMailBody  = @sMailBody  + @sSaut  
-  Set @sMailBody  = @sMailBody  + @sSaut          
+		  Set @sMailBody  = @sMailBody  + @sSaut  
+		  Set @sMailBody  = @sMailBody  + 'Nous restons à votre entière disposition pour tout renseignement complémentaire et vous prions d’agréer, ' + @sCiv + ' nos salutations distinguées.'  
+		  Set @sMailBody  = @sMailBody  + @sSaut  
   
-  Set @sMailBody  = @sMailBody  + @sSaut  
-  Set @sMailBody  = @sMailBody  + 'Nous restons à votre entière disposition pour tout renseignement complémentaire et vous prions d’agréer, ' + @sCiv + ' nos salutations distinguées.'  
-  Set @sMailBody  = @sMailBody  + @sSaut  
-  
- -- [DT262]  
-  Set @sMailBody  = @sMailBody  + @sSaut  
-  Set @sMailBody  = @sMailBody  + @sSaut  
-  Set @sMailBody  = @sMailBody  + 'Si votre contrat d''assurance dispose d''un site web de gestion de sinistre, vous pouvez à tout moment consulter et télécharger la ou les pièce(s) de votre dossier sur ce site communiqué par notre gestionnaire lors de votre déclaration.'  
-    
+		 -- [DT262]  
+		  Set @sMailBody  = @sMailBody  + @sSaut  
+		  Set @sMailBody  = @sMailBody  + @sSaut  
+		  Set @sMailBody  = @sMailBody  + 'Si votre contrat d''assurance dispose d''un site web de gestion de sinistre, vous pouvez à tout moment consulter et télécharger la ou les pièce(s) de votre dossier sur ce site communiqué par notre gestionnaire lors de votre déclaration.'  
+	  End   
+
   Set @sMailBody  = @sMailBody  + @sSaut  
   Set @sMailBody  = @sMailBody  + @sSaut  
   Set @sMailBody  = @sMailBody  + '****************************************************************'  
@@ -2374,7 +2424,7 @@ Declare
   @iIdProd,   
   @sLibProd,   
   @iIdEts,   
-         @sMailFrom,   
+  @sMailFrom,   
   @sMailSend,   
   @sMailCc,  
   @sMailObjet,  

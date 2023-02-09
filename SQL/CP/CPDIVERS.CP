@@ -6274,7 +6274,7 @@ Set @sExpediteur = @sExpediteur  + '<jff@spb.fr>'
 
 EXEC master.dbo.SPB_PS_MAIL 
 		@sRetourErrMail OUTPUT, 
-		'jff@spb.fr,GG_DSI-DO-PI@spb.eu,fsale@spb.eu,cbourdoiseau@spb.eu',
+		'jff@spb.fr',
 		--'jff@spb.fr',
 		@sMailBody, 
 		@sObjet, 
