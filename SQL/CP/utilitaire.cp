@@ -5500,3 +5500,94 @@ Begin
 
 End
 Go
+
+
+--------------------------------------------------------------------
+--
+-- Fonction             :       FN_LIB_POLE
+-- Auteur               :       Fabry JF
+-- Date                 :       07/12/2021
+-- Libellé              :
+-- Commentaires         :       Retourne le pole
+-- Références           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+--------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_LIB_POLE' AND type = 'FN' )
+        DROP function sysadm.FN_LIB_POLE
+Go
+
+CREATE  function sysadm.FN_LIB_POLE  
+       ( @dcIdProd    decimal ( 7 )
+        )
+RETURNS Varchar(65)
+
+AS
+
+Begin
+
+  Declare @sLibPole Varchar(35)
+
+  Select Top 1 @sLibPole = sysadm.FN_CODE_NUM ( id_code_num, '-UO' )  
+  From sysadm.det_pro dp
+  Where dp.id_code_dp = 99
+  And   dp.id_prod = @dcIdProd
+
+  Return @sLibPole 
+
+End
+Go
+
+--------------------------------------------------------------------
+--
+-- Fonction             :       FN_GET_ID_CORB
+-- Auteur               :       Fabry JF
+-- Date                 :       10/02/2023
+-- Libellé              :
+-- Commentaires         :       Retourne la corbeille à partir d'un sinistre
+-- Références           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+--------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_GET_ID_CORB' AND type = 'FN' )
+        DROP function sysadm.FN_GET_ID_CORB
+Go
+
+CREATE  function sysadm.FN_GET_ID_CORB  
+       ( @dcIdSin    decimal ( 10 )
+        )
+RETURNS Int
+
+AS
+
+Begin
+  
+  Declare @idIdCorb Int
+
+  Select @idIdCorb = p.id_corb 
+  From sysadm.w_sin ws,
+	   sysadm.produit p
+  Where ws.id_sin = @dcIdSin
+  And   p.id_prod = ws.id_prod
+	
+  If @@Rowcount > 0 Return @idIdCorb
+
+  Select @idIdCorb = p.id_corb 
+  From sysadm.sinistre s,
+	   sysadm.produit p
+  Where s.id_sin = @dcIdSin
+  And   p.id_prod = s.id_prod
+	
+  If @@Rowcount > 0 Return @idIdCorb
+
+  Return -1
+
+End
+Go
+
