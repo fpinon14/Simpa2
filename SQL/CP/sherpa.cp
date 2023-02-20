@@ -7110,3 +7110,224 @@ BEGIN
 END
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_RS4573_INTERRO_MAIL_MATP_ASSURE
+-- Auteur               :       JFF
+-- Date                 :       14/02/2023
+-- Libellé              :		
+-- Commentaires         :       !!!! A COMPILER SUR SHERPA !!!!!
+-- Références           :
+--
+-- Arguments            :       
+--
+-- Retourne             :        
+-------------------------------------------------------------------
+-- JFF      12/02/2016   [PI062]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_RS4573_INTERRO_MAIL_MATP_ASSURE' AND type = 'P' )
+        DROP PROCEDURE sysadm.PS_S_RS4573_INTERRO_MAIL_MATP_ASSURE
+GO
+
+CREATE PROCEDURE  sysadm.PS_S_RS4573_INTERRO_MAIL_MATP_ASSURE
+	@adcIdSin	Decimal (10) -- [PI062]
+As
+
+-- !!!! PS A COMPILER SUR SHERPA !!!!!
+
+Declare @iIdSin Int -- [PI062]
+
+Set @iIdSin = Convert ( integer, @adcIdSin ) -- [PI062]
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) = 'PRO'
+BEGIN  
+	Select	mp.id_seq,
+			-- mp.id_appli,
+			-- mp.id_sin,
+			-- mp.id_prod,
+			-- mp.lib_prod,
+			-- mp.id_arch,
+			convert ( Varchar ( 10), ach.id_sin ) + '/' + convert ( Varchar ( 10), ach.id_inter ) + '/' + convert ( Varchar ( 10), ach.id_doc ) id_cle,
+			ach.id_doc,
+			rtrim ( ach.id_cour_orig) + '/' + rtrim ( ach.id_cour ) id_cour, 
+			ach.nom,
+			sysadm.FN_CODE_CAR ( ach.cod_inter, '-IN' ) lib_inter,
+			-- mp.cree_le,
+			mp.mail_dte_trt,
+			-- mp.mail_from,
+			mp.mail_send,
+			mp.mail_subject
+			-- mp.boite_mail,
+			-- '(' + rtrim ( mp.typ_mail ) + ') ' + rtrim ( cc.lib_code ) lib_typ_mail
+
+	from TRACE_MAIL_PRO.sysadm.mail_push mp,
+		 TRACE_MAIL_PRO.sysadm.code_car cc,
+		 SIMPA2_PRO.sysadm.archive ach
+	where mp.id_sin = @iIdSin  -- [PI062]
+	And   mp.typ_mail = 'M16'
+	And   ach.id_arch = mp.id_arch
+	And   cc.id_typ_code = '-TM'
+	And   cc.id_code = mp.typ_mail
+	
+	Order by ach.id_doc
+
+End 
+Else
+Begin
+	Select	mp.id_seq,
+			-- mp.id_appli,
+			-- mp.id_sin,
+			-- mp.id_prod,
+			-- mp.lib_prod,
+			-- mp.id_arch,
+			convert ( Varchar ( 10), ach.id_sin ) + '/' + convert ( Varchar ( 10), ach.id_inter ) + '/' + convert ( Varchar ( 10), ach.id_doc ) id_cle,
+			ach.id_doc,
+			rtrim ( ach.id_cour_orig) + '/' + rtrim ( ach.id_cour ) id_cour, 
+			ach.nom,
+			sysadm.FN_CODE_CAR ( ach.cod_inter, '-IN' ) lib_inter,
+			-- mp.cree_le,
+			mp.mail_dte_trt,
+			-- mp.mail_from,
+			mp.mail_send,
+			mp.mail_subject
+			-- mp.boite_mail,
+			-- '(' + rtrim ( mp.typ_mail ) + ') ' + rtrim ( cc.lib_code ) lib_typ_mail
+
+	from TRACE_MAIL_TRT.sysadm.mail_push mp,
+		 TRACE_MAIL_TRT.sysadm.code_car cc,
+		 SIMPA2_TRT.sysadm.archive ach
+	where mp.id_sin = @iIdSin  -- [PI062]
+	And   mp.typ_mail = 'M16'
+	And   ach.id_arch = mp.id_arch
+	And   cc.id_typ_code = '-TM'
+	And   cc.id_code = mp.typ_mail
+
+	Order by ach.id_doc
+End 
+Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_I_RS4573_DUPLIQUE_MAIL_ASSURE_VERS_BANQUE
+-- Auteur               :       JFF
+-- Date                 :       14/02/2023
+-- Libellé              :		
+-- Commentaires         :       !!!! A COMPILER SUR SHERPA !!!!!
+-- Références           :
+--
+-- Arguments            :       
+--
+-- Retourne             :        
+-------------------------------------------------------------------
+-- JFF      12/02/2016   [PI062]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_RS4573_DUPLIQUE_MAIL_ASSURE_VERS_BANQUE' AND type = 'P' )
+        DROP PROCEDURE sysadm.PS_I_RS4573_DUPLIQUE_MAIL_ASSURE_VERS_BANQUE
+GO
+
+CREATE PROCEDURE  sysadm.PS_I_RS4573_DUPLIQUE_MAIL_ASSURE_VERS_BANQUE
+	@aiIdSeq	Integer,  -- Identifiant du mail existant
+	@asMailSend VarChar ( 128 ),
+	@asMailSubject VarChar ( 255 )
+As
+
+-- !!!! PS A COMPILER SUR SHERPA !!!!!
+
+Declare @sMailSendXmlActuel VarChar ( 128 )
+Declare @sMailSubjectXmlActuel VarChar ( 128 )
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) = 'PRO'
+BEGIN  
+
+	Select	@sMailSendXmlActuel = mail_send,
+			@sMailSubjectXmlActuel = mail_subject
+	From TRACE_MAIL_PRO.sysadm.mail_push
+	Where id_seq = @aiIdSeq
+
+	Insert into TRACE_MAIL_PRO.sysadm.mail_push
+	Select 
+		id_appli,
+		id_sin,
+		id_prod,
+		lib_prod,
+		id_ets,
+		GetDate(),
+		mail_from,
+		@asMailSend,
+		mail_cc,
+		@asMailSubject,
+		mail_body,
+		alt_quarantaine,
+		null,
+		'N',
+		alt_mail_recu,
+		mail_id_erreur,
+		mail_contact,
+		boite_mail,
+		typ_mail,
+		id_appli_num,
+		methode,
+		id_arch,
+		Replace (
+			Replace (
+				Replace ( xml_data, @sMailSendXmlActuel, @asMailSend ),
+				@sMailSubjectXmlActuel,
+				@asMailSubject
+				),
+			'code_produit_SIMPA2=',
+			'envoi_courrier_assure_a_la_banque="OUI" code_produit_SIMPA2='
+			)
+
+	From TRACE_MAIL_PRO.sysadm.mail_push
+	Where id_seq = @aiIdSeq
+
+END 
+Else
+BEGIN
+	Select	@sMailSendXmlActuel = mail_send,
+			@sMailSubjectXmlActuel = mail_subject
+	From TRACE_MAIL_TRT.sysadm.mail_push
+	Where id_seq = @aiIdSeq
+
+	Insert into TRACE_MAIL_TRT.sysadm.mail_push
+	Select 
+		id_appli,
+		id_sin,
+		id_prod,
+		lib_prod,
+		id_ets,
+		GetDate(),
+		mail_from,
+		@asMailSend,
+		mail_cc,
+		@asMailSubject,
+		mail_body,
+		alt_quarantaine,
+		null,
+		'N',
+		alt_mail_recu,
+		mail_id_erreur,
+		mail_contact,
+		boite_mail,
+		typ_mail,
+		id_appli_num,
+		methode,
+		id_arch,
+		Replace (
+			Replace (
+				Replace ( xml_data, @sMailSendXmlActuel, @asMailSend ),
+				@sMailSubjectXmlActuel,
+				@asMailSubject
+				),
+			'code_produit_SIMPA2=',
+			'envoi_courrier_assure_a_la_banque="OUI" code_produit_SIMPA2='
+			)
+
+	From TRACE_MAIL_TRT.sysadm.mail_push
+	Where id_seq = @aiIdSeq
+
+End 
+
+Go
+
