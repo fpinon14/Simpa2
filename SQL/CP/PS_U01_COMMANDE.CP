@@ -114,6 +114,7 @@
 --     JFF 04/10/2019   [PM462-1][V3]
 --     JFF 22/10/2019   [PI087_PM473_2]
 --	   JFF 19/12/2022   [RS4093_EVOL_ELD]
+--	   JFF 20/02/2023   [RS4616_RET_TLS]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U01_COMMANDE' AND type = 'P' )
         DROP procedure sysadm.PS_U01_COMMANDE
@@ -217,6 +218,11 @@ Declare @sTypAppSin Varchar ( 20 )
 Declare @lVal Integer
 Declare @sMtPaiementPayBox varchar ( 50 )
 Declare @sNumCCElDRet VarChar ( 30 )
+Declare @dcMtTTCcmde Decimal ( 11, 2 ) 
+Declare @sMarqRempl Varchar ( 35 ) -- [RS4616_RET_TLS]
+Declare @sModlRempl Varchar ( 35 ) -- [RS4616_RET_TLS]
+Declare @sCoulRempl Varchar ( 35 ) -- [RS4616_RET_TLS]
+Declare @sCapStkRempl Varchar ( 35 ) -- [RS4616_RET_TLS]
 
 Set @iCasPropoAutoO2m = 0 -- [PC877]
 Set @iTraite = 0 
@@ -2099,40 +2105,173 @@ IF @iStatusGc = 178 And @iStatusGCActuel <> 178
 	From 	sysadm.div_sin ds
 	Where 	ds.id_sin = @dcIdSin And ds.nom_zone = 'type_app'
 
-	
-	-- Problème intégration si montant =0 donc bcv absent par le contrôle PB
-	Select  @sVal2 = sysadm.FN_CLE_VAL ( 'MT_TTC_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';')
-	From    sysadm.sinistre ws, sysadm.commande wc
-	Where	wc.id_sin = @dcIdSin
-	And		wc.id_seq = @iIdSeq		
-	And		ws.id_sin = wc.id_sin
+	-- [RS4616_RET_TLS]
+	If sysadm.FN_CLE_NUMERIQUE ( 'RS4616_RET_TLS') > 0 
+	 Begin
+		-- Problème intégration si montant =0 donc bcv absent par le contrôle PB
+		Select  @sVal2 = sysadm.FN_CLE_VAL ( 'MT_TTC_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'),
+				@dcMtTTCcmde = wc.mt_ttc_cmde,
+				@sMarqRempl = sysadm.FN_CLE_VAL ( 'MARQ_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'),
+				@sModlRempl = sysadm.FN_CLE_VAL ( 'MODL_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'),
+				@sCoulRempl = sysadm.FN_CLE_VAL ( 'COUL_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'),
+				@sCapStkRempl = sysadm.FN_CLE_VAL ( 'CAP_STK_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';')
+		From    sysadm.sinistre ws, sysadm.commande wc
+		Where	wc.id_sin = @dcIdSin
+		And		wc.id_seq = @iIdSeq		
+		And		ws.id_sin = wc.id_sin
 
-	If @sVal2 is null Set @sVal2 = 0
-	If IsNumeric ( @sVal2 ) = 0 Set @sVal2 = 0
+		If @sVal2 is null Set @sVal2 = 0
+		If IsNumeric ( @sVal2 ) = 0 Set @sVal2 = 0
+		If @sVal2 = 0 Set @sVal2 = Convert ( Varchar ( 10 ), @dcMtTTCcmde ) -- [RS4616_RET_TLS]
 
-	Update 	sysadm.w_commande
-	Set	id_marq_art		= sysadm.FN_CLE_VAL ( 'MARQ_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'), 
-		id_modl_art		= sysadm.FN_CLE_VAL ( 'MODL_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'),
-		mt_ttc_cmde		= Round ( Convert ( decimal (11,2 ) , @sVal2), 2 ), 
-		id_marq_art_ifr = ws.marq_port,		
-		id_modl_art_ifr = ws.modl_port,
-		id_typ_art = @sVal1 
-	From    sysadm.w_sin ws, sysadm.w_commande wc
-	Where	wc.id_sin = @dcIdSin
-	And		wc.id_seq = @iIdSeq		
-	And		ws.id_sin = wc.id_sin
+		If CharIndex ( 'GO', Upper ( @sCapStkRempl), 1 ) <=0 And CharIndex ( 'GB', Upper ( @sCapStkRempl), 1 ) <=0 Set @sCapStkRempl = @sCapStkRempl + 'GB'
+		Set @sModlRempl = @sModlRempl + ' ' + @sCoulRempl + ' ' + @sCapStkRempl
 
-	Update 	sysadm.commande
-	Set	id_marq_art		= sysadm.FN_CLE_VAL ( 'MARQ_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'), 
-		id_modl_art		= sysadm.FN_CLE_VAL ( 'MODL_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'),
-		mt_ttc_cmde		= Round ( Convert ( decimal (11,2 ) , @sVal2 ), 2 ), 
-		id_marq_art_ifr = ws.marq_port,		
-		id_modl_art_ifr = ws.modl_port,
-		id_typ_art = @sVal1 
-	From    sysadm.sinistre ws, sysadm.commande wc
-	Where	wc.id_sin = @dcIdSin
-	And		wc.id_seq = @iIdSeq		
-	And		ws.id_sin = wc.id_sin
+		Update 	sysadm.w_commande
+		Set	id_marq_art		= @sMarqRempl, 
+			id_modl_art		= @sModlRempl,
+			mt_ttc_cmde		= Round ( Convert ( decimal (11,2 ) , @sVal2), 2 ), 
+			id_marq_art_ifr = 
+				Case 
+					When @sIdFour = 'TLS' Then 
+						    (	Select Top 1 rtrim (la.marq_ifr ) 
+								from sysadm.lien_article la 
+								Where la.id_four = 'TLS'
+								And la.marq_four = Left ( @sMarqRempl, 35)
+								And la.modl_four = Left ( @sModlRempl, 35)
+							)
+					Else ws.marq_port
+				End,		
+			id_modl_art_ifr =
+				Case 
+					When @sIdFour = 'TLS' Then 
+						(	Select Top 1 rtrim ( la.modl_ifr ) 
+							from sysadm.lien_article la 
+							Where la.id_four = 'TLS'
+							And la.marq_four = Left ( @sMarqRempl, 35)
+							And la.modl_four = Left ( @sModlRempl, 35)
+						)
+					Else ws.modl_port
+				End,
+			id_typ_art = @sVal1 
+		From    sysadm.w_sin ws, sysadm.w_commande wc
+		Where	wc.id_sin = @dcIdSin
+		And		wc.id_seq = @iIdSeq		
+		And		ws.id_sin = wc.id_sin
+
+		Update 	sysadm.commande
+		Set	id_marq_art		= @sMarqRempl, 
+			id_modl_art		= @sModlRempl,
+			mt_ttc_cmde		= Round ( Convert ( decimal (11,2 ) , @sVal2 ), 2 ), 
+			id_marq_art_ifr = 
+				Case 
+					When @sIdFour = 'TLS' Then 
+						    (	Select Top 1 rtrim (la.marq_ifr ) 
+								from sysadm.lien_article la 
+								Where la.id_four = 'TLS'
+								And la.marq_four = Left ( @sMarqRempl, 35)
+								And la.modl_four = Left ( @sModlRempl, 35)
+							)
+					Else ws.marq_port
+				End,		
+			id_modl_art_ifr =
+				Case 
+					When @sIdFour = 'TLS' Then 
+						(	Select Top 1 rtrim ( la.modl_ifr ) 
+							from sysadm.lien_article la 
+							Where la.id_four = 'TLS'
+							And la.marq_four = Left ( @sMarqRempl, 35)
+							And la.modl_four = Left ( @sModlRempl, 35)
+						)
+					Else ws.modl_port
+				End,
+			id_typ_art = @sVal1 
+		From    sysadm.sinistre ws, sysadm.commande wc
+		Where	wc.id_sin = @dcIdSin
+		And		wc.id_seq = @iIdSeq		
+		And		ws.id_sin = wc.id_sin
+			
+		If @sIdFour = 'TLS'
+		  Begin
+			If Not Exists ( 
+				Select Top 1 1 
+				From sysadm.article a
+				Where a.id_four = 'TLS' 
+				And   a.id_marq_art = Left ( @sMarqRempl, 35)
+				And   a.id_modl_art = Left ( @sModlRempl, 35)
+			)
+			Begin 
+				Insert into sysadm.article 
+				Select	@sIdFour,
+						Replace ( Replace ( Replace ( convert( varchar ( 30), GetDate(), 120 ), '-', ''), ' ', ''), ':', ''),
+						'TEL',
+						Left ( @sMarqRempl, 35),
+						Left ( @sModlRempl, 35),
+						0,
+						0,
+						20000,
+						null,
+						'N',
+						(	Select Top 1 rtrim ( la.marq_ifr ) 
+							from sysadm.lien_article la 
+							Where la.id_four = 'TLS'
+							And la.marq_four = Left ( @sMarqRempl, 35)
+							And la.modl_four = Left ( @sModlRempl, 35)
+							),
+						(	Select Top 1 rtrim ( la.modl_ifr ) 
+							from sysadm.lien_article la 
+							Where la.id_four = 'TLS'
+							And la.marq_four = Left ( @sMarqRempl, 35)
+							And la.modl_four = Left ( @sModlRempl, 35)
+							),
+						200,
+						1,
+						getdate(),
+						getdate(),
+						'JFF'
+			End
+		  End 
+
+	 End 	
+	Else
+	 Begin
+		-- Problème intégration si montant =0 donc bcv absent par le contrôle PB
+		Select  @sVal2 = sysadm.FN_CLE_VAL ( 'MT_TTC_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';')
+		From    sysadm.sinistre ws, sysadm.commande wc
+		Where	wc.id_sin = @dcIdSin
+		And		wc.id_seq = @iIdSeq		
+		And		ws.id_sin = wc.id_sin
+
+		If @sVal2 is null Set @sVal2 = 0
+		If IsNumeric ( @sVal2 ) = 0 Set @sVal2 = 0
+
+		Update 	sysadm.w_commande
+		Set	id_marq_art		= sysadm.FN_CLE_VAL ( 'MARQ_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'), 
+			id_modl_art		= sysadm.FN_CLE_VAL ( 'MODL_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'),
+			mt_ttc_cmde		= Round ( Convert ( decimal (11,2 ) , @sVal2), 2 ), 
+			id_marq_art_ifr = ws.marq_port,		
+			id_modl_art_ifr = ws.modl_port,
+			id_typ_art = @sVal1 
+		From    sysadm.w_sin ws, sysadm.w_commande wc
+		Where	wc.id_sin = @dcIdSin
+		And		wc.id_seq = @iIdSeq		
+		And		ws.id_sin = wc.id_sin
+
+		Update 	sysadm.commande
+		Set	id_marq_art		= sysadm.FN_CLE_VAL ( 'MARQ_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'), 
+			id_modl_art		= sysadm.FN_CLE_VAL ( 'MODL_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'),
+			mt_ttc_cmde		= Round ( Convert ( decimal (11,2 ) , @sVal2 ), 2 ), 
+			id_marq_art_ifr = ws.marq_port,		
+			id_modl_art_ifr = ws.modl_port,
+			id_typ_art = @sVal1 
+		From    sysadm.sinistre ws, sysadm.commande wc
+		Where	wc.id_sin = @dcIdSin
+		And		wc.id_seq = @iIdSeq		
+		And		ws.id_sin = wc.id_sin
+
+	 End 
+
+
 
   End
   

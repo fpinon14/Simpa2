@@ -2058,5 +2058,151 @@ Where  id_four = @sIdFour
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procedure            :       PS_U_RS4616_MAJ_CMDE_TLS
+-- Auteur               :       FABRY JF
+-- Date                 :       21/02/2023
+-- Libelle              :        
+-- Commentaires         :       [RS4616_RET_TLS]
+-- References           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+-- [VDOC14454] JFF 19/05/2014
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_RS4616_MAJ_CMDE_TLS' AND type = 'P' )
+        DROP procedure sysadm.PS_U_RS4616_MAJ_CMDE_TLS
+GO
 
+CREATE procedure sysadm.PS_U_RS4616_MAJ_CMDE_TLS
+	@sIdFour Varchar ( 3 ),
+	@iFreqMois Integer
+AS
+
+DECLARE @tb TABLE 
+	( id_seq	integer identity,
+	  id_marq_art	VarChar ( 35 ),
+	  id_modl_art	VarChar ( 35 ),
+	  marquage	integer null 
+	)
+
+Declare @iIdSeq integer
+Declare @sIdMarqArt Varchar( 35 ) 
+Declare @sIdModlArt Varchar( 35 ) 
+Declare @sObjet VarChar ( 255 )
+Declare @sMessage VarChar ( 8000 )
+Declare @sRetourErrMail VarChar ( 255 )
+Declare @sFicOut VarChar ( 255 )
+Declare @sLibPrestaExterne VarChar ( 35 ) 
+Declare @sFrom varchar ( 50 )
+
+Set @sIdFour = lTrim ( rTrim ( Upper ( @sIdFour )))
+Set @iFreqMois = Abs ( @iFreqMois ) * (-1)
+
+Set @sLibPrestaExterne = sysadm.FN_CODE_CAR ( @sIdFour, '-FR' ) 
+
+-- Maj des commandes
+Update c
+Set  id_marq_art_ifr = a.id_marq_art_ifr,
+	 id_modl_art_ifr = a.id_modl_art_ifr
+From sysadm.commande c,
+	 sysadm.article a
+Where c.id_four = @sIdFour
+And c.id_modl_art_ifr is null
+And c.maj_le > DateAdd ( month, @iFreqMois, GetDate() ) 
+And a.id_four = c.id_four
+And a.id_marq_art = c.id_marq_art
+And a.id_modl_art = c.id_modl_art
+And a.id_marq_art_ifr is not null
+And a.id_modl_art_ifr is not null
+
+Update c
+Set  id_marq_art_ifr = a.id_marq_art_ifr,
+	 id_modl_art_ifr = a.id_modl_art_ifr
+From sysadm.w_commande c,
+	 sysadm.article a
+Where c.id_four = @sIdFour
+And c.id_modl_art_ifr is null
+And c.maj_le > DateAdd ( month, @iFreqMois, GetDate() ) 
+And a.id_four = c.id_four
+And a.id_marq_art = c.id_marq_art
+And a.id_modl_art = c.id_modl_art
+And a.id_marq_art_ifr is not null
+And a.id_modl_art_ifr is not null
+
+-- Relevés des articles non liés + mail Séb
+
+Insert into @tb
+select a.id_marq_art,
+	   a.id_modl_art,
+	   0 'marquage'
+From  sysadm.article a
+Where a.id_four = @sIdFour
+And   a.id_typ_art <> 'CAF'
+And   ( a.id_marq_art_ifr is null or a.id_modl_art_ifr is null )
+
+While Exists ( Select Top 1 1 From @tb where marquage = 0 )
+ Begin
+	Select 	Top 1 
+		@iIdSeq = id_seq,
+		@sIdMarqArt = rtrim ( id_marq_art ),
+		@sIdModlArt = rtrim ( id_modl_art )
+	From	@tb
+	Where	marquage = 0
+
+	-- Envoi du mail à Sébastien en production 
+	Set @sObjet = 'Demande de création de référence Externe<=>IFR'
+
+	IF @@servername <> master.dbo.SPB_FN_ServerName ('PRO')	
+		Begin 
+			Set @sObjet = '[RECETTE] ' + @sObjet 
+		End 
+
+	Set @sMessage = @sMessage + ''
+
+	Set @sMessage = 'Bonjour Sébastien, ' + CHAR ( 10 ) 
+	Set @sMessage = @sMessage + CHAR ( 10 )
+	Set @sMessage = @sMessage + CHAR ( 10 )
+	Set @sMessage = @sMessage + 'Une nouvelle référence Externe du prestataire ' + @sLibPrestaExterne + ' est à relier à IFR.'
+	Set @sMessage = @sMessage + CHAR ( 10 )
+	Set @sMessage = @sMessage + CHAR ( 10 )
+	Set @sMessage = @sMessage + 'Prestataire externe : ' + @sLibPrestaExterne + CHAR ( 10 )
+	Set @sMessage = @sMessage + 'Marque Externe : ' + @sIdMarqArt + CHAR ( 10 )
+	Set @sMessage = @sMessage + 'Modèle Externe : ' + @sIdModlArt + CHAR ( 10 )
+	Set @sMessage = @sMessage + CHAR ( 10 )	  
+	Set @sMessage = @sMessage + CHAR ( 10 )
+	Set @sMessage = @sMessage + 'Cordialement,' + CHAR ( 10 )
+	Set @sMessage = @sMessage + CHAR ( 10 )
+	Set @sMessage = @sMessage + 'Jean-François FABRY' + CHAR ( 10 )
+	Set @sMessage = @sMessage + 'DSI/DEI Equipe SIMPA2' + CHAR ( 10 )
+	Set @sMessage = @sMessage + 'Legacy Application Tech Lead ' + CHAR ( 10 )
+	Set @sMessage = @sMessage + '71, Quai Colbert - 76600 Le Havre - France' + CHAR ( 10 )
+	Set @sMessage = @sMessage + 'Tél. : +33 (0)2 32 74 22 05' + CHAR ( 10 )
+	Set @sMessage = @sMessage + 'www.spb.eu' + CHAR ( 10 )
+	Set @sMessage = @sMessage + 'SAS au capital de 1 000 000 euros soumise au contrôle de l’ACPR.' + CHAR ( 10 )
+	Set @sMessage = @sMessage + 'Siège social : 71, quai Colbert - CS 90000 - 76600 Le Havre. Tél. : +33 (0)2 32 74 20 20' + CHAR ( 10 )
+	Set @sMessage = @sMessage + 'N° RCS 305 109 779 (Le Havre) – N°ORIAS 07 002 642 (www.orias.fr).' + CHAR ( 10 )
+
+	Set @sFrom = 'Lien_IFR_' + @sIdFour + '<jff@spb.fr>'
+
+	EXEC master.dbo.SPB_PS_MAIL 
+			@sRetourErrMail OUTPUT, 
+			--'sloison@spb.eu', 
+			'jff@spb.fr',
+			@sMessage, 
+			@sObjet, 
+			@sFrom, 
+			'',
+			@sFicOut, 
+			NULL, 
+			NULL, 
+			NULL, 
+			NULL	
+
+	Update @tb Set marquage = 1 Where id_seq = @iIdSeq
+ End
+
+Go
 

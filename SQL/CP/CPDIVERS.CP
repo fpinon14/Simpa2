@@ -1955,6 +1955,7 @@ CREATE procedure sysadm.PS_CORRECTION_BASE_NUIT_1
 -- ITSM289429 - FPI - correction cpt_valide=99
 -- FPI - 05/05/2015 - ajout correction id_opt
 -- JFF      12/02/2016   [PI062]
+-- JFF      20/02/2023   [RS4616_RET_TLS]
 -------------------------------------------------------------------
 AS
 
@@ -2443,6 +2444,8 @@ And Not Exists ( Select Top 1 1 From sysadm.det_pro dp where dp.id_prod = p.id_p
 -- Détecte les objets SQL supprimé de façon malveillante
 Exec sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
 
+-- [RS4616_RET_TLS]
+Exec sysadm.PS_U_RS4616_MAJ_CMDE_TLS 'TLS', 2
 
 GO
 
