@@ -7113,7 +7113,7 @@ Go
 
 --------------------------------------------------------------------
 --
--- Procédure            :       PS_S_RS4573_INTERRO_MAIL_MATP_ASSURE
+-- Procédure            :       PS_S_RS4573_INTERRO_MAIL_M16_MATP
 -- Auteur               :       JFF
 -- Date                 :       14/02/2023
 -- Libellé              :		
@@ -7126,11 +7126,11 @@ Go
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_RS4573_INTERRO_MAIL_MATP_ASSURE' AND type = 'P' )
-        DROP PROCEDURE sysadm.PS_S_RS4573_INTERRO_MAIL_MATP_ASSURE
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_RS4573_INTERRO_MAIL_M16_MATP' AND type = 'P' )
+        DROP PROCEDURE sysadm.PS_S_RS4573_INTERRO_MAIL_M16_MATP
 GO
 
-CREATE PROCEDURE  sysadm.PS_S_RS4573_INTERRO_MAIL_MATP_ASSURE
+CREATE PROCEDURE  sysadm.PS_S_RS4573_INTERRO_MAIL_M16_MATP
 	@adcIdSin	Decimal (10) -- [PI062]
 As
 
@@ -7209,7 +7209,7 @@ Go
 
 --------------------------------------------------------------------
 --
--- Procédure            :       PS_I_RS4573_DUPLIQUE_MAIL_ASSURE_VERS_BANQUE
+-- Procédure            :       PS_I_RS4573_DUPLIQUE_MAIL_M16_MATP
 -- Auteur               :       JFF
 -- Date                 :       14/02/2023
 -- Libellé              :		
@@ -7222,12 +7222,13 @@ Go
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_RS4573_DUPLIQUE_MAIL_ASSURE_VERS_BANQUE' AND type = 'P' )
-        DROP PROCEDURE sysadm.PS_I_RS4573_DUPLIQUE_MAIL_ASSURE_VERS_BANQUE
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_RS4573_DUPLIQUE_MAIL_M16_MATP' AND type = 'P' )
+        DROP PROCEDURE sysadm.PS_I_RS4573_DUPLIQUE_MAIL_M16_MATP
 GO
 
-CREATE PROCEDURE  sysadm.PS_I_RS4573_DUPLIQUE_MAIL_ASSURE_VERS_BANQUE
+CREATE PROCEDURE  sysadm.PS_I_RS4573_DUPLIQUE_MAIL_M16_MATP
 	@aiIdSeq	Integer,  -- Identifiant du mail existant
+	@asCodInter VarChar ( 1 ), -- A(ssuré) ou B(anque)
 	@asMailSend VarChar ( 128 ),
 	@asMailSubject VarChar ( 255 )
 As
@@ -7236,6 +7237,12 @@ As
 
 Declare @sMailSendXmlActuel VarChar ( 128 )
 Declare @sMailSubjectXmlActuel VarChar ( 128 )
+Declare @sTypeDest VarChar ( 20 )
+
+Set @sTypeDest = 'ASSURE' -- Défaut
+If Upper ( @asCodInter ) = 'A' Set @sTypeDest = 'ASSURE'
+If Upper ( @asCodInter ) = 'B' Set @sTypeDest = 'BANQUE'
+
 
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) = 'PRO'
 BEGIN  
@@ -7276,7 +7283,7 @@ BEGIN
 				@asMailSubject
 				),
 			'code_produit_SIMPA2=',
-			'envoi_courrier_assure_a_la_banque="OUI" code_produit_SIMPA2='
+			'type_destinataire="' + @sTypeDest + '" code_produit_SIMPA2='
 			)
 
 	From TRACE_MAIL_PRO.sysadm.mail_push
@@ -7321,7 +7328,7 @@ BEGIN
 				@asMailSubject
 				),
 			'code_produit_SIMPA2=',
-			'envoi_courrier_assure_a_la_banque="OUI" code_produit_SIMPA2='
+			'type_destinataire="' + @sTypeDest + '" code_produit_SIMPA2='
 			)
 
 	From TRACE_MAIL_TRT.sysadm.mail_push

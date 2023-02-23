@@ -2745,6 +2745,16 @@ Exec sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
 -- Nettoyage Corbeille
 Exec sysadm.PS_DU_NETTOYAGE_CORBEILLES
 
+-- changement Exe Simulation pour le lendemain
+If sysadm.FN_CLE_NUMERIQUE ( 'EXE_TSP8') > 0 
+ Begin
+	Update SESAME_PRO.sysadm.application Set lib_commande = 'C:\SPB\S_FR_APP_Simpa2_main_121.EXE' where id_appli = 'TSP8'
+ End
+Else
+ Begin
+	Update SESAME_PRO.sysadm.application Set lib_commande = 'C:\SPB\P_FR_APP_Simpa2_main_121.EXE' where id_appli = 'TSP8'
+ End
+
 GO
 
 grant execute on sysadm.PS_CORRECTION_BASE_NUIT_2 to rolebddsinistres
