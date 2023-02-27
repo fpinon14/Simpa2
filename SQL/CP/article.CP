@@ -2189,8 +2189,8 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 
 	EXEC master.dbo.SPB_PS_MAIL 
 			@sRetourErrMail OUTPUT, 
-			--'sloison@spb.eu', 
-			'jff@spb.fr',
+			'sloison@spb.eu', 
+			--'jff@spb.fr',
 			@sMessage, 
 			@sObjet, 
 			@sFrom, 

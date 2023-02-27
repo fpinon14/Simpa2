@@ -223,6 +223,9 @@ Declare @sMarqRempl Varchar ( 35 ) -- [RS4616_RET_TLS]
 Declare @sModlRempl Varchar ( 35 ) -- [RS4616_RET_TLS]
 Declare @sCoulRempl Varchar ( 35 ) -- [RS4616_RET_TLS]
 Declare @sCapStkRempl Varchar ( 35 ) -- [RS4616_RET_TLS]
+Declare @sNewIdRefFour VarChar ( 20 ) -- [RS4616_RET_TLS]
+Declare @sNewIdRefFourTest VarChar ( 20 ) -- [RS4616_RET_TLS]
+Declare @iCptId Integer -- [RS4616_RET_TLS]
 
 Set @iCasPropoAutoO2m = 0 -- [PC877]
 Set @iTraite = 0 
@@ -2196,14 +2199,30 @@ IF @iStatusGc = 178 And @iStatusGCActuel <> 178
 			If Not Exists ( 
 				Select Top 1 1 
 				From sysadm.article a
-				Where a.id_four = 'TLS' 
+				Where a.id_four = @sIdFour
 				And   a.id_marq_art = Left ( @sMarqRempl, 35)
 				And   a.id_modl_art = Left ( @sModlRempl, 35)
 			)
 			Begin 
+
+				Set @sNewIdRefFour = Replace ( Replace ( Replace ( convert( varchar ( 30), GetDate(), 120 ), '-', ''), ' ', ''), ':', '')
+				Set @sNewIdRefFourTest = @sNewIdRefFour 
+
+				Set @iCptId = 1
+				Set @sNewIdRefFourTest = @sNewIdRefFour + '_' + convert ( varchar (5), @iCptId )
+
+				While Exists ( Select Top 1 1
+							   From sysadm.article a with (nolock)
+							   Where a.id_four = @sIdFour
+							   And   a.id_ref_four = @sNewIdRefFourTest )
+					Begin
+						Set @iCptId = @iCptId + 1
+						Set @sNewIdRefFourTest = @sNewIdRefFour + '_' + convert ( varchar (5), @iCptId )
+					End
+
 				Insert into sysadm.article 
 				Select	@sIdFour,
-						Replace ( Replace ( Replace ( convert( varchar ( 30), GetDate(), 120 ), '-', ''), ' ', ''), ':', ''),
+						@sNewIdRefFourTest,
 						'TEL',
 						Left ( @sMarqRempl, 35),
 						Left ( @sModlRempl, 35),
@@ -2270,9 +2289,6 @@ IF @iStatusGc = 178 And @iStatusGCActuel <> 178
 		And		ws.id_sin = wc.id_sin
 
 	 End 
-
-
-
   End
   
 -- [VDOC9908]
@@ -2406,8 +2422,7 @@ IF @iStatusGc = 176 And @iStatusGCActuel <> 176
 	 Begin
 		If Convert ( decimal (11,2 ), @sMtPaiementPayBox  ) > 0 
 		  Begin
-			Set @sMess = @sMess + ' De plus, l''assuré avait payé une franchise de ' + @sMtPaiementPayBox + '€ que vous devez lui rembourser en suivant un process précis, à savoir rembourser cette franchise sur un détail de garantie instruit avec l''événement 146
-1 "Remb. franchise par SPB à l''assuré" sur une seule validation.'
+			Set @sMess = @sMess + ' De plus, l''assuré avait payé une franchise de ' + @sMtPaiementPayBox + '€ que vous devez lui rembourser en suivant un process précis, à savoir rembourser cette franchise sur un détail de garantie instruit avec l''événement 1461 "Remb. franchise par SPB à l''assuré" sur une seule validation.'
 
 			-- Enfin maj param si 1461 absent.
 			Exec sysadm.PS_I_CREATION_AUTO_PARAM_CONDITION @dcIdProd, @dcIdRev, @dcIdGti, '+EV', 1461, 'N'
@@ -2653,8 +2668,7 @@ If sysadm.FN_CLE_NUMERIQUE ( 'DT424') > 0
 		update sysadm.w_div_sin set val_nbre = 1 where id_sin=@dcIdSin and nom_zone='cra_suivi_imei'
 		update sysadm.div_sin set val_nbre = 1 where id_sin=@dcIdSin and nom_zone='cra_suivi_imei'
 
-		Set @sMess = 'Contact crée automatiquement, Process [' + @sLibFour + '] -> '+ 'Retour Contestation IMEI : Cas multi > Le client possède une assurance multi-produit, Orange répond en complétant le nom titulaire car Orange a trouvé un lien avec celui four
-ni par SPB (SPB a en charge de vérifier).'
+		Set @sMess = 'Contact crée automatiquement, Process [' + @sLibFour + '] -> '+ 'Retour Contestation IMEI : Cas multi > Le client possède une assurance multi-produit, Orange répond en complétant le nom titulaire car Orange a trouvé un lien avec celui fourni par SPB (SPB a en charge de vérifier).'
 		IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'	BEGIN EXEC SHERPA_PRO.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @dcIdSin, 2, @sMess, @sIdFour, @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C'	END	ELSE BEGIN EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @dcIdSin, 2, @sMess, @sIdFour, @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C' END				  
   	  End 
 
@@ -2663,8 +2677,7 @@ ni par SPB (SPB a en charge de vérifier).'
 		update sysadm.w_div_sin set val_nbre = 4 where id_sin=@dcIdSin and nom_zone='cra_suivi_imei'
 		update sysadm.div_sin set val_nbre = 4 where id_sin=@dcIdSin and nom_zone='cra_suivi_imei'
 
-		Set @sMess = 'Contact crée automatiquement, Process [' + @sLibFour + '] -> '+ 'Retour Contestation IMEI : Cas FREE > Le client possède une assurance, Orange répond en laissant en blanc le titulaire (IMSI = 20815 => client FREE), n/a Orange ne connait pa
-s l''identité associé (itinérance FREE).'
+		Set @sMess = 'Contact crée automatiquement, Process [' + @sLibFour + '] -> '+ 'Retour Contestation IMEI : Cas FREE > Le client possède une assurance, Orange répond en laissant en blanc le titulaire (IMSI = 20815 => client FREE), n/a Orange ne connait pas l''identité associé (itinérance FREE).'
 		IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'	BEGIN EXEC SHERPA_PRO.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @dcIdSin, 2, @sMess, @sIdFour, @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C'	END	ELSE BEGIN EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @dcIdSin, 2, @sMess, @sIdFour, @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C' END				  
   	  End 
 
@@ -2673,8 +2686,7 @@ s l''identité associé (itinérance FREE).'
 		update sysadm.w_div_sin set val_nbre = 1 where id_sin=@dcIdSin and nom_zone='cra_suivi_imei'
 		update sysadm.div_sin set val_nbre = 1 where id_sin=@dcIdSin and nom_zone='cra_suivi_imei'
 
-		Set @sMess = 'Contact crée automatiquement, Process [' + @sLibFour + '] -> '+ 'Retour Contestation IMEI : Cas chgt de n° > Le client possède une assurance (mono ou multi), Orange répond en fournissant les 2 n° associés au même IMSI (i.e même carte SIM) 
-ici, le client a une multi donc le n° sinistré n''est pas forcément identique au n° du titulaire de l''assurance.'
+		Set @sMess = 'Contact crée automatiquement, Process [' + @sLibFour + '] -> '+ 'Retour Contestation IMEI : Cas chgt de n° > Le client possède une assurance (mono ou multi), Orange répond en fournissant les 2 n° associés au même IMSI (i.e même carte SIM) ici, le client a une multi donc le n° sinistré n''est pas forcément identique au n° du titulaire de l''assurance.'
 		IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'	BEGIN EXEC SHERPA_PRO.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @dcIdSin, 2, @sMess, @sIdFour, @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C'	END	ELSE BEGIN EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @dcIdSin, 2, @sMess, @sIdFour, @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C' END				  
   	  End 
 
@@ -2683,8 +2695,7 @@ ici, le client a une multi donc le n° sinistré n''est pas forcément identique au
 		update sysadm.w_div_sin set val_nbre = 1 where id_sin=@dcIdSin and nom_zone='cra_suivi_imei'
 		update sysadm.div_sin set val_nbre = 1 where id_sin=@dcIdSin and nom_zone='cra_suivi_imei'
 
-		Set @sMess = 'Contact crée automatiquement, Process [' + @sLibFour + '] -> '+ 'Retour Contestation IMEI : Cas  chgt de  carte SIM > Le client possède une assurance (mono ou multi), Orange répond en fournissant les n° associés et les 2 IMSI (indiquant le
- chgt de carte SIM).'
+		Set @sMess = 'Contact crée automatiquement, Process [' + @sLibFour + '] -> '+ 'Retour Contestation IMEI : Cas  chgt de  carte SIM > Le client possède une assurance (mono ou multi), Orange répond en fournissant les n° associés et les 2 IMSI (indiquant le chgt de carte SIM).'
 		IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'	BEGIN EXEC SHERPA_PRO.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @dcIdSin, 2, @sMess, @sIdFour, @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C'	END	ELSE BEGIN EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @dcIdSin, 2, @sMess, @sIdFour, @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C' END				  
   	  End 
 
@@ -2910,8 +2921,7 @@ IF    ( CharIndex ( '[BVIEOX]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[BVIEOX]'
 		If ( CharIndex ( '[BVIEOX]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[BVIEOX]', @sCommentFrnActuel, 1 ) = 0 ) 
 		  Begin 
 			-- [PC801-6][MANTIS14177] 		  
-			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] : Le centre de réparation a reçu le mobile pour traitement SAV (suite 1ère désoxydation récemment effectuée), mais le mobile est bien en panne et non désoxydable, vous pouvez donc 
-instruire le dossier.'
+			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] : Le centre de réparation a reçu le mobile pour traitement SAV (suite 1ère désoxydation récemment effectuée), mais le mobile est bien en panne et non désoxydable, vous pouvez donc instruire le dossier.'
 		  End 
 		  
 		If ( CharIndex ( '[BRIS]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[BRIS]', @sCommentFrnActuel, 1 ) = 0 )
@@ -2923,20 +2933,13 @@ instruire le dossier.'
 		If ( CharIndex ( '[SAV_NO_OK]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[SAV_NO_OK]', @sCommentFrnActuel, 1 ) = 0 ) 
 		  Begin 
 			-- [PC801-6][MANTIS14177] 		  		  		  
-			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] : Le centre de réparation a reçu le mobile pour traitement SAV (suite 1ère désoxydation récemment effectuée), mais n''a pas détecté de panne qui ait un lien avec la 1ère désoxydati
-on, son mobile lui sera renvoyé.' 
+			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] : Le centre de réparation a reçu le mobile pour traitement SAV (suite 1ère désoxydation récemment effectuée), mais n''a pas détecté de panne qui ait un lien avec la 1ère désoxydation, son mobile lui sera renvoyé.' 
 		  End 
 
 		If ( CharIndex ( '[OXY]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[OXY]', @sCommentFrnActuel, 1 ) = 0 ) 
 		  Begin 
 			-- [PC801-6][MANTIS14177] 		  
-			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] : Le centre de réparation a reçu le mobile pour traitement SAV (suite 1ère désoxydation récemment effectuée), mais a détecté une nouvelle oxydation, son mobile lui sera renvoyé.' 
-
-
-
-
-
-		  End 
+			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] : Le centre de réparation a reçu le mobile pour traitement SAV (suite 1ère désoxydation récemment effectuée), mais a détecté une nouvelle oxydation, son mobile lui sera renvoyé.' 		  End 
   
 		Set @sIRR  = 'OK'
 
@@ -3022,8 +3025,7 @@ IF       ( ( CharIndex ( '[BNV]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[BNV]',
 
 	If CharIndex ( '[PNV]', @sCommentFrn, 1 ) > 0 -- [PM280-2][V3]
 	  Begin
-		Set @sMess = 'Message automatique suite retour fournisseur [' + @sLibFour + '] : Attention, appareil en panne non visible, ce qui entraîne un renvoi de l''appareil systématique à l''assuré par le prestataire et un refus de prise en charge. Vous pouvez c
-ontinuer l''instruction du dossier'
+		Set @sMess = 'Message automatique suite retour fournisseur [' + @sLibFour + '] : Attention, appareil en panne non visible, ce qui entraîne un renvoi de l''appareil systématique à l''assuré par le prestataire et un refus de prise en charge. Vous pouvez continuer l''instruction du dossier'
 		Set @sIRR = 'OK'
 	  End 
   
@@ -3037,8 +3039,7 @@ IF      (  ( ( CharIndex ( '[BNVSOX]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[B
   BEGIN
 	If CharIndex ( '[BNVSOX]', @sCommentFrn, 1 ) > 0
 	 Begin
-		Set @sMess = 'Message automatique suite retour fournisseur [' + @sLibFour + '] : Attention, appareil en bris non visible ET sans oxydation détectée, ce qui entraîne un renvoi de l''appareil systématique à l''assuré par le prestataire et un refus de pris
-e en charge. Vous pouvez continuer l''instruction du dossier'
+		Set @sMess = 'Message automatique suite retour fournisseur [' + @sLibFour + '] : Attention, appareil en bris non visible ET sans oxydation détectée, ce qui entraîne un renvoi de l''appareil systématique à l''assuré par le prestataire et un refus de prise en charge. Vous pouvez continuer l''instruction du dossier'
 	 End 
 
 	If CharIndex ( '[BVIEOX]', @sCommentFrn, 1 ) > 0

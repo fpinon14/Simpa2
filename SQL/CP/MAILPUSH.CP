@@ -1925,7 +1925,9 @@ Declare
   And    s.id_sin = c.id_sin  
 
   -- [ISM344831] @sBA_PhysiqueCMA 
-  If @sIdTypArt = 'CAF' And Not ( @sIdFour = ( 'CMA' ) and @sBA_PhysiqueCMA = 'PHYSIQUE' ) 
+  If  @sIdTypArt = 'CAF' 
+	  And Not ( @sIdFour = 'CMA' and @sBA_PhysiqueCMA = 'PHYSIQUE' ) 
+	  And Not ( @sIdFour in ( 'TLS', 'SBE' ) and @sIdRefFour = 'CMDE_A_CPLTER' ) 
    Begin
 	  -- On n'envoie pas le mail dans ce cas car il se formate mal par rapport au contexte.
 	  -- Mais on simule que l'envoi ait bien fonctionné pour ne rien faire dysfonctionner derrière
@@ -1933,9 +1935,6 @@ Declare
 	  Return 0  
    End 
    
-
-
-
 
  -- [PC202553_SELECTRA][CDCSINV3][MANTIS33658]  
   If Exists (   
