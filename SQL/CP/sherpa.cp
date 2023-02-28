@@ -7170,7 +7170,7 @@ BEGIN
 	And   cc.id_typ_code = '-TM'
 	And   cc.id_code = mp.typ_mail
 	
-	Order by ach.id_doc
+	Order by mp.id_seq
 
 End 
 Else
@@ -7203,7 +7203,7 @@ Begin
 	And   cc.id_typ_code = '-TM'
 	And   cc.id_code = mp.typ_mail
 
-	Order by ach.id_doc
+	Order by mp.id_seq
 End 
 Go
 
@@ -7238,6 +7238,9 @@ As
 Declare @sMailSendXmlActuel VarChar ( 128 )
 Declare @sMailSubjectXmlActuel VarChar ( 128 )
 Declare @sTypeDest VarChar ( 20 )
+Declare @sXmlDataActuel VarChar ( 2000 )
+Declare @iPos1 Integer
+Declare @iPos2 Integer
 
 Set @sTypeDest = 'ASSURE' -- Défaut
 If Upper ( @asCodInter ) = 'A' Set @sTypeDest = 'ASSURE'
@@ -7248,9 +7251,29 @@ IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id(
 BEGIN  
 
 	Select	@sMailSendXmlActuel = mail_send,
-			@sMailSubjectXmlActuel = mail_subject
+			@sMailSubjectXmlActuel = mail_subject,
+			@sXmlDataActuel = xml_data
 	From TRACE_MAIL_PRO.sysadm.mail_push
 	Where id_seq = @aiIdSeq
+
+	Set @iPos1 = CharIndex ( 'type_destinataire="', @sXmlDataActuel ) 
+	If @iPos1 > 0 
+	  Begin
+		Set @iPos2 = @iPos1 + len ( 'type_destinataire="' ) 
+		Set @iPos2 = CharIndex ( '"', @sXmlDataActuel, @iPos2 ) + 1
+		Set @sXmlDataActuel = Stuff ( @sXmlDataActuel, @iPos1, (@iPos2 - @iPos1) +1, '' )
+	  End
+
+	Set @sXmlDataActuel = 	
+		Replace (
+			Replace (
+				Replace ( @sXmlDataActuel, @sMailSendXmlActuel, @asMailSend ),
+				@sMailSubjectXmlActuel,
+				@asMailSubject
+				),
+			'code_produit_SIMPA2=',
+			'type_destinataire="' + @sTypeDest + '" code_produit_SIMPA2='
+			)
 
 	Insert into TRACE_MAIL_PRO.sysadm.mail_push
 	Select 
@@ -7276,15 +7299,7 @@ BEGIN
 		id_appli_num,
 		methode,
 		id_arch,
-		Replace (
-			Replace (
-				Replace ( xml_data, @sMailSendXmlActuel, @asMailSend ),
-				@sMailSubjectXmlActuel,
-				@asMailSubject
-				),
-			'code_produit_SIMPA2=',
-			'type_destinataire="' + @sTypeDest + '" code_produit_SIMPA2='
-			)
+		@sXmlDataActuel
 
 	From TRACE_MAIL_PRO.sysadm.mail_push
 	Where id_seq = @aiIdSeq
@@ -7293,9 +7308,29 @@ END
 Else
 BEGIN
 	Select	@sMailSendXmlActuel = mail_send,
-			@sMailSubjectXmlActuel = mail_subject
+			@sMailSubjectXmlActuel = mail_subject,
+			@sXmlDataActuel = xml_data
 	From TRACE_MAIL_TRT.sysadm.mail_push
 	Where id_seq = @aiIdSeq
+
+	Set @iPos1 = CharIndex ( 'type_destinataire="', @sXmlDataActuel ) 
+	If @iPos1 > 0 
+	  Begin
+		Set @iPos2 = @iPos1 + len ( 'type_destinataire="' ) 
+		Set @iPos2 = CharIndex ( '"', @sXmlDataActuel, @iPos2 ) + 1
+		Set @sXmlDataActuel = Stuff ( @sXmlDataActuel, @iPos1, (@iPos2 - @iPos1) +1, '' )
+	  End
+
+	Set @sXmlDataActuel = 	
+		Replace (
+			Replace (
+				Replace ( @sXmlDataActuel, @sMailSendXmlActuel, @asMailSend ),
+				@sMailSubjectXmlActuel,
+				@asMailSubject
+				),
+			'code_produit_SIMPA2=',
+			'type_destinataire="' + @sTypeDest + '" code_produit_SIMPA2='
+			)
 
 	Insert into TRACE_MAIL_TRT.sysadm.mail_push
 	Select 
@@ -7321,15 +7356,7 @@ BEGIN
 		id_appli_num,
 		methode,
 		id_arch,
-		Replace (
-			Replace (
-				Replace ( xml_data, @sMailSendXmlActuel, @asMailSend ),
-				@sMailSubjectXmlActuel,
-				@asMailSubject
-				),
-			'code_produit_SIMPA2=',
-			'type_destinataire="' + @sTypeDest + '" code_produit_SIMPA2='
-			)
+		@sXmlDataActuel
 
 	From TRACE_MAIL_TRT.sysadm.mail_push
 	Where id_seq = @aiIdSeq
