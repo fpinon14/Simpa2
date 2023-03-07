@@ -2187,6 +2187,15 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 
 	Set @sFrom = 'Lien_IFR_' + @sIdFour + '<jff@spb.fr>'
 
+	-- Section rajoutée, à enlever éventuellement pour la recette.
+	-- Le but est de ne plus envoyer le mail intempestif en recette à Sébastien
+	IF @@servername <> master.dbo.SPB_FN_ServerName ('PRO')	
+	  Begin
+		Update @tb Set marquage = 1 Where id_seq = @iIdSeq
+		Continue
+	  End 
+
+
 	EXEC master.dbo.SPB_PS_MAIL 
 			@sRetourErrMail OUTPUT, 
 			'sloison@spb.eu', 
