@@ -27,11 +27,12 @@ IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_EXTRACT_DOC_GENESYS' AND
         DROP procedure dbo.PS_S_EXTRACT_DOC_GENESYS
 GO
 CREATE procedure dbo.PS_S_EXTRACT_DOC_GENESYS
+	@asCas VarChar ( 20 )
 AS
 
 Declare @sId nVarChar ( 16 ) 
 
-Delete dbo.ft_genesys_doc
+If @asCas <>  'ADJONCTION' Delete dbo.ft_genesys_doc
 
 While Exists ( Select Top 1 1 From dbo.cle_doc_genesys where marquage = 0 )
  Begin
