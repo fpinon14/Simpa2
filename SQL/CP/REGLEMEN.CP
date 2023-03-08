@@ -39,11 +39,11 @@
 -------------------------------------------------------------------
 --  JFF		12/02/2016		[PI062]
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'DW_S01_REGLEMENT' AND type = 'P' )
-        DROP procedure sysadm.DW_S01_REGLEMENT
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'DW_S01_REGLEMENT_V01' AND type = 'P' )
+        DROP procedure sysadm.DW_S01_REGLEMENT_V01
 GO
 
-CREATE procedure sysadm.DW_S01_REGLEMENT
+CREATE procedure sysadm.DW_S01_REGLEMENT_V01
         @dcIdSin        Decimal (  10,0 ) -- [PI062]
 AS
  SELECT reglement.id_sin,
@@ -64,7 +64,8 @@ AS
         reglement.maj_par,
         reglement.valide_le,
         reglement.valide_par,
-        reglement.num_let_cheque
+        reglement.num_let_cheque,
+		reglement.id_reg_base
         
   FROM  sysadm.reglement
  WHERE  reglement.id_sin = @dcIdSin
