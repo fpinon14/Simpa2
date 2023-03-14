@@ -5591,3 +5591,153 @@ Begin
 End
 Go
 
+--------------------------------------------------------------------
+--
+-- Fonction             :       PS_FILE_OPEN_REWRITE
+-- Auteur               :       Fabry JF (sur reprise de Frédéric Brouard)
+-- Date                 :       10/03/2023
+-- Libellé              :
+-- Commentaires         :       Créé (ouvre) un fichier en création ou adjonction (Append)
+-- Références           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+--------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_FILE_OPEN_REWRITE' AND type = 'P' )
+        DROP procedure sysadm.PS_FILE_OPEN_REWRITE
+GO
+
+CREATE  PROCEDURE sysadm.PS_FILE_OPEN_REWRITE 
+	@FILE_NAME  NVARCHAR(256), -- nom du fichier
+	@ACTION		INT         ,  -- 2=Créer ; 8=Ouvrir en Append
+    @F_HANDLE   INT   OUTPUT,  -- handle OS du fichier
+    @F_ID       INT   OUTPUT   -- identifiant numérique du fichier
+AS
+ 
+/******************************************************************************************
+* Copyright :   Frédéric Brouard / SQLpro / SQL spot                                      *
+*               (http://sqlpro.developpez.com - http://www.sqlspot.com)                   *
+* Auteur :      Frédéric Brouard / SQL pro                                                *
+* Créée le :    2006-02-01                                                                *
+* Description : créé un fichier texte en écriture à l'aide d'objets OLE                   *
+******************************************************************************************/
+ 
+   SET NOCOUNT ON
+ 
+   -- valeur de retour d'exécution appel OLE
+   DECLARE @OLE_RETURN INT
+ 
+   -- création de l'objet
+   EXECUTE @OLE_RETURN = sp_OACreate 'Scripting.FileSystemObject', @F_HANDLE OUT
+   IF @OLE_RETURN <> 0  RETURN -1
+ 
+   --Ouvre le fichier (2 = ForWriting, 8 = ForAppending)
+   EXECUTE @OLE_RETURN = sp_OAMethod @F_HANDLE, 'OpenTextFile', @F_ID OUT, @FILE_NAME, @ACTION, 1
+   IF @OLE_RETURN <> 0  RETURN -1
+ 
+GO
+
+--------------------------------------------------------------------
+--
+-- Fonction             :       PS_FILE_WRITE_DATA
+-- Auteur               :       Fabry JF (sur reprise de Frédéric Brouard)
+-- Date                 :       10/03/2023
+-- Libellé              :
+-- Commentaires         :       ajoute une lignes de donnée
+-- Références           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+--------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_FILE_WRITE_DATA' AND type = 'P' )
+        DROP procedure sysadm.PS_FILE_WRITE_DATA
+GO
+
+CREATE PROCEDURE sysadm.PS_FILE_WRITE_DATA 
+		@F_ID  INT,            -- identifiant numérique du fichier
+        @LINE  VARCHAR(max),   -- texte à ajouter
+		@RETOUR_CHARIOT Int    -- 0=Sans;1=Avec retour chariot en fin de ligne
+AS
+ 
+/******************************************************************************************
+* Copyright :   Frédéric Brouard / SQLpro / SQL spot                                      *
+                (http://sqlpro.developpez.com - http://www.sqlspot.com)                   *
+* Auteur :      Frédéric Brouard / SQL pro                                                *
+* Créée le :    2006-02-01                                                                *
+* Description : ajoute du texte à un fichier texte l'aide d'objets OLE                    *
+******************************************************************************************/
+ 
+BEGIN
+ 
+   SET NOCOUNT ON
+ 
+   -- valeur de retour d'exécution appel OLE
+   DECLARE @OLE_RETURN INT
+ 
+
+   If @RETOUR_CHARIOT > 0 
+     Begin
+	   EXECUTE @OLE_RETURN = sp_OAMethod @F_ID, 'WriteLine', Null, @LINE
+
+	   IF @OLE_RETURN  <> 0 RETURN -1
+	 End 
+   Else
+     Begin
+			-- ecrit la ligne dans le fichier
+	   EXECUTE @OLE_RETURN = sp_OAMethod @F_ID, 'Write', Null, @LINE
+
+	   IF @OLE_RETURN  <> 0 RETURN -1
+	 End
+ 
+END
+GO
+
+--------------------------------------------------------------------
+--
+-- Fonction             :       PS_FILE_CLOSE
+-- Auteur               :       Fabry JF (sur reprise de Frédéric Brouard)
+-- Date                 :       10/03/2023
+-- Libellé              :
+-- Commentaires         :       Ferme le fichier
+-- Références           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+--------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_FILE_CLOSE' AND type = 'P' )
+        DROP procedure sysadm.PS_FILE_CLOSE
+GO
+
+CREATE PROCEDURE sysadm.PS_FILE_CLOSE 
+		@F_HANDLE INT,   -- handle OS du fichier
+        @F_ID      int   -- identifiant numérique du fichier
+AS
+ 
+/******************************************************************************************
+* Copyright :   Frédéric Brouard / SQLpro / SQL spot                                      *
+                (http://sqlpro.developpez.com - http://www.sqlspot.com)                   *
+* Auteur :      Frédéric Brouard / SQL pro                                                *
+* Créée le :    2006-02-01                                                                *
+* Description : ferme un fichier texte l'aide d'objets OLE                                *
+******************************************************************************************/
+ 
+BEGIN
+                
+   SET NOCOUNT ON
+ 
+   DECLARE @OLE_RETURN int
+ 
+   -- fermeture du fichier
+   EXECUTE @OLE_RETURN = sp_OADestroy @F_ID
+ 
+   -- destruction de l'objet Ole
+   EXECUTE @OLE_RETURN = sp_OADestroy @F_HANDLE
+ 
+END
+GO

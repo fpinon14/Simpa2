@@ -6192,6 +6192,8 @@ GO
 CREATE procedure sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
 AS
 
+IF NOT ( @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' ) Return
+
 Declare @Tb Table (
 	id_seq	int identity,
 	nom	    Varchar ( 255 ),
@@ -6247,7 +6249,7 @@ While Exists ( Select Top 1 1 From @Tb where marquage = 0 )
 
 Set @sMailBody = 'Bonjour, ' + Char (10) + Char ( 10 )
 Set @sMailBody = @sMailBody + convert ( varchar(10), @iRowCount ) + ' objet' + IIF ( @iRowCount > 1,'s','') + ' SQL ' + IIF ( @iRowCount > 1,'ont','a') + ' été créé' + IIF ( @iRowCount > 1,'s','')
-Set @sMailBody = @sMailBody + ' sur la base SIMPA2_PRO de façon malveillante (relevé le ' + convert ( varchar ( 10 ) , Getdate(), 103 ) + ' à ' + convert ( varchar ( 10 ) , Getdate(), 108 ) + ').' + Char (10) + Char ( 10 ) 
+Set @sMailBody = @sMailBody + ' sur la base ' + db_name() + ' de façon malveillante (relevé le ' + convert ( varchar ( 10 ) , Getdate(), 103 ) + ' à ' + convert ( varchar ( 10 ) , Getdate(), 108 ) + ').' + Char (10) + Char ( 10 ) 
 Set @sMailBody = @sMailBody + @sChaineObjAbs + Char (10) 
 
 Set @sMailBody = @sMailBody + CHAR ( 10 )
@@ -6259,7 +6261,7 @@ Set @sMailBody = @sMailBody + 'Fabry Jean-François'
 Set @sMailBody = @sMailBody + CHAR ( 10 )
 Set @sMailBody = @sMailBody + 'DSI/Etudes SIMPA2'
 
-Set @sObjet = '[ALERTE] ' + convert ( varchar(10), @iRowCount ) + ' objet' + IIF ( @iRowCount > 1,'s','') + ' SQL créé' + IIF ( @iRowCount > 1,'s','') + ' sur la base SIMPA2_PRO'
+Set @sObjet = '[ALERTE] ' + convert ( varchar(10), @iRowCount ) + ' objet' + IIF ( @iRowCount > 1,'s','') + ' SQL créé' + IIF ( @iRowCount > 1,'s','') + ' sur la base ' + db_name() 
 
 -- On casse la chaine objet et la chaine expediteur
 Set @sObjet = Left ( @sObjet + space ( 255 ), 255 )
@@ -6339,7 +6341,7 @@ While Exists ( Select Top 1 1 From @Tb where marquage = 0 )
 
 Set @sMailBody = 'Bonjour, ' + Char (10) + Char ( 10 )
 Set @sMailBody = @sMailBody + convert ( varchar(10), @iRowCount ) + ' objet' + IIF ( @iRowCount > 1,'s','') + ' SQL ' + IIF ( @iRowCount > 1,'ont','a') + ' été supprimé' + IIF ( @iRowCount > 1,'s','')
-Set @sMailBody = @sMailBody + ' de la base SIMPA2_PRO de façon malveillante (relevé le ' + convert ( varchar ( 10 ) , Getdate(), 103 ) + ' à ' + convert ( varchar ( 10 ) , Getdate(), 108 ) + ').' + Char (10) + Char ( 10 ) 
+Set @sMailBody = @sMailBody + ' de la base ' + db_name() + ' de façon malveillante (relevé le ' + convert ( varchar ( 10 ) , Getdate(), 103 ) + ' à ' + convert ( varchar ( 10 ) , Getdate(), 108 ) + ').' + Char (10) + Char ( 10 ) 
 Set @sMailBody = @sMailBody + @sChaineObjAbs + Char (10) 
 
 Set @sMailBody = @sMailBody + CHAR ( 10 )
@@ -6351,7 +6353,7 @@ Set @sMailBody = @sMailBody + 'Fabry Jean-François'
 Set @sMailBody = @sMailBody + CHAR ( 10 )
 Set @sMailBody = @sMailBody + 'DSI/Etudes SIMPA2'
 
-Set @sObjet = '[ALERTE] ' + convert ( varchar(10), @iRowCount ) + ' objet' + IIF ( @iRowCount > 1,'s','') + ' SQL supprimé' + IIF ( @iRowCount > 1,'s','') + ' de la base SIMPA2_PRO'
+Set @sObjet = '[ALERTE] ' + convert ( varchar(10), @iRowCount ) + ' objet' + IIF ( @iRowCount > 1,'s','') + ' SQL supprimé' + IIF ( @iRowCount > 1,'s','') + ' de la base ' + db_name() 
 
 -- On casse la chaine objet et la chaine expediteur
 Set @sObjet = Left ( @sObjet + space ( 255 ), 255 )
