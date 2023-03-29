@@ -25,6 +25,7 @@
 -- #1 Le 30/11/2004 DGA : Modification de la procédure SPB_PS_MAIL. Paramêtre @asRetourErr
 -- JFF      12/02/2016   [PI062]
 -- JFF      18/08/2020   [PM425] Suppression ligne contrôle sur courrier CP 00000
+-- JFF      28/03/2023   [RS4843-PM425-1]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_PM425_RECUP_INFO' AND type = 'P' )
         DROP procedure sysadm.PS_S_PM425_RECUP_INFO
@@ -52,7 +53,7 @@ CREATE PROCEDURE sysadm.PS_S_PM425_RECUP_INFO
 	@asChaine    VarChar ( 255 ) OUTPUT
 AS 
 
--- Voir l'option
+Declare @sCodeBanque VarChar ( 10 )
 
 Select @aiDecentralise = 1,
 	   @asFondPage = Upper ( rtrim ( ltrim ( sysadm.FN_CLE_VAL ( 'FOND_DE_PAGE', rtrim ( val_car ) + rtrim ( val_car2), ';' )))),
@@ -88,7 +89,8 @@ Select  @asNomDest   = IsNull ( rtrim ( i.nom ), '' ) ,
 		@asAdr2		= IsNull ( rtrim (i.adr_2 ), '' ),
 		@asAdrCP		= IsNull ( rtrim (i.adr_cp ), '' ),
 		@asAdrVille	= IsNull ( rtrim (i.adr_ville ), '' ),
-		@asCodInter = IsNull ( rtrim ( i.cod_inter ), '') 
+		@asCodInter = IsNull ( rtrim ( i.cod_inter ), '') ,
+		@sCodeBanque = IsNull ( rtrim ( i.cod_bq ), '') 
 From	sysadm.inter i
 Where   i.id_sin = @adcIdSin
 And     i.id_i = @adcIdInter
@@ -100,6 +102,15 @@ Where  a.id_arch = @aiIdArch
 
 If @asAdrCP = '00000' Set @aiDecentralise = 0
 
+-- [RS4843-PM425-1]
+If sysadm.FN_CLE_NUMERIQUE ( 'RS4843-PM425-1') > 0 
+ Begin
+    -- Si pour le traitement des relances, le code banque de l'inter Banque et BNP ou LCL, on annule la décentralisation
+	-- et on garde l'édition papier chez SPB.
+	-- Si ce n'est pas une relance, ce traitement est fait autrement sur le id_typ_doc 1 et 60.
+	If @aiIdTypDoc = -100 And @asCodInter = 'B' And @sCodeBanque in ( '30004', '30002' ) Set @aiDecentralise = 0 -- [RS4843-PM425-1]
+ End 
+ 
 Go
 
 
