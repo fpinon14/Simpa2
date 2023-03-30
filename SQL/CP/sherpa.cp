@@ -6951,11 +6951,20 @@ Declare @dtDteRetPnd DateTime
 
 Set @dtDteRetPnd = Convert ( DateTime, @asDteRetPnd )
 
--- Produit non éligible au trt (donné par Sophie Didier)
-If @aiIdProdAdh Not in ( 87 ) Return 4
-
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 BEGIN
+
+	If Not Exists (
+		Select Top 1 1 
+		From SHERPA_PRO.sysadm.det_pro dp
+		Where dp.id_prod = @aiIdProdAdh
+		and dp.id_typ_code = '-DP'
+		And dp.id_code = 266 
+	) 
+	 Begin	
+		Return 4
+	 End 
+
 	Select @aiIdCLi = id_cli 
 	from SHERPA_PRO.sysadm.adhesion with (nolock) 
 	where id_prod_adh = @aiIdProdAdh 
@@ -6987,6 +6996,17 @@ BEGIN
 END
 ELSE
 BEGIN
+	If Not Exists (
+		Select Top 1 1 
+		From SHERPA_SIM.sysadm.det_pro dp
+		Where dp.id_prod = @aiIdProdAdh
+		and dp.id_typ_code = '-DP'
+		And dp.id_code = 266 
+	) 
+	 Begin	
+		Return 4
+	 End 
+
 	Select @aiIdCLi = id_cli 
 	from SHERPA_SIM.sysadm.adhesion with (nolock) 
 	where id_prod_adh = @aiIdProdAdh 

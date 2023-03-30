@@ -6386,8 +6386,6 @@ GO
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
--- JFF      12/02/2016   [PI062]
--------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_RS4166_CTRLE_DATA_PND_CORUS' AND type = 'P' )
         DROP procedure sysadm.PS_S_RS4166_CTRLE_DATA_PND_CORUS
 GO
@@ -6400,7 +6398,8 @@ CREATE procedure sysadm.PS_S_RS4166_CTRLE_DATA_PND_CORUS
 	@asIdCour    VarChar  ( 6 ),
 	@adtDteEdit  DateTime,
 	@asDetRetPnd VarChar ( 10 ) output,
-	@asCreelePnd VarChar ( 10 ) output
+	@asCreelePnd VarChar ( 10 ) output,
+	@asIdProd    Varchar ( 10 ) output
 AS
 
 If Not Exists ( 
@@ -6430,6 +6429,23 @@ And   p.id_doc = @adcIdDoc
 If @@Rowcount > 0 
  Begin
 	Return 2
+ End 
+
+If Not Exists (
+	Select Top 1 1 
+	From sysadm.det_pro dp,
+		 sysadm.sinistre s
+	Where s.id_sin = @adcIdSin
+	And dp.id_prod = s.id_prod
+	And dp.id_code_dp = 364
+) 
+ Begin
+	
+	Select 	@asIdProd = s.id_prod
+	From sysadm.sinistre s
+	Where s.id_sin = @adcIdSin
+
+	Return -2
  End 
 
 Return 1
