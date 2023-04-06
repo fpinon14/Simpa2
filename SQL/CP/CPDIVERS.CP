@@ -1777,6 +1777,7 @@ Set @sDIR = 'DIR "' + @sRepCourDest + '*.DOT" /b'
 -- @TbRepCour se charge avec la liste des fichiers du répertoire
 Insert into @TbRepCour2 EXEC master.dbo.xp_cmdshell @sDIR 
 Delete @TbRepCour2 where nom_fic is null
+Delete @TbRepCour2 where left ( ltrim ( nom_fic ), 16 ) = 'ACCESS IS DENIED'
 Update @TbRepCour2 Set nom_fic = Upper ( nom_fic )
 Insert into @TbRepCour Select nom_fic, 0  From @TbRepCour2
 
