@@ -926,8 +926,62 @@ GO
 -- Arguments            :       
 --
 -- Retourne             :       Rien
---
 -------------------------------------------------------------------
+-- JFF    30/03/2023   Changement de méthode de lecture et recherche sur SIMPA2BLOB_PRO
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S01_RECUP_BLOB_KSL' AND type = 'P' )
+        DROP procedure sysadm.PS_S01_RECUP_BLOB_KSL
+GO
+
+CREATE procedure sysadm.PS_S01_RECUP_BLOB_KSL
+	@iIdArch	integer
+AS
+
+Select  wb.txt_blob  
+From sysadm.w_cour_blob_arch wb  with (nolock)  
+Where wb.id_arch = @iIdArch  
+
+If @@RowCount = 1 Return @@Error
+  
+Select  ab.txt_blob  
+From sysadm.archive a  with (nolock),  
+	 sysadm.archive_blob ab  with (nolock)  
+Where a.id_arch = @iIdArch  
+And     ab.id_sin = a.id_sin  
+And     ab.id_inter = a.id_inter  
+And     ab.id_doc = a.id_doc  
+	
+If @@RowCount = 1 Return @@Error
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+  Begin
+	Select  ab.txt_blob  
+	From sysadm.archive a  with (nolock),  
+	 	 SIMPA2BLOB_PRO.sysadm.archive_blob2 ab  with (nolock)  
+	Where a.id_arch = @iIdArch  
+	And     ab.id_sin = a.id_sin  
+	And     ab.id_inter = a.id_inter  
+	And     ab.id_doc = a.id_doc  
+  End   
+
+If @@RowCount = 1 Return @@Error
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+  Begin
+	Select  ab.txt_blob  
+	From sysadm.archive a  with (nolock),  
+	 	 SIMPA2BLOB_PRO.sysadm.archive_blob ab  with (nolock)  
+	Where a.id_arch = @iIdArch  
+	And     ab.id_sin = a.id_sin  
+	And     ab.id_inter = a.id_inter  
+	And     ab.id_doc = a.id_doc  
+  End   
+
+Return @@Error  
+
+Go
+
+/*
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S01_RECUP_BLOB_KSL' AND type = 'P' )
         DROP procedure sysadm.PS_S01_RECUP_BLOB_KSL
 GO
@@ -960,7 +1014,7 @@ Else
 Return @@Error
 
 Go
-
+*/
 --------------------------------------------------------------------
 --
 -- Procédure            : 	PS_S_PM240_NBRE_COURRIER_1
