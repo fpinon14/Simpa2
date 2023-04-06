@@ -6971,8 +6971,10 @@ BEGIN
 	And id_ets = @aiIdEts
 	And id_adh = @aiIdAdh
 	and id_sdos = @aiIdsDos 
+	/* Trop restrictif
 	and id_status in ( 0, 2, 3, 8 ) 
 	and id_exist <> 0 
+	*/
 
 	Set @iRowCount = @@RowCount 
 	If @iRowCount <= 0 Return -1	
@@ -7013,8 +7015,11 @@ BEGIN
 	And id_ets = @aiIdEts
 	And id_adh = @aiIdAdh
 	and id_sdos = @aiIdsDos 
+	/* Trop restrictif
 	and id_status in ( 0, 2, 3, 8 ) 
 	and id_exist <> 0 
+	*/
+
 
 	Set @iRowCount = @@RowCount 
 	If @iRowCount <= 0 Return -1	
