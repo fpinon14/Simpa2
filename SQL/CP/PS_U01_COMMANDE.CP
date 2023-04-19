@@ -115,6 +115,7 @@
 --     JFF 22/10/2019   [PI087_PM473_2]
 --	   JFF 19/12/2022   [RS4093_EVOL_ELD]
 --	   JFF 20/02/2023   [RS4616_RET_TLS]
+--	   JFF 06/04/2023   [PMO139_RS4926]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U01_COMMANDE' AND type = 'P' )
         DROP procedure sysadm.PS_U01_COMMANDE
@@ -2901,8 +2902,7 @@ IF    ( CharIndex ( '[BVIEOX]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[BVIEOX]'
 		If ( CharIndex ( '[SAV_NO_OK]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[SAV_NO_OK]', @sCommentFrnActuel, 1 ) = 0 ) 
 		  Begin 
 			-- [PC801-6][MANTIS14177] 		  
-			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] : Le centre de réparation a reçu le mobile pour traitement SAV (suite 1ère réparation récemment effectuée), mais n''a pas détecté de panne qui ait un lien avec la 1ère réparation,
- son mobile lui sera renvoyé.' 
+			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] : Le centre de réparation a reçu le mobile pour traitement SAV (suite 1ère réparation récemment effectuée), mais n''a pas détecté de panne qui ait un lien avec la 1ère réparation, son mobile lui sera renvoyé.' 
 		  End 
 
 	  
@@ -2972,7 +2972,8 @@ IF       ( ( CharIndex ( '[BNV]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[BNV]',
 		   ( CharIndex ( '[CRSMTPEC]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[CRSMTPEC]', @sCommentFrnActuel, 1 ) = 0 ) Or -- [PC13321]	       
 		   ( CharIndex ( '[EXP]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[EXP]', @sCommentFrnActuel, 1 ) = 0 ) Or  -- [PM280-2]
 		   ( CharIndex ( '[NOSPBS]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[NOSPBS]', @sCommentFrnActuel, 1 ) = 0 ) Or -- [PM280-2]
-		   ( CharIndex ( '[PNV]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[PNV]', @sCommentFrnActuel, 1 ) = 0 ) -- [PM280-2][V3]
+		   ( CharIndex ( '[PNV]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[PNV]', @sCommentFrnActuel, 1 ) = 0 ) Or -- [PM280-2][V3]
+		   ( CharIndex ( '[PRDV]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[PRDV]', @sCommentFrnActuel, 1 ) = 0 ) -- [PMO139_RS4926]
 	     ) 
 	 And @iStatusGc = 21
   BEGIN
@@ -2985,9 +2986,6 @@ IF       ( ( CharIndex ( '[BNV]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[BNV]',
 	If CharIndex ( '[PNC]', @sCommentFrn, 1 ) > 0 -- [PC929_CDISCOUNT][PC929-2-V3]
 	  Begin
 		Set @sMess = 'Retour fournisseur [' + @sLibFour + '] : Attention, panne non constatée, ce qui entraîne un renvoi de l''appareil systématique à l''assuré par le prestataire et un refus de prise en charge. Vous pouvez continuer l''instruction du dossier'
-
-
-
 		-- [MANTIS14489]
 		If @iInfoSpbFrnActuel = 957 
 		  Begin
@@ -3028,6 +3026,13 @@ IF       ( ( CharIndex ( '[BNV]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[BNV]',
 		Set @sMess = 'Message automatique suite retour fournisseur [' + @sLibFour + '] : Attention, appareil en panne non visible, ce qui entraîne un renvoi de l''appareil systématique à l''assuré par le prestataire et un refus de prise en charge. Vous pouvez continuer l''instruction du dossier'
 		Set @sIRR = 'OK'
 	  End 
+	
+	If CharIndex ( '[PRDV]', @sCommentFrn, 1 ) > 0 -- [PMO139_RS4926]
+	  Begin
+		Set @sMess = 'Retour fournisseur [' + @sLibFour + '] : Attention, panne résolue par Diagnostic Vidéo, ce qui entraîne un refus de prise en charge, le sinistre n''est pas considéré comme réparé, aucune tentative de réparation n''a été engagée. Vous pouvez continuer l''instruction du dossier'
+		Set @sIRR = 'OK'
+	  End 
+
   
   END
 
