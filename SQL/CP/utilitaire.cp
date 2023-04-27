@@ -5741,3 +5741,86 @@ BEGIN
  
 END
 GO
+
+--------------------------------------------------------------------
+--
+-- Fonction             :       FN_CLE_VAL_XML
+-- Auteur               :       Fabry JF
+-- Date                 :       26/04/2023
+-- Libellé              :		[RS5045]
+-- Commentaires         :       Retourne la valeur d'une variable Xml
+-- Références           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_CLE_VAL_XML' AND type = 'FN' )
+        DROP function sysadm.FN_CLE_VAL_XML
+Go
+
+CREATE  function sysadm.FN_CLE_VAL_XML  
+       ( @sXmlKey     VarChar (255), -- Clé de laquelle on veut extraire la valeur
+	     @sXmlData    VarChar (max), -- Chaine complète à browser
+	     @sRepesctCasse VarChar (3 ) -- OUI/NON
+        )
+RETURNS Varchar(255)
+
+AS
+
+Begin
+
+  Declare @sXmlDataWork VarChar (max)
+  Declare @sXmlKeyWork VarChar (255)
+  Declare @iPos1 integer
+  Declare @iPos2 integer
+  Declare @sValue VarChar ( 255 ) 
+
+  If @sXmlData is null Return ''
+  If @sXmlKey is null Return ''
+
+  Set @sXmlData = lTrim ( rTrim ( @sXmlData ))
+  Set @sXmlKey = lTrim ( rTrim ( @sXmlKey ))
+
+  If @sXmlData = '' Return ''
+  If @sXmlKey = '' Return ''
+
+  While CharIndex ( ' =', @sXmlData  ) > 0 
+    Begin 
+	 Set @sXmlData = Replace ( @sXmlData, ' =', '=' )
+	End 
+
+  While CharIndex ( '= ', @sXmlData  ) > 0 
+    Begin 
+	 Set @sXmlData = Replace ( @sXmlData, '= ', '=' )
+	End 
+
+  Set @sXmlDataWork = @sXmlData
+  Set @sXmlKeyWork = @sXmlKey
+
+  If @sRepesctCasse = 'NON' 
+    Begin 
+		Set @sXmlDataWork = Upper ( @sXmlDataWork )
+		Set @sXmlKeyWork = Upper ( @sXmlKeyWork )
+	End 
+
+  Set @iPos1 = CharIndex ( @sXmlKeyWork + '="', @sXmlDataWork ) 
+  If @iPos1 > 0 
+    Begin
+	  Set @iPos1 = @iPos1 + len ( @sXmlKeyWork + '="') 
+	  Set @iPos2 = CharIndex ( '"', @sXmlDataWork, @iPos1 ) 
+	End 
+
+  If @iPos1 <= 0 Or @iPos2 <= 0 Return ''
+
+  Set @sValue = lTrim ( rTrim ( Substring ( @sXmlData, @iPos1, @iPos2 - @iPos1 )))
+
+  If @sValue is null Set @sValue = ''
+
+  Return @sValue 
+
+End
+Go
+
+
