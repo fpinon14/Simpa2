@@ -1013,3 +1013,267 @@ If @asCodeMaquette is null Set @asCodeMaquette = ''
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procedure            :       sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL
+-- Auteur               :       Fabry JF
+-- Date                 :       25/04/2023
+-- Libelle              :        
+-- Commentaires         :       
+--	                            
+-- References           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL' AND type = 'P' )
+        DROP procedure sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL
+GO
+
+CREATE procedure sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL
+	@asModeLecture VarChar ( 6 )  
+As
+  
+If lTrim ( rtrim ( @asModeLecture )) = '' Set @asModeLecture = null  
+Set @asModeLecture = Upper ( @asModeLecture )   
+Set @asModeLecture = LTRIM ( RTRIM ( @asModeLecture ))  
+
+Declare @TbWork Table (
+	id_seq  integer,
+	id_sin  integer,
+	id_arch integer,
+	xml_data varchar (max),
+	chemin_depot varchar ( 255),
+	dateh_exec DateTime,
+	marquage integer
+)
+
+  
+-----------------------------------------
+---------- Version PRODUCTION -----------
+-----------------------------------------
+If @@servername = master.dbo.SPB_FN_ServerName ('PRO')  
+ Begin    
+  
+	-----------------------------------------------------------------------------
+	---------- Traitement SIMPA2 Par mode de lecture avec courrier SIMPA2 -------
+	-----------------------------------------------------------------------------
+	  If @asModeLecture is not null   
+		Begin  
+		   Insert into @TbWork
+		   Select   
+			mp.id_seq,  
+			mp.id_sin,  
+			mp.id_arch,  
+			mp.xml_data + IsNull ( mp.xml_data2, ''),
+			IsNull ( ( Select chemin From sysadm.chem_depot_ksl where id_chem = mp.id_chem ), '') chemin_depot,
+			mp.dateh_exec,
+			0
+  
+		   From sysadm.mail_push mp,  
+			SIMPA2_PRO.sysadm.det_pro d with (nolock) ,  
+			SIMPA2_PRO.sysadm.sinistre s with (nolock) ,  
+			SIMPA2_PRO.sysadm.archive a with (nolock)  
+     
+		   Where  mp.methode = 'KSL2'  -- Important, Nouveau RS5045
+		   And ( mp.mail_trt_ok = 'N' or mp.mail_trt_ok is null )  
+		   And mp.id_appli_num = 2  -- SIMPA2
+		   And a.id_arch = mp.id_arch  
+		   And s.id_sin = mp.id_sin  
+		   And d.id_prod = s.id_prod  
+		   And d.id_code_dp = 186  
+		   and d.id_code_car = @asModeLecture  
+		   And ( CharIndex ( '#' + a.id_cour + '#', sysadm.FN_CLE_VAL ( 'ID_COUR', rtrim ( d.val_car ), ';' ) , 1 ) > 0   
+				 Or   
+			  sysadm.FN_CLE_VAL ( 'ID_COUR', rtrim ( d.val_car ), ';' ) = ''  
+			)  
+		   And mp.cree_le > DateAdd ( month, -2, getdate() )  
+		   Return
+		End   
+
+	------------------------------------------------------------------------------
+	--------- Traitement SIMPA2 SANS mode de lecture avec courrier SIMPA2 --------
+	--------- avec contrôle que le produit lié au sinistre ne soit pas    --------
+	--------- sous mode de lecture (option dp/186).                       --------
+	------------------------------------------------------------------------------
+		   Insert into @TbWork		
+		   Select  
+			mp.id_seq,  
+			mp.id_sin,  
+			mp.id_arch,  
+			mp.xml_data + IsNull ( mp.xml_data2, ''),
+			IsNull ( ( Select chemin From sysadm.chem_depot_ksl where id_chem = mp.id_chem ), '') chemin_depot,
+			mp.dateh_exec,
+			0
+ 
+		   From sysadm.mail_push mp with (nolock),  
+			    SIMPA2_PRO.sysadm.archive a with (nolock)  
+		   Where  mp.methode = 'KSL2'  -- Important, Nouveau RS5045
+		   And ( mp.mail_trt_ok = 'N' or mp.mail_trt_ok is null )  
+		   And mp.id_appli_num = 2  -- SIMPA2
+		   And a.id_arch = mp.id_arch  
+		   And mp.cree_le > DateAdd ( month, -2, getdate() )  
+		   And Not Exists (   
+			  Select Top 1 1   
+			  From  SIMPA2_PRO.sysadm.det_pro d with (nolock),  
+					SIMPA2_PRO.sysadm.sinistre s with (nolock)  
+			  Where  s.id_sin = mp.id_sin  
+			  And    d.id_prod = s.id_prod  
+			  And    d.id_code_dp = 186  
+			  And    ( CharIndex ( '#' + a.id_cour + '#', sysadm.FN_CLE_VAL ( 'ID_COUR', rtrim ( d.val_car ), ';' ) , 1 ) > 0   
+				       Or   
+				       sysadm.FN_CLE_VAL ( 'ID_COUR', rtrim ( d.val_car ), ';' ) = ''  
+			         )  
+			)  
+
+ End  
+
+----------------------------------------------------------------------------------------------
+---------- Version SIMULATION                                                       ----------
+---------- doit être identique à la version de production hormis le nom des Serveur ---------- 
+----------------------------------------------------------------------------------------------
+If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')  
+ Begin    
+  
+	-----------------------------------------------------------------------------
+	---------- Traitement SIMPA2 Par mode de lecture avec courrier SIMPA2 -------
+	-----------------------------------------------------------------------------
+	  If @asModeLecture is not null   
+		Begin  
+		   Insert into @TbWork
+		   Select   
+			mp.id_seq,  
+			mp.id_sin,  
+			mp.id_arch,  
+			mp.xml_data + IsNull ( mp.xml_data2, ''),
+			IsNull ( ( Select chemin From sysadm.chem_depot_ksl where id_chem = mp.id_chem ), '') chemin_depot,
+			mp.dateh_exec,
+			0
+  
+		   From sysadm.mail_push mp,  
+			SIMPA2_TRT.sysadm.det_pro d with (nolock) ,  
+			SIMPA2_TRT.sysadm.sinistre s with (nolock) ,  
+			SIMPA2_TRT.sysadm.archive a with (nolock)  
+     
+		   Where  mp.methode = 'KSL2'  -- Important, Nouveau RS5045
+		   And ( mp.mail_trt_ok = 'N' or mp.mail_trt_ok is null )  
+		   And mp.id_appli_num = 2  -- SIMPA2
+		   And a.id_arch = mp.id_arch  
+		   And s.id_sin = mp.id_sin  
+		   And d.id_prod = s.id_prod  
+		   And d.id_code_dp = 186  
+		   and d.id_code_car = @asModeLecture  
+		   And ( CharIndex ( '#' + a.id_cour + '#', sysadm.FN_CLE_VAL ( 'ID_COUR', rtrim ( d.val_car ), ';' ) , 1 ) > 0   
+				 Or   
+			  sysadm.FN_CLE_VAL ( 'ID_COUR', rtrim ( d.val_car ), ';' ) = ''  
+			)  
+		   And mp.cree_le > DateAdd ( month, -2, getdate() )  
+		   Return
+		End   
+
+	------------------------------------------------------------------------------
+	--------- Traitement SIMPA2 SANS mode de lecture avec courrier SIMPA2 --------
+	--------- avec contrôle que le produit lié au sinistre ne soit pas    --------
+	--------- sous mode de lecture (option dp/186).                       --------
+	------------------------------------------------------------------------------
+		   Insert into @TbWork		
+		   Select  
+			mp.id_seq,  
+			mp.id_sin,  
+			mp.id_arch,  
+			mp.xml_data + IsNull ( mp.xml_data2, ''),
+			IsNull ( ( Select chemin From sysadm.chem_depot_ksl where id_chem = mp.id_chem ), '') chemin_depot,
+			mp.dateh_exec,
+			0
+ 
+		   From sysadm.mail_push mp with (nolock),  
+			    SIMPA2_TRT.sysadm.archive a with (nolock)  
+		   Where  mp.methode = 'KSL2'  -- Important, Nouveau RS5045
+		   And ( mp.mail_trt_ok = 'N' or mp.mail_trt_ok is null )  
+		   And mp.id_appli_num = 2  -- SIMPA2
+		   And a.id_arch = mp.id_arch  
+		   And mp.cree_le > DateAdd ( month, -2, getdate() )  
+		   And Not Exists (   
+			  Select Top 1 1   
+			  From  SIMPA2_TRT.sysadm.det_pro d with (nolock),  
+					SIMPA2_TRT.sysadm.sinistre s with (nolock)  
+			  Where  s.id_sin = mp.id_sin  
+			  And    d.id_prod = s.id_prod  
+			  And    d.id_code_dp = 186  
+			  And    ( CharIndex ( '#' + a.id_cour + '#', sysadm.FN_CLE_VAL ( 'ID_COUR', rtrim ( d.val_car ), ';' ) , 1 ) > 0   
+				       Or   
+				       sysadm.FN_CLE_VAL ( 'ID_COUR', rtrim ( d.val_car ), ';' ) = ''  
+			         )  
+			)  
+
+ End  
+
+----------------------------------------------------------------------------------------------
+---------- Version PRODUCTION ET SIMULATION                                         ----------
+---------- Ne fait intervenir que la base TRACE_MAIL_XXX                            ----------
+----------------------------------------------------------------------------------------------
+
+	------------------------------------------------------------------------------
+	--------- Traitement de tous les autres mails non lié à un courrier   --------
+	--------- SINISTRE.                                                   -------- 
+	------------------------------------------------------------------------------
+	Insert into @TbWork		
+	Select  
+	mp.id_seq,  
+	mp.id_sin,  
+	mp.id_arch,  
+	mp.xml_data + IsNull ( mp.xml_data2, ''),
+	IsNull ( ( Select chemin From sysadm.chem_depot_ksl where id_chem = mp.id_chem ), '') chemin_depot,
+	mp.dateh_exec,
+	0
+  
+	From sysadm.mail_push mp with (nolock)  
+	Where  mp.methode = 'KSL2'  -- Important, Nouveau RS5045
+	And ( mp.mail_trt_ok = 'N' or mp.mail_trt_ok is null )  
+	And mp.id_arch = -1    
+	And mp.cree_le > DateAdd ( month, -2, getdate() )    
+
+
+
+	------------------------------------------------------------------------------
+	--------- Moteur de traitement de tous les mails ramassés             --------
+	------------------------------------------------------------------------------
+	While Exists ( Select Top 1 1 From @TbWork where marquage = 0 )
+	 Begin
+		Select 	Top 1 
+			@iIdSeq = id_seq,
+			@iIdSin = id_sin,
+			@iIdArch = id_arch,
+			@sXmlData = xml_data,
+			@sChemDepot = chemin_depot,
+			@dtDatehExec = dateh_exec
+		From	@TbWork
+		Where	marquage = 0
+
+
+		If @dtDatehExec > Getdate() 
+		  Begin
+		     -- Ce n'est pas encore la date et l'heure pour traiter ce mail
+			 Update @TbWork Set marquage = 1 Where id_seq = @iIdSeq
+			 Continue
+		  End 
+
+		-- Ps d'instanciation de l'objet récup du handle
+
+		-- Boucle de traitement
+
+		-- Destruction du Handle
+
+
+
+
+		Update @TbWork Set marquage = 1 Where id_seq = @iIdSeq
+	 End
+
+
+
+
+
+Go

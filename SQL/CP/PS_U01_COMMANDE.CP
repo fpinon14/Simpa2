@@ -116,6 +116,7 @@
 --	   JFF 19/12/2022   [RS4093_EVOL_ELD]
 --	   JFF 20/02/2023   [RS4616_RET_TLS]
 --	   JFF 06/04/2023   [PMO139_RS4926]
+--     JFF 26/04/2023   [RS5045_REF_MATP]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U01_COMMANDE' AND type = 'P' )
         DROP procedure sysadm.PS_U01_COMMANDE
@@ -417,10 +418,7 @@ If @dtDteRcpMobCli is not null And ( @dtDteRcpMobCliActuel is null or @dtDteRcpM
 		END	
 		End 
 	End 
-
- 
-
-
+	
 -- [DT276]
 Select 	@sTypeAppSin = sysadm.FN_TRIM ( IsNull ( ds.val_car, '' ) )
 From 	sysadm.div_sin ds
@@ -1064,6 +1062,14 @@ If sysadm.FN_CLE_NUMERIQUE ( 'RS4093_EVOL_ELD') > 0
 	  End 
  End 
 
+-- [RS5045_REF_MATP]
+If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') > 0 
+ Begin
+	If @sIdFour = 'ELD' And @iStatusGc = 401 
+	  Begin
+		 Exec @iRet=sysadm.PS_I_RS5045_MAIL_COUR_CARTE_CADEAU_ELD_KSL
+	  End 
+ End 
 
 -- [PM82][LOT1]
 -- [PM200][PSM][PM82][LOT1][MANTIS2937]

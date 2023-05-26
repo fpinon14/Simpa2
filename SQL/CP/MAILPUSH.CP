@@ -21181,6 +21181,12 @@ AS
 	@sErrOutPut VarChar ( 255 ),
 	@iIdXml    Integer
 
+Declare @sMess			VarChar ( 2000 ),
+		@sErr			Varchar(60),
+		@iIdCt			integer,	
+		@iVal			integer, 
+		@sAdrMailErr VarChar ( 150 )
+
   Set @sSaut = Char (10)
   Set @iRet = 0
   Set @sIdAppli = 'SIMPA2'
@@ -21316,6 +21322,32 @@ AS
 			null, -- dteh_exec
 			@sErrOutPut OutPut
 	 End	
+
+	 -- MAJ du dossier, à partir de ce moment pour moi je considère que le BA a été envoyé (ce qui n'est pas rééllement le cas)
+
+	Set @sMess = 'Courrier lié à la carte cadeau, envoyé '
+	
+	Update	sysadm.commande
+	Set	    info_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DTE_BGE', CONVERT ( VarChar ( 10 ), getdate(), 103 ), RTRIM( c.info_spb_frn_cplt ), ';')
+	From	sysadm.commande c 
+	Where  	c.id_sin = @adcIdSin
+	And		c.id_seq = @aiIdSeq
+
+	Update	sysadm.w_commande
+	Set	    info_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DTE_BGE', CONVERT ( VarChar ( 10 ), getdate(), 103 ), RTRIM( c.info_spb_frn_cplt ), ';')
+	From	sysadm.w_commande c 
+	Where  	c.id_sin = @adcIdSin
+	And		c.id_seq = @aiIdSeq
+
+	IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+	BEGIN
+		Exec  SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @adcIdSin, 2, @sMess,	'', 300, @iIdCt OUTPUT
+	END
+	ELSE
+	BEGIN
+		Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @adcIdSin, 2, @sMess,	'', 300, @iIdCt OUTPUT
+	END
+
 
 Go
 

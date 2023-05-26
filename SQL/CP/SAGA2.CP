@@ -768,12 +768,13 @@ Go
 --
 -------------------------------------------------------------------
 --  JFF  21/10/2022  RS3917 l'info de reconditionné doit se retrouver à partir du terme "recondit" dans le modèle transmis par Free
+--  JFF  25/05/2023  HP-174 Ajout -CAPACITE, -COULEUR, -DUALSIM
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_SI_SAGA2_LIEN_REF_EXTERNE_AVEC_IFR_V01' AND type = 'P' )
-        DROP procedure sysadm.PS_SI_SAGA2_LIEN_REF_EXTERNE_AVEC_IFR_V01
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_SI_SAGA2_LIEN_REF_EXTERNE_AVEC_IFR_V02' AND type = 'P' )
+        DROP procedure sysadm.PS_SI_SAGA2_LIEN_REF_EXTERNE_AVEC_IFR_V02
 GO
 
-CREATE procedure sysadm.PS_SI_SAGA2_LIEN_REF_EXTERNE_AVEC_IFR_V01
+CREATE procedure sysadm.PS_SI_SAGA2_LIEN_REF_EXTERNE_AVEC_IFR_V02
 	@asCasInterro					VarChar ( 10 ),    -- (Obligatoire) Cas d'interrogation : ADHESION (Création d'adhésion) / SINISTRE (Création de sinistre)
 	@asCodeSpbPrestaExterne		    VarChar ( 3 ),     -- (Obligatoire) Code Spb (donné par JFF) référençant le prestataire extérieur chez Spb. Voir avec JFF pour avoir ce code.
 	@asMarqueExterneOuIfr			VarChar ( 500 ),   -- (Obligatoire) Marque Externe Ou IFR à rechercher , 35 Car Max => si plus, accepté mais sera rejeté
@@ -781,7 +782,10 @@ CREATE procedure sysadm.PS_SI_SAGA2_LIEN_REF_EXTERNE_AVEC_IFR_V01
 	@asGenCodeExterne			VarChar ( 500 ),       -- (Obligatoire si ADHESION / Facultatif si SINISTRE) 16 numérique Max => si plus, accepté mais sera rejeté. GENCODE Externe à stocker si présent, mais ne sert pas dans la recherche, vu avec Lisette le 11/06/21.
 	@asMarqueIfrRetour			VarChar ( 30 ) OutPut, -- (Retour) Marque IFR en retour si un lien EXT/IFR existe Ou si la marque est directement une marque IFR
 	@asModeleIfrRetour			VarChar ( 30 ) OutPut, -- (Retour) Modèle IFR en retour si un lien EXT/IFR existe Ou si le Modèle est directement une modèle IFR
-	@adcMtPrixPublicIFR			Decimal (11,2) OutPut  -- (Retour) Montant de la valeur Publique IFR de l'appareil.
+	@adcMtPrixPublicIFR			Decimal (11,2) OutPut, -- (Retour) Montant de la valeur Publique IFR de l'appareil.
+	@asCapacite					Varchar ( 25 ) output, -- (Retour) Capacité de stockage de l'appareil [HP-174]
+	@asDualSim					Varchar ( 25 ) output, -- (Retour) Fonction DualSim de l'appareil [HP-174]
+	@asCouleur					Varchar ( 25 ) output -- (Retour) couleur de l'appareil [HP-174]
 AS
 
 -- Code Retour de la PS
@@ -866,14 +870,19 @@ If LEn ( @asMarqueExterneOuIfr ) <= 30 And Len ( @asModeleDescripExterneOuIfr ) 
 		Set @asMarqueIfrRetour = @asMarqueExterneOuIfr
 		Set @asModeleIfrRetour = @asModeleDescripExterneOuIfr
 
-		Select Top 1 @adcMtPrixPublicIFR = i.frequence
+		
+		Select Top 1 
+			@adcMtPrixPublicIFR = i.frequence,
+			@asCapacite = i.java, -- [HP-174]
+			@asDualSim	= IIF ( IsNull ( i.stndby, 'NON') <> 'DUALSIM', 'NON', IsNull ( i.stndby, 'NON') ), -- [HP-174]
+			@asCouleur  = i.packtype -- [HP-174]
 		From   sysadm.ifr i
 		Where  i.marque = @asMarqueIfrRetour 
 		And    i.reference = @asModeleIfrRetour 
 
 		If @adcMtPrixPublicIFR is null Set @adcMtPrixPublicIFR = 0
 
-		Return 1	
+		Return 1
 	End 
   End
 
@@ -881,7 +890,11 @@ If LEn ( @asMarqueExterneOuIfr ) <= 30 And Len ( @asModeleDescripExterneOuIfr ) 
 Select Top 1 
 		@asMarqueIfrRetour = ltrim ( rtrim ( a.id_marq_art_ifr )),
 		@asModeleIfrRetour = ltrim ( rtrim ( a.id_modl_art_ifr )),
-		@adcMtPrixPublicIFR = i.frequence
+		@adcMtPrixPublicIFR = i.frequence,
+		@asCapacite = i.java, -- [HP-174]
+		@asDualSim	= IIF ( IsNull ( i.stndby, 'NON') <> 'DUALSIM', 'NON', IsNull ( i.stndby, 'NON') ), -- [HP-174]
+		@asCouleur  = i.packtype -- [HP-174]
+
 From sysadm.article a with (nolock),
 	 sysadm.ifr i with (nolock)
 Where a.id_four = @asCodeSpbPrestaExterne
@@ -1003,7 +1016,7 @@ If Not Exists (
 
 	EXEC master.dbo.SPB_PS_MAIL 
 			@sRetourErrMail OUTPUT, 
-			'sloison@spb.eu', -- 'jff@spb.fr'
+			'sloison@spb.eu,ntonnetot.eu', -- 'jff@spb.fr'
 			@sMessage, 
 			@sObjet, 
 			@sFrom, 
