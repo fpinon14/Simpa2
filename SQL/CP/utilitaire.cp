@@ -5823,4 +5823,184 @@ Begin
 End
 Go
 
+--------------------------------------------------------------------
+--
+-- Fonction             :       PS_INSTANCIER_UN_OBJET_SQL_SERVER
+-- Auteur               :       Fabry JF 
+-- Date                 :       26/05/2023
+-- Libellé              :		[RS5045_REF_MATP]
+-- Commentaires         :       Instancier un objet SQL SERVER et permet donc de 
+--                              récuper le Handle pour le piloter
+-- Références           :       
+--
+-- Arguments            :       Nom de l'objet à instancer,
+--
+-- Retourne             :       le Handle  (Si Handle à -1, l'objet n'a pas pu être instancié. Pour être utiliser le Handle doit être strictement positif)
+--
+--------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_INSTANCIER_UN_OBJET_SQL_SERVER' AND type = 'P' )
+        DROP procedure sysadm.PS_INSTANCIER_UN_OBJET_SQL_SERVER
+GO
 
+CREATE  PROCEDURE sysadm.PS_INSTANCIER_UN_OBJET_SQL_SERVER 
+	@asNomObjet Varchar ( 50 )
+As 
+
+Declare @Handle Int
+
+Set @asNomObjet = lTrim ( rTrim ( @asNomObjet )) 
+
+exec sp_OACreate @asNomObjet , @Handle OutPut
+
+If @Handle is null Set @Handle = -1
+If @Handle <= 0 Set @Handle = -1
+
+Return @Handle
+
+Go
+
+
+--------------------------------------------------------------------
+--
+-- Fonction             :       PS_DETRUIRE_UN_OBJET_SQL_SERVER
+-- Auteur               :       Fabry JF 
+-- Date                 :       26/05/2023
+-- Libellé              :		[RS5045_REF_MATP]
+-- Commentaires         :       Détruire un objet SQL SERVER en donnant son Handle
+-- Références           :       
+--
+-- Arguments            :       Handle à détruire
+--
+-- Retourne             :       0 succès de la destruction
+--                             <> 0, problème, non détruit
+--
+--------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_DETRUIRE_UN_OBJET_SQL_SERVER' AND type = 'P' )
+        DROP procedure sysadm.PS_DETRUIRE_UN_OBJET_SQL_SERVER
+GO
+
+CREATE  PROCEDURE sysadm.PS_DETRUIRE_UN_OBJET_SQL_SERVER 
+	@aiHandle Int
+As 
+
+Declare @iRet Int
+
+exec @iRet = sp_OADestroy @aiHandle 
+
+Return @iRet 
+
+Go
+
+--------------------------------------------------------------------
+--
+-- Fonction             :       PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM
+-- Auteur               :       Fabry JF 
+-- Date                 :       26/05/2023
+-- Libellé              :		[RS5045_REF_MATP]
+-- Commentaires         :       
+-- Références           :       
+--
+-- Arguments            :       	
+--									@aiHandle  
+--										Un entier (int) représentant le Handle de l'objet ADODB.Stream précédent instancié 
+--									@asType				Int,
+--										1 = Binaire pour de la descente de Blob
+--										2 = Texte
+--									@asMode				Int,
+--										1 = Lecture
+--										2 = Ecriture
+--										3 = Lecture/Ecriture
+--									@asCharSet			VarChar ( 30 ),
+--										Consulter tous les charset possible du ADODB.Stream sur https://learn.microsoft.com/en-us/previous-versions/exchange-server/exchange-10/ms526296(v=exchg.10)
+--										'UTF-8' pour de l'XML
+--										'ISO-8859-1' pour du fichier texte
+--									@asLineSeparator	VarChar ( 30 ),
+--										'adCRLF' (-1) Par défaut, un retour chariot et un saut de ligne, 
+--										'adCR' (13)	Retour chariot uniquement
+--										'adLF' (10) Saut de ligne uniquement	
+--										Précision : Les 3 sont les mêmes en fait, un CR et un LF c'est pareil aujourd'hui, cela avec un importance sur des imprimantes ou machines à écrire à chariot.
+--
+-- Retourne             :       0 succès 
+--                             <> 0, problème
+--
+--------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM' AND type = 'P' )
+        DROP procedure sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM
+GO
+
+CREATE  PROCEDURE sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM 
+	@aiHandle			Int,	
+	@asType				Int,
+	@asMode				Int,
+	@asCharSet			VarChar ( 30 ),
+	@asLineSeparator	VarChar ( 30 ),
+	@asTextBody			NVarChar ( Max )
+As
+
+Declare @iRet Integer
+
+Exec @iRet = sp_OASetProperty     @aiHandle, 'Type',  @asType
+If @iRet <> 0 Return @iRet 
+
+Exec @iRet = sp_OASetProperty     @aiHandle, 'Mode',  @asMode
+If @iRet <> 0 Return @iRet 
+
+Exec @iRet = sp_OASetProperty     @aiHandle, 'Charset',  @asCharSet
+If @iRet <> 0 Return @iRet 
+
+Exec @iRet = sp_OASetProperty     @aiHandle, 'LineSeparator',  @asLineSeparator
+If @iRet <> 0 Return @iRet 
+
+Exec @iRet = sp_OASetProperty     @aiHandle, 'Open'
+If @iRet <> 0 Return @iRet 
+
+Exec @iRet = sp_OASetProperty     @aiHandle, 'WriteText', null, @asTextBody
+If @iRet <> 0 Return @iRet 
+
+Return @iRet 
+
+Go
+
+--------------------------------------------------------------------
+--
+-- Fonction             :       PS_SAUVEGARDER_ET_FERMER_UN_FICHER_ADODB_STREAM
+-- Auteur               :       Fabry JF 
+-- Date                 :       26/05/2023
+-- Libellé              :		[RS5045_REF_MATP]
+-- Commentaires         :       
+-- Références           :       
+--
+-- Arguments            :       	@aiHandle  
+--										Un entier (int) représentant le Handle de l'objet ADODB.Stream précédent instancié 
+--									@asNomFichierASauver
+--										Nom UNC du fichier à Sauver (\\SERVEUR\etc...)
+--									@ModeSav
+--										1 = Non existant (pas d'écrasement)
+--										2 = Ecrasement si existant
+-- Retourne             :       0 succès 
+--                             <> 0, problème
+--
+--------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_SAUVEGARDER_ET_FERMER_UN_FICHER_ADODB_STREAM' AND type = 'P' )
+        DROP procedure sysadm.PS_SAUVEGARDER_ET_FERMER_UN_FICHER_ADODB_STREAM
+GO
+
+CREATE  PROCEDURE sysadm.PS_SAUVEGARDER_ET_FERMER_UN_FICHER_ADODB_STREAM 
+	@aiHandle			Int,
+	@asNomFichierASauver Varchar ( 255 ),
+	@ModeSav			Int
+As
+
+Declare @iRet Integer
+
+Set @asNomFichierASauver = lTrim ( rTrim ( @asNomFichierASauver ))
+
+Exec @iRet = sp_OAMethod  @aiHandle, 'SaveToFile', null, @asNomFichierASauver, @ModeSav
+If @iRet <> 0 Return @iRet 
+
+Exec @iRet = sp_OAMethod  @aiHandle, 'Close'
+If @iRet <> 0 Return @iRet 
+
+Return @iRet 
+
+Go
