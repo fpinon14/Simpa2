@@ -2011,12 +2011,11 @@ GO
 -- JFF      17/04/2019   [PM421-5] 
 -- JFF      01/09/2020   [VDOC29600]
 -- JFF      26/01/201    [VDOC30089]
+-- JFF      30/05/2023   [PMO89_RS4822]
 -------------------------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I01_W_INTER_V02' AND type = 'P' )
         DROP procedure sysadm.PS_I01_W_INTER_V02
 GO
-
-  
   
 CREATE procedure sysadm.PS_I01_W_INTER_V02   
 @iIdSin         Integer     ,    
@@ -2186,7 +2185,7 @@ If @iIdProd between 23400 and 23499   --#3
  Set @iIdInter = @iIdInter + 1    
     
  Insert into sysadm.w_inter  
-  ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,adr_att,num_teld,num_telb,num_fax,cod_mode_reg,rib_bq,rib_gui,rib_cpt,rib_cle,mt_a_reg,mt_reg,v_ref1,v_ref2,cod_ag,cod_bq,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,id_cour,id_nat_cour,alt_courgest,id_i_db,id_courj,cree_le,maj_le,maj_par,ordre_cheque,num_let_cheque,id_four,alt_suivi_mail,adr_mail,alt_suivi_sms,num_port_sms )    
+  ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,adr_att,num_teld,num_telb,num_fax,cod_mode_reg,rib_bq,rib_gui,rib_cpt,rib_cle,mt_a_reg,mt_reg,v_ref1,v_ref2,cod_ag,cod_bq,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,id_cour,id_nat_cour,alt_courgest,id_i_db,id_courj,cree_le,maj_le,maj_par,ordre_cheque,num_let_cheque,id_four,alt_suivi_mail,adr_mail,alt_suivi_sms,num_port_sms,dte_naiss,ville_naiss,pays_naiss,cod_etat_ctrle_inter )    
  Select     
            @dcIdSin as id_sin  ,  -- [PI062]    
            @iIdInter as id_i  ,    
@@ -2231,8 +2230,13 @@ If @iIdProd between 23400 and 23499   --#3
            null  as num_let_cheque ,    
            a.id_bq as id_four  ,    
    'N'  as alt_suivi_mail,    
-    NULL as adr_mail,        null  as      alt_suivi_sms, -- #2[FNAC_PROD_ECH_TECH]    
-    Null  as  num_port_sms -- #2 [FNAC_PROD_ECH_TECH]    
+    NULL as adr_mail,
+	NULL as alt_suivi_sms,
+	Null  as  num_port_sms, -- #2 [FNAC_PROD_ECH_TECH]    
+	null as dte_naiss,  -- [PMO89_RS4822]
+	null as ville_naiss,  -- [PMO89_RS4822]
+	null as pays_naiss,  -- [PMO89_RS4822]
+	null as cod_etat_ctrle_inter -- [PMO89_RS4822]
        
  From    
     sysadm.agence a    
@@ -2277,7 +2281,7 @@ If @iIdProd between 23100 and 23199 -- #3 -- #1 [PHG] Création Interlocuteur ABD
  Set @iIdInter = @iIdInter + 1    
     
  Insert into sysadm.w_inter     
- ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,adr_att,num_teld,num_telb,num_fax,cod_mode_reg,rib_bq,rib_gui,rib_cpt,rib_cle,mt_a_reg,mt_reg,v_ref1,v_ref2,cod_ag,cod_bq,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,id_cour,id_nat_cour,alt_courgest,id_i_db,id_courj,cree_le,maj_le,maj_par,ordre_cheque,num_let_cheque,id_four,alt_suivi_mail,adr_mail,alt_suivi_sms,num_port_sms )    
+ ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,adr_att,num_teld,num_telb,num_fax,cod_mode_reg,rib_bq,rib_gui,rib_cpt,rib_cle,mt_a_reg,mt_reg,v_ref1,v_ref2,cod_ag,cod_bq,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,id_cour,id_nat_cour,alt_courgest,id_i_db,id_courj,cree_le,maj_le,maj_par,ordre_cheque,num_let_cheque,id_four,alt_suivi_mail,adr_mail,alt_suivi_sms,num_port_sms,dte_naiss,ville_naiss,pays_naiss,cod_etat_ctrle_inter )    
  Select     
            @dcIdSin as id_sin  ,  -- [PI062]    
            @iIdInter as id_i  ,    
@@ -2324,7 +2328,11 @@ If @iIdProd between 23100 and 23199 -- #3 -- #1 [PHG] Création Interlocuteur ABD
      'N'  as alt_suivi_mail,    
      NULL         as adr_mail,    
      null  as      alt_suivi_sms, -- #2[FNAC_PROD_ECH_TECH]    
-     Null  as  num_port_sms -- #2 [FNAC_PROD_ECH_TECH]    
+     Null  as  num_port_sms, -- #2 [FNAC_PROD_ECH_TECH]    
+	null as dte_naiss,  -- [PMO89_RS4822]
+	null as ville_naiss,  -- [PMO89_RS4822]
+	null as pays_naiss,  -- [PMO89_RS4822]
+	null as cod_etat_ctrle_inter -- [PMO89_RS4822]
  From    
     sysadm.agence a    
  Where    
@@ -2370,7 +2378,7 @@ If @sCodInter = 'T' And @iIdProd between 31500 and 31599 -- #4 Déclaration Aquaz
     
     
  Insert into sysadm.w_inter     
- ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,adr_att,num_teld,num_telb,num_fax,cod_mode_reg,rib_bq,rib_gui,rib_cpt,rib_cle,mt_a_reg,mt_reg,v_ref1,v_ref2,cod_ag,cod_bq,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,id_cour,id_nat_cour,alt_courgest,id_i_db,id_courj,cree_le,maj_le,maj_par,ordre_cheque,num_let_cheque,id_four,alt_suivi_mail,adr_mail,alt_suivi_sms,num_port_sms )    
+ ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,adr_att,num_teld,num_telb,num_fax,cod_mode_reg,rib_bq,rib_gui,rib_cpt,rib_cle,mt_a_reg,mt_reg,v_ref1,v_ref2,cod_ag,cod_bq,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,id_cour,id_nat_cour,alt_courgest,id_i_db,id_courj,cree_le,maj_le,maj_par,ordre_cheque,num_let_cheque,id_four,alt_suivi_mail,adr_mail,alt_suivi_sms,num_port_sms,dte_naiss,ville_naiss,pays_naiss,cod_etat_ctrle_inter )    
  Select     
            @dcIdSin as id_sin  ,  -- [PI062]    
            @iIdInter as id_i  ,    
@@ -2417,7 +2425,11 @@ If @sCodInter = 'T' And @iIdProd between 31500 and 31599 -- #4 Déclaration Aquaz
    'N'  as alt_suivi_mail,    
     b.adr_mail   as adr_mail,    
     null  as      alt_suivi_sms, -- #2[FNAC_PROD_ECH_TECH]    
-    Null  as  num_port_sms -- #2 [FNAC_PROD_ECH_TECH]    
+    Null  as  num_port_sms, -- #2 [FNAC_PROD_ECH_TECH]    
+	null as dte_naiss,  -- [PMO89_RS4822]
+	null as ville_naiss,  -- [PMO89_RS4822]
+	null as pays_naiss,  -- [PMO89_RS4822]
+	null as cod_etat_ctrle_inter -- [PMO89_RS4822]
  From    
     sysadm.boutique b    
  Where    
@@ -2460,7 +2472,7 @@ End /* Déclaration Aquazen : Création inter point de balance            */
  Set @iIdInter = @iIdInter + 1    
     
  Insert into sysadm.w_inter     
- ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,cod_mode_reg,mt_a_reg,mt_reg,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,alt_courgest,cree_le,maj_le,maj_par,id_four,alt_suivi_mail )    
+ ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,cod_mode_reg,mt_a_reg,mt_reg,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,alt_courgest,cree_le,maj_le,maj_par,id_four,alt_suivi_mail,adr_mail,alt_suivi_sms,num_port_sms,dte_naiss,ville_naiss,pays_naiss,cod_etat_ctrle_inter )    
  Select     
            @dcIdSin as id_sin  ,  -- [PI062]    
            @iIdInter as id_i  ,    
@@ -2486,7 +2498,14 @@ End /* Déclaration Aquazen : Création inter point de balance            */
            getdate() as maj_le  ,    
            @sCodOper as maj_par  ,    
            a.id_bq as id_four  ,    
-     'N'  as alt_suivi_mail       
+     'N'  as alt_suivi_mail, 
+    NULL as adr_mail,
+	NULL as alt_suivi_sms,
+    Null  as  num_port_sms, -- #2 [FNAC_PROD_ECH_TECH]    
+	null as dte_naiss,  -- [PMO89_RS4822]
+	null as ville_naiss,  -- [PMO89_RS4822]
+	null as pays_naiss,  -- [PMO89_RS4822]
+	null as cod_etat_ctrle_inter -- [PMO89_RS4822]       
  From    
     sysadm.agence a    
  Where    
@@ -2530,7 +2549,7 @@ Begin -- Début 817
  Set @iIdInter = @iIdInter + 1    
     
  Insert into sysadm.w_inter     
- ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,adr_att,num_teld,num_telb,num_fax,cod_mode_reg,rib_bq,rib_gui,rib_cpt,rib_cle,mt_a_reg,mt_reg,v_ref1,v_ref2,cod_ag,cod_bq,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,id_cour,id_nat_cour,alt_courgest,id_i_db,id_courj,cree_le,maj_le,maj_par,ordre_cheque,num_let_cheque,id_four,alt_suivi_mail,adr_mail,alt_suivi_sms,num_port_sms )    
+ ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,adr_att,num_teld,num_telb,num_fax,cod_mode_reg,rib_bq,rib_gui,rib_cpt,rib_cle,mt_a_reg,mt_reg,v_ref1,v_ref2,cod_ag,cod_bq,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,id_cour,id_nat_cour,alt_courgest,id_i_db,id_courj,cree_le,maj_le,maj_par,ordre_cheque,num_let_cheque,id_four,alt_suivi_mail,adr_mail,alt_suivi_sms,num_port_sms,dte_naiss,ville_naiss,pays_naiss,cod_etat_ctrle_inter )    
  Select     
            @dcIdSin as id_sin  ,  -- [PI062]    
            @iIdInter as id_i  ,    
@@ -2577,7 +2596,11 @@ Begin -- Début 817
      'N'  as alt_suivi_mail,    
      NULL     as adr_mail,    
         null  as  alt_suivi_sms,     
-        Null  as  num_port_sms     
+        Null  as  num_port_sms,
+	null as dte_naiss,  -- [PMO89_RS4822]
+	null as ville_naiss,  -- [PMO89_RS4822]
+	null as pays_naiss,  -- [PMO89_RS4822]
+	null as cod_etat_ctrle_inter -- [PMO89_RS4822]		
        
  From    
     sysadm.agence a    
@@ -2625,7 +2648,7 @@ If @iIdProd in (select id_prod from sysadm.det_pro where id_code_dp=264) And @sC
     
     
  Insert into sysadm.w_inter     
- ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,cod_mode_reg,mt_a_reg,mt_reg,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,alt_courgest,cree_le,maj_le,maj_par,id_four,alt_suivi_mail )    
+ ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,cod_mode_reg,mt_a_reg,mt_reg,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,alt_courgest,cree_le,maj_le,maj_par,id_four,alt_suivi_mail,adr_mail,alt_suivi_sms,num_port_sms,dte_naiss,ville_naiss,pays_naiss,cod_etat_ctrle_inter )    
      
  Select     
            @dcIdSin as id_sin  ,  -- [PI062]    
@@ -2652,7 +2675,14 @@ If @iIdProd in (select id_prod from sysadm.det_pro where id_code_dp=264) And @sC
            getdate() as maj_le  ,    
            @sCodOper as maj_par  ,    
            a.id_bq as id_four  ,    
-   'N'  as alt_suivi_mail       
+   'N'  as alt_suivi_mail  ,    
+    NULL as adr_mail,
+	NULL as alt_suivi_sms,
+	Null  as  num_port_sms, -- #2 [FNAC_PROD_ECH_TECH]    
+	null as dte_naiss,  -- [PMO89_RS4822]
+	null as ville_naiss,  -- [PMO89_RS4822]
+	null as pays_naiss,  -- [PMO89_RS4822]
+	null as cod_etat_ctrle_inter -- [PMO89_RS4822]     
  From    
     sysadm.agence a    
  Where    
@@ -2735,7 +2765,11 @@ Begin
    w_inter.alt_suivi_mail,    
    w_inter.adr_mail,     
    w_inter.alt_suivi_sms,    
-   w_inter.num_port_sms     
+   w_inter.num_port_sms,
+   w_inter.dte_naiss,  -- [PMO89_RS4822]
+   w_inter.ville_naiss,  -- [PMO89_RS4822]
+   w_inter.pays_naiss,  -- [PMO89_RS4822]
+   w_inter.cod_etat_ctrle_inter  -- [PMO89_RS4822]
    )    
        
   Select        
@@ -2784,7 +2818,11 @@ Begin
    'N',    
    NULL,    
    NULL,     
-   NULL      
+   NULL,
+	null as dte_naiss,  -- [PMO89_RS4822]
+	null as ville_naiss,  -- [PMO89_RS4822]
+	null as pays_naiss,  -- [PMO89_RS4822]
+	null as cod_etat_ctrle_inter -- [PMO89_RS4822]   
        
  From sysadm.agence     
  Where id_bq = '99999'    
@@ -2867,7 +2905,11 @@ NULL id_four,
 'O' alt_suivi_mail,    
 IIF ( CharIndex ( ',', ia.adr_mail, 1) > 0, left ( rtrim ( ltrim ( ia.adr_mail )), CharIndex ( ',', ia.adr_mail, 1) - 1 ), rtrim ( ltrim ( ia.adr_mail )) )  adr_mail,  -- [VDOC29600]     
 NULL  alt_suivi_sms,    
-NULL   num_port_sms    
+NULL   num_port_sms,
+null as dte_naiss,  -- [PMO89_RS4822]
+null as ville_naiss,  -- [PMO89_RS4822]
+null as pays_naiss,  -- [PMO89_RS4822]
+null as cod_etat_ctrle_inter -- [PMO89_RS4822]
     
 From sysadm.inter_auto ia    
 Where ia.id_prod = @dcIdProd    

@@ -32,7 +32,8 @@
 --
 -- #1	JFF	20/10/2008	[FNAC_PROD_ECH_TECH]
 -------------------------------------------------------------------
---  JFF		12/02/2016		[PI062]
+-- JFF		12/02/2016	 [PI062]
+-- JFF      30/05/2023   [PMO89_RS4822]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'DW_S01_W_INTER_LSTDET' AND type = 'P' )
         DROP procedure sysadm.DW_S01_W_INTER_LSTDET
@@ -41,54 +42,59 @@ GO
 CREATE procedure sysadm.DW_S01_W_INTER_LSTDET
         @dcIdSin        Decimal (  10,0 ) -- [PI062]
 AS
- SELECT w_inter.id_sin,
-        w_inter.id_i,
-        w_inter.cod_inter,
-        w_inter.cod_civ,
-        w_inter.nom,
-        w_inter.adr_1,
-        w_inter.adr_2,
-        w_inter.adr_cp,
-        w_inter.adr_ville,
-        w_inter.adr_att,
-        w_inter.num_teld,
-        w_inter.num_telb,
-        w_inter.num_fax,
-        w_inter.cod_mode_reg,
-        w_inter.rib_bq,
-        w_inter.rib_gui,
-        w_inter.rib_cpt,
-        w_inter.rib_cle,
-        w_inter.mt_a_reg,
-        w_inter.mt_reg,
-        w_inter.v_ref1,
-        w_inter.v_ref2,
-        w_inter.cod_ag,
-        w_inter.cod_bq,
-        w_inter.cpt_cour,
-        w_inter.alt_valide,
-        w_inter.cpt_valide,
-        w_inter.alt_part,
-        w_inter.alt_ps,
-        w_inter.alt_pce,
-        w_inter.alt_quest,
-        w_inter.id_cour,
-        w_inter.id_nat_cour,
-        w_inter.alt_courgest,
-        w_inter.id_i_db,
-        w_inter.id_courj,
-        w_inter.cree_le,
-        w_inter.maj_le,
-        w_inter.maj_par,
-        w_inter.ordre_cheque,
-        w_inter.num_let_cheque,
-        w_inter.id_four,
-	w_inter.alt_suivi_mail,
-	w_inter.adr_mail,
-	cast(null as char(29)),
-	cast(null as char(20)),
-	w_inter.alt_suivi_sms, -- #1 [FNAC_PROD_ECH_TECH]
-	w_inter.num_port_sms -- #1 [FNAC_PROD_ECH_TECH]
+ SELECT w_inter.id_sin,  
+        w_inter.id_i,  
+        w_inter.cod_inter,  
+        w_inter.cod_civ,  
+        w_inter.nom,  
+        w_inter.adr_1,  
+        w_inter.adr_2,  
+        w_inter.adr_cp,  
+        w_inter.adr_ville,  
+        w_inter.adr_att,  
+        w_inter.num_teld,  
+        w_inter.num_telb,  
+        w_inter.num_fax,  
+        w_inter.cod_mode_reg,  
+        w_inter.rib_bq,  
+        w_inter.rib_gui,  
+        w_inter.rib_cpt,  
+        w_inter.rib_cle,  
+        w_inter.mt_a_reg,  
+        w_inter.mt_reg,  
+        w_inter.v_ref1,  
+        w_inter.v_ref2,  
+        w_inter.cod_ag,  
+        w_inter.cod_bq,  
+        w_inter.cpt_cour,  
+        w_inter.alt_valide,  
+        w_inter.cpt_valide,  
+        w_inter.alt_part,  
+        w_inter.alt_ps,  
+        w_inter.alt_pce,  
+        w_inter.alt_quest,  
+        w_inter.id_cour,  
+        w_inter.id_nat_cour,  
+        w_inter.alt_courgest,  
+        w_inter.id_i_db,  
+        w_inter.id_courj,  
+        w_inter.cree_le,  
+        w_inter.maj_le,  
+        w_inter.maj_par,  
+        w_inter.ordre_cheque,  
+        w_inter.num_let_cheque,  
+        w_inter.id_four,  
+		w_inter.alt_suivi_mail,  
+		w_inter.adr_mail,  
+		cast(null as char(29)),  
+		cast(null as char(20)),  
+		w_inter.alt_suivi_sms, -- #1 [FNAC_PROD_ECH_TECH]  
+	    w_inter.num_port_sms, -- #1 [FNAC_PROD_ECH_TECH]  
+		dte_naiss, -- [PMO89_RS4822]
+		ville_naiss, -- [PMO89_RS4822]
+		pays_naiss, -- [PMO89_RS4822]
+		cod_etat_ctrle_inter -- [PMO89_RS4822]
+
  FROM   sysadm.w_inter
  WHERE  w_inter.id_sin = @dcIdSin
 
@@ -152,6 +158,7 @@ GO
 --
 -- #1	JFF	20/10/2008	[FNAC_PROD_ECH_TECH]
 --  JFF		12/02/2016		[PI062]
+-- JFF      30/05/2023   [PMO89_RS4822]
 -------------------------------------------------------------------
 
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'DW_I01_W_INTER' AND type = 'P' )
@@ -201,10 +208,15 @@ CREATE procedure sysadm.DW_I01_W_INTER
         @sOrdreCheque	Varchar ( 35 )  ,
         @sNumLetCheque	Varchar ( 10 )  ,
         @sIdFour		Varchar ( 3 )   ,
-	@sAltSuiviMail	Varchar ( 1 )   ,
-	@sAdrMail		Varchar ( 50 ),
-	@sAltSuiviSms	VarChar ( 1 ),  -- #1 [FNAC_PROD_ECH_TECH]
-	@sNumPortSms    Varchar ( 20 ) -- #1 [FNAC_PROD_ECH_TECH]
+		@sAltSuiviMail	Varchar ( 1 )   ,
+		@sAdrMail		Varchar ( 50 ),
+		@sAltSuiviSms	VarChar ( 1 ),  -- #1 [FNAC_PROD_ECH_TECH]
+		@sNumPortSms    Varchar ( 20 ), -- #1 [FNAC_PROD_ECH_TECH]
+		@dtDteNaiss		DateTime, -- [PMO89_RS4822]
+		@sVilleNaiss    VarChar ( 35 ), -- [PMO89_RS4822]
+		@sPaysNaiss     VarChar ( 35 ), -- [PMO89_RS4822]
+		@sCodEtatCtrleInter Integer     -- [PMO89_RS4822]
+
 
 AS
  INSERT INTO    sysadm.w_inter
@@ -250,10 +262,15 @@ AS
                 w_inter.ordre_cheque,
                 w_inter.num_let_cheque,
                 w_inter.id_four,
-		w_inter.alt_suivi_mail,
-		w_inter.adr_mail,
-		w_inter.alt_suivi_sms, -- #1 [FNAC_PROD_ECH_TECH]
-		w_inter.num_port_sms -- #1 [FNAC_PROD_ECH_TECH]
+				w_inter.alt_suivi_mail,
+				w_inter.adr_mail,
+				w_inter.alt_suivi_sms, -- #1 [FNAC_PROD_ECH_TECH]
+				w_inter.num_port_sms, -- #1 [FNAC_PROD_ECH_TECH]
+				w_inter.dte_naiss, -- [PMO89_RS4822]
+				w_inter.ville_naiss, -- [PMO89_RS4822]
+				w_inter.pays_naiss, -- [PMO89_RS4822]
+				w_inter.cod_etat_ctrle_inter -- [PMO89_RS4822]
+
 		)
  VALUES (       @dcIdSin,
                 @dcIdI,
@@ -297,10 +314,15 @@ AS
                 @sOrdreCheque,
                 @sNumLetCheque,
                 @sIdFour,
-		@sAltSuiviMail,
-		@sAdrMail,
-		@sAltSuiviSms, -- #1 [FNAC_PROD_ECH_TECH]
-		@sNumPortSms   -- #1 [FNAC_PROD_ECH_TECH]
+				@sAltSuiviMail,
+				@sAdrMail,
+				@sAltSuiviSms, -- #1 [FNAC_PROD_ECH_TECH]
+				@sNumPortSms,  -- #1 [FNAC_PROD_ECH_TECH]
+				@dtDteNaiss,   -- [PMO89_RS4822]
+				@sVilleNaiss,  -- [PMO89_RS4822]
+				@sPaysNaiss,   -- [PMO89_RS4822]
+				@sCodEtatCtrleInter -- [PMO89_RS4822]
+
 		)       
 GO
 
@@ -377,6 +399,7 @@ GO
 --
 -- #1	JFF	20/10/2008	[FNAC_PROD_ECH_TECH]
 -- JFF      12/02/2016   [PI062]
+-- JFF      30/05/2023   [PMO89_RS4822]
 -------------------------------------------------------------------
 
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I01_W_INTER_WKF' AND type = 'P' )
@@ -429,10 +452,14 @@ AS
                 w_inter.ordre_cheque,
                 w_inter.num_let_cheque,
                 w_inter.id_four,
-		w_inter.alt_suivi_mail,
-		w_inter.adr_mail,
-		w_inter.alt_suivi_sms, -- #1 [FNAC_PROD_ECH_TECH]
-		w_inter.num_port_sms -- #1 [FNAC_PROD_ECH_TECH]
+				w_inter.alt_suivi_mail,
+				w_inter.adr_mail,
+				w_inter.alt_suivi_sms, -- #1 [FNAC_PROD_ECH_TECH]
+				w_inter.num_port_sms, -- #1 [FNAC_PROD_ECH_TECH]
+				w_inter.dte_naiss, -- [PMO89_RS4822]
+				w_inter.ville_naiss, -- [PMO89_RS4822]
+				w_inter.pays_naiss, -- [PMO89_RS4822]
+				w_inter.cod_etat_ctrle_inter -- [PMO89_RS4822]
 		)
  SELECT         inter.id_sin,
                 inter.id_i,
@@ -476,10 +503,14 @@ AS
                 inter.ordre_cheque,
                 null,
                 inter.id_four,
-		inter.alt_suivi_mail,
-		inter.adr_mail,
-		inter.alt_suivi_sms, -- #1 [FNAC_PROD_ECH_TECH]
-		inter.num_port_sms -- #1 [FNAC_PROD_ECH_TECH]
+				inter.alt_suivi_mail,
+				inter.adr_mail,
+				inter.alt_suivi_sms, -- #1 [FNAC_PROD_ECH_TECH]
+				inter.num_port_sms, -- #1 [FNAC_PROD_ECH_TECH]
+				inter.dte_naiss, -- [PMO89_RS4822]
+				inter.ville_naiss, -- [PMO89_RS4822]
+				inter.pays_naiss, -- [PMO89_RS4822]
+				inter.cod_etat_ctrle_inter -- [PMO89_RS4822]
 		
  FROM           sysadm.inter
  WHERE          inter.id_sin = @dcIdSin
@@ -527,6 +558,7 @@ GO
 -- #3 FS  le 16/06/2006 DntMail1 ; Getsion des paramétres @sAltSuiviMail, @sAdrMail
 -- #4 JFF le 20/10/2008	[FNAC_PROD_ECH_TECH]
 -- JFF      12/02/2016   [PI062]
+-- JFF      30/05/2023   [PMO89_RS4822]
 -------------------------------------------------------------------
 
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I02_W_INTER_WKF' AND type = 'P' )
@@ -553,11 +585,10 @@ CREATE procedure sysadm.PS_I02_W_INTER_WKF
         @dtCreeLe       DateTime        ,
         @dtMajLe        DateTime        ,
         @sCodOper       Varchar (  4   ),
-	@sAltSuiviMail	Varchar (  1   ) = 'N', -- #3
-	@sAdrMail	Varchar (  50  ) = null, -- #3
-	@sAltSuiviSms	VarChar ( 1 ) = 'N',  -- #4 [FNAC_PROD_ECH_TECH]
-	@sNumPortSms    Varchar ( 20 ) = null -- #4 [FNAC_PROD_ECH_TECH]
-
+		@sAltSuiviMail	Varchar (  1   ) = 'N', -- #3
+		@sAdrMail	Varchar (  50  ) = null, -- #3
+		@sAltSuiviSms	VarChar ( 1 ) = 'N',  -- #4 [FNAC_PROD_ECH_TECH]
+		@sNumPortSms    Varchar ( 20 ) = null -- #4 [FNAC_PROD_ECH_TECH]
 AS
 
 Declare @sLib Varchar(71)
@@ -616,10 +647,14 @@ Else
                 w_inter.ordre_cheque,
                 w_inter.num_let_cheque,
                 w_inter.id_four,
-		w_inter.alt_suivi_mail,
-		w_inter.adr_mail,
-		w_inter.alt_suivi_sms, -- #4 [FNAC_PROD_ECH_TECH]
-		w_inter.num_port_sms -- #4 [FNAC_PROD_ECH_TECH]
+				w_inter.alt_suivi_mail,
+				w_inter.adr_mail,
+				w_inter.alt_suivi_sms, -- #4 [FNAC_PROD_ECH_TECH]
+				w_inter.num_port_sms, -- #4 [FNAC_PROD_ECH_TECH]
+				w_inter.dte_naiss, -- [PMO89_RS4822]
+				w_inter.ville_naiss, -- [PMO89_RS4822]
+				w_inter.pays_naiss, -- [PMO89_RS4822]
+				w_inter.cod_etat_ctrle_inter -- [PMO89_RS4822]
 		)
  VALUES (       @dcIdSin,
                 0,
@@ -663,11 +698,14 @@ Else
                 NULL,
                 NULL,
                 NULL,
-		@sAltSuiviMail,
-		@sAdrMail,
-		@sAltSuiviSms,  -- #4 [FNAC_PROD_ECH_TECH]
-		@sNumPortSms -- #4 [FNAC_PROD_ECH_TECH]
-		
+				@sAltSuiviMail,
+				@sAdrMail,
+				@sAltSuiviSms,  -- #4 [FNAC_PROD_ECH_TECH]
+				@sNumPortSms, -- #4 [FNAC_PROD_ECH_TECH]
+				null, -- [PMO89_RS4822]
+				null, -- [PMO89_RS4822]
+				null, -- [PMO89_RS4822]
+				null  -- [PMO89_RS4822]
 )
 
 Return @@RowCount
@@ -764,11 +802,14 @@ AS
                 w_inter.ordre_cheque,
                 w_inter.num_let_cheque,
                 w_inter.id_four,
-		w_inter.alt_suivi_mail,
-		w_inter.adr_mail,
-		w_inter.alt_suivi_sms, -- #1 [FNAC_PROD_ECH_TECH]
-		w_inter.num_port_sms -- #1 [FNAC_PROD_ECH_TECH]
-	
+				w_inter.alt_suivi_mail,
+				w_inter.adr_mail,
+				w_inter.alt_suivi_sms, -- #1 [FNAC_PROD_ECH_TECH]
+				w_inter.num_port_sms, -- #1 [FNAC_PROD_ECH_TECH]
+				w_inter.dte_naiss, -- [PMO89_RS4822]
+				w_inter.ville_naiss, -- [PMO89_RS4822]
+				w_inter.pays_naiss, -- [PMO89_RS4822]
+				w_inter.cod_etat_ctrle_inter -- [PMO89_RS4822]
 		)
  VALUES (       @dcIdSin,
                 1,
@@ -812,11 +853,14 @@ AS
                 NULL,
                 NULL,
                 NULL,
-		'N',
-		NULL,
-		NULL, -- #1 [FNAC_PROD_ECH_TECH]
-		NULL  -- #1 [FNAC_PROD_ECH_TECH]
-	
+				'N',
+				NULL,
+				NULL, -- #1 [FNAC_PROD_ECH_TECH]
+				NULL,  -- #1 [FNAC_PROD_ECH_TECH]
+				null, -- [PMO89_RS4822]
+				null, -- [PMO89_RS4822]
+				null, -- [PMO89_RS4822]
+				null  -- [PMO89_RS4822]
 		)
 
  Return @@RowCount
@@ -920,7 +964,11 @@ If ( Select count ( * )
 			w_inter.alt_suivi_mail,
 			w_inter.adr_mail, 
 			w_inter.alt_suivi_sms, -- #1 [FNAC_PROD_ECH_TECH]
-			w_inter.num_port_sms -- #1 [FNAC_PROD_ECH_TECH]
+			w_inter.num_port_sms, -- #1 [FNAC_PROD_ECH_TECH]
+			w_inter.dte_naiss, -- [PMO89_RS4822]
+			w_inter.ville_naiss, -- [PMO89_RS4822]
+			w_inter.pays_naiss, -- [PMO89_RS4822]
+			w_inter.cod_etat_ctrle_inter -- [PMO89_RS4822]
 			
 			)
 			
@@ -970,7 +1018,11 @@ If ( Select count ( * )
 			'N',
 			NULL,
 			NULL, -- #1 [FNAC_PROD_ECH_TECH]
-			NULL  -- #1 [FNAC_PROD_ECH_TECH]
+			NULL,  -- #1 [FNAC_PROD_ECH_TECH]
+			null, -- [PMO89_RS4822]
+			null, -- [PMO89_RS4822]
+			null, -- [PMO89_RS4822]
+			null  -- [PMO89_RS4822]
 			
 	From sysadm.agence
 	Where id_bq = '30066'

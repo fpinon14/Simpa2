@@ -5122,233 +5122,240 @@ IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_LANCEUR_JOBS_SQL' AND type
         DROP procedure sysadm.PS_LANCEUR_JOBS_SQL
 GO
 
-CREATE procedure sysadm.PS_LANCEUR_JOBS_SQL
-AS
-
-Declare @iCnxDuTrt Integer 
-Declare @iCetteCnx Integer 
-Declare @iTypeTrt Integer 
-Declare @iCnxATuer Integer 
-Declare @iIdSpId integer
-Declare @iIdSeq integer
-Declare @iHeure integer
-
-Declare @sSql varchar ( 50 )
-Declare @dtDebTrt DateTime
-Declare @sDuree VarChar ( 50 )
-
-Declare @sRetourErrMail VarChar ( 100 )
-Declare @sMaChaine VarChar ( 100 )
-
-
--- Vérouille le lanceur
-If Not ( sysadm.FN_CLE_NUMERIQUE ( 'LANCEUR_JOBS_SQL') > 0 ) Return
-
--- Lancement valable pour une seule fois, on doit réamer le lanceur à chaque fois (par sécurité)
-Update sysadm.cle Set valeur = 0, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'LANCEUR_JOBS_SQL'
-
-
-Set @iTypeTrt = 1
-/* @iTypeTrt 
-1  : Traitement pour PI085
-2  : Redressement Blob plus viexu de 6 mois
-3  : Création d'index
-*/
-
------------------
--- Traitements --
------------------
-
--- Traitement 1
-If @iTypeTrt = 1
-  Begin
-
-	/*
-	Update sysadm.cle Set valeur = 1, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'KILL CNX SIMPA2'
-	Exec sysadm.PS_KILL_TOUTE_CNX_BASE_SIMPA2
-	Update sysadm.cle Set valeur = 0, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'KILL CNX SIMPA2'
-	*/
-
-	If GetDate () >= Convert ( VarChar, GetDate (), 103 ) + ' ' + '08:00'
-	  Begin
-		Set @sMaChaine = 'Trop tard, non lancé, ' + Left ( Convert ( Varchar (50), GetDate(), 103 ) + ' ' + Convert ( Varchar (50), GetDate(), 114 ), 19 )
-		EXEC master.dbo.SPB_PS_MAIL 
-				@sRetourErrMail OUTPUT, 
-				'jff@spb.fr, jff7209@yahoo.com',
-				'Début PS_LANCEUR_JOBS_SQL', 
-				@sMaChaine, 
-				'PS_LANCEUR_JOBS_SQL', -- From
-				'', 
-				NULL, 
-				NULL, 
-				NULL, 
-				NULL, 
-				NULL
-		Return
-	  End 
-
-	-- Update sysadm.cle Set valeur = 1, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'COUPER_ACCES_SIMPA2'
-
-	Set @dtDebTrt = GetDate()
-
-	Set @sMaChaine = 'Début ' + Left ( Convert ( Varchar (50), GetDate(), 103 ) + ' ' + Convert ( Varchar (50), GetDate(), 114 ), 19 )
-	EXEC master.dbo.SPB_PS_MAIL 
-			@sRetourErrMail OUTPUT, 
-			'jff@spb.fr',
-			'Début PS_LANCEUR_JOBS_SQL', 
-			@sMaChaine, 
-			'PS_LANCEUR_JOBS_SQL', -- From
-			'', 
-			NULL, 
-			NULL, 
-			NULL, 
-			NULL, 
-			NULL
-
-  -- Ici mettre la maj des Tables.
-
-
--- Ici TRT
-		-- [PI085]
-		alter table sysadm.w_volcanes_ass alter column cod_prod_dms decimal ( 5 )
-		alter table sysadm.produit_supp alter column cod_prod_dms decimal ( 5 )
-		alter table sysadm.produit alter column cod_prod_dms decimal ( 5 )
-
-		alter table sysadm.cum_ftu_brk alter column id_prod_volc decimal ( 5 )
-		alter table sysadm.w_cum_ftu_brk alter column id_prod_volc decimal ( 5 )
-
-		alter table sysadm.resil_adh alter column id_prod_dms decimal ( 5 )
-		alter table sysadm.trace_mob_rempl alter column id_prod_dms decimal ( 5 )
-
-		Update sysadm.produit
-		Set cod_prod_dms = Left ( Right ( REPLICATE ( '0', 5 ) + Convert ( varchar ( 5), id_prod) , 5 ), 3)
-		where cod_prod_dms is null 
-
-
-  -- / Ici mettre la maj des Tables.
-
-	
-	Update sysadm.cle Set valeur = 0, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'COUPER_ACCES_SIMPA2'
-
-	Set @sDuree = 
-		   Convert ( VarChar ( 10), DateDiff ( minute, @dtDebTrt , getdate())/60) + ' heures ' +
-		   Convert ( VarChar (10 ),
-			   convert ( Integer,
-				   (
-				   Convert( Decimal ( 10, 3 ) , DateDiff ( minute, @dtDebTrt , getdate())) / 60 -
-				   DateDiff ( minute, @dtDebTrt , getdate()) / 60 
-				   ) * 60
-				   )) + ' minutes'
-
-	Set @sMaChaine = 'Fin ' + Left ( Convert ( Varchar (50), GetDate(), 103 ) + ' ' + Convert ( Varchar (50), GetDate(), 114 ), 19 ) + ', durée ' + @sDuree 
-	
-	EXEC master.dbo.SPB_PS_MAIL 
-			@sRetourErrMail OUTPUT, 
-			'jff@spb.fr, jff7209@gmail.com',
-			'Fin PS_LANCEUR_JOBS_SQL', 
-			@sMaChaine, 
-			'PS_LANCEUR_JOBS_SQL', 
-			'', 
-			NULL, 
-			NULL, 
-			NULL, 
-			NULL, 
-			NULL
-
-
-
-  End
-
--- Traitement 2
-If @iTypeTrt = 2
-  Begin
-
-	Set @dtDebTrt = GetDate()
-
-	Set Transaction Isolation level Read UnCommitted
-
-	-- Déb trt
-		
-		-- La nuit prochaine
-		Update sysadm.cle Set valeur = 1, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'LANCEUR_JOBS_SQL'
-
-		If ( Select day ( getdate() ) ) <> 15 -- le 15 il y a déjà un trt mensuel 
-		  Begin
-
-			DECLARE @iRet                   INTEGER
-			DECLARE @dtDebTrt2	        DATETIME
-			DECLARE @adtFinTrt              DATETIME
-			DECLARE @aiNbrLig               INTEGER
-			DECLARE @asRetour               VARCHAR (  500 )
-
-			SET     @dtDebTrt2      = DATEADD ( mm, -225, getDate() )
-			SET     @adtFinTrt      = DATEADD ( mm, -6, getDate() )
-			SET     @aiNbrLig       = 50000
-
-			EXEC @iRet = sysadm.PS_X_TRT_SIMPA2_ARCHIVE_BLOB @dtDebTrt2, @adtFinTrt, @aiNbrLig, @asRetour OUTPUT
-		  End 
-
-	-- fin trt
-
-
-  End 
+CREATE procedure sysadm.PS_LANCEUR_JOBS_SQL  
+AS  
   
--- Traitement 3
-If @iTypeTrt = 3
-  Begin
+Declare @iCnxDuTrt Integer   
+Declare @iCetteCnx Integer   
+Declare @iTypeTrt Integer   
+Declare @iCnxATuer Integer   
+Declare @iIdSpId integer  
+Declare @iIdSeq integer  
+Declare @iHeure integer  
+  
+Declare @sSql varchar ( 50 )  
+Declare @dtDebTrt DateTime  
+Declare @sDuree VarChar ( 50 )  
+  
+Declare @sRetourErrMail VarChar ( 100 )  
+Declare @sMaChaine VarChar ( 100 )  
+  
+  
+-- Vérouille le lanceur  
+If Not ( sysadm.FN_CLE_NUMERIQUE ( 'LANCEUR_JOBS_SQL') > 0 ) Return  
+  
+-- Lancement valable pour une seule fois, on doit réamer le lanceur à chaque fois (par sécurité)  
+Update sysadm.cle Set valeur = 0, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'LANCEUR_JOBS_SQL'  
+  
+  
+Set @iTypeTrt = 2
+/* @iTypeTrt   
+1  : Traitement pour PI085  
+2  : Redressement Blob plus vieux de 6 mois  
+3  : autre Trt Ponctuel
+*/  
+  
+-----------------  
+-- Traitements --  
+-----------------  
+  
+-- Traitement 1  
+If @iTypeTrt = 1  
+  Begin  
+  
+ /*  
+ Update sysadm.cle Set valeur = 1, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'KILL CNX SIMPA2'  
+ Exec sysadm.PS_KILL_TOUTE_CNX_BASE_SIMPA2  
+ Update sysadm.cle Set valeur = 0, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'KILL CNX SIMPA2'  
+ */  
+  
+ If GetDate () >= Convert ( VarChar, GetDate (), 103 ) + ' ' + '08:00'  
+   Begin  
+  Set @sMaChaine = 'Trop tard, non lancé, ' + Left ( Convert ( Varchar (50), GetDate(), 103 ) + ' ' + Convert ( Varchar (50), GetDate(), 114 ), 19 )  
+  EXEC master.dbo.SPB_PS_MAIL   
+    @sRetourErrMail OUTPUT,   
+    'jff@spb.fr, jff7209@yahoo.com',  
+    'Début PS_LANCEUR_JOBS_SQL',   
+    @sMaChaine,   
+    'PS_LANCEUR_JOBS_SQL', -- From  
+    '',   
+    NULL,   
+    NULL,   
+    NULL,   
+    NULL,   
+    NULL  
+  Return  
+   End   
+  
+ -- Update sysadm.cle Set valeur = 1, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'COUPER_ACCES_SIMPA2'  
+  
+ Set @dtDebTrt = GetDate()  
+  
+ Set @sMaChaine = 'Début ' + Left ( Convert ( Varchar (50), GetDate(), 103 ) + ' ' + Convert ( Varchar (50), GetDate(), 114 ), 19 )  
+ EXEC master.dbo.SPB_PS_MAIL   
+   @sRetourErrMail OUTPUT,   
+   'jff@spb.fr',  
+   'Début PS_LANCEUR_JOBS_SQL',   
+   @sMaChaine,   
+   'PS_LANCEUR_JOBS_SQL', -- From  
+   '',   
+   NULL,   
+   NULL,   
+   NULL,   
+   NULL,   
+   NULL  
+  
+  -- Ici mettre la maj des Tables.  
+  
+  
+-- Ici TRT  
+  -- [PI085]  
+  alter table sysadm.w_volcanes_ass alter column cod_prod_dms decimal ( 5 )  
+  alter table sysadm.produit_supp alter column cod_prod_dms decimal ( 5 )  
+  alter table sysadm.produit alter column cod_prod_dms decimal ( 5 )  
+  
+  alter table sysadm.cum_ftu_brk alter column id_prod_volc decimal ( 5 )  
+  alter table sysadm.w_cum_ftu_brk alter column id_prod_volc decimal ( 5 )  
+  
+  alter table sysadm.resil_adh alter column id_prod_dms decimal ( 5 )  
+  alter table sysadm.trace_mob_rempl alter column id_prod_dms decimal ( 5 )  
+  
+  Update sysadm.produit  
+  Set cod_prod_dms = Left ( Right ( REPLICATE ( '0', 5 ) + Convert ( varchar ( 5), id_prod) , 5 ), 3)  
+  where cod_prod_dms is null   
+  
+  
+  -- / Ici mettre la maj des Tables.  
+  
+   
+ Update sysadm.cle Set valeur = 0, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'COUPER_ACCES_SIMPA2'  
+  
+ Set @sDuree =   
+     Convert ( VarChar ( 10), DateDiff ( minute, @dtDebTrt , getdate())/60) + ' heures ' +  
+     Convert ( VarChar (10 ),  
+      convert ( Integer,  
+       (  
+       Convert( Decimal ( 10, 3 ) , DateDiff ( minute, @dtDebTrt , getdate())) / 60 -  
+       DateDiff ( minute, @dtDebTrt , getdate()) / 60   
+       ) * 60  
+       )) + ' minutes'  
+  
+ Set @sMaChaine = 'Fin ' + Left ( Convert ( Varchar (50), GetDate(), 103 ) + ' ' + Convert ( Varchar (50), GetDate(), 114 ), 19 ) + ', durée ' + @sDuree   
+   
+ EXEC master.dbo.SPB_PS_MAIL   
+   @sRetourErrMail OUTPUT,   
+   'jff@spb.fr, jff7209@gmail.com',  
+   'Fin PS_LANCEUR_JOBS_SQL',   
+   @sMaChaine,   
+   'PS_LANCEUR_JOBS_SQL',   
+   '',   
+   NULL,   
+   NULL,   
+   NULL,   
+   NULL,   
+   NULL  
+  
+  
+  
+  End  
+  
+-- Traitement 2  
+If @iTypeTrt = 2  
+  Begin  
+  
+ Set @dtDebTrt = GetDate()  
+  
+ Set Transaction Isolation level Read UnCommitted  
+  
+ -- Déb trt  
+    
+  -- La nuit prochaine  
+  Update sysadm.cle Set valeur = 1, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'LANCEUR_JOBS_SQL'  
+  
+  If ( Select day ( getdate() ) ) <> 15 -- le 15 il y a déjà un trt mensuel   
+    Begin  
+  
+   DECLARE @iRet                   INTEGER  
+   DECLARE @dtDebTrt2         DATETIME  
+   DECLARE @adtFinTrt              DATETIME  
+   DECLARE @aiNbrLig               INTEGER  
+   DECLARE @asRetour               VARCHAR (  500 )  
+  
+   SET     @dtDebTrt2      = DATEADD ( mm, -225, getDate() )  
+   SET     @adtFinTrt      = DATEADD ( mm, -6, getDate() )  
+   SET     @aiNbrLig       = 50000  
+  
+   EXEC @iRet = sysadm.PS_X_TRT_SIMPA2_ARCHIVE_BLOB @dtDebTrt2, @adtFinTrt, @aiNbrLig, @asRetour OUTPUT  
+    End   
+  
+ -- fin trt  
+  
+  
+  End   
+    
+-- Traitement 3  
+If @iTypeTrt = 3  
+  Begin  
+  
+ Set @dtDebTrt = GetDate()  
 
-	Set @dtDebTrt = GetDate()
+ Set @sMaChaine = 'Début ' + Left ( Convert ( Varchar (50), GetDate(), 103 ) + ' ' + Convert ( Varchar (50), GetDate(), 114 ), 19 )  
+ EXEC master.dbo.SPB_PS_MAIL   
+   @sRetourErrMail OUTPUT,   
+   'jff@spb.fr, jff7209@gmail.com',  
+   'Instanciation Objet',   
+   @sMaChaine,   
+   'toto', -- From  
+   '',   
+   NULL,   
+   NULL,   
+   NULL,   
+   NULL,   
+   NULL  
 
-	Set @sMaChaine = 'Début ' + Left ( Convert ( Varchar (50), GetDate(), 103 ) + ' ' + Convert ( Varchar (50), GetDate(), 114 ), 19 )
-	EXEC master.dbo.SPB_PS_MAIL 
-			@sRetourErrMail OUTPUT, 
-			'jff@spb.fr, jff7209@gmail.com',
-			'Début Création d''index', 
-			@sMaChaine, 
-			'Début Création d''index', -- From
-			'', 
-			NULL, 
-			NULL, 
-			NULL, 
-			NULL, 
-			NULL
+  
+ Set Transaction Isolation level Read UnCommitted  
+  
+ -- Déb trt  
+  
+ DECLARE @OLE            INT 
+Declare @iRet2 int 
+-- Select @OLE 'Handle'
+EXECUTE @iRet2 = sp_OACreate 'ADODB.Stream',  @OLE OUTPUT
+-- EXEC sp_OAGetErrorInfo 'ADODB.Stream'  
+ 
+  
+ -- fin trt  
+  
+ Set @sDuree =   
+     Convert ( VarChar ( 10), DateDiff ( minute, @dtDebTrt , getdate())/60) + ' heures ' +  
+     Convert ( VarChar (10 ),  
+      convert ( Integer,  
+       (  
+       Convert( Decimal ( 10, 3 ) , DateDiff ( minute, @dtDebTrt , getdate())) / 60 -  
+       DateDiff ( minute, @dtDebTrt , getdate()) / 60   
+       ) * 60  
+       )) + ' minutes'  
+  
+ Set @sMaChaine = 'Fin ' + Left ( Convert ( Varchar (50), GetDate(), 103 ) + ' ' + Convert ( Varchar (50), GetDate(), 114 ), 19 ) + ', durée ' + @sDuree 
+ Set @sMaChaine = @sMaChaine + '// Handle : ' + Convert  ( Varchar ( 20 ),  @OLE ) + ' // Retour iRet : ' + Convert  ( Varchar ( 20 ),  @iRet2 )
+ 
+-- Select @sMaChaine 
 
-
-	Set Transaction Isolation level Read UnCommitted
-
-	-- Déb trt
-
-
-
-	-- fin trt
-
-	Set @sDuree = 
-		   Convert ( VarChar ( 10), DateDiff ( minute, @dtDebTrt , getdate())/60) + ' heures ' +
-		   Convert ( VarChar (10 ),
-			   convert ( Integer,
-				   (
-				   Convert( Decimal ( 10, 3 ) , DateDiff ( minute, @dtDebTrt , getdate())) / 60 -
-				   DateDiff ( minute, @dtDebTrt , getdate()) / 60 
-				   ) * 60
-				   )) + ' minutes'
-
-	Set @sMaChaine = 'Fin ' + Left ( Convert ( Varchar (50), GetDate(), 103 ) + ' ' + Convert ( Varchar (50), GetDate(), 114 ), 19 ) + ', durée ' + @sDuree 
-	
-	EXEC master.dbo.SPB_PS_MAIL 
-			@sRetourErrMail OUTPUT, 
-			'jff@spb.fr, jff7209@gmail.com',
-			'Fin MAJ commande', 
-			@sMaChaine, 
-			'Fin MAJ commande', -- From
-			'', 
-			NULL, 
-			NULL, 
-			NULL, 
-			NULL, 
-			NULL
-
-  End 
-
+ EXEC master.dbo.SPB_PS_MAIL   
+   @sRetourErrMail OUTPUT,   
+   'jff@spb.fr,jff7209@gmail.com',  
+   'Fin MAJ commande',   
+   @sMaChaine,   
+   'toto', -- From  
+   '',   
+   NULL,   
+   NULL,   
+   NULL,   
+   NULL,   
+   NULL  
+  
+  End   
 Go
 
 --------------------------------------------------------------------
