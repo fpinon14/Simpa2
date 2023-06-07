@@ -839,6 +839,7 @@ GO
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
+/*
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'TR_MODIF_RIB_PM466' AND type = 'TR' )
         DROP trigger sysadm.TR_MODIF_RIB_PM466
 GO
@@ -892,4 +893,4 @@ If Update ( rib_cle ) Or Update ( cod_mode_reg )
  End 
  
 Go
-
+*/

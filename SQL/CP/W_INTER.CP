@@ -401,7 +401,6 @@ GO
 -- JFF      12/02/2016   [PI062]
 -- JFF      30/05/2023   [PMO89_RS4822]
 -------------------------------------------------------------------
-
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I01_W_INTER_WKF' AND type = 'P' )
         DROP procedure sysadm.PS_I01_W_INTER_WKF
 GO
@@ -705,7 +704,7 @@ Else
 				null, -- [PMO89_RS4822]
 				null, -- [PMO89_RS4822]
 				null, -- [PMO89_RS4822]
-				null  -- [PMO89_RS4822]
+				0  -- [PMO89_RS4822]
 )
 
 Return @@RowCount
@@ -860,7 +859,7 @@ AS
 				null, -- [PMO89_RS4822]
 				null, -- [PMO89_RS4822]
 				null, -- [PMO89_RS4822]
-				null  -- [PMO89_RS4822]
+				0  -- [PMO89_RS4822]
 		)
 
  Return @@RowCount
@@ -1076,6 +1075,190 @@ Delete from sysadm.w_courrier Where id_sin = @dcIdIdSin And id_i = @dcIdI And id
 Update sysadm.w_queue 
 Set alt_occupe = 'N'
 Where id_sin = Convert ( VarChar ( 10 ), @dcIdIdSin )
+
+Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_I_PMO89_RS4822_PRESTA_CTRLE_INTER_ASSUREUR
+-- Auteur               :       Fabry JF
+-- Date                 :       05/06/2023
+-- Libellé              :       Insertion des prestas liées aux contrôles assureurs
+-- Commentaires         :       // [PMO89_RS4822] 
+--				
+--	
+-- Références           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_PMO89_RS4822_PRESTA_CTRLE_INTER_ASSUREUR' AND type = 'P' )
+        DROP procedure sysadm.PS_I_PMO89_RS4822_PRESTA_CTRLE_INTER_ASSUREUR
+GO
+
+CREATE procedure sysadm.PS_I_PMO89_RS4822_PRESTA_CTRLE_INTER_ASSUREUR  
+	@adcIdSin Decimal ( 10 )
+AS
+Declare 
+@iIdCle integer,
+@dcIdSin decimal (10),
+@dcIdI   decimal (2) ,
+@sCodInter varchar (5),
+@sCodCiv varchar (10),
+@sLibCiv varchar (20),
+@sNom varchar (71),
+@sAdr1 varchar (35),
+@sAdr2 varchar (35),
+@sAdrCp varchar (5),
+@sAdrVille varchar (35),
+@sDteNaiss DateTime,
+@sVilleNaiss varchar (35),
+@sPaysNaiss varchar (35),
+@dcIdGti Decimal (2),
+@dcNewIdDetail Decimal (2),
+@dcIdProd Decimal (7),
+@iNewIdSeq Integer,
+@sAdrMail VarChar ( 50 ),
+@sInfoSpbFrnCplt VarChar ( 800 ),
+@dcIdRev Decimal (2 ),
+@sNumTelD varchar ( 20 )
+
+
+Declare @Tb Table ( 
+id_cle integer identity,
+id_sin decimal (10) ,
+id_i decimal (2) ,
+cod_inter varchar (5),
+cod_civ varchar (10),
+nom varchar (71),
+adr_1 varchar (35),
+adr_2 varchar (35),
+adr_cp varchar (5),
+adr_ville varchar (35),
+adr_mail varchar(50 ),
+num_tel_d varchar ( 20 ) ,
+dte_naiss DateTime,
+ville_naiss varchar (35),
+pays_naiss varchar (35),
+marquage integer)
+
+
+-- Identifier les Interlocuteurs sur lesquels lancer une presta de contrôle
+Insert Into @Tb
+Select
+wi.id_sin,
+wi.id_i,
+wi.cod_inter,
+wi.cod_civ,
+lTrim ( rtrim ( wi.nom)),
+lTrim ( rtrim ( wi.adr_1)),
+lTrim ( rtrim ( wi.adr_2)),
+lTrim ( rtrim ( wi.adr_cp)),
+lTrim ( rtrim ( wi.adr_ville)),
+lTrim ( rtrim ( wi.adr_mail)),
+isnull (wi.num_teld, ''),
+wi.dte_naiss,
+lTrim ( rtrim ( wi.ville_naiss)),
+lTrim ( rtrim ( wi.pays_naiss)),
+0
+From sysadm.w_inter wi,
+	 sysadm.det_pro dp,
+	 sysadm.w_sin ws
+Where ws.id_sin = @adcIdSin
+And   wi.id_sin = ws.id_sin
+And   wi.cod_etat_ctrle_inter = 0
+And   dp.id_prod = ws.id_prod
+And   dp.id_code_dp = 365
+And   CHARINDEX ( '#' + ltrim ( rtrim ( wi.cod_inter )) + '#', sysadm.FN_CLE_VAL ( 'TYP_INTER', dp.val_car, ';')) > 0 
+
+If @@ROWCOUNT <= 0 Return
+
+Select Top 1 @dcIdGti = wg.id_gti
+From sysadm.w_gar_sin wg
+where id_sin = @adcIdSin
+and   cod_etat not in ( 900 ) 
+
+Select @dcIdProd = ws.id_prod,
+	   @dcIdRev = ws.id_rev
+From sysadm.w_sin ws
+Where ws.id_sin = @adcIdSin
+
+If @dcIdRev is null Set @dcIdRev = 0
+If @dcIdRev < 0 Set @dcIdRev = 0
+
+Select @sLibCiv = rTrim ( sysadm.FN_CODE_CAR ( @sCodCiv, '-CI' ) )
+
+-- Contrôle et redressement du paramètrage si besoin
+Exec sysadm.PS_I_CREATION_AUTO_PARAM_CONDITION @dcIdProd , @dcIdRev, @dcIdGti, '+EV', 1482, 'N'
+
+If @dcIdGti is null Set @dcIdGti = 0 
+If @dcIdGti = 0 Return
+
+Select	@dcNewIdDetail = max ( id_detail ) 
+From	sysadm.w_detail
+where   id_sin = @adcIdSin
+and     id_gti = @dcIdGti 
+
+If @dcNewIdDetail is null Set @dcNewIdDetail = -1 -- Car +1 donnera 0, le premier détail
+
+
+Select	@iNewIdSeq = max ( id_seq ) 
+From	sysadm.w_commande 
+where   id_sin = @adcIdSin
+
+If @iNewIdSeq is null Set @iNewIdSeq = 0 
+
+While Exists ( Select Top 1 1 From @Tb where marquage = 0 )
+ Begin
+	Select 	Top 1 
+		@iIdCle = id_cle,
+		@dcIdSin = id_sin,
+		@dcIdI = id_i,
+		@sCodInter = cod_inter,
+		@sCodCiv = cod_civ,
+		@sNom = nom,
+		@sAdr1 = adr_1,
+		@sAdr2 = adr_2,
+		@sAdrCp = adr_cp,
+		@sAdrVille = adr_ville,
+		@sAdrMail = adr_mail,
+		@sDteNaiss = dte_naiss,
+		@sVilleNaiss = ville_naiss,
+		@sPaysNaiss = pays_naiss,
+		@sNumTelD = num_tel_d
+	From	@Tb
+	Where	marquage = 0
+
+	-- Créer un détail de support pour la presta
+	Set @dcNewIdDetail = @dcNewIdDetail + 1	
+
+	Insert into sysadm.w_detail 
+	Select @adcIdSin,   @dcIdGti,   @dcNewIdDetail,   1482,   lib_det=null,   dte_det=null,   heu_det=null, num_carte=null,   mt_prej=0,   mt_fran=0,   mt_nplaf=0,   mt_plaf=0,   null, 'N', 'N', alt_plaf='N',   alt_reg='N',   alt_att='N', alt_valide='N',  1,  alt_ssui='O',   cod_mot_ssui=12,   cod_dec_mac=900,   cod_dec_ope=900,   cod_etat=900,   id_carte=0,   id_type_carte='00', getdate(),   getdate(),   'AUTO',   dte_cmd=null,   dte_livr=null,   mt_val_achat=null,   mt_val_publique=null,   num_facture=null
+
+	Insert into sysadm.detail 
+	Select @adcIdSin,   @dcIdGti,   @dcNewIdDetail,   1482,   id_reg=null,   id_i_reg=null,   lib_det=null,   dte_det=null,   heu_det=null, num_carte=null,   mt_prej=0,   mt_fran=0,   mt_nplaf=0,   mt_plaf=0,   alt_plaf='N',   alt_reg= 'N',   alt_att='N',   alt_ssui='O',   cod_mot_ssui=12,   cod_dec_mac=900,   cod_dec_ope=900,   cod_etat=900,   id_carte=0,   id_type_carte='00',   getdate(),   'AUTO',   getdate(),   getdate(),   'AUTO',   dte_cmd=null,   dte_livr=null,   mt_val_achat=null,   mt_val_publique=null,   num_facture=null
+
+
+	-- Créer la presta elle-même
+	Set @iNewIdSeq = @iNewIdSeq + 1	
+
+	Set @sInfoSpbFrnCplt = 'ID_INTER=' + CONVERT (  varchar ( 5 ), @dcIdI ) + ';LIB_CIV=' + @sLibCiv + ';NOM=' + @sNom + ';DTE_NAISS=' + CONVERT ( VarChar (10), @sDteNaiss, 103 ) + ';VILLE_NAISS=' + @sVilleNaiss + ';PAYS_NAISS=' + @sPaysNaiss
+	Insert into sysadm.w_commande
+	select @adcIdSin , @iNewIdSeq, @dcIdGti, @dcNewIdDetail, id_four='CDF', id_typ_art= 'CAF', 'Demande de Contrôle Interlocuteur', '', mt_ttc_cmde=0, adr_nom='X', adr_prenom='X', adr_livr1=@sAdr1, adr_livr2=@sAdr2, adr_livr_cpl=null, adr_cp=@sAdrCp, adr_ville=@sAdrVille, adr_tel1=@sNumTelD , adr_tel2=null, adr_tel3=null, adr_mail=@sAdrMail, dte_rdv_cli=null, hrdv_cli_min=null, hrdv_cli_max=null, id_serie_anc=null, 'Merci de contrôler cet interlocuteur', null,  null, null, null, null, 'RFO', null, 1, 'PRESTA AUTOMATIQUE', Getdate(), Getdate(), 'AUTO',  id_zone=null, id_bsp=null, dte_ret_pret=null, adr_cod_civ=@sCodCiv, 'DDE_CTRLE_INTER', id_orian_marque=null, id_orian_modele=null, dte_elv_mobile=null, 0, dte_emis_devis=null, mt_devis=null, null, dte_dev_acp=null, adrfc_cod_civ=null, adrfc_nom=null, adrfc_prenom=null, adrfc_livr1=null, adrfc_livr2=null, adrfc_livr_cpl=null, adrfc_cp=null, adrfc_ville=null, dte_ret_logis=null, dte_ret_pret_min=null, dte_ret_pret_max=null, id_ann=null, dte_env_bte_frn=null, dte_rcp_bte_cli=null, dte_dep_bte_cli=null, dte_env_st=null, dte_rcp_mob_cli=null, 0, id_marq_art_ifr=null, id_modl_art_ifr=null, info_spb_frn_cplt=@sInfoSpbFrnCplt , info_frn_spb_cplt=null
+
+	Insert into sysadm.commande
+	select @adcIdSin , @iNewIdSeq, @dcIdGti, @dcNewIdDetail, id_four='CDF', id_typ_art= 'CAF', 'Demande de Contrôle Interlocuteur', '', mt_ttc_cmde=0, adr_nom='X', adr_prenom='X', adr_livr1=@sAdr1, adr_livr2=@sAdr2, adr_livr_cpl=null, adr_cp=@sAdrCp, adr_ville=@sAdrVille, adr_tel1=@sNumTelD , adr_tel2=null, adr_tel3=null, adr_mail=@sAdrMail, dte_rdv_cli=null, hrdv_cli_min=null, hrdv_cli_max=null, id_serie_anc=null, 'Merci de contrôler cet interlocuteur', null,  null, null, null, null, 'RFO', null, 'PRESTA AUTOMATIQUE', 0, null, null, Getdate(), Getdate(), 'AUTO',  Getdate(),  'AUTO', id_zone=null, id_bsp=null, dte_ret_pret=null, adr_cod_civ=null, 'DDE_CTRLE_INTER', id_orian_marque=null, id_orian_modele=null, dte_elv_mobile=null, 0, dte_emis_devis=null, mt_devis=null, null, dte_dev_acp=null, adrfc_cod_civ=null, adrfc_nom=null, adrfc_prenom=null, adrfc_livr1=null, adrfc_livr2=null, adrfc_livr_cpl=null, adrfc_cp=null, adrfc_ville=null, dte_ret_logis=null, dte_ret_pret_min=null, dte_ret_pret_max=null, id_ann=null, dte_env_bte_frn=null, dte_rcp_bte_cli=null, dte_dep_bte_cli=null, dte_env_st=null, dte_rcp_mob_cli=null, 0, id_marq_art_ifr=null, id_modl_art_ifr=null, info_spb_frn_cplt=@sInfoSpbFrnCplt , info_frn_spb_cplt=null
+
+	-- Maj du code état de l'inter
+	Update sysadm.w_inter set cod_etat_ctrle_inter = 100 where id_sin = @adcIdSin and id_i = @dcIdI
+	Update sysadm.inter set cod_etat_ctrle_inter = 100 where id_sin = @adcIdSin and id_i = @dcIdI
+
+
+	-- Marquage de l'enrg traité
+	Update @Tb Set marquage = 1 Where id_cle = @iIdCle 
+ End
 
 Go
 

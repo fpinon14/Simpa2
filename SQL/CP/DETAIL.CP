@@ -691,303 +691,308 @@ Go
 -- JFF      11/04/2016   [PM336-1]
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
+-- JFF      30/05/2023   [PMO89_RS4822]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U03_DETAIL_MAJ_FACTU_V02' AND type = 'P' )
         DROP procedure sysadm.PS_U03_DETAIL_MAJ_FACTU_V02
 GO
-
-
-CREATE procedure sysadm.PS_U03_DETAIL_MAJ_FACTU_V02
-	@dcIdSin Decimal (10), -- [PI062]
-	@iIdSeq  Integer,
-	@dtDteFact DateTime,
-	@sNumFact  VarChar ( 255 ),
-	@dcMtFact  Decimal (11,2),
-	@sCatFact  Varchar (35), -- #2 [DCMP080166] Catégorie de Facture
-	@adcMtIndemPrinc_1 Decimal (11,2), -- [PM80_FA12_FRANEX]
-	@adcMtFraisAnex_2 Decimal (11,2)	, -- [PM80_FA12_FRANEX]
-	@adcMtFraisAnex_3 Decimal (11,2)	, -- [PM80_FA12_FRANEX]
-	@adcMtFraisAnex_4 Decimal (11,2)	, -- [PM80_FA12_FRANEX]
-	@adcMtFraisAnex_5 Decimal (11,2)	, -- [PM80_FA12_FRANEX]
-	@adcMtFraisAnex_6 Decimal (11,2)	, -- [PM80_FA12_FRANEX]
-	@adcMtFraisAnex_7 Decimal (11,2)	, -- [PM80_FA12_FRANEX]
-	@adcMtFraisAnex_8 Decimal (11,2)	, -- [PM80_FA12_FRANEX]
-	@adcMtFraisAnex_9 Decimal (11,2)	, -- [PM80_FA12_FRANEX]
-	@adcMtFraisAnex_10 Decimal (11,2), -- [PM80_FA12_FRANEX]
-	@adcMtFraisAnex_11 Decimal (11,2), -- [PM80_FA12_FRANEX]
-	@sChaine   VarChar ( 255 ), -- [PM336-1]
-	@sAltTraite Varchar(1) OUTPUT
-AS
-
-	Declare @sNomFourn  VarChar ( 255 )
-	Declare @sVal VarChar ( 500 )
-	Declare @AutoriseModif Integer
-	Declare @dcIdI Decimal( 7 )
-    Declare @dcIdGti Decimal (7)
-    Declare @dcIdDetail Decimal (7)
-    Declare @dcNewIdDetail Decimal (7)			    
-    Declare @sIdFour VarChar ( 3 )
-	Declare @iCas Integer
-	Declare @iRet Integer
-
-	Set @sAltTraite = 'O'
-
-	Select @sNomFourn = IsNull ( sysadm.FN_CODE_CAR ( c.id_four, '-FR' ), '(! Aucun fourn trouvé !)' ),
-		   @sIdFour = c.id_four
-	From   commande c
-	Where  c.id_sin = @dcIdSin 
-	and    c.id_seq = @iIdSeq
-
-	If @@Error <> 0 Return @@Error
-
-	If Exists (
-			Select *
-			From   sysadm.w_detail d with (nolock), 
-			       sysadm.w_commande c with (nolock)
-			Where  c.id_sin = @dcIdSin
-			And    c.id_seq = @iIdSeq
-			And    d.id_sin = c.id_sin 
-			And    d.id_gti = c.id_gti 
-			And    d.id_detail = c.id_detail )
-		Begin
-			Select @AutoriseModif = 1,
-				   @iCas = d.cod_etat,
-				   @dcIdGti = d.id_gti,
-				   @dcIdDetail = d.id_detail
-			From   sysadm.w_detail d, 
-			       sysadm.w_commande c 
-			Where  c.id_sin = @dcIdSin
-			And    c.id_seq = @iIdSeq
-			And    d.id_sin = c.id_sin 
-			And    d.id_gti = c.id_gti 
-			And    d.id_detail = c.id_detail 
-			And    d.cod_etat not in ( 500,600 )
-			And    ( Not exists ( select * from  w_queue wq with (nolock) where Convert ( decimal (10), wq.id_sin ) = c.id_sin ) -- [PI062]
-				 Or 
-				 Exists ( select * from w_queue wq with (nolock) where Convert ( decimal (10),  wq.id_sin ) = c.id_sin And alt_occupe = 'N' ) -- [PI062]
-			       )
-		
-		End
-	Else
-		Begin
-			Select @AutoriseModif = 1,
-				   @iCas = d.cod_etat,
-				   @dcIdGti = d.id_gti,
-				   @dcIdDetail = d.id_detail
-			From   sysadm.detail d with (nolock), 
-			       sysadm.commande c with (nolock)
-			Where  c.id_sin = @dcIdSin
-			And    c.id_seq = @iIdSeq
-			And    d.id_sin = c.id_sin 
-			And    d.id_gti = c.id_gti 
-			And    d.id_detail = c.id_detail 
-			And    d.cod_etat not in ( 500,600 ) 				   
-			And    ( Not exists ( select * from  w_queue wq where Convert ( decimal (10), wq.id_sin ) = c.id_sin ) -- [PI062]
-				 Or 
-				 Exists ( select * from w_queue wq where Convert ( decimal (10),  wq.id_sin ) = c.id_sin And alt_occupe = 'N' )-- [PI062]
-			       )
-		End
-	
-
-
-	If @@Error <> 0 Return @@Error
-
-	If @AutoriseModif = 1 
-	   Begin
-		Set @sVal = 'FACTURATION MENSUELLE ' + @sNomFourn + Char (10) + 
-				'Facture du ' + Convert ( VarChar ( 10 ) , @dtDteFact, 103 ) + Char (10) + 
-				'Commande : ' + Convert ( Varchar (10), @dcIdSin ) + ' Tiret ' + Convert ( Varchar (2), @iIdSeq ) + Char (10) +  -- [PI062]
-				'Numéro Facture : ' + @sNumFact + Char (10) +
-				'Catégorie de Facture : ' + @sCatFact -- #2 [DCMP080166]
-
-		IF @@servername = master.dbo.SPB_FN_ServerName ('PRO')
-		    EXEC SHERPA_PRO.sysadm.PS_I04_CONTACT_TRAVAIL_V02 @dcIdSin, 2, @sVal, 'ML', 'X' , 0 , null, 'C', null, 12
-		Else
- 		    EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V02 @dcIdSin, 2, @sVal, 'ML', 'X' , 0 , null, 'C', null, 12
--- Définir les valeurs de paramètre
-
-		    
-	   End
-	 Else
-	 Begin 
-	  Set @sAltTraite = 'N'	
-	  Return @@Error
-	 End 
-
-	If @@Error <> 0 Return @@Error
-	
-	-- L'inter fournisseur Fourn existe-til ?
-	If Not Exists ( 
-		Select *
-		From w_inter wi with (nolock)
-		Where wi.id_sin = @dcIdSin
-		And   wi.id_four = @sIdFour
-		And   wi.cod_inter = 'F'
-		      )
-	   Begin
-	   	-- Sinon Création de l'interlocuteur
-		Set @dcIdI = ( Select max (id_i) + 1
-			      From   sysadm.w_inter i
-			      Where  i.id_sin = @dcIdSin )
-
-		Insert into w_inter 
-		Select	
-			@dcIdSin,
-			@dcIdI,
-			'F',
-			5,
-			a.lib_ag,
-			a.adr_1,
-			a.adr_2,
-			a.adr_cp,
-			a.adr_ville,
-			null,
-			null,
-			null,
-			null,
-			'FM',
-			null,
-			null,
-			null,
-			null,
-			0,
-			0,
-			null,
-			null,
-			null,
-			null,
-			0,
-			0,
-			'N',
-			'N',
-			'N',
-			'N',
-			'N',
-			null,
-			null,
-			'N',
-			null,
-			null,
-			getdate(),
-			getdate(),
-			'ML',
-			null,
-			null,
-			@sIdFour ,
-			'N',
-			null,
-			null,
-			null
-
-		From   	sysadm.agence a with (nolock)
-		Where 	a.id_bq = @sIdFour 
-
-		If @@Rowcount <> 1 Return @@Error
-		If @@Error <> 0 Return @@Error
-		
-	   End 
-	   Else
-	   Begin
-		Select @dcIdI = wi.id_i
-		From w_inter wi with (nolock)
-		Where wi.id_sin = @dcIdSin
-		And   wi.id_four = @sIdFour 
-		And   wi.cod_inter = 'F'
-	   End 
-
-	-- [PM251-2]
-	If @iCas not in ( 500, 600 ) 
-	 Begin
-		Update sysadm.w_detail
-		Set	   cod_dec_mac = 100, 
-			   cod_dec_ope = 100,
-			   cod_etat = 100,
-			   alt_att = 'N',
-			   alt_ssui = 'N',
-			   cod_mot_ssui = 0
-		From   sysadm.w_detail d
-		Where  d.id_sin = @dcIdSin
-		And    d.id_gti = @dcIdGti
-		And    d.id_detail = @dcIdDetail
-	 End 
-
--- Le 17/03/2014, suite appel de Maryse, on revient en arrière sur la modification pour Auchan.
-	If @iCas not in ( 500, 600 ) 
-	  Begin	 
-		Update sysadm.w_detail
-		Set    id_i_reg = @dcIdI
-		From   sysadm.w_detail d
-		Where  d.id_sin = @dcIdSin
-		And    d.id_gti = @dcIdGti 
-		And    d.id_detail =  @dcIdDetail
-		And    d.cod_etat not in ( 500,600 ) 
-		And    ( Not exists ( select * from  w_queue wq where Convert ( decimal (10), wq.id_sin ) = d.id_sin ) -- [PI062]
-			 Or 
-			 Exists ( select * from w_queue wq where Convert ( decimal (10),  wq.id_sin ) = d.id_sin And alt_occupe = 'N' )-- [PI062]
-		       )
-
-		If @@Rowcount <> 1 
-		 Begin 
-		  Set @sAltTraite = 'N'	
-		  Return @@Error
-		 End 
-
-		If @@Error <> 0 Return @@Error
-
-		Update sysadm.w_detail 
-		Set    dte_livr = @dtDteFact, 
-				num_facture = Substring ( sysadm.FN_TRIM ( @sNumFact ), 1, 35 ) , 
-				mt_prej = @dcMtFact, 
-				alt_att = 'N',
-				alt_reg = Case -- [PM336-1]
-							When sysadm.FN_CLE_VAL ( 'A_FORCER', @sChaine, ';' ) = 'OUI'
-								Then 'O'
-							Else alt_reg
-						  End 
-		From   sysadm.w_detail d 
-		Where  d.id_sin = @dcIdSin
-		And    d.id_gti = @dcIdGti 
-		And    d.id_detail =  @dcIdDetail
-		And    d.cod_etat not in ( 500,600 ) 
-		And    ( Not exists ( select * from  w_queue wq where Convert ( decimal (10), wq.id_sin ) = d.id_sin ) -- [PI062]
-				Or 
-				Exists ( select * from w_queue wq where Convert ( decimal (10),  wq.id_sin ) = d.id_sin And alt_occupe = 'N' )-- [PI062]
-				)
-
-		If @@Rowcount <> 1 
-		 Begin 
-		  Set @sAltTraite = 'N'	
-		  Return @@Error
-		 End 
-
-		-- [PM80_FA12_FRANEX]
-		If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-		 Begin
-			Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01 
-				@dcIdSin,
-				@dcIdI,
-				@dcIdGti,
-				@dcIdDetail,
-				@adcMtIndemPrinc_1,
-				@adcMtFraisAnex_2,
-				@adcMtFraisAnex_3,
-				@adcMtFraisAnex_4,
-				@adcMtFraisAnex_5,
-				@adcMtFraisAnex_6,
-				@adcMtFraisAnex_7,
-				@adcMtFraisAnex_8,
-				@adcMtFraisAnex_9,
-				@adcMtFraisAnex_10,
-				@adcMtFraisAnex_11,
-				'ML'
-
-			If @iRet <> 0 Return @iRet 
-		 End 
-
-		If @@Error <> 0 Return @@Error
-	  End
-
-	Return @@Error
+  
+CREATE procedure sysadm.PS_U03_DETAIL_MAJ_FACTU_V02  
+ @dcIdSin Decimal (10), -- [PI062]  
+ @iIdSeq  Integer,  
+ @dtDteFact DateTime,  
+ @sNumFact  VarChar ( 255 ),  
+ @dcMtFact  Decimal (11,2),  
+ @sCatFact  Varchar (35), -- #2 [DCMP080166] Catégorie de Facture  
+ @adcMtIndemPrinc_1 Decimal (11,2), -- [PM80_FA12_FRANEX]  
+ @adcMtFraisAnex_2 Decimal (11,2) , -- [PM80_FA12_FRANEX]  
+ @adcMtFraisAnex_3 Decimal (11,2) , -- [PM80_FA12_FRANEX]  
+ @adcMtFraisAnex_4 Decimal (11,2) , -- [PM80_FA12_FRANEX]  
+ @adcMtFraisAnex_5 Decimal (11,2) , -- [PM80_FA12_FRANEX]  
+ @adcMtFraisAnex_6 Decimal (11,2) , -- [PM80_FA12_FRANEX]  
+ @adcMtFraisAnex_7 Decimal (11,2) , -- [PM80_FA12_FRANEX]  
+ @adcMtFraisAnex_8 Decimal (11,2) , -- [PM80_FA12_FRANEX]  
+ @adcMtFraisAnex_9 Decimal (11,2) , -- [PM80_FA12_FRANEX]  
+ @adcMtFraisAnex_10 Decimal (11,2), -- [PM80_FA12_FRANEX]  
+ @adcMtFraisAnex_11 Decimal (11,2), -- [PM80_FA12_FRANEX]  
+ @sChaine   VarChar ( 255 ), -- [PM336-1]  
+ @sAltTraite Varchar(1) OUTPUT  
+AS  
+  
+ Declare @sNomFourn  VarChar ( 255 )  
+ Declare @sVal VarChar ( 500 )  
+ Declare @AutoriseModif Integer  
+ Declare @dcIdI Decimal( 7 )  
+    Declare @dcIdGti Decimal (7)  
+    Declare @dcIdDetail Decimal (7)  
+    Declare @dcNewIdDetail Decimal (7)         
+    Declare @sIdFour VarChar ( 3 )  
+ Declare @iCas Integer  
+ Declare @iRet Integer  
+  
+ Set @sAltTraite = 'O'  
+  
+ Select @sNomFourn = IsNull ( sysadm.FN_CODE_CAR ( c.id_four, '-FR' ), '(! Aucun fourn trouvé !)' ),  
+     @sIdFour = c.id_four  
+ From   commande c  
+ Where  c.id_sin = @dcIdSin   
+ and    c.id_seq = @iIdSeq  
+  
+ If @@Error <> 0 Return @@Error  
+  
+ If Exists (  
+   Select *  
+   From   sysadm.w_detail d with (nolock),   
+          sysadm.w_commande c with (nolock)  
+   Where  c.id_sin = @dcIdSin  
+   And    c.id_seq = @iIdSeq  
+   And    d.id_sin = c.id_sin   
+   And    d.id_gti = c.id_gti   
+   And    d.id_detail = c.id_detail )  
+  Begin  
+   Select @AutoriseModif = 1,  
+       @iCas = d.cod_etat,  
+       @dcIdGti = d.id_gti,  
+       @dcIdDetail = d.id_detail  
+   From   sysadm.w_detail d,   
+          sysadm.w_commande c   
+   Where  c.id_sin = @dcIdSin  
+   And    c.id_seq = @iIdSeq  
+   And    d.id_sin = c.id_sin   
+   And    d.id_gti = c.id_gti   
+   And    d.id_detail = c.id_detail   
+   And    d.cod_etat not in ( 500,600 )  
+   And    ( Not exists ( select * from  w_queue wq with (nolock) where Convert ( decimal (10), wq.id_sin ) = c.id_sin ) -- [PI062]  
+     Or   
+     Exists ( select * from w_queue wq with (nolock) where Convert ( decimal (10),  wq.id_sin ) = c.id_sin And alt_occupe = 'N' ) -- [PI062]  
+          )  
+    
+  End  
+ Else  
+  Begin  
+   Select @AutoriseModif = 1,  
+       @iCas = d.cod_etat,  
+       @dcIdGti = d.id_gti,  
+       @dcIdDetail = d.id_detail  
+   From   sysadm.detail d with (nolock),   
+          sysadm.commande c with (nolock)  
+   Where  c.id_sin = @dcIdSin  
+   And    c.id_seq = @iIdSeq  
+   And    d.id_sin = c.id_sin   
+   And    d.id_gti = c.id_gti   
+   And    d.id_detail = c.id_detail   
+   And    d.cod_etat not in ( 500,600 )          
+   And    ( Not exists ( select * from  w_queue wq where Convert ( decimal (10), wq.id_sin ) = c.id_sin ) -- [PI062]  
+     Or   
+     Exists ( select * from w_queue wq where Convert ( decimal (10),  wq.id_sin ) = c.id_sin And alt_occupe = 'N' )-- [PI062]  
+          )  
+  End  
+   
+  
+  
+ If @@Error <> 0 Return @@Error  
+  
+ If @AutoriseModif = 1   
+    Begin  
+  Set @sVal = 'FACTURATION MENSUELLE ' + @sNomFourn + Char (10) +   
+    'Facture du ' + Convert ( VarChar ( 10 ) , @dtDteFact, 103 ) + Char (10) +   
+    'Commande : ' + Convert ( Varchar (10), @dcIdSin ) + ' Tiret ' + Convert ( Varchar (2), @iIdSeq ) + Char (10) +  -- [PI062]  
+    'Numéro Facture : ' + @sNumFact + Char (10) +  
+    'Catégorie de Facture : ' + @sCatFact -- #2 [DCMP080166]  
+  
+  IF @@servername = master.dbo.SPB_FN_ServerName ('PRO')  
+      EXEC SHERPA_PRO.sysadm.PS_I04_CONTACT_TRAVAIL_V02 @dcIdSin, 2, @sVal, 'ML', 'X' , 0 , null, 'C', null, 12  
+  Else  
+       EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V02 @dcIdSin, 2, @sVal, 'ML', 'X' , 0 , null, 'C', null, 12  
+-- Définir les valeurs de paramètre  
+  
+        
+    End  
+  Else  
+  Begin   
+   Set @sAltTraite = 'N'   
+   Return @@Error  
+  End   
+  
+ If @@Error <> 0 Return @@Error  
+   
+ -- L'inter fournisseur Fourn existe-til ?  
+ If Not Exists (   
+  Select *  
+  From w_inter wi with (nolock)  
+  Where wi.id_sin = @dcIdSin  
+  And   wi.id_four = @sIdFour  
+  And   wi.cod_inter = 'F'  
+        )  
+    Begin  
+     -- Sinon Création de l'interlocuteur  
+  Set @dcIdI = ( Select max (id_i) + 1  
+         From   sysadm.w_inter i  
+         Where  i.id_sin = @dcIdSin )  
+  
+  -- [PMO89_RS4822]
+  Insert into w_inter   
+  Select   
+   @dcIdSin,  
+   @dcIdI,  
+   'F',  
+   5,  
+   a.lib_ag,  
+   a.adr_1,  
+   a.adr_2,  
+   a.adr_cp,  
+   a.adr_ville,  
+   null,  
+   null,  
+   null,  
+   null,  
+   'FM',  
+   null,  
+   null,  
+   null,  
+   null,  
+   0,  
+   0,  
+   null,  
+   null,  
+   null,  
+   null,  
+   0,  
+   0,  
+   'N',  
+   'N',  
+   'N',  
+   'N',  
+   'N',  
+   null,  
+   null,  
+   'N',  
+   null,  
+   null,  
+   getdate(),  
+   getdate(),  
+   'ML',  
+   null,  
+   null,  
+   @sIdFour ,  
+   'N',  
+   null,  
+   null,  
+   null,
+   null, -- [PMO89_RS4822]
+   null, -- [PMO89_RS4822]
+   null, -- [PMO89_RS4822]
+   0    -- [PMO89_RS4822]
+  
+  From    sysadm.agence a with (nolock)  
+  Where  a.id_bq = @sIdFour   
+  
+  If @@Rowcount <> 1 Return @@Error  
+  If @@Error <> 0 Return @@Error  
+    
+    End   
+    Else  
+    Begin  
+  Select @dcIdI = wi.id_i  
+  From w_inter wi with (nolock)  
+  Where wi.id_sin = @dcIdSin  
+  And   wi.id_four = @sIdFour   
+  And   wi.cod_inter = 'F'  
+    End   
+  
+ -- [PM251-2]  
+ If @iCas not in ( 500, 600 )   
+  Begin  
+  Update sysadm.w_detail  
+  Set    cod_dec_mac = 100,   
+      cod_dec_ope = 100,  
+      cod_etat = 100,  
+      alt_att = 'N',  
+      alt_ssui = 'N',  
+      cod_mot_ssui = 0  
+  From   sysadm.w_detail d  
+  Where  d.id_sin = @dcIdSin  
+  And    d.id_gti = @dcIdGti  
+  And    d.id_detail = @dcIdDetail  
+  End   
+  
+-- Le 17/03/2014, suite appel de Maryse, on revient en arrière sur la modification pour Auchan.  
+ If @iCas not in ( 500, 600 )   
+   Begin    
+  Update sysadm.w_detail  
+  Set    id_i_reg = @dcIdI  
+  From   sysadm.w_detail d  
+  Where  d.id_sin = @dcIdSin  
+  And    d.id_gti = @dcIdGti   
+  And    d.id_detail =  @dcIdDetail  
+  And    d.cod_etat not in ( 500,600 )   
+  And    ( Not exists ( select * from  w_queue wq where Convert ( decimal (10), wq.id_sin ) = d.id_sin ) -- [PI062]  
+    Or   
+    Exists ( select * from w_queue wq where Convert ( decimal (10),  wq.id_sin ) = d.id_sin And alt_occupe = 'N' )-- [PI062]  
+         )  
+  
+  If @@Rowcount <> 1   
+   Begin   
+    Set @sAltTraite = 'N'   
+    Return @@Error  
+   End   
+  
+  If @@Error <> 0 Return @@Error  
+  
+  Update sysadm.w_detail   
+  Set    dte_livr = @dtDteFact,   
+    num_facture = Substring ( sysadm.FN_TRIM ( @sNumFact ), 1, 35 ) ,   
+    mt_prej = @dcMtFact,   
+    alt_att = 'N',  
+    alt_reg = Case -- [PM336-1]  
+       When sysadm.FN_CLE_VAL ( 'A_FORCER', @sChaine, ';' ) = 'OUI'  
+        Then 'O'  
+       Else alt_reg  
+        End   
+  From   sysadm.w_detail d   
+  Where  d.id_sin = @dcIdSin  
+  And    d.id_gti = @dcIdGti   
+  And    d.id_detail =  @dcIdDetail  
+  And    d.cod_etat not in ( 500,600 )   
+  And    ( Not exists ( select * from  w_queue wq where Convert ( decimal (10), wq.id_sin ) = d.id_sin ) -- [PI062]  
+    Or   
+    Exists ( select * from w_queue wq where Convert ( decimal (10),  wq.id_sin ) = d.id_sin And alt_occupe = 'N' )-- [PI062]  
+    )  
+  
+  If @@Rowcount <> 1   
+   Begin   
+    Set @sAltTraite = 'N'   
+    Return @@Error  
+   End   
+  
+  -- [PM80_FA12_FRANEX]  
+  If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0   
+   Begin  
+   Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01   
+    @dcIdSin,  
+    @dcIdI,  
+    @dcIdGti,  
+    @dcIdDetail,  
+    @adcMtIndemPrinc_1,  
+    @adcMtFraisAnex_2,  
+    @adcMtFraisAnex_3,  
+    @adcMtFraisAnex_4,  
+    @adcMtFraisAnex_5,  
+    @adcMtFraisAnex_6,  
+    @adcMtFraisAnex_7,  
+    @adcMtFraisAnex_8,  
+    @adcMtFraisAnex_9,  
+    @adcMtFraisAnex_10,  
+    @adcMtFraisAnex_11,  
+    'ML'  
+  
+   If @iRet <> 0 Return @iRet   
+   End   
+  
+  If @@Error <> 0 Return @@Error  
+   End  
+  
+ Return @@Error  
 Go
 
 --------------------------------------------------------------------
@@ -1027,6 +1032,7 @@ Go
 -- JFF      11/04/2016   [PM336-1]
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
+-- JFF      30/05/2023   [PMO89_RS4822]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U031_DETAIL_MAJ_FACTU_V02' AND type = 'P' )
         DROP procedure sysadm.PS_U031_DETAIL_MAJ_FACTU_V02
@@ -1163,6 +1169,7 @@ AS
 			      From   sysadm.w_inter i with (nolock)
 			      Where  i.id_sin = @dcIdSin )
 
+		-- [PMO89_RS4822]
 		Insert into w_inter 
 		Select	
 			@dcIdSin,
@@ -1210,7 +1217,11 @@ AS
 			'N',
 			null,
 			null,
-			null
+			null,
+		    null, -- [PMO89_RS4822]
+		    null, -- [PMO89_RS4822]
+		    null, -- [PMO89_RS4822]
+		    0    -- [PMO89_RS4822]
 
 		From   	sysadm.agence a with (nolock)
 		Where 	a.id_bq = @sIdFour 
@@ -1347,6 +1358,7 @@ Go
 -- JFF      11/04/2016   [PM336-1]
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
+-- JFF      30/05/2023   [PMO89_RS4822]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U032_DETAIL_MAJ_FACTU_V02' AND type = 'P' )
         DROP procedure sysadm.PS_U032_DETAIL_MAJ_FACTU_V02
@@ -1515,6 +1527,7 @@ AS
 			      From   sysadm.w_inter i with (nolock)
 			      Where  i.id_sin = @dcIdSin )
 
+		-- [PMO89_RS4822]
 		Insert into w_inter 
 		Select	
 			@dcIdSin,
@@ -1562,7 +1575,11 @@ AS
 			'N',
 			null,
 			null,
-			null
+			null,
+		    null, -- [PMO89_RS4822]
+		    null, -- [PMO89_RS4822]
+		    null, -- [PMO89_RS4822]
+		    0    -- [PMO89_RS4822]
 
 		From   	sysadm.agence a with (nolock)
 		Where 	a.id_bq = @sIdFour 
@@ -1709,6 +1726,7 @@ Go
 -- JFF      11/04/2016   [PM336-1]
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
+-- JFF      30/05/2023   [PMO89_RS4822]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U04_DETAIL_MAJ_FACTU_V03' AND type = 'P' )
         DROP procedure sysadm.PS_U04_DETAIL_MAJ_FACTU_V03
@@ -1898,6 +1916,7 @@ AS
 			      From   sysadm.w_inter i with (nolock)
 			      Where  i.id_sin = @dcIdSin )
 
+		-- [PMO89_RS4822]
 		Insert into w_inter 
 		Select	
 			@dcIdSin,
@@ -1945,7 +1964,11 @@ AS
 			'N',
 			null,
 			null,
-			null
+			null,
+		    null, -- [PMO89_RS4822]
+		    null, -- [PMO89_RS4822]
+		    null, -- [PMO89_RS4822]
+		    0    -- [PMO89_RS4822]
 
 		From   	sysadm.agence a with (nolock)
 		Where 	a.id_bq = @sIdFour
@@ -2161,6 +2184,7 @@ Go
 -- JFF      11/04/2016   [PM336-1]
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
+-- JFF      30/05/2023   [PMO89_RS4822]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U06_DETAIL_MAJ_FACTU_V02' AND type = 'P' )
         DROP procedure sysadm.PS_U06_DETAIL_MAJ_FACTU_V02
@@ -2311,6 +2335,7 @@ AS
 			      From   sysadm.w_inter i with (nolock)
 			      Where  i.id_sin = @dcIdSin )
 
+		-- [PMO89_RS4822]
 		Insert into w_inter 
 		Select	
 			@dcIdSin,
@@ -2358,7 +2383,11 @@ AS
 			'N',
 			null,
 			null,
-			null
+			null,
+		    null, -- [PMO89_RS4822]
+		    null, -- [PMO89_RS4822]
+		    null, -- [PMO89_RS4822]
+		    0    -- [PMO89_RS4822]
 
 		From   	sysadm.agence a with (nolock)
 		Where 	a.id_bq = @sSocCptable
@@ -2690,6 +2719,7 @@ Go
 -- MAJ	Le 		Par	Description
 -- JFF      25/11/2014   [PM251-2]
 -- JFF      12/02/2016   [PI062]
+-- JFF      30/05/2023   [PMO89_RS4822]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U07_DETAIL_MAJ_FACTU' AND type = 'P' )
         DROP procedure sysadm.PS_U07_DETAIL_MAJ_FACTU
@@ -2836,6 +2866,7 @@ AS
 			      From   sysadm.w_inter i with (nolock)
 			      Where  i.id_sin = @dcIdSin )
 
+		-- [PMO89_RS4822]
 		Insert into w_inter 
 		Select	
 			@dcIdSin,
@@ -2883,7 +2914,11 @@ AS
 			'N',
 			null,
 			null,
-			null
+			null,
+		    null, -- [PMO89_RS4822]
+		    null, -- [PMO89_RS4822]
+		    null, -- [PMO89_RS4822]
+		    0    -- [PMO89_RS4822]
 
 		From   	sysadm.agence a with (nolock)
 		Where 	a.id_bq = @sIdFourFactu
@@ -2978,6 +3013,7 @@ Go
 -- JFF      11/04/2016   [PM336-1]
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
+-- JFF      30/05/2023   [PMO89_RS4822]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U08_DETAIL_MAJ_FACTU_V03' AND type = 'P' )
         DROP procedure sysadm.PS_U08_DETAIL_MAJ_FACTU_V03
@@ -3229,6 +3265,7 @@ AS
 			      From   sysadm.w_inter i with (nolock)
 			      Where  i.id_sin = @dcIdSin )
 
+		-- [PMO89_RS4822]
 		Insert into w_inter 
 		Select	
 			@dcIdSin,
@@ -3276,7 +3313,11 @@ AS
 			'N',
 			null,
 			null,
-			null
+			null,
+			null, -- [PMO89_RS4822]
+		    null, -- [PMO89_RS4822]
+		    null, -- [PMO89_RS4822]
+		    0    -- [PMO89_RS4822]
 
 		From   	sysadm.agence a with (nolock)
 		Where 	a.id_bq = @sIdFourFactu
@@ -3439,6 +3480,7 @@ Go
 -- JFF      11/04/2016   [PM336-1]
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
+-- JFF      30/05/2023   [PMO89_RS4822]
 -------------------------------------------------------------------
 
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U09_DETAIL_MAJ_FACTU_V02' AND type = 'P' )
@@ -3602,6 +3644,7 @@ AS
 			      From   sysadm.w_inter i with (nolock)
 			      Where  i.id_sin = @dcIdSin )
 
+		-- [PMO89_RS4822]
 		Insert into w_inter 
 		Select	
 			@dcIdSin,
@@ -3649,7 +3692,11 @@ AS
 			'N',
 			null,
 			null,
-			null
+			null,
+		    null, -- [PMO89_RS4822]
+		    null, -- [PMO89_RS4822]
+		    null, -- [PMO89_RS4822]
+		    0    -- [PMO89_RS4822]
 
 		From   	sysadm.agence a with (nolock)
 		Where 	a.id_bq = @sIdFourFactu
@@ -3783,6 +3830,7 @@ Go
 -- JFF      11/04/2016   [PM336-1]
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
+-- JFF      30/05/2023   [PMO89_RS4822]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_DETAIL_MAJ_FACTU_SANS_REGL_DT44_V02' AND type = 'P' )
         DROP procedure sysadm.PS_U_DETAIL_MAJ_FACTU_SANS_REGL_DT44_V02
@@ -3919,6 +3967,7 @@ AS
 			      From   sysadm.w_inter i with (nolock)
 			      Where  i.id_sin = @dcIdSin )
 
+		-- [PMO89_RS4822]
 		Insert into w_inter 
 		Select	
 			@dcIdSin,
@@ -3966,7 +4015,11 @@ AS
 			'N',
 			null,
 			null,
-			null
+			null,
+		    null, -- [PMO89_RS4822]
+		    null, -- [PMO89_RS4822]
+		    null, -- [PMO89_RS4822]
+		    0    -- [PMO89_RS4822]
 
 		From   	sysadm.agence a with (nolock)
 		Where 	a.id_bq = @sIdFour 
@@ -4160,6 +4213,7 @@ Go
 -- JFF      11/04/2016   [PM336-1]
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
+-- JFF      30/05/2023   [PMO89_RS4822]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_DETAIL_MAJ_FACTU_DIAG_O2M_V02' AND type = 'P' )
         DROP procedure sysadm.PS_U_DETAIL_MAJ_FACTU_DIAG_O2M_V02
@@ -4299,6 +4353,7 @@ AS
 			      From   sysadm.w_inter i with (nolock)
 			      Where  i.id_sin = @dcIdSin )
 
+		-- [PMO89_RS4822]
 		Insert into w_inter 
 		Select	
 			@dcIdSin,
@@ -4346,7 +4401,11 @@ AS
 			'N',
 			null,
 			null,
-			null
+			null,
+		    null, -- [PMO89_RS4822]
+		    null, -- [PMO89_RS4822]
+		    null, -- [PMO89_RS4822]
+		    0    -- [PMO89_RS4822]
 
 		From   	sysadm.agence a with (nolock)
 		Where 	a.id_bq = @sIdFour 
@@ -4492,6 +4551,7 @@ Go
 -- JFF      11/04/2016   [PM336-1]
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
+-- JFF      30/05/2023   [PMO89_RS4822]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_DETAIL_MAJ_FACTU_BNP_SECU_V03' AND type = 'P' )
         DROP procedure sysadm.PS_U_DETAIL_MAJ_FACTU_BNP_SECU_V03
@@ -4632,7 +4692,8 @@ AS
 		Set @dcIdI = ( Select max (id_i) + 1
 			      From   sysadm.w_inter i with (nolock)
 			      Where  i.id_sin = @dcIdSin )
-
+		
+		-- [PMO89_RS4822]
 		Insert into w_inter 
 		Select	
 			@dcIdSin,
@@ -4680,7 +4741,11 @@ AS
 			'N',
 			null,
 			null,
-			null
+			null,
+		    null, -- [PMO89_RS4822]
+		    null, -- [PMO89_RS4822]
+		    null, -- [PMO89_RS4822]
+		    0    -- [PMO89_RS4822]
 
 		From   	sysadm.agence a with (nolock)
 		Where 	a.id_bq = @sIdFour 
@@ -4877,6 +4942,7 @@ Go
 -- JFF      11/04/2016   [PM336-1]
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
+-- JFF      30/05/2023   [PMO89_RS4822]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U10_DETAIL_MAJ_FACTU_ADVISE_V01' AND type = 'P' )
         DROP procedure sysadm.PS_U10_DETAIL_MAJ_FACTU_ADVISE_V01
@@ -5132,7 +5198,11 @@ AS
 			'N',
 			null,
 			null,
-			null
+			null,
+		    null, -- [PMO89_RS4822]
+		    null, -- [PMO89_RS4822]
+		    null, -- [PMO89_RS4822]
+		    0    -- [PMO89_RS4822]
 
 		From   	sysadm.agence a with (nolock)
 		Where 	a.id_bq = @sIdFour
