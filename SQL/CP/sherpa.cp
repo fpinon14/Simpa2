@@ -2236,7 +2236,7 @@ If @iIdProd between 23400 and 23499   --#3
 	null as dte_naiss,  -- [PMO89_RS4822]
 	null as ville_naiss,  -- [PMO89_RS4822]
 	null as pays_naiss,  -- [PMO89_RS4822]
-	null as cod_etat_ctrle_inter -- [PMO89_RS4822]
+	0 as cod_etat_ctrle_inter -- [PMO89_RS4822]
        
  From    
     sysadm.agence a    
@@ -2332,7 +2332,7 @@ If @iIdProd between 23100 and 23199 -- #3 -- #1 [PHG] Création Interlocuteur ABD
 	null as dte_naiss,  -- [PMO89_RS4822]
 	null as ville_naiss,  -- [PMO89_RS4822]
 	null as pays_naiss,  -- [PMO89_RS4822]
-	null as cod_etat_ctrle_inter -- [PMO89_RS4822]
+	0 as cod_etat_ctrle_inter -- [PMO89_RS4822]
  From    
     sysadm.agence a    
  Where    
@@ -2429,7 +2429,7 @@ If @sCodInter = 'T' And @iIdProd between 31500 and 31599 -- #4 Déclaration Aquaz
 	null as dte_naiss,  -- [PMO89_RS4822]
 	null as ville_naiss,  -- [PMO89_RS4822]
 	null as pays_naiss,  -- [PMO89_RS4822]
-	null as cod_etat_ctrle_inter -- [PMO89_RS4822]
+	0 as cod_etat_ctrle_inter -- [PMO89_RS4822]
  From    
     sysadm.boutique b    
  Where    
@@ -2505,7 +2505,7 @@ End /* Déclaration Aquazen : Création inter point de balance            */
 	null as dte_naiss,  -- [PMO89_RS4822]
 	null as ville_naiss,  -- [PMO89_RS4822]
 	null as pays_naiss,  -- [PMO89_RS4822]
-	null as cod_etat_ctrle_inter -- [PMO89_RS4822]       
+	0 as cod_etat_ctrle_inter -- [PMO89_RS4822]       
  From    
     sysadm.agence a    
  Where    
@@ -2600,7 +2600,7 @@ Begin -- Début 817
 	null as dte_naiss,  -- [PMO89_RS4822]
 	null as ville_naiss,  -- [PMO89_RS4822]
 	null as pays_naiss,  -- [PMO89_RS4822]
-	null as cod_etat_ctrle_inter -- [PMO89_RS4822]		
+	0 as cod_etat_ctrle_inter -- [PMO89_RS4822]		
        
  From    
     sysadm.agence a    
@@ -2682,7 +2682,7 @@ If @iIdProd in (select id_prod from sysadm.det_pro where id_code_dp=264) And @sC
 	null as dte_naiss,  -- [PMO89_RS4822]
 	null as ville_naiss,  -- [PMO89_RS4822]
 	null as pays_naiss,  -- [PMO89_RS4822]
-	null as cod_etat_ctrle_inter -- [PMO89_RS4822]     
+	0 as cod_etat_ctrle_inter -- [PMO89_RS4822]     
  From    
     sysadm.agence a    
  Where    
@@ -2822,7 +2822,7 @@ Begin
 	null as dte_naiss,  -- [PMO89_RS4822]
 	null as ville_naiss,  -- [PMO89_RS4822]
 	null as pays_naiss,  -- [PMO89_RS4822]
-	null as cod_etat_ctrle_inter -- [PMO89_RS4822]   
+	0 as cod_etat_ctrle_inter -- [PMO89_RS4822]   
        
  From sysadm.agence     
  Where id_bq = '99999'    
@@ -2909,7 +2909,7 @@ NULL   num_port_sms,
 null as dte_naiss,  -- [PMO89_RS4822]
 null as ville_naiss,  -- [PMO89_RS4822]
 null as pays_naiss,  -- [PMO89_RS4822]
-null as cod_etat_ctrle_inter -- [PMO89_RS4822]
+0 as cod_etat_ctrle_inter -- [PMO89_RS4822]
     
 From sysadm.inter_auto ia    
 Where ia.id_prod = @dcIdProd    

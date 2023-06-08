@@ -502,7 +502,7 @@ Select	distinct
 	null as dte_naiss,  -- [PMO89_RS4822]
 	null as ville_naiss,  -- [PMO89_RS4822]
 	null as pays_naiss,  -- [PMO89_RS4822]
-	null as cod_etat_ctrle_inter -- [PMO89_RS4822]
+	0 as cod_etat_ctrle_inter -- [PMO89_RS4822]
 From   	( Select  distinct
 		wc.id_sin,
 		wc.id_four
@@ -588,7 +588,7 @@ Select	distinct
 	null as dte_naiss,  -- [PMO89_RS4822]
 	null as ville_naiss,  -- [PMO89_RS4822]
 	null as pays_naiss,  -- [PMO89_RS4822]
-	null as cod_etat_ctrle_inter -- [PMO89_RS4822]
+	0 as cod_etat_ctrle_inter -- [PMO89_RS4822]
 	
 From   	( Select  distinct
 		wc.id_sin,
@@ -703,7 +703,7 @@ If Exists ( 	Select 	*
 		null as dte_naiss,  -- [PMO89_RS4822]
 		null as ville_naiss,  -- [PMO89_RS4822]
 		null as pays_naiss,  -- [PMO89_RS4822]
-		null as cod_etat_ctrle_inter -- [PMO89_RS4822]
+		0 as cod_etat_ctrle_inter -- [PMO89_RS4822]
 	From   	( Select  distinct
 			wc.id_sin,
 			'NES' id_four
@@ -793,7 +793,7 @@ If Exists ( 	Select 	*
 		null as dte_naiss,  -- [PMO89_RS4822]
 		null as ville_naiss,  -- [PMO89_RS4822]
 		null as pays_naiss,  -- [PMO89_RS4822]
-		null as cod_etat_ctrle_inter -- [PMO89_RS4822]
+		0 as cod_etat_ctrle_inter -- [PMO89_RS4822]
 
 	From   	( Select  distinct
 			wc.id_sin,

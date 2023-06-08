@@ -1254,7 +1254,7 @@ While Exists ( Select Top 1 1 From @Tb where marquage = 0 )
 	Update sysadm.w_inter set cod_etat_ctrle_inter = 100 where id_sin = @adcIdSin and id_i = @dcIdI
 	Update sysadm.inter set cod_etat_ctrle_inter = 100 where id_sin = @adcIdSin and id_i = @dcIdI
 
-	Set @sMess = 'Engagement d''une demande de contrôle LCBFT vers l''assureur pour l''interlocuteur de type ' + @sLibTypInter + ' ' + @sNom + '.'
+	Set @sMess = 'Engagement d''une demande de contrôle LCBFT vers l''assureur pour l''interlocuteur de type ' + @sLibTypInter + ' ' + @sNom + '. Vous ne pourrez pas régler le dossier tant que l''assureur n''aura pas répondu.'
 
 	IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 	BEGIN
