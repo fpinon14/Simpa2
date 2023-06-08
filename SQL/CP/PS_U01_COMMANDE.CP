@@ -117,6 +117,7 @@
 --	   JFF 20/02/2023   [RS4616_RET_TLS]
 --	   JFF 06/04/2023   [PMO139_RS4926]
 --     JFF 26/04/2023   [RS5045_REF_MATP]
+--     JFF 30/05/2023   [PMO89_RS4822]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U01_COMMANDE' AND type = 'P' )
         DROP procedure sysadm.PS_U01_COMMANDE
@@ -228,6 +229,9 @@ Declare @sCapStkRempl Varchar ( 35 ) -- [RS4616_RET_TLS]
 Declare @sNewIdRefFour VarChar ( 20 ) -- [RS4616_RET_TLS]
 Declare @sNewIdRefFourTest VarChar ( 20 ) -- [RS4616_RET_TLS]
 Declare @iCptId Integer -- [RS4616_RET_TLS]
+Declare @sNomInter VarChar ( 71 )
+Declare @dcIdInter Decimal (2 )
+Declare @sCodInter Varchar ( 5 )
 
 Set @iCasPropoAutoO2m = 0 -- [PC877]
 Set @iTraite = 0 
@@ -1808,6 +1812,50 @@ IF	@sIdRefFour in ( 'A_REPARER' )
 			EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @dcIdSin, 2, @sMess, @sIdFour, @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C'
 		END				 
  End 
+
+-- [PMO89_RS4822]
+If sysadm.FN_CLE_NUMERIQUE ( 'PMO89_RS4822') > 0 
+ Begin
+	IF ( ( @iStatusGc = 810 And @iStatusGCActuel <> 810 ) Or ( @iStatusGc = 820 And @iStatusGCActuel <> 820 ) ) and  @sIdFour = 'CDF'
+	  Begin
+		
+		Select @sNomInter = lTrim ( rTrim ( i.nom)),
+			   @dcIdInter  = i.id_i,
+			   @sCodInter = i.cod_inter
+		From sysadm.inter i,
+			 sysadm.commande c
+		Where c.id_sin = @dcIdSin
+		And c.id_seq = @iIdSeq
+		And i.id_sin = c.id_sin 
+		And i.id_i = Convert ( decimal (2), sysadm.FN_CLE_VAL ( 'ID_INTER', c.info_spb_frn_cplt, ';'))
+
+		If @iStatusGc = 810 
+		  Begin 
+			Set @sMess = 'Contact crée automatiquement, Process [' + @sLibFour + '] -> '+ @sLibFour + ' a contrôlé et accepté (OK) l''interlocuteur ' + @sNomInter + ' (' +  Convert ( varchar (5), @dcIdInter) + ') de type ' + sysadm.FN_CODE_CAR ( @sCodInter, '-IN' ) + ', prenez note des réponses de l''assureur avant de poursuivre l''instruction de votre dossier.'
+			Update sysadm.w_inter set cod_etat_ctrle_inter = 300 where id_sin = @dcIdSin and id_i = @dcIdInter
+			Update sysadm.inter set cod_etat_ctrle_inter = 300 where id_sin = @dcIdSin and id_i = @dcIdInter
+		  End 
+
+		If @iStatusGc = 820 
+		  Begin 
+			Set @sMess = 'Contact crée automatiquement, Process [' + @sLibFour + '] -> '+ @sLibFour + ' a contrôlé et rejeté (KO) l''interlocuteur ' + @sNomInter + ' (' +  Convert ( varchar (5), @dcIdInter) + ') de type ' + sysadm.FN_CODE_CAR ( @sCodInter, '-IN' ) + ', prenez note des réponses de l''assureur avant de poursuivre l''instruction de votre dossier.'
+			Update sysadm.w_inter set cod_etat_ctrle_inter = 200 where id_sin = @dcIdSin and id_i = @dcIdInter
+			Update sysadm.inter set cod_etat_ctrle_inter = 200 where id_sin = @dcIdSin and id_i = @dcIdInter
+		  End 
+
+
+		IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+		BEGIN
+			EXEC SHERPA_PRO.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @dcIdSin, 2, @sMess, 'PRS', @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C'
+		END
+		ELSE
+		BEGIN
+			EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @dcIdSin, 2, @sMess, 'PRS', @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C'
+		END
+
+	  End
+ End  
+-- /[PMO89_RS4822]
 
 -- [VDOC8041]
 IF @iStatusGc = 232 And @iStatusGCActuel <> 232

@@ -1581,7 +1581,12 @@ i.id_four,
 i.alt_suivi_mail,
 i.adr_mail,
 i.alt_suivi_sms,
-i.num_port_sms
+i.num_port_sms,
+i.dte_naiss, -- [PMO89_RS4822]
+i.ville_naiss, -- [PMO89_RS4822]
+i.pays_naiss, -- [PMO89_RS4822]
+i.cod_etat_ctrle_inter -- [PMO89_RS4822] 
+
 from sysadm.inter i with (nolock),
 	 sysadm.w_sin ws with (nolock) 
 where ws.id_sin = i.id_sin

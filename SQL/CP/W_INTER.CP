@@ -1021,7 +1021,7 @@ If ( Select count ( * )
 			null, -- [PMO89_RS4822]
 			null, -- [PMO89_RS4822]
 			null, -- [PMO89_RS4822]
-			null  -- [PMO89_RS4822]
+			0  -- [PMO89_RS4822]
 			
 	From sysadm.agence
 	Where id_bq = '30066'
@@ -1120,11 +1120,12 @@ Declare
 @dcNewIdDetail Decimal (2),
 @dcIdProd Decimal (7),
 @iNewIdSeq Integer,
-@sAdrMail VarChar ( 50 ),
 @sInfoSpbFrnCplt VarChar ( 800 ),
 @dcIdRev Decimal (2 ),
-@sNumTelD varchar ( 20 )
-
+@sNumTelD varchar ( 20 ),
+@sLibTypInter Varchar ( 35 ),
+@sMess VarChar ( 2000 ),
+@iIdCt Integer
 
 Declare @Tb Table ( 
 id_cle integer identity,
@@ -1137,7 +1138,6 @@ adr_1 varchar (35),
 adr_2 varchar (35),
 adr_cp varchar (5),
 adr_ville varchar (35),
-adr_mail varchar(50 ),
 num_tel_d varchar ( 20 ) ,
 dte_naiss DateTime,
 ville_naiss varchar (35),
@@ -1157,7 +1157,6 @@ lTrim ( rtrim ( wi.adr_1)),
 lTrim ( rtrim ( wi.adr_2)),
 lTrim ( rtrim ( wi.adr_cp)),
 lTrim ( rtrim ( wi.adr_ville)),
-lTrim ( rtrim ( wi.adr_mail)),
 isnull (wi.num_teld, ''),
 wi.dte_naiss,
 lTrim ( rtrim ( wi.ville_naiss)),
@@ -1187,8 +1186,6 @@ Where ws.id_sin = @adcIdSin
 
 If @dcIdRev is null Set @dcIdRev = 0
 If @dcIdRev < 0 Set @dcIdRev = 0
-
-Select @sLibCiv = rTrim ( sysadm.FN_CODE_CAR ( @sCodCiv, '-CI' ) )
 
 -- Contrôle et redressement du paramètrage si besoin
 Exec sysadm.PS_I_CREATION_AUTO_PARAM_CONDITION @dcIdProd , @dcIdRev, @dcIdGti, '+EV', 1482, 'N'
@@ -1223,13 +1220,15 @@ While Exists ( Select Top 1 1 From @Tb where marquage = 0 )
 		@sAdr2 = adr_2,
 		@sAdrCp = adr_cp,
 		@sAdrVille = adr_ville,
-		@sAdrMail = adr_mail,
 		@sDteNaiss = dte_naiss,
 		@sVilleNaiss = ville_naiss,
 		@sPaysNaiss = pays_naiss,
 		@sNumTelD = num_tel_d
 	From	@Tb
 	Where	marquage = 0
+
+	Select @sLibCiv = rTrim ( sysadm.FN_CODE_NUM ( @sCodCiv, '-CI' ) )
+	Select @sLibTypInter = rTrim ( sysadm.FN_CODE_CAR ( @sCodInter, '-IN' ) )
 
 	-- Créer un détail de support pour la presta
 	Set @dcNewIdDetail = @dcNewIdDetail + 1	
@@ -1244,16 +1243,27 @@ While Exists ( Select Top 1 1 From @Tb where marquage = 0 )
 	-- Créer la presta elle-même
 	Set @iNewIdSeq = @iNewIdSeq + 1	
 
-	Set @sInfoSpbFrnCplt = 'ID_INTER=' + CONVERT (  varchar ( 5 ), @dcIdI ) + ';LIB_CIV=' + @sLibCiv + ';NOM=' + @sNom + ';DTE_NAISS=' + CONVERT ( VarChar (10), @sDteNaiss, 103 ) + ';VILLE_NAISS=' + @sVilleNaiss + ';PAYS_NAISS=' + @sPaysNaiss
+	Set @sInfoSpbFrnCplt = 'ID_INTER=' + IsNull ( CONVERT (  varchar ( 5 ), @dcIdI ), '') + ';LIB_CIV=' + IsNull ( @sLibCiv, '')  + ';NOM=' + IsNull ( @sNom, '') + ';DTE_NAISS=' + CONVERT ( VarChar (10), IsNull ( @sDteNaiss, '01/01/1900'), 103 ) + ';VILLE_NAISS=' + IsNull ( @sVilleNaiss, '' ) + ';PAYS_NAISS=' + IsNull ( @sPaysNaiss, '' )
 	Insert into sysadm.w_commande
-	select @adcIdSin , @iNewIdSeq, @dcIdGti, @dcNewIdDetail, id_four='CDF', id_typ_art= 'CAF', 'Demande de Contrôle Interlocuteur', '', mt_ttc_cmde=0, adr_nom='X', adr_prenom='X', adr_livr1=@sAdr1, adr_livr2=@sAdr2, adr_livr_cpl=null, adr_cp=@sAdrCp, adr_ville=@sAdrVille, adr_tel1=@sNumTelD , adr_tel2=null, adr_tel3=null, adr_mail=@sAdrMail, dte_rdv_cli=null, hrdv_cli_min=null, hrdv_cli_max=null, id_serie_anc=null, 'Merci de contrôler cet interlocuteur', null,  null, null, null, null, 'RFO', null, 1, 'PRESTA AUTOMATIQUE', Getdate(), Getdate(), 'AUTO',  id_zone=null, id_bsp=null, dte_ret_pret=null, adr_cod_civ=@sCodCiv, 'DDE_CTRLE_INTER', id_orian_marque=null, id_orian_modele=null, dte_elv_mobile=null, 0, dte_emis_devis=null, mt_devis=null, null, dte_dev_acp=null, adrfc_cod_civ=null, adrfc_nom=null, adrfc_prenom=null, adrfc_livr1=null, adrfc_livr2=null, adrfc_livr_cpl=null, adrfc_cp=null, adrfc_ville=null, dte_ret_logis=null, dte_ret_pret_min=null, dte_ret_pret_max=null, id_ann=null, dte_env_bte_frn=null, dte_rcp_bte_cli=null, dte_dep_bte_cli=null, dte_env_st=null, dte_rcp_mob_cli=null, 0, id_marq_art_ifr=null, id_modl_art_ifr=null, info_spb_frn_cplt=@sInfoSpbFrnCplt , info_frn_spb_cplt=null
+	select @adcIdSin , @iNewIdSeq, @dcIdGti, @dcNewIdDetail, id_four='CDF', id_typ_art= 'CAF', 'Demande de Contrôle Interlocuteur', '', mt_ttc_cmde=0, adr_nom='X', adr_prenom='X', adr_livr1=@sAdr1, adr_livr2=@sAdr2, adr_livr_cpl=null, adr_cp=@sAdrCp, adr_ville=@sAdrVille, adr_tel1=@sNumTelD , adr_tel2=null, adr_tel3=null, adr_mail=null, dte_rdv_cli=null, hrdv_cli_min=null, hrdv_cli_max=null, id_serie_anc=null, 'Merci de contrôler cet interlocuteur', null,  null, null, null, null, 'ECT', null, 1, 'PRESTA AUTOMATIQUE', Getdate(), Getdate(), 'AUTO',  id_zone=null, id_bsp=null, dte_ret_pret=null, adr_cod_civ=@sCodCiv, 'DDE_CTRLE_INTER', id_orian_marque=null, id_orian_modele=null, dte_elv_mobile=null, 0, dte_emis_devis=null, mt_devis=null, null, dte_dev_acp=null, adrfc_cod_civ=null, adrfc_nom=null, adrfc_prenom=null, adrfc_livr1=null, adrfc_livr2=null, adrfc_livr_cpl=null, adrfc_cp=null, adrfc_ville=null, dte_ret_logis=null, dte_ret_pret_min=null, dte_ret_pret_max=null, id_ann=null, dte_env_bte_frn=null, dte_rcp_bte_cli=null, dte_dep_bte_cli=null, dte_env_st=null, dte_rcp_mob_cli=null, info_spb_frn=3410, id_marq_art_ifr=null, id_modl_art_ifr=null, info_spb_frn_cplt=@sInfoSpbFrnCplt , info_frn_spb_cplt=null
 
 	Insert into sysadm.commande
-	select @adcIdSin , @iNewIdSeq, @dcIdGti, @dcNewIdDetail, id_four='CDF', id_typ_art= 'CAF', 'Demande de Contrôle Interlocuteur', '', mt_ttc_cmde=0, adr_nom='X', adr_prenom='X', adr_livr1=@sAdr1, adr_livr2=@sAdr2, adr_livr_cpl=null, adr_cp=@sAdrCp, adr_ville=@sAdrVille, adr_tel1=@sNumTelD , adr_tel2=null, adr_tel3=null, adr_mail=@sAdrMail, dte_rdv_cli=null, hrdv_cli_min=null, hrdv_cli_max=null, id_serie_anc=null, 'Merci de contrôler cet interlocuteur', null,  null, null, null, null, 'RFO', null, 'PRESTA AUTOMATIQUE', 0, null, null, Getdate(), Getdate(), 'AUTO',  Getdate(),  'AUTO', id_zone=null, id_bsp=null, dte_ret_pret=null, adr_cod_civ=null, 'DDE_CTRLE_INTER', id_orian_marque=null, id_orian_modele=null, dte_elv_mobile=null, 0, dte_emis_devis=null, mt_devis=null, null, dte_dev_acp=null, adrfc_cod_civ=null, adrfc_nom=null, adrfc_prenom=null, adrfc_livr1=null, adrfc_livr2=null, adrfc_livr_cpl=null, adrfc_cp=null, adrfc_ville=null, dte_ret_logis=null, dte_ret_pret_min=null, dte_ret_pret_max=null, id_ann=null, dte_env_bte_frn=null, dte_rcp_bte_cli=null, dte_dep_bte_cli=null, dte_env_st=null, dte_rcp_mob_cli=null, 0, id_marq_art_ifr=null, id_modl_art_ifr=null, info_spb_frn_cplt=@sInfoSpbFrnCplt , info_frn_spb_cplt=null
+	select @adcIdSin , @iNewIdSeq, @dcIdGti, @dcNewIdDetail, id_four='CDF', id_typ_art= 'CAF', 'Demande de Contrôle Interlocuteur', '', mt_ttc_cmde=0, adr_nom='X', adr_prenom='X', adr_livr1=@sAdr1, adr_livr2=@sAdr2, adr_livr_cpl=null, adr_cp=@sAdrCp, adr_ville=@sAdrVille, adr_tel1=@sNumTelD , adr_tel2=null, adr_tel3=null, adr_mail=null, dte_rdv_cli=null, hrdv_cli_min=null, hrdv_cli_max=null, id_serie_anc=null, 'Merci de contrôler cet interlocuteur', null,  null, null, null, null, 'ECT', null, 'PRESTA AUTOMATIQUE', 0, null, null, Getdate(), Getdate(), 'AUTO',  Getdate(),  'AUTO', id_zone=null, id_bsp=null, dte_ret_pret=null, adr_cod_civ=null, 'DDE_CTRLE_INTER', id_orian_marque=null, id_orian_modele=null, dte_elv_mobile=null, 0, dte_emis_devis=null, mt_devis=null, null, dte_dev_acp=null, adrfc_cod_civ=null, adrfc_nom=null, adrfc_prenom=null, adrfc_livr1=null, adrfc_livr2=null, adrfc_livr_cpl=null, adrfc_cp=null, adrfc_ville=null, dte_ret_logis=null, dte_ret_pret_min=null, dte_ret_pret_max=null, id_ann=null, dte_env_bte_frn=null, dte_rcp_bte_cli=null, dte_dep_bte_cli=null, dte_env_st=null, dte_rcp_mob_cli=null, info_spb_frn=3410, id_marq_art_ifr=null, id_modl_art_ifr=null, info_spb_frn_cplt=@sInfoSpbFrnCplt , info_frn_spb_cplt=null
 
 	-- Maj du code état de l'inter
 	Update sysadm.w_inter set cod_etat_ctrle_inter = 100 where id_sin = @adcIdSin and id_i = @dcIdI
 	Update sysadm.inter set cod_etat_ctrle_inter = 100 where id_sin = @adcIdSin and id_i = @dcIdI
+
+	Set @sMess = 'Engagement d''une demande de contrôle LCBFT vers l''assureur pour l''interlocuteur de type ' + @sLibTypInter + ' ' + @sNom + '.'
+
+	IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+	BEGIN
+		Exec SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	'AUTO', 300, @iIdCt OUTPUT
+	END
+	ELSE
+	BEGIN
+		Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	'AUTO', 300, @iIdCt OUTPUT						
+	END
 
 
 	-- Marquage de l'enrg traité
