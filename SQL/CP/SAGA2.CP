@@ -527,7 +527,7 @@ Set @asModeleDescripBouyguesOuIfr = rTrim ( ltrim ( upper ( @asModeleDescripBouy
 If @asModeleDescripBouyguesOuIfr = '' Or Len ( @asModeleDescripBouyguesOuIfr ) > 105 Return -4
 
 -- 1ère recherche si IFR
-If LEn ( @asMarqueBouyguesOuIfr ) <= 30 And Len ( @asModeleDescripBouyguesOuIfr ) <= 30
+If LEn ( @asMarqueBouyguesOuIfr ) <= 35 And Len ( @asModeleDescripBouyguesOuIfr ) <= 35
   Begin
 	If Exists ( 
 			Select	top 1 1 
@@ -857,7 +857,7 @@ Set @asModeleDescripExterneOuIfr = rTrim ( ltrim ( upper ( @asModeleDescripExter
 If @asModeleDescripExterneOuIfr = '' Or Len ( @asModeleDescripExterneOuIfr ) > 105 Return -4
 
 -- 1ère recherche si IFR
-If LEn ( @asMarqueExterneOuIfr ) <= 30 And Len ( @asModeleDescripExterneOuIfr ) <= 30
+If LEn ( @asMarqueExterneOuIfr ) <= 35 And Len ( @asModeleDescripExterneOuIfr ) <= 35
   Begin
 	If Exists ( 
 			Select	top 1 1 
@@ -1123,3 +1123,56 @@ Return 1
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_SI_SAGA2_RECUP_REF_SPBIFR_EN_LIEN_AVEC_REF_EXTERNE
+-- Auteur               :       FABRY JF
+-- Date                 :       12/06/2023
+-- Libellé              :       [RS-5297-HP-178]
+-- Commentaires         :       
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_SI_SAGA2_RECUP_REF_SPBIFR_EN_LIEN_AVEC_REF_EXTERNE' AND type = 'P' )
+        DROP procedure sysadm.PS_SI_SAGA2_RECUP_REF_SPBIFR_EN_LIEN_AVEC_REF_EXTERNE
+GO
+
+CREATE procedure sysadm.PS_SI_SAGA2_RECUP_REF_SPBIFR_EN_LIEN_AVEC_REF_EXTERNE
+	@asLstCodeSpbPrestaExterne	VarChar ( 255 ),  -- (Obligatoire) Liste des Code Spb (donnés par JFF) référencant les prestataires Exterieur chez Spb à passer sous forme #BYG#FRE#...
+	@asFormatRetour VarChar ( 50 ) -- (Obligatoire) 'DISTINCT' (défaut) ou 'PAR_FOURN'
+AS
+
+If Upper ( @asFormatRetour ) = 'PAR_FOURN'
+  Begin
+	Select  Distinct
+			a.id_four 'Code_Fourn',
+			ltrim ( rtrim ( a.id_marq_art_ifr )) 'Marque_spbifr',
+			ltrim ( rtrim ( a.id_modl_art_ifr )) 'Modèle_spbifr',
+			IsNull ( i.java, '')  'Capacité', 
+			IIF ( IsNull ( i.stndby, 'NON') <> 'DUALSIM', 'NON', IsNull ( i.stndby, 'NON') ) 'DualSim', 
+			IsNull ( i.packtype, '')  'Couleur'
+
+	From sysadm.article a with (nolock),
+			sysadm.ifr i with (nolock)
+	Where CharIndex ( '#' + a.id_four + '#', @asLstCodeSpbPrestaExterne ) > 0 
+	And   i.marque = a.id_marq_art_ifr
+	And   i.reference = a.id_modl_art_ifr
+	Order by 1,2,3
+End 
+Else 
+Begin
+	Select  Distinct
+			ltrim ( rtrim ( a.id_marq_art_ifr )) 'Marque_spbifr',
+			ltrim ( rtrim ( a.id_modl_art_ifr )) 'Modèle_spbifr',
+			IsNull ( i.java, '')  'Capacité', 
+			IIF ( IsNull ( i.stndby, 'NON') <> 'DUALSIM', 'NON', IsNull ( i.stndby, 'NON') ) 'DualSim', 
+			IsNull ( i.packtype, '')  'Couleur'
+
+	From sysadm.article a with (nolock),
+			sysadm.ifr i with (nolock)
+	Where CharIndex ( '#' + a.id_four + '#', @asLstCodeSpbPrestaExterne ) > 0 
+	And   i.marque = a.id_marq_art_ifr
+	And   i.reference = a.id_modl_art_ifr
+	Order by 1,2
+End 
+Go
