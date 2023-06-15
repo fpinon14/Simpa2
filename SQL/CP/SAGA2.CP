@@ -17,6 +17,21 @@
 -- Commentaires         :       
 -- Références           :       
 --
+--  sysadm.PS_S_SAGA2_MARQUE_IFR
+--  sysadm.PS_S_SAGA2_MODELE_IFR
+--  sysadm.PS_S_EXTRANET_STATUT_DOSSIER_SIMPA2
+--  sysadm.PS_S_SAGA2_INTERRO_AUTRE_REF
+--  sysadm.PS_S_SAGA2_INTERRO_ID_REF_FOUR_BOUYGUES
+--  sysadm.PS_S_SAGA2_INTERRO_IFR
+--  sysadm.PS_S_SAGA2_INTERRO_IFR_V100
+--  sysadm.PS_S_SAGA2_REF_IFR
+--  sysadm.PS_S_SAGA2_STOCK_FOURN
+--  sysadm.PS_SI_SAGA2_BYG_CREATION_ADHESION_SINISTRE
+--  sysadm.PS_SI_SAGA2_BYG_RECUPERER_GENCODE_DEPUIS_VALEUR_IFR
+--  sysadm.PS_SI_SAGA2_LIEN_REF_EXTERNE_AVEC_IFR_V02
+--  sysadm.PS_SI_SAGA2_RECUP_REF_SPBIFR_EN_LIEN_AVEC_REF_EXTERNE
+--  sysadm.PS_SI_SAGA2_RECUPERER_GENCODE_DEPUIS_VALEUR_IFR
+--  sysadm.PS_U_SAGA2_STOCK_FOURN
 -------------------------------------------------------------------
 
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_SAGA2_REF_IFR' AND type = 'P' )

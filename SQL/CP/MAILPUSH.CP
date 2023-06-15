@@ -6046,6 +6046,7 @@ Go
 --      JFF      23/06/2020   [PC202553_SELECTRA]
 --      JFF      15/01/2021   [DT517]
 --      JFF      27/10/2021   [RS1218-RS1259-ADRO2M]
+--      JFF      14/06/2023   [PMO139][RS4926]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S08_MAILPUSH_CORPS_MAIL_FNAC_900' AND type = 'P' )
         DROP procedure sysadm.PS_S08_MAILPUSH_CORPS_MAIL_FNAC_900
@@ -7502,21 +7503,28 @@ If @aiInfoSpbFrn in ( 955, 1110, 1237, 1255, 956, 1112, 957 )
 		Set @asMailBody  = @asMailBody  + @sSaut
 		Set @asMailBody  = @asMailBody  + @sSaut
 
+		If @aiInfoSpbFrn in (  957 )  -- [PMO139][RS4926]
+		 Begin
+			Set @asMailBody  = @asMailBody  + 'Merci de préparer les pièces/informations suivantes :'
+         End
+		Else
+		 Begin
+			Set @asMailBody  = @asMailBody  + 'Joignez à votre appareil :'
+         End
 
-		Set @asMailBody  = @asMailBody  + 'Joignez à votre appareil :'
 		Set @asMailBody  = @asMailBody  + @sSaut
 
 		If @sPce441 <> '' 
-		  Begin
+			Begin
 			Set @asMailBody  = @asMailBody  + @sSaut
 			Set @asMailBody  = @asMailBody  + @sPce441
-		  End 
+			End 
 
 		If @sPce74 <> '' 
-		  Begin
+			Begin
 			Set @asMailBody  = @asMailBody  + @sSaut
 			Set @asMailBody  = @asMailBody  + @sPce74
-		  End 
+			End 
 
 		Set @asMailBody  = @asMailBody  + @sSaut
 		Set @asMailBody  = @asMailBody  + '- Le n° de commande SPB : ' + Convert ( Varchar (10), @adcIdSin ) + '-' + Convert ( Varchar (3), @aiIdSeq ) -- [PI062]
@@ -21350,5 +21358,3 @@ Declare @sMess			VarChar ( 2000 ),
 
 
 Go
-
-

@@ -6004,3 +6004,154 @@ If @iRet <> 0 Return @iRet
 Return @iRet 
 
 Go
+
+
+
+
+--------------------------------------------------------------------
+--
+-- Fonction             :       FN_GET_NOM_PRENOM
+-- Auteur               :       Fabry JF (Repris de Fred)
+-- Date                 :       14/06/2023
+-- Libellé              :		[PMO89_RS4822]
+-- Commentaires         :       
+-- Références           :       
+--
+--
+--------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_GET_NOM_PRENOM' AND type = 'F' )
+        Drop function sysadm.FN_GET_NOM_PRENOM
+Go
+
+GO
+CREATE  function sysadm.FN_GET_NOM_PRENOM  
+--------------------------------------------------------------------------------------------  
+-- FN_RIB_IBAN FS le 28/08/2018 : Transforme un RIB vers IBAN  
+--------------------------------------------------------------------------------------------  
+   (  
+   @sLib       Varchar(71),  -- Nom et prénom en une seule zone  
+   @sPartie    Varchar(1)    -- 'N' pour obtenir le nom, 'P' pour obtenir le prénom          
+   )  
+RETURNS Varchar(71)  
+  
+AS  
+  
+Begin  
+   
+ Declare @sNom    Varchar(35)   
+ Declare @sPrenom Varchar(35)   
+ Declare @iPos    Integer  
+ Declare @sRet    Varchar(35)  
+  
+/*------------------------------------------------------------------*/  
+/* #2 Retrait des espaces avant et aprŠs la chaine @sLib            */  
+/*------------------------------------------------------------------*/  
+  
+ Set @sLib = Ltrim ( @sLib )  /* Gauche */  
+ Set @sLib = Rtrim ( @sLib )  /* Droite */  
+ Set @iPos  = CHARINDEX ( ' ', @sLib )                             /* ... Position 1er espace */  
+  
+/*------------------------------------------------------------------*/  
+/* Un seul mot = Nom ...                                            */  
+/* On prend … partir du 4Šme car pour traiter                       */  
+/* les noms compos‚s sans pr‚nom                                    */  
+/*------------------------------------------------------------------*/  
+  
+ If @iPos = 0  
+     Begin  
+       Set @sNom    = @sLib  
+       Set @sPrenom = '-'  
+       Set @iPos    = 0  
+     End  
+  
+   /*---------------------------*/           
+   /* ... Pas de nom compos‚ ...*/  
+   /*---------------------------*/  
+  
+   If @iPos <> 0 And @sLib not LIKE '__ %'  
+      Begin  
+        Set @sNom    = SUBSTRING ( @sLib, 1, @iPos -1 )  
+      --  Set @sPrenom = RTRIM ( SUBSTRING ( @sLib, @iPos + 1,35 ) ) -- NTB   
+   Set @sPrenom = Case ISNUMERIC(RTRIM ( SUBSTRING ( @sLib, @iPos + 1,35 ) )) when 1 Then ' '   
+   ELSE RTRIM ( SUBSTRING ( @sLib, @iPos + 1,35 ) )  END   
+      End  
+  
+   /*---------------------------*/           
+   /* ... Nom 1 Lettre + 1 espace ...*/  
+   /*---------------------------*/  
+  
+   If @iPos <> 0 And @sLib LIKE '_ %'  
+        -- #4 Ajout du text  
+  
+        If CHARINDEX ( ' ', SUBSTRING ( @sLib, 3, 35 ) ) = 0  
+           Begin  
+              Set @sNom    = @sLib  
+              Set @sPrenom = '-'  
+           End  
+        Else  
+           Begin  
+             Set @sNom    = SUBSTRING ( @sLib, 1, 2 ) +  SUBSTRING ( SUBSTRING ( @sLib, 3, 35), 1, CHARINDEX ( ' ', SUBSTRING ( @sLib , 3, 35 ) ) -1 )  
+         Set @sPrenom = RTRIM ( SUBSTRING ( SUBSTRING ( @sLib, 3, 35 ), CHARINDEX( ' ', SUBSTRING ( @sLib, 3, 35 ) ) + 1,35 ) )  
+            
+    
+      
+     End  
+  
+   /*---------------------------*/   
+   /* ... Nom compos‚ simple ...*/  
+   /*---------------------------*/  
+  
+   If @iPos <> 0 And @sLib Like '__ %' And @sLib Not Like '__ __ %'  
+      Begin  
+        -- #3 ancienne commande  If CHARINDEX ( ' ', SUBSTRING ( @sLib +' ' , 4, 35 ) ) = 0   
+        If CHARINDEX ( ' ', SUBSTRING ( @sLib, 4, 35 ) ) = 0  
+           Begin  
+             Set @sNom    = Substring ( @sLib, 1, 2  )  /* #1 Nom    = 2 1er caractères */  
+             Set @sPrenom = Substring ( @sLib, 4, 35 )  /* #1 Prenom = La suite         */  
+      
+    End  
+             Else  
+    Begin  
+      Set @sNom    = SUBSTRING ( @sLib, 1, 3 ) +  SUBSTRING ( SUBSTRING ( @sLib, 4, 35), 1, CHARINDEX ( ' ', SUBSTRING ( @sLib , 4, 35 ) ) -1 )  
+      Set @sPrenom = RTRIM ( SUBSTRING ( SUBSTRING ( @sLib, 4, 35 ), CHARINDEX( ' ', SUBSTRING ( @sLib, 4, 35 ) ) + 1,35 ) )  
+    
+    End  
+      End  
+  
+   /*---------------------------*/  
+   /* ... Nom compos‚ double ...*/  
+   /*---------------------------*/  
+     If @iPos <> 0 And @sLib Like '__ __ %'  
+        Begin  
+          -- #3 Ancienne commande If CHARINDEX ( ' ', SUBSTRING ( @sLib +' ' , 7, 35 ) ) = 0  
+          If CHARINDEX ( ' ', SUBSTRING ( @sLib, 7, 35 ) ) = 0  
+             Begin  
+              --Set @sNom    = @sLib  
+  --Set @sPrenom = '-'  
+              Set @sNom    = Substring ( @sLib, 1, 5  )  /* #1 Nom    = 5 1er caractères */  
+              Set @sPrenom = Substring ( @sLib, 6, 35 )  /* #1 Prenom = La suite         */  
+             End  
+          Else  
+             Begin  
+               Set @sNom    =  substring ( @sLib, 1, 6 ) +substring( substring ( @sLib, 7, 35 ), 1, charindex( ' ', substring ( @sLib, 7, 35 ) ) -1 )  
+               Set @sPrenom =  RTRIM ( substring( substring ( @sLib, 7, 30 ), charindex( ' ', substring ( @sLib, 7, 30 ) ) + 1,30 ))  
+     
+  
+             End  
+         End  
+  
+   /*---------------------------*/  
+   /* #1 Retrait des espaces    */  
+   /*---------------------------*/  
+  
+   Set @sNom    = Ltrim ( @sNom )  
+   Set @sPrenom = Ltrim ( @sPrenom )  
+  
+  
+  Set @sRet = Case @sPartie When 'N' Then @sNom When 'P' Then @sPrenom End  
+   
+  Return @sRet  
+  
+End  
+
+Go

@@ -1106,6 +1106,7 @@ Declare @sXmlData varchar ( max )
 Declare @sChemDepot varchar ( 255 ) 
 Declare @sNomFichierDepot varchar ( 255 ) 
 Declare @ChemEtNomDepot varchar ( 255 ) 
+Declare @sServeurProduction varchar ( 3 )
 
 Set @sMsgTrc = 'Lancement du traitement le ' + Convert ( VarChar ( 10), Getdate(), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108) 
 Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL -1, 'LNCTRT', 'OK', @sMsgTrc 
@@ -1132,13 +1133,16 @@ Declare @TbWork Table (
 	marquage integer
 )
 
-  
+
+
 -----------------------------------------
 ---------- Version PRODUCTION -----------
 -----------------------------------------
 If @@servername = master.dbo.SPB_FN_ServerName ('PRO')  
  Begin    
   
+	Set @sServeurProduction = 'PRO'
+
 	Set @sDestinataire = 'GG_DSI-DO-INFRA-SERVEUR,jff@spb.fr,cbourdoiseau@spb.eu'
 
 	-----------------------------------------------------------------------------
@@ -1152,8 +1156,13 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 			mp.id_sin,  
 			mp.id_arch,  
 			mp.xml_data + IsNull ( mp.xml_data2, ''),
-			IsNull ( ( Select chemin From sysadm.chem_depot_ksl_rs5045 where id_chem = mp.id_chem ), '') chemin_depot,
-			IsNull ( ( Select chemin From sysadm.code_maquette_ksl_rs5045 where typ_mail = mp.typ_mail ), '') fichier_depot,
+			IsNull ( ( Select Case @sServeurProduction
+								When 'PRO' Then chemin_pro
+								Else Then chemin_sim
+							  End
+					   From sysadm.chem_depot_ksl_rs5045 
+					   where id_chem = mp.id_chem ), '') chemin_depot,
+			IsNull ( ( Select nom_fichier From sysadm.code_maquette_ksl_rs5045 where typ_mail = mp.typ_mail ), '') fichier_depot,
 			mp.dateh_exec,
 			0
   
@@ -1165,6 +1174,7 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 		   Where  mp.methode = 'KSL2'  -- Important, Nouveau RS5045
 		   And ( mp.mail_trt_ok = 'N' or mp.mail_trt_ok is null )  
 		   And mp.id_appli_num = 2  -- SIMPA2
+		   And mp.id_arch > 0 
 		   And a.id_arch = mp.id_arch  
 		   And s.id_sin = mp.id_sin  
 		   And d.id_prod = s.id_prod  
@@ -1196,7 +1206,12 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 			mp.id_sin,  
 			mp.id_arch,  
 			mp.xml_data + IsNull ( mp.xml_data2, ''),
-			IsNull ( ( Select chemin From sysadm.chem_depot_ksl_rs5045 where id_chem = mp.id_chem ), '') chemin_depot,
+			IsNull ( ( Select Case @sServeurProduction
+								When 'PRO' Then chemin_pro
+								Else Then chemin_sim
+							  End
+					   From sysadm.chem_depot_ksl_rs5045 
+					   where id_chem = mp.id_chem ), '') chemin_depot,
 			IsNull ( ( Select chemin From sysadm.code_maquette_ksl_rs5045 where typ_mail = mp.typ_mail ), '') fichier_depot,
 			mp.dateh_exec,
 			0
@@ -1206,6 +1221,7 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 		   Where  mp.methode = 'KSL2'  -- Important, Nouveau RS5045
 		   And ( mp.mail_trt_ok = 'N' or mp.mail_trt_ok is null )  
 		   And mp.id_appli_num = 2  -- SIMPA2
+		   And mp.id_arch > 0 
 		   And a.id_arch = mp.id_arch  
 		   And mp.cree_le > DateAdd ( month, -2, getdate() )  
 		   And Not Exists (   
@@ -1237,6 +1253,8 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 ----------------------------------------------------------------------------------------------
 If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')  
  Begin
+
+	Set @sServeurProduction = 'SIM'
   
 	Set @sDestinataire = 'jff@spb.fr'
 
@@ -1251,8 +1269,13 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 			mp.id_sin,  
 			mp.id_arch,  
 			mp.xml_data + IsNull ( mp.xml_data2, ''),
-			IsNull ( ( Select chemin From sysadm.chem_depot_ksl_rs5045 where id_chemin = mp.id_chemin ), '') chemin_depot,
-			IsNull ( ( Select chemin From sysadm.code_maquette_ksl_rs5045 where typ_mail = mp.typ_mail ), '') fichier_depot,
+			IsNull ( ( Select Case @sServeurProduction
+								When 'PRO' Then chemin_pro
+								Else Then chemin_sim
+							  End
+					   From sysadm.chem_depot_ksl_rs5045 
+					   where id_chem = mp.id_chem ), '') chemin_depot,
+			IsNull ( ( Select nom_fichier From sysadm.code_maquette_ksl_rs5045 where typ_mail = mp.typ_mail ), '') fichier_depot,
 			mp.dateh_exec,
 			0
   
@@ -1264,6 +1287,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		   Where  mp.methode = 'KSL2'  -- Important, Nouveau RS5045
 		   And ( mp.mail_trt_ok = 'N' or mp.mail_trt_ok is null )  
 		   And mp.id_appli_num = 2  -- SIMPA2
+		   And mp.id_arch > 0 
 		   And a.id_arch = mp.id_arch  
 		   And s.id_sin = mp.id_sin  
 		   And d.id_prod = s.id_prod  
@@ -1295,8 +1319,13 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 			mp.id_sin,  
 			mp.id_arch,  
 			mp.xml_data + IsNull ( mp.xml_data2, ''),
-			IsNull ( ( Select chemin From sysadm.chem_depot_ksl_rs5045 where id_chemin = mp.id_chemin ), '') chemin_depot,
-			IsNull ( ( Select chemin From sysadm.code_maquette_ksl_rs5045 where typ_mail = mp.typ_mail ), '') fichier_depot,
+			IsNull ( ( Select Case @sServeurProduction
+								When 'PRO' Then chemin_pro
+								Else Then chemin_sim
+							  End
+					   From sysadm.chem_depot_ksl_rs5045 
+					   where id_chem = mp.id_chem ), '') chemin_depot,
+			IsNull ( ( Select nom_fichier From sysadm.code_maquette_ksl_rs5045 where typ_mail = mp.typ_mail ), '') fichier_depot,
 			mp.dateh_exec,
 			0
  
@@ -1305,6 +1334,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		   Where  mp.methode = 'KSL2'  -- Important, Nouveau RS5045
 		   And ( mp.mail_trt_ok = 'N' or mp.mail_trt_ok is null )  
 		   And mp.id_appli_num = 2  -- SIMPA2
+		   And mp.id_arch > 0 
 		   And a.id_arch = mp.id_arch  
 		   And mp.cree_le > DateAdd ( month, -2, getdate() )  
 		   And Not Exists (   
@@ -1343,8 +1373,13 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 	mp.id_sin,  
 	mp.id_arch,  
 	mp.xml_data + IsNull ( mp.xml_data2, ''),
-	IsNull ( ( Select chemin From sysadm.chem_depot_ksl_rs5045 where id_chemin = mp.id_chemin ), '') chemin_depot,
-	IsNull ( ( Select chemin From sysadm.code_maquette_ksl_rs5045 where typ_mail = mp.typ_mail ), '') fichier_depot,
+	IsNull ( ( Select Case @sServeurProduction
+						When 'PRO' Then chemin_pro
+						Else Then chemin_sim
+						End
+				From sysadm.chem_depot_ksl_rs5045 
+				where id_chem = mp.id_chem ), '') chemin_depot,
+	IsNull ( ( Select nom_fichier From sysadm.code_maquette_ksl_rs5045 where typ_mail = mp.typ_mail ), '') fichier_depot,
 	mp.dateh_exec,
 	0
   
@@ -1486,7 +1521,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 
 		If @iRet <> 0 
 		  Begin
-			Set @sMsgTrc = 'Erreur lors de l''écrituredu fichier XML, code erreur ' + CONVERT ( Varchar ( 20 ), @iRet ) 
+			Set @sMsgTrc = 'Erreur lors de l''écriture du fichier XML, code erreur ' + CONVERT ( Varchar ( 20 ), @iRet ) 
 			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL @iIdSeq, 'ECRXML', 'ERR', @sMsgTrc 
 
 			Update @TbWork Set marquage = 1 Where id_seq = @iIdSeq
