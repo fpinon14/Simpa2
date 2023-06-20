@@ -5914,7 +5914,7 @@ Go
 --										Consulter tous les charset possible du ADODB.Stream sur https://learn.microsoft.com/en-us/previous-versions/exchange-server/exchange-10/ms526296(v=exchg.10)
 --										'UTF-8' pour de l'XML
 --										'ISO-8859-1' pour du fichier texte
---									@asLineSeparator	VarChar ( 30 ),
+--									@asLineSeparator	Integer,
 --										'adCRLF' (-1) Par défaut, un retour chariot et un saut de ligne, 
 --										'adCR' (13)	Retour chariot uniquement
 --										'adLF' (10) Saut de ligne uniquement	
@@ -5933,7 +5933,7 @@ CREATE  PROCEDURE sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM
 	@asType				Int,
 	@asMode				Int,
 	@asCharSet			VarChar ( 30 ),
-	@asLineSeparator	VarChar ( 30 ),
+	@aiLineSeparator	Integer,
 	@asTextBody			NVarChar ( Max )
 As
 
@@ -5948,13 +5948,13 @@ If @iRet <> 0 Return @iRet
 Exec @iRet = sp_OASetProperty     @aiHandle, 'Charset',  @asCharSet
 If @iRet <> 0 Return @iRet 
 
-Exec @iRet = sp_OASetProperty     @aiHandle, 'LineSeparator',  @asLineSeparator
+Exec @iRet = sp_OASetProperty     @aiHandle, 'LineSeparator',  @aiLineSeparator
 If @iRet <> 0 Return @iRet 
 
-Exec @iRet = sp_OASetProperty     @aiHandle, 'Open'
+Exec @iRet = sp_OAMethod     @aiHandle, 'Open'
 If @iRet <> 0 Return @iRet 
 
-Exec @iRet = sp_OASetProperty     @aiHandle, 'WriteText', null, @asTextBody
+Exec @iRet = sp_OAMethod     @aiHandle, 'WriteText', null, @asTextBody
 If @iRet <> 0 Return @iRet 
 
 Return @iRet 

@@ -16576,15 +16576,12 @@ Declare @iNbrPieceTot integer
 				null,
 				@sMailObjet,
 				'Corps du mail construit par KSL',
-				@sAltQuarant,
 				@sBoiteMail,
 				'CAST1M',
 				2,
-				'KSL2', -- [RS5045_REF_MATP]
-				'KSL_EDS',
 				-1,
 				@sXMLVar,
-				1,  -- id_chem
+				null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
 				null, -- dteh_exec
 				@sErrOutPut OutPut
 
@@ -16608,7 +16605,7 @@ Declare @iNbrPieceTot integer
 				'CAST1M',
 				2,
 				'KSL',
-				'KSL_EDS',
+				'KSL_EDS',     
 				-1,
 				@sXMLVar
 		  End
@@ -16634,15 +16631,12 @@ Declare @iNbrPieceTot integer
 				null,
 				@sMailObjet,
 				'Corps du mail construit par KSL',
-				@sAltQuarant,
 				@sBoiteMail,
 				'CAST1M',
 				2,
-				'KSL2', -- [RS5045_REF_MATP]
-				'KSL_EDS',
 				-1,
 				@sXMLVar,
-				1,  -- id_chem
+				null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
 				null, -- dteh_exec
 				@sErrOutPut OutPut
 
@@ -16666,7 +16660,7 @@ Declare @iNbrPieceTot integer
 				'CAST1M',
 				2,
 				'KSL',
-				'KSL_EDS',
+				'KSL_EDS',     
 				-1,
 				@sXMLVar
 		  End
@@ -16970,15 +16964,12 @@ Declare @iTri Integer
 				null,
 				@sMailObjet,
 				'Corps du mail construit par KSL',
-				@sAltQuarant,
 				@sBoiteMail,
 				@sTypMail,
 				2,
-				'KSL2', -- [RS5045_REF_MATP]
-				'KSL_EDS',
 				-1,
 				@sXMLVar,
-				1,  -- id_chem
+				null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
 				null, -- dteh_exec
 				@sErrOutPut OutPut
 
@@ -17029,15 +17020,12 @@ Declare @iTri Integer
 				null,
 				@sMailObjet,
 				'Corps du mail construit par KSL',
-				@sAltQuarant,
 				@sBoiteMail,
 				@sTypMail,
 				2,
-				'KSL2', -- [RS5045_REF_MATP]
-				'KSL_EDS',
 				-1,
 				@sXMLVar,
-				1,  -- id_chem
+				null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
 				null, -- dteh_exec
 				@sErrOutPut OutPut
 
@@ -21154,7 +21142,9 @@ CREATE procedure sysadm.PS_I_RS5045_MAIL_COUR_CARTE_CADEAU_ELD_KSL
 	@adcIdSin      	Decimal (10), -- [PI062]
 	@aiIdSeq	integer
 AS
-  
+  -- @asErrOutPut VarChar ( 255 ) Output
+Declare @asErrOutPut VarChar ( 255 ) 
+
   Declare 
 	@sSaut		VarChar (10), 
     @iRet		Integer,
@@ -21186,7 +21176,6 @@ AS
 	@sNumCCELD VarChar ( 35 ),
 	@sMtCC	   VarChar ( 20 ),
 	@sIdSeq    VarChar ( 15 ),
-	@sErrOutPut VarChar ( 255 ),
 	@iIdXml    Integer
 
 Declare @sMess			VarChar ( 2000 ),
@@ -21195,55 +21184,55 @@ Declare @sMess			VarChar ( 2000 ),
 		@iVal			integer, 
 		@sAdrMailErr VarChar ( 150 )
 
-  Set @sSaut = Char (10)
-  Set @iRet = 0
-  Set @sIdAppli = 'SIMPA2'
-  Set @sTypApp = '' 
-  Set @iOptionDP = -1
+Set @sSaut = Char (10)
+Set @iRet = 0
+Set @sIdAppli = 'SIMPA2'
+Set @sTypApp = '' 
+Set @iOptionDP = -1
 
-	Exec @iRet = sysadm.PS_S01_RECUP_DONNEES_MAIL_XML
-		@adcIdSin,
-		@iOptionDP,
-		@dcIdProd   OUTPUT,
-		@sLibProd   OUTPUT,
-		@dcIdEts    OUTPUT,
-		@sNumProd   OUTPUT,
-		@sCiv	    OUTPUT,
-		@sNom	    OUTPUT,
-		@sMailFrom  OUTPUT,
-		@sMailSend  OUTPUT,
-		@sMailCc    OUTPUT,
-		@sAltQuarant OUTPUT,
-		@sBoiteMail  OUTPUT,
-		@sXMLVar     OUTPUT
+Exec @iRet = sysadm.PS_S01_RECUP_DONNEES_MAIL_XML
+	@adcIdSin,
+	@iOptionDP,
+	@dcIdProd   OUTPUT,
+	@sLibProd   OUTPUT,
+	@dcIdEts    OUTPUT,
+	@sNumProd   OUTPUT,
+	@sCiv	    OUTPUT,
+	@sNom	    OUTPUT,
+	@sMailFrom  OUTPUT,
+	@sMailSend  OUTPUT,
+	@sMailCc    OUTPUT,
+	@sAltQuarant OUTPUT,
+	@sBoiteMail  OUTPUT,
+	@sXMLVar     OUTPUT
 
-	-- On néglige le sXMLVar retourné, on en construit un autre à la nouvelle méthode 5 [RS5045]
-	Set @sXMLVar = ''    
+-- On néglige le sXMLVar retourné, on en construit un autre à la nouvelle méthode 5 [RS5045]
+Set @sXMLVar = ''    
 
-	-- Armement du corps du mail 
-	Set @sMailObjet = 'Corps de l''Objet construit par KSL'
-	Set @sMailBody  = 'Corps du mail construit par KSL'
+-- Armement du corps du mail 
+Set @sMailObjet = 'Corps de l''Objet construit par KSL'
+Set @sMailBody  = 'Corps du mail construit par KSL'
 
-	-- On convertit pour l'appel de la PS
-	Set @iIdSin  = Convert ( integer, @adcIdSin )
-	Set @iIdProd = Convert ( integer, @dcIdProd )
-	Set @iIdEts  = Convert ( integer, @dcIdEts )
-	Set @sAltQuarant = 'N'
+-- On convertit pour l'appel de la PS
+Set @iIdSin  = Convert ( integer, @adcIdSin )
+Set @iIdProd = Convert ( integer, @dcIdProd )
+Set @iIdEts  = Convert ( integer, @dcIdEts )
+Set @sAltQuarant = 'N'
 
-	Set @dcIdInter = 0
-	Set @sTypMail = 'CC_ELD' -- (-TM) code_car sur TRACE_MAIL
+Set @dcIdInter = 0
+Set @sTypMail = 'CC_ELD' -- (-TM) code_car sur TRACE_MAIL
 
-	Select @sMtCC = Convert ( VarChar ( 20), c.mt_ttc_cmde ), --  As montant_carte_cadeau,
-		   @sRefIdem = sysadm.FN_CLE_VAL ( 'REF_INDEM', rtrim(c.info_spb_frn_cplt), ';' ), -- As ref_indemnisation,
-	   	   @sNumCCELD = sysadm.FN_CLE_VAL ( 'NUM_CC_ELD', rtrim( c.info_spb_frn_cplt), ';' ), -- As code_chq_cadeau,
-		   @sCodeSecu = sysadm.FN_CLE_VAL ( 'CODE_SECURITE', rtrim( c.info_frn_spb_cplt), ';' ), -- As code_acces_securise, -- [RS4093_EVOL_ELD]
-		   @sIdSeq    = Convert ( VarChar ( 15 ), c.id_seq )
-	From sysadm.commande c
-	Where c.id_sin = @adcIdSin
-	And   c.id_seq = @aiIdSeq
+Select @sMtCC = Convert ( VarChar ( 20), c.mt_ttc_cmde ), --  As montant_carte_cadeau,
+		@sRefIdem = sysadm.FN_CLE_VAL ( 'REF_INDEM', rtrim(c.info_spb_frn_cplt), ';' ), -- As ref_indemnisation,
+	   	@sNumCCELD = sysadm.FN_CLE_VAL ( 'NUM_CC_ELD', rtrim( c.info_spb_frn_cplt), ';' ), -- As code_chq_cadeau,
+		@sCodeSecu = sysadm.FN_CLE_VAL ( 'CODE_SECURITE', rtrim( c.info_frn_spb_cplt), ';' ), -- As code_acces_securise, -- [RS4093_EVOL_ELD]
+		@sIdSeq    = Convert ( VarChar ( 15 ), c.id_seq )
+From sysadm.commande c
+Where c.id_sin = @adcIdSin
+And   c.id_seq = @aiIdSeq
 
-	If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
-	 Begin
+If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
+	Begin
 		-- Appel Obligatoire pour déclarer le XML
 		Exec @iIdXml = TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CREATION_CHAINE_DATA_XML_KSL_A_VIDE
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER @iIdSin, @dcIdInter, @iIdXml
@@ -21273,22 +21262,19 @@ Declare @sMess			VarChar ( 2000 ),
 			null,
 			@sMailObjet,
 			@sMailBody,
-			@sAltQuarant,
 			@sBoiteMail,
 			@sTypMail,
 			2,
-			'KSL2', -- [RS5045_REF_MATP]
-			'RS5045_CODMAQ',
 			-1,
 			@sXMLVar,
-			1,  -- id_chem
+			null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
 			null, -- dteh_exec
-			@sErrOutPut OutPut
+			@asErrOutPut OutPut
 
-	   End    -- TRACE_MAIL_PRO : Fin écriture
+	End    -- TRACE_MAIL_PRO : Fin écriture
 
-	Else
-	 Begin
+Else
+	Begin
 		-- Appel Obligatoire pour déclarer le XML
 		Exec @iIdXml = TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CREATION_CHAINE_DATA_XML_KSL_A_VIDE
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER @iIdSin, @dcIdInter, @iIdXml
@@ -21318,43 +21304,45 @@ Declare @sMess			VarChar ( 2000 ),
 			null,
 			@sMailObjet,
 			@sMailBody,
-			@sAltQuarant,
 			@sBoiteMail,
 			@sTypMail,
 			2,
-			'KSL2', -- [RS5045_REF_MATP]
-			'RS5045_CODMAQ',
 			-1,
 			@sXMLVar,
-			1,  -- id_chem
+			null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
 			null, -- dteh_exec
-			@sErrOutPut OutPut
-	 End	
+			@asErrOutPut OutPut
+	End	
 
-	 -- MAJ du dossier, à partir de ce moment pour moi je considère que le BA a été envoyé (ce qui n'est pas rééllement le cas)
+	-- MAJ du dossier, à partir de ce moment pour moi je considère que le BA a été envoyé (ce qui n'est pas rééllement le cas)
 
-	Set @sMess = 'Courrier lié à la carte cadeau, envoyé '
+If @iRet <> 0 
+  Begin
+	Return @iRet
+  End 
+
+Set @sMess = 'Courrier lié à la carte cadeau, envoyé '
 	
-	Update	sysadm.commande
-	Set	    info_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DTE_BGE', CONVERT ( VarChar ( 10 ), getdate(), 103 ), RTRIM( c.info_spb_frn_cplt ), ';')
-	From	sysadm.commande c 
-	Where  	c.id_sin = @adcIdSin
-	And		c.id_seq = @aiIdSeq
+Update	sysadm.commande
+Set	    info_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DTE_BGE', CONVERT ( VarChar ( 10 ), getdate(), 103 ), RTRIM( c.info_spb_frn_cplt ), ';')
+From	sysadm.commande c 
+Where  	c.id_sin = @adcIdSin
+And		c.id_seq = @aiIdSeq
 
-	Update	sysadm.w_commande
-	Set	    info_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DTE_BGE', CONVERT ( VarChar ( 10 ), getdate(), 103 ), RTRIM( c.info_spb_frn_cplt ), ';')
-	From	sysadm.w_commande c 
-	Where  	c.id_sin = @adcIdSin
-	And		c.id_seq = @aiIdSeq
+Update	sysadm.w_commande
+Set	    info_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DTE_BGE', CONVERT ( VarChar ( 10 ), getdate(), 103 ), RTRIM( c.info_spb_frn_cplt ), ';')
+From	sysadm.w_commande c 
+Where  	c.id_sin = @adcIdSin
+And		c.id_seq = @aiIdSeq
 
-	IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
-	BEGIN
-		Exec  SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @adcIdSin, 2, @sMess,	'', 300, @iIdCt OUTPUT
-	END
-	ELSE
-	BEGIN
-		Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @adcIdSin, 2, @sMess,	'', 300, @iIdCt OUTPUT
-	END
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+BEGIN
+	Exec  SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @adcIdSin, 2, @sMess,	'', 300, @iIdCt OUTPUT
+END
+ELSE
+BEGIN
+	Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @adcIdSin, 2, @sMess,	'', 300, @iIdCt OUTPUT
+END
 
 
 Go

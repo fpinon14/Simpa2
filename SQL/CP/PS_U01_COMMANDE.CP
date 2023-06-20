@@ -1071,7 +1071,7 @@ If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') > 0
  Begin
 	If @sIdFour = 'ELD' And @iStatusGc = 401 
 	  Begin
-		 Exec @iRet=sysadm.PS_I_RS5045_MAIL_COUR_CARTE_CADEAU_ELD_KSL
+		 Exec @iRet=sysadm.PS_I_RS5045_MAIL_COUR_CARTE_CADEAU_ELD_KSL @dcIdSin, @iIdSeq 
 	  End 
  End 
 
