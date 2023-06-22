@@ -2565,6 +2565,7 @@ Go
 -- JFF    23/06/2020 [PC202553_SELECTRA]
 -- JFF    16/11/2020 [PC202553_SELECTRA][CDCSINV3]
 -- JFF    15/01/2021 [DT517]  
+-- JFF    26/04/2023 [RS5045_REF_MATP]
 ------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S04_MAILPUSH_INFO_REPAR_PASSE' AND type = 'P' )
         DROP procedure sysadm.PS_S04_MAILPUSH_INFO_REPAR_PASSE
@@ -2643,7 +2644,7 @@ Declare
   @sPropo2	Varchar(35), -- [PC403]
   @sDP205	VarChar (70 ), -- [RECUP_DONNEE_O2M]
   @sInfoSpbFrnCplt VarChar ( 255 ), -- [RECUP_DONNEE_O2M]
-  @sXMLVar     	VarChar ( 2000 ), -- [RECUP_DONNEE_O2M]
+  @sXMLVar     	VarChar ( max ), -- [RECUP_DONNEE_O2M]
   @sDteDecl		VarChar ( 15 ), -- [RECUP_DONNEE_O2M]
   @sLstAdresse	VarChar ( 255 ), -- [PM200][PSM]
   @sCodeBtqPSM_Proximite VarChar ( 255 ), -- [PM200][PSM]
@@ -2668,7 +2669,11 @@ Declare
   @sLibCie	Varchar ( 35 ), -- [DT361] 
   @sIdAdh	VarChar ( 19 ), -- [DT361] 
   @PiedDePage_SiVotreContratDispo VarChar (20 ), -- [DT386_EXTR_AXA]
-  @sNumImeiNouv Varchar ( 50 ) -- [DT361-1]
+  @sNumImeiNouv Varchar ( 50 ), -- [DT361-1]
+  @iIdXml integer,
+  @dcIdInter Decimal ( 2 ),
+  @sCodeMaquette VarChar ( 255 ),
+  @sErrOutPut VarChar ( 255 )
 
   Set @asCasRetour = ''
   Set @sMailBody = ''
@@ -4327,6 +4332,19 @@ Exec sysadm.PS_I_MAIL_IOS7_VDOC12443 @asIdAppli, @asBase, @iOptionDP, @adcIdSin
   Set @iIdProd = Convert ( integer, @dcIdProd )
   Set @iIdEts  = Convert ( integer, @dcIdEts )
 
+  -- [RS5045_REF_MATP]
+  If Exists ( Select Top 1 1 From sysadm.w_sin where id_sin = @adcIdSin ) 
+   Begin
+	 Select @dcIdInter = id_i From sysadm.w_inter where id_sin = @adcIdSin and cod_inter = 'A'
+   End 
+  Else
+   Begin
+	 Select @dcIdInter = id_i From sysadm.inter where id_sin = @adcIdSin and cod_inter = 'A'
+   End 
+
+   If @dcIdInter is null Set @dcIdInter = 0 
+
+  -- /[RS5045_REF_MATP]
 	-- [DT139]
 	If Len ( @sMailCcOrangeVIP ) > 0 
 	 Begin
@@ -4337,43 +4355,134 @@ Exec sysadm.PS_I_MAIL_IOS7_VDOC12443 @asIdAppli, @asBase, @iOptionDP, @adcIdSin
 
    Begin  -- TRACE_MAIL_PRO : Début écriture
 
-	  Exec @iRet = TRACE_MAIL_PRO.sysadm.PS_I01_MAIL_PUSH_V00 
-		@asIdAppli,
-		@iIdSin, 
-		@iIdProd, 
-		@sLibProd, 
-		@iIdEts, 
-	  @sMailFrom, 
-		@sMailSend, 
-		@sMailCc,
-		@sMailObjet,
-		@sMailBody,
-		@sAltQuarant,
-		@sBoiteMail, --#2
-		'M4', -- #2
-		2 -- #2
+  	-- [RS5045_REF_MATP] Nouvelle et future Méthode unique à utiliser !!
+	If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') > 0 
+		Begin
+			-- Appel Obligatoire pour déclarer le XML
+			Exec @iIdXml = TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CREATION_CHAINE_DATA_XML_KSL_A_VIDE
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER @iIdSin, @dcIdInter, @iIdXml
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_OPTIMISER_CHAINE_DATA_XML_KSL @iIdXml, 'OUI', 'OUI', 'OUI'
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_CODE_MAQUETTE_KSL_A_PARTIR_TYP_MAIL 'M4', @sCodeMaquette OutPut
 
+			-- Ajout personnalisé du client appelant le système
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_D_UN_MAIL_BODY_AU_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
+
+			-- Appel pour construire et récupérer le XML dans @xmlResult
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sXMLVar OUTPUT
+
+			Exec @iRet = TRACE_MAIL_PRO.sysadm.PS_RS5045_I_MAIL_PUSH_KSL
+				@asIdAppli,
+				@iIdSin,
+				@iIdProd,
+				@sLibProd,
+				@iIdEts,
+				@sMailFrom,
+				@sMailSend,
+				@sMailCc,
+				null,
+				@sMailObjet,
+				@sMailBody,
+				@sBoiteMail,
+				'M4',
+				2,
+				-1,
+				@sXMLVar,
+				null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
+				null, -- dteh_exec
+				@sErrOutPut OutPut
+
+				Set @asCasRetour = Left ( @sErrOutPut, 50 )
+
+		End 
+	Else
+		Begin
+		  Exec @iRet = TRACE_MAIL_PRO.sysadm.PS_I01_MAIL_PUSH_V00 
+			@asIdAppli,
+			@iIdSin, 
+			@iIdProd, 
+			@sLibProd, 
+			@iIdEts, 
+		  @sMailFrom, 
+			@sMailSend, 
+			@sMailCc,
+			@sMailObjet,
+			@sMailBody,
+			@sAltQuarant,
+			@sBoiteMail, --#2
+			'M4', -- #2
+			2 -- #2
+		End 
    End    -- TRACE_MAIL_PRO : Fin écriture
 
   Else
 
    Begin  -- TRACE_MAIL_TRT : Début écriture
 
-	  Exec @iRet = TRACE_MAIL_TRT.sysadm.PS_I01_MAIL_PUSH_V00 
-		@asIdAppli,
-		@iIdSin, 
-		@iIdProd, 
-		@sLibProd, 
-		@iIdEts, 
-        	@sMailFrom, 
-		@sMailSend, 
-		@sMailCc,
-		@sMailObjet,
-		@sMailBody,
-		@sAltQuarant,
-		@sBoiteMail, --#2
-		'M4', -- #2
-		2 -- #2
+  	-- [RS5045_REF_MATP] Nouvelle et future Méthode unique à utiliser !!
+	If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') > 0 
+		Begin
+			-- Appel Obligatoire pour déclarer le XML
+			Exec @iIdXml = TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CREATION_CHAINE_DATA_XML_KSL_A_VIDE
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER @iIdSin, @dcIdInter, @iIdXml
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_OPTIMISER_CHAINE_DATA_XML_KSL @iIdXml, 'OUI', 'OUI', 'OUI'
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_CODE_MAQUETTE_KSL_A_PARTIR_TYP_MAIL 'M4', @sCodeMaquette OutPut
+
+			-- Ajout personnalisé du client appelant le système
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_D_UN_MAIL_BODY_AU_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
+
+			-- Appel pour construire et récupérer le XML dans @xmlResult
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sXMLVar OUTPUT
+
+			Exec @iRet = TRACE_MAIL_TRT.sysadm.PS_RS5045_I_MAIL_PUSH_KSL
+				@asIdAppli,
+				@iIdSin,
+				@iIdProd,
+				@sLibProd,
+				@iIdEts,
+				@sMailFrom,
+				@sMailSend,
+				@sMailCc,
+				null,
+				@sMailObjet,
+				@sMailBody,
+				@sBoiteMail,
+				'M4',
+				2,
+				-1,
+				@sXMLVar,
+				null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
+				null, -- dteh_exec
+				@sErrOutPut OutPut
+
+				Set @asCasRetour = Left ( @sErrOutPut, 50 )
+
+		End 
+	Else
+		Begin
+		  Exec @iRet = TRACE_MAIL_TRT.sysadm.PS_I01_MAIL_PUSH_V00 
+			@asIdAppli,
+			@iIdSin, 
+			@iIdProd, 
+			@sLibProd, 
+			@iIdEts, 
+        		@sMailFrom, 
+			@sMailSend, 
+			@sMailCc,
+			@sMailObjet,
+			@sMailBody,
+			@sAltQuarant,
+			@sBoiteMail, --#2
+			'M4', -- #2
+			2 -- #2
+		End
 
    End    -- TRACE_MAIL_TRT : Fin écriture
 	
@@ -7480,8 +7589,8 @@ If @aiInfoSpbFrn in ( 955, 1110, 1237, 1255, 956, 1112, 957 )
 			Set @asMailBody  = @asMailBody  + @sSaut		
 			Set @asMailBody  = @asMailBody  + 'Notre centre de diagnostic enverra donc un transporteur chez vous pour l''enlèvement de ' + @sVar1 + '.'
 		 End
-
-		If @aiInfoSpbFrn in (  1237, 1255 )
+1237, 1255 )
+		If @aiInfoSpbFrn in (  
 		Begin
 			Set @asMailBody  = @asMailBody  + @sSaut		
 			Set @asMailBody  = @asMailBody  + 'Le rendez-vous avec le transporteur pour l''enlèvement aura lieu à la date suivante, sur le créneau horaire suivant : '  + @sRdv + '.'
@@ -21219,7 +21328,8 @@ Set @iIdProd = Convert ( integer, @dcIdProd )
 Set @iIdEts  = Convert ( integer, @dcIdEts )
 Set @sAltQuarant = 'N'
 
-Set @dcIdInter = 0
+Select @dcIdInter = id_i From sysadm.inter where id_sin = @adcIdSin and cod_inter = 'A'
+If @dcIdInter is null Set @dcIdInter = 0 
 Set @sTypMail = 'CC_ELD' -- (-TM) code_car sur TRACE_MAIL
 
 Select @sMtCC = Convert ( VarChar ( 20), c.mt_ttc_cmde ), --  As montant_carte_cadeau,

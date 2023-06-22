@@ -5308,28 +5308,50 @@ If @iTypeTrt = 3
  EXEC master.dbo.SPB_PS_MAIL   
    @sRetourErrMail OUTPUT,   
    'jff@spb.fr, jff7209@gmail.com',  
-   'Instanciation Objet',   
    @sMaChaine,   
-   'toto', -- From  
+   'Début',   
+   null, -- From  
    '',   
    NULL,   
    NULL,   
    NULL,   
    NULL,   
    NULL  
-
-  
- Set Transaction Isolation level Read UnCommitted  
-  
- -- Déb trt  
-  
- DECLARE @OLE            INT 
-Declare @iRet2 int 
--- Select @OLE 'Handle'
-EXECUTE @iRet2 = sp_OACreate 'ADODB.Stream',  @OLE OUTPUT
--- EXEC sp_OAGetErrorInfo 'ADODB.Stream'  
  
-  
+ 
+ -- Déb trt  
+Declare @File        VARCHAR(2000)
+
+DECLARE @OLE            INT 
+
+EXECUTE sp_OACreate 'ADODB.Stream',  @OLE OUTPUT
+
+DECLARE @Text XML
+SET @Text = 'Toto'
+DECLARE @Converted NVARCHAR(MAX)
+SET @Converted = CONVERT(nvarchar(MAX), @Text)
+
+EXECUTE sp_OASetProperty             @OLE,    'Type',             2                           --1 = binary, 2 = text
+EXECUTE sp_OASetProperty             @OLE,    'Mode',             3                           --0 = not set, 1 read, 2 write, 3 read/write
+EXECUTE sp_OASetProperty             @OLE,    'Charset',          'UTF-8'                     --'ISO-8859-1'
+EXECUTE sp_OASetProperty             @OLE,    'LineSeparator',    'adLF'                      -- adCR (13) 	Retour chariot uniquement, adCRLF (-1) Par défaut, un retour chariot et un saut de ligne, adLF (10) Saut de ligne uniquement
+EXECUTE sp_OAMethod                  @OLE,    'Open'  
+EXECUTE sp_OAMethod                  @OLE,    'WriteText',        NULL,       @Converted      --text method
+
+Declare @iRetMATPN Integer
+Declare @iRetMATPD Integer
+
+Set @File = '\\SPB.LAN\PRODUCTION\EDITIQUE\KSL-PRD\INPUT\PANNE_CASSE_VOL\SINISTRES\864_CA_ELD-7881723_1-20230309111033400_TEST_ELD_JFF_Test_Prod_MATPN.txt'
+EXECUTE @iRetMATPN=sp_OAMethod                  @OLE,    'SaveToFile',       NULL,       @File, 2   --1 = notexist 2 = overwrite
+Select '@iRetMATPN', @iRetMATPN
+
+Set @File = '\\SPB.LAN\PRODUCTION\FLUX_APPLIS\APPLIS_WEB\WEB_FILES\PCV\KSLPRO\MATP\864_CA_ELD-7881723_1-20230309111033400_TEST_ELD_JFF_Test_Prod_MATPD.txt'
+EXECUTE @iRetMATPD=sp_OAMethod                  @OLE,    'SaveToFile',       NULL,       @File, 2   --1 = notexist 2 = overwrite
+Select '@@iRetMATPD', @iRetMATPD
+
+EXECUTE sp_OAMethod                  @OLE,    'Close'
+EXECUTE sp_OADestroy                 @OLE
+ 
  -- fin trt  
   
  Set @sDuree =   
@@ -5342,23 +5364,27 @@ EXECUTE @iRet2 = sp_OACreate 'ADODB.Stream',  @OLE OUTPUT
        ) * 60  
        )) + ' minutes'  
   
- Set @sMaChaine = 'Fin ' + Left ( Convert ( Varchar (50), GetDate(), 103 ) + ' ' + Convert ( Varchar (50), GetDate(), 114 ), 19 ) + ', durée ' + @sDuree 
- Set @sMaChaine = @sMaChaine + '// Handle : ' + Convert  ( Varchar ( 20 ),  @OLE ) + ' // Retour iRet : ' + Convert  ( Varchar ( 20 ),  @iRet2 )
+ Set @sMaChaine = 'Fin ' + Left ( Convert ( Varchar (50), GetDate(), 103 ) + ' ' + Convert ( Varchar (50), GetDate(), 114 ), 19 ) + ', durée ' + @sDuree + CHAR ( 10 ) + CHAR ( 10 ) 
+ Set @sMaChaine = @sMaChaine + '// Handle : ' + Convert  ( Varchar ( 50 ),  @OLE ) + CHAR ( 10 ) + CHAR ( 10 ) 
+ Set @sMaChaine = @sMaChaine + '// @iRetMATPN : ' + Convert  ( Varchar ( 50 ),  @iRetMATPN ) + CHAR ( 10 ) + CHAR ( 10 ) 
+ Set @sMaChaine = @sMaChaine + '// @iRetMATPD : ' + Convert  ( Varchar ( 50 ),  @iRetMATPD ) + CHAR ( 10 ) + CHAR ( 10 ) 
  
 -- Select @sMaChaine 
 
  EXEC master.dbo.SPB_PS_MAIL   
    @sRetourErrMail OUTPUT,   
    'jff@spb.fr,jff7209@gmail.com',  
-   'Fin MAJ commande',   
-   @sMaChaine,   
-   'toto', -- From  
+   @sMaChaine,
+   'Fin',   
+   null, -- From  
    '',   
    NULL,   
    NULL,   
    NULL,   
    NULL,   
    NULL  
+
+Select '@sRetourErrMail', @sRetourErrMail
   
   End   
 Go

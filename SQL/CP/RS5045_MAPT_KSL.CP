@@ -514,6 +514,17 @@ While Exists ( Select Top 1 1 From @Tb )
 		Execute (@sSql)
 	 End 
 
+	-- Nettoyage des caractères gênant le format XML
+	Set @sSql = 'Update sysadm.variable_xml_ksl_rs5045 Set ' + @sNomZone + '= Replace ( ' + @sNomZone + ', ''%'', '''' ) where id_xml = ' + convert ( VarChar ( 10), @iIdXml ) + ' and ' + @sNomZone + ' is not null '
+	Execute (@sSql)
+	Set @sSql = 'Update sysadm.variable_xml_ksl_rs5045 Set ' + @sNomZone + '= Replace ( ' + @sNomZone + ', ''&'', '''' ) where id_xml = ' + convert ( VarChar ( 10), @iIdXml ) + ' and ' + @sNomZone + ' is not null '
+	Execute (@sSql)
+	Set @sSql = 'Update sysadm.variable_xml_ksl_rs5045 Set ' + @sNomZone + '= Replace ( ' + @sNomZone + ', ''\'', '''' ) where id_xml = ' + convert ( VarChar ( 10), @iIdXml ) + ' and ' + @sNomZone + ' is not null '
+	Execute (@sSql)
+	Set @sSql = 'Update sysadm.variable_xml_ksl_rs5045 Set ' + @sNomZone + '= Replace ( ' + @sNomZone + ', ''"'', '''' ) where id_xml = ' + convert ( VarChar ( 10), @iIdXml ) + ' and ' + @sNomZone + ' is not null '
+	Execute (@sSql)
+
+
 	Delete @Tb Where nom_zone = @sNomZone
  End
 
@@ -539,7 +550,8 @@ IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_I_CONSTRUCTION_CHAI
 GO
 
 CREATE procedure sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE
-	@iIdXml integer, 
+	@iIdXml integer,
+	@sCodeMaquette varchar ( 255 ), [ICI]
 	@xmlResult varchar(max) OUTPUT
 AS
 	
@@ -556,6 +568,7 @@ AS
 
 		montant_debite as 'entete/@montant_debite',
 		civilite_courte as 'entete/@civilite_courte',
+		civilite_courte as 'entete/@civilite',
 		civ as 'entete/@civ', -- [PM234-7][M21970]
 		civilite_longue as 'entete/@civilite_longue',
 		nom as 'entete/@nom',
@@ -581,9 +594,18 @@ AS
 		no_dossier_sinistre as 'entete/@no_dossier_sinistre',
 		ref_indemnisation as 'entete/@ref_indemnisation', -- [PC13321]
 		email_produit as 'entete/@email_produit', -- [DT154][MANTIS16226]
-		'' as 'entete/@mail_exp', -- Sera armé plus loin pour toute appli par sysadm.PS_RS5045_I_MAIL_PUSH_KSL et sysadm.PS_S_SUBTITUER_VARIABLE_XML
+		'' as 'entete/@mail_exp', -- Sera armé plus loin pour toute appli par sysadm.PS_RS5045_I_MAIL_PUSH_KSL et sysadm.PS_S_SUBSTITUER_VARIABLE_XML
+		app_marque as 'entete/@app_marque',
+		app_modele as 'entete/@app_modele',
+		adr_mail as 'entete/@email',
+		'' as 'entete/@o2mnom',
+		'' as 'entete/@o2madr1',
+		'' as 'entete/@o2mcp',
+		'' as 'entete/@o2mville',
+		mail_subject as 'entete/@mail_subject',
+		mail_body as 'entete/@mail_body',
 
-		-- Ci-dessous sectuon <Courrier
+		-- Ci-dessous section <Courrier
 
 		code_operateur as 'courrier/@code_gestionnaire',
 		app_marque as 'courrier/@app_marque',
@@ -731,6 +753,7 @@ Declare @sMethode Varchar ( 6 )
 Declare @sAltQuarantaine VarChar (   1 )
 Declare @dtDteHExec DateTime
 Declare @sHeureExec varchar ( 5 ) 
+Declare @sIdProd varchar ( 10 ) 
 
 Set @dtDteHExec = @adtDteHExec
 
@@ -945,10 +968,19 @@ Set @asMailSubject = REPLACE(@asMailSubject, '"','&quot;')
  -- JFF / 04/06/2021 / [RS-328-RS329-RS380]  
 If @sAdrMailBalProduit <> ''  
  Begin  
-  Exec sysadm.PS_S_SUBTITUER_VARIABLE_XML 'Mail_Exp', @sAdrMailBalProduit, @asXMLdata output  
+  Exec sysadm.PS_S_SUBSTITUER_VARIABLE_XML 'Mail_Exp', @sAdrMailBalProduit, @asXMLdata output  
  End   
   
 If LEN ( LTRIM ( RTRIM ( @asMailCc ) ) ) = 0  SET @asMailCc = NULL
+
+-- Particularité du MATPD (gestion d'une horreur :-)) la variable code_produit doit contenir pour MATPD le produit sinistre et pas ahdésion (natif)
+-- Changement de l'affection de la variable @sCodeMaquette, auparavant lu du XML Transmis, à présent armer avec le code maquette de la table de référence
+Select Top 1 @sCodeMaquette = cod_maq from sysadm.code_maquette_ksl_rs5045 where typ_mail = @asTypMail and id_cpt = 1
+If @sCodeMaquette in ( 'MATPD', 'MATPN' )
+  Begin
+	Set @sIdProd = Convert ( varchar ( 10), @aiIdProd )
+	Exec sysadm.PS_S_SUBSTITUER_VARIABLE_XML 'code_produit', @sIdProd, @asXMLdata output  
+  End 
 
  
 INSERT INTO sysadm.mail_push  
@@ -1030,16 +1062,17 @@ GO
 CREATE procedure sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL
 	@iIdXml integer, -- Clé de l'enregistrement XML_KSL
     @sXmlKey     VarChar (255), -- Clé sur laquelle mettre à jour la donnée
-	@sXmlData    VarChar (255) -- Donnée à mettre à jour sur la clé
+	@sXmlData    VarChar (max) -- Donnée à mettre à jour sur la clé
 
 	-- Retourne le Nbre de Row mis à jour, normalement 1, et sinon -1 si aucun Row mis à jour ce qui s'apparente à une erreur
 As
 
-Declare @sSql VarChar  ( 255 )
+Declare @sSql VarChar  ( max )
 Declare @iRowCount Integer
 
 Set @sXmlKey = lower ( lTrim ( rTrim ( @sXmlKey ) ) )
 Set @sXmlData = lTrim ( rTrim ( @sXmlData ) ) 
+Set @sXmlData = REPLACE ( @sXmlData , '''', '''''' )
 
 Set @sSql = 'Update sysadm.variable_xml_ksl_rs5045 Set ' + @sXmlKey + '=''' + @sXmlData + ''' Where id_xml =' + Convert ( Varchar ( 20 ), @iIdXml )
 Exec (@sSql)
@@ -1975,10 +2008,16 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		-- Si adresse différente de @spb, on l'efface.
 		If @sServeurProduction = 'SIM'
 		  Begin
-			Set @sAdrMail = Upper ( sysadm.FN_CLE_VAL_XML ( 'adr_mail', @sXmlData, 'NON' ) )
+			Set @sAdrMail = Upper ( sysadm.FN_CLE_VAL_XML ( 'email', @sXmlData, 'NON' ) )
 			If CHARINDEX ( '@SPB', @sAdrMail ) <= 0 
 			  Begin
-				Exec sysadm.PS_S_SUBTITUER_VARIABLE_XML  'adr_mail', '', @sXmlData output
+				Exec sysadm.PS_S_SUBSTITUER_VARIABLE_XML  'email', '', @sXmlData output
+			  End 
+
+			Set @sAdrMail = Upper ( sysadm.FN_CLE_VAL_XML ( 'Mail_Add_Dest', @sXmlData, 'NON' ) )
+			If CHARINDEX ( '@SPB', @sAdrMail ) <= 0 
+			  Begin
+				Exec sysadm.PS_S_SUBSTITUER_VARIABLE_XML  'Mail_Add_Dest', '', @sXmlData output
 			  End 
 		  End 
 
@@ -2095,4 +2134,33 @@ Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'FINTRT', 'OK', @sMsg
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procedure            :       sysadm.PS_RS5045_TRANSFORMATION_D_UN_MAIL_BODY_AU_FORMAT_XML_UTF8
+-- Auteur               :       Fabry JF
+-- Date                 :       25/04/2023
+-- Libelle              :        
+-- Commentaires         :       Insère une chaine XML à vide
+-- References           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_TRANSFORMATION_D_UN_MAIL_BODY_AU_FORMAT_XML_UTF8' AND type = 'P' )
+        DROP procedure sysadm.PS_RS5045_TRANSFORMATION_D_UN_MAIL_BODY_AU_FORMAT_XML_UTF8
+GO
 
+CREATE procedure sysadm.PS_RS5045_TRANSFORMATION_D_UN_MAIL_BODY_AU_FORMAT_XML_UTF8
+	@asMailBody varchar(max) OUTPUT,
+	@asSautActuel VarChar ( 50 )
+AS
+
+Declare @sSaut_XmlUTF8 VarChar ( 50 )
+
+Set @sSaut_XmlUTF8 = '<br />'
+
+Set @asMailBody = REPLACE ( @asMailBody, @asSautActuel, @sSaut_XmlUTF8 )
+
+Go
