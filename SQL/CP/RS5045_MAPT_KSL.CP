@@ -11,9 +11,14 @@
 -- sysadm.PS_RS5045_I_CREATION_CHAINE_DATA_XML_KSL_A_VIDE
 -- sysadm.PS_RS5045_I_MAIL_PUSH_KSL
 -- sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER
+-- sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL
 -- sysadm.PS_RS5045_S_LISTE_VARIABLE_XML_KSL
--- sysadm.PS_RS5045_U_OPTIMISER_CHAINE_DATA_XML_KSL
+-- sysadm.PS_RS5045_S_RECUPERER_CODE_MAQUETTE_KSL_A_PARTIR_TYP_MAIL
+-- sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL -- Jamais mis en production
+-- sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V02
+-- sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8
 -- sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL
+-- sysadm.PS_RS5045_U_OPTIMISER_CHAINE_DATA_XML_KSL
 --------------------------------------------------------------------
 
 --------------------------------------------------------------------
@@ -551,128 +556,193 @@ GO
 
 CREATE procedure sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE
 	@iIdXml integer,
-	@sCodeMaquette varchar ( 255 ), [ICI]
+	@sCodeMaquette varchar ( 255 ), 
 	@xmlResult varchar(max) OUTPUT
 AS
 	
-	select @xmlResult=(
-	select top 1 
+	If @sCodeMaquette in ( 'MATPN', 'MATPD' ) 
+	  Begin
+		select @xmlResult=(
+		select top 1 
 
-		-- ci-dessous Section <Tech
+			-- ci-dessous Section <Tech
 
-		'C' as 'tech/@canal',
-		code_maquette as 'tech/@code_maquette',
-		'S' as 'tech/@code_adhsin',
+			code_maquette as 'tech/@code_maquette',
 
-		-- ci-dessous Section <Entete
+			-- ci-dessous Section <Entete
 
-		montant_debite as 'entete/@montant_debite',
-		civilite_courte as 'entete/@civilite_courte',
-		civilite_courte as 'entete/@civilite',
-		civ as 'entete/@civ', -- [PM234-7][M21970]
-		civilite_longue as 'entete/@civilite_longue',
-		nom as 'entete/@nom',
-		prenom as 'entete/@prenom',
-		adresse1 as 'entete/@adresse1',
-		adresse2 as 'entete/@adresse2',
-		code_postal as 'entete/@code_postal',
-		ville as 'entete/@ville',
-		code_produit_sinistre as 'entete/@code_produit_sinistre',
-		nom_produit as 'entete/@nom_produit',
-		nom_produit_cpl as 'entete/@nom_produit_cpl',
-		lib_opt_produit as 'entete/@lib_opt_produit',
-		no_tel_spb as 'entete/@no_tel_spb',
-		num_tel_prod as 'entete/@num_tel_prod', -- [PM234-7][M21970]
-		no_fax_spb as 'entete/@no_fax_spb',
-		assureur as 'entete/@assureur',
-		no_police as 'entete/@no_police',
-		police as 'entete/@police',-- [PM234-7][M21970]
-		no_ligne_assuree as 'entete/@no_ligne_assuree',
-		cout_telephonique as 'entete/@cout_telephonique',
-		code_produit as 'entete/@code_produit', 
-		code_operateur as 'entete/@code_gestionnaire',
-		no_dossier_sinistre as 'entete/@no_dossier_sinistre',
-		ref_indemnisation as 'entete/@ref_indemnisation', -- [PC13321]
-		email_produit as 'entete/@email_produit', -- [DT154][MANTIS16226]
-		'' as 'entete/@mail_exp', -- Sera armé plus loin pour toute appli par sysadm.PS_RS5045_I_MAIL_PUSH_KSL et sysadm.PS_S_SUBSTITUER_VARIABLE_XML
-		app_marque as 'entete/@app_marque',
-		app_modele as 'entete/@app_modele',
-		adr_mail as 'entete/@email',
-		'' as 'entete/@o2mnom',
-		'' as 'entete/@o2madr1',
-		'' as 'entete/@o2mcp',
-		'' as 'entete/@o2mville',
-		mail_subject as 'entete/@mail_subject',
-		mail_body as 'entete/@mail_body',
+			montant_debite as 'entete/@montant_debite',
+			civilite_courte as 'entete/@civilite_courte',
+			civilite_courte as 'entete/@civilite',
+			civ as 'entete/@civ', -- [PM234-7][M21970]
+			civilite_longue as 'entete/@civilite_longue',
+			nom as 'entete/@nom',
+			prenom as 'entete/@prenom',
+			adresse1 as 'entete/@adresse1',
+			adresse2 as 'entete/@adresse2',
+			code_postal as 'entete/@code_postal',
+			ville as 'entete/@ville',
+			code_produit_sinistre as 'entete/@code_produit_sinistre',
+			nom_produit as 'entete/@nom_produit',
+			nom_produit_cpl as 'entete/@nom_produit_cpl',
+			lib_opt_produit as 'entete/@lib_opt_produit',
+			no_tel_spb as 'entete/@no_tel_spb',
+			num_tel_prod as 'entete/@num_tel_prod', -- [PM234-7][M21970]
+			no_fax_spb as 'entete/@no_fax_spb',
+			assureur as 'entete/@assureur',
+			no_police as 'entete/@no_police',
+			police as 'entete/@police',-- [PM234-7][M21970]
+			no_ligne_assuree as 'entete/@no_ligne_assuree',
+			cout_telephonique as 'entete/@cout_telephonique',
+			code_produit as 'entete/@code_produit', 
+			code_operateur as 'entete/@code_gestionnaire',
+			no_dossier_sinistre as 'entete/@no_dossier_sinistre',
+			ref_indemnisation as 'entete/@ref_indemnisation', -- [PC13321]
+			email_produit as 'entete/@email_produit', -- [DT154][MANTIS16226]
+			'' as 'entete/@mail_exp', -- Sera armé plus loin pour toute appli par sysadm.PS_RS5045_I_MAIL_PUSH_KSL et sysadm.PS_S_SUBSTITUER_VARIABLE_XML
+			app_marque as 'entete/@app_marque',
+			app_modele as 'entete/@app_modele',
+			adr_mail as 'entete/@email',
+			'' as 'entete/@o2mnom',
+			'' as 'entete/@o2madr1',
+			'' as 'entete/@o2mcp',
+			'' as 'entete/@o2mville',
+			mail_subject as 'entete/@mail_subject',
+			mail_body as 'entete/@mail_body'
 
-		-- Ci-dessous section <Courrier
+			-- Pas de section Courrier pour ces codes maquettes
 
-		code_operateur as 'courrier/@code_gestionnaire',
-		app_marque as 'courrier/@app_marque',
-		app_modele as 'courrier/@app_modele',
-		montant_caution as 'courrier/@montant_caution',
-		no_dossier_sinistre as 'courrier/@no_dossier_sinistre',
-		date_de_declaration as 'courrier/@date_de_declaration',
-		nom_produit as 'courrier/@nom_produit',
-		nom as 'courrier/@nom',
-		prenom as 'courrier/@prenom',
-		code_operateur as 'courrier/@code_operateur',
-		lib_opt_produit as 'courrier/@lib_opt_produit',
-		app_pret as 'courrier/@app_pret',
-		type_appareil as 'courrier/@type_appareil',
-		'A' as 'courrier/@code_envoi',
-		app_marque_rempl as 'courrier/@app_marque_rempl',
-		app_modele_rempl as 'courrier/@app_modele_rempl',
-		date_refus as 'courrier/@date_refus',
-		nom_livraison as 'courrier/@nom_livraison',
-		adresse1_livraison as 'courrier/@adresse1_livraison',
-		adresse2_livraison as 'courrier/@adresse2_livraison',
-		cp_ville_livraison as 'courrier/@cp_ville_livraison',
-		adr_mail as 'courrier/@email',
-		civ_livraison as 'courrier/@civ_livraison', -- [PM246]
-		prenom_livraison as 'courrier/@prenom_livraison', -- [PM246]
-		adressecplt_livraison as 'courrier/@adressecplt_livraison',   -- [PM246]
-		transporteur as 'courrier/@transporteur', -- [PM246]
-		num_bon_trans as 'courrier/@num_bon_transp', -- [PM246]
-		relance as 'courrier/@relance', -- [DT081_EVOL_PRET_BRIS]
-		typ_app_pret as 'courrier/@typ_app_pret', -- [DT081_EVOL_PRET_BRIS]
-		code_pick_up as 'courrier/@code_pick_up', -- [PM255]
-		dte_arr_plateforme as 'courrier/@dte_arr_plateforme', -- [PM250-1]
-		dte_dep_centre_distrib as 'courrier/@dte_dep_centre_distrib', -- [PM250-1]
-		montant_carte_cadeau  as 'courrier/@montant_carte_cadeau', -- [PC13321]
-		id_seq_cmde  as 'courrier/@id_seq_cmde', -- [PC13321]		
-		code_chq_cadeau as 'courrier/@code_chq_cadeau', -- [PC13321]
-		ZVAR46 as 'courrier/@ZVAR46', -- [DT154] 
-		code_acces_securise as 'courrier/@code_acces_securise', -- [PM287-3]
-		imei as 'courrier/@imei', -- [PM234-7][M21970]
-		maj_par as 'courrier/@maj_par', -- [PM234-7][M21970]
-		'' as 'courrier/@produit_orange', -- [PM234-7][M21970]
-		adr_mail_cc as 'courrier/@Mail_Copie_a_1', -- [PM234-7][M21970]
-		environnement as 'courrier/@environnement', -- [PM287-3]
-		adr_mail_cc as 'courrier/@email_cc', -- [DF006]
-		code_refus as 'courrier/@code_refus', -- [DF005-1-LOT2]
-		nature as 'courrier/@nature', -- [DF005-1-LOT2]
-		var_enum1 as 'courrier/@var_enum1', -- [PM287-6][MANTIS26879]
-		var_enum2 as 'courrier/@var_enum2', -- [PM287-6][MANTIS26879]
-		numero_relance as 'courrier/@numero_relance', -- [PM407-1]
-		joindre_courrier_orig as 'courrier/@joindre_courrier_orig', -- [PM407-1]
-		id_arch_orig as 'courrier/@id_arch_orig', -- [PM407-1]
-		env_en_recommande as 'courrier/@env_en_recommande', -- [PM407-1]
-		derniere_relance as 'courrier/@derniere_relance', -- [PM407-1]
-		date_cour_orig as 'courrier/@date_cour_orig', -- [PM407-1]
-		date_dern_rel as 'courrier/@date_dern_rel', -- [PM407-1]
-		categorie_relance as 'courrier/@categorie_relance', -- [PM407-1]
-		id_inter as 'courrier/@id_inter', -- [PM407-1]
-		id_doc as 'courrier/@id_doc', -- [PM407-1]
-		env_par_mail as 'courrier/@env_par_mail' -- [PM407-1]
+		from sysadm.variable_xml_ksl_rs5045 v
+		Where id_xml = @iIdXml
+		FOR XML PATH('demande'))
 
-	from sysadm.variable_xml_ksl_rs5045 v
-	Where id_xml = @iIdXml
-	FOR XML PATH('demande'))
+
+	  End 
+
+	Else -- Hors ( 'MAPTN', 'MAPTD' ) 
+	  Begin
+
+		select @xmlResult=(
+		select top 1 
+
+			-- ci-dessous Section <Tech
+
+			'C' as 'tech/@canal',
+			code_maquette as 'tech/@code_maquette',
+			'S' as 'tech/@code_adhsin',
+
+			-- ci-dessous Section <Entete
+
+			montant_debite as 'entete/@montant_debite',
+			civilite_courte as 'entete/@civilite_courte',
+			civilite_courte as 'entete/@civilite',
+			civ as 'entete/@civ', -- [PM234-7][M21970]
+			civilite_longue as 'entete/@civilite_longue',
+			nom as 'entete/@nom',
+			prenom as 'entete/@prenom',
+			adresse1 as 'entete/@adresse1',
+			adresse2 as 'entete/@adresse2',
+			code_postal as 'entete/@code_postal',
+			ville as 'entete/@ville',
+			code_produit_sinistre as 'entete/@code_produit_sinistre',
+			nom_produit as 'entete/@nom_produit',
+			nom_produit_cpl as 'entete/@nom_produit_cpl',
+			lib_opt_produit as 'entete/@lib_opt_produit',
+			no_tel_spb as 'entete/@no_tel_spb',
+			num_tel_prod as 'entete/@num_tel_prod', -- [PM234-7][M21970]
+			no_fax_spb as 'entete/@no_fax_spb',
+			assureur as 'entete/@assureur',
+			no_police as 'entete/@no_police',
+			police as 'entete/@police',-- [PM234-7][M21970]
+			no_ligne_assuree as 'entete/@no_ligne_assuree',
+			cout_telephonique as 'entete/@cout_telephonique',
+			code_produit as 'entete/@code_produit', 
+			code_operateur as 'entete/@code_gestionnaire',
+			no_dossier_sinistre as 'entete/@no_dossier_sinistre',
+			ref_indemnisation as 'entete/@ref_indemnisation', -- [PC13321]
+			email_produit as 'entete/@email_produit', -- [DT154][MANTIS16226]
+			'' as 'entete/@mail_exp', -- Sera armé plus loin pour toute appli par sysadm.PS_RS5045_I_MAIL_PUSH_KSL et sysadm.PS_S_SUBSTITUER_VARIABLE_XML
+			app_marque as 'entete/@app_marque',
+			app_modele as 'entete/@app_modele',
+			adr_mail as 'entete/@email',
+			'' as 'entete/@o2mnom',
+			'' as 'entete/@o2madr1',
+			'' as 'entete/@o2mcp',
+			'' as 'entete/@o2mville',
+			mail_subject as 'entete/@mail_subject',
+			mail_body as 'entete/@mail_body',
+
+			-- Ci-dessous section <Courrier
+
+			code_operateur as 'courrier/@code_gestionnaire',
+			app_marque as 'courrier/@app_marque',
+			app_modele as 'courrier/@app_modele',
+			montant_caution as 'courrier/@montant_caution',
+			no_dossier_sinistre as 'courrier/@no_dossier_sinistre',
+			date_de_declaration as 'courrier/@date_de_declaration',
+			nom_produit as 'courrier/@nom_produit',
+			nom as 'courrier/@nom',
+			prenom as 'courrier/@prenom',
+			code_operateur as 'courrier/@code_operateur',
+			lib_opt_produit as 'courrier/@lib_opt_produit',
+			app_pret as 'courrier/@app_pret',
+			type_appareil as 'courrier/@type_appareil',
+			'A' as 'courrier/@code_envoi',
+			app_marque_rempl as 'courrier/@app_marque_rempl',
+			app_modele_rempl as 'courrier/@app_modele_rempl',
+			date_refus as 'courrier/@date_refus',
+			nom_livraison as 'courrier/@nom_livraison',
+			adresse1_livraison as 'courrier/@adresse1_livraison',
+			adresse2_livraison as 'courrier/@adresse2_livraison',
+			cp_ville_livraison as 'courrier/@cp_ville_livraison',
+			adr_mail as 'courrier/@email',
+			civ_livraison as 'courrier/@civ_livraison', -- [PM246]
+			prenom_livraison as 'courrier/@prenom_livraison', -- [PM246]
+			adressecplt_livraison as 'courrier/@adressecplt_livraison',   -- [PM246]
+			transporteur as 'courrier/@transporteur', -- [PM246]
+			num_bon_trans as 'courrier/@num_bon_transp', -- [PM246]
+			relance as 'courrier/@relance', -- [DT081_EVOL_PRET_BRIS]
+			typ_app_pret as 'courrier/@typ_app_pret', -- [DT081_EVOL_PRET_BRIS]
+			code_pick_up as 'courrier/@code_pick_up', -- [PM255]
+			dte_arr_plateforme as 'courrier/@dte_arr_plateforme', -- [PM250-1]
+			dte_dep_centre_distrib as 'courrier/@dte_dep_centre_distrib', -- [PM250-1]
+			montant_carte_cadeau  as 'courrier/@montant_carte_cadeau', -- [PC13321]
+			id_seq_cmde  as 'courrier/@id_seq_cmde', -- [PC13321]		
+			code_chq_cadeau as 'courrier/@code_chq_cadeau', -- [PC13321]
+			ZVAR46 as 'courrier/@ZVAR46', -- [DT154] 
+			code_acces_securise as 'courrier/@code_acces_securise', -- [PM287-3]
+			imei as 'courrier/@imei', -- [PM234-7][M21970]
+			maj_par as 'courrier/@maj_par', -- [PM234-7][M21970]
+			'' as 'courrier/@produit_orange', -- [PM234-7][M21970]
+			adr_mail_cc as 'courrier/@Mail_Copie_a_1', -- [PM234-7][M21970]
+			environnement as 'courrier/@environnement', -- [PM287-3]
+			adr_mail_cc as 'courrier/@email_cc', -- [DF006]
+			code_refus as 'courrier/@code_refus', -- [DF005-1-LOT2]
+			nature as 'courrier/@nature', -- [DF005-1-LOT2]
+			var_enum1 as 'courrier/@var_enum1', -- [PM287-6][MANTIS26879]
+			var_enum2 as 'courrier/@var_enum2', -- [PM287-6][MANTIS26879]
+			numero_relance as 'courrier/@numero_relance', -- [PM407-1]
+			joindre_courrier_orig as 'courrier/@joindre_courrier_orig', -- [PM407-1]
+			id_arch_orig as 'courrier/@id_arch_orig', -- [PM407-1]
+			env_en_recommande as 'courrier/@env_en_recommande', -- [PM407-1]
+			derniere_relance as 'courrier/@derniere_relance', -- [PM407-1]
+			date_cour_orig as 'courrier/@date_cour_orig', -- [PM407-1]
+			date_dern_rel as 'courrier/@date_dern_rel', -- [PM407-1]
+			categorie_relance as 'courrier/@categorie_relance', -- [PM407-1]
+			id_inter as 'courrier/@id_inter', -- [PM407-1]
+			id_doc as 'courrier/@id_doc', -- [PM407-1]
+			env_par_mail as 'courrier/@env_par_mail' -- [PM407-1]
+
+		from sysadm.variable_xml_ksl_rs5045 v
+		Where id_xml = @iIdXml
+		FOR XML PATH('demande'))
 	
-	set @xmlResult=REPLACE(@xmlResult,'/></demande>',
-		'><tableaux><T1></T1><T2></T2><T3></T3><T4></T4><T5></T5><T6></T6></tableaux></courrier></demande>')
+		set @xmlResult=REPLACE(@xmlResult,'/></demande>',
+			'><tableaux><T1></T1><T2></T2><T3></T3><T4></T4><T5></T5><T6></T6></tableaux></courrier></demande>')
 	
+	End 
+
+
 	Set @xmlResult='<?xml version="1.0" encoding="UTF-8"?><liste_demande>' + 
 		@xmlResult +
 		'</liste_demande>'
@@ -758,7 +828,7 @@ Declare @sIdProd varchar ( 10 )
 Set @dtDteHExec = @adtDteHExec
 
 -- Nettoyage de ma la Table de stockage des xml temporaire, on garde que 15 jours.
-Delete sysadm.variable_xml_ksl_rs5045 where cree_le < DateAdd ( day, -15, Getdate())
+Delete sysadm.variable_xml_ksl_rs5045 where cree_le < DateAdd ( month, -2, Getdate())
 
 -- Set @asMethode = Upper ( lTrim ( rTrim ( @asMethode )))
 
@@ -1717,6 +1787,8 @@ Declare @sFicOut VarChar ( 255 )
 Declare @sMailBody VarChar ( 8000 )
 Declare @sDestinataire Varchar ( 200 )
 Declare @sMsgTrc varchar ( 255 ) 
+Declare @iRowCountWord Integer
+Declare @iRowCountHWord Integer
 Declare @iRowCount Integer
 Declare @iHandle Integer
 Declare @iIdSeq Integer
@@ -1731,6 +1803,9 @@ Declare @ChemEtNomDepot varchar ( 255 )
 Declare @sServeurProduction varchar ( 3 )
 Declare @sAdrMail varchar ( 255 ) 
 Declare @iIdLotTrc Integer
+Declare @iCptTraite Integer
+
+Set @iCptTraite = 0 
 
 Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL 'OBTENTION_ID_LOT_TRC', -1, '', '', '', @iIdLotTrc output
 
@@ -1739,7 +1814,6 @@ Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'LNCTRT', 'OK', @sMsg
 
 Set @sMsgTrc = 'Obtention d''un Identifiant de lot de trace : ' + CONVERT ( varchar ( 20 ), @iIdLotTrc  )
 Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'OBTIDT', 'OK', @sMsgTrc, @iIdLotTrc 
-
 
   
 Declare @TbWork Table (
@@ -1806,9 +1880,9 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 	And a.id_arch = mp.id_arch  
 	And mp.cree_le > DateAdd ( month, -2, getdate() )  
 
-	Set @iRowCount = @@Rowcount
+	Set @iRowCountWord  = @@Rowcount
 
-	Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCount ) + ' enregistrement(s) (mails) représentant des courriers WORD'
+	Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountWord  ) + ' enregistrement(s) (mails) représentant des courriers WORD'
 	Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'LCTCWD', 'OK', @sMsgTrc, @iIdLotTrc  
 
  End  
@@ -1868,9 +1942,9 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 	And a.id_arch = mp.id_arch  
 	And mp.cree_le > DateAdd ( month, -2, getdate() )  
 
-	Set @iRowCount = @@Rowcount
+	Set @iRowCountWord  = @@Rowcount
 
-	Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCount ) + ' enregistrement(s) (mails) représentant des courriers WORD'
+	Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountWord  ) + ' enregistrement(s) (mails) représentant des courriers WORD'
 	Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'LCTCWD', 'OK', @sMsgTrc, @iIdLotTrc 
 
  End  
@@ -1906,9 +1980,9 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 	And mp.id_arch = -1    
 	And mp.cree_le > DateAdd ( month, -2, getdate() )    
 
-	Set @iRowCount = @@Rowcount
+	Set @iRowCountHWord  = @@Rowcount
 
-	Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCount ) + ' enregistrement(s) (mails) représentant tous les autres mails HORS courrier WORD'
+	Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountHWord ) + ' enregistrement(s) (mails) représentant tous les autres mails HORS courrier WORD'
 	Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'LCTTAM', 'OK', @sMsgTrc, @iIdLotTrc
 
 
@@ -2106,6 +2180,8 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		  End
 
 		Update @TbWork Set marquage = 1 Where id_seq = @iIdSeq
+
+		Set @iCptTraite =  @iCptTraite + 1 
 	 End
  	------------------------------------------------------------------------------
 	--------- FIN Moteur                                                  --------
@@ -2128,6 +2204,12 @@ Else
 		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'DESOBJ', 'ERR', @sMsgTrc, @iIdLotTrc
 	End
 
+If @iRowCountWord + @iRowCountHWord  > 0
+  Begin
+	Set @sMsgTrc = 'Traitement de ' + Convert ( Varchar ( 20 ), @iCptTraite ) + ' mail(s) sur ' + Convert ( Varchar ( 20 ), @iRowCountWord + @iRowCountHWord ) + ' mail(s)'
+	Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INFO', 'OK', @sMsgTrc, @iIdLotTrc
+  End 
+
 Set @sMsgTrc = 'Fin du traitement le ' + Convert ( VarChar ( 10), Getdate(), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108) 
 Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'FINTRT', 'OK', @sMsgTrc, @iIdLotTrc
 
@@ -2136,7 +2218,7 @@ Go
 
 --------------------------------------------------------------------
 --
--- Procedure            :       sysadm.PS_RS5045_TRANSFORMATION_D_UN_MAIL_BODY_AU_FORMAT_XML_UTF8
+-- Procedure            :       sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8
 -- Auteur               :       Fabry JF
 -- Date                 :       25/04/2023
 -- Libelle              :        
@@ -2148,19 +2230,19 @@ Go
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_TRANSFORMATION_D_UN_MAIL_BODY_AU_FORMAT_XML_UTF8' AND type = 'P' )
-        DROP procedure sysadm.PS_RS5045_TRANSFORMATION_D_UN_MAIL_BODY_AU_FORMAT_XML_UTF8
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8' AND type = 'P' )
+        DROP procedure sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8
 GO
 
-CREATE procedure sysadm.PS_RS5045_TRANSFORMATION_D_UN_MAIL_BODY_AU_FORMAT_XML_UTF8
-	@asMailBody varchar(max) OUTPUT,
+CREATE procedure sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8
+	@asXmlData varchar(max) OUTPUT,
 	@asSautActuel VarChar ( 50 )
 AS
 
 Declare @sSaut_XmlUTF8 VarChar ( 50 )
 
-Set @sSaut_XmlUTF8 = '<br />'
+Set @sSaut_XmlUTF8 = '<br/>'
 
-Set @asMailBody = REPLACE ( @asMailBody, @asSautActuel, @sSaut_XmlUTF8 )
+Set @asXmlData = REPLACE ( @asXmlData, @asSautActuel, @sSaut_XmlUTF8 )
 
 Go

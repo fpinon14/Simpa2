@@ -4367,12 +4367,12 @@ Exec sysadm.PS_I_MAIL_IOS7_VDOC12443 @asIdAppli, @asBase, @iOptionDP, @adcIdSin
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
 
-			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_D_UN_MAIL_BODY_AU_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
 
 			-- Appel pour construire et récupérer le XML dans @xmlResult
-			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sXMLVar OUTPUT
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
 
 			Exec @iRet = TRACE_MAIL_PRO.sysadm.PS_RS5045_I_MAIL_PUSH_KSL
 				@asIdAppli,
@@ -4434,12 +4434,12 @@ Exec sysadm.PS_I_MAIL_IOS7_VDOC12443 @asIdAppli, @asBase, @iOptionDP, @adcIdSin
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
 
-			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_D_UN_MAIL_BODY_AU_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
 
 			-- Appel pour construire et récupérer le XML dans @xmlResult
-			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sXMLVar OUTPUT
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
 
 			Exec @iRet = TRACE_MAIL_TRT.sysadm.PS_RS5045_I_MAIL_PUSH_KSL
 				@asIdAppli,
@@ -13266,6 +13266,7 @@ Go
 --   JFF  24/03/2016  [VDOC20329]
 --   JFF  12/02/2016   [PI062]
 --   JFF  12/02/2018   [DT346]
+--   JFF  23/06/2023   Stoppé car n'est plus envoyé depuis la migration SQL 2014 du 01/01/2020
 --------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_MAIL_IOS7_VDOC12443' AND type = 'P' )
         DROP procedure sysadm.PS_I_MAIL_IOS7_VDOC12443
@@ -13319,8 +13320,10 @@ Declare
   @sEmailProduit Varchar(256),
   @sCivLongue Varchar(35),
   @sClientVip Varchar ( 10 ) -- [DT139]
-  
-  
+
+--   JFF  23/06/2023   Stoppé car n'est plus envoyé depuis la migration SQL 2014 du 01/01/2020  
+Return 0   
+
   Set @sMailBody = ''
   Set @sSaut = Char (10)
   Set @iRet = 0
@@ -17624,6 +17627,7 @@ Go
 --
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
+-- JFF      23/06/2023   Ce mail n'est pas ramassé je l'arrête.
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAILPUSH_PM95_ALERTE_14' AND type = 'P' )
         DROP procedure sysadm.PS_S_MAILPUSH_PM95_ALERTE_14
@@ -17635,6 +17639,10 @@ CREATE procedure sysadm.PS_S_MAILPUSH_PM95_ALERTE_14
 	@aiIdSeq 	Integer,
  	@asCasRetour    VarChar (50) OUTPUT
 AS
+
+Return 0
+
+
 Declare 
   @dcIdProd     Decimal (7), 
   @dcIdEts 	Decimal (7), 
@@ -21358,7 +21366,7 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_acces_securise',@sCodeSecu
 
 		-- Appel pour construire et récupérer le XML dans @xmlResult
-		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sXMLVar OUTPUT
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
 
 		Exec @iRet = TRACE_MAIL_PRO.sysadm.PS_RS5045_I_MAIL_PUSH_KSL
 			@sIdAppli,
@@ -21400,7 +21408,7 @@ Else
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_acces_securise',@sCodeSecu
 
 		-- Appel pour construire et récupérer le XML dans @xmlResult
-		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sXMLVar OUTPUT
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
 
 		Exec @iRet = TRACE_MAIL_TRT.sysadm.PS_RS5045_I_MAIL_PUSH_KSL
 			@sIdAppli,

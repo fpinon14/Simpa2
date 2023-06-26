@@ -2206,7 +2206,6 @@ If Exists (
 				Exec sysadm.PS_I_PC151379_REJET @adcIdSin, 'Refus machine 622', 'Le refus machine 622 s''est déclenché. Automatisation du process CRCA via EXTR_ATM/SIMPA2 impossible donc.'
 				Return -1
 			End
-		
 	End 
 
 Go
