@@ -2301,10 +2301,13 @@ Declare
 	Else 
 	  Begin
 		  -- [VDOC27477] Stéph. Delesque  
-		  Set @sMailBody  = @sMailBody + 'Prenez le temps d''ouvrir votre colis, d''examiner et de vérifier l''état de votre appareil lors de la remise de celui-ci. En cas d''anomalie (colis vide, appareil endommagé….) refusez le aussitôt en présence du transporteur ou en point relais puis contactez-nous dans les 48h. Si vous avez accepté le colis sans émettre de réserve sur le bon de transport, aucune anomalie de transport ne pourra être prise en charge.'   
-		  Set @sMailBody  = @sMailBody  + @sSaut  
-		  Set @sMailBody  = @sMailBody  + @sSaut          
-  
+		  If @iInfoSpbFrn not in ( 957 ) 
+		    Begin
+				Set @sMailBody  = @sMailBody + 'Prenez le temps d''ouvrir votre colis, d''examiner et de vérifier l''état de votre appareil lors de la remise de celui-ci. En cas d''anomalie (colis vide, appareil endommagé….) refusez le aussitôt en présence du transporteur ou en point relais puis contactez-nous dans les 48h. Si vous avez accepté le colis sans émettre de réserve sur le bon de transport, aucune anomalie de transport ne pourra être prise en charge.'   
+				Set @sMailBody  = @sMailBody  + @sSaut  
+				Set @sMailBody  = @sMailBody  + @sSaut          
+			End 
+			
 		  Set @sMailBody  = @sMailBody  + @sSaut  
 		  Set @sMailBody  = @sMailBody  + 'Nous restons à votre entière disposition pour tout renseignement complémentaire et vous prions d’agréer, ' + @sCiv + ' nos salutations distinguées.'  
 		  Set @sMailBody  = @sMailBody  + @sSaut  
