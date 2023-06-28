@@ -5718,6 +5718,7 @@ GO
 -- JFF      20/01/2014   [PM208]
 -- JFF		09/02/2016   [ITSM361927]
 -- JFF      12/02/2016   [PI062]
+-- JFF      28/06/2023   [RS5320]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S11_W_GTI_NBSINRGL_ADHESION_RNV_SPLREF611' AND type = 'P' )
         DROP procedure sysadm.PS_S11_W_GTI_NBSINRGL_ADHESION_RNV_SPLREF611
@@ -5752,16 +5753,24 @@ AS
   Begin
 	 SELECT @iNbSin  = count ( * )
 	 FROM   sysadm.sinistre s,
-			sysadm.gar_sin g
-	 WHERE  s.id_sin         = g.id_sin				 AND
-		s.id_sin        <> @dcIdSin                              AND
+			-- sysadm.gar_sin g -- [RS5320]
+			sysadm.code c, -- [RS5320]
+			sysadm.code c2 -- [RS5320]
+	 WHERE  -- s.id_sin         = g.id_sin				 AND  -- [RS5320]
+			s.id_sin        <> @dcIdSin                              AND
 			s.id_prod        = @dcIdProd                             AND
 			s.id_ets         = @dcIdEts                              AND
 			s.id_adh         = @sIdAdh                               AND  -- [PI038][RELEVE]
 			s.dte_surv      <= @dtSurv                               AND
 			s.dte_surv      >= @dtAdhRenouv                          AND
-			s.id_natsin      = @dcIdNatSin                           AND
-			s.id_natsin      in ( 133, 134, 135, 136 )               AND  -- Les 4 natures de sinistre en souplesse pour l'instant
+--			s.id_natsin      = @dcIdNatSin                           AND  -- [RS5320]
+--			s.id_natsin      in ( 133, 134, 135, 136 )               AND  -- Les 4 natures de sinistre en souplesse pour l'instant [RS5320]
+			c.id_typ_code    = '+NS'                                 AND  -- [RS5320]
+			CharIndex ( '(SPL)', c.lib_code ) > 0					 AND  -- [RS5320]
+			s.id_natsin = c.id_code									 AND  -- [RS5320]
+			c2.id_typ_code   = '+NS'                                 AND  -- [RS5320]
+			CharIndex ( '(SPL)', c2.lib_code ) > 0					 AND  -- [RS5320]
+			c2.id_code	 	 = @dcIdNatSin							 AND  -- [RS5320]
 			( s.cod_etat      in ( 550, 600 )
 			Or  Exists (  Select *
     				  From   sysadm.det_pro
@@ -5769,8 +5778,8 @@ AS
 				  And    det_pro.id_code_dp = 182
 				  And    det_pro.id_code_car = '760'
 				  And    s.cod_etat = 100 )
-			) AND               
-			g.id_gti = @dcIdGti   
+			)                
+--			AND g.id_gti = @dcIdGti   -- [RS5320]
   End        	        
 	        
 
@@ -5778,17 +5787,25 @@ AS
   Begin
 	 SELECT @iNbSin  = count ( * )
 	 FROM   sysadm.sinistre s,
-			sysadm.gar_sin g,
-			sysadm.personne p
-	 WHERE  s.id_sin         = g.id_sin				 AND
+			-- sysadm.gar_sin g,  -- [RS5320]
+			sysadm.personne p,
+			sysadm.code c, -- [RS5320]
+			sysadm.code c2 -- [RS5320]
+	 WHERE -- s.id_sin         = g.id_sin				 AND  -- [RS5320]
 		s.id_sin        <> @dcIdSin                              AND
 			s.id_prod        = @dcIdProd                             AND
 			s.id_ets         = @dcIdEts                              AND
 			s.id_adh         = @sIdAdh                               AND  -- [PI038][RELEVE]
 			s.dte_surv      <= @dtSurv                               AND
 			s.dte_surv      >= @dtAdhRenouv                          AND
-			s.id_natsin      = @dcIdNatSin                           AND
-			s.id_natsin      in ( 133, 134, 135, 136 )               AND  -- Les 4 natures de sinistre en souplesse pour l'instant
+--			s.id_natsin      = @dcIdNatSin                           AND  -- [RS5320] 
+--			s.id_natsin      in ( 133, 134, 135, 136 )               AND  -- Les 4 natures de sinistre en souplesse pour l'instant -- [RS5320]
+			c.id_typ_code    = '+NS'                                 AND  -- [RS5320]
+			CharIndex ( '(SPL)', c.lib_code ) > 0					 AND  -- [RS5320]
+			s.id_natsin = c.id_code									 AND  -- [RS5320]
+			c2.id_typ_code   = '+NS'                                 AND  -- [RS5320]
+			CharIndex ( '(SPL)', c2.lib_code ) > 0					 AND  -- [RS5320]
+			c2.id_code	 	 = @dcIdNatSin							 AND  -- [RS5320]
 			( s.cod_etat      in ( 550, 600 )
 			Or  Exists (  Select *
     				  From   sysadm.det_pro
@@ -5797,7 +5814,7 @@ AS
 				  And    det_pro.id_code_car = '760'
 				  And    s.cod_etat = 100 )
 			) AND               
-			g.id_gti = @dcIdGti   									AND
+-- 			g.id_gti = @dcIdGti   									AND   -- [RS5320]
 			p.id_ordre				= s.id_ordre						AND -- [ITSM361927]
 			p.nom					= @sNom									AND -- [ITSM361927]
 			p.prenom				= @sPrenom -- [ITSM361927]				

@@ -2047,13 +2047,16 @@ Declare
   
    If @MailRep > 0 And @sIdTypArt = 'PRS' And @aiStatusGc = 2  
   Begin  
-     Set @sMailBody  = @sMailBody  + 'Nous avons le plaisir de vous informer que votre appareil ' + @sMarque + ' ' + @sModele + ' réparé va vous être renvoyé à l''adresse suivante :'  
        
    -- [MANTIS14477]       
    If @iInfoSpbFrn = 957  
     Begin  
       Set @sMailBody  = @sMailBody  + 'Nous avons le plaisir de vous informer que votre appareil ' + @sMarque + ' ' + @sModele + ' a été réparé à l''adresse suivante :'  
     End   
+   Else
+    Begin  
+      Set @sMailBody  = @sMailBody  + 'Nous avons le plaisir de vous informer que votre appareil ' + @sMarque + ' ' + @sModele + ' réparé va vous être renvoyé à l''adresse suivante :'  
+	End 
        
    Set @sMailBody  = @sMailBody  + @sSaut  
    Set @sMailBody  = @sMailBody  + @sSaut     
