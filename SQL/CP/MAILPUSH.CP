@@ -15058,7 +15058,7 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 			Set @sMailBody  = @sMailBody  + @sSaut
 			Set @sMailBody  = @sMailBody  + 'Nous vous informons donc de la clôture de votre demande.' + @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
-			Set @sMailBody  = @sMailBody  + 'Si vous souhaitez que votre demande d’indemnisation soit ré-ouverte, nous vous remercions de nous appeler au '+ @sNumTelProd + '.'+ @sSaut
+			Set @sMailBody  = @sMailBody  + 'Si vous souhaitez que votre demande d’indemnisation soit rouverte, nous vous remercions de nous appeler au '+ @sNumTelProd + '.'+ @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
 			Set @sMailBody  = @sMailBody  + 'Nous restons à votre entière disposition pour toute question complémentaire.'+ @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
@@ -18470,6 +18470,7 @@ Go
 -- JFF      03/08/2021   On ne relance pas non plus un dossier réglé, refusée etc...
 -- JFF      12/08/2021   [RS398][RS905] Relance MyPanguee
 -- JFF      22/08/2022   [RS3179_SHUNT_RECLA]
+-- JFF      03/07/2023   [RS5124_ATM_ATP]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAILPUSH_RELANCE_PCE_DT262' AND type = 'P' )
         DROP procedure sysadm.PS_S_MAILPUSH_RELANCE_PCE_DT262
@@ -18487,6 +18488,8 @@ DECLARE @tb TABLE
 	  modele varchar ( 35 ),
 	  variante  varchar ( 35 ), -- [DT364)
 	  adr_mail_prod varchar ( 50 ), -- [RS398][RS905]
+	  adr_adrpostale_prod varchar ( 100 ), -- [RS5124_ATM_ATP]
+	  url_extranet_spb varchar ( 100 ), -- [RS5124_ATM_ATP]
 	  marquage	integer null 
 	)
 
@@ -18506,7 +18509,9 @@ DECLARE @det_pro TABLE
 	  dte_del_cloture_dos_j datetime,
 	  variante_mail varchar ( 35),
 	  lib_prod_dp66_Et_dp67 Varchar ( 71 ),
-	  adr_mail_prod_dp136 varchar ( 70 )
+	  adr_mail_prod_dp136 varchar ( 70 ),
+	  adr_adrpostale_prod varchar ( 100 ), -- [RS5124_ATM_ATP]
+	  url_extranet_spb varchar ( 100 ) -- [RS5124_ATM_ATP]
 	)
 
 DECLARE @tbPce TABLE 
@@ -18564,6 +18569,8 @@ Declare @sDteSurv VarChar ( 10 )
 Declare @sZVAS20 VarChar ( 255 )
 Declare @sNumTelProd VarChar ( 20 )
 Declare @sAdrMailProd VarChar ( 50 )
+Declare @sAdrAdPostaleProd VarChar ( 100 )
+Declare @sUrlEctranetSpb VarChar ( 100 )
 Declare @sAltRecla VarChar ( 1 )
 
 Set @dtDateJour = GetDate()
@@ -18601,7 +18608,17 @@ Select dp.id_prod,
 		(select sysadm.FN_CLE_VAL ( 'ADR_MAIL_PROD', rtrim ( dp136.val_car ) + rtrim ( dp136.val_car2 ), ';')
 		 from sysadm.det_pro dp136 with (nolock)
 		 where dp136.id_prod=dp.id_prod 
-		 and dp136.id_code_dp=136) , '' )
+		 and dp136.id_code_dp=136) , '' ),
+		IsNull (	
+		(select sysadm.FN_CLE_VAL ( 'ADR_ADPOSTALE_PROD', rtrim ( dp366.val_car ) + rtrim ( dp366.val_car2 ), ';')
+		 from sysadm.det_pro dp366 with (nolock)
+		 where dp366.id_prod=dp.id_prod 
+		 and dp366.id_code_dp=366) , '' ), -- [RS5124_ATM_ATP]
+		IsNull (	
+		(select sysadm.FN_CLE_VAL ( 'URL_ATLAS', rtrim ( dp119.val_car ) + rtrim ( dp119.val_car2 ), ';')
+		 from sysadm.det_pro dp119 with (nolock)
+		 where dp119.id_prod=dp.id_prod 
+		 and dp119.id_code_dp=119) , '' ) -- [RS5124_ATM_ATP]
 From sysadm.det_pro dp with (nolock)
 Where dp.id_code_dp = 309
 
@@ -18615,7 +18632,9 @@ select  Distinct
 		IsNull ( ltrim ( rtrim ( s.marq_port )), ''),
 		IsNull ( ltrim ( rtrim ( s.modl_port )), ''),
 		dp.variante_mail, -- [DT364]
-		dp.adr_mail_prod_dp136, 
+		dp.adr_mail_prod_dp136,
+		dp.adr_adrpostale_prod, -- [RS5124_ATM_ATP]
+		dp.url_extranet_spb, -- [RS5124_ATM_ATP]
 		0 'marquage'
 From	sysadm.sinistre s with (nolock),
 		@det_pro dp,
@@ -18655,6 +18674,8 @@ select Distinct
 		IsNull ( ltrim ( rtrim ( s.modl_port )), ''),
 		dp.variante_mail, -- [DT364]
 		dp.adr_mail_prod_dp136, 
+		dp.adr_adrpostale_prod, -- [RS5124_ATM_ATP]
+		dp.url_extranet_spb, -- [RS5124_ATM_ATP]
 		0 'marquage'
 From	sysadm.sinistre s with (nolock),
 		@det_pro dp,
@@ -18689,6 +18710,8 @@ select Distinct
 		IsNull ( ltrim ( rtrim ( s.modl_port )), ''),
 		dp.variante_mail, -- [DT364]
 		dp.adr_mail_prod_dp136, 
+		dp.adr_adrpostale_prod, -- [RS5124_ATM_ATP]
+		dp.url_extranet_spb, -- [RS5124_ATM_ATP]
 		0 'marquage'
 From	sysadm.sinistre s with (nolock),
 		@det_pro dp,
@@ -18723,6 +18746,8 @@ select Distinct
 		IsNull ( ltrim ( rtrim ( s.modl_port )), ''),
 		dp.variante_mail, -- [DT364]
 		dp.adr_mail_prod_dp136,  
+		dp.adr_adrpostale_prod, -- [RS5124_ATM_ATP]
+		dp.url_extranet_spb, -- [RS5124_ATM_ATP]
 		0 'marquage'
 From	sysadm.sinistre s with (nolock),
 		@det_pro dp,
@@ -18757,6 +18782,8 @@ select Distinct
 		IsNull ( ltrim ( rtrim ( s.modl_port )), ''),
 		dp.variante_mail, -- [DT364]
 		dp.adr_mail_prod_dp136, 
+		dp.adr_adrpostale_prod, -- [RS5124_ATM_ATP]
+		dp.url_extranet_spb, -- [RS5124_ATM_ATP]
 		0 'marquage'
 From	sysadm.sinistre s with (nolock),
 		@det_pro dp,
@@ -18797,7 +18824,9 @@ While Exists ( Select * From @tb where marquage = 0 )
 		@sMarque = marque,
 		@sModele = modele,
 		@sVariante = variante, -- [DT364]
-		@sAdrMailProd = adr_mail_prod -- [RS398][RS905]
+		@sAdrMailProd = adr_mail_prod, -- [RS398][RS905]
+		@sAdrAdPostaleProd = adr_adrpostale_prod, -- [RS5124_ATM_ATP]
+	    @sUrlEctranetSpb = url_extranet_spb -- [RS5124_ATM_ATP]
 	From	@tb
 	Where	marquage = 0
 
@@ -18953,15 +18982,15 @@ While Exists ( Select * From @tb where marquage = 0 )
 
 		End 
 
-	-- [PM519-1]
-	If @sVariante = 'MOBILEO' 
+	-- [PM519-1][RS5124]
+	If @sVariante in ( 'MOBILEO', 'ATM', 'ATP') 
 	  Begin
 		If @sTypRel = 'REL1'
 		  Begin
 			Set @sMailObjet = 'Demande de prise en charge – document(s) manquant(s) ' + @sLibProd + ' Référence client : ' + Convert ( VarChar, @dcIdSin ) 
 		  End 
 
-		If @sTypRel = 'REL2'
+		If @sTypRel in ( 'REL2', 'REL3', 'REL4' )
 		  Begin
 			Set @sMailObjet = 'Demande de prise en charge – document(s) manquant(s) ' + @sLibProd + ' Référence client : ' + Convert ( VarChar, @dcIdSin ) + ' - relance'
 		  End 
@@ -18970,8 +18999,9 @@ While Exists ( Select * From @tb where marquage = 0 )
 		  Begin
 			Set @sMailObjet = 'Demande de prise en charge – document(s) manquant(s) ' + @sLibProd + ' Référence client : ' + Convert ( VarChar, @dcIdSin ) + ' - dernière relance'
 		  End 
-
 	  End 
+
+
 
 	Set @sMailBody  = @sMailBody  + @sCiv
 	Set @sMailBody  = @sMailBody  + @sSaut
@@ -18982,7 +19012,7 @@ While Exists ( Select * From @tb where marquage = 0 )
 	IF @sTypRel in ( 'REL1', 'REL2') 
 	  Begin
 		-- [PM519-1]
-		If @sVariante = 'MOBILEO' And @sTypRel = 'REL1'
+		If @sVariante in ( 'MOBILEO', 'ATM', 'ATP') And @sTypRel = 'REL1'
 		  Begin
 			Set @sMailBody  = @sMailBody  + 'Vous avez déclaré un sinistre le ' + @sDteDecl + ', au titre de votre contrat ' + @sLibProd + ' concernant votre appareil ' + @sMarque + ' ' + @sModele + '.' 
 			Set @sMailBody  = @sMailBody  + @sSaut
@@ -18993,7 +19023,7 @@ While Exists ( Select * From @tb where marquage = 0 )
 		  End 
 
 		-- [PM519-1]
-		If @sVariante = 'MOBILEO' And @sTypRel = 'REL2'
+		If @sVariante in ( 'MOBILEO', 'ATM', 'ATP') And @sTypRel = 'REL2'
 		  Begin
 			Set @sMailBody  = @sMailBody  + 'Nous faisons suite à votre demande de prise en charge, au titre de votre contrat ' + @sLibProd + '. Sauf erreur de notre part, nous n’avons toujours pas reçu le ou les documents suivant(s) : ' + @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
@@ -19044,7 +19074,7 @@ While Exists ( Select * From @tb where marquage = 0 )
 	IF @sTypRel in ( 'REL5') 
 		Begin
 			-- [PM519-1]
-			If @sVariante = 'MOBILEO' 
+			If @sVariante in ( 'MOBILEO', 'ATM', 'ATP' )
 			  Begin
 				Set @sMailBody  = @sMailBody  + 'Vous avez déclaré un sinistre le ' + @sDteDecl + ' concernant votre appareil ' + @sMarque + ' ' + @sModele + ', au titre de votre contrat ' + @sLibProd + '.' + @sSaut
 				Set @sMailBody  = @sMailBody  + @sSaut
@@ -19052,7 +19082,7 @@ While Exists ( Select * From @tb where marquage = 0 )
 				Set @sMailBody  = @sMailBody  + @sSaut
 				Set @sMailBody  = @sMailBody  + 'Nous vous informons donc de la clôture de votre dossier.'+ @sSaut
 				Set @sMailBody  = @sMailBody  + @sSaut
-				Set @sMailBody  = @sMailBody  + 'Si vous souhaitez que votre demande d’indemnisation soit ré-ouverte, nous vous remercions de nous appeler au '+ @sNumTelProd + '.'+ @sSaut
+				Set @sMailBody  = @sMailBody  + 'Si vous souhaitez que votre demande d’indemnisation soit rouverte, nous vous remercions de nous appeler au '+ @sNumTelProd + '.'+ @sSaut
 				Set @sMailBody  = @sMailBody  + @sSaut
 				Set @sMailBody  = @sMailBody  + 'Nous restons à votre entière disposition pour toute question complémentaire.'+ @sSaut
 				Set @sMailBody  = @sMailBody  + @sSaut
@@ -19177,17 +19207,17 @@ While Exists ( Select * From @tb where marquage = 0 )
 		 Begin
 			Select 	Top 1 
 				@iIdSeqPce = id_seq,
-				@sTxtPara = txt_para
+				@sTxtPara = ltrim ( rtrim ( txt_para )) 
 			From @tbPce
 			Where marquage = 0
 
-			Set @sVal = Left ( @sTxtPara, 10 )
-			Set @sTxtPara = Substring ( @sTxtPara, 11, Len ( @sTxtPara ) )
+			Set @sVal = Left ( @sTxtPara, 1 )
+			Set @sTxtPara = Substring ( @sTxtPara, 2, Len ( @sTxtPara ) )
 			Set @sVal = Ltrim ( Replace ( @sVal, '-', '' ) )
 			Set @sTxtPara = @sVal + @sTxtPara 
 			Set @sTxtPara = Replace ( @sTxtPara, '"', '' )
-			Set @sTxtPara = Replace ( @sTxtPara, '«', '' )
-			Set @sTxtPara = Replace ( @sTxtPara, '»', '' )
+/*			Set @sTxtPara = Replace ( @sTxtPara, '«', '' )
+			Set @sTxtPara = Replace ( @sTxtPara, '»', '' ) */
 
 			-- Traitement pour fusionner les variables Word
 			Set @sTxtPara = Replace ( @sTxtPara, 'SDTESU', @sDteSurv  )
@@ -19208,12 +19238,13 @@ While Exists ( Select * From @tb where marquage = 0 )
 		-- [PM519-1]
 		If @sVariante = 'MOBILEO' And @sTypRel = 'REL1'
 		  Begin
+			Set @sMailBody  = @sMailBody  + @sSaut
 			Set @sMailBody  = @sMailBody  + 'Sans ce(s) document(s) nous ne pouvons étudier votre dossier.' + @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
 
 			Set @sMailBody  = @sMailBody  + 'Vous pouvez nous le(s) transmettre :' + @sSaut
 			Set @sMailBody  = @sMailBody  + '- soit en ligne, depuis le site sécurisé de votre banque, dans votre espace assurance, sélectionnez votre contrat, rubrique « déclarer et suivre un sinistre » et laissez-vous guider pour compléter votre dossier.' + @sSaut
-			Set @sMailBody  = @sMailBody  + '- soit par courrier à l''adresse postale suivante : SPB - Service Mobileo CS 90000 - 76095 Le Havre Cedex.' + @sSaut
+			Set @sMailBody  = @sMailBody  + '- soit par courrier à l''adresse postale suivante : ' + @sAdrAdPostaleProd + '.' + @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
 			Set @sMailBody  = @sMailBody  + 'Nous étudierons votre demande dès la réception du ou des documents et nous vous communiquerons notre décision.' + @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
@@ -19226,14 +19257,67 @@ While Exists ( Select * From @tb where marquage = 0 )
 			Set @sMailBody  = @sMailBody  + @sSaut
 		  End 
 
+
+		-- [RS5124]
+		If @sVariante = 'ATP' And @sTypRel = 'REL1'
+		  Begin
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Sans ce(s) document(s) nous ne pouvons étudier votre dossier.' + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+
+			Set @sMailBody  = @sMailBody  + 'Vous pouvez nous le(s) transmettre :' + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + '- soit par mail à l''adresse suivante : ' + @sAdrMailProd + @sSaut 
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + '- soit par courrier à l''adresse postale suivante : ' + @sAdrAdPostaleProd + '.' + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Nous étudierons votre demande dès la réception du ou des documents et nous vous communiquerons notre décision.' + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Nous restons à votre entière disposition pour toute question complémentaire au ' + @sNumTelProd + '.'+ @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Cordialement,'+ @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Votre gestionnaire d''assurance,'+ @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+		  End 
+
+		-- [RS5124]
+		If @sVariante = 'ATM' And @sTypRel = 'REL1'
+		  Begin
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Sans ce(s) document(s) nous ne pouvons étudier votre dossier.' + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+
+			Set @sMailBody  = @sMailBody  + 'Vous pouvez nous le(s) transmettre :' + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + '- soit en ligne, depuis votre espace assurance : ' + @sUrlEctranetSpb + ' rubrique « compléter mon dossier ». Pour vous connecter, munissez-vous de votre demande d''adhésion à l''Assurance Tous Mobiles afin d’y retrouver votre numéro de contrat.' + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + '- soit par mail à l''adresse suivante : ' + @sAdrMailProd + @sSaut 
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + '- soit par courrier à l''adresse postale suivante : ' + @sAdrAdPostaleProd + '.' + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Nous étudierons votre demande dès la réception du ou des documents et nous vous communiquerons notre décision.' + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Nous restons à votre entière disposition pour toute question complémentaire au ' + @sNumTelProd + '.'+ @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Cordialement,'+ @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Votre gestionnaire d''assurance,'+ @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+		  End 
+
+
 		If @sVariante = 'MOBILEO' And @sTypRel = 'REL2'
 		  Begin
+			Set @sMailBody  = @sMailBody  + @sSaut
 			Set @sMailBody  = @sMailBody  + 'Sans ce(s) document(s) nous ne pouvons étudier votre dossier.' + @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
 
 			Set @sMailBody  = @sMailBody  + 'Vous pouvez nous le(s) transmettre :' + @sSaut
 			Set @sMailBody  = @sMailBody  + '- soit en ligne, depuis le site sécurisé de votre banque, dans votre espace assurance, sélectionnez votre contrat, rubrique « déclarer et suivre un sinistre » et laissez-vous guider pour compléter votre dossier.' + @sSaut
-			Set @sMailBody  = @sMailBody  + '- soit par courrier à l''adresse postale suivante : SPB - Service Mobileo CS 90000 - 76095 Le Havre Cedex.' + @sSaut
+			Set @sMailBody  = @sMailBody  + '- soit par courrier à l''adresse postale suivante : ' + @sAdrAdPostaleProd + '.' + @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
 			Set @sMailBody  = @sMailBody  + 'Dès réception, nous étudierons votre demande et vous informerons de la suite donnée.' + @sSaut
 			Set @sMailBody  = @sMailBody  + 'Si nous n’avons pas de réponse de votre part dans un délai de 40 jours, nous serons dans l''obligation de clôturer votre dossier.' + @sSaut
@@ -19246,6 +19330,57 @@ While Exists ( Select * From @tb where marquage = 0 )
 			Set @sMailBody  = @sMailBody  + 'Votre gestionnaire d''assurance,'+ @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
 		  End 
+
+		If @sVariante = 'ATP' And @sTypRel = 'REL2'
+		  Begin
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Sans ce(s) document(s) nous ne pouvons étudier votre dossier.' + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+
+			Set @sMailBody  = @sMailBody  + 'Vous pouvez nous le(s) transmettre :' + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + '- soit par mail à l''adresse suivante : ' + @sAdrMailProd + @sSaut 
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + '- soit par courrier à l''adresse postale suivante : ' + @sAdrAdPostaleProd + '.' + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Dès réception, nous étudierons votre demande et vous informerons de la suite donnée.' + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Si nous n’avons pas de réponse de votre part dans un délai de 60 jours, nous serons dans l''obligation de clôturer votre dossier.' + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Nous restons à votre entière disposition pour toute question complémentaire au ' + @sNumTelProd + '.'+ @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Cordialement,'+ @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Votre gestionnaire d''assurance,'+ @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+		  End 
+
+		If @sVariante = 'ATM' And @sTypRel = 'REL2'
+		  Begin
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Sans ce(s) document(s) nous ne pouvons étudier votre dossier.' + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+
+			Set @sMailBody  = @sMailBody  + 'Vous pouvez nous le(s) transmettre :' + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + '- soit en ligne, depuis votre espace assurance : ' + @sUrlEctranetSpb + ' rubrique « compléter mon dossier ». Pour vous connecter, munissez-vous de votre demande d''adhésion à l''Assurance Tous Mobiles afin d’y retrouver votre numéro de contrat.' + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + '- soit par mail à l''adresse suivante : ' + @sAdrMailProd + @sSaut 
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + '- soit par courrier à l''adresse postale suivante : ' + @sAdrAdPostaleProd + '.' + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Dès réception, nous étudierons votre demande et vous informerons de la suite donnée.' + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Si nous n’avons pas de réponse de votre part dans un délai de 60 jours, nous serons dans l''obligation de clôturer votre dossier.' + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Nous restons à votre entière disposition pour toute question complémentaire au ' + @sNumTelProd + '.'+ @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Cordialement,'+ @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Votre gestionnaire d''assurance,'+ @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+		  End 
+
 
 		-- [ORANGE]
 		If @sVariante in ( 'ORANGE', 'SAMSUNG' )
