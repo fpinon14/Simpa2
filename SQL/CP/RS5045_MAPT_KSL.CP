@@ -10,7 +10,8 @@
 -- sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE
 -- sysadm.PS_RS5045_I_CREATION_CHAINE_DATA_XML_KSL_A_VIDE
 -- sysadm.PS_RS5045_I_MAIL_PUSH_KSL
--- sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER
+-- sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2
+-- sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_PEGASE
 -- sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL
 -- sysadm.PS_RS5045_S_LISTE_VARIABLE_XML_KSL
 -- sysadm.PS_RS5045_S_RECUPERER_CODE_MAQUETTE_KSL_A_PARTIR_TYP_MAIL
@@ -96,7 +97,7 @@ Go
 
 --------------------------------------------------------------------
 --
--- Procedure            :       sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER
+-- Procedure            :       sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2
 -- Auteur               :       Fabry JF
 -- Date                 :       25/04/2023
 -- Libelle              :        
@@ -108,11 +109,11 @@ Go
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER' AND type = 'P' )
-        DROP procedure sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2' AND type = 'P' )
+        DROP procedure sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2
 GO
 
-CREATE procedure sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER
+CREATE procedure sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2
 	@adcIdSin Decimal ( 10 ),
 	@adcIdInter Decimal ( 7 ),
 	@aiIdXml integer
@@ -213,7 +214,7 @@ BEGIN
 		  Begin
 			Select @sNom = s.nom,
 				   @sPrenom = s.prenom
-			From sysadm.w_sin s
+			From SIMPA2_PRO.sysadm.w_sin s
 			Where s.id_sin = @adcIdSin
 		 End 
 	  End 
@@ -346,7 +347,7 @@ BEGIN
 		  Begin
 			Select @sNom = s.nom,
 				   @sPrenom = s.prenom
-			From sysadm.w_sin s
+			From SIMPA2_TRT.sysadm.w_sin s
 			Where s.id_sin = @adcIdSin
 		 End 
 	  End 
@@ -462,6 +463,532 @@ Where id_xml = @aiIdXml
 
 
 Go
+
+
+--------------------------------------------------------------------
+--
+-- Procedure            :       sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_PEGASE
+-- Auteur               :       Fabry JF
+-- Date                 :       25/04/2023
+-- Libelle              :        
+-- Commentaires         :       Met à jour sur l'enregistrement id_xml donnée, les valeurs par défaut lié au sinistre et à l'interlocuteur
+-- References           :       POUR PEGASE
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_PEGASE' AND type = 'P' )
+        DROP procedure sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_PEGASE
+GO
+
+CREATE procedure sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_PEGASE
+	@adcIdSin integer,
+	@adcIdInter integer,
+	@aiIdXml integer
+AS
+
+Declare @dcIdSin Decimal ( 10 )
+Declare @dcIdProd Decimal ( 7 )
+Declare @dcIdRev Decimal ( 2 )
+
+Declare @sCodInter varchar ( 1 )
+Declare @sCodCivCourt VarChar ( 35 ) 
+Declare @sCodCivLong VarChar ( 35 ) 
+Declare @sNom VarChar ( 71 ) 
+Declare @sPrenom VarChar ( 71 ) 
+Declare @sAdresse1 VarChar ( 35 ) 
+Declare @sAdresse2 VarChar ( 35 ) 
+Declare @sCodePostal VarChar ( 5 ) 
+Declare @sVille VarChar ( 35 ) 
+Declare @sCodeProduitSinistre varchar ( 10 )
+Declare @sNomProduit varchar ( 50 )
+Declare @sNomProduitCpl varchar ( 50 )
+Declare @sLibOptProduit varchar ( 100 )
+Declare @sNoTelSpb varchar ( 20 )
+Declare @sNoTelFax varchar ( 20 )
+Declare @sNoPolice Varchar ( 35 ) 
+Declare @sAssureur Varchar ( 35 ) 
+Declare @sNoLigneAssuree Varchar ( 35 ) 
+Declare @sCoutTelephonique VarChar ( 35 )
+Declare @sCodeOperateur VarChar ( 4 )
+Declare @sCodeProduit VarChar ( 10 )
+Declare @sNoDossierSinistre VarChar ( 10 ) 
+Declare @sMarqPort VarChar ( 35 ) 
+Declare @sModlPort VarChar ( 35 ) 
+Declare @sEmailProduit VarChar ( 150 )
+Declare @DateDeDeclaration VarChar ( 10 )
+Declare @sAdrMail VarChar ( 120 )
+Declare @sIMEI VarChar ( 20 )
+Declare @sMajPar VarChar ( 4 )
+Declare @sNature VarChar ( 10 )
+Declare @sIdInter Varchar ( 10 )
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+BEGIN
+    -- *************************************
+	-- ** PRODUCTION                      **
+    -- *************************************
+
+    -- *************************************
+	-- ** Données liées à l'interlocuteur **
+    -- *************************************
+
+	Select @sCodCivCourt = Case When i.cod_civ in ( 4, 5 ) Then 'Messieurs' Else PEGASE_PRO.sysadm.FN_CODE_CAR(i.cod_civ,'-CI') End,
+		   @sCodCivLong = Case When i.cod_civ in ( 4, 5 ) Then 'Messieurs' Else PEGASE_PRO.sysadm.FN_CODE_CAR(i.cod_civ,'-CL') End,
+		   @sNom = i.nom,
+		   @sPrenom = i.nom,
+		   @sCodInter = i.cod_inter,
+		   @sAdresse1 = i.adr_1,
+		   @sAdresse2 = i.adr_2,
+		   @sCodePostal = i.adr_cp,
+		   @sVille = i.adr_ville,
+		   @sAdrMail = i.adr_mel,
+		   @sIdInter = i.id_inter
+
+	From PEGASE_PRO.sysadm.inter i
+	Where id_sin = @adcIdSin
+	And id_inter = @adcIdInter
+
+	If @@RowCount <= 0
+	 Begin 
+		Select	@sCodCivCourt = Case When i.cod_civ in ( 4, 5 ) Then 'Messieurs' Else PEGASE_PRO.sysadm.FN_CODE_CAR(i.cod_civ,'-CI') End,
+				@sCodCivLong = Case When i.cod_civ in ( 4, 5 ) Then 'Messieurs' Else PEGASE_PRO.sysadm.FN_CODE_CAR(i.cod_civ,'-CL') End,
+				@sNom = i.nom,
+				@sPrenom = i.nom,
+				@sCodInter = i.cod_inter,
+				@sAdresse1 = i.adr_1,
+				@sAdresse2 = i.adr_2,
+				@sCodePostal = i.adr_cp,
+				@sVille = i.adr_ville,
+				@sAdrMail = i.adr_mel,
+				@sIdInter = i.id_inter
+
+		From PEGASE_PRO.sysadm.w_inter i
+		Where id_sin = @adcIdSin
+		And id_inter = @adcIdInter
+	 End 
+
+	-- Traitement particulier pour l'assuré pour récupérer le nom et prom
+    If @sCodInter = 'A'
+	  Begin
+		Select @sNom = ps.nom,
+			   @sPrenom = ps.prenom
+		From PEGASE_PRO.sysadm.sinistre s,
+			 PEGASE_PRO.sysadm.personne ps 
+		Where s.id_sin = @adcIdSin
+		And  ps.id_ordre = s.id_ordre
+
+/*
+		If @@ROWCOUNT <= 0 
+		  Begin
+			Select @sNom = s.nom,
+				   @sPrenom = s.prenom
+			From PEGASE_PRO.sysadm.w_sin s
+			Where s.id_sin = @adcIdSin
+		 End */
+	  End 
+
+
+    -- *************************************
+	-- ** Données liées au sinistre       **
+    -- *************************************
+	Select @dcIdSin = s.id_sin,
+		   @dcIdRev = s.id_rev,
+		   @dcIdProd = s.id_prod,
+		   @sNoLigneAssuree = '',
+		   @sCodeOperateur = s.maj_par,
+		   @sNoDossierSinistre = Convert ( varchar (10), s.id_sin ),
+		   @sMarqPort = '',
+		   @sModlPort = '',
+		   @DateDeDeclaration = convert ( VarChar ( 10 ), s.dte_decl, 23 ),
+		   @sIMEI = '',
+		   @sMajPar = s.maj_par,
+		   @sNature = Convert ( varchar (10), s.id_nat_sin ) 
+
+	From PEGASE_PRO.sysadm.sinistre s
+	Where id_sin = @adcIdSin
+
+	If @@RowCount <= 0
+	 Begin 
+		Select @dcIdSin = s.id_sin,
+			   @dcIdRev = s.id_rev,
+			   @dcIdProd = s.id_prod,
+			   @sNoLigneAssuree = '',
+			   @sCodeOperateur = s.maj_par,
+			   @sNoDossierSinistre = Convert ( varchar (10), s.id_sin ),
+			   @sMarqPort = '',
+			   @sModlPort = '',
+			   @DateDeDeclaration = convert ( VarChar ( 10 ), s.dte_decl, 23 ),
+			   @sIMEI = '',
+			   @sMajPar = s.maj_par,
+			   @sNature = Convert ( varchar (10), s.id_nat_sin ) 
+
+		From PEGASE_PRO.sysadm.w_sin s
+		Where id_sin = @adcIdSin
+	 End 
+
+    -- *************************************
+	-- ** Données liées au produit        **
+    -- *************************************
+	Select	@sNoTelSpb = p.num_tel,
+			@sNoTelFax = p.num_fax,
+			@sCodeProduitSinistre =  Convert ( varchar ( 10), p.id_prod ),
+			@sNomProduit = p.liblong,
+			@sNomProduitCpl = p.liblong,
+			@sLibOptProduit = '',
+			@sCoutTelephonique = '',
+			@sCodeProduit = 
+					Case 
+						When SIMPA2_PRO.sysadm.FN_CLE_NUMERIQUE ( 'PI085') > 0 Then 
+							( Select Top 1 RIGHT('00000' + IsNull ( CONVERT(varchar(5), Convert ( integer, dp.val_calc) ), ''),5)   -- [PI085] passage de 3 à 5
+							  From PEGASE_PRO.sysadm.det_pro dp
+							  Where dp.id_calc = 6
+							  And   dp.id_prod = p.id_prod 
+							)
+						Else 
+							( Select Top 1 RIGHT('000' + IsNull ( CONVERT(varchar(5), Convert ( integer, dp.val_calc) ), ''),3) -- [PI085] On laisse ainsi mail de P. Fauvel le 25/05/2020 à 09h16 archivé dans le projet.
+							  From PEGASE_PRO.sysadm.det_pro dp
+							  Where dp.id_calc = 6
+							  And   dp.id_prod = para_prod.id_prod
+							)
+					End,
+			@sEmailProduit = ( Select c.lib_code 
+							   From PEGASE_PRO.sysadm.code c,
+									PEGASE_PRO.sysadm.det_pro dp
+							   Where dp.id_prod = p.id_prod
+							   And   dp.id_calc = 6
+							   And   c.id_code = dp.val_calc 
+							   And   c.id_typ_code = '+MP' )
+
+	From PEGASE_PRO.sysadm.produit p
+
+	Where p.id_prod = @dcIdProd 
+
+	-- *************************************
+	-- ** Données liées assureur/police   **
+    -- *************************************
+	Select Distinct cie.lib_cie
+	From PEGASE_PRO.sysadm.sinistre s,
+		 PEGASE_PRO.sysadm.gar_sin g,
+		 PEGASE_PRO.sysadm.garantie ga,
+		 PEGASE_PRO.sysadm.police po,
+		 PEGASE_PRO.sysadm.compagnie cie
+	Where s.id_sin = @dcIdSin
+	And   g.id_sin = s.id_sin
+	And   ga.id_prod = s.id_prod
+	And   ga.id_rev = s.id_rev
+	And   ga.id_gti = g.id_gti
+	And   po.id_police = ga.id_police
+	And   cie.id_cie = po.id_cie
+
+	If @@ROWCOUNT = 1
+		Begin
+			Select @sAssureur = cie.lib_cie
+			From PEGASE_PRO.sysadm.sinistre s,
+				 PEGASE_PRO.sysadm.gar_sin g,
+				 PEGASE_PRO.sysadm.garantie ga,
+				 PEGASE_PRO.sysadm.police po,
+				 PEGASE_PRO.sysadm.compagnie cie
+			Where s.id_sin = @dcIdSin
+			And   g.id_sin = s.id_sin
+			And   ga.id_prod = s.id_prod
+			And   ga.id_rev = s.id_rev
+			And   ga.id_gti = g.id_gti
+			And   po.id_police = ga.id_police
+			And   cie.id_cie = po.id_cie
+		End 
+
+	Select Distinct po.lib_police
+	From PEGASE_PRO.sysadm.sinistre s,
+		 PEGASE_PRO.sysadm.gar_sin g,
+		 PEGASE_PRO.sysadm.garantie ga,
+		 PEGASE_PRO.sysadm.police po,
+		 PEGASE_PRO.sysadm.compagnie cie
+	Where s.id_sin = @dcIdSin
+	And   g.id_sin = s.id_sin
+	And   ga.id_prod = s.id_prod
+	And   ga.id_rev = s.id_rev
+	And   ga.id_gti = g.id_gti
+	And   po.id_police = ga.id_police
+	And   cie.id_cie = po.id_cie
+
+	If @@ROWCOUNT = 1
+		Begin
+			Select @sNoPolice = po.lib_police
+			From PEGASE_PRO.sysadm.sinistre s,
+				 PEGASE_PRO.sysadm.gar_sin g,
+				 PEGASE_PRO.sysadm.garantie ga,
+				 PEGASE_PRO.sysadm.police po,
+				 PEGASE_PRO.sysadm.compagnie cie
+			Where s.id_sin = @dcIdSin
+			And   g.id_sin = s.id_sin
+			And   ga.id_prod = s.id_prod
+			And   ga.id_rev = s.id_rev
+			And   ga.id_gti = g.id_gti
+			And   po.id_police = ga.id_police
+			And   cie.id_cie = po.id_cie
+		End 
+
+END
+ELSE
+BEGIN
+
+    -- *************************************
+	-- ** SIMULATION                      **
+    -- *************************************
+
+    -- *************************************
+	-- ** Données liées à l'interlocuteur **
+    -- *************************************
+
+    -- *************************************
+	-- ** Données liées à l'interlocuteur **
+    -- *************************************
+
+	Select @sCodCivCourt = Case When i.cod_civ in ( 4, 5 ) Then 'Messieurs' Else PEGASE_TRT.sysadm.FN_CODE_CAR(i.cod_civ,'-CI') End,
+		   @sCodCivLong = Case When i.cod_civ in ( 4, 5 ) Then 'Messieurs' Else PEGASE_TRT.sysadm.FN_CODE_CAR(i.cod_civ,'-CL') End,
+		   @sNom = i.nom,
+		   @sPrenom = i.nom,
+		   @sCodInter = i.cod_inter,
+		   @sAdresse1 = i.adr_1,
+		   @sAdresse2 = i.adr_2,
+		   @sCodePostal = i.adr_cp,
+		   @sVille = i.adr_ville,
+		   @sAdrMail = i.adr_mel,
+		   @sIdInter = i.id_inter
+
+	From PEGASE_TRT.sysadm.inter i
+	Where id_sin = @adcIdSin
+	And id_inter = @adcIdInter
+
+	If @@RowCount <= 0
+	 Begin 
+		Select	@sCodCivCourt = Case When i.cod_civ in ( 4, 5 ) Then 'Messieurs' Else PEGASE_TRT.sysadm.FN_CODE_CAR(i.cod_civ,'-CI') End,
+				@sCodCivLong = Case When i.cod_civ in ( 4, 5 ) Then 'Messieurs' Else PEGASE_TRT.sysadm.FN_CODE_CAR(i.cod_civ,'-CL') End,
+				@sNom = i.nom,
+				@sPrenom = i.nom,
+				@sCodInter = i.cod_inter,
+				@sAdresse1 = i.adr_1,
+				@sAdresse2 = i.adr_2,
+				@sCodePostal = i.adr_cp,
+				@sVille = i.adr_ville,
+				@sAdrMail = i.adr_mel,
+				@sIdInter = i.id_inter
+
+		From PEGASE_TRT.sysadm.w_inter i
+		Where id_sin = @adcIdSin
+		And id_inter = @adcIdInter
+	 End 
+
+	-- Traitement particulier pour l'assuré pour récupérer le nom et prom
+    If @sCodInter = 'A'
+	  Begin
+		Select @sNom = ps.nom,
+			   @sPrenom = ps.prenom
+		From PEGASE_TRT.sysadm.sinistre s,
+			 PEGASE_TRT.sysadm.personne ps 
+		Where s.id_sin = @adcIdSin
+		And  ps.id_ordre = s.id_ordre
+
+/*
+		If @@ROWCOUNT <= 0 
+		  Begin
+			Select @sNom = s.nom,
+				   @sPrenom = s.prenom
+			From PEGASE_TRT.sysadm.w_sin s
+			Where s.id_sin = @adcIdSin
+		 End */
+	  End 
+
+
+    -- *************************************
+	-- ** Données liées au sinistre       **
+    -- *************************************
+	Select @dcIdSin = s.id_sin,
+		   @dcIdRev = s.id_rev,
+		   @dcIdProd = s.id_prod,
+		   @sNoLigneAssuree = '',
+		   @sCodeOperateur = s.maj_par,
+		   @sNoDossierSinistre = Convert ( varchar (10), s.id_sin ),
+		   @sMarqPort = '',
+		   @sModlPort = '',
+		   @DateDeDeclaration = convert ( VarChar ( 10 ), s.dte_dec, 23 ),
+		   @sIMEI = '',
+		   @sMajPar = s.maj_par,
+		   @sNature = Convert ( varchar (10), s.id_nat_sin ) 
+
+	From PEGASE_TRT.sysadm.sinistre s
+	Where id_sin = @adcIdSin
+
+	If @@RowCount <= 0
+	 Begin 
+		Select @dcIdSin = s.id_sin,
+			   @dcIdRev = s.id_rev,
+			   @dcIdProd = s.id_prod,
+			   @sNoLigneAssuree = '',
+			   @sCodeOperateur = s.maj_par,
+			   @sNoDossierSinistre = Convert ( varchar (10), s.id_sin ),
+			   @sMarqPort = '',
+			   @sModlPort = '',
+			   @DateDeDeclaration = convert ( VarChar ( 10 ), s.dte_dec, 23 ),
+			   @sIMEI = '',
+			   @sMajPar = s.maj_par,
+			   @sNature = Convert ( varchar (10), s.id_nat_sin ) 
+
+		From PEGASE_TRT.sysadm.w_sin s
+		Where id_sin = @adcIdSin
+	 End 
+
+    -- *************************************
+	-- ** Données liées au produit        **
+    -- *************************************
+	Select	@sNoTelSpb = p.num_tel,
+			@sNoTelFax = p.num_fax,
+			@sCodeProduitSinistre =  Convert ( varchar ( 10), p.id_prod ),
+			@sNomProduit = p.lib_long,
+			@sNomProduitCpl = p.lib_long,
+			@sLibOptProduit = '',
+			@sCoutTelephonique = '',
+			@sCodeProduit = 
+					Case 
+						When SIMPA2_TRT.sysadm.FN_CLE_NUMERIQUE ( 'PI085') > 0 Then 
+							(
+							Select Top 1 RIGHT('00000' + IsNull ( CONVERT(varchar(5), Convert ( integer, dp.val_calc) ), ''),5)   -- [PI085] passage de 3 à 5
+							From PEGASE_TRT.sysadm.det_pro dp
+							Where dp.id_calc = 6
+							And   dp.id_prod = p.id_prod
+							)
+						Else 
+							(
+							Select Top 1 RIGHT('000' + IsNull ( CONVERT(varchar(5), Convert ( integer, dp.val_calc) ), ''),3) -- [PI085] On laisse ainsi mail de P. Fauvel le 25/05/2020 à 09h16 archivé dans le projet.
+							From PEGASE_TRT.sysadm.det_pro dp
+							Where dp.id_calc = 6
+							And   dp.id_prod = p.id_prod
+							)
+					End,
+			@sEmailProduit = ( Select c.lib_code 
+							   From PEGASE_TRT.sysadm.code c,
+									PEGASE_TRT.sysadm.det_pro dp
+							   Where dp.id_prod = p.id_prod
+							   And   dp.id_calc = 6
+							   And   c.id_code = dp.val_calc 
+							   And   c.id_typ_code = '+MP' )
+
+	From PEGASE_TRT.sysadm.produit p
+
+	Where p.id_prod = @dcIdProd 
+
+	-- *************************************
+	-- ** Données liées assureur/police   **
+    -- *************************************
+	Select Distinct cie.lib_cie
+	From PEGASE_TRT.sysadm.sinistre s,
+		 PEGASE_TRT.sysadm.gar_sin g,
+		 PEGASE_TRT.sysadm.garantie ga,
+		 PEGASE_TRT.sysadm.police po,
+		 PEGASE_TRT.sysadm.compagnie cie
+	Where s.id_sin = @dcIdSin
+	And   g.id_sin = s.id_sin
+	And   ga.id_prod = s.id_prod
+	And   ga.id_rev = s.id_rev
+	And   ga.id_gti = g.id_gti
+	And   po.id_police = ga.id_police
+	And   cie.id_cie = po.id_cie
+
+	If @@ROWCOUNT = 1
+		Begin
+			Select @sAssureur = cie.lib_cie
+			From PEGASE_TRT.sysadm.sinistre s,
+				 PEGASE_TRT.sysadm.gar_sin g,
+				 PEGASE_TRT.sysadm.garantie ga,
+				 PEGASE_TRT.sysadm.police po,
+				 PEGASE_TRT.sysadm.compagnie cie
+			Where s.id_sin = @dcIdSin
+			And   g.id_sin = s.id_sin
+			And   ga.id_prod = s.id_prod
+			And   ga.id_rev = s.id_rev
+			And   ga.id_gti = g.id_gti
+			And   po.id_police = ga.id_police
+			And   cie.id_cie = po.id_cie
+		End 
+
+	Select Distinct po.lib_police
+	From PEGASE_TRT.sysadm.sinistre s,
+		 PEGASE_TRT.sysadm.gar_sin g,
+		 PEGASE_TRT.sysadm.garantie ga,
+		 PEGASE_TRT.sysadm.police po,
+		 PEGASE_TRT.sysadm.compagnie cie
+	Where s.id_sin = @dcIdSin
+	And   g.id_sin = s.id_sin
+	And   ga.id_prod = s.id_prod
+	And   ga.id_rev = s.id_rev
+	And   ga.id_gti = g.id_gti
+	And   po.id_police = ga.id_police
+	And   cie.id_cie = po.id_cie
+
+	If @@ROWCOUNT = 1
+		Begin
+			Select @sNoPolice = po.lib_police
+			From PEGASE_TRT.sysadm.sinistre s,
+				 PEGASE_TRT.sysadm.gar_sin g,
+				 PEGASE_TRT.sysadm.garantie ga,
+				 PEGASE_TRT.sysadm.police po,
+				 PEGASE_TRT.sysadm.compagnie cie
+			Where s.id_sin = @dcIdSin
+			And   g.id_sin = s.id_sin
+			And   ga.id_prod = s.id_prod
+			And   ga.id_rev = s.id_rev
+			And   ga.id_gti = g.id_gti
+			And   po.id_police = ga.id_police
+			And   cie.id_cie = po.id_cie
+		End 
+
+END	
+
+-- *************************************
+-- ** mis à jour de l'enregistrement  **
+-- *************************************
+
+Update sysadm.variable_xml_ksl_rs5045 
+Set civ = @sCodCivCourt,
+	civilite_courte = @sCodCivCourt,
+	civilite_longue = @sCodCivLong,
+	nom = @sNom, -- Pour KSL : Si nom = prenom et que les 2 données sont renseignée, alors n'exploitez qu'une seule donnée, le nom par exemple.
+	prenom = @sPrenom,
+	adresse1 = @sAdresse1,
+	adresse2 = @sAdresse2,
+	code_postal = @sCodePostal, 
+	ville = @sVille,
+	code_produit_sinistre = @sCodeProduitSinistre,
+	nom_produit = @sNomProduit,
+	nom_produit_cpl = @sNomProduitCpl,
+	lib_opt_produit = @sLibOptProduit,
+	no_tel_spb = @sNoTelSpb,
+	num_tel_prod = @sNoTelSpb,
+	assureur = @sAssureur,
+	no_police = @sNoPolice,
+	police = @sNoPolice,
+	cout_telephonique = @sCoutTelephonique,
+	code_produit = @sCodeProduit,
+	code_operateur = @sCodeOperateur,
+	no_dossier_sinistre = @sNoDossierSinistre,
+	email_produit = @sEmailProduit,
+	app_marque = @sMarqPort,
+	app_modele = @sModlPort,
+	date_de_declaration = @DateDeDeclaration, 
+	adr_mail = @sAdrMail,
+	imei = @sIMEI,
+	maj_par = @sMajPar,
+	nature = @sNature,
+	id_inter = @sIdInter
+
+Where id_xml = @aiIdXml
+
+
+Go
+
 
 --------------------------------------------------------------------
 --

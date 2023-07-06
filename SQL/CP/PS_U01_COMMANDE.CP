@@ -2125,33 +2125,38 @@ IF sysadm.FN_CLE_VAL ( 'FACT_PRESENTE', rtrim ( @sInfoFrnSpbCplt ) , ';') = 'NON
 	If @@ROWCOUNT = 1 And @iStatusGc = 151
 	 Begin
 		
-		-- A couper Définitviement plus tard.
-		-- Exec sysadm.PS_I_MAIL_DEM_PIECE_SBE @asIdAppli, @asBase, 51, @dcIdSin
-		
-		If Exists ( Select * From sysadm.w_sin ws Where ws.id_sin = @dcIdSin  )	
-		  Begin
-			If Exists ( Select * From sysadm.w_div_sin wds Where wds.id_sin = @dcIdSin And nom_zone = 'pce_fact_achat_adem')
+		-- [RS5045_REF_MATP]
+		If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') > 0
 			 Begin
-			   Update sysadm.w_div_sin Set val_car = 'O', maj_le = GETDATE(), maj_par = 'AUTO' Where id_sin = @dcIdSin And nom_zone = 'pce_fact_achat_adem'
-			 End 
-			Else
-			 Begin	 
-			   Insert into sysadm.w_div_sin values ( @dcIdSin, 'pce_fact_achat_adem', 'Pièce facture achat SBE à demander', '-1', 'N', 'X', 'N', 'N', 720, null, null, null, 'O', 0, getdate(), getdate(), 'AUTO' ) 
+				 Exec @iRet=sysadm.PS_I_RS5045_MAIL_COUR_DEM_PCE_SFR_SBE_FACT_ACHAT_KSL @dcIdSin, @iIdSeq 
 			 End
-		  End
+		Else
+			 Begin
+				If Exists ( Select * From sysadm.w_sin ws Where ws.id_sin = @dcIdSin  )	
+				  Begin
+					If Exists ( Select * From sysadm.w_div_sin wds Where wds.id_sin = @dcIdSin And nom_zone = 'pce_fact_achat_adem')
+					 Begin
+					   Update sysadm.w_div_sin Set val_car = 'O', maj_le = GETDATE(), maj_par = 'AUTO' Where id_sin = @dcIdSin And nom_zone = 'pce_fact_achat_adem'
+					 End 
+					Else
+					 Begin	 
+					   Insert into sysadm.w_div_sin values ( @dcIdSin, 'pce_fact_achat_adem', 'Pièce facture achat SBE à demander', '-1', 'N', 'X', 'N', 'N', 720, null, null, null, 'O', 0, getdate(), getdate(), 'AUTO' ) 
+					 End
+				  End
 
 
-		If Exists ( Select * From sysadm.sinistre ws Where ws.id_sin = @dcIdSin  )	
-		  Begin
-			If Exists ( Select * From sysadm.div_sin wds Where wds.id_sin = @dcIdSin And nom_zone = 'pce_fact_achat_adem')
-			 Begin
-			   Update sysadm.div_sin Set val_car = 'O', maj_le = GETDATE(), maj_par = 'AUTO' Where id_sin = @dcIdSin And nom_zone = 'pce_fact_achat_adem'
-			 End 
-			Else
-			 Begin	 
-			   Insert into sysadm.div_sin values ( @dcIdSin, 'pce_fact_achat_adem', 'Pièce facture achat SBE à demander', '-1', 'N', 'X', 'N', 'N', 720, null, null, null, 'O', getdate(), getdate(), 'AUTO', getdate(), 'AUTO' ) 
-			 End
-		  End
+				If Exists ( Select * From sysadm.sinistre ws Where ws.id_sin = @dcIdSin  )	
+				  Begin
+					If Exists ( Select * From sysadm.div_sin wds Where wds.id_sin = @dcIdSin And nom_zone = 'pce_fact_achat_adem')
+					 Begin
+					   Update sysadm.div_sin Set val_car = 'O', maj_le = GETDATE(), maj_par = 'AUTO' Where id_sin = @dcIdSin And nom_zone = 'pce_fact_achat_adem'
+					 End 
+					Else
+					 Begin	 
+					   Insert into sysadm.div_sin values ( @dcIdSin, 'pce_fact_achat_adem', 'Pièce facture achat SBE à demander', '-1', 'N', 'X', 'N', 'N', 720, null, null, null, 'O', getdate(), getdate(), 'AUTO', getdate(), 'AUTO' ) 
+					 End
+				  End
+			End
 	  End
   End 
 
