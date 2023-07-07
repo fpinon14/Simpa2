@@ -13382,9 +13382,10 @@ Go
 --   JFF  05/06/2015  [VDOC17642]
 --   JFF  26/01/2016  [VDOC19724]
 --   JFF  24/03/2016  [VDOC20329]
---   JFF  12/02/2016   [PI062]
---   JFF  12/02/2018   [DT346]
---   JFF  23/06/2023   Stoppé car n'est plus envoyé depuis la migration SQL 2014 du 01/01/2020
+--   JFF  12/02/2016  [PI062]
+--   JFF  12/02/2018  [DT346]
+--   JFF  23/06/2023  Stoppé car n'est plus envoyé depuis la migration SQL 2014 du 01/01/2020
+--   JFF  26/04/2023  [RS5045_REF_MATP]
 --------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_MAIL_IOS7_VDOC12443' AND type = 'P' )
         DROP procedure sysadm.PS_I_MAIL_IOS7_VDOC12443
@@ -13410,7 +13411,7 @@ Declare
   @sMailSend	VarChar (128), 
   @sMailCc	VarChar (128),
   @sMailObjet	VarChar ( 255 ),
-  @sMailBody	VarChar ( 7000 ),
+  @sMailBody	VarChar ( max ),
   @sAltQuarant  VarChar (1),	
   @asHREFURL	VarChar (300),		
   @sSaut	VarChar (10), 
@@ -13426,7 +13427,7 @@ Declare
   @iInfoSpbFrn  Integer, 
   @sIdRefFour   VarChar ( 35 ), 
   @sInfoSpbFrnCplt VarChar ( 255 ), 
-  @sXMLVar     	VarChar ( 2000 ), 
+  @sXMLVar     	VarChar ( max ), 
   @sTypApp 		VarChar ( 3 ),
   @sProduitOrange VarChar ( 3 ),
   @sMarqPort	VarChar(35),
@@ -13437,10 +13438,13 @@ Declare
   @sMajPar	VarChar(4),
   @sEmailProduit Varchar(256),
   @sCivLongue Varchar(35),
-  @sClientVip Varchar ( 10 ) -- [DT139]
-
---   JFF  23/06/2023   Stoppé car n'est plus envoyé depuis la migration SQL 2014 du 01/01/2020  
-Return 0   
+  @sClientVip Varchar ( 10 ), -- [DT139]
+  @sErrOutPut VarChar ( 255 ), -- [RS5045_REF_MATP]
+  @sTypMail   VarChar ( 10 ), -- [RS5045_REF_MATP]
+  @sVal		  varchar ( 255 ),-- [RS5045_REF_MATP]
+  @iIdXml   integer,  -- [RS5045_REF_MATP]
+  @sCodeMaquette VarChar ( 255 ), -- [RS5045_REF_MATP]
+  @dcIdInter Decimal ( 2 ) -- [RS5045_REF_MATP]
 
   Set @sMailBody = ''
   Set @sSaut = Char (10)
@@ -13496,7 +13500,7 @@ Prévoir 2 flux vers KSL, 1 pour Orange (codes produit 091XX - 096XX - 962XX) et 
 		@sBoiteMail  OUTPUT,
 		@sXMLVar     OUTPUT
 
-
+/* Obsolète [RS5045_REF_MATP]
 	Select top 1 @sMarqPort=RTrim(IsNull(marq_port,'')),
 		@sModlPort=RTrim(IsNull(modl_port,'')),
 		@sImei=RTrim(IsNull(num_imei_port,'')),
@@ -13553,11 +13557,12 @@ Prévoir 2 flux vers KSL, 1 pour Orange (codes produit 091XX - 096XX - 962XX) et 
 			-- le MailSend n'est pas une erreur, on n'envoie rien à l'assuré.
 			Set @sMailSend = 'laura.naulot@orange.com,desk@parnasse.fr' -- [DT346]	 
 		End 
-
+*/
 	
 	-- Armement du corps du mail 
 	Set @sMailObjet = 'SPB Sinistre numéro ' + Convert ( Varchar ( 10 ), @adcIdSin ) + ' ' + @sLibProd
 
+/* Obsolète [RS5045_REF_MATP]
 	-- Armement du corps du mail
 	Set @sXMLVar = @sXMLVar + '<courrier '
 	Set @sXMLVar = @sXMLVar + 'code_courrier_SIMPA2="MAIL_IOS7_APPLE" '
@@ -13569,6 +13574,7 @@ Prévoir 2 flux vers KSL, 1 pour Orange (codes produit 091XX - 096XX - 962XX) et 
 	Set @sXMLVar = @sXMLVar + 'no_dossier_sinistre ="' + convert(varchar(10), @adcIdSin) + '" ' -- [PI062]
 	Set @sXMLVar = @sXMLVar + 'civ="' + @sCivLongue + '" '
 	Set @sXMLVar = @sXMLVar + 'email="' + @sMailSend + '" '
+	Set @sXMLVar = @sXMLVar + 'email_cc="' + @sMailCc + '" '
 	Set @sXMLVar = @sXMLVar + 'app_marque="' + @sMarqPort + '" '
 	Set @sXMLVar = @sXMLVar + 'app_modele="' + @sModlPort + '" '
 	Set @sXMLVar = @sXMLVar + 'imei="' + @sImei + '" '
@@ -13577,7 +13583,7 @@ Prévoir 2 flux vers KSL, 1 pour Orange (codes produit 091XX - 096XX - 962XX) et 
 	Set @sXMLVar = @sXMLVar + 'maj_par="' + @sMajPar + '" '
 	Set @sXMLVar = @sXMLVar + 'email_produit="' + @sEmailProduit + '" '
 	Set @sXMLVar = @sXMLVar + '/>'
-
+*/
 
 	-- On convertit pour l'appel de la PS
 	Set @iIdSin  = Convert ( integer, @adcIdSin )
@@ -13585,56 +13591,215 @@ Prévoir 2 flux vers KSL, 1 pour Orange (codes produit 091XX - 096XX - 962XX) et 
 	Set @iIdEts  = Convert ( integer, @dcIdEts )
 	Set @sAltQuarant = 'N'
 
+	Set @sTypMail = 'MIOS7'
+
+	  -- [RS5045_REF_MATP]
+	  If Exists ( Select Top 1 1 From sysadm.w_sin where id_sin = @adcIdSin ) 
+	   Begin
+		 Select @dcIdInter = id_i From sysadm.w_inter where id_sin = @adcIdSin and cod_inter = 'A'
+	   End 
+	  Else
+	   Begin
+		 Select @dcIdInter = id_i From sysadm.inter where id_sin = @adcIdSin and cod_inter = 'A'
+	   End 
+
+	   If @dcIdInter is null Set @dcIdInter = 0 
+	  -- /[RS5045_REF_MATP]
+
+	-- Armement du corps du mail  
+	Set @sMailBody  = @sMailBody  + @sCiv + ' ' + @sNom + ','  
+	Set @sMailBody  = @sMailBody  + @sSaut  
+	Set @sMailBody  = @sMailBody  + @sSaut  
+	Set @sMailBody  = @sMailBody  + 'Vous nous avez déclaré un sinistre le <DTEDECL> dans le cadre de votre contrat <DP66> <DP67> qui couvre votre appareil <MARQ_APP> <MODL_APP> dont le numéro IMEI est <NUM_IMEI>.' + @sSaut
+	Set @sMailBody  = @sMailBody  + @sSaut  
+	Set @sMailBody  = @sMailBody  + 'Afin de pouvoir réparer votre terminal en toute sécurité, il est de votre responsabilité, préalablement à l’envoi en centre de diagnostic, de prendre les mesures suivantes : ' + @sSaut 
+	Set @sMailBody  = @sMailBody  + @sSaut  
+	Set @sMailBody  = @sMailBody  + '- Retirer et conserver votre carte SIM' + @sSaut  
+	Set @sMailBody  = @sMailBody  + '- Fournir le code verrou ou le désactiver' + @sSaut  
+	Set @sMailBody  = @sMailBody  + '- Désactiver la fonction de géolocalisation de votre mobile' + @sSaut  
+	Set @sMailBody  = @sMailBody  + '- Sauvegarder puis effacer l’ensemble des données enregistrées sur votre mobile' + @sSaut  
+	Set @sMailBody  = @sMailBody  + @sSaut  
+	Set @sMailBody  = @sMailBody  + 'A défaut, nous ne pourrons procéder à la réparation de votre mobile et nous serons contraints de vous le retourner. Vous aurez toutefois la possibilité de nous le renvoyer, une fois que vous aurez effectué les manipulations ci-dessus.' + @sSaut
+	Set @sMailBody  = @sMailBody  + @sSaut  
+	Set @sMailBody  = @sMailBody  + 'Si vous ne parvenez pas à désactiver l’application « Localiser mon iPhone » sur l’appareil sinistré, veuillez suivre la procédure présentée sur le site http://www.degeoloc.com' + @sSaut 
+	Set @sMailBody  = @sMailBody  + @sSaut  
+	Set @sMailBody  = @sMailBody  + 'Sincères salutations,' + @sSaut
+	Set @sMailBody  = @sMailBody  + @sSaut  
+	Set @sMailBody  = @sMailBody  + 'Votre gestionnaire d’assurance' + @sSaut
+	Set @sMailBody  = @sMailBody  + @sSaut  
+	Set @sMailBody  = @sMailBody  + 'SPB - <DP66> <DP67>' + @sSaut
+	Set @sMailBody  = @sMailBody  + '71 Quai Colbert' + @sSaut
+	Set @sMailBody  = @sMailBody  + '76095 LE HAVRE CEDEX' + @sSaut 
+	Set @sMailBody  = @sMailBody  + 'Tél. : <NUM_TEL_PROD>' + @sSaut 
+	Set @sMailBody  = @sMailBody  + @sSaut    
+	Set @sMailBody  = @sMailBody  + 'Email : <EMAIL_PRODUIT>' + @sSaut
 
 
 
 	If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 	 Begin
-		   Exec @iRet = TRACE_MAIL_PRO.sysadm.PS_I01_MAIL_PUSH_V02
-			@asIdAppli,
-			@iIdSin,
-			@iIdProd,
-			@sLibProd,
-			@iIdEts,
-			@sMailFrom,
-			@sMailSend,
-			@sMailCc,
-			null,
-			@sMailObjet,
-			'Corps du mail construit par KSL',
-			@sAltQuarant,
-			@sBoiteMail,
-			'MIOS7',
-			2,
-			'KSL',
-			'KSL_EDS',
-			-1,
-			@sXMLVar
+			-- Appel Obligatoire pour déclarer le XML
+			Exec @iIdXml = TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CREATION_CHAINE_DATA_XML_KSL_A_VIDE
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2 @adcIdSin, @dcIdInter, @iIdXml
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_OPTIMISER_CHAINE_DATA_XML_KSL @iIdXml, 'OUI', 'OUI', 'OUI'
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_CODE_MAQUETTE_KSL_A_PARTIR_TYP_MAIL @sTypMail, @sCodeMaquette OutPut
 
+			-- Récupération de certaines données pré-armées par PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'date_de_declaration', @sVal OutPut
+			Set @sVal = Right ( @sVal, 2 ) + SUBSTRING ( @sVal,6,2 ) + Left ( @sVal , 2 )
+			Set @sMailBody = Replace ( @sMailBody, '<DTEDECL>', Convert ( Varchar ( 10 ), Convert ( DateTime, @sVal ), 103 ))
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'nom_produit', @sVal OutPut
+			Set @sMailBody = Replace ( @sMailBody, '<DP66>', @sVal )
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'lib_opt_produit', @sVal OutPut
+			Set @sMailBody = Replace ( @sMailBody, '<DP67>', @sVal )
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'app_marque', @sVal OutPut
+			Set @sMailBody = Replace ( @sMailBody, '<MARQ_APP>', @sVal )
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'app_modele', @sVal OutPut
+			Set @sMailBody = Replace ( @sMailBody, '<MODL_APP>', @sVal )
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'imei', @sVal OutPut
+			Set @sMailBody = Replace ( @sMailBody, '<NUM_IMEI>', @sVal )
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'num_tel_prod', @sVal OutPut
+			Set @sMailBody = Replace ( @sMailBody, '<NUM_TEL_PROD>', @sVal )
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			Set @sMailBody = Replace ( @sMailBody, '<EMAIL_PRODUIT>', @sVal )			
+
+			-- Ajout personnalisé du client appelant le système
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
+
+			-- Appel pour construire et récupérer le XML dans @xmlResult
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
+
+				Exec @iRet = TRACE_MAIL_PRO.sysadm.PS_RS5045_I_MAIL_PUSH_KSL
+					@asIdAppli,
+					@iIdSin,
+					@iIdProd,
+					@sLibProd,
+					@iIdEts,
+					@sMailFrom,
+					@sMailSend,
+					@sMailCc,
+					null,
+					@sMailObjet,
+					'Corps du mail construit par KSL',
+					@sBoiteMail,
+					@sTypMail,
+					2,
+					-1,
+					@sXMLVar,
+					null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
+					null, -- dteh_exec
+					@sErrOutPut OutPut
+
+			/* Obsolète
+				   Exec @iRet = TRACE_MAIL_PRO.sysadm.PS_I01_MAIL_PUSH_V02
+					@asIdAppli,
+					@iIdSin,
+					@iIdProd,
+					@sLibProd,
+					@iIdEts,
+					@sMailFrom,
+					@sMailSend,
+					@sMailCc,
+					null,
+					@sMailObjet,
+					'Corps du mail construit par KSL',
+					@sAltQuarant,
+					@sBoiteMail,
+					'MIOS7',
+					2,
+					'KSL',
+					'KSL_EDS',
+					-1,
+					@sXMLVar
+				
+			  End */
 	   End    -- TRACE_MAIL_PRO : Fin écriture
 
 	Else
 	 Begin
-		 Exec @iRet = TRACE_MAIL_TRT.sysadm.PS_I01_MAIL_PUSH_V02
-			@asIdAppli,
-			@iIdSin,
-			@iIdProd,
-			@sLibProd,
-			@iIdEts,
-			@sMailFrom,
-			@sMailSend,
-			@sMailCc,
-			null,			
-			@sMailObjet,
-			'Corps du mail construit par KSL',
-			@sAltQuarant,
-			@sBoiteMail,
-			'MIOS7',
-			2,
-			'KSL',
-			'KSL_EDS',			
-			-1,
-			@sXMLVar
+			-- Appel Obligatoire pour déclarer le XML
+			Exec @iIdXml = TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CREATION_CHAINE_DATA_XML_KSL_A_VIDE
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2 @adcIdSin, @dcIdInter, @iIdXml
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_OPTIMISER_CHAINE_DATA_XML_KSL @iIdXml, 'OUI', 'OUI', 'OUI'
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_CODE_MAQUETTE_KSL_A_PARTIR_TYP_MAIL @sTypMail, @sCodeMaquette OutPut
+
+			-- Récupération de certaines données pré-armées par PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'date_de_declaration', @sVal OutPut
+			Set @sVal = Right ( @sVal, 2 ) + SUBSTRING ( @sVal,6,2 ) + Left ( @sVal , 2 )
+			Set @sMailBody = Replace ( @sMailBody, '<DTEDECL>', Convert ( Varchar ( 10 ), Convert ( DateTime, @sVal ), 103 ))
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'nom_produit', @sVal OutPut
+			Set @sMailBody = Replace ( @sMailBody, '<DP66>', @sVal )
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'lib_opt_produit', @sVal OutPut
+			Set @sMailBody = Replace ( @sMailBody, '<DP67>', @sVal )
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'app_marque', @sVal OutPut
+			Set @sMailBody = Replace ( @sMailBody, '<MARQ_APP>', @sVal )
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'app_modele', @sVal OutPut
+			Set @sMailBody = Replace ( @sMailBody, '<MODL_APP>', @sVal )
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'imei', @sVal OutPut
+			Set @sMailBody = Replace ( @sMailBody, '<NUM_IMEI>', @sVal )
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'num_tel_prod', @sVal OutPut
+			Set @sMailBody = Replace ( @sMailBody, '<NUM_TEL_PROD>', @sVal )
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			Set @sMailBody = Replace ( @sMailBody, '<EMAIL_PRODUIT>', @sVal )			
+
+			-- Ajout personnalisé du client appelant le système
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
+
+			-- Appel pour construire et récupérer le XML dans @xmlResult
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
+
+				Exec @iRet = TRACE_MAIL_TRT.sysadm.PS_RS5045_I_MAIL_PUSH_KSL
+					@asIdAppli,
+					@iIdSin,
+					@iIdProd,
+					@sLibProd,
+					@iIdEts,
+					@sMailFrom,
+					@sMailSend,
+					@sMailCc,
+					null,
+					@sMailObjet,
+					'Corps du mail construit par KSL',
+					@sBoiteMail,
+					@sTypMail,
+					2,
+					-1,
+					@sXMLVar,
+					null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
+					null, -- dteh_exec
+					@sErrOutPut OutPut
+
+		/* Obsolète
+				 Exec @iRet = TRACE_MAIL_TRT.sysadm.PS_I01_MAIL_PUSH_V02
+					@asIdAppli,
+					@iIdSin,
+					@iIdProd,
+					@sLibProd,
+					@iIdEts,
+					@sMailFrom,
+					@sMailSend,
+					@sMailCc,
+					null,			
+					@sMailObjet,
+					'Corps du mail construit par KSL',
+					@sAltQuarant,
+					@sBoiteMail,
+					'MIOS7',
+					2,
+					'KSL',
+					'KSL_EDS',			
+					-1,
+					@sXMLVar
+
+			  End 			*/
 	 End	
 Go
 

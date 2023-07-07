@@ -9715,6 +9715,7 @@ Declare @sBoiteMail   VarChar (35)
 Declare @sMailBody	VarChar ( 7000 )
 Declare @sErrOutPut VarChar ( 255 ) 
 
+/*
 If Exists ( 
 	Select Top 1 1
 	From   sysadm.sinistre s
@@ -9724,6 +9725,7 @@ If Exists (
 	Begin
 		Return
 	End 
+*/
 
 Delete sysadm.w_refus where id_sin = @adcIdSin and id_motif = 1655
 Delete sysadm.refus where id_sin = @adcIdSin and id_motif = 1655

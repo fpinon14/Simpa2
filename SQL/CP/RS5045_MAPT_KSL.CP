@@ -15,6 +15,7 @@
 -- sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL
 -- sysadm.PS_RS5045_S_LISTE_VARIABLE_XML_KSL
 -- sysadm.PS_RS5045_S_RECUPERER_CODE_MAQUETTE_KSL_A_PARTIR_TYP_MAIL
+-- sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE
 -- sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL -- Jamais mis en production
 -- sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V02
 -- sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8
@@ -1715,6 +1716,46 @@ And   cm.id_cpt = 1 -- le XML toujours
 If @asCodeMaquette is null Set @asCodeMaquette = ''
 
 Go
+
+
+--------------------------------------------------------------------
+--
+-- Procedure            :       sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE
+-- Auteur               :       Fabry JF
+-- Date                 :       25/04/2023
+-- Libelle              :        
+-- Commentaires         :       
+--	                            
+-- References           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE' AND type = 'P' )
+        DROP procedure sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE
+GO
+
+CREATE procedure sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE
+	@aiIdXml integer, -- Clé de l'enregistrement XML_KSL
+    @asNomVariable VarChar ( 255 ), -- Pas le nom XML, mais le nom de la zone dans la table
+	@asDonnee VarChar (255) output -- Donnée en retour
+As
+
+Declare @sSql VarChar ( 255 )
+Declare @Tb as Table ( valeur VarChar ( 255 ) )
+
+Set @asNomVariable = Lower ( lTrim ( rTrim ( @asNomVariable )))
+
+Set @sSql = 'Select ' + @asNomVariable + ' From sysadm.variable_xml_ksl_rs5045 where id_xml = ' + Convert ( varchar ( 50 ), @aiIdXml ) 
+Insert into @Tb exec (@sSql)
+Select @asDonnee = valeur from @Tb 
+
+If @asDonnee is null Set @asDonnee = ''
+
+Go
+
 
 --------------------------------------------------------------------
 --
