@@ -866,6 +866,7 @@ Go
 --		JFF     28/09/2016  [DT262]
 --		JFF     06/10/2016  [PC13321]
 --      JFF     15/05/2019  [DT386_EXTR_AXA]
+--		JFF     26/04/2023  [RS5045_REF_MATP]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S02_MAILPUSH_RECP_APP_EN_CTR' AND type = 'P' ) 
         DROP procedure sysadm.PS_S02_MAILPUSH_RECP_APP_EN_CTR
@@ -923,7 +924,12 @@ Declare
   @iOrangeV3	Integer, -- [PM246]
   @sIdTypArt	VarChar ( 3 ), -- [PM246]
   @sInfoSpbFrnCplt VarChar ( 800 ), -- [PM250-2]
-  @PiedDePage_SiVotreContratDispo VarChar (20 ) -- [DT386_EXTR_AXA]
+  @PiedDePage_SiVotreContratDispo VarChar (20 ), -- [DT386_EXTR_AXA]
+  @iIdXml integer,  -- [RS5045_REF_MATP]
+  @dcIdInter Decimal ( 2 ), -- [RS5045_REF_MATP]
+  @sCodeMaquette VarChar ( 255 ), -- [RS5045_REF_MATP]
+  @sErrOutPut VarChar ( 255 ), -- [RS5045_REF_MATP]
+  @sXMLVar     	VarChar ( max ) -- [RS5045_REF_MATP]
     
   Set @asCasRetour = ''
   Set @sMailBody = ''
@@ -1534,53 +1540,110 @@ End
 	  End 
     End
 
+  -- [RS5045_REF_MATP]
+  If Exists ( Select Top 1 1 From sysadm.w_sin where id_sin = @adcIdSin ) 
+   Begin
+	 Select @dcIdInter = id_i From sysadm.w_inter where id_sin = @adcIdSin and cod_inter = 'A'
+   End 
+  Else
+   Begin
+	 Select @dcIdInter = id_i From sysadm.inter where id_sin = @adcIdSin and cod_inter = 'A'
+   End 
+
+   If @dcIdInter is null Set @dcIdInter = 0 
+  -- /[RS5045_REF_MATP]
+
 
   If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
-
    Begin  -- TRACE_MAIL_PRO : Début écriture
 
 	  If @asCasRetour <> 'ADRESSE_MAIL_ABSENTE'
 	    Begin 	
-		  Exec @iRet = TRACE_MAIL_PRO.sysadm.PS_I01_MAIL_PUSH_V00 
-			@asIdAppli,
-			@iIdSin, 
-			@iIdProd, 
-			@sLibProd, 
-			@iIdEts, 
-			@sMailFrom, 
-			@sMailSend, 
-			@sMailCc,
-			@sMailObjet,
-			@sMailBody,
-			@sAltQuarant,
-			@sBoiteMail, -- #3
-			'M2', -- #3
-			2 -- #3
-	    End
-		
-          If @sTopSMS = 1 -- #5 [FNAC_PROD_ECH_TECH].[SMS]  
-            Begin
-		  
-		  -- Au tout dernier moment avant l'envoi, on tronque par la gauche et on
-		  -- ne conserve la partie pertinente sur le droite.
-		  Set @sSmsBody = Right ( @sSmsBody, @iLongMaxSMS ) -- #5 [FNAC_PROD_ECH_TECH].[SMS]  
-		  
-		  Exec TRACE_MAIL_PRO.sysadm.PS_I01_SMS_PUSH_V00 
-			@asIdAppli,
-			@iIdSin,
-			@iIdProd,
-			@sLibProd,
-			@iIdEts,
-			@sNumGsmSMS,
-			@sLogin,
-			@sMdPasse,
-			@sSmsBody,
-			@sCodeTrt,
-			'M2', 
-			2
-            End 
-		
 
+  			-- [RS5045_REF_MATP] Nouvelle et future Méthode unique à utiliser !!
+			If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') > 0 
+				Begin
+					-- Appel Obligatoire pour déclarer le XML
+					Exec @iIdXml = TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CREATION_CHAINE_DATA_XML_KSL_A_VIDE
+					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2 @adcIdSin, @dcIdInter, @iIdXml
+					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_OPTIMISER_CHAINE_DATA_XML_KSL @iIdXml, 'OUI', 'OUI', 'OUI'
+					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_CODE_MAQUETTE_KSL_A_PARTIR_TYP_MAIL 'M2', @sCodeMaquette OutPut
+
+					-- Ajout personnalisé du client appelant le système
+					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
+					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
+					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
+
+					-- Appel pour construire et récupérer le XML dans @xmlResult
+					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
+
+					Exec @iRet = TRACE_MAIL_PRO.sysadm.PS_RS5045_I_MAIL_PUSH_KSL
+						@asIdAppli,
+						@iIdSin,
+						@iIdProd,
+						@sLibProd,
+						@iIdEts,
+						@sMailFrom,
+						@sMailSend,
+						@sMailCc,
+						null,
+						@sMailObjet,
+						@sMailBody,
+						@sBoiteMail,
+						'M2',
+						2,
+						-1,
+						@sXMLVar,
+						null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
+						null, -- dteh_exec
+						@sErrOutPut OutPut
+
+						Set @asCasRetour = Left ( @sErrOutPut, 50 )
+
+				End 
+			Else
+				Begin
+				  Exec @iRet = TRACE_MAIL_PRO.sysadm.PS_I01_MAIL_PUSH_V00 
+					@asIdAppli,
+					@iIdSin, 
+					@iIdProd, 
+					@sLibProd, 
+					@iIdEts, 
+					@sMailFrom, 
+					@sMailSend, 
+					@sMailCc,
+					@sMailObjet,
+					@sMailBody,
+					@sAltQuarant,
+					@sBoiteMail, -- #3
+					'M2', -- #3
+					2 -- #3
+				End
+		End		
+
+        If @sTopSMS = 1 -- #5 [FNAC_PROD_ECH_TECH].[SMS]  
+        Begin
+		  
+				-- Au tout dernier moment avant l'envoi, on tronque par la gauche et on
+				-- ne conserve la partie pertinente sur le droite.
+				Set @sSmsBody = Right ( @sSmsBody, @iLongMaxSMS ) -- #5 [FNAC_PROD_ECH_TECH].[SMS]  
+		  
+				Exec TRACE_MAIL_PRO.sysadm.PS_I01_SMS_PUSH_V00 
+				@asIdAppli,
+				@iIdSin,
+				@iIdProd,
+				@sLibProd,
+				@iIdEts,
+				@sNumGsmSMS,
+				@sLogin,
+				@sMdPasse,
+				@sSmsBody,
+				@sCodeTrt,
+				'M2', 
+				2
+        End 
    End    -- TRACE_MAIL_PRO : Fin écriture
 
   Else
@@ -1588,47 +1651,94 @@ End
    Begin  -- TRACE_MAIL_TRT : Début écriture
 	  If @asCasRetour <> 'ADRESSE_MAIL_ABSENTE'
 	    Begin 	
-		  Exec @iRet = TRACE_MAIL_TRT.sysadm.PS_I01_MAIL_PUSH_V00 
-			@asIdAppli,
-			@iIdSin, 
-			@iIdProd, 
-			@sLibProd, 
-			@iIdEts, 
-			@sMailFrom, 
-			@sMailSend, 
-			@sMailCc,
-			@sMailObjet,
-			@sMailBody,
-			@sAltQuarant,
-			@sBoiteMail, -- #3
-			'M2', -- #3
-			2 -- #3	
+
+  			-- [RS5045_REF_MATP] Nouvelle et future Méthode unique à utiliser !!
+			If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') > 0 
+				Begin
+					-- Appel Obligatoire pour déclarer le XML
+					Exec @iIdXml = TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CREATION_CHAINE_DATA_XML_KSL_A_VIDE
+					Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2 @adcIdSin, @dcIdInter, @iIdXml
+					Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_OPTIMISER_CHAINE_DATA_XML_KSL @iIdXml, 'OUI', 'OUI', 'OUI'
+					Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_CODE_MAQUETTE_KSL_A_PARTIR_TYP_MAIL 'M2', @sCodeMaquette OutPut
+
+					-- Ajout personnalisé du client appelant le système
+					Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+					Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
+					Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
+					Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
+
+					-- Appel pour construire et récupérer le XML dans @xmlResult
+					Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
+
+					Exec @iRet = TRACE_MAIL_TRT.sysadm.PS_RS5045_I_MAIL_PUSH_KSL
+						@asIdAppli,
+						@iIdSin,
+						@iIdProd,
+						@sLibProd,
+						@iIdEts,
+						@sMailFrom,
+						@sMailSend,
+						@sMailCc,
+						null,
+						@sMailObjet,
+						@sMailBody,
+						@sBoiteMail,
+						'M2',
+						2,
+						-1,
+						@sXMLVar,
+						null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
+						null, -- dteh_exec
+						@sErrOutPut OutPut
+
+						Set @asCasRetour = Left ( @sErrOutPut, 50 )
+
+				End 
+			Else
+				Begin
+
+				  Exec @iRet = TRACE_MAIL_TRT.sysadm.PS_I01_MAIL_PUSH_V00 
+					@asIdAppli,
+					@iIdSin, 
+					@iIdProd, 
+					@sLibProd, 
+					@iIdEts, 
+					@sMailFrom, 
+					@sMailSend, 
+					@sMailCc,
+					@sMailObjet,
+					@sMailBody,
+					@sAltQuarant,
+					@sBoiteMail, -- #3
+					'M2', -- #3
+					2 -- #3	
+				End
 	    End
 		
-          If @sTopSMS = 1 -- #5 [FNAC_PROD_ECH_TECH].[SMS]  
-            Begin
+        If @sTopSMS = 1 -- #5 [FNAC_PROD_ECH_TECH].[SMS]  
+        Begin
 
-		  -- Au tout dernier moment avant l'envoi, on tronque par la gauche et on
-		  -- ne conserve la partie pertinente sur le droite.
-		  Set @sSmsBody = Right ( @sSmsBody, @iLongMaxSMS ) -- #5 [FNAC_PROD_ECH_TECH].[SMS]  
+				-- Au tout dernier moment avant l'envoi, on tronque par la gauche et on
+				-- ne conserve la partie pertinente sur le droite.
+				Set @sSmsBody = Right ( @sSmsBody, @iLongMaxSMS ) -- #5 [FNAC_PROD_ECH_TECH].[SMS]  
 
 
-		  Exec TRACE_MAIL_TRT.sysadm.PS_I01_SMS_PUSH_V00 
-			@asIdAppli,
-			@iIdSin,
-			@iIdProd,
-			@sLibProd,
-			@iIdEts,
-			@sNumGsmSMS,
-			@sLogin,
-			@sMdPasse,
-			@sSmsBody,
-			@sCodeTrt,
-			'M2', 
-			2
+				Exec TRACE_MAIL_TRT.sysadm.PS_I01_SMS_PUSH_V00 
+				@asIdAppli,
+				@iIdSin,
+				@iIdProd,
+				@sLibProd,
+				@iIdEts,
+				@sNumGsmSMS,
+				@sLogin,
+				@sMdPasse,
+				@sSmsBody,
+				@sCodeTrt,
+				'M2', 
+				2
                   
-            End 
-		
+        End 
 
    End    -- TRACE_MAIL_TRT : Fin écriture
 
@@ -22101,6 +22211,277 @@ ELSE
 BEGIN
 	Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @adcIdSin, 2, @sMess,	'', 300, @iIdCt OUTPUT
 END
+
+
+Go
+
+--------------------------------------------------------------------
+--
+-- Proc‚dure            :       PS_I_RS5045_MAIL_COUR_PM287_3_INFO_MANQUANTE_KSL
+-- Auteur               :       Fabry JF
+-- Date                 :       25/04/2023
+-- Libelle              :		[RS5045_REF_MATP]
+-- Commentaires         :       
+--
+-- References           :
+--
+--------------------------------------------------------------------
+-- JFF      12/02/2016   [PI062]
+--------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_RS5045_MAIL_COUR_PM287_3_INFO_MANQUANTE_KSL' AND type = 'P' )
+        DROP procedure sysadm.PS_I_RS5045_MAIL_COUR_PM287_3_INFO_MANQUANTE_KSL
+GO
+
+CREATE procedure sysadm.PS_I_RS5045_MAIL_COUR_PM287_3_INFO_MANQUANTE_KSL
+	@adcIdSin      	Decimal (10), -- [PI062]
+	@aiIdSeq	integer
+AS
+  -- @asErrOutPut VarChar ( 255 ) Output
+Declare @asErrOutPut VarChar ( 255 ) 
+
+  Declare 
+	@sSaut		VarChar (10), 
+    @iRet		Integer,
+	@sIdAppli	VarChar ( 6 ),
+	@sTypApp 	VarChar ( 10 ),
+	@iOptionDP  Integer,
+	@sXMLVar    VarChar (max),
+	@dcIdProd     Decimal (7), 
+	@dcIdEts 	Decimal (7), 
+    @iIdSin 	Integer,
+	@sLibProd     VarChar (255), 
+    @iIdProd 	Integer,
+	@iIdEts 	Integer,
+	@sAltQuarant  VarChar (1),
+	@sNumProd     VarChar (20),   
+	@dcIdInter  Decimal ( 2 ),
+	@sTypMail   VarChar ( 6 ),
+	@sCiv		VarChar (20), 
+	@sCodeMaquette VarChar ( 255 ),
+	@sNom		VarChar ( 71 ),
+	@sRefIdem   VarChar ( 50 ),
+	@sMailFrom	VarChar (128), 
+	@sMailSend	VarChar (128), 
+	@sMailCc	VarChar (128),
+	@sMailObjet	VarChar ( 255 ),
+	@sMailBody	VarChar ( 7000 ),
+	@sBoiteMail   VarChar (35),
+	@sCodeSecu  VarChar ( 10 ),
+	@sNumCCELD VarChar ( 35 ),
+	@sMtCC	   VarChar ( 20 ),
+	@sIdSeq    VarChar ( 15 ),
+	@iIdXml    Integer,
+	@sCodeAccesSecurise VarChar( 30 ),
+	@sEnvironnement VarChar ( 50 ),
+	@sVarEnum1 VarChar ( 100 ),
+	@sVarEnum2 VarChar ( 100 )
+
+Declare @sMess			VarChar ( 2000 ),
+		@sErr			Varchar(60),
+		@iIdCt			integer,	
+		@iVal			integer, 
+		@sAdrMailErr VarChar ( 150 )
+
+Set @sSaut = Char (10)
+Set @iRet = 0
+Set @sIdAppli = 'SIMPA2'
+Set @sTypApp = '' 
+Set @iOptionDP = -1
+
+Exec @iRet = sysadm.PS_S01_RECUP_DONNEES_MAIL_XML
+	@adcIdSin,
+	@iOptionDP,
+	@dcIdProd   OUTPUT,
+	@sLibProd   OUTPUT,
+	@dcIdEts    OUTPUT,
+	@sNumProd   OUTPUT,
+	@sCiv	    OUTPUT,
+	@sNom	    OUTPUT,
+	@sMailFrom  OUTPUT,
+	@sMailSend  OUTPUT,
+	@sMailCc    OUTPUT,
+	@sAltQuarant OUTPUT,
+	@sBoiteMail  OUTPUT,
+	@sXMLVar     OUTPUT
+
+-- On néglige le sXMLVar retourné, on en construit un autre à la nouvelle méthode 5 [RS5045]
+Set @sXMLVar = ''    
+
+-- Armement du corps du mail 
+Set @sMailObjet = 'Corps de l''Objet construit par KSL'
+Set @sMailBody  = 'Corps du mail construit par KSL'
+
+-- On convertit pour l'appel de la PS
+Set @iIdSin  = Convert ( integer, @adcIdSin )
+Set @iIdProd = Convert ( integer, @dcIdProd )
+Set @iIdEts  = Convert ( integer, @dcIdEts )
+Set @sAltQuarant = 'N'
+
+Select @dcIdInter = id_i From sysadm.inter where id_sin = @adcIdSin and cod_inter = 'A'
+If @dcIdInter is null Set @dcIdInter = 0 
+Set @sTypMail = 'INFMNQ' -- (-TM) code_car sur TRACE_MAIL
+
+-- Lecture des variables de sysadm.PS_S_PM234_7_COUR_PEC
+Set @sTypApp = 
+	Case When Exists (select * from sysadm.w_commande w where w.id_sin=@adcIdSin and w.id_typ_art='PRS'	and w.cod_etat <> 'ANN') Then 'repa' 
+			Else 'rempl' 
+	End 
+
+Set @sCodeAccesSecurise = 
+	sysadm.FN_CORR_NUM_CARTE ( 
+	Right ( replicate ( '0', 10  ) + Convert ( VarChar ( 10 ) , @adcIdSin ), 10 ) +
+	'1' +
+	Replace ( Right ( Convert ( VarChar ( 50), getdate(), 121 ), 5 ), '.', '' ),
+	Getdate() ) 
+
+Set @sEnvironnement = 
+	Case RIGHT( db_name( db_id() ), 3 )
+		When 'PRO' Then 'PRODUCTION'
+		Else 'RECETTE'
+	End 	 -- [PM287-3] ajout variable environnement
+
+Select @sVarEnum1 = 
+		Case -- [PM287-6][MANTIS26879]
+			When CharIndex ( '#305', sysadm.FN_CLE_VAL ( 'IFDNMQ_RET', rtrim ( ltrim ( info_frn_spb_cplt )), ';' ) ) > 0 
+				Then '- la fonction « Localiser mon Iphone » est activée sur votre appareil.'
+		End,
+	   @sVarEnum2 =	
+		Case -- [PM287-6][MANTIS26879]
+			When CharIndex ( '#232', sysadm.FN_CLE_VAL ( 'IFDNMQ_RET', rtrim ( ltrim ( info_frn_spb_cplt )), ';' ) ) > 0 
+				Then '- votre code verrou ne nous a pas été communiqué.'
+		End
+From sysadm.commande c
+Where c.id_sin = @adcIdSin
+And c.id_seq = @aiIdSeq
+
+If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
+	Begin
+		-- Appel Obligatoire pour déclarer le XML
+		Exec @iIdXml = TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CREATION_CHAINE_DATA_XML_KSL_A_VIDE
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2 @adcIdSin, @dcIdInter, @iIdXml
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_OPTIMISER_CHAINE_DATA_XML_KSL @iIdXml, 'OUI', 'OUI', 'OUI'
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_CODE_MAQUETTE_KSL_A_PARTIR_TYP_MAIL @sTypMail, @sCodeMaquette OutPut
+
+		-- Ajout personnalisé du client appelant le système
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'type_appareil', @sTypApp
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_acces_securise', @sCodeAccesSecurise 
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'environnement', @sEnvironnement
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'var_enum1', @sVarEnum1
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'var_enum2', @sVarEnum2	
+
+		-- Appel pour construire et récupérer le XML dans @xmlResult
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
+
+		Exec @iRet = TRACE_MAIL_PRO.sysadm.PS_RS5045_I_MAIL_PUSH_KSL
+			@sIdAppli,
+			@iIdSin,
+			@iIdProd,
+			@sLibProd,
+			@iIdEts,
+			@sMailFrom,
+			@sMailSend,
+			@sMailCc,
+			null,
+			@sMailObjet,
+			@sMailBody,
+			@sBoiteMail,
+			@sTypMail,
+			2,
+			-1,
+			@sXMLVar,
+			null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
+			null, -- dteh_exec
+			@asErrOutPut OutPut
+
+	End    -- TRACE_MAIL_PRO : Fin écriture
+
+Else
+	Begin
+		-- Appel Obligatoire pour déclarer le XML
+		Exec @iIdXml = TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CREATION_CHAINE_DATA_XML_KSL_A_VIDE
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2 @adcIdSin, @dcIdInter, @iIdXml
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_OPTIMISER_CHAINE_DATA_XML_KSL @iIdXml, 'OUI', 'OUI', 'OUI'
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_CODE_MAQUETTE_KSL_A_PARTIR_TYP_MAIL @sTypMail, @sCodeMaquette OutPut
+
+		-- Ajout personnalisé du client appelant le système
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'type_appareil', @sTypApp
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_acces_securise', @sCodeAccesSecurise 
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'environnement', @sEnvironnement
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'var_enum1', @sVarEnum1
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'var_enum2', @sVarEnum2	
+
+		-- Appel pour construire et récupérer le XML dans @xmlResult
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
+
+		Exec @iRet = TRACE_MAIL_TRT.sysadm.PS_RS5045_I_MAIL_PUSH_KSL
+			@sIdAppli,
+			@iIdSin,
+			@iIdProd,
+			@sLibProd,
+			@iIdEts,
+			@sMailFrom,
+			@sMailSend,
+			@sMailCc,
+			null,
+			@sMailObjet,
+			@sMailBody,
+			@sBoiteMail,
+			@sTypMail,
+			2,
+			-1,
+			@sXMLVar,
+			null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
+			null, -- dteh_exec
+			@asErrOutPut OutPut
+	End	
+
+	-- MAJ du dossier, à partir de ce moment pour moi je considère que le BA a été envoyé (ce qui n'est pas rééllement le cas)
+
+If @iRet <> 0 
+  Begin
+	Return @iRet
+  End 
+
+Set @sMess = '(PM287-3) Courrier KSL automatique de demande d''informations ou de données manquantes sur la prestation, envoyé à l''assuré.'
+
+-- dte_cour_rest_pret_HV
+If Exists ( Select * From sysadm.w_sin ws Where ws.id_sin = @adcIdSin  )	
+  Begin
+	If Exists ( Select * From sysadm.w_div_sin wds Where wds.id_sin = @adcIdSin And nom_zone = 'dte_cour_PM287_3_InfoManq')
+	 Begin
+	   Update sysadm.w_div_sin Set val_dte = GETDATE(), maj_le = GETDATE(), maj_par = 'EDS' Where id_sin = @adcIdSin And nom_zone = 'dte_cour_PM287_3_InfoManq'
+	 End 
+	Else
+	 Begin	 
+	   Insert into sysadm.w_div_sin values ( @adcIdSin, 'dte_cour_PM287_3_InfoManq', 'Date courr. info manquante PM287-3', '-1', 'N', 'D', 'N', 'N', 765, null, null, GETDATE(), null, 0, getdate(), getdate(), 'EDS' ) 
+	 End
+  End
+
+
+If Exists ( Select * From sysadm.sinistre ws Where ws.id_sin = @adcIdSin  )	
+  Begin
+	If Exists ( Select * From sysadm.div_sin wds Where wds.id_sin = @adcIdSin And nom_zone = 'dte_cour_PM287_3_InfoManq')
+	 Begin
+	   Update sysadm.div_sin Set val_dte = GETDATE(), maj_le = GETDATE(), maj_par = 'EDS' Where id_sin = @adcIdSin And nom_zone = 'dte_cour_PM287_3_InfoManq'
+	 End 
+	Else
+	 Begin	 
+	   Insert into sysadm.div_sin values ( @adcIdSin, 'dte_cour_PM287_3_InfoManq', 'Date courr. info manquante PM287-3', '-1', 'N', 'D', 'N', 'N', 765, null, null, GETDATE(), null, getdate(), getdate(), 'EDS', getdate(), 'EDS' ) 
+	 End
+  End
+
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+BEGIN
+	Exec  SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @adcIdSin, 2, @sMess,	'EDS', 300, @iIdCt OUTPUT
+END
+ELSE
+BEGIN
+	Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @adcIdSin, 2, @sMess,	'EDS', 300, @iIdCt OUTPUT
+END
+
 
 
 Go

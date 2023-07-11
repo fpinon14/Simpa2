@@ -5408,6 +5408,8 @@ Go
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
+-- JFF      26/04/2023   [RS5045_REF_MATP]
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_PM234_7_TAG_COURRIER_PEC' AND type = 'P' )
         DROP procedure sysadm.PS_I_PM234_7_TAG_COURRIER_PEC
 GO
@@ -5417,6 +5419,369 @@ CREATE procedure sysadm.PS_I_PM234_7_TAG_COURRIER_PEC
 	@asCodeCourrier	VarChar (10)
 AS
 
+Declare
+  @iIdXml integer,  -- [RS5045_REF_MATP]
+  @dcIdInter Decimal ( 2 ), -- [RS5045_REF_MATP]
+  @sCodeMaquette VarChar ( 255 ), -- [RS5045_REF_MATP]
+  @sErrOutPut VarChar ( 255 ), -- [RS5045_REF_MATP]
+  @sXMLVar     	VarChar ( max ), -- [RS5045_REF_MATP]
+  @sTypMail   VarChar ( 6 ), -- [RS5045_REF_MATP]
+  @sIdAppli   VarChar ( 6 ), -- [RS5045_REF_MATP]
+  @iIdProd    Integer,  -- [RS5045_REF_MATP]
+  @iIdSin     Integer,  -- [RS5045_REF_MATP]
+  @iIdEts     Integer,  -- [RS5045_REF_MATP]
+  @iOptionDP  Integer,
+  @dcIdProd     Decimal (7), 
+  @dcIdEts 	Decimal (7), 
+  @sLibProd     VarChar (255),
+  @sNumProd     VarChar (20),
+  @sCiv		VarChar (20), 
+  @sNom		VarChar ( 71 ),
+  @sMailFrom	VarChar (128), 
+  @sMailSend	VarChar (128), 
+  @sMailCc	VarChar (128),
+  @sAltQuarant  VarChar (1),
+  @sBoiteMail   VarChar (35),
+  @iRet  Integer,
+  @sTypApp VarChar ( 10 ),
+  @sAdrMail VarChar ( 255 ),
+  @sNomLivraison VarChar ( 71 ), 
+  @sAdresse1Livraison VarChar ( 50 ),
+  @sAdresse2Livraison VarChar ( 50 ),
+  @sCpVilleLivraison  VarChar ( 70 ),
+  @sAdrMailCC VarChar ( 255 ),
+  @sMailObjet	VarChar ( 255 ),
+  @sMailBody	VarChar ( 7000 )
+
+Declare @sMess			VarChar ( 2000 )
+Declare @sErr			Varchar(60)
+Declare @iIdCt			integer	
+Declare @iVal			integer 
+Declare @sAdrMailErr VarChar ( 150 )
+
+Set  @sIdAppli = 'SIMPA2'
+Set @iOptionDP = -1
+
+Exec @iRet = sysadm.PS_S01_RECUP_DONNEES_MAIL_XML
+	@adcIdSin,
+	@iOptionDP,
+	@dcIdProd   OUTPUT,
+	@sLibProd   OUTPUT,
+	@dcIdEts    OUTPUT,
+	@sNumProd   OUTPUT,
+	@sCiv	    OUTPUT,
+	@sNom	    OUTPUT,
+	@sMailFrom  OUTPUT,
+	@sMailSend  OUTPUT,
+	@sMailCc    OUTPUT,
+	@sAltQuarant OUTPUT,
+	@sBoiteMail  OUTPUT,
+	@sXMLVar     OUTPUT
+
+Set @iIdSin  = Convert ( integer, @adcIdSin )
+Set @iIdProd = Convert ( integer, @dcIdProd )
+Set @iIdEts  = Convert ( integer, @dcIdEts )
+Set @asCodeCourrier = rTrim ( lTrim ( @asCodeCourrier ))
+Set @sTypMail = @asCodeCourrier 
+
+Set @sMailObjet = 'Corps de l''Objet construit par KSL'
+Set @sMailBody  = 'Corps du mail construit par KSL'
+
+-- [RS5045_REF_MATP]
+If Exists ( Select Top 1 1 From sysadm.w_sin where id_sin = @adcIdSin ) 
+Begin
+	Select @dcIdInter = id_i From sysadm.w_inter where id_sin = @adcIdSin and cod_inter = 'A'
+End 
+Else
+Begin
+	Select @dcIdInter = id_i From sysadm.inter where id_sin = @adcIdSin and cod_inter = 'A'
+End 
+
+If @dcIdInter is null Set @dcIdInter = 0 
+-- /[RS5045_REF_MATP]
+
+
+-- Lecture des variables de sysadm.PS_S_PM234_7_COUR_PEC
+Set @sTypApp = 
+	Case When Exists (select * from sysadm.w_commande w where w.id_sin=@adcIdSin and w.id_typ_art='PRS'	and w.cod_etat <> 'ANN') Then 'repa' 
+			Else 'rempl' 
+	End 
+
+Set @sAdrMail = 
+	Case -- [DT346]
+		When Exists ( 
+				Select Top 1 1 
+				From   sysadm.w_div_sin ds,
+					   sysadm.det_pro dp,
+					   sysadm.w_sin s
+				Where  ds.id_sin = @adcIdSin
+				And	   ds.nom_zone = 'client_vip'
+				And	   ds.val_car = 'VIPPAR'
+				And	   s.id_sin = ds.id_sin 
+				And	   dp.id_prod = s.id_prod
+				And    dp.id_code_dp = 272
+			)	Then 'laura.naulot@orange.com,desk@parnasse.fr'
+		Else null
+	End 
+
+Set @sNomLivraison = 
+	Case 
+		When @asCodeCourrier ='WTE344' -- PXM
+			Then ( 
+				Select	Left ( IsNull ( rtrim( b.adr_nom ), ''), 100 )
+				From sysadm.boutique b
+				Where b.id_prod = 9133
+				And   b.cod_mag = 
+						(
+							Select Convert ( VarChar (20), Convert ( integer, rtrim ( ltrim ( replace ( dsCodeLivr.val_car, '#', '')))))
+							From sysadm.div_sin dsCodeLivr
+							Where dsCodeLivr.id_sin = @adcIdSin
+							And	  dsCodeLivr.nom_zone = 'code_livraison_atlas'
+						)
+				And	  b.region = 'FRN=PSM'
+
+				)
+		When @asCodeCourrier in ( 'WTE595', 'WTE598', 'WDE188', 'WDE189' ) -- RPU
+			Then ( 
+				Select Top 1 rtrim ( ltrim ( Replace ( i.nom, '[#]', ' ')))
+				From sysadm.inter i
+				Where i.id_sin = @adcIdSin
+				And   i.cod_inter = 'L'
+				)
+	End 
+
+Set @sAdresse1Livraison = 
+	Case 
+		When @asCodeCourrier = 'WTE344' -- PXM
+			Then ( 
+				Select	Left ( IsNull ( rtrim( b.adr_1 ), ''), 100 )
+				From sysadm.boutique b
+				Where b.id_prod = 9133
+				And   b.cod_mag  = 
+						(
+							Select Convert ( VarChar (20), Convert ( integer, rtrim ( ltrim ( replace ( dsCodeLivr.val_car, '#', '')))))
+							From sysadm.div_sin dsCodeLivr
+							Where dsCodeLivr.id_sin = @adcIdSin
+							And	  dsCodeLivr.nom_zone = 'code_livraison_atlas'
+						)
+				And	  b.region = 'FRN=PSM'
+
+				)
+		When @asCodeCourrier in ( 'WTE595', 'WTE598', 'WDE188', 'WDE189' ) -- RPU
+			Then ( 
+				Select Top 1 rtrim ( ltrim ( i.adr_1 ))
+				From sysadm.inter i
+				Where i.id_sin = @adcIdSin
+				And   i.cod_inter = 'L'
+				)
+	End
+
+Set @sAdresse2Livraison = 
+	Case 
+		When @asCodeCourrier = 'WTE344' -- PXM
+			Then ( 
+				Select	Left ( IsNull ( rtrim( b.adr_2 ), ''), 100 )
+				From sysadm.boutique b
+				Where b.id_prod = 9133
+				And   b.cod_mag  = 
+						(
+							Select Convert ( VarChar (20), Convert ( integer, rtrim ( ltrim ( replace ( dsCodeLivr.val_car, '#', '')))))
+							From sysadm.div_sin dsCodeLivr
+							Where dsCodeLivr.id_sin = @adcIdSin
+							And	  dsCodeLivr.nom_zone = 'code_livraison_atlas'
+						)
+				And	  b.region = 'FRN=PSM'
+
+				)
+		When @asCodeCourrier in ( 'WTE595', 'WTE598', 'WDE188', 'WDE189' ) -- RPU
+			Then ( 
+				Select Top 1 rtrim ( ltrim ( i.adr_2 ))
+				From sysadm.inter i
+				Where i.id_sin = @adcIdSin
+				And   i.cod_inter = 'L'
+				)
+	End
+
+Set @sCpVilleLivraison = 
+	Case 
+		When @asCodeCourrier = 'WTE344'  -- PXM
+			Then ( 
+				Select	Left ( IsNull ( rtrim( b.adr_cp ), '') + ' ' + IsNull ( rtrim( b.adr_ville ), ''), 100 )
+				From sysadm.boutique b
+				Where b.id_prod = 9133
+				And   b.cod_mag  = 
+						(
+							Select Convert ( VarChar (20), Convert ( integer, rtrim ( ltrim ( replace ( dsCodeLivr.val_car, '#', '')))))
+							From sysadm.div_sin dsCodeLivr
+							Where dsCodeLivr.id_sin = @adcIdSin
+							And	  dsCodeLivr.nom_zone = 'code_livraison_atlas'
+						)
+				And	  b.region = 'FRN=PSM'
+
+				)
+		When @asCodeCourrier in ( 'WTE595', 'WTE598', 'WDE188', 'WDE189' ) -- RPU
+			Then ( 
+				Select Top 1 rtrim ( ltrim ( i.adr_cp )) + ' ' + rtrim ( ltrim ( i.adr_ville ))
+				From sysadm.inter i
+				Where i.id_sin = @adcIdSin
+				And   i.cod_inter = 'L'
+				)
+	End 
+
+Set @sAdrMailCC = 
+	(
+		Select Top 1
+			   Case 
+				  When rtrim ( ds.val_car ) in ( 'SEN', 'SEM' ) 
+					Then 'vip@orange.com,franck.bonnard@orange.com' -- [VDOC17642] [VDOC20329]	 
+				  When rtrim ( ds.val_car ) in ( 'ASN' ) 
+					Then 't.munier@senat.fr,franck.bonnard@orange.com' -- [VDOC17642]	 [VDOC20329]	 
+				  Else ''
+			   End
+
+		From   sysadm.div_sin ds,
+			   sysadm.det_pro dp,
+			   sysadm.sinistre s
+		Where  ds.id_sin = @adcIdSin
+		And	   ds.nom_zone = 'client_vip'
+		And	   s.id_sin = ds.id_sin 
+		And	   dp.id_prod = s.id_prod
+		And    dp.id_code_dp = 272
+	) -- [VDOC17642][DF006]
+
+
+
+-- [RS5045_REF_MATP]
+If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') > 0 
+ Begin
+	If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
+
+		Begin  -- TRACE_MAIL_PRO : Début écriture
+			-- Appel Obligatoire pour déclarer le XML
+			Exec @iIdXml = TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CREATION_CHAINE_DATA_XML_KSL_A_VIDE
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2 @adcIdSin, @dcIdInter, @iIdXml
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_OPTIMISER_CHAINE_DATA_XML_KSL @iIdXml, 'OUI', 'OUI', 'OUI'
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_CODE_MAQUETTE_KSL_A_PARTIR_TYP_MAIL @sTypMail, @sCodeMaquette OutPut
+			
+			-- Ajout personnalisé du client appelant le système 
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'type_appareil', @sTypApp
+			If @sAdrMail is not null Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adr_mail', @sAdrMail
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'nom_livraison', @sNomLivraison
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adresse1_livraison', @sAdresse1Livraison
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adresse2_livraison', @sAdresse2Livraison
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'cp_ville_livraison', @sCpVilleLivraison 
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adr_mail_cc', @sAdrMailCC 
+			
+
+			-- Appel pour construire et récupérer le XML dans @xmlResult
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
+
+			Exec @iRet = TRACE_MAIL_PRO.sysadm.PS_RS5045_I_MAIL_PUSH_KSL
+				@sIdAppli,
+				@iIdSin,
+				@iIdProd,
+				@sLibProd,
+				@iIdEts,
+				@sMailFrom,
+				@sMailSend,
+				@sMailCc,
+				null,
+				@sMailObjet,
+				@sMailBody,
+				@sBoiteMail,
+				@sTypMail,
+				2,
+				-1,
+				@sXMLVar,
+				null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
+				null, -- dteh_exec
+				@sErrOutPut OutPut	
+		End 
+	Else
+		Begin  -- TRACE_MAIL_TRT : Début écriture
+			-- Appel Obligatoire pour déclarer le XML
+			Exec @iIdXml = TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CREATION_CHAINE_DATA_XML_KSL_A_VIDE
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2 @adcIdSin, @dcIdInter, @iIdXml
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_OPTIMISER_CHAINE_DATA_XML_KSL @iIdXml, 'OUI', 'OUI', 'OUI'
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_CODE_MAQUETTE_KSL_A_PARTIR_TYP_MAIL @sTypMail, @sCodeMaquette OutPut
+
+			-- Ajout personnalisé du client appelant le système
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'type_appareil', @sTypApp
+			If @sAdrMail is not null Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adr_mail', @sAdrMail
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'nom_livraison', @sNomLivraison
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adresse1_livraison', @sAdresse1Livraison
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adresse2_livraison', @sAdresse2Livraison
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'cp_ville_livraison', @sCpVilleLivraison 
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adr_mail_cc', @sAdrMailCC 
+
+			-- Appel pour construire et récupérer le XML dans @xmlResult
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
+
+			Exec @iRet = TRACE_MAIL_TRT.sysadm.PS_RS5045_I_MAIL_PUSH_KSL
+				@sIdAppli,
+				@iIdSin,
+				@iIdProd,
+				@sLibProd,
+				@iIdEts,
+				@sMailFrom,
+				@sMailSend,
+				@sMailCc,
+				null,
+				@sMailObjet,
+				@sMailBody,
+				@sBoiteMail,
+				@sTypMail,
+				2,
+				-1,
+				@sXMLVar,
+				null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
+				null, -- dteh_exec
+				@sErrOutPut OutPut		
+		End 
+
+		-- dte_cour_pec_envksl_pm234_7
+		If Exists ( Select * From sysadm.w_sin ws Where ws.id_sin = @adcIdSin  )	
+		  Begin
+			If Exists ( Select * From sysadm.w_div_sin wds Where wds.id_sin = @adcIdSin And nom_zone = 'dte_cour_pec_envksl_pm234_7')
+			 Begin
+			   Update sysadm.w_div_sin Set val_dte = GETDATE(), maj_le = GETDATE(), maj_par = 'EDS' Where id_sin = @adcIdSin And nom_zone = 'dte_cour_pec_envksl_pm234_7'
+			 End 
+			Else
+			 Begin	 
+			   Insert into sysadm.w_div_sin values ( @adcIdSin, 'dte_cour_pec_envksl_pm234_7', 'Date envoi cour. PEC KSL PM234-7', '-1', 'N', 'D', 'N', 'N', 770, null, null, GETDATE(), null, 1, getdate(), getdate(), 'EDS' ) 
+			 End
+		  End
+
+
+		If Exists ( Select * From sysadm.sinistre ws Where ws.id_sin = @adcIdSin  )	
+		  Begin
+			If Exists ( Select * From sysadm.div_sin wds Where wds.id_sin = @adcIdSin And nom_zone = 'dte_cour_pec_envksl_pm234_7')
+			 Begin
+			   Update sysadm.div_sin Set val_dte = GETDATE(), maj_le = GETDATE(), maj_par = 'EDS' Where id_sin = @adcIdSin And nom_zone = 'dte_cour_pec_envksl_pm234_7'
+			 End 
+			Else
+			 Begin	 
+			   Insert into sysadm.div_sin values ( @adcIdSin, 'dte_cour_pec_envksl_pm234_7', 'Date envoi cour. PEC KSL PM234-7', '-1', 'N', 'D', 'N', 'N', 770, null, null, GETDATE(), null, getdate(), getdate(), 'EDS', getdate(), 'EDS' ) 
+			 End
+		  End
+
+		Set @sMess = 'Suite automatisation de la déclaration via ATLAS/SIMPA2 (PM234-7), le courrier de prise en charge a été envoyé par KSL.'
+
+		IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+		BEGIN
+			Exec  SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @adcIdSin, 2, @sMess,	'EDS', 300, @iIdCt OUTPUT, 760
+		END
+		ELSE
+		BEGIN
+			Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @adcIdSin, 2, @sMess,	'EDS', 300, @iIdCt OUTPUT, 760
+		END
+
+
+ End 
+Else 
+ Begin
 	Insert into sysadm.w_div_sin 
 	(
 	id_sin,
@@ -5457,7 +5822,7 @@ AS
 	Getdate (),
 	'WEB'
 	)
-
+ End
 Go
 
 
@@ -5480,6 +5845,7 @@ Go
 -- JFF      03/08/2017   [DF006]
 -- JFF      12/02/2018   [DT346]
 -- JFF      06/11/2018   [PM451-1]
+-- JFF      26/04/2023   [RS5045_REF_MATP]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_PM234_7_COUR_PEC' AND type = 'P' )
         DROP procedure sysadm.PS_S_PM234_7_COUR_PEC 
@@ -5487,6 +5853,13 @@ GO
 
 CREATE procedure sysadm.PS_S_PM234_7_COUR_PEC
 AS
+
+-- [RS5045_REF_MATP]
+If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') > 0 
+ Begin
+	-- Fin de cette méthode
+	Return
+ End 
 
 SET NOCOUNT ON
 
@@ -5739,6 +6112,7 @@ Go
 --
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
+-- JFF      26/04/2023   [RS5045_REF_MATP]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_PM234_7_COUR_PEC' AND type = 'P' )
         DROP procedure sysadm.PS_U_PM234_7_COUR_PEC 
@@ -5748,6 +6122,13 @@ CREATE procedure sysadm.PS_U_PM234_7_COUR_PEC
         @adcIdSin     Decimal (  10,0 ),
         @asCas 	VarChar (35) = null
 AS
+
+-- [RS5045_REF_MATP]
+If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') > 0 
+ Begin
+	-- Fin de cette méthode
+	Return
+ End 
 
 Declare @sMess			VarChar ( 2000 )
 Declare @sErr			Varchar(60)

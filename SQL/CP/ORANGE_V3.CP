@@ -4746,6 +4746,7 @@ Go
 -- JFF      25/09/2017   [PM287-6]
 -- JFF      11/01/2018   [PM287-6][MANTIS26879]
 -- JFF      06/11/2018   [PM451-1]
+-- JFF      26/04/2023   [RS5045_REF_MATP]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_COURKSL_PM287_3_INFO_MANQUANTE' AND type = 'P' )
         DROP procedure sysadm.PS_S_COURKSL_PM287_3_INFO_MANQUANTE
@@ -4755,6 +4756,13 @@ CREATE procedure sysadm.PS_S_COURKSL_PM287_3_INFO_MANQUANTE
 AS
 
 SET NOCOUNT ON
+
+-- [RS5045_REF_MATP]
+If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') > 0 
+ Begin
+	-- Fin de cette méthode
+	Return
+ End 
 
 Delete from sysadm.w_cour_xml_orangev3
 
@@ -4889,6 +4897,7 @@ Go
 -------------------------------------------------------------------
 -- JFF      20/04/2015   [ITSM288077] Je ne modifie plus le code état
 -- JFF      12/02/2016   [PI062]
+-- JFF      26/04/2023   [RS5045_REF_MATP]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_COURKSL_PM287_3_INFO_MANQUANTE' AND type = 'P' )
         DROP procedure sysadm.PS_U_COURKSL_PM287_3_INFO_MANQUANTE 
@@ -4899,6 +4908,14 @@ CREATE procedure sysadm.PS_U_COURKSL_PM287_3_INFO_MANQUANTE
         @asCas 	VarChar (35) = null
 
 AS
+
+-- [RS5045_REF_MATP]
+If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') > 0 
+ Begin
+	-- Fin de cette méthode
+	Return
+ End 
+
 
 Declare @sMess			VarChar ( 2000 )
 Declare @sErr			Varchar(60)

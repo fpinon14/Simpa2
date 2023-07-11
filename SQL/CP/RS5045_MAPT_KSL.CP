@@ -2661,6 +2661,13 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 			  Begin
 				Exec sysadm.PS_S_SUBSTITUER_VARIABLE_XML  'Mail_Add_Dest', '', @sXmlData output
 			  End 
+
+			Set @sAdrMail = Upper ( sysadm.FN_CLE_VAL_XML ( 'email_cc', @sXmlData, 'NON' ) )
+			If CHARINDEX ( '@SPB', @sAdrMail ) <= 0 
+			  Begin
+				Exec sysadm.PS_S_SUBSTITUER_VARIABLE_XML  'email_cc', '', @sXmlData output
+			  End 
+
 		  End 
 
 		-- Transformation des variables du nom du fichier en données
@@ -2673,6 +2680,24 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 
 		Set @sMsgTrc = 'Traitement du mail dont l''id_seq est ' + CONVERT ( varchar ( 20 ), @iIdSeq )
 		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'MOTTRT', 'ENC', @sMsgTrc, @iIdLotTrc
+
+		If @sChemDepot = ''
+		  Begin
+			Set @sMsgTrc = 'Le chemin de dépôt n''est pas initialisé, contrôlez la déclaration du type de mail et de la maquette sur sysadm.code_maquette_ksl_rs5045 et sur sysadm.chem_depot_ksl_rs5045'
+			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONCHM', 'ERR', @sMsgTrc, @iIdLotTrc
+
+			Update @TbWork Set marquage = 1 Where id_seq = @iIdSeq
+			Continue
+		  End
+
+		If @sNomFichierDepot = ''
+		  Begin
+			Set @sMsgTrc = 'Le fichier de dépôt n''est pas initialisé, contrôlez la déclaration du type de mail et de la maquette sur sysadm.code_maquette_ksl_rs5045 et sur sysadm.chem_depot_ksl_rs5045'
+			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONCHM', 'ERR', @sMsgTrc, @iIdLotTrc
+
+			Update @TbWork Set marquage = 1 Where id_seq = @iIdSeq
+			Continue
+		  End
 
 		If @dtDatehExec > Getdate() 
 		  Begin
@@ -2775,7 +2800,8 @@ Else
 If @iRowCountWord + @iRowCountHWord  > 0
   Begin
 	Set @sMsgTrc = 'Traitement de ' + Convert ( Varchar ( 20 ), @iCptTraite ) + ' mail(s) sur ' + Convert ( Varchar ( 20 ), @iRowCountWord + @iRowCountHWord ) + ' mail(s)'
-	Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INFO', 'OK', @sMsgTrc, @iIdLotTrc
+	If @iCptTraite = @iRowCountWord + @iRowCountHWord Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INFO', 'OK', @sMsgTrc, @iIdLotTrc
+	Else Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INFO', 'ERR', @sMsgTrc, @iIdLotTrc
   End 
 
 Set @sMsgTrc = 'Fin du traitement le ' + Convert ( VarChar ( 10), Getdate(), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108) 

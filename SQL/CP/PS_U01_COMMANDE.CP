@@ -2036,11 +2036,19 @@ IF @iStatusGc in ( 308 ) And @iStatusGCActuel <> @iStatusGc
 		Delete from sysadm.div_sin Where id_sin = @dcIdSin and nom_zone in ( 'dte_cour_PM287_3_InfoManq', 'dte_action_PM287_3_par_ass', 'action_ksl_ec_PM287_3' ) 
 		Delete from sysadm.w_div_sin Where id_sin = @dcIdSin and nom_zone in ( 'dte_cour_PM287_3_InfoManq', 'dte_action_PM287_3_par_ass', 'action_ksl_ec_PM287_3') 
 
-		Insert into sysadm.div_sin Values ( @dcIdSin, 'action_ksl_ec_PM287_3', 'Action KSL En cours PM287-3', -1, 'N', 'X', 'N', 'N', 500, null, null, null, 'O', Getdate(), Getdate(), 'AUTO', Getdate(), 'AUTO' )
-		If Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @dcIdSin ) 
-			Begin
-				Insert into sysadm.w_div_sin Values ( @dcIdSin, 'action_ksl_ec_PM287_3', 'Action KSL En cours PM287-3', -1, 'N', 'X', 'N', 'N', 500, null, null, null, 'O', 1, Getdate(), Getdate(), 'AUTO' )
-			End 
+		-- [RS5045_REF_MATP]
+		If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') > 0 
+		 Begin
+				Exec @iRet=sysadm.PS_I_RS5045_MAIL_COUR_PM287_3_INFO_MANQUANTE_KSL @dcIdSin, @iIdSeq 
+		 End 
+		Else
+		 Begin
+			Insert into sysadm.div_sin Values ( @dcIdSin, 'action_ksl_ec_PM287_3', 'Action KSL En cours PM287-3', -1, 'N', 'X', 'N', 'N', 500, null, null, null, 'O', Getdate(), Getdate(), 'AUTO', Getdate(), 'AUTO' )
+			If Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @dcIdSin ) 
+				Begin
+					Insert into sysadm.w_div_sin Values ( @dcIdSin, 'action_ksl_ec_PM287_3', 'Action KSL En cours PM287-3', -1, 'N', 'X', 'N', 'N', 500, null, null, null, 'O', 1, Getdate(), Getdate(), 'AUTO' )
+				End 
+		 End 
 
 		Update 	sysadm.commande
 		Set	info_frn_spb_cplt = sysadm.FN_CLE_VAL_E ( 'IFDNMQ_ACT', 'A_FAIRE', info_frn_spb_cplt, ';')
@@ -2937,7 +2945,7 @@ IF    ( CharIndex ( '[BVIEOX]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[BVIEOX]'
 
   BEGIN
 	
-	-- [PM82][LOT2] [ICI]
+	-- [PM82][LOT2] 
 	-- [VDOC19868]
 	If  @iStatusGc = 21 And ( Upper ( sysadm.FN_CLE_VAL ( 'A_REPARER_SAV', @sInfoSpbFrnCpltActuel, ';' )) = 'OUI'
 							 Or 
