@@ -1087,6 +1087,8 @@ CREATE procedure sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE
 	@sCodeMaquette varchar ( 255 ), 
 	@xmlResult varchar(max) OUTPUT
 AS
+
+Declare @sCanal Varchar ( 20 ) 
 	
 	If @sCodeMaquette in ( 'MATPN', 'MATPD' ) 
 	  Begin
@@ -1149,13 +1151,31 @@ AS
 
 	Else -- Hors ( 'MAPTN', 'MAPTD' ) 
 	  Begin
+		
+		-- Détermination du Canal (très important)
+		Select Top 1 @sCanal = lTrim ( rTrim ( cm.canal ))
+		From   sysadm.code_maquette_ksl_rs5045 cm,
+			   sysadm.variable_xml_ksl_rs5045 v
+		Where  v.id_xml = @iIdXml
+		and	   cm.cod_maq = v.code_maquette
+
+		If @sCanal is Null or @sCanal = '' Set @sCanal = 'C'
+		If @sCanal = 'AUCUN' Set @sCanal = ''
 
 		select @xmlResult=(
 		select top 1 
 
 			-- ci-dessous Section <Tech
 
-			'C' as 'tech/@canal',
+			-- 'C' as 'tech/@canal',
+			Case @sCanal
+				When 'AUTO' Then
+					Case 
+						When lTrim ( rTrim ( adr_mail )) = '' Or adr_mail is null Then 'C'  -- Pour Courrier édition papier
+						Else 'E'  -- Pour envoi par mail
+					End
+				Else @sCanal
+			End as 'tech/@canal',
 			code_maquette as 'tech/@code_maquette',
 			'S' as 'tech/@code_adhsin',
 
