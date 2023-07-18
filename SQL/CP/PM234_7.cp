@@ -5460,7 +5460,7 @@ Declare @iVal			integer
 Declare @sAdrMailErr VarChar ( 150 )
 
 Set  @sIdAppli = 'SIMPA2'
-Set @iOptionDP = -1
+Set @iOptionDP = 51 -- Obligé pour forcer la lecture sur les table w_
 
 Exec @iRet = sysadm.PS_S01_RECUP_DONNEES_MAIL_XML
 	@adcIdSin,
@@ -5649,8 +5649,6 @@ Set @sAdrMailCC =
 		And    dp.id_code_dp = 272
 	) -- [VDOC17642][DF006]
 
-
-
 -- [RS5045_REF_MATP]
 If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') > 0 
  Begin
@@ -5742,6 +5740,7 @@ If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') > 0
 		End 
 
 		-- dte_cour_pec_envksl_pm234_7
+/*  Fout le bordel !
 		If Exists ( Select * From sysadm.w_sin ws Where ws.id_sin = @adcIdSin  )	
 		  Begin
 			If Exists ( Select * From sysadm.w_div_sin wds Where wds.id_sin = @adcIdSin And nom_zone = 'dte_cour_pec_envksl_pm234_7')
@@ -5749,12 +5748,12 @@ If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') > 0
 			   Update sysadm.w_div_sin Set val_dte = GETDATE(), maj_le = GETDATE(), maj_par = 'EDS' Where id_sin = @adcIdSin And nom_zone = 'dte_cour_pec_envksl_pm234_7'
 			 End 
 			Else
-			 Begin	 
-			   Insert into sysadm.w_div_sin values ( @adcIdSin, 'dte_cour_pec_envksl_pm234_7', 'Date envoi cour. PEC KSL PM234-7', '-1', 'N', 'D', 'N', 'N', 770, null, null, GETDATE(), null, 1, getdate(), getdate(), 'EDS' ) 
+			 Begin	
+			   Insert into sysadm.w_div_sin values ( @adcIdSin, 'dte_cour_pec_envksl_pm234_7', 'Date envoi cour. PEC KSL PM234-7', '-1', 'N', 'D', 'N', 'N', 770, null, null, GETDATE(), null, 0, getdate(), getdate(), 'EDS' ) 
 			 End
-		  End
+		  End */
 
-
+/* Fout le bordel !
 		If Exists ( Select * From sysadm.sinistre ws Where ws.id_sin = @adcIdSin  )	
 		  Begin
 			If Exists ( Select * From sysadm.div_sin wds Where wds.id_sin = @adcIdSin And nom_zone = 'dte_cour_pec_envksl_pm234_7')
@@ -5766,18 +5765,22 @@ If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') > 0
 			   Insert into sysadm.div_sin values ( @adcIdSin, 'dte_cour_pec_envksl_pm234_7', 'Date envoi cour. PEC KSL PM234-7', '-1', 'N', 'D', 'N', 'N', 770, null, null, GETDATE(), null, getdate(), getdate(), 'EDS', getdate(), 'EDS' ) 
 			 End
 		  End
+*/
 
-		Set @sMess = 'Suite automatisation de la déclaration via ATLAS/SIMPA2 (PM234-7), le courrier de prise en charge a été envoyé par KSL.'
+		If @iRet = 0
+		  Begin
+			Insert into sysadm.w_div_sin values ( @adcIdSin, 'dte_cour_pec_envksl_pm234_7', 'Date envoi cour. PEC KSL PM234-7', '-1', 'N', 'D', 'N', 'N', 770, null, null, GETDATE(), null, 0, getdate(), getdate(), 'EDS' ) 
+			Set @sMess = 'Suite automatisation de la déclaration via ATLAS/SIMPA2 (PM234-7), le courrier de prise en charge a été envoyé par KSL.'
 
-		IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
-		BEGIN
-			Exec  SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @adcIdSin, 2, @sMess,	'EDS', 300, @iIdCt OUTPUT, 760
-		END
-		ELSE
-		BEGIN
-			Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @adcIdSin, 2, @sMess,	'EDS', 300, @iIdCt OUTPUT, 760
-		END
-
+			IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+			BEGIN
+				Exec  SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @adcIdSin, 2, @sMess,	'EDS', 300, @iIdCt OUTPUT, 760
+			END
+			ELSE
+			BEGIN
+				Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @adcIdSin, 2, @sMess,	'EDS', 300, @iIdCt OUTPUT, 760
+			END
+		  End 
 
  End 
 Else 
