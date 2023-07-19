@@ -1343,11 +1343,11 @@ CREATE procedure sysadm.PS_RS5045_I_MAIL_PUSH_KSL
 		@asMailCc               VarChar ( 128 ) ,  
 		@asMailCci              VarChar ( 128 ) , -- [PM191-2]  
 		@asMailSubject          VarChar ( 255 ) ,  
-		@asMailBody             VarChar ( 7000 ),  
+		@asMailBody             VarChar ( max ),  
 --		@asAltQuarantaine       VarChar (   1 ),  
 		@asBoiteMail			VarChar (35), 
 		@asTypMail				VarChar (10), 
-		@aiIdAppli              Integer, 
+		@aiIdAppli              Integer, -- Forcé par le client appelant, sinon null et pris par défaut de TRACE_MAIL_xxx.sysadm.chem_depot_ksl_rs5045 si besoin (voir JFF)
 --		@asMethode				Varchar ( 6 ), -- [PM159]  
 --		@asMethodeKSL			VarChar ( 50 ), -- voir plus haut quelle valeur passer ici [RS5045_REF_MATP]   >> Plus la peine peut être déterminer autrement
 		@aiIdArch				Integer , -- [PM159]  
@@ -1356,8 +1356,6 @@ CREATE procedure sysadm.PS_RS5045_I_MAIL_PUSH_KSL
 		@adtDteHExec			DateTime, -- Forcé par le client appelant, sinon null et pris par défaut de TRACE_MAIL_xxx.sysadm.chem_depot_ksl_rs5045 si besoin (voir JFF), Date et heure avant laquelle le mail ne peut pas être envoyé, null si aucune critère
 		@asErrOutPut			VarChar ( 255 ) OutPut          
 AS  
-
-Select '@asXMLdata', @asXMLdata
 
 Declare @sCodeMaquette VarChar ( 100 )
 Declare @iRet integer 
@@ -1537,7 +1535,16 @@ If @dtDteHExec is null
 		 Set @dtDteHExec = CONVERT ( DateTime,  CONVERT ( Varchar ( 10 ), getdate(), 103 ) + ' ' + @sHeureExec )
 		 If GetDate() > @dtDteHExec Set @dtDteHExec = DATEADD ( day, 1, @dtDteHExec )
 	  End 
- End 
+ End
+ 
+-- Heure par défaut si non forcé par le client appelant
+If @aiIdAppli is null Or @aiIdAppli <= 0
+ Begin
+	Select Top 1 @aiIdAppli = id_appli
+	From sysadm.code_maquette_ksl_rs5045
+	Where typ_mail = @asTypMail
+	And   id_cpt = 1
+ End
   
 Set @iErr = 0  
 Set @asMailCci=NULL -- Aucune variable XML KSL pour accueillir cette donnée
@@ -1637,7 +1644,7 @@ VALUES
                 @asMailSend,  
 				@asMailCc,  
                 @asMailSubject,  
-                @asMailBody,  
+                Left ( @asMailBody, 7000 ),  
 				@sAltQuarantaine,  
 				@asBoiteMail,  
 				@asTypMail,  
