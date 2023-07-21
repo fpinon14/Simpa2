@@ -10168,7 +10168,7 @@ Declare
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
-
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adr_mail', @sMailSend
 		-- Appel pour construire et récupérer le XML dans @xmlResult
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
 
@@ -10229,6 +10229,7 @@ Declare
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adr_mail', @sMailSend
 
 		-- Appel pour construire et récupérer le XML dans @xmlResult
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
@@ -23341,6 +23342,7 @@ As
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adr_mail', @sMailSend
 
 			-- Appel pour construire et récupérer le XML dans @xmlResult
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
@@ -23404,6 +23406,7 @@ As
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adr_mail', @sMailSend
 
 			-- Appel pour construire et récupérer le XML dans @xmlResult
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
@@ -23710,6 +23713,7 @@ As
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adr_mail', @sMailSend
 
 			-- Appel pour construire et récupérer le XML dans @xmlResult
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
@@ -23775,6 +23779,7 @@ As
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adr_mail', @sMailSend
 
 			-- Appel pour construire et récupérer le XML dans @xmlResult
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT

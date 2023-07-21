@@ -2552,6 +2552,7 @@ Go
 -- JFF      12/02/2016   [PI062]
 -- JFF      22/10/2019   [PI087_PM473_2]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX] rien en V01
+-- JFF      30/05/2023   [PMO89_RS4822]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_RN_FRAIS_FACTU_PM375_V01' AND type = 'P' )
         DROP procedure sysadm.PS_I_RN_FRAIS_FACTU_PM375_V01
@@ -2857,7 +2858,11 @@ If Not Exists (
 			'N',
 			null,
 			null,
-			null
+			null,
+			null, -- [PMO89_RS4822]
+			null, -- [PMO89_RS4822]
+			null, -- [PMO89_RS4822]
+			null -- [PMO89_RS4822]
 
 		From   	sysadm.agence a
 		Where 	a.id_bq = @asIdFourFct 
@@ -3047,7 +3052,8 @@ If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0
 		@adcMtFraisAnex_8,
 		@adcMtFraisAnex_9,
 		@adcMtFraisAnex_10,
-		@adcMtFraisAnex_11
+		@adcMtFraisAnex_11,
+		'ML'
 	End 
 
 --  Validation
