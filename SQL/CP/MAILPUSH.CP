@@ -22982,6 +22982,11 @@ As
 			null, -- dteh_exec
 			@sErrOutPut OutPut
 
+		-- Traitement exceptionnel du fait de la virtualité de ce mail, il ne doit pas partir
+		Update TRACE_MAIL_PRO.sysadm.mail_push set 
+			mail_dte_trt = GETDATE(),
+			mail_trt_ok  = 'O'
+		Where id_seq = @@IDENTITY
 
 /*
 		Exec @iRet = TRACE_MAIL_PRO.sysadm.PS_I01_MAIL_PUSH_V00 
@@ -23060,6 +23065,13 @@ As
 			null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
 			null, -- dteh_exec
 			@sErrOutPut OutPut
+
+			-- Traitement exceptionnel du fait de la virtualité de ce mail, il ne doit pas partir
+			Update TRACE_MAIL_TRT.sysadm.mail_push set 
+				mail_dte_trt = GETDATE(),
+				mail_trt_ok  = 'O'
+			Where id_seq = @@IDENTITY
+
 
 
 /*
