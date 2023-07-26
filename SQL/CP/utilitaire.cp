@@ -5924,17 +5924,18 @@ Go
 --                             <> 0, problème
 --
 --------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM' AND type = 'P' )
-        DROP procedure sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM_V02' AND type = 'P' )
+        DROP procedure sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM_V02
 GO
 
-CREATE  PROCEDURE sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM 
+CREATE  PROCEDURE sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM_V02
 	@aiHandle			Int,	
 	@asType				Int,
 	@asMode				Int,
 	@asCharSet			VarChar ( 30 ),
 	@aiLineSeparator	Integer,
-	@asTextBody			NVarChar ( Max )
+	@asTextBody			NVarChar ( Max ),
+	@ablBlob			VarBinary (max)
 As
 
 Declare @iRet Integer
@@ -5954,8 +5955,17 @@ If @iRet <> 0 Return @iRet
 Exec @iRet = sp_OAMethod     @aiHandle, 'Open'
 If @iRet <> 0 Return @iRet 
 
-Exec @iRet = sp_OAMethod     @aiHandle, 'WriteText', null, @asTextBody
-If @iRet <> 0 Return @iRet 
+If @asType = 1 
+	Begin
+		Exec @iRet = sp_OAMethod     @aiHandle, 'WriteText', null, @asTextBody
+		If @iRet <> 0 Return @iRet 
+	End 
+
+If @asType = 2 
+	Begin
+		Exec @iRet = sp_OAMethod     @aiHandle, 'Write', null, @ablBlob
+		If @iRet <> 0 Return @iRet 
+	End 
 
 Return @iRet 
 
