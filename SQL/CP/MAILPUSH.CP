@@ -1934,13 +1934,14 @@ Declare
  @sAltSuiviSMS OUTPUT, -- #4 [FNAC_PROD_ECH_TECH].[SMS]  
  @sNumGsmSMS  OUTPUT -- #4 [FNAC_PROD_ECH_TECH].[SMS]  
   
-   
+
  Set @MailRep = 1   
   
-  
+/*
   -- [PM246]  
   If @iRet = -7   
     Begin  
+
   If @MailRep > 0   
    Begin  
    -- Le but pour Orange V3 et de toujours mettre une adresse mail si l'adresse réél n'est pas là, pour justement  
@@ -1950,18 +1951,19 @@ Declare
    End  
   Else  
    Begin  
+
     Set @asCasRetour = 'ADRESSE_MAIL_ABSENTE'  
     Return 0       
    End   
- End  
-  
+-- End  
+*/  
   
   -- Cas de retour n'étant pas des erreurs  
-  If @iRet in ( -9, -10 )  
+  If @iRet in ( -7, -9, -10 )  
    Begin  
  Select @asCasRetour =  
  Case @iRet  
---  When -7 Then 'ADRESSE_MAIL_ABSENTE'  
+  When -7 Then 'ADRESSE_MAIL_ABSENTE'  
   When -9 Then 'OPTION_DP_NON_PARAM'  
   When -10 Then 'BASE_NON_PRO_SUR_SERVEUR_PRO'  
  End   
