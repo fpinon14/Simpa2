@@ -1893,12 +1893,22 @@ Declare @iIdLotTrc Integer
 Declare @iCptTraite Integer
 
 -- [RS5045_REF_MATP]
-If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') >= 2  
- Begin
-	Exec sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V03
-	Return
- End 
-
+If @@servername = master.dbo.SPB_FN_ServerName ('PRO')  
+ Begin    
+	If SIMPA2_PRO.sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') >= 2  
+	 Begin
+		Exec sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V03
+		Return
+	 End 
+ End
+Else
+ Begin    
+	If SIMPA2_TRT.sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') >= 2  
+	 Begin
+		Exec sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V03
+		Return
+	 End 
+ End
 
 Set @iCptTraite = 0 
 
@@ -2413,6 +2423,11 @@ Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'LNCTRT', 'OK', @sMsg
 Set @sMsgTrc = 'Obtention d''un Identifiant de lot de trace : ' + CONVERT ( varchar ( 20 ), @iIdLotTrc  )
 Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'OBTIDT', 'OK', @sMsgTrc, @iIdLotTrc 
 
+Set @sMsgTrc = 'Nettoyage mémoire Winword.exe et WordToPdf.exe'
+Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INFO', 'OK', @sMsgTrc, @iIdLotTrc 
+
+EXEC master.dbo.xp_cmdshell 'taskkill /F  /IM WINWORD.EXE /T'
+EXEC master.dbo.xp_cmdshell 'taskkill /F  /IM WORDTOPDF.EXE /T'
   
 Declare @TbWork Table (
 	id_seq  integer,
@@ -2876,9 +2891,10 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 
 			Set @sMsgTrc = 'Récupération de WordToPdf.EXE effectué avec succès'
 			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'RCPEXE', 'OK', @sMsgTrc, @iIdLotTrc
-
+/*
 			EXEC master.dbo.xp_cmdshell 'taskkill /F  /IM WINWORD.EXE /T'
 			EXEC master.dbo.xp_cmdshell 'taskkill /F  /IM WORDTOPDF.EXE /T'
+*/
 
 			-- Création du répertoire de travail local au serveur
 			Set @sCmdDos = 'RD ' + @sRepBlobLocal
@@ -3109,6 +3125,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 	 Begin
 		-- Attente de n minutes
 		Set @iDelaiAttenteMinute = 8
+		--Set @iDelaiAttenteMinute = 2
 		Set @sMsgTrc = 'Conversion de tous les courriers Word au format PDF en cours... (attente de ' + Convert ( Varchar (10), @iDelaiAttenteMinute ) + ' minutes avant reprise du traitement )'
 		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'CONPDF', 'ENC', @sMsgTrc, @iIdLotTrc
 

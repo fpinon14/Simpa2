@@ -5153,11 +5153,13 @@ If Not ( sysadm.FN_CLE_NUMERIQUE ( 'LANCEUR_JOBS_SQL') > 0 ) Return
 Update sysadm.cle Set valeur = 0, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'LANCEUR_JOBS_SQL'  
   
   
-Set @iTypeTrt = 2
+Set @iTypeTrt = 4
 /* @iTypeTrt   
 1  : Traitement pour PI085  
 2  : Redressement Blob plus vieux de 6 mois  
-3  : autre Trt Ponctuel
+3  : Test ADODB droit réseau
+4  : Test ADODB sur C:\ local Serveur de prod
+5  : Test Move de local vers rep dest
 */  
   
 -----------------  
@@ -5387,6 +5389,174 @@ EXECUTE sp_OADestroy                 @OLE
 Select '@sRetourErrMail', @sRetourErrMail
   
   End   
+
+-- Traitement 4  
+If @iTypeTrt = 4  
+  Begin  
+
+Update sysadm.cle Set valeur = 1, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'LANCEUR_JOBS_SQL'  
+  
+ Set @dtDebTrt = GetDate()  
+
+ Set @sMaChaine = 'Début ' + Left ( Convert ( Varchar (50), GetDate(), 103 ) + ' ' + Convert ( Varchar (50), GetDate(), 114 ), 19 )  
+ EXEC master.dbo.SPB_PS_MAIL   
+   @sRetourErrMail OUTPUT,   
+   'jff@spb.fr, jff7209@gmail.com',  
+   @sMaChaine,   
+   'Début',   
+   null, -- From  
+   '',   
+   NULL,   
+   NULL,   
+   NULL,   
+   NULL,   
+   NULL  
+ 
+ 
+ -- Déb trt  
+Declare @Blob varbinary (max)
+
+Select @Blob = txt_blob
+From sysadm.archive_blob
+Where id_sin = 7932233
+And   id_inter = 0
+And   id_doc = 2
+
+Declare @File2        VARCHAR(2000)
+Declare @iRetMATPD2 Integer
+
+Set @File2 = 'C:\JFF_MATP_SQL_BLOB\MonDocTestSIMPA2.doc'
+
+DECLARE @OLE2            INT 
+EXECUTE sp_OACreate 'ADODB.Stream',  @OLE2 OUTPUT
+
+EXECUTE sp_OASetProperty             @OLE2,    'Type',             1                           --1 = binary, 2 = text
+EXECUTE sp_OASetProperty             @OLE2,    'Mode',             3                           --0 = not set, 1 read, 2 write, 3 read/write
+EXECUTE sp_OAMethod                  @OLE2,    'Open'  
+EXECUTE sp_OAMethod                  @OLE2,    'Write',        NULL,       @Blob  --text method
+
+--Commit data and close text stream
+EXECUTE @iRetMATPD2 = sp_OAMethod                  @OLE2,    'SaveToFile',       NULL,       @File2, 2   --1 = notexist 2 = overwrite
+EXECUTE sp_OAMethod                  @OLE2,    'Close'
+EXECUTE sp_OADestroy                 @OLE2
+
+EXECUTE sp_OADestroy @OLE2 
+ 
+ -- fin trt  
+  
+ Set @sDuree =   
+     Convert ( VarChar ( 10), DateDiff ( minute, @dtDebTrt , getdate())/60) + ' heures ' +  
+     Convert ( VarChar (10 ),  
+      convert ( Integer,  
+       (  
+       Convert( Decimal ( 10, 3 ) , DateDiff ( minute, @dtDebTrt , getdate())) / 60 -  
+       DateDiff ( minute, @dtDebTrt , getdate()) / 60   
+       ) * 60  
+       )) + ' minutes'  
+  
+ Set @sMaChaine = 'Fin ' + Left ( Convert ( Varchar (50), GetDate(), 103 ) + ' ' + Convert ( Varchar (50), GetDate(), 114 ), 19 ) + ', durée ' + @sDuree + CHAR ( 10 ) + CHAR ( 10 ) 
+ Set @sMaChaine = @sMaChaine + '// Handle : ' + Convert  ( Varchar ( 50 ),  @OLE2 ) + CHAR ( 10 ) + CHAR ( 10 ) 
+ Set @sMaChaine = @sMaChaine + '// @iRetMATPD (Save): ' + Convert  ( Varchar ( 50 ),  @iRetMATPD2 ) + CHAR ( 10 ) + CHAR ( 10 ) 
+
+Select @sMaChaine 
+ 
+-- Select @sMaChaine 
+
+ EXEC master.dbo.SPB_PS_MAIL   
+   @sRetourErrMail OUTPUT,   
+   'jff@spb.fr,jff7209@gmail.com',  
+   @sMaChaine,
+   'Fin',   
+   null, -- From  
+   '',   
+   NULL,   
+   NULL,   
+   NULL,   
+   NULL,   
+   NULL  
+
+Select '@sRetourErrMail', @sRetourErrMail
+  
+  End   
+
+
+-- Traitement 5
+If @iTypeTrt = 5  
+  Begin  
+
+Update sysadm.cle Set valeur = 1, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'LANCEUR_JOBS_SQL'  
+  
+ Set @dtDebTrt = GetDate()  
+
+ Set @sMaChaine = 'Début ' + Left ( Convert ( Varchar (50), GetDate(), 103 ) + ' ' + Convert ( Varchar (50), GetDate(), 114 ), 19 )  
+ EXEC master.dbo.SPB_PS_MAIL   
+   @sRetourErrMail OUTPUT,   
+   'jff@spb.fr, jff7209@gmail.com',  
+   @sMaChaine,   
+   'Début',   
+   null, -- From  
+   '',   
+   NULL,   
+   NULL,   
+   NULL,   
+   NULL,   
+   NULL  
+ 
+ 
+ -- Déb trt  
+
+Declare @FilePDFSource        VARCHAR(2000)
+Declare @FilePDFDest        VARCHAR(2000)
+
+Set @FilePDFSource = 'C:\JFF_MATP_SQL_BLOB\MonDocTestSIMPA2.PDF'
+
+-- Prod
+Set @FilePDFDest = '\\SPB.LAN\PRODUCTION\FLUX_APPLIS\APPLIS_WEB\WEB_FILES\PCV\KSLPRO\MATP\MonDocTestSIMPA2.PDF'
+
+-- Rc7
+--Set @FilePDFDest = '\\SPB.LAN\PRODUCTION\FLUX_APPLIS\APPLIS_WEB\WEB_FILES\PCV\KSLREC\MATP\MonDocTestSIMPA2.PDF'
+
+Declare @sCmdDos VarChar ( 200 )
+Set @sCmdDos = 'Move ' +  @FilePDFSource + ' ' + @FilePDFDest
+EXEC @iRet = master.dbo.xp_cmdshell @sCmdDos 
+
+ 
+ -- fin trt  
+  
+ Set @sDuree =   
+     Convert ( VarChar ( 10), DateDiff ( minute, @dtDebTrt , getdate())/60) + ' heures ' +  
+     Convert ( VarChar (10 ),  
+      convert ( Integer,  
+       (  
+       Convert( Decimal ( 10, 3 ) , DateDiff ( minute, @dtDebTrt , getdate())) / 60 -  
+       DateDiff ( minute, @dtDebTrt , getdate()) / 60   
+       ) * 60  
+       )) + ' minutes'  
+  
+ Set @sMaChaine = 'Fin ' + Left ( Convert ( Varchar (50), GetDate(), 103 ) + ' ' + Convert ( Varchar (50), GetDate(), 114 ), 19 ) + ', durée ' + @sDuree + CHAR ( 10 ) + CHAR ( 10 ) 
+  Set @sMaChaine = @sMaChaine + '// @iRet (Move): ' + Convert  ( Varchar ( 50 ),  @iRet ) + CHAR ( 10 ) + CHAR ( 10 ) 
+
+Select @sMaChaine 
+ 
+-- Select @sMaChaine 
+
+ EXEC master.dbo.SPB_PS_MAIL   
+   @sRetourErrMail OUTPUT,   
+   'jff@spb.fr,jff7209@gmail.com',  
+   @sMaChaine,
+   'Fin',   
+   null, -- From  
+   '',   
+   NULL,   
+   NULL,   
+   NULL,   
+   NULL,   
+   NULL  
+
+Select '@sRetourErrMail', @sRetourErrMail
+  
+  End   
+
 Go
 
 --------------------------------------------------------------------
