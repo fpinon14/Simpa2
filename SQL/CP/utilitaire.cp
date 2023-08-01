@@ -5935,7 +5935,7 @@ CREATE  PROCEDURE sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM_V02
 	@asCharSet			VarChar ( 30 ),
 	@aiLineSeparator	Integer,
 	@asTextBody			NVarChar ( Max ),
-	@ablBlob			VarBinary (max)
+	@ablBlob			VarBinary (max) 
 As
 
 Declare @iRet Integer
@@ -5946,22 +5946,25 @@ If @iRet <> 0 Return @iRet
 Exec @iRet = sp_OASetProperty     @aiHandle, 'Mode',  @asMode
 If @iRet <> 0 Return @iRet 
 
-Exec @iRet = sp_OASetProperty     @aiHandle, 'Charset',  @asCharSet
-If @iRet <> 0 Return @iRet 
+If @asType = 2 
+	Begin
+		Exec @iRet = sp_OASetProperty     @aiHandle, 'Charset',  @asCharSet
+		If @iRet <> 0 Return @iRet 
 
-Exec @iRet = sp_OASetProperty     @aiHandle, 'LineSeparator',  @aiLineSeparator
-If @iRet <> 0 Return @iRet 
+		Exec @iRet = sp_OASetProperty     @aiHandle, 'LineSeparator',  @aiLineSeparator
+		If @iRet <> 0 Return @iRet 
+	End 
 
 Exec @iRet = sp_OAMethod     @aiHandle, 'Open'
 If @iRet <> 0 Return @iRet 
 
-If @asType = 1 
+If @asType = 2 
 	Begin
 		Exec @iRet = sp_OAMethod     @aiHandle, 'WriteText', null, @asTextBody
 		If @iRet <> 0 Return @iRet 
 	End 
 
-If @asType = 2 
+If @asType = 1 
 	Begin
 		Exec @iRet = sp_OAMethod     @aiHandle, 'Write', null, @ablBlob
 		If @iRet <> 0 Return @iRet 
