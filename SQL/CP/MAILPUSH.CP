@@ -16162,7 +16162,8 @@ select distinct
 From	sysadm.commande c with (nolock),
 		sysadm.sinistre s with (nolock),
 		@det_pro dp,
-		sysadm.div_sin ds with (nolock)
+		sysadm.div_sin ds with (nolock),
+		sysadm.inter i with (nolock)
 Where	c.id_ref_four in ( 'A_DIAGNOSTIQUER', 'A_REPARER', 'A_DESOXYDER' )
 And		c.dte_rcp_frn is null
 And		c.cod_etat not in (  'ANN', 'RFO', 'RPC' )
@@ -16185,6 +16186,9 @@ And		Not Exists (
 			And		c1.id_typ_art = 'PST'
 			And     sysadm.FN_CLE_VAL ( 'TYP_RELAI', rtrim ( c1.info_spb_frn_cplt ) , ';' )= 'PRET'
 		)
+And		i.id_sin = s.id_sin
+And		i.cod_inter = 'A'
+And		i.adr_mail is not null
 
 Insert into @tb
 select distinct 
@@ -16207,7 +16211,8 @@ From	sysadm.commande c with (nolock),
 		sysadm.sinistre s with (nolock),
 		@det_pro dp,
 		sysadm.div_sin ds with (nolock),
-		sysadm.div_sin ds2 with (nolock)
+		sysadm.div_sin ds2 with (nolock),
+		sysadm.inter i with (nolock)
 Where	c.id_ref_four in ( 'A_DIAGNOSTIQUER', 'A_REPARER', 'A_DESOXYDER' )
 And		c.dte_rcp_frn is null
 And		c.cod_etat not in (  'ANN', 'RFO', 'RPC' )
@@ -16230,7 +16235,9 @@ And		Not Exists (
 			And		c1.id_typ_art = 'PST'
 			And     sysadm.FN_CLE_VAL ( 'TYP_RELAI', rtrim ( c1.info_spb_frn_cplt ) , ';' )= 'PRET'
 		)
-
+And		i.id_sin = s.id_sin
+And		i.cod_inter = 'A'
+And		i.adr_mail is not null
 
 Insert into @tb
 select distinct 
@@ -16253,7 +16260,8 @@ From	sysadm.commande c with (nolock),
 		sysadm.sinistre s with (nolock),
 		@det_pro dp,
 		sysadm.div_sin ds with (nolock),
-		sysadm.div_sin ds2 with (nolock)
+		sysadm.div_sin ds2 with (nolock),
+		sysadm.inter i with (nolock)
 Where	c.id_ref_four in ( 'A_DIAGNOSTIQUER', 'A_REPARER', 'A_DESOXYDER' )
 And		c.dte_rcp_frn is null
 And		c.cod_etat not in (  'ANN', 'RFO', 'RPC' )
@@ -16276,6 +16284,9 @@ And		Not Exists (
 			And		c1.id_typ_art = 'PST'
 			And     sysadm.FN_CLE_VAL ( 'TYP_RELAI', rtrim ( c1.info_spb_frn_cplt ) , ';' )= 'PRET'
 		)
+And		i.id_sin = s.id_sin
+And		i.cod_inter = 'A'
+And		i.adr_mail is not null
 
 Insert into @tb
 select distinct 
@@ -16298,7 +16309,8 @@ From	sysadm.commande c with (nolock),
 		sysadm.sinistre s with (nolock),
 		@det_pro dp ,
 		sysadm.div_sin ds with (nolock),
-		sysadm.div_sin ds2 with (nolock)
+		sysadm.div_sin ds2 with (nolock),
+		sysadm.inter i with (nolock)
 Where	c.id_ref_four in ( 'A_DIAGNOSTIQUER', 'A_REPARER', 'A_DESOXYDER' )
 And		c.dte_rcp_frn is null
 And		c.cod_etat not in (  'ANN', 'RFO', 'RPC' )
@@ -16328,6 +16340,9 @@ And		Not Exists (
 			And		c1.id_typ_art = 'PST'
 			And     sysadm.FN_CLE_VAL ( 'TYP_RELAI', rtrim ( c1.info_spb_frn_cplt ) , ';' )= 'PRET'
 		)
+And		i.id_sin = s.id_sin
+And		i.cod_inter = 'A'
+And		i.adr_mail is not null
 
 While Exists ( Select Top 1 1 From @tb where marquage = 0 )
  Begin
