@@ -3125,7 +3125,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 	 Begin
 		-- Attente de n minutes
 		Set @iDelaiAttenteMinute = 8
-		--Set @iDelaiAttenteMinute = 2
+	    -- Set @iDelaiAttenteMinute = 2
 		Set @sMsgTrc = 'Conversion de tous les courriers Word au format PDF en cours... (attente de ' + Convert ( Varchar (10), @iDelaiAttenteMinute ) + ' minutes avant reprise du traitement )'
 		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'CONPDF', 'ENC', @sMsgTrc, @iIdLotTrc
 
@@ -3289,7 +3289,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONXML', 'OK', @sMsgTrc, @iIdLotTrc 
 
 		Set @sMsgTrc = 'Déplacement du PDF ' + @sRepBlobLocal + '\' + @sNomFichierPDF + ' vers le répertoire KSL en cours... (sur ' + @sChemDepot + @sNomFichierPDF  + ')'
-		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'ECRXML', 'ENC', @sMsgTrc, @iIdLotTrc
+		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'DEPPDF', 'ENC', @sMsgTrc, @iIdLotTrc
 
 		-- Juste avant d'écrire le XML qui sera l'élément déclencheur pour KSL, je déplace le PDF dans le répertoire définitif
 		Set @sCmdDos = 'Move ' +  @sRepBlobLocal + '\' + @sNomFichierPDF + ' ' + @sChemDepot
@@ -3306,6 +3306,11 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 
 			Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
 			Continue
+		  End 
+		Else
+		  Begin
+			Set @sMsgTrc = 'PDF déplacé avec succès vers ' + @sCmdDos
+			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'DEPPDF', 'OK', @sMsgTrc, @iIdLotTrc
 		  End 
 
 		Set @sMsgTrc = 'Ecriture du fichier XML à destination de KSL en cours... (sur ' + @ChemEtNomDepot  + ')'

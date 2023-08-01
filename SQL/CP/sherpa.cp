@@ -7000,7 +7000,7 @@ BEGIN
 		Select Top 1 1 
 		From SHERPA_PRO.sysadm.det_pro dp
 		Where dp.id_prod = @aiIdProdAdh
-		and dp.id_typ_code = '-DP'
+		and dp.id_typ_code = 'DP'
 		And dp.id_code = 266 
 	) 
 	 Begin	
@@ -7044,7 +7044,7 @@ BEGIN
 		Select Top 1 1 
 		From SHERPA_SIM.sysadm.det_pro dp
 		Where dp.id_prod = @aiIdProdAdh
-		and dp.id_typ_code = '-DP'
+		and dp.id_typ_code = 'DP'
 		And dp.id_code = 266 
 	) 
 	 Begin	
