@@ -1146,7 +1146,6 @@ Declare @sCanal Varchar ( 20 )
 		Where id_xml = @iIdXml
 		FOR XML PATH('demande'))
 
-
 	  End 
 
 	Else -- Hors ( 'MAPTN', 'MAPTD' ) 
@@ -1284,6 +1283,7 @@ Declare @sCanal Varchar ( 20 )
 		from sysadm.variable_xml_ksl_rs5045 v
 		Where id_xml = @iIdXml
 		FOR XML PATH('demande'))
+
 	
 		set @xmlResult=REPLACE(@xmlResult,'/></demande>',
 			'><tableaux><T1></T1><T2></T2><T3></T3><T4></T4><T5></T5><T6></T6></tableaux></courrier></demande>')
