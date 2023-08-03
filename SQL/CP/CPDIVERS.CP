@@ -5153,7 +5153,7 @@ If Not ( sysadm.FN_CLE_NUMERIQUE ( 'LANCEUR_JOBS_SQL') > 0 ) Return
 Update sysadm.cle Set valeur = 0, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'LANCEUR_JOBS_SQL'  
   
   
-Set @iTypeTrt = 5
+Set @iTypeTrt = 2
 /* @iTypeTrt   
 1  : Traitement pour PI085  
 2  : Redressement Blob plus vieux de 6 mois  

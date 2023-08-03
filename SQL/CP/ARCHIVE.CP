@@ -44,96 +44,101 @@
 --
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
+-- JFF      26/04/2023   [RS5045_REF_MATP]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I01_ARCHIVE_VAL' AND type = 'P' )
         DROP procedure sysadm.PS_I01_ARCHIVE_VAL
 GO
 
-CREATE procedure sysadm.PS_I01_ARCHIVE_VAL
-        @dcIdSin        Decimal (  10,0 ),  -- [PI062]
-        @dcIdI          Decimal (  7,0 ),
-        @dcIdCpt        Decimal (  4,0 ),
-        @dcIdDoc        Decimal (  7,0 ),
-        @dcIdOrdre      Decimal (  7,0 ),
-        @sCodOper       Varchar (  4   ),
-        @dtValideLe     DateTime
-AS
-
- INSERT INTO    sysadm.archive
-        (       archive.id_sin,
-                archive.id_inter,
-                archive.id_doc,
-                archive.id_cour,
-                archive.id_prod,
-                archive.id_ordre,
-                archive.id_adh,
-                archive.cod_version,
-                archive.cod_inter,
-                archive.nom,
-                archive.dte_edit,
-                archive.dte_conf,
-                archive.dte_archiv,
-                archive.dte_rep,
-                archive.alt_part,
-                archive.alt_pce,
-                archive.alt_ps,
-                archive.alt_rep,
-                archive.txt_compo1,
-                archive.txt_compo2,
-                archive.ref_doc_dt,
-                archive.ref_doc_cp,
-                archive.ref_doc_pc,
-                archive.ref_doc_ps,
-                archive.nbr_conf,
-                archive.cree_le,
-                archive.maj_le,
-                archive.maj_par,
-                archive.valide_le,
-                archive.valide_par      )
- SELECT         w_courrier.id_sin,
-                w_courrier.id_i,
-                @dcIdDoc,
-                w_courrier.id_cour,
-                w_sin.id_prod,
-                @dcIdOrdre,
-                w_sin.id_adh,
-                2,
-                w_inter.cod_inter,
-                w_inter.nom,
-                w_queue.trv_edite_le,
-                NULL,
-                NULL,
-                NULL,
-                w_courrier.alt_part,
-                w_courrier.alt_pce,
-                w_courrier.alt_ps,
-                'N',
-                w_courrier.txt_compo1,
-                w_courrier.txt_compo2,
-                NULL,
-                NULL,
-                NULL,
-                NULL,
-                0,
-                w_courrier.cree_le,
-                w_courrier.maj_le,
-                w_courrier.maj_par,
-                @dtValideLe,
-                @sCodOper
- FROM           sysadm.w_sin,
-                sysadm.w_courrier,
-                sysadm.w_inter,
-                sysadm.w_queue
- WHERE          w_sin.id_sin            = @dcIdSin              AND
-                w_sin.id_sin            = w_courrier.id_sin     AND
-                w_sin.id_sin            = w_inter.id_sin        AND
-                w_courrier.id_i         = @dcIdI                AND
-                w_courrier.id_cpt       = @dcIdCpt              AND
-                w_courrier.id_i         = w_inter.id_i          AND
-                w_queue.id_sin  = Convert ( VarChar(10), w_sin.id_sin )  -- [PI062]
-
- Return @@RowCount
-
+  
+CREATE procedure sysadm.PS_I01_ARCHIVE_VAL  
+        @dcIdSin        Decimal (  10,0 ),  -- [PI062]  
+        @dcIdI          Decimal (  7,0 ),  
+        @dcIdCpt        Decimal (  4,0 ),  
+        @dcIdDoc        Decimal (  7,0 ),  
+        @dcIdOrdre      Decimal (  7,0 ),  
+        @sCodOper       Varchar (  4   ),  
+        @dtValideLe     DateTime  
+AS  
+  
+ INSERT INTO    sysadm.archive  
+        (       archive.id_sin,  
+                archive.id_inter,  
+                archive.id_doc,  
+                archive.id_cour,  
+                archive.id_prod,  
+                archive.id_ordre,  
+                archive.id_adh,  
+                archive.cod_version,  
+                archive.cod_inter,  
+                archive.nom,  
+                archive.dte_edit,  
+                archive.dte_conf,  
+                archive.dte_archiv,  
+                archive.dte_rep,  
+                archive.alt_part,  
+                archive.alt_pce,  
+                archive.alt_ps,  
+                archive.alt_rep,  
+                archive.txt_compo1,  
+                archive.txt_compo2,  
+                archive.ref_doc_dt,  
+                archive.ref_doc_cp,  
+                archive.ref_doc_pc,  
+                archive.ref_doc_ps,  
+                archive.nbr_conf,  
+                archive.cree_le,  
+                archive.maj_le,  
+                archive.maj_par,  
+                archive.valide_le,  
+                archive.valide_par,
+				archive.modele_word  -- [RS5045_REF_MATP]
+				)  
+ SELECT         w_courrier.id_sin,  
+                w_courrier.id_i,  
+                @dcIdDoc,  
+                w_courrier.id_cour,  
+                w_sin.id_prod,  
+                @dcIdOrdre,  
+                w_sin.id_adh,  
+                2,  
+                w_inter.cod_inter,  
+                w_inter.nom,  
+                w_queue.trv_edite_le,  
+                NULL,  
+                NULL,  
+                NULL,  
+                w_courrier.alt_part,  
+                w_courrier.alt_pce,  
+                w_courrier.alt_ps,  
+                'N',  
+                w_courrier.txt_compo1,  
+                w_courrier.txt_compo2,  
+                NULL,  
+                NULL,  
+                NULL,  
+                NULL,  
+                0,  
+                w_courrier.cree_le,  
+                w_courrier.maj_le,  
+                w_courrier.maj_par,  
+                @dtValideLe,  
+                @sCodOper,
+				w_courrier.modele_word  -- [RS5045_REF_MATP]
+ FROM           sysadm.w_sin,  
+                sysadm.w_courrier,  
+                sysadm.w_inter,  
+                sysadm.w_queue  
+ WHERE          w_sin.id_sin            = @dcIdSin              AND  
+                w_sin.id_sin            = w_courrier.id_sin     AND  
+                w_sin.id_sin            = w_inter.id_sin        AND  
+                w_courrier.id_i         = @dcIdI                AND  
+                w_courrier.id_cpt       = @dcIdCpt              AND  
+                w_courrier.id_i         = w_inter.id_i          AND  
+                w_queue.id_sin  = Convert ( VarChar(10), w_sin.id_sin )  -- [PI062]  
+  
+Return @@RowCount  
+  
 GO
 
 --------------------------------------------------------------------
@@ -4195,6 +4200,7 @@ GO
 -- #1	PHG	03/11/2006	[DNTMAIL1-2] On enregistre le media ( Id_Canal )
 --      JFF 12/06/2014  [PI052]
 --      JFF 12/02/2016  [PI062]
+-- JFF      26/04/2023   [RS5045_REF_MATP]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I01_ARCHIVE_VAL_SVE' AND type = 'P' )
         DROP procedure sysadm.PS_I01_ARCHIVE_VAL_SVE
@@ -4246,8 +4252,9 @@ Declare @iRowCount Integer -- [PI052]
                 archive.valide_par,
                 archive.id_arch,
                 archive.id_cour_orig,
-		archive.id_canal,	-- #1 PHG 03/11/2006 [DNTMAIL1-2] On enregistre le media ( Id_Canal )
-		archive.envoi_mail_le	-- #1 PHG 03/11/2006 [DNTMAIL1-2] On enregistre le media ( Id_Canal )
+				archive.id_canal,	-- #1 PHG 03/11/2006 [DNTMAIL1-2] On enregistre le media ( Id_Canal )
+				archive.envoi_mail_le,	-- #1 PHG 03/11/2006 [DNTMAIL1-2] On enregistre le media ( Id_Canal )
+				archive.modele_word  -- [RS5045_REF_MATP]
 	)
  SELECT         w_courrier.id_sin,
                 w_courrier.id_i,
@@ -4281,8 +4288,9 @@ Declare @iRowCount Integer -- [PI052]
                 @sCodOper,
                 @iCptArch,
                 w_courrier.id_cour_orig,
-		w_courrier.id_canal,	-- #1 PHG 03/11/2006 [DNTMAIL1-2] On enregistre le media ( Id_Canal )
-		NULL			-- #1 PHG 03/11/2006 [DNTMAIL1-2] On enregistre le media ( Id_Canal )
+				w_courrier.id_canal,	-- #1 PHG 03/11/2006 [DNTMAIL1-2] On enregistre le media ( Id_Canal )
+				NULL,
+				w_courrier.modele_word  -- [RS5045_REF_MATP]
  FROM           sysadm.w_sin,
                 sysadm.w_courrier,
                 sysadm.w_inter,

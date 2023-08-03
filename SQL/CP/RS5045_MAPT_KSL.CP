@@ -1373,9 +1373,6 @@ Declare @sIdProd varchar ( 10 )
 
 Set @dtDteHExec = @adtDteHExec
 
--- Nettoyage de ma la Table de stockage des xml temporaire, on garde que 15 jours.
-Delete sysadm.variable_xml_ksl_rs5045 where cree_le < DateAdd ( month, -2, Getdate())
-
 -- Set @asMethode = Upper ( lTrim ( rTrim ( @asMethode )))
 
 -- **********************************************************************************
@@ -2428,6 +2425,11 @@ Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INFO', 'OK', @sMsgTr
 
 EXEC master.dbo.xp_cmdshell 'taskkill /F  /IM WINWORD.EXE /T'
 EXEC master.dbo.xp_cmdshell 'taskkill /F  /IM WORDTOPDF.EXE /T'
+
+-- Nettoyage de ma la Table de stockage des xml temporaire, on garde que 15 jours.
+Set @sMsgTrc = 'Nettoyage des jetons XML table (sysadm.variable_xml_ksl_rs5045)'
+Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INFO', 'OK', @sMsgTrc, @iIdLotTrc 
+Delete sysadm.variable_xml_ksl_rs5045 where cree_le < DateAdd ( day, -15, Getdate())
   
 Declare @TbWork Table (
 	id_seq  integer,

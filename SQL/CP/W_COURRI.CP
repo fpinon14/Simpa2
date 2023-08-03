@@ -29,33 +29,35 @@
 -- MAJ	PAR	LE		Description
 -- #1	PHG	06/11/2006	[DNTMAIL1-2] Ajout du canal ( Id_Canal )
 --  JFF		12/02/2016		[PI062]
+-- JFF      26/04/2023   [RS5045_REF_MATP]
 -------------------------------------------------------------------
 
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'DW_S01_W_COURRIER' AND type = 'P' )
         DROP procedure sysadm.DW_S01_W_COURRIER
 GO
 
-CREATE procedure sysadm.DW_S01_W_COURRIER
-        @dcIdSin        Decimal (  10, 0 ) -- [PI062]
-AS
- SELECT w_courrier.id_sin,
-        w_courrier.id_i,
-        w_courrier.id_cpt,
-        w_courrier.id_cour,
-        w_courrier.alt_part,
-        w_courrier.alt_pce,
-        w_courrier.alt_ps,
-        w_courrier.txt_compo1,
-        w_courrier.txt_compo2,
-        w_courrier.id_i_db,
-        w_courrier.cree_le,
-        w_courrier.maj_le,
-        w_courrier.maj_par,
-        w_courrier.id_cour_orig,
-        w_courrier.id_canal -- #1 [DNTMAIL1-2]
+CREATE procedure sysadm.DW_S01_W_COURRIER  
+        @dcIdSin        Decimal (  10, 0 ) -- [PI062]  
+AS  
+ SELECT w_courrier.id_sin,  
+        w_courrier.id_i,  
+        w_courrier.id_cpt,  
+        w_courrier.id_cour,  
+        w_courrier.alt_part,  
+        w_courrier.alt_pce,  
+        w_courrier.alt_ps,  
+        w_courrier.txt_compo1,  
+        w_courrier.txt_compo2,  
+        w_courrier.id_i_db,  
+        w_courrier.cree_le,  
+        w_courrier.maj_le,  
+        w_courrier.maj_par,  
+        w_courrier.id_cour_orig,  
+        w_courrier.id_canal, -- #1 [DNTMAIL1-2]  
+		w_courrier.modele_word -- [RS5045_REF_MATP]
 
- FROM   sysadm.w_courrier
- WHERE  w_courrier.id_sin = @dcIdSin
+ FROM   sysadm.w_courrier  
+ WHERE  w_courrier.id_sin = @dcIdSin  
 
 GO
 
@@ -90,6 +92,7 @@ GO
 -- MAJ	PAR	LE		Description
 -- #1	PHG	06/11/2006	[DNTMAIL1-2] Ajout du canal ( Id_Canal )
 --      JFF 12/02/2016  [PI062]
+-- JFF      26/04/2023   [RS5045_REF_MATP]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'DW_I01_W_COURRIER' AND type = 'P' )
         DROP procedure sysadm.DW_I01_W_COURRIER
@@ -110,7 +113,8 @@ CREATE procedure sysadm.DW_I01_W_COURRIER
         @dtMajLe        DateTime        ,
         @sMajPar        Varchar (  4 )  ,
         @sIdCourOrig	VarChar ( 6 ),
-	@sIdCanal	Varchar ( 2 ) -- #1 [DNTMAIL1-2]
+		@sIdCanal	Varchar ( 2 ), -- #1 [DNTMAIL1-2]
+		@sModeleWord VarChar ( 40 ) -- [RS5045_REF_MATP]
 
 AS
  INSERT INTO    sysadm.w_courrier
@@ -128,7 +132,8 @@ AS
                 w_courrier.maj_le,
                 w_courrier.maj_par,
                 w_courrier.id_cour_orig,
-		w_courrier.id_canal -- #1 [DNTMAIL1-2]
+				w_courrier.id_canal, -- #1 [DNTMAIL1-2]
+				w_courrier.modele_word -- [RS5045_REF_MATP]
        )
  VALUES (       @dcIdsin,
                 @dcIdI,
@@ -144,7 +149,8 @@ AS
                 @dtMajLe,
                 @sMajPar,
                 @sIdCourOrig,
-		@sIdCanal -- #1 [DNTMAIL1-2]
+				@sIdCanal, -- #1 [DNTMAIL1-2]
+				@sModeleWord -- [RS5045_REF_MATP]
 	)
 GO
 
@@ -233,4 +239,37 @@ AS
  	id_nat_cour = null
  WHERE          w_inter.id_sin          = @dcIdSin
 GO
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_W_COURRIER_MODELE_WORD
+-- Auteur               :       Fabry JF
+-- Date                 :       03/08/2023
+-- Libellé              :       
+-- Commentaires         :       Récup des modèles
+-- Références           :    -- JFF      26/04/2023   [RS5045_REF_MATP]   
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_W_COURRIER_MODELE_WORD' AND type = 'P' )
+        DROP procedure sysadm.PS_S_W_COURRIER_MODELE_WORD
+GO
+
+CREATE procedure sysadm.PS_S_W_COURRIER_MODELE_WORD
+        @adcIdSin    Decimal (  10,0 ), -- [PI062]
+        @asChaine	 VarChar ( 100 ) OutPut
+AS
+
+Select @asChaine =
+	  Stuff (
+				( 
+				SELECT CAST( ';ID_I_' + rtrim ( wc.id_i) + '=' + IsNull ( wc.modele_word, '' ) AS VARCHAR(250)) 
+				FROM sysadm.w_courrier wc
+				Where id_sin = @adcIdSin
+				For XML PATH ('') 
+	   ), 1, 1, '' )
+
+Go
 
