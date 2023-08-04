@@ -26,6 +26,7 @@
 -- JFF      12/02/2016   [PI062]
 -- JFF      18/08/2020   [PM425] Suppression ligne contrôle sur courrier CP 00000
 -- JFF      28/03/2023   [RS4843-PM425-1]
+-- JFF      26/04/2023   [RS5045_REF_MATP]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_PM425_RECUP_INFO' AND type = 'P' )
         DROP procedure sysadm.PS_S_PM425_RECUP_INFO
@@ -54,6 +55,7 @@ CREATE PROCEDURE sysadm.PS_S_PM425_RECUP_INFO
 AS 
 
 Declare @sCodeBanque VarChar ( 10 )
+Declare @sModeleWord VarChar ( 40 ) -- [RS5045_REF_MATP]
 
 Select @aiDecentralise = 1,
 	   @asFondPage = Upper ( rtrim ( ltrim ( sysadm.FN_CLE_VAL ( 'FOND_DE_PAGE', rtrim ( val_car ) + rtrim ( val_car2), ';' )))),
@@ -95,10 +97,38 @@ From	sysadm.inter i
 Where   i.id_sin = @adcIdSin
 And     i.id_i = @adcIdInter
 
-Select @dcIdDoc = a.id_doc
-From   sysadm.archive a
-Where  a.id_arch = @aiIdArch
+-- [RS5045_REF_MATP]
+If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') >= 3 
+ Begin
+	
+	If @aiIdArch > 0 
+	  Begin
+		Select @sModeleWord = lTrim ( rTrim ( a.modele_word ))
+		From sysadm.archive a
+		Where a.id_arch = @aiIdArch
+	  End 
 
+	If @sModeleWord is null and @dcIdDoc > 0 
+	  Begin
+		Select @sModeleWord = lTrim ( rTrim ( a.modele_word ))
+		From sysadm.archive a
+		Where a.id_sin = @adcIdSin
+		And   a.id_inter = @adcIdInter
+		And   a.id_doc = @dcIdDoc
+	  End 
+	-- Si le courrier a un modele différent de null, donc différent de courrier.dot
+	-- alors on force à fond blanc car il a déjà son fond
+	If @sModeleWord is Not Null Set @asFondPage = 'PAPIER_BLANC'
+
+ End 
+ -- /[RS5045_REF_MATP]
+
+If @dcIdDoc = -1 -- [RS5045_REF_MATP]
+  Begin
+	Select @dcIdDoc = a.id_doc
+	From   sysadm.archive a
+	Where  a.id_arch = @aiIdArch
+  End 
 
 If @asAdrCP = '00000' Set @aiDecentralise = 0
 
