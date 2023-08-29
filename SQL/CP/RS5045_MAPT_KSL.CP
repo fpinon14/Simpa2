@@ -156,6 +156,14 @@ Declare @sMajPar VarChar ( 4 )
 Declare @sNature VarChar ( 10 )
 Declare @sIdInter Varchar ( 10 )
 
+Declare @sNoAdhesion varchar (50)
+Declare @sDateDeSurvenanceSinistre varchar (35)
+Declare @sHeureDeSurvenanceSinistre varchar (20)
+Declare @sNotTelInterAssure varchar (35)
+Declare @sLibNature varchar (35)
+
+
+
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 BEGIN
     -- *************************************
@@ -176,7 +184,8 @@ BEGIN
 		   @sCodePostal = i.adr_cp,
 		   @sVille = i.adr_ville,
 		   @sAdrMail = i.adr_mail,
-		   @sIdInter = i.id_i
+		   @sIdInter = i.id_i,
+		   @sNotTelInterAssure = i.num_teld
 
 	From SIMPA2_PRO.sysadm.inter i
 	Where id_sin = @adcIdSin
@@ -194,7 +203,8 @@ BEGIN
 				@sCodePostal = i.adr_cp,
 				@sVille = i.adr_ville,
 				@sAdrMail = i.adr_mail,
-				@sIdInter = i.id_i
+				@sIdInter = i.id_i,
+				@sNotTelInterAssure = i.num_teld
 
 		From SIMPA2_PRO.sysadm.w_inter i
 		Where id_sin = @adcIdSin
@@ -234,8 +244,19 @@ BEGIN
 		   @DateDeDeclaration = convert ( VarChar ( 10 ), s.dte_decl, 23 ),
 		   @sIMEI = s.num_imei_port,
 		   @sMajPar = s.maj_par,
-		   @sNature = Convert ( varchar (10), s.id_natsin ) 
-
+		   @sNature = Convert ( varchar (10), s.id_natsin ),
+		   @sLibNature = Upper (Left ( SIMPA2_PRO.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ), 1 )) + Lower ( Right ( SIMPA2_PRO.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ), len (SIMPA2_PRO.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ))-1 )),
+		   @sDateDeSurvenanceSinistre = convert ( VarChar ( 10 ), s.dte_surv, 23 ),
+		   @sHeureDeSurvenanceSinistre =  Convert ( VarChar (5), s.dte_surv, 108 ),
+		   @sNoAdhesion  = 
+			Case (Select cod_adh From SIMPA2_PRO.sysadm.produit p Where p.id_prod = s.id_prod ) 
+				When '3' Then lTrim ( rtrim ( s.id_adh ))
+				Else (
+					Select convert ( VarChar ( 5 ), p.cod_prod_dms ) + '-' + convert ( varchar ( 5), s.id_ets ) + '-' + lTrim ( rTrim ( s.id_adh )) + '-' + Convert ( varchar (2), s.id_sdos )
+					From SIMPA2_PRO.sysadm.produit p
+					Where p.id_prod = s.id_prod 
+					) 
+			End
 	From SIMPA2_PRO.sysadm.sinistre s
 	Where id_sin = @adcIdSin
 
@@ -252,7 +273,19 @@ BEGIN
 			   @DateDeDeclaration = convert ( VarChar ( 10 ), s.dte_decl, 23 ),
 			   @sIMEI = s.num_imei_port,
 			   @sMajPar = s.maj_par,
-			   @sNature = Convert ( varchar (10), s.id_natsin ) 
+			   @sNature = Convert ( varchar (10), s.id_natsin ),
+			   @sLibNature = Upper (Left ( SIMPA2_PRO.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ), 1 )) + Lower ( Right ( SIMPA2_PRO.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ), len (SIMPA2_PRO.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ))-1 )),
+			   @sDateDeSurvenanceSinistre = Convert ( VarChar ( 10 ), s.dte_surv, 23 ),
+			   @sHeureDeSurvenanceSinistre =  Convert ( VarChar (5), s.dte_surv, 108 ),
+			   @sNoAdhesion  = 
+				Case (Select cod_adh From SIMPA2_PRO.sysadm.produit p Where p.id_prod = s.id_prod ) 
+					When '3' Then lTrim ( rtrim ( s.id_adh ))
+					Else (
+						Select convert ( VarChar ( 5 ), p.cod_prod_dms ) + '-' + convert ( varchar ( 5), s.id_ets ) + '-' + lTrim ( rTrim ( s.id_adh )) + '-' + Convert ( varchar (2), s.id_sdos )
+						From SIMPA2_PRO.sysadm.produit p
+						Where p.id_prod = s.id_prod 
+						) 
+				End
 
 		From SIMPA2_PRO.sysadm.w_sin s
 		Where id_sin = @adcIdSin
@@ -299,6 +332,7 @@ BEGIN
     -- *************************************
 	-- ** Données liées à l'interlocuteur **
     -- *************************************
+
 	Select @sCodCivCourt = Case i.cod_civ When 5 Then 'Messieurs' Else SIMPA2_TRT.sysadm.FN_CODE_NUM(i.cod_civ,'-CI') End,
 		   @sCodCivLong = Case i.cod_civ When 5 Then 'Messieurs' Else SIMPA2_TRT.sysadm.FN_CODE_NUM(i.cod_civ,'-CL') End,
 		   @sNom = i.nom,
@@ -309,7 +343,8 @@ BEGIN
 		   @sCodePostal = i.adr_cp,
 		   @sVille = i.adr_ville,
 		   @sAdrMail = i.adr_mail,
-		   @sIdInter = i.id_i
+		   @sIdInter = i.id_i,
+		   @sNotTelInterAssure = i.num_teld
 
 	From SIMPA2_TRT.sysadm.inter i
 	Where id_sin = @adcIdSin
@@ -327,7 +362,8 @@ BEGIN
 				@sCodePostal = i.adr_cp,
 				@sVille = i.adr_ville,
 				@sAdrMail = i.adr_mail,
-				@sIdInter = i.id_i
+				@sIdInter = i.id_i,
+				@sNotTelInterAssure = i.num_teld
 
 		From SIMPA2_TRT.sysadm.w_inter i
 		Where id_sin = @adcIdSin
@@ -367,8 +403,19 @@ BEGIN
 		   @DateDeDeclaration = convert ( VarChar ( 10 ), s.dte_decl, 23 ),
 		   @sIMEI = s.num_imei_port,
 		   @sMajPar = s.maj_par,
-		   @sNature = Convert ( varchar (10), s.id_natsin ) 
-
+		   @sNature = Convert ( varchar (10), s.id_natsin ),
+		   @sLibNature = Upper (Left ( SIMPA2_TRT.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ), 1 )) + Lower ( Right ( SIMPA2_TRT.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ), len (SIMPA2_TRT.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ))-1 )),
+		   @sDateDeSurvenanceSinistre = convert ( VarChar ( 10 ), s.dte_surv, 23 ),
+		   @sHeureDeSurvenanceSinistre =  Convert ( VarChar (5), s.dte_surv, 108 ),
+		   @sNoAdhesion  = 
+			Case (Select cod_adh From SIMPA2_TRT.sysadm.produit p Where p.id_prod = s.id_prod ) 
+				When '3' Then lTrim ( rtrim ( s.id_adh ))
+				Else (
+					Select convert ( VarChar ( 5 ), p.cod_prod_dms ) + '-' + convert ( varchar ( 5), s.id_ets ) + '-' + lTrim ( rTrim ( s.id_adh )) + '-' + Convert ( varchar (2), s.id_sdos )
+					From SIMPA2_TRT.sysadm.produit p
+					Where p.id_prod = s.id_prod 
+					) 
+			End
 	From SIMPA2_TRT.sysadm.sinistre s
 	Where id_sin = @adcIdSin
 
@@ -385,7 +432,19 @@ BEGIN
 			   @DateDeDeclaration = convert ( VarChar ( 10 ), s.dte_decl, 23 ),
 			   @sIMEI = s.num_imei_port,
 			   @sMajPar = s.maj_par,
-			   @sNature = Convert ( varchar (10), s.id_natsin ) 
+			   @sNature = Convert ( varchar (10), s.id_natsin ),
+			   @sLibNature = Upper (Left ( SIMPA2_TRT.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ), 1 )) + Lower ( Right ( SIMPA2_TRT.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ), len (SIMPA2_TRT.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ))-1 )),
+			   @sDateDeSurvenanceSinistre = Convert ( VarChar ( 10 ), s.dte_surv, 23 ),
+			   @sHeureDeSurvenanceSinistre =  Convert ( VarChar (5), s.dte_surv, 108 ),
+			   @sNoAdhesion  = 
+				Case (Select cod_adh From SIMPA2_TRT.sysadm.produit p Where p.id_prod = s.id_prod ) 
+					When '3' Then lTrim ( rtrim ( s.id_adh ))
+					Else (
+						Select convert ( VarChar ( 5 ), p.cod_prod_dms ) + '-' + convert ( varchar ( 5), s.id_ets ) + '-' + lTrim ( rTrim ( s.id_adh )) + '-' + Convert ( varchar (2), s.id_sdos )
+						From SIMPA2_TRT.sysadm.produit p
+						Where p.id_prod = s.id_prod 
+						) 
+				End
 
 		From SIMPA2_TRT.sysadm.w_sin s
 		Where id_sin = @adcIdSin
@@ -420,7 +479,7 @@ BEGIN
 	Select @sAssureur = SIMPA2_TRT.sysadm.FN_LIB_CIE ( @dcIdSin )
 	Select @sNoPolice = SIMPA2_TRT.sysadm.FN_GET_LIB_POLICE_V01(@dcIdSin,@dcIdProd, @dcIdRev,-1,NULL) 
 	If @sNoPolice is null or lTrim ( rTrim ( @sNoPolice )) = '' Select @sNoPolice = SIMPA2_TRT.sysadm.FN_LIB_POLICE ( @dcIdSin )
-	
+
 END	
 
 -- *************************************
@@ -458,7 +517,13 @@ Set civ = @sCodCivCourt,
 	imei = @sIMEI,
 	maj_par = @sMajPar,
 	nature = @sNature,
-	id_inter = @sIdInter
+	id_inter = @sIdInter,
+	no_ligne_assuree = @sNoLigneAssuree,
+	no_adhesion = @sNoAdhesion,
+	date_de_survenance_sinistre = @sDateDeSurvenanceSinistre,
+	heure_de_survenance_sinistre = @sHeureDeSurvenanceSinistre,
+	no_tel_inter_assure = @sNotTelInterAssure,
+	lib_nature = @sLibNature 
 
 Where id_xml = @aiIdXml
 
@@ -1138,7 +1203,9 @@ Declare @sCanal Varchar ( 20 )
 			'' as 'entete/@o2mcp',
 			'' as 'entete/@o2mville',
 			mail_subject as 'entete/@mail_subject',
-			mail_body as 'entete/@mail_body'
+			mail_body as 'entete/@mail_body',
+			no_adhesion as 'entete/@no_adhesion',
+			no_tel_inter_assure as 'entete/@no_tel_inter_assure'
 
 			-- Pas de section Courrier pour ces codes maquettes
 
@@ -1218,6 +1285,8 @@ Declare @sCanal Varchar ( 20 )
 			'' as 'entete/@o2mville',
 			mail_subject as 'entete/@mail_subject',
 			mail_body as 'entete/@mail_body',
+			no_adhesion as 'entete/@no_adhesion',
+			no_tel_inter_assure as 'entete/@no_tel_inter_assure',
 
 			-- Ci-dessous section <Courrier
 
@@ -1278,7 +1347,13 @@ Declare @sCanal Varchar ( 20 )
 			categorie_relance as 'courrier/@categorie_relance', -- [PM407-1]
 			id_inter as 'courrier/@id_inter', -- [PM407-1]
 			id_doc as 'courrier/@id_doc', -- [PM407-1]
-			env_par_mail as 'courrier/@env_par_mail' -- [PM407-1]
+			env_par_mail as 'courrier/@env_par_mail', -- [PM407-1]
+			code_produit as 'courrier/@code_produit', 
+			lib_nature as 'courrier/@lib_nature',
+			date_de_survenance_sinistre as 'courrier/@date_de_survenance_sinistre',
+			heure_de_survenance_sinistre as 'courrier/@heure_de_survenance_sinistre',
+			texte_1 as 'courrier/@texte_1',
+			type_de_bien as 'courrier/@type_de_bien'
 
 		from sysadm.variable_xml_ksl_rs5045 v
 		Where id_xml = @iIdXml
