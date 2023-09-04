@@ -1154,8 +1154,14 @@ CREATE procedure sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE
 AS
 
 Declare @sCanal Varchar ( 20 ) 
-	
-	If @sCodeMaquette in ( 'MATPN', 'MATPD' ) 
+Declare @sMethodeKsl Varchar ( 20 ) 
+
+-- Déterminer la méthode lié à la maquette KSL
+Select @sMethodeKsl = ltrim ( rtrim ( cm.methode_ksl ))
+From sysadm.code_maquette_ksl_rs5045 cm
+Where cm.cod_maq = @sCodeMaquette
+
+	If @sMethodeKsl in ( 'RS5045_MATPN', 'RS5045_MATPD', 'RS5045_MAILPUSH_KSL' ) 
 	  Begin
 		select @xmlResult=(
 		select top 1 
@@ -1215,7 +1221,7 @@ Declare @sCanal Varchar ( 20 )
 
 	  End 
 
-	Else -- Hors ( 'MAPTN', 'MAPTD' ) 
+	If @sMethodeKsl in ( 'RS5045_CODMAQ' ) 
 	  Begin
 		
 		-- Détermination du Canal (très important)
@@ -1362,7 +1368,6 @@ Declare @sCanal Varchar ( 20 )
 	
 		set @xmlResult=REPLACE(@xmlResult,'/></demande>',
 			'><tableaux><T1></T1><T2></T2><T3></T3><T4></T4><T5></T5><T6></T6></tableaux></courrier></demande>')
-	
 	End 
 
 
