@@ -6735,8 +6735,8 @@ Go
 -- Procédure            :       PS_U_ARCHIVE_PIECE
 -- Auteur               :       JFF
 -- Date                 :       06/01/2020
--- Libell‚              :       Mets à joue l'état des pièces sur SHERPA.archive par rapport ua pièce SIMPA2
---								!!! A compiler sur SHERPA !!
+-- Libell‚              :       Mets à jour l'état des pièces sur SHERPA.archive par rapport ua pièce SIMPA2
+--								/!\ !!! A compiler sur SHERPA !! /!\
 --
 -- Références           :       [PC192290]
 --
@@ -6746,6 +6746,7 @@ Go
 --
 -------------------------------------------------------------------
 -- JFF  28/09/2021 [20210928162035633] Ajout d'un caractère de fin de chaine(@) pour ne pas perdre les espace de fin de chaine
+-- JFF  04/09/2023 [RS5656_MOD_PCE_DIF]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_ARCHIVE_PIECE' AND type = 'P' )
         DROP procedure sysadm.PS_U_ARCHIVE_PIECE
@@ -6757,7 +6758,7 @@ CREATE PROCEDURE sysadm.PS_U_ARCHIVE_PIECE
 	@asChaineTrt2 VarChar ( 255 ),
 	@asChaineTrt3 VarChar ( 255 )
 As
-
+--								/!\ !!! A compiler sur SHERPA !! /!\
 Declare @sChaineTrt VarChar ( 800 )
 Declare @sChaineTrtWrk VarChar ( 100 )
 Declare @iIdPce Int
@@ -6765,6 +6766,14 @@ Declare @sEtatPce VarChar (10 )
 Declare @dtDteAnalysePce DateTime 
 Declare @iPos Int
 Declare @iIdCli Int
+Declare @dcIdGti Decimal ( 7 )
+Declare @dcIdDetail Decimal ( 7 )
+Declare @sIdGti VarChar ( 15 ) 
+Declare @sIdDetail VarChar ( 15 ) 
+Declare @dcIdSin Decimal ( 10 )
+Declare @sModeFctDp345 Varchar ( 50 )
+
+Set @dcIdSin = convert ( Decimal ( 10 ) , @aiIdSin ) 
 
 Set @sChaineTrt = IsNull ( rTrim ( @asChaineTrt1), '') + IsNull ( rTrim ( @asChaineTrt2), '') + IsNull ( rTrim ( @asChaineTrt3), '')
 Set @sChaineTrt = Replace ( @sChaineTrt, '@', '' ) -- [20210928162035633]
@@ -6777,21 +6786,121 @@ While @sChaineTrt <> ''
 
 	 Set @sChaineTrtWrk = Left ( @sChaineTrt, @iPos -1 )
 
+	-- [RS5656_MOD_PCE_DIF]
+	If sysadm.FN_CLE_NUMERIQUE ( 'RS5656_MOD_PCE_DIF') > 0 
+	 Begin
+		 Set @sIdGti = sysadm.FN_CLE_VAL ( 'IGA', @sChaineTrtWrk, ';' ) 
+		 If IsNumeric ( @sIdGti ) = 0 Set @sIdGti = '-1'
+
+		 Set @sIdDetail = sysadm.FN_CLE_VAL ( 'IDT', @sChaineTrtWrk, ';' ) 
+		 If IsNumeric ( @sIdDetail ) = 0 Set @sIdDetail = '-1'
+
+		 Set @dcIdGti = Convert ( Decimal (7), @sIdGti )
+		 If @dcIdGti is null Or @dcIdGti = 0 Set @dcIdGti = -1
+		 
+		 Set @dcIdDetail = Convert ( Decimal (7), @sIdDetail )
+		 If @dcIdDetail is null Or @dcIdDetail = 0 Set @dcIdDetail = -1
+	 End 
+
 	 Set @iIdPce = Convert ( integer, sysadm.FN_CLE_VAL ( 'IP', @sChaineTrtWrk, ';' ) )
 	 Set @sEtatPce = sysadm.FN_CLE_VAL ( 'EP', @sChaineTrtWrk, ';' ) 
 	 Set @dtDteAnalysePce = Convert ( DateTime, sysadm.FN_CLE_VAL ( 'DA', @sChaineTrtWrk, ';' ) )
 
-	 Update sysadm.archive
-	 Set  etat_pce = @sEtatPce,
-	      dte_analyse_pce = @dtDteAnalysePce
-	 From sysadm.archive a,
-		  sysadm.contact c
-	 Where a.id_cli = @iIdCli
-	 And   a.id_pce = @iIdPce
-	 And   a.etat_pce is null 
-	 And   c.id_cli = a.id_cli
-	 And   c.id_contact = a.id_contact
-	 And   c.id_sin = @aiIdSin
+
+	-- [RS5656_MOD_PCE_DIF]
+	If sysadm.FN_CLE_NUMERIQUE ( 'RS5656_MOD_PCE_DIF') > 0 
+	 Begin
+
+	    IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'  
+		BEGIN  
+			
+			Select Top 1 @sModeFctDp345 = sysadm.FN_CLE_VAL ( 'MODE_FCT', rtrim ( val_car ) + rtrim ( val_car2 ), ';' ) 
+			From SIMPA2_PRO.sysadm.det_pro dp,
+				 SIMPA2_PRO.sysadm.w_sin ws
+			Where ws.id_sin = @dcIdSin 
+			And  dp.id_prod = ws.id_prod
+			And  dp.id_code_dp = 345
+			
+			If  @sModeFctDp345 is null Or @sModeFctDp345 =''
+			  Begin 
+				Select Top 1 @sModeFctDp345 = sysadm.FN_CLE_VAL ( 'MODE_FCT', rtrim ( val_car ) + rtrim ( val_car2 ), ';' ) 
+				From SIMPA2_PRO.sysadm.det_pro dp,
+					 SIMPA2_PRO.sysadm.sinistre ws
+				Where ws.id_sin = @dcIdSin 
+				And  dp.id_prod = ws.id_prod
+				And  dp.id_code_dp = 345
+			  End
+		End
+		Else
+		Begin
+			Select Top 1 @sModeFctDp345 = sysadm.FN_CLE_VAL ( 'MODE_FCT', rtrim ( val_car ) + rtrim ( val_car2 ), ';' ) 
+			From SIMPA2_TRT.sysadm.det_pro dp,
+				 SIMPA2_TRT.sysadm.w_sin ws
+			Where ws.id_sin = @dcIdSin 
+			And  dp.id_prod = ws.id_prod
+			And  dp.id_code_dp = 345
+
+			If  @sModeFctDp345 is null Or @sModeFctDp345 =''
+			  Begin 
+				Select Top 1 @sModeFctDp345 = sysadm.FN_CLE_VAL ( 'MODE_FCT', rtrim ( val_car ) + rtrim ( val_car2 ), ';' ) 
+				From SIMPA2_TRT.sysadm.det_pro dp,
+					 SIMPA2_TRT.sysadm.sinistre ws
+				Where ws.id_sin = @dcIdSin 
+				And  dp.id_prod = ws.id_prod
+				And  dp.id_code_dp = 345
+			  End
+		End 
+
+		If @sModeFctDp345 is null Set @sModeFctDp345 = ''
+		If @sModeFctDp345 = '' Set @sModeFctDp345 = 'UNIQUE'
+
+	 -- Jouer absolument avec le mode pour l'update, attention
+		If @sModeFctDp345 = 'UNIQUE' 
+		  Begin
+			 Update sysadm.archive
+			 Set  etat_pce = @sEtatPce,
+				  dte_analyse_pce = @dtDteAnalysePce
+			 From sysadm.archive a,
+				  sysadm.contact c
+			 Where a.id_cli = @iIdCli
+			 And   a.id_pce = @iIdPce
+			 And   a.etat_pce is null 
+			 And   c.id_cli = a.id_cli
+			 And   c.id_contact = a.id_contact
+			 And   c.id_sin = @aiIdSin
+		 End
+
+		If @sModeFctDp345 = 'DET_GARANTIE' 
+		  Begin
+			 Update sysadm.archive
+			 Set  etat_pce = @sEtatPce,
+				  dte_analyse_pce = @dtDteAnalysePce
+			 From sysadm.archive a,
+				  sysadm.contact c
+			 Where a.id_cli = @iIdCli
+			 And   a.id_gti = @dcIdGti
+			 And   a.id_detail = @dcIdDetail
+			 And   a.id_pce = @iIdPce
+			 And   a.etat_pce is null 
+			 And   c.id_cli = a.id_cli
+			 And   c.id_contact = a.id_contact
+			 And   c.id_sin = @aiIdSin
+		 End
+	 End
+	Else
+	 Begin
+		 Update sysadm.archive
+		 Set  etat_pce = @sEtatPce,
+			  dte_analyse_pce = @dtDteAnalysePce
+		 From sysadm.archive a,
+			  sysadm.contact c
+		 Where a.id_cli = @iIdCli
+		 And   a.id_pce = @iIdPce
+		 And   a.etat_pce is null 
+		 And   c.id_cli = a.id_cli
+		 And   c.id_contact = a.id_contact
+		 And   c.id_sin = @aiIdSin
+	 End
 
 	 Set @sChaineTrt = SubString ( @sChaineTrt, @iPos + 1, len ( @sChaineTrt ) ) 
 
