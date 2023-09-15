@@ -1450,6 +1450,7 @@ Declare @sAltQuarantaine VarChar (   1 )
 Declare @dtDteHExec DateTime
 Declare @sHeureExec varchar ( 5 ) 
 Declare @sIdProd varchar ( 10 ) 
+Declare @sMailObjet varchar ( 255 ) 
 
 Set @dtDteHExec = @adtDteHExec
 
@@ -1459,13 +1460,6 @@ Set @dtDteHExec = @adtDteHExec
 -- ** Cette PS ne traite que tu KSL2, malgré tout je le garde en argument d'entrée ** 
 -- ** afin que le client appelant en soit conscient                                **
 -- **********************************************************************************
-/*
-if @asMethode <> 'KSL2' 
- Begin 
-   Set @asErrOutPut = 'La méthode doit absolument être KSL2'
-   Return -1
- End
-*/
 
 Set @sMethode = 'KSL2'
 Set @sAltQuarantaine = 'N'
@@ -1478,44 +1472,6 @@ Set @sAltQuarantaine = 'N'
 -- Récupération du code maquette soit en Maq_code ou code_maquette
 Set @sCodeMaquette = sysadm.FN_CLE_VAL_XML ( 'code_maquette', @asXMLdata, 'NON' ) 
 
--- Rejet si...
-/*
-if @asMethodeKSL = 'KSL_EDS' And Upper ( @sCodeMaquette ) Not in ( 'MAIL_CASTO_DT133_2REL', 'MAIL_CASTO_DT133_1REL', 'MAIL_CASTO_DT133_ORIG', 'GEOLOC' ) 
-Begin
-   Set @asErrOutPut = 'La méthode_KSL n''est plus autorisée hormis pour 4 codes maquettes spécifiques, voir doc ou sp_helptext ''sysadm.PS_RS5045_I_MAIL_PUSH_KSL'''
-   Return -2
-End 
-*/
-/* pas nécéssaire, le code maquette étant determiner par le type de mail, la méthode ne sert pas.
--- Rejet si...
-if @asMethodeKSL in ( 'RS5045_MATPN', 'RS5045_MATPD' )  And @sCodeMaquette is not null
-Begin
-   Set @asErrOutPut = 'La méthode_KSL passée n''autorise pas la transmission d''un maquette, passez null en code_maquette, il sera déterminer automatiquement.'
-   Return -4
-End 
-
--- Rejet si...
-if @asMethodeKSL in ( 'RS5045_CODMAQ' )  And @sCodeMaquette is null
-Begin
-   Set @asErrOutPut = 'La méthode_KSL passée oblige la transmission d''un maquette qui doit exister sur sysadm.code_maquette_ksl_rs5045.'
-   Return -5
-End 
-
--- Rejet si...
-if @asMethodeKSL in ( 'RS5045_CODMAQ' )  And @sCodeMaquette is not null
-Begin
-   
-   If Not Exists (
-		Select Top 1 1
-		From sysadm.code_maquette_ksl_rs5045
-		Where cod_maq = @sCodeMaquette
-   )
-   
-   Set @asErrOutPut = 'Le code maquette ' + IsNull ( @sCodeMaquette, '') + ' transmis n''existe pas sur sysadm.code_maquette_ksl_rs5045, déclarez le .'
-   Return -6
-End 
-
-*/
 
 
 -- Traitement des cas de la Methode 4 actuelle (KSL_EDS)
@@ -1684,6 +1640,15 @@ If @sCodeMaquette in ( 'MATPD', 'MATPN' )
 	Exec sysadm.PS_S_SUBSTITUER_VARIABLE_XML 'code_produit', @sIdProd, @asXMLdata output  
   End 
 
+-- Lecture de la variable XML mailSubject, et ajout de la mention [RECETTE] si l'on est hors base de production
+If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')  
+ Begin    
+	Set @sMailObjet = sysadm.FN_CLE_VAL_XML  ( 'mail_subject', @asXMLdata, 'NON' )
+	If @sMailObjet is null Set @sMailObjet = ''
+	Set @sMailObjet = '[RECETTE] ' + @sMailObjet 
+
+	Exec sysadm.PS_S_SUBSTITUER_VARIABLE_XML 'mail_subject', @sMailObjet, @asXMLdata output  
+ End 
  
 INSERT INTO sysadm.mail_push  
         (  
@@ -2507,7 +2472,7 @@ EXEC master.dbo.xp_cmdshell 'taskkill /F  /IM WINWORD.EXE /T'
 EXEC master.dbo.xp_cmdshell 'taskkill /F  /IM WORDTOPDF.EXE /T'
 
 -- Nettoyage de ma la Table de stockage des xml temporaire, on garde que 15 jours.
-Set @sMsgTrc = 'Nettoyage des jetons XML table (sysadm.variable_xml_ksl_rs5045)'
+Set @sMsgTrc = 'Nettoyage des jetons XML (table sysadm.variable_xml_ksl_rs5045)'
 Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INFO', 'OK', @sMsgTrc, @iIdLotTrc 
 Delete sysadm.variable_xml_ksl_rs5045 where cree_le < DateAdd ( day, -15, Getdate())
   
@@ -2547,7 +2512,7 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 	And   cm.id_cpt   = 3
 	And   ch.id_chemin = cm.id_chemin 
 
-    ----------------------------------------------------------------------------------
+    ------------------------------------------------------------------------------
 	--------- Traitement mail avec courrier SIMPA2						  --------
 	------------------------------------------------------------------------------
 	Insert into @TbWork		
@@ -2588,14 +2553,14 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 		SIMPA2_PRO.sysadm.archive a with (nolock)  
 	Where  mp.methode = 'KSL2'  -- Important, Nouveau RS5045
 	And ( mp.mail_trt_ok = 'N' or mp.mail_trt_ok is null )  
-	-- And mp.id_appli_num = 2  -- SIMPA2, pas nécessaire au final
+	And mp.id_appli_num = 2  -- SIMPA2
 	And mp.id_arch > 0 
 	And a.id_arch = mp.id_arch  
 	And mp.cree_le > DateAdd ( month, -2, getdate() )  
 
 	Set @iRowCountWord  = @@Rowcount
 
-	Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountWord  ) + ' enregistrement(s) (mails) représentant des courriers WORD'
+	Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountWord  ) + ' enregistrement(s) (mails) représentant des courriers WORD SIMPA2'
 	Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'LCTCWD', 'OK', @sMsgTrc, @iIdLotTrc  
 
  End  
@@ -2665,14 +2630,14 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		SIMPA2_TRT.sysadm.archive a with (nolock)  
 	Where  mp.methode = 'KSL2'  -- Important, Nouveau RS5045
 	And ( mp.mail_trt_ok = 'N' or mp.mail_trt_ok is null )  
-	-- And mp.id_appli_num = 2  -- SIMPA2, pas nécessaire au final
+	And mp.id_appli_num = 2  -- SIMPA2
 	And mp.id_arch > 0 
 	And a.id_arch = mp.id_arch  
 	And mp.cree_le > DateAdd ( month, -2, getdate() )  
 
 	Set @iRowCountWord  = @@Rowcount
 
-	Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountWord  ) + ' enregistrement(s) (mails) représentant des courriers WORD'
+	Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountWord  ) + ' enregistrement(s) (mails) représentant des courriers WORD SIMPA2'
 	Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'LCTCWD', 'OK', @sMsgTrc, @iIdLotTrc 
 
  End  
@@ -2936,7 +2901,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 	
  	----------------------------------------------------------------------------------------------
 	--------- Préparation du traitement des mail avec courrier WORD							------
-	--------- Je ne conditionne pas ce pré-traitement à la présence au critère id_arch > 0  ------
+	--------- Je ne conditionne pas ce pré-traitement à la présence du critère id_arch > 0  ------
 	--------- La présence de l'EXE est impérative pour ne pas faire planter la tache Window ------
 	--------- qui passe 5 minutes plus tard                                                 ------
 	----------------------------------------------------------------------------------------------
