@@ -2501,6 +2501,7 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 	Set @sDestinataire = 'GG_DSI-DO-INFRA-SERVEUR,jff@spb.fr,cbourdoiseau@spb.eu'
 
 	-- Obtention répertoire local pour le cas des courriers Word 
+	/*
 	Select @sRepBlobLocal = 
 			Case @sServeurProduction
 			   When 'PRO' Then ch.chemin_pro
@@ -2511,6 +2512,16 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 	where cm.typ_mail = 'M16'
 	And   cm.id_cpt   = 3
 	And   ch.id_chemin = cm.id_chemin 
+	*/
+
+	Select @sRepBlobLocal = 
+			Case @sServeurProduction
+			   When 'PRO' Then ch.chemin_pro
+			   Else ch.chemin_sim
+		    End
+	From sysadm.chem_depot_ksl_rs5045 ch
+	where ch.id_chemin = 3
+
 
     ------------------------------------------------------------------------------
 	--------- Traitement mail avec courrier SIMPA2						  --------
@@ -2577,7 +2588,10 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
   
 	Set @sDestinataire = 'jff@spb.fr'
 
+
 	-- Obtention répertoire local pour le cas des courriers Word 
+
+/*
 	Select @sRepBlobLocal = 
 			Case @sServeurProduction
 			   When 'PRO' Then ch.chemin_pro
@@ -2588,6 +2602,15 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 	where cm.typ_mail = 'M16'
 	And   cm.id_cpt   = 3
 	And   ch.id_chemin = cm.id_chemin 
+*/
+
+	Select @sRepBlobLocal = 
+		Case @sServeurProduction
+			When 'PRO' Then ch.chemin_pro
+			Else ch.chemin_sim
+		End
+	From sysadm.chem_depot_ksl_rs5045 ch
+	where ch.id_chemin = 3
 
     ----------------------------------------------------------------------------------
 	--------- Traitement mail avec courrier SIMPA2						  --------
