@@ -28,35 +28,36 @@
 	DROP VIEW [sysadm].v_iwd_queue
 	GO
 
-	CREATE view [sysadm].[v_iwd_queue]  -- Vue v_iwd_queue
-	as
-	      Select 
-           rtrim (q.id_sin) as ExternalId, 
-           rtrim (q.id_sin) as claimNumber  ,
-           rtrim (q.id_corb)as IWD_ext_productSubtype, -- FS le 21/09/16 ; Attente Go de OLP pour remplacer par id_prod
-           rtrim (q.id_corb) as IWD_category,		   -- OLP Vu avec FS le 21/09/16, remplacement de id_prod par id_corb
-           rtrim (q.nom)as LastName,
-           cast (q.cod_etat as int) as cod_etat,
-           rtrim (q.alt_occupe)as alt_occupe,
-           q.trv_cree_le,
-           rtrim (q.cod_recu)as IWD_channel,
-           q.etat_iwd,
-           q.id_iwd,
-           q.id_contact,
-           rtrim (q.dos_maj_par) as dos_maj_par,
-           rtrim (q.dos_maj_par) as IWD_ext_sourceProcessType,
-           cast (q.cod_etat as int) as IWD_businessValue,
-           q.dos_maj_le  as IWD_ext_sourceCreatedDateTime,
-           dp.id_code_num  as departement,
-           sysadm.FN_CODE_NUM ( dp.id_code_num, '-UO' ) as lib_departement,
-           CASE
-          WHEN upper(txt_mess1) like '%DEMANDE SC24 EST%' THEN 1 
-          Else 0
-          END as flagSC24,
-          rtrim(q.routage_iwd) as routage_iwd
-                  FROM   sysadm.w_queue q
-            inner join sysadm.det_pro dp on dp.id_prod = q.id_prod and dp.id_code_dp = 99 and dp.id_typ_code_dp = '-DP' 
-            where etat_iwd is not NULL
+  
+	 CREATE view [sysadm].[v_iwd_queue]  -- Vue v_iwd_queue  
+	 as  
+       Select   
+           rtrim (q.id_sin) as ExternalId,   
+           rtrim (q.id_sin) as claimNumber  ,  
+           rtrim (q.id_corb)as IWD_ext_productSubtype, -- FS le 21/09/16 ; Attente Go de OLP pour remplacer par id_prod  
+           rtrim (q.id_corb) as IWD_category,     -- OLP Vu avec FS le 21/09/16, remplacement de id_prod par id_corb  
+           rtrim (q.nom)as LastName,  
+           cast (q.cod_etat as int) as cod_etat,  
+           rtrim (q.alt_occupe)as alt_occupe,  
+           q.trv_cree_le,  
+           rtrim (q.cod_recu)as IWD_channel,  
+           q.etat_iwd,  
+           q.id_iwd,  
+           q.id_contact,  
+           rtrim (q.dos_maj_par) as dos_maj_par,  
+           rtrim (q.dos_maj_par) as IWD_ext_sourceProcessType,  
+           cast (q.cod_etat as int) as IWD_businessValue,  
+           q.dos_maj_le  as IWD_ext_sourceCreatedDateTime,  
+           dp.id_code_num  as departement,  
+           sysadm.FN_CODE_NUM ( dp.id_code_num, '-UO' ) as lib_departement,  
+           CASE  
+          WHEN upper(txt_mess1) like '%DEMANDE SC24 EST%' THEN 1   
+          Else 0  
+          END as flagSC24,  
+          rtrim(q.routage_iwd) as routage_iwd  
+                  FROM   sysadm.w_queue q  
+            inner join sysadm.det_pro dp on dp.id_prod = q.id_prod and dp.id_code_dp = 99 and dp.id_typ_code_dp = '-DP'   
+            where etat_iwd is not NULL  
 	GO
 
 	grant select, insert, delete, update on sysadm.v_iwd_queue to rolebddsinistres

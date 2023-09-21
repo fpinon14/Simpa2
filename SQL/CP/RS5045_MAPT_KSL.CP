@@ -1142,6 +1142,7 @@ Go
 --
 -- Retourne             :       Rien
 --
+-- JFF      18/09/2023   [RS5875_DIF_DIV_DET]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE' AND type = 'P' )
         DROP procedure sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE
@@ -1359,7 +1360,9 @@ Where cm.cod_maq = @sCodeMaquette
 			date_de_survenance_sinistre as 'courrier/@date_de_survenance_sinistre',
 			heure_de_survenance_sinistre as 'courrier/@heure_de_survenance_sinistre',
 			texte_1 as 'courrier/@texte_1',
-			type_de_bien as 'courrier/@type_de_bien'
+			type_de_bien as 'courrier/@type_de_bien'/*,
+			etat_du_bien as 'courrier/@etat_du_bien',
+			moyen_de_paiement as 'courrier/@moyen_de_paiement'*/
 
 		from sysadm.variable_xml_ksl_rs5045 v
 		Where id_xml = @iIdXml

@@ -232,3 +232,111 @@ INSERT INTO sysadm.w_div_det
 	   @dtCreeLe, @dtMajLe, @sMajPar)
 GO
 
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_I_W_DIV_DET_AVEC_PARAM_DIV_PDET
+-- Auteur               :       FABRY JF
+-- Date                 :       05/10/2005
+-- Libellé              :        -- [RS5875_DIF_DIV_DET]
+-- Commentaires         :       Insertion dans W_DIV_DET avec Param DivPdet
+-- Références           :       
+--
+--
+-- Retourne             :       Rien
+-------------------------------------------------------------------
+-- JFF      12/02/2016   [PI062]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_W_DIV_DET_AVEC_PARAM_DIV_PDET' AND type = 'P' )
+        DROP procedure sysadm.PS_I_W_DIV_DET_AVEC_PARAM_DIV_PDET
+GO
+  
+CREATE procedure sysadm.PS_I_W_DIV_DET_AVEC_PARAM_DIV_PDET  
+        @dcIdProd       Decimal ( 7,0 ), -- Code Produit.  
+        @dcIdSin        Decimal ( 10,0 ), -- Référence sinistre. -- [PI062]  
+        @dcIdGti		Decimal ( 7,0 ), -- code garantie
+		@dcIdDetail		Decimal ( 7,0 ), -- code détail de garantie
+		@sNomZone       Varchar ( 35 ) , -- Nom de la zone à reporter.   
+        @sValeur        VarChar ( 35 ) , -- Valeur à reporter  
+        @sMajPar        Varchar ( 4 )    -- Opérateur  
+AS  
+  
+Declare @iRet Integer  
+  
+INSERT INTO sysadm.w_div_det
+  ( id_sin,
+	id_gti,
+	id_detail,
+	nom_zone,
+	lib_label,
+	id_typ_liste,
+	alt_liste_codecar,
+	id_typ_zone,
+	alt_oblig,
+	alt_prot,
+	cpt_tri,
+	val_nbre,
+	val_mt,
+	val_dte,
+	val_car,
+	cpt_valide,
+	cree_le,
+	maj_le,
+	maj_par )  
+  
+ Select  
+	@dcIdSin,   
+	@dcIdGti,
+	@dcIdDetail,
+    dp.nom_zone ,   
+    dp.lib_label,  
+    dp.id_typ_liste,  
+    dp.alt_liste_codecar,  
+    dp.id_typ_zone,   
+    dp.alt_oblig,  
+    'N' as alt_prot,  
+    dp.cpt_tri,  
+  
+  -- Valeur nombre ( integer )  
+  Case   
+	When dp.id_typ_zone = 'LN' Then Convert( integer, @sValeur )  
+	When dp.id_typ_zone = 'N'  Then Convert( integer, @sValeur )  
+	Else null  
+  End as val_nbre,  
+  
+  -- Valeur montant ( décimal )  
+  Case  
+	When dp.id_typ_zone = 'S' Then Convert ( Decimal(11,2 ), @sValeur )  
+	When dp.id_typ_zone = 'P' Then Convert ( Decimal(11,2 ), @sValeur ) / 100  
+	Else null  
+  End as val_mt,  
+  
+  -- Valeur date  
+  Case   
+	When dp.id_typ_zone = 'D' Then Convert( Datetime, @sValeur )  
+	Else null  
+  End as val_dte,  
+  
+  -- Valeur chaîne ( char )  
+  Case   
+	When dp.id_typ_zone in ( 'C', 'LC', 'X'  )Then @sValeur  
+	Else null  
+  End as val_dte,  
+  
+  0 as cpt_valide,  
+  getdate(),  
+  getdate(),   
+  @sMajPar   
+ From sysadm.div_pdet dp  
+ Where  
+ dp.id_prod = @dcIdProd And  
+ dp.id_gti = @dcIdGti And
+ dp.nom_zone = @sNomZone  
+ and not exists (select * from sysadm.w_div_det where id_sin=@dcIdSin and id_gti = @dcIdGti and id_detail = @dcIdDetail And nom_zone=@sNomZone) 
+    
+ Set @iRet = @@error  
+  
+Return @iRet  
+
+Go
+
