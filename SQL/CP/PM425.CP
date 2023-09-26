@@ -116,6 +116,9 @@ If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') >= 3
 		And   a.id_inter = @adcIdInter
 		And   a.id_doc = @dcIdDoc
 	  End 
+
+	If Upper( @sModeleWord ) = 'COURRIER.DOT' Set @sModeleWord = null
+
 	-- Si le courrier a un modele différent de null, donc différent de courrier.dot
 	-- alors on force à fond blanc car il a déjà son fond
 	If @sModeleWord is Not Null Set @asFondPage = 'PAPIER_BLANC'

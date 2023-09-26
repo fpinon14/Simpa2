@@ -17,21 +17,22 @@
 -- Commentaires         :       
 -- Références           :       
 --
---  sysadm.PS_S_SAGA2_MARQUE_IFR
---  sysadm.PS_S_SAGA2_MODELE_IFR
---  sysadm.PS_S_EXTRANET_STATUT_DOSSIER_SIMPA2
---  sysadm.PS_S_SAGA2_INTERRO_AUTRE_REF
---  sysadm.PS_S_SAGA2_INTERRO_ID_REF_FOUR_BOUYGUES
---  sysadm.PS_S_SAGA2_INTERRO_IFR
---  sysadm.PS_S_SAGA2_INTERRO_IFR_V100
---  sysadm.PS_S_SAGA2_REF_IFR
---  sysadm.PS_S_SAGA2_STOCK_FOURN
---  sysadm.PS_SI_SAGA2_BYG_CREATION_ADHESION_SINISTRE
---  sysadm.PS_SI_SAGA2_BYG_RECUPERER_GENCODE_DEPUIS_VALEUR_IFR
---  sysadm.PS_SI_SAGA2_LIEN_REF_EXTERNE_AVEC_IFR_V02
---  sysadm.PS_SI_SAGA2_RECUP_REF_SPBIFR_EN_LIEN_AVEC_REF_EXTERNE
---  sysadm.PS_SI_SAGA2_RECUPERER_GENCODE_DEPUIS_VALEUR_IFR
---  sysadm.PS_U_SAGA2_STOCK_FOURN
+-- sysadm.PS_S_SAGA2_MARQUE_IFR
+-- sysadm.PS_S_SAGA2_MODELE_IFR
+-- sysadm.PS_S_EXTRANET_STATUT_DOSSIER_SIMPA2
+-- sysadm.PS_S_SAGA2_INTERRO_ARTICLE_REF_EXTERNE
+-- sysadm.PS_S_SAGA2_INTERRO_AUTRE_REF
+-- sysadm.PS_S_SAGA2_INTERRO_ID_REF_FOUR_BOUYGUES
+-- sysadm.PS_S_SAGA2_INTERRO_IFR
+-- sysadm.PS_S_SAGA2_INTERRO_IFR_V100
+-- sysadm.PS_S_SAGA2_REF_IFR
+-- sysadm.PS_S_SAGA2_STOCK_FOURN
+-- sysadm.PS_SI_SAGA2_BYG_CREATION_ADHESION_SINISTRE
+-- sysadm.PS_SI_SAGA2_BYG_RECUPERER_GENCODE_DEPUIS_VALEUR_IFR
+-- sysadm.PS_SI_SAGA2_LIEN_REF_EXTERNE_AVEC_IFR_V02
+-- sysadm.PS_SI_SAGA2_RECUP_REF_SPBIFR_EN_LIEN_AVEC_REF_EXTERNE
+-- sysadm.PS_SI_SAGA2_RECUPERER_GENCODE_DEPUIS_VALEUR_IFR
+-- sysadm.PS_U_SAGA2_STOCK_FOURN
 -------------------------------------------------------------------
 
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_SAGA2_REF_IFR' AND type = 'P' )
@@ -475,6 +476,7 @@ Go
 -- Commentaires         :       
 -- Références           :       
 --
+-- JFF 25/09/2023 [REF_EXT_SAGA2] Gérer l'appel en mode SINISTRE d'un marque modèle à injecter dans le Ref Externe
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_SI_SAGA2_BYG_CREATION_ADHESION_SINISTRE' AND type = 'P' )
         DROP procedure sysadm.PS_SI_SAGA2_BYG_CREATION_ADHESION_SINISTRE
@@ -485,8 +487,8 @@ CREATE procedure sysadm.PS_SI_SAGA2_BYG_CREATION_ADHESION_SINISTRE
 	@asMarqueBouyguesOuIfr			VarChar ( 500 ),   -- (Obligatoire) Marque Bouygues Ou IFR à rechercher , 35 Car Max => si plus, accepté mais sera rejeté
 	@asModeleDescripBouyguesOuIfr	VarChar ( 500 ),   -- (Obligatoire) Modèle Bouygues Ou IFR à rechercher, 105 car Max => si plus, accepté mais sera rejeté
 	@asGenCodeBouygues			VarChar ( 500 ),       -- (Obligatoire si ADHESION / Facultatif si SINISTRE) 16 numérique Max => si plus, accepté mais sera rejeté. GENCODE Bouygues à stocker si présent, mais ne sert pas dans la recherche, vu avec Lisette le 11/06/21.
-	@asMarqueIfrRetour			VarChar ( 30 ) OutPut, -- (Retour) Marque IFR en retour si un lien BYG/IFR existe Ou si la marque est directement une marque IFR
-	@asModeleIfrRetour			VarChar ( 30 ) OutPut  -- (Retour) Modèle IFR en retour si un lien BYG/IFR existe Ou si le Modèle est directement une modèle IFR
+	@asMarqueIfrRetour			VarChar ( 35 ) OutPut, -- (Retour) Marque IFR en retour si un lien BYG/IFR existe Ou si la marque est directement une marque IFR
+	@asModeleIfrRetour			VarChar ( 35 ) OutPut  -- (Retour) Modèle IFR en retour si un lien BYG/IFR existe Ou si le Modèle est directement une modèle IFR
 AS
 
 -- Code Retour de la PS
@@ -541,22 +543,26 @@ Set @asModeleDescripBouyguesOuIfr = sysadm.FN_EPURE_CHAINE_V01 ( @asModeleDescri
 Set @asModeleDescripBouyguesOuIfr = rTrim ( ltrim ( upper ( @asModeleDescripBouyguesOuIfr )))
 If @asModeleDescripBouyguesOuIfr = '' Or Len ( @asModeleDescripBouyguesOuIfr ) > 105 Return -4
 
--- 1ère recherche si IFR
-If LEn ( @asMarqueBouyguesOuIfr ) <= 35 And Len ( @asModeleDescripBouyguesOuIfr ) <= 35
-  Begin
-	If Exists ( 
-			Select	top 1 1 
-			from	sysadm.ifr i with (nolock)
-			Where   i.marque = @asMarqueBouyguesOuIfr
-			And		i.reference = @asModeleDescripBouyguesOuIfr
-			And		i.alt_dispo = 'O'		
-		)
-	Begin
-		Set @asMarqueIfrRetour = @asMarqueBouyguesOuIfr
-		Set @asModeleIfrRetour = @asModeleDescripBouyguesOuIfr
-		Return 1	
-	End 
-  End
+-- [REF_EXT_SAGA2]
+If NOT sysadm.FN_CLE_NUMERIQUE ( 'REF_EXT_SAGA2') > 0 
+ Begin
+	-- 1ère recherche si IFR
+	If LEn ( @asMarqueBouyguesOuIfr ) <= 35 And Len ( @asModeleDescripBouyguesOuIfr ) <= 35
+	  Begin
+		If Exists ( 
+				Select	top 1 1 
+				from	sysadm.ifr i with (nolock)
+				Where   i.marque = @asMarqueBouyguesOuIfr
+				And		i.reference = @asModeleDescripBouyguesOuIfr
+				And		i.alt_dispo = 'O'		
+			)
+		Begin
+			Set @asMarqueIfrRetour = @asMarqueBouyguesOuIfr
+			Set @asModeleIfrRetour = @asModeleDescripBouyguesOuIfr
+			Return 1	
+		End 
+	  End
+End 
 
 -- 2ème recherche lien IFR
 Select Top 1 
@@ -630,8 +636,39 @@ If Not Exists (
 			getdate(),
 			getdate(),
 			'JFF'
-			
+
 		Set @iEnvoiMail = 1 
+
+		-- [REF_EXT_SAGA2]
+		If sysadm.FN_CLE_NUMERIQUE ( 'REF_EXT_SAGA2') > 0 
+			Begin
+				-- Recherche si Marqe/modl donné est une marque IFR auquel cas on fait le lien immédiatement
+				If LEn ( @asMarqueBouyguesOuIfr ) <= 35 And Len ( @asModeleDescripBouyguesOuIfr ) <= 35
+					Begin
+						If Exists ( 
+								Select	top 1 1 
+								from	sysadm.ifr i with (nolock)
+								Where   i.marque = @asMarqueBouyguesOuIfr
+								And		i.reference = @asModeleDescripBouyguesOuIfr
+								And		i.alt_dispo = 'O'		
+							)
+						Begin
+							Set @iEnvoiMail = 0
+							Set @asMarqueIfrRetour = @asMarqueBouyguesOuIfr
+							Set @asModeleIfrRetour = @asModeleDescripBouyguesOuIfr
+
+							Update sysadm.article 
+							Set   id_marq_art_ifr = @asMarqueBouyguesOuIfr,
+								  id_modl_art_ifr = @asModeleDescripBouyguesOuIfr,
+								  alt_dispo		  = 'O'
+							Where id_four = 'BYG'
+							And   id_marq_art = @asMarqueBouyguesOuIfr
+							And   Left ( id_modl_art, Len (id_modl_art) -1 ) + isnull ( observ_frn, '' ) = @asModeleDescripBouyguesOuIfr
+
+							Return 1	
+						End
+					End
+			End 
   End 
 
  If @iEnvoiMail > 0 
@@ -673,7 +710,7 @@ If Not Exists (
 
 	EXEC master.dbo.SPB_PS_MAIL 
 			@sRetourErrMail OUTPUT, 
-			'sloison@spb.eu', -- 'jff@spb.fr'
+			'sloison@spb.eu,ntonnetot.eu', -- 'jff@spb.fr', -- 
 			@sMessage, 
 			@sObjet, 
 			'[BTRUN_344_REFBYGIFR]', 
@@ -784,6 +821,7 @@ Go
 -------------------------------------------------------------------
 --  JFF  21/10/2022  RS3917 l'info de reconditionné doit se retrouver à partir du terme "recondit" dans le modèle transmis par Free
 --  JFF  25/05/2023  HP-174 Ajout -CAPACITE, -COULEUR, -DUALSIM
+-- JFF 25/09/2023 [REF_EXT_SAGA2] Gérer l'appel en mode SINISTRE d'un marque modèle à injecter dans le Ref Externe
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_SI_SAGA2_LIEN_REF_EXTERNE_AVEC_IFR_V02' AND type = 'P' )
         DROP procedure sysadm.PS_SI_SAGA2_LIEN_REF_EXTERNE_AVEC_IFR_V02
@@ -795,8 +833,8 @@ CREATE procedure sysadm.PS_SI_SAGA2_LIEN_REF_EXTERNE_AVEC_IFR_V02
 	@asMarqueExterneOuIfr			VarChar ( 500 ),   -- (Obligatoire) Marque Externe Ou IFR à rechercher , 35 Car Max => si plus, accepté mais sera rejeté
 	@asModeleDescripExterneOuIfr	VarChar ( 500 ),   -- (Obligatoire) Modèle Externe Ou IFR à rechercher, 105 car Max => si plus, accepté mais sera rejeté
 	@asGenCodeExterne			VarChar ( 500 ),       -- (Obligatoire si ADHESION / Facultatif si SINISTRE) 16 numérique Max => si plus, accepté mais sera rejeté. GENCODE Externe à stocker si présent, mais ne sert pas dans la recherche, vu avec Lisette le 11/06/21.
-	@asMarqueIfrRetour			VarChar ( 30 ) OutPut, -- (Retour) Marque IFR en retour si un lien EXT/IFR existe Ou si la marque est directement une marque IFR
-	@asModeleIfrRetour			VarChar ( 30 ) OutPut, -- (Retour) Modèle IFR en retour si un lien EXT/IFR existe Ou si le Modèle est directement une modèle IFR
+	@asMarqueIfrRetour			VarChar ( 35 ) OutPut, -- (Retour) Marque IFR en retour si un lien EXT/IFR existe Ou si la marque est directement une marque IFR
+	@asModeleIfrRetour			VarChar ( 35 ) OutPut, -- (Retour) Modèle IFR en retour si un lien EXT/IFR existe Ou si le Modèle est directement une modèle IFR
 	@adcMtPrixPublicIFR			Decimal (11,2) OutPut, -- (Retour) Montant de la valeur Publique IFR de l'appareil.
 	@asCapacite					Varchar ( 25 ) output, -- (Retour) Capacité de stockage de l'appareil [HP-174]
 	@asDualSim					Varchar ( 25 ) output, -- (Retour) Fonction DualSim de l'appareil [HP-174]
@@ -871,35 +909,39 @@ Set @asModeleDescripExterneOuIfr = REPLACE ( @asModeleDescripExterneOuIfr, '[REC
 Set @asModeleDescripExterneOuIfr = rTrim ( ltrim ( upper ( @asModeleDescripExterneOuIfr )))
 If @asModeleDescripExterneOuIfr = '' Or Len ( @asModeleDescripExterneOuIfr ) > 105 Return -4
 
--- 1ère recherche si IFR
-If LEn ( @asMarqueExterneOuIfr ) <= 35 And Len ( @asModeleDescripExterneOuIfr ) <= 35
-  Begin
-	If Exists ( 
-			Select	top 1 1 
-			from	sysadm.ifr i with (nolock)
-			Where   i.marque = @asMarqueExterneOuIfr
-			And		i.reference = @asModeleDescripExterneOuIfr
-			And		i.alt_dispo = 'O'		
-		)
-	Begin
-		Set @asMarqueIfrRetour = @asMarqueExterneOuIfr
-		Set @asModeleIfrRetour = @asModeleDescripExterneOuIfr
+-- [REF_EXT_SAGA2]
+If NOT sysadm.FN_CLE_NUMERIQUE ( 'REF_EXT_SAGA2') > 0 
+ Begin
+	-- 1ère recherche si IFR
+	If LEn ( @asMarqueExterneOuIfr ) <= 35 And Len ( @asModeleDescripExterneOuIfr ) <= 35
+	  Begin
+		If Exists ( 
+				Select	top 1 1 
+				from	sysadm.ifr i with (nolock)
+				Where   i.marque = @asMarqueExterneOuIfr
+				And		i.reference = @asModeleDescripExterneOuIfr
+				And		i.alt_dispo = 'O'		
+			)
+		Begin
+			Set @asMarqueIfrRetour = @asMarqueExterneOuIfr
+			Set @asModeleIfrRetour = @asModeleDescripExterneOuIfr
 
 		
-		Select Top 1 
-			@adcMtPrixPublicIFR = i.frequence,
-			@asCapacite = i.java, -- [HP-174]
-			@asDualSim	= IIF ( IsNull ( i.stndby, 'NON') <> 'DUALSIM', 'NON', IsNull ( i.stndby, 'NON') ), -- [HP-174]
-			@asCouleur  = i.packtype -- [HP-174]
-		From   sysadm.ifr i
-		Where  i.marque = @asMarqueIfrRetour 
-		And    i.reference = @asModeleIfrRetour 
+			Select Top 1 
+				@adcMtPrixPublicIFR = i.frequence,
+				@asCapacite = i.java, -- [HP-174]
+				@asDualSim	= IIF ( IsNull ( i.stndby, 'NON') <> 'DUALSIM', 'NON', IsNull ( i.stndby, 'NON') ), -- [HP-174]
+				@asCouleur  = i.packtype -- [HP-174]
+			From   sysadm.ifr i
+			Where  i.marque = @asMarqueIfrRetour 
+			And    i.reference = @asModeleIfrRetour 
 
-		If @adcMtPrixPublicIFR is null Set @adcMtPrixPublicIFR = 0
+			If @adcMtPrixPublicIFR is null Set @adcMtPrixPublicIFR = 0
 
-		Return 1
-	End 
-  End
+			Return 1
+		End 
+	  End
+End 
 
 -- 2ème recherche lien IFR
 Select Top 1 
@@ -987,6 +1029,36 @@ If Not Exists (
 			'JFF'
 			
 		Set @iEnvoiMail = 1 
+		-- [REF_EXT_SAGA2]
+		If sysadm.FN_CLE_NUMERIQUE ( 'REF_EXT_SAGA2') > 0 
+			Begin
+				-- Recherche si Marqe/modl donné est une marque IFR auquel cas on fait le lien immédiatement
+				If LEn ( @asMarqueExterneOuIfr ) <= 35 And Len ( @asModeleDescripExterneOuIfr ) <= 35
+					Begin
+						If Exists ( 
+								Select	top 1 1 
+								from	sysadm.ifr i with (nolock)
+								Where   i.marque = @asMarqueExterneOuIfr
+								And		i.reference = @asModeleDescripExterneOuIfr
+								And		i.alt_dispo = 'O'		
+							)
+						Begin
+							Set @iEnvoiMail = 0
+							Set @asMarqueIfrRetour = @asMarqueExterneOuIfr
+							Set @asModeleIfrRetour = @asModeleDescripExterneOuIfr
+
+							Update sysadm.article 
+							Set   id_marq_art_ifr = @asMarqueExterneOuIfr,
+								  id_modl_art_ifr = @asModeleDescripExterneOuIfr,
+								  alt_dispo		  = 'O'
+							Where id_four = @asCodeSpbPrestaExterne
+							And   id_marq_art = @asMarqueExterneOuIfr
+							And   Left ( id_modl_art, Len (id_modl_art) -1 ) + isnull ( observ_frn, '' ) = @asModeleDescripExterneOuIfr
+
+							Return 1	
+						End
+					End
+			End 
   End 
 
  If @iEnvoiMail > 0 
@@ -1191,3 +1263,55 @@ Begin
 	Order by 1,2
 End 
 Go
+
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_SAGA2_INTERRO_ARTICLE_REF_EXTERNE
+-- Auteur               :       FABRY JF
+-- Date                 :       21/09/2023
+-- Libellé              :       
+-- Commentaires         :       
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_SAGA2_INTERRO_ARTICLE_REF_EXTERNE' AND type = 'P' )
+        DROP procedure sysadm.PS_S_SAGA2_INTERRO_ARTICLE_REF_EXTERNE
+GO
+
+CREATE procedure sysadm.PS_S_SAGA2_INTERRO_ARTICLE_REF_EXTERNE
+	@asCodeSpbPrestaExterne	    VarChar ( 3 ),           -- (Obligatoire) Code prestataire externe interrogé
+	@asMarqueExterne			VarChar ( 500 ),		 -- (Obligatoire) Marque externe 
+	@asModeleDescripExterne		VarChar ( 500 ),		 -- (Obligatoire) Modèle externe 
+	@asPresentSurSIMPA2			Varchar ( 10 ) output,   -- OUI si ref externe déclaré sur SIMPA2 par SAGA2, NON à défaut
+	@asLienIFRsurSIMPA2			Varchar ( 10 ) output,   -- OUI si ref externe déclaré sur SIMPA2 par SAGA2 est bien lié à IFR, NON à défaut
+	@asMarqueIfr				Varchar ( 35 ) output,   -- Si OUI à @asLienIFRsurSIMPA2 alors marque IFR renvoyée pour info
+	@asModeleIfr				Varchar ( 35 ) output    -- Si OUI à @asLienIFRsurSIMPA2 alors modele IFR renvoyée pour info
+AS
+
+Set @asPresentSurSIMPA2 = 'NON'
+Set @asLienIFRsurSIMPA2 = 'NON'
+Set @asMarqueIfr = null
+Set @asModeleIfr = null
+Set @asMarqueExterne = LTRIM ( rtrim ( @asMarqueExterne ))
+Set @asModeleDescripExterne = LTRIM ( rtrim ( @asModeleDescripExterne ))
+
+Select  Top 1 
+	    @asLienIFRsurSIMPA2 =
+		Case 
+			When a.id_marq_art_ifr is not null And a.id_modl_art_ifr is not null Then 'OUI'
+			Else 'NON'
+		End,
+		@asMarqueIfr = a.id_marq_art_ifr,
+		@asModeleIfr = a.id_modl_art_ifr
+
+From sysadm.article a
+Where a.id_four = @asCodeSpbPrestaExterne
+And   a.id_marq_art = @asMarqueExterne
+And   rtrim ( Left ( a.id_modl_art, len (  a.id_modl_art ) -1 )) + RTRIM ( a.observ_frn) = @asModeleDescripExterne
+
+If @@Rowcount > 0 Set @asPresentSurSIMPA2= 'OUI'
+
+Go
+
+

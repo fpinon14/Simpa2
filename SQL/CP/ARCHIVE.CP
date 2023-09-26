@@ -853,12 +853,13 @@ GO
 -------------------------------------------------------------------
 -- JFF      12/06/2014   [PI052]
 -- JFF      12/02/2016   [PI062]
+-- JFF      26/04/2023   [RS5045_REF_MATP]
 -------------------------------------------------------------------
-if exists (select * from sysobjects where id = object_id('sysadm.PS_I02_ARCHIVE_RELANCES') and sysstat & 0xf = 4)
-	drop procedure sysadm.PS_I02_ARCHIVE_RELANCES
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I02_ARCHIVE_RELANCES_V01' AND type = 'P' )
+	drop procedure sysadm.PS_I02_ARCHIVE_RELANCES_V01
 GO
 
-CREATE PROC sysadm.PS_I02_ARCHIVE_RELANCES
+CREATE PROC sysadm.PS_I02_ARCHIVE_RELANCES_V01
   @adtDateDuJour	DateTime,
   @adcId_Doc		Decimal ( 7, 0 ) OUTPUT,
   @adcId_Sin		Decimal ( 10, 0 ),  -- [PI062]
@@ -872,8 +873,8 @@ CREATE PROC sysadm.PS_I02_ARCHIVE_RELANCES
   @asTextComp1		VarChar ( 248  ),
   @asValidePar		VarChar ( 4    ),
   @asMajPar		VarChar ( 4    ),
-  @asTypBlob		VarChar ( 2 )
-
+  @asTypBlob		VarChar ( 2 ),
+  @asModeleWord   VarChar( 50 ) -- [RS5045_REF_MATP]
 AS
 
 Declare @dtValideLe	DateTime		
@@ -957,8 +958,8 @@ And    id_inter = @adcId_Inter
 		archive.maj_par,
 		
 		archive.id_cour_orig,
-		archive.id_arch
-
+		archive.id_arch,
+		archive.modele_word  -- [RS5045_REF_MATP]
 	)
 
   VALUES
@@ -1004,7 +1005,8 @@ And    id_inter = @adcId_Inter
 		@asMajPar,
 		
 		@asId_Cour,
-		@iCptArch 
+		@iCptArch,
+		@asModeleWord -- [RS5045_REF_MATP]
 	)
 
 
