@@ -2257,7 +2257,7 @@ Declare
 		  If @sIdTypArt = 'CAF' And @sIdFour = 'CMA'  
 		   Begin
 				Set @sMailBody = @sMailBody + 'Nous allons vous faire parvenir d''ici quelques jours par courrier votre/vos bon(s) d''achat Carrefour pour un '
-				Set @sMailBody = @sMailBody + 'montant total de ' + convert ( VarChar ( 20 ), @dcMtTTCcmde ) + '€, correspondant au montant de l’indemnité qui vous est due au titre du contrat GARANTIE ' 
+				Set @sMailBody = @sMailBody + 'montant total de ' + convert ( VarChar ( 20 ), @dcMtTTCcmde ) + '€, correspondant au montant de l’indemnité qui vous est due au titre du contrat ' 
 				Set @sMailBody = @sMailBody + @sLibProd + ' à l''adresse suivante :'
 		   End 
 		  Else

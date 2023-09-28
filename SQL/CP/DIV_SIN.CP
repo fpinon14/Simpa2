@@ -375,6 +375,7 @@ Go
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
 -- JFF      01/06/2018   [PC151425-1]
+-- JFF      26/09/2023   [RS5928_FRCH_CHQ]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_PAIEMENT_ADH_PAYBOX_PC694_4' AND type = 'P' )
         DROP procedure sysadm.PS_I_PAIEMENT_ADH_PAYBOX_PC694_4
@@ -770,6 +771,35 @@ Else
 				   Insert into sysadm.div_sin values ( @dcIdSin, 'dte_cmplt_adh_paye_ass_paybox', 'Cmplt paiem.adh assuré par PayBox', '-1', 'N', 'D', 'N', 'N', 120, null, null, GETDATE(), null, getdate(), getdate(), 'AUTO', getdate(), 'AUTO' ) 
 				 End
 			  End
+
+			-- [RS5928_FRCH_CHQ]
+			If sysadm.FN_CLE_NUMERIQUE ( 'RS5928_FRCH_CHQ') > 0 
+			 Begin
+				If Exists ( Select * From sysadm.w_sin ws Where ws.id_sin = @dcIdSin  )	
+					Begin
+					If Exists ( Select * From sysadm.w_div_sin wds Where wds.id_sin = @dcIdSin And nom_zone = 'mode_paiement' )
+						Begin
+						Update sysadm.w_div_sin Set val_car = 'CB', maj_le = GETDATE(), maj_par = 'AUTO' Where id_sin = @dcIdSin And nom_zone = 'mode_paiement'
+						End 
+					Else
+						Begin	 
+						Insert into sysadm.w_div_sin values ( @dcIdSin, 'mode_paiement', 'Mode de paiement franchise', '-WO', 'O', 'LC', 'N', 'O', 122, null, null, null, 'CB', 1, getdate(), getdate(), 'AUTO' ) 
+						End
+					End
+
+				If Exists ( Select * From sysadm.sinistre ws Where ws.id_sin = @dcIdSin  )	
+					Begin
+					If Exists ( Select * From sysadm.div_sin wds Where wds.id_sin = @dcIdSin And nom_zone = 'mode_paiement')
+						Begin
+						Update sysadm.div_sin Set val_car = 'CB' , maj_le = GETDATE(), maj_par = 'AUTO' Where id_sin = @dcIdSin And nom_zone = 'mode_paiement'
+						End 
+					Else
+						Begin	 
+						Insert into sysadm.div_sin values ( @dcIdSin, 'mode_paiement', 'Mode de paiement franchise', '-WO', 'O', 'LC', 'N', 'O', 122, null, null, null, 'CB', getdate(), getdate(), 'AUTO', getdate(), 'AUTO' ) 
+						End
+					End
+			 End 
+
 		  End
 
 		  Select @iIdPce = Convert( integer, sysadm.FN_CLE_VAL ( 'CODE_PCE', dp.val_car, ';'))
