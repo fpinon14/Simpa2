@@ -4810,12 +4810,12 @@ GO
 
 
 CREATE  function sysadm.FN_EPURE_CHAINE_V02  (
-        @sChaine    VarChar ( 255) ,
+        @sChaine    VarChar ( 1000) ,
 		@sCas		Varchar ( 50 ) ) -- Aucun cas = Fonctionnement natif remplacements des tous les caractères spéciaux
 									 -- 'EXCL_SLASHX2' = Exclusion des 2 slash (slash et antislash), ils ne seront pas supprimés.
 									 -- 'JUSTE_RC_TAB_DQ' = Suppression uniquements des Retour Chariot (bref tous les sauts), ainsi que la Tabulation, et le double quot
 									 -- 'NATIF&RC_TAB_DQ' = Fonctionnement Natif avec en plus le cas JUSTE_RC_TAB_DQ
-RETURNS VarChar ( 255 )
+RETURNS VarChar ( 1000 )
 AS
 
 Begin
