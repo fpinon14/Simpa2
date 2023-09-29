@@ -147,11 +147,11 @@ If rTrim ( @sParam1 ) = '?'
  	Union all
  	Select ''
  	Union all
- 	Select 'sysadm.PS_L_CLE ''PS'''
+/* 	Select 'sysadm.PS_L_CLE ''PS'''
  	Union all
  	Select '=> Visu des PS et fonctions obsolètes sur [SINSQL19REC\RECSINISTRES19].SIMPA2_TRT par rapport la base de production'
- 	Union all
- 	Select ''
+*/
+  	Select ''
 	Union all
 	Select 'sysadm.PS_L_CLE ''ACT'', ''trigramme'', ''MA_CLE'', ''code activation optionnel'''
  	Union all
@@ -309,7 +309,7 @@ If Upper ( rTrim ( @sParam1 ) ) = 'SVN_ACTIF'
 	Order by 'Dte Dern. Cnx' desc , rev_svn_cnx desc
  End
 
-
+/*
 If Upper ( rTrim ( @sParam1 ) ) = 'PS'
  Begin 
 	select os.crdate as date_sim, op.crdate as date_pro, op.name 'PS/Vue/Fonction à recompiler sur [SINSQL19REC\RECSINISTRES19].SIMPA2_TRT'
@@ -329,6 +329,7 @@ If Upper ( rTrim ( @sParam1 ) ) = 'PS'
 		and   os.xtype in  ('P','FN','V')
 			 )
  End
+*/
 
 If Upper ( rTrim ( @sParam1 ) ) = 'ACT'
  Begin 
