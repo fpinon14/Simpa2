@@ -428,6 +428,12 @@ BEGIN
 	and 	pers.id_ordre		= sin.id_ordre
 	and	prod.id_prod		= sin.id_prod
 	and	grp.id_grp		= sin.id_ets
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = prod.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -547,6 +553,12 @@ BEGIN
 	and	eta.id_ets  		= sin.id_ets
 	and	eta.id_grp  		= grp.id_grp
 	and	eta.id_rev    		= -1
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = prod.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -668,6 +680,12 @@ BEGIN
 	and 	pers.id_ordre		= sin.id_ordre
 	and	prod.id_prod		= sin.id_prod
 	and	grp.id_grp		= sin.id_ets
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = prod.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -788,6 +806,12 @@ BEGIN
 	and	eta.id_ets  		= sin.id_ets
 	and	eta.id_grp  		= grp.id_grp
 	and	eta.id_rev    		= -1
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = prod.id_prod
+		And   dp.id_code_dp = 323
+		)	
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -1175,6 +1199,12 @@ BEGIN
 	and 	pers.id_ordre		= sin.id_ordre
 	and	prod.id_prod		= sin.id_prod
 	and	grp.id_grp		= sin.id_ets
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = prod.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -1278,6 +1308,12 @@ BEGIN
 	and	eta.id_ets  		= sin.id_ets
 	and	eta.id_grp  		= grp.id_grp
 	and	eta.id_rev    		= -1
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = prod.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -1380,6 +1416,12 @@ BEGIN
 	and 	pers.id_ordre		= sin.id_ordre
 	and	prod.id_prod		= sin.id_prod
 	and	grp.id_grp		= sin.id_ets
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = prod.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -1485,6 +1527,12 @@ BEGIN
 	and	eta.id_ets  		= sin.id_ets
 	and	eta.id_grp  		= grp.id_grp
 	and	eta.id_rev    		= -1
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = prod.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -1633,6 +1681,12 @@ BEGIN
 	and 	intass.cod_inter	= 'A'
 	and 	pers.id_ordre		= sin.id_ordre
 	and	grp.id_grp		= sin.id_ets
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = prod.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -1743,6 +1797,12 @@ BEGIN
 	and	eta.id_ets  		= sin.id_ets
 	and	eta.id_grp  		= grp.id_grp
 	and	eta.id_rev    		= -1
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = prod.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -1849,6 +1909,12 @@ BEGIN
 	and 	intass.cod_inter	= 'A'
 	and 	pers.id_ordre		= sin.id_ordre
 	and	grp.id_grp		= sin.id_ets
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = prod.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -1959,6 +2025,12 @@ BEGIN
 	and	eta.id_ets  		= sin.id_ets
 	and	eta.id_grp  		= grp.id_grp
 	and	eta.id_rev    		= -1
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = prod.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -2038,6 +2110,12 @@ BEGIN
 	and     arch.nbr_conf         	= 0
 	and     arch.id_sin           	= int.id_sin
 	and     arch.id_inter         	= int.id_i
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = sin.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -2082,6 +2160,12 @@ BEGIN
 	and     arch.nbr_conf         	= 0
 	and     arch.id_sin           	= int.id_sin
 	and     arch.id_inter         	= int.id_i
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = sin.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -2191,6 +2275,12 @@ BEGIN
 	and     arch.nbr_conf         	= 0
 	and     arch.id_sin           	= int.id_sin
 	and     arch.id_inter         	= int.id_i
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = sin.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -2270,6 +2360,12 @@ BEGIN
 	and     arch.nbr_conf         	= 0
 	and     arch.id_sin           	= int.id_sin
 	and     arch.id_inter         	= int.id_i
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = sin.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -3386,6 +3482,12 @@ BEGIN
 	and 	pers.id_ordre		= sin.id_ordre
 	and	prod.id_prod		= sin.id_prod
 	and	grp.id_grp		= sin.id_ets
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = prod.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -3491,6 +3593,12 @@ BEGIN
 	and 	pers.id_ordre		= sin.id_ordre
 	and	prod.id_prod		= sin.id_prod
 	and	grp.id_grp		= sin.id_ets
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = prod.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -3608,6 +3716,12 @@ BEGIN
 	and	eta.id_ets  		= sin.id_ets
 	and	eta.id_grp  		= grp.id_grp
 	and	eta.id_rev    		= -1
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = prod.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -3719,6 +3833,12 @@ BEGIN
 	and	eta.id_ets  		= sin.id_ets
 	and	eta.id_grp  		= grp.id_grp
 	and	eta.id_rev    		= -1
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = prod.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -3833,6 +3953,12 @@ BEGIN
 	and 	pers.id_ordre		= sin.id_ordre
 	and	prod.id_prod		= sin.id_prod
 	and	grp.id_grp		= sin.id_ets
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = prod.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -3939,6 +4065,12 @@ BEGIN
 	and 	pers.id_ordre		= sin.id_ordre
 	and	prod.id_prod		= sin.id_prod
 	and	grp.id_grp		= sin.id_ets
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = prod.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -4056,6 +4188,12 @@ BEGIN
 	and	eta.id_ets  		= sin.id_ets
 	and	eta.id_grp  		= grp.id_grp
 	and	eta.id_rev    		= -1
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = prod.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
@@ -4167,6 +4305,12 @@ BEGIN
 	and	eta.id_ets  		= sin.id_ets
 	and	eta.id_grp  		= grp.id_grp
 	and	eta.id_rev    		= -1
+	And Not exists ( 
+		Select Top 1 1
+		From sysadm.det_pro dp
+		Where dp.id_prod = prod.id_prod
+		And   dp.id_code_dp = 323
+		)
 	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
 	      Or 
 		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
