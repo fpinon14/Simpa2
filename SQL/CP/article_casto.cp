@@ -27,21 +27,23 @@ Go
 -- JFF	07/09/2016	 Bascule table article_casto vers table article CAS/CAF
 -------------------------------------------------------------------
 
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S01_CTL_ARTICLE_CASTO' AND type = 'P' )
-        DROP procedure sysadm.PS_S01_CTL_ARTICLE_CASTO
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S01_CTL_ARTICLE_CASTO_V01' AND type = 'P' )
+        DROP procedure sysadm.PS_S01_CTL_ARTICLE_CASTO_V01
 GO
 
-CREATE procedure sysadm.PS_S01_CTL_ARTICLE_CASTO
-        @iCodeArticle int
+CREATE procedure sysadm.PS_S01_CTL_ARTICLE_CASTO_V01
+        @sCodeArticle varchar ( 20 ) 
 AS
 	Declare @iRet integer
 	
 	Set @iRet=0
 
+	Set @sCodeArticle = LTRIM ( rTrim ( @sCodeArticle ))
+
 	Select @iRet=IsNull(Count(*),0)
 	From sysadm.article a
 	Where a.id_four = 'CAS'
-	And	  a.id_ref_four = Convert ( VarChar, @iCodeArticle ) 
+	And	  a.id_ref_four = @sCodeArticle
 
 	If @iRet > 1 Set @iRet=1
 	

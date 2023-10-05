@@ -524,6 +524,7 @@ Set @sAltQuarant = 'N'
 -- [RS5045_REF_MATP]
 If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') >=3 
 	Begin
+	/*
 		Set @sMailBody = @sMailBody + '<CIV> <NOM>,' + @sSaut
 		Set @sMailBody = @sMailBody + @sSaut
 		Set @sMailBody = @sMailBody + 'Pour éviter le délai d''acheminement par voie postale, c''est par mail que nous vous adressons une lettre relative à votre demande d''indemnisation.' + @sSaut
@@ -533,6 +534,18 @@ If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') >=3
 		Set @sMailBody = @sMailBody + 'Sincères salutations.' + @sSaut 
 		Set @sMailBody = @sMailBody + @sSaut 
 		Set @sMailBody = @sMailBody + 'Votre gestionnaire d''assurance'
+	*/
+		-- RS4573 mail V.Vander et V.Guyomard du 03/03/2023
+		Set @sMailBody = @sMailBody + '<CIV> <NOM>,' + @sSaut
+		Set @sMailBody = @sMailBody + @sSaut
+		Set @sMailBody = @sMailBody + 'Nous vous adressons ci-joint une correspondance suite à votre demande d''indemnisation.' + @sSaut
+		Set @sMailBody = @sMailBody + @sSaut 
+		Set @sMailBody = @sMailBody + 'Pour nous contacter, vous trouverez l''ensemble de nos coordonnées sur cette dernière (n''utilisez surtout pas l''adresse émettrice de ce mail qui ne permet pas de recevoir des réponses).' + @sSaut
+		Set @sMailBody = @sMailBody + @sSaut 
+		Set @sMailBody = @sMailBody + 'Sincères salutations.' + @sSaut 
+		Set @sMailBody = @sMailBody + @sSaut 
+		Set @sMailBody = @sMailBody + 'Votre gestionnaire d''assurance'
+
 	End 
 
 If @@servername = master.dbo.SPB_FN_ServerName ('PRO')

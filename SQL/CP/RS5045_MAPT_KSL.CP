@@ -90,7 +90,7 @@ Insert into sysadm.variable_xml_ksl_rs5045
 	  ''
 	)
 
-	-- Retour l'id_xml à stocker par le client appelet
+	-- Retour l'id_xml à stocker par le client appelant
 	Return @@identity
 
 Go
