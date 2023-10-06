@@ -554,79 +554,53 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 	-- [RS5045_REF_MATP]
 	If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') >=3 
 		Begin
+			-- Appel Obligatoire pour déclarer le XML
+			Exec @iIdXml = TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CREATION_CHAINE_DATA_XML_KSL_A_VIDE
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2 @dcIdSin, @dcIdI, @iIdXml
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_OPTIMISER_CHAINE_DATA_XML_KSL @iIdXml, 'OUI', 'OUI', 'OUI'
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_CODE_MAQUETTE_KSL_A_PARTIR_TYP_MAIL @sTypMail, @sCodeMaquette OutPut
 
-		    -- Produit éligible nouveau système
-			If Exists ( Select Top 1 1 From sysadm.det_pro Where id_prod = @dcIdProd And id_code_dp = 367 )
-			  Begin
-				-- Appel Obligatoire pour déclarer le XML
-				Exec @iIdXml = TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CREATION_CHAINE_DATA_XML_KSL_A_VIDE
-				Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2 @dcIdSin, @dcIdI, @iIdXml
-				Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_OPTIMISER_CHAINE_DATA_XML_KSL @iIdXml, 'OUI', 'OUI', 'OUI'
-				Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_CODE_MAQUETTE_KSL_A_PARTIR_TYP_MAIL @sTypMail, @sCodeMaquette OutPut
+			-- Ajout personnalisé du client appelant le système
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
 
-				-- Ajout personnalisé du client appelant le système
-				Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'civilite_courte', @sVal OutPut
+			Set @sMailBody = Replace ( @sMailBody, '<CIV>', @sVal )
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'nom', @sVal OutPut
+			Set @sMailBody = Replace ( @sMailBody, '<NOM>', @sVal )
 
-				Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'civilite_courte', @sVal OutPut
-				Set @sMailBody = Replace ( @sMailBody, '<CIV>', @sVal )
-				Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'nom', @sVal OutPut
-				Set @sMailBody = Replace ( @sMailBody, '<NOM>', @sVal )
-
-				Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
-				Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
-				Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
-				Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adr_mail', @sMailSend
-				Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adr_mail_cc', @sMailCc
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adr_mail', @sMailSend
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adr_mail_cc', @sMailCc
 
 
-				-- Appel pour construire et récupérer le XML dans @xmlResult
-				Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar2 OUTPUT
+			-- Appel pour construire et récupérer le XML dans @xmlResult
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar2 OUTPUT
 
-				Exec @iRet = TRACE_MAIL_PRO.sysadm.PS_RS5045_I_MAIL_PUSH_KSL
-					@asIdAppli,
-					@iIdSin,
-					@iIdProd,
-					@sLibProd,
-					@iIdEts,
-					@sMailFrom,
-					@sMailSend,
-					@sMailCc,
-					null,
-					@sMailObjet,
-					@sMailBody,
-					@sBoiteMail,
-					@sTypMail,
-					2,
-					@iIdArch,
-					@sXMLVar2,
-					null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
-					null, -- dteh_exec
-					@sErrOutPut OutPut
+			Exec @iRet = TRACE_MAIL_PRO.sysadm.PS_RS5045_I_MAIL_PUSH_KSL
+				@asIdAppli,
+				@iIdSin,
+				@iIdProd,
+				@sLibProd,
+				@iIdEts,
+				@sMailFrom,
+				@sMailSend,
+				@sMailCc,
+				null,
+				@sMailObjet,
+				@sMailBody,
+				@sBoiteMail,
+				@sTypMail,
+				2,
+				@iIdArch,
+				@sXMLVar2,
+				null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
+				null, -- dteh_exec
+				@sErrOutPut OutPut
 
-					Set @sRet = Left ( @sErrOutPut, 60 )
-			  End 
-			Else
-			  -- Produit NON éligible nouveau système, on reste sur l'ancien système
-			  Begin
-				Exec @iRet = TRACE_MAIL_PRO.sysadm.PS_I01_MAIL_PUSH_V01 
-					@asIdAppli,
-					@iIdSin,
-					@iIdProd,
-					@sLibProd,
-					@iIdEts,
-					@sMailFrom,
-					@sMailSend,
-					@sMailCc,
-					@sMailObjet,
-					'Corps du mail construit par KSL',
-					@sAltQuarant,
-					@sBoiteMail,
-					@sTypMail,
-					2,
-					'KSL',
-					@iIdArch,
-					@sXMLVar
-			  End 
+				Set @sRet = Left ( @sErrOutPut, 60 )
+
 		End 
 	Else
 	    -- Nouveau système non activé
@@ -659,9 +633,6 @@ Else
 	If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') >=3 
 		Begin
 
-		    -- Produit éligible nouveau système
-			If Exists ( Select Top 1 1 From sysadm.det_pro Where id_prod = @dcIdProd And id_code_dp = 367 )
-			  Begin
 				-- Appel Obligatoire pour déclarer le XML
 				Exec @iIdXml = TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CREATION_CHAINE_DATA_XML_KSL_A_VIDE
 				Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2 @dcIdSin, @dcIdI, @iIdXml
@@ -708,29 +679,6 @@ Else
 					@sErrOutPut OutPut
 
 					Set @sRet = Left ( @sErrOutPut, 60 )
-			  End 
-			Else
-			  -- Produit NON éligible nouveau système, on reste sur l'ancien système
-			  Begin
-				Exec @iRet = TRACE_MAIL_TRT.sysadm.PS_I01_MAIL_PUSH_V01 
-					@asIdAppli,
-					@iIdSin,
-					@iIdProd,
-					@sLibProd,
-					@iIdEts,
-					@sMailFrom,
-					@sMailSend,
-					@sMailCc,
-					@sMailObjet,
-					'Corps du mail construit par KSL',
-					@sAltQuarant,
-					@sBoiteMail,
-					@sTypMail,
-					2,
-					'KSL',
-					@iIdArch,
-					@sXMLVar
-			  End 
 		End 
 	Else
 	    -- Nouveau système non activé
@@ -755,8 +703,7 @@ Else
 				@sXMLVar
 	   End 
  End
-
-
+ 
 -- :[PM159] 
 
 
