@@ -265,23 +265,20 @@ If Exists (
 	End
 
 -- [RS3220_MODDEGR_TELST]
-If sysadm.FN_CLE_NUMERIQUE ( 'RS3220_MODDEGR_TELST') > 0 
- Begin
-	 If Exists ( 
-			Select	Top 1 1 
-			From	sysadm.sinistre s,
-					sysadm.commande c
-			Where	s.id_sin = @adcIdSin
-			And		c.id_sin = s.id_sin
-			And		c.id_four = 'O2M'
-			And     c.id_typ_art in ( 'TEL', 'TPC', 'RST' ) 
-			And     sysadm.FN_CLE_VAL ( 'RS3220', c.info_spb_frn_cplt, ';' ) = 'TLS'
-			And		@asIdFourFct = 'TL1'
-		)
-		Begin
-			Return 1
-		End 
- End 
+If Exists ( 
+	Select	Top 1 1 
+	From	sysadm.sinistre s,
+			sysadm.commande c
+	Where	s.id_sin = @adcIdSin
+	And		c.id_sin = s.id_sin
+	And		c.id_four = 'O2M'
+	And     c.id_typ_art in ( 'TEL', 'TPC', 'RST' ) 
+	And     sysadm.FN_CLE_VAL ( 'RS3220', c.info_spb_frn_cplt, ';' ) = 'TLS'
+	And		@asIdFourFct = 'TL1'
+)
+Begin
+	Return 1
+End 
  
 -- Défaut
 If Exists ( 

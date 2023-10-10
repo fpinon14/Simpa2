@@ -1973,10 +1973,7 @@ AS
 	If @mtPrefact is null Set @mtPrefact = 0
 
 -- [RS_1617_PM251] Su demande de Coraline, on néglige le MT_PREFAC donné par SAGA2 au profit du MT_PEC SIMPA2
-	If sysadm.FN_CLE_NUMERIQUE ( 'RS_1617_PM251') > 0 
-	 Begin
-		Set @mtPrefact = @mtPec
-	 End 
+	Set @mtPrefact = @mtPec
 
 	 -- Mantis 13860 
 	 -- [PM336-1]
@@ -1989,27 +1986,22 @@ AS
 			End 
 		End 
 -- [RS_1617_PM251] Su demande de Coraline, on néglige le MT_PREFAC donné par SAGA2 au profit du MT_PEC SIMPA2
-	If NOT sysadm.FN_CLE_NUMERIQUE ( 'RS_1617_PM251') > 0 
-	 Begin
-		If @mtPrefact = 0 And @mtPec > 0 
-			Begin
-				Set @mtPrefact = @mtPec
-			End 
-	 End
+/*
+	If @mtPrefact = 0 And @mtPec > 0 
+		Begin
+			Set @mtPrefact = @mtPec
+		End 
+*/
+
 -- /[RS_1617_PM251]
 
 
 	 If @mtPrefact = 0
 		Begin
 			-- [RS_1617_PM251] Su demande de Coraline, on change les termes de pré-fracturation en prise charge (plafond)
-			If sysadm.FN_CLE_NUMERIQUE ( 'RS_1617_PM251') > 0 
-				Begin
-					Set @sResult = 'ERREUR : Impossible de déterminer un montant de prise charge (plafond).'
-				End 
-			Else 
-				Begin
-					Set @sResult = 'ERREUR : Impossible de déterminer un montant de pré-facturation, ni de prise en charge.'
-				End 
+			Set @sResult = 'ERREUR : Impossible de déterminer un montant de prise charge (plafond).'
+		--	Set @sResult = 'ERREUR : Impossible de déterminer un montant de pré-facturation, ni de prise en charge.'
+
 			-- /[RS_1617_PM251]
 
 			Return -100
@@ -2121,14 +2113,8 @@ AS
 		 If @mtPrej > @mtPrefact 
 			Begin
 				-- [RS_1617_PM251] Su demande de Coraline, on change les termes de pré-fracturation en prise charge (plafond)
-				If sysadm.FN_CLE_NUMERIQUE ( 'RS_1617_PM251') > 0 
-					Begin
-						Set @sResult = 'ERREUR : Montant facture (' + CONVERT ( VarChar ( 20), @mtPrej ) + '€) supérieur au montant de prise charge (plafond) (' + CONVERT ( VarChar ( 20), @mtPrefact ) + '€)'
-					End 
-				Else
-					Begin
-						Set @sResult = 'ERREUR : Montant facture (' + CONVERT ( VarChar ( 20), @mtPrej ) + '€) supérieur au montant de pré-facturation (' + CONVERT ( VarChar ( 20), @mtPrefact ) + '€)'
-					End 
+				Set @sResult = 'ERREUR : Montant facture (' + CONVERT ( VarChar ( 20), @mtPrej ) + '€) supérieur au montant de prise charge (plafond) (' + CONVERT ( VarChar ( 20), @mtPrefact ) + '€)'
+				-- Set @sResult = 'ERREUR : Montant facture (' + CONVERT ( VarChar ( 20), @mtPrej ) + '€) supérieur au montant de pré-facturation (' + CONVERT ( VarChar ( 20), @mtPrefact ) + '€)'
 				-- /[RS_1617_PM251]
 
 				Return -100

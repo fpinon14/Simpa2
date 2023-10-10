@@ -4198,10 +4198,7 @@ Exec sysadm.PS_I_MAIL_IOS7_VDOC12443 @asIdAppli, @asBase, @iOptionDP, @adcIdSin
 		 Begin
 
 			-- [DT398]
-			If sysadm.FN_CLE_NUMERIQUE ( 'DT398') > 0 
-			 Begin
-				Set @sMailBody  = @sMailBody  + 'en téléchargeant un bon prépayé en vous connectant à l''adresse suivante https://extranet.trepidai.biz/ puis en l''imprimant et en le collant sur votre colis, ou enfin '
-			 End 
+			Set @sMailBody  = @sMailBody  + 'en téléchargeant un bon prépayé en vous connectant à l''adresse suivante https://extranet.trepidai.biz/ puis en l''imprimant et en le collant sur votre colis, ou enfin '
 
 		     -- PM200_LOT3_V3		 
 			If @sPremBtqProxPSM <> '' 
@@ -4253,17 +4250,14 @@ Exec sysadm.PS_I_MAIL_IOS7_VDOC12443 @asIdAppli, @asBase, @iOptionDP, @adcIdSin
 		-- :#12 [DCMP090678]	 
 
 		-- [DT398]
-		If sysadm.FN_CLE_NUMERIQUE ( 'DT398') > 0 
-		  Begin
-			If @sPremBtqProxPSM = '' 
-			  Begin
-				Set @sMailBody  = @sMailBody  + @sSaut
-				Set @sMailBody  = @sMailBody  + @sSaut
-				Set @sMailBody  = @sMailBody  + 'Si vous ne souhaitez pas envoyer votre appareil par colis à cette adresse, vous pouvez vous déplacer en boutique PSM de proximité. Retrouvez toutes les informations sur www.allopsm.fr.'
+		If @sPremBtqProxPSM = '' 
+			Begin
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Si vous ne souhaitez pas envoyer votre appareil par colis à cette adresse, vous pouvez vous déplacer en boutique PSM de proximité. Retrouvez toutes les informations sur www.allopsm.fr.'
 
-			  End 
+			End 
 
-		  End 
 		-- #12 [DCMP090678]	 
 		If @sTypApp = 'TEL'
 			Begin	
@@ -7043,20 +7037,10 @@ If @sIdFour = 'BLC'
    -- [VDOC13009]
    -- [VDOC17736]
 	-- [RS3337]
-	If sysadm.FN_CLE_NUMERIQUE ( 'RS3337') > 0 
-		Begin
-			Set @sAdressO2M = 'LOXY' + @sSaut
-			Set @sAdressO2M = @sAdressO2M + '21-23 Rue Saint-Hilaire' + @sSaut
-			Set @sAdressO2M = @sAdressO2M + 'Saint-Ouen l''Aumône' + @sSaut
-			Set @sAdressO2M = @sAdressO2M + '95041 CERGY-PONTOISE CEDEX 1' + @sSaut
-		End 
-	Else
-	  Begin
-		-- [RS1218-RS1259-ADRO2M]
-		Set @sAdressO2M = 'SPB PEM' + @sSaut
-		Set @sAdressO2M = @sAdressO2M + '124, rue Salvador Allende' + @sSaut
-		Set @sAdressO2M = @sAdressO2M + '95870 BEZONS' + @sSaut
-	  End
+	Set @sAdressO2M = 'LOXY' + @sSaut
+	Set @sAdressO2M = @sAdressO2M + '21-23 Rue Saint-Hilaire' + @sSaut
+	Set @sAdressO2M = @sAdressO2M + 'Saint-Ouen l''Aumône' + @sSaut
+	Set @sAdressO2M = @sAdressO2M + '95041 CERGY-PONTOISE CEDEX 1' + @sSaut
   End 
 
 -- [PC13348&13408]
@@ -16328,9 +16312,6 @@ Declare @dcIdInter Decimal ( 2 ) -- [RS5045_REF_MATP]
 Declare @sCodeMaquette VarChar ( 255 ) -- [RS5045_REF_MATP]
 Declare @sErrOutPut VarChar ( 255 ) -- [RS5045_REF_MATP]
 Declare @sXMLVar   VarChar ( max ) -- [RS5045_REF_MATP]  
-Declare @iRS3179_SHUNT_RECLA Integer
-
-Set @iRS3179_SHUNT_RECLA = sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') 
 
 Set @dtDateJour = GetDate()
 
@@ -16577,26 +16558,24 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 	Where	marquage = 0
 
 	-- [RS3179_SHUNT_RECLA]
-	If @iRS3179_SHUNT_RECLA  > 0 
-	 Begin
-		Set @iIdSin = CONVERT ( Integer,  @dcIdSin )
-		Set @sAltRecla = 'N'
+	Set @iIdSin = CONVERT ( Integer,  @dcIdSin )
+	Set @sAltRecla = 'N'
 
-		IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
-		BEGIN
-			Exec SHERPA_PRO.sysadm.Recla_Verifier_Sinistre @iIdSin, 2, @sAltRecla OUTPUT		
-		END
-		ELSE
-		BEGIN
-			Exec SHERPA_SIM.sysadm.Recla_Verifier_Sinistre @iIdSin, 2, @sAltRecla OUTPUT		
-		END	
+	IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+	BEGIN
+		Exec SHERPA_PRO.sysadm.Recla_Verifier_Sinistre @iIdSin, 2, @sAltRecla OUTPUT		
+	END
+	ELSE
+	BEGIN
+		Exec SHERPA_SIM.sysadm.Recla_Verifier_Sinistre @iIdSin, 2, @sAltRecla OUTPUT		
+	END	
 
-		If @sAltRecla = 'O'
-		  Begin
+	If @sAltRecla = 'O'
+		Begin
 			Update @tb Set marquage = 1	Where id_seq = @iIdSeq
 			Continue
-		  End
-	 End 
+		End
+
 
 	If @sVariante is null Set @sVariante = ''
 
@@ -20869,9 +20848,6 @@ Declare @dcIdInter Decimal ( 2 ) -- [RS5045_REF_MATP]
 Declare @sCodeMaquette VarChar ( 255 ) -- [RS5045_REF_MATP]
 Declare @sErrOutPut VarChar ( 255 ) -- [RS5045_REF_MATP]
 Declare @sXMLVar   VarChar ( max ) -- [RS5045_REF_MATP]   
-Declare @iRS3179_SHUNT_RECLA Integer
-
-Set @iRS3179_SHUNT_RECLA = sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') 
 
 Set @dtDateJour = GetDate()
 
@@ -21131,26 +21107,23 @@ While Exists ( Select * From @tb where marquage = 0 )
 	Where	marquage = 0
 
 	-- [RS3179_SHUNT_RECLA]
-	If @iRS3179_SHUNT_RECLA > 0 
-	 Begin
-		Set @iIdSin = CONVERT ( Integer,  @dcIdSin )
-		Set @sAltRecla = 'N'
+	Set @iIdSin = CONVERT ( Integer,  @dcIdSin )
+	Set @sAltRecla = 'N'
 
-		IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
-		BEGIN
-			Exec SHERPA_PRO.sysadm.Recla_Verifier_Sinistre @iIdSin, 2, @sAltRecla OUTPUT		
-		END
-		ELSE
-		BEGIN
-			Exec SHERPA_SIM.sysadm.Recla_Verifier_Sinistre @iIdSin, 2, @sAltRecla OUTPUT		
-		END	
+	IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+	BEGIN
+		Exec SHERPA_PRO.sysadm.Recla_Verifier_Sinistre @iIdSin, 2, @sAltRecla OUTPUT		
+	END
+	ELSE
+	BEGIN
+		Exec SHERPA_SIM.sysadm.Recla_Verifier_Sinistre @iIdSin, 2, @sAltRecla OUTPUT		
+	END	
 
-		If @sAltRecla = 'O'
-		  Begin
+	If @sAltRecla = 'O'
+		Begin
 			Update @tb Set marquage = 1	Where id_seq = @iIdSeq
 			Continue
-		  End
-	 End 
+		End
 
 	If @sVariante is null Set @sVariante = ''
 

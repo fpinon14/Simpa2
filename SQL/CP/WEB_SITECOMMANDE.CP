@@ -3150,38 +3150,34 @@ If 	@iRet <= 0
 	End 
 
 -- Contrôle ajouté car soupçon de Bug sur l'extranet, des commandes d'appareils non chargé m'arrivent ici en validation.
-If sysadm.FN_CLE_NUMERIQUE ( 'EVOL_WEB_CMDE') > 0 
- Begin
-	-- Récup du TTC de l'article
-	Select @dcTTCArticle = Convert ( decimal ( 11,2 ), Convert ( money, mt_prix_ht * ( 1 + ( tva / 100 ) )))
-	From   sysadm.article a
-	Where  a.id_four = @asIdFour
-	And    a.id_ref_four = @asIdRefFour	
+-- Récup du TTC de l'article
+Select @dcTTCArticle = Convert ( decimal ( 11,2 ), Convert ( money, mt_prix_ht * ( 1 + ( tva / 100 ) )))
+From   sysadm.article a
+Where  a.id_four = @asIdFour
+And    a.id_ref_four = @asIdRefFour	
 	
-	If @dcTTCArticle is null Set @dcTTCArticle = 0
+If @dcTTCArticle is null Set @dcTTCArticle = 0
 	
-	-- Récup du mt de PEC
-	Select  @dcMtPec = c.mt_ttc_cmde
-	From    sysadm.commande c
-	Where   c.id_sin = @adcIdSin
-	and     c.id_four = 'WBA'
-	and     c.cod_etat = 'CWE'
-	and     c.id_seq = (    Select max ( c2.id_seq ) 
-							From sysadm.commande c2
-							Where c2.id_sin = c.id_sin
-							and   c2.id_four = c.id_four
-							and   c2.cod_etat = c.cod_etat )
+-- Récup du mt de PEC
+Select  @dcMtPec = c.mt_ttc_cmde
+From    sysadm.commande c
+Where   c.id_sin = @adcIdSin
+and     c.id_four = 'WBA'
+and     c.cod_etat = 'CWE'
+and     c.id_seq = (    Select max ( c2.id_seq ) 
+						From sysadm.commande c2
+						Where c2.id_sin = c.id_sin
+						and   c2.id_four = c.id_four
+						and   c2.cod_etat = c.cod_etat )
 
-	If @dcMtPec is null Set @dcMtPec = 0
+If @dcMtPec is null Set @dcMtPec = 0
 
-	If @dcTTCArticle > @dcMtPec 
-	  Begin
-        -- Commande impossible
-        Select @asRetourMess = sysadm.FN_MESS ( 125, @asLangage )
+If @dcTTCArticle > @dcMtPec 
+	Begin
+		-- Commande impossible
+		Select @asRetourMess = sysadm.FN_MESS ( 125, @asLangage )
 		RETURN ( -1 )
-	  End 
-
- End 
+	End 
 
 -- [PM462-1] Traitement dépassement mt_pec et donc paiement Paybox pour le cplt.
 /* lié à la V02

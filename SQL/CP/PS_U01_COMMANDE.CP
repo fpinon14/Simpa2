@@ -2177,186 +2177,147 @@ IF @iStatusGc = 178 And @iStatusGCActuel <> 178
 	Where 	ds.id_sin = @dcIdSin And ds.nom_zone = 'type_app'
 
 	-- [RS4616_RET_TLS]
-	If sysadm.FN_CLE_NUMERIQUE ( 'RS4616_RET_TLS') > 0 
-	 Begin
-		-- Problème intégration si montant =0 donc bcv absent par le contrôle PB
-		Select  @sVal2 = sysadm.FN_CLE_VAL ( 'MT_TTC_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'),
-				@dcMtTTCcmde = wc.mt_ttc_cmde,
-				@sMarqRempl = sysadm.FN_CLE_VAL ( 'MARQ_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'),
-				@sModlRempl = sysadm.FN_CLE_VAL ( 'MODL_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'),
-				@sCoulRempl = sysadm.FN_CLE_VAL ( 'COUL_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'),
-				@sCapStkRempl = sysadm.FN_CLE_VAL ( 'CAP_STK_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';')
-		From    sysadm.sinistre ws, sysadm.commande wc
-		Where	wc.id_sin = @dcIdSin
-		And		wc.id_seq = @iIdSeq		
-		And		ws.id_sin = wc.id_sin
 
-		If @sVal2 is null Set @sVal2 = 0
-		If IsNumeric ( @sVal2 ) = 0 Set @sVal2 = 0
-		If @sVal2 = 0 Set @sVal2 = Convert ( Varchar ( 10 ), @dcMtTTCcmde ) -- [RS4616_RET_TLS]
+	-- Problème intégration si montant =0 donc bcv absent par le contrôle PB
+	Select  @sVal2 = sysadm.FN_CLE_VAL ( 'MT_TTC_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'),
+			@dcMtTTCcmde = wc.mt_ttc_cmde,
+			@sMarqRempl = sysadm.FN_CLE_VAL ( 'MARQ_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'),
+			@sModlRempl = sysadm.FN_CLE_VAL ( 'MODL_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'),
+			@sCoulRempl = sysadm.FN_CLE_VAL ( 'COUL_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'),
+			@sCapStkRempl = sysadm.FN_CLE_VAL ( 'CAP_STK_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';')
+	From    sysadm.sinistre ws, sysadm.commande wc
+	Where	wc.id_sin = @dcIdSin
+	And		wc.id_seq = @iIdSeq		
+	And		ws.id_sin = wc.id_sin
 
-		If CharIndex ( 'GO', Upper ( @sCapStkRempl), 1 ) <=0 And CharIndex ( 'GB', Upper ( @sCapStkRempl), 1 ) <=0 Set @sCapStkRempl = @sCapStkRempl + 'GB'
-		Set @sModlRempl = @sModlRempl + ' ' + @sCoulRempl + ' ' + @sCapStkRempl
+	If @sVal2 is null Set @sVal2 = 0
+	If IsNumeric ( @sVal2 ) = 0 Set @sVal2 = 0
+	If @sVal2 = 0 Set @sVal2 = Convert ( Varchar ( 10 ), @dcMtTTCcmde ) -- [RS4616_RET_TLS]
 
-		Update 	sysadm.w_commande
-		Set	id_marq_art		= @sMarqRempl, 
-			id_modl_art		= @sModlRempl,
-			mt_ttc_cmde		= Round ( Convert ( decimal (11,2 ) , @sVal2), 2 ), 
-			id_marq_art_ifr = 
-				Case 
-					When @sIdFour = 'TLS' Then 
-						    (	Select Top 1 rtrim (la.marq_ifr ) 
-								from sysadm.lien_article la 
-								Where la.id_four = 'TLS'
-								And la.marq_four = Left ( @sMarqRempl, 35)
-								And la.modl_four = Left ( @sModlRempl, 35)
-							)
-					Else ws.marq_port
-				End,		
-			id_modl_art_ifr =
-				Case 
-					When @sIdFour = 'TLS' Then 
-						(	Select Top 1 rtrim ( la.modl_ifr ) 
+	If CharIndex ( 'GO', Upper ( @sCapStkRempl), 1 ) <=0 And CharIndex ( 'GB', Upper ( @sCapStkRempl), 1 ) <=0 Set @sCapStkRempl = @sCapStkRempl + 'GB'
+	Set @sModlRempl = @sModlRempl + ' ' + @sCoulRempl + ' ' + @sCapStkRempl
+
+	Update 	sysadm.w_commande
+	Set	id_marq_art		= @sMarqRempl, 
+		id_modl_art		= @sModlRempl,
+		mt_ttc_cmde		= Round ( Convert ( decimal (11,2 ) , @sVal2), 2 ), 
+		id_marq_art_ifr = 
+			Case 
+				When @sIdFour = 'TLS' Then 
+						(	Select Top 1 rtrim (la.marq_ifr ) 
 							from sysadm.lien_article la 
 							Where la.id_four = 'TLS'
 							And la.marq_four = Left ( @sMarqRempl, 35)
 							And la.modl_four = Left ( @sModlRempl, 35)
 						)
-					Else ws.modl_port
-				End,
-			id_typ_art = @sVal1 
-		From    sysadm.w_sin ws, sysadm.w_commande wc
-		Where	wc.id_sin = @dcIdSin
-		And		wc.id_seq = @iIdSeq		
-		And		ws.id_sin = wc.id_sin
+				Else ws.marq_port
+			End,		
+		id_modl_art_ifr =
+			Case 
+				When @sIdFour = 'TLS' Then 
+					(	Select Top 1 rtrim ( la.modl_ifr ) 
+						from sysadm.lien_article la 
+						Where la.id_four = 'TLS'
+						And la.marq_four = Left ( @sMarqRempl, 35)
+						And la.modl_four = Left ( @sModlRempl, 35)
+					)
+				Else ws.modl_port
+			End,
+		id_typ_art = @sVal1 
+	From    sysadm.w_sin ws, sysadm.w_commande wc
+	Where	wc.id_sin = @dcIdSin
+	And		wc.id_seq = @iIdSeq		
+	And		ws.id_sin = wc.id_sin
 
-		Update 	sysadm.commande
-		Set	id_marq_art		= @sMarqRempl, 
-			id_modl_art		= @sModlRempl,
-			mt_ttc_cmde		= Round ( Convert ( decimal (11,2 ) , @sVal2 ), 2 ), 
-			id_marq_art_ifr = 
-				Case 
-					When @sIdFour = 'TLS' Then 
-						    (	Select Top 1 rtrim (la.marq_ifr ) 
-								from sysadm.lien_article la 
-								Where la.id_four = 'TLS'
-								And la.marq_four = Left ( @sMarqRempl, 35)
-								And la.modl_four = Left ( @sModlRempl, 35)
-							)
-					Else ws.marq_port
-				End,		
-			id_modl_art_ifr =
-				Case 
-					When @sIdFour = 'TLS' Then 
-						(	Select Top 1 rtrim ( la.modl_ifr ) 
+	Update 	sysadm.commande
+	Set	id_marq_art		= @sMarqRempl, 
+		id_modl_art		= @sModlRempl,
+		mt_ttc_cmde		= Round ( Convert ( decimal (11,2 ) , @sVal2 ), 2 ), 
+		id_marq_art_ifr = 
+			Case 
+				When @sIdFour = 'TLS' Then 
+						(	Select Top 1 rtrim (la.marq_ifr ) 
 							from sysadm.lien_article la 
 							Where la.id_four = 'TLS'
 							And la.marq_four = Left ( @sMarqRempl, 35)
 							And la.modl_four = Left ( @sModlRempl, 35)
 						)
-					Else ws.modl_port
-				End,
-			id_typ_art = @sVal1 
-		From    sysadm.sinistre ws, sysadm.commande wc
-		Where	wc.id_sin = @dcIdSin
-		And		wc.id_seq = @iIdSeq		
-		And		ws.id_sin = wc.id_sin
+				Else ws.marq_port
+			End,		
+		id_modl_art_ifr =
+			Case 
+				When @sIdFour = 'TLS' Then 
+					(	Select Top 1 rtrim ( la.modl_ifr ) 
+						from sysadm.lien_article la 
+						Where la.id_four = 'TLS'
+						And la.marq_four = Left ( @sMarqRempl, 35)
+						And la.modl_four = Left ( @sModlRempl, 35)
+					)
+				Else ws.modl_port
+			End,
+		id_typ_art = @sVal1 
+	From    sysadm.sinistre ws, sysadm.commande wc
+	Where	wc.id_sin = @dcIdSin
+	And		wc.id_seq = @iIdSeq		
+	And		ws.id_sin = wc.id_sin
 			
-		If @sIdFour = 'TLS'
-		  Begin
-			If Not Exists ( 
-				Select Top 1 1 
-				From sysadm.article a
-				Where a.id_four = @sIdFour
-				And   a.id_marq_art = Left ( @sMarqRempl, 35)
-				And   a.id_modl_art = Left ( @sModlRempl, 35)
-			)
-			Begin 
+	If @sIdFour = 'TLS'
+		Begin
+		If Not Exists ( 
+			Select Top 1 1 
+			From sysadm.article a
+			Where a.id_four = @sIdFour
+			And   a.id_marq_art = Left ( @sMarqRempl, 35)
+			And   a.id_modl_art = Left ( @sModlRempl, 35)
+		)
+		Begin 
 
-				Set @sNewIdRefFour = Replace ( Replace ( Replace ( convert( varchar ( 30), GetDate(), 120 ), '-', ''), ' ', ''), ':', '')
-				Set @sNewIdRefFourTest = @sNewIdRefFour 
+			Set @sNewIdRefFour = Replace ( Replace ( Replace ( convert( varchar ( 30), GetDate(), 120 ), '-', ''), ' ', ''), ':', '')
+			Set @sNewIdRefFourTest = @sNewIdRefFour 
 
-				Set @iCptId = 1
-				Set @sNewIdRefFourTest = @sNewIdRefFour + '_' + convert ( varchar (5), @iCptId )
+			Set @iCptId = 1
+			Set @sNewIdRefFourTest = @sNewIdRefFour + '_' + convert ( varchar (5), @iCptId )
 
-				While Exists ( Select Top 1 1
-							   From sysadm.article a with (nolock)
-							   Where a.id_four = @sIdFour
-							   And   a.id_ref_four = @sNewIdRefFourTest )
-					Begin
-						Set @iCptId = @iCptId + 1
-						Set @sNewIdRefFourTest = @sNewIdRefFour + '_' + convert ( varchar (5), @iCptId )
-					End
+			While Exists ( Select Top 1 1
+							From sysadm.article a with (nolock)
+							Where a.id_four = @sIdFour
+							And   a.id_ref_four = @sNewIdRefFourTest )
+				Begin
+					Set @iCptId = @iCptId + 1
+					Set @sNewIdRefFourTest = @sNewIdRefFour + '_' + convert ( varchar (5), @iCptId )
+				End
 
-				Insert into sysadm.article 
-				Select	@sIdFour,
-						@sNewIdRefFourTest,
-						'TEL',
-						Left ( @sMarqRempl, 35),
-						Left ( @sModlRempl, 35),
-						0,
-						0,
-						20000,
-						null,
-						'N',
-						(	Select Top 1 rtrim ( la.marq_ifr ) 
-							from sysadm.lien_article la 
-							Where la.id_four = 'TLS'
-							And la.marq_four = Left ( @sMarqRempl, 35)
-							And la.modl_four = Left ( @sModlRempl, 35)
-							),
-						(	Select Top 1 rtrim ( la.modl_ifr ) 
-							from sysadm.lien_article la 
-							Where la.id_four = 'TLS'
-							And la.marq_four = Left ( @sMarqRempl, 35)
-							And la.modl_four = Left ( @sModlRempl, 35)
-							),
-						200,
-						1,
-						getdate(),
-						getdate(),
-						'JFF'
-			End
-		  End 
+			Insert into sysadm.article 
+			Select	@sIdFour,
+					@sNewIdRefFourTest,
+					'TEL',
+					Left ( @sMarqRempl, 35),
+					Left ( @sModlRempl, 35),
+					0,
+					0,
+					20000,
+					null,
+					'N',
+					(	Select Top 1 rtrim ( la.marq_ifr ) 
+						from sysadm.lien_article la 
+						Where la.id_four = 'TLS'
+						And la.marq_four = Left ( @sMarqRempl, 35)
+						And la.modl_four = Left ( @sModlRempl, 35)
+						),
+					(	Select Top 1 rtrim ( la.modl_ifr ) 
+						from sysadm.lien_article la 
+						Where la.id_four = 'TLS'
+						And la.marq_four = Left ( @sMarqRempl, 35)
+						And la.modl_four = Left ( @sModlRempl, 35)
+						),
+					200,
+					1,
+					getdate(),
+					getdate(),
+					'JFF'
+		End
+	End 
 
-	 End 	
-	Else
-	 Begin
-		-- Problème intégration si montant =0 donc bcv absent par le contrôle PB
-		Select  @sVal2 = sysadm.FN_CLE_VAL ( 'MT_TTC_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';')
-		From    sysadm.sinistre ws, sysadm.commande wc
-		Where	wc.id_sin = @dcIdSin
-		And		wc.id_seq = @iIdSeq		
-		And		ws.id_sin = wc.id_sin
-
-		If @sVal2 is null Set @sVal2 = 0
-		If IsNumeric ( @sVal2 ) = 0 Set @sVal2 = 0
-
-		Update 	sysadm.w_commande
-		Set	id_marq_art		= sysadm.FN_CLE_VAL ( 'MARQ_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'), 
-			id_modl_art		= sysadm.FN_CLE_VAL ( 'MODL_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'),
-			mt_ttc_cmde		= Round ( Convert ( decimal (11,2 ) , @sVal2), 2 ), 
-			id_marq_art_ifr = ws.marq_port,		
-			id_modl_art_ifr = ws.modl_port,
-			id_typ_art = @sVal1 
-		From    sysadm.w_sin ws, sysadm.w_commande wc
-		Where	wc.id_sin = @dcIdSin
-		And		wc.id_seq = @iIdSeq		
-		And		ws.id_sin = wc.id_sin
-
-		Update 	sysadm.commande
-		Set	id_marq_art		= sysadm.FN_CLE_VAL ( 'MARQ_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'), 
-			id_modl_art		= sysadm.FN_CLE_VAL ( 'MODL_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'),
-			mt_ttc_cmde		= Round ( Convert ( decimal (11,2 ) , @sVal2 ), 2 ), 
-			id_marq_art_ifr = ws.marq_port,		
-			id_modl_art_ifr = ws.modl_port,
-			id_typ_art = @sVal1 
-		From    sysadm.sinistre ws, sysadm.commande wc
-		Where	wc.id_sin = @dcIdSin
-		And		wc.id_seq = @iIdSeq		
-		And		ws.id_sin = wc.id_sin
-
-	 End 
   End
   
 -- [VDOC9908]
@@ -2617,11 +2578,9 @@ Begin
 End
 
 -- [PM445-1]
-If sysadm.FN_CLE_NUMERIQUE ( 'PM445_1_GENERAL') > 0 
- Begin
-	If @dtDteRcpFrnActuel is null And @dtDteRcpFrn is null And ( @idBonTranspActuel is null Or @idBonTranspActuel ='' ) And @idBonTransp is not null
-	   And @sIdRefFour in ( 'A_REPARER', 'A_DESOXYDER', 'A_DIAGNOSTIQUER' )
-	 Begin
+If @dtDteRcpFrnActuel is null And @dtDteRcpFrn is null And ( @idBonTranspActuel is null Or @idBonTranspActuel ='' ) And @idBonTransp is not null
+	And @sIdRefFour in ( 'A_REPARER', 'A_DESOXYDER', 'A_DIAGNOSTIQUER' )
+	Begin
 		Set @sMess = 'Contact crée automatiquement, Process [' + @sLibFour + '] -> '+ 'numéro de tracking ALLER : ' + rTrim ( lTrim ( @idBonTransp ))
 
 		IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
@@ -2632,9 +2591,7 @@ If sysadm.FN_CLE_NUMERIQUE ( 'PM445_1_GENERAL') > 0
 		BEGIN
 			Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT						
 		END
-     End
-
- End 
+   End
  
 -- [DT209]
 If sysadm.FN_CLE_NUMERIQUE ( 'DT209') > 0 

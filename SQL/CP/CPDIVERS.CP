@@ -928,23 +928,11 @@ If @asCas = 'COMPLETE'
 	Begin 
 
 		-- [RS3337]
-		If sysadm.FN_CLE_NUMERIQUE ( 'RS3337') > 0 
-			Begin
-				Set @asNomLigne1 = 'LOXY'
-				Set @asAdrLigne1 = '21-23 Rue Saint-Hilaire'
-				Set @asAdrLigne2 = 'Saint-Ouen l''Aumône'
-				Set @asCP = '95041'
-				Set @asVille = 'CERGY-PONTOISE CEDEX 1'
-			End 
-		Else 
-		  Begin
-			-- [RS1218-RS1259-ADRO2M]
-			Set @asNomLigne1 = 'O2M SPB'
-			Set @asAdrLigne1 = '124, rue Salvador Allende'
-			Set @asAdrLigne2 = ''
-			Set @asCP = '95870'
-			Set @asVille = 'BEZONS'
-		  End 
+		Set @asNomLigne1 = 'LOXY'
+		Set @asAdrLigne1 = '21-23 Rue Saint-Hilaire'
+		Set @asAdrLigne2 = 'Saint-Ouen l''Aumône'
+		Set @asCP = '95041'
+		Set @asVille = 'CERGY-PONTOISE CEDEX 1'
 
 		Return
 	End 
@@ -952,21 +940,12 @@ If @asCas = 'COMPLETE'
 -- Adresse par défaut
 
 -- [RS3337]
-If sysadm.FN_CLE_NUMERIQUE ( 'RS3337') > 0 
-	Begin
-		Set @asNomLigne1 = 'LOXY'
-		Set @asAdrLigne1 = '21-23 Rue Saint-Hilaire'
-		Set @asAdrLigne2 = 'Saint-Ouen l''Aumône'
-		Set @asCP = '95041'
-		Set @asVille = 'CERGY-PONTOISE CEDEX 1'
-	End 
-Else 
-Begin
-	-- [RS1218-RS1259-ADRO2M]
-	Set @asAdrLigne1 = '124, rue Salvador Allende'
-	Set @asCP = '95870'
-	Set @asVille = 'BEZONS'
-End 
+Set @asNomLigne1 = 'LOXY'
+Set @asAdrLigne1 = '21-23 Rue Saint-Hilaire'
+Set @asAdrLigne2 = 'Saint-Ouen l''Aumône'
+Set @asCP = '95041'
+Set @asVille = 'CERGY-PONTOISE CEDEX 1'
+
 
 -- [PM280-1]
 Set @sTypApp = ''
@@ -1196,34 +1175,11 @@ Set @asNomLigne1 = @asNomLigne1 + @sLettreCatg
 -- SPB 2, 6 et 7, on ne change rien
 
 -- [PM280-1] le LEFT
-If sysadm.FN_CLE_NUMERIQUE ( 'RS3337') > 0 
-	Begin
-		If sysadm.FN_CLE_NUMERIQUE ( 'RS3337') >= 2 
-		  Begin
-			Set @asNomLigne1 = 'LOXY - ' + @asNomLigne1
-		  End 
-		Else
-		  Begin
-			Set @asNomLigne1 = 'LOXY'
-		  End
-
-		Set @asAdrLigne1 = '21-23 Rue Saint-Hilaire'
-		Set @asAdrLigne2 = 'Saint-Ouen l''Aumône'
-		Set @asCP = '95041'
-		Set @asVille = 'CERGY-PONTOISE CEDEX 1'
-	End 
-Else 
-	Begin
-
-		If Left ( @asNomLigne1, 5) in ('SPB 1','SPB 4','SPB 5')
-		Begin
-			-- Bezons
-			Set @asAdrLigne1 = '124, rue Salvador Allende'
-			Set @asAdrLigne2 = ''
-			Set @asCP = '95870'
-			Set @asVille = 'BEZONS'
-		End
-	End
+Set @asNomLigne1 = 'LOXY - ' + @asNomLigne1
+Set @asAdrLigne1 = '21-23 Rue Saint-Hilaire'
+Set @asAdrLigne2 = 'Saint-Ouen l''Aumône'
+Set @asCP = '95041'
+Set @asVille = 'CERGY-PONTOISE CEDEX 1'
 
 Go
 
@@ -3774,7 +3730,7 @@ While @iCpt <= @iCount
 Set @sObjet = 'Problème version SIMPA2 sur les Cluster/TS'
 
 Set @sMessage = 'Bonjour,' + Char ( 10 ) + Char ( 10 )
-Set @sMessage = @sMessage + 'Un ou plusieurs TS/SERVER n''ont été servis par la recopie des livrables (EXE) PowerBuilder cette nuit.' + Char ( 10 ) + Char ( 10 )
+Set @sMessage = @sMessage + 'Un ou plusieurs TS/SERVER n''ont pas été servis par la recopie des livrables (EXE) PowerBuilder cette nuit.' + Char ( 10 ) + Char ( 10 )
 Set @sMessage = @sMessage + 'Date Dern Cnx | SIMPA2	| Révision EXE SIMPA2 | Nbre User dessus' + Char ( 10 )
 Set @sMessage = @sMessage + @sChaine + Char ( 10 ) + Char ( 10 )
 Set @sMessage = @sMessage + CHAR ( 10 )

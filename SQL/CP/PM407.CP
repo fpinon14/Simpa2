@@ -160,370 +160,742 @@ Where  dp.id_prod = @adcIdProd
 And    dp.id_code_dp = 323
 And    dp.id_code_car = '-1'
 
--- Relance normales Assuré
-Insert into sysadm.w_cour_xml_orangev3 (
-	  no_dossier_sinistre,
-      civilite_courte,
-      civilite_longue,
-      nom,
-      prenom,
-      adresse1,
-      adresse2,
-      code_postal,
-      ville,
-      code_produit_sinistre,
-      nom_produit,
-      lib_opt_produit,
-      no_tel_spb,
-      no_fax_spb,
-      assureur,
-      no_police,
-      no_ligne_assuree,
-      cout_telephonique,
-      date_de_declaration,
-      code_operateur,
-	  code_maquette,
-	  adr_mail,
-	  numero_relance,
-	  joindre_courrier_orig,
-	  id_arch_orig,
-	  env_en_recommande,
-	  derniere_relance,
-	  date_cour_orig,
-	  date_dern_rel,
-	  categorie_relance,
-	  id_inter, 
-	  id_doc,
-	  env_par_mail
-	  )
-Select	
-	s.id_sin, 
-	sysadm.FN_CODE_NUM(pers.cod_civ,'-CI') as civilite, 
-	Case 
-		When pers.cod_civ=5 Then sysadm.FN_CODE_NUM( 4 ,'-CL') -- [PM451-1]
-		Else sysadm.FN_CODE_NUM(pers.cod_civ,'-CL') 
-	End as civilite_longue,
-	pers.nom,
-	pers.prenom,
-	pers.adr_1, 
-	pers.adr_2, 
-	Case pers.adr_cp When '00000' then '' Else pers.adr_cp End as adr_cp, 
-	pers.adr_ville,
-	p.id_prod,
-	(select rtrim(dp66.val_car) 
-	 from sysadm.det_pro dp66 
-	 where dp66.id_prod=s.id_prod 
-	   and dp66.id_code_dp=66) as lib_produit_assure,
-	(select rtrim(dp67.val_car) 
-	 from sysadm.det_pro dp67 
-	 where dp67.id_prod=s.id_prod 
-	   and dp67.id_code_dp=67) as lib_option_produit,
-	p.num_tel as num_tel_produit,
-	p.num_fax,
-	rtrim ( sysadm.FN_LIB_CIE (s.id_sin)) as lib_compagnie,
-	rtrim ( sysadm.FN_LIB_POLICE (s.id_sin)) as lib_police,
-	s.num_port as num_tel_assure,
-	(select rtrim(dp70.val_car) 
-	 from sysadm.det_pro dp70 
-	 where dp70.id_prod=s.id_prod 
-	   and dp70.id_code_dp=70) as cout_telephonique,
-	convert(varchar(10),s.dte_decl,20) as dte_decl,
-	rtrim ( s.maj_par ) as code_operateur,
-	'RELANCE_' + 
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+BEGIN
+	-- Relance normales Assuré
+	Insert into sysadm.w_cour_xml_orangev3 (
+		  no_dossier_sinistre,
+		  civilite_courte,
+		  civilite_longue,
+		  nom,
+		  prenom,
+		  adresse1,
+		  adresse2,
+		  code_postal,
+		  ville,
+		  code_produit_sinistre,
+		  nom_produit,
+		  lib_opt_produit,
+		  no_tel_spb,
+		  no_fax_spb,
+		  assureur,
+		  no_police,
+		  no_ligne_assuree,
+		  cout_telephonique,
+		  date_de_declaration,
+		  code_operateur,
+		  code_maquette,
+		  adr_mail,
+		  numero_relance,
+		  joindre_courrier_orig,
+		  id_arch_orig,
+		  env_en_recommande,
+		  derniere_relance,
+		  date_cour_orig,
+		  date_dern_rel,
+		  categorie_relance,
+		  id_inter, 
+		  id_doc,
+		  env_par_mail
+		  )
+	Select	
+		s.id_sin, 
+		sysadm.FN_CODE_NUM(pers.cod_civ,'-CI') as civilite, 
 		Case 
-			When sysadm.FN_CLE_VAL ( 'DERN_REL', @asValCar, ';' ) = 'OUI' 
-				Then 'DER'
-			Else convert ( varchar ,@iIdRel )
-		End as code_maquette,
-	Case 
-		When sysadm.FN_CLE_VAL ( 'ENV_RECOM', @asValCar, ';' ) = 'OUI' Then ''
-		When sysadm.FN_CLE_VAL ( 'ENV_MAIL', @asValCar, ';' ) <> 'OUI' Then ''
-		Else rtrim ( i.adr_mail )
-	End 'adr_mail',
-	convert ( varchar ,@iIdRel ) 'numero_relance',
-	Case @iIdRel
-		When 1 Then sysadm.FN_CLE_VAL ( 'JOINDRE_ORIG', @asValCar, ';' )
-		Else Case 
-				When isnumeric ( sysadm.FN_CLE_VAL ( 'ID_ARCH_ORIG', a.txt_compo2, ';') ) > 0 
-					Then sysadm.FN_CLE_VAL ( 'JOINDRE_ORIG', @asValCar, ';' )
-				Else 'NON'
-			 End 
-	End 'joindre_courrier_orig',
-	Case @iIdRel
-		When 1 Then Convert ( varchar, a.id_arch )
-		Else Isnull ( nullif ( sysadm.FN_CLE_VAL ( 'ID_ARCH_ORIG', a.txt_compo2, ';'), '' ), '0' )
-	End 'id_arch_orig',
-	sysadm.FN_CLE_VAL ( 'ENV_RECOM', @asValCar, ';' ) 'env_en_recommande',
-	sysadm.FN_CLE_VAL ( 'DERN_REL', @asValCar, ';' ) 'derniere_relance',
-	Case @iIdRel
-		When 1 Then Convert ( varchar, a.dte_edit, 103 )
-		Else sysadm.FN_CLE_VAL ( 'DTE_EDIT_ORIG', a.txt_compo2, ';') 
-	End 'date_cour_orig',
-	Case @iIdRel
-		When 1 Then ''
-		Else Convert ( varchar, a.dte_edit, 103 )
-	End 'date_dern_rel',
-	'RELANCE_ASSURE' 'categorie_relance',
-	a.id_inter,
-	a.id_doc,
-	Case 
-		When sysadm.FN_CLE_VAL ( 'ENV_RECOM', @asValCar, ';' ) = 'OUI' Then 'NON'
-		When ( rtrim ( i.adr_mail ) = '' Or i.adr_mail is null ) Then 'NON'
-		Else sysadm.FN_CLE_VAL ( 'ENV_MAIL', @asValCar, ';' )
-	End 'env_par_mail'
+			When pers.cod_civ=5 Then sysadm.FN_CODE_NUM( 4 ,'-CL') -- [PM451-1]
+			Else sysadm.FN_CODE_NUM(pers.cod_civ,'-CL') 
+		End as civilite_longue,
+		pers.nom,
+		pers.prenom,
+		pers.adr_1, 
+		pers.adr_2, 
+		Case pers.adr_cp When '00000' then '' Else pers.adr_cp End as adr_cp, 
+		pers.adr_ville,
+		p.id_prod,
+		(select rtrim(dp66.val_car) 
+		 from sysadm.det_pro dp66 
+		 where dp66.id_prod=s.id_prod 
+		   and dp66.id_code_dp=66) as lib_produit_assure,
+		(select rtrim(dp67.val_car) 
+		 from sysadm.det_pro dp67 
+		 where dp67.id_prod=s.id_prod 
+		   and dp67.id_code_dp=67) as lib_option_produit,
+		p.num_tel as num_tel_produit,
+		p.num_fax,
+		rtrim ( sysadm.FN_LIB_CIE (s.id_sin)) as lib_compagnie,
+		rtrim ( sysadm.FN_LIB_POLICE (s.id_sin)) as lib_police,
+		s.num_port as num_tel_assure,
+		(select rtrim(dp70.val_car) 
+		 from sysadm.det_pro dp70 
+		 where dp70.id_prod=s.id_prod 
+		   and dp70.id_code_dp=70) as cout_telephonique,
+		convert(varchar(10),s.dte_decl,20) as dte_decl,
+		rtrim ( s.maj_par ) as code_operateur,
+		'RELANCE_' + 
+			Case 
+				When sysadm.FN_CLE_VAL ( 'DERN_REL', @asValCar, ';' ) = 'OUI' 
+					Then 'DER'
+				Else convert ( varchar ,@iIdRel )
+			End as code_maquette,
+		Case 
+			When sysadm.FN_CLE_VAL ( 'ENV_RECOM', @asValCar, ';' ) = 'OUI' Then ''
+			When sysadm.FN_CLE_VAL ( 'ENV_MAIL', @asValCar, ';' ) <> 'OUI' Then ''
+			Else rtrim ( i.adr_mail )
+		End 'adr_mail',
+		convert ( varchar ,@iIdRel ) 'numero_relance',
+		Case @iIdRel
+			When 1 Then sysadm.FN_CLE_VAL ( 'JOINDRE_ORIG', @asValCar, ';' )
+			Else Case 
+					When isnumeric ( sysadm.FN_CLE_VAL ( 'ID_ARCH_ORIG', a.txt_compo2, ';') ) > 0 
+						Then sysadm.FN_CLE_VAL ( 'JOINDRE_ORIG', @asValCar, ';' )
+					Else 'NON'
+				 End 
+		End 'joindre_courrier_orig',
+		Case @iIdRel
+			When 1 Then Convert ( varchar, a.id_arch )
+			Else Isnull ( nullif ( sysadm.FN_CLE_VAL ( 'ID_ARCH_ORIG', a.txt_compo2, ';'), '' ), '0' )
+		End 'id_arch_orig',
+		sysadm.FN_CLE_VAL ( 'ENV_RECOM', @asValCar, ';' ) 'env_en_recommande',
+		sysadm.FN_CLE_VAL ( 'DERN_REL', @asValCar, ';' ) 'derniere_relance',
+		Case @iIdRel
+			When 1 Then Convert ( varchar, a.dte_edit, 103 )
+			Else sysadm.FN_CLE_VAL ( 'DTE_EDIT_ORIG', a.txt_compo2, ';') 
+		End 'date_cour_orig',
+		Case @iIdRel
+			When 1 Then ''
+			Else Convert ( varchar, a.dte_edit, 103 )
+		End 'date_dern_rel',
+		'RELANCE_ASSURE' 'categorie_relance',
+		a.id_inter,
+		a.id_doc,
+		Case 
+			When sysadm.FN_CLE_VAL ( 'ENV_RECOM', @asValCar, ';' ) = 'OUI' Then 'NON'
+			When ( rtrim ( i.adr_mail ) = '' Or i.adr_mail is null ) Then 'NON'
+			Else sysadm.FN_CLE_VAL ( 'ENV_MAIL', @asValCar, ';' )
+		End 'env_par_mail'
 	  
-From	sysadm.archive a,
-		sysadm.routage r,
-		sysadm.sinistre s,
-		sysadm.personne pers,
-		sysadm.produit p,
-		sysadm.inter i
-Where   a.id_prod = @adcIdProd
-And     ( 
-			(
-				( Substring ( a.id_cour_orig, 2, 1 ) = 'C' and Substring ( a.id_cour_orig, 4, 1 ) = 'P' Or Substring ( a.id_cour_orig, 1, 1 ) = 'Q' )
-				And 
-				@iIdRel = 1
-				And a.valide_le between @dtDate1Min and @dtDate1Max
-				and s.valide_le = a.valide_le
-				and CharIndex ( 'P001', a.txt_compo1, 1 ) = 0
-				And CharIndex ( 'P118', a.txt_compo1, 1 ) = 0
-				And CharIndex ( 'P119', a.txt_compo1, 1 ) = 0
-				And CharIndex ( 'P037', a.txt_compo1, 1 ) = 0            
-				And CharIndex ( 'P107', a.txt_compo1, 1 ) = 0            
-				And CharIndex ( 'P120', a.txt_compo1, 1 ) = 0   
-				And Not Exists (
-					Select Top 1 1 
-					From sysadm.archive a1
-					Where a1.id_sin = a.id_sin
-					And   a1.id_inter = a.id_inter
-					And   ( a1.id_cour_orig = rtrim ( a1.cod_inter ) + 'LAX' + Right ( '00' + Convert ( varchar, @iIdRel ), 2 )
-							Or 
-							a1.id_cour_orig = rtrim ( a1.cod_inter ) + 'LQ0' + Right ( '00' + Convert ( varchar, @iIdRel ), 2 )
-						  )
-				)
+	From	sysadm.archive a,
+			sysadm.routage r,
+			sysadm.sinistre s,
+			sysadm.personne pers,
+			sysadm.produit p,
+			sysadm.inter i
+	Where   a.id_prod = @adcIdProd
+	And     ( 
+				(
+					( Substring ( a.id_cour_orig, 2, 1 ) = 'C' and Substring ( a.id_cour_orig, 4, 1 ) = 'P' Or Substring ( a.id_cour_orig, 1, 1 ) = 'Q' )
+					And 
+					@iIdRel = 1
+					And a.valide_le between @dtDate1Min and @dtDate1Max
+					and s.valide_le = a.valide_le
+					and CharIndex ( 'P001', a.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P118', a.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P119', a.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P037', a.txt_compo1, 1 ) = 0            
+					And CharIndex ( 'P107', a.txt_compo1, 1 ) = 0            
+					And CharIndex ( 'P120', a.txt_compo1, 1 ) = 0   
+					And Not Exists (
+						Select Top 1 1 
+						From sysadm.archive a1
+						Where a1.id_sin = a.id_sin
+						And   a1.id_inter = a.id_inter
+						And   ( a1.id_cour_orig = rtrim ( a1.cod_inter ) + 'LAX' + Right ( '00' + Convert ( varchar, @iIdRel ), 2 )
+								Or 
+								a1.id_cour_orig = rtrim ( a1.cod_inter ) + 'LQ0' + Right ( '00' + Convert ( varchar, @iIdRel ), 2 )
+							  )
+					)
 
-			) 
-			Or
-			(
-				( Substring ( a.id_cour_orig, 2, 5 ) = 'LAX' + Right ( '00' + Convert ( varchar, @iIdRel - 1), 2 )
-				  Or 
-				  a.id_cour_orig = 'ALQ0' + Right ( '00' + Convert ( varchar, @iIdRel - 1), 2 )
-			    )
-				And 
-				@iIdRel > 1
-				And 
-				a.maj_le <= @dtDate2
-				And
-				a.maj_le > @dtDteMEp -- MEP
-				And -- [PM407-1][20190408]
-				sysadm.FN_CLE_VAL ( 'TRT_PAR', a.txt_compo2, ';') = 'KSL'
-				And Not Exists (
-					Select Top 1 1 
-					From sysadm.archive a1
-					Where a1.id_sin = a.id_sin
-					And   a1.id_inter = a.id_inter
-					And   a1.id_cour_orig = rtrim ( a.cod_inter ) + 'LAX' + Right ( '00' + Convert ( varchar, @iIdRel ), 2 )
-				)
-				and s.valide_le = a.valide_le 
-			) 
-		)
-And		a.nbr_conf = 0
-And 	a.cod_inter='A'
-And		r.id_sin = a.id_sin
-And		r.alt_queue = 'N'
-And		s.id_sin = a.id_sin
-and    	s.cod_etat in ( 100, 550 )
-And		pers.id_ordre = s.id_ordre
-And		p.id_prod = s.id_prod
-And     i.id_sin = a.id_sin
-And     i.cod_inter = a.cod_inter
-
-
--- Relance UF Banque
-Insert into sysadm.w_cour_xml_orangev3 (
-	  no_dossier_sinistre,
-      civilite_courte,
-      civilite_longue,
-      nom,
-      prenom,
-      adresse1,
-      adresse2,
-      code_postal,
-      ville,
-      code_produit_sinistre,
-      nom_produit,
-      lib_opt_produit,
-      no_tel_spb,
-      no_fax_spb,
-      assureur,
-      no_police,
-      no_ligne_assuree,
-      cout_telephonique,
-      date_de_declaration,
-      code_operateur,
-	  code_maquette,
-	  adr_mail,
-	  numero_relance,
-	  joindre_courrier_orig,
-	  id_arch_orig,
-	  env_en_recommande,
-	  derniere_relance,
-	  date_cour_orig,
-	  date_dern_rel,
-	  categorie_relance,
-	  id_inter,
-	  id_doc,
-	  env_par_mail
-	  )
-Select	
-	s.id_sin, 
-	'Messieurs' as civilite, 
-	'Messieurs' civilite_longue,
-	i.nom,
-	'',
-	i.adr_1, 
-	i.adr_2, 
-	Case pers.adr_cp When '00000' then '' Else i.adr_cp End as adr_cp, 
-	i.adr_ville,
-	p.id_prod,
-	(select rtrim(dp66.val_car) 
-	 from sysadm.det_pro dp66 
-	 where dp66.id_prod=s.id_prod 
-	   and dp66.id_code_dp=66) as lib_produit_assure,
-	(select rtrim(dp67.val_car) 
-	 from sysadm.det_pro dp67 
-	 where dp67.id_prod=s.id_prod 
-	   and dp67.id_code_dp=67) as lib_option_produit,
-	p.num_tel as num_tel_produit,
-	p.num_fax,
-	rtrim ( sysadm.FN_LIB_CIE (s.id_sin)) as lib_compagnie,
-	rtrim ( sysadm.FN_LIB_POLICE (s.id_sin)) as lib_police,
-	s.num_port as num_tel_assure,
-	(select rtrim(dp70.val_car) 
-	 from sysadm.det_pro dp70 
-	 where dp70.id_prod=s.id_prod 
-	   and dp70.id_code_dp=70) as cout_telephonique,
-	convert(varchar(10),s.dte_decl,20) as dte_decl,
-	rtrim ( s.maj_par ) as code_operateur,
-	'RELANCE_' + 
-		Case 
-			When sysadm.FN_CLE_VAL ( 'DERN_REL', @asValCar, ';' ) = 'OUI' 
-				Then 'DER'
-			Else convert ( varchar ,@iIdRel )
-		End as code_maquette,
-	Case 
-		When sysadm.FN_CLE_VAL ( 'ENV_RECOM', @asValCar, ';' ) = 'OUI' Then ''
-		When sysadm.FN_CLE_VAL ( 'ENV_MAIL', @asValCar, ';' ) <> 'OUI' Then ''
-		Else rtrim ( i.adr_mail )
-	End 'adr_mail',
-	convert ( varchar ,@iIdRel ) 'numero_relance',
-	Case @iIdRel
-		When 1 Then sysadm.FN_CLE_VAL ( 'JOINDRE_ORIG', @asValCar, ';' )
-		Else Case 
-				When isnumeric ( sysadm.FN_CLE_VAL ( 'ID_ARCH_ORIG', a.txt_compo2, ';') ) > 0 
-					Then sysadm.FN_CLE_VAL ( 'JOINDRE_ORIG', @asValCar, ';' )
-				Else 'NON'
-			 End 
-	End 'joindre_courrier_orig',
-	Case @iIdRel
-		When 1 Then Convert ( varchar, a.id_arch )
-		Else Isnull ( nullif ( sysadm.FN_CLE_VAL ( 'ID_ARCH_ORIG', a.txt_compo2, ';'), '' ), '0' )
-	End 'id_arch_orig',
-	sysadm.FN_CLE_VAL ( 'ENV_RECOM', @asValCar, ';' ) 'env_en_recommande',
-	sysadm.FN_CLE_VAL ( 'DERN_REL', @asValCar, ';' ) 'derniere_relance',
-	Case @iIdRel
-		When 1 Then Convert ( varchar, a.dte_edit, 103 )
-		Else sysadm.FN_CLE_VAL ( 'DTE_EDIT_ORIG', a.txt_compo2, ';') 
-	End 'date_cour_orig',
-	Case @iIdRel
-		When 1 Then ''
-		Else Convert ( varchar, a.dte_edit, 103 )
-	End 'date_dern_rel',
-	'RELANCE_BANQUE_UF' 'categorie_relance',
-	a.id_inter,
-	a.id_doc,
-	Case 
-		When sysadm.FN_CLE_VAL ( 'ENV_RECOM', @asValCar, ';' ) = 'OUI' Then 'NON'
-		When ( rtrim ( i.adr_mail ) = '' Or i.adr_mail is null ) Then 'NON'		
-		Else sysadm.FN_CLE_VAL ( 'ENV_MAIL', @asValCar, ';' )
-	End 'env_par_mail'
-		  
-From	sysadm.archive a,
-		sysadm.routage r,
-		sysadm.sinistre s,
-		sysadm.personne pers,
-		sysadm.produit p,
-		sysadm.inter i,
-		sysadm.w_gar_sin wg
-Where   a.id_prod = @adcIdProd
-And     ( 
-			(
-				( Substring ( a.id_cour_orig, 2, 1 ) = 'C' and Substring ( a.id_cour_orig, 4, 1 ) = 'P' Or Substring ( a.id_cour_orig, 1, 1 ) = 'Q' )
-				And 
-				@iIdRel = 1
-				And 
-				a.valide_le between @dtDate1Min and @dtDate1Max
-				and s.valide_le = a.valide_le
-				and CharIndex ( 'P001', a.txt_compo1, 1 ) = 0
-				And CharIndex ( 'P118', a.txt_compo1, 1 ) = 0
-				And CharIndex ( 'P119', a.txt_compo1, 1 ) = 0
-				And CharIndex ( 'P037', a.txt_compo1, 1 ) = 0            
-				And CharIndex ( 'P107', a.txt_compo1, 1 ) = 0            
-				And CharIndex ( 'P120', a.txt_compo1, 1 ) = 0  
-				And Not Exists (
-					Select Top 1 1 
-					From sysadm.archive a1
-					Where a1.id_sin = a.id_sin
-					And   a1.id_inter = a.id_inter
-					And   ( a1.id_cour_orig = rtrim ( a.cod_inter ) + 'LAX' + Right ( '00' + Convert ( varchar, @iIdRel ), 2 ))
 				) 
-
-			) 
-			Or
-			(
-				( Substring ( a.id_cour_orig, 2, 5 ) = 'LAX' + Right ( '00' + Convert ( varchar, @iIdRel - 1), 2 ) )
-				And 
-				@iIdRel > 1
-				And 
-				a.maj_le <= @dtDate2 
-				And
-				a.maj_le > '03/04/2019' -- MEP		
-				And -- [PM407-1][20190408]
-				sysadm.FN_CLE_VAL ( 'TRT_PAR', a.txt_compo2, ';') = 'KSL'
-				And Not Exists (
-					Select Top 1 1 
-					From sysadm.archive a1
-					Where a1.id_sin = a.id_sin
-					And   a1.id_inter = a.id_inter
-					And   a1.id_cour_orig = rtrim ( a.cod_inter ) + 'LAX' + Right ( '00' + Convert ( varchar, @iIdRel ), 2 )
+				Or
+				(
+					( Substring ( a.id_cour_orig, 2, 5 ) = 'LAX' + Right ( '00' + Convert ( varchar, @iIdRel - 1), 2 )
+					  Or 
+					  a.id_cour_orig = 'ALQ0' + Right ( '00' + Convert ( varchar, @iIdRel - 1), 2 )
+					)
+					And 
+					@iIdRel > 1
+					And 
+					a.maj_le <= @dtDate2
+					And
+					a.maj_le > @dtDteMEp -- MEP
+					And -- [PM407-1][20190408]
+					sysadm.FN_CLE_VAL ( 'TRT_PAR', a.txt_compo2, ';') = 'KSL'
+					And Not Exists (
+						Select Top 1 1 
+						From sysadm.archive a1
+						Where a1.id_sin = a.id_sin
+						And   a1.id_inter = a.id_inter
+						And   a1.id_cour_orig = rtrim ( a.cod_inter ) + 'LAX' + Right ( '00' + Convert ( varchar, @iIdRel ), 2 )
+					)
+					and s.valide_le = a.valide_le 
 				) 
-				and s.valide_le = a.valide_le
-			) 
-		)
-And		a.nbr_conf = 0
-And 	a.cod_inter='B'
-And		r.id_sin = a.id_sin
-And		r.alt_queue = 'N'
-And		s.id_sin = a.id_sin
-and    	s.cod_etat in ( 100, 550 )
-And		pers.id_ordre = s.id_ordre
-And		p.id_prod = s.id_prod
-And     i.id_sin = a.id_sin
-And     i.cod_inter = a.cod_inter
-And		wg.id_sin = s.id_sin
-And  	wg.id_gti = 7
-And		( 
-			Exists ( 
-				Select Top 1 1
-				From   sysadm.w_piece wp
-				Where  wp.id_sin = s.id_sin
-				And	   wp.id_gti = 7 
-				And	   wp.id_i = i.id_i
 			)
-			OR 
-			(  wg.alt_att = 'O' )
-		)
+	And		a.nbr_conf = 0
+	And 	a.cod_inter='A'
+	And		r.id_sin = a.id_sin
+	And		r.alt_queue = 'N'
+	And		s.id_sin = a.id_sin
+	and    	s.cod_etat in ( 100, 550 )
+	And		pers.id_ordre = s.id_ordre
+	And		p.id_prod = s.id_prod
+	And     i.id_sin = a.id_sin
+	And     i.cod_inter = a.cod_inter
+
+
+	-- Relance UF Banque
+	Insert into sysadm.w_cour_xml_orangev3 (
+		  no_dossier_sinistre,
+		  civilite_courte,
+		  civilite_longue,
+		  nom,
+		  prenom,
+		  adresse1,
+		  adresse2,
+		  code_postal,
+		  ville,
+		  code_produit_sinistre,
+		  nom_produit,
+		  lib_opt_produit,
+		  no_tel_spb,
+		  no_fax_spb,
+		  assureur,
+		  no_police,
+		  no_ligne_assuree,
+		  cout_telephonique,
+		  date_de_declaration,
+		  code_operateur,
+		  code_maquette,
+		  adr_mail,
+		  numero_relance,
+		  joindre_courrier_orig,
+		  id_arch_orig,
+		  env_en_recommande,
+		  derniere_relance,
+		  date_cour_orig,
+		  date_dern_rel,
+		  categorie_relance,
+		  id_inter,
+		  id_doc,
+		  env_par_mail
+		  )
+	Select	
+		s.id_sin, 
+		'Messieurs' as civilite, 
+		'Messieurs' civilite_longue,
+		i.nom,
+		'',
+		i.adr_1, 
+		i.adr_2, 
+		Case pers.adr_cp When '00000' then '' Else i.adr_cp End as adr_cp, 
+		i.adr_ville,
+		p.id_prod,
+		(select rtrim(dp66.val_car) 
+		 from sysadm.det_pro dp66 
+		 where dp66.id_prod=s.id_prod 
+		   and dp66.id_code_dp=66) as lib_produit_assure,
+		(select rtrim(dp67.val_car) 
+		 from sysadm.det_pro dp67 
+		 where dp67.id_prod=s.id_prod 
+		   and dp67.id_code_dp=67) as lib_option_produit,
+		p.num_tel as num_tel_produit,
+		p.num_fax,
+		rtrim ( sysadm.FN_LIB_CIE (s.id_sin)) as lib_compagnie,
+		rtrim ( sysadm.FN_LIB_POLICE (s.id_sin)) as lib_police,
+		s.num_port as num_tel_assure,
+		(select rtrim(dp70.val_car) 
+		 from sysadm.det_pro dp70 
+		 where dp70.id_prod=s.id_prod 
+		   and dp70.id_code_dp=70) as cout_telephonique,
+		convert(varchar(10),s.dte_decl,20) as dte_decl,
+		rtrim ( s.maj_par ) as code_operateur,
+		'RELANCE_' + 
+			Case 
+				When sysadm.FN_CLE_VAL ( 'DERN_REL', @asValCar, ';' ) = 'OUI' 
+					Then 'DER'
+				Else convert ( varchar ,@iIdRel )
+			End as code_maquette,
+		Case 
+			When sysadm.FN_CLE_VAL ( 'ENV_RECOM', @asValCar, ';' ) = 'OUI' Then ''
+			When sysadm.FN_CLE_VAL ( 'ENV_MAIL', @asValCar, ';' ) <> 'OUI' Then ''
+			Else rtrim ( i.adr_mail )
+		End 'adr_mail',
+		convert ( varchar ,@iIdRel ) 'numero_relance',
+		Case @iIdRel
+			When 1 Then sysadm.FN_CLE_VAL ( 'JOINDRE_ORIG', @asValCar, ';' )
+			Else Case 
+					When isnumeric ( sysadm.FN_CLE_VAL ( 'ID_ARCH_ORIG', a.txt_compo2, ';') ) > 0 
+						Then sysadm.FN_CLE_VAL ( 'JOINDRE_ORIG', @asValCar, ';' )
+					Else 'NON'
+				 End 
+		End 'joindre_courrier_orig',
+		Case @iIdRel
+			When 1 Then Convert ( varchar, a.id_arch )
+			Else Isnull ( nullif ( sysadm.FN_CLE_VAL ( 'ID_ARCH_ORIG', a.txt_compo2, ';'), '' ), '0' )
+		End 'id_arch_orig',
+		sysadm.FN_CLE_VAL ( 'ENV_RECOM', @asValCar, ';' ) 'env_en_recommande',
+		sysadm.FN_CLE_VAL ( 'DERN_REL', @asValCar, ';' ) 'derniere_relance',
+		Case @iIdRel
+			When 1 Then Convert ( varchar, a.dte_edit, 103 )
+			Else sysadm.FN_CLE_VAL ( 'DTE_EDIT_ORIG', a.txt_compo2, ';') 
+		End 'date_cour_orig',
+		Case @iIdRel
+			When 1 Then ''
+			Else Convert ( varchar, a.dte_edit, 103 )
+		End 'date_dern_rel',
+		'RELANCE_BANQUE_UF' 'categorie_relance',
+		a.id_inter,
+		a.id_doc,
+		Case 
+			When sysadm.FN_CLE_VAL ( 'ENV_RECOM', @asValCar, ';' ) = 'OUI' Then 'NON'
+			When ( rtrim ( i.adr_mail ) = '' Or i.adr_mail is null ) Then 'NON'		
+			Else sysadm.FN_CLE_VAL ( 'ENV_MAIL', @asValCar, ';' )
+		End 'env_par_mail'
+		  
+	From	sysadm.archive a,
+			sysadm.routage r,
+			sysadm.sinistre s,
+			sysadm.personne pers,
+			sysadm.produit p,
+			sysadm.inter i,
+			sysadm.w_gar_sin wg
+	Where   a.id_prod = @adcIdProd
+	And     ( 
+				(
+					( Substring ( a.id_cour_orig, 2, 1 ) = 'C' and Substring ( a.id_cour_orig, 4, 1 ) = 'P' Or Substring ( a.id_cour_orig, 1, 1 ) = 'Q' )
+					And 
+					@iIdRel = 1
+					And 
+					a.valide_le between @dtDate1Min and @dtDate1Max
+					and s.valide_le = a.valide_le
+					and CharIndex ( 'P001', a.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P118', a.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P119', a.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P037', a.txt_compo1, 1 ) = 0            
+					And CharIndex ( 'P107', a.txt_compo1, 1 ) = 0            
+					And CharIndex ( 'P120', a.txt_compo1, 1 ) = 0  
+					And Not Exists (
+						Select Top 1 1 
+						From sysadm.archive a1
+						Where a1.id_sin = a.id_sin
+						And   a1.id_inter = a.id_inter
+						And   ( a1.id_cour_orig = rtrim ( a.cod_inter ) + 'LAX' + Right ( '00' + Convert ( varchar, @iIdRel ), 2 ))
+					) 
+
+				) 
+				Or
+				(
+					( Substring ( a.id_cour_orig, 2, 5 ) = 'LAX' + Right ( '00' + Convert ( varchar, @iIdRel - 1), 2 ) )
+					And 
+					@iIdRel > 1
+					And 
+					a.maj_le <= @dtDate2 
+					And
+					a.maj_le > '03/04/2019' -- MEP		
+					And -- [PM407-1][20190408]
+					sysadm.FN_CLE_VAL ( 'TRT_PAR', a.txt_compo2, ';') = 'KSL'
+					And Not Exists (
+						Select Top 1 1 
+						From sysadm.archive a1
+						Where a1.id_sin = a.id_sin
+						And   a1.id_inter = a.id_inter
+						And   a1.id_cour_orig = rtrim ( a.cod_inter ) + 'LAX' + Right ( '00' + Convert ( varchar, @iIdRel ), 2 )
+					) 
+					and s.valide_le = a.valide_le
+				) 
+			)
+	And		a.nbr_conf = 0
+	And 	a.cod_inter='B'
+	And		r.id_sin = a.id_sin
+	And		r.alt_queue = 'N'
+	And		s.id_sin = a.id_sin
+	and    	s.cod_etat in ( 100, 550 )
+	And		pers.id_ordre = s.id_ordre
+	And		p.id_prod = s.id_prod
+	And     i.id_sin = a.id_sin
+	And     i.cod_inter = a.cod_inter
+	And		wg.id_sin = s.id_sin
+	And  	wg.id_gti = 7
+	And		( 
+				Exists ( 
+					Select Top 1 1
+					From   sysadm.w_piece wp
+					Where  wp.id_sin = s.id_sin
+					And	   wp.id_gti = 7 
+					And	   wp.id_i = i.id_i
+				)
+				OR 
+				(  wg.alt_att = 'O' )
+			)
+	And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( s.id_sin, 2 ) <= 0  -- [RS3179]
+END
+Else
+BEGIN
+	-- Relance normales Assuré
+	Insert into sysadm.w_cour_xml_orangev3 (
+		  no_dossier_sinistre,
+		  civilite_courte,
+		  civilite_longue,
+		  nom,
+		  prenom,
+		  adresse1,
+		  adresse2,
+		  code_postal,
+		  ville,
+		  code_produit_sinistre,
+		  nom_produit,
+		  lib_opt_produit,
+		  no_tel_spb,
+		  no_fax_spb,
+		  assureur,
+		  no_police,
+		  no_ligne_assuree,
+		  cout_telephonique,
+		  date_de_declaration,
+		  code_operateur,
+		  code_maquette,
+		  adr_mail,
+		  numero_relance,
+		  joindre_courrier_orig,
+		  id_arch_orig,
+		  env_en_recommande,
+		  derniere_relance,
+		  date_cour_orig,
+		  date_dern_rel,
+		  categorie_relance,
+		  id_inter, 
+		  id_doc,
+		  env_par_mail
+		  )
+	Select	
+		s.id_sin, 
+		sysadm.FN_CODE_NUM(pers.cod_civ,'-CI') as civilite, 
+		Case 
+			When pers.cod_civ=5 Then sysadm.FN_CODE_NUM( 4 ,'-CL') -- [PM451-1]
+			Else sysadm.FN_CODE_NUM(pers.cod_civ,'-CL') 
+		End as civilite_longue,
+		pers.nom,
+		pers.prenom,
+		pers.adr_1, 
+		pers.adr_2, 
+		Case pers.adr_cp When '00000' then '' Else pers.adr_cp End as adr_cp, 
+		pers.adr_ville,
+		p.id_prod,
+		(select rtrim(dp66.val_car) 
+		 from sysadm.det_pro dp66 
+		 where dp66.id_prod=s.id_prod 
+		   and dp66.id_code_dp=66) as lib_produit_assure,
+		(select rtrim(dp67.val_car) 
+		 from sysadm.det_pro dp67 
+		 where dp67.id_prod=s.id_prod 
+		   and dp67.id_code_dp=67) as lib_option_produit,
+		p.num_tel as num_tel_produit,
+		p.num_fax,
+		rtrim ( sysadm.FN_LIB_CIE (s.id_sin)) as lib_compagnie,
+		rtrim ( sysadm.FN_LIB_POLICE (s.id_sin)) as lib_police,
+		s.num_port as num_tel_assure,
+		(select rtrim(dp70.val_car) 
+		 from sysadm.det_pro dp70 
+		 where dp70.id_prod=s.id_prod 
+		   and dp70.id_code_dp=70) as cout_telephonique,
+		convert(varchar(10),s.dte_decl,20) as dte_decl,
+		rtrim ( s.maj_par ) as code_operateur,
+		'RELANCE_' + 
+			Case 
+				When sysadm.FN_CLE_VAL ( 'DERN_REL', @asValCar, ';' ) = 'OUI' 
+					Then 'DER'
+				Else convert ( varchar ,@iIdRel )
+			End as code_maquette,
+		Case 
+			When sysadm.FN_CLE_VAL ( 'ENV_RECOM', @asValCar, ';' ) = 'OUI' Then ''
+			When sysadm.FN_CLE_VAL ( 'ENV_MAIL', @asValCar, ';' ) <> 'OUI' Then ''
+			Else rtrim ( i.adr_mail )
+		End 'adr_mail',
+		convert ( varchar ,@iIdRel ) 'numero_relance',
+		Case @iIdRel
+			When 1 Then sysadm.FN_CLE_VAL ( 'JOINDRE_ORIG', @asValCar, ';' )
+			Else Case 
+					When isnumeric ( sysadm.FN_CLE_VAL ( 'ID_ARCH_ORIG', a.txt_compo2, ';') ) > 0 
+						Then sysadm.FN_CLE_VAL ( 'JOINDRE_ORIG', @asValCar, ';' )
+					Else 'NON'
+				 End 
+		End 'joindre_courrier_orig',
+		Case @iIdRel
+			When 1 Then Convert ( varchar, a.id_arch )
+			Else Isnull ( nullif ( sysadm.FN_CLE_VAL ( 'ID_ARCH_ORIG', a.txt_compo2, ';'), '' ), '0' )
+		End 'id_arch_orig',
+		sysadm.FN_CLE_VAL ( 'ENV_RECOM', @asValCar, ';' ) 'env_en_recommande',
+		sysadm.FN_CLE_VAL ( 'DERN_REL', @asValCar, ';' ) 'derniere_relance',
+		Case @iIdRel
+			When 1 Then Convert ( varchar, a.dte_edit, 103 )
+			Else sysadm.FN_CLE_VAL ( 'DTE_EDIT_ORIG', a.txt_compo2, ';') 
+		End 'date_cour_orig',
+		Case @iIdRel
+			When 1 Then ''
+			Else Convert ( varchar, a.dte_edit, 103 )
+		End 'date_dern_rel',
+		'RELANCE_ASSURE' 'categorie_relance',
+		a.id_inter,
+		a.id_doc,
+		Case 
+			When sysadm.FN_CLE_VAL ( 'ENV_RECOM', @asValCar, ';' ) = 'OUI' Then 'NON'
+			When ( rtrim ( i.adr_mail ) = '' Or i.adr_mail is null ) Then 'NON'
+			Else sysadm.FN_CLE_VAL ( 'ENV_MAIL', @asValCar, ';' )
+		End 'env_par_mail'
+	  
+	From	sysadm.archive a,
+			sysadm.routage r,
+			sysadm.sinistre s,
+			sysadm.personne pers,
+			sysadm.produit p,
+			sysadm.inter i
+	Where   a.id_prod = @adcIdProd
+	And     ( 
+				(
+					( Substring ( a.id_cour_orig, 2, 1 ) = 'C' and Substring ( a.id_cour_orig, 4, 1 ) = 'P' Or Substring ( a.id_cour_orig, 1, 1 ) = 'Q' )
+					And 
+					@iIdRel = 1
+					And a.valide_le between @dtDate1Min and @dtDate1Max
+					and s.valide_le = a.valide_le
+					and CharIndex ( 'P001', a.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P118', a.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P119', a.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P037', a.txt_compo1, 1 ) = 0            
+					And CharIndex ( 'P107', a.txt_compo1, 1 ) = 0            
+					And CharIndex ( 'P120', a.txt_compo1, 1 ) = 0   
+					And Not Exists (
+						Select Top 1 1 
+						From sysadm.archive a1
+						Where a1.id_sin = a.id_sin
+						And   a1.id_inter = a.id_inter
+						And   ( a1.id_cour_orig = rtrim ( a1.cod_inter ) + 'LAX' + Right ( '00' + Convert ( varchar, @iIdRel ), 2 )
+								Or 
+								a1.id_cour_orig = rtrim ( a1.cod_inter ) + 'LQ0' + Right ( '00' + Convert ( varchar, @iIdRel ), 2 )
+							  )
+					)
+
+				) 
+				Or
+				(
+					( Substring ( a.id_cour_orig, 2, 5 ) = 'LAX' + Right ( '00' + Convert ( varchar, @iIdRel - 1), 2 )
+					  Or 
+					  a.id_cour_orig = 'ALQ0' + Right ( '00' + Convert ( varchar, @iIdRel - 1), 2 )
+					)
+					And 
+					@iIdRel > 1
+					And 
+					a.maj_le <= @dtDate2
+					And
+					a.maj_le > @dtDteMEp -- MEP
+					And -- [PM407-1][20190408]
+					sysadm.FN_CLE_VAL ( 'TRT_PAR', a.txt_compo2, ';') = 'KSL'
+					And Not Exists (
+						Select Top 1 1 
+						From sysadm.archive a1
+						Where a1.id_sin = a.id_sin
+						And   a1.id_inter = a.id_inter
+						And   a1.id_cour_orig = rtrim ( a.cod_inter ) + 'LAX' + Right ( '00' + Convert ( varchar, @iIdRel ), 2 )
+					)
+					and s.valide_le = a.valide_le 
+				) 
+			)
+	And		a.nbr_conf = 0
+	And 	a.cod_inter='A'
+	And		r.id_sin = a.id_sin
+	And		r.alt_queue = 'N'
+	And		s.id_sin = a.id_sin
+	and    	s.cod_etat in ( 100, 550 )
+	And		pers.id_ordre = s.id_ordre
+	And		p.id_prod = s.id_prod
+	And     i.id_sin = a.id_sin
+	And     i.cod_inter = a.cod_inter
+
+
+	-- Relance UF Banque
+	Insert into sysadm.w_cour_xml_orangev3 (
+		  no_dossier_sinistre,
+		  civilite_courte,
+		  civilite_longue,
+		  nom,
+		  prenom,
+		  adresse1,
+		  adresse2,
+		  code_postal,
+		  ville,
+		  code_produit_sinistre,
+		  nom_produit,
+		  lib_opt_produit,
+		  no_tel_spb,
+		  no_fax_spb,
+		  assureur,
+		  no_police,
+		  no_ligne_assuree,
+		  cout_telephonique,
+		  date_de_declaration,
+		  code_operateur,
+		  code_maquette,
+		  adr_mail,
+		  numero_relance,
+		  joindre_courrier_orig,
+		  id_arch_orig,
+		  env_en_recommande,
+		  derniere_relance,
+		  date_cour_orig,
+		  date_dern_rel,
+		  categorie_relance,
+		  id_inter,
+		  id_doc,
+		  env_par_mail
+		  )
+	Select	
+		s.id_sin, 
+		'Messieurs' as civilite, 
+		'Messieurs' civilite_longue,
+		i.nom,
+		'',
+		i.adr_1, 
+		i.adr_2, 
+		Case pers.adr_cp When '00000' then '' Else i.adr_cp End as adr_cp, 
+		i.adr_ville,
+		p.id_prod,
+		(select rtrim(dp66.val_car) 
+		 from sysadm.det_pro dp66 
+		 where dp66.id_prod=s.id_prod 
+		   and dp66.id_code_dp=66) as lib_produit_assure,
+		(select rtrim(dp67.val_car) 
+		 from sysadm.det_pro dp67 
+		 where dp67.id_prod=s.id_prod 
+		   and dp67.id_code_dp=67) as lib_option_produit,
+		p.num_tel as num_tel_produit,
+		p.num_fax,
+		rtrim ( sysadm.FN_LIB_CIE (s.id_sin)) as lib_compagnie,
+		rtrim ( sysadm.FN_LIB_POLICE (s.id_sin)) as lib_police,
+		s.num_port as num_tel_assure,
+		(select rtrim(dp70.val_car) 
+		 from sysadm.det_pro dp70 
+		 where dp70.id_prod=s.id_prod 
+		   and dp70.id_code_dp=70) as cout_telephonique,
+		convert(varchar(10),s.dte_decl,20) as dte_decl,
+		rtrim ( s.maj_par ) as code_operateur,
+		'RELANCE_' + 
+			Case 
+				When sysadm.FN_CLE_VAL ( 'DERN_REL', @asValCar, ';' ) = 'OUI' 
+					Then 'DER'
+				Else convert ( varchar ,@iIdRel )
+			End as code_maquette,
+		Case 
+			When sysadm.FN_CLE_VAL ( 'ENV_RECOM', @asValCar, ';' ) = 'OUI' Then ''
+			When sysadm.FN_CLE_VAL ( 'ENV_MAIL', @asValCar, ';' ) <> 'OUI' Then ''
+			Else rtrim ( i.adr_mail )
+		End 'adr_mail',
+		convert ( varchar ,@iIdRel ) 'numero_relance',
+		Case @iIdRel
+			When 1 Then sysadm.FN_CLE_VAL ( 'JOINDRE_ORIG', @asValCar, ';' )
+			Else Case 
+					When isnumeric ( sysadm.FN_CLE_VAL ( 'ID_ARCH_ORIG', a.txt_compo2, ';') ) > 0 
+						Then sysadm.FN_CLE_VAL ( 'JOINDRE_ORIG', @asValCar, ';' )
+					Else 'NON'
+				 End 
+		End 'joindre_courrier_orig',
+		Case @iIdRel
+			When 1 Then Convert ( varchar, a.id_arch )
+			Else Isnull ( nullif ( sysadm.FN_CLE_VAL ( 'ID_ARCH_ORIG', a.txt_compo2, ';'), '' ), '0' )
+		End 'id_arch_orig',
+		sysadm.FN_CLE_VAL ( 'ENV_RECOM', @asValCar, ';' ) 'env_en_recommande',
+		sysadm.FN_CLE_VAL ( 'DERN_REL', @asValCar, ';' ) 'derniere_relance',
+		Case @iIdRel
+			When 1 Then Convert ( varchar, a.dte_edit, 103 )
+			Else sysadm.FN_CLE_VAL ( 'DTE_EDIT_ORIG', a.txt_compo2, ';') 
+		End 'date_cour_orig',
+		Case @iIdRel
+			When 1 Then ''
+			Else Convert ( varchar, a.dte_edit, 103 )
+		End 'date_dern_rel',
+		'RELANCE_BANQUE_UF' 'categorie_relance',
+		a.id_inter,
+		a.id_doc,
+		Case 
+			When sysadm.FN_CLE_VAL ( 'ENV_RECOM', @asValCar, ';' ) = 'OUI' Then 'NON'
+			When ( rtrim ( i.adr_mail ) = '' Or i.adr_mail is null ) Then 'NON'		
+			Else sysadm.FN_CLE_VAL ( 'ENV_MAIL', @asValCar, ';' )
+		End 'env_par_mail'
+		  
+	From	sysadm.archive a,
+			sysadm.routage r,
+			sysadm.sinistre s,
+			sysadm.personne pers,
+			sysadm.produit p,
+			sysadm.inter i,
+			sysadm.w_gar_sin wg
+	Where   a.id_prod = @adcIdProd
+	And     ( 
+				(
+					( Substring ( a.id_cour_orig, 2, 1 ) = 'C' and Substring ( a.id_cour_orig, 4, 1 ) = 'P' Or Substring ( a.id_cour_orig, 1, 1 ) = 'Q' )
+					And 
+					@iIdRel = 1
+					And 
+					a.valide_le between @dtDate1Min and @dtDate1Max
+					and s.valide_le = a.valide_le
+					and CharIndex ( 'P001', a.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P118', a.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P119', a.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P037', a.txt_compo1, 1 ) = 0            
+					And CharIndex ( 'P107', a.txt_compo1, 1 ) = 0            
+					And CharIndex ( 'P120', a.txt_compo1, 1 ) = 0  
+					And Not Exists (
+						Select Top 1 1 
+						From sysadm.archive a1
+						Where a1.id_sin = a.id_sin
+						And   a1.id_inter = a.id_inter
+						And   ( a1.id_cour_orig = rtrim ( a.cod_inter ) + 'LAX' + Right ( '00' + Convert ( varchar, @iIdRel ), 2 ))
+					) 
+
+				) 
+				Or
+				(
+					( Substring ( a.id_cour_orig, 2, 5 ) = 'LAX' + Right ( '00' + Convert ( varchar, @iIdRel - 1), 2 ) )
+					And 
+					@iIdRel > 1
+					And 
+					a.maj_le <= @dtDate2 
+					And
+					a.maj_le > '03/04/2019' -- MEP		
+					And -- [PM407-1][20190408]
+					sysadm.FN_CLE_VAL ( 'TRT_PAR', a.txt_compo2, ';') = 'KSL'
+					And Not Exists (
+						Select Top 1 1 
+						From sysadm.archive a1
+						Where a1.id_sin = a.id_sin
+						And   a1.id_inter = a.id_inter
+						And   a1.id_cour_orig = rtrim ( a.cod_inter ) + 'LAX' + Right ( '00' + Convert ( varchar, @iIdRel ), 2 )
+					) 
+					and s.valide_le = a.valide_le
+				) 
+			)
+	And		a.nbr_conf = 0
+	And 	a.cod_inter='B'
+	And		r.id_sin = a.id_sin
+	And		r.alt_queue = 'N'
+	And		s.id_sin = a.id_sin
+	and    	s.cod_etat in ( 100, 550 )
+	And		pers.id_ordre = s.id_ordre
+	And		p.id_prod = s.id_prod
+	And     i.id_sin = a.id_sin
+	And     i.cod_inter = a.cod_inter
+	And		wg.id_sin = s.id_sin
+	And  	wg.id_gti = 7
+	And		( 
+				Exists ( 
+					Select Top 1 1
+					From   sysadm.w_piece wp
+					Where  wp.id_sin = s.id_sin
+					And	   wp.id_gti = 7 
+					And	   wp.id_i = i.id_i
+				)
+				OR 
+				(  wg.alt_att = 'O' )
+			)
+	And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( s.id_sin, 2 ) <= 0  -- [RS3179]
+END 
 
 Go
 

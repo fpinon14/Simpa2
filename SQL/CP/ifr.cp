@@ -2509,8 +2509,6 @@ DECLARE @sCommande   VarChar(250),
 	@iCount Integer
 
 -- [RS2980_IFR]
-If NOT ( sysadm.FN_CLE_NUMERIQUE ( 'RS2980_IFR_MAIL') > 0 ) Return
-
 Set @dtRef=getdate()
 
 -- chemin d'enregistrement du Result Set

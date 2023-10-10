@@ -434,10 +434,7 @@ BEGIN
 		Where dp.id_prod = prod.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
+	And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
 	END
 
 	-- Adh‚sion SPB
@@ -559,10 +556,7 @@ BEGIN
 		Where dp.id_prod = prod.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
+	And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
 
 	END
 END 
@@ -686,10 +680,7 @@ BEGIN
 		Where dp.id_prod = prod.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
+	And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
 
 	END
 
@@ -812,10 +803,7 @@ BEGIN
 		Where dp.id_prod = prod.id_prod
 		And   dp.id_code_dp = 323
 		)	
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
+	And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
 
 	END
 END 
@@ -1205,10 +1193,7 @@ BEGIN
 		Where dp.id_prod = prod.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
+	And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
 
 	END
 
@@ -1314,10 +1299,7 @@ BEGIN
 		Where dp.id_prod = prod.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
+	And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
 
 	END
 END 
@@ -1422,12 +1404,7 @@ BEGIN
 		Where dp.id_prod = prod.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
-
-
+	And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
 
 	END
 
@@ -1533,10 +1510,7 @@ BEGIN
 		Where dp.id_prod = prod.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
+	And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
 
 	END
 END 
@@ -1687,10 +1661,7 @@ BEGIN
 		Where dp.id_prod = prod.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
+	And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
 
 	END
 
@@ -1803,10 +1774,8 @@ BEGIN
 		Where dp.id_prod = prod.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
+	And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
+
 	END
 END 
 
@@ -1915,10 +1884,7 @@ BEGIN
 		Where dp.id_prod = prod.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
+	And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
 
 	END
 
@@ -2031,10 +1997,7 @@ BEGIN
 		Where dp.id_prod = prod.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
+	And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
 
 	END
 END
@@ -2116,10 +2079,8 @@ BEGIN
 		Where dp.id_prod = sin.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
+	And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
+
 END 
 
 ELSE
@@ -2166,12 +2127,9 @@ BEGIN
 		Where dp.id_prod = sin.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
-END 
+	And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
 
+END 
 
 GO
 
@@ -2281,10 +2239,8 @@ BEGIN
 		Where dp.id_prod = sin.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
+	And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
+
 END 
 
 ELSE
@@ -2366,10 +2322,7 @@ BEGIN
 		Where dp.id_prod = sin.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
+	And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
 END 
 
 
@@ -3488,10 +3441,8 @@ BEGIN
 		Where dp.id_prod = prod.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
+	And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
+
 	UNION ALL
 
 	-- DeuxiŠme requˆte en regardant ALT_ATT coch‚.
@@ -3599,10 +3550,7 @@ BEGIN
 		Where dp.id_prod = prod.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
+	And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
 
 	END
 
@@ -3722,10 +3670,7 @@ BEGIN
 		Where dp.id_prod = prod.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
+	And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
 
 	UNION ALL
 
@@ -3839,10 +3784,7 @@ BEGIN
 		Where dp.id_prod = prod.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
+	And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
 	END
 END 
 
@@ -3959,10 +3901,7 @@ BEGIN
 		Where dp.id_prod = prod.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
+	And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
 
 	UNION ALL
 
@@ -4071,10 +4010,7 @@ BEGIN
 		Where dp.id_prod = prod.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
+	And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
 
 	END
 
@@ -4194,10 +4130,7 @@ BEGIN
 		Where dp.id_prod = prod.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
+	And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
 
 	UNION ALL
 
@@ -4311,10 +4244,7 @@ BEGIN
 		Where dp.id_prod = prod.id_prod
 		And   dp.id_code_dp = 323
 		)
-	And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-	      Or 
-		  ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-        )
+	And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
 
 	END
 END 
@@ -5239,10 +5169,7 @@ BEGIN
 			Where dp.id_prod = prod.id_prod
 			And   dp.id_code_dp = 323
 		 )
-		And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-			  Or 
-		      ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-            )
+		And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
 
 		Union All 
 
@@ -5330,10 +5257,7 @@ BEGIN
 			Where dp.id_prod = prod.id_prod
 			And   dp.id_code_dp = 323
 		 )
-		And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-			  Or 
-		      ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-            )
+		And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
 
 	End -- Fin R1A
 
@@ -5406,10 +5330,8 @@ BEGIN
 			Where dp.id_prod = prod.id_prod
 			And   dp.id_code_dp = 323
 		 )
-		And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-			  Or 
-		      ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-            )
+		And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
+
 
 		Union all
 
@@ -5482,10 +5404,7 @@ BEGIN
 			Where dp.id_prod = prod.id_prod
 			And   dp.id_code_dp = 323
 		 )
-		And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-			  Or 
-		      ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-            )
+		And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
 
 	End 
 
@@ -5569,10 +5488,7 @@ BEGIN
 			Where dp.id_prod = prod.id_prod
 			And   dp.id_code_dp = 323
 		 )
-		And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-			  Or 
-		      ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-            )
+		And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
 
 		UNION ALL
 
@@ -5653,10 +5569,7 @@ BEGIN
 			Where dp.id_prod = prod.id_prod
 			And   dp.id_code_dp = 323
 		 )
-		And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-			  Or 
-		      ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-            )
+		And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
 
 		union all
 		-- PremiŠre requˆte en regardant les piŠces coch‚s.
@@ -5740,10 +5653,7 @@ BEGIN
 			Where dp.id_prod = prod.id_prod
 			And   dp.id_code_dp = 323
 		 )
-		And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-			  Or 
-		      ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-            )
+		And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
 
 		UNION ALL
 
@@ -5827,10 +5737,7 @@ BEGIN
 			Where dp.id_prod = prod.id_prod
 			And   dp.id_code_dp = 323
 		 )
-		And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-			  Or 
-		      ( SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-            )
+		And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
 
 	End 
 END 
@@ -5929,11 +5836,7 @@ BEGIN
 			Where dp.id_prod = prod.id_prod
 			And   dp.id_code_dp = 323
 		 )
-		And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-			  Or 
-		      ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-            )
-
+		And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
 
 		Union All 
 
@@ -6021,10 +5924,7 @@ BEGIN
 			Where dp.id_prod = prod.id_prod
 			And   dp.id_code_dp = 323
 		 )
-		And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-			  Or 
-		      ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-            )
+		And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
 
 	End -- Fin R1A
 
@@ -6097,10 +5997,7 @@ BEGIN
 			Where dp.id_prod = prod.id_prod
 			And   dp.id_code_dp = 323
 		 )
-		And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-			  Or 
-		      ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-            )
+		And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
 
 		Union all
 
@@ -6173,10 +6070,7 @@ BEGIN
 			Where dp.id_prod = prod.id_prod
 			And   dp.id_code_dp = 323
 		 )
-		And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-			  Or 
-		      ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-            )
+		And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
 
 	End 
 
@@ -6260,10 +6154,7 @@ BEGIN
 			Where dp.id_prod = prod.id_prod
 			And   dp.id_code_dp = 323
 		 )
-		And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-			  Or 
-		      ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-            )
+		And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
 
 		UNION ALL
 
@@ -6344,10 +6235,7 @@ BEGIN
 			Where dp.id_prod = prod.id_prod
 			And   dp.id_code_dp = 323
 		 )
-		And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-			  Or 
-		      ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-            )
+		And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
 
 		union all
 		-- PremiŠre requˆte en regardant les piŠces coch‚s.
@@ -6431,10 +6319,7 @@ BEGIN
 			Where dp.id_prod = prod.id_prod
 			And   dp.id_code_dp = 323
 		 )
-		And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-			  Or 
-		      ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-            )
+		And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
 
 		UNION ALL
 
@@ -6518,11 +6403,7 @@ BEGIN
 			Where dp.id_prod = prod.id_prod
 			And   dp.id_code_dp = 323
 		 )
-		And ( sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') <= 0 
-			  Or 
-		      ( SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 And sysadm.FN_CLE_NUMERIQUE ( 'RS3179_SHUNT_RECLA') > 0 ) -- [RS3179]
-            )
-
+		And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
 	End 
 END 
 

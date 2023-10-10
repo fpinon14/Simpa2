@@ -294,15 +294,7 @@ While Exists ( Select Top 1 1 From sysadm.dossier_auto_DT432 where etat_trt = 'E
 	-- Traitement de la demande de création de dossier --
 	-----------------------------------------------------
 	-- [DT432_ISM261862]
-	If sysadm.FN_CLE_NUMERIQUE ( 'DT432_ISM261862') > 0 
-	 Begin
-		Exec @iRet = sysadm.PS_I_DT432_CREATION_DOSSIER_AUTO_V01 @iIdSeq  
-	 End 
-	Else
-	 Begin
-		Exec @iRet = sysadm.PS_I_DT432_CREATION_DOSSIER_AUTO @iIdSeq  
-	 End
-
+	Exec @iRet = sysadm.PS_I_DT432_CREATION_DOSSIER_AUTO_V01 @iIdSeq  
 
 	If @iRet < 0 Continue
 

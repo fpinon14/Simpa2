@@ -136,13 +136,10 @@ If @dcIdDoc = -1 -- [RS5045_REF_MATP]
 If @asAdrCP = '00000' Set @aiDecentralise = 0
 
 -- [RS4843-PM425-1]
-If sysadm.FN_CLE_NUMERIQUE ( 'RS4843-PM425-1') > 0 
- Begin
-    -- Si pour le traitement des relances, le code banque de l'inter Banque et BNP ou LCL, on annule la décentralisation
-	-- et on garde l'édition papier chez SPB.
-	-- Si ce n'est pas une relance, ce traitement est fait autrement sur le id_typ_doc 1 et 60.
-	If @aiIdTypDoc = -100 And @asCodInter = 'B' And @sCodeBanque in ( '30004', '30002' ) Set @aiDecentralise = 0 -- [RS4843-PM425-1]
- End 
+-- Si pour le traitement des relances, le code banque de l'inter Banque et BNP ou LCL, on annule la décentralisation
+-- et on garde l'édition papier chez SPB.
+-- Si ce n'est pas une relance, ce traitement est fait autrement sur le id_typ_doc 1 et 60.
+If @aiIdTypDoc = -100 And @asCodInter = 'B' And @sCodeBanque in ( '30004', '30002' ) Set @aiDecentralise = 0 -- [RS4843-PM425-1]
  
 Go
 

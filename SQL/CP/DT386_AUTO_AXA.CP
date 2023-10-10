@@ -682,21 +682,19 @@ AS
 		  End
 
 		-- [RS2980_IFR] -- Ctrle Validité prix IFR
-		If sysadm.FN_CLE_NUMERIQUE ( 'RS2980_IFR') > 0 
+		Select	@sMarqueAppSin = ws.marq_port,
+				@sModlAppSin = ws.modl_port
+		From sysadm.w_sin ws
+		Where ws.id_sin = @adcIdSin
+
+		Exec sysadm.PS_U_MARQUAGE_PRIX_IFR_A_REVOIR @sMarqueAppSin, @sModlAppSin, @sCodeRetIfr OutPut
+
+		If @sCodeRetIfr = 'URGE'
 			Begin
-				Select	@sMarqueAppSin = ws.marq_port,
-						@sModlAppSin = ws.modl_port
-				From sysadm.w_sin ws
-				Where ws.id_sin = @adcIdSin
+				Exec sysadm.PS_I_PM234_7_REJET @adcIdSin, 'Prix public IFR obsolète', 'Le prix IFR de l''appareil est obsolète, ce contact vient d''alerter automatiquement notre équipe lui demandant de revoir le prix de cet appareil en priorité, ce qui sera fait sous 24h.@Durant ce délai, toute validation du dossier est impossible. Automatisation du process Orange V3 via ATLAS/SIMPA2 impossible donc.'
+				Return -1
+			End 
 
-				Exec sysadm.PS_U_MARQUAGE_PRIX_IFR_A_REVOIR @sMarqueAppSin, @sModlAppSin, @sCodeRetIfr OutPut
-
-				If @sCodeRetIfr = 'URGE'
-				  Begin
-					Exec sysadm.PS_I_PM234_7_REJET @adcIdSin, 'Prix public IFR obsolète', 'Le prix IFR de l''appareil est obsolète, ce contact vient d''alerter automatiquement notre équipe lui demandant de revoir le prix de cet appareil en priorité, ce qui sera fait sous 24h.@Durant ce délai, toute validation du dossier est impossible. Automatisation du process Orange V3 via ATLAS/SIMPA2 impossible donc.'
-					Return -1
-				  End 
-			End
 
 
 		/*  -- [DT386_EXTR_AXA] On prend toute marques sans contrôle.
