@@ -1807,6 +1807,7 @@ Go
 --     JFF  31/01/2023   [ISM344831] On n'envoie pas si CAF
 --     JFF  03/02/2023   [RS4521] Modif Push mail BA Physique RDC-Carrefour
 --	   JFF  26/04/2023   [RS5045_REF_MATP]
+--     JFF  10/10/2023   [RS4521] Suppression critère restriction ISM [ISM344831] @sBA_PhysiqueCMA 
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S03_MAILPUSH_ENVTEL_REMP_REPAR_V03' AND type = 'P' )
         DROP procedure sysadm.PS_S03_MAILPUSH_ENVTEL_REMP_REPAR_V03
@@ -2044,7 +2045,7 @@ Declare
 
   -- [ISM344831] @sBA_PhysiqueCMA 
   If  @sIdTypArt = 'CAF' 
-	  And Not ( @sIdFour = 'CMA' and @sBA_PhysiqueCMA = 'PHYSIQUE' ) 
+--	  And Not ( @sIdFour = 'CMA' and @sBA_PhysiqueCMA = 'PHYSIQUE' ) -- [RS4521]
 	  And Not ( @sIdFour in ( 'TLS', 'SBE' ) and @sIdRefFour = 'CMDE_A_CPLTER' ) 
    Begin
 	  -- On n'envoie pas le mail dans ce cas car il se formate mal par rapport au contexte.
