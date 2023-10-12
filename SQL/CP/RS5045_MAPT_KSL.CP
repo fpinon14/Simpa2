@@ -1956,8 +1956,10 @@ Declare @dtDteDeb DateTime
 Declare @dtDteEdit DateTime
 Declare @sHeure VarChar ( 10 )
 Declare @iDelaiAttenteMinute Integer
+Declare @sDateHeureDebTrt VarChar ( 30 )
 
 Set @iCptTraite = 0 
+Set @sDateHeureDebTrt = Convert ( varchar ( 10 ), GETDATE(), 103 ) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00'
 
 Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL 'OBTENTION_ID_LOT_TRC', -1, '', '', '', @iIdLotTrc output
 
@@ -2003,19 +2005,6 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 	Set @sDestinataire = 'GG_DSI-DO-INFRA-SERVEUR,jff@spb.fr,cbourdoiseau@spb.eu'
 
 	-- Obtention répertoire local pour le cas des courriers Word 
-	/*
-	Select @sRepBlobLocal = 
-			Case @sServeurProduction
-			   When 'PRO' Then ch.chemin_pro
-			   Else ch.chemin_sim
-		    End
-	From sysadm.chem_depot_ksl_rs5045 ch,
-		 sysadm.code_maquette_ksl_rs5045 cm
-	where cm.typ_mail = 'M16'
-	And   cm.id_cpt   = 3
-	And   ch.id_chemin = cm.id_chemin 
-	*/
-
 	Select @sRepBlobLocal = 
 			Case @sServeurProduction
 			   When 'PRO' Then ch.chemin_pro
@@ -2092,20 +2081,6 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 
 
 	-- Obtention répertoire local pour le cas des courriers Word 
-
-/*
-	Select @sRepBlobLocal = 
-			Case @sServeurProduction
-			   When 'PRO' Then ch.chemin_pro
-			   Else ch.chemin_sim
-		    End
-	From sysadm.chem_depot_ksl_rs5045 ch,
-		 sysadm.code_maquette_ksl_rs5045 cm
-	where cm.typ_mail = 'M16'
-	And   cm.id_cpt   = 3
-	And   ch.id_chemin = cm.id_chemin 
-*/
-
 	Select @sRepBlobLocal = 
 		Case @sServeurProduction
 			When 'PRO' Then ch.chemin_pro
@@ -2231,18 +2206,23 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		Set @sMsgTrc = 'Erreur lors de l''instanciation de l''objet SqlServer ADODB.Stream, le traitement est arrêté à '  + Convert ( VarChar ( 10), Getdate(), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108) 
 		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INSOBJ', 'ERR', @sMsgTrc, @iIdLotTrc
 
-		Set @sObjet = '[ALERTE] Instanciation objet ADODB.Stream impossible'
+		Set @sObjet = '[ALERTE][Traitement_MATP_SQL_C#] => Instanciation objet ADODB.Stream impossible'
 
 		Set @sObjet = Left ( @sObjet + space ( 255 ), 255 )
 		Exec sysadm.PS_CASSER_REGLE_CHAINE @sObjet Output, '_', ' ' 
 
 		Set @sMailBody = 'Bonjour ' + char (10)
 		Set @sMailBody = @sMailBody + char (10)
-		Set @sMailBody = @sMailBody + 'Contexte de l''erreur : L''objet SqlServer ADODB.Stream ne peut plus s''intancier, la conséquence est que les mails SHERPA/SIMPA2 destinés aux assurés '
+		Set @sMailBody = @sMailBody + 'Serveur : ' + @@SERVERNAME 
+		If @@SERVERNAME = 'SQL14SINISTRES\SINISTRES' Set @sMailBody = @sMailBody + ' (Alias [LS-SINISTRES])'
+		Set @sMailBody = @sMailBody + char (10)		
+		Set @sMailBody = @sMailBody + 'base    : ' + DB_NAME () + char (10)
+		Set @sMailBody = @sMailBody + char (10)
+		Set @sMailBody = @sMailBody + 'Contexte de l''erreur : L''objet SqlServer ADODB.Stream ne peut plus s''intancier, la conséquence est que les mails SHERPA/SIMPA2/PEGASE destinés aux assurés '
 		Set @sMailBody = @sMailBody + 'ne sont plus déposés pour que le scrutateur KSL les ramasse, les mails ne partent donc plus.' + char (10)
 		Set @sMailBody = @sMailBody + char (10)
-		Set @sMailBody = @sMailBody + 'La cause possible :' + char (10)
-		Set @sMailBody = @sMailBody + '- Une soirée patch la veille a pu fait sauter le droit d''instanciation de cet objet OLE SqlServer lors d''un reboot du serveur qui s''est mal terminé (par exemple).' + char (10)
+		Set @sMailBody = @sMailBody + 'Une des causes possibles :' + char (10)
+		Set @sMailBody = @sMailBody + '- Une soirée patch la veille a pu faire sauter le droit d''instanciation de cet objet OLE SqlServer lors d''un reboot du serveur qui s''est mal terminé (par exemple).' + char (10)
 		Set @sMailBody = @sMailBody + '  Le code suivant peut rétablir ce droit, à jouer par INFRA.' + char (10)
 		Set @sMailBody = @sMailBody + '    exec sp_configure ''Ole Automation Procedures'', 1 ' + char (10)
 		Set @sMailBody = @sMailBody + '    RECONFIGURE' + char (10)
@@ -2250,6 +2230,16 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		Set @sMailBody = @sMailBody + 'Vérifier l''action en jouant : '+ char (10)
 		Set @sMailBody = @sMailBody + 'exec sp_configure ''Ole Automation Procedures'''+ char (10)
 		Set @sMailBody = @sMailBody + 'la valeur config_value doit être à 1 (activée) à présent' + char (10)
+		Set @sMailBody = @sMailBody + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + '- Sinon vérifiez les actions SQL récemment engagées par l''équipe INFRA sur ' + @@Servername  
+		If @@SERVERNAME = 'SQL14SINISTRES\SINISTRES' Set @sMailBody = @sMailBody + ' (Alias [LS-SINISTRES])'
+		Set @sMailBody = @sMailBody + ' .' + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + '  Consultez la trace du traitement avec ces 2 Select pour voir depuis quand le problème se produit ' + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + '  Select * from ' + DB_NAME () + '.sysadm.trace_matp_es_sinistre_ksl_rs5045 where cod_etat = ''ERR'' and cree_le > ''' + @sDateHeureDebTrt + ''' order by 1' + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + '  Select * from ' + DB_NAME () + '.sysadm.trace_matp_es_sinistre_ksl_rs5045 where cree_le > ''' + @sDateHeureDebTrt + ''' order by 1 desc' + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + 'L''alerte reviendra dans 20 minutes tant que le problème ne sera pas résolu.' + CHAR ( 10 )
 		Set @sMailBody = @sMailBody + CHAR ( 10 )
 		Set @sMailBody = @sMailBody + 'Cordialement,'
 		Set @sMailBody = @sMailBody + CHAR ( 10 )
@@ -2947,8 +2937,58 @@ Else
 If @iRowCountWord + @iRowCountHWord  > 0
   Begin
 	Set @sMsgTrc = 'Traitement de ' + Convert ( Varchar ( 20 ), @iCptTraite ) + ' mail(s) sur ' + Convert ( Varchar ( 20 ), @iRowCountWord + @iRowCountHWord ) + ' mail(s)'
-	If @iCptTraite = @iRowCountWord + @iRowCountHWord Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INFO', 'OK', @sMsgTrc, @iIdLotTrc
-	Else Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INFO', 'ERR', @sMsgTrc, @iIdLotTrc
+	If @iCptTraite = @iRowCountWord + @iRowCountHWord 
+		Begin	
+			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INFO', 'OK', @sMsgTrc, @iIdLotTrc
+		End 
+	Else 
+		Begin	
+			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INFO', 'ERR', @sMsgTrc, @iIdLotTrc
+
+			Set @sObjet = '[ERREUR][Traitement_MATP_SQL_C#] => Erreurs sur traitement Lot ' + CONVERT (VarChar ( 20), @iIdLotTrc ) + ', (' + Convert ( Varchar ( 20 ), @iCptTraite ) + '/' + Convert ( Varchar ( 20 ), @iRowCountWord + @iRowCountHWord ) + ')'
+
+			Set @sObjet = Left ( @sObjet + space ( 255 ), 255 )
+			Exec sysadm.PS_CASSER_REGLE_CHAINE @sObjet Output, '_', ' ' 
+
+			Set @sMailBody = 'Bonjour ' + char (10)
+			Set @sMailBody = @sMailBody + char (10)
+			Set @sMailBody = @sMailBody + 'Serveur : ' + @@SERVERNAME + char (10)
+			Set @sMailBody = @sMailBody + 'base    : ' + DB_NAME () + char (10)
+			Set @sMailBody = @sMailBody + char (10)
+			Set @sMailBody = @sMailBody + 'Le lot de traitement ' + CONVERT (VarChar ( 20), @iIdLotTrc ) + ' contient des erreurs, traitement de ' + Convert ( Varchar ( 20 ), @iCptTraite ) + ' mail(s) sur ' + Convert ( Varchar ( 20 ), @iRowCountWord + @iRowCountHWord ) + ' mail(s).' + char (10)
+			Set @sMailBody = @sMailBody + CHAR ( 10 )
+			Set @sMailBody = @sMailBody + 'Consultez la trace du traitement avec ces 4 Select pour voir depuis quand le problème se produit ' + CHAR ( 10 )
+			Set @sMailBody = @sMailBody + '  Select * from ' + DB_NAME () + '.sysadm.trace_matp_es_sinistre_ksl_rs5045 where id_lot_trc = '+ CONVERT (VarChar ( 20), @iIdLotTrc ) + ' order by 1' + CHAR ( 10 ) 
+			Set @sMailBody = @sMailBody + '  Select * from ' + DB_NAME () + '.sysadm.trace_matp_es_sinistre_ksl_rs5045 where id_lot_trc = '+ CONVERT (VarChar ( 20), @iIdLotTrc ) + ' and cod_etat = ''ERR'' order by 1' + CHAR ( 10 ) 
+			Set @sMailBody = @sMailBody + '  Select * from ' + DB_NAME () + '.sysadm.trace_matp_es_sinistre_ksl_rs5045 where cod_etat = ''ERR'' and cree_le > ''' + @sDateHeureDebTrt + ''' order by 1' + CHAR ( 10 )
+			Set @sMailBody = @sMailBody + '  Select * from ' + DB_NAME () + '.sysadm.trace_matp_es_sinistre_ksl_rs5045 where cree_le > ''' + @sDateHeureDebTrt + ''' order by 1 desc' + CHAR ( 10 )
+			Set @sMailBody = @sMailBody + CHAR ( 10 )
+			Set @sMailBody = @sMailBody + 'L''alerte reviendra dans 20 minutes tant que le problème ne sera pas résolu.' + CHAR ( 10 )
+			Set @sMailBody = @sMailBody + CHAR ( 10 )
+			Set @sMailBody = @sMailBody + 'Cordialement,'
+			Set @sMailBody = @sMailBody + CHAR ( 10 )
+			Set @sMailBody = @sMailBody + CHAR ( 10 )
+			Set @sMailBody = @sMailBody + 'Fabry Jean-François'
+			Set @sMailBody = @sMailBody + CHAR ( 10 )
+			Set @sMailBody = @sMailBody + 'DSI/IPDDEV Team SIMPA2' + CHAR ( 10 )
+			Set @sMailBody = @sMailBody + 'Legacy Application Tech Lead' + CHAR ( 10 )
+
+			EXEC master.dbo.SPB_PS_MAIL 
+					@sRetourErrMail OUTPUT, 
+					@sDestinataire ,
+					@sMailBody, 
+					@sObjet, 
+					null, 
+					'', 
+					@sFicOut, 
+					NULL, 
+					NULL, 
+					NULL, 
+					NULL
+
+
+		End 
+
   End 
 
 Set @sMsgTrc = 'Fin du traitement le ' + Convert ( VarChar ( 10), Getdate(), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108) 
