@@ -3148,3 +3148,158 @@ Return -1
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procedure            :       sysadm.PS_RS5045_S_PRE_ARMEMENT_TECHNIQUE
+-- Auteur               :       Fabry JF
+-- Date                 :       25/04/2023
+-- Libelle              :        
+-- Commentaires         :       Pré-arme certaines variables (non xml) pour l'insertion dans sysadm.mailpush
+-- References           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_S_PRE_ARMEMENT_TECHNIQUE' AND type = 'P' )
+        DROP procedure sysadm.PS_RS5045_S_PRE_ARMEMENT_TECHNIQUE
+GO
+
+CREATE procedure sysadm.PS_RS5045_S_PRE_ARMEMENT_TECHNIQUE
+	@aiIdAppli	Integer,    -- Obligatoire
+	@aiIdSin	Integer,    -- Obligatoire
+	@asIdAppli  VarChar ( 10 ) OutPut,
+	@aiIdProd	Integer OutPut,
+	@asLibProd  VarChar ( 255 ) OutPut,
+	@aiIdEts    Integer OutPut,
+    @asMailFrom	VarChar (128) OUTPUT,  -- ''
+    @asBoiteMail    VarChar (35) OUTPUT -- ''
+
+AS
+
+Declare @dcIdSin Decimal ( 10 ) 
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+BEGIN
+
+	Set @asIdAppli = Upper ( SHERPA_PRO.sysadm.FN_CODE_NUM (@aiIdAppli, '-AP'))
+	If  @asIdAppli = 'SIMPA' Set @asIdAppli = 'SIMPA2'
+	Set @asIdAppli = LTRIM ( Rtrim ( @asIdAppli ))
+
+	If @aiIdAppli = 2  -- SIMPA2
+	  Begin
+		Set @dcIdSin = Convert ( Decimal ( 10 ), @aiIdSin )
+
+		Select	@aiIdProd = Convert ( integer, ws.id_prod ),
+				@asLibProd = SIMPA2_PRO.sysadm.FN_LIB_PROD ( ws.id_prod ),
+			    @aiIdEts = Convert ( integer, ws.id_ets),
+				@asMailFrom = '',
+				@asBoiteMail = ''
+		From SIMPA2_PRO.sysadm.w_sin ws
+		Where ws.id_sin = @dcIdSin
+
+		If @aiIdProd is null 
+		  Begin
+			Set @dcIdSin = Convert ( Decimal ( 10 ), @aiIdSin )
+
+			Select	@aiIdProd = Convert ( integer, ws.id_prod ),
+					@asLibProd = SIMPA2_PRO.sysadm.FN_LIB_PROD ( ws.id_prod ),
+					@aiIdEts = Convert ( integer, ws.id_ets),
+					@asMailFrom = '',
+					@asBoiteMail = ''
+			From SIMPA2_PRO.sysadm.sinistre ws
+			Where ws.id_sin = @dcIdSin
+		  End 
+	  End 
+
+	If @aiIdAppli = 3 -- PEGASE 
+	  Begin
+		Select	@aiIdProd = ws.id_prod,
+				@asLibProd = p.lib_long,
+			    @aiIdEts = ws.id_ets,
+				@asMailFrom = '',
+				@asBoiteMail = ''
+		From PEGASE_PRO.sysadm.w_sin ws,
+			 PEGASE_PRO.sysadm.produit p
+		Where ws.id_sin = @aiIdSin
+		And  p.id_prod = ws.id_prod
+
+		If @aiIdProd is null 
+		  Begin
+			Select	@aiIdProd = ws.id_prod,
+					@asLibProd = p.lib_long,
+					@aiIdEts = ws.id_ets,
+					@asMailFrom = '',
+					@asBoiteMail = ''
+			From PEGASE_PRO.sysadm.sinistre ws,
+				 PEGASE_PRO.sysadm.produit p
+			Where ws.id_sin = @aiIdSin
+			And  p.id_prod = ws.id_prod
+		  End 
+	  End 
+End 
+Else
+BEGIN
+
+	Set @asIdAppli = Upper ( SHERPA_SIM.sysadm.FN_CODE_NUM (@aiIdAppli, '-AP'))
+	If  @asIdAppli = 'SIMPA' Set @asIdAppli = 'SIMPA2'
+	Set @asIdAppli = LTRIM ( Rtrim ( @asIdAppli ))
+
+	If @aiIdAppli = 2  -- SIMPA2
+	  Begin
+		Set @dcIdSin = Convert ( Decimal ( 10 ), @aiIdSin )
+
+		Select	@aiIdProd = Convert ( integer, ws.id_prod ),
+				@asLibProd = SIMPA2_TRT.sysadm.FN_LIB_PROD ( ws.id_prod ),
+			    @aiIdEts = Convert ( integer, ws.id_ets),
+				@asMailFrom = '',
+				@asBoiteMail = ''
+		From SIMPA2_TRT.sysadm.w_sin ws
+		Where ws.id_sin = @dcIdSin
+
+		If @aiIdProd is null 
+		  Begin
+			Set @dcIdSin = Convert ( Decimal ( 10 ), @aiIdSin )
+
+			Select	@aiIdProd = Convert ( integer, ws.id_prod ),
+					@asLibProd = SIMPA2_TRT.sysadm.FN_LIB_PROD ( ws.id_prod ),
+					@aiIdEts = Convert ( integer, ws.id_ets),
+					@asMailFrom = '',
+					@asBoiteMail = ''
+			From SIMPA2_TRT.sysadm.sinistre ws
+			Where ws.id_sin = @dcIdSin
+		  End 
+	  End 
+
+	If @aiIdAppli = 3 -- PEGASE 
+	  Begin
+		Select	@aiIdProd = ws.id_prod,
+				@asLibProd = p.lib_long,
+			    @aiIdEts = ws.id_ets,
+				@asMailFrom = '',
+				@asBoiteMail = ''
+		From PEGASE_TRT.sysadm.w_sin ws,
+			 PEGASE_TRT.sysadm.produit p
+		Where ws.id_sin = @aiIdSin
+		And  p.id_prod = ws.id_prod
+
+		If @aiIdProd is null 
+		  Begin
+			Select	@aiIdProd = ws.id_prod,
+					@asLibProd = p.lib_long,
+					@aiIdEts = ws.id_ets,
+					@asMailFrom = '',
+					@asBoiteMail = ''
+			From PEGASE_TRT.sysadm.sinistre ws,
+				 PEGASE_TRT.sysadm.produit p
+			Where ws.id_sin = @aiIdSin
+			And  p.id_prod = ws.id_prod
+		  End 
+	  End 
+End 
+
+
+Go
+
+
