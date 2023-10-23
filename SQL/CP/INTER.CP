@@ -894,3 +894,49 @@ If Update ( rib_cle ) Or Update ( cod_mode_reg )
  
 Go
 */
+
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_INTER_ADR_MAIL_INTER
+-- Auteur               :       FABRY JF
+-- Date                 :       18/10/2023
+-- Libellé              :       [RS6044_REL_MAIL]
+-- Commentaires         :       
+-- Références           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_INTER_ADR_MAIL_INTER' AND type = 'P' )
+        DROP procedure sysadm.PS_S_INTER_ADR_MAIL_INTER
+GO
+
+CREATE procedure sysadm.PS_S_INTER_ADR_MAIL_INTER  
+        @adcIdSin        Decimal (  10,0 ),  
+        @adcIdInter      Decimal (  7,0 ),  
+		@asAdrMail		 VarChar ( 128 ) OutPut
+
+AS  
+
+Select @asAdrMail = lTrim ( rTrim ( i.adr_mail ))
+From sysadm.inter i
+Where i.id_sin = @adcIdSin
+And   i.id_i = @adcIdInter
+
+If @asAdrMail is null Set @asAdrMail = ''
+
+If @asAdrMail <> '' Return
+
+Select @asAdrMail = lTrim ( rTrim ( i.adr_mail ))
+From sysadm.w_inter i
+Where i.id_sin = @adcIdSin
+And   i.id_i = @adcIdInter
+
+If @asAdrMail is null Set @asAdrMail = ''
+
+Go
+
+

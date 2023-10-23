@@ -16,7 +16,7 @@
 -- sysadm.PS_RS5045_S_LISTE_VARIABLE_XML_KSL
 -- sysadm.PS_RS5045_S_RECUPERER_CODE_MAQUETTE_KSL_A_PARTIR_TYP_MAIL
 -- sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE
--- sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V03
+-- sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V04
 -- sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8
 -- sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL
 -- sysadm.PS_RS5045_U_OPTIMISER_CHAINE_DATA_XML_KSL
@@ -246,7 +246,7 @@ BEGIN
 		   @sNature = Convert ( varchar (10), s.id_natsin ),
 		   @sLibNature = Upper (Left ( SIMPA2_PRO.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ), 1 )) + Lower ( Right ( SIMPA2_PRO.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ), len (SIMPA2_PRO.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ))-1 )),
 		   @sDateDeSurvenanceSinistre = convert ( VarChar ( 10 ), s.dte_surv, 23 ),
-		   @sHeureDeSurvenanceSinistre =  Convert ( VarChar (5), s.dte_surv, 108 ),
+		   @sHeureDeSurvenanceSinistre =  nullif (Convert ( VarChar (5), s.dte_surv, 108 ), '00:00'),
 		   @sNoAdhesion  = 
 			Case (Select cod_adh From SIMPA2_PRO.sysadm.produit p Where p.id_prod = s.id_prod ) 
 				When '3' Then lTrim ( rtrim ( s.id_adh ))
@@ -275,7 +275,7 @@ BEGIN
 			   @sNature = Convert ( varchar (10), s.id_natsin ),
 			   @sLibNature = Upper (Left ( SIMPA2_PRO.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ), 1 )) + Lower ( Right ( SIMPA2_PRO.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ), len (SIMPA2_PRO.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ))-1 )),
 			   @sDateDeSurvenanceSinistre = Convert ( VarChar ( 10 ), s.dte_surv, 23 ),
-			   @sHeureDeSurvenanceSinistre =  Convert ( VarChar (5), s.dte_surv, 108 ),
+			   @sHeureDeSurvenanceSinistre =  nullif (Convert ( VarChar (5), s.dte_surv, 108 ), '00:00'),
 			   @sNoAdhesion  = 
 				Case (Select cod_adh From SIMPA2_PRO.sysadm.produit p Where p.id_prod = s.id_prod ) 
 					When '3' Then lTrim ( rtrim ( s.id_adh ))
@@ -405,7 +405,7 @@ BEGIN
 		   @sNature = Convert ( varchar (10), s.id_natsin ),
 		   @sLibNature = Upper (Left ( SIMPA2_TRT.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ), 1 )) + Lower ( Right ( SIMPA2_TRT.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ), len (SIMPA2_TRT.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ))-1 )),
 		   @sDateDeSurvenanceSinistre = convert ( VarChar ( 10 ), s.dte_surv, 23 ),
-		   @sHeureDeSurvenanceSinistre =  Convert ( VarChar (5), s.dte_surv, 108 ),
+		   @sHeureDeSurvenanceSinistre =  nullif (Convert ( VarChar (5), s.dte_surv, 108 ), '00:00'),
 		   @sNoAdhesion  = 
 			Case (Select cod_adh From SIMPA2_TRT.sysadm.produit p Where p.id_prod = s.id_prod ) 
 				When '3' Then lTrim ( rtrim ( s.id_adh ))
@@ -434,7 +434,7 @@ BEGIN
 			   @sNature = Convert ( varchar (10), s.id_natsin ),
 			   @sLibNature = Upper (Left ( SIMPA2_TRT.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ), 1 )) + Lower ( Right ( SIMPA2_TRT.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ), len (SIMPA2_TRT.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ))-1 )),
 			   @sDateDeSurvenanceSinistre = Convert ( VarChar ( 10 ), s.dte_surv, 23 ),
-			   @sHeureDeSurvenanceSinistre =  Convert ( VarChar (5), s.dte_surv, 108 ),
+			   @sHeureDeSurvenanceSinistre =  nullif (Convert ( VarChar (5), s.dte_surv, 108 ), '00:00'),
 			   @sNoAdhesion  = 
 				Case (Select cod_adh From SIMPA2_TRT.sysadm.produit p Where p.id_prod = s.id_prod ) 
 					When '3' Then lTrim ( rtrim ( s.id_adh ))
@@ -1294,6 +1294,7 @@ Where cm.cod_maq = @sCodeMaquette
 			mail_body as 'entete/@mail_body',
 			no_adhesion as 'entete/@no_adhesion',
 			no_tel_inter_assure as 'entete/@no_tel_inter_assure',
+			categorie_relance as 'entete/@categorie_relance', -- [PM407-1]
 
 			-- Ci-dessous section <Courrier
 
@@ -1383,6 +1384,7 @@ Where cm.cod_maq = @sCodeMaquette
 	Where id_xml = @iIdXml
 Go
 
+
 --------------------------------------------------------------------
 --
 -- Procedure            :       sysadm.PS_RS5045_I_MAIL_PUSH_KSL
@@ -1409,7 +1411,8 @@ Go
 -- Retourne             :       0  Succès
 --                              <0 négatif : Erreur fonctionnelle
 --                              >0 positif : Erreur technique
---
+-------------------------------------------------------------------
+-- JFF      18/10/2023   [RS6044_REL_MAIL]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_I_MAIL_PUSH_KSL' AND type = 'P' )
         DROP procedure sysadm.PS_RS5045_I_MAIL_PUSH_KSL
@@ -1427,13 +1430,90 @@ CREATE procedure sysadm.PS_RS5045_I_MAIL_PUSH_KSL
 		@asMailCci              VarChar ( 128 ) , -- [PM191-2]  
 		@asMailSubject          VarChar ( 255 ) ,  
 		@asMailBody             VarChar ( max ),  
---		@asAltQuarantaine       VarChar (   1 ),  
 		@asBoiteMail			VarChar (35), 
 		@asTypMail				VarChar (10), 
 		@aiIdAppli              Integer, -- Forcé par le client appelant, sinon null et pris par défaut de TRACE_MAIL_xxx.sysadm.chem_depot_ksl_rs5045 si besoin (voir JFF)
---		@asMethode				Varchar ( 6 ), -- [PM159]  
---		@asMethodeKSL			VarChar ( 50 ), -- voir plus haut quelle valeur passer ici [RS5045_REF_MATP]   >> Plus la peine peut être déterminer autrement
-		@aiIdArch				Integer , -- [PM159]  
+		@aiIdArch				Integer , -- [PM159]
+		@asXMLdata				VarChar ( max ), -- [PM159]  
+		@aiIdChemin				Integer, -- Forcé par le client appelant, sinon null et pris par défaut de TRACE_MAIL_xxx.sysadm.chem_depot_ksl_rs5045 si besoin (voir JFF)
+		@adtDteHExec			DateTime, -- Forcé par le client appelant, sinon null et pris par défaut de TRACE_MAIL_xxx.sysadm.chem_depot_ksl_rs5045 si besoin (voir JFF), Date et heure avant laquelle le mail ne peut pas être envoyé, null si aucune critère
+		@asErrOutPut			VarChar ( 255 ) OutPut          
+AS  
+
+Exec sysadm.PS_RS5045_I_MAIL_PUSH_KSL_V01
+		@asIdAppli,
+		@aiIdSin,
+		@aiIdProd,
+		@asLibProd,
+		@aiIdEts,
+		@asMailFrom,
+		@asMailSend,
+		@asMailCc,
+		@asMailCci,
+		@asMailSubject,
+		@asMailBody,
+		@asBoiteMail,
+		@asTypMail,
+		@aiIdAppli,
+		@aiIdArch,
+		null, 
+		@asXMLdata,
+		@aiIdChemin,
+		@adtDteHExec,
+		@asErrOutPut OutPut    
+
+Go
+
+--------------------------------------------------------------------
+--
+-- Procedure            :       sysadm.PS_RS5045_I_MAIL_PUSH_KSL_V01
+-- Auteur               :       Fabry JF
+-- Date                 :       25/04/2023
+-- Libelle              :        
+-- Commentaires         :       Insère l'enregistrement dans Trace_Mail_Pro.sysadm.mail_push, 
+--	                            à la nouvelle méthode
+-- References           :       
+--
+-- Arguments            :       @asMethode => Toujours 'KSL2'
+--								@asMethodeKSL => 
+--									'RS5045_MATPN' Si methode 1, MailPush Simple dont Etudes Sinistre donne le corps de texte (PM191)
+--									'RS5045_MATPD' Si methode 2, Courrier SIMPA2 (voire autre appli plus tard, style PEGASE)  (PM159)
+--									'RS5045_CODMAQ' Si nouvelle Méthode 6 lié au présent projet RS5045, KSL doit donné au client appelant 
+--													un code maquette spécifique pour un besoin spécifique
+--								
+--									Cas Obsolète et fermé du 'KSL_EDS'
+--										Cette méthode n'est plus à utiliser, elle ser rejétée si elle est appelée dans cette PS.
+--										Malgré tout, 4 courriers sont lié à cette méthode et KSL ne refera pas ces courriers, 
+--										c'est pour cela, que seuls ces 4 courriers sont autorisé en méthode KSL_EDS.
+--										Ce sont les 4 codes maquettes 'MAIL_CASTO_DT133_2REL', 'MAIL_CASTO_DT133_1REL', 'MAIL_CASTO_DT133_ORIG', 'GEOLOC'
+--
+-- Retourne             :       0  Succès
+--                              <0 négatif : Erreur fonctionnelle
+--                              >0 positif : Erreur technique
+-------------------------------------------------------------------
+-- JFF      18/10/2023   [RS6044_REL_MAIL]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_I_MAIL_PUSH_KSL_V01' AND type = 'P' )
+        DROP procedure sysadm.PS_RS5045_I_MAIL_PUSH_KSL_V01
+GO
+
+CREATE procedure sysadm.PS_RS5045_I_MAIL_PUSH_KSL_V01
+		@asIdAppli              Char (  10 )    ,  
+		@aiIdSin                Integer         ,  
+		@aiIdProd               Integer         ,  
+		@asLibProd              VarChar ( 255 ) ,  
+		@aiIdEts                Integer         ,  
+		@asMailFrom             VarChar ( 128 ) ,  
+		@asMailSend             VarChar ( 128 ) ,  
+		@asMailCc               VarChar ( 128 ) ,  
+		@asMailCci              VarChar ( 128 ) , -- [PM191-2]  
+		@asMailSubject          VarChar ( 255 ) ,  
+		@asMailBody             VarChar ( max ),  
+		@asBoiteMail			VarChar (35), 
+		@asTypMail				VarChar (10), 
+		@aiIdAppli              Integer, -- Forcé par le client appelant, sinon null et pris par défaut de TRACE_MAIL_xxx.sysadm.chem_depot_ksl_rs5045 si besoin (voir JFF)
+		@aiIdArch				Integer , -- [PM159]
+		@asIdArchComplSeria     VarChar ( 100 ) = null, -- [RS6044_REL_MAIL]
 		@asXMLdata				VarChar ( max ), -- [PM159]  
 		@aiIdChemin				Integer, -- Forcé par le client appelant, sinon null et pris par défaut de TRACE_MAIL_xxx.sysadm.chem_depot_ksl_rs5045 si besoin (voir JFF)
 		@adtDteHExec			DateTime, -- Forcé par le client appelant, sinon null et pris par défaut de TRACE_MAIL_xxx.sysadm.chem_depot_ksl_rs5045 si besoin (voir JFF), Date et heure avant laquelle le mail ne peut pas être envoyé, null si aucune critère
@@ -1675,7 +1755,8 @@ INSERT INTO sysadm.mail_push
 				xml_data,
 				xml_data2, -- [RS5045_REF_MATP]
 				id_chemin, -- [RS5045_REF_MATP]
-				dateh_exec -- [RS5045_REF_MATP]
+				dateh_exec, -- [RS5045_REF_MATP]
+				id_arch_compl -- [RS6044_REL_MAIL]
         )  
 VALUES  
         (  
@@ -1699,7 +1780,8 @@ VALUES
                 Left ( @asXMLdata, 2000), -- [RS5045_REF_MATP]
 				Substring ( @asXMLdata, 2001, Len ( @asXMLdata ) ),  -- [RS5045_REF_MATP]
 				@aiIdChemin,
-				@dtDteHExec
+				@dtDteHExec,
+				@asIdArchComplSeria -- [RS6044_REL_MAIL]
         )  
   
 Set @iErr = @@ERROR     
@@ -1893,12 +1975,11 @@ Go
 
 --------------------------------------------------------------------
 --
--- Procedure            :       sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V03
+-- Procedure            :       sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL
 -- Auteur               :       Fabry JF
 -- Date                 :       25/04/2023
 -- Libelle              :       Moteur de traitement des Mail ES-SINISTRE <> KSL 
 -- Commentaires         :       Cette version gère les courriers Word
---	                            
 -- References           :       
 --
 -- Arguments            :       
@@ -1906,14 +1987,60 @@ Go
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V03' AND type = 'P' )
-        DROP procedure sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V03
+--	18/10/2023 [RS6044_REL_MAIL]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL' AND type = 'P' )
+        DROP procedure sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL
 GO
 
-CREATE procedure sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V03
+CREATE procedure sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL
 As
 
--- Procedure            :       sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V03
+-- Procedure            :       sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL
+-- Auteur               :       Fabry JF
+-- Date                 :       25/04/2023
+-- Libelle              :       Moteur de traitement MATP des Mail ES-SINISTRE <> KSL 
+-- Commentaires         :       Cette version gère les courriers Word
+
+If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') >=5 
+	Begin
+		Exec sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V04
+		Return
+	End 
+
+If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') >=4 
+	Begin
+		Exec sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V03
+		Return
+	End 
+
+Go
+
+
+--------------------------------------------------------------------
+--
+-- Procedure            :       sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V04
+-- Auteur               :       Fabry JF
+-- Date                 :       25/04/2023
+-- Libelle              :       Moteur de traitement des Mail ES-SINISTRE <> KSL 
+-- Commentaires         :       Cette version gère les courriers Word
+-- References           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+-- JFF      18/10/2023   [RS6044_REL_MAIL]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V04' AND type = 'P' )
+        DROP procedure sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V04
+GO
+
+CREATE procedure sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V04
+As
+
+-- Procedure            :       sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V04
 -- Auteur               :       Fabry JF
 -- Date                 :       25/04/2023
 -- Libelle              :       Moteur de traitement MATP des Mail ES-SINISTRE <> KSL 
@@ -1957,6 +2084,12 @@ Declare @dtDteEdit DateTime
 Declare @sHeure VarChar ( 10 )
 Declare @iDelaiAttenteMinute Integer
 Declare @sDateHeureDebTrt VarChar ( 30 )
+Declare @sIdArchComplSeria VarChar ( 100 ) -- [RS6044_REL_MAIL]
+Declare @sDteEditComplSeria VarChar ( 100 ) -- [RS6044_REL_MAIL]
+Declare @iCptArch Integer -- [RS6044_REL_MAIL]
+Declare @sIdArchComplWk varchar ( 100 ) -- [RS6044_REL_MAIL]
+Declare @sDteEditComplWk varchar ( 100 ) -- [RS6044_REL_MAIL]
+Declare @iIdArchComplWk Integer -- [RS6044_REL_MAIL]
 
 Set @iCptTraite = 0 
 Set @sDateHeureDebTrt = Convert ( varchar ( 10 ), GETDATE(), 103 ) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00'
@@ -1986,7 +2119,9 @@ Declare @TbWork Table (
 	id_appli_num integer,
 	typ_mail varchar ( 6),
 	id_arch integer,
+	id_arch_compl varchar (100), -- [RS6044_REL_MAIL]
 	dte_edit Datetime,
+	dte_edit_compl varchar (100), -- [RS6044_REL_MAIL]
 	xml_data varchar (max),
 	chemin_depot varchar ( 255),
 	nom_fichier_depot varchar ( 255),
@@ -2013,7 +2148,6 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 	From sysadm.chem_depot_ksl_rs5045 ch
 	where ch.id_chemin = 3
 
-
     ------------------------------------------------------------------------------
 	--------- Traitement mail avec courrier SIMPA2						  --------
 	------------------------------------------------------------------------------
@@ -2023,8 +2157,10 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 	mp.id_sin,  
 	mp.id_appli_num,
 	mp.typ_mail,
-	IsNull ( mp.id_arch, -1 ),  
+	IsNull ( mp.id_arch, -1 ),
+	mp.id_arch_compl, -- [RS6044_REL_MAIL]
 	a.dte_edit,
+	null, -- [RS6044_REL_MAIL]
 	mp.xml_data + IsNull ( mp.xml_data2, ''),
 	IsNull ( ( Select Case @sServeurProduction
 						When 'PRO' Then chemin_pro
@@ -2065,6 +2201,43 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 	Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountWord  ) + ' enregistrement(s) (mails) représentant des courriers WORD SIMPA2'
 	Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'LCTCWD', 'OK', @sMsgTrc, @iIdLotTrc  
 
+	If Exists ( Select Top 1 1 From @TbWork where marquage = 0 And id_arch_compl is not null )
+		Begin
+			Set @sMsgTrc = 'Présence de courriers WORD SIMPA2 complèmentaires à une archive principale, ramassage des dates d''édition correspondantes'
+			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INFO', 'OK', @sMsgTrc, @iIdLotTrc  
+		End 
+
+	-- [RS6044_REL_MAIL] Armement des DTE_EDIT des ID_ARCH_COMPL
+	While Exists ( Select Top 1 1 From @TbWork where marquage = 0 And id_arch_compl is not null )
+	 Begin
+		Select 	Top 1 
+			@iIdSeq = id_seq,
+			@sIdArchComplSeria = id_arch_compl -- [RS6044_REL_MAIL]
+		From	@TbWork
+		Where	marquage = 0
+		And id_arch_compl is not null
+
+		Set @sDteEditComplSeria = ''
+
+		Set @iCptArch = 1 -- [RS6044_REL_MAIL]
+		While 0=0 -- [RS6044_REL_MAIL]
+		 Begin
+			Set @sIdArchComplWk = sysadm.FN_CLE_VAL ( 'ID_ARCH_CPL_' + CONVERT ( varchar ( 20 ), @iCptArch), @sIdArchComplSeria, ';' ) 
+			If @sIdArchComplWk is null OR ltrim ( rtrim ( @sIdArchComplWk )) = '' Break
+
+			Set @iIdArchComplWk = CONVERT ( Integer, @sIdArchComplWk )
+
+			Select @sDteEditComplWk = CONVERT ( Varchar ( 10 ), a.dte_edit, 105 )
+			From SIMPA2_PRO.sysadm.archive a with (nolock)  
+			Where a.id_arch = @iIdArchComplWk
+
+			Set @sDteEditComplSeria = sysadm.FN_CLE_VAL_E ( 'DTE_EDIT_CPL_'+ CONVERT ( varchar ( 20 ), @iCptArch), @sDteEditComplWk, rtrim ( @sDteEditComplSeria), ';' ) 
+			Set @iCptArch = @iCptArch + 1
+		 End 
+
+		Update @TbWork Set marquage = 1, dte_edit_compl = rtrim ( @sDteEditComplSeria ) Where id_seq = @iIdSeq
+	 End 
+
  End  
 
 ----------------------------------------------------------------------------------------------
@@ -2099,7 +2272,9 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 	mp.id_appli_num,
 	mp.typ_mail,
 	IsNull ( mp.id_arch, -1 ),
+	mp.id_arch_compl, -- [RS6044_REL_MAIL]
 	a.dte_edit,	
+	null, -- [RS6044_REL_MAIL]
 	mp.xml_data + IsNull ( mp.xml_data2, ''),
 	IsNull ( ( Select Case @sServeurProduction
 						When 'PRO' Then chemin_pro
@@ -2140,6 +2315,43 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 	Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountWord  ) + ' enregistrement(s) (mails) représentant des courriers WORD SIMPA2'
 	Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'LCTCWD', 'OK', @sMsgTrc, @iIdLotTrc 
 
+	If Exists ( Select Top 1 1 From @TbWork where marquage = 0 And id_arch_compl is not null )
+		Begin
+			Set @sMsgTrc = 'Présence de courriers WORD SIMPA2 complèmentaires à une archive principale, ramassage des dates d''édition correspondantes'
+			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INFO', 'OK', @sMsgTrc, @iIdLotTrc  
+		End 
+
+	-- [RS6044_REL_MAIL] Armement des DTE_EDIT des ID_ARCH_COMPL
+	While Exists ( Select Top 1 1 From @TbWork where marquage = 0 And id_arch_compl is not null )
+	 Begin
+		Select 	Top 1 
+			@iIdSeq = id_seq,
+			@sIdArchComplSeria = id_arch_compl -- [RS6044_REL_MAIL]
+		From	@TbWork
+		Where	marquage = 0
+		And id_arch_compl is not null
+
+		Set @sDteEditComplSeria = ''
+
+		Set @iCptArch = 1 -- [RS6044_REL_MAIL]
+		While 0=0 -- [RS6044_REL_MAIL]
+		 Begin
+			Set @sIdArchComplWk = sysadm.FN_CLE_VAL ( 'ID_ARCH_CPL_' + CONVERT ( varchar ( 20 ), @iCptArch), @sIdArchComplSeria, ';' ) 
+			If @sIdArchComplWk is null OR ltrim ( rtrim ( @sIdArchComplWk )) = '' Break
+
+			Set @iIdArchComplWk = CONVERT ( Integer, @sIdArchComplWk )
+
+			Select @sDteEditComplWk = CONVERT ( Varchar ( 10 ), a.dte_edit, 105 )
+			From SIMPA2_TRT.sysadm.archive a with (nolock)  
+			Where a.id_arch = @iIdArchComplWk
+
+			Set @sDteEditComplSeria = sysadm.FN_CLE_VAL_E ( 'DTE_EDIT_CPL_'+ CONVERT ( varchar ( 20 ), @iCptArch), @sDteEditComplWk, rtrim ( @sDteEditComplSeria), ';' ) 
+			Set @iCptArch = @iCptArch + 1
+		 End 
+
+		Update @TbWork Set marquage = 1, dte_edit_compl = rtrim ( @sDteEditComplSeria ) Where id_seq = @iIdSeq
+	 End  
+
  End  
 
 ----------------------------------------------------------------------------------------------
@@ -2158,7 +2370,9 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 	mp.id_appli_num,
 	mp.typ_mail,
 	IsNull ( mp.id_arch, -1 ),
+	mp.id_arch_compl, -- [RS6044_REL_MAIL]
 	null 'dte_edit',
+	null, -- [RS6044_REL_MAIL]
 	mp.xml_data + IsNull ( mp.xml_data2, ''),
 	IsNull ( ( Select Case @sServeurProduction
 						When 'PRO' Then chemin_pro
@@ -2181,6 +2395,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 	Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountHWord ) + ' enregistrement(s) (mails) représentant tous les autres mails HORS courrier WORD'
 	Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'LCTTAM', 'OK', @sMsgTrc, @iIdLotTrc
 
+	Update @TbWork Set marquage = 0 -- [RS6044_REL_MAIL] On réinitialise bien les marqueurs potentiellement affecté à 1 avec id_arch_compl et les dte_edit
 
 	If ( Select COUNT(*) From @TbWork ) = 0 
 	  Begin
@@ -2415,7 +2630,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 	------------------------------------------------------------------------------
 	
  	----------------------------------------------------------------------------------------------
-	--------- Préparation du traitement des mail avec courrier WORD							------
+	--------- Préparation du traitement des mails avec courrier WORD						------
 	--------- Je ne conditionne pas ce pré-traitement à la présence du critère id_arch > 0  ------
 	--------- La présence de l'EXE est impérative pour ne pas faire planter la tache Window ------
 	--------- qui passe 5 minutes plus tard                                                 ------
@@ -2433,7 +2648,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 				Break
 			  End 
 
-			Set @sMsgTrc = 'Présence de courrier à traiter, récupération de WordToPdf.EXE en cours...'
+			Set @sMsgTrc = 'Récupération de WordToPdf.EXE en cours...'
 			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'RCPEXE', 'ENC', @sMsgTrc, @iIdLotTrc
 
 			Select @blWordToPdf = binaire,
@@ -2521,6 +2736,8 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 			@iIdAppliNum = id_appli_num,
 			@sTypMail = typ_mail,
 			@iIdArch = id_arch,
+			@sIdArchComplSeria = id_arch_compl, -- [RS6044_REL_MAIL]
+			@sDteEditComplSeria = dte_edit_compl, -- [RS6044_REL_MAIL]
 			@dtDteEdit = dte_edit,
 			@sXmlData = xml_data,
 			@sChemDepot = chemin_depot,
@@ -2529,151 +2746,172 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		Where	marquage = 0
 		And id_arch > 0
 
-		-- Obtention du nom de fichier particulier (id_cpt 3)
-		Select @sNomFichierDepot = 'DTE_EDIT=' + Convert ( Varchar ( 10 ) , @dtDteEdit, 105 ) + '-' + ltrim ( rtrim ( nom_fichier )) + '.' + ltrim ( rtrim ( extension_fichier ))
-		From   sysadm.code_maquette_ksl_rs5045
-		Where  typ_mail = @sTypMail
-		and	   id_cpt = 3
+		If @sIdArchComplSeria is null Set @sIdArchComplSeria = ''
+		If @sDteEditComplSeria is null Set @sDteEditComplSeria = ''
+		Set @sIdArchComplSeria = sysadm.FN_CLE_VAL_E ( 'ID_ARCH_CPL_0', Convert ( varchar ( 20 ) , @iIdArch), @sIdArchComplSeria, ';' ) -- [RS6044_REL_MAIL]
+		Set @sDteEditComplSeria = sysadm.FN_CLE_VAL_E ( 'DTE_EDIT_CPL_0', Convert ( varchar ( 10 ), @dtDteEdit, 105), @sDteEditComplSeria, ';' ) -- [RS6044_REL_MAIL]
+		Set @iCptArch = -1 -- [RS6044_REL_MAIL]
+		
+		While 0=0 -- [RS6044_REL_MAIL]
+			Begin
+				Set @iCptArch = @iCptArch + 1  -- Donne 0 (l'orig)
 
-		-- Contrôle de l'adresse mail, sécurité pour la simulation.
-		-- Si adresse différente de @spb, on l'efface.
-		If @sServeurProduction = 'SIM'
-		  Begin
-			Set @sAdrMail = Upper ( sysadm.FN_CLE_VAL_XML ( 'email', @sXmlData, 'NON' ) )
-			If CHARINDEX ( '@SPB', @sAdrMail ) <= 0 
-			  Begin
-				Exec sysadm.PS_S_SUBSTITUER_VARIABLE_XML  'email', '', @sXmlData output
-			  End 
+				-- [RS6044_REL_MAIL]
+				Set @sIdArchComplWk = sysadm.FN_CLE_VAL ( 'ID_ARCH_CPL_' + CONVERT ( varchar ( 20 ), @iCptArch), @sIdArchComplSeria, ';' ) 
+				If @sIdArchComplWk is null OR ltrim ( rtrim ( @sIdArchComplWk )) = '' Break
 
-			Set @sAdrMail = Upper ( sysadm.FN_CLE_VAL_XML ( 'Mail_Add_Dest', @sXmlData, 'NON' ) )
-			If CHARINDEX ( '@SPB', @sAdrMail ) <= 0 
-			  Begin
-				Exec sysadm.PS_S_SUBSTITUER_VARIABLE_XML  'Mail_Add_Dest', '', @sXmlData output
-			  End 
+				Set @iIdArchComplWk = CONVERT ( Integer, @sIdArchComplWk )
+				Set @sDteEditComplWk = sysadm.FN_CLE_VAL ( 'DTE_EDIT_CPL_'+ CONVERT ( varchar ( 20 ), @iCptArch), @sDteEditComplSeria, ';' )
 
-			Set @sAdrMail = Upper ( sysadm.FN_CLE_VAL_XML ( 'email_cc', @sXmlData, 'NON' ) )
-			If CHARINDEX ( '@SPB', @sAdrMail ) <= 0 
-			  Begin
-				Exec sysadm.PS_S_SUBSTITUER_VARIABLE_XML  'email_cc', '', @sXmlData output
-			  End 
+				-- Obtention du nom de fichier particulier (id_cpt 3) -- [RS6044_REL_MAIL]
+				Select @sNomFichierDepot = 'DTE_EDIT=' + @sDteEditComplWk  + '-' + ltrim ( rtrim ( nom_fichier )) + '.' + ltrim ( rtrim ( extension_fichier ))
+				From   sysadm.code_maquette_ksl_rs5045
+				Where  typ_mail = @sTypMail
+				and	   id_cpt = 3
 
-		  End 
+				-- Contrôle de l'adresse mail, sécurité pour la simulation.
+				-- Si adresse différente de @spb, on l'efface.
+				If @sServeurProduction = 'SIM'
+				  Begin
+					Set @sAdrMail = Upper ( sysadm.FN_CLE_VAL_XML ( 'email', @sXmlData, 'NON' ) )
+					If CHARINDEX ( '@SPB', @sAdrMail ) <= 0 
+					  Begin
+						Exec sysadm.PS_S_SUBSTITUER_VARIABLE_XML  'email', '', @sXmlData output
+					  End 
 
-		-- Transformation des variables du nom du fichier en données
-		Set @sNomFichierDepot = REPLACE ( @sNomFichierDepot, '[id_sin]', CONVERT ( VarChar ( 10 ), @iIdSin ) )
-		Set @sNomFichierDepot = REPLACE ( @sNomFichierDepot, '[id_seq_tb_mail_push]', CONVERT ( VarChar ( 20 ), @iIdSeq ) )
-		Set @sNomFichierDepot = REPLACE ( @sNomFichierDepot, '[yyyyMMddHHmmss]', Replace ( convert ( varchar(10), GETDATE(), 112 ) + CONVERT (varchar(8), GETDATE(), 108), ':', '' ))
-		Set @sNomFichierDepot = REPLACE ( @sNomFichierDepot, '[indice]', CONVERT ( VarChar ( 20 ), '1' ) )
+					Set @sAdrMail = Upper ( sysadm.FN_CLE_VAL_XML ( 'Mail_Add_Dest', @sXmlData, 'NON' ) )
+					If CHARINDEX ( '@SPB', @sAdrMail ) <= 0 
+					  Begin
+						Exec sysadm.PS_S_SUBSTITUER_VARIABLE_XML  'Mail_Add_Dest', '', @sXmlData output
+					  End 
 
-		Set @ChemEtNomDepot = @sRepBlobLocal + '\' + @sNomFichierDepot
+					Set @sAdrMail = Upper ( sysadm.FN_CLE_VAL_XML ( 'email_cc', @sXmlData, 'NON' ) )
+					If CHARINDEX ( '@SPB', @sAdrMail ) <= 0 
+					  Begin
+						Exec sysadm.PS_S_SUBSTITUER_VARIABLE_XML  'email_cc', '', @sXmlData output
+					  End 
 
-		Set @sMsgTrc = 'Traitement du mail dont l''id_seq est ' + CONVERT ( varchar ( 20 ), @iIdSeq )
-		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'MOTTRT', 'ENC', @sMsgTrc, @iIdLotTrc
+				  End 
 
-		If @sChemDepot = ''
-		  Begin
-			Set @sMsgTrc = 'Le chemin de dépôt n''est pas initialisé, contrôlez la déclaration du type de mail et de la maquette sur sysadm.code_maquette_ksl_rs5045 et sur sysadm.chem_depot_ksl_rs5045'
-			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONCHM', 'ERR', @sMsgTrc, @iIdLotTrc
+				-- Transformation des variables du nom du fichier en données
+				Set @sNomFichierDepot = REPLACE ( @sNomFichierDepot, '[id_sin]', CONVERT ( VarChar ( 10 ), @iIdSin ) )
+				Set @sNomFichierDepot = REPLACE ( @sNomFichierDepot, '[id_seq_tb_mail_push]', CONVERT ( VarChar ( 20 ), @iIdSeq ) )
+				Set @sNomFichierDepot = REPLACE ( @sNomFichierDepot, '[yyyyMMddHHmmss]', Replace ( convert ( varchar(10), GETDATE(), 112 ) + CONVERT (varchar(8), GETDATE(), 108), ':', '' ))
+				Set @sNomFichierDepot = REPLACE ( @sNomFichierDepot, '[indice]', CONVERT ( varchar ( 20 ), @iCptArch + 1 ) )  -- +1 Car  0 orig, donne l'indice 1, etc... -- [RS6044_REL_MAIL]
 
-			Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
-			Continue
-		  End
+				Set @ChemEtNomDepot = @sRepBlobLocal + '\' + @sNomFichierDepot
 
-		If @sNomFichierDepot = ''
-		  Begin
-			Set @sMsgTrc = 'Le fichier de dépôt n''est pas initialisé, contrôlez la déclaration du type de mail et de la maquette sur sysadm.code_maquette_ksl_rs5045 et sur sysadm.chem_depot_ksl_rs5045'
-			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONCHM', 'ERR', @sMsgTrc, @iIdLotTrc
+				Set @sMsgTrc = 'Traitement du mail dont l''id_seq est ' + CONVERT ( varchar ( 20 ), @iIdSeq )
+				Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'MOTTRT', 'ENC', @sMsgTrc, @iIdLotTrc
 
-			Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
-			Continue
-		  End
+				If @sChemDepot = ''
+				  Begin
+					Set @sMsgTrc = 'Le chemin de dépôt n''est pas initialisé, contrôlez la déclaration du type de mail et de la maquette sur sysadm.code_maquette_ksl_rs5045 et sur sysadm.chem_depot_ksl_rs5045'
+					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONCHM', 'ERR', @sMsgTrc, @iIdLotTrc
 
-		If @dtDatehExec > Getdate() 
-		  Begin
-		    -- Ce n'est pas encore la date et l'heure pour traiter ce mail
+					Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
+					Continue
+				  End
+
+				If @sNomFichierDepot = ''
+				  Begin
+					Set @sMsgTrc = 'Le fichier de dépôt n''est pas initialisé, contrôlez la déclaration du type de mail et de la maquette sur sysadm.code_maquette_ksl_rs5045 et sur sysadm.chem_depot_ksl_rs5045'
+					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONCHM', 'ERR', @sMsgTrc, @iIdLotTrc
+
+					Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
+					Continue
+				  End
+
+				If @dtDatehExec > Getdate() 
+				  Begin
+					-- Ce n'est pas encore la date et l'heure pour traiter ce mail
 	
-			Set @sMsgTrc = 'Le mail ' + CONVERT ( varchar ( 20 ), @iIdSeq ) + ' à une date d''éxécution au ' + Convert ( VarChar ( 10), @dtDatehExec, 103 ) + ' à ' + CONVERT (varchar(8), @dtDatehExec, 108)+ ', il n''est donc pas traité sur ce traitement, il sera traité ultérieurement' 
-			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'MOTTRT', 'EXERET', @sMsgTrc, @iIdLotTrc
+					Set @sMsgTrc = 'Le mail ' + CONVERT ( varchar ( 20 ), @iIdSeq ) + ' à une date d''éxécution au ' + Convert ( VarChar ( 10), @dtDatehExec, 103 ) + ' à ' + CONVERT (varchar(8), @dtDatehExec, 108)+ ', il n''est donc pas traité sur ce traitement, il sera traité ultérieurement' 
+					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'MOTTRT', 'EXERET', @sMsgTrc, @iIdLotTrc
 
-			Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
+					Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
 
-			Continue
-		  End 
+					Continue
+				  End 
 
-		-- Obtention du Blob sur la bonne base 
-		Set @sMsgTrc = 'Récupération du courrier (archive ' + Convert ( varchar ( 20), @iIdArch ) + ') de la base ' + 
-			Case @iIdAppliNum 
-				When 2 Then 'SIMPA2'
-				When 3 Then 'PEGASE'
-				Else '[Base à renseigner]'
-			End +
-			' en cours...'
+				-- Obtention du Blob sur la bonne base 
+				-- [RS6044_REL_MAIL]
+				Set @sMsgTrc = 'Récupération du courrier (archive ' + Convert ( varchar ( 20), @iIdArchComplWk ) + ') de la base ' + 
+					Case @iIdAppliNum 
+						When 2 Then 'SIMPA2'
+						When 3 Then 'PEGASE'
+						Else '[Base à renseigner]'
+					End +
+					' en cours...'
 
-		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'RECBLB', 'ENC', @sMsgTrc, @iIdLotTrc
-		Exec @iRet=sysadm.PS_RS5045_S_RECUPERER_LE_BLOB_COURRIER @iIdAppliNum, @iIdArch, @blBlobCourrier OUTPUT
+				Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'RECBLB', 'ENC', @sMsgTrc, @iIdLotTrc
+				-- [RS6044_REL_MAIL]
+				Exec @iRet=sysadm.PS_RS5045_S_RECUPERER_LE_BLOB_COURRIER @iIdAppliNum, @iIdArchComplWk, @blBlobCourrier OUTPUT
 
-		-- Obtention du Blob échouée 1er cas 
-		If @iRet <> 0 
-		  Begin
-			Set @sMsgTrc = 'Erreur lors de la récupération du blob, code erreur ' + CONVERT ( Varchar ( 20 ), @iRet ) + ', ce mail n''est pas traité !'
-			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'RECBLB', 'ERR', @sMsgTrc, @iIdLotTrc
+				-- Obtention du Blob échouée 1er cas 
+				If @iRet <> 0 
+				  Begin
+					Set @sMsgTrc = 'Erreur lors de la récupération du blob, code erreur ' + CONVERT ( Varchar ( 20 ), @iRet ) + ', ce mail n''est pas traité !'
+					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'RECBLB', 'ERR', @sMsgTrc, @iIdLotTrc
 
-			Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq 
-			Continue
-		  End 
+					Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq 
+					Continue
+				  End 
 
-		-- Obtention du Blob échouée 2ème cas
-		If @blBlobCourrier is null Or Datalength ( @blBlobCourrier ) <= 5
-		  Begin
-			Set @sMsgTrc = 'Erreur lors de la récupération du blob, le blob est vide, ce mail n''est pas traité !'
-			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'RECBLB', 'ERR', @sMsgTrc, @iIdLotTrc
+				-- Obtention du Blob échouée 2ème cas
+				If @blBlobCourrier is null Or Datalength ( @blBlobCourrier ) <= 5
+				  Begin
+					Set @sMsgTrc = 'Erreur lors de la récupération du blob, le blob est vide, ce mail n''est pas traité !'
+					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'RECBLB', 'ERR', @sMsgTrc, @iIdLotTrc
 
-			Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
-			Continue
-		  End 
+					Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
+					Continue
+				  End 
 
-		-- Obtention du Blob succés
-		Set @sMsgTrc = 'Récupération du courrier (archive ' + Convert ( varchar ( 20), @iIdArch ) + ') effectué avec succès.'
-		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'RECBLB', 'OK', @sMsgTrc, @iIdLotTrc
-
-
-		Set @sMsgTrc = 'Construction du fichier Word en cours...'
-		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONBLB', 'ENC', @sMsgTrc, @iIdLotTrc
-
-		Exec @iRet = sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM_V02 @iHandle, 1, 3, null, null, null, @blBlobCourrier
-
-		If @iRet <> 0 
-		  Begin
-			Set @sMsgTrc = 'Erreur lors de la construction du fichier Word, code erreur ' + CONVERT ( Varchar ( 20 ), @iRet ) + ', le fichier n''a pas été écrit !, mail non traité.'
-			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONBLB', 'ERR', @sMsgTrc, @iIdLotTrc
-
-			Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
-			Continue
-		  End 
-
-		Set @sMsgTrc = 'Fichier Word construit avec succès'
-		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONBLB', 'OK', @sMsgTrc, @iIdLotTrc 
+				-- Obtention du Blob succés
+				-- [RS6044_REL_MAIL]
+				Set @sMsgTrc = 'Récupération du courrier (archive ' + Convert ( varchar ( 20), @iIdArchComplWk ) + ') effectué avec succès.'
+				Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'RECBLB', 'OK', @sMsgTrc, @iIdLotTrc
 
 
-		Set @sMsgTrc = 'Ecriture du fichier Word à destination de KSL en cours... (sur ' + @ChemEtNomDepot  + ')'
-		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'ECRBLB', 'ENC', @sMsgTrc, @iIdLotTrc
+				Set @sMsgTrc = 'Construction du fichier Word en cours...'
+				Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONBLB', 'ENC', @sMsgTrc, @iIdLotTrc
 
-		Exec @iRet = sysadm.PS_SAUVEGARDER_ET_FERMER_UN_FICHER_ADODB_STREAM @iHandle, @ChemEtNomDepot, 2
+				Exec @iRet = sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM_V02 @iHandle, 1, 3, null, null, null, @blBlobCourrier
 
-		If @iRet <> 0 
-		  Begin
-			Set @sMsgTrc = 'Erreur lors de l''écriture du fichier Word, code erreur ' + CONVERT ( Varchar ( 20 ), @iRet ) + ', le fichier n''a pas été écrit !, mail non traité.'
-			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'ECRBLB', 'ERR', @sMsgTrc, @iIdLotTrc
+				If @iRet <> 0 
+				  Begin
+					Set @sMsgTrc = 'Erreur lors de la construction du fichier Word, code erreur ' + CONVERT ( Varchar ( 20 ), @iRet ) + ', le fichier n''a pas été écrit !, mail non traité.'
+					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONBLB', 'ERR', @sMsgTrc, @iIdLotTrc
 
-			Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
-			Continue
-		  End 
+					Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
+					Continue
+				  End 
 
-		Set @sMsgTrc = 'Fichier Word écrit avec succès sur ' + @ChemEtNomDepot 
-		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'ECRBLB', 'OK', @sMsgTrc, @iIdLotTrc
+				Set @sMsgTrc = 'Fichier Word construit avec succès'
+				Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONBLB', 'OK', @sMsgTrc, @iIdLotTrc 
 
-		Update @TbWork Set marquage = 1 Where id_seq = @iIdSeq
 
+				Set @sMsgTrc = 'Ecriture du fichier Word à destination de KSL en cours... (sur ' + @ChemEtNomDepot  + ')'
+				Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'ECRBLB', 'ENC', @sMsgTrc, @iIdLotTrc
+
+				Exec @iRet = sysadm.PS_SAUVEGARDER_ET_FERMER_UN_FICHER_ADODB_STREAM @iHandle, @ChemEtNomDepot, 2
+
+				If @iRet <> 0 
+				  Begin
+					Set @sMsgTrc = 'Erreur lors de l''écriture du fichier Word, code erreur ' + CONVERT ( Varchar ( 20 ), @iRet ) + ', le fichier n''a pas été écrit !, mail non traité.'
+					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'ECRBLB', 'ERR', @sMsgTrc, @iIdLotTrc
+
+					Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
+					Continue
+				  End 
+
+				Set @sMsgTrc = 'Fichier Word écrit avec succès sur ' + @ChemEtNomDepot 
+				Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'ECRBLB', 'OK', @sMsgTrc, @iIdLotTrc
+
+				Update @TbWork Set marquage = 1 Where id_seq = @iIdSeq
+
+			End
 	 End
  	------------------------------------------------------------------------------
 	--------- FIN 2ème Moteur                                             --------
@@ -2736,6 +2974,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 			@iIdSeq = id_seq,
 			@iIdSin = id_sin,
 			@iIdArch = id_arch,
+			@sIdArchComplSeria = id_arch_compl, -- [RS6044_REL_MAIL]
 			@sXmlData = xml_data,
 			@sChemDepot = chemin_depot,
 			@sNomFichierDepot = nom_fichier_depot,
@@ -2744,54 +2983,95 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		Where	marquage = 1
 		And id_arch > 0 
 
-		-- Reconstruction du nom du fichier PDF
-		Select @sNomFichierPDF = ltrim ( rtrim ( nom_fichier )) + '.' + + ltrim ( rtrim ( extension_fichier ))
-		From   sysadm.code_maquette_ksl_rs5045
-		Where  typ_mail = @sTypMail
-		and	   id_cpt = 2
+		If @sIdArchComplSeria is null Set @sIdArchComplSeria = ''
+		If @sDteEditComplSeria is null Set @sDteEditComplSeria = ''
+		Set @sIdArchComplSeria = sysadm.FN_CLE_VAL_E ( 'ID_ARCH_CPL_0', Convert ( varchar ( 20 ) , @iIdArch), @sIdArchComplSeria, ';' ) -- [RS6044_REL_MAIL]
+		Set @iCptArch = -1 -- [RS6044_REL_MAIL]
 
-		-- Transformation des variables du nom du fichier en données
-		Set @sNomFichierPDF = REPLACE ( @sNomFichierPDF, '[id_sin]', CONVERT ( VarChar ( 10 ), @iIdSin ) )
-		Set @sNomFichierPDF = REPLACE ( @sNomFichierPDF, '[id_seq_tb_mail_push]', CONVERT ( VarChar ( 20 ), @iIdSeq ) )
-		Set @sNomFichierPDF = REPLACE ( @sNomFichierPDF, '[yyyyMMddHHmmss]', Replace ( convert ( varchar(10), GETDATE(), 112 ) + CONVERT (varchar(8), GETDATE(), 108), ':', '' ))
-		Set @sNomFichierPDF = REPLACE ( @sNomFichierPDF, '[indice]', CONVERT ( VarChar ( 20 ), '1' ) )
+		While 0=0 -- [RS6044_REL_MAIL]
+			Begin
 
-		Set @sCmdDos = @sRepBlobLocal + '\' + @sNomFichierPDF
-		EXECUTE xp_fileexist @sCmdDos, @iFileExists OUTPUT
+				Set @iCptArch = @iCptArch + 1  -- Donne 0 (l'orig)
 
-		-- PDF bien présent ou pas avant d'aller plus loin
-		If @iFileExists = 0 
-		  Begin
-			Set @sMsgTrc = 'Le fichier ' + @sCmdDos + ' est introuvable en local, le mail n''est pas traité'
-			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'PDFAB1', 'ERR', @sMsgTrc, @iIdLotTrc
+				-- [RS6044_REL_MAIL]
+				Set @sIdArchComplWk = sysadm.FN_CLE_VAL ( 'ID_ARCH_CPL_' + CONVERT ( varchar ( 20 ), @iCptArch), @sIdArchComplSeria, ';' ) 
+				If @sIdArchComplWk is null OR ltrim ( rtrim ( @sIdArchComplWk )) = '' Break
 
-			Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
-			Continue
-		  End 
+				-- Reconstruction du nom du fichier PDF
+				Select @sNomFichierPDF = ltrim ( rtrim ( nom_fichier )) + '.' + ltrim ( rtrim ( extension_fichier ))
+				From   sysadm.code_maquette_ksl_rs5045
+				Where  typ_mail = @sTypMail
+				and	   id_cpt = 2
+
+				-- Transformation des variables du nom du fichier en données
+				Set @sNomFichierPDF = REPLACE ( @sNomFichierPDF, '[id_sin]', CONVERT ( VarChar ( 10 ), @iIdSin ) )
+				Set @sNomFichierPDF = REPLACE ( @sNomFichierPDF, '[id_seq_tb_mail_push]', CONVERT ( VarChar ( 20 ), @iIdSeq ) )
+				Set @sNomFichierPDF = REPLACE ( @sNomFichierPDF, '[yyyyMMddHHmmss]', Replace ( convert ( varchar(10), GETDATE(), 112 ) + CONVERT (varchar(8), GETDATE(), 108), ':', '' ))
+				Set @sNomFichierPDF = REPLACE ( @sNomFichierPDF, '[indice]', CONVERT ( varchar ( 20 ), @iCptArch + 1 ) )  -- +1 Car  0 orig, donne l'indice 1, etc... -- [RS6044_REL_MAIL]
+
+				Set @sCmdDos = @sRepBlobLocal + '\' + @sNomFichierPDF
+				EXECUTE xp_fileexist @sCmdDos, @iFileExists OUTPUT
+
+				-- PDF bien présent ou pas avant d'aller plus loin
+				If @iFileExists = 0 
+				  Begin
+					Set @sMsgTrc = 'Le fichier ' + @sCmdDos + ' est introuvable en local, le mail n''est pas traité'
+					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'PDFAB1', 'ERR', @sMsgTrc, @iIdLotTrc
+
+					Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
+					Continue
+				  End 
+
+				Set @sMsgTrc = 'Déplacement du PDF '+ CONVERT ( varchar ( 20 ), @iCptArch + 1 ) + ' ' + @sRepBlobLocal + '\' + @sNomFichierPDF + ' vers le répertoire KSL en cours... (sur ' + @sChemDepot + @sNomFichierPDF  + ')'
+				Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'DEPPDF', 'ENC', @sMsgTrc, @iIdLotTrc
+
+				-- Juste avant d'écrire le XML qui sera l'élément déclencheur pour KSL, je déplace le PDF dans le répertoire définitif
+				Set @sCmdDos = 'Move ' +  @sRepBlobLocal + '\' + @sNomFichierPDF + ' ' + @sChemDepot
+				EXEC @iRet = master.dbo.xp_cmdshell @sCmdDos 
+
+				Set @sCmdDos = @sChemDepot + @sNomFichierPDF
+				EXECUTE xp_fileexist @sCmdDos, @iFileExists OUTPUT
+
+				-- PDF bien présent ou pas avant d'aller plus loin
+				If @iFileExists = 0 
+				  Begin
+					Set @sMsgTrc = 'Après déplacement, le fichier ' + @sCmdDos + ' est introuvable dans le répertoire KSL, le mail n''est pas traité'
+					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'PDFAB2', 'ERR', @sMsgTrc, @iIdLotTrc
+
+					Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
+					Continue
+				  End 
+				Else
+				  Begin
+					Set @sMsgTrc = 'PDF ' + CONVERT ( varchar ( 20 ), @iCptArch + 1 ) + ' déplacé avec succès vers ' + @sCmdDos
+					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'DEPPDF', 'OK', @sMsgTrc, @iIdLotTrc
+				  End 
+			End
+
 
 		-- Contrôle de l'adresse mail, sécurité pour la simulation.
 		-- Si adresse différente de @spb, on l'efface.
 		If @sServeurProduction = 'SIM'
-		  Begin
-			Set @sAdrMail = Upper ( sysadm.FN_CLE_VAL_XML ( 'email', @sXmlData, 'NON' ) )
-			If CHARINDEX ( '@SPB', @sAdrMail ) <= 0 
-			  Begin
-				Exec sysadm.PS_S_SUBSTITUER_VARIABLE_XML  'email', '', @sXmlData output
-			  End 
+			Begin
+				Set @sAdrMail = Upper ( sysadm.FN_CLE_VAL_XML ( 'email', @sXmlData, 'NON' ) )
+				If CHARINDEX ( '@SPB', @sAdrMail ) <= 0 
+					Begin
+						Exec sysadm.PS_S_SUBSTITUER_VARIABLE_XML  'email', '', @sXmlData output
+					End 
 
-			Set @sAdrMail = Upper ( sysadm.FN_CLE_VAL_XML ( 'Mail_Add_Dest', @sXmlData, 'NON' ) )
-			If CHARINDEX ( '@SPB', @sAdrMail ) <= 0 
-			  Begin
-				Exec sysadm.PS_S_SUBSTITUER_VARIABLE_XML  'Mail_Add_Dest', '', @sXmlData output
-			  End 
+				Set @sAdrMail = Upper ( sysadm.FN_CLE_VAL_XML ( 'Mail_Add_Dest', @sXmlData, 'NON' ) )
+				If CHARINDEX ( '@SPB', @sAdrMail ) <= 0 
+					Begin
+						Exec sysadm.PS_S_SUBSTITUER_VARIABLE_XML  'Mail_Add_Dest', '', @sXmlData output
+					End 
 
-			Set @sAdrMail = Upper ( sysadm.FN_CLE_VAL_XML ( 'email_cc', @sXmlData, 'NON' ) )
-			If CHARINDEX ( '@SPB', @sAdrMail ) <= 0 
-			  Begin
-				Exec sysadm.PS_S_SUBSTITUER_VARIABLE_XML  'email_cc', '', @sXmlData output
-			  End 
+				Set @sAdrMail = Upper ( sysadm.FN_CLE_VAL_XML ( 'email_cc', @sXmlData, 'NON' ) )
+				If CHARINDEX ( '@SPB', @sAdrMail ) <= 0 
+					Begin
+						Exec sysadm.PS_S_SUBSTITUER_VARIABLE_XML  'email_cc', '', @sXmlData output
+					End 
 
-		  End 
+			End 
 
 		-- Transformation des variables du nom du fichier en données
 		Set @sNomFichierDepot = REPLACE ( @sNomFichierDepot, '[id_sin]', CONVERT ( VarChar ( 10 ), @iIdSin ) )
@@ -2804,34 +3084,34 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'MOTTRT', 'ENC', @sMsgTrc, @iIdLotTrc
 
 		If @sChemDepot = ''
-		  Begin
-			Set @sMsgTrc = 'Le chemin de dépôt n''est pas initialisé, contrôlez la déclaration du type de mail et de la maquette sur sysadm.code_maquette_ksl_rs5045 et sur sysadm.chem_depot_ksl_rs5045'
-			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONCHM', 'ERR', @sMsgTrc, @iIdLotTrc
+			Begin
+				Set @sMsgTrc = 'Le chemin de dépôt n''est pas initialisé, contrôlez la déclaration du type de mail et de la maquette sur sysadm.code_maquette_ksl_rs5045 et sur sysadm.chem_depot_ksl_rs5045'
+				Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONCHM', 'ERR', @sMsgTrc, @iIdLotTrc
 
-			Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
-			Continue
-		  End
+				Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
+				Continue
+			End
 
 		If @sNomFichierDepot = ''
-		  Begin
-			Set @sMsgTrc = 'Le fichier de dépôt n''est pas initialisé, contrôlez la déclaration du type de mail et de la maquette sur sysadm.code_maquette_ksl_rs5045 et sur sysadm.chem_depot_ksl_rs5045'
-			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONCHM', 'ERR', @sMsgTrc, @iIdLotTrc
+			Begin
+				Set @sMsgTrc = 'Le fichier de dépôt n''est pas initialisé, contrôlez la déclaration du type de mail et de la maquette sur sysadm.code_maquette_ksl_rs5045 et sur sysadm.chem_depot_ksl_rs5045'
+				Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONCHM', 'ERR', @sMsgTrc, @iIdLotTrc
 
-			Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
-			Continue
-		  End
+				Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
+				Continue
+			End
 
 		If @dtDatehExec > Getdate() 
-		  Begin
-		    -- Ce n'est pas encore la date et l'heure pour traiter ce mail
+			Begin
+				-- Ce n'est pas encore la date et l'heure pour traiter ce mail
 	
-			Set @sMsgTrc = 'Le mail ' + CONVERT ( varchar ( 20 ), @iIdSeq ) + ' à une date d''éxécution au ' + Convert ( VarChar ( 10), @dtDatehExec, 103 ) + ' à ' + CONVERT (varchar(8), @dtDatehExec, 108)+ ', il n''est donc pas traité sur ce traitement, il sera traité ultérieurement' 
-			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'MOTTRT', 'EXERET', @sMsgTrc, @iIdLotTrc
+				Set @sMsgTrc = 'Le mail ' + CONVERT ( varchar ( 20 ), @iIdSeq ) + ' à une date d''éxécution au ' + Convert ( VarChar ( 10), @dtDatehExec, 103 ) + ' à ' + CONVERT (varchar(8), @dtDatehExec, 108)+ ', il n''est donc pas traité sur ce traitement, il sera traité ultérieurement' 
+				Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'MOTTRT', 'EXERET', @sMsgTrc, @iIdLotTrc
 
-			Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
+				Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
 
-			Continue
-		  End 
+				Continue
+			End 
 
 		Set @sMsgTrc = 'Construction du fichier XML à destination de KSL en cours...'
 		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONXML', 'ENC', @sMsgTrc, @iIdLotTrc
@@ -2839,41 +3119,16 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		Exec @iRet = sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM @iHandle, 2, 3, 'UTF-8', 10, @sXmlData
 
 		If @iRet <> 0 
-		  Begin
-			Set @sMsgTrc = 'Erreur lors de la construction du fichier XML, code erreur ' + CONVERT ( Varchar ( 20 ), @iRet ) + ', le fichier n''a pas été écrit !'
-			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONXML', 'ERR', @sMsgTrc, @iIdLotTrc
+			Begin
+				Set @sMsgTrc = 'Erreur lors de la construction du fichier XML, code erreur ' + CONVERT ( Varchar ( 20 ), @iRet ) + ', le fichier n''a pas été écrit !'
+				Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONXML', 'ERR', @sMsgTrc, @iIdLotTrc
 
-			Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
-			Continue
-		  End 
+				Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
+				Continue
+			End 
 
 		Set @sMsgTrc = 'Fichier XML construit avec succès'
 		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONXML', 'OK', @sMsgTrc, @iIdLotTrc 
-
-		Set @sMsgTrc = 'Déplacement du PDF ' + @sRepBlobLocal + '\' + @sNomFichierPDF + ' vers le répertoire KSL en cours... (sur ' + @sChemDepot + @sNomFichierPDF  + ')'
-		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'DEPPDF', 'ENC', @sMsgTrc, @iIdLotTrc
-
-		-- Juste avant d'écrire le XML qui sera l'élément déclencheur pour KSL, je déplace le PDF dans le répertoire définitif
-		Set @sCmdDos = 'Move ' +  @sRepBlobLocal + '\' + @sNomFichierPDF + ' ' + @sChemDepot
-		EXEC @iRet = master.dbo.xp_cmdshell @sCmdDos 
-
-		Set @sCmdDos = @sChemDepot + @sNomFichierPDF
-		EXECUTE xp_fileexist @sCmdDos, @iFileExists OUTPUT
-
-		-- PDF bien présent ou pas avant d'aller plus loin
-		If @iFileExists = 0 
-		  Begin
-			Set @sMsgTrc = 'Après déplacement, le fichier ' + @sCmdDos + ' est introuvable dans le répertoire KSL, le mail n''est pas traité'
-			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'PDFAB2', 'ERR', @sMsgTrc, @iIdLotTrc
-
-			Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
-			Continue
-		  End 
-		Else
-		  Begin
-			Set @sMsgTrc = 'PDF déplacé avec succès vers ' + @sCmdDos
-			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'DEPPDF', 'OK', @sMsgTrc, @iIdLotTrc
-		  End 
 
 		Set @sMsgTrc = 'Ecriture du fichier XML à destination de KSL en cours... (sur ' + @ChemEtNomDepot  + ')'
 		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'ECRXML', 'ENC', @sMsgTrc, @iIdLotTrc

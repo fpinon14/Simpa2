@@ -21,6 +21,7 @@
 --				DW_S07_ARCHIVE_RELANCES   // Premières Relances Automatiques pour Gti Uf et Dem Pce Banques DCMP 000285
 --				PS_U01_MAJ_REEDITION
 --				PS_I01_RECUPERER_ARCHIVE_V01
+--				PS_I02_ARCHIVE_RELANCES_V02
 -------------------------------------------------------------------
 
 --------------------------------------------------------------------
@@ -866,12 +867,13 @@ GO
 -- JFF      12/06/2014   [PI052]
 -- JFF      12/02/2016   [PI062]
 -- JFF      26/04/2023   [RS5045_REF_MATP]
+-- JFF      18/10/2023   [RS6044_REL_MAIL]
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I02_ARCHIVE_RELANCES_V01' AND type = 'P' )
-	drop procedure sysadm.PS_I02_ARCHIVE_RELANCES_V01
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I02_ARCHIVE_RELANCES_V02' AND type = 'P' )
+	drop procedure sysadm.PS_I02_ARCHIVE_RELANCES_V02
 GO
 
-CREATE PROC sysadm.PS_I02_ARCHIVE_RELANCES_V01
+CREATE PROC sysadm.PS_I02_ARCHIVE_RELANCES_V02
   @adtDateDuJour	DateTime,
   @adcId_Doc		Decimal ( 7, 0 ) OUTPUT,
   @adcId_Sin		Decimal ( 10, 0 ),  -- [PI062]
@@ -886,7 +888,9 @@ CREATE PROC sysadm.PS_I02_ARCHIVE_RELANCES_V01
   @asValidePar		VarChar ( 4    ),
   @asMajPar		VarChar ( 4    ),
   @asTypBlob		VarChar ( 2 ),
-  @asModeleWord   VarChar( 50 ) -- [RS5045_REF_MATP]
+  @asModeleWord   VarChar( 50 ), -- [RS5045_REF_MATP]
+  @asIdCanal    Varchar ( 2 ) , -- [RS6044_REL_MAIL]
+  @aiIdArch		Integer OutPut -- [RS6044_REL_MAIL]
 AS
 
 Declare @dtValideLe	DateTime		
@@ -897,12 +901,15 @@ Declare @dtDteEdit DateTime -- [PI052]
 -- Récupération du nouvelle valeur d'archive --
 -------------------------------------------------------------------------
 -- [PI052]
-Set @iCptArch = null
+-- Set @iCptArch = null
+EXEC sysadm.PS_X_INCREMENTER 'CPT_ARCH', @iCptArch OUTPUT  -- [RS6044_REL_MAIL]
+Set @aiIdArch = @iCptArch -- [RS6044_REL_MAIL]
+
 Set @dtDteEdit = @adtDateDuJour -- [PI052]
 
 If sysadm.FN_CLE_NUMERIQUE ( 'PI052') > 0 
  Begin
-	EXEC sysadm.PS_X_INCREMENTER 'CPT_ARCH', @iCptArch OUTPUT
+--	EXEC sysadm.PS_X_INCREMENTER 'CPT_ARCH', @iCptArch OUTPUT
 	Set @dtDteEdit = '01/01/1900'
  End 
 
@@ -971,7 +978,9 @@ And    id_inter = @adcId_Inter
 		
 		archive.id_cour_orig,
 		archive.id_arch,
-		archive.modele_word  -- [RS5045_REF_MATP]
+		archive.modele_word,  -- [RS5045_REF_MATP]
+
+		archive.id_canal -- [RS6044_REL_MAIL]
 	)
 
   VALUES
@@ -1018,7 +1027,9 @@ And    id_inter = @adcId_Inter
 		
 		@asId_Cour,
 		@iCptArch,
-		@asModeleWord -- [RS5045_REF_MATP]
+		@asModeleWord, -- [RS5045_REF_MATP]
+
+		@asIdCanal -- [RS6044_REL_MAIL]
 	)
 
 
@@ -6555,3 +6566,47 @@ Where a.id_sin = @adcIdSin
 Order by 1, 2, 3
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_U_AFFECTER_UN_ID_ARCH
+-- Auteur               :       Fabry JF
+-- Date                 :       18/10/2023
+-- Libellé              :        
+-- Commentaires         :       
+-- Références           :       [RS6044_REL_MAIL]
+
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_AFFECTER_UN_ID_ARCH' AND type = 'P' )
+        DROP procedure sysadm.PS_U_AFFECTER_UN_ID_ARCH
+GO
+
+CREATE procedure sysadm.PS_U_AFFECTER_UN_ID_ARCH
+	@adcIdSin	Decimal (10),
+	@adcIdInter Decimal (  7,0 ),  
+	@adcIdDoc   Decimal (  7,0 ),
+	@aiIdArch	Integer OutPut
+AS
+
+Select @aiIdArch = a.id_arch
+From   sysadm.archive a
+Where  a.id_sin = @adcIdSin
+And	   a.id_inter = @adcIdInter
+And	   a.id_doc = @adcIdDoc
+
+If @aiIdArch > 0 Return
+
+EXEC sysadm.PS_X_INCREMENTER 'CPT_ARCH', @aiIdArch OUTPUT  
+
+Update sysadm.archive 
+Set id_arch = @aiIdArch
+Where  id_sin = @adcIdSin
+And	   id_inter = @adcIdInter
+And	   id_doc = @adcIdDoc
+
+Go
+
+
+

@@ -1006,9 +1006,11 @@ Begin
   Declare @AltDebCleValide Integer
   Declare @AltFinCleValide Integer
 
-  Set @asChaine = rtrim ( @asChaine )
+  If @asChaine is null Set @asChaine= ''
+  Set @asChaine = ltrim ( rtrim ( @asChaine ))
 
   If @asNouvVal is null Set @asNouvVal = ''
+  Set @asNouvVal = ltrim ( rtrim ( @asNouvVal ))
 
   Set @iDeb = CharIndex ( @asCle + '=', @asChaine, 1 ) 
   Set @sVal = ''
@@ -1096,7 +1098,7 @@ Begin
 	      End
 	End
    End
-   Return @sVal
+   Return lTrim ( rTrim ( @sVal ))
 
 End
 
