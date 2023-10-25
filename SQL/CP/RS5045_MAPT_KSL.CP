@@ -1632,10 +1632,13 @@ If @aiIdChemin is not null And Not Exists ( Select Top 1 1 From sysadm.chem_depo
 Else
   -- Determination id_chemin par défaut si non forcé par le client appelant
   Begin
-	Select Top 1 @aiIdChemin = id_chemin 
-	From sysadm.code_maquette_ksl_rs5045
-	Where typ_mail = @asTypMail
-	And   id_cpt   = 1
+	If @aiIdChemin is null 
+	  Begin
+		Select Top 1 @aiIdChemin = id_chemin 
+		From sysadm.code_maquette_ksl_rs5045
+		Where typ_mail = @asTypMail
+		And   id_cpt = 1
+	  End 
   End 
 
 -- Heure par défaut si non forcé par le client appelant

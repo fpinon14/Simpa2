@@ -1486,6 +1486,7 @@ Declare @sErrOutPut VarChar (255)
 Declare @sEnvEnRecommande VarChar ( 5)
 Declare @sDernRelance VarChar ( 5)
 Declare @iIdArchOrig Integer
+Declare @iIdChemForce Integer
 
 Declare @TbRelProd Table (
 	id_seq	 Integer identity,
@@ -1510,6 +1511,7 @@ Set @iIdRel = Convert ( integer, sysadm.FN_CLE_VAL ( 'ID_REL', @asValCar, ';' ))
 Set @iDelRel1Min = Convert ( integer, sysadm.FN_CLE_VAL ( 'DEL_REL_MIN', @asValCar, ';' ))
 Set @iDelRel1Max = Convert ( integer, sysadm.FN_CLE_VAL ( 'DEL_REL_MAX', @asValCar, ';' ))
 Set @iDelRel2 = Convert ( integer, sysadm.FN_CLE_VAL ( 'DEL_REL', @asValCar, ';' ))
+Set @iIdChemForce = null
 
 Set @dtDate1Min = Case sysadm.FN_CLE_VAL ( 'UNITE_DEL', @asValCar, ';' )
 					When 'J' Then DateAdd ( day, @iDelRel1Max * (-1), Getdate() )
@@ -2055,6 +2057,9 @@ While Exists ( Select Top 1 1 From @TbRelProd where marquage = 0 )
 		Set @sMailCc = ''
 		Set @sMailObjet = 'Objet du mail construit par KSL'
 		Set @sMailBody = 'Corps du mail construit par KSL'
+		Set @iIdChemForce = null
+
+		If @sEnvParMail <> 'OUI' Set @iIdChemForce = 5   -- Ejection vers un répertoire spécial pour KSL 
 
 		If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 			Begin
@@ -2114,7 +2119,7 @@ While Exists ( Select Top 1 1 From @TbRelProd where marquage = 0 )
 					2,
 					@iIdArchOrig,
 					@sXMLVar,
-					null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
+					@iIdChemForce, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
 					null, -- dteh_exec
 					@sErrOutPut OutPut
 
@@ -2177,7 +2182,7 @@ While Exists ( Select Top 1 1 From @TbRelProd where marquage = 0 )
 					2,
 					@iIdArchOrig,
 					@sXMLVar,
-					null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
+					@iIdChemForce, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
 					null, -- dteh_exec
 					@sErrOutPut OutPut
 
