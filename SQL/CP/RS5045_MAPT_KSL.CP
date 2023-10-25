@@ -2002,16 +2002,35 @@ As
 -- Libelle              :       Moteur de traitement MATP des Mail ES-SINISTRE <> KSL 
 -- Commentaires         :       Cette version gère les courriers Word
 
-If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') >=5 
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 	Begin
-		Exec sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V04
-		Return
-	End 
 
-If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') >=4 
+		If SIMPA2_PRO.sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') >=5 
+			Begin
+				Exec sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V04
+				Return
+			End 
+
+		If SIMPA2_PRO.sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') >=4 
+			Begin
+				Exec sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V03
+				Return
+			End 
+	End 
+Else
 	Begin
-		Exec sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V03
-		Return
+
+		If SIMPA2_TRT.sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') >=5 
+			Begin
+				Exec sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V04
+				Return
+			End 
+
+		If SIMPA2_TRT.sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') >=4 
+			Begin
+				Exec sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V03
+				Return
+			End 
 	End 
 
 Go
@@ -2090,6 +2109,31 @@ Declare @iCptArch Integer -- [RS6044_REL_MAIL]
 Declare @sIdArchComplWk varchar ( 100 ) -- [RS6044_REL_MAIL]
 Declare @sDteEditComplWk varchar ( 100 ) -- [RS6044_REL_MAIL]
 Declare @iIdArchComplWk Integer -- [RS6044_REL_MAIL]
+Declare @iContinue Integer 
+Declare @dtGetDate DateTime
+Declare @dtCrtle0000 DateTime
+Declare @dtCrtle2000 DateTime
+Declare @dtCrtle4000 DateTime
+Declare @dtCrtle0015 DateTime
+Declare @dtCrtle2015 DateTime
+Declare @dtCrtle4015 DateTime
+
+-- Contrôle sur l'horaire pour éviter les lancements à la main et donc désynchronisés par rapport au Job Windows (uniquement ebn production)
+Set @dtGetDate = GETDATE()
+Set @dtCrtle0000 = CONVERT( Varchar (10 ), GetDate(), 103 ) + ' ' + Left ( CONVERT( Varchar (10 ), GetDate(), 24), 3) + '00:00'
+Set @dtCrtle2000 = CONVERT( Varchar (10 ), GetDate(), 103 ) + ' ' + Left ( CONVERT( Varchar (10 ), GetDate(), 24), 3) + '20:00'
+Set @dtCrtle4000 = CONVERT( Varchar (10 ), GetDate(), 103 ) + ' ' + Left ( CONVERT( Varchar (10 ), GetDate(), 24), 3) + '40:00'
+Set @dtCrtle0015 = CONVERT( Varchar (10 ), GetDate(), 103 ) + ' ' + Left ( CONVERT( Varchar (10 ), GetDate(), 24), 3) + '00:15'
+Set @dtCrtle2015 = CONVERT( Varchar (10 ), GetDate(), 103 ) + ' ' + Left ( CONVERT( Varchar (10 ), GetDate(), 24), 3) + '20:15'
+Set @dtCrtle4015 = CONVERT( Varchar (10 ), GetDate(), 103 ) + ' ' + Left ( CONVERT( Varchar (10 ), GetDate(), 24), 3) + '40:15'
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+	Begin
+		If NOT ( @dtGetDate Between @dtCrtle0000 and @dtCrtle0015 Or @dtGetDate Between @dtCrtle2000 and @dtCrtle2015 Or @dtGetDate Between @dtCrtle4000 and @dtCrtle4015 ) 
+			Begin
+				Return
+			End
+	End 
 
 Set @iCptTraite = 0 
 Set @sDateHeureDebTrt = Convert ( varchar ( 10 ), GETDATE(), 103 ) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00'
@@ -2751,7 +2795,8 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		Set @sIdArchComplSeria = sysadm.FN_CLE_VAL_E ( 'ID_ARCH_CPL_0', Convert ( varchar ( 20 ) , @iIdArch), @sIdArchComplSeria, ';' ) -- [RS6044_REL_MAIL]
 		Set @sDteEditComplSeria = sysadm.FN_CLE_VAL_E ( 'DTE_EDIT_CPL_0', Convert ( varchar ( 10 ), @dtDteEdit, 105), @sDteEditComplSeria, ';' ) -- [RS6044_REL_MAIL]
 		Set @iCptArch = -1 -- [RS6044_REL_MAIL]
-		
+		Set @iContinue = 0
+
 		While 0=0 -- [RS6044_REL_MAIL]
 			Begin
 				Set @iCptArch = @iCptArch + 1  -- Donne 0 (l'orig)
@@ -2810,7 +2855,9 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONCHM', 'ERR', @sMsgTrc, @iIdLotTrc
 
 					Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
-					Continue
+					-- Continue
+					Set @iContinue = 1
+					Break
 				  End
 
 				If @sNomFichierDepot = ''
@@ -2819,7 +2866,10 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONCHM', 'ERR', @sMsgTrc, @iIdLotTrc
 
 					Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
-					Continue
+
+					-- Continue
+					Set @iContinue = 1
+					Break
 				  End
 
 				If @dtDatehExec > Getdate() 
@@ -2831,7 +2881,10 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 
 					Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
 
-					Continue
+					-- Continue
+					Set @iContinue = 1
+					Break
+
 				  End 
 
 				-- Obtention du Blob sur la bonne base 
@@ -2855,7 +2908,9 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'RECBLB', 'ERR', @sMsgTrc, @iIdLotTrc
 
 					Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq 
-					Continue
+					-- Continue
+					Set @iContinue = 1
+					Break
 				  End 
 
 				-- Obtention du Blob échouée 2ème cas
@@ -2865,7 +2920,9 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'RECBLB', 'ERR', @sMsgTrc, @iIdLotTrc
 
 					Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
-					Continue
+					-- Continue
+					Set @iContinue = 1
+					Break
 				  End 
 
 				-- Obtention du Blob succés
@@ -2885,7 +2942,9 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'CONBLB', 'ERR', @sMsgTrc, @iIdLotTrc
 
 					Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
-					Continue
+					-- Continue
+					Set @iContinue = 1
+					Break
 				  End 
 
 				Set @sMsgTrc = 'Fichier Word construit avec succès'
@@ -2903,7 +2962,9 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'ECRBLB', 'ERR', @sMsgTrc, @iIdLotTrc
 
 					Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
-					Continue
+					-- Continue
+					Set @iContinue = 1
+					Break
 				  End 
 
 				Set @sMsgTrc = 'Fichier Word écrit avec succès sur ' + @ChemEtNomDepot 
@@ -2912,6 +2973,8 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 				Update @TbWork Set marquage = 1 Where id_seq = @iIdSeq
 
 			End
+
+			If @iContinue = 1 Continue
 	 End
  	------------------------------------------------------------------------------
 	--------- FIN 2ème Moteur                                             --------
@@ -2987,6 +3050,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		If @sDteEditComplSeria is null Set @sDteEditComplSeria = ''
 		Set @sIdArchComplSeria = sysadm.FN_CLE_VAL_E ( 'ID_ARCH_CPL_0', Convert ( varchar ( 20 ) , @iIdArch), @sIdArchComplSeria, ';' ) -- [RS6044_REL_MAIL]
 		Set @iCptArch = -1 -- [RS6044_REL_MAIL]
+		Set @iContinue = 0
 
 		While 0=0 -- [RS6044_REL_MAIL]
 			Begin
@@ -3019,7 +3083,9 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'PDFAB1', 'ERR', @sMsgTrc, @iIdLotTrc
 
 					Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
-					Continue
+					-- Continue
+					Set @iContinue = 1
+					Break
 				  End 
 
 				Set @sMsgTrc = 'Déplacement du PDF '+ CONVERT ( varchar ( 20 ), @iCptArch + 1 ) + ' ' + @sRepBlobLocal + '\' + @sNomFichierPDF + ' vers le répertoire KSL en cours... (sur ' + @sChemDepot + @sNomFichierPDF  + ')'
@@ -3039,7 +3105,9 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'PDFAB2', 'ERR', @sMsgTrc, @iIdLotTrc
 
 					Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
-					Continue
+					-- Continue
+					Set @iContinue = 1
+					Break
 				  End 
 				Else
 				  Begin
@@ -3047,7 +3115,8 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'DEPPDF', 'OK', @sMsgTrc, @iIdLotTrc
 				  End 
 			End
-
+		
+		If @iContinue = 1 Continue
 
 		-- Contrôle de l'adresse mail, sécurité pour la simulation.
 		-- Si adresse différente de @spb, on l'efface.
