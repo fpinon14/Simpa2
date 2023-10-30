@@ -6170,3 +6170,102 @@ Begin
 End  
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       FN_CLE_VAL_XML_SUBST
+-- Auteur               :       JFF
+-- Date                 :       
+-- Libellé              :		
+-- Commentaires         :       
+-- Références           :
+--
+-- Arguments            :       
+--
+-- Retourne             :        1 Si l'insertion se passe bien
+--                              -1 Si l'insertion échoue.
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_CLE_VAL_XML_SUBST' AND type = 'FN' )
+        DROP function sysadm.FN_CLE_VAL_XML_SUBST
+Go
+
+CREATE  function sysadm.FN_CLE_VAL_XML_SUBST
+   (
+	@asCleVariable VarChar ( 100),  
+	@asNouvelleValeur  VarChar ( 500),
+	@asChaineXML varchar ( max ) 
+    )
+RETURNS Varchar(Max)
+
+Begin  
+-- Important : La casse de la clé n'a pas d'importance  
+-- Je recherche la variable (clé) sur n'importe quelle casse.  
+  
+-- Important : Cette fonction change l'intégralité de la valeur (pas une partie de la valeur)  
+-- Important : Cette fonction change ne traite qu'une seule fois la variable si elle se trouve plusieurs fois dans la chaine,   
+-- Elle traite la première variable trouvée.  
+  
+-- Important : Cette fonction n'ajoute pas de variable  
+  
+Declare @iPos1 integer  
+Declare @iPos2 integer  
+Declare @sCleVariableWrk VarChar ( 100)  
+Declare @sChaineXMLWrk varchar ( max )   -- [RS5045_REF_MATP] max
+  
+  
+-- Rejet si une valeur est nulle  
+If @asCleVariable is null Or @asNouvelleValeur is null Or @asChaineXML is null Return @asChaineXML
+  
+-- Je trime les valeurs  
+Set @asCleVariable = ltrim ( rtrim ( @asCleVariable ))   
+Set @asNouvelleValeur = ltrim ( rtrim ( @asNouvelleValeur ))   
+Set @asChaineXML = ltrim ( rtrim ( @asChaineXML ))   
+  
+-- La clés et la valeurs ne doivent pas contenir de double-quote  
+If CharIndex ( '"', @asCleVariable ) > 0 Return @asChaineXML 
+If CharIndex ( '"', @asNouvelleValeur ) > 0 Return @asChaineXML 
+  
+-- Je recolle les = à la variable et au début du "  
+While CharIndex ( '= ', @asChaineXML ) > 0   
+  Begin  
+  set @asChaineXML = Replace ( @asChaineXML , '= ', '=' )  
+  End   
+  
+While CharIndex ( ' =', @asChaineXML ) > 0   
+  Begin  
+  set @asChaineXML = Replace ( @asChaineXML , ' =', '=' )  
+  End   
+  
+Set @sCleVariableWrk = Upper ( @asCleVariable )  
+Set @sChaineXMLWrk = Upper(  @asChaineXML )  
+
+
+Set @iPos1 = 1 
+While CharIndex ( @sCleVariableWrk + '=', @sChaineXMLWrk, @iPos1 ) > 0 
+  Begin
+	-- Ainsi je peux rechercher la variable collée à un =, je ne confondrai pas ainsi la variable avec une évetuelle valeur du même nom que la variable  
+	Set @iPos1 = CharIndex ( @sCleVariableWrk + '=', @sChaineXMLWrk, @iPos1  )  
+	If @iPos1 <= 0 Break
+  
+	-- Je recherche forcément le début de la valeur  
+	Set @iPos1 = CharIndex ( '="', @sChaineXMLWrk, @iPos1 ) + 2 -- +2 car =" (2 car) il faut   
+	If @iPos1 <= 0 Break  
+  
+	Set @iPos2 = CharIndex ( '"', @sChaineXMLWrk, @iPos1 )   
+	If @iPos2 <= 0 Break  
+  
+	If @iPos2 - @iPos1 <= 0 Break   
+  
+	Set @sChaineXMLWrk = STUFF ( @sChaineXMLWrk, @iPos1,  @iPos2 - @iPos1, @asNouvelleValeur)  
+	Set @asChaineXML = STUFF ( @asChaineXML , @iPos1,  @iPos2 - @iPos1, @asNouvelleValeur)  
+
+	Set @iPos1 = @iPos2 -- Pour le départ du prochain tour
+  End 
+
+Return @asChaineXML
+
+End
+
+Go
+
+

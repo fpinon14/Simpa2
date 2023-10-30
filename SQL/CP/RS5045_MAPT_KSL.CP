@@ -10,12 +10,16 @@
 -- sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE
 -- sysadm.PS_RS5045_I_CREATION_CHAINE_DATA_XML_KSL_A_VIDE
 -- sysadm.PS_RS5045_I_MAIL_PUSH_KSL
--- sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2
+-- sysadm.PS_RS5045_I_MAIL_PUSH_KSL_V01
 -- sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_PEGASE
+-- sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2
 -- sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL
 -- sysadm.PS_RS5045_S_LISTE_VARIABLE_XML_KSL
+-- sysadm.PS_RS5045_S_PRE_ARMEMENT_TECHNIQUE
 -- sysadm.PS_RS5045_S_RECUPERER_CODE_MAQUETTE_KSL_A_PARTIR_TYP_MAIL
+-- sysadm.PS_RS5045_S_RECUPERER_LE_BLOB_COURRIER
 -- sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE
+-- sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL
 -- sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V04
 -- sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8
 -- sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL
@@ -1212,7 +1216,11 @@ Where cm.cod_maq = @sCodeMaquette
 			mail_subject as 'entete/@mail_subject',
 			mail_body as 'entete/@mail_body',
 			no_adhesion as 'entete/@no_adhesion',
-			no_tel_inter_assure as 'entete/@no_tel_inter_assure'
+			no_tel_inter_assure as 'entete/@no_tel_inter_assure',
+			pj2 as 'entete/@PJ2',
+			pj3 as 'entete/@PJ3',
+			pj4 as 'entete/@PJ4',
+			pj5 as 'entete/@PJ5'
 
 			-- Pas de section Courrier pour ces codes maquettes
 
@@ -1295,6 +1303,10 @@ Where cm.cod_maq = @sCodeMaquette
 			no_adhesion as 'entete/@no_adhesion',
 			no_tel_inter_assure as 'entete/@no_tel_inter_assure',
 			categorie_relance as 'entete/@categorie_relance', -- [PM407-1]
+			pj2 as 'entete/@PJ2',
+			pj3 as 'entete/@PJ3',
+			pj4 as 'entete/@PJ4',
+			pj5 as 'entete/@PJ5',
 
 			-- Ci-dessous section <Courrier
 
@@ -1361,9 +1373,7 @@ Where cm.cod_maq = @sCodeMaquette
 			date_de_survenance_sinistre as 'courrier/@date_de_survenance_sinistre',
 			heure_de_survenance_sinistre as 'courrier/@heure_de_survenance_sinistre',
 			texte_1 as 'courrier/@texte_1',
-			type_de_bien as 'courrier/@type_de_bien'/*,
-			etat_du_bien as 'courrier/@etat_du_bien',
-			moyen_de_paiement as 'courrier/@moyen_de_paiement'*/
+			type_de_bien as 'courrier/@type_de_bien'
 
 		from sysadm.variable_xml_ksl_rs5045 v
 		Where id_xml = @iIdXml
@@ -1440,6 +1450,9 @@ CREATE procedure sysadm.PS_RS5045_I_MAIL_PUSH_KSL
 		@asErrOutPut			VarChar ( 255 ) OutPut          
 AS  
 
+
+Declare @asChaineBCVretour	VarChar ( 255 )
+
 Exec sysadm.PS_RS5045_I_MAIL_PUSH_KSL_V01
 		@asIdAppli,
 		@aiIdSin,
@@ -1460,6 +1473,8 @@ Exec sysadm.PS_RS5045_I_MAIL_PUSH_KSL_V01
 		@asXMLdata,
 		@aiIdChemin,
 		@adtDteHExec,
+		null, -- [RS6044_REL_MAIL]
+		@asChaineBCVretour OutPut, -- [RS6044_REL_MAIL]
 		@asErrOutPut OutPut    
 
 Go
@@ -1513,10 +1528,12 @@ CREATE procedure sysadm.PS_RS5045_I_MAIL_PUSH_KSL_V01
 		@asTypMail				VarChar (10), 
 		@aiIdAppli              Integer, -- Forcé par le client appelant, sinon null et pris par défaut de TRACE_MAIL_xxx.sysadm.chem_depot_ksl_rs5045 si besoin (voir JFF)
 		@aiIdArch				Integer , -- [PM159]
-		@asIdArchComplSeria     VarChar ( 100 ) = null, -- [RS6044_REL_MAIL]
+		@asIdArchComplSeria     VarChar ( 255 ) = null, -- [RS6044_REL_MAIL]
 		@asXMLdata				VarChar ( max ), -- [PM159]  
 		@aiIdChemin				Integer, -- Forcé par le client appelant, sinon null et pris par défaut de TRACE_MAIL_xxx.sysadm.chem_depot_ksl_rs5045 si besoin (voir JFF)
 		@adtDteHExec			DateTime, -- Forcé par le client appelant, sinon null et pris par défaut de TRACE_MAIL_xxx.sysadm.chem_depot_ksl_rs5045 si besoin (voir JFF), Date et heure avant laquelle le mail ne peut pas être envoyé, null si aucune critère
+		@asChaineBCValler		VarChar ( 255 ), -- [RS6044_REL_MAIL]
+		@asChaineBCVretour		VarChar ( 255 ) OutPut, -- [RS6044_REL_MAIL]
 		@asErrOutPut			VarChar ( 255 ) OutPut          
 AS  
 
@@ -1790,7 +1807,9 @@ VALUES
 Set @iErr = @@ERROR     
   
 Set @iIdSeq = @@IDENTITY  
-  
+
+Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'ID_SEQ_MAIL', CONVERT ( varchar ( 20 ), @iIdSeq ), rtrim ( ltrim ( @asChaineBCVretour )), ';' )  -- [RS6044_REL_MAIL]
+
 RETURN @iErr  
 
 Go
@@ -2106,8 +2125,8 @@ Declare @dtDteEdit DateTime
 Declare @sHeure VarChar ( 10 )
 Declare @iDelaiAttenteMinute Integer
 Declare @sDateHeureDebTrt VarChar ( 30 )
-Declare @sIdArchComplSeria VarChar ( 100 ) -- [RS6044_REL_MAIL]
-Declare @sDteEditComplSeria VarChar ( 100 ) -- [RS6044_REL_MAIL]
+Declare @sIdArchComplSeria VarChar ( 255 ) -- [RS6044_REL_MAIL]
+Declare @sDteEditComplSeria VarChar ( 255 ) -- [RS6044_REL_MAIL]
 Declare @iCptArch Integer -- [RS6044_REL_MAIL]
 Declare @sIdArchComplWk varchar ( 100 ) -- [RS6044_REL_MAIL]
 Declare @sDteEditComplWk varchar ( 100 ) -- [RS6044_REL_MAIL]
@@ -2122,6 +2141,7 @@ Declare @dtCrtle2015 DateTime
 Declare @dtCrtle4015 DateTime
 
 -- Contrôle sur l'horaire pour éviter les lancements à la main et donc désynchronisés par rapport au Job Windows (uniquement ebn production)
+
 Set @dtGetDate = GETDATE()
 Set @dtCrtle0000 = CONVERT( Varchar (10 ), GetDate(), 103 ) + ' ' + Left ( CONVERT( Varchar (10 ), GetDate(), 24), 3) + '00:00'
 Set @dtCrtle2000 = CONVERT( Varchar (10 ), GetDate(), 103 ) + ' ' + Left ( CONVERT( Varchar (10 ), GetDate(), 24), 3) + '20:00'
@@ -2129,6 +2149,7 @@ Set @dtCrtle4000 = CONVERT( Varchar (10 ), GetDate(), 103 ) + ' ' + Left ( CONVE
 Set @dtCrtle0015 = CONVERT( Varchar (10 ), GetDate(), 103 ) + ' ' + Left ( CONVERT( Varchar (10 ), GetDate(), 24), 3) + '00:15'
 Set @dtCrtle2015 = CONVERT( Varchar (10 ), GetDate(), 103 ) + ' ' + Left ( CONVERT( Varchar (10 ), GetDate(), 24), 3) + '20:15'
 Set @dtCrtle4015 = CONVERT( Varchar (10 ), GetDate(), 103 ) + ' ' + Left ( CONVERT( Varchar (10 ), GetDate(), 24), 3) + '40:15'
+
 
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 	Begin
@@ -2166,9 +2187,9 @@ Declare @TbWork Table (
 	id_appli_num integer,
 	typ_mail varchar ( 6),
 	id_arch integer,
-	id_arch_compl varchar (100), -- [RS6044_REL_MAIL]
+	id_arch_compl varchar (255), -- [RS6044_REL_MAIL]
 	dte_edit Datetime,
-	dte_edit_compl varchar (100), -- [RS6044_REL_MAIL]
+	dte_edit_compl varchar (255), -- [RS6044_REL_MAIL]
 	xml_data varchar (max),
 	chemin_depot varchar ( 255),
 	nom_fichier_depot varchar ( 255),
@@ -2266,7 +2287,7 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 
 		Set @sDteEditComplSeria = ''
 
-		Set @iCptArch = 1 -- [RS6044_REL_MAIL]
+		Set @iCptArch = 2 -- [RS6044_REL_MAIL] la 1 étant réservée, la chaine sérialisée des pièces jointes commence à 2
 		While 0=0 -- [RS6044_REL_MAIL]
 		 Begin
 			Set @sIdArchComplWk = sysadm.FN_CLE_VAL ( 'ID_ARCH_CPL_' + CONVERT ( varchar ( 20 ), @iCptArch), @sIdArchComplSeria, ';' ) 
@@ -2380,7 +2401,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 
 		Set @sDteEditComplSeria = ''
 
-		Set @iCptArch = 1 -- [RS6044_REL_MAIL]
+		Set @iCptArch = 2 -- [RS6044_REL_MAIL] la 1 étant réservée, la chaine sérialisée des pièces jointes commence à 2
 		While 0=0 -- [RS6044_REL_MAIL]
 		 Begin
 			Set @sIdArchComplWk = sysadm.FN_CLE_VAL ( 'ID_ARCH_CPL_' + CONVERT ( varchar ( 20 ), @iCptArch), @sIdArchComplSeria, ';' ) 
@@ -2795,14 +2816,14 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 
 		If @sIdArchComplSeria is null Set @sIdArchComplSeria = ''
 		If @sDteEditComplSeria is null Set @sDteEditComplSeria = ''
-		Set @sIdArchComplSeria = sysadm.FN_CLE_VAL_E ( 'ID_ARCH_CPL_0', Convert ( varchar ( 20 ) , @iIdArch), @sIdArchComplSeria, ';' ) -- [RS6044_REL_MAIL]
-		Set @sDteEditComplSeria = sysadm.FN_CLE_VAL_E ( 'DTE_EDIT_CPL_0', Convert ( varchar ( 10 ), @dtDteEdit, 105), @sDteEditComplSeria, ';' ) -- [RS6044_REL_MAIL]
-		Set @iCptArch = -1 -- [RS6044_REL_MAIL]
+		Set @sIdArchComplSeria = sysadm.FN_CLE_VAL_E ( 'ID_ARCH_CPL_1', Convert ( varchar ( 20 ) , @iIdArch), @sIdArchComplSeria, ';' ) -- [RS6044_REL_MAIL]
+		Set @sDteEditComplSeria = sysadm.FN_CLE_VAL_E ( 'DTE_EDIT_CPL_1', Convert ( varchar ( 10 ), @dtDteEdit, 105), @sDteEditComplSeria, ';' ) -- [RS6044_REL_MAIL]
+		Set @iCptArch = 0 -- [RS6044_REL_MAIL]
 		Set @iContinue = 0
 
 		While 0=0 -- [RS6044_REL_MAIL]
 			Begin
-				Set @iCptArch = @iCptArch + 1  -- Donne 0 (l'orig)
+				Set @iCptArch = @iCptArch + 1  
 
 				-- [RS6044_REL_MAIL]
 				Set @sIdArchComplWk = sysadm.FN_CLE_VAL ( 'ID_ARCH_CPL_' + CONVERT ( varchar ( 20 ), @iCptArch), @sIdArchComplSeria, ';' ) 
@@ -2845,7 +2866,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 				Set @sNomFichierDepot = REPLACE ( @sNomFichierDepot, '[id_sin]', CONVERT ( VarChar ( 10 ), @iIdSin ) )
 				Set @sNomFichierDepot = REPLACE ( @sNomFichierDepot, '[id_seq_tb_mail_push]', CONVERT ( VarChar ( 20 ), @iIdSeq ) )
 				Set @sNomFichierDepot = REPLACE ( @sNomFichierDepot, '[yyyyMMddHHmmss]', Replace ( convert ( varchar(10), GETDATE(), 112 ) + CONVERT (varchar(8), GETDATE(), 108), ':', '' ))
-				Set @sNomFichierDepot = REPLACE ( @sNomFichierDepot, '[indice]', CONVERT ( varchar ( 20 ), @iCptArch + 1 ) )  -- +1 Car  0 orig, donne l'indice 1, etc... -- [RS6044_REL_MAIL]
+				Set @sNomFichierDepot = REPLACE ( @sNomFichierDepot, '[indice]', CONVERT ( varchar ( 20 ), @iCptArch ) )  
 
 				Set @ChemEtNomDepot = @sRepBlobLocal + '\' + @sNomFichierDepot
 
@@ -3051,14 +3072,14 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 
 		If @sIdArchComplSeria is null Set @sIdArchComplSeria = ''
 		If @sDteEditComplSeria is null Set @sDteEditComplSeria = ''
-		Set @sIdArchComplSeria = sysadm.FN_CLE_VAL_E ( 'ID_ARCH_CPL_0', Convert ( varchar ( 20 ) , @iIdArch), @sIdArchComplSeria, ';' ) -- [RS6044_REL_MAIL]
-		Set @iCptArch = -1 -- [RS6044_REL_MAIL]
+		Set @sIdArchComplSeria = sysadm.FN_CLE_VAL_E ( 'ID_ARCH_CPL_1', Convert ( varchar ( 20 ) , @iIdArch), @sIdArchComplSeria, ';' ) -- [RS6044_REL_MAIL]
+		Set @iCptArch = 0 -- [RS6044_REL_MAIL]
 		Set @iContinue = 0
 
 		While 0=0 -- [RS6044_REL_MAIL]
 			Begin
 
-				Set @iCptArch = @iCptArch + 1  -- Donne 0 (l'orig)
+				Set @iCptArch = @iCptArch + 1  
 
 				-- [RS6044_REL_MAIL]
 				Set @sIdArchComplWk = sysadm.FN_CLE_VAL ( 'ID_ARCH_CPL_' + CONVERT ( varchar ( 20 ), @iCptArch), @sIdArchComplSeria, ';' ) 
@@ -3074,7 +3095,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 				Set @sNomFichierPDF = REPLACE ( @sNomFichierPDF, '[id_sin]', CONVERT ( VarChar ( 10 ), @iIdSin ) )
 				Set @sNomFichierPDF = REPLACE ( @sNomFichierPDF, '[id_seq_tb_mail_push]', CONVERT ( VarChar ( 20 ), @iIdSeq ) )
 				Set @sNomFichierPDF = REPLACE ( @sNomFichierPDF, '[yyyyMMddHHmmss]', Replace ( convert ( varchar(10), GETDATE(), 112 ) + CONVERT (varchar(8), GETDATE(), 108), ':', '' ))
-				Set @sNomFichierPDF = REPLACE ( @sNomFichierPDF, '[indice]', CONVERT ( varchar ( 20 ), @iCptArch + 1 ) )  -- +1 Car  0 orig, donne l'indice 1, etc... -- [RS6044_REL_MAIL]
+				Set @sNomFichierPDF = REPLACE ( @sNomFichierPDF, '[indice]', CONVERT ( varchar ( 20 ), @iCptArch ) )  
 
 				Set @sCmdDos = @sRepBlobLocal + '\' + @sNomFichierPDF
 				EXECUTE xp_fileexist @sCmdDos, @iFileExists OUTPUT
@@ -3091,7 +3112,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 					Break
 				  End 
 
-				Set @sMsgTrc = 'Déplacement du PDF '+ CONVERT ( varchar ( 20 ), @iCptArch + 1 ) + ' ' + @sRepBlobLocal + '\' + @sNomFichierPDF + ' vers le répertoire KSL en cours... (sur ' + @sChemDepot + @sNomFichierPDF  + ')'
+				Set @sMsgTrc = 'Déplacement du PDF '+ CONVERT ( varchar ( 20 ), @iCptArch ) + ' ' + @sRepBlobLocal + '\' + @sNomFichierPDF + ' vers le répertoire KSL en cours... (sur ' + @sChemDepot + @sNomFichierPDF  + ')'
 				Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'DEPPDF', 'ENC', @sMsgTrc, @iIdLotTrc
 
 				-- Juste avant d'écrire le XML qui sera l'élément déclencheur pour KSL, je déplace le PDF dans le répertoire définitif
@@ -3114,7 +3135,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 				  End 
 				Else
 				  Begin
-					Set @sMsgTrc = 'PDF ' + CONVERT ( varchar ( 20 ), @iCptArch + 1 ) + ' déplacé avec succès vers ' + @sCmdDos
+					Set @sMsgTrc = 'PDF ' + CONVERT ( varchar ( 20 ), @iCptArch ) + ' déplacé avec succès vers ' + @sCmdDos
 					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'DEPPDF', 'OK', @sMsgTrc, @iIdLotTrc
 				  End 
 			End
@@ -3629,4 +3650,84 @@ End
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procedure            :       sysadm.PS_RS5045_U_MAJ_XML_PIECES_JOINTES_APRES_CREATION_XML
+-- Auteur               :       Fabry JF
+-- Date                 :       25/04/2023
+-- Libelle              :        
+-- Commentaires         :       Met à jour l'XML après création avec l'identity de l'enregistrement du mail (id_seq_mail)
+-- References           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_U_MAJ_XML_PIECES_JOINTES_APRES_CREATION_XML' AND type = 'P' )
+        DROP procedure sysadm.PS_RS5045_U_MAJ_XML_PIECES_JOINTES_APRES_CREATION_XML
+GO
 
+CREATE procedure sysadm.PS_RS5045_U_MAJ_XML_PIECES_JOINTES_APRES_CREATION_XML
+	@aiIdSeqMail		Integer,  
+	@aiIdSin			Integer,  
+	@asIdArchComplSeria VarChar ( 255 ),
+	@asTypMail			VarChar ( 10 ),
+	@aiIdChemin			Integer -- Force le chemin, dans ce cas, il n'est pas pris du défaut de @asTypMail
+AS
+
+Declare @iCptArch Integer
+Declare @sIdArchComplWk VarChar ( 255 )
+Declare @sXmlData VarChar ( max )
+Declare @sCheminEtFichierComplet VarChar ( 255 )
+Declare @sChemin VarChar ( 255 )
+Declare @sServeur VarChar( 5 ) 
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' Set @sServeur = 'PRO' Else Set @sServeur  = 'SIM'
+
+If @aiIdChemin is null 
+	Begin
+		Select Top 1 @aiIdChemin = id_chemin 
+		From sysadm.code_maquette_ksl_rs5045
+		Where typ_mail = @asTypMail
+		And   id_cpt = 1
+	End 
+
+Select @sChemin = 
+			Case @sServeur 
+			   When 'PRO' Then ch.chemin_pro
+			   Else ch.chemin_sim
+		    End
+From   sysadm.chem_depot_ksl_rs5045 ch
+Where  ch.id_chemin = @aiIdChemin
+
+
+Select  @sXmlData = mp.xml_data + IsNull ( mp.xml_data2, '')
+From	sysadm.mail_push mp
+Where   mp.id_seq = @aiIdSeqMail
+
+
+Set @iCptArch = 2 -- [RS6044_REL_MAIL] la 1 étant réservée, la chaine sérialisée des pièces jointes commence à 2
+Set @sCheminEtFichierComplet = ''
+
+While 0=0 -- [RS6044_REL_MAIL]
+	Begin
+		Set @sIdArchComplWk = sysadm.FN_CLE_VAL ( 'ID_ARCH_CPL_' + CONVERT ( varchar ( 20 ), @iCptArch), @asIdArchComplSeria, ';' ) 
+		If @sIdArchComplWk is null OR ltrim ( rtrim ( @sIdArchComplWk )) = '' Break
+
+		Set @sCheminEtFichierComplet = 
+				@sChemin + CONVERT ( Varchar (20 ) , @aiIdSeqMail ) + '_' + 
+				CONVERT ( Varchar (20 ) , @aiIdSin) + '_' + 
+				CONVERT( VarChar ( 10), @iCptArch ) +  '.PDF'
+
+		Set @sXmlData = sysadm.FN_CLE_VAL_XML_SUBST ( 'PJ' + CONVERT ( varchar ( 20 ), @iCptArch), @sCheminEtFichierComplet, @sXmlData ) 
+		Set @iCptArch = @iCptArch + 1
+
+	End
+
+Update sysadm.mail_push
+Set xml_data = Left ( @sXmlData, 2000), 
+	xml_data2 = Substring ( @sXmlData, 2001, Len ( @sXmlData ) )
+Where id_seq = @aiIdSeqMail
+
+Go

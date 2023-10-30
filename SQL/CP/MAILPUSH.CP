@@ -25140,7 +25140,10 @@ Declare @iIdProd 	Integer
 Declare @sLibProd	VarChar ( 70 )
 Declare @sMailFrom  	VarChar ( 128 )
 Declare @sBoiteMail  	VarChar ( 128 )
-Declare @sIdArchComplSeria VarChar ( 100 ) -- [RS6044_REL_MAIL]
+Declare @sIdArchComplSeria VarChar ( 255 ) -- [RS6044_REL_MAIL]
+Declare @sChaineBCValler	VarChar ( 255 ) -- [RS6044_REL_MAIL]
+Declare @sChaineBCVretour	VarChar ( 255 ) -- [RS6044_REL_MAIL]
+Declare @iIdSeqMail Integer  -- [RS6044_REL_MAIL]
 
 Set @sSaut = Char (10)
 
@@ -25162,11 +25165,14 @@ Set @sIdAppli = Space (10)
 Set @sLibProd = Space (255)
 Set @sMailSend = ''
 Set @sMailCc = ''
+Set @sChaineBCValler = ''
+Set @sChaineBCVretour = ''
 
 Set @sIdArchComplSeria = null
 If @aiIdArchCourOrig > 0 
   Begin
-	Set @sIdArchComplSeria = sysadm.FN_CLE_VAL_E ( 'ID_ARCH_CPL_1', CONVERT ( varchar ( 20 ), @aiIdArchCourOrig ), @sIdArchComplSeria, ';' ) 
+    -- PJ2
+	Set @sIdArchComplSeria = sysadm.FN_CLE_VAL_E ( 'ID_ARCH_CPL_2', CONVERT ( varchar ( 20 ), @aiIdArchCourOrig ), @sIdArchComplSeria, ';' ) 
   End 
 
 If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
@@ -25208,6 +25214,7 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
 
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'pj2', 'XX' -- La variable XML ne doit pas être vide pour maj ensuite
 
 		-- Appel pour construire et récupérer le XML dans @xmlResult
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
@@ -25232,7 +25239,20 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 			@sXMLVar,
 			null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
 			null, -- dteh_exec
+			@sChaineBCValler,
+			@sChaineBCVretour OutPut,
 			@sErrOutPut OutPut
+
+		Set @iIdSeqMail = Convert ( Integer, sysadm.FN_CLE_VAL ( 'ID_SEQ_MAIL', @sChaineBCVretour, ';' ) )
+
+		-- Met à jour l'XML après insertion avec l'id_seq_mail pour les gestions des fichiers joints au delà de 1 (donc le 2,3,4,5)
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_MAJ_XML_PIECES_JOINTES_APRES_CREATION_XML
+			@iIdSeqMail,  
+			@iIdSin,  
+			@sIdArchComplSeria,
+			@asTypMail,
+			null -- Force le chemin, dans ce cas, il n'est pas pris du défaut de @asTypMail
+
 
  End    -- TRACE_MAIL_PRO : Fin écriture
 
@@ -25275,6 +25295,7 @@ Else
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
 
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'pj2', 'XX' -- La variable XML ne doit pas être vide pour maj ensuite
 
 		-- Appel pour construire et récupérer le XML dans @xmlResult
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
@@ -25299,7 +25320,20 @@ Else
 			@sXMLVar,
 			null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
 			null, -- dteh_exec
+			@sChaineBCValler,
+			@sChaineBCVretour OutPut,
 			@sErrOutPut OutPut
+
+		Set @iIdSeqMail = Convert ( Integer, sysadm.FN_CLE_VAL ( 'ID_SEQ_MAIL', @sChaineBCVretour, ';' ) )
+
+		-- Met à jour l'XML après insertion avec l'id_seq_mail pour les gestions des fichiers joints au delà de 1 (donc le 2,3,4,5)
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_MAJ_XML_PIECES_JOINTES_APRES_CREATION_XML
+			@iIdSeqMail,  
+			@iIdSin,  
+			@sIdArchComplSeria,
+			@asTypMail,
+			null -- Force le chemin, dans ce cas, il n'est pas pris du défaut de @asTypMail
+
 
  End
 
