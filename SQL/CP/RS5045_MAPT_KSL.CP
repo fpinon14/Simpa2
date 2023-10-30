@@ -2633,6 +2633,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'MOTTRT', 'EXERET', @sMsgTrc, @iIdLotTrc
 
 			Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
+			Set @iCptTraite =  @iCptTraite + 1 -- Cas particulier, le décalage horaire n'est pas une erreur, on compte donc comme traité, même s'il sera représenté au prochain tour
 
 			Continue
 		  End 
@@ -2904,6 +2905,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'MOTTRT', 'EXERET', @sMsgTrc, @iIdLotTrc
 
 					Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
+					Set @iCptTraite =  @iCptTraite + 1 -- Cas particulier, le décalage horaire n'est pas une erreur, on compte donc comme traité, même s'il sera représenté au prochain tour
 
 					-- Continue
 					Set @iContinue = 1
@@ -3202,6 +3204,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 				Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', @iIdSeq, 'MOTTRT', 'EXERET', @sMsgTrc, @iIdLotTrc
 
 				Update @TbWork Set marquage = 100 Where id_seq = @iIdSeq
+				Set @iCptTraite =  @iCptTraite + 1 -- Cas particulier, le décalage horaire n'est pas une erreur, on compte donc comme traité, même s'il sera représenté au prochain tour
 
 				Continue
 			End 
