@@ -1220,7 +1220,8 @@ Where cm.cod_maq = @sCodeMaquette
 			pj2 as 'entete/@PJ2',
 			pj3 as 'entete/@PJ3',
 			pj4 as 'entete/@PJ4',
-			pj5 as 'entete/@PJ5'
+			pj5 as 'entete/@PJ5',
+			montant_carte_cadeau  as 'entete/@montant_carte_cadeau'
 
 			-- Pas de section Courrier pour ces codes maquettes
 
@@ -1307,6 +1308,7 @@ Where cm.cod_maq = @sCodeMaquette
 			pj3 as 'entete/@PJ3',
 			pj4 as 'entete/@PJ4',
 			pj5 as 'entete/@PJ5',
+			montant_carte_cadeau  as 'entete/@montant_carte_cadeau',
 
 			-- Ci-dessous section <Courrier
 
