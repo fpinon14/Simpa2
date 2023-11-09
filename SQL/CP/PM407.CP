@@ -1181,6 +1181,18 @@ Declare @sIdCtg   varchar ( 6 )
 Declare @iCptTri  integer
 Declare @iIdSeq   integer
 declare @sValCar  VarChar ( 500 )
+Declare @iAMUedtPapierTotal Integer
+Declare @iAMUedtPapier Integer
+Declare @iIdChemForce Integer
+Declare @iIdChemForceDef Integer
+Declare @sObjet VarChar ( 255 )
+Declare @sMessage VarChar ( 8000 )
+Declare @sRetourErrMail VarChar ( 255 )
+Declare @sFicOut VarChar ( 255 )
+Declare @sCheminKslEdtPapier VarChar ( 255 ) 
+
+Set @iAMUedtPapierTotal = 0
+Set @iIdChemForceDef = 0
 
 Insert into @tb
 select dp.id_prod,
@@ -1195,8 +1207,6 @@ Order by id_prod, tri
 
 Set @iIdSeq = 1 
 
--- [RS6005]
---Delete from sysadm.w_cour_xml_orangev3
 
 While Exists ( Select Top 1 1 From @tb where marquage = 0 )
  Begin
@@ -1207,29 +1217,48 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 	Where	marquage = 0
 	And		id_seq = @iIdSeq
 
-	Exec sysadm.PS_S_PM407_RELANCE_PRODUIT_RS6005 @dcIdProd, @sValCar
+	Set @iAMUedtPapier = 0
+	Exec sysadm.PS_S_PM407_RELANCE_PRODUIT_RS6005 @dcIdProd, @sValCar, @iAMUedtPapier OutPut, @iIdChemForce OutPut
+
+	Set @iAMUedtPapierTotal = @iAMUedtPapierTotal + @iAMUedtPapier
+	If @iIdChemForce > 0 And @iIdChemForceDef =0 Set @iIdChemForceDef = @iIdChemForce
 
 	Update @tb Set marquage = 1 Where id_seq = @iIdSeq
 	Set @iIdSeq = @iIdSeq + 1
  End
 
--- [RS6005]
-/*
-Exec sysadm.PS_MAJ_XML_COUR_ORANGEV3
+If @iAMUedtPapierTotal  > 0 And @@servername = master.dbo.SPB_FN_ServerName ('PRO') 
+	Begin
 
-Select	Distinct
-		no_dossier_sinistre,
-		id_inter,
-		id_doc,
-		numero_relance,
-		joindre_courrier_orig,
-		id_arch_orig,
-		env_en_recommande,
-		derniere_relance,
-		env_par_mail,
-		xml_data 
-From sysadm.w_cour_xml_orangev3
-*/
+		Select Top 1 @sCheminKslEdtPapier = lTrim ( rTrim ( chemin_pro )) from TRACE_MAIL_PRO.sysadm.chem_depot_ksl_rs5045 where id_chemin = @iIdChemForceDef 
+
+		Set @sObjet = '[' + convert ( VarChar (10), Getdate(), 103 ) + '] RELANCE BRED SIMPA2/KSL : Vous avez ' + CONVERT ( VarChar ( 10 ), @iAMUedtPapierTotal  ) + ' relance(s) à éditer'
+
+		Set @sMessage = 'Bonjour, ' + CHAR ( 10 )
+		Set @sMessage = @sMessage + CHAR ( 10 )
+		Set @sMessage = @sMessage + 'Aujourd''hui ' + convert ( VarChar (10), Getdate(), 103 ) + ', vous avez ' + CONVERT ( VarChar ( 10 ), @iAMUedtPapierTotal  ) + ' relance(s) à éditer sur : ' + @sCheminKslEdtPapier + CHAR ( 10 )
+		Set @sMessage = @sMessage + CHAR ( 10 )
+		Set @sMessage = @sMessage + 'Cordialement,'
+		Set @sMessage = @sMessage + CHAR ( 10 )
+		Set @sMessage = @sMessage + CHAR ( 10 )
+		Set @sMessage = @sMessage + 'Fabry Jean-François'
+		Set @sMessage = @sMessage + CHAR ( 10 )
+		Set @sMessage = @sMessage + 'DSI/Etudes SIMPA2'
+
+		EXEC master.dbo.SPB_PS_MAIL 
+				@sRetourErrMail OUTPUT, 
+				'PFAUVEL@spb.eu,IMORIN@spb.eu,NTONNETOT@spb.eu', 
+				@sMessage, 
+				@sObjet, 
+				'', 
+				'', 
+				@sFicOut, 
+				NULL, 
+				NULL, 
+				NULL, 
+				NULL
+
+	End 
 
 Go
 
@@ -1439,7 +1468,9 @@ GO
 
 CREATE procedure sysadm.PS_S_PM407_RELANCE_PRODUIT_RS6005
 	  @adcIdProd       Decimal (7,0),
-      @asValCar		  VarChar ( 500 )
+      @asValCar		  VarChar ( 500 ),
+	  @aiAMUedtPapier  Integer OutPut, 
+	  @aiIdChemForce Integer OutPut
 As
 
 Set NoCount On
@@ -1486,7 +1517,6 @@ Declare @sErrOutPut VarChar (255)
 Declare @sEnvEnRecommande VarChar ( 5)
 Declare @sDernRelance VarChar ( 5)
 Declare @iIdArchOrig Integer
-Declare @iIdChemForce Integer
 
 Declare @TbRelProd Table (
 	id_seq	 Integer identity,
@@ -1511,7 +1541,8 @@ Set @iIdRel = Convert ( integer, sysadm.FN_CLE_VAL ( 'ID_REL', @asValCar, ';' ))
 Set @iDelRel1Min = Convert ( integer, sysadm.FN_CLE_VAL ( 'DEL_REL_MIN', @asValCar, ';' ))
 Set @iDelRel1Max = Convert ( integer, sysadm.FN_CLE_VAL ( 'DEL_REL_MAX', @asValCar, ';' ))
 Set @iDelRel2 = Convert ( integer, sysadm.FN_CLE_VAL ( 'DEL_REL', @asValCar, ';' ))
-Set @iIdChemForce = null
+Set @aiIdChemForce = null
+Set @aiAMUedtPapier = 0 
 
 Set @dtDate1Min = Case sysadm.FN_CLE_VAL ( 'UNITE_DEL', @asValCar, ';' )
 					When 'J' Then DateAdd ( day, @iDelRel1Max * (-1), Getdate() )
@@ -2057,9 +2088,13 @@ While Exists ( Select Top 1 1 From @TbRelProd where marquage = 0 )
 		Set @sMailCc = ''
 		Set @sMailObjet = 'Objet du mail construit par KSL'
 		Set @sMailBody = 'Corps du mail construit par KSL'
-		Set @iIdChemForce = null
+		Set @aiIdChemForce  = null
 
-		If @sEnvParMail <> 'OUI' Set @iIdChemForce = 5   -- Ejection vers un répertoire spécial pour KSL 
+		If @sEnvParMail <> 'OUI' 
+			Begin
+				Set @aiIdChemForce  = 5   -- Ejection vers un répertoire spécial pour KSL 
+				Set @aiAMUedtPapier = @aiAMUedtPapier + 1
+			End 
 
 		If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 			Begin
@@ -2119,7 +2154,7 @@ While Exists ( Select Top 1 1 From @TbRelProd where marquage = 0 )
 					2,
 					@iIdArchOrig,
 					@sXMLVar,
-					@iIdChemForce, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
+					@aiIdChemForce, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
 					null, -- dteh_exec
 					@sErrOutPut OutPut
 
@@ -2182,7 +2217,7 @@ While Exists ( Select Top 1 1 From @TbRelProd where marquage = 0 )
 					2,
 					@iIdArchOrig,
 					@sXMLVar,
-					@iIdChemForce, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
+					@aiIdChemForce, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
 					null, -- dteh_exec
 					@sErrOutPut OutPut
 
@@ -2204,6 +2239,7 @@ While Exists ( Select Top 1 1 From @TbRelProd where marquage = 0 )
 
 		Update @TbRelProd Set marquage = 1 Where id_seq = @iIdSeq
 	End
+
 Go
 
 
