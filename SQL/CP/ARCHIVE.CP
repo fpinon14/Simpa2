@@ -23,6 +23,27 @@
 --				PS_I01_RECUPERER_ARCHIVE_V01
 --				PS_I02_ARCHIVE_RELANCES_V02
 -------------------------------------------------------------------
+-- sysadm.PS_I02_ARCHIVE_RELANCES_V02
+-- sysadm.DDDW_S_PRODUIT_RELANCE
+-- sysadm.DW_S01_ARCHIVE_RELANCES
+-- sysadm.DW_S02_ARCHIVE_RELANCES
+-- sysadm.DW_S03_ARCHIVE_RELANCES
+-- sysadm.DW_S04_ARCHIVE_RELANCES
+-- sysadm.DW_S05_ARCHIVE_RELANCES
+-- sysadm.DW_S06_ARCHIVE_SOLDAGE
+-- sysadm.DW_S07_ARCHIVE_RELANCES
+-- sysadm.IM_CUR_ARCHIVE_VAL
+-- sysadm.IM_CUR_ARCHIVE_VAL_SVE
+-- sysadm.PS_D01_ARCHIVE_SOLDAGE
+-- sysadm.PS_I01_ARCHIVE_VAL  
+-- sysadm.PS_I01_ARCHIVE_VAL_SVE
+-- sysadm.PS_I01_RECUPERER_ARCHIVE_V01
+-- sysadm.PS_S_RS4166_CONSULT_COURR_DETAIL
+-- sysadm.PS_S_RS4166_CTRLE_DATA_PND_CORUS
+-- sysadm.PS_U_AFFECTER_UN_ID_ARCH
+-- sysadm.PS_U01_MAJ_ID_EDT
+-- sysadm.PS_U01_MAJ_REEDITION
+-------------------------------------------------------------------
 
 --------------------------------------------------------------------
 --
@@ -298,6 +319,7 @@ GO
 -- Retourne             :       Rien
 --
 -- JFF      22/08/2022   [RS3179]
+-- JFF      10/11/2023   [OPTIM_TRT_RELANCE]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'DW_S01_ARCHIVE_RELANCES' AND type = 'P' )
         DROP procedure sysadm.DW_S01_ARCHIVE_RELANCES
@@ -308,6 +330,63 @@ CREATE procedure sysadm.DW_S01_ARCHIVE_RELANCES
       @dtDateMin      Datetime,
       @dtDateMax      DateTime		
 AS
+
+--  [OPTIM_TRT_RELANCE]
+If sysadm.FN_CLE_NUMERIQUE ( 'OPTIM_TRT_RELANCE') > 0 
+ Begin
+	Select 
+		ID_SIN 	=  id_sin,
+		ID_REV	=  id_rev,
+		ID_ORDRE	=  id_ordre,
+		COD_INTER	=  cod_inter,
+		NOM_INTER	=  nom_inter,
+		ID_COUR	=  id_cour,
+		ID_I	=  id_i,
+		ID_DOC	=  id_doc,
+		VALIDE_PAR	=  valide_par,
+		VALIDE_LE	=  valide_le,
+		TXT_COMPO	=  txt_compo,
+		ALT_PART	=  alt_part,
+		ALT_PCE	=  alt_pce,
+		ALT_PS	=  alt_ps,
+		INT_CIVIL	=  int_civil,
+		INT_ADR1	=  int_adr1,
+		INT_ADR2	=  int_adr2,
+		INT_ADR_CP	=  int_adr_cp,
+		INT_ADR_VILLE	=  int_adr_ville,
+		INT_VREF1	=  int_vref1,
+		INT_VREF2	=  int_vref2,
+		INT_RIB_BQ	=  int_rib_bq,
+		INT_RIB_CLE	=  int_rib_cle,
+		INT_RIB_CPT	=  int_rib_cpt,
+		INT_RIB_GUI	=  int_rib_gui,
+		PERS_CIVIL	=  pers_civil,
+		PERS_NOM	=  pers_nom,
+		PERS_PRENOM	=  pers_prenom,
+		DTE_EDIT	=  dte_edit,
+		INTASS_RIB_BQ	=  intass_rib_bq,
+		INTASS_RIB_CLE	=  intass_rib_cle,
+		INTASS_RIB_CPT	=  intass_rib_cpt,
+		INTASS_RIB_GUI	=  intass_rib_gui,
+		PROD_ID_DEPTS	=  prod_id_depts,
+		PROD_ID_DEPT	=  prod_id_dept,
+		ID_PROD	=  id_prod,
+		PROD_COURT	=  prod_court,
+		PROD_LONG	=  prod_long,
+		PROD_FAX	=  prod_fax,
+		PROD_TEL	=  prod_tel,
+		DTE_ADH	=  dte_adh,
+		DTE_SURV	=  dte_surv,
+		ID_ADH	=  id_adh,
+		ID_ETS	=  id_ets,
+		LIB_GRP	=  lib_grp,
+		TRI	= tri
+
+	From sysadm.pre_trt_relance
+	Where typ_rel = 'R1A'
+	And   id_prod = @dcIdProd
+	Return
+ End 
 
 
 Declare @sCodAdh	VarChar ( 1 )
@@ -1068,7 +1147,7 @@ And    id_inter = @adcId_Inter
 
 		  @asMajPar
 		) 
-
+ 
 GO
 
 
@@ -1087,6 +1166,7 @@ GO
 -- Retourne             :       Rien
 --
 -- JFF      22/08/2022   [RS3179]
+-- JFF      10/11/2023   [OPTIM_TRT_RELANCE]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'DW_S02_ARCHIVE_RELANCES' AND type = 'P' )
         DROP procedure sysadm.DW_S02_ARCHIVE_RELANCES
@@ -1096,6 +1176,65 @@ CREATE procedure sysadm.DW_S02_ARCHIVE_RELANCES
       @dcIdProd       Decimal (7,0),
       @dtDateMax      Datetime
 AS
+
+--  [OPTIM_TRT_RELANCE]
+If sysadm.FN_CLE_NUMERIQUE ( 'OPTIM_TRT_RELANCE') > 0 
+ Begin
+	Select 
+		ID_SIN 	=  id_sin,
+		ID_REV	=  id_rev,
+		ID_ORDRE	=  id_ordre,
+		COD_INTER	=  cod_inter,
+		NOM_INTER	=  nom_inter,
+		ID_COUR	=  id_cour,
+		ID_I	=  id_i,
+		ID_DOC	=  id_doc,
+		VALIDE_PAR	=  valide_par,
+		VALIDE_LE	=  valide_le,
+		TXT_COMPO	=  txt_compo,
+		ALT_PART	=  alt_part,
+		ALT_PCE	=  alt_pce,
+		ALT_PS	=  alt_ps,
+		INT_CIVIL	=  int_civil,
+		INT_ADR1	=  int_adr1,
+		INT_ADR2	=  int_adr2,
+		INT_ADR_CP	=  int_adr_cp,
+		INT_ADR_VILLE	=  int_adr_ville,
+		INT_VREF1	=  int_vref1,
+		INT_VREF2	=  int_vref2,
+		INT_RIB_BQ	=  int_rib_bq,
+		INT_RIB_CLE	=  int_rib_cle,
+		INT_RIB_CPT	=  int_rib_cpt,
+		INT_RIB_GUI	=  int_rib_gui,
+		PERS_CIVIL	=  pers_civil,
+		PERS_NOM	=  pers_nom,
+		PERS_PRENOM	=  pers_prenom,
+		DTE_EDIT	=  dte_edit,
+		INTASS_RIB_BQ	=  intass_rib_bq,
+		INTASS_RIB_CLE	=  intass_rib_cle,
+		INTASS_RIB_CPT	=  intass_rib_cpt,
+		INTASS_RIB_GUI	=  intass_rib_gui,
+		PROD_ID_DEPTS	=  prod_id_depts,
+		PROD_ID_DEPT	=  prod_id_dept,
+		ID_PROD	=  id_prod,
+		PROD_COURT	=  prod_court,
+		PROD_LONG	=  prod_long,
+		PROD_FAX	=  prod_fax,
+		PROD_TEL	=  prod_tel,
+		DTE_ADH	=  dte_adh,
+		DTE_SURV	=  dte_surv,
+		ID_ADH	=  id_adh,
+		ID_ETS	=  id_ets,
+		LIB_GRP	=  lib_grp,
+		TRI	= tri
+
+	From sysadm.pre_trt_relance
+	Where typ_rel = 'R2'
+	And   id_prod = @dcIdProd
+	Return
+ End 
+
+
 
 Declare @sCodAdh	VarChar ( 1 )
 
@@ -3319,6 +3458,7 @@ Go
 -- Retourne             :       Rien
 --
 -- JFF      22/08/2022   [RS3179]
+-- JFF      10/11/2023   [OPTIM_TRT_RELANCE]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'DW_S07_ARCHIVE_RELANCES' AND type = 'P' )
         DROP procedure sysadm.DW_S07_ARCHIVE_RELANCES
@@ -3331,6 +3471,62 @@ CREATE procedure sysadm.DW_S07_ARCHIVE_RELANCES
       @dtDateMax      DateTime		
 AS
 
+--  [OPTIM_TRT_RELANCE]
+If sysadm.FN_CLE_NUMERIQUE ( 'OPTIM_TRT_RELANCE') > 0 
+ Begin
+	Select 
+		ID_SIN 	=  id_sin,
+		ID_REV	=  id_rev,
+		ID_ORDRE	=  id_ordre,
+		COD_INTER	=  cod_inter,
+		NOM_INTER	=  nom_inter,
+		ID_COUR	=  id_cour,
+		ID_I	=  id_i,
+		ID_DOC	=  id_doc,
+		VALIDE_PAR	=  valide_par,
+		VALIDE_LE	=  valide_le,
+		TXT_COMPO	=  txt_compo,
+		ALT_PART	=  alt_part,
+		ALT_PCE	=  alt_pce,
+		ALT_PS	=  alt_ps,
+		INT_CIVIL	=  int_civil,
+		INT_ADR1	=  int_adr1,
+		INT_ADR2	=  int_adr2,
+		INT_ADR_CP	=  int_adr_cp,
+		INT_ADR_VILLE	=  int_adr_ville,
+		INT_VREF1	=  int_vref1,
+		INT_VREF2	=  int_vref2,
+		INT_RIB_BQ	=  int_rib_bq,
+		INT_RIB_CLE	=  int_rib_cle,
+		INT_RIB_CPT	=  int_rib_cpt,
+		INT_RIB_GUI	=  int_rib_gui,
+		PERS_CIVIL	=  pers_civil,
+		PERS_NOM	=  pers_nom,
+		PERS_PRENOM	=  pers_prenom,
+		DTE_EDIT	=  dte_edit,
+		INTASS_RIB_BQ	=  intass_rib_bq,
+		INTASS_RIB_CLE	=  intass_rib_cle,
+		INTASS_RIB_CPT	=  intass_rib_cpt,
+		INTASS_RIB_GUI	=  intass_rib_gui,
+		PROD_ID_DEPTS	=  prod_id_depts,
+		PROD_ID_DEPT	=  prod_id_dept,
+		ID_PROD	=  id_prod,
+		PROD_COURT	=  prod_court,
+		PROD_LONG	=  prod_long,
+		PROD_FAX	=  prod_fax,
+		PROD_TEL	=  prod_tel,
+		DTE_ADH	=  dte_adh,
+		DTE_SURV	=  dte_surv,
+		ID_ADH	=  id_adh,
+		ID_ETS	=  id_ets,
+		LIB_GRP	=  lib_grp,
+		TRI	= tri
+
+	From sysadm.pre_trt_relance
+	Where typ_rel = 'R1U'
+	And   id_prod = @dcIdProd
+	Return
+ End 
 
 Declare @sCodAdh	VarChar ( 1 )
 
@@ -5077,6 +5273,7 @@ Go
 -- Retourne             :       Rien
 --
 -- JFF      22/08/2022   [RS3179]
+-- JFF      10/11/2023   [OPTIM_TRT_RELANCE]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'DDDW_S_PRODUIT_RELANCE' AND type = 'P' )
         DROP procedure sysadm.DDDW_S_PRODUIT_RELANCE
@@ -5085,6 +5282,18 @@ GO
 CREATE procedure sysadm.DDDW_S_PRODUIT_RELANCE
 	  @sCodeTrt       VarChar ( 3 )
 AS
+
+--  [OPTIM_TRT_RELANCE]
+If sysadm.FN_CLE_NUMERIQUE ( 'OPTIM_TRT_RELANCE') > 0 
+ Begin
+	Select distinct 
+		id_prod,
+		prod_long
+	From sysadm.pre_trt_relance
+	Where typ_rel = @sCodeTrt
+	Return
+ End 
+
 
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 BEGIN
@@ -6608,5 +6817,2126 @@ And	   id_doc = @adcIdDoc
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_I_PRE_TRT_RELANCE
+-- Auteur               :       Fabry JF
+-- Date                 :       10/11/2023
+-- Libellé              :        [OPTIM_TRT_RELANCE]
+-- Commentaires         :       à lancer par le server
+-- Références           :       
+
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_PRE_TRT_RELANCE' AND type = 'P' )
+        DROP procedure sysadm.PS_I_PRE_TRT_RELANCE
+GO
+
+CREATE procedure sysadm.PS_I_PRE_TRT_RELANCE
+AS
+	Delete sysadm.pre_trt_relance
+	Insert into sysadm.pre_trt_relance Exec sysadm.PS_I_PRE_TRT_RELANCE_DATA 'R1A'
+	Insert into sysadm.pre_trt_relance Exec sysadm.PS_I_PRE_TRT_RELANCE_DATA 'R1U'
+	Insert into sysadm.pre_trt_relance Exec sysadm.PS_I_PRE_TRT_RELANCE_DATA 'R2'
+	
+	-- Permet d'accélerer les prochains SELECT
+	Exec sysadm.DDDW_S_PRODUIT_RELANCE 'R1A'
+	Exec sysadm.DDDW_S_PRODUIT_RELANCE 'R1U'
+	Exec sysadm.DDDW_S_PRODUIT_RELANCE 'R2'
+
+Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_I_PRE_TRT_RELANCE_DATA
+-- Auteur               :       Fabry JF
+-- Date                 :       10/11/2023
+-- Libellé              :        [OPTIM_TRT_RELANCE]
+-- Commentaires         :       
+-- Références           :       
+
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_PRE_TRT_RELANCE_DATA' AND type = 'P' )
+        DROP procedure sysadm.PS_I_PRE_TRT_RELANCE_DATA
+GO
+
+CREATE procedure sysadm.PS_I_PRE_TRT_RELANCE_DATA
+	  @sCodeTrt       VarChar ( 3 )
+AS
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+BEGIN
+
+	If @sCodeTrt = 'R1A' 
+	Begin 
+
+		select  
+		TYP_REL		= @sCodeTrt,
+ 		ID_SIN 		= sin.id_sin,
+		ID_REV		= sin.id_rev,
+		ID_ORDRE	= sin.id_ordre,
+		COD_INTER	= int.cod_inter,
+		NOM_INTER	= int.nom,		
+		ID_COUR		= IsNull ( arch.id_cour_orig, arch.id_cour ),
+		ID_I		= arch.id_inter,
+		ID_DOC		= arch.id_doc,
+		VALIDE_PAR	= arch.valide_par,
+		VALIDE_LE	= arch.valide_le,
+		TXT_COMPO	= arch.txt_compo1,
+		ALT_PART	= arch.alt_part,
+		ALT_PCE		= arch.alt_pce,
+		ALT_PS		= arch.alt_ps,
+		INT_CIVIL	= int.cod_civ,       
+		INT_ADR1	= int.adr_1,
+		INT_ADR2	= int.adr_2,
+		INT_ADR_CP	= int.adr_cp,
+		INT_ADR_VILLE	= int.adr_ville,
+		INT_VREF1	= int.v_ref1,
+		INT_VREF2	= int.v_ref2,
+		INT_RIB_BQ	= int.rib_bq,
+		INT_RIB_CLE	= int.rib_cle,
+		INT_RIB_CPT	= int.rib_cpt,
+		INT_RIB_GUI	= int.rib_gui,
+		PERS_CIVIL	= pers.cod_civ,
+		PERS_NOM	= pers.nom,
+		PERS_PRENOM	= pers.prenom,
+		DTE_EDIT	= arch.dte_edit,
+		INTASS_RIB_BQ	= intass.rib_bq,
+		INTASS_RIB_CLE	= intass.rib_cle,
+		INTASS_RIB_CPT	= intass.rib_cpt,
+		INTASS_RIB_GUI	= intass.rib_gui,
+		PROD_ID_DEPTS	= prod.id_depts,
+		PROD_ID_DEPT	= prod.id_dept,
+		ID_PROD		= prod.id_prod,
+		PROD_COURT	= prod.lib_court,
+		PROD_LONG	= prod.lib_long,
+		PROD_FAX	= prod.num_fax,
+		PROD_TEL	= prod.num_tel,
+		DTE_ADH		= sin.dte_adh,
+		DTE_SURV	= sin.dte_surv,
+		ID_ADH		= sin.id_adh,
+		ID_ETS		= sin.id_ets,
+		LIB_GRP		= grp.lib_grp,
+		TRI		= Case IsNull ( arch.id_cour_orig, arch.id_cour )
+					When 'APART1' THEN 2
+					Else 1
+				  End
+
+
+		From 	sysadm.sinistre 	sin with (nolock),
+			sysadm.archive  	arch with (nolock),
+			sysadm.inter		int with (nolock),
+			sysadm.inter		intass with (nolock),
+			sysadm.personne 	pers with (nolock),
+			sysadm.produit		prod with (nolock),
+			sysadm.groupe		grp with (nolock),
+			sysadm.routage		rout with (nolock)
+
+
+		Where	prod.cod_adh = '3'
+		And     prod.alt_rl1 = 'O'
+		And     rout.id_sin		= sin.id_sin
+		and     rout.alt_queue		= 'N'
+		and	sin.id_sin 		= arch.id_sin
+		and    	sin.cod_etat      	 in ( 100, 550 )
+		and    	sin.valide_le 		= arch.valide_le
+		and     
+		(
+		  (
+			(
+			( Substring ( arch.id_cour_orig, 2, 1 ) = 'C' and Substring ( arch.id_cour_orig, 4, 1 ) = 'P' ) Or
+			Substring ( arch.id_cour_orig, 1, 1 ) = 'Q' Or 
+			arch.id_cour_orig = 'APART1'
+			) And arch.id_cour_orig is not null
+		  ) 
+		 OR
+		  (
+			(
+			( Substring ( arch.id_cour, 2, 1 ) = 'C' and Substring ( arch.id_cour, 4, 1 ) = 'P' ) Or
+			Substring ( arch.id_cour, 1, 1 ) = 'Q' Or 
+			arch.id_cour = 'APART1'
+			) And arch.id_cour_orig is null
+		  )
+		)
+		and     (       CharIndex ( 'P001', arch.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P118', arch.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P119', arch.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P037', arch.txt_compo1, 1 ) = 0            
+					And CharIndex ( 'P107', arch.txt_compo1, 1 ) = 0            
+				And CharIndex ( 'P120', arch.txt_compo1, 1 ) = 0            
+				)
+		and     ( 
+				  ( prod.unt_rl1 = 'J' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'M' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'A' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				)
+
+		and     arch.cod_version     	= 2
+		and     arch.nbr_conf         	= 0
+		and     arch.id_sin           	= int.id_sin
+		and     arch.id_inter         	= int.id_i
+		and 	intass.id_sin		= arch.id_sin
+		and 	intass.cod_inter	= 'A'
+		and 	pers.id_ordre		= sin.id_ordre
+		and	prod.id_prod		= sin.id_prod
+		and	grp.id_grp		= sin.id_ets
+		And Not exists ( 
+			Select Top 1 1
+			From sysadm.det_pro dp
+			Where dp.id_prod = prod.id_prod
+			And   dp.id_code_dp = 323
+		 )
+		And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
+
+		Union All 
+
+		select  
+			TYP_REL		= @sCodeTrt,
+ 			ID_SIN 		= sin.id_sin,
+			ID_REV		= sin.id_rev,
+			ID_ORDRE	= sin.id_ordre,
+			COD_INTER	= int.cod_inter,
+			NOM_INTER	= int.nom,		
+			ID_COUR		= IsNull ( arch.id_cour_orig, arch.id_cour ),
+			ID_I		= arch.id_inter,
+			ID_DOC		= arch.id_doc,
+			VALIDE_PAR	= arch.valide_par,
+			VALIDE_LE	= arch.valide_le,
+			TXT_COMPO	= arch.txt_compo1,
+			ALT_PART	= arch.alt_part,
+			ALT_PCE		= arch.alt_pce,
+			ALT_PS		= arch.alt_ps,
+			INT_CIVIL	= int.cod_civ,       
+			INT_ADR1	= int.adr_1,
+			INT_ADR2	= int.adr_2,
+			INT_ADR_CP	= int.adr_cp,
+			INT_ADR_VILLE	= int.adr_ville,
+			INT_VREF1	= int.v_ref1,
+			INT_VREF2	= int.v_ref2,
+			INT_RIB_BQ	= int.rib_bq,
+			INT_RIB_CLE	= int.rib_cle,
+			INT_RIB_CPT	= int.rib_cpt,
+			INT_RIB_GUI	= int.rib_gui,
+			PERS_CIVIL	= pers.cod_civ,
+			PERS_NOM	= pers.nom,
+			PERS_PRENOM	= pers.prenom,
+			DTE_EDIT	= arch.dte_edit,
+			INTASS_RIB_BQ	= intass.rib_bq,
+			INTASS_RIB_CLE	= intass.rib_cle,
+			INTASS_RIB_CPT	= intass.rib_cpt,
+			INTASS_RIB_GUI	= intass.rib_gui,
+			PROD_ID_DEPTS	= prod.id_depts,
+			PROD_ID_DEPT	= prod.id_dept,
+			ID_PROD		= prod.id_prod,
+			PROD_COURT	= prod.lib_court,
+			PROD_LONG	= prod.lib_long,
+			PROD_FAX	= prod.num_fax,
+			PROD_TEL	= prod.num_tel,
+			DTE_ADH		= sin.dte_adh,
+			DTE_SURV	= sin.dte_surv,
+			ID_ADH		= sin.id_adh,
+			ID_ETS		= sin.id_ets,
+			LIB_GRP		= grp.lib_grp,
+			TRI		= Case IsNull ( arch.id_cour_orig, arch.id_cour )
+						When 'APART1' THEN 2
+						Else 1
+					  End
+
+		From 	sysadm.sinistre 	sin with (nolock),
+			sysadm.archive  	arch with (nolock),
+			sysadm.inter		int with (nolock),
+			sysadm.inter		intass with (nolock),
+			sysadm.personne 	pers with (nolock),
+			sysadm.produit		prod with (nolock),
+			sysadm.groupe		grp with (nolock),
+			sysadm.etablissement	eta with (nolock),
+			sysadm.routage		rout with (nolock)
+
+		Where	prod.cod_adh <> '3'
+		And     prod.alt_rl1 = 'O'
+		and     rout.id_sin		= sin.id_sin
+		and     rout.alt_queue		= 'N'
+		and	sin.id_sin 		= arch.id_sin
+		and    	sin.cod_etat      	 in ( 100, 550 )
+		and    	sin.valide_le 		= arch.valide_le
+		and     
+		(
+		  (
+			(
+			( Substring ( arch.id_cour_orig, 2, 1 ) = 'C' and Substring ( arch.id_cour_orig, 4, 1 ) = 'P' ) Or
+			Substring ( arch.id_cour_orig, 1, 1 ) = 'Q' Or 
+			arch.id_cour_orig = 'APART1'
+			) And arch.id_cour_orig is not null
+		  ) 
+		 OR
+		  (
+			(
+			( Substring ( arch.id_cour, 2, 1 ) = 'C' and Substring ( arch.id_cour, 4, 1 ) = 'P' ) Or
+			Substring ( arch.id_cour, 1, 1 ) = 'Q' Or 
+			arch.id_cour = 'APART1'
+			) And arch.id_cour_orig is null
+		  )
+		)
+		and     (       CharIndex ( 'P001', arch.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P118', arch.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P119', arch.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P037', arch.txt_compo1, 1 ) = 0            
+					And CharIndex ( 'P107', arch.txt_compo1, 1 ) = 0            
+				And CharIndex ( 'P120', arch.txt_compo1, 1 ) = 0            
+				)
+
+		and     ( 
+				  ( prod.unt_rl1 = 'J' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'M' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'A' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				)
+		and     arch.cod_version     	= 2
+		and     arch.nbr_conf         	= 0
+		and     arch.id_sin           	= int.id_sin
+		and     arch.id_inter         	= int.id_i
+		and 	intass.id_sin		= arch.id_sin
+		and 	intass.cod_inter	= 'A'
+		and 	pers.id_ordre		= sin.id_ordre
+		and	prod.id_prod		= sin.id_prod
+		and	eta.id_prod   		= sin.id_prod
+		and	eta.id_ets  		= sin.id_ets
+		and	eta.id_grp  		= grp.id_grp
+		and	eta.id_rev    		= -1
+		And Not exists ( 
+			Select Top 1 1
+			From sysadm.det_pro dp
+			Where dp.id_prod = prod.id_prod
+			And   dp.id_code_dp = 323
+		 )
+		And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
+
+	End -- Fin R1A
+
+	If @sCodeTrt = 'R2' 
+	Begin 
+
+		select  
+			TYP_REL		= @sCodeTrt,
+ 			ID_SIN 		= sin.id_sin,
+			ID_REV		= sin.id_rev,
+			ID_ORDRE	= sin.id_ordre,
+			COD_INTER	= int.cod_inter,
+			NOM_INTER	= int.nom,		
+			ID_COUR		= IsNull ( arch.id_cour_orig, arch.id_cour ),
+			ID_I		= arch.id_inter,
+			ID_DOC		= arch.id_doc,
+			VALIDE_PAR	= arch.valide_par,
+			VALIDE_LE	= arch.valide_le,
+			TXT_COMPO	= arch.txt_compo1,
+			ALT_PART	= arch.alt_part,
+			ALT_PCE		= arch.alt_pce,
+			ALT_PS		= arch.alt_ps,
+			INT_CIVIL	= int.cod_civ,       
+			INT_ADR1	= int.adr_1,
+			INT_ADR2	= int.adr_2,
+			INT_ADR_CP	= int.adr_cp,
+			INT_ADR_VILLE	= int.adr_ville,
+			INT_VREF1	= int.v_ref1,
+			INT_VREF2	= int.v_ref2,
+			INT_RIB_BQ	= int.rib_bq,
+			INT_RIB_CLE	= int.rib_cle,
+			INT_RIB_CPT	= int.rib_cpt,
+			INT_RIB_GUI	= int.rib_gui,
+			PERS_CIVIL	= pers.cod_civ,
+			PERS_NOM	= pers.nom,
+			PERS_PRENOM	= pers.prenom,
+			DTE_EDIT	= arch.dte_edit,
+			INTASS_RIB_BQ	= intass.rib_bq,
+			INTASS_RIB_CLE	= intass.rib_cle,
+			INTASS_RIB_CPT	= intass.rib_cpt,
+			INTASS_RIB_GUI	= intass.rib_gui,
+			PROD_ID_DEPTS	= prod.id_depts,
+			PROD_ID_DEPT	= prod.id_dept,
+			ID_PROD		= prod.id_prod,
+			PROD_COURT	= prod.lib_court,
+			PROD_LONG	= prod.lib_long,
+			PROD_FAX	= prod.num_fax,
+			PROD_TEL	= prod.num_tel,
+			DTE_ADH		= sin.dte_adh,
+			DTE_SURV	= sin.dte_surv,
+			ID_ADH		= sin.id_adh,
+			ID_ETS		= sin.id_ets,
+			LIB_GRP		= grp.lib_grp,
+			TRI		= Case IsNull ( arch.id_cour_orig, arch.id_cour )
+						When 'APART1' THEN 2
+						Else 1
+					  End
+
+		From 	sysadm.sinistre 	sin with (nolock),
+			sysadm.archive  	arch with (nolock),
+			sysadm.inter		int with (nolock),
+			sysadm.inter		intass with (nolock),
+			sysadm.personne 	pers with (nolock),
+			sysadm.produit		prod with (nolock),
+			sysadm.groupe		grp with (nolock),
+			sysadm.routage		rout with (nolock)
+
+
+		Where	prod.cod_adh = '3'
+		And     prod.alt_rl2 = 'O'
+		and     rout.id_sin		= sin.id_sin
+		and     rout.alt_queue		= 'N'
+		and	sin.id_sin 		= arch.id_sin
+		and    	sin.cod_etat      	in ( 100, 550 )
+		and    	sin.valide_le 		= arch.valide_le
+		and     
+		(
+		  (
+			( Substring ( arch.id_cour_orig, 2, 5 ) = 'LAX01' Or arch.id_cour_orig = 'ALQ001' )
+			And arch.id_cour_orig is not null
+		  ) 
+		 OR
+		  (
+			( Substring ( arch.id_cour, 2, 5 ) = 'LAX01' Or arch.id_cour = 'ALQ001' )
+			And arch.id_cour_orig is null
+		  )
+		)
+		and     ( 
+				  ( prod.unt_rl2 = 'J' 
+					And arch.maj_le  <= Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl2 * (-1), getdate()), 103) + ' 00:00:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl2 = 'M' 
+					And arch.maj_le  <= Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl2 * (-1), getdate()), 103) + ' 00:00:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl2 = 'A' 
+					And arch.maj_le  <= Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl2 * (-1), getdate()), 103) + ' 00:00:00'
+				  ) 
+				)
+
+
+		and     arch.cod_version     	= 2
+		and     arch.nbr_conf         	= 0
+		and     arch.id_sin           	= int.id_sin
+		and     arch.id_inter         	= int.id_i
+		and 	intass.id_sin		= arch.id_sin
+		and 	intass.cod_inter	= 'A'
+		and 	pers.id_ordre		= sin.id_ordre
+		and	prod.id_prod		= sin.id_prod
+		and	grp.id_grp		= sin.id_ets
+		And Not exists ( 
+			Select Top 1 1
+			From sysadm.det_pro dp
+			Where dp.id_prod = prod.id_prod
+			And   dp.id_code_dp = 323
+		 )
+		And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
+
+
+		Union all
+
+		select  
+			TYP_REL		= @sCodeTrt,
+ 			ID_SIN 		= sin.id_sin,
+			ID_REV		= sin.id_rev,
+			ID_ORDRE	= sin.id_ordre,
+			COD_INTER	= int.cod_inter,
+			NOM_INTER	= int.nom,		
+			ID_COUR		= IsNull ( arch.id_cour_orig, arch.id_cour ),
+			ID_I		= arch.id_inter,
+			ID_DOC		= arch.id_doc,
+			VALIDE_PAR	= arch.valide_par,
+			VALIDE_LE	= arch.valide_le,
+			TXT_COMPO	= arch.txt_compo1,
+			ALT_PART	= arch.alt_part,
+			ALT_PCE		= arch.alt_pce,
+			ALT_PS		= arch.alt_ps,
+			INT_CIVIL	= int.cod_civ,       
+			INT_ADR1	= int.adr_1,
+			INT_ADR2	= int.adr_2,
+			INT_ADR_CP	= int.adr_cp,
+			INT_ADR_VILLE	= int.adr_ville,
+			INT_VREF1	= int.v_ref1,
+			INT_VREF2	= int.v_ref2,
+			INT_RIB_BQ	= int.rib_bq,
+			INT_RIB_CLE	= int.rib_cle,
+			INT_RIB_CPT	= int.rib_cpt,
+			INT_RIB_GUI	= int.rib_gui,
+			PERS_CIVIL	= pers.cod_civ,
+			PERS_NOM	= pers.nom,
+			PERS_PRENOM	= pers.prenom,
+			DTE_EDIT	= arch.dte_edit,
+			INTASS_RIB_BQ	= intass.rib_bq,
+			INTASS_RIB_CLE	= intass.rib_cle,
+			INTASS_RIB_CPT	= intass.rib_cpt,
+			INTASS_RIB_GUI	= intass.rib_gui,
+			PROD_ID_DEPTS	= prod.id_depts,
+			PROD_ID_DEPT	= prod.id_dept,
+			ID_PROD		= prod.id_prod,
+			PROD_COURT	= prod.lib_court,
+			PROD_LONG	= prod.lib_long,
+			PROD_FAX	= prod.num_fax,
+			PROD_TEL	= prod.num_tel,
+			DTE_ADH		= sin.dte_adh,
+			DTE_SURV	= sin.dte_surv,
+			ID_ADH		= sin.id_adh,
+			ID_ETS		= sin.id_ets,
+			LIB_GRP		= grp.lib_grp,
+			TRI		= Case IsNull ( arch.id_cour_orig, arch.id_cour )
+						When 'APART1' THEN 2
+						Else 1
+					  End
+
+
+
+		From 	sysadm.sinistre 	sin with (nolock),
+			sysadm.archive  	arch with (nolock),
+			sysadm.inter		int with (nolock),
+			sysadm.inter		intass with (nolock),
+			sysadm.personne 	pers with (nolock),
+			sysadm.produit		prod with (nolock),
+			sysadm.groupe		grp with (nolock),
+			sysadm.etablissement	eta with (nolock),
+			sysadm.routage		rout with (nolock)
+
+		Where	prod.cod_adh <> '3'
+		And     prod.alt_rl2 = 'O'
+		and     rout.id_sin		= sin.id_sin
+		and     rout.alt_queue		= 'N'
+		and	sin.id_sin 		= arch.id_sin
+		and    	sin.cod_etat      	in ( 100, 550 )
+		and    	sin.valide_le 		= arch.valide_le
+		and     
+		(
+		  (
+			( Substring ( arch.id_cour_orig, 2, 5 ) = 'LAX01' Or arch.id_cour_orig = 'ALQ001' )
+			And arch.id_cour_orig is not null
+		  ) 
+		 OR
+		  (
+			( Substring ( arch.id_cour, 2, 5 ) = 'LAX01' Or arch.id_cour = 'ALQ001' )
+			And arch.id_cour_orig is null
+		  )
+		)
+
+		and     ( 
+				  ( prod.unt_rl2 = 'J' 
+					And arch.maj_le  <= Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl2 * (-1), getdate()), 103) + ' 00:00:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl2 = 'M' 
+					And arch.maj_le  <= Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl2 * (-1), getdate()), 103) + ' 00:00:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl2 = 'A' 
+					And arch.maj_le  <= Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl2 * (-1), getdate()), 103) + ' 00:00:00'
+				  ) 
+				)
+		and     arch.cod_version     	= 2
+		and     arch.nbr_conf         	= 0
+		and     arch.id_sin           	= int.id_sin
+		and     arch.id_inter         	= int.id_i
+		and 	intass.id_sin		= arch.id_sin
+		and 	intass.cod_inter	= 'A'
+		and 	pers.id_ordre		= sin.id_ordre
+		and	prod.id_prod		= sin.id_prod
+		and	eta.id_prod   		= sin.id_prod
+		and	eta.id_ets  		= sin.id_ets
+		and	eta.id_grp  		= grp.id_grp
+		and	eta.id_rev    		= -1
+		And Not exists ( 
+			Select Top 1 1
+			From sysadm.det_pro dp
+			Where dp.id_prod = prod.id_prod
+			And   dp.id_code_dp = 323
+		 )
+		And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
+
+	End 
+
+	If @sCodeTrt = 'R1U' 
+	Begin 
+
+		-- PremiŠre requˆte en regardant les piŠces coch‚s.
+		select  
+			TYP_REL		= @sCodeTrt,
+ 			ID_SIN 		= sin.id_sin,
+			ID_REV		= sin.id_rev,
+			ID_ORDRE	= sin.id_ordre,
+			COD_INTER	= int.cod_inter,
+			NOM_INTER	= int.nom,		
+			ID_COUR		= IsNull ( arch.id_cour_orig, arch.id_cour ),
+			ID_I		= arch.id_inter,
+			ID_DOC		= arch.id_doc,
+			VALIDE_PAR	= arch.valide_par,
+			VALIDE_LE	= arch.valide_le,
+			TXT_COMPO	= arch.txt_compo1,
+			ALT_PART	= arch.alt_part,
+			ALT_PCE		= arch.alt_pce,
+			ALT_PS		= arch.alt_ps,
+			INT_CIVIL	= int.cod_civ,       
+			INT_ADR1	= int.adr_1,
+			INT_ADR2	= int.adr_2,
+			INT_ADR_CP	= int.adr_cp,
+			INT_ADR_VILLE	= int.adr_ville,
+			INT_VREF1	= int.v_ref1,
+			INT_VREF2	= int.v_ref2,
+			INT_RIB_BQ	= int.rib_bq,
+			INT_RIB_CLE	= int.rib_cle,
+			INT_RIB_CPT	= int.rib_cpt,
+			INT_RIB_GUI	= int.rib_gui,
+			PERS_CIVIL	= pers.cod_civ,
+			PERS_NOM	= pers.nom,
+			PERS_PRENOM	= pers.prenom,
+			DTE_EDIT	= arch.dte_edit,
+			INTASS_RIB_BQ	= intass.rib_bq,
+			INTASS_RIB_CLE	= intass.rib_cle,
+			INTASS_RIB_CPT	= intass.rib_cpt,
+			INTASS_RIB_GUI	= intass.rib_gui,
+			PROD_ID_DEPTS	= prod.id_depts,
+			PROD_ID_DEPT	= prod.id_dept,
+			ID_PROD		= prod.id_prod,
+			PROD_COURT	= prod.lib_court,
+			PROD_LONG	= prod.lib_long,
+			PROD_FAX	= prod.num_fax,
+			PROD_TEL	= prod.num_tel,
+			DTE_ADH		= sin.dte_adh,
+			DTE_SURV	= sin.dte_surv,
+			ID_ADH		= sin.id_adh,
+			ID_ETS		= sin.id_ets,
+			LIB_GRP		= grp.lib_grp,
+			TRI		= Case IsNull ( arch.id_cour_orig, arch.id_cour )
+						When 'APART1' THEN 2
+						Else 1
+					  End
+
+		From 	sysadm.sinistre 	sin with (nolock),
+			sysadm.w_piece		wp with (nolock),
+			sysadm.archive  	arch with (nolock),
+			sysadm.inter		int with (nolock),
+			sysadm.inter		intass with (nolock),
+			sysadm.personne 	pers with (nolock),
+			sysadm.produit		prod with (nolock),
+			sysadm.groupe		grp with (nolock),
+			sysadm.routage		rout with (nolock)
+
+
+		Where	prod.cod_adh = '3'
+		And     prod.alt_rl1 = 'O'
+		and     rout.id_sin		= sin.id_sin
+		and     rout.alt_queue		= 'N'
+		and	sin.id_sin 		= arch.id_sin
+		and    	sin.cod_etat      	 in ( 100, 550 )
+		and    	sin.valide_le 		= arch.valide_le
+		and     
+		(
+		  (
+			(
+			( Substring ( arch.id_cour_orig, 1, 2 ) = 'BC' and Substring ( arch.id_cour_orig, 4, 1 ) = 'P' ) Or Substring ( arch.id_cour_orig, 1, 1 ) = 'Q' Or arch.id_cour_orig = 'APART1' 
+			) And arch.id_cour_orig is not null
+		  ) 
+		 OR
+		  (
+			(
+			( Substring ( arch.id_cour, 1, 2 ) = 'BC' and Substring ( arch.id_cour, 4, 1 ) = 'P' ) Or Substring ( arch.id_cour, 1, 1 ) = 'Q' Or arch.id_cour = 'APART1' 
+			) And arch.id_cour_orig is null
+		  )
+		)
+
+		and     ( 
+				  ( prod.unt_rl1 = 'J' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'M' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'A' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				)
+		and     arch.cod_version     	= 2
+		and	arch.cod_inter		= 'B'
+		and     arch.nbr_conf         	= 0
+		and     arch.id_sin           	= int.id_sin
+		and     arch.id_inter         	= int.id_i
+		and	wp.id_sin		= sin.id_sin
+		and	wp.id_gti		= 7
+		and	wp.id_i			= int.id_i
+		and 	intass.id_sin		= arch.id_sin
+		and 	intass.cod_inter	= 'A'
+		and 	pers.id_ordre		= sin.id_ordre
+		and	prod.id_prod		= sin.id_prod
+		and	grp.id_grp		= sin.id_ets
+		And Not exists ( 
+			Select Top 1 1
+			From sysadm.det_pro dp
+			Where dp.id_prod = prod.id_prod
+			And   dp.id_code_dp = 323
+		 )
+		And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
+
+		UNION ALL
+
+		-- DeuxiŠme requˆte en regardant ALT_ATT coch‚.
+		select  
+			TYP_REL		= @sCodeTrt,
+ 			ID_SIN 		= sin.id_sin,
+			ID_REV		= sin.id_rev,
+			ID_ORDRE	= sin.id_ordre,
+			COD_INTER	= int.cod_inter,
+			NOM_INTER	= int.nom,		
+			ID_COUR		= IsNull ( arch.id_cour_orig, arch.id_cour ),
+			ID_I		= arch.id_inter,
+			ID_DOC		= arch.id_doc,
+			VALIDE_PAR	= arch.valide_par,
+			VALIDE_LE	= arch.valide_le,
+			TXT_COMPO	= arch.txt_compo1,
+			ALT_PART	= arch.alt_part,
+			ALT_PCE		= arch.alt_pce,
+			ALT_PS		= arch.alt_ps,
+			INT_CIVIL	= int.cod_civ,       
+			INT_ADR1	= int.adr_1,
+			INT_ADR2	= int.adr_2,
+			INT_ADR_CP	= int.adr_cp,
+			INT_ADR_VILLE	= int.adr_ville,
+			INT_VREF1	= int.v_ref1,
+			INT_VREF2	= int.v_ref2,
+			INT_RIB_BQ	= int.rib_bq,
+			INT_RIB_CLE	= int.rib_cle,
+			INT_RIB_CPT	= int.rib_cpt,
+			INT_RIB_GUI	= int.rib_gui,
+			PERS_CIVIL	= pers.cod_civ,
+			PERS_NOM	= pers.nom,
+			PERS_PRENOM	= pers.prenom,
+			DTE_EDIT	= arch.dte_edit,
+			INTASS_RIB_BQ	= intass.rib_bq,
+			INTASS_RIB_CLE	= intass.rib_cle,
+			INTASS_RIB_CPT	= intass.rib_cpt,
+			INTASS_RIB_GUI	= intass.rib_gui,
+			PROD_ID_DEPTS	= prod.id_depts,
+			PROD_ID_DEPT	= prod.id_dept,
+			ID_PROD		= prod.id_prod,
+			PROD_COURT	= prod.lib_court,
+			PROD_LONG	= prod.lib_long,
+			PROD_FAX	= prod.num_fax,
+			PROD_TEL	= prod.num_tel,
+			DTE_ADH		= sin.dte_adh,
+			DTE_SURV	= sin.dte_surv,
+			ID_ADH		= sin.id_adh,
+			ID_ETS		= sin.id_ets,
+			LIB_GRP		= grp.lib_grp,
+			TRI		= Case IsNull ( arch.id_cour_orig, arch.id_cour )
+						When 'APART1' THEN 2
+						Else 1
+					  End
+
+
+
+		From 	sysadm.sinistre 	sin,
+			sysadm.w_gar_sin	wg,
+			sysadm.archive  	arch,
+			sysadm.inter		int,
+			sysadm.inter		intass,
+			sysadm.personne 	pers,
+			sysadm.produit		prod,
+			sysadm.groupe		grp,
+			sysadm.routage		rout
+
+
+		Where	prod.cod_adh = '3'
+		And     prod.alt_rl1 = 'O'
+		and     rout.id_sin		= sin.id_sin
+		and     rout.alt_queue		= 'N'
+		and	sin.id_sin 		= arch.id_sin
+		and    	sin.cod_etat      	 in ( 100, 550 )
+		and    	sin.valide_le 		= arch.valide_le
+		and     
+		(
+		  (
+			(
+			( Substring ( arch.id_cour_orig, 1, 2 ) = 'BC' and Substring ( arch.id_cour_orig, 4, 1 ) = 'P' ) Or Substring ( arch.id_cour_orig, 1, 1 ) = 'Q' Or arch.id_cour_orig = 'APART1' 
+			) And arch.id_cour_orig is not null
+		  ) 
+		 OR
+		  (
+			(
+			( Substring ( arch.id_cour, 1, 2 ) = 'BC' and Substring ( arch.id_cour, 4, 1 ) = 'P' ) Or Substring ( arch.id_cour, 1, 1 ) = 'Q' Or arch.id_cour = 'APART1' 
+			) And arch.id_cour_orig is null
+		  )
+		)
+
+		and     ( 
+				  ( prod.unt_rl1 = 'J' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'M' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'A' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				)
+		and     arch.cod_version     	= 2
+		and	arch.cod_inter		= 'B'
+		and     arch.nbr_conf         	= 0
+		and     arch.id_sin           	= int.id_sin
+		and     arch.id_inter         	= int.id_i
+		and	wg.id_sin		= sin.id_sin
+		and	wg.id_gti		= 7
+		and	wg.alt_att		= 'O' 
+		and 	intass.id_sin		= arch.id_sin
+		and 	intass.cod_inter	= 'A'
+		and 	pers.id_ordre		= sin.id_ordre
+		and	prod.id_prod		= sin.id_prod
+		and	grp.id_grp		= sin.id_ets
+		And Not exists ( 
+			Select Top 1 1
+			From sysadm.det_pro dp
+			Where dp.id_prod = prod.id_prod
+			And   dp.id_code_dp = 323
+		 )
+		And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
+
+		union all
+		-- PremiŠre requˆte en regardant les piŠces coch‚s.
+
+		select  			
+			TYP_REL		= @sCodeTrt,
+ 			ID_SIN 		= sin.id_sin,
+			ID_REV		= sin.id_rev,
+			ID_ORDRE	= sin.id_ordre,
+			COD_INTER	= int.cod_inter,
+			NOM_INTER	= int.nom,		
+			ID_COUR		= IsNull ( arch.id_cour_orig, arch.id_cour ),
+			ID_I		= arch.id_inter,
+			ID_DOC		= arch.id_doc,
+			VALIDE_PAR	= arch.valide_par,
+			VALIDE_LE	= arch.valide_le,
+			TXT_COMPO	= arch.txt_compo1,
+			ALT_PART	= arch.alt_part,
+			ALT_PCE		= arch.alt_pce,
+			ALT_PS		= arch.alt_ps,
+			INT_CIVIL	= int.cod_civ,       
+			INT_ADR1	= int.adr_1,
+			INT_ADR2	= int.adr_2,
+			INT_ADR_CP	= int.adr_cp,
+			INT_ADR_VILLE	= int.adr_ville,
+			INT_VREF1	= int.v_ref1,
+			INT_VREF2	= int.v_ref2,
+			INT_RIB_BQ	= int.rib_bq,
+			INT_RIB_CLE	= int.rib_cle,
+			INT_RIB_CPT	= int.rib_cpt,
+			INT_RIB_GUI	= int.rib_gui,
+			PERS_CIVIL	= pers.cod_civ,
+			PERS_NOM	= pers.nom,
+			PERS_PRENOM	= pers.prenom,
+			DTE_EDIT	= arch.dte_edit,
+			INTASS_RIB_BQ	= intass.rib_bq,
+			INTASS_RIB_CLE	= intass.rib_cle,
+			INTASS_RIB_CPT	= intass.rib_cpt,
+			INTASS_RIB_GUI	= intass.rib_gui,
+			PROD_ID_DEPTS	= prod.id_depts,
+			PROD_ID_DEPT	= prod.id_dept,
+			ID_PROD		= prod.id_prod,
+			PROD_COURT	= prod.lib_court,
+			PROD_LONG	= prod.lib_long,
+			PROD_FAX	= prod.num_fax,
+			PROD_TEL	= prod.num_tel,
+			DTE_ADH		= sin.dte_adh,
+			DTE_SURV	= sin.dte_surv,
+			ID_ADH		= sin.id_adh,
+			ID_ETS		= sin.id_ets,
+			LIB_GRP		= grp.lib_grp,
+			TRI		= Case IsNull ( arch.id_cour_orig, arch.id_cour )
+						When 'APART1' THEN 2
+						Else 1
+					  End
+
+
+		From 	sysadm.sinistre 	sin with (nolock),
+			sysadm.w_piece		wp with (nolock),
+			sysadm.archive  	arch with (nolock),
+			sysadm.inter		int with (nolock),
+			sysadm.inter		intass with (nolock),
+			sysadm.personne 	pers with (nolock),
+			sysadm.produit		prod with (nolock),
+			sysadm.groupe		grp with (nolock),
+			sysadm.etablissement	eta with (nolock),
+			sysadm.routage		rout with (nolock)
+
+
+		Where	prod.cod_adh <> '3'
+		And     prod.alt_rl1 = 'O'
+		and     rout.id_sin		= sin.id_sin
+		and     rout.alt_queue		= 'N'
+		and	sin.id_sin 		= arch.id_sin
+		and    	sin.cod_etat      	 in ( 100, 550 )
+		and    	sin.valide_le 		= arch.valide_le
+		and     
+		(
+		  (
+			(
+			( Substring ( arch.id_cour_orig, 1, 2 ) = 'BC' and Substring ( arch.id_cour_orig, 4, 1 ) = 'P' ) Or Substring ( arch.id_cour_orig, 1, 1 ) = 'Q' Or arch.id_cour_orig = 'APART1' 
+			) And arch.id_cour_orig is not null
+		  ) 
+		 OR
+		  (
+			(
+			( Substring ( arch.id_cour, 1, 2 ) = 'BC' and Substring ( arch.id_cour, 4, 1 ) = 'P' ) Or Substring ( arch.id_cour, 1, 1 ) = 'Q' Or arch.id_cour = 'APART1' 
+			) And arch.id_cour_orig is null
+		  )
+		)
+
+		and     ( 
+				  ( prod.unt_rl1 = 'J' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'M' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'A' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				)
+		and     arch.cod_version     	= 2
+		and	arch.cod_inter		= 'B'
+		and     arch.nbr_conf         	= 0
+		and     arch.id_sin           	= int.id_sin
+		and     arch.id_inter         	= int.id_i
+		and	wp.id_sin		= sin.id_sin
+		and	wp.id_gti		= 7
+		and	wp.id_i			= int.id_i
+		and 	intass.id_sin		= arch.id_sin
+		and 	intass.cod_inter	= 'A'
+		and 	pers.id_ordre		= sin.id_ordre
+		and	prod.id_prod		= sin.id_prod
+		and	eta.id_prod   		= sin.id_prod
+		and	eta.id_ets  		= sin.id_ets
+		and	eta.id_grp  		= grp.id_grp
+		and	eta.id_rev    		= -1
+		And Not exists ( 
+			Select Top 1 1
+			From sysadm.det_pro dp
+			Where dp.id_prod = prod.id_prod
+			And   dp.id_code_dp = 323
+		 )
+		And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
+
+		UNION ALL
+
+		-- DeuxiŠme requˆte en regardant ALT_ATT coch‚.
+		select  
+			TYP_REL		= @sCodeTrt,
+ 			ID_SIN 		= sin.id_sin,
+			ID_REV		= sin.id_rev,
+			ID_ORDRE	= sin.id_ordre,
+			COD_INTER	= int.cod_inter,
+			NOM_INTER	= int.nom,		
+			ID_COUR		= IsNull ( arch.id_cour_orig, arch.id_cour ),
+			ID_I		= arch.id_inter,
+			ID_DOC		= arch.id_doc,
+			VALIDE_PAR	= arch.valide_par,
+			VALIDE_LE	= arch.valide_le,
+			TXT_COMPO	= arch.txt_compo1,
+			ALT_PART	= arch.alt_part,
+			ALT_PCE		= arch.alt_pce,
+			ALT_PS		= arch.alt_ps,
+			INT_CIVIL	= int.cod_civ,       
+			INT_ADR1	= int.adr_1,
+			INT_ADR2	= int.adr_2,
+			INT_ADR_CP	= int.adr_cp,
+			INT_ADR_VILLE	= int.adr_ville,
+			INT_VREF1	= int.v_ref1,
+			INT_VREF2	= int.v_ref2,
+			INT_RIB_BQ	= int.rib_bq,
+			INT_RIB_CLE	= int.rib_cle,
+			INT_RIB_CPT	= int.rib_cpt,
+			INT_RIB_GUI	= int.rib_gui,
+			PERS_CIVIL	= pers.cod_civ,
+			PERS_NOM	= pers.nom,
+			PERS_PRENOM	= pers.prenom,
+			DTE_EDIT	= arch.dte_edit,
+			INTASS_RIB_BQ	= intass.rib_bq,
+			INTASS_RIB_CLE	= intass.rib_cle,
+			INTASS_RIB_CPT	= intass.rib_cpt,
+			INTASS_RIB_GUI	= intass.rib_gui,
+			PROD_ID_DEPTS	= prod.id_depts,
+			PROD_ID_DEPT	= prod.id_dept,
+			ID_PROD		= prod.id_prod,
+			PROD_COURT	= prod.lib_court,
+			PROD_LONG	= prod.lib_long,
+			PROD_FAX	= prod.num_fax,
+			PROD_TEL	= prod.num_tel,
+			DTE_ADH		= sin.dte_adh,
+			DTE_SURV	= sin.dte_surv,
+			ID_ADH		= sin.id_adh,
+			ID_ETS		= sin.id_ets,
+			LIB_GRP		= grp.lib_grp,
+			TRI		= Case IsNull ( arch.id_cour_orig, arch.id_cour )
+						When 'APART1' THEN 2
+						Else 1
+					  End
+
+
+		From 	sysadm.sinistre 	sin with (nolock),
+			sysadm.w_gar_sin	wg with (nolock),
+			sysadm.archive  	arch with (nolock),
+			sysadm.inter		int with (nolock),
+			sysadm.inter		intass with (nolock),
+			sysadm.personne 	pers with (nolock),
+			sysadm.produit		prod with (nolock),
+			sysadm.groupe		grp with (nolock),
+			sysadm.etablissement	eta with (nolock),
+			sysadm.routage		rout with (nolock)
+
+
+		Where	prod.cod_adh <> '3'
+		And     prod.alt_rl1 = 'O'
+		and     rout.id_sin		= sin.id_sin
+		and     rout.alt_queue		= 'N'
+		and	sin.id_sin 		= arch.id_sin
+		and    	sin.cod_etat      	 in ( 100, 550 )
+		and    	sin.valide_le 		= arch.valide_le
+		and     
+		(
+		  (
+			(
+			( Substring ( arch.id_cour_orig, 1, 2 ) = 'BC' and Substring ( arch.id_cour_orig, 4, 1 ) = 'P' ) Or Substring ( arch.id_cour_orig, 1, 1 ) = 'Q' Or arch.id_cour_orig = 'APART1'
+			) And arch.id_cour_orig is not null
+		  ) 
+		 OR
+		  (
+			(
+			( Substring ( arch.id_cour, 1, 2 ) = 'BC' and Substring ( arch.id_cour, 4, 1 ) = 'P' ) Or Substring ( arch.id_cour, 1, 1 ) = 'Q' Or arch.id_cour = 'APART1'
+			) And arch.id_cour_orig is null
+		  )
+		)
+
+		and     ( 
+				  ( prod.unt_rl1 = 'J' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'M' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'A' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				)
+		and     arch.cod_version     	= 2
+		and	arch.cod_inter		= 'B'
+		and     arch.nbr_conf         	= 0
+		and     arch.id_sin           	= int.id_sin
+		and     arch.id_inter         	= int.id_i
+		and	wg.id_sin		= sin.id_sin
+		and	wg.id_gti		= 7
+		and	wg.alt_att		= 'O' 
+		and 	intass.id_sin		= arch.id_sin
+		and 	intass.cod_inter	= 'A'
+		and 	pers.id_ordre		= sin.id_ordre
+		and	prod.id_prod		= sin.id_prod
+		and	eta.id_prod   		= sin.id_prod
+		and	eta.id_ets  		= sin.id_ets
+		and	eta.id_grp  		= grp.id_grp
+		and	eta.id_rev    		= -1
+		And Not exists ( 
+			Select Top 1 1
+			From sysadm.det_pro dp
+			Where dp.id_prod = prod.id_prod
+			And   dp.id_code_dp = 323
+		 )
+		And SHERPA_PRO.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
+
+	End 
+END 
+
+ELSE
+
+BEGIN
+	If @sCodeTrt = 'R1A' 
+	Begin 
+
+		select  
+			TYP_REL		= @sCodeTrt,
+ 			ID_SIN 		= sin.id_sin,
+			ID_REV		= sin.id_rev,
+			ID_ORDRE	= sin.id_ordre,
+			COD_INTER	= int.cod_inter,
+			NOM_INTER	= int.nom,		
+			ID_COUR		= IsNull ( arch.id_cour_orig, arch.id_cour ),
+			ID_I		= arch.id_inter,
+			ID_DOC		= arch.id_doc,
+			VALIDE_PAR	= arch.valide_par,
+			VALIDE_LE	= arch.valide_le,
+			TXT_COMPO	= arch.txt_compo1,
+			ALT_PART	= arch.alt_part,
+			ALT_PCE		= arch.alt_pce,
+			ALT_PS		= arch.alt_ps,
+			INT_CIVIL	= int.cod_civ,       
+			INT_ADR1	= int.adr_1,
+			INT_ADR2	= int.adr_2,
+			INT_ADR_CP	= int.adr_cp,
+			INT_ADR_VILLE	= int.adr_ville,
+			INT_VREF1	= int.v_ref1,
+			INT_VREF2	= int.v_ref2,
+			INT_RIB_BQ	= int.rib_bq,
+			INT_RIB_CLE	= int.rib_cle,
+			INT_RIB_CPT	= int.rib_cpt,
+			INT_RIB_GUI	= int.rib_gui,
+			PERS_CIVIL	= pers.cod_civ,
+			PERS_NOM	= pers.nom,
+			PERS_PRENOM	= pers.prenom,
+			DTE_EDIT	= arch.dte_edit,
+			INTASS_RIB_BQ	= intass.rib_bq,
+			INTASS_RIB_CLE	= intass.rib_cle,
+			INTASS_RIB_CPT	= intass.rib_cpt,
+			INTASS_RIB_GUI	= intass.rib_gui,
+			PROD_ID_DEPTS	= prod.id_depts,
+			PROD_ID_DEPT	= prod.id_dept,
+			ID_PROD		= prod.id_prod,
+			PROD_COURT	= prod.lib_court,
+			PROD_LONG	= prod.lib_long,
+			PROD_FAX	= prod.num_fax,
+			PROD_TEL	= prod.num_tel,
+			DTE_ADH		= sin.dte_adh,
+			DTE_SURV	= sin.dte_surv,
+			ID_ADH		= sin.id_adh,
+			ID_ETS		= sin.id_ets,
+			LIB_GRP		= grp.lib_grp,
+			TRI		= Case IsNull ( arch.id_cour_orig, arch.id_cour )
+						When 'APART1' THEN 2
+						Else 1
+					  End
+
+
+		From 	sysadm.sinistre 	sin with (nolock),
+			sysadm.archive  	arch with (nolock),
+			sysadm.inter		int with (nolock),
+			sysadm.inter		intass with (nolock),
+			sysadm.personne 	pers with (nolock),
+			sysadm.produit		prod with (nolock),
+			sysadm.groupe		grp with (nolock),
+			sysadm.routage		rout with (nolock)
+
+
+		Where	prod.cod_adh = '3'
+		And     prod.alt_rl1 = 'O'
+		And     rout.id_sin		= sin.id_sin
+		and     rout.alt_queue		= 'N'
+		and	sin.id_sin 		= arch.id_sin
+		and    	sin.cod_etat      	 in ( 100, 550 )
+		and    	sin.valide_le 		= arch.valide_le
+		and     
+		(
+		  (
+			(
+			( Substring ( arch.id_cour_orig, 2, 1 ) = 'C' and Substring ( arch.id_cour_orig, 4, 1 ) = 'P' ) Or
+			Substring ( arch.id_cour_orig, 1, 1 ) = 'Q' Or 
+			arch.id_cour_orig = 'APART1'
+			) And arch.id_cour_orig is not null
+		  ) 
+		 OR
+		  (
+			(
+			( Substring ( arch.id_cour, 2, 1 ) = 'C' and Substring ( arch.id_cour, 4, 1 ) = 'P' ) Or
+			Substring ( arch.id_cour, 1, 1 ) = 'Q' Or 
+			arch.id_cour = 'APART1'
+			) And arch.id_cour_orig is null
+		  )
+		)
+		and     (       CharIndex ( 'P001', arch.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P118', arch.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P119', arch.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P037', arch.txt_compo1, 1 ) = 0            
+					And CharIndex ( 'P107', arch.txt_compo1, 1 ) = 0            
+				And CharIndex ( 'P120', arch.txt_compo1, 1 ) = 0            
+				)
+		and     ( 
+				  ( prod.unt_rl1 = 'J' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'M' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'A' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				)
+
+		and     arch.cod_version     	= 2
+		and     arch.nbr_conf         	= 0
+		and     arch.id_sin           	= int.id_sin
+		and     arch.id_inter         	= int.id_i
+		and 	intass.id_sin		= arch.id_sin
+		and 	intass.cod_inter	= 'A'
+		and 	pers.id_ordre		= sin.id_ordre
+		and	prod.id_prod		= sin.id_prod
+		and	grp.id_grp		= sin.id_ets
+		And Not exists ( 
+			Select Top 1 1
+			From sysadm.det_pro dp
+			Where dp.id_prod = prod.id_prod
+			And   dp.id_code_dp = 323
+		 )
+		And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
+
+		Union All 
+
+		select  
+			TYP_REL		= @sCodeTrt,
+ 			ID_SIN 		= sin.id_sin,
+			ID_REV		= sin.id_rev,
+			ID_ORDRE	= sin.id_ordre,
+			COD_INTER	= int.cod_inter,
+			NOM_INTER	= int.nom,		
+			ID_COUR		= IsNull ( arch.id_cour_orig, arch.id_cour ),
+			ID_I		= arch.id_inter,
+			ID_DOC		= arch.id_doc,
+			VALIDE_PAR	= arch.valide_par,
+			VALIDE_LE	= arch.valide_le,
+			TXT_COMPO	= arch.txt_compo1,
+			ALT_PART	= arch.alt_part,
+			ALT_PCE		= arch.alt_pce,
+			ALT_PS		= arch.alt_ps,
+			INT_CIVIL	= int.cod_civ,       
+			INT_ADR1	= int.adr_1,
+			INT_ADR2	= int.adr_2,
+			INT_ADR_CP	= int.adr_cp,
+			INT_ADR_VILLE	= int.adr_ville,
+			INT_VREF1	= int.v_ref1,
+			INT_VREF2	= int.v_ref2,
+			INT_RIB_BQ	= int.rib_bq,
+			INT_RIB_CLE	= int.rib_cle,
+			INT_RIB_CPT	= int.rib_cpt,
+			INT_RIB_GUI	= int.rib_gui,
+			PERS_CIVIL	= pers.cod_civ,
+			PERS_NOM	= pers.nom,
+			PERS_PRENOM	= pers.prenom,
+			DTE_EDIT	= arch.dte_edit,
+			INTASS_RIB_BQ	= intass.rib_bq,
+			INTASS_RIB_CLE	= intass.rib_cle,
+			INTASS_RIB_CPT	= intass.rib_cpt,
+			INTASS_RIB_GUI	= intass.rib_gui,
+			PROD_ID_DEPTS	= prod.id_depts,
+			PROD_ID_DEPT	= prod.id_dept,
+			ID_PROD		= prod.id_prod,
+			PROD_COURT	= prod.lib_court,
+			PROD_LONG	= prod.lib_long,
+			PROD_FAX	= prod.num_fax,
+			PROD_TEL	= prod.num_tel,
+			DTE_ADH		= sin.dte_adh,
+			DTE_SURV	= sin.dte_surv,
+			ID_ADH		= sin.id_adh,
+			ID_ETS		= sin.id_ets,
+			LIB_GRP		= grp.lib_grp,
+			TRI		= Case IsNull ( arch.id_cour_orig, arch.id_cour )
+						When 'APART1' THEN 2
+						Else 1
+					  End
+
+		From 	sysadm.sinistre 	sin with (nolock),
+			sysadm.archive  	arch with (nolock),
+			sysadm.inter		int with (nolock),
+			sysadm.inter		intass with (nolock),
+			sysadm.personne 	pers with (nolock),
+			sysadm.produit		prod with (nolock),
+			sysadm.groupe		grp with (nolock),
+			sysadm.etablissement	eta with (nolock),
+			sysadm.routage		rout with (nolock)
+
+		Where	prod.cod_adh <> '3'
+		And     prod.alt_rl1 = 'O'
+		and     rout.id_sin		= sin.id_sin
+		and     rout.alt_queue		= 'N'
+		and	sin.id_sin 		= arch.id_sin
+		and    	sin.cod_etat      	 in ( 100, 550 )
+		and    	sin.valide_le 		= arch.valide_le
+		and     
+		(
+		  (
+			(
+			( Substring ( arch.id_cour_orig, 2, 1 ) = 'C' and Substring ( arch.id_cour_orig, 4, 1 ) = 'P' ) Or
+			Substring ( arch.id_cour_orig, 1, 1 ) = 'Q' Or 
+			arch.id_cour_orig = 'APART1'
+			) And arch.id_cour_orig is not null
+		  ) 
+		 OR
+		  (
+			(
+			( Substring ( arch.id_cour, 2, 1 ) = 'C' and Substring ( arch.id_cour, 4, 1 ) = 'P' ) Or
+			Substring ( arch.id_cour, 1, 1 ) = 'Q' Or 
+			arch.id_cour = 'APART1'
+			) And arch.id_cour_orig is null
+		  )
+		)
+		and     (       CharIndex ( 'P001', arch.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P118', arch.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P119', arch.txt_compo1, 1 ) = 0
+					And CharIndex ( 'P037', arch.txt_compo1, 1 ) = 0            
+					And CharIndex ( 'P107', arch.txt_compo1, 1 ) = 0            
+				And CharIndex ( 'P120', arch.txt_compo1, 1 ) = 0            
+				)
+
+		and     ( 
+				  ( prod.unt_rl1 = 'J' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'M' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'A' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				)
+		and     arch.cod_version     	= 2
+		and     arch.nbr_conf         	= 0
+		and     arch.id_sin           	= int.id_sin
+		and     arch.id_inter         	= int.id_i
+		and 	intass.id_sin		= arch.id_sin
+		and 	intass.cod_inter	= 'A'
+		and 	pers.id_ordre		= sin.id_ordre
+		and	prod.id_prod		= sin.id_prod
+		and	eta.id_prod   		= sin.id_prod
+		and	eta.id_ets  		= sin.id_ets
+		and	eta.id_grp  		= grp.id_grp
+		and	eta.id_rev    		= -1
+		And Not exists ( 
+			Select Top 1 1
+			From sysadm.det_pro dp
+			Where dp.id_prod = prod.id_prod
+			And   dp.id_code_dp = 323
+		 )
+		And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
+
+	End -- Fin R1A
+
+	If @sCodeTrt = 'R2' 
+	Begin 
+
+		select 
+			TYP_REL		= @sCodeTrt,
+ 			ID_SIN 		= sin.id_sin,
+			ID_REV		= sin.id_rev,
+			ID_ORDRE	= sin.id_ordre,
+			COD_INTER	= int.cod_inter,
+			NOM_INTER	= int.nom,		
+			ID_COUR		= IsNull ( arch.id_cour_orig, arch.id_cour ),
+			ID_I		= arch.id_inter,
+			ID_DOC		= arch.id_doc,
+			VALIDE_PAR	= arch.valide_par,
+			VALIDE_LE	= arch.valide_le,
+			TXT_COMPO	= arch.txt_compo1,
+			ALT_PART	= arch.alt_part,
+			ALT_PCE		= arch.alt_pce,
+			ALT_PS		= arch.alt_ps,
+			INT_CIVIL	= int.cod_civ,       
+			INT_ADR1	= int.adr_1,
+			INT_ADR2	= int.adr_2,
+			INT_ADR_CP	= int.adr_cp,
+			INT_ADR_VILLE	= int.adr_ville,
+			INT_VREF1	= int.v_ref1,
+			INT_VREF2	= int.v_ref2,
+			INT_RIB_BQ	= int.rib_bq,
+			INT_RIB_CLE	= int.rib_cle,
+			INT_RIB_CPT	= int.rib_cpt,
+			INT_RIB_GUI	= int.rib_gui,
+			PERS_CIVIL	= pers.cod_civ,
+			PERS_NOM	= pers.nom,
+			PERS_PRENOM	= pers.prenom,
+			DTE_EDIT	= arch.dte_edit,
+			INTASS_RIB_BQ	= intass.rib_bq,
+			INTASS_RIB_CLE	= intass.rib_cle,
+			INTASS_RIB_CPT	= intass.rib_cpt,
+			INTASS_RIB_GUI	= intass.rib_gui,
+			PROD_ID_DEPTS	= prod.id_depts,
+			PROD_ID_DEPT	= prod.id_dept,
+			ID_PROD		= prod.id_prod,
+			PROD_COURT	= prod.lib_court,
+			PROD_LONG	= prod.lib_long,
+			PROD_FAX	= prod.num_fax,
+			PROD_TEL	= prod.num_tel,
+			DTE_ADH		= sin.dte_adh,
+			DTE_SURV	= sin.dte_surv,
+			ID_ADH		= sin.id_adh,
+			ID_ETS		= sin.id_ets,
+			LIB_GRP		= grp.lib_grp,
+			TRI		= Case IsNull ( arch.id_cour_orig, arch.id_cour )
+						When 'APART1' THEN 2
+						Else 1
+					  End
+
+
+		From 	sysadm.sinistre 	sin with (nolock),
+			sysadm.archive  	arch with (nolock),
+			sysadm.inter		int with (nolock),
+			sysadm.inter		intass with (nolock),
+			sysadm.personne 	pers with (nolock),
+			sysadm.produit		prod with (nolock),
+			sysadm.groupe		grp with (nolock),
+			sysadm.routage		rout with (nolock)
+
+
+		Where	prod.cod_adh = '3'
+		And     prod.alt_rl2 = 'O'
+		and     rout.id_sin		= sin.id_sin
+		and     rout.alt_queue		= 'N'
+		and	sin.id_sin 		= arch.id_sin
+		and    	sin.cod_etat      	in ( 100, 550 )
+		and    	sin.valide_le 		= arch.valide_le
+		and     
+		(
+		  (
+			( Substring ( arch.id_cour_orig, 2, 5 ) = 'LAX01' Or arch.id_cour_orig = 'ALQ001' )
+			And arch.id_cour_orig is not null
+		  ) 
+		 OR
+		  (
+			( Substring ( arch.id_cour, 2, 5 ) = 'LAX01' Or arch.id_cour = 'ALQ001' )
+			And arch.id_cour_orig is null
+		  )
+		)
+		and     ( 
+				  ( prod.unt_rl2 = 'J' 
+					And arch.maj_le  <= Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl2 * (-1), getdate()), 103) + ' 00:00:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl2 = 'M' 
+					And arch.maj_le  <= Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl2 * (-1), getdate()), 103) + ' 00:00:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl2 = 'A' 
+					And arch.maj_le  <= Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl2 * (-1), getdate()), 103) + ' 00:00:00'
+				  ) 
+				)
+
+
+		and     arch.cod_version     	= 2
+		and     arch.nbr_conf         	= 0
+		and     arch.id_sin           	= int.id_sin
+		and     arch.id_inter         	= int.id_i
+		and 	intass.id_sin		= arch.id_sin
+		and 	intass.cod_inter	= 'A'
+		and 	pers.id_ordre		= sin.id_ordre
+		and	prod.id_prod		= sin.id_prod
+		and	grp.id_grp		= sin.id_ets
+		And Not exists ( 
+			Select Top 1 1
+			From sysadm.det_pro dp
+			Where dp.id_prod = prod.id_prod
+			And   dp.id_code_dp = 323
+		 )
+		And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
+
+		Union all
+
+		select  
+			TYP_REL		= @sCodeTrt,
+ 			ID_SIN 		= sin.id_sin,
+			ID_REV		= sin.id_rev,
+			ID_ORDRE	= sin.id_ordre,
+			COD_INTER	= int.cod_inter,
+			NOM_INTER	= int.nom,		
+			ID_COUR		= IsNull ( arch.id_cour_orig, arch.id_cour ),
+			ID_I		= arch.id_inter,
+			ID_DOC		= arch.id_doc,
+			VALIDE_PAR	= arch.valide_par,
+			VALIDE_LE	= arch.valide_le,
+			TXT_COMPO	= arch.txt_compo1,
+			ALT_PART	= arch.alt_part,
+			ALT_PCE		= arch.alt_pce,
+			ALT_PS		= arch.alt_ps,
+			INT_CIVIL	= int.cod_civ,       
+			INT_ADR1	= int.adr_1,
+			INT_ADR2	= int.adr_2,
+			INT_ADR_CP	= int.adr_cp,
+			INT_ADR_VILLE	= int.adr_ville,
+			INT_VREF1	= int.v_ref1,
+			INT_VREF2	= int.v_ref2,
+			INT_RIB_BQ	= int.rib_bq,
+			INT_RIB_CLE	= int.rib_cle,
+			INT_RIB_CPT	= int.rib_cpt,
+			INT_RIB_GUI	= int.rib_gui,
+			PERS_CIVIL	= pers.cod_civ,
+			PERS_NOM	= pers.nom,
+			PERS_PRENOM	= pers.prenom,
+			DTE_EDIT	= arch.dte_edit,
+			INTASS_RIB_BQ	= intass.rib_bq,
+			INTASS_RIB_CLE	= intass.rib_cle,
+			INTASS_RIB_CPT	= intass.rib_cpt,
+			INTASS_RIB_GUI	= intass.rib_gui,
+			PROD_ID_DEPTS	= prod.id_depts,
+			PROD_ID_DEPT	= prod.id_dept,
+			ID_PROD		= prod.id_prod,
+			PROD_COURT	= prod.lib_court,
+			PROD_LONG	= prod.lib_long,
+			PROD_FAX	= prod.num_fax,
+			PROD_TEL	= prod.num_tel,
+			DTE_ADH		= sin.dte_adh,
+			DTE_SURV	= sin.dte_surv,
+			ID_ADH		= sin.id_adh,
+			ID_ETS		= sin.id_ets,
+			LIB_GRP		= grp.lib_grp,
+			TRI		= Case IsNull ( arch.id_cour_orig, arch.id_cour )
+						When 'APART1' THEN 2
+						Else 1
+					  End
+
+
+		From 	sysadm.sinistre 	sin with (nolock),
+			sysadm.archive  	arch with (nolock),
+			sysadm.inter		int with (nolock),
+			sysadm.inter		intass with (nolock),
+			sysadm.personne 	pers with (nolock),
+			sysadm.produit		prod with (nolock),
+			sysadm.groupe		grp with (nolock),
+			sysadm.etablissement	eta with (nolock),
+			sysadm.routage		rout with (nolock)
+
+		Where	prod.cod_adh <> '3'
+		And     prod.alt_rl2 = 'O'
+		and     rout.id_sin		= sin.id_sin
+		and     rout.alt_queue		= 'N'
+		and	sin.id_sin 		= arch.id_sin
+		and    	sin.cod_etat      	in ( 100, 550 )
+		and    	sin.valide_le 		= arch.valide_le
+		and     
+		(
+		  (
+			( Substring ( arch.id_cour_orig, 2, 5 ) = 'LAX01' Or arch.id_cour_orig = 'ALQ001' )
+			And arch.id_cour_orig is not null
+		  ) 
+		 OR
+		  (
+			( Substring ( arch.id_cour, 2, 5 ) = 'LAX01' Or arch.id_cour = 'ALQ001' )
+			And arch.id_cour_orig is null
+		  )
+		)
+
+		and     ( 
+				  ( prod.unt_rl2 = 'J' 
+					And arch.maj_le  <= Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl2 * (-1), getdate()), 103) + ' 00:00:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl2 = 'M' 
+					And arch.maj_le  <= Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl2 * (-1), getdate()), 103) + ' 00:00:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl2 = 'A' 
+					And arch.maj_le  <= Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl2 * (-1), getdate()), 103) + ' 00:00:00'
+				  ) 
+				)
+		and     arch.cod_version     	= 2
+		and     arch.nbr_conf         	= 0
+		and     arch.id_sin           	= int.id_sin
+		and     arch.id_inter         	= int.id_i
+		and 	intass.id_sin		= arch.id_sin
+		and 	intass.cod_inter	= 'A'
+		and 	pers.id_ordre		= sin.id_ordre
+		and	prod.id_prod		= sin.id_prod
+		and	eta.id_prod   		= sin.id_prod
+		and	eta.id_ets  		= sin.id_ets
+		and	eta.id_grp  		= grp.id_grp
+		and	eta.id_rev    		= -1
+		And Not exists ( 
+			Select Top 1 1
+			From sysadm.det_pro dp
+			Where dp.id_prod = prod.id_prod
+			And   dp.id_code_dp = 323
+		 )
+		And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
+
+	End 
+
+	If @sCodeTrt = 'R1U' 
+	Begin 
+
+		-- PremiŠre requˆte en regardant les piŠces coch‚s.
+		select  
+			TYP_REL		= @sCodeTrt,
+ 			ID_SIN 		= sin.id_sin,
+			ID_REV		= sin.id_rev,
+			ID_ORDRE	= sin.id_ordre,
+			COD_INTER	= int.cod_inter,
+			NOM_INTER	= int.nom,		
+			ID_COUR		= IsNull ( arch.id_cour_orig, arch.id_cour ),
+			ID_I		= arch.id_inter,
+			ID_DOC		= arch.id_doc,
+			VALIDE_PAR	= arch.valide_par,
+			VALIDE_LE	= arch.valide_le,
+			TXT_COMPO	= arch.txt_compo1,
+			ALT_PART	= arch.alt_part,
+			ALT_PCE		= arch.alt_pce,
+			ALT_PS		= arch.alt_ps,
+			INT_CIVIL	= int.cod_civ,       
+			INT_ADR1	= int.adr_1,
+			INT_ADR2	= int.adr_2,
+			INT_ADR_CP	= int.adr_cp,
+			INT_ADR_VILLE	= int.adr_ville,
+			INT_VREF1	= int.v_ref1,
+			INT_VREF2	= int.v_ref2,
+			INT_RIB_BQ	= int.rib_bq,
+			INT_RIB_CLE	= int.rib_cle,
+			INT_RIB_CPT	= int.rib_cpt,
+			INT_RIB_GUI	= int.rib_gui,
+			PERS_CIVIL	= pers.cod_civ,
+			PERS_NOM	= pers.nom,
+			PERS_PRENOM	= pers.prenom,
+			DTE_EDIT	= arch.dte_edit,
+			INTASS_RIB_BQ	= intass.rib_bq,
+			INTASS_RIB_CLE	= intass.rib_cle,
+			INTASS_RIB_CPT	= intass.rib_cpt,
+			INTASS_RIB_GUI	= intass.rib_gui,
+			PROD_ID_DEPTS	= prod.id_depts,
+			PROD_ID_DEPT	= prod.id_dept,
+			ID_PROD		= prod.id_prod,
+			PROD_COURT	= prod.lib_court,
+			PROD_LONG	= prod.lib_long,
+			PROD_FAX	= prod.num_fax,
+			PROD_TEL	= prod.num_tel,
+			DTE_ADH		= sin.dte_adh,
+			DTE_SURV	= sin.dte_surv,
+			ID_ADH		= sin.id_adh,
+			ID_ETS		= sin.id_ets,
+			LIB_GRP		= grp.lib_grp,
+			TRI		= Case IsNull ( arch.id_cour_orig, arch.id_cour )
+						When 'APART1' THEN 2
+						Else 1
+					  End
+
+
+		From 	sysadm.sinistre 	sin with (nolock),
+			sysadm.w_piece		wp with (nolock),
+			sysadm.archive  	arch with (nolock),
+			sysadm.inter		int with (nolock),
+			sysadm.inter		intass with (nolock),
+			sysadm.personne 	pers with (nolock),
+			sysadm.produit		prod with (nolock),
+			sysadm.groupe		grp with (nolock),
+			sysadm.routage		rout with (nolock)
+
+
+		Where	prod.cod_adh = '3'
+		And     prod.alt_rl1 = 'O'
+		and     rout.id_sin		= sin.id_sin
+		and     rout.alt_queue		= 'N'
+		and	sin.id_sin 		= arch.id_sin
+		and    	sin.cod_etat      	 in ( 100, 550 )
+		and    	sin.valide_le 		= arch.valide_le
+		and     
+		(
+		  (
+			(
+			( Substring ( arch.id_cour_orig, 1, 2 ) = 'BC' and Substring ( arch.id_cour_orig, 4, 1 ) = 'P' ) Or Substring ( arch.id_cour_orig, 1, 1 ) = 'Q' Or arch.id_cour_orig = 'APART1' 
+			) And arch.id_cour_orig is not null
+		  ) 
+		 OR
+		  (
+			(
+			( Substring ( arch.id_cour, 1, 2 ) = 'BC' and Substring ( arch.id_cour, 4, 1 ) = 'P' ) Or Substring ( arch.id_cour, 1, 1 ) = 'Q' Or arch.id_cour = 'APART1' 
+			) And arch.id_cour_orig is null
+		  )
+		)
+
+		and     ( 
+				  ( prod.unt_rl1 = 'J' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'M' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'A' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				)
+		and     arch.cod_version     	= 2
+		and	arch.cod_inter		= 'B'
+		and     arch.nbr_conf         	= 0
+		and     arch.id_sin           	= int.id_sin
+		and     arch.id_inter         	= int.id_i
+		and	wp.id_sin		= sin.id_sin
+		and	wp.id_gti		= 7
+		and	wp.id_i			= int.id_i
+		and 	intass.id_sin		= arch.id_sin
+		and 	intass.cod_inter	= 'A'
+		and 	pers.id_ordre		= sin.id_ordre
+		and	prod.id_prod		= sin.id_prod
+		and	grp.id_grp		= sin.id_ets
+		And Not exists ( 
+			Select Top 1 1
+			From sysadm.det_pro dp
+			Where dp.id_prod = prod.id_prod
+			And   dp.id_code_dp = 323
+		 )
+		And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
+
+		UNION ALL
+
+		-- DeuxiŠme requˆte en regardant ALT_ATT coch‚.
+		select  
+			TYP_REL		= @sCodeTrt,
+ 			ID_SIN 		= sin.id_sin,
+			ID_REV		= sin.id_rev,
+			ID_ORDRE	= sin.id_ordre,
+			COD_INTER	= int.cod_inter,
+			NOM_INTER	= int.nom,		
+			ID_COUR		= IsNull ( arch.id_cour_orig, arch.id_cour ),
+			ID_I		= arch.id_inter,
+			ID_DOC		= arch.id_doc,
+			VALIDE_PAR	= arch.valide_par,
+			VALIDE_LE	= arch.valide_le,
+			TXT_COMPO	= arch.txt_compo1,
+			ALT_PART	= arch.alt_part,
+			ALT_PCE		= arch.alt_pce,
+			ALT_PS		= arch.alt_ps,
+			INT_CIVIL	= int.cod_civ,       
+			INT_ADR1	= int.adr_1,
+			INT_ADR2	= int.adr_2,
+			INT_ADR_CP	= int.adr_cp,
+			INT_ADR_VILLE	= int.adr_ville,
+			INT_VREF1	= int.v_ref1,
+			INT_VREF2	= int.v_ref2,
+			INT_RIB_BQ	= int.rib_bq,
+			INT_RIB_CLE	= int.rib_cle,
+			INT_RIB_CPT	= int.rib_cpt,
+			INT_RIB_GUI	= int.rib_gui,
+			PERS_CIVIL	= pers.cod_civ,
+			PERS_NOM	= pers.nom,
+			PERS_PRENOM	= pers.prenom,
+			DTE_EDIT	= arch.dte_edit,
+			INTASS_RIB_BQ	= intass.rib_bq,
+			INTASS_RIB_CLE	= intass.rib_cle,
+			INTASS_RIB_CPT	= intass.rib_cpt,
+			INTASS_RIB_GUI	= intass.rib_gui,
+			PROD_ID_DEPTS	= prod.id_depts,
+			PROD_ID_DEPT	= prod.id_dept,
+			ID_PROD		= prod.id_prod,
+			PROD_COURT	= prod.lib_court,
+			PROD_LONG	= prod.lib_long,
+			PROD_FAX	= prod.num_fax,
+			PROD_TEL	= prod.num_tel,
+			DTE_ADH		= sin.dte_adh,
+			DTE_SURV	= sin.dte_surv,
+			ID_ADH		= sin.id_adh,
+			ID_ETS		= sin.id_ets,
+			LIB_GRP		= grp.lib_grp,
+			TRI		= Case IsNull ( arch.id_cour_orig, arch.id_cour )
+						When 'APART1' THEN 2
+						Else 1
+					  End
+
+
+
+		From 	sysadm.sinistre 	sin,
+			sysadm.w_gar_sin	wg,
+			sysadm.archive  	arch,
+			sysadm.inter		int,
+			sysadm.inter		intass,
+			sysadm.personne 	pers,
+			sysadm.produit		prod,
+			sysadm.groupe		grp,
+			sysadm.routage		rout
+
+
+		Where	prod.cod_adh = '3'
+		And     prod.alt_rl1 = 'O'
+		and     rout.id_sin		= sin.id_sin
+		and     rout.alt_queue		= 'N'
+		and	sin.id_sin 		= arch.id_sin
+		and    	sin.cod_etat      	 in ( 100, 550 )
+		and    	sin.valide_le 		= arch.valide_le
+		and     
+		(
+		  (
+			(
+			( Substring ( arch.id_cour_orig, 1, 2 ) = 'BC' and Substring ( arch.id_cour_orig, 4, 1 ) = 'P' ) Or Substring ( arch.id_cour_orig, 1, 1 ) = 'Q' Or arch.id_cour_orig = 'APART1' 
+			) And arch.id_cour_orig is not null
+		  ) 
+		 OR
+		  (
+			(
+			( Substring ( arch.id_cour, 1, 2 ) = 'BC' and Substring ( arch.id_cour, 4, 1 ) = 'P' ) Or Substring ( arch.id_cour, 1, 1 ) = 'Q' Or arch.id_cour = 'APART1' 
+			) And arch.id_cour_orig is null
+		  )
+		)
+
+		and     ( 
+				  ( prod.unt_rl1 = 'J' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'M' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'A' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				)
+		and     arch.cod_version     	= 2
+		and	arch.cod_inter		= 'B'
+		and     arch.nbr_conf         	= 0
+		and     arch.id_sin           	= int.id_sin
+		and     arch.id_inter         	= int.id_i
+		and	wg.id_sin		= sin.id_sin
+		and	wg.id_gti		= 7
+		and	wg.alt_att		= 'O' 
+		and 	intass.id_sin		= arch.id_sin
+		and 	intass.cod_inter	= 'A'
+		and 	pers.id_ordre		= sin.id_ordre
+		and	prod.id_prod		= sin.id_prod
+		and	grp.id_grp		= sin.id_ets
+		And Not exists ( 
+			Select Top 1 1
+			From sysadm.det_pro dp
+			Where dp.id_prod = prod.id_prod
+			And   dp.id_code_dp = 323
+		 )
+		And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
+
+		union all
+		-- PremiŠre requˆte en regardant les piŠces coch‚s.
+
+		select  
+			TYP_REL		= @sCodeTrt,
+ 			ID_SIN 		= sin.id_sin,
+			ID_REV		= sin.id_rev,
+			ID_ORDRE	= sin.id_ordre,
+			COD_INTER	= int.cod_inter,
+			NOM_INTER	= int.nom,		
+			ID_COUR		= IsNull ( arch.id_cour_orig, arch.id_cour ),
+			ID_I		= arch.id_inter,
+			ID_DOC		= arch.id_doc,
+			VALIDE_PAR	= arch.valide_par,
+			VALIDE_LE	= arch.valide_le,
+			TXT_COMPO	= arch.txt_compo1,
+			ALT_PART	= arch.alt_part,
+			ALT_PCE		= arch.alt_pce,
+			ALT_PS		= arch.alt_ps,
+			INT_CIVIL	= int.cod_civ,       
+			INT_ADR1	= int.adr_1,
+			INT_ADR2	= int.adr_2,
+			INT_ADR_CP	= int.adr_cp,
+			INT_ADR_VILLE	= int.adr_ville,
+			INT_VREF1	= int.v_ref1,
+			INT_VREF2	= int.v_ref2,
+			INT_RIB_BQ	= int.rib_bq,
+			INT_RIB_CLE	= int.rib_cle,
+			INT_RIB_CPT	= int.rib_cpt,
+			INT_RIB_GUI	= int.rib_gui,
+			PERS_CIVIL	= pers.cod_civ,
+			PERS_NOM	= pers.nom,
+			PERS_PRENOM	= pers.prenom,
+			DTE_EDIT	= arch.dte_edit,
+			INTASS_RIB_BQ	= intass.rib_bq,
+			INTASS_RIB_CLE	= intass.rib_cle,
+			INTASS_RIB_CPT	= intass.rib_cpt,
+			INTASS_RIB_GUI	= intass.rib_gui,
+			PROD_ID_DEPTS	= prod.id_depts,
+			PROD_ID_DEPT	= prod.id_dept,
+			ID_PROD		= prod.id_prod,
+			PROD_COURT	= prod.lib_court,
+			PROD_LONG	= prod.lib_long,
+			PROD_FAX	= prod.num_fax,
+			PROD_TEL	= prod.num_tel,
+			DTE_ADH		= sin.dte_adh,
+			DTE_SURV	= sin.dte_surv,
+			ID_ADH		= sin.id_adh,
+			ID_ETS		= sin.id_ets,
+			LIB_GRP		= grp.lib_grp,
+			TRI		= Case IsNull ( arch.id_cour_orig, arch.id_cour )
+						When 'APART1' THEN 2
+						Else 1
+					  End
+
+
+		From 	sysadm.sinistre 	sin with (nolock),
+			sysadm.w_piece		wp with (nolock),
+			sysadm.archive  	arch with (nolock),
+			sysadm.inter		int with (nolock),
+			sysadm.inter		intass with (nolock),
+			sysadm.personne 	pers with (nolock),
+			sysadm.produit		prod with (nolock),
+			sysadm.groupe		grp with (nolock),
+			sysadm.etablissement	eta with (nolock),
+			sysadm.routage		rout with (nolock)
+
+
+		Where	prod.cod_adh <> '3'
+		And     prod.alt_rl1 = 'O'
+		and     rout.id_sin		= sin.id_sin
+		and     rout.alt_queue		= 'N'
+		and	sin.id_sin 		= arch.id_sin
+		and    	sin.cod_etat      	 in ( 100, 550 )
+		and    	sin.valide_le 		= arch.valide_le
+		and     
+		(
+		  (
+			(
+			( Substring ( arch.id_cour_orig, 1, 2 ) = 'BC' and Substring ( arch.id_cour_orig, 4, 1 ) = 'P' ) Or Substring ( arch.id_cour_orig, 1, 1 ) = 'Q' Or arch.id_cour_orig = 'APART1' 
+			) And arch.id_cour_orig is not null
+		  ) 
+		 OR
+		  (
+			(
+			( Substring ( arch.id_cour, 1, 2 ) = 'BC' and Substring ( arch.id_cour, 4, 1 ) = 'P' ) Or Substring ( arch.id_cour, 1, 1 ) = 'Q' Or arch.id_cour = 'APART1' 
+			) And arch.id_cour_orig is null
+		  )
+		)
+
+		and     ( 
+				  ( prod.unt_rl1 = 'J' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'M' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'A' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				)
+		and     arch.cod_version     	= 2
+		and	arch.cod_inter		= 'B'
+		and     arch.nbr_conf         	= 0
+		and     arch.id_sin           	= int.id_sin
+		and     arch.id_inter         	= int.id_i
+		and	wp.id_sin		= sin.id_sin
+		and	wp.id_gti		= 7
+		and	wp.id_i			= int.id_i
+		and 	intass.id_sin		= arch.id_sin
+		and 	intass.cod_inter	= 'A'
+		and 	pers.id_ordre		= sin.id_ordre
+		and	prod.id_prod		= sin.id_prod
+		and	eta.id_prod   		= sin.id_prod
+		and	eta.id_ets  		= sin.id_ets
+		and	eta.id_grp  		= grp.id_grp
+		and	eta.id_rev    		= -1
+		And Not exists ( 
+			Select Top 1 1
+			From sysadm.det_pro dp
+			Where dp.id_prod = prod.id_prod
+			And   dp.id_code_dp = 323
+		 )
+		And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0 -- [RS3179]
+
+		UNION ALL
+
+		-- DeuxiŠme requˆte en regardant ALT_ATT coch‚.
+		select  
+			TYP_REL		= @sCodeTrt,
+ 			ID_SIN 		= sin.id_sin,
+			ID_REV		= sin.id_rev,
+			ID_ORDRE	= sin.id_ordre,
+			COD_INTER	= int.cod_inter,
+			NOM_INTER	= int.nom,		
+			ID_COUR		= IsNull ( arch.id_cour_orig, arch.id_cour ),
+			ID_I		= arch.id_inter,
+			ID_DOC		= arch.id_doc,
+			VALIDE_PAR	= arch.valide_par,
+			VALIDE_LE	= arch.valide_le,
+			TXT_COMPO	= arch.txt_compo1,
+			ALT_PART	= arch.alt_part,
+			ALT_PCE		= arch.alt_pce,
+			ALT_PS		= arch.alt_ps,
+			INT_CIVIL	= int.cod_civ,       
+			INT_ADR1	= int.adr_1,
+			INT_ADR2	= int.adr_2,
+			INT_ADR_CP	= int.adr_cp,
+			INT_ADR_VILLE	= int.adr_ville,
+			INT_VREF1	= int.v_ref1,
+			INT_VREF2	= int.v_ref2,
+			INT_RIB_BQ	= int.rib_bq,
+			INT_RIB_CLE	= int.rib_cle,
+			INT_RIB_CPT	= int.rib_cpt,
+			INT_RIB_GUI	= int.rib_gui,
+			PERS_CIVIL	= pers.cod_civ,
+			PERS_NOM	= pers.nom,
+			PERS_PRENOM	= pers.prenom,
+			DTE_EDIT	= arch.dte_edit,
+			INTASS_RIB_BQ	= intass.rib_bq,
+			INTASS_RIB_CLE	= intass.rib_cle,
+			INTASS_RIB_CPT	= intass.rib_cpt,
+			INTASS_RIB_GUI	= intass.rib_gui,
+			PROD_ID_DEPTS	= prod.id_depts,
+			PROD_ID_DEPT	= prod.id_dept,
+			ID_PROD		= prod.id_prod,
+			PROD_COURT	= prod.lib_court,
+			PROD_LONG	= prod.lib_long,
+			PROD_FAX	= prod.num_fax,
+			PROD_TEL	= prod.num_tel,
+			DTE_ADH		= sin.dte_adh,
+			DTE_SURV	= sin.dte_surv,
+			ID_ADH		= sin.id_adh,
+			ID_ETS		= sin.id_ets,
+			LIB_GRP		= grp.lib_grp,
+			TRI		= Case IsNull ( arch.id_cour_orig, arch.id_cour )
+						When 'APART1' THEN 2
+						Else 1
+					  End
+
+		From 	sysadm.sinistre 	sin with (nolock),
+			sysadm.w_gar_sin	wg with (nolock),
+			sysadm.archive  	arch with (nolock),
+			sysadm.inter		int with (nolock),
+			sysadm.inter		intass with (nolock),
+			sysadm.personne 	pers with (nolock),
+			sysadm.produit		prod with (nolock),
+			sysadm.groupe		grp with (nolock),
+			sysadm.etablissement	eta with (nolock),
+			sysadm.routage		rout with (nolock)
+
+
+		Where	prod.cod_adh <> '3'
+		And     prod.alt_rl1 = 'O'
+		and     rout.id_sin		= sin.id_sin
+		and     rout.alt_queue		= 'N'
+		and	sin.id_sin 		= arch.id_sin
+		and    	sin.cod_etat      	 in ( 100, 550 )
+		and    	sin.valide_le 		= arch.valide_le
+		and     
+		(
+		  (
+			(
+			( Substring ( arch.id_cour_orig, 1, 2 ) = 'BC' and Substring ( arch.id_cour_orig, 4, 1 ) = 'P' ) Or Substring ( arch.id_cour_orig, 1, 1 ) = 'Q' Or arch.id_cour_orig = 'APART1'
+			) And arch.id_cour_orig is not null
+		  ) 
+		 OR
+		  (
+			(
+			( Substring ( arch.id_cour, 1, 2 ) = 'BC' and Substring ( arch.id_cour, 4, 1 ) = 'P' ) Or Substring ( arch.id_cour, 1, 1 ) = 'Q' Or arch.id_cour = 'APART1'
+			) And arch.id_cour_orig is null
+		  )
+		)
+
+		and     ( 
+				  ( prod.unt_rl1 = 'J' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( day, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'M' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( month, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				  Or 
+				  ( prod.unt_rl1 = 'A' 
+					And arch.valide_le  between Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_max * (-1), getdate()), 103) + ' 00:00:00'
+										and Convert ( varchar ( 10), DateAdd ( year, prod.dur_rl1_min * (-1), getdate()), 103) + ' 23:59:00'
+				  ) 
+				)
+		and     arch.cod_version     	= 2
+		and	arch.cod_inter		= 'B'
+		and     arch.nbr_conf         	= 0
+		and     arch.id_sin           	= int.id_sin
+		and     arch.id_inter         	= int.id_i
+		and	wg.id_sin		= sin.id_sin
+		and	wg.id_gti		= 7
+		and	wg.alt_att		= 'O' 
+		and 	intass.id_sin		= arch.id_sin
+		and 	intass.cod_inter	= 'A'
+		and 	pers.id_ordre		= sin.id_ordre
+		and	prod.id_prod		= sin.id_prod
+		and	eta.id_prod   		= sin.id_prod
+		and	eta.id_ets  		= sin.id_ets
+		and	eta.id_grp  		= grp.id_grp
+		and	eta.id_rev    		= -1
+		And Not exists ( 
+			Select Top 1 1
+			From sysadm.det_pro dp
+			Where dp.id_prod = prod.id_prod
+			And   dp.id_code_dp = 323
+		 )
+		And SHERPA_SIM.sysadm.FN_Recla_Verifier_Sinistre ( sin.id_sin, 2 ) <= 0  -- [RS3179]
+	End 
+END 
+
+Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_D_PRE_TRT_RELANCE
+-- Auteur               :       Fabry JF
+-- Date                 :       10/11/2023
+-- Libellé              :        [OPTIM_TRT_RELANCE]
+-- Commentaires         :       à lancer par SIMPA2 PB à la fin de chaque trt si 
+-- Références           :       
+
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_D_PRE_TRT_RELANCE' AND type = 'P' )
+        DROP procedure sysadm.PS_D_PRE_TRT_RELANCE
+GO
+
+CREATE procedure sysadm.PS_D_PRE_TRT_RELANCE
+	@dcIdSin	Decimal (10),
+	@dcIdInter  Decimal (7),
+	@dcIdDoc    Decimal (7)
+AS
+	Delete sysadm.pre_trt_relance where id_sin = @dcIdSin And id_i = @dcIdInter And id_doc = @dcIdDoc
+Go
 
 

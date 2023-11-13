@@ -4892,6 +4892,7 @@ Declare
   Set 	 @asTypMail   = Upper ( @asTypMail )
   Set 	 @sMailFrom='' -- [PM191-4] 
   Set 	 @sMailCc = ''
+  Set @sSaut = Char (10)
 
   Select @iIdProd  = Convert ( integer, id_prod ),
 	 @sLibProd = sysadm.FN_LIB_PROD ( id_prod ),
