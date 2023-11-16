@@ -2352,7 +2352,7 @@ Declare
 	If @sIdTypArt = 'CAF' And @sIdFour = 'CMA'  
 	  Begin
 		Set @sMailBody  = @sMailBody  + @sSaut      
-		Set @sMailBody  = @sMailBody  + 'Votre/Vos bons d''achat est/sont valable(s) 1 (un) an dans tous les magasins Carrefour situés en France métropolitaine (Corse comprise).' 
+		Set @sMailBody  = @sMailBody  + 'Votre/Vos bon(s) d''achat est/sont valable(s) 1 (un) an dans tous les magasins Carrefour situés en France métropolitaine (Corse comprise).' 
 		Set @sMailBody  = @sMailBody  + @sSaut      
 		Set @sMailBody  = @sMailBody  + @sSaut      
 		Set @sMailBody  = @sMailBody  + 'Nous vous rappelons que suite au sinistre garanti de l''appareil assuré cette indemnité vous est versée en vue de son remplacement.'
@@ -25393,7 +25393,7 @@ Set @sMailSend = ''
 Set @sMailCc = ''
 Set @sChaineBCValler = ''
 Set @sChaineBCVretour = ''
-Set @sMailObjet  = 'Corps du mail construit par KSL'
+Set @sMailObjet  = ''
 Set @sMailBody = 'Corps du mail construit par KSL'
 Set @sIdArchComplSeria = null
 
@@ -25432,6 +25432,10 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 		-- Ajout personnalisé du client appelant le système
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'montant_carte_cadeau', @asMontantBA
+		
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'nom_produit', @sVal OutPut
+		Set @sMailObjet  = 'Votre sinistre ' + @sVal + ' - Dossier ' + CONVERT ( varchar ( 10 ), @adcIdSin )
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet 
 
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'adr_mail', @sVal OutPut
 		Set @sMailSend = @sVal
@@ -25488,6 +25492,10 @@ Else
 		-- Ajout personnalisé du client appelant le système
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'montant_carte_cadeau', @asMontantBA
+
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'nom_produit', @sVal OutPut
+		Set @sMailObjet  = 'Votre sinistre ' + @sVal + ' - Dossier ' + CONVERT ( varchar ( 10 ), @adcIdSin )
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet 
 
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'adr_mail', @sVal OutPut
 		Set @sMailSend = @sVal
