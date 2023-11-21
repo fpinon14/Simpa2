@@ -1807,10 +1807,18 @@ VALUES
         )  
   
 Set @iErr = @@ERROR     
-  
 Set @iIdSeq = @@IDENTITY  
 
 Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'ID_SEQ_MAIL', CONVERT ( varchar ( 20 ), @iIdSeq ), rtrim ( ltrim ( @asChaineBCVretour )), ';' )  -- [RS6044_REL_MAIL]
+
+-- Si l'adresse mail est anonymisée alors on marque directement l'enregistrement comme envoyé pour éviter qu'il ressorte en erreur côté KSL
+If @asMailSend = 'XX@XX.COM'
+  Begin
+	Update sysadm.mail_push set 
+		mail_dte_trt = GETDATE(),
+		mail_trt_ok  = 'O'
+	Where id_seq = @iIdSeq
+  End 
 
 RETURN @iErr  
 
@@ -2862,7 +2870,6 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 					  Begin
 						Exec sysadm.PS_S_SUBSTITUER_VARIABLE_XML  'email_cc', '', @sXmlData output
 					  End 
-
 				  End 
 
 				-- Transformation des variables du nom du fichier en données
