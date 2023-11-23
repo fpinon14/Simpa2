@@ -9080,1096 +9080,1100 @@ go
 -- [VDOC12649] JFF 22/11/2013 - Ajout zone Type Evènement
 -- [VDOC13769] JFF 21/02/2014 - ajout zone fournisseur réglé + modif valeur dans zone garantie 
 -- [DT119]	- V01 - FPI - supp colonnes Mt_total_achat & alt_plaf + ajout mt remisé
+-- JFF      22/11/2023   [RS6175_GC_SCRP_SIM2]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S015_LSTREG_DAS_V01' AND type = 'P' )
         DROP procedure sysadm.PS_S015_LSTREG_DAS_V01
 GO
-
-CREATE procedure sysadm.PS_S015_LSTREG_DAS_V01 
-	@dtDteDeb       DateTime        ,
-    @dtDteFin       DateTime	
-
-AS
-
-SET NOCOUNT ON
-
-Declare @sPerReglt varchar(7)
- 
-Set @sPerReglt=CONVERT(varchar(2),datePart(month,@dtDteFin))
-If LEN(@sPerReglt)=1 Set @sPerReglt='0' + @sPerReglt
-Set @sPerReglt=@sPerReglt + '/' + CONVERT(varchar(4),datePart(year,@dtDteFin))
-
-Select distinct
- 'PERIODE DE REGLT' = @sPerReglt,
- 'GESTIONNAIRE' = 'SPB',
- 'N° CONTRAT DAS'	= police.lib_police,
- 'CIE ASS'	= compagnie.lib_cie,
- 'SOUSCRIPTEUR'	= groupe.lib_grp,
- 'INTITULE DU CONTRAT'	= produit.lib_long,
- 'N° SINISTRE'	= sinistre.id_sin,
- 'NOM'		= personne.nom,
- 'PRENOM'	= personne.prenom,
-  sysadm.FN_CODE_CAR(div_sin.val_car,'-AR') as genre,
-  sinistre.marq_port as 'marque', 
- /* convert(varchar(10),sinistre.dte_ach_port,103) as 'date_achat', */
- -- [VDOC10924]
-  Isnull ( 
-  convert(varchar(30),
-	  Case 
-		When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)
-			Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )
-		Else sinistre.dte_ach_port
-	  End ,103)
-	, 'Pas de date d''achat' )   as 'date_achat',
-  -- OLD (select top 1 detail.mt_val_achat from sysadm.detail where detail.id_sin=sinistre.id_sin) as mt_achat,
- -- [VDOC10924]
- -- [VDOC11052]
-   IsNull ( 
-	Case 
-		When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence 
-		  Then
-			  -- [VDOC11052]
-			  -- [ITSM224189] 965
-			  Case 
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )
-					   And   d.id_evt  not in ( 1083, 1317, 934, 965 ) 
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )
-					   And   d.id_evt  not in ( 1083, 1317, 934, 965 ) 
-					   And   d.mt_val_achat <> 9999
-					  )
-					  
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )
-					   And   d.id_evt  = 1317
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )
-					   And   d.id_evt  = 1317
-					   And   d.mt_val_achat <> 9999
-					  )
-
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )
-					   And   d.id_evt  = 934
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )
-					   And   d.id_evt  = 934
-					   And   d.mt_val_achat <> 9999
-					  )		
-
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )
-					   And   d.id_evt  = 1083
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )
-					   And   d.id_evt  = 1083
-					   And   d.mt_val_achat <> 9999
-					  )	
-
-				-- [ITSM224189] 965					  
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )
-					   And   d.id_evt  = 965
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )
-					   And   d.id_evt  = 965
-					   And   d.mt_val_achat <> 9999
-					  )	
-					  
-				Else 0
-			End
-					  		
-		Else
-			  (select top 1 d.mt_val_achat 
-			   from sysadm.detail d
-			   where d.id_sin=sinistre.id_sin
-			   and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )
-			   And   d.mt_val_achat <> 9999
-			   And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)
-											 From  sysadm.detail d1
-											 Where d1.id_sin = d.id_sin
-											 And   d1.id_gti = d.id_gti
-											 And   d1.id_detail = d.id_detail
-											 And   d1.mt_val_achat <> 9999 )
-			  )
-	End
-  , 0 ) as mt_achat,  -- [VDOC10924]
-  sinistre.id_adh as no_adhesion, 
-  convert(varchar(10),sinistre.dte_adh,103) as dte_adh, 
- 'date déb garantie' = convert(varchar(10),sinistre.dte_adh,103), 
-  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti,
-  convert(varchar(10),sinistre.dte_surv,103) as dte_surv, 
-  datepart(year,sinistre.dte_surv) as annee_surv,
-  datepart(month,sinistre.dte_surv) as mois_surv, 
- convert(varchar(10),sinistre.dte_decl,103) as dte_decl,
- 'type_garantie' 		= code_Ns.lib_code,
- 'garantie' 		= code_Gs.lib_code,
- -- 'ALT_PLAF'	= gar_sin.alt_plaf, -- [DT119]
- (select max(detail.mt_plaf) from sysadm.detail where detail.id_sin=gar_sin.id_sin and detail.id_gti=gar_sin.id_gti) as mt_plafond,
- 'quantité sinistre' =
-	Case 
-		When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence 
-	   		Then
-	   		( Select sum ( ds.val_nbre )
-	   		From   sysadm.div_det ds
-	   		Where  ds.id_sin = sinistre.id_sin
-	   		And    ds.nom_zone = 'qte' )
-		Else
-			reg_gti.mt_reg / (select max(detail.mt_plaf) from sysadm.detail where detail.id_sin=gar_sin.id_sin and detail.id_gti=gar_sin.id_gti)
-    End,		
- 'mt_total plafond' = reg_gti.mt_reg,
- 'DTE_REG'	= convert(varchar(10),reg_gti.maj_le,103) + ' ' + convert(varchar(10),reg_gti.maj_le,108), -- [ITSM166043]
- 'MT_REG_GTI'	= reg_gti.mt_reg,
- /* Old
- (select top 1 mt_val_publique from sysadm.detail 
-	where detail.id_sin=sinistre.id_sin and detail.id_sin=reg_gti.id_sin 
-	and mt_val_publique > 0
-	) as 'montant_sinistre',
-  */
- -- [VDOC10924]
-  IsNull ( 
-  (select top 1 d.mt_val_publique 
-   from sysadm.detail d
-   where d.id_sin=sinistre.id_sin
-   And   d.mt_val_publique = ( Select MAX ( d1.mt_val_publique)
-								 From  sysadm.detail d1
-								 Where d1.id_sin = d.id_sin
-								 And   d1.id_gti = d.id_gti
-								 And   d1.id_detail = d.id_detail )
-  ), 0 ) as 'montant_sinistre',  -- [VDOC10924]
-  (select SUM(mt_frais) from sysadm.frais where frais.id_sin=sinistre.id_sin and frais.id_typ_frais=1) as frais_transport,
-/*
-  case When d2.val_nbre is not null Then  convert(varchar(10),sinistre.dte_adh,103) Else '' End as dte_deb_gc,
-*/
- -- [VDOC10924]	
-  Nullif( 
-  convert(varchar(10),
-	  Case When d2.val_nbre is not null 
-			Then 
-			  Case 
-				When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)
-					Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )
-				Else sinistre.dte_ach_port
-			  End
-		   Else '' 
-	  End ,103) 
-  , '01/01/1900' )
-  as dte_deb_gc,
-/*  case When d2.val_nbre is not null Then convert(varchar(10),DateAdd(Month,d2.val_nbre,sinistre.dte_adh),103) Else '' End as dte_fin_gc, */
- -- [VDOC10924][VDOC11052]
-  case When d2.val_nbre is not null 
-        Then convert(varchar(10),DateAdd(Month,d2.val_nbre,
-			  Case 
-				When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)
-					Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )
-				Else sinistre.dte_ach_port
-			  End
-			),103) Else '' End as dte_fin_gc,
-  case When d2.val_nbre is null Then  convert(varchar(10),sinistre.dte_adh,103) 
-	Else convert(varchar(10),DateAdd(day, 1, DateAdd(Month,d2.val_nbre,sinistre.dte_adh)),103) End as dte_deb_gti_DAS,
-  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti_DAS,
-  /*(select top 1 sysadm.FN_CLE_VAL('PGC_MOIS',val_car,';') + ' mois' from sysadm.det_pro 
-    where det_pro.id_prod=sinistre.id_prod and det_pro.id_code_dp=85) as duree_garantie_das,*/
--- [VDOC10924][VDOC11052] duréé garantie DAS : = date achat - date fin garantie  
---   Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port, IsNull ( sinistre.dte_adh, (Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null ))), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,
-	Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port, 
-			  IsNUll ( 
-			  (Case 
-				When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)
-					Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )
-				Else sinistre.dte_ach_port
-			  End), sinistre.dte_adh )), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,  			  
- 
-  case When d2.val_nbre is null Then 'Neuf'
-	When d2.val_nbre = 3 Then 'Occasion'
-	Else 'Neuf' 
-  End as 'Neuf/Occasion',
--- [VDOC10924]
-  IsNull (
-	  (Select Top 1 rTrim( Convert ( VarChar ( 30), ds.val_nbre ) + '')
-	   From	 sysadm.div_sin ds,
-			 sysadm.det_pro dp
-	   Where dp.id_prod = sinistre.id_prod
-	   And   dp.id_code_dp = 85
-	   And   ds.id_sin = sinistre.id_sin
-	   And   ds.nom_zone= 'duree_gti_origine')
-   , 'Non géré sur le contrat' ) As 'Durée_GC(si PGC)',
--- [VDOC10924]
-	/*IsNull (
-	Case 
-		When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence 
-		  Then
-		     (select sum ( isnull ( d.mt_val_achat, 0 ) )
-			   from sysadm.detail d
-			   where d.id_sin=sinistre.id_sin
-			   and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )
-			   And   d.id_evt  not in ( 1083, 1317, 934, 965 ) -- [ITSM224189] 965
-			   And   d.mt_val_achat <> 9999
-			  ) 
-		Else
-		  (select top 1 d.mt_val_achat 
-		   from sysadm.detail d
-		   where d.id_sin=sinistre.id_sin
-		   And   d.mt_val_achat <> 9999
-		   And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)
-										 From  sysadm.detail d1
-										 Where d1.id_sin = d.id_sin
-										 And   d1.id_gti = d.id_gti
-										 And   d1.id_detail = d.id_detail
-										 And   d1.mt_val_achat <> 9999 )
-		  )*
-		  Case 
-			When IsNull ( (reg_gti.mt_reg / (select max(detail.mt_plaf) from sysadm.detail where detail.id_sin=gar_sin.id_sin and detail.id_gti=gar_sin.id_gti)), 0 ) < 1
-				 Then 1
-			Else IsNull ( (reg_gti.mt_reg / (select max(detail.mt_plaf) from sysadm.detail where detail.id_sin=gar_sin.id_sin and detail.id_gti=gar_sin.id_gti)), 0 ) 
-		  End 
-	End , 0 ) 'Montant_Total_Achat',*/ -- [DT119]
-  IsNUll ( 
-	  ( Select Top 1
-			   Case 
-					When id_ref_four = 'A_DIAGNOSTIQUER' Then 'DIAGNOSTIC'
-					When id_typ_art = 'PRS' Then 'REPARATION'
-					When id_typ_art = 'EDI' And CharIndex ( 'REPARER', id_ref_four ) > 0 Then  'REPARATION'					
-					When id_typ_art = 'EDI' And CharIndex ( 'DESOXYDER', id_ref_four ) > 0 Then  'DESOXYDATION'										
-					When id_typ_art = 'CAF' Then 'REMPLACEMENT PAR BON ACHAT'
-					When id_typ_art = 'EDI' And c.id_four = 'CDS' Then 'REMPLACEMENT PAR BON ACHAT' -- [VDOC19386]
-					When id_typ_art = 'PST' Then ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))
-					Else 'REMPLACEMENT PAR ' + ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))
-			   End 
-	  
-		From sysadm.reglement r,
-			 sysadm.detail d,
-			 sysadm.commande c
-		Where r.id_sin = sysadm.reg_gti.id_sin
-		And   r.id_reg = sysadm.reg_gti.id_reg 
-		and   r.cod_mode_reg = 'FM'
-		And   d.id_sin = r.id_sin
-		and   d.id_reg = r.id_reg
-		and   c.id_sin = d.id_sin
-		and   c.id_gti = d.id_gti
-		and   c.id_detail = d.id_detail
-		And   c.id_ref_four not in ( 'PEC_A_RECYCLER', 'REFUSE_A_REEXP', 'DECISION_SPB' )
-		 ),
-		'REMBOURSEMENT' ) as typ_evt, -- VDOC12649 	
-  IsNUll ( 
-	  ( Select Top 1 sysadm.FN_CODE_CAR ( i.id_four, '-FR' )
-		From sysadm.reglement r,
-			 sysadm.detail d,
-			 sysadm.commande c,
-			 sysadm.inter i
-		Where r.id_sin = sysadm.reg_gti.id_sin
-		And   r.id_reg = sysadm.reg_gti.id_reg 
-		and   r.cod_mode_reg = 'FM'
-		And   d.id_sin = r.id_sin
-		and   d.id_reg = r.id_reg
-		and   c.id_sin = d.id_sin
-		and   c.id_gti = d.id_gti
-		and   c.id_detail = d.id_detail
-		And   c.id_ref_four not in ( 'PEC_A_RECYCLER', 'REFUSE_A_REEXP', 'DECISION_SPB' )
-		And   i.id_sin = r.id_sin
-		And   i.id_i = r.id_i
-		And   i.cod_inter = 'F'
-		 ),
-		'ASSURE' ) as Inter_Regl, -- [VDOC13769]
-		 IsNull (
-			(Select Top 1 rTrim( Convert ( VarChar ( 30), ds.val_mt ) + '' )
-			From	 sysadm.div_sin ds,
-				 sysadm.div_pro dp
-			Where dp.id_prod = sinistre.id_prod
-				And   ds.id_sin = sinistre.id_sin
-				And   ds.nom_zone= 'mt_val_achat_remise'
-				and ds.nom_zone=dp.nom_zone)
-		, '' ) As 'Montant achat remisé'
- From
- sysadm.reg_gti   
-  inner join sysadm.sinistre  on reg_gti.id_sin	=	sinistre.id_sin
-  inner join sysadm.produit on sinistre.id_prod	=	produit.id_prod
- left outer join sysadm.div_sin on div_sin.id_sin = sinistre.id_sin and div_sin.nom_zone='type_app'
- left outer join sysadm.div_sin d2 on d2.id_sin = sinistre.id_sin and d2.nom_zone='duree_gti_origine'
- inner join sysadm.personne on personne.id_ordre    = 	sinistre.id_ordre
- inner join sysadm.gar_sin on reg_gti.id_sin	=	gar_sin.id_sin	and reg_gti.id_gti	=	gar_sin.id_gti
- inner join sysadm.garantie on  garantie.id_prod	=	sinistre.id_prod and  garantie.id_rev	=	sinistre.id_rev	and garantie.id_gti	=	reg_gti.id_gti
- inner join sysadm.police on garantie.id_police	=	police.id_police,
- sysadm.etablissement,
- sysadm.code code_Ns,
- sysadm.code code_Gs,
- sysadm.groupe,
- sysadm.compagnie,
- sysadm.reglement
-Where 
- ( groupe.id_grp	=	etablissement.id_grp	)	and
- ( etablissement.id_prod=	sinistre.id_prod	)	and
- ( etablissement.id_ets	=	sinistre.id_ets		)	and
- ( etablissement.id_rev	=	-1			)	and
- ( code_Ns.id_typ_code	=	'+NS'			)	and
- ( code_Ns.id_code	=	sinistre.id_natsin	)	and
- ( code_Gs.id_typ_code	=	'-GS'			)	and
- ( code_Gs.id_code	=	reg_gti.id_rgpt		)	and
- ( compagnie.id_cie	=	police.id_cie		)	and
- ( police.id_cie=93		)	and
- ( reglement.id_sin	=	reg_gti.id_sin 		)	and
- ( reglement.id_reg	=	reg_gti.id_reg		)	and
- ( reglement.cod_mot_reg = 'RN'				)	and
- reglement.dte_reg between    @dtDteDeb And @dtDteFin and
- ( reglement.cod_mode_reg in ('VA' , 'VM' , 'C', 'FM', 'BX', 'VV' ) ) 
-
-
-UNION 
-Select distinct
- 'PERIODE DE REGLT' = @sPerReglt,
- 'GESTIONNAIRE' = 'SPB',
- 'N° CONTRAT DAS'	= police.lib_police,
- 'CIE ASS'	= compagnie.lib_cie,
- 'SOUSCRIPTEUR'	= groupe.lib_grp,
- 'INTITULE DU CONTRAT'	= produit.lib_long,
- 'N° SINISTRE'	= sinistre.id_sin,
- 'NOM'		= personne.nom,
- 'PRENOM'	= personne.prenom,
-  sysadm.FN_CODE_CAR(div_sin.val_car,'-AR') as genre,
-  sinistre.marq_port as 'marque', 
- /* convert(varchar(10),sinistre.dte_ach_port,103) as 'date_achat', */
--- [VDOC10924]
-  Isnull ( 
-  convert(varchar(30),
-  Case 
-	When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)
-		Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )
-	Else sinistre.dte_ach_port
-  End ,103) 
-  , 'Pas de date d''achat' )   as 'date_achat',
--- (select top 1 detail.mt_val_achat from sysadm.detail where detail.id_sin=sinistre.id_sin) as mt_achat,
--- [VDOC11052]
-   IsNull ( 
-	Case 
-		When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence 
-		  Then
-			  -- [VDOC11052]
-			  Case 
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )
-					   And   d.id_evt  not in ( 1083, 1317, 934, 965 ) 
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )
-					   And   d.id_evt  not in ( 1083, 1317, 934, 965 ) 
-					   And   d.mt_val_achat <> 9999
-					  )
-					  
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )
-					   And   d.id_evt  = 1317
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )
-					   And   d.id_evt  = 1317
-					   And   d.mt_val_achat <> 9999
-					  )
-
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )
-					   And   d.id_evt  = 934
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )
-					   And   d.id_evt  = 934
-					   And   d.mt_val_achat <> 9999
-					  )		
-
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )
-					   And   d.id_evt  = 1083
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )
-					   And   d.id_evt  = 1083
-					   And   d.mt_val_achat <> 9999
-					  )	
-				Else 0
-			End
-					  		
-		Else
-			  (select top 1 d.mt_val_achat 
-			   from sysadm.detail d
-			   where d.id_sin=sinistre.id_sin
-			   and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )
-			   And   d.mt_val_achat <> 9999
-			   And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)
-											 From  sysadm.detail d1
-											 Where d1.id_sin = d.id_sin
-											 And   d1.id_gti = d.id_gti
-											 And   d1.id_detail = d.id_detail
-											 And   d1.mt_val_achat <> 9999 )
-			  )
-	End
-  , 0 ) as mt_achat,  -- [VDOC10924]
-  sinistre.id_adh as no_adhesion, 
-  convert(varchar(10),sinistre.dte_adh,103) as dte_adh, 
- 'date déb  garantie' = convert(varchar(10),sinistre.dte_adh,103),
-  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti,
-  convert(varchar(10),sinistre.dte_surv,103) as dte_surv, 
-  datepart(year,sinistre.dte_surv) as annee_surv,
-  datepart(month,sinistre.dte_surv) as mois_surv, 
- convert(varchar(10),sinistre.dte_decl,103) as dte_decl,
- 'type_garantie' 		= code_Ns.lib_code,
- 'garantie' 		= code_Nf.lib_code,
- -- 'ALT_PLAF'	= 'N', -- [DT119]
-  frais.mt_frais as mt_plafond,
- 'quantité sinistre' = 
-	Case 
-		When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence 
-	   		Then
-	   		( Select sum ( ds.val_nbre )
-	   		From   sysadm.div_det ds
-	   		Where  ds.id_sin = sinistre.id_sin
-	   		And    ds.nom_zone = 'qte' )
-		Else
-			reg_gti.mt_reg / frais.mt_frais
-    End,
- 'mt_total plafond' = reg_gti.mt_reg,
- 'DTE_REG'	= convert(varchar(10),reg_gti.maj_le,103) + ' ' + convert(varchar(10),reg_gti.maj_le,108), -- [ITSM166043]
- 'MT_REG_GTI'	= reg_gti.mt_reg,
- (select top 1 mt_val_publique from sysadm.detail 
-	where detail.id_sin=sinistre.id_sin and detail.id_sin=reg_gti.id_sin 
-	and mt_val_publique > 0
-	) as 'montant_sinistre',
-  (select SUM(mt_frais) from sysadm.frais where frais.id_sin=sinistre.id_sin and frais.id_typ_frais=1) as frais_transport,
-/*
-  case When d2.val_nbre is not null Then  convert(varchar(10),sinistre.dte_adh,103) Else '' End as dte_deb_gc,
-*/
- -- [VDOC10924]	
-  Nullif ( 
-  case When d2.val_nbre is not null Then convert(varchar(10),
-		  Case 
-			When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)
-				Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )
-			Else sinistre.dte_ach_port
-		  End
-		,103) 
-		Else '' 
-	End 
-	, '01/01/1900' )
-	as dte_deb_gc,
-/*  case When d2.val_nbre is not null Then convert(varchar(10),DateAdd(Month,d2.val_nbre,sinistre.dte_adh),103) Else '' End as dte_fin_gc, */
- -- [VDOC10924]	
-  case When d2.val_nbre is not null Then convert(varchar(10),DateAdd(Month,d2.val_nbre,
-		  Case 
-			When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)
-				Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )
-			Else sinistre.dte_ach_port
-		  End
-			),103) Else '' End as dte_fin_gc,
-   case When d2.val_nbre is null Then  convert(varchar(10),sinistre.dte_adh,103) 
-	Else convert(varchar(10),DateAdd(day, 1, DateAdd(Month,d2.val_nbre,sinistre.dte_adh)),103) End as dte_deb_gti_DAS,
-  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti_DAS,
-  /*(select top 1 sysadm.FN_CLE_VAL('PGC_MOIS',val_car,';') + ' mois' from sysadm.det_pro 
-    where det_pro.id_prod=sinistre.id_prod and det_pro.id_code_dp=85) as duree_garantie_das,*/
--- [VDOC10924]
---   Convert ( VarChar ( 10),Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, sinistre.dte_adh, sinistre.dte_fin_gti ) ) , 0 ) ) + '' ) as duree_garantie_das_Mois,
--- [VDOC10924][VDOC11052] duréé garantie DAS : = date achat - date fin garantie  
---   Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port, IsNull ( sinistre.dte_adh, (Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null ))), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,
-	Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port, 
-			  IsNUll ( 
-			  (Case 
-				When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)
-					Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )
-				Else sinistre.dte_ach_port
-			  End), sinistre.dte_adh )), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,  	
-  case When d2.val_nbre is null Then 'Neuf'
-	When d2.val_nbre = 3 Then 'Occasion'
-	Else 'Neuf'
-  End as 'Neuf/Occasion',
--- [VDOC10924]
-  IsNull (
-	  (Select Top 1 rTrim( Convert ( VarChar ( 30), ds.val_nbre ) + '' )
-	   From	 sysadm.div_sin ds,
-			 sysadm.det_pro dp
-	   Where dp.id_prod = sinistre.id_prod
-	   And   dp.id_code_dp = 85
-	   And   ds.id_sin = sinistre.id_sin
-	   And   ds.nom_zone= 'duree_gti_origine')
-   , 'Non géré sur le contrat' ) As 'Durée_GC(si PGC)',
-  /*IsNull ( 
-        	Case 
-        		When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence 
-        		  Then
-        		     (select sum ( d.mt_val_achat )
-        			   from sysadm.detail d
-        			   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti ) -- [ITSM224189] 965
-					   And   d.id_evt  not in ( 1083, 1317, 934, 965 ) 
-        			   And   d.mt_val_achat <> 9999
-        			  ) 
-        		Else
-        		  (select top 1 d.mt_val_achat 
-        		   from sysadm.detail d
-        		   where d.id_sin=sinistre.id_sin
-        		   And   d.mt_val_achat <> 9999
-        		   And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)
-        										 From  sysadm.detail d1
-        										 Where d1.id_sin = d.id_sin
-        										 And   d1.id_gti = d.id_gti
-        										 And   d1.id_detail = d.id_detail
-        										 And   d1.mt_val_achat <> 9999 )
-        		  )*
-        		  Case 
-        			When reg_gti.mt_reg / frais.mt_frais < 1
-        				 Then 1
-        			Else reg_gti.mt_reg / frais.mt_frais
-        		  End
-    		  End
-    	   , 0 )  'Montant_Total_Achat',*/ -- [DT119]
-  IsNUll ( 
-	  ( Select Top 1
-			   Case 
-					When id_ref_four = 'A_DIAGNOSTIQUER' Then 'DIAGNOSTIC'
-					When id_typ_art = 'PRS' Then 'REPARATION'
-					When id_typ_art = 'EDI' And CharIndex ( 'REPARER', id_ref_four ) > 0 Then  'REPARATION'					
-					When id_typ_art = 'EDI' And CharIndex ( 'DESOXYDER', id_ref_four ) > 0 Then  'DESOXYDATION'										
-					When id_typ_art = 'CAF' Then 'REMPLACEMENT PAR BON ACHAT'
-					When id_typ_art = 'EDI' And c.id_four = 'CDS' Then 'REMPLACEMENT PAR BON ACHAT' -- [VDOC19386]
-					When id_typ_art = 'PST' Then ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))
-					Else 'REMPLACEMENT PAR ' + ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))
-			   End 
-	  
-		From sysadm.reglement r,
-			 sysadm.detail d,
-			 sysadm.commande c
-		Where r.id_sin = sysadm.reg_gti.id_sin
-		And   r.id_reg = sysadm.reg_gti.id_reg 
-		and   r.cod_mode_reg = 'FM'
-		And   d.id_sin = r.id_sin
-		and   d.id_reg = r.id_reg
-		and   c.id_sin = d.id_sin
-		and   c.id_gti = d.id_gti
-		and   c.id_detail = d.id_detail
-		And   c.id_ref_four not in ( 'PEC_A_RECYCLER', 'REFUSE_A_REEXP', 'DECISION_SPB' )
-		 ),
-		'REMBOURSEMENT' ) as typ_evt, -- VDOC12649  
-  IsNUll ( 
-	  ( Select Top 1 sysadm.FN_CODE_CAR ( i.id_four, '-FR' )
-		From sysadm.reglement r,
-			 sysadm.detail d,
-			 sysadm.commande c,
-			 sysadm.inter i
-		Where r.id_sin = sysadm.reg_gti.id_sin
-		And   r.id_reg = sysadm.reg_gti.id_reg 
-		and   r.cod_mode_reg = 'FM'
-		And   d.id_sin = r.id_sin
-		and   d.id_reg = r.id_reg
-		and   c.id_sin = d.id_sin
-		and   c.id_gti = d.id_gti
-		and   c.id_detail = d.id_detail
-		And   c.id_ref_four not in ( 'PEC_A_RECYCLER', 'REFUSE_A_REEXP', 'DECISION_SPB' )
-		And   i.id_sin = r.id_sin
-		And   i.id_i = r.id_i
-		And   i.cod_inter = 'F'
-		 ),
-		'ASSURE' ) as Inter_Regl, -- [VDOC13769]
-		 IsNull (
-			(Select Top 1 rTrim( Convert ( VarChar ( 30), ds.val_mt ) + '' )
-			From	 sysadm.div_sin ds,
-				 sysadm.div_pro dp
-			Where dp.id_prod = sinistre.id_prod
-				And   ds.id_sin = sinistre.id_sin
-				And   ds.nom_zone= 'mt_val_achat_remise'
-				and ds.nom_zone=dp.nom_zone)
-		, '' ) As 'Montant achat remisé'
-		
-From
- sysadm.reg_gti   
-  inner join sysadm.sinistre  on reg_gti.id_sin	=	sinistre.id_sin
-  inner join sysadm.produit on sinistre.id_prod	=	produit.id_prod
- left outer join sysadm.div_sin on div_sin.id_sin = sinistre.id_sin and div_sin.nom_zone='type_app'
- left outer join sysadm.div_sin d2 on d2.id_sin = sinistre.id_sin and d2.nom_zone='duree_gti_origine'
- inner join sysadm.personne on personne.id_ordre    = 	sinistre.id_ordre
- inner join sysadm.frais on reg_gti.id_sin	=	frais.id_sin and reg_gti.id_reg	=	frais.id_reg,
- sysadm.garantie,
- sysadm.etablissement,
- sysadm.code code_Ns,
- sysadm.code code_Nf,
- sysadm.groupe,
- sysadm.departement,
- sysadm.police,
- sysadm.compagnie,
- sysadm.reglement
-Where 
- ( reg_gti.id_gti	=	-1			)	and
- ( groupe.id_grp	=	etablissement.id_grp	)	and
- ( etablissement.id_prod=	sinistre.id_prod	)	and
- ( etablissement.id_ets	=	sinistre.id_ets		)	and
- ( etablissement.id_rev	=	-1			)	and
- ( code_Ns.id_typ_code	=	'+NS'			)	and
- ( code_Ns.id_code	=	sinistre.id_natsin	)	and
- ( code_Nf.id_typ_code	=	'+NF'			)	and
- ( code_Nf.id_code	=	frais.id_typ_frais	)	and
- ( garantie.id_prod	=	sinistre.id_prod	)	and
- ( garantie.id_rev	=	sinistre.id_rev		)	and
- ( garantie.id_gti	=	IsNull ( ( Select NullIf ( NullIf ( max ( a_reg_gti.id_gti ), 0), -1 )
-					   From   sysadm.reg_gti a_reg_gti
-					   Where  a_reg_gti.id_sin = reg_gti.id_sin
-					   And    a_reg_gti.id_reg = reg_gti.id_reg ), 
-
-		 			 ( Select max ( gar_sin.id_gti ) 
-					   From   sysadm.gar_sin
-					   Where  gar_sin.id_sin = sinistre.id_sin )))	and
- ( garantie.id_police	=	police.id_police	)	and
- ( compagnie.id_cie	=	police.id_cie		)	and
- ( police.id_cie=93		)	and
- ( reglement.dte_reg    between    @dtDteDeb And @dtDteFin )	and
- ( reglement.id_sin     =       reg_gti.id_sin          )       and
- ( reglement.id_reg     =       reg_gti.id_reg          )       and
- ( reglement.cod_mode_reg in ('VA' , 'VM' , 'C', 'FM', 'BX', 'VV' ) ) 
-
-UNION 
-
-Select distinct
- 'PERIODE DE REGLT' = @sPerReglt,
- 'GESTIONNAIRE' = 'SPB',
- 'N° CONTRAT DAS'	= police.lib_police,
- 'CIE ASS'	= compagnie.lib_cie,
- 'SOUSCRIPTEUR'	= groupe.lib_grp,
- 'INTITULE DU CONTRAT'	= produit.lib_long,
- 'N° SINISTRE'	= sinistre.id_sin,
- 'NOM'		= personne.nom,
- 'PRENOM'	= personne.prenom,
-  sysadm.FN_CODE_CAR(div_sin.val_car,'-AR') as genre,
-  sinistre.marq_port as 'marque', 
-/* convert(varchar(10),sinistre.dte_ach_port,103) as 'date_achat', */
--- [VDOC10924]
-  IsNull ( 
-  convert(varchar(30),
-	  Case 
-		When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti )
-			Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.dte_det is not null )
-		Else sinistre.dte_ach_port
-	  End ,103) 
-  , 'Pas de date d''achat' )   as 'date_achat',
--- (select top 1 detail.mt_val_achat from sysadm.detail where detail.id_sin=sinistre.id_sin) as mt_achat,
--- [VDOC11052]
-   IsNull ( 
-	Case 
-		When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence 
-		  Then
-			  -- [VDOC11052]
-			  Case 
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   And   d.id_evt  not in ( 1083, 1317, 934, 965 )  -- [ITSM224189] 965
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   And   d.id_evt  not in ( 1083, 1317, 934, 965 ) 
-					   And   d.mt_val_achat <> 9999
-					  )
-					  
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   And   d.id_evt  = 1317
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   And   d.id_evt  = 1317
-					   And   d.mt_val_achat <> 9999
-					  )
-
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   And   d.id_evt  = 934
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   And   d.id_evt  = 934
-					   And   d.mt_val_achat <> 9999
-					  )		
-
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   And   d.id_evt  = 1083
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   And   d.id_evt  = 1083
-					   And   d.mt_val_achat <> 9999
-					  )	
-					  
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   And   d.id_evt  = 965
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   And   d.id_evt  = 965
-					   And   d.mt_val_achat <> 9999
-					  )	
-					  					  
-				Else 0
-			End
-					  		
-		Else
-			  (select top 1 d.mt_val_achat 
-			   from sysadm.detail d
-			   where d.id_sin=sinistre.id_sin
-			   And   d.mt_val_achat <> 9999
-			   And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)
-											 From  sysadm.detail d1
-											 Where d1.id_sin = d.id_sin
-											 And   d1.id_gti = d.id_gti
-											 And   d1.id_detail = d.id_detail
-											 And   d1.mt_val_achat <> 9999 )
-			  )
-	End
-  , 0 ) as mt_achat,  -- [VDOC10924]
-  sinistre.id_adh as no_adhesion, 
-  convert(varchar(10),sinistre.dte_adh,103) as dte_adh,  
-  'date déb  garantie' = convert(varchar(10),sinistre.dte_adh,103),
-  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti,
-  convert(varchar(10),sinistre.dte_surv,103) as dte_surv, 
-  datepart(year,sinistre.dte_surv) as annee_surv,
-  datepart(month,sinistre.dte_surv) as mois_surv, 
-  convert(varchar(10),sinistre.dte_decl,103) as dte_decl,
- 'type_garantie' 		= code_Ns.lib_code,
- 'garantie' 		= 
-		Case 
-			When reglement.cod_mode_reg = 'FM' and reglement.cod_mot_reg = 'RM' Then 'REGUL MOINS AVEC AVOIR'
-			When reglement.cod_mode_reg = 'FM' and reglement.cod_mot_reg = 'RP' Then 'REGUL PLUS AVEC AVOIR'			
-			When reglement.cod_mode_reg = 'C' and reglement.cod_mot_reg = 'RM' Then 'REGUL MOINS'			
-			When reglement.cod_mode_reg = 'C' and reglement.cod_mot_reg = 'RP' Then 'REGUL PLUS'						
-			Else 'REGULARISATION'
-		End	, -- VDOC12649
-  -- 'ALT_PLAF'	= 'N',-- [DT119]
-  reglement.mt_tot_reg as mt_plafond,
-  'quantité sinistre' = 1,
-  'mt_total plafond' = reglement.mt_tot_reg,
-  'DTE_REG'	= convert(varchar(10),reglement.dte_reg,103)+ ' ' + convert(varchar(10),reglement.maj_le,108), -- [ITSM166043]
-   'MT_REG_GTI'	= reglement.mt_tot_reg,
- (select top 1 mt_val_publique from sysadm.detail 
-	where detail.id_sin=sinistre.id_sin and detail.id_sin=reglement.id_sin 
-	and mt_val_publique > 0
-	) as 'montant_sinistre',
-  (select SUM(mt_frais) from sysadm.frais where frais.id_sin=sinistre.id_sin and frais.id_typ_frais=1) as frais_transport,
-/*
-  case When d2.val_nbre is not null Then  convert(varchar(10),sinistre.dte_adh,103) Else '' End as dte_deb_gc,
-*/
- -- [VDOC10924]	
-  nullif ( 
-  case When d2.val_nbre is not null Then convert(varchar(10),
-		  Case 
-			When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod )
-				Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.dte_det is not null )
-			Else sinistre.dte_ach_port
-		  End
-			,103) 
-		Else '' 
-   End, 
-   '01/01/1900' )
-   as dte_deb_gc,
-/*  case When d2.val_nbre is not null Then convert(varchar(10),DateAdd(Month,d2.val_nbre,sinistre.dte_adh),103) Else '' End as dte_fin_gc, */
- -- [VDOC10924]	
-  case When d2.val_nbre is not null Then convert(varchar(10),DateAdd(Month,d2.val_nbre,
-	  Case 
-		When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod )
-			Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.dte_det is not null )
-		Else sinistre.dte_ach_port
-	  End
-		),103) Else '' End as dte_fin_gc,
-   case When d2.val_nbre is null Then  convert(varchar(10),sinistre.dte_adh,103) 
-	Else convert(varchar(10),DateAdd(day, 1, DateAdd(Month,d2.val_nbre,sinistre.dte_adh)),103) End as dte_deb_gti_DAS,
-  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti_DAS,
-  /*(select top 1 sysadm.FN_CLE_VAL('PGC_MOIS',val_car,';') + ' mois' from sysadm.det_pro 
-    where det_pro.id_prod=sinistre.id_prod and det_pro.id_code_dp=85) as duree_garantie_das,*/
--- [VDOC10924]
---    Convert ( VarChar ( 10), Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, sinistre.dte_adh, sinistre.dte_fin_gti ) ) , 0 ) ) + '' ) as duree_garantie_das_Mois,
--- [VDOC10924][VDOC11052] duréé garantie DAS : = date achat - date fin garantie  
---   Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port, IsNull ( sinistre.dte_adh, (Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null ))), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,
-	Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port, 
-			  IsNUll ( 
-			  (Case 
-				When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod )
-					Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.dte_det is not null )
-				Else sinistre.dte_ach_port
-			  End), sinistre.dte_adh )), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,  	
-  case When d2.val_nbre is null Then 'Neuf'
-	When d2.val_nbre = 3 Then 'Occasion'
-	Else 'Neuf'
-  End as 'Neuf/Occasion',
--- [VDOC10924]
-  IsNull (
-	  (Select Top 1 rTrim( Convert ( VarChar ( 30), ds.val_nbre ) + '' )
-	   From	 sysadm.div_sin ds,
-			 sysadm.det_pro dp
-	   Where dp.id_prod = sinistre.id_prod
-	   And   dp.id_code_dp = 85
-	   And   ds.id_sin = sinistre.id_sin
-	   And   ds.nom_zone= 'duree_gti_origine')
-   , 'Non géré sur le contrat' ) As 'Durée_GC(si PGC)',
- /* IsNull ( 
-  Case 
-        		When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence 
-        		  Then
-        		     (select sum ( d.mt_val_achat )
-        			   from sysadm.detail d
-        			   where d.id_sin=sinistre.id_sin
-        			   And   d.id_evt  not in ( 1083, 1317, 934, 965 )  -- [ITSM224189] 965
-        			   And   d.mt_val_achat <> 9999
-        			  ) 
-        		Else
-        		  (select top 1 d.mt_val_achat 
-        		   from sysadm.detail d
-        		   where d.id_sin=sinistre.id_sin
-        		   And   d.mt_val_achat <> 9999
-        		   And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)
-        										 From  sysadm.detail d1
-        										 Where d1.id_sin = d.id_sin
-        										 And   d1.id_gti = d.id_gti
-        										 And   d1.id_detail = d.id_detail
-        										 And   d1.mt_val_achat <> 9999 )
-        		  )
-    		  End , 0 ) 'Montant_Total_Achat',*/-- [DT119]
-  IsNUll ( 
-	  ( Select Top 1
-			   Case 
-					When id_ref_four = 'A_DIAGNOSTIQUER' Then 'DIAGNOSTIC'
-					When id_typ_art = 'PRS' Then 'REPARATION'
-					When id_typ_art = 'EDI' And CharIndex ( 'REPARER', id_ref_four ) > 0 Then  'REPARATION'					
-					When id_typ_art = 'EDI' And CharIndex ( 'DESOXYDER', id_ref_four ) > 0 Then  'DESOXYDATION'										
-					When id_typ_art = 'CAF' Then 'REMPLACEMENT PAR BON ACHAT'
-					When id_typ_art = 'EDI' And c.id_four = 'CDS' Then 'REMPLACEMENT PAR BON ACHAT' -- [VDOC19386]
-					When id_typ_art = 'PST' Then ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))
-					Else 'REMPLACEMENT PAR ' + ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))
-			   End 
-	  
-		From sysadm.reglement r,
-			 sysadm.detail d,
-			 sysadm.commande c
-		Where r.id_sin = sysadm.reglement.id_sin
-		And   r.id_reg = sysadm.reglement.id_reg 
-		and   r.cod_mode_reg = 'FM'
-		And   d.id_sin = r.id_sin
-		and   d.id_reg = r.id_reg
-		and   c.id_sin = d.id_sin
-		and   c.id_gti = d.id_gti
-		and   c.id_detail = d.id_detail
-		And   c.id_ref_four not in ( 'PEC_A_RECYCLER', 'REFUSE_A_REEXP', 'DECISION_SPB' )
-		 ),
-		'REMBOURSEMENT' ) as typ_evt, -- VDOC12649    
-  IsNUll ( 
-	  ( Select Top 1 sysadm.FN_CODE_CAR ( i.id_four, '-FR' )
-		From sysadm.reglement r,
-			 sysadm.detail d,
-			 sysadm.commande c,
-			 sysadm.inter i
-		Where r.id_sin = sysadm.reglement.id_sin
-		And   r.id_reg = sysadm.reglement.id_reg 
-		and   r.cod_mode_reg = 'FM'
-		And   d.id_sin = r.id_sin
-		and   d.id_reg = r.id_reg
-		and   c.id_sin = d.id_sin
-		and   c.id_gti = d.id_gti
-		and   c.id_detail = d.id_detail
-		And   c.id_ref_four not in ( 'PEC_A_RECYCLER', 'REFUSE_A_REEXP', 'DECISION_SPB' )
-		And   i.id_sin = r.id_sin
-		And   i.id_i = r.id_i
-		And   i.cod_inter = 'F'
-		 ),
-		'ASSURE' ) as Inter_Regl, -- [VDOC13769]
-		 IsNull (
-			(Select Top 1 rTrim( Convert ( VarChar ( 30), ds.val_mt ) + '' )
-			From	 sysadm.div_sin ds,
-				 sysadm.div_pro dp
-			Where dp.id_prod = sinistre.id_prod
-				And   ds.id_sin = sinistre.id_sin
-				And   ds.nom_zone= 'mt_val_achat_remise'
-				and ds.nom_zone=dp.nom_zone)
-		, '' ) As 'Montant achat remisé'
   
-From
- sysadm.reglement 
-  inner join sysadm.sinistre  on reglement.id_sin	=	sinistre.id_sin
-  inner join sysadm.reg_gti on reglement.id_sin	= reg_gti.id_sin 
-  inner join sysadm.produit on sinistre.id_prod	=	produit.id_prod
- left outer join sysadm.div_sin on div_sin.id_sin = sinistre.id_sin and div_sin.nom_zone='type_app'
- left outer join sysadm.div_sin d2 on d2.id_sin = sinistre.id_sin and d2.nom_zone='duree_gti_origine'
- inner join sysadm.personne on personne.id_ordre    = 	sinistre.id_ordre,
- sysadm.garantie  ,
- sysadm.etablissement,
- sysadm.code code_Ns,
- sysadm.groupe,
- sysadm.police,
- sysadm.compagnie
-Where 
- ( groupe.id_grp	=	etablissement.id_grp	)	and
- ( etablissement.id_prod=	sinistre.id_prod	)	and
- ( etablissement.id_ets	=	sinistre.id_ets		)	and
- ( etablissement.id_rev	=	-1			)	and
- ( code_Ns.id_typ_code	=	'+NS'			)	and
- ( code_Ns.id_code	=	sinistre.id_natsin	)	and
- ( garantie.id_prod	=	sinistre.id_prod	)	and
- ( garantie.id_rev	=	sinistre.id_rev		)	and
- ( garantie.id_gti	=	( Select max ( gar_sin.id_gti ) 
-				  From   sysadm.gar_sin
-				  Where  gar_sin.id_sin = sinistre.id_sin ))	and
- ( garantie.id_police	=	police.id_police	)	and
- ( compagnie.id_cie	=	police.id_cie		)	and
-  ( police.id_cie=93		)	and
- ( reglement.dte_reg between    @dtDteDeb And @dtDteFin )	and
- ( reglement.cod_mot_reg in ( 'RE', 'RM', 'RP' )	)	and
- ( reglement.mt_tot_reg <> 0				)	and
- ( reglement.cod_mode_reg in ('VA' , 'VM' , 'C', 'FM', 'BX', 'VV' ) )
-Union
-select '@@@@@@@@@@@@@@@@@@@@@@@@@@','@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'PERIODE DE REGLT','période SPB','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'GESTIONNAIRE','SPB','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'CONTRAT DAS','n° police','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'CIE ASS','DAS','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'SOUSCRIPTEUR','nom du souscripteur','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'INTITULE DU CONTRAT','libellé du contrat','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'N° SINISTRE','n° dossier SPB','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'NOM','nom assure','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'PRENOM','prénom assure','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'genre','type appareil','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'marque','marque appareil','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'date_achat','date achat','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'mt_achat','mt achat origine','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'no_adhesion','n° adhésion SPB','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'dte_adh','date adhésion','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'date déb garantie','date débt garantie','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'dte_fin_gti','date fin garantie','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'dte_surv','date survenance','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'annee_surv','année survenance','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'mois_surv','mois survenance','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'dte_decl','date déclaration par l''assuré','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'type_garantie','nature garantie sur dossier','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'garantie','garantie du contrat','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'mt_plafond','montant plafond','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'quantité sinistre','concerne annulation billetterie','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'mt_total plafond','multiple colonne Y notamment pour annulation billetterie','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'DTE_REG','date règlement sur dossier','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'MT_REG_GTI','montant réglé par SPB','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'montant_sinistre','valeur au moment du sinistre','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'frais_transport dte_deb_gc','date début garantie en cas d''extension garantie constructeur','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'dte_fin_gc','date fin garantie constructeur','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'dte_deb_gti_DAS','date début prise garantie par DAS','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'dte_fin_gti_DAS','date fin garantie par DAS','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'duree_garantie_das','durée garantie DAS','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'Neuf/Occasion','type appareil de remplacement','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-Union
-select 'Duree_GC_si_PGC','durée garantie constructeur','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL
-
+CREATE procedure sysadm.PS_S015_LSTREG_DAS_V01   
+ @dtDteDeb       DateTime        ,  
+ @dtDteFin       DateTime   
+  
+AS  
+  
+SET NOCOUNT ON  
+  
+Declare @sPerReglt varchar(7)  
+   
+Set @sPerReglt=CONVERT(varchar(2),datePart(month,@dtDteFin))  
+If LEN(@sPerReglt)=1 Set @sPerReglt='0' + @sPerReglt  
+Set @sPerReglt=@sPerReglt + '/' + CONVERT(varchar(4),datePart(year,@dtDteFin))  
+  
+Select distinct  
+ 'PERIODE DE REGLT' = @sPerReglt,  
+ 'GESTIONNAIRE' = 'SPB',  
+ 'N° CONTRAT DAS' = police.lib_police,  
+ 'CIE ASS' = compagnie.lib_cie,  
+ 'SOUSCRIPTEUR' = groupe.lib_grp,  
+ 'INTITULE DU CONTRAT' = produit.lib_long,  
+ 'N° SINISTRE' = sinistre.id_sin,  
+ 'NOM'  = personne.nom,  
+ 'PRENOM' = personne.prenom,  
+  sysadm.FN_CODE_CAR(div_sin.val_car,'-AR') as genre,  
+  sinistre.marq_port as 'marque',   
+ /* convert(varchar(10),sinistre.dte_ach_port,103) as 'date_achat', */  
+ -- [VDOC10924]  
+  Isnull (   
+  convert(varchar(30),  
+   Case   
+  When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)  
+   Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )  
+  Else sinistre.dte_ach_port  
+   End ,103)  
+ , 'Pas de date d''achat' )   as 'date_achat',  
+  -- OLD (select top 1 detail.mt_val_achat from sysadm.detail where detail.id_sin=sinistre.id_sin) as mt_achat,  
+ -- [VDOC10924]  
+ -- [VDOC11052]  
+   IsNull (   
+ Case   
+  When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence   
+    Then  
+     -- [VDOC11052]  
+     -- [ITSM224189] 965  
+     Case   
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )  
+        And   d.id_evt  not in ( 1083, 1317, 934, 965 )   
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )  
+        And   d.id_evt  not in ( 1083, 1317, 934, 965 )   
+        And   d.mt_val_achat <> 9999  
+       )  
+         
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )  
+        And   d.id_evt  = 1317  
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )  
+        And   d.id_evt  = 1317  
+        And   d.mt_val_achat <> 9999  
+       )  
+  
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )  
+        And   d.id_evt  = 934  
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )  
+        And   d.id_evt  = 934  
+        And   d.mt_val_achat <> 9999  
+       )    
+  
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )  
+        And   d.id_evt  = 1083  
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )  
+        And   d.id_evt  = 1083  
+        And   d.mt_val_achat <> 9999  
+       )   
+  
+    -- [ITSM224189] 965         
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )  
+        And   d.id_evt  = 965  
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )  
+        And   d.id_evt  = 965  
+        And   d.mt_val_achat <> 9999  
+       )   
+         
+    Else 0  
+   End  
+           
+  Else  
+     (select top 1 d.mt_val_achat   
+      from sysadm.detail d  
+      where d.id_sin=sinistre.id_sin  
+      and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )  
+      And   d.mt_val_achat <> 9999  
+      And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)  
+            From  sysadm.detail d1  
+            Where d1.id_sin = d.id_sin  
+            And   d1.id_gti = d.id_gti  
+            And   d1.id_detail = d.id_detail  
+            And   d1.mt_val_achat <> 9999 )  
+     )  
+ End  
+  , 0 ) as mt_achat,  -- [VDOC10924]  
+  sinistre.id_adh as no_adhesion,   
+  convert(varchar(10),sinistre.dte_adh,103) as dte_adh,   
+ 'date déb garantie' = convert(varchar(10),sinistre.dte_adh,103),   
+  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti,  
+  convert(varchar(10),sinistre.dte_surv,103) as dte_surv,   
+  datepart(year,sinistre.dte_surv) as annee_surv,  
+  datepart(month,sinistre.dte_surv) as mois_surv,   
+ convert(varchar(10),sinistre.dte_decl,103) as dte_decl,  
+ 'type_garantie'   = code_Ns.lib_code,  
+ 'garantie'   = code_Gs.lib_code,  
+ -- 'ALT_PLAF' = gar_sin.alt_plaf, -- [DT119]  
+ (select max(detail.mt_plaf) from sysadm.detail where detail.id_sin=gar_sin.id_sin and detail.id_gti=gar_sin.id_gti) as mt_plafond,  
+ 'quantité sinistre' =  
+ Case   
+  When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence   
+      Then  
+      ( Select sum ( ds.val_nbre )  
+      From   sysadm.div_det ds  
+      Where  ds.id_sin = sinistre.id_sin  
+      And    ds.nom_zone = 'qte' )  
+  Else  
+   reg_gti.mt_reg / (select max(detail.mt_plaf) from sysadm.detail where detail.id_sin=gar_sin.id_sin and detail.id_gti=gar_sin.id_gti)  
+    End,    
+ 'mt_total plafond' = reg_gti.mt_reg,  
+ 'DTE_REG' = convert(varchar(10),reg_gti.maj_le,103) + ' ' + convert(varchar(10),reg_gti.maj_le,108), -- [ITSM166043]  
+ 'MT_REG_GTI' = reg_gti.mt_reg,  
+ /* Old  
+ (select top 1 mt_val_publique from sysadm.detail   
+ where detail.id_sin=sinistre.id_sin and detail.id_sin=reg_gti.id_sin   
+ and mt_val_publique > 0  
+ ) as 'montant_sinistre',  
+  */  
+ -- [VDOC10924]  
+  IsNull (   
+  (select top 1 d.mt_val_publique   
+   from sysadm.detail d  
+   where d.id_sin=sinistre.id_sin  
+   And   d.mt_val_publique = ( Select MAX ( d1.mt_val_publique)  
+         From  sysadm.detail d1  
+         Where d1.id_sin = d.id_sin  
+         And   d1.id_gti = d.id_gti  
+         And   d1.id_detail = d.id_detail )  
+  ), 0 ) as 'montant_sinistre',  -- [VDOC10924]  
+  (select SUM(mt_frais) from sysadm.frais where frais.id_sin=sinistre.id_sin and frais.id_typ_frais=1) as frais_transport,  
+/*  
+  case When d2.val_nbre is not null Then  convert(varchar(10),sinistre.dte_adh,103) Else '' End as dte_deb_gc,  
+*/  
+ -- [VDOC10924]   
+  Nullif(   
+  convert(varchar(10),  
+   Case When d2.val_nbre is not null   
+   Then   
+     Case   
+    When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)  
+     Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )  
+    Else sinistre.dte_ach_port  
+     End  
+     Else ''   
+   End ,103)   
+  , '01/01/1900' )  
+  as dte_deb_gc,  
+/*  case When d2.val_nbre is not null Then convert(varchar(10),DateAdd(Month,d2.val_nbre,sinistre.dte_adh),103) Else '' End as dte_fin_gc, */  
+ -- [VDOC10924][VDOC11052]  
+  case When d2.val_nbre is not null   
+        Then convert(varchar(10),DateAdd(Month,d2.val_nbre,  
+     Case   
+    When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)  
+     Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )  
+    Else sinistre.dte_ach_port  
+     End  
+   ),103) Else '' End as dte_fin_gc,  
+  case When d2.val_nbre is null Then  convert(varchar(10),sinistre.dte_adh,103)   
+ Else convert(varchar(10),DateAdd(day, 1, DateAdd(Month,d2.val_nbre,sinistre.dte_adh)),103) End as dte_deb_gti_DAS,  
+  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti_DAS,  
+  /*(select top 1 sysadm.FN_CLE_VAL('PGC_MOIS',val_car,';') + ' mois' from sysadm.det_pro   
+    where det_pro.id_prod=sinistre.id_prod and det_pro.id_code_dp=85) as duree_garantie_das,*/  
+-- [VDOC10924][VDOC11052] duréé garantie DAS : = date achat - date fin garantie    
+--   Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port, IsNull ( sinistre.dte_adh, (Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gt
+i and dt.dte_det is not null ))), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,  
+ Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port,   
+     IsNUll (   
+     (Case   
+    When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)  
+     Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )  
+    Else sinistre.dte_ach_port  
+     End), sinistre.dte_adh )), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,         
+   
+  case When d2.val_nbre is null Then 'Neuf'  
+ When d2.val_nbre = 3 Then 'Occasion'  
+ Else 'Neuf'   
+  End as 'Neuf/Occasion',  
+-- [VDOC10924]  
+  IsNull (  
+   (Select Top 1 rTrim( Convert ( VarChar ( 30), ds.val_nbre ) + '')  
+    From  sysadm.div_sin ds,  
+    sysadm.det_pro dp  
+    Where dp.id_prod = sinistre.id_prod  
+    And   dp.id_code_dp = 85  
+    And   ds.id_sin = sinistre.id_sin  
+    And   ds.nom_zone= 'duree_gti_orig') -- [RS6175_GC_SCRP_SIM2]  
+   , 'Non géré sur le contrat' ) As 'Durée_GC(si PGC)',  
+-- [VDOC10924]  
+ /*IsNull (  
+ Case   
+  When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence   
+    Then  
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+      from sysadm.detail d  
+      where d.id_sin=sinistre.id_sin  
+      and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )  
+      And   d.id_evt  not in ( 1083, 1317, 934, 965 ) -- [ITSM224189] 965  
+      And   d.mt_val_achat <> 9999  
+     )   
+  Else  
+    (select top 1 d.mt_val_achat   
+     from sysadm.detail d  
+     where d.id_sin=sinistre.id_sin  
+     And   d.mt_val_achat <> 9999  
+     And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)  
+           From  sysadm.detail d1  
+           Where d1.id_sin = d.id_sin  
+           And   d1.id_gti = d.id_gti  
+           And   d1.id_detail = d.id_detail  
+           And   d1.mt_val_achat <> 9999 )  
+    )*  
+    Case   
+   When IsNull ( (reg_gti.mt_reg / (select max(detail.mt_plaf) from sysadm.detail where detail.id_sin=gar_sin.id_sin and detail.id_gti=gar_sin.id_gti)), 0 ) < 1  
+     Then 1  
+   Else IsNull ( (reg_gti.mt_reg / (select max(detail.mt_plaf) from sysadm.detail where detail.id_sin=gar_sin.id_sin and detail.id_gti=gar_sin.id_gti)), 0 )   
+    End   
+ End , 0 ) 'Montant_Total_Achat',*/ -- [DT119]  
+  IsNUll (   
+   ( Select Top 1  
+      Case   
+     When id_ref_four = 'A_DIAGNOSTIQUER' Then 'DIAGNOSTIC'  
+     When id_typ_art = 'PRS' Then 'REPARATION'  
+     When id_typ_art = 'EDI' And CharIndex ( 'REPARER', id_ref_four ) > 0 Then  'REPARATION'       
+     When id_typ_art = 'EDI' And CharIndex ( 'DESOXYDER', id_ref_four ) > 0 Then  'DESOXYDATION'            
+     When id_typ_art = 'CAF' Then 'REMPLACEMENT PAR BON ACHAT'  
+     When id_typ_art = 'EDI' And c.id_four = 'CDS' Then 'REMPLACEMENT PAR BON ACHAT' -- [VDOC19386]  
+     When id_typ_art = 'PST' Then ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))  
+     Else 'REMPLACEMENT PAR ' + ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))  
+      End   
+     
+  From sysadm.reglement r,  
+    sysadm.detail d,  
+    sysadm.commande c  
+  Where r.id_sin = sysadm.reg_gti.id_sin  
+  And   r.id_reg = sysadm.reg_gti.id_reg   
+  and   r.cod_mode_reg = 'FM'  
+  And   d.id_sin = r.id_sin  
+  and   d.id_reg = r.id_reg  
+  and   c.id_sin = d.id_sin  
+  and   c.id_gti = d.id_gti  
+  and   c.id_detail = d.id_detail  
+  And   c.id_ref_four not in ( 'PEC_A_RECYCLER', 'REFUSE_A_REEXP', 'DECISION_SPB' )  
+   ),  
+  'REMBOURSEMENT' ) as typ_evt, -- VDOC12649    
+  IsNUll (   
+   ( Select Top 1 sysadm.FN_CODE_CAR ( i.id_four, '-FR' )  
+  From sysadm.reglement r,  
+    sysadm.detail d,  
+    sysadm.commande c,  
+    sysadm.inter i  
+  Where r.id_sin = sysadm.reg_gti.id_sin  
+  And   r.id_reg = sysadm.reg_gti.id_reg   
+  and   r.cod_mode_reg = 'FM'  
+  And   d.id_sin = r.id_sin  
+  and   d.id_reg = r.id_reg  
+  and   c.id_sin = d.id_sin  
+  and   c.id_gti = d.id_gti  
+  and   c.id_detail = d.id_detail  
+  And   c.id_ref_four not in ( 'PEC_A_RECYCLER', 'REFUSE_A_REEXP', 'DECISION_SPB' )  
+  And   i.id_sin = r.id_sin  
+  And   i.id_i = r.id_i  
+  And   i.cod_inter = 'F'  
+   ),  
+  'ASSURE' ) as Inter_Regl, -- [VDOC13769]  
+   IsNull (  
+   (Select Top 1 rTrim( Convert ( VarChar ( 30), ds.val_mt ) + '' )  
+   From  sysadm.div_sin ds,  
+     sysadm.div_pro dp  
+   Where dp.id_prod = sinistre.id_prod  
+    And   ds.id_sin = sinistre.id_sin  
+    And   ds.nom_zone= 'mt_val_achat_remise'  
+    and ds.nom_zone=dp.nom_zone)  
+  , '' ) As 'Montant achat remisé'  
+ From  
+ sysadm.reg_gti     
+  inner join sysadm.sinistre  on reg_gti.id_sin = sinistre.id_sin  
+  inner join sysadm.produit on sinistre.id_prod = produit.id_prod  
+ left outer join sysadm.div_sin on div_sin.id_sin = sinistre.id_sin and div_sin.nom_zone='type_app'  
+ left outer join sysadm.div_sin d2 on d2.id_sin = sinistre.id_sin and d2.nom_zone='duree_gti_orig' -- [RS6175_GC_SCRP_SIM2]
+ inner join sysadm.personne on personne.id_ordre    =  sinistre.id_ordre  
+ inner join sysadm.gar_sin on reg_gti.id_sin = gar_sin.id_sin and reg_gti.id_gti = gar_sin.id_gti  
+ inner join sysadm.garantie on  garantie.id_prod = sinistre.id_prod and  garantie.id_rev = sinistre.id_rev and garantie.id_gti = reg_gti.id_gti  
+ inner join sysadm.police on garantie.id_police = police.id_police,  
+ sysadm.etablissement,  
+ sysadm.code code_Ns,  
+ sysadm.code code_Gs,  
+ sysadm.groupe,  
+ sysadm.compagnie,  
+ sysadm.reglement  
+Where   
+ ( groupe.id_grp = etablissement.id_grp ) and  
+ ( etablissement.id_prod= sinistre.id_prod ) and  
+ ( etablissement.id_ets = sinistre.id_ets  ) and  
+ ( etablissement.id_rev = -1   ) and  
+ ( code_Ns.id_typ_code = '+NS'   ) and  
+ ( code_Ns.id_code = sinistre.id_natsin ) and  
+ ( code_Gs.id_typ_code = '-GS'   ) and  
+ ( code_Gs.id_code = reg_gti.id_rgpt  ) and  
+ ( compagnie.id_cie = police.id_cie  ) and  
+ ( police.id_cie=93  ) and  
+ ( reglement.id_sin = reg_gti.id_sin   ) and  
+ ( reglement.id_reg = reg_gti.id_reg  ) and  
+ ( reglement.cod_mot_reg = 'RN'    ) and  
+ reglement.dte_reg between    @dtDteDeb And @dtDteFin and  
+ ( reglement.cod_mode_reg in ('VA' , 'VM' , 'C', 'FM', 'BX', 'VV' ) )   
+  
+  
+UNION   
+Select distinct  
+ 'PERIODE DE REGLT' = @sPerReglt,  
+ 'GESTIONNAIRE' = 'SPB',  
+ 'N° CONTRAT DAS' = police.lib_police,  
+ 'CIE ASS' = compagnie.lib_cie,  
+ 'SOUSCRIPTEUR' = groupe.lib_grp,  
+ 'INTITULE DU CONTRAT' = produit.lib_long,  
+ 'N° SINISTRE' = sinistre.id_sin,  
+ 'NOM'  = personne.nom,  
+ 'PRENOM' = personne.prenom,  
+  sysadm.FN_CODE_CAR(div_sin.val_car,'-AR') as genre,  
+  sinistre.marq_port as 'marque',   
+ /* convert(varchar(10),sinistre.dte_ach_port,103) as 'date_achat', */  
+-- [VDOC10924]  
+  Isnull (   
+  convert(varchar(30),  
+  Case   
+ When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)  
+  Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )  
+ Else sinistre.dte_ach_port  
+  End ,103)   
+  , 'Pas de date d''achat' )   as 'date_achat',  
+-- (select top 1 detail.mt_val_achat from sysadm.detail where detail.id_sin=sinistre.id_sin) as mt_achat,  
+-- [VDOC11052]  
+   IsNull (   
+ Case   
+  When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence   
+    Then  
+     -- [VDOC11052]  
+     Case   
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )  
+        And   d.id_evt  not in ( 1083, 1317, 934, 965 )   
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )  
+        And   d.id_evt  not in ( 1083, 1317, 934, 965 )   
+        And   d.mt_val_achat <> 9999  
+       )  
+         
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )  
+        And   d.id_evt  = 1317  
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )  
+        And   d.id_evt  = 1317  
+        And   d.mt_val_achat <> 9999  
+       )  
+  
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )  
+        And   d.id_evt  = 934  
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )  
+        And   d.id_evt  = 934  
+        And   d.mt_val_achat <> 9999  
+       )    
+  
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )  
+        And   d.id_evt  = 1083  
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )  
+        And   d.id_evt  = 1083  
+        And   d.mt_val_achat <> 9999  
+       )   
+    Else 0  
+   End  
+           
+  Else  
+     (select top 1 d.mt_val_achat   
+      from sysadm.detail d  
+      where d.id_sin=sinistre.id_sin  
+      and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti )  
+      And   d.mt_val_achat <> 9999  
+      And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)  
+            From  sysadm.detail d1  
+            Where d1.id_sin = d.id_sin  
+            And   d1.id_gti = d.id_gti  
+            And   d1.id_detail = d.id_detail  
+            And   d1.mt_val_achat <> 9999 )  
+     )  
+ End  
+  , 0 ) as mt_achat,  -- [VDOC10924]  
+  sinistre.id_adh as no_adhesion,   
+  convert(varchar(10),sinistre.dte_adh,103) as dte_adh,   
+ 'date déb  garantie' = convert(varchar(10),sinistre.dte_adh,103),  
+  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti,  
+  convert(varchar(10),sinistre.dte_surv,103) as dte_surv,   
+  datepart(year,sinistre.dte_surv) as annee_surv,  
+  datepart(month,sinistre.dte_surv) as mois_surv,   
+ convert(varchar(10),sinistre.dte_decl,103) as dte_decl,  
+ 'type_garantie'   = code_Ns.lib_code,  
+ 'garantie'   = code_Nf.lib_code,  
+ -- 'ALT_PLAF' = 'N', -- [DT119]  
+  frais.mt_frais as mt_plafond,  
+ 'quantité sinistre' =   
+ Case   
+  When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence   
+      Then  
+      ( Select sum ( ds.val_nbre )  
+      From   sysadm.div_det ds  
+      Where  ds.id_sin = sinistre.id_sin  
+      And    ds.nom_zone = 'qte' )  
+  Else  
+   reg_gti.mt_reg / frais.mt_frais  
+    End,  
+ 'mt_total plafond' = reg_gti.mt_reg,  
+ 'DTE_REG' = convert(varchar(10),reg_gti.maj_le,103) + ' ' + convert(varchar(10),reg_gti.maj_le,108), -- [ITSM166043]  
+ 'MT_REG_GTI' = reg_gti.mt_reg,  
+ (select top 1 mt_val_publique from sysadm.detail   
+ where detail.id_sin=sinistre.id_sin and detail.id_sin=reg_gti.id_sin   
+ and mt_val_publique > 0  
+ ) as 'montant_sinistre',  
+  (select SUM(mt_frais) from sysadm.frais where frais.id_sin=sinistre.id_sin and frais.id_typ_frais=1) as frais_transport,  
+/*  
+  case When d2.val_nbre is not null Then  convert(varchar(10),sinistre.dte_adh,103) Else '' End as dte_deb_gc,  
+*/  
+ -- [VDOC10924]   
+  Nullif (   
+  case When d2.val_nbre is not null Then convert(varchar(10),  
+    Case   
+   When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)  
+    Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )  
+   Else sinistre.dte_ach_port  
+    End  
+  ,103)   
+  Else ''   
+ End   
+ , '01/01/1900' )  
+ as dte_deb_gc,  
+/*  case When d2.val_nbre is not null Then convert(varchar(10),DateAdd(Month,d2.val_nbre,sinistre.dte_adh),103) Else '' End as dte_fin_gc, */  
+ -- [VDOC10924]   
+  case When d2.val_nbre is not null Then convert(varchar(10),DateAdd(Month,d2.val_nbre,  
+    Case   
+   When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)  
+    Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )  
+   Else sinistre.dte_ach_port  
+    End  
+   ),103) Else '' End as dte_fin_gc,  
+   case When d2.val_nbre is null Then  convert(varchar(10),sinistre.dte_adh,103)   
+ Else convert(varchar(10),DateAdd(day, 1, DateAdd(Month,d2.val_nbre,sinistre.dte_adh)),103) End as dte_deb_gti_DAS,  
+  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti_DAS,  
+  /*(select top 1 sysadm.FN_CLE_VAL('PGC_MOIS',val_car,';') + ' mois' from sysadm.det_pro   
+    where det_pro.id_prod=sinistre.id_prod and det_pro.id_code_dp=85) as duree_garantie_das,*/  
+-- [VDOC10924]  
+--   Convert ( VarChar ( 10),Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, sinistre.dte_adh, sinistre.dte_fin_gti ) ) , 0 ) ) + '' ) as duree_garantie_das_Mois,  
+-- [VDOC10924][VDOC11052] duréé garantie DAS : = date achat - date fin garantie    
+--   Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port, IsNull ( sinistre.dte_adh, (Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gt
+i and dt.dte_det is not null ))), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,  
+ Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port,   
+     IsNUll (   
+     (Case   
+    When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)  
+     Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )  
+    Else sinistre.dte_ach_port  
+     End), sinistre.dte_adh )), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,     
+  case When d2.val_nbre is null Then 'Neuf'  
+ When d2.val_nbre = 3 Then 'Occasion'  
+ Else 'Neuf'  
+  End as 'Neuf/Occasion',  
+-- [VDOC10924]  
+  IsNull (  
+   (Select Top 1 rTrim( Convert ( VarChar ( 30), ds.val_nbre ) + '' )  
+    From  sysadm.div_sin ds,  
+    sysadm.det_pro dp  
+    Where dp.id_prod = sinistre.id_prod  
+    And   dp.id_code_dp = 85  
+    And   ds.id_sin = sinistre.id_sin  
+    And   ds.nom_zone= 'duree_gti_orig') -- [RS6175_GC_SCRP_SIM2]
+   , 'Non géré sur le contrat' ) As 'Durée_GC(si PGC)',  
+  /*IsNull (   
+         Case   
+          When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence   
+            Then  
+               (select sum ( d.mt_val_achat )  
+              from sysadm.detail d  
+              where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = ( Select top 1 id_gti from code_garantie c where c.id_prod = sinistre.id_prod and c.id_gti = reg_gti.id_gti ) -- [ITSM224189] 965  
+        And   d.id_evt  not in ( 1083, 1317, 934, 965 )   
+              And   d.mt_val_achat <> 9999  
+             )   
+          Else  
+            (select top 1 d.mt_val_achat   
+             from sysadm.detail d  
+             where d.id_sin=sinistre.id_sin  
+             And   d.mt_val_achat <> 9999  
+             And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)  
+                   From  sysadm.detail d1  
+                   Where d1.id_sin = d.id_sin  
+                   And   d1.id_gti = d.id_gti  
+                   And   d1.id_detail = d.id_detail  
+                   And   d1.mt_val_achat <> 9999 )  
+            )*  
+            Case   
+           When reg_gti.mt_reg / frais.mt_frais < 1  
+             Then 1  
+           Else reg_gti.mt_reg / frais.mt_frais  
+            End  
+        End  
+        , 0 )  'Montant_Total_Achat',*/ -- [DT119]  
+  IsNUll (   
+   ( Select Top 1  
+      Case   
+     When id_ref_four = 'A_DIAGNOSTIQUER' Then 'DIAGNOSTIC'  
+     When id_typ_art = 'PRS' Then 'REPARATION'  
+     When id_typ_art = 'EDI' And CharIndex ( 'REPARER', id_ref_four ) > 0 Then  'REPARATION'       
+     When id_typ_art = 'EDI' And CharIndex ( 'DESOXYDER', id_ref_four ) > 0 Then  'DESOXYDATION'            
+     When id_typ_art = 'CAF' Then 'REMPLACEMENT PAR BON ACHAT'  
+     When id_typ_art = 'EDI' And c.id_four = 'CDS' Then 'REMPLACEMENT PAR BON ACHAT' -- [VDOC19386]  
+     When id_typ_art = 'PST' Then ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))  
+     Else 'REMPLACEMENT PAR ' + ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))  
+      End   
+     
+  From sysadm.reglement r,  
+    sysadm.detail d,  
+    sysadm.commande c  
+  Where r.id_sin = sysadm.reg_gti.id_sin  
+  And   r.id_reg = sysadm.reg_gti.id_reg   
+  and   r.cod_mode_reg = 'FM'  
+  And   d.id_sin = r.id_sin  
+  and   d.id_reg = r.id_reg  
+  and   c.id_sin = d.id_sin  
+  and   c.id_gti = d.id_gti  
+  and   c.id_detail = d.id_detail  
+  And   c.id_ref_four not in ( 'PEC_A_RECYCLER', 'REFUSE_A_REEXP', 'DECISION_SPB' )  
+   ),  
+  'REMBOURSEMENT' ) as typ_evt, -- VDOC12649    
+  IsNUll (   
+   ( Select Top 1 sysadm.FN_CODE_CAR ( i.id_four, '-FR' )  
+  From sysadm.reglement r,  
+    sysadm.detail d,  
+    sysadm.commande c,  
+    sysadm.inter i  
+  Where r.id_sin = sysadm.reg_gti.id_sin  
+  And   r.id_reg = sysadm.reg_gti.id_reg   
+  and   r.cod_mode_reg = 'FM'  
+  And   d.id_sin = r.id_sin  
+  and   d.id_reg = r.id_reg  
+  and   c.id_sin = d.id_sin  
+  and   c.id_gti = d.id_gti  
+  and   c.id_detail = d.id_detail  
+  And   c.id_ref_four not in ( 'PEC_A_RECYCLER', 'REFUSE_A_REEXP', 'DECISION_SPB' )  
+  And   i.id_sin = r.id_sin  
+  And   i.id_i = r.id_i  
+  And   i.cod_inter = 'F'  
+   ),  
+  'ASSURE' ) as Inter_Regl, -- [VDOC13769]  
+   IsNull (  
+   (Select Top 1 rTrim( Convert ( VarChar ( 30), ds.val_mt ) + '' )  
+   From  sysadm.div_sin ds,  
+     sysadm.div_pro dp  
+   Where dp.id_prod = sinistre.id_prod  
+    And   ds.id_sin = sinistre.id_sin  
+    And   ds.nom_zone= 'mt_val_achat_remise'  
+    and ds.nom_zone=dp.nom_zone)  
+  , '' ) As 'Montant achat remisé'  
+    
+From  
+ sysadm.reg_gti     
+  inner join sysadm.sinistre  on reg_gti.id_sin = sinistre.id_sin  
+  inner join sysadm.produit on sinistre.id_prod = produit.id_prod  
+ left outer join sysadm.div_sin on div_sin.id_sin = sinistre.id_sin and div_sin.nom_zone='type_app'  
+ left outer join sysadm.div_sin d2 on d2.id_sin = sinistre.id_sin and d2.nom_zone='duree_gti_orig' -- [RS6175_GC_SCRP_SIM2]
+ inner join sysadm.personne on personne.id_ordre    =  sinistre.id_ordre  
+ inner join sysadm.frais on reg_gti.id_sin = frais.id_sin and reg_gti.id_reg = frais.id_reg,  
+ sysadm.garantie,  
+ sysadm.etablissement,  
+ sysadm.code code_Ns,  
+ sysadm.code code_Nf,  
+ sysadm.groupe,  
+ sysadm.departement,  
+ sysadm.police,  
+ sysadm.compagnie,  
+ sysadm.reglement  
+Where   
+ ( reg_gti.id_gti = -1   ) and  
+ ( groupe.id_grp = etablissement.id_grp ) and  
+ ( etablissement.id_prod= sinistre.id_prod ) and  
+ ( etablissement.id_ets = sinistre.id_ets  ) and  
+ ( etablissement.id_rev = -1   ) and  
+ ( code_Ns.id_typ_code = '+NS'   ) and  
+ ( code_Ns.id_code = sinistre.id_natsin ) and  
+ ( code_Nf.id_typ_code = '+NF'   ) and  
+ ( code_Nf.id_code = frais.id_typ_frais ) and  
+ ( garantie.id_prod = sinistre.id_prod ) and  
+ ( garantie.id_rev = sinistre.id_rev  ) and  
+ ( garantie.id_gti = IsNull ( ( Select NullIf ( NullIf ( max ( a_reg_gti.id_gti ), 0), -1 )  
+        From   sysadm.reg_gti a_reg_gti  
+        Where  a_reg_gti.id_sin = reg_gti.id_sin  
+        And    a_reg_gti.id_reg = reg_gti.id_reg ),   
+  
+       ( Select max ( gar_sin.id_gti )   
+        From   sysadm.gar_sin  
+        Where  gar_sin.id_sin = sinistre.id_sin ))) and  
+ ( garantie.id_police = police.id_police ) and  
+ ( compagnie.id_cie = police.id_cie  ) and  
+ ( police.id_cie=93  ) and  
+ ( reglement.dte_reg    between    @dtDteDeb And @dtDteFin ) and  
+ ( reglement.id_sin     =       reg_gti.id_sin          )       and  
+ ( reglement.id_reg     =       reg_gti.id_reg          )       and  
+ ( reglement.cod_mode_reg in ('VA' , 'VM' , 'C', 'FM', 'BX', 'VV' ) )   
+  
+UNION   
+  
+Select distinct  
+ 'PERIODE DE REGLT' = @sPerReglt,  
+ 'GESTIONNAIRE' = 'SPB',  
+ 'N° CONTRAT DAS' = police.lib_police,  
+ 'CIE ASS' = compagnie.lib_cie,  
+ 'SOUSCRIPTEUR' = groupe.lib_grp,  
+ 'INTITULE DU CONTRAT' = produit.lib_long,  
+ 'N° SINISTRE' = sinistre.id_sin,  
+ 'NOM'  = personne.nom,  
+ 'PRENOM' = personne.prenom,  
+  sysadm.FN_CODE_CAR(div_sin.val_car,'-AR') as genre,  
+  sinistre.marq_port as 'marque',   
+/* convert(varchar(10),sinistre.dte_ach_port,103) as 'date_achat', */  
+-- [VDOC10924]  
+  IsNull (   
+  convert(varchar(30),  
+   Case   
+  When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti )  
+   Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.dte_det is not null )  
+  Else sinistre.dte_ach_port  
+   End ,103)   
+  , 'Pas de date d''achat' )   as 'date_achat',  
+-- (select top 1 detail.mt_val_achat from sysadm.detail where detail.id_sin=sinistre.id_sin) as mt_achat,  
+-- [VDOC11052]  
+   IsNull (   
+ Case   
+  When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence   
+    Then  
+     -- [VDOC11052]  
+     Case   
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        And   d.id_evt  not in ( 1083, 1317, 934, 965 )  -- [ITSM224189] 965  
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        And   d.id_evt  not in ( 1083, 1317, 934, 965 )   
+        And   d.mt_val_achat <> 9999  
+       )  
+         
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        And   d.id_evt  = 1317  
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        And   d.id_evt  = 1317  
+        And   d.mt_val_achat <> 9999  
+       )  
+  
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        And   d.id_evt  = 934  
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        And   d.id_evt  = 934  
+        And   d.mt_val_achat <> 9999  
+       )    
+  
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        And   d.id_evt  = 1083  
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        And   d.id_evt  = 1083  
+        And   d.mt_val_achat <> 9999  
+       )   
+         
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        And   d.id_evt  = 965  
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        And   d.id_evt  = 965  
+        And   d.mt_val_achat <> 9999  
+       )   
+                
+    Else 0  
+   End  
+           
+  Else  
+     (select top 1 d.mt_val_achat   
+      from sysadm.detail d  
+      where d.id_sin=sinistre.id_sin  
+      And   d.mt_val_achat <> 9999  
+      And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)  
+            From  sysadm.detail d1  
+            Where d1.id_sin = d.id_sin  
+            And   d1.id_gti = d.id_gti  
+            And   d1.id_detail = d.id_detail  
+            And   d1.mt_val_achat <> 9999 )  
+     )  
+ End  
+  , 0 ) as mt_achat,  -- [VDOC10924]  
+  sinistre.id_adh as no_adhesion,   
+  convert(varchar(10),sinistre.dte_adh,103) as dte_adh,    
+  'date déb  garantie' = convert(varchar(10),sinistre.dte_adh,103),  
+  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti,  
+  convert(varchar(10),sinistre.dte_surv,103) as dte_surv,   
+  datepart(year,sinistre.dte_surv) as annee_surv,  
+  datepart(month,sinistre.dte_surv) as mois_surv,   
+  convert(varchar(10),sinistre.dte_decl,103) as dte_decl,  
+ 'type_garantie'   = code_Ns.lib_code,  
+ 'garantie'   =   
+  Case   
+   When reglement.cod_mode_reg = 'FM' and reglement.cod_mot_reg = 'RM' Then 'REGUL MOINS AVEC AVOIR'  
+   When reglement.cod_mode_reg = 'FM' and reglement.cod_mot_reg = 'RP' Then 'REGUL PLUS AVEC AVOIR'     
+   When reglement.cod_mode_reg = 'C' and reglement.cod_mot_reg = 'RM' Then 'REGUL MOINS'     
+   When reglement.cod_mode_reg = 'C' and reglement.cod_mot_reg = 'RP' Then 'REGUL PLUS'        
+   Else 'REGULARISATION'  
+  End , -- VDOC12649  
+  -- 'ALT_PLAF' = 'N',-- [DT119]  
+  reglement.mt_tot_reg as mt_plafond,  
+  'quantité sinistre' = 1,  
+  'mt_total plafond' = reglement.mt_tot_reg,  
+  'DTE_REG' = convert(varchar(10),reglement.dte_reg,103)+ ' ' + convert(varchar(10),reglement.maj_le,108), -- [ITSM166043]  
+   'MT_REG_GTI' = reglement.mt_tot_reg,  
+ (select top 1 mt_val_publique from sysadm.detail   
+ where detail.id_sin=sinistre.id_sin and detail.id_sin=reglement.id_sin   
+ and mt_val_publique > 0  
+ ) as 'montant_sinistre',  
+  (select SUM(mt_frais) from sysadm.frais where frais.id_sin=sinistre.id_sin and frais.id_typ_frais=1) as frais_transport,  
+/*  
+  case When d2.val_nbre is not null Then  convert(varchar(10),sinistre.dte_adh,103) Else '' End as dte_deb_gc,  
+*/  
+ -- [VDOC10924]   
+  nullif (   
+  case When d2.val_nbre is not null Then convert(varchar(10),  
+    Case   
+   When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod )  
+    Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.dte_det is not null )  
+   Else sinistre.dte_ach_port  
+    End  
+   ,103)   
+  Else ''   
+   End,   
+   '01/01/1900' )  
+   as dte_deb_gc,  
+/*  case When d2.val_nbre is not null Then convert(varchar(10),DateAdd(Month,d2.val_nbre,sinistre.dte_adh),103) Else '' End as dte_fin_gc, */  
+ -- [VDOC10924]   
+  case When d2.val_nbre is not null Then convert(varchar(10),DateAdd(Month,d2.val_nbre,  
+   Case   
+  When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod )  
+   Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.dte_det is not null )  
+  Else sinistre.dte_ach_port  
+   End  
+  ),103) Else '' End as dte_fin_gc,  
+   case When d2.val_nbre is null Then  convert(varchar(10),sinistre.dte_adh,103)   
+ Else convert(varchar(10),DateAdd(day, 1, DateAdd(Month,d2.val_nbre,sinistre.dte_adh)),103) End as dte_deb_gti_DAS,  
+  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti_DAS,  
+  /*(select top 1 sysadm.FN_CLE_VAL('PGC_MOIS',val_car,';') + ' mois' from sysadm.det_pro   
+    where det_pro.id_prod=sinistre.id_prod and det_pro.id_code_dp=85) as duree_garantie_das,*/  
+-- [VDOC10924]  
+--    Convert ( VarChar ( 10), Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, sinistre.dte_adh, sinistre.dte_fin_gti ) ) , 0 ) ) + '' ) as duree_garantie_das_Mois,  
+-- [VDOC10924][VDOC11052] duréé garantie DAS : = date achat - date fin garantie    
+--   Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port, IsNull ( sinistre.dte_adh, (Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gt
+i and dt.dte_det is not null ))), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,  
+ Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port,   
+     IsNUll (   
+     (Case   
+    When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod )  
+     Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.dte_det is not null )  
+    Else sinistre.dte_ach_port  
+     End), sinistre.dte_adh )), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,     
+  case When d2.val_nbre is null Then 'Neuf'  
+ When d2.val_nbre = 3 Then 'Occasion'  
+ Else 'Neuf'  
+  End as 'Neuf/Occasion',  
+-- [VDOC10924]  
+  IsNull (  
+   (Select Top 1 rTrim( Convert ( VarChar ( 30), ds.val_nbre ) + '' )  
+    From  sysadm.div_sin ds,  
+    sysadm.det_pro dp  
+    Where dp.id_prod = sinistre.id_prod  
+    And   dp.id_code_dp = 85  
+    And   ds.id_sin = sinistre.id_sin  
+    And   ds.nom_zone= 'duree_gti_orig')  -- [RS6175_GC_SCRP_SIM2]
+   , 'Non géré sur le contrat' ) As 'Durée_GC(si PGC)',  
+ /* IsNull (   
+  Case   
+          When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence   
+            Then  
+               (select sum ( d.mt_val_achat )  
+              from sysadm.detail d  
+              where d.id_sin=sinistre.id_sin  
+              And   d.id_evt  not in ( 1083, 1317, 934, 965 )  -- [ITSM224189] 965  
+              And   d.mt_val_achat <> 9999  
+             )   
+          Else  
+            (select top 1 d.mt_val_achat   
+             from sysadm.detail d  
+             where d.id_sin=sinistre.id_sin  
+             And   d.mt_val_achat <> 9999  
+             And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)  
+                   From  sysadm.detail d1  
+                   Where d1.id_sin = d.id_sin  
+                   And   d1.id_gti = d.id_gti  
+                   And   d1.id_detail = d.id_detail  
+                   And   d1.mt_val_achat <> 9999 )  
+            )  
+        End , 0 ) 'Montant_Total_Achat',*/-- [DT119]  
+  IsNUll (   
+   ( Select Top 1  
+      Case   
+     When id_ref_four = 'A_DIAGNOSTIQUER' Then 'DIAGNOSTIC'  
+     When id_typ_art = 'PRS' Then 'REPARATION'  
+     When id_typ_art = 'EDI' And CharIndex ( 'REPARER', id_ref_four ) > 0 Then  'REPARATION'       
+     When id_typ_art = 'EDI' And CharIndex ( 'DESOXYDER', id_ref_four ) > 0 Then  'DESOXYDATION'            
+     When id_typ_art = 'CAF' Then 'REMPLACEMENT PAR BON ACHAT'  
+     When id_typ_art = 'EDI' And c.id_four = 'CDS' Then 'REMPLACEMENT PAR BON ACHAT' -- [VDOC19386]  
+     When id_typ_art = 'PST' Then ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))  
+     Else 'REMPLACEMENT PAR ' + ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))  
+      End   
+     
+  From sysadm.reglement r,  
+    sysadm.detail d,  
+    sysadm.commande c  
+  Where r.id_sin = sysadm.reglement.id_sin  
+  And   r.id_reg = sysadm.reglement.id_reg   
+  and   r.cod_mode_reg = 'FM'  
+  And   d.id_sin = r.id_sin  
+  and   d.id_reg = r.id_reg  
+  and   c.id_sin = d.id_sin  
+  and   c.id_gti = d.id_gti  
+  and   c.id_detail = d.id_detail  
+  And   c.id_ref_four not in ( 'PEC_A_RECYCLER', 'REFUSE_A_REEXP', 'DECISION_SPB' )  
+   ),  
+  'REMBOURSEMENT' ) as typ_evt, -- VDOC12649      
+  IsNUll (   
+   ( Select Top 1 sysadm.FN_CODE_CAR ( i.id_four, '-FR' )  
+  From sysadm.reglement r,  
+    sysadm.detail d,  
+    sysadm.commande c,  
+    sysadm.inter i  
+  Where r.id_sin = sysadm.reglement.id_sin  
+  And   r.id_reg = sysadm.reglement.id_reg   
+  and   r.cod_mode_reg = 'FM'  
+  And   d.id_sin = r.id_sin  
+  and   d.id_reg = r.id_reg  
+  and   c.id_sin = d.id_sin  
+  and   c.id_gti = d.id_gti  
+  and   c.id_detail = d.id_detail  
+  And   c.id_ref_four not in ( 'PEC_A_RECYCLER', 'REFUSE_A_REEXP', 'DECISION_SPB' )  
+  And   i.id_sin = r.id_sin  
+  And   i.id_i = r.id_i  
+  And   i.cod_inter = 'F'  
+   ),  
+  'ASSURE' ) as Inter_Regl, -- [VDOC13769]  
+   IsNull (  
+   (Select Top 1 rTrim( Convert ( VarChar ( 30), ds.val_mt ) + '' )  
+   From  sysadm.div_sin ds,  
+     sysadm.div_pro dp  
+   Where dp.id_prod = sinistre.id_prod  
+    And   ds.id_sin = sinistre.id_sin  
+    And   ds.nom_zone= 'mt_val_achat_remise'  
+    and ds.nom_zone=dp.nom_zone)  
+  , '' ) As 'Montant achat remisé'  
+    
+From  
+ sysadm.reglement   
+  inner join sysadm.sinistre  on reglement.id_sin = sinistre.id_sin  
+  inner join sysadm.reg_gti on reglement.id_sin = reg_gti.id_sin   
+  inner join sysadm.produit on sinistre.id_prod = produit.id_prod  
+ left outer join sysadm.div_sin on div_sin.id_sin = sinistre.id_sin and div_sin.nom_zone='type_app'  
+ left outer join sysadm.div_sin d2 on d2.id_sin = sinistre.id_sin and d2.nom_zone='duree_gti_orig'  -- [RS6175_GC_SCRP_SIM2]
+ inner join sysadm.personne on personne.id_ordre    =  sinistre.id_ordre,  
+ sysadm.garantie  ,  
+ sysadm.etablissement,  
+ sysadm.code code_Ns,  
+ sysadm.groupe,  
+ sysadm.police,  
+ sysadm.compagnie  
+Where   
+ ( groupe.id_grp = etablissement.id_grp ) and  
+ ( etablissement.id_prod= sinistre.id_prod ) and  
+ ( etablissement.id_ets = sinistre.id_ets  ) and  
+ ( etablissement.id_rev = -1   ) and  
+ ( code_Ns.id_typ_code = '+NS'   ) and  
+ ( code_Ns.id_code = sinistre.id_natsin ) and  
+ ( garantie.id_prod = sinistre.id_prod ) and  
+ ( garantie.id_rev = sinistre.id_rev  ) and  
+ ( garantie.id_gti = ( Select max ( gar_sin.id_gti )   
+      From   sysadm.gar_sin  
+      Where  gar_sin.id_sin = sinistre.id_sin )) and  
+ ( garantie.id_police = police.id_police ) and  
+ ( compagnie.id_cie = police.id_cie  ) and  
+  ( police.id_cie=93  ) and  
+ ( reglement.dte_reg between    @dtDteDeb And @dtDteFin ) and  
+ ( reglement.cod_mot_reg in ( 'RE', 'RM', 'RP' ) ) and  
+ ( reglement.mt_tot_reg <> 0    ) and  
+ ( reglement.cod_mode_reg in ('VA' , 'VM' , 'C', 'FM', 'BX', 'VV' ) )  
+Union  
+select '@@@@@@@@@@@@@@@@@@@@@@@@@@','@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'PERIODE DE REGLT','période SPB','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'GESTIONNAIRE','SPB','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'CONTRAT DAS','n° police','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'CIE ASS','DAS','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'SOUSCRIPTEUR','nom du souscripteur','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'INTITULE DU CONTRAT','libellé du contrat','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'N° SINISTRE','n° dossier SPB','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'NOM','nom assure','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'PRENOM','prénom assure','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'genre','type appareil','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'marque','marque appareil','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'date_achat','date achat','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'mt_achat','mt achat origine','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'no_adhesion','n° adhésion SPB','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'dte_adh','date adhésion','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'date déb garantie','date débt garantie','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'dte_fin_gti','date fin garantie','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'dte_surv','date survenance','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'annee_surv','année survenance','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'mois_surv','mois survenance','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'dte_decl','date déclaration par l''assuré','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'type_garantie','nature garantie sur dossier','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'garantie','garantie du contrat','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'mt_plafond','montant plafond','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'quantité sinistre','concerne annulation billetterie','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'mt_total plafond','multiple colonne Y notamment pour annulation billetterie','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'DTE_REG','date règlement sur dossier','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'MT_REG_GTI','montant réglé par SPB','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'montant_sinistre','valeur au moment du sinistre','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'frais_transport dte_deb_gc','date début garantie en cas d''extension garantie constructeur','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'dte_fin_gc','date fin garantie constructeur','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'dte_deb_gti_DAS','date début prise garantie par DAS','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'dte_fin_gti_DAS','date fin garantie par DAS','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'duree_garantie_das','durée garantie DAS','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'Neuf/Occasion','type appareil de remplacement','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+Union  
+select 'Duree_GC_si_PGC','durée garantie constructeur','','','','',NULL,'','','','','',NULL,'','','','','',NULL,NULL,'','','',NULL,NULL,NULL,'',NULL,NULL,NULL,'','','','',NULL,'','','','',NULL  
+  
 GO
 
 grant execute on sysadm.PS_S015_LSTREG_DAS_V01 to rolebddsinistres
@@ -13098,903 +13102,908 @@ Go
 -- [VDoc8092] duree_gti_DAS + neuf/occasion
 -- [VDOC10924] JFF 15/04/2013 - Modification suite Audit DAS
 -- [VDOC12649] JFF 22/11/2013 - Ajout zone Type Evènement
+-- JFF      22/11/2023   [RS6175_GC_SCRP_SIM2]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_LSTREG_DAS_ADVISE' AND type = 'P' )
         DROP procedure sysadm.PS_S_LSTREG_DAS_ADVISE
 GO
 
-CREATE procedure sysadm.PS_S_LSTREG_DAS_ADVISE
-	@dtDteDeb       DateTime        ,
-    @dtDteFin       DateTime	
-
-AS
-
-SET NOCOUNT ON
-
-Declare @sPerReglt varchar(7)
  
-Set @sPerReglt=CONVERT(varchar(2),datePart(month,@dtDteFin))
-If LEN(@sPerReglt)=1 Set @sPerReglt='0' + @sPerReglt
-Set @sPerReglt=@sPerReglt + '/' + CONVERT(varchar(4),datePart(year,@dtDteFin))
-
-Select distinct
- 'PERIODE DE REGLT' = @sPerReglt,
- 'GESTIONNAIRE' = 'SPB',
- 'N° CONTRAT ADVISE/DAS'	= police.lib_police,
- 'CIE ASS'	= compagnie.lib_cie,
- 'SOUSCRIPTEUR'	= groupe.lib_grp,
- 'INTITULE DU CONTRAT'	= produit.lib_long,
- 'N° SINISTRE'	= sinistre.id_sin,
- 'NOM'		= personne.nom,
- 'PRENOM'	= personne.prenom,
-  sysadm.FN_CODE_CAR(div_sin.val_car,'-AR') as genre,
-  sinistre.marq_port as 'marque', 
- /* convert(varchar(10),sinistre.dte_ach_port,103) as 'date_achat', */
- -- [VDOC10924]
-  Isnull ( 
-  convert(varchar(30),
-	  Case 
-		When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)
-			Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )
-		Else sinistre.dte_ach_port
-	  End ,103)
-	, 'Pas de date d''achat' )   as 'date_achat',
-  -- OLD (select top 1 detail.mt_val_achat from sysadm.detail where detail.id_sin=sinistre.id_sin) as mt_achat,
- -- [VDOC10924]
- -- [VDOC11052]
-   IsNull ( 
-	Case 
-		When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence 
-		  Then
-			  -- [VDOC11052]
-			  Case 
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = reg_gti.id_gti
-					   And   d.id_evt  not in ( 1083, 1317, 934 ) 
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = reg_gti.id_gti
-					   And   d.id_evt  not in ( 1083, 1317, 934 ) 
-					   And   d.mt_val_achat <> 9999
-					  )
-					  
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = reg_gti.id_gti
-					   And   d.id_evt  = 1317
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = reg_gti.id_gti
-					   And   d.id_evt  = 1317
-					   And   d.mt_val_achat <> 9999
-					  )
-
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = reg_gti.id_gti
-					   And   d.id_evt  = 934
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = reg_gti.id_gti
-					   And   d.id_evt  = 934
-					   And   d.mt_val_achat <> 9999
-					  )		
-
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = reg_gti.id_gti
-					   And   d.id_evt  = 1083
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = reg_gti.id_gti
-					   And   d.id_evt  = 1083
-					   And   d.mt_val_achat <> 9999
-					  )	
-				Else 0
-			End
-					  		
-		Else
-			  (select top 1 d.mt_val_achat 
-			   from sysadm.detail d
-			   where d.id_sin=sinistre.id_sin
-			   And   d.id_gti = reg_gti.id_gti
-			   And   d.mt_val_achat <> 9999
-			   And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)
-											 From  sysadm.detail d1
-											 Where d1.id_sin = d.id_sin
-											 And   d1.id_gti = d.id_gti
-											 And   d1.id_detail = d.id_detail
-											 And   d1.mt_val_achat <> 9999 )
-			  )
-	End
-  , 0 ) as mt_achat,  -- [VDOC10924]
-  sinistre.id_adh as no_adhesion, 
-  convert(varchar(10),sinistre.dte_adh,103) as dte_adh, 
- 'date déb garantie' = convert(varchar(10),sinistre.dte_adh,103), 
-  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti,
-  convert(varchar(10),sinistre.dte_surv,103) as dte_surv, 
-  datepart(year,sinistre.dte_surv) as annee_surv,
-  datepart(month,sinistre.dte_surv) as mois_surv, 
- convert(varchar(10),sinistre.dte_decl,103) as dte_decl,
- 'type_garantie' 		= code_Ns.lib_code,
- 'garantie' 		= code_Gs.lib_code,
- 'ALT_PLAF'	= gar_sin.alt_plaf,
- (select max(detail.mt_plaf) from sysadm.detail where detail.id_sin=gar_sin.id_sin and detail.id_gti=gar_sin.id_gti) as mt_plafond,
- 'quantité sinistre' =
-	Case 
-		When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence 
-	   		Then
-	   		( Select sum ( ds.val_nbre )
-	   		From   sysadm.div_det ds
-	   		Where  ds.id_sin = sinistre.id_sin
-	   		And    ds.nom_zone = 'qte' )
-		Else
-			reg_gti.mt_reg / (select max(detail.mt_plaf) from sysadm.detail where detail.id_sin=gar_sin.id_sin and detail.id_gti=gar_sin.id_gti)
-    End,		
- 'mt_total plafond' = reg_gti.mt_reg,
- 'DTE_REG'	= convert(varchar(10),reg_gti.maj_le,103) + ' ' + convert(varchar(10),reg_gti.maj_le,108), -- [ITSM166043]
- 'MT_REG_GTI'	= reg_gti.mt_reg,
- /* Old
- (select top 1 mt_val_publique from sysadm.detail 
-	where detail.id_sin=sinistre.id_sin and detail.id_sin=reg_gti.id_sin 
-	and mt_val_publique > 0
-	) as 'montant_sinistre',
-  */
- -- [VDOC10924]
-  IsNull ( 
-  (select top 1 d.mt_val_publique 
-   from sysadm.detail d
-   where d.id_sin=sinistre.id_sin
-   And   d.mt_val_publique = ( Select MAX ( d1.mt_val_publique)
-								 From  sysadm.detail d1
-								 Where d1.id_sin = d.id_sin
-								 And   d1.id_gti = d.id_gti
-								 And   d1.id_detail = d.id_detail )
-  ), 0 ) as 'montant_sinistre',  -- [VDOC10924]
-  (select SUM(mt_frais) from sysadm.frais where frais.id_sin=sinistre.id_sin and frais.id_typ_frais=1) as frais_transport,
-/*
-  case When d2.val_nbre is not null Then  convert(varchar(10),sinistre.dte_adh,103) Else '' End as dte_deb_gc,
-*/
- -- [VDOC10924]	
-  Nullif( 
-  convert(varchar(10),
-	  Case When d2.val_nbre is not null 
-			Then 
-			  Case 
-				When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)
-					Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )
-				Else sinistre.dte_ach_port
-			  End
-		   Else '' 
-	  End ,103) 
-  , '01/01/1900' )
-  as dte_deb_gc,
-/*  case When d2.val_nbre is not null Then convert(varchar(10),DateAdd(Month,d2.val_nbre,sinistre.dte_adh),103) Else '' End as dte_fin_gc, */
- -- [VDOC10924][VDOC11052]
-  case When d2.val_nbre is not null 
-        Then convert(varchar(10),DateAdd(Month,d2.val_nbre,
-			  Case 
-				When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)
-					Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )
-				Else sinistre.dte_ach_port
-			  End
-			),103) Else '' End as dte_fin_gc,
-  case When d2.val_nbre is null Then  convert(varchar(10),sinistre.dte_adh,103) 
-	Else convert(varchar(10),DateAdd(day, 1, DateAdd(Month,d2.val_nbre,sinistre.dte_adh)),103) End as dte_deb_gti_DAS,
-  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti_DAS,
-  /*(select top 1 sysadm.FN_CLE_VAL('PGC_MOIS',val_car,';') + ' mois' from sysadm.det_pro 
-    where det_pro.id_prod=sinistre.id_prod and det_pro.id_code_dp=85) as duree_garantie_das,*/
--- [VDOC10924][VDOC11052] duréé garantie DAS : = date achat - date fin garantie  
---   Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port, IsNull ( sinistre.dte_adh, (Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null ))), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,
-	Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port, 
-			  IsNUll ( 
-			  (Case 
-				When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)
-					Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )
-				Else sinistre.dte_ach_port
-			  End), sinistre.dte_adh )), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,  			  
- 
-  case When d2.val_nbre is null Then 'Neuf'
-	When d2.val_nbre = 3 Then 'Occasion'
-	Else 'Neuf' 
-  End as 'Neuf/Occasion',
--- [VDOC10924]
-  IsNull (
-	  (Select Top 1 rTrim( Convert ( VarChar ( 30), ds.val_nbre ) + '')
-	   From	 sysadm.div_sin ds,
-			 sysadm.det_pro dp
-	   Where dp.id_prod = sinistre.id_prod
-	   And   dp.id_code_dp = 85
-	   And   ds.id_sin = sinistre.id_sin
-	   And   ds.nom_zone= 'duree_gti_origine')
-   , 'Non géré sur le contrat' ) As 'Durée_GC(si PGC)',
--- [VDOC10924]
-	IsNull (
-	Case 
-		When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence 
-		  Then
-		     (select sum ( d.mt_val_achat )
-			   from sysadm.detail d
-			   where d.id_sin=sinistre.id_sin
-			   and   d.id_gti = reg_gti.id_gti
-			   And   d.id_evt  not in ( 1083, 1317, 934 ) 
-			   And   d.mt_val_achat <> 9999
-			  ) 
-		Else
-		  (select top 1 d.mt_val_achat 
-		   from sysadm.detail d
-		   where d.id_sin=sinistre.id_sin
-		   And   d.mt_val_achat <> 9999
-		   And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)
-										 From  sysadm.detail d1
-										 Where d1.id_sin = d.id_sin
-										 And   d1.id_gti = d.id_gti
-										 And   d1.id_detail = d.id_detail
-										 And   d1.mt_val_achat <> 9999 )
-		  )*
-		  Case 
-			When IsNull ( (reg_gti.mt_reg / (select max(detail.mt_plaf) from sysadm.detail where detail.id_sin=gar_sin.id_sin and detail.id_gti=gar_sin.id_gti)), 0 ) < 1
-				 Then 1
-			Else IsNull ( (reg_gti.mt_reg / (select max(detail.mt_plaf) from sysadm.detail where detail.id_sin=gar_sin.id_sin and detail.id_gti=gar_sin.id_gti)), 0 ) 
-		  End 
-	End , 0 ) 'Montant_Total_Achat',
-  IsNUll ( 
-	  ( Select Top 1
-			   Case 
-					When id_ref_four = 'A_DIAGNOSTIQUER' Then 'DIAGNOSTIC'
-					When id_typ_art = 'PRS' Then 'REPARATION'
-					When id_typ_art = 'EDI' And CharIndex ( 'REPARER', id_ref_four ) > 0 Then  'REPARATION'					
-					When id_typ_art = 'EDI' And CharIndex ( 'DESOXYDER', id_ref_four ) > 0 Then  'DESOXYDATION'										
-					When id_typ_art = 'CAF' Then 'REMPLACEMENT PAR BON ACHAT'
-					When id_typ_art = 'EDI' And c.id_four = 'CDS' Then 'REMPLACEMENT PAR BON ACHAT' -- [VDOC19386]
-					When id_typ_art = 'PST' Then ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))
-					Else 'REMPLACEMENT PAR ' + ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))
-			   End 
-		From sysadm.reglement r,
-			 sysadm.detail d,
-			 sysadm.commande c
-		Where r.id_sin = sysadm.reg_gti.id_sin
-		And   r.id_reg = sysadm.reg_gti.id_reg 
-		and   r.cod_mode_reg = 'FM'
-		And   d.id_sin = r.id_sin
-		and   d.id_reg = r.id_reg
-		and   c.id_sin = d.id_sin
-		and   c.id_gti = d.id_gti
-		and   c.id_detail = d.id_detail
-		And   c.id_ref_four not in ( 'PEC_A_RECYCLER', 'REFUSE_A_REEXP', 'DECISION_SPB' )
-		 ),
-		'REMBOURSEMENT' ) as typ_evt, -- VDOC12649 	
-		Case reglement.cod_mode_reg 
-			When 'XA' Then 'Réglement virtuel SPB. Réglé rééllement par la centrale ADVISE vers la boutique ADVISE'
-			Else 'Réglement réél SPB'	  
-		End 'MODE_REGLEMENT' -- [PC947&977]
- From
- sysadm.reg_gti   
-  inner join sysadm.sinistre  on reg_gti.id_sin	=	sinistre.id_sin
-  inner join sysadm.produit on sinistre.id_prod	=	produit.id_prod
- left outer join sysadm.div_sin on div_sin.id_sin = sinistre.id_sin and div_sin.nom_zone='type_app'
- left outer join sysadm.div_sin d2 on d2.id_sin = sinistre.id_sin and d2.nom_zone='duree_gti_origine'
- inner join sysadm.personne on personne.id_ordre    = 	sinistre.id_ordre
- inner join sysadm.gar_sin on reg_gti.id_sin	=	gar_sin.id_sin	and reg_gti.id_gti	=	gar_sin.id_gti
- inner join sysadm.garantie on  garantie.id_prod	=	sinistre.id_prod and  garantie.id_rev	=	sinistre.id_rev	and garantie.id_gti	=	reg_gti.id_gti
- inner join sysadm.police on garantie.id_police	=	police.id_police,
- sysadm.etablissement,
- sysadm.code code_Ns,
- sysadm.code code_Gs,
- sysadm.groupe,
- sysadm.compagnie,
- sysadm.reglement
-Where 
- ( groupe.id_grp	=	etablissement.id_grp	)	and
- ( etablissement.id_prod=	sinistre.id_prod	)	and
- ( etablissement.id_ets	=	sinistre.id_ets		)	and
- ( etablissement.id_rev	=	-1			)	and
- ( code_Ns.id_typ_code	=	'+NS'			)	and
- ( code_Ns.id_code	=	sinistre.id_natsin	)	and
- ( code_Gs.id_typ_code	=	'-GS'			)	and
- ( code_Gs.id_code	=	reg_gti.id_rgpt		)	and
- ( compagnie.id_cie	=	police.id_cie		)	and
- ( police.id_cie=138		)	and
- ( reglement.id_sin	=	reg_gti.id_sin 		)	and
- ( reglement.id_reg	=	reg_gti.id_reg		)	and
- ( reglement.cod_mot_reg = 'RN'				)	and
- reglement.dte_reg between    @dtDteDeb And @dtDteFin and
- ( reglement.cod_mode_reg in ('VA' , 'VM' , 'C', 'FM', 'BX', 'VV', 'XA' ) ) 
-
-
-UNION 
-Select distinct
- 'PERIODE DE REGLT' = @sPerReglt,
- 'GESTIONNAIRE' = 'SPB',
- 'N° CONTRAT ADVISE/DAS'	= police.lib_police,
- 'CIE ASS'	= compagnie.lib_cie,
- 'SOUSCRIPTEUR'	= groupe.lib_grp,
- 'INTITULE DU CONTRAT'	= produit.lib_long,
- 'N° SINISTRE'	= sinistre.id_sin,
- 'NOM'		= personne.nom,
- 'PRENOM'	= personne.prenom,
-  sysadm.FN_CODE_CAR(div_sin.val_car,'-AR') as genre,
-  sinistre.marq_port as 'marque', 
- /* convert(varchar(10),sinistre.dte_ach_port,103) as 'date_achat', */
--- [VDOC10924]
-  Isnull ( 
-  convert(varchar(30),
-  Case 
-	When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)
-		Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )
-	Else sinistre.dte_ach_port
-  End ,103) 
-  , 'Pas de date d''achat' )   as 'date_achat',
--- (select top 1 detail.mt_val_achat from sysadm.detail where detail.id_sin=sinistre.id_sin) as mt_achat,
--- [VDOC11052]
-   IsNull ( 
-	Case 
-		When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence 
-		  Then
-			  -- [VDOC11052]
-			  Case 
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = reg_gti.id_gti
-					   And   d.id_evt  not in ( 1083, 1317, 934 ) 
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = reg_gti.id_gti
-					   And   d.id_evt  not in ( 1083, 1317, 934 ) 
-					   And   d.mt_val_achat <> 9999
-					  )
-					  
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = reg_gti.id_gti
-					   And   d.id_evt  = 1317
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = reg_gti.id_gti
-					   And   d.id_evt  = 1317
-					   And   d.mt_val_achat <> 9999
-					  )
-
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = reg_gti.id_gti
-					   And   d.id_evt  = 934
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = reg_gti.id_gti
-					   And   d.id_evt  = 934
-					   And   d.mt_val_achat <> 9999
-					  )		
-
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = reg_gti.id_gti
-					   And   d.id_evt  = 1083
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   and   d.id_gti = reg_gti.id_gti
-					   And   d.id_evt  = 1083
-					   And   d.mt_val_achat <> 9999
-					  )	
-				Else 0
-			End
-					  		
-		Else
-			  (select top 1 d.mt_val_achat 
-			   from sysadm.detail d
-			   where d.id_sin=sinistre.id_sin
-			   And   d.id_gti = reg_gti.id_gti
-			   And   d.mt_val_achat <> 9999
-			   And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)
-											 From  sysadm.detail d1
-											 Where d1.id_sin = d.id_sin
-											 And   d1.id_gti = d.id_gti
-											 And   d1.id_detail = d.id_detail
-											 And   d1.mt_val_achat <> 9999 )
-			  )
-	End
-  , 0 ) as mt_achat,  -- [VDOC10924]
-  sinistre.id_adh as no_adhesion, 
-  convert(varchar(10),sinistre.dte_adh,103) as dte_adh, 
- 'date déb  garantie' = convert(varchar(10),sinistre.dte_adh,103),
-  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti,
-  convert(varchar(10),sinistre.dte_surv,103) as dte_surv, 
-  datepart(year,sinistre.dte_surv) as annee_surv,
-  datepart(month,sinistre.dte_surv) as mois_surv, 
- convert(varchar(10),sinistre.dte_decl,103) as dte_decl,
- 'type_garantie' 		= code_Ns.lib_code,
- 'garantie' 		= code_Nf.lib_code,
- 'ALT_PLAF'	= 'N',
-  frais.mt_frais as mt_plafond,
- 'quantité sinistre' = 
-	Case 
-		When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence 
-	   		Then
-	   		( Select sum ( ds.val_nbre )
-	   		From   sysadm.div_det ds
-	   		Where  ds.id_sin = sinistre.id_sin
-	   		And    ds.nom_zone = 'qte' )
-		Else
-			reg_gti.mt_reg / frais.mt_frais
-    End,
- 'mt_total plafond' = reg_gti.mt_reg,
- 'DTE_REG'	= convert(varchar(10),reg_gti.maj_le,103) + ' ' + convert(varchar(10),reg_gti.maj_le,108), -- [ITSM166043]
- 'MT_REG_GTI'	= reg_gti.mt_reg,
- (select top 1 mt_val_publique from sysadm.detail 
-	where detail.id_sin=sinistre.id_sin and detail.id_sin=reg_gti.id_sin 
-	and mt_val_publique > 0
-	) as 'montant_sinistre',
-  (select SUM(mt_frais) from sysadm.frais where frais.id_sin=sinistre.id_sin and frais.id_typ_frais=1) as frais_transport,
-/*
-  case When d2.val_nbre is not null Then  convert(varchar(10),sinistre.dte_adh,103) Else '' End as dte_deb_gc,
-*/
- -- [VDOC10924]	
-  Nullif ( 
-  case When d2.val_nbre is not null Then convert(varchar(10),
-		  Case 
-			When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)
-				Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )
-			Else sinistre.dte_ach_port
-		  End
-		,103) 
-		Else '' 
-	End 
-	, '01/01/1900' )
-	as dte_deb_gc,
-/*  case When d2.val_nbre is not null Then convert(varchar(10),DateAdd(Month,d2.val_nbre,sinistre.dte_adh),103) Else '' End as dte_fin_gc, */
- -- [VDOC10924]	
-  case When d2.val_nbre is not null Then convert(varchar(10),DateAdd(Month,d2.val_nbre,
-		  Case 
-			When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)
-				Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )
-			Else sinistre.dte_ach_port
-		  End
-			),103) Else '' End as dte_fin_gc,
-   case When d2.val_nbre is null Then  convert(varchar(10),sinistre.dte_adh,103) 
-	Else convert(varchar(10),DateAdd(day, 1, DateAdd(Month,d2.val_nbre,sinistre.dte_adh)),103) End as dte_deb_gti_DAS,
-  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti_DAS,
-  /*(select top 1 sysadm.FN_CLE_VAL('PGC_MOIS',val_car,';') + ' mois' from sysadm.det_pro 
-    where det_pro.id_prod=sinistre.id_prod and det_pro.id_code_dp=85) as duree_garantie_das,*/
--- [VDOC10924]
---   Convert ( VarChar ( 10),Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, sinistre.dte_adh, sinistre.dte_fin_gti ) ) , 0 ) ) + '' ) as duree_garantie_das_Mois,
--- [VDOC10924][VDOC11052] duréé garantie DAS : = date achat - date fin garantie  
---   Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port, IsNull ( sinistre.dte_adh, (Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null ))), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,
-	Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port, 
-			  IsNUll ( 
-			  (Case 
-				When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)
-					Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )
-				Else sinistre.dte_ach_port
-			  End), sinistre.dte_adh )), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,  	
-  case When d2.val_nbre is null Then 'Neuf'
-	When d2.val_nbre = 3 Then 'Occasion'
-	Else 'Neuf'
-  End as 'Neuf/Occasion',
--- [VDOC10924]
-  IsNull (
-	  (Select Top 1 rTrim( Convert ( VarChar ( 30), ds.val_nbre ) + '' )
-	   From	 sysadm.div_sin ds,
-			 sysadm.det_pro dp
-	   Where dp.id_prod = sinistre.id_prod
-	   And   dp.id_code_dp = 85
-	   And   ds.id_sin = sinistre.id_sin
-	   And   ds.nom_zone= 'duree_gti_origine')
-   , 'Non géré sur le contrat' ) As 'Durée_GC(si PGC)',
-  IsNull ( 
-        	Case 
-        		When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence 
-        		  Then
-        		     (select sum ( d.mt_val_achat )
-        			   from sysadm.detail d
-        			   where d.id_sin=sinistre.id_sin
-        			   and   d.id_gti = reg_gti.id_gti
-        			   And   d.id_evt  not in ( 1083, 1317, 934 ) 
-        			   And   d.mt_val_achat <> 9999
-        			  ) 
-        		Else
-        		  (select top 1 d.mt_val_achat 
-        		   from sysadm.detail d
-        		   where d.id_sin=sinistre.id_sin
-        		   And   d.mt_val_achat <> 9999
-        		   And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)
-        										 From  sysadm.detail d1
-        										 Where d1.id_sin = d.id_sin
-        										 And   d1.id_gti = d.id_gti
-        										 And   d1.id_detail = d.id_detail
-        										 And   d1.mt_val_achat <> 9999 )
-        		  )*
-        		  Case 
-        			When reg_gti.mt_reg / frais.mt_frais < 1
-        				 Then 1
-        			Else reg_gti.mt_reg / frais.mt_frais
-        		  End
-    		  End
-    	   , 0 )  'Montant_Total_Achat',
-  IsNUll ( 
-	  ( Select Top 1
-			   Case 
-					When id_ref_four = 'A_DIAGNOSTIQUER' Then 'DIAGNOSTIC'
-					When id_typ_art = 'PRS' Then 'REPARATION'
-					When id_typ_art = 'EDI' And CharIndex ( 'REPARER', id_ref_four ) > 0 Then  'REPARATION'					
-					When id_typ_art = 'EDI' And CharIndex ( 'DESOXYDER', id_ref_four ) > 0 Then  'DESOXYDATION'										
-					When id_typ_art = 'CAF' Then 'REMPLACEMENT PAR BON ACHAT'
-					When id_typ_art = 'EDI' And c.id_four = 'CDS' Then 'REMPLACEMENT PAR BON ACHAT' -- [VDOC19386]
-					When id_typ_art = 'PST' Then ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))
-					Else 'REMPLACEMENT PAR ' + ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))
-			   End 
-	  
-		From sysadm.reglement r,
-			 sysadm.detail d,
-			 sysadm.commande c
-		Where r.id_sin = sysadm.reg_gti.id_sin
-		And   r.id_reg = sysadm.reg_gti.id_reg 
-		and   r.cod_mode_reg = 'FM'
-		And   d.id_sin = r.id_sin
-		and   d.id_reg = r.id_reg
-		and   c.id_sin = d.id_sin
-		and   c.id_gti = d.id_gti
-		and   c.id_detail = d.id_detail
-		And   c.id_ref_four not in ( 'PEC_A_RECYCLER', 'REFUSE_A_REEXP', 'DECISION_SPB' )
-		 ),
-		'REMBOURSEMENT' ) as typ_evt, -- VDOC12649 	
-		Case reglement.cod_mode_reg 
-			When 'XA' Then 'Réglement virtuel SPB. Réglé rééllement par la centrale ADVISE vers la boutique ADVISE'
-			Else 'Réglement réél SPB'	  
-		End 'MODE_REGLEMENT' -- [PC947&977]
-From
- sysadm.reg_gti   
-  inner join sysadm.sinistre  on reg_gti.id_sin	=	sinistre.id_sin
-  inner join sysadm.produit on sinistre.id_prod	=	produit.id_prod
- left outer join sysadm.div_sin on div_sin.id_sin = sinistre.id_sin and div_sin.nom_zone='type_app'
- left outer join sysadm.div_sin d2 on d2.id_sin = sinistre.id_sin and d2.nom_zone='duree_gti_origine'
- inner join sysadm.personne on personne.id_ordre    = 	sinistre.id_ordre
- inner join sysadm.frais on reg_gti.id_sin	=	frais.id_sin and reg_gti.id_reg	=	frais.id_reg,
- sysadm.garantie,
- sysadm.etablissement,
- sysadm.code code_Ns,
- sysadm.code code_Nf,
- sysadm.groupe,
- sysadm.departement,
- sysadm.police,
- sysadm.compagnie,
- sysadm.reglement
-Where 
- ( reg_gti.id_gti	=	-1			)	and
- ( groupe.id_grp	=	etablissement.id_grp	)	and
- ( etablissement.id_prod=	sinistre.id_prod	)	and
- ( etablissement.id_ets	=	sinistre.id_ets		)	and
- ( etablissement.id_rev	=	-1			)	and
- ( code_Ns.id_typ_code	=	'+NS'			)	and
- ( code_Ns.id_code	=	sinistre.id_natsin	)	and
- ( code_Nf.id_typ_code	=	'+NF'			)	and
- ( code_Nf.id_code	=	frais.id_typ_frais	)	and
- ( garantie.id_prod	=	sinistre.id_prod	)	and
- ( garantie.id_rev	=	sinistre.id_rev		)	and
- ( garantie.id_gti	=	IsNull ( ( Select NullIf ( NullIf ( max ( a_reg_gti.id_gti ), 0), -1 )
-					   From   sysadm.reg_gti a_reg_gti
-					   Where  a_reg_gti.id_sin = reg_gti.id_sin
-					   And    a_reg_gti.id_reg = reg_gti.id_reg ), 
-
-		 			 ( Select max ( gar_sin.id_gti ) 
-					   From   sysadm.gar_sin
-					   Where  gar_sin.id_sin = sinistre.id_sin )))	and
- ( garantie.id_police	=	police.id_police	)	and
- ( compagnie.id_cie	=	police.id_cie		)	and
- ( police.id_cie=138		)	and
- ( reglement.dte_reg    between    @dtDteDeb And @dtDteFin )	and
- ( reglement.id_sin     =       reg_gti.id_sin          )       and
- ( reglement.id_reg     =       reg_gti.id_reg          )       and
- ( reglement.cod_mode_reg in ('VA' , 'VM' , 'C', 'FM', 'BX', 'VV', 'XA' ) ) 
-
-UNION 
-
-Select distinct
- 'PERIODE DE REGLT' = @sPerReglt,
- 'GESTIONNAIRE' = 'SPB',
- 'N° CONTRAT ADVISE/DAS'	= police.lib_police,
- 'CIE ASS'	= compagnie.lib_cie,
- 'SOUSCRIPTEUR'	= groupe.lib_grp,
- 'INTITULE DU CONTRAT'	= produit.lib_long,
- 'N° SINISTRE'	= sinistre.id_sin,
- 'NOM'		= personne.nom,
- 'PRENOM'	= personne.prenom,
-  sysadm.FN_CODE_CAR(div_sin.val_car,'-AR') as genre,
-  sinistre.marq_port as 'marque', 
-/* convert(varchar(10),sinistre.dte_ach_port,103) as 'date_achat', */
--- [VDOC10924]
-  IsNull ( 
-  convert(varchar(30),
-	  Case 
-		When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod )
-			Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.dte_det is not null )
-		Else sinistre.dte_ach_port
-	  End ,103) 
-  , 'Pas de date d''achat' )   as 'date_achat',
--- (select top 1 detail.mt_val_achat from sysadm.detail where detail.id_sin=sinistre.id_sin) as mt_achat,
--- [VDOC11052]
-   IsNull ( 
-	Case 
-		When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence 
-		  Then
-			  -- [VDOC11052]
-			  Case 
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   And   d.id_evt  not in ( 1083, 1317, 934 ) 
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   And   d.id_evt  not in ( 1083, 1317, 934 ) 
-					   And   d.mt_val_achat <> 9999
-					  )
-					  
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   And   d.id_evt  = 1317
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   And   d.id_evt  = 1317
-					   And   d.mt_val_achat <> 9999
-					  )
-
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   And   d.id_evt  = 934
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   And   d.id_evt  = 934
-					   And   d.mt_val_achat <> 9999
-					  )		
-
-				When (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   And   d.id_evt  = 1083
-					   And   d.mt_val_achat <> 9999
-					  ) > 0 
-					  Then 
-					  (select sum ( isnull ( d.mt_val_achat, 0 ) )
-					   from sysadm.detail d
-					   where d.id_sin=sinistre.id_sin
-					   And   d.id_evt  = 1083
-					   And   d.mt_val_achat <> 9999
-					  )	
-				Else 0
-			End
-					  		
-		Else
-			  (select top 1 d.mt_val_achat 
-			   from sysadm.detail d
-			   where d.id_sin=sinistre.id_sin
-			   And   d.mt_val_achat <> 9999
-			   And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)
-											 From  sysadm.detail d1
-											 Where d1.id_sin = d.id_sin
-											 And   d1.id_gti = d.id_gti
-											 And   d1.id_detail = d.id_detail
-											 And   d1.mt_val_achat <> 9999 )
-			  )
-	End
-  , 0 ) as mt_achat,  -- [VDOC10924]
-  sinistre.id_adh as no_adhesion, 
-  convert(varchar(10),sinistre.dte_adh,103) as dte_adh,  
-  'date déb  garantie' = convert(varchar(10),sinistre.dte_adh,103),
-  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti,
-  convert(varchar(10),sinistre.dte_surv,103) as dte_surv, 
-  datepart(year,sinistre.dte_surv) as annee_surv,
-  datepart(month,sinistre.dte_surv) as mois_surv, 
-  convert(varchar(10),sinistre.dte_decl,103) as dte_decl,
- 'type_garantie' 		= code_Ns.lib_code,
- 'garantie' 		= 'REGULARISATION',
-  'ALT_PLAF'	= 'N',
-  reglement.mt_tot_reg as mt_plafond,
-  'quantité sinistre' = 1,
-  'mt_total plafond' = reglement.mt_tot_reg,
-  'DTE_REG'	= convert(varchar(10),reglement.dte_reg,103)+ ' ' + convert(varchar(10),reglement.maj_le,108), -- [ITSM166043]
-   'MT_REG_GTI'	= reglement.mt_tot_reg,
- (select top 1 mt_val_publique from sysadm.detail 
-	where detail.id_sin=sinistre.id_sin and detail.id_sin=reglement.id_sin 
-	and mt_val_publique > 0
-	) as 'montant_sinistre',
-  (select SUM(mt_frais) from sysadm.frais where frais.id_sin=sinistre.id_sin and frais.id_typ_frais=1) as frais_transport,
-/*
-  case When d2.val_nbre is not null Then  convert(varchar(10),sinistre.dte_adh,103) Else '' End as dte_deb_gc,
-*/
- -- [VDOC10924]	
-  nullif ( 
-  case When d2.val_nbre is not null Then convert(varchar(10),
-		  Case 
-			When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod )
-				Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.dte_det is not null )
-			Else sinistre.dte_ach_port
-		  End
-			,103) 
-		Else '' 
-   End, 
-   '01/01/1900' )
-   as dte_deb_gc,
-/*  case When d2.val_nbre is not null Then convert(varchar(10),DateAdd(Month,d2.val_nbre,sinistre.dte_adh),103) Else '' End as dte_fin_gc, */
- -- [VDOC10924]	
-  case When d2.val_nbre is not null Then convert(varchar(10),DateAdd(Month,d2.val_nbre,
-	  Case 
-		When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod )
-			Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.dte_det is not null )
-		Else sinistre.dte_ach_port
-	  End
-		),103) Else '' End as dte_fin_gc,
-   case When d2.val_nbre is null Then  convert(varchar(10),sinistre.dte_adh,103) 
-	Else convert(varchar(10),DateAdd(day, 1, DateAdd(Month,d2.val_nbre,sinistre.dte_adh)),103) End as dte_deb_gti_DAS,
-  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti_DAS,
-  /*(select top 1 sysadm.FN_CLE_VAL('PGC_MOIS',val_car,';') + ' mois' from sysadm.det_pro 
-    where det_pro.id_prod=sinistre.id_prod and det_pro.id_code_dp=85) as duree_garantie_das,*/
--- [VDOC10924]
---    Convert ( VarChar ( 10), Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, sinistre.dte_adh, sinistre.dte_fin_gti ) ) , 0 ) ) + '' ) as duree_garantie_das_Mois,
--- [VDOC10924][VDOC11052] duréé garantie DAS : = date achat - date fin garantie  
---   Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port, IsNull ( sinistre.dte_adh, (Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null ))), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,
-	Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port, 
-			  IsNUll ( 
-			  (Case 
-				When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod )
-					Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.dte_det is not null )
-				Else sinistre.dte_ach_port
-			  End), sinistre.dte_adh )), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,  	
-  case When d2.val_nbre is null Then 'Neuf'
-	When d2.val_nbre = 3 Then 'Occasion'
-	Else 'Neuf'
-  End as 'Neuf/Occasion',
--- [VDOC10924]
-  IsNull (
-	  (Select Top 1 rTrim( Convert ( VarChar ( 30), ds.val_nbre ) + '' )
-	   From	 sysadm.div_sin ds,
-			 sysadm.det_pro dp
-	   Where dp.id_prod = sinistre.id_prod
-	   And   dp.id_code_dp = 85
-	   And   ds.id_sin = sinistre.id_sin
-	   And   ds.nom_zone= 'duree_gti_origine')
-   , 'Non géré sur le contrat' ) As 'Durée_GC(si PGC)',
-  IsNull ( 
-  Case 
-        		When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence 
-        		  Then
-        		     (select sum ( d.mt_val_achat )
-        			   from sysadm.detail d
-        			   where d.id_sin=sinistre.id_sin
-        			   And   d.id_evt  not in ( 1083, 1317, 934 ) 
-        			   And   d.mt_val_achat <> 9999
-        			  ) 
-        		Else
-        		  (select top 1 d.mt_val_achat 
-        		   from sysadm.detail d
-        		   where d.id_sin=sinistre.id_sin
-        		   And   d.mt_val_achat <> 9999
-        		   And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)
-        										 From  sysadm.detail d1
-        										 Where d1.id_sin = d.id_sin
-        										 And   d1.id_gti = d.id_gti
-        										 And   d1.id_detail = d.id_detail
-        										 And   d1.mt_val_achat <> 9999 )
-        		  )
-    		  End , 0 ) 'Montant_Total_Achat',
-  IsNUll ( 
-	  ( Select Top 1
-			   Case 
-					When id_ref_four = 'A_DIAGNOSTIQUER' Then 'DIAGNOSTIC'
-					When id_typ_art = 'PRS' Then 'REPARATION'
-					When id_typ_art = 'EDI' And CharIndex ( 'REPARER', id_ref_four ) > 0 Then  'REPARATION'					
-					When id_typ_art = 'EDI' And CharIndex ( 'DESOXYDER', id_ref_four ) > 0 Then  'DESOXYDATION'										
-					When id_typ_art = 'CAF' Then 'REMPLACEMENT PAR BON ACHAT'
-					When id_typ_art = 'EDI' And c.id_four = 'CDS' Then 'REMPLACEMENT PAR BON ACHAT' -- [VDOC19386]
-					When id_typ_art = 'PST' Then ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))
-					Else 'REMPLACEMENT PAR ' + ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))
-			   End 
-	  
-		From sysadm.reglement r,
-			 sysadm.detail d,
-			 sysadm.commande c
-		Where r.id_sin = sysadm.reglement.id_sin
-		And   r.id_reg = sysadm.reglement.id_reg 
-		and   r.cod_mode_reg = 'FM'
-		And   d.id_sin = r.id_sin
-		and   d.id_reg = r.id_reg
-		and   c.id_sin = d.id_sin
-		and   c.id_gti = d.id_gti
-		and   c.id_detail = d.id_detail
-		And   c.id_ref_four not in ( 'PEC_A_RECYCLER', 'REFUSE_A_REEXP', 'DECISION_SPB' )
-		 ),
-		'REMBOURSEMENT' ) as typ_evt, -- VDOC12649 	
-		Case reglement.cod_mode_reg 
-			When 'XA' Then 'Réglement virtuel SPB. Réglé rééllement par la centrale ADVISE vers la boutique ADVISE'
-			Else 'Réglement réél SPB'	  
-		End 'MODE_REGLEMENT' -- [PC947&977]
+CREATE procedure sysadm.PS_S_LSTREG_DAS_ADVISE  
+ @dtDteDeb       DateTime        ,  
+    @dtDteFin       DateTime   
   
-From
- sysadm.reglement 
-  inner join sysadm.sinistre  on reglement.id_sin	=	sinistre.id_sin
-  inner join sysadm.produit on sinistre.id_prod	=	produit.id_prod
- left outer join sysadm.div_sin on div_sin.id_sin = sinistre.id_sin and div_sin.nom_zone='type_app'
- left outer join sysadm.div_sin d2 on d2.id_sin = sinistre.id_sin and d2.nom_zone='duree_gti_origine'
- inner join sysadm.personne on personne.id_ordre    = 	sinistre.id_ordre,
- sysadm.garantie  ,
- sysadm.etablissement,
- sysadm.code code_Ns,
- sysadm.groupe,
- sysadm.police,
- sysadm.compagnie
-Where 
- ( groupe.id_grp	=	etablissement.id_grp	)	and
- ( etablissement.id_prod=	sinistre.id_prod	)	and
- ( etablissement.id_ets	=	sinistre.id_ets		)	and
- ( etablissement.id_rev	=	-1			)	and
- ( code_Ns.id_typ_code	=	'+NS'			)	and
- ( code_Ns.id_code	=	sinistre.id_natsin	)	and
- ( garantie.id_prod	=	sinistre.id_prod	)	and
- ( garantie.id_rev	=	sinistre.id_rev		)	and
- ( garantie.id_gti	=	( Select max ( gar_sin.id_gti ) 
-				  From   sysadm.gar_sin
-				  Where  gar_sin.id_sin = sinistre.id_sin ))	and
- ( garantie.id_police	=	police.id_police	)	and
- ( compagnie.id_cie	=	police.id_cie		)	and
-  ( police.id_cie=138		)	and
- ( reglement.dte_reg between    @dtDteDeb And @dtDteFin )	and
- ( reglement.cod_mot_reg in ( 'RE', 'RM', 'RP' )	)	and
- ( reglement.mt_tot_reg <> 0				)	and
- ( reglement.cod_mode_reg in ('VA' , 'VM' , 'C', 'FM', 'BX', 'VV', 'XA' ) ) 
-
+AS  
+  
+SET NOCOUNT ON  
+  
+Declare @sPerReglt varchar(7)  
+   
+Set @sPerReglt=CONVERT(varchar(2),datePart(month,@dtDteFin))  
+If LEN(@sPerReglt)=1 Set @sPerReglt='0' + @sPerReglt  
+Set @sPerReglt=@sPerReglt + '/' + CONVERT(varchar(4),datePart(year,@dtDteFin))  
+  
+Select distinct  
+ 'PERIODE DE REGLT' = @sPerReglt,  
+ 'GESTIONNAIRE' = 'SPB',  
+ 'N° CONTRAT ADVISE/DAS' = police.lib_police,  
+ 'CIE ASS' = compagnie.lib_cie,  
+ 'SOUSCRIPTEUR' = groupe.lib_grp,  
+ 'INTITULE DU CONTRAT' = produit.lib_long,  
+ 'N° SINISTRE' = sinistre.id_sin,  
+ 'NOM'  = personne.nom,  
+ 'PRENOM' = personne.prenom,  
+  sysadm.FN_CODE_CAR(div_sin.val_car,'-AR') as genre,  
+  sinistre.marq_port as 'marque',   
+ /* convert(varchar(10),sinistre.dte_ach_port,103) as 'date_achat', */  
+ -- [VDOC10924]  
+  Isnull (   
+  convert(varchar(30),  
+   Case   
+  When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)  
+   Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )  
+  Else sinistre.dte_ach_port  
+   End ,103)  
+ , 'Pas de date d''achat' )   as 'date_achat',  
+  -- OLD (select top 1 detail.mt_val_achat from sysadm.detail where detail.id_sin=sinistre.id_sin) as mt_achat,  
+ -- [VDOC10924]  
+ -- [VDOC11052]  
+   IsNull (   
+ Case   
+  When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence   
+    Then  
+     -- [VDOC11052]  
+     Case   
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = reg_gti.id_gti  
+        And   d.id_evt  not in ( 1083, 1317, 934 )   
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = reg_gti.id_gti  
+        And   d.id_evt  not in ( 1083, 1317, 934 )   
+        And   d.mt_val_achat <> 9999  
+       )  
+         
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = reg_gti.id_gti  
+        And   d.id_evt  = 1317  
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = reg_gti.id_gti  
+        And   d.id_evt  = 1317  
+        And   d.mt_val_achat <> 9999  
+       )  
+  
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = reg_gti.id_gti  
+        And   d.id_evt  = 934  
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = reg_gti.id_gti  
+        And   d.id_evt  = 934  
+        And   d.mt_val_achat <> 9999  
+       )    
+  
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = reg_gti.id_gti  
+        And   d.id_evt  = 1083  
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = reg_gti.id_gti  
+        And   d.id_evt  = 1083  
+        And   d.mt_val_achat <> 9999  
+       )   
+    Else 0  
+   End  
+           
+  Else  
+     (select top 1 d.mt_val_achat   
+      from sysadm.detail d  
+      where d.id_sin=sinistre.id_sin  
+      And   d.id_gti = reg_gti.id_gti  
+      And   d.mt_val_achat <> 9999  
+      And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)  
+            From  sysadm.detail d1  
+            Where d1.id_sin = d.id_sin  
+            And   d1.id_gti = d.id_gti  
+            And   d1.id_detail = d.id_detail  
+            And   d1.mt_val_achat <> 9999 )  
+     )  
+ End  
+  , 0 ) as mt_achat,  -- [VDOC10924]  
+  sinistre.id_adh as no_adhesion,   
+  convert(varchar(10),sinistre.dte_adh,103) as dte_adh,   
+ 'date déb garantie' = convert(varchar(10),sinistre.dte_adh,103),   
+  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti,  
+  convert(varchar(10),sinistre.dte_surv,103) as dte_surv,   
+  datepart(year,sinistre.dte_surv) as annee_surv,  
+  datepart(month,sinistre.dte_surv) as mois_surv,   
+ convert(varchar(10),sinistre.dte_decl,103) as dte_decl,  
+ 'type_garantie'   = code_Ns.lib_code,  
+ 'garantie'   = code_Gs.lib_code,  
+ 'ALT_PLAF' = gar_sin.alt_plaf,  
+ (select max(detail.mt_plaf) from sysadm.detail where detail.id_sin=gar_sin.id_sin and detail.id_gti=gar_sin.id_gti) as mt_plafond,  
+ 'quantité sinistre' =  
+ Case   
+  When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence   
+      Then  
+      ( Select sum ( ds.val_nbre )  
+      From   sysadm.div_det ds  
+      Where  ds.id_sin = sinistre.id_sin  
+      And    ds.nom_zone = 'qte' )  
+  Else  
+   reg_gti.mt_reg / (select max(detail.mt_plaf) from sysadm.detail where detail.id_sin=gar_sin.id_sin and detail.id_gti=gar_sin.id_gti)  
+    End,    
+ 'mt_total plafond' = reg_gti.mt_reg,  
+ 'DTE_REG' = convert(varchar(10),reg_gti.maj_le,103) + ' ' + convert(varchar(10),reg_gti.maj_le,108), -- [ITSM166043]  
+ 'MT_REG_GTI' = reg_gti.mt_reg,  
+ /* Old  
+ (select top 1 mt_val_publique from sysadm.detail   
+ where detail.id_sin=sinistre.id_sin and detail.id_sin=reg_gti.id_sin   
+ and mt_val_publique > 0  
+ ) as 'montant_sinistre',  
+  */  
+ -- [VDOC10924]  
+  IsNull (   
+  (select top 1 d.mt_val_publique   
+   from sysadm.detail d  
+   where d.id_sin=sinistre.id_sin  
+   And   d.mt_val_publique = ( Select MAX ( d1.mt_val_publique)  
+         From  sysadm.detail d1  
+         Where d1.id_sin = d.id_sin  
+         And   d1.id_gti = d.id_gti  
+         And   d1.id_detail = d.id_detail )  
+  ), 0 ) as 'montant_sinistre',  -- [VDOC10924]  
+  (select SUM(mt_frais) from sysadm.frais where frais.id_sin=sinistre.id_sin and frais.id_typ_frais=1) as frais_transport,  
+/*  
+  case When d2.val_nbre is not null Then  convert(varchar(10),sinistre.dte_adh,103) Else '' End as dte_deb_gc,  
+*/  
+ -- [VDOC10924]   
+  Nullif(   
+  convert(varchar(10),  
+   Case When d2.val_nbre is not null   
+   Then   
+     Case   
+    When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)  
+     Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )  
+    Else sinistre.dte_ach_port  
+     End  
+     Else ''   
+   End ,103)   
+  , '01/01/1900' )  
+  as dte_deb_gc,  
+/*  case When d2.val_nbre is not null Then convert(varchar(10),DateAdd(Month,d2.val_nbre,sinistre.dte_adh),103) Else '' End as dte_fin_gc, */  
+ -- [VDOC10924][VDOC11052]  
+  case When d2.val_nbre is not null   
+        Then convert(varchar(10),DateAdd(Month,d2.val_nbre,  
+     Case   
+    When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)  
+     Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )  
+    Else sinistre.dte_ach_port  
+     End  
+   ),103) Else '' End as dte_fin_gc,  
+  case When d2.val_nbre is null Then  convert(varchar(10),sinistre.dte_adh,103)   
+ Else convert(varchar(10),DateAdd(day, 1, DateAdd(Month,d2.val_nbre,sinistre.dte_adh)),103) End as dte_deb_gti_DAS,  
+  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti_DAS,  
+  /*(select top 1 sysadm.FN_CLE_VAL('PGC_MOIS',val_car,';') + ' mois' from sysadm.det_pro   
+    where det_pro.id_prod=sinistre.id_prod and det_pro.id_code_dp=85) as duree_garantie_das,*/  
+-- [VDOC10924][VDOC11052] duréé garantie DAS : = date achat - date fin garantie    
+--   Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port, IsNull ( sinistre.dte_adh, (Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti
+ and dt.dte_det is not null ))), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,  
+ Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port,   
+     IsNUll (   
+     (Case   
+    When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)  
+     Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )  
+    Else sinistre.dte_ach_port  
+     End), sinistre.dte_adh )), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,         
+   
+  case When d2.val_nbre is null Then 'Neuf'  
+ When d2.val_nbre = 3 Then 'Occasion'  
+ Else 'Neuf'   
+  End as 'Neuf/Occasion',  
+-- [VDOC10924]  
+  IsNull (  
+   (Select Top 1 rTrim( Convert ( VarChar ( 30), ds.val_nbre ) + '')  
+    From  sysadm.div_sin ds,  
+    sysadm.det_pro dp  
+    Where dp.id_prod = sinistre.id_prod  
+    And   dp.id_code_dp = 85  
+    And   ds.id_sin = sinistre.id_sin  
+    And   ds.nom_zone= 'duree_gti_orig')  -- [RS6175_GC_SCRP_SIM2]
+   , 'Non géré sur le contrat' ) As 'Durée_GC(si PGC)',  
+-- [VDOC10924]  
+ IsNull (  
+ Case   
+  When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence   
+    Then  
+       (select sum ( d.mt_val_achat )  
+      from sysadm.detail d  
+      where d.id_sin=sinistre.id_sin  
+      and   d.id_gti = reg_gti.id_gti  
+      And   d.id_evt  not in ( 1083, 1317, 934 )   
+      And   d.mt_val_achat <> 9999  
+     )   
+  Else  
+    (select top 1 d.mt_val_achat   
+     from sysadm.detail d  
+     where d.id_sin=sinistre.id_sin  
+     And   d.mt_val_achat <> 9999  
+     And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)  
+           From  sysadm.detail d1  
+           Where d1.id_sin = d.id_sin  
+           And   d1.id_gti = d.id_gti  
+           And   d1.id_detail = d.id_detail  
+           And   d1.mt_val_achat <> 9999 )  
+    )*  
+    Case   
+   When IsNull ( (reg_gti.mt_reg / (select max(detail.mt_plaf) from sysadm.detail where detail.id_sin=gar_sin.id_sin and detail.id_gti=gar_sin.id_gti)), 0 ) < 1  
+     Then 1  
+   Else IsNull ( (reg_gti.mt_reg / (select max(detail.mt_plaf) from sysadm.detail where detail.id_sin=gar_sin.id_sin and detail.id_gti=gar_sin.id_gti)), 0 )   
+    End   
+ End , 0 ) 'Montant_Total_Achat',  
+  IsNUll (   
+   ( Select Top 1  
+      Case   
+     When id_ref_four = 'A_DIAGNOSTIQUER' Then 'DIAGNOSTIC'  
+     When id_typ_art = 'PRS' Then 'REPARATION'  
+     When id_typ_art = 'EDI' And CharIndex ( 'REPARER', id_ref_four ) > 0 Then  'REPARATION'       
+     When id_typ_art = 'EDI' And CharIndex ( 'DESOXYDER', id_ref_four ) > 0 Then  'DESOXYDATION'            
+     When id_typ_art = 'CAF' Then 'REMPLACEMENT PAR BON ACHAT'  
+     When id_typ_art = 'EDI' And c.id_four = 'CDS' Then 'REMPLACEMENT PAR BON ACHAT' -- [VDOC19386]  
+     When id_typ_art = 'PST' Then ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))  
+     Else 'REMPLACEMENT PAR ' + ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))  
+      End   
+  From sysadm.reglement r,  
+    sysadm.detail d,  
+    sysadm.commande c  
+  Where r.id_sin = sysadm.reg_gti.id_sin  
+  And   r.id_reg = sysadm.reg_gti.id_reg   
+  and   r.cod_mode_reg = 'FM'  
+  And   d.id_sin = r.id_sin  
+  and   d.id_reg = r.id_reg  
+  and   c.id_sin = d.id_sin  
+  and   c.id_gti = d.id_gti  
+  and   c.id_detail = d.id_detail  
+  And   c.id_ref_four not in ( 'PEC_A_RECYCLER', 'REFUSE_A_REEXP', 'DECISION_SPB' )  
+   ),  
+  'REMBOURSEMENT' ) as typ_evt, -- VDOC12649    
+  Case reglement.cod_mode_reg   
+   When 'XA' Then 'Réglement virtuel SPB. Réglé rééllement par la centrale ADVISE vers la boutique ADVISE'  
+   Else 'Réglement réél SPB'     
+  End 'MODE_REGLEMENT' -- [PC947&977]  
+ From  
+ sysadm.reg_gti     
+  inner join sysadm.sinistre  on reg_gti.id_sin = sinistre.id_sin  
+  inner join sysadm.produit on sinistre.id_prod = produit.id_prod  
+ left outer join sysadm.div_sin on div_sin.id_sin = sinistre.id_sin and div_sin.nom_zone='type_app'  
+ left outer join sysadm.div_sin d2 on d2.id_sin = sinistre.id_sin and d2.nom_zone='duree_gti_orig' -- [RS6175_GC_SCRP_SIM2]
+ inner join sysadm.personne on personne.id_ordre    =  sinistre.id_ordre  
+ inner join sysadm.gar_sin on reg_gti.id_sin = gar_sin.id_sin and reg_gti.id_gti = gar_sin.id_gti  
+ inner join sysadm.garantie on  garantie.id_prod = sinistre.id_prod and  garantie.id_rev = sinistre.id_rev and garantie.id_gti = reg_gti.id_gti  
+ inner join sysadm.police on garantie.id_police = police.id_police,  
+ sysadm.etablissement,  
+ sysadm.code code_Ns,  
+ sysadm.code code_Gs,  
+ sysadm.groupe,  
+ sysadm.compagnie,  
+ sysadm.reglement  
+Where   
+ ( groupe.id_grp = etablissement.id_grp ) and  
+ ( etablissement.id_prod= sinistre.id_prod ) and  
+ ( etablissement.id_ets = sinistre.id_ets  ) and  
+ ( etablissement.id_rev = -1   ) and  
+ ( code_Ns.id_typ_code = '+NS'   ) and  
+ ( code_Ns.id_code = sinistre.id_natsin ) and  
+ ( code_Gs.id_typ_code = '-GS'   ) and  
+ ( code_Gs.id_code = reg_gti.id_rgpt  ) and  
+ ( compagnie.id_cie = police.id_cie  ) and  
+ ( police.id_cie=138  ) and  
+ ( reglement.id_sin = reg_gti.id_sin   ) and  
+ ( reglement.id_reg = reg_gti.id_reg  ) and  
+ ( reglement.cod_mot_reg = 'RN'    ) and  
+ reglement.dte_reg between    @dtDteDeb And @dtDteFin and  
+ ( reglement.cod_mode_reg in ('VA' , 'VM' , 'C', 'FM', 'BX', 'VV', 'XA' ) )   
+  
+  
+UNION   
+Select distinct  
+ 'PERIODE DE REGLT' = @sPerReglt,  
+ 'GESTIONNAIRE' = 'SPB',  
+ 'N° CONTRAT ADVISE/DAS' = police.lib_police,  
+ 'CIE ASS' = compagnie.lib_cie,  
+ 'SOUSCRIPTEUR' = groupe.lib_grp,  
+ 'INTITULE DU CONTRAT' = produit.lib_long,  
+ 'N° SINISTRE' = sinistre.id_sin,  
+ 'NOM'  = personne.nom,  
+ 'PRENOM' = personne.prenom,  
+  sysadm.FN_CODE_CAR(div_sin.val_car,'-AR') as genre,  
+  sinistre.marq_port as 'marque',   
+ /* convert(varchar(10),sinistre.dte_ach_port,103) as 'date_achat', */  
+-- [VDOC10924]  
+  Isnull (   
+  convert(varchar(30),  
+  Case   
+ When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)  
+  Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )  
+ Else sinistre.dte_ach_port  
+  End ,103)   
+  , 'Pas de date d''achat' )   as 'date_achat',  
+-- (select top 1 detail.mt_val_achat from sysadm.detail where detail.id_sin=sinistre.id_sin) as mt_achat,  
+-- [VDOC11052]  
+   IsNull (   
+ Case   
+  When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence   
+    Then  
+     -- [VDOC11052]  
+     Case   
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = reg_gti.id_gti  
+        And   d.id_evt  not in ( 1083, 1317, 934 )   
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = reg_gti.id_gti  
+        And   d.id_evt  not in ( 1083, 1317, 934 )   
+        And   d.mt_val_achat <> 9999  
+       )  
+         
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = reg_gti.id_gti  
+        And   d.id_evt  = 1317  
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = reg_gti.id_gti  
+        And   d.id_evt  = 1317  
+        And   d.mt_val_achat <> 9999  
+       )  
+  
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = reg_gti.id_gti  
+        And   d.id_evt  = 934  
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = reg_gti.id_gti  
+        And   d.id_evt  = 934  
+        And   d.mt_val_achat <> 9999  
+       )    
+  
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = reg_gti.id_gti  
+        And   d.id_evt  = 1083  
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        and   d.id_gti = reg_gti.id_gti  
+        And   d.id_evt  = 1083  
+        And   d.mt_val_achat <> 9999  
+       )   
+    Else 0  
+   End  
+           
+  Else  
+     (select top 1 d.mt_val_achat   
+      from sysadm.detail d  
+      where d.id_sin=sinistre.id_sin  
+      And   d.id_gti = reg_gti.id_gti  
+      And   d.mt_val_achat <> 9999  
+      And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)  
+            From  sysadm.detail d1  
+            Where d1.id_sin = d.id_sin  
+            And   d1.id_gti = d.id_gti  
+            And   d1.id_detail = d.id_detail  
+            And   d1.mt_val_achat <> 9999 )  
+     )  
+ End  
+  , 0 ) as mt_achat,  -- [VDOC10924]  
+  sinistre.id_adh as no_adhesion,   
+  convert(varchar(10),sinistre.dte_adh,103) as dte_adh,   
+ 'date déb  garantie' = convert(varchar(10),sinistre.dte_adh,103),  
+  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti,  
+  convert(varchar(10),sinistre.dte_surv,103) as dte_surv,   
+  datepart(year,sinistre.dte_surv) as annee_surv,  
+  datepart(month,sinistre.dte_surv) as mois_surv,   
+ convert(varchar(10),sinistre.dte_decl,103) as dte_decl,  
+ 'type_garantie'   = code_Ns.lib_code,  
+ 'garantie'   = code_Nf.lib_code,  
+ 'ALT_PLAF' = 'N',  
+  frais.mt_frais as mt_plafond,  
+ 'quantité sinistre' =   
+ Case   
+  When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence   
+      Then  
+      ( Select sum ( ds.val_nbre )  
+      From   sysadm.div_det ds  
+      Where  ds.id_sin = sinistre.id_sin  
+      And    ds.nom_zone = 'qte' )  
+  Else  
+   reg_gti.mt_reg / frais.mt_frais  
+    End,  
+ 'mt_total plafond' = reg_gti.mt_reg,  
+ 'DTE_REG' = convert(varchar(10),reg_gti.maj_le,103) + ' ' + convert(varchar(10),reg_gti.maj_le,108), -- [ITSM166043]  
+ 'MT_REG_GTI' = reg_gti.mt_reg,  
+ (select top 1 mt_val_publique from sysadm.detail   
+ where detail.id_sin=sinistre.id_sin and detail.id_sin=reg_gti.id_sin   
+ and mt_val_publique > 0  
+ ) as 'montant_sinistre',  
+  (select SUM(mt_frais) from sysadm.frais where frais.id_sin=sinistre.id_sin and frais.id_typ_frais=1) as frais_transport,  
+/*  
+  case When d2.val_nbre is not null Then  convert(varchar(10),sinistre.dte_adh,103) Else '' End as dte_deb_gc,  
+*/  
+ -- [VDOC10924]   
+  Nullif (   
+  case When d2.val_nbre is not null Then convert(varchar(10),  
+    Case   
+   When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)  
+    Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )  
+   Else sinistre.dte_ach_port  
+    End  
+  ,103)   
+  Else ''   
+ End   
+ , '01/01/1900' )  
+ as dte_deb_gc,  
+/*  case When d2.val_nbre is not null Then convert(varchar(10),DateAdd(Month,d2.val_nbre,sinistre.dte_adh),103) Else '' End as dte_fin_gc, */  
+ -- [VDOC10924]   
+  case When d2.val_nbre is not null Then convert(varchar(10),DateAdd(Month,d2.val_nbre,  
+    Case   
+   When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)  
+    Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )  
+   Else sinistre.dte_ach_port  
+    End  
+   ),103) Else '' End as dte_fin_gc,  
+   case When d2.val_nbre is null Then  convert(varchar(10),sinistre.dte_adh,103)   
+ Else convert(varchar(10),DateAdd(day, 1, DateAdd(Month,d2.val_nbre,sinistre.dte_adh)),103) End as dte_deb_gti_DAS,  
+  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti_DAS,  
+  /*(select top 1 sysadm.FN_CLE_VAL('PGC_MOIS',val_car,';') + ' mois' from sysadm.det_pro   
+    where det_pro.id_prod=sinistre.id_prod and det_pro.id_code_dp=85) as duree_garantie_das,*/  
+-- [VDOC10924]  
+--   Convert ( VarChar ( 10),Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, sinistre.dte_adh, sinistre.dte_fin_gti ) ) , 0 ) ) + '' ) as duree_garantie_das_Mois,  
+-- [VDOC10924][VDOC11052] duréé garantie DAS : = date achat - date fin garantie    
+--   Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port, IsNull ( sinistre.dte_adh, (Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti
+ and dt.dte_det is not null ))), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,  
+ Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port,   
+     IsNUll (   
+     (Case   
+    When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod and d.id_code_num = reg_gti.id_gti)  
+     Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti and dt.dte_det is not null )  
+    Else sinistre.dte_ach_port  
+     End), sinistre.dte_adh )), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,     
+  case When d2.val_nbre is null Then 'Neuf'  
+ When d2.val_nbre = 3 Then 'Occasion'  
+ Else 'Neuf'  
+  End as 'Neuf/Occasion',  
+-- [VDOC10924]  
+  IsNull (  
+   (Select Top 1 rTrim( Convert ( VarChar ( 30), ds.val_nbre ) + '' )  
+    From  sysadm.div_sin ds,  
+    sysadm.det_pro dp  
+    Where dp.id_prod = sinistre.id_prod  
+    And   dp.id_code_dp = 85  
+    And   ds.id_sin = sinistre.id_sin  
+    And   ds.nom_zone= 'duree_gti_orig')  -- [RS6175_GC_SCRP_SIM2]
+   , 'Non géré sur le contrat' ) As 'Durée_GC(si PGC)',  
+  IsNull (   
+         Case   
+          When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence   
+            Then  
+               (select sum ( d.mt_val_achat )  
+              from sysadm.detail d  
+              where d.id_sin=sinistre.id_sin  
+              and   d.id_gti = reg_gti.id_gti  
+              And   d.id_evt  not in ( 1083, 1317, 934 )   
+              And   d.mt_val_achat <> 9999  
+             )   
+          Else  
+            (select top 1 d.mt_val_achat   
+             from sysadm.detail d  
+             where d.id_sin=sinistre.id_sin  
+             And   d.mt_val_achat <> 9999  
+             And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)  
+                   From  sysadm.detail d1  
+                   Where d1.id_sin = d.id_sin  
+                   And   d1.id_gti = d.id_gti  
+                   And   d1.id_detail = d.id_detail  
+                   And   d1.mt_val_achat <> 9999 )  
+            )*  
+            Case   
+           When reg_gti.mt_reg / frais.mt_frais < 1  
+             Then 1  
+           Else reg_gti.mt_reg / frais.mt_frais  
+            End  
+        End  
+        , 0 )  'Montant_Total_Achat',  
+  IsNUll (   
+   ( Select Top 1  
+      Case   
+     When id_ref_four = 'A_DIAGNOSTIQUER' Then 'DIAGNOSTIC'  
+     When id_typ_art = 'PRS' Then 'REPARATION'  
+     When id_typ_art = 'EDI' And CharIndex ( 'REPARER', id_ref_four ) > 0 Then  'REPARATION'       
+     When id_typ_art = 'EDI' And CharIndex ( 'DESOXYDER', id_ref_four ) > 0 Then  'DESOXYDATION'            
+     When id_typ_art = 'CAF' Then 'REMPLACEMENT PAR BON ACHAT'  
+     When id_typ_art = 'EDI' And c.id_four = 'CDS' Then 'REMPLACEMENT PAR BON ACHAT' -- [VDOC19386]  
+     When id_typ_art = 'PST' Then ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))  
+     Else 'REMPLACEMENT PAR ' + ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))  
+      End   
+     
+  From sysadm.reglement r,  
+    sysadm.detail d,  
+    sysadm.commande c  
+  Where r.id_sin = sysadm.reg_gti.id_sin  
+  And   r.id_reg = sysadm.reg_gti.id_reg   
+  and   r.cod_mode_reg = 'FM'  
+  And   d.id_sin = r.id_sin  
+  and   d.id_reg = r.id_reg  
+  and   c.id_sin = d.id_sin  
+  and   c.id_gti = d.id_gti  
+  and   c.id_detail = d.id_detail  
+  And   c.id_ref_four not in ( 'PEC_A_RECYCLER', 'REFUSE_A_REEXP', 'DECISION_SPB' )  
+   ),  
+  'REMBOURSEMENT' ) as typ_evt, -- VDOC12649    
+  Case reglement.cod_mode_reg   
+   When 'XA' Then 'Réglement virtuel SPB. Réglé rééllement par la centrale ADVISE vers la boutique ADVISE'  
+   Else 'Réglement réél SPB'     
+  End 'MODE_REGLEMENT' -- [PC947&977]  
+From  
+ sysadm.reg_gti     
+  inner join sysadm.sinistre  on reg_gti.id_sin = sinistre.id_sin  
+  inner join sysadm.produit on sinistre.id_prod = produit.id_prod  
+ left outer join sysadm.div_sin on div_sin.id_sin = sinistre.id_sin and div_sin.nom_zone='type_app'  
+ left outer join sysadm.div_sin d2 on d2.id_sin = sinistre.id_sin and d2.nom_zone='duree_gti_orig' -- [RS6175_GC_SCRP_SIM2]
+ inner join sysadm.personne on personne.id_ordre    =  sinistre.id_ordre  
+ inner join sysadm.frais on reg_gti.id_sin = frais.id_sin and reg_gti.id_reg = frais.id_reg,  
+ sysadm.garantie,  
+ sysadm.etablissement,  
+ sysadm.code code_Ns,  
+ sysadm.code code_Nf,  
+ sysadm.groupe,  
+ sysadm.departement,  
+ sysadm.police,  
+ sysadm.compagnie,  
+ sysadm.reglement  
+Where   
+ ( reg_gti.id_gti = -1   ) and  
+ ( groupe.id_grp = etablissement.id_grp ) and  
+ ( etablissement.id_prod= sinistre.id_prod ) and  
+ ( etablissement.id_ets = sinistre.id_ets  ) and  
+ ( etablissement.id_rev = -1   ) and  
+ ( code_Ns.id_typ_code = '+NS'   ) and  
+ ( code_Ns.id_code = sinistre.id_natsin ) and  
+ ( code_Nf.id_typ_code = '+NF'   ) and  
+ ( code_Nf.id_code = frais.id_typ_frais ) and  
+ ( garantie.id_prod = sinistre.id_prod ) and  
+ ( garantie.id_rev = sinistre.id_rev  ) and  
+ ( garantie.id_gti = IsNull ( ( Select NullIf ( NullIf ( max ( a_reg_gti.id_gti ), 0), -1 )  
+        From   sysadm.reg_gti a_reg_gti  
+        Where  a_reg_gti.id_sin = reg_gti.id_sin  
+        And    a_reg_gti.id_reg = reg_gti.id_reg ),   
+  
+       ( Select max ( gar_sin.id_gti )   
+        From   sysadm.gar_sin  
+        Where  gar_sin.id_sin = sinistre.id_sin ))) and  
+ ( garantie.id_police = police.id_police ) and  
+ ( compagnie.id_cie = police.id_cie  ) and  
+ ( police.id_cie=138  ) and  
+ ( reglement.dte_reg    between    @dtDteDeb And @dtDteFin ) and  
+ ( reglement.id_sin     =       reg_gti.id_sin          )       and  
+ ( reglement.id_reg     =       reg_gti.id_reg          )       and  
+ ( reglement.cod_mode_reg in ('VA' , 'VM' , 'C', 'FM', 'BX', 'VV', 'XA' ) )   
+  
+UNION   
+  
+Select distinct  
+ 'PERIODE DE REGLT' = @sPerReglt,  
+ 'GESTIONNAIRE' = 'SPB',  
+ 'N° CONTRAT ADVISE/DAS' = police.lib_police,  
+ 'CIE ASS' = compagnie.lib_cie,  
+ 'SOUSCRIPTEUR' = groupe.lib_grp,  
+ 'INTITULE DU CONTRAT' = produit.lib_long,  
+ 'N° SINISTRE' = sinistre.id_sin,  
+ 'NOM'  = personne.nom,  
+ 'PRENOM' = personne.prenom,  
+  sysadm.FN_CODE_CAR(div_sin.val_car,'-AR') as genre,  
+  sinistre.marq_port as 'marque',   
+/* convert(varchar(10),sinistre.dte_ach_port,103) as 'date_achat', */  
+-- [VDOC10924]  
+  IsNull (   
+  convert(varchar(30),  
+   Case   
+  When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod )  
+   Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.dte_det is not null )  
+  Else sinistre.dte_ach_port  
+   End ,103)   
+  , 'Pas de date d''achat' )   as 'date_achat',  
+-- (select top 1 detail.mt_val_achat from sysadm.detail where detail.id_sin=sinistre.id_sin) as mt_achat,  
+-- [VDOC11052]  
+   IsNull (   
+ Case   
+  When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence   
+    Then  
+     -- [VDOC11052]  
+     Case   
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        And   d.id_evt  not in ( 1083, 1317, 934 )   
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        And   d.id_evt  not in ( 1083, 1317, 934 )   
+        And   d.mt_val_achat <> 9999  
+       )  
+         
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        And   d.id_evt  = 1317  
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        And   d.id_evt  = 1317  
+        And   d.mt_val_achat <> 9999  
+       )  
+  
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        And   d.id_evt  = 934  
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        And   d.id_evt  = 934  
+        And   d.mt_val_achat <> 9999  
+       )    
+  
+    When (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        And   d.id_evt  = 1083  
+        And   d.mt_val_achat <> 9999  
+       ) > 0   
+       Then   
+       (select sum ( isnull ( d.mt_val_achat, 0 ) )  
+        from sysadm.detail d  
+        where d.id_sin=sinistre.id_sin  
+        And   d.id_evt  = 1083  
+        And   d.mt_val_achat <> 9999  
+       )   
+    Else 0  
+   End  
+           
+  Else  
+     (select top 1 d.mt_val_achat   
+      from sysadm.detail d  
+      where d.id_sin=sinistre.id_sin  
+      And   d.mt_val_achat <> 9999  
+      And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)  
+            From  sysadm.detail d1  
+            Where d1.id_sin = d.id_sin  
+            And   d1.id_gti = d.id_gti  
+            And   d1.id_detail = d.id_detail  
+            And   d1.mt_val_achat <> 9999 )  
+     )  
+ End  
+  , 0 ) as mt_achat,  -- [VDOC10924]  
+  sinistre.id_adh as no_adhesion,   
+  convert(varchar(10),sinistre.dte_adh,103) as dte_adh,    
+  'date déb  garantie' = convert(varchar(10),sinistre.dte_adh,103),  
+  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti,  
+  convert(varchar(10),sinistre.dte_surv,103) as dte_surv,   
+  datepart(year,sinistre.dte_surv) as annee_surv,  
+  datepart(month,sinistre.dte_surv) as mois_surv,   
+  convert(varchar(10),sinistre.dte_decl,103) as dte_decl,  
+ 'type_garantie'   = code_Ns.lib_code,  
+ 'garantie'   = 'REGULARISATION',  
+  'ALT_PLAF' = 'N',  
+  reglement.mt_tot_reg as mt_plafond,  
+  'quantité sinistre' = 1,  
+  'mt_total plafond' = reglement.mt_tot_reg,  
+  'DTE_REG' = convert(varchar(10),reglement.dte_reg,103)+ ' ' + convert(varchar(10),reglement.maj_le,108), -- [ITSM166043]  
+   'MT_REG_GTI' = reglement.mt_tot_reg,  
+ (select top 1 mt_val_publique from sysadm.detail   
+ where detail.id_sin=sinistre.id_sin and detail.id_sin=reglement.id_sin   
+ and mt_val_publique > 0  
+ ) as 'montant_sinistre',  
+  (select SUM(mt_frais) from sysadm.frais where frais.id_sin=sinistre.id_sin and frais.id_typ_frais=1) as frais_transport,  
+/*  
+  case When d2.val_nbre is not null Then  convert(varchar(10),sinistre.dte_adh,103) Else '' End as dte_deb_gc,  
+*/  
+ -- [VDOC10924]   
+  nullif (   
+  case When d2.val_nbre is not null Then convert(varchar(10),  
+    Case   
+   When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod )  
+    Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.dte_det is not null )  
+   Else sinistre.dte_ach_port  
+    End  
+   ,103)   
+  Else ''   
+   End,   
+   '01/01/1900' )  
+   as dte_deb_gc,  
+/*  case When d2.val_nbre is not null Then convert(varchar(10),DateAdd(Month,d2.val_nbre,sinistre.dte_adh),103) Else '' End as dte_fin_gc, */  
+ -- [VDOC10924]   
+  case When d2.val_nbre is not null Then convert(varchar(10),DateAdd(Month,d2.val_nbre,  
+   Case   
+  When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod )  
+   Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.dte_det is not null )  
+  Else sinistre.dte_ach_port  
+   End  
+  ),103) Else '' End as dte_fin_gc,  
+   case When d2.val_nbre is null Then  convert(varchar(10),sinistre.dte_adh,103)   
+ Else convert(varchar(10),DateAdd(day, 1, DateAdd(Month,d2.val_nbre,sinistre.dte_adh)),103) End as dte_deb_gti_DAS,  
+  convert(varchar(10),sinistre.dte_fin_gti,103) as dte_fin_gti_DAS,  
+  /*(select top 1 sysadm.FN_CLE_VAL('PGC_MOIS',val_car,';') + ' mois' from sysadm.det_pro   
+    where det_pro.id_prod=sinistre.id_prod and det_pro.id_code_dp=85) as duree_garantie_das,*/  
+-- [VDOC10924]  
+--    Convert ( VarChar ( 10), Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, sinistre.dte_adh, sinistre.dte_fin_gti ) ) , 0 ) ) + '' ) as duree_garantie_das_Mois,  
+-- [VDOC10924][VDOC11052] duréé garantie DAS : = date achat - date fin garantie    
+--   Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port, IsNull ( sinistre.dte_adh, (Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.id_gti = reg_gti.id_gti
+ and dt.dte_det is not null ))), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,  
+ Convert ( VarChar ( 10),( Convert ( VarChar ( 10), IsNull ( ABS ( DATEDIFF ( MONTH, IsNull ( sinistre.dte_ach_port,   
+     IsNUll (   
+     (Case   
+    When Exists ( Select * from det_pro d where d.id_code_dp = 42 and d.id_code_car = 'A' and d.id_prod = sinistre.id_prod )  
+     Then ( Select top 1 dte_det From sysadm.detail dt where dt.id_sin= sinistre.id_sin and dt.dte_det is not null )  
+    Else sinistre.dte_ach_port  
+     End), sinistre.dte_adh )), sinistre.dte_fin_gti ) ) , 0 ) ) + '' )) as duree_garantie_das_Mois,     
+  case When d2.val_nbre is null Then 'Neuf'  
+ When d2.val_nbre = 3 Then 'Occasion'  
+ Else 'Neuf'  
+  End as 'Neuf/Occasion',  
+-- [VDOC10924]  
+  IsNull (  
+   (Select Top 1 rTrim( Convert ( VarChar ( 30), ds.val_nbre ) + '' )  
+    From  sysadm.div_sin ds,  
+    sysadm.det_pro dp  
+    Where dp.id_prod = sinistre.id_prod  
+    And   dp.id_code_dp = 85  
+    And   ds.id_sin = sinistre.id_sin  
+    And   ds.nom_zone= 'duree_gti_orig')  -- [RS6175_GC_SCRP_SIM2]
+   , 'Non géré sur le contrat' ) As 'Durée_GC(si PGC)',  
+  IsNull (   
+  Case   
+          When ( sinistre.id_prod between 45200 and 45299 ) Or ( sinistre.id_prod between 46500 and 46700 ) -- Cas des CONFO Excellence   
+            Then  
+               (select sum ( d.mt_val_achat )  
+              from sysadm.detail d  
+              where d.id_sin=sinistre.id_sin  
+              And   d.id_evt  not in ( 1083, 1317, 934 )   
+              And   d.mt_val_achat <> 9999  
+             )   
+          Else  
+            (select top 1 d.mt_val_achat   
+             from sysadm.detail d  
+             where d.id_sin=sinistre.id_sin  
+             And   d.mt_val_achat <> 9999  
+             And   d.mt_val_achat = ( Select MAX ( d1.mt_val_achat)  
+                   From  sysadm.detail d1  
+                   Where d1.id_sin = d.id_sin  
+                   And   d1.id_gti = d.id_gti  
+                   And   d1.id_detail = d.id_detail  
+                   And   d1.mt_val_achat <> 9999 )  
+            )  
+        End , 0 ) 'Montant_Total_Achat',  
+  IsNUll (   
+   ( Select Top 1  
+      Case   
+     When id_ref_four = 'A_DIAGNOSTIQUER' Then 'DIAGNOSTIC'  
+     When id_typ_art = 'PRS' Then 'REPARATION'  
+     When id_typ_art = 'EDI' And CharIndex ( 'REPARER', id_ref_four ) > 0 Then  'REPARATION'       
+     When id_typ_art = 'EDI' And CharIndex ( 'DESOXYDER', id_ref_four ) > 0 Then  'DESOXYDATION'            
+     When id_typ_art = 'CAF' Then 'REMPLACEMENT PAR BON ACHAT'  
+     When id_typ_art = 'EDI' And c.id_four = 'CDS' Then 'REMPLACEMENT PAR BON ACHAT' -- [VDOC19386]  
+     When id_typ_art = 'PST' Then ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))  
+     Else 'REMPLACEMENT PAR ' + ( Select sysadm.FN_CODE_CAR ( id_typ_art, '-AR' ))  
+      End   
+     
+  From sysadm.reglement r,  
+    sysadm.detail d,  
+    sysadm.commande c  
+  Where r.id_sin = sysadm.reglement.id_sin  
+  And   r.id_reg = sysadm.reglement.id_reg   
+  and   r.cod_mode_reg = 'FM'  
+  And   d.id_sin = r.id_sin  
+  and   d.id_reg = r.id_reg  
+  and   c.id_sin = d.id_sin  
+  and   c.id_gti = d.id_gti  
+  and   c.id_detail = d.id_detail  
+  And   c.id_ref_four not in ( 'PEC_A_RECYCLER', 'REFUSE_A_REEXP', 'DECISION_SPB' )  
+   ),  
+  'REMBOURSEMENT' ) as typ_evt, -- VDOC12649    
+  Case reglement.cod_mode_reg   
+   When 'XA' Then 'Réglement virtuel SPB. Réglé rééllement par la centrale ADVISE vers la boutique ADVISE'  
+   Else 'Réglement réél SPB'     
+  End 'MODE_REGLEMENT' -- [PC947&977]  
+    
+From  
+ sysadm.reglement   
+  inner join sysadm.sinistre  on reglement.id_sin = sinistre.id_sin  
+  inner join sysadm.produit on sinistre.id_prod = produit.id_prod  
+ left outer join sysadm.div_sin on div_sin.id_sin = sinistre.id_sin and div_sin.nom_zone='type_app'  
+ left outer join sysadm.div_sin d2 on d2.id_sin = sinistre.id_sin and d2.nom_zone='duree_gti_orig'  -- [RS6175_GC_SCRP_SIM2]
+ inner join sysadm.personne on personne.id_ordre    =  sinistre.id_ordre,  
+ sysadm.garantie  ,  
+ sysadm.etablissement,  
+ sysadm.code code_Ns,  
+ sysadm.groupe,  
+ sysadm.police,  
+ sysadm.compagnie  
+Where   
+ ( groupe.id_grp = etablissement.id_grp ) and  
+ ( etablissement.id_prod= sinistre.id_prod ) and  
+ ( etablissement.id_ets = sinistre.id_ets  ) and  
+ ( etablissement.id_rev = -1   ) and  
+ ( code_Ns.id_typ_code = '+NS'   ) and  
+ ( code_Ns.id_code = sinistre.id_natsin ) and  
+ ( garantie.id_prod = sinistre.id_prod ) and  
+ ( garantie.id_rev = sinistre.id_rev  ) and  
+ ( garantie.id_gti = ( Select max ( gar_sin.id_gti )   
+      From   sysadm.gar_sin  
+      Where  gar_sin.id_sin = sinistre.id_sin )) and  
+ ( garantie.id_police = police.id_police ) and  
+ ( compagnie.id_cie = police.id_cie  ) and  
+  ( police.id_cie=138  ) and  
+ ( reglement.dte_reg between    @dtDteDeb And @dtDteFin ) and  
+ ( reglement.cod_mot_reg in ( 'RE', 'RM', 'RP' ) ) and  
+ ( reglement.mt_tot_reg <> 0    ) and  
+ ( reglement.cod_mode_reg in ('VA' , 'VM' , 'C', 'FM', 'BX', 'VV', 'XA' ) )   
+  
 GO
 --------------------------------------------------------------------
 --
