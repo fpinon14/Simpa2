@@ -2716,7 +2716,13 @@ Else
  Begin
 	Update SESAME_PRO.sysadm.application Set lib_commande = 'C:\SPB\P_FR_APP_Simpa2_main_121.EXE' where id_appli = 'TSP8'
  End
-
+ 
+ -- Purge Trace.
+If sysadm.FN_CLE_NUMERIQUE ( 'RS6179_TRG_WQ') > 0 
+	Begin
+		Delete sysadm.w_queue_histo Where cree_le_action < DATEADD ( month, -6, Getdate() )
+		Delete TRACE_MAIL_PRO.sysadm.trace_matp_es_sinistre_ksl_rs5045 Where cree_le < DATEADD ( month, -6, Getdate() )
+	End 
 GO
 
 grant execute on sysadm.PS_CORRECTION_BASE_NUIT_2 to rolebddsinistres

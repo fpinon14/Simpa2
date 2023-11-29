@@ -100,191 +100,294 @@
 	-- [VDOC20283] FS le 01/04/2016 : Gestion du passage état 5 à 1
 	-- JFF      12/02/2016   [PI062]
 					
-	CREATE TRIGGER [sysadm].[Iwd_Tr_Queue_Update]  -- [PM217-2] IWD : Iwd_Tr_Queue_Update trigger update w_queue : Maj cod_etat 1 à 5 + alt_occupe
-				ON [sysadm].[w_queue]
-		FOR update
-		As
-		--------------------------------------------------------------------
-		-- FS le 10/10/2013 : [PM217-2] IWD : w_queue trigger update : Maj cod_etat et alt_occupe
-		-- JFF      12/02/2016   [PI062]
-		--------------------------------------------------------------------
+	CREATE TRIGGER [sysadm].[Iwd_Tr_Queue_Update] -- [PM217-2] IWD : Iwd_Tr_Queue_Update trigger update w_queue : Maj cod_etat 1 à 5 + alt_occupe
+	ON [sysadm].[w_queue]
+	FOR UPDATE
+	AS
+	--------------------------------------------------------------------
+	-- FS le 10/10/2013 : [PM217-2] IWD : w_queue trigger update : Maj cod_etat et alt_occupe
+	-- JFF      12/02/2016   [PI062]
+	-- JFF Le 28/11/2023 : [RS6179] Trace des données w_queue
+	--------------------------------------------------------------------
+		If sysadm.FN_CLE_NUMERIQUE ( 'RS6179_TRG_WQ') > 0 
+		 Begin
 
-		if update( cod_etat ) -- Maj w_queue.cod_etat de 1 à 5
-		Begin 
-		
-		  update sysadm.update_iwd
-		     set
-		        cod_etat        = '5',
-		        alt_occupe      = i.alt_occupe,
-		        flag_update_iwd = 1,
-		        id_iwd          = i.id_iwd,
-		        queue           = 'iWD_Completed',
-		        routage_iwd     = null
-		    From 
-				inserted i, deleted d
-			Where 
-				convert( varchar(10),sysadm.update_iwd.id_sin) = i.id_sin And -- [PI062]
-			  	  i.id_sin   = d.id_sin  And
-				  i.id_iwd   is not null And
-				  i.etat_iwd = 2         And
-				  i.alt_occupe = 'N'     And
-				  i.cod_etat = '5'       And -- Nouvel état = 5
-				  d.cod_etat = '1'           -- Ancien état = 1
+			-- [RS6179] JFF 28/11/2023
+			INSERT INTO [sysadm].[w_queue_histo]
+			   ([action]
+			   ,[cree_le_action]
+			   ,[id_sin]
+			   ,[id_corb]
+			   ,[id_prod]
+			   ,[nom]
+			   ,[cod_etat]
+			   ,[cod_action]
+			   ,[alt_occupe]
+			   ,[alt_bloc]
+			   ,[trv_cree_le]
+			   ,[trv_maj_le]
+			   ,[trv_maj_par]
+			   ,[trv_route_le]
+			   ,[trv_route_par]
+			   ,[trv_edite_le]
+			   ,[trv_edite_par]
+			   ,[txt_mess1]
+			   ,[txt_mess2]
+			   ,[dos_maj_le]
+			   ,[dos_maj_par]
+			   ,[cod_recu]
+			   ,[cod_i_prov]
+			   ,[dte_recu]
+			   ,[cod_typ_recu]
+			   ,[dte_cour_cli]
+			   ,[id_contact]
+			   ,[etat_iwd]
+			   ,[id_iwd]
+			   ,[responsable_iwd]
+			   ,[routage_iwd])
 
-			INSERT INTO [sysadm].[update_iwd]
-				([id_sin]
-				,[cod_etat]
-				,[alt_occupe]
-				,[flag_update_iwd]
-				,[id_iwd]
-				,[queue]
-				,[routage_iwd]
-				,[maj_le])
-			Select
-				 i.id_sin,
-				 5              , -- cod_etat
-				 i.alt_occupe   , -- alt_occupe
-				 1              , -- flag update iwd
-				 i.id_iwd       , -- id_iwd de w_queue
-				 'iWD_Completed', -- queue
-				 null           , -- routage_iwd
-				 GETDATE()
-			From 
-				inserted i, deleted d
-			Where i.id_sin   = d.id_sin  And
-				  i.id_iwd   is not null And
-				  i.etat_iwd   = 2       And
-				  i.alt_occupe = 'N'     And
-				  i.cod_etat = '5'       And 
-				  d.cod_etat = '1'       And 
-				  not exists ( select * from sysadm.update_iwd v Where convert( varchar(10),v.id_sin) = i.id_sin ) -- [PI062]
-				  
-		End 
-		
-		if update( alt_occupe ) -- Report du alt_occupe sur update_iwd si passe de O à N
-		Begin 
+				SELECT 
+					  'U'
+					  ,GETDATE()
+					  ,i.[id_sin]
+					  ,i.[id_corb]
+					  ,i.[id_prod]
+					  ,i.[nom]
+					  ,i.[cod_etat]
+					  ,i.[cod_action]
+					  ,i.[alt_occupe]
+					  ,i.[alt_bloc]
+					  ,i.[trv_cree_le]
+					  ,i.[trv_maj_le]
+					  ,i.[trv_maj_par]
+					  ,i.[trv_route_le]
+					  ,i.[trv_route_par]
+					  ,i.[trv_edite_le]
+					  ,i.[trv_edite_par]
+					  ,i.[txt_mess1]
+					  ,i.[txt_mess2]
+					  ,i.[dos_maj_le]
+					  ,i.[dos_maj_par]
+					  ,i.[cod_recu]
+					  ,i.[cod_i_prov]
+					  ,i.[dte_recu]
+					  ,i.[cod_typ_recu]
+					  ,i.[dte_cour_cli]
+					  ,i.[id_contact]
+					  ,i.[etat_iwd]
+					  ,i.[id_iwd]
+					  ,i.[responsable_iwd]
+					  ,i.[routage_iwd]
+  
+				FROM deleted d, inserted i
+				Where i.id_sin = d.id_sin
+		 End 
 
-			update sysadm.update_iwd set
-				alt_occupe = i.alt_occupe,
-				maj_le     = GETDATE()
-			From
-				inserted i, deleted d
-			Where 
-				convert( varchar(10),sysadm.update_iwd.id_sin ) = i.id_sin and -- [PI062]
-				i.id_sin   = d.id_sin  And
-				i.id_iwd   is not null And
-			    i.etat_iwd = 2         And
-			    (
-			     (i.alt_occupe = 'N' And d.alt_occupe = 'O')    or 
-                 (i.alt_occupe = 'O' And d.alt_occupe = 'N')
-                 )     
-   
-		End 
-		
-		if update( alt_bloc ) -- Maj w_queue.alt_bloc de 'N' à 'O' ou de 'O' à 'N'
-		Begin 
-		
+	IF UPDATE(cod_etat) -- Maj w_queue.cod_etat de 1 à 5
+		BEGIN
+
+			UPDATE sysadm.update_iwd
+			SET    cod_etat = '5'
+				 , alt_occupe = i.alt_occupe
+				 , flag_update_iwd = 1
+				 , id_iwd = i.id_iwd
+				 , queue = 'iWD_Completed'
+				 , routage_iwd = NULL
+			FROM   inserted i
+				 , deleted d
+			WHERE
+				-- convert( varchar(10),sysadm.update_iwd.id_sin) = i.id_sin And -- [PI062] modifié 20170612
+				   sysadm.update_iwd.id_sin = CAST(i.id_sin AS INT)
+				   AND -- [PI062]
+
+				i.id_sin = d.id_sin
+				   AND i.id_iwd IS NOT NULL
+				   AND i.etat_iwd = 2
+				   AND i.alt_occupe = 'N'
+				   AND i.cod_etat = '5'
+				   AND -- Nouvel état = 5
+				d.cod_etat = '1'; -- Ancien état = 1
+
+			INSERT INTO [sysadm].[update_iwd] (   [id_sin]
+												, [cod_etat]
+												, [alt_occupe]
+												, [flag_update_iwd]
+												, [id_iwd]
+												, [queue]
+												, [routage_iwd]
+												, [maj_le]
+											  )
+						SELECT i.id_sin
+							 , 5               -- cod_etat
+							 , i.alt_occupe    -- alt_occupe
+							 , 1               -- flag update iwd
+							 , i.id_iwd        -- id_iwd de w_queue
+							 , 'iWD_Completed' -- queue
+							 , NULL            -- routage_iwd
+							 , GETDATE()
+						FROM   inserted i
+							 , deleted d
+						WHERE  i.id_sin = d.id_sin
+							   AND i.id_iwd IS NOT NULL
+							   AND i.etat_iwd = 2
+							   AND i.alt_occupe = 'N'
+							   AND i.cod_etat = '5'
+							   AND d.cod_etat = '1'
+							   AND NOT EXISTS (   SELECT *
+												  FROM   sysadm.update_iwd v
+												  WHERE  v.id_sin = CAST(i.id_sin AS INT)
+											  ); -- [PI062]
+
+		END;
+
+	IF UPDATE(alt_occupe) -- Report du alt_occupe sur update_iwd si passe de O à N
+		BEGIN
+
+			UPDATE sysadm.update_iwd
+			SET    alt_occupe = i.alt_occupe
+				 , maj_le = GETDATE()
+			FROM   inserted i
+				 , deleted d
+			WHERE
+				-- convert( varchar(10),sysadm.update_iwd.id_sin ) = i.id_sin and -- [PI062]
+				   sysadm.update_iwd.id_sin = CAST(i.id_sin AS INT)
+				   AND -- [PI062]
+				i.id_sin = d.id_sin
+				   AND i.id_iwd IS NOT NULL
+				   AND i.etat_iwd = 2
+				   AND (   (   i.alt_occupe = 'N'
+							   AND d.alt_occupe = 'O'
+						   )
+						   OR (   i.alt_occupe = 'O'
+								  AND d.alt_occupe = 'N'
+							  )
+					   );
+
+		END;
+
+	IF UPDATE(alt_bloc) -- Maj w_queue.alt_bloc de 'N' à 'O' ou de 'O' à 'N'
+		BEGIN
+
 			-- La ligne dans update_iwd existe : maj
-			
-			Update sysadm.update_iwd Set
-			[flag_update_iwd] = 1, 
-			[routage_iwd]     = 'COR#',
-			[queue]           = 'iWD_Captured',
-			[maj_le]          = GETDATE()
-			From 
-				inserted i, deleted d
-			Where 
-				convert( varchar(10),sysadm.update_iwd.id_sin ) = i.id_sin and -- [PI062]
-				i.id_sin   = d.id_sin  And
-				i.id_iwd   is not null And
-				i.etat_iwd = 2         And
-				i.alt_bloc = 'O'       And  -- Nouvelle valeur = 'O'
-				d.alt_bloc = 'N'            -- Ancienne valeur = 'N'
-			
+
+			UPDATE sysadm.update_iwd
+			SET    [flag_update_iwd] = 1
+				 , [routage_iwd] = 'COR#'
+				 , [queue] = 'iWD_Captured'
+				 , [maj_le] = GETDATE()
+			FROM   inserted i
+				 , deleted d
+			WHERE
+				--				convert( varchar(10),sysadm.update_iwd.id_sin ) = i.id_sin and -- [PI062]
+				   sysadm.update_iwd.id_sin = CAST(i.id_sin AS INT)
+				   AND -- [PI062]
+				i.id_sin = d.id_sin
+				   AND i.id_iwd IS NOT NULL
+				   AND i.etat_iwd = 2
+				   AND i.alt_bloc = 'O'
+				   AND -- Nouvelle valeur = 'O'
+				d.alt_bloc = 'N'; -- Ancienne valeur = 'N'
+
 			-- La ligne dans update_idw n'existe pas : insert
 
-			INSERT INTO [sysadm].[update_iwd]
-				([id_sin]
-				,[cod_etat]
-				,[alt_occupe]
-				,[flag_update_iwd]
-				,[id_iwd]
-				,[queue]
-				,[routage_iwd]
-				,[maj_le])
-			Select
-				 i.id_sin,
-				 i.cod_etat     , -- cod_etat
-				 i.alt_occupe   , -- alt_occupe
-				 1              , -- flag update iwd
-				 i.id_iwd       , -- id_iwd de w_queue
-				 'iWD_Captured', -- queue
-				 'COR#'          , -- routage_iwd
-				 GETDATE()
-			From 
-				inserted i, deleted d
-			Where 
-				  i.id_sin   = d.id_sin  And
-				  i.id_iwd   is not null And
-				  i.etat_iwd = 2         And
-				  i.alt_bloc = 'O'       And 
-				  d.alt_bloc = 'N'       And 
-				  not exists ( select * from sysadm.update_iwd v Where convert( varchar(10),v.id_sin) = i.id_sin ) -- [PI062]
-			
-		End 
+			INSERT INTO [sysadm].[update_iwd] (   [id_sin]
+												, [cod_etat]
+												, [alt_occupe]
+												, [flag_update_iwd]
+												, [id_iwd]
+												, [queue]
+												, [routage_iwd]
+												, [maj_le]
+											  )
+						SELECT i.id_sin
+							 , i.cod_etat     -- cod_etat
+							 , i.alt_occupe   -- alt_occupe
+							 , 1              -- flag update iwd
+							 , i.id_iwd       -- id_iwd de w_queue
+							 , 'iWD_Captured' -- queue
+							 , 'COR#'         -- routage_iwd
+							 , GETDATE()
+						FROM   inserted i
+							 , deleted d
+						WHERE  i.id_sin = d.id_sin
+							   AND i.id_iwd IS NOT NULL
+							   AND i.etat_iwd = 2
+							   AND i.alt_bloc = 'O'
+							   AND d.alt_bloc = 'N'
+							   AND
+							--				  not exists ( select * from sysadm.update_iwd v Where convert( varchar(10),v.id_sin) = i.id_sin ) -- [PI062]
+							NOT EXISTS (   SELECT *
+										   FROM   sysadm.update_iwd v
+										   WHERE  v.id_sin = CAST(i.id_sin AS INT)
+									   ); -- [PI062]
 
-		if update( trv_maj_le ) -- Maj w_queue.alt_bloc de 'O' à 'O' resté bloqué + trv_maj_le modifiée
-		Begin 
-		
+		END;
+
+	IF UPDATE(trv_maj_le) -- Maj w_queue.alt_bloc de 'O' à 'O' resté bloqué + trv_maj_le modifiée
+		BEGIN
+
 			-- Resté bloqué : La ligne dans update_iwd existe : maj
-			
-			Update sysadm.update_iwd Set
-			[flag_update_iwd] = 1, 
-			[routage_iwd]     = 'COR#',
-			[queue]           = 'iWD_Captured',
-			[maj_le] = GETDATE()
-			From 
-				inserted i, deleted d
-			Where 
-			convert( varchar(10),sysadm.update_iwd.id_sin) = i.id_sin And -- [PI062]
-				 i.id_sin   = d.id_sin  And
-				 i.id_iwd   is not null And
-				 i.etat_iwd = 2         And
-				 i.alt_bloc = 'O'       And   -- Nouvelle valeur = 'O'
-				 d.alt_bloc = 'O'       And   -- Ancienne valeur = 'O'
-				 i.trv_maj_le <> d.trv_maj_le -- Date modifiée
-			
+
+			UPDATE sysadm.update_iwd
+			SET    [flag_update_iwd] = 1
+				 , [routage_iwd] = 'COR#'
+				 , [queue] = 'iWD_Captured'
+				 , [maj_le] = GETDATE()
+			FROM   inserted i
+				 , deleted d
+			WHERE
+				--			convert( varchar(10),sysadm.update_iwd.id_sin) = i.id_sin And -- [PI062]
+				   sysadm.update_iwd.id_sin = CAST(i.id_sin AS INT)
+				   AND -- [PI062]
+				i.id_sin = d.id_sin
+				   AND i.id_iwd IS NOT NULL
+				   AND i.etat_iwd = 2
+				   AND i.alt_bloc = 'O'
+				   AND -- Nouvelle valeur = 'O'
+				d.alt_bloc = 'O'
+				   AND -- Ancienne valeur = 'O'
+				i.trv_maj_le <> d.trv_maj_le; -- Date modifiée
+
 			-- Resté bloqué : La ligne dans update_idw n'existe pas : insert
 
-			INSERT INTO [sysadm].[update_iwd]
-				([id_sin]
-				,[cod_etat]
-				,[alt_occupe]
-				,[flag_update_iwd]
-				,[id_iwd]
-				,[queue]
-				,[routage_iwd]
-				,[maj_le])
-			Select
-				 i.id_sin,
-				 i.cod_etat     , -- cod_etat
-				 i.alt_occupe   , -- alt_occupe
-				 1              , -- flag update iwd
-				 i.id_iwd       , -- id_iwd de w_queue
-				 'iWD_Captured', -- queue
-				 'COR#'         , -- routage_iwd
-				 GETDATE()
-			From 
-				inserted i, deleted d
-			Where i.id_sin   = d.id_sin  And
-				  i.id_iwd   is not null And
-				  i.etat_iwd = 2         And
-				  i.alt_bloc = 'O'       And   -- Nouvelle valeur = 'O'
-				  d.alt_bloc = 'O'       And   -- Ancienne valeur = 'O'
-				  i.trv_maj_le <> d.trv_maj_le And -- Date modifiée
-				  not exists ( select * from sysadm.update_iwd v Where convert( varchar(10),v.id_sin) = i.id_sin ) -- [PI062]
-		End 
-go
+			INSERT INTO [sysadm].[update_iwd] (   [id_sin]
+												, [cod_etat]
+												, [alt_occupe]
+												, [flag_update_iwd]
+												, [id_iwd]
+												, [queue]
+												, [routage_iwd]
+												, [maj_le]
+											  )
+						SELECT i.id_sin
+							 , i.cod_etat     -- cod_etat
+							 , i.alt_occupe   -- alt_occupe
+							 , 1              -- flag update iwd
+							 , i.id_iwd       -- id_iwd de w_queue
+							 , 'iWD_Captured' -- queue
+							 , 'COR#'         -- routage_iwd
+							 , GETDATE()
+						FROM   inserted i
+							 , deleted d
+						WHERE  i.id_sin = d.id_sin
+							   AND i.id_iwd IS NOT NULL
+							   AND i.etat_iwd = 2
+							   AND i.alt_bloc = 'O'
+							   AND -- Nouvelle valeur = 'O'
+							d.alt_bloc = 'O'
+							   AND -- Ancienne valeur = 'O'
+							i.trv_maj_le <> d.trv_maj_le
+							   AND -- Date modifiée
+							--				  not exists ( select * from sysadm.update_iwd v Where convert( varchar(10),v.id_sin) = i.id_sin ) -- [PI062]
+							NOT EXISTS (   SELECT *
+										   FROM   sysadm.update_iwd v
+										   WHERE  v.id_sin = CAST(i.id_sin AS INT)
+									   ); -- [PI062]
+
+		END;
+
+
+	go
 
 
 	IF  EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[sysadm].[Iwd_Tr_Queue_Delete]'))
@@ -298,10 +401,83 @@ go
 		--------------------------------------------------------------------
 		-- FS le 10/10/2013 [PM217-2] IWD : w_queue trigger delete
 		-- JFF      12/02/2016   [PI062]
+		-- JFF Le 28/11/2023 : [RS6179] Trace des données w_queue
 		--------------------------------------------------------------------
+		If sysadm.FN_CLE_NUMERIQUE ( 'RS6179_TRG_WQ') > 0 
+		 Begin
+			INSERT INTO [sysadm].[w_queue_histo]
+			   ([action]
+			   ,[cree_le_action]
+			   ,[id_sin]
+			   ,[id_corb]
+			   ,[id_prod]
+			   ,[nom]
+			   ,[cod_etat]
+			   ,[cod_action]
+			   ,[alt_occupe]
+			   ,[alt_bloc]
+			   ,[trv_cree_le]
+			   ,[trv_maj_le]
+			   ,[trv_maj_par]
+			   ,[trv_route_le]
+			   ,[trv_route_par]
+			   ,[trv_edite_le]
+			   ,[trv_edite_par]
+			   ,[txt_mess1]
+			   ,[txt_mess2]
+			   ,[dos_maj_le]
+			   ,[dos_maj_par]
+			   ,[cod_recu]
+			   ,[cod_i_prov]
+			   ,[dte_recu]
+			   ,[cod_typ_recu]
+			   ,[dte_cour_cli]
+			   ,[id_contact]
+			   ,[etat_iwd]
+			   ,[id_iwd]
+			   ,[responsable_iwd]
+			   ,[routage_iwd])
+
+				SELECT 
+					  'D'
+					  ,GETDATE()
+					  ,[id_sin]
+					  ,[id_corb]
+					  ,[id_prod]
+					  ,[nom]
+					  ,[cod_etat]
+					  ,[cod_action]
+					  ,[alt_occupe]
+					  ,[alt_bloc]
+					  ,[trv_cree_le]
+					  ,[trv_maj_le]
+					  ,[trv_maj_par]
+					  ,[trv_route_le]
+					  ,[trv_route_par]
+					  ,[trv_edite_le]
+					  ,[trv_edite_par]
+					  ,[txt_mess1]
+					  ,[txt_mess2]
+					  ,[dos_maj_le]
+					  ,[dos_maj_par]
+					  ,[cod_recu]
+					  ,[cod_i_prov]
+					  ,[dte_recu]
+					  ,[cod_typ_recu]
+					  ,[dte_cour_cli]
+					  ,[id_contact]
+					  ,[etat_iwd]
+					  ,[id_iwd]
+					  ,[responsable_iwd]
+					  ,[routage_iwd]
+  
+				FROM deleted d	
+		 End 
 		
 		Begin -- Maj de la ligne sur update_iwd
-						
+
+		-- [RS6179] JFF 28/11/2023
+
 			update sysadm.update_iwd set
 			 	 [cod_etat]        = d.cod_etat  , -- Report état de w_queue
 				 [alt_occupe]      = 'N', 
@@ -336,7 +512,6 @@ go
 			Where 
 				not exists ( select * from sysadm.update_iwd v Where convert( varchar(10),v.id_sin) = d.id_sin ) -- [PI062]
 				And d.id_iwd   is not null  	 
-								  
 
 		End -- / fin maj
 GO	
@@ -346,25 +521,100 @@ GO
 	DROP TRIGGER [sysadm].Iwd_Tr_Queue_Insert
 	GO
   
-	CREATE TRIGGER [sysadm].[Iwd_Tr_Queue_Insert]  -- [PM217-2] IWD : Iwd_Tr_Queue_Insert trigger update w_queue : Maj cod_etat 1 à 5 + alt_occupe
-				ON [sysadm].[w_queue]
-		FOR insert
-		As
-		--------------------------------------------------------------------
-		-- FS le 10/10/2013 : [PM217-2] IWD : w_queue trigger insert : Maj cod_etat et etat_iwd
-		--------------------------------------------------------------------
+	CREATE TRIGGER [sysadm].[Iwd_Tr_Queue_Insert]  -- [PM217-2] IWD : Iwd_Tr_Queue_Update trigger update w_queue : Maj cod_etat 1 à 5 + alt_occupe
+			ON [sysadm].[w_queue]
+	FOR insert
+	As
+	--------------------------------------------------------------------
+	-- FS  le 10/10/2013 : [PM217-2] IWD : w_queue trigger insert : Maj cod_etat et etat_iwd
+	-- FS  le 07/11/2023 [Pmo70] Correctif prendre les corbeilles de famille 217 et 2172
+	-- JFF Le 28/11/2023 : [RS6179] Trace des données w_queue
+	--------------------------------------------------------------------
+		-- [RS6179] JFF 28/11/2023
+		-- [RS6179_TRG_WQ]
+		If sysadm.FN_CLE_NUMERIQUE ( 'RS6179_TRG_WQ') > 0 
+		 Begin
+			INSERT INTO [sysadm].[w_queue_histo]
+			   ([action]
+			   ,[cree_le_action]
+			   ,[id_sin]
+			   ,[id_corb]
+			   ,[id_prod]
+			   ,[nom]
+			   ,[cod_etat]
+			   ,[cod_action]
+			   ,[alt_occupe]
+			   ,[alt_bloc]
+			   ,[trv_cree_le]
+			   ,[trv_maj_le]
+			   ,[trv_maj_par]
+			   ,[trv_route_le]
+			   ,[trv_route_par]
+			   ,[trv_edite_le]
+			   ,[trv_edite_par]
+			   ,[txt_mess1]
+			   ,[txt_mess2]
+			   ,[dos_maj_le]
+			   ,[dos_maj_par]
+			   ,[cod_recu]
+			   ,[cod_i_prov]
+			   ,[dte_recu]
+			   ,[cod_typ_recu]
+			   ,[dte_cour_cli]
+			   ,[id_contact]
+			   ,[etat_iwd]
+			   ,[id_iwd]
+			   ,[responsable_iwd]
+			   ,[routage_iwd])
+
+				SELECT 
+					  'I'
+					  ,GETDATE()
+					  ,[id_sin]
+					  ,[id_corb]
+					  ,[id_prod]
+					  ,[nom]
+					  ,[cod_etat]
+					  ,[cod_action]
+					  ,[alt_occupe]
+					  ,[alt_bloc]
+					  ,[trv_cree_le]
+					  ,[trv_maj_le]
+					  ,[trv_maj_par]
+					  ,[trv_route_le]
+					  ,[trv_route_par]
+					  ,[trv_edite_le]
+					  ,[trv_edite_par]
+					  ,[txt_mess1]
+					  ,[txt_mess2]
+					  ,[dos_maj_le]
+					  ,[dos_maj_par]
+					  ,[cod_recu]
+					  ,[cod_i_prov]
+					  ,[dte_recu]
+					  ,[cod_typ_recu]
+					  ,[dte_cour_cli]
+					  ,[id_contact]
+					  ,[etat_iwd]
+					  ,[id_iwd]
+					  ,[responsable_iwd]
+					  ,[routage_iwd]
+  
+				FROM inserted i
+		 End 
+
+	Begin 
 	
-		Begin 
-		
 		update sysadm.w_queue set etat_iwd = 1 
 		from
-		inserted i inner join sysadm.famille f on f.id_fam = 217 and f.id_typ_code = '-CO' and f.id_code = i.id_corb
+		inserted i inner join sysadm.famille f on ( f.id_fam = 217 or f.id_fam=2172 )  and f.id_typ_code = '-CO' and f.id_code = i.id_corb
 		Where
 		  i.id_sin = sysadm.w_queue.id_sin 
 		  and sysadm.w_queue.dos_maj_par not in ( 'ML', 'IMGA', 'EADR' )
-		  and sysadm.w_queue.cod_i_prov <> 'T'
-		  
-		End
+		  and sysadm.w_queue.cod_recu <> 'T'
+
+	  
+	End
 
 	go	
 	-- [PM217-2] IWD : Les procédures 
