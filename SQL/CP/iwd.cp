@@ -1242,3 +1242,46 @@ go
 grant execute on [sysadm].[Iwd_Param_Maj_Corbeille_V100] to rolebddsinistres
 go
 
+--------------------------------------------------------------------
+--
+-- Procedure            :       PS_IWD_CORB_FAM
+-- Auteur               :       Fabry JF
+-- Date                 :       29/11/2023
+-- Libelle              :       [OPTIM_UE_ROUTAGE]
+-- Commentaires         :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       
+--
+-------------------------------------------------------------------
+-- 
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_IWD_CORB_FAM' AND type = 'P' )
+        DROP procedure sysadm.PS_IWD_CORB_FAM
+GO
+
+CREATE procedure sysadm.PS_IWD_CORB_FAM
+	@adcIdSin Decimal ( 10),
+	@asIwd Varchar ( 50 ) Output,
+	@asIdCorb VarChar ( 3) Output,
+	@aiIdFam Integer Output
+AS
+
+Declare @sIdSin varChar ( 10 )
+
+Set @sIdSin = Convert ( varChar ( 10 ), @adcIdSin )
+
+Select	Top 1 
+		@asIwd = lTrim ( rTrim ( wq.id_iwd)) , 
+		@asIdCorb = lTrim ( rTrim ( wq.id_corb )), 
+		@aiIdFam = fa.id_fam
+From sysadm.w_queue wq
+	 LEFT outer join sysadm.famille fa on wq.id_corb = fa.id_code and fa.id_fam in ( 217, 2172)
+Where wq.id_sin = @sIdSin
+
+If @asIwd = '' Set @asIwd = null
+If @asIdCorb = '' Set @asIdCorb = null
+If @aiIdFam <= 0 Set @aiIdFam = null
+
+GO
