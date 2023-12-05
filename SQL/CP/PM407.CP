@@ -1232,6 +1232,8 @@ If @iAMUedtPapierTotal  > 0 And @@servername = master.dbo.SPB_FN_ServerName ('PR
 
 		Select Top 1 @sCheminKslEdtPapier = lTrim ( rTrim ( chemin_pro )) from TRACE_MAIL_PRO.sysadm.chem_depot_ksl_rs5045 where id_chemin = @iIdChemForceDef 
 
+		If @sCheminKslEdtPapier is null Set @sCheminKslEdtPapier = ''
+
 		Set @sObjet = '[' + convert ( VarChar (10), Getdate(), 103 ) + '] RELANCE BRED SIMPA2/KSL : Vous avez ' + CONVERT ( VarChar ( 10 ), @iAMUedtPapierTotal  ) + ' relance(s) à éditer'
 
 		Set @sMessage = 'Bonjour, ' + CHAR ( 10 )
