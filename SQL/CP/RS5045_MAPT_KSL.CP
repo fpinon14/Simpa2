@@ -1509,6 +1509,7 @@ Go
 --                              >0 positif : Erreur technique
 -------------------------------------------------------------------
 -- JFF      18/10/2023   [RS6044_REL_MAIL]
+-- JFF      05/12/2023   [RS6212_ARCH_MPUSH]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_I_MAIL_PUSH_KSL_V01' AND type = 'P' )
         DROP procedure sysadm.PS_RS5045_I_MAIL_PUSH_KSL_V01
@@ -1819,6 +1820,23 @@ If @asMailSend = 'XX@XX.COM'
 		mail_trt_ok  = 'O'
 	Where id_seq = @iIdSeq
   End 
+
+-- [RS6212_ARCH_MPUSH]
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+	Begin
+
+		If SIMPA2_PRO.sysadm.FN_CLE_NUMERIQUE ( 'RS6212_ARCH_MPUSH') > 0 
+			Begin
+				Exec sysadm.PS_RS5045_I_MAIL_ARCHIVE_CONTACT_SHERPA @iIdSeq
+			End 
+	End 
+Else
+	Begin
+		If SIMPA2_TRT.sysadm.FN_CLE_NUMERIQUE ( 'RS6212_ARCH_MPUSH') > 0 
+			Begin
+				Exec sysadm.PS_RS5045_I_MAIL_ARCHIVE_CONTACT_SHERPA @iIdSeq
+			End 
+	End 
 
 RETURN @iErr  
 
@@ -3743,3 +3761,98 @@ Set xml_data = Left ( @sXmlData, 2000),
 Where id_seq = @aiIdSeqMail
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Procedure            :       sysadm.PS_RS5045_I_MAIL_ARCHIVE_CONTACT_SHERPA
+-- Auteur               :       Fabry JF
+-- Date                 :       05/12/2023
+-- Libelle              :       [RS6212_ARCH_MPUSH]
+-- Commentaires         :       Archive un lien vers ce mail dans SHERPA
+-- References           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_I_MAIL_ARCHIVE_CONTACT_SHERPA' AND type = 'P' )
+        DROP procedure sysadm.PS_RS5045_I_MAIL_ARCHIVE_CONTACT_SHERPA
+GO
+
+CREATE procedure sysadm.PS_RS5045_I_MAIL_ARCHIVE_CONTACT_SHERPA
+	@aiIdSeqMail	Integer
+AS 
+
+Declare @iIdSin	integer
+Declare @iIdCli	integer
+Declare @idTypMail	Varchar (6)
+Declare @sLibTypMail VarChar (35)
+Declare @iIdAppli integer
+Declare @dtCreele DateTime
+Declare @sAdrMail VarChar ( 128)
+Declare @iIdContact	Integer 
+Declare @aiIdArch Integer 
+
+Set @iIdCli = null
+
+-- Obtention des données utiles
+If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
+	Begin
+		Select @iIdSin = mp.id_sin,
+			   @idTypMail = mp.typ_mail,
+			   @sLibTypMail = cc.lib_code,
+			   @iIdAppli = mp.id_appli_num,
+			   @dtCreele = mp.cree_le,
+			   @sAdrMail = mp.mail_send
+		From TRACE_MAIL_PRO.sysadm.mail_push mp,
+			 TRACE_MAIL_PRO.sysadm.code_car cc
+		Where mp.id_seq = @aiIdSeqMail
+		And  cc.id_typ_code = '-TM'
+		And  cc.id_code = mp.typ_mail
+
+
+		-- Appel PS sur SHERPA directement
+		Exec SHERPA_PRO.sysadm.PS_I_MAIL_ARCHIVE_CONTACT_SHERPA
+				@aiIdSeqMail,
+				@iIdSin,
+				@idTypMail,
+				@sLibTypMail,
+				@iIdAppli,
+				@dtCreele,
+				@sAdrMail,
+				@iIdContact Output,
+				@aiIdArch Output
+
+	End 
+Else 
+	Begin
+		Select @iIdSin = mp.id_sin,
+			   @idTypMail = mp.typ_mail,
+			   @sLibTypMail = cc.lib_code,
+			   @iIdAppli = mp.id_appli_num,
+			   @dtCreele = mp.cree_le,
+			   @sAdrMail = mp.mail_send
+		From TRACE_MAIL_TRT.sysadm.mail_push mp,
+			 TRACE_MAIL_TRT.sysadm.code_car cc
+		Where mp.id_seq = @aiIdSeqMail
+		And  cc.id_typ_code = '-TM'
+		And  cc.id_code = mp.typ_mail
+
+
+		-- Appel PS sur SHERPA directement
+		Exec SHERPA_SIM.sysadm.PS_I_MAIL_ARCHIVE_CONTACT_SHERPA
+				@aiIdSeqMail,
+				@iIdSin,
+				@idTypMail,
+				@sLibTypMail,
+				@iIdAppli,
+				@dtCreele,
+				@sAdrMail,
+				@iIdContact Output,
+				@aiIdArch Output
+	End 
+
+Go
+
+
