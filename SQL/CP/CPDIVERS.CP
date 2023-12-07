@@ -2695,6 +2695,9 @@ Update sysadm.police set lib_police = ltrim (rtrim ( lib_police))
 Update sysadm.code set lib_code = ltrim (rtrim ( lib_code ))
 Update sysadm.code_car set lib_code = ltrim (rtrim ( lib_code ))
 
+-- PC431_2 Mise à jour quotidienne de la date pour la Sélection des dossiers réglés
+Declare @dt DateTime;Set @dt = Convert ( DateTime, Convert ( Varchar ( 10 ), getdate(), 103 ) + ' ' + Right ( '00' + Convert ( VarChar ( 2 ), Convert ( Integer , rand () * 10 + 8 ) ), 2) + ':' + Right ( '00' + Convert ( VarChar ( 2 ), Convert ( Integer , rand () * 60 )), 2 )); Update sysadm.date_pivot Set dte_1 = @dt Where id_cle = 'PC431_2'
+
 -- Suite ISM 242201
 Exec sysadm.PS_IU_REDRESS_PRS_153_154
 
