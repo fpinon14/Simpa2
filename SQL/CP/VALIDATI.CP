@@ -39,7 +39,6 @@ IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_VALIDATION' AND type = 'P'
         DROP procedure sysadm.PS_VALIDATION
 GO
 
-
 CREATE procedure sysadm.PS_VALIDATION
         @dcIdSin        Decimal (  10,0 ), -- [PI062]
         @sCodOper       Varchar (  4   ),

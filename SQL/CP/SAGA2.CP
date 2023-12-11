@@ -873,8 +873,8 @@ Set @asCodeSpbPrestaExterne = lTrim ( rtrim ( UPPER ( @asCodeSpbPrestaExterne ) 
 
 If Not Exists (
 	Select Top 1 1 
-	From sysadm.code_car cc,
-		 sysadm.code_car cc1
+	From sysadm.code_car cc with (nolock),
+		 sysadm.code_car cc1 with (nolock)
 	Where cc.id_typ_code = '-FR'
 	And   cc.id_code = @asCodeSpbPrestaExterne
 	And   cc1.id_typ_code = '-WM' -- Liste autorisant les fonctionnalités proposées par cette PS
@@ -909,40 +909,6 @@ Set @asModeleDescripExterneOuIfr = REPLACE ( @asModeleDescripExterneOuIfr, '[REC
 Set @asModeleDescripExterneOuIfr = rTrim ( ltrim ( upper ( @asModeleDescripExterneOuIfr )))
 If @asModeleDescripExterneOuIfr = '' Or Len ( @asModeleDescripExterneOuIfr ) > 105 Return -4
 
--- [REF_EXT_SAGA2]
-If NOT sysadm.FN_CLE_NUMERIQUE ( 'REF_EXT_SAGA2') > 0 
- Begin
-	-- 1ère recherche si IFR
-	If LEn ( @asMarqueExterneOuIfr ) <= 35 And Len ( @asModeleDescripExterneOuIfr ) <= 35
-	  Begin
-		If Exists ( 
-				Select	top 1 1 
-				from	sysadm.ifr i with (nolock)
-				Where   i.marque = @asMarqueExterneOuIfr
-				And		i.reference = @asModeleDescripExterneOuIfr
-				And		i.alt_dispo = 'O'		
-			)
-		Begin
-			Set @asMarqueIfrRetour = @asMarqueExterneOuIfr
-			Set @asModeleIfrRetour = @asModeleDescripExterneOuIfr
-
-		
-			Select Top 1 
-				@adcMtPrixPublicIFR = i.frequence,
-				@asCapacite = i.java, -- [HP-174]
-				@asDualSim	= IIF ( IsNull ( i.stndby, 'NON') <> 'DUALSIM', 'NON', IsNull ( i.stndby, 'NON') ), -- [HP-174]
-				@asCouleur  = i.packtype -- [HP-174]
-			From   sysadm.ifr i
-			Where  i.marque = @asMarqueIfrRetour 
-			And    i.reference = @asModeleIfrRetour 
-
-			If @adcMtPrixPublicIFR is null Set @adcMtPrixPublicIFR = 0
-
-			Return 1
-		End 
-	  End
-End 
-
 -- 2ème recherche lien IFR
 Select Top 1 
 		@asMarqueIfrRetour = ltrim ( rtrim ( a.id_marq_art_ifr )),
@@ -956,8 +922,10 @@ From sysadm.article a with (nolock),
 	 sysadm.ifr i with (nolock)
 Where a.id_four = @asCodeSpbPrestaExterne
 And   a.alt_dispo = 'O'
-And   sysadm.FN_EPURE_CHAINE_V01 ( a.id_marq_art, 'EXCL_SLASHX2') = @asMarqueExterneOuIfr
-And   sysadm.FN_EPURE_CHAINE_V01 ( Left ( a.id_modl_art, Len (a.id_modl_art) -1 ) + isnull ( a.observ_frn, '' ), 'EXCL_SLASHX2') = @asModeleDescripExterneOuIfr
+-- And   sysadm.FN_EPURE_CHAINE_V01 ( a.id_marq_art, 'EXCL_SLASHX2') = @asMarqueExterneOuIfr
+-- And   sysadm.FN_EPURE_CHAINE_V01 ( Left ( a.id_modl_art, Len (a.id_modl_art) -1 ) + isnull ( a.observ_frn, '' ), 'EXCL_SLASHX2') = @asModeleDescripExterneOuIfr
+And   a.id_marq_art = @asMarqueExterneOuIfr
+And   Left ( a.id_modl_art, Len (a.id_modl_art) -1 ) + isnull ( a.observ_frn, '' ) = @asModeleDescripExterneOuIfr
 And   i.marque = a.id_marq_art_ifr
 And   i.reference = a.id_modl_art_ifr
 
@@ -1030,35 +998,32 @@ If Not Exists (
 			
 		Set @iEnvoiMail = 1 
 		-- [REF_EXT_SAGA2]
-		If sysadm.FN_CLE_NUMERIQUE ( 'REF_EXT_SAGA2') > 0 
+		-- Recherche si Marqe/modl donné est une marque IFR auquel cas on fait le lien immédiatement
+		If LEn ( @asMarqueExterneOuIfr ) <= 35 And Len ( @asModeleDescripExterneOuIfr ) <= 35
 			Begin
-				-- Recherche si Marqe/modl donné est une marque IFR auquel cas on fait le lien immédiatement
-				If LEn ( @asMarqueExterneOuIfr ) <= 35 And Len ( @asModeleDescripExterneOuIfr ) <= 35
-					Begin
-						If Exists ( 
-								Select	top 1 1 
-								from	sysadm.ifr i with (nolock)
-								Where   i.marque = @asMarqueExterneOuIfr
-								And		i.reference = @asModeleDescripExterneOuIfr
-								And		i.alt_dispo = 'O'		
-							)
-						Begin
-							Set @iEnvoiMail = 0
-							Set @asMarqueIfrRetour = @asMarqueExterneOuIfr
-							Set @asModeleIfrRetour = @asModeleDescripExterneOuIfr
+				If Exists ( 
+						Select	top 1 1 
+						from	sysadm.ifr i with (nolock)
+						Where   i.marque = @asMarqueExterneOuIfr
+						And		i.reference = @asModeleDescripExterneOuIfr
+						And		i.alt_dispo = 'O'		
+					)
+				Begin
+					Set @iEnvoiMail = 0
+					Set @asMarqueIfrRetour = @asMarqueExterneOuIfr
+					Set @asModeleIfrRetour = @asModeleDescripExterneOuIfr
 
-							Update sysadm.article 
-							Set   id_marq_art_ifr = @asMarqueExterneOuIfr,
-								  id_modl_art_ifr = @asModeleDescripExterneOuIfr,
-								  alt_dispo		  = 'O'
-							Where id_four = @asCodeSpbPrestaExterne
-							And   id_marq_art = @asMarqueExterneOuIfr
-							And   Left ( id_modl_art, Len (id_modl_art) -1 ) + isnull ( observ_frn, '' ) = @asModeleDescripExterneOuIfr
+					Update sysadm.article 
+					Set   id_marq_art_ifr = @asMarqueExterneOuIfr,
+							id_modl_art_ifr = @asModeleDescripExterneOuIfr,
+							alt_dispo		  = 'O'
+					Where id_four = @asCodeSpbPrestaExterne
+					And   id_marq_art = @asMarqueExterneOuIfr
+					And   Left ( id_modl_art, Len (id_modl_art) -1 ) + isnull ( observ_frn, '' ) = @asModeleDescripExterneOuIfr
 
-							Return 1	
-						End
-					End
-			End 
+					Return 1	
+				End
+			End
   End 
 
  If @iEnvoiMail > 0 
