@@ -2215,3 +2215,28 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procedure            :       PS_S_MAX_MAJ_LE
+-- Auteur               :       FABRY JF
+-- Date                 :       11/12/2023
+-- Libelle              :        
+-- Commentaires         :       [RS6244]
+-- References           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+-- [VDOC14454] JFF 19/05/2014
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAX_MAJ_LE' AND type = 'P' )
+        DROP procedure sysadm.PS_S_MAX_MAJ_LE
+GO
+
+CREATE procedure sysadm.PS_S_MAX_MAJ_LE
+	@adtMaxMajLeArticle DateTime OutPut
+AS
+
+SELECT @adtMaxMajLeArticle = Max ( maj_le) FROM sysadm.article
+ 
+Go
