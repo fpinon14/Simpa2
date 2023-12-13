@@ -6401,83 +6401,85 @@ Where Not Exists (
 )
 
 Set @iRowCount = @@RowCount 
-If @iRowCount <= 0 Return
+-- If @iRowCount <= 0 Return
 
-Set @sChaineObjAbs = ''
-Set @iCpt = 1
-
-While Exists ( Select Top 1 1 From @Tb where marquage = 0 )
+If @iRowCount > 0 
  Begin
-	Select 	Top 1 
-		@iIdSeq = id_seq,
-		@sNom = nom,
-		@sType = type
-	From	@Tb
-	Where	marquage = 0
+	Set @sChaineObjAbs = ''
+	Set @iCpt = 1
 
-	Set @sChaineObjAbs = @sChaineObjAbs  + Convert ( Varchar ( 5 ), @iCpt ) + '/ ' + @sNom + ', de type ' + @sType + Char ( 10 ) 
+	While Exists ( Select Top 1 1 From @Tb where marquage = 0 )
+	 Begin
+		Select 	Top 1 
+			@iIdSeq = id_seq,
+			@sNom = nom,
+			@sType = type
+		From	@Tb
+		Where	marquage = 0
 
-	Update @Tb Set marquage = 1 Where id_seq = @iIdSeq
-	Set @iCpt = @iCpt + 1 
- End
+		Set @sChaineObjAbs = @sChaineObjAbs  + Convert ( Varchar ( 5 ), @iCpt ) + '/ ' + @sNom + ', de type ' + @sType + Char ( 10 ) 
 
-Set @sMailBody = 'Bonjour, ' + Char (10) + Char ( 10 )
-Set @sMailBody = @sMailBody + convert ( varchar(10), @iRowCount ) + ' objet' + IIF ( @iRowCount > 1,'s','') + ' SQL ' + IIF ( @iRowCount > 1,'ont','a') + ' été créé' + IIF ( @iRowCount > 1,'s','')
-Set @sMailBody = @sMailBody + ' sur la base ' + db_name() + ' de façon malveillante (relevé le ' + convert ( varchar ( 10 ) , Getdate(), 103 ) + ' à ' + convert ( varchar ( 10 ) , Getdate(), 108 ) + ').' + Char (10) + Char ( 10 ) 
-Set @sMailBody = @sMailBody + @sChaineObjAbs + Char (10) 
+		Update @Tb Set marquage = 1 Where id_seq = @iIdSeq
+		Set @iCpt = @iCpt + 1 
+	 End
 
-Set @sMailBody = @sMailBody + CHAR ( 10 )
-Set @sMailBody = @sMailBody + CHAR ( 10 )
-Set @sMailBody = @sMailBody + 'Cordialement,'
-Set @sMailBody = @sMailBody + CHAR ( 10 )
-Set @sMailBody = @sMailBody + CHAR ( 10 )
-Set @sMailBody = @sMailBody + 'Fabry Jean-François'
-Set @sMailBody = @sMailBody + CHAR ( 10 )
-Set @sMailBody = @sMailBody + 'DSI/Etudes SIMPA2'
+	Set @sMailBody = 'Bonjour, ' + Char (10) + Char ( 10 )
+	Set @sMailBody = @sMailBody + convert ( varchar(10), @iRowCount ) + ' objet' + IIF ( @iRowCount > 1,'s','') + ' SQL ' + IIF ( @iRowCount > 1,'ont','a') + ' été créé' + IIF ( @iRowCount > 1,'s','')
+	Set @sMailBody = @sMailBody + ' sur la base ' + db_name() + ' de façon malveillante (relevé le ' + convert ( varchar ( 10 ) , Getdate(), 103 ) + ' à ' + convert ( varchar ( 10 ) , Getdate(), 108 ) + ').' + Char (10) + Char ( 10 ) 
+	Set @sMailBody = @sMailBody + @sChaineObjAbs + Char (10) 
 
-Set @sObjet = '[ALERTE] ' + convert ( varchar(10), @iRowCount ) + ' objet' + IIF ( @iRowCount > 1,'s','') + ' SQL créé' + IIF ( @iRowCount > 1,'s','') + ' sur la base ' + db_name() 
+	Set @sMailBody = @sMailBody + CHAR ( 10 )
+	Set @sMailBody = @sMailBody + CHAR ( 10 )
+	Set @sMailBody = @sMailBody + 'Cordialement,'
+	Set @sMailBody = @sMailBody + CHAR ( 10 )
+	Set @sMailBody = @sMailBody + CHAR ( 10 )
+	Set @sMailBody = @sMailBody + 'Fabry Jean-François'
+	Set @sMailBody = @sMailBody + CHAR ( 10 )
+	Set @sMailBody = @sMailBody + 'DSI/Etudes SIMPA2'
 
--- On casse la chaine objet et la chaine expediteur
-Set @sObjet = Left ( @sObjet + space ( 255 ), 255 )
-Exec sysadm.PS_CASSER_REGLE_CHAINE @sObjet Output, '_', ' ' 
+	Set @sObjet = '[ALERTE] ' + convert ( varchar(10), @iRowCount ) + ' objet' + IIF ( @iRowCount > 1,'s','') + ' SQL créé' + IIF ( @iRowCount > 1,'s','') + ' sur la base ' + db_name() 
 
-Set @sExpediteur = 'SQLSERVER'
+	-- On casse la chaine objet et la chaine expediteur
+	Set @sObjet = Left ( @sObjet + space ( 255 ), 255 )
+	Exec sysadm.PS_CASSER_REGLE_CHAINE @sObjet Output, '_', ' ' 
 
-Set @sExpediteur = Left ( @sExpediteur + space ( 128 ), 128)
-Exec sysadm.PS_CASSER_REGLE_CHAINE @sExpediteur Output, '_', ' ' 
-Set @sExpediteur = @sExpediteur  + '<jff@spb.fr>'
+	Set @sExpediteur = 'SQLSERVER'
 
-EXEC master.dbo.SPB_PS_MAIL 
-		@sRetourErrMail OUTPUT, 
-		'jff@spb.fr',
-		--'jff@spb.fr',
-		@sMailBody, 
-		@sObjet, 
-		@sExpediteur, 
-		'', 
-		@sFicOut, 
-		NULL, 
-		NULL, 
-		NULL, 
-		NULL
+	Set @sExpediteur = Left ( @sExpediteur + space ( 128 ), 128)
+	Exec sysadm.PS_CASSER_REGLE_CHAINE @sExpediteur Output, '_', ' ' 
+	Set @sExpediteur = @sExpediteur  + '<jff@spb.fr>'
+
+	EXEC master.dbo.SPB_PS_MAIL 
+			@sRetourErrMail OUTPUT, 
+			'jff@spb.fr',
+			--'jff@spb.fr',
+			@sMailBody, 
+			@sObjet, 
+			@sExpediteur, 
+			'', 
+			@sFicOut, 
+			NULL, 
+			NULL, 
+			NULL, 
+			NULL
+
+	-- Maj tab Ref
+	Insert into sysadm.objet_sql
+	Select	name, 
+			type, 
+			getdate(), 
+			getdate(), 
+			'SQL' 
+	from sys.objects sob
+	Where Not Exists ( 
+		Select Top 1 1
+		From sysadm.objet_sql osq
+		Where osq.nom = sob.name
+	)
+
+End 
 
 Delete @Tb
-
--- Maj tab Ref
-Insert into sysadm.objet_sql
-Select	name, 
-		type, 
-		getdate(), 
-		getdate(), 
-		'SQL' 
-from sys.objects sob
-Where Not Exists ( 
-	Select Top 1 1
-	From sysadm.objet_sql osq
-	Where osq.nom = sob.name
-)
-
-
 
 -- Contrôle de suppression d'objet
 Insert into @Tb
@@ -6493,66 +6495,78 @@ Where Not Exists (
 )
 
 Set @iRowCount = @@RowCount 
-If @iRowCount <= 0 Return
+-- If @iRowCount <= 0 Return
 
-Set @sChaineObjAbs = ''
-Set @iCpt = 1
-
-While Exists ( Select Top 1 1 From @Tb where marquage = 0 )
+If @iRowCount > 0 
  Begin
-	Select 	Top 1 
-		@iIdSeq = id_seq,
-		@sNom = nom,
-		@sType = type
-	From	@Tb
-	Where	marquage = 0
+	Set @sChaineObjAbs = ''
+	Set @iCpt = 1
 
-	Set @sChaineObjAbs = @sChaineObjAbs  + Convert ( Varchar ( 5 ), @iCpt ) + '/ ' + @sNom + ', de type ' + @sType + Char ( 10 ) 
+	While Exists ( Select Top 1 1 From @Tb where marquage = 0 )
+	 Begin
+		Select 	Top 1 
+			@iIdSeq = id_seq,
+			@sNom = nom,
+			@sType = type
+		From	@Tb
+		Where	marquage = 0
 
-	Update @Tb Set marquage = 1 Where id_seq = @iIdSeq
-	Set @iCpt = @iCpt + 1 
- End
+		Set @sChaineObjAbs = @sChaineObjAbs  + Convert ( Varchar ( 5 ), @iCpt ) + '/ ' + @sNom + ', de type ' + @sType + Char ( 10 ) 
 
-Set @sMailBody = 'Bonjour, ' + Char (10) + Char ( 10 )
-Set @sMailBody = @sMailBody + convert ( varchar(10), @iRowCount ) + ' objet' + IIF ( @iRowCount > 1,'s','') + ' SQL ' + IIF ( @iRowCount > 1,'ont','a') + ' été supprimé' + IIF ( @iRowCount > 1,'s','')
-Set @sMailBody = @sMailBody + ' de la base ' + db_name() + ' de façon malveillante (relevé le ' + convert ( varchar ( 10 ) , Getdate(), 103 ) + ' à ' + convert ( varchar ( 10 ) , Getdate(), 108 ) + ').' + Char (10) + Char ( 10 ) 
-Set @sMailBody = @sMailBody + @sChaineObjAbs + Char (10) 
+		Update @Tb Set marquage = 1 Where id_seq = @iIdSeq
+		Set @iCpt = @iCpt + 1 
+	 End
 
-Set @sMailBody = @sMailBody + CHAR ( 10 )
-Set @sMailBody = @sMailBody + CHAR ( 10 )
-Set @sMailBody = @sMailBody + 'Cordialement,'
-Set @sMailBody = @sMailBody + CHAR ( 10 )
-Set @sMailBody = @sMailBody + CHAR ( 10 )
-Set @sMailBody = @sMailBody + 'Fabry Jean-François'
-Set @sMailBody = @sMailBody + CHAR ( 10 )
-Set @sMailBody = @sMailBody + 'DSI/Etudes SIMPA2'
+	Set @sMailBody = 'Bonjour, ' + Char (10) + Char ( 10 )
+	Set @sMailBody = @sMailBody + convert ( varchar(10), @iRowCount ) + ' objet' + IIF ( @iRowCount > 1,'s','') + ' SQL ' + IIF ( @iRowCount > 1,'ont','a') + ' été supprimé' + IIF ( @iRowCount > 1,'s','')
+	Set @sMailBody = @sMailBody + ' de la base ' + db_name() + ' de façon malveillante (relevé le ' + convert ( varchar ( 10 ) , Getdate(), 103 ) + ' à ' + convert ( varchar ( 10 ) , Getdate(), 108 ) + ').' + Char (10) + Char ( 10 ) 
+	Set @sMailBody = @sMailBody + @sChaineObjAbs + Char (10) 
 
-Set @sObjet = '[ALERTE] ' + convert ( varchar(10), @iRowCount ) + ' objet' + IIF ( @iRowCount > 1,'s','') + ' SQL supprimé' + IIF ( @iRowCount > 1,'s','') + ' de la base ' + db_name() 
+	Set @sMailBody = @sMailBody + CHAR ( 10 )
+	Set @sMailBody = @sMailBody + CHAR ( 10 )
+	Set @sMailBody = @sMailBody + 'Cordialement,'
+	Set @sMailBody = @sMailBody + CHAR ( 10 )
+	Set @sMailBody = @sMailBody + CHAR ( 10 )
+	Set @sMailBody = @sMailBody + 'Fabry Jean-François'
+	Set @sMailBody = @sMailBody + CHAR ( 10 )
+	Set @sMailBody = @sMailBody + 'DSI/Etudes SIMPA2'
 
--- On casse la chaine objet et la chaine expediteur
-Set @sObjet = Left ( @sObjet + space ( 255 ), 255 )
-Exec sysadm.PS_CASSER_REGLE_CHAINE @sObjet Output, '_', ' ' 
+	Set @sObjet = '[ALERTE] ' + convert ( varchar(10), @iRowCount ) + ' objet' + IIF ( @iRowCount > 1,'s','') + ' SQL supprimé' + IIF ( @iRowCount > 1,'s','') + ' de la base ' + db_name() 
 
-Set @sExpediteur = 'SQLSERVER'
+	-- On casse la chaine objet et la chaine expediteur
+	Set @sObjet = Left ( @sObjet + space ( 255 ), 255 )
+	Exec sysadm.PS_CASSER_REGLE_CHAINE @sObjet Output, '_', ' ' 
 
-Set @sExpediteur = Left ( @sExpediteur + space ( 128 ), 128)
-Exec sysadm.PS_CASSER_REGLE_CHAINE @sExpediteur Output, '_', ' ' 
-Set @sExpediteur = @sExpediteur  + '<jff@spb.fr>'
+	Set @sExpediteur = 'SQLSERVER'
 
-EXEC master.dbo.SPB_PS_MAIL 
-		@sRetourErrMail OUTPUT, 
-		'jff@spb.fr',
-		--'jff@spb.fr',
-		@sMailBody, 
-		@sObjet, 
-		@sExpediteur, 
-		'', 
-		@sFicOut, 
-		NULL, 
-		NULL, 
-		NULL, 
-		NULL
+	Set @sExpediteur = Left ( @sExpediteur + space ( 128 ), 128)
+	Exec sysadm.PS_CASSER_REGLE_CHAINE @sExpediteur Output, '_', ' ' 
+	Set @sExpediteur = @sExpediteur  + '<jff@spb.fr>'
 
+	EXEC master.dbo.SPB_PS_MAIL 
+			@sRetourErrMail OUTPUT, 
+			'jff@spb.fr',
+			--'jff@spb.fr',
+			@sMailBody, 
+			@sObjet, 
+			@sExpediteur, 
+			'', 
+			@sFicOut, 
+			NULL, 
+			NULL, 
+			NULL, 
+			NULL
+
+	-- Maj tab Ref
+	Delete osq
+	From sysadm.objet_sql osq
+	Where Not Exists ( 
+		Select Top 1 1
+		from sys.objects sob
+		Where osq.nom = sob.name
+	)
+
+ End 
 
 Go
 
