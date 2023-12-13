@@ -1227,6 +1227,7 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 	Set @iIdSeq = @iIdSeq + 1
  End
 
+/* Shunté par Phiphi le 13/12/2023, il a automatisé le process
 If @iAMUedtPapierTotal  > 0 And @@servername = master.dbo.SPB_FN_ServerName ('PRO') 
 	Begin
 
@@ -1261,6 +1262,7 @@ If @iAMUedtPapierTotal  > 0 And @@servername = master.dbo.SPB_FN_ServerName ('PR
 				NULL
 
 	End 
+*/
 
 Go
 
@@ -2094,7 +2096,8 @@ While Exists ( Select Top 1 1 From @TbRelProd where marquage = 0 )
 
 		If @sEnvParMail <> 'OUI' 
 			Begin
-				Set @aiIdChemForce  = 5   -- Ejection vers un répertoire spécial pour KSL 
+			    -- Shunter par Phiphi le 13/12/23n il a fait un trt auto.
+				-- Set @aiIdChemForce  = 5   -- Ejection vers un répertoire spécial pour KSL 
 				Set @aiAMUedtPapier = @aiAMUedtPapier + 1
 			End 
 
