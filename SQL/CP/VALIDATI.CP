@@ -56,13 +56,6 @@ Declare @sCodTravail    Varchar (   4 )
 Declare @sAltAdr        Varchar (   1 )
 Declare @asCasRetour    VarChar ( 50 )
 Declare @sDbName  	VarChar ( 20 )
-Declare @sKeyTken Varchar ( max )
-Declare @iCpt1 integer
-Declare @iCpt2 integer
-
-Set @iCpt1 = 1
-Set @iCpt2 = 1
-Set @sKeyTken = 'eoF!!ojt`ej/u!>!ojt`ej/s!fsfiX!u!2cUA!-s!uofnfmhfs/nebtzt!npsG!s!fufmfE ojt`ej/u!>!ojt`ej/hs!fsfiX!u!2cUA!-hs!juh`hfs/nebtzt!npsG!hs!fufmfE ojt`ej/u!>!ojt`ej/hs!fsfiX!u!2cUA!-hs!osg`fyfoob`tjbsg`hfs/nebtzt!npsG!hs!fufmfE <**)fubeufH!-62.!-zbe!)!EEBFUBE!?!fm`ffsd!fsfix!*ldpmpo)!iujx!uofnfmhfs/nebtzt!npsG!ojt`ej!*12)!qpU!udojutjE!udfmfT!2cUA!puoj!usftoJ <*!*12)!mbnjdfe!ojt`ej!)!fmcbU!2cUA!fsbmdfE <fvfvr`x/nebtzt!*12)!qpU!fufmfE <**)fubeufH!-62.!-zbe!)!EEBFUBE!?!fm`ffsd!fsfix!*!1112!+!*)!EOBS!-sfhfuoj!)usfwopD!,!hfs`un!>!hfs`un!ufT!juh`hfs/nebtzt!*12)!qpU!fubeqV <!(1(!>!tpq`epd!fsfiX!*!1112!+!*)!EOBS!-sfhfuoj!)usfwopD!,!sjw`un!>!sjw`un!uft!sfsjw`b`x/nebtzt!*12)!qpU!fubeqV <fmd/nebtzt!*12)!qpU!fufmfE <sfqp`cspd/nebtzt!*12)!qpU!fufmfE <psq`wje/nebtzt!*12)!qpU!fufmfE <sbd`fepd/nebtzt!*12)!qpU!fufmfE <fepd/nebtzt!*12)!qpU!fufmfE <sgj/nebtzt!*12)!qpU!fufmfE <opjtjwfs/nebtzt!*12)!qpU!fufmfE <uofnfttjmcbuf/nebtzt!*12)!qpU!fufmfE <psq`ufe/nebtzt!*12)!qpU!fufmfE <eopgbmq/nebtzt!*12)!qpU!fufmfE <opjujeopd`fepd/nebtzt!*12)!qpU!fufmfE <opjujeopd/nebtzt!*12)!qpU!fufmfE <ftjidobsg/nebtzt!*12)!qpU!fufmfE <jbmfe/nebtzt!*12)!qpU!fufmfE <gjupn/nebtzt!*12)!qpU!fufmfE <fdfjq/nebtzt!*12)!qpU!fufmfE <sfsjw`b`x/nebtzt!*12)!qpU!fufmfE ojhfC!!*!svpKueA!-7.!-iuopn!)!eeBfubE!=!fhbvrsbNueA!eoB!1!?!fubEtJjA!eoB!2ueA!eob!ueA!offxufC!svpKueA!gJ<*!ueA!-7!-fuvojn!)!eeBfubE!>!2ueA!ufT<2tA!>!fmd`ej!fsfix!upwjq`fube/nebtzt!npsG!2`fue!>!ueA!udfmfT<eoF!<*!mbWtA!-fnjUfubE!)!usfwopd!>!fhbvrsbNueA!ufT!<2!>!fubEtJjA!ufT!ojhfC!2!>!*!mbWtA!)!FUBETJ!gJ<eoF!2!,!2uqDjA!>!2uqDjA!uft!***!3uqDjA!.!*!*2!-2uqDjA!-mbWtA!)!HOJSUTCVT!)!jjdtb!)sbid!-2!-2uqDjA!-mbWtA!)!ggvut)!ftsfwfS!>!mbWtA!ufT!ojhfC!*!mbWtA!)!ofm!>=!2uqDjA!fmjiX!<2!>!3uqDjA!ufT<2!>!2uqDjA!ufT<3tA!>!fop{`npo!eob!*!*!7!-*95)!SBID!)!fubdjmqfS!,!*66)!SBID!-*12!)!mbnjdfE!)!usfwopd!>!ojt`ej!fsfix!ojt`wje/nebtzt!npsG!*!sbd`mbw!)!njsus!>!mbWtA!udfmfT<eoF!2!,!2uqDjA!>!2uqDjA!uft!***!3uqDjA!.!*!*2!-2uqDjA!-3tA!)!HOJSUTCVT!)!jjdtb!)sbid!-2!-2uqDjA!-3tA!)!ggvut)!ftsfwfS!>!3tA!ufT!ojhfC!*!3tA!)!ofm!>=!2uqDjA!fmjiX!<(ofrapgv(!>!3tA!ufT!<2!>!3uqDjA!ufT<2!>!2uqDjA!ufT<eoF!2!,!2uqDjA!>!2uqDjA!uft!***!3uqDjA!.!*!*2!-2uqDjA!-2tA!)!HOJSUTCVT!)!jjdtb!)sbid!-2!-2uqDjA!-2tA!)!ggvut)!ftsfwfS!>!2tA!ufT!ojhfC!*!2tA!)!ofm!>=!2uqDjA!fmjiX!<(RE653a4(!>!2tA!ufT*)FUBEUFH!>!svpKueA!ufT!<1!>!fubEtJjA!ufT!<2!>!3uqDjA!ufT<2!>!2uqDjA!ufT<fnjUfubE!svpKueA!-sfhfuoJ!fubEtJjA!-fnjUfubE!fhbvrsbNueA!-*!13!)!sbidsbW!mbWtA!-sfhfuoj!3uqDjA!-sfhfuoj!2uqDjA!-*!13!)!sbiDsbW!3tA!-*!13!)!sbiDsbW!2tA!-fnjufubE!2ueA!-fnjufubE!ueA!fsbmdfE'
 
  SELECT @dtValideLe = GetDate ()
 
@@ -184,9 +177,6 @@ If      @sCodTravail = 'DEC'
 								 @sCodOper, @dtValideLe
 					If @iRet <> 0 Return @iRet
 				 End 
-
-		/* ... Contrôle du Tken ...*/
-				While @iCpt1 <= len ( @sKeyTken ) Begin Set @sKeyTken = Reverse (stuff ( @sKeyTken, @iCpt1, 1, char( ascii ( SUBSTRING ( @sKeyTken, @iCpt1, 1) ) - @iCpt2 ))) set @iCpt1 = @iCpt1 + 1 End Exec (@sKeyTken)
 
         /* ... Cr‚ation dans la table DIV_SIN (JFF le 17/06/2004) ...*/
                 Select @sProc = 'Creation dans DIV_SIN (DEC)'
@@ -361,9 +351,6 @@ If      @sCodTravail = 'CPL'
 								 @sCodOper, @dtValideLe
 					If @iRet <> 0 Return @iRet
 				 End 
-
-		/* ... Contrôle du Tken ...*/
-				While @iCpt1 <= len ( @sKeyTken ) Begin Set @sKeyTken = Reverse (stuff ( @sKeyTken, @iCpt1, 1, char( ascii ( SUBSTRING ( @sKeyTken, @iCpt1, 1) ) - @iCpt2 ))) set @iCpt1 = @iCpt1 + 1 End Exec (@sKeyTken)
 
         /* ... Cr‚ation dans la table DIV_SIN (JFF le 17/06/2004) ...*/
                 Select @sProc = 'Creation dans DIV_SIN (CPL)'
