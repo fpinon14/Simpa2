@@ -1584,6 +1584,43 @@ Or not exists
 -- Détecte les objets SQL supprimé de façon malveillante
 Exec sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
 
+-- Redressement param courrier absence Relance
+Insert into sysadm.cour_prod 
+Select p.id_prod, cp.id_cour, cp.id_cour, cp.id_para, cp.id_ordre, null, null, null, 'N', getdate(), getdate(), 'AUTO'
+From sysadm.produit p,
+	 sysadm.composition cp
+where p.alt_rl1 = 'O' 
+And not exists ( Select Top 1 1 From sysadm.cour_prod cp where cp.id_prod = p.id_prod and cp.id_cour = 'ALAX01' ) 
+And cp.id_cour = 'ALAX01'
+Order by p.id_prod, cp.id_cour, cp.id_ordre
+
+Insert into sysadm.cour_prod 
+Select p.id_prod, cp.id_cour, cp.id_cour, cp.id_para, cp.id_ordre, null, null, null, 'N', getdate(), getdate(), 'AUTO'
+From sysadm.produit p,
+	 sysadm.composition cp
+where p.alt_rl1 = 'O' 
+And not exists ( Select Top 1 1 From sysadm.cour_prod cp where cp.id_prod = p.id_prod and cp.id_cour = 'BLAX01' ) 
+And cp.id_cour = 'BLAX01'
+Order by p.id_prod, cp.id_cour, cp.id_ordre
+
+Insert into sysadm.cour_prod 
+Select p.id_prod, cp.id_cour, cp.id_cour, cp.id_para, cp.id_ordre, null, null, null, 'N', getdate(), getdate(), 'AUTO'
+From sysadm.produit p,
+	 sysadm.composition cp
+where p.alt_rl2 = 'O' 
+And not exists ( Select Top 1 1 From sysadm.cour_prod cp where cp.id_prod = p.id_prod and cp.id_cour = 'ALAX02' ) 
+And cp.id_cour = 'ALAX02'
+Order by p.id_prod, cp.id_cour, cp.id_ordre
+
+Insert into sysadm.cour_prod 
+Select p.id_prod, cp.id_cour, cp.id_cour, cp.id_para, cp.id_ordre, null, null, null, 'N', getdate(), getdate(), 'AUTO'
+From sysadm.produit p,
+	 sysadm.composition cp
+where p.alt_rl2 = 'O' 
+And not exists ( Select Top 1 1 From sysadm.cour_prod cp where cp.id_prod = p.id_prod and cp.id_cour = 'BLAX02' ) 
+And cp.id_cour = 'BLAX02'
+Order by p.id_prod, cp.id_cour, cp.id_ordre
+
 
 GO
 SET QUOTED_IDENTIFIER OFF 

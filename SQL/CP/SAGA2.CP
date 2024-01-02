@@ -922,8 +922,8 @@ From sysadm.article a with (nolock),
 	 sysadm.ifr i with (nolock)
 Where a.id_four = @asCodeSpbPrestaExterne
 And   a.alt_dispo = 'O'
--- And   sysadm.FN_EPURE_CHAINE_V01 ( a.id_marq_art, 'EXCL_SLASHX2') = @asMarqueExterneOuIfr
--- And   sysadm.FN_EPURE_CHAINE_V01 ( Left ( a.id_modl_art, Len (a.id_modl_art) -1 ) + isnull ( a.observ_frn, '' ), 'EXCL_SLASHX2') = @asModeleDescripExterneOuIfr
+--And   sysadm.FN_EPURE_CHAINE_V01 ( a.id_marq_art, 'EXCL_SLASHX2') = @asMarqueExterneOuIfr
+--And   sysadm.FN_EPURE_CHAINE_V01 ( Left ( a.id_modl_art, Len (a.id_modl_art) -1 ) + isnull ( a.observ_frn, '' ), 'EXCL_SLASHX2') = @asModeleDescripExterneOuIfr
 And   a.id_marq_art = @asMarqueExterneOuIfr
 And   Left ( a.id_modl_art, Len (a.id_modl_art) -1 ) + isnull ( a.observ_frn, '' ) = @asModeleDescripExterneOuIfr
 And   i.marque = a.id_marq_art_ifr
