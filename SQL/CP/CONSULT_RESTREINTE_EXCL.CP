@@ -24,6 +24,7 @@
 --
 -------------------------------------------------------------------
 -- JFF      11/02/2019   [PM473-1]
+-- JFF		04/01/2024   Je passe en NoLock Pour accélérer.
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_CONS_RESTR_EXCL' AND type = 'P' )
         DROP procedure sysadm.PS_S_CONS_RESTR_EXCL
@@ -41,11 +42,11 @@ If @asTable = 'W'
 	Begin 
 		If Exists ( 
 			Select  Top 1 1 
-			From	sysadm.w_sin ws,
-					sysadm.garantie ga,
-					sysadm.police po,
-					sysadm.autorisation au,
-					sysadm.produit_excl_hors_ue px
+			From	sysadm.w_sin ws with (nolock),
+					sysadm.garantie ga with (nolock),
+					sysadm.police po with (nolock),
+					sysadm.autorisation au with (nolock),
+					sysadm.produit_excl_hors_ue px with (nolock)
 			Where   ws.id_sin = @adcIdSin
 			And     ga.id_prod = ws.id_prod
 			And     ga.id_rev = ws.id_rev  
@@ -64,11 +65,11 @@ If @asTable = 'P'
 	Begin 
 		If Exists ( 
 			Select  Top 1 1 
-			From	sysadm.sinistre s,
-					sysadm.garantie ga,
-					sysadm.police po,
-					sysadm.autorisation au,
-					sysadm.produit_excl_hors_ue px
+			From	sysadm.sinistre s with (nolock),
+					sysadm.garantie ga with (nolock),
+					sysadm.police po with (nolock),
+					sysadm.autorisation au with (nolock),
+					sysadm.produit_excl_hors_ue px with (nolock)
 			Where   s.id_sin = @adcIdSin
 			And     ga.id_prod = s.id_prod
 			And     ga.id_rev = s.id_rev  
@@ -126,6 +127,8 @@ Go
 -- Retourne             :       
 --
 -------------------------------------------------------------------
+-- JFF		04/01/2024   Bug sur partie permanente W ald P
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_ACCES_GT_UE_HORS_UE' AND type = 'P' )
         DROP procedure sysadm.PS_S_ACCES_GT_UE_HORS_UE
 GO
@@ -166,7 +169,7 @@ If	@adcIdSin is Not null
 
 	If Exists ( Select Top 1 1 From sysadm.sinistre where id_sin = @adcIdSin )
 	  Begin 
-		Exec @iRet = sysadm.PS_S_CONS_RESTR_EXCL @adcIdSin, @asIdOper, 'W'
+		Exec @iRet = sysadm.PS_S_CONS_RESTR_EXCL @adcIdSin, @asIdOper, 'P'
 		Return @iRet 
 	  End 
 
