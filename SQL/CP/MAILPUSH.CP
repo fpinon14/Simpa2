@@ -16338,7 +16338,6 @@ From sysadm.det_pro dp with (nolock)
 Where dp.id_code_dp = 301
 
 
-
 -- [PM284-2]
 -- [DT364]
 Insert into @tb
@@ -20744,6 +20743,7 @@ Go
 -- JFF      22/08/2022   [RS3179_SHUNT_RECLA]
 -- JFF      03/07/2023   [RS5124_ATM_ATP]
 -- JFF      26/04/2023   [RS5045_REF_MATP]
+-- JFF      08/01/2024   [RS6314]je supprime le critère DTE_PIVOT_DT364 qui n'est plus d'actualité et n'apporte plus rien
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAILPUSH_RELANCE_PCE_DT262' AND type = 'P' )
         DROP procedure sysadm.PS_S_MAILPUSH_RELANCE_PCE_DT262
@@ -21008,7 +21008,7 @@ And     ds2.val_nbre not in ( 1500, 1510, 1520, 1530 )
 And		ds.id_sin = s.id_sin
 And		ds.nom_zone = 'dte_rel2_mail_ddepce_dt262'
 And		ds.val_dte < dp.dte_del_3eme_rel_j
-And		s.cree_le > dp.dte_pivot_dt364
+--  And		s.cree_le > dp.dte_pivot_dt364  [RS6314]
 And		Not Exists ( Select Top 1 1 From sysadm.div_sin ds3  with (nolock) Where ds3.id_sin = s.id_sin and ds3.nom_zone = 'dte_rel3_mail_ddepce_dt262' )
 And		wp.id_sin = s.id_sin -- cette jointure suffit à la présence d'une pièce toujours cochée
 And		wp.id_i = 0 -- assuré
@@ -21044,7 +21044,7 @@ And     ds2.val_nbre not in ( 1500, 1510, 1520, 1530 )
 And		ds.id_sin = s.id_sin
 And		ds.nom_zone = 'dte_rel3_mail_ddepce_dt262'
 And		ds.val_dte < dp.dte_del_4eme_rel_j
-And		s.cree_le > dp.dte_pivot_dt364
+-- And		s.cree_le > dp.dte_pivot_dt364  [RS6314]
 And		Not Exists ( Select Top 1 1 From sysadm.div_sin ds3  with (nolock) Where ds3.id_sin = s.id_sin and ds3.nom_zone = 'dte_rel4_mail_ddepce_dt262' )
 And		wp.id_sin = s.id_sin -- cette jointure suffit à la présence d'une pièce toujours cochée
 And		wp.id_i = 0 -- assuré
@@ -21085,7 +21085,7 @@ And		ds.nom_zone =  Case
 							Else 'dte_rel1_mail_ddepce_dt262'
 					   End 
 And		ds.val_dte < dp.dte_del_cloture_dos_j
-And		s.cree_le > dp.dte_pivot_dt364
+-- And		s.cree_le > dp.dte_pivot_dt364  [RS6314]
 And		Not Exists ( Select Top 1 1  From sysadm.div_sin ds3  with (nolock) Where ds3.id_sin = s.id_sin and ds3.nom_zone = 'dte_rel5_mail_ddepce_dt262' )
 And		wp.id_sin = s.id_sin -- cette jointure suffit à la présence d'une pièce toujours cochée
 And		wp.id_i = 0 -- assuré
