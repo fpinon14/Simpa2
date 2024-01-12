@@ -1280,3 +1280,51 @@ If @@Rowcount > 0 Set @asPresentSurSIMPA2= 'OUI'
 Go
 
 
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_SAGA2_MARQUE_IFR_V01' AND type = 'P' )
+        DROP procedure sysadm.PS_S_SAGA2_MARQUE_IFR_V01
+GO
+
+CREATE procedure sysadm.PS_S_SAGA2_MARQUE_IFR_V01
+  @asTypApp Varchar ( 3 ) 
+AS
+
+SET NOCOUNT ON
+
+Set @asTypApp = LTRIM ( rTrim ( @asTypApp ))
+
+Select	Distinct
+		i.marque 'Marque'
+from	sysadm.ifr i
+Where   i.alt_dispo = 'O'					   
+And     i.sku_saga = @asTypApp
+Order by i.marque
+
+Go
+
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_SAGA2_MODELE_IFR_V01' AND type = 'P' )
+        DROP procedure sysadm.PS_S_SAGA2_MODELE_IFR_V01
+GO
+
+
+CREATE procedure sysadm.PS_S_SAGA2_MODELE_IFR_V01
+	@asMarque varchar(35),
+	@asTypApp Varchar ( 3 ) 
+AS
+
+SET NOCOUNT ON
+
+Set @asMarque = lTrim ( rTrim ( @asMarque ))
+Set @asTypApp = LTRIM ( rTrim ( @asTypApp ))
+
+Select	Distinct		
+		i.reference 'Modele'
+from	sysadm.ifr i
+Where   i.alt_dispo = 'O'					   
+And i.marque = @asMarque
+And i.sku_saga = @asTypApp
+Order by i.reference
+
+Go
+
+
+
