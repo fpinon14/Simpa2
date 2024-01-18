@@ -6362,6 +6362,7 @@ Go
 -------------------------------------------------------------------
 -- JFF	02/11/2017	[VDOC25039]
 -- JFF      15/06/2018   [DF005-1-LOT3]
+-- JFF      16/01/2024   On annule le [DF005-1-LOT3] jamais mis en production et on créé un travail.
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_PM234_7_CAS_DF005_EN_ATT_PCE_SANS_TRV' AND type = 'P' )
         DROP procedure sysadm.PS_I_PM234_7_CAS_DF005_EN_ATT_PCE_SANS_TRV
@@ -6399,32 +6400,6 @@ Select Top 1 @dcIdGti = g.id_gti
 From   sysadm.w_gar_sin g
 Where  g.id_sin = @adcIdSin
 
-/* [VDOC25039]
-If Not Exists ( 
-	Select Top 1 1 
-	From    sysadm.w_piece wp
-	Where   wp.id_sin = @adcIdSin
-	And     wp.id_gti = @dcIdGti
-	And     wp.id_pce = 17
-	) 
-	Begin
-		Select Top 1 
-				@dcTriPce =p.cpt_tri,
-				@sIdParaPce = p.id_para
-		From   sysadm.piece p,
-			   sysadm.w_sin ws
-		Where  ws.id_sin = @adcIdSin
-		And	   p.id_prod = ws.id_prod
-		And    p.id_pce = 17
-
-		If @dcTriPce is not null 
-		 Begin
-			Insert into sysadm.w_piece Values ( @adcIdSin, @dcIdGti, 0, 17, 0, @sIdParaPce , @dcTriPce, getdate(), getdate(), 'WEB' ) 			
-		 End 
-
-	End 
-*/
-
 If Not Exists ( 
 	Select Top 1 1 
 	From    sysadm.w_piece wp
@@ -6458,18 +6433,21 @@ If ( Select Count (*)
 --	) = 2  [VDOC25039]
 	) = 1
   Begin 
-
+  	Exec sysadm.PS_I_PM234_7_REJET @adcIdSin, 'Rejet normal, cas ligne secondaire', 'Rejet normal cas de ligne secondaire, l''automate a automatiquement cocher la pièce 639, envoyez l''attestation Z00338 à l''assuré. Ce dossier n''est donc pas éligible à l''automatisation du process Orange V3 via ATLAS/SIMPA2.'
+	Return -1
+/*
 	-- [DF005-1-LOT3]
 	If sysadm.FN_CLE_NUMERIQUE ( 'DF005-1-LOT3') > 0 
 	 Begin
 		Exec sysadm.PS_I_PM234_7_TAG_COURRIER_PIECE @adcIdSin, 'Z00338'	
 	 End     
-
+*/
 	Return 1
   End 
   Else
   Begin
-    Return -1
+  	Exec sysadm.PS_I_PM234_7_REJET @adcIdSin, 'Rejet normal, cas ligne secondaire', 'Rejet normal cas de ligne secondaire, cochez la pièce 639 et envoyez l''attestation Z00338 à l''assuré. Ce dossier n''est donc pas éligible à l''automatisation du process Orange V3 via ATLAS/SIMPA2.'
+	Return -1
   End 
 Go
 
