@@ -2233,7 +2233,7 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
   
 	Set @sServeurProduction = 'PRO'
 
-	Set @sDestinataire = 'GG_DSI-DO-INFRA-SERVEUR,jff@spb.fr,cbourdoiseau@spb.eu'
+	Set @sDestinataire = 'jff@spb.fr,cbourdoiseau@spb.eu,cfrappat@spb.eu'
 
 	-- Obtention répertoire local pour le cas des courriers Word 
 	Select @sRepBlobLocal = 
