@@ -822,17 +822,18 @@ Go
 --  JFF  21/10/2022  RS3917 l'info de reconditionné doit se retrouver à partir du terme "recondit" dans le modèle transmis par Free
 --  JFF  25/05/2023  HP-174 Ajout -CAPACITE, -COULEUR, -DUALSIM
 -- JFF 25/09/2023 [REF_EXT_SAGA2] Gérer l'appel en mode SINISTRE d'un marque modèle à injecter dans le Ref Externe
+-- JFF 24/01/2023 Ne plus rendre obligatoire le GEN CODE sur l'adhésion
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_SI_SAGA2_LIEN_REF_EXTERNE_AVEC_IFR_V02' AND type = 'P' )
         DROP procedure sysadm.PS_SI_SAGA2_LIEN_REF_EXTERNE_AVEC_IFR_V02
 GO
 
 CREATE procedure sysadm.PS_SI_SAGA2_LIEN_REF_EXTERNE_AVEC_IFR_V02
-	@asCasInterro					VarChar ( 10 ),    -- (Obligatoire) Cas d'interrogation : ADHESION (Création d'adhésion) / SINISTRE (Création de sinistre)
+	@asCasInterro					VarChar ( 10 ),    -- (Obligatoire) Cas d'interrogation et éventuellement demande de création de lien : ADHESION (Création d'adhésion) / SINISTRE (Création de sinistre) , dans les 2 cas, pensez toujours à COMMITER votre appel, la PS ne fait pas qu’interroger, elle écrit aussi
 	@asCodeSpbPrestaExterne		    VarChar ( 3 ),     -- (Obligatoire) Code Spb (donné par JFF) référençant le prestataire extérieur chez Spb. Voir avec JFF pour avoir ce code.
-	@asMarqueExterneOuIfr			VarChar ( 500 ),   -- (Obligatoire) Marque Externe Ou IFR à rechercher , 35 Car Max => si plus, accepté mais sera rejeté
-	@asModeleDescripExterneOuIfr	VarChar ( 500 ),   -- (Obligatoire) Modèle Externe Ou IFR à rechercher, 105 car Max => si plus, accepté mais sera rejeté
-	@asGenCodeExterne			VarChar ( 500 ),       -- (Obligatoire si ADHESION / Facultatif si SINISTRE) 16 numérique Max => si plus, accepté mais sera rejeté. GENCODE Externe à stocker si présent, mais ne sert pas dans la recherche, vu avec Lisette le 11/06/21.
+	@asMarqueExterneOuIfr			VarChar ( 500 ),   -- (Obligatoire) Marque Externe Ou IFR à rechercher , tronqué à 35 caractères max automatiquement, non rejeté
+	@asModeleDescripExterneOuIfr	VarChar ( 500 ),   -- (Obligatoire) Modèle Externe Ou IFR à rechercher, tronqué à 105 caractères max automatiquement, non rejeté
+	@asGenCodeExterne			VarChar ( 500 ),       -- (Obligatoire si ADHESION Bouygues/ Facultatif si SINISTRE) 16 numérique Max => si plus, accepté mais sera rejeté. GENCODE Externe à stocker si présent, mais ne sert pas dans la recherche, vu avec Lisette le 11/06/21.  ,Passez ce que vous voulez ou rien du tout, je m’en arrangerai dans tout les cas, aucun rejet
 	@asMarqueIfrRetour			VarChar ( 35 ) OutPut, -- (Retour) Marque IFR en retour si un lien EXT/IFR existe Ou si la marque est directement une marque IFR
 	@asModeleIfrRetour			VarChar ( 35 ) OutPut, -- (Retour) Modèle IFR en retour si un lien EXT/IFR existe Ou si le Modèle est directement une modèle IFR
 	@adcMtPrixPublicIFR			Decimal (11,2) OutPut, -- (Retour) Montant de la valeur Publique IFR de l'appareil.
@@ -892,22 +893,38 @@ If @asCasInterro = '' Or ( @asCasInterro <> 'ADHESION' And @asCasInterro <> 'SIN
 If @asGenCodeExterne is null Set @asGenCodeExterne = ''
 Set @asGenCodeExterne = sysadm.FN_EPURE_CHAINE_V01 ( @asGenCodeExterne , 'EXCL_SLASHX2' ) 
 Set @asGenCodeExterne = rTrim ( ltrim ( upper ( @asGenCodeExterne )))
-If @asGenCodeExterne = '' And @asCasInterro = 'ADHESION' Return -5
-If Len ( @asGenCodeExterne ) > 16 And @asCasInterro = 'ADHESION' Return -6
-If CharIndex ( '_', @asGenCodeExterne ) > 0 Return -6
-Set @asGenCodeExterne = Left ( @asGenCodeExterne , 16 )
+
+-- Plus la peine 24/01/2023
+-- If @asGenCodeExterne = '' And @asCasInterro = 'ADHESION' Return -5
+
+-- Modif 24/01/2023
+-- If Len ( @asGenCodeExterne ) > 16 And @asCasInterro = 'ADHESION' Return -6
+If Len ( @asGenCodeExterne ) > 16 Set @asGenCodeExterne = ''
+
+-- Modif 24/01/2023
+-- If CharIndex ( '_', @asGenCodeExterne ) > 0 Return -6
+--Set @asGenCodeExterne = Left ( @asGenCodeExterne , 16 )
+If CharIndex ( '_', @asGenCodeExterne ) > 0 Set @asGenCodeExterne = ''
 
 If @asMarqueExterneOuIfr is null Set @asMarqueExterneOuIfr = ''
 Set @asMarqueExterneOuIfr = sysadm.FN_EPURE_CHAINE_V01 ( @asMarqueExterneOuIfr, 'EXCL_SLASHX2' ) 
 Set @asMarqueExterneOuIfr = rTrim ( ltrim ( upper ( @asMarqueExterneOuIfr )))
-If @asMarqueExterneOuIfr = '' Or Len ( @asMarqueExterneOuIfr ) > 35 Return -3
+
+-- Modif 24/01/2023
+--If @asMarqueExterneOuIfr = '' Or Len ( @asMarqueExterneOuIfr ) > 35 Return -3
+If @asMarqueExterneOuIfr = '' Return -3
+Set @asMarqueExterneOuIfr = LEFT ( @asMarqueExterneOuIfr, 35 )
 
 If @asModeleDescripExterneOuIfr is null Set @asModeleDescripExterneOuIfr = ''
 Set @asModeleDescripExterneOuIfr = sysadm.FN_EPURE_CHAINE_V01 ( @asModeleDescripExterneOuIfr, 'EXCL_SLASHX2' ) 
 --RS3917
 Set @asModeleDescripExterneOuIfr = REPLACE ( @asModeleDescripExterneOuIfr, '[REC]', '' ) 
 Set @asModeleDescripExterneOuIfr = rTrim ( ltrim ( upper ( @asModeleDescripExterneOuIfr )))
-If @asModeleDescripExterneOuIfr = '' Or Len ( @asModeleDescripExterneOuIfr ) > 105 Return -4
+
+-- Modif 24/01/2023
+-- If @asModeleDescripExterneOuIfr = '' Or Len ( @asModeleDescripExterneOuIfr ) > 105 Return -4
+If @asModeleDescripExterneOuIfr = '' Return -4
+Set @asModeleDescripExterneOuIfr = LEFT ( @asModeleDescripExterneOuIfr, 105 )
 
 -- 2ème recherche lien IFR
 Select Top 1 
@@ -952,25 +969,27 @@ If Not Exists (
   Begin -- Vraiment pas trouvé, donc on le créé
 	
 	-- Si ADHESION, Le GEN doit être valide, numérique 16 max
-	If @asCasInterro = 'ADHESION' And ISNUMERIC ( @asGenCodeExterne ) = 0 Return -6
+	-- Modif 24/01/2023 - Trop restrictif
+	-- If @asCasInterro = 'ADHESION' And ISNUMERIC ( @asGenCodeExterne ) = 0 Return -6
 
 	-- Si SINISTRE, Le GENCODE peut être non valide ou vide, pas obligatoire, j'en recréé un interne SIMPA2
-	If @asCasInterro = 'SINISTRE' And ISNUMERIC ( @asGenCodeExterne ) = 0 Set @asGenCodeExterne = ''
+	-- Modif 24/01/2023 - Trop restrictif	
+	--If @asCasInterro = 'SINISTRE' And ISNUMERIC ( @asGenCodeExterne ) = 0 Set @asGenCodeExterne = ''
 
 	-- Génération d'un GENCODE interne SIMPA2
-	If @asGenCodeExterne = '' Set @asGenCodeExterne = '9_9_9_9'
+	If @asGenCodeExterne = '' Set @asGenCodeExterne = '9_9_9_'
 
 	Set @iCpt = 1
 	Set @sGenCodeWrk = @asGenCodeExterne 
 
-	Set @asGenCodeExterne = @sGenCodeWrk + '_' + convert ( varchar (5), @iCpt )
+	Set @asGenCodeExterne = @sGenCodeWrk + right ( replicate ( '0', 5 ) + convert ( varchar (5), @iCpt ), 5)
 	While Exists ( Select Top 1 1
 				   From sysadm.article a with (nolock)
 				   Where a.id_four = @asCodeSpbPrestaExterne
 				   And   a.id_ref_four = @asGenCodeExterne )
 		Begin
 			Set @iCpt = @iCpt + 1
-			Set @asGenCodeExterne = @sGenCodeWrk + '_' + convert ( varchar (5), @iCpt )
+			Set @asGenCodeExterne = @sGenCodeWrk + right ( replicate ( '0', 5 ) + convert ( varchar (5), @iCpt ), 5)
 		End 
 
 	Insert into sysadm.article 
@@ -1029,7 +1048,7 @@ If Not Exists (
  If @iEnvoiMail > 0 
  Begin 
 	-- Envoi du mail à Sébastien en production 
-	Set @sObjet = 'Demande de création de référence Externe<=>IFR'
+	Set @sObjet = 'Demande de création de référence (lien) Externe<=>IFR'
 
 	IF @@servername <> master.dbo.SPB_FN_ServerName ('PRO')	
 		Begin 
@@ -1038,7 +1057,7 @@ If Not Exists (
 
 	Set @sMessage = @sMessage + ''
 
-	Set @sMessage = 'Bonjour Sébastien, ' + CHAR ( 10 ) 
+	Set @sMessage = 'Bonjour Sébastien, Nathalie,' + CHAR ( 10 ) 
 	Set @sMessage = @sMessage + CHAR ( 10 )
 	Set @sMessage = @sMessage + CHAR ( 10 )
 	Set @sMessage = @sMessage + 'Une nouvelle référence Externe du prestataire ' + @sLibPrestaExterne + ' est à relier à IFR.'
@@ -1055,11 +1074,12 @@ If Not Exists (
 	Set @sMessage = @sMessage + 'Cordialement,' + CHAR ( 10 )
 	Set @sMessage = @sMessage + CHAR ( 10 )
 	Set @sMessage = @sMessage + 'Jean-François FABRY' + CHAR ( 10 )
-	Set @sMessage = @sMessage + 'DSI/DEI Equipe SIMPA2' + CHAR ( 10 )
-	Set @sMessage = @sMessage + 'Legacy Application Tech Lead ' + CHAR ( 10 )
+	Set @sMessage = @sMessage + 'Leader technique' + CHAR ( 10 )
+	Set @sMessage = @sMessage + 'Application sinistre SIMPA2' + CHAR ( 10 )
 	Set @sMessage = @sMessage + '71, Quai Colbert - 76600 Le Havre - France' + CHAR ( 10 )
 	Set @sMessage = @sMessage + 'Tél. : +33 (0)2 32 74 22 05' + CHAR ( 10 )
-	Set @sMessage = @sMessage + 'www.spb.eu' + CHAR ( 10 )
+	Set @sMessage = @sMessage + 'Suivez-nous sur LinkedIn !  www.spb.eu' + CHAR ( 10 )
+	Set @sMessage = @sMessage + '----------------------------------------------------------' + CHAR ( 10 )
 	Set @sMessage = @sMessage + 'SAS au capital de 1 000 000 euros soumise au contrôle de l’ACPR.' + CHAR ( 10 )
 	Set @sMessage = @sMessage + 'Siège social : 71, quai Colbert - CS 90000 - 76600 Le Havre. Tél. : +33 (0)2 32 74 20 20' + CHAR ( 10 )
 	Set @sMessage = @sMessage + 'N° RCS 305 109 779 (Le Havre) – N°ORIAS 07 002 642 (www.orias.fr).' + CHAR ( 10 )
