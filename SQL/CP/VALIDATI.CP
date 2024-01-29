@@ -170,13 +170,10 @@ If      @sCodTravail = 'DEC'
 
         /* ... Cr‚ation dans la table REG_FRAIS_ANNEXE_FRN ...*/
 				-- [PM80_FA12_FRANEX]
-				If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-				 Begin
-					Select @sProc = 'Creation dans REG_FRAIS_ANNEXE_FRN (DEC)'
-					EXEC @iRet = sysadm.PS_I01_REG_FRAIS_ANNEXE_FRN_VAL @dcIdSin,
-								 @sCodOper, @dtValideLe
-					If @iRet <> 0 Return @iRet
-				 End 
+				Select @sProc = 'Creation dans REG_FRAIS_ANNEXE_FRN (DEC)'
+				EXEC @iRet = sysadm.PS_I01_REG_FRAIS_ANNEXE_FRN_VAL @dcIdSin,
+								@sCodOper, @dtValideLe
+				If @iRet <> 0 Return @iRet
 
         /* ... Cr‚ation dans la table DIV_SIN (JFF le 17/06/2004) ...*/
                 Select @sProc = 'Creation dans DIV_SIN (DEC)'
@@ -344,13 +341,10 @@ If      @sCodTravail = 'CPL'
 
         /* ... Cr‚ation dans la table REG_FRAIS_ANNEXE_FRN ...*/
 				-- [PM80_FA12_FRANEX]
-				If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-				 Begin
-					Select @sProc = 'Creation dans REG_FRAIS_ANNEXE_FRN (DEC)'
-					EXEC @iRet = sysadm.PS_I01_REG_FRAIS_ANNEXE_FRN_VAL @dcIdSin,
-								 @sCodOper, @dtValideLe
-					If @iRet <> 0 Return @iRet
-				 End 
+				Select @sProc = 'Creation dans REG_FRAIS_ANNEXE_FRN (DEC)'
+				EXEC @iRet = sysadm.PS_I01_REG_FRAIS_ANNEXE_FRN_VAL @dcIdSin,
+								@sCodOper, @dtValideLe
+				If @iRet <> 0 Return @iRet
 
         /* ... Cr‚ation dans la table DIV_SIN (JFF le 17/06/2004) ...*/
                 Select @sProc = 'Creation dans DIV_SIN (CPL)'

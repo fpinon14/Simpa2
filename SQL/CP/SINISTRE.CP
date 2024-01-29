@@ -490,12 +490,9 @@ Select @iRet = 1
                 IF      @@Error <> 0 Return -1
 
 				-- [PM80_FA12_FRANEX]
-				If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-				 Begin
-					DELETE FROM     sysadm.w_reg_frais_annexe_frn
-					WHERE           w_reg_frais_annexe_frn.id_sin        = @dcIdSin
-					IF      @@Error <> 0 Return -1
-				 End 
+				DELETE FROM     sysadm.w_reg_frais_annexe_frn
+				WHERE           w_reg_frais_annexe_frn.id_sin        = @dcIdSin
+				IF      @@Error <> 0 Return -1
 
                 DELETE FROM     sysadm.w_reg_gti
                 WHERE           w_reg_gti.id_sin        = @dcIdSin
@@ -596,12 +593,9 @@ Select @iRet = 1
                 IF      @@Error <> 0 Return -1
 
 				-- [PM80_FA12_FRANEX]
-				If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-				 Begin
-					DELETE FROM     sysadm.w_reg_frais_annexe_frn
-					WHERE           w_reg_frais_annexe_frn.id_sin        = @dcIdSin
-					IF      @@Error <> 0 Return -1
-				 End 
+				DELETE FROM     sysadm.w_reg_frais_annexe_frn
+				WHERE           w_reg_frais_annexe_frn.id_sin        = @dcIdSin
+				IF      @@Error <> 0 Return -1
 
                 DELETE FROM     sysadm.w_reg_gti
                 WHERE           w_reg_gti.id_sin        = @dcIdSin
@@ -780,12 +774,9 @@ Select @iRet = 1
             IF      @@Error <> 0 Return -9
 
 			-- [PM80_FA12_FRANEX]
-			If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-				Begin
-					DELETE FROM     sysadm.w_reg_frais_annexe_frn
-					WHERE           w_reg_frais_annexe_frn.id_sin        = @dcIdSin
-					IF      @@Error <> 0 Return -1
-				End 
+			DELETE FROM     sysadm.w_reg_frais_annexe_frn
+			WHERE           w_reg_frais_annexe_frn.id_sin        = @dcIdSin
+			IF      @@Error <> 0 Return -1
 
             DELETE FROM     sysadm.w_reg_gti
             WHERE           w_reg_gti.id_sin        = @dcIdSin

@@ -29,70 +29,82 @@
 -- PS_S01_LIB_POLICE	JFF 20/11/2009 [POLICE_PARTICULIERE] 	
 -- FN_GET_DIVERS_SINISTRE SBA 30/06/2010 : Renvoi le détail d'un sinistre
 -------------------------------------------------------------------
--- sysadm.DW_S01_LIB_POLICE
 -- sysadm.DW_S01_LIB_POLICE_V01
--- sysadm.FN_AFF_DATE 
--- sysadm.FN_AFF_DATE_CLOTURE_ASS 
--- sysadm.FN_A_COMMANDER
+-- sysadm.FN_A_COMMANDER (
+-- sysadm.FN_AFF_DATE  (
+-- sysadm.FN_AFF_DATE_CLOTURE_ASS  (
 -- sysadm.FN_CLE_VAL
 -- sysadm.FN_CLE_VAL_E
+-- sysadm.FN_CLE_VAL_XML  
+-- sysadm.FN_CLE_VAL_XML_SUBST
 -- sysadm.FN_CODE_CAR  
 -- sysadm.FN_CODE_NUM  
 -- sysadm.FN_CORR_IMEI
 -- sysadm.FN_CORR_NUM_CARTE
 -- sysadm.FN_CORR_NUM_CARTE_19
--- sysadm.FN_CTRLE_ADR_MAIL 
--- sysadm.FN_DATEDIFF  
--- sysadm.FN_DATEDIFF_V01  
+-- sysadm.FN_CTRLE_ADR_MAIL  (
+-- sysadm.FN_DATEDIFF  ( 
+-- sysadm.FN_DATEDIFF_V01  ( 
 -- sysadm.FN_DECRYPTE_NUM_CARTE
--- sysadm.FN_DEM_RCP_PIECE 
--- sysadm.FN_DTE_1ER_REGL 
--- sysadm.FN_DTE_CLO 
--- sysadm.FN_DTE_RNV 
--- sysadm.FN_EPURE_CHAINE_V02 
--- sysadm.FN_EVT_REMPL 
--- sysadm.FN_FILTRER_CAR 
--- sysadm.FN_GET_ASCENSION 
--- sysadm.FN_GET_BASE_GRC 
+-- sysadm.FN_DEM_RCP_PIECE  (
+-- sysadm.FN_DTE_1ER_REGL  (
+-- sysadm.FN_DTE_CLO  (
+-- sysadm.FN_DTE_RNV  (
+-- sysadm.FN_EPURE_CHAINE_V02  (
+-- sysadm.FN_EVT_REMPL  (
+-- sysadm.FN_FILTRER_CAR  (
+-- sysadm.FN_GET_ASCENSION ( 
+-- sysadm.FN_GET_BASE_GRC  ()
+-- sysadm.FN_GET_DIV_SIN (
 -- sysadm.FN_GET_DIVERS_SINISTRE 
--- sysadm.FN_GET_DIV_SIN
--- sysadm.FN_GET_DOS_SUIVI_PAR  @iIdSin Integer 
--- sysadm.FN_GET_ETAT_DOSSIER_PM251
--- sysadm.FN_GET_ETAT_GARANTIE_PM251
--- sysadm.FN_GET_LIB_POLICE
+-- sysadm.FN_GET_DOS_SUIVI_PAR  ( @iIdSin Integer )
+-- sysadm.FN_GET_ETAT_DOSSIER_PM251 (
+-- sysadm.FN_GET_ETAT_GARANTIE_PM251 (
+-- sysadm.FN_GET_ID_CORB  
 -- sysadm.FN_GET_LIB_POLICE_V01
--- sysadm.FN_GET_LISTE_GTI 
--- sysadm.FN_GET_LUNDI_DE_PAQUES 
--- sysadm.FN_GET_LUNDI_DE_PENTECOTE 
--- sysadm.FN_GET_PAQUES  
--- sysadm.FN_GET_PENTECOTE 
--- sysadm.FN_GET_PERIODE_TRT@dtDate datetime 
--- sysadm.FN_INT_DTE 
+-- sysadm.FN_GET_LISTE_GTI  (
+-- sysadm.FN_GET_LUNDI_DE_PAQUES ( 
+-- sysadm.FN_GET_LUNDI_DE_PENTECOTE ( 
+-- sysadm.FN_GET_NOM_PRENOM  
+-- sysadm.FN_GET_PAQUES  ( 
+-- sysadm.FN_GET_PENTECOTE ( 
+-- sysadm.FN_INT_DTE  (
 -- sysadm.FN_IS_DATE  
 -- sysadm.FN_IS_REG_ASSURE
--- sysadm.FN_LIB_CIE 
--- sysadm.FN_LIB_ETAT_DOS 
--- sysadm.FN_LIB_ETAT_DOS_ASSURE 
--- sysadm.FN_LIB_ETAT_DOS_ASSURE_V07 
--- sysadm.FN_LIB_GROUPE 
+-- sysadm.FN_LIB_CIE  (
+-- sysadm.FN_LIB_ETAT_DOS  (
+-- sysadm.FN_LIB_ETAT_DOS_ASSURE  (
+-- sysadm.FN_LIB_ETAT_DOS_ASSURE_V07  (
+-- sysadm.FN_LIB_GROUPE  (
 -- sysadm.FN_LIB_POLE  
--- sysadm.FN_LIB_POLICE 
+-- sysadm.FN_LIB_POLE  
+-- sysadm.FN_LIB_POLICE  (
 -- sysadm.FN_LIB_PROD  
 -- sysadm.FN_LIB_PROD_ASS  
 -- sysadm.FN_MASQUER_CARTE
 -- sysadm.FN_MASQUER_CARTE_2
 -- sysadm.FN_MESS
--- sysadm.FN_SOM_REGL 
--- sysadm.FN_TAG 
+-- sysadm.FN_SOM_REGL  (
+-- sysadm.FN_TAG  (
+--  sysadm.PS_S_CHAINE_ALEATOIRE
+-- sysadm.PS_DETRUIRE_UN_OBJET_SQL_SERVER 
+-- sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM_V02
+-- sysadm.PS_FILE_OPEN_REWRITE 
+-- sysadm.PS_INSTANCIER_UN_OBJET_SQL_SERVER 
+-- sysadm.PS_SAUVEGARDER_ET_FERMER_UN_FICHER_ADODB_STREAM 
+-- sysadm.FN_GET_LIB_POLICE
+-- sysadm.FN_GET_PERIODE_TRT (@dtDate datetime) 
+-- sysadm.PS_X_NOM
+-- sysadm.PS_DATEDIFF
+-- sysadm.DW_S01_LIB_POLICE
 -- sysadm.PS_CASSER_REGLE_CHAINE
 -- sysadm.PS_CORRIGE_CPT_VALIDE 
--- sysadm.PS_DATEDIFF
 -- sysadm.PS_DECRYPTE_NUM_CARTE
+-- sysadm.PS_FILE_CLOSE 
 -- sysadm.PS_FILE_EXISTS 
--- sysadm.PS_MAIL_RAPPORT_SIM
+-- sysadm.PS_FILE_WRITE_DATA 
+-- sysadm.PS_MAIL_RAPPORT_SIM(
 -- sysadm.PS_S01_LIB_POLICE_V01
--- sysadm.PS_S_CHAINE_ALEATOIRE
--- sysadm.PS_X_NOM
 -------------------------------------------------------------------
 
 
@@ -5912,11 +5924,11 @@ Go
 --										1 = Lecture
 --										2 = Ecriture
 --										3 = Lecture/Ecriture
---									@asCharSet			VarChar ( 30 ),
+--									@asCharSet			VarChar ( 30 ), (si @asType = 2 uniquement sinon null) 
 --										Consulter tous les charset possible du ADODB.Stream sur https://learn.microsoft.com/en-us/previous-versions/exchange-server/exchange-10/ms526296(v=exchg.10)
 --										'UTF-8' pour de l'XML
 --										'ISO-8859-1' pour du fichier texte
---									@asLineSeparator	Integer,
+--									@asLineSeparator	Integer, (si @asType = 2 uniquement sinon null) 
 --										'adCRLF' (-1) Par défaut, un retour chariot et un saut de ligne, 
 --										'adCR' (13)	Retour chariot uniquement
 --										'adLF' (10) Saut de ligne uniquement	
@@ -6265,6 +6277,262 @@ While CharIndex ( @sCleVariableWrk + '=', @sChaineXMLWrk, @iPos1 ) > 0
 Return @asChaineXML
 
 End
+
+Go
+
+--------------------------------------------------------------------
+--
+-- Fonction             :       PS_CHARGER_UN_FICHIER_BINAIRE_ADODB_STREAM
+-- Auteur               :       Fabry JF 
+-- Date                 :       27/01/2024
+-- Libellé              :		
+-- Commentaires         :       
+-- Références           :       
+--
+-- Arguments            :       	
+--									@aiHandle  
+--										Un entier (int) représentant le Handle de l'objet ADODB.Stream précédent instancié 
+--									@asCheminEtNomFichier
+--										Une variable chaine de 255 donnant le chemin (UNC) et le nom du fichier à charger
+--									@avbBlobRetour  (ouput)
+--										Un varBinary (max) vide qui aura Le fichier Binaire chargé en retour
+--
+-- Retourne             :       0 succès 
+--                             <> 0, problème
+--
+--------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_CHARGER_UN_FICHIER_BINAIRE_ADODB_STREAM' AND type = 'P' )
+        DROP procedure sysadm.PS_CHARGER_UN_FICHIER_BINAIRE_ADODB_STREAM
+GO
+
+CREATE  PROCEDURE sysadm.PS_CHARGER_UN_FICHIER_BINAIRE_ADODB_STREAM
+	@aiHandle			Int,
+	@asCheminEtNomFichier  Varchar ( 255 ),
+	@ablBlobRetour		VarBinary (max) Output
+As
+
+Declare @iRet Integer
+Declare @iEOF Integer
+Declare @iIdPaquet  Integer
+Declare @maChaineBIN varbinary (8000)
+
+DECLARE @tb TABLE ( 
+	id  integer identity,
+	marquage integer ,
+	line  varbinary (8000))
+
+If @asCheminEtNomFichier is null Set @asCheminEtNomFichier = ''
+Set @asCheminEtNomFichier = LTRIM (  RTRIM ( @asCheminEtNomFichier ))
+Set @iEOF = 0 
+
+If @asCheminEtNomFichier = '' Return -1
+
+Exec @iRet = sp_OASetProperty     @aiHandle, 'Type',  1
+If @iRet <> 0 Return @iRet 
+
+Exec @iRet = sp_OASetProperty     @aiHandle, 'Mode',  3
+If @iRet <> 0 Return @iRet 
+
+Exec @iRet = sp_OAMethod		  @aiHandle, 'Open'
+If @iRet <> 0 Return @iRet 
+
+EXECUTE @iRet = sp_OAMethod       @aiHandle, 'LoadFromFile' , null, @asCheminEtNomFichier 
+
+While @iEOF = 0
+  Begin
+	Insert into @tb ( line ) EXECUTE @iRet = sp_OAMethod  @aiHandle,  'Read' , null, 8000
+	If @iRet <> 0 Return @iRet 
+
+	EXECUTE @iRet = sp_OAGetProperty @aiHandle,  'EOS', @iEOF output
+	If @iRet <> 0 Return @iRet 
+  ENd 
+
+EXECUTE @iRet = sp_OAMethod @aiHandle, 'Close'
+If @iRet <> 0 Return @iRet 
+
+Set @ablBlobRetour = CONVERT ( VarBinary, '' ) 
+Update @tb Set marquage = 0
+
+While Exists ( Select Top 1 1 From @tb where marquage = 0 )
+Begin
+	Select @maChaineBIN = line,
+		   @iIdPaquet = id
+	From @tb
+	Where marquage = 0
+	And id = ( 
+				Select MIN ( id ) 
+				From @tb
+				Where marquage = 0
+			 )
+	
+	Set @ablBlobRetour = @ablBlobRetour + @maChaineBIN
+	
+	Update @tb Set marquage = 1 where id = @iIdPaquet
+
+End 
+
+Return @iRet 
+
+Go
+
+--------------------------------------------------------------------
+--
+-- Fonction             :       PS_CHARGER_UN_FICHIER_TEXTE_ADODB_STREAM
+-- Auteur               :       Fabry JF 
+-- Date                 :       27/01/2024
+-- Libellé              :		
+-- Commentaires         :       
+-- Références           :       
+--
+--------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_CHARGER_UN_FICHIER_TEXTE_ADODB_STREAM' AND type = 'P' )
+        DROP procedure sysadm.PS_CHARGER_UN_FICHIER_TEXTE_ADODB_STREAM
+GO
+
+CREATE  PROCEDURE sysadm.PS_CHARGER_UN_FICHIER_TEXTE_ADODB_STREAM
+	@aiHandle				Int,
+	@asCheminEtNomFichier	Varchar ( 255 ),
+	@asCharSet				VarChar ( 50 ), 
+	@asSerialiser			Varchar ( 5 ),
+	@asSeparateur			Varchar ( 20 ),
+	@aiNbreValParLigne		Int Output,
+	@aiNbreDeLigne			Int Output
+As
+
+-- 
+-- Contrainte			:			Le fichier  
+--
+-- Arguments            :       	
+--									@aiHandle  
+--										Un entier (int) représentant le Handle de l'objet ADODB.Stream précédent instancié 
+--									@asCheminEtNomFichier
+--										Une variable chaine de 255 donnant le chemin (UNC) et le nom du fichier à charger
+--									@asCharSet
+--										La valeur du charset en chaine de caractère, ex : ascii, unicode, UTF8, etc...
+--                                      S'il y a des caractères accentués, mettre unicode, sinon l'ascii sortira d'autres caractères à la place.
+--                                  @asSerialiser (Optionel)
+--										Une valeur en dur 'SERIA' qui indique de sérialiser chaque ligne pour plus facilement récupérer
+--                                      chaque valeur de chaque ligne. la sérialisation sera comme suit : V1=XXXXXX;V2=XXXXX;Vn=XXXXX
+--                                  @asSeparateur (Optionel)(Obligatoire si 'SERIA')
+--                                      Une valeur en dur en chaine indiquant le séparateur de champs
+--                                  @iNbreValParLigne (output)(optionel)(Renvoyé si SERIA) sinon null
+--                                      Une entier qui Retourne le nombre de champs par ligne
+--                                  @iNbreDeLigne (output)
+--                                      Une entier qui Retourne le nombre de ligne chargées
+--
+--									
+--
+--									Le client appelant doit créer cette table temporaire local à sa connexion pour récupérer le fichier et le traiter
+--                                  Il doit ensuite droper sa table même si elle sera normalement dropé à la fin de sa connexion
+--
+--									CREATE TABLE #TableStockageFichierTexte
+--										  ( id_ligne integer identity,
+--											marquage integer,
+--											data_ligne varchar ( max ) 
+--										  )
+--
+--									Exec sysadm.PS_CHARGER_UN_FICHIER_TEXTE_ADODB_STREAM  ...., ....., etc...
+--
+--									Traitement du client par boucle pour récupérer les données de la table #TableStockageFichierTexte
+--
+--									DROP TABLE #TableStockageFichierTexte
+--
+-- Retourne             :       0 succès 
+--                             <> 0, problème
+--
+
+Declare @iRet Integer
+Declare @iEOF Integer
+Declare @iIdLigne  Integer
+Declare @sMaChaineTexte varchar (max)
+Declare @iNumChamps Int
+Declare @iPosLigne Int
+Declare @iLenSeparateur Int
+Declare @sTagSeria VarChar ( 20 )
+
+If @asCheminEtNomFichier is null Set @asCheminEtNomFichier = ''
+Set @asCheminEtNomFichier = LTRIM (  RTRIM ( @asCheminEtNomFichier ))
+Set @iEOF = 0 
+Set @aiNbreDeLigne = 0
+Set @aiNbreValParLigne = 0
+
+If @asCheminEtNomFichier = '' Return -1
+
+Exec @iRet = sp_OASetProperty     @aiHandle, 'Type',  2
+If @iRet <> 0 Return @iRet 
+
+Exec @iRet = sp_OASetProperty     @aiHandle, 'Mode',  3
+If @iRet <> 0 Return @iRet 
+
+EXEC @iRet = sp_OASetProperty     @aiHandle, 'Charset', @asCharSet
+If @iRet <> 0 Return @iRet 
+
+EXEC @iRet = sp_OASetProperty     @aiHandle, 'LineSeparator', -1
+If @iRet <> 0 Return @iRet 
+
+Exec @iRet = sp_OAMethod		  @aiHandle, 'Open'
+If @iRet <> 0 Return @iRet 
+
+Exec @iRet = sp_OAMethod          @aiHandle, 'LoadFromFile' , null, @asCheminEtNomFichier 
+If @iRet <> 0 Return @iRet 
+
+While @iEOF = 0
+  Begin
+	Insert into #TableStockageFichierTexte ( data_ligne ) EXECUTE @iRet = sp_OAMethod  @aiHandle,  'ReadText' , null, -2
+	If @iRet <> 0 Return @iRet 
+
+	Set @aiNbreDeLigne = @aiNbreDeLigne + 1
+
+	EXECUTE @iRet = sp_OAGetProperty @aiHandle,  'EOS', @iEOF output
+	If @iRet <> 0 Return @iRet 
+  ENd 
+
+EXECUTE @iRet = sp_OAMethod @aiHandle, 'Close'
+If @iRet <> 0 Return @iRet 
+
+Update #TableStockageFichierTexte Set marquage = 0
+
+If Upper ( lTrim ( rTrim ( @asSerialiser ))) = 'SERIA'
+ Begin
+
+	While Exists ( Select Top 1 1 From #TableStockageFichierTexte Where marquage = 0 )
+		Begin
+
+			Select @sMaChaineTexte = data_ligne,
+				   @iIdLigne = id_ligne
+			From #TableStockageFichierTexte 
+			Where marquage = 0 
+
+			Set @iNumChamps = 1
+			If LEN ( @sMaChaineTexte ) > 0 
+			  Begin
+				 Set @sMaChaineTexte = 'V1=' + @sMaChaineTexte
+			  End 
+
+			Set @iPosLigne = 1
+			Set @iLenSeparateur = LEN ( lTrim ( rTrim ( @asSeparateur )))
+			While  CHARINDEX ( @asSeparateur, @sMaChaineTexte, @iPosLigne ) > 0 
+				Begin
+					Set @iPosLigne = CHARINDEX ( @asSeparateur, @sMaChaineTexte, @iPosLigne )
+					Set @iNumChamps = @iNumChamps + 1
+					Set @sTagSeria = ';V'+ CONVERT ( VarChar ( 10 ), @iNumChamps ) + '='
+					Set @sMaChaineTexte = STUFF ( @sMaChaineTexte, @iPosLigne, @iLenSeparateur, @sTagSeria )
+					Set @iPosLigne = @iPosLigne + @iLenSeparateur - 1 + 1
+				End 
+			
+			If @iNumChamps > @aiNbreValParLigne Set @aiNbreValParLigne = @iNumChamps 
+
+			Update #TableStockageFichierTexte 
+			Set marquage = 1,
+				data_ligne = @sMaChaineTexte
+			where id_ligne = @iIdLigne
+
+		End 
+		
+	Update #TableStockageFichierTexte Set marquage = 0
+ End 
+
+Return @iRet 
 
 Go
 

@@ -966,8 +966,6 @@ AS
    End   
   
   -- [PM80_FA12_FRANEX]  
-  If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0   
-   Begin  
    Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01   
     @dcIdSin,  
     @dcIdI,  
@@ -987,7 +985,6 @@ AS
     'ML'  
   
    If @iRet <> 0 Return @iRet   
-   End   
   
   If @@Error <> 0 Return @@Error  
    End  
@@ -1306,28 +1303,26 @@ AS
 		 End 
 
 		-- [PM80_FA12_FRANEX]
-		If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-		 Begin
-			Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01 
-				@dcIdSin,
-				@dcIdI,
-				@dcIdGti,
-				@dcIdDetail,
-				@adcMtIndemPrinc_1,
-				@adcMtFraisAnex_2,
-				@adcMtFraisAnex_3,
-				@adcMtFraisAnex_4,
-				@adcMtFraisAnex_5,
-				@adcMtFraisAnex_6,
-				@adcMtFraisAnex_7,
-				@adcMtFraisAnex_8,
-				@adcMtFraisAnex_9,
-				@adcMtFraisAnex_10,
-				@adcMtFraisAnex_11,
-				'ML'
+		Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01 
+			@dcIdSin,
+			@dcIdI,
+			@dcIdGti,
+			@dcIdDetail,
+			@adcMtIndemPrinc_1,
+			@adcMtFraisAnex_2,
+			@adcMtFraisAnex_3,
+			@adcMtFraisAnex_4,
+			@adcMtFraisAnex_5,
+			@adcMtFraisAnex_6,
+			@adcMtFraisAnex_7,
+			@adcMtFraisAnex_8,
+			@adcMtFraisAnex_9,
+			@adcMtFraisAnex_10,
+			@adcMtFraisAnex_11,
+			'ML'
 
-			If @iRet <> 0 Return @iRet 
-		 End 
+		If @iRet <> 0 Return @iRet 
+
 
 		If @@Error <> 0 Return @@Error
 	  End
@@ -1663,28 +1658,25 @@ AS
 		 End 
 
 		-- [PM80_FA12_FRANEX]
-		If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-		 Begin
-			Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01 
-				@dcIdSin,
-				@dcIdI,
-				@dcIdGti,
-				@dcIdDetail,
-				@adcMtIndemPrinc_1,
-				@adcMtFraisAnex_2,
-				@adcMtFraisAnex_3,
-				@adcMtFraisAnex_4,
-				@adcMtFraisAnex_5,
-				@adcMtFraisAnex_6,
-				@adcMtFraisAnex_7,
-				@adcMtFraisAnex_8,
-				@adcMtFraisAnex_9,
-				@adcMtFraisAnex_10,
-				@adcMtFraisAnex_11,
-				'ML'
+		Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01 
+			@dcIdSin,
+			@dcIdI,
+			@dcIdGti,
+			@dcIdDetail,
+			@adcMtIndemPrinc_1,
+			@adcMtFraisAnex_2,
+			@adcMtFraisAnex_3,
+			@adcMtFraisAnex_4,
+			@adcMtFraisAnex_5,
+			@adcMtFraisAnex_6,
+			@adcMtFraisAnex_7,
+			@adcMtFraisAnex_8,
+			@adcMtFraisAnex_9,
+			@adcMtFraisAnex_10,
+			@adcMtFraisAnex_11,
+			'ML'
 
-			If @iRet <> 0 Return @iRet 
-		 End 
+		If @iRet <> 0 Return @iRet 
 
 		If @@Error <> 0 Return @@Error
 	  End
@@ -1731,7 +1723,6 @@ Go
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U04_DETAIL_MAJ_FACTU_V03' AND type = 'P' )
         DROP procedure sysadm.PS_U04_DETAIL_MAJ_FACTU_V03
 GO
-
 
 CREATE procedure sysadm.PS_U04_DETAIL_MAJ_FACTU_V03
 	@dcIdSin Decimal (10), -- [PI062]
@@ -2036,28 +2027,25 @@ AS
 		 End 
 
 		-- [PM80_FA12_FRANEX]
-		If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-		 Begin
-			Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01 
-				@dcIdSin,
-				@dcIdI,
-				@dcIdGti,
-				@dcIdDetail,
-				@adcMtIndemPrinc_1,
-				@adcMtFraisAnex_2,
-				@adcMtFraisAnex_3,
-				@adcMtFraisAnex_4,
-				@adcMtFraisAnex_5,
-				@adcMtFraisAnex_6,
-				@adcMtFraisAnex_7,
-				@adcMtFraisAnex_8,
-				@adcMtFraisAnex_9,
-				@adcMtFraisAnex_10,
-				@adcMtFraisAnex_11,
-				'ML'
+		Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01 
+			@dcIdSin,
+			@dcIdI,
+			@dcIdGti,
+			@dcIdDetail,
+			@adcMtIndemPrinc_1,
+			@adcMtFraisAnex_2,
+			@adcMtFraisAnex_3,
+			@adcMtFraisAnex_4,
+			@adcMtFraisAnex_5,
+			@adcMtFraisAnex_6,
+			@adcMtFraisAnex_7,
+			@adcMtFraisAnex_8,
+			@adcMtFraisAnex_9,
+			@adcMtFraisAnex_10,
+			@adcMtFraisAnex_11,
+			'ML'
 
-			If @iRet <> 0 Return @iRet 
-		 End 
+		If @iRet <> 0 Return @iRet 
 
 		If @@Error <> 0 Return @@Error
 	  End
@@ -2668,28 +2656,25 @@ AS
 		End
 
 	-- [PM80_FA12_FRANEX]
-	If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-		Begin
-			Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01 
-				@dcIdSin,
-				@dcIdI,
-				@dcIdGti,
-				@dcIdDetail,
-				@adcMtIndemPrinc_1,
-				@adcMtFraisAnex_2,
-				@adcMtFraisAnex_3,
-				@adcMtFraisAnex_4,
-				@adcMtFraisAnex_5,
-				@adcMtFraisAnex_6,
-				@adcMtFraisAnex_7,
-				@adcMtFraisAnex_8,
-				@adcMtFraisAnex_9,
-				@adcMtFraisAnex_10,
-				@adcMtFraisAnex_11,
-				'ML'
+	Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01 
+		@dcIdSin,
+		@dcIdI,
+		@dcIdGti,
+		@dcIdDetail,
+		@adcMtIndemPrinc_1,
+		@adcMtFraisAnex_2,
+		@adcMtFraisAnex_3,
+		@adcMtFraisAnex_4,
+		@adcMtFraisAnex_5,
+		@adcMtFraisAnex_6,
+		@adcMtFraisAnex_7,
+		@adcMtFraisAnex_8,
+		@adcMtFraisAnex_9,
+		@adcMtFraisAnex_10,
+		@adcMtFraisAnex_11,
+		'ML'
 
-			If @iRet <> 0 Return @iRet 
-		End 
+	If @iRet <> 0 Return @iRet 
 
 	Return @@Error
 Go
@@ -3426,28 +3411,25 @@ AS
 		 End 
 
 		-- [PM80_FA12_FRANEX]
-		If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-		 Begin
-			Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01 
-				@dcIdSin,
-				@dcIdI,
-				@dcIdGti,
-				@dcIdDetail,
-				@adcMtIndemPrinc_1,
-				@adcMtFraisAnex_2,
-				@adcMtFraisAnex_3,
-				@adcMtFraisAnex_4,
-				@adcMtFraisAnex_5,
-				@adcMtFraisAnex_6,
-				@adcMtFraisAnex_7,
-				@adcMtFraisAnex_8,
-				@adcMtFraisAnex_9,
-				@adcMtFraisAnex_10,
-				@adcMtFraisAnex_11,
-				'ML'
+		Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01 
+			@dcIdSin,
+			@dcIdI,
+			@dcIdGti,
+			@dcIdDetail,
+			@adcMtIndemPrinc_1,
+			@adcMtFraisAnex_2,
+			@adcMtFraisAnex_3,
+			@adcMtFraisAnex_4,
+			@adcMtFraisAnex_5,
+			@adcMtFraisAnex_6,
+			@adcMtFraisAnex_7,
+			@adcMtFraisAnex_8,
+			@adcMtFraisAnex_9,
+			@adcMtFraisAnex_10,
+			@adcMtFraisAnex_11,
+			'ML'
 
-			If @iRet <> 0 Return @iRet 
-		 End 
+		If @iRet <> 0 Return @iRet 
 
 		If @@Error <> 0 Return @@Error
 	  End
@@ -3766,28 +3748,25 @@ AS
 		 End 
 
 		-- [PM80_FA12_FRANEX]
-		If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-		 Begin
-			Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01 
-				@dcIdSin,
-				@dcIdI,
-				@dcIdGti,
-				@dcIdDetail,
-				@adcMtIndemPrinc_1,
-				@adcMtFraisAnex_2,
-				@adcMtFraisAnex_3,
-				@adcMtFraisAnex_4,
-				@adcMtFraisAnex_5,
-				@adcMtFraisAnex_6,
-				@adcMtFraisAnex_7,
-				@adcMtFraisAnex_8,
-				@adcMtFraisAnex_9,
-				@adcMtFraisAnex_10,
-				@adcMtFraisAnex_11,
-				'ML'
+		Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01 
+			@dcIdSin,
+			@dcIdI,
+			@dcIdGti,
+			@dcIdDetail,
+			@adcMtIndemPrinc_1,
+			@adcMtFraisAnex_2,
+			@adcMtFraisAnex_3,
+			@adcMtFraisAnex_4,
+			@adcMtFraisAnex_5,
+			@adcMtFraisAnex_6,
+			@adcMtFraisAnex_7,
+			@adcMtFraisAnex_8,
+			@adcMtFraisAnex_9,
+			@adcMtFraisAnex_10,
+			@adcMtFraisAnex_11,
+			'ML'
 
-			If @iRet <> 0 Return @iRet 
-		 End 
+		If @iRet <> 0 Return @iRet 
 
 		If @@Error <> 0 Return @@Error
 	  End
@@ -4158,28 +4137,25 @@ AS
 			 End 
 
 		-- [PM80_FA12_FRANEX]
-		If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-		 Begin
-			Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01 
-				@dcIdSin,
-				@dcIdI,
-				@dcIdGti,
-				@dcIdDetail,
-				@adcMtIndemPrinc_1,
-				@adcMtFraisAnex_2,
-				@adcMtFraisAnex_3,
-				@adcMtFraisAnex_4,
-				@adcMtFraisAnex_5,
-				@adcMtFraisAnex_6,
-				@adcMtFraisAnex_7,
-				@adcMtFraisAnex_8,
-				@adcMtFraisAnex_9,
-				@adcMtFraisAnex_10,
-				@adcMtFraisAnex_11,
-				'ML'
+		Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01 
+			@dcIdSin,
+			@dcIdI,
+			@dcIdGti,
+			@dcIdDetail,
+			@adcMtIndemPrinc_1,
+			@adcMtFraisAnex_2,
+			@adcMtFraisAnex_3,
+			@adcMtFraisAnex_4,
+			@adcMtFraisAnex_5,
+			@adcMtFraisAnex_6,
+			@adcMtFraisAnex_7,
+			@adcMtFraisAnex_8,
+			@adcMtFraisAnex_9,
+			@adcMtFraisAnex_10,
+			@adcMtFraisAnex_11,
+			'ML'
 
-			If @iRet <> 0 Return @iRet 
-		 End 
+		If @iRet <> 0 Return @iRet 
 
 		End
 	
@@ -4498,28 +4474,25 @@ AS
 	 End 
 
 	-- [PM80_FA12_FRANEX]
-	If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-	  Begin
-		Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01 
-			@dcIdSin,
-			@dcIdI,
-			@dcIdGti,
-			@dcIdDetail,
-			@adcMtIndemPrinc_1,
-			@adcMtFraisAnex_2,
-			@adcMtFraisAnex_3,
-			@adcMtFraisAnex_4,
-			@adcMtFraisAnex_5,
-			@adcMtFraisAnex_6,
-			@adcMtFraisAnex_7,
-			@adcMtFraisAnex_8,
-			@adcMtFraisAnex_9,
-			@adcMtFraisAnex_10,
-			@adcMtFraisAnex_11,
-			'ML'
+	Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01 
+		@dcIdSin,
+		@dcIdI,
+		@dcIdGti,
+		@dcIdDetail,
+		@adcMtIndemPrinc_1,
+		@adcMtFraisAnex_2,
+		@adcMtFraisAnex_3,
+		@adcMtFraisAnex_4,
+		@adcMtFraisAnex_5,
+		@adcMtFraisAnex_6,
+		@adcMtFraisAnex_7,
+		@adcMtFraisAnex_8,
+		@adcMtFraisAnex_9,
+		@adcMtFraisAnex_10,
+		@adcMtFraisAnex_11,
+		'ML'
 
-			If @iRet <> 0 Return @iRet 
-	  End 
+		If @iRet <> 0 Return @iRet 
 
 	If @@Error <> 0 Return @@Error
 
@@ -4829,28 +4802,25 @@ AS
 		 End 
 
 		-- [PM80_FA12_FRANEX]
-		If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-		 Begin
-			Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01 
-				@dcIdSin,
-				@dcIdI,
-				@dcIdGti,
-				@dcIdDetail,
-				@adcMtIndemPrinc_1,
-				@adcMtFraisAnex_2,
-				@adcMtFraisAnex_3,
-				@adcMtFraisAnex_4,
-				@adcMtFraisAnex_5,
-				@adcMtFraisAnex_6,
-				@adcMtFraisAnex_7,
-				@adcMtFraisAnex_8,
-				@adcMtFraisAnex_9,
-				@adcMtFraisAnex_10,
-				@adcMtFraisAnex_11,
-				'ML'
+		Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01 
+			@dcIdSin,
+			@dcIdI,
+			@dcIdGti,
+			@dcIdDetail,
+			@adcMtIndemPrinc_1,
+			@adcMtFraisAnex_2,
+			@adcMtFraisAnex_3,
+			@adcMtFraisAnex_4,
+			@adcMtFraisAnex_5,
+			@adcMtFraisAnex_6,
+			@adcMtFraisAnex_7,
+			@adcMtFraisAnex_8,
+			@adcMtFraisAnex_9,
+			@adcMtFraisAnex_10,
+			@adcMtFraisAnex_11,
+			'ML'
 
-			If @iRet <> 0 Return @iRet 
-		 End 
+		If @iRet <> 0 Return @iRet 
 
 		If @@Error <> 0 Return @@Error
 	  End
@@ -5298,28 +5268,25 @@ AS
 		If @@Error <> 0 Return @@Error
 
 		-- [PM80_FA12_FRANEX]
-		If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-		 Begin
-			Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01 
-				@dcIdSin,
-				@dcIdI,
-				@dcIdGti,
-				@dcIdDetail,
-				@adcMtIndemPrinc_1,
-				@adcMtFraisAnex_2,
-				@adcMtFraisAnex_3,
-				@adcMtFraisAnex_4,
-				@adcMtFraisAnex_5,
-				@adcMtFraisAnex_6,
-				@adcMtFraisAnex_7,
-				@adcMtFraisAnex_8,
-				@adcMtFraisAnex_9,
-				@adcMtFraisAnex_10,
-				@adcMtFraisAnex_11,
-				'ML'
+		Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01 
+			@dcIdSin,
+			@dcIdI,
+			@dcIdGti,
+			@dcIdDetail,
+			@adcMtIndemPrinc_1,
+			@adcMtFraisAnex_2,
+			@adcMtFraisAnex_3,
+			@adcMtFraisAnex_4,
+			@adcMtFraisAnex_5,
+			@adcMtFraisAnex_6,
+			@adcMtFraisAnex_7,
+			@adcMtFraisAnex_8,
+			@adcMtFraisAnex_9,
+			@adcMtFraisAnex_10,
+			@adcMtFraisAnex_11,
+			'ML'
 
-			If @iRet <> 0 Return @iRet 
-		 End 
+		If @iRet <> 0 Return @iRet 
 
 	  End
 

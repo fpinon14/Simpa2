@@ -387,21 +387,18 @@ BEGIN
                 End
 
 		-- [PM80_FA12_FRANEX]
-		If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-		 Begin
-			/* ... On positionne le Nø de rŠglement dans W_REG_FRAIS_ANNEXE_FRN ... */
-			UPDATE          sysadm.w_reg_frais_annexe_frn
-			SET             sysadm.w_reg_frais_annexe_frn.id_reg = @dcCptReg
-			WHERE           w_reg_frais_annexe_frn.id_sin        = @dcIdSin      AND
-							w_reg_frais_annexe_frn.id_i          = @dcIdI        AND
-							w_reg_frais_annexe_frn.id_reg        = 0
+		/* ... On positionne le Nø de rŠglement dans W_REG_FRAIS_ANNEXE_FRN ... */
+		UPDATE          sysadm.w_reg_frais_annexe_frn
+		SET             sysadm.w_reg_frais_annexe_frn.id_reg = @dcCptReg
+		WHERE           w_reg_frais_annexe_frn.id_sin        = @dcIdSin      AND
+						w_reg_frais_annexe_frn.id_i          = @dcIdI        AND
+						w_reg_frais_annexe_frn.id_reg        = 0
 
-			IF      @@Error <> 0
-					Begin
-							Select @iRet = -8
-							Break
-					End
-		 End 
+		IF      @@Error <> 0
+				Begin
+						Select @iRet = -8
+						Break
+				End
 
 		-- [PC801_LOT1_V2]                        
 		Exec @iRet = sysadm.PS_I_FRANCHISE_PAYBOX_PC801_LOT1_V2 @dcIdSin, @dcIdI, @sCodInter, @dcCptRegTour, @dtValideLe, @dcCptReg OUTPUT 
@@ -1378,66 +1375,60 @@ If ( @dcSomRMRPPrecedent + @dcMtTotReg ) - Abs ( @adcMtAvoir ) < 0
 	End 
 
 -- [PM80_FA12_FRANEX]
-If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-	Begin
+	-- Type de frais du RM jamais passé sur RN+RPs
+	Set @sVentilFraisOrig = SPACE ( 100)
+	Set @sVentilFraisEncoursAff = SPACE ( 100)
+	Set @sVentilFraisEncoursCtrle = SPACE ( 100)
 
-		-- Type de frais du RM jamais passé sur RN+RPs
-		Set @sVentilFraisOrig = SPACE ( 100)
-		Set @sVentilFraisEncoursAff = SPACE ( 100)
-		Set @sVentilFraisEncoursCtrle = SPACE ( 100)
+	exec sysadm.PS_S_REG_FRAIS_ANNEXE_FRN_TYP_DIF 
+			@adcIdSin,
+			@dcIdRegBase,
+			@adcMtIndemPrinc_1,
+			@adcMtFraisAnex_2,
+			@adcMtFraisAnex_3,
+			@adcMtFraisAnex_4,
+			@adcMtFraisAnex_5,
+			@adcMtFraisAnex_6,
+			@adcMtFraisAnex_7,
+			@adcMtFraisAnex_8,
+			@adcMtFraisAnex_9,
+			@adcMtFraisAnex_10,
+			@adcMtFraisAnex_11,
+			@sVentilFraisOrig OutPut,
+			@sVentilFraisEncoursAff OutPut,
+			@sVentilFraisEncoursCtrle OutPut
 
-		exec sysadm.PS_S_REG_FRAIS_ANNEXE_FRN_TYP_DIF 
-				@adcIdSin,
-				@dcIdRegBase,
-				@adcMtIndemPrinc_1,
-				@adcMtFraisAnex_2,
-				@adcMtFraisAnex_3,
-				@adcMtFraisAnex_4,
-				@adcMtFraisAnex_5,
-				@adcMtFraisAnex_6,
-				@adcMtFraisAnex_7,
-				@adcMtFraisAnex_8,
-				@adcMtFraisAnex_9,
-				@adcMtFraisAnex_10,
-				@adcMtFraisAnex_11,
-				@sVentilFraisOrig OutPut,
-				@sVentilFraisEncoursAff OutPut,
-				@sVentilFraisEncoursCtrle OutPut
+	If @sVentilFraisEncoursCtrle <> @sVentilFraisOrig
+		Begin
+			Set @asResult = 'ERREUR : Un ou plusieurs types de frais du RM (' + @sVentilFraisEncoursAff + ') n''ont jamais été réglé sur le RN d''origine ou RP lié au RN d''origine (' + @sVentilFraisOrig + ').' 
+			Return -1
+		End 
 
-		If @sVentilFraisEncoursCtrle <> @sVentilFraisOrig
-			Begin
-				Set @asResult = 'ERREUR : Un ou plusieurs types de frais du RM (' + @sVentilFraisEncoursAff + ') n''ont jamais été réglé sur le RN d''origine ou RP lié au RN d''origine (' + @sVentilFraisOrig + ').' 
-				Return -1
-			End 
+	-- Les sommes de ventilation de chaque type de frais sur les RM sont supérieurs à la somme des RN+RP du même frais
+	Exec @iRetCtrleSomFrais = sysadm.PS_S_REG_FRAIS_ANNEXE_FRN_SOM_REGL_INCO
+			@adcIdSin,
+			@dcIdRegBase,
+			@adcMtIndemPrinc_1,
+			@adcMtFraisAnex_2,
+			@adcMtFraisAnex_3,
+			@adcMtFraisAnex_4,
+			@adcMtFraisAnex_5,
+			@adcMtFraisAnex_6,
+			@adcMtFraisAnex_7,
+			@adcMtFraisAnex_8,
+			@adcMtFraisAnex_9,
+			@adcMtFraisAnex_10,
+			@adcMtFraisAnex_11,
+			@dcMtFraisAnexExistant OutPut,
+			@dcMtFraisAPasser OutPut, 
+			@iTypeDuFrais OutPut,
+			@dcMtDifFraisAnx OutPut
 
-		-- Les sommes de ventilation de chaque type de frais sur les RM sont supérieurs à la somme des RN+RP du même frais
-		Exec @iRetCtrleSomFrais = sysadm.PS_S_REG_FRAIS_ANNEXE_FRN_SOM_REGL_INCO
-				@adcIdSin,
-				@dcIdRegBase,
-				@adcMtIndemPrinc_1,
-				@adcMtFraisAnex_2,
-				@adcMtFraisAnex_3,
-				@adcMtFraisAnex_4,
-				@adcMtFraisAnex_5,
-				@adcMtFraisAnex_6,
-				@adcMtFraisAnex_7,
-				@adcMtFraisAnex_8,
-				@adcMtFraisAnex_9,
-				@adcMtFraisAnex_10,
-				@adcMtFraisAnex_11,
-				@dcMtFraisAnexExistant OutPut,
-				@dcMtFraisAPasser OutPut, 
-				@iTypeDuFrais OutPut,
-				@dcMtDifFraisAnx OutPut
-
-		If @iRetCtrleSomFrais < 0 
-			Begin
-				Set @asResult = 'ERREUR : La somme des RN/RM/RP du frais ' + Convert ( varchar ( 20), @iTypeDuFrais) + ' (' + sysadm.FN_CODE_NUM ( @iTypeDuFrais, '-W7' ) + ') est de ' + CONVERT ( varchar ( 20), @dcMtFraisAnexExistant) + '€, vous ne pouvez donc soustraire un RM de -' + CONVERT ( varchar ( 20), abs ( @dcMtFraisAPasser) ) + '€, cela donnerait un nombre négatif au final (' + CONVERT ( varchar ( 20), @dcMtDifFraisAnx ) + '€).'
-				Return -1
-			End 
-			
-	End 
-
+	If @iRetCtrleSomFrais < 0 
+		Begin
+			Set @asResult = 'ERREUR : La somme des RN/RM/RP du frais ' + Convert ( varchar ( 20), @iTypeDuFrais) + ' (' + sysadm.FN_CODE_NUM ( @iTypeDuFrais, '-W7' ) + ') est de ' + CONVERT ( varchar ( 20), @dcMtFraisAnexExistant) + '€, vous ne pouvez donc soustraire un RM de -' + CONVERT ( varchar ( 20), abs ( @dcMtFraisAPasser) ) + '€, cela donnerait un nombre négatif au final (' + CONVERT ( varchar ( 20), @dcMtDifFraisAnx ) + '€).'
+			Return -1
+		End 
 
 If @dcIdRegBase is null
  Begin
@@ -1490,27 +1481,25 @@ Getdate(),
 )
 
 -- [PM80_FA12_FRANEX]
-If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-	Begin
-		Exec sysadm.PS_I_REG_FRAIS_ANNEXE_FRN_V01 
-			@adcIdSin,
-			@dcIdReg,
-			@dcIdInterRM,
-			@dcIdGtiBase,
-			-1,
-			@adcMtIndemPrinc_1,
-			@adcMtFraisAnex_2,
-			@adcMtFraisAnex_3,
-			@adcMtFraisAnex_4,
-			@adcMtFraisAnex_5,
-			@adcMtFraisAnex_6,
-			@adcMtFraisAnex_7,
-			@adcMtFraisAnex_8,
-			@adcMtFraisAnex_9,
-			@adcMtFraisAnex_10,
-			@adcMtFraisAnex_11,
-			@asCodOper
-	End 
+Exec sysadm.PS_I_REG_FRAIS_ANNEXE_FRN_V01 
+	@adcIdSin,
+	@dcIdReg,
+	@dcIdInterRM,
+	@dcIdGtiBase,
+	-1,
+	@adcMtIndemPrinc_1,
+	@adcMtFraisAnex_2,
+	@adcMtFraisAnex_3,
+	@adcMtFraisAnex_4,
+	@adcMtFraisAnex_5,
+	@adcMtFraisAnex_6,
+	@adcMtFraisAnex_7,
+	@adcMtFraisAnex_8,
+	@adcMtFraisAnex_9,
+	@adcMtFraisAnex_10,
+	@adcMtFraisAnex_11,
+	@asCodOper
+
 
 Insert into w_a_virer 
 Select r.id_sin,
@@ -1828,27 +1817,25 @@ Getdate(),
 )
 
 -- [PM80_FA12_FRANEX]
-If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-	Begin
-		Exec sysadm.PS_I_REG_FRAIS_ANNEXE_FRN_V01 
-			@adcIdSin,
-			@dcIdReg,
-			@dcIdInterRP,
-			@dcIdGtiBase,
-			-1,
-			@adcMtIndemPrinc_1,
-			@adcMtFraisAnex_2,
-			@adcMtFraisAnex_3,
-			@adcMtFraisAnex_4,
-			@adcMtFraisAnex_5,
-			@adcMtFraisAnex_6,
-			@adcMtFraisAnex_7,
-			@adcMtFraisAnex_8,
-			@adcMtFraisAnex_9,
-			@adcMtFraisAnex_10,
-			@adcMtFraisAnex_11,
-			@asCodOper
-	End 
+Exec sysadm.PS_I_REG_FRAIS_ANNEXE_FRN_V01 
+	@adcIdSin,
+	@dcIdReg,
+	@dcIdInterRP,
+	@dcIdGtiBase,
+	-1,
+	@adcMtIndemPrinc_1,
+	@adcMtFraisAnex_2,
+	@adcMtFraisAnex_3,
+	@adcMtFraisAnex_4,
+	@adcMtFraisAnex_5,
+	@adcMtFraisAnex_6,
+	@adcMtFraisAnex_7,
+	@adcMtFraisAnex_8,
+	@adcMtFraisAnex_9,
+	@adcMtFraisAnex_10,
+	@adcMtFraisAnex_11,
+	@asCodOper
+
 
 Insert into w_a_virer 
 Select r.id_sin,
@@ -2084,64 +2071,60 @@ If ( @dcSomRMRPPrecedent + @dcMtTotReg ) - Abs ( @adcMtRM ) < 0
 	End 
 
 -- [PM80_FA12_FRANEX]
-If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
+-- Type de frais du RM jamais passé sur RN+RPs
+
+Set @sVentilFraisOrig = SPACE ( 100)
+Set @sVentilFraisEncoursAff = SPACE ( 100)
+Set @sVentilFraisEncoursCtrle = SPACE ( 100)
+
+exec sysadm.PS_S_REG_FRAIS_ANNEXE_FRN_TYP_DIF 
+		@adcIdSin,
+		@adcIdRegBase,
+		@adcMtIndemPrinc_1,
+		@adcMtFraisAnex_2,
+		@adcMtFraisAnex_3,
+		@adcMtFraisAnex_4,
+		@adcMtFraisAnex_5,
+		@adcMtFraisAnex_6,
+		@adcMtFraisAnex_7,
+		@adcMtFraisAnex_8,
+		@adcMtFraisAnex_9,
+		@adcMtFraisAnex_10,
+		@adcMtFraisAnex_11,
+		@sVentilFraisOrig OutPut,
+		@sVentilFraisEncoursAff OutPut,
+		@sVentilFraisEncoursCtrle OutPut
+
+If @sVentilFraisEncoursCtrle <> @sVentilFraisOrig
 	Begin
-		-- Type de frais du RM jamais passé sur RN+RPs
+		Set @asResult = 'ERREUR : Un ou plusieurs types de frais du RM (' + @sVentilFraisEncoursAff + ') n''ont jamais été réglé sur le RN d''origine ou RP lié au RN d''origine (' + @sVentilFraisOrig + ').' 
+		Return -1
+	End 
 
-		Set @sVentilFraisOrig = SPACE ( 100)
-		Set @sVentilFraisEncoursAff = SPACE ( 100)
-		Set @sVentilFraisEncoursCtrle = SPACE ( 100)
+-- Les sommes de ventilation de chaque type de frais sur les RM sont supérieurs à la somme des RN+RP du même frais
+Exec @iRetCtrleSomFrais = sysadm.PS_S_REG_FRAIS_ANNEXE_FRN_SOM_REGL_INCO
+		@adcIdSin,
+		@adcIdRegBase,
+		@adcMtIndemPrinc_1,
+		@adcMtFraisAnex_2,
+		@adcMtFraisAnex_3,
+		@adcMtFraisAnex_4,
+		@adcMtFraisAnex_5,
+		@adcMtFraisAnex_6,
+		@adcMtFraisAnex_7,
+		@adcMtFraisAnex_8,
+		@adcMtFraisAnex_9,
+		@adcMtFraisAnex_10,
+		@adcMtFraisAnex_11,
+		@dcMtFraisAnexExistant OutPut,
+		@dcMtFraisAPasser OutPut, 
+		@iTypeDuFrais OutPut,
+		@dcMtDifFraisAnx OutPut
 
-		exec sysadm.PS_S_REG_FRAIS_ANNEXE_FRN_TYP_DIF 
-				@adcIdSin,
-				@adcIdRegBase,
-				@adcMtIndemPrinc_1,
-				@adcMtFraisAnex_2,
-				@adcMtFraisAnex_3,
-				@adcMtFraisAnex_4,
-				@adcMtFraisAnex_5,
-				@adcMtFraisAnex_6,
-				@adcMtFraisAnex_7,
-				@adcMtFraisAnex_8,
-				@adcMtFraisAnex_9,
-				@adcMtFraisAnex_10,
-				@adcMtFraisAnex_11,
-				@sVentilFraisOrig OutPut,
-				@sVentilFraisEncoursAff OutPut,
-				@sVentilFraisEncoursCtrle OutPut
-
-		If @sVentilFraisEncoursCtrle <> @sVentilFraisOrig
-			Begin
-				Set @asResult = 'ERREUR : Un ou plusieurs types de frais du RM (' + @sVentilFraisEncoursAff + ') n''ont jamais été réglé sur le RN d''origine ou RP lié au RN d''origine (' + @sVentilFraisOrig + ').' 
-				Return -1
-			End 
-
-		-- Les sommes de ventilation de chaque type de frais sur les RM sont supérieurs à la somme des RN+RP du même frais
-		Exec @iRetCtrleSomFrais = sysadm.PS_S_REG_FRAIS_ANNEXE_FRN_SOM_REGL_INCO
-				@adcIdSin,
-				@adcIdRegBase,
-				@adcMtIndemPrinc_1,
-				@adcMtFraisAnex_2,
-				@adcMtFraisAnex_3,
-				@adcMtFraisAnex_4,
-				@adcMtFraisAnex_5,
-				@adcMtFraisAnex_6,
-				@adcMtFraisAnex_7,
-				@adcMtFraisAnex_8,
-				@adcMtFraisAnex_9,
-				@adcMtFraisAnex_10,
-				@adcMtFraisAnex_11,
-				@dcMtFraisAnexExistant OutPut,
-				@dcMtFraisAPasser OutPut, 
-				@iTypeDuFrais OutPut,
-				@dcMtDifFraisAnx OutPut
-
-		If @iRetCtrleSomFrais < 0 
-			Begin
-				Set @asResult = 'ERREUR : La somme des RN/RM/RP du frais ' + Convert ( varchar ( 20), @iTypeDuFrais) + ' (' + sysadm.FN_CODE_NUM ( @iTypeDuFrais, '-W7' ) + ') est de ' + CONVERT ( varchar ( 20), @dcMtFraisAnexExistant) + '€, vous ne pouvez donc soustraire un RM de -' + CONVERT ( varchar ( 20), abs (@dcMtFraisAPasser) ) + '€, cela donnerait un nombre négatif au final (' + CONVERT ( varchar ( 20), @dcMtDifFraisAnx ) + '€).'
-				Return -1
-			End 
-
+If @iRetCtrleSomFrais < 0 
+	Begin
+		Set @asResult = 'ERREUR : La somme des RN/RM/RP du frais ' + Convert ( varchar ( 20), @iTypeDuFrais) + ' (' + sysadm.FN_CODE_NUM ( @iTypeDuFrais, '-W7' ) + ') est de ' + CONVERT ( varchar ( 20), @dcMtFraisAnexExistant) + '€, vous ne pouvez donc soustraire un RM de -' + CONVERT ( varchar ( 20), abs (@dcMtFraisAPasser) ) + '€, cela donnerait un nombre négatif au final (' + CONVERT ( varchar ( 20), @dcMtDifFraisAnx ) + '€).'
+		Return -1
 	End 
  
 Update sysadm.sinistre 
@@ -2189,27 +2172,24 @@ Getdate(),
 )
 
 -- [PM80_FA12_FRANEX]
-If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-	Begin
-		Exec sysadm.PS_I_REG_FRAIS_ANNEXE_FRN_V01 
-			@adcIdSin,
-			@dcIdReg,
-			@dcIdInterRM,
-			@dcIdGtiBase,
-			-1,
-			@adcMtIndemPrinc_1,
-			@adcMtFraisAnex_2,
-			@adcMtFraisAnex_3,
-			@adcMtFraisAnex_4,
-			@adcMtFraisAnex_5,
-			@adcMtFraisAnex_6,
-			@adcMtFraisAnex_7,
-			@adcMtFraisAnex_8,
-			@adcMtFraisAnex_9,
-			@adcMtFraisAnex_10,
-			@adcMtFraisAnex_11,
-			@asCodOper
-	End 
+Exec sysadm.PS_I_REG_FRAIS_ANNEXE_FRN_V01 
+	@adcIdSin,
+	@dcIdReg,
+	@dcIdInterRM,
+	@dcIdGtiBase,
+	-1,
+	@adcMtIndemPrinc_1,
+	@adcMtFraisAnex_2,
+	@adcMtFraisAnex_3,
+	@adcMtFraisAnex_4,
+	@adcMtFraisAnex_5,
+	@adcMtFraisAnex_6,
+	@adcMtFraisAnex_7,
+	@adcMtFraisAnex_8,
+	@adcMtFraisAnex_9,
+	@adcMtFraisAnex_10,
+	@adcMtFraisAnex_11,
+	@asCodOper
 
 Update sysadm.w_sin
 Set mt_reg = mt_reg + @adcMtRM
@@ -2448,27 +2428,24 @@ Getdate(),
 )
 
 -- [PM80_FA12_FRANEX]
-If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-	Begin
-		Exec sysadm.PS_I_REG_FRAIS_ANNEXE_FRN_V01 
-			@adcIdSin,
-			@dcIdReg,
-			@dcIdInterRP,
-			@dcIdGtiBase,
-			-1,
-			@adcMtIndemPrinc_1,
-			@adcMtFraisAnex_2,
-			@adcMtFraisAnex_3,
-			@adcMtFraisAnex_4,
-			@adcMtFraisAnex_5,
-			@adcMtFraisAnex_6,
-			@adcMtFraisAnex_7,
-			@adcMtFraisAnex_8,
-			@adcMtFraisAnex_9,
-			@adcMtFraisAnex_10,
-			@adcMtFraisAnex_11,
-			@asCodOper
-	End 
+Exec sysadm.PS_I_REG_FRAIS_ANNEXE_FRN_V01 
+	@adcIdSin,
+	@dcIdReg,
+	@dcIdInterRP,
+	@dcIdGtiBase,
+	-1,
+	@adcMtIndemPrinc_1,
+	@adcMtFraisAnex_2,
+	@adcMtFraisAnex_3,
+	@adcMtFraisAnex_4,
+	@adcMtFraisAnex_5,
+	@adcMtFraisAnex_6,
+	@adcMtFraisAnex_7,
+	@adcMtFraisAnex_8,
+	@adcMtFraisAnex_9,
+	@adcMtFraisAnex_10,
+	@adcMtFraisAnex_11,
+	@asCodOper
 
 Update sysadm.w_sin
 Set mt_reg = mt_reg + @adcMtRP
@@ -3035,8 +3012,6 @@ Insert into sysadm.w_reg_gti (
 	)
 
 		-- [PM80_FA12_FRANEX]
-If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0 
-	Begin
 	Exec @iRet = sysadm.PS_DI_W_REG_FRAIS_ANNEXE_FRN_V01 
 		@adcIdSin,
 		@dcIdI,
@@ -3054,7 +3029,6 @@ If sysadm.FN_CLE_NUMERIQUE ( 'PM80_FA12_FRANEX') > 0
 		@adcMtFraisAnex_10,
 		@adcMtFraisAnex_11,
 		'ML'
-	End 
 
 --  Validation
 	Set @sNoBoite = ''
