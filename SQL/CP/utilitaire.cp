@@ -6289,16 +6289,6 @@ Go
 -- Commentaires         :       
 -- Références           :       
 --
--- Arguments            :       	
---									@aiHandle  
---										Un entier (int) représentant le Handle de l'objet ADODB.Stream précédent instancié 
---									@asCheminEtNomFichier
---										Une variable chaine de 255 donnant le chemin (UNC) et le nom du fichier à charger
---									@avbBlobRetour  (ouput)
---										Un varBinary (max) vide qui aura Le fichier Binaire chargé en retour
---
--- Retourne             :       0 succès 
---                             <> 0, problème
 --
 --------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_CHARGER_UN_FICHIER_BINAIRE_ADODB_STREAM' AND type = 'P' )
@@ -6308,8 +6298,22 @@ GO
 CREATE  PROCEDURE sysadm.PS_CHARGER_UN_FICHIER_BINAIRE_ADODB_STREAM
 	@aiHandle			Int,
 	@asCheminEtNomFichier  Varchar ( 255 ),
-	@ablBlobRetour		VarBinary (max) Output
+	@ablBlobRetour		VarBinary (max) Output,
+	@aiTailleOctects	Int OutPut
 As
+
+-- Arguments            :       	
+--									@aiHandle  
+--										Un entier (int) représentant le Handle de l'objet ADODB.Stream précédent instancié 
+--									@asCheminEtNomFichier
+--										Une variable chaine de 255 donnant le chemin (UNC) et le nom du fichier à charger
+--									@avbBlobRetour  (output)
+--										Un varBinary (max) vide qui aura Le fichier Binaire chargé en retour
+--									@aiTailleOctects (output)
+--										Un entier qui contient le nombre d'octects chargé, bref, la taille du fichier.
+--
+-- Retourne             :       0 succès 
+--                             <> 0, problème
 
 Declare @iRet Integer
 Declare @iEOF Integer
@@ -6337,6 +6341,7 @@ Exec @iRet = sp_OAMethod		  @aiHandle, 'Open'
 If @iRet <> 0 Return @iRet 
 
 EXECUTE @iRet = sp_OAMethod       @aiHandle, 'LoadFromFile' , null, @asCheminEtNomFichier 
+If @iRet <> 0 Return @iRet 
 
 While @iEOF = 0
   Begin
@@ -6346,6 +6351,9 @@ While @iEOF = 0
 	EXECUTE @iRet = sp_OAGetProperty @aiHandle,  'EOS', @iEOF output
 	If @iRet <> 0 Return @iRet 
   ENd 
+
+EXECUTE @iRet = sp_OAGetProperty @aiHandle,  'Size', @aiTailleOctects output
+If @iRet <> 0 Return @iRet 
 
 EXECUTE @iRet = sp_OAMethod @aiHandle, 'Close'
 If @iRet <> 0 Return @iRet 
@@ -6396,7 +6404,8 @@ CREATE  PROCEDURE sysadm.PS_CHARGER_UN_FICHIER_TEXTE_ADODB_STREAM
 	@asSerialiser			Varchar ( 5 ),
 	@asSeparateur			Varchar ( 20 ),
 	@aiNbreValParLigne		Int Output,
-	@aiNbreDeLigne			Int Output
+	@aiNbreDeLigne			Int Output,
+	@aiTailleOctects	Int OutPut
 As
 
 -- 
@@ -6414,16 +6423,18 @@ As
 --										Une valeur en dur 'SERIA' qui indique de sérialiser chaque ligne pour plus facilement récupérer
 --                                      chaque valeur de chaque ligne. la sérialisation sera comme suit : V1=XXXXXX;V2=XXXXX;Vn=XXXXX
 --                                  @asSeparateur (Optionel)(Obligatoire si 'SERIA')
---                                      Une valeur en dur en chaine indiquant le séparateur de champs
+--                                      Une valeur en dur en chaine indiquant le séparateur de champs se trouvant dans le fichier chargé.
 --                                  @iNbreValParLigne (output)(optionel)(Renvoyé si SERIA) sinon null
 --                                      Une entier qui Retourne le nombre de champs par ligne
 --                                  @iNbreDeLigne (output)
 --                                      Une entier qui Retourne le nombre de ligne chargées
+--									@aiTailleOctects (output)
+--										Un entier qui contient le nombre d'octects chargé, bref, la taille du fichier.
 --
 --									
 --
 --									Le client appelant doit créer cette table temporaire local à sa connexion pour récupérer le fichier et le traiter
---                                  Il doit ensuite droper sa table même si elle sera normalement dropé à la fin de sa connexion
+--                                  Il doit ensuite droper sa table même si elle sera normalement dropée à la fin de sa connexion
 --
 --									CREATE TABLE #TableStockageFichierTexte
 --										  ( id_ligne integer identity,
@@ -6486,6 +6497,9 @@ While @iEOF = 0
 	EXECUTE @iRet = sp_OAGetProperty @aiHandle,  'EOS', @iEOF output
 	If @iRet <> 0 Return @iRet 
   ENd 
+
+EXECUTE @iRet = sp_OAGetProperty @aiHandle,  'Size', @aiTailleOctects output
+If @iRet <> 0 Return @iRet 
 
 EXECUTE @iRet = sp_OAMethod @aiHandle, 'Close'
 If @iRet <> 0 Return @iRet 
