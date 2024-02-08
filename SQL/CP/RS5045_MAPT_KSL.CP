@@ -1813,11 +1813,12 @@ Set @iIdSeq = @@IDENTITY
 Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'ID_SEQ_MAIL', CONVERT ( varchar ( 20 ), @iIdSeq ), rtrim ( ltrim ( @asChaineBCVretour )), ';' )  -- [RS6044_REL_MAIL]
 
 -- Si l'adresse mail est anonymisée alors on marque directement l'enregistrement comme envoyé pour éviter qu'il ressorte en erreur côté KSL
-If @asMailSend = 'XX@XX.COM'
+If @asMailSend = 'XX@XX.COM' Or @asMailSend = '' Or @asMailSend is null
   Begin
 	Update sysadm.mail_push set 
 		mail_dte_trt = GETDATE(),
-		mail_trt_ok  = 'O'
+		mail_trt_ok  = 'O',
+		mail_id_erreur = 100
 	Where id_seq = @iIdSeq
   End 
 
