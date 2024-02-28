@@ -1875,6 +1875,8 @@ Go
 -- Retourne             :       A lancer sur [LS-SINISTRES].SIMPA2_PRO absolument
 --
 -------------------------------------------------------------------
+--  JFF 27/02/2024 [20240227151332937] Modif de la requête Volcanes sur demande Sylvie
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_LISTE_DE_TOUS_LES_PRODUITS' AND type = 'P' )
             DROP procedure sysadm.PS_S_LISTE_DE_TOUS_LES_PRODUITS
 GO
@@ -2173,6 +2175,7 @@ group by evvol_cod_prod
 
 -- Cache état produit produit Volcanes
 Insert into @tbEtatProduitVolcanes
+/* [20240227151332937]
 Select [ctpro].ctpro_cod_prod,
 	   Case When max([ctrat].ctrat_dt_fin_ct) > 0 THEN 'Fermé'
 				Else 'Ouvert' 
@@ -2182,10 +2185,38 @@ FROM [VOLCANESDB_PRO].[dbo].[ctpro]  with (nolock) join [VOLCANESDB_PRO].[dbo].[
 			and [ctrat].ctrat_cod_stie_a = [ctpro].ctpro_cod_stie_a
 			and [ctrat].ctrat_cod_contra = [ctpro].ctpro_cod_contra
 where [ctpro].ctpro_existence <> 0
-group by [ctpro].ctpro_cod_prod 
+group by [ctpro].ctpro_cod_prod*/
+-- [20240227151332937]
+Select  Distinct tbCtp.ctpro_cod_prod,
+		Case 
+			When Exists (
+				Select top 1 1
+				FROM ( 
+						Select distinct ctp.ctpro_cod_prod, ctr.ctrat_dt_fin_ct
+						FROM [VOLCANESDB_PRO].[dbo].[ctpro] ctp with (nolock) join [VOLCANESDB_PRO].[dbo].[ctrat] ctr with (nolock)
+									on  ctr.ctrat_cod_tier_a = ctp.ctpro_cod_tier_a
+									and ctr.ctrat_cod_stie_a = ctp.ctpro_cod_stie_a
+									and ctr.ctrat_cod_contra = ctp.ctpro_cod_contra
+						where ctp.ctpro_existence <> 0
+						 ) as tbCtp2
+				Where tbCtp2.ctpro_cod_prod = tbCtp.ctpro_cod_prod 
+				And   tbCtp2.ctrat_dt_fin_ct = 0 
+			) Then 'Ouvert'
+			Else 'Fermé'
+		End
+From ( 
+	Select distinct ctp.ctpro_cod_prod, ctr.ctrat_dt_fin_ct
+	FROM [VOLCANESDB_PRO].[dbo].[ctpro] ctp with (nolock) join [VOLCANESDB_PRO].[dbo].[ctrat] ctr with (nolock)
+				on  ctr.ctrat_cod_tier_a = ctp.ctpro_cod_tier_a
+				and ctr.ctrat_cod_stie_a = ctp.ctpro_cod_stie_a
+				and ctr.ctrat_cod_contra = ctp.ctpro_cod_contra
+	where ctp.ctpro_existence <> 0
+	 ) as tbCtp
+
 
 -- Cache date de fermeture des produits volcanes
 Insert into @tbDateFermProduitVolcanes
+/*
 Select [ctpro].ctpro_cod_prod,
 		Case When max([ctrat].ctrat_dt_fin_ct) > 0 THEN convert(varchar(10),max([ctrat].ctrat_dt_fin_ct),10)
 				Else '' 
@@ -2196,6 +2227,46 @@ FROM [VOLCANESDB_PRO].[dbo].[ctpro] with (nolock) join [VOLCANESDB_PRO].[dbo].[c
 			and [ctrat].ctrat_cod_contra = [ctpro].ctpro_cod_contra
 where [ctpro].ctpro_existence <> 0
 group by [ctpro].ctpro_cod_prod 
+*/
+-- [20240227151332937]
+Select  Distinct tbCtp.ctpro_cod_prod,
+		Case 
+			When Not Exists (
+				Select top 1 1
+				FROM ( 
+						Select distinct ctp.ctpro_cod_prod, ctr.ctrat_dt_fin_ct
+						FROM [VOLCANESDB_PRO].[dbo].[ctpro] ctp with (nolock) join [VOLCANESDB_PRO].[dbo].[ctrat] ctr with (nolock)
+									on  ctr.ctrat_cod_tier_a = ctp.ctpro_cod_tier_a
+									and ctr.ctrat_cod_stie_a = ctp.ctpro_cod_stie_a
+									and ctr.ctrat_cod_contra = ctp.ctpro_cod_contra
+						where ctp.ctpro_existence <> 0
+						 ) as tbCtp2
+				Where tbCtp2.ctpro_cod_prod = tbCtp.ctpro_cod_prod 
+				And   tbCtp2.ctrat_dt_fin_ct = 0 
+			) Then (
+				Select convert(varchar(10),max(tbCtp2.ctrat_dt_fin_ct),10)
+				FROM ( 
+						Select distinct ctp.ctpro_cod_prod, ctr.ctrat_dt_fin_ct
+						FROM [VOLCANESDB_PRO].[dbo].[ctpro] ctp with (nolock) join [VOLCANESDB_PRO].[dbo].[ctrat] ctr with (nolock)
+									on  ctr.ctrat_cod_tier_a = ctp.ctpro_cod_tier_a
+									and ctr.ctrat_cod_stie_a = ctp.ctpro_cod_stie_a
+									and ctr.ctrat_cod_contra = ctp.ctpro_cod_contra
+						where ctp.ctpro_existence <> 0
+						 ) as tbCtp2
+				Where tbCtp2.ctpro_cod_prod = tbCtp.ctpro_cod_prod 
+				And   tbCtp2.ctrat_dt_fin_ct > 0 
+			)
+			Else ''
+		End
+From ( 
+	Select distinct ctp.ctpro_cod_prod, ctr. ctrat_dt_fin_ct
+	FROM [VOLCANESDB_PRO].[dbo].[ctpro] ctp with (nolock) join [VOLCANESDB_PRO].[dbo].[ctrat] ctr with (nolock)
+				on  ctr.ctrat_cod_tier_a = ctp.ctpro_cod_tier_a
+				and ctr.ctrat_cod_stie_a = ctp.ctpro_cod_stie_a
+				and ctr.ctrat_cod_contra = ctp.ctpro_cod_contra
+	where ctp.ctpro_existence <> 0
+	 ) as tbCtp
+
 
 -- Cache au de là de 1000
 Set @dcIdProdFFM  = 1  -- On part du produit en adhésion 1
