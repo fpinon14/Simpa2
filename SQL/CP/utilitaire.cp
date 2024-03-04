@@ -3199,7 +3199,7 @@ From
 				And		p.id_police = g.id_police
 				And		c.id_cie = p.id_cie	
 				
-				Return @sLibCie
+				Return ltrim ( rtrim ( @sLibCie ))
 			End 
 	 End  
 

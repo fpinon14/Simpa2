@@ -5719,6 +5719,7 @@ Go
 -------------------------------------------------------------------
 -- JFF      11/03/2019   [DT339]
 -- JFF      06/04/2020   [PM506-1]
+-- JFF      28/02/2024   [MCO_190_191_BECLM]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_DETECT_ERREUR_WS' AND type = 'P' )
         DROP procedure sysadm.PS_S_DETECT_ERREUR_WS
@@ -5792,7 +5793,7 @@ While @iNbreTour <= 2
 				When left ( upper ( nom_ws), 30 ) = 'PM506 - LUTTE ANTI BLANCHIMENT' -- [PM506]
 					Then left ( upper ( nom_ws), 30 ) -- [PM506]
 			End,
-			Left ( url_ws, 87),
+			Left ( url_ws, 68),  -- [MCO_190_191_BECLM] 87
 			@iDelaiMinParam * @iNbreTour,
 			count(*),
 			0
@@ -5825,7 +5826,7 @@ While @iNbreTour <= 2
 				When left ( upper ( nom_ws), 30 ) = 'PM506 - LUTTE ANTI BLANCHIMENT' -- [PM506]
 					Then left ( upper ( nom_ws), 30 ) -- [PM506]
 			End,
-			Left ( url_ws, 87)
+			Left ( url_ws, 68)  -- [MCO_190_191_BECLM] 87
 
 	Set @iNbreTour = @iNbreTour + 1
 
