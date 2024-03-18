@@ -3230,6 +3230,123 @@ End
 
 GO
 
+--------------------------------------------------------------------
+--
+-- Fonction             :       FN_ID_CIE
+-- Auteur               :       Fabry JF
+-- Date                 :       17/10/2013
+-- Libellé              :
+-- Commentaires         :       Retourne l'ID compagnie par rapport à un sinistre
+-- Références           :       
+--
+-- Arguments            :       Aucun
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+-- JFF      12/02/2016   [PI062]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_ID_CIE' AND type = 'FN' )
+        DROP function sysadm.FN_ID_CIE
+GO
+
+CREATE  function sysadm.FN_ID_CIE  (
+        @dcIdSin    Decimal (10) ) -- [PI062]
+RETURNS Integer
+AS
+
+Begin
+
+Declare @iIdCie Integer
+
+If 
+(
+Select COUNT (*)
+From 
+	(
+		Select  distinct c.id_cie
+		From	sysadm.sinistre s,
+				sysadm.garantie g,
+				sysadm.gar_sin gs,
+				sysadm.police p,
+				sysadm.compagnie c
+
+		Where   s.id_sin = @dcIdSin
+		And		gs.id_sin = s.id_sin
+		And     g.id_prod = s.id_prod
+		And		g.id_gti  = gs.id_gti
+		And		g.id_rev = s.id_rev
+		And		p.id_police = g.id_police
+		And		c.id_cie = p.id_cie
+	) as Tb
+) <> 1 
+ Begin
+ 
+ 	If ( Select COUNT (*) From sysadm.gar_sin where id_sin = @dcIdSin ) = 0
+ 		Or 
+	   ( Select id_rev From sysadm.sinistre s where s.id_sin = @dcIdSin ) < 0 	
+	 Begin
+		If 
+		(
+		Select COUNT (*)
+		From 
+			(
+				Select  distinct c.id_cie
+				From	sysadm.sinistre s,
+						sysadm.garantie g,
+						sysadm.police p,
+						sysadm.compagnie c
+
+				Where   s.id_sin = @dcIdSin
+				And     g.id_prod = s.id_prod
+				And		( g.id_rev = s.id_rev or s.id_rev < 0 )
+				And		p.id_police = g.id_police
+				And		c.id_cie = p.id_cie
+			) as Tb
+		) = 1
+			Begin 
+				Select	Top 1 @iIdCie = c.id_cie
+				From	sysadm.sinistre s,
+						sysadm.garantie g,
+						sysadm.police p,
+						sysadm.compagnie c
+
+				Where   s.id_sin = @dcIdSin
+				And     g.id_prod = s.id_prod
+				And		( g.id_rev = s.id_rev or s.id_rev < 0 )
+				And		p.id_police = g.id_police
+				And		c.id_cie = p.id_cie	
+				
+				Return @iIdCie 
+			End 
+	 End  
+ 
+	Return -1 -- 'Dépendance avec la garantie'
+ End 
+
+Select	Top 1 @iIdCie = c.id_cie
+From	sysadm.sinistre s,
+		sysadm.garantie g,
+		sysadm.gar_sin gs,
+		sysadm.police p,
+		sysadm.compagnie c
+
+Where   s.id_sin = @dcIdSin
+And		gs.id_sin = s.id_sin
+And     g.id_prod = s.id_prod
+And		g.id_rev = s.id_rev
+And		g.id_gti  = gs.id_gti
+And		p.id_police = g.id_police
+And		c.id_cie = p.id_cie
+
+
+Return @iIdCie
+
+End 
+
+GO
+
+
 
 
 --------------------------------------------------------------------
