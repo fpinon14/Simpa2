@@ -3110,17 +3110,17 @@ Select	id_lot_trt,
 		motif_refus_spb, 
 		rtrim ( ltrim ( comment_refus_spb) ),
 		Case
-			When motif_refus_spb >0 And motif_refus_spb <= 99 Then 'clemarchand@spb.eu,sdelesque@spb.eu,mlecorre-daniel@spb.eu'
+			When motif_refus_spb >0 And motif_refus_spb <= 99 Then 'clemarchand@spb.eu,sdelesque@spb.eu'
 			When motif_refus_spb >99 And motif_refus_spb <= 199 Then 'ntonnetot@spb.eu,flebarbay@spb.eu,ayvon@spb.eu,jff@spb.fr'
-			When motif_refus_spb >199 And motif_refus_spb <= 299 Then 'ilegall@spb.eu,mlecorre-daniel@spb.eu'
+			When motif_refus_spb >199 And motif_refus_spb <= 299 Then 'ilegall@spb.eu'
 			When motif_refus_spb >299 And motif_refus_spb <= 399 Then 'sbarthelemy@spb.eu,cbourdoiseau@spb.eu'
 			Else 'jff@spb.fr'
 		End 'adr_mail_log',
 		Case 
 			When motif_refus_spb >0 And motif_refus_spb <= 99 Then 'jff@spb.fr,sbarthelemy@spb.eu'
-			When motif_refus_spb >99 And motif_refus_spb <= 199 Then 'clemarchand@spb.eu,sdelesque@spb.eu,jff@spb.fr,sbarthelemy@spb.eu,mlecorre-daniel@spb.eu'
-			When motif_refus_spb >199 And motif_refus_spb <= 299 Then 'clemarchand@spb.eu,sdelesque@spb.eu,jff@spb.fr,sbarthelemy@spb.eu,mlecorre-daniel@spb.eu'
-			When motif_refus_spb >299 And motif_refus_spb <= 399 Then 'clemarchand@spb.eu,sdelesque@spb.eu,jff@spb.fr,sbarthelemy@spb.eu,mlecorre-daniel@spb.eu'
+			When motif_refus_spb >99 And motif_refus_spb <= 199 Then 'clemarchand@spb.eu,sdelesque@spb.eu,jff@spb.fr,sbarthelemy@spb.eu'
+			When motif_refus_spb >199 And motif_refus_spb <= 299 Then 'clemarchand@spb.eu,sdelesque@spb.eu,jff@spb.fr,sbarthelemy@spb.eu'
+			When motif_refus_spb >299 And motif_refus_spb <= 399 Then 'clemarchand@spb.eu,sdelesque@spb.eu,jff@spb.fr,sbarthelemy@spb.eu'
 			Else ''
 		End 'adr_mail_cc_log',
 		0
@@ -3133,17 +3133,17 @@ Group By
 		motif_refus_spb, 
 		comment_refus_spb,
 		Case
-			When motif_refus_spb >0 And motif_refus_spb <= 99 Then 'clemarchand@spb.eu,sdelesque@spb.eu,mlecorre-daniel@spb.eu'
+			When motif_refus_spb >0 And motif_refus_spb <= 99 Then 'clemarchand@spb.eu,sdelesque@spb.eu'
 			When motif_refus_spb >99 And motif_refus_spb <= 199 Then 'ntonnetot@spb.eu,flebarbay@spb.eu,ayvon@spb.eu,jff@spb.fr'
-			When motif_refus_spb >199 And motif_refus_spb <= 299 Then 'ilegall@spb.eu,mlecorre-daniel@spb.eu'
+			When motif_refus_spb >199 And motif_refus_spb <= 299 Then 'ilegall@spb.eu'
 			When motif_refus_spb >299 And motif_refus_spb <= 399 Then 'sbarthelemy@spb.eu,cbourdoiseau@spb.eu'
 			Else 'jff@spb.fr'
 		End,
 		Case 
 			When motif_refus_spb >0 And motif_refus_spb <= 99 Then 'jff@spb.fr,sbarthelemy@spb.eu'
-			When motif_refus_spb >99 And motif_refus_spb <= 199 Then 'clemarchand@spb.eu,sdelesque@spb.eu,jff@spb.fr,sbarthelemy@spb.eu,mlecorre-daniel@spb.eu'
-			When motif_refus_spb >199 And motif_refus_spb <= 299 Then 'clemarchand@spb.eu,sdelesque@spb.eu,jff@spb.fr,sbarthelemy@spb.eu,mlecorre-daniel@spb.eu'
-			When motif_refus_spb >299 And motif_refus_spb <= 399 Then 'clemarchand@spb.eu,sdelesque@spb.eu,jff@spb.fr,sbarthelemy@spb.eu,mlecorre-daniel@spb.eu'
+			When motif_refus_spb >99 And motif_refus_spb <= 199 Then 'clemarchand@spb.eu,sdelesque@spb.eu,jff@spb.fr,sbarthelemy@spb.eu'
+			When motif_refus_spb >199 And motif_refus_spb <= 299 Then 'clemarchand@spb.eu,sdelesque@spb.eu,jff@spb.fr,sbarthelemy@spb.eu'
+			When motif_refus_spb >299 And motif_refus_spb <= 399 Then 'clemarchand@spb.eu,sdelesque@spb.eu,jff@spb.fr,sbarthelemy@spb.eu'
 			Else ''
 		End
 Order by adr_mail_log
