@@ -94,11 +94,11 @@ Go
 -- Retourne             :       rien
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_TYPE_ACTION' AND type = 'P' )
-        DROP procedure sysadm.PS_HP276_S_HP_TYPE_ACTION
+        DROP procedure edi.PS_HP276_S_HP_TYPE_ACTION
 GO
 
 
-CREATE procedure sysadm.PS_HP276_S_HP_TYPE_ACTION
+CREATE procedure edi.PS_HP276_S_HP_TYPE_ACTION
 	    @aiCas				Tinyint,
 		@adcIdProd			Integer,
 		@adcIdGti			Integer,
@@ -171,11 +171,11 @@ Go
 -- Retourne             :       rien
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_POINT_DE_SERVICE' AND type = 'P' )
-        DROP procedure sysadm.PS_HP276_S_HP_POINT_DE_SERVICE
+        DROP procedure edi.PS_HP276_S_HP_POINT_DE_SERVICE
 GO
 
 
-CREATE procedure sysadm.PS_HP276_S_HP_POINT_DE_SERVICE
+CREATE procedure edi.PS_HP276_S_HP_POINT_DE_SERVICE
 	    @aiCas				Tinyint,
 		@adcIdProd			Integer,
 		@adcIdGti			Integer,

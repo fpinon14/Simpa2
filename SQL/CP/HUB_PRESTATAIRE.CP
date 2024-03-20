@@ -7,9 +7,9 @@
 -- Commentaires         :       Gestion des PS SQL entre SIMPA2 et le HUB prestataire
 --
 -- Procédures           :       
--- sysadm.PS_HP276_I_HP_CREATION_PRESTA_DANS_LE_HUB_PRESTATATIRE
--- sysadm.PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATATIRE
--- sysadm.PS_HP276_I_S2_CREATION_PRESTA_DANS_LE_HUB_PRESTATATIRE
+-- sysadm.PS_HP276_I_HP_CREATION_PRESTA_DANS_LE_HUB_PRESTATAIRE
+-- sysadm.PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATAIRE
+-- sysadm.PS_HP276_I_S2_CREATION_PRESTA_DANS_LE_HUB_PRESTATAIRE
 -- sysadm.PS_HP276_S_HP_POINT_DE_SERVICE
 -- sysadm.PS_HP276_S_HP_TYPE_ACTION
 -- sysadm.PS_HP276_S_HP_TYPE_DOMMAGE
@@ -30,6 +30,7 @@
 --
 -- Retourne             :       rien
 -------------------------------------------------------------------
+/*
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_S2_TYPE_DOMMAGE' AND type = 'P' )
         DROP procedure sysadm.PS_HP276_S_S2_TYPE_DOMMAGE
 GO
@@ -49,6 +50,12 @@ Declare @iIdGti Integer
 Set @iIdProd = CONVERT ( Integer, @adcIdProd ) 
 Set @iIdGti = CONVERT ( Integer, @adcIdGti ) 
 
+Declare @Tb table ( 
+	id_code_td_hp VarChar ( 30 ),
+	lib_td_hp VarChar ( 30 )
+	)
+
+
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 BEGIN
 	If @aiCas > 0 Set @aiCas = 3
@@ -59,7 +66,22 @@ BEGIN
 	-- [HP252_276_HUB_PRESTA]
 	If @aiCas in ( 2, 3 )
 	 Begin
+---		Exec [S2SQL14DEV\RECSAGA2].[PRESTATAIRE].[edi].PS_HP276_S_HP_TYPE_DOMMAGE @aiCas, @iIdProd, @iIdGti, @asMarqAppSin, @asModlAppSin, @asTypAppSin
 		Exec [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].[edi].PS_HP276_S_HP_TYPE_DOMMAGE @aiCas, @iIdProd, @iIdGti, @asMarqAppSin, @asModlAppSin, @asTypAppSin
+--		Insert into @Tb Exec ( 'Exec [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].[edi].PS_HP276_S_HP_TYPE_DOMMAGE @aiCas, @iIdProd, @iIdGti, @asMarqAppSin, @asModlAppSin, @asTypAppSin' ) 
+
+		Declare @s varchar ( 200 ) 
+--		Set @s = 'Exec [S2SQL14DEV\RECSAGA2].[PRESTATAIRE].[edi].PS_HP276_S_HP_TYPE_DOMMAGE 2, 1, 1, ''1'', ''1'', ''1'''
+--		Set @s = 'Begin Tran; Exec [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].[edi].PS_HP276_S_HP_TYPE_DOMMAGE 2, 1, 1, ''1'', ''1'', ''1''; commit tran'
+--		Set @s = 'Select top 5 left( BenefitStatusCode, 30) , Left ( BenefitStatusLabel, 30)  From [S2SQL14PP1\PPRSAGA2].PRESTATAIRE.ref.benefitstatus'
+--		Set @s = 'Select top 5 convert (varchar (10), id_sin) , convert (varchar (10), id_seq)   From [S2SQL14DEV\RECSAGA2].PRESTATAIRE.edi.DepotSimpa2ToHubPresta'		
+--		Set @s = 'select Left ( benefittypecode, 30), Left( brandcode, 30 ) from [S2SQL14PP1\PPRSAGA2].PRESTATAIRE.[dbo].[SelectBenefitType](''993'', ''SAMSUNG'', '''', null, null, null)'		
+--		select Left ( benefittypecode, 30), Left( brandcode, 30 ) from [S2SQL14PP1\PPRSAGA2].PRESTATAIRE.[dbo].[SelectBenefitType]('993', 'SAMSUNG', '', null, null, null)
+
+--		Select @s
+--		Insert into @Tb Exec ( @s ) 
+--		Select * from @Tb 
+
 	 End
 	Else
 	-- test SIMPA2
@@ -70,6 +92,7 @@ BEGIN
 END 
 
 Go
+*/
 
 -------------------------------------------------------------------
 --
@@ -85,11 +108,11 @@ Go
 -- Retourne             :       rien
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_TYPE_DOMMAGE' AND type = 'P' )
-        DROP procedure sysadm.PS_HP276_S_HP_TYPE_DOMMAGE
+        DROP procedure edi.PS_HP276_S_HP_TYPE_DOMMAGE
 GO
 
 
-CREATE procedure sysadm.PS_HP276_S_HP_TYPE_DOMMAGE
+CREATE procedure edi.PS_HP276_S_HP_TYPE_DOMMAGE
 	    @aiCas				Tinyint,
 		@aiIdProd			Integer,
 		@aiIdGti			Integer,
@@ -105,7 +128,7 @@ AS
 If @aiCas in ( 1, 2 )
   Begin
 	-- Select TEST pour JFF
-	WaitFor Delay '00:00:03'
+	WaitFor Delay '00:00:00'
 	Select Left ( 'TD1', 30) 'id_code_td_hp' , Left ( 'Ecran cassé', 50 ) 'lib_td_hp'
 	Union
 	Select Left ( 'TD2', 30) , Left ( 'Arrière cassé', 50 ) 
@@ -154,6 +177,7 @@ Go
 --
 -- Retourne             :       rien
 -------------------------------------------------------------------
+/*
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_S2_TYPE_ACTION' AND type = 'P' )
         DROP procedure sysadm.PS_HP276_S_S2_TYPE_ACTION
 GO
@@ -195,6 +219,7 @@ BEGIN
 END 
 
 Go
+*/
 
 -------------------------------------------------------------------
 --
@@ -230,7 +255,7 @@ AS
 ---------------------------------------------------------------------------------
 If @aiCas in ( 1, 2 )
   Begin
-	WaitFor Delay '00:00:03'
+	WaitFor Delay '00:00:00'
 	Select Left ( 'A_REPARER', 20) 'id_code_action_hp' , Left ( 'Réparation', 20 ) 'lib_action_hp'
 	Union
 	Select Left ( 'A_DIAGNOSTIQUER', 20) 'id_code_action_hp' , Left ( 'Diagnostic', 20 ) 'lib_action_hp'
@@ -270,6 +295,48 @@ If @aiCas = 3
 
 		*/
   End
+
+Go
+
+-------------------------------------------------------------------
+--
+-- Procédure            :       PS_HP276_S_S2_DATA_DOSSIER
+-- Auteur               :       JFF
+-- Date                 :       11/03/2024
+-- Libell‚              :       [HP252_276_HUB_PRESTA]
+-- Commentaires         :       Renvoie vers SIMPA2, à partir du HUB,  les points de services  possibles que propose le HUB selon "n" critères
+--                              /!\ A COMPILER SUR LA BASE SIMPA2 /!\
+--								Cette est la PS d'appel SIMPA2 qui appel le HUB selon l'environnement
+--
+-- Retourne             :       rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_S2_DATA_DOSSIER' AND type = 'P' )
+        DROP procedure sysadm.PS_HP276_S_S2_DATA_DOSSIER
+GO
+
+CREATE procedure sysadm.PS_HP276_S_S2_DATA_DOSSIER
+		@adcIdSin				Decimal ( 10 ),
+		@asIdAdh				VarChar ( 50 ) OutPut,
+		@aiIdGrpContractant		Integer OutPut,
+		@asLibGrpContractant	VarChar ( 35 ) OutPut
+
+AS
+
+Select	@asIdAdh =	Convert ( Varchar ( 20 ), pr.cod_prod_dms ) + '-' +
+					Convert ( Varchar ( 20 ), ws.id_ets) + '-' +
+					ltrim ( rtrim ( ws.id_adh )) + '-' +
+					Convert ( Varchar ( 20 ), ws.id_sdos) + '-',
+		@aiIdGrpContractant = gr.id_grp,
+		@asLibGrpContractant = ltrim ( rtrim ( gr.lib_grp ))
+From	sysadm.w_sin ws,
+	    sysadm.produit pr,
+		sysadm.groupe gr
+Where   ws.id_sin = @adcIdSin
+And     pr.id_prod = ws.id_prod
+And     gr.id_grp = pr.id_grp
+
+Set @asIdAdh = LTRIM ( rTrim ( @asIdAdh ))
+If  @asIdAdh = '' Set @asIdAdh = null
 
 Go
 
@@ -510,6 +577,7 @@ Select * From @Tb
 END 
 Go
 
+
 -------------------------------------------------------------------
 --
 -- Procédure            :       PS_HP276_S_HP_POINT_DE_SERVICE
@@ -559,9 +627,10 @@ AS
 ---------------------------------------------------------------------------------
 If @aiCas in ( 1, 2 )
   Begin
-	WaitFor Delay '00:00:03'
+	WaitFor Delay '00:00:00'
 	Select	LEFT ( 'AUYPSQZMJB', 20 ) 'idHubPresta',
 			Left ( 'ANV', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
+			null,
 			Left ( 'ANV0001', 20) 'idPointServ', 
 			Left ( 'CENTRALIZATION', 20 ) 'idModeProcess', 
 			Left ( 'Nom point de service ANV', 255 ) 'nomPointServ',
@@ -576,6 +645,7 @@ If @aiCas in ( 1, 2 )
 	Union
 	Select	LEFT ( 'AUYPSQZMJB', 20 ) 'idHubPresta',
 			Left ( 'ANV', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
+			null,
 			Left ( 'ANV0002', 20) 'idPointServ', 
 			Left ( 'PROXIMITY', 20 ) 'idModeProcess', 
 			Left ( 'Nom point de service ANV', 255 ) 'nomPointServ',
@@ -590,6 +660,7 @@ If @aiCas in ( 1, 2 )
 	Union
 	Select	LEFT ( 'AUYPSQZMJB', 20 ) 'idHubPresta',
 			Left ( 'ANV', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
+			null,
 			Left ( 'ANV0003', 20) 'idPointServ', 
 			Left ( 'PROXIMITY', 20 ) 'idModeProcess', 
 			Left ( 'Nom point de service ANV', 255 ) 'nomPointServ',
@@ -604,6 +675,7 @@ If @aiCas in ( 1, 2 )
 	Union
 	Select	LEFT ( 'AUYPSQZMJB', 20 ) 'idHubPresta',
 			Left ( 'ANV', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
+			null,
 			Left ( 'ANV0004', 20) 'idPointServ', 
 			Left ( 'PROXIMITY', 20 ) 'idModeProcess', 
 			Left ( 'Nom point de service ANV', 255 ) 'nomPointServ',
@@ -618,6 +690,7 @@ If @aiCas in ( 1, 2 )
 	Union
 	Select	LEFT ( 'AUYPSQZMJB', 20 ) 'idHubPresta',
 			Left ( 'ANV', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
+			null,
 			Left ( 'ANV0005', 20) 'idPointServ', 
 			Left ( 'PROXIMITY', 20 ) 'idModeProcess', 
 			Left ( 'Nom point de service ANV', 255 ) 'nomPointServ',
@@ -632,6 +705,7 @@ If @aiCas in ( 1, 2 )
 	Union
 	Select	LEFT ( 'AUYPSQZMJB', 20 ) 'idHubPresta',
 			Left ( 'ASF', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
+			null,
 			Left ( 'ASF0001', 20) 'idPointServ', 
 			Left ( 'CENTRALIZATION', 20 ) 'idModeProcess', 
 			Left ( 'Nom point de service ASF', 255 ) 'nomPointServ',
@@ -646,6 +720,7 @@ If @aiCas in ( 1, 2 )
 	Union
 	Select	LEFT ( 'AUYPSQZMJB', 20 ) 'idHubPresta',
 			Left ( 'ASF', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
+			null,
 			Left ( 'ASF0002', 20) 'idPointServ', 
 			Left ( 'PROXIMITY', 20 ) 'idModeProcess', 
 			Left ( 'Nom point de service ASF', 255 ) 'nomPointServ',
@@ -660,6 +735,7 @@ If @aiCas in ( 1, 2 )
 	Union
 	Select	LEFT ( 'AUYPSQZMJB', 20 ) 'idHubPresta',
 			Left ( 'ASF', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
+			null,
 			Left ( 'ASF0003', 20) 'idPointServ', 
 			Left ( 'PROXIMITY', 20 ) 'idModeProcess', 
 			Left ( 'Nom point de service ASF', 255 ) 'nomPointServ',
@@ -696,7 +772,7 @@ Go
 
 -------------------------------------------------------------------
 --
--- Procédure            :       PS_HP276_I_S2_CREATION_PRESTA_DANS_LE_HUB_PRESTATATIRE
+-- Procédure            :       PS_HP276_I_S2_CREATION_PRESTA_DANS_LE_HUB_PRESTATAIRE
 -- Auteur               :       JFF
 -- Date                 :       11/03/2024
 -- Libell‚              :       [HP252_276_HUB_PRESTA]
@@ -706,11 +782,11 @@ Go
 --
 -- Retourne             :       rien
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_I_S2_CREATION_PRESTA_DANS_LE_HUB_PRESTATATIRE' AND type = 'P' )
-        DROP procedure sysadm.PS_HP276_I_S2_CREATION_PRESTA_DANS_LE_HUB_PRESTATATIRE
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_I_S2_CREATION_PRESTA_DANS_LE_HUB_PRESTATAIRE' AND type = 'P' )
+        DROP procedure sysadm.PS_HP276_I_S2_CREATION_PRESTA_DANS_LE_HUB_PRESTATAIRE
 GO
 
-CREATE procedure sysadm.PS_HP276_I_S2_CREATION_PRESTA_DANS_LE_HUB_PRESTATATIRE
+CREATE procedure sysadm.PS_HP276_I_S2_CREATION_PRESTA_DANS_LE_HUB_PRESTATAIRE
 		@aiCas				Integer,
 	    @adcIdsin			Decimal ( 10 ),
 		@aiIdSeq			Integer
@@ -939,7 +1015,7 @@ And   c.id_seq = @aiIdSeq
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 BEGIN
 	If @aiCas > 0 Set @aiCas = 3
-	Exec @iRet = [LS-SAGA2].[PRESTATAIRE].[edi].PS_HP276_I_HP_CREATION_PRESTA_DANS_LE_HUB_PRESTATATIRE 
+	Exec @iRet = [LS-SAGA2].[PRESTATAIRE].[edi].PS_HP276_I_HP_CREATION_PRESTA_DANS_LE_HUB_PRESTATAIRE 
 	    @aiCas,
 		@sIdHubPresta,
 		@sPointService,
@@ -960,11 +1036,11 @@ BEGIN
 		Where   id_sin = @adcIdsin
 		And		id_seq = @aiIdSeq
 
-		 RAISERROR ('Retour erreur du Hub Prestataire PS_HP276_I_HP_CREATION_PRESTA_DANS_LE_HUB_PRESTATATIRE', 16, 1, @DBID, @DBNAME)
+		 RAISERROR ('Retour erreur du Hub Prestataire PS_HP276_I_HP_CREATION_PRESTA_DANS_LE_HUB_PRESTATAIRE', 16, 1, @DBID, @DBNAME)
 		 Return
 	  End 
 
-	Exec @iRet = [LS-SAGA2].[PRESTATAIRE].[edi].PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATATIRE 
+	Exec @iRet = [LS-SAGA2].[PRESTATAIRE].[edi].PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATAIRE 
 			@aiCas,
 			@iIdSin,
 			@aiIdSeq,
@@ -1048,7 +1124,7 @@ BEGIN
 			Where   id_sin = @adcIdsin
 			And		id_seq = @aiIdSeq
 
-			 RAISERROR ('Retour erreur du Hub Prestataire PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATATIRE', 16, 1, @DBID, @DBNAME)
+			 RAISERROR ('Retour erreur du Hub Prestataire PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATAIRE', 16, 1, @DBID, @DBNAME)
 			 Return
 		  End 
 
@@ -1058,7 +1134,7 @@ BEGIN
 	-- [HP252_276_HUB_PRESTA]
 	If @aiCas in ( 2, 3 )
 	 Begin
-		Exec @iRet = [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].[edi].PS_HP276_I_HP_CREATION_PRESTA_DANS_LE_HUB_PRESTATATIRE 
+		Exec @iRet = [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].[edi].PS_HP276_I_HP_CREATION_PRESTA_DANS_LE_HUB_PRESTATAIRE 
 			@aiCas,
 			@sIdHubPresta,
 			@sPointService,
@@ -1079,11 +1155,11 @@ BEGIN
 				Where   id_sin = @adcIdsin
 				And		id_seq = @aiIdSeq
 
-				 RAISERROR ('Retour erreur du Hub Prestataire PS_HP276_I_HP_CREATION_PRESTA_DANS_LE_HUB_PRESTATATIRE', 16, 1, @DBID, @DBNAME)
+				 RAISERROR ('Retour erreur du Hub Prestataire PS_HP276_I_HP_CREATION_PRESTA_DANS_LE_HUB_PRESTATAIRE', 16, 1, @DBID, @DBNAME)
 				 Return
 			  End 
 
-		Exec @iRet = [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].[edi].PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATATIRE 
+		Exec @iRet = [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].[edi].PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATAIRE 
 			@aiCas,
 			@iIdSin,
 			@aiIdSeq,
@@ -1167,7 +1243,7 @@ BEGIN
 			Where   id_sin = @adcIdsin
 			And		id_seq = @aiIdSeq
 
-			 RAISERROR ('Retour erreur du Hub Prestataire PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATATIRE', 16, 1, @DBID, @DBNAME)
+			 RAISERROR ('Retour erreur du Hub Prestataire PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATAIRE', 16, 1, @DBID, @DBNAME)
 			 Return
 		  End 
 
@@ -1175,7 +1251,7 @@ BEGIN
 	Else
 	-- test SIMPA2
 	 Begin
-		Exec @iRet = sysadm.PS_HP276_I_HP_CREATION_PRESTA_DANS_LE_HUB_PRESTATATIRE 
+		Exec @iRet = sysadm.PS_HP276_I_HP_CREATION_PRESTA_DANS_LE_HUB_PRESTATAIRE 
 			@aiCas,
 			@sIdHubPresta,
 			@sPointService,
@@ -1196,11 +1272,11 @@ BEGIN
 				Where   id_sin = @adcIdsin
 				And		id_seq = @aiIdSeq
 
-				 RAISERROR ('Retour erreur du Hub Prestataire PS_HP276_I_HP_CREATION_PRESTA_DANS_LE_HUB_PRESTATATIRE', 16, 1, @DBID, @DBNAME)
+				 RAISERROR ('Retour erreur du Hub Prestataire PS_HP276_I_HP_CREATION_PRESTA_DANS_LE_HUB_PRESTATAIRE', 16, 1, @DBID, @DBNAME)
 				 Return
 			  End 
 
-		Exec @iRet = sysadm.PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATATIRE 
+		Exec @iRet = sysadm.PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATAIRE 
 			@aiCas,
 			@iIdSin,
 			@aiIdSeq,
@@ -1284,7 +1360,7 @@ BEGIN
 			Where   id_sin = @adcIdsin
 			And		id_seq = @aiIdSeq
 
-			 RAISERROR ('Retour erreur du Hub Prestataire PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATATIRE', 16, 1, @DBID, @DBNAME)
+			 RAISERROR ('Retour erreur du Hub Prestataire PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATAIRE', 16, 1, @DBID, @DBNAME)
 			 Return
 		  End 
 
@@ -1297,7 +1373,7 @@ Go
 
 -------------------------------------------------------------------
 --
--- Procédure            :       PS_HP276_I_HP_CREATION_PRESTA_DANS_LE_HUB_PRESTATATIRE
+-- Procédure            :       PS_HP276_I_HP_CREATION_PRESTA_DANS_LE_HUB_PRESTATAIRE
 -- Auteur               :       JFF
 -- Date                 :       11/03/2024
 -- Libell‚              :       [HP252_276_HUB_PRESTA]
@@ -1308,11 +1384,11 @@ Go
 --
 -- Retourne             :       rien
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_I_HP_CREATION_PRESTA_DANS_LE_HUB_PRESTATATIRE' AND type = 'P' )
-        DROP procedure sysadm.PS_HP276_I_HP_CREATION_PRESTA_DANS_LE_HUB_PRESTATATIRE
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_I_HP_CREATION_PRESTA_DANS_LE_HUB_PRESTATAIRE' AND type = 'P' )
+        DROP procedure sysadm.PS_HP276_I_HP_CREATION_PRESTA_DANS_LE_HUB_PRESTATAIRE
 GO
 
-CREATE procedure sysadm.PS_HP276_I_HP_CREATION_PRESTA_DANS_LE_HUB_PRESTATATIRE
+CREATE procedure sysadm.PS_HP276_I_HP_CREATION_PRESTA_DANS_LE_HUB_PRESTATAIRE
 	    @aiCas				Tinyint,
 		@asIdHubPresta		VarChar ( 20 ),
 		@asPointService		VarChar ( 20 ),
@@ -1356,7 +1432,7 @@ Go
 
 -------------------------------------------------------------------
 --
--- Procédure            :       PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATATIRE
+-- Procédure            :       PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATAIRE
 -- Auteur               :       JFF
 -- Date                 :       11/03/2024
 -- Libell‚              :       [HP252_276_HUB_PRESTA]
@@ -1367,11 +1443,11 @@ Go
 --
 -- Retourne             :       rien
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATATIRE' AND type = 'P' )
-        DROP procedure sysadm.PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATATIRE
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATAIRE' AND type = 'P' )
+        DROP procedure sysadm.PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATAIRE
 GO
 
-CREATE procedure sysadm.PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATATIRE
+CREATE procedure sysadm.PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATAIRE
 	    @aiCas	Tinyint,
 		@iIdSin Integer ,
 		@iIdSeq integer ,
