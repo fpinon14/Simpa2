@@ -1423,7 +1423,7 @@ Update	sysadm.commande
 Set		id_lot_cmd  = 999800, 
 		cmd_gen_le = GETDATE(), 
 		cmd_gen_par = 'HUB',
-		info_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', STRING ( @alIdentityHubPresta ), RTRIM ( ltrim ( info_spb_frn_cplt )), ';')
+		info_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', convert ( VarChar ( 20) , @alIdentityHubPresta ), RTRIM ( ltrim ( info_spb_frn_cplt )), ';')
 Where   id_sin = @adcIdSin
 And		id_seq = @alIdSeq
 

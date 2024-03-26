@@ -1661,6 +1661,7 @@ Go
 -- JFF	21/11/2014	[VDOC16011]
 -- JFF	25/11/2014	[PM251-2]
 -- JFF  12/02/2016  [PI062]
+-- JFF  07/03/2024  [HP252_276_HUB_PRESTA]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I01_RETOUR_PREFACT_PM251' AND type = 'P' )
         DROP procedure sysadm.PS_I01_RETOUR_PREFACT_PM251
@@ -2150,6 +2151,19 @@ AS
 			  End 
 		
 		End 
+
+	-- [HP252_276_HUB_PRESTA]
+	 If Exists ( 
+		 Select Top 1 1
+		 From sysadm.w_commande wc
+		 Where wc.id_sin = @dcIdSin
+		 And   sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', wc.info_spb_frn_cplt, ';') <> ''
+		 And   wc.cod_etat = 'CNV'
+		)
+		Begin
+			Set @sResult = 'ERREUR : Une prestation liée au Hub Prestataire est à valider sur ce dossier par la DGRC d''abord.'
+			Return -100
+		End 		  
 
 	 -- Tout est Ok, début de maj.
 	Update w_queue set alt_occupe = 'O' where id_sin = @dcIdSin and alt_occupe = 'N'

@@ -126,15 +126,8 @@ Create index idx3_DepotSimpa2ToHubPresta on edi.DepotSimpa2ToHubPresta ( id_hub_
 Create index idx4_DepotSimpa2ToHubPresta on edi.DepotSimpa2ToHubPresta ( depose_le )
 Create index idx5_DepotSimpa2ToHubPresta on edi.DepotSimpa2ToHubPresta ( point_service )
 Create index idx6_DepotSimpa2ToHubPresta on edi.DepotSimpa2ToHubPresta ( id_four )
-
-/*
-Create index idx1_DepotSimpa2ToHubPresta on sysadm.DepotSimpa2ToHubPresta ( id_sin )
-Create index idx2_DepotSimpa2ToHubPresta on sysadm.DepotSimpa2ToHubPresta ( id_sin, id_seq )
-Create index idx3_DepotSimpa2ToHubPresta on sysadm.DepotSimpa2ToHubPresta ( id_hub_presta )
-Create index idx4_DepotSimpa2ToHubPresta on sysadm.DepotSimpa2ToHubPresta ( depose_le )
-Create index idx5_DepotSimpa2ToHubPresta on sysadm.DepotSimpa2ToHubPresta ( point_service )
-Create index idx6_DepotSimpa2ToHubPresta on sysadm.DepotSimpa2ToHubPresta ( id_four )
-*/
+Create index idx7_DepotSimpa2ToHubPresta on edi.DepotSimpa2ToHubPresta ( alt_trt )
+Create index idx8_DepotSimpa2ToHubPresta on edi.DepotSimpa2ToHubPresta ( traite_le)
 
 Go
 
@@ -955,3 +948,110 @@ Begin
 End  
   
   
+-------------------------------------------------------------------
+--
+-- Procédure            :       PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_SIMPA2_AU_HUB_PRESTAIRE
+-- Auteur               :       JFF
+-- Date                 :       11/03/2024
+-- Libell‚              :       [HP252_276_HUB_PRESTA]
+-- Commentaires         :       
+--                              /!\ A COMPILER SUR LA BASE PRESTATAIRE /!\
+--
+--								
+--
+-- Retourne             :       rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_SIMPA2_AU_HUB_PRESTAIRE' AND type = 'P' )
+        DROP procedure edi.PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_SIMPA2_AU_HUB_PRESTAIRE
+GO
+
+
+CREATE procedure edi.PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_SIMPA2_AU_HUB_PRESTAIRE
+	    @iIdSin		Integer,
+		@iIdSeq		Integer
+AS
+
+Select 
+	id_depot_simpa2,
+	id_sin,
+	id_seq,
+	depose_le,
+	depose_par,
+	cpt_essai,
+	essai_le,
+	alt_trt,
+	traite_le,
+	traite_par,
+	id_hub_presta,
+	id_four,
+	typ_dommage,
+	point_service,
+	mode_logis,
+	code_pickup,
+	nom_pickup,
+	ref_ass_pickup,
+	adr1_pickup,
+	adr2_pickup,
+	adr3_pickup,
+	adr_cp_pickup,
+	adr_ville_pickup,
+	code_process,
+	lib_code_process,
+	id_gti,
+	lib_perso_gti,
+	id_detail,
+	id_prod,
+	lib_prod,
+	id_prod_adh,
+	id_ets,
+	id_adh,
+	id_sdos,
+	id_typ_art,
+	cod_civ_livr,
+	lib_civ_livr_court,
+	lib_civ_livr_long,
+	id_contrat_abonne,
+	nom_ass,
+	prenom_ass,
+	nom_livr,
+	prenom_livr,
+	adr1_livr,
+	adr2_livr,
+	adr3_livr,
+	adr_cp_livr,
+	adr_ville_livr,
+	num_tel1_ass,
+	num_tel2_ass,
+	num_tel3_ass,
+	mail_assure,
+	num_imei_app_sin,
+	num_serie_app_sin,
+	description_probleme,
+	cod_etat,
+	valide_le,
+	valide_par,
+	cmd_gen_le,
+	id_ref_four,
+	ordre_action,
+	id_assureur,
+	lib_assureur,
+	lib_police,
+	typ_app_sin,
+	lib_typ_app_sin,
+	marq_app_sin,
+	modl_app_sin,
+	ref_app_sin,
+	num_tel_sin,
+	mt_val_achat,
+	mt_prise_en_charge,
+	date_achat,
+	etat_app_sin,
+	code_verrou,
+	desimlocke,
+	info_spb_frn_cplt
+
+From edi.DepotSimpa2ToHubPresta dps2
+Where dps2.id_sin = @iIdSin
+And   dps2.id_seq = @iIdSeq
+
+Go
