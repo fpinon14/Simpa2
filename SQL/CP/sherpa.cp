@@ -2012,932 +2012,1060 @@ GO
 -- JFF      01/09/2020   [VDOC29600]
 -- JFF      26/01/201    [VDOC30089]
 -- JFF      30/05/2023   [PMO89_RS4822]
+-- JFF      28/03/2024   [MCO174] [MCO174_INT_AUTO_AXAB] Axa Banque : création auto inter banque 'AXA BANQUE' , dysfonctionnement site atlas  
 -------------------------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I01_W_INTER_V02' AND type = 'P' )
         DROP procedure sysadm.PS_I01_W_INTER_V02
 GO
   
-CREATE procedure sysadm.PS_I01_W_INTER_V02   
-@iIdSin         Integer     ,    
-@iIdInter       Integer     ,    
-@iIdProd        Integer     ,    
-@sCodInter      Char(1)     ,    
-@sCodCiv        Char(1)     ,    
-@sNom           Varchar(35) ,    
-@sPrenom        Varchar(35) ,    
-@sAdr1          Varchar(35) ,    
-@sAdr2          Varchar(35) ,    
-@sAdrCp         Char(5)     ,    
-@sAdrVille      Varchar(35) ,    
-@sNumTelD       Varchar(20) ,    
-@sNumTelB       Varchar(20) ,    
-@sNumFax        Varchar(20) ,    
-@sCodBq         Varchar(5)  ,    
-@sCodAg         Varchar(5)  ,    
-@sRibBq         Varchar(5)  ,    
-@sRibGui        Varchar(5)  ,    
-@sRibCpt        Varchar(11) ,    
-@sRibCle        Varchar(2)  ,    
-@sCodOper       Varchar (4) ,    
-@sIdCourGest    Varchar (6) ,    
-@iCodSms        Integer       = null, -- #2 1 = Suivi Par Sms , 0 Pas de suivi par SMS    
-@sNumSms        Varchar(20),    
-@sAdrMel        Varchar(50),    
-@sRetour Varchar (60)  Output,    
-@sAltSuivi      Char(1)   = 'N' -- V02 #2 s'entend @sAltSuiviMail    
     
-As    
-    
-Declare @iRet  Integer    
-Declare @dtJour Datetime    
-Declare @sModeReg Varchar(2)    
-Declare @sAltSuiviMel Char(1) -- #2 Pour une meilleure compréhension ( et pour ne pas renommer le paramétre en entrée )    
-Declare @sAltSuiviSms Char(1) -- #2 Gestion pdt 313 Fnac EPDT    
-Declare @iPointBalance  Integer -- #4    
-Declare @dcIdSin Decimal ( 10 ) -- [PI062]    
-Declare @dcIdProd Decimal ( 7 )    
-Declare @dcIdInterMax Decimal ( 2 )    
-    
-Set @dcIdProd = Convert ( Decimal (7), @iIdProd ) -- [PM421-5]    
-    
-Set @sAltSuiviMel = @sAltSuivi -- #2 Pour une meilleure compréhension ( et pour ne pas renommer le paramétre en entrée )    
-    
-Set @dtJour  = GetDate ()    
-Set @iRet    = 0    
-Set @sRetour = 'OK'        
-Set @sAltSuiviSms = 'N' -- #2    
-    
-Set @dcIdSin = Convert ( Decimal ( 10 ) , @iIdSin ) -- [PI062]    
-    
--- #2 Initialisation des rubriques @sAltSuiviSms / @sNumSms    
-    
-If @iCodSms is Null Set @iCodSms = 0 -- #2    
-    
-If @iCodSms = 1     
- Begin    
-  Set @sAltSuiviSms = 'O' -- #2    
- End    
- Else    
- Begin    
-  Set @sAltSuiviSms = 'N' -- #2    
-  Set @sNumSms = Convert ( varchar(20), Null )    
- End    
-    
-    
-    
-If @sCodInter = 'A'     
-    
-         /*------------------------------------------------------------------*/    
-   Begin /* D‚claration : Cr‚ation ASSURE dans w_inter                       */    
-         /*------------------------------------------------------------------*/    
-    
-        /* #2 si Soci‚t‚ Je met le prenom = '' */    
-    
-        If @sCodCiv = '5' Select @sPrenom = ''       
-    
-     SELECT @sModeReg  = p.cod_mode_reg    
-   FROM sysadm.produit p    
-  WHERE    
-               p.id_prod      = @iIdProd And    
-               p.cod_dest_reg = 'A'    
-    
- -- V02 Passage des paramétres @sAltSuiviMel , @sAdrMel    
- -- #2  Passage des paramétres @sAltSuiviSms , @sNumSms    
-    
-    Exec @iRet = sysadm.PS_I02_W_INTER_WKF     
-                   @iIdSin    , @sCodCiv  , @sNom       , @sPrenom    , @sAdr1   ,    
-                   @sAdr2     , @sAdrCp   , @sAdrVille  , @sModeReg   , @sNumTelD,    
-                   @sNumTelB  , @sNumFax  , @sRibBq     , @sRibGui    , @sRibCpt ,    
-                   @sRibCle   , @dtJour   , @dtJour     , @sCodOper   ,     
-                   @sAltSuiviMel , @sAdrMel, @sAltSuiviSms, @sNumSms    
-    
- If @iRet <> 1    
-           Begin    
-             Select @sRetour = 'PS_I01_W_INTER/PS_I02_W_INTER_WKF:Erreur Creation inter assur‚'     
-             Return -1    
-           End    
-    
-   End    
-    
-If @sCodInter = 'B'    
-    
-         /*------------------------------------------------------------------*/    
-   Begin /* Declaration : Creation BANQUE dans w_inter                       */    
-         /*------------------------------------------------------------------*/    
-    
-     SELECT @sModeReg  = p.cod_mode_reg    
-   FROM sysadm.produit p    
-  WHERE    
-               p.id_prod      = @iIdProd And    
-               p.cod_dest_reg = 'B'    
-    
-    Exec @iRet = sysadm.PS_I03_W_INTER_WKF     
-                   @iIdSin   , @sNom      , @sAdr1    , @sAdr2    , @sAdrCp   ,    
-                   @sAdrVille, @sNumTelB  , @sModeReg , @sCodBq   , @sCodAg   ,    
-                   @dtJour   , @dtJour    , @sCodOper    
-    
- If @iRet <> 1    
-           Begin    
-             Select @sRetour = 'PS_I01_W_INTER/PS_I03_W_INTER_WKF:Erreur Cr‚ation inter banque'     
-             Return -1    
-           End    
-    
-   End    
-    
-/*------------------------------------------------------------------*/    
-/* D‚claration : Cr‚ation banque 30066/99998 pour produits          */    
-/*   11001, 14000,  14500, 14600, 15200                             */    
-/*                                                                  */    
-/* ( on d‚clenche cette cr‚ation par un code civilite = 'X'         */    
-/*------------------------------------------------------------------*/    
-    
-If @sCodCiv = 'X'    
-    
-         /*------------------------------------------------------------------*/    
-   Begin /* D‚claration : Cr‚ation BANQUE 30066/99998 dans w_inter           */    
-         /*------------------------------------------------------------------*/    
-    
-    
-     Exec @iRet = sysadm.PS_I04_W_INTER_WKF @iIdSin, @iIdProd, @dtJour, @dtJour, @sCodOper    
-    
-     If @iRet <> 1    
-        Begin    
-          Select @sRetour = 'PS_I01_INTER/PS_I04_W_INTER_WKF:Erreur Cr‚ation 30066/99998'     
-          Return -1    
-        End    
+CREATE procedure sysadm.PS_I01_W_INTER_V02     
+@iIdSin         Integer     ,      
+@iIdInter       Integer     ,      
+@iIdProd        Integer     ,      
+@sCodInter      Char(1)     ,      
+@sCodCiv        Char(1)     ,      
+@sNom           Varchar(35) ,      
+@sPrenom        Varchar(35) ,      
+@sAdr1          Varchar(35) ,      
+@sAdr2          Varchar(35) ,      
+@sAdrCp         Char(5)     ,      
+@sAdrVille      Varchar(35) ,      
+@sNumTelD       Varchar(20) ,      
+@sNumTelB       Varchar(20) ,      
+@sNumFax        Varchar(20) ,      
+@sCodBq         Varchar(5)  ,      
+@sCodAg         Varchar(5)  ,      
+@sRibBq         Varchar(5)  ,      
+@sRibGui        Varchar(5)  ,      
+@sRibCpt        Varchar(11) ,      
+@sRibCle        Varchar(2)  ,      
+@sCodOper       Varchar (4) ,      
+@sIdCourGest    Varchar (6) ,      
+@iCodSms        Integer       = null, -- #2 1 = Suivi Par Sms , 0 Pas de suivi par SMS      
+@sNumSms        Varchar(20),      
+@sAdrMel        Varchar(50),      
+@sRetour Varchar (60)  Output,      
+@sAltSuivi      Char(1)   = 'N' -- V02 #2 s'entend @sAltSuiviMail      
       
-   End    
-    
-/*------------------------------------------------------------------*/    
-/* Castorama : gestion d'un interlocuteur spécifique                */    
-/*------------------------------------------------------------------*/    
-    
-If @iIdProd between 23400 and 23499   --#3    
-    
-            
-   Begin /* Déclaration Castorama : Création BANQUE dans w_inter */    
-            
-    
- Set @iIdInter = 0    
-    
- Select @iIdInter = Max( i.id_i ) From sysadm.w_inter i Where i.id_sin = @dcIdSin -- [PI062]    
-    
- Set @iIdInter = @iIdInter + 1    
-    
- Insert into sysadm.w_inter  
-  ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,adr_att,num_teld,num_telb,num_fax,cod_mode_reg,rib_bq,rib_gui,rib_cpt,rib_cle,mt_a_reg,mt_reg,v_ref1,v_ref2,cod_ag,cod_bq,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,id_cour,id_nat_cour,alt_courgest,id_i_db,id_courj,cree_le,maj_le,maj_par,ordre_cheque,num_let_cheque,id_four,alt_suivi_mail,adr_mail,alt_suivi_sms,num_port_sms,dte_naiss,ville_naiss,pays_naiss,cod_etat_ctrle_inter )    
- Select     
-           @dcIdSin as id_sin  ,  -- [PI062]    
-           @iIdInter as id_i  ,    
-           'F'  as cod_inter ,    
-           5  as cod_civ  ,    
-           a.lib_ag as nom  ,    
-           a.adr_1 as adr_1  ,    
-           a.adr_2 as adr_2  ,    
-           a.adr_cp as adr_cp  ,    
-           a.adr_ville as adr_ville ,    
-           null  as adr_att  ,    
-           null  as num_teld ,    
-           null  as num_telb ,    
-           null  as num_fax  ,    
-           'FM'  as cod_mode_reg ,    
-           null  as rib_bq  ,    
-           null  as rib_gui  ,    
-           null  as rib_cpt  ,    
-           null  as rib_cle  ,    
-           0  as mt_a_reg ,    
-           0  as mt_reg  ,    
-           null  as v_ref1  ,    
-           null  as v_ref2  ,    
-           null  as cod_ag  ,    
-           null  as cod_bq  ,    
-           0  as cpt_cour ,    
-           0  as cpt_valide , -- #4 0 ald 1    
-           'N'  as alt_valide ,    
-           'N'  as alt_part ,    
-           'N'  as alt_ps  ,    
-           'N'  as alt_pce  ,    
-           'N'  as alt_quest ,    
-           null  as id_cour  ,    
-           null  as id_nat_cour ,    
-           'N'  as alt_courgest ,    
-           null  as id_i_db  ,    
-           null  as id_courj ,    
-           getdate() as cree_le  ,    
-           getdate() as maj_le  ,    
-           @sCodOper as maj_par  ,    
-           null  as ordre_cheque ,    
-           null  as num_let_cheque ,    
-           a.id_bq as id_four  ,    
-   'N'  as alt_suivi_mail,    
-    NULL as adr_mail,
-	NULL as alt_suivi_sms,
-	Null  as  num_port_sms, -- #2 [FNAC_PROD_ECH_TECH]    
-	null as dte_naiss,  -- [PMO89_RS4822]
-	null as ville_naiss,  -- [PMO89_RS4822]
-	null as pays_naiss,  -- [PMO89_RS4822]
-	0 as cod_etat_ctrle_inter -- [PMO89_RS4822]
-       
- From    
-    sysadm.agence a    
- Where    
-       a.id_bq = 'CAS' And not exists    
-          ( select * from sysadm.w_inter v     
-             where     
-                   v.id_sin     = @dcIdSin  and  -- [PI062]    
-                   v.cod_inter  = 'F'      and    
-                   a.lib_ag     = v.nom  and    
-            a.lib_ag     = v.nom    and    
-            a.adr_1      = v.adr_1  and    
-                   a.adr_cp = v.adr_cp and    
-                 a.adr_ville = v.adr_ville )    
-                
-    
- Set @iRet = @@error    
-    
- If @iRet <> 0    
-           Begin    
-             Select @sRetour = 'PS_I01_W_INTER:Erreur Création inter Castorama'     
-             Return -1    
-           End    
- Else    
-           Begin    
-             Set @iRet = 1    
-           End    
-    
-   End    
-    
-    
-If @iIdProd between 23100 and 23199 -- #3 -- #1 [PHG] Création Interlocuteur ABD Games pour Scores Games, Produit 23100,23101,23102,23103,23104,23105      
-    
-             
-   Begin /* Déclaration ScoreGames : Création BANQUE dans w_inter            */    
-             
-    
- Set @iIdInter = 0    
-    
- Select @iIdInter = Max( i.id_i ) From sysadm.w_inter i Where i.id_sin = @dcIdSin   -- [PI062]    
-    
- Set @iIdInter = @iIdInter + 1    
-    
- Insert into sysadm.w_inter     
- ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,adr_att,num_teld,num_telb,num_fax,cod_mode_reg,rib_bq,rib_gui,rib_cpt,rib_cle,mt_a_reg,mt_reg,v_ref1,v_ref2,cod_ag,cod_bq,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,id_cour,id_nat_cour,alt_courgest,id_i_db,id_courj,cree_le,maj_le,maj_par,ordre_cheque,num_let_cheque,id_four,alt_suivi_mail,adr_mail,alt_suivi_sms,num_port_sms,dte_naiss,ville_naiss,pays_naiss,cod_etat_ctrle_inter )    
- Select     
-           @dcIdSin as id_sin  ,  -- [PI062]    
-           @iIdInter as id_i  ,    
-           'F'  as cod_inter ,    
-           5  as cod_civ  ,    
-           a.lib_ag as nom  ,    
-           a.adr_1 as adr_1  ,    
-           a.adr_2 as adr_2  ,    
-           a.adr_cp as adr_cp  ,    
-           a.adr_ville as adr_ville ,    
-           null  as adr_att  ,    
-           null  as num_teld ,    
-           null  as num_telb ,    
-           null  as num_fax  ,    
-           'FM'  as cod_mode_reg ,    
-           null  as rib_bq  ,    
-           null  as rib_gui  ,    
-           null  as rib_cpt  ,    
-           null  as rib_cle  ,    
-           0  as mt_a_reg ,    
-           0  as mt_reg  ,    
-           null  as v_ref1  ,    
-           null  as v_ref2  ,    
-           null  as cod_ag  ,    
-           null  as cod_bq  ,    
-           0  as cpt_cour ,    
-           0  as cpt_valide , -- #4 0 ald 1    
-           'N'  as alt_valide ,    
-           'N'  as alt_part ,    
-           'N'  as alt_ps  ,    
-           'N'  as alt_pce  ,    
-           'N'  as alt_quest ,    
-           null  as id_cour  ,    
-           null  as id_nat_cour ,    
-           'N'  as alt_courgest ,    
-           null  as id_i_db  ,    
-           null  as id_courj ,    
-           getdate() as cree_le  ,    
-           getdate() as maj_le  ,    
-           @sCodOper as maj_par  ,    
-           null  as ordre_cheque ,    
-           null  as num_let_cheque ,    
-           a.id_bq as id_four  ,    
-     'N'  as alt_suivi_mail,    
-     NULL         as adr_mail,    
-     null  as      alt_suivi_sms, -- #2[FNAC_PROD_ECH_TECH]    
-     Null  as  num_port_sms, -- #2 [FNAC_PROD_ECH_TECH]    
-	null as dte_naiss,  -- [PMO89_RS4822]
-	null as ville_naiss,  -- [PMO89_RS4822]
-	null as pays_naiss,  -- [PMO89_RS4822]
-	0 as cod_etat_ctrle_inter -- [PMO89_RS4822]
- From    
-    sysadm.agence a    
- Where    
-       a.id_bq = 'SCG' And not exists    
-          ( select * from sysadm.w_inter v     
-             where     
-                   v.id_sin     = @dcIdSin  and -- [PI062]    
-                   v.cod_inter  = 'F'      and    
-                   a.lib_ag     = v.nom    and    
-            a.lib_ag     = v.nom    and    
-            a.adr_1      = v.adr_1  and    
-                   a.adr_cp = v.adr_cp and    
-                   a.adr_ville = v.adr_ville )    
-          
-    
- Set @iRet = @@error    
-    
- If @iRet <> 0    
-           Begin    
-             Select @sRetour = 'PS_I01_W_INTER:Erreur Création inter ScoreGames'     
-             Return -1    
-           End    
- Else    
-           Begin    
-             Set @iRet = 1    
-           End    
-    
-   End    
--- Fin Modif #1 [PHG]    
-       
-If @sCodInter = 'T' And @iIdProd between 31500 and 31599 -- #4 Déclaration Aquazen : Création inter point de balance    
-    
-    Begin /* Déclaration Aquazen : Création inter point de balance            */    
+As      
+      
+Declare @iRet  Integer      
+Declare @dtJour Datetime      
+Declare @sModeReg Varchar(2)      
+Declare @sAltSuiviMel Char(1) -- #2 Pour une meilleure compréhension ( et pour ne pas renommer le paramétre en entrée )      
+Declare @sAltSuiviSms Char(1) -- #2 Gestion pdt 313 Fnac EPDT      
+Declare @iPointBalance  Integer -- #4      
+Declare @dcIdSin Decimal ( 10 ) -- [PI062]      
+Declare @dcIdProd Decimal ( 7 )      
+Declare @dcIdInterMax Decimal ( 2 )      
+      
+Set @dcIdProd = Convert ( Decimal (7), @iIdProd ) -- [PM421-5]      
+Set @sAltSuiviMel = @sAltSuivi -- #2 Pour une meilleure compréhension ( et pour ne pas renommer le paramétre en entrée )      
+      
+Set @dtJour  = GetDate ()      
+Set @iRet    = 0      
+Set @sRetour = 'OK'          
+Set @sAltSuiviSms = 'N' -- #2      
+      
+Set @dcIdSin = Convert ( Decimal ( 10 ) , @iIdSin ) -- [PI062]      
+      
+-- #2 Initialisation des rubriques @sAltSuiviSms / @sNumSms      
+      
+If @iCodSms is Null Set @iCodSms = 0 -- #2      
+      
+If @iCodSms = 1       
+ Begin      
+  Set @sAltSuiviSms = 'O' -- #2      
+ End      
+ Else      
+ Begin      
+  Set @sAltSuiviSms = 'N' -- #2      
+  Set @sNumSms = Convert ( varchar(20), Null )      
+ End      
+      
+      
+      
+If @sCodInter = 'A'       
+      
+         /*------------------------------------------------------------------*/      
+   Begin /* D‚claration : Cr‚ation ASSURE dans w_inter                       */      
+         /*------------------------------------------------------------------*/      
+      
+        /* #2 si Soci‚t‚ Je met le prenom = '' */      
+      
+        If @sCodCiv = '5' Select @sPrenom = ''         
+      
+     SELECT @sModeReg  = p.cod_mode_reg      
+   FROM sysadm.produit p      
+  WHERE      
+               p.id_prod      = @iIdProd And      
+               p.cod_dest_reg = 'A'      
+      
+ -- V02 Passage des paramétres @sAltSuiviMel , @sAdrMel      
+ -- #2  Passage des paramétres @sAltSuiviSms , @sNumSms      
+      
+    Exec @iRet = sysadm.PS_I02_W_INTER_WKF       
+                   @iIdSin    , @sCodCiv  , @sNom       , @sPrenom    , @sAdr1   ,      
+                   @sAdr2     , @sAdrCp   , @sAdrVille  , @sModeReg   , @sNumTelD,      
+                   @sNumTelB  , @sNumFax  , @sRibBq     , @sRibGui    , @sRibCpt ,      
+                   @sRibCle   , @dtJour   , @dtJour     , @sCodOper   ,       
+                   @sAltSuiviMel , @sAdrMel, @sAltSuiviSms, @sNumSms      
+      
+ If @iRet <> 1      
+           Begin      
+             Select @sRetour = 'PS_I01_W_INTER/PS_I02_W_INTER_WKF:Erreur Creation inter assur‚'       
+             Return -1      
+           End      
+      
+   End      
+      
+If @sCodInter = 'B'      
+      
+         /*------------------------------------------------------------------*/      
+   Begin /* Declaration : Creation BANQUE dans w_inter                       */      
+         /*------------------------------------------------------------------*/      
+      
+	  -- [MCO174_INT_AUTO_AXAB]
+		If sysadm.FN_CLE_NUMERIQUE ( 'MCO174_INT_AUTO_AXAB') > 0 
+			Begin
+				If Not Exists ( 
+						Select Top 1 1
+						From   sysadm.w_inter wi      
+						Where  wi.id_sin = @dcIdSin      
+						And    wi.cod_inter = 'B'       
+						And    Upper ( wi.nom ) = Upper ( rtrim ( ltrim ( @sNom )))
+						And    Upper ( wi.adr_1 ) = Upper ( rtrim ( ltrim ( @sAdr1 )))    
+						And    Upper ( wi.adr_cp ) = Upper ( rtrim ( ltrim ( @sAdrCp )))    
+						And    Upper ( wi.adr_ville ) = Upper ( rtrim ( ltrim ( @sAdrVille )))
+						)      
+					Begin
+						SELECT @sModeReg  = p.cod_mode_reg      
+						FROM   sysadm.produit p      
+						WHERE      
+							   p.id_prod      = @iIdProd And      
+							   p.cod_dest_reg = 'B'      
+
+      
+						Exec @iRet = sysadm.PS_I03_W_INTER_WKF       
+								   @iIdSin   , @sNom      , @sAdr1    , @sAdr2    , @sAdrCp   ,      
+								   @sAdrVille, @sNumTelB  , @sModeReg , @sCodBq   , @sCodAg   ,      
+								   @dtJour   , @dtJour    , @sCodOper      
+      
+						If @iRet <> 1      
+						   Begin      
+							 Select @sRetour = 'PS_I01_W_INTER/PS_I03_W_INTER_WKF:Erreur Cr‚ation inter banque'       
+							 Return -1      
+						   End      				
+					End
+			End 
+		Else 
+			Begin
+
+				SELECT @sModeReg  = p.cod_mode_reg      
+				FROM   sysadm.produit p      
+				WHERE      
+					   p.id_prod      = @iIdProd And      
+					   p.cod_dest_reg = 'B'      
+
+      
+				Exec @iRet = sysadm.PS_I03_W_INTER_WKF       
+						   @iIdSin   , @sNom      , @sAdr1    , @sAdr2    , @sAdrCp   ,      
+						   @sAdrVille, @sNumTelB  , @sModeReg , @sCodBq   , @sCodAg   ,      
+						   @dtJour   , @dtJour    , @sCodOper      
+      
+				If @iRet <> 1      
+				   Begin      
+					 Select @sRetour = 'PS_I01_W_INTER/PS_I03_W_INTER_WKF:Erreur Cr‚ation inter banque'       
+					 Return -1      
+				   End      
+			End       
+   End      
+      
+/*------------------------------------------------------------------*/      
+/* D‚claration : Cr‚ation banque 30066/99998 pour produits          */      
+/*   11001, 14000,  14500, 14600, 15200                             */      
+/*                                                                  */      
+/* ( on d‚clenche cette cr‚ation par un code civilite = 'X'         */      
+/*------------------------------------------------------------------*/      
+      
+If @sCodCiv = 'X'      
+      
+         /*------------------------------------------------------------------*/      
+   Begin /* D‚claration : Cr‚ation BANQUE 30066/99998 dans w_inter           */      
+         /*------------------------------------------------------------------*/      
+      
+      
+     Exec @iRet = sysadm.PS_I04_W_INTER_WKF @iIdSin, @iIdProd, @dtJour, @dtJour, @sCodOper      
+      
+     If @iRet <> 1      
+        Begin      
+          Select @sRetour = 'PS_I01_INTER/PS_I04_W_INTER_WKF:Erreur Cr‚ation 30066/99998'       
+          Return -1      
+        End      
         
- Set @iIdInter = 0    
-    
- Select @iIdInter = Max( i.id_i ) From sysadm.w_inter i Where i.id_sin = @dcIdSin  -- [PI062]    
-    
- Set @iIdInter = @iIdInter + 1    
-   Set @iPointBalance = -1    
-    
-   If isnumeric( @sCodBq ) = 1 Set @iPointBalance = Convert ( integer,@sCodBq )    
-    
-    
- Insert into sysadm.w_inter     
- ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,adr_att,num_teld,num_telb,num_fax,cod_mode_reg,rib_bq,rib_gui,rib_cpt,rib_cle,mt_a_reg,mt_reg,v_ref1,v_ref2,cod_ag,cod_bq,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,id_cour,id_nat_cour,alt_courgest,id_i_db,id_courj,cree_le,maj_le,maj_par,ordre_cheque,num_let_cheque,id_four,alt_suivi_mail,adr_mail,alt_suivi_sms,num_port_sms,dte_naiss,ville_naiss,pays_naiss,cod_etat_ctrle_inter )    
- Select     
-           @dcIdSin as id_sin  ,  -- [PI062]    
-           @iIdInter as id_i  ,    
-           'T'  as cod_inter ,    
-           5  as cod_civ  ,    
-           'Point de balance : ' + IsNull ( b.cod_mag, '(inconnu')  as nom  ,    
-           b.adr_1 as adr_1  ,    
-           b.adr_2 as adr_2  ,    
-           b.adr_cp as adr_cp  ,    
-           b.adr_ville as adr_ville ,    
-           null  as adr_att  ,    
-           null  as num_teld ,    
-           null  as num_telb ,    
-           null  as num_fax  ,    
-           'VA'  as cod_mode_reg ,    
-           b.rib_bq as rib_bq  ,    
-           b.rib_gui as rib_gui  ,    
-           b.rib_cpt as rib_cpt  ,    
-           b.rib_cle as rib_cle  ,    
-           0  as mt_a_reg ,    
-           0  as mt_reg  ,    
-           null  as v_ref1  ,    
-           null  as v_ref2  ,    
-           null  as cod_ag  ,    
-           Convert ( VarChar ( 5 ), b.id_boutique, 5) as cod_bq  ,    
-           0  as cpt_cour ,    
-           0  as cpt_valide ,    
-           'N'  as alt_valide ,    
-           'N'  as alt_part ,    
-           'N'  as alt_ps  ,    
-           'N'  as alt_pce  ,    
-           'N'  as alt_quest ,    
-           null  as id_cour  ,    
-           null  as id_nat_cour ,    
-           'N'  as alt_courgest ,    
-           null  as id_i_db  ,    
-           null  as id_courj ,    
-           getdate() as cree_le  ,    
-           getdate() as maj_le  ,    
-           @sCodOper as maj_par  ,    
-           null  as ordre_cheque ,    
-           null  as num_let_cheque ,    
-           null  as id_four  ,    
-   'N'  as alt_suivi_mail,    
-    b.adr_mail   as adr_mail,    
-    null  as      alt_suivi_sms, -- #2[FNAC_PROD_ECH_TECH]    
-    Null  as  num_port_sms, -- #2 [FNAC_PROD_ECH_TECH]    
-	null as dte_naiss,  -- [PMO89_RS4822]
-	null as ville_naiss,  -- [PMO89_RS4822]
-	null as pays_naiss,  -- [PMO89_RS4822]
-	0 as cod_etat_ctrle_inter -- [PMO89_RS4822]
- From    
-    sysadm.boutique b    
- Where    
-    b.id_prod = @iIdProd     
-       and b.id_boutique = @iPointBalance And @iPointBalance > 0     
-    And not exists    
-          ( select * from sysadm.w_inter v     
-             where v.id_sin     = @dcIdSin  and  -- [PI062]    
-                   v.cod_inter  = 'T'      and    
-            Convert ( Integer, v.cod_bq ) = b.id_boutique     
-     )    
-    
- Set @iRet = @@error    
-    
-   If @iRet <> 0    
-      Begin    
-         Select @sRetour = 'PS_I01_W_INTER:Erreur Création inter Aquazen'     
-         Return -1    
-      End    
-   Else    
-      Begin    
-         Set @iRet = 1    
-      End    
-    /*------------------------------------------------------------------*/    
-End /* Déclaration Aquazen : Création inter point de balance            */    
-    /*------------------------------------------------------------------*/    
-    
-    
- -- [PC478]    
- If @iIdProd between 42500 and 42599    
-    
-    /*------------------------------------------------------------------*/    
-   Begin /* Déclaration SPDE : Création SPDE dans w_inter                       */    
-         /*------------------------------------------------------------------*/    
-    
- Set @iIdInter = 0    
-    
- Select @iIdInter = Max( i.id_i ) From sysadm.w_inter i Where i.id_sin = @dcIdSin    
-    
- Set @iIdInter = @iIdInter + 1    
-    
- Insert into sysadm.w_inter     
- ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,cod_mode_reg,mt_a_reg,mt_reg,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,alt_courgest,cree_le,maj_le,maj_par,id_four,alt_suivi_mail,adr_mail,alt_suivi_sms,num_port_sms,dte_naiss,ville_naiss,pays_naiss,cod_etat_ctrle_inter )    
- Select     
-           @dcIdSin as id_sin  ,  -- [PI062]    
-           @iIdInter as id_i  ,    
-           'T'  as cod_inter ,    
-           5  as cod_civ  ,    
-           a.lib_ag as nom  ,    
-           a.adr_1 as adr_1  ,    
-           a.adr_2 as adr_2  ,    
-           a.adr_cp as adr_cp  ,    
-           a.adr_ville as adr_ville ,    
-           'C'  as cod_mode_reg ,    
-     0  as mt_a_reg ,    
-           0  as mt_reg  ,    
-           0  as cpt_cour ,    
-           0  as cpt_valide ,    
-           'N'  as alt_valide ,    
-           'N'  as alt_part ,    
-           'N'  as alt_ps  ,    
-           'N'  as alt_pce  ,    
-     'N'  as alt_quest ,    
-           'N'  as alt_courgest ,    
-           getdate() as cree_le  ,    
-           getdate() as maj_le  ,    
-           @sCodOper as maj_par  ,    
-           a.id_bq as id_four  ,    
-     'N'  as alt_suivi_mail, 
-    NULL as adr_mail,
-	NULL as alt_suivi_sms,
-    Null  as  num_port_sms, -- #2 [FNAC_PROD_ECH_TECH]    
-	null as dte_naiss,  -- [PMO89_RS4822]
-	null as ville_naiss,  -- [PMO89_RS4822]
-	null as pays_naiss,  -- [PMO89_RS4822]
-	0 as cod_etat_ctrle_inter -- [PMO89_RS4822]       
- From    
-    sysadm.agence a    
- Where    
-       a.id_bq = 'SPD' And not exists    
-          ( select * from sysadm.w_inter v     
-             where     
-                   v.id_sin     = @iIdSin  and    
-                   v.cod_inter  = 'T'      and    
-                   a.lib_ag     = v.nom    and    
-            a.adr_1      = v.adr_1  and    
-                   a.adr_cp = v.adr_cp and    
-                   a.adr_ville = v.adr_ville )    
-                
-    
- Set @iRet = @@error    
-    
- If @iRet <> 0    
-           Begin    
-             Select @sRetour = 'PS_I01_W_INTER:Erreur Création inter SPDE'     
-             Return -1    
-           End    
- Else    
-           Begin    
-             Set @iRet = 1    
-           End    
-    
-   End    
-   -- Fin [PC478]    
-       
-    
-/*------------------------------------------------------------------*/    
-/* [Vdoc15313] Cdiscoun Sérénité (817) Création interlocuteur CDS   */    
-/*------------------------------------------------------------------*/    
-    
-If @iIdProd between 81700 and 81799  --  Cdiscount Sérénité (817) : Création d'un interlocuteur CDS    
-    
-Begin -- Début 817     
-    
- Set @iIdInter = 0    
- Select @iIdInter = Max( i.id_i ) From sysadm.w_inter i Where i.id_sin = @dcIdSin   -- [PI062]    
- Set @iIdInter = @iIdInter + 1    
-    
- Insert into sysadm.w_inter     
- ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,adr_att,num_teld,num_telb,num_fax,cod_mode_reg,rib_bq,rib_gui,rib_cpt,rib_cle,mt_a_reg,mt_reg,v_ref1,v_ref2,cod_ag,cod_bq,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,id_cour,id_nat_cour,alt_courgest,id_i_db,id_courj,cree_le,maj_le,maj_par,ordre_cheque,num_let_cheque,id_four,alt_suivi_mail,adr_mail,alt_suivi_sms,num_port_sms,dte_naiss,ville_naiss,pays_naiss,cod_etat_ctrle_inter )    
- Select     
-           @dcIdSin as id_sin  ,  -- [PI062]    
-           @iIdInter as id_i  ,    
-           'F'  as cod_inter ,    
-           5  as cod_civ  ,    
-           a.lib_ag as nom  ,    
-           a.adr_1 as adr_1  ,    
-           a.adr_2 as adr_2  ,    
-           a.adr_cp as adr_cp  ,    
-           a.adr_ville as adr_ville ,    
-           null  as adr_att  ,    
-           null  as num_teld ,    
-           null  as num_telb ,    
-           null  as num_fax  ,    
-           'FM'  as cod_mode_reg ,    
-           null  as rib_bq  ,    
-           null  as rib_gui  ,    
-           null  as rib_cpt  ,    
-           null  as rib_cle  ,    
-           0  as mt_a_reg ,    
-           0  as mt_reg  ,    
-           null  as v_ref1  ,    
-         null  as v_ref2  ,    
-           null  as cod_ag  ,    
-           null  as cod_bq  ,    
-           0  as cpt_cour ,    
-           0  as cpt_valide , -- #4 0 ald 1    
-           'N'  as alt_valide ,    
-           'N'  as alt_part ,    
-           'N'  as alt_ps  ,    
-           'N'  as alt_pce  ,    
-           'N'  as alt_quest ,    
-           null  as id_cour  ,    
-           null  as id_nat_cour ,    
-           'N'  as alt_courgest ,    
-           null  as id_i_db  ,    
-           null  as id_courj ,    
-           getdate() as cree_le  ,    
-           getdate() as maj_le  ,    
-           @sCodOper as maj_par  ,    
-           null  as ordre_cheque ,    
-           null  as num_let_cheque ,    
-           a.id_bq as id_four  ,    
-     'N'  as alt_suivi_mail,    
-     NULL     as adr_mail,    
-        null  as  alt_suivi_sms,     
-        Null  as  num_port_sms,
-	null as dte_naiss,  -- [PMO89_RS4822]
-	null as ville_naiss,  -- [PMO89_RS4822]
-	null as pays_naiss,  -- [PMO89_RS4822]
-	0 as cod_etat_ctrle_inter -- [PMO89_RS4822]		
-       
- From    
-    sysadm.agence a    
- Where    
-       a.id_bq = 'CDS' And not exists    
-          ( select * from sysadm.w_inter v     
-             where     
-               v.id_sin     = @dcIdSin  and  -- [PI062]    
-               v.cod_inter  = 'F'      and    
-               a.lib_ag     = v.nom    and    
-            a.lib_ag     = v.nom    and    
-            a.adr_1      = v.adr_1  and    
-               a.adr_cp  = v.adr_cp and    
-               a.adr_ville = v.adr_ville )    
- Set @iRet = @@error    
-    
- If @iRet <> 0    
-  Begin    
-   Set @sRetour = 'PS_I01_W_INTER:Erreur Création inter Cdiscount'     
-   Return -1    
-  End    
- Else    
-  Begin    
-   Set @iRet = 1    
-  End    
+   End      
       
-End -- Fin 817    
-    
-    
-    
- -- [PC13174]    
- -- [ITSM244603] Correction bug : création uniquement à la premiere passe : @sCodInter = 'A'     
- -- [ITSM297903] On prend IPA    
-If @iIdProd in (select id_prod from sysadm.det_pro where id_code_dp=264) And @sCodInter = 'B'     
-    
-         /*-------------------------------------------------*/    
-   Begin /* Création AXA-IPA dans w_inter                       */    
-         /*-------------------------------------------------*/    
-    
- Set @iIdInter = 0    
-    
- Select @iIdInter = Max( i.id_i ) From sysadm.w_inter i Where i.id_sin = @dcIdSin  -- [PI062]    
-    
- Set @iIdInter = @iIdInter + 1    
-    
-    
- Insert into sysadm.w_inter     
- ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,cod_mode_reg,mt_a_reg,mt_reg,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,alt_courgest,cree_le,maj_le,maj_par,id_four,alt_suivi_mail,adr_mail,alt_suivi_sms,num_port_sms,dte_naiss,ville_naiss,pays_naiss,cod_etat_ctrle_inter )    
+/*------------------------------------------------------------------*/      
+/* Castorama : gestion d'un interlocuteur spécifique                */      
+/*------------------------------------------------------------------*/      
+      
+If @iIdProd between 23400 and 23499   --#3      
+      
+              
+   Begin /* Déclaration Castorama : Création BANQUE dans w_inter */      
+              
+      
+ Set @iIdInter = 0      
+      
+ Select @iIdInter = Max( i.id_i ) From sysadm.w_inter i Where i.id_sin = @dcIdSin -- [PI062]      
+      
+ Set @iIdInter = @iIdInter + 1      
+      
+ Insert into sysadm.w_inter    
+  ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,adr_att,num_teld,num_telb,num_fax,cod_mode_reg,rib_bq,rib_gui,rib_cpt,rib_cle,mt_a_reg,mt_reg,v_ref1,v_ref2,cod_ag,cod_bq,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,id_cour,id_nat_cour,alt_courgest,id_i_db,id_courj,cree_le,maj_le,maj_par,ordre_cheque,num_let_cheque,id_four,alt_suivi_mail,adr_mail,alt_suivi_sms,num_port_sms,dte_naiss,ville_naiss,pays_naiss,cod_etat_ctrle_inter )      
+ Select       
+           @dcIdSin as id_sin  ,  -- [PI062]      
+           @iIdInter as id_i  ,      
+           'F'  as cod_inter ,      
+           5  as cod_civ  ,      
+           a.lib_ag as nom  ,      
+           a.adr_1 as adr_1  ,      
+           a.adr_2 as adr_2  ,      
+           a.adr_cp as adr_cp  ,      
+           a.adr_ville as adr_ville ,      
+           null  as adr_att  ,      
+           null  as num_teld ,      
+           null  as num_telb ,      
+           null  as num_fax  ,      
+           'FM'  as cod_mode_reg ,      
+           null  as rib_bq  ,      
+           null  as rib_gui  ,      
+           null  as rib_cpt  ,      
+           null  as rib_cle  ,      
+           0  as mt_a_reg ,      
+           0  as mt_reg  ,      
+           null  as v_ref1  ,      
+           null  as v_ref2  ,      
+           null  as cod_ag  ,      
+           null  as cod_bq  ,      
+           0  as cpt_cour ,      
+           0  as cpt_valide , -- #4 0 ald 1      
+           'N'  as alt_valide ,      
+           'N'  as alt_part ,      
+           'N'  as alt_ps  ,      
+           'N'  as alt_pce  ,      
+           'N'  as alt_quest ,                 null  as id_cour  ,      
+           null  as id_nat_cour ,      
+           'N'  as alt_courgest ,      
+           null  as id_i_db  ,      
+           null  as id_courj ,      
+           getdate() as cree_le  ,      
+           getdate() as maj_le  ,      
+           @sCodOper as maj_par  ,      
+           null  as ordre_cheque ,      
+           null  as num_let_cheque ,      
+           a.id_bq as id_four  ,      
+   'N'  as alt_suivi_mail,      
+    NULL as adr_mail,  
+ NULL as alt_suivi_sms,  
+ Null  as  num_port_sms, -- #2 [FNAC_PROD_ECH_TECH]      
+ null as dte_naiss,  -- [PMO89_RS4822]  
+ null as ville_naiss,  -- [PMO89_RS4822]  
+ null as pays_naiss,  -- [PMO89_RS4822]  
+ 0 as cod_etat_ctrle_inter -- [PMO89_RS4822]  
+         
+ From      
+    sysadm.agence a      
+ Where      
+       a.id_bq = 'CAS' And not exists      
+          ( select * from sysadm.w_inter v       
+             where       
+                   v.id_sin     = @dcIdSin  and  -- [PI062]      
+                   v.cod_inter  = 'F'      and      
+                   a.lib_ag     = v.nom  and      
+            a.lib_ag     = v.nom    and      
+            a.adr_1      = v.adr_1  and      
+                   a.adr_cp = v.adr_cp and      
+                 a.adr_ville = v.adr_ville )      
+                  
+      
+ Set @iRet = @@error      
+      
+ If @iRet <> 0      
+           Begin      
+             Select @sRetour = 'PS_I01_W_INTER:Erreur Création inter Castorama'       
+             Return -1      
+           End      
+ Else      
+           Begin      
+             Set @iRet = 1      
+           End      
+      
+   End      
+      
+      
+If @iIdProd between 23100 and 23199 -- #3 -- #1 [PHG] Création Interlocuteur ABD Games pour Scores Games, Produit 23100,23101,23102,23103,23104,23105        
+      
+               
+   Begin /* Déclaration ScoreGames : Création BANQUE dans w_inter            */      
+               
+      
+ Set @iIdInter = 0      
+      
+ Select @iIdInter = Max( i.id_i ) From sysadm.w_inter i Where i.id_sin = @dcIdSin   -- [PI062]      
+      
+ Set @iIdInter = @iIdInter + 1      
+      
+ Insert into sysadm.w_inter       
+ ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,adr_att,num_teld,num_telb,num_fax,cod_mode_reg,rib_bq,rib_gui,rib_cpt,rib_cle,mt_a_reg,mt_reg,v_ref1,v_ref2,cod_ag,cod_bq,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,id_cour,id_nat_cour,alt_courgest,id_i_db,id_courj,cree_le,maj_le,maj_par,ordre_cheque,num_let_cheque,id_four,alt_suivi_mail,adr_mail,alt_suivi_sms,num_port_sms,dte_naiss,ville_naiss,pays_naiss,cod_etat_ctrle_inter )      
+ Select       
+           @dcIdSin as id_sin  ,  -- [PI062]      
+           @iIdInter as id_i  ,      
+           'F'  as cod_inter ,      
+           5  as cod_civ  ,      
+           a.lib_ag as nom  ,      
+           a.adr_1 as adr_1  ,      
+           a.adr_2 as adr_2  ,      
+           a.adr_cp as adr_cp  ,      
+           a.adr_ville as adr_ville ,      
+           null  as adr_att  ,      
+           null  as num_teld ,      
+           null  as num_telb ,      
+           null  as num_fax  ,      
+           'FM'  as cod_mode_reg ,      
+           null  as rib_bq  ,      
+           null  as rib_gui  ,      
+           null  as rib_cpt  ,      
+           null  as rib_cle  ,      
+           0  as mt_a_reg ,      
+           0  as mt_reg  ,      
+           null  as v_ref1  ,      
+           null  as v_ref2  ,      
+           null  as cod_ag  ,      
+           null  as cod_bq  ,      
+           0  as cpt_cour ,      
+           0  as cpt_valide , -- #4 0 ald 1      
+           'N'  as alt_valide ,      
+           'N'  as alt_part ,      
+           'N'  as alt_ps  ,      
+           'N'  as alt_pce  ,      
+           'N'  as alt_quest ,      
+           null  as id_cour  ,      
+           null  as id_nat_cour ,      
+           'N'  as alt_courgest ,      
+           null  as id_i_db  ,      
+           null  as id_courj ,      
+           getdate() as cree_le  ,      
+           getdate() as maj_le  ,      
+   @sCodOper as maj_par  ,      
+           null  as ordre_cheque ,      
+           null  as num_let_cheque ,      
+           a.id_bq as id_four  ,      
+     'N'  as alt_suivi_mail,      
+     NULL         as adr_mail,      
+     null  as      alt_suivi_sms, -- #2[FNAC_PROD_ECH_TECH]      
+     Null  as  num_port_sms, -- #2 [FNAC_PROD_ECH_TECH]      
+ null as dte_naiss,  -- [PMO89_RS4822]  
+ null as ville_naiss,  -- [PMO89_RS4822]  
+ null as pays_naiss,  -- [PMO89_RS4822]  
+ 0 as cod_etat_ctrle_inter -- [PMO89_RS4822]  
+ From      
+    sysadm.agence a      
+ Where      
+       a.id_bq = 'SCG' And not exists      
+          ( select * from sysadm.w_inter v       
+             where       
+                   v.id_sin     = @dcIdSin  and -- [PI062]      
+                   v.cod_inter  = 'F'      and      
+                   a.lib_ag     = v.nom    and      
+            a.lib_ag     = v.nom    and      
+            a.adr_1      = v.adr_1  and      
+                   a.adr_cp = v.adr_cp and      
+                   a.adr_ville = v.adr_ville )      
+            
+      
+ Set @iRet = @@error      
+      
+ If @iRet <> 0      
+           Begin      
+             Select @sRetour = 'PS_I01_W_INTER:Erreur Création inter ScoreGames'       
+             Return -1      
+           End      
+ Else      
+           Begin      
+             Set @iRet = 1      
+           End      
+      
+   End      
+-- Fin Modif #1 [PHG]      
+         
+If @sCodInter = 'T' And @iIdProd between 31500 and 31599 -- #4 Déclaration Aquazen : Création inter point de balance      
+      
+    Begin /* Déclaration Aquazen : Création inter point de balance            */      
+          
+ Set @iIdInter = 0      
+      
+ Select @iIdInter = Max( i.id_i ) From sysadm.w_inter i Where i.id_sin = @dcIdSin  -- [PI062]      
+      
+ Set @iIdInter = @iIdInter + 1      
+   Set @iPointBalance = -1      
+      
+   If isnumeric( @sCodBq ) = 1 Set @iPointBalance = Convert ( integer,@sCodBq )      
+      
+      
+ Insert into sysadm.w_inter       
+ ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,adr_att,num_teld,num_telb,num_fax,cod_mode_reg,rib_bq,rib_gui,rib_cpt,rib_cle,mt_a_reg,mt_reg,v_ref1,v_ref2,cod_ag,cod_bq,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,id_cour,id_nat_cour,alt_courgest,id_i_db,id_courj,cree_le,maj_le,maj_par,ordre_cheque,num_let_cheque,id_four,alt_suivi_mail,adr_mail,alt_suivi_sms,num_port_sms,dte_naiss,ville_naiss,pays_naiss,cod_etat_ctrle_inter )      
+ Select       
+           @dcIdSin as id_sin  ,  -- [PI062]      
+           @iIdInter as id_i  ,      
+           'T'  as cod_inter ,      
+           5  as cod_civ  ,      
+           'Point de balance : ' + IsNull ( b.cod_mag, '(inconnu')  as nom  ,      
+           b.adr_1 as adr_1  ,      
+           b.adr_2 as adr_2  ,      
+           b.adr_cp as adr_cp  ,      
+           b.adr_ville as adr_ville ,      
+           null  as adr_att  ,      
+           null  as num_teld ,      
+           null  as num_telb ,      
+           null  as num_fax  ,      
+           'VA'  as cod_mode_reg ,      
+           b.rib_bq as rib_bq  ,      
+           b.rib_gui as rib_gui  ,      
+           b.rib_cpt as rib_cpt  ,      
+           b.rib_cle as rib_cle  ,      
+           0  as mt_a_reg ,      
+           0  as mt_reg  ,      
+           null  as v_ref1  ,      
+           null  as v_ref2  ,      
+           null  as cod_ag  ,      
+           Convert ( VarChar ( 5 ), b.id_boutique, 5) as cod_bq  ,      
+           0  as cpt_cour ,      
+           0  as cpt_valide ,      
+           'N'  as alt_valide ,      
+           'N'  as alt_part ,      
+           'N'  as alt_ps  ,      
+           'N'  as alt_pce  ,      
+           'N'  as alt_quest ,      
+           null  as id_cour  ,      
+           null  as id_nat_cour ,      
+           'N'  as alt_courgest ,      
+           null  as id_i_db  ,      
+           null  as id_courj ,      
+           getdate() as cree_le  ,      
+           getdate() as maj_le  ,      
+           @sCodOper as maj_par  ,      
+           null  as ordre_cheque ,      
+           null  as num_let_cheque ,      
+           null  as id_four  ,      
+   'N'  as alt_suivi_mail,      
+    b.adr_mail   as adr_mail,      
+    null  as      alt_suivi_sms, -- #2[FNAC_PROD_ECH_TECH]      
+    Null  as  num_port_sms, -- #2 [FNAC_PROD_ECH_TECH]      
+ null as dte_naiss,  -- [PMO89_RS4822]  
+ null as ville_naiss,  -- [PMO89_RS4822]  
+ null as pays_naiss,  -- [PMO89_RS4822]  
+ 0 as cod_etat_ctrle_inter -- [PMO89_RS4822]  
+ From      
+    sysadm.boutique b      
+ Where      
+    b.id_prod = @iIdProd       
+       and b.id_boutique = @iPointBalance And @iPointBalance > 0       
+    And not exists      
+          ( select * from sysadm.w_inter v       
+             where v.id_sin     = @dcIdSin  and  -- [PI062]      
+                   v.cod_inter  = 'T'      and      
+            Convert ( Integer, v.cod_bq ) = b.id_boutique       
+     )      
+      
+ Set @iRet = @@error      
+      
+   If @iRet <> 0      
+      Begin      
+         Select @sRetour = 'PS_I01_W_INTER:Erreur Création inter Aquazen'       
+         Return -1      
+      End      
+   Else      
+      Begin      
+         Set @iRet = 1      
+      End      
+    /*------------------------------------------------------------------*/      
+End /* Déclaration Aquazen : Création inter point de balance            */      
+    /*------------------------------------------------------------------*/      
+      
+      
+ -- [PC478]      
+ If @iIdProd between 42500 and 42599      
+      
+    /*------------------------------------------------------------------*/      
+   Begin /* Déclaration SPDE : Création SPDE dans w_inter                       */      
+         /*------------------------------------------------------------------*/      
+      
+ Set @iIdInter = 0      
+      
+ Select @iIdInter = Max( i.id_i ) From sysadm.w_inter i Where i.id_sin = @dcIdSin      
+      
+ Set @iIdInter = @iIdInter + 1      
+      
+ Insert into sysadm.w_inter       
+ ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,cod_mode_reg,mt_a_reg,mt_reg,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,alt_courgest,cree_le,maj_le,maj_par,id_four,alt_suivi_mail,adr_mail,alt_suivi_sms,num_port_sms
+,dte_naiss,ville_naiss,pays_naiss,cod_etat_ctrle_inter )      
+ Select       
+           @dcIdSin as id_sin  ,  -- [PI062]      
+           @iIdInter as id_i  ,      
+           'T'  as cod_inter ,      
+           5  as cod_civ  ,      
+           a.lib_ag as nom  ,      
+           a.adr_1 as adr_1  ,      
+           a.adr_2 as adr_2  ,      
+           a.adr_cp as adr_cp  ,      
+           a.adr_ville as adr_ville ,      
+           'C'  as cod_mode_reg ,      
+     0  as mt_a_reg ,      
+           0  as mt_reg  ,      
+           0  as cpt_cour ,      
+           0  as cpt_valide ,      
+           'N'  as alt_valide ,      
+           'N'  as alt_part ,      
+           'N'  as alt_ps  ,      
+           'N'  as alt_pce  ,      
+     'N'  as alt_quest ,      
+           'N'  as alt_courgest ,      
+           getdate() as cree_le  ,      
+           getdate() as maj_le  ,      
+           @sCodOper as maj_par  ,      
+           a.id_bq as id_four  ,      
+     'N'  as alt_suivi_mail,   
+    NULL as adr_mail,  
+ NULL as alt_suivi_sms,  
+    Null  as  num_port_sms, -- #2 [FNAC_PROD_ECH_TECH]      
+ null as dte_naiss,  -- [PMO89_RS4822]  
+ null as ville_naiss,  -- [PMO89_RS4822]  
+ null as pays_naiss,  -- [PMO89_RS4822]  
+ 0 as cod_etat_ctrle_inter -- [PMO89_RS4822]         
+ From      
+    sysadm.agence a      
+ Where      
+       a.id_bq = 'SPD' And not exists      
+          ( select * from sysadm.w_inter v       
+             where       
+                   v.id_sin     = @iIdSin  and      
+                   v.cod_inter  = 'T'      and      
+                   a.lib_ag     = v.nom    and      
+            a.adr_1      = v.adr_1  and      
+                   a.adr_cp = v.adr_cp and      
+                   a.adr_ville = v.adr_ville )      
+                  
+      
+ Set @iRet = @@error      
+      
+ If @iRet <> 0      
+           Begin      
+             Select @sRetour = 'PS_I01_W_INTER:Erreur Création inter SPDE'       
+             Return -1      
+           End      
+ Else      
+           Begin      
+             Set @iRet = 1      
+           End      
+      
+   End      
+   -- Fin [PC478]      
+         
+      
+/*------------------------------------------------------------------*/      
+/* [Vdoc15313] Cdiscoun Sérénité (817) Création interlocuteur CDS   */      
+/*------------------------------------------------------------------*/      
+      
+If @iIdProd between 81700 and 81799  --  Cdiscount Sérénité (817) : Création d'un interlocuteur CDS      
+      
+Begin -- Début 817       
+      
+ Set @iIdInter = 0      
+ Select @iIdInter = Max( i.id_i ) From sysadm.w_inter i Where i.id_sin = @dcIdSin   -- [PI062]      
+ Set @iIdInter = @iIdInter + 1      
+      
+ Insert into sysadm.w_inter       
+ ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,adr_att,num_teld,num_telb,num_fax,cod_mode_reg,rib_bq,rib_gui,rib_cpt,rib_cle,mt_a_reg,mt_reg,v_ref1,v_ref2,cod_ag,cod_bq,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,id_cour,id_nat_cour,alt_courgest,id_i_db,id_courj,cree_le,maj_le,maj_par,ordre_cheque,num_let_cheque,id_four,alt_suivi_mail,adr_mail,alt_suivi_sms,num_port_sms,dte_naiss,ville_naiss,pays_naiss,cod_etat_ctrle_inter )      
+ Select       
+           @dcIdSin as id_sin  ,  -- [PI062]      
+           @iIdInter as id_i  ,      
+           'F'  as cod_inter ,      
+           5  as cod_civ  ,      
+           a.lib_ag as nom  ,      
+           a.adr_1 as adr_1  ,      
+           a.adr_2 as adr_2  ,      
+           a.adr_cp as adr_cp  ,      
+           a.adr_ville as adr_ville ,      
+           null  as adr_att  ,      
+           null  as num_teld ,      
+           null  as num_telb ,      
+           null  as num_fax  ,      
+           'FM'  as cod_mode_reg ,      
+           null  as rib_bq  ,      
+           null  as rib_gui  ,      
+           null  as rib_cpt  ,      
+           null  as rib_cle  ,      
+           0  as mt_a_reg ,      
+           0  as mt_reg  ,      
+           null  as v_ref1  ,      
+         null  as v_ref2  ,      
+           null  as cod_ag  ,      
+           null  as cod_bq  ,      
+           0  as cpt_cour ,      
+           0  as cpt_valide , -- #4 0 ald 1      
+           'N'  as alt_valide ,      
+           'N'  as alt_part ,      
+           'N'  as alt_ps  ,      
+           'N'  as alt_pce  ,      
+           'N'  as alt_quest ,      
+           null  as id_cour  ,      
+           null  as id_nat_cour ,      
+           'N'  as alt_courgest ,      
+           null  as id_i_db  ,      
+           null  as id_courj ,      
+           getdate() as cree_le  ,      
+           getdate() as maj_le  ,      
+           @sCodOper as maj_par  ,      
+           null  as ordre_cheque ,      
+           null  as num_let_cheque ,      
+           a.id_bq as id_four  ,      
+     'N'  as alt_suivi_mail,      
+     NULL     as adr_mail,      
+        null  as  alt_suivi_sms,       
+        Null  as  num_port_sms,  
+ null as dte_naiss,  -- [PMO89_RS4822]  
+ null as ville_naiss,  -- [PMO89_RS4822]  
+ null as pays_naiss,  -- [PMO89_RS4822]  
+ 0 as cod_etat_ctrle_inter -- [PMO89_RS4822]    
+         
+ From      
+    sysadm.agence a      
+ Where      
+       a.id_bq = 'CDS' And not exists      
+          ( select * from sysadm.w_inter v       
+             where       
+               v.id_sin     = @dcIdSin  and  -- [PI062]      
+               v.cod_inter  = 'F'      and      
+               a.lib_ag     = v.nom    and      
+            a.lib_ag     = v.nom    and      
+            a.adr_1      = v.adr_1  and      
+               a.adr_cp  = v.adr_cp and      
+               a.adr_ville = v.adr_ville )      
+ Set @iRet = @@error      
+      
+ If @iRet <> 0      
+  Begin      
+   Set @sRetour = 'PS_I01_W_INTER:Erreur Création inter Cdiscount'       
+   Return -1      
+  End      
+ Else      
+  Begin      
+   Set @iRet = 1      
+  End      
+        
+End -- Fin 817      
+      
+      
+      
+ -- [PC13174]      
+ -- [ITSM244603] Correction bug : création uniquement à la premiere passe : @sCodInter = 'A'       
+ -- [ITSM297903] On prend IPA      
+If @iIdProd in (select id_prod from sysadm.det_pro where id_code_dp=264) And @sCodInter = 'B'       
+      
+         /*-------------------------------------------------*/      
+   Begin /* Création AXA-IPA dans w_inter                       */      
+         /*-------------------------------------------------*/      
+      
+ Set @iIdInter = 0      
+      
+ Select @iIdInter = Max( i.id_i ) From sysadm.w_inter i Where i.id_sin = @dcIdSin  -- [PI062]      
+      
+ Set @iIdInter = @iIdInter + 1      
+      
+      
+ Insert into sysadm.w_inter       
+ ( id_sin,id_i,cod_inter,cod_civ,nom,adr_1,adr_2,adr_cp,adr_ville,cod_mode_reg,mt_a_reg,mt_reg,cpt_cour,cpt_valide,alt_valide,alt_part,alt_ps,alt_pce,alt_quest,alt_courgest,cree_le,maj_le,maj_par,id_four,alt_suivi_mail,adr_mail,alt_suivi_sms,num_port_sms,
+dte_naiss,ville_naiss,pays_naiss,cod_etat_ctrle_inter )      
+       
+ Select       
+           @dcIdSin as id_sin  ,  -- [PI062]      
+           @iIdInter as id_i  ,      
+           'F'  as cod_inter ,      
+           5  as cod_civ  ,      
+           a.lib_ag as nom  ,      
+           a.adr_1 as adr_1  ,      
+           a.adr_2 as adr_2  ,      
+           a.adr_cp as adr_cp  ,      
+           a.adr_ville as adr_ville ,      
+           'FM'  as cod_mode_reg ,      
+           0  as mt_a_reg ,      
+           0  as mt_reg  ,      
+           0  as cpt_cour ,      
+           0  as cpt_valide ,      
+           'N'  as alt_valide ,      
+           'N'  as alt_part ,      
+           'N'  as alt_ps  ,      
+           'N'  as alt_pce  ,      
+           'N'  as alt_quest ,      
+           'N'  as alt_courgest ,      
+           getdate() as cree_le  ,      
+           getdate() as maj_le  ,      
+           @sCodOper as maj_par  ,      
+           a.id_bq as id_four  ,      
+   'N'  as alt_suivi_mail  ,      
+    NULL as adr_mail,  
+ NULL as alt_suivi_sms,  
+ Null  as  num_port_sms, -- #2 [FNAC_PROD_ECH_TECH]      
+ null as dte_naiss,  -- [PMO89_RS4822]  
+ null as ville_naiss,  -- [PMO89_RS4822]  
+ null as pays_naiss,  -- [PMO89_RS4822]  
+ 0 as cod_etat_ctrle_inter -- [PMO89_RS4822]       
+ From      
+    sysadm.agence a      
+ Where      
+       a.id_bq = 'IPA' And not exists      
+          ( select * from sysadm.w_inter v       
+             where       
+                   v.id_sin     = @dcIdSin  and  -- [PI062]      
+                   v.cod_inter  = 'F'      and      
+                   a.lib_ag     = v.nom    and      
+       a.adr_1      = v.adr_1  and      
+                   a.adr_cp = v.adr_cp and      
+                   a.adr_ville = v.adr_ville )      
+        
+ Set @iRet = @@error      
+      
+ If @iRet <> 0      
+           Begin      
+             Select @sRetour = 'PS_I01_W_INTER:Erreur Création inter AXA'       
+       Return -1      
+     End      
+ Else      
+           Begin      
+             Set @iRet = 1      
+           End      
+      
+   End      
+   -- Fin [PC13174]      
+         
+-- [VDOC16954] Interlocuteir       
+If ( @iIdProd between 32200 and 32299 ) Or ( @iIdProd between 67100 and 67199)  
+Begin      
+      
+ Set    @iIdInter = 0      
+ Select @iIdInter = Max( i.id_i ) From sysadm.w_inter i Where i.id_sin = @dcIdSin  -- [PI062]      
+ Set    @iIdInter = @iIdInter + 1      
+      
+  INSERT INTO    sysadm.w_inter      
+  (   w_inter.id_sin,      
+   w_inter.id_i,      
+   w_inter.cod_inter,      
+   w_inter.cod_civ,      
+   w_inter.nom,      
+   w_inter.adr_1,      
+   w_inter.adr_2,      
+   w_inter.adr_cp,      
+   w_inter.adr_ville,      
+   w_inter.adr_att,      
+   w_inter.num_teld,      
+   w_inter.num_telb,      
+   w_inter.num_fax,      
+   w_inter.cod_mode_reg,      
+   w_inter.rib_bq,      
+   w_inter.rib_gui,      
+   w_inter.rib_cpt,      
+   w_inter.rib_cle,      
+   w_inter.mt_a_reg,      
+   w_inter.mt_reg,      
+   w_inter.v_ref1,      
+   w_inter.v_ref2,      
+   w_inter.cod_ag,      
+   w_inter.cod_bq,      
+   w_inter.cpt_cour,      
+   w_inter.alt_valide,      
+   w_inter.cpt_valide,      
+   w_inter.alt_part,      
+   w_inter.alt_ps,      
+   w_inter.alt_pce,      
+   w_inter.alt_quest,      
+   w_inter.id_cour,      
+   w_inter.id_nat_cour,      
+   w_inter.alt_courgest,      
+   w_inter.id_i_db,      
+   w_inter.id_courj,      
+   w_inter.cree_le,      
+   w_inter.maj_le,      
+   w_inter.maj_par,      
+   w_inter.ordre_cheque,      
+            w_inter.num_let_cheque,      
+   w_inter.id_four,      
+   w_inter.alt_suivi_mail,      
+   w_inter.adr_mail,       
+   w_inter.alt_suivi_sms,      
+   w_inter.num_port_sms,  
+   w_inter.dte_naiss,  -- [PMO89_RS4822]  
+   w_inter.ville_naiss,  -- [PMO89_RS4822]  
+   w_inter.pays_naiss,  -- [PMO89_RS4822]  
+   w_inter.cod_etat_ctrle_inter  -- [PMO89_RS4822]  
+   )      
+         
+  Select          
+    @dcIdSin,  -- [PI062]      
+   @iIdInter,      
+   'B',      
+   '5',      
+   lib_ag,      
+   adr_1,      
+   adr_2,      
+   adr_cp,      
+   adr_ville,      
+   NULL,      
+   NULL,      
+   NULL,      
+   NULL,      
+   NULL,      
+   NULL,      
+   NULL,      
+   NULL,      
+   NULL,      
+   0.00,      
+   0.00,      
+   NULL,      
+   NULL,      
+   id_bq,      
+   id_ag,      
+   0,      
+   'O',      
+   0,      
+   'N',      
+   'N',      
+   'N',      
+   'N',      
+   NULL,      
+   NULL,      
+   'N',      
+   NULL,      
+   NULL,      
+   getdate(),      
+   getdate(),      
+   @sCodOper,      
+   NULL,      
+   NULL,      
+   NULL,      
+   'N',      
+   NULL,      
+   NULL,       
+   NULL,  
+ null as dte_naiss,  -- [PMO89_RS4822]  
+ null as ville_naiss,  -- [PMO89_RS4822]  
+ null as pays_naiss,  -- [PMO89_RS4822]  
+ 0 as cod_etat_ctrle_inter -- [PMO89_RS4822]     
+         
+ From sysadm.agence       
+ Where id_bq = '99999'      
+ And   id_ag = '99990' And not exists      
+  ( select * from sysadm.w_inter v       
+   where       
+   v.id_sin        = @dcIdSin  and  -- [PI062]      
+   v.cod_inter     = 'B'      and      
+   agence.lib_ag   = v.nom    and      
+   agence.adr_1    = v.adr_1  and      
+   agence.adr_cp = v.adr_cp   and      
+   agence.adr_ville= v.adr_ville )      
+        
+ Set @iRet = @@error      
+      
+ If @iRet <> 0      
+ Begin      
+  Select @sRetour = 'PS_I01_W_INTER:Erreur Création inter ONEY BANQUE ACCORD'       
+  Return -1      
+ End      
+ Else      
+  Begin      
+  Set @iRet = 1      
+ End      
+      
+End       
+      
+-- Création Inter type Autre "T" "en masse" :)      
+-- [PM421-5]    
+-- [VDOC30089] J'y ajoute les Banques mais sans création de l'inter Banque (que je laisse à Fred plus),     
+-- C'est uniquement pour aller mettre une adresse mail en auto sur l'inter banque.    
+Select @dcIdInterMax = Max( i.id_i ) From sysadm.w_inter i Where i.id_sin = @dcIdSin        
+If @dcIdInterMax is null Set @dcIdInterMax = 1 -- Pas 0, réservé à l'inter A, on mets 1 pour que le 1+1 donne 2 pour le 1ère inter T      
+If @dcIdInterMax < 2 Set @dcIdInterMax = 1 -- Car Fred pour le B mets toujours 1 en dur, donc cette ligne évite que ça pète en duplicate key.    
+
+If sysadm.FN_CLE_NUMERIQUE ( 'MCO174_INT_AUTO_AXAB') > 0 
+	Begin      
+		Insert into sysadm.w_inter      
+		Select       
+		@dcIdSin id_sin,      
+		@dcIdInterMax + row_number() over (partition by ia.id_prod order by ia.id_cle ) id_i,      
+		ia.cod_inter,      
+		ia.cod_civ,      
+		ia.nom,      
+		ia.adr_1,      
+		ia.adr_2,      
+		ia.adr_cp,      
+		ia.adr_ville,      
+		NULL adr_att,      
+		NULL num_teld,      
+		NULL num_telb,      
+		NULL num_fax,      
+		NULL cod_mode_reg,      
+		NULL rib_bq,      
+		NULL rib_gui,      
+		NULL rib_cpt,      
+		NULL rib_cle,      
+		0 mt_a_reg,      
+		0 mt_reg,      
+		NULL v_ref1,      
+		NULL v_ref2,      
+		NULL cod_ag,      
+		NULL cod_bq,      
+		0 cpt_cour,      
+		0 cpt_valide,      
+		'O' alt_valide,      
+		'N' alt_part,      
+		'N' alt_ps,      
+		'N' alt_pce,      
+		'N' alt_quest,      
+		NULL id_cour,      
+		NULL id_nat_cour,      
+		'N' alt_courgest,      
+		NULL id_i_db,      
+		NULL id_courj,      
+		getdate() cree_le,      
+		getdate() maj_le,      
+		@sCodOper maj_par,      
+		NULL ordre_cheque,      
+		NULL num_let_cheque,      
+		NULL id_four,      
+		'O' alt_suivi_mail,      
+		IIF ( CharIndex ( ',', ia.adr_mail, 1) > 0, left ( rtrim ( ltrim ( ia.adr_mail )), CharIndex ( ',', ia.adr_mail, 1) - 1 ), rtrim ( ltrim ( ia.adr_mail )) )  adr_mail,  -- [VDOC29600]       
+		NULL  alt_suivi_sms,      
+		NULL   num_port_sms,  
+		null as dte_naiss,  -- [PMO89_RS4822]  
+		null as ville_naiss,  -- [PMO89_RS4822]  
+		null as pays_naiss,  -- [PMO89_RS4822]  
+		0 as cod_etat_ctrle_inter -- [PMO89_RS4822]  
+      
+		From sysadm.inter_auto ia      
+		Where ia.id_prod = @dcIdProd   
+		And   nom <> '[PAS_DE_CREATION]'
+		-- And   ia.cod_inter <> 'B'  -- [VDOC30089]-- [MCO174_INT_AUTO_AXAB]
+		And   Not Exists (       
+		Select Top 1 1       
+		From   sysadm.w_inter wi      
+		Where  wi.id_sin = @dcIdSin      
+		And    Upper ( wi.cod_inter ) = Upper ( rtrim ( ltrim ( ia.cod_inter )))
+		And    Upper ( wi.nom ) = Upper ( rtrim ( ltrim (ia.nom )))
+		And    Upper ( wi.adr_1 ) = Upper ( rtrim ( ltrim (ia.adr_1 )))
+		And    Upper ( wi.adr_cp ) = Upper ( rtrim ( ltrim (ia.adr_cp )))
+		And    Upper ( wi.adr_ville ) = Upper ( rtrim ( ltrim (ia.adr_ville )))
+		)      
+
+		-- [VDOC30089] forçcage d'adresse mail sur inter Banque.    
+		Update sysadm.w_inter_encrypt     
+		Set adr_mail = ltrim ( rtrim( ia.adr_mail))    
+		From sysadm.w_inter_encrypt wi,    
+		 sysadm.inter_auto ia    
+		Where  ia.id_prod = @dcIdProd    
+		And    ia.cod_inter = 'B' -- [VDOC30089]    
+		And    ia.nom = '[PAS_DE_CREATION]' -- [MCO174_INT_AUTO_AXAB]
+		And    ia.adr_mail is not null    
+		And    wi.id_sin =  @dcIdSin    
+		And    wi.cod_inter = ia.cod_inter      
+
+	End
+Else 
+	Begin
+		Insert into sysadm.w_inter      
+		Select       
+		@dcIdSin id_sin,      
+		@dcIdInterMax + row_number() over (partition by ia.id_prod order by ia.id_cle ) id_i,      
+		ia.cod_inter,      
+		ia.cod_civ,      
+		ia.nom,      
+		ia.adr_1,      
+		ia.adr_2,      
+		ia.adr_cp,      
+		ia.adr_ville,      
+		NULL adr_att,      
+		NULL num_teld,      
+		NULL num_telb,      
+		NULL num_fax,      
+		NULL cod_mode_reg,      
+		NULL rib_bq,      
+		NULL rib_gui,      
+		NULL rib_cpt,      
+		NULL rib_cle,      
+		0 mt_a_reg,      
+		0 mt_reg,      
+		NULL v_ref1,      
+		NULL v_ref2,      
+		NULL cod_ag,      
+		NULL cod_bq,      
+		0 cpt_cour,      
+		0 cpt_valide,      
+		'O' alt_valide,      
+		'N' alt_part,      
+		'N' alt_ps,      
+		'N' alt_pce,      
+		'N' alt_quest,      
+		NULL id_cour,      
+		NULL id_nat_cour,      
+		'N' alt_courgest,      
+		NULL id_i_db,      
+		NULL id_courj,      
+		getdate() cree_le,      
+		getdate() maj_le,      
+		@sCodOper maj_par,      
+		NULL ordre_cheque,      
+		NULL num_let_cheque,      
+		NULL id_four,      
+		'O' alt_suivi_mail,      
+		IIF ( CharIndex ( ',', ia.adr_mail, 1) > 0, left ( rtrim ( ltrim ( ia.adr_mail )), CharIndex ( ',', ia.adr_mail, 1) - 1 ), rtrim ( ltrim ( ia.adr_mail )) )  adr_mail,  -- [VDOC29600]       
+		NULL  alt_suivi_sms,      
+		NULL   num_port_sms,  
+		null as dte_naiss,  -- [PMO89_RS4822]  
+		null as ville_naiss,  -- [PMO89_RS4822]  
+		null as pays_naiss,  -- [PMO89_RS4822]  
+		0 as cod_etat_ctrle_inter -- [PMO89_RS4822]  
+      
+		From sysadm.inter_auto ia      
+		Where ia.id_prod = @dcIdProd      
+		And   ia.cod_inter <> 'B' -- [VDOC30089]    
+		And   Not Exists (       
+		Select Top 1 1       
+		From   sysadm.w_inter wi      
+		Where  wi.id_sin = @dcIdSin      
+		And    wi.cod_inter = ia.cod_inter      
+		And    wi.nom = ia.nom      
+		And    wi.adr_1 = ia.adr_1      
+		And    wi.adr_cp = ia.adr_cp      
+		And    wi.adr_ville = ia.adr_ville      
+		)      
+
+		-- [VDOC30089] forçcage d'adresse mail sur inter Banque.    
+		Update sysadm.w_inter_encrypt     
+		Set adr_mail = ltrim ( rtrim( ia.adr_mail))    
+		From sysadm.w_inter_encrypt wi,    
+		 sysadm.inter_auto ia    
+		Where  ia.id_prod = @dcIdProd    
+		And    ia.cod_inter = 'B' -- [VDOC30089]    
+		And    ia.adr_mail is not null    
+		And    wi.id_sin =  @dcIdSin    
+		And    wi.cod_inter = ia.cod_inter      
+	End 
+
+  
+
      
- Select     
-           @dcIdSin as id_sin  ,  -- [PI062]    
-           @iIdInter as id_i  ,    
-           'F'  as cod_inter ,    
-           5  as cod_civ  ,    
-           a.lib_ag as nom  ,    
-           a.adr_1 as adr_1  ,    
-           a.adr_2 as adr_2  ,    
-           a.adr_cp as adr_cp  ,    
-           a.adr_ville as adr_ville ,    
-           'FM'  as cod_mode_reg ,    
-           0  as mt_a_reg ,    
-           0  as mt_reg  ,    
-           0  as cpt_cour ,    
-           0  as cpt_valide ,    
-           'N'  as alt_valide ,    
-           'N'  as alt_part ,    
-           'N'  as alt_ps  ,    
-           'N'  as alt_pce  ,    
-           'N'  as alt_quest ,    
-           'N'  as alt_courgest ,    
-           getdate() as cree_le  ,    
-           getdate() as maj_le  ,    
-           @sCodOper as maj_par  ,    
-           a.id_bq as id_four  ,    
-   'N'  as alt_suivi_mail  ,    
-    NULL as adr_mail,
-	NULL as alt_suivi_sms,
-	Null  as  num_port_sms, -- #2 [FNAC_PROD_ECH_TECH]    
-	null as dte_naiss,  -- [PMO89_RS4822]
-	null as ville_naiss,  -- [PMO89_RS4822]
-	null as pays_naiss,  -- [PMO89_RS4822]
-	0 as cod_etat_ctrle_inter -- [PMO89_RS4822]     
- From    
-    sysadm.agence a    
- Where    
-       a.id_bq = 'IPA' And not exists    
-          ( select * from sysadm.w_inter v     
-             where     
-                   v.id_sin     = @dcIdSin  and  -- [PI062]    
-                   v.cod_inter  = 'F'      and    
-                   a.lib_ag     = v.nom    and    
-       a.adr_1      = v.adr_1  and    
-                   a.adr_cp = v.adr_cp and    
-                   a.adr_ville = v.adr_ville )    
-      
- Set @iRet = @@error    
-    
- If @iRet <> 0    
-           Begin    
-             Select @sRetour = 'PS_I01_W_INTER:Erreur Création inter AXA'     
-       Return -1    
-     End    
- Else    
-           Begin    
-             Set @iRet = 1    
-           End    
-    
-   End    
-   -- Fin [PC13174]    
-       
--- [VDOC16954] Interlocuteir     
-If ( @iIdProd between 32200 and 32299 ) Or ( @iIdProd between 67100 and 67199)
-Begin    
-    
- Set    @iIdInter = 0    
- Select @iIdInter = Max( i.id_i ) From sysadm.w_inter i Where i.id_sin = @dcIdSin  -- [PI062]    
- Set    @iIdInter = @iIdInter + 1    
-    
-  INSERT INTO    sysadm.w_inter    
-  (   w_inter.id_sin,    
-   w_inter.id_i,    
-   w_inter.cod_inter,    
-   w_inter.cod_civ,    
-   w_inter.nom,    
-   w_inter.adr_1,    
-   w_inter.adr_2,    
-   w_inter.adr_cp,    
-   w_inter.adr_ville,    
-   w_inter.adr_att,    
-   w_inter.num_teld,    
-   w_inter.num_telb,    
-   w_inter.num_fax,    
-   w_inter.cod_mode_reg,    
-   w_inter.rib_bq,    
-   w_inter.rib_gui,    
-   w_inter.rib_cpt,    
-   w_inter.rib_cle,    
-   w_inter.mt_a_reg,    
-   w_inter.mt_reg,    
-   w_inter.v_ref1,    
-   w_inter.v_ref2,    
-   w_inter.cod_ag,    
-   w_inter.cod_bq,    
-   w_inter.cpt_cour,    
-   w_inter.alt_valide,    
-   w_inter.cpt_valide,    
-   w_inter.alt_part,    
-   w_inter.alt_ps,    
-   w_inter.alt_pce,    
-   w_inter.alt_quest,    
-   w_inter.id_cour,    
-   w_inter.id_nat_cour,    
-   w_inter.alt_courgest,    
-   w_inter.id_i_db,    
-   w_inter.id_courj,    
-   w_inter.cree_le,    
-   w_inter.maj_le,    
-   w_inter.maj_par,    
-   w_inter.ordre_cheque,    
-            w_inter.num_let_cheque,    
-   w_inter.id_four,    
-   w_inter.alt_suivi_mail,    
-   w_inter.adr_mail,     
-   w_inter.alt_suivi_sms,    
-   w_inter.num_port_sms,
-   w_inter.dte_naiss,  -- [PMO89_RS4822]
-   w_inter.ville_naiss,  -- [PMO89_RS4822]
-   w_inter.pays_naiss,  -- [PMO89_RS4822]
-   w_inter.cod_etat_ctrle_inter  -- [PMO89_RS4822]
-   )    
-       
-  Select        
-    @dcIdSin,  -- [PI062]    
-   @iIdInter,    
-   'B',    
-   '5',    
-   lib_ag,    
-   adr_1,    
-   adr_2,    
-   adr_cp,    
-   adr_ville,    
-   NULL,    
-   NULL,    
-   NULL,    
-   NULL,    
-   NULL,    
-   NULL,    
-   NULL,    
-   NULL,    
-   NULL,    
-   0.00,    
-   0.00,    
-   NULL,    
-   NULL,    
-   id_bq,    
-   id_ag,    
-   0,    
-   'O',    
-   0,    
-   'N',    
-   'N',    
-   'N',    
-   'N',    
-   NULL,    
-   NULL,    
-   'N',    
-   NULL,    
-   NULL,    
-   getdate(),    
-   getdate(),    
-   @sCodOper,    
-   NULL,    
-   NULL,    
-   NULL,    
-   'N',    
-   NULL,    
-   NULL,     
-   NULL,
-	null as dte_naiss,  -- [PMO89_RS4822]
-	null as ville_naiss,  -- [PMO89_RS4822]
-	null as pays_naiss,  -- [PMO89_RS4822]
-	0 as cod_etat_ctrle_inter -- [PMO89_RS4822]   
-       
- From sysadm.agence     
- Where id_bq = '99999'    
- And   id_ag = '99990' And not exists    
-  ( select * from sysadm.w_inter v     
-   where     
-   v.id_sin        = @dcIdSin  and  -- [PI062]    
-   v.cod_inter     = 'B'      and    
-   agence.lib_ag   = v.nom    and    
-   agence.adr_1    = v.adr_1  and    
-   agence.adr_cp = v.adr_cp   and    
-   agence.adr_ville= v.adr_ville )    
-      
- Set @iRet = @@error    
-    
- If @iRet <> 0    
- Begin    
-  Select @sRetour = 'PS_I01_W_INTER:Erreur Création inter ONEY BANQUE ACCORD'     
-  Return -1    
- End    
- Else    
-  Begin    
-  Set @iRet = 1    
- End    
-    
-End     
-    
--- Création Inter type Autre "T" "en masse" :)    
--- [PM421-5]  
--- [VDOC30089] J'y ajoute les Banques mais sans création de l'inter Banque (que je laisse à Fred plus),   
--- C'est uniquement pour aller mettre une adresse mail en auto sur l'inter banque.  
-Select @dcIdInterMax = Max( i.id_i ) From sysadm.w_inter i Where i.id_sin = @dcIdSin      
-If @dcIdInterMax is null Set @dcIdInterMax = 1 -- Pas 0, réservé à l'inter A, on mets 1 pour que le 1+1 donne 2 pour le 1ère inter T    
-If @dcIdInterMax < 2 Set @dcIdInterMax = 1 -- Car Fred pour le B mets toujours 1 en dur, donc cette ligne évite que ça pète en duplicate key.  
-    
-Insert into sysadm.w_inter    
-Select     
-@dcIdSin id_sin,    
-@dcIdInterMax + row_number() over (partition by ia.id_prod order by ia.id_cle ) id_i,    
-ia.cod_inter,    
-ia.cod_civ,    
-ia.nom,    
-ia.adr_1,    
-ia.adr_2,    
-ia.adr_cp,    
-ia.adr_ville,    
-NULL adr_att,    
-NULL num_teld,    
-NULL num_telb,    
-NULL num_fax,    
-NULL cod_mode_reg,    
-NULL rib_bq,    
-NULL rib_gui,    
-NULL rib_cpt,    
-NULL rib_cle,    
-0 mt_a_reg,    
-0 mt_reg,    
-NULL v_ref1,    
-NULL v_ref2,    
-NULL cod_ag,    
-NULL cod_bq,    
-0 cpt_cour,    
-0 cpt_valide,    
-'O' alt_valide,    
-'N' alt_part,    
-'N' alt_ps,    
-'N' alt_pce,    
-'N' alt_quest,    
-NULL id_cour,    
-NULL id_nat_cour,    
-'N' alt_courgest,    
-NULL id_i_db,    
-NULL id_courj,    
-getdate() cree_le,    
-getdate() maj_le,    
-@sCodOper maj_par,    
-NULL ordre_cheque,    
-NULL num_let_cheque,    
-NULL id_four,    
-'O' alt_suivi_mail,    
-IIF ( CharIndex ( ',', ia.adr_mail, 1) > 0, left ( rtrim ( ltrim ( ia.adr_mail )), CharIndex ( ',', ia.adr_mail, 1) - 1 ), rtrim ( ltrim ( ia.adr_mail )) )  adr_mail,  -- [VDOC29600]     
-NULL  alt_suivi_sms,    
-NULL   num_port_sms,
-null as dte_naiss,  -- [PMO89_RS4822]
-null as ville_naiss,  -- [PMO89_RS4822]
-null as pays_naiss,  -- [PMO89_RS4822]
-0 as cod_etat_ctrle_inter -- [PMO89_RS4822]
-    
-From sysadm.inter_auto ia    
-Where ia.id_prod = @dcIdProd    
-And   ia.cod_inter <> 'B' -- [VDOC30089]  
-And   Not Exists (     
-Select Top 1 1     
-From   sysadm.w_inter wi    
-Where  wi.id_sin = @dcIdSin    
-And    wi.cod_inter = ia.cod_inter    
-And    wi.nom = ia.nom    
-And    wi.adr_1 = ia.adr_1    
-And    wi.adr_cp = ia.adr_cp    
-And    wi.adr_ville = ia.adr_ville    
-)    
-  
--- [VDOC30089] forçcage d'adresse mail sur inter Banque.  
-Update sysadm.w_inter_encrypt   
-Set adr_mail = ltrim ( rtrim( ia.adr_mail))  
-From sysadm.w_inter_encrypt wi,  
- sysadm.inter_auto ia  
-Where  ia.id_prod = @dcIdProd  
-And    ia.cod_inter = 'B' -- [VDOC30089]  
-And    ia.adr_mail is not null  
-And    wi.id_sin =  @dcIdSin  
-And    wi.cod_inter = ia.cod_inter    
-   
-Return @iRet    
-  
+Return @iRet      
+
 Go
   
 grant execute on sysadm.PS_I01_W_INTER_V02 to rolebddsinistres

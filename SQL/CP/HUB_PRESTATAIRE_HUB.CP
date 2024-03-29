@@ -29,7 +29,7 @@ GO
 
 Insert into [edi].[parametre] Values ( 'CPT_HUB', 0, -1 ) 
 
-
+/*
 If Exists ( Select Top 1 1 From sys.objects where name = 'DepotSimpa2ToHubPresta' and type = 'U' ) Drop Table edi.DepotSimpa2ToHubPresta
 
 CREATE TABLE edi.DepotSimpa2ToHubPresta(
@@ -130,6 +130,7 @@ Create index idx7_DepotSimpa2ToHubPresta on edi.DepotSimpa2ToHubPresta ( alt_trt
 Create index idx8_DepotSimpa2ToHubPresta on edi.DepotSimpa2ToHubPresta ( traite_le)
 
 Go
+*/
 
 -------------------------------------------------------------------
 --
@@ -328,7 +329,7 @@ AS
 ---------------------------------------------------------------------------------
 If @aiCas in ( 1, 2 )
   Begin
-	-- WaitFor Delay '00:00:5'
+	WaitFor Delay '00:00:00'
 	Select	LEFT ( 'AUYPSQZMJB', 20 ) 'idHubPresta',
 			Left ( 'ANV', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
 			null,
@@ -561,6 +562,9 @@ CREATE procedure edi.PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATAIRE
 		@sInfo_spb_frn_cplt VarChar ( 800 ) 
 
 AS
+
+Declare @iError Integer
+Declare @iRowCount Integer
 
 -----------------------------------------------------------------------
 -- Cas Test Pour JF sur la base SIMPA2, Retour en dur (bouchon)      --
@@ -907,7 +911,12 @@ If @aiCas in ( 2, 3 )
 			@sInfo_spb_frn_cplt
 		)
 
-		Return @@Error
+		Set @iError = @@Error
+		Set @iRowCount = @@ROWCOUNT
+
+		If @iError = 0 And @iRowCount <> 1 Set @iError = 1000
+
+		Return @iError 
 
   End
 
@@ -947,7 +956,8 @@ Begin
 
 End  
   
-  
+Go
+
 -------------------------------------------------------------------
 --
 -- Procédure            :       PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_SIMPA2_AU_HUB_PRESTAIRE
@@ -965,10 +975,10 @@ IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_DONNEES_TRANSMI
         DROP procedure edi.PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_SIMPA2_AU_HUB_PRESTAIRE
 GO
 
-
 CREATE procedure edi.PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_SIMPA2_AU_HUB_PRESTAIRE
 	    @iIdSin		Integer,
-		@iIdSeq		Integer
+		@iIdSeq		Integer,
+		@iIdDepotS2 Integer
 AS
 
 Select 
@@ -1053,5 +1063,6 @@ Select
 From edi.DepotSimpa2ToHubPresta dps2
 Where dps2.id_sin = @iIdSin
 And   dps2.id_seq = @iIdSeq
+And   dps2.id_depot_simpa2 = @iIdDepotS2 
 
 Go

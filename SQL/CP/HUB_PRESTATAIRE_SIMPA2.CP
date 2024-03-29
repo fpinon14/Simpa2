@@ -1427,6 +1427,11 @@ Set		id_lot_cmd  = 999800,
 Where   id_sin = @adcIdSin
 And		id_seq = @alIdSeq
 
+Update	sysadm.w_commande 
+Set		info_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', convert ( VarChar ( 20) , @alIdentityHubPresta ), RTRIM ( ltrim ( info_spb_frn_cplt )), ';')
+Where   id_sin = @adcIdSin
+And		id_seq = @alIdSeq
+
 Go
 
 

@@ -457,6 +457,15 @@ select @dcIdProd = s.id_prod,
 from   sysadm.sinistre s
 where  s.id_sin = @dcIdSin
 
+If @@ROWCOUNT <= 0 
+  Begin
+	select @dcIdProd = s.id_prod,
+		   @dtDteAdh = s.dte_adh,	
+		   @dtDteSurv = s.dte_surv
+	from   sysadm.w_sin s
+	where  s.id_sin = @dcIdSin
+  End 
+
 -- Si pas de sin, retour date null
 If @dtDteAdh is null return @dtDteRnv 
 If @dtDteSurv is null return @dtDteRnv 
