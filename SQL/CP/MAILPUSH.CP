@@ -2797,6 +2797,7 @@ Go
 -- JFF    16/11/2020 [PC202553_SELECTRA][CDCSINV3]
 -- JFF    15/01/2021 [DT517]  
 -- JFF    26/04/2023 [RS5045_REF_MATP]
+-- JFF    07/03/2024 [HP252_276_HUB_PRESTA]
 ------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S04_MAILPUSH_INFO_REPAR_PASSE' AND type = 'P' )
         DROP procedure sysadm.PS_S04_MAILPUSH_INFO_REPAR_PASSE
@@ -2904,7 +2905,8 @@ Declare
   @dcIdInter Decimal ( 2 ), -- [RS5045_REF_MATP]
   @sCodeMaquette VarChar ( 255 ), -- [RS5045_REF_MATP]
   @sErrOutPut VarChar ( 255 ), -- [RS5045_REF_MATP]
-  @sXMLVar     	VarChar ( max ) -- [RS5045_REF_MATP]
+  @sXMLVar     	VarChar ( max ), -- [RS5045_REF_MATP]
+  @iPrestaHUB  Integer -- [HP252_276_HUB_PRESTA]
 
   Set @asCasRetour = ''
   Set @sMailBody = ''
@@ -3032,9 +3034,9 @@ If Exists (
 	And	 wc.cod_etat = 'CNV'
 )
 Begin 
-Set @iMobZen3Express = 1
-Set @asCasRetour = 'AUCUNE_PRS_SUR_CRITERE'
-Return 0
+	Set @iMobZen3Express = 1
+	Set @asCasRetour = 'AUCUNE_PRS_SUR_CRITERE'
+	Return 0
 End 
 
   -- Sommes-nous dans le cas d'une Réparation non validée ?
@@ -3078,6 +3080,18 @@ End
 	 Or ( c.id_four = 'TMT' And c.info_spb_frn in ( 2510, 2516 )) -- [PC801_6_TAMET]
 	 Or ( c.id_four = 'CEA' And c.info_spb_frn in ( 3110, 3120 )) -- [DT361]
 	 )
+
+  -- [HP252_276_HUB_PRESTA] Pas de mail si la presta est sur le HUB, le HUB s'en occupe
+  If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
+	Begin
+		Set @iPrestaHUB = IIF ( Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', @sInfoSpbFrnCplt, ';' ) ) > 0, 1, 0 )
+  
+		If @iPrestaHUB > 0 
+			Begin 
+				Set @asCasRetour = 'PRESTA_HUB_PAS_DE_MAIL'
+				Return 0
+			End 
+	End 
 
   If @sIdFour is null Or @sIdFour = '' 
    Begin

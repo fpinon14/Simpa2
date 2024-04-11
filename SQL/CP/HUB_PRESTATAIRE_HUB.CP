@@ -72,8 +72,8 @@ CREATE TABLE edi.DepotSimpa2ToHubPresta(
 	lib_civ_livr_court			varchar ( 35 )			NOT NULL,   -- Lib civilité court de l'interlocuteur lié à la prestation
 	lib_civ_livr_long			varchar ( 35 )			NOT NULL,   -- Lib civilité long de l'interlocuteur lié à la prestation
 	id_contrat_abonne			VarChar ( 20 ) 				NULL,	-- Identifiant éventuel de l'assuré reconnu par le contractant
-	nom_ass						VarChar ( 35 ) 				NULL,	-- Nom de l'assuré ayant souscrit l'adhésion
-	prenom_ass					VarChar ( 35 ) 				NULL,	-- Prénom de l'assuré ayant souscrit l'adhésion
+	nom_ass						VarChar ( 35 ) 			NOT	NULL,	-- Nom de l'assuré ayant souscrit l'adhésion
+	prenom_ass					VarChar ( 35 ) 			NOT	NULL,	-- Prénom de l'assuré ayant souscrit l'adhésion
 	nom_livr					varchar ( 35 )			NOT NULL,   -- Nom de l'interlocuteur lié à la prestation
 	prenom_livr					varchar ( 35 )			NOT NULL,   -- Prénom de l'interlocuteur lié à la prestation
 	adr1_livr					varchar ( 35 )			NOT NULL,   -- Adresse ligne 1 de l'interlocuteur lié à la prestation
@@ -82,12 +82,12 @@ CREATE TABLE edi.DepotSimpa2ToHubPresta(
 	adr_cp_livr					varchar ( 5 )			NOT NULL,   -- Code postal de l'interlocuteur lié à la prestation
 	adr_ville_livr				varchar ( 35 )			NOT NULL,   -- Ville de l'interlocuteur lié à la prestation
 	num_tel1_ass				varchar ( 20 ) 			NOT NULL,   -- Numéro tel1 de l'interlocuteur lié à la prestation
-	num_tel2_ass				varchar ( 20 ) 				NULL,   -- Numéro tel1 de l'interlocuteur lié à la prestation
-	num_tel3_ass				varchar ( 20 ) 				NULL,   -- Numéro tel1 de l'interlocuteur lié à la prestation
+	num_tel2_ass				varchar ( 20 ) 				NULL,   -- Numéro tel2 de l'interlocuteur lié à la prestation
+	num_tel3_ass				varchar ( 20 ) 				NULL,   -- Numéro tel3 de l'interlocuteur lié à la prestation
 	mail_assure					varchar ( 128 )				NULL,   -- Adresse mail de l'assuré
 	num_imei_app_sin			varchar ( 20 )  			NULL,   -- Numéro de IMEI de l'appareil sinistré
 	num_serie_app_sin			varchar ( 20 )  			NULL,   -- Numéro de série de l'appareil sinistré
-	description_probleme		varchar ( 255 )  			NULL,   -- Déscription résumé du probleme sur l'appareil écrit en français par le GT
+	description_probleme		varchar ( 255 )  			NULL,   -- Description résumé du problème sur l'appareil écrit en français par le GT
 	cod_etat					varchar ( 3 )   		NOT NULL,   -- Etat de la prestation
 	valide_le					DateTime				NOT NULL,   -- Date de validation de la prestation par le GT
 	valide_par					varchar ( 4 )			NOT NULL,   -- Prestation validé par 
@@ -101,13 +101,13 @@ CREATE TABLE edi.DepotSimpa2ToHubPresta(
 	lib_typ_app_sin				Varchar ( 35 )			NOT	NULL,   -- Libellé de l'appareil sinistré (-AR)
 	marq_app_sin				Varchar ( 35 )			NOT	NULL,   -- Marque de l'appareil sinistré
 	modl_app_sin				Varchar ( 35 )			NOT	NULL,   -- Modèle de l'appareil sinistré
-	ref_app_sin					Varchar ( 20 )			NOT	NULL,   -- référence de l'appareil sinistré IFR, DARTY, AUTRE (AUTRE=Marque contrôlé, saisie modèle libre)
+	ref_app_sin					Varchar ( 20 )			NOT	NULL,   -- référentiel de l'appareil sinistré IFR, DARTY, AUTRE (AUTRE=Marque contrôlé, saisie modèle libre)
 	num_tel_sin					VarChar ( 25 )				NULL,   -- Numéro de téléphone de l'appareil sinistré (si c'est une téléphone/smartphone)
 	mt_val_achat				decimal ( 11, 2 )		NOT	NULL,   -- Montant de la valeur d'achat
 	mt_prise_en_charge			decimal ( 11, 2 )		NOT	NULL,   -- Montant de prise en max par spb (à respecter par le fournisseur )
 	date_achat					DateTime					NULL,	-- Date achat du matériel sinistré
 	etat_app_sin				varChar ( 20 )				NULL,	-- Etat de l'appareil sinistré, REConditionné ou NEUf
-	code_verrou					VarChar ( 20 )				NULL,	-- Code vérou de l'appareil
+	code_verrou					VarChar ( 20 )				NULL,	-- Code verrou de l'appareil
 	desimlocke					VarChar( 20 )				NULL,	-- Appareil désimlocké OUI/NON
 	info_spb_frn_cplt			VarChar ( 800 )				NULL,	-- Chaîne sérialisée contenant de multiples informations
 
@@ -198,7 +198,6 @@ If @aiCas = 3
 
 	ORDER BY
 
-
 	*/
   End
 Go
@@ -228,7 +227,8 @@ CREATE procedure edi.PS_HP276_S_HP_TYPE_ACTION
 		@asMarqAppSin		VarChar ( 35 ),
 		@asModlAppSin		VarChar ( 35 ),
 		@asTypAppSin		VarChar ( 35 ),
-		@asTypDommage		VarChar ( 100 )
+		@asTypDommage		VarChar ( 100 ),
+		@asTypPrestation    VarChar ( 20 )
 AS
 
 ---------------------------------------------------------------------------------
@@ -238,15 +238,19 @@ AS
 If @aiCas in ( 1, 2 )
   Begin
 	-- WaitFor Delay '00:00:00'
-	Select Left ( 'A_REPARER', 20) 'id_code_action_hp' , Left ( 'Réparation', 20 ) 'lib_action_hp'
-	Union
-	Select Left ( 'A_DIAGNOSTIQUER', 20) 'id_code_action_hp' , Left ( 'Diagnostic', 20 ) 'lib_action_hp'
-	Union
-	Select Left ( 'A_COMMANDER', 20) 'id_code_action_hp' , Left ( 'Commande de remplacement', 20 ) 'lib_action_hp'
-	Union
-	Select Left ( 'PEC_A_RECYCLER', 20) 'id_code_action_hp' , Left ( 'Prise en charge, à recycler', 20 ) 'lib_action_hp'
-	Union
-	Select Left ( 'REFUSE_A_REEXP', 20) 'id_code_action_hp' , Left ( 'Refusé, à réexpédier', 20 ) 'lib_action_hp'
+	If @asTypPrestation = 'A_COMMANDER' 
+		Select Left ( 'A_COMMANDER', 20) 'id_code_action_hp' , Left ( 'Commande de remplacement', 20 ) 'lib_action_hp'
+		Union
+		Select Left ( 'A_DIAGNOSTIQUER', 20) 'id_code_action_hp' , Left ( 'Diagnostic', 20 ) 'lib_action_hp'
+		
+	Else 
+		Select Left ( 'A_REPARER', 20) 'id_code_action_hp' , Left ( 'Réparation', 20 ) 'lib_action_hp'
+		Union
+		Select Left ( 'A_DIAGNOSTIQUER', 20) 'id_code_action_hp' , Left ( 'Diagnostic', 20 ) 'lib_action_hp'
+		Union
+		Select Left ( 'PEC_A_RECYCLER', 20) 'id_code_action_hp' , Left ( 'Prise en charge, à recycler', 20 ) 'lib_action_hp'
+		Union
+		Select Left ( 'REFUSE_A_REEXP', 20) 'id_code_action_hp' , Left ( 'Refusé, à réexpédier', 20 ) 'lib_action_hp'
   End
 
 -------------------------------------------------------------------------------
@@ -329,7 +333,25 @@ AS
 ---------------------------------------------------------------------------------
 If @aiCas in ( 1, 2 )
   Begin
-	WaitFor Delay '00:00:00'
+	WaitFor Delay '00:00:05'
+
+	If @asTypPrestation = 'A_COMMANDER' 
+		Select	LEFT ( 'AUYPSQZMJB', 20 ) 'idHubPresta',
+				Left ( 'ANV', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
+				null,
+				Left ( 'ANV0001', 20) 'idPointServ', 
+				Left ( 'CENTRALIZATION', 20 ) 'idModeProcess', 
+				Left ( 'Nom point de service ANV', 255 ) 'nomPointServ',
+				Left ( 'Adresse1 point de service ANV', 255 ) 'adr1PointServ',
+				Left ( 'Adresse2 point de service ANV', 255 ) 'adr2PointServ',
+				Left ( 'Adresse3 point de service ANV', 255 ) 'adr3PointServ',
+				Left ( 'Code postal ANV', 20) 'adrCpPointServ',
+				Left ( 'Ville ANV', 50) 'adrVillePointServ',
+				Left ( 'FR', 50) 'CodePaysPointServ',
+				Left ( '595.65', 15 ) 'DistanceMetre',
+				Left ( 'ACCEPTED', 20 ) 'statutPointServ' -- ACCEPTED, REJECTED, UNAVAILABLE, UNVERIFIED
+
+	Else
 	Select	LEFT ( 'AUYPSQZMJB', 20 ) 'idHubPresta',
 			Left ( 'ANV', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
 			null,
