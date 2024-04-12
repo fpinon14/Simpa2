@@ -174,6 +174,8 @@ If @aiCas in ( 1, 2 )
 	Select Left ( 'TD3', 30) , Left ( 'Cassé sur le côté', 50 ) 
 	Union
 	Select Left ( 'TD4', 30) , Left ( 'Objectif de la caméra avant cassé', 50 ) 
+	
+	-- Select 'AUCUN', 'AUCUN'
   End
 
 -------------------------------------------------------------------------------
@@ -333,7 +335,7 @@ AS
 ---------------------------------------------------------------------------------
 If @aiCas in ( 1, 2 )
   Begin
-	WaitFor Delay '00:00:05'
+	WaitFor Delay '00:00:00'
 
 	If @asTypPrestation = 'A_COMMANDER' 
 		Select	LEFT ( 'AUYPSQZMJB', 20 ) 'idHubPresta',
@@ -471,6 +473,25 @@ If @aiCas in ( 1, 2 )
 			Left ( 'FR', 50) 'CodePaysPointServ',
 			Left ( '595.65', 15 ) 'DistanceMetre',
 			Left ( 'UNAVAILABLE', 20 ) 'statutPointServ' -- ACCEPTED, REJECTED, UNAVAILABLE, UNVERIFIED
+/*
+	Select	LEFT ( 'AUCUN', 20 ) 'idHubPresta',
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null
+*/
+
+
+
   End
 
 -------------------------------------------------------------------------------
@@ -1086,5 +1107,160 @@ From edi.DepotSimpa2ToHubPresta dps2
 Where dps2.id_sin = @iIdSin
 And   dps2.id_seq = @iIdSeq
 And   dps2.id_depot_simpa2 = @iIdDepotS2 
+
+Go
+
+-------------------------------------------------------------------
+--
+-- Procédure            :       PS_HP276_S_HP_RECUPERER_EN_MASSE_LES_PRESTATIONS_A_TRAITER
+-- Auteur               :       JFF
+-- Date                 :       11/03/2024
+-- Libell‚              :       [HP252_276_HUB_PRESTA]
+-- Commentaires         :       Renvoie toutes les prestations présentes sur le HUB et donc A TRAITER
+--                              /!\ A COMPILER SUR LA BASE PRESTATAIRE /!\
+--
+--								
+--
+-- Retourne             :       rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_RECUPERER_EN_MASSE_LES_PRESTATIONS_A_TRAITER' AND type = 'P' )
+        DROP procedure edi.PS_HP276_S_HP_RECUPERER_EN_MASSE_LES_PRESTATIONS_A_TRAITER
+GO
+
+
+CREATE procedure edi.PS_HP276_S_HP_RECUPERER_EN_MASSE_LES_PRESTATIONS_A_TRAITER
+AS
+
+Select 
+	id_depot_simpa2,
+	id_sin,
+	id_seq,
+	depose_le,
+	depose_par,
+	cpt_essai,
+	essai_le,
+	alt_trt,
+	traite_le,
+	traite_par,
+	id_hub_presta,
+	id_four,
+	typ_dommage,
+	point_service,
+	mode_logis,
+	code_pickup,
+	nom_pickup,
+	ref_ass_pickup,
+	adr1_pickup,
+	adr2_pickup,
+	adr3_pickup,
+	adr_cp_pickup,
+	adr_ville_pickup,
+	code_process,
+	lib_code_process,
+	id_gti,
+	lib_perso_gti,
+	id_detail,
+	id_prod,
+	lib_prod,
+	id_prod_adh,
+	id_ets,
+	id_adh,
+	id_sdos,
+	id_typ_art,
+	cod_civ_livr,
+	lib_civ_livr_court,
+	lib_civ_livr_long,
+	id_contrat_abonne,
+	nom_ass,
+	prenom_ass,
+	nom_livr,
+	prenom_livr,
+	adr1_livr,
+	adr2_livr,
+	adr3_livr,
+	adr_cp_livr,
+	adr_ville_livr,
+	num_tel1_ass,
+	num_tel2_ass,
+	num_tel3_ass,
+	mail_assure,
+	num_imei_app_sin,
+	num_serie_app_sin,
+	description_probleme,
+	cod_etat,
+	valide_le,
+	valide_par,
+	cmd_gen_le,
+	id_ref_four,
+	ordre_action,
+	id_assureur,
+	lib_assureur,
+	lib_police,
+	typ_app_sin,
+	lib_typ_app_sin,
+	marq_app_sin,
+	modl_app_sin,
+	ref_app_sin,
+	num_tel_sin,
+	mt_val_achat,
+	mt_prise_en_charge,
+	date_achat,
+	etat_app_sin,
+	code_verrou,
+	desimlocke,
+	info_spb_frn_cplt
+
+From edi.DepotSimpa2ToHubPresta dps2
+Where dps2.alt_trt in ( 'N', 'E' ) 
+Order by id_depot_simpa2
+
+Go
+
+-------------------------------------------------------------------
+--
+-- Procédure            :       PS_HP276_U_HP_MARQUAGE_UNITAIRE_D_UNE_PRESTATION_TRAITEE
+-- Auteur               :       JFF
+-- Date                 :       11/03/2024
+-- Libell‚              :       [HP252_276_HUB_PRESTA]
+-- Commentaires         :       Marque unitairement une prestation en mode tentative_uniquement ou tentive_générée
+--                              /!\ A COMPILER SUR LA BASE PRESTATAIRE /!\
+--
+--								
+--
+-- Retourne             :       1 Succès / -1 Echec
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_U_HP_MARQUAGE_UNITAIRE_D_UNE_PRESTATION_TRAITEE' AND type = 'P' )
+        DROP procedure edi.PS_HP276_U_HP_MARQUAGE_UNITAIRE_D_UNE_PRESTATION_TRAITEE
+GO
+
+
+CREATE procedure edi.PS_HP276_U_HP_MARQUAGE_UNITAIRE_D_UNE_PRESTATION_TRAITEE
+	@asCas			VarChar ( 50 ),  -- Valeur possible de asCas
+									 -- TENTATIVE_UNIQUEMENT : Tentative s'étant terminée en échec 
+									 -- TENTATIVE_GENEREE    : Tentative s'étant terminée en succès et donc ayant réellement générée la prestation vers le prestataire
+	@aiIdDepotSimpa2	Integer			 -- Clé primaire de l'enregistrement à mettre à mettre
+AS
+
+Set @asCas = Upper ( lTrim ( rTrim ( @asCas )))
+
+If @asCas in ( 'TENTATIVE_UNIQUEMENT', 'TENTATIVE_GENEREE' ) 
+  Begin
+	Update	edi.DepotSimpa2ToHubPresta 
+	Set		cpt_essai = cpt_essai + 1,
+			essai_le  = GetDate(),
+			alt_trt   = 'E'
+	Where	id_depot_simpa2 = @aiIdDepotSimpa2
+	And     alt_trt <> 'O'
+  End 
+
+If @asCas = 'TENTATIVE_GENEREE' 
+  Begin
+	Update	edi.DepotSimpa2ToHubPresta 
+	Set		alt_trt   = 'O',
+			traite_le = GetDate(),
+			traite_par = 'HUB'
+	Where	id_depot_simpa2 = @aiIdDepotSimpa2
+	And     alt_trt <> 'O'
+  End 
 
 Go

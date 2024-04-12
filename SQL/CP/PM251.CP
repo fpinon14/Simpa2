@@ -1661,7 +1661,6 @@ Go
 -- JFF	21/11/2014	[VDOC16011]
 -- JFF	25/11/2014	[PM251-2]
 -- JFF  12/02/2016  [PI062]
--- JFF  07/03/2024  [HP252_276_HUB_PRESTA]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I01_RETOUR_PREFACT_PM251' AND type = 'P' )
         DROP procedure sysadm.PS_I01_RETOUR_PREFACT_PM251
@@ -1824,6 +1823,7 @@ Go
 -- JFF  05/10/2017  [PC171918]
 -- JFF  06/11/2017  [PC171933]
 -- JFF  04/01/2022  [RS_1617_PM251]
+-- JFF  07/03/2024  [HP252_276_HUB_PRESTA]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_PREPA_VAL_AUTO_PM251_V01' AND type = 'P' )
         DROP procedure sysadm.PS_U_PREPA_VAL_AUTO_PM251_V01
