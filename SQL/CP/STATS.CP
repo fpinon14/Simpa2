@@ -20855,3 +20855,313 @@ Group by
 END
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S01_LSTREG_MCO_389_RGPT
+-- Auteur               :       DBI
+-- Date                 :       08/12/1998
+-- Libellé              :       [MCO389]
+-- Commentaires         :       Liste d‚taill‚e des rŠglements
+-- Références           :       
+--
+--				EURO
+--	
+-- Arguments            :       @dtDteDeb       DateTime                (Val)
+--                              @dtDteFin       DateTime                (Val)
+--                              @dcPeriodeDeb   Decimal(7)              (Val)
+--                              @dcPeriodeFin   Decimal(7)              (Val)
+--				@dcIdProd	Decimal(7)		(Val)
+-- Retourne             :       Rien
+-------------------------------------------------------------------
+-- JFF      06/10/2014   [PM266]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S01_LSTREG_MCO_389_RGPT' AND type = 'P' )
+        DROP procedure sysadm.PS_S01_LSTREG_MCO_389_RGPT
+GO
+
+CREATE procedure sysadm.PS_S01_LSTREG_MCO_389_RGPT
+	@dtDteDeb       DateTime        ,
+    @dtDteFin       DateTime	,
+	@dcPeriodeDeb   Decimal(7)      ,
+	@dcPeriodeFin   Decimal(7)      
+AS
+
+SET NOCOUNT ON
+
+
+Select
+ @dcPeriodeDeb,
+ @dcPeriodeFin,
+ 'DTE_REG'	= reg_gti.maj_le,
+ 'ID_SIN'	= sinistre.id_sin,
+ 'ID_REG'	= reg_gti.id_reg,
+ 'ID_PROD'	= produit.id_prod, -- New!
+ 'LIB_PROD'	= produit.lib_long,
+ 'LIB_DEPT'	= departement.lib_dept,
+ 'TERRIT_ADH'   =	Case -- New!
+					When Right (Convert ( VarChar ( 10 ),  sinistre.id_ets ), 3 ) = '001' 
+						Then 'Métropole'
+					When Right (Convert ( VarChar ( 10 ),  sinistre.id_ets ), 3 ) in ( '011', '012', '013' )
+						Then 'Antilles-Guyane'
+					When Right (Convert ( VarChar ( 10 ),  sinistre.id_ets ), 3 ) = '014'
+						Then 'La Réunion'
+					When Right (Convert ( VarChar ( 10 ),  sinistre.id_ets ), 3 ) = '015'
+						Then 'Nouvelle-Calédonie'
+					When Right (Convert ( VarChar ( 10 ),  sinistre.id_ets ), 3 ) = '018'
+						Then 'Wallis & Futuna'
+					Else 'Non défini, voir P.Oslaj'
+				End,
+ 'DTE_ADH'  = sinistre.dte_adh, -- New!
+ 'DTE_SURV'	= sinistre.dte_surv,
+ 'ID_EXERCICE'  = DatePart ( year, sinistre.dte_surv ),
+ 'DTE_DECL'	= sinistre.dte_decl,
+ 'ID_ETS'	= groupe.id_grp,
+ 'NS' 		= code_Ns.lib_code,
+ 'ID_GTI'	= reg_gti.id_gti,
+ 'ID_RGPT'	= reg_gti.id_rgpt,
+ 'GA' 		= code_Gs.lib_code,
+ 'MT_REG_GTI'	= reg_gti.mt_reg,
+ 'ID_DETAIL'	= detail.id_detail,
+ 'MT_PREJ'	= detail.mt_prej,
+ 'MT_PLAF'	= detail.mt_plaf,
+ 'ALT_PLAF'	= gar_sin.alt_plaf,
+ 'DTE_DET'	= detail.dte_det,
+ 'EV' 		= code_Ev.lib_code,
+ 'LIB_GRP'	= groupe.lib_grp,
+ 'LIB_POLICE'	= police.lib_police,
+ 'LIB_CIE'	= compagnie.lib_cie,
+ 'ID_BOUTIQUE'	= sinistre.id_orian_boutique
+From
+ sysadm.reg_gti   ,
+ sysadm.sinistre  ,
+ sysadm.detail    ,
+ sysadm.garantie,
+ sysadm.gar_sin,
+ sysadm.etablissement,
+ sysadm.code code_Ns,
+ sysadm.code code_Gs,
+ sysadm.code code_Ev,
+ sysadm.groupe,
+ sysadm.produit,
+ sysadm.departement,
+ sysadm.police,
+ sysadm.compagnie,
+ sysadm.reglement,
+ sysadm.det_pro dp
+Where 
+ ( reg_gti.id_sin	=	sinistre.id_sin 	)	and
+ ( reg_gti.id_sin	=	detail.id_sin		)	and
+ ( reg_gti.id_reg	=	detail.id_reg		)	and
+ ( reg_gti.id_gti	=	detail.id_gti		)	and
+ ( reg_gti.id_rgpt	=	( Case detail.id_gti
+				When 7 Then
+					Case 
+					 When detail.id_evt between 700 and 719 then 700
+					 When detail.id_evt between 720 and 739 then 720
+					 Else 740
+					End
+				Else	detail.id_gti
+				End )			)	and
+ ( sinistre.id_prod	=	produit.id_prod		)	and
+ ( produit.id_dept	=	departement.id_dept	)	and
+ ( detail.id_sin	=	gar_sin.id_sin		)	and
+ ( detail.id_gti	=	gar_sin.id_gti		)	and
+ ( groupe.id_grp	=	etablissement.id_grp	)	and
+ ( etablissement.id_prod=	sinistre.id_prod	)	and
+ ( etablissement.id_ets	=	sinistre.id_ets		)	and
+ ( etablissement.id_rev	=	-1			)	and
+ ( code_Ns.id_typ_code	=	'+NS'			)	and
+ ( code_Ns.id_code	=	sinistre.id_natsin	)	and
+ ( code_Gs.id_typ_code	=	'-GS'			)	and
+ ( code_Gs.id_code	=	reg_gti.id_rgpt		)	and
+ ( code_Ev.id_typ_code	=	'+EV'			)	and
+ ( code_Ev.id_code	=	detail.id_evt		)	and
+ ( garantie.id_prod	=	sinistre.id_prod	)	and
+ ( garantie.id_rev	=	sinistre.id_rev		)	and
+ ( garantie.id_gti	=	reg_gti.id_gti		)	and
+ ( garantie.id_police	=	police.id_police	)	and
+ ( compagnie.id_cie	=	police.id_cie		)	and
+ ( sinistre.id_prod	=	dp.id_prod		)	and
+ ( reg_gti.maj_le    between    @dtDteDeb And @dtDteFin )	and
+ ( reglement.id_sin     =       reg_gti.id_sin          )       and
+ ( reglement.id_reg     =       reg_gti.id_reg          )       and
+ ( reglement.cod_mode_reg in ('VA' , 'VM' , 'C', 'FM', 'BX', 'VV' ) ) And 
+ ( dp.id_code_dp = 94 and sysadm.FN_CLE_VAL('COD_DW', dp.val_car, ';') = 'MCO389_LST_SIN_REGLES' )
+ 
+UNION ALL
+Select
+ @dcPeriodeDeb,
+ @dcPeriodeFin,
+ 'DTE_REG'	= reg_gti.maj_le,
+ 'ID_SIN'	= sinistre.id_sin,
+ 'ID_REG'	= reg_gti.id_reg,
+ 'ID_PROD'	= produit.id_prod, -- New!
+ 'LIB_PROD'	= produit.lib_long,
+ 'LIB_DEPT'	= departement.lib_dept,
+ 'TERRIT_ADH'   =	Case -- New!
+					When Right (Convert ( VarChar ( 10 ),  sinistre.id_ets ), 3 ) = '001' 
+						Then 'Métropole'
+					When Right (Convert ( VarChar ( 10 ),  sinistre.id_ets ), 3 ) in ( '011', '012', '013' )
+						Then 'Antilles-Guyane'
+					When Right (Convert ( VarChar ( 10 ),  sinistre.id_ets ), 3 ) = '014'
+						Then 'La Réunion'
+					When Right (Convert ( VarChar ( 10 ),  sinistre.id_ets ), 3 ) = '015'
+						Then 'Nouvelle-Calédonie'
+					When Right (Convert ( VarChar ( 10 ),  sinistre.id_ets ), 3 ) = '018'
+						Then 'Wallis & Futuna'
+					Else 'Non défini, voir P.Oslaj'
+				End,
+ 'DTE_ADH'  = sinistre.dte_adh, -- New!
+ 'DTE_SURV'	= sinistre.dte_surv,
+ 'ID_EXERCICE'  = DatePart ( year, sinistre.dte_surv ),
+ 'DTE_DECL'	= sinistre.dte_decl,
+ 'ID_ETS'	= groupe.id_grp,
+ 'NS' 		= code_Ns.lib_code,
+ 'ID_GTI'	= reg_gti.id_gti,
+ 'ID_RGPT'	= reg_gti.id_rgpt,
+ 'GA' 		= code_Nf.lib_code,
+ 'MT_REG_GTI'	= reg_gti.mt_reg,
+ 'ID_DETAIL'	= frais.id_frais,
+ 'MT_PREJ'	= frais.mt_frais,
+ 'MT_PLAF'	= frais.mt_frais,
+ 'ALT_PLAF'	= 'N',
+ 'DTE_DET'	= null,
+ 'EV' 		= code_Nf.lib_code,
+ 'LIB_GRP'	= groupe.lib_grp,
+ 'LIB_POLICE'	= police.lib_police,
+ 'LIB_CIE'	= compagnie.lib_cie,
+ 'ID_BOUTIQUE'	= sinistre.id_orian_boutique
+From
+ sysadm.reg_gti   ,
+ sysadm.sinistre  ,
+ sysadm.frais     ,
+ sysadm.garantie,
+ sysadm.etablissement,
+ sysadm.code code_Ns,
+ sysadm.code code_Nf,
+ sysadm.groupe,
+ sysadm.produit,
+ sysadm.departement,
+ sysadm.police,
+ sysadm.compagnie,
+ sysadm.reglement,
+ sysadm.det_pro dp
+
+Where 
+ ( reg_gti.id_sin	=	sinistre.id_sin 	)	and
+ ( reg_gti.id_sin	=	frais.id_sin		)	and
+ ( reg_gti.id_reg	=	frais.id_reg		)	and
+ ( reg_gti.id_gti	=	-1			)	and
+ ( sinistre.id_prod	=	produit.id_prod		)	and
+ ( produit.id_dept	=	departement.id_dept	)	and
+ ( groupe.id_grp	=	etablissement.id_grp	)	and
+ ( etablissement.id_prod=	sinistre.id_prod	)	and
+ ( etablissement.id_ets	=	sinistre.id_ets		)	and
+ ( etablissement.id_rev	=	-1			)	and
+ ( code_Ns.id_typ_code	=	'+NS'			)	and
+ ( code_Ns.id_code	=	sinistre.id_natsin	)	and
+ ( code_Nf.id_typ_code	=	'+NF'			)	and
+ ( code_Nf.id_code	=	frais.id_typ_frais	)	and
+ ( garantie.id_prod	=	sinistre.id_prod	)	and
+ ( garantie.id_rev	=	sinistre.id_rev		)	and
+ ( garantie.id_gti	=	IsNull ( ( Select NullIf ( NullIf ( max ( a_reg_gti.id_gti ), 0), -1 )
+					   From   sysadm.reg_gti a_reg_gti
+					   Where  a_reg_gti.id_sin = reg_gti.id_sin
+					   And    a_reg_gti.id_reg = reg_gti.id_reg ), 
+
+		 			 ( Select max ( gar_sin.id_gti ) 
+					   From   sysadm.gar_sin
+					   Where  gar_sin.id_sin = sinistre.id_sin )))	and
+ ( garantie.id_police	=	police.id_police	)	and
+ ( compagnie.id_cie	=	police.id_cie		)	and
+ ( sinistre.id_prod	=	dp.id_prod		)	and
+ ( reg_gti.maj_le    between    @dtDteDeb And @dtDteFin )	and
+ ( reglement.id_sin     =       reg_gti.id_sin          )       and
+ ( reglement.id_reg     =       reg_gti.id_reg          )       and
+ ( reglement.cod_mode_reg in ('VA' , 'VM' , 'C', 'FM', 'BX', 'VV' ) ) And 
+ ( dp.id_code_dp = 94 and sysadm.FN_CLE_VAL('COD_DW', dp.val_car, ';') = 'MCO389_LST_SIN_REGLES' )
+
+UNION ALL
+
+Select
+ @dcPeriodeDeb,
+ @dcPeriodeFin,
+ 'DTE_REG'	= reglement.dte_reg,
+ 'ID_SIN'	= sinistre.id_sin,
+ 'ID_REG'	= reglement.id_reg,
+ 'ID_PROD'	= produit.id_prod, -- New! 
+ 'LIB_PROD'	= produit.lib_long,
+ 'LIB_DEPT'	= departement.lib_dept,
+ 'TERRIT_ADH'   =	Case -- New!
+					When Right (Convert ( VarChar ( 10 ),  sinistre.id_ets ), 3 ) = '001' 
+						Then 'Métropole'
+					When Right (Convert ( VarChar ( 10 ),  sinistre.id_ets ), 3 ) in ( '011', '012', '013' )
+						Then 'Antilles-Guyane'
+					When Right (Convert ( VarChar ( 10 ),  sinistre.id_ets ), 3 ) = '014'
+						Then 'La Réunion'
+					When Right (Convert ( VarChar ( 10 ),  sinistre.id_ets ), 3 ) = '015'
+						Then 'Nouvelle-Calédonie'
+					When Right (Convert ( VarChar ( 10 ),  sinistre.id_ets ), 3 ) = '018'
+						Then 'Wallis & Futuna'
+					Else 'Non défini, voir P.Oslaj'
+				End, 
+ 'DTE_ADH'  = sinistre.dte_adh, -- New!
+ 'DTE_SURV'	= sinistre.dte_surv,
+ 'ID_EXERCICE'  = DatePart ( year, sinistre.dte_surv ),
+ 'DTE_DECL'	= sinistre.dte_decl,
+ 'ID_ETS'	= groupe.id_grp,
+ 'NS' 		= code_Ns.lib_code,
+ 'ID_GTI'	= -2,
+ 'ID_RGPT'	= -2,
+ 'GA' 		= 'REGULARISATION',
+ 'MT_REG_GTI'	= reglement.mt_tot_reg,
+ 'ID_DETAIL'	= 0,
+ 'MT_PREJ'	= 0,
+ 'MT_PLAF'	= reglement.mt_tot_reg,
+ 'ALT_PLAF'	= 'N',
+ 'DTE_DET'	= null,
+ 'EV' 		= reglement.lib_reg,
+ 'LIB_GRP'	= groupe.lib_grp,
+ 'LIB_POLICE'	= police.lib_police,
+ 'LIB_CIE'	= compagnie.lib_cie,
+ 'ID_BOUTIQUE'	= sinistre.id_orian_boutique
+From
+ sysadm.reglement ,
+ sysadm.sinistre  ,
+ sysadm.garantie  ,
+ sysadm.etablissement,
+ sysadm.code code_Ns,
+ sysadm.groupe,
+ sysadm.produit,
+ sysadm.departement,
+ sysadm.police,
+ sysadm.compagnie,
+ sysadm.det_pro dp
+
+Where 
+ ( reglement.id_sin	=	sinistre.id_sin 	)	and
+ ( sinistre.id_prod	=	produit.id_prod		)	and
+ ( produit.id_dept	=	departement.id_dept	)	and
+ ( groupe.id_grp	=	etablissement.id_grp	)	and
+ ( etablissement.id_prod=	sinistre.id_prod	)	and
+ ( etablissement.id_ets	=	sinistre.id_ets		)	and
+ ( etablissement.id_rev	=	-1			)	and
+ ( code_Ns.id_typ_code	=	'+NS'			)	and
+ ( code_Ns.id_code	=	sinistre.id_natsin	)	and
+ ( garantie.id_prod	=	sinistre.id_prod	)	and
+ ( garantie.id_rev	=	sinistre.id_rev		)	and
+ ( garantie.id_gti	=	( Select max ( gar_sin.id_gti ) 
+				  From   sysadm.gar_sin
+				  Where  gar_sin.id_sin = sinistre.id_sin ))	and
+ ( garantie.id_police	=	police.id_police	)	and
+ ( compagnie.id_cie	=	police.id_cie		)	and
+ ( sinistre.id_prod	=	dp.id_prod		)	and
+ ( reglement.dte_reg between    @dtDteDeb And @dtDteFin )	and
+ ( reglement.cod_mot_reg in ( 'RE', 'RM', 'RP' )	)	and
+ ( reglement.mt_tot_reg <> 0				)	and
+ ( reglement.cod_mode_reg in ('VA' , 'VM' , 'C', 'FM', 'BX', 'VV' ) ) and 
+ ( dp.id_code_dp = 94 and sysadm.FN_CLE_VAL('COD_DW', dp.val_car, ';') = 'MCO389_LST_SIN_REGLES' )
+
+GO
+
