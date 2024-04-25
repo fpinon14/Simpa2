@@ -6043,6 +6043,12 @@ Go
 -- Arguments            :       	
 --									@aiHandle  
 --										Un entier (int) représentant le Handle de l'objet ADODB.Stream précédent instancié 
+--									@aiOuvrirFic
+--										1 = Ouverture du fichier/ Initialisation des Type, Mode, CharSet et LineSeparator
+--										0 = Pas de traitement d'ouverture
+--									@aiInsererData
+--										1 = Insertion données Texte ou Binaire, Type, Mode, CharSet et LineSeparator peuvent être passé à null à ce moment
+--										0 = Aucune insertion de données
 --									@asType				Int,
 --										1 = Binaire pour de la descente de Blob
 --										2 = Texte
@@ -6051,9 +6057,10 @@ Go
 --										2 = Ecriture
 --										3 = Lecture/Ecriture
 --									@asCharSet			VarChar ( 30 ), (si @asType = 2 uniquement sinon null) 
---										Consulter tous les charset possible du ADODB.Stream sur https://learn.microsoft.com/en-us/previous-versions/exchange-server/exchange-10/ms526296(v=exchg.10)
+--										Consulter tous les charset possible du ADODB.Stream sur https://www.w3schools.com/html/html_charset.asp
 --										'UTF-8' pour de l'XML
 --										'ISO-8859-1' pour du fichier texte
+--										'ASCII' pour du fichier texte
 --									@asLineSeparator	Integer, (si @asType = 2 uniquement sinon null) 
 --										'adCRLF' (-1) Par défaut, un retour chariot et un saut de ligne, 
 --										'adCR' (13)	Retour chariot uniquement
@@ -6064,14 +6071,16 @@ Go
 --                             <> 0, problème
 --
 --------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM_V02' AND type = 'P' )
-        DROP procedure sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM_V02
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM_V03' AND type = 'P' )
+        DROP procedure sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM_V03
 GO
 
-CREATE  PROCEDURE sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM_V02
+CREATE  PROCEDURE sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM_V03
 	@aiHandle			Int,	
-	@asType				Int,
-	@asMode				Int,
+	@aiOuvrirFic		Int, 
+	@aiInsererData		Int,
+	@aiType				Int,
+	@aiMode				Int,
 	@asCharSet			VarChar ( 30 ),
 	@aiLineSeparator	Integer,
 	@asTextBody			NVarChar ( Max ),
@@ -6079,35 +6088,48 @@ CREATE  PROCEDURE sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM_V02
 As
 
 Declare @iRet Integer
+Declare @iLineSeparator Int
+Declare @iType Int
 
-Exec @iRet = sp_OASetProperty     @aiHandle, 'Type',  @asType
-If @iRet <> 0 Return @iRet 
-
-Exec @iRet = sp_OASetProperty     @aiHandle, 'Mode',  @asMode
-If @iRet <> 0 Return @iRet 
-
-If @asType = 2 
+If @aiOuvrirFic > 0 
 	Begin
-		Exec @iRet = sp_OASetProperty     @aiHandle, 'Charset',  @asCharSet
+		Exec @iRet = sp_OASetProperty     @aiHandle, 'Type',  @aiType
 		If @iRet <> 0 Return @iRet 
 
-		Exec @iRet = sp_OASetProperty     @aiHandle, 'LineSeparator',  @aiLineSeparator
+		Exec @iRet = sp_OASetProperty     @aiHandle, 'Mode',  @aiMode
+		If @iRet <> 0 Return @iRet 
+
+		If @aiType = 2 
+			Begin
+				Exec @iRet = sp_OASetProperty     @aiHandle, 'Charset',  @asCharSet
+				If @iRet <> 0 Return @iRet 
+
+				Exec @iRet = sp_OASetProperty     @aiHandle, 'LineSeparator',  @aiLineSeparator
+				If @iRet <> 0 Return @iRet 
+			End 
+
+		Exec @iRet = sp_OAMethod     @aiHandle, 'Open'
 		If @iRet <> 0 Return @iRet 
 	End 
 
-Exec @iRet = sp_OAMethod     @aiHandle, 'Open'
-If @iRet <> 0 Return @iRet 
+If @aiInsererData > 0 
+	Begin 
+		EXECUTE @iRet = sp_OAGetProperty @aiHandle,  'Type', @iType output
 
-If @asType = 2 
-	Begin
-		Exec @iRet = sp_OAMethod     @aiHandle, 'WriteText', null, @asTextBody
-		If @iRet <> 0 Return @iRet 
-	End 
+		If @iType = 2 
+			Begin
+				EXECUTE @iRet = sp_OAGetProperty @aiHandle,  'LineSeparator', @iLineSeparator output
+				Set @asTextBody = @asTextBody + Char ( @iLineSeparator )
 
-If @asType = 1 
-	Begin
-		Exec @iRet = sp_OAMethod     @aiHandle, 'Write', null, @ablBlob
-		If @iRet <> 0 Return @iRet 
+				Exec @iRet = sp_OAMethod     @aiHandle, 'WriteText', null, @asTextBody
+				If @iRet <> 0 Return @iRet 
+			End 
+
+		If @iType = 1 
+			Begin
+				Exec @iRet = sp_OAMethod     @aiHandle, 'Write', null, @ablBlob
+				If @iRet <> 0 Return @iRet 
+			End 
 	End 
 
 Return @iRet 

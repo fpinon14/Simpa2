@@ -1435,4 +1435,356 @@ And		id_seq = @alIdSeq
 Go
 
 
+-------------------------------------------------------------------
+--
+-- Procédure            :       PS_HP276_SU_S2_MOTEUR_TRT_RETOUR_HUB
+-- Auteur               :       JFF
+-- Date                 :       24/04/2024
+-- Libell‚              :       [HP252_276_HUB_PRESTA]
+-- Commentaires         :       Mets à jour la prestation sur SIMPA2 en retour du HUB
+--                              /!\ A COMPILER SUR LA BASE SIMPA2 /!\
+--
+-- Retourne             :       rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_SU_S2_MOTEUR_TRT_RETOUR_HUB' AND type = 'P' )
+        DROP procedure sysadm.PS_HP276_SU_S2_MOTEUR_TRT_RETOUR_HUB
+GO
+
+CREATE procedure sysadm.PS_HP276_SU_S2_MOTEUR_TRT_RETOUR_HUB
+AS
+
+Declare  @TbFourn TABLE (
+	id_work						int IDENTITY (1,1)			NOT NULL, -- Id Local Tempo
+	marquage					int							Null,
+	id_four						VarChar ( 3 )				NULL,
+	id_work_row_min				int							Null,
+	id_work_row_max				int							Null
+)
+
+Declare  @TbHubToSimpa2Work TABLE (
+	id_work						int IDENTITY (1,1)			NOT NULL, -- Id Local Tempo
+	marquage					int							Null,
+	id_depot_hub				int							NOT NULL, -- Identifiant non modifiable de dépot, contrôle des trou/blanc si Delete Malveillant
+	depose_le					DateTime					NULL,	-- Enregistrement déposé par Simpa2 le 
+	id_sin						Decimal ( 10 )				NULL,  
+	id_seq						int							NULL,  
+	id_four						VarChar ( 3 )				NULL,
+	id_hub_presta				VarChar ( 20 )			NOT NULL,   -- Identifiant sur le Hub Prestataire de la prestation
+	num_cmd_frn					VarChar ( 50 )				NULL,   -- Numéro de la prestation chez le prestataire
+	status_code					VarChar ( 2 )				NULL,   -- Code HUB
+	return_code					Varchar ( 50 )				NULL,	-- Code HUB
+	reason_code					Varchar ( 50 )				NULL,	-- Code HUB
+	typ_ba_aller				Varchar ( 35 )				NULL,	-- RPICKUP ou BPPAYE, voire de nouveaux CODE
+	perte_aller					VarChar ( 1  )				NULL,   -- O/N Perte du colis à l'aller
+	diag_video_engage			VarChar ( 1  )				NULL,   -- O/N Diag vidéo engagé
+	resolu_diag_video			VarChar ( 1  )				NULL,   -- O/N résolu par Diag vidéo 
+	dte_rdv_conf				DateTime					NULL,   -- Date de rdv confirmé pour déplacement à domicile 
+	assure_en_prox				VarChar ( 1  )				NULL,   -- O/N Confirmation du prestataire, l'assuré s'est réellement rendu en proximité
+	nom_prox					VarChar ( 40 )				NULL,   -- Si assure_en_prox='O' alors, le prestataire donne le nom de la boutique de proximité
+	code_prox					VarChar ( 35 )  			NULL,   -- Code (numéro) de la boutique de proximité
+	assure_env_central			VarChar ( 1  )				NULL,   -- O/N Confirmation du prestataire, l'assuré a envoyé son colis en centralisation
+	dte_rcp_frn					DateTime					NULL,   -- Date de réception de l'appareil chez le prestataire
+	site_action					VarChar ( 20 )				NULL,   -- STATION/DOMICILE
+	app_incomplet				VarChar ( 1  )				NULL,   -- O/N si appareil incomplet
+	num_imei_rempl				VarChar ( 20 )				NULL,	-- Numéro IMEI de remplacement (pour TEL)
+	num_serie_rempl				VarChar ( 60 )				NULL,	-- Numéro SERIE de remplacement (pour autre que TEL)
+	dte_fin_trait				DateTime					NULL,   -- Date de fin de traitement/Date d'envoi colis retour vers assuré
+	comment_frn					VarChar ( 255 )				NULL,   -- Commentaire fournisseur
+	num_bon_trp					VarChar ( 35 )				NULL,   -- Numéro de colis retour 
+	nom_transporteur			VarChar ( 35 )				NULL,   -- NOm du transporteur
+	dte_rcp_app_cli				DateTime					NULL,   -- Date de réception de l'appareil par l'assuré
+	app_swap					VarChar ( 1  )				NULL,   -- O/N swap sur réparation (app irrep couvert et le presta redonne auto un app de rempl)
+	marque_rempl				VarChar ( 35 )				NULL,   -- Marque de remplacement (sur SWAP ou Cmde Manuelle)
+	modele_rempl				VarChar ( 35 )				NULL,   -- Modele de remplacement (sur SWAP ou Cmde Manuelle)
+	couleur_rempl				VarChar ( 35 )				NULL,   -- Couleur de remplacement (sur SWAP ou Cmde Manuelle)
+	cap_stk_rempl				VarChar ( 35 )				NULL,   -- Capacité de stockage de remplacement (sur SWAP ou Cmde Manuelle)
+	neuf_recond_rempl			VarChar ( 10 )				NULL,	-- NEU/REC app de remplacement (sur SWAP ou Cmde Manuelle) Neuf ou Reconditionné
+	prix_ttc_public				Decimal ( 11, 2 )			NULL,   -- Prix TTC de l'app de remplacement qui sera facturé par le prestataire et réglé par spb
+	prble_livraison				VarChar ( 35 )				NULL,   -- après une dte_fin_trait renseigné, Code du problème de livraison
+	pec_prble_livraison			VarChar ( 1  )				NULL,   -- O/N OUI si le presta prend la prble de livrasion à sa charge
+	info_frn_spb_cplt			VarChar ( 800 )				NULL    -- Chaine sérialisée contenant de multiples informations pour de nouvelles données "exotiques" liées à un prestataire précis.
+)
+
+Declare @sInstanceHub		VarChar ( 100 ) 
+Declare @sSql				Varchar ( 2000 )
+Declare @sEnv				VarChar ( 10 )
+Declare @iIdLotTrc			Int
+Declare @iRowCountData		Int	
+Declare	@iIdWorkFrn			Int
+Declare	@iAMUerrRowTrt		Int
+Declare	@iAMUerrFrn			Int
+Declare	@iAMUunRowEcrFrn	Int
+Declare	@idWorkRowMin		Int
+Declare	@idWorkRowMax		Int
+Declare	@iCptIdWorkRow		Int
+Declare	@sChaineIdFour		Varchar ( 250 )
+Declare	@iHandleObjet		Int 
+
+Set @iAMUerrRowTrt = 0 
+Set @iAMUunRowEcrFrn = 0
+Set @iAMUerrFrn = 0
+
+Declare @iIdWorkRow			int,
+		@iIdDepotHub		int,
+		@dtDeposeLe			DateTime,
+		@dcIdSin			Decimal ( 10 ),
+		@iIdSeq				int,
+		@sIdFour			VarChar ( 3 ),
+		@sIdHubPresta		VarChar ( 20 ),
+		@sNumCmdFrn			VarChar ( 50 ),
+		@sStatusCode		VarChar ( 2 ),
+		@sReturnCode		Varchar ( 50 ),
+		@sReasonCode		Varchar ( 50 ),
+		@sTypBaAller		Varchar ( 35 ),
+		@sPerteAller		VarChar ( 1  ),
+		@sDiagVideoEngage	VarChar ( 1  ),
+		@sResoluDiagVideo	VarChar ( 1  ),
+		@dtDteRdvConf		DateTime,
+		@sAssureEnProx		VarChar ( 1  ),
+		@sNomProx			VarChar ( 40 ),
+		@sCodeProx			VarChar ( 35 ),
+		@sAssureEnvCentral	VarChar ( 1  ),
+		@dtDteRcpFrn		DateTime,
+		@sSiteAction		VarChar ( 20 ),
+		@sAppIncomplet		VarChar ( 1  ),
+		@sNumImeiRempl		VarChar ( 20 ),
+		@sNumSerieRempl		VarChar ( 60 ),
+		@dtDteFinTrait		DateTime,
+		@sCommentFrn		VarChar ( 255 ),
+		@sNumBonTrp			VarChar ( 35 ),
+		@sNomTransporteur	VarChar ( 35 ),
+		@dtDteRcpAppCli		DateTime,
+		@sAppSwap			VarChar ( 1  ),
+		@sMarqueRempl		VarChar ( 35 ),
+		@sModeleRempl		VarChar ( 35 ),
+		@sCouleurRempl		VarChar ( 35 ),
+		@sCapStkRempl		VarChar ( 35 ),
+		@sNeufRecondRempl	VarChar ( 10 ),
+		@dcPrixTtcPublic	Decimal ( 11, 2 ),
+		@sPrbleLivraison	VarChar ( 35 ),
+		@sPecPrbleLivraison	VarChar ( 1  ),
+		@sInfoFrnSpbCplt	VarChar ( 800 )
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+	BEGIN
+		Set @sInstanceHub = '[LS-SAGA2].[PRESTATAIRE].'
+		Set @sEnv = 'PROD'
+	END 
+ELSE
+	BEGIN
+		Set @sInstanceHub = '[S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].'
+		Set @sEnv = 'SIM'
+	END 
+
+---------------------------------
+-- Initialisation de la Trace  --
+---------------------------------
+If @sEnv = 'PROD'
+	Begin 
+		Exec [LS-SAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '', '', @iIdLotTrc output
+	End
+Else
+	Begin 
+		Exec [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '', '', @iIdLotTrc output
+	End
+
+Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', ''OK'', ''Lancement du traitement le ' + Convert ( VarChar ( 10), Getdate(), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108) + ''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
+
+
+-------------------------------
+-- Récupération des données  --
+-------------------------------
+Set @sSql = 
+'Select ' + 
+'		0, '+
+'		dhs.id_depot_hub, '+
+'		dhs.depose_le, '+
+'		dsh.id_sin, '+
+'		dsh.id_seq, '+
+'		dsh.id_four, '+
+'		dhs.id_hub_presta, '+
+'		dhs.num_cmd_frn, '+
+'		dhs.status_code, '+
+'		dhs.return_code, '+
+'		dhs.reason_code, '+
+'		dhs.typ_ba_aller, '+
+'		dhs.perte_aller, '+
+'		dhs.diag_video_engage, '+
+'		dhs.resolu_diag_video, '+
+'		dhs.dte_rdv_conf, '+
+'		dhs.assure_en_prox, '+
+'		dhs.nom_prox, '+
+'		dhs.code_prox, '+
+'		dhs.assure_env_central, '+
+'		dhs.dte_rcp_frn, '+
+'		dhs.site_action, '+
+'		dhs.app_incomplet, '+
+'		dhs.num_imei_rempl, '+
+'		dhs.num_serie_rempl, '+
+'		dhs.dte_fin_trait, '+
+'		dhs.comment_frn, '+
+'		dhs.num_bon_trp, '+
+'		dhs.nom_transporteur, '+
+'		dhs.dte_rcp_app_cli, '+
+'		dhs.app_swap, '+
+'		dhs.marque_rempl, '+
+'		dhs.modele_rempl, '+
+'		dhs.couleur_rempl, '+
+'		dhs.cap_stk_rempl, '+
+'		dhs.neuf_recond_rempl, '+
+'		dhs.prix_ttc_public, '+
+'		dhs.prble_livraison, '+
+'		dhs.pec_prble_livraison, '+
+'		dhs.info_frn_spb_cplt '+
+'From	' + @sInstanceHub + 'edi.DepotHubToSimpa2Presta dhs ' + 
+'		Left Outer Join ' + @sInstanceHub + 'edi.DepotSimpa2ToHubPresta dsh on dhs.id_hub_presta = dsh.id_hub_presta ' +
+'Where   dhs.alt_trt = ''N'' ' +
+'Order by dsh.id_four, dhs.depose_le '
+
+Insert into @TbHubToSimpa2Work Exec ( @sSql ) -- ;Select * from @TbHubToSimpa2Work
+Set @iRowCountData = @@ROWCOUNT
+
+Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', ''OK'', ''Récupération par SIMPA2 de ' + Convert ( Varchar ( 20 ), @iRowCountData  ) + ' enregistrements de suivi/retour provenant du HUB.'', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
+
+---------------------------------------
+-- Pas de données, fin de traitement --
+---------------------------------------
+IF @iRowCountData <= 0 
+	Begin
+		Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', ''OK'', ''Fin du traitement le ' + Convert ( VarChar ( 10), Getdate(), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108) + ''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
+		Return 
+	End 
+
+-----------------------------
+-- Trace des frn concernés --
+-----------------------------
+Insert into @TbFourn 
+Select Distinct 
+		0, 
+		T1.id_four,
+		IsNull ( ( Select MIN ( id_work ) From @TbHubToSimpa2Work T2 where T2.id_four = T1.id_four ) , 0 ),
+		IsNull ( ( Select MAX ( id_work ) From @TbHubToSimpa2Work T2 where T2.id_four = T1.id_four ) , 0 )
+From @TbHubToSimpa2Work T1
+Set @iRowCountData = @@ROWCOUNT
+
+If @iRowCountData > 0 
+	Begin
+		Select @sChaineIdFour = Stuff ( ( SELECT CAST(rtrim ( id_four) + ', ' AS VARCHAR(250)) FROM @TbFourn For XML PATH ('') ) , 1, 2, '' )
+		Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', ''OK'', ''' + Convert ( Varchar ( 20 ), @iRowCountData  ) + ' Prestataire(s) concerné(s) : ' + @sChaineIdFour + ''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
+	End 
+
+---------------------------
+-- Moteur de traitement  --
+---------------------------
+Exec @iHandleObjet = sysadm.PS_INSTANCIER_UN_OBJET_SQL_SERVER 'ADODB.Stream'
+-- [TODO] Si Erreur Mail pour JFF en SIM, pour vincent et BLN en production copie JF
+
+While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
+ Begin
+	Select Top 1 
+		@iIdWorkFrn = id_work,
+		@sIdFour	= id_four,
+		@idWorkRowMin = id_work_row_min,
+		@idWorkRowMax = id_work_row_max
+	From  @TbFourn where marquage = 0
+
+	Set @iAMUerrFrn = 0
+	Set @iAMUunRowEcrFrn = 0
+	Set @iCptIdWorkRow = @idWorkRowMin
+
+	-- [TODO] Ouverture du fichier 
+	-- Exec @iRet = sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM_V03 @iHandle, 1, 0, 2, 3, 'ASCII', 13, null, null
+		
+	While Exists ( Select Top 1 1 From @TbHubToSimpa2Work where marquage = 0 And id_four = @sIdFour And @iCptIdWorkRow between @idWorkRowMin and @idWorkRowMax )
+	 Begin
+		Set @iAMUerrRowTrt = 0
+
+		Select 	Top 1 
+			@iIdWorkRow = id_work,
+			@iIdDepotHub = id_depot_hub,
+			@dtDeposeLe = depose_le,
+			@dcIdSin = id_sin,
+			@iIdSeq = id_seq,
+			@sIdHubPresta = id_hub_presta,
+			@sNumCmdFrn = num_cmd_frn,
+			@sStatusCode = status_code,
+			@sReturnCode = return_code,
+			@sReasonCode = reason_code,
+			@sTypBaAller = typ_ba_aller,
+			@sPerteAller = perte_aller,
+			@sDiagVideoEngage = diag_video_engage,
+			@sResoluDiagVideo = resolu_diag_video,
+			@dtDteRdvConf = dte_rdv_conf,
+			@sAssureEnProx = assure_en_prox,
+			@sNomProx = nom_prox,
+			@sCodeProx = code_prox,
+			@sAssureEnvCentral = assure_env_central,
+			@dtDteRcpFrn = dte_rcp_frn,
+			@sSiteAction = site_action,
+			@sAppIncomplet = app_incomplet,
+			@sNumImeiRempl = num_imei_rempl,
+			@sNumSerieRempl = num_serie_rempl,
+			@dtDteFinTrait = dte_fin_trait,
+			@sCommentFrn = comment_frn,
+			@sNumBonTrp = num_bon_trp,
+			@sNomTransporteur = nom_transporteur,
+			@dtDteRcpAppCli = dte_rcp_app_cli,
+			@sAppSwap = app_swap,
+			@sMarqueRempl = marque_rempl,
+			@sModeleRempl = modele_rempl,
+			@sCouleurRempl = couleur_rempl,
+			@sCapStkRempl = cap_stk_rempl,
+			@sNeufRecondRempl = neuf_recond_rempl,
+			@dcPrixTtcPublic = prix_ttc_public,
+			@sPrbleLivraison = prble_livraison,
+			@sPecPrbleLivraison = pec_prble_livraison,
+			@sInfoFrnSpbCplt = info_frn_spb_cplt
+		From	@TbHubToSimpa2Work
+		Where	marquage = 0
+
+		-- [TODO] Trt principal des Rows
+
+		If @iAMUerrRowTrt = 1 
+			Begin
+		  		Update @TbHubToSimpa2Work Set marquage = -1 Where id_work = @iIdWorkRow
+				Set @iAMUerrFrn = 1
+				-- [TODO] Tracer avec les données nécéssaires
+				
+				Set @iCptIdWorkRow = @iCptIdWorkRow + 1
+				Continue
+			End 
+
+		-- [TODO] Ecriture du row dans fichier
+		Set @iAMUunRowEcrFrn = 1
+		
+		Update @TbHubToSimpa2Work Set marquage = 1 Where id_work = @iIdWorkRow
+		Set @iCptIdWorkRow = @iCptIdWorkRow + 1
+	 End
+
+	 -- [TODO] Fermeture du fichier (close)
+
+	 If @iAMUunRowEcrFrn = 1 
+		Begin
+			-- [TODO] Sauvegarde du fichier sur disque
+			Select 'toto'
+			
+			-- [TODO] Si SAV FIC OK Alors Marquage en base de toute les lignes id_dep_Hub traitée
+			-- Exec ( 'Update ' + @sInstanceHub + 'edi.DepotHubToSimpa2Presta Set alt_trt = ''O'' where id_depot_hub = 1')
+			-- Boucle sur table @TbHubToSimpa2Work where marquage = 1 (donc -1 ne seront pas marqué), marquer à 2 et pour chaque 1, marquer tu table réél à 'O'
+		End 
+
+
+	 If @iAMUerrFrn = 1
+		Begin
+			-- [TODO] Mail Vincent et Boulenouar copie JF, erreur sur ce Fourn
+			-- Mettre le Select de la Trace.
+			Select 'toto'
+		End 
+
+	 Update @TbFourn Set marquage = 1 Where id_work = @iIdWorkFrn
+
+End 
+-- Select * from @TbHubToSimpa2Work
+
+Go
 

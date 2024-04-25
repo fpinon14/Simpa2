@@ -11,9 +11,17 @@
 Use PRESTATAIRE
 Go
 
+-----------------
+-- LES SCHEMAS --
+-----------------
 -- create schema edi;
 Go
 
+-----------------
+-- LES TABLES  --
+-----------------
+
+/*
 If Exists ( Select Top 1 1 From sys.objects where name = 'parametre' and type = 'U' ) Drop Table edi.parametre
 
 CREATE TABLE edi.parametre(
@@ -29,7 +37,7 @@ GO
 
 Insert into [edi].[parametre] Values ( 'CPT_HUB', 0, -1 ) 
 
-/*
+
 If Exists ( Select Top 1 1 From sys.objects where name = 'DepotSimpa2ToHubPresta' and type = 'U' ) Drop Table edi.DepotSimpa2ToHubPresta
 
 CREATE TABLE edi.DepotSimpa2ToHubPresta(
@@ -86,7 +94,7 @@ CREATE TABLE edi.DepotSimpa2ToHubPresta(
 	num_tel3_ass				varchar ( 20 ) 				NULL,   -- Numéro tel3 de l'interlocuteur lié à la prestation
 	mail_assure					varchar ( 128 )				NULL,   -- Adresse mail de l'assuré
 	num_imei_app_sin			varchar ( 20 )  			NULL,   -- Numéro de IMEI de l'appareil sinistré
-	num_serie_app_sin			varchar ( 20 )  			NULL,   -- Numéro de série de l'appareil sinistré
+	num_serie_app_sin			varchar ( 60 )  			NULL,   -- Numéro de série de l'appareil sinistré
 	description_probleme		varchar ( 255 )  			NULL,   -- Description résumé du problème sur l'appareil écrit en français par le GT
 	cod_etat					varchar ( 3 )   		NOT NULL,   -- Etat de la prestation
 	valide_le					DateTime				NOT NULL,   -- Date de validation de la prestation par le GT
@@ -131,6 +139,94 @@ Create index idx8_DepotSimpa2ToHubPresta on edi.DepotSimpa2ToHubPresta ( traite_
 
 Go
 */
+
+If Exists ( Select Top 1 1 From sys.objects where name = 'DepotHubToSimpa2Presta' and type = 'U' ) Drop Table edi.DepotHubToSimpa2Presta
+
+CREATE TABLE edi.DepotHubToSimpa2Presta(
+	id_depot_hub				int IDENTITY(1,1)			NOT NULL,	-- Identifiant non modifiable de dépot, contrôle des trou/blanc si Delete Malveillant
+	depose_le					DateTime default Getdate()	NULL,	-- Enregistrement déposé par Simpa2 le 
+	depose_par					Char (4) default 'HUB'		NULL,	-- Enregistrement déposé par
+	alt_trt						Char (1) default 'N'		NULL,	-- Répère alternatif N(on)/E(n cours)/O(ui) des enregistrement pris en compte et traité par le HubP.
+	traite_le					DateTime					NULL,	-- Traité par le Hub le
+	traite_par					Char (4)					NULL,	-- traité par
+	id_hub_presta				VarChar ( 20 )			NOT NULL,   -- Identifiant sur le Hub Prestataire de la prestation
+	num_cmd_frn					VarChar ( 50 )				NULL,   -- Numéro de la prestation chez le prestataire
+	status_code					VarChar ( 2 )				NULL,   -- Code HUB
+	return_code					Varchar ( 50 )				NULL,	-- Code HUB
+	reason_code					Varchar ( 50 )				NULL,	-- Code HUB
+	typ_ba_aller				Varchar ( 35 )				NULL,	-- RPICKUP ou BPPAYE, voire de nouveaux CODE
+	perte_aller					VarChar ( 1  ) default 'N'	NULL,   -- O/N Perte du colis à l'aller
+	diag_video_engage			VarChar ( 1  ) default 'N'	NULL,   -- O/N Diag vidéo engagé
+	resolu_diag_video			VarChar ( 1  ) default 'N'	NULL,   -- O/N résolu par Diag vidéo 
+	dte_rdv_conf				DateTime					NULL,   -- Date de rdv confirmé pour déplacement à domicile 
+	assure_en_prox				VarChar ( 1  ) default 'N'	NULL,   -- O/N Confirmation du prestataire, l'assuré s'est réellement rendu en proximité
+	nom_prox					VarChar ( 40 )				NULL,   -- Si assure_en_prox='O' alors, le prestataire donne le nom de la boutique de proximité
+	code_prox					VarChar ( 35 )  			NULL,   -- Code (numéro) de la boutique de proximité
+	assure_env_central			VarChar ( 1  ) default 'N'	NULL,   -- O/N Confirmation du prestataire, l'assuré a envoyé son colis en centralisation
+	dte_rcp_frn					DateTime					NULL,   -- Date de réception de l'appareil chez le prestataire
+	site_action					VarChar ( 20 )				NULL,   -- STATION/DOMICILE
+	app_incomplet				VarChar ( 1  ) default 'N'	NULL,   -- O/N si appareil incomplet
+	num_imei_rempl				VarChar ( 20 )				NULL,	-- Numéro IMEI de remplacement (pour TEL)
+	num_serie_rempl				VarChar ( 60 )				NULL,	-- Numéro SERIE de remplacement (pour autre que TEL)
+	dte_fin_trait				DateTime					NULL,   -- Date de fin de traitement/Date d'envoi colis retour vers assuré
+	comment_frn					VarChar ( 255 )				NULL,   -- Commentaire fournisseur
+	num_bon_trp					VarChar ( 35 )				NULL,   -- Numéro de colis retour 
+	nom_transporteur			VarChar ( 35 )				NULL,   -- NOm du transporteur
+	dte_rcp_app_cli				DateTime					NULL,   -- Date de réception de l'appareil par l'assuré
+	app_swap					VarChar ( 1  ) default 'N'	NULL,   -- O/N swap sur réparation (app irrep couvert et le presta redonne auto un app de rempl)
+	marque_rempl				VarChar ( 35 )				NULL,   -- Marque de remplacement (sur SWAP ou Cmde Manuelle)
+	modele_rempl				VarChar ( 35 )				NULL,   -- Modele de remplacement (sur SWAP ou Cmde Manuelle)
+	couleur_rempl				VarChar ( 35 )				NULL,   -- Couleur de remplacement (sur SWAP ou Cmde Manuelle)
+	cap_stk_rempl				VarChar ( 35 )				NULL,   -- Capacité de stockage de remplacement (sur SWAP ou Cmde Manuelle)
+	neuf_recond_rempl			VarChar ( 10 )				NULL,	-- NEU/REC app de remplacement (sur SWAP ou Cmde Manuelle) Neuf ou Reconditionné
+	prix_ttc_public				Decimal ( 11, 2 )			NULL,   -- Prix TTC de l'app de remplacement qui sera facturé par le prestataire et réglé par spb
+	prble_livraison				VarChar ( 35 )				NULL,   -- après une dte_fin_trait renseigné, Code du problème de livraison
+	pec_prble_livraison			VarChar ( 1  ) default 'N'	NULL,   -- O/N OUI si le presta prend la prble de livrasion à sa charge
+	info_frn_spb_cplt			VarChar ( 800 )				NULL,   -- Chaine sérialisée contenant de multiples informations pour de nouvelles données "exotiques" liées à un prestataire précis.
+	
+	CONSTRAINT pk_DepotHubToSimpa2Presta PRIMARY KEY CLUSTERED 
+
+(
+	id_depot_hub ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 95) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+Create index idx1_DepotHubToSimpa2Presta on edi.DepotHubToSimpa2Presta ( id_hub_presta )
+Create index idx2_DepotHubToSimpa2Presta on edi.DepotHubToSimpa2Presta ( depose_le )
+Create index idx3_DepotHubToSimpa2Presta on edi.DepotHubToSimpa2Presta ( alt_trt )
+Create index idx4_DepotHubToSimpa2Presta on edi.DepotHubToSimpa2Presta ( traite_le )
+
+Go
+
+
+If Exists ( Select Top 1 1 From sys.objects where name = 'TraceRecupRetourParSimpa2' and type = 'U' ) Drop table edi.TraceRecupRetourParSimpa2
+
+CREATE TABLE edi.TraceRecupRetourParSimpa2 (
+	[id_trc] [int] IDENTITY(1,1) NOT NULL,
+	[id_lot_trc] int NOT NULL,
+	[cod_etat] varchar ( 6 ) NOT NULL,
+	[commentaire] varchar ( 255 ) null,
+	[cree_le] datetime NOT NULL,
+	[maj_par] varchar(4) NOT NULL
+	CONSTRAINT [pk_TraceRecupRetourParSimpa2] PRIMARY KEY CLUSTERED 
+	( [id_trc] ASC ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+
+) ON [PRIMARY]
+GO
+
+Create index idx1_TraceRecupRetourParSimpa2 on edi.TraceRecupRetourParSimpa2 (cod_etat)
+Create index idx2_TraceRecupRetourParSimpa2 on edi.TraceRecupRetourParSimpa2 (cree_le)
+Create index idx3_TraceRecupRetourParSimpa2 on edi.TraceRecupRetourParSimpa2 (id_lot_trc)
+
+Delete edi.parametre where ref_cpt = 'ID_LOT_TRC'
+Insert into edi.parametre Values ( 'ID_LOT_TRC', 0, 1 )
+
+
+-----------------
+-- LES PS      --
+-----------------
+
 
 -------------------------------------------------------------------
 --
@@ -1233,7 +1329,6 @@ IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_U_HP_MARQUAGE_UNITAI
         DROP procedure edi.PS_HP276_U_HP_MARQUAGE_UNITAIRE_D_UNE_PRESTATION_TRAITEE
 GO
 
-
 CREATE procedure edi.PS_HP276_U_HP_MARQUAGE_UNITAIRE_D_UNE_PRESTATION_TRAITEE
 	@asCas			VarChar ( 50 ),  -- Valeur possible de asCas
 									 -- TENTATIVE_UNIQUEMENT : Tentative s'étant terminée en échec 
@@ -1263,4 +1358,94 @@ If @asCas = 'TENTATIVE_GENEREE'
 	And     alt_trt <> 'O'
   End 
 
+Go
+
+-------------------------------------------------------------------
+--
+-- Procédure            :       PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2
+-- Auteur               :       JFF
+-- Date                 :       11/03/2024
+-- Libell‚              :       [HP252_276_HUB_PRESTA]
+-- Commentaires         :       Trace la récup des retour du HUB par SIMPA2
+--                              /!\ A COMPILER SUR LA BASE PRESTATAIRE /!\
+--
+--								
+--
+-- Retourne             :       
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2' AND type = 'P' )
+        DROP procedure edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2
+GO
+
+CREATE procedure edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2
+	@asCas			Varchar ( 50 ),
+	@aiCodEtat		varchar ( 6 ),
+	@asCommentaire	VarChar ( 255 ),
+	@aiIdLotTrc		Integer OutPut
+As
+
+If @asCas = 'OBTENTION_ID_LOT_TRC'
+  Begin
+	EXEC edi.PS_X_INCREMENTER 'ID_LOT_TRC', @aiIdLotTrc OUTPUT 
+	Return
+  End 
+
+Set @asCommentaire = lTrim ( rTrim ( @asCommentaire ) )
+
+Insert into edi.TraceRecupRetourParSimpa2 
+		(
+		id_lot_trc,
+		cod_etat,
+		commentaire,
+		cree_le,
+		maj_par
+		)
+Values
+		(
+		@aiIdLotTrc,
+		@aiCodEtat,
+		@asCommentaire,
+		Getdate(),
+		'SQLS'
+		)
+
+Go
+
+-------------------------------------------------------------------
+--
+-- Procédure            :       PS_X_INCREMENTER
+-- Auteur               :       JFF
+-- Date                 :       11/03/2024
+-- Libell‚              :       [HP252_276_HUB_PRESTA]
+-- Commentaires         :       Incrémentation d'un compteur
+--                              /!\ A COMPILER SUR LA BASE PRESTATAIRE /!\
+--
+--								
+--
+-- Retourne             :       
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_X_INCREMENTER' AND type = 'P' )
+        DROP procedure edi.PS_X_INCREMENTER
+GO
+ 
+create procedure edi.PS_X_INCREMENTER
+ @srefcpt  varchar(10),  
+ @dccptval decimal(10,0) output -- [PI062]  
+as  
+  
+-- JFF      12/02/2016   [PI062]  
+  
+/* mise a jour de la valeur du compteur dans la table. */  
+update edi.parametre  
+   set cpt_val = cpt_val + 1  
+ where ref_cpt = @srefcpt  
+  
+if @@rowcount = 0  return -1  
+  
+/* acquisition de la derniere valeur du compteur */  
+select  @dccptval = cpt_val  
+  from  edi.parametre  
+ where  ref_cpt = @srefcpt  
+  
+return 1  
 Go
