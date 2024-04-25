@@ -205,6 +205,8 @@ If Exists ( Select Top 1 1 From sys.objects where name = 'TraceRecupRetourParSim
 CREATE TABLE edi.TraceRecupRetourParSimpa2 (
 	[id_trc] [int] IDENTITY(1,1) NOT NULL,
 	[id_lot_trc] int NOT NULL,
+	[id_depot_hub] int NOT NULL,
+	[id_hub_presta] int NULL,
 	[cod_etat] varchar ( 6 ) NOT NULL,
 	[commentaire] varchar ( 255 ) null,
 	[cree_le] datetime NOT NULL,
@@ -1379,6 +1381,8 @@ GO
 
 CREATE procedure edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2
 	@asCas			Varchar ( 50 ),
+	@aiIdDepotHub	Int,
+	@asIdHubPresta  VarChar ( 20 ),
 	@aiCodEtat		varchar ( 6 ),
 	@asCommentaire	VarChar ( 255 ),
 	@aiIdLotTrc		Integer OutPut
@@ -1395,6 +1399,8 @@ Set @asCommentaire = lTrim ( rTrim ( @asCommentaire ) )
 Insert into edi.TraceRecupRetourParSimpa2 
 		(
 		id_lot_trc,
+		id_depot_hub,
+		id_hub_presta,
 		cod_etat,
 		commentaire,
 		cree_le,
@@ -1403,6 +1409,8 @@ Insert into edi.TraceRecupRetourParSimpa2
 Values
 		(
 		@aiIdLotTrc,
+		@aiIdDepotHub,
+		@asIdHubPresta,
 		@aiCodEtat,
 		@asCommentaire,
 		Getdate(),

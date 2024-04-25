@@ -1519,17 +1519,34 @@ Declare	@idWorkRowMax		Int
 Declare	@iCptIdWorkRow		Int
 Declare	@sChaineIdFour		Varchar ( 250 )
 Declare	@iHandleObjet		Int 
+Declare @sDestErrTech  VarChar ( 200 ) 
+Declare @sDestErrCoherenceHub  VarChar ( 200 ) 
+Declare @sMailBody VarChar ( 8000 )
+Declare @sObjet VarChar ( 255 ) 
+Declare @sMsgTrc varchar ( 255 ) 
+Declare @sRetourErrMail VarChar ( 255 )
+Declare @sFicOut VarChar ( 255 )
+Declare @sDateHeureDebTrt VarChar ( 30 )
+Declare @iRet Int
+Declare @sCheminDepotFichierMPR VarChar ( 255 )
+Declare @sInfoFrnSpbCpltCree VarChar ( 800 )
+Declare @sEnregistrementFicMPR VarChar ( max )
+Declare @sSepChampsFinMPR VarChar ( 10 )
+Declare @iStatusGC Int
 
 Set @iAMUerrRowTrt = 0 
 Set @iAMUunRowEcrFrn = 0
 Set @iAMUerrFrn = 0
+Set @sInfoFrnSpbCpltCree = ''
+Set @sEnregistrementFicMPR = ''
+Set @sSepChampsFinMPR = CHAR ( 9 ) -- Tabulation
 
 Declare @iIdWorkRow			int,
 		@iIdDepotHub		int,
 		@dtDeposeLe			DateTime,
 		@dcIdSin			Decimal ( 10 ),
 		@iIdSeq				int,
-		@sIdFour			VarChar ( 3 ),
+		@sIdFour			VarChar ( 10 ),
 		@sIdHubPresta		VarChar ( 20 ),
 		@sNumCmdFrn			VarChar ( 50 ),
 		@sStatusCode		VarChar ( 2 ),
@@ -1563,17 +1580,19 @@ Declare @iIdWorkRow			int,
 		@dcPrixTtcPublic	Decimal ( 11, 2 ),
 		@sPrbleLivraison	VarChar ( 35 ),
 		@sPecPrbleLivraison	VarChar ( 1  ),
-		@sInfoFrnSpbCplt	VarChar ( 800 )
+		@sInfoFrnSpbCpltlu	VarChar ( 800 )
 
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 	BEGIN
 		Set @sInstanceHub = '[LS-SAGA2].[PRESTATAIRE].'
 		Set @sEnv = 'PROD'
+		Set @sCheminDepotFichierMPR = '\\F4T\SIMPA2\'
 	END 
 ELSE
 	BEGIN
 		Set @sInstanceHub = '[S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].'
 		Set @sEnv = 'SIM'
+		Set @sCheminDepotFichierMPR = '\\SPB.LAN\APPLIS\SPB\RECCMD\'
 	END 
 
 ---------------------------------
@@ -1581,15 +1600,22 @@ ELSE
 ---------------------------------
 If @sEnv = 'PROD'
 	Begin 
-		Exec [LS-SAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '', '', @iIdLotTrc output
+		Exec [LS-SAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', -1, '-1', '', '', @iIdLotTrc output
+		Set @sDestErrTech = 'jff@spb.fr,cbourdoiseau@spb.eu,cfrappat@spb.eu,VANDRE@spb.eu,BKHELIFA_ext@spb.eu'
+		Set @sDestErrCoherenceHub = 'jff@spb.fr,cbourdoiseau@spb.eu,cfrappat@spb.eu,VANDRE@spb.eu,BKHELIFA_ext@spb.eu'
 	End
 Else
 	Begin 
-		Exec [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '', '', @iIdLotTrc output
+		Exec [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', -1, '-1', '', '', @iIdLotTrc output
+		Set @sDestErrTech = 'jff@spb.fr'
+		Set @sDestErrCoherenceHub = 'jff@spb.fr'
 	End
 
-Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', ''OK'', ''Lancement du traitement le ' + Convert ( VarChar ( 10), Getdate(), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108) + ''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
+Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', -1, ''-1'', ''OK'', '''+ 
+			'Lancement du traitement le ' + Convert ( VarChar ( 10), Getdate(), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108) + 
+			''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
 
+Set @sDateHeureDebTrt = Convert ( varchar ( 10 ), GETDATE(), 103 ) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00'
 
 -------------------------------
 -- Récupération des données  --
@@ -1644,14 +1670,18 @@ Set @sSql =
 Insert into @TbHubToSimpa2Work Exec ( @sSql ) -- ;Select * from @TbHubToSimpa2Work
 Set @iRowCountData = @@ROWCOUNT
 
-Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', ''OK'', ''Récupération par SIMPA2 de ' + Convert ( Varchar ( 20 ), @iRowCountData  ) + ' enregistrements de suivi/retour provenant du HUB.'', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
+Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', -1, ''-1'', ''OK'', ''' + 
+			'Récupération par SIMPA2 de ' + Convert ( Varchar ( 20 ), @iRowCountData  ) + ' enregistrements de suivi/retour provenant du HUB.' +
+			''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
 
 ---------------------------------------
 -- Pas de données, fin de traitement --
 ---------------------------------------
 IF @iRowCountData <= 0 
 	Begin
-		Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', ''OK'', ''Fin du traitement le ' + Convert ( VarChar ( 10), Getdate(), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108) + ''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
+		Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', -1, ''-1'', ''OK'', ''' +
+		'Fin du traitement le ' + Convert ( VarChar ( 10), Getdate(), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108) + 
+		''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
 		Return 
 	End 
 
@@ -1670,14 +1700,81 @@ Set @iRowCountData = @@ROWCOUNT
 If @iRowCountData > 0 
 	Begin
 		Select @sChaineIdFour = Stuff ( ( SELECT CAST(rtrim ( id_four) + ', ' AS VARCHAR(250)) FROM @TbFourn For XML PATH ('') ) , 1, 2, '' )
-		Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', ''OK'', ''' + Convert ( Varchar ( 20 ), @iRowCountData  ) + ' Prestataire(s) concerné(s) : ' + @sChaineIdFour + ''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
+		Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', -1, ''-1'', ''OK'', ''' + 
+		Convert ( Varchar ( 20 ), @iRowCountData  ) + ' Prestataire(s) concerné(s) : ' + @sChaineIdFour + 
+		''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
 	End 
 
 ---------------------------
 -- Moteur de traitement  --
 ---------------------------
 Exec @iHandleObjet = sysadm.PS_INSTANCIER_UN_OBJET_SQL_SERVER 'ADODB.Stream'
--- [TODO] Si Erreur Mail pour JFF en SIM, pour vincent et BLN en production copie JF
+
+-- Traitement d'une Erreur pontentiel d'instanciation
+If @iHandleObjet < 0 
+	Begin
+		Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', -1, ''-1'', ''ERR'', ''' +
+		'Erreur lors de l''instanciation de l''objet SqlServer ADODB.Stream, le traitement est arrêté à ' + Convert ( VarChar ( 10), Getdate(), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108) + 
+		''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
+
+		Set @sObjet = '[ALERTE] [Traitement_SIMPA2_HUB_PRESTATAIRE] => Instanciation objet ADODB.Stream impossible'
+
+		Set @sObjet = Left ( @sObjet + space ( 255 ), 255 )
+		Exec sysadm.PS_CASSER_REGLE_CHAINE @sObjet Output, '_', ' ' 
+
+		Set @sMailBody = 'Bonjour ' + char (10)
+		Set @sMailBody = @sMailBody + char (10)
+		Set @sMailBody = @sMailBody + 'Serveur : ' + @@SERVERNAME 
+		If @@SERVERNAME = 'SQL14SINISTRES\SINISTRES' Set @sMailBody = @sMailBody + ' (Alias [LS-SINISTRES])' + char (10)		
+		Set @sMailBody = @sMailBody + 'base SIMPA2 : ' + DB_NAME () + char (10)
+		Set @sMailBody = @sMailBody + 'Instance et base HUB PRESTATAIRE : ' + @sInstanceHub + char (10)
+		Set @sMailBody = @sMailBody + char (10)
+		Set @sMailBody = @sMailBody + 'Contexte de l''erreur : L''objet SqlServer ADODB.Stream ne peut plus s''intancier, la conséquence est que les retours de prestations du Hub Prestataires ne peuvent plus traités par SIMPA2.' + char (10)
+		Set @sMailBody = @sMailBody + char (10)
+		Set @sMailBody = @sMailBody + 'Une des causes possibles :' + char (10)
+		Set @sMailBody = @sMailBody + '- Une soirée patch la veille a pu faire sauter le droit d''instanciation de cet objet OLE SqlServer lors d''un reboot du serveur qui s''est mal terminé (par exemple).' + char (10)
+		Set @sMailBody = @sMailBody + '  Le code suivant peut rétablir ce droit, à jouer par INFRA.' + char (10)
+		Set @sMailBody = @sMailBody + '    exec sp_configure ''Ole Automation Procedures'', 1 ' + char (10)
+		Set @sMailBody = @sMailBody + '    RECONFIGURE' + char (10)
+		Set @sMailBody = @sMailBody + char (10)
+		Set @sMailBody = @sMailBody + 'Vérifier l''action en jouant : '+ char (10)
+		Set @sMailBody = @sMailBody + 'exec sp_configure ''Ole Automation Procedures'''+ char (10)
+		Set @sMailBody = @sMailBody + 'la valeur config_value doit être à 1 (activée) à présent' + char (10)
+		Set @sMailBody = @sMailBody + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + '- Sinon vérifiez les actions SQL récemment engagées par l''équipe INFRA sur ' + @@Servername  
+		If @@SERVERNAME = 'SQL14SINISTRES\SINISTRES' Set @sMailBody = @sMailBody + ' (Alias [LS-SINISTRES])'
+		Set @sMailBody = @sMailBody + ' .' + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + '  Consultez la trace du traitement avec ces 2 Select pour voir depuis quand le problème se produit ' + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + '  Select * from ' + @sInstanceHub + 'edi.TraceRecupRetourParSimpa2  where cod_etat = ''ERR'' and cree_le > ''' + @sDateHeureDebTrt + ''' order by 1' + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + '  Select * from ' + @sInstanceHub + 'edi.TraceRecupRetourParSimpa2  where cree_le > ''' + @sDateHeureDebTrt + ''' order by 1 desc' + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + 'L''alerte reviendra au prochain traitement tant que le problème ne sera pas résolu.' + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + 'Cordialement,'
+		Set @sMailBody = @sMailBody + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + 'Fabry Jean-François'
+		Set @sMailBody = @sMailBody + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + 'DSI/IPDDEV Team SIMPA2' + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + 'Legacy Application Tech Lead' + CHAR ( 10 )
+
+
+		EXEC master.dbo.SPB_PS_MAIL 
+				@sRetourErrMail OUTPUT, 
+				@sDestErrTech ,
+				@sMailBody, 
+				@sObjet, 
+				null, 
+				'', 
+				@sFicOut, 
+				NULL, 
+				NULL, 
+				NULL, 
+				NULL
+
+		Return
+	End 
 
 While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
  Begin
@@ -1692,8 +1789,26 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 	Set @iAMUunRowEcrFrn = 0
 	Set @iCptIdWorkRow = @idWorkRowMin
 
-	-- [TODO] Ouverture du fichier 
-	-- Exec @iRet = sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM_V03 @iHandle, 1, 0, 2, 3, 'ASCII', 13, null, null
+
+	-- Le code fournisseur existe-t-il sur SIMPA2
+	If Not Exists ( 
+			Select Top 1 1 
+			From sysadm.code_car cc
+			Where cc.id_typ_code = '-FR'
+			And   cc.id_code = @sIdFour
+		)
+		Begin
+			Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', -1, ''-1'', ''ERR'', ''' + 
+			'Le code fournisseur ' + ISNULL ( @sIdFour, '(vide)') + ' donné par le Hub Prestataire n''''existe pas sur SIMPA2.' + ''', ' + 
+			Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
+
+			Update @TbFourn Set marquage = -1 Where id_work = @iIdWorkFrn			
+			Continue
+		End 
+
+	-- Ouverture du fichier 
+	Exec @iRet = sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM_V03 @iHandleObjet, 1, 0, 2, 3, 'ISO-8859-1', 13, null, null
+	-- [TODO] Trace et arrêt si problème ouverture fichier 
 		
 	While Exists ( Select Top 1 1 From @TbHubToSimpa2Work where marquage = 0 And id_four = @sIdFour And @iCptIdWorkRow between @idWorkRowMin and @idWorkRowMax )
 	 Begin
@@ -1738,12 +1853,79 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 			@dcPrixTtcPublic = prix_ttc_public,
 			@sPrbleLivraison = prble_livraison,
 			@sPecPrbleLivraison = pec_prble_livraison,
-			@sInfoFrnSpbCplt = info_frn_spb_cplt
+			@sInfoFrnSpbCpltlu = info_frn_spb_cplt
 		From	@TbHubToSimpa2Work
 		Where	marquage = 0
 
-		-- [TODO] Trt principal des Rows
+		------------------------------------
+		-- Contrôle principal des données --
+		------------------------------------
+		While 1=1
+			Begin
+				-- Le binôme id_sin/id_seq existe-il sur SIMPA2 ?
+				If Not Exists ( 
+						Select Top 1 1 
+						From sysadm.commande c
+						Where c.id_sin = @dcIdSin
+						And   c.id_seq = @iIdSeq
+					) And @iAMUerrRowTrt = 0
+					Begin
+						Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', ' + Convert ( VarChar (20), @iIdDepotHub) + ', ''' + @sIdHubPresta + ''', ''ERR'', ''' + 
+						'La prestation ' + IsNull ( Convert ( Varchar ( 10 ), @dcIdSin ), '(vide)') + '-' + IsNull ( Convert ( Varchar ( 10 ), @iIdSeq ), '(vide)' ) + ' n''existe pas sur SIMPA2 (IdHubPresta=' + IsNull ( Convert ( Varchar ( 10 ), @sIdHubPresta ), '(vide) )') + '.' + 
+						''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
 
+						Set @iAMUerrRowTrt = 1
+						Break
+					End 
+
+				-- Détermination du statut SIMPA2 de la prestation
+				Set @iStatusGC = 0 -- [TODO] Fct ( @sStatusCode, @sReturnCode, @sReasonCode ) 
+				If @iStatusGC <= 0 -- Au minimum 159 ou un statut 'en cours à créer' si non existant
+					Begin
+						Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', ' + Convert ( VarChar (20), @iIdDepotHub) + ', ''' + @sIdHubPresta + ''', ''ERR'', ''' + 
+									'.Les 3 données @sStatusCode, @sReturnCode, @sReasonCode ne permettent pas de déterminer/mapper un statut pour la prestation SIMPA2.' +
+									''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
+
+						Set @iAMUerrRowTrt = 1
+						Break
+					End 
+
+				Break
+			End 
+		------------------------------------------------------------------------
+		-- Traitement principal des données, construction de l'enregistrement --
+		------------------------------------------------------------------------
+		While @iAMUerrRowTrt = 0
+			Begin
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + Convert ( Varchar ( 10 ), @dcIdSin ) + '-' + Convert ( Varchar ( 10 ), @iIdSeq ) + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + @sIdFour + @sSepChampsFinMPR
+
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNumCmdFrn, '') + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @iStatusGC, '0') + @sSepChampsFinMPR
+
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sTypBaAller, '') + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sPerteAller, '') + @sSepChampsFinMPR
+
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sDiagVideoEngage, '') + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sResoluDiagVideo, '') + @sSepChampsFinMPR
+
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( convert ( varchar(10), @dtDteRdvConf, 103 ) + ' ' + CONVERT (varchar(8), @dtDteRdvConf, 108), '') + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sAssureEnProx, '') + @sSepChampsFinMPR
+				
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNomProx, '') + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sCodeProx, '') + @sSepChampsFinMPR
+
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sAssureEnvCentral, '') + @sSepChampsFinMPR
+				
+				
+				Break
+			End 
+		
+		----------------------------------------
+		-- Trt des erreurs                    --
+		----------------------------------------
+
+		-- AMU une erreur sur un row de ce fournisseur
 		If @iAMUerrRowTrt = 1 
 			Begin
 		  		Update @TbHubToSimpa2Work Set marquage = -1 Where id_work = @iIdWorkRow
@@ -1784,7 +1966,6 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 	 Update @TbFourn Set marquage = 1 Where id_work = @iIdWorkFrn
 
 End 
--- Select * from @TbHubToSimpa2Work
 
 Go
 
