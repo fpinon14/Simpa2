@@ -205,6 +205,7 @@ If Exists ( Select Top 1 1 From sys.objects where name = 'TraceRecupRetourParSim
 CREATE TABLE edi.TraceRecupRetourParSimpa2 (
 	[id_trc] [int] IDENTITY(1,1) NOT NULL,
 	[id_lot_trc] int NOT NULL,
+	[id_four] Varchar ( 10 ) NULL,
 	[id_depot_hub] int NOT NULL,
 	[id_hub_presta] int NULL,
 	[cod_etat] varchar ( 6 ) NOT NULL,
@@ -220,6 +221,7 @@ GO
 Create index idx1_TraceRecupRetourParSimpa2 on edi.TraceRecupRetourParSimpa2 (cod_etat)
 Create index idx2_TraceRecupRetourParSimpa2 on edi.TraceRecupRetourParSimpa2 (cree_le)
 Create index idx3_TraceRecupRetourParSimpa2 on edi.TraceRecupRetourParSimpa2 (id_lot_trc)
+Create index idx4_TraceRecupRetourParSimpa2 on edi.TraceRecupRetourParSimpa2 (id_four)
 
 Delete edi.parametre where ref_cpt = 'ID_LOT_TRC'
 Insert into edi.parametre Values ( 'ID_LOT_TRC', 0, 1 )
@@ -1381,6 +1383,7 @@ GO
 
 CREATE procedure edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2
 	@asCas			Varchar ( 50 ),
+	@asIdFour		VarChar ( 10 ),
 	@aiIdDepotHub	Int,
 	@asIdHubPresta  VarChar ( 20 ),
 	@aiCodEtat		varchar ( 6 ),
@@ -1399,6 +1402,7 @@ Set @asCommentaire = lTrim ( rTrim ( @asCommentaire ) )
 Insert into edi.TraceRecupRetourParSimpa2 
 		(
 		id_lot_trc,
+		id_four,
 		id_depot_hub,
 		id_hub_presta,
 		cod_etat,
@@ -1409,6 +1413,7 @@ Insert into edi.TraceRecupRetourParSimpa2
 Values
 		(
 		@aiIdLotTrc,
+		@asIdFour,
 		@aiIdDepotHub,
 		@asIdHubPresta,
 		@aiCodEtat,
