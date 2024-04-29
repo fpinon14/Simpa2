@@ -6180,7 +6180,37 @@ Return @iRet
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Fonction             :       PS_FERMER_UN_FICHER_ADODB_STREAM
+-- Auteur               :       Fabry JF 
+-- Date                 :       29/04/2024
+-- Libellé              :		[HP252_276_HUB_PRESTA]
+-- Commentaires         :       
+-- Références           :       
+--
+-- Arguments            :       	@aiHandle  
+--										Un entier (int) représentant le Handle de l'objet ADODB.Stream précédent instancié 
+-- Retourne             :       0 succès 
+--                             <> 0, problème
+--
+--------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_FERMER_UN_FICHER_ADODB_STREAM' AND type = 'P' )
+        DROP procedure sysadm.PS_FERMER_UN_FICHER_ADODB_STREAM
+GO
 
+CREATE  PROCEDURE sysadm.PS_FERMER_UN_FICHER_ADODB_STREAM 
+	@aiHandle			Int
+As
+
+Declare @iRet Integer
+
+Exec @iRet = sp_OAMethod  @aiHandle, 'Close'
+If @iRet <> 0 Return @iRet 
+
+Return @iRet 
+
+Go
 
 
 --------------------------------------------------------------------
