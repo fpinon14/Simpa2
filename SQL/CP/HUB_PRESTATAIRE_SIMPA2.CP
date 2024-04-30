@@ -1535,7 +1535,7 @@ Declare @sCheminDepotFichierMPRRacine VarChar ( 255 )
 Declare @sCheminDepotFichierMPRFrn VarChar ( 255 )
 Declare @sInfoFrnSpbCpltCree VarChar ( 800 )
 Declare @sEnregistrementFicMPR VarChar ( max )
-Declare @sSepChampsFinMPR VarChar ( 10 )
+Declare @sSepChampsFicMPR VarChar ( 10 )
 Declare @iStatusGC Int
 Declare @sDestCc VarChar ( 200 )
 Declare @sNomFicMPRwork VarChar ( 255 ) 
@@ -1551,7 +1551,7 @@ Set @iAMUerrFrn = 0
 Set @iAMUerrGen = 0
 Set @sInfoFrnSpbCpltCree = ''
 Set @sEnregistrementFicMPR = ''
-Set @sSepChampsFinMPR = CHAR ( 9 ) -- Tabulation
+Set @sSepChampsFicMPR = CHAR ( 9 ) -- Tabulation
 
 Declare @iIdWorkRow			int,
 		@iIdDepotHub		int,
@@ -1589,7 +1589,7 @@ Declare @iIdWorkRow			int,
 		@sCouleurRempl		VarChar ( 35 ),
 		@sCapStkRempl		VarChar ( 35 ),
 		@sNeufRecondRempl	VarChar ( 10 ),
-		@dcPrixTtcPublic	Decimal ( 11, 2 ),
+		@dcPrixTtcRempl	Decimal ( 11, 2 ),
 		@sPrbleLivraison	VarChar ( 35 ),
 		@sPecPrbleLivraison	VarChar ( 1  ),
 		@sInfoFrnSpbCpltlu	VarChar ( 800 )
@@ -1925,7 +1925,7 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 			@sCouleurRempl = ltrim ( rtrim ( couleur_rempl )),
 			@sCapStkRempl = ltrim ( rtrim ( cap_stk_rempl )),
 			@sNeufRecondRempl = ltrim ( rtrim ( neuf_recond_rempl )),
-			@dcPrixTtcPublic = prix_ttc_public,
+			@dcPrixTtcRempl = prix_ttc_public,
 			@sPrbleLivraison = ltrim ( rtrim ( prble_livraison )),
 			@sPecPrbleLivraison = ltrim ( rtrim ( pec_prble_livraison )),
 			@sInfoFrnSpbCpltlu = ltrim ( rtrim ( info_frn_spb_cplt ))
@@ -1986,6 +1986,9 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 					End 
 				*/
 
+				-- Le numéro de commande fournisseur fait 20 sur SIMPA2 et 50 sur le Hub
+				If Len ( @sNumCmdFrn ) > 20 Set @sNumCmdFrn = LEFT ( @sNumCmdFrn, 17 ) + '...'
+
 				Break
 			End 
 
@@ -1995,55 +1998,59 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 		If @iAMUerrRowTrt = 0
 			Begin
 				Set @sEnregistrementFicMPR = ''
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + Convert ( Varchar ( 10 ), @dcIdSin ) + '-' + Convert ( Varchar ( 10 ), @iIdSeq ) + @sSepChampsFinMPR
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + @sIdFour + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + Convert ( Varchar ( 10 ), @dcIdSin ) + '-' + Convert ( Varchar ( 10 ), @iIdSeq ) + @sSepChampsFicMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + Convert ( Varchar ( 20 ), @iIdDepotHub ) + @sSepChampsFicMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + @sIdHubPresta + @sSepChampsFicMPR
 
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNumCmdFrn, '') + @sSepChampsFinMPR
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( Convert ( Varchar ( 20 ), @iStatusGC), '0') + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + 'HUB' + @sSepChampsFicMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + @sIdFour + @sSepChampsFicMPR
 
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sTypBaAller, '') + @sSepChampsFinMPR
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sPerteAller, '') + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNumCmdFrn, '') + @sSepChampsFicMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( Convert ( Varchar ( 20 ), @iStatusGC), '0') + @sSepChampsFicMPR
 
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sDiagVideoEngage, '') + @sSepChampsFinMPR
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sResoluDiagVideo, '') + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sTypBaAller, '') + @sSepChampsFicMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sPerteAller, '') + @sSepChampsFicMPR
 
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( convert ( varchar(10), @dtDteRdvConf, 103 ) + ' ' + CONVERT (varchar(8), @dtDteRdvConf, 108), '') + @sSepChampsFinMPR
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sAssureEnProx, '') + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sDiagVideoEngage, '') + @sSepChampsFicMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sResoluDiagVideo, '') + @sSepChampsFicMPR
+
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( convert ( varchar(10), @dtDteRdvConf, 103 ) + ' ' + CONVERT (varchar(8), @dtDteRdvConf, 108), '') + @sSepChampsFicMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sAssureEnProx, '') + @sSepChampsFicMPR
 				
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNomProx, '') + @sSepChampsFinMPR
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sCodeProx, '') + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNomProx, '') + @sSepChampsFicMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sCodeProx, '') + @sSepChampsFicMPR
 
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sAssureEnvCentral, '') + @sSepChampsFinMPR
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( convert ( varchar(10), @dtDteRcpFrn, 103 ) + ' ' + CONVERT (varchar(8), @dtDteRcpFrn, 108), '') + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sAssureEnvCentral, '') + @sSepChampsFicMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( convert ( varchar(10), @dtDteRcpFrn, 103 ) + ' ' + CONVERT (varchar(8), @dtDteRcpFrn, 108), '') + @sSepChampsFicMPR
 
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sSiteAction, '') + @sSepChampsFinMPR
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sAppIncomplet, '') + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sSiteAction, '') + @sSepChampsFicMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sAppIncomplet, '') + @sSepChampsFicMPR
 
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNumImeiRempl, '') + @sSepChampsFinMPR
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNumSerieRempl, '') + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNumImeiRempl, '') + @sSepChampsFicMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNumSerieRempl, '') + @sSepChampsFicMPR
 
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( convert ( varchar(10), @dtDteFinTrait, 103 ) + ' ' + CONVERT (varchar(8), @dtDteFinTrait, 108), '') + @sSepChampsFinMPR
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sCommentFrn, '') + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( convert ( varchar(10), @dtDteFinTrait, 103 ) + ' ' + CONVERT (varchar(8), @dtDteFinTrait, 108), '') + @sSepChampsFicMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sCommentFrn, '') + @sSepChampsFicMPR
 
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNumBonTrp, '') + @sSepChampsFinMPR
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNomTransporteur, '') + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNumBonTrp, '') + @sSepChampsFicMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNomTransporteur, '') + @sSepChampsFicMPR
 
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( convert ( varchar(10), @dtDteRcpAppCli, 103 ) + ' ' + CONVERT (varchar(8), @dtDteRcpAppCli, 108), '') + @sSepChampsFinMPR
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sAppSwap, '') + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( convert ( varchar(10), @dtDteRcpAppCli, 103 ) + ' ' + CONVERT (varchar(8), @dtDteRcpAppCli, 108), '') + @sSepChampsFicMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sAppSwap, '') + @sSepChampsFicMPR
 
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sMarqueRempl, '') + @sSepChampsFinMPR
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sModeleRempl, '') + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sMarqueRempl, '') + @sSepChampsFicMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sModeleRempl, '') + @sSepChampsFicMPR
 
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sCouleurRempl, '') + @sSepChampsFinMPR
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sCapStkRempl, '') + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sCouleurRempl, '') + @sSepChampsFicMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sCapStkRempl, '') + @sSepChampsFicMPR
 
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNeufRecondRempl, '') + @sSepChampsFinMPR
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( convert ( varchar(20), @dcPrixTtcPublic ), '') + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNeufRecondRempl, '') + @sSepChampsFicMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( convert ( varchar(20), @dcPrixTtcRempl ), '') + @sSepChampsFicMPR
 
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sPrbleLivraison, '') + @sSepChampsFinMPR
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sPecPrbleLivraison, '') + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sPrbleLivraison, '') + @sSepChampsFicMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sPecPrbleLivraison, '') + @sSepChampsFicMPR
 
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sInfoFrnSpbCpltlu, '') + @sSepChampsFinMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sInfoFrnSpbCpltlu, '') + @sSepChampsFicMPR
 			
 			End 
 		

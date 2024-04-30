@@ -179,7 +179,7 @@ CREATE TABLE edi.DepotHubToSimpa2Presta(
 	couleur_rempl				VarChar ( 35 )				NULL,   -- Couleur de remplacement (sur SWAP ou Cmde Manuelle)
 	cap_stk_rempl				VarChar ( 35 )				NULL,   -- Capacité de stockage de remplacement (sur SWAP ou Cmde Manuelle)
 	neuf_recond_rempl			VarChar ( 10 )				NULL,	-- NEU/REC app de remplacement (sur SWAP ou Cmde Manuelle) Neuf ou Reconditionné
-	prix_ttc_public				Decimal ( 11, 2 )			NULL,   -- Prix TTC de l'app de remplacement qui sera facturé par le prestataire et réglé par spb
+	prix_ttc_rempl				Decimal ( 11, 2 )			NULL,   -- Prix TTC de l'app de remplacement qui sera facturé par le prestataire et réglé par spb
 	prble_livraison				VarChar ( 35 )				NULL,   -- après une dte_fin_trait renseigné, Code du problème de livraison
 	pec_prble_livraison			VarChar ( 1  ) default 'N'	NULL,   -- O/N OUI si le presta prend la prble de livrasion à sa charge
 	info_frn_spb_cplt			VarChar ( 800 )				NULL,   -- Chaine sérialisée contenant de multiples informations pour de nouvelles données "exotiques" liées à un prestataire précis.
@@ -207,7 +207,7 @@ CREATE TABLE edi.TraceRecupRetourParSimpa2 (
 	[id_lot_trc] int NOT NULL,
 	[id_four] Varchar ( 10 ) NULL,
 	[id_depot_hub] int NOT NULL,
-	[id_hub_presta] int NULL,
+	[id_hub_presta] Varchar ( 20 ) NULL,
 	[cod_etat] varchar ( 6 ) NOT NULL,
 	[commentaire] varchar ( 255 ) null,
 	[cree_le] datetime NOT NULL,
