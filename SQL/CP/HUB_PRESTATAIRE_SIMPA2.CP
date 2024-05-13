@@ -1488,8 +1488,6 @@ Declare  @TbHubToSimpa2Work TABLE (
 	dte_rcp_frn					DateTime					NULL,   -- Date de réception de l'appareil chez le prestataire
 	site_action					VarChar ( 20 )				NULL,   -- STATION/DOMICILE
 	app_incomplet				VarChar ( 1  )				NULL,   -- O/N si appareil incomplet
-	num_imei_rempl				VarChar ( 20 )				NULL,	-- Numéro IMEI de remplacement (pour TEL)
-	num_serie_rempl				VarChar ( 60 )				NULL,	-- Numéro SERIE de remplacement (pour autre que TEL)
 	dte_fin_trait				DateTime					NULL,   -- Date de fin de traitement/Date d'envoi colis retour vers assuré
 	comment_frn					VarChar ( 255 )				NULL,   -- Commentaire fournisseur
 	num_bon_trp					VarChar ( 35 )				NULL,   -- Numéro de colis retour 
@@ -1498,6 +1496,8 @@ Declare  @TbHubToSimpa2Work TABLE (
 	app_swap					VarChar ( 1  )				NULL,   -- O/N swap sur réparation (app irrep couvert et le presta redonne auto un app de rempl)
 	marque_rempl				VarChar ( 35 )				NULL,   -- Marque de remplacement (sur SWAP ou Cmde Manuelle)
 	modele_rempl				VarChar ( 35 )				NULL,   -- Modele de remplacement (sur SWAP ou Cmde Manuelle)
+	num_imei_rempl				VarChar ( 20 )				NULL,	-- Numéro IMEI de remplacement (pour TEL)
+	num_serie_rempl				VarChar ( 60 )				NULL,	-- Numéro SERIE de remplacement (pour autre que TEL)
 	couleur_rempl				VarChar ( 35 )				NULL,   -- Couleur de remplacement (sur SWAP ou Cmde Manuelle)
 	cap_stk_rempl				VarChar ( 35 )				NULL,   -- Capacité de stockage de remplacement (sur SWAP ou Cmde Manuelle)
 	neuf_recond_rempl			VarChar ( 10 )				NULL,	-- NEU/REC app de remplacement (sur SWAP ou Cmde Manuelle) Neuf ou Reconditionné
@@ -1576,8 +1576,6 @@ Declare @iIdWorkRow			int,
 		@dtDteRcpFrn		DateTime,
 		@sSiteAction		VarChar ( 20 ),
 		@sAppIncomplet		VarChar ( 1  ),
-		@sNumImeiRempl		VarChar ( 20 ),
-		@sNumSerieRempl		VarChar ( 60 ),
 		@dtDteFinTrait		DateTime,
 		@sCommentFrn		VarChar ( 255 ),
 		@sNumBonTrp			VarChar ( 35 ),
@@ -1586,6 +1584,8 @@ Declare @iIdWorkRow			int,
 		@sAppSwap			VarChar ( 1  ),
 		@sMarqueRempl		VarChar ( 35 ),
 		@sModeleRempl		VarChar ( 35 ),
+		@sNumImeiRempl		VarChar ( 20 ),
+		@sNumSerieRempl		VarChar ( 60 ),
 		@sCouleurRempl		VarChar ( 35 ),
 		@sCapStkRempl		VarChar ( 35 ),
 		@sNeufRecondRempl	VarChar ( 10 ),
@@ -1653,8 +1653,6 @@ Set @sSql =
 '		dhs.dte_rcp_frn, '+
 '		dhs.site_action, '+
 '		dhs.app_incomplet, '+
-'		dhs.num_imei_rempl, '+
-'		dhs.num_serie_rempl, '+
 '		dhs.dte_fin_trait, '+
 '		dhs.comment_frn, '+
 '		dhs.num_bon_trp, '+
@@ -1663,6 +1661,8 @@ Set @sSql =
 '		dhs.app_swap, '+
 '		dhs.marque_rempl, '+
 '		dhs.modele_rempl, '+
+'		dhs.num_imei_rempl, '+
+'		dhs.num_serie_rempl, '+
 '		dhs.couleur_rempl, '+
 '		dhs.cap_stk_rempl, '+
 '		dhs.neuf_recond_rempl, '+
@@ -1912,8 +1912,6 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 			@dtDteRcpFrn = dte_rcp_frn,
 			@sSiteAction = ltrim ( rtrim ( site_action )),
 			@sAppIncomplet = ltrim ( rtrim ( app_incomplet )),
-			@sNumImeiRempl = ltrim ( rtrim ( num_imei_rempl )),
-			@sNumSerieRempl = ltrim ( rtrim ( num_serie_rempl )),
 			@dtDteFinTrait = dte_fin_trait,
 			@sCommentFrn = ltrim ( rtrim ( comment_frn )),
 			@sNumBonTrp = ltrim ( rtrim ( num_bon_trp )),
@@ -1922,6 +1920,8 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 			@sAppSwap = ltrim ( rtrim ( app_swap )),
 			@sMarqueRempl = ltrim ( rtrim ( marque_rempl )),
 			@sModeleRempl = ltrim ( rtrim ( modele_rempl )),
+			@sNumImeiRempl = ltrim ( rtrim ( num_imei_rempl )),
+			@sNumSerieRempl = ltrim ( rtrim ( num_serie_rempl )),
 			@sCouleurRempl = ltrim ( rtrim ( couleur_rempl )),
 			@sCapStkRempl = ltrim ( rtrim ( cap_stk_rempl )),
 			@sNeufRecondRempl = ltrim ( rtrim ( neuf_recond_rempl )),
@@ -2026,9 +2026,6 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sSiteAction, '') + @sSepChampsFicMPR
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sAppIncomplet, '') + @sSepChampsFicMPR
 
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNumImeiRempl, '') + @sSepChampsFicMPR
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNumSerieRempl, '') + @sSepChampsFicMPR
-
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( convert ( varchar(10), @dtDteFinTrait, 103 ) + ' ' + CONVERT (varchar(8), @dtDteFinTrait, 108), '') + @sSepChampsFicMPR
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sCommentFrn, '') + @sSepChampsFicMPR
 
@@ -2042,6 +2039,9 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sModeleRempl, '') + @sSepChampsFicMPR
 
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sCouleurRempl, '') + @sSepChampsFicMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNumImeiRempl, '') + @sSepChampsFicMPR
+
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNumSerieRempl, '') + @sSepChampsFicMPR
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sCapStkRempl, '') + @sSepChampsFicMPR
 
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNeufRecondRempl, '') + @sSepChampsFicMPR

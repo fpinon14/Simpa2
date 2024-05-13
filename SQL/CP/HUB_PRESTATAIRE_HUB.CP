@@ -166,8 +166,6 @@ CREATE TABLE edi.DepotHubToSimpa2Presta(
 	dte_rcp_frn					DateTime					NULL,   -- Date de réception de l'appareil chez le prestataire
 	site_action					VarChar ( 20 )				NULL,   -- STATION/DOMICILE
 	app_incomplet				VarChar ( 1  ) default 'N'	NULL,   -- O/N si appareil incomplet
-	num_imei_rempl				VarChar ( 20 )				NULL,	-- Numéro IMEI de remplacement (pour TEL)
-	num_serie_rempl				VarChar ( 60 )				NULL,	-- Numéro SERIE de remplacement (pour autre que TEL)
 	dte_fin_trait				DateTime					NULL,   -- Date de fin de traitement/Date d'envoi colis retour vers assuré
 	comment_frn					VarChar ( 255 )				NULL,   -- Commentaire fournisseur
 	num_bon_trp					VarChar ( 35 )				NULL,   -- Numéro de colis retour 
@@ -176,6 +174,8 @@ CREATE TABLE edi.DepotHubToSimpa2Presta(
 	app_swap					VarChar ( 1  ) default 'N'	NULL,   -- O/N swap sur réparation (app irrep couvert et le presta redonne auto un app de rempl)
 	marque_rempl				VarChar ( 35 )				NULL,   -- Marque de remplacement (sur SWAP ou Cmde Manuelle)
 	modele_rempl				VarChar ( 35 )				NULL,   -- Modele de remplacement (sur SWAP ou Cmde Manuelle)
+	num_imei_rempl				VarChar ( 20 )				NULL,	-- Numéro IMEI de remplacement (pour TEL)
+	num_serie_rempl				VarChar ( 60 )				NULL,	-- Numéro SERIE de remplacement (pour autre que TEL)
 	couleur_rempl				VarChar ( 35 )				NULL,   -- Couleur de remplacement (sur SWAP ou Cmde Manuelle)
 	cap_stk_rempl				VarChar ( 35 )				NULL,   -- Capacité de stockage de remplacement (sur SWAP ou Cmde Manuelle)
 	neuf_recond_rempl			VarChar ( 10 )				NULL,	-- NEU/REC app de remplacement (sur SWAP ou Cmde Manuelle) Neuf ou Reconditionné
