@@ -1510,6 +1510,7 @@ Go
 -------------------------------------------------------------------
 -- JFF      18/10/2023   [RS6044_REL_MAIL]
 -- JFF      05/12/2023   [RS6212_ARCH_MPUSH]
+-- JFF      14/05/2024   [ISM427064] Exception CC_ELD pas de marquage en erreur si pas d'adresse mail
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_I_MAIL_PUSH_KSL_V01' AND type = 'P' )
         DROP procedure sysadm.PS_RS5045_I_MAIL_PUSH_KSL_V01
@@ -1813,7 +1814,9 @@ Set @iIdSeq = @@IDENTITY
 Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'ID_SEQ_MAIL', CONVERT ( varchar ( 20 ), @iIdSeq ), rtrim ( ltrim ( @asChaineBCVretour )), ';' )  -- [RS6044_REL_MAIL]
 
 -- Si l'adresse mail est anonymisée alors on marque directement l'enregistrement comme envoyé pour éviter qu'il ressorte en erreur côté KSL
-If @asMailSend = 'XX@XX.COM' Or @asMailSend = '' Or @asMailSend is null
+-- [ISM427064] Exception CC_ELD pas de marquage en erreur si pas d'adresse mail
+-- Exception pour ELD, où on laisse partir quand même, l'équipe KSL fera partir par courrier.
+If ( @asMailSend = 'XX@XX.COM' Or @asMailSend = '' Or @asMailSend is null ) And @asTypMail not in ( 'CC_ELD' )
   Begin
 	Update sysadm.mail_push set 
 		mail_dte_trt = GETDATE(),

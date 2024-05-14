@@ -151,9 +151,9 @@ CREATE TABLE edi.DepotHubToSimpa2Presta(
 	traite_par					Char (4)					NULL,	-- traité par
 	id_hub_presta				VarChar ( 20 )			NOT NULL,   -- Identifiant sur le Hub Prestataire de la prestation
 	num_cmd_frn					VarChar ( 50 )				NULL,   -- Numéro de la prestation chez le prestataire
-	status_code					VarChar ( 2 )				NULL,   -- Code HUB
-	return_code					Varchar ( 50 )				NULL,	-- Code HUB
-	reason_code					Varchar ( 50 )				NULL,	-- Code HUB
+	activity_code				VarChar ( 50 )				NULL,   -- Code HUB
+	activity_return_code		Varchar ( 50 )				NULL,	-- Code HUB
+	activity_reason_code		Varchar ( 50 )				NULL,	-- Code HUB
 	typ_ba_aller				Varchar ( 35 )				NULL,	-- RPICKUP ou BPPAYE, voire de nouveaux CODE
 	perte_aller					VarChar ( 1  ) default 'N'	NULL,   -- O/N Perte du colis à l'aller
 	diag_video_engage			VarChar ( 1  ) default 'N'	NULL,   -- O/N Diag vidéo engagé
@@ -172,6 +172,8 @@ CREATE TABLE edi.DepotHubToSimpa2Presta(
 	nom_transporteur			VarChar ( 35 )				NULL,   -- NOm du transporteur
 	dte_rcp_app_cli				DateTime					NULL,   -- Date de réception de l'appareil par l'assuré
 	app_swap					VarChar ( 1  ) default 'N'	NULL,   -- O/N swap sur réparation (app irrep couvert et le presta redonne auto un app de rempl)
+	ref_app_rempl				Varchar ( 20 )              NULL,   -- IFR si ifr, null sinon
+	autres_infos_rempl			VarChar ( 40 )              NULL,   -- COULEUR ou CAPACITE ou COULEUR_ET_CAPACITE, incohérent si ref_app_rempl = IFR
 	marque_rempl				VarChar ( 35 )				NULL,   -- Marque de remplacement (sur SWAP ou Cmde Manuelle)
 	modele_rempl				VarChar ( 35 )				NULL,   -- Modele de remplacement (sur SWAP ou Cmde Manuelle)
 	num_imei_rempl				VarChar ( 20 )				NULL,	-- Numéro IMEI de remplacement (pour TEL)

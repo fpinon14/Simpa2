@@ -1473,9 +1473,9 @@ Declare  @TbHubToSimpa2Work TABLE (
 	id_four						VarChar ( 3 )				NULL,
 	id_hub_presta				VarChar ( 20 )			NOT NULL,   -- Identifiant sur le Hub Prestataire de la prestation
 	num_cmd_frn					VarChar ( 50 )				NULL,   -- Numéro de la prestation chez le prestataire
-	status_code					VarChar ( 2 )				NULL,   -- Code HUB
-	return_code					Varchar ( 50 )				NULL,	-- Code HUB
-	reason_code					Varchar ( 50 )				NULL,	-- Code HUB
+	activity_code				VarChar ( 50 )				NULL,   -- Code HUB
+	activity_return_code		Varchar ( 50 )				NULL,	-- Code HUB
+	activity_reason_code		Varchar ( 50 )				NULL,	-- Code HUB
 	typ_ba_aller				Varchar ( 35 )				NULL,	-- RPICKUP ou BPPAYE, voire de nouveaux CODE
 	perte_aller					VarChar ( 1  )				NULL,   -- O/N Perte du colis à l'aller
 	diag_video_engage			VarChar ( 1  )				NULL,   -- O/N Diag vidéo engagé
@@ -1494,6 +1494,8 @@ Declare  @TbHubToSimpa2Work TABLE (
 	nom_transporteur			VarChar ( 35 )				NULL,   -- NOm du transporteur
 	dte_rcp_app_cli				DateTime					NULL,   -- Date de réception de l'appareil par l'assuré
 	app_swap					VarChar ( 1  )				NULL,   -- O/N swap sur réparation (app irrep couvert et le presta redonne auto un app de rempl)
+	ref_app_rempl				Varchar ( 20 )              NULL,   -- IFR si ifr, null sinon
+	autres_infos_rempl			VarChar ( 40 )              NULL,   -- COULEUR ou CAPACITE ou COULEUR_ET_CAPACITE, incohérent si ref_app_rempl = IFR
 	marque_rempl				VarChar ( 35 )				NULL,   -- Marque de remplacement (sur SWAP ou Cmde Manuelle)
 	modele_rempl				VarChar ( 35 )				NULL,   -- Modele de remplacement (sur SWAP ou Cmde Manuelle)
 	num_imei_rempl				VarChar ( 20 )				NULL,	-- Numéro IMEI de remplacement (pour TEL)
@@ -1545,6 +1547,7 @@ Declare @iFileExists Int
 Declare @iAMUenrMarqBase Int
 Declare @iError Int
 
+
 Set @iAMUerrRowTrt = 0 
 Set @iAMUunRowEcrFrn = 0
 Set @iAMUerrFrn = 0
@@ -1561,9 +1564,9 @@ Declare @iIdWorkRow			int,
 		@sIdFour			VarChar ( 10 ),
 		@sIdHubPresta		VarChar ( 20 ),
 		@sNumCmdFrn			VarChar ( 50 ),
-		@sStatusCode		VarChar ( 2 ),
-		@sReturnCode		Varchar ( 50 ),
-		@sReasonCode		Varchar ( 50 ),
+		@sActivityCode		VarChar ( 50 ),
+		@sActivityReturnCode Varchar ( 50 ),
+		@sActivityReasonCode Varchar ( 50 ),
 		@sTypBaAller		Varchar ( 35 ),
 		@sPerteAller		VarChar ( 1  ),
 		@sDiagVideoEngage	VarChar ( 1  ),
@@ -1582,6 +1585,8 @@ Declare @iIdWorkRow			int,
 		@sNomTransporteur	VarChar ( 35 ),
 		@dtDteRcpAppCli		DateTime,
 		@sAppSwap			VarChar ( 1  ),
+		@sRefAppRempl		Varchar ( 20 ),
+		@sAutresInfosRempl	VarChar ( 40 ),
 		@sMarqueRempl		VarChar ( 35 ),
 		@sModeleRempl		VarChar ( 35 ),
 		@sNumImeiRempl		VarChar ( 20 ),
@@ -1638,9 +1643,9 @@ Set @sSql =
 '		dsh.id_four, '+
 '		dhs.id_hub_presta, '+
 '		dhs.num_cmd_frn, '+
-'		dhs.status_code, '+
-'		dhs.return_code, '+
-'		dhs.reason_code, '+
+'		dhs.activity_code, '+
+'		dhs.activity_return_code, '+
+'		dhs.activity_reason_code, '+
 '		dhs.typ_ba_aller, '+
 '		dhs.perte_aller, '+
 '		dhs.diag_video_engage, '+
@@ -1659,6 +1664,8 @@ Set @sSql =
 '		dhs.nom_transporteur, '+
 '		dhs.dte_rcp_app_cli, '+
 '		dhs.app_swap, '+
+'		dhs.ref_app_rempl, '+
+'		dhs.autres_infos_rempl, '+
 '		dhs.marque_rempl, '+
 '		dhs.modele_rempl, '+
 '		dhs.num_imei_rempl, '+
@@ -1897,9 +1904,9 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 			@iIdSeq = id_seq,
 			@sIdHubPresta = ltrim ( rtrim ( id_hub_presta )),
 			@sNumCmdFrn = ltrim ( rtrim ( num_cmd_frn )),
-			@sStatusCode = ltrim ( rtrim ( status_code )),
-			@sReturnCode = ltrim ( rtrim ( return_code )),
-			@sReasonCode = ltrim ( rtrim ( reason_code )),
+			@sActivityCode = ltrim ( rtrim ( activity_code )),
+			@sActivityReturnCode = ltrim ( rtrim ( activity_return_code )),
+			@sActivityReasonCode = ltrim ( rtrim ( activity_reason_code )),
 			@sTypBaAller = ltrim ( rtrim ( typ_ba_aller )),
 			@sPerteAller = ltrim ( rtrim ( perte_aller )),
 			@sDiagVideoEngage = ltrim ( rtrim ( diag_video_engage )),
@@ -1918,6 +1925,8 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 			@sNomTransporteur = ltrim ( rtrim ( nom_transporteur )),
 			@dtDteRcpAppCli = dte_rcp_app_cli,
 			@sAppSwap = ltrim ( rtrim ( app_swap )),
+			@sRefAppRempl = ltrim ( rtrim ( ref_app_rempl )),
+			@sAutresInfosRempl = ltrim ( rtrim ( autres_infos_rempl )),
 			@sMarqueRempl = ltrim ( rtrim ( marque_rempl )),
 			@sModeleRempl = ltrim ( rtrim ( modele_rempl )),
 			@sNumImeiRempl = ltrim ( rtrim ( num_imei_rempl )),
@@ -1956,11 +1965,11 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 					End 
 
 				-- Détermination du statut SIMPA2 de la prestation
-				Set @iStatusGC = 2 -- [TODO] Fct ( @sStatusCode, @sReturnCode, @sReasonCode ) 
+				Set @iStatusGC = 2 -- [TODO] Fct ( @sActivityCode, @sActivityReturnCode, @sActivityReasonCode ) 
 				If @iStatusGC <= 0 -- Au minimum 159 ou un statut 'en cours à créer' si non existant
 					Begin
 						Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', ''' + ISNULL ( @sIdFour, '(vide)') + ''', ' + Convert ( VarChar (20), @iIdDepotHub) + ', ''' + @sIdHubPresta + ''', ''ERR'', ''' + 
-									'Les 3 données @sStatusCode, @sReturnCode, @sReasonCode ne permettent pas de déterminer/mapper un statut pour la prestation SIMPA2.' +
+									'Les 3 données @sActivityCode, @sActivityReturnCode, @sActivityReasonCode ne permettent pas de déterminer/mapper un statut pour la prestation SIMPA2.' +
 									''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
 
 						Set @iAMUerrRowTrt = 1
@@ -2034,6 +2043,9 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( convert ( varchar(10), @dtDteRcpAppCli, 103 ) + ' ' + CONVERT (varchar(8), @dtDteRcpAppCli, 108), '') + @sSepChampsFicMPR
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sAppSwap, '') + @sSepChampsFicMPR
+
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sRefAppRempl, '') + @sSepChampsFicMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sAutresInfosRempl, '') + @sSepChampsFicMPR
 
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sMarqueRempl, '') + @sSepChampsFicMPR
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sModeleRempl, '') + @sSepChampsFicMPR
