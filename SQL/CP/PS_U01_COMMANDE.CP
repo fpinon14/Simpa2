@@ -118,6 +118,7 @@
 --	   JFF 06/04/2023   [PMO139_RS4926]
 --     JFF 26/04/2023   [RS5045_REF_MATP]
 --     JFF 30/05/2023   [PMO89_RS4822]
+--     JFF 07/03/2024   [HP252_276_HUB_PRESTA]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U01_COMMANDE' AND type = 'P' )
         DROP procedure sysadm.PS_U01_COMMANDE
@@ -2914,19 +2915,19 @@ IF    ( CharIndex ( '[BVIEOX]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[BVIEOX]'
 		If ( CharIndex ( '[BVIEOX]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[BVIEOX]', @sCommentFrnActuel, 1 ) = 0 ) 
 		  Begin 
 		    -- [PC801-6][MANTIS14177] 
-			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] : Le centre de réparation a reçu le mobile pour traitement SAV (suite 1ère réparation récemment effectuée), mais a détecté une OXYDATION, son mobile lui sera renvoyé.'
+			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] : Le CTR a reçu l''appareil pour traitement SAV (suite 1ère réparation récemment effectuée), mais a détecté une OXYDATION, l''appareil sera renvoyé à l''assuré.'
 		  End 
 		  
 		If ( CharIndex ( '[BRIS]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[BRIS]', @sCommentFrnActuel, 1 ) = 0 )
 		  Begin
 		    -- [PC801-6][MANTIS14177] 		  
-			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] : Le centre de réparation a reçu le mobile pour traitement SAV (suite 1ère réparation récemment effectuée), mais a détecté un BRIS, son mobile lui sera renvoyé.'
+			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] : Le CTR a reçu l''appareil pour traitement SAV (suite 1ère réparation récemment effectuée), mais a détecté un BRIS, l''appareil sera renvoyé à l''assuré.'
 		  End 
 
 		If ( CharIndex ( '[SAV_NO_OK]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[SAV_NO_OK]', @sCommentFrnActuel, 1 ) = 0 ) 
 		  Begin 
 			-- [PC801-6][MANTIS14177] 		  
-			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] : Le centre de réparation a reçu le mobile pour traitement SAV (suite 1ère réparation récemment effectuée), mais n''a pas détecté de panne qui ait un lien avec la 1ère réparation, son mobile lui sera renvoyé.' 
+			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] : Le CTR a reçu l''appareil pour traitement SAV (suite 1ère réparation récemment effectuée), mais n''a pas détecté de panne/dommage qui ait un lien avec la 1ère réparation, l''appareil sera renvoyé à l''assuré.' 
 		  End 
 
 	  
@@ -2997,12 +2998,13 @@ IF       ( ( CharIndex ( '[BNV]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[BNV]',
 		   ( CharIndex ( '[EXP]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[EXP]', @sCommentFrnActuel, 1 ) = 0 ) Or  -- [PM280-2]
 		   ( CharIndex ( '[NOSPBS]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[NOSPBS]', @sCommentFrnActuel, 1 ) = 0 ) Or -- [PM280-2]
 		   ( CharIndex ( '[PNV]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[PNV]', @sCommentFrnActuel, 1 ) = 0 ) Or -- [PM280-2][V3]
-		   ( CharIndex ( '[PRDV]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[PRDV]', @sCommentFrnActuel, 1 ) = 0 ) -- [PMO139_RS4926]
+		   ( CharIndex ( '[PRDV]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[PRDV]', @sCommentFrnActuel, 1 ) = 0 ) Or -- [PMO139_RS4926]
+		   ( CharIndex ( '[DNCAD]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[DNCAD]', @sCommentFrnActuel, 1 ) = 0 ) -- [HP252_276_HUB_PRESTA]
 	     ) 
 	 And @iStatusGc = 21
   BEGIN
   
-	Set @sMess = 'Message automatique suite retour fournisseur [' + @sLibFour + '] : Attention, appareil en bris non visible, ce qui entraîne un renvoi de l''appareil systématique à l''assuré par le prestataire et un refus de prise en charge. Vous pouvez continuer l''instruction du dossier'
+	Set @sMess = 'Message automatique suite retour fournisseur [' + @sLibFour + '] : Attention, appareil en bris non visible, ce qui entraîne un renvoi de l''appareil à l''assuré et un refus de prise en charge. Vous pouvez continuer l''instruction du dossier'
 	Set @sIRR = 'OK'
 
 	-- [PC929_CDISCOUNT][PC929-2-V3]
@@ -3047,17 +3049,22 @@ IF       ( ( CharIndex ( '[BNV]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[BNV]',
 
 	If CharIndex ( '[PNV]', @sCommentFrn, 1 ) > 0 -- [PM280-2][V3]
 	  Begin
-		Set @sMess = 'Message automatique suite retour fournisseur [' + @sLibFour + '] : Attention, appareil en panne non visible, ce qui entraîne un renvoi de l''appareil systématique à l''assuré par le prestataire et un refus de prise en charge. Vous pouvez continuer l''instruction du dossier'
+		Set @sMess = 'Message automatique suite retour fournisseur [' + @sLibFour + '] : Attention, appareil en panne non visible, ce qui entraîne un renvoi de l''appareil à l''assuré et un refus de prise en charge. Vous pouvez continuer l''instruction du dossier'
 		Set @sIRR = 'OK'
 	  End 
 	
 	If CharIndex ( '[PRDV]', @sCommentFrn, 1 ) > 0 -- [PMO139_RS4926]
 	  Begin
-		Set @sMess = 'Retour fournisseur [' + @sLibFour + '] : Attention, panne résolue par Diagnostic Vidéo, ce qui entraîne un refus de prise en charge, le sinistre n''est pas considéré comme réparé, aucune tentative de réparation n''a été engagée. Vous pouvez continuer l''instruction du dossier'
+		Set @sMess = 'Retour fournisseur [' + @sLibFour + '] : Attention, panne résolue par Diagnostic Vidéo, ce qui entraîne un refus de prise en charge, le sinistre n''est pas considéré comme réparé. Vous pouvez continuer l''instruction du dossier'
 		Set @sIRR = 'OK'
 	  End 
 
-  
+	If CharIndex ( '[DNCAD]', @sCommentFrn, 1 ) > 0 -- [HP252_276_HUB_PRESTA]
+	  Begin
+		Set @sMess = 'Retour fournisseur [' + @sLibFour + '] : Attention, présence de dommages qui ne correspondent pas à la déclaration, ce qui entraîne un refus de prise en charge et un renvoi de l''appareil à l''assuré. Vous pouvez continuer l''instruction du dossier'
+		Set @sIRR = 'OK'
+	  End 
+ 
   END
 
 -- [PM200][LOT2][DESOX]
