@@ -159,10 +159,8 @@ CREATE TABLE edi.DepotHubToSimpa2Presta(
 	diag_video_engage			VarChar ( 1  ) default 'N'	NULL,   -- O/N Diag vidéo engagé
 	resolu_diag_video			VarChar ( 1  ) default 'N'	NULL,   -- O/N résolu par Diag vidéo 
 	dte_rdv_conf				DateTime					NULL,   -- Date de rdv confirmé pour déplacement à domicile 
-	assure_en_prox				VarChar ( 1  ) default 'N'	NULL,   -- O/N Confirmation du prestataire, l'assuré s'est réellement rendu en proximité
-	nom_prox					VarChar ( 40 )				NULL,   -- Si assure_en_prox='O' alors, le prestataire donne le nom de la boutique de proximité
-	code_prox					VarChar ( 35 )  			NULL,   -- Code (numéro) de la boutique de proximité
-	assure_env_central			VarChar ( 1  ) default 'N'	NULL,   -- O/N Confirmation du prestataire, l'assuré a envoyé son colis en centralisation
+	mode_logis_ret				VarChar ( 20 )				NULL,   -- CENTRALISATION / PROXIMITE, Confirmation du prestataire sur le mode rééllement utilisé par l'assuré
+	point_service_ret			VarChar ( 20 )				NULL,   -- Code du point de service où l'assuré s'est rééllement rendu ou bien a envoyé son appareil
 	dte_rcp_frn					DateTime					NULL,   -- Date de réception de l'appareil chez le prestataire
 	site_action					VarChar ( 20 )				NULL,   -- STATION/DOMICILE
 	app_incomplet				VarChar ( 1  ) default 'N'	NULL,   -- O/N si appareil incomplet
@@ -172,7 +170,6 @@ CREATE TABLE edi.DepotHubToSimpa2Presta(
 	nom_transporteur			VarChar ( 35 )				NULL,   -- NOm du transporteur
 	dte_rcp_app_cli				DateTime					NULL,   -- Date de réception de l'appareil par l'assuré
 	app_swap					VarChar ( 1  ) default 'N'	NULL,   -- O/N swap sur réparation (app irrep couvert et le presta redonne auto un app de rempl)
---	ref_app_rempl				Varchar ( 20 )              NULL,   -- IFR si ifr, null sinon
 	autres_infos_rempl			VarChar ( 40 )              NULL,   -- null, COULEUR ou CAPACITE ou COULEUR_ET_CAPACITE, incohérent si ref_app_rempl = IFR
 	marque_rempl				VarChar ( 35 )				NULL,   -- Marque de remplacement (sur SWAP ou Cmde Manuelle)
 	modele_rempl				VarChar ( 35 )				NULL,   -- Modele de remplacement (sur SWAP ou Cmde Manuelle)
@@ -1464,3 +1461,278 @@ select  @dccptval = cpt_val
   
 return 1  
 Go
+
+-------------------------------------------------------------------
+--
+-- Procédure            :       PS_HP276_I_HP_INSERTION_ACTIVITY_HUB_TO_SIMPA2
+-- Auteur               :       JFF
+-- Date                 :       11/03/2024
+-- Libell‚              :       [HP252_276_HUB_PRESTA]
+-- Commentaires         :       Insertion une activité de retour du Hub vers SIMPA2
+--                              /!\ A COMPILER SUR LA BASE PRESTATAIRE /!\
+--
+--								
+--
+-- Retourne             :       = 0 Succès, <> 0 Erreur
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_I_HP_INSERTION_ACTIVITY_HUB_TO_SIMPA2' AND type = 'P' )
+        DROP procedure edi.PS_HP276_I_HP_INSERTION_ACTIVITY_HUB_TO_SIMPA2
+GO
+
+CREATE procedure edi.PS_HP276_I_HP_INSERTION_ACTIVITY_HUB_TO_SIMPA2
+	@asIdHubPresta		VarChar ( 20 ),
+	@asNumCmdFrn		VarChar ( 50 ),
+	@asActivityCode		VarChar ( 50 ),
+	@asActivityReturnCode		Varchar ( 50 ),
+	@asActivityReasonCode		Varchar ( 50 ),
+	@asDiagVideoEngage		VarChar ( 1  ),
+	@asResoluDiagVideo		VarChar ( 1  ),
+	@adtDteRdvConf		DateTime,
+	@asModeLogisRet		VarChar ( 20 ),
+	@asPointServiceRet	VarChar ( 20 ),
+	@adtDteRcpFrn		DateTime,
+	@asSiteAction		VarChar ( 20 ),
+	@adtDteFinTrait		DateTime,
+	@asCommentFrn		VarChar ( 255 ),
+	@asNumBonTrp		VarChar ( 35 ),
+	@asNomTransporteur		VarChar ( 35 ),
+	@asAutresInfosRempl		VarChar ( 40 ),
+	@asMarqueRempl		VarChar ( 35 ),
+	@asModeleRempl		VarChar ( 35 ),
+	@asNumImeiRempl		VarChar ( 20 ),
+	@asNumSerieRempl		VarChar ( 60 ),
+	@asCouleurRempl		VarChar ( 35 ),
+	@asCapStkRempl		VarChar ( 35 ),
+	@asNeufRecondRempl		VarChar ( 10 ),
+	@adcPrixTtcRempl		Decimal ( 11, 2 ),
+	@adtDteRcpAppCli		DateTime,
+	@asInfoFrnSpbCpltlu		VarChar ( 800 )
+As
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+-- Retour à tester impérativement 
+-- 	Si 0 Alors Succès, Ok
+--	Si <> 0 Alors Erreur, le client appelant doit le géré dans son code, je n'ai pas l'information, l'enregistrement ne s'est pas inséré.
+---------------------------------------------------------------------------------------------------------------------------------------------
+DECLARE @DBID INT
+DECLARE @DBNAME NVARCHAR(128)
+Declare @iIdDepotHub Int
+Declare @iIdentity Int
+Declare @iError Int
+
+SET @DBID = DB_ID()
+SET @DBNAME = DB_NAME()
+
+If @asIdHubPresta is null Or lTrim ( rTrim ( @asIdHubPresta )) = ''
+  Begin
+     RAISERROR ('La variable @asIdHubPresta doit absolument est renseignée.', 16, 1, @DBID, @DBNAME)
+	 Return @@Error
+  End 
+
+Select @iIdDepotHub = max ( id_depot_hub )
+From edi.DepotHubToSimpa2Presta
+Where id_hub_presta = @asIdHubPresta
+
+-- 1ère Création
+If @@Rowcount <= 0 
+  Begin
+	Insert into edi.DepotHubToSimpa2Presta 
+		( 
+			id_hub_presta,
+			num_cmd_frn,
+			activity_code,
+			activity_return_code,
+			activity_reason_code,
+			diag_video_engage,
+			resolu_diag_video,
+			dte_rdv_conf,
+			mode_logis_ret,
+			point_service_ret,
+			dte_rcp_frn,
+			site_action,
+			dte_fin_trait,
+			comment_frn,
+			num_bon_trp,
+			nom_transporteur,
+			dte_rcp_app_cli,
+			autres_infos_rempl,
+			marque_rempl,
+			modele_rempl,
+			num_imei_rempl,
+			num_serie_rempl,
+			couleur_rempl,
+			cap_stk_rempl,
+			neuf_recond_rempl,
+			prix_ttc_rempl,
+			info_frn_spb_cplt
+		) 
+	Values
+		(
+			@asIdHubPresta,
+			@asNumCmdFrn,
+			@asActivityCode,
+			@asActivityReturnCode,
+			@asActivityReasonCode,
+			@asDiagVideoEngage,
+			@asResoluDiagVideo,
+			@adtDteRdvConf,
+			@asModeLogisRet,
+			@asPointServiceRet,
+			@adtDteRcpFrn,
+			@asSiteAction,
+			@adtDteFinTrait,
+			@asCommentFrn,
+			@asNumBonTrp,
+			@asNomTransporteur,
+			@adtDteRcpAppCli,
+			@asAutresInfosRempl,
+			@asMarqueRempl,
+			@asModeleRempl,
+			@asNumImeiRempl,
+			@asNumSerieRempl,
+			@asCouleurRempl,
+			@asCapStkRempl,
+			@asNeufRecondRempl,
+			@adcPrixTtcRempl,
+			@asInfoFrnSpbCpltlu
+		)
+	
+	Return @@Error
+  End 
+
+-- Maj (par insertion dern enrg source )
+	Insert into edi.DepotHubToSimpa2Presta 
+		( 
+			id_hub_presta,
+			num_cmd_frn,
+			activity_code,
+			activity_return_code,
+			activity_reason_code,
+			typ_ba_aller,
+			perte_aller,
+			diag_video_engage,
+			resolu_diag_video,
+			dte_rdv_conf,
+			mode_logis_ret,
+			point_service_ret,
+			dte_rcp_frn,
+			site_action,
+			app_incomplet,
+			dte_fin_trait,
+			comment_frn,
+			num_bon_trp,
+			nom_transporteur,
+			dte_rcp_app_cli,
+			app_swap,
+			autres_infos_rempl,
+			marque_rempl,
+			modele_rempl,
+			num_imei_rempl,
+			num_serie_rempl,
+			couleur_rempl,
+			cap_stk_rempl,
+			neuf_recond_rempl,
+			prix_ttc_rempl,
+			prble_livraison,
+			pec_prble_livraison,
+			info_frn_spb_cplt
+		) 
+Select		id_hub_presta,
+			num_cmd_frn,
+			activity_code,
+			activity_return_code,
+			activity_reason_code,
+			typ_ba_aller,
+			perte_aller,
+			diag_video_engage,
+			resolu_diag_video,
+			dte_rdv_conf,
+			mode_logis_ret,
+			point_service_ret,
+			dte_rcp_frn,
+			site_action,
+			app_incomplet,
+			dte_fin_trait,
+			comment_frn,
+			num_bon_trp,
+			nom_transporteur,
+			dte_rcp_app_cli,
+			app_swap,
+			autres_infos_rempl,
+			marque_rempl,
+			modele_rempl,
+			num_imei_rempl,
+			num_serie_rempl,
+			couleur_rempl,
+			cap_stk_rempl,
+			neuf_recond_rempl,
+			prix_ttc_rempl,
+			prble_livraison,
+			pec_prble_livraison,
+			info_frn_spb_cplt
+
+From edi.DepotHubToSimpa2Presta
+Where id_depot_hub = @iIdDepotHub
+
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+
+Set @iIdentity = @@IDENTITY
+
+
+-- Maj (des nouvelles données)
+Update edi.DepotHubToSimpa2Presta Set num_cmd_frn = lTrim ( rtrim ( @asNumCmdFrn ))						Where id_depot_hub = @iIdentity And @asNumCmdFrn			is not null And lTrim ( rtrim ( @asNumCmdFrn )) <> ''
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set activity_code = lTrim ( rtrim ( @asActivityCode ))				Where id_depot_hub = @iIdentity And @asActivityCode			is not null And lTrim ( rtrim ( @asActivityCode )) <> ''
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set activity_return_code = lTrim ( rtrim ( @asActivityReturnCode ))	Where id_depot_hub = @iIdentity And @asActivityReturnCode	is not null And lTrim ( rtrim ( @asActivityReturnCode )) <> ''
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set activity_reason_code = lTrim ( rtrim ( @asActivityReasonCode ))	Where id_depot_hub = @iIdentity And @asActivityReasonCode	is not null And lTrim ( rtrim ( @asActivityReasonCode )) <> ''
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set diag_video_engage = lTrim ( rtrim ( @asDiagVideoEngage ))			Where id_depot_hub = @iIdentity And @asDiagVideoEngage		is not null And lTrim ( rtrim ( @asDiagVideoEngage )) <> ''
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set resolu_diag_video = lTrim ( rtrim ( @asResoluDiagVideo ))			Where id_depot_hub = @iIdentity And @asResoluDiagVideo		is not null And lTrim ( rtrim ( @asResoluDiagVideo )) <> ''
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set dte_rdv_conf = @adtDteRdvConf										Where id_depot_hub = @iIdentity And @adtDteRdvConf			is not null 
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set mode_logis_ret = lTrim ( rtrim ( @asModeLogisRet ))				Where id_depot_hub = @iIdentity And @asModeLogisRet			is not null And lTrim ( rtrim ( @asModeLogisRet )) <> ''
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set point_service_ret = lTrim ( rtrim ( @asPointServiceRet ))			Where id_depot_hub = @iIdentity And @asPointServiceRet		is not null And lTrim ( rtrim ( @asPointServiceRet )) <> ''
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set dte_rcp_frn = @adtDteRcpFrn										Where id_depot_hub = @iIdentity And @adtDteRcpFrn			is not null 
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set site_action = lTrim ( rtrim ( @asSiteAction ))					Where id_depot_hub = @iIdentity And @asSiteAction			is not null And lTrim ( rtrim (	@asSiteAction )) <> ''
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set dte_fin_trait = @adtDteFinTrait									Where id_depot_hub = @iIdentity And @adtDteFinTrait			is not null 
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set comment_frn = lTrim ( rtrim ( @asCommentFrn ))					Where id_depot_hub = @iIdentity And @asCommentFrn			is not null And lTrim ( rtrim (	@asCommentFrn )) <> ''
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set num_bon_trp = lTrim ( rtrim ( @asNumBonTrp ))						Where id_depot_hub = @iIdentity And @asNumBonTrp			is not null And lTrim ( rtrim (	@asNumBonTrp )) <> ''	
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set nom_transporteur = lTrim ( rtrim ( @asNomTransporteur ))			Where id_depot_hub = @iIdentity And @asNomTransporteur		is not null And lTrim ( rtrim (	@asNomTransporteur )) <> ''	
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set dte_rcp_app_cli = @adtDteRcpAppCli								Where id_depot_hub = @iIdentity And @adtDteRcpAppCli		is not null
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set autres_infos_rempl = lTrim ( rtrim ( @asAutresInfosRempl ))		Where id_depot_hub = @iIdentity And @asAutresInfosRempl		is not null And lTrim ( rtrim (	@asAutresInfosRempl )) <> ''	
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set marque_rempl = lTrim ( rtrim ( @asMarqueRempl ))					Where id_depot_hub = @iIdentity And @asMarqueRempl			is not null And lTrim ( rtrim (	@asMarqueRempl )) <> ''	
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set modele_rempl = lTrim ( rtrim ( @asModeleRempl ))					Where id_depot_hub = @iIdentity And @asModeleRempl			is not null And lTrim ( rtrim (	@asModeleRempl )) <> ''	
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set num_imei_rempl = lTrim ( rtrim ( @asNumImeiRempl ))				Where id_depot_hub = @iIdentity And @asNumImeiRempl			is not null And lTrim ( rtrim (	@asNumImeiRempl )) <> ''	
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set num_serie_rempl = lTrim ( rtrim ( @asNumSerieRempl ))				Where id_depot_hub = @iIdentity And @asNumSerieRempl		is not null And lTrim ( rtrim (	@asNumSerieRempl )) <> ''	
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set couleur_rempl = lTrim ( rtrim ( @asCouleurRempl ))				Where id_depot_hub = @iIdentity And @asCouleurRempl			is not null And lTrim ( rtrim (	@asCouleurRempl )) <> ''	
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set cap_stk_rempl = lTrim ( rtrim ( @asCapStkRempl ))					Where id_depot_hub = @iIdentity And @asCapStkRempl			is not null And lTrim ( rtrim (	@asCapStkRempl )) <> ''	
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set neuf_recond_rempl = lTrim ( rtrim ( @asNeufRecondRempl ))			Where id_depot_hub = @iIdentity And @asNeufRecondRempl		is not null And lTrim ( rtrim (	@asNeufRecondRempl )) <> ''	
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set prix_ttc_rempl = @adcPrixTtcRempl									Where id_depot_hub = @iIdentity And @adcPrixTtcRempl		is not null And @adcPrixTtcRempl >= 0
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set info_frn_spb_cplt = lTrim ( rtrim ( @asInfoFrnSpbCpltlu ))		Where id_depot_hub = @iIdentity And @asInfoFrnSpbCpltlu		is not null And lTrim ( rtrim (	@asInfoFrnSpbCpltlu )) <> ''	
+
+Return @@Error
+
+Go
+

@@ -434,6 +434,7 @@ Declare  @TbHubToSimpa2Work TABLE (
 	id_sin						Decimal ( 10 )				NULL,  
 	id_seq						int							NULL,  
 	id_four						VarChar ( 3 )				NULL,
+	ordre_action				VarChar ( 20 )				NULL,
 	id_hub_presta				VarChar ( 20 )			NOT NULL,   -- Identifiant sur le Hub Prestataire de la prestation
 	num_cmd_frn					VarChar ( 50 )				NULL,   -- Numéro de la prestation chez le prestataire
 	activity_code				VarChar ( 50 )				NULL,   -- Code HUB
@@ -444,10 +445,8 @@ Declare  @TbHubToSimpa2Work TABLE (
 	diag_video_engage			VarChar ( 1  )				NULL,   -- O/N Diag vidéo engagé
 	resolu_diag_video			VarChar ( 1  )				NULL,   -- O/N résolu par Diag vidéo 
 	dte_rdv_conf				DateTime					NULL,   -- Date de rdv confirmé pour déplacement à domicile 
-	assure_en_prox				VarChar ( 1  )				NULL,   -- O/N Confirmation du prestataire, l'assuré s'est réellement rendu en proximité
-	nom_prox					VarChar ( 40 )				NULL,   -- Si assure_en_prox='O' alors, le prestataire donne le nom de la boutique de proximité
-	code_prox					VarChar ( 35 )  			NULL,   -- Code (numéro) de la boutique de proximité
-	assure_env_central			VarChar ( 1  )				NULL,   -- O/N Confirmation du prestataire, l'assuré a envoyé son colis en centralisation
+	mode_logis_ret				VarChar ( 20 )				NULL,   -- CENTRALISATION / PROXIMITE, Confirmation du prestataire sur le mode rééllement utilisé par l'assuré
+	point_service_ret			VarChar ( 20 )				NULL,   -- Code du point de service où l'assuré s'est rééllement rendu ou bien a envoyé son appareil
 	dte_rcp_frn					DateTime					NULL,   -- Date de réception de l'appareil chez le prestataire
 	site_action					VarChar ( 20 )				NULL,   -- STATION/DOMICILE
 	app_incomplet				VarChar ( 1  )				NULL,   -- O/N si appareil incomplet
@@ -457,7 +456,6 @@ Declare  @TbHubToSimpa2Work TABLE (
 	nom_transporteur			VarChar ( 35 )				NULL,   -- NOm du transporteur
 	dte_rcp_app_cli				DateTime					NULL,   -- Date de réception de l'appareil par l'assuré
 	app_swap					VarChar ( 1  )				NULL,   -- O/N swap sur réparation (app irrep couvert et le presta redonne auto un app de rempl)
---	ref_app_rempl				Varchar ( 20 )              NULL,   -- IFR si ifr, null sinon
 	autres_infos_rempl			VarChar ( 40 )              NULL,   -- COULEUR ou CAPACITE ou COULEUR_ET_CAPACITE, incohérent si ref_app_rempl = IFR
 	marque_rempl				VarChar ( 35 )				NULL,   -- Marque de remplacement (sur SWAP ou Cmde Manuelle)
 	modele_rempl				VarChar ( 35 )				NULL,   -- Modele de remplacement (sur SWAP ou Cmde Manuelle)
@@ -509,7 +507,7 @@ Declare @iCptIndice Int
 Declare @iFileExists Int
 Declare @iAMUenrMarqBase Int
 Declare @iError Int
-
+Declare @sChaineBCVretourDetStatut VarChar ( 255 ) 
 
 Set @iAMUerrRowTrt = 0 
 Set @iAMUunRowEcrFrn = 0
@@ -525,6 +523,7 @@ Declare @iIdWorkRow			int,
 		@dcIdSin			Decimal ( 10 ),
 		@iIdSeq				int,
 		@sIdFour			VarChar ( 10 ),
+		@sOrdreAction		VarChar ( 20 ),
 		@sIdHubPresta		VarChar ( 20 ),
 		@sNumCmdFrn			VarChar ( 50 ),
 		@sActivityCode		VarChar ( 50 ),
@@ -535,10 +534,8 @@ Declare @iIdWorkRow			int,
 		@sDiagVideoEngage	VarChar ( 1  ),
 		@sResoluDiagVideo	VarChar ( 1  ),
 		@dtDteRdvConf		DateTime,
-		@sAssureEnProx		VarChar ( 1  ),
-		@sNomProx			VarChar ( 40 ),
-		@sCodeProx			VarChar ( 35 ),
-		@sAssureEnvCentral	VarChar ( 1  ),
+		@sModeLogisRet		VarChar ( 20 ),
+		@sPointServiceRet	VarChar ( 20 ),
 		@dtDteRcpFrn		DateTime,
 		@sSiteAction		VarChar ( 20 ),
 		@sAppIncomplet		VarChar ( 1  ),
@@ -548,7 +545,6 @@ Declare @iIdWorkRow			int,
 		@sNomTransporteur	VarChar ( 35 ),
 		@dtDteRcpAppCli		DateTime,
 		@sAppSwap			VarChar ( 1  ),
---		@sRefAppRempl		Varchar ( 20 ),
 		@sAutresInfosRempl	VarChar ( 40 ),
 		@sMarqueRempl		VarChar ( 35 ),
 		@sModeleRempl		VarChar ( 35 ),
@@ -604,20 +600,25 @@ Set @sSql =
 '		dsh.id_sin, '+
 '		dsh.id_seq, '+
 '		dsh.id_four, '+
+'		dsh.ordre_action, ' +
 '		dhs.id_hub_presta, '+
 '		dhs.num_cmd_frn, '+
 '		dhs.activity_code, '+
 '		dhs.activity_return_code, '+
 '		dhs.activity_reason_code, '+
-'		dhs.typ_ba_aller, '+
+'		Case ' +
+'			When dsh.mode_logis = ''CENTRALISATION'' and code_pickup is not null ' +
+'				Then ''RPICKUP''' +
+'			When dsh.mode_logis = ''CENTRALISATION'' and code_pickup is null ' +
+'				Then ''BPPAYE''' +
+'			Else null ' + 
+'		End typ_ba_aller, ' +	
 '		dhs.perte_aller, '+
 '		dhs.diag_video_engage, '+
 '		dhs.resolu_diag_video, '+
 '		dhs.dte_rdv_conf, '+
-'		dhs.assure_en_prox, '+
-'		dhs.nom_prox, '+
-'		dhs.code_prox, '+
-'		dhs.assure_env_central, '+
+'		dhs.mode_logis_ret, '+
+'		dhs.point_service_ret, '+
 '		dhs.dte_rcp_frn, '+
 '		dhs.site_action, '+
 '		dhs.app_incomplet, '+
@@ -865,6 +866,7 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 			@dtDeposeLe = depose_le,
 			@dcIdSin = id_sin,
 			@iIdSeq = id_seq,
+			@sOrdreAction = ltrim ( rtrim ( ordre_action )),
 			@sIdHubPresta = ltrim ( rtrim ( id_hub_presta )),
 			@sNumCmdFrn = ltrim ( rtrim ( num_cmd_frn )),
 			@sActivityCode = ltrim ( rtrim ( activity_code )),
@@ -875,10 +877,8 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 			@sDiagVideoEngage = ltrim ( rtrim ( diag_video_engage )),
 			@sResoluDiagVideo = ltrim ( rtrim ( resolu_diag_video )),
 			@dtDteRdvConf = dte_rdv_conf,
-			@sAssureEnProx = ltrim ( rtrim ( assure_en_prox )),
-			@sNomProx = ltrim ( rtrim ( nom_prox )),
-			@sCodeProx = ltrim ( rtrim ( code_prox )),
-			@sAssureEnvCentral = ltrim ( rtrim ( assure_env_central )),
+			@sModeLogisRet = ltrim ( rtrim ( mode_logis_ret )),
+			@sPointServiceRet = ltrim ( rtrim ( point_service_ret )),
 			@dtDteRcpFrn = dte_rcp_frn,
 			@sSiteAction = ltrim ( rtrim ( site_action )),
 			@sAppIncomplet = ltrim ( rtrim ( app_incomplet )),
@@ -927,17 +927,28 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 						Break
 					End 
 
-				-- Détermination du statut SIMPA2 de la prestation
-				-- 1/ créer une PS dédiée à ce trt
-				-- 2/ passer les args nécessaire
-				-- 3/ retourner le statut : 
-				--		Soit > 0 
-				--		soit -1 si aucun
-				-- 4/ mettre à jour enregistrement réel en base avec les données complétés
-				--    + Retour en mode BCV des données à mettre à jour au niveau variables de la table tempo, mais uniquement les variables, par la table (ça ne sert à rien)
+				-- Transformation données
+					-- Le numéro de commande fournisseur fait 20 sur SIMPA2 et 50 sur le Hub
+				If Len ( @sNumCmdFrn ) > 20 Set @sNumCmdFrn = LEFT ( @sNumCmdFrn, 17 ) + '...'
+					
+					-- mode_log_ret
+				If UPPER ( @sModeLogisRet ) = 'PROXIMITY' Set @sModeLogisRet = 'PROXIMITE'
+				If UPPER ( @sPointServiceRet ) = 'CENTRALIZATION' Set @sPointServiceRet = 'CENTRALISATION'
 
-				Set @iStatusGC = 2 -- [TODO] Fct ( @sActivityCode, @sActivityReturnCode, @sActivityReasonCode ) 
-				If @iStatusGC <= 0 -- Au minimum 159 ou un statut 'en cours à créer' si non existant
+				-- Détermination du statut SIMPA2 de la prestation
+				Set @sChaineBCVretourDetStatut = SPACE ( 255 )
+				Set @sChaineBCVretourDetStatut = sysadm.FN_CLE_VAL_E ( 'TYP_BA_ALLER', Upper ( @sTypBaAller ), @sChaineBCVretourDetStatut, ';' ) 
+
+				Exec @iRet = sysadm.PS_HP276_SU_S2_MOTEUR_TRT_RETOUR_HUB_DETERMINATION_STATUT 
+								@sActivityCode, 
+								@sActivityReturnCode, 
+								@sActivityReasonCode,
+								@sOrdreAction,
+								@sInstanceHub,
+								@iIdDepotHub,
+								@sChaineBCVretourDetStatut OutPut
+
+				If @iRet <= 0 -- Au minimum 159 ou un statut 'en cours à créer' si non existant
 					Begin
 						Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', ''' + ISNULL ( @sIdFour, '(vide)') + ''', ' + Convert ( VarChar (20), @iIdDepotHub) + ', ''' + @sIdHubPresta + ''', ''ERR'', ''' + 
 									'Les 3 données @sActivityCode, @sActivityReturnCode, @sActivityReasonCode ne permettent pas de déterminer/mapper un statut pour la prestation SIMPA2.' +
@@ -948,26 +959,15 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 						Break
 					End 
 
-				-- Détermination du problème de livraison
-				-- Modifier la tableau pour mettre les 3 valeurs
-				-- Supp de la zone de table prble_livraison
-				-- Ajout des 3 autres zone activity_code, activity_return_code, activity_reason_code
-				-- [TODO] @sPrbleLivraison = Fct ( activity_code, activity_return_code, activity_reason_code )
-				Set @sPrbleLivraison = ''
-				/*
-				If Si @sPrbleLivraison = '' ET ( activity_code, activity_return_code, activity_reason_code ) no vide alors ERREUR
-					Begin
-						Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', ''' + ISNULL ( @sIdFour, '(vide)') + ''', ' + Convert ( VarChar (20), @iIdDepotHub) + ', ''' + @sIdHubPresta + ''', ''ERR'', ''' + 
-									'Les 3 données @sStatusCode, @sReturnCode, @sReasonCode ne permettent pas de déterminer/mapper un statut pour la prestation SIMPA2.' +
-									''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
+				Set @iStatusGC = convert ( Integer, sysadm.FN_CLE_VAL ( 'STATUS_GC', @sChaineBCVretourDetStatut, ';' ))
+				
+				Set @sCommentFrn = sysadm.FN_CLE_VAL ( 'MOT_CLE_CPLT', @sChaineBCVretourDetStatut, ';' ) + ' ' + @sCommentFrn
+				
+				Set @sPerteAller = sysadm.FN_CLE_VAL ( 'PERTE_ALLER', @sChaineBCVretourDetStatut, ';' )
+				Set @sPrbleLivraison = sysadm.FN_CLE_VAL ( 'PRBLE_LIVRAISON', @sChaineBCVretourDetStatut, ';' )
+				Set @sPecPrbleLivraison = sysadm.FN_CLE_VAL ( 'PEC_PRBLE_LIVRAISON', @sChaineBCVretourDetStatut, ';' )
 
-						Set @iAMUerrRowTrt = 1
-						Break
-					End 
-				*/
-
-				-- Le numéro de commande fournisseur fait 20 sur SIMPA2 et 50 sur le Hub
-				If Len ( @sNumCmdFrn ) > 20 Set @sNumCmdFrn = LEFT ( @sNumCmdFrn, 17 ) + '...'
+				Set @sAppSwap = sysadm.FN_CLE_VAL ( 'APP_SWAP', @sChaineBCVretourDetStatut, ';' )
 
 				Break
 			End 
@@ -995,12 +995,9 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sResoluDiagVideo, '') + @sSepChampsFicMPR
 
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( convert ( varchar(10), @dtDteRdvConf, 103 ) + ' ' + CONVERT (varchar(8), @dtDteRdvConf, 108), '') + @sSepChampsFicMPR
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sAssureEnProx, '') + @sSepChampsFicMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sModeLogisRet, '') + @sSepChampsFicMPR
 				
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNomProx, '') + @sSepChampsFicMPR
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sCodeProx, '') + @sSepChampsFicMPR
-
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sAssureEnvCentral, '') + @sSepChampsFicMPR
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sPointServiceRet, '') + @sSepChampsFicMPR
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( convert ( varchar(10), @dtDteRcpFrn, 103 ) + ' ' + CONVERT (varchar(8), @dtDteRcpFrn, 108), '') + @sSepChampsFicMPR
 
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sSiteAction, '') + @sSepChampsFicMPR
@@ -1234,4 +1231,153 @@ Begin
 End 
 
 Go
+
+-------------------------------------------------------------------
+--
+-- Procédure            :       PS_HP276_SU_S2_MOTEUR_TRT_RETOUR_HUB_DETERMINATION_STATUT
+-- Auteur               :       JFF
+-- Date                 :       24/04/2024
+-- Libell‚              :       [HP252_276_HUB_PRESTA]
+-- Commentaires         :       Mets à jour la prestation sur SIMPA2 en retour du HUB
+--                              /!\ A COMPILER SUR LA BASE SIMPA2 /!\
+--
+-- Retourne             :       rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_SU_S2_MOTEUR_TRT_RETOUR_HUB_DETERMINATION_STATUT' AND type = 'P' )
+        DROP procedure sysadm.PS_HP276_SU_S2_MOTEUR_TRT_RETOUR_HUB_DETERMINATION_STATUT
+GO
+
+CREATE procedure sysadm.PS_HP276_SU_S2_MOTEUR_TRT_RETOUR_HUB_DETERMINATION_STATUT
+	@asActivityCode				VarChar ( 50 ), 
+	@asActivityReturnCode 		VarChar ( 50 ), 
+	@asActivityReasonCode 		VarChar ( 50 ),
+	@asActionOrigine			VarChar ( 50 ),
+	@asInstanceHub				VarChar ( 100 ),
+	@aiIdDepotHub				Integer,
+	@asChaineBCVretour			VarChar ( 255 ) OutPut
+AS
+
+Declare @iStatut Integer
+Declare @sMotClecplt varChar ( 100 )
+Declare @sBCVserial  varChar ( 100 )
+Declare @sSql		Varchar ( 2000 )
+Declare @sTypBaAller VarChar ( 35 ) 
+
+Set @sTypBaAller = sysadm.FN_CLE_VAL ( 'TYP_BA_ALLER', @asChaineBCVretour, ';' )
+
+Set @asActivityCode = Upper ( @asActivityCode )
+Set @asActivityReturnCode = Upper ( @asActivityReturnCode )
+Set @asActivityReasonCode = Upper ( @asActivityReasonCode )
+Set @asActionOrigine = Upper ( @asActionOrigine )
+
+-- Recherche sur les 4 critères
+Select @iStatut = mrh.statut,
+	   @sMotClecplt = lTrim ( rTrim ( mrh.mot_cle_cplt )),
+	   @sBCVserial  = lTrim ( rTrim ( mrh.bcv_serial ))
+From sysadm.mapping_retour_hub mrh
+Where mrh.activity_code = @asActivityCode
+And   mrh.activity_return_code = @asActivityReturnCode
+And   mrh.activity_reason_code = @asActivityReasonCode
+And   mrh.action_origine = @asActionOrigine
+
+-- Recherche sur 3 critères, sans @asActionOrigine
+If @@ROWCOUNT<= 0 
+	Begin
+		Select @iStatut = mrh.statut,
+			   @sMotClecplt = lTrim ( rTrim ( mrh.mot_cle_cplt )),
+			   @sBCVserial  = lTrim ( rTrim ( mrh.bcv_serial ))
+		From sysadm.mapping_retour_hub mrh
+		Where mrh.activity_code = @asActivityCode
+		And   mrh.activity_return_code = @asActivityReturnCode
+		And   mrh.activity_reason_code = @asActivityReasonCode
+	End 
+
+-- Recherche sur 2 critères, avec @asActionOrigine
+If @@ROWCOUNT<= 0 
+	Begin
+		Select @iStatut = mrh.statut,
+			   @sMotClecplt = lTrim ( rTrim ( mrh.mot_cle_cplt )),
+			   @sBCVserial  = lTrim ( rTrim ( mrh.bcv_serial ))
+		From sysadm.mapping_retour_hub mrh
+		Where mrh.activity_code = @asActivityCode
+		And   mrh.activity_return_code = @asActivityReturnCode
+		And   mrh.action_origine = @asActionOrigine
+	End 
+
+-- Recherche sur 2 critères, sans @asActionOrigine
+If @@ROWCOUNT<= 0 
+	Begin
+		Select @iStatut = mrh.statut,
+			   @sMotClecplt = lTrim ( rTrim ( mrh.mot_cle_cplt )),
+			   @sBCVserial  = lTrim ( rTrim ( mrh.bcv_serial ))
+		From sysadm.mapping_retour_hub mrh
+		Where mrh.activity_code = @asActivityCode
+		And   mrh.activity_return_code = @asActivityReturnCode
+	End 
+
+If @@ROWCOUNT<= 0 
+	Begin
+		Return -1 -- Pas de statut déterminé
+	End 
+
+Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'STATUS_GC', CONVERT( Varchar (10), @iStatut ), @asChaineBCVretour, ';')
+Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'MOT_CLE_CPLT', CONVERT( Varchar (10), @sMotClecplt ), @asChaineBCVretour, ';')
+If RIGHT ( rTrim ( @asChaineBCVretour), 1 )<> ';' Set @asChaineBCVretour = rTrim ( @asChaineBCVretour) + ';'
+Set @asChaineBCVretour = @asChaineBCVretour + @sBCVserial
+
+-------------------------------------------------------------------------------------------
+-- Cas particulier de redressement de données dans la table de dépot pour être cohérent, --
+-- Cela évite des règles sur le HUB à donner au développeur.                             --
+-------------------------------------------------------------------------------------------
+-- Cas de la perte à l'aller
+If	@asActivityCode = 'DEVICE_RECEPTION' And 
+	@asActivityReturnCode = 'KO' 
+	Begin
+		Set @sSql = 
+		'Update ' + @asInstanceHub + 'edi.DepotHubToSimpa2Presta '  +
+		'Set perte_aller = '''+ sysadm.FN_CLE_VAL ( 'PERTE_ALLER', @sBCVserial, ';') + ''', ' +
+		'    typ_ba_aller = ''' + @sTypBaAller + ''', ' +
+		'    prble_livraison = '''+ sysadm.FN_CLE_VAL ( 'PRBLE_LIVRAISON', @sBCVserial, ';') + '''' + 
+		'    pec_prble_livraison = '''+ sysadm.FN_CLE_VAL ( 'PEC_PRBLE_LIVRAISON', @sBCVserial, ';') + '''' + 
+		'    where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @aiIdDepotHub )  
+		Exec ( @sSql )
+	End 
+
+-- Cas de l'incomplet
+If	@asActivityCode = 'RETURN_OF_CONFORMITY' And 
+	@asActivityReturnCode = 'KO' And
+	@asActivityReasonCode = 'INCOMPLETE_DEVICE'
+	Begin
+		Set @sSql = 
+		'Update ' + @asInstanceHub + 'edi.DepotHubToSimpa2Presta '  +
+		'Set app_incomplet = '''+ sysadm.FN_CLE_VAL ( 'APP_INCOMPLET', @sBCVserial, ';') + ''', ' +
+		'    where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @aiIdDepotHub )  
+		Exec ( @sSql )
+	End 
+
+-- Cas du swap
+If	@asActivityCode in ( 'DEVICE_MANUFACTURER_ACTIONS', 'SERVICE_PROVIDER_ACTIONS' ) And 
+	@asActivityReturnCode = 'SWAPPED'
+	Begin
+		Set @sSql = 
+		'Update ' + @asInstanceHub + 'edi.DepotHubToSimpa2Presta '  +
+		'Set app_swap = '''+ sysadm.FN_CLE_VAL ( 'APP_SWAP', @sBCVserial, ';') + ''', ' +
+		'    where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @aiIdDepotHub )  
+		Exec ( @sSql )
+	End 
+
+-- Cas des problème de livraison sur le retour
+If	@asActivityCode in ( 'CUSTOMER_ACKNOWLEDGMENT', 'CARRIER_ACKNOWLEDGMENT' ) And 
+	@asActivityReturnCode in ( 'NOT_RECEIVED_BY_CUSTOMER', 'NOT_RECEIVED_LOSS_OF_TRANSPORT' )
+	Begin
+		Set @sSql = 
+		'Update ' + @asInstanceHub + 'edi.DepotHubToSimpa2Presta '  +
+		'Set prble_livraison = '''+ sysadm.FN_CLE_VAL ( 'PRBLE_LIVRAISON', @sBCVserial, ';') + '''' + 
+		'    where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @aiIdDepotHub )  
+		Exec ( @sSql )
+	End 
+
+Return 1
+
+GO
 
