@@ -468,6 +468,7 @@ Declare  @TbHubToSimpa2Work TABLE (
 	prix_ttc_public				Decimal ( 11, 2 )			NULL,   -- Prix TTC de l'app de remplacement qui sera facturé par le prestataire et réglé par spb
 	prble_livraison				VarChar ( 35 )				NULL,   -- après une dte_fin_trait renseigné, Code du problème de livraison
 	pec_prble_livraison			VarChar ( 1  )				NULL,   -- O/N OUI si le presta prend la prble de livrasion à sa charge
+	id_hub_presta_sav           VarChar ( 20 )			    NULL,   -- Identifiant sur le Hub Prestataire de la future prestation de SAV à venir
 	info_frn_spb_cplt			VarChar ( 800 )				NULL    -- Chaine sérialisée contenant de multiples informations pour de nouvelles données "exotiques" liées à un prestataire précis.
 )
 
@@ -554,9 +555,10 @@ Declare @iIdWorkRow			int,
 		@sCouleurRempl		VarChar ( 35 ),
 		@sCapStkRempl		VarChar ( 35 ),
 		@sNeufRecondRempl	VarChar ( 10 ),
-		@dcPrixTtcRempl	Decimal ( 11, 2 ),
+		@dcPrixTtcRempl		Decimal ( 11, 2 ),
 		@sPrbleLivraison	VarChar ( 35 ),
 		@sPecPrbleLivraison	VarChar ( 1  ),
+		@sIdHubPrestaSav	VarChar ( 20 ),
 		@sInfoFrnSpbCpltlu	VarChar ( 800 )
 
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' Set @sEnv = 'PROD' ELSE Set @sEnv = 'SIM'
@@ -641,6 +643,7 @@ Set @sSql =
 '		dhs.prix_ttc_public, '+
 '		dhs.prble_livraison, '+
 '		dhs.pec_prble_livraison, '+
+'		dhs.id_hub_presta_sav '+
 '		dhs.info_frn_spb_cplt '+
 'From	' + @sInstanceHub + 'edi.DepotHubToSimpa2Presta dhs ' + 
 '		Left Outer Join ' + @sInstanceHub + 'edi.DepotSimpa2ToHubPresta dsh on dhs.id_hub_presta = dsh.id_hub_presta ' +
@@ -889,7 +892,6 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 			@sNomTransporteur = ltrim ( rtrim ( nom_transporteur )),
 			@dtDteRcpAppCli = dte_rcp_app_cli,
 			@sAppSwap = ltrim ( rtrim ( app_swap )),
-			--@sRefAppRempl = ltrim ( rtrim ( ref_app_rempl )),
 			@sAutresInfosRempl = ltrim ( rtrim ( autres_infos_rempl )),
 			@sMarqueRempl = ltrim ( rtrim ( marque_rempl )),
 			@sModeleRempl = ltrim ( rtrim ( modele_rempl )),
@@ -969,6 +971,8 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 				Set @sPecPrbleLivraison = sysadm.FN_CLE_VAL ( 'PEC_PRBLE_LIVRAISON', @sChaineBCVretourDetStatut, ';' )
 
 				Set @sAppSwap = sysadm.FN_CLE_VAL ( 'APP_SWAP', @sChaineBCVretourDetStatut, ';' )
+
+				Set @sInfoFrnSpbCpltlu = sysadm.FN_CLE_VAL_E ( 'DDE_SAV', sysadm.FN_CLE_VAL ( 'DDE_SAV', @sChaineBCVretourDetStatut, ';' ), @sInfoFrnSpbCpltlu, ';' )
 
 				Break
 			End 

@@ -181,7 +181,10 @@ CREATE TABLE edi.DepotHubToSimpa2Presta(
 	prix_ttc_rempl				Decimal ( 11, 2 )			NULL,   -- Prix TTC de l'app de remplacement qui sera facturé par le prestataire et réglé par spb
 	prble_livraison				VarChar ( 35 )				NULL,   -- après une dte_fin_trait renseigné, Code du problème de livraison
 	pec_prble_livraison			VarChar ( 1  ) default 'N'	NULL,   -- O/N OUI si le presta prend la prble de livrasion à sa charge
+	id_hub_presta_sav           VarChar ( 20 )			    NULL,   -- Identifiant sur le Hub Prestataire de la future prestation de SAV à venir
 	info_frn_spb_cplt			VarChar ( 800 )				NULL,   -- Chaine sérialisée contenant de multiples informations pour de nouvelles données "exotiques" liées à un prestataire précis.
+	chemin_fic					VarChar ( 255 )				NULL,   -- Chemin de dépôt du fichier produit par le moteur
+	nom_fic						VarChar ( 255 )				NULL   -- Nom du fichier produit par le moteur
 	
 	CONSTRAINT pk_DepotHubToSimpa2Presta PRIMARY KEY CLUSTERED 
 
@@ -1506,7 +1509,8 @@ CREATE procedure edi.PS_HP276_I_HP_INSERTION_ACTIVITY_HUB_TO_SIMPA2
 	@asNeufRecondRempl		VarChar ( 10 ),
 	@adcPrixTtcRempl		Decimal ( 11, 2 ),
 	@adtDteRcpAppCli		DateTime,
-	@asInfoFrnSpbCpltlu		VarChar ( 800 )
+	@asIdHubPrestaSav		VarChar ( 20 ),
+	@asInfoFrnSpbCplt		VarChar ( 800 )
 As
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -1564,6 +1568,7 @@ If @@Rowcount <= 0
 			cap_stk_rempl,
 			neuf_recond_rempl,
 			prix_ttc_rempl,
+			id_hub_presta_sav,
 			info_frn_spb_cplt
 		) 
 	Values
@@ -1594,7 +1599,8 @@ If @@Rowcount <= 0
 			@asCapStkRempl,
 			@asNeufRecondRempl,
 			@adcPrixTtcRempl,
-			@asInfoFrnSpbCpltlu
+			@asIdHubPrestaSav,
+			@asInfoFrnSpbCplt
 		)
 	
 	Return @@Error
@@ -1635,6 +1641,7 @@ If @@Rowcount <= 0
 			prix_ttc_rempl,
 			prble_livraison,
 			pec_prble_livraison,
+			id_hub_presta_sav,
 			info_frn_spb_cplt
 		) 
 Select		id_hub_presta,
@@ -1669,6 +1676,7 @@ Select		id_hub_presta,
 			prix_ttc_rempl,
 			prble_livraison,
 			pec_prble_livraison,
+			null, -- id_hub_presta_sav
 			info_frn_spb_cplt
 
 From edi.DepotHubToSimpa2Presta
@@ -1730,7 +1738,9 @@ Update edi.DepotHubToSimpa2Presta Set neuf_recond_rempl = lTrim ( rtrim ( @asNeu
 Set @iError = @@Error; If @iError <> 0 Return @iError 
 Update edi.DepotHubToSimpa2Presta Set prix_ttc_rempl = @adcPrixTtcRempl									Where id_depot_hub = @iIdentity And @adcPrixTtcRempl		is not null And @adcPrixTtcRempl >= 0
 Set @iError = @@Error; If @iError <> 0 Return @iError 
-Update edi.DepotHubToSimpa2Presta Set info_frn_spb_cplt = lTrim ( rtrim ( @asInfoFrnSpbCpltlu ))		Where id_depot_hub = @iIdentity And @asInfoFrnSpbCpltlu		is not null And lTrim ( rtrim (	@asInfoFrnSpbCpltlu )) <> ''	
+Update edi.DepotHubToSimpa2Presta Set id_hub_presta_sav = @asIdHubPrestaSav								Where id_depot_hub = @iIdentity And @asIdHubPrestaSav		is not null And lTrim ( rtrim (	@asIdHubPrestaSav )) <> ''	
+Set @iError = @@Error; If @iError <> 0 Return @iError 
+Update edi.DepotHubToSimpa2Presta Set info_frn_spb_cplt = lTrim ( rtrim ( @asInfoFrnSpbCplt ))			Where id_depot_hub = @iIdentity And @asInfoFrnSpbCplt		is not null And lTrim ( rtrim (	@asInfoFrnSpbCplt )) <> ''	
 
 Return @@Error
 

@@ -234,12 +234,14 @@ Declare @sNomInter VarChar ( 71 )
 Declare @dcIdInter Decimal (2 )
 Declare @sCodInter Varchar ( 5 )
 Declare @iPrestaHUB Integer
-Declare @TypArtIfr VarChar ( 255 )
-Declare @iMarqModlIFr Integer
+Declare @TypArtIfr VarChar ( 255 ) -- [HP252_276_HUB_PRESTA]
+Declare @iMarqModlIFr Integer -- [HP252_276_HUB_PRESTA]
+Declare @iDemandeSavHubPresta Integer -- [HP252_276_HUB_PRESTA]
 
 Set @iCasPropoAutoO2m = 0 -- [PC877]
 Set @iTraite = 0 
 Set @iStopMajAdhMobRempl = 0 
+Set @iDemandeSavHubPresta = IIF ( sysadm.FN_CLE_VAL ( 'DDE_SAV', @sInfoFrnSpbCplt, ';' ) = 'OUI', 1, 0) -- [HP252_276_HUB_PRESTA]
 
 -- #2 PHG 22/03/2007 [DCMP070191] Gestion de l'enregistrement du Maj_le
 Set @dtTimeStamp = GetDate()
@@ -3481,7 +3483,16 @@ If @sIdFour = 'AUC'
 	Begin 
 		Exec sysadm.PS_I_PM421_6_MAJ_DOS_AUCHAN @dcIdSin, @iIdSeq, @iIdCmdFrn, @dtDteEnvCli
 	End 
- 
+
+-- [HP252_276_HUB_PRESTA] -- Gestion du SAV avc le Hub Prestataire.
+[ICI]
+If @iDemandeSavHubPresta > 0 
+	Begin
+		
+
+	End 
+
+
 
 /* à laisser à la fin */
 -- [VDOC15650]
