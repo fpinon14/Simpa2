@@ -233,6 +233,9 @@ Declare @iCptId Integer -- [RS4616_RET_TLS]
 Declare @sNomInter VarChar ( 71 )
 Declare @dcIdInter Decimal (2 )
 Declare @sCodInter Varchar ( 5 )
+Declare @iPrestaHUB Integer
+Declare @TypArtIfr VarChar ( 255 )
+Declare @iMarqModlIFr Integer
 
 Set @iCasPropoAutoO2m = 0 -- [PC877]
 Set @iTraite = 0 
@@ -297,8 +300,8 @@ Select  @sIdSerieNouvActuel = c.id_serie_nouv,
 	@sMajParCmdActuel = c.maj_par, -- #6 [DCMP080077]      
 	@dcIdGti = c.id_gti, -- #6 [DCMP080077]
 	@dcIdDetail = c.id_detail, -- #6 [DCMP080077]
-	@sInfoFrnSpbCpltActuel = IsNull ( rtrim ( c.info_frn_spb_cplt ), '' ), -- #11 [FNAC_PROD_ECH_TECH]	
 	@sInfoSpbFrnCpltActuel = IsNull ( rtrim ( c.info_spb_frn_cplt ), ''), -- [PC501]-1
+	@sInfoFrnSpbCpltActuel = IsNull ( rtrim ( c.info_frn_spb_cplt ), '' ), -- #11 [FNAC_PROD_ECH_TECH]	
 	@iStatusGCActuel = c.status_gc, -- #12 [FNAC_PROD_ECH_TECH].[20090127140540720]
 	@dcIdProd = s.id_prod, -- #14 JFF 14/05/2009 [DCMP090282]
 	@dcIdRev = s.id_rev, -- [MANTIS11520][PC13419]
@@ -316,6 +319,7 @@ And 	c.id_seq = @iIdSeq
 And     s.id_sin = c.id_sin
 
 If IsNumeric ( @sMtPaiementPayBox ) = 0 Set @sMtPaiementPayBox = '0'
+Set @iPrestaHUB = IIF ( Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', @sInfoSpbFrnCpltActuel, ';' ) ) > 0, 1, 0 ) -- [HP252_276_HUB_PRESTA]
 
 -- [VDOC25366]
 If @dtDteEnvCliActuel is not null
@@ -1522,8 +1526,23 @@ BEGIN
 		END
 	END 
 
+	-- [HP252_276_HUB_PRESTA]
+	IF @iStatusGCActuel <> 169 And @iStatusGc = 169 And @iPrestaHUB > 0
+	BEGIN 
+			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] -> Appareil incomplet, process Hub Prestataire => Le HUB envoie automatiquement un mail à l''assuré lui demandant d''envoyer les éléments manquants au prestataire.'
+			IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+			BEGIN
+				Exec  SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT
+			END
+			ELSE
+			BEGIN
+				Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT
+			END
+	END
+	-- /[HP252_276_HUB_PRESTA]
+
 	-- #13 JFF 14/05/2009 [DCMP090085]
-	IF @sIdRefFour = 'A_DIAGNOSTIQUER' AND @iStatusGCActuel <> 169 And @iStatusGc = 169
+	IF @sIdRefFour = 'A_DIAGNOSTIQUER' AND @iStatusGCActuel <> 169 And @iStatusGc = 169 And @iPrestaHUB <= 0  -- [HP252_276_HUB_PRESTA]
 	BEGIN 
 		--[PC501]-1
 		If @sIdFour in ( 'MS1' )
@@ -1622,7 +1641,7 @@ BEGIN
 	END 
 
 	-- [DT288-3_LOT2]
-	IF @sIdRefFour = 'A_REPARER' AND @iStatusGCActuel <> 169 And @iStatusGc = 169 and @sIdFour in ( 'COR' ) 
+	IF @sIdRefFour = 'A_REPARER' AND @iStatusGCActuel <> 169 And @iStatusGc = 169 and @sIdFour in ( 'COR' )  And @iPrestaHUB <= 0  -- [HP252_276_HUB_PRESTA]
 	BEGIN 
 		Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] -> Appareil incomplet. Retour automatique de l''appareil vers l''assuré'
 
@@ -1861,7 +1880,7 @@ If sysadm.FN_CLE_NUMERIQUE ( 'PMO89_RS4822') > 0
 -- [VDOC8041]
 IF @iStatusGc = 232 And @iStatusGCActuel <> 232
   Begin
-	Set @sMess = 'Contact crée automatiquement, Process [' + @sLibFour + '] -> '+ @sLibFour + ' a besoin du code verrou pour terminer la réparation, merci de prendre contact avec l''assuré pour obtenir le code verrou.'		    
+	Set @sMess = 'Contact crée automatiquement, Process [' + @sLibFour + '] -> '+ @sLibFour + ' a besoin du code verrou de l''appareil pour continuer son action, merci de prendre contact avec l''assuré pour obtenir le code verrou.'		    
 
 	IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 	BEGIN
@@ -2173,12 +2192,21 @@ IF @iStatusGc = 178 And @iStatusGCActuel <> 178
    and @sIdTypArt = 'CAF' and @sIdRefFour = 'CMDE_A_CPLTER'
    Begin
 
+   -- [HP252_276_HUB_PRESTA]
+   Select @TypArtIfr = 
+		  '#' + ( 
+		   Select stuff ( 
+					( SELECT Distinct '#' + CAST(rtrim ( ltrim ( rtrim ( i.sku_saga )) ) AS VARCHAR(250)) 
+					  FROM sysadm.ifr i
+					  Where sku_saga is not null
+					  For XML PATH ('') )
+				, 1, 1, '' )) + '#'
+
 	Select 	@sVal1 = sysadm.FN_TRIM ( IsNull ( ds.val_car, '' ) )
 	From 	sysadm.div_sin ds
 	Where 	ds.id_sin = @dcIdSin And ds.nom_zone = 'type_app'
 
 	-- [RS4616_RET_TLS]
-
 	-- Problème intégration si montant =0 donc bcv absent par le contrôle PB
 	Select  @sVal2 = sysadm.FN_CLE_VAL ( 'MT_TTC_REMPL', rtrim ( @sInfoFrnSpbCplt ) , ';'),
 			@dcMtTTCcmde = wc.mt_ttc_cmde,
@@ -2195,8 +2223,23 @@ IF @iStatusGc = 178 And @iStatusGCActuel <> 178
 	If IsNumeric ( @sVal2 ) = 0 Set @sVal2 = 0
 	If @sVal2 = 0 Set @sVal2 = Convert ( Varchar ( 10 ), @dcMtTTCcmde ) -- [RS4616_RET_TLS]
 
-	If CharIndex ( 'GO', Upper ( @sCapStkRempl), 1 ) <=0 And CharIndex ( 'GB', Upper ( @sCapStkRempl), 1 ) <=0 Set @sCapStkRempl = @sCapStkRempl + 'GB'
-	Set @sModlRempl = @sModlRempl + ' ' + @sCoulRempl + ' ' + @sCapStkRempl
+	If CharIndex ( 'TO', Upper ( @sCapStkRempl), 1 ) <=0  And 
+	   CharIndex ( 'GO', Upper ( @sCapStkRempl), 1 ) <=0  And 
+	   CharIndex ( 'GB', Upper ( @sCapStkRempl), 1 ) <=0  Set @sCapStkRempl = @sCapStkRempl + 'GB'
+
+	Set @sModlRempl = rtrim ( ltrim ( @sModlRempl + ' ' + @sCoulRempl + ' ' + @sCapStkRempl ))
+
+   -- [HP252_276_HUB_PRESTA]
+   Set @iMarqModlIFr = 0
+   If Exists  (
+		Select top 1 1 From sysadm.ifr i
+		Where i.marque = @sMarqRempl
+		And   i.reference = @sModlRempl
+   ) 
+	Begin
+		Set @iMarqModlIFr = 1
+	End 
+
 
 	Update 	sysadm.w_commande
 	Set	id_marq_art		= @sMarqRempl, 
@@ -2204,6 +2247,8 @@ IF @iStatusGc = 178 And @iStatusGCActuel <> 178
 		mt_ttc_cmde		= Round ( Convert ( decimal (11,2 ) , @sVal2), 2 ), 
 		id_marq_art_ifr = 
 			Case 
+				When @iMarqModlIFr > 0 Then @sMarqRempl -- [HP252_276_HUB_PRESTA]
+
 				When @sIdFour = 'TLS' Then 
 						(	Select Top 1 rtrim (la.marq_ifr ) 
 							from sysadm.lien_article la 
@@ -2211,10 +2256,20 @@ IF @iStatusGc = 178 And @iStatusGCActuel <> 178
 							And la.marq_four = Left ( @sMarqRempl, 35)
 							And la.modl_four = Left ( @sModlRempl, 35)
 						)
+				When @iPrestaHUB > 0 Then -- [HP252_276_HUB_PRESTA]
+						(	Select Top 1 rtrim (la.marq_ifr ) 
+							from sysadm.lien_article la 
+							Where la.id_four = 'HUP'
+							And la.marq_four = Left ( @sMarqRempl, 35)
+							And la.modl_four = Left ( @sModlRempl, 35)
+						)
+
 				Else ws.marq_port
 			End,		
 		id_modl_art_ifr =
 			Case 
+				When @iMarqModlIFr > 0 Then @sModlRempl -- [HP252_276_HUB_PRESTA]
+
 				When @sIdFour = 'TLS' Then 
 					(	Select Top 1 rtrim ( la.modl_ifr ) 
 						from sysadm.lien_article la 
@@ -2222,6 +2277,15 @@ IF @iStatusGc = 178 And @iStatusGCActuel <> 178
 						And la.marq_four = Left ( @sMarqRempl, 35)
 						And la.modl_four = Left ( @sModlRempl, 35)
 					)
+
+				When @iPrestaHUB > 0 Then -- [HP252_276_HUB_PRESTA]
+						(	Select Top 1 rtrim (la.modl_ifr ) 
+							from sysadm.lien_article la 
+							Where la.id_four = 'HUP'
+							And la.marq_four = Left ( @sMarqRempl, 35)
+							And la.modl_four = Left ( @sModlRempl, 35)
+						)
+
 				Else ws.modl_port
 			End,
 		id_typ_art = @sVal1 
@@ -2236,6 +2300,8 @@ IF @iStatusGc = 178 And @iStatusGCActuel <> 178
 		mt_ttc_cmde		= Round ( Convert ( decimal (11,2 ) , @sVal2 ), 2 ), 
 		id_marq_art_ifr = 
 			Case 
+				When @iMarqModlIFr > 0 Then @sMarqRempl -- [HP252_276_HUB_PRESTA]
+
 				When @sIdFour = 'TLS' Then 
 						(	Select Top 1 rtrim (la.marq_ifr ) 
 							from sysadm.lien_article la 
@@ -2243,10 +2309,21 @@ IF @iStatusGc = 178 And @iStatusGCActuel <> 178
 							And la.marq_four = Left ( @sMarqRempl, 35)
 							And la.modl_four = Left ( @sModlRempl, 35)
 						)
+
+				When @iPrestaHUB > 0 Then -- [HP252_276_HUB_PRESTA]
+						(	Select Top 1 rtrim (la.marq_ifr ) 
+							from sysadm.lien_article la 
+							Where la.id_four = 'HUP'
+							And la.marq_four = Left ( @sMarqRempl, 35)
+							And la.modl_four = Left ( @sModlRempl, 35)
+						)
+
 				Else ws.marq_port
 			End,		
 		id_modl_art_ifr =
 			Case 
+				When @iMarqModlIFr > 0 Then @sModlRempl -- [HP252_276_HUB_PRESTA]
+
 				When @sIdFour = 'TLS' Then 
 					(	Select Top 1 rtrim ( la.modl_ifr ) 
 						from sysadm.lien_article la 
@@ -2254,6 +2331,15 @@ IF @iStatusGc = 178 And @iStatusGCActuel <> 178
 						And la.marq_four = Left ( @sMarqRempl, 35)
 						And la.modl_four = Left ( @sModlRempl, 35)
 					)
+
+				When @iPrestaHUB > 0 Then -- [HP252_276_HUB_PRESTA]
+						(	Select Top 1 rtrim (la.modl_ifr ) 
+							from sysadm.lien_article la 
+							Where la.id_four = 'HUP'
+							And la.marq_four = Left ( @sMarqRempl, 35)
+							And la.modl_four = Left ( @sModlRempl, 35)
+						)
+
 				Else ws.modl_port
 			End,
 		id_typ_art = @sVal1 
@@ -2262,12 +2348,14 @@ IF @iStatusGc = 178 And @iStatusGCActuel <> 178
 	And		wc.id_seq = @iIdSeq		
 	And		ws.id_sin = wc.id_sin
 			
-	If @sIdFour = 'TLS'
+	If ( @sIdFour = 'TLS' Or @iPrestaHUB > 0 ) -- [HP252_276_HUB_PRESTA]
+	   And CHARINDEX ( '#' + @sVal1 + '#', @TypArtIfr ) > 0 -- [HP252_276_HUB_PRESTA]
+	   And @iMarqModlIFr <= 0 -- [HP252_276_HUB_PRESTA]
 		Begin
 		If Not Exists ( 
 			Select Top 1 1 
 			From sysadm.article a
-			Where a.id_four = @sIdFour
+			Where ( a.id_four = @sIdFour Or ( @iPrestaHUB > 0 And a.id_four = 'HUP' )) -- [HP252_276_HUB_PRESTA]
 			And   a.id_marq_art = Left ( @sMarqRempl, 35)
 			And   a.id_modl_art = Left ( @sModlRempl, 35)
 		)
@@ -2289,9 +2377,12 @@ IF @iStatusGc = 178 And @iStatusGCActuel <> 178
 				End
 
 			Insert into sysadm.article 
-			Select	@sIdFour,
+			Select	Case 
+						When @iPrestaHUB > 0 Then 'HUP'
+						Else @sIdFour
+					End, -- [HP252_276_HUB_PRESTA]
 					@sNewIdRefFourTest,
-					'TEL',
+					@sVal1, -- [HP252_276_HUB_PRESTA]
 					Left ( @sMarqRempl, 35),
 					Left ( @sModlRempl, 35),
 					0,
@@ -2301,13 +2392,13 @@ IF @iStatusGc = 178 And @iStatusGCActuel <> 178
 					'N',
 					(	Select Top 1 rtrim ( la.marq_ifr ) 
 						from sysadm.lien_article la 
-						Where la.id_four = 'TLS'
+						Where  ( la.id_four = @sIdFour Or ( @iPrestaHUB > 0 And la.id_four = 'HUP' )) -- [HP252_276_HUB_PRESTA]
 						And la.marq_four = Left ( @sMarqRempl, 35)
 						And la.modl_four = Left ( @sModlRempl, 35)
 						),
 					(	Select Top 1 rtrim ( la.modl_ifr ) 
 						from sysadm.lien_article la 
-						Where la.id_four = 'TLS'
+						Where ( la.id_four = @sIdFour Or ( @iPrestaHUB > 0 And la.id_four = 'HUP' )) -- [HP252_276_HUB_PRESTA]
 						And la.marq_four = Left ( @sMarqRempl, 35)
 						And la.modl_four = Left ( @sModlRempl, 35)
 						),

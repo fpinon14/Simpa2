@@ -9451,6 +9451,7 @@ Go
 -- JFF      21/02/2107   [DT288]
 -- FPI		24/10/2017	 [FPI.COR.20171024] Mail Helène : les commandes pour régularisation suite swap ne doivent pas être envoyés à Cordon
 -- JFF		31/10/2017	 [JFF.COR.20171031] Mail Christine: les commandes pour régularisation suite swap doivent être envoyés à Cordon
+-- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_COMMANDE_DT276_SWAP_CTR' AND type = 'P' )
         DROP procedure sysadm.PS_I_COMMANDE_DT276_SWAP_CTR
@@ -9479,6 +9480,13 @@ Declare @iIdCt Integer
 Declare @iInfoSpbFrn Integer
 Declare @iIdLotCmd Integer
 Declare @dcIdEvt Decimal ( 7 )
+Declare @iPrestaHUB Integer
+Declare @sAutresInfosRempl VarChar ( 100 )
+Declare @sMarqRempl VarChar ( 35 )
+Declare @sModlRempl VarChar ( 35 )
+Declare @iMarqModlIFr Integer
+Declare @sNewInfoSpbFrnCplt VarChar ( 255 )
+Declare @sNewInfoFrnSpbCplt VarChar ( 255 )
 
 Set @iCasDT276SwapCTR = 0 
 IF sysadm.FN_CLE_VAL ( 'TGR_APPSW', rtrim ( @sInfoFrnSpbCplt ) , ';') <> 'OUI' Return
@@ -9487,10 +9495,71 @@ IF sysadm.FN_CLE_VAL ( 'APP_SWAP', rtrim ( @sInfoFrnSpbCplt ) , ';') <> 'OUI' Re
 Set @iInfoSpbFrn = 0
 Set @iIdLotCmd   = 999999
 
+-- [HP252_276_HUB_PRESTA]
+Set @sMarqRempl = sysadm.FN_CLE_VAL ( 'MARQSW', @sInfoFrnSpbCplt, ';' ), 
+Set @sModlRempl = sysadm.FN_CLE_VAL ( 'MODLSW', @sInfoFrnSpbCplt, ';' ), 
+
+-- [HP252_276_HUB_PRESTA]
+If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
+Begin
+	
+	Select @iPrestaHUB = IIF ( Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' ) ) > 0, 1, 0 )
+	From sysadm.commande c
+	Where c.id_sin = @dcIdSin
+	And   c.id_seq = @iIdSeq
+	If @iPrestaHUB is null Set @iPrestaHUB = 0
+	
+	Set @sAutresInfosRempl = sysadm.FN_CLE_VAL ( 'AUTRES_INFOS_REMPL', @sInfoFrnSpbCplt, ';' )
+	If @iPrestaHUB > 0 And @sAutresInfosRempl in ( 'COULEUR_ET_CAPACITE', 'COULEUR', 'CAPACITE')
+		Begin
+			If @sAutresInfosRempl = 'COULEUR_ET_CAPACITE'
+				Begin
+					Set @sCapStkRempl = sysadm.FN_CLE_VAL ( 'CAP_STK_REMPL', @sInfoFrnSpbCplt, ';' )
+					Set @sCoulRempl = sysadm.FN_CLE_VAL ( 'COUL_REMPL', @sInfoFrnSpbCplt, ';' )
+					If  CharIndex ( 'TO', Upper ( @sCapStkRempl), 1 ) <=0  And 
+						CharIndex ( 'GO', Upper ( @sCapStkRempl), 1 ) <=0  And 
+						CharIndex ( 'GB', Upper ( @sCapStkRempl), 1 ) <=0  Set @sCapStkRempl = @sCapStkRempl + 'GB'
+
+					Set @sModlRempl = rtrim ( ltrim ( @sModlRempl + ' ' + @sCoulRempl + ' ' + @sCapStkRempl ))
+				End 
+
+			If @sAutresInfosRempl = 'COULEUR'
+				Begin
+					Set @sCoulRempl = sysadm.FN_CLE_VAL ( 'COUL_REMPL', @sInfoFrnSpbCplt, ';' )
+					Set @sModlRempl = rtrim ( ltrim ( @sModlRempl + ' ' + @sCoulRempl ))
+				End 
+
+			If @sAutresInfosRempl = 'CAPACITE'
+				Begin
+					Set @sCapStkRempl = sysadm.FN_CLE_VAL ( 'CAP_STK_REMPL', @sInfoFrnSpbCplt, ';' )
+					If  CharIndex ( 'TO', Upper ( @sCapStkRempl), 1 ) <=0  And 
+						CharIndex ( 'GO', Upper ( @sCapStkRempl), 1 ) <=0  And 
+						CharIndex ( 'GB', Upper ( @sCapStkRempl), 1 ) <=0  Set @sCapStkRempl = @sCapStkRempl + 'GB'
+
+					Set @sModlRempl = rtrim ( ltrim ( @sModlRempl + ' ' + @sCapStkRempl ))
+				End 
+		End 
+
+End 
+
+
+-- [HP252_276_HUB_PRESTA]
+Set @iMarqModlIFr = 0
+If Exists  (
+	Select top 1 1 From sysadm.ifr i
+	Where i.marque = @sMarqRempl
+	And   i.reference = @sModlRempl
+) 
+Begin
+	Set @iMarqModlIFr = 1
+End 
+
+
 -- [DT290]
 -- [DT280] Vu avec Hélène, je génère pour O2M dans tous les cas
 -- [DT288]
-If @iInfoSpbFrnActuel = 984 Or @sIdFour in ( 'O2M', 'COR' )
+-- [HP252_276_HUB_PRESTA] Or @iPrestaHUB > 0
+If @iInfoSpbFrnActuel = 984 Or @sIdFour in ( 'O2M', 'COR' ) Or @iPrestaHUB > 0
  Begin
 	Set @iInfoSpbFrn = 986
 	Set @iIdLotCmd   = 0
@@ -9550,7 +9619,21 @@ Select @iNewIdSeq = max ( id_seq ) From sysadm.commande where id_sin = @dcIdSin
 
 If @iNewIdSeq is null Set @iNewIdSeq = 0
 Set @iNewIdSeq = @iNewIdSeq + 1
-		
+
+-- [HP252_276_HUB_PRESTA]		
+Set @sNewInfoSpbFrnCplt = 
+			sysadm.FN_CLE_VAL_E ( 'GRADE_REC', sysadm.FN_CLE_VAL ( 'GRADE_REC', @sInfoFrnSpbCplt, ';' ),
+			sysadm.FN_CLE_VAL_E ( 'NEUF_REC', sysadm.FN_CLE_VAL ( 'NEUF_REC', @sInfoFrnSpbCplt, ';' ), '', ';')
+			, ';')
+
+-- [HP252_276_HUB_PRESTA] HP_ID_HUB_PRESTA bidon juste pour mémoire que c'est une 
+If @iPrestaHUB > 0 Set @sNewInfoSpbFrnCplt = sysadm.FN_CLE_VAL_E ( 'HP_ID_HUB_PRESTA', 'FICTIVE', @sNewInfoSpbFrnCplt, ';')
+
+
+-- [HP252_276_HUB_PRESTA]
+Set @sNewInfoFrnSpbCplt = sysadm.FN_CLE_VAL_E ( 'SWAP_AUTO_CTR', 'OUI', '', ';' )
+
+
 Insert into sysadm.commande
 select top 1 
 		id_sin,
@@ -9559,8 +9642,8 @@ select top 1
 		@dcNewIdDetail, 
 		c.id_four, -- [DT280]
 		@sTypeAppSin,
-		sysadm.FN_CLE_VAL ( 'MARQSW', @sInfoFrnSpbCplt, ';' ),
-		sysadm.FN_CLE_VAL ( 'MODLSW', @sInfoFrnSpbCplt, ';' ), 
+		@sMarqRempl,  -- [HP252_276_HUB_PRESTA]
+		@sModlRempl,  -- [HP252_276_HUB_PRESTA]
 		Convert ( Decimal ( 11, 2 ), sysadm.FN_CLE_VAL ( 'MTTTCSW', @sInfoFrnSpbCplt, ';' )), 
 		adr_nom, adr_prenom, adr_livr1, adr_livr2, adr_livr_cpl, adr_cp, adr_ville, adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, 
 		'', null,  
@@ -9573,12 +9656,10 @@ select top 1
 		'PRESTA AUTOMATIQUE', @iIdLotCmd, null, null, Getdate(), Getdate(), 'AUTO',  Getdate(),  'AUTO', id_zone, id_bsp, dte_ret_pret, adr_cod_civ, 'REMPL_SWAP_CTR', id_orian_marque, id_orian_modele, dte_elv_mobile,
 		178,
 		dte_emis_devis, mt_devis, alt_dev_acp, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli, @iInfoSpbFrn,
-		sysadm.FN_CLE_VAL ( 'MARQSW', @sInfoFrnSpbCplt, ';' ),
-		sysadm.FN_CLE_VAL ( 'MODLSW', @sInfoFrnSpbCplt, ';' ), 
-		sysadm.FN_CLE_VAL_E ( 'GRADE_REC', sysadm.FN_CLE_VAL ( 'GRADE_REC', @sInfoFrnSpbCplt, ';' ),
-		sysadm.FN_CLE_VAL_E ( 'NEUF_REC', sysadm.FN_CLE_VAL ( 'NEUF_REC', @sInfoFrnSpbCplt, ';' ), '', ';')
-		, ';'), 
-		'SWAP_AUTO_CTR=OUI' -- [DT280]
+		IIF ( @iMarqModlIFr > 0, @sMarqRempl, null ), -- [HP252_276_HUB_PRESTA]
+		IIF ( @iMarqModlIFr > 0, @sModlRempl, null ), -- [HP252_276_HUB_PRESTA]
+		@sNewInfoSpbFrnCplt, -- [HP252_276_HUB_PRESTA]
+		@sNewInfoFrnSpbCplt -- [DT280] -- [HP252_276_HUB_PRESTA]
 From sysadm.commande c
 Where c.id_sin = @dcIdSin
 And   c.id_seq = @iIdSeq
@@ -9593,8 +9674,8 @@ If Exists ( Select * from sysadm.w_commande where id_sin = @dcIdSin   and id_seq
 		@dcNewIdDetail, 
 		c.id_four,  -- [DT280]
 		@sTypeAppSin,
-		sysadm.FN_CLE_VAL ( 'MARQSW', @sInfoFrnSpbCplt, ';' ),
-		sysadm.FN_CLE_VAL ( 'MODLSW', @sInfoFrnSpbCplt, ';' ), 
+		@sMarqRempl, -- [HP252_276_HUB_PRESTA]
+		@sModlRempl, -- [HP252_276_HUB_PRESTA]
 		Convert ( Decimal ( 11, 2 ), sysadm.FN_CLE_VAL ( 'MTTTCSW', @sInfoFrnSpbCplt, ';' )), 
 		adr_nom, adr_prenom, adr_livr1, adr_livr2, adr_livr_cpl, adr_cp, adr_ville, adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, 
 		'', null,  
@@ -9607,12 +9688,10 @@ If Exists ( Select * from sysadm.w_commande where id_sin = @dcIdSin   and id_seq
 		1, 'PRESTA AUTOMATIQUE', Getdate(), Getdate(), 'AUTO',  id_zone, id_bsp, dte_ret_pret, adr_cod_civ, 'REMPL_SWAP_CTR', id_orian_marque, id_orian_modele, dte_elv_mobile, 
 		178, 
 		dte_emis_devis, mt_devis, alt_dev_acp, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli, @iInfoSpbFrn, 
-		sysadm.FN_CLE_VAL ( 'MARQSW', @sInfoFrnSpbCplt, ';' ),
-		sysadm.FN_CLE_VAL ( 'MODLSW', @sInfoFrnSpbCplt, ';' ), 
-		sysadm.FN_CLE_VAL_E ( 'GRADE_REC', sysadm.FN_CLE_VAL ( 'GRADE_REC', @sInfoFrnSpbCplt, ';' ),
-		sysadm.FN_CLE_VAL_E ( 'NEUF_REC', sysadm.FN_CLE_VAL ( 'NEUF_REC', @sInfoFrnSpbCplt, ';' ), '', ';')
-		, ';'),  
-		'SWAP_AUTO_CTR=OUI' -- [DT280]
+		IIF ( @iMarqModlIFr > 0, @sMarqRempl, null ), -- [HP252_276_HUB_PRESTA]
+		IIF ( @iMarqModlIFr > 0, @sModlRempl, null ), -- [HP252_276_HUB_PRESTA]
+		@sNewInfoSpbFrnCplt, -- [HP252_276_HUB_PRESTA]
+		@sNewInfoFrnSpbCplt -- [DT280] -- [HP252_276_HUB_PRESTA]
 	From sysadm.w_commande c
 	Where c.id_sin = @dcIdSin
 	And   c.id_seq = @iIdSeq

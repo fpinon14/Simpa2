@@ -2071,6 +2071,7 @@ Go
 --
 -- Retourne             :       Rien
 -- [VDOC14454] JFF 19/05/2014
+-- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_RS4616_MAJ_CMDE_TLS' AND type = 'P' )
         DROP procedure sysadm.PS_U_RS4616_MAJ_CMDE_TLS
@@ -2097,11 +2098,22 @@ Declare @sRetourErrMail VarChar ( 255 )
 Declare @sFicOut VarChar ( 255 )
 Declare @sLibPrestaExterne VarChar ( 35 ) 
 Declare @sFrom varchar ( 50 )
+Declare @TypArtIfr varchar ( 100 )
 
 Set @sIdFour = lTrim ( rTrim ( Upper ( @sIdFour )))
 Set @iFreqMois = Abs ( @iFreqMois ) * (-1)
 
 Set @sLibPrestaExterne = sysadm.FN_CODE_CAR ( @sIdFour, '-FR' ) 
+
+-- [HP252_276_HUB_PRESTA]
+Select @TypArtIfr = 
+		'#' + ( 
+		Select stuff ( 
+				( SELECT Distinct '#' + CAST(rtrim ( ltrim ( rtrim ( i.sku_saga )) ) AS VARCHAR(250)) 
+					FROM sysadm.ifr i
+					Where sku_saga is not null
+					For XML PATH ('') )
+			, 1, 1, '' )) + '#'
 
 -- Maj des commandes
 Update c
@@ -2109,7 +2121,7 @@ Set  id_marq_art_ifr = a.id_marq_art_ifr,
 	 id_modl_art_ifr = a.id_modl_art_ifr
 From sysadm.commande c,
 	 sysadm.article a
-Where c.id_four = @sIdFour
+Where ( c.id_four = @sIdFour Or Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' ) ) > 0 ) -- [HP252_276_HUB_PRESTA]
 And c.id_modl_art_ifr is null
 And c.maj_le > DateAdd ( month, @iFreqMois, GetDate() ) 
 And a.id_four = c.id_four
@@ -2123,7 +2135,7 @@ Set  id_marq_art_ifr = a.id_marq_art_ifr,
 	 id_modl_art_ifr = a.id_modl_art_ifr
 From sysadm.w_commande c,
 	 sysadm.article a
-Where c.id_four = @sIdFour
+Where ( c.id_four = @sIdFour Or Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' ) ) > 0 ) -- [HP252_276_HUB_PRESTA]
 And c.id_modl_art_ifr is null
 And c.maj_le > DateAdd ( month, @iFreqMois, GetDate() ) 
 And a.id_four = c.id_four
@@ -2139,8 +2151,8 @@ select a.id_marq_art,
 	   a.id_modl_art,
 	   0 'marquage'
 From  sysadm.article a
-Where a.id_four = @sIdFour
-And   a.id_typ_art <> 'CAF'
+Where a.id_four = @sIdFour 
+And   CHARINDEX ( '#' + rtrim ( a.id_typ_art ) + '#', @TypArtIfr ) > 0 -- [HP252_276_HUB_PRESTA]
 And   ( a.id_marq_art_ifr is null or a.id_modl_art_ifr is null )
 
 While Exists ( Select Top 1 1 From @tb where marquage = 0 )
@@ -2199,7 +2211,7 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 	EXEC master.dbo.SPB_PS_MAIL 
 			@sRetourErrMail OUTPUT, 
 			'sloison@spb.eu,ntonnetot@spb.eu', 
-			--'jff@spb.fr',
+--			'jff@spb.fr',
 			@sMessage, 
 			@sObjet, 
 			@sFrom, 

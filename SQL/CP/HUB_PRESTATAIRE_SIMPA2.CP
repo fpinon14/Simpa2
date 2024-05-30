@@ -170,7 +170,8 @@ Select	@iIdSin			= Convert ( integer, @adcIdsin),
 		@sTypAppSin		= nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'TYPE_APP', 'P',  'RETOUR=CODE'  ) , ''), 
 		@sLibTypAppSin  = nullif ( sysadm.FN_CODE_CAR ( @sTypAppSin, '-AR' ), '') ,
 		@sEtatAppSin	= nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'TYPAPP_REC_NEU', 'P',  'RETOUR=CODE'  ), ''),
-		@sCodeVerrou	= nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'CODE_VERROU_SHERPA_SCRIPT', 'P', '' ), '' ),
+		@sCodeVerrou	= IsNull ( nullif ( sysadm.FN_CLE_VAL ( 'CODE_VERROU', c.info_spb_frn_cplt, ';' ), ''), 
+						   		   nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'CODE_VERROU_SHERPA_SCRIPT', 'P', '' ), '' )),
 		@sDesimlocke	= nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'DESIMLOCKE', 'P', '' ), '' ),
 		@dtDateAchat	= s.dte_ach_port,
 		@iIdAssureur	= sysadm.FN_ID_CIE (s.id_sin),
@@ -1128,6 +1129,8 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 					'Set alt_trt = ''O'', ' +
 					'    traite_le = ''' + Convert ( varchar ( 10 ), GETDATE(), 112 ) + ' ' + Convert ( varchar ( 30 ), GETDATE(), 114 ) + ''', ' +
 					'    traite_par = ''SIM2''' + 
+					'	 chemin_fic = Reverse ( Right ( reverse ( ' + @sCheminDepotFichierMPRFrn + ' ), Len ( ' + @sCheminDepotFichierMPRFrn + ' ) - CharIndex ( ''\'', reverse (  ' + @sCheminDepotFichierMPRFrn + ' )) + 1 ))' +
+					'	 nom_fic = Reverse ( Left (  reverse (  ' + @sCheminDepotFichierMPRFrn + ' ), CharIndex ( ''\'', reverse (  '+ @sCheminDepotFichierMPRFrn + ' )) - 1 ))' +
 					'    where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @iIdDepotHub )  
 					Exec ( @sSql )
 					Set @iError = @@ERROR 
