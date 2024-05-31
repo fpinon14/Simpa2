@@ -711,6 +711,25 @@ AS
 Declare @iError Integer
 Declare @iRowCount Integer
 
+Declare @sAltTrt VarChar ( 1 )
+Declare @dtTraiteLe DateTime 
+Declare @sTraitePar VarChar ( 4 )
+Declare @iAReparerSav Integer
+
+Set @iAReparerSav = IIF ( sysadm.FN_CLE_VAL ( 'A_REPARER_SAV', @sInfo_spb_frn_cplt, ';') = 'OUI', 1, 0)
+
+Set @sAltTrt = 'N'
+Set @dtTraiteLe = null 
+Set @sTraitePar = null
+
+
+If @iAReparerSav > 0 
+	Begin
+		Set @sAltTrt = 'O'
+		Set @dtTraiteLe = GETDATE()
+		Set @sTraitePar = 'SIM2'
+	End 
+
 -----------------------------------------------------------------------
 -- Cas Test Pour JF sur la base SIMPA2, Retour en dur (bouchon)      --
 -- /!\ A laisser !													 --
@@ -984,9 +1003,9 @@ If @aiCas in ( 2, 3 )
 			'SIM2',
 			0,
 			null,
-			'N',
-			null,
-			null,
+			@sAltTrt,
+			@dtTraiteLe,
+			@sTraitePar,
 			@sIdHubPresta,
 			@sIdFour,
 			@sTypDommage,

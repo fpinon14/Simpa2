@@ -237,6 +237,7 @@ Declare @iPrestaHUB Integer
 Declare @TypArtIfr VarChar ( 255 ) -- [HP252_276_HUB_PRESTA]
 Declare @iMarqModlIFr Integer -- [HP252_276_HUB_PRESTA]
 Declare @iDemandeSavHubPresta Integer -- [HP252_276_HUB_PRESTA]
+Declare @dcIdEvt Decimal ( 7 ) -- [HP252_276_HUB_PRESTA]
 
 Set @iCasPropoAutoO2m = 0 -- [PC877]
 Set @iTraite = 0 
@@ -3485,10 +3486,92 @@ If @sIdFour = 'AUC'
 	End 
 
 -- [HP252_276_HUB_PRESTA] -- Gestion du SAV avc le Hub Prestataire.
-[ICI]
 If @iDemandeSavHubPresta > 0 
 	Begin
+		-- /!\/!\/!\/!\/!\/!\/!\/!\/!\
+		-- Insérer un contact expliquant la demande de SAV [TODO]
+		-- /!\/!\/!\/!\/!\/!\/!\/!\/!\
+
+		Select	@dcNewIdDetail = max ( id_detail ) 
+		From	sysadm.detail
+		where   id_sin = @dcIdSin
+		and     id_gti = @dcIdGti 
+
+		If @dcNewIdDetail is null Set @dcNewIdDetail = 0
+		Set @dcNewIdDetail = @dcNewIdDetail + 1
+
+		Select	@dcIdEvt = dt.id_evt
+		From	sysadm.detail dt
+		Where	id_sin  = @dcIdSin
+		And		id_gti  = @dcIdGti 
+		And		id_detail = @dcIdDetail 
+
+
+		Insert into sysadm.detail 
+		Select id_sin,   id_gti,   @dcNewIdDetail,   @dcIdEvt,   id_reg=0,   id_i_reg=null,   lib_det,   dte_det,   heu_det, num_carte,   mt_prej=0,   mt_fran=0,   mt_nplaf=0,   mt_plaf=0,   alt_plaf='N',   alt_reg='N',   alt_att='O',   alt_ssui='N',   cod_mot_ssui=0,   cod_dec_mac=100,   cod_dec_ope=100,   cod_etat=100,   id_carte,   id_type_carte,   getdate(),   'AUTO',   getdate(),   getdate(),   'AUTO',   dte_cmd=null,   dte_livr=null,   mt_val_achat,   mt_val_publique,   num_facture=null
+		From sysadm.detail d
+		Where d.id_sin = @dcIdSin
+		And   d.id_gti = @dcIdGti
+		And   d.id_detail = @dcIdDetail
+
+		If Exists ( Select * from w_detail where id_sin = @dcIdSin  and id_gti = @dcIdGti  and id_detail = @dcIdDetail  )
+		  Begin
+			Insert into sysadm.w_detail 
+			Select id_sin,   id_gti,   @dcNewIdDetail,   @dcIdEvt,   lib_det,   dte_det,   heu_det, num_carte,   mt_prej=0,   mt_fran=0,   mt_nplaf=0,   mt_plaf=0,   id_i_reg=null, alt_bloc='N', alt_cour='N', alt_plaf='N',   alt_reg='N',   alt_att='O', alt_valide='N',  cpt_valide=1,  alt_ssui='N',   cod_mot_ssui=0,   cod_dec_mac=100,   cod_dec_ope=100,   cod_etat=100,   id_carte,   id_type_carte, getdate(),   getdate(),   'AUTO',   dte_cmd=null,   dte_livr=null,   mt_val_achat,   mt_val_publique,   num_facture=null
+			From sysadm.w_detail d
+			Where d.id_sin = @dcIdSin
+			And   d.id_gti = @dcIdGti
+			And   d.id_detail = @dcIdDetail
+		  End 
+
+		Insert into sysadm.div_det 
+		Select id_sin,   id_gti, @dcNewIdDetail, nom_zone, lib_label, id_typ_liste, alt_liste_codecar, id_typ_zone, alt_oblig, alt_prot , cpt_tri, val_nbre, val_mt, val_dte, val_car, getdate(), getdate(),  'AUTO', getdate(), 'AUTO'
+		From sysadm.div_det d
+		Where d.id_sin = @dcIdSin
+		And   d.id_gti = @dcIdGti
+		And   d.id_detail = @dcIdDetail
+
+		If Exists ( Select * from w_div_det where id_sin = @dcIdSin  and id_gti = @dcIdGti  and id_detail = @dcIdDetail  )
+		  Begin
+			Insert into sysadm.w_div_det 
+			Select id_sin,   id_gti, @dcNewIdDetail, nom_zone, lib_label, id_typ_liste, alt_liste_codecar, id_typ_zone, alt_oblig, alt_prot , cpt_tri, val_nbre, val_mt, val_dte, val_car, 1, getdate(),   getdate(), 'AUTO'
+			From sysadm.w_div_det d
+			Where d.id_sin = @dcIdSin
+			And   d.id_gti = @dcIdGti
+			And   d.id_detail = @dcIdDetail			  
+		  End 
+
+		Select @iNewIdSeq = max ( id_seq ) From sysadm.commande where id_sin = @dcIdSin
+
+		If @iNewIdSeq is null Set @iNewIdSeq = 0
+		Set @iNewIdSeq = @iNewIdSeq + 1
 		
+		Insert into sysadm.commande
+		select top 1 id_sin , @iNewIdSeq, id_gti, @dcNewIdDetail, id_four, id_typ_art, id_marq_art, id_modl_art, mt_ttc_cmde, adr_nom, adr_prenom, adr_livr1, adr_livr2, adr_livr_cpl, adr_cp, adr_ville, adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, 'Prestation de SAV demandée par le prestataire luimême sur retour de la prestation ' + CONVERT ( Varchar ( 10), @iIdSeq) + '.', null,  null, null, null, null, 'ECT', null, 'PRESTA AUTOMATIQUE', 0, null, null, Getdate(), Getdate(), 'AUTO',  Getdate(),  'AUTO', id_zone, id_bsp, dte_ret_pret, adr_cod_civ, id_ref_four, id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, alt_dev_acp, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli=null, 990 , id_marq_art_ifr, id_modl_art_ifr, 
+					 sysadm.FN_CLE_VAL_E ( 'A_REPARER_SAV', 'OUI', 
+						 sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', '', 
+							sysadm.FN_CLE_VAL_E ( 'HP_ID_HUB_PRESTA', sysadm.FN_CLE_VAL ( 'ID_HUB_PRESTA_SAV', @sInfoFrnSpbCplt, ';') , RTRIM ( c.info_spb_frn_cplt ), ';' ) 
+						 , ';' ),
+					 ';' ),
+					 ''
+		From sysadm.commande c
+		Where c.id_sin = @dcIdSin
+		And   c.id_seq = @iIdSeq
+
+		If Exists ( Select * from w_commande where id_sin = @dcIdSin   and id_seq = @iIdSeq )
+		  Begin
+			Insert into sysadm.w_commande
+			select top 1 id_sin , @iNewIdSeq, id_gti, @dcNewIdDetail, id_four, id_typ_art, id_marq_art, id_modl_art, mt_ttc_cmde, adr_nom, adr_prenom, adr_livr1, adr_livr2, adr_livr_cpl, adr_cp, adr_ville, adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, 'Prestation de SAV demandée par le prestataire luimême sur retour de la prestation ' + CONVERT ( Varchar ( 10), @iIdSeq) + '.', null,  null, null, null, null, 'ECT', null, 1, 'PRESTA AUTOMATIQUE', Getdate(), Getdate(), 'AUTO',  id_zone, id_bsp, dte_ret_pret, adr_cod_civ, id_ref_four, id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, alt_dev_acp, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli=null, 990, id_marq_art_ifr, id_modl_art_ifr, 
+					 sysadm.FN_CLE_VAL_E ( 'A_REPARER_SAV', 'OUI', 
+						 sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', '', 
+							sysadm.FN_CLE_VAL_E ( 'HP_ID_HUB_PRESTA', sysadm.FN_CLE_VAL ( 'ID_HUB_PRESTA_SAV', @sInfoFrnSpbCplt, ';') , RTRIM ( c.info_spb_frn_cplt ), ';' ) 
+						 , ';' ),
+					 ';' ),
+					 ''
+			From w_commande c
+			Where c.id_sin = @dcIdSin
+			And   c.id_seq = @iIdSeq
+		  End 
 
 	End 
 

@@ -631,7 +631,6 @@ Set @sSql =
 '		dhs.nom_transporteur, '+
 '		dhs.dte_rcp_app_cli, '+
 '		dhs.app_swap, '+
---'		dhs.ref_app_rempl, '+
 '		dhs.autres_infos_rempl, '+
 '		dhs.marque_rempl, '+
 '		dhs.modele_rempl, '+
@@ -941,6 +940,7 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 				-- Détermination du statut SIMPA2 de la prestation
 				Set @sChaineBCVretourDetStatut = SPACE ( 255 )
 				Set @sChaineBCVretourDetStatut = sysadm.FN_CLE_VAL_E ( 'TYP_BA_ALLER', Upper ( @sTypBaAller ), @sChaineBCVretourDetStatut, ';' ) 
+				Set @sCommentFrn = Left ( ISNULL ( @sCommentFrn, '' ) + SPACE ( 255 ), 255)
 
 				Exec @iRet = sysadm.PS_HP276_SU_S2_MOTEUR_TRT_RETOUR_HUB_DETERMINATION_STATUT 
 								@sActivityCode, 
@@ -949,6 +949,7 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 								@sOrdreAction,
 								@sInstanceHub,
 								@iIdDepotHub,
+								@sCommentFrn OutPut,
 								@sChaineBCVretourDetStatut OutPut
 
 				If @iRet <= 0 -- Au minimum 159 ou un statut 'en cours à créer' si non existant
@@ -1017,7 +1018,6 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( convert ( varchar(10), @dtDteRcpAppCli, 103 ) + ' ' + CONVERT (varchar(8), @dtDteRcpAppCli, 108), '') + @sSepChampsFicMPR
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sAppSwap, '') + @sSepChampsFicMPR
 
-				-- Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sRefAppRempl, '') + @sSepChampsFicMPR
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sAutresInfosRempl, '') + @sSepChampsFicMPR
 
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sMarqueRempl, '') + @sSepChampsFicMPR
@@ -1261,6 +1261,7 @@ CREATE procedure sysadm.PS_HP276_SU_S2_MOTEUR_TRT_RETOUR_HUB_DETERMINATION_STATU
 	@asActionOrigine			VarChar ( 50 ),
 	@asInstanceHub				VarChar ( 100 ),
 	@aiIdDepotHub				Integer,
+	@asCommentFrn				VarChar ( 255 ) OutPut,
 	@asChaineBCVretour			VarChar ( 255 ) OutPut
 AS
 
@@ -1269,6 +1270,7 @@ Declare @sMotClecplt varChar ( 100 )
 Declare @sBCVserial  varChar ( 100 )
 Declare @sSql		Varchar ( 2000 )
 Declare @sTypBaAller VarChar ( 35 ) 
+Declare @sLibActivity VarChar( 255 )
 
 Set @sTypBaAller = sysadm.FN_CLE_VAL ( 'TYP_BA_ALLER', @asChaineBCVretour, ';' )
 
@@ -1280,7 +1282,8 @@ Set @asActionOrigine = Upper ( @asActionOrigine )
 -- Recherche sur les 4 critères
 Select @iStatut = mrh.statut,
 	   @sMotClecplt = lTrim ( rTrim ( mrh.mot_cle_cplt )),
-	   @sBCVserial  = lTrim ( rTrim ( mrh.bcv_serial ))
+	   @sBCVserial  = lTrim ( rTrim ( mrh.bcv_serial )),
+	   @sLibActivity = lTrim ( rTrim ( lib_activity ))
 From sysadm.mapping_retour_hub mrh
 Where mrh.activity_code = @asActivityCode
 And   mrh.activity_return_code = @asActivityReturnCode
@@ -1292,7 +1295,8 @@ If @@ROWCOUNT<= 0
 	Begin
 		Select @iStatut = mrh.statut,
 			   @sMotClecplt = lTrim ( rTrim ( mrh.mot_cle_cplt )),
-			   @sBCVserial  = lTrim ( rTrim ( mrh.bcv_serial ))
+			   @sBCVserial  = lTrim ( rTrim ( mrh.bcv_serial )),
+			   @sLibActivity = lTrim ( rTrim ( lib_activity ))
 		From sysadm.mapping_retour_hub mrh
 		Where mrh.activity_code = @asActivityCode
 		And   mrh.activity_return_code = @asActivityReturnCode
@@ -1304,7 +1308,8 @@ If @@ROWCOUNT<= 0
 	Begin
 		Select @iStatut = mrh.statut,
 			   @sMotClecplt = lTrim ( rTrim ( mrh.mot_cle_cplt )),
-			   @sBCVserial  = lTrim ( rTrim ( mrh.bcv_serial ))
+			   @sBCVserial  = lTrim ( rTrim ( mrh.bcv_serial )),
+			   @sLibActivity = lTrim ( rTrim ( lib_activity ))
 		From sysadm.mapping_retour_hub mrh
 		Where mrh.activity_code = @asActivityCode
 		And   mrh.activity_return_code = @asActivityReturnCode
@@ -1316,7 +1321,8 @@ If @@ROWCOUNT<= 0
 	Begin
 		Select @iStatut = mrh.statut,
 			   @sMotClecplt = lTrim ( rTrim ( mrh.mot_cle_cplt )),
-			   @sBCVserial  = lTrim ( rTrim ( mrh.bcv_serial ))
+			   @sBCVserial  = lTrim ( rTrim ( mrh.bcv_serial )),
+			   @sLibActivity = lTrim ( rTrim ( lib_activity ))
 		From sysadm.mapping_retour_hub mrh
 		Where mrh.activity_code = @asActivityCode
 		And   mrh.activity_return_code = @asActivityReturnCode
@@ -1330,7 +1336,8 @@ If @@ROWCOUNT<= 0
 Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'STATUS_GC', CONVERT( Varchar (10), @iStatut ), @asChaineBCVretour, ';')
 Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'MOT_CLE_CPLT', CONVERT( Varchar (10), @sMotClecplt ), @asChaineBCVretour, ';')
 If RIGHT ( rTrim ( @asChaineBCVretour), 1 )<> ';' Set @asChaineBCVretour = rTrim ( @asChaineBCVretour) + ';'
-Set @asChaineBCVretour = @asChaineBCVretour + @sBCVserial
+Set @asChaineBCVretour = rTrim ( @asChaineBCVretour + @sBCVserial )
+Set @asCommentFrn = rTrim ( ISNULL ( @asCommentFrn, '' ) + IIF ( ISNULL ( @asCommentFrn, '' ) <> '', '. ', '' ) + @sLibActivity + '.' )
 
 -------------------------------------------------------------------------------------------
 -- Cas particulier de redressement de données dans la table de dépot pour être cohérent, --
@@ -1388,3 +1395,30 @@ Return 1
 
 GO
 
+-------------------------------------------------------------------
+--
+-- Procédure            :       PS_HP276_S_S2_RECUPERER_ID_SEQ_SAV
+-- Auteur               :       JFF
+-- Date                 :       24/04/2024
+-- Libell‚              :       [HP252_276_HUB_PRESTA]
+-- Commentaires         :       Récupère le dernier Id Seq (cas du SAV donc)
+--                              /!\ A COMPILER SUR LA BASE SIMPA2 /!\
+--
+-- Retourne             :       rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_S2_RECUPERER_ID_SEQ_SAV' AND type = 'P' )
+        DROP procedure sysadm.PS_HP276_S_S2_RECUPERER_ID_SEQ_SAV
+GO
+
+CREATE procedure sysadm.PS_HP276_S_S2_RECUPERER_ID_SEQ_SAV
+	    @adcIdsin			Decimal ( 10 ),
+		@aiIdSeqSavRet		Integer  Output
+AS
+
+Select @aiIdSeqSavRet = MAX ( id_seq ) 
+From   sysadm.commande c
+Where  c.id_sin = @adcIdsin
+
+If @aiIdSeqSavRet is null Set @aiIdSeqSavRet = 0
+
+Go
