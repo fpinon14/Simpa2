@@ -3488,10 +3488,6 @@ If @sIdFour = 'AUC'
 -- [HP252_276_HUB_PRESTA] -- Gestion du SAV avc le Hub Prestataire.
 If @iDemandeSavHubPresta > 0 
 	Begin
-		-- /!\/!\/!\/!\/!\/!\/!\/!\/!\
-		-- Insérer un contact expliquant la demande de SAV [TODO]
-		-- /!\/!\/!\/!\/!\/!\/!\/!\/!\
-
 		Select	@dcNewIdDetail = max ( id_detail ) 
 		From	sysadm.detail
 		where   id_sin = @dcIdSin
@@ -3572,6 +3568,17 @@ If @iDemandeSavHubPresta > 0
 			Where c.id_sin = @dcIdSin
 			And   c.id_seq = @iIdSeq
 		  End 
+
+			Set @sMess = 'Contact crée automatiquement, Process [' + @sLibFour + '] -> '+ 'Le prestataire a demandé la création d''une prestation de SAV, laquelle a automatiquement été créée par le système.' 
+
+			IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+			BEGIN
+				Exec SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT
+			END
+			ELSE
+			BEGIN
+				Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT						
+			END
 
 	End 
 

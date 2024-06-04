@@ -1213,6 +1213,7 @@ CREATE procedure sysadm.PS_CORRECTION_BASE_TEMPS_1
 -- JFF	18/12/2013	ITSM190500
 -- JFF      12/02/2016   [PI062]
 -- JFF  25/08/2020 Création enregistrement dans routage si absent
+-- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
 -------------------------------------------------------------------
 AS
 
@@ -1361,6 +1362,11 @@ And 	mt_plaf > 0
 And	id_reg > 0
 And	cod_etat = 500
 
+-- [HP252_276_HUB_PRESTA]
+If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
+  Begin
+	Exec sysadm.PS_HP276_SI_S2_MOTEUR_TRANSFERT_PARTICULIER_VERS_HUB
+  End 
 
 GO
 SET QUOTED_IDENTIFIER OFF 
@@ -1396,6 +1402,7 @@ CREATE procedure sysadm.PS_CORRECTION_BASE_TEMPS_2
 -------------------------------------------------------------------
 -- JFF 23/04/2019 - Redressement des cmde ELD sur le num CC manquant.
 -- JFF 19/12/2022   [RS4093_EVOL_ELD]
+-- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
 -------------------------------------------------------------------
 
 AS
@@ -1621,6 +1628,12 @@ And not exists ( Select Top 1 1 From sysadm.cour_prod cp where cp.id_prod = p.id
 And cp.id_cour = 'BLAX02'
 Order by p.id_prod, cp.id_cour, cp.id_ordre
 
+-- [HP252_276_HUB_PRESTA]
+If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
+  Begin
+	Exec sysadm.PS_HP276_SI_S2_MOTEUR_TRANSFERT_PARTICULIER_VERS_HUB
+  End 
+
 
 GO
 SET QUOTED_IDENTIFIER OFF 
@@ -1654,6 +1667,7 @@ CREATE procedure sysadm.PS_CORRECTION_BASE_TEMPS_3
 --
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
+-- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
 -------------------------------------------------------------------
 AS
 
@@ -1807,6 +1821,11 @@ While Exists ( Select Top 1 1 From @TbRepCour where marquage = 0 )
 -- Détecte les objets SQL supprimé de façon malveillante
 Exec sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
 
+-- [HP252_276_HUB_PRESTA]
+If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
+  Begin
+	Exec sysadm.PS_HP276_SI_S2_MOTEUR_TRANSFERT_PARTICULIER_VERS_HUB
+  End 
  
 GO
 SET QUOTED_IDENTIFIER OFF 
@@ -1838,7 +1857,8 @@ CREATE procedure sysadm.PS_CORRECTION_BASE_TEMPS_4
 -- Arguments            :
 --
 -- Retourne             :       Rien
---
+-------------------------------------------------------------------
+-- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
 -------------------------------------------------------------------
 AS
 
@@ -1925,6 +1945,13 @@ And i.dern_maj_prix_trt not in ( 'URGE', 'FERM' )
 
 -- Détecte les objets SQL supprimé de façon malveillante
 Exec sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
+
+-- [HP252_276_HUB_PRESTA]
+If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
+  Begin
+	Exec sysadm.PS_HP276_SI_S2_MOTEUR_TRANSFERT_PARTICULIER_VERS_HUB
+  End 
+
 
 GO
 SET QUOTED_IDENTIFIER OFF 

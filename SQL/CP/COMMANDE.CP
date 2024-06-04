@@ -7843,6 +7843,7 @@ Go
 -- JFF   19/09/2018  [DT361]
 -- JFF   21/10/2019  [VDOC28556] Hélène
 -- JFF   29/10/2019  J'ajoute SBE, si problème on l'enlèvera
+-- JFF   07/03/2024  [HP252_276_HUB_PRESTA]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_PEC_A_RECYCLER_PM330' AND type = 'P' )
         DROP procedure sysadm.PS_I_PEC_A_RECYCLER_PM330
@@ -7862,9 +7863,36 @@ Declare @sProbleme Varchar ( 255 )
 Declare @iIdSeqRAR Integer
 Declare @sQualifcationIrrep VarChar ( 10 ) -- [VDOC28556] Hélène
 Declare @sCasRetour VarChar ( 50 )
+Declare @iIdSeqHubPrestaOrig Integer
 
 Set @sProbleme = ''
 Set @iEligible = 0
+Set @iIdSeqHubPrestaOrig = -1
+
+-- [HP252_276_HUB_PRESTA]
+If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
+ Begin
+	Select @iIdSeqHubPrestaOrig = Max ( id_seq )
+	From sysadm.commande c with ( nolock )
+	Where c.id_sin = @adcIdSin
+	And   c.id_ref_four in ( 'A_REPARER' ) 
+	And   Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' ) ) > 0 
+	And   sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' ) <> 'FICTIVE'
+	And   c.status_gc in ( 21 )
+	And	  c.cod_etat <> 'ANN'
+	/*
+	And   ( CharIndex ( '[BVIE]', c.comment_frn, 1 ) > 0 Or 
+		    CharIndex ( '[BVIEOX]', c.comment_frn, 1 ) > 0  Or 
+			CharIndex ( '[BVID]', c.comment_frn, 1 ) > 0  Or 
+			CharIndex ( '[BVIP]', c.comment_frn, 1 ) > 0  Or 
+			CharIndex ( '[BVIT]', c.comment_frn, 1 ) > 0  Or 
+			CharIndex ( '[PIE]',  c.comment_frn, 1 ) > 0  ) 
+	*/
+
+ End 
+
+If @iIdSeqHubPrestaOrig is null Set @iIdSeqHubPrestaOrig = -1
+If @iIdSeqHubPrestaOrig = 0 Set @iIdSeqHubPrestaOrig = -1
 
 If Not Exists ( 
 		Select	Top 1 1
@@ -7873,7 +7901,7 @@ If Not Exists (
 		Where   s.id_sin = @adcIdSin
 		And		ct.id_prod = s.id_prod
 		And		ct.id_code_frn in ( 'O2M', 'PSM', 'COR', 'CEA', 'SBE' ) -- [DT288]
-   )
+   ) And @iIdSeqHubPrestaOrig < 0
    Begin
 	Return
    End 
@@ -7919,7 +7947,7 @@ If Exists (
 	And		rg.id_gti <> 8 -- [PM330-1][MANTIS20367]
 	And		c1.id_sin = r.id_sin
 	And		c1.id_ref_four in ( 'A_REPARER', 'A_DESOXYDER' )
-	And		c1.id_four in ( 'O2M', 'PSM', 'COR', 'CEA', 'SBE' )
+	And		( c1.id_four in ( 'O2M', 'PSM', 'COR', 'CEA', 'SBE' ) Or @iIdSeqHubPrestaOrig > 0 ) -- [HP252_276_HUB_PRESTA]
 	And		c1.status_gc in ( 21, 23 )
 	And		c1.cod_etat <> 'ANN'
 	And		Not Exists ( 
@@ -7948,7 +7976,7 @@ If @iEligible = 0 And
 --	And		Convert ( VarChar( 10 ), cmde.valide_le, 103 ) = Convert ( VarChar( 10 ), GetDate(), 103 )  -- [VDOC21260]
 	And		c1.id_sin = cmde.id_sin
 	And		c1.id_ref_four in ( 'A_REPARER', 'A_DESOXYDER' )
-	And		c1.id_four in ( 'O2M', 'PSM', 'COR', 'CEA', 'SBE' ) -- [DT288]
+	And		( c1.id_four in ( 'O2M', 'PSM', 'COR', 'CEA', 'SBE' ) Or @iIdSeqHubPrestaOrig > 0 ) -- [HP252_276_HUB_PRESTA] -- [DT288]
 	And		c1.status_gc in ( 21, 23 )
 	And		c1.cod_etat <> 'ANN'
 	And		Not Exists ( 
@@ -7982,17 +8010,24 @@ If Exists ( Select Top 1 1 From sysadm.w_commande Where id_sin = @adcIdSin )
 											End 
 		From	sysadm.w_commande c1
 		Where   c1.id_sin = @adcIdSin
-		And		c1.id_ref_four in ( 'A_REPARER', 'A_DESOXYDER' )
-		And		c1.status_gc in ( 21, 23 )
-		And		c1.cree_le < GetDate()
-		And		c1.cod_etat <> 'ANN'
-		And     c1.id_seq = ( Select Max ( c2.id_seq) 
-							  From   sysadm.commande c2
-							  Where  c2.id_sin = c1.id_sin
-							  And    c2.id_ref_four in ( 'A_REPARER', 'A_DESOXYDER' )
-							  And    c2.status_gc in ( 21, 23 )
-							  And    c2.cree_le < GetDate()
-							  And	 c2.cod_etat <> 'ANN' )
+		And		( 
+					(			c1.id_ref_four in ( 'A_REPARER', 'A_DESOXYDER' )
+						And		c1.status_gc in ( 21, 23 )
+						And		c1.cree_le < GetDate()
+						And		c1.cod_etat <> 'ANN'
+						And     @iIdSeqHubPrestaOrig < 0 
+						And     c1.id_seq = ( Select Max ( c2.id_seq) 
+												From   sysadm.commande c2
+												Where  c2.id_sin = c1.id_sin
+												And    c2.id_ref_four in ( 'A_REPARER', 'A_DESOXYDER' )
+												And    c2.status_gc in ( 21, 23 )
+												And    c2.cree_le < GetDate()
+												And	 c2.cod_etat <> 'ANN' )
+					)
+					Or 
+					c1.id_seq = @iIdSeqHubPrestaOrig
+				)
+				
   End 
 Else
   Begin
@@ -8010,17 +8045,23 @@ Else
 										End 
 	From	sysadm.commande c1
 	Where   c1.id_sin = @adcIdSin
-	And		c1.id_ref_four in ( 'A_REPARER', 'A_DESOXYDER' )
-	And		c1.status_gc in ( 21, 23 )
-	And		c1.cree_le < GetDate()
-	And		c1.cod_etat <> 'ANN'
-	And     c1.id_seq = ( Select Max ( c2.id_seq) 
-							From   sysadm.commande c2
-							Where  c2.id_sin = c1.id_sin
-							And    c2.id_ref_four in ( 'A_REPARER', 'A_DESOXYDER' )
-							And    c2.status_gc in ( 21, 23 )
-							And    c2.cree_le < GetDate()
-							And	 c2.cod_etat <> 'ANN' )
+	And		( 
+				(			c1.id_ref_four in ( 'A_REPARER', 'A_DESOXYDER' )
+					And		c1.status_gc in ( 21, 23 )
+					And		c1.cree_le < GetDate()
+					And		c1.cod_etat <> 'ANN'
+					And     @iIdSeqHubPrestaOrig < 0 
+					And     c1.id_seq = ( Select Max ( c2.id_seq) 
+											From   sysadm.commande c2
+											Where  c2.id_sin = c1.id_sin
+											And    c2.id_ref_four in ( 'A_REPARER', 'A_DESOXYDER' )
+											And    c2.status_gc in ( 21, 23 )
+											And    c2.cree_le < GetDate()
+											And	 c2.cod_etat <> 'ANN' )
+				)
+				Or 
+				c1.id_seq = @iIdSeqHubPrestaOrig
+			)
   End 
 
 Select	@dcNewIdDetail = max ( id_detail ) 
@@ -8067,23 +8108,52 @@ If Exists ( Select * from w_div_det where id_sin = @adcIdSin  and id_gti = @dcId
 	  
 Select @iNewIdSeq = max ( id_seq ) From sysadm.commande where id_sin = @adcIdSin 
 
+
 If @iNewIdSeq is null Set @iNewIdSeq = 0
 Set @iNewIdSeq = @iNewIdSeq + 1
 				
-Insert into commande
-select top 1 id_sin , @iNewIdSeq, id_gti, @dcNewIdDetail, id_four, id_typ_art= 'EDI', 'PRISE EN CHARGE A RECYCLER', '', mt_ttc_cmde=0, adr_nom, adr_prenom, adr_livr1, adr_livr2, adr_livr_cpl, adr_cp, adr_ville, adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, @sProbleme, null,  null, null, null, null, 'RFO', null, 'PRESTA AUTOMATIQUE', 0, null, null, Getdate(), Getdate(), 'AUTO',  Getdate(),  'AUTO', id_zone, id_bsp, dte_ret_pret, adr_cod_civ, 'PEC_A_RECYCLER', id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, null, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli, 0, 'PRISE EN CHARGE A RECYCLER', id_modl_art_ifr, null, null
+Insert into sysadm.commande
+select top 1 id_sin , @iNewIdSeq, id_gti, @dcNewIdDetail, id_four, id_typ_art= 'EDI', 'PRISE EN CHARGE A RECYCLER', '', mt_ttc_cmde=0, adr_nom, adr_prenom, adr_livr1, adr_livr2, adr_livr_cpl, adr_cp, adr_ville, adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, @sProbleme, null,  null, null, null, null, 'RFO', null, 'PRESTA AUTOMATIQUE', 0, null, null, Getdate(), Getdate(), 'AUTO',  Getdate(),  'AUTO', id_zone, id_bsp, dte_ret_pret, adr_cod_civ, 'PEC_A_RECYCLER', id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, null, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli=null, 0, 'PRISE EN CHARGE A RECYCLER', id_modl_art_ifr, 
+			IIF ( @iIdSeqHubPrestaOrig > 0, 
+					( sysadm.FN_CLE_VAL_E ( 'HP_ID_FOUR', c.id_four, 
+						sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', '', 
+							sysadm.FN_CLE_VAL_E ( 'HP_ID_HUB_PRESTA', sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';') , '', ';' ) 
+						, ';' ),
+					  ';' )
+				     ), null ),
+		   null
 From commande c
 Where c.id_sin = @adcIdSin
 And   c.id_seq = @iIdSeq
 
-If Exists ( Select * from w_commande where id_sin = @adcIdSin and id_seq = @iIdSeq )
+If Exists ( Select * from sysadm.w_commande where id_sin = @adcIdSin and id_seq = @iIdSeq )
 	Begin
-		Insert into w_commande
-		select top 1 id_sin , @iNewIdSeq, id_gti, @dcNewIdDetail, id_four, id_typ_art= 'EDI', 'PRISE EN CHARGE A RECYCLER', '', mt_ttc_cmde=0, adr_nom, adr_prenom, adr_livr1, adr_livr2, adr_livr_cpl, adr_cp, adr_ville, adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, @sProbleme, null,  null, null, null, null, 'RFO', null, 1, 'PRESTA AUTOMATIQUE', Getdate(), Getdate(), 'AUTO',  id_zone, id_bsp, dte_ret_pret, adr_cod_civ, 'PEC_A_RECYCLER'   , id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, null, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli, 0, 'PRISE EN CHARGE A RECYCLER', id_modl_art_ifr, null, null
+		Insert into sysadm.w_commande
+		select top 1 id_sin , @iNewIdSeq, id_gti, @dcNewIdDetail, id_four, id_typ_art= 'EDI', 'PRISE EN CHARGE A RECYCLER', '', mt_ttc_cmde=0, adr_nom, adr_prenom, adr_livr1, adr_livr2, adr_livr_cpl, adr_cp, adr_ville, adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, @sProbleme, null,  null, null, null, null, 'RFO', null, 1, 'PRESTA AUTOMATIQUE', Getdate(), Getdate(), 'AUTO',  id_zone, id_bsp, dte_ret_pret, adr_cod_civ, 'PEC_A_RECYCLER'   , id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, null, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli=null, 0, 'PRISE EN CHARGE A RECYCLER', id_modl_art_ifr,
+				IIF ( @iIdSeqHubPrestaOrig > 0, 
+						( sysadm.FN_CLE_VAL_E ( 'HP_ID_FOUR', c.id_four, 
+							sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', '', 
+								sysadm.FN_CLE_VAL_E ( 'HP_ID_HUB_PRESTA', sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';') , '', ';' ) 
+							, ';' ),
+						  ';' )
+						 ), null ),
+			   null
 		From w_commande c
 		Where c.id_sin = @adcIdSin
 		And   c.id_seq = @iIdSeq
 	End 				
+
+
+	-- [HP252_276_HUB_PRESTA]
+If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
+ Begin
+	If @iIdSeqHubPrestaOrig > 0 
+		Begin
+			Insert into sysadm.en_attente_transfert_vers_hp
+			exec sysadm.PS_HP276_S_S2_OBTENTION_DONNEES_PRESTA_SIMPA2_POUR_PREPARATION_CREATION_HUB_PRESTATAIRE 2, @adcIdSin, @iNewIdSeq
+		End 
+ End 
+
 
 -- [VDOC28556] Hélène
 	 /*
@@ -8136,6 +8206,7 @@ Go
 -- JFF	    09/08/2018   [ITSM551169]
 -- JFF	    09/08/2018   [ITSM551169]
 -- JFF		19/09/2018	 [DT361]
+-- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_REFUSE_A_REEXP_PM330' AND type = 'P' )
         DROP procedure sysadm.PS_I_REFUSE_A_REEXP_PM330
@@ -8172,10 +8243,30 @@ Declare @iIdSeqRAR Integer
 Declare @sIdFour VarChar ( 3 )
 Declare @sMess	VarChar ( 2000 )
 Declare @iIdCt	integer		
+Declare @iIdSeqHubPrestaOrig Integer
 
 Set @sProbleme = ''
 Set @iEligible = 0
 Set @iIdProcess = 990
+Set @iIdSeqHubPrestaOrig = -1
+
+-- [HP252_276_HUB_PRESTA]
+If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
+ Begin
+	Select @iIdSeqHubPrestaOrig = Max ( id_seq )
+	From sysadm.commande c with ( nolock )
+	Where c.id_sin = @adcIdSin
+	And   c.id_ref_four in ( 'A_REPARER' ) 
+	And   Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' ) ) > 0 
+	And   sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' ) <> 'FICTIVE'
+	And   c.status_gc in ( 21 )
+	And	  c.cod_etat <> 'ANN'
+
+	If @iIdSeqHubPrestaOrig is null Set @iIdSeqHubPrestaOrig = -1
+ End 
+ 
+If @iIdSeqHubPrestaOrig is null Set @iIdSeqHubPrestaOrig = -1
+If @iIdSeqHubPrestaOrig = 0 Set @iIdSeqHubPrestaOrig = -1
 
 If Not Exists ( 
 		Select	Top 1 1
@@ -8184,7 +8275,7 @@ If Not Exists (
 		Where   s.id_sin = @adcIdSin
 		And		ct.id_prod = s.id_prod
 		And		ct.id_code_frn in ( 'O2M', 'PSM', 'COR', 'CEA', 'SBE' ) -- [DT288]
-   )
+   ) And @iIdSeqHubPrestaOrig < 0
    Begin
 	Return
    End 
@@ -8215,7 +8306,7 @@ If Exists (
 			sysadm.refus r
 	Where   c1.id_sin = @adcIdSin
 	And		c1.id_ref_four in ( 'A_REPARER', 'A_DESOXYDER' )
-	And		c1.id_four in ( 'O2M', 'PSM', 'COR', 'CEA' ) -- [DT288]
+	And		( c1.id_four in ( 'O2M', 'PSM', 'COR', 'CEA' ) Or @iIdSeqHubPrestaOrig > 0 ) -- [HP252_276_HUB_PRESTA]-- [DT288]
 	And		( c1.status_gc in ( 21, 23 ) or ( c1.status_gc = 169 and c1.id_four = 'COR' )) -- [DT288-3_LOT2]
 	And		c1.cod_etat <> 'ANN'
 	And		g.id_sin = c1.id_sin
@@ -8224,7 +8315,6 @@ If Exists (
 	And		r.id_sin = g.id_sin -- VDOC21660
 	And     r.id_gti = g.id_gti -- VDOC21660
 	And		r.id_motif not in ( 661, 603 ) -- VDOC21660
-
 )
 	Begin
 		Set @iEligible = 1
@@ -8294,12 +8384,20 @@ Select	Top 1 @dcIdGti = c1.id_gti,
 			  @sCodEtat = c1.cod_etat
 From	sysadm.commande c1
 Where   c1.id_sin = @adcIdSin
-And		c1.id_ref_four in ( 'A_REPARER', 'A_DESOXYDER' )
-And		c1.id_four in ( 'O2M', 'PSM', 'COR', 'CEA' ) -- [DT288]
-And		( c1.status_gc in ( 21, 23 ) or ( c1.status_gc = 169 and c1.id_four = 'COR' )) -- [DT288-3_LOT2]
-And		c1.cree_le < GetDate()
-And		c1.cod_etat <> 'ANN'
+And     ( 
+			(
+				c1.id_ref_four in ( 'A_REPARER', 'A_DESOXYDER' )
+				And		c1.id_four in ( 'O2M', 'PSM', 'COR', 'CEA' )  -- [HP252_276_HUB_PRESTA]-- [DT288]
+				And		( c1.status_gc in ( 21, 23 ) or ( c1.status_gc = 169 and c1.id_four = 'COR' )) -- [DT288-3_LOT2]
+				And		c1.cree_le < GetDate()
+				And		c1.cod_etat <> 'ANN'
+				And     @iIdSeqHubPrestaOrig < 0
+			)
+			Or 
+			c1.id_seq = @iIdSeqHubPrestaOrig
+		)
 
+If @iIdSeqHubPrestaOrig > 0 Set @sQRelPickUpRet = 'NON'
 
 Select	@dcNewIdDetail = max ( id_detail ) 
 From	sysadm.detail
@@ -8354,9 +8452,9 @@ If @sQRelPickUpRet = 'OUI' And Len ( @sCodePickUp ) > 0 And @sIdFour <> 'COR'
 	Set @sInfoSpbFrnCplt = 'CODE_PICK_UP=' + rtrim ( @sCodePickUp ) + ';RET_REL_PICK_UP=OUI;MAIL_ASSURE=' + rtrim ( @sMailAssure ) 
 	Set @iIdProcess = 983
  End 
- 
--- [DT191-1]
-		  				
+ -- [DT191-1]
+  		
+
 Insert into commande
 select top 1 id_sin , @iNewIdSeq, id_gti, @dcNewIdDetail, id_four, id_typ_art= 'EDI', 'REFUSE A REEXPEDIER', '', mt_ttc_cmde=0, 
 			adr_nom=@sAdrNom, 
@@ -8366,9 +8464,15 @@ select top 1 id_sin , @iNewIdSeq, id_gti, @dcNewIdDetail, id_four, id_typ_art= '
 			adr_livr_cpl=@sAdrLivrCpl, 
 			adr_cp=@sAdrCp, 
 			adr_ville=@sAdrVille, 
-			adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, @sProbleme, null,  null, null, null, null, 'ECT', null, 'PRESTA AUTOMATIQUE', 0, null, null, Getdate(), Getdate(), 'AUTO',  Getdate(),  'AUTO', id_zone, id_bsp, dte_ret_pret, adr_cod_civ=@sAdrCodCiv, 'REFUSE_A_REEXP', id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, null, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli, @iIdProcess, 'REFUSE A REEXPEDIER', id_modl_art_ifr,
-	   @sInfoSpbFrnCplt ,-- [DT191-1]   
-	   null
+			adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, @sProbleme, null,  null, null, null, null, 'ECT', null, 'PRESTA AUTOMATIQUE', 0, null, null, Getdate(), Getdate(), 'AUTO',  Getdate(),  'AUTO', id_zone, id_bsp, dte_ret_pret, adr_cod_civ=@sAdrCodCiv, 'REFUSE_A_REEXP', id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, null, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli=null, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli, @iIdProcess, 'REFUSE A REEXPEDIER', id_modl_art_ifr,
+			IIF ( @aiIdSeqOrig > 0, 
+					( sysadm.FN_CLE_VAL_E ( 'HP_ID_FOUR', c.id_four, 
+						sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', '', 
+							sysadm.FN_CLE_VAL_E ( 'HP_ID_HUB_PRESTA', sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';') , @sInfoSpbFrnCplt, ';' ) 
+						, ';' ),
+					  ';' )
+				     ), @sInfoSpbFrnCplt ),	  -- [HP252_276_HUB_PRESTA] 
+			null
 From commande c
 Where c.id_sin = @adcIdSin
 And   c.id_seq = @iIdSeq
@@ -8385,13 +8489,28 @@ If Exists ( Select * from w_commande where id_sin = @adcIdSin and id_seq = @iIdS
 				adr_cp=@sAdrCp, 
 				adr_ville=@sAdrVille, 
 				adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, @sProbleme, null,  null, null, null, null, 'ECT', null, 1, 'PRESTA AUTOMATIQUE', Getdate(), Getdate(), 'AUTO',  id_zone, id_bsp, dte_ret_pret, adr_cod_civ=@sAdrCodCiv, 'REFUSE_A_REEXP'   , id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, null, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli, @iIdProcess, 'REFUSE A REEXPEDIER', id_modl_art_ifr, 
-			   @sInfoSpbFrnCplt -- [DT191-1]
-			   , null
+				IIF ( @aiIdSeqOrig > 0, 
+						( sysadm.FN_CLE_VAL_E ( 'HP_ID_FOUR', c.id_four, 
+							sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', '', 
+								sysadm.FN_CLE_VAL_E ( 'HP_ID_HUB_PRESTA', sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';') , @sInfoSpbFrnCplt, ';' ) 
+							, ';' ),
+							';' )
+							), @sInfoSpbFrnCplt ),	  -- [HP252_276_HUB_PRESTA] 
+			   null
 		From w_commande c
 		Where c.id_sin = @adcIdSin
 		And   c.id_seq = @iIdSeq
 	End 				
 
+	-- [HP252_276_HUB_PRESTA]
+If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
+ Begin
+	If @iIdSeqHubPrestaOrig > 0 
+		Begin
+			Insert into sysadm.en_attente_transfert_vers_hp
+			exec sysadm.PS_HP276_S_S2_OBTENTION_DONNEES_PRESTA_SIMPA2_POUR_PREPARATION_CREATION_HUB_PRESTATAIRE 2, @adcIdSin, @iNewIdSeq
+		End 
+ End 
 
 If @sQRelPickUpRet = 'OUI' And Len ( @sCodePickUp ) > 0 
 	Begin
