@@ -4708,6 +4708,10 @@ Declare @sVal VarChar ( 100 )
 Declare @sVal1 VarChar ( 100 )
 Declare @sVal2 VarChar ( 100 )
 Declare @sVal3 VarChar ( 100 )
+Declare @iNbreARepSav Integer 
+Declare @iNbreACtlSav Integer 
+Declare @iNbreSavActuel Integer 
+
 Set @sChaineBCV = ''
 
 -- [PC938_ORANGE_V3]
@@ -4807,6 +4811,39 @@ And   s.id_sin = @dcIdSin
 
 If @sVal is null Set @sVal = ''
 Select @sChaineBCV = sysadm.FN_CLE_VAL_E ( 'DNCX_STATUS_GC', @sVal, RTRIM ( @sChaineBCV) , ';')
+
+-- [HP252_276_HUB_PRESTA]
+If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
+ Begin
+	If sysadm.FN_CLE_VAL ( 'DDE_SAV', @sChaineBCV, ';' ) = 'OUI'
+		Begin 
+			Select	@iNbreARepSav = COUNT(*) 
+			From	sysadm.commande c with (nolock)
+			Where	c.id_sin = @dcIdSin
+			And 	c.id_seq = @iIdSeq
+			And		sysadm.FN_CLE_VAL ( 'A_REPARER_SAV', c.info_spb_frn_cplt, ';' ) = 'OUI'
+			And     c.cod_etat <> 'ANN'
+
+			Select	@iNbreACtlSav = COUNT(*) 
+			From	sysadm.commande c with (nolock)
+			Where	c.id_sin = @dcIdSin
+			And 	c.id_seq = @iIdSeq
+			And		sysadm.FN_CLE_VAL ( 'A_CONTROLER_SAV', c.info_spb_frn_cplt, ';' ) = 'OUI'
+			And     c.cod_etat <> 'ANN'
+
+			If @iNbreARepSav is null Set @iNbreARepSav = 0 
+			If @iNbreACtlSav is null Set @iNbreACtlSav = 0 
+
+			If @iNbreARepSav = @iNbreACtlSav And @iNbreARepSav = 0 And @iNbreACtlSav = 0 Set @iNbreSavActuel = 0
+			If @iNbreARepSav = @iNbreACtlSav And @iNbreARepSav > 0 And @iNbreACtlSav > 0 Set @iNbreSavActuel = 2
+			If @iNbreARepSav > @iNbreACtlSav And @iNbreARepSav > 0 And @iNbreACtlSav = 0 Set @iNbreSavActuel = 1
+
+			If @iNbreSavActuel is null Set @iNbreSavActuel = 0 
+
+			Set @sChaineBCV = sysadm.FN_CLE_VAL_E ( 'NBRE_SAV_ACTUEL', Convert ( VarChar ( 10 ), @iNbreSavActuel ), rTrim ( @sChaineBCV ), ';' )
+		End 
+ End 
+
 
 Select  @sIdFour = IsNull ( c.id_four , '') ,
 	@sCodEtat = IsNull ( c.cod_etat, ''),

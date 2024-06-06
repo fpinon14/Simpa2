@@ -580,8 +580,8 @@ If @sEnv = 'PROD'
 		Set @sInstanceHub = '[LS-SAGA2].[PRESTATAIRE].'
 		Set @sCheminDepotFichierMPRRacine  = '\\F4T\SIMPA2\'
 		Exec [LS-SAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '-1', -1, '-1', '', '', @iIdLotTrc output
-		Set @sDestErrTech = 'cbourdoiseau@spb.eu,cfrappat@spb.eu,VANDRE@spb.eu,BKHELIFA_ext@spb.eu'
-		Set @sDestErrCoherenceHub = 'VANDRE@spb.eu,BKHELIFA_ext@spb.eu'
+		Set @sDestErrTech = 'cbourdoiseau@spb.eu,cfrappat@spb.eu,VANDRE@spb.eu,BKHELIFA_ext@spb.eu,OCHAOUACHI@spb.eu'
+		Set @sDestErrCoherenceHub = 'VANDRE@spb.eu,BKHELIFA_ext@spb.eu,OCHAOUACHI@spb.eu'
 		Set @sDestCc = 'jff@spb.fr'
 	End 
 Else
@@ -648,10 +648,10 @@ Set @sSql =
 '		dhs.couleur_rempl, '+
 '		dhs.cap_stk_rempl, '+
 '		dhs.neuf_recond_rempl, '+
-'		dhs.prix_ttc_public, '+
+'		dhs.prix_ttc_rempl, '+
 '		dhs.prble_livraison, '+
 '		dhs.pec_prble_livraison, '+
-'		dhs.id_hub_presta_sav '+
+'		dhs.id_hub_presta_sav, '+
 '		dhs.info_frn_spb_cplt '+
 'From	' + @sInstanceHub + 'edi.DepotHubToSimpa2Presta dhs ' + 
 '		Left Outer Join ' + @sInstanceHub + 'edi.DepotSimpa2ToHubPresta dsh on dhs.id_hub_presta = dsh.id_hub_presta ' +
@@ -973,8 +973,9 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 					End 
 
 				Set @iStatusGC = convert ( Integer, sysadm.FN_CLE_VAL ( 'STATUS_GC', @sChaineBCVretourDetStatut, ';' ))
-				
-				Set @sCommentFrn = sysadm.FN_CLE_VAL ( 'MOT_CLE_CPLT', @sChaineBCVretourDetStatut, ';' ) + ' ' + @sCommentFrn
+				If @iStatusGC IS NULL Set @iStatusGC = 0 
+
+				Set @sCommentFrn = ltrim ( sysadm.FN_CLE_VAL ( 'MOT_CLE_CPLT', @sChaineBCVretourDetStatut, ';' ) + ' ' + @sCommentFrn )
 				
 				Set @sPerteAller = sysadm.FN_CLE_VAL ( 'PERTE_ALLER', @sChaineBCVretourDetStatut, ';' )
 				Set @sPrbleLivraison = sysadm.FN_CLE_VAL ( 'PRBLE_LIVRAISON', @sChaineBCVretourDetStatut, ';' )
@@ -982,7 +983,10 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 
 				Set @sAppSwap = sysadm.FN_CLE_VAL ( 'APP_SWAP', @sChaineBCVretourDetStatut, ';' )
 
-				Set @sInfoFrnSpbCpltlu = sysadm.FN_CLE_VAL_E ( 'DDE_SAV', sysadm.FN_CLE_VAL ( 'DDE_SAV', @sChaineBCVretourDetStatut, ';' ), @sInfoFrnSpbCpltlu, ';' )
+				If sysadm.FN_CLE_VAL ( 'DDE_SAV', @sChaineBCVretourDetStatut, ';' ) = 'Oui' 
+					Begin
+						Set @sInfoFrnSpbCpltlu = sysadm.FN_CLE_VAL_E ( 'DDE_SAV', sysadm.FN_CLE_VAL ( 'DDE_SAV', @sChaineBCVretourDetStatut, ';' ), @sInfoFrnSpbCpltlu, ';' )
+					End 
 
 				Break
 			End 
@@ -1141,9 +1145,9 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 					'Update ' + @sInstanceHub + 'edi.DepotHubToSimpa2Presta '  +
 					'Set alt_trt = ''O'', ' +
 					'    traite_le = ''' + Convert ( varchar ( 10 ), GETDATE(), 112 ) + ' ' + Convert ( varchar ( 30 ), GETDATE(), 114 ) + ''', ' +
-					'    traite_par = ''SIM2''' + 
-					'	 chemin_fic = Reverse ( Right ( reverse ( ' + @sCheminDepotFichierMPRFrn + ' ), Len ( ' + @sCheminDepotFichierMPRFrn + ' ) - CharIndex ( ''\'', reverse (  ' + @sCheminDepotFichierMPRFrn + ' )) + 1 ))' +
-					'	 nom_fic = Reverse ( Left (  reverse (  ' + @sCheminDepotFichierMPRFrn + ' ), CharIndex ( ''\'', reverse (  '+ @sCheminDepotFichierMPRFrn + ' )) - 1 ))' +
+					'    traite_par = ''SIM2'',' + 
+					'	 chemin_fic = Reverse ( Right ( reverse ( ''' + @sCheminDepotFichierMPRFrn + ''' ), Len ( ''' + @sCheminDepotFichierMPRFrn + ''' ) - CharIndex ( ''\'', reverse (  ''' + @sCheminDepotFichierMPRFrn + ''' )) + 1 )),' +
+					'	 nom_fic = Reverse ( Left (  reverse (  ''' + @sCheminDepotFichierMPRFrn + ''' ), CharIndex ( ''\'', reverse (  '''+ @sCheminDepotFichierMPRFrn + ''' )) - 1 ))' +
 					'    where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @iIdDepotHub )  
 					Exec ( @sSql )
 					Set @iError = @@ERROR 
@@ -1280,6 +1284,7 @@ Declare @sBCVserial  varChar ( 100 )
 Declare @sSql		Varchar ( 2000 )
 Declare @sTypBaAller VarChar ( 35 ) 
 Declare @sLibActivity VarChar( 255 )
+Declare @iRowCount Integer
 
 Set @sTypBaAller = sysadm.FN_CLE_VAL ( 'TYP_BA_ALLER', @asChaineBCVretour, ';' )
 
@@ -1299,8 +1304,10 @@ And   mrh.activity_return_code = @asActivityReturnCode
 And   mrh.activity_reason_code = @asActivityReasonCode
 And   mrh.action_origine = @asActionOrigine
 
+Set @iRowCount = @@ROWCOUNT
+
 -- Recherche sur 3 critères, sans @asActionOrigine
-If @@ROWCOUNT<= 0 
+If @iRowCount <= 0 
 	Begin
 		Select @iStatut = mrh.statut,
 			   @sMotClecplt = lTrim ( rTrim ( mrh.mot_cle_cplt )),
@@ -1310,10 +1317,13 @@ If @@ROWCOUNT<= 0
 		Where mrh.activity_code = @asActivityCode
 		And   mrh.activity_return_code = @asActivityReturnCode
 		And   mrh.activity_reason_code = @asActivityReasonCode
+
+		Set @iRowCount = @@ROWCOUNT
+
 	End 
 
 -- Recherche sur 2 critères, avec @asActionOrigine
-If @@ROWCOUNT<= 0 
+If @iRowCount <= 0 
 	Begin
 		Select @iStatut = mrh.statut,
 			   @sMotClecplt = lTrim ( rTrim ( mrh.mot_cle_cplt )),
@@ -1323,10 +1333,13 @@ If @@ROWCOUNT<= 0
 		Where mrh.activity_code = @asActivityCode
 		And   mrh.activity_return_code = @asActivityReturnCode
 		And   mrh.action_origine = @asActionOrigine
+
+		Set @iRowCount = @@ROWCOUNT
+
 	End 
 
 -- Recherche sur 2 critères, sans @asActionOrigine
-If @@ROWCOUNT<= 0 
+If @iRowCount <= 0 
 	Begin
 		Select @iStatut = mrh.statut,
 			   @sMotClecplt = lTrim ( rTrim ( mrh.mot_cle_cplt )),
@@ -1335,18 +1348,28 @@ If @@ROWCOUNT<= 0
 		From sysadm.mapping_retour_hub mrh with ( nolock )
 		Where mrh.activity_code = @asActivityCode
 		And   mrh.activity_return_code = @asActivityReturnCode
+
+		Set @iRowCount = @@ROWCOUNT
+
 	End 
 
-If @@ROWCOUNT<= 0 
+If @iRowCount<= 0 
 	Begin
 		Return -1 -- Pas de statut déterminé
 	End 
+
+If @iStatut is null Set @iStatut = 0
+If @sMotClecplt is null Set @sMotClecplt = ''
+If @sBCVserial is null Set @sBCVserial = ''
+If @sLibActivity is null Set @sLibActivity = ''
+If @asCommentFrn is null Set @asCommentFrn = ''
+Set @asCommentFrn = LTRIM ( rTrim ( @asCommentFrn ))
 
 Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'STATUS_GC', CONVERT( Varchar (10), @iStatut ), @asChaineBCVretour, ';')
 Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'MOT_CLE_CPLT', CONVERT( Varchar (10), @sMotClecplt ), @asChaineBCVretour, ';')
 If RIGHT ( rTrim ( @asChaineBCVretour), 1 )<> ';' Set @asChaineBCVretour = rTrim ( @asChaineBCVretour) + ';'
 Set @asChaineBCVretour = rTrim ( @asChaineBCVretour + @sBCVserial )
-Set @asCommentFrn = rTrim ( ISNULL ( @asCommentFrn, '' ) + IIF ( ISNULL ( @asCommentFrn, '' ) <> '', '. ', '' ) + @sLibActivity + '.' )
+Set @asCommentFrn = rTrim ( @asCommentFrn ) + IIF ( ISNULL ( Rtrim ( @asCommentFrn ), '' ) <> '', '. ', '' ) + @sLibActivity 
 
 -------------------------------------------------------------------------------------------
 -- Cas particulier de redressement de données dans la table de dépot pour être cohérent, --

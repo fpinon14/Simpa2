@@ -238,11 +238,17 @@ Declare @TypArtIfr VarChar ( 255 ) -- [HP252_276_HUB_PRESTA]
 Declare @iMarqModlIFr Integer -- [HP252_276_HUB_PRESTA]
 Declare @iDemandeSavHubPresta Integer -- [HP252_276_HUB_PRESTA]
 Declare @dcIdEvt Decimal ( 7 ) -- [HP252_276_HUB_PRESTA]
+Declare @iNbreSavActuel Integer -- [HP252_276_HUB_PRESTA]
+Declare @sCasSav VarChar ( 30 ) -- [HP252_276_HUB_PRESTA]
 
 Set @iCasPropoAutoO2m = 0 -- [PC877]
 Set @iTraite = 0 
 Set @iStopMajAdhMobRempl = 0 
 Set @iDemandeSavHubPresta = IIF ( sysadm.FN_CLE_VAL ( 'DDE_SAV', @sInfoFrnSpbCplt, ';' ) = 'OUI', 1, 0) -- [HP252_276_HUB_PRESTA]
+Set @iNbreSavActuel = IIF ( IsNumeric ( sysadm.FN_CLE_VAL ( 'NBRE_SAV_ACTUEL', @sInfoFrnSpbCplt, ';' ) ) = 1, 
+								Convert ( integer, sysadm.FN_CLE_VAL ( 'NBRE_SAV_ACTUEL', @sInfoFrnSpbCplt, ';' )),
+								0
+						  ) -- [HP252_276_HUB_PRESTA]
 
 -- #2 PHG 22/03/2007 [DCMP070191] Gestion de l'enregistrement du Maj_le
 Set @dtTimeStamp = GetDate()
@@ -3486,7 +3492,22 @@ If @sIdFour = 'AUC'
 	End 
 
 -- [HP252_276_HUB_PRESTA] -- Gestion du SAV avc le Hub Prestataire.
-If @iDemandeSavHubPresta > 0 
+If @iDemandeSavHubPresta > 0 And @iNbreSavActuel Not in ( 0, 1 )
+	Begin
+		Set @sMess = 'Contact crée automatiquement, Process [' + @sLibFour + '] -> '+ 'Le prestataire a demandé la création d''une prestation de SAV, le nombre maximum de 2 SAV étant atteint du ce dossier, le système n''a pas créé de prestation, mais conserve juste pour mémoire par ce contact la notification du prestataire.' 
+
+		IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+		BEGIN
+			Exec SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT
+		END
+		ELSE
+		BEGIN
+			Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT						
+		END
+
+	End 
+
+If @iDemandeSavHubPresta > 0 And @iNbreSavActuel in ( 0, 1 )
 	Begin
 		Select	@dcNewIdDetail = max ( id_detail ) 
 		From	sysadm.detail
@@ -3541,10 +3562,13 @@ If @iDemandeSavHubPresta > 0
 
 		If @iNewIdSeq is null Set @iNewIdSeq = 0
 		Set @iNewIdSeq = @iNewIdSeq + 1
+
+		If @iNbreSavActuel = 0 Set @sCasSav = 'A_REPARER_SAV'
+		If @iNbreSavActuel = 1 Set @sCasSav = 'A_CONTROLER_SAV'
 		
 		Insert into sysadm.commande
 		select top 1 id_sin , @iNewIdSeq, id_gti, @dcNewIdDetail, id_four, id_typ_art, id_marq_art, id_modl_art, mt_ttc_cmde, adr_nom, adr_prenom, adr_livr1, adr_livr2, adr_livr_cpl, adr_cp, adr_ville, adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, 'Prestation de SAV demandée par le prestataire luimême sur retour de la prestation ' + CONVERT ( Varchar ( 10), @iIdSeq) + '.', null,  null, null, null, null, 'ECT', null, 'PRESTA AUTOMATIQUE', 0, null, null, Getdate(), Getdate(), 'AUTO',  Getdate(),  'AUTO', id_zone, id_bsp, dte_ret_pret, adr_cod_civ, id_ref_four, id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, alt_dev_acp, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli=null, 990 , id_marq_art_ifr, id_modl_art_ifr, 
-					 sysadm.FN_CLE_VAL_E ( 'A_REPARER_SAV', 'OUI', 
+					 sysadm.FN_CLE_VAL_E ( @sCasSav, 'OUI', 
 						 sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', '', 
 							sysadm.FN_CLE_VAL_E ( 'HP_ID_HUB_PRESTA', sysadm.FN_CLE_VAL ( 'ID_HUB_PRESTA_SAV', @sInfoFrnSpbCplt, ';') , RTRIM ( c.info_spb_frn_cplt ), ';' ) 
 						 , ';' ),
@@ -3558,7 +3582,7 @@ If @iDemandeSavHubPresta > 0
 		  Begin
 			Insert into sysadm.w_commande
 			select top 1 id_sin , @iNewIdSeq, id_gti, @dcNewIdDetail, id_four, id_typ_art, id_marq_art, id_modl_art, mt_ttc_cmde, adr_nom, adr_prenom, adr_livr1, adr_livr2, adr_livr_cpl, adr_cp, adr_ville, adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, 'Prestation de SAV demandée par le prestataire luimême sur retour de la prestation ' + CONVERT ( Varchar ( 10), @iIdSeq) + '.', null,  null, null, null, null, 'ECT', null, 1, 'PRESTA AUTOMATIQUE', Getdate(), Getdate(), 'AUTO',  id_zone, id_bsp, dte_ret_pret, adr_cod_civ, id_ref_four, id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, alt_dev_acp, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli=null, 990, id_marq_art_ifr, id_modl_art_ifr, 
-					 sysadm.FN_CLE_VAL_E ( 'A_REPARER_SAV', 'OUI', 
+					 sysadm.FN_CLE_VAL_E ( @sCasSav, 'OUI', 
 						 sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', '', 
 							sysadm.FN_CLE_VAL_E ( 'HP_ID_HUB_PRESTA', sysadm.FN_CLE_VAL ( 'ID_HUB_PRESTA_SAV', @sInfoFrnSpbCplt, ';') , RTRIM ( c.info_spb_frn_cplt ), ';' ) 
 						 , ';' ),

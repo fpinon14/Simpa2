@@ -50,7 +50,7 @@ GO
 
 Insert into [edi].[parametre] Values ( 'CPT_HUB', 0, -1 ) 
 
-
+/*
 If Exists ( Select Top 1 1 From sys.objects where name = 'DepotSimpa2ToHubPresta' and type = 'U' ) Drop Table edi.DepotSimpa2ToHubPresta
 
 CREATE TABLE edi.DepotSimpa2ToHubPresta(
@@ -151,7 +151,7 @@ Create index idx7_DepotSimpa2ToHubPresta on edi.DepotSimpa2ToHubPresta ( alt_trt
 Create index idx8_DepotSimpa2ToHubPresta on edi.DepotSimpa2ToHubPresta ( traite_le)
 
 Go
-
+*/
 
 If Exists ( Select Top 1 1 From sys.objects where name = 'DepotHubToSimpa2Presta' and type = 'U' ) Drop Table edi.DepotHubToSimpa2Presta
 
@@ -729,7 +729,7 @@ Declare @dtTraiteLe DateTime
 Declare @sTraitePar VarChar ( 4 )
 Declare @iAReparerSav Integer
 
-Set @iAReparerSav = IIF ( sysadm.FN_CLE_VAL ( 'A_REPARER_SAV', @sInfo_spb_frn_cplt, ';') = 'OUI', 1, 0)
+Set @iAReparerSav = IIF ( edi.FN_CLE_VAL ( 'A_REPARER_SAV', @sInfo_spb_frn_cplt, ';') = 'OUI', 1, 0)
 
 Set @sAltTrt = 'N'
 Set @dtTraiteLe = null 
@@ -1399,7 +1399,7 @@ From edi.DepotHubToSimpa2Presta
 Where id_hub_presta = @asIdHubPresta
 
 -- 1ère Création
-If @@Rowcount <= 0 
+If @iIdDepotHub is null
   Begin
 	Insert into edi.DepotHubToSimpa2Presta 
 		( 
@@ -1783,4 +1783,98 @@ Declare @iError Integer
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Fonction             :       FN_CLE_VAL
+-- Auteur               :       Fabry JF
+-- Date                 :       21/02/2007
+-- Libellé              :
+-- Commentaires         :       Pour un clé fournie, se trouve dans une chaîne de caractères, 
+--				retourne la valeur liée, en précisant le séparateur
+-- Références           :       Ex : Select sysadm.FN_CLE_VAL ( 'TOTO', 'XYXU=TOTO;TOTO=TUTU;TITI=TETE;XYXY=TOTO;RERE=;FRFR=', ';' )
+--
+-- Arguments            :       @asCle		VarChar ( 255 )  La clé à rechercher
+--				@asChaine	VarChar ( 255 )  La clé à parcourir
+--				@asSep		VarChar ( 1 )    Le séparateur
+--
+-- Retourne             :       @asVal	 	VarChar ( 255 )  La valeur en retour
+--
+-- JFF  19/12/2018   Ajout lTrim ( Rtrim ( sur le retour
+--------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_CLE_VAL' AND type = 'FN' )
+        DROP function edi.FN_CLE_VAL
+Go
+
+CREATE  function edi.FN_CLE_VAL
+   (
+	@asCle		VarChar ( 255 ) , 
+	@asChaine	VarChar ( 1000 ) ,
+	@asSep		VarChar ( 1 )   
+    )
+RETURNS Varchar(1000)
+
+AS
+
+Begin
+
+  Declare @iDeb Integer
+  Declare @iFin Integer
+  Declare @sVal VarChar ( 1000 )
+  Declare @AltDebCleValide Integer
+  Declare @AltFinCleValide Integer
+
+  Set @iDeb = CharIndex ( @asCle + '=', @asChaine, 1 ) 
+  Set @sVal = ''
+  Set @AltDebCleValide = 0
+  Set @AltFinCleValide = 0
+
+  While @iDeb > 0 
+   Begin
+     If @iDeb = 1 
+	Begin
+	  Set @AltDebCleValide = 1
+	End 
+
+     If @iDeb > 1 
+ 	Begin
+	  if Substring ( @asChaine, @iDeb - 1, 1 ) = @asSep
+		Begin
+			Set @AltDebCleValide = 1
+		End 
+	End 
+
+     Set @iFin = CharIndex ( '=', @asChaine, @iDeb ) 
+     If @iFin > 0 
+	Begin 
+		Set @AltFinCleValide = 1	
+	End 
+
+     -- Ce n'est pas une clé
+     If @AltDebCleValide = 0 Or @AltFinCleValide = 0
+	Begin
+	        Set @iDeb = CharIndex ( @asCle + '=', @asChaine, @iDeb + 1 ) 
+	End
+     
+     -- C'est bien une clé valide
+     If @AltDebCleValide = 1 And @AltFinCleValide = 1
+	Begin
+	     Set @iDeb = @iFin + 1
+	     Set @iFin = CharIndex ( @asSep, @asChaine, @iDeb ) - 1
+	     if @iFin <= 0 Set @iFin = Len ( @asChaine )
+	     
+	     if @iFin > 0 
+	      Begin
+	        Set @sVal = Substring ( @asChaine, @iDeb, @iFin - @iDeb + 1 )
+		Set @iDeb = 0
+	      End
+	End
+   End
+
+   If @sVal is null Set @sVal = ''
+
+   Return  ltrim ( rTrim ( @sVal ))
+
+End
+
+Go
 
