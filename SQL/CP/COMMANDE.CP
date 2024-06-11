@@ -7958,10 +7958,18 @@ If @iIdSeqRAR is null Set @iIdSeqRAR = 0
 If @iIdSeqRAR = ( Select Max ( c.id_seq )
 					From  commande c
 					Where  c.id_sin = @adcIdSin )
+				And @iIdSeqHubPrestaOrig < 0 -- [HP252_276_HUB_PRESTA]
 	Begin
 	 Return
 	End 
 
+If @iIdSeqRAR >= ( Select Max ( c.id_seq )
+					From  commande c
+					Where  c.id_sin = @adcIdSin ) - 1
+				And @iIdSeqHubPrestaOrig > 0 -- [HP252_276_HUB_PRESTA]
+	Begin
+		Return
+	End 
 
 -- [PM330-1][MANTIS20367]
 If Exists ( 
@@ -8298,6 +8306,19 @@ If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0
 	And   sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' ) <> 'FICTIVE'
 	And   c.status_gc in ( 21 )
 	And	  c.cod_etat <> 'ANN'
+	/*
+	And   Not Exists ( 
+			Select Top 1 1
+			From sysadm.commande c1
+			Where c1.id_sin = c.id_sin
+			And    c.id_ref_four = 'REFUSE_A_REEXP'
+			And    c.id_seq = ( Select Max ( c2.id_seq ) 
+								From   commande c2
+								Where  c2.id_sin = c1.id_sin
+								And    c2.id_ref_four = c.id_ref_four
+								)
+		  )
+	*/
 
 	If @iIdSeqHubPrestaOrig is null Set @iIdSeqHubPrestaOrig = -1
  End 
@@ -8332,9 +8353,19 @@ If @iIdSeqRAR is null Set @iIdSeqRAR = 0
 If @iIdSeqRAR = ( Select Max ( c.id_seq )
 					From  commande c
 					Where  c.id_sin = @adcIdSin )
+				And @iIdSeqHubPrestaOrig < 0 -- [HP252_276_HUB_PRESTA]
 	Begin
 		Return
 	End 
+
+If @iIdSeqRAR >= ( Select Max ( c.id_seq )
+					From  commande c
+					Where  c.id_sin = @adcIdSin ) - 1
+				And @iIdSeqHubPrestaOrig > 0 -- [HP252_276_HUB_PRESTA]
+	Begin
+		Return
+	End 
+
 
 If Exists ( 
 	Select	Top 1 1
@@ -8502,7 +8533,7 @@ select top 1 id_sin , @iNewIdSeq, id_gti, @dcNewIdDetail, id_four, id_typ_art= '
 			adr_cp=@sAdrCp, 
 			adr_ville=@sAdrVille, 
 			adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, @sProbleme, null,  null, null, null, null, 'ECT', null, 'PRESTA AUTOMATIQUE', 0, null, null, Getdate(), Getdate(), 'AUTO',  Getdate(),  'AUTO', id_zone, id_bsp, dte_ret_pret, adr_cod_civ=@sAdrCodCiv, 'REFUSE_A_REEXP', id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, null, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli=null, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli, @iIdProcess, 'REFUSE A REEXPEDIER', id_modl_art_ifr,
-			IIF ( @aiIdSeqOrig > 0, 
+			IIF ( @iIdSeqHubPrestaOrig > 0, 
 					( sysadm.FN_CLE_VAL_E ( 'HP_ID_FOUR', c.id_four, 
 						sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', '', 
 							sysadm.FN_CLE_VAL_E ( 'HP_ID_HUB_PRESTA', sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';') , @sInfoSpbFrnCplt, ';' ) 
@@ -8526,7 +8557,7 @@ If Exists ( Select * from w_commande where id_sin = @adcIdSin and id_seq = @iIdS
 				adr_cp=@sAdrCp, 
 				adr_ville=@sAdrVille, 
 				adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, @sProbleme, null,  null, null, null, null, 'ECT', null, 1, 'PRESTA AUTOMATIQUE', Getdate(), Getdate(), 'AUTO',  id_zone, id_bsp, dte_ret_pret, adr_cod_civ=@sAdrCodCiv, 'REFUSE_A_REEXP'   , id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, null, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli, @iIdProcess, 'REFUSE A REEXPEDIER', id_modl_art_ifr, 
-				IIF ( @aiIdSeqOrig > 0, 
+				IIF ( @iIdSeqHubPrestaOrig > 0, 
 						( sysadm.FN_CLE_VAL_E ( 'HP_ID_FOUR', c.id_four, 
 							sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', '', 
 								sysadm.FN_CLE_VAL_E ( 'HP_ID_HUB_PRESTA', sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';') , @sInfoSpbFrnCplt, ';' ) 
@@ -9643,6 +9674,8 @@ Declare @sModlRempl VarChar ( 35 )
 Declare @iMarqModlIFr Integer
 Declare @sNewInfoSpbFrnCplt VarChar ( 255 )
 Declare @sNewInfoFrnSpbCplt VarChar ( 255 )
+Declare @sCapStkRempl VarChar ( 35 )
+Declare @sCoulRempl VarChar ( 35 )
 
 Set @iCasDT276SwapCTR = 0 
 IF sysadm.FN_CLE_VAL ( 'TGR_APPSW', rtrim ( @sInfoFrnSpbCplt ) , ';') <> 'OUI' Return
@@ -9652,8 +9685,8 @@ Set @iInfoSpbFrn = 0
 Set @iIdLotCmd   = 999999
 
 -- [HP252_276_HUB_PRESTA]
-Set @sMarqRempl = sysadm.FN_CLE_VAL ( 'MARQSW', @sInfoFrnSpbCplt, ';' ), 
-Set @sModlRempl = sysadm.FN_CLE_VAL ( 'MODLSW', @sInfoFrnSpbCplt, ';' ), 
+Set @sMarqRempl = sysadm.FN_CLE_VAL ( 'MARQSW', @sInfoFrnSpbCplt, ';' ) 
+Set @sModlRempl = sysadm.FN_CLE_VAL ( 'MODLSW', @sInfoFrnSpbCplt, ';' ) 
 
 -- [HP252_276_HUB_PRESTA]
 If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 

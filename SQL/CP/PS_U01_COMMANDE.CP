@@ -237,9 +237,11 @@ Declare @iPrestaHUB Integer
 Declare @TypArtIfr VarChar ( 255 ) -- [HP252_276_HUB_PRESTA]
 Declare @iMarqModlIFr Integer -- [HP252_276_HUB_PRESTA]
 Declare @iDemandeSavHubPresta Integer -- [HP252_276_HUB_PRESTA]
+Declare @iDemandeAutoPECRAR Integer -- [HP252_276_HUB_PRESTA]
 Declare @dcIdEvt Decimal ( 7 ) -- [HP252_276_HUB_PRESTA]
 Declare @iNbreSavActuel Integer -- [HP252_276_HUB_PRESTA]
 Declare @sCasSav VarChar ( 30 ) -- [HP252_276_HUB_PRESTA]
+Declare @sPrestaAutoHub  VarChar ( 35 )-- [HP252_276_HUB_PRESTA]
 
 Set @iCasPropoAutoO2m = 0 -- [PC877]
 Set @iTraite = 0 
@@ -249,6 +251,8 @@ Set @iNbreSavActuel = IIF ( IsNumeric ( sysadm.FN_CLE_VAL ( 'NBRE_SAV_ACTUEL', @
 								Convert ( integer, sysadm.FN_CLE_VAL ( 'NBRE_SAV_ACTUEL', @sInfoFrnSpbCplt, ';' )),
 								0
 						  ) -- [HP252_276_HUB_PRESTA]
+Set @iDemandeAutoPECRAR = IIF ( sysadm.FN_CLE_VAL ( 'AUTO_PEC_RAR', @sInfoFrnSpbCplt, ';' ) = 'OUI', 1, 0) -- [HP252_276_HUB_PRESTA]
+Set @sPrestaAutoHub = sysadm.FN_CLE_VAL ( 'PRESTA_AUTO', @sInfoFrnSpbCplt, ';' )
 
 -- #2 PHG 22/03/2007 [DCMP070191] Gestion de l'enregistrement du Maj_le
 Set @dtTimeStamp = GetDate()
@@ -1093,7 +1097,7 @@ If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') > 0
 -- [PM200][PSM][PM82][LOT1][MANTIS2937]
 -- [BLCODE]
 -- [VDOC9304_PM82_LOT1]
-If @sIdFour in ( 'BLC', 'O2M', 'COR', 'SBE', 'PSM', 'MTT', 'TMT', 'CEA' ) 
+If @sIdFour in ( 'BLC', 'O2M', 'COR', 'SBE', 'PSM', 'MTT', 'TMT', 'CEA' ) Or @iPrestaHUB > 0  -- [HP252_276_HUB_PRESTA]
 	   
 	BEGIN
 		-- [PM200][LOT2][DESOX]
@@ -1126,7 +1130,7 @@ If @sIdFour in ( 'BLC', 'O2M', 'COR', 'SBE', 'PSM', 'MTT', 'TMT', 'CEA' )
 -- [PC877]
 -- [DT141]
 -- [DT288-3_LOT2] ajout COR
-If @sIdFour in ( 'BLC', 'O2M', 'SB1', 'MS1', 'PSM', 'MTT', 'TMT', 'SBE', 'COR', 'CEA' )
+If @sIdFour in ( 'BLC', 'O2M', 'SB1', 'MS1', 'PSM', 'MTT', 'TMT', 'SBE', 'COR', 'CEA' ) Or @iPrestaHUB > 0  -- [HP252_276_HUB_PRESTA]
 BEGIN
 	
           -- #16 JFF 06/11/2009 [FRAIS_O2M]
@@ -1536,6 +1540,21 @@ BEGIN
 	END 
 
 	-- [HP252_276_HUB_PRESTA]
+	IF @iStatusGCActuel <> 305 And @iStatusGc = 305 And @iPrestaHUB > 0
+	BEGIN 
+			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] -> La géolocation est active. Le prestataire se charge de contacter l''assuré pour la désactiver, aucune action spb.'
+			IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+			BEGIN
+				Exec  SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT
+			END
+			ELSE
+			BEGIN
+				Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT
+			END
+	END
+	-- /[HP252_276_HUB_PRESTA]
+
+	-- [HP252_276_HUB_PRESTA]
 	IF @iStatusGCActuel <> 169 And @iStatusGc = 169 And @iPrestaHUB > 0
 	BEGIN 
 			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] -> Appareil incomplet, process Hub Prestataire => Le HUB envoie automatiquement un mail à l''assuré lui demandant d''envoyer les éléments manquants au prestataire.'
@@ -1549,6 +1568,23 @@ BEGIN
 			END
 	END
 	-- /[HP252_276_HUB_PRESTA]
+
+	-- [HP252_276_HUB_PRESTA]
+	IF @iStatusGCActuel <> 159 And @iStatusGc = 159 And @iPrestaHUB > 0
+	BEGIN 
+			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] -> Le CTR (Prestataire) a réceptionné l''appareil.'
+			IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+			BEGIN
+				Exec  SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT
+			END
+			ELSE
+			BEGIN
+				Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT
+			END
+	END
+	-- /[HP252_276_HUB_PRESTA]
+
+
 
 	-- #13 JFF 14/05/2009 [DCMP090085]
 	IF @sIdRefFour = 'A_DIAGNOSTIQUER' AND @iStatusGCActuel <> 169 And @iStatusGc = 169 And @iPrestaHUB <= 0  -- [HP252_276_HUB_PRESTA]
@@ -3489,6 +3525,113 @@ If @sIdFour = 'MCM' And @iStatusGc = 202
 If @sIdFour = 'AUC'
 	Begin 
 		Exec sysadm.PS_I_PM421_6_MAJ_DOS_AUCHAN @dcIdSin, @iIdSeq, @iIdCmdFrn, @dtDteEnvCli
+	End 
+
+-- [HP252_276_HUB_PRESTA] -- Demande Auto de PEC RAR
+If @iDemandeAutoPECRAR > 0 
+	Begin
+		If @sPrestaAutoHub = 'PEC_A_RECYCLER'
+			Begin
+
+				Select @iNewIdSeq = max ( id_seq ) From sysadm.commande where id_sin = @dcIdSin
+
+				If @iNewIdSeq is null Set @iNewIdSeq = 0
+				Set @iNewIdSeq = @iNewIdSeq + 1
+				
+				Insert into sysadm.commande
+				select top 1 id_sin , @iNewIdSeq, id_gti, @dcIdDetail, id_four, 'EDI', 'PRISE EN CHARGE A RECYCLER', '', mt_ttc_cmde, adr_nom, adr_prenom, adr_livr1, adr_livr2, adr_livr_cpl, adr_cp, adr_ville, adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, '', null,  null, null, null, null, 'RFO', null, 'PRESTA AUTOMATIQUE', 0, null, null, Getdate(), Getdate(), 'AUTO',  Getdate(),  'AUTO', id_zone, id_bsp, dte_ret_pret, adr_cod_civ, 'PEC_A_RECYCLER', id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, null, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli, 990, 'PRISE EN CHARGE A RECYCLER', id_modl_art_ifr, 
+							( sysadm.FN_CLE_VAL_E ( 'HP_ID_FOUR', c.id_four, 
+								sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', '', 
+									sysadm.FN_CLE_VAL_E ( 'HP_ID_HUB_PRESTA', 'FICTIVE' , '', ';' ) 
+								, ';' ),
+							  ';' )
+							 ),
+						   null
+				From commande c
+				Where c.id_sin = @dcIdSin
+				And   c.id_seq = @iIdSeq
+
+				If Exists ( Select * from sysadm.w_commande where id_sin = @dcIdSin and id_seq = @iIdSeq )
+				  Begin
+					Insert into sysadm.w_commande
+					select top 1 id_sin , @iNewIdSeq, id_gti, @dcIdDetail, id_four, 'EDI', 'PRISE EN CHARGE A RECYCLER', '', mt_ttc_cmde, adr_nom, adr_prenom, adr_livr1, adr_livr2, adr_livr_cpl, adr_cp, adr_ville, adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, '', null,  null, null, null, null, 'RFO', null, 1, 'PRESTA AUTOMATIQUE', Getdate(), Getdate(), 'AUTO',  id_zone, id_bsp, dte_ret_pret, adr_cod_civ, 'PEC_A_RECYCLER'   , id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, null, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli, 990, 'PRISE EN CHARGE A RECYCLER', id_modl_art_ifr, 
+							( sysadm.FN_CLE_VAL_E ( 'HP_ID_FOUR', c.id_four, 
+								sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', '', 
+									sysadm.FN_CLE_VAL_E ( 'HP_ID_HUB_PRESTA', 'FICTIVE' , '', ';' ) 
+								, ';' ),
+							  ';' )
+							 ),
+						   null
+
+					From w_commande c
+					Where c.id_sin = @dcIdSin
+					And   c.id_seq = @iIdSeq
+				  End 	
+
+					Set @sMess = 'Contact crée automatiquement, Process [' + @sLibFour + '] -> '+ 'Le Hub Prestataire a automatiquement engagé une prestation PEC_A_RECYCLER vers le CTR.' 
+
+					IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+					BEGIN
+						Exec SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT
+					END
+					ELSE
+					BEGIN
+						Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT						
+					END
+
+
+			End 
+
+		If @sPrestaAutoHub = 'REFUSE_A_REEXP'
+			Begin
+				Select @iNewIdSeq = max ( id_seq ) From sysadm.commande where id_sin = @dcIdSin
+
+				If @iNewIdSeq is null Set @iNewIdSeq = 0
+				Set @iNewIdSeq = @iNewIdSeq + 1
+				
+				Insert into sysadm.commande
+				select top 1 id_sin , @iNewIdSeq, id_gti, @dcIdDetail, id_four, 'EDI', 'REFUSE A REEXPEDIER', '', mt_ttc_cmde, adr_nom, adr_prenom, adr_livr1, adr_livr2, adr_livr_cpl, adr_cp, adr_ville, adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, '', null,  null, null, null, null, 'RFO', null, 'PRESTA AUTOMATIQUE', 0, null, null, Getdate(), Getdate(), 'AUTO',  Getdate(),  'AUTO', id_zone, id_bsp, dte_ret_pret, adr_cod_civ, 'REFUSE_A_REEXP', id_orian_marque, id_orian_modele, dte_elv_mobile, 155, dte_emis_devis, mt_devis, null, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli, 990, 'REFUSE A REEXPEDIER', id_modl_art_ifr, 
+							( sysadm.FN_CLE_VAL_E ( 'HP_ID_FOUR', c.id_four, 
+								sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', '', 
+									sysadm.FN_CLE_VAL_E ( 'HP_ID_HUB_PRESTA', 'FICTIVE' , '', ';' ) 
+								, ';' ),
+							  ';' )
+							 ),
+						   null
+				From commande c
+				Where c.id_sin = @dcIdSin
+				And   c.id_seq = @iIdSeq
+
+				If Exists ( Select * from sysadm.w_commande where id_sin = @dcIdSin and id_seq = @iIdSeq )
+				  Begin
+					Insert into sysadm.w_commande
+					select top 1 id_sin , @iNewIdSeq, id_gti, @dcIdDetail, id_four, 'EDI', 'REFUSE A REEXPEDIER', '', mt_ttc_cmde, adr_nom, adr_prenom, adr_livr1, adr_livr2, adr_livr_cpl, adr_cp, adr_ville, adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, '', null,  null, null, null, null, 'RFO', null, 1, 'PRESTA AUTOMATIQUE', Getdate(), Getdate(), 'AUTO',  id_zone, id_bsp, dte_ret_pret, adr_cod_civ, 'REFUSE_A_REEXP'   , id_orian_marque, id_orian_modele, dte_elv_mobile, 155, dte_emis_devis, mt_devis, null, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli, 990, 'REFUSE A REEXPEDIER', id_modl_art_ifr, 
+							( sysadm.FN_CLE_VAL_E ( 'HP_ID_FOUR', c.id_four, 
+								sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', '', 
+									sysadm.FN_CLE_VAL_E ( 'HP_ID_HUB_PRESTA', 'FICTIVE' , '', ';' ) 
+								, ';' ),
+							  ';' )
+							 ),
+						   null
+
+					From w_commande c
+					Where c.id_sin = @dcIdSin
+					And   c.id_seq = @iIdSeq
+				  End 	
+
+					Set @sMess = 'Contact crée automatiquement, Process [' + @sLibFour + '] -> '+ 'Le Prestataire a automatiquement engagé une prestation REFUSE_A_REEXP vers le CTR.' 
+
+					IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+					BEGIN
+						Exec SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT
+					END
+					ELSE
+					BEGIN
+						Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT						
+					END
+			End 
+
+
 	End 
 
 -- [HP252_276_HUB_PRESTA] -- Gestion du SAV avc le Hub Prestataire.

@@ -74,6 +74,8 @@ Go
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
+-- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_ENVOI_MAIL_LOG_PRESTA' AND type = 'P' )
         DROP procedure sysadm.PS_S_ENVOI_MAIL_LOG_PRESTA
 GO
@@ -86,7 +88,7 @@ CREATE procedure sysadm.PS_S_ENVOI_MAIL_LOG_PRESTA
 	@asNomFicOrig varchar(100)
 AS
 
-If Upper ( sysadm.FN_TRIM ( db_name ( db_id () ) ) ) <> 'SIMPA2_PRO' Return
+-- If Upper ( sysadm.FN_TRIM ( db_name ( db_id () ) ) ) <> 'SIMPA2_PRO' Return  [HP252_276_HUB_PRESTA]
 
 declare @sRetourErrMail varchar (255) 
 declare @sAdrMail varchar (255) 
@@ -109,11 +111,20 @@ Set @asNomFicOrigCourt = Left ( @asNomFicOrigCourt , Charindex ( '\', @asNomFicO
 Set @asNomFicOrigCourt = reverse ( @asNomFicOrigCourt ) 
 If @asNomFicOrigCourt is null Set @asNomFicOrigCourt = ''
 
-Select @sAdrMail = pm.adr_mail,
-	   @sAdrMailCc = pm.adr_mail_cc
-From   sysadm.param_mail_presta pm
-Where  pm.id_four = @asIdFour
-
+If Upper ( sysadm.FN_TRIM ( db_name ( db_id () ) ) ) <> 'SIMPA2_PRO' -- [HP252_276_HUB_PRESTA]
+	Begin
+		-- Hors Production
+		Set @sAdrMail = 'jff@spb.fr'
+		Set @sAdrMailCc = null
+	End 
+Else
+	Begin
+		-- Production
+		Select @sAdrMail = pm.adr_mail,
+			   @sAdrMailCc = pm.adr_mail_cc
+		From   sysadm.param_mail_presta pm
+		Where  pm.id_four = @asIdFour
+	End 
 /*
 If Exists ( 
 	SELECT Top 1  1

@@ -405,6 +405,22 @@ Set		info_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', convert ( VarChar 
 Where   id_sin = @adcIdSin
 And		id_seq = @alIdSeq
 
+-- Cas des REFUSE_A_REEXP que l'on ferme, je n'attendrai plus le 155 en retour pour ces presta sur le HP
+If ( Select id_ref_four From sysadm.commande Where id_sin = @adcIdSin And id_seq = @alIdSeq ) = 'REFUSE_A_REEXP'
+  Begin
+		Update	sysadm.commande 
+		Set		status_gc = 155,
+				cod_etat = 'RFO'
+		Where   id_sin = @adcIdSin
+		And		id_seq = @alIdSeq
+
+		Update	sysadm.w_commande 
+		Set		status_gc = 155,
+				cod_etat = 'RFO'
+		Where   id_sin = @adcIdSin
+		And		id_seq = @alIdSeq
+  End 
+
 Go
 
 
@@ -451,21 +467,21 @@ Declare  @TbHubToSimpa2Work TABLE (
 	activity_return_code		Varchar ( 50 )				NULL,	-- Code HUB
 	activity_reason_code		Varchar ( 50 )				NULL,	-- Code HUB
 	typ_ba_aller				Varchar ( 35 )				NULL,	-- RPICKUP ou BPPAYE, voire de nouveaux CODE
-	perte_aller					VarChar ( 1  )				NULL,   -- O/N Perte du colis à l'aller
-	diag_video_engage			VarChar ( 1  )				NULL,   -- O/N Diag vidéo engagé
-	resolu_diag_video			VarChar ( 1  )				NULL,   -- O/N résolu par Diag vidéo 
+	perte_aller					VarChar ( 3  )				NULL,   -- O/N Perte du colis à l'aller
+	diag_video_engage			VarChar ( 3  )				NULL,   -- O/N Diag vidéo engagé
+	resolu_diag_video			VarChar ( 3  )				NULL,   -- O/N résolu par Diag vidéo 
 	dte_rdv_conf				DateTime					NULL,   -- Date de rdv confirmé pour déplacement à domicile 
 	mode_logis_ret				VarChar ( 20 )				NULL,   -- CENTRALISATION / PROXIMITE, Confirmation du prestataire sur le mode rééllement utilisé par l'assuré
 	point_service_ret			VarChar ( 20 )				NULL,   -- Code du point de service où l'assuré s'est rééllement rendu ou bien a envoyé son appareil
 	dte_rcp_frn					DateTime					NULL,   -- Date de réception de l'appareil chez le prestataire
 	site_action					VarChar ( 20 )				NULL,   -- STATION/DOMICILE
-	app_incomplet				VarChar ( 1  )				NULL,   -- O/N si appareil incomplet
+	app_incomplet				VarChar ( 3  )				NULL,   -- O/N si appareil incomplet
 	dte_fin_trait				DateTime					NULL,   -- Date de fin de traitement/Date d'envoi colis retour vers assuré
 	comment_frn					VarChar ( 255 )				NULL,   -- Commentaire fournisseur
 	num_bon_trp					VarChar ( 35 )				NULL,   -- Numéro de colis retour 
 	nom_transporteur			VarChar ( 35 )				NULL,   -- NOm du transporteur
 	dte_rcp_app_cli				DateTime					NULL,   -- Date de réception de l'appareil par l'assuré
-	app_swap					VarChar ( 1  )				NULL,   -- O/N swap sur réparation (app irrep couvert et le presta redonne auto un app de rempl)
+	app_swap					VarChar ( 3  )				NULL,   -- O/N swap sur réparation (app irrep couvert et le presta redonne auto un app de rempl)
 	autres_infos_rempl			VarChar ( 40 )              NULL,   -- COULEUR ou CAPACITE ou COULEUR_ET_CAPACITE, incohérent si ref_app_rempl = IFR
 	marque_rempl				VarChar ( 35 )				NULL,   -- Marque de remplacement (sur SWAP ou Cmde Manuelle)
 	modele_rempl				VarChar ( 35 )				NULL,   -- Modele de remplacement (sur SWAP ou Cmde Manuelle)
@@ -476,7 +492,7 @@ Declare  @TbHubToSimpa2Work TABLE (
 	neuf_recond_rempl			VarChar ( 10 )				NULL,	-- NEU/REC app de remplacement (sur SWAP ou Cmde Manuelle) Neuf ou Reconditionné
 	prix_ttc_public				Decimal ( 11, 2 )			NULL,   -- Prix TTC de l'app de remplacement qui sera facturé par le prestataire et réglé par spb
 	prble_livraison				VarChar ( 35 )				NULL,   -- après une dte_fin_trait renseigné, Code du problème de livraison
-	pec_prble_livraison			VarChar ( 1  )				NULL,   -- O/N OUI si le presta prend la prble de livrasion à sa charge
+	pec_prble_livraison			VarChar ( 3  )				NULL,   -- O/N OUI si le presta prend la prble de livrasion à sa charge
 	id_hub_presta_sav           VarChar ( 20 )			    NULL,   -- Identifiant sur le Hub Prestataire de la future prestation de SAV à venir
 	info_frn_spb_cplt			VarChar ( 800 )				NULL    -- Chaine sérialisée contenant de multiples informations pour de nouvelles données "exotiques" liées à un prestataire précis.
 )
@@ -519,6 +535,9 @@ Declare @iFileExists Int
 Declare @iAMUenrMarqBase Int
 Declare @iError Int
 Declare @sChaineBCVretourDetStatut VarChar ( 255 ) 
+Declare @TbRepFicMovMPR Table ( nom_fic varchar ( 100) INDEX IX1 CLUSTERED ) 
+Declare @sDIR Varchar ( 255 )
+
 
 Set @iAMUerrRowTrt = 0 
 Set @iAMUunRowEcrFrn = 0
@@ -541,21 +560,21 @@ Declare @iIdWorkRow			int,
 		@sActivityReturnCode Varchar ( 50 ),
 		@sActivityReasonCode Varchar ( 50 ),
 		@sTypBaAller		Varchar ( 35 ),
-		@sPerteAller		VarChar ( 1  ),
-		@sDiagVideoEngage	VarChar ( 1  ),
-		@sResoluDiagVideo	VarChar ( 1  ),
+		@sPerteAller		VarChar ( 3  ),
+		@sDiagVideoEngage	VarChar ( 3  ),
+		@sResoluDiagVideo	VarChar ( 3  ),
 		@dtDteRdvConf		DateTime,
 		@sModeLogisRet		VarChar ( 20 ),
 		@sPointServiceRet	VarChar ( 20 ),
 		@dtDteRcpFrn		DateTime,
 		@sSiteAction		VarChar ( 20 ),
-		@sAppIncomplet		VarChar ( 1  ),
+		@sAppIncomplet		VarChar ( 3  ),
 		@dtDteFinTrait		DateTime,
 		@sCommentFrn		VarChar ( 255 ),
 		@sNumBonTrp			VarChar ( 35 ),
 		@sNomTransporteur	VarChar ( 35 ),
 		@dtDteRcpAppCli		DateTime,
-		@sAppSwap			VarChar ( 1  ),
+		@sAppSwap			VarChar ( 3  ),
 		@sAutresInfosRempl	VarChar ( 40 ),
 		@sMarqueRempl		VarChar ( 35 ),
 		@sModeleRempl		VarChar ( 35 ),
@@ -566,7 +585,7 @@ Declare @iIdWorkRow			int,
 		@sNeufRecondRempl	VarChar ( 10 ),
 		@dcPrixTtcRempl		Decimal ( 11, 2 ),
 		@sPrbleLivraison	VarChar ( 35 ),
-		@sPecPrbleLivraison	VarChar ( 1  ),
+		@sPecPrbleLivraison	VarChar ( 3  ),
 		@sIdHubPrestaSav	VarChar ( 20 ),
 		@sInfoFrnSpbCpltlu	VarChar ( 800 )
 
@@ -654,7 +673,7 @@ Set @sSql =
 '		dhs.id_hub_presta_sav, '+
 '		dhs.info_frn_spb_cplt '+
 'From	' + @sInstanceHub + 'edi.DepotHubToSimpa2Presta dhs ' + 
-'		Left Outer Join ' + @sInstanceHub + 'edi.DepotSimpa2ToHubPresta dsh on dhs.id_hub_presta = dsh.id_hub_presta ' +
+'		Left Outer Join ' + @sInstanceHub + 'edi.DepotSimpa2ToHubPresta dsh on dhs.id_hub_presta = dsh.id_hub_presta and dsh.ordre_action in ( ''A_COMMANDER'', ''A_REPARER'', ''A_REPARER_SAV'', ''A_DIAGNOSTIQUER'') ' +
 'Where   dhs.alt_trt = ''N'' ' +
 'Order by dsh.id_four, dhs.depose_le ' -- Tri extrêmement important, ne jamais le changer, le reste ne fonctionnerait plus.
 
@@ -836,6 +855,64 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 	Set @iCptIndice = 1
 	While 1=1
 		Begin
+
+			Delete @TbRepFicMovMPR  
+
+			-- .001
+			Set @sNomFicMPRwork = 'MPR' + Replace ( Convert ( Varchar ( 10 ), Getdate (), 103 ), '/', '') + '.' + Right ( REPLICATE ( '0', 3 ) + CONVERT ( VarChar ( 3 ), @iCptIndice ), 3 )
+			Set @sChemFicWork = @sCheminDepotFichierMPRFrn + @sNomFicMPRwork
+			
+			EXECUTE xp_fileexist @sChemFicWork, @iFileExists OUTPUT
+
+			If @iFileExists > 0 
+				Begin 
+					Set @iCptIndice = @iCptIndice + 1
+					Continue
+				End 
+
+			-- .X01
+			Set @sNomFicMPRwork = 'MPR' + Replace ( Convert ( Varchar ( 10 ), Getdate (), 103 ), '/', '') + '.X' + Right ( REPLICATE ( '0', 2 ) + CONVERT ( VarChar ( 2 ), @iCptIndice ), 2 )
+			Set @sChemFicWork = @sCheminDepotFichierMPRFrn + @sNomFicMPRwork
+			
+			EXECUTE xp_fileexist @sChemFicWork, @iFileExists OUTPUT
+			
+			If @iFileExists > 0 
+				Begin 
+					Set @iCptIndice = @iCptIndice + 1
+					Continue
+				End 
+
+			-- .BAD001*.*
+			Set @sNomFicMPRwork = 'MPR' + Replace ( Convert ( Varchar ( 10 ), Getdate (), 103 ), '/', '') + '.BAD' + Right ( REPLICATE ( '0', 3 ) + CONVERT ( VarChar ( 3 ), @iCptIndice ), 3 )
+			Set @sChemFicWork = @sCheminDepotFichierMPRFrn + @sNomFicMPRwork
+
+			Set @sDIR = 'DIR "' + @sChemFicWork + '*.*" /b'
+			Insert into @TbRepFicMovMPR  EXEC master.dbo.xp_cmdshell @sDIR 
+
+			Set @sChemFicWork = REPLACE ( @sChemFicWork , '.0', '.X' ) 
+			Set @sDIR = 'DIR "' + @sChemFicWork + '*.*" /b'
+			Insert into @TbRepFicMovMPR  EXEC master.dbo.xp_cmdshell @sDIR 
+
+			Delete @TbRepFicMovMPR  where nom_fic is null
+			Delete @TbRepFicMovMPR  where Left ( nom_fic, 3 ) <> 'MPR'
+
+			Select @iFileExists = COUNT (*) From @TbRepFicMovMPR  
+			If @iFileExists is null Set @iFileExists = 0 
+
+			If @iFileExists > 0 
+				Begin 
+					Set @iCptIndice = @iCptIndice + 1
+					Continue
+				End 
+
+			-- C'est bon, on remet le bon nom de fichier 
+			Set @sNomFicMPRwork = 'MPR' + Replace ( Convert ( Varchar ( 10 ), Getdate (), 103 ), '/', '') + '.' + Right ( REPLICATE ( '0', 3 ) + CONVERT ( VarChar ( 3 ), @iCptIndice ), 3 )
+			Set @sChemFicWork = @sCheminDepotFichierMPRFrn + @sNomFicMPRwork
+			Set @sCheminDepotFichierMPRFrn = @sCheminDepotFichierMPRFrn + @sNomFicMPRwork
+
+			Break
+/*
+
 			Set @sNomFicMPRwork = 'MPR' + Replace ( Convert ( Varchar ( 10 ), Getdate (), 103 ), '/', '') + '.' + Right ( REPLICATE ( '0', 3 ) + CONVERT ( VarChar ( 3 ), @iCptIndice ), 3 )
 			Set @sChemFicWork = @sCheminDepotFichierMPRFrn + @sNomFicMPRwork
 			
@@ -849,6 +926,8 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 
 			Set @sCheminDepotFichierMPRFrn = @sCheminDepotFichierMPRFrn + @sNomFicMPRwork
 			Break
+*/
+
 		End 
 
 	-- Ouverture du fichier de charset ISO-8859-1
@@ -1280,7 +1359,7 @@ AS
 
 Declare @iStatut Integer
 Declare @sMotClecplt varChar ( 100 )
-Declare @sBCVserial  varChar ( 100 )
+Declare @sBCVserial  varChar ( 255 )
 Declare @sSql		Varchar ( 2000 )
 Declare @sTypBaAller VarChar ( 35 ) 
 Declare @sLibActivity VarChar( 255 )
@@ -1317,6 +1396,7 @@ If @iRowCount <= 0
 		Where mrh.activity_code = @asActivityCode
 		And   mrh.activity_return_code = @asActivityReturnCode
 		And   mrh.activity_reason_code = @asActivityReasonCode
+		And	  mrh.action_origine is null
 
 		Set @iRowCount = @@ROWCOUNT
 
@@ -1332,6 +1412,7 @@ If @iRowCount <= 0
 		From sysadm.mapping_retour_hub mrh with ( nolock )
 		Where mrh.activity_code = @asActivityCode
 		And   mrh.activity_return_code = @asActivityReturnCode
+		And   mrh.activity_reason_code is null
 		And   mrh.action_origine = @asActionOrigine
 
 		Set @iRowCount = @@ROWCOUNT
@@ -1348,6 +1429,8 @@ If @iRowCount <= 0
 		From sysadm.mapping_retour_hub mrh with ( nolock )
 		Where mrh.activity_code = @asActivityCode
 		And   mrh.activity_return_code = @asActivityReturnCode
+		And   mrh.activity_reason_code is null
+		And   mrh.action_origine is null
 
 		Set @iRowCount = @@ROWCOUNT
 
@@ -1367,7 +1450,7 @@ Set @asCommentFrn = LTRIM ( rTrim ( @asCommentFrn ))
 
 Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'STATUS_GC', CONVERT( Varchar (10), @iStatut ), @asChaineBCVretour, ';')
 Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'MOT_CLE_CPLT', CONVERT( Varchar (10), @sMotClecplt ), @asChaineBCVretour, ';')
-If RIGHT ( rTrim ( @asChaineBCVretour), 1 )<> ';' Set @asChaineBCVretour = rTrim ( @asChaineBCVretour) + ';'
+If RIGHT ( rTrim ( @asChaineBCVretour), 1 )<> ';' And len ( rTrim ( RTRIM (  @asChaineBCVretour))) > 0 And @asChaineBCVretour is not null Set @asChaineBCVretour = rTrim ( @asChaineBCVretour) + ';'
 Set @asChaineBCVretour = rTrim ( @asChaineBCVretour + @sBCVserial )
 Set @asCommentFrn = rTrim ( @asCommentFrn ) + IIF ( ISNULL ( Rtrim ( @asCommentFrn ), '' ) <> '', '. ', '' ) + @sLibActivity 
 
@@ -1383,7 +1466,7 @@ If	@asActivityCode = 'DEVICE_RECEPTION' And
 		'Update ' + @asInstanceHub + 'edi.DepotHubToSimpa2Presta '  +
 		'Set perte_aller = '''+ sysadm.FN_CLE_VAL ( 'PERTE_ALLER', @sBCVserial, ';') + ''', ' +
 		'    typ_ba_aller = ''' + @sTypBaAller + ''', ' +
-		'    prble_livraison = '''+ sysadm.FN_CLE_VAL ( 'PRBLE_LIVRAISON', @sBCVserial, ';') + '''' + 
+		'    prble_livraison = '''+ sysadm.FN_CLE_VAL ( 'PRBLE_LIVRAISON', @sBCVserial, ';') + ''',' + 
 		'    pec_prble_livraison = '''+ sysadm.FN_CLE_VAL ( 'PEC_PRBLE_LIVRAISON', @sBCVserial, ';') + '''' + 
 		'    where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @aiIdDepotHub )  
 		Exec ( @sSql )
@@ -1396,8 +1479,8 @@ If	@asActivityCode = 'RETURN_OF_CONFORMITY' And
 	Begin
 		Set @sSql = 
 		'Update ' + @asInstanceHub + 'edi.DepotHubToSimpa2Presta '  +
-		'Set app_incomplet = '''+ sysadm.FN_CLE_VAL ( 'APP_INCOMPLET', @sBCVserial, ';') + ''', ' +
-		'    where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @aiIdDepotHub )  
+		'Set app_incomplet = '''+ sysadm.FN_CLE_VAL ( 'APP_INCOMPLET', @sBCVserial, ';') + '''' +
+		'where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @aiIdDepotHub )  
 		Exec ( @sSql )
 	End 
 
@@ -1407,8 +1490,8 @@ If	@asActivityCode in ( 'DEVICE_MANUFACTURER_ACTIONS', 'SERVICE_PROVIDER_ACTIONS
 	Begin
 		Set @sSql = 
 		'Update ' + @asInstanceHub + 'edi.DepotHubToSimpa2Presta '  +
-		'Set app_swap = '''+ sysadm.FN_CLE_VAL ( 'APP_SWAP', @sBCVserial, ';') + ''', ' +
-		'    where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @aiIdDepotHub )  
+		'Set app_swap = '''+ sysadm.FN_CLE_VAL ( 'APP_SWAP', @sBCVserial, ';') + '''' +
+		'where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @aiIdDepotHub )  
 		Exec ( @sSql )
 	End 
 

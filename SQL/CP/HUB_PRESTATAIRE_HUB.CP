@@ -168,21 +168,21 @@ CREATE TABLE edi.DepotHubToSimpa2Presta(
 	activity_return_code		Varchar ( 50 )				NULL,	-- Code HUB
 	activity_reason_code		Varchar ( 50 )				NULL,	-- Code HUB
 	typ_ba_aller				Varchar ( 35 )				NULL,	-- RPICKUP ou BPPAYE, voire de nouveaux CODE
-	perte_aller					VarChar ( 1  ) default 'N'	NULL,   -- O/N Perte du colis à l'aller
-	diag_video_engage			VarChar ( 1  ) default 'N'	NULL,   -- O/N Diag vidéo engagé
-	resolu_diag_video			VarChar ( 1  ) default 'N'	NULL,   -- O/N résolu par Diag vidéo 
+	perte_aller					VarChar ( 3  )				NULL,   -- OUI/NON Perte du colis à l'aller
+	diag_video_engage			VarChar ( 3  )				NULL,   -- OUI/NON Diag vidéo engagé
+	resolu_diag_video			VarChar ( 3  )				NULL,   -- OUI/NON résolu par Diag vidéo 
 	dte_rdv_conf				DateTime					NULL,   -- Date de rdv confirmé pour déplacement à domicile 
 	mode_logis_ret				VarChar ( 20 )				NULL,   -- CENTRALISATION / PROXIMITE, Confirmation du prestataire sur le mode rééllement utilisé par l'assuré
 	point_service_ret			VarChar ( 20 )				NULL,   -- Code du point de service où l'assuré s'est rééllement rendu ou bien a envoyé son appareil
 	dte_rcp_frn					DateTime					NULL,   -- Date de réception de l'appareil chez le prestataire
 	site_action					VarChar ( 20 )				NULL,   -- STATION/DOMICILE
-	app_incomplet				VarChar ( 1  ) default 'N'	NULL,   -- O/N si appareil incomplet
+	app_incomplet				VarChar ( 3  )				NULL,   -- OUI/NON si appareil incomplet
 	dte_fin_trait				DateTime					NULL,   -- Date de fin de traitement/Date d'envoi colis retour vers assuré
 	comment_frn					VarChar ( 255 )				NULL,   -- Commentaire fournisseur
 	num_bon_trp					VarChar ( 35 )				NULL,   -- Numéro de colis retour 
 	nom_transporteur			VarChar ( 35 )				NULL,   -- NOm du transporteur
 	dte_rcp_app_cli				DateTime					NULL,   -- Date de réception de l'appareil par l'assuré
-	app_swap					VarChar ( 1  ) default 'N'	NULL,   -- O/N swap sur réparation (app irrep couvert et le presta redonne auto un app de rempl)
+	app_swap					VarChar ( 3  )				NULL,   -- OUI/NON swap sur réparation (app irrep couvert et le presta redonne auto un app de rempl)
 	autres_infos_rempl			VarChar ( 40 )              NULL,   -- null, renseigné par ces mot si la donnée est à l'extérieur du modèle COULEUR ou CAPACITE ou COULEUR_ET_CAPACITE, incohérent si ref_app_rempl = IFR
 	marque_rempl				VarChar ( 35 )				NULL,   -- Marque de remplacement (sur SWAP ou Cmde Manuelle)
 	modele_rempl				VarChar ( 35 )				NULL,   -- Modele de remplacement (sur SWAP ou Cmde Manuelle)
@@ -193,7 +193,7 @@ CREATE TABLE edi.DepotHubToSimpa2Presta(
 	neuf_recond_rempl			VarChar ( 10 )				NULL,	-- NEU/REC app de remplacement (sur SWAP ou Cmde Manuelle) Neuf ou Reconditionné
 	prix_ttc_rempl				Decimal ( 11, 2 )			NULL,   -- Prix TTC de l'app de remplacement qui sera facturé par le prestataire et réglé par spb
 	prble_livraison				VarChar ( 35 )				NULL,   -- après une dte_fin_trait renseigné, Code du problème de livraison
-	pec_prble_livraison			VarChar ( 1  ) default 'N'	NULL,   -- O/N OUI si le presta prend la prble de livrasion à sa charge
+	pec_prble_livraison			VarChar ( 3  )				NULL,   -- OUI/NON OUI si le presta prend la prble de livrasion à sa charge
 	id_hub_presta_sav           VarChar ( 20 )			    NULL,   -- Identifiant sur le Hub Prestataire de la future prestation de SAV à venir
 	info_frn_spb_cplt			VarChar ( 800 )				NULL,   -- Chaine sérialisée contenant de multiples informations pour de nouvelles données "exotiques" liées à un prestataire précis.
 	chemin_fic					VarChar ( 255 )				NULL,   -- Chemin de dépôt du fichier produit par le moteur
@@ -1349,8 +1349,8 @@ CREATE procedure edi.PS_HP276_I_HP_INSERTION_ACTIVITY_HUB_TO_SIMPA2
 	@asActivityCode		VarChar ( 50 ),
 	@asActivityReturnCode		Varchar ( 50 ),
 	@asActivityReasonCode		Varchar ( 50 ),
-	@asDiagVideoEngage		VarChar ( 1  ),
-	@asResoluDiagVideo		VarChar ( 1  ),
+	@asDiagVideoEngage		VarChar ( 3  ),
+	@asResoluDiagVideo		VarChar ( 3  ),
 	@adtDteRdvConf		DateTime,
 	@asModeLogisRet		VarChar ( 20 ),
 	@asPointServiceRet	VarChar ( 20 ),
@@ -1397,6 +1397,7 @@ If @asIdHubPresta is null Or lTrim ( rTrim ( @asIdHubPresta )) = ''
 Select @iIdDepotHub = max ( id_depot_hub )
 From edi.DepotHubToSimpa2Presta
 Where id_hub_presta = @asIdHubPresta
+
 
 -- 1ère Création
 If @iIdDepotHub is null
@@ -1507,9 +1508,9 @@ If @iIdDepotHub is null
 		) 
 Select		id_hub_presta,
 			num_cmd_frn,
-			activity_code,
-			activity_return_code,
-			activity_reason_code,
+			activity_code=null,
+			activity_return_code=null,
+			activity_reason_code=null,
 			typ_ba_aller,
 			perte_aller,
 			diag_video_engage,
@@ -1525,16 +1526,16 @@ Select		id_hub_presta,
 			num_bon_trp,
 			nom_transporteur,
 			dte_rcp_app_cli,
-			app_swap,
-			autres_infos_rempl,
-			marque_rempl,
-			modele_rempl,
-			num_imei_rempl,
-			num_serie_rempl,
-			couleur_rempl,
-			cap_stk_rempl,
-			neuf_recond_rempl,
-			prix_ttc_rempl,
+			app_swap='N',
+			autres_infos_rempl=null,
+			marque_rempl=null,
+			modele_rempl=null,
+			num_imei_rempl=null,
+			num_serie_rempl=null,
+			couleur_rempl=null,
+			cap_stk_rempl=null,
+			neuf_recond_rempl=null,
+			prix_ttc_rempl=null,
 			prble_livraison,
 			pec_prble_livraison,
 			null, -- id_hub_presta_sav
