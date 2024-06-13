@@ -70,6 +70,10 @@ Go
 -- Commentaires         :       
 --                              /!\ A COMPILER SUR LA BASE SIMPA2 /!\
 --								
+--								Attention si modif sur le SELECT de retour, pensez à modifier
+--									sysadm.PS_I_PEC_A_RECYCLER_PM330
+--									sysadm.PS_I_REFUSE_A_REEXP_PM330
+--									d_stk_hub_presta_donnees_simpa2
 --
 -- Retourne             :       rien
 -------------------------------------------------------------------
@@ -631,7 +635,13 @@ Set @sSql =
 '		dsh.id_sin, '+
 '		dsh.id_seq, '+
 '		dsh.id_four, '+
-'		dsh.ordre_action, ' +
+'		Case ' +
+'			When sysadm.FN_CLE_VAL ( ''A_REPARER_SAV'', dsh.info_spb_frn_cplt, '';'' ) = ''OUI'' ' +
+'				Then ''A_REPARER_SAV''  ' + 
+'			When sysadm.FN_CLE_VAL ( ''A_CONTROLER_SAV'', dsh.info_spb_frn_cplt, '';'' ) = ''OUI'' ' +
+'				Then ''A_REPARER_SAV'' ' + -- Normal, une seule action ici, c'est pour la jointure du mapping 
+'			Else dsh.ordre_action ' +
+'		End, ' + 
 '		dhs.id_hub_presta, '+
 '		dhs.num_cmd_frn, '+
 '		dhs.activity_code, '+
@@ -673,7 +683,7 @@ Set @sSql =
 '		dhs.id_hub_presta_sav, '+
 '		dhs.info_frn_spb_cplt '+
 'From	' + @sInstanceHub + 'edi.DepotHubToSimpa2Presta dhs ' + 
-'		Left Outer Join ' + @sInstanceHub + 'edi.DepotSimpa2ToHubPresta dsh on dhs.id_hub_presta = dsh.id_hub_presta and dsh.ordre_action in ( ''A_COMMANDER'', ''A_REPARER'', ''A_REPARER_SAV'', ''A_DIAGNOSTIQUER'') ' +
+'		Left Outer Join ' + @sInstanceHub + 'edi.DepotSimpa2ToHubPresta dsh on dhs.id_hub_presta = dsh.id_hub_presta and dsh.ordre_action in ( ''A_COMMANDER'', ''A_REPARER'', ''A_DIAGNOSTIQUER'') ' +
 'Where   dhs.alt_trt = ''N'' ' +
 'Order by dsh.id_four, dhs.depose_le ' -- Tri extrêmement important, ne jamais le changer, le reste ne fonctionnerait plus.
 
@@ -911,22 +921,6 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 			Set @sCheminDepotFichierMPRFrn = @sCheminDepotFichierMPRFrn + @sNomFicMPRwork
 
 			Break
-/*
-
-			Set @sNomFicMPRwork = 'MPR' + Replace ( Convert ( Varchar ( 10 ), Getdate (), 103 ), '/', '') + '.' + Right ( REPLICATE ( '0', 3 ) + CONVERT ( VarChar ( 3 ), @iCptIndice ), 3 )
-			Set @sChemFicWork = @sCheminDepotFichierMPRFrn + @sNomFicMPRwork
-			
-			EXECUTE xp_fileexist @sChemFicWork, @iFileExists OUTPUT
-			
-			If @iFileExists > 0 
-				Begin 
-					Set @iCptIndice = @iCptIndice + 1
-					Continue
-				End 
-
-			Set @sCheminDepotFichierMPRFrn = @sCheminDepotFichierMPRFrn + @sNomFicMPRwork
-			Break
-*/
 
 		End 
 
@@ -990,6 +984,7 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 			@dcPrixTtcRempl = prix_ttc_public,
 			@sPrbleLivraison = ltrim ( rtrim ( prble_livraison )),
 			@sPecPrbleLivraison = ltrim ( rtrim ( pec_prble_livraison )),
+			@sIdHubPrestaSav = ltrim ( rtrim ( id_hub_presta_sav )),
 			@sInfoFrnSpbCpltlu = ltrim ( rtrim ( info_frn_spb_cplt ))
 		From	@TbHubToSimpa2Work
 		Where	marquage = 0
@@ -1028,7 +1023,21 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 				-- Détermination du statut SIMPA2 de la prestation
 				Set @sChaineBCVretourDetStatut = SPACE ( 255 )
 				Set @sChaineBCVretourDetStatut = sysadm.FN_CLE_VAL_E ( 'TYP_BA_ALLER', Upper ( @sTypBaAller ), @sChaineBCVretourDetStatut, ';' ) 
+
+				If @dtDteRcpFrn is null Set @sChaineBCVretourDetStatut = sysadm.FN_CLE_VAL_E ( 'DTE_RCP_FRN_PRESENTE', 'NON', @sChaineBCVretourDetStatut, ';' ) 
+				If @dtDteRcpFrn is Not null Set @sChaineBCVretourDetStatut = sysadm.FN_CLE_VAL_E ( 'DTE_RCP_FRN_PRESENTE', 'OUI', @sChaineBCVretourDetStatut, ';' ) 
+
+				If @dtDteFinTrait is null Set @sChaineBCVretourDetStatut = sysadm.FN_CLE_VAL_E ( 'DTE_FIN_TRAIT_PRESENTE', 'NON', @sChaineBCVretourDetStatut, ';' ) 
+				If @dtDteFinTrait is Not null Set @sChaineBCVretourDetStatut = sysadm.FN_CLE_VAL_E ( 'DTE_FIN_TRAIT_PRESENTE', 'OUI', @sChaineBCVretourDetStatut, ';' ) 
+
+				If @dtDteRcpAppCli is null Set @sChaineBCVretourDetStatut = sysadm.FN_CLE_VAL_E ( 'DTE_RCP_APP_CLI_PRESENTE', 'NON', @sChaineBCVretourDetStatut, ';' ) 
+				If @dtDteRcpAppCli is Not null Set @sChaineBCVretourDetStatut = sysadm.FN_CLE_VAL_E ( 'DTE_RCP_APP_CLI_PRESENTE', 'OUI', @sChaineBCVretourDetStatut, ';' ) 
+
+				Set @sChaineBCVretourDetStatut = sysadm.FN_CLE_VAL_E ( 'ID_SIN', CONVERT( varchar ( 20), @dcIdSin), @sChaineBCVretourDetStatut, ';' )
+				Set @sChaineBCVretourDetStatut = sysadm.FN_CLE_VAL_E ( 'ID_SEQ', CONVERT( varchar ( 20), @iIdSeq), @sChaineBCVretourDetStatut, ';' )
+
 				Set @sCommentFrn = Left ( ISNULL ( @sCommentFrn, '' ) + SPACE ( 255 ), 255)
+				Set @sChaineBCVretourDetStatut = Left ( ISNULL ( @sChaineBCVretourDetStatut, '' ) + SPACE ( 255 ), 255)
 
 				Exec @iRet = sysadm.PS_HP276_SU_S2_MOTEUR_TRT_RETOUR_HUB_DETERMINATION_STATUT 
 								@sActivityCode, 
@@ -1060,12 +1069,38 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 				Set @sPrbleLivraison = sysadm.FN_CLE_VAL ( 'PRBLE_LIVRAISON', @sChaineBCVretourDetStatut, ';' )
 				Set @sPecPrbleLivraison = sysadm.FN_CLE_VAL ( 'PEC_PRBLE_LIVRAISON', @sChaineBCVretourDetStatut, ';' )
 
+				If Len ( sysadm.FN_CLE_VAL ( 'DTE_RCP_FRN', @sChaineBCVretourDetStatut, ';' )) > 0 
+				  Begin
+					Set @dtDteRcpFrn = Convert ( DateTime, sysadm.FN_CLE_VAL ( 'DTE_RCP_FRN', @sChaineBCVretourDetStatut, ';' ))
+				  End 
+
+				If Len ( sysadm.FN_CLE_VAL ( 'DTE_FIN_TRAIT', @sChaineBCVretourDetStatut, ';' )) > 0 
+				  Begin
+					Set @dtDteFinTrait = Convert ( DateTime, sysadm.FN_CLE_VAL ( 'DTE_FIN_TRAIT', @sChaineBCVretourDetStatut, ';' ))
+				  End 
+
+				If Len ( sysadm.FN_CLE_VAL ( 'DTE_RCP_APP_CLI', @sChaineBCVretourDetStatut, ';' )) > 0 
+				  Begin
+					Set @dtDteRcpAppCli = Convert ( DateTime, sysadm.FN_CLE_VAL ( 'DTE_RCP_APP_CLI', @sChaineBCVretourDetStatut, ';' ))
+				  End 
+
 				Set @sAppSwap = sysadm.FN_CLE_VAL ( 'APP_SWAP', @sChaineBCVretourDetStatut, ';' )
 
-				If sysadm.FN_CLE_VAL ( 'DDE_SAV', @sChaineBCVretourDetStatut, ';' ) = 'Oui' 
+				If sysadm.FN_CLE_VAL ( 'DDE_SAV', @sChaineBCVretourDetStatut, ';' ) = 'OUI' 
 					Begin
 						Set @sInfoFrnSpbCpltlu = sysadm.FN_CLE_VAL_E ( 'DDE_SAV', sysadm.FN_CLE_VAL ( 'DDE_SAV', @sChaineBCVretourDetStatut, ';' ), @sInfoFrnSpbCpltlu, ';' )
 					End 
+
+				If sysadm.FN_CLE_VAL ( 'AUTO_PEC_RAR', @sChaineBCVretourDetStatut, ';' ) = 'OUI' 
+					Begin
+						Set @sInfoFrnSpbCpltlu = sysadm.FN_CLE_VAL_E ( 'AUTO_PEC_RAR', sysadm.FN_CLE_VAL ( 'AUTO_PEC_RAR', @sChaineBCVretourDetStatut, ';' ), @sInfoFrnSpbCpltlu, ';' )
+					End 
+
+				If Len( sysadm.FN_CLE_VAL ( 'PRESTA_AUTO', @sChaineBCVretourDetStatut, ';' ) ) > 0 
+					Begin
+						Set @sInfoFrnSpbCpltlu = sysadm.FN_CLE_VAL_E ( 'PRESTA_AUTO', sysadm.FN_CLE_VAL ( 'PRESTA_AUTO', @sChaineBCVretourDetStatut, ';' ), @sInfoFrnSpbCpltlu, ';' )
+					End 
+
 
 				Break
 			End 
@@ -1115,10 +1150,10 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sMarqueRempl, '') + @sSepChampsFicMPR
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sModeleRempl, '') + @sSepChampsFicMPR
 
-				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sCouleurRempl, '') + @sSepChampsFicMPR
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNumImeiRempl, '') + @sSepChampsFicMPR
-
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNumSerieRempl, '') + @sSepChampsFicMPR
+
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sCouleurRempl, '') + @sSepChampsFicMPR
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sCapStkRempl, '') + @sSepChampsFicMPR
 
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sNeufRecondRempl, '') + @sSepChampsFicMPR
@@ -1127,6 +1162,7 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sPrbleLivraison, '') + @sSepChampsFicMPR
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sPecPrbleLivraison, '') + @sSepChampsFicMPR
 
+				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sIdHubPrestaSav, '') + @sSepChampsFicMPR
 				Set @sEnregistrementFicMPR = @sEnregistrementFicMPR + ISNULL ( @sInfoFrnSpbCpltlu, '') + @sSepChampsFicMPR
 			
 			End 
@@ -1364,8 +1400,15 @@ Declare @sSql		Varchar ( 2000 )
 Declare @sTypBaAller VarChar ( 35 ) 
 Declare @sLibActivity VarChar( 255 )
 Declare @iRowCount Integer
+Declare @dcIdSin  Decimal ( 10 )
+Declare @iIdSeq Integer
+
+Set @asCommentFrn = RTRIM ( @asCommentFrn )
+Set @asChaineBCVretour = RTRIM (	@asChaineBCVretour ) 
 
 Set @sTypBaAller = sysadm.FN_CLE_VAL ( 'TYP_BA_ALLER', @asChaineBCVretour, ';' )
+Set @dcIdSin = Convert ( Decimal ( 10 ), sysadm.FN_CLE_VAL ( 'ID_SIN', @asChaineBCVretour, ';' ))
+Set @iIdSeq = Convert ( Integer, sysadm.FN_CLE_VAL ( 'ID_SEQ', @asChaineBCVretour, ';' ))
 
 Set @asActivityCode = Upper ( @asActivityCode )
 Set @asActivityReturnCode = Upper ( @asActivityReturnCode )
@@ -1448,11 +1491,24 @@ If @sLibActivity is null Set @sLibActivity = ''
 If @asCommentFrn is null Set @asCommentFrn = ''
 Set @asCommentFrn = LTRIM ( rTrim ( @asCommentFrn ))
 
+/*
+If @iStatut = 0 
+	Begin
+		Select @iStatut = c.status_gc
+		From sysadm.commande c
+		Where c.id_sin = @dcIdSin
+		And   c.id_seq = @iIdSeq
+		If @iStatut is null Set @iStatut = 0
+	End 
+*/
+
 Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'STATUS_GC', CONVERT( Varchar (10), @iStatut ), @asChaineBCVretour, ';')
-Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'MOT_CLE_CPLT', CONVERT( Varchar (10), @sMotClecplt ), @asChaineBCVretour, ';')
+Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'MOT_CLE_CPLT', CONVERT( Varchar (100), @sMotClecplt ), @asChaineBCVretour, ';')
 If RIGHT ( rTrim ( @asChaineBCVretour), 1 )<> ';' And len ( rTrim ( RTRIM (  @asChaineBCVretour))) > 0 And @asChaineBCVretour is not null Set @asChaineBCVretour = rTrim ( @asChaineBCVretour) + ';'
 Set @asChaineBCVretour = rTrim ( @asChaineBCVretour + @sBCVserial )
 Set @asCommentFrn = rTrim ( @asCommentFrn ) + IIF ( ISNULL ( Rtrim ( @asCommentFrn ), '' ) <> '', '. ', '' ) + @sLibActivity 
+
+
 
 -------------------------------------------------------------------------------------------
 -- Cas particulier de redressement de données dans la table de dépot pour être cohérent, --
@@ -1471,6 +1527,8 @@ If	@asActivityCode = 'DEVICE_RECEPTION' And
 		'    where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @aiIdDepotHub )  
 		Exec ( @sSql )
 	End 
+
+
 
 -- Cas de l'incomplet
 If	@asActivityCode = 'RETURN_OF_CONFORMITY' And 
@@ -1506,6 +1564,44 @@ If	@asActivityCode in ( 'CUSTOMER_ACKNOWLEDGMENT', 'CARRIER_ACKNOWLEDGMENT' ) An
 		Exec ( @sSql )
 	End 
 
+-- Si Dte_Rcp_Frn obligatoire est Absente, on force à GetDate()
+If	@asActivityCode in ( 'DEVICE_RECEPTION' ) And 
+	@asActivityReturnCode in ( 'OK' )
+	And sysadm.FN_CLE_VAL ( 'DTE_RCP_FRN_PRESENTE', @asChaineBCVretour, ';' ) = 'NON'
+	Begin
+		Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'DTE_RCP_FRN', CONVERT( Varchar (10), GETDATE(), 103) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00', @asChaineBCVretour, ';')		
+		Set @sSql = 
+		'Update ' + @asInstanceHub + 'edi.DepotHubToSimpa2Presta '  +
+		'Set dte_rcp_frn = '''+ Convert ( varchar ( 10 ), GETDATE(), 110 ) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00' + '''' + 
+		'    where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @aiIdDepotHub )  
+		Exec ( @sSql )
+	End 
+
+-- Si Dte_Fin_Trait obligatoire est Absente, on force à GetDate()
+If	@iStatut in ( 151, 152, 2, 21, 178, 176 ) 
+	And sysadm.FN_CLE_VAL ( 'DTE_FIN_TRAIT_PRESENTE', @asChaineBCVretour, ';' ) = 'NON'
+	Begin
+		Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'DTE_FIN_TRAIT', CONVERT( Varchar (10), GETDATE(), 103) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00', @asChaineBCVretour, ';')		
+		Set @sSql = 
+		'Update ' + @asInstanceHub + 'edi.DepotHubToSimpa2Presta '  +
+		'Set dte_fin_trait = '''+ Convert ( varchar ( 10 ), GETDATE(), 110 ) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00' + '''' + 
+		'    where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @aiIdDepotHub )  
+		Exec ( @sSql )
+	End 
+
+-- Si Dte_Rcp_App_Cli obligatoire est Absente, on force à GetDate()
+If	@asActivityCode in ( 'CUSTOMER_ACKNOWLEDGMENT', 'CARRIER_ACKNOWLEDGMENT' ) And 
+	@asActivityReturnCode in ( 'RECEIVED_BY_CUSTOMER' )
+	And sysadm.FN_CLE_VAL ( 'DTE_RCP_APP_CLI_PRESENTE', @asChaineBCVretour, ';' ) = 'NON'
+	Begin
+		Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'DTE_RCP_APP_CLI', CONVERT( Varchar (10), GETDATE(), 103) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00', @asChaineBCVretour, ';')		
+		Set @sSql = 
+		'Update ' + @asInstanceHub + 'edi.DepotHubToSimpa2Presta '  +
+		'Set dte_rcp_app_cli = '''+ Convert ( varchar ( 10 ), GETDATE(), 110 ) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00' + '''' + 
+		'    where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @aiIdDepotHub )  
+		Exec ( @sSql )
+	End 
+	
 Return 1
 
 GO

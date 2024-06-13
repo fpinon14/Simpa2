@@ -4699,9 +4699,9 @@ CREATE procedure sysadm.PS_S11_COMMANDE_V07
 	@iInfoSpbFrn Integer OUTPUT,
 	@sIdTypArt Varchar(3) OUTPUT,
 	@dcIdProd Decimal (7) OUTPUT,
-	@sInfoSpbFrnCplt VarChar ( 255 ) OUTPUT,
-	@sInfoFrnSpbCplt VarChar ( 255 ) OUTPUT,	
-	@sChaineBCV VarChar ( 255 ) OUTPUT
+	@sInfoSpbFrnCplt VarChar ( 800 ) OUTPUT,
+	@sInfoFrnSpbCplt VarChar ( 800 ) OUTPUT,	
+	@sChaineBCV VarChar ( 800 ) OUTPUT
 As
 
 Declare @sVal VarChar ( 100 )
@@ -4711,8 +4711,9 @@ Declare @sVal3 VarChar ( 100 )
 Declare @iNbreARepSav Integer 
 Declare @iNbreACtlSav Integer 
 Declare @iNbreSavActuel Integer 
+-- 
 
-Set @sChaineBCV = ''
+If @sChaineBCV is null Set @sChaineBCV = ''
 
 -- [PC938_ORANGE_V3]
 If Exists ( Select * 
@@ -4820,14 +4821,14 @@ If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0
 			Select	@iNbreARepSav = COUNT(*) 
 			From	sysadm.commande c with (nolock)
 			Where	c.id_sin = @dcIdSin
-			And 	c.id_seq = @iIdSeq
+--			And 	c.id_seq = @iIdSeq
 			And		sysadm.FN_CLE_VAL ( 'A_REPARER_SAV', c.info_spb_frn_cplt, ';' ) = 'OUI'
 			And     c.cod_etat <> 'ANN'
 
 			Select	@iNbreACtlSav = COUNT(*) 
 			From	sysadm.commande c with (nolock)
 			Where	c.id_sin = @dcIdSin
-			And 	c.id_seq = @iIdSeq
+--			And 	c.id_seq = @iIdSeq
 			And		sysadm.FN_CLE_VAL ( 'A_CONTROLER_SAV', c.info_spb_frn_cplt, ';' ) = 'OUI'
 			And     c.cod_etat <> 'ANN'
 
@@ -4842,6 +4843,17 @@ If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0
 
 			Set @sChaineBCV = sysadm.FN_CLE_VAL_E ( 'NBRE_SAV_ACTUEL', Convert ( VarChar ( 10 ), @iNbreSavActuel ), rTrim ( @sChaineBCV ), ';' )
 		End 
+
+/*			
+	Select	@sDernIdRefFour = c.id_ref_four
+	From	sysadm.commande c with (nolock)
+	Where	c.id_sin = @dcIdSin
+	And     c.id_seq = (	Select MAX ( id_seq ) 
+							From sysadm.commande c1
+							Where c1.id_sin = c.id_sin ) 
+	If @sDernIdRefFour is null Set @sDernIdRefFour = ''
+	Set @sChaineBCV = sysadm.FN_CLE_VAL_E ( 'DERN_ID_REF_FOUR', @sDernIdRefFour, rTrim ( @sChaineBCV ), ';' )
+*/
  End 
 
 
@@ -8194,7 +8206,7 @@ If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0
  Begin
 	If @iIdSeqHubPrestaOrig > 0 
 		Begin
-			Insert into sysadm.en_attente_transfert_vers_hp
+			Insert into sysadm.en_attente_transfert_vers_hp ( id_cas, id_sin, id_seq, id_hub_presta, id_four, typ_dommage, point_service, mode_logis, code_pickup, nom_pickup, ref_ass_pickup, adr1_pickup, adr2_pickup, adr3_pickup, adr_cp_pickup, adr_ville_pickup, code_process, lib_code_process, id_gti, lib_perso_gti, id_detail, id_prod, lib_prod, id_prod_adh, id_ets, id_adh, id_sdos, id_typ_art, cod_civ_livr, lib_civ_livr_court, lib_civ_livr_long, id_contrat_abonne, nom_ass, prenom_ass, nom_livr, prenom_livr, adr1_livr, adr2_livr, adr3_livr, adr_cp_livr, adr_ville_livr, num_tel1_ass, num_tel2_ass, num_tel3_ass, mail_assure, num_imei_app_sin, num_serie_app_sin, description_probleme, cod_etat, valide_le, valide_par, cmd_gen_le, id_ref_four, ordre_action, id_assureur, lib_assureur, lib_police, typ_app_sin, lib_typ_app_sin, marq_app_sin, modl_app_sin, ref_app_sin, num_tel_sin, mt_val_achat, mt_prise_en_charge, date_achat, etat_app_sin, code_verrou, desimlocke, info_spb_frn_cplt )
 			exec sysadm.PS_HP276_S_S2_OBTENTION_DONNEES_PRESTA_SIMPA2_POUR_PREPARATION_CREATION_HUB_PRESTATAIRE 2, @adcIdSin, @iNewIdSeq
 		End 
  End 
@@ -8575,7 +8587,7 @@ If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0
  Begin
 	If @iIdSeqHubPrestaOrig > 0 
 		Begin
-			Insert into sysadm.en_attente_transfert_vers_hp
+			Insert into sysadm.en_attente_transfert_vers_hp ( id_cas, id_sin, id_seq, id_hub_presta, id_four, typ_dommage, point_service, mode_logis, code_pickup, nom_pickup, ref_ass_pickup, adr1_pickup, adr2_pickup, adr3_pickup, adr_cp_pickup, adr_ville_pickup, code_process, lib_code_process, id_gti, lib_perso_gti, id_detail, id_prod, lib_prod, id_prod_adh, id_ets, id_adh, id_sdos, id_typ_art, cod_civ_livr, lib_civ_livr_court, lib_civ_livr_long, id_contrat_abonne, nom_ass, prenom_ass, nom_livr, prenom_livr, adr1_livr, adr2_livr, adr3_livr, adr_cp_livr, adr_ville_livr, num_tel1_ass, num_tel2_ass, num_tel3_ass, mail_assure, num_imei_app_sin, num_serie_app_sin, description_probleme, cod_etat, valide_le, valide_par, cmd_gen_le, id_ref_four, ordre_action, id_assureur, lib_assureur, lib_police, typ_app_sin, lib_typ_app_sin, marq_app_sin, modl_app_sin, ref_app_sin, num_tel_sin, mt_val_achat, mt_prise_en_charge, date_achat, etat_app_sin, code_verrou, desimlocke, info_spb_frn_cplt )
 			exec sysadm.PS_HP276_S_S2_OBTENTION_DONNEES_PRESTA_SIMPA2_POUR_PREPARATION_CREATION_HUB_PRESTATAIRE 2, @adcIdSin, @iNewIdSeq
 		End 
  End 
@@ -9676,8 +9688,14 @@ Declare @sNewInfoSpbFrnCplt VarChar ( 255 )
 Declare @sNewInfoFrnSpbCplt VarChar ( 255 )
 Declare @sCapStkRempl VarChar ( 35 )
 Declare @sCoulRempl VarChar ( 35 )
+Declare @TypArtIfr		VarChar ( 255 )
+Declare @sNewIdRefFour VarChar ( 20 ) -- [RS4616_RET_TLS]
+Declare @sNewIdRefFourTest VarChar ( 20 ) -- [RS4616_RET_TLS]
+Declare @iCptId Integer -- [RS4616_RET_TLS]
+
 
 Set @iCasDT276SwapCTR = 0 
+Set @iPrestaHUB = 0 
 IF sysadm.FN_CLE_VAL ( 'TGR_APPSW', rtrim ( @sInfoFrnSpbCplt ) , ';') <> 'OUI' Return
 IF sysadm.FN_CLE_VAL ( 'APP_SWAP', rtrim ( @sInfoFrnSpbCplt ) , ';') <> 'OUI' Return
 
@@ -9914,6 +9932,157 @@ ELSE
 BEGIN
 	Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT						
 END
+
+-- Trt pour affection marque/modèle IFR
+-- [HP252_276_HUB_PRESTA]
+If @iPrestaHUB > 0 
+	Begin 
+	   -- [HP252_276_HUB_PRESTA]
+	   Set @iMarqModlIFr = 0
+	   If Exists  (
+			Select top 1 1 From sysadm.ifr i
+			Where i.marque = @sMarqRempl
+			And   i.reference = @sModlRempl
+	   ) 
+		Begin
+			Set @iMarqModlIFr = 1
+		End 
+
+	   If @iMarqModlIFr = 0 
+		Begin
+		   Select @TypArtIfr = 
+				  '#' + ( 
+				   Select stuff ( 
+							( SELECT Distinct '#' + CAST(rtrim ( ltrim ( rtrim ( i.sku_saga )) ) AS VARCHAR(250)) 
+							  FROM sysadm.ifr i
+							  Where sku_saga is not null
+							  For XML PATH ('') )
+						, 1, 1, '' )) + '#'
+		 End 
+
+		Update 	sysadm.w_commande
+		Set	
+			id_marq_art_ifr = 
+				Case 
+					When @iMarqModlIFr > 0 Then @sMarqRempl -- [HP252_276_HUB_PRESTA]
+
+					Else 
+							(	Select Top 1 rtrim (la.marq_ifr ) 
+								from sysadm.lien_article la 
+								Where la.id_four = 'HUP'
+								And la.marq_four = Left ( @sMarqRempl, 35)
+								And la.modl_four = Left ( @sModlRempl, 35)
+							)
+
+				End,		
+			id_modl_art_ifr =
+				Case 
+					When @iMarqModlIFr > 0 Then @sModlRempl -- [HP252_276_HUB_PRESTA]
+
+					Else
+							(	Select Top 1 rtrim (la.modl_ifr ) 
+								from sysadm.lien_article la 
+								Where la.id_four = 'HUP'
+								And la.marq_four = Left ( @sMarqRempl, 35)
+								And la.modl_four = Left ( @sModlRempl, 35)
+							)
+
+				End
+
+		From    sysadm.w_commande wc
+		Where	wc.id_sin = @dcIdSin
+		And		wc.id_seq = @iNewIdSeq		
+
+		Update 	sysadm.commande
+		Set	
+			id_marq_art_ifr = 
+				Case 
+					When @iMarqModlIFr > 0 Then @sMarqRempl -- [HP252_276_HUB_PRESTA]
+
+					Else 
+							(	Select Top 1 rtrim (la.marq_ifr ) 
+								from sysadm.lien_article la 
+								Where la.id_four = 'HUP'
+								And la.marq_four = Left ( @sMarqRempl, 35)
+								And la.modl_four = Left ( @sModlRempl, 35)
+							)
+
+				End,		
+			id_modl_art_ifr =
+				Case 
+					When @iMarqModlIFr > 0 Then @sModlRempl -- [HP252_276_HUB_PRESTA]
+
+					Else
+							(	Select Top 1 rtrim (la.modl_ifr ) 
+								from sysadm.lien_article la 
+								Where la.id_four = 'HUP'
+								And la.marq_four = Left ( @sMarqRempl, 35)
+								And la.modl_four = Left ( @sModlRempl, 35)
+							)
+
+				End
+
+		From    sysadm.commande wc
+		Where	wc.id_sin = @dcIdSin
+		And		wc.id_seq = @iNewIdSeq	
+
+		If Not Exists (
+				Select Top 1 1 
+				From sysadm.article a
+				Where ( a.id_four = @sIdFour Or ( @iPrestaHUB > 0 And a.id_four = 'HUP' )) -- [HP252_276_HUB_PRESTA]
+				And   a.id_marq_art = Left ( @sMarqRempl, 35)
+				And   a.id_modl_art = Left ( @sModlRempl, 35)
+					  )
+		   And CHARINDEX ( '#' + @sTypeAppSin + '#', @TypArtIfr ) > 0 -- [HP252_276_HUB_PRESTA]
+		   And @iMarqModlIFr <= 0 -- [HP252_276_HUB_PRESTA]
+
+			Begin
+				Set @sNewIdRefFour = Replace ( Replace ( Replace ( convert( varchar ( 30), GetDate(), 120 ), '-', ''), ' ', ''), ':', '')
+				Set @sNewIdRefFourTest = @sNewIdRefFour 
+
+				Set @iCptId = 1
+				Set @sNewIdRefFourTest = @sNewIdRefFour + '_' + convert ( varchar (5), @iCptId )
+
+				While Exists ( Select Top 1 1
+								From sysadm.article a with (nolock)
+								Where a.id_four = @sIdFour
+								And   a.id_ref_four = @sNewIdRefFourTest )
+					Begin
+						Set @iCptId = @iCptId + 1
+						Set @sNewIdRefFourTest = @sNewIdRefFour + '_' + convert ( varchar (5), @iCptId )
+					End
+
+				Insert into sysadm.article 
+				Select	'HUP',
+						@sNewIdRefFourTest,
+						@sTypeAppSin, -- [HP252_276_HUB_PRESTA]
+						Left ( @sMarqRempl, 35),
+						Left ( @sModlRempl, 35),
+						0,
+						0,
+						20000,
+						null,
+						'N',
+						(	Select Top 1 rtrim ( la.marq_ifr ) 
+							from sysadm.lien_article la 
+							Where  la.id_four = 'HUP' -- [HP252_276_HUB_PRESTA]
+							And la.marq_four = Left ( @sMarqRempl, 35)
+							And la.modl_four = Left ( @sModlRempl, 35)
+							),
+						(	Select Top 1 rtrim ( la.modl_ifr ) 
+							from sysadm.lien_article la 
+							Where  la.id_four = 'HUP' -- [HP252_276_HUB_PRESTA]
+							And la.marq_four = Left ( @sMarqRempl, 35)
+							And la.modl_four = Left ( @sModlRempl, 35)
+							),
+						200,
+						1,
+						getdate(),
+						getdate(),
+						'JFF'
+
+			End 
+	End 
 
 Go
 

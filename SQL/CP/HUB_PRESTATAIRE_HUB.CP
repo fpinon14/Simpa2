@@ -1393,7 +1393,7 @@ If @asIdHubPresta is null Or lTrim ( rTrim ( @asIdHubPresta )) = ''
      RAISERROR ('La variable @asIdHubPresta doit absolument est renseignée.', 16, 1, @DBID, @DBNAME)
 	 Return @@Error
   End 
-
+/*
 Select @iIdDepotHub = max ( id_depot_hub )
 From edi.DepotHubToSimpa2Presta
 Where id_hub_presta = @asIdHubPresta
@@ -1401,7 +1401,7 @@ Where id_hub_presta = @asIdHubPresta
 
 -- 1ère Création
 If @iIdDepotHub is null
-  Begin
+  Begin*/
 	Insert into edi.DepotHubToSimpa2Presta 
 		( 
 			id_hub_presta,
@@ -1466,6 +1466,7 @@ If @iIdDepotHub is null
 		)
 	
 	Return @@Error
+/*
   End 
 
 -- Maj (par insertion dern enrg source )
@@ -1527,18 +1528,18 @@ Select		id_hub_presta,
 			nom_transporteur,
 			dte_rcp_app_cli,
 			app_swap='N',
-			autres_infos_rempl=null,
-			marque_rempl=null,
-			modele_rempl=null,
-			num_imei_rempl=null,
-			num_serie_rempl=null,
-			couleur_rempl=null,
-			cap_stk_rempl=null,
-			neuf_recond_rempl=null,
-			prix_ttc_rempl=null,
+			autres_infos_rempl,
+			marque_rempl,
+			modele_rempl,
+			num_imei_rempl,
+			num_serie_rempl,
+			couleur_rempl,
+			cap_stk_rempl,
+			neuf_recond_rempl,
+			prix_ttc_rempl,
 			prble_livraison,
 			pec_prble_livraison,
-			null, -- id_hub_presta_sav
+			id_hub_presta_sav, 
 			info_frn_spb_cplt
 
 From edi.DepotHubToSimpa2Presta
@@ -1605,6 +1606,7 @@ Set @iError = @@Error; If @iError <> 0 Return @iError
 Update edi.DepotHubToSimpa2Presta Set info_frn_spb_cplt = lTrim ( rtrim ( @asInfoFrnSpbCplt ))			Where id_depot_hub = @iIdentity And @asInfoFrnSpbCplt		is not null And lTrim ( rtrim (	@asInfoFrnSpbCplt )) <> ''	
 
 Return @@Error
+*/
 
 Go
 

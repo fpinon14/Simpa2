@@ -2121,7 +2121,35 @@ Set  id_marq_art_ifr = a.id_marq_art_ifr,
 	 id_modl_art_ifr = a.id_modl_art_ifr
 From sysadm.commande c,
 	 sysadm.article a
-Where ( c.id_four = @sIdFour Or Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' ) ) > 0 ) -- [HP252_276_HUB_PRESTA]
+Where c.id_four = @sIdFour -- [HP252_276_HUB_PRESTA]
+And c.id_modl_art_ifr is null
+And c.maj_le > DateAdd ( month, @iFreqMois, GetDate() ) 
+And a.id_four = c.id_four
+And a.id_marq_art = c.id_marq_art
+And a.id_modl_art = c.id_modl_art
+And a.id_marq_art_ifr is not null
+And a.id_modl_art_ifr is not null
+
+Update c
+Set  id_marq_art_ifr = a.id_marq_art_ifr,
+	 id_modl_art_ifr = a.id_modl_art_ifr
+From sysadm.commande c,
+	 sysadm.article a
+Where Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' ) ) > 0 
+And c.id_modl_art_ifr is null
+And c.maj_le > DateAdd ( month, @iFreqMois, GetDate() ) 
+And a.id_four = 'HUP'
+And a.id_marq_art = c.id_marq_art
+And a.id_modl_art = c.id_modl_art
+And a.id_marq_art_ifr is not null
+And a.id_modl_art_ifr is not null
+
+Update c
+Set  id_marq_art_ifr = a.id_marq_art_ifr,
+	 id_modl_art_ifr = a.id_modl_art_ifr
+From sysadm.w_commande c,
+	 sysadm.article a
+Where c.id_four = @sIdFour  -- [HP252_276_HUB_PRESTA]
 And c.id_modl_art_ifr is null
 And c.maj_le > DateAdd ( month, @iFreqMois, GetDate() ) 
 And a.id_four = c.id_four
@@ -2135,14 +2163,15 @@ Set  id_marq_art_ifr = a.id_marq_art_ifr,
 	 id_modl_art_ifr = a.id_modl_art_ifr
 From sysadm.w_commande c,
 	 sysadm.article a
-Where ( c.id_four = @sIdFour Or Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' ) ) > 0 ) -- [HP252_276_HUB_PRESTA]
+Where Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' ) ) > 0 
 And c.id_modl_art_ifr is null
 And c.maj_le > DateAdd ( month, @iFreqMois, GetDate() ) 
-And a.id_four = c.id_four
+And a.id_four = 'HUP'
 And a.id_marq_art = c.id_marq_art
 And a.id_modl_art = c.id_modl_art
 And a.id_marq_art_ifr is not null
 And a.id_modl_art_ifr is not null
+
 
 -- Relevés des articles non liés + mail Séb
 
@@ -2201,17 +2230,18 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 
 	-- Section rajoutée, à enlever éventuellement pour la recette.
 	-- Le but est de ne plus envoyer le mail intempestif en recette à Sébastien
+/*
 	IF @@servername <> master.dbo.SPB_FN_ServerName ('PRO')	
 	  Begin
 		Update @tb Set marquage = 1 Where id_seq = @iIdSeq
 		Continue
 	  End 
-
+*/
 
 	EXEC master.dbo.SPB_PS_MAIL 
 			@sRetourErrMail OUTPUT, 
-			'sloison@spb.eu,ntonnetot@spb.eu', 
---			'jff@spb.fr',
+--			'sloison@spb.eu,ntonnetot@spb.eu', 
+			'jff@spb.fr',
 			@sMessage, 
 			@sObjet, 
 			@sFrom, 
