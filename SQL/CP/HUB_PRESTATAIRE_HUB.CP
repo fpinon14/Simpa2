@@ -50,7 +50,7 @@ GO
 
 Insert into [edi].[parametre] Values ( 'CPT_HUB', 0, -1 ) 
 
-/*
+
 If Exists ( Select Top 1 1 From sys.objects where name = 'DepotSimpa2ToHubPresta' and type = 'U' ) Drop Table edi.DepotSimpa2ToHubPresta
 
 CREATE TABLE edi.DepotSimpa2ToHubPresta(
@@ -151,7 +151,7 @@ Create index idx7_DepotSimpa2ToHubPresta on edi.DepotSimpa2ToHubPresta ( alt_trt
 Create index idx8_DepotSimpa2ToHubPresta on edi.DepotSimpa2ToHubPresta ( traite_le)
 
 Go
-*/
+
 
 If Exists ( Select Top 1 1 From sys.objects where name = 'DepotHubToSimpa2Presta' and type = 'U' ) Drop Table edi.DepotHubToSimpa2Presta
 

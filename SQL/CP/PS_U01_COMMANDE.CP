@@ -1101,8 +1101,8 @@ If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') > 0
 If @sIdFour in ( 'BLC', 'O2M', 'COR', 'SBE', 'PSM', 'MTT', 'TMT', 'CEA' ) Or @iPrestaHUB > 0  -- [HP252_276_HUB_PRESTA]
 	   
 	BEGIN
-		-- [PM200][LOT2][DESOX]
-		IF ( @sIdRefFour in ( 'A_REPARER', 'A_DESOXYDER') And @iStatusGCActuel <> @iStatusGc And @iStatusGc in ( 153, 154 ) And @sCodEtatActuel not in ( 'RFO', 'RPC', 'ANN' ) )
+		-- [PM200][LOT2][DESOX] -- [HP252_276_HUB_PRESTA]
+		IF ( ( @sIdRefFour in ( 'A_REPARER', 'A_DESOXYDER') Or ( @sIdRefFour = 'A_DIAGNOSTIQUER' And  @iPrestaHUB > 0  )) And @iStatusGCActuel <> @iStatusGc And @iStatusGc in ( 153, 154 ) And @sCodEtatActuel not in ( 'RFO', 'RPC', 'ANN' ) )
    			BEGIN
 				Select @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] -> ' +
 				Case @iStatusGc 
@@ -2280,9 +2280,9 @@ IF @iStatusGc = 178 And @iStatusGCActuel <> 178
 	And		wc.id_seq = @iIdSeq		
 	And		ws.id_sin = wc.id_sin
 
-	If @sVal2 is null Set @sVal2 = 0
-	If IsNumeric ( @sVal2 ) = 0 Set @sVal2 = 0
-	If @sVal2 = 0 Set @sVal2 = Convert ( Varchar ( 10 ), @dcMtTTCcmde ) -- [RS4616_RET_TLS]
+	If @sVal2 is null Set @sVal2 = '0'
+	If IsNumeric ( @sVal2 ) = 0 Set @sVal2 = '0'
+	If @sVal2 = '0' Set @sVal2 = Convert ( Varchar ( 10 ), @dcMtTTCcmde ) -- [RS4616_RET_TLS]
 
 	If CharIndex ( 'TO', Upper ( @sCapStkRempl), 1 ) <=0  And 
 	   CharIndex ( 'GO', Upper ( @sCapStkRempl), 1 ) <=0  And 
@@ -2598,6 +2598,23 @@ IF @iStatusGc = 176 And @iStatusGCActuel <> 176
 
 	Where  id_sin = @dcIdSin
 	And    id_seq = @iIdSeq
+
+	-- [HP252_276_HUB_PRESTA]
+	If @iPrestaHUB > 0 
+		Begin
+			Update sysadm.commande 
+			Set comment_frn = @sCommentFrn
+			Where  id_sin = @dcIdSin
+			And    id_seq = @iIdSeq
+
+			Update sysadm.w_commande 
+			Set comment_frn = @sCommentFrn
+			Where  id_sin = @dcIdSin
+			And    id_seq = @iIdSeq
+
+			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] -> ' + @sCommentFrn
+
+		End 
 
     -- [PM462-1][V3]
 	If sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') >= 0 

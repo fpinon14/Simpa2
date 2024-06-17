@@ -5624,6 +5624,7 @@ Go
 --
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
+-- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_COMMANDE_PM82_LOT1_CLOTURE_PRS' AND type = 'P' )
         DROP procedure sysadm.PS_U_COMMANDE_PM82_LOT1_CLOTURE_PRS
@@ -5667,6 +5668,43 @@ UPDATE sysadm.w_commande
  AND 	w_commande.status_gc in ( 153, 154 ) 
  AND	w_commande.cod_etat not in ( 'ANN' )
 
+
+ -- [HP252_276_HUB_PRESTA]
+If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
+ Begin
+
+	 UPDATE sysadm.commande
+	 SET	cod_etat = 
+			Case commande.id_four
+        		When 'O2M' Then 'RFO'
+        		Else 'RPC'
+			End 
+
+	 FROM   sysadm.sinistre s
+
+	 WHERE  s.id_sin = commande.id_sin
+	 AND    commande.id_sin = @dcIdSin
+	 AND    commande.id_ref_four in ( 'A_DIAGNOSTIQUER' )
+	 AND 	commande.status_gc in ( 153, 154 ) 
+	 AND	commande.cod_etat not in ( 'ANN' )
+ 
+	UPDATE sysadm.w_commande
+	 SET
+			cod_etat = 
+			Case w_commande.id_four
+        		When 'O2M' Then 'RFO'
+        		Else 'RPC'
+			End 
+
+	 FROM   sysadm.w_sin s
+
+	 WHERE  s.id_sin = w_commande.id_sin
+	 AND    w_commande.id_sin = @dcIdSin
+	 AND    w_commande.id_ref_four in ( 'A_DIAGNOSTIQUER' )
+	 AND 	w_commande.status_gc in ( 153, 154 ) 
+	 AND	w_commande.cod_etat not in ( 'ANN' )
+
+ End
 GO
 
 --------------------------------------------------------------------
@@ -5735,6 +5773,7 @@ GO
 --
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
+-- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_COMMANDE_PM82_LOT1_CLOTURE_A_REPARER_FORCE' AND type = 'P' )
         DROP procedure sysadm.PS_U_COMMANDE_PM82_LOT1_CLOTURE_A_REPARER_FORCE
@@ -5756,7 +5795,7 @@ UPDATE sysadm.commande
 
  WHERE  s.id_sin = commande.id_sin
  AND    commande.id_sin = @dcIdSin
- AND    commande.id_ref_four in ( 'A_REPARER_FORCE', 'A_DESOXYDER_FORCE' )  --[MANTIS3405][PM200]
+ AND    commande.id_ref_four in ( 'A_REPARER_FORCE', 'A_DESOXYDER_FORCE', 'A_DIAG_FORCE' )  --[MANTIS3405][PM200] -- [HP252_276_HUB_PRESTA]
  AND	commande.cod_etat not in ( 'ANN' )
  
 UPDATE sysadm.w_commande
@@ -5771,7 +5810,7 @@ UPDATE sysadm.w_commande
 
  WHERE  s.id_sin = w_commande.id_sin
  AND    w_commande.id_sin = @dcIdSin
- AND    w_commande.id_ref_four in ( 'A_REPARER_FORCE', 'A_DESOXYDER_FORCE' ) --[MANTIS3405][PM200]
+ AND    w_commande.id_ref_four in ( 'A_REPARER_FORCE', 'A_DESOXYDER_FORCE', 'A_DIAG_FORCE'  ) --[MANTIS3405][PM200] -- [HP252_276_HUB_PRESTA]
  AND	w_commande.cod_etat not in ( 'ANN' )
 
 GO
