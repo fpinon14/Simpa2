@@ -25309,7 +25309,7 @@ Else
 
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
-
+		
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'pj2', 'XX' -- La variable XML ne doit pas être vide pour maj ensuite
 
 		-- Appel pour construire et récupérer le XML dans @xmlResult

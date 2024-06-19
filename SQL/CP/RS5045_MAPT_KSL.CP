@@ -3698,6 +3698,8 @@ Go
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
+-- 19/06/2024	JFF		Pour écraser tout de même le 'XX' qui gêne KSL
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_U_MAJ_XML_PIECES_JOINTES_APRES_CREATION_XML' AND type = 'P' )
         DROP procedure sysadm.PS_RS5045_U_MAJ_XML_PIECES_JOINTES_APRES_CREATION_XML
 GO
@@ -3747,7 +3749,14 @@ Set @sCheminEtFichierComplet = ''
 While 0=0 -- [RS6044_REL_MAIL]
 	Begin
 		Set @sIdArchComplWk = sysadm.FN_CLE_VAL ( 'ID_ARCH_CPL_' + CONVERT ( varchar ( 20 ), @iCptArch), @asIdArchComplSeria, ';' ) 
-		If @sIdArchComplWk is null OR ltrim ( rtrim ( @sIdArchComplWk )) = '' Break
+--		If @sIdArchComplWk is null OR ltrim ( rtrim ( @sIdArchComplWk )) = '' Break
+
+		If @sIdArchComplWk is null OR ltrim ( rtrim ( @sIdArchComplWk )) = '' 
+			Begin
+				-- Pour écraser tout de même le 'XX' qui gêne KSL
+				Set @sXmlData = sysadm.FN_CLE_VAL_XML_SUBST ( 'PJ' + CONVERT ( varchar ( 20 ), @iCptArch), '', @sXmlData ) 
+				Break
+			End 
 
 		Set @sCheminEtFichierComplet = 
 				@sChemin + CONVERT ( Varchar (20 ) , @aiIdSeqMail ) + '_' + 

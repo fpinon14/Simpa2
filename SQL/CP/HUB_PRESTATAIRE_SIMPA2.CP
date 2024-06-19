@@ -2473,3 +2473,49 @@ While Exists ( Select Top 1 1 From @TB_EnAttenteTransfertVersHpWork where alt_tr
  End
 
 Go
+
+-------------------------------------------------------------------
+--
+-- Procédure            :       PS_HP276_S_S2_LIB_ACTIVITY_MAPPING
+-- Auteur               :       JFF
+-- Date                 :       11/03/2024
+-- Libell‚              :       [HP252_276_HUB_PRESTA]
+-- Commentaires         :       
+--                              /!\ A COMPILER SUR LA BASE SIMPA2 /!\
+--								Cette est la PS d'appel SIMPA2 qui appel le HUB selon l'environnement
+--
+-- Retourne             :       rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_S2_LIB_ACTIVITY_MAPPING' AND type = 'P' )
+        DROP procedure sysadm.PS_HP276_S_S2_LIB_ACTIVITY_MAPPING
+GO
+
+CREATE procedure sysadm.PS_HP276_S_S2_LIB_ACTIVITY_MAPPING
+	@asActivityCode			varchar ( 50 ), 
+	@asActivityReturnCode	varchar ( 50 ),
+	@asActivityReasonCode	varchar ( 50 ),
+	@asLibActivity			varchar ( 255 )	OutPut
+AS
+
+If @asActivityCode is null Return
+If @asActivityReturnCode is null Return
+
+If @asActivityReasonCode is not null 
+	Begin
+		Select Top 1 @asLibActivity = lTrim ( rTrim ( lib_activity ))
+		From   sysadm.mapping_retour_hub
+		Where  activity_code = @asActivityCode
+		And	   activity_return_code = @asActivityReturnCode
+		And	   activity_reason_code = @asActivityReasonCode 
+
+		Return
+	End 
+
+Select Top 1 @asLibActivity = lTrim ( rTrim ( lib_activity ))
+From   sysadm.mapping_retour_hub
+Where  activity_code = @asActivityCode
+And	   activity_return_code = @asActivityReturnCode
+
+Go
+
+

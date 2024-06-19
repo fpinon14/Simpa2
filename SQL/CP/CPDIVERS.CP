@@ -1982,6 +1982,7 @@ CREATE procedure sysadm.PS_CORRECTION_BASE_NUIT_1
 -- FPI - 05/05/2015 - ajout correction id_opt
 -- JFF      12/02/2016   [PI062]
 -- JFF      20/02/2023   [RS4616_RET_TLS]
+-- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
 -------------------------------------------------------------------
 AS
 
@@ -2472,6 +2473,12 @@ Exec sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
 
 -- [RS4616_RET_TLS]
 Exec sysadm.PS_U_RS4616_MAJ_CMDE_TLS 'TLS', 2
+
+-- [HP252_276_HUB_PRESTA]
+If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
+ Begin
+	Exec sysadm.PS_U_RS4616_MAJ_CMDE_TLS 'HUP', 2
+ End 
 
 GO
 

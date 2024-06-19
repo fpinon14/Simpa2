@@ -1881,3 +1881,76 @@ End
 
 Go
 
+-------------------------------------------------------------------
+--
+-- Procédure            :       PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_HUB_PRESTAIRE_A_SIMPA2
+-- Auteur               :       JFF
+-- Date                 :       11/03/2024
+-- Libell‚              :       [HP252_276_HUB_PRESTA]
+-- Commentaires         :       
+--                              /!\ A COMPILER SUR LA BASE PRESTATAIRE /!\
+--
+--								
+--
+-- Retourne             :       rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_HUB_PRESTAIRE_A_SIMPA2' AND type = 'P' )
+        DROP procedure edi.PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_HUB_PRESTAIRE_A_SIMPA2
+GO
+
+CREATE procedure edi.PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_HUB_PRESTAIRE_A_SIMPA2
+	    @sIdHubPresta VarChar ( 20 )
+AS
+
+Select 
+	'N' alt_b_detail_presta,
+	id_depot_hub,
+	Convert ( VarChar ( 10 ), depose_le , 103 ) + ' ' + Convert ( VarChar ( 10 ), depose_le , 108 ) depose_le,
+	depose_par,
+	alt_trt,
+	Convert ( VarChar ( 10 ), traite_le , 103 ) + ' ' + Convert ( VarChar ( 10 ), traite_le , 108 ) traite_le,
+	traite_par,
+	id_hub_presta,
+	num_cmd_frn,
+	activity_code,
+	activity_return_code,
+	activity_reason_code,
+	null lib_activity,
+	typ_ba_aller,
+	perte_aller,
+	diag_video_engage,
+	resolu_diag_video,
+	Convert ( VarChar ( 10 ), dte_rdv_conf , 103 ) dte_rdv_conf,
+	mode_logis_ret,
+	point_service_ret,
+	Convert ( VarChar ( 10 ), dte_rcp_frn , 103 )  dte_rcp_frn,
+	site_action,
+	app_incomplet,
+	Convert ( VarChar ( 10 ), dte_fin_trait , 103 )  dte_fin_trait,
+	comment_frn,
+	num_bon_trp,
+	nom_transporteur,
+	Convert ( VarChar ( 10 ), dte_rcp_app_cli , 103 ) dte_rcp_app_cli,
+	app_swap,
+	autres_infos_rempl,
+	marque_rempl,
+	modele_rempl,
+	num_imei_rempl,
+	num_serie_rempl,
+	couleur_rempl,
+	cap_stk_rempl,
+	neuf_recond_rempl,
+	prix_ttc_rempl,
+	prble_livraison,
+	pec_prble_livraison,
+	id_hub_presta_sav,
+	info_frn_spb_cplt,
+	chemin_fic,
+	nom_fic
+
+From edi.DepotHubToSimpa2Presta dhs
+Where dhs.id_hub_presta = @sIdHubPresta
+Order by id_depot_hub
+
+Go
+
