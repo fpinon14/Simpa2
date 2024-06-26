@@ -3010,7 +3010,7 @@ GO
 
 --------------------------------------------------------------------
 --
--- Fonction             :       FN_LIB_POLICE
+-- Fonction             :       FN_LIB_POLICE_V02
 -- Auteur               :       Fabry JF
 -- Date                 :       17/10/2013
 -- Libellé              :
@@ -3024,13 +3024,15 @@ GO
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_LIB_POLICE' AND type = 'FN' )
-        DROP function sysadm.FN_LIB_POLICE
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_LIB_POLICE_V02' AND type = 'FN' )
+        DROP function sysadm.FN_LIB_POLICE_V02
 GO
 
 
-CREATE  function sysadm.FN_LIB_POLICE  (
-        @dcIdSin    Decimal (10) ) -- [PI062]
+CREATE  function sysadm.FN_LIB_POLICE_V02  (
+        @dcIdSin    Decimal (10) , -- [PI062]
+		@sCas		VarChar  ( 1 ) -- P/W
+		)
 RETURNS VarChar ( 35 )
 AS
 
@@ -3038,85 +3040,173 @@ Begin
 
 Declare @sLibPolice VarChar (35)
 
-If 
-(
-Select COUNT (*)
-From 
+If @sCas is null Set @sCas = 'P' -- Défaut
+
+If @sCas = 'P'
+Begin
+	If 
 	(
-		Select  distinct g.id_police
-		From	sysadm.sinistre s,
-				sysadm.garantie g,
-				sysadm.gar_sin gs,
-				sysadm.police p,
-				sysadm.compagnie c
-
-		Where   s.id_sin = @dcIdSin
-		And		gs.id_sin = s.id_sin
-		And     g.id_prod = s.id_prod
-		And		g.id_gti  = gs.id_gti
-		And		g.id_rev = s.id_rev
-		And		p.id_police = g.id_police
-		And		c.id_cie = p.id_cie
-	) as Tb
-) <> 1 
- Begin
- 
-	If ( Select COUNT (*) From sysadm.gar_sin where id_sin = @dcIdSin ) = 0
-		Or 
-	   ( Select id_rev From sysadm.sinistre s where s.id_sin = @dcIdSin ) < 0 	
-	 Begin
-		If 
+	Select COUNT (*)
+	From 
 		(
-		Select COUNT (*)
-		From 
-			(
-				Select  distinct g.id_police
-				From	sysadm.sinistre s,
-						sysadm.garantie g,
-						sysadm.police p,
-						sysadm.compagnie c
+			Select  distinct g.id_police
+			From	sysadm.sinistre s,
+					sysadm.garantie g,
+					sysadm.gar_sin gs,
+					sysadm.police p,
+					sysadm.compagnie c
 
-				Where   s.id_sin = @dcIdSin
-				And     g.id_prod = s.id_prod
-				And		( g.id_rev = s.id_rev or s.id_rev < 0 )
-				And		p.id_police = g.id_police
-				And		c.id_cie = p.id_cie
-			) as Tb
-		) = 1
-			Begin 
-				Select  Top 1 @sLibPolice = p.lib_police
-				From	sysadm.sinistre s,
-						sysadm.garantie g,
-						sysadm.police p,
-						sysadm.compagnie c
-
-				Where   s.id_sin = @dcIdSin
-				And     g.id_prod = s.id_prod
-				And		( g.id_rev = s.id_rev or s.id_rev < 0 )
-				And		p.id_police = g.id_police
-				And		c.id_cie = p.id_cie		
-				
-				Return @sLibPolice
-			End 
-	 End  
+			Where   s.id_sin = @dcIdSin
+			And		gs.id_sin = s.id_sin
+			And     g.id_prod = s.id_prod
+			And		g.id_gti  = gs.id_gti
+			And		g.id_rev = s.id_rev
+			And		p.id_police = g.id_police
+			And		c.id_cie = p.id_cie
+		) as Tb
+	) <> 1 
+	 Begin
  
-	Return 'Dépendance avec la garantie'
- End 
+		If ( Select COUNT (*) From sysadm.gar_sin where id_sin = @dcIdSin ) = 0
+			Or 
+		   ( Select id_rev From sysadm.sinistre s where s.id_sin = @dcIdSin ) < 0 	
+		 Begin
+			If 
+			(
+			Select COUNT (*)
+			From 
+				(
+					Select  distinct g.id_police
+					From	sysadm.sinistre s,
+							sysadm.garantie g,
+							sysadm.police p,
+							sysadm.compagnie c
 
-Select	@sLibPolice = p.lib_police
-From	sysadm.sinistre s,
-		sysadm.garantie g,
-		sysadm.gar_sin gs,
-		sysadm.police p,
-		sysadm.compagnie c
+					Where   s.id_sin = @dcIdSin
+					And     g.id_prod = s.id_prod
+					And		( g.id_rev = s.id_rev or s.id_rev < 0 )
+					And		p.id_police = g.id_police
+					And		c.id_cie = p.id_cie
+				) as Tb
+			) = 1
+				Begin 
+					Select  Top 1 @sLibPolice = p.lib_police
+					From	sysadm.sinistre s,
+							sysadm.garantie g,
+							sysadm.police p,
+							sysadm.compagnie c
 
-Where   s.id_sin = @dcIdSin
-And		gs.id_sin = s.id_sin
-And     g.id_prod = s.id_prod
-And		g.id_gti  = gs.id_gti
-And		g.id_rev = s.id_rev
-And		p.id_police = g.id_police
-And		c.id_cie = p.id_cie
+					Where   s.id_sin = @dcIdSin
+					And     g.id_prod = s.id_prod
+					And		( g.id_rev = s.id_rev or s.id_rev < 0 )
+					And		p.id_police = g.id_police
+					And		c.id_cie = p.id_cie		
+				
+					Return @sLibPolice
+				End 
+		 End  
+ 
+		Return 'Dépendance avec la garantie'
+	 End 
+
+	Select	@sLibPolice = p.lib_police
+	From	sysadm.sinistre s,
+			sysadm.garantie g,
+			sysadm.gar_sin gs,
+			sysadm.police p,
+			sysadm.compagnie c
+
+	Where   s.id_sin = @dcIdSin
+	And		gs.id_sin = s.id_sin
+	And     g.id_prod = s.id_prod
+	And		g.id_gti  = gs.id_gti
+	And		g.id_rev = s.id_rev
+	And		p.id_police = g.id_police
+	And		c.id_cie = p.id_cie
+End 
+
+If @sCas = 'W'
+Begin
+	If 
+	(
+	Select COUNT (*)
+	From 
+		(
+			Select  distinct g.id_police
+			From	sysadm.w_sin s,
+					sysadm.garantie g,
+					sysadm.w_gar_sin gs,
+					sysadm.police p,
+					sysadm.compagnie c
+
+			Where   s.id_sin = @dcIdSin
+			And		gs.id_sin = s.id_sin
+			And     g.id_prod = s.id_prod
+			And		g.id_gti  = gs.id_gti
+			And		g.id_rev = s.id_rev
+			And		p.id_police = g.id_police
+			And		c.id_cie = p.id_cie
+		) as Tb
+	) <> 1 
+	 Begin
+ 
+		If ( Select COUNT (*) From sysadm.w_gar_sin where id_sin = @dcIdSin ) = 0
+			Or 
+		   ( Select id_rev From sysadm.w_sin s where s.id_sin = @dcIdSin ) < 0 	
+		 Begin
+			If 
+			(
+			Select COUNT (*)
+			From 
+				(
+					Select  distinct g.id_police
+					From	sysadm.w_sin s,
+							sysadm.garantie g,
+							sysadm.police p,
+							sysadm.compagnie c
+
+					Where   s.id_sin = @dcIdSin
+					And     g.id_prod = s.id_prod
+					And		( g.id_rev = s.id_rev or s.id_rev < 0 )
+					And		p.id_police = g.id_police
+					And		c.id_cie = p.id_cie
+				) as Tb
+			) = 1
+				Begin 
+					Select  Top 1 @sLibPolice = p.lib_police
+					From	sysadm.w_sin s,
+							sysadm.garantie g,
+							sysadm.police p,
+							sysadm.compagnie c
+
+					Where   s.id_sin = @dcIdSin
+					And     g.id_prod = s.id_prod
+					And		( g.id_rev = s.id_rev or s.id_rev < 0 )
+					And		p.id_police = g.id_police
+					And		c.id_cie = p.id_cie		
+				
+					Return @sLibPolice
+				End 
+		 End  
+ 
+		Return 'Dépendance avec la garantie'
+	 End 
+
+	Select	@sLibPolice = p.lib_police
+	From	sysadm.w_sin s,
+			sysadm.garantie g,
+			sysadm.w_gar_sin gs,
+			sysadm.police p,
+			sysadm.compagnie c
+
+	Where   s.id_sin = @dcIdSin
+	And		gs.id_sin = s.id_sin
+	And     g.id_prod = s.id_prod
+	And		g.id_gti  = gs.id_gti
+	And		g.id_rev = s.id_rev
+	And		p.id_police = g.id_police
+	And		c.id_cie = p.id_cie
+End 
 
 
 Return rtrim ( ltrim ( @sLibPolice )) 
@@ -3127,7 +3217,7 @@ GO
 
 --------------------------------------------------------------------
 --
--- Fonction             :       FN_LIB_CIE
+-- Fonction             :       FN_LIB_CIE_V02
 -- Auteur               :       Fabry JF
 -- Date                 :       17/10/2013
 -- Libellé              :
@@ -3140,13 +3230,16 @@ GO
 --
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
+-- JFF      07/03/2024   [HP252_276_HUB_PRESTA] -- Ajout trt @sCas
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_LIB_CIE' AND type = 'FN' )
-        DROP function sysadm.FN_LIB_CIE
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_LIB_CIE_V02' AND type = 'FN' )
+        DROP function sysadm.FN_LIB_CIE_V02
 GO
 
-CREATE  function sysadm.FN_LIB_CIE  (
-        @dcIdSin    Decimal (10) ) -- [PI062]
+CREATE  function sysadm.FN_LIB_CIE_V02  (
+        @dcIdSin    Decimal (10) , -- [PI062]
+		@sCas		VarChar  ( 1 ) -- P/W
+		)
 RETURNS VarChar ( 35 )
 AS
 
@@ -3154,87 +3247,177 @@ Begin
 
 Declare @sLibCie VarChar (35)
 
-If 
-(
-Select COUNT (*)
-From 
+If @sCas is null Set @sCas = 'P' -- Défaut
+
+If @sCas = 'P'
+Begin
+	If 
 	(
-		Select  distinct c.id_cie
-		From	sysadm.sinistre s,
-				sysadm.garantie g,
-				sysadm.gar_sin gs,
-				sysadm.police p,
-				sysadm.compagnie c
-
-		Where   s.id_sin = @dcIdSin
-		And		gs.id_sin = s.id_sin
-		And     g.id_prod = s.id_prod
-		And		g.id_gti  = gs.id_gti
-		And		g.id_rev = s.id_rev
-		And		p.id_police = g.id_police
-		And		c.id_cie = p.id_cie
-	) as Tb
-) <> 1 
- Begin
- 
- 	If ( Select COUNT (*) From sysadm.gar_sin where id_sin = @dcIdSin ) = 0
- 		Or 
-	   ( Select id_rev From sysadm.sinistre s where s.id_sin = @dcIdSin ) < 0 	
-	 Begin
-		If 
+	Select COUNT (*)
+	From 
 		(
-		Select COUNT (*)
-		From 
+			Select  distinct c.id_cie
+			From	sysadm.sinistre s,
+					sysadm.garantie g,
+					sysadm.gar_sin gs,
+					sysadm.police p,
+					sysadm.compagnie c
+
+			Where   s.id_sin = @dcIdSin
+			And		gs.id_sin = s.id_sin
+			And     g.id_prod = s.id_prod
+			And		g.id_gti  = gs.id_gti
+			And		g.id_rev = s.id_rev
+			And		p.id_police = g.id_police
+			And		c.id_cie = p.id_cie
+		) as Tb
+	) <> 1 
+	 Begin
+ 
+ 		If ( Select COUNT (*) From sysadm.gar_sin where id_sin = @dcIdSin ) = 0
+ 			Or 
+		   ( Select id_rev From sysadm.sinistre s where s.id_sin = @dcIdSin ) < 0 	
+		 Begin
+			If 
 			(
-				Select  distinct c.id_cie
-				From	sysadm.sinistre s,
-						sysadm.garantie g,
-						sysadm.police p,
-						sysadm.compagnie c
+			Select COUNT (*)
+			From 
+				(
+					Select  distinct c.id_cie
+					From	sysadm.sinistre s,
+							sysadm.garantie g,
+							sysadm.police p,
+							sysadm.compagnie c
 
-				Where   s.id_sin = @dcIdSin
-				And     g.id_prod = s.id_prod
-				And		( g.id_rev = s.id_rev or s.id_rev < 0 )
-				And		p.id_police = g.id_police
-				And		c.id_cie = p.id_cie
-			) as Tb
-		) = 1
-			Begin 
-				Select	Top 1 @sLibCie = c.lib_cie
-				From	sysadm.sinistre s,
-						sysadm.garantie g,
-						sysadm.police p,
-						sysadm.compagnie c
+					Where   s.id_sin = @dcIdSin
+					And     g.id_prod = s.id_prod
+					And		( g.id_rev = s.id_rev or s.id_rev < 0 )
+					And		p.id_police = g.id_police
+					And		c.id_cie = p.id_cie
+				) as Tb
+			) = 1
+				Begin 
+					Select	Top 1 @sLibCie = c.lib_cie
+					From	sysadm.sinistre s,
+							sysadm.garantie g,
+							sysadm.police p,
+							sysadm.compagnie c
 
-				Where   s.id_sin = @dcIdSin
-				And     g.id_prod = s.id_prod
-				And		( g.id_rev = s.id_rev or s.id_rev < 0 )
-				And		p.id_police = g.id_police
-				And		c.id_cie = p.id_cie	
+					Where   s.id_sin = @dcIdSin
+					And     g.id_prod = s.id_prod
+					And		( g.id_rev = s.id_rev or s.id_rev < 0 )
+					And		p.id_police = g.id_police
+					And		c.id_cie = p.id_cie	
 				
-				Return ltrim ( rtrim ( @sLibCie ))
-			End 
-	 End  
+					Return ltrim ( rtrim ( @sLibCie ))
+				End 
+		 End  
 
  
  
-	Return 'Dépendance avec la garantie'
- End 
+		Return 'Dépendance avec la garantie'
+	 End 
 
-Select	Top 1 @sLibCie = c.lib_cie
-From	sysadm.sinistre s,
-		sysadm.garantie g,
-		sysadm.gar_sin gs,
-		sysadm.police p,
-		sysadm.compagnie c
+	Select	Top 1 @sLibCie = c.lib_cie
+	From	sysadm.sinistre s,
+			sysadm.garantie g,
+			sysadm.gar_sin gs,
+			sysadm.police p,
+			sysadm.compagnie c
 
-Where   s.id_sin = @dcIdSin
-And		gs.id_sin = s.id_sin
-And     g.id_prod = s.id_prod
-And		g.id_rev = s.id_rev
-And		g.id_gti  = gs.id_gti
-And		p.id_police = g.id_police
-And		c.id_cie = p.id_cie
+	Where   s.id_sin = @dcIdSin
+	And		gs.id_sin = s.id_sin
+	And     g.id_prod = s.id_prod
+	And		g.id_rev = s.id_rev
+	And		g.id_gti  = gs.id_gti
+	And		p.id_police = g.id_police
+	And		c.id_cie = p.id_cie
+End 
+
+If @sCas = 'W'
+Begin
+	If 
+	(
+	Select COUNT (*)
+	From 
+		(
+			Select  distinct c.id_cie
+			From	sysadm.w_sin s,
+					sysadm.garantie g,
+					sysadm.w_gar_sin gs,
+					sysadm.police p,
+					sysadm.compagnie c
+
+			Where   s.id_sin = @dcIdSin
+			And		gs.id_sin = s.id_sin
+			And     g.id_prod = s.id_prod
+			And		g.id_gti  = gs.id_gti
+			And		g.id_rev = s.id_rev
+			And		p.id_police = g.id_police
+			And		c.id_cie = p.id_cie
+		) as Tb
+	) <> 1 
+	 Begin
+ 
+ 		If ( Select COUNT (*) From sysadm.w_gar_sin where id_sin = @dcIdSin ) = 0
+ 			Or 
+		   ( Select id_rev From sysadm.w_sin s where s.id_sin = @dcIdSin ) < 0 	
+		 Begin
+			If 
+			(
+			Select COUNT (*)
+			From 
+				(
+					Select  distinct c.id_cie
+					From	sysadm.w_sin s,
+							sysadm.garantie g,
+							sysadm.police p,
+							sysadm.compagnie c
+
+					Where   s.id_sin = @dcIdSin
+					And     g.id_prod = s.id_prod
+					And		( g.id_rev = s.id_rev or s.id_rev < 0 )
+					And		p.id_police = g.id_police
+					And		c.id_cie = p.id_cie
+				) as Tb
+			) = 1
+				Begin 
+					Select	Top 1 @sLibCie = c.lib_cie
+					From	sysadm.w_sin s,
+							sysadm.garantie g,
+							sysadm.police p,
+							sysadm.compagnie c
+
+					Where   s.id_sin = @dcIdSin
+					And     g.id_prod = s.id_prod
+					And		( g.id_rev = s.id_rev or s.id_rev < 0 )
+					And		p.id_police = g.id_police
+					And		c.id_cie = p.id_cie	
+				
+					Return ltrim ( rtrim ( @sLibCie ))
+				End 
+		 End  
+
+ 
+ 
+		Return 'Dépendance avec la garantie'
+	 End 
+
+	Select	Top 1 @sLibCie = c.lib_cie
+	From	sysadm.w_sin s,
+			sysadm.garantie g,
+			sysadm.w_gar_sin gs,
+			sysadm.police p,
+			sysadm.compagnie c
+
+	Where   s.id_sin = @dcIdSin
+	And		gs.id_sin = s.id_sin
+	And     g.id_prod = s.id_prod
+	And		g.id_rev = s.id_rev
+	And		g.id_gti  = gs.id_gti
+	And		p.id_police = g.id_police
+	And		c.id_cie = p.id_cie
+End 
 
 
 Return ltrim ( rtrim ( @sLibCie ))
@@ -3245,7 +3428,7 @@ GO
 
 --------------------------------------------------------------------
 --
--- Fonction             :       FN_ID_CIE
+-- Fonction             :       FN_ID_CIE_V02
 -- Auteur               :       Fabry JF
 -- Date                 :       17/10/2013
 -- Libellé              :
@@ -3258,13 +3441,16 @@ GO
 --
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
+-- JFF      07/03/2024   [HP252_276_HUB_PRESTA] -- Ajout trt @sCas
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_ID_CIE' AND type = 'FN' )
-        DROP function sysadm.FN_ID_CIE
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_ID_CIE_V02' AND type = 'FN' )
+        DROP function sysadm.FN_ID_CIE_V02
 GO
 
-CREATE  function sysadm.FN_ID_CIE  (
-        @dcIdSin    Decimal (10) ) -- [PI062]
+CREATE  function sysadm.FN_ID_CIE_V02  (
+        @dcIdSin    Decimal (10) , -- [PI062]
+		@sCas		VarChar  ( 1 ) -- P/W
+		)
 RETURNS Integer
 AS
 
@@ -3272,94 +3458,179 @@ Begin
 
 Declare @iIdCie Integer
 
-If 
-(
-Select COUNT (*)
-From 
+If @sCas is null Set @sCas = 'P' -- Défaut
+
+If @sCas = 'P'
+Begin
+	If 
 	(
-		Select  distinct c.id_cie
-		From	sysadm.sinistre s,
-				sysadm.garantie g,
-				sysadm.gar_sin gs,
-				sysadm.police p,
-				sysadm.compagnie c
-
-		Where   s.id_sin = @dcIdSin
-		And		gs.id_sin = s.id_sin
-		And     g.id_prod = s.id_prod
-		And		g.id_gti  = gs.id_gti
-		And		g.id_rev = s.id_rev
-		And		p.id_police = g.id_police
-		And		c.id_cie = p.id_cie
-	) as Tb
-) <> 1 
- Begin
- 
- 	If ( Select COUNT (*) From sysadm.gar_sin where id_sin = @dcIdSin ) = 0
- 		Or 
-	   ( Select id_rev From sysadm.sinistre s where s.id_sin = @dcIdSin ) < 0 	
-	 Begin
-		If 
+	Select COUNT (*)
+	From 
 		(
-		Select COUNT (*)
-		From 
-			(
-				Select  distinct c.id_cie
-				From	sysadm.sinistre s,
-						sysadm.garantie g,
-						sysadm.police p,
-						sysadm.compagnie c
+			Select  distinct c.id_cie
+			From	sysadm.sinistre s,
+					sysadm.garantie g,
+					sysadm.gar_sin gs,
+					sysadm.police p,
+					sysadm.compagnie c
 
-				Where   s.id_sin = @dcIdSin
-				And     g.id_prod = s.id_prod
-				And		( g.id_rev = s.id_rev or s.id_rev < 0 )
-				And		p.id_police = g.id_police
-				And		c.id_cie = p.id_cie
-			) as Tb
-		) = 1
-			Begin 
-				Select	Top 1 @iIdCie = c.id_cie
-				From	sysadm.sinistre s,
-						sysadm.garantie g,
-						sysadm.police p,
-						sysadm.compagnie c
-
-				Where   s.id_sin = @dcIdSin
-				And     g.id_prod = s.id_prod
-				And		( g.id_rev = s.id_rev or s.id_rev < 0 )
-				And		p.id_police = g.id_police
-				And		c.id_cie = p.id_cie	
-				
-				Return @iIdCie 
-			End 
-	 End  
+			Where   s.id_sin = @dcIdSin
+			And		gs.id_sin = s.id_sin
+			And     g.id_prod = s.id_prod
+			And		g.id_gti  = gs.id_gti
+			And		g.id_rev = s.id_rev
+			And		p.id_police = g.id_police
+			And		c.id_cie = p.id_cie
+		) as Tb
+	) <> 1 
+	 Begin
  
-	Return -1 -- 'Dépendance avec la garantie'
- End 
+ 		If ( Select COUNT (*) From sysadm.gar_sin where id_sin = @dcIdSin ) = 0
+ 			Or 
+		   ( Select id_rev From sysadm.sinistre s where s.id_sin = @dcIdSin ) < 0 	
+		 Begin
+			If 
+			(
+			Select COUNT (*)
+			From 
+				(
+					Select  distinct c.id_cie
+					From	sysadm.sinistre s,
+							sysadm.garantie g,
+							sysadm.police p,
+							sysadm.compagnie c
 
-Select	Top 1 @iIdCie = c.id_cie
-From	sysadm.sinistre s,
-		sysadm.garantie g,
-		sysadm.gar_sin gs,
-		sysadm.police p,
-		sysadm.compagnie c
+					Where   s.id_sin = @dcIdSin
+					And     g.id_prod = s.id_prod
+					And		( g.id_rev = s.id_rev or s.id_rev < 0 )
+					And		p.id_police = g.id_police
+					And		c.id_cie = p.id_cie
+				) as Tb
+			) = 1
+				Begin 
+					Select	Top 1 @iIdCie = c.id_cie
+					From	sysadm.sinistre s,
+							sysadm.garantie g,
+							sysadm.police p,
+							sysadm.compagnie c
 
-Where   s.id_sin = @dcIdSin
-And		gs.id_sin = s.id_sin
-And     g.id_prod = s.id_prod
-And		g.id_rev = s.id_rev
-And		g.id_gti  = gs.id_gti
-And		p.id_police = g.id_police
-And		c.id_cie = p.id_cie
+					Where   s.id_sin = @dcIdSin
+					And     g.id_prod = s.id_prod
+					And		( g.id_rev = s.id_rev or s.id_rev < 0 )
+					And		p.id_police = g.id_police
+					And		c.id_cie = p.id_cie	
+				
+					Return @iIdCie 
+				End 
+		 End  
+ 
+		Return -1 -- 'Dépendance avec la garantie'
+	 End 
 
+	Select	Top 1 @iIdCie = c.id_cie
+	From	sysadm.sinistre s,
+			sysadm.garantie g,
+			sysadm.gar_sin gs,
+			sysadm.police p,
+			sysadm.compagnie c
+
+	Where   s.id_sin = @dcIdSin
+	And		gs.id_sin = s.id_sin
+	And     g.id_prod = s.id_prod
+	And		g.id_rev = s.id_rev
+	And		g.id_gti  = gs.id_gti
+	And		p.id_police = g.id_police
+	And		c.id_cie = p.id_cie
+End
+
+If @sCas = 'W'
+Begin
+	If
+	(
+	Select COUNT (*)
+	From 
+		(
+			Select  distinct c.id_cie
+			From	sysadm.w_sin s,
+					sysadm.garantie g,
+					sysadm.w_gar_sin gs,
+					sysadm.police p,
+					sysadm.compagnie c
+
+			Where   s.id_sin = @dcIdSin
+			And		gs.id_sin = s.id_sin
+			And     g.id_prod = s.id_prod
+			And		g.id_gti  = gs.id_gti
+			And		g.id_rev = s.id_rev
+			And		p.id_police = g.id_police
+			And		c.id_cie = p.id_cie
+		) as Tb
+	) <> 1 
+	 Begin
+ 
+ 		If ( Select COUNT (*) From sysadm.w_gar_sin where id_sin = @dcIdSin ) = 0
+ 			Or 
+		   ( Select id_rev From sysadm.w_sin s where s.id_sin = @dcIdSin ) < 0 	
+		 Begin
+			If 
+			(
+			Select COUNT (*)
+			From 
+				(
+					Select  distinct c.id_cie
+					From	sysadm.w_sin s,
+							sysadm.garantie g,
+							sysadm.police p,
+							sysadm.compagnie c
+
+					Where   s.id_sin = @dcIdSin
+					And     g.id_prod = s.id_prod
+					And		( g.id_rev = s.id_rev or s.id_rev < 0 )
+					And		p.id_police = g.id_police
+					And		c.id_cie = p.id_cie
+				) as Tb
+			) = 1
+				Begin 
+					Select	Top 1 @iIdCie = c.id_cie
+					From	sysadm.w_sin s,
+							sysadm.garantie g,
+							sysadm.police p,
+							sysadm.compagnie c
+
+					Where   s.id_sin = @dcIdSin
+					And     g.id_prod = s.id_prod
+					And		( g.id_rev = s.id_rev or s.id_rev < 0 )
+					And		p.id_police = g.id_police
+					And		c.id_cie = p.id_cie	
+				
+					Return @iIdCie 
+				End 
+		 End  
+ 
+		Return -1 -- 'Dépendance avec la garantie'
+	 End 
+
+	Select	Top 1 @iIdCie = c.id_cie
+	From	sysadm.w_sin s,
+			sysadm.garantie g,
+			sysadm.w_gar_sin gs,
+			sysadm.police p,
+			sysadm.compagnie c
+
+	Where   s.id_sin = @dcIdSin
+	And		gs.id_sin = s.id_sin
+	And     g.id_prod = s.id_prod
+	And		g.id_rev = s.id_rev
+	And		g.id_gti  = gs.id_gti
+	And		p.id_police = g.id_police
+	And		c.id_cie = p.id_cie
+End 
 
 Return @iIdCie
 
 End 
 
 GO
-
-
 
 
 --------------------------------------------------------------------

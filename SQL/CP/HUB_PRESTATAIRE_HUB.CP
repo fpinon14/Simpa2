@@ -34,7 +34,7 @@ Go
 -- LES TABLES  --
 -----------------
 
-
+/*
 If Exists ( Select Top 1 1 From sys.objects where name = 'parametre' and type = 'U' ) Drop Table edi.parametre
 
 CREATE TABLE edi.parametre(
@@ -240,7 +240,7 @@ Create index idx4_TraceRecupRetourParSimpa2 on edi.TraceRecupRetourParSimpa2 (id
 
 Delete edi.parametre where ref_cpt = 'ID_LOT_TRC'
 Insert into edi.parametre Values ( 'ID_LOT_TRC', 0, 1 )
-
+*/
 
 -----------------
 -- LES PS      --
