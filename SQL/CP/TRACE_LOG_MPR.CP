@@ -114,7 +114,7 @@ If @asNomFicOrigCourt is null Set @asNomFicOrigCourt = ''
 If Upper ( sysadm.FN_TRIM ( db_name ( db_id () ) ) ) <> 'SIMPA2_PRO' -- [HP252_276_HUB_PRESTA]
 	Begin
 		-- Hors Production
-		Set @sAdrMail = 'jff@spb.fr'
+		Set @sAdrMail = 'jff@spb.fr,VANDRE@spb.eu,BKHELIFA_ext@spb.eu,OCHAOUACHI@spb.eu'
 		Set @sAdrMailCc = null
 	End 
 Else

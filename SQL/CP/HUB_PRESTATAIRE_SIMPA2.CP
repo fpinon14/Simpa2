@@ -926,8 +926,8 @@ Else
 		Set @sInstanceHub = '[S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].'
 		Set @sCheminDepotFichierMPRRacine  = '\\SPB.LAN\APPLIS\SPB\RECCMD\'
 		Exec [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '-1', -1, '-1', '', '', @iIdLotTrc output
-		Set @sDestErrTech = 'jff@spb.fr'
-		Set @sDestErrCoherenceHub = 'jff@spb.fr'
+		Set @sDestErrTech = 'jff@spb.fr,VANDRE@spb.eu,BKHELIFA_ext@spb.eu,OCHAOUACHI@spb.eu'
+		Set @sDestErrCoherenceHub = 'jff@spb.fr,VANDRE@spb.eu,BKHELIFA_ext@spb.eu,OCHAOUACHI@spb.eu'
 		Set @sDestCc = 'jff@spb.fr'
 	End
 

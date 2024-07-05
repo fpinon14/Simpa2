@@ -2929,8 +2929,7 @@ Declare
 	Return 0
    End
   -- :[PM103][1]
-
-
+  
   -- Récupération des données standard nécessaires à l'envoi du mail
   
   Exec @iRet = sysadm.PS_S01_RECUP_DONNEES_MAIL 
@@ -3051,7 +3050,8 @@ End
 	 @sIdTypArt = c.id_typ_art, -- [PC929_CDISCOUNT][PC929-2-V3]
 	 @sNumImeiAnc = IsNull ( rtrim ( c.id_serie_anc ), '' ), -- [DT145_V4]
      @sARepGarantie = IsNull ( sysadm.FN_CLE_VAL ( 'A_REP_GARANTIE', RTRIM ( c.info_spb_frn_cplt), ';' ), '' ), -- [PM280-1][MANTIS15456]
-	 @sTrigrammeOpe = rtrim ( c.maj_par ) -- [DT361]
+	 @sTrigrammeOpe = rtrim ( c.maj_par ), -- [DT361]
+	 @iPrestaHUB = IIF ( Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', @sInfoSpbFrnCplt, ';' ) ) > 0, 1, 0 ) -- [HP252_276_HUB_PRESTA]
   From   sysadm.w_commande c
   Where  c.id_sin = @adcIdSin
   And 	 c.cod_etat = 'CNV'
@@ -3079,19 +3079,9 @@ End
 	 Or ( c.id_four = 'MTT' And c.info_spb_frn in ( 910 )) -- [PC13348&13408]
 	 Or ( c.id_four = 'TMT' And c.info_spb_frn in ( 2510, 2516 )) -- [PC801_6_TAMET]
 	 Or ( c.id_four = 'CEA' And c.info_spb_frn in ( 3110, 3120 )) -- [DT361]
+--	 Or ( Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', @sInfoSpbFrnCplt, ';' ) ) > 0 And c.info_spb_frn in ( 3510, 3520, 3530)) --  [HP252_276_HUB_PRESTA]
 	 )
 
-  -- [HP252_276_HUB_PRESTA] Pas de mail si la presta est sur le HUB, le HUB s'en occupe
-  If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
-	Begin
-		Set @iPrestaHUB = IIF ( Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', @sInfoSpbFrnCplt, ';' ) ) > 0, 1, 0 )
-  
-		If @iPrestaHUB > 0 
-			Begin 
-				Set @asCasRetour = 'PRESTA_HUB_PAS_DE_MAIL'
-				Return 0
-			End 
-	End 
 
   If @sIdFour is null Or @sIdFour = '' 
    Begin
@@ -3321,6 +3311,11 @@ End
 				When @sIdFour in ( 'SBE' ) And @iInfoSpbFrn in ( 910, 961, 982 ) Then 5 -- [DT141] -- 982 [PC202553_SELECTRA] 
 				When @sIdFour in ( 'CEA' ) And @iInfoSpbFrn in ( 3110 ) Then 25 -- [DT361]
 				When @sIdFour in ( 'CEA' ) And @iInfoSpbFrn in ( 3120 ) Then 26 -- [DT361]
+/*
+				When @iPrestaHUB > 0 And @iInfoSpbFrn in ( 3510 ) Then 28 -- [HP252_276_HUB_PRESTA]
+				When @iPrestaHUB > 0 And @iInfoSpbFrn in ( 3520 ) Then 29 -- [HP252_276_HUB_PRESTA]
+				When @iPrestaHUB > 0 And @iInfoSpbFrn in ( 3530 ) Then 30 -- [HP252_276_HUB_PRESTA]
+*/
   				Else 1
   			  End
 
@@ -3612,7 +3607,7 @@ Exec sysadm.PS_I_MAIL_IOS7_VDOC12443 @asIdAppli, @asBase, @iOptionDP, @adcIdSin
 
 --------------------------------------------------------------------------------------------------------------------
   -- Armement de l'objet du mail
-  If @iVarianteMail in ( 1,3,4,5,6,10,11,12,13,14,15,16,17,18,19,22,23,24, 27 ) -- #4 [PC801_LOT1_V2][SURCOUF_ECH_EXPRESS] -- #5 [DCMP080202] -- #8 [FNAC_PROD_ECH_TECH].[20090224144248310] -- [BLCODE]
+  If @iVarianteMail in ( 1,3,4,5,6,10,11,12,13,14,15,16,17,18,19,22,23,24,27,28,29,30 ) -- [HP252_276_HUB_PRESTA]
    Begin
   	Set @sMailObjet = 'Votre dossier n°' + sysadm.FN_TRIM ( Right ( Replicate ( '0', 10 ) + Convert ( VarChar, @adcIdSin ), 10 ) ) + ' ' + @sLibProd -- [PI062]
    End     	
@@ -16245,6 +16240,7 @@ Go
 -- JFF      10/08/2020   [PM519-1]
 -- JFF      22/08/2022   [RS3179_SHUNT_RECLA]
 -- JFF      26/04/2023   [RS5045_REF_MATP]
+-- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAILPUSH_APP_NON_RECP_EN_CTR' AND type = 'P' )
         DROP procedure sysadm.PS_S_MAILPUSH_APP_NON_RECP_EN_CTR
