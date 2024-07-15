@@ -1,0 +1,6 @@
+HA$PBExportHeader$st_variable_mail.srs
+global type st_variable_mail from structure
+	string		variable
+	string		valeur
+end type
+

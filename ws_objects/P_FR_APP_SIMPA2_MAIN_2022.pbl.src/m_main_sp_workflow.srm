@@ -1,0 +1,444 @@
+HA$PBExportHeader$m_main_sp_workflow.srm
+$PBExportComments$-} Menu pour le module de gestion des travaux de l'application SIMPA 2.
+forward
+global type m_main_sp_workflow from menu
+end type
+type m_100 from menu within m_main_sp_workflow
+end type
+type m_101 from menu within m_100
+end type
+type m_102 from menu within m_100
+end type
+type m_103 from menu within m_100
+end type
+type m_100 from menu within m_main_sp_workflow
+m_101 m_101
+m_102 m_102
+m_103 m_103
+end type
+type m_200 from menu within m_main_sp_workflow
+end type
+type m_201 from menu within m_200
+end type
+type m_202 from menu within m_200
+end type
+type m_203 from menu within m_200
+end type
+type m_204 from menu within m_200
+end type
+type m_2401 from menu within m_204
+end type
+type m_saisipar-validpar from menu within m_204
+end type
+type m_204 from menu within m_200
+m_2401 m_2401
+m_saisipar-validpar m_saisipar-validpar
+end type
+type m_205 from menu within m_200
+end type
+type m_206 from menu within m_200
+end type
+type m_200 from menu within m_main_sp_workflow
+m_201 m_201
+m_202 m_202
+m_203 m_203
+m_204 m_204
+m_205 m_205
+m_206 m_206
+end type
+type m_fermer from menu within m_main_sp_workflow
+end type
+type m_fermer from menu within m_main_sp_workflow
+end type
+type m_quitter from menu within m_main_sp_workflow
+end type
+type m_raffichemenu from menu within m_quitter
+end type
+type m_mosaque from menu within m_quitter
+end type
+type m_cascade from menu within m_quitter
+end type
+type m_pleinecran from menu within m_quitter
+end type
+type m_rorgicones from menu within m_quitter
+end type
+type m_quitter from menu within m_main_sp_workflow
+m_raffichemenu m_raffichemenu
+m_mosaque m_mosaque
+m_cascade m_cascade
+m_pleinecran m_pleinecran
+m_rorgicones m_rorgicones
+end type
+type m_44 from menu within m_main_sp_workflow
+end type
+type m_aproposde from menu within m_44
+end type
+type m_44 from menu within m_main_sp_workflow
+m_aproposde m_aproposde
+end type
+end forward
+
+global type m_main_sp_workflow from menu
+m_100 m_100
+m_200 m_200
+m_fermer m_fermer
+m_quitter m_quitter
+m_44 m_44
+end type
+global m_main_sp_workflow m_main_sp_workflow
+
+type variables
+
+end variables
+
+on m_main_sp_workflow.create
+m_main_sp_workflow=this
+this.m_100=create m_100
+this.m_200=create m_200
+this.m_fermer=create m_fermer
+this.m_quitter=create m_quitter
+this.m_44=create m_44
+this.Item[]={this.m_100, &
+this.m_200, &
+this.m_fermer, &
+this.m_quitter, &
+this.m_44}
+end on
+
+on m_main_sp_workflow.destroy
+destroy(this.m_100)
+destroy(this.m_200)
+destroy(this.m_fermer)
+destroy(this.m_quitter)
+destroy(this.m_44)
+end on
+
+type m_100 from menu within m_main_sp_workflow
+m_101 m_101
+m_102 m_102
+m_103 m_103
+end type
+
+on m_100.create
+this.Text="&Gestion"
+this.m_101=create m_101
+this.m_102=create m_102
+this.m_103=create m_103
+this.Item[]={this.m_101, &
+this.m_102, &
+this.m_103}
+end on
+
+on m_100.destroy
+destroy(this.m_101)
+destroy(this.m_102)
+destroy(this.m_103)
+end on
+
+type m_101 from menu within m_100
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_WorkFlow::m_101
+//* Evenement 		: Clicked
+//* Auteur			: Erick John Stark
+//* Date				: 05/01/1998 10:52:38
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Commentaires	: Cr$$HEX1$$e900$$ENDHEX$$ation des travaux
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+F_OuvreAccueil ( W_A_Sp_Cree_Travail, This, stGlb )
+
+end on
+
+on m_101.create
+this.Text="&Cr$$HEX1$$e900$$ENDHEX$$ation Travaux"
+this.Enabled=false
+end on
+
+type m_102 from menu within m_100
+end type
+
+on m_102.create
+this.Text="-"
+end on
+
+type m_103 from menu within m_100
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_WorkFlow::m_103
+//* Evenement 		: Clicked
+//* Auteur			: Erick John Stark
+//* Date				: 05/01/1998 10:52:38
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Commentaires	: D$$HEX1$$e900$$ENDHEX$$blocage d'un dossier
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+F_OuvreAccueil ( W_8_Accueil_WorkFlow_Deblocage, This, stGlb )
+end on
+
+on m_103.create
+this.Text="&D$$HEX1$$e900$$ENDHEX$$blocage des dossiers"
+end on
+
+type m_200 from menu within m_main_sp_workflow
+m_201 m_201
+m_202 m_202
+m_203 m_203
+m_204 m_204
+m_205 m_205
+m_206 m_206
+end type
+
+on m_200.create
+this.Text="&Statistiques"
+this.m_201=create m_201
+this.m_202=create m_202
+this.m_203=create m_203
+this.m_204=create m_204
+this.m_205=create m_205
+this.m_206=create m_206
+this.Item[]={this.m_201, &
+this.m_202, &
+this.m_203, &
+this.m_204, &
+this.m_205, &
+this.m_206}
+end on
+
+on m_200.destroy
+destroy(this.m_201)
+destroy(this.m_202)
+destroy(this.m_203)
+destroy(this.m_204)
+destroy(this.m_205)
+destroy(this.m_206)
+end on
+
+type m_201 from menu within m_200
+end type
+
+on clicked;f_OuvreAccueil ( w_a_spb_Travaux_Crees, This, stglb )
+end on
+
+on m_201.create
+this.Text="Etats Travaux Cr$$HEX2$$e900e900$$ENDHEX$$s"
+end on
+
+type m_202 from menu within m_200
+end type
+
+on clicked;f_OuvreAccueil ( w_a_spb_Travaux_Traites, This, stglb )
+end on
+
+on m_202.create
+this.Text="Etats Travaux Trait$$HEX1$$e900$$ENDHEX$$s"
+end on
+
+type m_203 from menu within m_200
+end type
+
+on clicked;f_OuvreAccueil ( w_a_spb_Travaux_Solde, This, stglb )
+end on
+
+on m_203.create
+this.Text="Etats Travaux en cours"
+end on
+
+type m_204 from menu within m_200
+m_2401 m_2401
+m_saisipar-validpar m_saisipar-validpar
+end type
+
+on clicked;//f_OuvreAccueil ( w_a_sa_Travaux_Par_Operateur, This, stglb )
+end on
+
+on m_204.create
+this.Text="&Production"
+this.m_2401=create m_2401
+this.m_saisipar-validpar=create m_saisipar-validpar
+this.Item[]={this.m_2401, &
+this.m_saisipar-validpar}
+end on
+
+on m_204.destroy
+destroy(this.m_2401)
+destroy(this.m_saisipar-validpar)
+end on
+
+type m_2401 from menu within m_204
+end type
+
+on clicked;f_OuvreAccueil ( w_a_spb_travaux_opv, This, stglb )
+end on
+
+on m_2401.create
+this.Text="Valid$$HEX2$$e9002000$$ENDHEX$$Par-Saisi Par"
+end on
+
+on m_2401.destroy
+end on
+
+type m_saisipar-validpar from menu within m_204
+end type
+
+on clicked;f_OuvreAccueil ( w_a_spb_Travaux_ops, This, stglb )
+end on
+
+on m_saisipar-validpar.create
+this.Text="Saisi Par-Valid$$HEX2$$e9002000$$ENDHEX$$Par"
+end on
+
+type m_205 from menu within m_200
+end type
+
+on clicked;f_OuvreAccueil ( w_a_spb_travaux_routes, This, stGlb )
+end on
+
+on m_205.create
+this.Text="&Motifs de routage"
+end on
+
+type m_206 from menu within m_200
+end type
+
+on clicked;f_OuvreAccueil ( w_a_sp_trt_consult_w_queue, This, stglb )
+end on
+
+on m_206.create
+this.Text="Consultation de tous les travaux"
+end on
+
+type m_fermer from menu within m_main_sp_workflow
+end type
+
+on clicked;Close ( ParentWindow )
+
+end on
+
+on m_fermer.create
+this.Text="&Fermer"
+end on
+
+on m_fermer.destroy
+end on
+
+type m_quitter from menu within m_main_sp_workflow
+m_raffichemenu m_raffichemenu
+m_mosaque m_mosaque
+m_cascade m_cascade
+m_pleinecran m_pleinecran
+m_rorgicones m_rorgicones
+end type
+
+on m_quitter.create
+this.Text="F&en$$HEX1$$ea00$$ENDHEX$$tre"
+this.m_raffichemenu=create m_raffichemenu
+this.m_mosaque=create m_mosaque
+this.m_cascade=create m_cascade
+this.m_pleinecran=create m_pleinecran
+this.m_rorgicones=create m_rorgicones
+this.Item[]={this.m_raffichemenu, &
+this.m_mosaque, &
+this.m_cascade, &
+this.m_pleinecran, &
+this.m_rorgicones}
+end on
+
+on m_quitter.destroy
+destroy(this.m_raffichemenu)
+destroy(this.m_mosaque)
+destroy(this.m_cascade)
+destroy(this.m_pleinecran)
+destroy(this.m_rorgicones)
+end on
+
+type m_raffichemenu from menu within m_quitter
+end type
+
+on clicked;ParentWindow.ParentWindow ().ToolBarVisible 		= True
+ParentWindow.ParentWindow ().ToolBarAlignment 	= AlignAtTop!
+
+end on
+
+on m_raffichemenu.create
+this.Text="&R$$HEX1$$e900$$ENDHEX$$affiche Menu"
+end on
+
+type m_mosaque from menu within m_quitter
+end type
+
+on clicked;ParentWindow.ArrangeSheets ( Tile! )
+end on
+
+on m_mosaque.create
+this.Text="&Mosa$$HEX1$$ef00$$ENDHEX$$que"
+end on
+
+type m_cascade from menu within m_quitter
+end type
+
+on clicked;ParentWindow.ArrangeSheets ( Cascade! )
+end on
+
+on m_cascade.create
+this.Text="&Cascade"
+end on
+
+type m_pleinecran from menu within m_quitter
+end type
+
+on clicked;ParentWindow.ArrangeSheets ( Layer! )
+end on
+
+on m_pleinecran.create
+this.Text="&Plein Ecran"
+end on
+
+type m_rorgicones from menu within m_quitter
+end type
+
+on clicked;ParentWindow.ArrangeSheets ( Icons! )
+end on
+
+on m_rorgicones.create
+this.Text="R$$HEX1$$e900$$ENDHEX$$org. &Icones"
+end on
+
+type m_44 from menu within m_main_sp_workflow
+m_aproposde m_aproposde
+end type
+
+on m_44.create
+this.Text="&?"
+this.m_aproposde=create m_aproposde
+this.Item[]={this.m_aproposde}
+end on
+
+on m_44.destroy
+destroy(this.m_aproposde)
+end on
+
+type m_aproposde from menu within m_44
+end type
+
+on clicked;OpenWithParm ( w_a_Propos, stGlb )
+end on
+
+on m_aproposde.create
+this.Text="A Propos de ..."
+end on
+

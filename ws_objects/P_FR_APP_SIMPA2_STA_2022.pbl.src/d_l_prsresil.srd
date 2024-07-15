@@ -1,0 +1,20 @@
+HA$PBExportHeader$d_l_prsresil.srd
+$PBExportComments$--> Extraction des adh$$HEX1$$e900$$ENDHEX$$sion li$$HEX4$$e9002000e0002000$$ENDHEX$$une prestation pour un produit DMS de t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phonie. Fichier fourni $$HEX2$$e0002000$$ENDHEX$$EA par la suite
+release 4;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 97 print.margin.bottom = 97 print.paper.source = 0 print.paper.size = 0 print.prompt=no )
+header(height=1 color="536870912" )
+summary(height=5 color="536870912" )
+footer(height=1 color="536870912" )
+detail(height=5 color="536870912" )
+table(column=(type=decimal(0) name=cod_prod_dms dbname="cod_prod_dms" )
+ column=(type=char(5) name=id_ets dbname="id_ets" )
+ column=(type=char(19) name=id_adh dbname="id_adh" )
+ column=(type=decimal(0) name=id_sdos dbname="id_sdos" )
+ column=(type=decimal(0) name=cod_opt dbname="cod_opt" )
+ column=(type=char(8) name=cree_le dbname="cree_le" )
+ column=(type=char(35) name=police dbname="Police" )
+ column=(type=char(35) name=compagnie dbname="Compagnie" )
+ column=(type=decimal(0) name=id_prod dbname="id_prod" )
+ column=(type=decimal(0) name=id_sin dbname="id_sin" )
+ procedure="1 execute sysadm.DW_S05_COMMANDE;1 @dtDteDeb = :dtDteDeb, @dtDteFin = :dtDteFin, @idProd = :idProd" arguments=(("dtDteDeb", datetime),("dtDteFin", datetime),("idProd", number)) )
+column(band=detail id=6 alignment="0" tabsequence=0 border="0" color="0" x="1" y="0" height="57" width="183"  name=cree_le  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )

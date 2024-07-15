@@ -1,0 +1,71 @@
+HA$PBExportHeader$f_rechdetpro.srf
+$PBExportComments$Fonction de recherche de lgn dans DetPro
+global type f_rechdetpro from function_object
+end type
+
+forward prototypes
+global subroutine f_rechdetpro (ref long aldeb, ref long alfin, ref datawindow adwdetpro, long alidprod, string asidtypcode, integer aiidcode)
+end prototypes
+
+global subroutine f_rechdetpro (ref long aldeb, ref long alfin, ref datawindow adwdetpro, long alidprod, string asidtypcode, integer aiidcode);//*-----------------------------------------------------------------
+//*
+//* Fonction      : F_RechDetPro
+//* Auteur        : Catherine ABDMEZIEM
+//* Date          : 06/02/2003 14:39:53
+//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Recherche la pr$$HEX1$$e900$$ENDHEX$$sence d'une ou pls lgns sur DetPro
+//* Commentaires  : la Dw DetPro doit $$HEX1$$ea00$$ENDHEX$$tre charg$$HEX1$$e900$$ENDHEX$$e en amont
+//*
+//* Arguments     : 		(Ref)	Long		alDeb			1$$HEX1$$e800$$ENDHEX$$re lgn trouv$$HEX1$$e900$$ENDHEX$$e				(arg de retour)
+//*							(Ref)	Long		alFin			Derni$$HEX1$$e800$$ENDHEX$$re lgn trouv$$HEX1$$e900$$ENDHEX$$e			(arg de retour)
+//*							(Ref)	Dw			adwDetPro	R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$la dw contenant les donn$$HEX1$$e900$$ENDHEX$$es de DetPro
+//*							(Val)	Long		alIdProd		Produit
+//*							(Val)	String	asIdTypCode
+//*							(Val)	Integer	aiIdCode		A utiliser ds la rech si > 0
+//*
+//* Retourne      : 		Rien
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//* #..   ...   ../../....
+//*
+//*-----------------------------------------------------------------
+
+Long		LTotLgn
+String	sRech, sIdProd, sIdTypCode, sIdCode, sAnd
+
+adwDetPro.Sort ()
+lTotLgn = adwDetPro.RowCount ()
+
+sRech = ""
+sAnd  = " AND "
+
+sIdProd	=	"ID_PROD = " + String ( alIdProd )
+sIdTypCode = "ID_TYP_CODE_DP = '" + Upper ( asIdTypCode ) + "'"
+sIdCode		=	"ID_CODE_DP = " + String ( aiIdCode )
+
+/*------------------------------------------------------------------*/
+/* On inclut IdCode ds la rech uniquement s'il est strictement      */
+/* positif                                                          */
+/*------------------------------------------------------------------*/
+If aiIdCode > 0 Then sRech += sIdCode + sAnd
+
+/*------------------------------------------------------------------*/
+/* Construction de la cha$$HEX1$$ee00$$ENDHEX$$ne de recherche                           */
+/*------------------------------------------------------------------*/
+sRech += sIdProd + sAnd + sIdTypCode
+
+/*------------------------------------------------------------------*/
+/* Recherche sur DetPro                                             */
+/*------------------------------------------------------------------*/
+alDeb = adwDetPro.Find ( sRech, 1, lTotLgn )
+If alDeb > 0 Then	alFin = adwDetPro.Find ( sRech, lTotLgn, 1 )
+
+If IsNull ( alDeb ) Or alDeb < 0 Then	alDeb = 0
+If IsNull ( alFin ) Or alFin < 0 Then	alFin = 0
+
+If alDeb = 0 Then alFin = -1
+
+
+
+end subroutine
+

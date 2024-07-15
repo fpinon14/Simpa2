@@ -1,0 +1,15 @@
+HA$PBExportHeader$d_sp_lst_par_rch.srd
+$PBExportComments$---} Liste des paragraphes d'informations disponibles ( Recherche ).
+release 4;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 97 print.margin.bottom = 97 print.paper.source = 0 print.paper.size = 0 print.prompt=no )
+header(height=1 color="536870912" )
+summary(height=1 color="536870912" )
+footer(height=1 color="536870912" )
+detail(height=1 color="536870912" )
+table(column=(type=decimal(0) name=id_prod dbname="id_prod" )
+ column=(type=char(4) name=id_para dbname="id_para" )
+ column=(type=char(35) name=lib_para dbname="lib_para" )
+ column=(type=datetime name=cree_le dbname="cree_le" )
+ column=(type=datetime name=maj_le dbname="maj_le" )
+ column=(type=char(4) name=maj_par dbname="maj_par" )
+ procedure="1 execute sysadm.DW_S02_PARA_PROD;1 @dcIdProd = :dcIdProd" arguments=(("dcIdProd", number))  sort="id_para A " )

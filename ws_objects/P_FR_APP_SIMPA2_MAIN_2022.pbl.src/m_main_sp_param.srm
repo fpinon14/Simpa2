@@ -1,0 +1,2096 @@
+HA$PBExportHeader$m_main_sp_param.srm
+$PBExportComments$-} Menu pour le module de parametrage de l'application de SIMPA 2.
+forward
+global type m_main_sp_param from menu
+end type
+type m_100 from menu within m_main_sp_param
+end type
+type m_101 from menu within m_100
+end type
+type m_102 from menu within m_100
+end type
+type m_103 from menu within m_100
+end type
+type m_104 from menu within m_100
+end type
+type m_105 from menu within m_100
+end type
+type m_106 from menu within m_100
+end type
+type m_108 from menu within m_100
+end type
+type m_109 from menu within m_100
+end type
+type m_110 from menu within m_100
+end type
+type m_111 from menu within m_100
+end type
+type m_112 from menu within m_100
+end type
+type m_113 from menu within m_100
+end type
+type m_114 from menu within m_100
+end type
+type m_115 from menu within m_100
+end type
+type m_116 from menu within m_100
+end type
+type m_117 from menu within m_100
+end type
+type m_118 from menu within m_100
+end type
+type m_100 from menu within m_main_sp_param
+m_101 m_101
+m_102 m_102
+m_103 m_103
+m_104 m_104
+m_105 m_105
+m_106 m_106
+m_108 m_108
+m_109 m_109
+m_110 m_110
+m_111 m_111
+m_112 m_112
+m_113 m_113
+m_114 m_114
+m_115 m_115
+m_116 m_116
+m_117 m_117
+m_118 m_118
+end type
+type m_200 from menu within m_main_sp_param
+end type
+type m_201 from menu within m_200
+end type
+type m_202 from menu within m_200
+end type
+type m_203 from menu within m_200
+end type
+type m_204 from menu within m_200
+end type
+type m_205 from menu within m_200
+end type
+type m_206 from menu within m_200
+end type
+type m_207 from menu within m_200
+end type
+type m_208 from menu within m_200
+end type
+type m_209 from menu within m_200
+end type
+type m_200 from menu within m_main_sp_param
+m_201 m_201
+m_202 m_202
+m_203 m_203
+m_204 m_204
+m_205 m_205
+m_206 m_206
+m_207 m_207
+m_208 m_208
+m_209 m_209
+end type
+type m_300 from menu within m_main_sp_param
+end type
+type m_301 from menu within m_300
+end type
+type m_302 from menu within m_300
+end type
+type m_303 from menu within m_300
+end type
+type m_304 from menu within m_300
+end type
+type m_3041 from menu within m_304
+end type
+type m_3042 from menu within m_304
+end type
+type m_304 from menu within m_300
+m_3041 m_3041
+m_3042 m_3042
+end type
+type m_300 from menu within m_main_sp_param
+m_301 m_301
+m_302 m_302
+m_303 m_303
+m_304 m_304
+end type
+type m_fermer from menu within m_main_sp_param
+end type
+type m_quitter from menu within m_main_sp_param
+end type
+type m_raffichemenu from menu within m_quitter
+end type
+type m_mosaque from menu within m_quitter
+end type
+type m_cascade from menu within m_quitter
+end type
+type m_pleinecran from menu within m_quitter
+end type
+type m_rorgicones from menu within m_quitter
+end type
+type m_quitter from menu within m_main_sp_param
+m_raffichemenu m_raffichemenu
+m_mosaque m_mosaque
+m_cascade m_cascade
+m_pleinecran m_pleinecran
+m_rorgicones m_rorgicones
+end type
+type m_44 from menu within m_main_sp_param
+end type
+type m_aproposde from menu within m_44
+end type
+type m_44 from menu within m_main_sp_param
+m_aproposde m_aproposde
+end type
+global type m_main_sp_param from menu
+m_100 m_100
+m_200 m_200
+m_300 m_300
+m_fermer m_fermer
+m_quitter m_quitter
+m_44 m_44
+end type
+end forward
+
+global type m_main_sp_param from menu
+m_100 m_100
+m_200 m_200
+m_300 m_300
+m_fermer m_fermer
+m_quitter m_quitter
+m_44 m_44
+end type
+global m_main_sp_param m_main_sp_param
+
+type variables
+
+end variables
+
+on m_main_sp_param.create
+m_main_sp_param=this
+call super::create
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_100=create m_100
+this.m_200=create m_200
+this.m_300=create m_300
+this.m_fermer=create m_fermer
+this.m_quitter=create m_quitter
+this.m_44=create m_44
+this.Item[UpperBound(this.Item)+1]=this.m_100
+this.Item[UpperBound(this.Item)+1]=this.m_200
+this.Item[UpperBound(this.Item)+1]=this.m_300
+this.Item[UpperBound(this.Item)+1]=this.m_fermer
+this.Item[UpperBound(this.Item)+1]=this.m_quitter
+this.Item[UpperBound(this.Item)+1]=this.m_44
+end on
+
+on m_main_sp_param.destroy
+call super::destroy
+destroy(this.m_100)
+destroy(this.m_200)
+destroy(this.m_300)
+destroy(this.m_fermer)
+destroy(this.m_quitter)
+destroy(this.m_44)
+end on
+
+type m_100 from menu within m_main_sp_param
+m_101 m_101
+m_102 m_102
+m_103 m_103
+m_104 m_104
+m_105 m_105
+m_106 m_106
+m_108 m_108
+m_109 m_109
+m_110 m_110
+m_111 m_111
+m_112 m_112
+m_113 m_113
+m_114 m_114
+m_115 m_115
+m_116 m_116
+m_117 m_117
+m_118 m_118
+end type
+
+on m_100.create
+call super::create
+this.text = "&Param$$HEX1$$e800$$ENDHEX$$tres G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$raux"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_101=create m_101
+this.m_102=create m_102
+this.m_103=create m_103
+this.m_104=create m_104
+this.m_105=create m_105
+this.m_106=create m_106
+this.m_108=create m_108
+this.m_109=create m_109
+this.m_110=create m_110
+this.m_111=create m_111
+this.m_112=create m_112
+this.m_113=create m_113
+this.m_114=create m_114
+this.m_115=create m_115
+this.m_116=create m_116
+this.m_117=create m_117
+this.m_118=create m_118
+this.Item[UpperBound(this.Item)+1]=this.m_101
+this.Item[UpperBound(this.Item)+1]=this.m_102
+this.Item[UpperBound(this.Item)+1]=this.m_103
+this.Item[UpperBound(this.Item)+1]=this.m_104
+this.Item[UpperBound(this.Item)+1]=this.m_105
+this.Item[UpperBound(this.Item)+1]=this.m_106
+this.Item[UpperBound(this.Item)+1]=this.m_108
+this.Item[UpperBound(this.Item)+1]=this.m_109
+this.Item[UpperBound(this.Item)+1]=this.m_110
+this.Item[UpperBound(this.Item)+1]=this.m_111
+this.Item[UpperBound(this.Item)+1]=this.m_112
+this.Item[UpperBound(this.Item)+1]=this.m_113
+this.Item[UpperBound(this.Item)+1]=this.m_114
+this.Item[UpperBound(this.Item)+1]=this.m_115
+this.Item[UpperBound(this.Item)+1]=this.m_116
+this.Item[UpperBound(this.Item)+1]=this.m_117
+this.Item[UpperBound(this.Item)+1]=this.m_118
+end on
+
+on m_100.destroy
+call super::destroy
+destroy(this.m_101)
+destroy(this.m_102)
+destroy(this.m_103)
+destroy(this.m_104)
+destroy(this.m_105)
+destroy(this.m_106)
+destroy(this.m_108)
+destroy(this.m_109)
+destroy(this.m_110)
+destroy(this.m_111)
+destroy(this.m_112)
+destroy(this.m_113)
+destroy(this.m_114)
+destroy(this.m_115)
+destroy(this.m_116)
+destroy(this.m_117)
+destroy(this.m_118)
+end on
+
+type m_101 from menu within m_100
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet			:	m_cartes
+//* Evenement 		:	clicked
+//* Auteur			:	Y. Picard
+//* Date				:	11/08/97 13:57:56
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre des cartes.
+//* Commentaires	:	
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+
+f_OuvreAccueil ( W_A_Sp_Carte, This, stglb )
+end on
+
+on m_101.create
+call super::create
+this.text = "C&artes"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_101.destroy
+call super::destroy
+end on
+
+type m_102 from menu within m_100
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet			:	m_compagnie
+//* Evenement 		:	clicked
+//* Auteur			:	Y. Picard
+//* Date				:	28/07/97 15:53:56
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre.
+//* Commentaires	:	
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+f_OuvreAccueil ( W_A_Spb_Compagnie, This, stglb )
+end on
+
+on m_102.create
+call super::create
+this.text = "Co&mpagnies"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_102.destroy
+call super::destroy
+end on
+
+type m_103 from menu within m_100
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet			:	m_departement
+//* Evenement 		:	clicked
+//* Auteur			:	Y. Picard
+//* Date				:	11/08/97 11:08:56
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre des departements.
+//* Commentaires	:	
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+
+f_OuvreAccueil ( W_A_Spb_Departement, This, stglb )
+end on
+
+on m_103.create
+call super::create
+this.text = "&D$$HEX1$$e900$$ENDHEX$$partements"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_103.destroy
+call super::destroy
+end on
+
+type m_104 from menu within m_100
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet			:	m_groupes
+//* Evenement 		:	clicked
+//* Auteur			:	Y. Picard
+//* Date				:	11/08/97 17:21:56
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre des groupes.
+//* Commentaires	:	
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+
+f_OuvreAccueil ( W_A_Sp_Groupe, This, stglb )
+end on
+
+on m_104.create
+call super::create
+this.text = "&Groupes"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_104.destroy
+call super::destroy
+end on
+
+type m_105 from menu within m_100
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet			:	m_paragraphes
+//* Evenement 		:	clicked
+//* Auteur			:	Y. Picard
+//* Date				:	28/07/97 15:54:50
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre.
+//* Commentaires	:	
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+
+f_OuvreAccueil ( W_A_Sp_Paragraphe, This, stglb )
+end on
+
+on m_105.create
+call super::create
+this.text = "&Paragraphes"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_105.destroy
+call super::destroy
+end on
+
+type m_106 from menu within m_100
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet			:	m_police
+//* Evenement 		:	clicked
+//* Auteur			:	Y. Picard
+//* Date				:	11/08/97 13:57:56
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre des polices.
+//* Commentaires	:	
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+
+f_OuvreAccueil ( W_A_Spb_Police, This, stglb )
+end on
+
+on m_106.create
+call super::create
+this.text = "Po&lices"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_106.destroy
+call super::destroy
+end on
+
+type m_108 from menu within m_100
+end type
+
+on m_108.create
+call super::create
+this.text = "-"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_108.destroy
+call super::destroy
+end on
+
+type m_109 from menu within m_100
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet			:	m_codes
+//* Evenement 		:	clicked
+//* Auteur			:	Y. Picard
+//* Date				:	13/08/97 10:43:56
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre des codes num$$HEX1$$e900$$ENDHEX$$riques.
+//* Commentaires	:	
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+
+f_OuvreAccueil ( W_A_Spb_Codes_Num, This, stglb )
+end on
+
+on m_109.create
+call super::create
+this.text = "&Codes Num$$HEX1$$e900$$ENDHEX$$riques"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_109.destroy
+call super::destroy
+end on
+
+type m_110 from menu within m_100
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet			:	m_codesalphanumriques
+//* Evenement 		:	clicked
+//* Auteur			:	Y. Picard
+//* Date				:	19/08/97 10:25:56
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre des codes alphanum$$HEX1$$e900$$ENDHEX$$riques.
+//* Commentaires	:	
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+
+f_OuvreAccueil ( W_A_Spb_Codes_Car, This, stglb )
+end on
+
+on m_110.create
+call super::create
+this.text = "C&odes Alphanum$$HEX1$$e900$$ENDHEX$$riques"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_110.destroy
+call super::destroy
+end on
+
+type m_111 from menu within m_100
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_PIECES
+//* Evenement 		: clicked
+//* Auteur			: Y. Picard
+//* Date				: 14/08/97 12:43:12
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre des pi$$HEX1$$e800$$ENDHEX$$ces.
+//* Commentaires	: 
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+
+f_OuvreAccueil ( W_A_Spb_Piece, This, stglb )
+end on
+
+on m_111.create
+call super::create
+this.text = "P&i$$HEX1$$e800$$ENDHEX$$ces"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_111.destroy
+call super::destroy
+end on
+
+type m_112 from menu within m_100
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_naturesexclusion
+//* Evenement 		: clicked
+//* Auteur			: Y. Picard
+//* Date				: 14/08/97 12:43:12
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre des motifs de refus.
+//* Commentaires	: 
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+
+f_OuvreAccueil ( W_A_Spb_Refus, This, stglb )
+end on
+
+on m_112.create
+call super::create
+this.text = "&Motifs de Refus"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_112.destroy
+call super::destroy
+end on
+
+type m_113 from menu within m_100
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_dtails
+//* Evenement 		: clicked
+//* Auteur			: Y. Picard
+//* Date				: 14/08/97 12:43:12
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre des d$$HEX1$$e900$$ENDHEX$$tails de sinistres.
+//* Commentaires	: 
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+
+f_OuvreAccueil ( W_A_Spb_DetSin, This, stglb )
+end on
+
+on m_113.create
+call super::create
+this.text = "D&$$HEX1$$e900$$ENDHEX$$tails Sinistre"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_113.destroy
+call super::destroy
+end on
+
+type m_114 from menu within m_100
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_naturessinistre
+//* Evenement 		: clicked
+//* Auteur			: Y. Picard
+//* Date				: 14/08/97 12:43:12
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre des natures de sinistres.
+//* Commentaires	: 
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+
+f_OuvreAccueil ( W_A_Spb_NatSin, This, stglb )
+end on
+
+on m_114.create
+call super::create
+this.text = "&Natures Sinistre"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_114.destroy
+call super::destroy
+end on
+
+type m_115 from menu within m_100
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_territorialites
+//* Evenement 		: clicked
+//* Auteur			: Y. Picard
+//* Date				: 14/08/97 12:43:12
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre des territorialit$$HEX1$$e900$$ENDHEX$$s.
+//* Commentaires	: 
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+
+f_OuvreAccueil ( W_A_Spb_Terri, This, stglb )
+end on
+
+on m_115.create
+call super::create
+this.text = "&Territorialit$$HEX1$$e900$$ENDHEX$$s"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_115.destroy
+call super::destroy
+end on
+
+type m_116 from menu within m_100
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_evnement
+//* Evenement 		: clicked
+//* Auteur			: Y. Picard
+//* Date				: 14/08/97 12:43:12
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre des $$HEX1$$e900$$ENDHEX$$v$$HEX1$$e800$$ENDHEX$$nements
+//* Commentaires	: 
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+
+f_OuvreAccueil ( W_A_Spb_Evt, This, stglb )
+end on
+
+on m_116.create
+call super::create
+this.text = "E&v$$HEX1$$e800$$ENDHEX$$nements"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_116.destroy
+call super::destroy
+end on
+
+type m_117 from menu within m_100
+end type
+
+on m_117.create
+call super::create
+this.text = "-"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_117.destroy
+call super::destroy
+end on
+
+type m_118 from menu within m_100
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet			:	m_aide_tarif
+//* Evenement 		:	clicked
+//* Auteur			:	PLJ
+//* Date				:	09/03/1998 15:53:56
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre.
+//* Commentaires	:	
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+f_OuvreAccueil ( w_a_sp_aide_tarif, This, stglb )
+end on
+
+on m_118.create
+call super::create
+this.text = "&Aide Tarif"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_118.destroy
+call super::destroy
+end on
+
+type m_200 from menu within m_main_sp_param
+m_201 m_201
+m_202 m_202
+m_203 m_203
+m_204 m_204
+m_205 m_205
+m_206 m_206
+m_207 m_207
+m_208 m_208
+m_209 m_209
+end type
+
+on m_200.create
+call super::create
+this.text = "&D$$HEX1$$e900$$ENDHEX$$finition Produit"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_201=create m_201
+this.m_202=create m_202
+this.m_203=create m_203
+this.m_204=create m_204
+this.m_205=create m_205
+this.m_206=create m_206
+this.m_207=create m_207
+this.m_208=create m_208
+this.m_209=create m_209
+this.Item[UpperBound(this.Item)+1]=this.m_201
+this.Item[UpperBound(this.Item)+1]=this.m_202
+this.Item[UpperBound(this.Item)+1]=this.m_203
+this.Item[UpperBound(this.Item)+1]=this.m_204
+this.Item[UpperBound(this.Item)+1]=this.m_205
+this.Item[UpperBound(this.Item)+1]=this.m_206
+this.Item[UpperBound(this.Item)+1]=this.m_207
+this.Item[UpperBound(this.Item)+1]=this.m_208
+this.Item[UpperBound(this.Item)+1]=this.m_209
+end on
+
+on m_200.destroy
+call super::destroy
+destroy(this.m_201)
+destroy(this.m_202)
+destroy(this.m_203)
+destroy(this.m_204)
+destroy(this.m_205)
+destroy(this.m_206)
+destroy(this.m_207)
+destroy(this.m_208)
+destroy(this.m_209)
+end on
+
+type m_201 from menu within m_200
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet			:	m_produits
+//* Evenement 		:	clicked
+//* Auteur			:	Y. Picard
+//* Date				:	28/07/97 15:50:23
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre.
+//* Commentaires	:	
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+f_OuvreAccueil ( W_A_Sp_Produit, This, stglb )
+end on
+
+on m_201.create
+call super::create
+this.text = "&Produits"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_201.destroy
+call super::destroy
+end on
+
+type m_202 from menu within m_200
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet			:	m_conditions
+//* Evenement 		:	clicked
+//* Auteur			:	YP
+//* Date				:	08/09/97 10:41:38
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre.
+//* Commentaires	:	
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+
+f_OuvreAccueil ( W_A_Sp_Garantie, This, stglb )
+end on
+
+on m_202.create
+call super::create
+this.text = "&Conditions  de Garantie"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_202.destroy
+call super::destroy
+end on
+
+type m_203 from menu within m_200
+end type
+
+on m_203.create
+call super::create
+this.text = "-"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_203.destroy
+call super::destroy
+end on
+
+type m_204 from menu within m_200
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet			:	m_courrierstypes
+//* Evenement 		:	clicked
+//* Auteur			:	Y. Picard
+//* Date				:	28/07/97 15:52:30
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil.
+//* Commentaires	:	
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+f_OuvreAccueil ( W_A_Spb_Courtype, This, stglb )
+end on
+
+on m_204.create
+call super::create
+this.text = "Biblioth$$HEX1$$e800$$ENDHEX$$que des Courriers &Type"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_204.destroy
+call super::destroy
+end on
+
+type m_205 from menu within m_200
+end type
+
+on m_205.create
+call super::create
+this.text = "-"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_205.destroy
+call super::destroy
+end on
+
+type m_206 from menu within m_200
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: m_Corbeille::Clicked
+//* Evenement 		: Clicked
+//* Auteur			: Erick John Stark
+//* Date				: 29/09/1997 15:22:35
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Commentaires	: Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+F_OuvreAccueil ( W_8_Accueil_Corb_Oper, This, stGLB )
+
+
+end on
+
+on m_206.create
+call super::create
+this.text = "Corbeilles/&Op$$HEX1$$e900$$ENDHEX$$rateur"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_206.destroy
+call super::destroy
+end on
+
+type m_207 from menu within m_200
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: m_Corbeille::Clicked
+//* Evenement 		: Clicked
+//* Auteur			: Erick John Stark
+//* Date				: 29/09/1997 15:22:35
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Commentaires	: Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+F_OuvreAccueil ( W_a_sp_droit_courrier, This, stGLB )
+
+
+end on
+
+on m_207.create
+call super::create
+this.text = "Droits Courriers/Validation autonome"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_207.destroy
+call super::destroy
+end on
+
+type m_208 from menu within m_200
+end type
+
+on m_208.create
+call super::create
+this.text = "-"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_208.destroy
+call super::destroy
+end on
+
+type m_209 from menu within m_200
+end type
+
+event clicked;//*-----------------------------------------------------------------
+//*
+//* Objet			: m_main_sp_param
+//* Evenement 		: clicked
+//* Auteur			: F. Pinon
+//* Date				: 10/12/2008 09:23:03
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Commentaires	: 
+//*				  
+//* Arguments		: 
+//*
+//* Retourne		: (none)
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//* #..   ...   ../../....   
+//* 
+//*-----------------------------------------------------------------
+
+F_OuvreAccueil ( W_a_sp_recopie_produit, This, stGLB )
+
+
+end event
+
+on m_209.create
+call super::create
+this.text = "Recopie de produit"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_209.destroy
+call super::destroy
+end on
+
+type m_300 from menu within m_main_sp_param
+m_301 m_301
+m_302 m_302
+m_303 m_303
+m_304 m_304
+end type
+
+on m_300.create
+call super::create
+this.text = "P&aram$$HEX1$$e900$$ENDHEX$$trage sp$$HEX1$$e900$$ENDHEX$$cial"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_301=create m_301
+this.m_302=create m_302
+this.m_303=create m_303
+this.m_304=create m_304
+this.Item[UpperBound(this.Item)+1]=this.m_301
+this.Item[UpperBound(this.Item)+1]=this.m_302
+this.Item[UpperBound(this.Item)+1]=this.m_303
+this.Item[UpperBound(this.Item)+1]=this.m_304
+end on
+
+on m_300.destroy
+call super::destroy
+destroy(this.m_301)
+destroy(this.m_302)
+destroy(this.m_303)
+destroy(this.m_304)
+end on
+
+type m_301 from menu within m_300
+end type
+
+event clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: m_301::Clicked
+//* Evenement 		: Clicked
+//* Auteur			: FPI
+//* Date				: 19/10/2009
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Commentaires	: Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+F_OuvreAccueil ( W_a_sp_param_frais, This, stGLB )
+
+
+end event
+
+on m_301.create
+call super::create
+this.text = "Param$$HEX1$$e900$$ENDHEX$$trage des frais (PM72)"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_301.destroy
+call super::destroy
+end on
+
+type m_302 from menu within m_300
+end type
+
+on m_302.create
+call super::create
+this.text = "Param$$HEX1$$e900$$ENDHEX$$trage des tarifs de reprises de mat$$HEX1$$e900$$ENDHEX$$riels (PM02)"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_302.destroy
+call super::destroy
+end on
+
+event clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: m_302::Clicked
+//* Evenement 		: Clicked
+//* Auteur			: FPI
+//* Date				: 01/03/2011
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Commentaires	: Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+F_OuvreAccueil ( w_a_sp_param_tarifs_reprises, This, stGLB )
+
+
+end event
+
+type m_303 from menu within m_300
+end type
+
+event clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: m_303::Clicked
+//* Evenement 		: Clicked
+//* Auteur			: FPI
+//* Date				: 16/11/2011
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Commentaires	: Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+F_OuvreAccueil ( w_a_sp_param_alerte_frn , This, stGLB )
+end event
+
+on m_303.create
+call super::create
+this.text = "Param$$HEX1$$e900$$ENDHEX$$trage des alertes fournisseurs (PM287-2)"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_303.destroy
+call super::destroy
+end on
+
+type m_304 from menu within m_300
+m_3041 m_3041
+m_3042 m_3042
+end type
+
+event clicked;//*-----------------------------------------------------------------
+//*
+//* Objet			:	m_304
+//* Evenement 		:	clicked
+//* Auteur			:	FPI
+//* Date				:	26/09/2012
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Nouveau menu Ouvrant la fen$$HEX1$$ea00$$ENDHEX$$tre de param alertes prix piblic/march$$HEX1$$e900$$ENDHEX$$
+//* Commentaires	:	[VDoc8841]
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+/*SetPointer ( HourGlass! )
+
+F_OuvreAccueil ( w_trt_sp_param_pxpubmarch, This, stGlb )*/
+
+
+
+end event
+
+on m_304.create
+call super::create
+this.text = "Param$$HEX1$$e900$$ENDHEX$$trage des alertes prix public/prix march$$HEX2$$e9002000$$ENDHEX$$(VDoc8841/9319)"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_3041=create m_3041
+this.m_3042=create m_3042
+this.Item[UpperBound(this.Item)+1]=this.m_3041
+this.Item[UpperBound(this.Item)+1]=this.m_3042
+end on
+
+on m_304.destroy
+call super::destroy
+destroy(this.m_3041)
+destroy(this.m_3042)
+end on
+
+type m_3041 from menu within m_304
+end type
+
+event clicked;//*-----------------------------------------------------------------
+//*
+//* Objet			:	m_3041
+//* Evenement 		:	clicked
+//* Auteur			:	FPI
+//* Date				:	26/09/2012
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Nouveau menu Ouvrant la fen$$HEX1$$ea00$$ENDHEX$$tre de param alertes prix piblic/march$$HEX1$$e900$$ENDHEX$$
+//* Commentaires	:	[VDoc8841][VDoc9319]
+
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+
+F_OuvreAccueil ( w_trt_sp_param_pxpubmarch, This, stGlb )
+
+
+
+end event
+
+on m_3041.create
+call super::create
+this.text = "Param$$HEX1$$e900$$ENDHEX$$trage d$$HEX1$$e900$$ENDHEX$$tail (VDoc8841)"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_3041.destroy
+call super::destroy
+end on
+
+type m_3042 from menu within m_304
+end type
+
+event clicked;//*-----------------------------------------------------------------
+//*
+//* Objet			:	m_3041
+//* Evenement 		:	clicked
+//* Auteur			:	FPI
+//* Date				:	19/12/2012
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Nouveau menu Ouvrant la fen$$HEX1$$ea00$$ENDHEX$$tre de param alertes prix piblic/march$$HEX1$$e900$$ENDHEX$$
+//* Commentaires	:	[VDoc9319]
+
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+
+F_OuvreAccueil ( w_trt_sp_param_pxpubmarch_masse, This, stGlb )
+
+
+
+end event
+
+on m_3042.create
+call super::create
+this.text = "Param$$HEX1$$e900$$ENDHEX$$trage de masse (VDoc9319)"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_3042.destroy
+call super::destroy
+end on
+
+type m_fermer from menu within m_main_sp_param
+end type
+
+on clicked;Close ( ParentWindow )
+
+end on
+
+on m_fermer.create
+call super::create
+this.text = "&Fermer"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_fermer.destroy
+call super::destroy
+end on
+
+type m_quitter from menu within m_main_sp_param
+m_raffichemenu m_raffichemenu
+m_mosaque m_mosaque
+m_cascade m_cascade
+m_pleinecran m_pleinecran
+m_rorgicones m_rorgicones
+end type
+
+on m_quitter.create
+call super::create
+this.text = "F&en$$HEX1$$ea00$$ENDHEX$$tre"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_raffichemenu=create m_raffichemenu
+this.m_mosaque=create m_mosaque
+this.m_cascade=create m_cascade
+this.m_pleinecran=create m_pleinecran
+this.m_rorgicones=create m_rorgicones
+this.Item[UpperBound(this.Item)+1]=this.m_raffichemenu
+this.Item[UpperBound(this.Item)+1]=this.m_mosaque
+this.Item[UpperBound(this.Item)+1]=this.m_cascade
+this.Item[UpperBound(this.Item)+1]=this.m_pleinecran
+this.Item[UpperBound(this.Item)+1]=this.m_rorgicones
+end on
+
+on m_quitter.destroy
+call super::destroy
+destroy(this.m_raffichemenu)
+destroy(this.m_mosaque)
+destroy(this.m_cascade)
+destroy(this.m_pleinecran)
+destroy(this.m_rorgicones)
+end on
+
+type m_raffichemenu from menu within m_quitter
+end type
+
+on clicked;ParentWindow.ParentWindow ().ToolBarVisible 		= True
+ParentWindow.ParentWindow ().ToolBarAlignment 	= AlignAtTop!
+
+end on
+
+on m_raffichemenu.create
+call super::create
+this.text = "&R$$HEX1$$e900$$ENDHEX$$affiche Menu"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_raffichemenu.destroy
+call super::destroy
+end on
+
+type m_mosaque from menu within m_quitter
+end type
+
+on clicked;ParentWindow.ArrangeSheets ( Tile! )
+end on
+
+on m_mosaque.create
+call super::create
+this.text = "&Mosa$$HEX1$$ef00$$ENDHEX$$que"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_mosaque.destroy
+call super::destroy
+end on
+
+type m_cascade from menu within m_quitter
+end type
+
+on clicked;ParentWindow.ArrangeSheets ( Cascade! )
+end on
+
+on m_cascade.create
+call super::create
+this.text = "&Cascade"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_cascade.destroy
+call super::destroy
+end on
+
+type m_pleinecran from menu within m_quitter
+end type
+
+on clicked;ParentWindow.ArrangeSheets ( Layer! )
+end on
+
+on m_pleinecran.create
+call super::create
+this.text = "&Plein Ecran"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_pleinecran.destroy
+call super::destroy
+end on
+
+type m_rorgicones from menu within m_quitter
+end type
+
+on clicked;ParentWindow.ArrangeSheets ( Icons! )
+end on
+
+on m_rorgicones.create
+call super::create
+this.text = "R$$HEX1$$e900$$ENDHEX$$org. &Icones"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_rorgicones.destroy
+call super::destroy
+end on
+
+type m_44 from menu within m_main_sp_param
+m_aproposde m_aproposde
+end type
+
+on m_44.create
+call super::create
+this.text = "&?"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_aproposde=create m_aproposde
+this.Item[UpperBound(this.Item)+1]=this.m_aproposde
+end on
+
+on m_44.destroy
+call super::destroy
+destroy(this.m_aproposde)
+end on
+
+type m_aproposde from menu within m_44
+end type
+
+on clicked;OpenWithParm ( w_a_Propos, stglb )
+end on
+
+on m_aproposde.create
+call super::create
+this.text = "A Propos de ..."
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_aproposde.destroy
+call super::destroy
+end on
+

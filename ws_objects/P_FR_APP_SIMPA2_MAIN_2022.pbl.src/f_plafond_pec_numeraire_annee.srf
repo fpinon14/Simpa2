@@ -1,0 +1,177 @@
+HA$PBExportHeader$f_plafond_pec_numeraire_annee.srf
+global type f_plafond_pec_numeraire_annee from function_object
+end type
+
+forward prototypes
+global function decimal f_plafond_pec_numeraire_annee (string asidtypplaf, decimal adcplafond, string asidnivplaf, ref u_datawindow adwsin, ref datawindow adwdetail, ref datawindow adwproduit, long adcidgti, long adcidevt)
+end prototypes
+
+global function decimal f_plafond_pec_numeraire_annee (string asidtypplaf, decimal adcplafond, string asidnivplaf, ref u_datawindow adwsin, ref datawindow adwdetail, ref datawindow adwproduit, long adcidgti, long adcidevt);//*-----------------------------------------------------------------
+//*
+//* Fonction      : F_Plafond_Pec_Numeraire_Annee
+//* Auteur        : Fabry JF
+//* Date          : 15/09/2005 11:06:05
+//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Gestion des plafonds par montant et par ann$$HEX1$$e900$$ENDHEX$$e
+//* Commentaires  : 
+//*
+//* Arguments     : String				asIdTypPlaf			Val
+//*					  Decimal 			adcPlafond			Val
+//*               : String 			asIdNivPlaf  		Val
+//*					  uDataWindow		aDwSin		Ref
+//*					  DataWindow		aDwDetail	Ref
+//*					  DataWindow		aDwProduit	Ref
+//*					  Long				adcIdGti    Val
+//*					  Long				adcIdEvt    Val
+//*	
+//*
+//* Retourne      : Decimal (le plafond)
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//*       JFF    14/06/2012  [VDOC7410]
+//*       JFF    26/11/2012  [PC877]
+//        JFF    11/10/2013  [VDOC12475]
+// 		 JFF    05/01/2015  [PC13321]   749
+// 		 JFF    24/08/2016  [VDOC21504]
+//        JFF    03/08/2021  Ajout 750/751
+//*-----------------------------------------------------------------
+
+Integer iSinEnCours
+Long dcIdSin, dcIdProd, dcIdEts, lCpt, dcIdsDos, dcIdGti, dcIdEvt, lCptMax, dcIdProdAdh, lCptDet, lTotDetail
+DateTime dtDteSurv, dtDteAdhRenouv
+Date dDteAdh, dDteResult 
+String sRech, sPos, sIdAdh, sAutrePlaf, sMtAutreSinistre 
+Boolean bAucun
+Decimal dcPlafRetour, dcSommeDetail
+Decimal{5}   dcDurPerRnv_Adh
+String       sUntPerRnv_Adh, sIdSiren
+
+
+bAucun 		= FALSE
+dcIdSin		= adwsin.GetItemNumber ( 1, "ID_SIN" )
+dcIdProd		= adwsin.GetItemNumber ( 1, "ID_PROD" )
+dcIdEts		= adwsin.GetItemNumber ( 1, "ID_ETS" )
+sIdAdh		= adwsin.GetItemString ( 1, "ID_ADH" )
+dcIdsDos		= adwsin.GetItemNumber ( 1, "ID_SDOS" )
+dtDteSurv	= DateTime ( adwsin.GetItemDate ( 1, "DTE_SURV_DATE" ) )
+dDteAdh		= adwsin.GetItemDate ( 1, "DTE_ADH" )
+dcIdGti		= adcIdgti
+dcIdEvt		= adcidevt
+sIdSiren		= adwsin.GetItemString ( 1, "ID_CONTRAT_ABONNE" )
+
+
+iSinEnCours	= 1				
+sMtAutreSinistre 	= "             "
+
+dcDurPerRnv_Adh		= adwProduit.GetItemNumber ( 1, "DUR_PERRNV_ADH" )
+sUntPerRnv_Adh		   = adwProduit.GetItemString ( 1, "UNT_PERRNV_ADH" )
+dcIdProdAdh				= adwProduit.GetItemNumber ( 1, "COD_PROD_DMS" )
+
+
+/*-----------------------------------------------------------------------*/
+/* On calcule la date du dernier renouvellement.                         */
+/* En fonction de l'unit$$HEX2$$e9002000$$ENDHEX$$de periode de renouvellement (ANNEE,MOIS,JOUR) */
+/*-----------------------------------------------------------------------*/
+Choose case sUntPerRnv_Adh
+ 	Case "A"
+     lCptMax = 30
+   Case "M"
+     lCptMax = 360
+   Case "J"
+    lCptMax = 10950
+End choose
+
+For lCpt = 1 To lCptMax
+	dDteResult = F_Plus_Date ( dDteAdh, dcDurPerRnv_Adh, sUntPerRnv_Adh )
+	If	dDteResult <= Date (dtDteSurv) Then
+		dDteAdh = dDteResult
+	Else
+		Exit
+	End If
+Next
+dtDteAdhRenouv = DateTime ( dDteAdh )
+
+/*-------------------------------------------------------------------------------------*/
+/* On traite en fonction du niveau de plafond (Garanti ou Ev$$HEX1$$e900$$ENDHEX$$nement)                   */
+/* Les Plafonds suivants : 													                     */
+/* 691 : GE-PLAF/ANNEE SURV. GLISS&ADHESION , 692 : GE-PLAF/ANNEE SURV. GLISS&ADHERENT */
+/* 693 : GE-PLAF/ANNEE RENOUV&ADHESION , 694 : GE-PLAF/ANNEE RENOUV&ADHERENT           */
+/*-------------------------------------------------------------------------------------*/
+Choose Case asIdNivPlaf
+		Case "-GA"
+			Choose Case asIdTypPlaf	
+			 Case "680"
+				
+			 bAucun = TRUE					
+				
+			 Case "673", "739"
+				SQLCA.PS_S05_W_GTI_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdGti, dtDteSurv, sMtAutreSinistre )					
+			 Case "674", "740"
+				SQLCA.PS_S06_W_GTI_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dcIdGti, dtDteSurv, sMtAutreSinistre )
+			 Case "691"
+				SQLCA.PS_S01_W_GTI_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdGti, dtDteSurv, sMtAutreSinistre )
+			 Case "692"
+				SQLCA.PS_S02_W_GTI_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dcIdGti, dtDteSurv, sMtAutreSinistre )
+			 Case "693"
+				SQLCA.PS_S03_W_GTI_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdGti, dtDteSurv, dtDteAdhRenouv, sMtAutreSinistre )
+			 Case "694"
+				SQLCA.PS_S04_W_GTI_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dcIdGti, dtDteSurv, dtDteAdhRenouv, sMtAutreSinistre )
+			 Case "732" // [VDOC7410]
+				SQLCA.PS_S_W_GTI_PLAF_ADHESION ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdGti, sMtAutreSinistre )
+			 Case "733" // [VDOC7410]
+				SQLCA.PS_S_W_GTI_PLAF_ADHERENT ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dcIdGti, sMtAutreSinistre )
+			 Case "734" // [PC877] // [VDOC21504]
+				SQLCA.PS_S734_W_GTI_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dtDteSurv, sMtAutreSinistre )
+			 Case "735" // [PC877]  // [VDOC21504]
+				SQLCA.PS_S735_W_GTI_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dtDteSurv, sMtAutreSinistre )
+			 Case "736" // [PC877]  // [VDOC21504]
+ 				SQLCA.PS_S736_W_GTI_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dtDteSurv, dtDteAdhRenouv, sMtAutreSinistre )
+			 Case "737" // [PC877] // [VDOC21504]
+				SQLCA.PS_S737_W_GTI_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dtDteSurv, dtDteAdhRenouv, sMtAutreSinistre )
+			 Case "738" // [PC877] // [VDOC21504]
+				SQLCA.PS_S738_W_GTI_MT_PLAF ( dcIdSin, dcIdProdAdh, sIdSiren, dtDteSurv, dtDteAdhRenouv, sMtAutreSinistre )
+			// [PC13321]   749				
+			 Case "749" // Copie du 693
+				SQLCA.PS_S031_W_GTI_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdGti, dtDteSurv, dtDteAdhRenouv, sMtAutreSinistre )
+			 Case "750" 
+ 				SQLCA.PS_S750_W_GTI_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dtDteSurv, dtDteAdhRenouv, sMtAutreSinistre )
+
+			Case Else 
+				bAucun = TRUE
+			End Choose 
+
+		Case "+EV"
+			Choose Case asIdTypPlaf 
+			 Case "680"
+				
+				bAucun = TRUE					
+					
+			 Case "673", "739"
+				SQLCA.PS_S05_W_DETAIL_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdGti, dcIdEvt, dtDteSurv, sMtAutreSinistre )
+			 Case "674", "740"
+				SQLCA.PS_S06_W_DETAIL_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dcIdGti, dcIdEvt, dtDteSurv, sMtAutreSinistre )
+			 Case "691"
+				SQLCA.PS_S01_W_DETAIL_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdGti, dcIdEvt, dtDteSurv, sMtAutreSinistre ) 
+			 Case "692"
+				SQLCA.PS_S02_W_DETAIL_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dcIdGti, dcIdEvt, dtDteSurv, sMtAutreSinistre )
+			 Case "693"
+				SQLCA.PS_S03_W_DETAIL_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdGti, dcIdEvt, dtDteSurv, dtDteAdhRenouv, sMtAutreSinistre )
+			 Case "694"
+				SQLCA.PS_S04_W_DETAIL_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dcIdGti, dcIdEvt, dtDteSurv, dtDteAdhRenouv, sMtAutreSinistre )
+			 Case Else
+				bAucun = TRUE
+			End Choose 
+End Choose
+
+
+If	Not bAucun Then
+	dcPlafRetour = adcPlafond - Dec ( sMtAutreSinistre )
+	If dcPlafRetour <= 0 Then dcPlafRetour = 0.01
+Else 
+	dcPlafRetour = adcPlafond
+End If
+
+Return dcPlafRetour
+
+end function
+

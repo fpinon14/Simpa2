@@ -1,0 +1,12 @@
+HA$PBExportHeader$p_simpa2_wssrr_proxy.srj
+$PBExportComments$Generated Web Service Proxy Project
+GeneratorID:{1B1DCEE2-E514-11D1-B30A-006008925BD4}GENBC00000000
+
+WSDLLOCATION:\\spb.lan\enteo\FLDRREDIR\FR\LEH\FPI\Desktop\AssuranceService.wsdl	
+COMPONENT:0
+PACKAGE:12	WebService.AssuranceService	WebService.AssuranceResult	WebService.CancelOrderResult	WebService.CreateOrderItem	WebService.CreateOrderResult	WebService.Destinataire	WebService.GetStockRequestItem	WebService.GetStockResponseItem	WebService.GetStockResult	WebService.IdentifyMobileResult	WebService.Item	WebService.ValidateOrderResult
+COMMENT:
+DEPLOYMENT:P_FR_APP_SIMPA2_SRR_121\P_FR_APP_SIMPA2_SRR_121.pbl	0	0
+PROJECT:
+PREFIX:srr_
+ASSEMBLY:0	1	WSSFR_Reunion.dll

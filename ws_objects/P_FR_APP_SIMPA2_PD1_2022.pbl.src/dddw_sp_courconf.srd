@@ -1,0 +1,12 @@
+HA$PBExportHeader$dddw_sp_courconf.srd
+$PBExportComments$---} DropDownDatawindow pour les courriers type de confirmation.
+release 4;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 97 print.margin.bottom = 97 print.paper.source = 0 print.paper.size = 0 print.prompt=no )
+header(height=1 color="536870912" )
+summary(height=1 color="536870912" )
+footer(height=1 color="536870912" )
+detail(height=69 color="536870912" )
+table(column=(type=char(6) name=id_cour dbname="id_cour" )
+ column=(type=char(35) name=lib_cour dbname="lib_cour" )
+ procedure="1 execute sysadm.DD_S02_COUR_TYPE;1 "  sort="id_cour A " )
+compute(band=detail alignment="0" expression=" id_cour + ~" : ~" + lib_cour "border="0" color="16711680" x="10" y="4" height="61" width="1226" format="[GENERAL]"  name=libelle  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )

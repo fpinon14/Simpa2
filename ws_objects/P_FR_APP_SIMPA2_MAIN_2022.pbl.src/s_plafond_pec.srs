@@ -1,0 +1,11 @@
+HA$PBExportHeader$s_plafond_pec.srs
+global type s_plafond_pec from structure
+	decimal { 2 }		dcplafgti
+	decimal { 2 }		dcplafevt
+	decimal { 2 }		dcplafvalach
+	decimal { 2 }		dcplafvalpublique
+	string		splafautre
+	decimal { 2 }		dcplafmtpec
+	string		sTypParaVer
+end type
+

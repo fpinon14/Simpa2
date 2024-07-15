@@ -1,0 +1,37 @@
+HA$PBExportHeader$f_is_carte.srf
+global type f_is_carte from function_object
+end type
+
+forward prototypes
+global function boolean f_is_carte (string asidadh)
+end prototypes
+
+global function boolean f_is_carte (string asidadh);//*-----------------------------------------------------------------
+//*
+//* Fonction		: F_IS_CARTE
+//* Auteur			: Fabry JF
+//* Date				: 01/02/2013
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: TRUE si c'est une carte du nombre de caract$$HEX1$$e800$$ENDHEX$$re demand$$HEX2$$e9002000$$ENDHEX$$(passer 0 pour teste si >= 16 )
+//* Commentaires	: [VDOC10102]
+//*
+//* Arguments		: 	String	asIdAdh		Val 
+//*						
+//*
+//* Retourne		: Boolean
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//*
+//*-----------------------------------------------------------------
+
+
+Boolean bCarte
+
+bCarte = false 
+
+bCarte = ( Len ( Trim ( asIdAdh ) ) >= 16 )
+
+Return bCarte
+
+end function
+
