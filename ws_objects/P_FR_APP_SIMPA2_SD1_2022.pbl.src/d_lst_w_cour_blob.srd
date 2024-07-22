@@ -1,0 +1,18 @@
+HA$PBExportHeader$d_lst_w_cour_blob.srd
+$PBExportComments$liste des courriers $$HEX2$$e0002000$$ENDHEX$$la validation finale (DCMP 040366)
+release 4;
+datawindow(units=0 timer_interval=0 color=12632256 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 97 print.margin.bottom = 97 print.paper.source = 0 print.paper.size = 0 print.prompt=no )
+header(height=1 color="536870912" )
+summary(height=1 color="536870912" )
+footer(height=5 color="536870912" )
+detail(height=5 color="536870912" )
+table(column=(type=number name=id_sin dbname="id_sin" )
+ column=(type=number name=id_i dbname="id_i" )
+ column=(type=number name=id_cpt dbname="id_cpt" )
+ column=(type=char(2) name=id_typ_blob dbname="id_typ_blob" )
+ column=(type=number name=id_typ_doc dbname="id_typ_doc" )
+ column=(type=datetime name=cree_le dbname="cree_le" )
+ column=(type=datetime name=maj_le dbname="maj_le" )
+ column=(type=char(4) name=maj_par dbname="maj_par" )
+ procedure="1 execute sysadm.DW_S02_W_COUR_BLOB
+@dcIdSin = :id_sin" arguments=(("id_sin", number)) )

@@ -1,0 +1,20 @@
+HA$PBExportHeader$dddw_sp_sin_contact_nature.srd
+$PBExportComments$nature de contact
+release 4;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 97 print.margin.bottom = 97 print.paper.source = 0 print.paper.size = 0 print.prompt=no )
+header(height=1 color="536870912" )
+summary(height=5 color="536870912" )
+footer(height=1 color="536870912" )
+detail(height=69 color="536870912" )
+table(column=(type=char(1) name=id_canal dbname="id_canal" )
+ column=(type=char(2) name=id_typ_msg dbname="id_typ_msg" )
+ column=(type=char(35) name=lib_typ_msg dbname="lib_typ_msg" )
+ column=(type=decimal(0) name=id_nat_msg dbname="id_nat_msg" )
+ column=(type=char(35) name=lib_nat_msg dbname="lib_nat_msg" )
+ column=(type=char(1) name=alt_mess dbname="alt_mess" )
+ column=(type=char(1) name=alt_cree_trv dbname="alt_cree_trv" )
+ column=(type=char(1) name=alt_valide dbname="alt_valide" )
+ column=(type=char(2) name=alt_sc dbname="alt_sc" )
+ column=(type=char(1) name=alt_affecte dbname="alt_affecte" )
+ procedure="1 execute sysadm.DD_S02_CONTACT_TYPE;1 "  sort="lib_nat_msg A " )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="16711680" x="10" y="4" height="61" width="2090" format="[general]"  name=lib_nat_msg edit.limit=35 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )

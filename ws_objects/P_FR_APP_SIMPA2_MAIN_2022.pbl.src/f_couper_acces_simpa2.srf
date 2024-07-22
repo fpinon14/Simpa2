@@ -1,0 +1,52 @@
+HA$PBExportHeader$f_couper_acces_simpa2.srf
+global type f_couper_acces_simpa2 from function_object
+end type
+
+forward prototypes
+global subroutine f_couper_acces_simpa2 ()
+end prototypes
+
+global subroutine f_couper_acces_simpa2 ();//*-----------------------------------------------------------------
+//*
+//* Fonction		: F_Couper_Acces_SIMPA2
+//* Auteur			: Fabry JF
+//* Date				: 04/01/2017
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Coupe SIMPA2 $$HEX2$$e0002000$$ENDHEX$$l'acc$$HEX1$$e800$$ENDHEX$$s SIMPA2.
+//* Commentaires	: 
+//*
+//* Arguments		: 	String			asCle	   Val
+//*						
+//*
+//* Retourne		: Boolean
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//*-----------------------------------------------------------------
+
+DateTime dtDteActuelle
+Date     dDteDerCnx, dDteActuelle
+Time     tDteDerCnx, tDteActuelle
+Long 		lNbreHeure
+
+Choose Case stGlb.sCodOper 
+	Case "JFF", "FPI"
+		// acc$$HEX1$$e800$$ENDHEX$$s autoris$$HEX2$$e9002000$$ENDHEX$$dans tous les cas
+		Return
+End Choose 
+
+If Not F_CLE_A_TRUE ( "COUPER_ACCES_SIMPA2" ) Then Return 
+
+stMessage.berreurg=FALSE
+stMessage.bouton=Ok!
+stMessage.icon=Information!
+stMessage.stitre="SIMPA2 indisponible"
+stMessage.scode ="GENE177"
+	
+F_Message ( stMessage )
+
+HALT
+	
+
+
+end subroutine
+

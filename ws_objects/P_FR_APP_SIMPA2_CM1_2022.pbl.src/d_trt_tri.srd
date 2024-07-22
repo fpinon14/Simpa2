@@ -1,0 +1,16 @@
+HA$PBExportHeader$d_trt_tri.srd
+$PBExportComments$Tri des fichiers $$HEX2$$e0002000$$ENDHEX$$importer
+release 8;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 97 print.margin.bottom = 97 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=0 color="536870912" )
+table(column=(type=char(20) updatewhereclause=yes name=type_fic dbname="Type_Fic" )
+ column=(type=char(20) updatewhereclause=yes name=jour dbname="jour" )
+ column=(type=char(20) updatewhereclause=yes name=mois dbname="mois" )
+ column=(type=char(20) updatewhereclause=yes name=annee dbname="annee" )
+ column=(type=char(20) updatewhereclause=yes name=extention dbname="extention" )
+  sort="type_fic A annee A mois A jour A extention A " )
+text(band=header alignment="0" text="//*  JFF   05/09/08 	  [MICROMANIA]" border="0" color="33554432" x="46" y="8" height="76" width="1170" html.valueishtml="0"  name=t_1 visible="1"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+htmltable(border="0" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" netscapelayers="0" )

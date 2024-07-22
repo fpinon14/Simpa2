@@ -1,0 +1,14 @@
+HA$PBExportHeader$st_point_relai_chronopost.srs
+$PBExportComments$[PM255-1]
+global type st_point_relai_chronopost from structure
+	string		returncode
+	string		nomassure
+	string		prenomassure
+	string		adresse1
+	string		adresse2
+	string		adresse3
+	string		codepostal
+	string		ville
+	chrono_pointchr		pointrelais
+end type
+

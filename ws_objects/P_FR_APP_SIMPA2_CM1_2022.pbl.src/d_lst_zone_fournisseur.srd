@@ -1,0 +1,20 @@
+HA$PBExportHeader$d_lst_zone_fournisseur.srd
+$PBExportComments$Liste des zones d$$HEX1$$e900$$ENDHEX$$servits par chaque fournisseur
+release 4;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 97 print.margin.bottom = 97 print.paper.source = 0 print.paper.size = 0 print.prompt=no )
+header(height=1 color="536870912" )
+summary(height=1 color="536870912" )
+footer(height=1 color="536870912" )
+detail(height=1 color="536870912" )
+table(column=(type=number name=id_prod dbname="id_prod" )
+ column=(type=char(3) name=id_four dbname="id_four" )
+ column=(type=char(5) name=code_postal dbname="code_postal" )
+ column=(type=char(5) name=code_action dbname="code_action" )
+ column=(type=char(35) name=ville dbname="ville" )
+ column=(type=datetime name=cree_le dbname="cree_le" )
+ column=(type=datetime name=maj_le dbname="maj_le" )
+ column=(type=char(4) name=maj_par dbname="maj_par" )
+ procedure="1 execute sysadm.DW_S01_ZONE_FOURNISSEUR;1 "  sort="code_postal A ville A " )
+column(band=detail id=1 alignment="0" tabsequence=0 border="0" color="0" x="1" y="0" height="57" width="183"  name=id_prod  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=0 border="0" color="0" x="183" y="0" height="57" width="69"  name=id_four  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="0" tabsequence=0 border="0" color="0" x="252" y="0" height="57" width="115"  name=code_action  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )

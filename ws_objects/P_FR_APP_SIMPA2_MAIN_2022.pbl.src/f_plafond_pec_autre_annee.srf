@@ -1,0 +1,253 @@
+HA$PBExportHeader$f_plafond_pec_autre_annee.srf
+global type f_plafond_pec_autre_annee from function_object
+end type
+
+forward prototypes
+global function string f_plafond_pec_autre_annee (string asidtypplaf, decimal adcplafond, ref u_datawindow adwsin, ref datawindow adwdetail, ref datawindow adwproduit, long adcidgti, long adcidevt)
+end prototypes
+
+global function string f_plafond_pec_autre_annee (string asidtypplaf, decimal adcplafond, ref u_datawindow adwsin, ref datawindow adwdetail, ref datawindow adwproduit, long adcidgti, long adcidevt);//*-----------------------------------------------------------------
+//*
+//* Fonction      : F_Plafond_Pec_Autre_Annee
+//* Auteur        : Fabry JF
+//* Date          : 15/09/2005 11:06:05
+//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Gestion des plafonds par nombre (d'evt ou de sinistre, ou autre) et par ann$$HEX1$$e900$$ENDHEX$$e
+//* Commentaires  : 
+//*
+//* Arguments     : String			 	asIdTypPlaf			Val
+//*					  Decimal 			adcPlafond			Val
+//*					  uDataWindow		adwSin		Ref
+//*					  DataWindow		adwDetail	Ref
+//*					  DataWindow		aDwProduit	Ref
+//*					  Long				adcIdGti
+//*  					  Long				adcIdEvt
+//*
+//* Retourne      : String (O/N, il y a un autre plafond)
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//* #1    JFF   12/06/2008   [DCMP080377] Plafond Nb Sin par ann$$HEX1$$e900$$ENDHEX$$e civile
+//*			FPI	17/06/2010	[DCMP100410] Plafond 715 & 716 + 717 & 718
+//			FPI	08/12/2010	[DCMP100410.Correction]
+//			 JFF   [PC397][PC441][PC443]
+//*       JFF    27/07/2011  [PLAF_REF] plafond 723
+//*       JFF    23/11/2011  [PC581].[POINT155][VDOC5984]
+//        JFF    24/01/2012  [CONFO][CUISINE]
+//        JFF    18/04/2012  [201204181055][PROBLEME_PLAF_MARYSE]
+//        JFF    25/02/2016  [VDOC19396]
+//        JFF    03/08/2021  Ajout 750/751
+//*-----------------------------------------------------------------
+
+Integer iNbAutreSin, iSinEnCours
+Long dcIdSin, dcIdProd, dcIdEts, lCpt, dcIdsDos, dcIdGti, dcIdEvt, lCptMax, lIdDetail   
+DateTime dtDteSurv, dtDteAdhRenouv
+Date dDteAdh, dDteResult 
+String sRech, sPos, sIdAdh, sAutrePlaf
+Boolean bAucun
+Decimal{5}   dcDurPerRnv_Adh
+String       sUntPerRnv_Adh, sNumPort
+
+bAucun 		= FALSE
+dcIdSin		= adwSin.GetItemNumber ( 1, "ID_SIN" )
+dcIdProd		= adwSin.GetItemNumber ( 1, "ID_PROD" )
+dcIdEts		= adwSin.GetItemNumber ( 1, "ID_ETS" )
+sIdAdh		= adwSin.GetItemString ( 1, "ID_ADH" )
+dcIdsDos		= adwSin.GetItemNumber ( 1, "ID_SDOS" )
+dtDteSurv	= DateTime ( adwSin.GetItemDate ( 1, "DTE_SURV_DATE" ) )
+dDteAdh		= adwSin.GetItemDate ( 1, "DTE_ADH" )
+dcIdGti		= adcIdGti
+dcIdEvt		= adcIdEvt
+sNumPort	   = adwSin.GetItemString ( 1, "NUM_PORT" ) // [PLAF_REF]
+
+sNumPort	= F_REMPLACE ( sNumPort	, " ", "" )
+
+if adwDetail.rowcount() > 0 Then
+	lIdDetail   = adwDetail.GetItemnumber ( 1, "ID_DETAIL" ) // [201204181055][PROBLEME_PLAF_MARYSE]
+Else
+	lIdDetail   = -1
+End if
+
+
+dcDurPerRnv_Adh		= adwProduit.GetItemNumber ( 1, "DUR_PERRNV_ADH" )
+sUntPerRnv_Adh		   = adwProduit.GetItemString ( 1, "UNT_PERRNV_ADH" )
+
+iSinEnCours	= 1				
+iNbAutreSin = 0
+sAutrePlaf  = "N"
+
+/*----------------------------------------------------------------------*/
+/* On calcule la date du dernier renouvellement.                        */
+/* En fonction de l'unit$$HEX2$$e9002000$$ENDHEX$$de p$$HEX1$$e900$$ENDHEX$$riode de renouvellement (ANNEE,MOIS,JOUR)*/
+/*----------------------------------------------------------------------*/
+Choose case sUntPerRnv_Adh
+ 	Case "A"
+     lCptMax = 30
+   Case "M"
+     lCptMax = 360
+   Case "J"
+    lCptMax = 10950
+End choose
+
+For lCpt = 1 To lCptMax
+	dDteResult = F_Plus_Date ( dDteAdh, dcDurPerRnv_Adh, sUntPerRnv_Adh )
+	If	dDteResult <= Date (dtDteSurv) Then
+		dDteAdh = dDteResult
+	Else
+		Exit
+	End If
+Next
+dtDteAdhRenouv = DateTime ( dDteAdh )
+
+Choose Case asIdTypPlaf			
+	Case "695"
+		SQLCA.PS_S01_W_GTI_NBSIN ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dtDteSurv, iNbAutreSin )
+
+	Case "696"
+		SQLCA.PS_S02_W_GTI_NBSIN ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dtDteSurv, iNbAutreSin )
+
+	Case "697"
+		SQLCA.PS_S03_W_GTI_NBSIN ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dtDteSurv, dtDteAdhRenouv, iNbAutreSin )
+
+	Case "698"
+		SQLCA.PS_S04_W_GTI_NBSIN ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dtDteSurv, dtDteAdhRenouv, iNbAutreSin )
+		
+	Case "702"
+		SQLCA.PS_S07_W_DETAIL_NBEVT ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdGti, dcIdEvt, dtDteSurv, iNbAutreSin )
+		// [201204181055][PROBLEME_PLAF_MARYSE]
+		If IsValid ( gdwlstdetail ) And Not IsNull ( gdwlstdetail ) Then
+			iSinEnCours = Integer(gdwlstdetail.describe("Evaluate('sum(if(id_evt = " + String ( dcIdEvt ) + " and  id_detail <>" +	string(lIdDetail) + " and id_gti = " + String ( adcIdGti ) + ",1,0) for all)',0)")) + 1 // +1 d$$HEX1$$e900$$ENDHEX$$tail en cours $$HEX2$$e0002000$$ENDHEX$$ajouter
+		End If
+
+	Case "703"
+		SQLCA.PS_S08_W_DETAIL_NBEVT ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dcIdGti, dcIdEvt, dtDteSurv, iNbAutreSin )
+		// [201204181055][PROBLEME_PLAF_MARYSE]
+		If IsValid ( gdwlstdetail ) And Not IsNull ( gdwlstdetail ) Then
+			iSinEnCours = Integer(gdwlstdetail.describe("Evaluate('sum(if(id_evt = " + String ( dcIdEvt ) + " and  id_detail <>" +	string(lIdDetail) + " and id_gti = " + String ( adcIdGti ) + ",1,0) for all)',0)")) + 1 // +1 d$$HEX1$$e900$$ENDHEX$$tail en cours $$HEX2$$e0002000$$ENDHEX$$ajouter
+		End If
+
+	Case "704"
+		SQLCA.PS_S09_W_DETAIL_NBEVT ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdGti, dcIdEvt, dtDteSurv, dtDteAdhRenouv, iNbAutreSin )
+		// [201204181055][PROBLEME_PLAF_MARYSE]
+		If IsValid ( gdwlstdetail ) And Not IsNull ( gdwlstdetail ) Then
+			iSinEnCours = Integer(gdwlstdetail.describe("Evaluate('sum(if(id_evt = " + String ( dcIdEvt ) + " and  id_detail <>" +	string(lIdDetail) + " and id_gti = " + String ( adcIdGti ) + ",1,0) for all)',0)")) + 1 // +1 d$$HEX1$$e900$$ENDHEX$$tail en cours $$HEX2$$e0002000$$ENDHEX$$ajouter
+		End If
+
+	Case "705"
+		SQLCA.PS_S10_W_DETAIL_NBEVT ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dcIdGti, dcIdEvt, dtDteSurv, dtDteAdhRenouv, iNbAutreSin )
+		// [201204181055][PROBLEME_PLAF_MARYSE]
+		If IsValid ( gdwlstdetail ) And Not IsNull ( gdwlstdetail ) Then
+			iSinEnCours = Integer(gdwlstdetail.describe("Evaluate('sum(if(id_evt = " + String ( dcIdEvt ) + " and  id_detail <>" +	string(lIdDetail) + " and id_gti = " + String ( adcIdGti ) + ",1,0) for all)',0)")) + 1 // +1 d$$HEX1$$e900$$ENDHEX$$tail en cours $$HEX2$$e0002000$$ENDHEX$$ajouter
+		End If
+
+	Case "707"
+		SQLCA.PS_S11_W_DETAIL_NBEVT ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdEvt, dtDteSurv, iNbAutreSin)
+		// [201204181055][PROBLEME_PLAF_MARYSE]
+		If IsValid ( gdwlstdetail ) And Not IsNull ( gdwlstdetail ) Then
+			iSinEnCours = Integer(gdwlstdetail.describe("Evaluate('sum(if(id_evt = " + String ( dcIdEvt ) + " and  id_detail <>" +	string(lIdDetail) + ",1,0) for all)',0)")) + 1 // +1 d$$HEX1$$e900$$ENDHEX$$tail en cours $$HEX2$$e0002000$$ENDHEX$$ajouter
+		End If
+
+	Case "708"
+		SQLCA.PS_S12_W_DETAIL_NBEVT ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dcIdEvt, dtDteSurv, iNbAutreSin)
+		If IsValid ( gdwlstdetail ) And Not IsNull ( gdwlstdetail ) Then
+			iSinEnCours = Integer(gdwlstdetail.describe("Evaluate('sum(if(id_evt = " + String ( dcIdEvt ) + " and  id_detail <>" +	string(lIdDetail) + ",1,0) for all)',0)")) + 1 // +1 d$$HEX1$$e900$$ENDHEX$$tail en cours $$HEX2$$e0002000$$ENDHEX$$ajouter
+		End If
+
+	Case "709"
+		SQLCA.PS_S13_W_DETAIL_NBEVT ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdEvt, dtDteSurv, dtDteAdhRenouv, iNbAutreSin)
+		If IsValid ( gdwlstdetail ) And Not IsNull ( gdwlstdetail ) Then
+			iSinEnCours = Integer(gdwlstdetail.describe("Evaluate('sum(if(id_evt = " + String ( dcIdEvt ) + " and  id_detail <>" +	string(lIdDetail) + ",1,0) for all)',0)")) + 1 // +1 d$$HEX1$$e900$$ENDHEX$$tail en cours $$HEX2$$e0002000$$ENDHEX$$ajouter
+		End If
+
+	Case "710"
+		SQLCA.PS_S14_W_DETAIL_NBEVT ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dcIdEvt, dtDteSurv, dtDteAdhRenouv, iNbAutreSin)
+		If IsValid ( gdwlstdetail ) And Not IsNull ( gdwlstdetail ) Then
+			iSinEnCours = Integer(gdwlstdetail.describe("Evaluate('sum(if(id_evt = " + String ( dcIdEvt ) + " and  id_detail <>" +	string(lIdDetail) + ",1,0) for all)',0)")) + 1 // +1 d$$HEX1$$e900$$ENDHEX$$tail en cours $$HEX2$$e0002000$$ENDHEX$$ajouter
+		End If
+
+//* #1 [DCMP080377] 
+	Case "711"
+		SQLCA.PS_S06_W_GTI_NBSIN ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dtDteSurv, iNbAutreSin )
+
+	Case "712"
+		SQLCA.PS_S05_W_GTI_NBSIN ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dtDteSurv, iNbAutreSin )
+//* :#1 [DCMP080377] 
+
+	// [DCMP100410]
+	Case "715"
+		SQLCA.PS_S07_W_GTI_NBSIN ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, iNbAutreSin )
+		
+	Case "716"
+		SQLCA.PS_S08_W_GTI_NBSIN ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, iNbAutreSin )
+	
+	Case "717"
+		SQLCA.PS_S10_W_GTI_NBGTI_ADHESION_V01( dcIdSin, dcIdProd, dcIdEts, sIdAdh,  dtDteSurv, dcIdGti,  iNbAutreSin ) // [DCMP100410.Correction]
+		
+	Case "718"
+		SQLCA.PS_S09_W_GTI_NBGTI_ADHERENT_V01( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dtDteSurv, dcIdGti,  iNbAutreSin ) // [DCMP100410.Correction]
+	//: [DCMP100410]
+	
+	// [PC397][PC441][PC443]
+	Case "719"
+		SQLCA.PS_S11_W_GTI_NBGTI_PEC_ADHESION( dcIdSin, dcIdProd, dcIdEts, sIdAdh,  dtDteSurv, dcIdGti,  iNbAutreSin ) // [DCMP100410.Correction]
+
+	Case "720"
+		SQLCA.PS_S12_W_GTI_NBGTI_PEC_ADHERENT( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dtDteSurv, dcIdGti,  iNbAutreSin ) // [DCMP100410.Correction]
+	// [PC397][PC441][PC443]
+	
+	Case "723" // [PLAF_REF]
+		SQLCA.PS_S13_W_GTI_NBSIN_NUM_PORT ( dcIdSin, dcIdProd, sNumPort , dtDteSurv, iNbAutreSin )
+
+	Case "724" // [PLAF_REF]
+		SQLCA.PS_S14_W_GTI_NBGTI_ADHESION (dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdGti, iNbAutreSin )
+
+	Case "725" // [PLAF_REF]
+		SQLCA.PS_S15_W_GTI_NBGTI_ADHERENT (dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dcIdGti, iNbAutreSin )
+
+	// [PC581].[POINT155][VDOC5984]
+	Case "726"
+		SQLCA.PS_S09_W_GTI_NBSIN ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdGti, dtDteSurv, iNbAutreSin )
+
+	// [PC581].[POINT155][VDOC5984]
+	Case "727"
+		SQLCA.PS_S10_W_GTI_NBSIN ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdGti, dcIdsDos, dtDteSurv, iNbAutreSin )
+
+	// [PC581].[POINT155][VDOC5984]
+	Case "728"
+		SQLCA.PS_S11_W_GTI_NBSIN ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdGti, dtDteSurv, dtDteAdhRenouv, iNbAutreSin )
+
+	// [PC581].[POINT155][VDOC5984]
+	Case "729"
+		SQLCA.PS_S12_W_GTI_NBSIN ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdGti, dcIdsDos, dtDteSurv, dtDteAdhRenouv, iNbAutreSin )
+
+	// [CONFO][CUISINE]
+	Case "730"
+		SQLCA.PS_S_W_DETAIL_NBEVT_GTI_ADHESION ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdGti, iNbAutreSin )
+
+   // 731 : Absence du 731 normale.
+
+	// [PC801-5]
+	Case "748"
+		SQLCA.PS_S_W_GTI_NBSIN_RESIL_ADH ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dtDteSurv, iNbAutreSin )		
+
+	Case "752"
+	// [VDOC19396]
+		SQLCA.PS_S_W_GTI_NBSIN_NUM_PORT_ANN_ADH (dcIdSin,dcIdProd,dcIdEts,sIdAdh,sNumPort,dtDteSurv, dtDteAdhRenouv, iNbAutreSin ) 
+
+	Case "751"
+		SQLCA.PS_S751_W_GTI_NBSIN_DTE_SURV ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dtDteSurv, dtDteAdhRenouv, iNbAutreSin )
+
+	Case Else 
+		bAucun = TRUE
+
+End Choose 
+
+If	Not bAucun And iSinEnCours + iNbAutreSin > adcPlafond	Then
+	sAutrePlaf = "O"
+End If
+
+Return sAutrePlaf + "x" + String ( iSinEnCours + iNbAutreSin ) + " (plaf " + asIdTypPlaf + ")"
+
+
+
+end function
+

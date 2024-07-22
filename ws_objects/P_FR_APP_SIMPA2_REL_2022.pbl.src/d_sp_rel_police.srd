@@ -1,0 +1,17 @@
+HA$PBExportHeader$d_sp_rel_police.srd
+$PBExportComments$---} DataWindow invisible permettant de retrouver la police et la compagnie en fonction d'un produit et d'une r$$HEX1$$e900$$ENDHEX$$vision.
+release 4;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 97 print.margin.bottom = 97 print.paper.source = 0 print.paper.size = 0 print.prompt=no )
+header(height=1 color="536870912" )
+summary(height=1 color="536870912" )
+footer(height=1 color="536870912" )
+detail(height=73 color="536870912" )
+table(column=(type=decimal(0) name=id_prod dbname="id_prod" )
+ column=(type=decimal(0) name=id_rev dbname="id_rev" )
+ column=(type=char(35) name=lib_police dbname="lib_police" )
+ column=(type=char(35) name=lib_cie dbname="lib_cie" )
+ procedure="1 execute sysadm.DW_S02_GARANTIE;1 @dcIdProd = :dcIdProd" arguments=(("dcIdProd", number))  sort="id_prod A id_rev A lib_police A " )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="0" x="28" y="8" height="57" width="366" format="[general]"  name=id_prod edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="417" y="8" height="57" width="366" format="[general]"  name=id_rev edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="0" x="805" y="8" height="57" width="805" format="[general]"  name=lib_police edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="0" tabsequence=0 border="0" color="0" x="1633" y="8" height="57" width="805"  name=lib_cie  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )

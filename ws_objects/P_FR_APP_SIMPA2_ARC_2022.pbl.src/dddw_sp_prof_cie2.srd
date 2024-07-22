@@ -1,0 +1,14 @@
+HA$PBExportHeader$dddw_sp_prof_cie2.srd
+$PBExportComments$Liste des compagnies par produit
+release 4;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 97 print.margin.bottom = 97 print.paper.source = 0 print.paper.size = 0 print.prompt=no )
+header(height=1 color="536870912" )
+summary(height=1 color="536870912" )
+footer(height=1 color="536870912" )
+detail(height=69 color="536870912" )
+table(column=(type=number name=id_prod dbname="id_prod" )
+ column=(type=number name=id_cie dbname="id_cie" )
+ column=(type=char(35) name=lib_cie dbname="lib_cie" )
+ procedure="1 execute sysadm.DD_S02_PROF_COMPAGNIE;1 "  sort="id_cie A " )
+column(band=detail id=2 alignment="1" tabsequence=20 border="0" color="16711680" x="14" y="8" height="53" width="119" format="[general]"  name=id_cie edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="0" expression="lib_cie + ~"(~" + id_cie + ~")~""border="0" color="16711680" x="147" y="8" height="57" width="636" format="[GENERAL]"  name=cp_cie  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )

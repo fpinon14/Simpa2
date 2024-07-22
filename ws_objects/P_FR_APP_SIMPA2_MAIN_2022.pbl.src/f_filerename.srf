@@ -1,0 +1,30 @@
+HA$PBExportHeader$f_filerename.srf
+global type f_filerename from function_object
+end type
+
+forward prototypes
+global function boolean f_filerename (string asfichiersource, string asfichierrenomme)
+end prototypes
+
+global function boolean f_filerename (string asfichiersource, string asfichierrenomme);//*-----------------------------------------------------------------
+//*
+//* Fonction		: F_FileRename
+//* Auteur			: Fabry JF
+//* Date				: 03/09/2013
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Renomme un fichier via KERNEL 32
+//* Commentaires	: 
+//*
+//* Arguments		: 	String			asFichierSource	
+//*						String			asFichierRenomm$$HEX1$$e900$$ENDHEX$$
+//*						
+//*
+//* Retourne		: TRUE si renommage Ok, False sinon
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//*-----------------------------------------------------------------
+
+Return MoveFileA (asFichierSource, asFichierRenomme) 
+
+end function
+

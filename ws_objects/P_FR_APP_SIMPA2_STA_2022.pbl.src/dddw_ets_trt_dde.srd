@@ -1,0 +1,14 @@
+HA$PBExportHeader$dddw_ets_trt_dde.srd
+$PBExportComments$---} DDDW des $$HEX1$$e900$$ENDHEX$$tablissements, utilis$$HEX1$$e900$$ENDHEX$$e pour traitement sur demande
+release 4;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 97 print.margin.bottom = 97 print.paper.source = 0 print.paper.size = 0 print.prompt=no )
+header(height=1 color="536870912" )
+summary(height=1 color="536870912" )
+footer(height=1 color="536870912" )
+detail(height=77 color="536870912" )
+table(column=(type=decimal(0) name=id_prod dbname="id_prod" )
+ column=(type=decimal(0) name=id_grp dbname="id_grp" )
+ column=(type=char(35) name=lib_grp dbname="lib_grp" )
+ procedure="1 execute sysadm.DD_S03_ETABLISSEMENT;1 " )
+column(band=detail id=2 alignment="1" tabsequence=32766 border="0" color="16711680" x="19" y="8" height="61" width="119" format="[general]"  name=id_grp edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="16711680" x="170" y="8" height="61" width="1500" format="[general]"  name=lib_grp edit.limit=35 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )

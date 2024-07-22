@@ -1,0 +1,15 @@
+HA$PBExportHeader$d_date_traitement.srd
+release 4;
+datawindow(units=0 timer_interval=0 color=12632256 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 97 print.margin.bottom = 97 print.paper.source = 0 print.paper.size = 0 print.prompt=no )
+header(height=1 color="536870912" )
+summary(height=5 color="536870912" )
+footer(height=1 color="536870912" )
+detail(height=89 color="536870912" )
+table(column=(type=date name=dte_deb dbname="dte_deb" )
+ column=(type=date name=dte_fin dbname="dte_fin" )
+ column=(type=decimal(0) name=id_periode dbname="id_periode" )
+ )
+text(band=detail alignment="1" text="Traitement du"border="0" color="0" x="19" y="16" height="57" width="357"  name=dte_deb_t  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="2" tabsequence=32766 border="6" color="16711680" x="407" y="16" height="61" width="353" format="dd/mm/yyyy"  name=dte_deb edit.limit=0 edit.case=upper edit.format="dd/mm/yyyy" edit.focusrectangle=no edit.autoselect=no edit.displayonly=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=detail alignment="1" text="au"border="0" color="0" x="782" y="16" height="57" width="60"  name=dte_fin_t  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=10 border="5" color="16711680" x="869" y="16" height="61" width="353" format="dd/mm/yyyy"  name=dte_fin dddw.name=dddw_fin_periode dddw.displaycolumn=dte_fin dddw.datacolumn=dte_fin dddw.percentwidth=500 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )

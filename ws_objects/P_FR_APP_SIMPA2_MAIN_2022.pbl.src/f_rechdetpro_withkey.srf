@@ -1,0 +1,93 @@
+HA$PBExportHeader$f_rechdetpro_withkey.srf
+$PBExportComments$Fonction de recherche de lgn dans DetPro, avec une option de recherche suppl$$HEX1$$e900$$ENDHEX$$mentaire avec cl$$HEX1$$e900$$ENDHEX$$
+global type f_rechdetpro_withkey from function_object
+end type
+
+forward prototypes
+global subroutine f_rechdetpro_withkey (ref long alrow, ref datawindow adwdetpro, long alidprod, string asidtypcode, integer aiidcode, ref n_cst_attrib_key akeys[])
+end prototypes
+
+global subroutine f_rechdetpro_withkey (ref long alrow, ref datawindow adwdetpro, long alidprod, string asidtypcode, integer aiidcode, ref n_cst_attrib_key akeys[]);//*-----------------------------------------------------------------
+//*
+//* Fonction      : F_RechDetPro_WithKey
+//* Auteur        : Catherine ABDMEZIEM
+//* Date          : 06/02/2003 14:39:53
+//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Recherche la pr$$HEX1$$e900$$ENDHEX$$sence d'une ligne dans det_pro
+//*					  Avec VAL_CAR contenant une liste de cl$$HEX2$$e9002000$$ENDHEX$$de la forme
+//*					  "KEY1=VALUE1;KEY2=VALUE2...KEYN=VALUEN"
+//* Commentaires  : la Dw DetPro doit $$HEX1$$ea00$$ENDHEX$$tre charg$$HEX1$$e900$$ENDHEX$$e en amont
+//*
+//* Arguments     : 		(Ref)	Long		alLigne		Lign trouv$$HEX1$$e900$$ENDHEX$$e (arg de retour) => 0 pas d'option trouv$$HEX1$$e900$$ENDHEX$$e
+//*							(Ref)	Dw			adwDetPro	R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$la dw contenant les donn$$HEX1$$e900$$ENDHEX$$es de DetPro
+//*							(Val)	Long		alIdProd		Produit
+//*							(Val)	String	asIdTypCode
+//*							(Val)	Integer	aiIdCode		A utiliser ds la rech si > 0
+//*							(Ref) n_cst_attrib_key aKeys : Tableau de descripteur de cl$$HEX1$$e900$$ENDHEX$$
+//*										Contient les cl$$HEX4$$e9002000e0002000$$ENDHEX$$utiliser comme crit$$HEX1$$e800$$ENDHEX$$re de recherche.
+//*										Contiendra eventuellement les cl$$HEX2$$e9002000$$ENDHEX$$restante trouv$$HEX1$$e900$$ENDHEX$$e apr$$HEX1$$e800$$ENDHEX$$s la recherche
+//* Retourne      : 		Rien
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//* #1    JFF/PHG  05/01/2010 [20100105121935437]
+//*
+//*-----------------------------------------------------------------
+constant string lSep = ";"
+
+n_cst_string lnv_string
+Long		lTotKeys
+Long		lParseKey
+Long		lParseRow
+Long		lDeb
+Long 		lFin
+Long 		lIndexKey[]
+String	sFind, sValCar
+String	aKeyValue
+boolean 	bFound
+
+//On appelle la fonction DetPro de Base pour rechercher l'option pass$$HEX1$$e900$$ENDHEX$$e en param$$HEX1$$e800$$ENDHEX$$tre
+f_rechdetpro( lDeb, lFin, aDwDetPro, alIdProd, asIdTypCode, aiIdCode)
+
+// #1 [20100105121935437]
+//alRow = lDeb
+alRow = 0
+
+If lDeb = 0 then Return // On sort si pas trouv$$HEX1$$e900$$ENDHEX$$e. 
+
+// Construction du Find de Recherche avec les Cl$$HEX1$$e900$$ENDHEX$$s trouv$$HEX1$$e900$$ENDHEX$$es en crit$$HEX1$$e800$$ENDHEX$$re.
+lTotKeys = upperbound(aKeys)
+if lTotKeys = 0 then 
+	alRow = 0
+	Return // Si pas de Cl$$HEX2$$e9002000$$ENDHEX$$
+End If
+
+// D$$HEX1$$e900$$ENDHEX$$termination de l'indice de tableau des Cl$$HEX1$$e900$$ENDHEX$$s de Recherche, pour optimiser celle-ci.
+For lParseKey = 1 to lTotKeys
+	If Not lnv_String.of_IsEmpty(String(aKeys[lParseKey].iaKeyValue)) and 	&
+		Not lnv_String.of_IsEmpty(String(aKeys[lParseKey].isKeyName)) 			&
+		Then lIndexKey[upperbound(lIndexKey)+1] = lParseKey
+Next
+
+// Recherche des Valeurs de  Cl$$HEX2$$e9002000$$ENDHEX$$dans Val_Car
+lTotKeys = upperbound(lIndexKey)
+For lParseRow = lDeb to lFin
+	sValCar = aDwDetPro.object.val_car[lParseRow]
+	bFound = TRUE
+	For lParseKey = 1 to lTotKeys
+		aKeyValue  = lnv_string.of_getkeyvalue( sValCar, aKeys[lIndexKey[lParseKey]].isKeyName, lSep)
+		bFound = aKeys[lIndexKey[lParseKey]].iaKeyValue = aKeyValue And bFound
+	Next
+	If bfound Then Exit
+Next
+
+// Si Crit$$HEX1$$e800$$ENDHEX$$res Trouv$$HEX1$$e900$$ENDHEX$$s, Lecture des Cl$$HEX1$$e900$$ENDHEX$$s Trouv$$HEX1$$e900$$ENDHEX$$e
+if bFound Then
+	alRow = lParseRow
+	lTotKeys = upperbound(aKeys)
+	For lParseKey = 1 to lTotKeys
+		aKeys[lParseKey].iaKeyValue = lnv_string.of_getkeyvalue( sValCar, aKeys[lParseKey].isKeyName, lSep)
+	Next 
+End If
+
+end subroutine
+
