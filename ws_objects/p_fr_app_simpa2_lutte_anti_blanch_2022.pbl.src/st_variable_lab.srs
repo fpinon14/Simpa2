@@ -1,6 +1,0 @@
-HA$PBExportHeader$st_variable_lab.srs
-global type st_variable_lab from structure
-	string		variable
-	string		valeur
-end type
-
