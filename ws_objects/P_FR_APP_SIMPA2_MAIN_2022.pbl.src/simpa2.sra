@@ -1,4 +1,4 @@
-HA$PBExportHeader$simpa2.sra
+﻿$PBExportHeader$simpa2.sra
 forward
 global type simpa2 from application
 end type
@@ -20,16 +20,16 @@ s_SPB		stSPB
 
 u_spb_gs_trace	uoGsTrace
 
-String                    gsAction	// FS action automatique $$HEX2$$e0002000$$ENDHEX$$effectuer
-String                    gsParam	// FS param$$HEX1$$e900$$ENDHEX$$tre pour action automatique
-String		gsCasGestion   // JFF r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration sur la grille de sinistre du cas de gestion fix$$HEX2$$e9002000$$ENDHEX$$sur le d$$HEX1$$e900$$ENDHEX$$tail
+String                    gsAction	// FS action automatique à effectuer
+String                    gsParam	// FS paramétre pour action automatique
+String		gsCasGestion   // JFF récupération sur la grille de sinistre du cas de gestion fixé sur le détail
 
 Boolean		ibRaccActif
 Boolean		gbOpCon  // JFF Gestion automatique des commandes
 
-w_mdi_sp		gWMdi    // Instance de r$$HEX1$$e900$$ENDHEX$$ference globale afin q'OpCon puisse fermer SIMPA2 (Utiliser uniquement si user = OPCO)
+w_mdi_sp		gWMdi    // Instance de réference globale afin q'OpCon puisse fermer SIMPA2 (Utiliser uniquement si user = OPCO)
 
-//[BUG_STRUCTPB11] .DEBUG  - A virer une fois le bug trouv$$HEX1$$e900$$ENDHEX$$.
+//[BUG_STRUCTPB11] .DEBUG  - A virer une fois le bug trouvé.
 //s_plafond_pec gstPPecDebug
 
 String gsBinDroit // [VDOC4684]
@@ -70,6 +70,7 @@ end variables
 
 global type simpa2 from application
 string appname = "simpa2"
+string appruntimeversion = "22.2.0.3356"
 end type
 global simpa2 simpa2
 
@@ -96,7 +97,7 @@ protected subroutine af_fermeapplication ();//*---------------------------------
 //* Fonction		: af_FermeApplication
 //* Auteur			: DBI
 //* Date				: 04/08/1997 10:32:55
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Fermeture de l'application et destruction des objets ouverts
+//* Libellé			: Fermeture de l'application et destruction des objets ouverts
 //* Commentaires	: Appel de f_FermeMdi pour MAJ datetime de deconnexion
 //*					  Destruction des objets ouverts
 //* Arguments		: Aucun
@@ -107,15 +108,15 @@ protected subroutine af_fermeapplication ();//*---------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* Pour OpCon, on ne lance pas cette partie, apr$$HEX1$$e800$$ENDHEX$$s plusieurs test   */
-/* il y a rien de plantage et donc d'apparation de Box (g$$HEX1$$e900$$ENDHEX$$nant      */
+/* Pour OpCon, on ne lance pas cette partie, après plusieurs test   */
+/* il y a rien de plantage et donc d'apparation de Box (génant      */
 /* pour pour OPCON).                                                */
 /*------------------------------------------------------------------*/
 If Not gbOpCon Then f_FermeMdi ( stGLB )
 
 /*------------------------------------------------------------------*/
-/* Si la transaction sur la base a bien $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$cr$$HEX2$$e900e900$$ENDHEX$$e et qu'elle est    */
-/* connect$$HEX1$$e900$$ENDHEX$$e (DBHandle <> 0) ALORS on la d$$HEX1$$e900$$ENDHEX$$connecte.                */
+/* Si la transaction sur la base a bien été créée et qu'elle est    */
+/* connectée (DBHandle <> 0) ALORS on la déconnecte.                */
 /*------------------------------------------------------------------*/
 
 If IsValid ( SQLCA ) Then
@@ -180,7 +181,7 @@ private subroutine af_fermeture_opcon ();//*------------------------------------
 //* Fonction      : Simpa2::af_Fermeture_Opcon 
 //* Auteur        : Fabry JF
 //* Date          : 17/12/2002 14:19:15
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Ecriture d'un dernier fichier pour preuve du fonctionnement
+//* Libellé       : Ecriture d'un dernier fichier pour preuve du fonctionnement
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -205,7 +206,7 @@ private subroutine af_gestion_opcon ();//*--------------------------------------
 //* Fonction      : Simpa2::af_Gestion_Opcon
 //* Auteur        : Fabry JF
 //* Date          : 19/12/2002 14:11:36
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 
 //*
@@ -224,8 +225,8 @@ gbOpCon = Trim ( Upper ( stGlb.sCodOper ) ) = "OPCO"
 If gbOpCon then
 
 	/*------------------------------------------------------------------*/
-	/* On teste la pr$$HEX1$$e900$$ENDHEX$$sence de la cl$$HEX2$$e9002000$$ENDHEX$$de s$$HEX1$$e900$$ENDHEX$$curit$$HEX1$$e900$$ENDHEX$$, si cette cl$$HEX2$$e9002000$$ENDHEX$$n'est   */
-	/* pas pr$$HEX1$$e900$$ENDHEX$$sente, on ne lance pas SIMPA2.                            */
+	/* On teste la présence de la clé de sécurité, si cette clé n'est   */
+	/* pas présente, on ne lance pas SIMPA2.                            */
 	/*------------------------------------------------------------------*/
 
 //Migration PB8-WYNIWYG-03/2006 CP
@@ -246,7 +247,7 @@ event open;//*-----------------------------------------------------------------
 //* Evenement 		:	Open
 //* Auteur			:	Y. Picard
 //* Date				:	28/07/97 15:22:27
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Lancement de l'application SIMPA 2.
+//* Libellé			:	Lancement de l'application SIMPA 2.
 //* Commentaires	:	
 //*				  
 //*-----------------------------------------------------------------
@@ -254,7 +255,7 @@ event open;//*-----------------------------------------------------------------
 //* [DETECTEAPPLI.001] 12/05/2006 	Correction double messagebox			
 //*-----------------------------------------------------------------
 
-Boolean	bOk		// Bool$$HEX1$$e900$$ENDHEX$$en pour la v$$HEX1$$e900$$ENDHEX$$rification du bon d$$HEX1$$e900$$ENDHEX$$roulement du script.
+Boolean	bOk		// Booléen pour la vérification du bon déroulement du script.
 
 SetPointer ( HourGlass! )
 
@@ -265,22 +266,22 @@ bOk = stGLB.uoEnvSpb.uf_Initialisation ( This, stGLB, stMessage )
 f_LireSPB ( stGlb, stSPB )
 
 /*------------------------------------------------------------------*/
-/* JFF Le 22/06/2004 : A partir de maintenant, par s$$HEX1$$fb00$$ENDHEX$$ret$$HEX1$$e900$$ENDHEX$$, je ne    */
-/* lis plus ce param$$HEX1$$e800$$ENDHEX$$tre, je force toujours en SVE. (ProfileString  */
+/* JFF Le 22/06/2004 : A partir de maintenant, par sûreté, je ne    */
+/* lis plus ce paramètre, je force toujours en SVE. (ProfileString  */
 /* ( stGlb.sFichierIni, "EDITION", "METHODE", "" ) = "SVE")         */
 /*------------------------------------------------------------------*/
 stGLB.bSaiValEdt = TRUE
 
 /*------------------------------------------------------------------*/
 /* JFF Le 13/12/2002 : Sommes-nous en mode automatique pour         */
-/* g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer les commandes ?                                          */
+/* générer les commandes ?                                          */
 /* L'utilisateur est-il OPCON/XPS(SMA) ?  								  */
-/* si oui--> m$$HEX1$$e900$$ENDHEX$$morisation en variable globale, passage en mode auto */
+/* si oui--> mémorisation en variable globale, passage en mode auto */
 /*------------------------------------------------------------------*/
 This.af_Gestion_OpCon ()
 
 /*------------------------------------------------------------------*/
-/* V$$HEX1$$e900$$ENDHEX$$rification que l'initialisation de uoEnvSpb s'est bien pass$$HEX1$$e900$$ENDHEX$$e  */
+/* Vérification que l'initialisation de uoEnvSpb s'est bien passée  */
 /*------------------------------------------------------------------*/
 If Not bOk Then
 
@@ -292,7 +293,7 @@ If Not bOk Then
 Else
 
 	/*------------------------------------------------------------------*/
-	/* V$$HEX1$$e900$$ENDHEX$$rification de la connexion $$HEX2$$e0002000$$ENDHEX$$la base                           */
+	/* Vérification de la connexion à la base                           */
 	/*------------------------------------------------------------------*/
 	If Not f_ConnectSqlServer ( stGLB.sFichierIni   , &
                                "SIMPA BASE"        , &
@@ -342,11 +343,11 @@ If IsValid(stGLB.uoEnvSpb) Then DESTROY stGLB.uoEnvSpb
 //Fin Migration PB8-WYNIWYG-03/2006 FM
 
 If IsValid ( w_LogoApp_SoldeTrv ) Then
-	Close ( w_LogoApp_SoldeTrv )					// Fermeture de la fen$$HEX1$$ea00$$ENDHEX$$tre d'attente
+	Close ( w_LogoApp_SoldeTrv )					// Fermeture de la fenêtre d'attente
 End If
 
 /*------------------------------------------------------------------*/
-/* Fermeture de l'application si probl$$HEX1$$e800$$ENDHEX$$me lors du script            */
+/* Fermeture de l'application si problème lors du script            */
 /*------------------------------------------------------------------*/
 If Not bOk Then 
 
@@ -364,7 +365,7 @@ on close;//*-----------------------------------------------------------------
 //* Evenement 		:	Close
 //* Auteur			:	YP
 //* Date				:	03/09/97 10:42:29
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	
+//* Libellé			:	
 //* Commentaires	:	Destruction de tous les objets
 //*				  
 //*-----------------------------------------------------------------
@@ -389,13 +390,13 @@ event systemerror;//*-----------------------------------------------------------
 //* Evenement 		: SystemError
 //* Auteur			: YP
 //* Date				: 03/09/1997 10:42:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Gestion des erreurs syst$$HEX1$$e800$$ENDHEX$$me.
+//* Libellé			: 
+//* Commentaires	: Gestion des erreurs système.
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*	DBI	04/08/1997	  Rollback avant appel f_erreur
-//*							  Cr$$HEX1$$e900$$ENDHEX$$ation et appel af_FermeApplication $$HEX2$$e0002000$$ENDHEX$$la place
+//*							  Création et appel af_FermeApplication à la place
 //*							  de Halt Close
 //*-----------------------------------------------------------------
 
