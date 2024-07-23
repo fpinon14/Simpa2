@@ -1,4 +1,4 @@
-HA$PBExportHeader$u_sp_gs_trait_part1.sru
+﻿$PBExportHeader$u_sp_gs_trait_part1.sru
 $PBExportComments$--- } UserObjet pour traitement particulier 1
 forward
 global type u_sp_gs_trait_part1 from nonvisualobject
@@ -41,10 +41,10 @@ private function boolean uf_controlersaisie ();//*------------------------------
 //* Fonction		: uf_ControlerSaisie (Private)
 //* Auteur			: Fabry JF
 //* Date				: 10/05/1999 19:32:28
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le la saisie de iDwSaisie.
-//* Commentaires	: Les zones $$HEX1$$e900$$ENDHEX$$tant contr$$HEX1$$f400$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$es chacune au moment de la
+//* Libellé			: Contrôle la saisie de iDwSaisie.
+//* Commentaires	: Les zones étant contrôlées chacune au moment de la
 //*					  saisie, cette fonction regarde uniquement si tous les
-//*					  champs ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$saisies.
+//*					  champs ont été saisies.
 //*
 //* Arguments		: Aucun
 //*
@@ -65,7 +65,7 @@ stMessage.Icon	  	= Information!
 iDwSaisie.AcceptText()
 
 /*------------------------------------------------------------------*/
-/* Si l'item n'est pas accept$$HEX1$$e900$$ENDHEX$$, on ne lance pas le contr$$HEX1$$f400$$ENDHEX$$le         */
+/* Si l'item n'est pas accepté, on ne lance pas le contrôle         */
 /*------------------------------------------------------------------*/
 If iDwSaisie.ibErreur then 
 	bRet = False
@@ -80,8 +80,8 @@ bRet = This.Uf_Zn_Ctrl ()
 
 
 /*-----------------------------------------------------------------*/
-/* CAS 1 : La date de d$$HEX1$$e900$$ENDHEX$$but de d$$HEX1$$e900$$ENDHEX$$claration doit toujours $$HEX1$$ea00$$ENDHEX$$tre      */
-/*			  renseign$$HEX1$$e900$$ENDHEX$$e.			 	 											 */
+/* CAS 1 : La date de début de déclaration doit toujours être      */
+/*			  renseignée.			 	 											 */
 /*-----------------------------------------------------------------*/
 If bRet Then
 
@@ -90,7 +90,7 @@ If bRet Then
 		bRet= False
 		stMessage.bErreurG= TRUE
 		stMessage.sCode	= "EWK0012"	
-		stMessage.sVar[1] = "la date de d$$HEX1$$e900$$ENDHEX$$but de d$$HEX1$$e900$$ENDHEX$$claration"
+		stMessage.sVar[1] = "la date de début de déclaration"
    	F_Message ( stMessage )
 
 	End IF
@@ -99,8 +99,8 @@ End If
 
 
 /*-----------------------------------------------------------------*/
-/* CAS 2 : La date de fin   de d$$HEX1$$e900$$ENDHEX$$claration doit toujours $$HEX1$$ea00$$ENDHEX$$tre      */
-/*			  renseign$$HEX1$$e900$$ENDHEX$$e.			 	 											 */
+/* CAS 2 : La date de fin   de déclaration doit toujours être      */
+/*			  renseignée.			 	 											 */
 /*-----------------------------------------------------------------*/
 If bRet Then
 
@@ -109,7 +109,7 @@ If bRet Then
 		bRet= False
 		stMessage.bErreurG= TRUE
 		stMessage.sCode	= "EWK0012"	
-		stMessage.sVar[1] = "la date de fin de d$$HEX1$$e900$$ENDHEX$$claration"
+		stMessage.sVar[1] = "la date de fin de déclaration"
    	F_Message ( stMessage )
 
 	End IF
@@ -117,8 +117,8 @@ If bRet Then
 End If
 
 /*-----------------------------------------------------------------*/
-/* CAS 3 : La date de d$$HEX1$$e900$$ENDHEX$$but d'arr$$HEX1$$ea00$$ENDHEX$$t des refus doit toujours $$HEX1$$ea00$$ENDHEX$$tre   */
-/*			  renseign$$HEX1$$e900$$ENDHEX$$e.			 	 											 */
+/* CAS 3 : La date de début d'arrêt des refus doit toujours être   */
+/*			  renseignée.			 	 											 */
 /*-----------------------------------------------------------------*/
 If bRet Then
 
@@ -127,7 +127,7 @@ If bRet Then
 		bRet= False
 		stMessage.bErreurG= TRUE
 		stMessage.sCode	= "EWK0012"	
-		stMessage.sVar[1] = "la date de d$$HEX1$$e900$$ENDHEX$$but des refus"
+		stMessage.sVar[1] = "la date de début des refus"
    	F_Message ( stMessage )
 
 	End IF
@@ -136,8 +136,8 @@ End If
 
 
 /*-----------------------------------------------------------------*/
-/* CAS 4 : La date de fin d'arr$$HEX1$$ea00$$ENDHEX$$t des refus doit toujours $$HEX1$$ea00$$ENDHEX$$tre     */
-/*			  renseign$$HEX1$$e900$$ENDHEX$$e.			 	 											 */
+/* CAS 4 : La date de fin d'arrêt des refus doit toujours être     */
+/*			  renseignée.			 	 											 */
 /*-----------------------------------------------------------------*/
 If bRet Then
 
@@ -155,7 +155,7 @@ End If
 
 
 /*-----------------------------------------------------------------*/
-/* CAS 5 : Le produit doit toujours $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.					 */
+/* CAS 5 : Le produit doit toujours être renseigné.					 */
 /*-----------------------------------------------------------------*/
 If bRet Then
 
@@ -173,11 +173,11 @@ End If
 
 
 /*------------------------------------------------------------------*/
-/* CAS 6 : On v$$HEX1$$e900$$ENDHEX$$rifie que la p$$HEX1$$e900$$ENDHEX$$riode d'arr$$HEX1$$ea00$$ENDHEX$$t des refus existe bien  */
+/* CAS 6 : On vérifie que la période d'arrêt des refus existe bien  */
 /*         sur la table cum_periode. Si ce n'est pas le cas on ne   */
 /* 		  lance pas le traitement.                                 */
-/*         Par logique, si la p$$HEX1$$e900$$ENDHEX$$riode d'arr$$HEX1$$ea00$$ENDHEX$$t des refus existe, les */
-/*         p$$HEX1$$e900$$ENDHEX$$riodes de d$$HEX1$$e900$$ENDHEX$$but et de fin de d$$HEX1$$e900$$ENDHEX$$claration existe aussi. */
+/*         Par logique, si la période d'arrêt des refus existe, les */
+/*         périodes de début et de fin de déclaration existe aussi. */
 /*------------------------------------------------------------------*/
 If bRet Then
 	
@@ -187,11 +187,11 @@ If bRet Then
 	lPeriodeArret = dwcPeriode.GetItemNumber ( dwcPeriode.GetRow(), "ID_PERIODE" )
 
 	/*------------------------------------------------------------------*/
-	/* Je d$$HEX1$$e900$$ENDHEX$$cide ici de ne pas cr$$HEX1$$e900$$ENDHEX$$er une nouvelle proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e     */
+	/* Je décide ici de ne pas créer une nouvelle procédure stockée     */
 	/* sur la base, afin de ne pas la surcharger un peu plus. Le        */
-	/* traitement sur demande est bien moins utilis$$HEX1$$e900$$ENDHEX$$, que toutes les    */
-	/* autres fen$$HEX1$$ea00$$ENDHEX$$tres de SIMPA2. Ainsi je pense qu'il est pr$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rable   */
-	/* dans ce cas de faire un SELECT en PB (qui sera compil$$HEX4$$e9002000e0002000$$ENDHEX$$chaque  */
+	/* traitement sur demande est bien moins utilisé, que toutes les    */
+	/* autres fenêtres de SIMPA2. Ainsi je pense qu'il est préférable   */
+	/* dans ce cas de faire un SELECT en PB (qui sera compilé à chaque  */
 	/* lancement bien entendu.)                                         */
 	/*------------------------------------------------------------------*/
 
@@ -208,7 +208,7 @@ If bRet Then
 		bRet= False
 		stMessage.bErreurG= FALSE
 		stMessage.sCode	= "EWK0020"	
-		stMessage.sVar[1] = "p$$HEX1$$e900$$ENDHEX$$riode des refus"
+		stMessage.sVar[1] = "période des refus"
    	F_Message ( stMessage )
 
 	End IF
@@ -227,11 +227,11 @@ public subroutine uf_initialiser (ref u_datawindow adwsaisie, ref u_datawindow_a
 //* Fonction		: uf_Initialisation (Public)
 //* Auteur			: Fabry JF
 //* Date				: 07/05/1999 17:03:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Initialisation de l'objet
+//* Libellé			: Initialisation de l'objet
 //* Commentaires	: 
 //*
 //* Arguments		: U_DataWindow				aDwSaisie		(REF) 	DW de saisie des arguments
-//*					  U_Datawindow_Accueil	aDw1				(REF)		DW d'affichage de l'$$HEX1$$e900$$ENDHEX$$tat
+//*					  U_Datawindow_Accueil	aDw1				(REF)		DW d'affichage de l'état
 //*					  StaticText				stEnCours		(REF)		Static Text indiquant la progression
 //*					  U_Transaction			aTrTrans			(REF)	
 //*
@@ -268,14 +268,14 @@ iDw1.ilMaxLig	 = 0
 
 
 /*------------------------------------------------------------------*/
-/* Le texte de StEncours (statictext) est rentr$$HEX2$$e9002000$$ENDHEX$$une fois pour      */
+/* Le texte de StEncours (statictext) est rentré une fois pour      */
 /* toute. on jouera ensuite avec Show() et Hide() pour l'affichage. */
 /*------------------------------------------------------------------*/
 iStEnCours.Hide()
 iStEnCours.Text = "Traitement en cours, veuillez patienter..."
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le fichier pour les p$$HEX1$$e900$$ENDHEX$$riodes de traitement.          */
+/* On récupére le fichier pour les périodes de traitement.          */
 /*------------------------------------------------------------------*/
 sFicPeriode = ProfileString ( stGLB.sFichierIni, "TRAITEMENT", "FICHIER_PERIODE", "" )
 
@@ -329,8 +329,8 @@ public subroutine uf_imprimer ();//*--------------------------------------------
 //* Fonction		: uf_Imprimer (Public)
 //* Auteur			: Fabry JF
 //* Date				: 19/05/1999 11:50:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Impression de l'$$HEX1$$e900$$ENDHEX$$tat.
-//* Commentaires	: Lanc$$HEX4$$e9002000e0002000$$ENDHEX$$partir du bouton pb_Imprimer de la fen$$HEX1$$ea00$$ENDHEX$$tre
+//* Libellé			: Impression de l'état.
+//* Commentaires	: Lancé à partir du bouton pb_Imprimer de la fenêtre
 //*
 //* Arguments		: Aucun
 //*
@@ -354,7 +354,7 @@ iDw1.Modify("datawindow.Footer.Height=0")
 iDw1.SetRedraw ( True )
 
 /*------------------------------------------------------------------*/
-/* Box indiquant la fin de l'impression de l'$$HEX1$$e900$$ENDHEX$$tat.                  */
+/* Box indiquant la fin de l'impression de l'état.                  */
 /*------------------------------------------------------------------*/
 Beep(1)
 stMessage.bErreurG = False
@@ -372,11 +372,11 @@ public subroutine uf_lancer (ref picturebutton apbimprimer, ref picturebutton ap
 //* Fonction		: uf_Lancer (Public)
 //* Auteur			: Fabry JF
 //* Date				: 11/05/1999 15:38:12
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Lance le retrieve apr$$HEX1$$e800$$ENDHEX$$s contr$$HEX1$$f400$$ENDHEX$$le
+//* Libellé			: Lance le retrieve après contrôle
 //* Commentaires	: 
 //*
-//* Arguments		: PictureButton			aPbImprimer				Bouton imprimer sur fen$$HEX1$$ea00$$ENDHEX$$tre.
-//*					  PictureButton			aPbExcel					Bouton Fichier Excel sur fen$$HEX1$$ea00$$ENDHEX$$tre.
+//* Arguments		: PictureButton			aPbImprimer				Bouton imprimer sur fenêtre.
+//*					  PictureButton			aPbExcel					Bouton Fichier Excel sur fenêtre.
 //*
 //* Retourne		: Rien
 //*			
@@ -386,7 +386,7 @@ public subroutine uf_lancer (ref picturebutton apbimprimer, ref picturebutton ap
 //*-----------------------------------------------------------------
 
 Long					lPerDecDeb, lPerDecFin, lPerDebArret, lPerFinArret, lProd
-String				sNbPage												// Nombre de pages de l'$$HEX1$$e900$$ENDHEX$$tat
+String				sNbPage												// Nombre de pages de l'état
 DataWindowChild	dwcPeriode
 
 If This.Uf_ControlerSaisie () Then
@@ -419,15 +419,15 @@ If This.Uf_ControlerSaisie () Then
 	iDw1.Retrieve ( lPerDecDeb, lPerDecFin, lPerDebArret, lPerFinArret, lProd )
 
 	/*------------------------------------------------------------------*/
-	/* IMPORTANT ! : Il faut commiter apr$$HEX1$$e800$$ENDHEX$$s le Retrieve, car la         */
-	/* requ$$HEX1$$ea00$$ENDHEX$$te contient des Insert dans une table temporaire.           */
+	/* IMPORTANT ! : Il faut commiter après le Retrieve, car la         */
+	/* requête contient des Insert dans une table temporaire.           */
 	/*------------------------------------------------------------------*/
 	f_Commit ( itrTrans, True )
 
 	iStEncours.Hide()
 
 	/*------------------------------------------------------------------*/
-	/* Des donn$$HEX1$$e900$$ENDHEX$$es ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$trouv$$HEX1$$e900$$ENDHEX$$es...                                  */
+	/* Des données ont été trouvées...                                  */
 	/*------------------------------------------------------------------*/
 	If iDw1.RowCount() > 0 then
 
@@ -437,7 +437,7 @@ If This.Uf_ControlerSaisie () Then
 		aPbExcel.enabled 	  = True
 
 	/*------------------------------------------------------------------*/
-	/* Aucune donn$$HEX1$$e900$$ENDHEX$$e trouv$$HEX1$$e900$$ENDHEX$$e...                                         */
+	/* Aucune donnée trouvée...                                         */
 	/*------------------------------------------------------------------*/
 	Else
 
@@ -447,7 +447,7 @@ If This.Uf_ControlerSaisie () Then
 		Beep(1)
 
 		/*------------------------------------------------------------------*/
-		/* Box indiquant qu'aucune donn$$HEX1$$e900$$ENDHEX$$e ne r$$HEX1$$e900$$ENDHEX$$pond $$HEX2$$e0002000$$ENDHEX$$la demande.			  */
+		/* Box indiquant qu'aucune donnée ne répond à la demande.			  */
 		/*------------------------------------------------------------------*/
 		stMessage.bErreurG = False
 		stMessage.sCode	 = "EWK0022"
@@ -472,8 +472,8 @@ public subroutine uf_excel ();//*-----------------------------------------------
 //* Fonction		: uf_Excel (Public)
 //* Auteur			: Fabry JF
 //* Date				: 20/05/1999 10:59:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Sauve les donn$$HEX1$$e900$$ENDHEX$$es au format Excel
-//* Commentaires	: lancer $$HEX2$$e0002000$$ENDHEX$$partir de ue_Item6 sur la fen$$HEX1$$ea00$$ENDHEX$$tre
+//* Libellé			: Sauve les données au format Excel
+//* Commentaires	: lancer à partir de ue_Item6 sur la fenêtre
 //*
 //* Arguments		: Aucun
 //*
@@ -481,7 +481,7 @@ public subroutine uf_excel ();//*-----------------------------------------------
 //*			
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
-//*				  
+//			FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!		  
 //*-----------------------------------------------------------------
 
 Int 		iRet
@@ -491,7 +491,7 @@ sNomFic = F_GetNomFichier ( "", "Fichier Excel (*.XLS),*.XLS,Tous Fichiers (*.*)
 
 If sNomFic <> "" Then
 
-	iRet = iDw1.SaveAs ( sNomFic , EXCEL!, TRUE ) 
+	iRet = iDw1.SaveAs ( sNomFic , EXCEL8!, TRUE ) // [MIG_PB2022]
 
 	If iRet < 0 Then
 
@@ -514,16 +514,16 @@ private function boolean uf_zn_ctrl ();//*--------------------------------------
 //* Fonction		: Uf_Zn_Ctrl (Private)
 //* Auteur			: Fabry JF
 //* Date				: 07/05/1999 17:45:31
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le La coh$$HEX1$$e900$$ENDHEX$$rence des champs de iDwSaisie
+//* Libellé			: Contrôle La cohérence des champs de iDwSaisie
 //* Commentaires	: Cette fonction appelle d'autres fonctions 
-//*					  priv$$HEX1$$e900$$ENDHEX$$es. Il existe une fonction pour chaque zone.
-//*					  Cette Fonction n'est pas d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$sur l'ItemChanged
+//*					  privées. Il existe une fonction pour chaque zone.
+//*					  Cette Fonction n'est pas déclenché sur l'ItemChanged
 //*					  mais dans la fonction uf_ControlerSaisie, afin de 
-//*					  ne pas g$$HEX1$$ea00$$ENDHEX$$ner l'utilisateur dans le choix des trois dates.
+//*					  ne pas gêner l'utilisateur dans le choix des trois dates.
 //*
 //* Arguments		: Aucun
 //*
-//* Retourne		: Boolean		bSuite			A True, aucune erreur de coh$$HEX1$$e900$$ENDHEX$$rence
+//* Retourne		: Boolean		bSuite			A True, aucune erreur de cohérence
 //*			
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -534,25 +534,25 @@ Boolean 	bSuite = True
 String	sNomColErr
 
 
-// ... P$$HEX1$$e900$$ENDHEX$$riode de d$$HEX1$$e900$$ENDHEX$$claration de d$$HEX1$$e900$$ENDHEX$$but
+// ... Période de déclaration de début
 If bSuite Then
 	sNomColErr = "PERDECDEB"
 	bsuite 	  = This.Uf_Zn_PerDecDeb ()
 End If
 
-// ... P$$HEX1$$e900$$ENDHEX$$riode de d$$HEX1$$e900$$ENDHEX$$claration de Fin
+// ... Période de déclaration de Fin
 If bSuite Then
 	sNomColErr = "PERDECFIN"
 	bSuite	  = This.Uf_Zn_PerDecFin ()
 End If
 
-// ... P$$HEX1$$e900$$ENDHEX$$riode de d$$HEX1$$e900$$ENDHEX$$but d'arr$$HEX1$$ea00$$ENDHEX$$t des refus
+// ... Période de début d'arrêt des refus
 If bSuite Then
 	sNomColErr = "PERDEBARRET"
 	bSuite	  = This.Uf_Zn_PerDebArret ()
 End If
 
-// ... P$$HEX1$$e900$$ENDHEX$$riode de d$$HEX1$$e900$$ENDHEX$$but d'arr$$HEX1$$ea00$$ENDHEX$$t des refus
+// ... Période de début d'arrêt des refus
 If bSuite Then
 	sNomColErr = "PERFINARRET"
 //	bSuite	  = This.Uf_Zn_PerFinArret ()
@@ -573,7 +573,7 @@ private function boolean uf_zn_perdecdeb ();//*---------------------------------
 //* Fonction		: uf_Zn_PerDecDeb (Private)
 //* Auteur			: Fabry JF
 //* Date				: 10/05/1999 16:33:28
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone PerDecDeb (Periode Declaration d$$HEX1$$e900$$ENDHEX$$but)
+//* Libellé			: Contrôle de la zone PerDecDeb (Periode Declaration début)
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun
@@ -596,8 +596,8 @@ dPerFinArret= Date ( iDwSaisie.GetItemString ( 1 ,"PERFINARRET"  ) )
 
 
 /*------------------------------------------------------------------*/
-/* La date de d$$HEX1$$e900$$ENDHEX$$but de d$$HEX1$$e900$$ENDHEX$$claration doit $$HEX1$$ea00$$ENDHEX$$tre strictement            */
-/* ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date du jour.												  */
+/* La date de début de déclaration doit être strictement            */
+/* antérieure à la date du jour.												  */
 /*------------------------------------------------------------------*/
 If dPerDecDeb >= Today () Then 
 
@@ -608,7 +608,7 @@ End If
 
 /*------------------------------------------------------------------*/
 /* On ne controle que si la PerDecFin ou la PerDebArret ou          */
-/* la PerFinArret ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$saisies.											  */
+/* la PerFinArret ont été saisies.											  */
 /*------------------------------------------------------------------*/
 If  ( Not IsNull ( dPerDecFin ) or Not IsNull ( dPerDebArret ) or Not IsNull ( dPerFinArret ) ) and bRet Then
 
@@ -616,8 +616,8 @@ If  ( Not IsNull ( dPerDecFin ) or Not IsNull ( dPerDebArret ) or Not IsNull ( d
 	If Not IsNull ( dPerDecFin ) Then
 		
 		/*------------------------------------------------------------------*/
-		/* La date de d$$HEX1$$e900$$ENDHEX$$but de d$$HEX1$$e900$$ENDHEX$$claration doit $$HEX1$$ea00$$ENDHEX$$tre strictement            */
-		/* ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date de fin de d$$HEX1$$e900$$ENDHEX$$claration                       */
+		/* La date de début de déclaration doit être strictement            */
+		/* antérieure à la date de fin de déclaration                       */
 		/*------------------------------------------------------------------*/
 		If dPerDecDeb >= dPerDecFin Then
 			bRet = False
@@ -629,8 +629,8 @@ If  ( Not IsNull ( dPerDecFin ) or Not IsNull ( dPerDebArret ) or Not IsNull ( d
 	If Not IsNull ( dPerDebArret ) and bRet Then
 
 		/*------------------------------------------------------------------*/
-		/* La date de d$$HEX1$$e900$$ENDHEX$$but de d$$HEX1$$e900$$ENDHEX$$claration doit $$HEX1$$ea00$$ENDHEX$$tre ant$$HEX1$$e900$$ENDHEX$$rieure             */
-		/* ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la date de d$$HEX1$$e900$$ENDHEX$$but d'arr$$HEX1$$ea00$$ENDHEX$$t  des refus.			   		  */
+		/* La date de début de déclaration doit être antérieure             */
+		/* ou égale à la date de début d'arrêt  des refus.			   		  */
 		/*------------------------------------------------------------------*/
 		If dPerDecDeb > dPerDebArret Then
 			bRet = False
@@ -642,8 +642,8 @@ If  ( Not IsNull ( dPerDecFin ) or Not IsNull ( dPerDebArret ) or Not IsNull ( d
 	If Not IsNull ( dPerFinArret ) and bRet Then
 
 		/*------------------------------------------------------------------*/
-		/* La date de d$$HEX1$$e900$$ENDHEX$$but de d$$HEX1$$e900$$ENDHEX$$claration doit $$HEX1$$ea00$$ENDHEX$$tre strictement            */
-		/* ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date de fin d'arr$$HEX1$$ea00$$ENDHEX$$t des refus.			   	     */
+		/* La date de début de déclaration doit être strictement            */
+		/* antérieure à la date de fin d'arrêt des refus.			   	     */
 		/*------------------------------------------------------------------*/
 		If dPerDecDeb >= dPerFinArret Then
 			bRet = False
@@ -664,7 +664,7 @@ private function boolean uf_zn_perdecfin ();//*---------------------------------
 //* Fonction		: uf_Zn_PerDecFin (Private)
 //* Auteur			: Fabry JF
 //* Date				: 10/05/1999 16:33:28
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone PerDecFin (Periode Declaration Fin)
+//* Libellé			: Contrôle de la zone PerDecFin (Periode Declaration Fin)
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun
@@ -687,8 +687,8 @@ dPerFinArret= Date ( iDwSaisie.GetItemString ( 1 ,"PERFINARRET"  ) )
 
 
 /*------------------------------------------------------------------*/
-/* La date de fin de d$$HEX1$$e900$$ENDHEX$$claration doit $$HEX1$$ea00$$ENDHEX$$tre strictement              */
-/* ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date du jour.												  */
+/* La date de fin de déclaration doit être strictement              */
+/* antérieure à la date du jour.												  */
 /*------------------------------------------------------------------*/
 If dPerDecFin >= Today () Then 
 
@@ -699,16 +699,16 @@ End If
 
 /*------------------------------------------------------------------*/
 /* On ne controle que si la PerDecDeb ou la PerFinArret ont 		  */
-/* $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$saisies.																	  */
-/* Il n'y a pas de contr$$HEX1$$f400$$ENDHEX$$les entre PerDecFin et PerDebArret.		  */
+/* été saisies.																	  */
+/* Il n'y a pas de contrôles entre PerDecFin et PerDebArret.		  */
 /*------------------------------------------------------------------*/
 If  ( Not IsNull ( dPerDecDeb ) or Not IsNull ( dPerFinArret ) ) and bRet Then
 
 	If Not IsNull ( dPerDecDeb ) Then
 
 		/*------------------------------------------------------------------*/
-		/* La date de fin de d$$HEX1$$e900$$ENDHEX$$claration doit $$HEX1$$ea00$$ENDHEX$$tre strictement              */
-		/* post$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date de d$$HEX1$$e900$$ENDHEX$$but de d$$HEX1$$e900$$ENDHEX$$claration                    */
+		/* La date de fin de déclaration doit être strictement              */
+		/* postérieure à la date de début de déclaration                    */
 		/*------------------------------------------------------------------*/
 		If dPerDecFin <= dPerDecDeb Then
 			bRet = False
@@ -720,8 +720,8 @@ If  ( Not IsNull ( dPerDecDeb ) or Not IsNull ( dPerFinArret ) ) and bRet Then
 	If Not IsNull ( dPerFinArret ) and bRet Then
 
 		/*------------------------------------------------------------------*/
-		/* La date de fin de d$$HEX1$$e900$$ENDHEX$$claration doit ant$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale			  */
-		/* $$HEX2$$e0002000$$ENDHEX$$la date de fin d'arr$$HEX1$$ea00$$ENDHEX$$t des refus										  */
+		/* La date de fin de déclaration doit antérieure ou égale			  */
+		/* à la date de fin d'arrêt des refus										  */
 		/*------------------------------------------------------------------*/
 		If dPerDecFin > dPerFinArret Then
 			bRet = False
@@ -742,12 +742,12 @@ private subroutine uf_zn_zerreur (string ascolerr);//*--------------------------
 //* Fonction		: Uf_Zn_ZErreur (Private)
 //* Auteur			: Fabry JF
 //* Date				: 10/05/1999 18:11:58
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Gestion des erreurs sur les zones
-//* Commentaires	: Lancer $$HEX2$$e0002000$$ENDHEX$$partir de uf_Zn_Ctrl.
+//* Libellé			: Gestion des erreurs sur les zones
+//* Commentaires	: Lancer à partir de uf_Zn_Ctrl.
 //*
-//*					EWK0004 = La 1 doit $$HEX1$$ea00$$ENDHEX$$tre ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date du jour
-//*					EWK0010 = La 1 doit $$HEX1$$ea00$$ENDHEX$$tre ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la 2
-//*					EWK0011 = La 1 doit $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la 2
+//*					EWK0004 = La 1 doit être antérieure à la date du jour
+//*					EWK0010 = La 1 doit être antérieure à la 2
+//*					EWK0011 = La 1 doit être postérieure à la 2
 //*
 //*
 //* Arguments		: String			asColErr			(Val)			Colonne en erreur
@@ -773,21 +773,21 @@ CHOOSE CASE asColErr
 
 			CASE 05
 	         stMessage.sCode	 = "EWK0004"
-				stMessage.sVar[1] = "date de d$$HEX1$$e900$$ENDHEX$$but de d$$HEX1$$e900$$ENDHEX$$claration"
+				stMessage.sVar[1] = "date de début de déclaration"
 
 			CASE 10
 	         stMessage.sCode	 = "EWK0010"
-				stMessage.sVar[1] = "date de d$$HEX1$$e900$$ENDHEX$$but de d$$HEX1$$e900$$ENDHEX$$claration"
-				stMessage.sVar[2] = "date de fin de d$$HEX1$$e900$$ENDHEX$$claration"
+				stMessage.sVar[1] = "date de début de déclaration"
+				stMessage.sVar[2] = "date de fin de déclaration"
 
 			CASE 20
 	         stMessage.sCode	 = "EWK0010"
-				stMessage.sVar[1] = "date de d$$HEX1$$e900$$ENDHEX$$but de d$$HEX1$$e900$$ENDHEX$$claration"
-				stMessage.sVar[2] = "date de d$$HEX1$$e900$$ENDHEX$$but des refus"
+				stMessage.sVar[1] = "date de début de déclaration"
+				stMessage.sVar[2] = "date de début des refus"
 
 			CASE 30
 	         stMessage.sCode	 = "EWK0010"
-				stMessage.sVar[1] = "date de d$$HEX1$$e900$$ENDHEX$$but de d$$HEX1$$e900$$ENDHEX$$claration"
+				stMessage.sVar[1] = "date de début de déclaration"
 				stMessage.sVar[2] = "date de fin des refus"
 
 
@@ -799,17 +799,17 @@ CHOOSE CASE asColErr
 		CHOOSE CASE iDwSaisie.iiErreur
 			CASE 05
 	         stMessage.sCode	 = "EWK0004"
-				stMessage.sVar[1] = "date de fin de d$$HEX1$$e900$$ENDHEX$$claration"
+				stMessage.sVar[1] = "date de fin de déclaration"
 
 			CASE 10
 	         stMessage.sCode	 = "EWK0011"
-				stMessage.sVar[1] = "date de fin de d$$HEX1$$e900$$ENDHEX$$claration"
-				stMessage.sVar[2] = "date de d$$HEX1$$e900$$ENDHEX$$but de d$$HEX1$$e900$$ENDHEX$$claration"
+				stMessage.sVar[1] = "date de fin de déclaration"
+				stMessage.sVar[2] = "date de début de déclaration"
 
 			CASE 20
 
 	         stMessage.sCode	 = "EWK0010"
-				stMessage.sVar[1] = "date de fin de d$$HEX1$$e900$$ENDHEX$$claration"
+				stMessage.sVar[1] = "date de fin de déclaration"
 				stMessage.sVar[2] = "date de fin des refus"
 
 
@@ -821,17 +821,17 @@ CHOOSE CASE asColErr
 		CHOOSE CASE iDwSaisie.iiErreur
 			CASE 05
 	         stMessage.sCode	 = "EWK0004"
-				stMessage.sVar[1] = "date de d$$HEX1$$e900$$ENDHEX$$but des refus"
+				stMessage.sVar[1] = "date de début des refus"
 
 			CASE 10
 	         stMessage.sCode	 = "EWK0011"
-				stMessage.sVar[1] = "date de d$$HEX1$$e900$$ENDHEX$$but des refus"
-				stMessage.sVar[2] = "date de d$$HEX1$$e900$$ENDHEX$$but de d$$HEX1$$e900$$ENDHEX$$claration"
+				stMessage.sVar[1] = "date de début des refus"
+				stMessage.sVar[2] = "date de début de déclaration"
 
 			CASE 20
 
 	         stMessage.sCode	 = "EWK0010"
-				stMessage.sVar[1] = "date de d$$HEX1$$e900$$ENDHEX$$but des refus"
+				stMessage.sVar[1] = "date de début des refus"
 				stMessage.sVar[2] = "date de fin des refus"
 
 		END CHOOSE
@@ -847,19 +847,19 @@ CHOOSE CASE asColErr
 			CASE 10
 	         stMessage.sCode	 = "EWK0011"
 				stMessage.sVar[1] = "date de fin des refus"
-				stMessage.sVar[2] = "date de d$$HEX1$$e900$$ENDHEX$$but de d$$HEX1$$e900$$ENDHEX$$claration"
+				stMessage.sVar[2] = "date de début de déclaration"
 
 			CASE 20
 
 	         stMessage.sCode	 = "EWK0011"
 				stMessage.sVar[1] = "date de fin des refus"
-				stMessage.sVar[2] = "date de d$$HEX1$$e900$$ENDHEX$$but des refus"
+				stMessage.sVar[2] = "date de début des refus"
 
 			CASE 30
 
 	         stMessage.sCode	 = "EWK0011"
 				stMessage.sVar[1] = "date de fin des refus"
-				stMessage.sVar[2] = "date de fin de d$$HEX1$$e900$$ENDHEX$$claration"
+				stMessage.sVar[2] = "date de fin de déclaration"
 
 
 		END CHOOSE
@@ -879,7 +879,7 @@ private function boolean uf_zn_perdebarret ();//*-------------------------------
 //* Fonction		: uf_Zn_PerDebArret (Private)
 //* Auteur			: Fabry JF
 //* Date				: 10/05/1999 16:33:28
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone PerDebArret ( d$$HEX1$$e900$$ENDHEX$$but de la Periode d'arret des refus)
+//* Libellé			: Contrôle de la zone PerDebArret ( début de la Periode d'arret des refus)
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun
@@ -902,8 +902,8 @@ dPerDecDeb 	= Date ( iDwSaisie.GetItemString ( 1 ,"PERDECDEB" ) )
 
 
 /*------------------------------------------------------------------*/
-/* La date de d$$HEX1$$e900$$ENDHEX$$but d'arr$$HEX1$$ea00$$ENDHEX$$t des refus doit $$HEX1$$ea00$$ENDHEX$$tre strictement         */
-/* ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date du jour.												  */
+/* La date de début d'arrêt des refus doit être strictement         */
+/* antérieure à la date du jour.												  */
 /*------------------------------------------------------------------*/
 If dPerDebArret >= Today () Then 
 
@@ -914,7 +914,7 @@ End If
 
 /*-------------------------------------------------------------------*/
 /* On ne controle que si la PerDecDeb ou la PerDebArret ont          */
-/* $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$saisies																		   */
+/* été saisies																		   */
 /*-------------------------------------------------------------------*/
 If  ( Not IsNull ( dPerDecDeb ) or Not IsNull ( dPerDebArret ) ) and bRet Then
 
@@ -922,8 +922,8 @@ If  ( Not IsNull ( dPerDecDeb ) or Not IsNull ( dPerDebArret ) ) and bRet Then
 	If Not IsNull ( dPerDecDeb ) Then
 
 		/*------------------------------------------------------------------*/
-		/* La date de d$$HEX1$$e900$$ENDHEX$$but d'arr$$HEX1$$ea00$$ENDHEX$$t des refus doit $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure         */
-		/* ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la date de d$$HEX1$$e900$$ENDHEX$$but de d$$HEX1$$e900$$ENDHEX$$claration                       */
+		/* La date de début d'arrêt des refus doit être postérieure         */
+		/* ou égale à la date de début de déclaration                       */
 		/*------------------------------------------------------------------*/
 		If dPerDebArret < dPerDecDeb Then
 			bRet = False
@@ -935,8 +935,8 @@ If  ( Not IsNull ( dPerDecDeb ) or Not IsNull ( dPerDebArret ) ) and bRet Then
 	If Not IsNull ( dPerFinArret ) and bRet Then
 
 		/*------------------------------------------------------------------*/
-		/* La date de $$HEX1$$e900$$ENDHEX$$but d'arr$$HEX1$$ea00$$ENDHEX$$t des refus doit strictement ant$$HEX1$$e900$$ENDHEX$$rieure    */
-		/* $$HEX2$$e0002000$$ENDHEX$$la date de fin d'arr$$HEX1$$ea00$$ENDHEX$$t des refus.										  */
+		/* La date de ébut d'arrêt des refus doit strictement antérieure    */
+		/* à la date de fin d'arrêt des refus.										  */
 		/*------------------------------------------------------------------*/
 		If dPerDebArret >= dPerFinArret Then
 			bRet = False
@@ -957,7 +957,7 @@ private function boolean uf_zn_perfinarret ();//*-------------------------------
 //* Fonction		: uf_Zn_PerFinArret (Private)
 //* Auteur			: Fabry JF
 //* Date				: 10/05/1999 16:33:28
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone PerFinArret (Fin de la Periode d'arret des refus)
+//* Libellé			: Contrôle de la zone PerFinArret (Fin de la Periode d'arret des refus)
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun
@@ -981,8 +981,8 @@ dPerDecFin 	= Date ( iDwSaisie.GetItemString ( 1 ,"PERDECFIN" ) )
 
 
 /*------------------------------------------------------------------*/
-/* La date de fin d'arr$$HEX1$$ea00$$ENDHEX$$t des refus doit $$HEX1$$ea00$$ENDHEX$$tre strictement           */
-/* ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date du jour.												  */
+/* La date de fin d'arrêt des refus doit être strictement           */
+/* antérieure à la date du jour.												  */
 /*------------------------------------------------------------------*/
 If dPerFinArret >= Today () Then 
 
@@ -993,7 +993,7 @@ End If
 
 /*-------------------------------------------------------------------*/
 /* On ne controle que si la PerDecDeb ou la PerDecFin ou la          */
-/* PerFinArret ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$saisie														*/
+/* PerFinArret ont été saisie														*/
 /*-------------------------------------------------------------------*/
 If  ( Not IsNull ( dPerDecDeb ) or Not IsNull ( dPerDecFin ) or Not IsNull ( dPerDebArret ) ) and bRet Then
 
@@ -1001,8 +1001,8 @@ If  ( Not IsNull ( dPerDecDeb ) or Not IsNull ( dPerDecFin ) or Not IsNull ( dPe
 	If Not IsNull ( dPerDecDeb ) Then
 
 		/*------------------------------------------------------------------*/
-		/* La date de fin d'arr$$HEX1$$ea00$$ENDHEX$$t des refus doit $$HEX1$$ea00$$ENDHEX$$tre Strictement           */
-		/* post$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date de d$$HEX1$$e900$$ENDHEX$$but de d$$HEX1$$e900$$ENDHEX$$claration                    */
+		/* La date de fin d'arrêt des refus doit être Strictement           */
+		/* postérieure à la date de début de déclaration                    */
 		/*------------------------------------------------------------------*/
 		If dPerFinArret <= dPerDecDeb Then
 			bRet = False
@@ -1014,8 +1014,8 @@ If  ( Not IsNull ( dPerDecDeb ) or Not IsNull ( dPerDecFin ) or Not IsNull ( dPe
 	If Not IsNull ( dPerDebArret ) and bRet Then
 
 		/*------------------------------------------------------------------*/
-		/* La date de fin d'arr$$HEX1$$ea00$$ENDHEX$$t des refus doit strictement post$$HEX1$$e900$$ENDHEX$$rieure    */
-		/* $$HEX2$$e0002000$$ENDHEX$$la date de d$$HEX1$$e900$$ENDHEX$$but d'arr$$HEX1$$ea00$$ENDHEX$$t des refus.									  */
+		/* La date de fin d'arrêt des refus doit strictement postérieure    */
+		/* à la date de début d'arrêt des refus.									  */
 		/*------------------------------------------------------------------*/
 		If dPerFinArret <= dPerDebArret Then
 			bRet = False
@@ -1027,8 +1027,8 @@ If  ( Not IsNull ( dPerDecDeb ) or Not IsNull ( dPerDecFin ) or Not IsNull ( dPe
 	If Not IsNull ( dPerDecFin ) and bRet Then
 
 		/*------------------------------------------------------------------*/
-		/* La date de fin d'arr$$HEX1$$ea00$$ENDHEX$$t des refus doit post$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale       */
-		/* $$HEX2$$e0002000$$ENDHEX$$la date de fin de d$$HEX1$$e900$$ENDHEX$$claration.										     */
+		/* La date de fin d'arrêt des refus doit postérieure ou égale       */
+		/* à la date de fin de déclaration.										     */
 		/*------------------------------------------------------------------*/
 		If dPerFinArret < dPerDecFin Then
 			bRet = False

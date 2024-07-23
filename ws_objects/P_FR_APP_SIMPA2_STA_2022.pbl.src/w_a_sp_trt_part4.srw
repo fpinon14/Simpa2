@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_a_sp_trt_part4.srw
-$PBExportComments$--- } Fen$$HEX1$$ea00$$ENDHEX$$tre de traitement particuliers 1 : Stat des nbre de motif de refus.
+﻿$PBExportHeader$w_a_sp_trt_part4.srw
+$PBExportComments$--- } Fenêtre de traitement particuliers 1 : Stat des nbre de motif de refus.
 forward
 global type w_a_sp_trt_part4 from w_8_accueil
 end type
@@ -50,12 +50,13 @@ public function integer wf_lancer ();//*----------------------------------------
 //* Fonction      : w_a_sp_trt_part4::wf_Lancer
 //* Auteur        : JCA
 //* Date          : 15/11/2007
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Lancement de l'extraction
+//* Libellé       : Lancement de l'extraction
 //*
 //* Retourne      : integer
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
+//			FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 String	sDataObj, sNomFic
@@ -83,17 +84,17 @@ st_1.Text = "En cours de traitement..."
 lTotRow = dw_1.Retrieve (dtDeb, dtFin, lProd ) 
 
 If lTotRow = 0 Then
-	st_1.Text = "Aucune donn$$HEX1$$e900$$ENDHEX$$e"
+	st_1.Text = "Aucune donnée"
 ElseIf lTotRow < 0 Then
 	st_1.Text = "ERREUR !! (" + String ( lTotRow ) + ")"
 Else
 	sNomFic = stGlb.sRepTempo + Upper ( sDataObj ) + '_' + string(lProd) + K_FICSTAT 
 
-	If Dw_1.SaveAs ( sNomFic , Excel!, True ) > 0 Then
+	If Dw_1.SaveAs ( sNomFic , Excel8!, True ) > 0 Then // [MIG_PB2022]
 		st_1.Text  = sNomFic 
 		RUN ( isRepExcel + " " + sNomFic  )
 	Else
-		stText.Text  = "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier"
+		stText.Text  = "Impossible d'écrire le fichier"
 	End If	
 
 End If
@@ -106,7 +107,7 @@ public function boolean wf_controlerdate ();//*---------------------------------
 //* Fonction      : wf_ControlerDate::wf_ControlerDate
 //* Auteur        : Fabry JF
 //* Date          : 21/10/2002 17:10:07
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le des dates
+//* Libellé       : Contrôle des dates
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -130,7 +131,7 @@ For lCpt = 1 To 2
 	Choose Case lCpt
 		Case 1 
 			sVal = uo_Dte_Deb.sle_Affichage.Text
-			sMes = " de d$$HEX1$$e900$$ENDHEX$$but"
+			sMes = " de début"
 		Case 2
 			sVal = uo_Dte_Fin.sle_Affichage.Text				
 			sMes = " de fin"
@@ -194,7 +195,7 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Fonction      : w_a_sp_trt_part4::ue_initialiser
 //* Auteur        : JCA
 //* Date          : 15/11/2007
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
@@ -210,6 +211,8 @@ type cb_debug from w_8_accueil`cb_debug within w_a_sp_trt_part4
 end type
 
 type pb_retour from w_8_accueil`pb_retour within w_a_sp_trt_part4
+integer width = 242
+integer height = 144
 end type
 
 type pb_interro from w_8_accueil`pb_interro within w_a_sp_trt_part4
@@ -222,6 +225,8 @@ end type
 type pb_creer from w_8_accueil`pb_creer within w_a_sp_trt_part4
 integer x = 1733
 integer y = 420
+integer width = 242
+integer height = 144
 string text = "&Lancer"
 end type
 
@@ -230,7 +235,7 @@ event pb_creer::clicked;call super::clicked;//*---------------------------------
 //* Fonction      : w_a_sp_trt_part4::pb_creer::clicked
 //* Auteur        : JCA
 //* Date          : 15/11/2007
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Lancement de l'extraction
+//* Libellé       : Lancement de l'extraction
 //*
 //* Retourne      : integer
 //*
@@ -354,7 +359,7 @@ fontfamily fontfamily = swiss!
 string facename = "Arial"
 long textcolor = 33554432
 long backcolor = 67108864
-string text = "R$$HEX1$$e900$$ENDHEX$$glements adress$$HEX1$$e900$$ENDHEX$$s aux boutiques Mondov$$HEX1$$e900$$ENDHEX$$lo par sinistre"
+string text = "Réglements adressés aux boutiques Mondovélo par sinistre"
 alignment alignment = center!
 boolean focusrectangle = false
 end type

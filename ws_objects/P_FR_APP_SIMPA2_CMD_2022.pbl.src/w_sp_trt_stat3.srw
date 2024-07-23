@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_sp_trt_stat3.srw
-$PBExportComments$Extraction pour le contr$$HEX1$$f400$$ENDHEX$$le des Devis DCMP020281
+﻿$PBExportHeader$w_sp_trt_stat3.srw
+$PBExportComments$Extraction pour le contrôle des Devis DCMP020281
 forward
 global type w_sp_trt_stat3 from w_8_accueil
 end type
@@ -70,8 +70,8 @@ private function boolean wf_chargerdonnees ();//*-------------------------------
 //* Fonction      : w_sp_trt_stat3::wf_ChargerDonnees (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 20/09/2002 17:01:27
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Chargement des donn$$HEX1$$e900$$ENDHEX$$es
-//* Commentaires  : Chargement des r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rences commandes SPB se trouvant
+//* Libellé       : Chargement des données
+//* Commentaires  : Chargement des références commandes SPB se trouvant
 //*					  sur C:\WINNT\TEMP\DEVIS.TXT
 //*
 //* Arguments     : 
@@ -131,7 +131,7 @@ If bOk then
 End If
 
 /*------------------------------------------------------------------*/
-/* Chargement des donn$$HEX1$$e900$$ENDHEX$$es.                                          */
+/* Chargement des données.                                          */
 /*------------------------------------------------------------------*/
 If bOk Then
 	//#1 [DCMP-060643]-19/09/2006-PHG Gestion repertoire temporaire
@@ -149,7 +149,7 @@ End If
 /* MAJ du static text                                               */
 /*------------------------------------------------------------------*/
 If bOk Then
-	st_Charger.Text = String ( lTotRow ) + " r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rences commandes charg$$HEX1$$e900$$ENDHEX$$es"
+	st_Charger.Text = String ( lTotRow ) + " références commandes chargées"
 End If
 
 
@@ -165,7 +165,7 @@ private function boolean wf_controler ();//*------------------------------------
 //* Fonction      : w_sp_trt_stat3::wf_Controler (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 23/09/2002 17:01:27
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le des donn$$HEX1$$e900$$ENDHEX$$es
+//* Libellé       : Contrôle des données
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -178,11 +178,11 @@ private function boolean wf_controler ();//*------------------------------------
 //*
 //* #1	 CAG	 04/11/02 	  Modification SFR # Ajout du ctrl facturation CEGETEL
 //* #2	 CAG	 04/11/02 	  Modification SFR # La zone ID_CMDE de dw_Charger
-//*															est maintenant de 20 car. d'o$$HEX1$$f900$$ENDHEX$$
-//*															ctrl suppl$$HEX1$$e900$$ENDHEX$$mentaire de la longueur
+//*															est maintenant de 20 car. d'où
+//*															ctrl supplémentaire de la longueur
 //*															pour CETELEC
-//* #3	 CAG	 18/08/03	  Modification n$$HEX2$$b0002000$$ENDHEX$$de commandes CEGETEL : pour Must les n$$HEX1$$b000$$ENDHEX$$
-//*										de commandes peuvent maintenant $$HEX1$$ea00$$ENDHEX$$tre au format Mobile Protect
+//* #3	 CAG	 18/08/03	  Modification n° de commandes CEGETEL : pour Must les n°
+//*										de commandes peuvent maintenant être au format Mobile Protect
 //*-----------------------------------------------------------------
 
 Long		lTotRow, lCpt, lPos
@@ -206,12 +206,12 @@ Choose Case sIdFourn
 
 			If IsNull ( sIdCmde ) Then Continue
 
-			// si le n$$HEX2$$b0002000$$ENDHEX$$de commande ne commence pas par 920, il doit commencer par 2 chiffres
+			// si le n° de commande ne commence pas par 920, il doit commencer par 2 chiffres
 			If Left ( sIdCmde, 3 ) <> "920" Then
-				// s'il commence par 2 chiffres, on doit avoir une s$$HEX1$$e900$$ENDHEX$$quence alphanum de 6
+				// s'il commence par 2 chiffres, on doit avoir une séquence alphanum de 6
 				If Not Match ( Mid ( sIdCmde, 1, 8 ), "^[0-9a-zA-Z]+$" ) Then
 					bOk = False
-					st_Extraire.Text  = "R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sIdCmde + " : '" + Mid ( sIdCmde, 1, 8 ) + "' n'est pas un alphanum$$HEX1$$e900$$ENDHEX$$rique de 8 caract$$HEX1$$e800$$ENDHEX$$res"
+					st_Extraire.Text  = "Référence " + sIdCmde + " : '" + Mid ( sIdCmde, 1, 8 ) + "' n'est pas un alphanumérique de 8 caractères"
 				End If
 				If bOk Then
 					/*------------------------------------------------------------------*/
@@ -219,21 +219,21 @@ Choose Case sIdFourn
 					/*------------------------------------------------------------------*/
 					If Mid ( sIdCmde, 9, 5 ) <> "PR00/" And Mid ( sIdCmde, 9, 5 ) <> "FR00/" Then
 						bOk = False
-						st_Extraire.Text  = "R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sIdCmde + " : '" + Mid ( sIdCmde, 9, 5 ) + "' doit $$HEX1$$ea00$$ENDHEX$$tre PR00/ ou FR00/"
+						st_Extraire.Text  = "Référence " + sIdCmde + " : '" + Mid ( sIdCmde, 9, 5 ) + "' doit être PR00/ ou FR00/"
 					End If
 				End If
 				If bOk Then
 					If Not IsNumber ( Right ( sIdCmde, Len ( sIdCmde ) - 13 ) ) Or Len ( sIdCmde ) <> 20 Then
 						bOk = False
-						st_Extraire.Text  = "R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sIdCmde + " : '" + Right ( sIdCmde, Len ( sIdCmde ) - 13 ) + "' n'est pas un num$$HEX1$$e900$$ENDHEX$$rique de 7 chiffres"
+						st_Extraire.Text  = "Référence " + sIdCmde + " : '" + Right ( sIdCmde, Len ( sIdCmde ) - 13 ) + "' n'est pas un numérique de 7 chiffres"
 					End If
 				End If
 			Else
-				// le n$$HEX2$$b0002000$$ENDHEX$$de commande commence par 920
+				// le n° de commande commence par 920
 				If bOk Then
 					If Not IsNumber ( Right ( sIdCmde, Len ( sIdCmde ) - 3 ) ) Or Len ( sIdCmde ) <> 10 Then
 						bOk = False
-						st_Extraire.Text  = "R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sIdCmde + " : '" + Right ( sIdCmde, Len ( sIdCmde ) - 3 ) + "' n'est pas un num$$HEX1$$e900$$ENDHEX$$rique de 7 chiffres"
+						st_Extraire.Text  = "Référence " + sIdCmde + " : '" + Right ( sIdCmde, Len ( sIdCmde ) - 3 ) + "' n'est pas un numérique de 7 chiffres"
 					End If
 				End If
 			End If
@@ -248,7 +248,7 @@ Choose Case sIdFourn
 End Choose
 
 If bOk Then
-	st_Extraire.Text  = "Contr$$HEX1$$f400$$ENDHEX$$le Ok !"
+	st_Extraire.Text  = "Contrôle Ok !"
 End If
 
 Return bOk
@@ -259,7 +259,7 @@ private function boolean wf_lancer ();//*---------------------------------------
 //* Fonction      : w_sp_trt_stat3::wf_Lancer (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 23/09/2002 17:01:27
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Lancement du traitement.
+//* Libellé       : Lancement du traitement.
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -270,9 +270,10 @@ private function boolean wf_lancer ();//*---------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....
 //*
-//* #1	 CAG	 05/11/2002	  Modification SFR # : Ajout d'un param$$HEX1$$e800$$ENDHEX$$tre
-//*								  pour le retrieve + id_sin et id_seq $$HEX2$$e0002000$$ENDHEX$$0 
+//* #1	 CAG	 05/11/2002	  Modification SFR # : Ajout d'un paramètre
+//*								  pour le retrieve + id_sin et id_seq à 0 
 //*								  pour CEGETEL
+//*  #2		FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 Boolean	bOk
@@ -300,8 +301,8 @@ For lCpt = 1 To lTotRow
 		Case "CEG"
 			If IsNull ( sIdCmde ) Then
 				lRow = Dw_Stocker.InsertRow (0)
-				Dw_Stocker.SetItem ( lRow, "NUM_COMMANDE_SPB", "Aucune r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence charg$$HEX1$$e900$$ENDHEX$$e !" )
-				// CAG 17/03/03 : si la derni$$HEX1$$e800$$ENDHEX$$re r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence n'est pas trouv$$HEX1$$e900$$ENDHEX$$e, la jauge ne va pas $$HEX2$$e0002000$$ENDHEX$$100%
+				Dw_Stocker.SetItem ( lRow, "NUM_COMMANDE_SPB", "Aucune référence chargée !" )
+				// CAG 17/03/03 : si la dernière référence n'est pas trouvée, la jauge ne va pas à 100%
 				uo_Defil.uf_Progression ( lCpt )
 				Continue
 			End If
@@ -313,8 +314,8 @@ For lCpt = 1 To lTotRow
 
 	If IsNull ( sIdCmde ) Then
 		lRow = Dw_Stocker.InsertRow (0)
-		Dw_Stocker.SetItem ( lRow, "NUM_COMMANDE_SPB", "Aucune r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence charg$$HEX1$$e900$$ENDHEX$$e !" )
-		// CAG 17/03/03 : si la derni$$HEX1$$e800$$ENDHEX$$re r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence n'est pas trouv$$HEX1$$e900$$ENDHEX$$e, la jauge ne va pas $$HEX2$$e0002000$$ENDHEX$$100%
+		Dw_Stocker.SetItem ( lRow, "NUM_COMMANDE_SPB", "Aucune référence chargée !" )
+		// CAG 17/03/03 : si la dernière référence n'est pas trouvée, la jauge ne va pas à 100%
 		uo_Defil.uf_Progression ( lCpt )
 		Continue
 	End If
@@ -322,7 +323,7 @@ For lCpt = 1 To lTotRow
 	Dw_Extraire.Retrieve ( lIdSin, lIdSeq, sIdCmdFrn )
 	If Dw_Extraire.RowCount () <= 0 Then
 		lRow = Dw_Stocker.InsertRow (0)
-		Dw_Stocker.SetItem ( lRow, "NUM_COMMANDE_SPB", sIdCmde + " : R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence non trouv$$HEX1$$e900$$ENDHEX$$e !" )
+		Dw_Stocker.SetItem ( lRow, "NUM_COMMANDE_SPB", sIdCmde + " : Référence non trouvée !" )
 	Else
 		Dw_Extraire.RowsCopy ( 1, Dw_Extraire.RowCount (), Primary!, Dw_Stocker, Dw_Stocker.RowCount () + 1, Primary! )
 	End If
@@ -333,16 +334,16 @@ For lCpt = 1 To lTotRow
 Next
 //#1 [DCMP-060643]-19/09/2006-PHG Gestion repertoire temporaire
 //If Dw_Stocker.SaveAs ( isRepWin + K_TEMP + K_FICSTAT, Excel!, True ) > 0 Then
-//	st_Extraire.Text  = "Extraction sauvegard$$HEX1$$e900$$ENDHEX$$e sur " + isRepWin + K_TEMP + K_FICSTAT
+//	st_Extraire.Text  = "Extraction sauvegardée sur " + isRepWin + K_TEMP + K_FICSTAT
 //	RUN ( isRepExcel + " " + isRepWin + K_TEMP + K_FICSTAT )
 //Else
-//	st_Extraire.Text  = "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier" + isRepWin + K_TEMP + K_FICSTAT
+//	st_Extraire.Text  = "Impossible d'écrire le fichier" + isRepWin + K_TEMP + K_FICSTAT
 //End If
-If Dw_Stocker.SaveAs ( stGlb.sRepTempo + K_FICSTAT, Excel!, True ) > 0 Then
-	st_Extraire.Text  = "Extraction sauvegard$$HEX1$$e900$$ENDHEX$$e sur " + stGlb.sRepTempo + K_FICSTAT
+If Dw_Stocker.SaveAs ( stGlb.sRepTempo + K_FICSTAT, Excel8!, True ) > 0 Then // [MIG_PB2022]
+	st_Extraire.Text  = "Extraction sauvegardée sur " + stGlb.sRepTempo + K_FICSTAT
 	RUN ( isRepExcel + " " + stGlb.sRepTempo + K_FICSTAT )
 Else
-	st_Extraire.Text  = "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier" + stGlb.sRepTempo + K_FICSTAT
+	st_Extraire.Text  = "Impossible d'écrire le fichier" + stGlb.sRepTempo + K_FICSTAT
 End If
 
 Return bOk
@@ -354,7 +355,7 @@ public subroutine wf_choixfourn (string asidfourn);//*--------------------------
 //* Fonction      : W_Sp_Trt_Stat3::wf_ChoixFourn
 //* Auteur        : Catherine ABDMEZIEM
 //* Date          : 04/11/2002 14:07:59
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Modification SFR #
+//* Libellé       : Modification SFR #
 //* Commentaires  : Modification de l'affichage sur choix du fournisseur
 //*
 //* Arguments     : 
@@ -373,7 +374,7 @@ Choose Case asIdFourn
 	/* Fournisseur : CEGETEL                                            */
 	/*------------------------------------------------------------------*/
 	Case "CEG"
-		cb_Charger.Text = "Charger les r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rences des commandes SFR"
+		cb_Charger.Text = "Charger les références des commandes SFR"
 End Choose
 
 cb_Charger.Enabled = True
@@ -384,7 +385,7 @@ private function boolean wf_maj ();//*------------------------------------------
 //* Fonction      : w_sp_trt_stat3::wf_Maj (PRIVATE)
 //* Auteur        : Catherine Abdmeziem
 //* Date          : 30/01/2003
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Maj du code $$HEX1$$e900$$ENDHEX$$tat des commandes $$HEX2$$e0002000$$ENDHEX$$RPC
+//* Libellé       : Maj du code état des commandes à RPC
 //* Commentaires  : Annexe 22
 //*					  
 //*
@@ -466,7 +467,7 @@ If F_Message ( stMessage ) = 1 Then
 		F_Commit ( SQLCA, True )
 	End If
 
-	stMessage.sTitre		= "Mise $$HEX2$$e0002000$$ENDHEX$$jour du code $$HEX1$$e900$$ENDHEX$$tat en RPC"
+	stMessage.sTitre		= "Mise à jour du code état en RPC"
 	stMessage.bErreurG	= FALSE
 	stMessage.Bouton		= Ok!
 
@@ -483,7 +484,7 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		: Ue_Initialiser
 //* Auteur			: Fabry JF
 //* Date				: 03/09/2002 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -495,7 +496,7 @@ DataWindowChild dwChild
 Long lRow
 //u_DeclarationFuncky uoDeclarationFuncky //[I037] Migration FUNCKy
 
-This.Title = "Extraction pour le contr$$HEX1$$f400$$ENDHEX$$le des devis ou factures de t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phonie"
+This.Title = "Extraction pour le contrôle des devis ou factures de téléphonie"
 
 //wf_PositionnerObjets ()
 
@@ -527,14 +528,14 @@ dwChild.Retrieve ( "-FR" )
 
 end event
 
-on show;call w_8_accueil::show;//*-----------------------------------------------------------------
+event show;call super::show;//*-----------------------------------------------------------------
 //*
 //* Objet         : w_sp_trt_stat3
 //* Evenement     : Show
 //* Auteur        : Fabry JF
 //* Date          : 20/09/2002 17:10:48
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Chargement des donn$$HEX1$$e900$$ENDHEX$$es
-//* Commentaires  : Chargement des r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rences commandes SPB se trouvant
+//* Libellé       : Chargement des données
+//* Commentaires  : Chargement des références commandes SPB se trouvant
 //*					  sur C:\WINNT\TEMP\DEVIS.TXT
 //*
 //* Arguments     : Aucun
@@ -579,7 +580,7 @@ Dw_Charger.Reset ()
 Dw_Extraire.Reset ()
 Dw_Stocker.Reset ()
 
-end on
+end event
 
 on w_sp_trt_stat3.create
 int iCurrent
@@ -692,7 +693,7 @@ integer weight = 400
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
-string text = "Charger les r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rences"
+string text = "Charger les références"
 end type
 
 on clicked;//*-----------------------------------------------------------------
@@ -701,8 +702,8 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 20/09/2002 17:10:48
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Chargement des donn$$HEX1$$e900$$ENDHEX$$es
-//* Commentaires  : Chargement des r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rences commandes SPB se trouvant
+//* Libellé       : Chargement des données
+//* Commentaires  : Chargement des références commandes SPB se trouvant
 //*					  sur C:\WINNT\TEMP\DEVIS.TXT
 //*
 //* Arguments     : 
@@ -764,7 +765,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : cb_Annuler
 //* Auteur        : Fabry JF
 //* Date          : 03/09/2002 16:05:18
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -793,16 +794,16 @@ integer weight = 400
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
-string text = "Extraire sous Excel les donn$$HEX1$$e900$$ENDHEX$$es li$$HEX1$$e900$$ENDHEX$$es aux commandes"
+string text = "Extraire sous Excel les données liées aux commandes"
 end type
 
-on clicked;//*-----------------------------------------------------------------
+event clicked;//*-----------------------------------------------------------------
 //*
 //* Objet         : w_sp_trt_stat3::cb_Lancer
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 23/09/2002 17:10:48
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Lancement du traitement
+//* Libellé       : Lancement du traitement
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -823,7 +824,7 @@ If Parent.wf_Lancer () Then
 
 End If
 
-end on
+end event
 
 type st_charger from statictext within w_sp_trt_stat3
 integer x = 521
@@ -877,7 +878,7 @@ integer weight = 400
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
-string text = "Contr$$HEX1$$f400$$ENDHEX$$ler les donn$$HEX1$$e900$$ENDHEX$$es charg$$HEX1$$e900$$ENDHEX$$es"
+string text = "Contrôler les données chargées"
 end type
 
 on clicked;//*-----------------------------------------------------------------
@@ -886,7 +887,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 20/09/2002 17:10:48
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Controle des donn$$HEX1$$e900$$ENDHEX$$es
+//* Libellé       : Controle des données
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -968,7 +969,7 @@ on itemchanged;//*--------------------------------------------------------------
 //* Evenement     : ItemChanged
 //* Auteur        : Abdmeziem Catherine
 //* Date          : 04/11/2002
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Choix du fournisseur
+//* Libellé       : Choix du fournisseur
 //* Commentaires  : 
 //*
 //* Arguments     : Aucun
@@ -999,7 +1000,7 @@ integer weight = 400
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
-string text = "Mise $$HEX2$$e0002000$$ENDHEX$$jour du code $$HEX1$$e900$$ENDHEX$$tat en ~"RECU PAR CLIENT~""
+string text = "Mise à jour du code état en ~"RECU PAR CLIENT~""
 end type
 
 on clicked;//*-----------------------------------------------------------------
@@ -1008,8 +1009,8 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Catherine Abdmeziem
 //* Date          : 30/01/2003
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Lancement de la mise $$HEX2$$e0002000$$ENDHEX$$jour du code $$HEX1$$e900$$ENDHEX$$tat des cmdes
-//* Commentaires  : $$HEX2$$e0002000$$ENDHEX$$RPC
+//* Libellé       : Lancement de la mise à jour du code état des cmdes
+//* Commentaires  : à RPC
 //*
 //* Arguments     : 
 //*

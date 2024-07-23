@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_a_sp_trt_consult_w_queue.srw
+﻿$PBExportHeader$w_a_sp_trt_consult_w_queue.srw
 $PBExportComments$--- }Consultation en ligne de w_queue
 forward
 global type w_a_sp_trt_consult_w_queue from w_8_accueil
@@ -36,7 +36,7 @@ private function boolean wf_controlersaisie ();//*------------------------------
 //* Fonction		: wf_ControlerSaisie (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 06/10/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Controle de saisie
 //*
 //* Arguments		: 
@@ -122,7 +122,7 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		: Ue_Initialiser
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -172,6 +172,8 @@ type cb_debug from w_8_accueil`cb_debug within w_a_sp_trt_consult_w_queue
 end type
 
 type pb_retour from w_8_accueil`pb_retour within w_a_sp_trt_consult_w_queue
+integer width = 242
+integer height = 144
 integer taborder = 50
 end type
 
@@ -225,13 +227,14 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: Click
 //* Auteur			: Fabry JF
 //* Date				: 20/09/2002 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*				  
 //  #1 [DCMP-060643]-19/09/2006-PHG Gestion repertoire temporaire
+//	#2		FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 
@@ -248,7 +251,7 @@ If wf_ControlerSaisie () Then
 		//#1 [DCMP-060643]-19/09/2006-PHG Gestion repertoire temporaire
 		//dw_Stat.SaveAs ( isRepWin + K_TEMP + K_FICSTAT,Excel!, TRUE )
 		//RUN ( isRepExcel + " " + isRepWin + K_TEMP + K_FICSTAT )
-		dw_Stat.SaveAs ( stGlb.sRepTempo + K_FICSTAT,Excel!, TRUE )
+		dw_Stat.SaveAs ( stGlb.sRepTempo + K_FICSTAT,Excel8!, TRUE ) //[MIG_PB2022]
 		RUN ( isRepExcel + " " + stGlb.sRepTempo + K_FICSTAT )
 	Else
 		stMessage.sTitre  	= "Extraction"

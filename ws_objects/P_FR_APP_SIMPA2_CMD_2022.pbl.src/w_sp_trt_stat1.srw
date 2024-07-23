@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_sp_trt_stat1.srw
+﻿$PBExportHeader$w_sp_trt_stat1.srw
 $PBExportComments$Statistique sur les commandes.
 forward
 global type w_sp_trt_stat1 from w_8_accueil
@@ -40,7 +40,7 @@ public function boolean wf_controlersaisie ();//*-------------------------------
 //* Fonction		: wf_ControlerSaisie (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 06/10/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Controle de saisie
 //*
 //* Arguments		: 
@@ -104,7 +104,7 @@ For lCpt = 1 To lNbrCol
 Next
 
 /*------------------------------------------------------------------*/
-/* Coh$$HEX1$$e900$$ENDHEX$$rence des deux dates.                                        */
+/* Cohérence des deux dates.                                        */
 /*------------------------------------------------------------------*/
 If bOk And dw_1.GetItemDate ( 1, sCol [ 4 ] ) > dw_1.GetItemDate ( 1, sCol [ 5 ] ) Then
 	bOk = False
@@ -169,12 +169,12 @@ public subroutine wf_positionnerobjets ();//*-----------------------------------
 //* Evenement 		: wf_PositionnerObjets
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
-//* #1	FPI	27/01/2009 [DCMP080728] Agrandissement du libell$$HEX2$$e9002000$$ENDHEX$$long de produit
+//* #1	FPI	27/01/2009 [DCMP080728] Agrandissement du libellé long de produit
 //*-----------------------------------------------------------------
 
 dw_1.x	= 472			// #1 - 709
@@ -197,7 +197,7 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		: Ue_Initialiser
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -225,7 +225,7 @@ dwChild.SetTransObject ( SQLCA )
 dwChild.Retrieve ( "-EC" )
 lRow = dwChild.InsertRow ( 1 )
 dwchild.SetItem ( lRow , "ID_CODE", "*" )
-dwchild.SetItem ( lRow , "LIB_CODE", "Tous les $$HEX1$$e900$$ENDHEX$$tats" )
+dwchild.SetItem ( lRow , "LIB_CODE", "Tous les états" )
 
 dw_1.GetChild ( "ID_PROD", dwChild )
 dwChild.SetTransObject ( SQLCA )
@@ -264,7 +264,7 @@ on show;call w_8_accueil::show;//*----------------------------------------------
 //* Evenement 		: Show
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -301,6 +301,8 @@ type cb_debug from w_8_accueil`cb_debug within w_sp_trt_stat1
 end type
 
 type pb_retour from w_8_accueil`pb_retour within w_sp_trt_stat1
+integer width = 242
+integer height = 144
 integer taborder = 50
 end type
 
@@ -339,7 +341,7 @@ event dw_1::itemerror;call super::itemerror;//*---------------------------------
 //* Evenement 		: itemerror
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -359,7 +361,7 @@ on dw_1::itemchanged;call w_8_accueil`dw_1::itemchanged;//*---------------------
 //* Evenement 		: itemChanged
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -395,7 +397,7 @@ integer weight = 400
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
-string text = "Extraire les donn$$HEX1$$e900$$ENDHEX$$es"
+string text = "Extraire les données"
 end type
 
 event clicked;//*-----------------------------------------------------------------
@@ -404,13 +406,14 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: cb_Lancer
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*				  
 //  #1 [DCMP-060643]-19/09/2006-PHG Gestion repertoire temporaire
+//	#2		FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 DateTime dtMin, dtMax
@@ -433,7 +436,7 @@ If wf_ControlerSaisie () Then
 
 	If lTotRow > 0 Then
 		//#1 [DCMP-060643]-19/09/2006-PHG Gestion repertoire temporaire
-		dw_Stat.SaveAs ( stGlb.sRepTempo + K_FICSTAT,Excel!, TRUE )
+		dw_Stat.SaveAs ( stGlb.sRepTempo + K_FICSTAT,Excel8!, TRUE ) // [MIG_PB2022]
 		RUN ( isRepExcel + " " + stGlb.sRepTempo + K_FICSTAT )
 	Else
 
@@ -469,7 +472,7 @@ integer x = 517
 integer y = 404
 integer width = 1778
 boolean bringtotop = true
-string text = "Les montants du fichier Excel sont exprim$$HEX1$$e900$$ENDHEX$$s en"
+string text = "Les montants du fichier Excel sont exprimés en"
 end type
 
 event constructor;//*-----------------------------------------------------------------
@@ -478,7 +481,7 @@ event constructor;//*-----------------------------------------------------------
 //* Evenement 		: constructor
 //* Auteur			: 
 //* Date				: 03/03/2008 17:08:29
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: (OVERRIDE )
 //*				  
 //* Arguments		: 

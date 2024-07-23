@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_a_sp_c_extraction_excel.srw
-$PBExportComments$--} Fen$$HEX1$$ea00$$ENDHEX$$tre de consultation du param$$HEX1$$e900$$ENDHEX$$trage du produit sous excel
+﻿$PBExportHeader$w_a_sp_c_extraction_excel.srw
+$PBExportComments$--} Fenêtre de consultation du paramétrage du produit sous excel
 forward
 global type w_a_sp_c_extraction_excel from w_8_accueil_consultation
 end type
@@ -24,7 +24,7 @@ end forward
 global type w_a_sp_c_extraction_excel from w_8_accueil_consultation
 integer width = 3808
 integer height = 1996
-string title = "Extraction param$$HEX1$$e800$$ENDHEX$$trage des produits"
+string title = "Extraction paramètrage des produits"
 cb_lancer cb_lancer
 st_1 st_1
 st_2 st_2
@@ -52,7 +52,7 @@ private subroutine wf_lancer ();//*---------------------------------------------
 //* Fonction      : w_a_sp_c_Extraction_Excel::wf_Lancer ()
 //* Auteur        : Fabry JF
 //* Date          : 28/08/2002 15:00:56
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -66,14 +66,15 @@ private subroutine wf_lancer ();//*---------------------------------------------
 //* [EXPPARMBOUT]	PHG	06/09/2006 Ajout de la table boutique dans l'export
 //  #1 [DCMP-060643]-19/09/2006-PHG Gestion repertoire temporaire
 //	 #2 [DCMP-060749]-18/10/2006-PHG EXtraction complete du parametrage
-//		 ATTENTION : Afin d'alleger le code, les codes mort de #1 on $$HEX1$$e900$$ENDHEX$$t$$HEX1$$e900$$ENDHEX$$
-//		 enlev$$HEX1$$e900$$ENDHEX$$.
-//  #3 [DCMP060405] 06/12/2006 Ajout de famill et famille_car $$HEX2$$e0002000$$ENDHEX$$l'extraction
+//		 ATTENTION : Afin d'alleger le code, les codes mort de #1 on été
+//		 enlevé.
+//  #3 [DCMP060405] 06/12/2006 Ajout de famill et famille_car à l'extraction
 //* #4	JCA	21/09/2007		DCMP 70410 - Ajout du code produit pour l'extraction de [cour_prod]
 //* #5	JCA	02/10/2007		DCMP 70705 - Ajout de l'extraction de [cour_prod] pour les courriers par produit
 //* #6   PHG   28/01/2009		A la parlote => Ajout Ref_codic_darty
 //* #7 	FPI	28/01/2010		[20100128.FPI] Correction Extraction Excel de plus de 65000 lignes 
 //			FPI	28/02/2013		[ITSM201601] Ajout de la colonne id_nat_cour dans l'extraction de cour_prod
+//			FPI	23/07/2024		[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 String	sNomDw, sExtFic
@@ -179,7 +180,7 @@ sTabDw [24,1] = "revision"
 sTabDw [24,2] = "revision"
 
 /*------------------------------------------------------------------*/
-/* [EXPPARMBOUT] On ajoute la table boutique dans le param$$HEX1$$e900$$ENDHEX$$trage    */
+/* [EXPPARMBOUT] On ajoute la table boutique dans le paramétrage    */
 /*------------------------------------------------------------------*/
 sTabDw [25,1] = "boutique"
 sTabDw [25,2] = "boutique"
@@ -188,16 +189,16 @@ sTabDw [25,2] = "boutique"
 /* #2 [DCMP-060749]-17/10/2006-PHG Extraction complete du           */
 /* parametrage.                                                     */
 /*------------------------------------------------------------------*/
-/* On a ajout$$HEX2$$e9002000$$ENDHEX$$une colonne au tableau									     */
+/* On a ajouté une colonne au tableau									     */
 /*																						  */
 /* 3 eme colonne contient des parametre d'execution :               */
 /*																						  */
-/* D : k_DataObjDyn : Dataobject dynamique, construit $$HEX2$$e0002000$$ENDHEX$$la vol$$HEX1$$e900$$ENDHEX$$e    */
-/*	d'autre indicateurs pourraient etre ajout$$HEX2$$e9002000$$ENDHEX$$ult$$HEX1$$e900$$ENDHEX$$rieurement		  */
+/* D : k_DataObjDyn : Dataobject dynamique, construit à la volée    */
+/*	d'autre indicateurs pourraient etre ajouté ultérieurement		  */
 /*                                                                  */
 /* 4 eme colonne contient l'ordre SQL a executer si K_DataObjDyn	  */
 /*                                                                  */
-/* Si ces colonnes suppl$$HEX1$$e900$$ENDHEX$$mentaire sont nulle, mode de fonctionnement*/
+/* Si ces colonnes supplémentaire sont nulle, mode de fonctionnement*/
 /* historique ( dataobject statique et 1 seul fichier )             */
 /*																						  */
 /* Dernier point : on est en PB8+WIN32, la limitation aux format de */
@@ -229,7 +230,7 @@ sTabDw [30,2] = "franchise"
 sTabDw [30,3] = K_DataObjDyn
 sTabDw [30,4] = 'execute sysadm.DW_S30_PARAM_FRANCHISE'
 
-// table Condition scind$$HEX1$$e900$$ENDHEX$$e en deux fichiers
+// table Condition scindée en deux fichiers
 sTabDw [31,1] = "condition"
 sTabDw [31,2] = "condition-01"
 sTabDw [31,3] = K_DataObjDyn
@@ -280,7 +281,7 @@ sTabDw [38,4] = 'execute sysadm.DW_S37_COUR_PROD'
 sTabDw [39,1] = "ref_codic_darty"
 sTabDw [39,2] = "ref_codic_darty"
 sTabDw [39,3] = K_DataObjDyn
-// Pas besoin de PS, select brut de fonderie suffit, la table $$HEX1$$e900$$ENDHEX$$tant un r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rentiel
+// Pas besoin de PS, select brut de fonderie suffit, la table étant un référentiel
 sTabDw [39,4] = "select * from sysadm.ref_codic_darty"
 // Fin #6
 
@@ -330,9 +331,9 @@ For lCpt = 1 To lMaxDw
 		dw_Trt.Retrieve ()
 		
 		// #7 - [20100128.FPI] Correction Extraction Excel de plus de 65000 lignes 
-		// On d$$HEX1$$e900$$ENDHEX$$coupe en +ieurs fichiers xxx_1.xls, xxx_2.xls ...
-		// On utilise un datastore "tampon" dans lequel on recopie le r$$HEX1$$e900$$ENDHEX$$sultat par groupe de 65000 lignes
-		// C'est ce datastore qui est enregistr$$HEX2$$e9002000$$ENDHEX$$dans les fichiers xls
+		// On découpe en +ieurs fichiers xxx_1.xls, xxx_2.xls ...
+		// On utilise un datastore "tampon" dans lequel on recopie le résultat par groupe de 65000 lignes
+		// C'est ce datastore qui est enregistré dans les fichiers xls
 		if dw_Trt.RowCount() > lNbMaxLigExcel Then
 			dsData = CREATE datastore
 		
@@ -354,7 +355,7 @@ For lCpt = 1 To lMaxDw
 				
 				sNomFic = Left(sTabDw [lCpt, 2] ,Len(sTabDw [lCpt, 2] ) - 4)
 				sNomFic +="_" + String(lIndexFic) + ".xls"
-				dsData.saveas( Upper ( sNomFic) , Excel!, True )
+				dsData.saveas( Upper ( sNomFic) , Excel8!, True ) // [MIG_PB2022]
 				
 				lIndexFic++ 
 				lRowDeb+=lNbMaxLigExcel
@@ -364,7 +365,7 @@ For lCpt = 1 To lMaxDw
 			
 			Destroy dsData
 		Else
-			dw_Trt.SaveAs ( Upper ( sTabDw [lCpt, 2] ) , Excel!, True ) 
+			dw_Trt.SaveAs ( Upper ( sTabDw [lCpt, 2] ) , Excel8!, True )  // [MIG_PB2022]
 		End if
 		
 		//dw_Trt.SaveAs ( Upper ( sTabDw [lCpt, 2] ) , Excel!, True ) 
@@ -375,7 +376,7 @@ Next
 hpb_extract2excel.position = 100
 
 //#1 [DCMP-060643]-19/09/2006-PHG Gestion repertoire temporaire
-st_2.Text = "Extraction des " + String ( lMaxDw ) + " fichiers termin$$HEX1$$e900$$ENDHEX$$e sur " + Upper ( stGlb.sRepTempo ) + "..."
+st_2.Text = "Extraction des " + String ( lMaxDw ) + " fichiers terminée sur " + Upper ( stGlb.sRepTempo ) + "..."
 hpb_extract2excel.Hide()
 st_2.Show ()
 
@@ -387,7 +388,7 @@ on show;call w_8_accueil_consultation::show;//*---------------------------------
 //* Evenement     : Show
 //* Auteur        : Fabry JF
 //* Date          : 28/08/2002 15:35:28
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -549,7 +550,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 28/08/2002 14:44:57
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -584,7 +585,7 @@ string facename = "Arial"
 long textcolor = 33554432
 long backcolor = 12632256
 boolean enabled = false
-string text = "Extraction du param$$HEX1$$e800$$ENDHEX$$trage de tous les produits SIMPA2 en fichiers excel. Chaque zone poss$$HEX1$$e800$$ENDHEX$$de un alias clair et significatif."
+string text = "Extraction du paramètrage de tous les produits SIMPA2 en fichiers excel. Chaque zone possède un alias clair et significatif."
 boolean focusrectangle = false
 end type
 
@@ -645,7 +646,7 @@ fontfamily fontfamily = swiss!
 string facename = "Arial"
 long textcolor = 33554432
 long backcolor = 12632256
-string text = "Num$$HEX1$$e900$$ENDHEX$$ro de produit pour cour_prod"
+string text = "Numéro de produit pour cour_prod"
 boolean focusrectangle = false
 end type
 
@@ -673,7 +674,7 @@ integer y = 188
 integer width = 2121
 boolean bringtotop = true
 integer weight = 700
-string text = "Les montants dans les fichiers Excel sont exprim$$HEX1$$e900$$ENDHEX$$s en"
+string text = "Les montants dans les fichiers Excel sont exprimés en"
 end type
 
 event constructor;//*-----------------------------------------------------------------
@@ -682,7 +683,7 @@ event constructor;//*-----------------------------------------------------------
 //* Evenement 		: constructor
 //* Auteur			: 
 //* Date				: 27/02/2008 14:43:58
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: (OVERRIDE)
 //*				  
 //* Arguments		: 

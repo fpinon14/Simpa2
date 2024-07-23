@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_trt_sp_saisie_lien_article.srw
+﻿$PBExportHeader$w_trt_sp_saisie_lien_article.srw
 $PBExportComments$[VDoc6993
 forward
 global type w_trt_sp_saisie_lien_article from w_8_accueil
@@ -16,7 +16,7 @@ end forward
 global type w_trt_sp_saisie_lien_article from w_8_accueil
 integer width = 4741
 integer height = 1892
-string title = "Param$$HEX1$$e900$$ENDHEX$$trage des liens automatiques ARTICLE<=>IFR"
+string title = "Paramétrage des liens automatiques ARTICLE<=>IFR"
 event ue_supprimerdetail pbm_custom72
 pb_appliquer pb_appliquer
 st_temoin_sav st_temoin_sav
@@ -36,7 +36,7 @@ event ue_supprimerdetail;//*----------------------------------------------------
 //* Fonction		: w_trt_sp_saisie_lien_article::ue_supprimerdetail
 //* Auteur			: F. Pinon
 //* Date				: 05/03/2012 11:25:19
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: value unsignedlong wparam	 */
@@ -60,7 +60,7 @@ public function integer wf_valider ();//*---------------------------------------
 //* Fonction		: w_trt_sp_saisie_lien_article::wf_valider
 //* Auteur			: F. Pinon
 //* Date				: 05/03/2012 16:22:25
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -99,7 +99,7 @@ public function integer wf_controler ();//*-------------------------------------
 //* Fonction		: w_trt_sp_saisie_lien_article::wf_controler
 //* Auteur			: F. Pinon
 //* Date				: 05/03/2012 16:13:07
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -114,7 +114,7 @@ public function integer wf_controler ();//*-------------------------------------
 
 Long lRow, lCol
 String sCols[]={"ID_FOUR","ID_REF_FOUR","MARQ_IFR","MODL_IFR"}
-String sErrCol[]={"- le code fournisseur","- la r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur","- la marque IFR","- le mod$$HEX1$$e800$$ENDHEX$$le IFR"}
+String sErrCol[]={"- le code fournisseur","- la référence fournisseur","- la marque IFR","- le modèle IFR"}
 String sVal, sMsg
 
 If dw_1.accepttext( ) <=0 Then return -1
@@ -132,7 +132,7 @@ For lRow =1 to dw_1.RowCount()
 	Next
 	
 	if sMsg <> "" Then
-		stMessage.sTitre		= "Param$$HEX1$$e900$$ENDHEX$$trage des liens automatiques - SIMPA2"
+		stMessage.sTitre		= "Paramétrage des liens automatiques - SIMPA2"
 		stMessage.Icon			= Information!
 		stMessage.sVar[1] = sMsg
 		stMessage.sCode	= "GENE001"
@@ -156,7 +156,7 @@ public subroutine wf_set_maj_par ();//*-----------------------------------------
 //* Fonction		: w_trt_sp_saisie_lien_article::wf_set_maj_par
 //* Auteur			: F. Pinon
 //* Date				: 05/03/2012 16:33:02
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -210,7 +210,7 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		: ue_initialiser
 //* Auteur			: F. Pinon
 //* Date				: 05/03/2012 10:36:19
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -258,7 +258,7 @@ event ue_creer;call super::ue_creer;//*-----------------------------------------
 //* Evenement 		: ue_creer
 //* Auteur			: F. Pinon
 //* Date				: 05/03/2012 11:26:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -316,7 +316,7 @@ event pb_creer::clicked;//*-----------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 05/03/2012 16:04:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -350,10 +350,10 @@ end type
 
 event dw_1::clicked;call super::clicked;//*-----------------------------------------------------------------
 //*
-//* Ev$$HEX1$$e800$$ENDHEX$$nement		: w_trt_sp_saisie_lien_article::clicked
+//* Evènement		: w_trt_sp_saisie_lien_article::clicked
 //* Auteur			: F. Pinon
 //* Date				: 05/03/2012 10:52:21
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: value unsignedlong flags	 */
@@ -405,7 +405,7 @@ event dw_1::ue_modifiermenu;call super::ue_modifiermenu;
 //* Evenement 		: ue_modifiermenu
 //* Auteur			: F. Pinon
 //* Date				: 05/03/2012 11:55:03
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -435,7 +435,7 @@ event dw_1::itemchanged;call super::itemchanged;
 //* Evenement 		: itemchanged
 //* Auteur			: F. Pinon
 //* Date				: 05/03/2012 12:00:40
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value long row	 */
@@ -524,7 +524,7 @@ event dw_1::itemerror;call super::itemerror;//*---------------------------------
 //* Evenement 		: itemerror
 //* Auteur			: F. Pinon
 //* Date				: 05/03/2012 14:48:55
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value long row	 */
@@ -543,7 +543,7 @@ Long ll_return
 
 Call super::itemerror
 
-stMessage.sTitre		= "Param$$HEX1$$e900$$ENDHEX$$trage des liens automatiques - SIMPA2"
+stMessage.sTitre		= "Paramétrage des liens automatiques - SIMPA2"
 stMessage.Icon			= Information!
 
 stMessage.bErreurG	= TRUE
@@ -553,10 +553,10 @@ Choose Case isErrCol
 			stMessage.sVar[1] = "code fournisseur"
 			stMessage.sCode	= "GENE003"
 	Case "ID_REF_FOUR"
-			stMessage.sVar[1] = "r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur"
+			stMessage.sVar[1] = "référence fournisseur"
 			stMessage.sCode	= "GENE002"
 	Case "MODL_IFR"
-			stMessage.sVar[1] = "mod$$HEX1$$e800$$ENDHEX$$le IFR"
+			stMessage.sVar[1] = "modèle IFR"
 			stMessage.sCode	= "GENE003"
 	Case "MARQ_IFR"
 			stMessage.sVar[1] = "marque IFR"
@@ -577,7 +577,7 @@ event dw_1::dberror;
 //* Evenement 		: dberror
 //* Auteur			: F. Pinon
 //* Date				: 05/03/2012 16:52:21
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value long sqldbcode	 */
@@ -597,7 +597,7 @@ event dw_1::dberror;
 If sqldbcode =2627 Then // Violation contrainte PK
 	stMessage.berreurg=FALSE
 	stMessage.scode="GENE005"
-	stMessage.sTitre="Param$$HEX1$$e900$$ENDHEX$$trage des liens automatiques - SIMPA2"
+	stMessage.sTitre="Paramétrage des liens automatiques - SIMPA2"
 	stMessage.sVar[1] = "Un des liens articles "
 	f_message(stMessage)
 End if
@@ -655,7 +655,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 05/03/2012 16:05:29
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -714,7 +714,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 09/12/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [VDOC16211]
+//* Libellé			: [VDOC16211]
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -724,12 +724,12 @@ event clicked;//*---------------------------------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* 
+//			FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 Integer iRet
 
-iRet = dw_1.Saveas(stglb.sreptempo + "LIENS_ARTICLE.XLS", Excel!,TRUE)
+iRet = dw_1.Saveas(stglb.sreptempo + "LIENS_ARTICLE.XLS", Excel8!,TRUE) // [MIG_PB2022]
 
 stMessage.sTitre  	= "Extraction des liens automatiques ARTICLE<=>IFR"
 stMessage.Icon			= Information!
@@ -739,7 +739,7 @@ stMessage.sVar[1] = stglb.sreptempo + "LIENS_ARTICLE.XLS"
 If iRet = 1 Then
 	stMessage.bErreurG	= FALSE
 	stMessage.sCode	= "GENE013"
-	stMessage.sVar[1] = "Le fichier " + stMessage.sVar[1] + " a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$."
+	stMessage.sVar[1] = "Le fichier " + stMessage.sVar[1] + " a été généré."
 Else
 	stMessage.bErreurG	= TRUE
 	stMessage.sCode		= "ANCE008"
@@ -765,7 +765,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 05/11/2009 12:03:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 

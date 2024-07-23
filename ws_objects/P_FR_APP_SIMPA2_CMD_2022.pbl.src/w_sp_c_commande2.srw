@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_sp_c_commande2.srw
-$PBExportComments$Fen$$HEX1$$ea00$$ENDHEX$$tre au niveau sinistre affichant le r$$HEX1$$e900$$ENDHEX$$sum$$HEX2$$e9002000$$ENDHEX$$d'une commande.
+﻿$PBExportHeader$w_sp_c_commande2.srw
+$PBExportComments$Fenêtre au niveau sinistre affichant le résumé d'une commande.
 forward
 global type w_sp_c_commande2 from w_8_traitement_master
 end type
@@ -48,7 +48,7 @@ DataWindow		idw_Produit
 /*------------------------------------------------------------------*/
 /* DCMP 030207 : CAG 20/05/03                     */
 /*------------------------------------------------------------------*/
-Integer			iiNbMaxPg = 3	//  nbre de pages max $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$rer
+Integer			iiNbMaxPg = 3	//  nbre de pages max à gérer
 Integer			iiCptPgCte	//  compteur de page courante
 
 U_DataWindow		idwPg[3]		// tableau des dw correspondant aux pages
@@ -72,14 +72,14 @@ event ue_taillefenetre();//*----------------------------------------------------
 //* Evenement 		: Ue_TailleFenetre
 //* Auteur			: Fabry JF
 //* Date				: 16/10/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*-----------------------------------------------------------------
 
-// Je r$$HEX1$$e900$$ENDHEX$$ajuste la hauteur pour W10
+// Je réajuste la hauteur pour W10
 
 This.Height = 1810
 
@@ -90,8 +90,8 @@ public function boolean wf_preparermodifier ();//*------------------------------
 //* Fonction		: W_Td_Sp_W_Contact::Wf_PreparerModifier
 //* Auteur			: Fabry JF
 //* Date				: 25/04/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Op$$HEX1$$e900$$ENDHEX$$ration avant modification
+//* Libellé			: 
+//* Commentaires	: Opération avant modification
 //*
 //* Arguments		: Rien
 //*
@@ -100,8 +100,8 @@ public function boolean wf_preparermodifier ();//*------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    CAG		07/05/03	  DCMP 030207 : Ajout de 6 zones en retour de Cetelec (pour Cegetel Must)
-//*								  => ajout d'une dw suppl$$HEX1$$e900$$ENDHEX$$mentaire => modif gestion des boutons prec et suiv
-//* #2    CAG		03/06/03   Ajout de la zone ID_ANN = cat$$HEX1$$e900$$ENDHEX$$gorie d'annulation
+//*								  => ajout d'une dw supplémentaire => modif gestion des boutons prec et suiv
+//* #2    CAG		03/06/03   Ajout de la zone ID_ANN = catégorie d'annulation
 //* #3	 JFF		05/07/04   DMCP 040206
 //* #4	 PHG		05/12/06	  DCMP xxxxxx Urbanisation : Unification de fonction
 //* #5 	 JFF	   20/10/08	  [FNAC_PROD_ECH_TECH]
@@ -111,7 +111,7 @@ String	sMonnaie, sMod, sIdFour, sIdTypArt
 Long		lCpt, lIdProd 
 n_cst_cmd_commun	lnvCmdCommun
 /*------------------------------------------------------------------*/
-/* On arme le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre avec le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre       */
+/* On arme le titre de la fenêtre avec le titre de la fenêtre       */
 /* Parent.                                                          */
 /*------------------------------------------------------------------*/
 This.Title = istPass.sTab [ 1 ]
@@ -135,21 +135,21 @@ cb_Suiv.Enabled = True
 cb_Prec.Enabled = False
 
 /*------------------------------------------------------------------*/
-/* On arme la valeur de la monnaie avec celle de la fen$$HEX1$$ea00$$ENDHEX$$tre de      */
+/* On arme la valeur de la monnaie avec celle de la fenêtre de      */
 /* SINISTRE. (En consultation uniquement).                          */
 /*------------------------------------------------------------------*/
 sMonnaie = istPass.sTab [ 3 ]
 Uo_Consult_Euro.Uf_Changer_Monnaie ( sMonnaie )
 
 /*------------------------------------------------------------------*/
-/* On recopie la ligne du d$$HEX1$$e900$$ENDHEX$$tail de la fen$$HEX1$$ea00$$ENDHEX$$tre parent dans          */
+/* On recopie la ligne du détail de la fenêtre parent dans          */
 /* dw_wGarSin de GARANTIE.                                          */
 /*------------------------------------------------------------------*/
 dw_1.Uf_CopierLigne ()
 
 /*------------------------------------------------------------------*/
-/* On supprime les espaces des n$$HEX2$$b0002000$$ENDHEX$$de Tel seulement pour les n$$HEX7$$b000200020002000200020002000$$ENDHEX$$*/
-/* Fran$$HEX1$$e700$$ENDHEX$$ais $$HEX2$$e0002000$$ENDHEX$$10 Chiffres.                                          */
+/* On supprime les espaces des n° de Tel seulement pour les n°      */
+/* Français à 10 Chiffres.                                          */
 /*------------------------------------------------------------------*/
 dw_Client.SetItem ( 1, "ADR_TEL1", Wf_Formatage_Tel ( dw_Client.GetItemString ( 1, "ADR_TEL1" ), TRUE ) )
 dw_Client.SetItem ( 1, "ADR_TEL2", Wf_Formatage_Tel ( dw_Client.GetItemString ( 1, "ADR_TEL2" ), TRUE ) )
@@ -169,8 +169,8 @@ End If
 dw_Client.Modify ( sMod )
 
 /*------------------------------------------------------------------*/
-/* #1 : CAG 20/05/2003 : modification des libell$$HEX1$$e900$$ENDHEX$$s de la dw des     */
-/* donn$$HEX1$$e900$$ENDHEX$$es fournisseur									                    */
+/* #1 : CAG 20/05/2003 : modification des libellés de la dw des     */
+/* données fournisseur									                    */
 /*------------------------------------------------------------------*/
 sIdFour = dw_1.GetItemString ( 1, "ID_FOUR" )
 sIdTypArt = dw_1.GetItemString ( 1, "ID_TYP_ART" )
@@ -178,7 +178,7 @@ lIdProd = istPass.dwMaster.GetItemNumber ( 1, "ID_PROD" )
 
 // #4 Unification de Fonction :
 // This.wf_Changer_Lib_Dw ( lIdProd, sIdFour, sIdTypArt )
-// Remplac$$HEX2$$e9002000$$ENDHEX$$par :
+// Remplacé par :
 //* #5 [FNAC_PROD_ECH_TECH] ajout isTypeTrt = "C"
 lnvCmdCommun.uf_Changer_Lib_Dw ( dw_Cmd_Frn, lIdProd, sIdFour, sIdTypArt, "C" )
 
@@ -208,7 +208,7 @@ public subroutine wf_positionnerobjets ();//*-----------------------------------
 //* Fonction		: W_Td_Sp_W_Contact::Wf_PositionnerObjets
 //* Auteur			: Fabry JF
 //* Date				: 25/04/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Positionnement des objets
 //*
 //* Arguments		: Rien
@@ -218,8 +218,8 @@ public subroutine wf_positionnerobjets ();//*-----------------------------------
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //* #1  CAG		07/05/03	DCMP 030207 : Ajout de 6 zones en retour de Cetelec (pour Cegetel Must)
-//*								=> ajout d'une dw suppl$$HEX1$$e900$$ENDHEX$$mentaire => modif gestion des boutons prec et suiv
-//* #2  CAG		26/05/03	Ajout de 2 boutons pour revenir directement $$HEX2$$e0002000$$ENDHEX$$la 1$$HEX1$$e800$$ENDHEX$$re ou derni$$HEX1$$e800$$ENDHEX$$re page
+//*								=> ajout d'une dw supplémentaire => modif gestion des boutons prec et suiv
+//* #2  CAG		26/05/03	Ajout de 2 boutons pour revenir directement à la 1ère ou dernière page
 //*-----------------------------------------------------------------
 
 dw_1.X				= 28
@@ -273,7 +273,7 @@ private subroutine wf_tb_consultation ();//*------------------------------------
 //* Fonction		: W_Tm_Sp_W_Gar_Sin::Wf_Tb_Consultation (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 23/07/1998 15:44:13
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On est en validation/Consultation, on rend les boutons invisibles
 //*
 //* Arguments		: Aucun
@@ -288,7 +288,7 @@ DataWindow dwNorm[]
 //Fin Migration PB8-WYNIWYG-03/2006 FM
 
 /*------------------------------------------------------------------*/
-/* Cette fonction est appel$$HEX1$$e900$$ENDHEX$$e sur Ue_Initialiser de la fen$$HEX1$$ea00$$ENDHEX$$tre.     */
+/* Cette fonction est appelée sur Ue_Initialiser de la fenêtre.     */
 /*------------------------------------------------------------------*/
 
 pb_Controler.Visible 	= False
@@ -329,11 +329,11 @@ private function string wf_formatage_tel (string asText, boolean abSwitch);//*--
 //* Fonction		: w_sp_c_commandes2:wf_Formatage_Tel (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 06/10/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Formatage des N$$HEX2$$b0002000$$ENDHEX$$de Tel
+//* Libellé			: Formatage des N° de Tel
 //* Commentaires	: 
 //*
 //* Arguments		: asText		String		Val
-//*					  abSwitch	Boolean		Val		True : on ins$$HEX1$$e900$$ENDHEX$$re des espaces
+//*					  abSwitch	Boolean		Val		True : on insére des espaces
 //*																False: on retire les espaces
 //*					  
 //*
@@ -358,7 +358,7 @@ CHOOSE CASE abSwitch
 
 		CHOOSE CASE iLen
 		
-			// Standard Fran$$HEX1$$e700$$ENDHEX$$ais 1234567890 -> 12 34 56 78 90
+			// Standard Français 1234567890 -> 12 34 56 78 90
 			CASE 10
 		
 				sVal = Left ( sVal, 2 ) 	+ " " + &
@@ -372,7 +372,7 @@ CHOOSE CASE abSwitch
 	CASE ELSE
 
 		/*------------------------------------------------------------------*/
-		/* Pas d'espace pour les num$$HEX1$$e900$$ENDHEX$$ros de t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone.                      */
+		/* Pas d'espace pour les numéros de téléphone.                      */
 		/*------------------------------------------------------------------*/
 		For lCpt = iLen To 1 Step -1
 			If Mid ( sVal, lCpt, 1 ) = " " Then 
@@ -392,11 +392,11 @@ public subroutine wf_gestionboutons (string asbouton, boolean abposdef);//*-----
 //* Fonction      : N_Cst_W_Commande2::uf_GestionBoutons
 //* Auteur        : Catherine ABDMEZIEM
 //* Date          : 19/05/2003 15:50:00
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: DCMP 030207 : Ajout de 6 zones en retour de Cetelec (pour Cegetel Must)
-//* Commentaires  : => ajout d'une dw suppl$$HEX1$$e900$$ENDHEX$$mentaire => modif gestion des boutons prec et suiv
+//* Libellé       : DCMP 030207 : Ajout de 6 zones en retour de Cetelec (pour Cegetel Must)
+//* Commentaires  : => ajout d'une dw supplémentaire => modif gestion des boutons prec et suiv
 //*
-//* Arguments     : ( Val )	String	asBouton	:	indique le bouton sur lequel on a appuy$$HEX1$$e900$$ENDHEX$$
-//*					  ( Val )	Boolean	abPosDef	:	indique si l'on doit se positionner sur la 1$$HEX1$$e800$$ENDHEX$$re zone modifiable par d$$HEX1$$e900$$ENDHEX$$faut
+//* Arguments     : ( Val )	String	asBouton	:	indique le bouton sur lequel on a appuyé
+//*					  ( Val )	Boolean	abPosDef	:	indique si l'on doit se positionner sur la 1ère zone modifiable par défaut
 //*
 //* Retourne      : Aucun
 //*
@@ -444,7 +444,7 @@ Choose Case iiCptPgCte
 		cb_Dern.Enabled = True
 End Choose
 
-// Mise $$HEX2$$e0002000$$ENDHEX$$jour de l'affichage du compteur des pages
+// Mise à jour de l'affichage du compteur des pages
 Aff_Pg_Cmd_t.Text = "page " + String ( iiCptPgCte ) + " / " + String ( iiNbMaxPg )
 
 If abPosDef Then
@@ -461,10 +461,10 @@ private subroutine wf_gestionzone_infospbfrn ();//*-----------------------------
 //* Fonction      : w_sp_c_Commande2::wf_GestionZone_InfoSpbFrn (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 30/06/2004 14:58:44
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Gestion de la zone Info_Spb_Frn
+//* Libellé       : Gestion de la zone Info_Spb_Frn
 //* Commentaires  : DCMP 040206
-//*					  $$HEX2$$e0002000$$ENDHEX$$Partir du code ($$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$ment de la liste), il faut retrouver le code la liste,
-//*					  le label $$HEX2$$e0002000$$ENDHEX$$placer devant la zone
+//*					  à Partir du code (élément de la liste), il faut retrouver le code la liste,
+//*					  le label à placer devant la zone
 //*
 //* Arguments     : 
 //*
@@ -485,7 +485,7 @@ lIdCodeElt = dw_1.GetItemNumber ( 1, "INFO_SPB_FRN" )
 If IsNull ( lIdCodeElt ) Then return
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine le code de la liste correspondante.                 */
+/* On détermine le code de la liste correspondante.                 */
 /*------------------------------------------------------------------*/
 lIdListe = ( Int ( lIdCodeElt / 100 ) ) * 100
 
@@ -501,7 +501,7 @@ If dwChild.RowCount () <> 1 Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Mise $$HEX2$$e0002000$$ENDHEX$$jour de label.                                            */
+/* Mise à jour de label.                                            */
 
 /*------------------------------------------------------------------*/
 sLabel = dwChild.GetItemString ( 1, "LIB_CODE" )
@@ -520,14 +520,14 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		: Ue_Initialiser
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //* #1  CAG		20/05/03	DCMP 030207 : Ajout de 6 zones en retour de Cetelec (pour Cegetel Must)
-//*								=> ajout d'une dw suppl$$HEX1$$e900$$ENDHEX$$mentaire => modif gestion des boutons prec et suiv
-//* #2  CAG		04/06/03 Ajout de la zone ID_ANN = cat$$HEX1$$e900$$ENDHEX$$gorie d'annulation
+//*								=> ajout d'une dw supplémentaire => modif gestion des boutons prec et suiv
+//* #2  CAG		04/06/03 Ajout de la zone ID_ANN = catégorie d'annulation
 //* #3  CAG		05/07/04 DCMP 040206
 //* #4  JCA		31/08/06	suppression de [ADR_MAIL] dans l'appel de [dw_client.uf_InitialiserCouleur] et de [dw_client.uf_Proteger]
 // 		FPI	10/07/2017	[ITSM475226] - Pour le scrollbar du probleme
@@ -690,7 +690,7 @@ dw_client.uf_Proteger &
 
 
 /*------------------------------------------------------------------*/
-/* Gestion du Passage $$HEX2$$e0002000$$ENDHEX$$l'EURO.                                     */
+/* Gestion du Passage à l'EURO.                                     */
 /*------------------------------------------------------------------*/
 N_Cst_Passage_Euro	nvPassageEuro
 
@@ -738,7 +738,7 @@ on we_childactivate;//*---------------------------------------------------------
 //* Evenement 		: We_ChildActivate
 //* Auteur			: Fabry JF
 //* Date				: 04/09/01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -761,18 +761,18 @@ If ( ibAInitialiser ) Then
 	istPass = Message.PowerObjectParm
 
 	itrTrans						=  istPass.trTrans	// Objet transaction de la fenetre appelante
-	iwParent						=	istPass.wParent	// Fenetre Appelante ( utilis$$HEX1$$e900$$ENDHEX$$e pour enable )	
+	iwParent						=	istPass.wParent	// Fenetre Appelante ( utilisée pour enable )	
 
 	istPass.wParent			=	This			// Fenetre appelante pour fenetre de traitment
 	istPass.trTrans			=	itrTrans		// Objet de transaction par defaut
 //	istPass.bEnableParent	= 	False			// Doit on rendre la fenetre appelante disable
-														// lors de l'appel d'une fen$$HEX1$$ea00$$ENDHEX$$tre de traitement	This.TriggerEvent ( "ue_Initialiser" )
-//	istPass.bCloseRetour		=	False			// Doit on fermer la fen$$HEX1$$ea00$$ENDHEX$$tre sur le bouton retour. D$$HEX1$$e900$$ENDHEX$$cision du script client
+														// lors de l'appel d'une fenêtre de traitement	This.TriggerEvent ( "ue_Initialiser" )
+//	istPass.bCloseRetour		=	False			// Doit on fermer la fenêtre sur le bouton retour. Décision du script client
 
 
 	wf_ActiverMajAccueil( True )	
 
-	// Si il s'agit d'une fen$$HEX1$$ea00$$ENDHEX$$tre fille d'un master on la stock pour pouvoir la fermer
+	// Si il s'agit d'une fenêtre fille d'un master on la stock pour pouvoir la fermer
 
 	If ( ibOpen ) Then
 
@@ -799,7 +799,7 @@ If ( ibAInitialiser ) Then
 	pb_Supprimer.Enabled = istPass.bSupprime
 	bOk = wf_PreparerModifier ()
 
-	// Arr$$HEX1$$ea00$$ENDHEX$$t d'ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre si probl$$HEX1$$e800$$ENDHEX$$me
+	// Arrêt d'ouverture de la fenêtre si problème
 
 	If Not bOk Then
 
@@ -868,7 +868,7 @@ event show;call super::show;//*-------------------------------------------------
 //* Evenement 		: Show
 //* Auteur			: Fabry JF
 //* Date				: 16/10/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -894,6 +894,7 @@ end type
 
 event dw_1::buttonclicked;call super::buttonclicked;//       JFF   19/09/2016 [PM346-1]
 //       JFF   07/03/2024 [HP252_276_HUB_PRESTA]
+//			FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 
 String sInfoSpbCplt, sURLFourn , sIdFour, sPathIE, sIdSin, sIdSeq, sInfoSpbFrnCplt 
 Long lIdSin, lIdProd, lIdSeq, lIdDepotS2
@@ -929,7 +930,7 @@ Choose Case  dwo.name
 
 		sPathIE = ProfileString ( stGlb.sFichierIni, "DOCUMENTATION", "IE_W7", "" )
 		If Trim ( sPathIE ) = "" Then
-			stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de gestion"
+			stMessage.sTitre		= "Contrôle de gestion"
 			stMessage.Icon			= Information!
 			stMessage.bErreurG	= FALSE
 			stMessage.sCode		= "WSIN746"
@@ -944,7 +945,7 @@ Choose Case  dwo.name
 		If Not FileExists ( sPathIE ) Then
 			sPathIE = ProfileString ( stGlb.sFichierIni, "DOCUMENTATION", "IE_XP_ET_TS", "" )
 			If Trim ( sPathIE ) = "" Then
-				stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de gestion"
+				stMessage.sTitre		= "Contrôle de gestion"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.sCode		= "WSIN746"
@@ -972,7 +973,7 @@ Choose Case  dwo.name
 
 		dsTracePresta.Retrieve ( lIdSin, lIdSeq ) 
 		
-		dsTracePresta.SaveAs ( stglb.sRepTempo + "TracePresta.XLS", Excel!, TRUE )
+		dsTracePresta.SaveAs ( stglb.sRepTempo + "TracePresta.XLS", Excel8!, TRUE ) // [MIG_PB2022]
 		RUN ( sRepExcel + " " + stglb.sRepTempo + "TracePresta.XLS" )
 	
 	Case "b_voir_hub"
@@ -1112,7 +1113,7 @@ Choose Case  dwo.name
 	Case "b_consultifsc"
 
 		sVal = dw_cmd_frn.GetItemString ( 1, "INFO_FRN_SPB_CPLT" ) 
-		stMessage.sTitre		= "Infos fournisseur suppl$$HEX1$$e900$$ENDHEX$$mentaires"
+		stMessage.sTitre		= "Infos fournisseur supplémentaires"
 		stMessage.Icon			= Information!
 		stMessage.bErreurG	= FALSE
 		stMessage.sCode		= "GENE013"
@@ -1136,7 +1137,7 @@ Choose Case  dwo.name
 				
 		sPathIE = ProfileString ( stGlb.sFichierIni, "DOCUMENTATION", "IE_W7", "" )
 		If Trim ( sPathIE ) = "" Then
-			stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de gestion"
+			stMessage.sTitre		= "Contrôle de gestion"
 			stMessage.Icon			= Information!
 			stMessage.bErreurG	= FALSE
 			stMessage.sCode		= "WSIN746"
@@ -1151,7 +1152,7 @@ Choose Case  dwo.name
 		If Not FileExists ( sPathIE ) Then
 			sPathIE = ProfileString ( stGlb.sFichierIni, "DOCUMENTATION", "IE_XP_ET_TS", "" )
 			If Trim ( sPathIE ) = "" Then
-				stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de gestion"
+				stMessage.sTitre		= "Contrôle de gestion"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.sCode		= "WSIN746"
@@ -1214,7 +1215,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: Abdmeziem Catherine
 //* Date				: 26/05/2003
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1248,7 +1249,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: Abdmeziem Catherine
 //* Date				: 26/05/2003
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1282,14 +1283,14 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*				  
 //* #1  CAG		20/05/03	DCMP 030207 : Ajout de 6 zones en retour de Cetelec (pour Cegetel Must)
-//*								=> ajout d'une dw suppl$$HEX1$$e900$$ENDHEX$$mentaire => modif gestion des boutons prec et suiv
+//*								=> ajout d'une dw supplémentaire => modif gestion des boutons prec et suiv
 //*-----------------------------------------------------------------
 
 wf_GestionBoutons("PREC", True)
@@ -1328,14 +1329,14 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: click
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*				  
 //* #1  CAG		20/05/03	DCMP 030207 : Ajout de 6 zones en retour de Cetelec (pour Cegetel Must)
-//*								=> ajout d'une dw suppl$$HEX1$$e900$$ENDHEX$$mentaire => modif gestion des boutons prec et suiv
+//*								=> ajout d'une dw supplémentaire => modif gestion des boutons prec et suiv
 //*-----------------------------------------------------------------
 
 wf_GestionBoutons("SUIV", True)

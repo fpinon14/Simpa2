@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_sp_trt_autofact.srw
+﻿$PBExportHeader$w_sp_trt_autofact.srw
 $PBExportComments$Automatisation Facturation Fournisseur
 forward
 global type w_sp_trt_autofact from w_8_accueil
@@ -61,7 +61,7 @@ global w_sp_trt_autofact w_sp_trt_autofact
 type variables
 Private :
 
-String	K_FICCHARG = "FICFOURN.TXT" // Nom du fichier de donn$$HEX1$$e900$$ENDHEX$$e de facturation
+String	K_FICCHARG = "FICFOURN.TXT" // Nom du fichier de donnée de facturation
 integer	K_TYPFACT_PRESTA	= 1
 integer	K_TYPFACT_H_PRESTA= 2
 integer	K_TYPFACT_H_PRESTA_MAJ_1_DETAIL = 3 // [VDOC9586]
@@ -92,8 +92,8 @@ private function boolean wf_chargerdonnees ();
 //* Fonction      : w_sp_trt_autofact::wf_ChargerDonnees (PRIVATE)
 //* Auteur        : PHG
 //* Date          : 22/11/2006
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Chargement des donn$$HEX1$$e900$$ENDHEX$$es
-//* Commentaires  : Chargement des r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rences commandes SPB se trouvant
+//* Libellé       : Chargement des données
+//* Commentaires  : Chargement des références commandes SPB se trouvant
 //*					  sur <REP_TEMPO>\FICFOURN.TXT
 //*
 //* Arguments     : 
@@ -118,7 +118,7 @@ bOk = True
 sFicFourn = stGlb.sRepTempo + K_FICCHARG
 
 // #1
-// charge le data object correspondant au groupe de fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$(darty ou non darty).
+// charge le data object correspondant au groupe de fournisseur sélectionné (darty ou non darty).
 st_1.visible = false
 wf_chargerdw ()
 // FIN - #1
@@ -135,7 +135,7 @@ If Not f_FileExists ( sFicFourn ) Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Chargement des donn$$HEX1$$e900$$ENDHEX$$es.                                          */
+/* Chargement des données.                                          */
 /*------------------------------------------------------------------*/
 If bOk Then
 	lTotRow = dw_Charger.ImportFile ( sFicFourn )
@@ -152,7 +152,7 @@ End If
 /* MAJ du static text                                               */
 /*------------------------------------------------------------------*/
 If bOk Then
-	st_Charger.Text = String ( lTotRow ) + " r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rences commandes charg$$HEX1$$e900$$ENDHEX$$es"
+	st_Charger.Text = String ( lTotRow ) + " références commandes chargées"
 End If
 
 
@@ -166,9 +166,9 @@ end function
 private function boolean wf_maj ();//*-----------------------------------------------------------------
 //*
 //* Fonction      : w_sp_trt_autofact::wf_Maj (PRIVATE)
-//* Auteur        : PHG, d'apr$$HEX1$$e800$$ENDHEX$$s JFF
+//* Auteur        : PHG, d'après JFF
 //* Date          : 21/11/2006
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*					  
 //*
@@ -179,8 +179,8 @@ private function boolean wf_maj ();//*------------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modi
 //* #1	JCA		23/02/2007	DCMP 070110 - Ajout du fournisseur Darty
-//* #2	PHG						[DCMP080166] - Ajout Cat$$HEX1$$e900$$ENDHEX$$gorie de Facture  
-//* #3	PHG		13/06/2008	[DCMP080461] - Int$$HEX1$$e900$$ENDHEX$$gration Facture Hors PRestation
+//* #2	PHG						[DCMP080166] - Ajout Catégorie de Facture  
+//* #3	PHG		13/06/2008	[DCMP080461] - Intégration Facture Hors PRestation
 //* #4	PHG		15/04/2009	[FNAC_PROD_ECH_TECH] - Fnac Attitude
 //* #5   JFF		09/01/2013  [VDOC9586]
 //       JFF      07/10/2013  [DT044-1_V5]
@@ -249,7 +249,7 @@ lIdSeq = 0 // [PM251-2]
 
 Choose Case iIdTypFact 
 	Case K_typfact_h_presta 
-		// Non $$HEX1$$e900$$ENDHEX$$ligible au PM251-2, Pas d'action sur SIMPA2
+		// Non éligible au PM251-2, Pas d'action sur SIMPA2
 		lIdSeq = -100	// [PM251-2]	
 		stMessage.sCode		= "COMD479" 
 		
@@ -262,7 +262,7 @@ Choose Case iIdTypFact
 
 		
 	Case K_TYPFACT_H_PRESTA_IPHONE_O2M_SFR
-		// Non $$HEX1$$e900$$ENDHEX$$ligible au PM251-2, n'a jamais vu le jour en prodcution.
+		// Non éligible au PM251-2, n'a jamais vu le jour en prodcution.
 		lIdSeq = -100	// [PM251-2]			
 		stMessage.sCode		= "COMD824" 
 		
@@ -278,7 +278,7 @@ Choose Case iIdTypFact
 		stMessage.sCode		= "COMD836"  // [PM210]
 		
 	Case K_TYPFACT_BNP_SECU
-		// Non $$HEX1$$e900$$ENDHEX$$ligible au PM251-2, reste manuel
+		// Non éligible au PM251-2, reste manuel
 		lIdSeq = -100  // [PM251-2]
 		stMEssage.scode  = "COMD884"// [PC13174]
 		
@@ -316,9 +316,9 @@ If F_Message ( stMessage ) = 1 Then
 
 	sResult = space ( 500 )
 	
-		if iIdTypFact = K_typfact_h_presta Then // #3 [DCMP080461] Mise $$HEX2$$e0002000$$ENDHEX$$Jour Contact / travail
+		if iIdTypFact = K_typfact_h_presta Then // #3 [DCMP080461] Mise à Jour Contact / travail
 
-			// [PM80_FA12_FRANEX] : Rien ici car aucun maj de d$$HEX1$$e900$$ENDHEX$$tail, aucune validation de r$$HEX1$$e800$$ENDHEX$$glement.
+			// [PM80_FA12_FRANEX] : Rien ici car aucun maj de détail, aucune validation de règlement.
 
 			lRet = sqlca.PS_U05_DETAIL_MAJ_FACTU_V01 (long(ids_charger.object.id_sin[lCpt]),	&
 													 string(ids_charger.object.id_fourn[lCpt]),		&
@@ -331,7 +331,7 @@ If F_Message ( stMessage ) = 1 Then
 		ElseIf iIdTypFact = K_TYPFACT_H_PRESTA_MAJ_1_DETAIL Then
 				// [VDOC9586] // [DT92_FACTU_CASTO]
 
-				// [PM80_FA12_FRANEX] lib$$HEX1$$e900$$ENDHEX$$rer u_transaction $$HEX2$$e0002000$$ENDHEX$$la d$$HEX1$$e900$$ENDHEX$$sac de cl$$HEX1$$e900$$ENDHEX$$, supp ancienne PS !!!
+				// [PM80_FA12_FRANEX] libérer u_transaction à la désac de clé, supp ancienne PS !!!
 				lRet = sqlca.PS_U08_DETAIL_MAJ_FACTU_V03 (long(ids_charger.object.id_sin[lCpt]),	&
 														 string(ids_charger.object.id_fourn[lCpt]),		&
 														 datetime(ids_charger.object.dte_fact[lCpt]),	&
@@ -360,7 +360,7 @@ If F_Message ( stMessage ) = 1 Then
 		ElseIf iIdTypFact = K_TYPFACT_H_PRESTA_IPHONE_O2M_SFR Then
 				// [DT57_CMDE_IPHONE_SFR]
 
-				// [PM80_FA12_FRANEX] lib$$HEX1$$e900$$ENDHEX$$rer u_transaction $$HEX2$$e0002000$$ENDHEX$$la d$$HEX1$$e900$$ENDHEX$$sac de cl$$HEX1$$e900$$ENDHEX$$
+				// [PM80_FA12_FRANEX] libérer u_transaction à la désac de clé
 				lRet = sqlca.PS_U09_DETAIL_MAJ_FACTU_V02 (long(ids_charger.object.id_sin[lCpt]),	&
 															 string(ids_charger.object.id_fourn[lCpt]),		&
 															 datetime(ids_charger.object.dte_fact[lCpt]),	&
@@ -386,7 +386,7 @@ If F_Message ( stMessage ) = 1 Then
 				// [DT044-1_V5]
 				lIdSeq = long ( ids_charger.object.id_seq[lCpt] )
 
-				// [PM80_FA12_FRANEX] lib$$HEX1$$e900$$ENDHEX$$rer u_transaction $$HEX2$$e0002000$$ENDHEX$$la d$$HEX1$$e900$$ENDHEX$$sac de cl$$HEX1$$e900$$ENDHEX$$
+				// [PM80_FA12_FRANEX] libérer u_transaction à la désac de clé
 				lRet = sqlca.PS_U_DETAIL_MAJ_FACTU_SANS_REGL_DT44_V02 (long(ids_charger.object.id_sin[lCpt]),	&
 															 integer(ids_charger.object.id_seq[lCpt]),		&
 															 datetime(ids_charger.object.dte_fact[lCpt]),	&
@@ -412,7 +412,7 @@ If F_Message ( stMessage ) = 1 Then
 				// [PM210]
 				lIdSeq = long ( ids_charger.object.id_seq[lCpt] )
 				
-				// [PM80_FA12_FRANEX] lib$$HEX1$$e900$$ENDHEX$$rer u_transaction $$HEX2$$e0002000$$ENDHEX$$la d$$HEX1$$e900$$ENDHEX$$sac de cl$$HEX1$$e900$$ENDHEX$$
+				// [PM80_FA12_FRANEX] libérer u_transaction à la désac de clé
 		
 				lRet = sqlca.PS_U_DETAIL_MAJ_FACTU_DIAG_O2M_V02 (long(ids_charger.object.id_sin[lCpt]),	&
 															 integer(ids_charger.object.id_seq[lCpt]),		&
@@ -436,7 +436,7 @@ If F_Message ( stMessage ) = 1 Then
 
 		ElseIf iIdTypFact = K_TYPFACT_BNP_SECU Then
 				// [PC13174]
-				// [PM80_FA12_FRANEX] lib$$HEX1$$e900$$ENDHEX$$rer u_transaction $$HEX2$$e0002000$$ENDHEX$$la d$$HEX1$$e900$$ENDHEX$$sac de cl$$HEX1$$e900$$ENDHEX$$
+				// [PM80_FA12_FRANEX] libérer u_transaction à la désac de clé
 		
 				lRet = sqlca.PS_U_DETAIL_MAJ_FACTU_BNP_SECU_V03 (long(ids_charger.object.id_prod[lCpt]),	&
 															 long(ids_charger.object.id_ets[lCpt]),	&
@@ -476,7 +476,7 @@ If F_Message ( stMessage ) = 1 Then
 					
 					// [PM251-2]
 					If bEligiblePM251T2 Then
-						// [PM80_FA12_FRANEX] lib$$HEX1$$e900$$ENDHEX$$rer u_transaction $$HEX2$$e0002000$$ENDHEX$$la d$$HEX1$$e900$$ENDHEX$$sac de cl$$HEX1$$e900$$ENDHEX$$
+						// [PM80_FA12_FRANEX] libérer u_transaction à la désac de clé
 
 						lRet = sqlca.PS_U04_DETAIL_MAJ_FACTU_V03 (long(ids_charger.object.id_sin[lCpt]),	&
 																 string(ids_charger.object.id_fourn[lCpt]),		&
@@ -502,7 +502,7 @@ If F_Message ( stMessage ) = 1 Then
 						
 					Else
 					
-					/* N'est plus utilis$$HEX1$$e900$$ENDHEX$$, $$HEX2$$e0002000$$ENDHEX$$supprimer plus tard.
+					/* N'est plus utilisé, à supprimer plus tard.
 						lRet = sqlca.PS_U04_DETAIL_MAJ_FACTU (long(ids_charger.object.id_sin[lCpt]),	&
 																 string(ids_charger.object.id_fourn[lCpt]),		&
 																 datetime(ids_charger.object.dte_fact[lCpt]),	&
@@ -527,7 +527,7 @@ If F_Message ( stMessage ) = 1 Then
 
 					lIdSeq = long ( ids_charger.object.id_seq[lCpt] )
 
-					// [PM80_FA12_FRANEX] lib$$HEX1$$e900$$ENDHEX$$rer u_transaction $$HEX2$$e0002000$$ENDHEX$$la d$$HEX1$$e900$$ENDHEX$$sac de cl$$HEX1$$e900$$ENDHEX$$
+					// [PM80_FA12_FRANEX] libérer u_transaction à la désac de clé
 					
 					lRet = sqlca.PS_U06_DETAIL_MAJ_FACTU_V02 (long(ids_charger.object.id_sin[lCpt]),	&
 															 long(ids_charger.object.id_seq[lCpt] ),			&
@@ -581,11 +581,11 @@ If F_Message ( stMessage ) = 1 Then
 					  "NE1", "NE2", "NE3", "NE4", "NE5", "NE6", "NE7", "BLP", "BLQ"
 					// [FACTU_SRR]
 					// [FACTU_VIP_CDS]
-					// Nouveau g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rique pour M$$HEX1$$e900$$ENDHEX$$thode en en sp$$HEX1$$e900$$ENDHEX$$cifiant le fournisseur $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e800$$ENDHEX$$gler
+					// Nouveau générique pour Méthode en en spécifiant le fournisseur à règler
 					// [DT227]
 					lIdSeq = long ( ids_charger.object.id_seq[lCpt] )						
 
-					// [PM80_FA12_FRANEX] lib$$HEX1$$e900$$ENDHEX$$rer u_transaction $$HEX2$$e0002000$$ENDHEX$$la d$$HEX1$$e900$$ENDHEX$$sac de cl$$HEX1$$e900$$ENDHEX$$
+					// [PM80_FA12_FRANEX] libérer u_transaction à la désac de clé
 					
 					lRet = sqlca.PS_U031_DETAIL_MAJ_FACTU_V02 (long(ids_charger.object.id_sin[lCpt]),	&
 														 integer(ids_charger.object.id_seq[lCpt]),		&
@@ -609,9 +609,9 @@ If F_Message ( stMessage ) = 1 Then
 														 sTraite )						
 															 
 					
-				Case "999"  // li$$HEX4$$e9002000e0002000$$ENDHEX$$SCR
+				Case "999"  // lié à SCR
 					// [VDOC14649]
-					// [PM80_FA12_FRANEX] lib$$HEX1$$e900$$ENDHEX$$rer u_transaction $$HEX2$$e0002000$$ENDHEX$$la d$$HEX1$$e900$$ENDHEX$$sac de cl$$HEX1$$e900$$ENDHEX$$
+					// [PM80_FA12_FRANEX] libérer u_transaction à la désac de clé
 
 					lRet = sqlca.PS_U032_DETAIL_MAJ_FACTU_V02 (long(ids_charger.object.id_sin[lCpt]),	&
 															 "999_SCR" , &
@@ -639,7 +639,7 @@ If F_Message ( stMessage ) = 1 Then
 				// [PC151259-2]
 				case "ADV"
 
-					// [PM80_FA12_FRANEX] lib$$HEX1$$e900$$ENDHEX$$rer u_transaction $$HEX2$$e0002000$$ENDHEX$$la d$$HEX1$$e900$$ENDHEX$$sac de cl$$HEX1$$e900$$ENDHEX$$
+					// [PM80_FA12_FRANEX] libérer u_transaction à la désac de clé
 					lRet = sqlca.PS_U10_DETAIL_MAJ_FACTU_ADVISE_V01 (long(ids_charger.object.id_sin[lCpt]),	&
 																 string(ids_charger.object.id_fourn[lCpt]),		&
 																 datetime(ids_charger.object.dte_fact[lCpt]),	&
@@ -664,7 +664,7 @@ If F_Message ( stMessage ) = 1 Then
 				case else
 					lIdSeq = long ( ids_charger.object.id_seq[lCpt] )					
 
-					// [PM80_FA12_FRANEX] lib$$HEX1$$e900$$ENDHEX$$rer u_transaction $$HEX2$$e0002000$$ENDHEX$$la d$$HEX1$$e900$$ENDHEX$$sac de cl$$HEX1$$e900$$ENDHEX$$
+					// [PM80_FA12_FRANEX] libérer u_transaction à la désac de clé
 				
 					lRet = sqlca.PS_U03_DETAIL_MAJ_FACTU_V02 (long(ids_charger.object.id_sin[lCpt]),	&
 															 integer(ids_charger.object.id_seq[lCpt]),		&
@@ -710,7 +710,7 @@ If F_Message ( stMessage ) = 1 Then
 			
 			// [BUG_PM251-2]
 			If sTraite <> "O" Then
-				dw_charger.SetItem ( lCpt, "RESULT", "ERREUR : Erreur sur le nombre de d$$HEX1$$e900$$ENDHEX$$tail $$HEX2$$e0002000$$ENDHEX$$traiter (cause absence de d$$HEX1$$e900$$ENDHEX$$tail ou d$$HEX1$$e900$$ENDHEX$$tail d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gl$$HEX2$$e9002000$$ENDHEX$$pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$demment)." ) 
+				dw_charger.SetItem ( lCpt, "RESULT", "ERREUR : Erreur sur le nombre de détail à traiter (cause absence de détail ou détail déjà réglé précédemment)." ) 
 				Continue
 			End If
 			
@@ -725,7 +725,7 @@ If F_Message ( stMessage ) = 1 Then
 		If bEligiblePM251T2 Then
 			If bRet Then
 
-				// Pr$$HEX1$$e900$$ENDHEX$$paration du dossier $$HEX2$$e0002000$$ENDHEX$$la validation finale, simule la saisie, les Ctrl/Valide
+				// Préparation du dossier à la validation finale, simule la saisie, les Ctrl/Valide
 				If Len ( Trim ( sResult ) ) > 0 Then sResult += "."
 				
 				sResultSav = Trim ( sResult )
@@ -789,7 +789,7 @@ If F_Message ( stMessage ) = 1 Then
 					lCtrlValide = SQLCA.PS_S_CONTROLE_DBLT_REGLT ( long ( ids_charger.object.id_sin[lCpt] ) )
 					
 					IF lCtrlValide <= 0 Then
-						dw_charger.SetItem ( lCpt, "RESULT", "ERREUR : Probl$$HEX1$$e800$$ENDHEX$$me technique lors de la validation(1). A repasser par l'automate jusqu'$$HEX2$$e0002000$$ENDHEX$$ce que ce r$$HEX1$$e900$$ENDHEX$$glement passe." )						
+						dw_charger.SetItem ( lCpt, "RESULT", "ERREUR : Problème technique lors de la validation(1). A repasser par l'automate jusqu'à ce que ce réglement passe." )						
 						F_Commit ( SQLCA, False)
 						Continue
 					End If
@@ -801,11 +801,11 @@ If F_Message ( stMessage ) = 1 Then
 					F_Commit ( SQLCA, True )
 					
 					If  lCtrlValide < 0 Then
-						dw_charger.SetItem ( lCpt, "RESULT", "ERREUR : Probl$$HEX1$$e800$$ENDHEX$$me technique lors de la validation(2). A repasser par l'automate jusqu'$$HEX2$$e0002000$$ENDHEX$$ce que ce r$$HEX1$$e900$$ENDHEX$$glement passe." )
+						dw_charger.SetItem ( lCpt, "RESULT", "ERREUR : Problème technique lors de la validation(2). A repasser par l'automate jusqu'à ce que ce réglement passe." )
 					Else
 						// [PM336-1]
 						If lnvPFCString.of_Getkeyvalue ( sChaine, "A_FORCER", ";") = "OUI" Then
-							dw_charger.SetItem ( lCpt, "RESULT", "Validation => Ok (forc$$HEX1$$e900$$ENDHEX$$e)" )
+							dw_charger.SetItem ( lCpt, "RESULT", "Validation => Ok (forcée)" )
 						Else
 							dw_charger.SetItem ( lCpt, "RESULT", "Validation => Ok" )
 						End If
@@ -840,7 +840,7 @@ If F_Message ( stMessage ) = 1 Then
 		End If
 		
 		// [PI087_PM473_2]
-		// Gestion de la trace ici. Si probl$$HEX1$$e800$$ENDHEX$$me, je n'affecte pas la validation, c'est d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$commit$$HEX2$$e9002000$$ENDHEX$$et je ne touche pas au bRet
+		// Gestion de la trace ici. Si problème, je n'affecte pas la validation, c'est déjà commité et je ne touche pas au bRet
 		If bRet Then
 		
 			lRet2 = SQLCA.PS_I_PI087_TRACE_DOSSIER_V01 ( long ( ids_charger.object.id_sin[lCpt] ), "VALIDATION", stGLB.sCodOper, dcIdInter, dcIdDoc )
@@ -856,7 +856,7 @@ If F_Message ( stMessage ) = 1 Then
 	If bRet And dw_Charger.Find ( "Left ( RESULT, 6 ) = 'ERREUR'", 1, dw_Charger.RowCount () ) <= 0 Then
 		st_extraire.BackColor = 32768
 		st_extraire.TextColor = 16777215
-		st_extraire.Text = "Mise $$HEX2$$e0002000$$ENDHEX$$jour pass$$HEX1$$e900$$ENDHEX$$e avec succ$$HEX1$$e900$$ENDHEX$$s sur toutes les lignes"
+		st_extraire.Text = "Mise à jour passée avec succés sur toutes les lignes"
 	ElseIf Not bRet Then
 		st_extraire.BackColor = 255
 		st_extraire.TextColor = 16777215	
@@ -864,7 +864,7 @@ If F_Message ( stMessage ) = 1 Then
 	Else 
 		st_extraire.BackColor = 255
 		st_extraire.TextColor = 16777215	
-		st_extraire.Text = "Des erreurs ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$es dans la mise $$HEX2$$e0002000$$ENDHEX$$jour, consultez les r$$HEX1$$e900$$ENDHEX$$sultats de chaque prestation"		
+		st_extraire.Text = "Des erreurs ont été détectées dans la mise à jour, consultez les résultats de chaque prestation"		
 	End If 
 
 	dw_visu_trt.SetItem ( 1, "DTE_FIN", DateTime ( Today (), Now () ) )
@@ -894,9 +894,9 @@ If F_Message ( stMessage ) = 1 Then
 
 	// [PM251-2]
 	If bEligiblePM251T2 Then
-		stMessage.sTitre		= "R$$HEX1$$e900$$ENDHEX$$sultat du traitement"		
+		stMessage.sTitre		= "Résultat du traitement"		
 	Else
-		stMessage.sTitre		= "Mise $$HEX2$$e0002000$$ENDHEX$$jour des d$$HEX1$$e900$$ENDHEX$$tail avec les donn$$HEX1$$e900$$ENDHEX$$es de facturation."
+		stMessage.sTitre		= "Mise à jour des détail avec les données de facturation."
 	End If
 	stMessage.bErreurG	= FALSE
 	stMessage.Bouton		= Ok!
@@ -921,7 +921,7 @@ private function integer wf_chargerdw ();//*------------------------------------
 //* Fonction      : w_sp_trt_autofact::wf_ChargerDw (PRIVATE)
 //* Auteur        : JCA
 //* Date          : 22/02/2007
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Chargement du data object correspond au fournisseur choisit
+//* Libellé       : Chargement du data object correspond au fournisseur choisit
 //* Commentaires  : DCMP 070110 - Ajout du fournisseur Darty
 //*
 //* Arguments     : 
@@ -931,7 +931,7 @@ private function integer wf_chargerdw ();//*------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1	PHG	13/06/2008	[DCMP080461] Int$$HEX1$$e900$$ENDHEX$$gration FActuration Hors PRestation
+//* #1	PHG	13/06/2008	[DCMP080461] Intégration FActuration Hors PRestation
 //* #2	PHG	10/04/2009	[FNAC_PROD_ECH_TECH] Fnac Attitude
 //*    	JFF	09/01/2013	[VDOC9586]
 //       JFF   07/10/2013  [DT044-1_V5]
@@ -1014,7 +1014,7 @@ Choose Case iIdTypFact   // [DCMP080461] Choix du type de Facturation
 				  "NE1", "NE2", "NE3", "NE4", "NE5", "NE6", "NE7", "BLP", "BLQ"
 				// [FACTU_SRR]
 				// [FACTU_VIP_CDS]
-				// Nouveau g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rique pour M$$HEX1$$e900$$ENDHEX$$thode en sp$$HEX1$$e900$$ENDHEX$$cifiant le fournisseur $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e800$$ENDHEX$$gler
+				// Nouveau générique pour Méthode en spécifiant le fournisseur à règler
 				// [VDOC14649]
 				// [PM336-1]
 				// [DT227]
@@ -1067,7 +1067,7 @@ private function boolean wf_pm251_2_validation_auto (long adcidsin, long adcidpr
 //* Fonction      : w_sp_trt_autofact::wf_pm251_2_validation_auto (PRIVATE)
 //* Auteur        : 
 //* Date          : 21/11/2006
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*					  
 //*
@@ -1125,25 +1125,25 @@ For lCpt = 1 To 2
 		Case nvdoubleval.K_ERR_INITALISATION
 			asResult+="ERREUR : Double validation du dossier=>Erreur d'initialisation." 
 		Case nvdoubleval.K_ANNULE
-			asResult+="ERREUR : Double validation du dossier=>Op$$HEX1$$e900$$ENDHEX$$ration annul$$HEX1$$e900$$ENDHEX$$e."
+			asResult+="ERREUR : Double validation du dossier=>Opération annulée."
 		Case nvdoubleval.K_ERR_NIVEAU_REQUIS
-			asResult+="ERREUR : Double validation du dossier=>Op$$HEX1$$e900$$ENDHEX$$ration non autoris$$HEX1$$e900$$ENDHEX$$e, Ce dossier n$$HEX1$$e900$$ENDHEX$$cessite une double validation de " + stmessage.svar[1] + "."
+			asResult+="ERREUR : Double validation du dossier=>Opération non autorisée, Ce dossier nécessite une double validation de " + stmessage.svar[1] + "."
 		Case nvdoubleval.K_ERR_SAISIE
 			asResult+="ERREUR : Double validation du dossier=>Erreur de saisie du trigramme/mot de passe."
 		Case nvdoubleval.K_ERR_DROIT_INSUFFISANT
 			asResult+="ERREUR : Double validation du dossier=>Vous n'avez pas les droits pour le niveau " + stmessage.svar[1] + "."
 		Case nvdoubleval.K_ERR_OPER_INCONNU
-			asResult+="ERREUR : Double validation du dossier=>Op$$HEX1$$e900$$ENDHEX$$rateur inexistant, Veuillez contacter l'$$HEX1$$e900$$ENDHEX$$quipe param$$HEX1$$e900$$ENDHEX$$trage EPG au 2245."
+			asResult+="ERREUR : Double validation du dossier=>Opérateur inexistant, Veuillez contacter l'équipe paramétrage EPG au 2245."
 		Case nvdoubleval.K_ERR_LIRE_UO
-			asResult+="ERREUR : Double validation du dossier=>Le code d$$HEX1$$e900$$ENDHEX$$partement (-DP,99) n'est pas param$$HEX1$$e900$$ENDHEX$$tr$$HEX2$$e9002000$$ENDHEX$$sur le produit " + string(dcIdProd) + ".Veuillez contacter l'$$HEX1$$e900$$ENDHEX$$quipe param$$HEX1$$e900$$ENDHEX$$trageEPG au 2245."
+			asResult+="ERREUR : Double validation du dossier=>Le code département (-DP,99) n'est pas paramétré sur le produit " + string(dcIdProd) + ".Veuillez contacter l'équipe paramétrageEPG au 2245."
 		Case nvdoubleval.K_OK
 			asResult+="ERREUR : Double validation du dossier=>Validation OK."
 		Case nvdoubleval.K_ERR_LIRE_MONTANT
-			asResult+="ERREUR : Double validation du dossier=>Erreur de d$$HEX1$$e900$$ENDHEX$$termination du montant du sinistre."
+			asResult+="ERREUR : Double validation du dossier=>Erreur de détermination du montant du sinistre."
 		Case nvdoubleval.K_ERR_HISTO
 			asResult+="ERREUR : Double validation du dossier=>Erreur d'historisation de la double validation du dossier."
 		Case Else
-			asResult+="ERREUR : Double validation du dossier=>Op$$HEX1$$e900$$ENDHEX$$rateur inexistant, Veuillez contacter l'$$HEX1$$e900$$ENDHEX$$quipe param$$HEX1$$e900$$ENDHEX$$trage."
+			asResult+="ERREUR : Double validation du dossier=>Opérateur inexistant, Veuillez contacter l'équipe paramétrage."
 		end choose
 	
 		f_commit(SQLCA,False)
@@ -1158,16 +1158,16 @@ For lCpt = 1 To 2
 	
 	/*------------------------------------------------------------------*/
 	/* Le 04/06/1999.                                                   */
-	/* Modif DGA: On v$$HEX1$$e900$$ENDHEX$$rifie si l'on peut ecrire dans le r$$HEX1$$e900$$ENDHEX$$pertoire de  */
+	/* Modif DGA: On vérifie si l'on peut ecrire dans le répertoire de  */
 	/* TRACE. Si ce n'est pas le cas, on arrete tout.                   */
 	/*------------------------------------------------------------------*/
 	If bRet Then 
 		If	F_Verifier_Ecriture_Trace ( sFicEssai ) < 0	Then
 		/*------------------------------------------------------------------*/
 		/* On affiche un message d'erreur que l'on ne peut tracer. On sort  */
-		/* ensuite imm$$HEX1$$e900$$ENDHEX$$diatement de la fonction.                            */
+		/* ensuite immédiatement de la fonction.                            */
 		/*------------------------------------------------------------------*/
-			asResult += "ERREUR : L'$$HEX1$$e900$$ENDHEX$$criture de la TRACE est impossible. Appeler le service informatique."		
+			asResult += "ERREUR : L'écriture de la TRACE est impossible. Appeler le service informatique."		
 			bRet = False
 		
 		End If
@@ -1201,15 +1201,15 @@ For lCpt = 1 To 2
 	If lRetValidation < 0 Then bRet = FALSE
 	
 	/*------------------------------------------------------------------*/
-	/* La zone sProc est pass$$HEX1$$e900$$ENDHEX$$e par r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence. Elle est arm$$HEX1$$e900$$ENDHEX$$e $$HEX2$$e0002000$$ENDHEX$$''      */
-	/* dans la proc$$HEX1$$e900$$ENDHEX$$dure. Si une erreur survient, on arme cette cha$$HEX1$$ee00$$ENDHEX$$ne  */
+	/* La zone sProc est passée par référence. Elle est armée à ''      */
+	/* dans la procédure. Si une erreur survient, on arme cette chaîne  */
 	/* pour expliquer ou est survenue l'erreur.                         */
 	/*------------------------------------------------------------------*/
 	sProc = Trim ( sProc )
 	If	sProc <> "" Then bRet = False
 	
 	/*------------------------------------------------------------------*/
-	/* Si SqlDbCode est arm$$HEX1$$e900$$ENDHEX$$, on part du principe qu'il y a eu une      */
+	/* Si SqlDbCode est armé, on part du principe qu'il y a eu une      */
 	/* erreur, et ce quel que soit la valeur de sProc.                  */
 	/*------------------------------------------------------------------*/
 	If SQLCA.SqlCode <> 0 Or SQLCA.SqlDbCode <> 0	Then bRet = False
@@ -1249,7 +1249,7 @@ For lCpt = 1 To 2
 		//#3
 		Choose Case lRetValidation 
 			Case -1000 
-				asResult += "ERREUR : Probl$$HEX1$$e800$$ENDHEX$$me lors de la validation, passez en validation manuelle"
+				asResult += "ERREUR : Problème lors de la validation, passez en validation manuelle"
 				// [VDOC4288]
 				F_Commit ( SQLCA, False )
 
@@ -1257,7 +1257,7 @@ For lCpt = 1 To 2
 			// [VDOC5021]
 			Case -1001 
 
-				asResult += "ERREUR : Probl$$HEX1$$e800$$ENDHEX$$me lors de la validation, passez en validation manuelle"
+				asResult += "ERREUR : Problème lors de la validation, passez en validation manuelle"
 				F_Commit ( SQLCA, False )
 				
 				F_Execute ( "Exec sysadm.PS_U_REDRESSEMENT_CMDE_ANNUL " + String ( dcIdSin ) + ".", SQLCA )				
@@ -1310,9 +1310,9 @@ end function
 private function boolean wf_controler ();//*-----------------------------------------------------------------
 //*
 //* Fonction      : w_sp_trt_autofact::wf_Controler (PRIVATE)
-//* Auteur        : PHG, d'apr$$HEX1$$e800$$ENDHEX$$s JFF ( w_sp_trt_stat3 )
+//* Auteur        : PHG, d'après JFF ( w_sp_trt_stat3 )
 //* Date          : 21/11/2006
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le des donn$$HEX1$$e900$$ENDHEX$$es
+//* Libellé       : Contrôle des données
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -1322,12 +1322,12 @@ private function boolean wf_controler ();//*------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     	Modification
 //* #1	JCA		23/02/2007	DCMP 070110 - Ajout du fournisseur Darty
-//* #2	PHG		17/03/2008	[DCMP080166] Ajout Champs 'Cat$$HEX1$$e900$$ENDHEX$$gorie de Facture'
-//* #3 	FPI		05/03/2009	Contr$$HEX1$$f400$$ENDHEX$$le date de facture > today()
+//* #2	PHG		17/03/2008	[DCMP080166] Ajout Champs 'Catégorie de Facture'
+//* #3 	FPI		05/03/2009	Contrôle date de facture > today()
 //* #4	PHG		10/04/2009  [FNAC_PROD_ECH_TECH] Fnac Attitude
 //* #5	JFF		04/05/2009  [FNAC_PROD_ECH_TECH].20090504151852270 Fnac Attitude
-//* #6	PHG		28/09/2009	[DCMP090483] Controle non nullit$$HEX2$$e9002000$$ENDHEX$$des champs 
-//*									"heure du ticket - caisse - h$$HEX1$$f400$$ENDHEX$$te - n$$HEX2$$b0002000$$ENDHEX$$de ticket"				
+//* #6	PHG		28/09/2009	[DCMP090483] Controle non nullité des champs 
+//*									"heure du ticket - caisse - hôte - n° de ticket"				
 //* #7   JFF      30/11/2009  [FNAC_BGE].[20091130112458810]
 //* #8   JFF      03/12/2009  [FNAC_BGE].[20091203110556880]
 //*      JFF      09/01/2013  [VDOC9586]
@@ -1335,7 +1335,7 @@ private function boolean wf_controler ();//*------------------------------------
 //       JFF   07/10/2013 [DT044-1_V5]
 //       JFF   05/11/2013 [PM210]
 //       JFF   22/10/2014 [FACTU_VIP_CDS]
-//		FPI	29/10/2014	[PC13174] nouvelle m$$HEX1$$e900$$ENDHEX$$thode de factu
+//		FPI	29/10/2014	[PC13174] nouvelle méthode de factu
 //		FPI	30/01/2015	[FACTU_SRR]
 // 		JFF	12/03/2015  [VDOC14649]
 //       JFF   09/04/2015 [DT141]
@@ -1351,19 +1351,19 @@ private function boolean wf_controler ();//*------------------------------------
 //       JFF   09/09/2022 [PM80_FA12_FRANEX]
 //*-----------------------------------------------------------------
 //*
-//* [FNAC_PROD_ECH_TECH] Fnac Attitude : Note de d$$HEX1$$e900$$ENDHEX$$veloppement :
-//* On atteint la limite de ce qui est qualitativement g$$HEX1$$e900$$ENDHEX$$rable via choose case
+//* [FNAC_PROD_ECH_TECH] Fnac Attitude : Note de développement :
+//* On atteint la limite de ce qui est qualitativement gérable via choose case
 //* pour les controle et enregistrement par fournisseur.
 //*
 //* Si jamais un autre fournisseur devait se greffer sur se processus, je propose
-//* la r$$HEX2$$e900e900$$ENDHEX$$criture de cette fen$$HEX1$$ea00$$ENDHEX$$tre via le principe suivant :
-//* - D$$HEX1$$e900$$ENDHEX$$port de wf_controler et wf_maj dans un objet d'int$$HEX1$$e900$$ENDHEX$$gration par fournisseur
-//* bas$$HEX2$$e9002000$$ENDHEX$$sur l'architecture suivante :
-//* n_cst_autofact_anc : Objet ancetre d'int$$HEX1$$e900$$ENDHEX$$gration, g$$HEX1$$e900$$ENDHEX$$rer le commun en tout les fournisseur
-//*      +-> n_cst_autofact_<code fournisseur>, impl$$HEX1$$e900$$ENDHEX$$mentant les controle sp$$HEX1$$e900$$ENDHEX$$cifique
-//*			 et la m$$HEX1$$e900$$ENDHEX$$thode d'enregistrement par fournisseur.
-//* Le tout $$HEX1$$e900$$ENDHEX$$tant instanci$$HEX4$$e9002000e0002000$$ENDHEX$$la vol$$HEX1$$e900$$ENDHEX$$e, via un CREATE USING, par code fournisseur,
-//* lors de la s$$HEX1$$e900$$ENDHEX$$lection de celui-ci dans la dddw.
+//* la réécriture de cette fenêtre via le principe suivant :
+//* - Déport de wf_controler et wf_maj dans un objet d'intégration par fournisseur
+//* basé sur l'architecture suivante :
+//* n_cst_autofact_anc : Objet ancetre d'intégration, gérer le commun en tout les fournisseur
+//*      +-> n_cst_autofact_<code fournisseur>, implémentant les controle spécifique
+//*			 et la méthode d'enregistrement par fournisseur.
+//* Le tout étant instancié à la volée, via un CREATE USING, par code fournisseur,
+//* lors de la sélection de celui-ci dans la dddw.
 //* Pierre-Henri Gillot, le 15/04/2009 
 //*-----------------------------------------------------------------
 
@@ -1379,7 +1379,7 @@ Integer  iIdTypFact //[DCMP080461]
 boolean	bHpresta	  // #2 [DCMP080166]
 
 string	sOk, sRetour, sDesc // [FNAC_PROD_ECH_TECH]
-string	sChampSup[]  // #4 [FNAC_PROD_ECH_TECH] Tableau de champs suppl$$HEX1$$e900$$ENDHEX$$mentaire, hors chmaps existant
+string	sChampSup[]  // #4 [FNAC_PROD_ECH_TECH] Tableau de champs supplémentaire, hors chmaps existant
 string   sNull[]
 n_cst_string	lnvString
 string   sTbFraisAnex[], sTbFraisNull[]
@@ -1407,7 +1407,7 @@ Boolean bBasculeFNC
 /* Frais annexe dcTbFraisAnex[]
      1	Indemnisation principale
      2	Diagnostic/Analyse/Expertise
-     3	Irr$$HEX1$$e900$$ENDHEX$$parable
+     3	Irréparable
      4	Refus
      5	Frais de gestion/frais de dossier
      6	Logistique/transport/frais d'envoi
@@ -1446,12 +1446,12 @@ Choose Case sIdFourn
 		End Choose				
 End Choose						
 
-if not bok then sErreur += "Traitement n$$HEX1$$b000$$ENDHEX$$" + String ( iIdTypFact ) + " non autoris$$HEX2$$e9002000$$ENDHEX$$sur le fournisseur " + sIdFourn
+if not bok then sErreur += "Traitement n°" + String ( iIdTypFact ) + " non autorisé sur le fournisseur " + sIdFourn
 
-// Traitement 5 interdit le Vendredi pour un probl$$HEX1$$e800$$ENDHEX$$me de bordereau GenVir.
+// Traitement 5 interdit le Vendredi pour un problème de bordereau GenVir.
 If iIdTypFact = 5 And DayNumber ( ToDay() ) = 6 Then
 	bOk = False
-	if not bok then sErreur += "Traitement n$$HEX1$$b000$$ENDHEX$$" + String ( iIdTypFact ) + " interdit le Vendredi."
+	if not bok then sErreur += "Traitement n°" + String ( iIdTypFact ) + " interdit le Vendredi."
 End If
 	
 // [VDOC9586]
@@ -1486,7 +1486,7 @@ For lCpt = 1 to lTotRow
 		sMteFact		= dw_charger.object.mte_fact[lCpt]
 		//on charge le fournisseur du fichier pour la ligne en cours
 		sIdFournFic = dw_charger.object.id_fourn[lCpt]
-		// #2	[DCMP080166] Cat$$HEX1$$e900$$ENDHEX$$gorie de Facture
+		// #2	[DCMP080166] Catégorie de Facture
 		sCatFact		= dw_charger.object.cat_fact[lCpt]
 
 		// [PM336-1]
@@ -1501,7 +1501,7 @@ For lCpt = 1 to lTotRow
 		sMteFact		= dw_charger.object.mte_fact[lCpt]
 		//on charge le fournisseur du fichier pour la ligne en cours
 		sIdFournFic = dw_charger.object.id_fourn[lCpt]
-		// #2	[DCMP080166] Cat$$HEX1$$e900$$ENDHEX$$gorie de Facture
+		// #2	[DCMP080166] Catégorie de Facture
 		sCatFact		= dw_charger.object.cat_fact[lCpt]
 
 		// [PM336-1]
@@ -1528,7 +1528,7 @@ For lCpt = 1 to lTotRow
 				sMteFact		= dw_charger.object.mte_fact[lCpt]
 				//on charge le fournisseur du fichier pour la ligne en cours
 				sIdFournFic = dw_charger.object.id_fourn[lCpt]
-				// #2	[DCMP080166] Cat$$HEX1$$e900$$ENDHEX$$gorie de Facture
+				// #2	[DCMP080166] Catégorie de Facture
 				sCatFact		= dw_charger.object.cat_fact[lCpt]
 
 				// [PM336-1]
@@ -1556,20 +1556,20 @@ For lCpt = 1 to lTotRow
 				// [FACTU_VIP_CDS]
 				// [FACTU_SRR]
 				// [DT227]
-				// Nouveau g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rique pour M$$HEX1$$e900$$ENDHEX$$thode en en sp$$HEX1$$e900$$ENDHEX$$cifiant le fournisseur $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e800$$ENDHEX$$gler
+				// Nouveau générique pour Méthode en en spécifiant le fournisseur à règler
 				// Chargement dans les variables de controle
 				sIdSinIdSeq = dw_charger.object.id_sin_id_seq[lCpt]
 				sDteFact		= dw_charger.object.dte_fact[lCpt]
 				sNumFacture	= dw_charger.object.num_facture[lCpt]
 				sMteFact		= dw_charger.object.mte_fact[lCpt]
-				sIdFournFic = dw_charger.object.id_fourn[lCpt]  // La nouveaut$$HEX1$$e900$$ENDHEX$$
+				sIdFournFic = dw_charger.object.id_fourn[lCpt]  // La nouveauté
 				sCatFact		= dw_charger.object.cat_fact[lCpt]
 	
 				// [PM336-1]
 				sAForcer    = dw_charger.object.a_forcer [lCpt]
 
 	
-				// Controle Forme Id-Sin Id-Seq : Il doivent $$HEX1$$ea00$$ENDHEX$$tre num$$HEX1$$e900$$ENDHEX$$rique
+				// Controle Forme Id-Sin Id-Seq : Il doivent être numérique
 				// Utilisation des codes retour des cast de Long et Integer
 				// pour ce faire.
 				
@@ -1580,26 +1580,26 @@ For lCpt = 1 to lTotRow
 						(iIdSeq<>0) and ( Not IsNull (iIdSeq) ) 
 
 		
-			// [PM363-1] $$HEX2$$e0002000$$ENDHEX$$migrer au dessus lors de la d$$HEX1$$e900$$ENDHEX$$sact de la cl$$HEX2$$e9002000$$ENDHEX$$PM363-1
+			// [PM363-1] à migrer au dessus lors de la désact de la clé PM363-1
 			Case "O2M"
 				// [PM363-1]
 				// [FACTU_VIP_CDS]
 				// [FACTU_SRR]
 				// [DT227]
-				// Nouveau g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rique pour M$$HEX1$$e900$$ENDHEX$$thode en en sp$$HEX1$$e900$$ENDHEX$$cifiant le fournisseur $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e800$$ENDHEX$$gler
+				// Nouveau générique pour Méthode en en spécifiant le fournisseur à règler
 				// Chargement dans les variables de controle
 				sIdSinIdSeq = dw_charger.object.id_sin_id_seq[lCpt]
 				sDteFact		= dw_charger.object.dte_fact[lCpt]
 				sNumFacture	= dw_charger.object.num_facture[lCpt]
 				sMteFact		= dw_charger.object.mte_fact[lCpt]
-				sIdFournFic = dw_charger.object.id_fourn[lCpt]  // La nouveaut$$HEX1$$e900$$ENDHEX$$
+				sIdFournFic = dw_charger.object.id_fourn[lCpt]  // La nouveauté
 				sCatFact		= dw_charger.object.cat_fact[lCpt]
 	
 				// [PM336-1]
 				sAForcer    = dw_charger.object.a_forcer [lCpt]
 
 	
-				// Controle Forme Id-Sin Id-Seq : Il doivent $$HEX1$$ea00$$ENDHEX$$tre num$$HEX1$$e900$$ENDHEX$$rique
+				// Controle Forme Id-Sin Id-Seq : Il doivent être numérique
 				// Utilisation des codes retour des cast de Long et Integer
 				// pour ce faire.
 				
@@ -1609,7 +1609,7 @@ For lCpt = 1 to lTotRow
 				bOk = (lIdSin<>0) and ( Not IsNull (lIdSin) ) and &
 						(iIdSeq<>0) and ( Not IsNull (iIdSeq) ) 
 
-			Case "999" // li$$HEX2$$e9002000$$ENDHEX$$SCR 
+			Case "999" // lié SCR 
 				// [VDOC14649]
 				sIdSinIdSeq = dw_charger.object.id_sin_id_seq[lCpt]
 				sDteFact		= dw_charger.object.dte_fact[lCpt]
@@ -1626,7 +1626,7 @@ For lCpt = 1 to lTotRow
 				
 			case "FNC"// #4 [FNAC_PROD_ECH_TECH]
 				//on charge le fournisseur du fichier pour la ligne en cours
-				//Correspond $$HEX2$$e0002000$$ENDHEX$$id_fourn
+				//Correspond à id_fourn
 				sIdFournFic = dw_charger.object.id_fourn[lCpt]
 				// Chargement dans les variables de controle
 				sIdSinIdSeq = dw_charger.object.id_bon_ech[lCpt] 
@@ -1642,8 +1642,8 @@ For lCpt = 1 to lTotRow
 				sDteFact = left(sDteFact,2)+"/"+mid(sDteFact,3,2)+"/"+right(sDteFact,4)
 
 				sNumFacture	= dw_charger.object.num_facture[lCpt]
-				sMteFact		= string(dw_charger.object.mte_fact[lCpt]) // Correspond $$HEX2$$e0002000$$ENDHEX$$mt_fact
-				// #2	[DCMP080166] Cat$$HEX1$$e900$$ENDHEX$$gorie de Facture
+				sMteFact		= string(dw_charger.object.mte_fact[lCpt]) // Correspond à mt_fact
+				// #2	[DCMP080166] Catégorie de Facture
 				sCatFact		= dw_charger.object.cat_fact[lCpt]
 
 				// [PM336-1]
@@ -1684,13 +1684,13 @@ For lCpt = 1 to lTotRow
 				sDteFact		= dw_charger.object.dte_fact[lCpt]
 				sNumFacture	= dw_charger.object.num_facture[lCpt]
 				sMteFact		= dw_charger.object.mte_fact[lCpt]
-				// #2	[DCMP080166] Cat$$HEX1$$e900$$ENDHEX$$gorie de Facture
+				// #2	[DCMP080166] Catégorie de Facture
 				sCatFact		= dw_charger.object.cat_fact[lCpt]
 	
 				// [PM336-1]
 				sAForcer    = dw_charger.object.a_forcer [lCpt]
 	
-				// Controle Forme Id-Sin Id-Seq : Il doivent $$HEX1$$ea00$$ENDHEX$$tre num$$HEX1$$e900$$ENDHEX$$rique
+				// Controle Forme Id-Sin Id-Seq : Il doivent être numérique
 				// Utilisation des codes retour des cast de Long et Integer
 				// pour ce faire.
 				
@@ -1700,7 +1700,7 @@ For lCpt = 1 to lTotRow
 				bOk = (lIdSin<>0) and ( Not IsNull (lIdSin) ) and &
 						(iIdSeq<>0) and ( Not IsNull (iIdSeq) ) 
 		
-				// Controle Code Fournisseur S$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$= Code Fournisseur de la commande
+				// Controle Code Fournisseur Sélectionné = Code Fournisseur de la commande
 				sIdFournFic = Space(3) // Init de la chaine pour appel RPC.
 				sqlca.PS_S07_COMMANDE(lIdSin,iIdSeq,sIdFournFic)
 				bOk = ( sqlca.sqlcode = 0 )
@@ -1710,7 +1710,7 @@ For lCpt = 1 to lTotRow
 	End If
 
 	// [PM80_FA12_FRANEX]
-	// Zones communes $$HEX2$$e0002000$$ENDHEX$$tous les DO ci-dessus, donc un seul chargement commun
+	// Zones communes à tous les DO ci-dessus, donc un seul chargement commun
 	sTbFraisAnex = sTbFraisNull
 	sTbFraisAnex[1] =  dw_charger.object.indem_princ_1[lCpt]
 	sTbFraisAnex[2] =  dw_charger.object.frais_anex_2 [lCpt]		
@@ -1725,7 +1725,7 @@ For lCpt = 1 to lTotRow
 	sTbFraisAnex[11] =  dw_charger.object.frais_anex_11 [lCpt]		
 
 
-	// *** Variables charg$$HEX1$$e900$$ENDHEX$$es en m$$HEX1$$e900$$ENDHEX$$moire, controle des donn$$HEX1$$e900$$ENDHEX$$es
+	// *** Variables chargées en mémoire, controle des données
 	// [PM336-1]
 	if bOk Then 
 		If Upper ( sAForcer ) = "A_FORCER" And Not bDroitForcage Then
@@ -1759,10 +1759,10 @@ For lCpt = 1 to lTotRow
 			Choose Case sIdFourAG
 				Case "CAL"
 					bOk = dw_charger.Find ( "ID_FOURN = '" + upper(Trim(sIdFourn)) + "'" , 1, dw_charger.RowCount ()) > 0 
-					if not bok then sErreur += "Code Fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$absent du fichier !"
+					if not bok then sErreur += "Code Fournisseur sélectionné absent du fichier !"
 				Case Else
 					bOk = ( upper(trim(sIdFournFic)) = upper(Trim(sIdFourn)) )
-					if not bok then sErreur += "Code Fournisseur du Fichier, diff$$HEX1$$e900$$ENDHEX$$rent de celui s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$! "
+					if not bok then sErreur += "Code Fournisseur du Fichier, différent de celui sélectionné ! "
 			
 			End Choose 
 		End If
@@ -1776,46 +1776,46 @@ For lCpt = 1 to lTotRow
 		if not bok then sErreur += "Date Facturation n'est pas une date ! "
 	End If
 	
-	// #3 - Controle dte fact ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$aujourd'hui
+	// #3 - Controle dte fact antérieure à aujourd'hui
 	if bOK Then
 		If IsNull ( sDteFact ) Then sDteFact = ""
 		bOk = bOk And  (Date(sDteFact) <= today())
-		if not bok then sErreur += "Date Facturation doit $$HEX1$$ea00$$ENDHEX$$tre inf$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la date du jour ! "
+		if not bok then sErreur += "Date Facturation doit être inférieure ou égale à la date du jour ! "
 	End if
 	
 	If bOk Then
 		If IsNull ( sNumFacture ) Then sNumFacture = ""
 		sNumFacture = Trim ( sNumFacture )
 		bOk = bOk And sNumFacture <> ""
-		if not bok then sErreur += "N$$HEX2$$b0002000$$ENDHEX$$de facture obligatoire ! "
+		if not bok then sErreur += "N° de facture obligatoire ! "
 	End If
 	
-	// Controle que Num Facture est <= $$HEX2$$e0002000$$ENDHEX$$35 Caract$$HEX1$$e800$$ENDHEX$$re
+	// Controle que Num Facture est <= à 35 Caractère
 	If bOk Then
 		If IsNull ( sNumFacture ) Then sNumFacture = ""
 		bOk = bOk And ( Len(sNumFacture) <= 35	)
-		if not bok then sErreur += "N$$HEX2$$b0002000$$ENDHEX$$de facture trop grand ! "
+		if not bok then sErreur += "N° de facture trop grand ! "
 	End If
 
 	// #2 [DCMP080166]
-	// Controle que Cat$$HEX1$$e900$$ENDHEX$$gorie de Facture est <= $$HEX2$$e0002000$$ENDHEX$$35 Caract$$HEX1$$e800$$ENDHEX$$re
+	// Controle que Catégorie de Facture est <= à 35 Caractère
 	If bOk Then
 		If IsNull ( sCatFact ) Then sCatFact = ""		
 		bOk = bOk And ( Len(sCatFact) <= 35	)
-		if not bok then sErreur += "Cat$$HEX1$$e900$$ENDHEX$$gorie de facture trop grand ! "
+		if not bok then sErreur += "Catégorie de facture trop grand ! "
 	End If
 	//
 
-	// Controle que Montant Facture est bien un d$$HEX1$$e900$$ENDHEX$$cimal
+	// Controle que Montant Facture est bien un décimal
 	If bOk Then
 		bOk = bOk And ( Dec(sMteFact)<> 0 )	
 		if not bok then sErreur += "Montant de facturation n'est pas un nombre ! "
 	End If
 	
 	// [PM80_FA12_FRANEX]
-	// Ici contr$$HEX1$$f400$$ENDHEX$$les des frais annexes
+	// Ici contrôles des frais annexes
 	
-	// Remplacer les null par 0 et // aucun montant strictement n$$HEX1$$e900$$ENDHEX$$gatif
+	// Remplacer les null par 0 et // aucun montant strictement négatif
 	lTotTbFrais = UpperBound ( sTbFraisAnex ) 
 	
 	If bOk Then
@@ -1823,29 +1823,29 @@ For lCpt = 1 to lTotRow
 			If IsNull ( sTbFraisAnex [lCptTbFrais] ) Or Trim ( sTbFraisAnex [lCptTbFrais] ) = "" Then sTbFraisAnex [lCptTbFrais] = "0"
 			If Not IsNumber( sTbFraisAnex [lCptTbFrais] ) then
 				bOk = False
-				sErreur += "Les zones de montants de frais doivent $$HEX1$$ea00$$ENDHEX$$tre num$$HEX1$$e900$$ENDHEX$$riques (d$$HEX1$$e900$$ENDHEX$$cimales) !"				
+				sErreur += "Les zones de montants de frais doivent être numériques (décimales) !"				
 				Exit
 			End If 
 			
 			If bOk Then
 				if Dec ( sTbFraisAnex [lCptTbFrais])  < 0 Then
 					bOk = False
-					sErreur += "Les zones de montants de frais doivent $$HEX1$$ea00$$ENDHEX$$tre positives ou $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro !"				
+					sErreur += "Les zones de montants de frais doivent être positives ou à zéro !"				
 					Exit
 				End If 
 			End If 
 		Next 
 	End If 
 	
-	/* Suite mail de Coraline, l'indem princ peut $$HEX1$$ea00$$ENDHEX$$tre $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro
-	// Indem Princ doit $$HEX1$$ea00$$ENDHEX$$tre positif
+	/* Suite mail de Coraline, l'indem princ peut être à zéro
+	// Indem Princ doit être positif
 	If bOk And dec ( sTbFraisAnex [1] ) <= 0 Then
 		bOk = False
-		sErreur += "Le montant de frais 'Indem. Princ' doit $$HEX1$$ea00$$ENDHEX$$tre strictement positif !"				
+		sErreur += "Le montant de frais 'Indem. Princ' doit être strictement positif !"				
 	End If 
 	*/
 	
-	// La somme des frais de 1 $$HEX2$$e0002000$$ENDHEX$$11 doit $$HEX1$$ea00$$ENDHEX$$tre $$HEX1$$e900$$ENDHEX$$gale au montant de facture
+	// La somme des frais de 1 à 11 doit être égale au montant de facture
 	If bOk Then
 		dcSomTbFrais = 0 
 		For lCptTbFrais = 1 To lTotTbFrais 
@@ -1853,12 +1853,12 @@ For lCpt = 1 to lTotRow
 		Next 
 		If dec ( sMteFact )  <> dcSomTbFrais Then
 			bOk = False
-			sErreur += "La somme des frais doit $$HEX1$$ea00$$ENDHEX$$tre $$HEX1$$e900$$ENDHEX$$gale au montant de facturation !"				
+			sErreur += "La somme des frais doit être égale au montant de facturation !"				
 		End If 
 	End If 
 	
 
-	// *** Controles Sp$$HEX1$$e900$$ENDHEX$$cifiques, par fournisseurs
+	// *** Controles Spécifiques, par fournisseurs
 	if bOk Then
 		choose case sIdFourn
 				
@@ -1872,7 +1872,7 @@ For lCpt = 1 to lTotRow
 					bOk = ( sqlca.sqlcode = 0 )
 					if Not bOk then sErreur += "Erreur SQL : PS_S01_AGENCE : "+SQLCA.SQLErrText
 					if bOk and sOk = "N" then
-						sErreur += "Soci$$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$Comptable : " + trim(sRetour)
+						sErreur += "Société Comptable : " + trim(sRetour)
 						bOk = False
 					End If
 					sRetour 	= space(50)
@@ -1882,7 +1882,7 @@ For lCpt = 1 to lTotRow
 				if bOk Then
 					// id_bon_ech
 					// - 1 Controle de format : lng = 8 et idSin et IdSeq sont des nombres
-					// Attention : lIdSin et lIdSeq sont r$$HEX1$$e900$$ENDHEX$$utilis$$HEX2$$e9002000$$ENDHEX$$lors du report des donn$$HEX1$$e900$$ENDHEX$$es
+					// Attention : lIdSin et lIdSeq sont réutilisé lors du report des données
 					// vers le datastore d'enregitrement.
 
 					// #7 [FNAC_BGE].[20091130112458810]
@@ -1899,11 +1899,11 @@ For lCpt = 1 to lTotRow
 					End Choose
 					// :#7 [FNAC_BGE].[20091130112458810]
 					
-					//* #8 [FNAC_BGE].[20091203110556880] passage de 8 $$HEX2$$e0002000$$ENDHEX$$20
+					//* #8 [FNAC_BGE].[20091203110556880] passage de 8 à 20
 					bOk = (lIdSin<>0) and ( Not IsNull (lIdSin) ) and &
 							(iIdSeq<>0) and ( Not IsNull (iIdSeq) ) and &
 							len(trim(sIdSinIdSeq)) = lLongueur
-					if not bok then sErreur += "N$$HEX2$$b0002000$$ENDHEX$$Bon d'$$HEX1$$e900$$ENDHEX$$change incorrect ! "
+					if not bok then sErreur += "N° Bon d'échange incorrect ! "
 					//* #8 [FNAC_BGE].[20091203110556880]
 					
 				End If
@@ -1917,7 +1917,7 @@ For lCpt = 1 to lTotRow
 					bOk = ( sqlca.sqlcode = 0 )
 					if Not bOk then sErreur += " Erreur SQL : PS_S12_COMMANDE : "+SQLCA.SQLErrText
 					if bOk and sOk = "N" then
-						sErreur += "N$$HEX2$$b0002000$$ENDHEX$$Bon d'$$HEX1$$e900$$ENDHEX$$change : " + trim(sRetour)
+						sErreur += "N° Bon d'échange : " + trim(sRetour)
 						bOk = False
 					End If
 					sRetour 	= space(50)
@@ -1926,21 +1926,21 @@ For lCpt = 1 to lTotRow
 				End If
 				
 				If bOk Then
-					// num_fact : Doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$
+					// num_fact : Doit être renseigné
 					bOk = ( Len(trim(sNumFacture) ) > 0 ) and ( not isnull(sNumFacture) )
-					if not bok then sErreur += "N$$HEX2$$b0002000$$ENDHEX$$de facture obligatoire ! "
+					if not bok then sErreur += "N° de facture obligatoire ! "
 				End If
 				
 				if bOk Then
 					// mt_bon, ie mt_fact
-					// - 1 Doit $$HEX1$$ea00$$ENDHEX$$re positif.
+					// - 1 Doit êre positif.
 					bOk = Dec(sMteFact) > 0
-					if not bok then sErreur += "Mt du bon $$HEX2$$e0002000$$ENDHEX$$0 ou n$$HEX1$$e900$$ENDHEX$$gatif ! "
+					if not bok then sErreur += "Mt du bon à 0 ou négatif ! "
 				End If
 
 				if bOk Then
 					// mt_bon, ie mt_fact
-					// - 2 V$$HEX1$$e900$$ENDHEX$$rif par rapport $$HEX2$$e0002000$$ENDHEX$$Mt de P.E.C.
+					// - 2 Vérif par rapport à Mt de P.E.C.
 					SQLCA.PS_S01_DIV_Det ( lIdSin, iIdSeq, Dec(sMteFact), sRetour, sOk )
 					bOk = ( sqlca.sqlcode = 0 )
 					if Not bOk then sErreur += "Erreur SQL : PS_S01_DIV_Det : "+SQLCA.SQLErrText
@@ -2009,9 +2009,9 @@ For lCpt = 1 to lTotRow
 				
 				if bOk Then
 					// mt_ticket,
-					// Doit $$HEX1$$ea00$$ENDHEX$$re positif.
+					// Doit êre positif.
 					bOk = Dec(sChampSup[7] ) > 0
-					if not bok then sErreur += "Mt Ticket $$HEX2$$e0002000$$ENDHEX$$0 ou n$$HEX1$$e900$$ENDHEX$$gatif ! "
+					if not bok then sErreur += "Mt Ticket à 0 ou négatif ! "
 				End If
 
 		End choose
@@ -2103,20 +2103,20 @@ For lCpt = 1 to lTotRow
 					// [FACTU_VIP_CDS]
 					// [FACTU_SRR]
 					// [DT227]
-					// Nouveau g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rique pour M$$HEX1$$e900$$ENDHEX$$thode en en sp$$HEX1$$e900$$ENDHEX$$cifiant le fournisseur $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e800$$ENDHEX$$gler
+					// Nouveau générique pour Méthode en en spécifiant le fournisseur à règler
 					ids_charger.object.id_sin[lPos] 			= lIdSin
 					ids_charger.object.id_seq[lPos] 			= iIdSeq
 					ids_charger.object.dte_fact[lPos] 		= Date(sDteFact)
 					ids_charger.object.num_facture[lPos] 	= sNumFacture
 					ids_charger.object.mte_fact[lPos] 		= Dec(sMteFact)
-					ids_charger.object.id_fourn[lPos] 		= sIdFournFic  // La nouveaut$$HEX1$$e900$$ENDHEX$$
+					ids_charger.object.id_fourn[lPos] 		= sIdFournFic  // La nouveauté
 					ids_charger.object.cat_fact[lPos] 		= sCatFact			
 					
 					// [PM336-1]
 					ids_charger.object.a_forcer[lPos]	= sAForcer
 					
 
-				// [PM363-1] $$HEX2$$e0002000$$ENDHEX$$migrer au dessus lors de la d$$HEX1$$e900$$ENDHEX$$sact de la cl$$HEX2$$e9002000$$ENDHEX$$PM363-1
+				// [PM363-1] à migrer au dessus lors de la désact de la clé PM363-1
 				Case "O2M"
 					// [PM363-1]
 					ids_charger.object.id_sin[lPos] 			= lIdSin
@@ -2124,18 +2124,18 @@ For lCpt = 1 to lTotRow
 					ids_charger.object.dte_fact[lPos] 		= Date(sDteFact)
 					ids_charger.object.num_facture[lPos] 	= sNumFacture
 					ids_charger.object.mte_fact[lPos] 		= Dec(sMteFact)
-					ids_charger.object.id_fourn[lPos] 		= sIdFournFic  // La nouveaut$$HEX1$$e900$$ENDHEX$$
+					ids_charger.object.id_fourn[lPos] 		= sIdFournFic  // La nouveauté
 					ids_charger.object.cat_fact[lPos] 		= sCatFact		
 					
 					// [PM336-1]
 					ids_charger.object.a_forcer[lPos]	= sAForcer
 					
-				Case "999" // li$$HEX2$$e9002000$$ENDHEX$$SCR [VDOC14649]
+				Case "999" // lié SCR [VDOC14649]
 					ids_charger.object.id_sin[lPos] 			= lIdSin
 					ids_charger.object.dte_fact[lPos] 		= Date(sDteFact)
 					ids_charger.object.num_facture[lPos] 	= sNumFacture
 					ids_charger.object.mte_fact[lPos] 		= Dec(sMteFact)
-					ids_charger.object.id_fourn[lPos] 		= sIdFournFic  // La nouveaut$$HEX1$$e900$$ENDHEX$$
+					ids_charger.object.id_fourn[lPos] 		= sIdFournFic  // La nouveauté
 					ids_charger.object.cat_fact[lPos] 		= sCatFact						
 					
 					// [PM336-1]
@@ -2186,7 +2186,7 @@ For lCpt = 1 to lTotRow
 		
 		// [PM80_FA12_FRANEX]
 
-		// Zones communes $$HEX2$$e0002000$$ENDHEX$$tous les DO ci-dessus, donc un seul chargement commun
+		// Zones communes à tous les DO ci-dessus, donc un seul chargement commun
 		ids_charger.object.indem_princ_1[lPos] = Dec (sTbFraisAnex[1])
 		ids_charger.object.frais_anex_2[lPos] = Dec (sTbFraisAnex[2])
 		ids_charger.object.frais_anex_3[lPos] = Dec (sTbFraisAnex[3]) 
@@ -2212,7 +2212,7 @@ For lCpt = 1 to lTotRow
 Next
 
 
-//* #8 [FNAC_BGE].[20091203110556880] contr$$HEX1$$f400$$ENDHEX$$le d$$HEX1$$e900$$ENDHEX$$port$$HEX1$$e900$$ENDHEX$$
+//* #8 [FNAC_BGE].[20091203110556880] contrôle déporté
 If bOk And sIdFourn = "FNC" Then 
 	lTotRow = ids_charger.Rowcount ()
 	ids_charger.SetSort ( "ID_SIN A" )
@@ -2224,7 +2224,7 @@ If bOk And sIdFourn = "FNC" Then
 		If lIdSin = lIdSinPrec Then
 			bOk = False
 			lCpt = 0
-			sErreur += "N$$HEX2$$b0002000$$ENDHEX$$Bon d'$$HEX1$$e900$$ENDHEX$$change en doublon sinistre " + String (lIdSin) + " ($$HEX2$$e0002000$$ENDHEX$$rechercher dans le fichier FNAC) ! "
+			sErreur += "N° Bon d'échange en doublon sinistre " + String (lIdSin) + " (à rechercher dans le fichier FNAC) ! "
 			sRetour 	= space(50)
 			sOk 		= " "
 			Exit
@@ -2259,10 +2259,10 @@ if bOk Then // [DCMP080461] Confirmation d'un traitement hors prestation
 		End Choose 
 				
 		if F_message(stMessage) = 1 THen
-			st_Extraire.Text  = "Contr$$HEX1$$f400$$ENDHEX$$le Ok !"
+			st_Extraire.Text  = "Contrôle Ok !"
 			bOk = TRUE
 		Else
-			st_Extraire.text  = "Contr$$HEX1$$f400$$ENDHEX$$le non valid$$HEX2$$e9002000$$ENDHEX$$( erreur de choix de type de facturation ) !"
+			st_Extraire.text  = "Contrôle non validé ( erreur de choix de type de facturation ) !"
 			bOk = FALSE
 		End If
 	Else
@@ -2285,22 +2285,22 @@ if bOk Then // [DCMP080461] Confirmation d'un traitement hors prestation
 				stMEssage.Bouton = YESNO!					
 			
 			Case Else
-				st_Extraire.Text  = "Contr$$HEX1$$f400$$ENDHEX$$le Ok !"
+				st_Extraire.Text  = "Contrôle Ok !"
 			
 		End Choose 
 		
 		If stMEssage.scode <> "" Then
 			if F_message(stMessage) = 1 THen
-				st_Extraire.Text  = "Contr$$HEX1$$f400$$ENDHEX$$le Ok !"
+				st_Extraire.Text  = "Contrôle Ok !"
 				bOk = TRUE
 			Else
-				st_Extraire.text  = "Contr$$HEX1$$f400$$ENDHEX$$le non valid$$HEX2$$e9002000$$ENDHEX$$( erreur de choix de type de facturation ) !"
+				st_Extraire.text  = "Contrôle non validé ( erreur de choix de type de facturation ) !"
 				bOk = FALSE
 			End If				
 		End If
 	End If
 else
-	st_Extraire.Text  = "Erreur sur la ligne n$$HEX1$$b000$$ENDHEX$$"+string(lCpt)+" "+sErreur
+	st_Extraire.Text  = "Erreur sur la ligne n°"+string(lCpt)+" "+sErreur
 End If
 SetPointer(Arrow!)
 
@@ -2326,7 +2326,7 @@ public subroutine wf_positionnerobjets ();//*-----------------------------------
 //* Fonction		: W_Tm_Sp_Sinistre::Wf_PositionnerObjets (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 28/09/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On positionne et on taille tous les objets
 //*
 //* Arguments		: Aucun
@@ -2404,7 +2404,7 @@ private subroutine wf_pct ();//*------------------------------------------------
 //* Fonction      : w_sp_trt_autofact::wf_pct (PRIVATE)
 //* Auteur        : JFF
 //* Date          : 13/01/2023
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: maj pourcentage
+//* Libellé       : maj pourcentage
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -2428,21 +2428,21 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //*
 //* Objet 			: W_Sp_Trt_Extr1::Ue_Initialiser
 //* Evenement 		: Ue_Initialiser
-//* Auteur			: PHG, d'apr$$HEX1$$e800$$ENDHEX$$s JFF ( w_sp_trt_stat3 )
+//* Auteur			: PHG, d'après JFF ( w_sp_trt_stat3 )
 //* Date				: 20/11/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ	PAR		Date		Modification
 //* #1	JCA	22/02/2007	DCMP 070110 - Ajout du fournisseur Darty
-//* #2	PHG	13/06/2008	[DCMP080461] Int$$HEX1$$e900$$ENDHEX$$gration FActuration Hors Prestation
+//* #2	PHG	13/06/2008	[DCMP080461] Intégration FActuration Hors Prestation
 //*-----------------------------------------------------------------
 
 DataWindowChild dwChild
 Long lRow
 
-This.Title = "Automatisation Facturation Fournisseur T$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phonie"
+This.Title = "Automatisation Facturation Fournisseur Téléphonie"
 
 // #1
 // ids_charger = create datastore
@@ -2461,7 +2461,7 @@ dw_Fourn.GetChild ( "ID_TYP_FACT", dwChild )
 dwChild.SetTransObject ( SQLCA )
 lRow = dwChild.Retrieve ( "-AF" )
 
-// Gros probl$$HEX1$$e800$$ENDHEX$$me : Cette fen$$HEX1$$ea00$$ENDHEX$$tre (je ne sais pas pourquoi) ne d$$HEX1$$e900$$ENDHEX$$clenche plus
+// Gros problème : Cette fenêtre (je ne sais pas pourquoi) ne déclenche plus
 // nativement le SHOW(), var comprendre, l'appel de la fonction this.show() ne fonctionne pas non plus
 
 isCasTailleFen = "REDUIRE"
@@ -2474,10 +2474,10 @@ event show;call super::show;//*-------------------------------------------------
 //*
 //* Objet         : w_sp_trt_autofact
 //* Evenement     : Show
-//* Auteur        : PHG, d'apr$$HEX1$$e800$$ENDHEX$$s JFF ( w_sp_trt_stat3 )
+//* Auteur        : PHG, d'après JFF ( w_sp_trt_stat3 )
 //* Date          : 20/11/2006
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Chargement des donn$$HEX1$$e900$$ENDHEX$$es
-//* Commentaires  : Chargement des r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rences commandes SPB se trouvant
+//* Libellé       : Chargement des données
+//* Commentaires  : Chargement des références commandes SPB se trouvant
 //*					  sur C:\TEMP\[utilisateur]\[application]\FICFOURN.TXT
 //*
 //* Arguments     : Aucun
@@ -2526,8 +2526,8 @@ Yield()
 st_charger.Text = ""
 st_Extraire.Text = ""
 
-dw_fourn.SetItem ( 1, "ID_FOURN", "" ) 	// #1 - Remise $$HEX2$$e0002000$$ENDHEX$$blanc de la dropdown du fournisseur
-dw_fourn.SetItem ( 1, "ID_TYP_FACT", stnul.inum )  // #2 [DCMP080461] - Remise $$HEX2$$e0002000$$ENDHEX$$blanc de la dropdown du fournisseur
+dw_fourn.SetItem ( 1, "ID_FOURN", "" ) 	// #1 - Remise à blanc de la dropdown du fournisseur
+dw_fourn.SetItem ( 1, "ID_TYP_FACT", stnul.inum )  // #2 [DCMP080461] - Remise à blanc de la dropdown du fournisseur
 
 st_1.Visible = true // #1
 
@@ -2610,7 +2610,7 @@ event close;call super::close;//*-----------------------------------------------
 //* Evenement 		: close
 //* Auteur			: Pierre-Henri Gillot
 //* Date				: 23/11/2006 13:27:36
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -2681,17 +2681,17 @@ integer weight = 400
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
-string text = "Charger les r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rences"
+string text = "Charger les références"
 end type
 
 event clicked;//*-----------------------------------------------------------------
 //*
 //* Objet         : w_sp_trt_autofact::cb_Charger
 //* Evenement     : Clicked
-//* Auteur        : PHG, d'apr$$HEX1$$e800$$ENDHEX$$s JFF ( w_sp_trt_stat3 )
+//* Auteur        : PHG, d'après JFF ( w_sp_trt_stat3 )
 //* Date          : 20/11/2006
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Chargement des donn$$HEX1$$e900$$ENDHEX$$es
-//* Commentaires  : Chargement des r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rences commandes SPB se trouvant
+//* Libellé       : Chargement des données
+//* Commentaires  : Chargement des références commandes SPB se trouvant
 //*					  sur C:\WINNT\TEMP\DEVIS.TXT
 //*
 //* Arguments     : 
@@ -2704,7 +2704,7 @@ event clicked;//*---------------------------------------------------------------
 //*
 //* #1	 CAG	 06/11/2002	  Modification SFR # Ajout du ctrl facturation CEGETEL
 //* #2	 CAG	 30/01/2003	  Annexe 22 : Ajout du bouton maj cod_etat = "RPC"
-//* #3	 PHG	 16/06/2008	 [DCMP080461] Int$$HEX1$$e900$$ENDHEX$$gration Facturation Hors Prestation
+//* #3	 PHG	 16/06/2008	 [DCMP080461] Intégration Facturation Hors Prestation
 //*-----------------------------------------------------------------
 
 String	sModif
@@ -2755,9 +2755,9 @@ on clicked;//*-----------------------------------------------------------------
 //*
 //* Objet         : w_sp_trt_extr1::cb_Annuler
 //* Evenement     : cb_Annuler
-//* Auteur        : PHG, d'apr$$HEX1$$e800$$ENDHEX$$s JFF ( w_sp_trt_stat3 )
+//* Auteur        : PHG, d'après JFF ( w_sp_trt_stat3 )
 //* Date          : 20/11/2006
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -2826,16 +2826,16 @@ integer weight = 400
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
-string text = "Contr$$HEX1$$f400$$ENDHEX$$ler les donn$$HEX1$$e900$$ENDHEX$$es charg$$HEX1$$e900$$ENDHEX$$es"
+string text = "Contrôler les données chargées"
 end type
 
 event clicked;//*-----------------------------------------------------------------
 //*
 //* Objet         : w_sp_trt_autofact::cb_Controler
 //* Evenement     : Clicked
-//* Auteur        : PHG, d'apr$$HEX1$$e800$$ENDHEX$$s JFF ( w_sp_trt_stat3 )
+//* Auteur        : PHG, d'après JFF ( w_sp_trt_stat3 )
 //* Date          : 20/11/2006
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Controle des donn$$HEX1$$e900$$ENDHEX$$es
+//* Libellé       : Controle des données
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -2878,7 +2878,7 @@ event itemchanged;
 //* Evenement     : ItemChanged
 //* Auteur        : PHG
 //* Date          : 20/11/2006
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Choix du fournisseur
+//* Libellé       : Choix du fournisseur
 //* Commentaires  : 
 //*
 //* Arguments     : Aucun
@@ -2888,14 +2888,14 @@ event itemchanged;
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1   JCA	23/02/2007		DCMP 070110 - Ajout du fournisseur Darty
-//* #2	PHG	16/06/2008		[DCMP080461] Int$$HEX1$$e900$$ENDHEX$$gration FActuration Hors PRestation
+//* #2	PHG	16/06/2008		[DCMP080461] Intégration FActuration Hors PRestation
 //*-----------------------------------------------------------------
 integer iActionCode, iTotFourn, iRow // #1
 DataWindowChild dwChild // #1
 boolean bOkToProcess
 n_cst_string lnvString
 
-//#2 [DCMP080461] Gestion de l'acc$$HEX1$$e800$$ENDHEX$$s au bouton "Charger"
+//#2 [DCMP080461] Gestion de l'accès au bouton "Charger"
 Choose case upper(dwo.name)
 	case "ID_FOURN"
 		bOkToProcess = Not lnvString.of_isEmpty(data) and &
@@ -2935,7 +2935,7 @@ event itemerror;//*-------------------------------------------------------------
 //* Evenement 		: ItemError
 //* Auteur			: JCA
 //* Date				: 26/02/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion des Erreurs 
 //* 						DCMP 070110 - Ajout du fournisseur Darty
 //*-----------------------------------------------------------------
@@ -2975,7 +2975,7 @@ integer weight = 400
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
-string text = "Mise $$HEX2$$e0002000$$ENDHEX$$jour"
+string text = "Mise à jour"
 end type
 
 event clicked;//*-----------------------------------------------------------------
@@ -2984,7 +2984,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : PHG
 //* Date          : 21/11/2006
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Lancement du traitement
+//* Libellé       : Lancement du traitement
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -3029,7 +3029,7 @@ event itemerror;//*-------------------------------------------------------------
 //* Evenement 		: itemerror
 //* Auteur			: PHG
 //* Date				: 17/06/2008 11:27:29
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 	[DCMP080496] On intercepte les erreur 
 //*						pour ne pas avoir le msg standard d'erreur 
 //*						d'import des dw.
@@ -3080,7 +3080,7 @@ fontfamily fontfamily = swiss!
 string facename = "Arial"
 long textcolor = 33554432
 long backcolor = 67108864
-string text = "S$$HEX1$$e900$$ENDHEX$$lectionner un fournisseur... puis charger les r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rences..."
+string text = "Sélectionner un fournisseur... puis charger les références..."
 boolean focusrectangle = false
 end type
 
@@ -3091,7 +3091,7 @@ integer width = 1193
 integer height = 136
 boolean bringtotop = true
 long backcolor = 67108864
-string text = "Les montants du fichier texte $$HEX2$$e0002000$$ENDHEX$$int$$HEX1$$e900$$ENDHEX$$grer doivent $$HEX1$$ea00$$ENDHEX$$tre exprim$$HEX1$$e900$$ENDHEX$$s en "
+string text = "Les montants du fichier texte à intégrer doivent être exprimés en "
 alignment alignment = center!
 end type
 
@@ -3101,7 +3101,7 @@ event constructor;//*-----------------------------------------------------------
 //* Evenement 		: constructor
 //* Auteur			: 
 //* Date				: 27/02/2008 14:43:58
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: (OVERRIDE)
 //*				  
 //* Arguments		: 
@@ -3130,7 +3130,7 @@ fontcharset fontcharset = ansi!
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Tahoma"
-string text = "Sauvegarder les r$$HEX1$$e900$$ENDHEX$$sultats"
+string text = "Sauvegarder les résultats"
 end type
 
 event clicked;//*-----------------------------------------------------------------
@@ -3138,7 +3138,7 @@ event clicked;//*---------------------------------------------------------------
 //* Fonction      : clicked  (PRIVATE)
 //* Auteur        : JFF
 //* Date          : 28/01/2013
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le des donn$$HEX1$$e900$$ENDHEX$$es
+//* Libellé       : Contrôle des données
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -3148,14 +3148,15 @@ event clicked;//*---------------------------------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     	Modification
 //			JFF		27/01/2014	[VDOC12917]
+//			FPI		23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 String sNomComplet, sNomFic
 Long lRet
 		
-GetFileSaveName( "Sauvegarde du r$$HEX1$$e900$$ENDHEX$$sultat de traitement en fichier Excel", sNomComplet, sNomFic, "", "Fichiers Excel (*.XLS),*.XLS, Tous Fichiers (*.*),*.*")
+GetFileSaveName( "Sauvegarde du résultat de traitement en fichier Excel", sNomComplet, sNomFic, "", "Fichiers Excel (*.XLS),*.XLS, Tous Fichiers (*.*),*.*")
 
-lRet = dw_Charger.SaveAs ( sNomComplet, Excel!, True )
+lRet = dw_Charger.SaveAs ( sNomComplet, Excel8!, True ) // [MIG_PB2022]
 
 Choose Case lRet 
 	Case -1 
@@ -3206,18 +3207,18 @@ fontcharset fontcharset = ansi!
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Tahoma"
-string text = "J~'agrandis la fen$$HEX1$$ea00$$ENDHEX$$tre"
+string text = "J~'agrandis la fenêtre"
 end type
 
 event clicked;
 If isCasTailleFen = "REDUIRE" Then 
 	isCasTailleFen = "AGRANDIR"
 	Wf_PositionnerObjets ( )
-	cb_taillefen.Text = "Je r$$HEX1$$e900$$ENDHEX$$duis la fen$$HEX1$$ea00$$ENDHEX$$tre"
+	cb_taillefen.Text = "Je réduis la fenêtre"
 Else 
 	isCasTailleFen = "REDUIRE"
 	Wf_PositionnerObjets ( )
-	cb_taillefen.Text = "J'agrandis la fen$$HEX1$$ea00$$ENDHEX$$tre"	
+	cb_taillefen.Text = "J'agrandis la fenêtre"	
 End If 
 end event
 

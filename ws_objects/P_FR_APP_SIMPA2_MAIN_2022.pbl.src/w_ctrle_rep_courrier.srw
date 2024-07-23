@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_ctrle_rep_courrier.srw
+﻿$PBExportHeader$w_ctrle_rep_courrier.srw
 forward
 global type w_ctrle_rep_courrier from window
 end type
@@ -40,7 +40,7 @@ event ue_ctrle_rep_courrier();//*-----------------------------------------------
 //* Evenement 		: ue_Ctrle_Rep_Courrier
 //* Auteur			: JFF
 //* Date				: 27/12/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -56,8 +56,8 @@ public subroutine uf_controle_rep_courrier ();//*-------------------------------
 //* Fonction		: uf_controle_rep_courrier	(PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 26/12/2002
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: V$$HEX1$$e900$$ENDHEX$$rif du r$$HEX1$$e900$$ENDHEX$$pertoire courrier
+//* Libellé			: 
+//* Commentaires	: Vérif du répertoire courrier
 //*
 //* Arguments		: 
 //*
@@ -66,7 +66,7 @@ public subroutine uf_controle_rep_courrier ();//*-------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	  Modification
-//* 
+//			FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 DataStore dsFicPara
@@ -85,7 +85,7 @@ st_pause_ctrle_courrier.X			=  0
 st_pause_ctrle_courrier.Y			=  00
 st_pause_ctrle_courrier.Height	=  700	
 st_pause_ctrle_courrier.Width		= 2500	
-st_pause_ctrle_courrier.text = " ~n~rVeuillez patienter pendant l'initialisation des courriers... ~n~r~n~r" + "Ne fermez pas votre session, n$$HEX2$$1920e900$$ENDHEX$$teignez pas votre ordinateur, laissez le traitement se terminer, merci.~n~r"
+st_pause_ctrle_courrier.text = " ~n~rVeuillez patienter pendant l'initialisation des courriers... ~n~r~n~r" + "Ne fermez pas votre session, n’éteignez pas votre ordinateur, laissez le traitement se terminer, merci.~n~r"
 st_pause_ctrle_courrier.Show ()
 st_pause_ctrle_courrier.BringToTop	= TRUE
 
@@ -163,10 +163,10 @@ For lCpt = 1 To lTot
 	
 	sNomFicSourceSav = sRepSourceSav + dsFicPara.GetItemString ( lCpt, "NOM_FIC" ) 
 
-	lRet = Filecopy ( sNomFicSourceSav, sNomFicDestProduction, False) // Recopie sans $$HEX1$$e900$$ENDHEX$$crasement (False)
+	lRet = Filecopy ( sNomFicSourceSav, sNomFicDestProduction, False) // Recopie sans écrasement (False)
 	invWin.uf_SetFileAttributes(sNomFicDestProduction, 33) // Lecture Seule (1) + Archive (32 ou 20x)
 	
- 	dsFicPara.SetItem ( lCpt, "ERR_COUR", "Fichier absent en production, redress$$HEX1$$e900$$ENDHEX$$, r$$HEX1$$e900$$ENDHEX$$sulat recopie : " + String ( lRet) )
+ 	dsFicPara.SetItem ( lCpt, "ERR_COUR", "Fichier absent en production, redressé, résulat recopie : " + String ( lRet) )
 	
 	bAMUERR = TRUE
 	
@@ -174,15 +174,15 @@ Next
 
 If bAMUERR Then
 	sRepFicTrace += "TRACE_ERR_REP_COURRIER_" + String ( Today(), "yyyymmdd" ) + String ( Time (Today()), "hhmmss" ) + ".XLS"
-	dsFicPara.SaveAs ( sRepFicTrace, EXCEL!, TRUE) 
+	dsFicPara.SaveAs ( sRepFicTrace, EXCEL8!, TRUE)  // [MIG_PB2022]
 
-	sObjet = "Redressement r$$HEX1$$e900$$ENDHEX$$pertoire courrier"
+	sObjet = "Redressement répertoire courrier"
 	
 	
 	sMailBodyOrig  = "RepSourceSav : " + sRepSourceSav + sSaut 
 	sMailBodyOrig += "RepDestProduction : " + sRepDestProduction + sSaut 
-	sMailBodyOrig += "Nbre de paragraphes redress$$HEX1$$e900$$ENDHEX$$s : " + String ( lCountRedresse ) + sSaut 
-	sMailBodyOrig += "Fichier Trace D$$HEX1$$e900$$ENDHEX$$tail : " + sRepFicTrace + sSaut 
+	sMailBodyOrig += "Nbre de paragraphes redressés : " + String ( lCountRedresse ) + sSaut 
+	sMailBodyOrig += "Fichier Trace Détail : " + sRepFicTrace + sSaut 
 	sMailBodyOrig += "Base : " + SQLCA.DataBase + sSaut 
 	sMailBodyOrig += "Trigramme : " + stGlb.sCodOper + sSaut 
 	sMailBodyOrig += "Date : " + String ( Today (), "dd/mm/yyyy" ) + " " + String ( Time ( Today()), "hh:mm:ss" ) + sSaut 
@@ -231,7 +231,7 @@ event open;//*-----------------------------------------------------------------
 //* Evenement 		: Open
 //* Auteur			: JFF
 //* Date				: 27/12/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -252,7 +252,7 @@ event show;//*-----------------------------------------------------------------
 //* Evenement 		: Show
 //* Auteur			: JFF
 //* Date				: 27/12/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -270,7 +270,7 @@ event close;//*-----------------------------------------------------------------
 //* Evenement 		: Close
 //* Auteur			: JFF
 //* Date				: 27/12/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------

@@ -1,4 +1,4 @@
-HA$PBExportHeader$u_gs_sp_relance.sru
+﻿$PBExportHeader$u_gs_sp_relance.sru
 $PBExportComments$---} Objet pour les Relances et le Soldage.
 forward
 global type u_gs_sp_relance from nonvisualobject
@@ -45,8 +45,8 @@ integer		iidTrt
 String		isTxtCompo  // Composition du courrier de relance
 String		isIdCour	    // Courrier de relances
 String		isNomFicTrace // Nom du fichier de trace.	
-String		isSolAltRl2    // Le soldage sera diff$$HEX1$$e900$$ENDHEX$$rent si le traitement pr$$HEX1$$e900$$ENDHEX$$voit des 2$$HEX1$$e800$$ENDHEX$$mes relances.
-String		isAltSoldRl    // Le produit pr$$HEX1$$e900$$ENDHEX$$voit (O/N) le soldage des dossiers r$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$mment relanc$$HEX1$$e900$$ENDHEX$$s. 
+String		isSolAltRl2    // Le soldage sera différent si le traitement prévoit des 2èmes relances.
+String		isAltSoldRl    // Le produit prévoit (O/N) le soldage des dossiers récémment relancés. 
 String		isFicSig    // Fichier de sign pers
 String		isRepSig, isFmtSig	// Sign Pers 
 Int			iiHautFooter
@@ -55,13 +55,13 @@ Int			iiTotLigPol    // Nombre de ligne dans Dw_Police
 Decimal		iDcIdSin
 Decimal		iDcIdInter
 
-// On compare ces dates par rapport $$HEX2$$e0002000$$ENDHEX$$la date du jour
-// donc idtDateMin est une date ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$idtDateMax
-// qui est elle m$$HEX1$$ea00$$ENDHEX$$me ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date du jour.
+// On compare ces dates par rapport à la date du jour
+// donc idtDateMin est une date antérieure à idtDateMax
+// qui est elle même antérieure à la date du jour.
 DateTime		idtDateDuJour,idtDateMin, idtDateMax
 DateTime		idtDateMaxSolRl, idtDateMaxSolPc
 
-//Libell$$HEX2$$e9002000$$ENDHEX$$du produit pour PageBlanche dossier sold$$HEX1$$e900$$ENDHEX$$
+//Libellé du produit pour PageBlanche dossier soldé
 String		isLibProd 
 
 // DCMP 70809
@@ -108,9 +108,9 @@ public function boolean uf_preparerlancer ();//*--------------------------------
 //* Fonction		: uf_PreparerLancer (Public)
 //* Auteur			: Fabry JF
 //* Date				: 08/06/1999 15:47:17
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Pr$$HEX1$$e900$$ENDHEX$$pare le lancement du Traitement
+//* Libellé			: Prépare le lancement du Traitement
 //* Commentaires	: - Controle La saisie
-//*					  - Charge le param$$HEX1$$e800$$ENDHEX$$trage du produit s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX1$$e900$$ENDHEX$$.
+//*					  - Charge le paramètrage du produit sélectionné.
 //*
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -128,13 +128,13 @@ iDw1.Reset ()
 This.uf_CacherTextDw1 ( "OUI" )
 
 /*------------------------------------------------------------------*/
-/* On Contr$$HEX1$$f400$$ENDHEX$$le la saisie.                                           */
+/* On Contrôle la saisie.                                           */
 /*------------------------------------------------------------------*/
 //bOk = This.uf_ControlerSaisie ( 1 ) // JCA - POLE
 
 
 /*------------------------------------------------------------------*/
-/* On Charge le param$$HEX1$$e800$$ENDHEX$$trage. (except$$HEX2$$e9002000$$ENDHEX$$pour les R1P et DR1)          */
+/* On Charge le paramètrage. (excepté pour les R1P et DR1)          */
 /*------------------------------------------------------------------*/
 If bOk Then
 	bOk = This.uf_ChargerDwParaProd ()
@@ -142,26 +142,26 @@ End If
 
 
 /*------------------------------------------------------------------*/
-/* Ram$$HEX1$$e800$$ENDHEX$$ne la date du jour du serveur, dans idtDateDuJour.           */
+/* Ramène la date du jour du serveur, dans idtDateDuJour.           */
 /*------------------------------------------------------------------*/
 If bOk Then
 	bOk = This.uf_DateDuJour ()
 End If
 
-// JCA - POLE - Code d$$HEX1$$e900$$ENDHEX$$port$$HEX2$$e9002000$$ENDHEX$$dans la fonction uf_ChargerDw1() afin de ppouvoir
-//						r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer tous les produits du p$$HEX1$$f400$$ENDHEX$$le choisi
+// JCA - POLE - Code déporté dans la fonction uf_ChargerDw1() afin de ppouvoir
+//						récupérer tous les produits du pôle choisi
 
 
 ///*------------------------------------------------------------------*/
-///* On d$$HEX1$$e900$$ENDHEX$$termine les dates de traitement. On charge idtDateMin ( et  */
-///* $$HEX1$$e900$$ENDHEX$$ventuellement idtDateMax ).                                     */
+///* On détermine les dates de traitement. On charge idtDateMin ( et  */
+///* éventuellement idtDateMax ).                                     */
 ///*------------------------------------------------------------------*/
 //If bOk Then
 //	bOk = This.uf_DeterminerDateTrt ()
 //
 //	/*------------------------------------------------------------------*/
 //	/* JFF le 27/05/2003 : Pour Must il faut d'abord faire les          */
-//	/* dossiers de PANNE via la fen$$HEX1$$ea00$$ENDHEX$$tre de rep$$HEX1$$e900$$ENDHEX$$rage.                    */
+//	/* dossiers de PANNE via la fenêtre de repérage.                    */
 //	/*------------------------------------------------------------------*/
 //	If ilProd = 5712 Then
 //
@@ -178,14 +178,14 @@ End If
 //End If
 //
 ///*------------------------------------------------------------------*/
-///* Chargement des donn$$HEX1$$e900$$ENDHEX$$es dans Dw_courrier.                         */
+///* Chargement des données dans Dw_courrier.                         */
 ///*------------------------------------------------------------------*/
 //If bOk Then
 //	bOk = This.uf_ChargerDwCourrier ()
 //End If
 
 /*------------------------------------------------------------------*/
-/* Chargement des donn$$HEX1$$e900$$ENDHEX$$es dans Dw1.                                 */
+/* Chargement des données dans Dw1.                                 */
 /*------------------------------------------------------------------*/
 If bOk Then
 	bOk = This.uf_ChargerDw1 ()
@@ -202,7 +202,7 @@ protected function boolean uf_determinerdatetrt ();//*--------------------------
 //* Fonction		: uf_DeterminerDateTrt (Protected) 
 //* Auteur			: Fabry JF
 //* Date				: 08/06/1999 16:57:55
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$termine les dates de traitements
+//* Libellé			: Détermine les dates de traitements
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun 
@@ -216,12 +216,12 @@ protected function boolean uf_determinerdatetrt ();//*--------------------------
 
 Boolean 	bOk = True
 DateTime	dtDtMin, dDtMax
-Int		iDurRlMin		// D$$HEX1$$e900$$ENDHEX$$lai concernant les relances
-Int		iDurRlMax      // D$$HEX1$$e900$$ENDHEX$$lai concernant les relances
-Int		iDurSolMinRl   // D$$HEX1$$e900$$ENDHEX$$lai concernant le soldage lorsqu'il y a eut relances
-Int		iDurSolMinPc   // D$$HEX1$$e900$$ENDHEX$$lai concernant le soldage lorsqu'il n'y a jamais de courriers,
+Int		iDurRlMin		// Délai concernant les relances
+Int		iDurRlMax      // Délai concernant les relances
+Int		iDurSolMinRl   // Délai concernant le soldage lorsqu'il y a eut relances
+Int		iDurSolMinPc   // Délai concernant le soldage lorsqu'il n'y a jamais de courriers,
 								// ou lorsqu'il y a eu courriers sans relance.
-Int		iMes				// Message $$HEX2$$e0002000$$ENDHEX$$afficher
+Int		iMes				// Message à afficher
 String	sUntRl1
 String	sMes[ 3 ]		// Messages
 
@@ -232,13 +232,13 @@ iDtDateMaxSolRl = stNul.Dtm
 iDtDateMaxSolPc = stNul.Dtm
 
 
-sMes[ 1 ] = "premi$$HEX1$$e800$$ENDHEX$$res relances"
-sMes[ 2 ] = "deuxi$$HEX1$$e800$$ENDHEX$$mes relances"
+sMes[ 1 ] = "premières relances"
+sMes[ 2 ] = "deuxièmes relances"
 sMes[ 3 ] = "soldage de dossiers"
 
 
 /*------------------------------------------------------------------*/
-/* Le produit pr$$HEX1$$e900$$ENDHEX$$voit-il ce type de traitement ?						  */
+/* Le produit prévoit-il ce type de traitement ?						  */
 /*------------------------------------------------------------------*/
 CHOOSE CASE isTypTrt
 
@@ -260,8 +260,8 @@ CHOOSE CASE isTypTrt
 
 	CASE "R1P", "DR1"
 		/*------------------------------------------------------------------*/
-		/* On ne tient pas compte du param$$HEX1$$e800$$ENDHEX$$trage pour ce cas de traitement. */
-		/* On ne calcule aucun d$$HEX1$$e900$$ENDHEX$$lai.													  */
+		/* On ne tient pas compte du paramètrage pour ce cas de traitement. */
+		/* On ne calcule aucun délai.													  */
 		/*------------------------------------------------------------------*/
 
 END CHOOSE
@@ -281,14 +281,14 @@ End If
 
 
 /*------------------------------------------------------------------*/
-/* On Charge les d$$HEX1$$e900$$ENDHEX$$lais	(except$$HEX2$$e9002000$$ENDHEX$$pour les trt R1P, DR1)  			  */
-/* Ces d$$HEX1$$e900$$ENDHEX$$lais sont $$HEX2$$e0002000$$ENDHEX$$prendre en compte $$HEX2$$e0002000$$ENDHEX$$partir de la date du jour. */
+/* On Charge les délais	(excepté pour les trt R1P, DR1)  			  */
+/* Ces délais sont à prendre en compte à partir de la date du jour. */
 /* DUR_RL1_MAX >= DUR_RL1_MIN (mais idtDateMin <= idtDateMax )      */
 /*------------------------------------------------------------------*/
 If bOk and isTypTrt <> "R1P" and isTypTrt <> "DR1" Then
 
-	// L'unit$$HEX2$$e9002000$$ENDHEX$$de temps pour tous les traitements est d$$HEX1$$e900$$ENDHEX$$termin$$HEX1$$e900$$ENDHEX$$s
-	// $$HEX2$$e0002000$$ENDHEX$$partir de UNT_RL1, voir le param$$HEX1$$e800$$ENDHEX$$trage.
+	// L'unité de temps pour tous les traitements est déterminés
+	// à partir de UNT_RL1, voir le paramètrage.
 	sUntRl1	  = iDwParaProd.GetItemString ( 1, "UNT_RL1" )
 
 	CHOOSE CASE isTypTrt
@@ -304,10 +304,10 @@ If bOk and isTypTrt <> "R1P" and isTypTrt <> "DR1" Then
 
 
 /*--------------------------------------------------------------------------*/
-/* D$$HEX1$$e900$$ENDHEX$$termination des dates.                                                 */
-/* On d$$HEX1$$e900$$ENDHEX$$termine les dates, sachant que idtDateMin <= idtDateMax             */
+/* Détermination des dates.                                                 */
+/* On détermine les dates, sachant que idtDateMin <= idtDateMax             */
 /* Ex: idtDateMin = 25/02/1999 00:00:00 -au-> idtDateMax 15/05/1999 23:59:59*/
-/*     La date du jour $$HEX1$$e900$$ENDHEX$$tant le 27/07/1999 15:35:25                         */
+/*     La date du jour étant le 27/07/1999 15:35:25                         */
 /*--------------------------------------------------------------------------*/
 
 	CHOOSE CASE isTypTrt
@@ -356,9 +356,9 @@ protected function boolean uf_datedujour ();//*---------------------------------
 //* Fonction		: uf_DateDuJour ( Protected )
 //* Auteur			: Fabry JF
 //* Date				: 08/06/1999 17:07:55
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$termine la date du jour.
-//* Commentaires	: Ram$$HEX1$$e800$$ENDHEX$$ne la date du jour et l'heure, du serveur
-//*					  Cela n$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$ssite bien $$HEX1$$e900$$ENDHEX$$videmment que la table param$$HEX1$$e800$$ENDHEX$$tre 
+//* Libellé			: Détermine la date du jour.
+//* Commentaires	: Ramène la date du jour et l'heure, du serveur
+//*					  Cela nécéssite bien évidemment que la table paramètre 
 //*					  ne soit pas vide, ce qui ne doit jamais arriver.
 //* Arguments		: Aucun
 //*
@@ -387,7 +387,7 @@ If IsNull ( dtDateDuJour ) Then
 	stMessage.Icon	    = Exclamation!
 	stMessage.Bouton   = Ok!
 	stMessage.bTrace   = True
-	stMessage.sVar[1]  = "Impossible de lire la date du serveur. Le traitement n'est pas lanc$$HEX1$$e900$$ENDHEX$$."
+	stMessage.sVar[1]  = "Impossible de lire la date du serveur. Le traitement n'est pas lancé."
 
 	F_Message ( stMessage )	
 
@@ -407,9 +407,9 @@ protected function boolean uf_chargerdw1 ();//*---------------------------------
 //* Fonction		: uf_ChargerDw1 (Protected)
 //* Auteur			: Fabry JF
 //* Date				: 09/06/1999 13:58:21
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Chargement de Dw_1.
-//* Commentaires	: On charge tous les courriers qui vont $$HEX1$$ea00$$ENDHEX$$tre $$HEX2$$e0002000$$ENDHEX$$relancer
-//*					  pour la premi$$HEX1$$e800$$ENDHEX$$re fois.
+//* Libellé			: Chargement de Dw_1.
+//* Commentaires	: On charge tous les courriers qui vont être à relancer
+//*					  pour la première fois.
 //*
 //* Arguments		: Aucun
 //*
@@ -440,15 +440,15 @@ DO UNTIL i > j
 	ilProd =  iDwParaProd.object.id_prod[i]
 
 	/*------------------------------------------------------------------*/
-	/* On d$$HEX1$$e900$$ENDHEX$$termine les dates de traitement. On charge idtDateMin ( et  */
-	/* $$HEX1$$e900$$ENDHEX$$ventuellement idtDateMax ).                                     */
+	/* On détermine les dates de traitement. On charge idtDateMin ( et  */
+	/* éventuellement idtDateMax ).                                     */
 	/*------------------------------------------------------------------*/
 	If bOk Then
 		bOk = This.uf_DeterminerDateTrt ()
 	
 		/*------------------------------------------------------------------*/
 		/* JFF le 27/05/2003 : Pour Must il faut d'abord faire les          */
-		/* dossiers de PANNE via la fen$$HEX1$$ea00$$ENDHEX$$tre de rep$$HEX1$$e900$$ENDHEX$$rage.                    */
+		/* dossiers de PANNE via la fenêtre de repérage.                    */
 		/*------------------------------------------------------------------*/
 		If ilProd = 5712 Then
 	
@@ -465,32 +465,32 @@ DO UNTIL i > j
 	End If
 	
 	/*------------------------------------------------------------------*/
-	/* Chargement des donn$$HEX1$$e900$$ENDHEX$$es dans Dw_courrier.                         */
+	/* Chargement des données dans Dw_courrier.                         */
 	/*------------------------------------------------------------------*/
 	If bOk Then
 		bOk = This.uf_ChargerDwCourrier ()
 	End If
 
 	/*------------------------------------------------------------------*/
-	/* Diff$$HEX1$$e900$$ENDHEX$$rents retrieves en fonction du type de relance.             */
+	/* Différents retrieves en fonction du type de relance.             */
 	/*------------------------------------------------------------------*/
 	CHOOSE CASE isTypTrt
 	
-		// Premi$$HEX1$$e800$$ENDHEX$$res Relances Automatique.
+		// Premières Relances Automatique.
 		CASE "R1A"
 	
 			ilNbrRowDw1 = iDw1.Retrieve ( ilProd, idtDateMin, idtDateMax )
 				
-			sTitreR = " courrier(s) valid$$HEX1$$e900$$ENDHEX$$(s) entre le " + String ( Date ( idtDateMin) ) + " et le " + String ( Date ( idtDateMax) ) + ".'" 		
-			sProd  = " : Premi$$HEX1$$e800$$ENDHEX$$res Relances Automatiques"
+			sTitreR = " courrier(s) validé(s) entre le " + String ( Date ( idtDateMin) ) + " et le " + String ( Date ( idtDateMax) ) + ".'" 		
+			sProd  = " : Premières Relances Automatiques"
 	
-		// Premi$$HEX1$$e800$$ENDHEX$$res Relances Automatique pour les Gti Uf avec Dem. Pces $$HEX2$$e0002000$$ENDHEX$$la banque.
+		// Premières Relances Automatique pour les Gti Uf avec Dem. Pces à la banque.
 //		CASE "R1U"
 //	
 //			ilNbrRowDw1 = iDw1.Retrieve ( ilProd, idtDateMin, idtDateMax )
 //	
-//			// Aucun Group by n'$$HEX1$$e900$$ENDHEX$$tant fait dans la requ$$HEX1$$ea00$$ENDHEX$$te pour des raisons techniques
-//			//	Il faut $$HEX1$$e900$$ENDHEX$$purer les doublons de sinistres.
+//			// Aucun Group by n'étant fait dans la requête pour des raisons techniques
+//			//	Il faut épurer les doublons de sinistres.
 //	
 //			sTriActuel = iDw1.Describe ( "datawindow.table.Sort" )
 //			iDw1.Modify ( "datawindow.table.Sort = '1A'" )
@@ -512,53 +512,53 @@ DO UNTIL i > j
 //	
 //			ilNbrRowDw1 = iDw1.RowCount ()
 //	
-//			sTitre = "st_Titre.text = 'Liste de " + String ( ilNbrRowDw1 ) + " courrier(s) valid$$HEX1$$e900$$ENDHEX$$(s) entre le " + String ( Date ( idtDateMin) ) + & 
+//			sTitre = "st_Titre.text = 'Liste de " + String ( ilNbrRowDw1 ) + " courrier(s) validé(s) entre le " + String ( Date ( idtDateMin) ) + & 
 //						" et le " + String ( Date ( idtDateMax) ) + ".'" 	
 //	
-//			sProd  = " : Premi$$HEX1$$e800$$ENDHEX$$res Relances Automatiques (Garanties Uf avec Dem. Pces. $$HEX2$$e0002000$$ENDHEX$$la banque)"
+//			sProd  = " : Premières Relances Automatiques (Garanties Uf avec Dem. Pces. à la banque)"
 	
 	
 			
 	
-		// Premi$$HEX1$$e800$$ENDHEX$$res Relances Particuli$$HEX1$$e800$$ENDHEX$$res
+		// Premières Relances Particulières
 		CASE "R1T"
 	
 			iDw1.Retrieve ( ilProd, idtDateMin, idtDateMax )
-			sTitreR = " courrier(s) valid$$HEX1$$e900$$ENDHEX$$(s) entre le " + String ( Date ( idtDateMin) ) + " et le " + String ( Date ( idtDateMax) ) + ".'" 
-			sProd  = " : Premi$$HEX1$$e800$$ENDHEX$$res Relances Particuli$$HEX1$$e800$$ENDHEX$$res"
+			sTitreR = " courrier(s) validé(s) entre le " + String ( Date ( idtDateMin) ) + " et le " + String ( Date ( idtDateMax) ) + ".'" 
+			sProd  = " : Premières Relances Particulières"
 	
-		// Premi$$HEX1$$e800$$ENDHEX$$res Relances Ponctuelles.
+		// Premières Relances Ponctuelles.
 		CASE "R1P"
 	
 			dcIdSin 		= iDwSaisieSin.GetItemNumber ( 1, "ID_SIN" )
 			ilNbrRowDw1 = iDw1.Retrieve ( dcIdSin, ilProd )
 	
-			sTitreR = " courrier(s) n~~'ayant jamais $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$relanc$$HEX1$$e900$$ENDHEX$$(s).'" 	
-			sProd  = " : Premi$$HEX1$$e800$$ENDHEX$$res Relances Ponctuelles"
+			sTitreR = " courrier(s) n~~'ayant jamais été relancé(s).'" 	
+			sProd  = " : Premières Relances Ponctuelles"
 	
-		// Destruction d'une Premi$$HEX1$$e800$$ENDHEX$$re Relance.
+		// Destruction d'une Première Relance.
 		CASE "DR1"
 	
 			dcIdSin 		= iDwSaisieSin.GetItemNumber ( 1, "ID_SIN" )
 			ilNbrRowDw1 = iDw1.Retrieve ( dcIdSin )
 	
-			sTitreR = " courrier(s) de premi$$HEX1$$e800$$ENDHEX$$re relance $$HEX2$$e0002000$$ENDHEX$$annuler.'" 	
-			sProd  = " : Annulation d~~'une Premi$$HEX1$$e800$$ENDHEX$$re Relance"
+			sTitreR = " courrier(s) de première relance à annuler.'" 	
+			sProd  = " : Annulation d~~'une Première Relance"
 	
-		// Deuxi$$HEX1$$e800$$ENDHEX$$me Relances
+		// Deuxième Relances
 		CASE "R2"
 	
 			ilNbrRowDw1 = iDw1.Retrieve ( ilProd, idtDateMax )
 
-			sTitreR = " courrier(s) de premi$$HEX1$$e800$$ENDHEX$$re relance $$HEX1$$e900$$ENDHEX$$dit$$HEX1$$e900$$ENDHEX$$s avant le " + String ( Date ( idtDateMax) ) + ".'"
-			sProd  = " : Deuxi$$HEX1$$e800$$ENDHEX$$me Relances"
+			sTitreR = " courrier(s) de première relance édités avant le " + String ( Date ( idtDateMax) ) + ".'"
+			sProd  = " : Deuxième Relances"
 	
 	END CHOOSE
 	
 	iDw1.rowscopy(1, iDw1.rowcount( ), Primary!, dtsRelance, dtsRelance.rowcount()+1, Primary!)
 
 	/*------------------------------------------------------------------*/
-	/* On commit pour les tables temporaires utilis$$HEX1$$e900$$ENDHEX$$es.                 */
+	/* On commit pour les tables temporaires utilisées.                 */
 	/*------------------------------------------------------------------*/
 	F_Commit ( iTrTrans, True )
 
@@ -573,7 +573,7 @@ ilNbrRowDw1 = iDw1.rowcount()
 sTitre = "st_Titre.text = 'Liste de " + String ( ilNbrRowDw1 ) + sTitreR
 
 /*------------------------------------------------------------------*/
-/* Le retrieve s'est mal pass$$HEX1$$e900$$ENDHEX$$, on arr$$HEX1$$ea00$$ENDHEX$$te tout.                     */
+/* Le retrieve s'est mal passé, on arrête tout.                     */
 /*------------------------------------------------------------------*/
 If ilNbrRowDw1 < 0 Then
 
@@ -592,7 +592,7 @@ If ilNbrRowDw1 < 0 Then
 
 
 /*------------------------------------------------------------------*/
-/* Aucune ligne ramen$$HEX1$$e900$$ENDHEX$$e.														  */
+/* Aucune ligne ramenée.														  */
 /*------------------------------------------------------------------*/
 ElseIf ilNbrRowDw1 = 0 Then
 
@@ -651,7 +651,7 @@ Else
 		CASE ELSE
 			//iDwProduit.accepttext( )
 			sLibCode = iDwProduit.Describe ( "Evaluate ( 'LookUpDisplay ( ID_CODE )', 1 ) " )
-			sProd = "st_Produit.text = ' P$$HEX1$$f400$$ENDHEX$$le " + sLibCode + sProd + "'"
+			sProd = "st_Produit.text = ' Pôle " + sLibCode + sProd + "'"
 	
 	END CHOOSE
 
@@ -677,7 +677,7 @@ public subroutine uf_cachertextdw1 (string ascas);
 //* Fonction		: uf_CacherTextDw1	(Public)
 //* Auteur			: Fabry JF
 //* Date				: 09/06/1999 15:38:24
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Cache le header de Dw1
+//* Libellé			: Cache le header de Dw1
 //* Commentaires	: 
 //*
 //* Arguments		: String			asCas			(Val)			OUI on cache, NON on ne cache pas
@@ -698,7 +698,7 @@ Else
 End If
 
 /*------------------------------------------------------------------*/
-/* Dw_1 peut $$HEX1$$ea00$$ENDHEX$$tre diff$$HEX1$$e900$$ENDHEX$$rente fonction des trt.          				  */
+/* Dw_1 peut être différente fonction des trt.          				  */
 /*------------------------------------------------------------------*/
 CHOOSE CASE isTypTrt
 
@@ -722,7 +722,7 @@ public function boolean uf_imprimerliste ();//*---------------------------------
 //* Fonction		: uf_ImprimerListe	(Public) 
 //* Auteur			: Fabry JF
 //* Date				: 09/06/1999 15:13:37
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Impression de la liste des dossiers $$HEX2$$e0002000$$ENDHEX$$relancer.
+//* Libellé			: Impression de la liste des dossiers à relancer.
 //* Commentaires	: 	
 //*
 //* Arguments		: Rien
@@ -750,10 +750,10 @@ protected function boolean uf_creerblob (long alrow);//*------------------------
 //* Fonction		: uf_CreerBlob	(Protected)
 //* Auteur			: Fabry JF
 //* Date				: 14/06/1999 12:08:29
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Cr$$HEX1$$e900$$ENDHEX$$ation du blob de donn$$HEX1$$e900$$ENDHEX$$es.
+//* Libellé			: Création du blob de données.
 //* Commentaires	: 
 //*
-//* Arguments		: Long		alRow			// Row du dossier $$HEX2$$e0002000$$ENDHEX$$Traiter
+//* Arguments		: Long		alRow			// Row du dossier à Traiter
 //*
 //* Retourne		: Boolean
 //*			
@@ -761,19 +761,20 @@ protected function boolean uf_creerblob (long alrow);//*------------------------
 //* MAJ PAR		Date		Modification
 //* #1  JFF   15/04/04  DCMP 040020 SVE : Gestion de la Sign Pers
 //* #2  MADM  04/08/06  Projet DNTMAIL1/2 Mails sortant en remplacement des courriers
-//* #3  DGA   19/09/2006	Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire DCMP-060643
-//* #4	FPI	28/09/2009	[DCMP090552] Gestion des no de tel $$HEX1$$e900$$ENDHEX$$tranger
+//* #3  DGA   19/09/2006	Gestion d'un répertoire temporaire DCMP-060643
+//* #4	FPI	28/09/2009	[DCMP090552] Gestion des no de tel étranger
 //* #5   FPI   24/11/2009   [POLICE_PARTICULIERE] 
-//			FPI	13/10/2010	[VDoc1416] civilit$$HEX2$$e9002000$$ENDHEX$$longue 4 $$HEX2$$e0002000$$ENDHEX$$"Madame, Monsieur" 
+//			FPI	13/10/2010	[VDoc1416] civilité longue 4 à "Madame, Monsieur" 
+//			FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 Boolean 		bOk = True
 Boolean		bVal, bOkDp66
 String		sNomFic			// Nom du fichier Blob
-String		sVide[]			// Tableau de variables $$HEX2$$e0002000$$ENDHEX$$ins$$HEX1$$e900$$ENDHEX$$rer dans le blob.
+String		sVide[]			// Tableau de variables à insérer dans le blob.
 String		sVal, sVal2, sDpParam			
-String		sRech				// Cha$$HEX1$$ee00$$ENDHEX$$ne de recherche
-String		sChaine			// Cha$$HEX1$$ce00$$ENDHEX$$ne $$HEX3$$e0002000e900$$ENDHEX$$crire dans le fichier, qui constituera le blob.
+String		sRech				// Chaîne de recherche
+String		sChaine			// ChaÎne à écrire dans le fichier, qui constituera le blob.
 String		sMes				// Message
 String		sBin
 Int			iRowPol			// Row dans Dw_Police
@@ -787,13 +788,13 @@ Long lIdSin, lIdProd, lIdRev   // #5
 
 /*------------------------------------------------------------------*/
 /* On efface tous les fichiers de data pouvant exister afin qu'il   */
-/* n'y ait pas de conflits $$HEX1$$e900$$ENDHEX$$ventuels.                               */
+/* n'y ait pas de conflits éventuels.                               */
 /*------------------------------------------------------------------*/
 //u_DeclarationFuncky uoDeclarationFuncky
 //uoDeclarationFuncky = Create u_DeclarationFuncky
 /*------------------------------------------------------------------*/  
 /* #3. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 //sNomFic = isRepWin + "\TEMP\" + stGlb.sCodAppli + "*.DT"
 sNomFic = stGLB.sRepTempo + stGlb.sCodAppli + "*.DT"
@@ -808,7 +809,7 @@ iuoLibelle.Uf_Initialisation ( iTrTrans )
 ilTotVar = iuoLibelle.Uf_Retrieve ( "-VA" )
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$arme le tableau des variables $$HEX2$$e0002000$$ENDHEX$$vide.                       */
+/* On réarme le tableau des variables à vide.                       */
 /*------------------------------------------------------------------*/
 //String sVide[] // [MIGPB11] [EMD] : mise en commentaire de la double declaration de sVide[]
 sVide [ ilTotVar ] = ""
@@ -834,14 +835,14 @@ sVarNonArmee = "!! VARIABLE NON ARMEE=>PROBLEME DE PARAMETRAGE, CONTACTEZ OMG/SO
 /* IRIBCL		=	RIB CLE DE L'INTERLOCUTEUR     			( inter.rib_cle )							  */	 	
 /* IRIBCP		=	RIB COMPTE DE L'INTERLOCUTEUR          ( inter.rib_cpt )							  */	
 /* IRIBGU		=	RIB GUICHET DE L'INTERLOCUTEUR			( inter.rib_gui ) 						  */		 
-/* ACIVAS		=	CIVILITE DE L$$HEX1$$1920$$ENDHEX$$ASSURE							( personne.cod_civ )						  */	
-/* ANOMAS		=	NOM DE L$$HEX1$$1920$$ENDHEX$$ASSURE								( personne.nom )							  */
-/* APREAS		=	PRENOM DE L$$HEX1$$1920$$ENDHEX$$ASSURE							( personne.prenom )						  */
-/* ZVAR01		=	DATE D$$HEX1$$1920$$ENDHEX$$ENVOI DU COURRIER QUE L$$HEX1$$1920$$ENDHEX$$ON RELANCE (archive.dte_edit)					  */
-/* ARIBBQ		=	RIB BANQUE DE L$$HEX1$$1920$$ENDHEX$$ASSURE						( inter.rib_bq where cod_inter = A )  */
-/* ARIBCL		=	RIB CLE DE L$$HEX1$$1920$$ENDHEX$$ASSURE							( inter.rib_bq where cod_inter = A )  */
-/* ARIBCP		=	RIB COMPTE DE L$$HEX1$$1920$$ENDHEX$$ASSURE   					( inter.rib_bq where cod_inter = A )  */
-/* ARIBGU		=	RIB GUICHET DE L$$HEX1$$1920$$ENDHEX$$ASSURE						( inter.rib_bq where cod_inter = A )  */
+/* ACIVAS		=	CIVILITE DE L’ASSURE							( personne.cod_civ )						  */	
+/* ANOMAS		=	NOM DE L’ASSURE								( personne.nom )							  */
+/* APREAS		=	PRENOM DE L’ASSURE							( personne.prenom )						  */
+/* ZVAR01		=	DATE D’ENVOI DU COURRIER QUE L’ON RELANCE (archive.dte_edit)					  */
+/* ARIBBQ		=	RIB BANQUE DE L’ASSURE						( inter.rib_bq where cod_inter = A )  */
+/* ARIBCL		=	RIB CLE DE L’ASSURE							( inter.rib_bq where cod_inter = A )  */
+/* ARIBCP		=	RIB COMPTE DE L’ASSURE   					( inter.rib_bq where cod_inter = A )  */
+/* ARIBGU		=	RIB GUICHET DE L’ASSURE						( inter.rib_bq where cod_inter = A )  */
 /* PCODDG		=	CODE SECTEUR									( produit.id_depts )                  */
 /* PCODDP 		=	CODE DEPARTEMENT DU PRODUIT				( produit.id_dept    )                */
 /* PCOMPA		=	NOM DE LA COMPAGNIE D'ASSURANCE			( compagnie.lib_cie )                 */
@@ -951,7 +952,7 @@ iuoLibelle.Uf_SetValue ( "ARIBGU", sVal )
 sVal = String ( iDw1.GetItemNumber ( alRow, "PROD_ID_DEPTS" ) )
 iuoLibelle.Uf_SetValue ( "PCODDG", sVal )	
 
-/* Lib$$HEX1$$e900$$ENDHEX$$ll$$HEX2$$e9002000$$ENDHEX$$du sous d$$HEX1$$e900$$ENDHEX$$partement   											  */
+/* Libéllé du sous département   											  */
 /*------------------------------------------------------------------*/
 sLibDept = space ( 35 )
 itrTrans.IM_S01_DEPARTEMENT( Dec(sVal), sLibDept )
@@ -963,12 +964,12 @@ iuoLibelle.Uf_SetValue ( "PCODDP", sVal )
 /*------------------------------------------------------------------*/
 /* Deux cas possibles pour la cie & la police.                      */
 /* Voir uf_ChargerDwPolice, dw_police peut ne pas contenir certaines*/
-/* r$$HEX1$$e900$$ENDHEX$$visions.                                                        */
+/* révisions.                                                        */
 /*------------------------------------------------------------------*/
 
-iDwPolice.saveas("c:\temp\test\iDwPolice.xls", excel!, true)
-iDw1.saveas("c:\temp\test\iDw1.xls", excel!, true)
-iDwParaProd.saveas("c:\temp\test\iDwParaProd.xls", excel!, true)
+iDwPolice.saveas("c:\temp\test\iDwPolice.xls", excel8!, true) // [MIG_PB2022]
+iDw1.saveas("c:\temp\test\iDw1.xls", excel8!, true)  // [MIG_PB2022]
+iDwParaProd.saveas("c:\temp\test\iDwParaProd.xls", excel8!, true)  // [MIG_PB2022]
 
 sRech = "ID_REV = " + String ( iDw1.GetItemNumber ( alRow, "ID_REV" ) )
 iRowPol = iDwPolice.Find ( sRech, 1, iiTotLigPol )
@@ -1003,7 +1004,7 @@ iuoLibelle.Uf_SetValue ( "PPOLIC", sVal )
 sVal = String ( iDw1.GetItemNumber ( alRow, "ID_PROD" ) )
 iuoLibelle.Uf_SetValue ( "PIDPRO", sVal )   
 
-// Prise en compte des modification de l'ent$$HEX1$$ea00$$ENDHEX$$te des courriers
+// Prise en compte des modification de l'entête des courriers
 /////////////////////////////////////////////////////////
 
 //sVal = iDw1.GetItemString ( alRow, "PROD_COURT" ) 
@@ -1109,12 +1110,12 @@ sVal = iDw1.GetItemString ( alRow, "LIB_GRP" )
 iuoLibelle.Uf_SetValue ( "SLIETS", sVal )	
 
 /*------------------------------------------------------------------*/
-/* #3 : Renseignement de la variable ZVAR05 (idem $$HEX2$$e0002000$$ENDHEX$$SAVANE) avec le */
-/* Pr$$HEX1$$e900$$ENDHEX$$nom et nom du Gestionnaire.											  */
+/* #3 : Renseignement de la variable ZVAR05 (idem à SAVANE) avec le */
+/* Prénom et nom du Gestionnaire.											  */
 /*------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------------*/
-/* #2 : Ajout de l'identifiant interlocuteur $$HEX2$$e0002000$$ENDHEX$$la fonction uf_GetAutorisation */
+/* #2 : Ajout de l'identifiant interlocuteur à la fonction uf_GetAutorisation */
 /*----------------------------------------------------------------------------*/
 This.uf_GetAutorisation ( "", sBIN, bVal, bVal, bVal, iDw1.GetItemNumber ( alRow, "ID_PROD" ), stGlb.sCodOper, iDw1.GetItemNumber ( alRow, "ID_I" ) )
 If Mid ( sBIN, 10, 1 ) = "1" Then
@@ -1132,8 +1133,8 @@ If stGLB.bSaiValEdt Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Variable donnant le d$$HEX1$$e900$$ENDHEX$$lai en jour 										  */
-/* pour r$$HEX1$$e900$$ENDHEX$$ponse au deuxi$$HEX1$$e800$$ENDHEX$$me relance											  */
+/* Variable donnant le délai en jour 										  */
+/* pour réponse au deuxième relance											  */
 /*------------------------------------------------------------------*/
 F_RechDetPro ( lDeb, lFin, idw_DetPro, iDw1.GetItemNumber ( alRow, "ID_PROD" ), "-DP", 97 )
 if lDeb > 0 then
@@ -1156,14 +1157,14 @@ Else
 End If
 
 /*------------------------------------------------------------------*/
-/* On cr$$HEX3$$e900e9002000$$ENDHEX$$maintenant le blob lui-m$$HEX1$$ea00$$ENDHEX$$me										  */
+/* On créé maintenant le blob lui-même										  */
 /*------------------------------------------------------------------*/
 sChaine = ""
 iuoLibelle.Uf_Creer_Chaine ( sChaine, stSpb )
 
 isChaineData = sChaine 
 
-// [MIGPB11] [EMD] : Debut Migration : Forcer la cr$$HEX1$$e900$$ENDHEX$$ation de Blob en ANSI
+// [MIGPB11] [EMD] : Debut Migration : Forcer la création de Blob en ANSI
 //iblBlobData = Blob ( sChaine )
 iblBlobData = Blob ( sChaine, EncodingANSI! )
 // [MIGPB11] [EMD] : Fin Migration
@@ -1176,11 +1177,11 @@ protected function boolean uf_determinercomposition (long alrow);//*------------
 //* Fonction		: uf_DeterminerComposition
 //* Auteur			: JCA
 //* Date				: 28/01/2008
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$termination de la composition des courriers de relance
+//* Libellé			: Détermination de la composition des courriers de relance
 //*
 //* Arguments		: Long		alRow			(Val)			// Dossier courant dans Dw1
 //*
-//* Retourne		: Boolean	True, tout s'est bien pass$$HEX1$$e900$$ENDHEX$$
+//* Retourne		: Boolean	True, tout s'est bien passé
 //*			
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -1208,7 +1209,7 @@ stMessage.bTrace = True
 If	Not F_Procedure ( stMessage, itrTrans, "PS_S01_COUR_PROD" )	Then
 
 	bOk = False
-	isMess = "Probl$$HEX1$$e800$$ENDHEX$$me lors l'execution de PS_S01_COUR_PROD"
+	isMess = "Problème lors l'execution de PS_S01_COUR_PROD"
 	F_Message ( stMessage )
 
 End If
@@ -1223,18 +1224,18 @@ protected function boolean uf_ecrirecourrierdansarchive (long alrow);
 //* Fonction		: uf_EcrireCourrierDansArchive (Protected)
 //* Auteur			: JCA
 //* Date				: 23/01/2008
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Ecriture de l'enregistrement dans ARCHIVE et ARCHIVE_BLOB
+//* Libellé			: Ecriture de l'enregistrement dans ARCHIVE et ARCHIVE_BLOB
 //* Commentaires	: 
 //*
-//* Arguments		: Long		alRow			(Val)			// aRow du dossier $$HEX2$$e0002000$$ENDHEX$$Traiter dans iDw1.
+//* Arguments		: Long		alRow			(Val)			// aRow du dossier à Traiter dans iDw1.
 //*
 //* Retourne		: Rien
 //*			
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
-//* #1  JFF    11/10/99 Gestion de l'Id_Adh $$HEX2$$e0002000$$ENDHEX$$Null				  
-//* #2  JFF    11/10/99 On Trace uniquement si l'execution de la Proc$$HEX1$$e900$$ENDHEX$$dure
-//*							d'insertion s'est bien d$$HEX1$$e900$$ENDHEX$$roul$$HEX1$$e900$$ENDHEX$$e.
+//* #1  JFF    11/10/99 Gestion de l'Id_Adh à Null				  
+//* #2  JFF    11/10/99 On Trace uniquement si l'execution de la Procédure
+//*							d'insertion s'est bien déroulée.
 //* #3  JFF		15/04/04 DCMP 040020 SVE : On fusionne le courrier de relance
 //*-----------------------------------------------------------------
 
@@ -1250,8 +1251,8 @@ String  	sValidePar
 String  	sTypBlob
 Int		iRet
 
-idcIdDoc = -1   // idcId_Doc sera pass$$HEX2$$e9002000$$ENDHEX$$par Ref $$HEX2$$e0002000$$ENDHEX$$PS_S02_ARCHIVE_RELANCES.
-					 // et reviendra avec le nouvel Id_Doc cr$$HEX2$$e900e900$$ENDHEX$$.
+idcIdDoc = -1   // idcId_Doc sera passé par Ref à PS_S02_ARCHIVE_RELANCES.
+					 // et reviendra avec le nouvel Id_Doc créé.
 
 /*------------------------------------------------------------------*/
 /* Armement des variables.                                 			  */
@@ -1260,7 +1261,7 @@ sTypBlob = "DO"
 
 dcIdSin 		= iDw1.GetItemNumber ( alRow, "ID_SIN"	  )
 dcIdInter	= iDw1.GetItemNumber ( alRow, "ID_I" 	  )
-idcIdDoc    = iDw1.GetItemNumber ( alRow, "ID_DOC"	  )  // Armement qui ne sert pas, puisque ser mis $$HEX2$$e0002000$$ENDHEX$$jour en retour de PS_I02_ARCHIVE_RELANCES
+idcIdDoc    = iDw1.GetItemNumber ( alRow, "ID_DOC"	  )  // Armement qui ne sert pas, puisque ser mis à jour en retour de PS_I02_ARCHIVE_RELANCES
 dcIdOrdre	= iDw1.GetItemNumber ( alRow, "ID_ORDRE" )
 sIdAdh		= iDw1.GetItemString ( alRow, "ID_ADH"   )
 sCodInter	= iDw1.GetItemString ( alRow, "COD_INTER")
@@ -1269,7 +1270,7 @@ sMajPar		= stGlb.sCodOper
 sValidePar	= iDw1.GetItemString ( alRow, "VALIDE_PAR")
 
 /*------------------------------------------------------------------*/
-/* #1 ,11/10/99, Gestion de l'Id_Adh $$HEX2$$e0002000$$ENDHEX$$Null					           */
+/* #1 ,11/10/99, Gestion de l'Id_Adh à Null					           */
 /*------------------------------------------------------------------*/
 If IsNull ( sIdAdh ) Then
 	sIdAdh = ""
@@ -1313,8 +1314,8 @@ protected function boolean uf_misajourcourrieroriginal (long alrow);//*---------
 //* Fonction		: uf_MajAJourCourrierOriginal (Protected)
 //* Auteur			: Fabry JF
 //* Date				: 16/06/1999 15:24:45
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Mis $$HEX2$$e0002000$$ENDHEX$$jour du courrier original.
-//* Commentaires	: On update Nbr_Conf $$HEX2$$e0002000$$ENDHEX$$1
+//* Libellé			: Mis à jour du courrier original.
+//* Commentaires	: On update Nbr_Conf à 1
 //*
 //* Arguments		: Long			alRow				(Val)				Dossier en cours sur Dw_1
 //*
@@ -1329,9 +1330,9 @@ Boolean bOk = True
 
 Long		dcIdSin			// Sinistre
 Long		dcIdInter		// Interlocuteur
-Long		dcIdDoc			// n$$HEX2$$b0002000$$ENDHEX$$du document lu sur iDw1 et non pas le dernier Id_Doc pr$$HEX1$$e900$$ENDHEX$$sent
-								// sur archive pour ce m$$HEX1$$ea00$$ENDHEX$$me interlocuteur, car il correspondrait au courrier
-								// de relance qui vient juste d'$$HEX1$$ea00$$ENDHEX$$tre $$HEX1$$e900$$ENDHEX$$crit.
+Long		dcIdDoc			// n° du document lu sur iDw1 et non pas le dernier Id_Doc présent
+								// sur archive pour ce même interlocuteur, car il correspondrait au courrier
+								// de relance qui vient juste d'être écrit.
 Decimal {2} dcIdsin2, dcIdInter2, dcIdDoc2
 
 dcIdSin 	 = iDw1.GetItemNumber ( alRow, "ID_SIN" )
@@ -1341,7 +1342,7 @@ dcIdDoc	 = iDw1.GetItemNumber ( alRow, "ID_DOC" )
 If bOk Then
 
 	/*------------------------------------------------------------------*/
-	/* Pour un update, je ne cr$$HEX1$$e900$$ENDHEX$$e pas une nouvelle PS afin de ne pas    */
+	/* Pour un update, je ne crée pas une nouvelle PS afin de ne pas    */
 	/* alourdir un peu plus u_transaction.                              */
 	/*------------------------------------------------------------------*/
 	dcIdsin2 = Dec ( dcIdSin )
@@ -1355,7 +1356,7 @@ If bOk Then
 	USING		iTrTrans ;
 
 
-	isMess = "Probl$$HEX1$$e800$$ENDHEX$$me sur UPDATE, uf_MajAJourCourrierOriginal, u_Rl_Sp_Rel_Anc."
+	isMess = "Problème sur UPDATE, uf_MajAJourCourrierOriginal, u_Rl_Sp_Rel_Anc."
 
 	stMessage.bTrace = True
 	If	Not F_Procedure ( stMessage, itrTrans, isMess )	Then
@@ -1377,8 +1378,8 @@ protected function boolean uf_chargerdwparaprod ();//*--------------------------
 //* Fonction		: uf_ChargerDwParaProd (Protected)
 //* Auteur			: Fabry JF
 //* Date				: 24/06/1999 17:23:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Chargement du param$$HEX1$$e800$$ENDHEX$$trage
-//* Commentaires	: On Charge le param$$HEX1$$e800$$ENDHEX$$trage. (except$$HEX2$$e9002000$$ENDHEX$$pour les R1P et DR1)
+//* Libellé			: Chargement du paramètrage
+//* Commentaires	: On Charge le paramètrage. (excepté pour les R1P et DR1)
 //*
 //* Arguments		: Aucun
 //*
@@ -1415,7 +1416,7 @@ CHOOSE CASE isTypTrt
 			stMessage.Icon	    = Exclamation!
 			stMessage.Bouton   = Ok!
 			stMessage.bTrace   = False
-			stMessage.sVar[1]  = "Probl$$HEX1$$e800$$ENDHEX$$me lors du chargement du param$$HEX1$$e800$$ENDHEX$$trage du produit. Le traitement n'est pas lanc$$HEX1$$e900$$ENDHEX$$."
+			stMessage.sVar[1]  = "Problème lors du chargement du paramètrage du produit. Le traitement n'est pas lancé."
 
 			F_Message ( stMessage )
 	
@@ -1426,7 +1427,7 @@ CHOOSE CASE isTypTrt
 //		/*------------------------------------------------------------------*/
 //		/* La procedure d'insertion du courrier de relance dans la base     */
 //		/* attend l'idprod, voila pourquoi on va le chercher maintenant.    */
-//		/* De plus si l'idprod revient $$HEX2$$e0002000$$ENDHEX$$0, cela nous indique que le        */
+//		/* De plus si l'idprod revient à 0, cela nous indique que le        */
 //		/* sinistre n'existe pas, on ne va pas plus loin alors.             */
 //		/*------------------------------------------------------------------*/
 //		
@@ -1467,8 +1468,8 @@ protected function boolean uf_detruirepremiererelance ();
 //* Fonction		: uf_DetruirePremiereRelance (Protected)
 //* Auteur			: Fabry JF
 //* Date				: 24/06/1999 17:43:19
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Destruction d'une premi$$HEX1$$e800$$ENDHEX$$re relance.
-//* Commentaires	: Le courrier original ne pourra jamais plus $$HEX1$$ea00$$ENDHEX$$tre relanc$$HEX1$$e900$$ENDHEX$$.
+//* Libellé			: Destruction d'une première relance.
+//* Commentaires	: Le courrier original ne pourra jamais plus être relancé.
 //*
 //* Arguments		: Aucun
 //*
@@ -1504,7 +1505,7 @@ WHERE  id_arch = (	SELECT	id_arch FROM sysadm.archive
 							)
 USING  iTrTrans ;
 
-isMess = "Probl$$HEX1$$e800$$ENDHEX$$me sur DELETE FROM sysadm.w_cour_blob_arch, uf_DetruirePremiereRelance, u_Rl_Sp_Relance."
+isMess = "Problème sur DELETE FROM sysadm.w_cour_blob_arch, uf_DetruirePremiereRelance, u_Rl_Sp_Relance."
 
 If	Not F_Procedure ( stMessage, itrTrans, isMess )	Then
 
@@ -1526,7 +1527,7 @@ If bOk Then
 	USING  iTrTrans ;
 	
 	
-	isMess = "Probl$$HEX1$$e800$$ENDHEX$$me sur DELETE FROM sysadm.archive_blob, uf_DetruirePremiereRelance, u_Rl_Sp_Rel_Anc."
+	isMess = "Problème sur DELETE FROM sysadm.archive_blob, uf_DetruirePremiereRelance, u_Rl_Sp_Rel_Anc."
 	
 	
 	If	Not F_Procedure ( stMessage, itrTrans, isMess )	Then
@@ -1548,7 +1549,7 @@ If bOk Then
 		AND    id_doc      = :dcIdDoc
 		USING  iTrTrans ;
 	
-		isMess = "Probl$$HEX1$$e800$$ENDHEX$$me sur DELETE FROM sysadm.archive, uf_DetruirePremiereRelance, u_Rl_Sp_Rel_Anc."
+		isMess = "Problème sur DELETE FROM sysadm.archive, uf_DetruirePremiereRelance, u_Rl_Sp_Rel_Anc."
 	
 		stMessage.bTrace = True
 		If	Not F_Procedure ( stMessage, itrTrans, isMess )	Then
@@ -1564,8 +1565,8 @@ If bOk Then
 End If
 
 /*------------------------------------------------------------------*/
-/* On laisse la zone nbre_conf du courrier original $$HEX2$$e0002000$$ENDHEX$$1, de cette   */
-/* fa$$HEX1$$e700$$ENDHEX$$ons il ne sera jamais relanc$$HEX1$$e900$$ENDHEX$$.                                */
+/* On laisse la zone nbre_conf du courrier original à 1, de cette   */
+/* façons il ne sera jamais relancé.                                */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
@@ -1574,7 +1575,7 @@ End If
 If bOk Then
 
 	F_Commit ( iTrTrans, True )
-	isMess = "N$$HEX2$$b0002000$$ENDHEX$$du Row d$$HEX1$$e900$$ENDHEX$$truit dans la DataWindow : " + String ( lRow ) + ", Sinistre : " + String ( dcIdSin )
+	isMess = "N° du Row détruit dans la DataWindow : " + String ( lRow ) + ", Sinistre : " + String ( dcIdSin )
 	iDw1.DeleteRow ( lRow )
 
 End If
@@ -1588,12 +1589,12 @@ public function boolean uf_lancertrt (ref boolean absaisie);//*-----------------
 //* Fonction		: uf_LancerTrt	(Public)
 //* Auteur			: Fabry JF
 //* Date				: 11/06/1999 10:23:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Lancement du Traitement.
+//* Libellé			: Lancement du Traitement.
 //* Commentaires	: Cette fonction contient une partie du lancement
-//*					  du traitement, la suite est sur ue_Item7 de la fen$$HEX1$$ea00$$ENDHEX$$tre.
+//*					  du traitement, la suite est sur ue_Item7 de la fenêtre.
 //*
-//* Arguments		: Boolean 		abSaisie				(Ref)    Valeur de retour bool$$HEX1$$e900$$ENDHEX$$enne indiquant que le traitement 
-//*																			n'est pas lanc$$HEX1$$e900$$ENDHEX$$, non pas pour un probl$$HEX1$$e800$$ENDHEX$$me quelconque mais
+//* Arguments		: Boolean 		abSaisie				(Ref)    Valeur de retour booléenne indiquant que le traitement 
+//*																			n'est pas lancé, non pas pour un problème quelconque mais
 //*																			pour une saisie invalide.
 //*
 //* Retourne		: Boolean
@@ -1613,7 +1614,7 @@ CHOOSE CASE isTypTrt
 		bOk 		= This.uf_ControlerSaisie ( 2 )		
 		abSaisie = bOk
 
-//		D$$HEX1$$e900$$ENDHEX$$port$$HEX2$$e9002000$$ENDHEX$$dans l'objet fen$$HEX1$$ea00$$ENDHEX$$tre w_a_sp_relance::spb_imprimerdossier
+//		Déporté dans l'objet fenêtre w_a_sp_relance::spb_imprimerdossier
 //		If bOk Then
 //			bOk = This.uf_ChargerDwPolice ()
 //		End If
@@ -1631,7 +1632,7 @@ CHOOSE CASE isTypTrt
 		bOk 		= This.uf_ControlerSaisie ( 2 )		
 		abSaisie = bOk
 
-//		D$$HEX1$$e900$$ENDHEX$$port$$HEX2$$e9002000$$ENDHEX$$dans l'objet fen$$HEX1$$ea00$$ENDHEX$$tre w_a_sp_relance::spb_imprimerdossier
+//		Déporté dans l'objet fenêtre w_a_sp_relance::spb_imprimerdossier
 //		If bOk Then
 //			bOk = This.uf_ChargerDwPolice ()
 //		End If
@@ -1665,15 +1666,15 @@ protected function boolean uf_controlersaisie (integer acas);//*----------------
 //* Fonction		: uf_ControlerSaisie (Protected)
 //* Auteur			: Fabry JF
 //* Date				: 08/06/1999 15:21:03
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controle la saisie 
-//* Commentaires	: Contr$$HEX1$$f400$$ENDHEX$$le de la saisie sur 3 DataWindows diff$$HEX1$$e900$$ENDHEX$$rentes.
-//*					  $$HEX2$$e0002000$$ENDHEX$$des moments diff$$HEX1$$e900$$ENDHEX$$rents, c'est $$HEX2$$e0002000$$ENDHEX$$dire au chargement et au lancement.
+//* Libellé			: Controle la saisie 
+//* Commentaires	: Contrôle de la saisie sur 3 DataWindows différentes.
+//*					  à des moments différents, c'est à dire au chargement et au lancement.
 //*					  
 //*
-//* Arguments		: Integer		aCas			(Val)			1 : Contr$$HEX1$$f400$$ENDHEX$$le de saisie pour chargement
-//*																		2 : Contr$$HEX1$$f400$$ENDHEX$$le de saisie pour Lancement
+//* Arguments		: Integer		aCas			(Val)			1 : Contrôle de saisie pour chargement
+//*																		2 : Contrôle de saisie pour Lancement
 //*
-//* Retourne		: Boolean, True tout est renseign$$HEX1$$e900$$ENDHEX$$.
+//* Retourne		: Boolean, True tout est renseigné.
 //*			
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -1692,7 +1693,7 @@ sCol[ 1 ]  = "ID_PROD"			// sur Dw_Produit
 sCol[ 2 ]  = "ID_SIN"		   // sur Dw_SaisieSin
 
 sErr[ 1 ]  = "- Le produit"
-sErr[ 2 ]  = "- La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence sinistre"
+sErr[ 2 ]  = "- La référence sinistre"
 
 
 sSautLigne = "~r"
@@ -1700,7 +1701,7 @@ sText 	  = sSautLigne
 
 
 /*------------------------------------------------------------------*/
-/* Contr$$HEX1$$f400$$ENDHEX$$le de la saisie au chargement des donn$$HEX1$$e900$$ENDHEX$$es, suite au click  */
+/* Contrôle de la saisie au chargement des données, suite au click  */
 /* sur le bouton CHARGER.                                           */
 /*------------------------------------------------------------------*/
 If aCas = 1 Then
@@ -1710,7 +1711,7 @@ If aCas = 1 Then
 	CASE "R1A", "R1U", "R2"
 
 		/*------------------------------------------------------------------*/
-		/* Contr$$HEX1$$f400$$ENDHEX$$le de la saisie sur Dw_Produit                             */
+		/* Contrôle de la saisie sur Dw_Produit                             */
 		/*------------------------------------------------------------------*/
 		If IsNull ( iDwProduit.GetItemNumber ( 1, sCol[ 1 ] ) ) Then
 			bOk = False	
@@ -1722,7 +1723,7 @@ If aCas = 1 Then
 	CASE "R1T", "SOL"
 
 		/*------------------------------------------------------------------*/
-		/* Contr$$HEX1$$f400$$ENDHEX$$le de la saisie sur Dw_Produit                             */
+		/* Contrôle de la saisie sur Dw_Produit                             */
 		/*------------------------------------------------------------------*/
 		If IsNull ( iDwProduit.GetItemNumber ( 1, sCol[ 1 ] ) ) Then
 			bOk = False	
@@ -1734,7 +1735,7 @@ If aCas = 1 Then
 	CASE "R1P", "DR1"
 
 		/*------------------------------------------------------------------*/
-		/* Contr$$HEX1$$f400$$ENDHEX$$le de la saisie sur Dw_SaisieSin									  */
+		/* Contrôle de la saisie sur Dw_SaisieSin									  */
 		/*------------------------------------------------------------------*/
 		If Not iDwSaisieSin.ibErreur Then
 
@@ -1761,7 +1762,7 @@ End If
 
 
 /*------------------------------------------------------------------*/
-/* Contr$$HEX1$$f400$$ENDHEX$$le de la saisie au lancement du traitement, suite au       */
+/* Contrôle de la saisie au lancement du traitement, suite au       */
 /* click sur le(s) boutons LANCER, DETRUIRE, SOLDER.                */
 /*------------------------------------------------------------------*/
 If aCas = 2 Then
@@ -1771,7 +1772,7 @@ If aCas = 2 Then
 	CASE "R1P", "DR1"
 
 		/*------------------------------------------------------------------*/
-		/* Contr$$HEX1$$f400$$ENDHEX$$le de la s$$HEX1$$e900$$ENDHEX$$lection d'un courrier									  */
+		/* Contrôle de la sélection d'un courrier									  */
 		/*------------------------------------------------------------------*/
 
 		If iDw1.GetSelectedRow ( 0 ) = 0 Then
@@ -1819,8 +1820,8 @@ public function string uf_get_libprod ();//*------------------------------------
 //* Fonction		: uf_Get_LibProd
 //* Auteur			: PLJ
 //* Date				: 26/03/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration du libell$$HEX2$$e9002000$$ENDHEX$$de produit ayant permis de charger
+//* Libellé			: 
+//* Commentaires	: Récupération du libellé de produit ayant permis de charger
 //*                 le soldage
 //*					  
 //*
@@ -1842,7 +1843,7 @@ private subroutine uf_initialiser_sigelec (long alidprod, string ascodoper);//*-
 //* Fonction      : u_gs_sp_RelAnc::uf_Initialiser_SigElec (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 05/04/2004 17:03:43
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Gestion de la signature $$HEX1$$e900$$ENDHEX$$lectronique.
+//* Libellé       : Gestion de la signature électronique.
 //* Commentaires  : 
 //*
 //* Arguments     : Long		alIdProd			Val 
@@ -1860,12 +1861,12 @@ String sFic, sBin
 Boolean bVal, bDroitSigElec
 
 /*------------------------------------------------------------------*/
-/* Immediatement par d$$HEX1$$e900$$ENDHEX$$faut on alloue une signature SPB             */
+/* Immediatement par défaut on alloue une signature SPB             */
 /*------------------------------------------------------------------*/
 isFicSig = isRepSig + "DEFAUT." + isFmtSig
 
 /*------------------------------------------------------------------*/
-/* y a-t-il alors une signature par d$$HEX1$$e900$$ENDHEX$$faut pour ce produit ? 		  */
+/* y a-t-il alors une signature par défaut pour ce produit ? 		  */
 /*------------------------------------------------------------------*/
 sFic = isRepSig + String ( alIdProd ) + "\DEFAUT." + isFmtSig
 //Migration PB8-WYNIWYG-03/2006 FM
@@ -1876,11 +1877,11 @@ If f_FileExists ( sFic ) Then
 End If
 
 /*-------------------------------------------------------------------*/
-/* Le Gestionnaire qui a $$HEX1$$e900$$ENDHEX$$crit le courrier d'origine a-t-il le droit */
-/* d'utiliser la signature personnalis$$HEX1$$e900$$ENDHEX$$e ?                           */
+/* Le Gestionnaire qui a écrit le courrier d'origine a-t-il le droit */
+/* d'utiliser la signature personnalisée ?                           */
 /*-------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------*/
-/* #1 : Ajout de l'identifiant interlocuteur $$HEX2$$e0002000$$ENDHEX$$la fonction uf_GetAutorisation */
+/* #1 : Ajout de l'identifiant interlocuteur à la fonction uf_GetAutorisation */
 /*----------------------------------------------------------------------------*/
 This.uf_GetAutorisation ( "", sBIN, bVal, bVal, bVal, alIdProd, asCodOper, -1 )
 bDroitSigElec = Mid ( sBIN, 8, 1 ) = "1" 
@@ -1899,7 +1900,7 @@ If bDroitSigElec Then
 End If
 
 /*------------------------------------------------------------------*/
-/* On remplace "\" par "\\" pour interpr$$HEX1$$e900$$ENDHEX$$tation correcte dans word  */
+/* On remplace "\" par "\\" pour interprétation correcte dans word  */
 /*------------------------------------------------------------------*/
 isFicSig  = F_Remplace ( isFicSig, "\", "\\" )
 
@@ -1912,15 +1913,15 @@ public function long uf_zn_taillelot (integer acas);//*-------------------------
 //* Fonction		: uf_Zn_TailleLot	  (Public)
 //* Auteur			: Fabry JF
 //* Date				: 11/06/1999 16:01:20
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone Dw_TailleLot
+//* Libellé			: Contrôle de la zone Dw_TailleLot
 //* Commentaires	: (ItemChanged de Dw_TailleLot)
 //*
-//* Arguments		: Int			aCas			(Val)			1 --> Contr$$HEX1$$f400$$ENDHEX$$le de la zone
+//* Arguments		: Int			aCas			(Val)			1 --> Contrôle de la zone
 //*																   2 --> Gestion de l'erreur
 //*
 //Migration PB8-WYNIWYG-03/2006 FM
 ////* Retourne		: Rien
-//*	Retourne		: long  r$$HEX1$$e900$$ENDHEX$$sultat du SetActionCode
+//*	Retourne		: long  résultat du SetActionCode
 //Fin Migration PB8-WYNIWYG-03/2006 FM
 //*			
 //*-----------------------------------------------------------------
@@ -1933,7 +1934,7 @@ String	sVal
 long		ll_ret = 0
 
 /*------------------------------------------------------------------*/
-/* Cont$$HEX1$$f400$$ENDHEX$$le de la zone (ItemChanged).                                */
+/* Contôle de la zone (ItemChanged).                                */
 /*------------------------------------------------------------------*/
 If aCas = 1 Then
 
@@ -1968,15 +1969,15 @@ public function long uf_zn_refsin (integer acas);//*----------------------------
 //* Fonction		: uf_Zn_RefSin	  (Public)
 //* Auteur			: Fabry JF
 //* Date				: 23/06/1999 16:01:20
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone Id_Sin 
+//* Libellé			: Contrôle de la zone Id_Sin 
 //* Commentaires	: (ItemChanged de Dw_SaisieSin)
 //*
-//* Arguments		: Int			aCas			(Val)			1 --> Contr$$HEX1$$f400$$ENDHEX$$le de la zone
+//* Arguments		: Int			aCas			(Val)			1 --> Contrôle de la zone
 //*																   2 --> Gestion de l'erreur
 //*
 //Migration PB8-WYNIWYG-03/2006 FM
 ////* Retourne		: Rien
-//*	Retourne		: long  r$$HEX1$$e900$$ENDHEX$$sultat du SetActionCode
+//*	Retourne		: long  résultat du SetActionCode
 //Fin Migration PB8-WYNIWYG-03/2006 FM
 //*			
 //*-----------------------------------------------------------------
@@ -1992,7 +1993,7 @@ long	ll_ret = 0
 //Fin Migration PB8-WYNIWYG-03/2006 FM
 
 /*------------------------------------------------------------------*/
-/* Cont$$HEX1$$f400$$ENDHEX$$le de la zone (ItemChanged).                                */
+/* Contôle de la zone (ItemChanged).                                */
 /*------------------------------------------------------------------*/
 If aCas = 1 Then
 
@@ -2041,38 +2042,38 @@ public subroutine uf_getautorisation (string asidnatcour, ref string asbin, ref 
 //* Fonction      : u_gs_sp_Rel_Anc::uf_GetAutorisation (PUBLIC)
 //* Auteur        : Fabry JF
 //* Date          : 02/03/2004 10:01:09
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Lecture des droits d'autorisation/refus, pour ce gestionnaire et 
+//* Libellé       : Lecture des droits d'autorisation/refus, pour ce gestionnaire et 
 //*					  ce produit (ou tout produit), permettant de modifier le contenu des courriers.
-//*					  Le BIN de retour indique $$HEX1$$e900$$ENDHEX$$galement si le gestionnaire est en validation
+//*					  Le BIN de retour indique également si le gestionnaire est en validation
 //*					  autonome ou pas.
 //* Commentaires  :  ! MAINTENANCE A FAIRE AUSSI L'OBJET DE SINISTRE !
 //*
-//* Arguments     : 	String		asIdNatCour		val	Nature du courrier compos$$HEX2$$e9002000$$ENDHEX$$et $$HEX2$$e0002000$$ENDHEX$$analyser
-//*						String		asBIN				r$$HEX1$$e900$$ENDHEX$$f	Bin de retour (voir ci-dessous d$$HEX1$$e900$$ENDHEX$$codage)
-//*						Boolean		abModifCour		r$$HEX1$$e900$$ENDHEX$$f	TRUE : Le courrier compos$$HEX2$$e9002000$$ENDHEX$$peut $$HEX1$$ea00$$ENDHEX$$tre modifi$$HEX2$$e9000900$$ENDHEX$$et donc sauvegard$$HEX1$$e900$$ENDHEX$$.
-//*						Boolean		abValAuto		r$$HEX1$$e900$$ENDHEX$$f	TRUE : Le gestionnaire est en mode Validation autonome
-//*						Boolean		abValidation	r$$HEX1$$e900$$ENDHEX$$f	TRUE : Le gestionnaire a le droit de Valider (phase validation)
+//* Arguments     : 	String		asIdNatCour		val	Nature du courrier composé et à analyser
+//*						String		asBIN				réf	Bin de retour (voir ci-dessous décodage)
+//*						Boolean		abModifCour		réf	TRUE : Le courrier composé peut être modifié	et donc sauvegardé.
+//*						Boolean		abValAuto		réf	TRUE : Le gestionnaire est en mode Validation autonome
+//*						Boolean		abValidation	réf	TRUE : Le gestionnaire a le droit de Valider (phase validation)
 //*						Long			alIdProd			Val	Code Produit
 //*						String		asCodOper		Val	Code User
 //							Integer     aiIdi				Val   Code Interlocuteur
 //*
-//*						D$$HEX1$$e900$$ENDHEX$$codage du BIN de 6 chiffres $$HEX2$$e0002000$$ENDHEX$$d$$HEX1$$e900$$ENDHEX$$couper sous la forme
-//*					   1er    0/1     $$HEX2$$e0002000$$ENDHEX$$1 --> Autoriser modif Cr. Questionnaire 
-//*					   2$$HEX1$$e800$$ENDHEX$$me   0/1     $$HEX2$$e0002000$$ENDHEX$$1 --> Autoriser modif Cr. Dem. Pi$$HEX1$$e800$$ENDHEX$$ce
-//*					   3$$HEX1$$e800$$ENDHEX$$me   0/1     $$HEX2$$e0002000$$ENDHEX$$1 --> Autoriser modif Cr. Prise en charge
-//*					   4$$HEX1$$e800$$ENDHEX$$me   0/1     $$HEX2$$e0002000$$ENDHEX$$1 --> Autoriser modif Cr. Refus
-//*					   5$$HEX1$$e800$$ENDHEX$$me   0/1     $$HEX2$$e0002000$$ENDHEX$$1 --> Autoriser modif Cr. R$$HEX1$$e900$$ENDHEX$$glement
-//*                  6$$HEX1$$e800$$ENDHEX$$me   0/1     $$HEX2$$e0002000$$ENDHEX$$1 --> Autoriser Validation autonome
-//*					   7$$HEX1$$e800$$ENDHEX$$me	 0/1		$$HEX2$$e0002000$$ENDHEX$$1 --> Autoriser Phase Validation
-//*					   8$$HEX1$$e800$$ENDHEX$$me	 0/1		$$HEX2$$e0002000$$ENDHEX$$1 --> Autoriser Signature $$HEX1$$e900$$ENDHEX$$lectronique
-//*						9$$HEX1$$e800$$ENDHEX$$me	 0/1		$$HEX2$$e0002000$$ENDHEX$$1 --> Autoriser Gestionnaire DSC
-//*					   10$$HEX1$$e800$$ENDHEX$$me	 0/1		$$HEX2$$e0002000$$ENDHEX$$1 --> Autoriser Nom&Pr$$HEX1$$e900$$ENDHEX$$nom gestionnaire sur Courrier
-//*					   11$$HEX1$$e800$$ENDHEX$$me	 0/1		$$HEX2$$e0002000$$ENDHEX$$1 --> Autoriser Aucune signature
-//*						12$$HEX1$$e800$$ENDHEX$$me  0/1     $$HEX2$$e0002000$$ENDHEX$$1 --> Autoriser envoi mail
-//*                  13$$HEX1$$e800$$ENDHEX$$me  0/1     $$HEX2$$e0002000$$ENDHEX$$1 --> Autoriser modif mail
-//*						14$$HEX1$$e800$$ENDHEX$$me  0/1     $$HEX2$$e0002000$$ENDHEX$$1 --> Autoriser modif mail R$$HEX1$$e900$$ENDHEX$$glement
-//*						15$$HEX1$$e800$$ENDHEX$$me  0/1     $$HEX2$$e0002000$$ENDHEX$$1 --> Autoriser modif mail Refus
-//*						16$$HEX1$$e800$$ENDHEX$$me  0/1     $$HEX2$$e0002000$$ENDHEX$$1 --> Autoriser envoi mail Cr. Particulier	 
+//*						Décodage du BIN de 6 chiffres à découper sous la forme
+//*					   1er    0/1     à 1 --> Autoriser modif Cr. Questionnaire 
+//*					   2ème   0/1     à 1 --> Autoriser modif Cr. Dem. Pièce
+//*					   3ème   0/1     à 1 --> Autoriser modif Cr. Prise en charge
+//*					   4ème   0/1     à 1 --> Autoriser modif Cr. Refus
+//*					   5ème   0/1     à 1 --> Autoriser modif Cr. Réglement
+//*                  6ème   0/1     à 1 --> Autoriser Validation autonome
+//*					   7ème	 0/1		à 1 --> Autoriser Phase Validation
+//*					   8ème	 0/1		à 1 --> Autoriser Signature électronique
+//*						9ème	 0/1		à 1 --> Autoriser Gestionnaire DSC
+//*					   10ème	 0/1		à 1 --> Autoriser Nom&Prénom gestionnaire sur Courrier
+//*					   11ème	 0/1		à 1 --> Autoriser Aucune signature
+//*						12ème  0/1     à 1 --> Autoriser envoi mail
+//*                  13ème  0/1     à 1 --> Autoriser modif mail
+//*						14ème  0/1     à 1 --> Autoriser modif mail Réglement
+//*						15ème  0/1     à 1 --> Autoriser modif mail Refus
+//*						16ème  0/1     à 1 --> Autoriser envoi mail Cr. Particulier	 
 //*
 //*					  ex BIN : 0110101
 //*
@@ -2089,26 +2090,26 @@ Long   lTotTab, lTotAuto, lCpt, lRow
 Boolean bFin
 
 /*------------------------------------------------------------------*/
-/* D$$HEX1$$e900$$ENDHEX$$finiton des droits.                                            */
+/* Définiton des droits.                                            */
 /*------------------------------------------------------------------*/
 sTabDroit [1] = "1"		// Autoriser modif Cr. Questionnaire 
-sTabDroit [2] = "2"		// Autoriser modif Cr. Dem. Pi$$HEX1$$e800$$ENDHEX$$ce
+sTabDroit [2] = "2"		// Autoriser modif Cr. Dem. Pièce
 sTabDroit [3] = "3"		// Autoriser modif Cr. Prise en charge
 sTabDroit [4] = "4"		// Autoriser modif Cr. Refus
-sTabDroit [5] = "5"		// Autoriser modif Cr. R$$HEX1$$e900$$ENDHEX$$glement
+sTabDroit [5] = "5"		// Autoriser modif Cr. Réglement
 sTabDroit [6] = "6"		// Autoriser Validation autonome
-sTabDroit [7] = "7"		// Autoriser $$HEX2$$e0002000$$ENDHEX$$Valider (phase validation)
-sTabDroit [8] = "8"		// Autoriser $$HEX2$$e0002000$$ENDHEX$$utiliser la signature $$HEX1$$e900$$ENDHEX$$lectronique.
+sTabDroit [7] = "7"		// Autoriser à Valider (phase validation)
+sTabDroit [8] = "8"		// Autoriser à utiliser la signature électronique.
 sTabDroit [9] = "9"		// Autoriser Gestionnaire DSC.
-sTabDroit [10] = "10"	// Autoriser Nom&Pr$$HEX1$$e900$$ENDHEX$$nom gestionnaire sur courrier
+sTabDroit [10] = "10"	// Autoriser Nom&Prénom gestionnaire sur courrier
 sTabDroit [11] = "11"	// Autoriser Aucune signature
 
 /*------------------------------------------------------------------*/
-/* #1 04/08/2006 MADM D$$HEX1$$e900$$ENDHEX$$finiton des nouveaux  droits.               */
+/* #1 04/08/2006 MADM Définiton des nouveaux  droits.               */
 /*------------------------------------------------------------------*/
 sTabDroit [12] = "12"		// Autoriser envoi mail
 sTabDroit [13] = "13"		// Autoriser modif mail
-sTabDroit [14] = "14"		// Autoriser modif mail R$$HEX1$$e900$$ENDHEX$$glement
+sTabDroit [14] = "14"		// Autoriser modif mail Réglement
 sTabDroit [15] = "15"		// Autoriser modif mail Refus
 sTabDroit [16] = "16"		// Autoriser envoi mail Cr. Particulier	
 
@@ -2162,7 +2163,7 @@ For lCpt = 1 To lTotTab
 
 	/*------------------------------------------------------------------*/
 	/* S'il n'y a aucun droit particulier pour ce produit, y a-t-il     */
-	/* alors un droit par d$$HEX1$$e900$$ENDHEX$$faut.                                       */
+	/* alors un droit par défaut.                                       */
 	/*------------------------------------------------------------------*/
 	sFindTrt = sFindOrig + sTabDroit [ lCpt ] + " AND ID_PROD = -1"
 	lRow = idwAutorisation.Find ( sFindTrt, 1, lTotAuto ) 
@@ -2187,7 +2188,7 @@ For lCpt = 1 To lTotTab
 	End If
 	
 	/*------------------------------------------------------------------*/
-	/* Sinon si aucun droit n'est affect$$HEX1$$e900$$ENDHEX$$, c'est par d$$HEX1$$e900$$ENDHEX$$faut un refus de */
+	/* Sinon si aucun droit n'est affecté, c'est par défaut un refus de */
 	/* modifier.                                                        */
 	/*------------------------------------------------------------------*/
 	asBIN += "0"
@@ -2195,17 +2196,17 @@ For lCpt = 1 To lTotTab
 Next	
 
 /*------------------------------------------------------------------*/
-/* Correction du BIN pour le cas de certaines incoh$$HEX1$$e900$$ENDHEX$$rence.          */
+/* Correction du BIN pour le cas de certaines incohérence.          */
 /*------------------------------------------------------------------*/
-/* Impossible d'avoir 8 et 11 en m$$HEX1$$ea00$$ENDHEX$$me temps et pourtant le          */
-/* param$$HEX1$$e800$$ENDHEX$$trage permet de le faire.                                  */
+/* Impossible d'avoir 8 et 11 en même temps et pourtant le          */
+/* paramètrage permet de le faire.                                  */
 /*------------------------------------------------------------------*/
 If Mid ( asBIN, 8, 1 ) = "1" And Mid ( asBIN, 11, 1 ) = "1" Then
 	sFindTrt = sFindOrig + sTabDroit [ 8 ] + " AND ID_PROD = " + sIdProd
 	lRow = idwAutorisation.Find ( sFindTrt, 1, lTotAuto )
 
 	/*------------------------------------------------------------------*/
-	/* 8 est plus fort dans ce cas puiqu'associ$$HEX2$$e9002000$$ENDHEX$$au produit, on annule  */
+	/* 8 est plus fort dans ce cas puiqu'associé au produit, on annule  */
 	/* donc 11.																			  */
 	/*------------------------------------------------------------------*/
 	If lRow > 0 Then
@@ -2222,7 +2223,7 @@ abValAuto = Mid ( asBIN, 6, 1 ) = "1"
 abValidation = Mid ( asBIN, 7, 1 ) = "1"
 
 /*------------------------------------------------------------------*/
-/* A-t-on un code courrier $$HEX2$$e0002000$$ENDHEX$$analyser ?                             */
+/* A-t-on un code courrier à analyser ?                             */
 /*------------------------------------------------------------------*/
 If asIdNatCour <> "" Then
 
@@ -2234,14 +2235,14 @@ If asIdNatCour <> "" Then
 	/*------------------------------------------------------------------*/
 	 lRow = idw1.Find ( "ID_I = " + String ( aiIdi ), 1, idw1.Rowcount () )
 	/*------------------------------------------------------------------*/
-	/* #1 On d$$HEX1$$e900$$ENDHEX$$termine le canal (Mail ou courrier) de l'interlocuteur   */
+	/* #1 On détermine le canal (Mail ou courrier) de l'interlocuteur   */
 	/*------------------------------------------------------------------*/
 	 sAltSuiviMail = idw1.GetItemString (lRow , "ALT_SUIVI_MAIL")
-	//[DNTMAIL1-2_MEP_DEF] For$$HEX1$$e700$$ENDHEX$$age $$HEX2$$e0002000$$ENDHEX$$supprimer lors de la MEP finale.
+	//[DNTMAIL1-2_MEP_DEF] Forçage à supprimer lors de la MEP finale.
 	sAltSuiviMail = "N"
 	
 	/*--------------------------------------------------------------------------------------------*/
-	/* #1 Si le canal est $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$Mail et que le droit 13 est $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$1 alors abModifCour est vraie */
+	/* #1 Si le canal est égal à Mail et que le droit 13 est égal à 1 alors abModifCour est vraie */
 	/*--------------------------------------------------------------------------------------------*/ 
 	 abModifCour = sAltSuiviMail <> "O" Or ( sAltSuiviMail =  "O" And Mid ( asBIN, 13, 1 ) = "1" ) 
 
@@ -2278,25 +2279,25 @@ If asIdNatCour <> "" Then
 	If Not bFin And abModifCour Then 
 
 		/*------------------------------------------------------------------*/
-		/* Droit $$HEX2$$e0002000$$ENDHEX$$modifier les courriers de r$$HEX1$$e900$$ENDHEX$$glement                      */
+		/* Droit à modifier les courriers de réglement                      */
 		/*------------------------------------------------------------------*/
 		If abModifCour Then
 			Choose Case Mid ( asIdNatCour, 3, 1 )
-				Case "C", "V"   // Ch$$HEX1$$e900$$ENDHEX$$que et virement
+				Case "C", "V"   // Chéque et virement
 				/*------------------------------------------------------------------*/
-				/* #1 Si le canal est diff$$HEX1$$e900$$ENDHEX$$rent de Mail alors abModifCour est vraie */
+				/* #1 Si le canal est différent de Mail alors abModifCour est vraie */
 				/*------------------------------------------------------------------*/ 
 				 If sAltSuiviMail <> "O" Then
 					 abModifCour = Mid ( asBIN, 5, 1 ) = "1" 
 				 Else
 				/*--------------------------------------------------------------------------------------------*/
-				/* #1 Si le canal est $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$Mail et que le droit 14 est $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$1 alors abModifCour est vraie */
+				/* #1 Si le canal est égal à Mail et que le droit 14 est égal à 1 alors abModifCour est vraie */
 				/*--------------------------------------------------------------------------------------------*/
 				    abModifCour = Mid ( asBIN, 5, 1 ) = "1" And Mid ( asBIN, 14, 1 ) = "1" 
 				 End If	 
 
 				/*------------------------------------------------------------------*/
-				/* Droit $$HEX2$$e0002000$$ENDHEX$$modifier les courriers de prise en charge                */
+				/* Droit à modifier les courriers de prise en charge                */
 				/*------------------------------------------------------------------*/
 				Case "E"
 					abModifCour = Mid ( asBIN, 3, 1 ) = "1" 
@@ -2304,7 +2305,7 @@ If asIdNatCour <> "" Then
 			End Choose
 		End If	
 		/*------------------------------------------------------------------*/
-		/* Droit $$HEX2$$e0002000$$ENDHEX$$modifier les courriers de demande de pi$$HEX1$$e800$$ENDHEX$$ce.				  */
+		/* Droit à modifier les courriers de demande de pièce.				  */
 		/*------------------------------------------------------------------*/
 		If abModifCour Then
 			If Mid ( asIdNatCour, 4, 1 ) = "P" Then
@@ -2313,18 +2314,18 @@ If asIdNatCour <> "" Then
 		End If
 		
 		/*------------------------------------------------------------------*/
-		/* Droit $$HEX2$$e0002000$$ENDHEX$$modifier les courriers de refus.								  */
+		/* Droit à modifier les courriers de refus.								  */
 		/*------------------------------------------------------------------*/
 		If abModifCour Then
 			If Mid ( asIdNatCour, 5, 1 ) = "R" Then
 				/*------------------------------------------------------------------*/
-				/* #1 Si le canal est diff$$HEX1$$e900$$ENDHEX$$rent de Mail alors abModifCour est vraie */
+				/* #1 Si le canal est différent de Mail alors abModifCour est vraie */
 				/*------------------------------------------------------------------*/ 
 				If sAltSuiviMail <> "O" Then
 					abModifCour = Mid ( asBIN, 4, 1 ) = "1" 
 				Else 
 					/*--------------------------------------------------------------------------------------------*/
-					/* #1 Si le canal est $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$Mail et que le droit 15 est $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$1 alors abModifCour est vraie */
+					/* #1 Si le canal est égal à Mail et que le droit 15 est égal à 1 alors abModifCour est vraie */
 					/*--------------------------------------------------------------------------------------------*/
 					abModifCour = Mid ( asBIN, 4, 1 ) = "1" And Mid ( asBIN, 15, 1 ) = "1"
 				End If
@@ -2347,8 +2348,8 @@ public function boolean uf_ecriredwgencourrier (long alrow, string astype);
 //* Fonction      : u_gs_sp_Relance::uf_EcrireCourrierDansArchive_sve (PRIVATE)
 //* Auteur        : JCA
 //* Date          : 23/01/2008
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
-//* Commentaires  : Ecriture du courrier de relance fusionn$$HEX1$$e900$$ENDHEX$$, en base type DO
+//* Libellé       : 
+//* Commentaires  : Ecriture du courrier de relance fusionné, en base type DO
 //*
 //* Arguments     : Long			alRow			Val
 //*
@@ -2379,7 +2380,7 @@ if asType = "R" then
 else
 	dcIdDoc		= 2
 	sIdCour		= iDw1.GetitemString ( alRow, "ID_COUR" )
-	sTitre		= mid(isTxtCompoOri, len(stglb.sreptempo)+1) // pour extraire le nom du fichier g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$
+	sTitre		= mid(isTxtCompoOri, len(stglb.sreptempo)+1) // pour extraire le nom du fichier généré
 	sTxtCompo 	= isTxtCompoOri
 	sAltPart		= "O"
 end if
@@ -2389,12 +2390,12 @@ Choose Case Left ( iDw1.GetitemString ( alRow, "ID_COUR" ), 1 )
 		sBac = "MILIEU"
 	Case "B"		// Courrier Banque
 		sBac = "HAUT"
-	Case Else	// Courrier Assur$$HEX2$$e9002000$$ENDHEX$$+ autres
+	Case Else	// Courrier Assuré + autres
 		sBac = "BAS"
 End Choose	
 
 /*------------------------------------------------------------------*/
-/* Insertion d'un enregistrement populis$$HEX2$$e9002000$$ENDHEX$$dans DwGenCourrier.       */
+/* Insertion d'un enregistrement populisé dans DwGenCourrier.       */
 /*------------------------------------------------------------------*/
 iRow = idwGenCourrier.InsertRow ( 0 )
 
@@ -2420,7 +2421,7 @@ protected function boolean uf_chargerdwcourrier ();//*--------------------------
 //* Fonction		: uf_ChargerDwCourrier (Protected)
 //* Auteur			: JCA
 //* Date				: 31/02/2008
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Chargement de Dw_Courrier
+//* Libellé			: Chargement de Dw_Courrier
 //* Commentaires	: On charge tous les types de courriers
 //*			
 //*-----------------------------------------------------------------
@@ -2434,18 +2435,18 @@ Long		lNbrRowDwCourrier
 
 CHOOSE CASE isTypTrt
 	
-	// Premi$$HEX1$$e800$$ENDHEX$$res Relances Automatique.
+	// Premières Relances Automatique.
 	CASE "R1A", "R1U", "R1T", "R1P"
 		lNbrRowDwCourrier = iDwCourrier.Retrieve ( string(ilProd), "1" )
 
-	// Deuxi$$HEX1$$e800$$ENDHEX$$me Relances
+	// Deuxième Relances
 	CASE "R2"
 		lNbrRowDwCourrier = iDwCourrier.Retrieve ( string(ilProd), "2" )
 
 END CHOOSE
 
 /*------------------------------------------------------------------*/
-/* Le retrieve s'est mal pass$$HEX1$$e900$$ENDHEX$$, on arr$$HEX1$$ea00$$ENDHEX$$te tout.                     */
+/* Le retrieve s'est mal passé, on arrête tout.                     */
 /*------------------------------------------------------------------*/
 If lNbrRowDwCourrier < 0 Then
 
@@ -2459,7 +2460,7 @@ If lNbrRowDwCourrier < 0 Then
 	F_Message ( stMessage )
 
 /*------------------------------------------------------------------*/
-/* Aucune ligne ramen$$HEX1$$e900$$ENDHEX$$e.														  */
+/* Aucune ligne ramenée.														  */
 /*------------------------------------------------------------------*/
 ElseIf lNbrRowDwCourrier = 0 Then
 
@@ -2486,44 +2487,44 @@ public subroutine uf_initialiser_anc (ref u_datawindow adwproduit, ref u_datawin
 //* CO-Auteur		: JCA (refonte relance orange)
 //* Date				: 15/01/2008
 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Initialisation de la fen$$HEX1$$ea00$$ENDHEX$$tre anc$$HEX1$$ea00$$ENDHEX$$tre
-//* Commentaires	: Cette initialisation sera commune $$HEX2$$e0002000$$ENDHEX$$toutes les fen$$HEX1$$ea00$$ENDHEX$$tres descendantes.
-//*					  - R1A  --> Premi$$HEX1$$e800$$ENDHEX$$res Relances Automatiques.
-//*									 Edite les premi$$HEX1$$e800$$ENDHEX$$res relances des courriers Qxxxx, xxxPxx
+//* Libellé			: Initialisation de la fenêtre ancêtre
+//* Commentaires	: Cette initialisation sera commune à toutes les fenêtres descendantes.
+//*					  - R1A  --> Premières Relances Automatiques.
+//*									 Edite les premières relances des courriers Qxxxx, xxxPxx
 //*
-//*					  - R1U  --> Premi$$HEX1$$e800$$ENDHEX$$res Relances Automatiques pour les garanties UF avec Dem. Pces. $$HEX2$$e0002000$$ENDHEX$$la banque.
-//*								  	 Suite DCMP000285 B. Levesque, Edite les premi$$HEX1$$e800$$ENDHEX$$res relances des courriers Qxxxx, xCxPxx, APART1
+//*					  - R1U  --> Premières Relances Automatiques pour les garanties UF avec Dem. Pces. à la banque.
+//*								  	 Suite DCMP000285 B. Levesque, Edite les premières relances des courriers Qxxxx, xCxPxx, APART1
 //*
-//*					  - R1T  --> Premi$$HEX1$$e800$$ENDHEX$$res Relances Particuli$$HEX1$$e800$$ENDHEX$$res
+//*					  - R1T  --> Premières Relances Particulières
 //*                            Edite une LISTE des courriers APART1
-//*                            Apr$$HEX1$$e800$$ENDHEX$$s un contr$$HEX1$$f400$$ENDHEX$$le visuel par la consultation, ces courriers pourront $$HEX1$$ea00$$ENDHEX$$tre
-//*									 Relanc$$HEX1$$e900$$ENDHEX$$s par la fen$$HEX1$$ea00$$ENDHEX$$tre des relances ponctuelles.
+//*                            Après un contrôle visuel par la consultation, ces courriers pourront être
+//*									 Relancés par la fenêtre des relances ponctuelles.
 //*
-//*					  - R1P  --> Premi$$HEX1$$e800$$ENDHEX$$res Relances Ponctuelles.
-//*									 Edite une premi$$HEX1$$e800$$ENDHEX$$re relance d'un courrier (n'ayant jamais $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$relanc$$HEX1$$e900$$ENDHEX$$), sans tenir
-//*									 compte du param$$HEX1$$e800$$ENDHEX$$trage.
+//*					  - R1P  --> Premières Relances Ponctuelles.
+//*									 Edite une première relance d'un courrier (n'ayant jamais été relancé), sans tenir
+//*									 compte du paramètrage.
 //*
-//*					  - DR1  --> Annuler (D$$HEX1$$e900$$ENDHEX$$truire) une premi$$HEX1$$e800$$ENDHEX$$re relance.
-//*									 Destruction d'une premi$$HEX1$$e800$$ENDHEX$$re relance, notamment pour les APART1. Une fois la relance d$$HEX1$$e900$$ENDHEX$$truite
-//*									 le courrier original ne pourra jamais plus $$HEX1$$ea00$$ENDHEX$$tre relanc$$HEX1$$e900$$ENDHEX$$.
+//*					  - DR1  --> Annuler (Détruire) une première relance.
+//*									 Destruction d'une première relance, notamment pour les APART1. Une fois la relance détruite
+//*									 le courrier original ne pourra jamais plus être relancé.
 //*
-//*					  - R2   --> Deuxi$$HEX1$$e800$$ENDHEX$$mes Relances.				
+//*					  - R2   --> Deuxièmes Relances.				
 //*									 
 //*
-//* Arguments		: u_DataWindow					aDwProduit			(Ref) // S$$HEX1$$e900$$ENDHEX$$lection du produit
-//*					  u_DataWindow					aDwSaisieSinot		(Ref)	// Saisie d'un num$$HEX1$$e900$$ENDHEX$$ro de sinistre
+//* Arguments		: u_DataWindow					aDwProduit			(Ref) // Sélection du produit
+//*					  u_DataWindow					aDwSaisieSinot		(Ref)	// Saisie d'un numéro de sinistre
 //*					  u_DataWindow_Accueil		aDw1					(Ref) // Dw_1 principale
-//*					  DataWindow					aDwParaProd			(Ref) // DataWindow r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rant le param. du prod. S$$HEX1$$e900$$ENDHEX$$lect.
-//*					  Datawindow					aDwPolice			(Ref) // DataWindow r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rant les polices, Cie.
-//*					  Datawindow					aDwCivilite			(Ref) // Dw des civilit$$HEX1$$e900$$ENDHEX$$s (long, court)
+//*					  DataWindow					aDwParaProd			(Ref) // DataWindow récupérant le param. du prod. Sélect.
+//*					  Datawindow					aDwPolice			(Ref) // DataWindow récupérant les polices, Cie.
+//*					  Datawindow					aDwCivilite			(Ref) // Dw des civilités (long, court)
 //*					  String							asTypTrt				(Val) // Type de Relances
-//*					  u_libelle_dga				auoLibelle			(Ref) // Objet servant $$HEX2$$e0002000$$ENDHEX$$construire le blob
+//*					  u_libelle_dga				auoLibelle			(Ref) // Objet servant à construire le blob
 //*					  u_Transaction				aTrTrans				(Ref) // Objet de transaction
 //*					  u_BarreDefil					auoDefil				(Ref) // Jauge
 //*					  DataWindow					adw_BoiteArchive	(Ref) // DW pour la gestion des boites archives
 //*					  DataWindow					adw_DetPro			(Ref) // DW sur DET_PRO
-//*				 	  DataWindow					adwGenCourrier		(R$$HEX1$$e900$$ENDHEX$$f) // Dw Gen Cour SVE DCMP 040020
-//*					  Datawindow					adwAutorisation   (R$$HEX1$$e900$$ENDHEX$$f) // Dw des autorisation pour la Sign Elec.
+//*				 	  DataWindow					adwGenCourrier		(Réf) // Dw Gen Cour SVE DCMP 040020
+//*					  Datawindow					adwAutorisation   (Réf) // Dw des autorisation pour la Sign Elec.
 //* Retourne		: 
 //*			
 //*-----------------------------------------------------------------
@@ -2563,7 +2564,7 @@ idwAutorisation.SetTransObject ( itrTrans )
 idwAutorisation.Retrieve ( "*", -100 )
 
 /*------------------------------------------------------------------*/
-/* Initialisation du le signature $$HEX1$$e900$$ENDHEX$$lectronique.                     */
+/* Initialisation du le signature électronique.                     */
 /*------------------------------------------------------------------*/
 isRepSig	= ProfileString ( stGLB.sFichierIni, "EDITION", "REP_SIGNATURE", "K:\SIGNPERS\" )
 isFmtSig	= ProfileString ( stGLB.sFichierIni, "EDITION", "FMT_SIGNATURE", "TIF" )
@@ -2576,7 +2577,7 @@ idw_DetPro.Retrieve ( -1 )
 idw_DetPro.Sort ()
 
 /*------------------------------------------------------------------*/
-/* On arme une variable contenant le r$$HEX1$$e900$$ENDHEX$$pertoire Windows             */
+/* On arme une variable contenant le répertoire Windows             */
 /*------------------------------------------------------------------*/
 //u_DeclarationFuncky uoDeclarationFuncky //[I037] Migration FUNCKy
 //uoDeclarationFuncky = Create u_DeclarationFuncky
@@ -2593,7 +2594,7 @@ iDwCivilite.SetTransObject  ( iTrTrans )
 iDwSaisieSin.SetTransObject ( iTrTrans )
 idwCourrier.SetTransObject	 ( iTrTrans )
 
-// On Ram$$HEX1$$e800$$ENDHEX$$ne dans la Dw1 toutes les lignes du select.
+// On Ramène dans la Dw1 toutes les lignes du select.
 iDw1.ilMaxLig = 0
 iuoDefil.uf_Init ( 0 )
 
@@ -2603,37 +2604,37 @@ iuoDefil.uf_Init ( 0 )
 CHOOSE CASE isTypTrt
 	
 	/*------------------------------------------------------------------*/
-	/* 1$$HEX1$$e800$$ENDHEX$$res Relances Automatiques                                      */
+	/* 1ères Relances Automatiques                                      */
 	/*------------------------------------------------------------------*/
 	CASE "R1A"
 		iDw1.DataObject = "D_SP_RELANCE_NORMALE"
 		
 	/*------------------------------------------------------------------*/
-	/* 1$$HEX1$$e800$$ENDHEX$$res Relances Automatiques Gti Uf avec Dem. Pces BQ             */
+	/* 1ères Relances Automatiques Gti Uf avec Dem. Pces BQ             */
 	/*------------------------------------------------------------------*/
 	CASE "R1U"
 		iDw1.DataObject = "D_SP_REL1_AUTO_UFBQ"
 		
 	/*------------------------------------------------------------------*/
-	/* 1$$HEX1$$e800$$ENDHEX$$res Relances Particuli$$HEX1$$e800$$ENDHEX$$res												  */
+	/* 1ères Relances Particulières												  */
 	/*------------------------------------------------------------------*/
 	CASE "R1T"
 		iDw1.DataObject = "D_SP_RELANCE_PARTICULIERE"
 
 	/*------------------------------------------------------------------*/
-	/* 1$$HEX1$$e800$$ENDHEX$$res Relances Ponctuelles                                       */
+	/* 1ères Relances Ponctuelles                                       */
 	/*------------------------------------------------------------------*/
 	CASE "R1P"
 		iDw1.DataObject = "D_SP_REL1_PONC"
 		
 	/*------------------------------------------------------------------*/
-	/* D$$HEX1$$e900$$ENDHEX$$estruction d'une premi$$HEX1$$e800$$ENDHEX$$re relance.                             */
+	/* Déestruction d'une première relance.                             */
 	/*------------------------------------------------------------------*/
 	CASE "DR1"
 		iDw1.DataObject = "D_SP_REL1_ANNUL"
 
 	/*------------------------------------------------------------------*/
-	/* 2$$HEX1$$e800$$ENDHEX$$mes Relances Automatiques                                      */
+	/* 2èmes Relances Automatiques                                      */
 	/*------------------------------------------------------------------*/
 	CASE "R2"
 		iDw1.DataObject = "D_SP_SECONDE_RELANCE"
@@ -2735,7 +2736,7 @@ public function boolean uf_generer_courrier (long alligne);//*------------------
 //* Evenement 		: uf_generer_courrier
 //* Auteur			: JCA
 //* Date				: 20/01/2008
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: DCMP 70809
 //*				  
 //*-----------------------------------------------------------------
@@ -2750,7 +2751,7 @@ Long lIdProd
 n_Cst_Edition_Courrier	nvGenCourrier
 
 /*------------------------------------------------------------------*/
-/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du courrier fusionn$$HEX1$$e900$$ENDHEX$$.                                 */
+/* Génération du courrier fusionné.                                 */
 /*------------------------------------------------------------------*/
 nvGenCourrier = Create N_Cst_Edition_Courrier
 
@@ -2758,7 +2759,7 @@ nvGenCourrier.uf_Initialiser ( "E" )
 If nvGenCourrier.uf_InitialiserWord ( FALSE ) = 1 then 
 
 	/*------------------------------------------------------------------*/
-	/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration dans ouverture du Word par la suite (FALSE)           */
+	/* Génération dans ouverture du Word par la suite (FALSE)           */
 	/*------------------------------------------------------------------*/
 	iRet = nvGenCourrier.uf_Generer_Courrier ( idwGenCourrier, FALSE )	
 End If
@@ -2766,12 +2767,12 @@ End If
 Destroy nvGenCourrier
 
 /*------------------------------------------------------------------*/
-/* On relit le fichier DOC complet fusionn$$HEX13$$e900200020002000090009000900090009000900090020002000$$ENDHEX$$*/
+/* On relit le fichier DOC complet fusionné   							  */
 /*------------------------------------------------------------------*/
 If iRet > 0 Then 
 	/*------------------------------------------------------------------*/  
 	/* #1. DCMP-060643                                                  */
-	/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+	/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 	/*------------------------------------------------------------------*/
 	bRet = F_LireFichierBlob ( iblBlobDoc, stGLB.sRepTempo + "RELANCE.DOC" )
 
@@ -2784,14 +2785,14 @@ End If
 
 if bRet then 
 	/*------------------------------------------------------------------*/
-	/* Ajout dans w_cour_blob_arch pour $$HEX1$$e900$$ENDHEX$$dition								  */
+	/* Ajout dans w_cour_blob_arch pour édition								  */
 	/*------------------------------------------------------------------*/
 	bRet = uf_maj_w_cour_blob_arch (alLigne)	
 	
 end if
 
 if bRet then 
-	isMess = "La g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du courrier de relance a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$effectu$$HEX1$$e900$$ENDHEX$$e."
+	isMess = "La génération du courrier de relance a été effectuée."
 end if
 
 return bRet
@@ -2864,10 +2865,10 @@ public function boolean uf_creercourrierrelance (long aldossier);//*------------
 //* Fonction		: uf_CreerCourrierRelance  (Public)
 //* Auteur			: Fabry JF
 //* Date				: 14/06/1999 11:36:12
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Cr$$HEX1$$e900$$ENDHEX$$ation du courrier de relance.
+//* Libellé			: Création du courrier de relance.
 //* Commentaires	: appel sur ue_ImprimerDossier.
 //*
-//* Arguments		: Long			alDossier			(Val)			Row du dossier $$HEX2$$e0002000$$ENDHEX$$traiter sur Dw_1
+//* Arguments		: Long			alDossier			(Val)			Row du dossier à traiter sur Dw_1
 //*
 //* Retourne		: Rien
 //*			
@@ -2879,13 +2880,13 @@ public function boolean uf_creercourrierrelance (long aldossier);//*------------
 Boolean bOk = True
 
 /*------------------------------------------------------------------*/
-/* Cr$$HEX1$$e900$$ENDHEX$$ation du Blob stock$$HEX2$$e9000900$$ENDHEX$$dans iblBlobData								  */
+/* Création du Blob stocké	dans iblBlobData								  */
 /*------------------------------------------------------------------*/
 bOk = This.Uf_CreerBlob ( alDossier )
 
 /*------------------------------------------------------------------*/
-/* D$$HEX1$$e900$$ENDHEX$$termination du courrier, en fonction de l'interlocuteur et du  */
-/* type de traitement, et d$$HEX1$$e900$$ENDHEX$$termination de la composition du code   */
+/* Détermination du courrier, en fonction de l'interlocuteur et du  */
+/* type de traitement, et détermination de la composition du code   */
 /* courrier.                                                        */
 /*------------------------------------------------------------------*/
 If bOk Then
@@ -2908,7 +2909,7 @@ If bOk Then
 End If
 
 /*------------------------------------------------------------------*/
-/* On Update maintenant NBR_CONF $$HEX2$$e0002000$$ENDHEX$$1.                               */
+/* On Update maintenant NBR_CONF à 1.                               */
 /*------------------------------------------------------------------*/
 If bOk Then
 	bOk = This.Uf_MisAJourCourrierOriginal ( alDossier )
@@ -2924,14 +2925,14 @@ public function boolean uf_ecriretrace (long alrow, integer itypetrace);
 //* Fonction		: uf_EcrireTrace 	( Public )
 //* Auteur			: JCA
 //* Date				: 04/02/2008
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Ecriture de la trace
+//* Libellé			: Ecriture de la trace
 //*
 //* Commentaires	: 
 //*					  
 //*
 //* Arguments		: Long	alRow			Row du dossier en cours sur Dw_1
 //*																
-//*					  String	asMessage	Message $$HEX2$$e0002000$$ENDHEX$$tracer.			
+//*					  String	asMessage	Message à tracer.			
 //*
 //* Retourne		: boolean
 //*			
@@ -2961,7 +2962,7 @@ choose case itypetrace
 		iTrTrans.PS_I01_TRACE_RELANCE ( iIdTrt, dcIdSin, dcIdInter, dcIdDocOri, dcIdDocRel, isMess)
 		
 	case 3
-		// procedure de mise $$HEX2$$e0002000$$ENDHEX$$jour de la trace [trace_recap_relance]
+		// procedure de mise à jour de la trace [trace_recap_relance]
 		iTrTrans.PS_U01_TRACE_RECAP_RELANCE ( iIdTrt, iCptTraite )
 
 end choose
@@ -2977,8 +2978,8 @@ if iTrTrans.sqlcode <> 0 or iTrTrans.sqldbcode <> 0 then
 	stMessage.Icon	  	  = Exclamation!
 	stMessage.Bouton    = Ok!
 	stMessage.bTrace    = True
-	stMessage.sVar[1]   = "Probl$$HEX1$$e800$$ENDHEX$$me lors de l'$$HEX1$$e900$$ENDHEX$$criture de l'historique des relances."
-	stMessage.sVar[1]  += " Le traitement est arr$$HEX1$$ea00$$ENDHEX$$t$$HEX1$$e900$$ENDHEX$$." 
+	stMessage.sVar[1]   = "Problème lors de l'écriture de l'historique des relances."
+	stMessage.sVar[1]  += " Le traitement est arrêté." 
 
 else
 	
@@ -2995,7 +2996,7 @@ public function boolean uf_chargerdwpolice (long lidprod);//*-------------------
 //* Fonction		: uf_ChargerDwPolice	(Protected)
 //* Auteur			: Fabry JF
 //* Date				: 11/06/1999 10:32:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Chargement de Dw_Police
+//* Libellé			: Chargement de Dw_Police
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun
@@ -3011,12 +3012,12 @@ public function boolean uf_chargerdwpolice (long lidprod);//*-------------------
 Boolean		bOk 	 = True
 Boolean		bDelete
 
-Int			iRow				// Nombre de ligne Charg$$HEX1$$e900$$ENDHEX$$es
+Int			iRow				// Nombre de ligne Chargées
 Int			iCpt				// Compteur
 Int			iTotRow			// Nombre total de Row dans DwPolice
 Int			iRevSav			// Sauvegarde du la Revision dans DwPolice
 Int			iRevCour			// Revision courante dans Dw_Police
-String		sRech				// Cha$$HEX1$$ee00$$ENDHEX$$ne de recherche
+String		sRech				// Chaîne de recherche
 
 iiTotLigPol = -1
 iDwPolice.Reset ()
@@ -3024,7 +3025,7 @@ iDwPolice.Reset ()
 iRow = iDwPolice.Retrieve ( lIdProd )
 
 /*------------------------------------------------------------------*/
-/* Le retrieve s'est mal pass$$HEX1$$e900$$ENDHEX$$, on arr$$HEX1$$ea00$$ENDHEX$$te tout.                     */
+/* Le retrieve s'est mal passé, on arrête tout.                     */
 /*------------------------------------------------------------------*/
 If iRow < 0 Then
 
@@ -3037,7 +3038,7 @@ If iRow < 0 Then
 	stMessage.Icon	    = Exclamation!
 	stMessage.Bouton   = Ok!
 	stMessage.bTrace   = False
-	stMessage.sVar[1]  = "Probl$$HEX1$$e800$$ENDHEX$$me lors du chargement des polices. Le traitement n'est pas lanc$$HEX1$$e900$$ENDHEX$$"
+	stMessage.sVar[1]  = "Problème lors du chargement des polices. Le traitement n'est pas lancé"
 
 	F_Message ( stMessage )
 
@@ -3046,8 +3047,8 @@ End If
 
 /*------------------------------------------------------------------*/
 /* sinon on nettoie    DwPolice afin de ne pas garder dans la DW    */
-/* les lignes pour lesquelles, il y a deux n$$HEX2$$b0002000$$ENDHEX$$de police diff$$HEX1$$e900$$ENDHEX$$rents  */
-/* pour la m$$HEX1$$ea00$$ENDHEX$$me r$$HEX1$$e900$$ENDHEX$$vision.                                           */
+/* les lignes pour lesquelles, il y a deux n° de police différents  */
+/* pour la même révision.                                           */
 /* (Vu avec Denis)																  */
 /*------------------------------------------------------------------*/
 If bOk Then
@@ -3066,7 +3067,7 @@ If bOk Then
 			iDwPolice.DeleteRow ( iCpt + 1 )
 			bDelete = True
 				
-			//.. Cas de la premi$$HEX1$$e800$$ENDHEX$$re ligne, un peu sp$$HEX1$$e900$$ENDHEX$$cial.
+			//.. Cas de la première ligne, un peu spécial.
 			If iCpt = 1 Then
 				iDwPolice.DeleteRow ( iCpt )
 			End If
@@ -3083,8 +3084,8 @@ If bOk Then
 	Next		
 
 	/*------------------------------------------------------------------*/
-	/* On affecte d$$HEX1$$e900$$ENDHEX$$finitivement le nombre de lignes de Dw_Police dans  */
-	/* une variable d'instance afin de ne pas avoir $$HEX2$$e0002000$$ENDHEX$$le recalculer $$HEX4$$e000200020002000$$ENDHEX$$*/
+	/* On affecte définitivement le nombre de lignes de Dw_Police dans  */
+	/* une variable d'instance afin de ne pas avoir à le recalculer à   */
 	/* chaque appel de uf_CreerBlob.                                    */
 	/*------------------------------------------------------------------*/
 	iiTotLigPol = iDwPolice.RowCount ()
@@ -3104,8 +3105,8 @@ private function string uf_format_numtel (string asvarstr);//*------------------
 //* Fonction		: u_gs_sp_relance::uf_format_numtel
 //* Auteur			: F. Pinon
 //* Date				: 28/09/2009 17:23:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: [DCMP090552] Gestion des num$$HEX1$$e900$$ENDHEX$$ros de tel $$HEX1$$e900$$ENDHEX$$tranger
+//* Libellé			: 
+//* Commentaires	: [DCMP090552] Gestion des numéros de tel étranger
 //*
 //* Arguments		: asVarStr
 //*

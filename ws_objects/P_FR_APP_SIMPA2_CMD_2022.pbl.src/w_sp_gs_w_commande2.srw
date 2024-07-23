@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_sp_gs_w_commande2.srw
-$PBExportComments$Fen$$HEX1$$ea00$$ENDHEX$$tre au niveau affichant le r$$HEX1$$e900$$ENDHEX$$sum$$HEX2$$e9002000$$ENDHEX$$d'une commande.
+﻿$PBExportHeader$w_sp_gs_w_commande2.srw
+$PBExportComments$Fenêtre au niveau affichant le résumé d'une commande.
 forward
 global type w_sp_gs_w_commande2 from w_8_traitement_master
 end type
@@ -46,8 +46,6 @@ end type
 end forward
 
 global type w_sp_gs_w_commande2 from w_8_traitement_master
-integer x = 1075
-integer y = 481
 integer width = 3648
 integer height = 1836
 event ue_taillefenetre ( )
@@ -104,14 +102,14 @@ event ue_taillefenetre();//*----------------------------------------------------
 //* Evenement 		: Ue_TailleFenetre
 //* Auteur			: Fabry JF
 //* Date				: 16/10/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*-----------------------------------------------------------------
 
-// Je r$$HEX1$$e900$$ENDHEX$$ajuste la hauteur pour W10
+// Je réajuste la hauteur pour W10
 
 This.Height = 1810
 end event
@@ -121,8 +119,8 @@ public function boolean wf_preparermodifier ();//*------------------------------
 //* Fonction		: W_Td_Sp_W_Contact::Wf_PreparerModifier
 //* Auteur			: Fabry JF
 //* Date				: 25/04/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Op$$HEX1$$e900$$ENDHEX$$ration avant modification
+//* Libellé			: 
+//* Commentaires	: Opération avant modification
 //*
 //* Arguments		: Rien
 //*
@@ -131,18 +129,18 @@ public function boolean wf_preparermodifier ();//*------------------------------
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*				  
-//* #1  CAG		03/06/03 Ajout de la zone ID_ANN : d$$HEX1$$e900$$ENDHEX$$sormais le bouton
-//*							annuler n'est plus disponible si l'$$HEX1$$e900$$ENDHEX$$tat ne le permet pas
+//* #1  CAG		03/06/03 Ajout de la zone ID_ANN : désormais le bouton
+//*							annuler n'est plus disponible si l'état ne le permet pas
 //*							( avant, msg + blocage )
 //* #2  CAG		30/09/04 DCMP 040349 : Seuls les utilisateurs dont le niveau
-//*								op$$HEX1$$e900$$ENDHEX$$rateur est au moins AU peuvent supprimer une cmde
+//*								opérateur est au moins AU peuvent supprimer une cmde
 //* #3  JFF	   06/02/2006  [SITE_CMDE] Gestion des nouvelles option d'autorisation 79, 80, 81
-//* #4  JCA	   27/02/2007		DCMP 070085 - Permettre annulation du flux $$HEX1$$e900$$ENDHEX$$mis vers C-Discount
+//* #4  JCA	   27/02/2007		DCMP 070085 - Permettre annulation du flux émis vers C-Discount
 //* #5  JFF    20/06/2008 [DCMP080479]
 //*	  FPI    22/07/2010 [PC321] Autorisation de modifier la commande pour SCR
 //*     JFF    14/09/2011 [VDOC5013]
 //*     FPI    07/10/2011 [VDOC5312] Ajout du droit d'annulation de presta 221
-//*     JFF    09/12/2011 [VDOC6164] Autrosier 213 $$HEX2$$e0002000$$ENDHEX$$annuler PEC_A_RECYCLER en RFO
+//*     JFF    09/12/2011 [VDOC6164] Autrosier 213 à annuler PEC_A_RECYCLER en RFO
 //		FPI	23/05/2012	[PM103] Affichage du btn cb_maj_presta
 //      JFF   23/05/2012 [PM103][1]
 //		FPI	11/06/2012	[PM103][FPI] Ajout autorisation 224
@@ -165,7 +163,7 @@ Integer iCpt, iNbCar
 
 
 /*------------------------------------------------------------------*/
-/* On arme le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre avec le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre       */
+/* On arme le titre de la fenêtre avec le titre de la fenêtre       */
 /* Parent.                                                          */
 /*------------------------------------------------------------------*/
 This.Title = istPass.sTab [ 1 ]
@@ -229,7 +227,7 @@ If isTypeTrt = "S" then
 				End Choose
 				
 				// [ANN_RPC_NRGLT]
-				// ON permet l'annulation d'une presta RPC si le d$$HEX1$$e900$$ENDHEX$$tail associ$$HEX2$$e9002000$$ENDHEX$$n'est pas r$$HEX1$$e900$$ENDHEX$$gl$$HEX1$$e900$$ENDHEX$$.
+				// ON permet l'annulation d'une presta RPC si le détail associé n'est pas réglé.
 				lRow = idw_wDetail.Find ( "ID_GTI = " + String ( dw_1.GetItemNumber ( 1, "ID_GTI" ) ) + " AND " + &
 												 "ID_DETAIL = " + String ( dw_1.GetItemNumber ( 1, "ID_DETAIL" ) ) &
 											  , 1, idw_wDetail.RowCount ( ) ) 
@@ -246,7 +244,7 @@ If isTypeTrt = "S" then
 				pb_Annuler.Enabled = dw_1.GetItemNumber ( 1, "CPT_VALIDE" ) > 0 //* #5  [DCMP080479]
 	
 				// #5  [DCMP080479] wf_GetAutorisation (213) remplace stGlb.sTypOper >= "3"
-				// [VDOC5312] Ajout du contr$$HEX1$$f400$$ENDHEX$$le sur Autorisation 221
+				// [VDOC5312] Ajout du contrôle sur Autorisation 221
 				dw_Ann_Cmde.Visible = dw_1.GetItemNumber ( 1, "CPT_VALIDE" ) > 0 And &
 											  ( invCmd.uf_GetAutorisation (213) Or &
 												 Upper ( Dw_1.GetItemString ( 1, "ID_FOUR" ) ) = "WBA"  or &
@@ -285,7 +283,7 @@ If isTypeTrt = "S" then
 End If
 
 /*------------------------------------------------------------------*/
-/* On arme la valeur de la monnaie avec celle de la fen$$HEX1$$ea00$$ENDHEX$$tre de      */
+/* On arme la valeur de la monnaie avec celle de la fenêtre de      */
 /* SINISTRE. (En consultation uniquement).                          */
 /*------------------------------------------------------------------*/
 If	isTypeTrt = "C"	Then
@@ -362,7 +360,7 @@ public subroutine wf_positionnerobjets ();//*-----------------------------------
 //* Fonction		: W_Td_Sp_W_Contact::Wf_PositionnerObjets
 //* Auteur			: Fabry JF
 //* Date				: 25/04/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Positionnement des objets
 //*
 //* Arguments		: Rien
@@ -373,9 +371,9 @@ public subroutine wf_positionnerobjets ();//*-----------------------------------
 //* MAJ   PAR      Date	     Modification
 //* 
 //* #1  CAG		07/05/03	DCMP 030207 : Ajout de 6 zones en retour de Cetelec (pour Cegetel Must)
-//*								=> ajout d'une dw suppl$$HEX1$$e900$$ENDHEX$$mentaire => modif gestion des boutons prec et suiv
-//* #2  CAG		26/05/03	Ajout de 2 boutons pour revenir directement $$HEX2$$e0002000$$ENDHEX$$la 1$$HEX1$$e800$$ENDHEX$$re ou derni$$HEX1$$e800$$ENDHEX$$re page
-//* #3  CAG		03/06/03 Ajout de la zone ID_ANN = cat$$HEX1$$e900$$ENDHEX$$gorie d'annulation
+//*								=> ajout d'une dw supplémentaire => modif gestion des boutons prec et suiv
+//* #2  CAG		26/05/03	Ajout de 2 boutons pour revenir directement à la 1ère ou dernière page
+//* #3  CAG		03/06/03 Ajout de la zone ID_ANN = catégorie d'annulation
 //      JFF   23/05/2012 [PM103][1]
 //      JFF   13/01/2014 [PM246]
 //		FPI	07/11/2014	[VDOC15529]
@@ -485,7 +483,7 @@ public function boolean wf_controler ();//*-------------------------------------
 //* Fonction		: W_Td_Sp_W_Contact::Wf_PositionnerObjets
 //* Auteur			: Fabry JF
 //* Date				: 25/04/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Positionnement des objets
 //*
 //* Arguments		: Rien
@@ -546,7 +544,7 @@ private subroutine wf_tb_consultation ();//*------------------------------------
 //* Fonction		: W_Tm_Sp_W_Gar_Sin::Wf_Tb_Consultation (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 23/07/1998 15:44:13
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On est en validation/Consultation, on rend les boutons invisibles
 //*
 //* Arguments		: Aucun
@@ -555,7 +553,7 @@ private subroutine wf_tb_consultation ();//*------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
-//* #1  CAG		03/06/03 Ajout de la zone ID_ANN = cat$$HEX1$$e900$$ENDHEX$$gorie d'annulation
+//* #1  CAG		03/06/03 Ajout de la zone ID_ANN = catégorie d'annulation
 //*-----------------------------------------------------------------
 
 //Migration PB8-WYNIWYG-03/2006 FM
@@ -564,7 +562,7 @@ DataWindow dwNorm[]
 //Fin Migration PB8-WYNIWYG-03/2006 FM
 
 /*------------------------------------------------------------------*/
-/* Cette fonction est appel$$HEX1$$e900$$ENDHEX$$e sur Ue_Initialiser de la fen$$HEX1$$ea00$$ENDHEX$$tre.     */
+/* Cette fonction est appelée sur Ue_Initialiser de la fenêtre.     */
 /*------------------------------------------------------------------*/
 
 pb_Controler.Visible 	= False
@@ -609,8 +607,8 @@ public function boolean wf_preparervalider ();//*-------------------------------
 //* Fonction		: W_Td_Sp_W_Contact::Wf_PreparerValider
 //* Auteur			: Fabry JF
 //* Date				: 25/04/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Op$$HEX1$$e900$$ENDHEX$$ration avant validation
+//* Libellé			: 
+//* Commentaires	: Opération avant validation
 //*
 //* Arguments		: Rien
 //*
@@ -629,7 +627,7 @@ public subroutine wf_activation_maj_presta_manuelle (boolean abactiver);//*-----
 //* Fonction		: W_sp_gs_w_commande2::wf_activation_maj_presta_manuelle
 //* Auteur			: F. PINON	
 //* Date				: 23/05/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Affiche le bouton de maj presta manuelle
 //*
 //* Arguments		: True pour activer, False sinon
@@ -645,7 +643,7 @@ public function string wf_format_affichage_zone (string astab[], integer ailongu
 //* Fonction      :w_sp_gs_w_commande2::wf_format_affichage_zone 
 //* Auteur        : FPI
 //* Date          : ?
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Formatte une chaine pour les zones sur plusieurs lignes
+//* Libellé       : Formatte une chaine pour les zones sur plusieurs lignes
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -675,7 +673,7 @@ public function string wf_format_affichage_zone (string aschaine, long allongueu
 //* Fonction      :w_sp_gs_w_commande2::wf_format_affichage_zone 
 //* Auteur        : FPI
 //* Date          : ?
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Formatte une chaine pour les zones sur plusieurs lignes
+//* Libellé       : Formatte une chaine pour les zones sur plusieurs lignes
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -694,7 +692,7 @@ Long lPos, lIndex
 if isnull(aschaine) Then return aschaine
 
 If pos(aschaine," ") = 0 and pos(aschaine,";") =0 Then
-	// D$$HEX1$$e900$$ENDHEX$$coupe $$HEX2$$e0002000$$ENDHEX$$n car
+	// Découpe à n car
 	do while Len(asChaine) > allongueur
 		sRetour+=Left(asChaine,alLongueur) + "~r~n"
 		asChaine=Mid(asChaine, alLongueur +1)
@@ -704,7 +702,7 @@ If pos(aschaine," ") = 0 and pos(aschaine,";") =0 Then
 	Return sRetour
 End if
 
-// D$$HEX1$$e900$$ENDHEX$$coupe avec s$$HEX1$$e900$$ENDHEX$$parateur " " ou ";"
+// Découpe avec séparateur " " ou ";"
 lIndex=1
 do while asChaine <> ""
 
@@ -755,15 +753,15 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		: Ue_Initialiser
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*
 //* #1  CAG		07/05/03	DCMP 030207 : Ajout de 6 zones en retour de Cetelec (pour Cegetel Must)
-//*								=> ajout d'une dw suppl$$HEX1$$e900$$ENDHEX$$mentaire => modif gestion des boutons prec et suiv
-//* #2  CAG		03/06/03 Ajout de la zone ID_ANN = cat$$HEX1$$e900$$ENDHEX$$gorie d'annulation
+//*								=> ajout d'une dw supplémentaire => modif gestion des boutons prec et suiv
+//* #2  CAG		03/06/03 Ajout de la zone ID_ANN = catégorie d'annulation
 //* #3  JFF		24/08/03 DCMP 030362 Gestion des communes
 //* #4  JFF		01/09/03 Gestion des TAc_IMEI
 //* #5  JFF    04/06/2007   [DCMP070163-070164-070248-070318] Gestion Prise en charge
@@ -810,7 +808,7 @@ pb_Annuler.Visible = isTypeTrt = "S"
 dw_Ann_Cmde.Visible = isTypeTrt = "S"
 
 /*------------------------------------------------------------------*/
-/* On commence $$HEX2$$e0002000$$ENDHEX$$initialiser les NVUO.                              */
+/* On commence à initialiser les NVUO.                              */
 /*------------------------------------------------------------------*/
 invCmd = Create n_cst_w_commande2
 
@@ -828,9 +826,9 @@ stPass.dwTab [ 3 ] = istPass.dwTab [ 3 ]	// dw_w_div_det  // #5
 /* # Modification SFR # Le 17/07/2002.                              */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* On ajoute la DW DW_WDETAIL afin de controler que le d$$HEX1$$e900$$ENDHEX$$tail       */
-/* n'est pas A REGLER si l'on cherche $$HEX2$$e0002000$$ENDHEX$$supprimer la commande li$$HEX1$$e900$$ENDHEX$$e  */
-/* $$HEX2$$e0002000$$ENDHEX$$ce d$$HEX1$$e900$$ENDHEX$$tail.                                                     */
+/* On ajoute la DW DW_WDETAIL afin de controler que le détail       */
+/* n'est pas A REGLER si l'on cherche à supprimer la commande liée  */
+/* à ce détail.                                                     */
 /*------------------------------------------------------------------*/
 stPass.dwNorm [ 1 ]	= istPass.dwNorm [ 1 ]
 idw_wDetail = stPass.dwNorm [ 1 ] // [ANN_RPC_NRGLT]
@@ -848,7 +846,7 @@ stPass.dwNorm [9] = istPass.dwNorm [9]  // [WEBSIM2].[FRANCE]
 stPass.sTab [2]  = istPass.sTab [ 2 ]
 
 /*------------------------------------------------------------------*/
-/* # Modification SFR # Le 17/07/2002 + CAG 12/09/02 : $$HEX2$$e0002000$$ENDHEX$$compl$$HEX1$$e900$$ENDHEX$$ter, dwTabX $$HEX2$$e0002000$$ENDHEX$$initialiser */
+/* # Modification SFR # Le 17/07/2002 + CAG 12/09/02 : à compléter, dwTabX à initialiser */
 /*------------------------------------------------------------------*/
 invCmd.Uf_Initialiser_Dw ( istPass.dwNorm [ 4 ], istPass.dwNorm [ 5 ], FALSE )
 invCmd.Uf_Initialiser_Dw_Sfr ( istPass.dwNorm [ 2 ], istPass.dwNorm [ 3 ], dwTab1, dwTab2, dwTab3, FALSE )
@@ -857,7 +855,7 @@ invCmd.Uf_Initialiser_Dw_Sfr ( istPass.dwNorm [ 2 ], istPass.dwNorm [ 3 ], dwTab
 invCmd.uf_Initialiser ( stPass, cb_Prec, cb_Suiv, cb_Prem, cb_Dern, cb_Commune_Livr, cb_Commune_Fact, cb_imei, aff_pg_cmd_t, cb_modif_adr )
 
 /*------------------------------------------------------------------*/
-/* Gestion du Passage $$HEX2$$e0002000$$ENDHEX$$l'EURO.                                     */
+/* Gestion du Passage à l'EURO.                                     */
 /*------------------------------------------------------------------*/
 N_Cst_Passage_Euro	nvPassageEuro
 
@@ -886,7 +884,7 @@ on ue_item6;call w_8_traitement_master::ue_item6;//*----------------------------
 //* Evenement     : ue_Item6
 //* Auteur        : Fabry JF
 //* Date          : 23/09/2003 17:22:30
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Armement de l'IMEI de l'adh$$HEX1$$e900$$ENDHEX$$sion, corrig$$HEX1$$e900$$ENDHEX$$
+//* Libellé       : Armement de l'IMEI de l'adhésion, corrigé
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -907,19 +905,19 @@ sIMEIAdh = istPass.sTab [ 4 ]
 bRet = F_IMEI ( sIMEIAdh, sIMEICorrige )
 
 /*------------------------------------------------------------------*/
-/* Placement de l'IMEI Corrig$$HEX2$$e9002000$$ENDHEX$$(ou pas) dans le clipboard.          */
+/* Placement de l'IMEI Corrigé (ou pas) dans le clipboard.          */
 /*------------------------------------------------------------------*/
 ClipBoard ( sIMEICorrige )
 
 /*------------------------------------------------------------------*/
-/* S'il est bon sur l'adh$$HEX1$$e900$$ENDHEX$$sion												  */
+/* S'il est bon sur l'adhésion												  */
 /*------------------------------------------------------------------*/
 If bRet Then
 	stMessage.sCode		= "SFRP130"
 	stMessage.sVar[1]		= sIMEICorrige 
 
 /*------------------------------------------------------------------*/
-/* S'il a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$corrig$$HEX1$$e900$$ENDHEX$$.                                              */
+/* S'il a été corrigé.                                              */
 /*------------------------------------------------------------------*/
 ElseIf Not bRet And sIMEICorrige <> "" Then
 	stMessage.sCode		= "SFRP140"
@@ -933,7 +931,7 @@ Else
 
 End If
 
-stMessage.sTitre		= "Armement IMEI provenant de l'adh$$HEX1$$e900$$ENDHEX$$sion"
+stMessage.sTitre		= "Armement IMEI provenant de l'adhésion"
 stMessage.Icon			= Information!
 stMessage.bErreurG	= FALSE
 stMessage.Bouton		= Ok!
@@ -950,7 +948,7 @@ on ue_item5;call w_8_traitement_master::ue_item5;//*----------------------------
 //* Evenement 		: ue_Item5
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: ANNULATION D'UNE COMMANDE.
+//* Libellé			: ANNULATION D'UNE COMMANDE.
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -960,7 +958,7 @@ on ue_item5;call w_8_traitement_master::ue_item5;//*----------------------------
 
 
 /*------------------------------------------------------------------*/
-/* Annulation d'une commande valid$$HEX1$$e900$$ENDHEX$$e.                               */
+/* Annulation d'une commande validée.                               */
 /*------------------------------------------------------------------*/
 If invCmd.uf_Annuler_Cmde () > 0 Then
 	pb_Annuler.Enabled = FALSE
@@ -974,7 +972,7 @@ on ue_controler;//**************************************************************
 // Evenement 	: ue_Controler
 //	Auteur		: Fabry JF
 //	Date			: 05/09/01
-// Libell$$HEX3$$e90009000900$$ENDHEX$$: Controle des informations de la fen$$HEX1$$ea00$$ENDHEX$$tre
+// Libellé		: Controle des informations de la fenêtre
 // Commentaires: 
 //					  
 // ----------------------------------------------------------------------------
@@ -1015,7 +1013,7 @@ event ue_supprimer;//*----------------------------------------------------------
 //* Evenement 		: Ue_Supprimer
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1036,7 +1034,7 @@ If	invCmd.uf_Bt_Supprimer_Cmd ( lIdGti, lIdDetail ) > 0	Then
 	stMessage.bouton = YesNo!
 
 	If F_Message ( stMessage ) = 1 Then 
-		// #3 Mis $$HEX2$$e0002000$$ENDHEX$$jour des donn$$HEX1$$e900$$ENDHEX$$es de prises en charge.
+		// #3 Mis à jour des données de prises en charge.
 		invCmd.Uf_MajPec ( lIdGti, lIdDetail )
 
 		Call Super::Ue_Supprimer
@@ -1052,7 +1050,7 @@ event we_childactivate;call super::we_childactivate;//*-------------------------
 //* Evenement 		: We_ChildActivate
 //* Auteur			: Fabry JF
 //* Date				: 04/09/01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1144,7 +1142,7 @@ on close;call w_8_traitement_master::close;//*----------------------------------
 //* Evenement 		: Close
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1162,7 +1160,7 @@ event ue_retour;call super::ue_retour;//*---------------------------------------
 //* Evenement 		: ue_retour
 //* Auteur			: F. Pinon
 //* Date				: 08/03/2011 08:32:26
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PC321]
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -1173,7 +1171,7 @@ event ue_retour;call super::ue_retour;//*---------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* 	FPI	13/08/2012	[PC796] Remboursement en num$$HEX1$$e900$$ENDHEX$$raire
+//* 	FPI	13/08/2012	[PC796] Remboursement en numéraire
 //*-----------------------------------------------------------------
 Long lIdProcess
 Long lDeb, lFin
@@ -1207,7 +1205,7 @@ event show;call super::show;//*-------------------------------------------------
 //* Evenement 		: Show
 //* Auteur			: Fabry JF
 //* Date				: 16/10/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1238,7 +1236,7 @@ event dw_1::itemchanged;call super::itemchanged;//******************************
 // Evenement 	: Itemchanged
 //	Auteur		: Fabry JF
 //	Date			: 05/09/01
-// Libell$$HEX3$$e90009000900$$ENDHEX$$: Controle des zones
+// Libellé		: Controle des zones
 // Commentaires: 
 //					  
 // ----------------------------------------------------------------------------
@@ -1259,7 +1257,7 @@ event dw_1::itemerror;call super::itemerror;//**********************************
 // Evenement 	: ItemError
 //	Auteur		: Fabry JF
 //	Date			: 05/09/01
-// Libell$$HEX3$$e90009000900$$ENDHEX$$: Controle des zones
+// Libellé		: Controle des zones
 // Commentaires: 
 //					  
 // ----------------------------------------------------------------------------
@@ -1280,7 +1278,7 @@ end event
 
 event dw_1::buttonclicked;call super::buttonclicked;//       JFF   19/09/2016 [PM346-1]
 //       JFF   07/03/2024 [HP252_276_HUB_PRESTA]
-
+//			FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 
 String sInfoSpbCplt, sURLFourn , sIdFour, sPathIE, sIdSin, sIdSeq, sInfoSpbFrnCplt 
 Long lIdSin, lIdProd, lIdSeq, lIdDepotS2 
@@ -1317,7 +1315,7 @@ Choose Case  dwo.name
 
 		sPathIE = ProfileString ( stGlb.sFichierIni, "DOCUMENTATION", "IE_W7", "" )
 		If Trim ( sPathIE ) = "" Then
-			stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de gestion"
+			stMessage.sTitre		= "Contrôle de gestion"
 			stMessage.Icon			= Information!
 			stMessage.bErreurG	= FALSE
 			stMessage.sCode		= "WSIN746"
@@ -1332,7 +1330,7 @@ Choose Case  dwo.name
 		If Not FileExists ( sPathIE ) Then
 			sPathIE = ProfileString ( stGlb.sFichierIni, "DOCUMENTATION", "IE_XP_ET_TS", "" )
 			If Trim ( sPathIE ) = "" Then
-				stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de gestion"
+				stMessage.sTitre		= "Contrôle de gestion"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.sCode		= "WSIN746"
@@ -1361,7 +1359,7 @@ Choose Case  dwo.name
 
 		dsTracePresta.Retrieve ( lIdSin, lIdSeq ) 
 		
-		dsTracePresta.SaveAs ( stglb.sRepTempo + "TracePresta.XLS", Excel!, TRUE )
+		dsTracePresta.SaveAs ( stglb.sRepTempo + "TracePresta.XLS", Excel8!, TRUE ) // [MIG_PB2022]
 		RUN ( sRepExcel + " " + stglb.sRepTempo + "TracePresta.XLS" )
 		
 		
@@ -1460,7 +1458,7 @@ event itemerror;call super::itemerror;//****************************************
 // Evenement 	: ItemError
 //	Auteur		: Fabry JF
 //	Date			: 05/09/01
-// Libell$$HEX3$$e90009000900$$ENDHEX$$: Controle des zones
+// Libellé		: Controle des zones
 // Commentaires: 
 //					  
 // ----------------------------------------------------------------------------
@@ -1485,7 +1483,7 @@ event itemchanged;call super::itemchanged;//************************************
 // Evenement 	: Itemchanged
 //	Auteur		: Fabry JF
 //	Date			: 05/09/01
-// Libell$$HEX3$$e90009000900$$ENDHEX$$: Controle des zones
+// Libellé		: Controle des zones
 // Commentaires: 
 //					  
 // ----------------------------------------------------------------------------
@@ -1533,7 +1531,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: cb_Annuler
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1543,7 +1541,7 @@ on clicked;//*-----------------------------------------------------------------
 
 
 /*------------------------------------------------------------------*/
-/* Annulation d'une commande valid$$HEX1$$e900$$ENDHEX$$e.                               */
+/* Annulation d'une commande validée.                               */
 /*------------------------------------------------------------------*/
 Parent.TriggerEvent ( "ue_item5")
 end on
@@ -1589,7 +1587,7 @@ Choose Case  dwo.name
 	Case "b_consultifsc"
 
 		sVal = dw_cmd_frn.GetItemString ( 1, "INFO_FRN_SPB_CPLT" ) 
-		stMessage.sTitre		= "Infos fournisseur suppl$$HEX1$$e900$$ENDHEX$$mentaires"
+		stMessage.sTitre		= "Infos fournisseur supplémentaires"
 		stMessage.Icon			= Information!
 		stMessage.bErreurG	= FALSE
 		stMessage.sCode		= "GENE013"
@@ -1614,7 +1612,7 @@ Choose Case  dwo.name
 				
 		sPathIE = ProfileString ( stGlb.sFichierIni, "DOCUMENTATION", "IE_W7", "" )
 		If Trim ( sPathIE ) = "" Then
-			stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de gestion"
+			stMessage.sTitre		= "Contrôle de gestion"
 			stMessage.Icon			= Information!
 			stMessage.bErreurG	= FALSE
 			stMessage.sCode		= "WSIN746"
@@ -1629,7 +1627,7 @@ Choose Case  dwo.name
 		If Not FileExists ( sPathIE ) Then
 			sPathIE = ProfileString ( stGlb.sFichierIni, "DOCUMENTATION", "IE_XP_ET_TS", "" )
 			If Trim ( sPathIE ) = "" Then
-				stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de gestion"
+				stMessage.sTitre		= "Contrôle de gestion"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.sCode		= "WSIN746"
@@ -1695,7 +1693,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: Abdmeziem Catherine
 //* Date				: 26/05/2003
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1757,7 +1755,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: Abdmeziem Catherine
 //* Date				: 26/05/2003
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1820,14 +1818,14 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*				  
 //* #1  CAG		07/05/03	DCMP 030207 : Ajout de 6 zones en retour de Cetelec (pour Cegetel Must)
-//*								=> ajout d'une dw suppl$$HEX1$$e900$$ENDHEX$$mentaire => modif gestion des boutons prec et suiv
+//*								=> ajout d'une dw supplémentaire => modif gestion des boutons prec et suiv
 //		FPI	23/05/2012	[PM103] Affichage du btn cb_maj_presta
 //		FPI	07/11/2014	[VDOC15529]
 //*-----------------------------------------------------------------
@@ -1835,7 +1833,7 @@ event clicked;//*---------------------------------------------------------------
 Boolean bPrestaRepBaseMan 
 n_cst_string lnvPFCString
 
-// 19/05/2003 : d$$HEX1$$e900$$ENDHEX$$portation du code dans le nvuo
+// 19/05/2003 : déportation du code dans le nvuo
 invCmd.uf_GestionBoutons ( 0, "PREC", True )
 //cb_maj_presta.bringtotop=cb_maj_presta.Visible // [PM103]
 
@@ -1888,14 +1886,14 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: click
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*				  
 //* #1  CAG		07/05/03	DCMP 030207 : Ajout de 6 zones en retour de Cetelec (pour Cegetel Must)
-//*								=> ajout d'une dw suppl$$HEX1$$e900$$ENDHEX$$mentaire => modif gestion des boutons prec et suiv
+//*								=> ajout d'une dw supplémentaire => modif gestion des boutons prec et suiv
 //		FPI	23/05/2012	[PM103] Affichage du btn cb_maj_presta
 //		FPI	07/11/2014	[VDOC15529]
 //*-----------------------------------------------------------------
@@ -1904,7 +1902,7 @@ Boolean bPrestaRepBaseMan
 n_cst_string lnvPFCString
 
 
-// 19/05/2003 : d$$HEX1$$e900$$ENDHEX$$portation du code dans le nvuo
+// 19/05/2003 : déportation du code dans le nvuo
 invCmd.uf_GestionBoutons ( 0, "SUIV", True )
 
 //cb_maj_presta.bringtotop=cb_maj_presta.Visible // [PM103]
@@ -1975,7 +1973,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 20/08/2003 17:07:58
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Bouton d'ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre de recherche
+//* Libellé       : Bouton d'ouverture de la fenêtre de recherche
 //*					  des communes
 //* Commentaires  : 
 //*
@@ -2038,7 +2036,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 20/08/2003 17:07:58
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Bouton d'ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre de recherche
+//* Libellé       : Bouton d'ouverture de la fenêtre de recherche
 //*					  des communes
 //* Commentaires  : 
 //*
@@ -2093,7 +2091,7 @@ integer weight = 400
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
-string text = "R$$HEX1$$e900$$ENDHEX$$cup. IMEI Adh. Corrig$$HEX1$$e900$$ENDHEX$$"
+string text = "Récup. IMEI Adh. Corrigé"
 end type
 
 on clicked;//*-----------------------------------------------------------------
@@ -2102,7 +2100,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 23/09/2003 17:24:44
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Armement IMEI de l'adh$$HEX1$$e900$$ENDHEX$$sion Corrig$$HEX1$$e900$$ENDHEX$$
+//* Libellé       : Armement IMEI de l'adhésion Corrigé
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -2141,8 +2139,8 @@ event clicked;//*---------------------------------------------------------------
 //* Fonction		: W_sp_gs_w_commande2::cb_maj_presta.clicked
 //* Auteur			: F. PINON	
 //* Date				: 23/05/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PM103]
-//* Commentaires	: Ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre de maj presta manuelle
+//* Libellé			: [PM103]
+//* Commentaires	: Ouvre la fenêtre de maj presta manuelle
 //*
 //* Arguments		: 
 //*
@@ -2209,7 +2207,7 @@ event clicked;//*
 //* Fonction		: Clicked
 //* Auteur			: JFF
 //* Date				: 23/05/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PM103]
 //*
 //* Arguments		: 
@@ -2254,7 +2252,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 16/01/2014 
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Modif adresses
+//* Libellé       : Modif adresses
 //*					  
 //* Commentaires  : [PM246]
 //*

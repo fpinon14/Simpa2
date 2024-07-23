@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_sp_trt_autre_fichier.srw
-$PBExportComments$Int$$HEX1$$e900$$ENDHEX$$gration de fichiers CODIC DARTY [DCMP80862]
+﻿$PBExportHeader$w_sp_trt_autre_fichier.srw
+$PBExportComments$Intégration de fichiers CODIC DARTY [DCMP80862]
 forward
 global type w_sp_trt_autre_fichier from w_8_accueil
 end type
@@ -61,26 +61,26 @@ global w_sp_trt_autre_fichier w_sp_trt_autre_fichier
 type variables
 Private :
 
-String	K_FICCHARG_CODIC_DARTY = "FIC_CODIC.TXT" // Nom du fichier de donn$$HEX1$$e900$$ENDHEX$$e CODIC DARTY
+String	K_FICCHARG_CODIC_DARTY = "FIC_CODIC.TXT" // Nom du fichier de donnée CODIC DARTY
 integer	K_TYPTRT_CODIC_DARTY	= 1
 
 // FPI - 15/01/2009
-String	K_FICCHARG_TAC_IMEI = "TAC_IMEI.TXT" // Nom du fichier de donn$$HEX1$$e900$$ENDHEX$$e TAC IMEI
+String	K_FICCHARG_TAC_IMEI = "TAC_IMEI.TXT" // Nom du fichier de donnée TAC IMEI
 integer	K_TYPTRT_TAC_IMEI	= 2
 
 // FPI - 30/06/2009 - [DCMP090310]
-String	K_FICCHARG_CT_INFO = "CT_INFO.TXT" // Nom du fichier de donn$$HEX1$$e900$$ENDHEX$$es Contacts info.
+String	K_FICCHARG_CT_INFO = "CT_INFO.TXT" // Nom du fichier de données Contacts info.
 integer	K_TYPTRT_CT_INFO	= 3
 
 integer K_TYPTRT_CAMARA = 4
 
 // FPI - 05/11/2009 - [EXPANSION5.BOUTIQUES]
-String	K_FICCHARG_BTQ = "EXP5_BOUTIQUE.TXT" // Nom du fichier de donn$$HEX1$$e900$$ENDHEX$$es Boutiques Expansion5
+String	K_FICCHARG_BTQ = "EXP5_BOUTIQUE.TXT" // Nom du fichier de données Boutiques Expansion5
 integer	K_TYPTRT_BTQ	= 5
 
 // FPI - 19/02/2010 - [DCMP100102]
 Integer K_TYPTRT_LST_SIN =6
-String K_FICCHARG_LST_SIN ="LST_SIN.TXT" // Nom du fichier de donn$$HEX1$$e900$$ENDHEX$$es de liste des sinistres
+String K_FICCHARG_LST_SIN ="LST_SIN.TXT" // Nom du fichier de données de liste des sinistres
 
 // FPI - 30/11/2010 - [PC475]
 Integer K_TYPTRT_BTQ_MCM =7
@@ -91,7 +91,7 @@ Integer K_TYPTRT_BTQ_PSM =8
 
 // FPI - 18/09/2012 - [VDoc8686]
 Integer K_TYPTRT_CT_CLIENT =9
-String	K_FICCHARG_CT_CLIENT = "CT_CLIENT.TXT" // Nom du fichier de donn$$HEX1$$e900$$ENDHEX$$es Contacts clients
+String	K_FICCHARG_CT_CLIENT = "CT_CLIENT.TXT" // Nom du fichier de données Contacts clients
 
 // JFF - 21/12/2012 - [VDoc9663]
 Integer K_TYPTRT_VDOC9663 =10
@@ -103,52 +103,52 @@ String isNomFicImei
 
 // FPI - 14/01/2014 - [VDoc13194]
 Integer K_TYPTRT_LST_CMDE_O2M =12
-String K_FICCHARG_LST_CMDE_O2M ="LST_CMDE_PREST.TXT" // Nom du fichier de donn$$HEX1$$e900$$ENDHEX$$es de liste des commandes
+String K_FICCHARG_LST_CMDE_O2M ="LST_CMDE_PREST.TXT" // Nom du fichier de données de liste des commandes
 
 Integer K_TYPTRT_LST_CMDE_CDS =13
-String K_FICCHARG_LST_CMDE_CDS ="LST_CMDE_CDS.TXT" // Nom du fichier de donn$$HEX1$$e900$$ENDHEX$$es de liste des commandes CDS
+String K_FICCHARG_LST_CMDE_CDS ="LST_CMDE_CDS.TXT" // Nom du fichier de données de liste des commandes CDS
 
 // FPI - 21/01/2014 - [VDoc13415]
 Integer K_TYPTRT_LST_CMDE_CFM =14
-String K_FICCHARG_LST_CMDE_CFM ="LST_CMDE_CFM.TXT" // Nom du fichier de donn$$HEX1$$e900$$ENDHEX$$es de liste des commandes Confo
+String K_FICCHARG_LST_CMDE_CFM ="LST_CMDE_CFM.TXT" // Nom du fichier de données de liste des commandes Confo
 
 // JFF - 21/01/2014 - [VDOC12917]
 Integer K_RM_AVOIR_FOURN =15
-String K_FICCHARG_RM_AVOIR_FOURN ="RM_AVOIR_FOURN.TXT" // Nom du fichier de donn$$HEX1$$e900$$ENDHEX$$es de liste des commandes
+String K_FICCHARG_RM_AVOIR_FOURN ="RM_AVOIR_FOURN.TXT" // Nom du fichier de données de liste des commandes
 
 // FPI - 19/09/2016	- [VDOC19525]
 Integer K_TYPTRT_LST_SIN_CASTO =16
 
 // FPI - 22/09/2016	- [VDOC21846]
 Integer K_TYPTRT_LST_SIN_REG =17
-String K_FICCHARG_LST_SIN_REG ="LST_SIN_REG.TXT" // Nom du fichier de donn$$HEX1$$e900$$ENDHEX$$es de liste des dossiers & r$$HEX1$$e800$$ENDHEX$$glements
+String K_FICCHARG_LST_SIN_REG ="LST_SIN_REG.TXT" // Nom du fichier de données de liste des dossiers & règlements
 
 // FPI - 04/11/2016	- [VDOC22119]
 Integer K_TYPTRT_LST_RM =18
 
 // JFF   30/11/2016 [PM375-1]
 Integer K_RP_AVOIR_FOURN =19
-String K_FICCHARG_RP_AVOIR_FOURN ="RP_AVOIR_FOURN.TXT" // Nom du fichier de donn$$HEX1$$e900$$ENDHEX$$es de liste des commandes
+String K_FICCHARG_RP_AVOIR_FOURN ="RP_AVOIR_FOURN.TXT" // Nom du fichier de données de liste des commandes
 Integer K_RM_SIMPLE = 20
-String K_FICCHARG_RM_SIMPLE ="RM_SIMPLE.TXT" // Nom du fichier de donn$$HEX1$$e900$$ENDHEX$$es de liste des commandes
+String K_FICCHARG_RM_SIMPLE ="RM_SIMPLE.TXT" // Nom du fichier de données de liste des commandes
 Integer K_RP_SIMPLE = 21
-String K_FICCHARG_RP_SIMPLE ="RP_SIMPLE.TXT" // Nom du fichier de donn$$HEX1$$e900$$ENDHEX$$es de liste des commandes
+String K_FICCHARG_RP_SIMPLE ="RP_SIMPLE.TXT" // Nom du fichier de données de liste des commandes
 Integer K_RN_FRAIS_FACTU = 22
-String K_FICCHARG_RN_FRAIS_FACTU ="RN_FRAIS_FACTU.TXT" // Nom du fichier de donn$$HEX1$$e900$$ENDHEX$$es de liste des commandes
+String K_FICCHARG_RN_FRAIS_FACTU ="RN_FRAIS_FACTU.TXT" // Nom du fichier de données de liste des commandes
 
 // FPI - [VDOC23002] - 13/02/2017
 Integer K_TYPTRT_LST_REG = 23
 
 // FPI - [VDOC23962] - 07/07/2017
 Integer K_TYPTRT_LST_CMDE =24
-String K_FICCHARG_LST_CMDE ="LST_CMDE.TXT" // Nom du fichier de donn$$HEX1$$e900$$ENDHEX$$es de liste des commandes
+String K_FICCHARG_LST_CMDE ="LST_CMDE.TXT" // Nom du fichier de données de liste des commandes
 
 // FPI - [VDOC24986] - 26/12/2017
 Integer K_TYPTRT_LST_FACTU_CASTO =25
 
 // FPI - 21/02/2018 - [VDoc25758]
 Integer K_TYPTRT_LST_CMDE_AUC =26
-String K_FICCHARG_LST_CMDE_AUC ="LST_CMDE_AUC.TXT" // Nom du fichier de donn$$HEX1$$e900$$ENDHEX$$es de liste des commandes Auchan
+String K_FICCHARG_LST_CMDE_AUC ="LST_CMDE_AUC.TXT" // Nom du fichier de données de liste des commandes Auchan
 
 // JFF - 27/05/2019 - [PM478-1]
 Integer K_TYPTRT_RET_PM02 =27
@@ -156,7 +156,7 @@ String  K_FICCHARG_RET_PM02 ="RETOUR_PM02_O2M_SPB.TXT"
 
 // FPI - [VDOC28472] - 07/10/2019
 Integer K_TYPTRT_LST_FACT =28
-String K_FICCHARG_LST_FACT ="LST_FACT.TXT" // Nom du fichier de donn$$HEX1$$e900$$ENDHEX$$es de liste des commandes
+String K_FICCHARG_LST_FACT ="LST_FACT.TXT" // Nom du fichier de données de liste des commandes
 
 // JFF 02/01/2023 [RS_4166_PND_CORUS]
 Integer K_TYPTRT_LST_PND_CORUS =29
@@ -243,7 +243,7 @@ private function boolean wf_chargerdonnees ();//*-------------------------------
 //* Fonction      : w_sp_trt_autofact::wf_ChargerDonnees (PRIVATE)
 //* Auteur        : FPI
 //* Date          : 12/12/2008
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Chargement des donn$$HEX1$$e900$$ENDHEX$$es
+//* Libellé       : Chargement des données
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -252,13 +252,13 @@ private function boolean wf_chargerdonnees ();//*-------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1		FPI	15/01/2009	Int$$HEX1$$e900$$ENDHEX$$gration des fichiers TAC_IMEI
+//* #1		FPI	15/01/2009	Intégration des fichiers TAC_IMEI
 //* #2		FPI	14/04/2009	Trim des champs marque & modele
-//* #3	FPI		30/06/2009	[DCP090310] Int$$HEX1$$e900$$ENDHEX$$gration contacts d'info
+//* #3	FPI		30/06/2009	[DCP090310] Intégration contacts d'info
 //* #4	FPI		03/08/2009	[CAMARA]
 //* #5	FPI		05/11/2009	[EXPANSION5.BOUTIQUES]
 //* #6	FPI		19/02/2010	[DCMP100102]
-//			FPI		12/02/2012 [PM200][PSM] Int$$HEX1$$e900$$ENDHEX$$gration fichier btq PSM
+//			FPI		12/02/2012 [PM200][PSM] Intégration fichier btq PSM
 // 			FPI		18/09/2012  [VDoc8686]
 // 			JFF		21/12/2012  [VDoc9663]
 //			FPI		17/05/2013	[PC938]
@@ -425,7 +425,7 @@ If Not f_FileExists ( sFicFourn ) Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Chargement des donn$$HEX1$$e900$$ENDHEX$$es.                                          */
+/* Chargement des données.                                          */
 /*------------------------------------------------------------------*/
 If bOk Then
 	Choose Case lIdTT
@@ -459,35 +459,35 @@ if bTrimChamps and bOk Then wf_trim_champs( ) // #5 - Simplification // [PC175]
 If bOk Then
 	Choose case lIdTT
 		Case  K_RM_AVOIR_FOURN // [VDOC12917]
-			st_Charger.Text = String ( lTotRow ) + " RM Avoirs fournisseurs charg$$HEX1$$e900$$ENDHEX$$s"
+			st_Charger.Text = String ( lTotRow ) + " RM Avoirs fournisseurs chargés"
 		Case  K_TYPTRT_BTQ , K_TYPTRT_BTQ_MCM // [PC175]
-			st_Charger.Text = String ( lTotRow ) + " r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rences boutiques charg$$HEX1$$e900$$ENDHEX$$es"
+			st_Charger.Text = String ( lTotRow ) + " références boutiques chargées"
 		Case  K_TYPTRT_LST_SIN , K_TYPTRT_VDOC9663, K_TYPTRT_LST_SIN_CASTO, K_TYPTRT_LST_SIN_REG,K_TYPTRT_LST_RM, K_TYPTRT_LST_REG, K_TYPTRT_LST_FACTU_CASTO
-			st_Charger.Text = String ( lTotRow ) + " r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rences sinistres charg$$HEX1$$e900$$ENDHEX$$es"
+			st_Charger.Text = String ( lTotRow ) + " références sinistres chargées"
 		Case  K_TYPTRT_CT_CLIENT 
-			st_Charger.Text = String ( lTotRow ) + " r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rences clients charg$$HEX1$$e900$$ENDHEX$$es"
+			st_Charger.Text = String ( lTotRow ) + " références clients chargées"
 		Case  K_TYPTRT_IMEI_ORANGE 
-			st_Charger.Text = String ( lTotRow ) + " IMEI Orange charg$$HEX1$$e900$$ENDHEX$$es"
+			st_Charger.Text = String ( lTotRow ) + " IMEI Orange chargées"
 		// [PM375-1]
 		Case K_RP_AVOIR_FOURN
-			st_Charger.Text = String ( lTotRow ) + " RP Avoirs fournisseurs charg$$HEX1$$e900$$ENDHEX$$s"		
+			st_Charger.Text = String ( lTotRow ) + " RP Avoirs fournisseurs chargés"		
 		// [PM375-1]
 		Case K_RM_SIMPLE
-			st_Charger.Text = String ( lTotRow ) + " RM simples charg$$HEX1$$e900$$ENDHEX$$s"		
+			st_Charger.Text = String ( lTotRow ) + " RM simples chargés"		
 		// [PM375-1]
 		Case K_RP_SIMPLE
-			st_Charger.Text = String ( lTotRow ) + " RP simples charg$$HEX1$$e900$$ENDHEX$$s"		
+			st_Charger.Text = String ( lTotRow ) + " RP simples chargés"		
 		// [PM375-1]
 		Case K_RN_FRAIS_FACTU
-			st_Charger.Text = String ( lTotRow ) + " RN frais factu charg$$HEX1$$e900$$ENDHEX$$s"					
+			st_Charger.Text = String ( lTotRow ) + " RN frais factu chargés"					
 		// [PM478-1]
 		Case K_RN_FRAIS_FACTU
-			st_Charger.Text = String ( lTotRow ) + " Retours PM02 charg$$HEX1$$e900$$ENDHEX$$s"					
+			st_Charger.Text = String ( lTotRow ) + " Retours PM02 chargés"					
 		// [RS_4166_PND_CORUS]
 		Case K_TYPTRT_LST_PND_CORUS			
-			st_Charger.Text = String ( lTotRow ) + " Retours PND CORUS charg$$HEX1$$e900$$ENDHEX$$s"					
+			st_Charger.Text = String ( lTotRow ) + " Retours PND CORUS chargés"					
 		Case Else
-			st_Charger.Text = String ( lTotRow ) + " r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rences commandes charg$$HEX1$$e900$$ENDHEX$$es"
+			st_Charger.Text = String ( lTotRow ) + " références commandes chargées"
 			
 	End choose
 	// Fin #6
@@ -508,7 +508,7 @@ private function boolean wf_controler ();
 //* Fonction      : w_sp_trt_autofact::wf_Controler (PRIVATE)
 //* Auteur        : FPI
 //* Date          : 12/12/2008
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le des donn$$HEX1$$e900$$ENDHEX$$es
+//* Libellé       : Contrôle des données
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -517,10 +517,10 @@ private function boolean wf_controler ();
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     	Modification
-//* #1		FPI	15/01/2009	Int$$HEX1$$e900$$ENDHEX$$gration des fichiers TAC_IMEI
+//* #1		FPI	15/01/2009	Intégration des fichiers TAC_IMEI
 //* #2		FPI	15/01/2009	Correction bug sur les codics darty
-//* #3		FPI	30/06/2009	[DCMP090310] Int$$HEX1$$e900$$ENDHEX$$gration contacts d'info
-//* #4		FPI	30/06/2009	[EXPANSION5.BOUTIQUES] Int$$HEX1$$e900$$ENDHEX$$gration boutiques Expansion5
+//* #3		FPI	30/06/2009	[DCMP090310] Intégration contacts d'info
+//* #4		FPI	30/06/2009	[EXPANSION5.BOUTIQUES] Intégration boutiques Expansion5
 //* #5		FPI	19/02/2010	[DCMP100102] Extraction dte_surv, dte_achat 
 // 			FPI	18/09/2012	[VDOC8686]
 // 			JFF	21/12/2012  [VDoc9663]
@@ -615,7 +615,7 @@ Choose Case iIdTT
 	// [RS_4166_PND_CORUS]
 	Case K_TYPTRT_LST_PND_CORUS
 
-		// Suppression des lignes d'ent$$HEX1$$ea00$$ENDHEX$$tes
+		// Suppression des lignes d'entêtes
 		dw_Charger.SetFilter ( "Left ( Trim ( val_ret_pnd_corus), 23 ) = 'NOM_FICHIER;APPLICATION'" )
 		dw_Charger.Filter ()
 		dw_Charger.RowsDiscard ( 1, dw_Charger.RowCount (), Primary! )
@@ -639,7 +639,7 @@ Choose Case iIdTT
 
 		dw_Charger.Sort ()
 		
-		st_Charger.Text = String ( dw_Charger.RowCount () ) + " Retours PND CORUS SIMPA2 et KSL $$HEX2$$e0002000$$ENDHEX$$traiter"	
+		st_Charger.Text = String ( dw_Charger.RowCount () ) + " Retours PND CORUS SIMPA2 et KSL à traiter"	
 
 		
 End Choose
@@ -661,10 +661,10 @@ For lCpt = 1 to lTotRow
 		sVal[lPos] = dw_Charger.GetItemString(lCpt, sColNames[lPos])
 	Next
 	
-	// Contr$$HEX1$$f400$$ENDHEX$$les
+	// Contrôles
 	Choose Case iIdTT
 		Case K_TYPTRT_CODIC_DARTY
-			// Contr$$HEX1$$f400$$ENDHEX$$le que toutes les col sont renseign$$HEX1$$e900$$ENDHEX$$es
+			// Contrôle que toutes les col sont renseignées
 			bOk=wf_controler_chps_oblig( sColNames, sVal, sErreur)
 			
 			// Controle de gestion
@@ -672,35 +672,35 @@ For lCpt = 1 to lTotRow
 				bOk = wf_controler_codic( sVal, sErreur)
 			End If
 			
-			// Correction de la valeur du mod$$HEX1$$e800$$ENDHEX$$le : ' et "
+			// Correction de la valeur du modèle : ' et "
 			sVal[6] = uString.of_globalreplace(sVal[6],"'","p")		//#2 :  avant : sVal[5] dans le of_globalreplace
 			sVal[6] = uString.of_globalreplace(sVal[6],"~"","p")
 		
 		// #1
 		Case K_TYPTRT_TAC_IMEI
-			// Contr$$HEX1$$f400$$ENDHEX$$le que toutes les col sont renseign$$HEX1$$e900$$ENDHEX$$es
+			// Contrôle que toutes les col sont renseignées
 			bOk=wf_controler_chps_oblig( sColNames, sVal, sErreur)
 			
-			// Contr$$HEX1$$f400$$ENDHEX$$le des champs
+			// Contrôle des champs
 			if bOk Then
 				bOk =wf_controler_tac_imei(sVal, sErreur)
 			End If
 			
 		// #3
 		Case K_TYPTRT_CT_INFO
-			// Contr$$HEX1$$f400$$ENDHEX$$le que toutes les col sont renseign$$HEX1$$e900$$ENDHEX$$es
+			// Contrôle que toutes les col sont renseignées
 			bOk=wf_controler_chps_oblig( sColOblig, sVal, sErreur)
 			
-			// Contr$$HEX1$$f400$$ENDHEX$$le des champs
+			// Contrôle des champs
 			if bOk Then
 				bOk =wf_controler_ct_info(sVal, sErreur)
 			End If
 		// #4
 		Case K_TYPTRT_BTQ
-			// Contr$$HEX1$$f400$$ENDHEX$$le que toutes les col sont renseign$$HEX1$$e900$$ENDHEX$$es
+			// Contrôle que toutes les col sont renseignées
 			bOk=wf_controler_chps_oblig( sColOblig, sVal, sErreur)
 			
-			// Contr$$HEX1$$f400$$ENDHEX$$le de gestion
+			// Contrôle de gestion
 			If bOk Then
 				bOk = wf_controler_boutiques(sVal, sErreur)
 			End if
@@ -710,14 +710,14 @@ For lCpt = 1 to lTotRow
 		
 		// [PC175] // [PC938]
 		Case K_TYPTRT_BTQ_MCM, K_TYPTRT_BTQ_PSM, K_TYPTRT_IMEI_ORANGE, K_TYPTRT_LST_CMDE_CFM, K_TYPTRT_LST_CMDE_AUC
-			// Contr$$HEX1$$f400$$ENDHEX$$le que toutes les col sont renseign$$HEX1$$e900$$ENDHEX$$es
+			// Contrôle que toutes les col sont renseignées
 			bOk=wf_controler_chps_oblig( sColNames, sVal, sErreur)
 		
 		Case K_TYPTRT_CT_CLIENT // [VDoc8686]
-			// Contr$$HEX1$$f400$$ENDHEX$$le que toutes les col sont renseign$$HEX1$$e900$$ENDHEX$$es
+			// Contrôle que toutes les col sont renseignées
 			bOk=wf_controler_chps_oblig( sColOblig, sVal, sErreur)
 			
-			// Contr$$HEX1$$f400$$ENDHEX$$le des champs
+			// Contrôle des champs
 			if bOk Then
 				bOk =wf_controler_ct_client(sVal, sErreur)
 			End If
@@ -766,7 +766,7 @@ For lCpt = 1 to lTotRow
 	// Positionnement sur l'erreur
 	If Not bOk Then 
 		dw_Charger.ScrollToRow ( lCpt )
-		dw_Charger.SelectRow ( 0, FALSE ) // #3 - Am$$HEX1$$e900$$ENDHEX$$lioration
+		dw_Charger.SelectRow ( 0, FALSE ) // #3 - Amélioration
 		dw_Charger.SelectRow ( lCpt, True )
 		Exit
 	End If
@@ -826,11 +826,11 @@ For lCpt = 1 to lTotRow
 Next
 
 if bOk Then 
-	st_Extraire.Text  = "Contr$$HEX1$$f400$$ENDHEX$$le Ok !"
+	st_Extraire.Text  = "Contrôle Ok !"
 	st_extraire.BackColor = 32768
    st_extraire.TextColor = 16777215
 else
-	st_Extraire.Text  = "Erreur sur la ligne n$$HEX1$$b000$$ENDHEX$$"+string(lCpt)+" "+sErreur
+	st_Extraire.Text  = "Erreur sur la ligne n°"+string(lCpt)+" "+sErreur
 	st_extraire.BackColor = 255
    st_extraire.TextColor = 16777215	
 	
@@ -846,7 +846,7 @@ private function boolean wf_maj ();//*------------------------------------------
 //* Fonction      : w_sp_trt_autre_fichier::wf_Maj (PRIVATE)
 //* Auteur        :FPI
 //* Date          : 12/12/2008
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : [DCMP80862]
 //*					  
 //*
@@ -856,10 +856,10 @@ private function boolean wf_maj ();//*------------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1		FPI	15/01/2009	Int$$HEX1$$e900$$ENDHEX$$gration des fichiers TAC_IMEI
-//* #2		FPI	01/07/2009	[DCMP090310] Int$$HEX1$$e900$$ENDHEX$$gration contacts d'info
+//* #1		FPI	15/01/2009	Intégration des fichiers TAC_IMEI
+//* #2		FPI	01/07/2009	[DCMP090310] Intégration contacts d'info
 //* #3		FPI	03/08/2009	[CAMARA]
-//* #4 		FPI	06/11/2009	[EXPANSION5.BOUTIQUES] Ajout de l'int$$HEX1$$e900$$ENDHEX$$gration des btq
+//* #4 		FPI	06/11/2009	[EXPANSION5.BOUTIQUES] Ajout de l'intégration des btq
 //* #5		FPI	19/02/2010	[DCMP100102]
 //				FPI	02/12/2010	[PC175]
 // 				FPI	15/02/2012	[PM200][PSM]
@@ -1069,7 +1069,7 @@ If bRet Then
 			hpb_trt.Position = lCpt
 			wf_pct ()
 			Yield()
-			If iIdTt <> K_TYPTRT_CAMARA Then F_Commit ( SQLCA, True ) // #3 - Pour Camara, on commit $$HEX2$$e0002000$$ENDHEX$$la fin
+			If iIdTt <> K_TYPTRT_CAMARA Then F_Commit ( SQLCA, True ) // #3 - Pour Camara, on commit à la fin
 			If iIdTt = k_typtrt_ct_info Then dw_charger.setItem(lCpt,"IS_OK","O") // #2
 		else
 			
@@ -1112,7 +1112,7 @@ if bRet and iIdTT = K_TYPTRT_CAMARA Then
 		dw_charger.Retrieve()
 	Else
 		F_Commit ( SQLCA, TRUE )
-		st_extraire.text="Extraction et marquage termin$$HEX1$$e900$$ENDHEX$$s"
+		st_extraire.text="Extraction et marquage terminés"
 	End If
 	
 	Return bRet	
@@ -1132,7 +1132,7 @@ Else
    stMessage.sVar[1]   = String ( lNbTraite )
 End If
 
-stMessage.sTitre		= "Traitement/Int$$HEX1$$e900$$ENDHEX$$gration autre fichier."
+stMessage.sTitre		= "Traitement/Intégration autre fichier."
 stMessage.bErreurG	= FALSE
 stMessage.Bouton		= Ok!
 If (not gbOpcon) Then F_Message ( stMessage ) // [PC175] ajout de gbopcon
@@ -1146,7 +1146,7 @@ private function integer wf_chargerdw ();//*------------------------------------
 //* Fonction      : w_sp_trt_autofact::wf_ChargerDw (PRIVATE)
 //* Auteur        : FPI
 //* Date          : 12/12/2008
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Chargement du data object correspond type de traitement choisi
+//* Libellé       : Chargement du data object correspond type de traitement choisi
 //* Commentaires  : [DCMP80862]
 //*
 //* Arguments     : 
@@ -1156,8 +1156,8 @@ private function integer wf_chargerdw ();//*------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1		FPI	15/01/2009	Int$$HEX1$$e900$$ENDHEX$$gration des fichiers TAC_IMEI
-//* #2	FPI		30/06/2009	[DCP090310] Int$$HEX1$$e900$$ENDHEX$$gration contacts d'info
+//* #1		FPI	15/01/2009	Intégration des fichiers TAC_IMEI
+//* #2	FPI		30/06/2009	[DCP090310] Intégration contacts d'info
 //* #3 	FPI		03/08/2009	[CAMARA]
 //* #4 	FPI		05/11/2009	[EXPANSION5.BOUTIQUES]
 //* #5	FPI		19/02/2010	[DCMP100102]
@@ -1304,8 +1304,8 @@ private function boolean wf_controler_tac_imei (ref string asvaleurs[], ref stri
 //* Fonction		: w_sp_trt_autre_fichier::wf_controler_tac_imei
 //* Auteur			: F. Pinon
 //* Date				: 15/01/2009 11:26:03
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Int$$HEX1$$e900$$ENDHEX$$gration des fichiers TAC_IMEI
+//* Libellé			: 
+//* Commentaires	: Intégration des fichiers TAC_IMEI
 //*
 //* Arguments		: ref string asvaleurs[]	 */
 /* 	ref string aserreur	 */
@@ -1327,7 +1327,7 @@ bOk = True
 
 // idTrt
 bOk = ( integer(asValeurs[1]) =  K_TYPTRT_TAC_IMEI)
-if not bok then asErreur += 'Code de traitement diff$$HEX1$$e900$$ENDHEX$$rent du type de traitement s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$! '
+if not bok then asErreur += 'Code de traitement différent du type de traitement sélectionné ! '
 			
 //TAC_IMEI
 if bOk Then
@@ -1335,16 +1335,16 @@ if bOk Then
 	if not bok then asErreur += "Code TAC n'est pas un nombre ! "
 End If
 	
-// Marque est <= $$HEX2$$e0002000$$ENDHEX$$35 Caract$$HEX1$$e800$$ENDHEX$$res
+// Marque est <= à 35 Caractères
 If bOk Then
 	bOk = (Len(asValeurs[2]) <= 35	)
 	if not bok then asErreur += "Marque trop grand ! "
 End If
 
-// Mod$$HEX1$$e800$$ENDHEX$$le est <= $$HEX2$$e0002000$$ENDHEX$$35 Caract$$HEX1$$e800$$ENDHEX$$res
+// Modèle est <= à 35 Caractères
 If bOk Then
 	bOk = ( Len(asValeurs[3]) <= 35	)
-	if not bok then asErreur += "Mod$$HEX1$$e800$$ENDHEX$$le trop grand ! "
+	if not bok then asErreur += "Modèle trop grand ! "
 End If
 
 if bOk Then
@@ -1388,8 +1388,8 @@ public function long wf_epure_tac_imei ();//*-----------------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_epure_tac_imei
 //* Auteur			: F. Pinon
 //* Date				: 15/01/2009 12:02:10
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Supprime les doublons & lignes inutiles dans les donn$$HEX1$$e900$$ENDHEX$$es TAC_IMEI
-//* Commentaires	: Int$$HEX1$$e900$$ENDHEX$$gration des fichiers TAC_IMEI
+//* Libellé			: Supprime les doublons & lignes inutiles dans les données TAC_IMEI
+//* Commentaires	: Intégration des fichiers TAC_IMEI
 //*
 //* Arguments		: 
 //*
@@ -1439,7 +1439,7 @@ public subroutine wf_trim_champs ();//*-----------------------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_trim_champs
 //* Auteur			: F. Pinon
 //* Date				: 15/04/2009 11:24:11
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Trim les valeurs dans dw_charger
+//* Libellé			: Trim les valeurs dans dw_charger
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -1478,7 +1478,7 @@ private function boolean wf_controler_ct_info (ref string asvaleurs[], ref strin
 //* Fonction		: w_sp_trt_autre_fichier::wf_controler_ct_info
 //* Auteur			: F. Pinon
 //* Date				: 30/06/2009 16:33:10
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [DCMP090310]
 //*
 //* Arguments		: ref string asvaleurs[]	 */
@@ -1515,7 +1515,7 @@ End If
 if bOk Then
 	bOk = IsNumber(asValeurs[3]) Or IsNull(asValeurs[3])
 	if not bok then 
-		asErreur += "R$$HEX1$$e900$$ENDHEX$$sultat n'est pas un nombre ! "
+		asErreur += "Résultat n'est pas un nombre ! "
 	Else 
 		iResultat = integer(asValeurs[3])
 	End if
@@ -1555,7 +1555,7 @@ End If
 if bOk Then
 	bOk = IsDate(asValeurs[9]) Or IsNull(asValeurs[9])
 	if not bok then 
-		asErreur += "Date r$$HEX1$$e800$$ENDHEX$$glement SPB n'est pas une date ! "
+		asErreur += "Date règlement SPB n'est pas une date ! "
 	Else 
 		dteRegSpb = datetime(date(asValeurs[9]))
 	End if
@@ -1582,7 +1582,7 @@ public function boolean wf_init_camara (ref long alidlotextr, ref string asnomfi
 //* Fonction		: w_sp_trt_autre_fichier::wf_init_camara
 //* Auteur			: F. Pinon
 //* Date				: 03/08/2009 10:01:20
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [CAMARA]
 //*
 //* Arguments		: ref long alidlotextr	 */
@@ -1625,7 +1625,7 @@ if bRet Then
 End if
 
 If bRet Then
-	If right(sNomComplet,4) = ".TXT" Then // Car le SaveAs ajoute .TXT $$HEX2$$e0002000$$ENDHEX$$la fin
+	If right(sNomComplet,4) = ".TXT" Then // Car le SaveAs ajoute .TXT à la fin
 		sNomComplet = Left(sNomComplet,Len(sNomComplet) -4)
 	End If
 	
@@ -1648,7 +1648,7 @@ protected function boolean wf_controler_boutiques (ref string asval[], ref strin
 //* Fonction		: w_sp_trt_autre_fichier::wf_controler_boutiques
 //* Auteur			: F. Pinon
 //* Date				: 09/11/2009 09:52:57
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [O2M_FRAIS]
 //*
 //* Arguments		: ref string asvaleur[]	 */
@@ -1664,13 +1664,13 @@ protected function boolean wf_controler_boutiques (ref string asval[], ref strin
 
 Boolean bOk
 
-// Contr$$HEX1$$f400$$ENDHEX$$le des champs
+// Contrôle des champs
 bOk = IsNumber(asVal[1])
 
 if bOk Then
-	// Contr$$HEX1$$f400$$ENDHEX$$le d'existence
+	// Contrôle d'existence
 	If SQLCA.PS_V01_BOUTIQUE( Dec(asVal[1]), asval[2], asval[9]) = -1 Then
-		if  asval[9] ='I' Then 	asErreur += "Cette boutique existe d$$HEX1$$e900$$ENDHEX$$j$$HEX1$$e000$$ENDHEX$$."
+		if  asval[9] ='I' Then 	asErreur += "Cette boutique existe déjà."
 		if  asval[9] ='U' Then 	asErreur += "Cette boutique n'existe pas."
 		bOk=FALSE
 	End if
@@ -1686,7 +1686,7 @@ private function boolean wf_controler_codic (ref string asvaleurs[], ref string 
 //* Fonction		: w_sp_trt_autre_fichier::wf_controler_codic
 //* Auteur			: F. Pinon
 //* Date				: 09/11/2009 09:59:52
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: ref string asvaleurs[]	 */
@@ -1698,7 +1698,7 @@ private function boolean wf_controler_codic (ref string asvaleurs[], ref string 
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
 //* 		FPI	29/12/2012	[ITSM140261] Correction taille marque/modele table des codics
-//* 		JFF   30/08/2017	Pas de type TEL sur le r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rentiel DARTY !
+//* 		JFF   30/08/2017	Pas de type TEL sur le référentiel DARTY !
 //*-----------------------------------------------------------------
 
 boolean bOK
@@ -1707,9 +1707,9 @@ bOk=TRUE
 
 // Code_tt	
 bOk = ( integer(asValeurs[1]) =  K_TYPTRT_CODIC_DARTY)
-if not bok then asErreur += 'Code de traitement diff$$HEX1$$e900$$ENDHEX$$rent du type de traitement s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$! '
+if not bok then asErreur += 'Code de traitement différent du type de traitement sélectionné ! '
 			
-// Provenance est <= $$HEX2$$e0002000$$ENDHEX$$3 Caract$$HEX1$$e800$$ENDHEX$$res
+// Provenance est <= à 3 Caractères
 If bOk Then
 	bOk = (Len(asValeurs[2]) <= 3	)
 	if not bok then asErreur += "Provenance trop grand ! "
@@ -1724,10 +1724,10 @@ If bOk Then
 	End if
 End If
 
-// Pas de type TEL sur le r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rentiel DARTY ! 
+// Pas de type TEL sur le référentiel DARTY ! 
 If bOk Then
 	bOk = ( asValeurs[3] <> "TEL" )
-	if not bok then asErreur += "Pas de type TEL sur le r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rentiel DARTY ! "
+	if not bok then asErreur += "Pas de type TEL sur le référentiel DARTY ! "
 End If
 
 //Codic
@@ -1736,16 +1736,16 @@ If bOk Then
 	if not bok then asErreur += "Codic n'est pas un nombre ! "
 End If
 
-// Marque est <= $$HEX2$$e0002000$$ENDHEX$$30 Caract$$HEX1$$e800$$ENDHEX$$res
+// Marque est <= à 30 Caractères
 If bOk Then
 	bOk = (Len(asValeurs[5]) <= 30	)
 	if not bok then asErreur += "Marque trop grand ! "
 End If
 
-// Mod$$HEX1$$e800$$ENDHEX$$le est <= $$HEX2$$e0002000$$ENDHEX$$30 Caract$$HEX1$$e800$$ENDHEX$$res
+// Modèle est <= à 30 Caractères
 If bOk Then
 	bOk = ( Len(asValeurs[6]) <= 30	)
-	if not bok then asErreur += "Mod$$HEX1$$e800$$ENDHEX$$le trop grand ! "
+	if not bok then asErreur += "Modèle trop grand ! "
 End If
 
 
@@ -1757,7 +1757,7 @@ protected function boolean wf_controler_lst_sin (ref string asval[], ref string 
 //* Fonction		: w_sp_trt_autre_fichier::wf_controler_lst_sin
 //* Auteur			: F. Pinon
 //* Date				: 19/02/2010
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [DCMP100102]
 //*
 //* Arguments		: ref string asvaleur[]	 */
@@ -1773,11 +1773,11 @@ protected function boolean wf_controler_lst_sin (ref string asval[], ref string 
 
 Boolean bOk
 
-// Contr$$HEX1$$f400$$ENDHEX$$le des champs
+// Contrôle des champs
 bOk = IsNumber(asVal[1])
 
 if bOk Then
-	// Contr$$HEX1$$f400$$ENDHEX$$le d'existence
+	// Contrôle d'existence
 	If SQLCA.PS_V02_SIN( Dec(asVal[1]) ) = 0 Then
 		asErreur="Ce sinistre n'existe pas"
 		bOk=FALSE
@@ -1794,7 +1794,7 @@ protected subroutine wf_trt_lst_sin ();//*--------------------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_trt_lst_sin
 //* Auteur			: F. Pinon
 //* Date				: 19/02/2010 11:03:15
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [DCMP100102]
 //*
 //* Arguments		: 
@@ -1805,6 +1805,7 @@ protected subroutine wf_trt_lst_sin ();//*--------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
 //* 		FPI	30/07/2010	[20100730.FPI] Utilisation d'une PS
+//			FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 String sSql, sIdSin
@@ -1840,13 +1841,13 @@ dw_charger.SetTransObject( SQLCA)
 dw_charger.Retrieve(sSql)
 //	:[20100730.FPI]
 
-dw_charger.saveas( stglb.sreptempo + "LST_SIN.XLS" ,Excel!, TRUE)
+dw_charger.saveas( stglb.sreptempo + "LST_SIN.XLS" ,Excel8!, TRUE) // [MIG_PB2022]
 
-stMessage.sTitre		= "Traitement/Int$$HEX1$$e900$$ENDHEX$$gration autre fichier."
+stMessage.sTitre		= "Traitement/Intégration autre fichier."
 stMessage.bErreurG	= FALSE
 stMessage.Bouton		= Ok!
 stMessage.scode="GENE013"
-stMessage.sVar[1] = "L'extraction est enregistr$$HEX1$$e900$$ENDHEX$$e dans le fichier " + stglb.sreptempo + "LST_SIN.XLS"
+stMessage.sVar[1] = "L'extraction est enregistrée dans le fichier " + stglb.sreptempo + "LST_SIN.XLS"
 F_Message ( stMessage )
 
 end subroutine
@@ -1856,7 +1857,7 @@ private function string wf_determiner_fic_btq (integer aitypfic);//*------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_determiner_fic_btq
 //* Auteur			: F. Pinon
 //* Date				: 30/11/2010 14:51:02
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: value integer aitypfic	 */
@@ -1866,7 +1867,7 @@ private function string wf_determiner_fic_btq (integer aitypfic);//*------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* 		FPI	14/02/2012	[PM200][PSM] Int$$HEX1$$e900$$ENDHEX$$gration fichier btq PSM
+//* 		FPI	14/02/2012	[PM200][PSM] Intégration fichier btq PSM
 //*-----------------------------------------------------------------
 String sNomFic,sRepFic, sVal
 Long lTotLig, lCpt
@@ -1919,7 +1920,7 @@ private function long wf_charger_ficbtq (string asnomfic);//*-------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_charger_ficbtq
 //* Auteur			: F. Pinon
 //* Date				: 30/11/2010 16:05:23
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: value string asnomfic	 */
@@ -1941,7 +1942,7 @@ sListeBoutiques=""
 
 iFic = FileOpen ( asnomfic, LineMode!, Read!)
 
-// On ne tient pas compte de la 1$$HEX1$$e800$$ENDHEX$$re ligne
+// On ne tient pas compte de la 1ère ligne
 FileRead ( iFic, sVal ) 
 
 Do While FileRead ( iFic, sVal ) <> -100
@@ -1981,7 +1982,7 @@ private function boolean wf_ctrl_btq (string slignebtq);//*---------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_ctrl_btq
 //* Auteur			: F. Pinon
 //* Date				: 01/12/2010 11:33:07
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PC175]
 //*
 //* Arguments		: value string slignebtq	 */
@@ -2024,7 +2025,7 @@ private function boolean wf_trt_btq_mcm ();//*----------------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_trt_btq_mcm
 //* Auteur			: F. Pinon
 //* Date				: 02/12/2010 10:14:21
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PC175]
 //*
 //* Arguments		: 
@@ -2049,7 +2050,7 @@ Next
 
 wf_delete_btq_mcm( ) // [PC175.2]
 
-// Mise $$HEX2$$e0002000$$ENDHEX$$jour
+// Mise à jour
 lRet = dw_charger.Update( )
 bRet = (lRet = 1)
 
@@ -2063,10 +2064,10 @@ End if
 */
 
 if bRet Then 
-	st_Charger.Text="Mise $$HEX2$$e0002000$$ENDHEX$$jour effectu$$HEX1$$e900$$ENDHEX$$e"
+	st_Charger.Text="Mise à jour effectuée"
 	F_Commit ( SQLCA, True )
 Else
-	st_Charger.Text="Erreur de mise $$HEX2$$e0002000$$ENDHEX$$jour"
+	st_Charger.Text="Erreur de mise à jour"
 	F_Commit ( SQLCA, False )
 End if
 
@@ -2081,7 +2082,7 @@ private subroutine wf_opcon_btq_mcm ();//*--------------------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_opcon_btq_mcm
 //* Auteur			: F. Pinon
 //* Date				: 02/12/2010 16:07:04
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -2091,7 +2092,7 @@ private subroutine wf_opcon_btq_mcm ();//*--------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* 		FPI	08/06/2011	[ITSM71141] On effectue la mise $$HEX2$$e0002000$$ENDHEX$$jour uniquement juste apr$$HEX1$$e800$$ENDHEX$$s la gen des commandes MCM
+//* 		FPI	08/06/2011	[ITSM71141] On effectue la mise à jour uniquement juste après la gen des commandes MCM
 //*-----------------------------------------------------------------
 Boolean bRet
 Long lCount
@@ -2124,7 +2125,7 @@ private subroutine wf_delete_btq_mcm ();//*-------------------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_delete_btq_mcm
 //* Auteur			: F. Pinon
 //* Date				: 14/03/2011 14:07:20
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PC175.2]
 //*
 //* Arguments		: 
@@ -2185,7 +2186,7 @@ private function integer wf_sortie_opcon (string ascas, integer aicodeerreur, st
 //* Fonction		: w_sp_trt_autre_fichier::wf_sortie_opcon
 //* Auteur			: F. Pinon
 //* Date				: 19/05/2011 15:59:23
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PC175]
 //*
 //* Arguments		: 
@@ -2229,7 +2230,7 @@ CHOOSE CASE Upper ( asCas )
 	CASE "ECR"
 
 		/*------------------------------------------------------------------*/
-		/* On est connect$$HEX2$$e9002000$$ENDHEX$$avec OpCon, donc sortie en fichier Erreur.       */
+		/* On est connecté avec OpCon, donc sortie en fichier Erreur.       */
 		/*------------------------------------------------------------------*/
 		If gbOpCon Then 
 
@@ -2262,7 +2263,7 @@ private function long wf_charger_ficbtq_psm (string asnomfic);//*---------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_charger_ficbtq
 //* Auteur			: F. Pinon
 //* Date				: 14/02/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PM200][PSM]
 //*
 //* Arguments		: value string asnomfic	 */
@@ -2321,7 +2322,7 @@ private function boolean wf_ctrl_btq_psm (ref string slignebtq);//*-------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_ctrl_btq_psm
 //* Auteur			: F. Pinon
 //* Date				: 14/02/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PM200][PSM]
 //*
 //* Arguments		: value string slignebtq	 */
@@ -2332,8 +2333,8 @@ private function boolean wf_ctrl_btq_psm (ref string slignebtq);//*-------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
 //* 		FPI	13/12/2012	[CORR_BTQ_PSM] si pas de num tel alors le parse renvoie 6 col.
-//			FPI	26/12/2014	[VDOC16118] Am$$HEX1$$e900$$ENDHEX$$lioration maj adresse
-//			FPI	28/04/2016	[CORR_BTQ_PSM2] Correction du libell$$HEX2$$e9002000$$ENDHEX$$de PSM
+//			FPI	26/12/2014	[VDOC16118] Amélioration maj adresse
+//			FPI	28/04/2016	[CORR_BTQ_PSM2] Correction du libellé de PSM
 //*-----------------------------------------------------------------
 
 String sVal[]
@@ -2365,16 +2366,16 @@ For iIndex=1 to lTailleTab
 		
 	if iIndex=3 Then
 		// Parse de l'adresse en 2
-		// Suppr des caract$$HEX1$$e800$$ENDHEX$$res parasites
+		// Suppr des caractères parasites
 		sVal[iIndex] = uString.of_globalreplace( sVal[iIndex], "/","-", TRUE)
-		sVal[iIndex] = uString.of_globalreplace( sVal[iIndex], "$$HEX1$$ca00$$ENDHEX$$","", TRUE)
-		sVal[iIndex] = uString.of_globalreplace( sVal[iIndex], "$$HEX1$$7d01$$ENDHEX$$","$$HEX1$$e900$$ENDHEX$$", TRUE)
-		sVal[iIndex] = uString.of_globalreplace( sVal[iIndex], "$$HEX1$$2221$$ENDHEX$$","$$HEX1$$f400$$ENDHEX$$", TRUE)
+		sVal[iIndex] = uString.of_globalreplace( sVal[iIndex], "Ê","", TRUE)
+		sVal[iIndex] = uString.of_globalreplace( sVal[iIndex], "Ž","é", TRUE)
+		sVal[iIndex] = uString.of_globalreplace( sVal[iIndex], "™","ô", TRUE)
 		
 		sAdr1=sVal[iIndex]
 		sAdr2=""
 		
-		// On tente la d$$HEX1$$e900$$ENDHEX$$coupe avec le -
+		// On tente la découpe avec le -
 		If Len(sAdr1) > 40 Then
 			wf_decoupe_adr( sVal[iIndex], sadr1, sadr2, " - ")
 		
@@ -2382,12 +2383,12 @@ For iIndex=1 to lTailleTab
 				// On tente l'abbreviation sur l'ensemble
 				sAdr1=wf_abbr(sVal[iIndex],"Avenue","Av.")
 				if Len(sAdr1) > 40 Then sAdr1=wf_abbr(sAdr1,"Boulevard","Bd")
-				if Len(sAdr1) > 40 Then sAdr1=wf_abbr(sAdr1,"G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ral","Gal")
+				if Len(sAdr1) > 40 Then sAdr1=wf_abbr(sAdr1,"Général","Gal")
 				if Len(sAdr1) > 40 Then sAdr1=wf_abbr(sAdr1,"General","Gal")
-				if Len(sAdr1) > 40 Then sAdr1=wf_abbr(sAdr1,"Mar$$HEX1$$e900$$ENDHEX$$chal","Mal")
+				if Len(sAdr1) > 40 Then sAdr1=wf_abbr(sAdr1,"Maréchal","Mal")
 				if Len(sAdr1) > 40 Then sAdr1=wf_abbr(sAdr1,"Marechal","Mal")
 			
-				// Si NOK, on d$$HEX1$$e900$$ENDHEX$$coupe avec la virgule
+				// Si NOK, on découpe avec la virgule
 				if Len(sAdr1) > 40 Then
 					wf_decoupe_adr( sVal[iIndex], sadr1, sadr2, ", ")
 				else
@@ -2414,7 +2415,7 @@ protected subroutine wf_decoupe_adr (string asadresse, ref string asadr1, ref st
 //* Fonction		: w_sp_trt_autre_fichier::wf_decoupe_adr
 //* Auteur			: F. Pinon
 //* Date				: 05/11/2009 16:46:22
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [EXPANSION5.BOUTIQUES]
 //*
 //* Arguments		: value string asadresse	 */
@@ -2426,8 +2427,8 @@ protected subroutine wf_decoupe_adr (string asadresse, ref string asadr1, ref st
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* 		FPI	15/02/2012	[PM200][PSM] Ajout du param$$HEX1$$e800$$ENDHEX$$tre asseparator
-//			FPI	26/12/2014	[VDOC16118] Am$$HEX1$$e900$$ENDHEX$$lioration maj adresse
+//* 		FPI	15/02/2012	[PM200][PSM] Ajout du paramètre asseparator
+//			FPI	26/12/2014	[VDOC16118] Amélioration maj adresse
 //*-----------------------------------------------------------------
 Integer iPos, iLastPos
 
@@ -2468,7 +2469,7 @@ private function boolean wf_trt_btq_psm ();//*----------------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_trt_btq_psm
 //* Auteur			: F. Pinon
 //* Date				: 15/02/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PM200][PSM]
 //*
 //* Arguments		: 
@@ -2489,15 +2490,15 @@ Next
 
 //wf_delete_btq_mcm( ) // Suppression des boutiques ?
 
-// Mise $$HEX2$$e0002000$$ENDHEX$$jour
+// Mise à jour
 lRet = dw_charger.Update( )
 bRet = (lRet = 1)
 
 if bRet Then 
-	st_Charger.Text="Mise $$HEX2$$e0002000$$ENDHEX$$jour effectu$$HEX1$$e900$$ENDHEX$$e"
+	st_Charger.Text="Mise à jour effectuée"
 	F_Commit ( SQLCA, True )
 Else
-	st_Charger.Text="Erreur de mise $$HEX2$$e0002000$$ENDHEX$$jour"
+	st_Charger.Text="Erreur de mise à jour"
 	
 	if gbOpcon Then 
 		wf_trace("ECR",SQLCA.Sqlerrtext)
@@ -2517,7 +2518,7 @@ private subroutine wf_rename_file (boolean abok, integer aityptrt);//*----------
 //* Fonction		: w_sp_trt_autre_fichier::wf_rename_file
 //* Auteur			: F. Pinon
 //* Date				: 02/12/2010 17:01:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Renomme le fichier des boutques MCM selon son int$$HEX1$$e900$$ENDHEX$$gration/non
+//* Libellé			: Renomme le fichier des boutques MCM selon son intégration/non
 //* Commentaires	: [PC175]
 //*
 //* Arguments		: value boolean abok	 */
@@ -2565,7 +2566,7 @@ private subroutine wf_opcon_btq_psm ();//*--------------------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_opcon_btq_psm
 //* Auteur			: F. Pinon
 //* Date				: 15/02/2012 15:13:23
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PM200][PSM]
 //*
 //* Arguments		: 
@@ -2597,7 +2598,7 @@ private function boolean wf_controler_ct_client (ref string asvaleurs[], ref str
 //* Fonction		: w_sp_trt_autre_fichier::wf_controler_ct_client
 //* Auteur			: F. Pinon
 //* Date				: 18/09/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [VDoc8686]
 //*
 //* Arguments		: ref string asvaleurs[]	 */
@@ -2630,7 +2631,7 @@ End if
 If bOk Then
 	bOk = IsNumber(asValeurs[2]) Or IsNull(asValeurs[2])
 	if not bok then 
-		asErreur += "R$$HEX1$$e900$$ENDHEX$$sultat n'est pas un nombre !"
+		asErreur += "Résultat n'est pas un nombre !"
 	Else 
 		iResultat = integer(asValeurs[2])
 	End if
@@ -2653,7 +2654,7 @@ protected subroutine wf_trt_extr_vdoc9663 ();//*--------------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_trt_Extr_vDoc9663
 //* Auteur			: Fabry JF
 //* Date				: 21/12/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [VDOC9663]
 //*
 //* Arguments		: 
@@ -2664,6 +2665,7 @@ protected subroutine wf_trt_extr_vdoc9663 ();//*--------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
 //* 		FPI	30/07/2010	[20100730.FPI] Utilisation d'une PS
+//			FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 String sSql, sIdSin
@@ -2700,13 +2702,13 @@ dw_charger.SetTransObject( SQLCA)
 dw_charger.Retrieve(sSql)
 //	:[20100730.FPI]
 
-dw_charger.saveas( stglb.sreptempo + "EXTRACTION_VDOC9663.XLS" ,Excel!, TRUE)
+dw_charger.saveas( stglb.sreptempo + "EXTRACTION_VDOC9663.XLS" ,Excel8!, TRUE) // [MIG_PB2022]
 
-stMessage.sTitre		= "Traitement/Int$$HEX1$$e900$$ENDHEX$$gration autre fichier."
+stMessage.sTitre		= "Traitement/Intégration autre fichier."
 stMessage.bErreurG	= FALSE
 stMessage.Bouton		= Ok!
 stMessage.scode="GENE013"
-stMessage.sVar[1] = "L'extraction est enregistr$$HEX1$$e900$$ENDHEX$$e dans le fichier " + stglb.sreptempo + "EXTRACTION_VDOC9663.XLS"
+stMessage.sVar[1] = "L'extraction est enregistrée dans le fichier " + stglb.sreptempo + "EXTRACTION_VDOC9663.XLS"
 F_Message ( stMessage )
 
 end subroutine
@@ -2716,7 +2718,7 @@ protected function boolean wf_controler_ (ref string asval[], ref string aserreu
 //* Fonction		: w_sp_trt_autre_fichier::wf_controler_lst_sin
 //* Auteur			: F. Pinon
 //* Date				: 19/02/2010
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [DCMP100102]
 //*
 //* Arguments		: ref string asvaleur[]	 */
@@ -2732,11 +2734,11 @@ protected function boolean wf_controler_ (ref string asval[], ref string aserreu
 
 Boolean bOk
 
-// Contr$$HEX1$$f400$$ENDHEX$$le des champs
+// Contrôle des champs
 bOk = IsNumber(asVal[1])
 
 if bOk Then
-	// Contr$$HEX1$$f400$$ENDHEX$$le d'existence
+	// Contrôle d'existence
 	If SQLCA.PS_V02_SIN( Dec(asVal[1]) ) = 0 Then
 		asErreur="Ce sinistre n'existe pas"
 		bOk=FALSE
@@ -2753,7 +2755,7 @@ private subroutine wf_opcon_imei_orange ();//*----------------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_opcon_imei_orange
 //* Auteur			: F. Pinon
 //* Date				:  17/05/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PC938]
 //*
 //* Arguments		: 
@@ -2769,22 +2771,22 @@ private subroutine wf_opcon_imei_orange ();//*----------------------------------
 Boolean bRet
 
 wf_trace("INIT","")
-wf_trace("ECR","Int$$HEX1$$e900$$ENDHEX$$gration des IMEI Orange V3")
+wf_trace("ECR","Intégration des IMEI Orange V3")
 
 dw_fourn.setItem(1,"ID_TT",K_TYPTRT_IMEI_ORANGE)
 
 bRet = wf_chargerdonnees( )
 
-if bRet Then wf_trace("ECR",String(dw_charger.RowCount()) + " lignes charg$$HEX1$$e900$$ENDHEX$$es")
+if bRet Then wf_trace("ECR",String(dw_charger.RowCount()) + " lignes chargées")
 
 if bRet Then bRet=wf_controler( )
 
 if bRet Then bRet=wf_maj( )
 
 if bRet Then 
-	wf_trace("ECR","Mise $$HEX2$$e0002000$$ENDHEX$$jour effectu$$HEX1$$e900$$ENDHEX$$e")
+	wf_trace("ECR","Mise à jour effectuée")
 Else
-	wf_trace("ECR","Echec de mise $$HEX2$$e0002000$$ENDHEX$$jour")
+	wf_trace("ECR","Echec de mise à jour")
 End if
 
 wf_rename_file( bRet, K_TYPTRT_IMEI_ORANGE )
@@ -2796,7 +2798,7 @@ private function string wf_determiner_fic_imei ();//*---------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_determiner_fic_imei
 //* Auteur			: F. Pinon
 //* Date				: 17/05/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -2842,7 +2844,7 @@ public function boolean wf_trt_imei_orange ();//*-------------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_trt_imei_orange
 //* Auteur			: F. Pinon
 //* Date				: 17/05/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PC175]
 //*
 //* Arguments		: 
@@ -2860,22 +2862,22 @@ String sNomFicRen,sListeCodeMag
 
 // [20130620.FPI]
 If dw_charger.RowCount() = 0 Then
-	st_Charger.Text="Aucune mise $$HEX2$$e0002000$$ENDHEX$$jour : fichier vide"
+	st_Charger.Text="Aucune mise à jour : fichier vide"
 	Return true
 End if
 
 SQLCA.PS_D01_imei_orangev3( )
 If SQLCA.SQLCode <> 0 Or SQLCA.SQLDBCode <> 0 Then	 bRet = False
 
-// Mise $$HEX2$$e0002000$$ENDHEX$$jour
+// Mise à jour
 lRet = dw_charger.Update( )
 bRet = (lRet = 1)
 
 if bRet Then 
-	st_Charger.Text="Mise $$HEX2$$e0002000$$ENDHEX$$jour effectu$$HEX1$$e900$$ENDHEX$$e"
+	st_Charger.Text="Mise à jour effectuée"
 	F_Commit ( SQLCA, True )
 Else
-	st_Charger.Text="Erreur de mise $$HEX2$$e0002000$$ENDHEX$$jour"
+	st_Charger.Text="Erreur de mise à jour"
 	F_Commit ( SQLCA, False )
 End if
 
@@ -2890,7 +2892,7 @@ private subroutine wf_opcon_boutique (string asidfour);//*----------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_opcon_boutique
 //* Auteur			: F. Pinon
 //* Date				: 18/09/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [VDOC12140]
 //*
 //* Arguments		: 
@@ -2907,7 +2909,7 @@ Boolean bRet
 Integer iTypeTrt
 
 wf_trace("INIT","")
-wf_trace("ECR","Int$$HEX1$$e900$$ENDHEX$$gration des boutiques " + asidfour)
+wf_trace("ECR","Intégration des boutiques " + asidfour)
 
 Choose Case asIdFour
 	Case "PSM"
@@ -2920,16 +2922,16 @@ dw_fourn.setItem(1,"ID_TT",iTypeTrt)
 
 bRet = wf_chargerdonnees( )
 
-if bRet Then wf_trace("ECR",String(dw_charger.RowCount()) + " boutiques charg$$HEX1$$e900$$ENDHEX$$es")
+if bRet Then wf_trace("ECR",String(dw_charger.RowCount()) + " boutiques chargées")
 
 if bRet Then bRet=wf_controler( )
 
 if bRet Then bRet=wf_maj( )
 
 if bRet Then 
-	wf_trace("ECR","Mise $$HEX2$$e0002000$$ENDHEX$$jour effectu$$HEX1$$e900$$ENDHEX$$e")
+	wf_trace("ECR","Mise à jour effectuée")
 Else
-	wf_trace("ECR","Echec de mise $$HEX2$$e0002000$$ENDHEX$$jour")
+	wf_trace("ECR","Echec de mise à jour")
 End if
 
 wf_rename_file( bRet, K_TYPTRT_BTQ_PSM )
@@ -2941,7 +2943,7 @@ public function integer wf_trace (string ascas, string astexte);//*-------------
 //* Fonction		: w_sp_autre_fichier::wf_Trace (PRIVATE)
 //* Auteur			: FPI	
 //* Date				: 26/09/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Trace des op$$HEX1$$e900$$ENDHEX$$rations
+//* Libellé			: Trace des opérations
 //* Commentaires	: 
 //*
 //* Arguments		: asCas			String		Val
@@ -2996,7 +2998,7 @@ protected function boolean wf_controler_format_cmde (ref string asval[], ref str
 //* Fonction		: w_sp_trt_autre_fichier::wf_controler_lst_sin
 //* Auteur			: F. Pinon
 //* Date				: 19/02/2010
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [DCMP100102]
 //*
 //* Arguments		: ref string asvaleur[]	 */
@@ -3015,26 +3017,26 @@ n_cst_string nvstring
 String sValeurs[]
 
 If isNull(asVal[1]) Then
-	asErreur="Num$$HEX1$$e900$$ENDHEX$$ro de commande non renseign$$HEX1$$e900$$ENDHEX$$"
+	asErreur="Numéro de commande non renseigné"
 	bOk=FALSE
 End if
 
 If bOk Then
 	nvString.of_parsetoarray( asVal[1], "-", sValeurs)
 	if UpperBound(sValeurs) <> 2 Then
-		asErreur="Num$$HEX1$$e900$$ENDHEX$$ro de commande invalide"
+		asErreur="Numéro de commande invalide"
 		bOk=FALSE
 	End if
 End if
 
-// Contr$$HEX1$$f400$$ENDHEX$$le des champs
+// Contrôle des champs
 If bOk Then
 	bOk = IsNumber(sValeurs[1])
 
 	if bOk Then 	bOk = IsNumber(sValeurs[2])
 	
 	If not bOk then 
-		asErreur="Num$$HEX1$$e900$$ENDHEX$$ro de commande invalide"
+		asErreur="Numéro de commande invalide"
 		bOk=FALSE
 	End if
 End if
@@ -3047,7 +3049,7 @@ protected subroutine wf_trt_lst_cmd (integer aitrt);//*-------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_trt_lst_cmd
 //* Auteur			: F. Pinon
 //* Date				: 14/01/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [VDoc13194]
 //*
 //* Arguments		: 
@@ -3058,6 +3060,7 @@ protected subroutine wf_trt_lst_cmd (integer aitrt);//*-------------------------
 //* MAJ   PAR      Date	     Modification
 //			FPI		13/02/2017	 [VDOC23002]
 //			FPI		21/02/2018	 [VDoc25758]
+//			FPI		23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 String sIdSin, sFichier
@@ -3137,13 +3140,13 @@ For lRow=1 To lSql
 Next
 
 
-dw_charger.saveas(  sFichier ,Excel!, TRUE)
+dw_charger.saveas(  sFichier ,Excel8!, TRUE) // [MIG_PB2022]
 
-stMessage.sTitre		= "Traitement/Int$$HEX1$$e900$$ENDHEX$$gration autre fichier."
+stMessage.sTitre		= "Traitement/Intégration autre fichier."
 stMessage.bErreurG	= FALSE
 stMessage.Bouton		= Ok!
 stMessage.scode="GENE013"
-stMessage.sVar[1] = "L'extraction est enregistr$$HEX1$$e900$$ENDHEX$$e dans le fichier " + sFichier
+stMessage.sVar[1] = "L'extraction est enregistrée dans le fichier " + sFichier
 F_Message ( stMessage )
 
 end subroutine
@@ -3153,8 +3156,8 @@ private function boolean wf_controler_chps_oblig (ref string ascolnames[], ref s
 //* Fonction		: w_sp_trt_autre_fichier::wf_controler_chps_oblig
 //* Auteur			: F.Pinon	
 //* Date				: 27/01/2014 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Int$$HEX1$$e900$$ENDHEX$$gration des fichiers TAC_IMEI
+//* Libellé			: 
+//* Commentaires	: Intégration des fichiers TAC_IMEI
 //*
 //* Arguments		: ref string ascolnames[]	 */
 /* 	ref string asvaleurs[]	 */
@@ -3165,7 +3168,7 @@ private function boolean wf_controler_chps_oblig (ref string ascolnames[], ref s
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* #1	 FPI	 01/07/2009		Am$$HEX1$$e900$$ENDHEX$$lioration : on ne met que la premi$$HEX1$$e800$$ENDHEX$$re erreur
+//* #1	 FPI	 01/07/2009		Amélioration : on ne met que la première erreur
 //*-----------------------------------------------------------------
 
 n_cst_string uString
@@ -3177,7 +3180,7 @@ bOk=TRUE
 For lPos=1 To UpperBound(asColNames)
 	If uString.of_isempty(asValeurs[lPos]) Then
 		bOk = FALSE
-		asErreur += "La colonne " + asColNames[lPos] + " n'est pas renseign$$HEX1$$e900$$ENDHEX$$e ! "
+		asErreur += "La colonne " + asColNames[lPos] + " n'est pas renseignée ! "
 		exit // #1 
 	end if
 Next
@@ -3190,7 +3193,7 @@ public function boolean wf_trt_rm_avoir_fourn ();//*----------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_trt_rm_avoir_fourn
 //* Auteur			: JFF
 //* Date				: 28/01/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [VDOC12917]
 //*
 //* Arguments		: 
@@ -3222,11 +3225,11 @@ bRet = True
 cb_result.Enabled = TRUE
 
 If lTotRow = 0 Then
-	st_Charger.Text="Aucune mise $$HEX2$$e0002000$$ENDHEX$$jour : fichier vide"
+	st_Charger.Text="Aucune mise à jour : fichier vide"
 	Return true
 End if
 
-lRetFinal = 0 // Scucc$$HEX1$$e800$$ENDHEX$$s total
+lRetFinal = 0 // Scuccès total
 
 For lCpt = 1 To lTotRow
 
@@ -3291,31 +3294,31 @@ Next
 
 If bRet then 
 	If lRetFinal = 1 Then 
-		// st_Charger.Text="Mise $$HEX2$$e0002000$$ENDHEX$$jour totale effectu$$HEX1$$e900$$ENDHEX$$e"
+		// st_Charger.Text="Mise à jour totale effectuée"
 		st_extraire.BackColor = 32768
 		st_extraire.TextColor = 16777215
-		st_extraire.Text = "Mise $$HEX2$$e0002000$$ENDHEX$$jour totale effectu$$HEX1$$e900$$ENDHEX$$e"
+		st_extraire.Text = "Mise à jour totale effectuée"
 	End If
 	
 	If lRetFinal = 2 Then 
-		// st_Charger.Text="Mise $$HEX2$$e0002000$$ENDHEX$$jour partielle effectu$$HEX1$$e900$$ENDHEX$$e"
+		// st_Charger.Text="Mise à jour partielle effectuée"
 		st_extraire.BackColor = 255
 		st_extraire.TextColor = 16777215		
-		st_extraire.Text = "Mise $$HEX2$$e0002000$$ENDHEX$$jour partielle effectu$$HEX1$$e900$$ENDHEX$$e, consultez les r$$HEX1$$e900$$ENDHEX$$sultats de chaque ligne"
+		st_extraire.Text = "Mise à jour partielle effectuée, consultez les résultats de chaque ligne"
 	End If
 	
 	If lRetFinal = -1 Then 
-		// st_Charger.Text="Aucune mise $$HEX2$$e0002000$$ENDHEX$$jour effectu$$HEX1$$e900$$ENDHEX$$e"
+		// st_Charger.Text="Aucune mise à jour effectuée"
 		st_extraire.BackColor = 255
 		st_extraire.TextColor = 16777215		
-		st_extraire.Text = "Aucune mise $$HEX2$$e0002000$$ENDHEX$$jour effectu$$HEX1$$e900$$ENDHEX$$e, consultez les r$$HEX1$$e900$$ENDHEX$$sultats de chaque ligne"
+		st_extraire.Text = "Aucune mise à jour effectuée, consultez les résultats de chaque ligne"
 	End If
 Else 
-	// st_Charger.Text="Erreur de mise $$HEX2$$e0002000$$ENDHEX$$jour en base, arr$$HEX1$$ea00$$ENDHEX$$t de traitement ligne " + String ( lCpt )
+	// st_Charger.Text="Erreur de mise à jour en base, arrêt de traitement ligne " + String ( lCpt )
 	dw_Charger.SetItem ( lCpt, "RESULT_TRT", st_Charger.Text )
 	st_extraire.BackColor = 255
 	st_extraire.TextColor = 16777215		
-	st_extraire.Text = "Erreur de mise $$HEX2$$e0002000$$ENDHEX$$jour en base, arr$$HEX1$$ea00$$ENDHEX$$t de traitement ligne " + String ( lCpt )
+	st_extraire.Text = "Erreur de mise à jour en base, arrêt de traitement ligne " + String ( lCpt )
 End If 
 
 cb_result.Event Clicked ()
@@ -3331,7 +3334,7 @@ protected function string wf_abbr (string asadresse, string asvaleur, string asa
 //* Fonction		: w_sp_trt_autre_fichier::wf_abbr
 //* Auteur			: F. Pinon
 //* Date				: 26/12/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [VDOC16118]
 //*
 //* Arguments		: value string asadresse	 */
@@ -3359,7 +3362,7 @@ public subroutine wf_trt_lstsinreg ();//*---------------------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_trt_lstsinreg
 //* Auteur			: F. Pinon
 //* Date				: 22/09/2016
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [VDOC21846]
 //*
 //* Arguments		: 
@@ -3408,7 +3411,7 @@ protected function boolean wf_controler_lstsinreg (ref string asval[], ref strin
 //* Fonction		: w_sp_trt_autre_fichier::wf_controler_lstsinreg
 //* Auteur			: F. Pinon
 //* Date				: 22/09/2016
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	:[VDOC21846]
 //*
 //* Arguments		: ref string asvaleur[]	 */
@@ -3424,11 +3427,11 @@ protected function boolean wf_controler_lstsinreg (ref string asval[], ref strin
 
 Boolean bOk
 
-// Contr$$HEX1$$f400$$ENDHEX$$le des champs
+// Contrôle des champs
 bOk = IsNumber(asVal[1])
 
 if bOk Then
-	// Contr$$HEX1$$f400$$ENDHEX$$le d'existence
+	// Contrôle d'existence
 	If SQLCA.PS_V02_SIN( Dec(asVal[1]) ) = 0 Then
 		asErreur="Ce sinistre n'existe pas"
 		bOk=FALSE
@@ -3438,7 +3441,7 @@ Else
 End if
 
 if bOk and not IsNumber(asVal[2]) Then
-	asErreur += "Le num$$HEX1$$e900$$ENDHEX$$ro de r$$HEX1$$e800$$ENDHEX$$glement n'est pas un nombre ! "
+	asErreur += "Le numéro de règlement n'est pas un nombre ! "
 	bOk=FALSE
 End if
 
@@ -3450,7 +3453,7 @@ public function boolean wf_trt_rp_avoir_fourn ();//*----------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_trt_rp_avoir_fourn
 //* Auteur			: JFF
 //* Date				: 30/11/2016
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [VDOC12917]// [PM375-1]
 //*
 //* Arguments		: 
@@ -3481,11 +3484,11 @@ bRet = True
 cb_result.Enabled = TRUE
 
 If lTotRow = 0 Then
-	st_Charger.Text="Aucune mise $$HEX2$$e0002000$$ENDHEX$$jour : fichier vide"
+	st_Charger.Text="Aucune mise à jour : fichier vide"
 	Return true
 End if
 
-lRetFinal = 0 // Scucc$$HEX1$$e800$$ENDHEX$$s total
+lRetFinal = 0 // Scuccès total
 
 For lCpt = 1 To lTotRow
 
@@ -3550,31 +3553,31 @@ Next
 
 If bRet then 
 	If lRetFinal = 1 Then 
-		// st_Charger.Text="Mise $$HEX2$$e0002000$$ENDHEX$$jour totale effectu$$HEX1$$e900$$ENDHEX$$e"
+		// st_Charger.Text="Mise à jour totale effectuée"
 		st_extraire.BackColor = 32768
 		st_extraire.TextColor = 16777215
-		st_extraire.Text = "Mise $$HEX2$$e0002000$$ENDHEX$$jour totale effectu$$HEX1$$e900$$ENDHEX$$e"
+		st_extraire.Text = "Mise à jour totale effectuée"
 	End If
 	
 	If lRetFinal = 2 Then 
-		// st_Charger.Text="Mise $$HEX2$$e0002000$$ENDHEX$$jour partielle effectu$$HEX1$$e900$$ENDHEX$$e"
+		// st_Charger.Text="Mise à jour partielle effectuée"
 		st_extraire.BackColor = 255
 		st_extraire.TextColor = 16777215		
-		st_extraire.Text = "Mise $$HEX2$$e0002000$$ENDHEX$$jour partielle effectu$$HEX1$$e900$$ENDHEX$$e, consultez les r$$HEX1$$e900$$ENDHEX$$sultats de chaque ligne"
+		st_extraire.Text = "Mise à jour partielle effectuée, consultez les résultats de chaque ligne"
 	End If
 	
 	If lRetFinal = -1 Then 
-		// st_Charger.Text="Aucune mise $$HEX2$$e0002000$$ENDHEX$$jour effectu$$HEX1$$e900$$ENDHEX$$e"
+		// st_Charger.Text="Aucune mise à jour effectuée"
 		st_extraire.BackColor = 255
 		st_extraire.TextColor = 16777215		
-		st_extraire.Text = "Aucune mise $$HEX2$$e0002000$$ENDHEX$$jour effectu$$HEX1$$e900$$ENDHEX$$e, consultez les r$$HEX1$$e900$$ENDHEX$$sultats de chaque ligne"
+		st_extraire.Text = "Aucune mise à jour effectuée, consultez les résultats de chaque ligne"
 	End If
 Else 
-	// st_Charger.Text="Erreur de mise $$HEX2$$e0002000$$ENDHEX$$jour en base, arr$$HEX1$$ea00$$ENDHEX$$t de traitement ligne " + String ( lCpt )
+	// st_Charger.Text="Erreur de mise à jour en base, arrêt de traitement ligne " + String ( lCpt )
 	dw_Charger.SetItem ( lCpt, "RESULT_TRT", st_Charger.Text )
 	st_extraire.BackColor = 255
 	st_extraire.TextColor = 16777215		
-	st_extraire.Text = "Erreur de mise $$HEX2$$e0002000$$ENDHEX$$jour en base, arr$$HEX1$$ea00$$ENDHEX$$t de traitement ligne " + String ( lCpt )
+	st_extraire.Text = "Erreur de mise à jour en base, arrêt de traitement ligne " + String ( lCpt )
 End If 
 cb_result.Event Clicked ()
 
@@ -3589,7 +3592,7 @@ public function boolean wf_trt_rm_simple ();//*---------------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_trt_rm_simple
 //* Auteur			: JFF
 //* Date				: 30/11/2016
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [VDOC12917][PM375-1]
 //*
 //* Arguments		: 
@@ -3621,11 +3624,11 @@ bRet = True
 cb_result.Enabled = TRUE
 
 If lTotRow = 0 Then
-	st_Charger.Text="Aucune mise $$HEX2$$e0002000$$ENDHEX$$jour : fichier vide"
+	st_Charger.Text="Aucune mise à jour : fichier vide"
 	Return true
 End if
 
-lRetFinal = 0 // Scucc$$HEX1$$e800$$ENDHEX$$s total
+lRetFinal = 0 // Scuccès total
 
 For lCpt = 1 To lTotRow
 
@@ -3691,31 +3694,31 @@ Next
 
 If bRet then 
 	If lRetFinal = 1 Then 
-		// st_Charger.Text="Mise $$HEX2$$e0002000$$ENDHEX$$jour totale effectu$$HEX1$$e900$$ENDHEX$$e"
+		// st_Charger.Text="Mise à jour totale effectuée"
 		st_extraire.BackColor = 32768
 		st_extraire.TextColor = 16777215
-		st_extraire.Text = "Mise $$HEX2$$e0002000$$ENDHEX$$jour totale effectu$$HEX1$$e900$$ENDHEX$$e"
+		st_extraire.Text = "Mise à jour totale effectuée"
 	End If
 	
 	If lRetFinal = 2 Then 
-		// st_Charger.Text="Mise $$HEX2$$e0002000$$ENDHEX$$jour partielle effectu$$HEX1$$e900$$ENDHEX$$e"
+		// st_Charger.Text="Mise à jour partielle effectuée"
 		st_extraire.BackColor = 255
 		st_extraire.TextColor = 16777215		
-		st_extraire.Text = "Mise $$HEX2$$e0002000$$ENDHEX$$jour partielle effectu$$HEX1$$e900$$ENDHEX$$e, consultez les r$$HEX1$$e900$$ENDHEX$$sultats de chaque ligne"
+		st_extraire.Text = "Mise à jour partielle effectuée, consultez les résultats de chaque ligne"
 	End If
 	
 	If lRetFinal = -1 Then 
-		// st_Charger.Text="Aucune mise $$HEX2$$e0002000$$ENDHEX$$jour effectu$$HEX1$$e900$$ENDHEX$$e"
+		// st_Charger.Text="Aucune mise à jour effectuée"
 		st_extraire.BackColor = 255
 		st_extraire.TextColor = 16777215		
-		st_extraire.Text = "Aucune mise $$HEX2$$e0002000$$ENDHEX$$jour effectu$$HEX1$$e900$$ENDHEX$$e, consultez les r$$HEX1$$e900$$ENDHEX$$sultats de chaque ligne"
+		st_extraire.Text = "Aucune mise à jour effectuée, consultez les résultats de chaque ligne"
 	End If
 Else 
-	// st_Charger.Text="Erreur de mise $$HEX2$$e0002000$$ENDHEX$$jour en base, arr$$HEX1$$ea00$$ENDHEX$$t de traitement ligne " + String ( lCpt )
+	// st_Charger.Text="Erreur de mise à jour en base, arrêt de traitement ligne " + String ( lCpt )
 	dw_Charger.SetItem ( lCpt, "RESULT_TRT", st_Charger.Text )
 	st_extraire.BackColor = 255
 	st_extraire.TextColor = 16777215		
-	st_extraire.Text = "Erreur de mise $$HEX2$$e0002000$$ENDHEX$$jour en base, arr$$HEX1$$ea00$$ENDHEX$$t de traitement ligne " + String ( lCpt )
+	st_extraire.Text = "Erreur de mise à jour en base, arrêt de traitement ligne " + String ( lCpt )
 End If 
 
 cb_result.Event Clicked ()
@@ -3731,7 +3734,7 @@ public function boolean wf_trt_rp_simple ();//*---------------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_trt_rp_simple
 //* Auteur			: JFF
 //* Date				: 30/11/2016
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [VDOC12917][PM375-1]
 //*
 //* Arguments		: 
@@ -3763,12 +3766,12 @@ bRet = True
 cb_result.Enabled = TRUE
 
 If lTotRow = 0 Then
-	st_Charger.Text="Aucune mise $$HEX2$$e0002000$$ENDHEX$$jour : fichier vide"
+	st_Charger.Text="Aucune mise à jour : fichier vide"
 	Return true
 End if
 
 
-lRetFinal = 0 // Scucc$$HEX1$$e800$$ENDHEX$$s total
+lRetFinal = 0 // Scuccès total
 
 For lCpt = 1 To lTotRow
 
@@ -3835,31 +3838,31 @@ Next
 
 If bRet then 
 	If lRetFinal = 1 Then 
-		// st_Charger.Text="Mise $$HEX2$$e0002000$$ENDHEX$$jour totale effectu$$HEX1$$e900$$ENDHEX$$e"
+		// st_Charger.Text="Mise à jour totale effectuée"
 		st_extraire.BackColor = 32768
 		st_extraire.TextColor = 16777215
-		st_extraire.Text = "Mise $$HEX2$$e0002000$$ENDHEX$$jour totale effectu$$HEX1$$e900$$ENDHEX$$e"
+		st_extraire.Text = "Mise à jour totale effectuée"
 	End If
 	
 	If lRetFinal = 2 Then 
-		// st_Charger.Text="Mise $$HEX2$$e0002000$$ENDHEX$$jour partielle effectu$$HEX1$$e900$$ENDHEX$$e"
+		// st_Charger.Text="Mise à jour partielle effectuée"
 		st_extraire.BackColor = 255
 		st_extraire.TextColor = 16777215		
-		st_extraire.Text = "Mise $$HEX2$$e0002000$$ENDHEX$$jour partielle effectu$$HEX1$$e900$$ENDHEX$$e, consultez les r$$HEX1$$e900$$ENDHEX$$sultats de chaque ligne"
+		st_extraire.Text = "Mise à jour partielle effectuée, consultez les résultats de chaque ligne"
 	End If
 	
 	If lRetFinal = -1 Then 
-		// st_Charger.Text="Aucune mise $$HEX2$$e0002000$$ENDHEX$$jour effectu$$HEX1$$e900$$ENDHEX$$e"
+		// st_Charger.Text="Aucune mise à jour effectuée"
 		st_extraire.BackColor = 255
 		st_extraire.TextColor = 16777215		
-		st_extraire.Text = "Aucune mise $$HEX2$$e0002000$$ENDHEX$$jour effectu$$HEX1$$e900$$ENDHEX$$e, consultez les r$$HEX1$$e900$$ENDHEX$$sultats de chaque ligne"
+		st_extraire.Text = "Aucune mise à jour effectuée, consultez les résultats de chaque ligne"
 	End If
 Else 
-	// st_Charger.Text="Erreur de mise $$HEX2$$e0002000$$ENDHEX$$jour en base, arr$$HEX1$$ea00$$ENDHEX$$t de traitement ligne " + String ( lCpt )
+	// st_Charger.Text="Erreur de mise à jour en base, arrêt de traitement ligne " + String ( lCpt )
 	dw_Charger.SetItem ( lCpt, "RESULT_TRT", st_Charger.Text )
 	st_extraire.BackColor = 255
 	st_extraire.TextColor = 16777215		
-	st_extraire.Text = "Erreur de mise $$HEX2$$e0002000$$ENDHEX$$jour en base, arr$$HEX1$$ea00$$ENDHEX$$t de traitement ligne " + String ( lCpt )
+	st_extraire.Text = "Erreur de mise à jour en base, arrêt de traitement ligne " + String ( lCpt )
 End If 
 cb_result.Event Clicked ()
 
@@ -3875,7 +3878,7 @@ public function boolean wf_trt_rn_frais_factu ();//*----------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_trt_rn_Frais_Factu
 //* Auteur			: JFF
 //* Date				: 30/11/2016
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [VDOC12917][PM375-1]
 //*
 //* Arguments		: 
@@ -3905,11 +3908,11 @@ bRet = True
 cb_result.Enabled = TRUE
 
 If lTotRow = 0 Then
-	st_Charger.Text="Aucune mise $$HEX2$$e0002000$$ENDHEX$$jour : fichier vide"
+	st_Charger.Text="Aucune mise à jour : fichier vide"
 	Return true
 End if
 
-lRetFinal = 0 // Scucc$$HEX1$$e800$$ENDHEX$$s total
+lRetFinal = 0 // Scuccès total
 
 For lCpt = 1 To lTotRow
 
@@ -3978,31 +3981,31 @@ Next
 
 If bRet then 
 	If lRetFinal = 1 Then 
-		// st_Charger.Text="Mise $$HEX2$$e0002000$$ENDHEX$$jour totale effectu$$HEX1$$e900$$ENDHEX$$e"
+		// st_Charger.Text="Mise à jour totale effectuée"
 		st_extraire.BackColor = 32768
 		st_extraire.TextColor = 16777215
-		st_extraire.Text = "Mise $$HEX2$$e0002000$$ENDHEX$$jour totale effectu$$HEX1$$e900$$ENDHEX$$e"
+		st_extraire.Text = "Mise à jour totale effectuée"
 	End If
 	
 	If lRetFinal = 2 Then 
-		// st_Charger.Text="Mise $$HEX2$$e0002000$$ENDHEX$$jour partielle effectu$$HEX1$$e900$$ENDHEX$$e"
+		// st_Charger.Text="Mise à jour partielle effectuée"
 		st_extraire.BackColor = 255
 		st_extraire.TextColor = 16777215		
-		st_extraire.Text = "Mise $$HEX2$$e0002000$$ENDHEX$$jour partielle effectu$$HEX1$$e900$$ENDHEX$$e, consultez les r$$HEX1$$e900$$ENDHEX$$sultats de chaque ligne"
+		st_extraire.Text = "Mise à jour partielle effectuée, consultez les résultats de chaque ligne"
 	End If
 	
 	If lRetFinal = -1 Then 
-		// st_Charger.Text="Aucune mise $$HEX2$$e0002000$$ENDHEX$$jour effectu$$HEX1$$e900$$ENDHEX$$e"
+		// st_Charger.Text="Aucune mise à jour effectuée"
 		st_extraire.BackColor = 255
 		st_extraire.TextColor = 16777215		
-		st_extraire.Text = "Aucune mise $$HEX2$$e0002000$$ENDHEX$$jour effectu$$HEX1$$e900$$ENDHEX$$e, consultez les r$$HEX1$$e900$$ENDHEX$$sultats de chaque ligne"
+		st_extraire.Text = "Aucune mise à jour effectuée, consultez les résultats de chaque ligne"
 	End If
 Else 
-	// st_Charger.Text="Erreur de mise $$HEX2$$e0002000$$ENDHEX$$jour en base, arr$$HEX1$$ea00$$ENDHEX$$t de traitement ligne " + String ( lCpt )
+	// st_Charger.Text="Erreur de mise à jour en base, arrêt de traitement ligne " + String ( lCpt )
 	dw_Charger.SetItem ( lCpt, "RESULT_TRT", st_Charger.Text )
 	st_extraire.BackColor = 255
 	st_extraire.TextColor = 16777215		
-	st_extraire.Text = "Erreur de mise $$HEX2$$e0002000$$ENDHEX$$jour en base, arr$$HEX1$$ea00$$ENDHEX$$t de traitement ligne " + String ( lCpt )
+	st_extraire.Text = "Erreur de mise à jour en base, arrêt de traitement ligne " + String ( lCpt )
 End If 
 cb_result.Event Clicked ()
 
@@ -4017,7 +4020,7 @@ protected subroutine wf_trt_lst_reg (integer aitrt);//*-------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_trt_lst_reg
 //* Auteur			: F. Pinon
 //* Date				: 08/03/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [VDoc23002]
 //*					  Nombre de colonnes dynamiques
 //*
@@ -4027,6 +4030,7 @@ protected subroutine wf_trt_lst_reg (integer aitrt);//*-------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
+//			FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 String sIdSin, sFichier
@@ -4048,8 +4052,8 @@ Choose case aiTrt
 	Case K_TYPTRT_LST_REG 
 		sFichier=stglb.sreptempo + "LST_SIN_REG.XLS"
 		sColName="ID_SIN"
-		nbColToCreate=5 // Nb de colonnes $$HEX2$$e0002000$$ENDHEX$$dupliquer
-		nbColOrig=6 // Nb max de groupe de r$$HEX1$$e900$$ENDHEX$$sultats dans la dw actuelle
+		nbColToCreate=5 // Nb de colonnes à dupliquer
+		nbColOrig=6 // Nb max de groupe de résultats dans la dw actuelle
 		sDwName="d_trt_vdoc23002"
 End Choose
 
@@ -4060,7 +4064,7 @@ hpb_trt.SetStep = 1
 wf_pct ()
 Yield ()
 
-// Groupe de n$$HEX2$$b0002000$$ENDHEX$$de dossiers
+// Groupe de n° de dossiers
 For lRow = 1 To lTotRow
 	if Len(sSql[lSql]) > 7950 Then
 		lSql+=1
@@ -4085,7 +4089,7 @@ wf_pct ()
 Yield ()
 
 
-// D$$HEX1$$e900$$ENDHEX$$termination du nb de groupe de r$$HEX1$$e900$$ENDHEX$$sultats max
+// Détermination du nb de groupe de résultats max
 iNbColMax=nbColOrig
 For lRow=1 To lSql
 	iNbCol=SQLCA.DW_S_vdoc23002_nbcol( sSql[lRow])
@@ -4099,13 +4103,13 @@ Next
 
 dw_charger.DataObject=sDwName
 
-// Cr$$HEX1$$e900$$ENDHEX$$ation des colonnes suppl$$HEX1$$e900$$ENDHEX$$mentaire
+// Création des colonnes supplémentaire
 if iNbColMax > nbColOrig Then
 
-	// R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration du source de la dw
+	// Récupération du source de la dw
 	nvString.of_parsetoarray(dw_charger.Describe("DataWindow.Syntax"),sline,sDwSyntax)
 	
-	// Copie jusqu'$$HEX2$$e0002000$$ENDHEX$$la fin de d$$HEX1$$e900$$ENDHEX$$finition des colonnes
+	// Copie jusqu'à la fin de définition des colonnes
 	lRow=1
 	Do
 		sDwSyntax2[lRow]=sDwSyntax[lRow]
@@ -4119,7 +4123,7 @@ if iNbColMax > nbColOrig Then
 		lRow=lRow -1
 	End if
 	
-	// Cr$$HEX1$$e900$$ENDHEX$$ation des colonnes suppl$$HEX1$$e900$$ENDHEX$$mentaires _xx
+	// Création des colonnes supplémentaires _xx
 	For lRow2=nbColOrig+1 to iNbColMax 
 		For lCol=nbColToCreate to 1 Step -1
 			lTmp=UpperBound(sDwSyntax2) + 1
@@ -4135,7 +4139,7 @@ if iNbColMax > nbColOrig Then
 		lRow+=1
 	Loop
 	
-	// Cr$$HEX1$$e900$$ENDHEX$$ation de la syntaxe de dw finale
+	// Création de la syntaxe de dw finale
 	sDwFinal=""
 	For lRow=1 To UpperBound(sDwSyntax2)
 		if Pos(sDwSyntax2[lRow] ,"name=cout_sinistre") > 0 And aiTrt = K_TYPTRT_LST_REG Then
@@ -4144,7 +4148,7 @@ if iNbColMax > nbColOrig Then
 		sDwFinal+=sDwSyntax2[lRow] + sLine
 	Next
 	
-	// Cr$$HEX1$$e900$$ENDHEX$$ation de la dw
+	// Création de la dw
 	dw_Charger.create( sDwFinal)
 
 End if
@@ -4170,13 +4174,13 @@ Next
 
 hpb_trt.Position=0
 
-dw_charger.saveas(  sFichier ,Excel!, TRUE)
+dw_charger.saveas(  sFichier ,Excel8!, TRUE) // [MIG_PB2022]
 
-stMessage.sTitre		= "Traitement/Int$$HEX1$$e900$$ENDHEX$$gration autre fichier."
+stMessage.sTitre		= "Traitement/Intégration autre fichier."
 stMessage.bErreurG	= FALSE
 stMessage.Bouton		= Ok!
 stMessage.scode="GENE013"
-stMessage.sVar[1] = "L'extraction est enregistr$$HEX1$$e900$$ENDHEX$$e dans le fichier " + sFichier
+stMessage.sVar[1] = "L'extraction est enregistrée dans le fichier " + sFichier
 F_Message ( stMessage )
 
 end subroutine
@@ -4186,7 +4190,7 @@ public function boolean wf_trt_retour_pm02 ();//*-------------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_trt_retour_PM02
 //* Auteur			: JFF
 //* Date				: 25/05/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PM378-1]
 //*
 //* Arguments		: 
@@ -4216,11 +4220,11 @@ bRet = True
 cb_result.Enabled = TRUE
 
 If lTotRow = 0 Then
-	st_Charger.Text="Aucune mise $$HEX2$$e0002000$$ENDHEX$$jour : fichier vide"
+	st_Charger.Text="Aucune mise à jour : fichier vide"
 	Return true
 End if
 
-lRetFinal = 0 // Scucc$$HEX1$$e800$$ENDHEX$$s total
+lRetFinal = 0 // Scuccès total
 
 For lCpt = 1 To lTotRow
 
@@ -4276,7 +4280,7 @@ For lCpt = 1 To lTotRow
 	if bRet Then 
 		F_Commit ( SQLCA, True )
 	Else
-		st_Charger.Text="Erreur de mise $$HEX2$$e0002000$$ENDHEX$$jour en base"
+		st_Charger.Text="Erreur de mise à jour en base"
 		F_Commit ( SQLCA, False )
 		Exit
 	End if
@@ -4287,15 +4291,15 @@ For lCpt = 1 To lTotRow
 Next
 
 If lRetFinal = 1 Then 
-	st_Charger.Text="Mise $$HEX2$$e0002000$$ENDHEX$$jour totale effectu$$HEX1$$e900$$ENDHEX$$e"
+	st_Charger.Text="Mise à jour totale effectuée"
 End If
 
 If lRetFinal = 2 Then 
-	st_Charger.Text="Mise $$HEX2$$e0002000$$ENDHEX$$jour partielle effectu$$HEX1$$e900$$ENDHEX$$e"
+	st_Charger.Text="Mise à jour partielle effectuée"
 End If
 
 If lRetFinal = -1 Then 
-	st_Charger.Text="Aucune mise $$HEX2$$e0002000$$ENDHEX$$jour effectu$$HEX1$$e900$$ENDHEX$$e"
+	st_Charger.Text="Aucune mise à jour effectuée"
 End If
 
 cb_result.Event Clicked ()
@@ -4311,7 +4315,7 @@ protected function boolean wf_controler_vdoc28472 (ref long alcpt, ref string as
 //* Fonction		: w_sp_trt_autre_fichier::wf_controler_vDoc28472
 //* Auteur			: F. Pinon
 //* Date				: 07/10/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [VDOC28472]
 //*
 //* Arguments		: ref string asvaleur[]	 */
@@ -4329,11 +4333,11 @@ Boolean bOk
 String sVal
 
 sVal=dw_charger.GetItemString(alCpt,"ID_SIN")
-// Contr$$HEX1$$f400$$ENDHEX$$le des champs
+// Contrôle des champs
 bOk = IsNumber(sVal)
 
 if bOk Then
-	// Contr$$HEX1$$f400$$ENDHEX$$le d'existence
+	// Contrôle d'existence
 	If SQLCA.PS_V02_SIN( Dec(sVal) ) = 0 Then
 		asErreur="Ce sinistre n'existe pas"
 		bOk=FALSE
@@ -4354,7 +4358,7 @@ End if
 
 sVal=dw_charger.GetItemString(alCpt,"FOURNISSEUR")
 if bOk and Trim(sVal) = "" Then
-	asErreur+="Le fournisseur n'est pas renseign$$HEX1$$e900$$ENDHEX$$"
+	asErreur+="Le fournisseur n'est pas renseigné"
 	bOk=FALSE
 End if
 
@@ -4366,8 +4370,8 @@ public function boolean wf_trt_lstfact ();//*-----------------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_trt_lstfact
 //* Auteur			: FPI
 //* Date				: 07/10/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: [VDOC28472] - extraction du tiret $$HEX2$$e0002000$$ENDHEX$$partir du dossier et montant r$$HEX1$$e900$$ENDHEX$$gl$$HEX2$$e9002000$$ENDHEX$$au fournisseur
+//* Libellé			: 
+//* Commentaires	: [VDOC28472] - extraction du tiret à partir du dossier et montant réglé au fournisseur
 //*
 //* Arguments		: 
 //*
@@ -4432,7 +4436,7 @@ public subroutine wf_positionnerobjets ();//*-----------------------------------
 //* Fonction		: W_Tm_Sp_Sinistre::Wf_PositionnerObjets (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 28/09/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On positionne et on taille tous les objets
 //*
 //* Arguments		: Aucun
@@ -4511,7 +4515,7 @@ public function boolean wf_trt_pnd_corus ();//*---------------------------------
 //* Fonction		: w_sp_trt_autre_fichier::wf_trt_pnd_corus
 //* Auteur			: JFF
 //* Date				: 02/01/2023
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	:  [RS_4166_PND_CORUS]
 //*
 //* Arguments		: 
@@ -4537,12 +4541,12 @@ sTagSIMPA2 = "SIMPA2"
 sTagKsl = "KSL_ADH"
 
 If dw_charger.RowCount() = 0 Then
-	st_Charger.Text="Aucune mise $$HEX2$$e0002000$$ENDHEX$$jour : fichier vide"
+	st_Charger.Text="Aucune mise à jour : fichier vide"
 	Return true
 End if
 
 lTotRow = dw_Charger.RowCount ()
-lRetFinal = 0 // Scucc$$HEX1$$e800$$ENDHEX$$s total
+lRetFinal = 0 // Scuccès total
 
 hpb_trt.MinPosition = 0
 hpb_trt.MaxPosition = lTotRow
@@ -4586,7 +4590,7 @@ For lCpt = 1 To lTotRow
 		
 		Choose Case sCodInter 
 			Case "A"
-				sLibinter = "Assur$$HEX1$$e900$$ENDHEX$$"
+				sLibinter = "Assuré"
 			Case "B"
 				sLibinter = "Banque"			
 			Case "F"
@@ -4603,21 +4607,21 @@ For lCpt = 1 To lTotRow
 		
 		sIdCour = Mid ( sValRetPndCorus, iPos1, iPos2 - iPos1 ) 
 		
-		// Si le courrier pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dent $$HEX1$$e900$$ENDHEX$$tait un ALAX01, on passe le suivant.
-		// Bien dw doit $$HEX1$$ea00$$ENDHEX$$tre tri$$HEX2$$e9002000$$ENDHEX$$en nom desc.
+		// Si le courrier précédent était un ALAX01, on passe le suivant.
+		// Bien dw doit être trié en nom desc.
 		If sIdCourSav = "ALAX01" Then 
 			// hpb_trt.Position = lCpt
 			hpb_trt.Position ++
 			wf_pct ()
 			Yield ()
 			sIdCourSav = sIdCour		
-			dw_Charger.SetItem ( lCpt, "RESULT_TRT", "Non trait$$HEX2$$e9002000$$ENDHEX$$car d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$trait$$HEX2$$e9002000$$ENDHEX$$sur le courrier " + sIdCourSav + " pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dent, m$$HEX1$$ea00$$ENDHEX$$me enveloppe" )
+			dw_Charger.SetItem ( lCpt, "RESULT_TRT", "Non traité car déjà traité sur le courrier " + sIdCourSav + " précédent, même enveloppe" )
 			Continue 
 		End IF 
 		
 		sIdCourSav = sIdCour	
 	
-		// Cas d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$marqu$$HEX2$$e9002000$$ENDHEX$$par le pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dent Contr$$HEX1$$f400$$ENDHEX$$le, on ne traite pas
+		// Cas déjà marqué par le précédent Contrôle, on ne traite pas
 		If sResultTrt <> "" Then 
 			bMajPartielle = True
 			hpb_trt.Position = lCpt
@@ -4637,10 +4641,10 @@ For lCpt = 1 To lTotRow
 		iPos1 = LastPos ( sValRetPndCorus, ";" ) + 1
 		sMotif = Mid ( sValRetPndCorus, iPos1, Len ( sValRetPndCorus )) 
 		sMotif = Upper ( sMotif ) 
-		sMotif = F_REMPLACE ( sMotif, "$$HEX2$$c300a900$$ENDHEX$$", "$$HEX1$$e900$$ENDHEX$$" )  	
-		sMotif = F_REMPLACE ( sMotif, "$$HEX2$$c300a800$$ENDHEX$$", "$$HEX1$$e800$$ENDHEX$$" )  		
-		sMotif = F_REMPLACE ( sMotif, "$$HEX1$$c300$$ENDHEX$$", "$$HEX1$$e000$$ENDHEX$$" ) 
-		sMotif = F_REMPLACE ( sMotif, "$$HEX1$$a000$$ENDHEX$$", " " ) // Le premier n'est pas un espace mais un car sp$$HEX2$$e9002000$$ENDHEX$$:)
+		sMotif = F_REMPLACE ( sMotif, "Ã©", "é" )  	
+		sMotif = F_REMPLACE ( sMotif, "Ã¨", "è" )  		
+		sMotif = F_REMPLACE ( sMotif, "Ã", "à" ) 
+		sMotif = F_REMPLACE ( sMotif, " ", " " ) // Le premier n'est pas un espace mais un car spé :)
 		sMotif = F_REMPLACE ( sMotif, "  ", " " )  		
 		sMotif = Upper ( Left ( sMotif, 1 ) ) + Lower ( Right ( sMotif, Len ( sMotif ) -1 ) )
 		sMotif = F_REMPLACE ( sMotif , "'", "''" )
@@ -4666,7 +4670,7 @@ For lCpt = 1 To lTotRow
 	
 		if bRet Then 
 			F_Commit ( SQLCA, True )
-			sResult = "Trait$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s"
+			sResult = "Traité avec succès"
 			dw_Charger.SetItem ( lCpt, "RESULT_TRT", sResult )		
 			bAMUligneTraitee =True
 		Else
@@ -4678,7 +4682,7 @@ For lCpt = 1 To lTotRow
 	
 	If bTrtKSL Then
 
-		// Cas d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$marqu$$HEX2$$e9002000$$ENDHEX$$par le pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dent Contr$$HEX1$$f400$$ENDHEX$$le, on ne traite pas
+		// Cas déjà marqué par le précédent Contrôle, on ne traite pas
 		If sResultTrt <> "" Then 
 			bMajPartielle = True
 			hpb_trt.Position = lCpt
@@ -4710,10 +4714,10 @@ For lCpt = 1 To lTotRow
 		iPos1 = LastPos ( sValRetPndCorus, ";" ) + 1
 		sMotif = Mid ( sValRetPndCorus, iPos1, Len ( sValRetPndCorus )) 
 		sMotif = Upper ( sMotif ) 
-		sMotif = F_REMPLACE ( sMotif, "$$HEX2$$c300a900$$ENDHEX$$", "$$HEX1$$e900$$ENDHEX$$" )  	
-		sMotif = F_REMPLACE ( sMotif, "$$HEX2$$c300a800$$ENDHEX$$", "$$HEX1$$e800$$ENDHEX$$" )  		
-		sMotif = F_REMPLACE ( sMotif, "$$HEX1$$c300$$ENDHEX$$", "$$HEX1$$e000$$ENDHEX$$" ) 
-		sMotif = F_REMPLACE ( sMotif, "$$HEX1$$a000$$ENDHEX$$", " " ) // Le premier n'est pas un espace mais un car sp$$HEX2$$e9002000$$ENDHEX$$:)
+		sMotif = F_REMPLACE ( sMotif, "Ã©", "é" )  	
+		sMotif = F_REMPLACE ( sMotif, "Ã¨", "è" )  		
+		sMotif = F_REMPLACE ( sMotif, "Ã", "à" ) 
+		sMotif = F_REMPLACE ( sMotif, " ", " " ) // Le premier n'est pas un espace mais un car spé :)
 		sMotif = F_REMPLACE ( sMotif, "  ", " " )  		
 		sMotif = Upper ( Left ( sMotif, 1 ) ) + Lower ( Right ( sMotif, Len ( sMotif ) -1 ) )
 		sMotif = F_REMPLACE ( sMotif , "'", "''" )
@@ -4740,7 +4744,7 @@ For lCpt = 1 To lTotRow
 	
 		if bRet Then 
 			F_Commit ( SQLCA, True )
-			sResult = "Trait$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s"
+			sResult = "Traité avec succès"
 			dw_Charger.SetItem ( lCpt, "RESULT_TRT", sResult )		
 			bAMUligneTraitee =True
 		Else
@@ -4760,21 +4764,21 @@ If bRet then
 	If bMajPartielle And Not bAMUligneTraitee Then
 		st_extraire.BackColor = 255
 		st_extraire.TextColor = 16777215
-		st_extraire.Text = "Aucune Mise $$HEX2$$e0002000$$ENDHEX$$jour effectu$$HEX1$$e900$$ENDHEX$$e, sauvegardez le log et consultez le"
+		st_extraire.Text = "Aucune Mise à jour effectuée, sauvegardez le log et consultez le"
 	ElseIf bMajPartielle Then
 		st_extraire.BackColor = RGB(255, 100, 0)
 		st_extraire.TextColor = 16777215
-		st_extraire.Text = "Mise $$HEX2$$e0002000$$ENDHEX$$jour partielle, des lignes n'ont pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$trait$$HEX1$$e900$$ENDHEX$$es, sauvegardez le log et consultez le"
+		st_extraire.Text = "Mise à jour partielle, des lignes n'ont pas été traitées, sauvegardez le log et consultez le"
 	Else		
 		st_extraire.BackColor = 32768
 		st_extraire.TextColor = 16777215
-		st_extraire.Text = "Mise $$HEX2$$e0002000$$ENDHEX$$jour totale effectu$$HEX1$$e900$$ENDHEX$$e"		
+		st_extraire.Text = "Mise à jour totale effectuée"		
 	End If 
 Else 
-	// st_Charger.Text="Erreur de mise $$HEX2$$e0002000$$ENDHEX$$jour en base, arr$$HEX1$$ea00$$ENDHEX$$t de traitement ligne " + String ( lCpt )
+	// st_Charger.Text="Erreur de mise à jour en base, arrêt de traitement ligne " + String ( lCpt )
 	st_extraire.BackColor = 255
 	st_extraire.TextColor = 16777215		
-	st_extraire.Text = "Erreur de mise $$HEX2$$e0002000$$ENDHEX$$jour en base, arr$$HEX1$$ea00$$ENDHEX$$t de traitement ligne " + String ( lCpt )
+	st_extraire.Text = "Erreur de mise à jour en base, arrêt de traitement ligne " + String ( lCpt )
 //	dw_Charger.SetItem ( lCpt, "RESULT_TRT", st_Charger.Text )
 End If 
 
@@ -4789,7 +4793,7 @@ public function boolean wf_controler_pnd_corus (long alcpt, ref string aserreur)
 //* Fonction		: w_sp_trt_autre_fichier::wf_controler_pnd_corus
 //* Auteur			: JFF
 //* Date				: 03/01/2023
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [RS_4166_PND_CORUS]
+//* Libellé			: [RS_4166_PND_CORUS]
 //* Commentaires	: 
 //*
 //*
@@ -4817,7 +4821,7 @@ bTrtSIMPA2 = Left ( sValRetPndCorus, len ( sTagSIMPA2 ) ) = sTagSIMPA2
 bTrtKSL    = Left ( sValRetPndCorus, len ( sTagKsl ) ) = sTagKsl
 
 If Not bTrtSIMPA2 And Not bTrtKSL Then
-	asErreur = "ERREUR : cette ligne (" + Left ( sValRetPndCorus, 20) + "...) devant normalement r$$HEX1$$e900$$ENDHEX$$pr$$HEX1$$e900$$ENDHEX$$senter un courrier n'est pas au format SIMPA2 ou KSL attendu"
+	asErreur = "ERREUR : cette ligne (" + Left ( sValRetPndCorus, 20) + "...) devant normalement réprésenter un courrier n'est pas au format SIMPA2 ou KSL attendu"
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )
 	// bOk = False
 End If 
@@ -4866,15 +4870,15 @@ IF bTrtSIMPA2 Then
 	iRet = SQLCA.PS_S_RS4166_CTRLE_DATA_PND_CORUS ( lIdSin, lIdInter, lIdDoc, sCodInter, sIdCour, sDteEdit, sDteRetPnd, sCreelePnd, sIdProd ) 
 	
 	If iRet = -1 Then
-		dw_Charger.SetItem ( alCpt, "RESULT_TRT", "ERREUR : Le courrier " + Mid ( sValRetPndCorus, iPosDeb, iPosFin - iPosDeb) + " n'a pas de r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence sur SIMPA2, la ligne n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$trait$$HEX1$$e900$$ENDHEX$$e" )
+		dw_Charger.SetItem ( alCpt, "RESULT_TRT", "ERREUR : Le courrier " + Mid ( sValRetPndCorus, iPosDeb, iPosFin - iPosDeb) + " n'a pas de référence sur SIMPA2, la ligne n'a pas été traitée" )
 	End If
 
 	If iRet = -2 Then
-		dw_Charger.SetItem ( alCpt, "RESULT_TRT", "ERREUR : Le produit " + sIdProd + " du courrier " + Mid ( sValRetPndCorus, iPosDeb, iPosFin - iPosDeb) + " n'est pas $$HEX1$$e900$$ENDHEX$$ligible au traitement des PND, la ligne n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$trait$$HEX1$$e900$$ENDHEX$$e" )	
+		dw_Charger.SetItem ( alCpt, "RESULT_TRT", "ERREUR : Le produit " + sIdProd + " du courrier " + Mid ( sValRetPndCorus, iPosDeb, iPosFin - iPosDeb) + " n'est pas éligible au traitement des PND, la ligne n'a pas été traitée" )	
 	End If
 	
 	IF iRet = 2 Then
-		dw_Charger.SetItem ( alCpt, "RESULT_TRT", "ERREUR : PND d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$existant du " + sDteRetPnd + " trait$$HEX2$$e9002000$$ENDHEX$$le " + sCreelePnd + ", la ligne n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$trait$$HEX1$$e900$$ENDHEX$$e" )	
+		dw_Charger.SetItem ( alCpt, "RESULT_TRT", "ERREUR : PND déjà existant du " + sDteRetPnd + " traité le " + sCreelePnd + ", la ligne n'a pas été traitée" )	
 	End If 
 
 End If 
@@ -4912,21 +4916,21 @@ IF bTrtKSL Then
 	iRet = SQLCA.PS_S_RS4166_CTRLE_ADH_FFM ( lIdProdAdh, lIdEts, lIdAdh, lIdsdos, sDteRetPnd, lIdCLi, sCreelePnd  ) 
 	
 	If iRet <= 0 Then
-		asErreur = "ERREUR : l'adh$$HEX1$$e900$$ENDHEX$$sion " + String ( lIdProdAdh ) + "-" + String ( lIdEts ) + "-" + String ( lIdAdh ) + "-" + String ( lIdsDos ) + " n'a pas de r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence adh$$HEX1$$e900$$ENDHEX$$sion sur SHERPA, la ligne n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$trait$$HEX1$$e900$$ENDHEX$$e"
+		asErreur = "ERREUR : l'adhésion " + String ( lIdProdAdh ) + "-" + String ( lIdEts ) + "-" + String ( lIdAdh ) + "-" + String ( lIdsDos ) + " n'a pas de référence adhésion sur SHERPA, la ligne n'a pas été traitée"
 		dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )
 		// bOk = False
 	End If 
 	
 	IF iRet = 2 Then
-		dw_Charger.SetItem ( alCpt, "RESULT_TRT", "ERREUR : l'adh$$HEX1$$e900$$ENDHEX$$sion " + String ( lIdProdAdh ) + "-" + String ( lIdEts ) + "-" + String ( lIdAdh ) + "-" + String ( lIdsDos ) + " a plusieurs r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rences adh$$HEX1$$e900$$ENDHEX$$sions sur SHERPA, la ligne n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$trait$$HEX1$$e900$$ENDHEX$$e" )
+		dw_Charger.SetItem ( alCpt, "RESULT_TRT", "ERREUR : l'adhésion " + String ( lIdProdAdh ) + "-" + String ( lIdEts ) + "-" + String ( lIdAdh ) + "-" + String ( lIdsDos ) + " a plusieurs références adhésions sur SHERPA, la ligne n'a pas été traitée" )
 	End If 
 
 	IF iRet = 3 Then
-		dw_Charger.SetItem ( alCpt, "RESULT_TRT", "ERREUR : PND d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$existant du " + sDteRetPnd + " trait$$HEX2$$e9002000$$ENDHEX$$le " + sCreelePnd )	
+		dw_Charger.SetItem ( alCpt, "RESULT_TRT", "ERREUR : PND déjà existant du " + sDteRetPnd + " traité le " + sCreelePnd )	
 	End If 		
 
 	IF iRet = 4 Then
-		dw_Charger.SetItem ( alCpt, "RESULT_TRT", "ERREUR : Produit adh$$HEX1$$e900$$ENDHEX$$sion " + String (lIdProdAdh) + " non $$HEX1$$e900$$ENDHEX$$ligible au traitement des PND, la ligne n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$trait$$HEX1$$e900$$ENDHEX$$e" )	
+		dw_Charger.SetItem ( alCpt, "RESULT_TRT", "ERREUR : Produit adhésion " + String (lIdProdAdh) + " non éligible au traitement des PND, la ligne n'a pas été traitée" )	
 	End If 		
 		
 	
@@ -4941,8 +4945,8 @@ public function boolean wf_controler_retour_pm02 (long alcpt, ref string aserreu
 //* Fonction		: w_sp_trt_autre_fichier::wf_controler_retour_PM02
 //* Auteur			: JFF
 //* Date				: 28/05/2019 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PM478-1]
-//* Commentaires	: Int$$HEX1$$e900$$ENDHEX$$gration des Retours du PM02
+//* Libellé			: [PM478-1]
+//* Commentaires	: Intégration des Retours du PM02
 //*
 //* Arguments		: ref string ascolnames[]
 //* 	ref string asvaleurs[]
@@ -4974,7 +4978,7 @@ If bOkRow And ( IsNull ( sVal ) Or Len ( Trim ( sVal ) ) <= 0 ) Then
 End If
 
 If bOkRow And ( Not ISNUMBER ( sVal )  ) Then
-	asErreur = "ERREUR : La zone ID_CUM de la ligne " + String ( alCpt ) + " doit $$HEX1$$ea00$$ENDHEX$$tre un nombre"
+	asErreur = "ERREUR : La zone ID_CUM de la ligne " + String ( alCpt ) + " doit être un nombre"
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )
 	bOk = False
 	bOkRow = False
@@ -4982,7 +4986,7 @@ End If
 
 If bOkRow Then 
 	If ( Long ( sVal ) <= 0 ) Then
-		asErreur = "ERREUR : La zone ID_CUM de la ligne " + String ( alCpt ) + " doit $$HEX1$$ea00$$ENDHEX$$tre un nombre positif"
+		asErreur = "ERREUR : La zone ID_CUM de la ligne " + String ( alCpt ) + " doit être un nombre positif"
 		dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )
 		bOk = False
 		bOkRow = False
@@ -5017,7 +5021,7 @@ If bOkRow And ( IsNull ( sVal ) Or Len ( Trim ( sVal ) ) <= 0 ) Then
 End If
 
 If bOkRow And ( Not ISNUMBER ( sVal )  ) Then
-	asErreur = "ERREUR : La zone ID_TRT de la ligne " + String ( alCpt ) + " doit $$HEX1$$ea00$$ENDHEX$$tre un nombre"
+	asErreur = "ERREUR : La zone ID_TRT de la ligne " + String ( alCpt ) + " doit être un nombre"
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )
 	bOk = False
 	bOkRow = False
@@ -5025,7 +5029,7 @@ End If
 
 If bOkRow Then
 	If ( Long ( sVal ) <= 0 ) Then
-		asErreur = "ERREUR : La zone ID_TRT de la ligne " + String ( alCpt ) + " doit $$HEX1$$ea00$$ENDHEX$$tre un nombre positif"
+		asErreur = "ERREUR : La zone ID_TRT de la ligne " + String ( alCpt ) + " doit être un nombre positif"
 		dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )
 		bOk = False
 		bOkRow = False
@@ -5042,7 +5046,7 @@ If bOkRow And ( IsNull ( sVal ) Or Len ( Trim ( sVal ) ) <= 0 ) Then
 End If
 
 If bOkRow And ( Not ISNUMBER ( sVal )  ) Then
-	asErreur = "ERREUR : La zone ID_PERIODE de la ligne " + String ( alCpt ) + " doit $$HEX1$$ea00$$ENDHEX$$tre un nombre"
+	asErreur = "ERREUR : La zone ID_PERIODE de la ligne " + String ( alCpt ) + " doit être un nombre"
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )
 	bOk = False
 	bOkRow = False
@@ -5050,7 +5054,7 @@ End If
 
 If bOkRow Then
 	If ( Long ( sVal ) <= 0 ) Then
-		asErreur = "ERREUR : La zone ID_PERIODE de la ligne " + String ( alCpt ) + " doit $$HEX1$$ea00$$ENDHEX$$tre un nombre positif"
+		asErreur = "ERREUR : La zone ID_PERIODE de la ligne " + String ( alCpt ) + " doit être un nombre positif"
 		dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )
 		bOk = False
 		bOkRow = False
@@ -5067,7 +5071,7 @@ If bOkRow And ( IsNull ( sVal ) Or Len ( Trim ( sVal ) ) <= 0 ) Then
 End If
 
 If bOkRow And ( Not ISNUMBER ( sVal )  ) Then
-	asErreur = "ERREUR : La zone ID_SIN de la ligne " + String ( alCpt ) + " doit $$HEX1$$ea00$$ENDHEX$$tre un nombre"
+	asErreur = "ERREUR : La zone ID_SIN de la ligne " + String ( alCpt ) + " doit être un nombre"
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )
 	bOk = False
 	bOkRow = False
@@ -5075,7 +5079,7 @@ End If
 
 If bOkRow Then
 	If ( Long ( sVal ) <= 0 ) Then
-		asErreur = "ERREUR : La zone ID_SIN de la ligne " + String ( alCpt ) + " doit $$HEX1$$ea00$$ENDHEX$$tre un nombre positif"
+		asErreur = "ERREUR : La zone ID_SIN de la ligne " + String ( alCpt ) + " doit être un nombre positif"
 		dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )
 		bOk = False
 		bOkRow = False
@@ -5092,7 +5096,7 @@ If bOkRow And ( IsNull ( sVal ) Or Len ( Trim ( sVal ) ) <= 0 ) Then
 End If
 
 If bOkRow And ( Not ISNUMBER ( sVal )  ) Then
-	asErreur = "ERREUR : La zone ID_SEQ de la ligne " + String ( alCpt ) + " doit $$HEX1$$ea00$$ENDHEX$$tre un nombre"
+	asErreur = "ERREUR : La zone ID_SEQ de la ligne " + String ( alCpt ) + " doit être un nombre"
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )
 	bOk = False
 	bOkRow = False
@@ -5100,7 +5104,7 @@ End If
 
 If bOkRow Then 
 	If ( Long ( sVal ) <= 0 ) Then
-		asErreur = "ERREUR : La zone ID_SEQ de la ligne " + String ( alCpt ) + " doit $$HEX1$$ea00$$ENDHEX$$tre un nombre positif"
+		asErreur = "ERREUR : La zone ID_SEQ de la ligne " + String ( alCpt ) + " doit être un nombre positif"
 		dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )
 		bOk = False
 		bOkRow = False
@@ -5132,7 +5136,7 @@ If bOkRow And ( IsNull ( sVal ) Or Len ( Trim ( sVal ) ) <= 0 ) Then
 End If
 
 If bOkRow And ( Not ISNUMBER ( sVal )  ) Then
-	asErreur = "ERREUR : La zone MT_FACT_TTC_MODIF_BRK de la ligne " + String ( alCpt ) + " doit $$HEX1$$ea00$$ENDHEX$$tre un nombre (2 decimals $$HEX1$$e900$$ENDHEX$$ventuellement)"
+	asErreur = "ERREUR : La zone MT_FACT_TTC_MODIF_BRK de la ligne " + String ( alCpt ) + " doit être un nombre (2 decimals éventuellement)"
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )
 	bOk = False
 	bOkRow = False
@@ -5140,7 +5144,7 @@ End If
 
 If bOkRow Then 
 	If ( Dec ( sVal ) < 0 ) Then
-		asErreur = "ERREUR : La zone MT_FACT_TTC_MODIF_BRK de la ligne " + String ( alCpt ) + " doit $$HEX1$$ea00$$ENDHEX$$tre un nombre positif"
+		asErreur = "ERREUR : La zone MT_FACT_TTC_MODIF_BRK de la ligne " + String ( alCpt ) + " doit être un nombre positif"
 		dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )
 		bOk = False
 		bOkRow = False
@@ -5170,7 +5174,7 @@ If bOkRow And ( IsNull ( sVal ) Or Len ( Trim ( sVal ) ) <= 0 ) Then
 End If
 
 If bOkRow And ( Not ISNUMBER ( sVal )  ) Then
-	asErreur = "ERREUR : La zone MT_FACT_TTC_FORCE_SPB de la ligne " + String ( alCpt ) + " doit $$HEX1$$ea00$$ENDHEX$$tre un nombre (2 decimals $$HEX1$$e900$$ENDHEX$$ventuellement)"
+	asErreur = "ERREUR : La zone MT_FACT_TTC_FORCE_SPB de la ligne " + String ( alCpt ) + " doit être un nombre (2 decimals éventuellement)"
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )
 	bOk = False
 	bOkRow = False
@@ -5178,7 +5182,7 @@ End If
 
 If bOkRow Then 
 	If ( Dec ( sVal ) < 0 ) Then
-		asErreur = "ERREUR : La zone MT_FACT_TTC_FORCE_SPB de la ligne " + String ( alCpt ) + " doit $$HEX1$$ea00$$ENDHEX$$tre un nombre positif"
+		asErreur = "ERREUR : La zone MT_FACT_TTC_FORCE_SPB de la ligne " + String ( alCpt ) + " doit être un nombre positif"
 		dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )
 		bOk = False
 		bOkRow = False
@@ -5209,7 +5213,7 @@ private subroutine wf_pct ();//*------------------------------------------------
 //* Fonction      : w_sp_trt_autofact::wf_pct (PRIVATE)
 //* Auteur        : JFF
 //* Date          : 13/01/2023
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: maj pourcentage
+//* Libellé       : maj pourcentage
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -5236,8 +5240,8 @@ public function boolean wf_controler_rm_avoir_fourn (long alcpt, ref string aser
 //* Fonction		: w_sp_trt_autre_fichier::wf_controler_rm_avoir_fourn
 //* Auteur			: JFF
 //* Date				: 27/01/2014 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [VDOC12917]
-//* Commentaires	: Int$$HEX1$$e900$$ENDHEX$$gration des fichiers TAC_IMEI
+//* Libellé			: [VDOC12917]
+//* Commentaires	: Intégration des fichiers TAC_IMEI
 //*
 //* Arguments		: ref string ascolnames[]	 */
 /* 	ref string asvaleurs[]	 */
@@ -5248,7 +5252,7 @@ public function boolean wf_controler_rm_avoir_fourn (long alcpt, ref string aser
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* #1	 FPI	 01/07/2009		Am$$HEX1$$e900$$ENDHEX$$lioration : on ne met que la premi$$HEX1$$e800$$ENDHEX$$re erreur
+//* #1	 FPI	 01/07/2009		Amélioration : on ne met que la première erreur
 //        JFF   30/11/2016   [PM375-1]
 //       JFF   09/09/2022 [PM80_FA12_FRANEX]
 //*-----------------------------------------------------------------
@@ -5326,7 +5330,7 @@ If bOkRow And ( IsNull ( sVal ) Or Len ( Trim ( sVal ) ) <= 0 ) Then
 End If
 
 If bOkRow And Len ( Trim ( sVal ) ) > 3 Then
-	asErreur = "ERREUR : La zone ID_FOUR de la ligne " + String ( alCpt ) + " est trop longue (3 Caract$$HEX1$$e800$$ENDHEX$$re max)"
+	asErreur = "ERREUR : La zone ID_FOUR de la ligne " + String ( alCpt ) + " est trop longue (3 Caractère max)"
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )
 	bOk = False
 	bOkRow = False
@@ -5361,7 +5365,7 @@ If bOkRow And ( IsNull ( sVal ) Or Len ( Trim ( sVal ) ) <= 0 ) Then
 End If
 
 If bOkRow And Not IsNumber ( sVal ) Then
-	asErreur = 'La valeur "' + sVal + '", $$HEX2$$e0002000$$ENDHEX$$la ligne ' + String ( alCpt ) + " n'est pas valide."
+	asErreur = 'La valeur "' + sVal + '", à la ligne ' + String ( alCpt ) + " n'est pas valide."
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 	bOk = False
 	bOkRow = False		
@@ -5369,7 +5373,7 @@ End If
 
 // [PM80_FA12_FRANEX]
 If bOkRow And dec ( sMtRMAvoir ) >= 0 Then
-	asErreur = "Le montant du RM avec Avoir doit $$HEX1$$ea00$$ENDHEX$$tre strictement n$$HEX1$$e900$$ENDHEX$$gatif"
+	asErreur = "Le montant du RM avec Avoir doit être strictement négatif"
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 	bOk = False
 	bOkRow = False		
@@ -5387,7 +5391,7 @@ sTbFraisAnex[9] =  dw_charger.object.frais_anex_9 [alCpt]
 sTbFraisAnex[10] =  dw_charger.object.frais_anex_10 [alCpt]		
 sTbFraisAnex[11] =  dw_charger.object.frais_anex_11 [alCpt]	
 
-// Contr$$HEX1$$f400$$ENDHEX$$le que le r$$HEX1$$e800$$ENDHEX$$glement de base ait $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$pass$$HEX2$$e9002000$$ENDHEX$$apr$$HEX1$$e800$$ENDHEX$$s la MEP du PM80, si c'est avant, interdiction de ventiler.
+// Contrôle que le règlement de base ait été passé après la MEP du PM80, si c'est avant, interdiction de ventiler.
 iIdRegBaseIdSeq = -1
 iRet = SQLCA.PS_S_PM80_CTRLE_VENTIL_REG_BASE ( lIdSin, iIdRegBaseIdSeq, lIdSeq, dtDteRegBase, dtDtePivotMepPM80, sResult ) 
 
@@ -5405,7 +5409,7 @@ If bOkRow Then
 	For lCptTbFrais = 1 To lTotTbFrais 
 		If IsNull ( sTbFraisAnex [lCptTbFrais] ) Or Trim ( sTbFraisAnex [lCptTbFrais] ) = "" Then sTbFraisAnex [lCptTbFrais] = "0"
 		If Not IsNumber( sTbFraisAnex [lCptTbFrais] ) then
-			asErreur += "Les zones de montants de frais doivent $$HEX1$$ea00$$ENDHEX$$tre num$$HEX1$$e900$$ENDHEX$$riques (d$$HEX1$$e900$$ENDHEX$$cimales)"				
+			asErreur += "Les zones de montants de frais doivent être numériques (décimales)"				
 			dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 			bOk = False
 			bOkRow = False	
@@ -5413,7 +5417,7 @@ If bOkRow Then
 		
 		If bOkRow Then
 			if Dec ( sTbFraisAnex [lCptTbFrais]) > 0 Then
-				asErreur += "Les zones de montants de frais doivent $$HEX1$$ea00$$ENDHEX$$tre n$$HEX1$$e900$$ENDHEX$$gatives ou $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro"				
+				asErreur += "Les zones de montants de frais doivent être négatives ou à zéro"				
 				dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 				bOk = False
 				bOkRow = False	
@@ -5422,17 +5426,17 @@ If bOkRow Then
 	Next 
 End If 
 
-/* Suite mail de Coraline, l'indem princ peut $$HEX1$$ea00$$ENDHEX$$tre $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro	
-// Indem Princ doit $$HEX1$$ea00$$ENDHEX$$tre n$$HEX1$$e900$$ENDHEX$$gatif
+/* Suite mail de Coraline, l'indem princ peut être à zéro	
+// Indem Princ doit être négatif
 If bOkRow And dec ( sTbFraisAnex [1] ) >= 0 Then
-	asErreur += "Le montant de frais 'Indem. Princ' doit $$HEX1$$ea00$$ENDHEX$$tre strictement n$$HEX1$$e900$$ENDHEX$$gatif"				
+	asErreur += "Le montant de frais 'Indem. Princ' doit être strictement négatif"				
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 	bOk = False
 	bOkRow = False			
 End If 
 */
 
-// La somme des frais de 1 $$HEX2$$e0002000$$ENDHEX$$11 doit $$HEX1$$ea00$$ENDHEX$$tre $$HEX1$$e900$$ENDHEX$$gale au montant de facture
+// La somme des frais de 1 à 11 doit être égale au montant de facture
 If bOkRow Then
 	dcSomTbFrais = 0 
 	For lCptTbFrais = 1 To lTotTbFrais 
@@ -5441,13 +5445,13 @@ If bOkRow Then
 	
 	If dtDteRegBase < dtDtePivotMepPM80 Then
 		If dcSomTbFrais <> 0 Then
-			asErreur +=	"ERREUR : Ventilation interdite d$$HEX1$$e800$$ENDHEX$$s lors que le r$$HEX1$$e800$$ENDHEX$$glement d'origine (num$$HEX1$$e900$$ENDHEX$$ro " + String ( iIdRegBaseIdSeq ) + ") a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$pass$$HEX2$$e9002000$$ENDHEX$$avant la mise en production du PM80 (r$$HEX1$$e800$$ENDHEX$$glement pass$$HEX2$$e9002000$$ENDHEX$$le " + String ( dtDteRegBase, "dd/mm/yyyy hh:mm:ss") + " et MEP du PM80 le " + String ( dtDtePivotMepPM80, "dd/mm/yyyy hh:mm:ss") + "). Ne passez aucune ventilation, laissez les ventilations vides."			
+			asErreur +=	"ERREUR : Ventilation interdite dès lors que le règlement d'origine (numéro " + String ( iIdRegBaseIdSeq ) + ") a été passé avant la mise en production du PM80 (règlement passé le " + String ( dtDteRegBase, "dd/mm/yyyy hh:mm:ss") + " et MEP du PM80 le " + String ( dtDtePivotMepPM80, "dd/mm/yyyy hh:mm:ss") + "). Ne passez aucune ventilation, laissez les ventilations vides."			
 			dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 			bOk = False
 			bOkRow = False				
 		End If 			
 	ElseIf dec ( sMtRMAvoir ) <> dcSomTbFrais Then
-		asErreur += "La somme des frais doit $$HEX1$$ea00$$ENDHEX$$tre $$HEX1$$e900$$ENDHEX$$gale au montant du RM factur$$HEX1$$e900$$ENDHEX$$"	
+		asErreur += "La somme des frais doit être égale au montant du RM facturé"	
 		dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 		bOk = False
 		bOkRow = False				
@@ -5477,7 +5481,7 @@ public function boolean wf_controler_rp_avoir_fourn (long alcpt, ref string aser
 //* Fonction		: w_sp_trt_autre_fichier::wf_controler_rp_avoir_fourn
 //* Auteur			: JFF
 //* Date				: 30/11/2016
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [VDOC12917][PM375-1]
+//* Libellé			: [VDOC12917][PM375-1]
 //* Commentaires	: 
 //*
 //* Arguments		: ref string ascolnames[]
@@ -5489,7 +5493,7 @@ public function boolean wf_controler_rp_avoir_fourn (long alcpt, ref string aser
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* #1	 FPI	 01/07/2009	  Am$$HEX1$$e900$$ENDHEX$$lioration : on ne met que la premi$$HEX1$$e800$$ENDHEX$$re erreur
+//* #1	 FPI	 01/07/2009	  Amélioration : on ne met que la première erreur
 //        JFF   09/09/2022   [PM80_FA12_FRANEX]
 //*-----------------------------------------------------------------
 
@@ -5565,7 +5569,7 @@ If bOkRow And ( IsNull ( sVal ) Or Len ( Trim ( sVal ) ) <= 0 ) Then
 End If
 
 If bOkRow And Len ( Trim ( sVal ) ) > 3 Then
-	asErreur = "ERREUR : La zone ID_FOUR de la ligne " + String ( alCpt ) + " est trop longue (3 Caract$$HEX1$$e800$$ENDHEX$$re max)"
+	asErreur = "ERREUR : La zone ID_FOUR de la ligne " + String ( alCpt ) + " est trop longue (3 Caractère max)"
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )
 	bOk = False
 	bOkRow = False
@@ -5600,7 +5604,7 @@ If bOkRow And ( IsNull ( sVal ) Or Len ( Trim ( sVal ) ) <= 0 ) Then
 End If
 
 If bOkRow And Not IsNumber ( sVal ) Then
-	asErreur = 'La valeur "' + sVal + '", $$HEX2$$e0002000$$ENDHEX$$la ligne ' + String ( alCpt ) + " n'est pas valide."
+	asErreur = 'La valeur "' + sVal + '", à la ligne ' + String ( alCpt ) + " n'est pas valide."
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 	bOk = False
 	bOkRow = False		
@@ -5608,7 +5612,7 @@ End If
 
 // [PM80_FA12_FRANEX]
 If bOkRow And dec ( sMtRPAvoir ) <= 0 Then
-	asErreur = "Le montant du RP avec Avoir doit $$HEX1$$ea00$$ENDHEX$$tre strictement positif"
+	asErreur = "Le montant du RP avec Avoir doit être strictement positif"
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 	bOk = False
 	bOkRow = False		
@@ -5626,7 +5630,7 @@ sTbFraisAnex[9] =  dw_charger.object.frais_anex_9 [alCpt]
 sTbFraisAnex[10] =  dw_charger.object.frais_anex_10 [alCpt]		
 sTbFraisAnex[11] =  dw_charger.object.frais_anex_11 [alCpt]	
 
-// Contr$$HEX1$$f400$$ENDHEX$$le que le r$$HEX1$$e800$$ENDHEX$$glement de base ait $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$pass$$HEX2$$e9002000$$ENDHEX$$apr$$HEX1$$e800$$ENDHEX$$s la MEP du PM80, si c'est avant, interdiction de ventiler.
+// Contrôle que le règlement de base ait été passé après la MEP du PM80, si c'est avant, interdiction de ventiler.
 iIdRegBaseIdSeq = -1
 iRet = SQLCA.PS_S_PM80_CTRLE_VENTIL_REG_BASE ( lIdSin, iIdRegBaseIdSeq, lIdSeq, dtDteRegBase, dtDtePivotMepPM80, sResult ) 
 
@@ -5638,14 +5642,14 @@ If iRet < 0 Then
 End If
 
 
-// Remplacer les null par 0 et // aucun montant strictement n$$HEX1$$e900$$ENDHEX$$gatif
+// Remplacer les null par 0 et // aucun montant strictement négatif
 lTotTbFrais = UpperBound ( sTbFraisAnex ) 
 
 If bOkRow Then
 	For lCptTbFrais = 1 To lTotTbFrais 
 		If IsNull ( sTbFraisAnex [lCptTbFrais] ) Or Trim ( sTbFraisAnex [lCptTbFrais] ) = "" Then sTbFraisAnex [lCptTbFrais] = "0"
 		If Not IsNumber( sTbFraisAnex [lCptTbFrais] ) then
-			asErreur += "Les zones de montants de frais doivent $$HEX1$$ea00$$ENDHEX$$tre num$$HEX1$$e900$$ENDHEX$$riques (d$$HEX1$$e900$$ENDHEX$$cimales)"				
+			asErreur += "Les zones de montants de frais doivent être numériques (décimales)"				
 			dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 			bOk = False
 			bOkRow = False	
@@ -5653,7 +5657,7 @@ If bOkRow Then
 		
 		If bOkRow Then
 			if Dec ( sTbFraisAnex [lCptTbFrais])  < 0 Then
-				asErreur += "Les zones de montants de frais doivent $$HEX1$$ea00$$ENDHEX$$tre positives ou $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro"				
+				asErreur += "Les zones de montants de frais doivent être positives ou à zéro"				
 				dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 				bOk = False
 				bOkRow = False	
@@ -5662,17 +5666,17 @@ If bOkRow Then
 	Next 
 End If 
 
-/* Suite mail de Coraline, l'indem princ peut $$HEX1$$ea00$$ENDHEX$$tre $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro	
-// Indem Princ doit $$HEX1$$ea00$$ENDHEX$$tre positif
+/* Suite mail de Coraline, l'indem princ peut être à zéro	
+// Indem Princ doit être positif
 If bOkRow And dec ( sTbFraisAnex [1] ) <= 0 Then
-	asErreur += "Le montant de frais 'Indem. Princ' doit $$HEX1$$ea00$$ENDHEX$$tre strictement positif"				
+	asErreur += "Le montant de frais 'Indem. Princ' doit être strictement positif"				
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 	bOk = False
 	bOkRow = False			
 End If 
 */
 
-// La sommes des frais de 1 $$HEX2$$e0002000$$ENDHEX$$11 doit $$HEX1$$ea00$$ENDHEX$$tre $$HEX1$$e900$$ENDHEX$$gale au montant de facture
+// La sommes des frais de 1 à 11 doit être égale au montant de facture
 If bOkRow Then
 	dcSomTbFrais = 0 
 	For lCptTbFrais = 1 To lTotTbFrais 
@@ -5682,13 +5686,13 @@ If bOkRow Then
 	
 	If dtDteRegBase < dtDtePivotMepPM80 Then
 		If dcSomTbFrais <> 0 Then
-			asErreur +=	"ERREUR : Ventilation interdite d$$HEX1$$e800$$ENDHEX$$s lors que le r$$HEX1$$e800$$ENDHEX$$glement d'origine (num$$HEX1$$e900$$ENDHEX$$ro " + String ( iIdRegBaseIdSeq ) + ") a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$pass$$HEX2$$e9002000$$ENDHEX$$avant la mise en production du PM80 (r$$HEX1$$e800$$ENDHEX$$glement pass$$HEX2$$e9002000$$ENDHEX$$le " + String ( dtDteRegBase, "dd/mm/yyyy hh:mm:ss") + " et MEP du PM80 le " + String ( dtDtePivotMepPM80, "dd/mm/yyyy hh:mm:ss") + "). Ne passez aucune ventilation, laissez les ventilations vides."			
+			asErreur +=	"ERREUR : Ventilation interdite dès lors que le règlement d'origine (numéro " + String ( iIdRegBaseIdSeq ) + ") a été passé avant la mise en production du PM80 (règlement passé le " + String ( dtDteRegBase, "dd/mm/yyyy hh:mm:ss") + " et MEP du PM80 le " + String ( dtDtePivotMepPM80, "dd/mm/yyyy hh:mm:ss") + "). Ne passez aucune ventilation, laissez les ventilations vides."			
 			dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 			bOk = False
 			bOkRow = False				
 		End If 			
 	ElseIf dec ( sMtRPAvoir ) <> dcSomTbFrais Then
-		asErreur += "La somme des frais doit $$HEX1$$ea00$$ENDHEX$$tre $$HEX1$$e900$$ENDHEX$$gale au montant du RP Factur$$HEX1$$e900$$ENDHEX$$"	
+		asErreur += "La somme des frais doit être égale au montant du RP Facturé"	
 		dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 		bOk = False
 		bOkRow = False				
@@ -5718,7 +5722,7 @@ public function boolean wf_controler_rp_simple (long alcpt, ref string aserreur)
 //* Fonction		: w_sp_trt_autre_fichier::wf_controler_rp_simple
 //* Auteur			: JFF
 //* Date				: 30/11/2016
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PM375-1]
+//* Libellé			: [PM375-1]
 //* Commentaires	: 
 //*
 //* Arguments		: ref string ascolnames[]	 */
@@ -5730,7 +5734,7 @@ public function boolean wf_controler_rp_simple (long alcpt, ref string aserreur)
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* #1	 FPI	 01/07/2009		Am$$HEX1$$e900$$ENDHEX$$lioration : on ne met que la premi$$HEX1$$e800$$ENDHEX$$re erreur
+//* #1	 FPI	 01/07/2009		Amélioration : on ne met que la première erreur
 //        JFF   09/09/2022   [PM80_FA12_FRANEX]
 //*-----------------------------------------------------------------
 
@@ -5817,7 +5821,7 @@ If bOkRow And ( IsNull ( sVal ) Or Len ( Trim ( sVal ) ) <= 0 ) Then
 End If
 
 If bOkRow And Not IsNumber ( sVal ) Then
-	asErreur = 'La valeur "' + sVal + '", $$HEX2$$e0002000$$ENDHEX$$la ligne ' + String ( alCpt ) + " n'est pas valide."
+	asErreur = 'La valeur "' + sVal + '", à la ligne ' + String ( alCpt ) + " n'est pas valide."
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 	bOk = False
 	bOkRow = False		
@@ -5842,7 +5846,7 @@ End If
 
 // [PM80_FA12_FRANEX]
 If bOkRow And dec ( sMtRPsimple ) <= 0 Then
-	asErreur = "Le montant du RP simple doit $$HEX1$$ea00$$ENDHEX$$tre strictement positif"
+	asErreur = "Le montant du RP simple doit être strictement positif"
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 	bOk = False
 	bOkRow = False		
@@ -5860,7 +5864,7 @@ sTbFraisAnex[9] =  dw_charger.object.frais_anex_9 [alCpt]
 sTbFraisAnex[10] =  dw_charger.object.frais_anex_10 [alCpt]		
 sTbFraisAnex[11] =  dw_charger.object.frais_anex_11 [alCpt]	
 
-// Contr$$HEX1$$f400$$ENDHEX$$le que le r$$HEX1$$e800$$ENDHEX$$glement de base ait $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$pass$$HEX2$$e9002000$$ENDHEX$$apr$$HEX1$$e800$$ENDHEX$$s la MEP du PM80, si c'est avant, interdiction de ventiler.
+// Contrôle que le règlement de base ait été passé après la MEP du PM80, si c'est avant, interdiction de ventiler.
 iRet = SQLCA.PS_S_PM80_CTRLE_VENTIL_REG_BASE ( lIdSin, iIdRegbase, -1, dtDteRegBase, dtDtePivotMepPM80, sResult ) 
 
 If iRet < 0 Then
@@ -5870,14 +5874,14 @@ If iRet < 0 Then
 	bOkRow = False				
 End If 		
 
-// Remplacer les null par 0 et // aucun montant strictement n$$HEX1$$e900$$ENDHEX$$gatif
+// Remplacer les null par 0 et // aucun montant strictement négatif
 lTotTbFrais = UpperBound ( sTbFraisAnex ) 
 
 If bOkRow Then
 	For lCptTbFrais = 1 To lTotTbFrais 
 		If IsNull ( sTbFraisAnex [lCptTbFrais] ) Or Trim ( sTbFraisAnex [lCptTbFrais] ) = "" Then sTbFraisAnex [lCptTbFrais] = "0"
 		If Not IsNumber( sTbFraisAnex [lCptTbFrais] ) then
-			asErreur += "Les zones de montants de frais doivent $$HEX1$$ea00$$ENDHEX$$tre num$$HEX1$$e900$$ENDHEX$$riques (d$$HEX1$$e900$$ENDHEX$$cimales)"				
+			asErreur += "Les zones de montants de frais doivent être numériques (décimales)"				
 			dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 			bOk = False
 			bOkRow = False	
@@ -5885,7 +5889,7 @@ If bOkRow Then
 		
 		If bOkRow Then
 			if Dec ( sTbFraisAnex [lCptTbFrais])  < 0 Then
-				asErreur += "Les zones de montants de frais doivent $$HEX1$$ea00$$ENDHEX$$tre positives ou $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro !"				
+				asErreur += "Les zones de montants de frais doivent être positives ou à zéro !"				
 				dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 				bOk = False
 				bOkRow = False	
@@ -5894,17 +5898,17 @@ If bOkRow Then
 	Next 
 End If 
 
-/* Suite mail de Coraline, l'indem princ peut $$HEX1$$ea00$$ENDHEX$$tre $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro	
-// Indem Princ doit $$HEX1$$ea00$$ENDHEX$$tre positif
+/* Suite mail de Coraline, l'indem princ peut être à zéro	
+// Indem Princ doit être positif
 If bOkRow And dec ( sTbFraisAnex [1] ) <= 0 Then
-	asErreur += "Le montant de frais 'Indem. Princ' doit $$HEX1$$ea00$$ENDHEX$$tre strictement positif !"				
+	asErreur += "Le montant de frais 'Indem. Princ' doit être strictement positif !"				
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 	bOk = False
 	bOkRow = False			
 End If 
 */
 
-// La sommes des frais de 1 $$HEX2$$e0002000$$ENDHEX$$11 doit $$HEX1$$ea00$$ENDHEX$$tre $$HEX1$$e900$$ENDHEX$$gale au montant de facture
+// La sommes des frais de 1 à 11 doit être égale au montant de facture
 If bOkRow Then
 	dcSomTbFrais = 0 
 	For lCptTbFrais = 1 To lTotTbFrais 
@@ -5913,13 +5917,13 @@ If bOkRow Then
 
 	If dtDteRegBase < dtDtePivotMepPM80 Then
 		If dcSomTbFrais <> 0 Then
-			asErreur +=	"ERREUR : Ventilation interdite d$$HEX1$$e800$$ENDHEX$$s lors que le r$$HEX1$$e800$$ENDHEX$$glement d'origine (num$$HEX1$$e900$$ENDHEX$$ro " + String ( iIdRegBase ) + ") a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$pass$$HEX2$$e9002000$$ENDHEX$$avant la mise en production du PM80 (r$$HEX1$$e800$$ENDHEX$$glement pass$$HEX2$$e9002000$$ENDHEX$$le " + String ( dtDteRegBase, "dd/mm/yyyy hh:mm:ss") + " et MEP du PM80 le " + String ( dtDtePivotMepPM80, "dd/mm/yyyy hh:mm:ss") + "). Ne passez aucune ventilation, laissez les ventilations vides."			
+			asErreur +=	"ERREUR : Ventilation interdite dès lors que le règlement d'origine (numéro " + String ( iIdRegBase ) + ") a été passé avant la mise en production du PM80 (règlement passé le " + String ( dtDteRegBase, "dd/mm/yyyy hh:mm:ss") + " et MEP du PM80 le " + String ( dtDtePivotMepPM80, "dd/mm/yyyy hh:mm:ss") + "). Ne passez aucune ventilation, laissez les ventilations vides."			
 			dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 			bOk = False
 			bOkRow = False				
 		End If 			
 	ElseIf dec ( sMtRPsimple ) <> dcSomTbFrais Then
-		asErreur += "La somme des frais doit $$HEX1$$ea00$$ENDHEX$$tre $$HEX1$$e900$$ENDHEX$$gale au montant du RP simple"	
+		asErreur += "La somme des frais doit être égale au montant du RP simple"	
 		dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 		bOk = False
 		bOkRow = False				
@@ -5949,7 +5953,7 @@ public function boolean wf_controler_rm_simple (long alcpt, ref string aserreur)
 //* Fonction		: w_sp_trt_autre_fichier::wf_controler_rm_simple
 //* Auteur			: JFF
 //* Date				: 30/11/2016
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PM375-1]
+//* Libellé			: [PM375-1]
 //* Commentaires	: 
 //*
 //* Arguments		: ref string ascolnames[]	 */
@@ -5961,7 +5965,7 @@ public function boolean wf_controler_rm_simple (long alcpt, ref string aserreur)
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* #1	 FPI	 01/07/2009		Am$$HEX1$$e900$$ENDHEX$$lioration : on ne met que la premi$$HEX1$$e800$$ENDHEX$$re erreur
+//* #1	 FPI	 01/07/2009		Amélioration : on ne met que la première erreur
 //        JFF   09/09/2022 [PM80_FA12_FRANEX]
 //*-----------------------------------------------------------------
 
@@ -6049,7 +6053,7 @@ If bOkRow And ( IsNull ( sVal ) Or Len ( Trim ( sVal ) ) <= 0 ) Then
 End If
 
 If bOkRow And Not IsNumber ( sVal ) Then
-	asErreur = 'La valeur "' + sVal + '", $$HEX2$$e0002000$$ENDHEX$$la ligne ' + String ( alCpt ) + " n'est pas valide."
+	asErreur = 'La valeur "' + sVal + '", à la ligne ' + String ( alCpt ) + " n'est pas valide."
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 	bOk = False
 	bOkRow = False		
@@ -6073,7 +6077,7 @@ End If
 
 // [PM80_FA12_FRANEX]
 If bOkRow And dec ( sMtRMsimple ) >= 0 Then
-	asErreur = "Le montant du RM simple doit $$HEX1$$ea00$$ENDHEX$$tre strictement n$$HEX1$$e900$$ENDHEX$$gatif"
+	asErreur = "Le montant du RM simple doit être strictement négatif"
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 	bOk = False
 	bOkRow = False		
@@ -6091,7 +6095,7 @@ sTbFraisAnex[9] =  dw_charger.object.frais_anex_9 [alCpt]
 sTbFraisAnex[10] =  dw_charger.object.frais_anex_10 [alCpt]		
 sTbFraisAnex[11] =  dw_charger.object.frais_anex_11 [alCpt]	
 
-	// Contr$$HEX1$$f400$$ENDHEX$$le que le r$$HEX1$$e800$$ENDHEX$$glement de base ait $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$pass$$HEX2$$e9002000$$ENDHEX$$apr$$HEX1$$e800$$ENDHEX$$s la MEP du PM80, si c'est avant, interdiction de ventiler.
+	// Contrôle que le règlement de base ait été passé après la MEP du PM80, si c'est avant, interdiction de ventiler.
 iRet = SQLCA.PS_S_PM80_CTRLE_VENTIL_REG_BASE ( lIdSin, iIdRegbase, -1, dtDteRegBase, dtDtePivotMepPM80, sResult ) 
 
 If iRet < 0 Then
@@ -6108,7 +6112,7 @@ If bOkRow Then
 	For lCptTbFrais = 1 To lTotTbFrais 
 		If IsNull ( sTbFraisAnex [lCptTbFrais] ) Or Trim ( sTbFraisAnex [lCptTbFrais] ) = "" Then sTbFraisAnex [lCptTbFrais] = "0"
 		If Not IsNumber( sTbFraisAnex [lCptTbFrais] ) then
-			asErreur += "Les zones de montants de frais doivent $$HEX1$$ea00$$ENDHEX$$tre num$$HEX1$$e900$$ENDHEX$$riques (d$$HEX1$$e900$$ENDHEX$$cimales)"				
+			asErreur += "Les zones de montants de frais doivent être numériques (décimales)"				
 			dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 			bOk = False
 			bOkRow = False	
@@ -6116,7 +6120,7 @@ If bOkRow Then
 		
 		If bOkRow Then
 			if Dec ( sTbFraisAnex [lCptTbFrais]) > 0 Then
-				asErreur += "Les zones de montants de frais doivent $$HEX1$$ea00$$ENDHEX$$tre n$$HEX1$$e900$$ENDHEX$$gatives ou $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro"				
+				asErreur += "Les zones de montants de frais doivent être négatives ou à zéro"				
 				dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 				bOk = False
 				bOkRow = False	
@@ -6125,17 +6129,17 @@ If bOkRow Then
 	Next 
 End If 
 
-/* Suite mail de Coraline, l'indem princ peut $$HEX1$$ea00$$ENDHEX$$tre $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro	
-// Indem Princ doit $$HEX1$$ea00$$ENDHEX$$tre n$$HEX1$$e900$$ENDHEX$$gatif
+/* Suite mail de Coraline, l'indem princ peut être à zéro	
+// Indem Princ doit être négatif
 If bOkRow And dec ( sTbFraisAnex [1] ) >= 0 Then
-	asErreur += "Le montant de frais 'Indem. Princ' doit $$HEX1$$ea00$$ENDHEX$$tre strictement n$$HEX1$$e900$$ENDHEX$$gatif"				
+	asErreur += "Le montant de frais 'Indem. Princ' doit être strictement négatif"				
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 	bOk = False
 	bOkRow = False			
 End If 
 */
 
-// La somme des frais de 1 $$HEX2$$e0002000$$ENDHEX$$11 doit $$HEX1$$ea00$$ENDHEX$$tre $$HEX1$$e900$$ENDHEX$$gale au montant de facture
+// La somme des frais de 1 à 11 doit être égale au montant de facture
 If bOkRow Then
 	dcSomTbFrais = 0 
 	For lCptTbFrais = 1 To lTotTbFrais 
@@ -6144,13 +6148,13 @@ If bOkRow Then
 
 	If dtDteRegBase < dtDtePivotMepPM80 Then
 		If dcSomTbFrais <> 0 Then
-			asErreur +=	"ERREUR : Ventilation interdite d$$HEX1$$e800$$ENDHEX$$s lors que le r$$HEX1$$e800$$ENDHEX$$glement d'origine (num$$HEX1$$e900$$ENDHEX$$ro " + String ( iIdRegBase ) + ") a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$pass$$HEX2$$e9002000$$ENDHEX$$avant la mise en production du PM80 (r$$HEX1$$e800$$ENDHEX$$glement pass$$HEX2$$e9002000$$ENDHEX$$le " + String ( dtDteRegBase, "dd/mm/yyyy hh:mm:ss") + " et MEP du PM80 le " + String ( dtDtePivotMepPM80, "dd/mm/yyyy hh:mm:ss") + "). Ne passez aucune ventilation, laissez les ventilations vides."			
+			asErreur +=	"ERREUR : Ventilation interdite dès lors que le règlement d'origine (numéro " + String ( iIdRegBase ) + ") a été passé avant la mise en production du PM80 (règlement passé le " + String ( dtDteRegBase, "dd/mm/yyyy hh:mm:ss") + " et MEP du PM80 le " + String ( dtDtePivotMepPM80, "dd/mm/yyyy hh:mm:ss") + "). Ne passez aucune ventilation, laissez les ventilations vides."			
 			dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 			bOk = False
 			bOkRow = False				
 		End If 			
 	ElseIf dec ( sMtRMsimple ) <> dcSomTbFrais Then
-		asErreur += "La somme des frais doit $$HEX1$$ea00$$ENDHEX$$tre $$HEX1$$e900$$ENDHEX$$gale au montant du RM simple"	
+		asErreur += "La somme des frais doit être égale au montant du RM simple"	
 		dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 		bOk = False
 		bOkRow = False				
@@ -6181,7 +6185,7 @@ public function boolean wf_controler_rn_frais_factu (long alcpt, ref string aser
 //* Fonction		: w_sp_trt_autre_fichier::wf_controler_rn_Frais_Factu
 //* Auteur			: JFF
 //* Date				: 30/11/2016
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PM375-1]
+//* Libellé			: [PM375-1]
 //* Commentaires	: 
 //*
 //* Arguments		: ref string ascolnames[]	 */
@@ -6193,7 +6197,7 @@ public function boolean wf_controler_rn_frais_factu (long alcpt, ref string aser
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* #1	 FPI	 01/07/2009		Am$$HEX1$$e900$$ENDHEX$$lioration : on ne met que la premi$$HEX1$$e800$$ENDHEX$$re erreur
+//* #1	 FPI	 01/07/2009		Amélioration : on ne met que la première erreur
 //        JFF   09/09/2022    [PM80_FA12_FRANEX]
 //*-----------------------------------------------------------------
 
@@ -6251,7 +6255,7 @@ If bOkRow And ( IsNull ( sVal ) Or Len ( Trim ( sVal ) ) <= 0 ) Then
 End If
 
 If bOkRow And Not IsNumber ( sVal ) Then
-	asErreur = 'La valeur "' + sVal + '", $$HEX2$$e0002000$$ENDHEX$$la ligne ' + String ( alCpt ) + " n'est pas valide."
+	asErreur = 'La valeur "' + sVal + '", à la ligne ' + String ( alCpt ) + " n'est pas valide."
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 	bOk = False
 	bOkRow = False		
@@ -6284,7 +6288,7 @@ If bOkRow And ( IsNull ( sVal ) Or Len ( Trim ( sVal ) ) <= 0 ) Then
 End If
 
 If bOkRow And Len ( Trim ( sVal ) ) > 3 Then
-	asErreur = "ERREUR : La zone ID_FOUR_FCT de la ligne " + String ( alCpt ) + " est trop longue (3 Caract$$HEX1$$e800$$ENDHEX$$re max)"
+	asErreur = "ERREUR : La zone ID_FOUR_FCT de la ligne " + String ( alCpt ) + " est trop longue (3 Caractère max)"
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )
 	bOk = False
 	bOkRow = False
@@ -6292,7 +6296,7 @@ End If
 
 // [PM80_FA12_FRANEX]
 If bOkRow And dec ( sMtRNfrais ) <= 0 Then
-	asErreur = "Le montant du RN de frais doit $$HEX1$$ea00$$ENDHEX$$tre strictement positif"
+	asErreur = "Le montant du RN de frais doit être strictement positif"
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 	bOk = False
 	bOkRow = False		
@@ -6310,14 +6314,14 @@ sTbFraisAnex[9] =  dw_charger.object.frais_anex_9 [alCpt]
 sTbFraisAnex[10] =  dw_charger.object.frais_anex_10 [alCpt]		
 sTbFraisAnex[11] =  dw_charger.object.frais_anex_11 [alCpt]	
 
-// Remplacer les null par 0 et // aucun montant strictement n$$HEX1$$e900$$ENDHEX$$gatif
+// Remplacer les null par 0 et // aucun montant strictement négatif
 lTotTbFrais = UpperBound ( sTbFraisAnex ) 
 
 If bOkRow Then
 	For lCptTbFrais = 1 To lTotTbFrais 
 		If IsNull ( sTbFraisAnex [lCptTbFrais] ) Or Trim ( sTbFraisAnex [lCptTbFrais] ) = "" Then sTbFraisAnex [lCptTbFrais] = "0"
 		If Not IsNumber( sTbFraisAnex [lCptTbFrais] ) then
-			asErreur += "Les zones de montants de frais doivent $$HEX1$$ea00$$ENDHEX$$tre num$$HEX1$$e900$$ENDHEX$$riques (d$$HEX1$$e900$$ENDHEX$$cimales)"				
+			asErreur += "Les zones de montants de frais doivent être numériques (décimales)"				
 			dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 			bOk = False
 			bOkRow = False	
@@ -6325,7 +6329,7 @@ If bOkRow Then
 		
 		If bOkRow Then
 			if Dec ( sTbFraisAnex [lCptTbFrais])  < 0 Then
-				asErreur += "Les zones de montants de frais doivent $$HEX1$$ea00$$ENDHEX$$tre positives ou $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro !"				
+				asErreur += "Les zones de montants de frais doivent être positives ou à zéro !"				
 				dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 				bOk = False
 				bOkRow = False	
@@ -6335,23 +6339,23 @@ If bOkRow Then
 End If 
 
 /*
-// Indem Princ doit $$HEX1$$ea00$$ENDHEX$$tre positif
+// Indem Princ doit être positif
 If bOkRow And dec ( sTbFraisAnex [1] ) <= 0 Then
-	asErreur += "Le montant de frais 'Indem. Princ' doit $$HEX1$$ea00$$ENDHEX$$tre strictement positif"				
+	asErreur += "Le montant de frais 'Indem. Princ' doit être strictement positif"				
 	dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 	bOk = False
 	bOkRow = False			
 End If 
 */
 
-// La sommes des frais de 1 $$HEX2$$e0002000$$ENDHEX$$11 doit $$HEX1$$ea00$$ENDHEX$$tre $$HEX1$$e900$$ENDHEX$$gale au montant de facture
+// La sommes des frais de 1 à 11 doit être égale au montant de facture
 If bOkRow Then
 	dcSomTbFrais = 0 
 	For lCptTbFrais = 1 To lTotTbFrais 
 		dcSomTbFrais += dec ( sTbFraisAnex [lCptTbFrais] )
 	Next 
 	If dec ( sMtRNfrais ) <> dcSomTbFrais Then
-		asErreur += "La somme des frais doit $$HEX1$$ea00$$ENDHEX$$tre $$HEX1$$e900$$ENDHEX$$gale au montant du RN de frais"	
+		asErreur += "La somme des frais doit être égale au montant du RN de frais"	
 		dw_Charger.SetItem ( alCpt, "RESULT_TRT", asErreur )		
 		bOk = False
 		bOkRow = False				
@@ -6368,15 +6372,15 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //*
 //* Objet 			: W_Sp_Trt_Extr1::Ue_Initialiser
 //* Evenement 		: Ue_Initialiser
-//* Auteur			: PHG, d'apr$$HEX1$$e800$$ENDHEX$$s JFF ( w_sp_trt_stat3 )
+//* Auteur			: PHG, d'après JFF ( w_sp_trt_stat3 )
 //* Date				: 20/11/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ	PAR		Date		Modification
 //* #1	JCA	22/02/2007	DCMP 070110 - Ajout du fournisseur Darty
-//* #2	PHG	13/06/2008	[DCMP080461] Int$$HEX1$$e900$$ENDHEX$$gration FActuration Hors Prestation
+//* #2	PHG	13/06/2008	[DCMP080461] Intégration FActuration Hors Prestation
 //			FPI	03/12/2010	[PC175] Ajout d'un traitement Opcon
 //			FPI	15/02/2012	[PM200][PSM]
 //			FPI	17/05/2013	[PC938]
@@ -6387,7 +6391,7 @@ DataWindowChild dwChild
 Long lRow, lCpt
 Long lTrouve
 
-This.Title = "Int$$HEX1$$e900$$ENDHEX$$gration autre fichier"
+This.Title = "Intégration autre fichier"
 
 dw_Fourn.Reset ()
 dw_Fourn.InsertRow ( 0 )
@@ -6423,7 +6427,7 @@ event show;call super::show;//*-------------------------------------------------
 //* Evenement     : Show
 //* Auteur        : FPI
 //* Date          : 12/12/2008
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Chargement des donn$$HEX1$$e900$$ENDHEX$$es
+//* Libellé       : Chargement des données
 //* Commentaires  : [DCMP80862]
 //*
 //* Arguments     : Aucun
@@ -6447,7 +6451,7 @@ If gbOpCon Then
 			Case "INT_BOUTIQUE"
 				wf_opcon_boutique(stglb.stab_opcon_xps [lCpt] )
 			Case "INT_IMEI"
-				// Pas de contr$$HEX1$$f400$$ENDHEX$$le de la section car que IMEI Orange pour l'instant
+				// Pas de contrôle de la section car que IMEI Orange pour l'instant
 				//wf_opcon_imei_orange( )  // [ITSM212977]
 		End Choose
 	Next
@@ -6549,7 +6553,7 @@ event close;call super::close;//*-----------------------------------------------
 //* Evenement 		: close
 //* Auteur			: Pierre-Henri Gillot
 //* Date				: 23/11/2006 13:27:36
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -6625,10 +6629,10 @@ event clicked;//*---------------------------------------------------------------
 //*
 //* Objet         : w_sp_trt_autofact::cb_Charger
 //* Evenement     : Clicked
-//* Auteur        : PHG, d'apr$$HEX1$$e800$$ENDHEX$$s JFF ( w_sp_trt_stat3 )
+//* Auteur        : PHG, d'après JFF ( w_sp_trt_stat3 )
 //* Date          : 20/11/2006
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Chargement des donn$$HEX1$$e900$$ENDHEX$$es
-//* Commentaires  : Chargement des r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rences commandes SPB se trouvant
+//* Libellé       : Chargement des données
+//* Commentaires  : Chargement des références commandes SPB se trouvant
 //*					  sur C:\WINNT\TEMP\DEVIS.TXT
 //*
 //* Arguments     : 
@@ -6641,7 +6645,7 @@ event clicked;//*---------------------------------------------------------------
 //*
 //* #1	 CAG	 06/11/2002	  Modification SFR # Ajout du ctrl facturation CEGETEL
 //* #2	 CAG	 30/01/2003	  Annexe 22 : Ajout du bouton maj cod_etat = "RPC"
-//* #3	 PHG	 16/06/2008	 [DCMP080461] Int$$HEX1$$e900$$ENDHEX$$gration Facturation Hors Prestation
+//* #3	 PHG	 16/06/2008	 [DCMP080461] Intégration Facturation Hors Prestation
 //*-----------------------------------------------------------------
 
 String	sModif
@@ -6693,9 +6697,9 @@ on clicked;//*-----------------------------------------------------------------
 //*
 //* Objet         : w_sp_trt_extr1::cb_Annuler
 //* Evenement     : cb_Annuler
-//* Auteur        : PHG, d'apr$$HEX1$$e800$$ENDHEX$$s JFF ( w_sp_trt_stat3 )
+//* Auteur        : PHG, d'après JFF ( w_sp_trt_stat3 )
 //* Date          : 20/11/2006
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -6764,16 +6768,16 @@ integer weight = 400
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
-string text = "Contr$$HEX1$$f400$$ENDHEX$$ler les donn$$HEX1$$e900$$ENDHEX$$es charg$$HEX1$$e900$$ENDHEX$$es"
+string text = "Contrôler les données chargées"
 end type
 
 event clicked;//*-----------------------------------------------------------------
 //*
 //* Objet         : w_sp_trt_autofact::cb_Controler
 //* Evenement     : Clicked
-//* Auteur        : PHG, d'apr$$HEX1$$e800$$ENDHEX$$s JFF ( w_sp_trt_stat3 )
+//* Auteur        : PHG, d'après JFF ( w_sp_trt_stat3 )
 //* Date          : 20/11/2006
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Controle des donn$$HEX1$$e900$$ENDHEX$$es
+//* Libellé       : Controle des données
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -6817,7 +6821,7 @@ event itemchanged;
 //* Evenement     : ItemChanged
 //* Auteur        : FPI
 //* Date          : 12/12/2006
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Choix du type de traitement
+//* Libellé       : Choix du type de traitement
 //* Commentaires  : 
 //*
 //* Arguments     : Aucun
@@ -6826,7 +6830,7 @@ event itemchanged;
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1	 FPI		31/07/2009	[CAMARA] Changement de libell$$HEX2$$e9002000$$ENDHEX$$des boutons
+//* #1	 FPI		31/07/2009	[CAMARA] Changement de libellé des boutons
 //* #2	FPI		19/02/2010	[DCMP100102] Ajout du traitement 6
 // 			FPI		19/09/2016	[VDOC19525]
 //			FPI		04/11/2016	 [VDOC22119]
@@ -6850,15 +6854,15 @@ st_1.visible = false
 // #1
 Choose case long(data)
 	Case K_TYPTRT_CAMARA
-		cb_charger.Text = "Charger les Factures $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gler" 
+		cb_charger.Text = "Charger les Factures à régler" 
 		cb_maj.Text = "Extraction et marquage en base"
 	Case  K_TYPTRT_LST_SIN, K_TYPTRT_LST_CMDE_O2M, K_TYPTRT_LST_CMDE_CDS, K_TYPTRT_LST_CMDE_CFM, K_TYPTRT_LST_SIN_CASTO, K_TYPTRT_LST_SIN_REG, K_TYPTRT_LST_RM, K_TYPTRT_LST_REG,K_TYPTRT_LST_CMDE, K_TYPTRT_LST_FACTU_CASTO, K_TYPTRT_LST_CMDE_AUC, K_TYPTRT_LST_FACT
 		cb_charger.Text = "Charger le fichier"
 		cb_maj.Text = "Lancer l'extraction"
 	Case Else
-		// Textes par d$$HEX1$$e900$$ENDHEX$$faut
+		// Textes par défaut
 		cb_charger.Text = "Charger le fichier"
-		cb_maj.Text = "Mise $$HEX2$$e0002000$$ENDHEX$$jour en base"
+		cb_maj.Text = "Mise à jour en base"
 End choose
 
 st_charger.Text=""
@@ -6874,7 +6878,7 @@ event itemerror;//*-------------------------------------------------------------
 //* Evenement 		: ItemError
 //* Auteur			: JCA
 //* Date				: 26/02/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion des Erreurs 
 //* 						DCMP 070110 - Ajout du fournisseur Darty
 //*-----------------------------------------------------------------
@@ -6916,7 +6920,7 @@ integer weight = 400
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
-string text = "Mise $$HEX2$$e0002000$$ENDHEX$$jour en base"
+string text = "Mise à jour en base"
 end type
 
 event clicked;//*-----------------------------------------------------------------
@@ -6925,7 +6929,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : PHG
 //* Date          : 21/11/2006
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Lancement du traitement
+//* Libellé       : Lancement du traitement
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -6974,7 +6978,7 @@ event itemerror;//*-------------------------------------------------------------
 //* Evenement 		: itemerror
 //* Auteur			: PHG
 //* Date				: 17/06/2008 11:27:29
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 	[DCMP080496] On intercepte les erreur 
 //*						pour ne pas avoir le msg standard d'erreur 
 //*						d'import des dw.
@@ -7006,7 +7010,7 @@ event getfocus;
 //* Fonction      : w_sp_trt_autre_fichier::getfocus
 //* Auteur         : F. Pinon
 //* Date            : 14/08/2009 09:46:49
-//* Libell$$HEX10$$e900200020002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé         : 
 //* Commentaires   : 
 //*
 //* Arguments      : 
@@ -7016,11 +7020,11 @@ event getfocus;
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date        Modification
 //* #..   ...   ../../....   
-//* #1   FPI    14/08/2009      [DCMP090310] Am$$HEX1$$e900$$ENDHEX$$lioration
+//* #1   FPI    14/08/2009      [DCMP090310] Amélioration
 //*-----------------------------------------------------------------
 
 If this.RowCount() > 0 And cb_maj.Enabled = TRUE Then
-   // on r$$HEX1$$e900$$ENDHEX$$active le btn ctl et d$$HEX1$$e900$$ENDHEX$$sactive cb_maj
+   // on réactive le btn ctl et désactive cb_maj
    cb_maj.Enabled = False
    cb_controler.Enabled = TRUE
 End if
@@ -7063,7 +7067,7 @@ fontfamily fontfamily = swiss!
 string facename = "Arial"
 long textcolor = 33554432
 long backcolor = 67108864
-string text = "S$$HEX1$$e900$$ENDHEX$$lectionner un traitement..."
+string text = "Sélectionner un traitement..."
 boolean focusrectangle = false
 end type
 
@@ -7074,7 +7078,7 @@ integer width = 1522
 integer height = 136
 boolean bringtotop = true
 long backcolor = 67108864
-string text = "Si des montants se trouvent dans le fichier texte $$HEX2$$e0002000$$ENDHEX$$int$$HEX1$$e900$$ENDHEX$$grer, ces derniers doivent $$HEX1$$ea00$$ENDHEX$$tre exprim$$HEX1$$e900$$ENDHEX$$s en Euros."
+string text = "Si des montants se trouvent dans le fichier texte à intégrer, ces derniers doivent être exprimés en Euros."
 alignment alignment = center!
 end type
 
@@ -7084,7 +7088,7 @@ event constructor;//*-----------------------------------------------------------
 //* Evenement 		: constructor
 //* Auteur			: 
 //* Date				: 27/02/2008 14:43:58
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: (OVERRIDE)
 //*				  
 //* Arguments		: 
@@ -7131,7 +7135,7 @@ fontcharset fontcharset = ansi!
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Tahoma"
-string text = "Sauvegarder les r$$HEX1$$e900$$ENDHEX$$sultats"
+string text = "Sauvegarder les résultats"
 end type
 
 event clicked;//*-----------------------------------------------------------------
@@ -7139,7 +7143,7 @@ event clicked;//*---------------------------------------------------------------
 //* Fonction      : clicked  (PRIVATE)
 //* Auteur        : JFF
 //* Date          : 28/01/2013
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le des donn$$HEX1$$e900$$ENDHEX$$es
+//* Libellé       : Contrôle des données
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -7149,14 +7153,15 @@ event clicked;//*---------------------------------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     	Modification
 //			JFF		27/01/2014	[VDOC12917]
+//			FPI		23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 String sNomComplet, sNomFic
 Long lRet
 		
-GetFileSaveName( "Sauvegarde du r$$HEX1$$e900$$ENDHEX$$sultat de traitement en fichier Excel", sNomComplet, sNomFic, "", "Fichiers Excel (*.XLS),*.XLS, Tous Fichiers (*.*),*.*")
+GetFileSaveName( "Sauvegarde du résultat de traitement en fichier Excel", sNomComplet, sNomFic, "", "Fichiers Excel (*.XLS),*.XLS, Tous Fichiers (*.*),*.*")
 
-lRet = dw_Charger.SaveAs ( sNomComplet, Excel!, True )
+lRet = dw_Charger.SaveAs ( sNomComplet, Excel8!, True ) // [MIG_PB2022]
 
 Choose Case lRet 
 	Case -1 
@@ -7194,18 +7199,18 @@ fontcharset fontcharset = ansi!
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Tahoma"
-string text = "J~'agrandis la fen$$HEX1$$ea00$$ENDHEX$$tre"
+string text = "J~'agrandis la fenêtre"
 end type
 
 event clicked;
 If isCasTailleFen = "REDUIRE" Then 
 	isCasTailleFen = "AGRANDIR"
 	Wf_PositionnerObjets ( )
-	cb_taillefen.Text = "Je r$$HEX1$$e900$$ENDHEX$$duis la fen$$HEX1$$ea00$$ENDHEX$$tre"
+	cb_taillefen.Text = "Je réduis la fenêtre"
 Else 
 	isCasTailleFen = "REDUIRE"
 	Wf_PositionnerObjets ( )
-	cb_taillefen.Text = "J'agrandis la fen$$HEX1$$ea00$$ENDHEX$$tre"	
+	cb_taillefen.Text = "J'agrandis la fenêtre"	
 End If 
 end event
 

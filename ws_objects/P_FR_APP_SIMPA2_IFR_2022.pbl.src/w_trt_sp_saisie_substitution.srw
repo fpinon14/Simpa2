@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_trt_sp_saisie_substitution.srw
+﻿$PBExportHeader$w_trt_sp_saisie_substitution.srw
 $PBExportComments$[VDoc18645]
 forward
 global type w_trt_sp_saisie_substitution from w_8_accueil
@@ -16,7 +16,7 @@ end forward
 global type w_trt_sp_saisie_substitution from w_8_accueil
 integer width = 4571
 integer height = 1892
-string title = "Param$$HEX1$$e900$$ENDHEX$$trage des substitutions"
+string title = "Paramétrage des substitutions"
 event ue_supprimerdetail pbm_custom72
 pb_appliquer pb_appliquer
 st_temoin_sav st_temoin_sav
@@ -36,7 +36,7 @@ event ue_supprimerdetail;//*----------------------------------------------------
 //* Fonction		: w_trt_sp_saisie_substitution::ue_supprimerdetail
 //* Auteur			: F. Pinon
 //* Date				: 08/10/2015 11:25:19
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: value unsignedlong wparam	 */
@@ -60,7 +60,7 @@ public function integer wf_valider ();//*---------------------------------------
 //* Fonction		: w_trt_sp_saisie_substitution::wf_valider
 //* Auteur			: F. Pinon
 //* Date				: 08/10/2015 16:22:25
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -99,7 +99,7 @@ public function integer wf_controler ();//*-------------------------------------
 //* Fonction		: w_trt_sp_saisie_substitution::wf_controler
 //* Auteur			: F. Pinon
 //* Date				: 08/10/2015 16:13:07
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -114,7 +114,7 @@ public function integer wf_controler ();//*-------------------------------------
 
 Long lRow, lCol, lRow2
 String sCols[]={"ID_PROD","CPT_SUBS","MARQ_APP_ORIG","MODL_APP_ORIG","MARQ_APP_SUBS","MODL_APP_SUBS"}
-String sErrCol[]={"- le produit","- l'ordre","- la marque d'origine","- le mod$$HEX1$$e800$$ENDHEX$$le d'origine","- la marque de substitution","- le mod$$HEX1$$e800$$ENDHEX$$le de substitution"}
+String sErrCol[]={"- le produit","- l'ordre","- la marque d'origine","- le modèle d'origine","- la marque de substitution","- le modèle de substitution"}
 String sVal, sMsg
 String sValeurs[]
 
@@ -182,7 +182,7 @@ For lRow =1 to dw_1.RowCount()
 
 	// Message d'erreur
 	if sMsg <> "" Then
-		stMessage.sTitre		= "Param$$HEX1$$e900$$ENDHEX$$trage des substitutions - SIMPA2"
+		stMessage.sTitre		= "Paramétrage des substitutions - SIMPA2"
 		stMessage.Icon			= Information!
 		stMessage.sVar[1] = sMsg
 		
@@ -203,7 +203,7 @@ public subroutine wf_set_maj_par ();//*-----------------------------------------
 //* Fonction		: w_trt_sp_saisie_substitution::wf_set_maj_par
 //* Auteur			: F. Pinon
 //* Date				: 08/10/2015 16:33:02
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -257,7 +257,7 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		: ue_initialiser
 //* Auteur			: F. Pinon
 //* Date				: 08/10/2015 10:36:19
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -305,7 +305,7 @@ event ue_creer;call super::ue_creer;//*-----------------------------------------
 //* Evenement 		: ue_creer
 //* Auteur			: F. Pinon
 //* Date				: 08/10/2015 11:26:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -362,7 +362,7 @@ event pb_creer::clicked;//*-----------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 08/10/2015 16:04:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -396,10 +396,10 @@ end type
 
 event dw_1::clicked;call super::clicked;//*-----------------------------------------------------------------
 //*
-//* Ev$$HEX1$$e800$$ENDHEX$$nement		: w_trt_sp_saisie_substitution::clicked
+//* Evènement		: w_trt_sp_saisie_substitution::clicked
 //* Auteur			: F. Pinon
 //* Date				: 08/10/2015 10:52:21
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: value unsignedlong flags	 */
@@ -451,7 +451,7 @@ event dw_1::ue_modifiermenu;call super::ue_modifiermenu;
 //* Evenement 		: ue_modifiermenu
 //* Auteur			: F. Pinon
 //* Date				: 08/10/2015 11:55:03
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -481,7 +481,7 @@ event dw_1::itemchanged;call super::itemchanged;
 //* Evenement 		: itemchanged
 //* Auteur			: F. Pinon
 //* Date				: 08/10/2015 12:00:40
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value long row	 */
@@ -551,7 +551,7 @@ event dw_1::itemerror;call super::itemerror;//*---------------------------------
 //* Evenement 		: itemerror
 //* Auteur			: F. Pinon
 //* Date				: 08/10/2015 14:48:55
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value long row	 */
@@ -570,20 +570,20 @@ Long ll_return
 
 Call super::itemerror
 
-stMessage.sTitre		= "Param$$HEX1$$e900$$ENDHEX$$trage des substitutions - SIMPA2"
+stMessage.sTitre		= "Paramétrage des substitutions - SIMPA2"
 stMessage.Icon			= Information!
 
 stMessage.bErreurG	= TRUE
 
 Choose Case isErrCol
 	Case "MODL_APP_ORIG"
-			stMessage.sVar[1] = "mod$$HEX1$$e800$$ENDHEX$$le de l'appareil d'origine"
+			stMessage.sVar[1] = "modèle de l'appareil d'origine"
 			stMessage.sCode	= "GENE003"
 	Case "MARQ_APP_ORIG"
 			stMessage.sVar[1] = "marque de l'appareil d'origine"
 			stMessage.sCode	= "GENE002"
 	Case "MODL_APP_SUBS"
-			stMessage.sVar[1] = "mod$$HEX1$$e800$$ENDHEX$$le de l'appareil de substitution"
+			stMessage.sVar[1] = "modèle de l'appareil de substitution"
 			stMessage.sCode	= "GENE003"
 	Case "MARQ_APP_SUBS"
 			stMessage.sVar[1] = "marque de l'appareil de substitution"
@@ -604,7 +604,7 @@ event dw_1::dberror;
 //* Evenement 		: dberror
 //* Auteur			: F. Pinon
 //* Date				: 08/10/2015 16:52:21
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value long sqldbcode	 */
@@ -624,7 +624,7 @@ event dw_1::dberror;
 If sqldbcode =2627 Then // Violation contrainte PK
 	stMessage.berreurg=FALSE
 	stMessage.scode="GENE005"
-	stMessage.sTitre="Param$$HEX1$$e900$$ENDHEX$$trage des substitutions - SIMPA2"
+	stMessage.sTitre="Paramétrage des substitutions - SIMPA2"
 	stMessage.sVar[1] = "Une des substitutions"
 	f_message(stMessage)
 End if
@@ -682,7 +682,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 08/10/2015 16:05:29
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -741,7 +741,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 09/12/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [VDOC16211]
+//* Libellé			: [VDOC16211]
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -751,12 +751,12 @@ event clicked;//*---------------------------------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* 
+//			FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 Integer iRet
 
-iRet = dw_1.Saveas(stglb.sreptempo + "SUBSTITUTION.XLS", Excel!,TRUE)
+iRet = dw_1.Saveas(stglb.sreptempo + "SUBSTITUTION.XLS", Excel8!,TRUE) // [MIG_PB2022]
 
 stMessage.sTitre  	= "Extraction des substitutions"
 stMessage.Icon			= Information!
@@ -766,7 +766,7 @@ stMessage.sVar[1] = stglb.sreptempo + "SUBSTITUTION.XLS"
 If iRet = 1 Then
 	stMessage.bErreurG	= FALSE
 	stMessage.sCode	= "GENE013"
-	stMessage.sVar[1] = "Le fichier " + stMessage.sVar[1] + " a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$."
+	stMessage.sVar[1] = "Le fichier " + stMessage.sVar[1] + " a été généré."
 Else
 	stMessage.bErreurG	= TRUE
 	stMessage.sCode		= "ANCE008"
@@ -792,7 +792,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 05/11/2009 12:03:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 

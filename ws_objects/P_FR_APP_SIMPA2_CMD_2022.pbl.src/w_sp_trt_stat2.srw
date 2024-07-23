@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_sp_trt_stat2.srw
+﻿$PBExportHeader$w_sp_trt_stat2.srw
 $PBExportComments$Statistique sur les Stocks/Articles
 forward
 global type w_sp_trt_stat2 from w_8_accueil
@@ -40,7 +40,7 @@ public function boolean wf_controlersaisie ();//*-------------------------------
 //* Fonction		: wf_ControlerSaisie (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 06/10/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Controle de saisie
 //*
 //* Arguments		: 
@@ -148,7 +148,7 @@ public subroutine wf_positionnerobjets ();//*-----------------------------------
 //* Evenement 		: wf_PositionnerObjets
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -179,7 +179,7 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		: Ue_Initialiser
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -225,7 +225,7 @@ on show;call w_8_accueil::show;//*----------------------------------------------
 //* Evenement 		: Show
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -302,7 +302,7 @@ event dw_1::itemerror;call super::itemerror;//*---------------------------------
 //* Evenement 		: itemerror
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -336,7 +336,7 @@ event dw_1::itemchanged;call super::itemchanged;//*-----------------------------
 //* Evenement 		: itemchanged
 //* Auteur			: FPI
 //* Date				: 26/07/2016
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [SAISIE_FOUR_MANU] Saisie manuelle du fournisseur		  
+//* Libellé			: [SAISIE_FOUR_MANU] Saisie manuelle du fournisseur		  
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -380,7 +380,7 @@ integer weight = 400
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
-string text = "Extraire les donn$$HEX1$$e900$$ENDHEX$$es"
+string text = "Extraire les données"
 end type
 
 event clicked;//*-----------------------------------------------------------------
@@ -389,13 +389,14 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: cb_Lancer
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*				  
 //  #1 [DCMP-060643]-19/09/2006-PHG Gestion repertoire temporaire
+//	#2		FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 Long	lTotRow
@@ -409,7 +410,7 @@ If wf_ControlerSaisie () Then
 
 	If lTotRow > 0 Then
 		//#1 [DCMP-060643]-19/09/2006-PHG Gestion repertoire temporaire
-		dw_Stat.SaveAs ( stglb.sRepTempo + K_FICSTAT, Excel!, TRUE )
+		dw_Stat.SaveAs ( stglb.sRepTempo + K_FICSTAT, Excel8!, TRUE ) // [MIG_PB2022]
 		RUN ( isRepExcel + " " + stglb.sRepTempo + K_FICSTAT )
 
 	Else
@@ -446,7 +447,7 @@ integer x = 457
 integer y = 76
 integer width = 1801
 boolean bringtotop = true
-string text = "Les montants du fichier Excel sont exprim$$HEX1$$e900$$ENDHEX$$s en"
+string text = "Les montants du fichier Excel sont exprimés en"
 end type
 
 event constructor;//*-----------------------------------------------------------------
@@ -455,7 +456,7 @@ event constructor;//*-----------------------------------------------------------
 //* Evenement 		: constructor
 //* Auteur			: 
 //* Date				: 27/02/2008 14:43:58
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: (OVERRIDE )
 //*				  
 //* Arguments		: 

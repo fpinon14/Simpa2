@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_a_sp_param_alerte_frn.srw
+﻿$PBExportHeader$w_a_sp_param_alerte_frn.srw
 $PBExportComments$[PM95]
 forward
 global type w_a_sp_param_alerte_frn from w_8_accueil
@@ -29,7 +29,7 @@ private function boolean wf_droit_modif ();//*----------------------------------
 //* Fonction		: w_a_sp_param_alerte_frn::wf_droit_modif
 //* Auteur			: F. Pinon
 //* Date				: 16/11/2011 14:45:26
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -44,8 +44,8 @@ private function boolean wf_droit_modif ();//*----------------------------------
 Long 		lTotLigne
 
 /*--------------------------------------------------------------------*/
-/* La pr$$HEX1$$e900$$ENDHEX$$sence d'une ligne 222 pour l'op$$HEX1$$e900$$ENDHEX$$rateur */
-/* connect$$HEX60$$e90020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000$$ENDHEX$$*/   
+/* La présence d'une ligne 222 pour l'opérateur */
+/* connecté                                                           */   
 /*--------------------------------------------------------------------*/
 
 SELECT count(*) INTO :lTotLigne
@@ -99,7 +99,7 @@ event open;call super::open;//*-------------------------------------------------
 //* Evenement 		: open
 //* Auteur			: F. Pinon
 //* Date				: 16/11/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -114,10 +114,10 @@ event open;call super::open;//*-------------------------------------------------
 itrTrans=SQLCA
 
 /*------------------------------------------------------------------*/
-/* Fen$$HEX1$$ea00$$ENDHEX$$tre de recherche                                             */
+/* Fenêtre de recherche                                             */
 /*------------------------------------------------------------------*/
 pb_Interro.istInterro.wAncetre				= This
-pb_Interro.istInterro.sTitre 					= "Recherche de param$$HEX1$$e900$$ENDHEX$$trage alertes"
+pb_Interro.istInterro.sTitre 					= "Recherche de paramétrage alertes"
 pb_Interro.istInterro.sDataObject			= "d_sp_int_param_alert_frn"
 pb_Interro.istInterro.sCodeDw					= "PARAM_ALERTE_FRN"
 
@@ -152,7 +152,7 @@ pb_Interro.istInterro.sData[5].sMoteur		= "MSS"
 
 
 /*------------------------------------------------------------------*/
-/* Initialisation de la structure pour le passage des param$$HEX1$$e800$$ENDHEX$$tres    */
+/* Initialisation de la structure pour le passage des paramètres    */
 /*------------------------------------------------------------------*/
 istPass.trTrans 	= itrTrans
 istPass.bControl	= TRUE		// Utilisation du bouton Controler
@@ -169,7 +169,7 @@ event ue_fin_interro;
 //* Evenement 		: ue_fin_interro
 //* Auteur			: F. Pinon
 //* Date				: 16/11/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -247,7 +247,7 @@ event ue_preparer_interro;call super::ue_preparer_interro;//*-------------------
 //* Evenement 		: ue_preparer_interro
 //* Auteur			: F. Pinon
 //* Date				: 16/11/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Charge les datawindow de la fen$$HEX1$$ea00$$ENDHEX$$tre d'interroration.
+//* Libellé			:	Charge les datawindow de la fenêtre d'interroration.
 //* Commentaires	:	
 //*				  
 //*-----------------------------------------------------------------
@@ -283,7 +283,7 @@ event ue_creer;call super::ue_creer;//*-----------------------------------------
 //* Evenement 		: ue_creer
 //* Auteur			: F. Pinon
 //* Date				: 16/11/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -308,7 +308,7 @@ event ue_modifier;call super::ue_modifier;//*-----------------------------------
 //* Evenement 		: ue_modifier
 //* Auteur			: F. Pinon
 //* Date				: 16/11/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -352,8 +352,8 @@ integer height = 144
 end type
 
 type dw_1 from w_8_accueil`dw_1 within w_a_sp_param_alerte_frn
-integer x = 235
-integer width = 2864
+integer x = 233
+integer width = 2866
 integer height = 580
 string dataobject = "d_sp_a_param_alerte_frn"
 end type
@@ -364,7 +364,7 @@ event dw_1::constructor;call super::constructor;//*-----------------------------
 //* Evenement 		: constructor
 //* Auteur			: F. Pinon
 //* Date				: 16/11/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -415,7 +415,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 16/11/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: TODO
 //*				  
 //* Arguments		: 
@@ -425,7 +425,7 @@ event clicked;//*---------------------------------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* 
+//			FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 Datastore dsParamTarif
@@ -440,7 +440,7 @@ SetNull(lNull)
 SetNull(sNull)
 SetNull(dtNull)
 
-stMessage.sTitre  	= "Extraction du param$$HEX1$$e900$$ENDHEX$$trage des alertes fournisseurs"
+stMessage.sTitre  	= "Extraction du paramétrage des alertes fournisseurs"
 stMessage.Icon			= Information!
 stMessage.Bouton		= Ok!
 
@@ -450,14 +450,14 @@ dsParamTarif.dataobject="d_lst_param_alerte_frn"
 dsParamTarif.SetTransObject(SQLCA)
 dsParamTarif.Retrieve()
 
-iRet = dsParamTarif.Saveas(stglb.sreptempo + "PARAM_ALERTE_FRN.XLS", Excel!,TRUE)
+iRet = dsParamTarif.Saveas(stglb.sreptempo + "PARAM_ALERTE_FRN.XLS", Excel8!,TRUE) // [MIG_PB2022]
 
 stMessage.sVar[1] = stglb.sreptempo + "PARAM_ALERTE_FRN.XLS"
 
 If iRet = 1 Then
 	stMessage.bErreurG	= FALSE
 	stMessage.sCode	= "GENE013"
-	stMessage.sVar[1] = "Le fichier" + stMessage.sVar[1] + " est g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$."
+	stMessage.sVar[1] = "Le fichier" + stMessage.sVar[1] + " est généré."
 Else
 	stMessage.bErreurG	= TRUE
 	stMessage.sCode		= "ANCE008"

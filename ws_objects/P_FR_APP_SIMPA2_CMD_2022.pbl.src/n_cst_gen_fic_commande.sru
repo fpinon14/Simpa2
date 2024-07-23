@@ -1,5 +1,5 @@
-HA$PBExportHeader$n_cst_gen_fic_commande.sru
-$PBExportComments$Objet pour la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande
+﻿$PBExportHeader$n_cst_gen_fic_commande.sru
+$PBExportComments$Objet pour la génération du fichier de commande
 forward
 global type n_cst_gen_fic_commande from nonvisualobject
 end type
@@ -135,7 +135,7 @@ public subroutine uf_preparer ();//*--------------------------------------------
 //* Fonction		: n_cst_gen_fic_commande::uf_Preparer (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Preparer avant traitement
+//* Libellé			: Preparer avant traitement
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -153,10 +153,10 @@ DatawindowChild 	dwChild
 
 CHOOSE CASE isTypTrt
 
-	// G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration
+	// Génération
 	CASE "G"
 		/*------------------------------------------------------------------*/
-		/* Pr$$HEX1$$e900$$ENDHEX$$paration dw fournisseur.                                      */
+		/* Préparation dw fournisseur.                                      */
 		/*------------------------------------------------------------------*/
 		idwFourn.Reset ()
 		idwFourn.InsertRow ( 0 )
@@ -166,7 +166,7 @@ CHOOSE CASE isTypTrt
 			idwFourn.SetItem ( 1, "ID_FOURN", dwChild.GetItemString ( 1, "ID_CODE" ) )
 		End If
 
-	// ReG$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration
+	// ReGénération
 	CASE "R"
 		If idwLstLots.Retrieve () > 0 Then idwLstLots.SelectRow ( 1, TRUE )
 
@@ -180,7 +180,7 @@ public function integer uf_controler_saisie ();//*------------------------------
 //* Fonction		: n_cst_gen_fic_commande::uf_Controler_Saisie (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la saisie
+//* Libellé			: Controler de la saisie
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -202,7 +202,7 @@ iRet = 1
 CHOOSE CASE isTypTrt
 	CASE "G"
 		/*------------------------------------------------------------------*/
-		/* 1 : Le fournisseur est-il renseign$$HEX2$$e9002000$$ENDHEX$$?                            */
+		/* 1 : Le fournisseur est-il renseigné ?                            */
 		/*------------------------------------------------------------------*/
 		sIdfourn = idwFourn.GetItemString ( 1, "ID_FOURN" ) 
 		If IsNull ( sIdFourn ) Then 
@@ -215,7 +215,7 @@ CHOOSE CASE isTypTrt
 
 	CASE "R"
 		/*------------------------------------------------------------------*/
-		/* 1 : Un row est-il s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX1$$e900$$ENDHEX$$.											  */
+		/* 1 : Un row est-il sélectionné.											  */
 		/*------------------------------------------------------------------*/
 		If idwLstLots.GetSelectedRow ( 0 ) <= 0 Then 
 			stMessage.sTitre = "Controle de saisie"
@@ -235,7 +235,7 @@ public function integer uf_lancer_trt ();//*------------------------------------
 //* Fonction		: n_cst_gen_fic_commande::uf_Lancer_Trt (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 31/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Lancement du Traitement
+//* Libellé			: Lancement du Traitement
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -246,7 +246,7 @@ public function integer uf_lancer_trt ();//*------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* #1	 CAG	 06/05/03	  G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration d'un fichier vide qd pas de cmdes
+//* #1	 CAG	 06/05/03	  Génération d'un fichier vide qd pas de cmdes
 //*								  pour des fournisseurs autres que CEGETEL et CETELEC
 //* #2    JFF   28/10/09     [FNAC_PROD_ECH_TECH].[BGE].[20091027112156767]
 //*-----------------------------------------------------------------
@@ -264,26 +264,26 @@ If uf_Trace ( "INIT", "") <= 0 Then iRet = -1
 
 CHOOSE CASE isTypTrt
 
-	// G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration d'un fichier
+	// Génération d'un fichier
 	CASE "G"
 		This.uf_Trace ( "ECR", "TRAITEMENT DE GENERATION DE COMMANDES" )
 
 		/*------------------------------------------------------------------*/
-		/* Purge des fichiers du mois pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dent.                            */
+		/* Purge des fichiers du mois précédent.                            */
 		/*------------------------------------------------------------------*/
 		sIdFourn = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
 		This.uf_Purge_Fichier_Auto ( sIdFourn )
 
 		/*------------------------------------------------------------------*/
 		/* Chargement des commandes de la table dans la dw                  */
-		/* si iRet = 2, aucune ligne $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer.									  */
+		/* si iRet = 2, aucune ligne à générer.									  */
 		/*------------------------------------------------------------------*/
 		If iRet > 0 Then
 			iRet = This.uf_Charger_Commandes () 
 		End If
 
 		/*------------------------------------------------------------------*/
-		/* Marquage des commandes charg$$HEX1$$e900$$ENDHEX$$es comme $$HEX1$$e900$$ENDHEX$$tant g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$es.				  */
+		/* Marquage des commandes chargées comme étant générées.				  */
 		/*------------------------------------------------------------------*/
 		// #2  [FNAC_PROD_ECH_TECH].[BGE].[20091027112156767]
 //		If iRet = 1 Then
@@ -292,7 +292,7 @@ CHOOSE CASE isTypTrt
 		End If
 
 		/*--------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commandes pour le fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$*/
+		/* Génération du fichier de commandes pour le fournisseur sélectionné */
 		/*--------------------------------------------------------------------*/
 		/* #1 : CAG 06/05/2003																 */
 		/*--------------------------------------------------------------------*/
@@ -302,28 +302,28 @@ CHOOSE CASE isTypTrt
 		End If
 
 		If iRet <= 0 Then 
-			This.uf_Trace ( "ECR", "Le traitement se termine anormalement, le fichier n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!!." )
+			This.uf_Trace ( "ECR", "Le traitement se termine anormalement, le fichier n'a pas été généré !!!." )
 		ElseIf iRet = 1 then
-			This.uf_Trace ( "ECR", "Le traitement se termine normalement, le fichier a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$." )
+			This.uf_Trace ( "ECR", "Le traitement se termine normalement, le fichier a été généré." )
 		Else
-			This.uf_Trace ( "ECR", "Le traitement se termine normalement, Aucune $$HEX2$$e0002000$$ENDHEX$$ligne $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer." )
+			This.uf_Trace ( "ECR", "Le traitement se termine normalement, Aucune à ligne à générer." )
 		End If
 
-	// ReG$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration d'un fichier $$HEX2$$e0002000$$ENDHEX$$partir d'un lot
+	// ReGénération d'un fichier à partir d'un lot
 	CASE "R"
 
 		This.uf_Trace ( "ECR", "TRAITEMENT DE REGENERATION D'UN LOT" )
 
 		/*------------------------------------------------------------------*/
 		/* Chargement des commandes de la table dans la dw                  */
-		/* si iRet = 2, aucune ligne $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer.									  */
+		/* si iRet = 2, aucune ligne à générer.									  */
 		/*------------------------------------------------------------------*/
 		If iRet > 0 Then
 			iRet = This.uf_Charger_Commandes () 
 		End If
 
 		/*-------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commandes pour le fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX1$$e900$$ENDHEX$$*/
+		/* Génération du fichier de commandes pour le fournisseur sélectionné*/
 		/*-------------------------------------------------------------------*/
 		/* #1 : CAG 06/05/03																	*/
 		/*-------------------------------------------------------------------*/
@@ -333,12 +333,12 @@ CHOOSE CASE isTypTrt
 
 		If iRet <= 0 Then 
 			This.uf_Trace ( "ECR", "Le traitement se termine anormalement, le fichier (Lot " &
-			+ String ( idwLstLots.GetItemNumber ( idwLstLots.GetSelectedRow ( 0 ), "ID_LOT_CMD" ) ) + ") n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$reg$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!!." )
+			+ String ( idwLstLots.GetItemNumber ( idwLstLots.GetSelectedRow ( 0 ), "ID_LOT_CMD" ) ) + ") n'a pas été regénéré !!!." )
 		ElseIf iRet = 1 then
 			This.uf_Trace ( "ECR", "Le traitement se termine normalement, le fichier (Lot " &
-			+ String ( idwLstLots.GetItemNumber ( idwLstLots.GetSelectedRow ( 0 ), "ID_LOT_CMD" ) ) + ") a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$reg$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$." )
+			+ String ( idwLstLots.GetItemNumber ( idwLstLots.GetSelectedRow ( 0 ), "ID_LOT_CMD" ) ) + ") a été regénéré." )
 		Else
-			This.uf_Trace ( "ECR", "Le traitement se termine normalement, Aucune $$HEX2$$e0002000$$ENDHEX$$ligne $$HEX2$$e0002000$$ENDHEX$$reg$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer pour ce lot." )
+			This.uf_Trace ( "ECR", "Le traitement se termine normalement, Aucune à ligne à regénérer pour ce lot." )
 		End If
 
 END CHOOSE
@@ -354,7 +354,7 @@ private function integer uf_trace (string ascas, string astexte);//*------------
 //* Fonction		: n_cst_gen_fic_commande::uf_Trace (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Trace des op$$HEX1$$e900$$ENDHEX$$rations
+//* Libellé			: Trace des opérations
 //* Commentaires	: 
 //*
 //* Arguments		: asCas			String		Val
@@ -416,7 +416,7 @@ private function integer uf_purge_fichier_auto (string aidfourn);//*------------
 //* Fonction		: n_cst_gen_fic_commande::uf_Purge_Fichier_Auto (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 05/09/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Purge Automatique des fichier trait$$HEX2$$e9002000$$ENDHEX$$apr$$HEX1$$e800$$ENDHEX$$s 6 mois
+//* Libellé			: Purge Automatique des fichier traité après 6 mois
 //* Commentaires	: 
 //*
 //* Arguments		: String		aIdfourn		Val
@@ -426,7 +426,7 @@ private function integer uf_purge_fichier_auto (string aidfourn);//*------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1    JFF    30/08/2002  Le nom du r$$HEX1$$e900$$ENDHEX$$pertoire de g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration n'est plus le code
+//* #1    JFF    30/08/2002  Le nom du répertoire de génération n'est plus le code
 //*								  du fournisseur -FR mais le nom complet (<8 car) -FL
 //* 
 //*-----------------------------------------------------------------
@@ -437,7 +437,7 @@ Long	lTotLig, lCpt, lErreur, lCptCas, lTotGen, lRow
 
 /*------------------------------------------------------------------*/
 /* JFF le 28/02/2002 : Je shunte pour le moment la purge            */
-/* (Probl$$HEX1$$e800$$ENDHEX$$me avec le CETELEC)                                       */
+/* (Problème avec le CETELEC)                                       */
 /*------------------------------------------------------------------*/
 Return 1
 
@@ -492,9 +492,9 @@ For lCptCas = 1 To 4
 Next
 
 If lErreur > 0 Then
-	This.Uf_Trace ( "ECR", "ERREUR lors de la purge de fichiers, " + String ( lErreur ) + " fichiers non purg$$HEX1$$e900$$ENDHEX$$s" )
+	This.Uf_Trace ( "ECR", "ERREUR lors de la purge de fichiers, " + String ( lErreur ) + " fichiers non purgés" )
 End If
-This.Uf_Trace ( "ECR", String ( lTotGen - lErreur ) + " fichiers sur " + String ( lTotGen ) + " ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$purg$$HEX1$$e900$$ENDHEX$$s" )
+This.Uf_Trace ( "ECR", String ( lTotGen - lErreur ) + " fichiers sur " + String ( lTotGen ) + " ont été purgés" )
 
 
 Return iRet
@@ -505,7 +505,7 @@ public subroutine uf_initialiser (ref s_pass astpass, ref listbox alblistefic);/
 //* Fonction		: n_cst_gen_fic_commande::uf_Initialiser (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Initialisation de l'objet
+//* Libellé			: Initialisation de l'objet
 //* Commentaires	: 
 //*
 //* Arguments		: astPass		s_Pass		Ref
@@ -564,7 +564,7 @@ idwStkRepFourn.SetTransObject ( SQLCA )
 idwStkRepFourn.Retrieve ( "-FL" )
 
 /*------------------------------------------------------------------*/
-/* Tableau des fournisseurs $$HEX2$$e0002000$$ENDHEX$$traiter par OpCon/XPS.                */
+/* Tableau des fournisseurs à traiter par OpCon/XPS.                */
 /*------------------------------------------------------------------*/
 isTabFrIntGen = stGlb.sTab_OpCon_XPS
 
@@ -579,7 +579,7 @@ private function long uf_charger_commandes ();//*-------------------------------
 //* Fonction		: n_cst_gen_fic_commande::uf_Charger_Commandes (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 31/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Chargement des commandes
+//* Libellé			: Chargement des commandes
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -592,13 +592,13 @@ private function long uf_charger_commandes ();//*-------------------------------
 //* #..   ...   ../../....   
 //* 
 //* #1	 CAG	 08/10/02	  Modification SFR : en fonction du fournisseur
-//*								  la dw change d'objet. Pour Cegetel, on g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re
-//*								  quand m$$HEX1$$ea00$$ENDHEX$$me un fichier si aucune commande
+//*								  la dw change d'objet. Pour Cegetel, on génère
+//*								  quand même un fichier si aucune commande
 //*
 //* #2	 CAG   16/10/02     Modification y compris pour Cetelec : si au moins
-//*							     une annul, on ne reg$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$re pas
-//*								  cf doc d'analyse des traitements pour int$$HEX1$$e900$$ENDHEX$$gration
-//*								  SFR pr$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence annexe 12
+//*							     une annul, on ne regénére pas
+//*								  cf doc d'analyse des traitements pour intégration
+//*								  SFR préférence annexe 12
 //*
 //* #3	 CAG	 10/09/04	  DCMP 040381 : Ajout du frn MSS
 //* #4    MADM  06/02/06     [DCMP060119]: Ajout du frn AVM
@@ -644,13 +644,13 @@ iRet = 1
 
 CHOOSE CASE isTypTrt
 
-	// G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration d'un fichier
+	// Génération d'un fichier
 	CASE "G"
 		sIdFourn = Upper (idwFourn.GetItemString ( 1, "ID_FOURN" ))
 
-		This.uf_Trace ( "ECR", "R$$HEX1$$e900$$ENDHEX$$vision SVN : " + stGLB.sRevisionSvn )
+		This.uf_Trace ( "ECR", "Révision SVN : " + stGLB.sRevisionSvn )
 
-		This.uf_Trace ( "ECR", "Fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$: (" + sIdFourn + ") " + &
+		This.uf_Trace ( "ECR", "Fournisseur sélectionné : (" + sIdFourn + ") " + &
 										Upper ( idwFourn.Describe ( "Evaluate ( 'LookUpDisplay ( ID_FOURN )', 1 )" ) ) )
 
 		/*------------------------------------------------------------------*/
@@ -668,7 +668,7 @@ CHOOSE CASE isTypTrt
 				idwFicCharg.SetTransObject ( SQLCA )
 
 				/*------------------------------------------------------------------*/
-				/* Chargement des commandes avec un ID_LOT_CMD $$HEX2$$e0002000$$ENDHEX$$0 (jamais g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$es)*/
+				/* Chargement des commandes avec un ID_LOT_CMD à 0 (jamais générées)*/
 				/*------------------------------------------------------------------*/
 				lTotLig = idwFicCharg.Retrieve ( 0, sIdFourn )
 				idwFicCharg.Sort ()
@@ -679,7 +679,7 @@ CHOOSE CASE isTypTrt
 					This.uf_Trace ( "ECR", "Chargement des commandes : ERREUR DE CHARGEMENT (" + String ( lTotLig ) + ")"  )
 				Else
 					/*------------------------------------------------------------------*/
-					/* S'il n'y a pas de commande, on g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re quand m$$HEX1$$ea00$$ENDHEX$$me le fichier      */
+					/* S'il n'y a pas de commande, on génère quand même le fichier      */
 					/*------------------------------------------------------------------*/
 					This.uf_Trace ( "ECR", "Chargement des commandes : " + String ( lTotLig ) + " ligne(s)"  )
 				End If
@@ -728,11 +728,11 @@ CHOOSE CASE isTypTrt
 				End Choose 
 
 				/*------------------------------------------------------------------*/
-				/* Chargement des commandes avec un ID_LOT_CMDE $$HEX2$$e0002000$$ENDHEX$$0 (jamais g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$e)*/
+				/* Chargement des commandes avec un ID_LOT_CMDE à 0 (jamais générée)*/
 				/*------------------------------------------------------------------*/
 				lTotLig = idwFicCharg.Retrieve ( 0, sIdFourn )
 
-				// [BLCODE] On g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re BLCODE 	avec O2M
+				// [BLCODE] On génère BLCODE 	avec O2M
 				If sIdFourn	= "O2M" Then
 					idwFicCharg2.Reset ()
 					idwFicCharg2.DataObject = "d_trt_charg_cmde_agen_standard"
@@ -776,26 +776,26 @@ CHOOSE CASE isTypTrt
 				If lTotLig < 0 Then
 					This.uf_Sortie_OpCon ( "ECR", 550, "ERR550/CHGREFIFR", FALSE )
 					iRet = -1
-					This.uf_Trace ( "ECR", "Chargement du r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rentiel IFR : ERREUR DE CHARGEMENT (" + String ( lTotLig ) + ")"  )
+					This.uf_Trace ( "ECR", "Chargement du référentiel IFR : ERREUR DE CHARGEMENT (" + String ( lTotLig ) + ")"  )
 				Else
 					If lTotLig = 0 Then iRet = 2
-					This.uf_Trace ( "ECR", "Chargement du r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rentiel IFR : " + String ( lTotLig ) + " ligne(s)"  )
+					This.uf_Trace ( "ECR", "Chargement du référentiel IFR : " + String ( lTotLig ) + " ligne(s)"  )
 				End If
 
 			
 			/*------------------------------------------------------------------*/
-			/* Pas de fournisseur d$$HEX1$$e900$$ENDHEX$$clar$$HEX2$$e9002000$$ENDHEX$$pour g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$le fichier.					  */
+			/* Pas de fournisseur déclaré pour généré le fichier.					  */
 			/*------------------------------------------------------------------*/
 			Case ELSE
 				iRet = -1
-				This.Uf_Trace ( "ECR", "ERREUR : Pas de fournisseur d$$HEX1$$e900$$ENDHEX$$clar$$HEX2$$e9002000$$ENDHEX$$pour la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande !!" )
+				This.Uf_Trace ( "ECR", "ERREUR : Pas de fournisseur déclaré pour la génération du fichier de commande !!" )
 
 		End Choose
 
-	// ReG$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration d'un fichier $$HEX2$$e0002000$$ENDHEX$$partir d'un lot
+	// ReGénération d'un fichier à partir d'un lot
 	CASE "R"
 				iRet = 1
-				// R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration du fournisseur dans la liste des lots
+				// Récupération du fournisseur dans la liste des lots
 				sIdFourn = Upper ( idwLstLots.GetItemString ( idwLstLots.GetRow (), "ID_FOUR" ) )
 				idwFicCharg.Reset ()
 
@@ -834,10 +834,10 @@ CHOOSE CASE isTypTrt
 
 		lLot = idwLstLots.GetItemNumber ( idwLstLots.GetSelectedRow ( 0 ), "ID_LOT_CMD" ) 
 
-		This.uf_Trace ( "ECR", "Lot s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$: " + String ( lLot ) )
+		This.uf_Trace ( "ECR", "Lot sélectionné : " + String ( lLot ) )
 
 		/*------------------------------------------------------------------*/
-		/* Chargement des commandes avec l'ID_LOT_CMDE s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX1$$e900$$ENDHEX$$.			  */
+		/* Chargement des commandes avec l'ID_LOT_CMDE sélectionné.			  */
 		/*------------------------------------------------------------------*/
 		lTotLig = idwFicCharg.Retrieve ( lLot, sIdFourn )
 		idwFicCharg.Sort ()
@@ -855,7 +855,7 @@ CHOOSE CASE isTypTrt
 		/*------------------------------------------------------------------*/
 		If idwFicCharg.Find ( "COD_ETAT = 'ANN'", 1, lTotLig) > 0 Then
 			iRet = -1
-			This.uf_Trace ( "ECR", "Chargement du lot de commandes : il y a au moins une commande d'annul$$HEX1$$e900$$ENDHEX$$e dans ce lot !"  )
+			This.uf_Trace ( "ECR", "Chargement du lot de commandes : il y a au moins une commande d'annulée dans ce lot !"  )
 		End If
 
 END CHOOSE
@@ -864,7 +864,7 @@ END CHOOSE
 CHOOSE CASE sIdFourn
 
 	/*------------------------------------------------------------------*/
-	/* Cas particulier $$HEX2$$e0002000$$ENDHEX$$traiter pour CEGETEL, avant g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du      */
+	/* Cas particulier à traiter pour CEGETEL, avant génération du      */
 	/* fichier.                                                         */
 	/*------------------------------------------------------------------*/
 	CASE "CEG"
@@ -919,7 +919,7 @@ private function integer uf_generer_fichier (long alidlotcmd);//*---------------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 31/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commandes pour le fournisseur
+//* Libellé			: Génération du fichier de commandes pour le fournisseur
 //* Commentaires	: 
 //*
 //* Arguments		: alIdLotCmd	Long	Val
@@ -932,7 +932,7 @@ private function integer uf_generer_fichier (long alidlotcmd);//*---------------
 //* #..   ...   ../../....   
 //*
 //* #1	 CAG	 15/10/02	Modification SFR : Ajout de la fonction de
-//*								g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration pour Cegetel
+//*								génération pour Cegetel
 //* #2	 CAG	 14/09/04	DCMP 040381 : Ajout du frn MSS
 //* #3    MADM  06/02/06	[DCMP060119]: Ajout du frn AVM
 //* #4    MADM  07/03/06	[DCMP060198]: Ajout du frn BRIGHTPOINT/BTP
@@ -1248,11 +1248,11 @@ CHOOSE CASE Upper ( sIdFourn )
 
 
 	/*------------------------------------------------------------------*/
-	/* Pas de fournisseur d$$HEX1$$e900$$ENDHEX$$clar$$HEX2$$e9002000$$ENDHEX$$pour g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$le fichier.					  */
+	/* Pas de fournisseur déclaré pour généré le fichier.					  */
 	/*------------------------------------------------------------------*/
 	CASE ELSE
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR : Pas de fournisseur d$$HEX1$$e900$$ENDHEX$$clar$$HEX2$$e9002000$$ENDHEX$$pour la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande !!" )
+		This.Uf_Trace ( "ECR", "ERREUR : Pas de fournisseur déclaré pour la génération du fichier de commande !!" )
 		This.uf_Sortie_OpCon ( "ECR", 600, "ERR600/GENFICINC", FALSE )
 
 END CHOOSE
@@ -1269,8 +1269,8 @@ private function integer uf_flaguer_commandes_cegetel ();//*--------------------
 //* Fonction		: n_cst_gen_fic_commande::uf_Flaguer_Commandes_Cegetel ( PRIVATE )
 //* Auteur			: Abdmeziem Catherine
 //* Date				: 08/10/02
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: On marque en base les commandes charg$$HEX1$$e900$$ENDHEX$$es comme $$HEX1$$e900$$ENDHEX$$tant g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$es
-//*					  elle ne pourraient $$HEX1$$ea00$$ENDHEX$$tre par la suite que reg$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$es avant la fonction ad$$HEX1$$e900$$ENDHEX$$quat.
+//* Libellé			: On marque en base les commandes chargées comme étant générées
+//*					  elle ne pourraient être par la suite que regénérées avant la fonction adéquat.
 //* Commentaires	: Modification SFR
 //*
 //* Arguments		: Aucun
@@ -1296,12 +1296,12 @@ ilIdLotCeg = -1
 SQLCA.PS_S05_COMMANDE ( "ID_LOT_CEG", ilIdLotCeg )
 
 If ilIdLotCeg <= 0 Or IsNull ( ilIdLotCeg ) Then
-	// RollBack imm$$HEX1$$e900$$ENDHEX$$diat.
+	// RollBack immédiat.
 	F_Commit ( SQLCA, False )
 	iRet = -1
-	This.Uf_Trace ( "ECR", "ERREUR lors de la r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration de l'ID_LOT_CEG, " + String ( ilIdLotCeg ) )
+	This.Uf_Trace ( "ECR", "ERREUR lors de la récupération de l'ID_LOT_CEG, " + String ( ilIdLotCeg ) )
 Else
-	This.Uf_Trace ( "ECR", "Attribution du n$$HEX2$$b0002000$$ENDHEX$$de fichier de commandes : " + String ( ilIdLotCeg ) )
+	This.Uf_Trace ( "ECR", "Attribution du n° de fichier de commandes : " + String ( ilIdLotCeg ) )
 End If
 
 // [ITSM178659]
@@ -1334,20 +1334,20 @@ For lCpt = 1 To 2
 	If lTotFilt > 0 Then
 
 	/*------------------------------------------------------------------*/
-	/* R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration d'un n$$HEX2$$b0002000$$ENDHEX$$max de cmde par produit                     */
+	/* Récupération d'un n° max de cmde par produit                     */
 	/*------------------------------------------------------------------*/
 		SQLCA.PS_S04_COMMANDE ( lIdProd, lTotFilt, lCptCmdMax )
 		If lCptCmdMax <= 0 Or IsNull ( lCptCmdMax ) Then
-			// RollBack imm$$HEX1$$e900$$ENDHEX$$diat.
+			// RollBack immédiat.
 			F_Commit ( SQLCA, False )
 			iRet = -1
-			This.Uf_Trace ( "ECR", "ERREUR lors de la r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration de CPT_CMD, " + String ( lCptCmdMax ) )
+			This.Uf_Trace ( "ECR", "ERREUR lors de la récupération de CPT_CMD, " + String ( lCptCmdMax ) )
 		Else
-			This.Uf_Trace ( "ECR", "Attribution des n$$HEX2$$b0002000$$ENDHEX$$de commandes : " + String ( lCptCmdMax - lTotFilt + 1 ) + " $$HEX2$$e0002000$$ENDHEX$$" + String ( lCptCmdMax ) )
+			This.Uf_Trace ( "ECR", "Attribution des n° de commandes : " + String ( lCptCmdMax - lTotFilt + 1 ) + " à " + String ( lCptCmdMax ) )
 		End If
 
 		/*------------------------------------------------------------------*/
-		/* Attribution d'un n$$HEX2$$b0002000$$ENDHEX$$de cmde $$HEX2$$e0002000$$ENDHEX$$toutes les lignes charg$$HEX1$$e900$$ENDHEX$$es pour    */
+		/* Attribution d'un n° de cmde à toutes les lignes chargées pour    */
 		/* le produit en cours de traitement                                */
 		/*------------------------------------------------------------------*/
 		If iRet > 0 Then
@@ -1364,16 +1364,16 @@ For lCpt = 1 To 2
 
 		/*------------------------------------------------------------------*/
 		/* Update en base.                                                  */
-		/* Les lignes vont $$HEX1$$ea00$$ENDHEX$$tre marqu$$HEX1$$e900$$ENDHEX$$es en bases.								  */
+		/* Les lignes vont être marquées en bases.								  */
 		/*------------------------------------------------------------------*/
 		If iRet > 0 Then
 			If idwFicCharg.Update () > 0 Then
 				F_Commit ( SQLCA, True )
-				This.Uf_Trace ( "ECR", "Update du marquage r$$HEX1$$e900$$ENDHEX$$ussi, les commandes pour le produit " + String ( lIdProd ) + " sont flagu$$HEX1$$e900$$ENDHEX$$es en base." )
+				This.Uf_Trace ( "ECR", "Update du marquage réussi, les commandes pour le produit " + String ( lIdProd ) + " sont flaguées en base." )
 			Else
 				iRet = -1
 				F_Commit ( SQLCA, False )
-				This.Uf_Trace ( "ECR", "ERREUR, Update du marquage en base a $$HEX1$$e900$$ENDHEX$$chou$$HEX2$$e9002000$$ENDHEX$$sur le produit " + String ( lIdProd ) + "." )
+				This.Uf_Trace ( "ECR", "ERREUR, Update du marquage en base a échoué sur le produit " + String ( lIdProd ) + "." )
 			End If
 		End If
 	End If
@@ -1394,8 +1394,8 @@ private function integer uf_generer_fichier_cegetel ();//*----------------------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_CEGETEL ( PRIVATE )
 //* Auteur			: Abdmeziem Catherine
 //* Date				: 09/10/02
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour CEGETEL
-//* Commentaires	: Un fichier sera g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$SAPjjmmi.txt (SAP25101.txt)
+//* Libellé			: Génération du fichier de commande pour CEGETEL
+//* Commentaires	: Un fichier sera généré SAPjjmmi.txt (SAP25101.txt)
 //*					  N'EST PLUS UTILISE !!!! FONCTION POUR SAV SI REPRISE DE MUST
 //*					  VOIR A PRESENT : uf_Generer_Fichier_CEGETEL2
 //* Arguments		: Aucun
@@ -1427,7 +1427,7 @@ idwFicGenCmde.Reset ()
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Ecriture des enregistrements des commandes : chaque ligne        */
-/* d'ent$$HEX1$$ea00$$ENDHEX$$te de commande est suivie des articles correspondants.     */
+/* d'entête de commande est suivie des articles correspondants.     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 lTot = idwFicCharg.RowCount ()
@@ -1435,7 +1435,7 @@ lTot = idwFicCharg.RowCount ()
 For lCpt = 1 To lTot
 
 	/*------------------------------------------------------------------*/
-	/* Ecriture de l'ent$$HEX1$$ea00$$ENDHEX$$te de commande                                 */
+	/* Ecriture de l'entête de commande                                 */
 	/*------------------------------------------------------------------*/
 	sEnr = "$"																										  + sSep + &
 			 This.uf_FormatChamps ( 10, idwFicCharg.GetItemString ( lCpt, "ID_PROD_CLIENT" ) ) + sSep + &
@@ -1469,17 +1469,17 @@ For lCpt = 1 To lTot
 	/*------------------------------------------------------------------*/
 
 	/*------------------------------------------------------------------*/
-	/* 1 - $$HEX1$$e900$$ENDHEX$$criture de la ligne de l'article de base                    */
+	/* 1 - écriture de la ligne de l'article de base                    */
 	/*------------------------------------------------------------------*/
 	sEnr = "*" + sSep + uf_FormatChamps ( 18, idwFicCharg.GetItemString ( lCpt, "ID_REF_FOUR" ) ) + sSep + "1"
 	lNewRow = idwFicGenCmde.InsertRow ( 0 )
 	idwFicGenCmde.SetItem ( lNewRow, "LIGNE", sEnr )
 
 	/*------------------------------------------------------------------*/
-	/* 2 - Ecriture de l'article li$$HEX2$$e9002000$$ENDHEX$$au code hlr                        */
+	/* 2 - Ecriture de l'article lié au code hlr                        */
 	/*------------------------------------------------------------------*/
 	If Not ( IsNull ( idwFicCharg.GetItemNumber ( lCpt, "ID_HLR" ) ) ) Then
-		// R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration du kit dans det_article
+		// Récupération du kit dans det_article
 		sFiltre = "ID_FOUR = '" + idwFicCharg.GetItemString ( lCpt, "ID_FOUR" ) 		  + "' AND " + &
 					 "ID_REF_FOUR = '" + idwFicCharg.GetItemString ( lCpt, "ID_REF_FOUR" ) + "' AND " + &
 					 "ID_TYP_ART = 'KIT' AND " 														  + &
@@ -1489,7 +1489,7 @@ For lCpt = 1 To lTot
 		idwFicChargArt.Sort ()
 		If idwFicChargArt.RowCount () = 0 Then
 			/*------------------------------------------------------------------*/
-			/* On n'a pas trouv$$HEX2$$e9002000$$ENDHEX$$le kit avec le produit => on le cherche pour   */
+			/* On n'a pas trouvé le kit avec le produit => on le cherche pour   */
 			/* id_prod = -1                                                     */
 			/*------------------------------------------------------------------*/
 			sFiltre = "ID_FOUR = '" + idwFicCharg.GetItemString ( lCpt, "ID_FOUR" ) 		  + "' AND " + &
@@ -1501,7 +1501,7 @@ For lCpt = 1 To lTot
 			idwFicChargArt.Sort ()
 			If idwFicChargArt.RowCount () <> 0 Then
 				/*------------------------------------------------------------------*/
-				/* On cherche maintenant l'article li$$HEX2$$e9002000$$ENDHEX$$au kit trouv$$HEX17$$e9002000200020002000200020002000200020002000200020002000200020002000$$ENDHEX$$*/
+				/* On cherche maintenant l'article lié au kit trouvé                */
 				/*------------------------------------------------------------------*/
 				sFiltre = "ID_FOUR = '" + idwFicCharg.GetItemString ( lCpt, "ID_FOUR" ) 		  + "' AND " + &
 							 "ID_HLR = " + String ( idwFicCharg.GetItemNumber ( lCpt, "ID_HLR" ) ) + " AND " + &
@@ -1517,7 +1517,7 @@ For lCpt = 1 To lTot
 			End If
 		Else
 			/*------------------------------------------------------------------*/
-			/* On cherche maintenant l'article li$$HEX2$$e9002000$$ENDHEX$$au kit trouv$$HEX17$$e9002000200020002000200020002000200020002000200020002000200020002000$$ENDHEX$$*/
+			/* On cherche maintenant l'article lié au kit trouvé                */
 			/*------------------------------------------------------------------*/
 			sFiltre = "ID_FOUR = '" + idwFicCharg.GetItemString ( lCpt, "ID_FOUR" ) 		  + "' AND " + &
 						 "ID_HLR = " + String ( idwFicCharg.GetItemNumber ( lCpt, "ID_HLR" ) ) + " AND " + &
@@ -1534,7 +1534,7 @@ For lCpt = 1 To lTot
 	End If
 
 	/*------------------------------------------------------------------*/
-	/* 3 - Ecriture de l'article li$$HEX2$$e9002000$$ENDHEX$$au produit                         */
+	/* 3 - Ecriture de l'article lié au produit                         */
 	/*------------------------------------------------------------------*/
 	sFiltre = "ID_FOUR = '" + idwFicCharg.GetItemString ( lCpt, "ID_FOUR" ) 		  + "' AND " + &
 				 "ID_REF_FOUR = '" + idwFicCharg.GetItemString ( lCpt, "ID_REF_FOUR" ) + "' AND " + &
@@ -1550,7 +1550,7 @@ For lCpt = 1 To lTot
 	End If
 
 	/*------------------------------------------------------------------*/
-	/* 4 - Ecriture du (ou des) article(s) li$$HEX1$$e900$$ENDHEX$$(s) au mobile             */
+	/* 4 - Ecriture du (ou des) article(s) lié(s) au mobile             */
 	/*------------------------------------------------------------------*/
 	sFiltre = "ID_FOUR = '" + idwFicCharg.GetItemString ( lCpt, "ID_FOUR" ) 		  + "' AND " + &
 				 "ID_REF_FOUR = '" + idwFicCharg.GetItemString ( lCpt, "ID_REF_FOUR" ) + "' AND " + &
@@ -1569,7 +1569,7 @@ Next
 
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* Ecriture de l'enregistrement de l'ent$$HEX1$$ea00$$ENDHEX$$te de fichier              */
+/* Ecriture de l'enregistrement de l'entête de fichier              */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 sNbEnr = String ( idwFicGenCmde.RowCount () )
@@ -1584,22 +1584,22 @@ idwFicGenCmde.SetItem ( lNewRow, "LIGNE", sEnr )
 
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration du nom de fichier, et g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration                    */
+/* Récupération du nom de fichier, et génération                    */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 sNomFic = K_FIC5
 This.uf_nom_fichier ( sNomFic , 0 )
 If sNomFic = "" Then
 	iRet = -1
-	This.Uf_Trace ( "ECR", "Il y a d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$eu 10 g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rations aujourd'hui !!" )
+	This.Uf_Trace ( "ECR", "Il y a déjà eu 10 générations aujourd'hui !!" )
 Else
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, False )
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des commandes g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic ) )
+		This.Uf_Trace ( "ECR", "Fichier des commandes généré avec succès sur : " + Upper ( sNomFic ) )
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des commandes, le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des commandes, le fichier n'est pas généré !!" )
 	End If
 End If
 
@@ -1612,7 +1612,7 @@ private subroutine uf_charger_cegetel ();//*------------------------------------
 //* Fonction      : N_Cst_Gen_Fic_Commande::uf_Charger_Cegetel ( PRIVATE )
 //* Auteur        : Catherine ABDMEZIEM
 //* Date          : 10/10/2002 12:07:44
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Formate diff$$HEX1$$e900$$ENDHEX$$rentes zones pour que la longueur de la concat$$HEX1$$e900$$ENDHEX$$nation soit correcte ou cplmt avec des "0"
+//* Libellé       : Formate différentes zones pour que la longueur de la concaténation soit correcte ou cplmt avec des "0"
 //* Commentaires  : Modification SFR
 //*
 //* Arguments     : Aucun
@@ -1622,7 +1622,7 @@ private subroutine uf_charger_cegetel ();//*------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....
-//* #1	 CAG	 25/11/2002	  Les champs $$HEX2$$e0002000$$ENDHEX$$null deviennent vides
+//* #1	 CAG	 25/11/2002	  Les champs à null deviennent vides
 //*-----------------------------------------------------------------
 
 Long			lTot, lCpt, lCptCar, lLongMCiv
@@ -1635,7 +1635,7 @@ For lCpt = 1 To lTot
 
 
 	/*------------------------------------------------------------------*/
-	/* Zone civilit$$HEX2$$e9002000$$ENDHEX$$+ nom + pr$$HEX1$$e900$$ENDHEX$$nom <= 30 caract$$HEX1$$e800$$ENDHEX$$res                    */
+	/* Zone civilité + nom + prénom <= 30 caractères                    */
 	/*------------------------------------------------------------------*/
 	sCiv = idwFicCharg.GetItemString ( lCpt, "LIB_COD_CIV" )
 	If IsNull ( sCiv ) Then
@@ -1658,7 +1658,7 @@ For lCpt = 1 To lTot
 
 	
 	/*------------------------------------------------------------------*/
-	/* Zone adr_livr_cpl <= 30 caract$$HEX1$$e800$$ENDHEX$$res                               */
+	/* Zone adr_livr_cpl <= 30 caractères                               */
 	/*------------------------------------------------------------------*/
 	sAdrLivrCpl = idwFicCharg.GetItemString ( lCpt, "ADR_LIVR_CPL" )
 	If IsNull ( sAdrLivrCpl ) Then sAdrLivrCpl = ""
@@ -1666,7 +1666,7 @@ For lCpt = 1 To lTot
 
 
 	/*------------------------------------------------------------------*/
-	/* Zone adr_livr1 + adr_livr2 < 30 caract$$HEX1$$e800$$ENDHEX$$res                       */
+	/* Zone adr_livr1 + adr_livr2 < 30 caractères                       */
 	/*------------------------------------------------------------------*/
 	sAdrLivr1 = idwFicCharg.GetItemString ( lCpt, "ADR_LIVR1" )
 	sAdrLivr2 = idwFicCharg.GetItemString ( lCpt, "ADR_LIVR2" )
@@ -1691,14 +1691,14 @@ For lCpt = 1 To lTot
 
 	
 	/*------------------------------------------------------------------*/
-	/* Zone adr_ville : 35 car dans commande => tronqu$$HEX4$$e9002000e0002000$$ENDHEX$$25            */
+	/* Zone adr_ville : 35 car dans commande => tronqué à 25            */
 	/*------------------------------------------------------------------*/
 	sAdrVille = idwFicCharg.GetItemString ( lCpt, "ADR_VILLE" )
 	sAdrVille = Left ( sAdrVille, 25 )
 	idwFicCharg.SetItem ( lCpt, "ADR_VILLE", sAdrVille )
 
 	/*------------------------------------------------------------------*/
-	/* Zone adr_cp : combl$$HEX2$$e9002000$$ENDHEX$$avec un "0" si n$$HEX1$$e900$$ENDHEX$$cessaire                   */
+	/* Zone adr_cp : comblé avec un "0" si nécessaire                   */
 	/*------------------------------------------------------------------*/
 	sAdrCp = idwFicCharg.GetItemString ( lCpt, "ADR_CP" )
 	If Len ( sAdrCp ) = 4 Then
@@ -1706,8 +1706,8 @@ For lCpt = 1 To lTot
 	End If
 
 	/*------------------------------------------------------------------*/
-	/* Zone adr_tel1 : sans espace ni autre caract$$HEX1$$e800$$ENDHEX$$re que des chiffres  */
-	/*                 20 car dans w_commande => tronqu$$HEX4$$e9002000e0002000$$ENDHEX$$16           */
+	/* Zone adr_tel1 : sans espace ni autre caractère que des chiffres  */
+	/*                 20 car dans w_commande => tronqué à 16           */
 	/*------------------------------------------------------------------*/
 	sAdrTel1 = idwFicCharg.GetItemString ( lCpt, "ADR_TEL1" )
 	sAdrTelForm = sAdrTel1
@@ -1730,21 +1730,21 @@ private function string uf_calcnumcmde (long alidprod, string asidcontrabon, lon
 //* Fonction      : N_Cst_Gen_Fic_Commande::uf_CalcNumCmde ( PRIVATE )
 //* Auteur        : Catherine ABDMEZIEM
 //* Date          : 09/10/2002 15:22:57
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Calcul du num$$HEX1$$e900$$ENDHEX$$ro d'une commande CEGETEL
+//* Libellé       : Calcul du numéro d'une commande CEGETEL
 //* Commentaires  : Modification SFR
 //*
 //* Arguments     : ( Val )	Long		alIdProd			:	Id_prod
 //*					  ( Val )	String	asIdContrAbon	:	Id_Contrat_Abonne		vient de w_sin/sinistre
-//*					  ( Val )	Long		alCptCmd			:	CptCmd incr$$HEX1$$e900$$ENDHEX$$ment$$HEX2$$e9002000$$ENDHEX$$dans produit
+//*					  ( Val )	Long		alCptCmd			:	CptCmd incrémenté dans produit
 //*
 //* Retourne      : String		Id_Cmd_Frn
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1    JFF   30/06/2003   Suite m$$HEX1$$e900$$ENDHEX$$mo de D. Talmat et Marina Salvatore, 
-//*								  le num$$HEX1$$e900$$ENDHEX$$ro de commande de MUST sera identique $$HEX2$$e0002000$$ENDHEX$$celui
-//*								  de M.Protect except$$HEX2$$e9002000$$ENDHEX$$le "FR00" et les compteurs qui restent 
-//*								  diff$$HEX1$$e900$$ENDHEX$$rents.
+//* #1    JFF   30/06/2003   Suite mémo de D. Talmat et Marina Salvatore, 
+//*								  le numéro de commande de MUST sera identique à celui
+//*								  de M.Protect excepté le "FR00" et les compteurs qui restent 
+//*								  différents.
 //*
 //*-----------------------------------------------------------------
 
@@ -1761,7 +1761,7 @@ Choose Case alIdProd
 
 	/*------------------------------------------------------------------*/
 	/* Produits autres (en vue de Mobile Protect)                       */
-	/* Le n$$HEX2$$b0002000$$ENDHEX$$Scs est compris dans Id_Contrat_Abonne                     */
+	/* Le n° Scs est compris dans Id_Contrat_Abonne                     */
 	/*------------------------------------------------------------------*/
 	Case Else
 		sId_Cmd_Frn = asIdContrAbon + "PR00/"
@@ -1781,13 +1781,13 @@ private function string uf_formatchamps (integer ainbcar, string aschamp);//*---
 //* Fonction      : N_Cst_Gen_Fic_Commande::uf_FormatChamps ( PRIVATE )
 //* Auteur        : Catherine ABDMEZIEM
 //* Date          : 10/10/2002 17:06:05
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Ajoute les espaces n$$HEX1$$e900$$ENDHEX$$cessaires pour que la cha$$HEX1$$ee00$$ENDHEX$$ne retourn$$HEX1$$e900$$ENDHEX$$e fasse la longueur voulue
+//* Libellé       : Ajoute les espaces nécessaires pour que la chaîne retournée fasse la longueur voulue
 //* Commentaires  : Modification SFR
 //*
-//* Arguments     : ( Val )	Integer	aiNbCar	:	Longueur de la cha$$HEX1$$ee00$$ENDHEX$$ne $$HEX2$$e0002000$$ENDHEX$$retourner
-//*					  ( Val )	String	asChamp	:	Cha$$HEX1$$ee00$$ENDHEX$$ne $$HEX2$$e0002000$$ENDHEX$$traiter
+//* Arguments     : ( Val )	Integer	aiNbCar	:	Longueur de la chaîne à retourner
+//*					  ( Val )	String	asChamp	:	Chaîne à traiter
 //*
-//* Retourne      : String	:	cha$$HEX1$$ee00$$ENDHEX$$ne format$$HEX1$$e900$$ENDHEX$$e $$HEX2$$e0002000$$ENDHEX$$la longueur voulue
+//* Retourne      : String	:	chaîne formatée à la longueur voulue
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
@@ -1809,7 +1809,7 @@ private function integer uf_flaguer_commandes (ref long alidlotcmd, string asidf
 //* Fonction		: n_cst_gen_fic_commande::uf_Flaguer_Commandes (PRIVATE)
 //* Auteur			: Abdmeziem	Catherine
 //* Date				: 15/10/02
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: En fonction du fournisseur, on lance la fonction uf_Flaguer_Commandes_FOURNISSEUR
+//* Libellé			: En fonction du fournisseur, on lance la fonction uf_Flaguer_Commandes_FOURNISSEUR
 //*					  
 //* Commentaires	: 
 //*
@@ -1929,14 +1929,14 @@ iRet = 1
 
 		// [RS-5297-HP-178]
 		Case "IFR"
-			// Rien $$HEX2$$e0002000$$ENDHEX$$faire pour ce cas
+			// Rien à faire pour ce cas
 
 		/*------------------------------------------------------------------*/
-		/* Pas de fournisseur d$$HEX1$$e900$$ENDHEX$$clar$$HEX2$$e9002000$$ENDHEX$$pour g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$le fichier.					  */
+		/* Pas de fournisseur déclaré pour généré le fichier.					  */
 		/*------------------------------------------------------------------*/
 		Case ELSE
 			iRet = -1
-			This.Uf_Trace ( "ECR", "ERREUR : Pas de fournisseur d$$HEX1$$e900$$ENDHEX$$clar$$HEX2$$e9002000$$ENDHEX$$pour la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande !!" )
+			This.Uf_Trace ( "ECR", "ERREUR : Pas de fournisseur déclaré pour la génération du fichier de commande !!" )
 			This.uf_Sortie_OpCon ( "ECR", 570, "ERR570/FLGCMDINC", FALSE )
 
 	End Choose
@@ -1950,7 +1950,7 @@ private subroutine uf_nom_fichier (ref string asnomfic, long alcas);//*---------
 //* Fonction		: n_cst_gen_fic_commande::uf_Nom_Fichier (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 09/10/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration d'un nom de fichier
+//* Libellé			: Génération d'un nom de fichier
 //* Commentaires	: 
 //*
 //* Arguments		: asNomFic		String		(Ref)
@@ -1960,15 +1960,15 @@ private subroutine uf_nom_fichier (ref string asnomfic, long alcas);//*---------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1    JFF    30/08/2002  Le nom du r$$HEX1$$e900$$ENDHEX$$pertoire de g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration n'est plus le code
+//* #1    JFF    30/08/2002  Le nom du répertoire de génération n'est plus le code
 //*								  du fournisseur -FR mais le nom complet (<8 car) -FL
 //*
-//* #2	 CAG	  16/10/2002  Modif SFR Pr$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence : si le fournisseur est Cegetel, nom du fichier = "SAPJJMM.TXT"
-//* #4	 CAG	  30/10/2002  								 suite aux tests de JFF, on ajoute un n$$HEX2$$b0002000$$ENDHEX$$d'index
+//* #2	 CAG	  16/10/2002  Modif SFR Préférence : si le fournisseur est Cegetel, nom du fichier = "SAPJJMM.TXT"
+//* #4	 CAG	  30/10/2002  								 suite aux tests de JFF, on ajoute un n° d'index
 //*
 //* #3	 CAG	  17/10/2002  Pour les prestations dont le produit est 5712 ( les cmds sont uniquement pour Cegetel)
-//*								  on ajoute un r$$HEX1$$e900$$ENDHEX$$pertoire entre le nom fournisseur et le r$$HEX1$$e900$$ENDHEX$$pertoire fic_cmd du nom du produit
-//*								  annexe 7 (6.7.2) dans l'analyse de l'int$$HEX1$$e900$$ENDHEX$$gration SFR pref
+//*								  on ajoute un répertoire entre le nom fournisseur et le répertoire fic_cmd du nom du produit
+//*								  annexe 7 (6.7.2) dans l'analyse de l'intégration SFR pref
 //*
 //* #4	 CAG	  16/09/2004  DCMP 040381 : Ajout du frn MSS
 //* #5    MADM   06/02/2006  [DCMP060119]: Ajout du frn AEVUM/AVM 
@@ -2028,7 +2028,7 @@ lRow = idwStkRepFourn.Find ( "ID_CODE = '" + sIdFourn + "'", 1, idwStkRepFourn.R
 If lRow > 0 Then
 	sRepFourn = Upper ( idwStkRepFourn.GetItemString ( lRow, "LIB_CODE" ) )
 Else
-	// sRepFourn restera $$HEX2$$e0002000$$ENDHEX$$vide et l'$$HEX1$$e900$$ENDHEX$$criture du fichier renverra de g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration
+	// sRepFourn restera à vide et l'écriture du fichier renverra de génération
    // dans le log.
 End If
 
@@ -2192,7 +2192,7 @@ Choose Case sIdFourn
 	Case "MCM"
 		
 		// Nom du fichier : sinistresAAAAMMJJ
-		// Format du fichier : .txt avec comme s$$HEX1$$e900$$ENDHEX$$parateur de zone une tabulation
+		// Format du fichier : .txt avec comme séparateur de zone une tabulation
 		
 		sNomFic = "sinistres" + &
 					  String ( year    ( Today () ), "0000" ) + &
@@ -2330,10 +2330,10 @@ Choose Case sIdFourn
 	
 		
 	/*------------------------------------------------------------------*/
-	/* Pas de fournisseur d$$HEX1$$e900$$ENDHEX$$clar$$HEX2$$e9002000$$ENDHEX$$pour g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$le fichier.					  */
+	/* Pas de fournisseur déclaré pour généré le fichier.					  */
 	/*------------------------------------------------------------------*/
 	Case ELSE
-		This.Uf_Trace ( "ECR", "ERREUR : Pas de fournisseur d$$HEX1$$e900$$ENDHEX$$clar$$HEX2$$e9002000$$ENDHEX$$pour la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande !!" )
+		This.Uf_Trace ( "ECR", "ERREUR : Pas de fournisseur déclaré pour la génération du fichier de commande !!" )
 
 End Choose
 
@@ -2347,7 +2347,7 @@ private function integer uf_sortie_opcon (string ascas, integer aicodeerreur, st
 //* Fonction		: n_cst_in_fic_SuiviCmd::uf_Sortie_OpCon (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 16/12/2002
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Fichier de sortie des erreurs pour OpCon
+//* Libellé			: Fichier de sortie des erreurs pour OpCon
 //* Commentaires	: 
 //*
 //* Arguments		: asCas			String		Val
@@ -2361,7 +2361,7 @@ private function integer uf_sortie_opcon (string ascas, integer aicodeerreur, st
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* #1    JFF    05/04/2006  ajout du "+ K_FIC_SORTIE_OPCON" derri$$HEX1$$e800$$ENDHEX$$re isRepFicOpcon  
+//* #1    JFF    05/04/2006  ajout du "+ K_FIC_SORTIE_OPCON" derrière isRepFicOpcon  
 //* 
 //*-----------------------------------------------------------------
 
@@ -2395,7 +2395,7 @@ CHOOSE CASE Upper ( asCas )
 	CASE "ECR"
 
 		/*------------------------------------------------------------------*/
-		/* On est connect$$HEX2$$e9002000$$ENDHEX$$avec OpCon, donc sortie en fichier Erreur.       */
+		/* On est connecté avec OpCon, donc sortie en fichier Erreur.       */
 		/*------------------------------------------------------------------*/
 		If gbOpCon Then 
 
@@ -2426,7 +2426,7 @@ public function integer uf_trt_opcon (string ascas);//*-------------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Trt_OpCon (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 16/12/2002
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Traitement de certaines partie en Automatique
+//* Libellé			: Traitement de certaines partie en Automatique
 //* Commentaires	: 
 //*
 //* Arguments		: asCas			String		Val
@@ -2484,9 +2484,9 @@ private function integer uf_flaguer_commandes_standard (ref long alidlotcmd);//*
 //* Fonction		: n_cst_gen_fic_commande::uf_Flaguer_Commandes_Standard (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: On marque en bases es commandes charg$$HEX1$$e900$$ENDHEX$$es comm$$HEX3$$e9002000e900$$ENDHEX$$tant g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$es
-//*					  elle ne pouraient $$HEX1$$ea00$$ENDHEX$$tre par la suite que reg$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$es avant la fonction ad$$HEX1$$e900$$ENDHEX$$quat.
-//* Commentaires	: Utilis$$HEX2$$e9002000$$ENDHEX$$pour tout fournisseur standard SPB
+//* Libellé			: On marque en bases es commandes chargées commé étant générées
+//*					  elle ne pouraient être par la suite que regénérées avant la fonction adéquat.
+//* Commentaires	: Utilisé pour tout fournisseur standard SPB
 //*
 //* Arguments		: alIdLotCmd	long		Ref
 //*					  
@@ -2508,19 +2508,19 @@ dtNow = DateTime ( Today (), Now () )
 
 
 /*------------------------------------------------------------------*/
-/* R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration d'un n$$HEX2$$b0002000$$ENDHEX$$de lot de commandes.                        */
+/* Récupération d'un n° de lot de commandes.                        */
 /*------------------------------------------------------------------*/
 lIdLotCmde = -1
 SQLCA.PS_S03_COMMANDE ( "ID_LOT_CMD", lIdLotCmde )
 
 If lIdLotCmde <= 0 Or IsNull ( lIdLotCmde ) Then
 
-	// RollBack imm$$HEX1$$e900$$ENDHEX$$diat.
+	// RollBack immédiat.
 	F_Commit ( SQLCA, False )
 	iRet = -1
-	This.Uf_Trace ( "ECR", "ERREUR lors de la r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration de l'ID_LOT_CMD, " + String ( lIdLotCmde ) )
+	This.Uf_Trace ( "ECR", "ERREUR lors de la récupération de l'ID_LOT_CMD, " + String ( lIdLotCmde ) )
 Else
-	This.Uf_Trace ( "ECR", "Attribution du n$$HEX2$$b0002000$$ENDHEX$$de lot de commandes : " + String ( lIdLotCmde ) )
+	This.Uf_Trace ( "ECR", "Attribution du n° de lot de commandes : " + String ( lIdLotCmde ) )
 End If
 
 
@@ -2528,7 +2528,7 @@ End If
 F_COMMIT ( SQLCA, SQLCA.SQLCODE = 0 Or SQLCA.SQLDBCODE = 0  ) 
 
 /*------------------------------------------------------------------*/
-/* Attribution du n$$HEX2$$b0002000$$ENDHEX$$de lot $$HEX2$$e0002000$$ENDHEX$$toutes les lignes charg$$HEX1$$e900$$ENDHEX$$es.           */
+/* Attribution du n° de lot à toutes les lignes chargées.           */
 /*------------------------------------------------------------------*/
 If iRet > 0 Then
 	lTot = idwFicCharg.RowCount ()
@@ -2540,16 +2540,16 @@ If iRet > 0 Then
 
 	/*------------------------------------------------------------------*/
 	/* Update en base.                                                  */
-	/* Les lignes vont $$HEX1$$ea00$$ENDHEX$$tre marqu$$HEX1$$e900$$ENDHEX$$es en bases.								  */
+	/* Les lignes vont être marquées en bases.								  */
 	/*------------------------------------------------------------------*/
 	If idwFicCharg.Update () > 0 Then
 		F_Commit ( SQLCA, True )
-		This.Uf_Trace ( "ECR", "Update du marquage r$$HEX1$$e900$$ENDHEX$$ussi, les commandes sont flagu$$HEX1$$e900$$ENDHEX$$es en base." )
+		This.Uf_Trace ( "ECR", "Update du marquage réussi, les commandes sont flaguées en base." )
 		alIdLotCmd = lIdLotCmde
 	Else
 		iRet = -1
 		F_Commit ( SQLCA, False )
-		This.Uf_Trace ( "ECR", "ERREUR, Update du marquage en base a $$HEX1$$e900$$ENDHEX$$chou$$HEX1$$e900$$ENDHEX$$." )
+		This.Uf_Trace ( "ECR", "ERREUR, Update du marquage en base a échoué." )
 		alIdLotCmd = -1
 	End if
 End If
@@ -2564,8 +2564,8 @@ private function integer uf_generer_fichier_dme (long alidlotcmd);//*-----------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_DME (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/04/2003
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le DME
-//* Commentaires	: Trois fichiers seront g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$s dans le m$$HEX1$$ea00$$ENDHEX$$me r$$HEX1$$e900$$ENDHEX$$pertoires :
+//* Libellé			: Génération du fichier de commande pour le DME
+//* Commentaires	: Trois fichiers seront générés dans le même répertoires :
 //*					  un pour les commandes   : CMDjjmma.ind  (CMD10091.001)
 //*					  un pour les prestations : PRSjjmma.ind  (PRS10091.001)
 //*					  un pour les annulations : ANNjjmma.ind  (ANN10091.001)
@@ -2582,10 +2582,10 @@ private function integer uf_generer_fichier_dme (long alidlotcmd);//*-----------
 //* #..   ...   ../../....   
 //* 
 //* #1	 CAG	 17/10/2002	  Modification SFR : Pour ce produit (5712), on
-//*								  cr$$HEX1$$e900$$ENDHEX$$e un fichier suppl$$HEX1$$e900$$ENDHEX$$mentaire pour chaque type (cmd, prs, annul ...)
-//*								  et on les $$HEX1$$e900$$ENDHEX$$crit dans un r$$HEX1$$e900$$ENDHEX$$pertoire sp$$HEX1$$e900$$ENDHEX$$cifique
-//*								  Annexe 7 (6.7.2) dans l'int$$HEX1$$e900$$ENDHEX$$gration de SFR, analyse des traitements
-//* #2	 CAG	 06/05/2003	  G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration d'un fichier vide qd pas de cmdes
+//*								  crée un fichier supplémentaire pour chaque type (cmd, prs, annul ...)
+//*								  et on les écrit dans un répertoire spécifique
+//*								  Annexe 7 (6.7.2) dans l'intégration de SFR, analyse des traitements
+//* #2	 CAG	 06/05/2003	  Génération d'un fichier vide qd pas de cmdes
 //*       JFF   22/06/2011   [VDOC4513]
 //        JFF   15/09/2015   [DT169]
 // 		 JFF   21/06/2018   [VDOC26276]
@@ -2615,7 +2615,7 @@ For lCptCas = 1 To 4
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+		/* Génération du fichier de COMMANDES (CMD)                         */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sFiltre = "ID_TYP_ART <> 'PRS' AND COD_ETAT <> 'ANN'"
@@ -2623,10 +2623,10 @@ For lCptCas = 1 To 4
 			sTypArt = "commandes"
 			sTypArtNul = "commande"
 			sAction = "A_COMMANDER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de COMMANDES en cours..." )
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATIONS (PRS)                       */
+		/* Génération du fichier de PRESTATIONS (PRS)                       */
 		/*------------------------------------------------------------------*/
 		CASE 2
 			sFiltre = "ID_TYP_ART = 'PRS' AND COD_ETAT <> 'ANN'"
@@ -2634,10 +2634,10 @@ For lCptCas = 1 To 4
 			sTypArt = "prestations"
 			sTypArtNul = "prestation"
 			sAction = "A_REPARER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATIONS en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de PRESTATIONS en cours..." )
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des ANNULATION des COMMANDES (ACD)			  */
+		/* Génération du fichier des ANNULATION des COMMANDES (ACD)			  */
 		/*------------------------------------------------------------------*/
 		CASE 3
 			sFiltre = "ID_TYP_ART <> 'PRS' AND COD_ETAT = 'ANN'"
@@ -2645,10 +2645,10 @@ For lCptCas = 1 To 4
 			sTypArt = "annulations de commandes"
 			sTypArtNul = "annulation de commandes"
 			sAction = "A_ANNULER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier d'ANNULATIONS DES COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier d'ANNULATIONS DES COMMANDES en cours..." )
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des ANNULATION des COMMANDES (APR)			  */
+		/* Génération du fichier des ANNULATION des COMMANDES (APR)			  */
 		/*------------------------------------------------------------------*/
 		CASE 4
 			sFiltre = "ID_TYP_ART = 'PRS' AND COD_ETAT = 'ANN'"
@@ -2656,7 +2656,7 @@ For lCptCas = 1 To 4
 			sTypArt = "annulations de prestations"
 			sTypArtNul = "annulation de prestations"
 			sAction = "A ANNULER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier d'ANNULATIONS DES PRESTATIONS en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier d'ANNULATIONS DES PRESTATIONS en cours..." )
 
 
 	END CHOOSE
@@ -2668,13 +2668,13 @@ For lCptCas = 1 To 4
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 		/*------------------------------------------------------------------*/
-		/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$re un fichier vide que pour les commandes.             */
+		/* On ne génére un fichier vide que pour les commandes.             */
 		/*------------------------------------------------------------------*/
 		If lCptCas <> 1 Then
 			Continue
@@ -2743,14 +2743,14 @@ For lCptCas = 1 To 4
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, TRUE )
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 
 		// [VDOC26276]
 		This.uf_Maj_Nom_Fichier_Ds_Presta ( sNomFic ) 
 		
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 
@@ -2766,7 +2766,7 @@ private function integer uf_generer_fichier_sbe (long alidlotcmd);//*-----------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_SBE (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 25/06/2015
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour SBE
+//* Libellé			: Génération du fichier de commande pour SBE
 //* Commentaires	: JFF   07/04/2015 [PC13442-1]
 //*
 //* Arguments		: alIdLotCmd	Long	Val
@@ -2780,7 +2780,7 @@ private function integer uf_generer_fichier_sbe (long alidlotcmd);//*-----------
 //* #2	JFF	20/10/2008	[FNAC_PROD_ECH_TECH]
 //* #3   JFF   20/10/2008  [FNAC_PROD_ECH_TECH].[20090127140540720]
 //* #4   JFF   20/10/2008  [FNAC_PROD_ECH_TECH].[20090225143455120]
-//* #7	FPI	20/03/2009	[DCMP090109] SBE devient r$$HEX1$$e900$$ENDHEX$$parateur d'IPhone
+//* #7	FPI	20/03/2009	[DCMP090109] SBE devient réparateur d'IPhone
 //* #8   JFF   27/03/2009  [DCMP090152] Civ long pour SBE
 //*  	   JFF	13/04/2010  [ADRESSE_SBE]
 //			FPI	10/08/2010	[PM01] Process 4
@@ -2814,7 +2814,7 @@ iRet = 1
 idwFicGenCmde.DataObject = "d_trt_fichier_cmde_SBE"
 
 /*------------------------------------------------------------------*/
-/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+/* Génération du fichier de COMMANDES (CMD)                         */
 /*------------------------------------------------------------------*/
 //* #6 [FNAC_PROD_ECH_TECH].[20090127140540720]
 // sFiltre = "ID_TYP_ART = 'EDI' AND COD_ETAT <> 'ANN'"
@@ -2825,7 +2825,7 @@ For lCptCas = 1 To 1
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATIONS (PRS)                       */
+		/* Génération du fichier de PRESTATIONS (PRS)                       */
 		/*------------------------------------------------------------------*/
 		// [PM82][LOT1] Simplification
 		// [MANTIS3743]
@@ -2834,7 +2834,7 @@ For lCptCas = 1 To 1
 			sNomFic = K_FIC2 // "PRS"
 			sTypArt = "Ordre SBE"
 			sTypArtNul = "Ordre SBE"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATION SBE en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de PRESTATION SBE en cours..." )
 
 	End Choose
 
@@ -2845,10 +2845,10 @@ For lCptCas = 1 To 1
 	idwFicGenCmde.Reset ()
 	
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
-	If lTot = 0 Then This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+	If lTot = 0 Then This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 	
 	For lCpt = 1 To lTot
 		lRow = idwFicGenCmde.InsertRow ( 0 )
@@ -2989,7 +2989,7 @@ For lCptCas = 1 To 1
 		idwFicGenCmde.SetItem ( lRow, "GARANTIE",			String ( idwFicCharg.GetItemNumber ( lCpt, "ID_GTI" ) ) )
 		idwFicGenCmde.SetItem ( lRow, "INFO_SPB_FRN",	sInfoSpbFrn  )		// [VDOC4970]
 		idwFicGenCmde.SetItem ( lRow, "ASSUREUR",			idwFicCharg.GetItemString ( lCpt, "ASSUREUR" ) )
-		// [DCMP080162] AJout Valeur Publique d'achat et Date Achat ( note : date stock$$HEX1$$e900$$ENDHEX$$e sous forme de chaine )
+		// [DCMP080162] AJout Valeur Publique d'achat et Date Achat ( note : date stockée sous forme de chaine )
 		idwFicGenCmde.SetItem ( lRow, "MT_VAL_ACHAT",	idwFicCharg.GetItemString ( lCpt, "MT_VAL_ACHAT" ))
 		idwFicGenCmde.SetItem ( lRow, "DTE_ACHAT",		idwFicCharg.GetItemString ( lCpt, "DTE_ACHAT" ) )
 		idwFicGenCmde.SetItem ( lRow, "MT_PEC",			idwFicCharg.GetItemString ( lCpt, "MT_PEC" ) )
@@ -2997,12 +2997,12 @@ For lCptCas = 1 To 1
 
 		// [PM166][SBE]
 		If sAction = "A_COMMANDER" Then
-			// On r$$HEX1$$e900$$ENDHEX$$initialise certaines zones inutiles pour la commande
+			// On réinitialise certaines zones inutiles pour la commande
 /* [DT141][MANTIS14455]
 			idwFicGenCmde.SetItem ( lRow, "PROBLEME",	"")							
 			idwFicGenCmde.SetItem ( lRow, "NUM_IMEI_SERIE",	"" )								
 */			
-/* Idem $$HEX2$$e0002000$$ENDHEX$$la RST d'OV3, on laisse la marq/modl IFR, plus haut sur MARQ_APP et MODL_APP
+/* Idem à la RST d'OV3, on laisse la marq/modl IFR, plus haut sur MARQ_APP et MODL_APP
 			idwFicGenCmde.SetItem ( lRow, "MARQ_APP",			idwFicCharg.GetItemString ( lCpt, "ID_MARQ_ART" ) )						
 			idwFicGenCmde.SetItem ( lRow, "MODL_APP",			idwFicCharg.GetItemString ( lCpt, "ID_MODL_ART" ) )						
 */		End If
@@ -3047,14 +3047,14 @@ For lCptCas = 1 To 1
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, TRue ) // True : On indique les en-tetes
 	
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 		
 		// [VDOC26276]
 		This.uf_Maj_Nom_Fichier_Ds_Presta ( sNomFic ) 
 		
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 	End If
 
 	If iRet = -1 Then Exit
@@ -3069,7 +3069,7 @@ private function integer uf_generer_fichier_mss (long alidlotcmd);//*-----------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_MSS (PRIVATE)
 //* Auteur			: Catherine Abdmeziem
 //* Date				: 13/09/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour MSS
+//* Libellé			: Génération du fichier de commande pour MSS
 //* Commentaires	: DCMP 040381
 //*
 //* Arguments		: alIdLotCmd	Long	Val
@@ -3098,7 +3098,7 @@ For lCptCas = 1 To 4
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+		/* Génération du fichier de COMMANDES (CMD)                         */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sFiltre = "ID_TYP_ART <> 'PRS' AND COD_ETAT <> 'ANN'"
@@ -3106,10 +3106,10 @@ For lCptCas = 1 To 4
 			sTypArt = "commandes"
 			sTypArtNul = "commande"
 			sAction = "A_COMMANDER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de COMMANDES en cours..." )
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATIONS (PRS)                       */
+		/* Génération du fichier de PRESTATIONS (PRS)                       */
 		/*------------------------------------------------------------------*/
 		CASE 2
 			sFiltre = "ID_TYP_ART = 'PRS' AND COD_ETAT <> 'ANN'"
@@ -3117,10 +3117,10 @@ For lCptCas = 1 To 4
 			sTypArt = "prestations"
 			sTypArtNul = "prestation"
 			sAction = "A_REPARER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATIONS en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de PRESTATIONS en cours..." )
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des ANNULATION des COMMANDES (ACD)			  */
+		/* Génération du fichier des ANNULATION des COMMANDES (ACD)			  */
 		/*------------------------------------------------------------------*/
 		CASE 3
 			sFiltre = "ID_TYP_ART <> 'PRS' AND COD_ETAT = 'ANN'"
@@ -3128,10 +3128,10 @@ For lCptCas = 1 To 4
 			sTypArt = "annulations de commandes"
 			sTypArtNul = "annulation de commandes"
 			sAction = "A_ANNULER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier d'ANNULATIONS DES COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier d'ANNULATIONS DES COMMANDES en cours..." )
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des ANNULATION des COMMANDES (APR)			  */
+		/* Génération du fichier des ANNULATION des COMMANDES (APR)			  */
 		/*------------------------------------------------------------------*/
 		CASE 4
 			sFiltre = "ID_TYP_ART = 'PRS' AND COD_ETAT = 'ANN'"
@@ -3139,7 +3139,7 @@ For lCptCas = 1 To 4
 			sTypArt = "annulations de prestations"
 			sTypArtNul = "annulation de prestations"
 			sAction = "A_ANNULER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier d'ANNULATIONS DES PRESTATIONS en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier d'ANNULATIONS DES PRESTATIONS en cours..." )
 
 
 	END CHOOSE
@@ -3151,14 +3151,14 @@ For lCptCas = 1 To 4
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" + sLibCplt )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" + sLibCplt )
 		Choose Case lCptCas
 			Case 2
-				// Pour le cas PRS on g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re un fichier vide (s'il doit $$HEX1$$ea00$$ENDHEX$$tre vide).
+				// Pour le cas PRS on génère un fichier vide (s'il doit être vide).
 
 			Case Else
 				Continue
@@ -3170,7 +3170,7 @@ For lCptCas = 1 To 4
 		lRow = idwFicGenCmde.InsertRow ( 0 )
 
 		/*------------------------------------------------------------------*/
-		/* #2 CAG 13/09/2004 : identique $$HEX2$$e0002000$$ENDHEX$$SBE + civilit$$HEX2$$e9002000$$ENDHEX$$- imei            */
+		/* #2 CAG 13/09/2004 : identique à SBE + civilité - imei            */
 		/*------------------------------------------------------------------*/
 		idwFicGenCmde.SetItem ( lRow, "NUM_LOT_CMD",		String ( alIdLotCmd ) )
 
@@ -3207,10 +3207,10 @@ For lCptCas = 1 To 4
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, False )
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic ) + " " + sLibCplt )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic ) + " " + sLibCplt )
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + ", " + sLibCplt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + ", " + sLibCplt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 
@@ -3227,8 +3227,8 @@ private function integer uf_flaguer_commandes_cegetel2 ();//*-------------------
 //* Fonction		: n_cst_gen_fic_commande::uf_Flaguer_Commandes_Cegetel2 ( PRIVATE )
 //* Auteur			: Abdmeziem Catherine
 //* Date				: 08/10/02
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: On marque en base les commandes charg$$HEX1$$e900$$ENDHEX$$es comme $$HEX1$$e900$$ENDHEX$$tant g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$es
-//*					  elle ne pourraient $$HEX1$$ea00$$ENDHEX$$tre par la suite que reg$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$es avant la fonction ad$$HEX1$$e900$$ENDHEX$$quat.
+//* Libellé			: On marque en base les commandes chargées comme étant générées
+//*					  elle ne pourraient être par la suite que regénérées avant la fonction adéquat.
 //* Commentaires	: Modification SFR
 //*
 //* Arguments		: Aucun
@@ -3254,12 +3254,12 @@ ilIdLotCeg = -1
 SQLCA.PS_S05_COMMANDE ( "ID_LOT_CEG", ilIdLotCeg )
 
 If ilIdLotCeg <= 0 Or IsNull ( ilIdLotCeg ) Then
-	// RollBack imm$$HEX1$$e900$$ENDHEX$$diat.
+	// RollBack immédiat.
 	F_Commit ( SQLCA, False )
 	iRet = -1
-	This.Uf_Trace ( "ECR", "ERREUR lors de la r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration de l'ID_LOT_CEG, " + String ( ilIdLotCeg ) )
+	This.Uf_Trace ( "ECR", "ERREUR lors de la récupération de l'ID_LOT_CEG, " + String ( ilIdLotCeg ) )
 Else
-	This.Uf_Trace ( "ECR", "Attribution du n$$HEX2$$b0002000$$ENDHEX$$de fichier de commandes : " + String ( ilIdLotCeg ) )
+	This.Uf_Trace ( "ECR", "Attribution du n° de fichier de commandes : " + String ( ilIdLotCeg ) )
 End If
 
 // [ITSM178659]
@@ -3272,7 +3272,7 @@ lTotFilt = idwFicCharg.RowCount ()
 If lTotFilt > 0 Then
 
 		/*------------------------------------------------------------------*/
-		/* Attribution d'un n$$HEX2$$b0002000$$ENDHEX$$de cmde $$HEX2$$e0002000$$ENDHEX$$toutes les lignes charg$$HEX1$$e900$$ENDHEX$$es pour    */
+		/* Attribution d'un n° de cmde à toutes les lignes chargées pour    */
 		/* le produit en cours de traitement                                */
 		/*------------------------------------------------------------------*/
 		If iRet > 0 Then
@@ -3289,16 +3289,16 @@ If lTotFilt > 0 Then
 
 		/*------------------------------------------------------------------*/
 		/* Update en base.                                                  */
-		/* Les lignes vont $$HEX1$$ea00$$ENDHEX$$tre marqu$$HEX1$$e900$$ENDHEX$$es en bases.								  */
+		/* Les lignes vont être marquées en bases.								  */
 		/*------------------------------------------------------------------*/
 		If iRet > 0 Then
 			If idwFicCharg.Update () > 0 Then
 				F_Commit ( SQLCA, True )
-				This.Uf_Trace ( "ECR", "Update du marquage r$$HEX1$$e900$$ENDHEX$$ussi, les commandes pour le produit " + String ( lIdProd ) + " sont flagu$$HEX1$$e900$$ENDHEX$$es en base." )
+				This.Uf_Trace ( "ECR", "Update du marquage réussi, les commandes pour le produit " + String ( lIdProd ) + " sont flaguées en base." )
 			Else
 				iRet = -1
 				F_Commit ( SQLCA, False )
-				This.Uf_Trace ( "ECR", "ERREUR, Update du marquage en base a $$HEX1$$e900$$ENDHEX$$chou$$HEX2$$e9002000$$ENDHEX$$sur le produit " + String ( lIdProd ) + "." )
+				This.Uf_Trace ( "ECR", "ERREUR, Update du marquage en base a échoué sur le produit " + String ( lIdProd ) + "." )
 			End If
 		End If
 End If
@@ -3312,12 +3312,12 @@ private function string uf_calcnumcmde2 (long alidprod, string asidcontrabon, st
 //* Fonction      : N_Cst_Gen_Fic_Commande::uf_CalcNumCmde2 ( PRIVATE )
 //* Auteur        : FABRY JF ( reprise fonction Catherine ABDMEZIEM)
 //* Date          : 09/10/2002 15:22:57
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Calcul du num$$HEX1$$e900$$ENDHEX$$ro d'une commande CEGETEL (version 2004/2005)
+//* Libellé       : Calcul du numéro d'une commande CEGETEL (version 2004/2005)
 //* Commentaires  : Modification SFR
 //*
 //* Arguments     : ( Val )	Long		alIdProd			:	Id_prod
 //*					  ( Val )	String	asIdContrAbon	:	Id_Contrat_Abonne		vient de w_sin/sinistre
-//*					  ( Val )	String	asNumCmdSPB		:	N$$HEX2$$b0002000$$ENDHEX$$comande SPB
+//*					  ( Val )	String	asNumCmdSPB		:	N° comande SPB
 //*
 //* Retourne      : String		Id_Cmd_Frn
 //*
@@ -3342,8 +3342,8 @@ private function integer uf_generer_fichier_cegetel2 (long alidlotcmd);//*------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_CEGETEL2 ( PRIVATE )
 //* Auteur			: FABRY JF (reprise avec quelques modif de la fonction de Abdmeziem Catherine)
 //* Date				: 09/10/02
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour CEGETEL pour les nouvelles offres 2004/2005
-//* Commentaires	: Un fichier sera g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$SAPjjmmi.txt (SAP25101.txt)
+//* Libellé			: Génération du fichier de commande pour CEGETEL pour les nouvelles offres 2004/2005
+//* Commentaires	: Un fichier sera généré SAPjjmmi.txt (SAP25101.txt)
 //*
 //* Arguments		: alIdLotCmd	Long	Val
 //*					  
@@ -3375,7 +3375,7 @@ idwFicGenCmde.Reset ()
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Ecriture des enregistrements des commandes : chaque ligne        */
-/* d'ent$$HEX1$$ea00$$ENDHEX$$te de commande est suivie des articles correspondants.     */
+/* d'entête de commande est suivie des articles correspondants.     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 lTot = idwFicCharg.RowCount ()
@@ -3389,7 +3389,7 @@ For lCpt = 1 To lTot
 	End If
 
 	/*------------------------------------------------------------------*/
-	/* Ecriture de l'ent$$HEX1$$ea00$$ENDHEX$$te de commande                                 */
+	/* Ecriture de l'entête de commande                                 */
 	/*------------------------------------------------------------------*/
 	sEnr = "$"																										  + sSep + &
 			 This.uf_FormatChamps ( 10, sDonneurOrdre	)													  + sSep + &
@@ -3435,19 +3435,19 @@ For lCpt = 1 To lTot
 	/*------------------------------------------------------------------*/
 
 	/*------------------------------------------------------------------*/
-	/* 1 - $$HEX1$$e900$$ENDHEX$$criture de la ligne de l'article de base                    */
+	/* 1 - écriture de la ligne de l'article de base                    */
 	/*------------------------------------------------------------------*/
 	sEnr = "*" + sSep + uf_FormatChamps ( 18, sIdRefFour ) + sSep + "1"
 	lNewRow = idwFicGenCmde.InsertRow ( 0 )
 	idwFicGenCmde.SetItem ( lNewRow, "LIGNE", sEnr )
 
 	/*------------------------------------------------------------------*/
-	/* 2 - Ecriture de l'article li$$HEX2$$e9002000$$ENDHEX$$au code hlr                        */
+	/* 2 - Ecriture de l'article lié au code hlr                        */
 	/*------------------------------------------------------------------*/
 	// N'existe plus surl a nouvelle version du fichier
 
 	/*------------------------------------------------------------------*/
-	/* 3 - Ecriture de l'article li$$HEX2$$e9002000$$ENDHEX$$au produit                         */
+	/* 3 - Ecriture de l'article lié au produit                         */
 	/*------------------------------------------------------------------*/
 	sFiltre = "ID_FOUR = '" + idwFicCharg.GetItemString ( lCpt, "ID_FOUR" ) 		  + "' AND " + &
 				 "ID_REF_FOUR = '" + idwFicCharg.GetItemString ( lCpt, "ID_REF_FOUR" ) + "' AND " + &
@@ -3463,7 +3463,7 @@ For lCpt = 1 To lTot
 	End If
 
 	/*------------------------------------------------------------------*/
-	/* 4 - Ecriture du (ou des) article(s) li$$HEX1$$e900$$ENDHEX$$(s) au mobile             */
+	/* 4 - Ecriture du (ou des) article(s) lié(s) au mobile             */
 	/*------------------------------------------------------------------*/
 	sFiltre = "ID_FOUR = '" + idwFicCharg.GetItemString ( lCpt, "ID_FOUR" ) 		  + "' AND " + &
 				 "ID_REF_FOUR = '" + idwFicCharg.GetItemString ( lCpt, "ID_REF_FOUR" ) + "' AND " + &
@@ -3482,7 +3482,7 @@ Next
 
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* Ecriture de l'enregistrement de l'ent$$HEX1$$ea00$$ENDHEX$$te de fichier              */
+/* Ecriture de l'enregistrement de l'entête de fichier              */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 sNbEnr = String ( idwFicGenCmde.RowCount () )
@@ -3497,7 +3497,7 @@ idwFicGenCmde.SetItem ( lNewRow, "LIGNE", sEnr )
 
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration du nom de fichier, et g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration                    */
+/* Récupération du nom de fichier, et génération                    */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 sNomFic = K_FIC5
@@ -3505,15 +3505,15 @@ sNomFic = K_FIC5
 This.uf_nom_fichier ( sNomFic , 0 )
 If sNomFic = "" Then
 	iRet = -1
-	This.Uf_Trace ( "ECR", "Il y a d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$eu 10 g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rations aujourd'hui !!" )
+	This.Uf_Trace ( "ECR", "Il y a déjà eu 10 générations aujourd'hui !!" )
 Else
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, False )
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des commandes g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic ) )
+		This.Uf_Trace ( "ECR", "Fichier des commandes généré avec succès sur : " + Upper ( sNomFic ) )
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des commandes, le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des commandes, le fichier n'est pas généré !!" )
 	End If
 End If
 
@@ -3526,7 +3526,7 @@ private function integer uf_generer_fichier_cdiscount (long alidlotcmd);//*-----
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_CDICOUNT (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 12/07/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier d'information pour C-DISCOUNT
+//* Libellé			: Génération du fichier d'information pour C-DISCOUNT
 //* Commentaires	: 
 //*
 //* Arguments		: alIdLotCmd	Long	Val
@@ -3555,7 +3555,7 @@ For lCptCas = 1 To 1
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+		/* Génération du fichier de COMMANDES (CMD)                         */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sFiltre = "ID_TYP_ART = 'EDI' AND COD_ETAT <> 'ANN'"
@@ -3563,7 +3563,7 @@ For lCptCas = 1 To 1
 			sTypArt = "prises en charges"
 			sTypArtNul = "prise en charge"
 			sAction = "PRISE_EN_CHARGE"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de COMMANDES en cours..." )
 
 
 	END CHOOSE
@@ -3575,13 +3575,13 @@ For lCptCas = 1 To 1
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 		/*------------------------------------------------------------------*/
-		/* #5	CAG : 06/05/2003 : on ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier vide pour les  */
+		/* #5	CAG : 06/05/2003 : on ne génère pas de fichier vide pour les  */
 		/*								 annulations ni prestations					  */
 		/*------------------------------------------------------------------*/
 		If lCptCas <> 1 Then
@@ -3623,10 +3623,10 @@ For lCptCas = 1 To 1
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, False )
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 
@@ -3642,10 +3642,10 @@ private subroutine uf_formatchaine (ref string asval, long alcas);//*-----------
 //* Fonction      : N_Cst_Gen_Fic_Commande::uf_FormatChaine
 //* Auteur        : Catherine ABDMEZIEM
 //* Date          : 13/11/02
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Remplace certains caract$$HEX1$$e800$$ENDHEX$$res dans une cha$$HEX1$$ee00$$ENDHEX$$ne par des blancs
+//* Libellé       : Remplace certains caractères dans une chaîne par des blancs
 //* Commentaires  : 
 //*
-//* Arguments     : ( Ref )	String	asVal	:	cha$$HEX1$$ee00$$ENDHEX$$ne $$HEX2$$e0002000$$ENDHEX$$traiter
+//* Arguments     : ( Ref )	String	asVal	:	chaîne à traiter
 //*					  ( val )   Long		alCas
 //*
 //* Retourne      : Rien
@@ -3680,7 +3680,7 @@ sTabCar2[5]="~""
 lTotSubst = UpperBound ( sTabSubst )
 
 /*------------------------------------------------------------------*/
-/* On remplace les caract$$HEX1$$e800$$ENDHEX$$res voulus.										  */
+/* On remplace les caractères voulus.										  */
 /*------------------------------------------------------------------*/
 
 Choose case alCas
@@ -3735,7 +3735,7 @@ private subroutine uf_charger_o2m ();//*----------------------------------------
 //* Fonction		: n_cst_gen_fic_commande::uf_Charger_O2M (PRIVATE)
 //* Auteur			: PHG
 //* Date				: 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Modif apr$$HEX1$$e800$$ENDHEX$$s chargement des commandes pour O2M
+//* Libellé			: Modif après chargement des commandes pour O2M
 //* Commentaires	: [O2M]
 //*
 //* Arguments		: 
@@ -3750,8 +3750,8 @@ private subroutine uf_charger_o2m ();//*----------------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* Pas d'espace pour les num$$HEX1$$e900$$ENDHEX$$ros de t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone.                      */
-/* Seulement dans la g$$HEX1$$ea00$$ENDHEX$$ne du fichier, on laisse les espaces en base */
+/* Pas d'espace pour les numéros de téléphone.                      */
+/* Seulement dans la gêne du fichier, on laisse les espaces en base */
 /*------------------------------------------------------------------*/
 Long 	lTot, lCpt, lCptCas, lLen, lCptLen
 String sVal
@@ -3833,7 +3833,7 @@ private function integer uf_generer_fichier_micromania (long alidlotcmd);//*----
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_Micromania (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 05/09/2008
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le Micromania
+//* Libellé			: Génération du fichier de commande pour le Micromania
 //* Commentaires	: [MICROMANIA]
 //*
 //* Arguments		: alIdLotCmd	Long	Val
@@ -3845,7 +3845,7 @@ private function integer uf_generer_fichier_micromania (long alidlotcmd);//*----
 //* MAJ   PAR      Date	     Modification
 //* #1	 JFF		07/05/2004 DCMP 040134 D. Bizien A-NOVO souhaite l'ID_PROD plutot que le LIB_PROD
 //* #2	 JCA		28/02/2008 DCMP 080158 - Changement de format du fichier
-//* #3    JFF     02/12/2008 BUG remont$$HEX2$$e9002000$$ENDHEX$$par David Ibersien
+//* #3    JFF     02/12/2008 BUG remonté par David Ibersien
 //*       JFF     10/06/2010 [PC419/440/418/439_MICROMANIA]
 //*-----------------------------------------------------------------
 
@@ -3864,16 +3864,16 @@ For lCptCas = 1 To 1
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier sp$$HEX1$$e900$$ENDHEX$$ciale pour MCM								  */
+		/* Génération du fichier spéciale pour MCM								  */
 		/*------------------------------------------------------------------*/
 		CASE 1
 // [PC419/440/418/439_MICROMANIA]
 			sFiltre = "COD_ETAT <> 'ANN'"
 			sNomFic = ""
-			sTypArt = "Appareil $$HEX2$$e0002000$$ENDHEX$$Expertiser/Remplacer"
-			sTypArtNul = "Appareil $$HEX2$$e0002000$$ENDHEX$$Expertiser/Remplacer"
+			sTypArt = "Appareil à Expertiser/Remplacer"
+			sTypArtNul = "Appareil à Expertiser/Remplacer"
 			sAction = "A EXPERTISER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier d'APPAREILS A EXPERTISER/REMPLACER en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier d'APPAREILS A EXPERTISER/REMPLACER en cours..." )
 
 
 
@@ -3886,15 +3886,15 @@ For lCptCas = 1 To 1
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" + sLibCplt )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" + sLibCplt )
 /* #3
 		Choose Case lCptCas
 			Case 2
-				// Pour le cas PRS on g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$re un fichier vide (s'il doit $$HEX1$$ea00$$ENDHEX$$tre vide).
+				// Pour le cas PRS on génére un fichier vide (s'il doit être vide).
 
 			Case Else
 				Continue
@@ -3934,10 +3934,10 @@ For lCptCas = 1 To 1
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, False )
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic ) + " " + sLibCplt )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic ) + " " + sLibCplt )
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + ", " + sLibCplt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + ", " + sLibCplt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 
@@ -3954,7 +3954,7 @@ private subroutine uf_charger_cdiscountpro ();//*-------------------------------
 //* Fonction		: n_cst_gen_fic_commande::uf_Charger_CDiscountPRO (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 21/04/2009
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Modif apr$$HEX1$$e800$$ENDHEX$$s chargement des commandes pour CDiscountPRO
+//* Libellé			: Modif après chargement des commandes pour CDiscountPRO
 //* Commentaires	: [DCMP090102]
 //*
 //* Arguments		: 
@@ -3965,12 +3965,12 @@ private subroutine uf_charger_cdiscountpro ();//*-------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* [ITSM314090]	FPI	12/08/2015	M. remplac$$HEX2$$e9002000$$ENDHEX$$par M dans la civilt$$HEX1$$e900$$ENDHEX$$
+//* [ITSM314090]	FPI	12/08/2015	M. remplacé par M dans la civilté
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* Pas d'espace pour les num$$HEX1$$e900$$ENDHEX$$ros de t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone.                      */
-/* Seulement dans la g$$HEX1$$ea00$$ENDHEX$$ne du fichier, on laisse les espaces en base */
+/* Pas d'espace pour les numéros de téléphone.                      */
+/* Seulement dans la gêne du fichier, on laisse les espaces en base */
 /*------------------------------------------------------------------*/
 Long 	lTot, lCpt, lCptCas, lLen, lCptLen
 String sVal
@@ -4042,8 +4042,8 @@ private function integer uf_generer_fichier_cdiscountpro (long alidlotcmd);//*--
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_CDISCOUNTPRO (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 21/04/2009
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le fournisseur CDISCOUNTPRO
-//* Commentaires	: Trois fichiers seront g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$s dans le m$$HEX1$$ea00$$ENDHEX$$me r$$HEX1$$e900$$ENDHEX$$pertoires :
+//* Libellé			: Génération du fichier de commande pour le fournisseur CDISCOUNTPRO
+//* Commentaires	: Trois fichiers seront générés dans le même répertoires :
 //*					  un pour les commandes   : CMDjjmma.ind  (CMD10091.001)
 //*					  un pour les prestations : PRSjjmma.ind  (PRS10091.001)
 //*					  un pour les annulations : ANNjjmma.ind  (ANN10091.001)
@@ -4058,12 +4058,12 @@ private function integer uf_generer_fichier_cdiscountpro (long alidlotcmd);//*--
 //* #..   ...   ../../....   
 //* 
 //* #1	 CAG	 17/10/2002	  Modification SFR : Pour ce produit (5712), on
-//*								  cr$$HEX1$$e900$$ENDHEX$$e un fichier suppl$$HEX1$$e900$$ENDHEX$$mentaire pour chaque type (cmd, prs, annul ...)
-//*								  et on les $$HEX1$$e900$$ENDHEX$$crit dans un r$$HEX1$$e900$$ENDHEX$$pertoire sp$$HEX1$$e900$$ENDHEX$$cifique
-//*								  Annexe 7 (6.7.2) dans l'int$$HEX1$$e900$$ENDHEX$$gration de SFR, analyse des traitements
+//*								  crée un fichier supplémentaire pour chaque type (cmd, prs, annul ...)
+//*								  et on les écrit dans un répertoire spécifique
+//*								  Annexe 7 (6.7.2) dans l'intégration de SFR, analyse des traitements
 //*
 //* #4	 JFF	 07/04/2003   Ajout de l'ID_REF_FOUR et MT_TTC_CMDE
-//* #5	 CAG	 06/05/2003	  G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration d'un fichier vide de cmde qd pas de cmdes
+//* #5	 CAG	 06/05/2003	  Génération d'un fichier vide de cmde qd pas de cmdes
 //        JFF   12/04/2012   [VDOC7530]
 //*-----------------------------------------------------------------
 
@@ -4085,7 +4085,7 @@ For lCptCas = 1 To 4
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+		/* Génération du fichier de COMMANDES (CMD)                         */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sFiltre = "ID_TYP_ART <> 'PRS' AND COD_ETAT <> 'ANN'"
@@ -4093,10 +4093,10 @@ For lCptCas = 1 To 4
 			sTypArt = "commandes"
 			sTypArtNul = "commande"
 			sAction = "A COMMANDER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de COMMANDES en cours..." )
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATIONS (PRS)                       */
+		/* Génération du fichier de PRESTATIONS (PRS)                       */
 		/*------------------------------------------------------------------*/
 		CASE 2
 			sFiltre = "ID_TYP_ART = 'PRS' AND COD_ETAT <> 'ANN'"
@@ -4104,10 +4104,10 @@ For lCptCas = 1 To 4
 			sTypArt = "prestations"
 			sTypArtNul = "prestation"
 			sAction = "A REPARER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATIONS en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de PRESTATIONS en cours..." )
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des ANNULATION des COMMANDES (ACD)			  */
+		/* Génération du fichier des ANNULATION des COMMANDES (ACD)			  */
 		/*------------------------------------------------------------------*/
 		CASE 3
 			sFiltre = "ID_TYP_ART <> 'PRS' AND COD_ETAT = 'ANN'"
@@ -4115,10 +4115,10 @@ For lCptCas = 1 To 4
 			sTypArt = "annulations de commandes"
 			sTypArtNul = "annulation de commandes"
 			sAction = "A ANNULER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier d'ANNULATIONS DES COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier d'ANNULATIONS DES COMMANDES en cours..." )
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des ANNULATION des COMMANDES (APR)			  */
+		/* Génération du fichier des ANNULATION des COMMANDES (APR)			  */
 		/*------------------------------------------------------------------*/
 		CASE 4
 			sFiltre = "ID_TYP_ART = 'PRS' AND COD_ETAT = 'ANN'"
@@ -4126,7 +4126,7 @@ For lCptCas = 1 To 4
 			sTypArt = "annulations de prestations"
 			sTypArtNul = "annulation de prestations"
 			sAction = "A ANNULER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier d'ANNULATIONS DES PRESTATIONS en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier d'ANNULATIONS DES PRESTATIONS en cours..." )
 
 
 	END CHOOSE
@@ -4138,13 +4138,13 @@ For lCptCas = 1 To 4
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 		/*------------------------------------------------------------------*/
-		/* #5	CAG : 06/05/2003 : on ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier vide pour les  */
+		/* #5	CAG : 06/05/2003 : on ne génère pas de fichier vide pour les  */
 		/*								 annulations ni prestations					  */
 		/*------------------------------------------------------------------*/
 		If lCptCas <> 1 Then
@@ -4196,10 +4196,10 @@ For lCptCas = 1 To 4
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, False )
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 
@@ -4215,8 +4215,8 @@ private function integer uf_generer_fichier_phoneandphone (long alidlotcmd);//*-
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_PHONEANDPHONE (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 21/04/2009
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le fournisseur PHONEANDPHONE
-//* Commentaires	: Trois fichiers seront g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$s dans le m$$HEX1$$ea00$$ENDHEX$$me r$$HEX1$$e900$$ENDHEX$$pertoires :
+//* Libellé			: Génération du fichier de commande pour le fournisseur PHONEANDPHONE
+//* Commentaires	: Trois fichiers seront générés dans le même répertoires :
 //*					  un pour les commandes   : CMDjjmma.ind  (CMD10091.001)
 //*					  un pour les prestations : PRSjjmma.ind  (PRS10091.001)
 //*					  un pour les annulations : ANNjjmma.ind  (ANN10091.001)
@@ -4231,12 +4231,12 @@ private function integer uf_generer_fichier_phoneandphone (long alidlotcmd);//*-
 //* #..   ...   ../../....   
 //* 
 //* #1	 CAG	 17/10/2002	  Modification SFR : Pour ce produit (5712), on
-//*								  cr$$HEX1$$e900$$ENDHEX$$e un fichier suppl$$HEX1$$e900$$ENDHEX$$mentaire pour chaque type (cmd, prs, annul ...)
-//*								  et on les $$HEX1$$e900$$ENDHEX$$crit dans un r$$HEX1$$e900$$ENDHEX$$pertoire sp$$HEX1$$e900$$ENDHEX$$cifique
-//*								  Annexe 7 (6.7.2) dans l'int$$HEX1$$e900$$ENDHEX$$gration de SFR, analyse des traitements
+//*								  crée un fichier supplémentaire pour chaque type (cmd, prs, annul ...)
+//*								  et on les écrit dans un répertoire spécifique
+//*								  Annexe 7 (6.7.2) dans l'intégration de SFR, analyse des traitements
 //*
 //* #4	 JFF	 07/04/2003   Ajout de l'ID_REF_FOUR et MT_TTC_CMDE
-//* #5	 CAG	 06/05/2003	  G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration d'un fichier vide de cmde qd pas de cmdes
+//* #5	 CAG	 06/05/2003	  Génération d'un fichier vide de cmde qd pas de cmdes
 //*-----------------------------------------------------------------
 
 Int	iRet
@@ -4256,7 +4256,7 @@ For lCptCas = 1 To 1
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+		/* Génération du fichier de COMMANDES (CMD)                         */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sFiltre = "ID_TYP_ART <> 'PRS' AND COD_ETAT <> 'ANN'"
@@ -4264,7 +4264,7 @@ For lCptCas = 1 To 1
 			sTypArt = "commandes"
 			sTypArtNul = "commande"
 			sAction = "A COMMANDER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de COMMANDES en cours..." )
 
 	END CHOOSE
 
@@ -4275,13 +4275,13 @@ For lCptCas = 1 To 1
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 		/*------------------------------------------------------------------*/
-		/* #5	CAG : 06/05/2003 : on ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier vide pour les  */
+		/* #5	CAG : 06/05/2003 : on ne génère pas de fichier vide pour les  */
 		/*								 annulations ni prestations					  */
 		/*------------------------------------------------------------------*/
 		If lCptCas <> 1 Then
@@ -4328,10 +4328,10 @@ For lCptCas = 1 To 1
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, False )
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 
@@ -4347,8 +4347,8 @@ private function integer uf_generer_fichier_rueducommerce (long alidlotcmd);//*-
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_RUEDUCOMMERCE (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 09/06/2009
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le RUEDUCOMMERCE
-//* Commentaires	: Trois fichiers seront g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$s dans le m$$HEX1$$ea00$$ENDHEX$$me r$$HEX1$$e900$$ENDHEX$$pertoires :
+//* Libellé			: Génération du fichier de commande pour le RUEDUCOMMERCE
+//* Commentaires	: Trois fichiers seront générés dans le même répertoires :
 //*					  un pour les commandes   : CMDjjmma.ind  (CMD10091.001)
 //*					  un pour les prestations : PRSjjmma.ind  (PRS10091.001)
 //*					  un pour les annulations : ANNjjmma.ind  (ANN10091.001)
@@ -4363,12 +4363,13 @@ private function integer uf_generer_fichier_rueducommerce (long alidlotcmd);//*-
 //* #..   ...   ../../....   
 //* 
 //* #1	 CAG	 17/10/2002	  Modification SFR : Pour ce produit (5712), on
-//*								  cr$$HEX1$$e900$$ENDHEX$$e un fichier suppl$$HEX1$$e900$$ENDHEX$$mentaire pour chaque type (cmd, prs, annul ...)
-//*								  et on les $$HEX1$$e900$$ENDHEX$$crit dans un r$$HEX1$$e900$$ENDHEX$$pertoire sp$$HEX1$$e900$$ENDHEX$$cifique
-//*								  Annexe 7 (6.7.2) dans l'int$$HEX1$$e900$$ENDHEX$$gration de SFR, analyse des traitements
+//*								  crée un fichier supplémentaire pour chaque type (cmd, prs, annul ...)
+//*								  et on les écrit dans un répertoire spécifique
+//*								  Annexe 7 (6.7.2) dans l'intégration de SFR, analyse des traitements
 //*
 //* #4	 JFF	 07/04/2003   Ajout de l'ID_REF_FOUR et MT_TTC_CMDE
-//* #5	 CAG	 06/05/2003	  G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration d'un fichier vide de cmde qd pas de cmdes
+//* #5	 CAG	 06/05/2003	  Génération d'un fichier vide de cmde qd pas de cmdes
+//* #6	 FPI	 23/07/2024	  [MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 Int	iRet
@@ -4387,7 +4388,7 @@ For lCptCas = 1 To 4
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+		/* Génération du fichier de COMMANDES (CMD)                         */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sFiltre = "ID_TYP_ART <> 'PRS' AND COD_ETAT <> 'ANN'"
@@ -4395,10 +4396,10 @@ For lCptCas = 1 To 4
 			sTypArt = "commandes"
 			sTypArtNul = "commande"
 			sAction = "A COMMANDER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de COMMANDES en cours..." )
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATIONS (PRS)                       */
+		/* Génération du fichier de PRESTATIONS (PRS)                       */
 		/*------------------------------------------------------------------*/
 		CASE 2
 			sFiltre = "ID_TYP_ART = 'PRS' AND COD_ETAT <> 'ANN'"
@@ -4406,10 +4407,10 @@ For lCptCas = 1 To 4
 			sTypArt = "prestations"
 			sTypArtNul = "prestation"
 			sAction = "A REPARER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATIONS en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de PRESTATIONS en cours..." )
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des ANNULATION des COMMANDES (ACD)			  */
+		/* Génération du fichier des ANNULATION des COMMANDES (ACD)			  */
 		/*------------------------------------------------------------------*/
 		CASE 3
 			sFiltre = "ID_TYP_ART <> 'PRS' AND COD_ETAT = 'ANN'"
@@ -4417,10 +4418,10 @@ For lCptCas = 1 To 4
 			sTypArt = "annulations de commandes"
 			sTypArtNul = "annulation de commandes"
 			sAction = "A ANNULER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier d'ANNULATIONS DES COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier d'ANNULATIONS DES COMMANDES en cours..." )
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des ANNULATION des COMMANDES (APR)			  */
+		/* Génération du fichier des ANNULATION des COMMANDES (APR)			  */
 		/*------------------------------------------------------------------*/
 		CASE 4
 			sFiltre = "ID_TYP_ART = 'PRS' AND COD_ETAT = 'ANN'"
@@ -4428,7 +4429,7 @@ For lCptCas = 1 To 4
 			sTypArt = "annulations de prestations"
 			sTypArtNul = "annulation de prestations"
 			sAction = "A ANNULER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier d'ANNULATIONS DES PRESTATIONS en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier d'ANNULATIONS DES PRESTATIONS en cours..." )
 
 
 	END CHOOSE
@@ -4440,13 +4441,13 @@ For lCptCas = 1 To 4
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 		/*------------------------------------------------------------------*/
-		/* #5	CAG : 06/05/2003 : on ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier vide pour les  */
+		/* #5	CAG : 06/05/2003 : on ne génère pas de fichier vide pour les  */
 		/*								 annulations ni prestations					  */
 		/*------------------------------------------------------------------*/
 		If lCptCas <> 1 Then
@@ -4488,13 +4489,13 @@ For lCptCas = 1 To 4
 	Next
 
 	This.uf_nom_fichier ( sNomFic, lCptProd )
-	iRet = idwFicGenCmde.SaveAs ( sNomFic, Excel!, True )
+	iRet = idwFicGenCmde.SaveAs ( sNomFic, Excel8!, True ) // [MIG_PB2022]
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 
@@ -4510,7 +4511,7 @@ private function integer uf_generer_fichier_sbetv (long alidlotcmd);//*---------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_SBETV (PRIVATE)
 //* Auteur			: PHG
 //* Date				: 27/11/2007
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour O2M
+//* Libellé			: Génération du fichier de commande pour O2M
 //* Commentaires	: [DCMP090327].[SBETV]
 //*
 //* Arguments		: alIdLotCmd	Long	Val
@@ -4524,7 +4525,7 @@ private function integer uf_generer_fichier_sbetv (long alidlotcmd);//*---------
 //* #2	JFF	20/10/2008	[FNAC_PROD_ECH_TECH]
 //* #3   JFF   20/10/2008  [FNAC_PROD_ECH_TECH].[20090127140540720]
 //* #4   JFF   20/10/2008  [FNAC_PROD_ECH_TECH].[20090225143455120]
-//* #7	FPI	20/03/2009	[DCMP090109] O2M devient r$$HEX1$$e900$$ENDHEX$$parateur d'IPhone
+//* #7	FPI	20/03/2009	[DCMP090109] O2M devient réparateur d'IPhone
 //* #8   JFF   27/03/2009  [DCMP090152] Civ long pour O2M
 //* #9   JFF   25/11/2009  [DCMP090327].[SBETV].[20091125155555450]
 //*-----------------------------------------------------------------
@@ -4542,7 +4543,7 @@ iRet = 1
 idwFicGenCmde.DataObject = "d_trt_fichier_cmde_SBETV"
 
 /*------------------------------------------------------------------*/
-/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+/* Génération du fichier de COMMANDES (CMD)                         */
 /*------------------------------------------------------------------*/
 //* #6 [FNAC_PROD_ECH_TECH].[20090127140540720]
 // sFiltre = "ID_TYP_ART = 'EDI' AND COD_ETAT <> 'ANN'"
@@ -4551,7 +4552,7 @@ sFiltre = "COD_ETAT <> 'ANN'"
 sNomFic = K_FIC2 // "PRS"
 sTypArt = "Ordre SBE TV"
 sTypArtNul = "Ordre SBE TV"
-This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES en cours..." )
+This.Uf_Trace ( "ECR", "Génération du fichier de COMMANDES en cours..." )
 
 idwFicCharg.SetFilter ( sFiltre )
 idwFicCharg.Filter ()
@@ -4560,10 +4561,10 @@ lTot = idwFicCharg.RowCount ()
 idwFicGenCmde.Reset ()
 
 /*------------------------------------------------------------------*/
-/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+/* On ne génère pas de fichier si pas de commandes ou pas de        */
 /* prestations.                                                     */
 /*------------------------------------------------------------------*/
-If lTot = 0 Then This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+If lTot = 0 Then This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 
 For lCpt = 1 To lTot
 	lRow = idwFicGenCmde.InsertRow ( 0 )
@@ -4625,7 +4626,7 @@ For lCpt = 1 To lTot
 	idwFicGenCmde.SetItem ( lRow, "MODL_APP",			idwFicCharg.GetItemString ( lCpt, "MODL_APP" ) )						
 	idwFicGenCmde.SetItem ( lRow, "NOM_GEST",			idwFicCharg.GetItemString ( lCpt, "NOM_GEST" ) )						
 	
-	// #7 [DCMP090109] D$$HEX1$$e900$$ENDHEX$$placement de l'armement de sAction
+	// #7 [DCMP090109] Déplacement de l'armement de sAction
 	//sAction = idwFicCharg.GetItemString ( lCpt, "ID_REF_FOUR" )
 
 	idwFicGenCmde.SetItem ( lRow, "ACTION", sAction )
@@ -4657,7 +4658,7 @@ For lCpt = 1 To lTot
 	
 	idwFicGenCmde.SetItem ( lRow, "MT_FRAIS",			idwFicCharg.GetItemDecimal ( lCpt, "MT_DEVIS" ) )
 	idwFicGenCmde.SetItem ( lRow, "ASSUREUR",			idwFicCharg.GetItemString ( lCpt, "ASSUREUR" ) )
-	// [DCMP080162] AJout Valeur Publique d'achat et Date Achat ( note : date stock$$HEX1$$e900$$ENDHEX$$e sous forme de chaine )
+	// [DCMP080162] AJout Valeur Publique d'achat et Date Achat ( note : date stockée sous forme de chaine )
 	idwFicGenCmde.SetItem ( lRow, "DTE_ACHAT",		idwFicCharg.GetItemString ( lCpt, "DTE_ACHAT" ) )
 
 
@@ -4710,10 +4711,10 @@ This.uf_nom_fichier ( sNomFic, lCptProd )
 iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, TRue ) // True : On indique les en-tetes
 
 If iRet > 0 Then
-	This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+	This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 Else
 	iRet = -1
-	This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+	This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 End If
 
 Return iRet 
@@ -4724,7 +4725,7 @@ private function integer uf_generer_fichier_fnac (long alidlotcmd);//*----------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_fnac (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 27/10/2009
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [FNAC_EPT.BGE].FPI G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le traitement BGE FNAC EPT
+//* Libellé			: [FNAC_EPT.BGE].FPI Génération du fichier de commande pour le traitement BGE FNAC EPT
 //* Commentaires	: [FNAC_PROD_ECH_TECH].[BGE].[20091027112156767]
 //*
 //* Arguments		: alIdLotCmd	Long	Val
@@ -4767,20 +4768,20 @@ For lCptCas = 1 To 2
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration des donn$$HEX1$$e900$$ENDHEX$$es de COMMANDES                              */
+		/* Génération des données de COMMANDES                              */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sFiltre = "ID_TYP_ART = 'CAF' AND COD_ETAT <> 'ANN'"
 			sTypArtNul = "commande"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration des BGE en cours..." )
+			This.Uf_Trace ( "ECR", "Génération des BGE en cours..." )
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration des donn$$HEX1$$e900$$ENDHEX$$es d'ANNULATION des COMMANDES          		  */
+		/* Génération des données d'ANNULATION des COMMANDES          		  */
 		/*------------------------------------------------------------------*/
 		CASE 2
 			sFiltre = "ID_TYP_ART = 'CAF' AND COD_ETAT = 'ANN'"
 			sTypArtNul = "annulation de commandes"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration des ANNULATIONS de BGE en cours..." )
+			This.Uf_Trace ( "ECR", "Génération des ANNULATIONS de BGE en cours..." )
 
 	END CHOOSE
 
@@ -4790,13 +4791,13 @@ For lCptCas = 1 To 2
 	lTot = idwFicCharg.RowCount ()			
 
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 	End If
 
 	For lCpt = 1 To lTot
 
 		/*------------------------------------------------------------------*/
-		/* Ecriture du d$$HEX1$$e900$$ENDHEX$$tail de commande                                 */
+		/* Ecriture du détail de commande                                 */
 		/*------------------------------------------------------------------*/
 		// [PC501][EVOLPC]
 	   lIdRev = idwFicCharg.GetItemNumber ( lCpt, "ID_REV" )
@@ -4813,7 +4814,7 @@ For lCptCas = 1 To 2
 		End if
 		
 		// -- N_DGE
-		// [PI062] [A_REPRENDRE] mail envoyer $$HEX2$$e0002000$$ENDHEX$$H$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e800$$ENDHEX$$ne le 11/01/17
+		// [PI062] [A_REPRENDRE] mail envoyer à Hélène le 11/01/17
 		sEnr += uf_formatchamps ( 7, String(idwFicCharg.GetItemNumber ( lCpt, "ID_SIN" )), "0", TRUE ) + &
 			String(idwFicCharg.GetItemNumber ( lCpt, "ID_SEQ" )) + sSep
 		
@@ -4856,7 +4857,7 @@ For lCptCas = 1 To 2
 		If IsNull ( sUniteBGE ) Then sUniteBGE = ""
 		If lDelaiBGE <= 0 Or ( sUniteBGE <> "M" and sUniteBGE <> "A" and sUniteBGE <> "J" ) Then
 			iRet = -1
-			This.Uf_Trace ( "ECR", "ERREUR dans la r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration du param$$HEX1$$e800$$ENDHEX$$tre -DP/126 DELAI_PEREMPTION_BGE et UNITE_PEREMPTION_BGE : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+			This.Uf_Trace ( "ECR", "ERREUR dans la récupération du paramètre -DP/126 DELAI_PEREMPTION_BGE et UNITE_PEREMPTION_BGE : le fichier n'est pas généré !!" )
 			Return iRet
 		End If
 
@@ -4874,7 +4875,7 @@ For lCptCas = 1 To 2
 		sEnr += uf_formatchamps(16,String(lMtCmde), "0", TRUE) + sSep  
 			 
 		// -- N_BGE
-		// [PI062] [A_REPRENDRE] mail envoyer $$HEX2$$e0002000$$ENDHEX$$H$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e800$$ENDHEX$$ne le 11/01/17
+		// [PI062] [A_REPRENDRE] mail envoyer à Hélène le 11/01/17
 		sEnr += "0100" + &
 			uf_formatchamps(7,String(idwFicCharg.GetItemNumber ( lCpt, "ID_SIN" )), "0", TRUE)	  + &
 			String(idwFicCharg.GetItemNumber ( lCpt, "ID_SEQ" )) + &
@@ -4885,12 +4886,12 @@ For lCptCas = 1 To 2
 		idwFicGenCmde.SetItem ( lNewRow, "LIGNE", sEnr )
 	
 		//	[PC282] 
-		If lCptCas=1 Then // G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration de BGE
+		If lCptCas=1 Then // Génération de BGE
 			F_RechDetPro ( lDeb, lFin, idwDetPro,lIdProd, "-DP", 105) // Gestion FNAC EPT
 			If lDeb > 0 Then 
 				F_RechDetPro ( lDeb, lFin, idwDetPro, lIdProd, "-DP",104 ) // Gestion suivi dossier par SMS 
 				If lDeb > 0 Then 
-					// On devra envoyer un SMS $$HEX2$$e0002000$$ENDHEX$$l'assur$$HEX1$$e900$$ENDHEX$$
+					// On devra envoyer un SMS à l'assuré
 					lTabIdSin[UpperBound(lTabIdSin) + 1] = idwFicCharg.GetItemNumber ( lCpt, "ID_SIN" )
 				End if
 			End if
@@ -4914,11 +4915,11 @@ Else
 End If
 
 
-// Nbre Ligne total dans le fichier hors d$$HEX1$$e900$$ENDHEX$$but et Fin
+// Nbre Ligne total dans le fichier hors début et Fin
 lTot = idwFicGenCmde.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Ecriture de l'ent$$HEX1$$ea00$$ENDHEX$$te de commande                                 */
+/* Ecriture de l'entête de commande                                 */
 /*------------------------------------------------------------------*/
 sEnr = "D " 																							+ sSep + &
 		 "BGE"							  								  								+ sSep + &
@@ -4955,13 +4956,13 @@ If iRet > 0 then
 End If 
 
 If iRet > 0 Then
-	This.Uf_Trace ( "ECR", "Fichier des commandes g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+	This.Uf_Trace ( "ECR", "Fichier des commandes généré avec succès sur : " + Upper ( sNomFic )  )
 Else
 	iRet = -1
-	This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des BGE : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+	This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des BGE : le fichier n'est pas généré !!" )
 End If
 
-//	[PC282] : envoi des SMS $$HEX2$$e0002000$$ENDHEX$$l'assur$$HEX1$$e900$$ENDHEX$$
+//	[PC282] : envoi des SMS à l'assuré
 sCasRetour=Fill(" ",50)
 
 For lDeb=1 to UpperBound(lTabIdSin)
@@ -4977,13 +4978,13 @@ private function string uf_formatchamps (integer ainbcar, string aschamp, string
 //* Fonction		: n_cst_gen_fic_commande::uf_formatchamps ( PRIVATE )
 //* Auteur			: F. Pinon
 //* Date				: 28/10/2009 10:31:40
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Ajoute les caract$$HEX1$$e800$$ENDHEX$$res n$$HEX1$$e900$$ENDHEX$$cessaires pour que la cha$$HEX1$$ee00$$ENDHEX$$ne retourn$$HEX1$$e900$$ENDHEX$$e fasse la longueur voulue
+//* Libellé			: Ajoute les caractères nécessaires pour que la chaîne retournée fasse la longueur voulue
 //* Commentaires	: 
 //*
-//* Arguments		: ( Val )	Integer	aiNbCar	:	Longueur de la cha$$HEX1$$ee00$$ENDHEX$$ne $$HEX2$$e0002000$$ENDHEX$$retourner
-//*					  ( Val )	String	asChamp	:	Cha$$HEX1$$ee00$$ENDHEX$$ne $$HEX2$$e0002000$$ENDHEX$$traiter
-//*					  ( Val )	String	asCar		:	Caract$$HEX1$$e800$$ENDHEX$$re $$HEX2$$e0002000$$ENDHEX$$ajouter
-//*					  ( Val )	String	abDebut	:	Caract$$HEX1$$e800$$ENDHEX$$re $$HEX2$$e0002000$$ENDHEX$$ajouter $$HEX2$$e0002000$$ENDHEX$$gauche ?
+//* Arguments		: ( Val )	Integer	aiNbCar	:	Longueur de la chaîne à retourner
+//*					  ( Val )	String	asChamp	:	Chaîne à traiter
+//*					  ( Val )	String	asCar		:	Caractère à ajouter
+//*					  ( Val )	String	abDebut	:	Caractère à ajouter à gauche ?
 //*
 //* Retourne		: string	
 //*
@@ -5012,9 +5013,9 @@ private function integer uf_flaguer_commandes_fnac ();//*-----------------------
 //* Fonction		: n_cst_gen_fic_commande::uf_Flaguer_Commandes_Fnac (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 27/10/2009
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: On marque en bases es commandes charg$$HEX1$$e900$$ENDHEX$$es comm$$HEX3$$e9002000e900$$ENDHEX$$tant g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$es
-//*					  elle ne pouraient $$HEX1$$ea00$$ENDHEX$$tre par la suite que reg$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$es avant la fonction ad$$HEX1$$e900$$ENDHEX$$quat.
-//* Commentaires	: Utilis$$HEX2$$e9002000$$ENDHEX$$pour tout fournisseur standard SPB
+//* Libellé			: On marque en bases es commandes chargées commé étant générées
+//*					  elle ne pouraient être par la suite que regénérées avant la fonction adéquat.
+//* Commentaires	: Utilisé pour tout fournisseur standard SPB
 //* 					  [FNAC_PROD_ECH_TECH].[BGE].[20091027112156767]
 //*
 //* Arguments		: 
@@ -5037,26 +5038,26 @@ dtNow = DateTime ( Today (), Now () )
 
 
 /*------------------------------------------------------------------*/
-/* R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration d'un n$$HEX2$$b0002000$$ENDHEX$$de lot de commandes.                        */
+/* Récupération d'un n° de lot de commandes.                        */
 /*------------------------------------------------------------------*/
 ilIdLotFNC = -1
 SQLCA.PS_S03_COMMANDE ( "ID_LOT_FNC", ilIdLotFNC )
 
 If ilIdLotFNC <= 0 Or IsNull ( ilIdLotFNC ) Then
 
-	// RollBack imm$$HEX1$$e900$$ENDHEX$$diat.
+	// RollBack immédiat.
 	F_Commit ( SQLCA, False )
 	iRet = -1
-	This.Uf_Trace ( "ECR", "ERREUR lors de la r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration de l'ID_LOT_FNC, " + String ( ilIdLotFNC ) )
+	This.Uf_Trace ( "ECR", "ERREUR lors de la récupération de l'ID_LOT_FNC, " + String ( ilIdLotFNC ) )
 Else
-	This.Uf_Trace ( "ECR", "Attribution du n$$HEX2$$b0002000$$ENDHEX$$de lot de commandes : " + String ( ilIdLotFNC ) )
+	This.Uf_Trace ( "ECR", "Attribution du n° de lot de commandes : " + String ( ilIdLotFNC ) )
 End If
 
 // [ITSM178659]
 F_COMMIT ( SQLCA, SQLCA.SQLCODE = 0 Or SQLCA.SQLDBCODE = 0  ) 
 
 /*------------------------------------------------------------------*/
-/* Attribution du n$$HEX2$$b0002000$$ENDHEX$$de lot $$HEX2$$e0002000$$ENDHEX$$toutes les lignes charg$$HEX1$$e900$$ENDHEX$$es.           */
+/* Attribution du n° de lot à toutes les lignes chargées.           */
 /*------------------------------------------------------------------*/
 If iRet > 0 Then
 	lTot = idwFicCharg.RowCount ()
@@ -5068,15 +5069,15 @@ If iRet > 0 Then
 
 	/*------------------------------------------------------------------*/
 	/* Update en base.                                                  */
-	/* Les lignes vont $$HEX1$$ea00$$ENDHEX$$tre marqu$$HEX1$$e900$$ENDHEX$$es en bases.								  */
+	/* Les lignes vont être marquées en bases.								  */
 	/*------------------------------------------------------------------*/
 	If idwFicCharg.Update () > 0 Then
 		F_Commit ( SQLCA, True )
-		This.Uf_Trace ( "ECR", "Update du marquage r$$HEX1$$e900$$ENDHEX$$ussi, les commandes sont flagu$$HEX1$$e900$$ENDHEX$$es en base." )
+		This.Uf_Trace ( "ECR", "Update du marquage réussi, les commandes sont flaguées en base." )
 	Else
 		iRet = -1
 		F_Commit ( SQLCA, False )
-		This.Uf_Trace ( "ECR", "ERREUR, Update du marquage en base a $$HEX1$$e900$$ENDHEX$$chou$$HEX1$$e900$$ENDHEX$$." )
+		This.Uf_Trace ( "ECR", "ERREUR, Update du marquage en base a échoué." )
 	End if
 End If
 
@@ -5090,7 +5091,7 @@ private function integer uf_generer_fichier_mss_diag (long alidlotcmd);//*------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_MSS_DIAG (PRIVATE)
 //* Auteur			: PHG
 //* Date				: 27/11/2007
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour O2M
+//* Libellé			: Génération du fichier de commande pour O2M
 //* Commentaires	: [MSS_DIAG]
 //*
 //* Arguments		: alIdLotCmd	Long	Val
@@ -5104,10 +5105,10 @@ private function integer uf_generer_fichier_mss_diag (long alidlotcmd);//*------
 //* #2	JFF	20/10/2008	[FNAC_PROD_ECH_TECH]
 //* #3   JFF   20/10/2008  [FNAC_PROD_ECH_TECH].[20090127140540720]
 //* #4   JFF   20/10/2008  [FNAC_PROD_ECH_TECH].[20090225143455120]
-//* #7	FPI	20/03/2009	[DCMP090109] O2M devient r$$HEX1$$e900$$ENDHEX$$parateur d'IPhone
+//* #7	FPI	20/03/2009	[DCMP090109] O2M devient réparateur d'IPhone
 //* #8   JFF   27/03/2009  [DCMP090152] Civ long pour O2M
 //* #9   JFF   02/03/2010  [MSS_LOT2]
-//			PHG	30/06/2010	[DCMP100420] Le champ num_imei_anc est agrandi $$HEX2$$e0002000$$ENDHEX$$60, mais limit$$HEX4$$e9002000e0002000$$ENDHEX$$30
+//			PHG	30/06/2010	[DCMP100420] Le champ num_imei_anc est agrandi à 60, mais limité à 30
 //			JFF   11/10/2010  [20101011144634403]
 //			JFF	21/03/2010  [VDOC3537]
 //*-----------------------------------------------------------------
@@ -5123,7 +5124,7 @@ iRet = 1
 idwFicGenCmde.DataObject = "d_trt_fichier_cmde_MSS_DIAG"
 
 /*------------------------------------------------------------------*/
-/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+/* Génération du fichier de COMMANDES (CMD)                         */
 /*------------------------------------------------------------------*/
 //* #6 [FNAC_PROD_ECH_TECH].[20090127140540720]
 // sFiltre = "ID_TYP_ART = 'EDI' AND COD_ETAT <> 'ANN'"
@@ -5135,14 +5136,14 @@ For lCptFrn = 1 To 2
 	Choose Case lCptFrn 
 
 		Case 1 // Attitude
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration ordres ATTITUDE en cours..." )
+			This.Uf_Trace ( "ECR", "Génération ordres ATTITUDE en cours..." )
 			sFiltre = "COD_ETAT <> 'ANN' AND AIGUI_MS1_ATT=1"
 			sTypArt = "Ordre Attitude"
 			sTypArtNul = "Ordre Attitude"
 			lCasNomFic = 0
 		
 		Case 2 // MSS
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration ordres MSS en cours..." )			
+			This.Uf_Trace ( "ECR", "Génération ordres MSS en cours..." )			
 			sFiltre = "COD_ETAT <> 'ANN' AND AIGUI_MS1_ATT<>1"
 			sTypArt = "Ordre MSS"
 			sTypArtNul = "Ordre MSS"
@@ -5157,10 +5158,10 @@ For lCptFrn = 1 To 2
 	idwFicGenCmde.Reset ()
 	
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
-	If lTot = 0 Then This.Uf_Trace ( "ECR", "Aucun " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+	If lTot = 0 Then This.Uf_Trace ( "ECR", "Aucun " + sTypArtNul + " à générer" )
 	
 	For lCpt = 1 To lTot
 		lRow = idwFicGenCmde.InsertRow ( 0 )
@@ -5233,7 +5234,7 @@ For lCptFrn = 1 To 2
 		idwFicGenCmde.SetItem ( lRow, "MODL_APP",			idwFicCharg.GetItemString ( lCpt, "MODL_APP" ) )						
 		idwFicGenCmde.SetItem ( lRow, "NOM_GEST",			idwFicCharg.GetItemString ( lCpt, "NOM_GEST" ) )						
 		
-		// #7 [DCMP090109] D$$HEX1$$e900$$ENDHEX$$placement de l'armement de sAction
+		// #7 [DCMP090109] Déplacement de l'armement de sAction
 		//sAction = idwFicCharg.GetItemString ( lCpt, "ID_REF_FOUR" )
 	
 		idwFicGenCmde.SetItem ( lRow, "ACTION", sAction )
@@ -5243,7 +5244,7 @@ For lCptFrn = 1 To 2
 		idwFicGenCmde.SetItem ( lRow, "INFO_SPB_FRN",	sInfoSpbFrn )
 	
 		
-		// [DCMP080162] AJout Valeur Publique d'achat et Date Achat ( note : date stock$$HEX1$$e900$$ENDHEX$$e sous forme de chaine )
+		// [DCMP080162] AJout Valeur Publique d'achat et Date Achat ( note : date stockée sous forme de chaine )
 		idwFicGenCmde.SetItem ( lRow, "MT_VAL_ACHAT",	Dec(idwFicCharg.GetItemString ( lCpt, "MT_VAL_ACHAT" )) )
 		idwFicGenCmde.SetItem ( lRow, "DTE_ACHAT",		idwFicCharg.GetItemString ( lCpt, "DTE_ACHAT" ) )
 	
@@ -5264,7 +5265,7 @@ For lCptFrn = 1 To 2
 			Choose Case idwFicCharg.GetItemNumber ( lCpt, "INFO_SPB_FRN" ) 
 	
 				//* #4 [FNAC_PROD_ECH_TECH].[20090225143455120] ajout 906, 911
-				//* 1261 annul$$HEX2$$e9002000$$ENDHEX$$au profit de 1264
+				//* 1261 annulé au profit de 1264
 				Case 1240, 1260, 1264 // On ne mets les infos FNAC que pour les process suivants
 					idwFicGenCmde.SetItem ( lRow, "COD_MAG",			idwFicCharg.GetItemString ( lCpt, "COD_MAG" ) ) 				
 					idwFicGenCmde.SetItem ( lRow, "ADR_1_MAG",		idwFicCharg.GetItemString ( lCpt, "ADR_1_MAG" ) )
@@ -5298,10 +5299,10 @@ For lCptFrn = 1 To 2
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, FALSE ) // True : On indique les en-tetes
 	
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 	End If
 Next
 
@@ -5313,7 +5314,7 @@ private function integer uf_generer_fichier_auchan (long alidlotcmd);//*--------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_Auchan (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 06/07/2010
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le Micromania
+//* Libellé			: Génération du fichier de commande pour le Micromania
 //* Commentaires	: [PC363_AUCHAN]
 //*
 //* Arguments		: alIdLotCmd	Long	Val
@@ -5325,10 +5326,11 @@ private function integer uf_generer_fichier_auchan (long alidlotcmd);//*--------
 //* MAJ   PAR      Date	     Modification
 //* #1	 JFF		07/05/2004 DCMP 040134 D. Bizien A-NOVO souhaite l'ID_PROD plutot que le LIB_PROD
 //* #2	 JCA		28/02/2008 DCMP 080158 - Changement de format du fichier
-//* #3    JFF     02/12/2008 BUG remont$$HEX2$$e9002000$$ENDHEX$$par David Ibersien
+//* #3    JFF     02/12/2008 BUG remonté par David Ibersien
 //*       JFF     10/06/2010 [PC419/440/418/439_MICROMANIA]
 //*       JFF     22/02/2011 [PC363_AUC].[ECL_FICH]
-// 		FPI		05/10/2011	[VDoc5352] correction (d$$HEX1$$e900$$ENDHEX$$placer)
+// 		FPI		05/10/2011	[VDoc5352] correction (déplacer)
+//*	FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 Int	iRet
@@ -5348,7 +5350,7 @@ For lCptCas = 1 To 1
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier sp$$HEX1$$e900$$ENDHEX$$ciale pour MCM								  */
+		/* Génération du fichier spéciale pour MCM								  */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sFiltre = "COD_ETAT <> 'ANN'"
@@ -5356,7 +5358,7 @@ For lCptCas = 1 To 1
 			sTypArt = "Bon cadeau"
 			sTypArtNul = "Bon cadeau"
 			sAction = "CMDE_BON_CADEAU"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des BON CADEAUX AUCHAN en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier des BON CADEAUX AUCHAN en cours..." )
 
 
 	END CHOOSE
@@ -5368,18 +5370,18 @@ For lCptCas = 1 To 1
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucun " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" + sLibCplt )
+		This.Uf_Trace ( "ECR", "Aucun " + sTypArtNul + " à générer" + sLibCplt )
 		This.uf_nom_fichier ( sNomFic, lCptProd )
 		sNomFic = F_Remplace ( sNomFic, "[PRODUIT]", "Aucun_" )
-		iRet = idwFicGenCmde.SaveAs ( sNomFic, Excel!, True )
+		iRet = idwFicGenCmde.SaveAs ( sNomFic, Excel8!, True ) // [MIG_PB2022]
 /* #3
 		Choose Case lCptCas
 			Case 2
-				// Pour le cas PRS on g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$re un fichier vide (s'il doit $$HEX1$$ea00$$ENDHEX$$tre vide).
+				// Pour le cas PRS on génére un fichier vide (s'il doit être vide).
 
 			Case Else
 				Continue
@@ -5446,12 +5448,12 @@ For lCptCas = 1 To 1
 		idwFicGenCmde.Filter ()
 
 		sNomFic = F_Remplace ( sNomFicOrig, "[PRODUIT]", sIdProdLu + "_" )
-		iRet = idwFicGenCmde.SaveAs ( sNomFic, Excel!, True )
+		iRet = idwFicGenCmde.SaveAs ( sNomFic, Excel8!, True ) // [MIG_PB2022]
 		If iRet > 0 Then
-			This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic ) + " " + sLibCplt )
+			This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic ) + " " + sLibCplt )
 		Else
 			iRet = -1
-			This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + ", " + sLibCplt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+			This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + ", " + sLibCplt + " : le fichier n'est pas généré !!" )
 			Exit
 		End If
 
@@ -5463,7 +5465,7 @@ For lCptCas = 1 To 1
 	Loop
 	// :[PC363_AUC].[ECL_FICH]
 
-	// ON continue en $$HEX1$$e900$$ENDHEX$$crivant le fichier XML pour les courriers.
+	// ON continue en écrivant le fichier XML pour les courriers.
 	If iRet > 0 Then
 		sNomFic = Left ( sNomFicOrig, Len ( sNomFicOrig ) - 4 ) + ".XML"
 		iRet = This.uf_Generer_Fichier_Auchan_XML ( sNomFic, alIdLotCmd )
@@ -5482,8 +5484,8 @@ private function integer uf_generer_fichier_carrefour (long alidlotcmd);//*-----
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_CARREFOUR (PRIVATE)
 //* Auteur			: FABRY JF
 //* Date				: 08/11/2010
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le fournisseur BRIGHTPOINT
-//* Commentaires	: Trois fichiers seront g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$s dans le m$$HEX1$$ea00$$ENDHEX$$me r$$HEX1$$e900$$ENDHEX$$pertoires :
+//* Libellé			: Génération du fichier de commande pour le fournisseur BRIGHTPOINT
+//* Commentaires	: Trois fichiers seront générés dans le même répertoires :
 //*					  un pour les commandes   : CMDjjmma.ind  (CMD10091.001)
 //*					  un pour les prestations : PRSjjmma.ind  (PRS10091.001)
 //*					  un pour les annulations : ANNjjmma.ind  (ANN10091.001)
@@ -5498,14 +5500,15 @@ private function integer uf_generer_fichier_carrefour (long alidlotcmd);//*-----
 //* #..   ...   ../../....   
 //* 
 //* #1	 CAG	 17/10/2002	  Modification SFR : Pour ce produit (5712), on
-//*								  cr$$HEX1$$e900$$ENDHEX$$e un fichier suppl$$HEX1$$e900$$ENDHEX$$mentaire pour chaque type (cmd, prs, annul ...)
-//*								  et on les $$HEX1$$e900$$ENDHEX$$crit dans un r$$HEX1$$e900$$ENDHEX$$pertoire sp$$HEX1$$e900$$ENDHEX$$cifique
-//*								  Annexe 7 (6.7.2) dans l'int$$HEX1$$e900$$ENDHEX$$gration de SFR, analyse des traitements
+//*								  crée un fichier supplémentaire pour chaque type (cmd, prs, annul ...)
+//*								  et on les écrit dans un répertoire spécifique
+//*								  Annexe 7 (6.7.2) dans l'intégration de SFR, analyse des traitements
 //*
 //* #4	 JFF	 07/04/2003   Ajout de l'ID_REF_FOUR et MT_TTC_CMDE
-//* #5	 CAG	 06/05/2003	  G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration d'un fichier vide de cmde qd pas de cmdes
+//* #5	 CAG	 06/05/2003	  Génération d'un fichier vide de cmde qd pas de cmdes
 //			FPI	06/08/2014		[VDoc14815]
 //			FPI	13/04/2016		[VDOC20517]
+//			FPI	23/07/2024		[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 Int	iRet
@@ -5523,7 +5526,7 @@ For lCptCas = 1 To 1
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+		/* Génération du fichier de COMMANDES (CMD)                         */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sFiltre = "ID_TYP_ART <> 'PRS' AND COD_ETAT <> 'ANN'"
@@ -5531,7 +5534,7 @@ For lCptCas = 1 To 1
 			sTypArt = "commandes"
 			sTypArtNul = "commande"
 			sAction = "A COMMANDER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de COMMANDES en cours..." )
 
 
 
@@ -5544,13 +5547,13 @@ For lCptCas = 1 To 1
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 		/*------------------------------------------------------------------*/
-		/* #5	CAG : 06/05/2003 : on ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier vide pour les  */
+		/* #5	CAG : 06/05/2003 : on ne génère pas de fichier vide pour les  */
 		/*								 annulations ni prestations					  */
 		/*------------------------------------------------------------------*/
 		If lCptCas <> 1 Then
@@ -5597,13 +5600,13 @@ For lCptCas = 1 To 1
 	Next
 
 	This.uf_nom_fichier ( sNomFic, lCptProd )
-	iRet = idwFicGenCmde.SaveAs ( sNomFic, Excel!, TRUE )
+	iRet = idwFicGenCmde.SaveAs ( sNomFic, Excel8!, TRUE ) // [MIG_PB2022]
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 
@@ -5619,8 +5622,8 @@ private function integer uf_generer_fichier_carma (long alidlotcmd);//*---------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_CARMA (PRIVATE)
 //* Auteur			: FABRY JF
 //* Date				: 08/11/2010
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le fournisseur BRIGHTPOINT
-//* Commentaires	: Trois fichiers seront g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$s dans le m$$HEX1$$ea00$$ENDHEX$$me r$$HEX1$$e900$$ENDHEX$$pertoires :
+//* Libellé			: Génération du fichier de commande pour le fournisseur BRIGHTPOINT
+//* Commentaires	: Trois fichiers seront générés dans le même répertoires :
 //*					  un pour les commandes   : CMDjjmma.ind  (CMD10091.001)
 //*					  un pour les prestations : PRSjjmma.ind  (PRS10091.001)
 //*					  un pour les annulations : ANNjjmma.ind  (ANN10091.001)
@@ -5635,17 +5638,18 @@ private function integer uf_generer_fichier_carma (long alidlotcmd);//*---------
 //* #..   ...   ../../....   
 //* 
 //* #1	 CAG	 17/10/2002	  Modification SFR : Pour ce produit (5712), on
-//*								  cr$$HEX1$$e900$$ENDHEX$$e un fichier suppl$$HEX1$$e900$$ENDHEX$$mentaire pour chaque type (cmd, prs, annul ...)
-//*								  et on les $$HEX1$$e900$$ENDHEX$$crit dans un r$$HEX1$$e900$$ENDHEX$$pertoire sp$$HEX1$$e900$$ENDHEX$$cifique
-//*								  Annexe 7 (6.7.2) dans l'int$$HEX1$$e900$$ENDHEX$$gration de SFR, analyse des traitements
+//*								  crée un fichier supplémentaire pour chaque type (cmd, prs, annul ...)
+//*								  et on les écrit dans un répertoire spécifique
+//*								  Annexe 7 (6.7.2) dans l'intégration de SFR, analyse des traitements
 //*
 //* #4	 JFF	 07/04/2003   Ajout de l'ID_REF_FOUR et MT_TTC_CMDE
-//* #5	 CAG	 06/05/2003	  G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration d'un fichier vide de cmde qd pas de cmdes
+//* #5	 CAG	 06/05/2003	  Génération d'un fichier vide de cmde qd pas de cmdes
 // 			FPI	22/07/2013	[PC952]
 // 			JFF	21/02/2014	[VDOC13683]
 //			FPI	02/02/2015	[VDoc16699] Ajout colonne police
 //			FPI 	08/04/2016	[DT176]
 //			FPI 	08/04/2016	[VDOC20515]
+//			FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 Int	iRet
@@ -5664,7 +5668,7 @@ For lCptCas = 1 To 1
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+		/* Génération du fichier de COMMANDES (CMD)                         */
 		/*------------------------------------------------------------------*/
 		CASE 1
 
@@ -5673,7 +5677,7 @@ For lCptCas = 1 To 1
 			sTypArt = "commandes"
 			sTypArtNul = "commande"
 			sAction = "BA_A_ENVOYER_A_L_ASSURE"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de COMMANDES en cours..." )
 	END CHOOSE
 
 	idwFicCharg.SetFilter ( sFiltre )
@@ -5683,13 +5687,13 @@ For lCptCas = 1 To 1
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 		/*------------------------------------------------------------------*/
-		/* #5	CAG : 06/05/2003 : on ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier vide pour les  */
+		/* #5	CAG : 06/05/2003 : on ne génère pas de fichier vide pour les  */
 		/*								 annulations ni prestations					  */
 		/*------------------------------------------------------------------*/
 		If lCptCas <> 1 Then
@@ -5706,7 +5710,7 @@ For lCptCas = 1 To 1
 			sVal = lnvString.of_Getkeyvalue ( sInfoSpbFrnCplt , "GESTION_ENVOI_BA", ";")
 		End If
 		
-		if sVal="SPB" Then Continue // Cas o$$HEX2$$f9002000$$ENDHEX$$le BA est envoy$$HEX2$$e9002000$$ENDHEX$$par SPB
+		if sVal="SPB" Then Continue // Cas où le BA est envoyé par SPB
 		// :[DT176]
 		
 		lRow = idwFicGenCmde.InsertRow ( 0 )
@@ -5731,13 +5735,13 @@ For lCptCas = 1 To 1
 	Next
 
 	This.uf_nom_fichier ( sNomFic, lCptProd )
-	iRet = idwFicGenCmde.SaveAs ( sNomFic, Excel!, TRUE )
+	iRet = idwFicGenCmde.SaveAs ( sNomFic, Excel8!, TRUE ) // [MIG_PB2022]
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 
@@ -5745,7 +5749,7 @@ For lCptCas = 1 To 1
 
 Next
 
-// ON continue en $$HEX1$$e900$$ENDHEX$$crivant le fichier XML pour les courriers.
+// ON continue en écrivant le fichier XML pour les courriers.
 If iRet > 0 Then
 	sNomFic = Left ( sNomFic, Len ( sNomFic ) - 4 ) + ".XML"
 	iRet = This.uf_Generer_Fichier_carma_XML ( sNomFic, alIdLotCmd )
@@ -5759,7 +5763,7 @@ private function integer uf_generer_fichier_carma_xml (string asnomfic, long ali
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_carma_XML (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 23/11/2010
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des data pour les courriers KSL au format XML
+//* Libellé			: Génération du fichier des data pour les courriers KSL au format XML
 //* Commentaires	: [PC301].[LOT2]
 //*
 //* Arguments		: String 	asNomFic		Val
@@ -5844,7 +5848,7 @@ If iFic < 0 Or iFicSav < 0 Then Return -1
 
 //======================================= Param TAG =============================================
 
-// Ent$$HEX1$$ea00$$ENDHEX$$te 
+// Entête 
 sTGEnteteVersion = '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'
 
 // Symboles
@@ -5889,7 +5893,7 @@ sTGacte_gestion_code	= "Acte_gestion_code"
 sTGmaq_code				= "Maq_code"
 
 
-// Tag Format$$HEX1$$e900$$ENDHEX$$s
+// Tag Formatés
 sfTGS			 	= sDeb + sFin + sTGS + sFerm
 sTGS				= sDeb + sTGS + ' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"' + sFerm
 
@@ -5945,7 +5949,7 @@ sTGmaq_code					+= sEgaleGuill
 
 //======================================= ECRITURE =============================================
 
-// D$$HEX1$$e900$$ENDHEX$$but construction fichier 
+// Début construction fichier 
 iWrt = FileWrite ( iFic, sTGEnteteVersion )
 iWrtSav = FileWrite ( iFicSav, sTGEnteteVersion )
 If iWrt < 0 Or iWrtSav < 0 Then Return -1
@@ -6109,7 +6113,7 @@ private function integer uf_generer_fichier_auchan_xml (string asnomfic, long al
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_Auchan_XML (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 23/11/2010
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des data pour les courriers KSL au format XML
+//* Libellé			: Génération du fichier des data pour les courriers KSL au format XML
 //* Commentaires	: [PC363].[COURRIER]
 //*
 //* Arguments		: String 	asNomFic		Val
@@ -6197,7 +6201,7 @@ dsDonneeCourrier.Sort ()
 
 //======================================= Param TAG =============================================
 
-// Ent$$HEX1$$ea00$$ENDHEX$$te 
+// Entête 
 sTGEnteteVersion = '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'
 
 // Symboles
@@ -6244,7 +6248,7 @@ sTGacte_gestion_code	= "Acte_gestion_code"
 sTGmt_franchise 		= "mt_franchise"
 sTGmaq_code				= "Maq_code"
 
-// Tag Format$$HEX1$$e900$$ENDHEX$$s
+// Tag Formatés
 sfTGS			 	= sDeb + sFin + sTGS + sFerm
 sTGS				= sDeb + sTGS + ' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"' + sFerm
 
@@ -6301,7 +6305,7 @@ sTGgti_52_ouv				+= sEgaleGuill // [PC786-1_AUCHAN_GEM]
 // Aucune
 
 //======================================= ECRITURE =============================================
-// D$$HEX1$$e900$$ENDHEX$$but construction fichier 
+// Début construction fichier 
 
 // [PC363_AUC].[ECL_FICH]
 lIdprodSav = 0
@@ -6525,8 +6529,8 @@ private function integer uf_generer_fichier_coriolis (long alidlotcmd);//*------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_CORIOLIS (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 03/05/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le fournisseur BRIGHTPOINT
-//* Commentaires	: Trois fichiers seront g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$s dans le m$$HEX1$$ea00$$ENDHEX$$me r$$HEX1$$e900$$ENDHEX$$pertoires :
+//* Libellé			: Génération du fichier de commande pour le fournisseur BRIGHTPOINT
+//* Commentaires	: Trois fichiers seront générés dans le même répertoires :
 //*					  un pour les commandes   : CMDjjmma.ind  (CMD10091.001)
 //*					  un pour les prestations : PRSjjmma.ind  (PRS10091.001)
 //*					  un pour les annulations : ANNjjmma.ind  (ANN10091.001)
@@ -6541,12 +6545,12 @@ private function integer uf_generer_fichier_coriolis (long alidlotcmd);//*------
 //* #..   ...   ../../....   
 //* 
 //* #1	 CAG	 17/10/2002	  Modification SFR : Pour ce produit (5712), on
-//*								  cr$$HEX1$$e900$$ENDHEX$$e un fichier suppl$$HEX1$$e900$$ENDHEX$$mentaire pour chaque type (cmd, prs, annul ...)
-//*								  et on les $$HEX1$$e900$$ENDHEX$$crit dans un r$$HEX1$$e900$$ENDHEX$$pertoire sp$$HEX1$$e900$$ENDHEX$$cifique
-//*								  Annexe 7 (6.7.2) dans l'int$$HEX1$$e900$$ENDHEX$$gration de SFR, analyse des traitements
+//*								  crée un fichier supplémentaire pour chaque type (cmd, prs, annul ...)
+//*								  et on les écrit dans un répertoire spécifique
+//*								  Annexe 7 (6.7.2) dans l'intégration de SFR, analyse des traitements
 //*
 //* #4	 JFF	 07/04/2003   Ajout de l'ID_REF_FOUR et MT_TTC_CMDE
-//* #5	 CAG	 06/05/2003	  G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration d'un fichier vide de cmde qd pas de cmdes
+//* #5	 CAG	 06/05/2003	  Génération d'un fichier vide de cmde qd pas de cmdes
 //        JFF   05/12/2017   [PM426-1]
 // 		 JFF   03/01/2018   [VDOC25374]
 // 		 JFF   21/06/2018   [VDOC26276]
@@ -6578,7 +6582,7 @@ For lCptCas = 1 To 1
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+		/* Génération du fichier de COMMANDES (CMD)                         */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sFiltre = "ID_TYP_ART <> 'PRS' AND COD_ETAT <> 'ANN'"
@@ -6587,11 +6591,11 @@ For lCptCas = 1 To 1
 			sTypArtNul = "commande"
 			sAction = "A_COMMANDER"
 			sActionOrig = sAction 
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de COMMANDES en cours..." )
 
 	End Choose
 
-/* code d$$HEX1$$e900$$ENDHEX$$bile
+/* code débile
 	If Not bPM426 Then
 		sInfoSpbFrnCplt = Trim ( Upper ( idwFicCharg.GetItemString ( lCptCas, "INFO_SPB_FRN_CPLT" ) ))
 	
@@ -6615,13 +6619,13 @@ For lCptCas = 1 To 1
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 		/*------------------------------------------------------------------*/
-		/* #5	CAG : 06/05/2003 : on ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier vide pour les  */
+		/* #5	CAG : 06/05/2003 : on ne génère pas de fichier vide pour les  */
 		/*								 annulations ni prestations					  */
 		/*------------------------------------------------------------------*/
 		If lCptCas <> 1 Then
@@ -6692,14 +6696,14 @@ For lCptCas = 1 To 1
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, False )
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 		
 		// [VDOC26276]
 		This.uf_Maj_Nom_Fichier_Ds_Presta ( sNomFic ) 
 		
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 
@@ -6715,7 +6719,7 @@ private function integer uf_generer_fichier_psm (long alidlotcmd);//*-----------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_PSM (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 13/02/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le fourniseur CORDON
+//* Libellé			: Génération du fichier de commande pour le fourniseur CORDON
 //* Commentaires	: 
 //*
 //* Arguments		: alIdLotCmd	Long	Val
@@ -6763,8 +6767,8 @@ iRet = 1
 idwFicGenCmde.DataObject = "d_trt_fichier_cmde_PSM"
 
 /* -- Retrait script quotidien le 03/07/2023
--- D$$HEX1$$e900$$ENDHEX$$but [VDOC11610] - JFF - A. Rault - 19/07/2013
-	print 'D$$HEX1$$e900$$ENDHEX$$but [VDOC11610] - JFF - A. Rault - 19/07/2013'
+-- Début [VDOC11610] - JFF - A. Rault - 19/07/2013
+	print 'Début [VDOC11610] - JFF - A. Rault - 19/07/2013'
 	Update sysadm.cle Set valeur = 1, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'VDOC11610'
 	print 'Fin [VDOC11610] - JFF - A. Rault - 19/07/2013'
 -- Fin [VDOC11610] - JFF - A. Rault - 19/07/2013
@@ -6784,7 +6788,7 @@ For lCptCas = lDebCpt To lFinCpt
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATIONS (PRS)                       */
+		/* Génération du fichier de PRESTATIONS (PRS)                       */
 		/*------------------------------------------------------------------*/
 		// [PM82][LOT1] Simplification
 		// [MANTIS3743]
@@ -6795,7 +6799,7 @@ For lCptCas = lDebCpt To lFinCpt
 			sTypArt = "prestations"
 			sTypArtNul = "prestation"
 			
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de REPARATION en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de REPARATION en cours..." )
 
 		CASE 2
 			sFiltre = "ID_TYP_ART IN ( 'PRS', 'EDI') AND COD_ETAT <> 'ANN' AND POS ( ID_REF_FOUR, 'A_DESOXYDER') > 0"
@@ -6804,7 +6808,7 @@ For lCptCas = lDebCpt To lFinCpt
 			sTypArt = "prestations"
 			sTypArtNul = "prestation"
 
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de D'OXYDATION en cours..." )				
+			This.Uf_Trace ( "ECR", "Génération du fichier de D'OXYDATION en cours..." )				
 
 
 		CASE 3
@@ -6815,14 +6819,14 @@ For lCptCas = lDebCpt To lFinCpt
 			sNomFic = K_FIC14
 			sTypArt = "prestations relai"
 			sTypArtNul = "prestation relai"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des REPARATION RELAI en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier des REPARATION RELAI en cours..." )
 
 		CASE 5
 				sFiltre = ""
 				sNomFic = K_FIC2
 				sTypArt = "prestations"
 				sTypArtNul = "prestation"
-				This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des prestations en cours..." )
+				This.Uf_Trace ( "ECR", "Génération du fichier des prestations en cours..." )
 
 
 
@@ -6836,14 +6840,14 @@ For lCptCas = lDebCpt To lFinCpt
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" + sLibCplt )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" + sLibCplt )
 		Choose Case lCptCas
 			Case 2
-				// Pour le cas PRS on g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$re un fichier vide (s'il doit $$HEX1$$ea00$$ENDHEX$$tre vide).
+				// Pour le cas PRS on génére un fichier vide (s'il doit être vide).
 
 			Case Else
 				Continue
@@ -6987,14 +6991,14 @@ For lCptCas = lDebCpt To lFinCpt
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, False )
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic ) + " " + sLibCplt )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic ) + " " + sLibCplt )
 		
 		// [VDOC26276]
 		This.uf_Maj_Nom_Fichier_Ds_Presta ( sNomFic ) 
 		
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + ", " + sLibCplt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + ", " + sLibCplt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 
@@ -7011,8 +7015,8 @@ private function integer uf_generer_fichier_ore (long alidlotcmd);//*-----------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_ORE (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 22/08/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le ORE
-//* Commentaires	: Trois fichiers seront g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$s dans le m$$HEX1$$ea00$$ENDHEX$$me r$$HEX1$$e900$$ENDHEX$$pertoires :
+//* Libellé			: Génération du fichier de commande pour le ORE
+//* Commentaires	: Trois fichiers seront générés dans le même répertoires :
 //*					  un pour les commandes   : CMDjjmma.ind  (CMD10091.001)
 //*					  un pour les prestations : PRSjjmma.ind  (PRS10091.001)
 //*					  un pour les annulations : ANNjjmma.ind  (ANN10091.001)
@@ -7026,7 +7030,7 @@ private function integer uf_generer_fichier_ore (long alidlotcmd);//*-----------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//*
+//		FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 Int	iRet, iFic
@@ -7044,7 +7048,7 @@ For lCptCas = 1 To 4
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+		/* Génération du fichier de COMMANDES (CMD)                         */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sFiltre = "ID_TYP_ART <> 'PRS' AND COD_ETAT <> 'ANN'"
@@ -7052,10 +7056,10 @@ For lCptCas = 1 To 4
 			sTypArt = "commandes"
 			sTypArtNul = "commande"
 			sAction = "A_COMMANDER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de COMMANDES en cours..." )
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATIONS (PRS)                       */
+		/* Génération du fichier de PRESTATIONS (PRS)                       */
 		/*------------------------------------------------------------------*/
 		CASE 2
 			sFiltre = "ID_TYP_ART = 'PRS' AND COD_ETAT <> 'ANN'"
@@ -7063,11 +7067,11 @@ For lCptCas = 1 To 4
 			sTypArt = "prestations"
 			sTypArtNul = "prestation"
 			sAction = "A_REPARER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATIONS en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de PRESTATIONS en cours..." )
 			idwFicGenCmde.DataObject = "d_trt_fichier_cmde_ORE_PRS"
 			
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des ANNULATION des COMMANDES (ACD)			  */
+		/* Génération du fichier des ANNULATION des COMMANDES (ACD)			  */
 		/*------------------------------------------------------------------*/
 		CASE 3
 			/*sFiltre = "ID_TYP_ART <> 'PRS' AND COD_ETAT = 'ANN'"
@@ -7075,11 +7079,11 @@ For lCptCas = 1 To 4
 			sTypArt = "annulations de commandes"
 			sTypArtNul = "annulation de commandes"
 			sAction = "A_ANNULER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier d'ANNULATIONS DES COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier d'ANNULATIONS DES COMMANDES en cours..." )
 			*/
 			Continue  // [PC767-1] - annulations par mail
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des ANNULATION des COMMANDES (APR)			  */
+		/* Génération du fichier des ANNULATION des COMMANDES (APR)			  */
 		/*------------------------------------------------------------------*/
 		CASE 4
 		/*	sFiltre = "ID_TYP_ART = 'PRS' AND COD_ETAT = 'ANN'"
@@ -7087,7 +7091,7 @@ For lCptCas = 1 To 4
 			sTypArt = "annulations de prestations"
 			sTypArtNul = "annulation de prestations"
 			sAction = "A_ANNULER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier d'ANNULATIONS DES PRESTATIONS en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier d'ANNULATIONS DES PRESTATIONS en cours..." )
 		*/	Continue // [PC767-1] - annulations par mail
 
 	END CHOOSE
@@ -7099,13 +7103,13 @@ For lCptCas = 1 To 4
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 		/*------------------------------------------------------------------*/
-		/* #5	CAG : 06/05/2003 : on ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier vide pour les  */
+		/* #5	CAG : 06/05/2003 : on ne génère pas de fichier vide pour les  */
 		/*								 annulations ni prestations					  */
 		/*------------------------------------------------------------------*/
 		If lCptCas <> 1 Then
@@ -7133,7 +7137,7 @@ For lCptCas = 1 To 4
 		idwFicGenCmde.SetItem ( lRow, "num_port",			idwFicCharg.GetItemString ( lCpt, "ADR_TEL3" ) )			
 		
 		If idwFicCharg.GetItemString ( lCpt, "ID_TYP_ART") = "PRS" Then 
-			sVal="R$$HEX1$$e900$$ENDHEX$$paration" 
+			sVal="Réparation" 
 		Else 
 			sVal="Remplacement"
 		End if
@@ -7159,13 +7163,13 @@ For lCptCas = 1 To 4
 	Next
 
 	This.uf_nom_fichier ( sNomFic, lCptProd )
-	iRet = idwFicGenCmde.SaveAs ( sNomFic, Excel!, True )
+	iRet = idwFicGenCmde.SaveAs ( sNomFic, Excel8!, True ) // [MIG_PB2022]
 	
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 
@@ -7182,7 +7186,7 @@ private function integer uf_generer_fichier_o2m_blcode (long alidlotcmd);//*----
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_O2M (PRIVATE)
 //* Auteur			: PHG
 //* Date				: 27/11/2007
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour O2M
+//* Libellé			: Génération du fichier de commande pour O2M
 //* Commentaires	: [O2M]
 //*
 //* Arguments		: alIdLotCmd	Long	Val
@@ -7196,7 +7200,7 @@ private function integer uf_generer_fichier_o2m_blcode (long alidlotcmd);//*----
 //* #2	JFF	20/10/2008	[FNAC_PROD_ECH_TECH]
 //* #3   JFF   20/10/2008  [FNAC_PROD_ECH_TECH].[20090127140540720]
 //* #4   JFF   20/10/2008  [FNAC_PROD_ECH_TECH].[20090225143455120]
-//* #7	FPI	20/03/2009	[DCMP090109] O2M devient r$$HEX1$$e900$$ENDHEX$$parateur d'IPhone
+//* #7	FPI	20/03/2009	[DCMP090109] O2M devient réparateur d'IPhone
 //* #8   JFF   27/03/2009  [DCMP090152] Civ long pour O2M
 //*  	   JFF	13/04/2010  [ADRESSE_O2M]
 //			FPI	10/08/2010	[PM01] Process 4
@@ -7239,7 +7243,7 @@ iRet = 1
 idwFicGenCmde.DataObject = "d_trt_fichier_cmde_O2M"
 
 /*------------------------------------------------------------------*/
-/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+/* Génération du fichier de COMMANDES (CMD)                         */
 /*------------------------------------------------------------------*/
 //* #6 [FNAC_PROD_ECH_TECH].[20090127140540720]
 // sFiltre = "ID_TYP_ART = 'EDI' AND COD_ETAT <> 'ANN'"
@@ -7255,7 +7259,7 @@ For lCptCas = lCptDeb To lCptFin
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATIONS (PRS)                       */
+		/* Génération du fichier de PRESTATIONS (PRS)                       */
 		/*------------------------------------------------------------------*/
 		// [PM82][LOT1] Simplification
 		// [MANTIS3743]
@@ -7264,14 +7268,14 @@ For lCptCas = lCptDeb To lCptFin
 			sNomFic = K_FIC2 // "PRS"
 			sTypArt = "Ordre O2M"
 			sTypArtNul = "Ordre O2M"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATION O2M en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de PRESTATION O2M en cours..." )
 
 		CASE 2
 			sFiltre = "ID_FOUR= 'BLC'"
 			sNomFic = K_FIC10 // "PRS"
 			sTypArt = "Ordre BLCODE"
 			sTypArtNul = "Ordre BLCODE"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATION BLCODE en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de PRESTATION BLCODE en cours..." )
 
 		// [VDOC17908]
 		CASE 3
@@ -7279,7 +7283,7 @@ For lCptCas = lCptDeb To lCptFin
 			sNomFic = K_FIC2 // "PRS"
 			sTypArt = "Ordre O2M et BLCODE"
 			sTypArtNul = "Ordre O2M et BLCODE"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATION O2M et BLCODE en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de PRESTATION O2M et BLCODE en cours..." )
 
 	End Choose
 
@@ -7290,10 +7294,10 @@ For lCptCas = lCptDeb To lCptFin
 	idwFicGenCmde.Reset ()
 	
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
-	If lTot = 0 Then This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+	If lTot = 0 Then This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 	
 	For lCpt = 1 To lTot
 		lRow = idwFicGenCmde.InsertRow ( 0 )
@@ -7453,7 +7457,7 @@ For lCptCas = lCptDeb To lCptFin
 		idwFicGenCmde.SetItem ( lRow, "MODL_APP",			idwFicCharg.GetItemString ( lCpt, "MODL_APP" ) )						
 		idwFicGenCmde.SetItem ( lRow, "NOM_GEST",			idwFicCharg.GetItemString ( lCpt, "NOM_GEST" ) )						
 		
-		// #7 [DCMP090109] D$$HEX1$$e900$$ENDHEX$$placement de l'armement de sAction
+		// #7 [DCMP090109] Déplacement de l'armement de sAction
 		//sAction = idwFicCharg.GetItemString ( lCpt, "ID_REF_FOUR" )
 	
 		idwFicGenCmde.SetItem ( lRow, "ACTION", sAction )
@@ -7485,7 +7489,7 @@ For lCptCas = lCptDeb To lCptFin
 		
 		idwFicGenCmde.SetItem ( lRow, "MT_FRAIS",			idwFicCharg.GetItemDecimal ( lCpt, "MT_DEVIS" ) )
 		idwFicGenCmde.SetItem ( lRow, "ASSUREUR",			idwFicCharg.GetItemString ( lCpt, "ASSUREUR" ) )
-		// [DCMP080162] AJout Valeur Publique d'achat et Date Achat ( note : date stock$$HEX1$$e900$$ENDHEX$$e sous forme de chaine )
+		// [DCMP080162] AJout Valeur Publique d'achat et Date Achat ( note : date stockée sous forme de chaine )
 		idwFicGenCmde.SetItem ( lRow, "MT_VAL_ACHAT",	Dec(idwFicCharg.GetItemString ( lCpt, "MT_VAL_ACHAT" )) )
 		idwFicGenCmde.SetItem ( lRow, "DTE_ACHAT",		idwFicCharg.GetItemString ( lCpt, "DTE_ACHAT" ) )
 	
@@ -7567,7 +7571,7 @@ For lCptCas = lCptDeb To lCptFin
 	
 		// [PM166][O2M]
 		If sAction = "A_COMMANDER" Then
-			// On r$$HEX1$$e900$$ENDHEX$$initialise certaines zones inutiles pour la commande
+			// On réinitialise certaines zones inutiles pour la commande
 			idwFicGenCmde.SetItem ( lRow, "PROBLEME",	"")							
 			idwFicGenCmde.SetItem ( lRow, "NUM_IMEI_SERIE",	"" )								
 			idwFicGenCmde.SetItem ( lRow, "MARQ_APP",			idwFicCharg.GetItemString ( lCpt, "ID_MARQ_ART" ) )						
@@ -7641,8 +7645,8 @@ For lCptCas = lCptDeb To lCptFin
 	// [RS3220_MODDEGR_TELST]
 	// On sort les cmde de rempl Orange du flux O2M
 
-/* le mode d$$HEX1$$e900$$ENDHEX$$grad$$HEX2$$e9002000$$ENDHEX$$est termin$$HEX2$$e9002000$$ENDHEX$$mais je ne casse pas le code, on ne sait jamais....
-	If mode_d$$HEX1$$e900$$ENDHEX$$grad$$HEX2$$e9002000$$ENDHEX$$Then
+/* le mode dégradé est terminé mais je ne casse pas le code, on ne sait jamais....
+	If mode_dégradé Then
 		sFiltreTLS_RS3220  = "CODE_PROD IN ( '9100','9101','19100','9600','9601','9610','9102','9103','9104','9105','9106','9122','9123','9124','9125','9126','46300','46301','9129','48200','9127','9128','9611','9620','9120','9121','28502','9131','9107','9108','9109','9110','9111','9112','25100','9130','9612','9613','28200','28500','28501','32700','9113','9114','9115','9148','9139','9140','9141','9142','9143','9134','9135','9136','9150','9152','9153','9154','96200','96201','9626','96204','96205','9623','9624','9625','9621','9116','9117','9118','9119','9622','9162','9163','9164','9159','9160','9161','9155','9156','9158','9157','32702','51600','51601','51602','51603','51604','9165','9166','9167','9168','9169','9170','51605','51606','51607','51608','51609','51610','51611','51612','51613','51614','51615','51616','51617','51618','51619','51620','51621','51622','51623','51624','51625','51626','51627','51628','51629','51630','51631','51632','51633','51634','51635','51636','51637','51638','51639','51640','51641','51642','51643','41600','41602','39102','39103','9630','41601','39101','44700','44800','9614','39104','39105','39106','80800','9132','9133','9147','9151','9146','9137','96202','9627','9138','32701','9149','9144','9145','96203','9628') AND "
 		sFiltreTLS_RS3220 += "FOURNISSEUR = 'O2M' AND "
 		sFiltreTLS_RS3220 += "TYP_ART IN ( 'TEL', 'TPC', 'RST') AND "		
@@ -7656,7 +7660,7 @@ For lCptCas = lCptDeb To lCptFin
 		idwFicGenCmde.SetFilter ( sFiltreTLS_RS3220 )
 		idwFicGenCmde.Filter ()
 
-		// Marquage indiquant que ce sont des presta trait$$HEX1$$e900$$ENDHEX$$es par TLS
+		// Marquage indiquant que ce sont des presta traitées par TLS
 		lTotRS3220 = idwFicGenCmde.RowCount()
 		For lCptRS3220 = 1 to lTotRS3220 
 			sValRS3220 = idwFicGenCmde.GetItemString  ( lCptRS3220, "INFO_SPB_FRN_CPLT" )
@@ -7671,10 +7675,10 @@ For lCptCas = lCptDeb To lCptFin
 		iRet = idwFicGenCmde.SaveAs ( sNomFic_RS3220, Text!, TRue )
 
 		If iRet > 0 Then
-			This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic_RS3220 )  )
+			This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic_RS3220 )  )
 	
 			// [VDOC26276]
-			// This.uf_Maj_Nom_Fichier_Ds_Presta ( sNomFic_RS3220 ) fait plus bas sur FLUX, contexte filtr$$HEX1$$e900$$ENDHEX$$
+			// This.uf_Maj_Nom_Fichier_Ds_Presta ( sNomFic_RS3220 ) fait plus bas sur FLUX, contexte filtré
 			This.uf_Maj_Nom_Spb_Frn_Cplt ( "RS3220", "TLS" ) 
 
 			sValRS3220 = Reverse ( TRIM ( sNomFic_RS3220 ) )
@@ -7685,14 +7689,14 @@ For lCptCas = lCptDeb To lCptFin
 			
 		Else
 			iRet = -1
-			This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+			This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 		End If
 	
 		If iRet = -1 Then Exit
 		
 		If iRet <> -1 Then
 
-			// N$$HEX1$$e900$$ENDHEX$$gation du filtre pour avoir l'autre partie
+			// Négation du filtre pour avoir l'autre partie
 			sFiltreTLS_RS3220 = "NOT ( " + sFiltreTLS_RS3220 + " )"
 			idwFicGenCmde.SetFilter ( sFiltreTLS_RS3220 )
 			idwFicGenCmde.Filter ()
@@ -7700,10 +7704,10 @@ For lCptCas = lCptDeb To lCptFin
 			// Vers le nom de fichier d'origine cette fois
 			iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, True )
 			If iRet > 0 Then
-				This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+				This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 		
 				// [VDOC26276]
-				// This.uf_Maj_Nom_Fichier_Ds_Presta ( sNomFic ) fait plus bas sur FLUX, contexte filtr$$HEX1$$e900$$ENDHEX$$
+				// This.uf_Maj_Nom_Fichier_Ds_Presta ( sNomFic ) fait plus bas sur FLUX, contexte filtré
 				sValRS3220 = Reverse ( TRIM ( sNomFic ) )
 				lVal = Pos ( sValRS3220, "\" ) 
 				sValRS3220 = Left ( sValRS3220, lVal - 1 )
@@ -7711,7 +7715,7 @@ For lCptCas = lCptDeb To lCptFin
 				This.uf_Maj_Nom_Spb_Frn_Cplt ( "FLUX", sValRS3220 )
 			Else
 				iRet = -1
-				This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+				This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 			End If
 			If iRet = -1 Then Exit			
 			
@@ -7723,14 +7727,14 @@ For lCptCas = lCptDeb To lCptFin
 		iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, TRue ) // True : On indique les en-tetes
 	
 		If iRet > 0 Then
-			This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+			This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 	
 			// [VDOC26276]
 			This.uf_Maj_Nom_Fichier_Ds_Presta ( sNomFic ) 
 			
 		Else
 			iRet = -1
-			This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+			This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 		End If
 	
 		If iRet = -1 Then Exit
@@ -7747,8 +7751,8 @@ private function integer uf_generer_fichier_lbe (long alidlotcmd);//*-----------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_LBE (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 16/10/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le LBE [PC884]
-//* Commentaires	: un fichier sera g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$s dans le m$$HEX1$$ea00$$ENDHEX$$me r$$HEX1$$e900$$ENDHEX$$pertoires :
+//* Libellé			: Génération du fichier de commande pour le LBE [PC884]
+//* Commentaires	: un fichier sera générés dans le même répertoires :
 //*					  un pour les commandes   : CMDjjmma.ind  (CMD10091.001)
 //*
 //* Arguments		: alIdLotCmd	Long	Val
@@ -7760,10 +7764,10 @@ private function integer uf_generer_fichier_lbe (long alidlotcmd);//*-----------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
 //*		FPI	13/06/2013	[DT044_1]
-//			FPI	21/01/2014	[20140121.FPI] Cr$$HEX1$$e900$$ENDHEX$$ation du fichier de commande Edel m$$HEX1$$ea00$$ENDHEX$$me si aucune commande
+//			FPI	21/01/2014	[20140121.FPI] Création du fichier de commande Edel même si aucune commande
 //       JFF   12/01/2015 [DT125_LECLERC]
 //       JFF   19/01/2015 [MANTIS14006] 
-//		FPI	02/03/2015	[DT125_V3] Civilit$$HEX2$$e9002000$$ENDHEX$$longue
+//		FPI	02/03/2015	[DT125_V3] Civilité longue
 // 		JFF   21/06/2018 [VDOC26276]
 //*-----------------------------------------------------------------
 
@@ -7780,14 +7784,14 @@ idwFicGenCmde.DataObject = "d_trt_fichier_cmde_edel"
 idwFicGenCmde.Object.DataWindow.Export.XHTML.UseTemplate = "commande_edel2"
 	
 /*------------------------------------------------------------------*/
-/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+/* Génération du fichier de COMMANDES (CMD)                         */
 /*------------------------------------------------------------------*/
 sFiltre = "ID_TYP_ART ='CAF' AND COD_ETAT <> 'ANN'"
 sNomFic = K_FIC1
 sTypArt = "commandes"
 sTypArtNul = "commande"
 sAction = "A COMMANDER"
-This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES en cours..." )
+This.Uf_Trace ( "ECR", "Génération du fichier de COMMANDES en cours..." )
 
 idwFicCharg.SetFilter ( sFiltre )
 idwFicCharg.Filter ()
@@ -7796,11 +7800,11 @@ lTot = idwFicCharg.RowCount ()
 idwFicGenCmde.Reset ()
 
 /*------------------------------------------------------------------*/
-/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+/* On ne génère pas de fichier si pas de commandes ou pas de        */
 /* prestations.                                                     */
 /*------------------------------------------------------------------*/
 If lTot = 0 Then
-	This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+	This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 End If
 
 For lCpt = 1 To lTot
@@ -7825,17 +7829,17 @@ For lCpt = 1 To lTot
 	idwFicGenCmde.SetItem ( lRow, "MTCARTE",	 idwFicCharg.GetItemDecimal ( lCpt, "MT_TTC_CMDE" ) )	
 	idwFicGenCmde.SetItem ( lRow, "QTE", 1 )
 	
-	// [DT125_V3] Civilit$$HEX2$$e9002000$$ENDHEX$$longue
+	// [DT125_V3] Civilité longue
 	idwFicGenCmde.SetItem ( lRow, "CHAMP1",		idwFicCharg.GetItemString ( lCpt, "ADR_COD_CIV_LG" ) )	
 	
 	idwFicGenCmde.SetItem ( lRow, "CHAMP2",			idwFicCharg.GetItemString ( lCpt, "ADR_NOM" ) )
 	idwFicGenCmde.SetItem ( lRow, "CHAMP3",				idwFicCharg.GetItemString ( lCpt, "ADR_PRENOM" ) )
 	
 	idwFicGenCmde.SetItem ( lRow, "CPMAGCMD", "9996" )
-	// FPI/Maryline - Le code pannonceau doit $$HEX1$$ea00$$ENDHEX$$tre sur 4 chiffres
+	// FPI/Maryline - Le code pannonceau doit être sur 4 chiffres
 	idwFicGenCmde.SetItem ( lRow, "CPMAGLIV",				String(Long(idwFicCharg.GetItemString ( lCpt, "ID_ORIAN_BOUTIQUE" )),"0000") )
 
-	// [DT125_V3] Civilit$$HEX2$$e9002000$$ENDHEX$$longue
+	// [DT125_V3] Civilité longue
 	idwFicGenCmde.SetItem ( lRow, "RAISON",		idwFicCharg.GetItemString ( lCpt, "ADR_COD_CIV_LG" ) )	
 	
 	idwFicGenCmde.SetItem ( lRow, "CONTACT",			idwFicCharg.GetItemString ( lCpt, "ADR_NOM" ) + " " + f_getitem3(idwFicCharg, lCpt, "ADR_PRENOM" ) )
@@ -7871,14 +7875,14 @@ Next
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, XML!, True, EncodingUTF8! )
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 
 		// [VDOC26276]
 		This.uf_Maj_Nom_Fichier_Ds_Presta ( sNomFic ) 
 		
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 	End If
 //End if
 
@@ -7890,8 +7894,8 @@ private function integer uf_generer_fichier_omt (long alidlotcmd);//*-----------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_OMT (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 22/11/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le OMT
-//* Commentaires	: Trois fichiers seront g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$s dans le m$$HEX1$$ea00$$ENDHEX$$me r$$HEX1$$e900$$ENDHEX$$pertoires :
+//* Libellé			: Génération du fichier de commande pour le OMT
+//* Commentaires	: Trois fichiers seront générés dans le même répertoires :
 //*					  un pour les commandes   : CMDjjmma.ind  (CMD10091.001)
 //*					  un pour les prestations : PRSjjmma.ind  (PRS10091.001)
 //*					  un pour les annulations : ANNjjmma.ind  (ANN10091.001)
@@ -7920,7 +7924,7 @@ For lCptCas = 1 To 3
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+		/* Génération du fichier de COMMANDES (CMD)                         */
 		/*------------------------------------------------------------------*/
 		CASE 1
 
@@ -7933,23 +7937,23 @@ For lCptCas = 1 To 3
 			sTypArt = "commandes"
 			sTypArtNul = "commande"
 			sAction = "A COMMANDER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de COMMANDES en cours..." )
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATIONS (PRS)                       */
+		/* Génération du fichier de PRESTATIONS (PRS)                       */
 		/*------------------------------------------------------------------*/
 		CASE 2
 			// [PC874_2_V1]
 			idwFicGenCmde.DataObject = "d_trt_fichier_cmde_omt_ctrle_imei"
 			sFiltre = "ID_TYP_ART = 'EDI' AND COD_ETAT <> 'ANN'"
 			sNomFic = K_FIC16
-			sTypArt = "demandes de contr$$HEX1$$f400$$ENDHEX$$le IMEI"
-			sTypArtNul = "demande de contr$$HEX1$$f400$$ENDHEX$$le IMEI"
+			sTypArt = "demandes de contrôle IMEI"
+			sTypArtNul = "demande de contrôle IMEI"
 			sAction = "A_CONTROLER_IMEI"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de demande de contr$$HEX1$$f400$$ENDHEX$$le IMEI en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de demande de contrôle IMEI en cours..." )
 			lCas = 1
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des ANNULATION des COMMANDES (ACD)			  */
+		/* Génération du fichier des ANNULATION des COMMANDES (ACD)			  */
 		/*------------------------------------------------------------------*/
 		CASE 3
 			sFiltre = "ID_TYP_ART <> 'PRS' AND COD_ETAT = 'ANN'"
@@ -7957,7 +7961,7 @@ For lCptCas = 1 To 3
 			sTypArt = "annulations de commandes"
 			sTypArtNul = "annulation de commandes"
 			sAction = "A ANNULER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier d'ANNULATIONS DES COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier d'ANNULATIONS DES COMMANDES en cours..." )
 
 	END CHOOSE
 
@@ -7968,18 +7972,18 @@ For lCptCas = 1 To 3
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 		/*------------------------------------------------------------------*/
-		/* #5	CAG : 06/05/2003 : on ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier vide pour les  */
+		/* #5	CAG : 06/05/2003 : on ne génère pas de fichier vide pour les  */
 		/*								 annulations ni prestations					  */
 		/*------------------------------------------------------------------*/
 		Choose Case lCptCas 
 			Case 1, 2
-				// Ok g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re un fichier vide
+				// Ok génère un fichier vide
 			Case Else 
 				Continue
 		End Choose 
@@ -8016,10 +8020,10 @@ For lCptCas = 1 To 3
 			iRet = idwFicGenCmde.SaveAsFormattedText ( sNomFic, EncodingAnsi!,"","") // Fichier format fixe
 		
 			If iRet > 0 Then
-				This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+				This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 			Else
 				iRet = -1
-				This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+				This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 				Exit
 			End If
 		
@@ -8049,10 +8053,10 @@ For lCptCas = 1 To 3
 			iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, False ) // True : On indique les en-tetes
 						
 			If iRet > 0 Then
-				This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+				This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 			Else
 				iRet = -1
-				This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+				This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 				Exit
 			End If
 		
@@ -8073,8 +8077,8 @@ private function integer uf_generer_fichier_vipp (long alidlotcmd);//*----------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_VIPP (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 03/05/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le fournisseur BRIGHTPOINT
-//* Commentaires	: Trois fichiers seront g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$s dans le m$$HEX1$$ea00$$ENDHEX$$me r$$HEX1$$e900$$ENDHEX$$pertoires :
+//* Libellé			: Génération du fichier de commande pour le fournisseur BRIGHTPOINT
+//* Commentaires	: Trois fichiers seront générés dans le même répertoires :
 //*					  un pour les commandes   : CMDjjmma.ind  (CMD10091.001)
 //*					  un pour les prestations : PRSjjmma.ind  (PRS10091.001)
 //*					  un pour les annulations : ANNjjmma.ind  (ANN10091.001)
@@ -8089,14 +8093,15 @@ private function integer uf_generer_fichier_vipp (long alidlotcmd);//*----------
 //* #..   ...   ../../....   
 //* 
 //* #1	 CAG	 17/10/2002	  Modification SFR : Pour ce produit (5712), on
-//*								  cr$$HEX1$$e900$$ENDHEX$$e un fichier suppl$$HEX1$$e900$$ENDHEX$$mentaire pour chaque type (cmd, prs, annul ...)
-//*								  et on les $$HEX1$$e900$$ENDHEX$$crit dans un r$$HEX1$$e900$$ENDHEX$$pertoire sp$$HEX1$$e900$$ENDHEX$$cifique
-//*								  Annexe 7 (6.7.2) dans l'int$$HEX1$$e900$$ENDHEX$$gration de SFR, analyse des traitements
+//*								  crée un fichier supplémentaire pour chaque type (cmd, prs, annul ...)
+//*								  et on les écrit dans un répertoire spécifique
+//*								  Annexe 7 (6.7.2) dans l'intégration de SFR, analyse des traitements
 //*
 //* #4	 JFF	 07/04/2003   Ajout de l'ID_REF_FOUR et MT_TTC_CMDE
-//* #5	 CAG	 06/05/2003	  G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration d'un fichier vide de cmde qd pas de cmdes
+//* #5	 CAG	 06/05/2003	  Génération d'un fichier vide de cmde qd pas de cmdes
 //        JFF   19/11/2013   [DT_60_AUGM_TVA]
 //        JFF   27/11/2013   [ITSM18204]
+//		  FPI   23/07/2024   [MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 Int	iRet
@@ -8118,7 +8123,7 @@ For lCptCas = 1 To 1
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+		/* Génération du fichier de COMMANDES (CMD)                         */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sFiltre = "ID_TYP_ART <> 'PRS' AND COD_ETAT <> 'ANN'"
@@ -8126,7 +8131,7 @@ For lCptCas = 1 To 1
 			sTypArt = "commandes"
 			sTypArtNul = "commande"
 			sAction = "A COMMANDER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de COMMANDES en cours..." )
 
 	End Choose
 
@@ -8137,13 +8142,13 @@ For lCptCas = 1 To 1
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 		/*------------------------------------------------------------------*/
-		/* #5	CAG : 06/05/2003 : on ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier vide pour les  */
+		/* #5	CAG : 06/05/2003 : on ne génère pas de fichier vide pour les  */
 		/*								 annulations ni prestations					  */
 		/*------------------------------------------------------------------*/
 		If lCptCas <> 1 Then
@@ -8205,13 +8210,13 @@ For lCptCas = 1 To 1
 	Next
 
 	This.uf_nom_fichier ( sNomFic, lCptProd )
-	iRet = idwFicGenCmde.SaveAs ( sNomFic, Excel!, True )
+	iRet = idwFicGenCmde.SaveAs ( sNomFic, Excel8!, True ) // [MIG_PB2022]
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 
@@ -8227,7 +8232,7 @@ private function integer uf_generer_fichier_mtt (long alidlotcmd);//*-----------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_O2M (PRIVATE)
 //* Auteur			: PHG
 //* Date				: 27/11/2007
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour O2M
+//* Libellé			: Génération du fichier de commande pour O2M
 //* Commentaires	: [O2M]
 //*
 //* Arguments		: alIdLotCmd	Long	Val
@@ -8241,7 +8246,7 @@ private function integer uf_generer_fichier_mtt (long alidlotcmd);//*-----------
 //* #2	JFF	20/10/2008	[FNAC_PROD_ECH_TECH]
 //* #3   JFF   20/10/2008  [FNAC_PROD_ECH_TECH].[20090127140540720]
 //* #4   JFF   20/10/2008  [FNAC_PROD_ECH_TECH].[20090225143455120]
-//* #7	FPI	20/03/2009	[DCMP090109] O2M devient r$$HEX1$$e900$$ENDHEX$$parateur d'IPhone
+//* #7	FPI	20/03/2009	[DCMP090109] O2M devient réparateur d'IPhone
 //* #8   JFF   27/03/2009  [DCMP090152] Civ long pour O2M
 //*  	   JFF	13/04/2010  [ADRESSE_O2M]
 //			FPI	10/08/2010	[PM01] Process 4
@@ -8268,7 +8273,7 @@ iRet = 1
 idwFicGenCmde.DataObject = "d_trt_fichier_cmde_MTT"
 
 /*------------------------------------------------------------------*/
-/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+/* Génération du fichier de COMMANDES (CMD)                         */
 /*------------------------------------------------------------------*/
 //* #6 [FNAC_PROD_ECH_TECH].[20090127140540720]
 // sFiltre = "ID_TYP_ART = 'EDI' AND COD_ETAT <> 'ANN'"
@@ -8279,7 +8284,7 @@ For lCptCas = 1 To 1
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATIONS (PRS)                       */
+		/* Génération du fichier de PRESTATIONS (PRS)                       */
 		/*------------------------------------------------------------------*/
 		// [PM82][LOT1] Simplification
 		// [MANTIS3743]
@@ -8288,7 +8293,7 @@ For lCptCas = 1 To 1
 			sNomFic = K_FIC2 // "PRS"
 			sTypArt = "Ordre MTT"
 			sTypArtNul = "Ordre MTT"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATION MTT en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de PRESTATION MTT en cours..." )
 
 
 	End Choose
@@ -8300,10 +8305,10 @@ For lCptCas = 1 To 1
 	idwFicGenCmde.Reset ()
 	
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
-	If lTot = 0 Then This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+	If lTot = 0 Then This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 	
 	For lCpt = 1 To lTot
 		lRow = idwFicGenCmde.InsertRow ( 0 )
@@ -8425,7 +8430,7 @@ For lCptCas = 1 To 1
 	
 		// [PM166][O2M]
 		If sAction = "A_COMMANDER" Then
-			// On r$$HEX1$$e900$$ENDHEX$$initialise certaines zones inutiles pour la commande
+			// On réinitialise certaines zones inutiles pour la commande
 			idwFicGenCmde.SetItem ( lRow, "PROBLEME",	"")							
 			idwFicGenCmde.SetItem ( lRow, "NUM_IMEI_SERIE",	"" )								
 			idwFicGenCmde.SetItem ( lRow, "MARQ_APP",			idwFicCharg.GetItemString ( lCpt, "ID_MARQ_ART" ) )						
@@ -8458,10 +8463,10 @@ For lCptCas = 1 To 1
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, TRue ) // True : On indique les en-tetes
 	
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 	End If
 
 	If iRet = -1 Then Exit
@@ -8477,7 +8482,7 @@ public function integer uf_generer_fichier_srr (long alidtotcmd);//*------------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_SRR(PRIVATE)
 //* Auteur			: FPI
 //* Date				: 21/02/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration des commandes pour SFR La R$$HEX1$$e900$$ENDHEX$$union
+//* Libellé			: Génération des commandes pour SFR La Réunion
 //* Commentaires	: [PC925]
 //*
 //* Arguments		: alIdLotCmd	Long	Val
@@ -8518,27 +8523,27 @@ For lCptCas = 1 To 4
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+		/* Génération du fichier de COMMANDES (CMD)                         */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sFiltre = "ID_TYP_ART <> 'PRS' AND COD_ETAT <> 'ANN'"
 			sTypArt = "commandes"
 			sTypArtNul = "commande"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de COMMANDES en cours..." )
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATIONS (PRS)                       */
+		/* Génération du fichier de PRESTATIONS (PRS)                       */
 		/*------------------------------------------------------------------*/
 		CASE 2
 		/*	sFiltre = "ID_TYP_ART = 'PRS' AND COD_ETAT <> 'ANN'"
 			sTypArt = "prestations"
 			sTypArtNul = "prestation"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATIONS en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de PRESTATIONS en cours..." )
 			idwFicGenCmde.DataObject = "d_trt_fichier_cmde_ORE_PRS"
 			*/
 			Continue
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des ANNULATION des COMMANDES (ACD)			  */
+		/* Génération du fichier des ANNULATION des COMMANDES (ACD)			  */
 		/*------------------------------------------------------------------*/
 		CASE 3
 			/*sFiltre = "ID_TYP_ART <> 'PRS' AND COD_ETAT = 'ANN'"
@@ -8546,11 +8551,11 @@ For lCptCas = 1 To 4
 			sTypArt = "annulations de commandes"
 			sTypArtNul = "annulation de commandes"
 			sAction = "A ANNULER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier d'ANNULATIONS DES COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier d'ANNULATIONS DES COMMANDES en cours..." )
 			*/
 			Continue  // [PC767-1] - annulations par mail
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des ANNULATION des COMMANDES (APR)			  */
+		/* Génération du fichier des ANNULATION des COMMANDES (APR)			  */
 		/*------------------------------------------------------------------*/
 		CASE 4
 		/*	sFiltre = "ID_TYP_ART = 'PRS' AND COD_ETAT = 'ANN'"
@@ -8558,7 +8563,7 @@ For lCptCas = 1 To 4
 			sTypArt = "annulations de prestations"
 			sTypArtNul = "annulation de prestations"
 			sAction = "A ANNULER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier d'ANNULATIONS DES PRESTATIONS en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier d'ANNULATIONS DES PRESTATIONS en cours..." )
 		*/	Continue // [PC767-1] - annulations par mail
 
 	END CHOOSE
@@ -8570,13 +8575,13 @@ For lCptCas = 1 To 4
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 		/*------------------------------------------------------------------*/
-		/* #5	CAG : 06/05/2003 : on ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier vide pour les  */
+		/* #5	CAG : 06/05/2003 : on ne génère pas de fichier vide pour les  */
 		/*								 annulations ni prestations					  */
 		/*------------------------------------------------------------------*/
 		If lCptCas <> 1 Then
@@ -8587,7 +8592,7 @@ For lCptCas = 1 To 4
 	iRetFinal=1
 	For lCpt = 1 To lTot
 
-		// Cr$$HEX1$$e900$$ENDHEX$$ation de la commande
+		// Création de la commande
 		iRet=wsCaller.uf_createorder( idwFicCharg, lCpt, uoResultWs)
 		
 		If iRet<=0 Then 
@@ -8599,18 +8604,18 @@ For lCptCas = 1 To 4
 			
 			iRetFinal=-1
 			
-			sMess="Erreur de cr$$HEX1$$e900$$ENDHEX$$ation de commande SRR : erreur " + String(iRet) // [BUG_GEN_CMD_SRR]
+			sMess="Erreur de création de commande SRR : erreur " + String(iRet) // [BUG_GEN_CMD_SRR]
 			
 			If not isnull(uoResultWs) Then
 			
-				if isnull(uoResultWs.ws_message) Then uoResultWs.ws_message="Erreur de cr$$HEX1$$e900$$ENDHEX$$ation de commande SRR : erreur inconnue (" + String(iRet) + ")" // [BUG_GEN_CMD_SRR]
+				if isnull(uoResultWs.ws_message) Then uoResultWs.ws_message="Erreur de création de commande SRR : erreur inconnue (" + String(iRet) + ")" // [BUG_GEN_CMD_SRR]
 				
 				This.Uf_Trace ( "ECR", "Commande " + &
 					f_getitem3(idwFicCharg, lCpt,"ID_SIN") + "-" + f_getitem3(idwFicCharg, lCpt,"ID_SEQ")  + &
-							" erreur de cr$$HEX1$$e900$$ENDHEX$$ation de commande : " + &
+							" erreur de création de commande : " + &
 					uoResultWs.ws_message )
 					
-					sMess="Erreur de cr$$HEX1$$e900$$ENDHEX$$ation de commande SRR : " + uoResultWs.ws_message
+					sMess="Erreur de création de commande SRR : " + uoResultWs.ws_message
 			End if
 		End if
 
@@ -8655,17 +8660,17 @@ For lCptCas = 1 To 4
 	// Maj des commandes
 	If idwFicCharg.Update () > 0 Then
 		F_Commit ( SQLCA, True )
-		This.Uf_Trace ( "ECR", "Update du marquage r$$HEX1$$e900$$ENDHEX$$ussi, les commandes sont flagu$$HEX1$$e900$$ENDHEX$$es en base." )
+		This.Uf_Trace ( "ECR", "Update du marquage réussi, les commandes sont flaguées en base." )
 	Else
 		F_Commit ( SQLCA, False )
-		This.Uf_Trace ( "ECR", "ERREUR, Update du marquage en base a $$HEX1$$e900$$ENDHEX$$chou$$HEX1$$e900$$ENDHEX$$." )
+		This.Uf_Trace ( "ECR", "ERREUR, Update du marquage en base a échoué." )
 	End if
 
 	If iRetFinal > 0 Then
-		This.Uf_Trace ( "ECR", "Commandes " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$es avec succ$$HEX1$$e800$$ENDHEX$$s")
+		This.Uf_Trace ( "ECR", "Commandes " + sTypArt + " générées avec succès")
 	Else
 		iRetFinal = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration des commandes des " + sTypArt  )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération des commandes des " + sTypArt  )
 		Exit
 	End if
 	
@@ -8683,8 +8688,8 @@ private function integer uf_generer_fichier_vipp2 (long alidlotcmd);//*---------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_VIPP2 (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 14/05/2014	
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le fournisseur VIPP [PC13448]
-//* Commentaires	: Trois fichiers seront g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$s dans le m$$HEX1$$ea00$$ENDHEX$$me r$$HEX1$$e900$$ENDHEX$$pertoires :
+//* Libellé			: Génération du fichier de commande pour le fournisseur VIPP [PC13448]
+//* Commentaires	: Trois fichiers seront générés dans le même répertoires :
 //*					  un pour les commandes   : CMDjjmma.ind  (CMD10091.001)
 //*					  un pour les prestations : PRSjjmma.ind  (PRS10091.001)
 //*					  un pour les annulations : ANNjjmma.ind  (ANN10091.001)
@@ -8720,7 +8725,7 @@ For lCptCas = 1 To 1
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+		/* Génération du fichier de COMMANDES (CMD)                         */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sFiltre = "ID_TYP_ART <> 'PRS' AND COD_ETAT <> 'ANN'"
@@ -8728,7 +8733,7 @@ For lCptCas = 1 To 1
 			sTypArt = "commandes"
 			sTypArtNul = "commande"
 			sAction = "A COMMANDER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de COMMANDES en cours..." )
 
 	End Choose
 
@@ -8738,13 +8743,13 @@ For lCptCas = 1 To 1
 	lTot = idwFicCharg.RowCount ()			
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 		/*------------------------------------------------------------------*/
-		/* #5	CAG : 06/05/2003 : on ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier vide pour les  */
+		/* #5	CAG : 06/05/2003 : on ne génère pas de fichier vide pour les  */
 		/*								 annulations ni prestations					  */
 		/*------------------------------------------------------------------*/
 		If lCptCas <> 1 Then
@@ -8755,9 +8760,9 @@ For lCptCas = 1 To 1
 	idwFicGenCmde.Reset()
 
 	/*------------------------------------------------------------------*/
-	/* ORANGE ne souhaite pas de tabulation, le s$$HEX1$$e900$$ENDHEX$$parateur doit $$HEX1$$ea00$$ENDHEX$$tre    */
-	/* un point virgule. PB ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas ce format (uniquement des     */
-	/* virgule avec CSV). Je fais donc ici de l'$$HEX1$$e900$$ENDHEX$$picerie pour g$$HEX1$$e900$$ENDHEX$$rer     */
+	/* ORANGE ne souhaite pas de tabulation, le séparateur doit être    */
+	/* un point virgule. PB ne génère pas ce format (uniquement des     */
+	/* virgule avec CSV). Je fais donc ici de l'épicerie pour gérer     */
 	/* ces point virgules.                                              */
 	/*------------------------------------------------------------------*/
 
@@ -8766,8 +8771,8 @@ For lCptCas = 1 To 1
 		lRow=idwFicGenCmde.InsertRow(0)
 		
 		/* scopus_id
-		Si le n$$HEX2$$b0002000$$ENDHEX$$d$$HEX1$$1920$$ENDHEX$$adh$$HEX1$$e900$$ENDHEX$$sion Cdiscount comporte 17 caract$$HEX1$$e800$$ENDHEX$$res, on retire les 2 derniers caract$$HEX1$$e800$$ENDHEX$$res ;
-		Si le n$$HEX2$$b0002000$$ENDHEX$$d$$HEX1$$1920$$ENDHEX$$adh$$HEX1$$e900$$ENDHEX$$sion Cdiscount comporte 18 caract$$HEX1$$e800$$ENDHEX$$res, on retire le 1er et les 2 derniers caract$$HEX1$$e800$$ENDHEX$$res. 
+		Si le n° d’adhésion Cdiscount comporte 17 caractères, on retire les 2 derniers caractères ;
+		Si le n° d’adhésion Cdiscount comporte 18 caractères, on retire le 1er et les 2 derniers caractères. 
 		*/
 		sVal= idwFicCharg.GetItemString ( lCpt, "ID_CONTRAT_ABONNE") 
 		If isNull(sVal) Then 
@@ -8826,7 +8831,7 @@ For lCptCas = 1 To 1
 		// lot
 		idwFicGenCmde.SetItem(lRow,"LOT",alidlotcmd)
 		
-		// n$$HEX2$$b0002000$$ENDHEX$$dossier
+		// n° dossier
 		idwFicGenCmde.SetItem(lRow,"NO_DOSSIER",String ( idwFicCharg.GetItemNumber ( lCpt, "ID_SIN" )))
 		
 		// code fournisseur
@@ -8878,10 +8883,10 @@ For lCptCas = 1 To 1
 	If iRet = -1 Then FileDelete ( sNomFic )
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 
@@ -8897,7 +8902,7 @@ private function integer uf_generer_fichier_electrodepot (long alidlotcmd);//*--
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_ElectroDepot (PRIVATE)
 //* Auteur			: Fabry 
 //* Date				: 15/12/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour ElectroDepot
+//* Libellé			: Génération du fichier de commande pour ElectroDepot
 //* Commentaires	: [PC13321]
 //*
 //* Arguments		: alIdLotCmd	Long	Val
@@ -8909,10 +8914,10 @@ private function integer uf_generer_fichier_electrodepot (long alidlotcmd);//*--
 //* MAJ   PAR      Date	     Modification
 //* #1	 JFF		07/05/2004 DCMP 040134 D. Bizien A-NOVO souhaite l'ID_PROD plutot que le LIB_PROD
 //* #2	 JCA		28/02/2008 DCMP 080158 - Changement de format du fichier
-//* #3    JFF     02/12/2008 BUG remont$$HEX2$$e9002000$$ENDHEX$$par David Ibersien
+//* #3    JFF     02/12/2008 BUG remonté par David Ibersien
 //*       JFF     10/06/2010 [PC419/440/418/439_MICROMANIA]
 //*       JFF     22/02/2011 [PC363_AUC].[ECL_FICH]
-// 		FPI		05/10/2011	[VDoc5352] correction (d$$HEX1$$e900$$ENDHEX$$placer)
+// 		FPI		05/10/2011	[VDoc5352] correction (déplacer)
 // 		JFF   21/06/2018 [VDOC26276]
 //       JFF   19/12/2022 [RS4093_EVOL_ELD]
 //*-----------------------------------------------------------------
@@ -8943,7 +8948,7 @@ For lCptCas = 1 To 1
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier sp$$HEX1$$e900$$ENDHEX$$ciale pour MCM								  */
+		/* Génération du fichier spéciale pour MCM								  */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sFiltre = "COD_ETAT <> 'ANN'"
@@ -8951,7 +8956,7 @@ For lCptCas = 1 To 1
 			sTypArt = "Bon cadeau"
 			sTypArtNul = "Bon cadeau"
 			sAction = "CMDE_CARTE_CADEAU"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des CARTE CADEAUX ELECTRO DEPOT en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier des CARTE CADEAUX ELECTRO DEPOT en cours..." )
 
 
 	END CHOOSE
@@ -8963,13 +8968,13 @@ For lCptCas = 1 To 1
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 		/*------------------------------------------------------------------*/
-		/* #5	CAG : 06/05/2003 : on ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier vide pour les  */
+		/* #5	CAG : 06/05/2003 : on ne génère pas de fichier vide pour les  */
 		/*								 annulations ni prestations					  */
 		/*------------------------------------------------------------------*/
 		If lCptCas <> 1 Then
@@ -9057,13 +9062,13 @@ For lCptCas = 1 To 1
 
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 		
 		// [VDOC26276]
 		This.uf_Maj_Nom_Fichier_Ds_Presta ( sNomFic ) 
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 
@@ -9079,7 +9084,7 @@ private function integer uf_generer_fichier_tamet (long alidlotcmd);//*---------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_TAMET (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 13/02/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le fourniseur CORDON
+//* Libellé			: Génération du fichier de commande pour le fourniseur CORDON
 //* Commentaires	: 
 //*
 //* Arguments		: alIdLotCmd	Long	Val
@@ -9125,14 +9130,14 @@ For lCptCas = 1 To 1
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATIONS (PRS)                       */
+		/* Génération du fichier de PRESTATIONS (PRS)                       */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sFiltre = "ID_FOUR= 'TMT'"
 			sNomFic = K_FIC2 // "PRS"
 			sTypArt = "Ordre TAMET"
 			sTypArtNul = "Ordre TAMET"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATION TAMET en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de PRESTATION TAMET en cours..." )
 
 	END CHOOSE
 
@@ -9140,14 +9145,14 @@ For lCptCas = 1 To 1
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" + sLibCplt )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" + sLibCplt )
 		Choose Case lCptCas
 			Case 2
-				// Pour le cas PRS on g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$re un fichier vide (s'il doit $$HEX1$$ea00$$ENDHEX$$tre vide).
+				// Pour le cas PRS on génére un fichier vide (s'il doit être vide).
 
 			Case Else
 				Continue
@@ -9251,10 +9256,10 @@ For lCptCas = 1 To 1
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, False )
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic ) + " " + sLibCplt )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic ) + " " + sLibCplt )
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + ", " + sLibCplt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + ", " + sLibCplt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 
@@ -9271,8 +9276,8 @@ private function integer uf_generer_fichier_cdiscountpro_new (long alidlotcmd);/
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_CDISCOUNTPRO (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 21/04/2009
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le fournisseur CDISCOUNTPRO
-//* Commentaires	: Trois fichiers seront g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$s dans le m$$HEX1$$ea00$$ENDHEX$$me r$$HEX1$$e900$$ENDHEX$$pertoires :
+//* Libellé			: Génération du fichier de commande pour le fournisseur CDISCOUNTPRO
+//* Commentaires	: Trois fichiers seront générés dans le même répertoires :
 //*					  un pour les commandes   : CMDjjmma.ind  (CMD10091.001)
 //*					  un pour les prestations : PRSjjmma.ind  (PRS10091.001)
 //*					  un pour les annulations : ANNjjmma.ind  (ANN10091.001)
@@ -9287,12 +9292,12 @@ private function integer uf_generer_fichier_cdiscountpro_new (long alidlotcmd);/
 //* #..   ...   ../../....   
 //* 
 //* #1	 CAG	 17/10/2002	  Modification SFR : Pour ce produit (5712), on
-//*								  cr$$HEX1$$e900$$ENDHEX$$e un fichier suppl$$HEX1$$e900$$ENDHEX$$mentaire pour chaque type (cmd, prs, annul ...)
-//*								  et on les $$HEX1$$e900$$ENDHEX$$crit dans un r$$HEX1$$e900$$ENDHEX$$pertoire sp$$HEX1$$e900$$ENDHEX$$cifique
-//*								  Annexe 7 (6.7.2) dans l'int$$HEX1$$e900$$ENDHEX$$gration de SFR, analyse des traitements
+//*								  crée un fichier supplémentaire pour chaque type (cmd, prs, annul ...)
+//*								  et on les écrit dans un répertoire spécifique
+//*								  Annexe 7 (6.7.2) dans l'intégration de SFR, analyse des traitements
 //*
 //* #4	 JFF	 07/04/2003   Ajout de l'ID_REF_FOUR et MT_TTC_CMDE
-//* #5	 CAG	 06/05/2003	  G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration d'un fichier vide de cmde qd pas de cmdes
+//* #5	 CAG	 06/05/2003	  Génération d'un fichier vide de cmde qd pas de cmdes
 //        JFF   12/04/2012   [VDOC7530]
 //        JFF   02/03/2015   [PM289_CDP]
 //        JFF   08/12/2015   [PM289-2]
@@ -9323,7 +9328,7 @@ sNomFic = K_FIC1
 sTypArt = "commandes"
 sTypArtNul = "commande"
 sAction = "A COMMANDER"
-This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES en cours..." )
+This.Uf_Trace ( "ECR", "Génération du fichier de COMMANDES en cours..." )
 
 
 
@@ -9334,11 +9339,11 @@ lTot = idwFicCharg.RowCount ()
 idwFicGenCmde.Reset ()
 
 /*------------------------------------------------------------------*/
-/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+/* On ne génère pas de fichier si pas de commandes ou pas de        */
 /* prestations.                                                     */
 /*------------------------------------------------------------------*/
 If lTot = 0 Then
-	This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+	This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 End If
 
 For lCpt = 1 To lTot
@@ -9400,7 +9405,7 @@ This.uf_nom_fichier ( sNomFic, lCptProd )
 iRet = idwFicGenCmde.SaveAs ( sNomFic, XLSX!, TRUE )	
 
 If iRet > 0 Then
-	This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+	This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 	This.Uf_Trace ( "ECR", "PI doit modifier le nom du fichier en << commandes_SPB_aaaammjj_hhmmss.XLSX >>" )
 
 	// [VDOC26276]
@@ -9408,7 +9413,7 @@ If iRet > 0 Then
 
 Else
 	iRet = -1
-	This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+	This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 End If
 
 Return iRet 
@@ -9419,8 +9424,8 @@ private function integer uf_generer_fichier_bak2 (long alidlotcmd);//*----------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_BAK2 (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 12/10/2016
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le fournisseur BRIGHTPOINT
-//* Commentaires	: Trois fichiers seront g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$s dans le m$$HEX1$$ea00$$ENDHEX$$me r$$HEX1$$e900$$ENDHEX$$pertoires :
+//* Libellé			: Génération du fichier de commande pour le fournisseur BRIGHTPOINT
+//* Commentaires	: Trois fichiers seront générés dans le même répertoires :
 //*					  un pour les commandes   : CMDjjmma.ind  (CMD10091.001)
 //*					  un pour les prestations : PRSjjmma.ind  (PRS10091.001)
 //*					  un pour les annulations : ANNjjmma.ind  (ANN10091.001)
@@ -9435,12 +9440,12 @@ private function integer uf_generer_fichier_bak2 (long alidlotcmd);//*----------
 //* #..   ...   ../../....   
 //* 
 //* #1	 CAG	 17/10/2002	  Modification SFR : Pour ce produit (5712), on
-//*								  cr$$HEX1$$e900$$ENDHEX$$e un fichier suppl$$HEX1$$e900$$ENDHEX$$mentaire pour chaque type (cmd, prs, annul ...)
-//*								  et on les $$HEX1$$e900$$ENDHEX$$crit dans un r$$HEX1$$e900$$ENDHEX$$pertoire sp$$HEX1$$e900$$ENDHEX$$cifique
-//*								  Annexe 7 (6.7.2) dans l'int$$HEX1$$e900$$ENDHEX$$gration de SFR, analyse des traitements
+//*								  crée un fichier supplémentaire pour chaque type (cmd, prs, annul ...)
+//*								  et on les écrit dans un répertoire spécifique
+//*								  Annexe 7 (6.7.2) dans l'intégration de SFR, analyse des traitements
 //*
 //* #4	 JFF	 07/04/2003   Ajout de l'ID_REF_FOUR et MT_TTC_CMDE
-//* #5	 CAG	 06/05/2003	  G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration d'un fichier vide de cmde qd pas de cmdes
+//* #5	 CAG	 06/05/2003	  Génération d'un fichier vide de cmde qd pas de cmdes
 //*-----------------------------------------------------------------
 
 Int	iRet, iPos
@@ -9459,7 +9464,7 @@ For lCptCas = 1 To 1
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+		/* Génération du fichier de COMMANDES (CMD)                         */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sFiltre = "ID_TYP_ART <> 'PRS' AND COD_ETAT <> 'ANN'"
@@ -9467,7 +9472,7 @@ For lCptCas = 1 To 1
 			sTypArt = "commandes"
 			sTypArtNul = "commande"
 			sAction = "A_COMMANDER"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de COMMANDES en cours..." )
 
 	End Choose
 
@@ -9479,13 +9484,13 @@ For lCptCas = 1 To 1
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 		/*------------------------------------------------------------------*/
-		/* #5	CAG : 06/05/2003 : on ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier vide pour les  */
+		/* #5	CAG : 06/05/2003 : on ne génère pas de fichier vide pour les  */
 		/*								 annulations ni prestations					  */
 		/*------------------------------------------------------------------*/
 		If lCptCas <> 1 Then
@@ -9550,10 +9555,10 @@ For lCptCas = 1 To 1
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, False )
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 
@@ -9569,7 +9574,7 @@ private function integer uf_generer_fichier_cordon (long alidlotcmd);//*--------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_CORDON (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 02/01/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour CORDON
+//* Libellé			: Génération du fichier de commande pour CORDON
 //* Commentaires	: [DT253]
 //*
 //* Arguments		: alIdLotCmd	Long	Val
@@ -9583,7 +9588,7 @@ private function integer uf_generer_fichier_cordon (long alidlotcmd);//*--------
 //* #2	JFF	20/10/2008	[FNAC_PROD_ECH_TECH]
 //* #3   JFF   20/10/2008  [FNAC_PROD_ECH_TECH].[20090127140540720]
 //* #4   JFF   20/10/2008  [FNAC_PROD_ECH_TECH].[20090225143455120]
-//* #7	FPI	20/03/2009	[DCMP090109] SBE devient r$$HEX1$$e900$$ENDHEX$$parateur d'IPhone
+//* #7	FPI	20/03/2009	[DCMP090109] SBE devient réparateur d'IPhone
 //* #8   JFF   27/03/2009  [DCMP090152] Civ long pour SBE
 //*  	   JFF	13/04/2010  [ADRESSE_SBE]
 //			FPI	10/08/2010	[PM01] Process 4
@@ -9618,7 +9623,7 @@ iRet = 1
 idwFicGenCmde.DataObject = "d_trt_fichier_cmde_CORDON"
 
 /*------------------------------------------------------------------*/
-/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+/* Génération du fichier de COMMANDES (CMD)                         */
 /*------------------------------------------------------------------*/
 //* #6 [FNAC_PROD_ECH_TECH].[20090127140540720]
 // sFiltre = "ID_TYP_ART = 'EDI' AND COD_ETAT <> 'ANN'"
@@ -9629,7 +9634,7 @@ For lCptCas = 1 To 1
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATIONS (PRS)                       */
+		/* Génération du fichier de PRESTATIONS (PRS)                       */
 		/*------------------------------------------------------------------*/
 		// [PM82][LOT1] Simplification
 		// [MANTIS3743]
@@ -9638,7 +9643,7 @@ For lCptCas = 1 To 1
 			sNomFic = K_FIC2 // "PRS"
 			sTypArt = "Ordre CORDON"
 			sTypArtNul = "Ordre CORDON"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATION CORDON en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de PRESTATION CORDON en cours..." )
 
 	End Choose
 
@@ -9649,10 +9654,10 @@ For lCptCas = 1 To 1
 	idwFicGenCmde.Reset ()
 	
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
-	If lTot = 0 Then This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+	If lTot = 0 Then This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 	
 	For lCpt = 1 To lTot
 		lRow = idwFicGenCmde.InsertRow ( 0 )
@@ -9828,7 +9833,7 @@ For lCptCas = 1 To 1
 		idwFicGenCmde.SetItem ( lRow, "CODE_PICK_UP",	sVal  )
 		
 		idwFicGenCmde.SetItem ( lRow, "ASSUREUR",			idwFicCharg.GetItemString ( lCpt, "ASSUREUR" ) )
-		// [DCMP080162] AJout Valeur Publique d'achat et Date Achat ( note : date stock$$HEX1$$e900$$ENDHEX$$e sous forme de chaine )
+		// [DCMP080162] AJout Valeur Publique d'achat et Date Achat ( note : date stockée sous forme de chaine )
 		idwFicGenCmde.SetItem ( lRow, "MT_VAL_ACHAT",	idwFicCharg.GetItemString ( lCpt, "MT_VAL_ACHAT" ))
 		idwFicGenCmde.SetItem ( lRow, "DTE_ACHAT",		idwFicCharg.GetItemString ( lCpt, "DTE_ACHAT" ) )
 		idwFicGenCmde.SetItem ( lRow, "MT_PEC",			idwFicCharg.GetItemString ( lCpt, "MT_PEC" ) )
@@ -9836,12 +9841,12 @@ For lCptCas = 1 To 1
 
 		// [PM166][SBE]
 		If sAction = "A_COMMANDER" Then
-			// On r$$HEX1$$e900$$ENDHEX$$initialise certaines zones inutiles pour la commande
+			// On réinitialise certaines zones inutiles pour la commande
 /* [DT141][MANTIS14455]
 			idwFicGenCmde.SetItem ( lRow, "PROBLEME",	"")							
 			idwFicGenCmde.SetItem ( lRow, "NUM_IMEI_SERIE",	"" )								
 */			
-/* Idem $$HEX2$$e0002000$$ENDHEX$$la RST d'OV3, on laisse la marq/modl IFR, plus haut sur MARQ_APP et MODL_APP
+/* Idem à la RST d'OV3, on laisse la marq/modl IFR, plus haut sur MARQ_APP et MODL_APP
 			idwFicGenCmde.SetItem ( lRow, "MARQ_APP",			idwFicCharg.GetItemString ( lCpt, "ID_MARQ_ART" ) )						
 			idwFicGenCmde.SetItem ( lRow, "MODL_APP",			idwFicCharg.GetItemString ( lCpt, "ID_MODL_ART" ) )						
 */		End If
@@ -9881,14 +9886,14 @@ For lCptCas = 1 To 1
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, FALSE ) 
 	
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 		
 		// [VDOC26276]
 		This.uf_Maj_Nom_Fichier_Ds_Presta ( sNomFic ) 
 		
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 	End If
 
 	If iRet = -1 Then Exit
@@ -9903,10 +9908,10 @@ private function integer uf_flaguer_commandes_carma (ref long alidlotcmd);//*---
 //* Fonction		: n_cst_gen_fic_commande::uf_Flaguer_Commandes_Carma (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 28/03/2018
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: On marque en bases les commandes charg$$HEX1$$e900$$ENDHEX$$es comm$$HEX3$$e9002000e900$$ENDHEX$$tant g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$es
-//*					  elle ne pouraient $$HEX1$$ea00$$ENDHEX$$tre par la suite que reg$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$es avant la fonction ad$$HEX1$$e900$$ENDHEX$$quat.
+//* Libellé			: On marque en bases les commandes chargées commé étant générées
+//*					  elle ne pouraient être par la suite que regénérées avant la fonction adéquat.
 //*
-//* Commentaires	: [DT339] Utilis$$HEX2$$e9002000$$ENDHEX$$pour Carma
+//* Commentaires	: [DT339] Utilisé pour Carma
 //*
 //* Arguments		: 
 //*					  
@@ -9929,19 +9934,19 @@ dtNow = DateTime ( Today (), Now () )
 
 
 /*------------------------------------------------------------------*/
-/* R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration d'un n$$HEX2$$b0002000$$ENDHEX$$de lot de commandes.                        */
+/* Récupération d'un n° de lot de commandes.                        */
 /*------------------------------------------------------------------*/
 lIdLotCmde = -1
 SQLCA.PS_S03_COMMANDE ( "ID_LOT_CMD", lIdLotCmde )
 
 If lIdLotCmde <= 0 Or IsNull ( lIdLotCmde ) Then
 
-	// RollBack imm$$HEX1$$e900$$ENDHEX$$diat.
+	// RollBack immédiat.
 	F_Commit ( SQLCA, False )
 	iRet = -1
-	This.Uf_Trace ( "ECR", "ERREUR lors de la r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration de l'ID_LOT_CMD, " + String ( lIdLotCmde ) )
+	This.Uf_Trace ( "ECR", "ERREUR lors de la récupération de l'ID_LOT_CMD, " + String ( lIdLotCmde ) )
 Else
-	This.Uf_Trace ( "ECR", "Attribution du n$$HEX2$$b0002000$$ENDHEX$$de lot de commandes : " + String ( lIdLotCmde ) )
+	This.Uf_Trace ( "ECR", "Attribution du n° de lot de commandes : " + String ( lIdLotCmde ) )
 End If
 
 
@@ -9949,14 +9954,14 @@ End If
 F_COMMIT ( SQLCA, SQLCA.SQLCODE = 0 Or SQLCA.SQLDBCODE = 0  ) 
 
 /*------------------------------------------------------------------*/
-/* Attribution du n$$HEX2$$b0002000$$ENDHEX$$de lot $$HEX2$$e0002000$$ENDHEX$$toutes les lignes charg$$HEX1$$e900$$ENDHEX$$es.           */
+/* Attribution du n° de lot à toutes les lignes chargées.           */
 /*------------------------------------------------------------------*/
 If iRet > 0 Then
 	lTot = idwFicCharg.RowCount ()
 	For lCpt = 1 To lTot
 		sVal=idwFicCharg.GetItemString(lCpt, "INFO_SPB_FRN_CPLT")
 		
-		if Pos(sVal,"GESTION_ENVOI_BA=SPB") <= 0 Then // On exclue les commandes g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$es par ETL
+		if Pos(sVal,"GESTION_ENVOI_BA=SPB") <= 0 Then // On exclue les commandes générées par ETL
 			idwFicCharg.SetItem ( lCpt, "ID_LOT_CMD", lIdLotCmde )
 			idwFicCharg.SetItem ( lCpt, "CMD_GEN_LE", dtNow )
 			idwFicCharg.SetItem ( lCpt, "CMD_GEN_PAR", stGlb.sCodOper )
@@ -9966,16 +9971,16 @@ If iRet > 0 Then
 
 	/*------------------------------------------------------------------*/
 	/* Update en base.                                                  */
-	/* Les lignes vont $$HEX1$$ea00$$ENDHEX$$tre marqu$$HEX1$$e900$$ENDHEX$$es en bases.								  */
+	/* Les lignes vont être marquées en bases.								  */
 	/*------------------------------------------------------------------*/
 	If idwFicCharg.Update () > 0 Then
 		F_Commit ( SQLCA, True )
-		This.Uf_Trace ( "ECR", "Update du marquage r$$HEX1$$e900$$ENDHEX$$ussi, les commandes sont flagu$$HEX1$$e900$$ENDHEX$$es en base." )
+		This.Uf_Trace ( "ECR", "Update du marquage réussi, les commandes sont flaguées en base." )
 		alidlotcmd=lIdLotCmde
 	Else
 		iRet = -1
 		F_Commit ( SQLCA, False )
-		This.Uf_Trace ( "ECR", "ERREUR, Update du marquage en base a $$HEX1$$e900$$ENDHEX$$chou$$HEX1$$e900$$ENDHEX$$." )
+		This.Uf_Trace ( "ECR", "ERREUR, Update du marquage en base a échoué." )
 		alidlotcmd=-1
 	End if
 End If
@@ -9990,7 +9995,7 @@ public subroutine uf_maj_nom_fichier_ds_presta (string asnomficentier);//*------
 //* Fonction		: n_cst_gen_fic_commande::uf_Maj_Nom_Fichier_Ds_Presta (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 21/06/2018
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Mise $$HEX2$$e0002000$$ENDHEX$$jour du nom de fichier dans la basesur la prestation concern$$HEX1$$e900$$ENDHEX$$e
+//* Libellé			: Mise à jour du nom de fichier dans la basesur la prestation concernée
 //* Commentaires	: [VDOC26276]
 //*
 //* Arguments		: asNomFic		String		(Ref)
@@ -10042,7 +10047,7 @@ For lCpt = 1 To lTot
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update du nom de fichier sur " + string ( lIdSin ) + "-" + String ( lIdSeq ) + ", msg SqlServer : " + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update du nom de fichier sur " + string ( lIdSin ) + "-" + String ( lIdSeq ) + ", msg SqlServer : " + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -10056,7 +10061,7 @@ For lCpt = 1 To lTot
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")	
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update du nom de fichier sur " + string ( lIdSin ) + "-" + String ( lIdSeq ) + ", msg SqlServer : " + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update du nom de fichier sur " + string ( lIdSin ) + "-" + String ( lIdSeq ) + ", msg SqlServer : " + sVal )
 
 		F_commit ( SQLCA, False )
 			
@@ -10066,9 +10071,9 @@ For lCpt = 1 To lTot
 Next 
 
 If iErr = 1 Then
-	This.uf_Trace ( "ECR", "Marquage du nom de fichier " + sNomFic + " sur les prestations en base, termin$$HEX2$$e9002000$$ENDHEX$$avec des erreurs.")	
+	This.uf_Trace ( "ECR", "Marquage du nom de fichier " + sNomFic + " sur les prestations en base, terminé avec des erreurs.")	
 Else 
-	This.uf_Trace ( "ECR", "Marquage du nom de fichier " + sNomFic + " sur les prestations en base, termin$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s.")	
+	This.uf_Trace ( "ECR", "Marquage du nom de fichier " + sNomFic + " sur les prestations en base, terminé avec succès.")	
 End If 
 
 end subroutine
@@ -10078,7 +10083,7 @@ private function integer uf_generer_fichier_ceat (long alidlotcmd);//*----------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_CEAT (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2018
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour CORDON
+//* Libellé			: Génération du fichier de commande pour CORDON
 //* Commentaires	: [DT361]
 //*
 //* Arguments		: alIdLotCmd	Long	Val
@@ -10092,7 +10097,7 @@ private function integer uf_generer_fichier_ceat (long alidlotcmd);//*----------
 //* #2	JFF	20/10/2008	[FNAC_PROD_ECH_TECH]
 //* #3   JFF   20/10/2008  [FNAC_PROD_ECH_TECH].[20090127140540720]
 //* #4   JFF   20/10/2008  [FNAC_PROD_ECH_TECH].[20090225143455120]
-//* #7	FPI	20/03/2009	[DCMP090109] SBE devient r$$HEX1$$e900$$ENDHEX$$parateur d'IPhone
+//* #7	FPI	20/03/2009	[DCMP090109] SBE devient réparateur d'IPhone
 //* #8   JFF   27/03/2009  [DCMP090152] Civ long pour SBE
 //*  	   JFF	13/04/2010  [ADRESSE_SBE]
 //			FPI	10/08/2010	[PM01] Process 4
@@ -10128,7 +10133,7 @@ iRet = 1
 idwFicGenCmde.DataObject = "d_trt_fichier_cmde_CEAT"
 
 /*------------------------------------------------------------------*/
-/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+/* Génération du fichier de COMMANDES (CMD)                         */
 /*------------------------------------------------------------------*/
 //* #6 [FNAC_PROD_ECH_TECH].[20090127140540720]
 // sFiltre = "ID_TYP_ART = 'EDI' AND COD_ETAT <> 'ANN'"
@@ -10139,7 +10144,7 @@ For lCptCas = 1 To 1
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATIONS (PRS)                       */
+		/* Génération du fichier de PRESTATIONS (PRS)                       */
 		/*------------------------------------------------------------------*/
 		// [PM82][LOT1] Simplification
 		// [MANTIS3743]
@@ -10148,7 +10153,7 @@ For lCptCas = 1 To 1
 			sNomFic = K_FIC2 // "PRS"
 			sTypArt = "Ordre CEAT"
 			sTypArtNul = "Ordre CEAT"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de PRESTATION CEAT en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de PRESTATION CEAT en cours..." )
 
 	End Choose
 
@@ -10159,10 +10164,10 @@ For lCptCas = 1 To 1
 	idwFicGenCmde.Reset ()
 	
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
-	If lTot = 0 Then This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+	If lTot = 0 Then This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 	
 	For lCpt = 1 To lTot
 		lRow = idwFicGenCmde.InsertRow ( 0 )
@@ -10287,7 +10292,7 @@ For lCptCas = 1 To 1
 		idwFicGenCmde.SetItem ( lRow, "INFO_SPB_FRN",	sInfoSpbFrn  )		// [VDOC4970]
 
 		idwFicGenCmde.SetItem ( lRow, "ASSUREUR",			idwFicCharg.GetItemString ( lCpt, "ASSUREUR" ) )
-		// [DCMP080162] AJout Valeur Publique d'achat et Date Achat ( note : date stock$$HEX1$$e900$$ENDHEX$$e sous forme de chaine )
+		// [DCMP080162] AJout Valeur Publique d'achat et Date Achat ( note : date stockée sous forme de chaine )
 		idwFicGenCmde.SetItem ( lRow, "MT_VAL_ACHAT",	idwFicCharg.GetItemString ( lCpt, "MT_VAL_ACHAT" ))
 		idwFicGenCmde.SetItem ( lRow, "DTE_ACHAT",		idwFicCharg.GetItemString ( lCpt, "DTE_ACHAT" ) )
 		idwFicGenCmde.SetItem ( lRow, "MT_PEC",			idwFicCharg.GetItemString ( lCpt, "MT_PEC" ) )
@@ -10308,14 +10313,14 @@ For lCptCas = 1 To 1
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, FALSE ) 
 	
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 		
 		// [VDOC26276]
 		This.uf_Maj_Nom_Fichier_Ds_Presta ( sNomFic ) 
 		
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 	End If
 
 	If iRet = -1 Then Exit
@@ -10330,8 +10335,8 @@ private function integer uf_generer_fichier_agora_place (long alidlotcmd);//*---
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_AGORA_PLACE (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 17/09/2018
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le fournisseur BRIGHTPOINT
-//* Commentaires	: Trois fichiers seront g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$s dans le m$$HEX1$$ea00$$ENDHEX$$me r$$HEX1$$e900$$ENDHEX$$pertoires :
+//* Libellé			: Génération du fichier de commande pour le fournisseur BRIGHTPOINT
+//* Commentaires	: Trois fichiers seront générés dans le même répertoires :
 //*					  un pour les commandes   : CMDjjmma.ind  (CMD10091.001)
 //*					  un pour les prestations : PRSjjmma.ind  (PRS10091.001)
 //*					  un pour les annulations : ANNjjmma.ind  (ANN10091.001)
@@ -10346,12 +10351,12 @@ private function integer uf_generer_fichier_agora_place (long alidlotcmd);//*---
 //* #..   ...   ../../....   
 //* 
 //* #1	 CAG	 17/10/2002	  Modification SFR : Pour ce produit (5712), on
-//*								  cr$$HEX1$$e900$$ENDHEX$$e un fichier suppl$$HEX1$$e900$$ENDHEX$$mentaire pour chaque type (cmd, prs, annul ...)
-//*								  et on les $$HEX1$$e900$$ENDHEX$$crit dans un r$$HEX1$$e900$$ENDHEX$$pertoire sp$$HEX1$$e900$$ENDHEX$$cifique
-//*								  Annexe 7 (6.7.2) dans l'int$$HEX1$$e900$$ENDHEX$$gration de SFR, analyse des traitements
+//*								  crée un fichier supplémentaire pour chaque type (cmd, prs, annul ...)
+//*								  et on les écrit dans un répertoire spécifique
+//*								  Annexe 7 (6.7.2) dans l'intégration de SFR, analyse des traitements
 //*
 //* #4	 JFF	 07/04/2003   Ajout de l'ID_REF_FOUR et MT_TTC_CMDE
-//* #5	 CAG	 06/05/2003	  G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration d'un fichier vide de cmde qd pas de cmdes
+//* #5	 CAG	 06/05/2003	  Génération d'un fichier vide de cmde qd pas de cmdes
 //        JFF   05/12/2017   [PM426-1]
 // 		 JFF   03/01/2018   [VDOC25374]
 // 		 JFF   21/06/2018   [VDOC26276]
@@ -10376,7 +10381,7 @@ For lCptCas = 1 To 1
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+		/* Génération du fichier de COMMANDES (CMD)                         */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sFiltre = "ID_TYP_ART <> 'PRS' AND COD_ETAT <> 'ANN'"
@@ -10385,7 +10390,7 @@ For lCptCas = 1 To 1
 			sTypArtNul = "commande"
 			sAction = "A_COMMANDER"
 			sActionOrig = sAction 
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de COMMANDES en cours..." )
 
 	End Choose
 
@@ -10396,13 +10401,13 @@ For lCptCas = 1 To 1
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 		/*------------------------------------------------------------------*/
-		/* #5	CAG : 06/05/2003 : on ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier vide pour les  */
+		/* #5	CAG : 06/05/2003 : on ne génère pas de fichier vide pour les  */
 		/*								 annulations ni prestations					  */
 		/*------------------------------------------------------------------*/
 		If lCptCas <> 1 Then
@@ -10470,14 +10475,14 @@ For lCptCas = 1 To 1
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, False )
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 		
 		// [VDOC26276]
 		This.uf_Maj_Nom_Fichier_Ds_Presta ( sNomFic ) 
 		
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 
@@ -10493,7 +10498,7 @@ private function integer uf_generer_fichier_orangeopenpro (long alidlotcmd);//*-
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_OrangeOpenPro (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 05/09/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le fournisseur OrangeOpenPro
+//* Libellé			: Génération du fichier de commande pour le fournisseur OrangeOpenPro
 //* Commentaires	: 
 //*
 //* Arguments		: alIdLotCmd	Long	Val
@@ -10525,7 +10530,7 @@ For lCptCas = 1 To 1
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+		/* Génération du fichier de COMMANDES (CMD)                         */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sFiltre = "ID_TYP_ART = 'EDI' AND ID_REF_FOUR = 'CONTEST_IMEI' AND COD_ETAT <> 'ANN'"
@@ -10533,7 +10538,7 @@ For lCptCas = 1 To 1
 			sTypArt = "contestations IMEI"
 			sTypArtNul = "contestation IMEI"
 			sAction = "A_CONTROLER_IMEI"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des contestation IMEI en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier des contestation IMEI en cours..." )
 
 	End Choose
 
@@ -10544,13 +10549,13 @@ For lCptCas = 1 To 1
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 		/*------------------------------------------------------------------*/
-		/* #5	CAG : 06/05/2003 : on ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier vide pour les  */
+		/* #5	CAG : 06/05/2003 : on ne génère pas de fichier vide pour les  */
 		/*								 annulations ni prestations					  */
 		/*------------------------------------------------------------------*/
 		If lCptCas <> 1 Then
@@ -10582,14 +10587,14 @@ For lCptCas = 1 To 1
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, False )
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 		
 		// [VDOC26276]
 		This.uf_Maj_Nom_Fichier_Ds_Presta ( sNomFic ) 
 		
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 
@@ -10605,7 +10610,7 @@ private function integer uf_generer_fichier_orangegrandpublic (long alidlotcmd);
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_OrangeGrandPublic (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 05/09/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le fournisseur OrangeOpenPro
+//* Libellé			: Génération du fichier de commande pour le fournisseur OrangeOpenPro
 //* Commentaires	: 
 //*
 //* Arguments		: alIdLotCmd	Long	Val
@@ -10637,7 +10642,7 @@ For lCptCas = 1 To 1
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+		/* Génération du fichier de COMMANDES (CMD)                         */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sFiltre = "ID_TYP_ART = 'EDI' AND ID_REF_FOUR = 'CONTEST_IMEI' AND COD_ETAT <> 'ANN'"
@@ -10645,7 +10650,7 @@ For lCptCas = 1 To 1
 			sTypArt = "contestations IMEI"
 			sTypArtNul = "contestation IMEI"
 			sAction = "A_CONTROLER_IMEI"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des contestation IMEI en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier des contestation IMEI en cours..." )
 
 	End Choose
 
@@ -10656,13 +10661,13 @@ For lCptCas = 1 To 1
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 		/*------------------------------------------------------------------*/
-		/* #5	CAG : 06/05/2003 : on ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier vide pour les  */
+		/* #5	CAG : 06/05/2003 : on ne génère pas de fichier vide pour les  */
 		/*								 annulations ni prestations					  */
 		/*------------------------------------------------------------------*/
 		If lCptCas <> 1 Then
@@ -10694,14 +10699,14 @@ For lCptCas = 1 To 1
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, False )
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 		
 		// [VDOC26276]
 		This.uf_Maj_Nom_Fichier_Ds_Presta ( sNomFic ) 
 		
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 
@@ -10717,7 +10722,7 @@ private subroutine uf_charger_standard ();//*-----------------------------------
 //* Fonction		: n_cst_gen_fic_commande::uf_Charger_Standard (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 27/09/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Modif apr$$HEX1$$e800$$ENDHEX$$s chargement des commandes pour tout fourn standard
+//* Libellé			: Modif après chargement des commandes pour tout fourn standard
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -10732,8 +10737,8 @@ private subroutine uf_charger_standard ();//*-----------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* Pas d'espace pour les num$$HEX1$$e900$$ENDHEX$$ros de t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone.                      */
-/* Seulement dans la g$$HEX1$$ea00$$ENDHEX$$ne du fichier, on laisse les espaces en base */
+/* Pas d'espace pour les numéros de téléphone.                      */
+/* Seulement dans la gêne du fichier, on laisse les espaces en base */
 /*------------------------------------------------------------------*/
 Long 	lTot, lCpt, lCptCas, lLen, lCptLen
 String sVal
@@ -10801,7 +10806,7 @@ public subroutine uf_maj_nom_spb_frn_cplt (string ascle, string asval);//*------
 //* Fonction		: n_cst_gen_fic_commande::uf_Maj_Nom_Spb_Frn_Cplt (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 20/06/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Mise $$HEX2$$e0002000$$ENDHEX$$jour du nom de fichier dans la basesur la prestation concern$$HEX1$$e900$$ENDHEX$$e
+//* Libellé			: Mise à jour du nom de fichier dans la basesur la prestation concernée
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -10821,7 +10826,7 @@ sSqlOrig = "EXEC sysadm.PS_U_MAJ_SPB_FRN_CPLT "
 
 sSql = sSqlOrig 
 
-This.uf_Trace ( "ECR", "Marquage dans la cl$$HEX2$$e9002000$$ENDHEX$$" + asCle + " de la valeur " + asVal + " sur les prestations en base, en cours...")
+This.uf_Trace ( "ECR", "Marquage dans la clé " + asCle + " de la valeur " + asVal + " sur les prestations en base, en cours...")
 
 lTot = idwFicGenCmde.RowCount ()			
 For lCpt = 1 To lTot
@@ -10849,7 +10854,7 @@ For lCpt = 1 To lTot
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update du nom de fichier sur " + string ( lIdSin ) + "-" + String ( lIdSeq ) + ", msg SqlServer : " + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update du nom de fichier sur " + string ( lIdSin ) + "-" + String ( lIdSeq ) + ", msg SqlServer : " + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -10863,7 +10868,7 @@ For lCpt = 1 To lTot
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")	
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update du nom de fichier sur " + string ( lIdSin ) + "-" + String ( lIdSeq ) + ", msg SqlServer : " + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update du nom de fichier sur " + string ( lIdSin ) + "-" + String ( lIdSeq ) + ", msg SqlServer : " + sVal )
 
 		F_commit ( SQLCA, False )
 			
@@ -10873,9 +10878,9 @@ For lCpt = 1 To lTot
 Next 
 
 If iErr = 1 Then
-	This.uf_Trace ( "ECR", "Marquage dans la cl$$HEX2$$e9002000$$ENDHEX$$" + asCle + " de la valeur " + asVal + " sur les prestations en base, termin$$HEX2$$e9002000$$ENDHEX$$avec des erreurs.")	
+	This.uf_Trace ( "ECR", "Marquage dans la clé " + asCle + " de la valeur " + asVal + " sur les prestations en base, terminé avec des erreurs.")	
 Else 
-	This.uf_Trace ( "ECR", "Marquage dans la cl$$HEX2$$e9002000$$ENDHEX$$" + asCle + " de la valeur " + asVal + " sur les prestations en base, termin$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s.")	
+	This.uf_Trace ( "ECR", "Marquage dans la clé " + asCle + " de la valeur " + asVal + " sur les prestations en base, terminé avec succès.")	
 End If 
 
 end subroutine
@@ -10885,8 +10890,8 @@ private function integer uf_generer_fichier_telstore (long alidlotcmd);//*------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_TELSTORE (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 16/08/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le fournisseur TELSTORE
-//* Commentaires	: Trois fichiers seront g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$s dans le m$$HEX1$$ea00$$ENDHEX$$me r$$HEX1$$e900$$ENDHEX$$pertoires :
+//* Libellé			: Génération du fichier de commande pour le fournisseur TELSTORE
+//* Commentaires	: Trois fichiers seront générés dans le même répertoires :
 //*					  un pour les commandes   : CMDjjmma.ind  (CMD10091.001)
 //*					  un pour les prestations : PRSjjmma.ind  (PRS10091.001)
 //*					  un pour les annulations : ANNjjmma.ind  (ANN10091.001)
@@ -10901,12 +10906,12 @@ private function integer uf_generer_fichier_telstore (long alidlotcmd);//*------
 //* #..   ...   ../../....   
 //* 
 //* #1	 CAG	 17/10/2002	  Modification SFR : Pour ce produit (5712), on
-//*								  cr$$HEX1$$e900$$ENDHEX$$e un fichier suppl$$HEX1$$e900$$ENDHEX$$mentaire pour chaque type (cmd, prs, annul ...)
-//*								  et on les $$HEX1$$e900$$ENDHEX$$crit dans un r$$HEX1$$e900$$ENDHEX$$pertoire sp$$HEX1$$e900$$ENDHEX$$cifique
-//*								  Annexe 7 (6.7.2) dans l'int$$HEX1$$e900$$ENDHEX$$gration de SFR, analyse des traitements
+//*								  crée un fichier supplémentaire pour chaque type (cmd, prs, annul ...)
+//*								  et on les écrit dans un répertoire spécifique
+//*								  Annexe 7 (6.7.2) dans l'intégration de SFR, analyse des traitements
 //*
 //* #4	 JFF	 07/04/2003   Ajout de l'ID_REF_FOUR et MT_TTC_CMDE
-//* #5	 CAG	 06/05/2003	  G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration d'un fichier vide de cmde qd pas de cmdes
+//* #5	 CAG	 06/05/2003	  Génération d'un fichier vide de cmde qd pas de cmdes
 //        JFF   05/12/2017   [PM426-1]
 // 		 JFF   03/01/2018   [VDOC25374]
 // 		 JFF   21/06/2018   [VDOC26276]
@@ -10931,7 +10936,7 @@ For lCptCas = 1 To 1
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+		/* Génération du fichier de COMMANDES (CMD)                         */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sFiltre = "ID_TYP_ART <> 'PRS' AND COD_ETAT <> 'ANN'"
@@ -10940,7 +10945,7 @@ For lCptCas = 1 To 1
 			sTypArtNul = "commande"
 			sAction = "A_COMMANDER"
 			sActionOrig = sAction 
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de COMMANDES en cours..." )
 
 	End Choose
 
@@ -10951,13 +10956,13 @@ For lCptCas = 1 To 1
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 		/*------------------------------------------------------------------*/
-		/* #5	CAG : 06/05/2003 : on ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier vide pour les  */
+		/* #5	CAG : 06/05/2003 : on ne génère pas de fichier vide pour les  */
 		/*								 annulations ni prestations					  */
 		/*------------------------------------------------------------------*/
 		If lCptCas <> 1 Then
@@ -11030,14 +11035,14 @@ For lCptCas = 1 To 1
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, True )
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 		
 		// [VDOC26276]
 		This.uf_Maj_Nom_Fichier_Ds_Presta ( sNomFic ) 
 		
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 
@@ -11053,7 +11058,7 @@ private function integer uf_generer_fichier_cardif (long alidlotcmd);//*--------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_CARDIF (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 07/06/2023
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de commande pour le fournisseur CARDIF
+//* Libellé			: Génération du fichier de commande pour le fournisseur CARDIF
 //* Commentaires	[PMO89_RS4822]
 //*
 //* Arguments		: alIdLotCmd	Long	Val
@@ -11085,16 +11090,16 @@ For lCptCas = 1 To 1
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+		/* Génération du fichier de COMMANDES (CMD)                         */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sFiltre = "ID_TYP_ART <> 'PRS' AND COD_ETAT <> 'ANN'"
 			sNomFic = K_FIC1
-			sTypArt = "demandes de contr$$HEX1$$f400$$ENDHEX$$le"
-			sTypArtNul = "demande de contr$$HEX1$$f400$$ENDHEX$$le"
+			sTypArt = "demandes de contrôle"
+			sTypArtNul = "demande de contrôle"
 			sAction = "A_CONTROLER"
 			sActionOrig = sAction 
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de DEMANDE DE CONTR$$HEX1$$d400$$ENDHEX$$LE en cours..." )
+			This.Uf_Trace ( "ECR", "Génération du fichier de DEMANDE DE CONTRÔLE en cours..." )
 
 	End Choose
 
@@ -11105,13 +11110,13 @@ For lCptCas = 1 To 1
 	idwFicGenCmde.Reset ()
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 		/*------------------------------------------------------------------*/
-		/* #5	CAG : 06/05/2003 : on ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier vide pour les  */
+		/* #5	CAG : 06/05/2003 : on ne génère pas de fichier vide pour les  */
 		/*								 annulations ni prestations					  */
 		/*------------------------------------------------------------------*/
 		If lCptCas <> 1 Then
@@ -11198,14 +11203,14 @@ For lCptCas = 1 To 1
 	iRet = idwFicGenCmde.SaveAs ( sNomFic, Text!, True )
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 		
 		// [VDOC26276]
 		This.uf_Maj_Nom_Fichier_Ds_Presta ( sNomFic ) 
 		
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 
@@ -11221,7 +11226,7 @@ private function integer uf_generer_fichier_ifr ();//*--------------------------
 //* Fonction		: n_cst_gen_fic_commande::uf_Generer_Fichier_IFR (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 12/06/2023
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier IFR
+//* Libellé			: Génération du fichier IFR
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -11250,24 +11255,24 @@ For lCptCas = 1 To 1
 	CHOOSE CASE lCptCas
 
 		/*------------------------------------------------------------------*/
-		/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier de COMMANDES (CMD)                         */
+		/* Génération du fichier de COMMANDES (CMD)                         */
 		/*------------------------------------------------------------------*/
 		CASE 1
 			sNomFic = K_FIC18
-			sTypArt = "r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rences IFR"
-			sTypArtNul = "r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence IFR"
-			This.Uf_Trace ( "ECR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rentiel IFR en cours..." )
+			sTypArt = "références IFR"
+			sTypArtNul = "référence IFR"
+			This.Uf_Trace ( "ECR", "Génération du fichier référentiel IFR en cours..." )
 
 	End Choose
 
 	lTot = idwFicCharg.RowCount ()			
 
 	/*------------------------------------------------------------------*/
-	/* On ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re pas de fichier si pas de commandes ou pas de        */
+	/* On ne génère pas de fichier si pas de commandes ou pas de        */
 	/* prestations.                                                     */
 	/*------------------------------------------------------------------*/
 	If lTot = 0 Then
-		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer" )
+		This.Uf_Trace ( "ECR", "Aucune " + sTypArtNul + " à générer" )
 	End If
 
 	This.uf_nom_fichier ( sNomFic, lCptProd )
@@ -11277,10 +11282,10 @@ For lCptCas = 1 To 1
 	iRet = idwFicCharg.SaveAs ( sNomFic, Text!, True )
 
 	If iRet > 0 Then
-		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$avec succ$$HEX1$$e800$$ENDHEX$$s sur : " + Upper ( sNomFic )  )
+		This.Uf_Trace ( "ECR", "Fichier des " + sTypArt + " généré avec succès sur : " + Upper ( sNomFic )  )
 	Else
 		iRet = -1
-		This.Uf_Trace ( "ECR", "ERREUR dans la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier des " + sTypArt + " : le fichier n'est pas g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$!!" )
+		This.Uf_Trace ( "ECR", "ERREUR dans la génération du fichier des " + sTypArt + " : le fichier n'est pas généré !!" )
 		Exit
 	End If
 

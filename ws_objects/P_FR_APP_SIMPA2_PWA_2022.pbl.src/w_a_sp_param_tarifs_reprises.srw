@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_a_sp_param_tarifs_reprises.srw
+﻿$PBExportHeader$w_a_sp_param_tarifs_reprises.srw
 forward
 global type w_a_sp_param_tarifs_reprises from w_8_accueil
 end type
@@ -9,7 +9,7 @@ end forward
 global type w_a_sp_param_tarifs_reprises from w_8_accueil
 integer width = 3538
 integer height = 1504
-string title = "Accueil - Gestion des tarifs de reprises des mat$$HEX1$$e900$$ENDHEX$$riels sinistr$$HEX1$$e900$$ENDHEX$$s"
+string title = "Accueil - Gestion des tarifs de reprises des matériels sinistrés"
 pb_extraire pb_extraire
 end type
 global w_a_sp_param_tarifs_reprises w_a_sp_param_tarifs_reprises
@@ -28,7 +28,7 @@ private function boolean wf_droit_modif ();//*----------------------------------
 //* Fonction		: w_a_sp_param_tarifs_reprises::wf_droit_modif
 //* Auteur			: F. Pinon
 //* Date				: 14/04/2011 14:45:26
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -43,8 +43,8 @@ private function boolean wf_droit_modif ();//*----------------------------------
 Long 		lTotLigne
 
 /*--------------------------------------------------------------------*/
-/* La pr$$HEX1$$e900$$ENDHEX$$sence d'une ligne 220 pour l'op$$HEX1$$e900$$ENDHEX$$rateur */
-/* connect$$HEX60$$e90020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000$$ENDHEX$$*/   
+/* La présence d'une ligne 220 pour l'opérateur */
+/* connecté                                                           */   
 /*--------------------------------------------------------------------*/
 
 SELECT count(*) INTO :lTotLigne
@@ -98,7 +98,7 @@ event open;call super::open;//*-------------------------------------------------
 //* Evenement 		: open
 //* Auteur			: F. Pinon
 //* Date				: 01/03/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -113,10 +113,10 @@ event open;call super::open;//*-------------------------------------------------
 itrTrans=SQLCA
 
 /*------------------------------------------------------------------*/
-/* Fen$$HEX1$$ea00$$ENDHEX$$tre de recherche                                             */
+/* Fenêtre de recherche                                             */
 /*------------------------------------------------------------------*/
 pb_Interro.istInterro.wAncetre				= This
-pb_Interro.istInterro.sTitre 					= "Recherche de tarifs de reprises de mat$$HEX1$$e900$$ENDHEX$$riel"
+pb_Interro.istInterro.sTitre 					= "Recherche de tarifs de reprises de matériel"
 pb_Interro.istInterro.sDataObject			= "d_sp_int_param_ftu_brk"
 pb_Interro.istInterro.sCodeDw					= "PARAM_TARIF_REPRISE"
 
@@ -172,7 +172,7 @@ pb_Interro.istInterro.sData[9].sOperande	= "="
 
 
 /*------------------------------------------------------------------*/
-/* Initialisation de la structure pour le passage des param$$HEX1$$e800$$ENDHEX$$tres    */
+/* Initialisation de la structure pour le passage des paramètres    */
 /*------------------------------------------------------------------*/
 istPass.trTrans 	= itrTrans
 istPass.bControl	= TRUE		// Utilisation du bouton Controler
@@ -187,7 +187,7 @@ event ue_fin_interro;
 //* Evenement 		: ue_fin_interro
 //* Auteur			: F. Pinon
 //* Date				: 01/03/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -286,7 +286,7 @@ event ue_preparer_interro;call super::ue_preparer_interro;//*-------------------
 //* Evenement 		: ue_preparer_interro
 //* Auteur			: F. Pinon
 //* Date				: 01/03/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Charge les datawindow de la fen$$HEX1$$ea00$$ENDHEX$$tre d'interroration.
+//* Libellé			:	Charge les datawindow de la fenêtre d'interroration.
 //* Commentaires	:	Chargement des produits et des garantie
 //*				  
 //*-----------------------------------------------------------------
@@ -339,7 +339,7 @@ event ue_creer;call super::ue_creer;//*-----------------------------------------
 //* Evenement 		: ue_creer
 //* Auteur			: F. Pinon
 //* Date				: 01/03/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -364,7 +364,7 @@ event ue_modifier;call super::ue_modifier;//*-----------------------------------
 //* Evenement 		: ue_modifier
 //* Auteur			: F. Pinon
 //* Date				: 01/03/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -424,7 +424,7 @@ event dw_1::constructor;call super::constructor;//*-----------------------------
 //* Evenement 		: constructor
 //* Auteur			: F. Pinon
 //* Date				: 01/03/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -475,7 +475,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 01/03/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -485,7 +485,7 @@ event clicked;//*---------------------------------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* 
+//			FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 Datastore dsParamTarif
@@ -500,11 +500,11 @@ SetNull(lNull)
 SetNull(sNull)
 SetNull(dtNull)
 
-stMessage.sTitre  	= "Extraction du param$$HEX1$$e900$$ENDHEX$$trage des tarifs"
+stMessage.sTitre  	= "Extraction du paramétrage des tarifs"
 stMessage.Icon			= Information!
 stMessage.Bouton		= Ok!
 
-// 1$$HEX2$$b0002000$$ENDHEX$$m$$HEX1$$e900$$ENDHEX$$thode : 1 seul fichier
+// 1° méthode : 1 seul fichier
 bRet=uo_extract_excel.uf_extract_excel({"d_lst_param_ftu_brk","d_lst_param_ftu_brk_vts"}, &
 		{"d_lst_param_ftu_brk","d_lst_param_ftu_brk_vts"}, stglb.sreptempo + "PARAM_FTU_BRK.XLS")
 
@@ -512,19 +512,19 @@ If bRet Then
 	stMessage.sVar[1] = stglb.sreptempo + "PARAM_FTU_BRK.XLS"
 	stMessage.bErreurG	= FALSE
 	stMessage.sCode	= "GENE013"
-	stMessage.sVar[1] = "Le fichier" +  stglb.sreptempo + "PARAM_FTU_BRK.XLS" + " a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$."
+	stMessage.sVar[1] = "Le fichier" +  stglb.sreptempo + "PARAM_FTU_BRK.XLS" + " a été généré."
 
 	f_message(stMessage)
 	Return
 End if
 
-// 2$$HEX2$$b0002000$$ENDHEX$$m$$HEX1$$e900$$ENDHEX$$thode : 2 fichiers
+// 2° méthode : 2 fichiers
 dsParamTarif = CREATE DataStore
 dsParamTarif.dataobject="d_lst_param_ftu_brk"
 dsParamTarif.SetTransObject(SQLCA)
 dsParamTarif.Retrieve()
 
-iRet = dsParamTarif.Saveas(stglb.sreptempo + "PARAM_FTU_BRK.XLS", Excel!,TRUE)
+iRet = dsParamTarif.Saveas(stglb.sreptempo + "PARAM_FTU_BRK.XLS", Excel8!,TRUE) // [MIG_PB2022]
 
 
 If iRet=1 Then
@@ -532,7 +532,7 @@ If iRet=1 Then
 	dsParamTarif.SetTransObject(SQLCA)
 	dsParamTarif.Retrieve()
 
-	iRet = dsParamTarif.Saveas(stglb.sreptempo + "PARAM_FTU_BRK_VTS.XLS", Excel!,TRUE)
+	iRet = dsParamTarif.Saveas(stglb.sreptempo + "PARAM_FTU_BRK_VTS.XLS", Excel8!,TRUE) // [MIG_PB2022]
 End if
 
 stMessage.sVar[1] = stglb.sreptempo + "PARAM_FTU_BRK.XLS"
@@ -541,7 +541,7 @@ stMessage.sVar[2] = stglb.sreptempo + "PARAM_FTU_BRK_VTS.XLS"
 If iRet = 1 Then
 	stMessage.bErreurG	= FALSE
 	stMessage.sCode	= "GENE013"
-	stMessage.sVar[1] = "Les fichiers" + stMessage.sVar[1] + " et " + stMessage.sVar[2] + " ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$s."
+	stMessage.sVar[1] = "Les fichiers" + stMessage.sVar[1] + " et " + stMessage.sVar[2] + " ont été générés."
 Else
 	stMessage.bErreurG	= TRUE
 	stMessage.sCode		= "ANCE008"

@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_trt_sp_saisie_ctg_factu.srw
+﻿$PBExportHeader$w_trt_sp_saisie_ctg_factu.srw
 $PBExportComments$[PM251-5]
 forward
 global type w_trt_sp_saisie_ctg_factu from w_8_accueil
@@ -16,7 +16,7 @@ end forward
 global type w_trt_sp_saisie_ctg_factu from w_8_accueil
 integer width = 3570
 integer height = 1892
-string title = "Param$$HEX1$$e900$$ENDHEX$$trage des cat$$HEX1$$e900$$ENDHEX$$gories de facturation"
+string title = "Paramétrage des catégories de facturation"
 event ue_supprimerdetail pbm_custom72
 pb_appliquer pb_appliquer
 st_temoin_sav st_temoin_sav
@@ -36,7 +36,7 @@ event ue_supprimerdetail;//*----------------------------------------------------
 //* Fonction		: w_trt_sp_saisie_ctg_factu::ue_supprimerdetail
 //* Auteur			: F. Pinon
 //* Date				: 13/02/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: value unsignedlong wparam	 */
@@ -60,7 +60,7 @@ public function integer wf_valider ();//*---------------------------------------
 //* Fonction		: w_trt_sp_saisie_ctg_factu::wf_valider
 //* Auteur			: F. Pinon
 //* Date				: 13/02/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -104,7 +104,7 @@ public function integer wf_controler ();//*-------------------------------------
 //* Fonction		: w_trt_sp_saisie_ctg_factu::wf_controler
 //* Auteur			: F. Pinon
 //* Date				: 13/02/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -119,7 +119,7 @@ public function integer wf_controler ();//*-------------------------------------
 
 Long lRow, lCol, lRow2
 String sCols[]={"MARQ_APP","MODL_APP","CATEGORIE"}
-String sErrCol[]={"- la marque","- le mod$$HEX1$$e800$$ENDHEX$$le","- la cat$$HEX1$$e900$$ENDHEX$$gorie"}
+String sErrCol[]={"- la marque","- le modèle","- la catégorie"}
 String sVal, sMsg
 String sValeurs[]
 
@@ -144,7 +144,7 @@ For lRow =1 to dw_1.RowCount()
 		End if
 	Next
 	
-	// Doublon marque/modele/cat$$HEX1$$e900$$ENDHEX$$gorie
+	// Doublon marque/modele/catégorie
 	if sMsg="" Then
 		lRow2=dw_1.Find("MARQ_APP='" + sValeurs[1] + "' AND MODL_APP='" + sValeurs[2] + &
 			"' AND CATEGORIE='" +  sValeurs[3] + "'", &
@@ -157,7 +157,7 @@ For lRow =1 to dw_1.RowCount()
 
 	// Message d'erreur
 	if sMsg <> "" Then
-		stMessage.sTitre		= "Param$$HEX1$$e900$$ENDHEX$$trage des cat$$HEX1$$e900$$ENDHEX$$gories de facturation"
+		stMessage.sTitre		= "Paramétrage des catégories de facturation"
 		stMessage.Icon			= Information!
 		stMessage.sVar[1] = sMsg
 		
@@ -178,7 +178,7 @@ public subroutine wf_set_maj_par ();//*-----------------------------------------
 //* Fonction		: w_trt_sp_saisie_ctg_factu::wf_set_maj_par
 //* Auteur			: F. Pinon
 //* Date				: 13/02/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -244,7 +244,7 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		: ue_initialiser
 //* Auteur			: F. Pinon
 //* Date				: 13/02/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -285,7 +285,7 @@ event ue_creer;call super::ue_creer;//*-----------------------------------------
 //* Evenement 		: ue_creer
 //* Auteur			: F. Pinon
 //* Date				: 13/02/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -341,7 +341,7 @@ event pb_creer::clicked;//*-----------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 13/02/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -374,10 +374,10 @@ end type
 
 event dw_1::clicked;call super::clicked;//*-----------------------------------------------------------------
 //*
-//* Ev$$HEX1$$e800$$ENDHEX$$nement		: w_trt_sp_saisie_ctg_factu::clicked
+//* Evènement		: w_trt_sp_saisie_ctg_factu::clicked
 //* Auteur			: F. Pinon
 //* Date				: 13/02/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: value unsignedlong flags	 */
@@ -429,7 +429,7 @@ event dw_1::ue_modifiermenu;call super::ue_modifiermenu;
 //* Evenement 		: ue_modifiermenu
 //* Auteur			: F. Pinon
 //* Date				: 13/02/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -459,7 +459,7 @@ event dw_1::itemchanged;call super::itemchanged;
 //* Evenement 		: itemchanged
 //* Auteur			: F. Pinon
 //* Date				: 13/02/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value long row	 */
@@ -526,7 +526,7 @@ event dw_1::itemerror;call super::itemerror;//*---------------------------------
 //* Evenement 		: itemerror
 //* Auteur			: F. Pinon
 //* Date				: 13/02/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value long row	 */
@@ -545,14 +545,14 @@ Long ll_return
 
 Call super::itemerror
 
-stMessage.sTitre		= "Param$$HEX1$$e900$$ENDHEX$$trage des cat$$HEX1$$e900$$ENDHEX$$gories de facturation"
+stMessage.sTitre		= "Paramétrage des catégories de facturation"
 stMessage.Icon			= Information!
 
 stMessage.bErreurG	= TRUE
 
 Choose Case isErrCol
 	Case "MODL_APP"
-			stMessage.sVar[1] = "mod$$HEX1$$e800$$ENDHEX$$le de l'appareil"
+			stMessage.sVar[1] = "modèle de l'appareil"
 			stMessage.sCode	= "GENE003"
 	Case "MARQ_APP"
 			stMessage.sVar[1] = "marque de l'appareil"
@@ -573,7 +573,7 @@ event dw_1::dberror;
 //* Evenement 		: dberror
 //* Auteur			: F. Pinon
 //* Date				: 13/02/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value long sqldbcode	 */
@@ -593,8 +593,8 @@ event dw_1::dberror;
 If sqldbcode =2627 Then // Violation contrainte PK
 	stMessage.berreurg=FALSE
 	stMessage.scode="GENE005"
-	stMessage.sTitre="Param$$HEX1$$e900$$ENDHEX$$trage des cat$$HEX1$$e900$$ENDHEX$$gories de facturation - SIMPA2"
-	stMessage.sVar[1] = "Une des cat$$HEX1$$e900$$ENDHEX$$gories de facturation"
+	stMessage.sTitre="Paramétrage des catégories de facturation - SIMPA2"
+	stMessage.sVar[1] = "Une des catégories de facturation"
 	f_message(stMessage)
 End if
 
@@ -651,7 +651,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 13/02/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -710,7 +710,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 10/02/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PM251-5]
+//* Libellé			: [PM251-5]
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -720,14 +720,14 @@ event clicked;//*---------------------------------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* 
+//			FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 Integer iRet
 
-iRet = dw_1.Saveas(stglb.sreptempo + "CTG_FACTU.XLS", Excel!,TRUE)
+iRet = dw_1.Saveas(stglb.sreptempo + "CTG_FACTU.XLS", Excel8!,TRUE) // [MIG_PB2022]
 
-stMessage.sTitre  	= "Extraction des cat$$HEX1$$e900$$ENDHEX$$gories de facturation"
+stMessage.sTitre  	= "Extraction des catégories de facturation"
 stMessage.Icon			= Information!
 stMessage.Bouton		= Ok!
 stMessage.sVar[1] = stglb.sreptempo + "CTG_FACTU.XLS"
@@ -735,7 +735,7 @@ stMessage.sVar[1] = stglb.sreptempo + "CTG_FACTU.XLS"
 If iRet = 1 Then
 	stMessage.bErreurG	= FALSE
 	stMessage.sCode	= "GENE013"
-	stMessage.sVar[1] = "Le fichier " + stMessage.sVar[1] + " a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$."
+	stMessage.sVar[1] = "Le fichier " + stMessage.sVar[1] + " a été généré."
 Else
 	stMessage.bErreurG	= TRUE
 	stMessage.sCode		= "ANCE008"
@@ -761,7 +761,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 13/02/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 

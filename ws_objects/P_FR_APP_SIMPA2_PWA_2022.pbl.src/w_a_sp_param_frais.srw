@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_a_sp_param_frais.srw
+﻿$PBExportHeader$w_a_sp_param_frais.srw
 forward
 global type w_a_sp_param_frais from w_8_accueil
 end type
@@ -13,7 +13,7 @@ end forward
 global type w_a_sp_param_frais from w_8_accueil
 integer width = 3602
 integer height = 1504
-string title = "Accueil - Param$$HEX1$$e900$$ENDHEX$$trage des frais"
+string title = "Accueil - Paramétrage des frais"
 cb_histo cb_histo
 p_xls p_xls
 pb_extraire pb_extraire
@@ -50,7 +50,7 @@ event open;call super::open;//*-------------------------------------------------
 //* Evenement 		: open
 //* Auteur			: F. Pinon
 //* Date				: 19/10/2009 14:57:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -65,10 +65,10 @@ event open;call super::open;//*-------------------------------------------------
 itrTrans=SQLCA
 
 /*------------------------------------------------------------------*/
-/* Fen$$HEX1$$ea00$$ENDHEX$$tre de recherche                                             */
+/* Fenêtre de recherche                                             */
 /*------------------------------------------------------------------*/
 pb_Interro.istInterro.wAncetre				= This
-pb_Interro.istInterro.sTitre 					= "Recherche de param$$HEX1$$e800$$ENDHEX$$tres frais"
+pb_Interro.istInterro.sTitre 					= "Recherche de paramètres frais"
 pb_Interro.istInterro.sDataObject			= "d_sp_int_param_frais"
 pb_Interro.istInterro.sCodeDw					= "PARAM_FRAIS"
 
@@ -100,10 +100,10 @@ pb_Interro.istInterro.sData[5].sType		= "DATETIME" // [PI056]
 pb_Interro.istInterro.sData[5].sOperande	= "="
 
 /*------------------------------------------------------------------*/
-/* Fen$$HEX1$$ea00$$ENDHEX$$tre de recherche historique                                  */
+/* Fenêtre de recherche historique                                  */
 /*------------------------------------------------------------------*/
 istInterroHisto.wAncetre				= This
-istInterroHisto.sTitre 					= "Historique de param$$HEX1$$e800$$ENDHEX$$tres frais"
+istInterroHisto.sTitre 					= "Historique de paramètres frais"
 istInterroHisto.sDataObject			= "d_sp_int_trace_param_frais"
 istInterroHisto.sCodeDw					= "PARAM_FRAIS"
 
@@ -141,7 +141,7 @@ istInterroHisto.sData[6].sType		= "DATETIME" // [PI056]
 istInterroHisto.sData[6].sOperande	= "="
 
 /*------------------------------------------------------------------*/
-/* Initialisation de la structure pour le passage des param$$HEX1$$e800$$ENDHEX$$tres    */
+/* Initialisation de la structure pour le passage des paramètres    */
 /*------------------------------------------------------------------*/
 istPass.trTrans 	= itrTrans
 istPass.bControl	= TRUE		// Utilisation du bouton Controler
@@ -154,7 +154,7 @@ event ue_fin_interro;
 //* Evenement 		: ue_fin_interro
 //* Auteur			: F. Pinon
 //* Date				: 19/10/2009 15:43:33
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -226,7 +226,7 @@ event ue_preparer_interro;call super::ue_preparer_interro;//*-------------------
 //* Evenement 		: ue_preparer_interro
 //* Auteur			: F. Pinon
 //* Date				: 19/10/2009 16:18:31
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Charge les datawindow de la fen$$HEX1$$ea00$$ENDHEX$$tre d'interroration.
+//* Libellé			:	Charge les datawindow de la fenêtre d'interroration.
 //* Commentaires	:	Chargement des produits et des garantie
 //*				  
 //*-----------------------------------------------------------------
@@ -265,7 +265,7 @@ event ue_creer;call super::ue_creer;//*-----------------------------------------
 //* Evenement 		: ue_creer
 //* Auteur			: F. Pinon
 //* Date				: 20/10/2009 10:00:45
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -290,7 +290,7 @@ event ue_modifier;call super::ue_modifier;//*-----------------------------------
 //* Evenement 		: ue_modifier
 //* Auteur			: F. Pinon
 //* Date				: 20/10/2009 10:02:45
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -345,7 +345,7 @@ event dw_1::constructor;call super::constructor;//*-----------------------------
 //* Evenement 		: constructor
 //* Auteur			: F. Pinon
 //* Date				: 19/10/2009 14:53:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -395,7 +395,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 02/11/2009 14:20:06
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -425,10 +425,10 @@ SetNull(lIdGti)
 SetNull(lIdProcess)
 SetNull(dtMajLe)
 
-//  Fen$$HEX1$$ea00$$ENDHEX$$tre d'interro
+//  Fenêtre d'interro
 OpenWithParm( w_Interro, istInterroHisto )
 
-// R$$HEX1$$e900$$ENDHEX$$cup des infos
+// Récup des infos
 stPass = Message.PowerObjectParm
 sClause				= stPass.sTab[1]
 
@@ -459,7 +459,7 @@ For iPos=1 to UpperBound(sCritere) step 3
 		End Choose
 Next
 
-// Fen$$HEX1$$ea00$$ENDHEX$$tre de consult
+// Fenêtre de consult
 
 If isValid ( W_t_sp_c_trace_param_frais )	= False	Then
 
@@ -508,7 +508,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 05/11/2009 12:03:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -546,7 +546,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 05/11/2009 11:46:42
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -556,7 +556,7 @@ event clicked;//*---------------------------------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* 
+//			FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 Datastore dsParamFrais
@@ -574,9 +574,9 @@ dsParamFrais.dataobject="d_sp_a_param_frais"
 dsParamFrais.SetTransObject(SQLCA)
 dsParamFrais.Retrieve(lNull,sNull,lNull,dtNull, sNull)
 
-iRet = dsParamFrais.Saveas(stglb.sreptempo + "PARAM_FRAIS.XLS", Excel!,TRUE)
+iRet = dsParamFrais.Saveas(stglb.sreptempo + "PARAM_FRAIS.XLS", Excel8!,TRUE) // [MIG_PB2022]
 
-stMessage.sTitre  	= "Extraction du param$$HEX1$$e900$$ENDHEX$$trage des frais"
+stMessage.sTitre  	= "Extraction du paramétrage des frais"
 stMessage.Icon			= Information!
 stMessage.Bouton		= Ok!
 stMessage.sVar[1] = stglb.sreptempo + "PARAM_FRAIS.XLS"
@@ -584,7 +584,7 @@ stMessage.sVar[1] = stglb.sreptempo + "PARAM_FRAIS.XLS"
 If iRet = 1 Then
 	stMessage.bErreurG	= FALSE
 	stMessage.sCode	= "GENE013"
-	stMessage.sVar[1] = "Le fichier " + stMessage.sVar[1] + " a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$."
+	stMessage.sVar[1] = "Le fichier " + stMessage.sVar[1] + " a été généré."
 Else
 	stMessage.bErreurG	= TRUE
 	stMessage.sCode		= "ANCE008"

@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_a_sp_trt_part2.srw
-$PBExportComments$--- } Fen$$HEX1$$ea00$$ENDHEX$$tre de traitement particuliers 2 : Stat Hebdo pour SFR_PGC (DNT)
+﻿$PBExportHeader$w_a_sp_trt_part2.srw
+$PBExportComments$--- } Fenêtre de traitement particuliers 2 : Stat Hebdo pour SFR_PGC (DNT)
 forward
 global type w_a_sp_trt_part2 from w_8_accueil
 end type
@@ -94,7 +94,7 @@ public function boolean wf_controlerdate ();//*---------------------------------
 //* Fonction      : wf_ControlerDate::wf_ControlerDate
 //* Auteur        : Fabry JF
 //* Date          : 21/10/2002 17:10:07
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le des dates
+//* Libellé       : Contrôle des dates
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -118,7 +118,7 @@ For lCpt = 1 To 2
 	Choose Case lCpt
 		Case 1 
 			sVal = uo_Dte_Deb.sle_Affichage.Text
-			sMes = " de d$$HEX1$$e900$$ENDHEX$$but"
+			sMes = " de début"
 		Case 2
 			sVal = uo_Dte_Fin.sle_Affichage.Text				
 			sMes = " de fin"
@@ -150,7 +150,7 @@ public subroutine wf_lancer (string ascas);//*----------------------------------
 //* Fonction      : wf_ControlerDate::wf_Lancer
 //* Auteur        : Fabry JF
 //* Date          : 21/10/2002 17:10:07
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le des dates
+//* Libellé       : Contrôle des dates
 //* Commentaires  : 
 //*
 //* Arguments     : String		asCas		(Val)
@@ -162,6 +162,7 @@ public subroutine wf_lancer (string ascas);//*----------------------------------
 //* #..   ...   ../../....
 //*
 //  #1 [DCMP-060643]-19/09/2006-PHG Gestion repertoire temporaire
+//	#2		FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //*-----------------------------------------------------------------
 
 String	sDataObj, sNomFic
@@ -209,7 +210,7 @@ stText.Text = "En cours de traitement..."
 lTotRow = dw_Trt.Retrieve ( 17800, dtDeb, dtFin ) 
 
 If lTotRow = 0 Then
-	stText.Text = "Aucune donn$$HEX1$$e900$$ENDHEX$$e"
+	stText.Text = "Aucune donnée"
 ElseIf lTotRow < 0 Then
 	stText.Text = "ERREUR !! (" + String ( lTotRow ) + ")"
 Else
@@ -217,11 +218,11 @@ Else
 	//sNomFic = isRepWin + K_TEMP + Upper ( Right ( sDataObj, 8) ) + K_FICSTAT 
 	sNomFic = stGlb.sRepTempo + Upper ( Right ( sDataObj, 8) ) + K_FICSTAT 
 
-	If Dw_Trt.SaveAs ( sNomFic , Excel!, True ) > 0 Then
+	If Dw_Trt.SaveAs ( sNomFic , Excel8!, True ) > 0 Then // [MIG_PB2022]
 		stText.Text  = sNomFic 
 		RUN ( isRepExcel + " " + sNomFic  )
 	Else
-		stText.Text  = "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier"
+		stText.Text  = "Impossible d'écrire le fichier"
 	End If	
 
 End If
@@ -237,7 +238,7 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		: Initiliaser
 //* Auteur			: Fabry JF
 //* Date				: 04/10/2002 15:14:40
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Initialisation de la fen$$HEX1$$ea00$$ENDHEX$$tres
+//* Libellé			: Initialisation de la fenêtres
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -345,6 +346,8 @@ type cb_debug from w_8_accueil`cb_debug within w_a_sp_trt_part2
 end type
 
 type pb_retour from w_8_accueil`pb_retour within w_a_sp_trt_part2
+integer width = 242
+integer height = 144
 integer taborder = 110
 end type
 
@@ -390,7 +393,7 @@ string facename = "Arial"
 long textcolor = 33554432
 long backcolor = 12632256
 boolean enabled = false
-string text = "D_L_OUV4_TEL : Tous les dossiers sauf les r$$HEX1$$e900$$ENDHEX$$gl$$HEX1$$e900$$ENDHEX$$s et r$$HEX1$$e900$$ENDHEX$$fus$$HEX1$$e900$$ENDHEX$$s (Cela afin de prendre en compte les sans suite qui n~'ont pas de garantie ni de d$$HEX1$$e900$$ENDHEX$$tail). Crit$$HEX1$$e800$$ENDHEX$$re de recherche sur la date de cr$$HEX1$$e900$$ENDHEX$$ation du dossier dans SIMPA2."
+string text = "D_L_OUV4_TEL : Tous les dossiers sauf les réglés et réfusés (Cela afin de prendre en compte les sans suite qui n~'ont pas de garantie ni de détail). Critère de recherche sur la date de création du dossier dans SIMPA2."
 boolean border = true
 borderstyle borderstyle = styleraised!
 boolean focusrectangle = false
@@ -410,7 +413,7 @@ string facename = "Arial"
 long textcolor = 33554432
 long backcolor = 12632256
 boolean enabled = false
-string text = "D_L_REG6_TEL : Tous les dossiers r$$HEX1$$e900$$ENDHEX$$gl$$HEX1$$e900$$ENDHEX$$s et en cours de r$$HEX1$$e900$$ENDHEX$$glement (Un dossier r$$HEX1$$e900$$ENDHEX$$gl$$HEX2$$e9002000$$ENDHEX$$a au moins une garantie et un d$$HEX1$$e900$$ENDHEX$$tail r$$HEX1$$e900$$ENDHEX$$gl$$HEX1$$e900$$ENDHEX$$). Crit$$HEX1$$e800$$ENDHEX$$re de recherche sur la date du premier r$$HEX1$$e900$$ENDHEX$$glement sur le dossier dans SIMPA2."
+string text = "D_L_REG6_TEL : Tous les dossiers réglés et en cours de réglement (Un dossier réglé a au moins une garantie et un détail réglé). Critère de recherche sur la date du premier réglement sur le dossier dans SIMPA2."
 boolean border = true
 borderstyle borderstyle = styleraised!
 boolean focusrectangle = false
@@ -430,7 +433,7 @@ string facename = "Arial"
 long textcolor = 33554432
 long backcolor = 12632256
 boolean enabled = false
-string text = "D_L_REF3_TEL : Tous les dossiers refus$$HEX1$$e900$$ENDHEX$$s ayant une garantie refus$$HEX1$$e900$$ENDHEX$$es (On ne regarde pas si les d$$HEX1$$e900$$ENDHEX$$tails sont refus$$HEX1$$e900$$ENDHEX$$s, vu avec JLQ et MPL). Crit$$HEX1$$e800$$ENDHEX$$re de recherche sur la date de derni$$HEX1$$e800$$ENDHEX$$re validation du dossier dans SIMPA2."
+string text = "D_L_REF3_TEL : Tous les dossiers refusés ayant une garantie refusées (On ne regarde pas si les détails sont refusés, vu avec JLQ et MPL). Critère de recherche sur la date de dernière validation du dossier dans SIMPA2."
 boolean border = true
 borderstyle borderstyle = styleraised!
 boolean focusrectangle = false
@@ -450,7 +453,7 @@ string facename = "Arial"
 long textcolor = 33554432
 long backcolor = 12632256
 boolean enabled = false
-string text = "D_L_REF4_TEL : Tous les motifs de refus sur les dossiers refus$$HEX1$$e900$$ENDHEX$$s ayant leur garantie refus$$HEX1$$e900$$ENDHEX$$e, P$$HEX1$$e900$$ENDHEX$$cision : on ne compte pas des dossiers, mais des motifs de refus. Crit$$HEX1$$e800$$ENDHEX$$re de recherche sur la date de cr$$HEX1$$e900$$ENDHEX$$ation du refus dans SIMPA2."
+string text = "D_L_REF4_TEL : Tous les motifs de refus sur les dossiers refusés ayant leur garantie refusée, Pécision : on ne compte pas des dossiers, mais des motifs de refus. Critère de recherche sur la date de création du refus dans SIMPA2."
 boolean border = true
 borderstyle borderstyle = styleraised!
 boolean focusrectangle = false
@@ -470,7 +473,7 @@ string facename = "Arial"
 long textcolor = 33554432
 long backcolor = 12632256
 boolean enabled = false
-string text = "D_L_ENC4_TEL : Montant du pr$$HEX1$$e900$$ENDHEX$$judice des d$$HEX1$$e900$$ENDHEX$$tails en attente. Crit$$HEX1$$e800$$ENDHEX$$re de recherche sur la date de cr$$HEX1$$e900$$ENDHEX$$ation du d$$HEX1$$e900$$ENDHEX$$tail dans SIMPA2. Le dossier a au moins $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$valid$$HEX2$$e9002000$$ENDHEX$$une fois"
+string text = "D_L_ENC4_TEL : Montant du préjudice des détails en attente. Critère de recherche sur la date de création du détail dans SIMPA2. Le dossier a au moins été validé une fois"
 boolean border = true
 borderstyle borderstyle = styleraised!
 boolean focusrectangle = false
@@ -497,7 +500,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 21/10/2002 17:27:11
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -554,7 +557,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 21/10/2002 17:27:11
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -611,7 +614,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 21/10/2002 17:27:11
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -668,7 +671,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 21/10/2002 17:27:11
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -725,7 +728,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 21/10/2002 17:27:11
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -775,7 +778,7 @@ string facename = "Arial"
 long textcolor = 33554432
 long backcolor = 12632256
 boolean enabled = false
-string text = "SFR PGC (17800), Statistiques sur base r$$HEX2$$e900e900$$ENDHEX$$lle"
+string text = "SFR PGC (17800), Statistiques sur base réélle"
 alignment alignment = center!
 boolean border = true
 boolean focusrectangle = false
