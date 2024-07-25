@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_sp_trt_saisie_boutiques.srw
+﻿$PBExportHeader$w_sp_trt_saisie_boutiques.srw
 $PBExportComments$[PM200][PSM]
 forward
 global type w_sp_trt_saisie_boutiques from window
@@ -21,7 +21,7 @@ global type w_sp_trt_saisie_boutiques from window
 integer width = 2651
 integer height = 1024
 boolean titlebar = true
-string title = "Saisie boutiques de proximit$$HEX1$$e900$$ENDHEX$$"
+string title = "Saisie boutiques de proximité"
 boolean controlmenu = true
 windowtype windowtype = response!
 long backcolor = 67108864
@@ -46,7 +46,7 @@ Integer K_NB_MAX_MAGASIN=2
 
 Boolean ibNouvelleMethodeWS // [PM200_5]
 
-soapconnection isoapcnx
+//soapconnection isoapcnx // [MIG_PB2022] Objet soapconnection obsolète
 
 // [VDOC18634]
 string isAction
@@ -83,7 +83,7 @@ SQLCA.PS_S_adresse_centrale_psm( idcidsin, String(lIdBoutique), 'SEL_BOUTIQUE', 
 
 // JFF : Si elle n'existe pas, on ne la mets pas.
 If IsNull ( snomligne1 ) Or snomligne1 = "" Then
-	stMessage.sTitre		= "Saisie boutique(s) de proximit$$HEX1$$e900$$ENDHEX$$"
+	stMessage.sTitre		= "Saisie boutique(s) de proximité"
 	stMessage.Icon			= Information!
 	stMessage.bErreurG	= FALSE
 	stMessage.Bouton		= OK!
@@ -126,7 +126,7 @@ public subroutine wf_search_by_cp ();//*----------------------------------------
 //* Fonction		: w_sp_trt_saisie_boutiques::wf_search_by_cp (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 17/08/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PM200-5]
 //*
 //* Arguments		:
@@ -136,6 +136,7 @@ public subroutine wf_search_by_cp ();//*----------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
+//  #1		FPI		25/07/2024	[MIG_PB2022] SoapConnection obsolète
 //*----------------------------------------------------------------
 string sRet=""
 String sCp, sCode
@@ -148,13 +149,13 @@ st_aucune_boutique.visible=FALSE
 
 uoWsCaller=CREATE n_cst_sp_ws_psm_caller
 
-If not isValid (isoapcnx) Then isoapcnx = CREATE soapconnection
+/*If not isValid (isoapcnx) Then isoapcnx = CREATE soapconnection
 
-lRet=uoWsCaller.createproxy(isoapcnx )
+lRet=uoWsCaller.createproxy(isoapcnx )*/
 
 if lRet=-1 Then	
 	// Erreur appel du WS
-	stMessage.sTitre		= "Saisie boutique(s) de proximit$$HEX1$$e900$$ENDHEX$$"
+	stMessage.sTitre		= "Saisie boutique(s) de proximité"
 	stMessage.Icon			= Information!
 	stMessage.bErreurG	= FALSE
 	stMessage.Bouton		= OK!
@@ -171,7 +172,7 @@ lRet=uoWsCaller.uf_get_boutiques( sCp, sRet)
 
 If lRet > 0 and sRet <> "" Then
 	If Pos(sRet,"#",2) <> LastPos(sRet,"#") and K_NB_MAX_MAGASIN=1 Then
-		// 2 boutiques renvoy$$HEX1$$e900$$ENDHEX$$es, on prend la premi$$HEX1$$e800$$ENDHEX$$re
+		// 2 boutiques renvoyées, on prend la première
 		sRet=Left(sRet, Pos(sRet,"#",2) - 1)
 	End if
 else
@@ -190,7 +191,7 @@ End if
 destroy uoWsCaller
 
 If sRet="" Then
-	/*stMessage.sTitre		= "Saisie boutique(s) de proximit$$HEX1$$e900$$ENDHEX$$"
+	/*stMessage.sTitre		= "Saisie boutique(s) de proximité"
 	stMessage.Icon			= Information!
 	stMessage.bErreurG	= FALSE
 	stMessage.Bouton		= OK!
@@ -217,7 +218,7 @@ public subroutine wf_search_by_cp2 ();//*---------------------------------------
 //* Fonction		: w_sp_trt_saisie_boutiques::wf_search_by_cp2 (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 11/09/2015
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [VDoc18634]
 //*
 //* Arguments		:
@@ -248,7 +249,7 @@ lRet= uoWsCaller.uf_get_boutiques_proximites (isAction, ilIdProd, sCp, ismarque 
 
 If lRet > 0 and sRet <> "" Then
 	If Pos(sRet,"#",2) <> LastPos(sRet,"#") and K_NB_MAX_MAGASIN=1 Then
-		// 2 boutiques renvoy$$HEX1$$e900$$ENDHEX$$es, on prend la premi$$HEX1$$e800$$ENDHEX$$re
+		// 2 boutiques renvoyées, on prend la première
 		sRet=Left(sRet, Pos(sRet,"#",2) - 1)
 	End if
 	// [FPI.20190930] - on zappe le message d'erreur
@@ -268,7 +269,7 @@ End if
 destroy uoWsCaller
 
 If sRet="" or lRet <=0 Then // [FPI.20190930]
-	/*stMessage.sTitre		= "Saisie boutique(s) de proximit$$HEX1$$e900$$ENDHEX$$"
+	/*stMessage.sTitre		= "Saisie boutique(s) de proximité"
 	stMessage.Icon			= Information!
 	stMessage.bErreurG	= FALSE
 	stMessage.Bouton		= OK!
@@ -303,15 +304,15 @@ event open;//*-----------------------------------------------------------------
 //* Evenement 		: open
 //* Auteur			: F. Pinon
 //* Date				: 14/02/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  stPass.dcTab[1] = id_sin
-//*				  stPass.sTab[1] = titre de la fen$$HEX1$$ea00$$ENDHEX$$tre
+//*				  stPass.sTab[1] = titre de la fenêtre
 //*				  stPass.sTab[2] = code postal
 //*				  stPass.sTab[3] = marque
-//*				  stPass.sTab[4] = mod$$HEX1$$e800$$ENDHEX$$le
+//*				  stPass.sTab[4] = modèle
 //*				  stPass.sTab[5] = type appareil
-//*				  stPass.lTab[1] = nombre de btq s$$HEX1$$e900$$ENDHEX$$lectionnable
+//*				  stPass.lTab[1] = nombre de btq sélectionnable
 //*				  stPass.lTab[2] = id_evt
 //*				  stPass.lTab[3] =id_prod
 //*				  stPass.bTab[1] = ibNouvelleMethodeWS
@@ -326,7 +327,7 @@ event open;//*-----------------------------------------------------------------
 //* 	FPI	13/05/2013	[PC938]
 //		FPI	18/07/2013	[PM200_5]
 //		FPI	11/09/2015	[VDoc18634]
-//		FPI	13/12/2016	[ITSM432979] Correction du n$$HEX2$$b0002000$$ENDHEX$$de dossier en string avec .00
+//		FPI	13/12/2016	[ITSM432979] Correction du n° de dossier en string avec .00
 //*-----------------------------------------------------------------
 s_pass stPass
 String sTitre
@@ -398,7 +399,7 @@ event close;//*-----------------------------------------------------------------
 //* Evenement 		: close
 //* Auteur			: F. Pinon
 //* Date				: 14/02/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -451,7 +452,7 @@ fontfamily fontfamily = swiss!
 string facename = "Tahoma"
 long textcolor = 33554432
 long backcolor = 67108864
-string text = "Aucune boutique trouv$$HEX1$$e900$$ENDHEX$$e pour ce code postal."
+string text = "Aucune boutique trouvée pour ce code postal."
 boolean focusrectangle = false
 end type
 
@@ -476,7 +477,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 14/02/2012 11:28:57
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -494,7 +495,7 @@ String sLibBoutique=""
 string  snomligne1, snomligne2, sadrligne1, sadrligne2, scp, sville
 
 If (dw_lst_boutiques.RowCount() = K_NB_MAX_MAGASIN) Then
-	stMessage.sTitre		= "Saisie boutique(s) de proximit$$HEX1$$e900$$ENDHEX$$"
+	stMessage.sTitre		= "Saisie boutique(s) de proximité"
 	stMessage.Icon			= Information!
 	stMessage.bErreurG	= FALSE
 	stMessage.Bouton		= OK!
@@ -541,7 +542,7 @@ event buttonclicked;call super::buttonclicked;//*-------------------------------
 //* Evenement 		: buttonclicked
 //* Auteur			: F. Pinon
 //* Date				: 14/02/2012 13:42:57
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value long row	 */
@@ -582,7 +583,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 14/02/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -619,7 +620,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 14/02/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 

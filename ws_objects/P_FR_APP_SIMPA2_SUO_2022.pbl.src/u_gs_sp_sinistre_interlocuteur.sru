@@ -1,4 +1,4 @@
-HA$PBExportHeader$u_gs_sp_sinistre_interlocuteur.sru
+﻿$PBExportHeader$u_gs_sp_sinistre_interlocuteur.sru
 $PBExportComments$---} User Object pour la gestion des interlocuteurs. (W_INTER)
 forward
 global type u_gs_sp_sinistre_interlocuteur from u_gs_sp_sinistre_anc
@@ -43,7 +43,7 @@ Private :
 	
 	string			isListEnvZ0[] = {'Z040','Z041','Z042','Z043'} // [DCMP050251]
 	
-	soapconnection isoapcnx
+	// soapconnection isoapcnx  // [MIG_PB2022] soapconnection obsolète
 
 end variables
 
@@ -95,18 +95,18 @@ public subroutine uf_traitement (integer aitype, ref s_pass astpass);//*--------
 //* Fonction		: Uf_Traitement (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:29:33
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Integer		aiType			(Val)	Type de traitement
-//*					  s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//*					  s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
 //*-----------------------------------------------------------------
 
 Choose Case aiType
-Case 1					// INITIALISATION		(Ue_Initialiser de la fen$$HEX1$$ea00$$ENDHEX$$tre)
+Case 1					// INITIALISATION		(Ue_Initialiser de la fenêtre)
 	Uf_InitialiserFenetre ( astPass )
 
 Case 2					// MODIFICATION		(Wf_PreparerModifier)
@@ -126,7 +126,7 @@ Case 6					// PREPARER VALIDER	(Wf_PreparerValider)
 Case 7					// PREPARER ABANDONNER	(Wf_PreparerAbandonner)
 	Uf_PreparerAbandonner ( astPass )
 
-Case 9					// CAS PARTICULIER	(Appel sur l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement Ue_Banque)
+Case 9					// CAS PARTICULIER	(Appel sur l'événement Ue_Banque)
 	Uf_Tb_Coordonnees ()
 
 Case 10					// SUPPRESSION			(Wf_PreparerSupprimer)
@@ -143,21 +143,21 @@ private subroutine uf_preparermodifier (ref s_pass astpass);//*-----------------
 //* Fonction		: Uf_PreparerModifier (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Pr$$HEX1$$e900$$ENDHEX$$paration de la modification d'un interlocuteur
+//* Libellé			: 
+//* Commentaires	: Préparation de la modification d'un interlocuteur
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
-//* #1  CAG 15/09/2003	correction DCMP 030390 : ce n'est pas la d$$HEX1$$e900$$ENDHEX$$cl. du sin qu'il faut
-//*								prendre en compte, mais le m$$HEX1$$e900$$ENDHEX$$dia du travail
+//* #1  CAG 15/09/2003	correction DCMP 030390 : ce n'est pas la décl. du sin qu'il faut
+//*								prendre en compte, mais le média du travail
 //*								(cod_recu de w_queue au lieu de cod_decl de w_sin)
 //* #2 JFF  22/03/2004  DCMP 040020 SVE
 //     JFF  23/05/2012  [PM103][1]
-// 		FPI 27/04/2016		[FPI.20160427] Protection de la zone cod_inter en modif (pour $$HEX1$$e900$$ENDHEX$$viter de changer l'inter assur$$HEX1$$e900$$ENDHEX$$)
+// 		FPI 27/04/2016		[FPI.20160427] Protection de la zone cod_inter en modif (pour éviter de changer l'inter assuré)
 //       JFF   05/02/2018 [PM360-2]
 //       JFF   18/08/2020 [PM497-1]
 //       JFF   30/05/2023 [PMO89_RS4822]
@@ -179,13 +179,13 @@ isCodRecu = astPass.sTab [ 4 ]
 lIdSin = idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 
 /*------------------------------------------------------------------*/
-/* On recopie la ligne du d$$HEX1$$e900$$ENDHEX$$tail de la fen$$HEX1$$ea00$$ENDHEX$$tre parent dans dw_wInter de  */
+/* On recopie la ligne du détail de la fenêtre parent dans dw_wInter de  */
 /* INTERLOCUTEUR.                                                   */
 /*------------------------------------------------------------------*/
 idw_wInter.Uf_CopierLigne ()
 
 /*------------------------------------------------------------------*/
-/* Le produit a t-il chang$$HEX2$$e9002000$$ENDHEX$$?                                       */
+/* Le produit a t-il changé ?                                       */
 /*------------------------------------------------------------------*/
 Uf_ChangerProduit ()
 
@@ -198,11 +198,11 @@ End If
 
 /*------------------------------------------------------------------*/
 /* On autorise ou non l'utilisation du bouton SUPPRIMER de la       */
-/* fen$$HEX1$$ea00$$ENDHEX$$tre.                                                         */
+/* fenêtre.                                                         */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* Si l'interlocuteur a d$$HEX1$$e900$$ENDHEX$$j$$HEX3$$e0002000e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$valid$$HEX1$$e900$$ENDHEX$$, ou si le montant $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gler  */
-/* est sup$$HEX1$$e900$$ENDHEX$$rieur $$HEX2$$e0002000$$ENDHEX$$0, on interdit la suppression.                   */
+/* Si l'interlocuteur a déjà été validé, ou si le montant à régler  */
+/* est supérieur à 0, on interdit la suppression.                   */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Si l'interlocuteur existe dans la table W_PIECE ou W_REFUS, on   */
@@ -232,7 +232,7 @@ Else
 End If
 
 /*------------------------------------------------------------------*/
-/* Si le code de l'interlocuteur est positionn$$HEX2$$e9002000$$ENDHEX$$pour l'envoi d'un   */
+/* Si le code de l'interlocuteur est positionné pour l'envoi d'un   */
 /* double, on ne peut pas supprimer cet interlocuteur.              */
 /*------------------------------------------------------------------*/
 If	bSupprime	Then
@@ -245,7 +245,7 @@ If	bSupprime	Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Si l'interlocuteur est positionn$$HEX2$$e9002000$$ENDHEX$$dans un d$$HEX1$$e900$$ENDHEX$$tail A REGLER, on    */
+/* Si l'interlocuteur est positionné dans un détail A REGLER, on    */
 /* ne peut pas supprimer cet interlocuteur.                         */
 /*------------------------------------------------------------------*/
 If	bSupprime	Then
@@ -258,36 +258,36 @@ If	bSupprime	Then
 End If
 
 /*------------------------------------------------------------------*/
-/* On g$$HEX1$$e900$$ENDHEX$$re les paragraphes d'informations en Modification.          */
+/* On gére les paragraphes d'informations en Modification.          */
 /*------------------------------------------------------------------*/
 Uf_GestionuAjout ( 2 )
 
 /*------------------------------------------------------------------*/
-/* On g$$HEX1$$e900$$ENDHEX$$re la liste des interlocuteurs $$HEX2$$e0002000$$ENDHEX$$qui l'on peut envoyer un   */
+/* On gére la liste des interlocuteurs à qui l'on peut envoyer un   */
 /* double.                                                          */
 /*------------------------------------------------------------------*/
 Uf_Gestion_Double_Inter ()
 
 /*------------------------------------------------------------------*/
-/* On g$$HEX1$$e900$$ENDHEX$$re les frais en Modification.                               */
+/* On gére les frais en Modification.                               */
 /*------------------------------------------------------------------*/
 Uf_Gestion_Frais ( 2 )
 
 /*------------------------------------------------------------------*/
-/* On g$$HEX1$$e900$$ENDHEX$$re le nom des documents Word en insertion.                  */
+/* On gére le nom des documents Word en insertion.                  */
 /*------------------------------------------------------------------*/
 Uf_Initialiser_Fichier_Word ()
 
 /*------------------------------------------------------------------*/
-/* On g$$HEX1$$e900$$ENDHEX$$re les TabOrder uniquement en saisie.                       */
+/* On gére les TabOrder uniquement en saisie.                       */
 /*------------------------------------------------------------------*/
 If	isTypeTrt = "S"	Then
-	Uf_Tb_Coordonnees ()				// Coordonn$$HEX1$$e900$$ENDHEX$$es assur$$HEX1$$e900$$ENDHEX$$
+	Uf_Tb_Coordonnees ()				// Coordonnées assuré
 	Uf_Tb_Questionnaire ()			// ALT_QUEST, ALT_COURGEST, ID_NAT_COUR, ID_I_DB, ID_COURJ
 End If
 
 /*------------------------------------------------------------------*/
-/* On g$$HEX1$$e900$$ENDHEX$$re l'onglet sur les paragraphes.                            */
+/* On gére l'onglet sur les paragraphes.                            */
 /*------------------------------------------------------------------*/
 Uf_Gestion_Onglet ( 2 )
 
@@ -361,10 +361,10 @@ private subroutine uf_preparerinserer (ref s_pass astpass);//*------------------
 //* Fonction		: Uf_PreparerInserer (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Pr$$HEX1$$e900$$ENDHEX$$paration de l'insertion d'un interlocuteur
+//* Libellé			: 
+//* Commentaires	: Préparation de l'insertion d'un interlocuteur
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*-----------------------------------------------------------------
@@ -379,13 +379,13 @@ n_cst_string	lnvString
 String sValCar, sCodInter 
 
 /*------------------------------------------------------------------*/
-/* Le produit a t-il chang$$HEX2$$e9002000$$ENDHEX$$?                                       */
+/* Le produit a t-il changé ?                                       */
 /*------------------------------------------------------------------*/
 Uf_ChangerProduit ()
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re l'ID_SIN et le N$$HEX2$$b0002000$$ENDHEX$$de l'interlocuteur. Le test sur    */
-/* les 10 interlocuteurs est r$$HEX1$$e900$$ENDHEX$$alis$$HEX2$$e9002000$$ENDHEX$$sur UE_CREER de                */
+/* On récupére l'ID_SIN et le N° de l'interlocuteur. Le test sur    */
+/* les 10 interlocuteurs est réalisé sur UE_CREER de                */
 /* W_Tm_sp_Sinistre.                                                */
 /*------------------------------------------------------------------*/
 lIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
@@ -401,34 +401,34 @@ idw_wInter.SetItem ( 1, "ID_SIN", lIdSin )
 idw_wInter.SetItem ( 1, "ID_I", lIdInter )
 
 /*------------------------------------------------------------------*/
-/* On g$$HEX1$$e900$$ENDHEX$$re les paragraphes d'informations en Insertion.             */
+/* On gére les paragraphes d'informations en Insertion.             */
 /*------------------------------------------------------------------*/
 Uf_GestionuAjout ( 1 )
 
 /*------------------------------------------------------------------*/
-/* On g$$HEX1$$e900$$ENDHEX$$re la liste des interlocuteurs $$HEX2$$e0002000$$ENDHEX$$qui l'on peut envoyer un   */
+/* On gére la liste des interlocuteurs à qui l'on peut envoyer un   */
 /* double.                                                          */
 /*------------------------------------------------------------------*/
 Uf_Gestion_Double_Inter ()
 
 /*------------------------------------------------------------------*/
-/* On g$$HEX1$$e900$$ENDHEX$$re les frais en insertion.                                  */
+/* On gére les frais en insertion.                                  */
 /*------------------------------------------------------------------*/
 Uf_Gestion_Frais ( 1 )
 
 /*------------------------------------------------------------------*/
-/* On g$$HEX1$$e900$$ENDHEX$$re le nom des documents Word en insertion.                  */
+/* On gére le nom des documents Word en insertion.                  */
 /*------------------------------------------------------------------*/
 Uf_Initialiser_Fichier_Word ()
 
 /*------------------------------------------------------------------*/
-/* On g$$HEX1$$e900$$ENDHEX$$re les TabOrder.                                            */
+/* On gére les TabOrder.                                            */
 /*------------------------------------------------------------------*/
-Uf_Tb_Coordonnees ()				// Coordonn$$HEX1$$e900$$ENDHEX$$es assur$$HEX1$$e900$$ENDHEX$$
+Uf_Tb_Coordonnees ()				// Coordonnées assuré
 Uf_Tb_Questionnaire ()			// ALT_QUEST, ALT_COURGEST, ID_NAT_COUR, ID_I_DB, ID_COURJ
 
 /*------------------------------------------------------------------*/
-/* On g$$HEX1$$e900$$ENDHEX$$re l'onglet sur les paragraphes.                            */
+/* On gére l'onglet sur les paragraphes.                            */
 /*------------------------------------------------------------------*/
 Uf_Gestion_Onglet ( 1 )
 
@@ -487,8 +487,8 @@ private subroutine uf_tb_coordonnees ();//*-------------------------------------
 //* Fonction		: Uf_Tb_Coordonnees (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 17:35:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Gestion des TabOrder les coordonn$$HEX1$$e900$$ENDHEX$$es de l'interlocuteur.
+//* Libellé			: 
+//* Commentaires	: Gestion des TabOrder les coordonnées de l'interlocuteur.
 //*
 //* Arguments		: Aucun
 //*
@@ -508,18 +508,18 @@ Long lLig, lTotInter
 /* NUM_TELD, NUM_TELB, NUM_FAX.                                     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* L'ordre est important, en effet on peut avoir valid$$HEX2$$e9002000$$ENDHEX$$un          */
+/* L'ordre est important, en effet on peut avoir validé un          */
 /* interlocuteur de type BANQUE.                                    */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
-/* Si le dossier est d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$valid$$HEX1$$e900$$ENDHEX$$, on ne peut plus toucher au nom    */
+/* Si le dossier est déjà validé, on ne peut plus toucher au nom    */
 /* de la personne.                                                  */
 /*------------------------------------------------------------------*/
 If	idw_wInter.GetItemNumber ( 1, "CPT_VALIDE" ) > 0 Then
 	idw_wInter.ClearValues ( "COD_INTER" )
 	idw_wInter.SetValue ( "COD_INTER", 1, "Autre ~tT" )
-	idw_wInter.SetValue ( "COD_INTER", 2, "Assur$$HEX2$$e9002000$$ENDHEX$$~tA" )
+	idw_wInter.SetValue ( "COD_INTER", 2, "Assuré ~tA" )
 	idw_wInter.SetValue ( "COD_INTER", 3, "Banque ~tB" )
 	idw_wInter.SetValue ( "COD_INTER", 4, "Fourn. ~tF" )
 	// [PM234-4_V1]
@@ -539,16 +539,16 @@ Else
 
 /*------------------------------------------------------------------*/
 /* Si on est en train de modifier un interlocuteur de type          */
-/* 'ASSURE', on ajoute la DataValue. Si on ins$$HEX1$$e900$$ENDHEX$$re un                */
-/* interlocuteur, on v$$HEX1$$e900$$ENDHEX$$rifie qu'il n'existe pas un enregistrement   */
+/* 'ASSURE', on ajoute la DataValue. Si on insére un                */
+/* interlocuteur, on vérifie qu'il n'existe pas un enregistrement   */
 /* de type 'ASSURE'.                                                */
 /*------------------------------------------------------------------*/
 	If	idw_wInter.GetItemString ( 1, "COD_INTER" ) = "A"	Then
-		idw_wInter.SetValue ( "COD_INTER", 2, "Assur$$HEX2$$e9002000$$ENDHEX$$~tA" )
+		idw_wInter.SetValue ( "COD_INTER", 2, "Assuré ~tA" )
 	Else
 		lLig = idw_wInter.iudwDetailSource.Find ( "COD_INTER = 'A'", 1, lTotInter )
 		If	lLig = 0 Then
-			idw_wInter.SetValue ( "COD_INTER", 2, "Assur$$HEX2$$e9002000$$ENDHEX$$~tA" )
+			idw_wInter.SetValue ( "COD_INTER", 2, "Assuré ~tA" )
 		End If
 	End If
 
@@ -559,7 +559,7 @@ Else
 End If
 
 /*------------------------------------------------------------------*/
-/* Si le code interlocuteur correspond $$HEX2$$e0002000$$ENDHEX$$une BANQUE les zones       */
+/* Si le code interlocuteur correspond à une BANQUE les zones       */
 /* deviennent non saisissables.                                     */
 /*------------------------------------------------------------------*/
 If	idw_wInter.GetItemString ( 1, "COD_INTER" ) = "B" Then
@@ -575,7 +575,7 @@ If	idw_wInter.GetItemString ( 1, "COD_INTER" ) = "B" Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Si le code interlocuteur correspond $$HEX2$$e0002000$$ENDHEX$$un FOURNISSEUR les zones   */
+/* Si le code interlocuteur correspond à un FOURNISSEUR les zones   */
 /* deviennent non saisissables.                                     */
 /*------------------------------------------------------------------*/
 If	idw_wInter.GetItemString ( 1, "COD_INTER" ) = "F" Then
@@ -606,7 +606,7 @@ private subroutine uf_tb_questionnaire ();//*-----------------------------------
 //* Fonction		: Uf_Tb_Questionnaire (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 17:35:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion des TabOrder pour le questionnaire et le courrier gestionnaire
 //*
 //* Arguments		: Aucun
@@ -621,9 +621,9 @@ private subroutine uf_tb_questionnaire ();//*-----------------------------------
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
-/* Si ALT_QUEST est $$HEX2$$e0002000$$ENDHEX$$OUI, la zone ID_NAT_COUR est positionn$$HEX1$$e900$$ENDHEX$$e $$HEX5$$e0002000200020002000$$ENDHEX$$*/
+/* Si ALT_QUEST est à OUI, la zone ID_NAT_COUR est positionnée à    */
 /* Q+ID_PROD, elle est non saisissable. La zone ALT_COURGEST est    */
-/* prot$$HEX1$$e900$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$e.                                                        */
+/* protégée.                                                        */
 /*------------------------------------------------------------------*/
 If	idw_wInter.GetItemString ( 1, "ALT_QUEST" ) = "O" Then
 	idw_wInter.Uf_Proteger ( { "ALT_QUEST" }, "0" )
@@ -666,18 +666,18 @@ private subroutine uf_controlersaisie (ref s_pass astpass);//*------------------
 //* Fonction		: Uf_ControlerSaisie (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Contr$$HEX1$$f400$$ENDHEX$$le de saisie d'un interlocuteur
+//* Libellé			: 
+//* Commentaires	: Contrôle de saisie d'un interlocuteur
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
 //*-----------------------------------------------------------------
 //* #1 FS 	le 28/05/2001 : Utilisation de u_spb_cp_2000
-//* #2 JFF 	le 20/08/2003 : Contr$$HEX1$$f400$$ENDHEX$$le des communes DCMP 030362
+//* #2 JFF 	le 20/08/2003 : Contrôle des communes DCMP 030362
 //* #3 JCA 	le 29/05/2006 : DntMail
-//* #4 JCA  11/06/2007		DCMP 070399 - Correction contr$$HEX1$$f400$$ENDHEX$$le de validit$$HEX2$$e9002000$$ENDHEX$$du RIB
+//* #4 JCA  11/06/2007		DCMP 070399 - Correction contrôle de validité du RIB
 //* #5 JFF	20/10/2008	   [FNAC_PROD_ECH_TECH]
 //*    JFF  07/04/2010	   [DCMP100177]
 //*    JFF  04/10/2011     [PM159].[Controle_mail]
@@ -741,21 +741,21 @@ sCol[ 19 ] = "PAYS_NAISS"
 // /[PMO89_RS4822]
 
 sErr[  1 ] = " - Le code de l'interlocuteur"
-sErr[  2 ] = " - La civilit$$HEX1$$e900$$ENDHEX$$"
+sErr[  2 ] = " - La civilité"
 sErr[  3 ] = " - Le nom"
-sErr[  4 ] = " - La premi$$HEX1$$e800$$ENDHEX$$re ligne d'adresse"
+sErr[  4 ] = " - La première ligne d'adresse"
 sErr[  5 ] = " - Le code postal"
 sErr[  6 ] = " - La ville"
-sErr[  7 ] = " - Le mode de r$$HEX1$$e800$$ENDHEX$$glement"
+sErr[  7 ] = " - Le mode de règlement"
 sErr[  8 ] = " - Le code banque"
 sErr[  9 ] = " - Le code guichet"
-sErr[ 10 ] = " - Le num$$HEX1$$e900$$ENDHEX$$ro de compte"
-sErr[ 11 ] = " - La cl$$HEX2$$e9002000$$ENDHEX$$RIB"
+sErr[ 10 ] = " - Le numéro de compte"
+sErr[ 11 ] = " - La clé RIB"
 sErr[ 12 ] = " - Le code courrier"
 sErr[ 13 ] = " - Le code du courrier joint"
 // #3
 sErr[ 14 ] = " - L'identifiant de l'email avant l'arobase (@)"
-sErr[ 15 ] = " - Le domaine de l'email apr$$HEX1$$e800$$ENDHEX$$s l'arobase (@)"
+sErr[ 15 ] = " - Le domaine de l'email après l'arobase (@)"
 // #3 FIN
 sErr[ 16 ] = " - L'interlocuteur pour le double du courrier"
 
@@ -767,7 +767,7 @@ sErr[ 19 ] = " - Le pays de naissance de l'interlocuteur"
 
 
 /*------------------------------------------------------------------*/
-/* #1 : On v$$HEX1$$e900$$ENDHEX$$rifie que tous les doc word sont ferm$$HEX1$$e900$$ENDHEX$$s                */
+/* #1 : On vérifie que tous les doc word sont fermés                */
 /*      ( remplacement de evt save pour office 2000                 */
 /*------------------------------------------------------------------*/
 If Not ibsaisievalidation Then 
@@ -784,7 +784,7 @@ End If
 Uf_Gestion_Str2Nul ()
 
 /*------------------------------------------------------------------*/
-/* On positionne la zone ALT_VALIDE de l'interlocuteur $$HEX2$$e0002000$$ENDHEX$$OUI.       */
+/* On positionne la zone ALT_VALIDE de l'interlocuteur à OUI.       */
 /*------------------------------------------------------------------*/
 idw_wInter.SetItem ( 1, "ALT_VALIDE", "O" )
 
@@ -793,7 +793,7 @@ For	lCpt = 1 To 15
 Next
 
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re la zone pour "ID_I_DB".                              */
+/* On recupére la zone pour "ID_I_DB".                              */
 /*------------------------------------------------------------------*/
 //sVal[ 14 ] = String ( idw_wInter.GetItemNumber ( 1, sCol[ 14 ] ) ) // #3
 sVal[ 16 ] = String ( idw_wInter.GetItemNumber ( 1, sCol[ 16 ] ) )
@@ -812,7 +812,7 @@ For	lCpt = 1 To 6
 Next
 
 /*------------------------------------------------------------------*/
-/* Si on commence $$HEX2$$e0002000$$ENDHEX$$saisir un $$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$ment du RIB, il faut aller         */
+/* Si on commence à saisir un élément du RIB, il faut aller         */
 /* jusqu'au bout.                                                   */
 /*------------------------------------------------------------------*/
 If	sVal [ 8 ] <> "" Or sVal [ 9 ] <> "" Or sVal [ 10 ] <> "" Or sVal [ 11 ] <> "" Then
@@ -825,8 +825,8 @@ If	sVal [ 8 ] <> "" Or sVal [ 9 ] <> "" Or sVal [ 10 ] <> "" Or sVal [ 11 ] <> "
 End If
 
 /*------------------------------------------------------------------*/
-/* Si ALT_COURGEST est $$HEX2$$e0002000$$ENDHEX$$R (Remplacer), alors ID_NAT_COUR ne doit   */
-/* pas $$HEX1$$ea00$$ENDHEX$$tre NULL.                                                   */
+/* Si ALT_COURGEST est à R (Remplacer), alors ID_NAT_COUR ne doit   */
+/* pas être NULL.                                                   */
 /*------------------------------------------------------------------*/
 If	idw_wInter.GetItemString ( 1, "ALT_COURGEST" ) = "R" Then
 	If IsNull ( sVal[ 12 ] ) or sVal[ 12 ] = ""	Then
@@ -836,8 +836,8 @@ If	idw_wInter.GetItemString ( 1, "ALT_COURGEST" ) = "R" Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Si ALT_COURGEST est $$HEX2$$e0002000$$ENDHEX$$J (Joindre), alors ID_COURJ ne doit pas    */
-/* $$HEX1$$ea00$$ENDHEX$$tre NULL.                                                       */
+/* Si ALT_COURGEST est à J (Joindre), alors ID_COURJ ne doit pas    */
+/* être NULL.                                                       */
 /*------------------------------------------------------------------*/
 If	idw_wInter.GetItemString ( 1, "ALT_COURGEST" ) = "J" Then
 	If IsNull ( sVal[ 13 ] ) or sVal[ 13 ] = ""	Then
@@ -859,7 +859,7 @@ If	sVal [ 14 ] <> "" Or sVal [ 15 ] <> "" Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Si ALT_COURGEST est $$HEX2$$e0002000$$ENDHEX$$D (Double), alors ID_I_DB ne doit pas $$HEX1$$ea00$$ENDHEX$$tre */
+/* Si ALT_COURGEST est à D (Double), alors ID_I_DB ne doit pas être */
 /* NULL.                                                            */
 /*------------------------------------------------------------------*/
 If	idw_wInter.GetItemString ( 1, "ALT_COURGEST" ) = "D" Then
@@ -904,7 +904,7 @@ If F_CLE_A_TRUE ( "PMO89_RS4822" ) Then
 			dtToday = Datetime ( Today(), now())
 			IF dt < dt2 Or dt > dtToday Then
 				If sPos = "" Then sPos = sCol[ 17 ]				
-				sText = sText + sErr[ 17 ] + " post$$HEX1$$e900$$ENDHEX$$rieure au 01/01/1913" + sNouvelleLigne
+				sText = sText + sErr[ 17 ] + " postérieure au 01/01/1913" + sNouvelleLigne
 			End If 
 			
 		Else
@@ -917,11 +917,11 @@ End If
 
 
 /*------------------------------------------------------------------*/
-/* Affichage de la cha$$HEX1$$ee00$$ENDHEX$$ne correspondant au message d'erreur         */
+/* Affichage de la chaîne correspondant au message d'erreur         */
 /*------------------------------------------------------------------*/
 If	sPos <> "" Then
 
-	stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de saisie d'un interlocuteur"
+	stMessage.sTitre		= "Contrôle de saisie d'un interlocuteur"
 	stMessage.Icon			= Information!
 	stMessage.sVar[1] 	= sText
 	stMessage.bErreurG	= TRUE
@@ -945,13 +945,13 @@ End If
 /*------------------------------------------------------------------*/
 If sPos = "" Then
 /*------------------------------------------------------------------*/
-/* Si ALT_COURGEST est $$HEX2$$e0002000$$ENDHEX$$D (Double), on v$$HEX1$$e900$$ENDHEX$$rifie la validit$$HEX2$$e9002000$$ENDHEX$$de      */
+/* Si ALT_COURGEST est à D (Double), on vérifie la validité de      */
 /* ID_I_DB.                                                         */
 /* Un interlocuteur de type 'Autre' ne peut pas envoyer un double.  */
-/* Un interlocuteur de type 'Assur$$HEX1$$e900$$ENDHEX$$' ne peut envoyer un double      */
+/* Un interlocuteur de type 'Assuré' ne peut envoyer un double      */
 /* qu'a un interlocuteur de type 'Banque'.                          */
 /* Un interlocuteur de type 'Banque' ne peut envoyer un double      */
-/* qu'a un interlocuteur de type 'Assur$$HEX1$$e900$$ENDHEX$$'.                          */
+/* qu'a un interlocuteur de type 'Assuré'.                          */
 /*------------------------------------------------------------------*/
 	If	sVal[ 1 ] = "T" And idw_wInter.GetItemString ( 1, "ALT_COURGEST" ) = "D" Then
 		sPos = sCol[ 14 ]
@@ -971,10 +971,10 @@ If sPos = "" Then
 	End If
 
 /*------------------------------------------------------------------*/
-/* Si ALT_COURGEST est $$HEX2$$e0002000$$ENDHEX$$R (Remplacer), alors il faut v$$HEX1$$e900$$ENDHEX$$rifier que  */
-/* l'on ne r$$HEX1$$e900$$ENDHEX$$clame pas un courrier particulier, ou un               */
-/* post-scriptum ou une autre pi$$HEX1$$e800$$ENDHEX$$ce. Je fais ce test ici, car il    */
-/* est tr$$HEX1$$e900$$ENDHEX$$s difficlie de l'ins$$HEX1$$e900$$ENDHEX$$rer dans les ItemChanged.            */
+/* Si ALT_COURGEST est à R (Remplacer), alors il faut vérifier que  */
+/* l'on ne réclame pas un courrier particulier, ou un               */
+/* post-scriptum ou une autre pièce. Je fais ce test ici, car il    */
+/* est trés difficlie de l'insérer dans les ItemChanged.            */
 /* (Plusieurs actions possibles).                                   */
 /*------------------------------------------------------------------*/
 	If	sPos = ""	Then
@@ -1004,8 +1004,8 @@ If sPos = "" Then
 	End If
 
 /*------------------------------------------------------------------*/
-/* Il est impossible de saisir plusieur fois le m$$HEX1$$ea00$$ENDHEX$$me interlocuteur  */
-/* BANQUE (m$$HEX1$$ea00$$ENDHEX$$me code AGENCE, code BANQUE).                          */
+/* Il est impossible de saisir plusieur fois le même interlocuteur  */
+/* BANQUE (même code AGENCE, code BANQUE).                          */
 /*------------------------------------------------------------------*/
 	If	sPos = ""	Then
 		sCodInter = idw_wInter.GetItemString ( 1, "COD_INTER" )
@@ -1025,20 +1025,20 @@ If sPos = "" Then
 
 /*------------------------------------------------------------------*/
 /* Le 19/01/1999.                                                   */
-/* On v$$HEX1$$e900$$ENDHEX$$rifie si les coordonn$$HEX1$$e900$$ENDHEX$$es de l'(A)ssur$$HEX2$$e9002000$$ENDHEX$$change. Si c'est le  */
+/* On vérifie si les coordonnées de l'(A)ssuré change. Si c'est le  */
 /* cas, on affiche un message pour demander au gestionnaire s'il    */
-/* veut 'recopier' la nouvelle adresse de l'assur$$HEX2$$e9002000$$ENDHEX$$sur les          */
-/* coordonn$$HEX1$$e900$$ENDHEX$$es du sinistre. S'il r$$HEX1$$e900$$ENDHEX$$pond (O)ui, on positionne la     */
-/* variable ALT_ADR de W_SIN pour permettre l'$$HEX1$$e900$$ENDHEX$$criture d'une trace. */
+/* veut 'recopier' la nouvelle adresse de l'assuré sur les          */
+/* coordonnées du sinistre. S'il répond (O)ui, on positionne la     */
+/* variable ALT_ADR de W_SIN pour permettre l'écriture d'une trace. */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Modification DBI le 17/08/1999                                   */
-/* On g$$HEX1$$e800$$ENDHEX$$re $$HEX1$$e900$$ENDHEX$$galement la modification de la civilit$$HEX1$$e900$$ENDHEX$$. En effet,      */
+/* On gère également la modification de la civilité. En effet,      */
 /* elle                                                             */
 /* n'intervient pas dans la recherche homonymique et n'est donc     */
 /* pas                                                              */
 /* plus importante que l'adresse.                                   */
-/* De plus, les civilit$$HEX1$$e900$$ENDHEX$$s r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$es de mani$$HEX1$$e800$$ENDHEX$$re automatique aupr$$HEX1$$e800$$ENDHEX$$s  */
+/* De plus, les civilités récupérées de manière automatique auprès  */
 /* des                                                              */
 /* banques sont souvent Mr ou Mme. Ce qui ne fait pas terrible sur  */
 /*                                                                  */
@@ -1083,7 +1083,7 @@ If sPos = "" Then
 
 		If	bModifCoor	Then
 
-			stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de gestion d'un interlocuteur"
+			stMessage.sTitre		= "Contrôle de gestion d'un interlocuteur"
 			stMessage.Icon			= Question!
 			stMessage.Bouton		= YesNo!
 			stMessage.bErreurG	= False
@@ -1098,7 +1098,7 @@ If sPos = "" Then
 				Next
 
 /*------------------------------------------------------------------*/
-/* Si on ne change que les num$$HEX1$$e900$$ENDHEX$$ros de t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone, on ne trace pas    */
+/* Si on ne change que les numéros de téléphone, on ne trace pas    */
 /* cette information.                                               */
 /*------------------------------------------------------------------*/
 				For	lCpt = 1 To 5
@@ -1119,7 +1119,7 @@ If sPos = "" Then
 
 	If	sPos <> "" Then
 
-		stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de gestion d'un interlocuteur"
+		stMessage.sTitre		= "Contrôle de gestion d'un interlocuteur"
 		stMessage.Icon			= Information!
 		stMessage.bErreurG	= False
 	
@@ -1213,7 +1213,7 @@ If sPos = "" Then
 	
 	If Not bMail Then
 			sPos = "ADR_MAIL_NAME"
-			stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de l'adresse mail"
+			stMessage.sTitre		= "Contrôle de l'adresse mail"
 			stMessage.Icon			= Information!
 			stMessage.Bouton		= Ok!
 			stMessage.bErreurG	= False
@@ -1233,7 +1233,7 @@ If sPos="" Then
 	
 		If isNull(idw_winter.getitemString( 1, "cod_bq")) Then
 			
-			stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le du code agence"
+			stMessage.sTitre		= "Contrôle du code agence"
 			stMessage.Icon			= Information!
 			stMessage.Bouton		= YesNo!
 			stMessage.bErreurG	= False
@@ -1246,7 +1246,7 @@ If sPos="" Then
 				
 				 idw_winter.SetItem( 1, "COD_BQ", nvString.of_getkeyvalue( sRetour,"COD_MAG",";"))  
 				 
-				 idw_winter.SetItem( 1, "COD_CIV", '5')  // St$$HEX1$$e900$$ENDHEX$$
+				 idw_winter.SetItem( 1, "COD_CIV", '5')  // Sté
  				 idw_winter.SetItem( 1, "NOM", nvString.of_getkeyvalue( sRetour,"ADR_NOM",";"))  
  				 idw_winter.SetItem( 1, "ADR_1", nvString.of_getkeyvalue( sRetour,"ADR_1",";"))  
  				 idw_winter.SetItem( 1, "ADR_2", nvString.of_getkeyvalue( sRetour,"ADR_2",";"))  
@@ -1281,7 +1281,7 @@ If lDeb > 0 And idw_wInter.GetItemString ( 1, "ALT_COURGEST" ) = "D" Then
 				stMessage.Bouton		= Ok!
 				stMessage.bErreurG	= False
 				stMessage.sCode		= "WINT309"
-				stMessage.sVar[1]    = "assur$$HEX1$$e900$$ENDHEX$$"
+				stMessage.sVar[1]    = "assuré"
 				f_Message ( stMessage ) 							
 			End If 
 
@@ -1300,14 +1300,14 @@ If lDeb > 0 And idw_wInter.GetItemString ( 1, "ALT_COURGEST" ) = "D" Then
 	End CHoose 
 End If 
 
-// A toujours laisser $$HEX2$$e0002000$$ENDHEX$$la fin
+// A toujours laisser à la fin
 // [PMO89_RS4822]
 If bCasPMO89_RS4822_DP365 and sPos = "" and lCptValide <=0 Then
 	sNomComplet = idw_winter.GetItemString ( 1, "NOM" )
 	sNom = SQLCA.FN_GET_NOM_PRENOM ( sNomComplet, "N" ) 
 	sPrenom = SQLCA.FN_GET_NOM_PRENOM ( sNomComplet, "P" ) 
 
-	stMessage.sTitre		= "D$$HEX1$$e900$$ENDHEX$$coupage Pr$$HEX1$$e900$$ENDHEX$$nom et Nom"
+	stMessage.sTitre		= "Découpage Prénom et Nom"
 	stMessage.Icon			= Question!
 	stMessage.Bouton		= YesNo!
 	stMessage.bErreurG	= False
@@ -1330,8 +1330,8 @@ private subroutine uf_zn_codinter ();//*----------------------------------------
 //* Fonction		: Uf_Zn_CodInter (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 15/01/1998 18:23:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: V$$HEX1$$e900$$ENDHEX$$rification de la zone COD_INTER
+//* Libellé			: 
+//* Commentaires	: Vérification de la zone COD_INTER
 //*
 //* Arguments		: Aucun
 //*
@@ -1365,7 +1365,7 @@ If F_CLE_A_TRUE ( "PMO89_RS4822" ) Then
 
 			
 			Do While Not bFin
-				stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le d'interlocuteur par l'assureur"
+				stMessage.sTitre		= "Contrôle d'interlocuteur par l'assureur"
 				stMessage.Icon			= Exclamation!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= YesNo!
@@ -1391,7 +1391,7 @@ private subroutine uf_gestionuajout (integer aitype);//*------------------------
 //* Fonction		: Uf_GestionuAjout (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 22/01/1998 16:31:31
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion des paragraphes d'informations
 //*
 //* Arguments		: Integer		aiType			(Val)	Type d'action
@@ -1401,10 +1401,10 @@ private subroutine uf_gestionuajout (integer aitype);//*------------------------
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //* #1  CAG 12/02/2003  DCMP 030078 : Edition automatique d'une enveloppe
-//* #2  CAG 10/09/2003	DCMP 030390 : Si d$$HEX1$$e900$$ENDHEX$$clar par t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone, Z017 au lieu
+//* #2  CAG 10/09/2003	DCMP 030390 : Si déclar par téléphone, Z017 au lieu
 //*						   de Z014 suite DCMP 030078
-//* #3  CAG 15/09/2003	correction DCMP 030390 : ce n'est pas la d$$HEX1$$e900$$ENDHEX$$cl. du sin qu'il faut
-//*								prendre en compte, mais le m$$HEX1$$e900$$ENDHEX$$dia du travail
+//* #3  CAG 15/09/2003	correction DCMP 030390 : ce n'est pas la décl. du sin qu'il faut
+//*								prendre en compte, mais le média du travail
 //*								(cod_recu de w_queue au lieu de cod_decl de w_sin)
 //
 //* [DCMP050251]	PHG	19/04/2006 :
@@ -1424,7 +1424,7 @@ sNew		= "~r~n"
 sLigne	= ""
 
 Choose Case aiType
-Case 0					// On a chang$$HEX2$$e9002000$$ENDHEX$$de produit, on initialise les lignes de dw_Recherche
+Case 0					// On a changé de produit, on initialise les lignes de dw_Recherche
 	
 	iuoAjout.dw_Recherche.Reset ()
 	idw_ParaProd.RowsCopy ( 1, 999, Primary!, iuoAjout.dw_Recherche, 1, Primary! )
@@ -1436,13 +1436,13 @@ Case 1					// On est en insertion d'un interlocuteur
 
 	lTotParaProd = iuoAjout.dw_Recherche.RowCount ()
 /*------------------------------------------------------------------*/
-/* Les zones $$HEX2$$e0002000$$ENDHEX$$ins$$HEX1$$e900$$ENDHEX$$rer sont les suivantes :                         */
+/* Les zones à insérer sont les suivantes :                         */
 /* ID_SIN                                                           */
 /* ID_I                                                             */
 /* ID_PARA                                                          */
-/* CPT_TRI	: La valeur est incr$$HEX1$$e900$$ENDHEX$$ment$$HEX1$$e900$$ENDHEX$$e automatiquement             */
-/* CREE_LE	: Cette valeur sera positionn$$HEX1$$e900$$ENDHEX$$e sur l'update de la DW   */
-/* MAJ_LE	: Cette valeur sera positionn$$HEX1$$e900$$ENDHEX$$e sur l'update de la DW   */
+/* CPT_TRI	: La valeur est incrémentée automatiquement             */
+/* CREE_LE	: Cette valeur sera positionnée sur l'update de la DW   */
+/* MAJ_LE	: Cette valeur sera positionnée sur l'update de la DW   */
 /* MAJ_PAR                                                          */
 /* LIB_PARA                                                         */
 /* CPT_VER                                                          */
@@ -1488,8 +1488,8 @@ Case 2					// On est en modification d'un interlocuteur
 	iuoAjout.dw_Cible.Reset ()
 
 /*------------------------------------------------------------------*/
-/* La DW idw_wParaInfo est tri$$HEX1$$e900$$ENDHEX$$e sur ID_SIN, ID_I, CPT_TRI. On      */
-/* recherche l'existence de paragraphes pr$$HEX1$$e900$$ENDHEX$$alablement affect$$HEX1$$e900$$ENDHEX$$s.     */
+/* La DW idw_wParaInfo est triée sur ID_SIN, ID_I, CPT_TRI. On      */
+/* recherche l'existence de paragraphes préalablement affectés.     */
 /*------------------------------------------------------------------*/
 	sFiltre = "ID_I = " + String ( idw_wInter.GetItemNumber ( 1, "ID_I" ) )
 
@@ -1501,8 +1501,8 @@ Case 2					// On est en modification d'un interlocuteur
 
 	If	lTotParaAffecte	> 0 Then
 /*------------------------------------------------------------------*/
-/* On trouve des paragraphes. On les ins$$HEX1$$e900$$ENDHEX$$re dans dw_Source. Au      */
-/* passage, on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$le CODE_PARA pour filtrer dw_Recherche.     */
+/* On trouve des paragraphes. On les insére dans dw_Source. Au      */
+/* passage, on récupéré le CODE_PARA pour filtrer dw_Recherche.     */
 /*------------------------------------------------------------------*/
 		idw_wParaInfo.RowsCopy ( 1, 999, Primary!, iuoAjout.dw_Source, 1, Primary! )
 
@@ -1510,14 +1510,14 @@ Case 2					// On est en modification d'un interlocuteur
 				sFiltre = sFiltre + "ID_PARA <> '" + idw_wParaInfo.GetItemString ( lCpt, "ID_PARA" ) + "' AND "
 		Next
 /*------------------------------------------------------------------*/
-/* On enl$$HEX1$$e900$$ENDHEX$$ve le dernier AND g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$dans la boucle.                  */
+/* On enléve le dernier AND généré dans la boucle.                  */
 /*------------------------------------------------------------------*/
 		sFiltre = Left ( sFiltre, Len ( sFiltre ) - 5 )
 	End If
 
 /*------------------------------------------------------------------*/
 /* On positionne un filtre sur recherche pour enlever les           */
-/* paragraphes d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$pr$$HEX1$$e900$$ENDHEX$$sents (Eventuellement aucun).                */
+/* paragraphes déjà présents (Eventuellement aucun).                */
 /*------------------------------------------------------------------*/
 	iuoAjout.dw_Recherche.SetFilter ( sFiltre )
 	iuoAjout.dw_Recherche.Filter ()
@@ -1567,7 +1567,7 @@ Case 2					// On est en modification d'un interlocuteur
 	iuoAjout.dw_Cible.SetFilter ( sFiltre )
 	iuoAjout.dw_Cible.Filter ()
 
-Case 3					// On vient de cocher ALT_QUEST, on supprime tous les paragraphes affect$$HEX1$$e900$$ENDHEX$$s
+Case 3					// On vient de cocher ALT_QUEST, on supprime tous les paragraphes affectés
 	
 	/*------------------------------------------------------------------*/
 	/* #1                                                               */
@@ -1582,7 +1582,7 @@ Case 3					// On vient de cocher ALT_QUEST, on supprime tous les paragraphes aff
 	/*------------------------------------------------------------------*/
 	/*------------------------------------------------------------------*/
 	/* [DCMP050251]-PHG-10/05/2006 : 											  */
-	/* - On teste en plus la pr$$HEX1$$e900$$ENDHEX$$sence d'autre enveloppe list$$HEX1$$e900$$ENDHEX$$e dans la  */
+	/* - On teste en plus la présence d'autre enveloppe listée dans la  */
 	/*   Variable d'instance  														  */
 	/* - Optimisation du code de suppression des lignes					  */
 	/*------------------------------------------------------------------*/
@@ -1593,7 +1593,7 @@ Case 3					// On vient de cocher ALT_QUEST, on supprime tous les paragraphes aff
 	End If
 	
 	// [DCMP050251]-PHG-10/05/2006 : Recherche des enveloppes z040 a z043
-	// On s'arrete sur la premi$$HEX1$$e800$$ENDHEX$$re trouv$$HEX1$$e900$$ENDHEX$$e si on a pas trouv$$HEX2$$e9002000$$ENDHEX$$de Z017 ou de Z014
+	// On s'arrete sur la première trouvée si on a pas trouvé de Z017 ou de Z014
 	IF lRowZSource = 0 Then
 		lRowZSource  = &
 			iuoAjout.dw_Source.Find &
@@ -1605,7 +1605,7 @@ Case 3					// On vient de cocher ALT_QUEST, on supprime tous les paragraphes aff
 	
 	If lRowZSource > 0 Then
 		// [DCMP050251]-PHG-10/05/2006 : Optimisation
-		// Le code ci-dessous est remplac$$HEX2$$e9002000$$ENDHEX$$par les deux rowsdiscard situ$$HEX2$$e9002000$$ENDHEX$$apres ce script mis en commentaire
+		// Le code ci-dessous est remplacé par les deux rowsdiscard situé apres ce script mis en commentaire
 //		lNbCol = Long ( iuoAjout.dw_Source.Describe ( "DATAWINDOW.COLUMN.COUNT") )
 //		For lCpt = 1 To lNbCol
 //			sName = iuoAjout.dw_Source.Describe ( "#" + String ( lCpt ) + ".NAME" )
@@ -1664,8 +1664,8 @@ private subroutine uf_changerproduit ();//*-------------------------------------
 //* Fonction		: Uf_ChangerProduit (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 23/01/1998 17:40:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: A t-on chang$$HEX2$$e9002000$$ENDHEX$$de produit ?
+//* Libellé			: 
+//* Commentaires	: A t-on changé de produit ?
 //*
 //* Arguments		: Aucun
 //*
@@ -1674,13 +1674,13 @@ private subroutine uf_changerproduit ();//*-------------------------------------
 //*-----------------------------------------------------------------
 //		FPI	25/05/2012	[PC292] Modif de la dddw des courriers
 /*------------------------------------------------------------------*/
-/* L'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement Ue_Initialisation n'est d$$HEX1$$e900$$ENDHEX$$clench$$HEX1$$e900$$ENDHEX$$e qu'une seule      */
-/* fois. Or la fen$$HEX1$$ea00$$ENDHEX$$tre de traitement d$$HEX1$$e900$$ENDHEX$$tail a besoin de savoir si   */
-/* le produit a chang$$HEX1$$e900$$ENDHEX$$. Il faut donc faire le test sur              */
+/* L'événement Ue_Initialisation n'est déclenchée qu'une seule      */
+/* fois. Or la fenêtre de traitement détail a besoin de savoir si   */
+/* le produit a changé. Il faut donc faire le test sur              */
 /* Uf_PreparerModifier et Uf_PreparerInserer.                       */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* Les initialisations relatives au Produit/R$$HEX1$$e900$$ENDHEX$$vision auront lieu    */
+/* Les initialisations relatives au Produit/Révision auront lieu    */
 /* ici.                                                             */
 /*------------------------------------------------------------------*/
 Long lIdProd
@@ -1692,7 +1692,7 @@ lIdProd	= idw_Produit.GetItemNumber ( 1, "ID_PROD" )
 If	lIdProd <> ilDernierIdProd Then
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$initialise les paragraphes de PARA_PROD.                    */
+/* On réinitialise les paragraphes de PARA_PROD.                    */
 /*------------------------------------------------------------------*/
 	Uf_GestionuAjout ( 0 )
 
@@ -1723,7 +1723,7 @@ private subroutine uf_gestion_frais (integer aitype);//*------------------------
 //* Fonction		: Uf_Gestion_Frais (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 22/01/1998 16:31:31
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion des frais pour l'interlocuteur
 //*
 //* Arguments		: Integer		aiType			(Val)	Type d'action
@@ -1744,11 +1744,11 @@ Case 1					// On est en insertion d'un interlocuteur
 Case 2					// On est en modification d'un interlocuteur
 /*------------------------------------------------------------------*/
 /* Important, il ne faut pas oublier de positionner le statut des   */
-/* lignes r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$es $$HEX2$$e0002000$$ENDHEX$$NotModified!.                                */
+/* lignes récupérées à NotModified!.                                */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* Les lignes sont positionn$$HEX1$$e900$$ENDHEX$$es $$HEX2$$e0002000$$ENDHEX$$NewModified! et il faut les       */
-/* mettre $$HEX2$$e0002000$$ENDHEX$$NotModified! (Obligatoire pour la gestion du niveau 2). */
+/* Les lignes sont positionnées à NewModified! et il faut les       */
+/* mettre à NotModified! (Obligatoire pour la gestion du niveau 2). */
 /* On passe donc les lignes d'abord en DataModified! puis en        */
 /* NotModified!                                                     */
 /*------------------------------------------------------------------*/
@@ -1790,10 +1790,10 @@ private subroutine uf_preparervalider (ref s_pass astpass);//*------------------
 //* Fonction		: Uf_PreparerValider (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Pr$$HEX1$$e900$$ENDHEX$$paration de la validation d'un interlocuteur
+//* Libellé			: 
+//* Commentaires	: Préparation de la validation d'un interlocuteur
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
@@ -1852,10 +1852,10 @@ private subroutine uf_preparervalider_paragraphe (ref s_pass astpass);//*-------
 //* Fonction		: Uf_PreparerValider_Paragraphe (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Validation des paragraphes pour l'interlocuteur
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
@@ -1873,11 +1873,11 @@ bMove						= True
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* En insertion, on recopie les lignes simplement. La variable      */
-/* bInsert est arm$$HEX1$$e900$$ENDHEX$$e sur la fonction Wf_ControlerSaisie de la       */
-/* fen$$HEX1$$ea00$$ENDHEX$$tre des Interlocuteurs.                                      */
+/* bInsert est armée sur la fonction Wf_ControlerSaisie de la       */
+/* fenêtre des Interlocuteurs.                                      */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* En modification, on supprime les lignes existantes et on ins$$HEX1$$e900$$ENDHEX$$re  */
+/* En modification, on supprime les lignes existantes et on insére  */
 /* les autres sans se poser de questions d'optimisation.(Voir St    */
 /* Denis)                                                           */
 /*------------------------------------------------------------------*/
@@ -1926,13 +1926,13 @@ If	Not astPass.bInsert Then
 End If
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re les nouvelles lignes.                                  */
+/* On insére les nouvelles lignes.                                  */
 /*------------------------------------------------------------------*/
 lTotParaAffecte = iuoAjout.dw_Source.RowCount ()
 
 If	lTotParaAffecte > 0 Then
 /*------------------------------------------------------------------*/
-/* On positionne de mani$$HEX1$$e800$$ENDHEX$$re fiable le Compteur de Tri (CPT_TRI).    */
+/* On positionne de manière fiable le Compteur de Tri (CPT_TRI).    */
 /*------------------------------------------------------------------*/
 	For	lCpt = 1 To lTotParaAffecte
 			iuoAjout.dw_Source.SetItem ( lCpt, "CPT_TRI", lCpt )
@@ -1949,10 +1949,10 @@ private subroutine uf_preparervalider_frais (ref s_pass astpass);//*------------
 //* Fonction		: Uf_PreparerValider_Frais (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Pr$$HEX1$$e900$$ENDHEX$$paration de la validation des frais
+//* Libellé			: 
+//* Commentaires	: Préparation de la validation des frais
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
@@ -1989,7 +1989,7 @@ If	idw_wInter.iudwDetailSource.GetItemStatus ( idw_wInter.ilLigneDetailSource, 0
 
 Else
 /*------------------------------------------------------------------*/
-/* On s'occupe d'abord des frais qui ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$supprim$$HEX1$$e900$$ENDHEX$$s. On va       */
+/* On s'occupe d'abord des frais qui ont été supprimés. On va       */
 /* optimiser les DELETE.                                            */
 /*------------------------------------------------------------------*/
 	lTotSupp = idw_wFraisSupp.RowCount ()
@@ -2005,7 +2005,7 @@ Else
 			If	lTotFrais > 0	Then
 /*------------------------------------------------------------------*/
 /* On supprime maintenant le frais en passant la ligne              */
-/* s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX1$$e900$$ENDHEX$$e dans la buffer Delete.                              */
+/* sélectionnée dans la buffer Delete.                              */
 /*------------------------------------------------------------------*/
 				idw_wFrais.RowsMove ( 1, 1, Primary!, idw_wFrais, 1, Delete! )
 
@@ -2023,7 +2023,7 @@ Else
 			bMove		= True
 			Status	= idw_LstFrais.GetItemStatus ( lCptFrais, 0, Primary! )
 /*------------------------------------------------------------------*/
-/* Si le frais est en insertion, on ins$$HEX1$$e900$$ENDHEX$$re la ligne dans  W_FRAIS.  */
+/* Si le frais est en insertion, on insére la ligne dans  W_FRAIS.  */
 /*------------------------------------------------------------------*/
 			sFiltreFrais = "ID_I = " + String ( idw_wInter.GetItemNumber ( 1, "ID_I" ) ) + &
 						 		 " AND ID_FRAIS = " + String ( idw_LstFrais.GetItemNumber ( lCptFrais, "ID_FRAIS" ) )
@@ -2040,7 +2040,7 @@ Else
 /* Le frais est en modification. on va supprimer la ligne de        */
 /* W_FRAIS ( faire un RowsDiscard sur cette ligne ). Ensuite,       */
 /* on recopie la ligne de W_LSTFRAIS dans W_FRAIS avec un statut    */
-/* $$HEX2$$e0002000$$ENDHEX$$Modified! pour envoyer un UPDATE.                              */
+/* à Modified! pour envoyer un UPDATE.                              */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Le Frais courant.                                                */
@@ -2050,11 +2050,11 @@ Else
 
 /*------------------------------------------------------------------*/
 /* Le 25/08/1998                                                    */
-/* Le gestionnaire ins$$HEX1$$e900$$ENDHEX$$re un frais (CTL+VAL), valide                */
+/* Le gestionnaire insére un frais (CTL+VAL), valide                */
 /* l'interlocuteur, puis revient modifier le frais (CTL+VAL),       */
 /* revalide l'interlocuteur sans rien toucher d'autre.              */
-/* Probl$$HEX1$$e800$$ENDHEX$$me sur la validation. Normal, car le frais passe en        */
-/* DataModified!, or il n'a jamais $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$enregistr$$HEX2$$e9002000$$ENDHEX$$sur le moteur.    */
+/* Problème sur la validation. Normal, car le frais passe en        */
+/* DataModified!, or il n'a jamais été enregistré sur le moteur.    */
 /*------------------------------------------------------------------*/
 				StatuswFrais	= idw_wFrais.GetItemStatus ( 1, 0, Primary! )
 
@@ -2071,7 +2071,7 @@ Else
 					idw_wFrais.SetItemStatus ( 1, 0, Primary!, DataModified! )
 /*------------------------------------------------------------------*/
 /* !! Important, pour que l'update puisse partir, il faut les       */
-/* colonnes poss$$HEX1$$e900$$ENDHEX$$dent le statut DataModified!.                      */
+/* colonnes possédent le statut DataModified!.                      */
 /*------------------------------------------------------------------*/
 					lTotCol = Long ( idw_wFrais.Describe ( "DataWindow.Column.Count" ) )
 					For	lCptCol = 1 To lTotCol
@@ -2094,17 +2094,17 @@ private subroutine uf_preparersupprimer (ref s_pass astpass);//*----------------
 //* Fonction		: U_Gs_Sp_Sinistre_Interlocuteur::Uf_PreparerSupprimer
 //* Auteur			: Erick John Stark
 //* Date				: 28/01/1998 09:42:07
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On veut supprimer un interlocuteur
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //* #1  JFF 22/03/2004  DCMP 040020 SVE
-//* #2	FPI	26/01/2010	[201001261350] Emp$$HEX1$$ea00$$ENDHEX$$cher la suppr de l'inter assur$$HEX1$$e900$$ENDHEX$$
+//* #2	FPI	26/01/2010	[201001261350] Empêcher la suppr de l'inter assuré
 //*-----------------------------------------------------------------
 
 String sFiltre
@@ -2112,7 +2112,7 @@ Long lTotwParaInfo, lCpt, lTotSupp, lIdI, lTotwFrais
 Integer iRet
 
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie si on se trouve sur l'onglet N$$HEX2$$b0002000$$ENDHEX$$01. (Onglet           */
+/* On vérifie si on se trouve sur l'onglet N° 01. (Onglet           */
 /* Interlocuteur). On affiche un message qui demande si on veut     */
 /* supprimer l'interlocuteur courant.                               */
 /*------------------------------------------------------------------*/
@@ -2151,8 +2151,8 @@ Else
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Il faut maintenant enlever les lignes du buffer DELETE! qui      */
-/* peuvent $$HEX1$$ea00$$ENDHEX$$tre impact$$HEX1$$e900$$ENDHEX$$es.                                          */
-/* L'utilisateur a chang$$HEX2$$e9002000$$ENDHEX$$une premi$$HEX1$$e800$$ENDHEX$$re fois les lignes avant de     */
+/* peuvent être impactées.                                          */
+/* L'utilisateur a changé une première fois les lignes avant de     */
 /* vouloir supprimer l'interlocuteur.                               */
 /*------------------------------------------------------------------*/
 
@@ -2170,7 +2170,7 @@ Else
 /* On veut supprimer un interlocuteur, il faut optimiser les        */
 /* commandes DELETE qui partent sur le moteur.                      */
 /* La commande DELETE sur les interlocuteurs supprime aussi les     */
-/* tables d$$HEX1$$e900$$ENDHEX$$pendantes (W_PARA_INFO, W_INTER_BLOB, W_FRAIS), donc    */
+/* tables dépendantes (W_PARA_INFO, W_INTER_BLOB, W_FRAIS), donc    */
 /* il ne faut pas envoyer de DELETE par la suite sur ces tables.    */
 /*------------------------------------------------------------------*/
 
@@ -2191,8 +2191,8 @@ Else
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Il faut maintenant enlever les lignes du buffer DELETE! qui      */
-/* peuvent $$HEX1$$ea00$$ENDHEX$$tre impact$$HEX1$$e900$$ENDHEX$$es.                                          */
-/* L'utilisateur a chang$$HEX2$$e9002000$$ENDHEX$$une premi$$HEX1$$e800$$ENDHEX$$re fois les lignes avant de     */
+/* peuvent être impactées.                                          */
+/* L'utilisateur a changé une première fois les lignes avant de     */
 /* vouloir supprimer l'interlocuteur.                               */
 /*------------------------------------------------------------------*/
 
@@ -2213,7 +2213,7 @@ Else
 /* On veut supprimer un interlocuteur, il faut optimiser les        */
 /* commandes DELETE qui partent sur le moteur.                      */
 /* La commande DELETE sur les interlocuteurs supprime aussi les     */
-/* tables d$$HEX1$$e900$$ENDHEX$$pendantes (W_PARA_INFO, W_INTER_BLOB, W_FRAIS), donc    */
+/* tables dépendantes (W_PARA_INFO, W_INTER_BLOB, W_FRAIS), donc    */
 /* il ne faut pas envoyer de DELETE par la suite sur ces tables.    */
 /*------------------------------------------------------------------*/
 
@@ -2255,7 +2255,7 @@ private subroutine uf_gestion_double_inter ();//*-------------------------------
 //* Fonction		: U_Gs_Sp_Sinistre_Interlocuteur::Uf_Gestion_Double_Inter (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 12/06/1998 15:00:59
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion de la DDLB ppour la liste des interlocuteurs
 //*
 //* Arguments		: Aucun
@@ -2275,13 +2275,13 @@ iIndex		= 1
 idw_wInter.ClearValues ( "ID_I_DB" )
 
 /*------------------------------------------------------------------*/
-/* Le 15/06/1998. Selon St Denis(!!); on ne g$$HEX1$$e900$$ENDHEX$$re pas de double      */
-/* pour le type d'assur$$HEX2$$e9002000$$ENDHEX$$AUTRE. Il faut donc les exclure de la      */
+/* Le 15/06/1998. Selon St Denis(!!); on ne gére pas de double      */
+/* pour le type d'assuré AUTRE. Il faut donc les exclure de la      */
 /* construction de la ListBox.                                      */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* Le test sur le ID_I_DB est r$$HEX1$$e900$$ENDHEX$$alis$$HEX2$$e9002000$$ENDHEX$$sur le controle de saisie     */
-/* des interlocuteurs. Vraisemblance de la zone (Assur$$HEX1$$e900$$ENDHEX$$<->Banque).  */
+/* Le test sur le ID_I_DB est réalisé sur le controle de saisie     */
+/* des interlocuteurs. Vraisemblance de la zone (Assuré<->Banque).  */
 /*------------------------------------------------------------------*/
 
 For	lCpt = 1 To lTotInter
@@ -2305,7 +2305,7 @@ private subroutine uf_initialiser_fichier_word ();//*---------------------------
 //* Fonction		: U_Gs_Sp_Sinistre_Interlocuteur::Uf_InitialiserFichier_Word (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 22/06/1998 18:29:19
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Initialisation des fichiers Words pour les courriers particuliers,
 //*					  le paragraphe AUTRE PIECE et le POST-SCRIPTUM
 //*
@@ -2342,10 +2342,10 @@ private subroutine uf_preparerabandonner (ref s_pass astpass);//*---------------
 //* Fonction		: Uf_PreparerAbandonner (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On adandonne la saisie de l'interlocuteur
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
@@ -2368,7 +2368,7 @@ public subroutine uf_gestion_onglet (integer aitype);//*------------------------
 //* Fonction		: U_Gs_Sp_Sinistre_Interlocuteur::Uf_Gestion_Onglet (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 15/07/1998 14:19:02
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion de l'onglet Paragraphes d'informations 
 //*
 //* Arguments		: Integer		aiType			(Val)	Type de traitement
@@ -2385,11 +2385,11 @@ sBitmap2 = "K:\PB4OBJ\BMP\8_ALPCE.BMP"
 Choose Case aiType
 Case 1
 /*------------------------------------------------------------------*/
-/* On est en insertion d'un interlocuteur, on active l'acc$$HEX1$$e900$$ENDHEX$$s aux    */
+/* On est en insertion d'un interlocuteur, on active l'accés aux    */
 /* paragraphes ainsi que le bitmap.                                 */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* On vient de modifier ALT_QUEST, (ALT_QUEST=N) Acc$$HEX1$$e900$$ENDHEX$$s AUTORISE.    */
+/* On vient de modifier ALT_QUEST, (ALT_QUEST=N) Accés AUTORISE.    */
 /*------------------------------------------------------------------*/
 	iuoOng.Uf_ActiverOnglet ( "02", True )
 	iuoOng.Uf_ChangerBitmap ( "02", "" )
@@ -2397,21 +2397,21 @@ Case 1
 
 Case 2
 /*------------------------------------------------------------------*/
-/* On est en modification d'un interlocuteur. On v$$HEX1$$e900$$ENDHEX$$rifie si la      */
-/* personne peut avoir acc$$HEX1$$e900$$ENDHEX$$s $$HEX2$$e0002000$$ENDHEX$$l'onglet des paragraphes.            */
+/* On est en modification d'un interlocuteur. On vérifie si la      */
+/* personne peut avoir accés à l'onglet des paragraphes.            */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* Le courrier est un questionnaire, acc$$HEX1$$e900$$ENDHEX$$s INTERDIT.                */
+/* Le courrier est un questionnaire, accés INTERDIT.                */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* Il existe un courrier particulier, acc$$HEX1$$e900$$ENDHEX$$s INTERDIT.               */
+/* Il existe un courrier particulier, accés INTERDIT.               */
 /*------------------------------------------------------------------*/
 	If			idw_wInter.GetItemString ( 1, "ALT_QUEST" )	= "O"	Or &
 				idw_wInter.GetItemString ( 1, "ALT_PART" )	= "O"	Then
 				iuoOng.Uf_ActiverOnglet ( "02", False )
 				iuoOng.Uf_ChangerBitmap ( "02", sBitmap1 )
 /*------------------------------------------------------------------*/
-/* Il existe des paragraphes de s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX1$$e900$$ENDHEX$$s dans Uo_Ajout, Acc$$HEX1$$e900$$ENDHEX$$s   */
+/* Il existe des paragraphes de sélectionnés dans Uo_Ajout, Accés   */
 /* AUTORISE.                                                        */
 /*------------------------------------------------------------------*/
 	ElseIf	iuoAjout.dw_Source.RowCount () > 0 Then
@@ -2424,7 +2424,7 @@ Case 2
 
 Case 3
 /*------------------------------------------------------------------*/
-/* On vient de modifier ALT_QUEST, (ALT_QUEST=O) Acc$$HEX1$$e900$$ENDHEX$$s INTERDIT.    */
+/* On vient de modifier ALT_QUEST, (ALT_QUEST=O) Accés INTERDIT.    */
 /*------------------------------------------------------------------*/
 	iuoOng.Uf_ActiverOnglet ( "02", False )
 	iuoOng.Uf_ChangerBitmap ( "02", sBitmap1 )
@@ -2448,7 +2448,7 @@ private subroutine uf_gestion_str2nul ();//*------------------------------------
 //* Fonction		: U_Gs_Sp_Sinistre_Interlocuteur::Uf_Gestion_Str2Nul (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 17/10/1998 18:05:58
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Cette fonction transforme les chaines vides en NULL
 //*
 //* Arguments		: Aucun
@@ -2463,13 +2463,13 @@ Long lCpt, lNbrCol
 
 /*------------------------------------------------------------------*/
 /* Le but de cette fonction est de transformer toutes les zones au  */
-/* format STRING dans la DW courante en NULL. Cela $$HEX1$$e900$$ENDHEX$$vitera d'avoir  */
+/* format STRING dans la DW courante en NULL. Cela évitera d'avoir  */
 /* sur le moteurs des zones avec des blancs. Cette fonction doit    */
-/* $$HEX1$$ea00$$ENDHEX$$tre appel$$HEX1$$e900$$ENDHEX$$e avant la fonction Uf_ControlerSaisie ().            */
+/* être appelée avant la fonction Uf_ControlerSaisie ().            */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* De plus si le gestionnaire saisi des blancs DEVANT la zone,      */
-/* ces caract$$HEX1$$e800$$ENDHEX$$res sont automatiquement enlev$$HEX1$$e900$$ENDHEX$$s.                     */
+/* ces caractères sont automatiquement enlevés.                     */
 /*------------------------------------------------------------------*/
 
 lNbrCol				= UpperBound ( sCol )
@@ -2501,8 +2501,8 @@ private subroutine uf_initialiserfenetre (ref s_pass astpassdga);//*------------
 //* Fonction		: Uf_InitialiserFenetre (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Initialisation de la fen$$HEX1$$ea00$$ENDHEX$$tre des interlocuteurs
+//* Libellé			: 
+//* Commentaires	: Initialisation de la fenêtre des interlocuteurs
 //*
 //* Arguments		: Ref		s_Pass		astPassDga		
 //*
@@ -2526,7 +2526,7 @@ String sCol[27]
 ibSaisieValidation = astPassDga.bTab[2]
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re les DDDW qui ne changent jamais.                     */
+/* On récupére les DDDW qui ne changent jamais.                     */
 /* Colonnes COD_CIV, COD_MOD_REG.                                   */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
@@ -2550,7 +2550,7 @@ idw_wInter.iudwDetailSource.GetChild ( "ADR_MAIL_DOMAIN", dwChild )
 idw_wInter.GetChild ( "ADR_MAIL_DOMAIN", dwChild1 )
 dwChild.ShareData ( dwChild1 )
 
-// JCA - en test - r$$HEX1$$e900$$ENDHEX$$sidu de code lors du d$$HEX1$$e900$$ENDHEX$$veloppement ...
+// JCA - en test - résidu de code lors du développement ...
 
 //idw_wInter.iudwDetailSource.GetChild ( "ADR_MAIL_NAME", dwChild )
 //idw_wInter.GetChild ( "ADR_MAIL_NAME", dwChild1 )
@@ -2563,8 +2563,8 @@ dwChild.ShareData ( dwChild1 )
 // JCA - en test - FIN
 
 /*------------------------------------------------------------------*/
-/* On initialise la DDDW sur ID_COURJ $$HEX2$$e0002000$$ENDHEX$$vide. Le retrieve sera      */
-/* effectu$$HEX2$$e9002000$$ENDHEX$$sur la fonction Uf_ChangerProduit ().                   */
+/* On initialise la DDDW sur ID_COURJ à vide. Le retrieve sera      */
+/* effectué sur la fonction Uf_ChangerProduit ().                   */
 /*------------------------------------------------------------------*/
 idw_wInter.GetChild ( "ID_COURJ", dwChild )
 dwChild.InsertRow ( 0 )
@@ -2651,19 +2651,19 @@ private subroutine uf_controlersaisie_commune (ref string astext, ref string asp
 //* Fonction      : u_gs_sp_sinistre_interlocuteur::uf_ControlerSaisie_Commune (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 25/08/2003 16:34:05
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: DCMP 030362 Contr$$HEX1$$f400$$ENDHEX$$le des communes.
+//* Libellé       : DCMP 030362 Contrôle des communes.
 //* Commentaires  : 
 //*
-//* Arguments     : 	String		r$$HEX1$$e900$$ENDHEX$$f		asText
-//*						String		r$$HEX1$$e900$$ENDHEX$$f		asPos
+//* Arguments     : 	String		réf		asText
+//*						String		réf		asPos
 //*
 //* Retourne      : 
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1	 JFF	  08/10/2003  Le fichier INSEE.TXT ne contient que les 25 premiers 
-//*								  caract$$HEX1$$e800$$ENDHEX$$res de la ville.
-//* #2	 JFF	  27/01/2004  DCMP 030581 : On pr$$HEX1$$e900$$ENDHEX$$voit un shunt pour le contr$$HEX1$$f400$$ENDHEX$$le des communes.
+//*								  caractères de la ville.
+//* #2	 JFF	  27/01/2004  DCMP 030581 : On prévoit un shunt pour le contrôle des communes.
 //*-----------------------------------------------------------------
 
 Integer		iCode
@@ -2674,7 +2674,7 @@ Boolean		bCommuneTrouve, bCodePostalTrouve
 If asPos <> "" Or Not ibAltCommune Then Return
 
 /*------------------------------------------------------------------*/
-/* #2 : OPTION 16 : Si Option, on d$$HEX1$$e900$$ENDHEX$$connecte tout le contr$$HEX1$$f400$$ENDHEX$$le des   */
+/* #2 : OPTION 16 : Si Option, on déconnecte tout le contrôle des   */
 /* communes                                                         */
 /*------------------------------------------------------------------*/
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 16 )
@@ -2684,13 +2684,13 @@ sCP	  	 = Upper ( Trim ( idw_wInter.GetItemString ( 1, "ADR_CP" )	) )
 sCodInter = idw_wInter.GetItemString ( 1, "COD_INTER" )
 
 /*------------------------------------------------------------------*/
-/* Si ce n'est pas un pays $$HEX1$$e900$$ENDHEX$$tranger, ni une banque on traite le cas */
+/* Si ce n'est pas un pays étranger, ni une banque on traite le cas */
 /*------------------------------------------------------------------*/
 If sCP <> "00000" And sCodInter <> "B" Then
 	sVille  = Upper ( Trim ( idw_wInter.GetItemString ( 1, "ADR_VILLE" )	 ) )
 	
 	/*------------------------------------------------------------------*/
-	/* On $$HEX1$$e900$$ENDHEX$$pure la chaine de fa$$HEX1$$e700$$ENDHEX$$on $$HEX2$$e0002000$$ENDHEX$$ne garder que la ville.            */
+	/* On épure la chaine de façon à ne garder que la ville.            */
 	/*------------------------------------------------------------------*/
 	This.uf_Epuration_ZoneCommune ( sVille, iCode )
 
@@ -2707,19 +2707,19 @@ If sCP <> "00000" And sCodInter <> "B" Then
 	bCodePostalTrouve = False
 
 	/*------------------------------------------------------------------*/
-	/* Traitement des cas particulier : M$$HEX1$$e900$$ENDHEX$$thode LUC                     */
-	/* LR 2.2 Si pr$$HEX1$$e900$$ENDHEX$$sence du terme CEDEX ou BP, le contr$$HEX1$$f400$$ENDHEX$$le de          */
-	/* croisement Commune-CodePostal est limit$$HEX2$$e9002000$$ENDHEX$$au d$$HEX1$$e900$$ENDHEX$$partement (les     */
-	/* deux premiers chiffres du code postal), sinon SIMPA2 contr$$HEX1$$f400$$ENDHEX$$le    */
-	/* la coh$$HEX1$$e900$$ENDHEX$$rence compl$$HEX1$$e800$$ENDHEX$$te CodePostal-Commune                         */
+	/* Traitement des cas particulier : Méthode LUC                     */
+	/* LR 2.2 Si présence du terme CEDEX ou BP, le contrôle de          */
+	/* croisement Commune-CodePostal est limité au département (les     */
+	/* deux premiers chiffres du code postal), sinon SIMPA2 contrôle    */
+	/* la cohérence complète CodePostal-Commune                         */
 	/*                                                                  */
 	/*------------------------------------------------------------------*/
 	Choose Case iCode
-		// Il y a la pr$$HEX1$$e900$$ENDHEX$$sence d'un CEDEX, BP ou autre, donc controle uniquement sur le Dept.
+		// Il y a la présence d'un CEDEX, BP ou autre, donc controle uniquement sur le Dept.
 		Case 1
 			sDept = Left ( sCP, 2 ) 
 
-		// Sinon contr$$HEX1$$f400$$ENDHEX$$le sur le CP enti$$HEX1$$e800$$ENDHEX$$rement.
+		// Sinon contrôle sur le CP entièrement.
 		Case Else
 			sDept = sCP
 
@@ -2736,7 +2736,7 @@ If sCP <> "00000" And sCodInter <> "B" Then
 	/* La commune n'existe pas                                          */
 	/*------------------------------------------------------------------*/
 	If Not bCommuneTrouve Then
-			stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de saisie d'un interlocuteur (Communes)"
+			stMessage.sTitre		= "Contrôle de saisie d'un interlocuteur (Communes)"
 			stMessage.Icon			= Information!
 			stMessage.bErreurG	= TRUE
 			stMessage.sCode		= "COMM03"
@@ -2750,7 +2750,7 @@ If sCP <> "00000" And sCodInter <> "B" Then
 	/*------------------------------------------------------------------*/
 	If bCommuneTrouve And Not bCodePostalTrouve Then
 
-		stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de saisie d'un interlocuteur (Communes)"
+		stMessage.sTitre		= "Contrôle de saisie d'un interlocuteur (Communes)"
 		stMessage.Icon			= Information!
 		stMessage.bErreurG	= TRUE
 		stMessage.sCode		= "COMM02"
@@ -2765,7 +2765,7 @@ If sCP <> "00000" And sCodInter <> "B" Then
 End If	
 
 If asPos <> "" Then
-	asText = asText + " - Un bin$$HEX1$$f400$$ENDHEX$$me Commune/CodePostal valide" + "~n~r"
+	asText = asText + " - Un binôme Commune/CodePostal valide" + "~n~r"
 End If
 
 end subroutine
@@ -2775,31 +2775,31 @@ private subroutine uf_epuration_zonecommune (ref string asville, ref integer aic
 //* Fonction      : uf_gs_sp_sinistre::uf_Epuration_ZoneCommune ( PRIVATE )
 //* Auteur        : Fabry JF
 //* Date          : 12/09/2003 10:48:04
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Supprime tout ce qui est g$$HEX1$$ea00$$ENDHEX$$nant dans la chaine de 
+//* Libellé       : Supprime tout ce qui est gênant dans la chaine de 
 //*					  la ville afin de ne garder que la ville.
 //* Commentaires  : 
 //*
 //* Arguments     : String 	asVille 		aRef
-//*					  Integer	aiCode		aRef	 1 : Pr$$HEX1$$e900$$ENDHEX$$sence d'un CEDEX, BP, etc 
+//*					  Integer	aiCode		aRef	 1 : Présence d'un CEDEX, BP, etc 
 //*
 //* Retourne      : 
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....
-//* #1	FPI	18/03/2010	[Bug.Incident.9415] Correction si ville ne contient que des caract$$HEX1$$e800$$ENDHEX$$res $$HEX2$$e0002000$$ENDHEX$$supprimer
+//* #1	FPI	18/03/2010	[Bug.Incident.9415] Correction si ville ne contient que des caractères à supprimer
 //*-----------------------------------------------------------------
 String sVille, sCar, sMot, sMotSubst
-String sTbMotCle []   // Mots Cl$$HEX4$$e9002000e0002000$$ENDHEX$$ne pas tenir Compte
+String sTbMotCle []   // Mots Clé à ne pas tenir Compte
 Integer iTotMotCle, iCpt, iPos
 Boolean bCarTrouve
 
-sTbMotCle = { " BP", "CEDEX", "C$$HEX1$$c900$$ENDHEX$$DEX", "CED$$HEX1$$c900$$ENDHEX$$X", "C$$HEX1$$c900$$ENDHEX$$D$$HEX1$$c900$$ENDHEX$$X" }
+sTbMotCle = { " BP", "CEDEX", "CÉDEX", "CEDÉX", "CÉDÉX" }
 sVille = Upper ( asVille )
 aiCode = 0
 
 /*------------------------------------------------------------------*/
-/* 1 : Suppression des mots cl$$HEX1$$e900$$ENDHEX$$s                                    */
+/* 1 : Suppression des mots clés                                    */
 /*------------------------------------------------------------------*/
 iTotMotCle = UpperBound ( sTbMotCle )
 For iCpt = 1 To iTotMotCle
@@ -2814,7 +2814,7 @@ For iCpt = 1 To iTotMotCle
 Next
 
 /*------------------------------------------------------------------*/
-/* 2 : Par la gauche, suppression de tout caract$$HEX1$$e800$$ENDHEX$$re non compris     */
+/* 2 : Par la gauche, suppression de tout caractère non compris     */
 /* entre 65 et 90 (ASCII).                                          */
 /*------------------------------------------------------------------*/
 bCarTrouve = TRUE
@@ -2833,7 +2833,7 @@ Do While bCarTrouve and Len(sVille) > 0	// #1 - [Bug.Incident.9415]
 Loop
 
 /*------------------------------------------------------------------*/
-/* 3 : Par la Droite, suppression de tout caract$$HEX1$$e800$$ENDHEX$$re non compris     */
+/* 3 : Par la Droite, suppression de tout caractère non compris     */
 /* entre 65 et 90 (ASCII).                                          */
 /*------------------------------------------------------------------*/
 bCarTrouve = TRUE
@@ -2853,7 +2853,7 @@ Loop
 
 
 /*------------------------------------------------------------------*/
-/* 4 : Si _SAINT_ Ou _SAINTE_ trouv$$HEX2$$e9002000$$ENDHEX$$en d$$HEX1$$e900$$ENDHEX$$but de chaine remplacer   */
+/* 4 : Si _SAINT_ Ou _SAINTE_ trouvé en début de chaine remplacer   */
 /* par ST ou STE                                                    */
 
 /*------------------------------------------------------------------*/
@@ -2890,7 +2890,7 @@ For iCpt = 1 To 4
 Next
 
 /*------------------------------------------------------------------*/
-/* 5 : Si la ville est compos$$HEX1$$e900$$ENDHEX$$e, il ne doit y avoir qu'un espace 	  */
+/* 5 : Si la ville est composée, il ne doit y avoir qu'un espace 	  */
 /* entre les mots.																  */
 /*------------------------------------------------------------------*/
 iPos = 1 
@@ -2912,13 +2912,13 @@ public subroutine uf_initialiser_objets (ref u_spb_ajout_courtyp auajout, ref u_
 //* Fonction		: Uf_Initialiser_Objets (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 22/01/1998 15:23:57
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Initialisation des objets de la fen$$HEX1$$ea00$$ENDHEX$$tre W_Td_Sp_Interlocuteur
+//* Libellé			: 
+//* Commentaires	: Initialisation des objets de la fenêtre W_Td_Sp_Interlocuteur
 //*
-//* Arguments		: U_Spb_Ajout_CourTyp		auAjout				(R$$HEX1$$e900$$ENDHEX$$f)	User Objet 
-//*					  U_Spb_Cp						auCourrierWord		(R$$HEX1$$e900$$ENDHEX$$f)	User Objet 
-//*					  CommandButton				acbCommune			(R$$HEX1$$e900$$ENDHEX$$f) 
-//*					  N_Cst_Saisie_Validation_Interlocuteur	invSaisieValInter (R$$HEX1$$e900$$ENDHEX$$f)  SVE DCMP040020
+//* Arguments		: U_Spb_Ajout_CourTyp		auAjout				(Réf)	User Objet 
+//*					  U_Spb_Cp						auCourrierWord		(Réf)	User Objet 
+//*					  CommandButton				acbCommune			(Réf) 
+//*					  N_Cst_Saisie_Validation_Interlocuteur	invSaisieValInter (Réf)  SVE DCMP040020
 //*
 //* Retourne		: Rien
 //*
@@ -2928,7 +2928,7 @@ iUoAjout	= auAjout
 
 /*------------------------------------------------------------------*/
 /* On initialise les DW Source, Cible maintenant. On n'utilise pas  */
-/* la fonction Uf_Initialiser () car elle affecte $$HEX2$$e0002000$$ENDHEX$$nouveau le      */
+/* la fonction Uf_Initialiser () car elle affecte à nouveau le      */
 /* itrTrans. Ce qui est inutile.                                    */
 /*------------------------------------------------------------------*/
 iuoAjout.dw_Source.DataObject 	= "d_Lst_Sin_W_Inter_Para_Affecte"
@@ -2953,8 +2953,8 @@ private function boolean uf_presencecp (integer aiidinter, string ascodinter);//
 //* Fonction      : u_gs_sp_sinistre::uf_PresenceCP (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 22/03/2004 11:20:04
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Utilis$$HEX2$$e9002000$$ENDHEX$$pour la m$$HEX1$$e900$$ENDHEX$$thode SVE (DCMP 040020)
-//* Commentaires  : y a-t-il une CP pr$$HEX1$$e900$$ENDHEX$$sent sur le disque pour l'inter
+//* Libellé       : Utilisé pour la méthode SVE (DCMP 040020)
+//* Commentaires  : y a-t-il une CP présent sur le disque pour l'inter
 //*
 //* Arguments     : Int		aiIdInter		Val
 //*					  String asCodInter		Val
@@ -2963,7 +2963,7 @@ private function boolean uf_presencecp (integer aiidinter, string ascodinter);//
 //*
 //*-----------------------------------------------------------------
 //* MAJ		PAR      Date	     Modification
-//* #1 		DGA      19/09/2006 Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire DCMP-060643
+//* #1 		DGA      19/09/2006 Gestion d'un répertoire temporaire DCMP-060643
 //*
 //*-----------------------------------------------------------------
 
@@ -2974,12 +2974,12 @@ Time tHeureFic
 Boolean bAuMoinsUnCp
 
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe au moins un CP sur le disque.             */
+/* On vérifie s'il existe au moins un CP sur le disque.             */
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re tous les fichiers du type                            */
+/* On récupére tous les fichiers du type                            */
 /* C:\WINNT\TEMP\XXXX*.*.                                           */
 /*------------------------------------------------------------------*/
-/* XXXX = Code de l'application sur 4 caract$$HEX1$$e800$$ENDHEX$$res obligatoires.      */
+/* XXXX = Code de l'application sur 4 caractères obligatoires.      */
 /* 99   = ID_INTER sur deux positions obligatoires (Ex:02,12).      */
 /* 9    = COD_INTER.                                                */
 /* ex : SIM200_A.DOC																  */
@@ -2987,7 +2987,7 @@ Boolean bAuMoinsUnCp
 bAuMoinsUnCp	= FALSE
 /*------------------------------------------------------------------*/  
 /* #1. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 //sRepTmp			= stGLB.sWinDir + "\TEMP\"
 sRepTmp			= stGLB.sRepTempo
@@ -3013,8 +3013,8 @@ private function long uf_zn_rib ();//*------------------------------------------
 //* Fonction		: Uf_Zn_Rib (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 15/01/1998 18:23:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: V$$HEX1$$e900$$ENDHEX$$rification du RIB de l'interlocuteur
+//* Libellé			: 
+//* Commentaires	: Vérification du RIB de l'interlocuteur
 //*
 //* Arguments		: Aucun
 //*
@@ -3125,8 +3125,8 @@ private function long uf_zn_altquest ();//*-------------------------------------
 //* Fonction		: Uf_Zn_AltQuest (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 15/01/1998 18:23:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: V$$HEX1$$e900$$ENDHEX$$rification des zones ALT_QUEST, ALT_COURGEST.
+//* Libellé			: 
+//* Commentaires	: Vérification des zones ALT_QUEST, ALT_COURGEST.
 //*
 //* Arguments		: Aucun
 //*
@@ -3139,17 +3139,17 @@ private function long uf_zn_altquest ();//*-------------------------------------
 //* MAJ PAR		Date		Modification
 //* #1  CAG 12/02/2003  DCMP 030078
 //* #2  CAG 18/02/2003  Lors du positionnement d'un questionnaire s'il y
-//*							avait d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$un paragraphe, apr$$HEX1$$e800$$ENDHEX$$s confirmation de
+//*							avait déjà un paragraphe, après confirmation de
 //*							la suppression de celui-ci, lors du ctrl valider
 //*							du dossier, msg : pas de courrier, valid direct ...
-//* #3  CAG 10/09/2003	DCMP 030390 : Si d$$HEX1$$e900$$ENDHEX$$clar par t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone, Z017 au lieu
+//* #3  CAG 10/09/2003	DCMP 030390 : Si déclar par téléphone, Z017 au lieu
 //*						   de Z014 suite DCMP 030078
-//* #4  CAG 15/09/2003	correction DCMP 030390 : ce n'est pas la d$$HEX1$$e900$$ENDHEX$$cl. du sin qu'il faut
-//*								prendre en compte, mais le m$$HEX1$$e900$$ENDHEX$$dia du travail
+//* #4  CAG 15/09/2003	correction DCMP 030390 : ce n'est pas la décl. du sin qu'il faut
+//*								prendre en compte, mais le média du travail
 //*								(cod_recu de w_queue au lieu de cod_decl de w_sin)
 //*
 //* [DCMP050251]	PHG	10/05/2006
-//*	- Integration de la gestion de 4 enveloppes suppl$$HEX1$$e900$$ENDHEX$$mentaire
+//*	- Integration de la gestion de 4 enveloppes supplémentaire
 //*-----------------------------------------------------------------
 //       JFF   12/06/2014 [PI052]
 //		FPI	15/06/2015 [BLOC_COUR_FRN]
@@ -3208,7 +3208,7 @@ Case "ALT_QUEST"
 /*------------------------------------------------------------------*/
 /* Si le gestionnaire veut un questionnaire, il ne doit pas y       */
 /* avoir de courrier particulier, ou de post-Scriptum ou de         */
-/* paragraphe autre pi$$HEX1$$e800$$ENDHEX$$ce.                                          */
+/* paragraphe autre pièce.                                          */
 /*------------------------------------------------------------------*/
 	If sAltQuest = "O" And ( idw_wInter.GetItemString ( 1, "ALT_PART" )	= "O"	Or &
 								  	 idw_wInter.GetItemString ( 1, "ALT_PS" ) 	= "O"	Or & 
@@ -3257,13 +3257,13 @@ Case "ALT_QUEST"
 				Or iuoAjout.dw_Source.RowCount () > 1 Then
 */
 
-/* Remplac$$HEX2$$e9002000$$ENDHEX$$par nouveau Code JFF valide le 06/05/2004 */
+/* Remplacé par nouveau Code JFF valide le 06/05/2004 */
 
 /* [DCMP050251]-PHG-10/05/2006							   */
 /* - Ajout de commentaire sur le script ci-dessous		*/
 /* - Ajout de la gestion des enveloppes Z040-Z043		*/
 
-	ElseIf	sAltQuest = "O" /* ALTQUEST  Coch$$HEX2$$e9002000$$ENDHEX$$*/ &
+	ElseIf	sAltQuest = "O" /* ALTQUEST  Coché */ &
 		And iuoAjout.dw_Source.RowCount () > 0 /* ET Il y a au moins UNE ligne */ &
 		And /* ET */ &
 		 (  /* Il n'y a pas le cas ci-dessous */ & 
@@ -3290,7 +3290,7 @@ Case "ALT_QUEST"
 		
 		If	F_Message ( stMessage ) = 1 Then	
 			/*------------------------------------------------------------------*/
-			/* On supprime tous les paragraphes positionn$$HEX1$$e900$$ENDHEX$$s pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$demment.       */
+			/* On supprime tous les paragraphes positionnés précédemment.       */
 			/*------------------------------------------------------------------*/
 			Uf_GestionuAjout ( 3 )
 			idw_wInter.SetItem ( 1, "ALT_QUEST", "O" )
@@ -3339,19 +3339,19 @@ Case "ALT_QUEST"
 	/*------------------------------------------------------------------*/
 	/* [DCMP050251]-PHG-10/05/2006							   				  */
 	/*	- On teste sur TOUTE les enveloppes Z014,Z017,Z040--Z041   		  */
-	/*	  independament du media utilis$$HEX1$$e900$$ENDHEX$$.										  */
+	/*	  independament du media utilisé.										  */
 	/*	  Ensuite, on s'occupe de savoir si c'est Z014 ou Z017			  */
 	/*   qu'il faut inserer au cas ou.											  */
 	/*------------------------------------------------------------------*/
 
 	lRowZSource = iuoAjout.dw_Source.Find ( "ID_PARA IN ("+sListEnvZ+",'Z014','Z017')", 1, iuoAjout.dw_Source.RowCount () )
 
-	If lRowZsource = 0 then // Si pas d'enveloppe deja ins$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$e
+	If lRowZsource = 0 then // Si pas d'enveloppe deja insérée
 		// On regarde les enveloppes dispo
 		lRowZCible = iuoAjout.dw_Cible.Find ( "ID_PARA IN ("+sListEnvZ+",'Z014','Z017')", 1, iuoAjout.dw_Cible.RowCount () )
-		If lRowZCible > 0 then // si on a des enveloppes, on l'inserera, mais le cas des Z014/17 doit etre trait$$HEX1$$e900$$ENDHEX$$
+		If lRowZCible > 0 then // si on a des enveloppes, on l'inserera, mais le cas des Z014/17 doit etre traité
 			Choose case trim(iuoAjout.dw_Cible.object.id_para[lRowZCible]) // Selon l'enveloppe
-				Case 'Z014', 'Z017' // On a trouv$$HEX2$$e9002000$$ENDHEX$$Z014 ou Z017
+				Case 'Z014', 'Z017' // On a trouvé Z014 ou Z017
 					If isCodRecu <> "T" Then // Media <> telephone ? => On tente d'inserer l'Enveloppe Z014
 						lRowZCible = iuoAjout.dw_Cible.Find ( "ID_PARA = 'Z014'", 1, iuoAjout.dw_Cible.RowCount () )
 					Else // Sinon => On tente d'inserer l'Enveloppe Z017
@@ -3361,7 +3361,7 @@ Case "ALT_QUEST"
 		End If
 	End If
 	
-	if lRowZCible > 0 then // On Insere l'nveloppe selectionn$$HEX1$$e900$$ENDHEX$$e SI on a le droit ( Option 2 sur le produit )
+	if lRowZCible > 0 then // On Insere l'nveloppe selectionnée SI on a le droit ( Option 2 sur le produit )
 		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 2 )
 		if lDeb > 0 then
 			iuoAjout.dw_Cible.SetRow ( lRowZCible )
@@ -3369,7 +3369,7 @@ Case "ALT_QUEST"
 		End If
 	End If
 	
-	// [DCMP050251] Ancien code, remplac$$HEX2$$e9002000$$ENDHEX$$par ci-dessus
+	// [DCMP050251] Ancien code, remplacé par ci-dessus
 //	lRowZSource = iuoAjout.dw_Source.Find ( "ID_PARA = 'Z014'", 1, iuoAjout.dw_Source.RowCount () )
 //	lRowZSource1 = iuoAjout.dw_Source.Find ( "ID_PARA = 'Z017'", 1, iuoAjout.dw_Source.RowCount () )
 //	If ( isCodRecu <> "T" And lRowZSource = 0 ) Or ( isCodRecu = "T" And lRowZSource1 = 0 ) Then
@@ -3425,7 +3425,7 @@ private function long uf_zn_ordrecheque ();//*----------------------------------
 //* Fonction		: Uf_Zn_OrdreCheque (PRIVATE)
 //* Auteur			: PLJ
 //* Date				: 12/05/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Suppression des blancs devant l'ordre pour traitement sage
 //*
 //* Arguments		: Aucun
@@ -3464,7 +3464,7 @@ private function long uf_zn_codmodreg ();//*------------------------------------
 //* Fonction		: Uf_Zn_CodModReg (PRIVATE)
 //* Auteur			: FABRY JF
 //* Date				: 12/05/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun
@@ -3507,7 +3507,7 @@ Next
 
 // [PM462-1][V3]
 If F_CLE_A_TRUE ( "PM462-1" ) Then
-	// M$$HEX1$$ea00$$ENDHEX$$me si le Param l'autorise, J'interdit en dur le mode CB.
+	// Même si le Param l'autorise, J'interdit en dur le mode CB.
 	If sCodModReg = "CB" Then 
 		bAutorise = False
 	End If 
@@ -3537,12 +3537,12 @@ public subroutine uf_initialiser_dw_desc (ref u_datawindow_detail adw_lstfrais, 
 //* Fonction		: Uf_Initialiser_Dw_Desc (Public)
 //* Auteur			: Erick John Stark
 //* Date				: 19/10/1997 18:47:02
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Initialisation des instances pour le NVUO
 //*
-//* Arguments		: U_DataWindow_Detail	adw_LstFrais		(R$$HEX1$$e900$$ENDHEX$$f)	DataWindow sur les Frais (Liste)
-//*					  U_DataWindow				adw_wInter			(R$$HEX1$$e900$$ENDHEX$$f)	DataWindow sur les interlocuteurs
-//*					  DataWindow				adw_Norm[8]			(R$$HEX1$$e900$$ENDHEX$$f)	Tableau de DataWindow 
+//* Arguments		: U_DataWindow_Detail	adw_LstFrais		(Réf)	DataWindow sur les Frais (Liste)
+//*					  U_DataWindow				adw_wInter			(Réf)	DataWindow sur les interlocuteurs
+//*					  DataWindow				adw_Norm[8]			(Réf)	Tableau de DataWindow 
 //*
 //* Retourne		: Rien
 //*
@@ -3588,7 +3588,7 @@ idw_wRefus	= adw_Norm[4]
 idw_wFrais	= adw_Norm[5]
 
 /*------------------------------------------------------------------*/
-/* DataWindow external permettant de garder les frais supprim$$HEX1$$e900$$ENDHEX$$s     */
+/* DataWindow external permettant de garder les frais supprimés     */
 /*------------------------------------------------------------------*/
 idw_wFraisSupp	= adw_Norm[6]
 
@@ -3610,16 +3610,16 @@ public function long uf_zn_trt (ref s_pass astpass);//*-------------------------
 //* Fonction		: Uf_Zn_Trt (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:27:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Traitement sur les zones de dw_wInter
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
 //*-----------------------------------------------------------------
 //* #1  PLJ  12/05/2004  Suppression des blancs devant ordre_cheque pour traitement sage
-//* #2  JFF  18/05/2005  contr$$HEX1$$f400$$ENDHEX$$le sur COD_MODE_REG
+//* #2  JFF  18/05/2005  contrôle sur COD_MODE_REG
 //* [MIGPB8COR] Changement du code retour pour prise en compte returncode
 //* #3  PHG	 15/11/2006  [DNTMAIL1-2] Blocage pour modifier AltSuiviMail
 //*							 si un courrier PArticulier Existe
@@ -3678,7 +3678,7 @@ protected function string uf_buildstringlist (string asstringarray[]);//*-------
 //* Fonction		: uf_BuildStringList (PRIVATE)
 //* Auteur			: PHG
 //* Date				: 23/01/1998 17:40:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Construit une liste de chaine de type
+//* Libellé			: Construit une liste de chaine de type
 //*					: 'chaine1','chaine2','chaine3'
 //*					: a partir d'un tableau de chaine.
 //* Commentaires	: 
@@ -3756,7 +3756,7 @@ private subroutine uf_tb_validation ();//*--------------------------------------
 //* Fonction		: Uf_Tb_Adhesion (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 17:35:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion des TabOrder en Consultaion/Validation.
 //*
 //* Arguments		: Aucun
@@ -3826,11 +3826,11 @@ idw_wInter.Uf_Proteger ( sCol, "1" )
 
 
 /*------------------------------------------------------------------*/
-/* Il faut r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer les valeurs pour les types d'interlocuteurs.   */
+/* Il faut récupérer les valeurs pour les types d'interlocuteurs.   */
 /*------------------------------------------------------------------*/
 idw_wInter.ClearValues ( "COD_INTER" )
 idw_wInter.SetValue ( "COD_INTER", 1, "Autre ~tT" )
-idw_wInter.SetValue ( "COD_INTER", 2, "Assur$$HEX2$$e9002000$$ENDHEX$$~tA" )
+idw_wInter.SetValue ( "COD_INTER", 2, "Assuré ~tA" )
 idw_wInter.SetValue ( "COD_INTER", 3, "Banque ~tB" )
 idw_wInter.SetValue ( "COD_INTER", 4, "Fourn. ~tF" )
 
@@ -3849,7 +3849,7 @@ private function long uf_zn_altsuivimail ();//*---------------------------------
 //* Fonction		: uf_zn_AltSuiviMail (PRIVATE)
 //* Auteur			: PHG
 //* Date				: 15/11/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [DNTMAIL1-2]
+//* Libellé			: [DNTMAIL1-2]
 //* Commentaires	: Blocage de AltSuviMail si un courrier existe
 //*
 //* Arguments		: Aucun
@@ -3867,7 +3867,7 @@ bPresenceCP = This.uf_PresenceCP ( idw_wInter.object.id_i[1], idw_wInter.object.
 
 If bPresenceCP then
 	iAction = 2
-	stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de saisie d'un interlocuteur"
+	stMessage.sTitre		= "Contrôle de saisie d'un interlocuteur"
 	stMessage.Icon			= Information!
 	stMessage.bErreurG	= FALSE
 	stMessage.sCode		= "WINT190"
@@ -3886,7 +3886,7 @@ public function boolean uf_controler_sepa (string ascodebq, string ascodeag);//*
 //* Fonction		: uf_controler_sepa (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 11/10/2013	
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [VDoc12394]
+//* Libellé			: [VDoc12394]
 //* Commentaires	: 	
 //*
 //* Arguments		: Aucun
@@ -3905,7 +3905,7 @@ bRet=TRUE
 
 //  [VDoc20041]
 // Appel du WebService
-/* D$$HEX1$$e900$$ENDHEX$$fintivement shunt$$HEX2$$e9002000$$ENDHEX$$par JF le 22/01/2019
+/* Défintivement shunté par JF le 22/01/2019
 	// bRet = SQLCA.PS_S02_AGENCE ( asCodeBq, asCodeAg) > 0 
 
 	uoWsSpbCaller=CREATE n_cst_sp_ws_spbsepa_caller
@@ -3942,7 +3942,7 @@ if lRowDS <=0 Then
 	
 		idw_wDivSin.SetItem ( lRowDS, "ID_SIN", idw_wSin.GetItemNumber ( 1, "ID_SIN" ) )
 		idw_wDivSin.SetItem ( lRowDS, "NOM_ZONE", "ctl_sepa" )
-		idw_wDivSin.SetItem ( lRowDS, "LIB_LABEL", "Contr$$HEX1$$f400$$ENDHEX$$le Banque/Agence SEPA" )
+		idw_wDivSin.SetItem ( lRowDS, "LIB_LABEL", "Contrôle Banque/Agence SEPA" )
 		idw_wDivSin.SetItem ( lRowDS, "ID_TYP_LISTE", "-XX" )
 		idw_wDivSin.SetItem ( lRowDS, "ALT_LISTE_CODECAR", "N" )
 		idw_wDivSin.SetItem ( lRowDS, "ID_TYP_ZONE", "C" )
@@ -3959,7 +3959,7 @@ if lRowDS <=0 Then
 		idw_wDivSin.SetItem ( lRowDS, "MAJ_PAR", stGlb.sCodOper )
 	End if
 Else
-	// Mise $$HEX2$$e0002000$$ENDHEX$$jour dans div_sin
+	// Mise à jour dans div_sin
 	sVal=idw_wDivSin.GetItemString(lRowDS,"VAL_CAR")
 	
 	If bRet Then
@@ -3988,8 +3988,8 @@ private function long uf_zn_idnatcour ();//*------------------------------------
 //* Fonction		: Uf_Zn_IdNatCour (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 15/01/1998 18:23:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: V$$HEX1$$e900$$ENDHEX$$rification de la zone ID_NAT_COUR
+//* Libellé			: 
+//* Commentaires	: Vérification de la zone ID_NAT_COUR
 //*
 //* Arguments		: Aucun
 //*
@@ -4038,7 +4038,7 @@ If lDeb > 0 And iAction=0 Then
 	sListeCour=nvString.of_getkeyvalue( sValCar, "ID_COUR",";")
 	
 	if Pos(sListeCour,"#" + sIdCour + "#") > 0 And Pos(sListeBtq,"#" + String(lIdBoutique) + "#") <= 0 Then
-		// S$$HEX1$$e900$$ENDHEX$$lection d'un courrier non-utilisable pour cette btq
+		// Sélection d'un courrier non-utilisable pour cette btq
 		iAction=1
 		idw_wInter.iiErreur=2
 	End if
@@ -4056,8 +4056,8 @@ private function integer uf_zn_codciv ();//*------------------------------------
 //* Fonction		: Uf_Zn_CodCiv (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 15/01/1998 18:23:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PM452-1]
-//* Commentaires	: V$$HEX1$$e900$$ENDHEX$$rification de la zone COD_INTER
+//* Libellé			: [PM452-1]
+//* Commentaires	: Vérification de la zone COD_INTER
 //*
 //* Arguments		: Aucun
 //*
@@ -4086,8 +4086,8 @@ private function integer uf_zn_altcourgest (string ascas);//*-------------------
 //* Fonction		: Uf_Zn_AltCourGest (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 20/08/2020 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PM497-1]
-//* Commentaires	: V$$HEX1$$e900$$ENDHEX$$rification de la zone ALT_COURGEST
+//* Libellé			: [PM497-1]
+//* Commentaires	: Vérification de la zone ALT_COURGEST
 //*
 //* Arguments		: Aucun
 //*
@@ -4122,7 +4122,7 @@ private function long uf_zn_adr_mail_name ();//*--------------------------------
 //* Fonction		: uf_zn_adr_mail_name (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 04/08/2023
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: // [RS5045_REF_MATP]
+//* Libellé			: // [RS5045_REF_MATP]
 //* Commentaires	: Blocage de AltSuviMail si un courrier existe
 //*
 //* Arguments		: Aucun
@@ -4171,7 +4171,7 @@ private function long uf_zn_adr_mail_domain ();//*------------------------------
 //* Fonction		: uf_zn_adr_mail_domain (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 04/08/2023
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: // [RS5045_REF_MATP]
+//* Libellé			: // [RS5045_REF_MATP]
 //* Commentaires	: Blocage de AltSuviMail si un courrier existe
 //*
 //* Arguments		: Aucun

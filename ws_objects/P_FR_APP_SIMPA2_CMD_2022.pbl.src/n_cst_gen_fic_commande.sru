@@ -8494,6 +8494,7 @@ public function integer uf_generer_fichier_srr (long alidtotcmd);//*------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
 //*		FPI	15/10/2014	[PC14936]
+//			FPI	25/07/2024  [MIG_PB2022] Soapconnection obsolète
 //*-----------------------------------------------------------------
 
 Int	iRet,  iRetFinal
@@ -8502,7 +8503,7 @@ String	 sTypArt,  sFiltre, sTypArtNul, sEnrg, sSep, sVal, sNull
 String sMess
 n_cst_sp_ws_srr_caller wsCaller
 Datetime dtNull
-SoapConnection uSoapCnx
+//SoapConnection uSoapCnx
 srr_createorderresult uoResultWs
 srr_validateorderresult uoResultValidWs
 
@@ -8512,9 +8513,11 @@ SetNull(sNull)
 
 wsCaller= CREATE n_cst_sp_ws_srr_caller
 
-uSoapCnx = CREATE soapconnection
+/*uSoapCnx = CREATE soapconnection
 
-iRet=wsCaller.createproxy(uSoapCnx )
+iRet=wsCaller.createproxy(uSoapCnx )*/
+
+wsCaller.uf_init( )
 
 For lCptCas = 1 To 4
 	
