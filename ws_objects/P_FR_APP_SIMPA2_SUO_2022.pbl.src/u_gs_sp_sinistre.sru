@@ -4093,6 +4093,7 @@ n_cst_string lnvPFCString
 String a
 a="e"
 
+MessageBox ("TOTO", "TOTO" )
 
 stMessage.sTitre		= "Conrôle de saisie du sinistre"
 stMessage.Icon			= Information!
