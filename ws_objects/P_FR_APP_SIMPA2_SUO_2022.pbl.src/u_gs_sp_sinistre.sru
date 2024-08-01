@@ -4089,6 +4089,9 @@ Integer iCodResilAdh, iIdEvtPce
 Boolean 	bDdePceUFAssure, bRefUFAssure, bRegUFAssure 
 n_cst_string lnvPFCString
 
+String a
+a="e"
+
 stMessage.sTitre		= "Conrôle de saisie du sinistre"
 stMessage.Icon			= Information!
 sPos						= ""
