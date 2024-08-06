@@ -20199,6 +20199,7 @@ private function boolean uf_validation_finale_trt_particuliers ();//*-----------
 //       JFF   30/05/2023 [PMO89_RS4822]
 //       JFF   03/11/2023 [RS6114_MAIL_CMA]
 //       JFF   07/03/2024 [HP252_276_HUB_PRESTA]
+//       JFF   05/08/2024 [MCO602_PNEU]
 //*-----------------------------------------------------------------
 
 Date dtPivotFranchisePBox
@@ -21060,9 +21061,12 @@ Choose Case True
 			F_Execute ( sSql, SQLCA )
 			bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
 			
-			sSql = "Exec sysadm.PS_U_PRESTA_LECLERC_PNEU " + String ( idw_wsin.GetItemNumber  ( 1, "ID_SIN" ) ) + "., '" + stGlb.sCodOper + "'"
-			F_Execute ( sSql, SQLCA )
-			bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
+			// [MCO602_PNEU]
+			If NOT F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
+				sSql = "Exec sysadm.PS_U_PRESTA_LECLERC_PNEU " + String ( idw_wsin.GetItemNumber  ( 1, "ID_SIN" ) ) + "., '" + stGlb.sCodOper + "'"
+				F_Execute ( sSql, SQLCA )
+				bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
+			End If	
 			
 		End if
 
