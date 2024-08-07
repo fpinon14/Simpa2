@@ -10827,6 +10827,7 @@ private function string uf_controlergestion_commandes ();//*--------------------
 //    JFF   03/09/2018 [DT361]
 //    JFF   01/10/2018 [PM445-1]
 //    JFF   07/03/2024 [HP252_276_HUB_PRESTA]
+//    JFF   05/08/2024 [MCO602_PNEU]
 //*-----------------------------------------------------------------
 
 String	sPos, sVar, sVar2, sRech, sTitreCplt, sVal1, sVal2, sVal 
@@ -12557,38 +12558,41 @@ If bOk Then
 	End If 
 End If
 
-// [DT227]
-If bOk Then	
-	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 299 )	
-	If lDeb > 0 Then
-		// JFF 07/06/2016 [DT227]
-		SQLCA.PS_S_DATE_PIVOT ( "DT227", dtDt1, dtDt2, dtDt3 ) 
-
-		// [DT227][V3]			
-		lVal2 = 	idw_wDetail.Find ( "ID_EVT = 940 AND MT_PLAF >0", 1, idw_wDetail.RowCount ())
-		
-		Choose Case lCodEtatSin 
-			Case 100, 550, 600
-				// [DT227][V3]
-				If dtCreeLe >= dtDt1 And lVal2 <= 0 Then
-					lVal1 = idw_LstwCommande.Find ( "COD_ETAT <> 'ANN'", 1, idw_LstwCommande.rowCount()+1 )	
-					If lVal1 <= 0 Then
-						stMessage.sTitre  	= "Leclerc Pneu"
-						stMessage.Icon			= Exclamation!
-						stMessage.bErreurG	= FALSE
-						stMessage.Bouton		= YesNo!
-						stMessage.sCode = "WSIN804"
-						If F_Message (stMessage) = 2 Then
-							bOk = False
-							stMessage.sCode = ""
-							stMessage.sVar[1] = "==> Créez une prestation de réparation ou de remplacement."
-						End If
-						
-					End If	
-				End If
-		End Choose		
-	End If 
-End If
+// [MCO602_PNEU] à Supp plus tard
+If NOT F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
+	// [DT227]
+	If bOk Then	
+		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 299 )	
+		If lDeb > 0 Then
+			// JFF 07/06/2016 [DT227]
+			SQLCA.PS_S_DATE_PIVOT ( "DT227", dtDt1, dtDt2, dtDt3 ) 
+	
+			// [DT227][V3]			
+			lVal2 = 	idw_wDetail.Find ( "ID_EVT = 940 AND MT_PLAF >0", 1, idw_wDetail.RowCount ())
+			
+			Choose Case lCodEtatSin 
+				Case 100, 550, 600
+					// [DT227][V3]
+					If dtCreeLe >= dtDt1 And lVal2 <= 0 Then
+						lVal1 = idw_LstwCommande.Find ( "COD_ETAT <> 'ANN'", 1, idw_LstwCommande.rowCount()+1 )	
+						If lVal1 <= 0 Then
+							stMessage.sTitre  	= "Leclerc Pneu"
+							stMessage.Icon			= Exclamation!
+							stMessage.bErreurG	= FALSE
+							stMessage.Bouton		= YesNo!
+							stMessage.sCode = "WSIN804"
+							If F_Message (stMessage) = 2 Then
+								bOk = False
+								stMessage.sCode = ""
+								stMessage.sVar[1] = "==> Créez une prestation de réparation ou de remplacement."
+							End If
+							
+						End If	
+					End If
+			End Choose		
+		End If 
+	End If
+End If 
 
 // [BUG_C_BAILLY]
 lVal1 = idw_LstwCommande.Find ( "ID_REF_FOUR IN ( 'REFUSE_A_REEXP', 'A_REPARER_FORCE' ) AND COD_ETAT = 'CNV'", 1, idw_LstwCommande.rowCount()+1 )	
@@ -18255,6 +18259,7 @@ private function long uf_zn_boutique ();//*-------------------------------------
 //*   #2    JFF   15/01/2010  [O2M_DIAG_NOMADE].Lot2.JFF
 //* 		   JFF   04/11/2010  [PC301].[LOT2]
 //* 		   JFF   27/03/2014  [DT076]
+//          JFF   05/08/2024  [MCO602_PNEU]
 //*-----------------------------------------------------------------
 
 String	sFind, sGetText, sIdEntrepot 
@@ -18330,6 +18335,18 @@ If lDeb > 0 Then
 	idw_wSin.iiErreur = 2
 	iAction = 1
 End If
+
+// [MCO602_PNEU] on ne touche plus à la boutique si présence d'un règlement
+If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 299 )
+	If lDeb > 0 Then
+		If idw_lstinter.Find("COD_INTER='A' And MT_REG > 0",1,idw_lstinter.RowCount()) > 0 Then 
+			idw_wSin.iiErreur = 3
+			iAction = 1
+		End If 
+	End If
+End If
+
 
 //Migration PB8-WYNIWYG-03/2006 OR
 //idw_wSin.SetActionCode ( iAction )
@@ -21053,20 +21070,28 @@ Choose Case True
 	Case sCasPart = "LECLERC_PNEU"
 		
 		If bRet Then // [DT176]
-			sSql = "Exec sysadm.PS_U19_COMMANDE_VIRTUELLE_STD " + String ( idw_wsin.GetItemNumber  ( 1, "ID_SIN" ) ) + "., 'AUT',0"
-			F_Execute ( sSql, SQLCA )
-			bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
-			
-			sSql = "Exec sysadm.PS_U19_COMMANDE_VIRTUELLE_STD " + String ( idw_wsin.GetItemNumber  ( 1, "ID_SIN" ) ) + "., 'CAL',0"
-			F_Execute ( sSql, SQLCA )
-			bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
-			
+		
 			// [MCO602_PNEU]
 			If NOT F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
+				sSql = "Exec sysadm.PS_U19_COMMANDE_VIRTUELLE_STD " + String ( idw_wsin.GetItemNumber  ( 1, "ID_SIN" ) ) + "., 'AUT',0"
+				F_Execute ( sSql, SQLCA )
+				bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
+				
+				sSql = "Exec sysadm.PS_U19_COMMANDE_VIRTUELLE_STD " + String ( idw_wsin.GetItemNumber  ( 1, "ID_SIN" ) ) + "., 'CAL',0"
+				F_Execute ( sSql, SQLCA )
+				bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
+				
 				sSql = "Exec sysadm.PS_U_PRESTA_LECLERC_PNEU " + String ( idw_wsin.GetItemNumber  ( 1, "ID_SIN" ) ) + "., '" + stGlb.sCodOper + "'"
 				F_Execute ( sSql, SQLCA )
 				bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
 			End If	
+
+			// [MCO602_PNEU]
+			If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
+				sSql = "Exec sysadm.PS_I_PRESTA_LECLERC_PNEU_MCO602 " + String ( idw_wsin.GetItemNumber  ( 1, "ID_SIN" ) ) + "." 
+				F_Execute ( sSql, SQLCA )
+				bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
+			End If				
 			
 		End if
 

@@ -1,5 +1,5 @@
-HA$PBExportHeader$n_cst_w_commande2.sru
-$PBExportComments$Objet li$$HEX1$$e900$$ENDHEX$$s $$HEX2$$e0002000$$ENDHEX$$la fen$$HEX1$$ea00$$ENDHEX$$tre Commande2
+﻿$PBExportHeader$n_cst_w_commande2.sru
+$PBExportComments$Objet liés à la fenêtre Commande2
 forward
 global type n_cst_w_commande2 from u_gs_sp_sinistre_anc
 end type
@@ -43,22 +43,22 @@ u_DataWindow_Detail	idw_wDivSin   // [WEBSIM2].[FRANCE]
 /*------------------------------------------------------------------*/
 /* DCMP 030207 : CAG 07/05/03                     */
 /*------------------------------------------------------------------*/
-Integer			iiNbMaxPg = 3	//  nbre de pages max $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$rer
+Integer			iiNbMaxPg = 3	//  nbre de pages max à gérer
 Integer			iiCptPgCte	//  compteur de page courante
 
 U_DataWindow		idwPg[3]		// tableau des dw correspondant aux pages
 String			isPgCol[3]	// tableau des colonnes recevant le focus sur activation d'une page
 
-CommandButton		icbPrec		// bouton pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dent de la fen$$HEX1$$ea00$$ENDHEX$$tre w_gs_sp_w_commande2
-CommandButton		icbSuiv		// bouton suivant de la fen$$HEX1$$ea00$$ENDHEX$$tre w_gs_sp_w_commande2
-CommandButton		icbPrem		// bouton premier de la fen$$HEX1$$ea00$$ENDHEX$$tre w_gs_sp_w_commande2
-CommandButton		icbDern		// bouton dernier de la fen$$HEX1$$ea00$$ENDHEX$$tre w_gs_sp_w_commande2
-CommandButton		icbComLiv	// bouton v$$HEX1$$e900$$ENDHEX$$rif Commune livraison
-CommandButton		icbComFac	// bouton v$$HEX1$$e900$$ENDHEX$$rif Commune facturation
-CommandButton		icbImei		// Bouton r$$HEX1$$e900$$ENDHEX$$cup IMEI Adh origine
+CommandButton		icbPrec		// bouton précédent de la fenêtre w_gs_sp_w_commande2
+CommandButton		icbSuiv		// bouton suivant de la fenêtre w_gs_sp_w_commande2
+CommandButton		icbPrem		// bouton premier de la fenêtre w_gs_sp_w_commande2
+CommandButton		icbDern		// bouton dernier de la fenêtre w_gs_sp_w_commande2
+CommandButton		icbComLiv	// bouton vérif Commune livraison
+CommandButton		icbComFac	// bouton vérif Commune facturation
+CommandButton		icbImei		// Bouton récup IMEI Adh origine
 CommandButton		icbModifAdr	// [PM246]
 
-StaticText		istAffPgCmd	// affichage de la page courante de la fen$$HEX1$$ea00$$ENDHEX$$tre w_gs_ps_w_commande2
+StaticText		istAffPgCmd	// affichage de la page courante de la fenêtre w_gs_ps_w_commande2
 
 Boolean			ibAltCommune   // DCMP 030362 Gestion des commune O/N
 
@@ -108,10 +108,10 @@ public subroutine uf_preparermodifier (ref s_pass astpass);//*------------------
 //* Fonction		: n_cst_pg_in_fic_article::Uf_PreparerModifier (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 31/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Pr$$HEX1$$e900$$ENDHEX$$paration de la modification d'une commande
+//* Libellé			: 
+//* Commentaires	: Préparation de la modification d'une commande
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*					  
 //*
 //* Retourne		: integer	
@@ -119,9 +119,9 @@ public subroutine uf_preparermodifier (ref s_pass astpass);//*------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    CAG		07/05/03	DCMP 030207 : Ajout de 6 zones en retour de Cetelec (pour Cegetel Must)
-//*								=> ajout d'une dw suppl$$HEX1$$e900$$ENDHEX$$mentaire => modif gestion des boutons prec et suiv
-//* #2	 CAG		03/06/03 Ajout de la zone ID_ANN = cat$$HEX1$$e900$$ENDHEX$$gorie d'annulation
-//* #3	 CAG		24/06/03 Pour les annul de cmde d'ASF, cat$$HEX1$$e900$$ENDHEX$$gorie 2, 3, 4 uniquement
+//*								=> ajout d'une dw supplémentaire => modif gestion des boutons prec et suiv
+//* #2	 CAG		03/06/03 Ajout de la zone ID_ANN = catégorie d'annulation
+//* #3	 CAG		24/06/03 Pour les annul de cmde d'ASF, catégorie 2, 3, 4 uniquement
 //* #4	 JFF		05/07/04 DCMP 040206
 //* #5	 PHG     05/12/06 DCMP xxxxxx Urbanisation : Unification de Focntion
 //* #6	 JFF	   20/10/08	[FNAC_PROD_ECH_TECH]
@@ -135,7 +135,7 @@ n_cst_cmd_commun	lnvCmdCommun
 isTypeTrt = astPass.sTab [2]
 
 /*------------------------------------------------------------------*/
-/* On recopie la ligne du d$$HEX1$$e900$$ENDHEX$$tail de la fen$$HEX1$$ea00$$ENDHEX$$tre parent dans          */
+/* On recopie la ligne du détail de la fenêtre parent dans          */
 /* dw_wGarSin de GARANTIE.                                          */
 /*------------------------------------------------------------------*/
 idw_TrtCmde.Uf_CopierLigne ()
@@ -149,7 +149,7 @@ icbComFac.Enabled = ibAltCommune
 This.Uf_ProtegerZone ()
 
 /*------------------------------------------------------------------*/
-/* Formater les N$$HEX2$$b0002000$$ENDHEX$$de T$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phones.                                   */
+/* Formater les N° de Téléphones.                                   */
 /*------------------------------------------------------------------*/
 idw_TrtClient.SetItem ( 1, "ADR_TEL1", Uf_Formatage_Tel ( idw_TrtClient.GetItemString ( 1, "ADR_TEL1" ), TRUE ) )
 idw_TrtClient.SetItem ( 1, "ADR_TEL2", Uf_Formatage_Tel ( idw_TrtClient.GetItemString ( 1, "ADR_TEL2" ), TRUE ) )
@@ -162,7 +162,7 @@ idw_TrtClient.SetItem ( 1, "ADR_TEL3", Uf_Formatage_Tel ( idw_TrtClient.GetItemS
 /*------------------------------------------------------------------*/
 uf_Modifier_Icone_Sfr ()
 /*------------------------------------------------------------------*/
-/* On proc$$HEX1$$e900$$ENDHEX$$de $$HEX2$$e0002000$$ENDHEX$$l'armement des valeurs pour les zones A ou B.       */
+/* On procéde à l'armement des valeurs pour les zones A ou B.       */
 /*------------------------------------------------------------------*/
 uf_Zn_AdrCp ( idw_TrtClient.GetItemString ( 1, "ADR_CP" ), TRUE )
 
@@ -177,14 +177,14 @@ For lCpt = 2 To iiNbMaxPg
 	idwPg [ lCpt ].Hide ()
 Next
 
-// CAG 20/05/2003 :  modification des libell$$HEX1$$e900$$ENDHEX$$s de la dw des donn$$HEX1$$e900$$ENDHEX$$es fournisseur
+// CAG 20/05/2003 :  modification des libellés de la dw des données fournisseur
 sIdFour = idw_TrtCmde.GetItemString ( 1, "ID_FOUR" )
 sIdTypArt = idw_TrtCmde.GetItemString ( 1, "ID_TYP_ART" )
 lIdProd = idw_Produit.GetItemNumber ( 1, "ID_PROD" )
 
 // #5 Unification de fonction
 //This.uf_Changer_Lib_Dw ( lIdProd, sIdFour, sIdTypArt )
-//remplac$$HEX2$$e9002000$$ENDHEX$$par :
+//remplacé par :
 //* #6 [FNAC_PROD_ECH_TECH] ajout isTypeTrt
 lnvCmdCommun.uf_Changer_Lib_Dw ( idw_TrtCmde_Frn, lIdProd, sIdFour, sIdTypArt, isTypeTrt )
 
@@ -212,7 +212,7 @@ dwChild.Filter ()
 
 
 /*------------------------------------------------------------------*/
-/* Le bouton de r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration de l'IMEI adh corrig$$HEX2$$e9002000$$ENDHEX$$n'est            */
+/* Le bouton de récupération de l'IMEI adh corrigé n'est            */
 /* disponible que sur Option.                                       */
 /*------------------------------------------------------------------*/
 
@@ -240,7 +240,7 @@ private subroutine uf_protegerzone ();//*---------------------------------------
 //* Fonction		: n_cst_pg_in_fic_article::Uf_ProtegerZone (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 31/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Protection des zones
 //*
 //* Arguments		: 
@@ -344,7 +344,7 @@ CHOOSE CASE Upper ( isTypeTrt )
 		icbComFac.Enabled = sProt = "0"
 
 		// [PM246]
-		icbModifAdr.Enabled = sProt = "1" And iIdLotCmde > 0 And bFournAutoriseModifAdresse // [PM246] C'est l'inverse, on autorise quadn c'est valid$$HEX2$$e9002000$$ENDHEX$$!
+		icbModifAdr.Enabled = sProt = "1" And iIdLotCmde > 0 And bFournAutoriseModifAdresse // [PM246] C'est l'inverse, on autorise quadn c'est validé !
 		
 		idw_TrtCmde.uf_Proteger &
 				( {	"PROBLEME"				,& 
@@ -361,7 +361,7 @@ CHOOSE CASE Upper ( isTypeTrt )
 		// [:PC321]
 	
 
-		// [HP252_276_HUB_PRESTA] Pour une presta, on ne modifie plus l'adresse car d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$transmise au Hub.
+		// [HP252_276_HUB_PRESTA] Pour une presta, on ne modifie plus l'adresse car déjà transmise au Hub.
 		If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 			If sProt <> "1" Then
 				If lnvString.of_getkeyvalue ( sInfoSpbFrnCplt, "HP_ID_HUB_PRESTA", ";") <> "" Then
@@ -439,7 +439,7 @@ public function string uf_controlersaisie ();//*--------------------------------
 //* Fonction		: n_cst_pg_in_fic_article::Uf_ControlerSaisie (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 06/10/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Controle de saisie
 //*
 //* Arguments		: 
@@ -452,28 +452,28 @@ public function string uf_controlersaisie ();//*--------------------------------
 //* #..   ...   ../../....   
 //* 
 //* #1	 CAG	 10/09/2002   Modification SFR # Ajout de la colonne ADR_COD_CIV
-//* #2	 CAG	 07/11/2002	  						   R$$HEX1$$e900$$ENDHEX$$cup du code SRP + ajout des
+//* #2	 CAG	 07/11/2002	  						   Récup du code SRP + ajout des
 //*															modifs : zone pb obligatoire pr PRS
 //*															zone IMEI
 //* #3	 CAG	 18/11/2002	  						   Ctrl de la zone IMEI :
 //*														   document du cpte-rendu de mission chez CETELEC (2.3)
-//*															Le Imei doit $$HEX1$$ea00$$ENDHEX$$tre un nombre de 15 chiffres ou "0" si PRS
-//* #3.1	 JFF	 01/09/2003	  						   Pour CEGETEL (MUST), on ne prend pas que les IMEI Valide ou $$HEX2$$e0002000$$ENDHEX$$15x0.
-//*															en revanche le pout #3.1 est d$$HEX1$$e900$$ENDHEX$$velopp$$HEX2$$e9002000$$ENDHEX$$avec DET_PRO et peut s'adapter $$HEX2$$e0002000$$ENDHEX$$tout produit
-//* #4	 CAG	 18/11/2002	  						   Ctrl des zones de t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone
+//*															Le Imei doit être un nombre de 15 chiffres ou "0" si PRS
+//* #3.1	 JFF	 01/09/2003	  						   Pour CEGETEL (MUST), on ne prend pas que les IMEI Valide ou à 15x0.
+//*															en revanche le pout #3.1 est développé avec DET_PRO et peut s'adapter à tout produit
+//* #4	 CAG	 18/11/2002	  						   Ctrl des zones de téléphone
 //*														   document du cmpte-rendu de mission chez CETELEC (2.2)
-//*															10 chiffres commen$$HEX1$$e700$$ENDHEX$$ant par 0 et ne finissant pas par 0000
+//*															10 chiffres commençant par 0 et ne finissant pas par 0000
 //* #5	 CAG	 19/05/2003		DCMP 030207 : Ajout de 6 zones en retour de Cetelec (pour Cegetel Must)
-//*									=> ajout d'une dw suppl$$HEX1$$e900$$ENDHEX$$mentaire => modif gestion des boutons prec et suiv
-//* #6	 JFF	 17/06/2003    Modif li$$HEX4$$e9002000e0002000$$ENDHEX$$ARVATO, Adresse de facturation
-//* #7	 JFF   26/08/2003	  DCMP 030362 : contr$$HEX1$$f400$$ENDHEX$$le des communes par rapport au fichier INSEE
-//* #8	 JFF   01/09/2003	  Contr$$HEX1$$f400$$ENDHEX$$les des Tac IMEI/Marques
-//* #9	 JFF	 09/10/2003	  Acception sur option des CP $$HEX2$$e0002000$$ENDHEX$$00000
-//* #10	 CAG	 25/11/2003	  Ajout d'un param$$HEX1$$e800$$ENDHEX$$tre : num$$HEX1$$e900$$ENDHEX$$ro de pg
+//*									=> ajout d'une dw supplémentaire => modif gestion des boutons prec et suiv
+//* #6	 JFF	 17/06/2003    Modif lié à ARVATO, Adresse de facturation
+//* #7	 JFF   26/08/2003	  DCMP 030362 : contrôle des communes par rapport au fichier INSEE
+//* #8	 JFF   01/09/2003	  Contrôles des Tac IMEI/Marques
+//* #9	 JFF	 09/10/2003	  Acception sur option des CP à 00000
+//* #10	 CAG	 25/11/2003	  Ajout d'un paramètre : numéro de pg
 //* #11	 JFF	 20/10/2008	  [FNAC_PROD_ECH_TECH]
-//*			FPI	22/07/2010	[PC321] Contr$$HEX1$$f400$$ENDHEX$$les diff$$HEX1$$e900$$ENDHEX$$rents
+//*			FPI	22/07/2010	[PC321] Contrôles différents
 //      JFF   23/05/2012 [PM103][1]
-//		FPI	15/06/2012	[SFRP085.FPI] D$$HEX1$$e900$$ENDHEX$$sactivation du contr$$HEX1$$f400$$ENDHEX$$le du n$$HEX2$$b0002000$$ENDHEX$$de tel
+//		FPI	15/06/2012	[SFRP085.FPI] Désactivation du contrôle du n° de tel
 //    JFF   27/08/2012  [MANTIS4331]
 //		FPI	14/10/2016	[PC151255]
 //*-----------------------------------------------------------------
@@ -518,20 +518,20 @@ sCol[ 11] = "ADRFC_CP"
 sCol[ 12] = "ADRFC_VILLE"
 sCol[ 13] = "ADRFC_COD_CIV"
 
-sErr[ 1 ] = " - Le nom du client (R$$HEX1$$e900$$ENDHEX$$cup/Livr.)"
-sErr[ 2 ] = " - Le prenom du client (R$$HEX1$$e900$$ENDHEX$$cup/Livr.)"
-sErr[ 3 ] = " - L'adresse (R$$HEX1$$e900$$ENDHEX$$cup/Livr.)"
-sErr[ 4 ] = " - Le code postal (R$$HEX1$$e900$$ENDHEX$$cup/Livr.)"
-sErr[ 5 ] = " - La ville (R$$HEX1$$e900$$ENDHEX$$cup/Livr.)"
-sErr[ 6 ] = " - Le n$$HEX2$$b0002000$$ENDHEX$$de t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone"
+sErr[ 1 ] = " - Le nom du client (Récup/Livr.)"
+sErr[ 2 ] = " - Le prenom du client (Récup/Livr.)"
+sErr[ 3 ] = " - L'adresse (Récup/Livr.)"
+sErr[ 4 ] = " - Le code postal (Récup/Livr.)"
+sErr[ 5 ] = " - La ville (Récup/Livr.)"
+sErr[ 6 ] = " - Le n° de téléphone"
 // #6
-sErr[ 7 ] = " - La civilit$$HEX2$$e9002000$$ENDHEX$$(R$$HEX1$$e900$$ENDHEX$$cup/Livr.)"
+sErr[ 7 ] = " - La civilité (Récup/Livr.)"
 sErr[ 8 ] = " - Le nom du client (Fact.)"
 sErr[ 9 ] = " - Le prenom du client (Fact.)"
 sErr[ 10] = " - L'adresse (Fact.)"
 sErr[ 11] = " - Le code postal (Fact.)"
 sErr[ 12] = " - La ville (Fact.)"
-sErr[ 13] = " - La civilit$$HEX2$$e9002000$$ENDHEX$$(Fact.)"
+sErr[ 13] = " - La civilité (Fact.)"
 lNbrCol	 = UpperBound ( sCol )
 
 stMessage.sTitre  	= "Controle de saisie"
@@ -573,18 +573,18 @@ Next
 /*------------------------------------------------------------------*/
 /* # Modification SFR # Le 17/07/2002.                              */
 /*------------------------------------------------------------------*/
-/* La saisie de ADR_TEL3 (correspondant au N$$HEX2$$b0002000$$ENDHEX$$de t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone du       */
+/* La saisie de ADR_TEL3 (correspondant au N° de téléphone du       */
 /* portable) est obligatoire pour les produits SFR. Il doit de      */
 /* plus comporter obligatoirement 10 chiffres et commencer par 06.  */
 /*------------------------------------------------------------------*/
-/* Ce contr$$HEX1$$f400$$ENDHEX$$le n'est valable que pour le cas d'une                  */
+/* Ce contrôle n'est valable que pour le cas d'une                  */
 /* PReStation.(CETELEC).                                            */
 /*------------------------------------------------------------------*/
 If	sPos = "" And idw_Produit.GetItemNumber ( 1, "COD_TEL" ) = 21 And idw_Produit.GetItemNumber ( 1, "ID_PROD" ) <> 5707 Then
 	sAdrTel3 = idw_TrtClient.GetItemString ( 1, "ADR_TEL3" )
 	If	IsNull ( sAdrTel3 ) Or Len ( Trim ( sAdrTel3 ) ) = 0	Then
 		sPos = "ADR_TEL3"
-		sText = sText + " - Le N$$HEX2$$b0002000$$ENDHEX$$de portable" + sNouvelleLigne
+		sText = sText + " - Le N° de portable" + sNouvelleLigne
 	Else
 /*------------------------------------------------------------------*/
 /* On met 10 chiffres + 4 espaces en fonction du formatage.         */
@@ -603,7 +603,7 @@ End If
 /*------------------------------------------------------------------*/
 /* #4																					  */
 /*------------------------------------------------------------------*/
-// [SFRP085.FPI] D$$HEX1$$e900$$ENDHEX$$sactivation du contr$$HEX1$$f400$$ENDHEX$$le du n$$HEX2$$b0002000$$ENDHEX$$de tel
+// [SFRP085.FPI] Désactivation du contrôle du n° de tel
 /*sCol[ 1 ] = "ADR_TEL1"
 sCol[ 2 ] = "ADR_TEL2"
 sCol[ 3 ] = "ADR_TEL3"
@@ -626,7 +626,7 @@ If sPos = "" Then
 				Case 2
 					sText = "second"
 				Case 3
-					sText = "troisi$$HEX1$$e800$$ENDHEX$$me"
+					sText = "troisième"
 			End Choose
 			Exit
 		End If
@@ -660,8 +660,8 @@ sCol[ 1 ] = "PROBLEME"
 
 // sCol[ 2 ] = "ID_SERIE_ANC" // [MANTIS4331]
 
-sErr[ 1 ] = " - La description du probl$$HEX1$$e800$$ENDHEX$$me"
-// sErr[ 2 ] = " - Le n$$HEX2$$b0002000$$ENDHEX$$de s$$HEX1$$e900$$ENDHEX$$rie de l'ancien appareil" // [MANTIS4331]
+sErr[ 1 ] = " - La description du problème"
+// sErr[ 2 ] = " - Le n° de série de l'ancien appareil" // [MANTIS4331]
 
 lNbrCol	 = UpperBound ( sCol )
 
@@ -672,7 +672,7 @@ stMessage.Bouton		= Ok!
 stMessage.sCode		= "GENE001"
 
 /*------------------------------------------------------------------*/
-/* Le num$$HEX1$$e900$$ENDHEX$$ro IMEI est obligatoire	 										  	 */
+/* Le numéro IMEI est obligatoire	 										  	 */
 /*------------------------------------------------------------------*/
 //	sVal = idw_TrtCmde.GetItemString ( 1, sCol [ 2 ] )
 
@@ -702,7 +702,7 @@ stMessage.sCode		= "GENE001"
 		/*------------------------------------------------------------------*/
 		/* #3																					  */
 		/*------------------------------------------------------------------*/
-		// Interdit-on l'IMEI $$HEX2$$e0002000$$ENDHEX$$0 pour ce produit ? OUI si lDeb > 0
+		// Interdit-on l'IMEI à 0 pour ce produit ? OUI si lDeb > 0
 		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 6 )
 
 		If ( ( sVal <> s15Zero ) And ( Len ( sVal ) <> 15 ) or Not IsNumber ( sVal ) ) &
@@ -736,7 +736,7 @@ stMessage.sCode		= "GENE001"
 /* #3.1                                                             */
 /*------------------------------------------------------------------*/
 	If sPos = "" Then
-		// Interdit-on l'IMEI $$HEX2$$e0002000$$ENDHEX$$0 pour ce produit ? OUI si lDeb > 0
+		// Interdit-on l'IMEI à 0 pour ce produit ? OUI si lDeb > 0
 		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 6 )
 
 		If sVal <> s15Zero Or lDeb > 0 Then
@@ -761,10 +761,10 @@ stMessage.sCode		= "GENE001"
 
 
 /*------------------------------------------------------------------*/
-/* La description du probl$$HEX1$$e800$$ENDHEX$$me est obligatoire si c'est une 			  */
+/* La description du problème est obligatoire si c'est une 			  */
 /* prestation   											                    */
 /*------------------------------------------------------------------*/
-If Upper ( sIdTypArt ) = "PRS"  and not bDP141 Then // [PC321] Pas de contr$$HEX1$$f400$$ENDHEX$$le du probl$$HEX1$$e800$$ENDHEX$$me pour SCR
+If Upper ( sIdTypArt ) = "PRS"  and not bDP141 Then // [PC321] Pas de contrôle du problème pour SCR
 
 	sVal = idw_TrtCmde.GetItemString ( 1, sCol [ 1 ] )
 
@@ -818,11 +818,11 @@ End If
 */
 
 sErr[ 1 ] = " - La marque de l'ancien appareil"
-sErr[ 2 ] = " - Le mod$$HEX1$$e800$$ENDHEX$$le de l'ancien appareil"
+sErr[ 2 ] = " - Le modèle de l'ancien appareil"
 
 /* [PM103][1]
 sErr[ 3 ] = " - La date de rendez-vous avec le client"
-sErr[ 4 ] = " - L'Heure de rendez-vous au plus t$$HEX1$$f400$$ENDHEX$$t"
+sErr[ 4 ] = " - L'Heure de rendez-vous au plus tôt"
 sErr[ 5 ] = " - L'Heure de rendez-vous au plus tard"
 */
 
@@ -863,7 +863,7 @@ If sPos <> "" Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Si c'est une Prestation on contr$$HEX1$$f400$$ENDHEX$$le alors que la date de Rdv et  */
+/* Si c'est une Prestation on contrôle alors que la date de Rdv et  */
 /* Heures soient saisies.                                           */
 /*------------------------------------------------------------------*/
 If lNbrCol > 3 Then
@@ -894,7 +894,7 @@ If lNbrCol > 3 Then
 	Next
 End If 
 
-// [PC321] Si Gestion Carrefour on oublie les contr$$HEX1$$f400$$ENDHEX$$les pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dents
+// [PC321] Si Gestion Carrefour on oublie les contrôles précédents
 If bDP141 Then sPos="" 
 // :[PC321]
 
@@ -908,7 +908,7 @@ End If
 
 /*------------------------------------------------------------------*/
 /* Le 30/07/2003 'DCMP 030337'                                      */
-/* Pour ARVATO - et uniquement pour certains d$$HEX1$$e900$$ENDHEX$$partements -, la     */
+/* Pour ARVATO - et uniquement pour certains départements -, la     */
 /* prise de rendez-vous est interdite le 04/08/2003, le 11/08/2003  */
 /* et le 25/08/2003.                                                */
 /*------------------------------------------------------------------*/
@@ -926,7 +926,7 @@ If	sPos = ""	Then
 	Next
 
 	/*------------------------------------------------------------------*/
-	/* JFF le 17/12/03 : Modif demand$$HEX2$$e9002000$$ENDHEX$$pour le 26/12/2003 et            */
+	/* JFF le 17/12/03 : Modif demandé pour le 26/12/2003 et            */
 	/* 02/01/2004, sans tenir compte des Depts.                         */
 	/*------------------------------------------------------------------*/
 	bDeptTrouve = TRUE
@@ -993,7 +993,7 @@ private function string uf_formatage_heure (string astext);//*------------------
 //* Fonction		: n_cst_pg_in_fic_article::Uf_Formatage_Heure (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 06/10/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Formatage des Heures
+//* Libellé			: Formatage des Heures
 //* Commentaires	: 
 //*
 //* Arguments		: asText		String		Val
@@ -1068,7 +1068,7 @@ public function string uf_controlergestion ();//*-------------------------------
 //* Fonction		: n_cst_pg_in_fic_article::Uf_ControlerGestion (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 06/09/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Controle de Gestion
 //*
 //* Arguments		: 
@@ -1079,8 +1079,8 @@ public function string uf_controlergestion ();//*-------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1 	 CAG		19/05/03	DCMP 030207 : Ajout de 6 zones en retour de Cetelec (pour Cegetel Must)
-//*								=> ajout d'une dw suppl$$HEX1$$e900$$ENDHEX$$mentaire => modif gestion des boutons prec et suiv
-//* #2	 CAG		25/11/2003 Ajout d'un param$$HEX1$$e800$$ENDHEX$$tre : num$$HEX1$$e900$$ENDHEX$$ro de pg
+//*								=> ajout d'une dw supplémentaire => modif gestion des boutons prec et suiv
+//* #2	 CAG		25/11/2003 Ajout d'un paramètre : numéro de pg
 //*-----------------------------------------------------------------
 
 Int	iRet
@@ -1098,7 +1098,7 @@ stMessage.Bouton		= Ok!
 
 
 /*------------------------------------------------------------------*/
-/* Contr$$HEX1$$f400$$ENDHEX$$le G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ral.                                                */
+/* Contrôle Général.                                                */
 /*------------------------------------------------------------------*/
 /* Heure mini avant Heure Maxi.												  */
 /*------------------------------------------------------------------*/
@@ -1136,7 +1136,7 @@ ElseIf IsNull ( sVal ) And Not IsNull ( sVal1 ) Then
 End If	
 
 /*------------------------------------------------------------------*/
-/* Si Au moin une Heure alors une date doit $$HEX1$$ea00$$ENDHEX$$tre saisi.				  */
+/* Si Au moin une Heure alors une date doit être saisi.				  */
 /*------------------------------------------------------------------*/
 If ( Not IsNull ( sVal ) Or Not IsNull ( sVal1 ) ) And &
 	( IsNull ( idw_TrtCmde.GetItemDate ( 1, "DTE_RDV_CLI" ) ) ) Then
@@ -1157,7 +1157,7 @@ If ( Not IsNull ( sVal ) Or Not IsNull ( sVal1 ) ) And &
 End If
 
 /*------------------------------------------------------------------*/
-/* Contr$$HEX1$$f400$$ENDHEX$$le Particulier pour certains fournisseurs.                 */
+/* Contrôle Particulier pour certains fournisseurs.                 */
 /*------------------------------------------------------------------*/
 CHOOSE CASE Upper ( sIdFour )
 
@@ -1186,7 +1186,7 @@ private function string uf_formatage_email (string astext);//*------------------
 //* Fonction		: n_cst_pg_in_fic_article::Uf_Formatage_eMail (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 06/10/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Formatage de l'mail
+//* Libellé			: Formatage de l'mail
 //* Commentaires	: 
 //*
 //* Arguments		: asText		String		Val
@@ -1211,21 +1211,21 @@ iLen = Len ( Trim ( sVal ) )
 If iLen <= 0 Then Return sVal
 
 /*------------------------------------------------------------------*/
-/* Recherche d'un double espace $$HEX2$$e0002000$$ENDHEX$$remplacer par @                   */
+/* Recherche d'un double espace à remplacer par @                   */
 /*------------------------------------------------------------------*/
 DO WHILE Pos ( sVal, "  ", 1 ) > 1 
 	sVal = Replace ( sVal, Pos ( sVal, "  ", 1 ), 2, "@" )	
 LOOP
 
 /*------------------------------------------------------------------*/
-/* Recherche d'un espace $$HEX2$$e0002000$$ENDHEX$$remplacer par .                          */
+/* Recherche d'un espace à remplacer par .                          */
 /*------------------------------------------------------------------*/
 DO WHILE Pos ( sVal, " ", 1 ) > 1 
 	sVal = Replace ( sVal, Pos ( sVal, " ", 1 ), 1, "." )	
 LOOP
 
 /*------------------------------------------------------------------*/
-/* V$$HEX1$$e900$$ENDHEX$$rification de la validit$$HEX2$$e9002000$$ENDHEX$$de l'email.                          */
+/* Vérification de la validité de l'email.                          */
 /*------------------------------------------------------------------*/
 iPoint = 0
 iAt = 0
@@ -1267,7 +1267,7 @@ Next
 If iAt <> 1 Or iPoint < 1 Then sVal = "-1"
 
 /*------------------------------------------------------------------*/
-/* Enfin il ne peut y avoir que certain caract$$HEX1$$e800$$ENDHEX$$res.                 */
+/* Enfin il ne peut y avoir que certain caractères.                 */
 /*------------------------------------------------------------------*/
 If sVal <>  "-1" Then
 	iLen = Len ( Trim ( sVal ) )
@@ -1298,7 +1298,7 @@ private function string uf_formatage_cp (string astext);//*---------------------
 //* Fonction		: n_cst_pg_in_fic_article::Uf_Formatage_CP (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 06/09/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Formatage CP
+//* Libellé			: Formatage CP
 //* Commentaires	: 
 //*
 //* Arguments		: asText		String		Val
@@ -1320,13 +1320,13 @@ sVal = asText
 iLen = Len ( Trim ( sVal ) )
 
 /*------------------------------------------------------------------*/
-/* Au moins 5 Caract$$HEX1$$e800$$ENDHEX$$res.                                           */
+/* Au moins 5 Caractères.                                           */
 /*------------------------------------------------------------------*/
 If iLen < 5 then 	sVal = "-1"
 
 
 /*------------------------------------------------------------------*/
-/* Enfin il ne peut y avoir que certains caract$$HEX1$$e800$$ENDHEX$$res.                */
+/* Enfin il ne peut y avoir que certains caractères.                */
 /*------------------------------------------------------------------*/
 If sVal <>  "-1" Then
 	For lCpt = 1 To iLen
@@ -1344,7 +1344,7 @@ End If
 /*------------------------------------------------------------------*/
 If	sVal <> "-1" And idw_Produit.GetItemNumber ( 1, "COD_TEL" ) = 21 And idw_Produit.GetItemNumber ( 1, "ID_PROD" ) <> 5707	Then
 /*------------------------------------------------------------------*/
-/* On proc$$HEX1$$e900$$ENDHEX$$de $$HEX2$$e0002000$$ENDHEX$$l'armement des valeurs pour les zones A ou B.       */
+/* On procéde à l'armement des valeurs pour les zones A ou B.       */
 /*------------------------------------------------------------------*/
 	uf_Zn_AdrCp ( sVal, FALSE )
 End If
@@ -1357,7 +1357,7 @@ public function integer uf_annuler_cmde ();//*----------------------------------
 //* Fonction		: n_cst_w_commande2::Uf_Annuler_Cmde (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 16/10/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Annulation d'une commande
+//* Libellé			: Annulation d'une commande
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -1371,18 +1371,18 @@ public function integer uf_annuler_cmde ();//*----------------------------------
 //* 
 //* #1	 CAG	 31/10/2002	  Modification SFR # Annulation des commandes
 //*								  pour CEGETEL ( annexe 15 d'Analyse des traitements ... )
-//* #2	 CAG	 05/03/2003	  Si Annulation cmde CEGETEL et que cmde js g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$e => pas de msg
-//* #3	 CAG	 03/06/2003	  Ajout de la zone ID_ANN = cat$$HEX1$$e900$$ENDHEX$$gorie d'annulation
-//* #4	 JFF	 07/11/2003   Pour ARVATO, on ne peut annuler que si prs concern$$HEX2$$e9002000$$ENDHEX$$a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$
-//*								  il y a plus de 7 jours et que la date de collecte n'est pas renseign$$HEX1$$e900$$ENDHEX$$e.
+//* #2	 CAG	 05/03/2003	  Si Annulation cmde CEGETEL et que cmde js générée => pas de msg
+//* #3	 CAG	 03/06/2003	  Ajout de la zone ID_ANN = catégorie d'annulation
+//* #4	 JFF	 07/11/2003   Pour ARVATO, on ne peut annuler que si prs concerné a été généré
+//*								  il y a plus de 7 jours et que la date de collecte n'est pas renseignée.
 //* #5	 CAG	 20/09/2004	  DCMP 040381 : Ajout du frn MSS
 //* #6    MADM  07/02/2006   [DCMP060119]: Ajout du frn AVM
 //* #7    MADM  09/05/2006   [DCMP060356]: Rempl du frn AVM par COR
 //* #8    JFF   06/02/2006   [SITE_CMDE] Gestion des nouvelles option d'autorisation 79, 80, 81
-//* #9	JCA	27/02/2007		DCMP 070085 - Permettre annulation du flux $$HEX1$$e900$$ENDHEX$$mis vers C-Discount
+//* #9	JCA	27/02/2007		DCMP 070085 - Permettre annulation du flux émis vers C-Discount
 //* #10	JFF   18/09/2007 		[ALAPAGE]
 //* #11	PHG	03/12/2007 		[O2M] : Gestion O2M
-//* #12	PHG	04/03/2008	  [DCMP080174] : Regroupement des annulation O2M en un Fichier centralis$$HEX1$$e900$$ENDHEX$$.
+//* #12	PHG	04/03/2008	  [DCMP080174] : Regroupement des annulation O2M en un Fichier centralisé.
 //* #13	PHG	12/03/2008	  [DCMP080174] : Correction Affichage Message Incorrect
 //* #14  JFF   20/06/2008 	  [DCMP080479]
 //* #15  JFF   05/09/2008 	  [MICROMANIA]
@@ -1425,6 +1425,7 @@ public function integer uf_annuler_cmde ();//*----------------------------------
 //       JFF   17/09/2018 [PM444-1]
 //       JFF   04/10/2019 [PM462-1][V3]
 //       JFF   30/05/2023 [PMO89_RS4822]
+//       JFF   05/08/2024 [MCO602_PNEU]
 //*-----------------------------------------------------------------
 
 Int		iRet,  iIdSeq
@@ -1440,7 +1441,7 @@ Boolean  bDT57_annulation // [DT57_CMDE_IPHONE_SFR]
 Long		lIdSin, lRow, lVal1, lVal2
 String	sIdTypArt, SIdFour, sIdRefFour, sVal 
 DataWindowChild	dwChild
-Int		iReponse // #13	[DCMP080174] : On stocke la reponse $$HEX2$$e0002000$$ENDHEX$$la question pos$$HEX1$$e900$$ENDHEX$$e en fin de trt pour l'annulation
+Int		iReponse // #13	[DCMP080174] : On stocke la reponse à la question posée en fin de trt pour l'annulation
 Decimal {2} dcIdsin, dcMtFranchiseARemb
 string	sModele, sInfoSpbFrnCplt // [DT57_CMDE_IPHONE_SFR]
 n_cst_string lnvPFCString
@@ -1538,7 +1539,7 @@ End If
 /*------------------------------------------------------------------*/
 /* #3 CAG : 03/06/2003                                              */
 /*------------------------------------------------------------------*/
-// Si aucune cat$$HEX1$$e900$$ENDHEX$$gorie d'annulation n'est s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX1$$e900$$ENDHEX$$e
+// Si aucune catégorie d'annulation n'est sélectionnée
 idw_AnnCmde.SetItem ( 1, "ID_ANN", 4 )  	//* #6  [DCMP080479]
 /*
 idw_AnnCmde.GetChild ( "ID_ANN", dwChild )
@@ -1562,7 +1563,7 @@ stMessage.Bouton		= YesNo!
 
 dtNow = DateTime ( Today (), Now () )
 dNow  = Today ()
-// sIdFour = Upper ( idw_TrtCmde.GetItemString ( 1, "ID_FOUR" ) ) // #26 - Fait en d$$HEX1$$e900$$ENDHEX$$but de fonction
+// sIdFour = Upper ( idw_TrtCmde.GetItemString ( 1, "ID_FOUR" ) ) // #26 - Fait en début de fonction
 sIdTypArt = Upper ( idw_TrtCmde.GetItemString ( 1, "ID_TYP_ART" ) )
 dCmdGenLe = Date ( idw_TrtCmde.GetItemDateTime ( 1, "CMD_GEN_LE" ) )
 dDteElvMob= Date ( idw_TrtCmde.GetItemDateTime ( 1, "DTE_ELV_MOBILE" ) )
@@ -1581,7 +1582,7 @@ Choose case sIdFour
 
 			Case "TEL"
 				/*------------------------------------------------------------------*/
-				/* #2 Select dans PB, car cas extr$$HEX1$$ea00$$ENDHEX$$mement rare                      */
+				/* #2 Select dans PB, car cas extrêmement rare                      */
 				/*------------------------------------------------------------------*/
 				lIdSin = idw_TrtCmde.GetItemNumber ( 1, "ID_SIN")
 				iIdSeq = idw_TrtCmde.GetItemNumber ( 1, "ID_SEQ")
@@ -1598,7 +1599,7 @@ Choose case sIdFour
 
 				If iIdLotCmd = 0 Then
 					/*------------------------------------------------------------------*/
-					/* Jamais g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$, on annule en interne.                             */
+					/* Jamais généré, on annule en interne.                             */
 					/*------------------------------------------------------------------*/
 					bAnnulGen = False
 					idw_TrtCmde.SetItem ( 1, "COD_ETAT", "ANN" )
@@ -1631,7 +1632,7 @@ Choose case sIdFour
 			Case "TEL"
 
 				/*------------------------------------------------------------------*/
-				/* #2 Select dans PB, car cas extr$$HEX1$$ea00$$ENDHEX$$mement rare                      */
+				/* #2 Select dans PB, car cas extrêmement rare                      */
 				/*------------------------------------------------------------------*/
 				lIdSin = idw_TrtCmde.GetItemNumber ( 1, "ID_SIN")
 				iIdSeq = idw_TrtCmde.GetItemNumber ( 1, "ID_SEQ")
@@ -1648,7 +1649,7 @@ Choose case sIdFour
 
 				If iIdLotCmd = 0 Then
 					/*------------------------------------------------------------------*/
-					/* Jamais g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$, on annule en interne.                             */
+					/* Jamais généré, on annule en interne.                             */
 					/*------------------------------------------------------------------*/
 					bAnnulGen = False
 					idw_TrtCmde.SetItem ( 1, "COD_ETAT", "ANN" )
@@ -1686,7 +1687,7 @@ Choose case sIdFour
 			Case "PRS"
 
 				/*------------------------------------------------------------------*/
-				/* #2 Select dans PB, car cas extr$$HEX1$$ea00$$ENDHEX$$mement rare                      */
+				/* #2 Select dans PB, car cas extrêmement rare                      */
 				/*------------------------------------------------------------------*/
 				lIdSin = idw_TrtCmde.GetItemNumber ( 1, "ID_SIN")
 				iIdSeq = idw_TrtCmde.GetItemNumber ( 1, "ID_SEQ")
@@ -1703,7 +1704,7 @@ Choose case sIdFour
 
 				If iIdLotCmd = 0 Then
 					/*------------------------------------------------------------------*/
-					/* Jamais g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$, on annule en interne.                             */
+					/* Jamais généré, on annule en interne.                             */
 					/*------------------------------------------------------------------*/
 					bAnnulGen = False
 					idw_TrtCmde.SetItem ( 1, "COD_ETAT", "ANN" )
@@ -1713,7 +1714,7 @@ Choose case sIdFour
 					idw_TrtCmde.SetItem ( 1, "ID_ANN", idw_AnnCmde.GetItemNumber ( 1, "ID_ANN" ) )
 				Else
 					/*------------------------------------------------------------------------*/
-					/* Annulation SBE, il faut contacter Fr$$HEX1$$e900$$ENDHEX$$d$$HEX1$$e900$$ENDHEX$$ric Duhamel.						  */
+					/* Annulation SBE, il faut contacter Frédéric Duhamel.						  */
 					/*------------------------------------------------------------------------*/
 
 					stMessage.sCode = "COMD053"
@@ -1739,7 +1740,7 @@ Choose case sIdFour
 			Case "PRS"
 
 				/*------------------------------------------------------------------*/
-				/* #2 Select dans PB, car cas extr$$HEX1$$ea00$$ENDHEX$$mement rare                      */
+				/* #2 Select dans PB, car cas extrêmement rare                      */
 				/*------------------------------------------------------------------*/
 				lIdSin = idw_TrtCmde.GetItemNumber ( 1, "ID_SIN")
 				iIdSeq = idw_TrtCmde.GetItemNumber ( 1, "ID_SEQ")
@@ -1756,7 +1757,7 @@ Choose case sIdFour
 
 				If iIdLotCmd = 0 Then
 					/*------------------------------------------------------------------*/
-					/* Jamais g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$, on annule en interne.                             */
+					/* Jamais généré, on annule en interne.                             */
 					/*------------------------------------------------------------------*/
 					bAnnulGen = False
 					idw_TrtCmde.SetItem ( 1, "COD_ETAT", "ANN" )
@@ -1766,7 +1767,7 @@ Choose case sIdFour
 					idw_TrtCmde.SetItem ( 1, "ID_ANN", idw_AnnCmde.GetItemNumber ( 1, "ID_ANN" ) )					
 				Else
 					/*------------------------------------------------------------------------*/
-					/* Annulation SBE, il faut contacter Fran$$HEX1$$e700$$ENDHEX$$ois Faisans.						  */
+					/* Annulation SBE, il faut contacter François Faisans.						  */
 					/*------------------------------------------------------------------------*/
 
 					stMessage.sCode = "COMD054"
@@ -1796,7 +1797,7 @@ Choose case sIdFour
 			Case "PRS"
 
 				/*------------------------------------------------------------------*/
-				/* #2 Select dans PB, car cas extr$$HEX1$$ea00$$ENDHEX$$mement rare                      */
+				/* #2 Select dans PB, car cas extrêmement rare                      */
 				/*------------------------------------------------------------------*/
 				lIdSin = idw_TrtCmde.GetItemNumber ( 1, "ID_SIN")
 				iIdSeq = idw_TrtCmde.GetItemNumber ( 1, "ID_SEQ")
@@ -1813,7 +1814,7 @@ Choose case sIdFour
 
 				If iIdLotCmd = 0 Then
 					/*------------------------------------------------------------------*/
-					/* Jamais g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$, on annule en interne.                             */
+					/* Jamais généré, on annule en interne.                             */
 					/*------------------------------------------------------------------*/
 					bAnnulGen = False
 					idw_TrtCmde.SetItem ( 1, "COD_ETAT", "ANN" )
@@ -1841,7 +1842,7 @@ Choose case sIdFour
 			Case "EDI"
 
 				/*------------------------------------------------------------------*/
-				/* #2 Select dans PB, car cas extr$$HEX1$$ea00$$ENDHEX$$mement rare                      */
+				/* #2 Select dans PB, car cas extrêmement rare                      */
 				/*------------------------------------------------------------------*/
 				lIdSin = idw_TrtCmde.GetItemNumber ( 1, "ID_SIN")
 				iIdSeq = idw_TrtCmde.GetItemNumber ( 1, "ID_SEQ")
@@ -1858,7 +1859,7 @@ Choose case sIdFour
 
 				If iIdLotCmd = 0 Then
 					/*------------------------------------------------------------------*/
-					/* Jamais g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$, on annule en interne.                             */
+					/* Jamais généré, on annule en interne.                             */
 					/*------------------------------------------------------------------*/
 					bAnnulGen = False
 					idw_TrtCmde.SetItem ( 1, "COD_ETAT", "ANN" )
@@ -1882,7 +1883,7 @@ Choose case sIdFour
 			Case "TEL"
 
 				/*------------------------------------------------------------------*/
-				/* #2 Select dans PB, car cas extr$$HEX1$$ea00$$ENDHEX$$mement rare                      */
+				/* #2 Select dans PB, car cas extrêmement rare                      */
 				/*------------------------------------------------------------------*/
 				lIdSin = idw_TrtCmde.GetItemNumber ( 1, "ID_SIN")
 				iIdSeq = idw_TrtCmde.GetItemNumber ( 1, "ID_SEQ")
@@ -1897,7 +1898,7 @@ Choose case sIdFour
 				AND    id_seq = :iIdSeq
 		      USING  SQLCA ;
 
-				If iIdLotCmd = -1 Then   // Attention tester $$HEX2$$e0002000$$ENDHEX$$-1 pas 0 !!!
+				If iIdLotCmd = -1 Then   // Attention tester à -1 pas 0 !!!
 					stMessage.sCode		= "COMD441"
 					//* #17 [20090209142923553]
 					bMessParticulier = TRUE
@@ -1908,7 +1909,7 @@ Choose case sIdFour
 	Case "WBB"
 
 		/*------------------------------------------------------------------*/
-		/* #2 Select dans PB, car cas extr$$HEX1$$ea00$$ENDHEX$$mement rare                      */
+		/* #2 Select dans PB, car cas extrêmement rare                      */
 		/*------------------------------------------------------------------*/
 		lIdSin = idw_TrtCmde.GetItemNumber ( 1, "ID_SIN")
 		iIdSeq = idw_TrtCmde.GetItemNumber ( 1, "ID_SEQ")
@@ -1923,7 +1924,7 @@ Choose case sIdFour
 		AND    id_seq = :iIdSeq
 		USING  SQLCA ;
 
-		If iIdLotCmd = -1 Then   // Attention tester $$HEX2$$e0002000$$ENDHEX$$-1 pas 0 !!!
+		If iIdLotCmd = -1 Then   // Attention tester à -1 pas 0 !!!
 			stMessage.sCode		= "COMD623"
 			bMessParticulier = TRUE // [WEBSIM2].[2]
 		End If
@@ -1940,7 +1941,7 @@ Choose case sIdFour
 			Case "EDI", "PRS"
 
 				/*------------------------------------------------------------------*/
-				/*  Select dans PB, car cas extr$$HEX1$$ea00$$ENDHEX$$mement rare                      */
+				/*  Select dans PB, car cas extrêmement rare                      */
 				/*------------------------------------------------------------------*/
 				lIdSin = idw_TrtCmde.GetItemNumber ( 1, "ID_SIN")
 				iIdSeq = idw_TrtCmde.GetItemNumber ( 1, "ID_SEQ")
@@ -1958,7 +1959,7 @@ Choose case sIdFour
 
 				If iIdLotCmd = 0 Then
 					/*------------------------------------------------------------------*/
-					/* Jamais g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$, on annule en interne.                             */
+					/* Jamais généré, on annule en interne.                             */
 					/*------------------------------------------------------------------*/
 					bAnnulGen = False
 					idw_TrtCmde.SetItem ( 1, "COD_ETAT", "ANN" )
@@ -1966,29 +1967,29 @@ Choose case sIdFour
 					idw_TrtCmde.SetItem ( 1, "MAJ_LE", dtNow )	
 					idw_TrtCmde.SetItem ( 1, "MAJ_PAR", stGlb.sCodOper )	
 					idw_TrtCmde.SetItem ( 1, "ID_ANN", idw_AnnCmde.GetItemNumber ( 1, "ID_ANN" ) )										
-				Else // #12 [DCMP080174] Plus de message, les commandes annul$$HEX1$$e900$$ENDHEX$$es et envoy$$HEX1$$e900$$ENDHEX$$es
-					  // sont envoy$$HEX1$$e900$$ENDHEX$$es sont forme de fichier Excel $$HEX2$$e0002000$$ENDHEX$$O2M
+				Else // #12 [DCMP080174] Plus de message, les commandes annulées et envoyées
+					  // sont envoyées sont forme de fichier Excel à O2M
 //					/*------------------------------------------------------------------------*/
 //					/* Annulation O2M, il faut contacter .												  */
 //					/*------------------------------------------------------------------------*/
 //
 //					stMessage.sCode = "COMD460" // [O2M] Message d'annulation de commande
 
-//* #25  [MSS_DIAG] Je shunt le FALSE qui se trouve $$HEX1$$ea00$$ENDHEX$$tre g$$HEX1$$ea00$$ENDHEX$$nant.
+//* #25  [MSS_DIAG] Je shunt le FALSE qui se trouve être gênant.
 //					bAffichMsg	= False // #13 [DCMP080174]
 				End If
 
 		End CHoose
 
-//* #15 [MICROMANIA]  Annul$$HEX2$$e9002000$$ENDHEX$$par Lisette Small le 09/09/08, pas de process d'annulatino pour MCM.
-//* #16 [DCMP090026] Je r$$HEX1$$e900$$ENDHEX$$active le process d'annulation Micromania.
+//* #15 [MICROMANIA]  Annulé par Lisette Small le 09/09/08, pas de process d'annulatino pour MCM.
+//* #16 [DCMP090026] Je réactive le process d'annulation Micromania.
 	Case "MCM" 
 
 		Choose Case sIdTypArt 
 			Case "AEF"
 
 				/*------------------------------------------------------------------*/
-				/*  Select dans PB, car cas extr$$HEX1$$ea00$$ENDHEX$$mement rare                      */
+				/*  Select dans PB, car cas extrêmement rare                      */
 				/*------------------------------------------------------------------*/
 				lIdSin = idw_TrtCmde.GetItemNumber ( 1, "ID_SIN")
 				iIdSeq = idw_TrtCmde.GetItemNumber ( 1, "ID_SEQ")
@@ -2005,7 +2006,7 @@ Choose case sIdFour
 
 				If iIdLotCmd = 0 Then
 					/*------------------------------------------------------------------*/
-					/* Jamais g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$, on annule en interne.                             */
+					/* Jamais généré, on annule en interne.                             */
 					/*------------------------------------------------------------------*/
 					bAnnulGen = False
 					idw_TrtCmde.SetItem ( 1, "COD_ETAT", "ANN" )
@@ -2029,7 +2030,7 @@ Choose case sIdFour
 			Case Else				
 
 				/*------------------------------------------------------------------*/
-				/* #2 Select dans PB, car cas extr$$HEX1$$ea00$$ENDHEX$$mement rare                      */
+				/* #2 Select dans PB, car cas extrêmement rare                      */
 				/*------------------------------------------------------------------*/
 				lIdSin = idw_TrtCmde.GetItemNumber ( 1, "ID_SIN")
 				iIdSeq = idw_TrtCmde.GetItemNumber ( 1, "ID_SEQ")
@@ -2046,7 +2047,7 @@ Choose case sIdFour
 
 				If iIdLotCmd = 0 Then
 					/*------------------------------------------------------------------*/
-					/* Jamais g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$, on annule en interne.                             */
+					/* Jamais généré, on annule en interne.                             */
 					/*------------------------------------------------------------------*/
 					bAnnulGen = False
 					idw_TrtCmde.SetItem ( 1, "COD_ETAT", "ANN" )
@@ -2067,7 +2068,7 @@ Choose case sIdFour
 			Case "TEL"
 
 				/*------------------------------------------------------------------*/
-				/* #2 Select dans PB, car cas extr$$HEX1$$ea00$$ENDHEX$$mement rare                      */
+				/* #2 Select dans PB, car cas extrêmement rare                      */
 				/*------------------------------------------------------------------*/
 				lIdSin = idw_TrtCmde.GetItemNumber ( 1, "ID_SIN")
 				iIdSeq = idw_TrtCmde.GetItemNumber ( 1, "ID_SEQ")
@@ -2084,7 +2085,7 @@ Choose case sIdFour
 
 				If iIdLotCmd = 0 Then
 					/*------------------------------------------------------------------*/
-					/* Jamais g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$, on annule en interne.                             */
+					/* Jamais généré, on annule en interne.                             */
 					/*------------------------------------------------------------------*/
 					bAnnulGen = False
 					idw_TrtCmde.SetItem ( 1, "COD_ETAT", "ANN" )
@@ -2106,7 +2107,7 @@ Choose case sIdFour
 			Case Else				
 
 				/*------------------------------------------------------------------*/
-				/* #2 Select dans PB, car cas extr$$HEX1$$ea00$$ENDHEX$$mement rare                      */
+				/* #2 Select dans PB, car cas extrêmement rare                      */
 				/*------------------------------------------------------------------*/
 				lIdSin = idw_TrtCmde.GetItemNumber ( 1, "ID_SIN")
 				iIdSeq = idw_TrtCmde.GetItemNumber ( 1, "ID_SEQ")
@@ -2123,7 +2124,7 @@ Choose case sIdFour
 
 				If iIdLotCmd = 0 Then
 					/*------------------------------------------------------------------*/
-					/* Jamais g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$, on annule en interne.                             */
+					/* Jamais généré, on annule en interne.                             */
 					/*------------------------------------------------------------------*/
 					bAnnulGen = False
 					idw_TrtCmde.SetItem ( 1, "COD_ETAT", "ANN" )
@@ -2142,7 +2143,7 @@ Choose case sIdFour
 		Choose Case sIdTypArt 
 			Case "CAF"
 				/*------------------------------------------------------------------*/
-				/* Annulation aupr$$HEX1$$e800$$ENDHEX$$s du fournisseur par fichier.						  */
+				/* Annulation auprès du fournisseur par fichier.						  */
 				/*------------------------------------------------------------------*/
 				lIdSin = idw_TrtCmde.GetItemNumber ( 1, "ID_SIN")
 				iIdSeq = idw_TrtCmde.GetItemNumber ( 1, "ID_SEQ")
@@ -2204,7 +2205,7 @@ Choose case sIdFour
 
 				If iIdLotCmd = 0 Then
 					/*------------------------------------------------------------------*/
-					/* Jamais g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$, on annule en interne.                             */
+					/* Jamais généré, on annule en interne.                             */
 					/*------------------------------------------------------------------*/
 					bAnnulGen = False
 					idw_TrtCmde.SetItem ( 1, "COD_ETAT", "ANN" )
@@ -2226,7 +2227,7 @@ Choose case sIdFour
 			Case Else
 
 				/*------------------------------------------------------------------*/
-				/* #2 Select dans PB, car cas extr$$HEX1$$ea00$$ENDHEX$$mement rare                      */
+				/* #2 Select dans PB, car cas extrêmement rare                      */
 				/*------------------------------------------------------------------*/
 				lIdSin = idw_TrtCmde.GetItemNumber ( 1, "ID_SIN")
 				iIdSeq = idw_TrtCmde.GetItemNumber ( 1, "ID_SEQ")
@@ -2243,7 +2244,7 @@ Choose case sIdFour
 
 				If iIdLotCmd = 0 Then
 					/*------------------------------------------------------------------*/
-					/* Jamais g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$, on annule en interne.                             */
+					/* Jamais généré, on annule en interne.                             */
 					/*------------------------------------------------------------------*/
 					bAnnulGen = False
 					idw_TrtCmde.SetItem ( 1, "COD_ETAT", "ANN" )
@@ -2263,7 +2264,7 @@ Choose case sIdFour
 			Case "PRS"
 
 				/*------------------------------------------------------------------*/
-				/* #2 Select dans PB, car cas extr$$HEX1$$ea00$$ENDHEX$$mement rare                      */
+				/* #2 Select dans PB, car cas extrêmement rare                      */
 				/*------------------------------------------------------------------*/
 				lIdSin = idw_TrtCmde.GetItemNumber ( 1, "ID_SIN")
 				iIdSeq = idw_TrtCmde.GetItemNumber ( 1, "ID_SEQ")
@@ -2280,7 +2281,7 @@ Choose case sIdFour
 
 				If iIdLotCmd = 0 Then
 					/*------------------------------------------------------------------*/
-					/* Jamais g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$, on annule en interne.                             */
+					/* Jamais généré, on annule en interne.                             */
 					/*------------------------------------------------------------------*/
 					bAnnulGen = False
 					idw_TrtCmde.SetItem ( 1, "COD_ETAT", "ANN" )
@@ -2331,8 +2332,8 @@ Choose case sIdFour
 					// On autorise dans tous les cas
 			End choose
 		
-		// [ITSM306150] [ITSM363758][ITSM394275]
-		Case "DTY", "MBS", "CVC", "ATC", "CMA", "OMT", "AAS"
+		// [ITSM306150] [ITSM363758][ITSM394275][MCO602_PNEU]
+		Case "DTY", "MBS", "CVC", "ATC", "CMA", "OMT", "AAS", "CAL"
 			// On autorise dans tous les cas
 			
 	/*------------------------------------------------------------------*/
@@ -2360,7 +2361,7 @@ If bAnnulGen Then
 	if bAffichMsg Then
 		//* #17 [20090209142923553]
 		If Not bMessParticulier Then
-			stMessage.sCode		= "COMD477"		// #6  [DCMP080479] On force le message $$HEX2$$e0002000$$ENDHEX$$pr$$HEX1$$e900$$ENDHEX$$sent
+			stMessage.sCode		= "COMD477"		// #6  [DCMP080479] On force le message à présent
 			//* #25  [MSS_DIAG]
 			stMessage.Icon			= Question!
 			stMessage.bErreurG	= FALSE
@@ -2380,7 +2381,7 @@ If bAnnulGen Then
 			stMessage.Icon			= Question!
 			stMessage.bErreurG	= FALSE
 			stMessage.Bouton		= YesNo!			
-			stMessage.sVar[1] =  String ( dcMtFranchiseARemb, "#,##0.00 \$$HEX1$$ac20$$ENDHEX$$" ) 
+			stMessage.sVar[1] =  String ( dcMtFranchiseARemb, "#,##0.00 \€" ) 
 			iReponse = F_Message ( stMessage )
 		End If 
 	End If
@@ -2453,11 +2454,11 @@ private function string uf_formatage_tel (string astext, boolean abswitch);//*--
 //* Fonction		: n_cst_w_commandes2:Uf_Formatage_Tel (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 06/10/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Formatage des N$$HEX2$$b0002000$$ENDHEX$$de Tel
+//* Libellé			: Formatage des N° de Tel
 //* Commentaires	: 
 //*
 //* Arguments		: asText		String		Val
-//*					  abSwitch	Boolean		Val		True : on ins$$HEX1$$e900$$ENDHEX$$re des espaces
+//*					  abSwitch	Boolean		Val		True : on insére des espaces
 //*																False: on retire les espaces
 //*					  
 //*
@@ -2477,7 +2478,7 @@ sVal = Trim ( asText )
 iLen = Len ( Trim ( sVal ) )
 
 /*------------------------------------------------------------------*/
-/* Que des Chiffres ou des espaces dans le n$$HEX2$$b0002000$$ENDHEX$$de T$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone.         */
+/* Que des Chiffres ou des espaces dans le n° de Téléphone.         */
 /*------------------------------------------------------------------*/
 If abSwitch Then
 	For lCpt = 1 To iLen
@@ -2494,7 +2495,7 @@ CHOOSE CASE abSwitch
 
 		CHOOSE CASE iLen
 		
-			// Standard Fran$$HEX1$$e700$$ENDHEX$$ais 1234567890 -> 12 34 56 78 90
+			// Standard Français 1234567890 -> 12 34 56 78 90
 			CASE 10
 
 				sVal = Left ( sVal, 2 ) 	+ " " + &
@@ -2508,7 +2509,7 @@ CHOOSE CASE abSwitch
 	CASE ELSE
 
 		/*------------------------------------------------------------------*/
-		/* Pas d'espace pour les num$$HEX1$$e900$$ENDHEX$$ros de t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone.                      */
+		/* Pas d'espace pour les numéros de téléphone.                      */
 		/*------------------------------------------------------------------*/
 		For lCpt = iLen To 1 Step -1
 			If Mid ( sVal, lCpt, 1 ) = " " Then 
@@ -2528,8 +2529,8 @@ public function boolean uf_preparervalider ();//*-------------------------------
 //* Fonction		: n_cst_w_commande2::Uf_PreparerValider (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 31/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Pr$$HEX1$$e900$$ENDHEX$$paration de la validation d'une commande
+//* Libellé			: 
+//* Commentaires	: Préparation de la validation d'une commande
 //*
 //* Arguments		: 
 //*					  
@@ -2543,8 +2544,8 @@ public function boolean uf_preparervalider ();//*-------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On supprime les espaces des n$$HEX2$$b0002000$$ENDHEX$$de Tel seulement pour les n$$HEX7$$b000200020002000200020002000$$ENDHEX$$*/
-/* Fran$$HEX1$$e700$$ENDHEX$$ais $$HEX2$$e0002000$$ENDHEX$$10 Chiffres.                                          */
+/* On supprime les espaces des n° de Tel seulement pour les n°      */
+/* Français à 10 Chiffres.                                          */
 /*------------------------------------------------------------------*/
 idw_TrtClient.SetItem ( 1, "ADR_TEL1", Uf_Formatage_Tel ( idw_TrtClient.GetItemString ( 1, "ADR_TEL1" ), FALSE ) )
 idw_TrtClient.SetItem ( 1, "ADR_TEL2", Uf_Formatage_Tel ( idw_TrtClient.GetItemString ( 1, "ADR_TEL2" ), FALSE ) )
@@ -2559,8 +2560,8 @@ private subroutine uf_modifier_icone_sfr ();//*---------------------------------
 //* Fonction		: N_Cst_W_Commande2::uf_Modifier_Icone_Sfr (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 21/07/2002 09:31:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On positionne un BITMAP diff$$HEX1$$e900$$ENDHEX$$rent sur la zone ADR_TEL3
+//* Libellé			: 
+//* Commentaires	: On positionne un BITMAP différent sur la zone ADR_TEL3
 //*
 //* Arguments		: Aucun
 //*
@@ -2598,7 +2599,7 @@ private subroutine uf_zn_adrcp (string asval, boolean abinit);//*---------------
 //* Fonction		: N_Cst_W_Commande3::uf_Zn_AdrCp (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 21/07/2002 09:31:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On s'occupe de la zone ADR_CP
 //*
 //* Arguments		: (Val)		asVal		String
@@ -2609,7 +2610,7 @@ private subroutine uf_zn_adrcp (string asval, boolean abinit);//*---------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JFF   04/06/2003	  Modification de la structure de la table ZONE_COGEPAR (nouvellement
-//*								  nomm$$HEX1$$e900$$ENDHEX$$e ZONE_FOURNISSEUR), donc modification du sRech
+//*								  nommée ZONE_FOURNISSEUR), donc modification du sRech
 //* 
 //*-----------------------------------------------------------------
 
@@ -2630,7 +2631,7 @@ sValDefaut = "B"  // B pour CETELEC
 /*------------------------------------------------------------------*/
 If	idw_Produit.GetItemNumber ( 1, "COD_TEL" ) = 21 And lIdProd <> 5707	Then
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie si le CODE POSTAL que l'on vient de saisir existe     */
+/* On vérifie si le CODE POSTAL que l'on vient de saisir existe     */
 /* dans la table ZONE_COGEPAR.                                      */
 /*------------------------------------------------------------------*/
 	If	Not IsNull ( asVal )	Then
@@ -2652,14 +2653,14 @@ If	idw_Produit.GetItemNumber ( 1, "COD_TEL" ) = 21 And lIdProd <> 5707	Then
 		sIdZone = stNul.str
 	End If
 /*------------------------------------------------------------------*/
-/* Il s'agit de l'initialisation, c'est $$HEX2$$e0002000$$ENDHEX$$dire que l'on vient       */
+/* Il s'agit de l'initialisation, c'est à dire que l'on vient       */
 /* directement de la fonction uf_PreparerModifier, il faut prendre  */
-/* les valeurs remont$$HEX1$$e900$$ENDHEX$$es par le SELECT.                             */
+/* les valeurs remontées par le SELECT.                             */
 /*------------------------------------------------------------------*/
 	If	Not abInit	Then
 		idw_TrtCmde.SetItem ( 1, "ID_ZONE", sIdZone )
 /*------------------------------------------------------------------*/
-/* On positionne les zones qui d$$HEX1$$e900$$ENDHEX$$pendent de ID_ZONE $$HEX2$$e0002000$$ENDHEX$$NULL.         */
+/* On positionne les zones qui dépendent de ID_ZONE à NULL.         */
 /*------------------------------------------------------------------*/
 		idw_TrtCmde.SetItem ( 1, "ID_CHOIX_HORAIRE", stNul.lng )
 		idw_TrtCmde.SetItem ( 1, "DTE_RDV_CLI", stNul.dat )
@@ -2683,7 +2684,7 @@ private function string uf_controlergestion_cegetel ();//*----------------------
 //* Fonction      : N_Cst_w_commande2::uf_ControlerGestion_CEGETEL ( PRIVATE )
 //* Auteur        : Catherine ABDMEZIEM
 //* Date          : 04/10/2002 16:19:15
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : Aucun
@@ -2692,10 +2693,10 @@ private function string uf_controlergestion_cegetel ();//*----------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1    JFF   	11/03/2003 Ajout de contr$$HEX1$$f400$$ENDHEX$$les sur adresses et ville
+//* #1    JFF   	11/03/2003 Ajout de contrôles sur adresses et ville
 //* #2 	 CAG		19/05/03	DCMP 030207 : Ajout de 6 zones en retour de Cetelec (pour Cegetel Must)
-//*								=> ajout d'une dw suppl$$HEX1$$e900$$ENDHEX$$mentaire => modif gestion des boutons prec et suiv
-//* #3	 CAG		25/11/2003 Ajout d'un param$$HEX1$$e800$$ENDHEX$$tre : num$$HEX1$$e900$$ENDHEX$$ro de pg
+//*								=> ajout d'une dw supplémentaire => modif gestion des boutons prec et suiv
+//* #3	 CAG		25/11/2003 Ajout d'un paramètre : numéro de pg
 //*-----------------------------------------------------------------
 
 DataWindowChild	dwChild
@@ -2710,7 +2711,7 @@ sPos = ""
 	lLen = Len ( Trim ( dwChild.GetItemString ( lRow, "LIB_CODE" ) ) ) + &
 			 Len ( Trim ( idw_TrtClient.GetItemString ( 1, "ADR_NOM" ) ) )+ &
 			 Len ( Trim ( idw_TrtClient.GetItemString ( 1, "ADR_PRENOM" ) ) )
-	// -2 pour les 2 espaces entre la civilit$$HEX2$$e9002000$$ENDHEX$$et le nom, et le nom et le pr$$HEX1$$e900$$ENDHEX$$nom
+	// -2 pour les 2 espaces entre la civilité et le nom, et le nom et le prénom
 	If lLen > 30 - 2 Then
 		stMessage.sCode = "COMD038"
 		sPos = "ADR_NOM"
@@ -2730,7 +2731,7 @@ sPos = ""
 	/*------------------------------------------------------------------*/
 	lLen = Len ( Trim ( idw_TrtClient.GetItemString ( 1, "ADR_LIVR1" ) ) )	+ &
 			 Len ( Trim ( idw_TrtClient.GetItemString ( 1, "ADR_LIVR2" ) ) )
-	// -1 pour le s$$HEX1$$e900$$ENDHEX$$parateur
+	// -1 pour le séparateur
 	If lLen > 30 - 1 Then
 		stMessage.sCode = "COMD042"
 		sPos = "ADR_LIVR1" 
@@ -2763,20 +2764,20 @@ private subroutine uf_controlersaisie_commune (ref string aspos);//*------------
 //* Fonction      : n_cst_w_commande2::uf_ControlerSaisie_Commune (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 25/08/2003 16:34:05
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: DCMP 030362 Contr$$HEX1$$f400$$ENDHEX$$le des communes.
+//* Libellé       : DCMP 030362 Contrôle des communes.
 //* Commentaires  : 
 //*
-//* Arguments     : String		r$$HEX1$$e900$$ENDHEX$$f		asPos
+//* Arguments     : String		réf		asPos
 //*
 //* Retourne      : 
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1	 JFF	  08/10/2003  Le fichier INSEE.TXT ne contien que les 25 premiers 
-//*								  caract$$HEX1$$e800$$ENDHEX$$res de la ville.
-//* #2	 JFF	  27/01/2004  DCMP 030581 : On pr$$HEX1$$e900$$ENDHEX$$voit un shunt pour le contr$$HEX1$$f400$$ENDHEX$$le des communes.
+//*								  caractères de la ville.
+//* #2	 JFF	  27/01/2004  DCMP 030581 : On prévoit un shunt pour le contrôle des communes.
 //* #3	 PHG	  17/06/2006  [DCMP060445] : Unification Sherpa/simpa Controle des communes
-//*								  R$$HEX2$$e900e900$$ENDHEX$$criture de la fonction.
+//*								  Réécriture de la fonction.
 //*
 //*-----------------------------------------------------------------
 
@@ -2786,7 +2787,7 @@ String 		sVille, sCP, sMes, sPosCP, sPosVille
 If asPos <> "" Or Not ibAltCommune Then Return
 
 /*------------------------------------------------------------------*/
-/* #2 : OPTION 16 : Si Option, on d$$HEX1$$e900$$ENDHEX$$connecte tout le contr$$HEX1$$f400$$ENDHEX$$le des   */
+/* #2 : OPTION 16 : Si Option, on déconnecte tout le contrôle des   */
 /* communes                                                         */
 /*------------------------------------------------------------------*/
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 16 )
@@ -2820,7 +2821,7 @@ For lCptAdr = 1 To 1
 			/*------------------------------------------------------------------*/
 			/* Le CP n'existe pas					                                */
 			/*------------------------------------------------------------------*/
-			stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de saisie d'un interlocuteur (Communes)"
+			stMessage.sTitre		= "Contrôle de saisie d'un interlocuteur (Communes)"
 			stMessage.Bouton		= Ok!
 			stMessage.Icon			= Information!
 			stMessage.sVar[1]		= sMes
@@ -2832,7 +2833,7 @@ For lCptAdr = 1 To 1
 			/*------------------------------------------------------------------*/
 			/* La commune n'existe pas                                          */
 			/*------------------------------------------------------------------*/
-			stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de saisie d'un interlocuteur (Communes)"
+			stMessage.sTitre		= "Contrôle de saisie d'un interlocuteur (Communes)"
 			stMessage.Bouton		= Ok!
 			stMessage.Icon			= Information!
 			stMessage.sVar[1]		= sMes
@@ -2853,10 +2854,10 @@ private subroutine uf_controlersaisie_tacimei (ref string aspos);//*------------
 //* Fonction      : n_cst_w_commande2::uf_ControlerSaisie_TacImei (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 02/09/2003 15:04:10
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le des TAC_IMEI
+//* Libellé       : Contrôle des TAC_IMEI
 //* Commentaires  : 
 //*
-//* Arguments     : String		r$$HEX1$$e900$$ENDHEX$$f		asPos
+//* Arguments     : String		réf		asPos
 //*
 //* Retourne      : 
 //*
@@ -2869,7 +2870,7 @@ String	sTacImei
 String	sMarqPort, sMarqTAC, sIdTypArt   
 Long 		lTotTAC, lRow 
 
-// JFF 31/03, n'est plus utilis$$HEX4$$e9002000e0002000$$ENDHEX$$cet endroit.
+// JFF 31/03, n'est plus utilisé à cet endroit.
 Return
 
 If asPos <> "" Then Return
@@ -2884,25 +2885,25 @@ If sIdTypArt <> "PRS" Then Return
 lTotTAC = idw_TacImei.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* On ne fait le contr$$HEX1$$f400$$ENDHEX$$le de coh$$HEX1$$e900$$ENDHEX$$rence que si les deux zones sont   */
-/* renseign$$HEX1$$e900$$ENDHEX$$es.                                                     */
+/* On ne fait le contrôle de cohérence que si les deux zones sont   */
+/* renseignées.                                                     */
 /*------------------------------------------------------------------*/
 If IsNull ( sMarqPort ) Or sMarqPort = "" Or IsNull ( sTacImei ) Or sTacImei = "" Then Return
 
 lRow = idw_TacImei.Find ( "ID_TAC = " + sTacImei, 1, lTotTAC )
 
 /*------------------------------------------------------------------*/
-/* TAC Trouv$$HEX2$$e9002000$$ENDHEX$$dans la base.                                         */
+/* TAC Trouvé dans la base.                                         */
 /*------------------------------------------------------------------*/
 If lRow > 0 Then
 	sMarqTAC = Upper ( idw_TacImei.GetItemString ( lRow, "MARQUE" ) )
 
 	/*------------------------------------------------------------------*/
-	/* Mais le TAC ne correspond pas $$HEX2$$e0002000$$ENDHEX$$la Marque.                       */
+	/* Mais le TAC ne correspond pas à la Marque.                       */
 	/*------------------------------------------------------------------*/
 	If sMarqPort <> sMarqTac Then
 
-		stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de validit$$HEX2$$e9002000$$ENDHEX$$du TAC IMEI"
+		stMessage.sTitre		= "Contrôle de validité du TAC IMEI"
 		stMessage.Bouton		= Ok!
 		stMessage.Icon			= Information!
 		stMessage.bErreurG	= FALSE
@@ -2927,7 +2928,7 @@ private function integer uf_zn_idserieanc (ref u_datawindow adw, string asdata, 
 //*
 //* Fonction		: n_cst_w_commande2::Uf_Zn_IdSerieAnc (PRIVATE)
 //* Date				: 02/09/2003
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Zone Id_Serie_Anc
+//* Libellé			: Zone Id_Serie_Anc
 //* Commentaires	: 
 //*
 //* Arguments		: aDw				DataWindow	Ref
@@ -2939,8 +2940,8 @@ private function integer uf_zn_idserieanc (ref u_datawindow adw, string asdata, 
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1	 JFF	   09/09/2003 Denis souhaite que les gestionnaire saississent
-//*								  eux-m$$HEX1$$ea00$$ENDHEX$$me les quinze '0', et non pas que la saisie
-//*								  soit assist$$HEX1$$e900$$ENDHEX$$e.
+//*								  eux-même les quinze '0', et non pas que la saisie
+//*								  soit assistée.
 //* 
 //*---------------------------------------------------------------
 
@@ -2979,7 +2980,7 @@ private function integer uf_zn_probleme (ref u_datawindow adw, string asdata, lo
 //*
 //* Fonction		: n_cst_w_commande2::Uf_Zn_Probleme
 //* Date				: 19/09/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Zone Choix
+//* Libellé			: Zone Choix
 //* Commentaires	: 
 //*
 //* Arguments		: aDw				u_DataWindow	Val
@@ -3016,12 +3017,12 @@ private subroutine uf_epuration_zonecommune (ref string asville, ref integer aic
 //* Fonction      : uf_gs_sp_sinistre::uf_Epuration_ZoneCommune ( PRIVATE )
 //* Auteur        : Fabry JF
 //* Date          : 12/09/2003 10:48:04
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Supprime tout ce qui est g$$HEX1$$ea00$$ENDHEX$$nant dans la chaine de 
+//* Libellé       : Supprime tout ce qui est gênant dans la chaine de 
 //*					  la ville afin de ne garder que la ville.
 //* Commentaires  : 
 //*
 //* Arguments     : String 	asVille 		aRef
-//*					  Integer	aiCode		aRef	 1 : Pr$$HEX1$$e900$$ENDHEX$$sence d'un CEDEX, BP, etc 
+//*					  Integer	aiCode		aRef	 1 : Présence d'un CEDEX, BP, etc 
 //*
 //* Retourne      : 
 //*
@@ -3031,16 +3032,16 @@ private subroutine uf_epuration_zonecommune (ref string asville, ref integer aic
 //*
 //*-----------------------------------------------------------------
 String sVille, sCar, sMot, sMotSubst
-String sTbMotCle []   // Mots Cl$$HEX4$$e9002000e0002000$$ENDHEX$$ne pas tenir Compte
+String sTbMotCle []   // Mots Clé à ne pas tenir Compte
 Integer iTotMotCle, iCpt, iPos
 Boolean bCarTrouve
 
-sTbMotCle = { " BP", "CEDEX", "C$$HEX1$$c900$$ENDHEX$$DEX", "CED$$HEX1$$c900$$ENDHEX$$X", "C$$HEX1$$c900$$ENDHEX$$D$$HEX1$$c900$$ENDHEX$$X" }
+sTbMotCle = { " BP", "CEDEX", "CÉDEX", "CEDÉX", "CÉDÉX" }
 sVille = Upper ( asVille )
 aiCode = 0
 
 /*------------------------------------------------------------------*/
-/* 1 : Suppression des mots cl$$HEX1$$e900$$ENDHEX$$s                                    */
+/* 1 : Suppression des mots clés                                    */
 /*------------------------------------------------------------------*/
 iTotMotCle = UpperBound ( sTbMotCle )
 For iCpt = 1 To iTotMotCle
@@ -3055,7 +3056,7 @@ For iCpt = 1 To iTotMotCle
 Next
 
 /*------------------------------------------------------------------*/
-/* 2 : Par la gauche, suppression de tout caract$$HEX1$$e800$$ENDHEX$$re non compris     */
+/* 2 : Par la gauche, suppression de tout caractère non compris     */
 /* entre 65 et 90 (ASCII).                                          */
 /*------------------------------------------------------------------*/
 bCarTrouve = TRUE
@@ -3073,7 +3074,7 @@ Do While bCarTrouve
 Loop
 
 /*------------------------------------------------------------------*/
-/* 3 : Par la Droite, suppression de tout caract$$HEX1$$e800$$ENDHEX$$re non compris     */
+/* 3 : Par la Droite, suppression de tout caractère non compris     */
 /* entre 65 et 90 (ASCII).                                          */
 /*------------------------------------------------------------------*/
 bCarTrouve = TRUE
@@ -3092,7 +3093,7 @@ Loop
 
 
 /*------------------------------------------------------------------*/
-/* 4 : Si _SAINT_ Ou _SAINTE_ trouv$$HEX2$$e9002000$$ENDHEX$$en d$$HEX1$$e900$$ENDHEX$$but de chaine remplacer   */
+/* 4 : Si _SAINT_ Ou _SAINTE_ trouvé en début de chaine remplacer   */
 /* par ST ou STE                                                    */
 /*------------------------------------------------------------------*/
 For iCpt = 1 To 4
@@ -3128,7 +3129,7 @@ For iCpt = 1 To 4
 Next
 
 /*------------------------------------------------------------------*/
-/* 5 : Si la ville est compos$$HEX1$$e900$$ENDHEX$$e, il ne doit y avoir qu'un espace 	  */
+/* 5 : Si la ville est composée, il ne doit y avoir qu'un espace 	  */
 /* entre les mots.																  */
 /*------------------------------------------------------------------*/
 iPos = 1 
@@ -3150,10 +3151,10 @@ private subroutine uf_controlersaisie_cp (ref string aspos);//*-----------------
 //* Fonction      : n_cst_w_commande2::uf_ControlerSaisie_CP (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 09/10/2003 16:34:05
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
-//* Arguments     : String		r$$HEX1$$e900$$ENDHEX$$f		asPos
+//* Arguments     : String		réf		asPos
 //*
 //* Retourne      : 
 //*
@@ -3173,18 +3174,18 @@ If asPos <> "" Then Return
 
 bAutorise=TRUE // [ITSM120934]
 
-// on recherche si l'option 8 est param$$HEX1$$e900$$ENDHEX$$tr$$HEX1$$e900$$ENDHEX$$e pour le produit
+// on recherche si l'option 8 est paramétrée pour le produit
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 8 )
 
 if lDeb > 0 then
 	
 	For i = lDeb To lFin
-		// type d'artivle param$$HEX1$$e900$$ENDHEX$$tr$$HEX1$$e900$$ENDHEX$$
+		// type d'artivle paramétré
 		sIdCodeCar = idw_DetPro.object.id_code_car[i]
-		// mot cl$$HEX2$$e9002000$$ENDHEX$$autorisant les DOM-TOM et l'ETRANGER
+		// mot clé autorisant les DOM-TOM et l'ETRANGER
 		sValCar	=	lnvPFCString.of_getkeyvalue ( idw_DetPro.object.val_car[i], 'TERR', ';' )
 		
-		// si le type d'article param$$HEX1$$e900$$ENDHEX$$tr$$HEX2$$e9002000$$ENDHEX$$est le m$$HEX1$$ea00$$ENDHEX$$me que celui pour la commande en cours
+		// si le type d'article paramétré est le même que celui pour la commande en cours
 		if sIdCodeCar = sIdTypArt then
 		
 			if sAdrCp = '00000' then
@@ -3211,10 +3212,10 @@ if lDeb > 0 then
 	next
 	
 else
-	// si l'option n'est pas param$$HEX1$$e900$$ENDHEX$$tr$$HEX1$$e900$$ENDHEX$$e et que l'on a un CP ETRANGER OU DOM-TOM
+	// si l'option n'est pas paramétrée et que l'on a un CP ETRANGER OU DOM-TOM
 	if sAdrCp = '00000' then
 		bAutorise = false // on REFUSE la prestation
-		stMessage.sVar[1] = "$$HEX1$$e900$$ENDHEX$$trangers"
+		stMessage.sVar[1] = "étrangers"
 	end if
 		
 	if ( left ( sAdrCp, 2 ) = '98' or left ( sAdrCp, 2 ) = '97' ) and & 
@@ -3225,7 +3226,7 @@ else
 end if
 
 if bAutorise = false And asPos = "" then
-	stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le d'autorisation"
+	stMessage.sTitre		= "Contrôle d'autorisation"
 	stMessage.Bouton		= Ok!
 	stMessage.Icon			= Information!
 	stMessage.bErreurG	= FALSE
@@ -3238,8 +3239,8 @@ End IF
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 8 )
 
 /*------------------------------------------------------------------*/
-/* Si l'option n'est pas pr$$HEX1$$e900$$ENDHEX$$sente, on sort de ce contr$$HEX1$$f400$$ENDHEX$$le.          */
-/* On ne contr$$HEX1$$f400$$ENDHEX$$le que si l'option 8 est pr$$HEX1$$e900$$ENDHEX$$sente dans DET_PRO       */
+/* Si l'option n'est pas présente, on sort de ce contrôle.          */
+/* On ne contrôle que si l'option 8 est présente dans DET_PRO       */
 /*------------------------------------------------------------------*/
 If lDeb <= 0 Then Return
 
@@ -3264,7 +3265,7 @@ For lCptAdr = 1 To 1
 
 	If sCP = "00000" Then
 
-		stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de saisie des CP"
+		stMessage.sTitre		= "Contrôle de saisie des CP"
 		stMessage.Bouton		= Ok!
 		stMessage.Icon			= Information!
 		stMessage.bErreurG	= TRUE
@@ -3293,12 +3294,12 @@ public subroutine uf_gestionboutons (integer ainumpg, string asbouton, boolean a
 //* Fonction      : N_Cst_W_Commande2::uf_GestionBoutons
 //* Auteur        : Catherine ABDMEZIEM
 //* Date          : 19/05/2003 15:50:00
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: DCMP 030207 : Ajout de 6 zones en retour de Cetelec (pour Cegetel Must)
-//* Commentaires  : => ajout d'une dw suppl$$HEX1$$e900$$ENDHEX$$mentaire => modif gestion des boutons prec et suiv
+//* Libellé       : DCMP 030207 : Ajout de 6 zones en retour de Cetelec (pour Cegetel Must)
+//* Commentaires  : => ajout d'une dw supplémentaire => modif gestion des boutons prec et suiv
 //*
 //* Arguments     : ( Val )	Integer	aiNumPg	:	indique la page sur laquelle on se positionne (0 si c'est par appui de bouton)
-//*					  ( Val )	String	asBouton	:	indique le bouton sur lequel on a appuy$$HEX2$$e9002000$$ENDHEX$$(vide si on se positionne sur une pg pr$$HEX1$$e900$$ENDHEX$$cise)
-//*					  ( Val )	Boolean	abPosDef	:	indique si l'on doit se positionner sur la 1$$HEX1$$e800$$ENDHEX$$re zone modifiable par d$$HEX1$$e900$$ENDHEX$$faut
+//*					  ( Val )	String	asBouton	:	indique le bouton sur lequel on a appuyé (vide si on se positionne sur une pg précise)
+//*					  ( Val )	Boolean	abPosDef	:	indique si l'on doit se positionner sur la 1ère zone modifiable par défaut
 //*
 //* Retourne      : Aucun
 //*
@@ -3307,7 +3308,7 @@ public subroutine uf_gestionboutons (integer ainumpg, string asbouton, boolean a
 //* #..   ...   ../../....
 //*
 //* #1	 CAG	 26/05/2003	  Ajout des boutons premier et dernier
-//* #2	 CAG	 25/11/2003	  Ajout d'un param$$HEX1$$e800$$ENDHEX$$tre : num$$HEX1$$e900$$ENDHEX$$ro de pg
+//* #2	 CAG	 25/11/2003	  Ajout d'un paramètre : numéro de pg
 //* #3	 JFF	 20/10/2008	  [FNAC_PROD_ECH_TECH]
 //        JFF   13/01/2014   [PM246]
 //*-----------------------------------------------------------------
@@ -3341,7 +3342,7 @@ If idwPg [ iPgPrec ].AcceptText () < 0 Then Return
 idwPg [ iPgPrec ].Hide ()
 idwPg [ iiCptPgCte ].Show ()
 
-// Bouton visible sur 3$$HEX1$$e800$$ENDHEX$$me page (Coord. Inter)
+// Bouton visible sur 3ème page (Coord. Inter)
 icbComLiv.Visible = iiCptPgCte = 3
 //icbComFac.Visible = icbComLiv.Visible 
 icbComLiv.BringToTop = icbComLiv.Visible 
@@ -3376,7 +3377,7 @@ Choose Case iiCptPgCte
 		icbDern.Enabled = True
 End Choose
 
-// Mise $$HEX2$$e0002000$$ENDHEX$$jour de l'affichage du compteur
+// Mise à jour de l'affichage du compteur
 istAffPgCmd.Text = "page " + String ( iiCptPgCte ) + " / " + String ( iiNbMaxPg )
 
 If abPosDef Then
@@ -3393,9 +3394,9 @@ private function string uf_controlergestion_darty ();//*------------------------
 //* Fonction		: n_cst_w_commande2::Uf_ControlerGestion_Darty (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 17/11/2003
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler Sp$$HEX1$$e900$$ENDHEX$$cifique pour DARTY
-//* Commentaires	: La zone probl$$HEX1$$e800$$ENDHEX$$me pour DARTY doit au moins contenir un chiffre.
-//*					  Ce chiffre est fix$$HEX2$$e9002000$$ENDHEX$$par la machine pour l'ordre du choix.
+//* Libellé			: Controler Spécifique pour DARTY
+//* Commentaires	: La zone problème pour DARTY doit au moins contenir un chiffre.
+//*					  Ce chiffre est fixé par la machine pour l'ordre du choix.
 //*
 //* Arguments		: 
 //*					  
@@ -3433,10 +3434,10 @@ private subroutine uf_gestionzone_infospbfrn ();//*-----------------------------
 //* Fonction      : n_cst_w_Commande2::uf_GestionZone_InfoSpbFrn (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 30/06/2004 14:58:44
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Gestion de la zone Info_Spb_Frn
+//* Libellé       : Gestion de la zone Info_Spb_Frn
 //* Commentaires  : DCMP 040206
-//*					  $$HEX2$$e0002000$$ENDHEX$$Partir du code ($$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$ment de la liste), il faut retrouver le code la liste,
-//*					  le label $$HEX2$$e0002000$$ENDHEX$$placer devant la zone
+//*					  à Partir du code (élément de la liste), il faut retrouver le code la liste,
+//*					  le label à placer devant la zone
 //*
 //* Arguments     : 
 //*
@@ -3457,7 +3458,7 @@ lIdCodeElt = idw_TrtCmde.GetItemNumber ( 1, "INFO_SPB_FRN" )
 If IsNull ( lIdCodeElt ) Then return
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine le code de la liste correspondante.                 */
+/* On détermine le code de la liste correspondante.                 */
 /*------------------------------------------------------------------*/
 lIdListe = ( Int ( lIdCodeElt / 100 ) ) * 100
 
@@ -3473,7 +3474,7 @@ If dwChild.RowCount () <> 1 Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Mise $$HEX2$$e0002000$$ENDHEX$$jour de label.                                            */
+/* Mise à jour de label.                                            */
 /*------------------------------------------------------------------*/
 sLabel = dwChild.GetItemString ( 1, "LIB_CODE" )
 sLabel  = F_Remplace ( sLabel , "'", "~~'" )
@@ -3494,7 +3495,7 @@ public function long uf_controlerzone (string asdw, string asnomcol, string asda
 //* Fonction		: n_cst_pg_in_fic_article::Uf_ControlerZone (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 06/09/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controle de zones
+//* Libellé			: Controle de zones
 //* Commentaires	: 
 //*
 //* Arguments		: asDw			String		Val
@@ -3624,7 +3625,7 @@ public function long uf_gerermessage (string asdw);//*--------------------------
 //* Fonction		: n_cst_pg_in_fic_article::Uf_GererMessage (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 06/09/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Gestion Msg d'erreurs
+//* Libellé			: Gestion Msg d'erreurs
 //* Commentaires	: 
 //*
 //* Arguments		: asDw		String		Val
@@ -3632,12 +3633,12 @@ public function long uf_gerermessage (string asdw);//*--------------------------
 //*					  
 //*
 //* Retourne		: String
-//* [MIGPB8COR]	: Chang$$HEX2$$e9002000$$ENDHEX$$en Long
+//* [MIGPB8COR]	: Changé en Long
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* 		FPI	22/07/2010	[PC321] Contr$$HEX1$$f400$$ENDHEX$$le de la zone info_spb_frn
+//* 		FPI	22/07/2010	[PC321] Contrôle de la zone info_spb_frn
 //*-----------------------------------------------------------------
 
 u_DataWindow Dw
@@ -3706,18 +3707,18 @@ public subroutine uf_majpec (long alidgti, long aliddetail);//*-----------------
 //* Fonction		: N_Cst_W_Commande2::uf_majpec (PUBLIC)
 //* Auteur			: FABRY JF
 //* Date				: 19/06/2007
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Maj des donn$$HEX1$$e900$$ENDHEX$$es de PEC le cas $$HEX1$$e900$$ENDHEX$$ch$$HEX1$$e900$$ENDHEX$$ant
+//* Libellé			: Maj des données de PEC le cas échéant
 //* Commentaires	: [DCMP070163-070164-070248-070318] Gestion Prise en charge
 //*
-//* Arguments		: Long 		alIdGti		R$$HEX1$$e900$$ENDHEX$$f
-//*					  Long 		alIdDetail	R$$HEX1$$e900$$ENDHEX$$f
+//* Arguments		: Long 		alIdGti		Réf
+//*					  Long 		alIdDetail	Réf
 //*
 //* Retourne		: Integer
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JFF   03/08/2009   [CAMARA].[PRESTA_WEB_BOUTIQUE]
-//			FPI	17/03/2016	[SUPPR_PEC] Correction suppression de la PEC d'un d$$HEX1$$e900$$ENDHEX$$tail
+//			FPI	17/03/2016	[SUPPR_PEC] Correction suppression de la PEC d'un détail
 //*-----------------------------------------------------------------
 
 String sRech, sRechOrig
@@ -3763,7 +3764,7 @@ If lRow > 0 Then
 	bTrouve = TRUE
 End If
 
-// Rechercher d'un for$$HEX1$$e700$$ENDHEX$$age de PEC
+// Rechercher d'un forçage de PEC
 sRech = sRechOrig + " AND UPPER ( NOM_ZONE ) = 'ALT_PEC' "
 
 lRow = idw_DivDet.Find ( sRech, 1, idw_DivDet.RowCount () )
@@ -3772,7 +3773,7 @@ If lRow > 0 Then
 	bTrouve = TRUE	
 End If
 
-// Recherche d'un plafond syst$$HEX1$$e800$$ENDHEX$$me
+// Recherche d'un plafond système
 sRech = sRechOrig + " AND UPPER ( NOM_ZONE ) = 'ALT_PLAF_PEC' "
 
 lRow = idw_DivDet.Find ( sRech, 1, idw_DivDet.RowCount () )
@@ -3816,11 +3817,11 @@ public function integer uf_bt_supprimer_cmd (ref long alidgti, ref long aliddeta
 //* Fonction		: N_Cst_W_Commande2::uf_bt_Supprimer_Cmd (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 21/07/2002 09:31:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Traitement du CLICK sur le bouton SUPPRIMER de la fen$$HEX1$$ea00$$ENDHEX$$tre de COMMANDE2
+//* Libellé			: 
+//* Commentaires	: Traitement du CLICK sur le bouton SUPPRIMER de la fenêtre de COMMANDE2
 //*
-//* Arguments		: Long		alIdGti		R$$HEX1$$e900$$ENDHEX$$f
-//*					  Long		alIdDetail	R$$HEX1$$e900$$ENDHEX$$f
+//* Arguments		: Long		alIdGti		Réf
+//*					  Long		alIdDetail	Réf
 //*
 //* Retourne		: Integer
 //*
@@ -3828,9 +3829,9 @@ public function integer uf_bt_supprimer_cmd (ref long alidgti, ref long aliddeta
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
 //* #1	 CAG	 30/01/2003	  Lors de la suppression d'une cmde alors
-//*								  que le 1er d$$HEX1$$e900$$ENDHEX$$tail est $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gler, msg emp$$HEX1$$ea00$$ENDHEX$$chant
+//*								  que le 1er détail est à régler, msg empêchant
 //*								  la suppression
-//* #2	JFF	 12/08/2003   Rendre impossible la suppression sui une seq sup$$HEX1$$e900$$ENDHEX$$rieure existe.
+//* #2	JFF	 12/08/2003   Rendre impossible la suppression sui une seq supérieure existe.
 //* #3   JFF    04/06/2007   [DCMP070163-070164-070248-070318] Gestion Prise en charge
 //*  	   JFF	 13/04/2010   [WEBSIM2].[FRANCE]
 //*      JFF    05/12/2011   [ITSM92864]
@@ -3868,12 +3869,12 @@ End If
 /* # Modification SFR # Le 17/07/2002.                              */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie si le d$$HEX1$$e900$$ENDHEX$$tail sur lequel la commande est pass$$HEX1$$e900$$ENDHEX$$e est    */
-/* en cours de r$$HEX1$$e800$$ENDHEX$$glement. Si oui la suppression est interdite.      */
+/* On vérifie si le détail sur lequel la commande est passée est    */
+/* en cours de règlement. Si oui la suppression est interdite.      */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* Je ne fais pas le test sur la zone CODE_TEL $$HEX2$$e0002000$$ENDHEX$$21, car ce cas     */
-/* doit $$HEX1$$ea00$$ENDHEX$$tre toujours valable.                                      */
+/* Je ne fais pas le test sur la zone CODE_TEL à 21, car ce cas     */
+/* doit être toujours valable.                                      */
 /*------------------------------------------------------------------*/
 
 lIdGti		= idw_TrtCmde.GetItemNumber ( 1, "ID_GTI" )
@@ -3884,7 +3885,7 @@ sRech			= "ID_GTI = " + String ( lIdGti ) + " And ID_DETAIL = " + String ( lIdDe
 
 lLig			= idw_wDetail.Find ( sRech, 1, lTotDetail )
 /*------------------------------------------------------------------*/
-/* La ligne doit forc$$HEX1$$e900$$ENDHEX$$ment exister sinon c'est tr$$HEX1$$e800$$ENDHEX$$s tr$$HEX1$$e800$$ENDHEX$$s grave.     */
+/* La ligne doit forcément exister sinon c'est très très grave.     */
 /*------------------------------------------------------------------*/
 /* #1 : GetItemNumber sur lLig et non 1                             */
 /*------------------------------------------------------------------*/
@@ -3933,7 +3934,7 @@ public function boolean uf_getautorisation (long aliddroit);//*-----------------
 //* Fonction      : n_cst_w_command2::uf_GetAutorisation (PUBLIC)
 //* Auteur        : Fabry JF
 //* Date          : 20/06/2008 
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Lecture simple d'une autorisation
+//* Libellé       : Lecture simple d'une autorisation
 //* Commentaires  : [DCMP080479]
 //*
 //* Arguments     : Long	alDroit		Val
@@ -3967,7 +3968,7 @@ private function integer uf_zn_infospbfrn (ref u_datawindow adw, string asdata, 
 //*
 //* Fonction		: n_cst_w_commande2::Uf_Zn_InfoSpbFrn (PRIVATE)
 //* Date				: 16/07/2010
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Zone Info_Spb_Frn
+//* Libellé			: Zone Info_Spb_Frn
 //* Commentaires	: [PC321]
 //*
 //* Arguments		: aDw				DataWindow	Ref
@@ -3991,7 +3992,7 @@ Boolean bOk
 
 iRet 		= 0
 
-// Si prix d'achat <= 150$$HEX1$$ac20$$ENDHEX$$, suite $$HEX2$$e0002000$$ENDHEX$$un 1415, que 1425 ou 1430 autoris$$HEX1$$e900$$ENDHEX$$
+// Si prix d'achat <= 150€, suite à un 1415, que 1425 ou 1430 autorisé
 lIdGti		= idw_TrtCmde.GetItemNumber ( 1, "ID_GTI" )
 lIdDetail	= idw_TrtCmde.GetItemNumber ( 1, "ID_DETAIL" )
 
@@ -4068,7 +4069,7 @@ private function boolean uf_getautorisation (long aliddroit, string asidfour);//
 //* Fonction      : n_cst_w_command2::uf_GetAutorisation (PUBLIC)
 //* Auteur        : FPI
 //* Date          : 09/12/2010
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Lecture d'une autorisation avec VAL_CAR="ID_FOUR=..."
+//* Libellé       : Lecture d'une autorisation avec VAL_CAR="ID_FOUR=..."
 //* Commentaires  : [VDoc2280]
 //*
 //* Arguments     : Long	alDroit		Val
@@ -4115,7 +4116,7 @@ public function boolean uf_getautorisation_221 (long alidprocess);//*-----------
 //* Fonction      : n_cst_w_commande2::uf_GetAutorisation_221 (PUBLIC)
 //* Auteur        : FPI
 //* Date          : 07/10/2011
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Lecture de l'autorisation 221
+//* Libellé       : Lecture de l'autorisation 221
 //* Commentaires  : [VDoc5312]
 //*
 //* Arguments     : Long alIdProcess		Val
@@ -4147,7 +4148,7 @@ public function datawindow uf_get_dwdetpro ();//*-------------------------------
 //* Fonction      : n_cst_w_commande2::uf_get_dwdetpro 
 //* Auteur        : FPI
 //* Date          : 23/05/2012
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: [PM103]
+//* Libellé       : [PM103]
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -4166,7 +4167,7 @@ public function long uf_get_idprod ();//*---------------------------------------
 //* Fonction      : n_cst_w_commande2::uf_get_idprod 
 //* Auteur        : FPI
 //* Date          : 23/05/2012
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: [PM103]
+//* Libellé       : [PM103]
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -4185,18 +4186,18 @@ public subroutine uf_initialiser (ref s_pass astpass, ref commandbutton acbprec,
 //* Fonction		: n_cst_pg_in_fic_article::Uf_Initialiser (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 31/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Ref		s_Pass	astPass
-//*					  ( R$$HEX1$$e900$$ENDHEX$$f )	CommandButton	acbPrec		:	bouton pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dent de la fen$$HEX1$$ea00$$ENDHEX$$tre w_gs_sp_w_commande2
-//*					  ( R$$HEX1$$e900$$ENDHEX$$f )	CommandButton	acbSuiv		:	bouton suivant de la fen$$HEX1$$ea00$$ENDHEX$$tre w_gs_sp_w_commande2
-//*					  ( R$$HEX1$$e900$$ENDHEX$$f )	CommandButton	acbPrem		:	bouton premier de la fen$$HEX1$$ea00$$ENDHEX$$tre w_gs_sp_w_commande2
-//*					  ( R$$HEX1$$e900$$ENDHEX$$f )	CommandButton	acbDern		:	bouton dernier de la fen$$HEX1$$ea00$$ENDHEX$$tre w_gs_sp_w_commande2
-//*					  ( R$$HEX1$$e900$$ENDHEX$$f )	CommandButton	acbComLiv	:	bouton V$$HEX1$$e900$$ENDHEX$$rif Commune Adr. Livr.
-//*					  ( R$$HEX1$$e900$$ENDHEX$$f )	CommandButton	acbComFac	:	bouton V$$HEX1$$e900$$ENDHEX$$rif Commune Adr. Fact.
-//*					  ( R$$HEX1$$e900$$ENDHEX$$f )	CommandButton	acbIMEI		:	bouton R$$HEX1$$e900$$ENDHEX$$cup. IMEI Adh. Modifi$$HEX1$$e900$$ENDHEX$$
-//*					  ( R$$HEX1$$e900$$ENDHEX$$f )	StaticText		astAffPgCmd	:	affichage de la page courante de la fen$$HEX1$$ea00$$ENDHEX$$tre w_gs_sp_w_commande2
+//*					  ( Réf )	CommandButton	acbPrec		:	bouton précédent de la fenêtre w_gs_sp_w_commande2
+//*					  ( Réf )	CommandButton	acbSuiv		:	bouton suivant de la fenêtre w_gs_sp_w_commande2
+//*					  ( Réf )	CommandButton	acbPrem		:	bouton premier de la fenêtre w_gs_sp_w_commande2
+//*					  ( Réf )	CommandButton	acbDern		:	bouton dernier de la fenêtre w_gs_sp_w_commande2
+//*					  ( Réf )	CommandButton	acbComLiv	:	bouton Vérif Commune Adr. Livr.
+//*					  ( Réf )	CommandButton	acbComFac	:	bouton Vérif Commune Adr. Fact.
+//*					  ( Réf )	CommandButton	acbIMEI		:	bouton Récup. IMEI Adh. Modifié
+//*					  ( Réf )	StaticText		astAffPgCmd	:	affichage de la page courante de la fenêtre w_gs_sp_w_commande2
 //*
 //* Retourne		: integer	
 //*
@@ -4204,9 +4205,9 @@ public subroutine uf_initialiser (ref s_pass astpass, ref commandbutton acbprec,
 //* MAJ   PAR      Date	     Modification
 //* 
 //* #1  CAG		07/05/03	DCMP 030207 : Ajout de 6 zones en retour de Cetelec (pour Cegetel Must)
-//*								=> ajout d'une dw suppl$$HEX1$$e900$$ENDHEX$$mentaire => modif gestion des boutons prec et suiv
+//*								=> ajout d'une dw supplémentaire => modif gestion des boutons prec et suiv
 //* #2  CAG		26/05/03 Ajout des boutons premier et dernier
-//* #3  CAG		03/06/03 Ajout de la zone ID_ANN = cat$$HEX1$$e900$$ENDHEX$$gorie d'annulation
+//* #3  CAG		03/06/03 Ajout de la zone ID_ANN = catégorie d'annulation
 //* #4  JFF		05/07/04 DCMP 040206
 //* #5  JCA    08/06/2006		Suppression ADR_MAIL   
 //* #6  JFF    04/06/2007   [DCMP070163-070164-070248-070318] Gestion Prise en charge
@@ -4250,9 +4251,9 @@ idw_DivDet  = astPass.dwTab [3]  // #6
 /* # Modification SFR # Le 17/07/2002.                              */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* On ajoute la DW DW_WDETAIL afin de controler que le d$$HEX1$$e900$$ENDHEX$$tail       */
-/* n'est pas A REGLER si l'on cherche $$HEX2$$e0002000$$ENDHEX$$supprimer la commande li$$HEX1$$e900$$ENDHEX$$e  */
-/* $$HEX2$$e0002000$$ENDHEX$$ce d$$HEX1$$e900$$ENDHEX$$tail.                                                     */
+/* On ajoute la DW DW_WDETAIL afin de controler que le détail       */
+/* n'est pas A REGLER si l'on cherche à supprimer la commande liée  */
+/* à ce détail.                                                     */
 /*------------------------------------------------------------------*/
 idw_wDetail	= astPass.dwNorm [ 1 ]
 
@@ -4422,7 +4423,7 @@ public function boolean uf_cmdeauto_dt57 (long adcidsin, long aiidseq);//*------
 //* Fonction		: n_cst_pg_in_fic_article::Uf_CmdeAuto_DT57 (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 13/02/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [DT57_CMDE_IPHONE_SFR]
+//* Libellé			: [DT57_CMDE_IPHONE_SFR]
 //* Commentaires	: Controle de Gestion
 //*
 //* Arguments		: adcIdSin, aiIdSeq
@@ -4484,7 +4485,7 @@ public function integer uf_zn_adrcodciv (datawindow adw, string asdata, long alr
 //* Fonction		: n_cst_w_commande2::Uf_Zn_AdrCodCiv (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 12/11/2018
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Zone Cod_civ
+//* Libellé			: Zone Cod_civ
 //* Commentaires	: [PM452-1]
 //*
 //* Arguments		: aDw				DataWindow	Val

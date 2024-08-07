@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_tm_sp_sinistre.srw
-$PBExportComments$-} Fen$$HEX1$$ea00$$ENDHEX$$tre de traitement pour la saisie des sinistres. ( DCMP 990391 )
+﻿$PBExportHeader$w_tm_sp_sinistre.srw
+$PBExportComments$-} Fenêtre de traitement pour la saisie des sinistres. ( DCMP 990391 )
 forward
 global type w_tm_sp_sinistre from w_8_traitement_master
 end type
@@ -173,7 +173,7 @@ type dw_wreg_frais_annexe_frn from datawindow within w_tm_sp_sinistre
 end type
 type st_attente_diverse from statictext within w_tm_sp_sinistre
 end type
-type cb_testHub from commandbutton within w_tm_sp_sinistre
+type cb_testhub from commandbutton within w_tm_sp_sinistre
 end type
 end forward
 
@@ -274,7 +274,7 @@ uo_consult_euro uo_consult_euro
 st_pause_api_lab st_pause_api_lab
 dw_wreg_frais_annexe_frn dw_wreg_frais_annexe_frn
 st_attente_diverse st_attente_diverse
-cb_testHub cb_testHub
+cb_testhub cb_testhub
 end type
 global w_tm_sp_sinistre w_tm_sp_sinistre
 
@@ -348,7 +348,7 @@ event ue_quitteronglet011;//*---------------------------------------------------
 //* Evenement 		: Ue_QuitterOngler011
 //* Auteur			: Erick John Stark
 //* Date				: 05/02/1998 15:50:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -357,7 +357,7 @@ event ue_quitteronglet011;//*---------------------------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche un ItemFocusChanged avant toute chose. Cela         */
+/* On déclenche un ItemFocusChanged avant toute chose. Cela         */
 /* concerne les zones COD_CIV, ID_ETS.                              */
 /*------------------------------------------------------------------*/
 
@@ -384,7 +384,7 @@ event ue_valider_dossier;//*----------------------------------------------------
 //* Evenement 		: Ue_Valider_Dossier
 //* Auteur			: Erick John Stark
 //* Date				: 05/11/1998 11:04:08
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On vient de clicker sur le bouton pour valider le dossier
 //*				  
 //*-----------------------------------------------------------------
@@ -399,8 +399,8 @@ long	ll_ret = 0
 //Fin Migration PB8-WYNIWYG-03/2006 OR
 
 /*------------------------------------------------------------------*/
-/* On passe le nom du fichier de trace pour l'essai d'$$HEX1$$e900$$ENDHEX$$criture en   */
-/* param$$HEX1$$ea00$$ENDHEX$$tre.                                                       */
+/* On passe le nom du fichier de trace pour l'essai d'écriture en   */
+/* paramêtre.                                                       */
 /*------------------------------------------------------------------*/
 stPass_Dga.sTab[1] = isFicEssaiTrc
 
@@ -431,7 +431,7 @@ event ue_choix_garantie;//*-----------------------------------------------------
 //* Evenement 		: Ue_Choix_Garantie
 //* Auteur			: Erick John Stark
 //* Date				: 26/11/1998 17:33:12
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -443,10 +443,10 @@ event ue_choix_garantie;//*-----------------------------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On vient de la fen$$HEX1$$ea00$$ENDHEX$$tre W_T_SP_CHOIX_GARANTIE. L'utilisateur      */
+/* On vient de la fenêtre W_T_SP_CHOIX_GARANTIE. L'utilisateur      */
 /* vient soit de choisir une garantie, soit de faire retour. On va  */
-/* r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer ce choix. On va ensuite r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer le cout moyen de la  */
-/* garantie. Et pour finir, on ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre de traitement des   */
+/* récupérer ce choix. On va ensuite récupérer le cout moyen de la  */
+/* garantie. Et pour finir, on ouvre la fenêtre de traitement des   */
 /* GARANTIES.                                                       */
 /*------------------------------------------------------------------*/
 s_Pass	stPass_Dga
@@ -494,7 +494,7 @@ Else
 End IF 
 
 /*------------------------------------------------------------------*/
-/* On teste la valeur de retour qui correspond $$HEX2$$e0002000$$ENDHEX$$l'armement de      */
+/* On teste la valeur de retour qui correspond à l'armement de      */
 /* ID_GTI.                                                          */
 /*------------------------------------------------------------------*/
 If	stPass_Dga.lTab[1] <> -1 Then
@@ -511,8 +511,8 @@ If bRet Then bRet= wf_creationgti_cle( stPass_Dga.lTab[1] )
 if bRet Then
 // :[ITSM49138]
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le cout moyen. La DW sur le code garantie n'est      */
-/* plus filtr$$HEX1$$e900$$ENDHEX$$e. Il faut donc faire une recherche sur l'ID_GTI.     */
+/* On récupére le cout moyen. La DW sur le code garantie n'est      */
+/* plus filtrée. Il faut donc faire une recherche sur l'ID_GTI.     */
 /*------------------------------------------------------------------*/
 		sRech 				= "ID_GTI = " + String ( stPass_Dga.lTab[1] )
 		lTotCodeGarantie	= dw_CodeGarantie.RowCount ()
@@ -520,7 +520,7 @@ if bRet Then
 		stPass_Dga.lTab[2] 	= dw_CodeGarantie.GetItemNumber ( lLig, "MT_CMT" )
 
 /*------------------------------------------------------------------*/
-/* Les valeurs suivantes doivent $$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$es manuellement. Sinon,   */
+/* Les valeurs suivantes doivent être armées manuellement. Sinon,   */
 /* la fonction F_OuvreTraitement ne peut pas marcher.               */
 /*------------------------------------------------------------------*/
 		stPass_Dga.wParent	= This
@@ -529,19 +529,19 @@ if bRet Then
 
 /*------------------------------------------------------------------*/
 /* On positionne ensuite les valeurs standards pour l'ouverture     */
-/* d'un d$$HEX1$$e900$$ENDHEX$$tail.                                                     */
+/* d'un détail.                                                     */
 /*------------------------------------------------------------------*/
 		stPass_Dga.bInsert		= True
 		stPass_Dga.bControl		= True
 
 		stPass_Dga.sTab [ 1 ]	= This.Title
 		stPass_Dga.sTab [ 2 ]	= isTypeTrt
-		// stPass_Dga.sTab [ 3 ]	// D$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$utiliser sur ue_modifier
-		stPass_Dga.sTab [ 4 ]	= dw_1.GetItemString ( 1, "NUM_IMEI_PORT" ) // n$$HEX2$$b0002000$$ENDHEX$$IMEI provenant de l'adh$$HEX1$$e900$$ENDHEX$$sion (a pu $$HEX1$$ea00$$ENDHEX$$tre modifi$$HEX2$$e9002000$$ENDHEX$$depuis l'ouverture du sinistre)
+		// stPass_Dga.sTab [ 3 ]	// Déjà utiliser sur ue_modifier
+		stPass_Dga.sTab [ 4 ]	= dw_1.GetItemString ( 1, "NUM_IMEI_PORT" ) // n° IMEI provenant de l'adhésion (a pu être modifié depuis l'ouverture du sinistre)
 		stPass_Dga.sTab [ 5 ]	= Trim ( Upper ( dw_1.GetItemString ( 1, "MARQ_PORT" ) ))
 		stPass_Dga.sTab [ 6 ]	= dw_1.GetItemString ( 1, "MODL_PORT" )
-		stPass_Dga.sTab [ 7 ]	= dw_1.GetItemString ( 1, "NUM_IMEI_PORT", Primary!, TRUE ) // DCMP 030407 n$$HEX2$$b0002000$$ENDHEX$$IMEI provenant de l'adh$$HEX1$$e900$$ENDHEX$$sion (N'A PAS ETE modifi$$HEX2$$e9002000$$ENDHEX$$depuis l'ouverture du sinistre)
-		stPass_Dga.sTab [ 8 ]	= iuoGsSpSinistre.uf_Determiner_Referentiel ( iuoGsSpSinistre.uf_GestOng_Divers_Trouver ( "TYPE_APP" )) // R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rentiel utilis$$HEX2$$e9002000$$ENDHEX$$en fct du type d'appareil (T$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phonie)
+		stPass_Dga.sTab [ 7 ]	= dw_1.GetItemString ( 1, "NUM_IMEI_PORT", Primary!, TRUE ) // DCMP 030407 n° IMEI provenant de l'adhésion (N'A PAS ETE modifié depuis l'ouverture du sinistre)
+		stPass_Dga.sTab [ 8 ]	= iuoGsSpSinistre.uf_Determiner_Referentiel ( iuoGsSpSinistre.uf_GestOng_Divers_Trouver ( "TYPE_APP" )) // Référentiel utilisé en fct du type d'appareil (Téléphonie)
 
 		stPass_Dga.bTab [ 1 ]	= ibAltCmdMobile
 		stPass_Dga.bTab [ 2 ]	= ibAltCommune
@@ -551,7 +551,7 @@ if bRet Then
 		stPass_Dga.dwTab [ 3 ]	= Dw_w_commande
 
 		stPass_Dga.udwTab [ 1 ]	= Dw_w_Div_Sin   // #3
-		stPass_Dga.udwTab [ 2 ]	= dw_w_div_Det       // DataWindow Stockage Donn$$HEX1$$e900$$ENDHEX$$es onglet divers details
+		stPass_Dga.udwTab [ 2 ]	= dw_w_div_Det       // DataWindow Stockage Données onglet divers details
 
 		stPass_Dga.dwMaster		= dw_1
 
@@ -588,12 +588,12 @@ if bRet Then
 		stPass_Dga.dwNorm [ 23 ]	= dw_Commune
 		stPass_Dga.dwNorm [ 24 ]	= dw_Tac_Imei
 
-		stPass_Dga.dwNorm [ 25 ]	= dw_Stk_IFR			// DataWindow Stockage Donn$$HEX1$$e900$$ENDHEX$$es IFR 
-		stPass_Dga.dwNorm [ 26 ]	= dw_Code_Equivalence	// DataWindow Stockage Libell$$HEX1$$e900$$ENDHEX$$s IFR Traduit 
+		stPass_Dga.dwNorm [ 25 ]	= dw_Stk_IFR			// DataWindow Stockage Données IFR 
+		stPass_Dga.dwNorm [ 26 ]	= dw_Code_Equivalence	// DataWindow Stockage Libellés IFR Traduit 
 		stPass_Dga.dwNorm [ 27 ]	= dw_autorisation    // Table autorisation
-		stPass_Dga.dwNorm [ 28 ]	= dw_Stk_Codic_Darty	// DataWindow Stockage Donn$$HEX1$$e900$$ENDHEX$$es CODIC DARTY #3
-		stPass_Dga.dwNorm [ 29 ]	= dw_code_mb         // DataWindow Stockage Donn$$HEX1$$e900$$ENDHEX$$es MARQUE diverses (-MB)
-		stPass_Dga.dwNorm [ 30 ]	= dw_div_pDet        // DataWindow Stockage Donn$$HEX1$$e900$$ENDHEX$$es param onglet divers details
+		stPass_Dga.dwNorm [ 28 ]	= dw_Stk_Codic_Darty	// DataWindow Stockage Données CODIC DARTY #3
+		stPass_Dga.dwNorm [ 29 ]	= dw_code_mb         // DataWindow Stockage Données MARQUE diverses (-MB)
+		stPass_Dga.dwNorm [ 30 ]	= dw_div_pDet        // DataWindow Stockage Données param onglet divers details
 		stPass_Dga.dwNorm [ 31 ]	= dddw_codecar_wdivsin_charg_tempo // Chargement tempo des codes pour W_Div_Det
 		stPass_Dga.dwNorm [ 32 ]	= dddw_code_wdivsin_charg_tempo // Chargement tempo des codes pour W_Div_Det
 		stPass_Dga.dwNorm [ 33 ]	= dw_wdetail   // [CONFO][NV_PROCESS]
@@ -601,9 +601,9 @@ if bRet Then
 		F_OuvreTraitement ( iW_Tm_Sp_W_Gar_Sin, stPass_Dga )	
 	End If
 /*------------------------------------------------------------------*/
-/* La fen$$HEX1$$ea00$$ENDHEX$$tre W_T_SP_CHOIX_GARANTIE ne va $$HEX1$$ea00$$ENDHEX$$tre ferm$$HEX1$$e900$$ENDHEX$$e que           */
+/* La fenêtre W_T_SP_CHOIX_GARANTIE ne va être fermée que           */
 /* maintenant. En effet, on ne fait que des TriggerEvent dans la    */
-/* fen$$HEX1$$ea00$$ENDHEX$$tre. Le CLOSE de la fen$$HEX1$$ea00$$ENDHEX$$tre se fait donc en dernier.         */
+/* fenêtre. Le CLOSE de la fenêtre se fait donc en dernier.         */
 /*------------------------------------------------------------------*/
 End If
 
@@ -623,7 +623,7 @@ event ue_entreronglet041;//*----------------------------------------------------
 //* Evenement 		: Ue_EntrerOngler041
 //* Auteur			: Fabry JF
 //* Date				: 29/04/2005 15:50:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -647,14 +647,14 @@ event ue_taillefenetre();//*----------------------------------------------------
 //* Evenement 		: Ue_TailleFenetre
 //* Auteur			: Fabry JF
 //* Date				: 16/10/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*-----------------------------------------------------------------
 
-// Je r$$HEX1$$e900$$ENDHEX$$ajuste la hauteur pour W10
+// Je réajuste la hauteur pour W10
 
 This.Height = 1810
 
@@ -668,8 +668,8 @@ public function boolean wf_preparermodifier ();//*------------------------------
 //* Fonction		: W_Tm_Sp_Sinistre::Wf_PreparerModifier
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Op$$HEX1$$e900$$ENDHEX$$ration avant modification
+//* Libellé			: 
+//* Commentaires	: Opération avant modification
 //*
 //* Arguments		: Rien
 //*
@@ -683,7 +683,7 @@ public function boolean wf_preparermodifier ();//*------------------------------
 //* #1			JFF		24/04/2001 CONTACTDNT : Gestion contacts.
 //* #2		   JFF		05/09/2002 Gestion de la gestion de contact uniquement pour Sherpa
 //* #3	FPI	06/10/2009	[DCMP090595] Ajout du btn cb_valid_factu
-//* #4	 FPI  09/02/2010 [DCMP090595.Correctif] Btn Valid_factu cach$$HEX2$$e9002000$$ENDHEX$$si pbcontroler cach$$HEX1$$e900$$ENDHEX$$
+//* #4	 FPI  09/02/2010 [DCMP090595.Correctif] Btn Valid_factu caché si pbcontroler caché
 //      JFF   23/05/2012 [PM103][1]
 //      JFF   12/05/2016 [MOTEUR_RECH_IFR]
 //*-----------------------------------------------------------------
@@ -702,8 +702,8 @@ isATraiterPar = ""
 
 stPass_Dga.sTab [ 1 ] = istPass.sTab [ 1 ]			// ID_SIN en cours de traitement
 stPass_Dga.sTab [ 2 ] = istPass.sTab [ 2 ]			// Nous sommes en saisie
-stPass_Dga.sTab [ 3 ] = istPass.sTab [ 3 ]			// Provenance du courrier recu (A)ssur$$HEX1$$e900$$ENDHEX$$, (B)anque
-stPass_Dga.sTab [ 4 ] = istPass.sTab [ 4 ]			// Type de courrier recu (Q)uestionnaire, (F)ax, (T)$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone, (C)ourrier
+stPass_Dga.sTab [ 3 ] = istPass.sTab [ 3 ]			// Provenance du courrier recu (A)ssuré, (B)anque
+stPass_Dga.sTab [ 4 ] = istPass.sTab [ 4 ]			// Type de courrier recu (Q)uestionnaire, (F)ax, (T)éléphone, (C)ourrier
 stPass_Dga.sTab [ 5 ] = istPass.sTab [ 5 ]			// Date du dernier courrier client (DTE_COUR_CLI)
 
 If	isTypeTrt = "S"	Then
@@ -745,7 +745,7 @@ Else
 End If
 
 /*------------------------------------------------------------------*/
-/* #1 : On m$$HEX1$$e900$$ENDHEX$$morise la Gestion Contact.									  */
+/* #1 : On mémorise la Gestion Contact.									  */
 /*------------------------------------------------------------------*/
 ibAltContact = dw_Produit.GetItemString ( 1, "ALT_CONTACT" ) = "O"
 ibAltContactSherpa = False
@@ -762,9 +762,9 @@ Uo_Ong.Uf_ActiverOnglet ( "04", dw_w_div_sin.RowCount () > 0 )
 Uo_Ong.Uf_ActiverOnglet ( "05", ibAltCmdMobile )
 
 /*------------------------------------------------------------------*/
-/* Au retour, on arme le titre de l4a fen$$HEX1$$ea00$$ENDHEX$$tre de la mani$$HEX1$$e800$$ENDHEX$$re          */
+/* Au retour, on arme le titre de l4a fenêtre de la manière          */
 /* suivante.                                                        */
-/* Code Produit + Libell$$HEX2$$e9002000$$ENDHEX$$Produit + N$$HEX2$$b0002000$$ENDHEX$$Dossier + Nom + Pr$$HEX1$$e900$$ENDHEX$$nom.      */
+/* Code Produit + Libellé Produit + N° Dossier + Nom + Prénom.      */
 /*------------------------------------------------------------------*/
 If	stPass_Dga.bRetour Then
 	This.Title = stPass_Dga.sTab [ 1 ]
@@ -772,9 +772,9 @@ End If
 
 /*------------------------------------------------------------------*/
 /* JFF le 29/08/01.																  */
-/* Certaines erreurs arrivent $$HEX2$$e0002000$$ENDHEX$$ce moment le retrieve a eu lieu,    */
-/* mais la ligne n'est pas encore dans la dw_1. De cette fa$$HEX1$$e700$$ENDHEX$$on on   */
-/* boucle jusqu'$$HEX2$$e0002000$$ENDHEX$$tant que la ligne soit pr$$HEX1$$e900$$ENDHEX$$sente.                  */
+/* Certaines erreurs arrivent à ce moment le retrieve a eu lieu,    */
+/* mais la ligne n'est pas encore dans la dw_1. De cette façon on   */
+/* boucle jusqu'à tant que la ligne soit présente.                  */
 /*------------------------------------------------------------------*/
 Do While Dw_1.RowCount () <= 0 
 	Yield ()
@@ -788,7 +788,7 @@ If isTypeTrt = "S" Then
 
 	iTrTrans.PS_S02_W_QUEUE_POCHETTE	( Dw_1.GetItemNumber ( 1, "ID_SIN"), "CONSULT" , lPochette )
 
-	// << Veuillez ouvrir une pochette pour ce compl$$HEX1$$e900$$ENDHEX$$ment >>
+	// << Veuillez ouvrir une pochette pour ce complément >>
 	If lPochette = 1 Then
 		/*------------------------------------------------------------------*/
 		/* #4                                                               */
@@ -813,14 +813,14 @@ If	isTypeTrt = "C"	Then
 	/*------------------------------------------------------------------*/
 	/* #4                                                               */
 	/*------------------------------------------------------------------*/
-	// << Veuillez ouvrir une pochette pour ce compl$$HEX1$$e900$$ENDHEX$$ment >>
+	// << Veuillez ouvrir une pochette pour ce complément >>
 	If lPochette = 1 Then
 
 //		st_Pochette.Text =  ProfileString ( stGlb.sFichierErreur, "MESSAGE", "WORK360", "Message Pochette Introuvable" )
 		st_Pochette.Text = "Poch1"
 		st_Pochette.Show()
 
-	// << Pochette $$HEX2$$e0002000$$ENDHEX$$Ouvrir lors de la r$$HEX1$$e900$$ENDHEX$$ception du prochain compl$$HEX1$$e900$$ENDHEX$$ment >>
+	// << Pochette à Ouvrir lors de la réception du prochain complément >>
 	ElseIf lPochette = 2 Then
 
 //		st_Pochette.Text =  ProfileString ( stGlb.sFichierErreur, "MESSAGE", "WORK370", "Message Pochette Introuvable" )
@@ -834,7 +834,7 @@ cb_Notice.uf_SetIdProd ( dw_1.GetItemNumber ( 1, "ID_PROD" ) )
 cb_Excel.uf_SetIdProd ( dw_1.GetItemNumber ( 1, "ID_PROD" ) )
 
 /*------------------------------------------------------------------*/
-/* DMDI 7718 Ajout d'un message : ! Ets 01001 : v$$HEX1$$e900$$ENDHEX$$rifier si         */
+/* DMDI 7718 Ajout d'un message : ! Ets 01001 : vérifier si         */
 /* souscription du SECURITE PLUS en inclusion"                      */
 /*------------------------------------------------------------------*/
 If dw_1.GetItemNumber ( 1, "ID_PROD" ) = 6700 And &
@@ -849,7 +849,7 @@ If dw_1.GetItemNumber ( 1, "ID_PROD" ) = 6700 And &
 End If
 
 // #12 - [DCMP090595] 
-If iuogsspsinistre.uf_getautorisation2( 208) and pb_controler.Visible Then // #4 - [DCMP090595.Correctif] ajout de la 2$$HEX1$$e800$$ENDHEX$$me condition
+If iuogsspsinistre.uf_getautorisation2( 208) and pb_controler.Visible Then // #4 - [DCMP090595.Correctif] ajout de la 2ème condition
 	cb_valid_factu.X=1687
 	cb_valid_factu.Y=9
 	cb_valid_factu.Enabled = TRUE
@@ -907,7 +907,7 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //* Fonction		: W_Tm_Sp_Sinistre::Wf_PositionnerObjets (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 15:27:47
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On positionne et on taille tous les objets
 //*
 //* Arguments		: Aucun
@@ -920,14 +920,14 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //* #1  CAG		08/07/2004 DCMP 030381 : Ajout d'un btn pour aff des
 //*								polices-assurances des gti du produit du dr
 //* #2  CAG		08/11/2004 DCMP 040366 : Ajout d'un btn pour aff la
-//*								cat$$HEX1$$e900$$ENDHEX$$gorie des courrier, uniquement en validation
+//*								catégorie des courrier, uniquement en validation
 //      JFF   23/05/2012 [PM103][1]
 //      JFF   29/08/2023 [RS5666_DOS_SUIVI_PAR]
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On positionne tous les objets n$$HEX1$$e900$$ENDHEX$$cessaires $$HEX2$$e0002000$$ENDHEX$$la gestion, pour     */
-/* faciliter le d$$HEX1$$e900$$ENDHEX$$veloppement. (On peut bouger les objets).         */
+/* On positionne tous les objets nécessaires à la gestion, pour     */
+/* faciliter le développement. (On peut bouger les objets).         */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
@@ -1000,7 +1000,7 @@ End If
 /* Gestion des boites archives.                                     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* N$$HEX2$$b0002000$$ENDHEX$$bo$$HEX1$$ee00$$ENDHEX$$te archive                                                 */
+/* N° boîte archive                                                 */
 /*------------------------------------------------------------------*/
 dw_BoiteArchive.X			= 2451
 dw_BoiteArchive.Y			=   93
@@ -1070,8 +1070,8 @@ public function string wf_controlersaisie ();//*--------------------------------
 //* Fonction		: Wf_ControlerSaisie (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:50:46
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Contr$$HEX1$$f400$$ENDHEX$$le de la saisie
+//* Libellé			: 
+//* Commentaires	: Contrôle de la saisie
 //*
 //* Arguments		: Aucun
 //*
@@ -1100,7 +1100,7 @@ If stPass_Dga.sTab [ 1 ] = ""	Then
 
 	iTrTrans.PS_S02_W_QUEUE_POCHETTE	( Dw_1.GetItemNumber ( 1, "ID_SIN"), "ENCOURS" , lPochette )
 
-	// << Veuillez ouvrir une pochette pour ce compl$$HEX1$$e900$$ENDHEX$$ment >>
+	// << Veuillez ouvrir une pochette pour ce complément >>
 	If lPochette = 1 Then
 
 		/*------------------------------------------------------------------*/
@@ -1110,7 +1110,7 @@ If stPass_Dga.sTab [ 1 ] = ""	Then
 		st_Pochette.Text = "Poch1"
 		st_Pochette.Show()
 
-//	// << Pochette $$HEX2$$e0002000$$ENDHEX$$Ouvrir lors de la r$$HEX1$$e900$$ENDHEX$$ception du prochain compl$$HEX1$$e900$$ENDHEX$$ment >>
+//	// << Pochette à Ouvrir lors de la réception du prochain complément >>
 //	ElseIf lPochette = 2 And Dw_Lst_Inter.Find ( "ALT_QUEST = 'O'", 1, Dw_Lst_Inter.RowCount () ) > 0 Then
 //
 //		st_Pochette.Text =  ProfileString ( stGlb.sFichierErreur, "MESSAGE", "WORK370", "Message Pochette Introuvable" )
@@ -1132,8 +1132,8 @@ public function boolean wf_terminervalider ();//*-------------------------------
 //* Fonction		: W_Tm_Sp_Sinistre::Wf_TerminerModifier
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Op$$HEX1$$e900$$ENDHEX$$ration apr$$HEX1$$e900$$ENDHEX$$s Validation de dw_1
+//* Libellé			: 
+//* Commentaires	: Opération aprés Validation de dw_1
 //*
 //* Arguments		: Rien
 //*
@@ -1155,13 +1155,13 @@ public function boolean wf_suite_valider ();//*---------------------------------
 //* Fonction		: W_Tm_Sp_Sinistre::Wf_Suite_Valider (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 25/06/1998 09:53:19
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On va maintenant valider les BLOBS
 //*
 //* Arguments		: Aucun
 //*
 //* Retourne		: Boolean		True 	= La validation est OK
-//*										FAlse	= Probl$$HEX1$$e800$$ENDHEX$$me de validation
+//*										FAlse	= Problème de validation
 //*-----------------------------------------------------------------
 //* #1	JFF	16/03/2004	DCMP 040020 SVE
 //* #2	JFF/DGA  06/04/2006 Migration PB8-SPB-04/2006
@@ -1189,7 +1189,7 @@ End If
 
 /*------------------------------------------------------------------*/
 /* On vient de valider les BLOBS. Si tout se passe bien, la         */
-/* fonction anc$$HEX1$$ea00$$ENDHEX$$tre d$$HEX1$$e900$$ENDHEX$$clenche un PostEvent de Ue_Retour. Dans le    */
+/* fonction ancêtre déclenche un PostEvent de Ue_Retour. Dans le    */
 /* cas contraire, il ne se passe rien.                              */
 /*------------------------------------------------------------------*/
 
@@ -1217,13 +1217,13 @@ Return ( bOk )
 ////* Fonction		: W_Tm_Sp_Sinistre::Wf_Suite_Valider (PUBLIC)
 ////* Auteur			: Erick John Stark
 ////* Date				: 25/06/1998 09:53:19
-////* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+////* Libellé			: 
 ////* Commentaires	: On va maintenant valider les BLOBS
 ////*
 ////* Arguments		: Aucun
 ////*
 ////* Retourne		: Boolean		True 	= La validation est OK
-////*										FAlse	= Probl$$HEX1$$e800$$ENDHEX$$me de validation
+////*										FAlse	= Problème de validation
 ////*-----------------------------------------------------------------
 ////* #1	JFF	16/03/2004	DCMP 040020 SVE
 ////*-----------------------------------------------------------------
@@ -1252,7 +1252,7 @@ Return ( bOk )
 //
 ///*------------------------------------------------------------------*/
 ///* On vient de valider les BLOBS. Si tout se passe bien, la         */
-///* fonction anc$$HEX1$$ea00$$ENDHEX$$tre d$$HEX1$$e900$$ENDHEX$$clenche un PostEvent de Ue_Retour. Dans le    */
+///* fonction ancêtre déclenche un PostEvent de Ue_Retour. Dans le    */
 ///* cas contraire, il ne se passe rien.                              */
 ///*------------------------------------------------------------------*/
 //
@@ -1269,7 +1269,7 @@ private subroutine wf_tb_consultation ();//*------------------------------------
 //* Fonction		: W_Tm_Sp_Sinistre::Wf_Tb_Consultation (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 23/07/1998 15:44:13
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On est en validation/Consultation, on rend les boutons invisibles
 //*
 //* Arguments		: Aucun
@@ -1277,7 +1277,7 @@ private subroutine wf_tb_consultation ();//*------------------------------------
 //* Retourne		: Rien
 //*-----------------------------------------------------------------
 //* MAJ 	PAR		Date			Modification
-//* #1	FPI		09/02/2010	[DCMP090595.Correctif] Btn Valid_factu cach$$HEX1$$e900$$ENDHEX$$
+//* #1	FPI		09/02/2010	[DCMP090595.Correctif] Btn Valid_factu caché
 //*-----------------------------------------------------------------
 
 //Migration PB8-WYNIWYG-03/2006 CP
@@ -1286,7 +1286,7 @@ DataWindow	dwNorm[]
 //Fin Migration PB8-WYNIWYG-03/2006 CP
 
 /*------------------------------------------------------------------*/
-/* Cette fonction est appel$$HEX1$$e900$$ENDHEX$$e sur Ue_Initialiser de la fen$$HEX1$$ea00$$ENDHEX$$tre.     */
+/* Cette fonction est appelée sur Ue_Initialiser de la fenêtre.     */
 /*------------------------------------------------------------------*/
 
 pb_Controler.Visible 	= False
@@ -1328,8 +1328,8 @@ public function boolean wf_preparervalider ();//*-------------------------------
 //* Fonction		: W_Tm_Sp_Sinistre::Wf_PreparerValider
 //* Auteur			: Erick John Stark
 //* Date				: 04/06/1999 11:19:52
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On va v$$HEX1$$e900$$ENDHEX$$rifier si on peut $$HEX1$$e900$$ENDHEX$$crire une trace.
+//* Libellé			: 
+//* Commentaires	: On va vérifier si on peut écrire une trace.
 //*
 //* Arguments		: Aucun
 //*
@@ -1360,12 +1360,12 @@ If	ibSaisieValidation Then
 End If
 
 /*------------------------------------------------------------------*/
-/* On va v$$HEX1$$e900$$ENDHEX$$rifier si on peut $$HEX1$$e900$$ENDHEX$$crire une TRACE. Si ce n'est pas le   */
+/* On va vérifier si on peut écrire une TRACE. Si ce n'est pas le   */
 /* cas, on arrete tout.                                             */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* La variable isFicEssaiTrc est positionn$$HEX1$$e900$$ENDHEX$$e sur l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement        */
-/* Ue_Initialiser de la fen$$HEX1$$ea00$$ENDHEX$$tre.                                    */
+/* La variable isFicEssaiTrc est positionnée sur l'événement        */
+/* Ue_Initialiser de la fenêtre.                                    */
 /*------------------------------------------------------------------*/
 stPass_Dga.sTab[1] = isFicEssaiTrc
 iuoGsSpSinistre.Uf_Traitement ( 6, stPass_Dga )
@@ -1382,8 +1382,8 @@ Return ( stPass_Dga.bRetour )
 ////* Fonction		: W_Tm_Sp_Sinistre::Wf_PreparerValider
 ////* Auteur			: Erick John Stark
 ////* Date				: 04/06/1999 11:19:52
-////* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-////* Commentaires	: On va v$$HEX1$$e900$$ENDHEX$$rifier si on peut $$HEX1$$e900$$ENDHEX$$crire une trace.
+////* Libellé			: 
+////* Commentaires	: On va vérifier si on peut écrire une trace.
 ////*
 ////* Arguments		: Aucun
 ////*
@@ -1416,12 +1416,12 @@ Return ( stPass_Dga.bRetour )
 //End If
 //
 ///*------------------------------------------------------------------*/
-///* On va v$$HEX1$$e900$$ENDHEX$$rifier si on peut $$HEX1$$e900$$ENDHEX$$crire une TRACE. Si ce n'est pas le   */
+///* On va vérifier si on peut écrire une TRACE. Si ce n'est pas le   */
 ///* cas, on arrete tout.                                             */
 ///*------------------------------------------------------------------*/
 ///*------------------------------------------------------------------*/
-///* La variable isFicEssaiTrc est positionn$$HEX1$$e900$$ENDHEX$$e sur l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement        */
-///* Ue_Initialiser de la fen$$HEX1$$ea00$$ENDHEX$$tre.                                    */
+///* La variable isFicEssaiTrc est positionnée sur l'événement        */
+///* Ue_Initialiser de la fenêtre.                                    */
 ///*------------------------------------------------------------------*/
 //stPass_Dga.sTab[1] = isFicEssaiTrc
 //iuoGsSpSinistre.Uf_Traitement ( 6, stPass_Dga )
@@ -1435,8 +1435,8 @@ private subroutine wf_enabled_fenetre (string asmonnaie);//*--------------------
 //* Fonction		: Wf_Enabled_Fenetre (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:50:46
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Contr$$HEX1$$f400$$ENDHEX$$le de la saisie
+//* Libellé			: 
+//* Commentaires	: Contrôle de la saisie
 //*
 //* Arguments		: Aucun
 //*
@@ -1461,13 +1461,13 @@ private function boolean wf_creationgti_sfr (long alidgti);//*------------------
 //* Fonction		: W_Tm_Sp_Sinistre::wf_CreationGti_Sfr (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 21/07/2002 09:31:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Envoi d'un certain nombre de controles avant la cr$$HEX1$$e900$$ENDHEX$$ation de la garantie.
+//* Libellé			: 
+//* Commentaires	: Envoi d'un certain nombre de controles avant la création de la garantie.
 //*
 //* Arguments		: (Val)			Long		alIdGti
 //*
-//* Retourne		: Boolean			TRUE		= Cr$$HEX1$$e900$$ENDHEX$$ation de la garantie autoris$$HEX1$$e900$$ENDHEX$$e
-//*											FALSE		= Cr$$HEX1$$e900$$ENDHEX$$ation de la garantie non autoris$$HEX1$$e900$$ENDHEX$$e
+//* Retourne		: Boolean			TRUE		= Création de la garantie autorisée
+//*											FALSE		= Création de la garantie non autorisée
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
@@ -1487,8 +1487,8 @@ lTotGti			= Dw_Lst_Gti.RowCount ()
 lTotCommande	= Dw_w_Commande.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* On interdit la cr$$HEX1$$e900$$ENDHEX$$ation de la garantie PANNE(18) si une          */
-/* garantie BRIS(11) existe d$$HEX1$$e900$$ENDHEX$$j$$HEX1$$e000$$ENDHEX$$.                                   */
+/* On interdit la création de la garantie PANNE(18) si une          */
+/* garantie BRIS(11) existe déjà.                                   */
 /*------------------------------------------------------------------*/
 If alIdGti = 18	Then
 	sRech = "ID_GTI = 11"
@@ -1506,10 +1506,10 @@ If alIdGti = 18	Then
 End If
 
 /*------------------------------------------------------------------*/
-/* On interdit la cr$$HEX1$$e900$$ENDHEX$$ation de la garantie BRIS si la garantie       */
+/* On interdit la création de la garantie BRIS si la garantie       */
 /* PANNE existe et qu'il n'existe pas de commande en cours pour     */
 /* cette garantie PANNE. De plus, s'il existe une commande pour la  */
-/* garantie PANNE la date de retour de pr$$HEX1$$ea00$$ENDHEX$$t doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.   */
+/* garantie PANNE la date de retour de prêt doit être renseignée.   */
 /*------------------------------------------------------------------*/
 If	alIdGti = 11	Then
 	sRech = "ID_GTI = 18 And COD_ETAT <> 'ANN'"
@@ -1529,7 +1529,7 @@ If	alIdGti = 11	Then
 		bRet = FALSE
 	End If
 /*------------------------------------------------------------------*/
-/* La garantie PANNE doit $$HEX1$$ea00$$ENDHEX$$tre close.                               */
+/* La garantie PANNE doit être close.                               */
 /*------------------------------------------------------------------*/
 	If	bRet	Then
 		lLig = Dw_Lst_Gti.Find ( "ID_GTI = 18", 1, lTotGti )
@@ -1548,8 +1548,8 @@ If	alIdGti = 11	Then
 	End If
 
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie maintenant que la commande en cours poss$$HEX1$$e900$$ENDHEX$$de une date  */
-/* de retour de pr$$HEX1$$ea00$$ENDHEX$$t.                                               */
+/* On vérifie maintenant que la commande en cours posséde une date  */
+/* de retour de prêt.                                               */
 /*------------------------------------------------------------------*/
 	If	bRet	Then
 		For	lCpt = 1 To lTotCommande
@@ -1587,8 +1587,8 @@ If	alIdGti = 11	Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Probl$$HEX1$$e800$$ENDHEX$$me d'affichage du Libell$$HEX2$$e9002000$$ENDHEX$$Garantie. On affiche le message  */
-/* d'erreur et avant on enl$$HEX1$$e900$$ENDHEX$$ve le filtre.                           */
+/* Problème d'affichage du Libellé Garantie. On affiche le message  */
+/* d'erreur et avant on enléve le filtre.                           */
 /*------------------------------------------------------------------*/
 If	Not bRet	Then
 	F_Message ( stMessage )
@@ -1602,10 +1602,10 @@ public subroutine wf_script_client_focus ();//*---------------------------------
 //* Fonction		: W_Ancetre_Traitement::Wf_Script_Client_Focus		(PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 15/03/2004 11:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On utilise cette fonction $$HEX2$$e0002000$$ENDHEX$$la fin de l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ment Ue_Controler
-//*					  afin de positionner le focus sur une autre fen$$HEX1$$ea00$$ENDHEX$$tre
-//*					  On utilise cette m$$HEX1$$e900$$ENDHEX$$thode dans le cas de Saisie/Validation/Edition
+//* Libellé			: 
+//* Commentaires	: On utilise cette fonction à la fin de l'événément Ue_Controler
+//*					  afin de positionner le focus sur une autre fenêtre
+//*					  On utilise cette méthode dans le cas de Saisie/Validation/Edition
 //*
 //* Arguments		: Aucun
 //*
@@ -1614,7 +1614,7 @@ public subroutine wf_script_client_focus ();//*---------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	   Modification
-//* #1		 JFF	 20/11/2006 Gestion du r$$HEX1$$e900$$ENDHEX$$sultat du contr$$HEX1$$f400$$ENDHEX$$le [JFF-RESCTRL-201106]
+//* #1		 JFF	 20/11/2006 Gestion du résultat du contrôle [JFF-RESCTRL-201106]
 //*-----------------------------------------------------------------
 
 Integer iRet
@@ -1642,7 +1642,7 @@ private function boolean wf_creationgti_cle (long alidgti);//*------------------
 //* Fonction		: w_tm_sp_sinistre::wf_creationgti_cle
 //* Auteur			: F. Pinon
 //* Date				: 01/12/2010 14:22:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	:	[ITSM49138]
 //*
 //* Arguments		: value long lidgti	 */
@@ -1659,10 +1659,10 @@ Boolean bRet
 
 bRet=TRUE
 
-/*Pop up sur les contrats 201 et 202 d$$HEX1$$e900$$ENDHEX$$clench$$HEX1$$e900$$ENDHEX$$e lors de l'ouverture d'une garantie cl$$HEX1$$e900$$ENDHEX$$s, 
-uniquement sur les options adh$$HEX1$$e900$$ENDHEX$$sions 21-22-23-71-73 (produit 201) ou option 75 ou 77 (produit 202).
+/*Pop up sur les contrats 201 et 202 déclenchée lors de l'ouverture d'une garantie clés, 
+uniquement sur les options adhésions 21-22-23-71-73 (produit 201) ou option 75 ou 77 (produit 202).
 Le texte de la pop up :
-ATTENTION pour l'option famille la garantie cl$$HEX1$$e900$$ENDHEX$$s est g$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$e par AXA ASSISTANCE et non SPB.
+ATTENTION pour l'option famille la garantie clés est gérée par AXA ASSISTANCE et non SPB.
 TEL  : 0800 42 80 71
 ADRESSE : AXA IARD France 26 rue DROUOT 75458 Paris Cedex 09
 */
@@ -1707,7 +1707,7 @@ private function string wf_gti_panne_pgc_auchan (string asfiltre);//*-----------
 //* Fonction		: w_tm_sp_sinistre::wf_gti_panne_pgc_auchan
 //* Auteur			: FABRY JF
 //* Date				: 25/02/2011 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PC363].[PANNE_PGC]
+//* Libellé			: [PC363].[PANNE_PGC]
 //* Commentaires	:	
 //*
 //* Arguments		: String 	asFiltre			Val
@@ -1840,7 +1840,7 @@ public subroutine wf_afficher_doc (string asnomfichier, string astitreerr);//*--
 //* Evenement 		: wf_afficher_doc
 //* Auteur			: F. Pinon
 //* Date				: 01/05/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PM103]
+//* Libellé			: [PM103]
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -1885,7 +1885,7 @@ End If
 
 sRepWord = f_getwordexe()
 /*------------------------------------------------------------------*/
-/* Le chemin o$$HEX2$$f9002000$$ENDHEX$$trouver word est vide.                              */
+/* Le chemin où trouver word est vide.                              */
 /*------------------------------------------------------------------*/
 If sRepWord = "" Then 
 	stMessage.sTitre  	= asTitreErr
@@ -1955,7 +1955,7 @@ public function boolean wf_blocage_ouv_gti ();//*-------------------------------
 //* Fonction		: w_tm_sp_sinistre::wf_blocage_ouv_gti
 //* Auteur			: F. Pinon
 //* Date				: 22/04/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	:	[PC13362]
 //*
 //* Arguments		: 	 */
@@ -1979,7 +1979,7 @@ If lDeb > 0 Then
 	
 	If sVal="OUI" and isNull(dw_1.GetItemDateTime ( 1, "DTE_ACH_PORT" )) Then // [PI056]
 	
-		stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de saisie du sinistre"
+		stMessage.sTitre		= "Contrôle de saisie du sinistre"
 		stMessage.Icon			= Information!
 		stMessage.bErreurG	= False
 		stMessage.sCode = "GENE001"
@@ -2031,7 +2031,7 @@ public function string wf_gti_denree_alim_auchan (string asfiltre);//*----------
 //* Fonction		: w_tm_sp_sinistre::wf_gti_denree_alim_auchan
 //* Auteur			: FABRY JF
 //* Date				: 06/06/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PC786-1_AUCHAN_GEM] 
+//* Libellé			: [PC786-1_AUCHAN_GEM] 
 //* Commentaires	:	
 //*
 //* Arguments		: String 	asFiltre			Val
@@ -2086,7 +2086,7 @@ public function string wf_gti_somme_forfaitaire (string asfiltre);//*-----------
 //* Fonction		: w_tm_sp_sinistre::wf_gti_somme_forfaitaire
 //* Auteur			: FABRY JF
 //* Date				: 07/11/2018
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [VDOC26935][PC171999] 
+//* Libellé			: [VDOC26935][PC171999] 
 //* Commentaires	:	
 //*
 //* Arguments		: String 	asFiltre			Val
@@ -2131,9 +2131,9 @@ event ue_modifier;call super::ue_modifier;//*-----------------------------------
 //* Evenement 		: Ue_Modifier
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 16:37:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Ouverture des Fen$$HEX1$$ea00$$ENDHEX$$tres de d$$HEX1$$e900$$ENDHEX$$tail.
-//*				     (On est en modification d'un d$$HEX1$$e900$$ENDHEX$$tail)
+//* Libellé			: 
+//* Commentaires	: Ouverture des Fenêtres de détail.
+//*				     (On est en modification d'un détail)
 //*
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -2171,9 +2171,9 @@ Case "dw_lst_inter"
 /*------------------------------------------------------------------*/
 /* On arme la structure pour expliquer un certain nombre de         */
 /* choses. On est en modification, on ne veut pas du bouton CTRL.   */
-/* On passe la DW de d$$HEX1$$e900$$ENDHEX$$tail ainsi que la DW Master (Sinistre).      */
-/* Cette derni$$HEX1$$e800$$ENDHEX$$re est tr$$HEX1$$e900$$ENDHEX$$s importante. Elle va $$HEX1$$e900$$ENDHEX$$viter d'utiliser    */
-/* des instances de fen$$HEX1$$ea00$$ENDHEX$$tres.                                       */
+/* On passe la DW de détail ainsi que la DW Master (Sinistre).      */
+/* Cette dernière est trés importante. Elle va éviter d'utiliser    */
+/* des instances de fenêtres.                                       */
 /*------------------------------------------------------------------*/
 	stPass_Dga.bInsert		= False
 	stPass_Dga.bSupprime		= True
@@ -2183,8 +2183,8 @@ Case "dw_lst_inter"
 	stPass_Dga.sTab [ 2 ]	= isTypeTrt
 	stPass_Dga.sTab [ 3 ]	= Uo_Consult_Euro.Uf_Recuperer_Monnaie_Courante ()
 
-	// stPass_Dga.sTab [ 4 ]	Est d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$utilis$$HEX2$$e9002000$$ENDHEX$$!!!
-	// stPass_Dga.sTab [ 5 ]	Est d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$utilis$$HEX2$$e9002000$$ENDHEX$$!!!
+	// stPass_Dga.sTab [ 4 ]	Est déjà utilisé !!!
+	// stPass_Dga.sTab [ 5 ]	Est déjà utilisé !!!
 
 	If ibSaisieValidation Then
 		stPass_Dga.sTab [ 6 ]	= iuoGsSpSinistre.uf_GetDataInter ( iIdInter ) // #2
@@ -2232,12 +2232,12 @@ Case "dw_lst_gti"
 	stPass_Dga.sTab [ 1 ]	= This.Title
 	stPass_Dga.sTab [ 2 ]	= isTypeTrt
 	stPass_Dga.sTab [ 3 ]	= Uo_Consult_Euro.Uf_Recuperer_Monnaie_Courante ()
-	stPass_Dga.sTab [ 4 ]	= dw_1.GetItemString ( 1, "NUM_IMEI_PORT" ) // n$$HEX2$$b0002000$$ENDHEX$$IMEI provenant de l'adh$$HEX1$$e900$$ENDHEX$$sion (a pu $$HEX1$$ea00$$ENDHEX$$tre modifi$$HEX2$$e9002000$$ENDHEX$$depuis l'ouverture du sinistre)
+	stPass_Dga.sTab [ 4 ]	= dw_1.GetItemString ( 1, "NUM_IMEI_PORT" ) // n° IMEI provenant de l'adhésion (a pu être modifié depuis l'ouverture du sinistre)
 	stPass_Dga.sTab [ 5 ]	= Upper ( trim ( dw_1.GetItemString ( 1, "MARQ_PORT" )))
 	stPass_Dga.sTab [ 6 ]	= dw_1.GetItemString ( 1, "MODL_PORT" )
-	stPass_Dga.sTab [ 7 ]	= dw_1.GetItemString ( 1, "NUM_IMEI_PORT", Primary!, TRUE ) // DCMP 030407 n$$HEX2$$b0002000$$ENDHEX$$IMEI provenant de l'adh$$HEX1$$e900$$ENDHEX$$sion (N'A PAS ETE modifi$$HEX2$$e9002000$$ENDHEX$$depuis l'ouverture du sinistre)
+	stPass_Dga.sTab [ 7 ]	= dw_1.GetItemString ( 1, "NUM_IMEI_PORT", Primary!, TRUE ) // DCMP 030407 n° IMEI provenant de l'adhésion (N'A PAS ETE modifié depuis l'ouverture du sinistre)
 
-	stPass_Dga.sTab [ 8 ]	= iuoGsSpSinistre.uf_Determiner_Referentiel ( iuoGsSpSinistre.uf_GestOng_Divers_Trouver ( "TYPE_APP" )) // R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rentiel utilis$$HEX2$$e9002000$$ENDHEX$$en fct du type d'appareil (T$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phonie)
+	stPass_Dga.sTab [ 8 ]	= iuoGsSpSinistre.uf_Determiner_Referentiel ( iuoGsSpSinistre.uf_GestOng_Divers_Trouver ( "TYPE_APP" )) // Référentiel utilisé en fct du type d'appareil (Téléphonie)
 
 	stPass_Dga.bTab [ 1 ]	= ibAltCmdMobile
 	stPass_Dga.bTab [ 2 ]	= ibAltCommune // Gestion des Communes O/N
@@ -2247,7 +2247,7 @@ Case "dw_lst_gti"
 	stPass_Dga.dwTab [ 3 ]	= Dw_w_commande
 
 	stPass_Dga.udwTab [ 1 ]	= Dw_w_Div_Sin   // #3
-	stPass_Dga.udwTab [ 2 ]	= dw_w_div_Det       // DataWindow Stockage Donn$$HEX1$$e900$$ENDHEX$$es onglet divers details
+	stPass_Dga.udwTab [ 2 ]	= dw_w_div_Det       // DataWindow Stockage Données onglet divers details
 
 	stPass_Dga.dwMaster		= dw_1
 
@@ -2283,12 +2283,12 @@ Case "dw_lst_gti"
 	stPass_Dga.dwNorm [ 22 ]	= dw_Det_Pro			// DataWindow DET_PRO #1
 	stPass_Dga.dwNorm [ 23 ]	= dw_Commune			// DataWindow des Communes
 	stPass_Dga.dwNorm [ 24 ]	= dw_Tac_Imei			// DataWindow des Tac_Imei #3
-	stPass_Dga.dwNorm [ 25 ]	= dw_Stk_IFR			// DataWindow Stockage Donn$$HEX1$$e900$$ENDHEX$$es IFR #3
-	stPass_Dga.dwNorm [ 26 ]	= dw_Code_Equivalence	// DataWindow Stockage Libell$$HEX1$$e900$$ENDHEX$$s IFR Traduit #3
+	stPass_Dga.dwNorm [ 25 ]	= dw_Stk_IFR			// DataWindow Stockage Données IFR #3
+	stPass_Dga.dwNorm [ 26 ]	= dw_Code_Equivalence	// DataWindow Stockage Libellés IFR Traduit #3
 	stPass_Dga.dwNorm [ 27 ]	= dw_autorisation    // Table autorisation
-	stPass_Dga.dwNorm [ 28 ]	= dw_Stk_Codic_Darty	// DataWindow Stockage Donn$$HEX1$$e900$$ENDHEX$$es CODIC DARTY #3
-	stPass_Dga.dwNorm [ 29 ]	= dw_code_mb         // DataWindow Stockage Donn$$HEX1$$e900$$ENDHEX$$es MARQUE diverses (-MB)
-	stPass_Dga.dwNorm [ 30 ]	= dw_div_pDet        // DataWindow Stockage Donn$$HEX1$$e900$$ENDHEX$$es param onglet divers details
+	stPass_Dga.dwNorm [ 28 ]	= dw_Stk_Codic_Darty	// DataWindow Stockage Données CODIC DARTY #3
+	stPass_Dga.dwNorm [ 29 ]	= dw_code_mb         // DataWindow Stockage Données MARQUE diverses (-MB)
+	stPass_Dga.dwNorm [ 30 ]	= dw_div_pDet        // DataWindow Stockage Données param onglet divers details
 	stPass_Dga.dwNorm [ 31 ]	= dddw_codecar_wdivsin_charg_tempo // Chargement tempo des codes pour W_Div_Det
 	stPass_Dga.dwNorm [ 32 ]	= dddw_code_wdivsin_charg_tempo // Chargement tempo des codes pour W_Div_Det
 	stPass_Dga.dwNorm [ 33 ]	= dw_wdetail   // [CONFO][NV_PROCESS]
@@ -2383,10 +2383,10 @@ Case "dw_w_commande"
 	stPass_Dga.bInsert		= False
 	stPass_Dga.bControl		= True
 
-	stPass_Dga.sTab [ 1 ]	= This.Title + "/ Commande n$$HEX2$$b0002000$$ENDHEX$$" + String (dw_w_commande.GetItemNumber ( dw_w_commande.GetRow (), "ID_SEQ" ))
+	stPass_Dga.sTab [ 1 ]	= This.Title + "/ Commande n° " + String (dw_w_commande.GetItemNumber ( dw_w_commande.GetRow (), "ID_SEQ" ))
 	stPass_Dga.sTab [ 2 ]	= isTypeTrt
 	stPass_Dga.sTab [ 3 ]	= Uo_Consult_Euro.Uf_Recuperer_Monnaie_Courante ()
-	stPass_Dga.sTab [ 4 ]	= dw_1.GetItemString ( 1, "NUM_IMEI_PORT", Primary!, TRUE ) // DCMP 030407 n$$HEX2$$b0002000$$ENDHEX$$IMEI provenant de l'adh$$HEX1$$e900$$ENDHEX$$sion (N'A PAS ETE modifi$$HEX2$$e9002000$$ENDHEX$$depuis l'ouverture du sinistre)
+	stPass_Dga.sTab [ 4 ]	= dw_1.GetItemString ( 1, "NUM_IMEI_PORT", Primary!, TRUE ) // DCMP 030407 n° IMEI provenant de l'adhésion (N'A PAS ETE modifié depuis l'ouverture du sinistre)
 
 	stPass_Dga.bTab [ 1 ]	= ibAltCommune // Gestion des Communes O/N
 
@@ -2397,9 +2397,9 @@ Case "dw_w_commande"
 /* # Modification SFR # Le 17/07/2002.                              */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* On ajoute la DW DW_WDETAIL afin de controler que le d$$HEX1$$e900$$ENDHEX$$tail       */
-/* n'est pas A REGLER si l'on cherche $$HEX2$$e0002000$$ENDHEX$$supprimer la commande li$$HEX1$$e900$$ENDHEX$$e  */
-/* $$HEX2$$e0002000$$ENDHEX$$ce d$$HEX1$$e900$$ENDHEX$$tail.                                                     */
+/* On ajoute la DW DW_WDETAIL afin de controler que le détail       */
+/* n'est pas A REGLER si l'on cherche à supprimer la commande liée  */
+/* à ce détail.                                                     */
 /*------------------------------------------------------------------*/
 	stPass_Dga.dwNorm [ 1 ]	= dw_wDetail
 	stPass_Dga.dwNorm [ 2 ]	= dw_Horaire_Rdv
@@ -2434,20 +2434,20 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		: Ue_Initialiser
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //* #1  DBI le 30/08/1999 DCMP 990391 Gestion des motifs de routage			  
 //* #3  CAG    05/03/2003 DCMP 030135 : Ajout d'une table des boutiques
-//* #4  JFF		20/08/2003 DCMP 030362 : Chargement des communes pour Contr$$HEX1$$f400$$ENDHEX$$le(CP/VILLE).
+//* #4  JFF		20/08/2003 DCMP 030362 : Chargement des communes pour Contrôle(CP/VILLE).
 //* #5  JFF    --/--/2003 Gestion des TAC															  
 //* #6  JFF    17/11/2003 Gestion du mail pour DARTY
 //* #7  JFF    11/03/2004 PROJET_SVE
 //* #8  JFF    15/06/2004 Gestion onglet Divers
-//* #9  CAG		11/10/2004 DCMP 040366 : Visualisation de la cat$$HEX1$$e900$$ENDHEX$$gorie des courriers en validation uniquement
-//* #10 PHG		17/10/2006 [DCMP060445] Controle de coh$$HEX1$$e900$$ENDHEX$$rence CP-commune unifi$$HEX2$$e9002000$$ENDHEX$$entre Sherpa/Simpa
+//* #9  CAG		11/10/2004 DCMP 040366 : Visualisation de la catégorie des courriers en validation uniquement
+//* #10 PHG		17/10/2006 [DCMP060445] Controle de cohérence CP-commune unifié entre Sherpa/Simpa
 //* #11 JCA		16/05/2007 DCMP 070051 - Fusion des tables [courrier] et composition] en [cour_prod]
 //      JFF    12/06/2014 [PI052]
 //      JFF    06/04/2020 [PM506-1]
@@ -2526,7 +2526,7 @@ If isTypeTrt = "S" Then
 //	Else 
 //		ibAltCommune = FALSE
 //	End If
-// remplac$$HEX2$$e9002000$$ENDHEX$$par
+// remplacé par
 	if isvalid(stglb.uocommune) then
 		if stglb.uocommune.rowCount()>0 then
 			ibAltCommune = ( stglb.uocommune.ShareData(dw_commune) = 1 )
@@ -2536,18 +2536,18 @@ End If
 stPass_Dga.bTab[1] = ibAltCommune
 
 /*------------------------------------------------------------------*/
-/* On commence $$HEX2$$e0002000$$ENDHEX$$initialiser les NVUO.                              */
+/* On commence à initialiser les NVUO.                              */
 /*------------------------------------------------------------------*/
 iuoGsSpSinistre = Create U_Gs_Sp_Sinistre
 iuoGsSpContTrace = Create U_Gs_Sp_Sinistre_Contact_Trace
 
 /*------------------------------------------------------------------*/
-/* #7 initilisation des objets li$$HEX1$$e900$$ENDHEX$$s $$HEX2$$e0002000$$ENDHEX$$la SVE.                       */
+/* #7 initilisation des objets liés à la SVE.                       */
 /*------------------------------------------------------------------*/
 iuoGsSpSinistre.uf_Initialiser_SVE ( stPassSVE, invSaisieValSin, lb_Fichier )
 
 /*------------------------------------------------------------------*/
-/* Ces fonctions sont issues du NVUO anc$$HEX1$$ea00$$ENDHEX$$tre.                       */
+/* Ces fonctions sont issues du NVUO ancêtre.                       */
 /*------------------------------------------------------------------*/
 iuoGsSpSinistre.Uf_Initialisation ( dw_1, itrTrans, Uo_Ong, isTypeTrt )
 iuoGsSpSinistre.Uf_Initialiser_Dw ( dw_Produit, dw_Det_Pro, True )
@@ -2665,7 +2665,7 @@ Uo_Ong.Uf_EnregistrerOnglet ( "05", "Commandes",		"", dw_w_commande,	False )
 Uo_Ong.Uf_ActiverOnglet ( "05", False )
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$alise un certain nombre de choses en fonction du type de    */
+/* On réalise un certain nombre de choses en fonction du type de    */
 /* traitement. (Initialisation d'une varaible d'instance pour le    */
 /* WorkFlow, Gestion des TabOrdrers, Etc..)                         */
 /*------------------------------------------------------------------*/
@@ -2700,11 +2700,11 @@ Case "C"
 End Choose
 
 /*------------------------------------------------------------------*/
-/* Le nom du fichier de trace pour l'essai d'$$HEX1$$e900$$ENDHEX$$criture.              */
+/* Le nom du fichier de trace pour l'essai d'écriture.              */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* Cette variable sera utilis$$HEX1$$e900$$ENDHEX$$e pour le routage dans l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement    */
-/* Ue_Routage. Elle sera aussi utilis$$HEX1$$e900$$ENDHEX$$e dans la fonction de         */
+/* Cette variable sera utilisée pour le routage dans l'événement    */
+/* Ue_Routage. Elle sera aussi utilisée dans la fonction de         */
 /* validation du UserObjet.                                         */
 /*------------------------------------------------------------------*/
 sRep = ProfileString ( stGLB.sFichierIni, "TRACE", "REP_TRACE", "Erreur" )
@@ -2730,7 +2730,7 @@ isFicEssaiTrcRout = sRep + stGLB.sCodOper + String ( Today (), "ddmm" ) + ".TMP"
 
 
 /*------------------------------------------------------------------*/
-/* Gestion du Passage $$HEX2$$e0002000$$ENDHEX$$l'EURO.                                     */
+/* Gestion du Passage à l'EURO.                                     */
 /*------------------------------------------------------------------*/
 N_Cst_Passage_Euro	nvPassageEuro
 
@@ -2768,14 +2768,14 @@ event ue_creer;call super::ue_creer;//*-----------------------------------------
 //* Evenement 		: Ue_Creer
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 16:37:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Ouverture des Fen$$HEX1$$ea00$$ENDHEX$$tres de d$$HEX1$$e900$$ENDHEX$$tail.
-//*				     (On est en cr$$HEX1$$e900$$ENDHEX$$ation d'un d$$HEX1$$e900$$ENDHEX$$tail)
+//* Libellé			: 
+//* Commentaires	: Ouverture des Fenêtres de détail.
+//*				     (On est en création d'un détail)
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //* #1  JFF  23/03/2004 Blob data pour SVE DCMP 040020
-//* #2  JFF  10/01/2007 La lecture de l'ID_I n'est pas utile en cr$$HEX1$$e900$$ENDHEX$$ation.
+//* #2  JFF  10/01/2007 La lecture de l'ID_I n'est pas utile en création.
 //* #3  JFF  18/09/2007 [ALAPAGE]
 //*     FPI	 30/07/2010 [PM72]
 //*	  FPI	 18/10/2010	 [PM72.1]
@@ -2791,7 +2791,7 @@ Long lTot, lCpt, lnbContact
 Boolean bRet, bOk
 
 /*----------------------------------------------------------------------------*/
-/* On peut cr$$HEX1$$e900$$ENDHEX$$er un Contact en Consultation.                                  */
+/* On peut créer un Contact en Consultation.                                  */
 /*----------------------------------------------------------------------------*/
 //Migration PB8-WYNIWYG-03/2006 OR
 //If	isTypeTrt <> "S" And isDetailActif <> "dw_lst_contact" Then Return
@@ -2806,17 +2806,17 @@ Case "dw_lst_inter"
 //	iIdInter = dw_lst_inter.GetItemNumber ( dw_lst_inter.GetRow (), "ID_I" ) #2
 
 /*------------------------------------------------------------------*/
-/* On ne doit pas cr$$HEX1$$e900$$ENDHEX$$er plus de 10 interlocuteurs. On ne g$$HEX1$$e900$$ENDHEX$$re pas   */
+/* On ne doit pas créer plus de 10 interlocuteurs. On ne gére pas   */
 /* les trous, selon St Denis il n'y aura jamais plus de 2 ou 3      */
-/* lignes dans la table. Donc on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re simplement le dernier Id  */
-/* de la DW sachant qu'elle est tri$$HEX1$$e900$$ENDHEX$$e sur CODE_ID.                  */
+/* lignes dans la table. Donc on récupére simplement le dernier Id  */
+/* de la DW sachant qu'elle est triée sur CODE_ID.                  */
 /*------------------------------------------------------------------*/
 	lTot = dw_Lst_Inter.RowCount ()
 	If	lTot > 0 Then
 		If	dw_Lst_Inter.GetItemNumber ( lTot, "ID_I" ) >= 10 Then
 			bRet = False
 
-			stMessage.sTitre		= "Cr$$HEX1$$e900$$ENDHEX$$ation d'un interlocuteur - SIMPA 2"
+			stMessage.sTitre		= "Création d'un interlocuteur - SIMPA 2"
 			stMessage.Icon			= StopSign!
 			stMessage.sVar [ 1 ]	= "d'interlocuteur"
 			stMessage.sCode		= "WSIN100"
@@ -2829,18 +2829,18 @@ Case "dw_lst_inter"
 /*------------------------------------------------------------------*/
 /* On arme la structure pour expliquer un certain nombre de         */
 /* choses. On est en insertion, on veut un bouton CTRL. On passe    */
-/* la DW de d$$HEX1$$e900$$ENDHEX$$tail ainsi que la DW Master (Sinistre). Cette         */
-/* derni$$HEX1$$e800$$ENDHEX$$re est tr$$HEX1$$e900$$ENDHEX$$s importante. Elle va $$HEX1$$e900$$ENDHEX$$viter d'utiliser des      */
-/* instances de fen$$HEX1$$ea00$$ENDHEX$$tres.                                           */
+/* la DW de détail ainsi que la DW Master (Sinistre). Cette         */
+/* dernière est trés importante. Elle va éviter d'utiliser des      */
+/* instances de fenêtres.                                           */
 /*------------------------------------------------------------------*/
 		stPass_Dga.bInsert		= True
 		stPass_Dga.bControl		= False
 	
 		stPass_Dga.sTab [ 1 ]	= This.Title
 		stPass_Dga.sTab [ 2 ]	= isTypeTrt
- 	// stPass_Dga.sTab [ 3 ]   Est r$$HEX1$$e900$$ENDHEX$$serv$$HEX2$$e9002000$$ENDHEX$$pour la modification.
-	// stPass_Dga.sTab [ 4 ]	Est d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$utilis$$HEX2$$e9002000$$ENDHEX$$!!!
-	// stPass_Dga.sTab [ 5 ]	Est d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$utilis$$HEX2$$e9002000$$ENDHEX$$!!!
+ 	// stPass_Dga.sTab [ 3 ]   Est réservé pour la modification.
+	// stPass_Dga.sTab [ 4 ]	Est déjà utilisé !!!
+	// stPass_Dga.sTab [ 5 ]	Est déjà utilisé !!!
 
 		If ibSaisieValidation Then
 //			stPass_Dga.sTab [ 6 ]	= iuoGsSpSinistre.uf_GetDataInter ( iIdInter ) // #1  #2
@@ -2878,7 +2878,7 @@ Case "dw_lst_inter"
 Case "dw_lst_gti"
 
 /*------------------------------------------------------------------*/
-/* On va ouvrir une fen$$HEX1$$ea00$$ENDHEX$$tre pour demander au gestionnaire de        */
+/* On va ouvrir une fenêtre pour demander au gestionnaire de        */
 /* choisir une garantie.                                            */
 /*------------------------------------------------------------------*/
 
@@ -2887,7 +2887,7 @@ Case "dw_lst_gti"
 	// :[PC13362]
 	
 /*------------------------------------------------------------------*/
-/* On filtre les garanties d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$positionn$$HEX1$$e900$$ENDHEX$$es.                       */
+/* On filtre les garanties déjà positionnées.                       */
 /*------------------------------------------------------------------*/
 	sFiltre = ""
 
@@ -2897,13 +2897,13 @@ Case "dw_lst_gti"
 			sFiltre = sFiltre + "ID_GTI <> " + String ( dw_Lst_Gti.GetItemNumber ( lCpt, "ID_GTI" ) ) + " AND "
 		Next
 /*------------------------------------------------------------------*/
-/* On enl$$HEX1$$e900$$ENDHEX$$ve le dernier AND g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$dans la boucle.                  */
+/* On enléve le dernier AND généré dans la boucle.                  */
 /*------------------------------------------------------------------*/
 		sFiltre = Left ( sFiltre, Len ( sFiltre ) - 5 )
 	End If
 	
 	// [PC363].[PANNE_PGC]
-	// Compl$$HEX1$$e800$$ENDHEX$$ment d'exclusion sur condidion
+	// Complèment d'exclusion sur condidion
 	
 	sFiltre = This.Wf_Gti_Panne_PGC_Auchan ( sFiltre )
 	
@@ -2928,17 +2928,17 @@ Case "dw_lst_gti"
 		OpenWithParm ( W_T_Sp_Choix_Garantie, stPass_Dga, stPass_Dga.wParent.ParentWindow () )
 
 /*------------------------------------------------------------------*/
-/* On va ouvrir une fen$$HEX1$$ea00$$ENDHEX$$tre CHILD qui va permettre de choisir la    */
-/* garantie que l'on d$$HEX1$$e900$$ENDHEX$$sire ouvrir. La 'suite' de l'ouverture de    */
-/* la fen$$HEX1$$ea00$$ENDHEX$$tre de d$$HEX1$$e900$$ENDHEX$$tail se fera sur l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement Ue_Choix_Garantie.  */
+/* On va ouvrir une fenêtre CHILD qui va permettre de choisir la    */
+/* garantie que l'on désire ouvrir. La 'suite' de l'ouverture de    */
+/* la fenêtre de détail se fera sur l'événement Ue_Choix_Garantie.  */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* On va enlever le filtre sur CODE_GARANTIE sur l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ment        */
+/* On va enlever le filtre sur CODE_GARANTIE sur l'événément        */
 /* UE_CHOIX_GARANTIE.                                               */
 /*------------------------------------------------------------------*/
 	Else
 /*------------------------------------------------------------------*/
-/* On enl$$HEX1$$e900$$ENDHEX$$ve le filtre si il n'y a aucune ligne.                    */
+/* On enléve le filtre si il n'y a aucune ligne.                    */
 /*------------------------------------------------------------------*/
 		sFiltre = ""
 		dw_CodeGarantie.SetFilter ( sFiltre )
@@ -3004,10 +3004,10 @@ event show;call super::show;//*-------------------------------------------------
 //* Evenement 		: Show
 //* Auteur			: Erick John Stark
 //* Date				: 05/12/1997 16:25:00
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Initialisation de la variable ibMajAccueil $$HEX2$$e0002000$$ENDHEX$$Faux
-//*				  	  pour que la gestion automatique de la fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil
-//*				     ne soit pas effectu$$HEX1$$e900$$ENDHEX$$e. La mise $$HEX2$$e0002000$$ENDHEX$$jour de l'accueil est r$$HEX1$$e900$$ENDHEX$$alis$$HEX1$$e900$$ENDHEX$$e
+//* Libellé			: 
+//* Commentaires	: Initialisation de la variable ibMajAccueil à Faux
+//*				  	  pour que la gestion automatique de la fenêtre d'accueil
+//*				     ne soit pas effectuée. La mise à jour de l'accueil est réalisée
 //*				     dans W_ACCUEIL_WORKFLOW.
 //*				  
 //*-----------------------------------------------------------------
@@ -3028,7 +3028,7 @@ on hide;call w_8_traitement_master::hide;//*------------------------------------
 //* Evenement 		: Hide
 //* Auteur			: Catherine Abdmeziem
 //* Date				: 06/07/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: DCMP 030381 : fermeture de la popup sur hide
 //*				     
 //*				  
@@ -3046,7 +3046,7 @@ event we_childactivate;call super::we_childactivate;//*-------------------------
 //* Evenement 		: We_ChildActivate
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 17:53:35
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -3071,8 +3071,8 @@ event close;call super::close;//*-----------------------------------------------
 //* Evenement 		: Close
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 18:46:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Fermeture d$$HEX1$$e900$$ENDHEX$$finitive de la fen$$HEX1$$ea00$$ENDHEX$$tre.
+//* Libellé			: 
+//* Commentaires	: Fermeture définitive de la fenêtre.
 //*				     On supprime tous les NVUO.
 //*				  
 //*-----------------------------------------------------------------
@@ -3118,8 +3118,8 @@ event ue_routage;call super::ue_routage;//*-------------------------------------
 //* Evenement 		: Ue_Routage
 //* Auteur			: Erick John Stark
 //* Date				: 05/12/1997 16:36:19
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre de routage
+//* Libellé			: 
+//* Commentaires	: Ouverture de la fenêtre de routage
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ 	PAR		Date			Modification
@@ -3127,7 +3127,7 @@ event ue_routage;call super::ue_routage;//*-------------------------------------
 //* #2	JCA	05/12/2006	Modification de la corbeille interdite
 //* #3	JFF	06/12/2006	On ne regarde le droit de validation que si
 //*                        l'on est en validation.
-//			FPI	26/12/2013	[PM217-2] Fen$$HEX1$$ea00$$ENDHEX$$tre de routage IWD
+//			FPI	26/12/2013	[PM217-2] Fenêtre de routage IWD
 //			JFF   29/11/2023  CCO => Ticket 399863
 //			JFF   29/11/2023  [OPTIM_UE_ROUTAGE]
 //*-----------------------------------------------------------------
@@ -3152,7 +3152,7 @@ String sDosMajPar
 If ibSaisieValidation And isTypeTrt = "V" Then // #3
 	iuoGsSpSinistre.uf_GetAutorisation ( "", sVal, bVal, bVal, bRet, -1 )
 	If Not bRet Then
-		stMessage.sTitre		= "Vous n'$$HEX1$$ea00$$ENDHEX$$tes pas autoris$$HEX1$$e900$$ENDHEX$$."
+		stMessage.sTitre		= "Vous n'êtes pas autorisé."
 		stMessage.Icon			= Exclamation!
 		stMessage.bErreurG	= False
 		stMessage.sCode		= "SVE0020"
@@ -3167,7 +3167,7 @@ If ibSaisieValidation And isTypeTrt = "V" Then // #3
 End If
 
 /*------------------------------------------------------------------*/
-/* La variable isCodEtat permet de d$$HEX1$$e900$$ENDHEX$$terminer si on est en saisie   */
+/* La variable isCodEtat permet de déterminer si on est en saisie   */
 /* ou en validation.                                                */
 /*------------------------------------------------------------------*/
 
@@ -3267,7 +3267,7 @@ If	stPass.sTab[ 1 ] = "ROU" Then
 
 	// [PM217-2]
 	If not isnull(sIdIwd) Then
-		//isTxtMess="IWD travail rout$$HEX4$$e9002000e0002000$$ENDHEX$$" + isCodOper
+		//isTxtMess="IWD travail routé à " + isCodOper
 		SQLCA.Iwd_Update_Iwd_Router_Dossier( String(lIdSin) , isIdCorb, isCodOper, isTxtMess)
 	End if
 	// :[PM217-2]
@@ -3289,8 +3289,8 @@ event ue_retour;//*-------------------------------------------------------------
 //* Evenement 		: Ue_Retour
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 17:29:51
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Op$$HEX1$$e900$$ENDHEX$$rations  $$HEX2$$e0002000$$ENDHEX$$effectuer avant la fermeture de la fen$$HEX1$$ea00$$ENDHEX$$tre
+//* Libellé			: 
+//* Commentaires	: Opérations  à effectuer avant la fermeture de la fenêtre
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -3298,7 +3298,7 @@ event ue_retour;//*-------------------------------------------------------------
 //*										de pochette				  
 //* #2		   JFF		05/09/02 Gestion de la gestion de contact uniquement pour Sherpa
 //* #3			JFF		16/03/04 DCMP 040020
-//* #4			JFF      07/04/2006 Migration PB8-SPB-04/2006 - Appel suppl$$HEX1$$e900$$ENDHEX$$mentaire.
+//* #4			JFF      07/04/2006 Migration PB8-SPB-04/2006 - Appel supplémentaire.
 //*-----------------------------------------------------------------
 
 Boolean bOkPourFermer
@@ -3337,10 +3337,10 @@ st_Pochette.Hide()
 
 /*------------------------------------------------------------------*/
 /* Il faut mettre le script en OVERRIDE.                            */
-/* Appel de l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement UE_MajAccueil avant le retour de la         */
-/* fen$$HEX1$$ea00$$ENDHEX$$tre.                                                         */
+/* Appel de l'événement UE_MajAccueil avant le retour de la         */
+/* fenêtre.                                                         */
 /* En effet UE_Retour ne traite pas Ue_MajAccueil si la variable    */
-/* ibMajAccueil est $$HEX2$$e0002000$$ENDHEX$$Faux.                                         */
+/* ibMajAccueil est à Faux.                                         */
 /*------------------------------------------------------------------*/
 
 If IsValid ( W_Consulter_Paragraphe ) Then Close ( W_Consulter_Paragraphe )
@@ -3379,33 +3379,33 @@ event ue_majaccueil;call super::ue_majaccueil;//*-------------------------------
 //* Evenement 		: Ue_MajAccueil
 //* Auteur			: Erick John Stark
 //* Date				: 03/06/1997 11:57:04
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: NE JAMAIS ENVOYER DE ' DANS LA CHAINE isMajAccueil
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //* #1 DBI le 30/08/1999 DCMP 990391 Gestion des motifs de routage			 
-//* #2 FS  le 16/12/2002 Dcmp 20430 Ajt code $$HEX1$$e900$$ENDHEX$$tat dans trace workflow		 
+//* #2 FS  le 16/12/2002 Dcmp 20430 Ajt code état dans trace workflow		 
 //*-----------------------------------------------------------------
 
 String 		sTab	= "~t"	// Code tabulation
 
 Long			lCodEtat				// Code Etat du dossier
-String		sAltBloc 			// Dossier bloqu$$HEX2$$e9002000$$ENDHEX$$?
+String		sAltBloc 			// Dossier bloqué ?
 String		sMess					// Message saisi
-String		sCorbProd			// Corbeille assign$$HEX1$$e900$$ENDHEX$$e au produit
-String		sMajLe, sCreele	// Dates et heures de cr$$HEX1$$e900$$ENDHEX$$ation et de maj
+String		sCorbProd			// Corbeille assignée au produit
+String		sMajLe, sCreele	// Dates et heures de création et de maj
 String		sMajPar				// Responsable de la maj
 String		sDtHeure				// Date et heure actuelle
-String		sNom					// Nom et pr$$HEX1$$e900$$ENDHEX$$nom
-String		sIdSin				// R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence Sinistre
+String		sNom					// Nom et prénom
+String		sIdSin				// Référence Sinistre
 String		sMajParDep
 String		sMotifRoutage = "N"// Gestion des motifs de routage  #1
 String      sCodEtat           // #2
 
 
 If dw_1.RowCount () <= 0 Then
-	iwParent.TriggerEvent ( "UE_MODIFIER" )	// R$$HEX1$$e900$$ENDHEX$$alise les mises $$HEX2$$e0002000$$ENDHEX$$jour li$$HEX1$$e900$$ENDHEX$$es au WorkFlow
+	iwParent.TriggerEvent ( "UE_MODIFIER" )	// Réalise les mises à jour liées au WorkFlow
 	Return 1
 End If 
 
@@ -3426,15 +3426,15 @@ sNom			= dw_1.GetItemString ( 1, "NOM" )	+ " "	+ dw_1.GetItemString( 1, "PRENOM"
 If IsNull ( sMess ) Then sMess = ""
 
 /*------------------------------------------------------------------*/
-/* #2 SIMPA : Le code $$HEX1$$e900$$ENDHEX$$tat du dossier n'est pas renseign$$HEX12$$e90020002000200020002000200020002000200020002000$$ENDHEX$$*/
-/*            Tj $$HEX2$$e0002000$$ENDHEX$$"0" pour compatibilit$$HEX2$$e9002000$$ENDHEX$$fichier avec SINDI        */
+/* #2 SIMPA : Le code état du dossier n'est pas renseigné           */
+/*            Tj à "0" pour compatibilité fichier avec SINDI        */
 /*------------------------------------------------------------------*/
 
 sCodEtat = "0"
 
 /*------------------------------------------------------------------*/
 /* S'il n'y a aucun courrier dans DW_COURRIER, que la zone          */
-/* lCodEtat ne soit pas $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$1 (BLOQUEE) et que l'on soit en     */
+/* lCodEtat ne soit pas égale à 1 (BLOQUEE) et que l'on soit en     */
 /* saisie, on passe directement le dossier A EDITER (COD_ETAT=5).   */
 /*------------------------------------------------------------------*/
 If	lCodEtat <> 1 And isCodEtat = "1" And dw_wCourrier.RowCount () = 0 And isCodAction = "1" Then
@@ -3445,8 +3445,8 @@ Choose Case isCodEtat
 
 Case "1" 					// Cas de la saisie
 /*------------------------------------------------------------------*/
-/* Il est possible que la zone ALT_BLOC ne soit par arm$$HEX1$$e900$$ENDHEX$$e, et       */
-/* pourtant la zone COD_ETAT est $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$1 (BLOQUEE!!).             */
+/* Il est possible que la zone ALT_BLOC ne soit par armée, et       */
+/* pourtant la zone COD_ETAT est égale à 1 (BLOQUEE!!).             */
 /*------------------------------------------------------------------*/
 	If ( lCodEtat = 1 ) And isCodAction = '1' Then	
 		sAltBloc			= "O" 
@@ -3454,20 +3454,20 @@ Case "1" 					// Cas de la saisie
 	End If
 
 	/*----------------------------------------------------------------------------*/
-	/* La variable isCodAction est arm$$HEX1$$e900$$ENDHEX$$e lors de l'appui sur les boutons de la    */
-	/* mani$$HEX1$$e800$$ENDHEX$$re suivante                                                           */
+	/* La variable isCodAction est armée lors de l'appui sur les boutons de la    */
+	/* manière suivante                                                           */
 	/*                                                                            */
 	/*    1 - Bouton Valider                                                      */
 	/*    2 - Bouton Retour                                                       */
 	/*    3 - Bouton Routage                                                      */
-	/*    4 - Bouton Valider alors que le dossier est bloqu$$HEX23$$e9002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000$$ENDHEX$$*/
+	/*    4 - Bouton Valider alors que le dossier est bloqué                      */
 	/*----------------------------------------------------------------------------*/
 
 	Choose Case isCodAction
 
 	Case '1', '4', '5'	// 1 ....................................... Controle-Valider
-								// 4 ....................................... Controle-Valider Bloqu$$HEX1$$e900$$ENDHEX$$
-								// 5 ....................................... Controle-Valider sans courrier ( on passe $$HEX2$$e0002000$$ENDHEX$$la validation )
+								// 4 ....................................... Controle-Valider Bloqué
+								// 5 ....................................... Controle-Valider sans courrier ( on passe à la validation )
 
 		isMajAccueil = 	sCreele					+ sTab	+ &
 								sCorbProd				+ sTab	+ &
@@ -3632,10 +3632,10 @@ Case "5"		// Validation
 End Choose
 
 /*----------------------------------------------------------------------------*/
-/* Appel de la mise $$HEX2$$e0002000$$ENDHEX$$jour du WorkFlow                                        */
+/* Appel de la mise à jour du WorkFlow                                        */
 /*----------------------------------------------------------------------------*/
 
-istPass.sTab[1]	=	"AUT"						// Mode automatique pour la mise $$HEX2$$e0002000$$ENDHEX$$jour de la fen$$HEX1$$ea00$$ENDHEX$$tre WorkFlow
+istPass.sTab[1]	=	"AUT"						// Mode automatique pour la mise à jour de la fenêtre WorkFlow
 istPass.sTab[2]	=	isMajAccueil
 istPass.sTab[3]	=	sMotifRoutage
 
@@ -3648,7 +3648,7 @@ End If
 
 Message.PowerObjectParm = istPass
 
-iwParent.TriggerEvent ( "UE_MAJACCUEIL" )	// R$$HEX1$$e900$$ENDHEX$$alise les mises $$HEX2$$e0002000$$ENDHEX$$jour li$$HEX1$$e900$$ENDHEX$$es au WorkFlow
+iwParent.TriggerEvent ( "UE_MAJACCUEIL" )	// Réalise les mises à jour liées au WorkFlow
 
 //Migration PB8-WYNIWYG-03/2006 OR
 return 0
@@ -3662,9 +3662,9 @@ on ue_item5;call w_8_traitement_master::ue_item5;//*----------------------------
 //* Evenement 		: Item5
 //* Auteur			: FABRY JF
 //* Date				: 01/02/2002
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Evenement d$$HEX1$$e900$$ENDHEX$$clench$$HEX4$$e9002000e0002000$$ENDHEX$$partir de la fen$$HEX1$$ea00$$ENDHEX$$tre contacts
-//*					  en consultation pour r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer les init de la personne
+//* Libellé			: 
+//* Commentaires	: Evenement déclenché à partir de la fenêtre contacts
+//*					  en consultation pour récupérer les init de la personne
 //*					  qui va traiter le travail.
 //*				  
 //*-----------------------------------------------------------------
@@ -3683,8 +3683,8 @@ event ue_enablefenetre;call super::ue_enablefenetre;//*-------------------------
 //* Evenement 		: Ue_EnableFenetre
 //* Auteur			: Erick John Stark
 //* Date				: 09/06/1998 17:20:28
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On vient de la fen$$HEX1$$ea00$$ENDHEX$$tre des Garanties
+//* Libellé			: 
+//* Commentaires	: On vient de la fenêtre des Garanties
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -3694,7 +3694,7 @@ event ue_enablefenetre;call super::ue_enablefenetre;//*-------------------------
 String sMonnaie
 
 /*------------------------------------------------------------------*/
-/* Si on est en saisie, il faut reg$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer le TreeView.              */
+/* Si on est en saisie, il faut regénérer le TreeView.              */
 /*------------------------------------------------------------------*/
 Choose Case isTypeTrt
 Case "S"
@@ -3702,9 +3702,9 @@ Case "S"
 	Wf_Enabled_Fenetre ( sMonnaie )
 
 /*------------------------------------------------------------------*/
-/* On est en consultation, on d$$HEX1$$e900$$ENDHEX$$termine d'ou l'on vient (GTI ou     */
-/* INTER), on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re la valeur de la monnaie pour cette fen$$HEX1$$ea00$$ENDHEX$$tre,  */
-/* et on positionne la m$$HEX1$$ea00$$ENDHEX$$me valeur pour la fen$$HEX1$$ea00$$ENDHEX$$tre en cours.        */
+/* On est en consultation, on détermine d'ou l'on vient (GTI ou     */
+/* INTER), on récupére la valeur de la monnaie pour cette fenêtre,  */
+/* et on positionne la même valeur pour la fenêtre en cours.        */
 /*------------------------------------------------------------------*/
 Case "C"
 	Choose Case isDetailConsult
@@ -3817,7 +3817,7 @@ this.uo_consult_euro=create uo_consult_euro
 this.st_pause_api_lab=create st_pause_api_lab
 this.dw_wreg_frais_annexe_frn=create dw_wreg_frais_annexe_frn
 this.st_attente_diverse=create st_attente_diverse
-this.cb_testHub=create cb_testHub
+this.cb_testhub=create cb_testhub
 iCurrent=UpperBound(this.Control)
 this.Control[iCurrent+1]=this.pb_routage
 this.Control[iCurrent+2]=this.uo_ong
@@ -3904,7 +3904,7 @@ this.Control[iCurrent+82]=this.uo_consult_euro
 this.Control[iCurrent+83]=this.st_pause_api_lab
 this.Control[iCurrent+84]=this.dw_wreg_frais_annexe_frn
 this.Control[iCurrent+85]=this.st_attente_diverse
-this.Control[iCurrent+86]=this.cb_testHub
+this.Control[iCurrent+86]=this.cb_testhub
 end on
 
 on w_tm_sp_sinistre.destroy
@@ -3994,7 +3994,7 @@ destroy(this.uo_consult_euro)
 destroy(this.st_pause_api_lab)
 destroy(this.dw_wreg_frais_annexe_frn)
 destroy(this.st_attente_diverse)
-destroy(this.cb_testHub)
+destroy(this.cb_testhub)
 end on
 
 event timer;call super::timer;//*-----------------------------------------------------------------
@@ -4003,9 +4003,9 @@ event timer;call super::timer;//*-----------------------------------------------
 //* Evenement 		: Item5
 //* Auteur			: FABRY JF
 //* Date				: 25/06/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PI052]
-//* Commentaires	: Evenement d$$HEX1$$e900$$ENDHEX$$clench$$HEX4$$e9002000e0002000$$ENDHEX$$partir de la fen$$HEX1$$ea00$$ENDHEX$$tre contacts
-//*					  en consultation pour r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer les init de la personne
+//* Libellé			: [PI052]
+//* Commentaires	: Evenement déclenché à partir de la fenêtre contacts
+//*					  en consultation pour récupérer les init de la personne
 //*					  qui va traiter le travail.
 //*				  
 //*-----------------------------------------------------------------
@@ -4015,24 +4015,24 @@ event timer;call super::timer;//*-----------------------------------------------
 
 s_Pass stPass
 
-// Test d'un boolean de fa$$HEX1$$e700$$ENDHEX$$on $$HEX2$$e0002000$$ENDHEX$$pouvoir d$$HEX1$$e900$$ENDHEX$$clencher le Timer pour d'autres traitement
+// Test d'un boolean de façon à pouvoir déclencher le Timer pour d'autres traitement
 // est pas pour le PI052.
 
-// SI timer du PI052 Allum$$HEX1$$e900$$ENDHEX$$
+// SI timer du PI052 Allumé
 If invSaisieValSin.ibTimerPI052 Then
 	pb_Controler.Enabled = False
 
-	// Si fin PDF pas encore g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$
+	// Si fin PDF pas encore généré
 	If Not invSaisieValSin.ibFinGenerationPDFOk Then
 
-		// Alors on srute toujours le r$$HEX1$$e900$$ENDHEX$$pertoire
+		// Alors on srute toujours le répertoire
 		If invSaisieValSin.uf_PI052_GestionTimer ( "SCRUTER", 0 ) <= 0 Then
 		
-			//... Et si d$$HEX1$$e900$$ENDHEX$$lai d$$HEX1$$e900$$ENDHEX$$pass$$HEX2$$e9002000$$ENDHEX$$Alors...
+			//... Et si délai dépassé Alors...
 			invSaisieValSin.uf_PI052_GestionTimer ( "ARRETER_TIMER", 0 )
 			OpenWithParm ( W_Trt_Capture_Click, "" )
 			
-			stMessage.sTitre		= "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration des courriers"
+			stMessage.sTitre		= "Génération des courriers"
 			stMessage.Icon			= Information!
 			stMessage.bErreurG	= FALSE
 			stMessage.Bouton		= OK!
@@ -4043,11 +4043,11 @@ If invSaisieValSin.ibTimerPI052 Then
 
 		End If
 
-	Else // ...Sinon succ$$HEX1$$e800$$ENDHEX$$s, courrier r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$s.
+	Else // ...Sinon succès, courrier récupérés.
 		invSaisieValSin.uf_PI052_GestionTimer ( "ARRETER_TIMER", 0 )
 		OpenWithParm ( W_Trt_Capture_Click, "" )
 		
-		dw_1.TriggerEvent ( "ue_ibScriptClientFocus" )  // Affectation $$HEX2$$e0002000$$ENDHEX$$TRUE
+		dw_1.TriggerEvent ( "ue_ibScriptClientFocus" )  // Affectation à TRUE
 		iuoGsSpSinistre.ib2EmeTourPI052 = True
 		pb_Controler.Enabled = True
 		pb_Controler.TriggerEvent (Clicked!)
@@ -4082,7 +4082,7 @@ event dw_1::ue_ouvrir_fentrv;//*------------------------------------------------
 //* Evenement 		: ue_Ouvrir_FenTrv
 //* Auteur			: FABRY JF
 //* Date				: 09/05/2001 14:02:05
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Overture de la fen$$HEX1$$ea00$$ENDHEX$$tre des travaux
+//* Libellé			: Overture de la fenêtre des travaux
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -4098,14 +4098,14 @@ event dw_1::ue_ouvrir_fentrv;//*------------------------------------------------
 s_Pass	stPass
 
 /*----------------------------------------------------------------------------*/
-/* Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre des travaux en invisible $$HEX2$$e0002000$$ENDHEX$$partir de l'objet       */
+/* Ouverture de la fenêtre des travaux en invisible à partir de l'objet       */
 /* contact_trace.                                                             */
 /*----------------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* Initialisation de la structure pour le passage des param$$HEX1$$e800$$ENDHEX$$tres    */
+/* Initialisation de la structure pour le passage des paramètres    */
 /*------------------------------------------------------------------*/
 stPass.trTrans 	= itrTrans
-stPass.bControl	= True		// Utilisation du bouton Cont$$HEX1$$f400$$ENDHEX$$ler.
+stPass.bControl	= True		// Utilisation du bouton Contôler.
 stPass.wParent		= Parent
 stPass.sTab [ 1 ] = String ( This.GetItemNumber ( 1, "ID_SIN" ) )
 stPass.bInsert		= True
@@ -4138,7 +4138,7 @@ on dw_1::ue_ouvrir_fensaisie;call w_8_traitement_master`dw_1::ue_ouvrir_fensaisi
 //* Evenement 		: ue_Ouvrir_FenSaisie
 //* Auteur			: FABRY JF
 //* Date				: 09/05/2001 14:02:05
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Overture de la fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil dce saisie de sinistre
+//* Libellé			: Overture de la fenêtre d'accueil dce saisie de sinistre
 //* Commentaires	: 
 //*				 
 //* Arguments		: 
@@ -4152,7 +4152,7 @@ on dw_1::ue_ouvrir_fensaisie;call w_8_traitement_master`dw_1::ue_ouvrir_fensaisi
 //*-----------------------------------------------------------------
 
 /*----------------------------------------------------------------------------*/
-/* Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil de saisie de sinistre.                   */
+/* Ouverture de la fenêtre d'accueil de saisie de sinistre.                   */
 /*----------------------------------------------------------------------------*/
 SetPointer ( HourGlass! )
 
@@ -4174,7 +4174,7 @@ event dw_1::ue_ouvrir_fenvalidation;//*-----------------------------------------
 //* Evenement 		: ue_Ouvrir_FenValidation
 //* Auteur			: FABRY JF
 //* Date				: 09/05/2001 14:02:05
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Overture de la fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil de validation
+//* Libellé			: Overture de la fenêtre d'accueil de validation
 //* Commentaires	: 
 //*				 
 //* Arguments		: 
@@ -4188,7 +4188,7 @@ event dw_1::ue_ouvrir_fenvalidation;//*-----------------------------------------
 //*-----------------------------------------------------------------
 
 /*----------------------------------------------------------------------------*/
-/* Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil de saisie de sinistre.                   */
+/* Ouverture de la fenêtre d'accueil de saisie de sinistre.                   */
 /*----------------------------------------------------------------------------*/
 SetPointer ( HourGlass! )
 
@@ -4216,7 +4216,7 @@ on dw_1::ue_ibscriptclientfocus;call w_8_traitement_master`dw_1::ue_ibscriptclie
 //* Evenement     : ue_ibScriptClientFocus
 //* Auteur        : Fabry JF
 //* Date          : 15/03/2004 10:58:42
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Armement du ibScriptClientFocus $$HEX2$$e0002000$$ENDHEX$$partir de u_gs_sp_Sinistre::uf_ControlerGestion
+//* Libellé       : Armement du ibScriptClientFocus à partir de u_gs_sp_Sinistre::uf_ControlerGestion
 //*					  Utiliser pour la SVE DCMP 040020
 //* Commentaires  : 
 //*
@@ -4242,7 +4242,7 @@ event dw_1::ue_majenabledbouton();//*-------------------------------------------
 //* Evenement 		: Item11
 //* Auteur			: FABRY JF
 //* Date				: 25/06/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PI052]
+//* Libellé			: [PI052]
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -4265,7 +4265,7 @@ event dw_1::ue_fermerword();//*-------------------------------------------------
 //* Evenement 		: ue_FermerWord
 //* Auteur			: FABRY JF
 //* Date				: 11/02/2020
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Ferme Word
+//* Libellé			: Ferme Word
 //* Commentaires	: 
 //*				 
 //* Arguments		: 
@@ -4304,7 +4304,7 @@ event dw_1::itemerror;//*-------------------------------------------------------
 //* Evenement 		: ItemError
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:47:59
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion des messages d'erreur
 //*				  
 //*-----------------------------------------------------------------
@@ -4314,21 +4314,23 @@ event dw_1::itemerror;//*-------------------------------------------------------
 //* #1	 CAG	 08/11/2002	  La zone id_orian_boutique devient saisissable
 //*								  si cod_adh <> 1 et 6 => gestion de la zone
 //* #2	 CAG   10/06/2003	  Modification de la marque portable en dddw
-//* #3	 CAG	 04/08/2003	  Modif du libell$$HEX2$$e9002000$$ENDHEX$$du msg concernant la modif #2
+//* #3	 CAG	 04/08/2003	  Modif du libellé du msg concernant la modif #2
 //* #4	 JFF	 19/02/2006   [SITE_CMDE] Gestion des nouvelles option d'autorisation 79, 80, 81
 //* #5	 PHG	 26/04/2007   [DCMP070275] Ajout de nvx motifs sans suite pour la facturation
-//* #6    JFF   16/04/2008   [DCMP070914] Num$$HEX1$$e900$$ENDHEX$$ration AIG
-//* #7	 PHG   09/08/2008	  |DCMP080625] D$$HEX1$$e900$$ENDHEX$$sactivation Controle MArque/mod$$HEX1$$e800$$ENDHEX$$le
+//* #6    JFF   16/04/2008   [DCMP070914] Numération AIG
+//* #7	 PHG   09/08/2008	  |DCMP080625] Désactivation Controle MArque/modèle
 //*								  					obligatoire.
 //* #8    JFF    15/01/2010  [O2M_DIAG_NOMADE].Lot2.JFF (suppression tag #8)
 //*       JFF    08/02/2011  [PC301][VETUSTE]
 //*       JFF	  15/05/2012  [ITSM115501]
 //*       JFF	  27/03/2014  [DT076]
-//*       JFF    07/06/2021  [RS-496] Blocage modif dte_surv, si pr$$HEX1$$e900$$ENDHEX$$sence pr$$HEX1$$e900$$ENDHEX$$-script avec notion de dte_surv exploit$$HEX1$$e900$$ENDHEX$$e.
+//*       JFF    07/06/2021  [RS-496] Blocage modif dte_surv, si présence pré-script avec notion de dte_surv exploitée.
+//        JFF    05/08/2024  [MCO602_PNEU]
 //*-----------------------------------------------------------------
 
 Long ll_return
 String sMarque, sModele
+Long lVal
 
 Choose Case Upper ( This.GetColumnName () ) 
 	Case "DTE_RESIL"
@@ -4358,8 +4360,28 @@ Choose Case Upper ( This.GetColumnName () )
 		End If
 		isErrCol		= Upper ( This.GetColumnName () )
 
+	Case "ID_ORIAN_BOUTIQUE"
+		// [MCO602_PNEU]
+		If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
+			Choose Case This.iiErreur
+	
+				// [MCO602_PNEU]
+				Case 3
+					If This.GetText () = "" Then 
+						lVal = dw_1.GetItemNumber ( 1, "ID_ORIAN_BOUTIQUE" ) 
+						If lVal > 0 Then  
+							ibErreur = TRUE
+							isErrCol	= Upper ( This.GetColumnName () )							
+						End If 
+					Else
+						// Sinon on déclenche l'ancêtre, et la suite ci-dessous
+						Call super::itemerror
+					End If 
+			End Choose	
+		End If
+
 	Case Else
-		// Sinon on d$$HEX1$$e900$$ENDHEX$$clenche l'anc$$HEX1$$ea00$$ENDHEX$$tre, et la suite ci-dessous
+		// Sinon on déclenche l'ancêtre, et la suite ci-dessous
 		Call super::itemerror
 End Choose 
 
@@ -4375,39 +4397,39 @@ If	ibErreur Then
 	Case "DTE_SURV_DATE"
 		Choose Case This.iiErreur
 		Case 0
-			stMessage.sVar[1] = "date de survenance"				// Erreur de Validation - Date sup$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$date du jour
+			stMessage.sVar[1] = "date de survenance"				// Erreur de Validation - Date supérieure à date du jour
 			stMessage.sCode	= "GENE002"
 
 		Case 1
-			stMessage.sVar[1] = "date de survenance"				// Erreur de saisie - Date inf$$HEX1$$e900$$ENDHEX$$rieure au 01/01/1994
+			stMessage.sVar[1] = "date de survenance"				// Erreur de saisie - Date inférieure au 01/01/1994
 			stMessage.sCode	= "GENE002"
 
 		Case 2
-			stMessage.sVar[1] = "date de survenance"				// Erreur de saisie - Date de survenance > Date de d$$HEX1$$e900$$ENDHEX$$claration
-			stMessage.sVar[2] = "inf$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale"
-			stMessage.sVar[3] = "date de d$$HEX1$$e900$$ENDHEX$$claration"
+			stMessage.sVar[1] = "date de survenance"				// Erreur de saisie - Date de survenance > Date de déclaration
+			stMessage.sVar[2] = "inférieure ou égale"
+			stMessage.sVar[3] = "date de déclaration"
 			stMessage.bErreurG= False
 			stMessage.sCode	= "WSIN140"
 
 		Case 3
 /*------------------------------------------------------------------*/
-/* La commande PS_X_CALC_REVISION vient d'$$HEX1$$e900$$ENDHEX$$chouer. La structure de  */
-/* message est arm$$HEX1$$e900$$ENDHEX$$e sur F_Procedure.                               */
+/* La commande PS_X_CALC_REVISION vient d'échouer. La structure de  */
+/* message est armée sur F_Procedure.                               */
 /*------------------------------------------------------------------*/
 			stMessage.sTitre		= "Gestion des sinistres - SIMPA2"
 			stMessage.Icon			= StopSign!
 
 		Case 4
 			stMessage.sVar[1] = "date de survenance"				// Erreur de saisie - Date de survenance < Date d'opposition
-			stMessage.sVar[2] = "inf$$HEX1$$e900$$ENDHEX$$rieure"
+			stMessage.sVar[2] = "inférieure"
 			stMessage.sVar[3] = "date d'opposition"
 			stMessage.bErreurG= False
 			stMessage.sCode	= "WSIN140"
 
-		// #6 [DCMP070914] Num$$HEX1$$e900$$ENDHEX$$ration AIG
+		// #6 [DCMP070914] Numération AIG
 		Case 5
 			stMessage.bErreurG= True
-			// sVar[1] est arm$$HEX1$$e900$$ENDHEX$$e sur uf_zn_dtesurv => "StMessage.sVar[1] = sMsg"
+			// sVar[1] est armée sur uf_zn_dtesurv => "StMessage.sVar[1] = sMsg"
 			stMessage.sCode	= n_cst_protocole_aig_param_gti.k_msg_prefixenomodif
 
 		// [PC301][VETUSTE]
@@ -4415,7 +4437,7 @@ If	ibErreur Then
 			stMessage.bErreurG= FALSE
 			stMessage.sCode	= "WSIN700"
 
-		//*  JFF    07/06/2021  [RS-496] Blocage modif dte_surv, si pr$$HEX1$$e900$$ENDHEX$$sence pr$$HEX1$$e900$$ENDHEX$$-script avec notion de dte_surv exploit$$HEX1$$e900$$ENDHEX$$e.
+		//*  JFF    07/06/2021  [RS-496] Blocage modif dte_surv, si présence pré-script avec notion de dte_surv exploitée.
 		Case 7
 			stMessage.bErreurG= False
 			stMessage.sCode	= "WSIN871"
@@ -4426,7 +4448,7 @@ If	ibErreur Then
 		stMessage.bErreurG	= False
 		Choose Case This.iiErreur
 		Case 1
-			stMessage.sVar[1] = "l'heure de survenance"		// Erreur de saisie - Il faut saisir 4 caract$$HEX1$$e800$$ENDHEX$$res
+			stMessage.sVar[1] = "l'heure de survenance"		// Erreur de saisie - Il faut saisir 4 caractères
 			stMessage.sCode	= "WSIN120"
 
 		Case 2
@@ -4435,14 +4457,14 @@ If	ibErreur Then
 
 		Case 3
 			stMessage.sVar[1] = "date de survenance"				// Erreur de saisie - Date de survenance < Date d'opposition
-			stMessage.sVar[2] = "inf$$HEX1$$e900$$ENDHEX$$rieure"
+			stMessage.sVar[2] = "inférieure"
 			stMessage.sVar[3] = "date d'opposition"
 			stMessage.sCode	= "WSIN140"
 
 		End Choose
 
 	Case "ADR_1"
-		stMessage.sVar[1] 	= "premi$$HEX1$$e800$$ENDHEX$$re ligne d'adresse"
+		stMessage.sVar[1] 	= "première ligne d'adresse"
 		stMessage.sCode		= "GENE002"
 
 	Case "ADR_2"
@@ -4458,11 +4480,11 @@ If	ibErreur Then
 		stMessage.sCode		= "GENE002"
 
 	Case "NUM_TELD", "NUM_TELB"
-		stMessage.sVar[1] 	= "num$$HEX1$$e900$$ENDHEX$$ro de t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone"
+		stMessage.sVar[1] 	= "numéro de téléphone"
 		stMessage.sCode		= "GENE003"
 
 	Case "NUM_FAX"
-		stMessage.sVar[1] 	= "num$$HEX1$$e900$$ENDHEX$$ro de fax"
+		stMessage.sVar[1] 	= "numéro de fax"
 		stMessage.sCode		= "GENE003"
 
 	Case "DTE_ACH_PORT"
@@ -4499,6 +4521,11 @@ If	ibErreur Then
 			stMessage.sCode		= "WSIN769"
 			stMessage.Icon			= Information!
 
+		// [MCO602_PNEU]
+		Case 3
+			stMessage.bErreurG	= False
+			stMessage.sCode		= "WSIN902"
+			stMessage.Icon			= Information!
 
 		End Choose
 
@@ -4553,7 +4580,7 @@ If	ibErreur Then
 		Choose Case This.iiErreur
 		Case 1
 			stMessage.bErreurG	= False
-			stMessage.sVar[1] 	= "Le mod$$HEX1$$e800$$ENDHEX$$le de l'appareil"
+			stMessage.sVar[1] 	= "Le modèle de l'appareil"
 			stMessage.sCode		= "WSIN131"
 
 		Case 2
@@ -4607,7 +4634,7 @@ If	ibErreur Then
 
 		Case 1
 			stMessage.bErreurG	= False
-			stMessage.sVar[1]	   = "num$$HEX1$$e900$$ENDHEX$$ro de ligne li$$HEX2$$e9002000$$ENDHEX$$au t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone portable sinitr$$HEX1$$e900$$ENDHEX$$"
+			stMessage.sVar[1]	   = "numéro de ligne lié au téléphone portable sinitré"
 			stMessage.sCode		= "GENE003"
 
 		End Choose
@@ -4629,16 +4656,16 @@ If	ibErreur Then
 			stMessage.bErreurG	= False
 			stMessage.sCode		= "CTRL001"
 			stMessage.sVar[1] 	= "La date d'adhesion"
-			stMessage.sVar[2] 	= "La date de r$$HEX1$$e900$$ENDHEX$$siliation"
+			stMessage.sVar[2] 	= "La date de résiliation"
 
 		Case 3
 			stMessage.bErreurG	= False
 			stMessage.sCode		= "CTRL022"
-			stMessage.sVar[1] 	= "La date de r$$HEX1$$e900$$ENDHEX$$siliation"
+			stMessage.sVar[1] 	= "La date de résiliation"
 
 
 		End Choose
-	// #5 [DCMP070275]Code motif sans suite reserv$$HEX4$$e9002000e0002000$$ENDHEX$$al facturation
+	// #5 [DCMP070275]Code motif sans suite reservé à al facturation
 	Case "COD_MOT_SSUI"
 			Choose Case This.iiErreur
 				Case 1
@@ -4698,7 +4725,7 @@ on dw_1::doubleclicked;call w_8_traitement_master`dw_1::doubleclicked;//*-------
 //* Evenement 		: DoubleClicked
 //* Auteur			: Erick John Stark
 //* Date				: 02/02/1998 21:46:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Modification du Message
 //*				  
 //*-----------------------------------------------------------------
@@ -4715,7 +4742,7 @@ DataWindowChild dwChild
 /*------------------------------------------------------------------*/
 /* # Modification SFR # Le 27/09/2002                               */
 /*------------------------------------------------------------------*/
-/* Ajout du bouton pour l'ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre des gammes        */
+/* Ajout du bouton pour l'ouverture de la fenêtre des gammes        */
 /*------------------------------------------------------------------*/
 sObj = GetObjectAtPointer ()
 sObj = Upper ( Left ( sObj, pos ( sObj, "~t" ) - 1 ) )
@@ -4737,7 +4764,7 @@ Choose Case sObj
 		If isTypeTrt = "S" And lCodTel > 0 Then
 
 			/*------------------------------------------------------------------*/
-			/* La zone 'Type_app' est-elle renseign$$HEX1$$e900$$ENDHEX$$e ?                         */
+			/* La zone 'Type_app' est-elle renseignée ?                         */
 			/*------------------------------------------------------------------*/
 			bRefIFR = False
 			lRow = dw_w_div_sin.Find ( "NOM_ZONE = 'type_app'", 1, dw_w_div_sin.RowCount () )
@@ -4770,7 +4797,7 @@ Choose Case sObj
 			End If
 
 			If Not bRefIFR Or Not bMarque Or Not bModele Then
-				stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de saisie du sinistre"
+				stMessage.sTitre		= "Contrôle de saisie du sinistre"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= False
 				stMessage.sCode 		= "WSIN440"
@@ -4782,10 +4809,10 @@ Choose Case sObj
 				/* Fct.                                                             */
 				/*------------------------------------------------------------------*/
 				stFenEquFct.sTab   [1] = "CS"
-				stFenEquFct.sTab [2] = Upper ( sMarque )   // Marque de r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence
-				stFenEquFct.sTab [3] = Upper ( sModele )   // Mod$$HEX1$$e800$$ENDHEX$$le de r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence
-				stFenEquFct.dwNorm [1] = dw_Stk_IFR			 // Dw des donn$$HEX1$$e900$$ENDHEX$$es IFR
-				stFenEquFct.dwNorm [2] = dw_Code_Equivalence // Dw des libell$$HEX1$$e900$$ENDHEX$$s IFR Traduit par D. Buire
+				stFenEquFct.sTab [2] = Upper ( sMarque )   // Marque de référence
+				stFenEquFct.sTab [3] = Upper ( sModele )   // Modèle de référence
+				stFenEquFct.dwNorm [1] = dw_Stk_IFR			 // Dw des données IFR
+				stFenEquFct.dwNorm [2] = dw_Code_Equivalence // Dw des libellés IFR Traduit par D. Buire
 
 				OpenWithParm ( w_Trt_Sp_Ifr_Consultation_Equiv, stFenEquFct )
 
@@ -4802,7 +4829,7 @@ event dw_1::itemchanged;call super::itemchanged;//*-----------------------------
 //* Evenement 		: ItemChanged
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:35:04
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Modification des zones
 //*				  
 //*-----------------------------------------------------------------
@@ -4844,8 +4871,8 @@ event dw_1::sqlpreview;call super::sqlpreview;//*-------------------------------
 //* Evenement 		: SqlPreview
 //* Auteur			: FABRY JF
 //* Date				: 13/12/2010 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Suite bug relev$$HEX2$$e9002000$$ENDHEX$$par Arian Papillon, j'ajoute un "." pour 
-//*					  transformer en d$$HEX1$$e900$$ENDHEX$$cimal
+//* Libellé			: Suite bug relevé par Arian Papillon, j'ajoute un "." pour 
+//*					  transformer en décimal
 //* Commentaires	: [DECIMAL_PAPILLON]
 //*				 
 //* Arguments		: 
@@ -4873,7 +4900,7 @@ event dw_1::buttonclicked;call super::buttonclicked;//*-------------------------
 //* Fonction		: w_tm_sp_sinistre::dw_1::buttonclicked
 //* Auteur			: JFF
 //* Date				: 12/05/2016 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	:	[MOTEUR_RECH_IFR]
 //*
 //* Arguments		: 
@@ -4939,7 +4966,7 @@ integer y = 312
 integer width = 585
 integer height = 80
 long textcolor = 0
-string text = "                                                                      G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration des courriers en cours, veuillez patienter..."
+string text = "                                                                      Génération des courriers en cours, veuillez patienter..."
 end type
 
 type pb_retour from w_8_traitement_master`pb_retour within w_tm_sp_sinistre
@@ -4956,7 +4983,7 @@ event pb_retour::clicked;//*----------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Erick John Stark
 //* Date				: 05/12/1997 16:45:25
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Positionnement du code action
 //*				  
 //*-----------------------------------------------------------------
@@ -5009,7 +5036,7 @@ on pb_valider::clicked;call w_8_traitement_master`pb_valider::clicked;//*-------
 //* Evenement 		: Clicked
 //* Auteur			: Erick John Stark
 //* Date				: 05/12/1997 17:25:29
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Positionnement du code action sur CTRL_VALIDER
 //*				  
 //*-----------------------------------------------------------------
@@ -5018,12 +5045,12 @@ on pb_valider::clicked;call w_8_traitement_master`pb_valider::clicked;//*-------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* Le positionnement du code action doit $$HEX1$$ea00$$ENDHEX$$tre effectu$$HEX2$$e9002000$$ENDHEX$$sur le       */
-/* contr$$HEX1$$f400$$ENDHEX$$le de gestion en fonction du nombre de courrier $$HEX2$$e0002000$$ENDHEX$$envoyer. */
+/* Le positionnement du code action doit être effectué sur le       */
+/* contrôle de gestion en fonction du nombre de courrier à envoyer. */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
-/* Pour le moment, je positionne isCodAction $$HEX2$$e0002000$$ENDHEX$$1.                   */
+/* Pour le moment, je positionne isCodAction à 1.                   */
 /*------------------------------------------------------------------*/
 
 isCodAction = "1"
@@ -5052,7 +5079,7 @@ on pb_controler::clicked;//*----------------------------------------------------
 //* Evenement 		: 
 //* Auteur			: Erick John Stark
 //* Date				: 05/02/1998 15:50:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -5061,7 +5088,7 @@ on pb_controler::clicked;//*----------------------------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche un ItemFocusChanged avant toute chose. Cela         */
+/* On déclenche un ItemFocusChanged avant toute chose. Cela         */
 /* concerne les zones COD_CIV, ID_ETS.                              */
 /*------------------------------------------------------------------*/
 dw_1.TriggerEvent ( ItemFocusChanged! )
@@ -5158,7 +5185,7 @@ event sqlpreview;//*------------------------------------------------------------
 //* Evenement 		: SqlPreview
 //* Auteur			: Erick John Stark
 //* Date				: 28/11/1997 15:34:57
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -5368,13 +5395,13 @@ event sqlpreview;//*------------------------------------------------------------
 //* Evenement 		: SqlPreview
 //* Auteur			: Erick John Stark
 //* Date				: 28/11/1997 15:34:57
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //* #1	JFF	12/10/2007	On remplace le DeleteRow par un RowsDiscard, le delete du detail
-//*								se chargeant du delete du div_det. Ainsi on $$HEX1$$e900$$ENDHEX$$vite le plante "No change Made to db"
+//*								se chargeant du delete du div_det. Ainsi on évite le plante "No change Made to db"
 //*      JFF   13/12/2010  [DECIMAL_PAPILLON]
 //*-----------------------------------------------------------------
 
@@ -5467,7 +5494,7 @@ Case	"INSE"
 	dcMtValPublique= This.GetItemDecimal ( lLig,	"MT_VAL_PUBLIQUE"	)
 	sNumFacture		= This.GetItemString   ( lLig,	"NUM_FACTURE"	)
 	
-// [MIGPB11] [EMD] : passage des arguments datetime (dont la partie time n'est pas initialis$$HEX1$$e900$$ENDHEX$$e) en string
+// [MIGPB11] [EMD] : passage des arguments datetime (dont la partie time n'est pas initialisée) en string
 /*	
 	itrTrans.DW_I01_W_DETAIL (	dcIdSin,				&
 										dcIdGti,				&
@@ -5631,7 +5658,7 @@ event sqlpreview;//*------------------------------------------------------------
 //* Evenement 		: SqlPreview
 //* Auteur			: Erick John Stark
 //* Date				: 28/11/1997 15:34:57
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -5767,7 +5794,7 @@ event sqlpreview;//*------------------------------------------------------------
 //* Evenement 		: SqlPreview
 //* Auteur			: Erick John Stark
 //* Date				: 28/11/1997 15:34:57
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -5919,7 +5946,7 @@ event sqlpreview;//*------------------------------------------------------------
 //* Evenement 		: SqlPreview
 //* Auteur			: Erick John Stark
 //* Date				: 28/11/1997 15:34:57
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -6059,7 +6086,7 @@ event sqlpreview;//*------------------------------------------------------------
 //* Evenement 		: SqlPreview
 //* Auteur			: Erick John Stark
 //* Date				: 28/11/1997 15:34:57
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -6090,7 +6117,7 @@ sSqlPreview = SQLSyntax
 /*------------------------------------------------------------------*/
 
 /* Au niveau du SqlPreview, on ne doit avoir que des insertions.    */
-/* Les donn$$HEX1$$e900$$ENDHEX$$es ins$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$es proviennent de la foncion                   */
+/* Les données insérées proviennent de la foncion                   */
 /* Uf_Determiner_Composition de U_Gs_Sp_Sinistre. On envoie le      */
 /* DELETE de tous les courriers existant sur Uf_Terminer_Valider de */
 /* U_Gs_Sp_Sinistre.                                                */
@@ -6209,7 +6236,7 @@ on constructor;//*--------------------------------------------------------------
 //* Evenement 		: Constructor
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 14:57:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -6252,7 +6279,7 @@ event sqlpreview;call super::sqlpreview;//*-------------------------------------
 //* Evenement 		: SqlPreview
 //* Auteur			: Erick John Stark
 //* Date				: 28/11/1997 15:34:57
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -6349,8 +6376,8 @@ Case	"INSE"
 	sAltPs		= This.GetItemString ( lLig,	"ALT_PS"					)
 	sAltPce		= This.GetItemString ( lLig,	"ALT_PCE"				)
 /*------------------------------------------------------------------*/
-/* Si les zones ALT_XXX sont positionn$$HEX1$$e900$$ENDHEX$$es $$HEX2$$e0002000$$ENDHEX$$'E', il faut les        */
-/* remettre $$HEX2$$e0002000$$ENDHEX$$'N'. L'information est n$$HEX1$$e900$$ENDHEX$$cessaire pour la             */
+/* Si les zones ALT_XXX sont positionnées à 'E', il faut les        */
+/* remettre à 'N'. L'information est nécessaire pour la             */
 /* suppression sur W_INTER_BLOB.                                    */
 /*------------------------------------------------------------------*/
 	If	sAltPart	= "E"	Then sAltPart	= "N"
@@ -6509,8 +6536,8 @@ on ue_modifiermenu;call u_datawindow_detail::ue_modifiermenu;//*----------------
 //* Evenement 		: Ue_ModifierMenu
 //* Auteur			: Erick John Stark
 //* Date				: 15/01/1998 14:25:28
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Pas de suppresiion d'un d$$HEX1$$e900$$ENDHEX$$tail $$HEX2$$e0002000$$ENDHEX$$partir du menu contextuel
+//* Libellé			: 
+//* Commentaires	: Pas de suppresiion d'un détail à partir du menu contextuel
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -6534,8 +6561,8 @@ End If
 end on
 
 event rbuttondown;//Migration PB8-WYNIWYG-03/2006 OR
-//ce code remplace le code de l'anc$$HEX1$$ea00$$ENDHEX$$tre, 
-//il permet la s$$HEX1$$e900$$ENDHEX$$lection de la ligne sur le click droit
+//ce code remplace le code de l'ancêtre, 
+//il permet la sélection de la ligne sur le click droit
 
 If Row > 0 Then
 	This.SetRow(Row)
@@ -6574,8 +6601,8 @@ on ue_modifiermenu;call u_datawindow_detail::ue_modifiermenu;//*----------------
 //* Evenement 		: Ue_ModifierMenu
 //* Auteur			: Erick John Stark
 //* Date				: 15/01/1998 14:25:28
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Pas de suppresiion d'un d$$HEX1$$e900$$ENDHEX$$tail $$HEX2$$e0002000$$ENDHEX$$partir du menu contextuel
+//* Libellé			: 
+//* Commentaires	: Pas de suppresiion d'un détail à partir du menu contextuel
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -6601,13 +6628,13 @@ event sqlpreview;call super::sqlpreview;//*-------------------------------------
 //* Evenement 		: SqlPreview
 //* Auteur			: Erick John Stark
 //* Date				: 28/11/1997 15:34:57
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //* #1	JFF	12/10/2007	On remplace le DeleteRow par un RowsDiscard, le delete du detail
-//*								se chargeant du delete du div_det. Ainsi on $$HEX1$$e900$$ENDHEX$$vite le plante "No change Made to db"
+//*								se chargeant du delete du div_det. Ainsi on évite le plante "No change Made to db"
 //*      JFF   13/12/2010  [DECIMAL_PAPILLON]
 //*-----------------------------------------------------------------
 
@@ -6843,8 +6870,8 @@ End Choose
 end event
 
 event rbuttondown;//Migration PB8-WYNIWYG-03/2006 OR
-//ce code remplace le code de l'anc$$HEX1$$ea00$$ENDHEX$$tre, 
-//il permet la s$$HEX1$$e900$$ENDHEX$$lection de la ligne sur le click droit
+//ce code remplace le code de l'ancêtre, 
+//il permet la sélection de la ligne sur le click droit
 
 If Row > 0 Then
 	This.SetRow(Row)
@@ -6876,7 +6903,7 @@ event sqlpreview;//*------------------------------------------------------------
 //* Evenement 		: SqlPreview
 //* Auteur			: Erick John Stark
 //* Date				: 28/11/1997 15:34:57
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -6903,13 +6930,13 @@ sSqlPreview = SQLSyntax
 
 /*------------------------------------------------------------------*/
 /* Au niveau du SqlPreview, on ne doit avoir que des insertions ou  */
-/* des suppressions. Les donn$$HEX1$$e900$$ENDHEX$$es ins$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$es proviennent des fonctions */
+/* des suppressions. Les données insérées proviennent des fonctions */
 /* Uf_PreparerValider_Plafond () (Pour les plafonds de la           */
 /* garantie) et Uf_PreparerValider_Detail (Pour les plafonds des    */
-/* d$$HEX1$$e900$$ENDHEX$$tails).                                                        */
+/* détails).                                                        */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* Attention, pour information la zone ID_PARA peut $$HEX1$$ea00$$ENDHEX$$tre NULLE.     */
+/* Attention, pour information la zone ID_PARA peut être NULLE.     */
 /*------------------------------------------------------------------*/
 
 //Migration PB8-WYNIWYG-03/2006 CP
@@ -7018,7 +7045,7 @@ event sqlpreview;//*------------------------------------------------------------
 //* Evenement 		: SqlPreview
 //* Auteur			: Erick John Stark
 //* Date				: 28/11/1997 15:34:57
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -7050,8 +7077,8 @@ sSqlPreview = SQLSyntax
 /* Modification du SqlPreview dans le cas d'une Insertion.          */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re toujours un ID_REG $$HEX2$$e0002000$$ENDHEX$$0. Cette valeur sera arm$$HEX1$$e900$$ENDHEX$$e au     */
-/* moment de la validation, dans les proc$$HEX1$$e900$$ENDHEX$$dures stock$$HEX1$$e900$$ENDHEX$$es de         */
+/* On insére toujours un ID_REG à 0. Cette valeur sera armée au     */
+/* moment de la validation, dans les procédures stockées de         */
 /* SqlServer.                                                       */
 /*------------------------------------------------------------------*/
 
@@ -7184,7 +7211,7 @@ event sqlpreview;call super::sqlpreview;//*-------------------------------------
 //* Evenement 		: SqlPreview
 //* Auteur			: JFF
 //* Date				: 30/04/2001 15:42:44
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Insertion des Contacts d'un sinistre.
 //*				  
 //*-----------------------------------------------------------------
@@ -7192,9 +7219,9 @@ event sqlpreview;call super::sqlpreview;//*-------------------------------------
 //*				  
 //*-----------------------------------------------------------------
 
-String		sSql, sTxtMess1, sTxtMess2	// commande SQL qui doit $$HEX1$$ea00$$ENDHEX$$tre envoy$$HEX1$$e900$$ENDHEX$$e.
-Long			lLig					// N$$HEX2$$b0002000$$ENDHEX$$de la ligne $$HEX2$$e0002000$$ENDHEX$$ins$$HEX1$$e800$$ENDHEX$$rer ou supprimer.
-dwBuffer		dwBuf					// buffer de donn$$HEX1$$e900$$ENDHEX$$e de la Dw.
+String		sSql, sTxtMess1, sTxtMess2	// commande SQL qui doit être envoyée.
+Long			lLig					// N° de la ligne à insèrer ou supprimer.
+dwBuffer		dwBuf					// buffer de donnée de la Dw.
 
 //Migration PB8-WYNIWYG-03/2006 CP
 //sSql = This.GetSqlPreview ()
@@ -7297,7 +7324,7 @@ event sqlpreview;call super::sqlpreview;//*-------------------------------------
 //* Evenement 		: SqlPreview
 //* Auteur			: Erick John Stark
 //* Date				: 28/11/1997 15:34:57
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------*/
@@ -7497,7 +7524,7 @@ on ue_modifiermenu;call u_datawindow_detail::ue_modifiermenu;//*****************
 // Evenement 	: ue_ModifierMenu
 //	Auteur		: Fabry JF
 //	Date			: 04/09/01
-// Libell$$HEX3$$e90009000900$$ENDHEX$$: Menu contextuel 
+// Libellé		: Menu contextuel 
 // Commentaires: 
 //					  
 // ----------------------------------------------------------------------------
@@ -7531,8 +7558,8 @@ END CHOOSE
 end on
 
 event rbuttondown;//Migration PB8-WYNIWYG-03/2006 OR
-//ce code remplace le code de l'anc$$HEX1$$ea00$$ENDHEX$$tre, 
-//il permet la s$$HEX1$$e900$$ENDHEX$$lection de la ligne sur le click droit
+//ce code remplace le code de l'ancêtre, 
+//il permet la sélection de la ligne sur le click droit
 
 If Row > 0 Then
 	This.SetRow(Row)
@@ -7681,8 +7708,8 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement     : clicked
 //* Auteur        : PLJ
 //* Date          : 05/09/2003 09:46:33
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
-//* Commentaires  : Ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre de gestion des num$$HEX1$$e900$$ENDHEX$$ros de bo$$HEX1$$ee00$$ENDHEX$$te
+//* Libellé       : 
+//* Commentaires  : Ouvre la fenêtre de gestion des numéros de boîte
 //*
 //* Arguments     : 
 //*
@@ -7706,7 +7733,7 @@ Boolean	bRet, bVal
 If ibSaisieValidation Then
 	iuoGsSpSinistre.uf_GetAutorisation ( "", sVal, bVal, bVal, bRet, -1 )
 	If Not bRet Then
-		stMessage.sTitre		= "Vous n'$$HEX1$$ea00$$ENDHEX$$tes pas autoris$$HEX1$$e900$$ENDHEX$$."
+		stMessage.sTitre		= "Vous n'êtes pas autorisé."
 		stMessage.Icon			= Exclamation!
 		stMessage.bErreurG	= False
 		stMessage.sCode		= "SVE0020"
@@ -7733,14 +7760,14 @@ Else
 		lIdTypArch = dw_BoiteArchive.GetItemNumber ( 1, "ID_TYP_ARCH" )
 
 		/*----------------------------------------------------------*/
-		/* On ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre que dans la cas d'une m$$HEX1$$e900$$ENDHEX$$thode priv$$HEX1$$e900$$ENDHEX$$e */
+		/* On ouvre la fenêtre que dans la cas d'une méthode privée */
 		/*----------------------------------------------------------*/
 		If lIdTypArch = 1 Then
 
 			OpenWithParm  ( w_trt_sp_wkfs_boite, stPass, Parent )
 
 			/*------------------------------------------------------------------*/
-			/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e800$$ENDHEX$$re le nouveau num$$HEX1$$e900$$ENDHEX$$ro de boite                           */
+			/* On récupère le nouveau numéro de boite                           */
 			/*------------------------------------------------------------------*/
 			sNoBoite = Message.StringParm
 			sNoBoiteOrigine = dw_BoiteArchive.GetItemString ( 1, "NO_BOITE" )
@@ -7749,7 +7776,7 @@ Else
 				If sNoBoite <> sNoBoiteOrigine Or isNull ( sNoBoiteOrigine ) Then
 					dw_BoiteArchive.SetItem ( 1, "NO_BOITE", sNoBoite )
 
-					sText = 'A stocker dans bo$$HEX1$$ee00$$ENDHEX$$te ' + sNoBoite
+					sText = 'A stocker dans boîte ' + sNoBoite
 					sMod = "Text_t.Text = '" + sText + "'"
 					dw_BoiteArchive.Modify ( sMod )
 
@@ -7864,10 +7891,10 @@ end type
 event sqlpreview;//*-----------------------------------------------------------------
 //*
 //* Objet			: W_Tm_Sa_Sinistre::Dw_Stk_W_Cour_Blob_Sve
-//* Ev$$HEX1$$e900$$ENDHEX$$nement		: SqlPreview
+//* Evénement		: SqlPreview
 //* Auteur			: Fabry JF
 //* Date				: 17/03/2004 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On envoie les commandes sur la table W_COUR_BLOB
 //*
 //* Arguments		: Aucun
@@ -7994,12 +8021,12 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: Clicked! (OVERRIDE)
 //* Auteur			: Erick John Stark
 //* Date				: 05/11/1998 11:01:22
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ	PAR	Date			Modification
-//* #1	JCA	08/03/2007	DCMP 070161 - Amelioration process DNT - Autorisation de validation avec r$$HEX1$$e900$$ENDHEX$$glement
+//* #1	JCA	08/03/2007	DCMP 070161 - Amelioration process DNT - Autorisation de validation avec réglement
 //* #2   JFF   03/04/2007  DCMP 070161 - Modif JF suite erreur d'analyse, il est mieux de tester le "MT_A_REGLER > 0"
 //*													 Afind e prendre en compte les frais interlocuteurs
 //* #3 	FPI	08/10/2009	[DCMP90595] Ajout du btn valid_factu
@@ -8029,7 +8056,7 @@ This.Enabled = False
 If ibSaisieValidation Then
 	iuoGsSpSinistre.uf_GetAutorisation ( "", sVal, bVal, bVal, bRet, -1 )
 	If Not bRet Then
-		stMessage.sTitre		= "Vous n'$$HEX1$$ea00$$ENDHEX$$tes pas autoris$$HEX1$$e900$$ENDHEX$$."
+		stMessage.sTitre		= "Vous n'êtes pas autorisé."
 		stMessage.Icon			= Exclamation!
 		stMessage.bErreurG	= False
 		stMessage.sCode		= "SVE0020"
@@ -8039,8 +8066,8 @@ If ibSaisieValidation Then
 	End If
 	
 	// #1
-	// si au moins 1 detail est dans l'etat "$$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gler" (CodEtat = 500)
-	// si refus de validation avec r$$HEX1$$e900$$ENDHEX$$glement 
+	// si au moins 1 detail est dans l'etat "à régler" (CodEtat = 500)
+	// si refus de validation avec réglement 
 /* #8
 	lTotDetail	= dw_wDetail.RowCount ()
 	sRech = "COD_ETAT = 500"
@@ -8051,7 +8078,7 @@ If ibSaisieValidation Then
 bMtAReg = dw_1.GetItemDecimal ( 1, "MT_A_REG" ) > 0 
 // Fin #3
 
-/* #3	lLigDet > 0 and &  Remplac$$HEX2$$e9002000$$ENDHEX$$dans le test par bMtAReg */ 
+/* #3	lLigDet > 0 and &  Remplacé dans le test par bMtAReg */ 
 	If	bRet and &
 		bMtAReg and &
 		Mid (sVal, 17, 1 ) = '0' Then
@@ -8154,19 +8181,19 @@ event itemerror;call super::itemerror;//*---------------------------------------
 //* Evenement 		: ItemError
 //* Auteur			: Fabry JF
 //* Date				: 17/06/2004 09:47:59
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion des messages d'erreur
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JFF   20/06/2006   DCMP060480 
 //* #2  	 JFF	 29/08/2007	  [DCMP070587] - Charte souplesse SFR
-//* #3	 PHG	 09/08/2008	  [DCMP080625] D$$HEX1$$e900$$ENDHEX$$sactivation Controle 
+//* #3	 PHG	 09/08/2008	  [DCMP080625] Désactivation Controle 
 //*									Marque/modele Obligatoire
 //* #4 	 JFF   03/11/2008   [FNAC_PROD_ECH_TECH]
 //* #5 	 JFF   12/01/2006   [FNAC_PROD_ECH_TECH].[20090112170517890]
 //*  	    JFF	 13/04/2010   [WEBSIM2].[FRANCE]
-//* 		 JFF	 03/06/2010   [DCMP100397] Num$$HEX1$$e900$$ENDHEX$$ro de facture Attitude
+//* 		 JFF	 03/06/2010   [DCMP100397] Numéro de facture Attitude
 //* 		 JFF   04/11/2010   [PC301].[LOT2]
 //*       JFF   21/12/2010   [PC301][VESTUSTE]
 //        JFF   02/04/2011   [PC694][SFR2012]
@@ -8201,28 +8228,28 @@ Choose Case isErrCol
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
-				stMessage.sCode		= "WSIN450"  // Impossible de modifier le type d'appareil, la marque, le mod$$HEX1$$e800$$ENDHEX$$le, ...
+				stMessage.sCode		= "WSIN450"  // Impossible de modifier le type d'appareil, la marque, le modèle, ...
 			Case 2
 				stMessage.sTitre		= "Modification du type d'appareil"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
-				stMessage.sCode		= "WSIN460" // Pour ce produit, le CODIC DARTY permet de d$$HEX1$$e900$$ENDHEX$$terminer ...
+				stMessage.sCode		= "WSIN460" // Pour ce produit, le CODIC DARTY permet de déterminer ...
 
 			Case 3  // #1
-				stMessage.sTitre		= "Choix de l'op$$HEX1$$e900$$ENDHEX$$rateur"
+				stMessage.sTitre		= "Choix de l'opérateur"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
-				stMessage.sCode		= "WSIN495" // Impossible de modifier l'op$$HEX1$$e900$$ENDHEX$$rateur d$$HEX1$$e800$$ENDHEX$$s qu'une commande est pr$$HEX1$$e900$$ENDHEX$$sente sur le dossier.@@Si l'$$HEX1$$e900$$ENDHEX$$tat de la commande le permet, supprimez cette derni$$HEX1$$e800$$ENDHEX$$re et modifier ensuite l'op$$HEX1$$e900$$ENDHEX$$rateur.
+				stMessage.sCode		= "WSIN495" // Impossible de modifier l'opérateur dès qu'une commande est présente sur le dossier.@@Si l'état de la commande le permet, supprimez cette dernière et modifier ensuite l'opérateur.
 
 	// [PC301].[LOT2]
 			Case 4  // #1
-				stMessage.sTitre		= "Choix entrep$$HEX1$$f400$$ENDHEX$$t" // Variante
+				stMessage.sTitre		= "Choix entrepôt" // Variante
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
-				stMessage.sCode		= "WSIN699" // Impossible de modifier l'op$$HEX1$$e900$$ENDHEX$$rateur d$$HEX1$$e800$$ENDHEX$$s qu'une commande est pr$$HEX1$$e900$$ENDHEX$$sente sur le dossier.@@Si l'$$HEX1$$e900$$ENDHEX$$tat de la commande le permet, supprimez cette derni$$HEX1$$e800$$ENDHEX$$re et modifier ensuite l'op$$HEX1$$e900$$ENDHEX$$rateur.
+				stMessage.sCode		= "WSIN699" // Impossible de modifier l'opérateur dès qu'une commande est présente sur le dossier.@@Si l'état de la commande le permet, supprimez cette dernière et modifier ensuite l'opérateur.
 	// [PC301].[LOT2]
 
 // [PC694][SFR2012]
@@ -8235,11 +8262,11 @@ Choose Case isErrCol
 // [PC694][SFR2012]
 
 			Case 6  // #1 [VDOC9376]
-				stMessage.sTitre		= "Recondionn$$HEX1$$e900$$ENDHEX$$/Neuf"
+				stMessage.sTitre		= "Recondionné/Neuf"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
-				stMessage.sCode		= "WSIN733" // Une commande est pr$$HEX1$$e900$$ENDHEX$$sente sur le dossier, il vous est impossible de modifier cette zone.
+				stMessage.sCode		= "WSIN733" // Une commande est présente sur le dossier, il vous est impossible de modifier cette zone.
 
 			Case 7  // [PC801_V10]
 				stMessage.sTitre		= "Mode Paiement PayBox"
@@ -8253,7 +8280,7 @@ Choose Case isErrCol
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
-				stMessage.sCode		= "WSIN791" // Cet appareil est d$$HEX1$$e900$$ENDHEX$$sormais interdit de d$$HEX1$$e900$$ENDHEX$$claration sur ce produit.
+				stMessage.sCode		= "WSIN791" // Cet appareil est désormais interdit de déclaration sur ce produit.
 				
 				If this.GetItemString( row, "VAL_LST_CAR") = data Then this.iireset=1
 				
@@ -8263,18 +8290,18 @@ Choose Case isErrCol
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
-				stMessage.sCode		= "WSIN809 " // Modification interdite d$$HEX1$$e800$$ENDHEX$$s qu'il existe une prestation.
+				stMessage.sCode		= "WSIN809 " // Modification interdite dès qu'il existe une prestation.
 				
 				If this.GetItemString( row, "VAL_LST_CAR") = data Then this.iireset=1			
 
 
 			// [VDOC25738]
 			Case 10
-				stMessage.sTitre		= "Modification du type d'appareil achet$$HEX1$$e900$$ENDHEX$$"
+				stMessage.sTitre		= "Modification du type d'appareil acheté"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
-				stMessage.sCode		= "WSIN452"  // Impossible de modifier le type d'appareil, la marque, le mod$$HEX1$$e800$$ENDHEX$$le, ...
+				stMessage.sCode		= "WSIN452"  // Impossible de modifier le type d'appareil, la marque, le modèle, ...
 
 			// [PC171999]
 			Case 11
@@ -8282,7 +8309,7 @@ Choose Case isErrCol
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
-				stMessage.sCode		= "WSIN831"  // L'$$HEX1$$e900$$ENDHEX$$tat de votre sinistre ne permet plus cette modification.
+				stMessage.sCode		= "WSIN831"  // L'état de votre sinistre ne permet plus cette modification.
 
 			// [RS5928_FRCH_CHQ]
 			Case 12
@@ -8290,7 +8317,7 @@ Choose Case isErrCol
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
-				stMessage.sCode		= "WSIN897"  // L'$$HEX1$$e900$$ENDHEX$$tat de votre sinistre ne permet plus cette modification.
+				stMessage.sCode		= "WSIN897"  // L'état de votre sinistre ne permet plus cette modification.
 			
 			
 			Case Else
@@ -8305,7 +8332,7 @@ Choose Case isErrCol
 
 			// NOM_ZONE = TYPE_APP
 // [DCMP100397] 
-			Case 1	// Veuillez saisir un num$$HEX1$$e900$$ENDHEX$$ro de facture FNAC/ATTITUDE valide (voyez avec votre RE).
+			Case 1	// Veuillez saisir un numéro de facture FNAC/ATTITUDE valide (voyez avec votre RE).
 				stMessage.sTitre		= "Modification interdite"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -8325,7 +8352,7 @@ Choose Case isErrCol
 
 			// #2
 			Case 2   // Pas les droits
-				stMessage.sTitre		= "D$$HEX1$$e900$$ENDHEX$$cision assureur"
+				stMessage.sTitre		= "Décision assureur"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
@@ -8333,16 +8360,16 @@ Choose Case isErrCol
 				stMessage.sCode		= "WDET500"
 
 			// #2
-			Case 3  // Dec d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$prise
-				stMessage.sTitre		= "D$$HEX1$$e900$$ENDHEX$$cision assureur"
+			Case 3  // Dec déjà prise
+				stMessage.sTitre		= "Décision assureur"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
 				stMessage.sCode		= "WSIN604"
 
 			// #2
-			Case 4  // Saisie annul$$HEX1$$e900$$ENDHEX$$e
-				stMessage.sTitre		= "D$$HEX1$$e900$$ENDHEX$$cision assureur"
+			Case 4  // Saisie annulée
+				stMessage.sTitre		= "Décision assureur"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
@@ -8354,7 +8381,7 @@ Choose Case isErrCol
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
-				stMessage.sCode		= "WSIN630"  // Impossible de modifier le type d'appareil, la marque, le mod$$HEX1$$e800$$ENDHEX$$le, ...
+				stMessage.sCode		= "WSIN630"  // Impossible de modifier le type d'appareil, la marque, le modèle, ...
 
 			Case 6
 				// #5 [FNAC_PROD_ECH_TECH].[20090112170517890]
@@ -8376,13 +8403,13 @@ Choose Case isErrCol
 	Case "VAL_ALT"
 		Choose Case iiErreur
 			Case 1
-				stMessage.sTitre		= "Reg$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration de mot de passe"
+				stMessage.sTitre		= "Regénération de mot de passe"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
 				stMessage.sCode		= "COMD435"
 				
-			case 2 //#3 [DCMP080625] Demande de controle IMEI Impossible si marque ou mod$$HEX1$$e800$$ENDHEX$$le non renseign$$HEX1$$e900$$ENDHEX$$.
+			case 2 //#3 [DCMP080625] Demande de controle IMEI Impossible si marque ou modèle non renseigné.
 				stMessage.sTitre		= "Demande de Controle IMEI"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -8398,7 +8425,7 @@ Choose Case isErrCol
 
 // [WEBSIM2].[FRANCE]
 			Case 4
-				stMessage.sTitre		= "Reg$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration de mot de passe"
+				stMessage.sTitre		= "Regénération de mot de passe"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
@@ -8407,7 +8434,7 @@ Choose Case isErrCol
 				
 			//[PC512-2]
 			Case 5
-				stMessage.sTitre		= "R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration de donn$$HEX1$$e900$$ENDHEX$$es"
+				stMessage.sTitre		= "Récupération de données"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
@@ -8439,7 +8466,7 @@ Choose Case isErrCol
 
 			// [DT081-1_CREDIMM]
 			Case 10
-				stMessage.sTitre		= "R$$HEX1$$e900$$ENDHEX$$cr$$HEX1$$e900$$ENDHEX$$dit impossible"
+				stMessage.sTitre		= "Récrédit impossible"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
@@ -8447,7 +8474,7 @@ Choose Case isErrCol
 				
 			// [DT081-1_CREDIMM]
 			Case 11
-				stMessage.sTitre		= "R$$HEX1$$e900$$ENDHEX$$cr$$HEX1$$e900$$ENDHEX$$dit impossible"
+				stMessage.sTitre		= "Récrédit impossible"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
@@ -8463,7 +8490,7 @@ Choose Case isErrCol
 				
 			
 			// [DT276]
-			Case 13	// Cette donn$$HEX1$$e900$$ENDHEX$$e ne peut plus $$HEX1$$ea00$$ENDHEX$$tre modifi$$HEX1$$e900$$ENDHEX$$e.
+			Case 13	// Cette donnée ne peut plus être modifiée.
 				stMessage.sTitre		= "Modification interdite"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -8471,7 +8498,7 @@ Choose Case isErrCol
 				stMessage.sCode		= "WSIN807"				
 					
 			// [PC13321-3]
-			Case 14	// Cette donn$$HEX1$$e900$$ENDHEX$$e ne peut plus $$HEX1$$ea00$$ENDHEX$$tre modifi$$HEX1$$e900$$ENDHEX$$e.
+			Case 14	// Cette donnée ne peut plus être modifiée.
 				stMessage.sTitre		= "Modification interdite"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -8479,7 +8506,7 @@ Choose Case isErrCol
 				stMessage.sCode		= "WSIN814"				
 								
 			// [PC13321-3]
-			Case 15	// Cette donn$$HEX1$$e900$$ENDHEX$$e ne peut plus $$HEX1$$ea00$$ENDHEX$$tre modifi$$HEX1$$e900$$ENDHEX$$e.
+			Case 15	// Cette donnée ne peut plus être modifiée.
 				stMessage.sTitre		= "Modification interdite"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -8487,7 +8514,7 @@ Choose Case isErrCol
 				stMessage.sCode		= "WSIN815"				
 
 			// [VDOC27557]
-			Case 16	// R$$HEX1$$e900$$ENDHEX$$server au DR.
+			Case 16	// Réserver au DR.
 				stMessage.sTitre		= "Modification interdite"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -8495,7 +8522,7 @@ Choose Case isErrCol
 				stMessage.sCode		= "WSIN838"				
 
 			// [PC202553_SELECTRA]
-			Case 17	// Cette donn$$HEX1$$e900$$ENDHEX$$e ne peut pas $$HEX1$$ea00$$ENDHEX$$tre modifi$$HEX1$$e900$$ENDHEX$$e.
+			Case 17	// Cette donnée ne peut pas être modifiée.
 				stMessage.sTitre		= "Modification interdite"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -8514,7 +8541,7 @@ Choose Case isErrCol
 				stMessage.bErreurG	= TRUE
 				stMessage.Bouton		= OK!
 				stMessage.sVar[1]		= "date du ticket"
-				stMessage.sVar[2]		= "ant$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale"
+				stMessage.sVar[2]		= "antérieure ou égale"
 				stMessage.sVar[3]		= "date de survenance"
 				stMessage.sCode		= "GENE007"
 
@@ -8524,8 +8551,8 @@ Choose Case isErrCol
 				stMessage.bErreurG	= TRUE
 				stMessage.Bouton		= OK!
 				stMessage.sVar[1]		= "date du ticket"
-				stMessage.sVar[2]		= "ant$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale"
-				stMessage.sVar[3]		= "date de d$$HEX1$$e900$$ENDHEX$$claration"
+				stMessage.sVar[2]		= "antérieure ou égale"
+				stMessage.sVar[3]		= "date de déclaration"
 				stMessage.sCode		= "GENE007"
 
 			Case 3
@@ -8534,22 +8561,22 @@ Choose Case isErrCol
 				stMessage.bErreurG	= TRUE
 				stMessage.Bouton		= OK!
 				stMessage.sVar[1]		= "date du ticket"
-				stMessage.sVar[2]		= "ant$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale"
+				stMessage.sVar[2]		= "antérieure ou égale"
 				stMessage.sVar[3]		= "date du jour"
 				stMessage.sCode		= "GENE007"
 
 			Case 4
-				stMessage.sTitre		= "Date derni$$HEX1$$e800$$ENDHEX$$re utilisation"
+				stMessage.sTitre		= "Date dernière utilisation"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
 				stMessage.sCode		= "GENE013" // [DT031-2] - TODO : revoir le message
-				stMessage.sVar[1]		= "Interdit de modifier la date de derni$$HEX1$$e800$$ENDHEX$$re utilisation si une action est engag$$HEX1$$e900$$ENDHEX$$e aupr$$HEX1$$e800$$ENDHEX$$s de l'assur$$HEX2$$e9002000$$ENDHEX$$(r$$HEX1$$e800$$ENDHEX$$glement, refus, commande)." 
+				stMessage.sVar[1]		= "Interdit de modifier la date de dernière utilisation si une action est engagée auprès de l'assuré (règlement, refus, commande)." 
 				
 				
 			//	[DT081-4]
 			Case 5
-				stMessage.sTitre		= "Date manuelle de restitution de pr$$HEX1$$ea00$$ENDHEX$$t"
+				stMessage.sTitre		= "Date manuelle de restitution de prêt"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
@@ -8568,16 +8595,16 @@ Choose Case isErrCol
 
 	Case "VAL_NBRE"
 		Choose Case iiErreur
-			Case 1  // Dur$$HEX1$$e900$$ENDHEX$$e de GC d'origine non saisissable
-				stMessage.sTitre		= "Dur$$HEX1$$e900$$ENDHEX$$e garantie constructeur"
+			Case 1  // Durée de GC d'origine non saisissable
+				stMessage.sTitre		= "Durée garantie constructeur"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
 				stMessage.sCode		= "WSIN570"
 				
 			// [PC301][VESTUSTE]
-			Case 2  // Dur$$HEX1$$e900$$ENDHEX$$e de GC d'origine non saisissable
-				stMessage.sTitre		= "Dur$$HEX1$$e900$$ENDHEX$$e garantie constructeur"
+			Case 2  // Durée de GC d'origine non saisissable
+				stMessage.sTitre		= "Durée garantie constructeur"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
@@ -8613,7 +8640,7 @@ event rowfocuschanged;call super::rowfocuschanged;//*---------------------------
 //* Evenement 		: RowFocusChanged
 //* Auteur			: Fabry JF
 //* Date				: 17/06/2004 09:35:04
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Changement de zone 
 //*				  
 //*-----------------------------------------------------------------
@@ -8644,7 +8671,7 @@ event itemchanged;call super::itemchanged;//*-----------------------------------
 //* Evenement 		: ItemChanged
 //* Auteur			: Fabry JF
 //* Date				: 17/06/2004 09:35:04
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Modification des zones
 //*				  
 //*-----------------------------------------------------------------
@@ -8679,7 +8706,7 @@ on losefocus;call u_datawindow::losefocus;//*-----------------------------------
 //* Evenement     : LoseFocus
 //* Auteur        : Fabry JF
 //* Date          : 17/06/2004 16:09:21
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -8697,7 +8724,7 @@ on losefocus;call u_datawindow::losefocus;//*-----------------------------------
 end on
 
 event itemfocuschanged;call super::itemfocuschanged;//Migration PB8-WYNIWYG-03/2006 FM
-//le script du RowFocusChanged est recopi$$HEX2$$e9002000$$ENDHEX$$et adapt$$HEX2$$e9002000$$ENDHEX$$ici
+//le script du RowFocusChanged est recopié et adapté ici
 //(mauvais nom de colonne au 1er passage)
 If	isTypeTrt = "S" and row > 0 Then
 //	iuoGsSpSinistre.uf_GestOng_Divers_DDDW ( This.GetText (), Upper ( This.GetColumnName () ) , This.GetRow () )
@@ -8714,7 +8741,7 @@ event sqlpreview;call super::sqlpreview;//*-------------------------------------
 //* Evenement 		: SqlPreview
 //* Auteur			: FPI
 //* Date				: 24/12/2010
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [23122010.FPI]
+//* Libellé			: [23122010.FPI]
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -8834,7 +8861,7 @@ event clicked;//*---------------------------------------------------------------
 //* Fonction      : W_Tm_Sp_Sinistre::Click
 //* Auteur        : Catherine ABDMEZIEM
 //* Date          : 08/07/2004 17:27:47
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : Ajout du bouton pour affichage polices et 
 //*						assurances des gti du produit du dr DCMP 030381
 //* Arguments     : 
@@ -8862,7 +8889,7 @@ F_Rechdetpro(lDeb, lFin,dw_det_pro, &
 	dw_1.getItemNumber( 1, "ID_PROD"),"-DP",124)
 	
 If lDeb > 0 Then
-	// On effectuera la r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration du lib_police dans boutique
+	// On effectuera la récupération du lib_police dans boutique
 	stPass.sTab [ 2 ] = 'O' 
 End if
 // Fin #1 - [EXPANSION5.LIB_POLICE]
@@ -8975,8 +9002,8 @@ on clicked;//*-----------------------------------------------------------------
 //* Fonction      : W_Tm_Sp_Sinistre::Click
 //* Auteur        : Catherine ABDMEZIEM
 //* Date          : 11/10/2004
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
-//* Commentaires  : Ajout du bouton pour affichage cat$$HEX1$$e900$$ENDHEX$$gorie des
+//* Libellé       : 
+//* Commentaires  : Ajout du bouton pour affichage catégorie des
 //*						courriers : DCMP 040366
 //* Arguments     : 
 //*
@@ -9087,7 +9114,7 @@ event sqlpreview;call super::sqlpreview;//*-------------------------------------
 //* Evenement 		: SqlPreview
 //* Auteur			: FPI
 //* Date				: 24/12/2010
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [23122010.FPI]
+//* Libellé			: [23122010.FPI]
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -9213,7 +9240,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 06/10/2009 11:47:43
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [DCMP090595]
 //*				  
 //* Arguments		: 
@@ -9259,7 +9286,7 @@ event itemchanged;call super::itemchanged;//*-----------------------------------
 //* Fonction		: ItemChanged
 //* Auteur			: Fabry JF
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Rien
@@ -9301,7 +9328,7 @@ event itemerror;call super::itemerror;//*---------------------------------------
 //* Fonction		: ItemError
 //* Auteur			: Fabry JF
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Rien
@@ -9311,7 +9338,7 @@ event itemerror;call super::itemerror;//*---------------------------------------
 //*-----------------------------------------------------------------
 
 
-stMessage.sTitre		= "Dossier $$HEX2$$e0002000$$ENDHEX$$traiter par"
+stMessage.sTitre		= "Dossier à traiter par"
 stMessage.Icon			= Information!
 stMessage.sCode		= "CONT019"
 stMessage.bErreurG	= False
@@ -9335,8 +9362,8 @@ event sqlpreview;call super::sqlpreview;//*-------------------------------------
 //* Evenement 		: SqlPreview
 //* Auteur			: FABRY JF
 //* Date				: 13/12/2010 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Suite bug relev$$HEX2$$e9002000$$ENDHEX$$par Arian Papillon, j'ajoute un "." pour 
-//*					  transformer en d$$HEX1$$e900$$ENDHEX$$cimal
+//* Libellé			: Suite bug relevé par Arian Papillon, j'ajoute un "." pour 
+//*					  transformer en décimal
 //* Commentaires	: [DECIMAL_PAPILLON]
 //*				 
 //* Arguments		: 
@@ -9398,7 +9425,7 @@ event clicked;//*
 //* Fonction		: Clicked
 //* Auteur			: JFF
 //* Date				: 23/05/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PM103]
 //*
 //* Arguments		: 
@@ -9441,7 +9468,7 @@ event clicked;//*---------------------------------------------------------------
 //* Fonction      : W_Tm_Sp_Sinistre::Click
 //* Auteur        : FPI
 //* Date          : 01/06/2012
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : [PM103]
 //*
 //* Arguments     : 
@@ -9477,7 +9504,7 @@ event clicked;//*---------------------------------------------------------------
 //* Fonction      : W_Tm_Sp_Sinistre::Click
 //* Auteur        : Fabry JF
 //* Date          : 07/05/2019
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*						
 //* Arguments     : 
@@ -9509,7 +9536,7 @@ on ue_changer_monnaie;call u_consultation_euro::ue_changer_monnaie;//*----------
 //* Evenement 		: Ue_Changer_Monnaie
 //* Auteur			: Erick John Stark
 //* Date				: 05/12/1997 17:25:29
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On positionne les bonnes valeurs dans le TreeView
 //*				  
 //*-----------------------------------------------------------------
@@ -9567,7 +9594,7 @@ event sqlpreview;//*------------------------------------------------------------
 //* Evenement 		: SqlPreview
 //* Auteur			: FABRY JF
 //* Date				: 07/10/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PM80_FA12_FRANEX]
+//* Libellé			: [PM80_FA12_FRANEX]
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -9591,8 +9618,8 @@ sSqlPreview = SQLSyntax
 /* Modification du SqlPreview dans le cas d'une Insertion.          */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re toujours un ID_REG $$HEX2$$e0002000$$ENDHEX$$0. Cette valeur sera arm$$HEX1$$e900$$ENDHEX$$e au     */
-/* moment de la validation, dans les proc$$HEX1$$e900$$ENDHEX$$dures stock$$HEX1$$e900$$ENDHEX$$es de         */
+/* On insére toujours un ID_REG à 0. Cette valeur sera armée au     */
+/* moment de la validation, dans les procédures stockées de         */
 /* SqlServer.                                                       */
 /*------------------------------------------------------------------*/
 
@@ -9694,7 +9721,7 @@ borderstyle borderstyle = styleraised!
 boolean focusrectangle = false
 end type
 
-type cb_testHub from commandbutton within w_tm_sp_sinistre
+type cb_testhub from commandbutton within w_tm_sp_sinistre
 boolean visible = false
 integer x = 1906
 integer y = 24
@@ -9729,7 +9756,7 @@ bRet = f_ConnectSqlServer_Hub_Prestataire ( stGLB.sFichierIni   , &
 									 stGlb.slibcourtappli, &
 									 stGlb.sCodOper          ) 
 
-sSql = "Exec edi.PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATAIRE 2,7990868,1,'AUYPSQZMJB','ANV','#TD1#TD2#TD3#','ANV0001','Centralisation','4165R','U EXPRESS','7990868 TABOURET VICTOR','Avenue du President Kennedy','Place de L Europe',null,'17000','LA ROCHELLE',3520,'Ass. d$$HEX1$$e900$$ENDHEX$$pose colis en relais pickup',11,'DOMMAGE ACCIDENTEL',0,87900,'MOBIL ZEN 2 TEL C1',879,1001,'8628214',1,'PRS',1,'M.','Monsieur',null,'TABOURET','VICTOR','TABOURET','VICTOR','52 RUE DU MINAGE',null,null,'17000','LA ROCHELLE','0617239269',null,null,'victor.tabouret@gmail.com','355395071124049',null,'ECRAN TOMBE AU SOL ET CASSE','ECT','06/20/2024 13:13:52','JFF','06/20/2024 13:13:58','A_REPARER','A_REPARER',6,'AIG EUROPE SA','2 500 272','TEL','SMARTPHONE/TELEPHONE MOBILE','APPLE','IPHONE 11 128GO BLANC','IFR','0617239269',599.00,150.00,'12/28/2015 00:00:00','REC',null,null,'NEUF_REC=[#REC#];HP_ID_HUB_PRESTA=AUYPSQZMJB;HP_ID_FOUR=ANV;HP_TYP_DOM=#TD1#TD2#TD3#;HP_ID_POINT_SERV=ANV0001;HP_ID_MODE_PROCESS=Centralisation;CODE_PICK_UP=4165R;NOM_PICK_UP=U EXPRESS;REFASS_PICK_UP=7990868 TABOURET VICTOR;ADR1_PICK_UP=Avenue du President Kennedy;ADR2_PICK_UP=Place de L Europe;ADRCP_PICK_UP=17000;ADRVILLE_PICK_UP=LA ROCHELLE;HP_INFO_SPB_FRN=3520'"
+sSql = "Exec edi.PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATAIRE 2,7990868,1,'AUYPSQZMJB','ANV','#TD1#TD2#TD3#','ANV0001','Centralisation','4165R','U EXPRESS','7990868 TABOURET VICTOR','Avenue du President Kennedy','Place de L Europe',null,'17000','LA ROCHELLE',3520,'Ass. dépose colis en relais pickup',11,'DOMMAGE ACCIDENTEL',0,87900,'MOBIL ZEN 2 TEL C1',879,1001,'8628214',1,'PRS',1,'M.','Monsieur',null,'TABOURET','VICTOR','TABOURET','VICTOR','52 RUE DU MINAGE',null,null,'17000','LA ROCHELLE','0617239269',null,null,'victor.tabouret@gmail.com','355395071124049',null,'ECRAN TOMBE AU SOL ET CASSE','ECT','06/20/2024 13:13:52','JFF','06/20/2024 13:13:58','A_REPARER','A_REPARER',6,'AIG EUROPE SA','2 500 272','TEL','SMARTPHONE/TELEPHONE MOBILE','APPLE','IPHONE 11 128GO BLANC','IFR','0617239269',599.00,150.00,'12/28/2015 00:00:00','REC',null,null,'NEUF_REC=[#REC#];HP_ID_HUB_PRESTA=AUYPSQZMJB;HP_ID_FOUR=ANV;HP_TYP_DOM=#TD1#TD2#TD3#;HP_ID_POINT_SERV=ANV0001;HP_ID_MODE_PROCESS=Centralisation;CODE_PICK_UP=4165R;NOM_PICK_UP=U EXPRESS;REFASS_PICK_UP=7990868 TABOURET VICTOR;ADR1_PICK_UP=Avenue du President Kennedy;ADR2_PICK_UP=Place de L Europe;ADRCP_PICK_UP=17000;ADRVILLE_PICK_UP=LA ROCHELLE;HP_INFO_SPB_FRN=3520'"
 lErrorHubPresta = F_Execute_Hub_Prestataire ( sSql, itrHubPrestataire, lIndentityHubPresta, lRowCountHubPresta )
 bRet = lErrorHubPresta = 0 And itrHubPrestataire.SqlCode = 0 And itrHubPrestataire.SqlDBCode = 0
 

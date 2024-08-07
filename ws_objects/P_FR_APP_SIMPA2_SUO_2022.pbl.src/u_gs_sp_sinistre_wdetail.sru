@@ -1,5 +1,5 @@
-HA$PBExportHeader$u_gs_sp_sinistre_wdetail.sru
-$PBExportComments$---} User Object pour la gestion des d$$HEX1$$e900$$ENDHEX$$tails. (W_DETAIL)
+﻿$PBExportHeader$u_gs_sp_sinistre_wdetail.sru
+$PBExportComments$---} User Object pour la gestion des détails. (W_DETAIL)
 forward
 global type u_gs_sp_sinistre_wdetail from u_gs_sp_sinistre_anc
 end type
@@ -79,7 +79,7 @@ Private :
 	// JFF   04/06/2007   [DCMP070163-070164-070248-070318] Gestion Prise en charge
 	StaticText			istPec, istLabPec
 	
-	//	Constantes pour d$$HEX1$$e900$$ENDHEX$$finir les options
+	//	Constantes pour définir les options
 	constant integer K_DP85_GESTIONPGC = 85 // [DCMP070284] : Option 85 : Gestion Prise en charge garantie constructeur
 
 Public :
@@ -283,8 +283,8 @@ event ue_mt_prej();//*----------------------------------------------------------
 //* Evt           : ue_mt_prej
 //* Auteur			: Fabry JF
 //* Date				: 15/12/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [VDOC6122]
-//* Commentaires	: Contr$$HEX1$$f400$$ENDHEX$$le de gestion d'un d$$HEX1$$e900$$ENDHEX$$tail
+//* Libellé			: [VDOC6122]
+//* Commentaires	: Contrôle de gestion d'un détail
 //*
 //* Arguments		: 
 //*
@@ -316,18 +316,18 @@ public subroutine uf_traitement (integer aitype, ref s_pass astpass);//*--------
 //* Fonction		: Uf_Traitement (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:29:33
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Integer		aiType			(Val)	Type de traitement
-//*					  s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//*					  s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
 //*-----------------------------------------------------------------
 
 Choose Case aiType
-Case 1					// INITIALISATION		(Ue_Initialiser de la fen$$HEX1$$ea00$$ENDHEX$$tre)
+Case 1					// INITIALISATION		(Ue_Initialiser de la fenêtre)
 	Uf_InitialiserFenetre ()
 
 Case 2					// MODIFICATION		(Wf_PreparerModifier)
@@ -346,7 +346,7 @@ Case 4					// CONTROLE SAISIE	(Wf_ControlerSaisie) + (Wf_ControlerGestion)
 Case 6					// PREPARER VALIDER	(Wf_PreparerValider)
 	Uf_PreparerValider ( astPass )
 
-Case 9					// CAS PARTICULIER	(Appel sur l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement Ue_Banque)
+Case 9					// CAS PARTICULIER	(Appel sur l'événement Ue_Banque)
 
 Case 10					// SUPPRESSION			(Wf_PreparerSupprimer)
 	Uf_PreparerSupprimer ( astPass )
@@ -362,8 +362,8 @@ private subroutine uf_initialiserfenetre ();//*---------------------------------
 //* Fonction		: Uf_InitialiserFenetre (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Initialisation de la fen$$HEX1$$ea00$$ENDHEX$$tre (FREEFORM) d'un d$$HEX1$$e900$$ENDHEX$$tail
+//* Libellé			: 
+//* Commentaires	: Initialisation de la fenêtre (FREEFORM) d'un détail
 //*
 //* Arguments		: Aucun
 //*
@@ -379,7 +379,7 @@ String sTri
 String sCol[] 
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re les DDDW qui ne changent jamais.                     */
+/* On récupére les DDDW qui ne changent jamais.                     */
 /* Colonnes COD_MOT_SSUI, COD_DEC_MAC, COD_DEC_OPE, COD_ETAT,       */
 /* ID_TYP_CARTE.                                                    */
 /*------------------------------------------------------------------*/
@@ -410,22 +410,22 @@ dwChild.ShareData ( dwChild1 )
 /* Le 21/04/1999. Modif. pour la couverture UF des autres cartes.   */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* On veut trier la zone ID_TYPE_CARTE en fonction du libell$$HEX1$$e900$$ENDHEX$$.      */
+/* On veut trier la zone ID_TYPE_CARTE en fonction du libellé.      */
 /*------------------------------------------------------------------*/
 sTri = "LIB_CODE A"
 dwChild1.SetSort ( sTri )
 dwChild1.Sort ()
 
 /*------------------------------------------------------------------*/
-/* On fait un ShareData pour le libell$$HEX2$$e9002000$$ENDHEX$$de la garantie.             */
+/* On fait un ShareData pour le libellé de la garantie.             */
 /*------------------------------------------------------------------*/
 idw_LstGarSin.GetChild ( "ID_GTI", dwChild )
 idw_wDetailFF.GetChild ( "ID_GTI", dwChild1 )
 dwChild.ShareData ( dwChild1 )
 
 /*------------------------------------------------------------------*/
-/* On fait un ShareData pour la d$$HEX1$$e900$$ENDHEX$$signation des interlocuteurs      */
-/* pour les pi$$HEX1$$e800$$ENDHEX$$ces, les refus et le destinataire du r$$HEX1$$e900$$ENDHEX$$glement.      */
+/* On fait un ShareData pour la désignation des interlocuteurs      */
+/* pour les pièces, les refus et le destinataire du réglement.      */
 /*------------------------------------------------------------------*/
 iuoTagPiece.dw_Trt.GetChild ( "ID_I", dwChild )
 idw_LstInter.ShareData ( dwChild )
@@ -478,7 +478,7 @@ private subroutine uf_tb_validation ();//*--------------------------------------
 //* Fonction		: Uf_Tb_Adhesion (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 17:35:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion des TabOrder en consultaion/Validation.
 //*
 //* Arguments		: Aucun
@@ -520,7 +520,7 @@ idw_wDetailFF.Uf_Proteger ( sCol, "1" )
 iCbValAchDef.Enabled = False
 
 /*------------------------------------------------------------------*/
-/* On positionne la gestion des pi$$HEX1$$e800$$ENDHEX$$ces et des refus en mode         */
+/* On positionne la gestion des pièces et des refus en mode         */
 /* (C)onsultation.                                                  */
 /*------------------------------------------------------------------*/
 iuoTagPiece.Uf_Consulter ( True ) 
@@ -538,16 +538,16 @@ private subroutine uf_preparerinserer (ref s_pass astpass);//*------------------
 //* Fonction		: Uf_PreparerInserer (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Pr$$HEX1$$e900$$ENDHEX$$paration de l'insertion d'un d$$HEX1$$e900$$ENDHEX$$tail
+//* Libellé			: 
+//* Commentaires	: Préparation de l'insertion d'un détail
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
 //*-----------------------------------------------------------------
-//* #1 JCA	12/01/2007	DCMP 050273 - Gestion du bitmap de l'onglet pi$$HEX1$$e800$$ENDHEX$$ce fait dans Uf_GestionuTagger_Piece
-//* #2 JCA	04/06/2007	DCMP 070304 - Mise sans suite d'un d$$HEX1$$e900$$ENDHEX$$tail de garantie sur l'option 75
+//* #1 JCA	12/01/2007	DCMP 050273 - Gestion du bitmap de l'onglet pièce fait dans Uf_GestionuTagger_Piece
+//* #2 JCA	04/06/2007	DCMP 070304 - Mise sans suite d'un détail de garantie sur l'option 75
 //* #3 JFF  04/06/2007  [DCMP070163-070164-070248-070318] Gestion Prise en charge
 //* #4 JFF  04/09/2007  [DCMP070431]
 //* #5 JFF  28/01/2008  [DCMP080028]
@@ -565,7 +565,7 @@ idw_LstCmdeDet.Reset ()
 
 /*------------------------------------------------------------------*/
 /* Modification SFR # Le 27/09/02 : initialisation de la gamme. La  */
-/* valeur -1 signifie que la fen$$HEX1$$ea00$$ENDHEX$$tre des gammes n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX10$$e900200020002000200020002000200020002000$$ENDHEX$$*/
+/* valeur -1 signifie que la fenêtre des gammes n'a pas été         */
 /* ouverte.                                                         */
 /*------------------------------------------------------------------*/
 ilRetGamme = -1
@@ -581,7 +581,7 @@ ibDeCochageCCConfoEncours = False // [CONFO][CUISINE][PC680]
 ibIdEvtInterditCreation = False // [DT424]
 
 // #2
-stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de gestion d'un d$$HEX1$$e900$$ENDHEX$$tail"
+stMessage.sTitre		= "Contrôle de gestion d'un détail"
 stMessage.Icon			= Information!
 stMessage.bErreurG	= FALSE
 
@@ -595,17 +595,17 @@ end if
 //: #2 - FIN
 
 /*------------------------------------------------------------------*/
-/* R$$HEX1$$f400$$ENDHEX$$le de facturation, droit -NA/208										  */
+/* Rôle de facturation, droit -NA/208										  */
 /*------------------------------------------------------------------*/
 This.uf_Set_ProfilFacturation ()
 
 /*------------------------------------------------------------------*/
-/* Le produit a t-il chang$$HEX2$$e9002000$$ENDHEX$$?                                       */
+/* Le produit a t-il changé ?                                       */
 /*------------------------------------------------------------------*/
 Uf_ChangerProduit ()
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re l'ID_SIN et l'ID_GTI.                                */
+/* On récupére l'ID_SIN et l'ID_GTI.                                */
 /*------------------------------------------------------------------*/
 lIdSin		= idw_wGarSin.GetItemNumber ( 1, "ID_SIN" )
 lIdGti		= idw_wGarSin.GetItemNumber ( 1, "ID_GTI" )
@@ -616,10 +616,10 @@ idw_wDetailFF.SetItem ( 1, "ID_SIN", lIdSin )
 idw_wDetailFF.SetItem ( 1, "ID_GTI", lIdGti )
 
 /*------------------------------------------------------------------*/
-/* On incr$$HEX1$$e900$$ENDHEX$$mente le N$$HEX2$$b0002000$$ENDHEX$$du d$$HEX1$$e900$$ENDHEX$$tail.                                   */
+/* On incrémente le N° du détail.                                   */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* Le N$$HEX2$$b0002000$$ENDHEX$$de d$$HEX1$$e900$$ENDHEX$$tail commence $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro.                                 */
+/* Le N° de détail commence à zéro.                                 */
 /*------------------------------------------------------------------*/
 
 lTotDetail = idw_wDetailFF.iudwDetailSource.RowCount ()
@@ -632,7 +632,7 @@ End If
 idw_wDetailFF.SetItem ( 1, "ID_DETAIL", lIdDetail )
 
 /*------------------------------------------------------------------*/
-/* On g$$HEX1$$e900$$ENDHEX$$re les pieces, les refus et les plafonds en insertion.      */
+/* On gére les pieces, les refus et les plafonds en insertion.      */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* S'il n'y a pas d'interlocuteurs, on rend l'onglet inaccessible.  */
@@ -658,26 +658,26 @@ Uf_Gestion_DetailDivers ()
 Uf_GestOng_Divers ()
 
 /*------------------------------------------------------------------*/
-/* On g$$HEX1$$e900$$ENDHEX$$re les TabOrder.                                            */
+/* On gére les TabOrder.                                            */
 /*------------------------------------------------------------------*/
 
-idw_wDetailFF.Modify ( "mt_prej_t.Text= 'Mt Pr$$HEX1$$e900$$ENDHEX$$judice'" )	
+idw_wDetailFF.Modify ( "mt_prej_t.Text= 'Mt Préjudice'" )	
 
 Uf_Tb_Detail ()
 /*------------------------------------------------------------------*/
-/* On g$$HEX1$$e900$$ENDHEX$$re la derni$$HEX1$$e800$$ENDHEX$$re colonne.                                     */
+/* On gére la dernière colonne.                                     */
 /*------------------------------------------------------------------*/
 idw_wDetailFF.ilDernCol = 14					// Zne ALT_BLOC
 
 /*------------------------------------------------------------------*/
-/* On s'occupe des variables d'instance n$$HEX1$$e900$$ENDHEX$$cessaires $$HEX2$$e0002000$$ENDHEX$$la gestion    */
+/* On s'occupe des variables d'instance nécessaires à la gestion    */
 /* du dossier.                                                      */
 /*------------------------------------------------------------------*/
 idcMtPlafInitial = 0.00
 isAltBlocInitial = "N"
 
 /*------------------------------------------------------------------*/
-/* On initialise le Bitmap des onglets Pi$$HEX1$$e900$$ENDHEX$$ces et Refus.             */
+/* On initialise le Bitmap des onglets Piéces et Refus.             */
 /*------------------------------------------------------------------*/
 // #1 // #iuoOng.Uf_ChangerBitmap ( "02", "" ) 
 iuoOng.Uf_ChangerBitmap ( "03", "" )
@@ -702,7 +702,7 @@ End If
 /* # Modification SFR # Le 17/07/2002.                              */
 /*------------------------------------------------------------------*/
 /* La zone ID_I_REG est rendue Visible/Invisible en fonction de     */
-/* certains crit$$HEX1$$e800$$ENDHEX$$res.                                               */
+/* certains critères.                                               */
 /*------------------------------------------------------------------*/
 This.uf_Rendre_Visible_Idireg ( 0 )
 
@@ -747,7 +747,7 @@ If lDeb > 0 Then
 End If
 // :#3
 
-// #4 Valeur par d$$HEX1$$e900$$ENDHEX$$faut
+// #4 Valeur par défaut
 lRow = idw_wDivDet.Find ( "UPPER ( NOM_ZONE ) = 'ACCORD_REMPL'", 1, idw_wDivDet.RowCount () )
 If lRow > 0 Then
 
@@ -757,7 +757,7 @@ If lRow > 0 Then
 	End If
 End If
 
-// #5 Valeur par d$$HEX1$$e900$$ENDHEX$$faut
+// #5 Valeur par défaut
 lRow = idw_wDivDet.Find ( "UPPER ( NOM_ZONE ) = 'ACCORD_REMPL2'", 1, idw_wDivDet.RowCount () )
 If lRow > 0 Then
 
@@ -778,7 +778,7 @@ private subroutine uf_zn_altbloc ();//*-----------------------------------------
 //* Fonction		: Uf_Zn_AltBloc (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 08/01/1998 17:14:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Controle de ALT_BLOC
 //*
 //* Arguments		: Aucun
@@ -788,7 +788,7 @@ private subroutine uf_zn_altbloc ();//*-----------------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On vient de bloquer le d$$HEX1$$e900$$ENDHEX$$tail, on passe le COD_ETAT $$HEX2$$e0002000$$ENDHEX$$1.         */
+/* On vient de bloquer le détail, on passe le COD_ETAT à 1.         */
 /*------------------------------------------------------------------*/
 If	idw_wDetailFF.GetText () = "O" Then
 	idw_wDetailFF.SetItem ( 1, "COD_ETAT", 1 )
@@ -796,7 +796,7 @@ If	idw_wDetailFF.GetText () = "O" Then
 	idw_wDetailFF.SetItem ( 1, "COD_DEC_OPE", 1 )
 
 /*------------------------------------------------------------------*/
-/* On positionne les montants $$HEX2$$e0002000$$ENDHEX$$0. (MT_PLAF, MT_NPLAF, MT_FRAN).    */
+/* On positionne les montants à 0. (MT_PLAF, MT_NPLAF, MT_FRAN).    */
 /*------------------------------------------------------------------*/
 	idw_wDetailFF.SetItem ( 1, "MT_PLAF", 	0.00 )	
 	idw_wDetailFF.SetItem ( 1, "MT_NPLAF", 0.00 )	
@@ -804,8 +804,8 @@ If	idw_wDetailFF.GetText () = "O" Then
 	idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "N" )
 Else
 /*------------------------------------------------------------------*/
-/* On vient de d$$HEX1$$e900$$ENDHEX$$bloquer le d$$HEX1$$e900$$ENDHEX$$tail, on positionne le COD_ETAT $$HEX2$$e0002000$$ENDHEX$$0   */
-/* (Non control$$HEX1$$e900$$ENDHEX$$). Il sera arm$$HEX2$$e9002000$$ENDHEX$$lors du contr$$HEX1$$f400$$ENDHEX$$le de                 */
+/* On vient de débloquer le détail, on positionne le COD_ETAT à 0   */
+/* (Non controlé). Il sera armé lors du contrôle de                 */
 /* gestion.(Normalement!!).                                         */
 /*------------------------------------------------------------------*/
 	idw_wDetailFF.SetItem ( 1, "COD_ETAT", 0 )
@@ -821,15 +821,15 @@ private subroutine uf_preparermodifier (ref s_pass astpass);//*-----------------
 //* Fonction		: Uf_PreparerModifier (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Pr$$HEX1$$e900$$ENDHEX$$paration de la modification d'un d$$HEX1$$e900$$ENDHEX$$tail
+//* Libellé			: 
+//* Commentaires	: Préparation de la modification d'un détail
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
 //*-----------------------------------------------------------------
-//* #1 JCA	04/06/2007	DCMP 070304 - Mise sans suite d'un d$$HEX1$$e900$$ENDHEX$$tail de garantie sur l'option 75
+//* #1 JCA	04/06/2007	DCMP 070304 - Mise sans suite d'un détail de garantie sur l'option 75
 //* #2 JFF  04/06/2007  [DCMP070163-070164-070248-070318] Gestion Prise en charge
 //* #3 JFF  04/09/2007  [DCMP070431]
 //* #4 JFF  28/01/2008  [DCMP080028]
@@ -886,7 +886,7 @@ F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" 
 bConfo = lDeb > 0
 
 // #1
-stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de gestion d'un d$$HEX1$$e900$$ENDHEX$$tail"
+stMessage.sTitre		= "Contrôle de gestion d'un détail"
 stMessage.Icon			= Information!
 stMessage.bErreurG	= FALSE
 
@@ -901,42 +901,42 @@ end if
 
 /*------------------------------------------------------------------*/
 /* Modification SFR # Le 27/09/02 : initialisation de la gamme. La  */
-/* valeur -1 signifie que la fen$$HEX1$$ea00$$ENDHEX$$tre des gammes n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX10$$e900200020002000200020002000200020002000$$ENDHEX$$*/
+/* valeur -1 signifie que la fenêtre des gammes n'a pas été         */
 /* ouverte.                                                         */
 /*------------------------------------------------------------------*/
 ilRetGamme = -1
 
 /*------------------------------------------------------------------*/
-/* On recopie la ligne du d$$HEX1$$e900$$ENDHEX$$tail de la fen$$HEX1$$ea00$$ENDHEX$$tre parent dans          */
+/* On recopie la ligne du détail de la fenêtre parent dans          */
 /* dw_wDetailFF de W_DETAIL.                                        */
 /*------------------------------------------------------------------*/
 idw_wDetailFF.Uf_CopierLigne ()
 
 
 /*------------------------------------------------------------------*/
-/* R$$HEX1$$f400$$ENDHEX$$le de facturation, droit -NA/208										  */
+/* Rôle de facturation, droit -NA/208										  */
 /*------------------------------------------------------------------*/
 This.uf_Set_ProfilFacturation ()
 
 
 /*------------------------------------------------------------------*/
-/* Le produit a t-il chang$$HEX2$$e9002000$$ENDHEX$$?                                       */
+/* Le produit a t-il changé ?                                       */
 /*------------------------------------------------------------------*/
 Uf_ChangerProduit ()
 
 /*------------------------------------------------------------------*/
 /* On autorise ou non l'utilisation du bouton SUPPRIMER de la       */
-/* fen$$HEX1$$ea00$$ENDHEX$$tre.                                                         */
+/* fenêtre.                                                         */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* Si le d$$HEX1$$e900$$ENDHEX$$tail a d$$HEX1$$e900$$ENDHEX$$j$$HEX3$$e0002000e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$valid$$HEX1$$e900$$ENDHEX$$, on interdit la suppression.      */
+/* Si le détail a déjà été validé, on interdit la suppression.      */
 /*------------------------------------------------------------------*/
 If	idw_wDetailFF.GetItemNumber ( 1, "CPT_VALIDE" ) > 0	Then
 	bSupprime = False
 End If
 
 /*------------------------------------------------------------------*/
-/* On g$$HEX1$$e900$$ENDHEX$$re les pieces, les refus et les plafonds en modification.   */
+/* On gére les pieces, les refus et les plafonds en modification.   */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* S'il n'y a pas d'interlocuteurs, on rend l'onglet inaccessible.  */
@@ -960,20 +960,20 @@ Uf_Gestion_DetailDivers ()
 Uf_GestOng_Divers ()
 
 /*------------------------------------------------------------------*/
-/* On s'occupe de la date du d$$HEX1$$e900$$ENDHEX$$tail. D$$HEX1$$e900$$ENDHEX$$coupage des zones.           */
+/* On s'occupe de la date du détail. Découpage des zones.           */
 /*------------------------------------------------------------------*/
 Uf_Cast_DteDet ()
 
-idw_wDetailFF.Modify ( "mt_prej_t.Text= 'Mt Pr$$HEX1$$e900$$ENDHEX$$judice'" )	
+idw_wDetailFF.Modify ( "mt_prej_t.Text= 'Mt Préjudice'" )	
 
 /*------------------------------------------------------------------*/
-/* On g$$HEX1$$e900$$ENDHEX$$re les TabOrder uniquement en saisie.                       */
+/* On gére les TabOrder uniquement en saisie.                       */
 /*------------------------------------------------------------------*/
 If	isTypeTrt = "S"	Then
 	Uf_Tb_Detail ()
 
 /*------------------------------------------------------------------*/
-/* On g$$HEX1$$e900$$ENDHEX$$re la derni$$HEX1$$e800$$ENDHEX$$re colonne.                                     */
+/* On gére la dernière colonne.                                     */
 /*------------------------------------------------------------------*/
 	If	idw_wDetailFF.GetItemString ( 1, "ALT_SSUI" ) = "O"	Then
 		idw_wDetailFF.ilDernCol = 22					// Zne COD_MOT_SSUI
@@ -983,7 +983,7 @@ If	isTypeTrt = "S"	Then
 End If
 
 /*------------------------------------------------------------------*/
-/* On s'occupe des variables d'instance n$$HEX1$$e900$$ENDHEX$$cessaires $$HEX2$$e0002000$$ENDHEX$$la gestion    */
+/* On s'occupe des variables d'instance nécessaires à la gestion    */
 /* du dossier.                                                      */
 /*------------------------------------------------------------------*/
 idcMtPlafInitial = idw_wDetailFF.GetItemNumber ( 1, "MT_PLAF" )
@@ -997,16 +997,16 @@ If	iuoOng.Uf_RecupererOngletCourant () <> "01" Then
 End If
 
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie si on donne acc$$HEX1$$e900$$ENDHEX$$s au bonton CONTROLE de la fen$$HEX1$$ea00$$ENDHEX$$tre.   */
-/* En effet si le d$$HEX1$$e900$$ENDHEX$$tail est d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gl$$HEX2$$e9002000$$ENDHEX$$(COD_ETAT = 600),           */
+/* On vérifie si on donne accés au bonton CONTROLE de la fenêtre.   */
+/* En effet si le détail est déjà réglé (COD_ETAT = 600),           */
 /* l'utilisateur ne doit rien toucher.                              */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Le bouton sera rendu actif/inactif dans la fonction              */
-/* Wf_PreparerModifier de la fen$$HEX1$$ea00$$ENDHEX$$tre.                               */
+/* Wf_PreparerModifier de la fenêtre.                               */
 /*------------------------------------------------------------------*/
 If	idw_wDetailFF.GetItemNumber ( 1, "COD_ETAT" ) = 600	Then
-	astPass.lTab[1] = 0			// Il faut d$$HEX1$$e900$$ENDHEX$$sactiver le bouton
+	astPass.lTab[1] = 0			// Il faut désactiver le bouton
 Else
 	astPass.lTab[1] = 1			// Il faut activer le bouton
 End If
@@ -1030,7 +1030,7 @@ End If
 /* # Modification SFR # Le 17/07/2002.                              */
 /*------------------------------------------------------------------*/
 /* La zone ID_I_REG est rendue Visible/Invisible en fonction de     */
-/* certains crit$$HEX1$$e800$$ENDHEX$$res.                                               */
+/* certains critères.                                               */
 /*------------------------------------------------------------------*/
 This.uf_Rendre_Visible_Idireg ( 0 )
 
@@ -1074,7 +1074,7 @@ If lDeb > 0 Then
 					If bAltPec and bPec Then
 						istPec.TextColor = 255 // rouge
 					Else
-						istPec.TextColor = 32768 // Vert fonc$$HEX1$$e900$$ENDHEX$$
+						istPec.TextColor = 32768 // Vert foncé
 					End IF
 				End If
 			Exit
@@ -1084,7 +1084,7 @@ If lDeb > 0 Then
 End If
 // :#2
 
-// #3 Valeur par d$$HEX1$$e900$$ENDHEX$$faut
+// #3 Valeur par défaut
 lRow = idw_wDivDet.Find ( "UPPER ( NOM_ZONE ) = 'ACCORD_REMPL'", 1, idw_wDivDet.RowCount () )
 If lRow > 0 Then
 
@@ -1094,7 +1094,7 @@ If lRow > 0 Then
 	End If
 End If
 
-// #5 Valeur par d$$HEX1$$e900$$ENDHEX$$faut
+// #5 Valeur par défaut
 lRow = idw_wDivDet.Find ( "UPPER ( NOM_ZONE ) = 'ACCORD_REMPL2'", 1, idw_wDivDet.RowCount () )
 If lRow > 0 Then
 
@@ -1150,14 +1150,14 @@ If lDeb > 0 Then
 				
 				If dcMtPrej > dcMtCmde + dcMtMajor Then
 					lRow = 0
-					stMessage.sTitre		= "R$$HEX1$$e900$$ENDHEX$$glement facture"
+					stMessage.sTitre		= "Réglement facture"
 					stMessage.Icon			= Exclamation!
 					stMessage.bErreurG	= FALSE
 					stMessage.Bouton		= Ok!
 					stMessage.sCode		= "WDET637"
-					stMessage.sVar[1] = String ( dcMtPrej ) + "$$HEX1$$ac20$$ENDHEX$$"
-					stMessage.sVar[2] = String ( dcMtCmde ) + "$$HEX1$$ac20$$ENDHEX$$"
-					stMessage.sVar[3] = String ( dcMtMajor ) + "$$HEX1$$ac20$$ENDHEX$$"
+					stMessage.sVar[1] = String ( dcMtPrej ) + "€"
+					stMessage.sVar[2] = String ( dcMtCmde ) + "€"
+					stMessage.sVar[3] = String ( dcMtMajor ) + "€"
 
 				
 					F_Message ( stMessage )
@@ -1201,15 +1201,15 @@ private subroutine uf_gestionutagger_piece (integer aitype);//*-----------------
 //* Fonction		: Uf_GestionuTagger_Piece (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 22/01/1998 16:31:31
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Gestion des pi$$HEX1$$e800$$ENDHEX$$ces $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$clamer
+//* Libellé			: 
+//* Commentaires	: Gestion des pièces à réclamer
 //*
 //* Arguments		: Integer		aiType			(Val)	Type d'action
 //*
 //* Retourne		: Rien
 //*
 //*-----------------------------------------------------------------
-//*	#1	JCA	12/01/2007		DCMP 050273 - Cochage automatique des pi$$HEX1$$e800$$ENDHEX$$ces $$HEX2$$e0002000$$ENDHEX$$la cr$$HEX1$$e900$$ENDHEX$$ation d'un d$$HEX1$$e900$$ENDHEX$$tail en fonction de l'option 77
+//*	#1	JCA	12/01/2007		DCMP 050273 - Cochage automatique des pièces à la création d'un détail en fonction de l'option 77
 //		FPI		29/03/2012		[PM194] Evolution de la DP 77
 //    JFF   04/09/2023  [RS5656_MOD_PCE_DIF]
 //*-----------------------------------------------------------------
@@ -1230,14 +1230,14 @@ sLigne	= ""
 
 Choose Case aiType
 /*------------------------------------------------------------------*/
-/* On a chang$$HEX2$$e9002000$$ENDHEX$$de produit, on repopulise les pi$$HEX1$$e800$$ENDHEX$$ces dans dw_Source. */
+/* On a changé de produit, on repopulise les pièces dans dw_Source. */
 /*------------------------------------------------------------------*/
 Case 0					
 	iuoTagPiece.dw_Source.Reset ()
 	idw_Piece.RowsCopy ( 1, 999, Primary!, iuoTagPiece.dw_Source, 1, Primary! )
 
 /*------------------------------------------------------------------*/
-/* On est en insertion d'un d$$HEX1$$e900$$ENDHEX$$tail.                                 */
+/* On est en insertion d'un détail.                                 */
 /*------------------------------------------------------------------*/
 Case 1
 	iuoTagPiece.dw_Trt.Reset ()
@@ -1253,22 +1253,22 @@ Case 1
 	lTotPiece = iuoTagPiece.dw_Source.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Les zones $$HEX2$$e0002000$$ENDHEX$$ins$$HEX1$$e900$$ENDHEX$$rer sont les suivantes :                         */
+/* Les zones à insérer sont les suivantes :                         */
 /* ID_SIN                                                           */
 /* ID_GTI                                                           */
-/* ID_DETAIL : On positionne avec la valeur du d$$HEX1$$e900$$ENDHEX$$tail en cours      */
+/* ID_DETAIL : On positionne avec la valeur du détail en cours      */
 /* ID_PCE                                                           */
-/* ID_I      : Positionn$$HEX4$$e9002000e0002000$$ENDHEX$$""                                      */
+/* ID_I      : Positionné à ""                                      */
 /* ID_PARA                                                          */
 /* CPT_TRI                                                          */
-/* CREE_LE	: Cette valeur sera positionn$$HEX1$$e900$$ENDHEX$$e sur l'update de la DW   */
-/* MAJ_LE	: Cette valeur sera positionn$$HEX1$$e900$$ENDHEX$$e sur l'update de la DW   */
+/* CREE_LE	: Cette valeur sera positionnée sur l'update de la DW   */
+/* MAJ_LE	: Cette valeur sera positionnée sur l'update de la DW   */
 /* MAJ_PAR                                                          */
 /* CPT_VER                                                          */
 /* ALT_RECLAME                                                      */
 /* LIB_PCE                                                          */
 /* ALT_RECLAME_AVANT                                                */
-/* ID_I_AVANT : Positionn$$HEX4$$e9002000e0002000$$ENDHEX$$""                                     */
+/* ID_I_AVANT : Positionné à ""                                     */
 /*------------------------------------------------------------------*/
 
 	For	lCpt = 1 To lTotPiece
@@ -1355,14 +1355,14 @@ Case 1
 	iuoTagPiece.dw_Source.Sort ()
 
 /*------------------------------------------------------------------*/
-/* On est en modification d'un d$$HEX1$$e900$$ENDHEX$$tail.                              */
+/* On est en modification d'un détail.                              */
 /*------------------------------------------------------------------*/
 Case 2
 
 	iuoTagPiece.dw_Trt.Reset ()
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re dans DW_TRT les pi$$HEX1$$e900$$ENDHEX$$ces d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$clam$$HEX1$$e900$$ENDHEX$$es. Pour cela on    */
+/* On insére dans DW_TRT les piéces déjà réclamées. Pour cela on    */
 /* filtre sur ID_GTI et ID_DETAIL.                                  */
 /*------------------------------------------------------------------*/
 	sFiltre = "ID_GTI = " + String ( idw_wDetailFF.GetItemNumber ( 1, "ID_GTI" ) ) + &
@@ -1383,8 +1383,8 @@ Case 2
 	For	lCpt = 1 To lTotPieceTag
 			idw_wPiece_Detail.SetItem ( lCpt, "ALT_RECLAME_AVANT",	"O" )
 /*------------------------------------------------------------------*/
-/* Ne jamais faire un SetItem avec un GetItemNumber (Probl$$HEX1$$e800$$ENDHEX$$me de    */
-/* pr$$HEX1$$e900$$ENDHEX$$cision). Il faut passer dans une variable interm$$HEX1$$e900$$ENDHEX$$diaire.      */
+/* Ne jamais faire un SetItem avec un GetItemNumber (Problème de    */
+/* précision). Il faut passer dans une variable intermédiaire.      */
 /*------------------------------------------------------------------*/
 			lIdI = idw_wPiece_Detail.GetItemNumber ( lCpt, "ID_I" )
 			idw_wPiece_Detail.SetItem ( lCpt, "ID_I_AVANT", 			lIdI )
@@ -1401,9 +1401,9 @@ Case 2
 	idw_wPiece_Detail.Sort ()
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re maintenant les pi$$HEX1$$e800$$ENDHEX$$ces non r$$HEX1$$e900$$ENDHEX$$clam$$HEX1$$e900$$ENDHEX$$es. Pour cela on      */
+/* On insére maintenant les pièces non réclamées. Pour cela on      */
 /* filtre dw_Source sur ID_GTI et COD_TYP_PCE. On n'oublie pas de   */
-/* filtrer les pi$$HEX1$$e800$$ENDHEX$$ces d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$pr$$HEX1$$e900$$ENDHEX$$sentes dans dw_Trt.                   */
+/* filtrer les pièces déjà présentes dans dw_Trt.                   */
 /*------------------------------------------------------------------*/
 	For	lCpt = 1 To lTotPieceTag
 			sFiltre = sFiltre + "ID_PCE <> " + String ( iuoTagPiece.dw_Trt.GetItemNumber ( lCpt, "ID_PCE" ) ) + " AND "
@@ -1417,22 +1417,22 @@ Case 2
 	lTotPiece = iuoTagPiece.dw_Source.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Les zones $$HEX2$$e0002000$$ENDHEX$$ins$$HEX1$$e900$$ENDHEX$$rer sont les suivantes :                         */
+/* Les zones à insérer sont les suivantes :                         */
 /* ID_SIN                                                           */
 /* ID_GTI                                                           */
-/* ID_DETAIL : On positionne avec la valeur du d$$HEX1$$e900$$ENDHEX$$tail en cours      */
+/* ID_DETAIL : On positionne avec la valeur du détail en cours      */
 /* ID_PCE                                                           */
-/* ID_I      : Positionn$$HEX4$$e9002000e0002000$$ENDHEX$$""                                      */
+/* ID_I      : Positionné à ""                                      */
 /* ID_PARA                                                          */
 /* CPT_TRI                                                          */
-/* CREE_LE	: Cette valeur sera positionn$$HEX1$$e900$$ENDHEX$$e sur l'update de la DW   */
-/* MAJ_LE	: Cette valeur sera positionn$$HEX1$$e900$$ENDHEX$$e sur l'update de la DW   */
+/* CREE_LE	: Cette valeur sera positionnée sur l'update de la DW   */
+/* MAJ_LE	: Cette valeur sera positionnée sur l'update de la DW   */
 /* MAJ_PAR                                                          */
 /* CPT_VER                                                          */
 /* ALT_RECLAME                                                      */
 /* LIB_PCE                                                          */
 /* ALT_RECLAME_AVANT                                                */
-/* ID_I_AVANT : Positionn$$HEX4$$e9002000e0002000$$ENDHEX$$""                                     */
+/* ID_I_AVANT : Positionné à ""                                     */
 /*------------------------------------------------------------------*/
 	For	lCpt = 1 To lTotPiece
 			sLigne = sLigne 																										+ &
@@ -1470,7 +1470,7 @@ private subroutine uf_gestionutagger_refus (integer aitype);//*-----------------
 //* Fonction		: Uf_GestionuTagger_Refus (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 22/01/1998 16:31:31
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion des motifs de refus
 //*
 //* Arguments		: Integer		aiType			(Val)	Type d'action
@@ -1488,14 +1488,14 @@ sLigne	= ""
 
 Choose Case aiType
 /*------------------------------------------------------------------*/
-/* On a chang$$HEX2$$e9002000$$ENDHEX$$de produit, on repopulise les motifs dans dw_Source. */
+/* On a changé de produit, on repopulise les motifs dans dw_Source. */
 /*------------------------------------------------------------------*/
 Case 0					
 	iuoTagRefus.dw_Source.Reset ()
 	idw_Motif.RowsCopy ( 1, 999, Primary!, iuoTagRefus.dw_Source, 1, Primary! )
 
 /*------------------------------------------------------------------*/
-/* On est en insertion d'un d$$HEX1$$e900$$ENDHEX$$tail.                                 */
+/* On est en insertion d'un détail.                                 */
 /*------------------------------------------------------------------*/
 Case 1
 	iuoTagRefus.dw_Trt.Reset ()
@@ -1511,24 +1511,24 @@ Case 1
 	lTotMotif = iuoTagRefus.dw_Source.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Les zones $$HEX2$$e0002000$$ENDHEX$$ins$$HEX1$$e900$$ENDHEX$$rer sont les suivantes :                         */
+/* Les zones à insérer sont les suivantes :                         */
 /* ID_SIN                                                           */
 /* ID_GTI                                                           */
-/* ID_DETAIL : On positionne avec la valeur du d$$HEX1$$e900$$ENDHEX$$tail en cours      */
+/* ID_DETAIL : On positionne avec la valeur du détail en cours      */
 /* ID_MOTIF                                                         */
 /* ALT_MAC                                                          */
 /* ALT_OPE                                                          */
-/* ID_I      : Positionn$$HEX4$$e9002000e0002000$$ENDHEX$$""                                      */
+/* ID_I      : Positionné à ""                                      */
 /* ID_PARA                                                          */
 /* CPT_TRI                                                          */
-/* CREE_LE	: Cette valeur sera positionn$$HEX1$$e900$$ENDHEX$$e sur l'update de la DW   */
-/* MAJ_LE	: Cette valeur sera positionn$$HEX1$$e900$$ENDHEX$$e sur l'update de la DW   */
+/* CREE_LE	: Cette valeur sera positionnée sur l'update de la DW   */
+/* MAJ_LE	: Cette valeur sera positionnée sur l'update de la DW   */
 /* MAJ_PAR                                                          */
 /* CPT_VER                                                          */
 /* LIB_MOTIF                                                        */
 /* ALT_MAC_AVANT                                                    */
 /* ALT_OPE_AVANT                                                    */
-/* ID_I_AVANT : Positionn$$HEX4$$e9002000e0002000$$ENDHEX$$""                                     */
+/* ID_I_AVANT : Positionné à ""                                     */
 /*------------------------------------------------------------------*/
 	For	lCpt = 1 To lTotMotif
 			sLigne = sLigne 																										+ &
@@ -1561,14 +1561,14 @@ Case 1
 
 
 /*------------------------------------------------------------------*/
-/* On est en modification d'un d$$HEX1$$e900$$ENDHEX$$tail.                              */
+/* On est en modification d'un détail.                              */
 /*------------------------------------------------------------------*/
 Case 2
 
 	iuoTagRefus.dw_Trt.Reset ()
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re dans DW_TRT les refus d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$positionn$$HEX1$$e900$$ENDHEX$$s. Pour cela on   */
+/* On insére dans DW_TRT les refus déjà positionnés. Pour cela on   */
 /* filtre sur ID_GTI et ID_DETAIL.                                  */
 /*------------------------------------------------------------------*/
 	sFiltre = "ID_GTI = " + String ( idw_wDetailFF.GetItemNumber ( 1, "ID_GTI" ) ) + &
@@ -1590,8 +1590,8 @@ Case 2
 			idw_wRefus_Detail.SetItem ( lCpt, "ALT_MAC_AVANT", idw_wRefus_Detail.GetItemString ( lCpt, "ALT_MAC" ) )
 			idw_wRefus_Detail.SetItem ( lCpt, "ALT_OPE_AVANT", idw_wRefus_Detail.GetItemString ( lCpt, "ALT_OPE" ) )
 /*------------------------------------------------------------------*/
-/* Ne jamais faire un SetItem avec un GetItemNumber (Probl$$HEX1$$e800$$ENDHEX$$me de    */
-/* pr$$HEX1$$e900$$ENDHEX$$cision). Il faut passer dans une variable interm$$HEX1$$e900$$ENDHEX$$diaire.      */
+/* Ne jamais faire un SetItem avec un GetItemNumber (Problème de    */
+/* précision). Il faut passer dans une variable intermédiaire.      */
 /*------------------------------------------------------------------*/
 			lIdI = idw_wRefus_Detail.GetItemNumber ( lCpt, "ID_I" )
 			idw_wRefus_Detail.SetItem ( lCpt, "ID_I_AVANT", 	lIdI )
@@ -1607,9 +1607,9 @@ Case 2
 	idw_wRefus_Detail.Sort ()
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re maintenant les refus non positionn$$HEX1$$e900$$ENDHEX$$s. Pour cela on     */
+/* On insére maintenant les refus non positionnés. Pour cela on     */
 /* filtre dw_Source sur ID_GTI et COD_TYP_MOTIF. On n'oublie pas de */
-/* filtrer les motifs d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$pr$$HEX1$$e900$$ENDHEX$$sents dans dw_Trt.                    */
+/* filtrer les motifs déjà présents dans dw_Trt.                    */
 /*------------------------------------------------------------------*/
 	For	lCpt = 1 To lTotRefusTag
 			sFiltre = sFiltre + "ID_MOTIF <> " + String ( iuoTagRefus.dw_Trt.GetItemNumber ( lCpt, "ID_MOTIF" ) ) + " AND "
@@ -1623,24 +1623,24 @@ Case 2
 	lTotMotif = iuoTagRefus.dw_Source.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Les zones $$HEX2$$e0002000$$ENDHEX$$ins$$HEX1$$e900$$ENDHEX$$rer sont les suivantes :                         */
+/* Les zones à insérer sont les suivantes :                         */
 /* ID_SIN                                                           */
 /* ID_GTI                                                           */
-/* ID_DETAIL : On positionne avec la valeur du d$$HEX1$$e900$$ENDHEX$$tail en cours      */
+/* ID_DETAIL : On positionne avec la valeur du détail en cours      */
 /* ID_MOTIF                                                         */
 /* ALT_MAC                                                          */
 /* ALT_OPE                                                          */
-/* ID_I      : Positionn$$HEX4$$e9002000e0002000$$ENDHEX$$""                                      */
+/* ID_I      : Positionné à ""                                      */
 /* ID_PARA                                                          */
 /* CPT_TRI                                                          */
-/* CREE_LE	: Cette valeur sera positionn$$HEX1$$e900$$ENDHEX$$e sur l'update de la DW   */
-/* MAJ_LE	: Cette valeur sera positionn$$HEX1$$e900$$ENDHEX$$e sur l'update de la DW   */
+/* CREE_LE	: Cette valeur sera positionnée sur l'update de la DW   */
+/* MAJ_LE	: Cette valeur sera positionnée sur l'update de la DW   */
 /* MAJ_PAR                                                          */
 /* CPT_VER                                                          */
 /* LIB_MOTIF                                                        */
 /* ALT_MAC_AVANT                                                    */
 /* ALT_OPE_AVANT                                                    */
-/* ID_I_AVANT : Positionn$$HEX4$$e9002000e0002000$$ENDHEX$$""                                     */
+/* ID_I_AVANT : Positionné à ""                                     */
 /*------------------------------------------------------------------*/
 	For	lCpt = 1 To lTotMotif
 			sLigne = sLigne 																								+ &
@@ -1681,8 +1681,8 @@ private subroutine uf_changerproduit ();//*-------------------------------------
 //* Fonction		: Uf_ChangerProduit (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 23/01/1998 17:40:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: A t-on chang$$HEX2$$e9002000$$ENDHEX$$de produit ou de r$$HEX1$$e900$$ENDHEX$$vision ?
+//* Libellé			: 
+//* Commentaires	: A t-on changé de produit ou de révision ?
 //*
 //* Arguments		: Aucun
 //*
@@ -1691,13 +1691,13 @@ private subroutine uf_changerproduit ();//*-------------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* L'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement Ue_Initialisation n'est d$$HEX1$$e900$$ENDHEX$$clench$$HEX1$$e900$$ENDHEX$$e qu'une seule      */
-/* fois. Or la fen$$HEX1$$ea00$$ENDHEX$$tre de traitement d$$HEX1$$e900$$ENDHEX$$tail a besoin de savoir si   */
-/* le produit a chang$$HEX1$$e900$$ENDHEX$$. Il faut donc faire le test sur              */
+/* L'événement Ue_Initialisation n'est déclenchée qu'une seule      */
+/* fois. Or la fenêtre de traitement détail a besoin de savoir si   */
+/* le produit a changé. Il faut donc faire le test sur              */
 /* Uf_PreparerModifier et Uf_PreparerInserer.                       */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* Les initialisations relatives au Produit/R$$HEX1$$e900$$ENDHEX$$vision auront lieu    */
+/* Les initialisations relatives au Produit/Révision auront lieu    */
 /* ici.                                                             */
 /*------------------------------------------------------------------*/
 Long lIdProd, lIdRev
@@ -1707,7 +1707,7 @@ lIdRev		= idw_wSin.GetItemNumber ( 1, "ID_REV" )
 
 If	lIdProd <> ilDernierIdProd Or lIdRev <> ilDernierIdRev	Then
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$initialise la liste des pi$$HEX1$$e800$$ENDHEX$$ces et des motifs (DW_SOURCE).   */
+/* On réinitialise la liste des pièces et des motifs (DW_SOURCE).   */
 /*------------------------------------------------------------------*/
 	Uf_GestionuTagger_Piece ( 0 )
 	Uf_GestionuTagger_Refus ( 0 )
@@ -1725,10 +1725,10 @@ private subroutine uf_preparervalider (ref s_pass astpass);//*------------------
 //* Fonction		: Uf_PreparerValider (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Pr$$HEX1$$e900$$ENDHEX$$paration de la validation d'un d$$HEX1$$e900$$ENDHEX$$tail
+//* Libellé			: 
+//* Commentaires	: Préparation de la validation d'un détail
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
@@ -1740,17 +1740,17 @@ DataWindowChild	dwChild
 String	sFiltre
 
 /*------------------------------------------------------------------*/
-/* On s'occupe du transfert des pi$$HEX1$$e800$$ENDHEX$$ces du d$$HEX1$$e900$$ENDHEX$$tail.                   */
+/* On s'occupe du transfert des pièces du détail.                   */
 /*------------------------------------------------------------------*/
 Uf_PreparerValider_Piece ( astPass )
 
 /*------------------------------------------------------------------*/
-/* On s'occupe du transfert des refus du d$$HEX1$$e900$$ENDHEX$$tail.                    */
+/* On s'occupe du transfert des refus du détail.                    */
 /*------------------------------------------------------------------*/
 Uf_PreparerValider_Refus ( astPass )
 
 /*------------------------------------------------------------------*/
-/* On s'occupe du transfert des plafonds du d$$HEX1$$e900$$ENDHEX$$tail.                 */
+/* On s'occupe du transfert des plafonds du détail.                 */
 /*------------------------------------------------------------------*/
 Uf_PreparerValider_Plafond ( astPass )
 
@@ -1765,8 +1765,8 @@ Uf_PreparerValider_OngDivers ( )
 /* Le 21/04/1999. Modif. pour la couverture UF des autres cartes.   */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$sactive le filtre sur ID_TYPE_CARTE. Ce filtre peut $$HEX1$$ea00$$ENDHEX$$tre    */
-/* positionn$$HEX2$$e9002000$$ENDHEX$$dans la fonction Uf_Zn_IdEvt ()                       */
+/* On désactive le filtre sur ID_TYPE_CARTE. Ce filtre peut être    */
+/* positionné dans la fonction Uf_Zn_IdEvt ()                       */
 /*------------------------------------------------------------------*/
 sFiltre = ""
 
@@ -1785,10 +1785,10 @@ private subroutine uf_preparervalider_piece (ref s_pass astpass);//*------------
 //* Fonction		: Uf_PreparerValider_Piece (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Pr$$HEX1$$e900$$ENDHEX$$paration de la validation d'un d$$HEX1$$e900$$ENDHEX$$tail (Niveau PIECE)
+//* Libellé			: 
+//* Commentaires	: Préparation de la validation d'un détail (Niveau PIECE)
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
@@ -1803,12 +1803,12 @@ Boolean 		bModif
 bModif		= False
 
 /*------------------------------------------------------------------*/
-/* On s'occupe du transfert des pi$$HEX1$$e800$$ENDHEX$$ces du d$$HEX1$$e900$$ENDHEX$$tail.                  */
+/* On s'occupe du transfert des pièces du détail.                  */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* On va v$$HEX1$$e900$$ENDHEX$$rifier si l'une pi$$HEX1$$e800$$ENDHEX$$ce a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$touch$$HEX1$$e900$$ENDHEX$$. (Modification        */
+/* On va vérifier si l'une pièce a été touché. (Modification        */
 /* possible sur ALT_RECLAME ou ID_I). Si c'est le cas, on supprime  */
-/* toutes les pi$$HEX1$$e800$$ENDHEX$$ces (en modification) et on ins$$HEX1$$e900$$ENDHEX$$re les autres.     */
+/* toutes les pièces (en modification) et on insére les autres.     */
 /*------------------------------------------------------------------*/
 lTotTagTrt = iuoTagPiece.dw_Trt.RowCount ()
 
@@ -1831,8 +1831,8 @@ Next
 If	bModif	Then
 	If	Not astPass.bInsert Then
 /*------------------------------------------------------------------*/
-/* On a touch$$HEX4$$e9002000e0002000$$ENDHEX$$l'une des pi$$HEX1$$e800$$ENDHEX$$ces. On supprime, en modification,    */
-/* les pi$$HEX1$$e800$$ENDHEX$$ces pr$$HEX1$$e900$$ENDHEX$$alablement coch$$HEX1$$e900$$ENDHEX$$s.                                 */
+/* On a touché à l'une des pièces. On supprime, en modification,    */
+/* les pièces préalablement cochés.                                 */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* On positionne le flag pour l'optimisation des commandes sur      */
@@ -1855,7 +1855,7 @@ If	bModif	Then
 	End If
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re uniquement les pi$$HEX1$$e800$$ENDHEX$$ces qui sont r$$HEX1$$e900$$ENDHEX$$clam$$HEX1$$e900$$ENDHEX$$es.              */
+/* On insére uniquement les pièces qui sont réclamées.              */
 /*------------------------------------------------------------------*/
 	sFiltre = "ALT_RECLAME = 'O'"
 
@@ -1879,10 +1879,10 @@ private subroutine uf_preparervalider_refus (ref s_pass astpass);//*------------
 //* Fonction		: Uf_PreparerValider_Refus (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Pr$$HEX1$$e900$$ENDHEX$$paration de la validation d'un d$$HEX1$$e900$$ENDHEX$$tail (Niveau REFUS)
+//* Libellé			: 
+//* Commentaires	: Préparation de la validation d'un détail (Niveau REFUS)
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
@@ -1897,12 +1897,12 @@ Boolean 		bModif
 bModif		= False
 
 /*------------------------------------------------------------------*/
-/* On s'occupe du transfert des refus du d$$HEX1$$e900$$ENDHEX$$tail.                    */
+/* On s'occupe du transfert des refus du détail.                    */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* On va v$$HEX1$$e900$$ENDHEX$$rifier si l'un des refus a boug$$HEX1$$e900$$ENDHEX$$. (Modification possible */
+/* On va vérifier si l'un des refus a bougé. (Modification possible */
 /* sur ALT_MAC, ALT_OPE ou ID_I). Si c'est le cas, on supprime      */
-/* tous les refus (en modification) et on ins$$HEX1$$e900$$ENDHEX$$re les autres.        */
+/* tous les refus (en modification) et on insére les autres.        */
 /*------------------------------------------------------------------*/
 lTotTagTrt = iuoTagRefus.dw_Trt.RowCount ()
 
@@ -1928,8 +1928,8 @@ Next
 If	bModif	Then
 	If	Not astPass.bInsert Then
 /*------------------------------------------------------------------*/
-/* On a touch$$HEX4$$e9002000e0002000$$ENDHEX$$l'un des refus. On supprime, en modification,      */
-/* les refus pr$$HEX1$$e900$$ENDHEX$$alablement coch$$HEX1$$e900$$ENDHEX$$s.                                  */
+/* On a touché à l'un des refus. On supprime, en modification,      */
+/* les refus préalablement cochés.                                  */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* On positionne le flag pour l'optimisation des commandes sur      */
@@ -1952,7 +1952,7 @@ If	bModif	Then
 	End If
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re uniquement les refus qui sont coch$$HEX1$$e900$$ENDHEX$$s.                  */
+/* On insére uniquement les refus qui sont cochés.                  */
 /*------------------------------------------------------------------*/
 	sFiltre = "ALT_MAC = 'O' Or ALT_OPE = 'O'"
 
@@ -1976,8 +1976,8 @@ private subroutine uf_gestiongarantie ();//*------------------------------------
 //* Fonction		: Uf_GestionGarantie (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 23/01/1998 17:40:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Modification cosm$$HEX1$$e900$$ENDHEX$$tique d'un d$$HEX1$$e900$$ENDHEX$$tail en fonction d'une garantie
+//* Libellé			: 
+//* Commentaires	: Modification cosmétique d'un détail en fonction d'une garantie
 //*
 //* Arguments		: Aucun
 //*
@@ -1986,7 +1986,7 @@ private subroutine uf_gestiongarantie ();//*------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JFF    11/05/2004  DCMP 040149 GMP (gti 23)
-//* #2    JFF	  05/11/2004  Gestion particuli$$HEX1$$e800$$ENDHEX$$re pour le DNT/DM
+//* #2    JFF	  05/11/2004  Gestion particulière pour le DNT/DM
 //* #3    JFF    02/11/2009  [DCMP071000].[JFF]
 //        JFF    24/01/2012  [CONFO][CUISINE][PC680]
 //*-----------------------------------------------------------------
@@ -2000,7 +2000,7 @@ sMod			= ""
 
 // #3  [DCMP071000].[JFF]
 If lIdGti = 23 Then
-	sMod += "mt_val_achat_t.Text = 'Nouveau prix constat$$HEX1$$e900$$ENDHEX$$' "
+	sMod += "mt_val_achat_t.Text = 'Nouveau prix constaté' "
 	idw_wDetailFF.Modify ( sMod )
 	sMod = ""
 End If
@@ -2014,7 +2014,7 @@ If lDeb > 0 Then
 		idw_wDetailFF.Modify ( sMod )
 		sMod = ""
 	Else
-		sMod += "mt_val_achat_t.Text = 'Montant en " + stGlb.smonnaiesymboledesire + " de la Qt$$HEX1$$e900$$ENDHEX$$'"
+		sMod += "mt_val_achat_t.Text = 'Montant en " + stGlb.smonnaiesymboledesire + " de la Qté'"
 		idw_wDetailFF.Modify ( sMod )
 		sMod = ""
 	End IF
@@ -2022,10 +2022,10 @@ End IF
 // [CONFO][CUISINE][PC680]
 
 /*------------------------------------------------------------------*/
-/* La premi$$HEX1$$e800$$ENDHEX$$re chose est de filtrer les $$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nements. La zone ID_EVT  */
+/* La première chose est de filtrer les événements. La zone ID_EVT  */
 /* est une DDDW. Elle correspond au SELECT sur la table             */
 /* CODE_CONDITION (+EV) toutes garanties confondues. Il faut donc   */
-/* filtrer les $$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nements en fonction de ID_GTI.                    */
+/* filtrer les événements en fonction de ID_GTI.                    */
 /*------------------------------------------------------------------*/
 idw_CodeCondition.SetFilter ( "ID_GTI = " + String ( lIdGti ) )
 idw_CodeCondition.Filter ()
@@ -2054,13 +2054,13 @@ For lCpt = lDeb To lFin
 	End If
 
 	/*------------------------------------------------------------------*/
-	/* On s'occupe du libell$$HEX2$$e9002000$$ENDHEX$$sur DTE_DET.                              */
+	/* On s'occupe du libellé sur DTE_DET.                              */
 	/*------------------------------------------------------------------*/
 	Choose Case lIdGti
 /* #3  [DCMP071000].[JFF]
 	// #1
 	Case	23
-		sMod += "mt_val_achat_t.Text = 'Nouveau prix constat$$HEX1$$e900$$ENDHEX$$' "
+		sMod += "mt_val_achat_t.Text = 'Nouveau prix constaté' "
 */
 	// #2
 	Case	15
@@ -2093,7 +2093,7 @@ private subroutine uf_tb_detail ();//*------------------------------------------
 //* Fonction		: Uf_Tb_Detail (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 17:35:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion des TabOrder en saisie
 //*
 //* Arguments		: Aucun
@@ -2140,19 +2140,19 @@ sCol [ 18 ] = "NUM_FACTURE"
 sCol [ 19 ] = "MT_VAL_PUBLIQUE"
 
 /*------------------------------------------------------------------*/
-/* Si le d$$HEX1$$e900$$ENDHEX$$tail est d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gl$$HEX1$$e900$$ENDHEX$$, aucune zone n'est accessible.       */
+/* Si le détail est déjà réglé, aucune zone n'est accessible.       */
 /*------------------------------------------------------------------*/
 If	idw_wDetailFF.GetItemNumber ( 1, "COD_ETAT" ) = 600	Then
 	idw_wDetailFF.Uf_Proteger ( sCol, "1" )
 Else
 /*------------------------------------------------------------------*/
-/* Si le niveau de l'op$$HEX1$$e900$$ENDHEX$$rateur le permet, on rend la zone ALT_REG   */
+/* Si le niveau de l'opérateur le permet, on rend la zone ALT_REG   */
 /* accessible.                                                      */
 /*------------------------------------------------------------------*/
 	If	Long ( stGLB.sTypOper ) >= idw_Produit.GetItemNumber ( 1, "COD_NIV_OPE" )	Then
 		idw_wDetailFF.Uf_Proteger ( { "ALT_REG" }, "0" )
 /*------------------------------------------------------------------*/
-/* Le montant plafonn$$HEX2$$e9002000$$ENDHEX$$est accessible si ALT_REG est $$HEX2$$e0002000$$ENDHEX$$OUI.         */
+/* Le montant plafonné est accessible si ALT_REG est à OUI.         */
 /*------------------------------------------------------------------*/
 		Uf_Tb_AltReg ()
 	Else
@@ -2160,7 +2160,7 @@ Else
 	End If
 
 /*------------------------------------------------------------------*/
-/* Si le dossier a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$valid$$HEX2$$e9002000$$ENDHEX$$au moins 1 fois, ID_EVT est non       */
+/* Si le dossier a été validé au moins 1 fois, ID_EVT est non       */
 /* accessible.                                                      */
 /*------------------------------------------------------------------*/
 	If	idw_wDetailFF.GetItemNumber ( 1, "CPT_VALIDE" ) > 0 Then
@@ -2176,8 +2176,8 @@ Else
 /*------------------------------------------------------------------*/
 /* Modification DBI le 18/08/1998                                   */
 /*                                                                  */
-/* isNomCol $$HEX1$$e900$$ENDHEX$$tait arm$$HEX2$$e9002000$$ENDHEX$$avec ID_EVT or le tri sur preparerInserer    */
-/* ou preparermodifier d$$HEX1$$e900$$ENDHEX$$clenche un itemfocuschanged                */
+/* isNomCol était armé avec ID_EVT or le tri sur preparerInserer    */
+/* ou preparermodifier déclenche un itemfocuschanged                */
 /*------------------------------------------------------------------*/
 	idw_wDetailFF.isNomCol = ""
 
@@ -2220,13 +2220,13 @@ End If
 
 
 If bCasto Then
-	idw_wDetailFF.Modify ( "mt_val_achat_t.Text= 'Montant en " + stGlb.smonnaiesymboledesire + " de la Qt$$HEX1$$e900$$ENDHEX$$'" ) //[SUISSE].LOT3
+	idw_wDetailFF.Modify ( "mt_val_achat_t.Text= 'Montant en " + stGlb.smonnaiesymboledesire + " de la Qté'" ) //[SUISSE].LOT3
 
 	Choose Case idw_wDetailFF.GetItemNumber ( 1, "ID_GTI")
 		Case 11, 27
 			idw_wDetailFF.Modify ( "mt_prej_t.Text= 'Mt Fact. Mensuelle~n~rCastorama'" )
 		Case Else
-			idw_wDetailFF.Modify ( "mt_prej_t.Text= 'Mt Pr$$HEX1$$e900$$ENDHEX$$judice'" )
+			idw_wDetailFF.Modify ( "mt_prej_t.Text= 'Mt Préjudice'" )
 	End CHoose 
 
 End If
@@ -2253,7 +2253,7 @@ private subroutine uf_tb_AltReg ();//*------------------------------------------
 //* Fonction		: Uf_Tb_AltReg (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 17:35:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion des TabOrder pour les zones ALT_REG, MT_PLAF
 //*
 //* Arguments		: Aucun
@@ -2276,7 +2276,7 @@ private subroutine uf_zn_libdet ();//*------------------------------------------
 //* Fonction		: Uf_Zn_LibDet (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 08/01/1998 17:14:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Controle de LIB_DET
 //*
 //* Arguments		: Aucun
@@ -2290,8 +2290,8 @@ String sVal, sLibDet
 sVal = idw_wDetailFF.GetText ()
 
 /*------------------------------------------------------------------*/
-/* Il faut remettre le libell$$HEX4$$e9002000e0002000$$ENDHEX$$NUL car on n'utilise pas le        */
-/* principe de l'anc$$HEX1$$ea00$$ENDHEX$$tre U_DataWindow avec iiCarNul. (Impossible $$HEX3$$e00020002000$$ENDHEX$$*/
+/* Il faut remettre le libellé à NUL car on n'utilise pas le        */
+/* principe de l'ancêtre U_DataWindow avec iiCarNul. (Impossible à  */
 /* faire puisqu'il faut s'occuper de la zone ALT_COUR)              */
 /*------------------------------------------------------------------*/
 If	IsNull ( sVal ) Or sVal = ""	Then
@@ -2299,8 +2299,8 @@ If	IsNull ( sVal ) Or sVal = ""	Then
 	idw_wDetailFF.SetItem ( 1, "ALT_COUR", "N" )
 Else
 /*------------------------------------------------------------------*/
-/* Si on vient 'ajouter' des caract$$HEX1$$e800$$ENDHEX$$res au libell$$HEX1$$e900$$ENDHEX$$, on v$$HEX1$$e900$$ENDHEX$$rifie si   */
-/* la personne voulait d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$faire appara$$HEX1$$ee00$$ENDHEX$$tre ce libell$$HEX2$$e9002000$$ENDHEX$$sur le      */
+/* Si on vient 'ajouter' des caractères au libellé, on vérifie si   */
+/* la personne voulait déjà faire apparaître ce libellé sur le      */
 /* courrier.                                                        */
 /*------------------------------------------------------------------*/
 	sLibDet = idw_wDetailFF.GetItemString ( 1, "LIB_DET" )
@@ -2316,24 +2316,24 @@ private subroutine uf_controlersaisie (ref s_pass astpass);//*------------------
 //* Fonction		: Uf_ControlerSaisie (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Contr$$HEX1$$f400$$ENDHEX$$le de saisie du d$$HEX1$$e900$$ENDHEX$$tail
+//* Libellé			: 
+//* Commentaires	: Contrôle de saisie du détail
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1	 JFF		09/05/2006 DCMP060324
-//* #2    MADM    06/07/2006 DCMP 060472 FNAC Suissse-Belgique permettre le r$$HEX1$$e800$$ENDHEX$$glement $$HEX2$$e0002000$$ENDHEX$$0 euros sur option 57   
+//* #2    MADM    06/07/2006 DCMP 060472 FNAC Suissse-Belgique permettre le règlement à 0 euros sur option 57   
 //* #3 	 PHG		30/05/07 [DCMP070284] Gestion des Refus automatique pour la PGC
 //* #4    JFF     04/06/2007  [DCMP070163-070164-070248-070318] Gestion Prise en charge
 //* #5    JFF     28/01/2008  [DCMP080028]
 //* #6	 JFF	   20/10/2008	[FNAC_PROD_ECH_TECH]
-//* #7	FPI	10/02/2010	[CASTO_SWAP] Contr$$HEX1$$f400$$ENDHEX$$le de la zone "ref_article_casto" propre $$HEX2$$e0002000$$ENDHEX$$Casto
+//* #7	FPI	10/02/2010	[CASTO_SWAP] Contrôle de la zone "ref_article_casto" propre à Casto
 //* #8	FPI	26/02/2010	[20100226.FPI] Correction colonne en erreur
-//			FPI	18/02/2011	[VDoc3233] Modif du message pour date du d$$HEX1$$e900$$ENDHEX$$tail
+//			FPI	18/02/2011	[VDoc3233] Modif du message pour date du détail
 //			FPI	07/09/2011	[VDoc5257]
 //       JFF   24/01/2012  [CONFO][CUISINE][PC680]
 //		FPI	14/12/2015	[CTL_INTER_PC_REFUS]
@@ -2369,7 +2369,7 @@ F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" 
 bConfo = lDeb > 0
 
 /*------------------------------------------------------------------*/
-/* Cette variable permet de d$$HEX1$$e900$$ENDHEX$$terminer au retour de la fonction     */
+/* Cette variable permet de déterminer au retour de la fonction     */
 /* (Wf_ControlerSaisie) on se positionne sur Dw_1 ou si arme        */
 /* idwControle.                                                     */
 /* Si lChoixDw = 0 -> dw_1                                          */
@@ -2386,11 +2386,11 @@ Uf_Gestion_Str2Nul ()
 
 sCol[ 1 ] = "ID_EVT"
 
-sErr[ 1 ] = " - Le code $$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement"
+sErr[ 1 ] = " - Le code événement"
 
 /*------------------------------------------------------------------*/
-/* Si ALT_SSUI est positionn$$HEX4$$e9002000e0002000$$ENDHEX$$OUI, il faut oblogatoirement avoir  */
-/* un COD_MOT_SSUI renseign$$HEX1$$e900$$ENDHEX$$, mais diff$$HEX1$$e900$$ENDHEX$$rent de 0.                  */
+/* Si ALT_SSUI est positionné à OUI, il faut oblogatoirement avoir  */
+/* un COD_MOT_SSUI renseigné, mais différent de 0.                  */
 /*------------------------------------------------------------------*/
 If	idw_wDetailFF.GetItemString ( 1, "ALT_SSUI" ) = "O" And  &
 	( idw_wDetailFF.GetItemNumber ( 1, "COD_MOT_SSUI" ) = 0 Or IsNull ( idw_wDetailFF.GetItemNumber ( 1, "COD_MOT_SSUI" ) ) ) Then
@@ -2403,13 +2403,13 @@ If	idw_wDetailFF.GetItemString ( 1, "ALT_SSUI" ) = "O" And  &
 End If
 
 /*------------------------------------------------------------------*/
-/* Si l'heure du d$$HEX1$$e900$$ENDHEX$$tail est positionn$$HEX1$$e900$$ENDHEX$$e mais que la date est        */
+/* Si l'heure du détail est positionnée mais que la date est        */
 /* vide, il faut interdire la saisie.                               */
 /*------------------------------------------------------------------*/
 sHeure = idw_wDetailFF.GetItemString ( 1, "HEU_DET" )
 If	IsNull ( idw_wDetailFF.GetItemDate ( 1, "DTE_DET_DATE" ) ) And ( sHeure <> "" Or Not IsNull ( sHeure ) ) Then
 	sPos = "DTE_DET_DATE"
-	sText = sText + " - La date du d$$HEX1$$e900$$ENDHEX$$tail (Si l'heure est pr$$HEX1$$e900$$ENDHEX$$sente)" + sNouvelleLigne
+	sText = sText + " - La date du détail (Si l'heure est présente)" + sNouvelleLigne
 
 	stMessage.sVar[1] 	= sText
 	stMessage.bErreurG	= TRUE
@@ -2417,7 +2417,7 @@ If	IsNull ( idw_wDetailFF.GetItemDate ( 1, "DTE_DET_DATE" ) ) And ( sHeure <> ""
 
 Else
 /*------------------------------------------------------------------*/
-/* Dans le cas contraire, on positionne la date du d$$HEX1$$e900$$ENDHEX$$tail au bon    */
+/* Dans le cas contraire, on positionne la date du détail au bon    */
 /* format.                                                          */
 /*------------------------------------------------------------------*/
 	If IsNull ( sHeure ) Or sHeure = "" Then
@@ -2429,7 +2429,7 @@ Else
 End If
 
 /*------------------------------------------------------------------*/
-/* Toutes les pi$$HEX1$$e800$$ENDHEX$$ces r$$HEX1$$e900$$ENDHEX$$clam$$HEX1$$e900$$ENDHEX$$es doivent avoir un interlocuteur.      */
+/* Toutes les pièces réclamées doivent avoir un interlocuteur.      */
 /*------------------------------------------------------------------*/
 If	sPos = "" Then
 	lTotPiece = iuoTagPiece.dw_Trt.RowCount ()
@@ -2440,7 +2440,7 @@ If	sPos = "" Then
 				lIdPce = iuoTagPiece.dw_Trt.GetItemNumber ( lCpt, "ID_PCE" ) 
 
 				iuoTagPiece.dw_Trt.SetRow ( lCpt )
-				sText				= sText + " - L'interlocuteur pour la pi$$HEX1$$e800$$ENDHEX$$ce " + String ( lIdPce ) + sNouvelleLigne
+				sText				= sText + " - L'interlocuteur pour la pièce " + String ( lIdPce ) + sNouvelleLigne
 
 				stMessage.sVar[1] 	= sText
 				stMessage.bErreurG	= TRUE
@@ -2472,12 +2472,12 @@ If	sPos = "" Then
 End If
 
 /*------------------------------------------------------------------*/
-/* S'il existe des PIECES et des REFUS OPERATEURS de coch$$HEX1$$e900$$ENDHEX$$s, en     */
-/* m$$HEX1$$ea00$$ENDHEX$$me temps, on demande au gestionnaire de faire quelque chose.   */
+/* S'il existe des PIECES et des REFUS OPERATEURS de cochés, en     */
+/* même temps, on demande au gestionnaire de faire quelque chose.   */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* S'il existe des PIECES ou des REFUS OPERATEURS de coch$$HEX1$$e900$$ENDHEX$$s, et     */
-/* que l'op$$HEX1$$e900$$ENDHEX$$rateur positionne le dossier en ATTENTE, on lui         */
+/* S'il existe des PIECES ou des REFUS OPERATEURS de cochés, et     */
+/* que l'opérateur positionne le dossier en ATTENTE, on lui         */
 /* demande de faire quelque chose.                                  */
 /*------------------------------------------------------------------*/
 If	sPos = "" Then
@@ -2510,7 +2510,7 @@ End If
 
 If	sPos = "" Then
 /*------------------------------------------------------------------*/
-/* on v$$HEX1$$e900$$ENDHEX$$rifie simplement les colonnes obligatoires.                 */
+/* on vérifie simplement les colonnes obligatoires.                 */
 /* ID_EVT                                                           */
 /*------------------------------------------------------------------*/
 	For	lCpt = 1 To lNbrCol
@@ -2533,7 +2533,7 @@ If	sPos = "" Then
 	Else
 /*------------------------------------------------------------------*/
 /* Le 10/12/1998                                                    */
-/* Si le d$$HEX1$$e900$$ENDHEX$$tail est SANS SUITE, on force la zone MT_PREJ $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro.    */
+/* Si le détail est SANS SUITE, on force la zone MT_PREJ à zéro.    */
 /* Sinon, le calcul sur MT_TOT_PREJ de la garantie sera faux.       */
 /*------------------------------------------------------------------*/
 		If	idw_wDetailFF.GetItemString ( 1, "ALT_SSUI" ) = "O"	Then
@@ -2541,14 +2541,14 @@ If	sPos = "" Then
 		End If
 /*------------------------------------------------------------------*/
 /* Le 10/12/1998                                                    */
-/* Si la zone MT_PREJ est $$HEX2$$e0002000$$ENDHEX$$0.00, on positionne la zone ID_I_REG $$HEX3$$e00020002000$$ENDHEX$$*/
+/* Si la zone MT_PREJ est à 0.00, on positionne la zone ID_I_REG à  */
 /* NULL.                                                            */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* # Modification SFR # Le 17/07/2002.                              */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* La zone ID_I_REG doit $$HEX1$$ea00$$ENDHEX$$tre mise $$HEX2$$e0002000$$ENDHEX$$NULL si MT_PREJ est $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro,    */
+/* La zone ID_I_REG doit être mise à NULL si MT_PREJ est à zéro,    */
 /* sauf dans le cas des produits SFR et uniquement dans le cas      */
 /* d'une garantie PANNE (18).                                       */
 /*------------------------------------------------------------------*/
@@ -2613,7 +2613,7 @@ If	sPos = "" And idw_wDetailFF.GetItemString ( 1, "ALT_BLOC" ) <> "O" Then
 			If Not bVal Then
 				If sPos = "" Then sPos = "DTE_DET_DATE"
 				// sText = sText + " - La date de d'achat" + sNouvelleLigne
-				sText = sText + " - La date du d$$HEX1$$e900$$ENDHEX$$tail" + sNouvelleLigne// 	[VDoc3233] 
+				sText = sText + " - La date du détail" + sNouvelleLigne// 	[VDoc3233] 
 				
 				stMessage.sCode		= "GENE001"
 				stMessage.bErreurG	= TRUE
@@ -2659,7 +2659,7 @@ If	sPos = "" And idw_wDetailFF.GetItemString ( 1, "ALT_BLOC" ) <> "O" Then
 End If
 
 /*------------------------------------------------------------------*/
-/* #3 [DCMP070284] On controle les donn$$HEX1$$e900$$ENDHEX$$es pour la Prologantion     */
+/* #3 [DCMP070284] On controle les données pour la Prologantion     */
 /* Garantie Constructeur                                            */
 /*------------------------------------------------------------------*/
 If	sPos = "" And idw_wDetailFF.GetItemString ( 1, "ALT_BLOC" ) <> "O" Then
@@ -2686,7 +2686,7 @@ If lDeb > 0 and lIdGti = 18 Then
 	if sVal[1]="" Then
 		stMessage.sCode		= "GENE001"
 		stMessage.bErreurG	= TRUE
-		stMessage.sVar[1] 	+="- la r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence de l'article Castorama" + sNouvelleLigne
+		stMessage.sVar[1] 	+="- la référence de l'article Castorama" + sNouvelleLigne
 		// #8 - [20100226.FPI]
 		If sPos = "" Then
 			sOng="04"
@@ -2713,7 +2713,7 @@ If lDeb > 0 and lIdGti = 18 Then
 	If sPos = "" and not isNumber(sVal[1]) Then
 		stMessage.sCode		= "GENE002"
 		stMessage.bErreurG	= TRUE
-		stMessage.sVar[1]  ="r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence de l'article Castorama"
+		stMessage.sVar[1]  ="référence de l'article Castorama"
 		// #8 - [20100226.FPI]
 //		sPos = "ALT_BLOC"
 		sPos = "VAL_CAR"		
@@ -2747,11 +2747,11 @@ End if*/
 // :[VDoc5059]
 
 /*------------------------------------------------------------------*/
-/* Affichage de la cha$$HEX1$$ee00$$ENDHEX$$ne correspondant au message d'erreur         */
+/* Affichage de la chaîne correspondant au message d'erreur         */
 /*------------------------------------------------------------------*/
 If	sPos <> "" Then
 
-	stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de saisie du d$$HEX1$$e900$$ENDHEX$$tail"
+	stMessage.sTitre		= "Contrôle de saisie du détail"
 	stMessage.Icon			= Information!
 
 	f_Message ( stMessage )
@@ -2797,25 +2797,25 @@ private subroutine uf_controlergestion (ref s_pass astpass);//*-----------------
 //* Fonction		: Uf_ControlerGestion (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Contr$$HEX1$$f400$$ENDHEX$$le de gestion d'un d$$HEX1$$e900$$ENDHEX$$tail
+//* Libellé			: 
+//* Commentaires	: Contrôle de gestion d'un détail
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1    JFF    06/11/2003  Ajout d'un contr$$HEX1$$f400$$ENDHEX$$le sur la zone MT_VAL_ACHAT
+//* #1    JFF    06/11/2003  Ajout d'un contrôle sur la zone MT_VAL_ACHAT
 //* #2	 JFF	  16/07/2004  Gestion onglet divers.
-//* #3	 JCA		13/11/2006	DCMP 060826	- controle r$$HEX1$$e900$$ENDHEX$$glement fournisseur
+//* #3	 JCA		13/11/2006	DCMP 060826	- controle réglement fournisseur
 //* #4	 JCA		13/02/2007	DCMP 060928	- controle pour la garantie clef (id_gti = 1) tout produit
-//* #5	 JCA		01/06/2007	DCMP 070304	- possibilit$$HEX2$$e9002000$$ENDHEX$$de mettre sans suite les details de garantie pour les produits avec l'option 75
+//* #5	 JCA		01/06/2007	DCMP 070304	- possibilité de mettre sans suite les details de garantie pour les produits avec l'option 75
 //* #6    JFF     04/06/2007  [DCMP070163-070164-070248-070318] Gestion Prise en charge
 //* #7    JFF     04/09/2007  [DCMP070431]
 //* #8	 PHG		05/09/2007	[DCMP070510] MEssage d'alerte pour Role 508 Si plafonds
 //* #9	 PHG		12/12/2007	[O2M]	: Controle de Gestion pour Flux O2M sur le detail correspondant
-//* #10	 FPI		05/03/2009	Contr$$HEX1$$f400$$ENDHEX$$le date de facturation <= date du jour
+//* #10	 FPI		05/03/2009	Contrôle date de facturation <= date du jour
 //*       JFF     12/04/2010  [O2M_DIAG_NOMADE].Lot2.JFF.[20100412131826877]
 //*       JFF     27/04/2010  [O2M_DIAG_NOMADE].Lot2.JFF.[20100427143447010]
 //*		 JFF		06/05/2010  [20100506164646807]
@@ -2832,14 +2832,14 @@ private subroutine uf_controlergestion (ref s_pass astpass);//*-----------------
 //	       JFF     04/10/2012  [ITSM131178][PLAF_REF]
 // 		 JFF	   29/01/2013  [PC801_MANTIS6481]
 //		FPI	27/02/2013	 [ITSM147960] Epuration de zones de l'onglet Divers
-//		FPI	03/04/2013	[REG_FACTU_DIAG] Contr$$HEX1$$f400$$ENDHEX$$le sur le r$$HEX1$$e800$$ENDHEX$$glement de diagnostic BLC
-//		FPI	18/04/2013	[VDoc10924] Ajout ctrl valeur d'achat diff$$HEX1$$e900$$ENDHEX$$rent
+//		FPI	03/04/2013	[REG_FACTU_DIAG] Contrôle sur le règlement de diagnostic BLC
+//		FPI	18/04/2013	[VDoc10924] Ajout ctrl valeur d'achat différent
 //		FPI 	15/05/2013	[PC926]
 //    JFF   06/06/2013  [VDOC11003] ajout AND STATUS_GC NOT IN ( 2, 21 )
 //		FPI	11/06/2013	[PC845]
 //	   FPI	14/08/2013	[DT058]
 //    JFF   27/11/2013  [ITSM18204]
-//		FPI	26/12/2013	[PC864_1] Mantis 8099 - r$$HEX1$$e800$$ENDHEX$$glement du d$$HEX1$$e900$$ENDHEX$$tail $$HEX2$$e0002000$$ENDHEX$$0
+//		FPI	26/12/2013	[PC864_1] Mantis 8099 - règlement du détail à 0
 //    JFF   13/01/2014  [PM246]
 //    JFF   20/02/2014  [VDOC13754]
 //    JFF   01/07/2014  [PM246-2_GPS_OV3]
@@ -2876,6 +2876,7 @@ private subroutine uf_controlergestion (ref s_pass astpass);//*-----------------
 //    JFF   07/08/2019  [PM462-1][V3]
 //    JFF   15/01/2020  [VDOC28827]/[VDOC28866]
 //    JFF   22/12/2021  [RS1472_DT432_BRED]
+//    JFF   05/08/2024  [MCO602_PNEU]
 //*-----------------------------------------------------------------
 String 		sPos, sOng, sPosPec, sFiltreOrig, sVal1, sVal 
 Long lTotwRefus, lCpt, lDeb, lFin, lCptDetPro, lVal, lIdProd, lTrouve, lVal1, lValOrig
@@ -2907,7 +2908,7 @@ String sRech
 Long lLig
 
 
-stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de gestion d'un d$$HEX1$$e900$$ENDHEX$$tail"
+stMessage.sTitre		= "Contrôle de gestion d'un détail"
 stMessage.Icon			= Information!
 stMessage.bErreurG	= FALSE
 stMessage.sCode		= "" // #6
@@ -2930,7 +2931,7 @@ sMarqPortSin = Upper( idw_Wsin.GetItemString ( 1, "MARQ_PORT" ) )
 bAltReg = idw_wDetailFF.GetItemString ( 1, "ALT_REG" ) = "O"
 
 /*------------------------------------------------------------------*/
-/* On positionne la zone ALT_VALIDE du d$$HEX1$$e900$$ENDHEX$$tail $$HEX2$$e0002000$$ENDHEX$$OUI.                */
+/* On positionne la zone ALT_VALIDE du détail à OUI.                */
 /*------------------------------------------------------------------*/
 idw_wDetailFF.SetItem ( 1, "ALT_VALIDE", "O" )
 bDetailBloque = idw_wDetailFF.GetItemString ( 1, "ALT_BLOC" ) = "O"
@@ -2984,7 +2985,7 @@ If lIdEvt = 1439 Then
 End If	
 
 /*------------------------------------------------------------------*/
-/* Si le dossier n'est pas bloqu$$HEX1$$e900$$ENDHEX$$, on d$$HEX1$$e900$$ENDHEX$$clenche la gestion des      */
+/* Si le dossier n'est pas bloqué, on déclenche la gestion des      */
 /* Refus.                                                           */
 /*------------------------------------------------------------------*/
 If	Not bDetailBloque Then
@@ -3008,7 +3009,7 @@ If	Not bDetailBloque Then
 					idw_wDivDet.SetItem ( lRowDD , "ID_GTI", idw_wDetailFF.GetItemNumber ( 1, "ID_GTI" ) )	
 					idw_wDivDet.SetItem ( lRowDD , "ID_DETAIL", idw_wDetailFF.GetItemNumber ( 1, "ID_DETAIL" ) )		 
 					idw_wDivDet.SetItem ( lRowDD , "NOM_ZONE", "val_pub_orange_utilisee" )
-					idw_wDivDet.SetItem ( lRowDD , "LIB_LABEL", "Valeur publique Orange Utilis$$HEX1$$e900$$ENDHEX$$e" )
+					idw_wDivDet.SetItem ( lRowDD , "LIB_LABEL", "Valeur publique Orange Utilisée" )
 					idw_wDivDet.SetItem ( lRowDD , "ID_TYP_LISTE", "-XX" )
 					idw_wDivDet.SetItem ( lRowDD , "ALT_LISTE_CODECAR", "N")
 					idw_wDivDet.SetItem ( lRowDD , "ID_TYP_ZONE", "X" )
@@ -3036,8 +3037,8 @@ If	Not bDetailBloque Then
 /*------------------------------------------------------------------*/
 /* Modification DBI le 23/09/1998                                   */
 /* On calcule la date de 1er uf non plus sur la garantie mais sur   */
-/* les d$$HEX1$$e900$$ENDHEX$$tails                                                      */
-/* on en a besoin pour calculer le d$$HEX1$$e900$$ENDHEX$$lai 625                        */
+/* les détails                                                      */
+/* on en a besoin pour calculer le délai 625                        */
 /*------------------------------------------------------------------*/
 
 	uf_Calculer_dt_1er_Uf ( )
@@ -3046,16 +3047,16 @@ If	Not bDetailBloque Then
 End If
 
 /*------------------------------------------------------------------*/
-/* A l'issue de la gestion des refus, il faut r$$HEX1$$e900$$ENDHEX$$initialiser la      */
-/* zone ID_I $$HEX2$$e0002000$$ENDHEX$$NULL pour tous les refus non coch$$HEX1$$e900$$ENDHEX$$s. En effet si la  */
-/* personne fait deux fois CTRL+VAL, on ne touche pas $$HEX2$$e0002000$$ENDHEX$$la zone     */
+/* A l'issue de la gestion des refus, il faut réinitialiser la      */
+/* zone ID_I à NULL pour tous les refus non cochés. En effet si la  */
+/* personne fait deux fois CTRL+VAL, on ne touche pas à la zone     */
 /* ID_I. Cela n'a aucune importance pour la validation, puisqu'on   */
-/* utilise les zones ALT_MAC et ALT_OPE, mais on peut $$HEX1$$e900$$ENDHEX$$viter un     */
+/* utilise les zones ALT_MAC et ALT_OPE, mais on peut éviter un     */
 /* DELETE et un INSERT sur les REFUS.                               */
 /*------------------------------------------------------------------*/
 If	sPos = "" Then
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine le code $$HEX1$$e900$$ENDHEX$$tat du dossier.                            */
+/* On détermine le code état du dossier.                            */
 /*------------------------------------------------------------------*/
 	Uf_Determiner_Etat ( 1 )			// COD_DEC_MAC
 	Uf_Determiner_Etat ( 2 )			// COD_DEC_OPE
@@ -3099,7 +3100,7 @@ If Not bDetailBloque And sPos = "" Then
 End If
 
 /*------------------------------------------------------------------*/
-/* On calcule maintenant le montant $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gler.                       */
+/* On calcule maintenant le montant à régler.                       */
 /*------------------------------------------------------------------*/
 If	sPos = "" Then
 	sPos = Uf_Calcul_MontantRegle ()
@@ -3126,9 +3127,9 @@ If sPos = "" Then
 End If
 
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie que les motifs de refus poss$$HEX1$$e900$$ENDHEX$$de un interlocuteur      */
+/* On vérifie que les motifs de refus posséde un interlocuteur      */
 /* sinon on affiche un message d'avertissement non bloquant.        */
-/* Uniquement dans les cas ou le dossier n'est pas bloqu$$HEX1$$e900$$ENDHEX$$.          */
+/* Uniquement dans les cas ou le dossier n'est pas bloqué.          */
 /*------------------------------------------------------------------*/
 If	idw_wDetailFF.GetItemString ( 1, "ALT_BLOC" ) = "N" Then
 	lTotwRefus = iuoTagRefus.dw_Trt.RowCount ()
@@ -3149,7 +3150,7 @@ If	idw_wDetailFF.GetItemString ( 1, "ALT_BLOC" ) = "N" Then
 				iIdi = iuoTagRefus.dw_Trt.GetItemNumber(lCpt,"ID_I")
 				sVal=idw_lstinter.GetItemString( idw_lstinter.Find("ID_I = " + String(iIdi),1,idw_lstinter.RowCount( )), "COD_INTER")
 				If sVal="L" or sVal="F" Then
-					stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de gestion d'une garantie"
+					stMessage.sTitre		= "Contrôle de gestion d'une garantie"
 					stMessage.Icon			= Information!
 					stMessage.bErreurG	= FALSE
 					stMessage.sCode		= "WGAR410"
@@ -3165,7 +3166,7 @@ If	idw_wDetailFF.GetItemString ( 1, "ALT_BLOC" ) = "N" Then
 	Next
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine au passage s'il faut afficher un bitmap dans        */
+/* On détermine au passage s'il faut afficher un bitmap dans        */
 /* l'onglet des refus.                                              */
 /*------------------------------------------------------------------*/
 	If	bBitMap	Then
@@ -3224,7 +3225,7 @@ If iEtat = 500 Then
 	If sPos = "" Then Uf_ControlerGestion_AltRegParam ( sPos )
 End If
 
-// #8 [DCMP070510] Message d'alerte si d$$HEX1$$e900$$ENDHEX$$clenchement de plafond pour le role 208
+// #8 [DCMP070510] Message d'alerte si déclenchement de plafond pour le role 208
 if uf_getautorisation( 208 ) and idw_wdetailFF.object.alt_plaf[1]="O" Then
 		stMessage.sCode = "GENE157"
 		stMessage.icon  = Information!
@@ -3233,7 +3234,7 @@ if uf_getautorisation( 208 ) and idw_wdetailFF.object.alt_plaf[1]="O" Then
 		F_Message ( stMessage )
 End If
 
-// #10 - Contr$$HEX1$$f400$$ENDHEX$$le date de facturation <= date du jour
+// #10 - Contrôle date de facturation <= date du jour
 if uf_getautorisation( 208 ) Then
 	dDteFact = Date( idw_wDetailFF.GetItemDateTime ( 1, "DTE_FACTURE" ) ) // [PI056]
 	if dDteFact > Today() Then
@@ -3345,7 +3346,7 @@ if sPos="" And iEtat = 500 And lIdEvt = 1389 Then
 		
 		Choose Case sVal
 			Case ""
-				// Zone "Centre de r$$HEX1$$e900$$ENDHEX$$paration" non renseign$$HEX1$$e900$$ENDHEX$$e
+				// Zone "Centre de réparation" non renseignée
 				stMessage.sCode = "WDET628"
 				stMessage.icon  = Information!
 				stMessage.bErreurG = False
@@ -3353,7 +3354,7 @@ if sPos="" And iEtat = 500 And lIdEvt = 1389 Then
 				F_Message ( stMessage )
 				sPos = "LIB_DET"
 			Case "CAL" 
-				// R$$HEX1$$e900$$ENDHEX$$paration Centre L$$HEX1$$1920$$ENDHEX$$auto Leclerc => pas de r$$HEX1$$e800$$ENDHEX$$glement des frais de d$$HEX1$$e900$$ENDHEX$$pose
+				// Réparation Centre L’auto Leclerc => pas de règlement des frais de dépose
 				stMessage.sCode = "WDET627"
 				stMessage.icon  = Information!
 				stMessage.bErreurG = False
@@ -3579,7 +3580,7 @@ If uf_GestOng_Divers_Trouver ("ALT_PEC" ) <> "O" AND &
 	// [ITSM529150]
 	Choose Case lIdGti
 		Case 10, 8, 12
-			// Pas de r$$HEX1$$e900$$ENDHEX$$paration, c'est normal
+			// Pas de réparation, c'est normal
 		Case Else
 			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 94 )
 			For lCptDetPro = lDeb To lFin
@@ -3595,7 +3596,7 @@ If uf_GestOng_Divers_Trouver ("ALT_PEC" ) <> "O" AND &
 												
 						If lRow <= 0 And lRow1 <= 0 And Not This.uf_GetAutorisation ( 208 ) Then
 							stMessage.sCode = "COMD841"
-							stMessage.sVar [1] = "un r$$HEX1$$e800$$ENDHEX$$glement"
+							stMessage.sVar [1] = "un règlement"
 							stMessage.icon  = Information!
 							stMessage.bErreurG = False
 							stMessage.bouton = Ok!
@@ -3760,7 +3761,7 @@ End If
 If lIdEvt = 1425 Then
 	SQLCA.PS_S01_AUTORISATION (9, stGlb.sCodOper, lIdprod, lTrouve)
 	If lTrouve <= 0 Then
-		stMessage.sTitre       = "R$$HEX1$$e900$$ENDHEX$$glement caution exceptionnel"
+		stMessage.sTitre       = "Réglement caution exceptionnel"
 		stMessage.bErreurG	= FALSE
 		stMessage.icon  = Exclamation!
 		stMessage.sCode		= "WDET650"
@@ -3770,59 +3771,63 @@ If lIdEvt = 1425 Then
 	End If
 End If
 
-// [DT227]
-F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 299 )	
-If lDeb > 0 Then
-	// JFF 07/06/2016 [DT227]
-	SQLCA.PS_S_DATE_PIVOT ( "DT227", dtDt1, dtDt2, dtDt3 ) 
-	
-	If dtCreeLe >= dtDt1 Then
+// [MCO602_PNEU] à Commenter (pas supprimer) définitivement
+If NOT F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
+	// [DT227]
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 299 )	
+	If lDeb > 0 Then
+		// JFF 07/06/2016 [DT227]
+		SQLCA.PS_S_DATE_PIVOT ( "DT227", dtDt1, dtDt2, dtDt3 ) 
 		
-		Choose Case lIdEvt
-			Case 1391
-				lVal1 = idw_LstCmdeDet.Find ( "COD_ETAT <> 'ANN' AND ID_TYP_ART = 'PRS'", 1, idw_LstCmdeDet.rowCount()+1 )						
-				If lVal1 <= 0 Then
-					stMessage.sTitre  	= "Leclerc Pneu"
-					stMessage.Icon			= Information!
-					stMessage.bErreurG	= FALSE
-					stMessage.Bouton		= Ok!
-					stMessage.sCode = "WDET652"
-					F_Message ( stMessage )
-					sPos = "ID_I_REG"
-				End If	
-				
-			Case 1397
-				lVal1 = idw_LstCmdeDet.Find ( "COD_ETAT <> 'ANN' AND ID_TYP_ART = 'PNE'", 1, idw_LstCmdeDet.rowCount()+1 )						
-				If lVal1 <= 0 Then
-					stMessage.sTitre  	= "Leclerc Pneu"
-					stMessage.Icon			= Information!
-					stMessage.bErreurG	= FALSE
-					stMessage.Bouton		= Ok!
-					stMessage.sCode = "WDET653"
-					F_Message ( stMessage )
-					sPos = "ID_I_REG"
-				End If
-				
-		End Choose 
-	End If
+		If dtCreeLe >= dtDt1 Then
+			
+			Choose Case lIdEvt
+				Case 1391
+					lVal1 = idw_LstCmdeDet.Find ( "COD_ETAT <> 'ANN' AND ID_TYP_ART = 'PRS'", 1, idw_LstCmdeDet.rowCount()+1 )						
+					If lVal1 <= 0 Then
+						stMessage.sTitre  	= "Leclerc Pneu"
+						stMessage.Icon			= Information!
+						stMessage.bErreurG	= FALSE
+						stMessage.Bouton		= Ok!
+						stMessage.sCode = "WDET652"
+						F_Message ( stMessage )
+						sPos = "ID_I_REG"
+					End If	
+					
+				Case 1397
+					lVal1 = idw_LstCmdeDet.Find ( "COD_ETAT <> 'ANN' AND ID_TYP_ART = 'PNE'", 1, idw_LstCmdeDet.rowCount()+1 )						
+					If lVal1 <= 0 Then
+						stMessage.sTitre  	= "Leclerc Pneu"
+						stMessage.Icon			= Information!
+						stMessage.bErreurG	= FALSE
+						stMessage.Bouton		= Ok!
+						stMessage.sCode = "WDET653"
+						F_Message ( stMessage )
+						sPos = "ID_I_REG"
+					End If
+					
+			End Choose 
+		End If
+	End If 
 End If 
+ 
 
 // [VDoc16817]
 If sPos="" and idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF" ) > 0 Then
-	// R$$HEX1$$e800$$ENDHEX$$glement > 0
+	// Règlement > 0
 	lVal = idw_wDetailFF.GetItemNumber ( 1, "ID_I_REG" )
 	lRow = idw_LstInter.Find ( "ID_I = " + String ( lVal ), 1, idw_LstInter.RowCount ())
 
 	If lRow > 0 Then
 		
 		If idw_LstInter.GetItemString ( lRow, "COD_INTER" ) <> "F" Then
-			// Destinataire Assur$$HEX2$$e9002000$$ENDHEX$$ou Autre
+			// Destinataire Assuré ou Autre
 			idw_wdetailff.GetChild( "ID_EVT", dwChild)
 			lRow=dwChild.Find("ID_CODE=" + String(idw_wdetailff.GetItemNumber(1,"ID_EVT")), 1, dwChild.Rowcount( ))
 			
 			If Left(Upper(dwChild.GetItemString(lRow, "LIB_CODE")),5) = "REMPL" Then
-				// Ev$$HEX1$$e800$$ENDHEX$$nement de remplacement
-				stMessage.sTitre       = "(VDoc16817) R$$HEX1$$e800$$ENDHEX$$glement assur$$HEX2$$e9002000$$ENDHEX$$interdit"
+				// Evènement de remplacement
+				stMessage.sTitre       = "(VDoc16817) Règlement assuré interdit"
 				stMessage.bErreurG	= FALSE
 				stMessage.sCode		= "WDET643"
 				stMessage.bouton = Ok!
@@ -3832,7 +3837,7 @@ If sPos="" and idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF" ) > 0 Then
 			End if
 		End if
 		
-		// [REGL_LBE] - Si r$$HEX1$$e800$$ENDHEX$$glement LBE et pas de case "pas_de_rglt_fourn", on l'ajoute
+		// [REGL_LBE] - Si règlement LBE et pas de case "pas_de_rglt_fourn", on l'ajoute
 		If sPos="" And idw_LstInter.GetItemString ( lRow, "ID_FOUR") = "LBE" Then
 			lRowDD  = idw_wDivDet.Find ( "NOM_ZONE = 'pas_de_rglt_fourn'", 1, idw_wDivDet.RowCount () )				
 			If lRowDD  <= 0 Then
@@ -4094,14 +4099,14 @@ If Not bDetailBloque Then
 	If lDeb > 0 And iuoTagPiece.dw_Trt.Find ( "ALT_RECLAME = 'O'", 1, iuoTagPiece.dw_Trt.RowCount () ) > 0 Then		
 		Choose Case lIdEvt
 			Case 702, 711
-				/* Le contr$$HEX1$$f400$$ENDHEX$$le ne concerne pas que les dossiers du DT432, mais tous les dossiers
+				/* Le contrôle ne concerne pas que les dossiers du DT432, mais tous les dossiers
 				lRow = idw_wDivSin.Find ( "Upper (NOM_ZONE) = 'DT432_ID_SIN_EMETTEUR'", 1, idw_wDivSin.RowCount () ) 
 				If lRow >0 Then 
 					sVal = Trim ( Upper ( idw_wDivSin.GetItemString ( lRow, "VAL_CAR" ) ))
 					If IsNull ( sVal) Then sVal = ""
 					
 					If sVal <> "" Then*/
-						stMessage.sTitre		= "DT432/RS1472 : Demande de pi$$HEX1$$e800$$ENDHEX$$ces interdite"
+						stMessage.sTitre		= "DT432/RS1472 : Demande de pièces interdite"
 						stMessage.bErreurG	= FALSE
 						stMessage.sCode		= "WDET679 "
 						stMessage.Icon			= information!
@@ -4123,10 +4128,10 @@ private function boolean uf_rf_ecrirerefus (long alrefus);//*-------------------
 //* Fonction		: Uf_Rf_EcrireRefus (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 26/02/1998 15:21:26
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
-//* Arguments		: Long		alRefus			(Val)	N$$HEX2$$b0002000$$ENDHEX$$du Refus
+//* Arguments		: Long		alRefus			(Val)	N° du Refus
 //*
 //* Retourne		: Boolean		Vrai = Le refus existe, on vient de le cocher.
 //*										Faux = Le refus n'existe pas.
@@ -4160,7 +4165,7 @@ If	lLig > 0 Then
 Else
 	bRet = False
 
-	stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de saisie du d$$HEX1$$e900$$ENDHEX$$tail"
+	stMessage.sTitre		= "Contrôle de saisie du détail"
 	stMessage.Icon			= Information!
 	stMessage.sVar[1] 	= String ( alRefus )
 	stMessage.bErreurG	= False
@@ -4178,8 +4183,8 @@ private function boolean uf_rf_614 ();//*---------------------------------------
 //* Fonction		: Uf_Rf_614 (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 26/02/1998 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Ev$$HEX1$$e900$$ENDHEX$$nement non couvert
+//* Libellé			: 
+//* Commentaires	: Evénement non couvert
 //*
 //* Arguments		: Aucun
 //*
@@ -4195,8 +4200,8 @@ String sRech
 Boolean bRet
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche ce motif si l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement saisi n'est pas couvert.    */
-/* On envoie le test uniquement si la r$$HEX1$$e900$$ENDHEX$$vision est connue.          */
+/* On déclenche ce motif si l'événement saisi n'est pas couvert.    */
+/* On envoie le test uniquement si la révision est connue.          */
 /*------------------------------------------------------------------*/
 bRet = True
 
@@ -4210,7 +4215,7 @@ If	idw_wSin.GetItemNumber ( 1, "ID_REV" ) <> -1	Then
 	lLig = idw_Condition.Find ( sRech, 1, lTotCondition )
 
 /*------------------------------------------------------------------*/
-/* L'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement n'est pas couvert, on d$$HEX1$$e900$$ENDHEX$$clenche le refus.            */
+/* L'événement n'est pas couvert, on déclenche le refus.            */
 /*------------------------------------------------------------------*/
 	If	lLig = 0 Then
 		bRet = Uf_RF_EcrireRefus ( 614 )
@@ -4230,8 +4235,8 @@ private function boolean uf_gestionrefus ();//*---------------------------------
 //* Fonction		: Uf_GestionRefus (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 23/01/1998 17:40:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On d$$HEX1$$e900$$ENDHEX$$marre la gestion des refus
+//* Libellé			: 
+//* Commentaires	: On démarre la gestion des refus
 //*
 //* Arguments		: Aucun
 //*
@@ -4240,11 +4245,11 @@ private function boolean uf_gestionrefus ();//*---------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #2	 JFF	  26/10/2004  DCMP 040406 Si Option 26, on ne d$$HEX1$$e900$$ENDHEX$$clenche pas le refus 633
+//* #2	 JFF	  26/10/2004  DCMP 040406 Si Option 26, on ne déclenche pas le refus 633
 //* [DCMP060272]	PHG	31/05/2006 Ajout Seuil Inter sur val achat ( casto ) 
-//* #3  MADM 11/07/2006 DCMP 050393 Gestion de refus automatique entre $$HEX1$$e900$$ENDHEX$$v$$HEX1$$e800$$ENDHEX$$nements et nature de sinistre
+//* #3  MADM 11/07/2006 DCMP 050393 Gestion de refus automatique entre évènements et nature de sinistre
 //* #4	PHG	30/05/2007	[DCMP070284] Gestion des refus automatique pour la PGC
-//* #5	FPI	17/03/2009	[DCMP090107] Refus 650 et 654 d$$HEX1$$e900$$ENDHEX$$sactiv$$HEX2$$e9002000$$ENDHEX$$pour l'autorisation 208
+//* #5	FPI	17/03/2009	[DCMP090107] Refus 650 et 654 désactivé pour l'autorisation 208
 //* #6	FPI	29/09/2009	[DCMP090573] Refus 629
 //* #7	PHG	26/10/2009  [DCMP071000] REfus 655 ( Seuil d'intervention GMP ) + correction rf 651
 //* #8	FPI	10/02/2010	[CASTO_SWAP] Refus 644
@@ -4280,8 +4285,8 @@ s_Plafond_Pec stPlafPec // #1
 n_cst_string lnvPFCString
 
 /*------------------------------------------------------------------*/
-/* La premi$$HEX1$$e800$$ENDHEX$$re chose $$HEX2$$e0002000$$ENDHEX$$faire est de d$$HEX1$$e900$$ENDHEX$$cocher tous les refus         */
-/* machines pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dents.                                             */
+/* La première chose à faire est de décocher tous les refus         */
+/* machines précédents.                                             */
 /*------------------------------------------------------------------*/
 sPos = "" 
 
@@ -4299,7 +4304,7 @@ For	lCpt = 1 To lTotRefus
 Next
 
 //  [ITSM131064][PLAF_REF]
-// Si lRow <= 0 alors PEC suite placement projet, sinon, PEC r$$HEX2$$e900e900$$ENDHEX$$l
+// Si lRow <= 0 alors PEC suite placement projet, sinon, PEC réél
 lRow = idw_wDivDet.Find ( "ID_GTI = " + String ( lIdGti ) + " AND " + &
 								 "ID_DETAIL = " + String ( lIdDetail ) + " AND " + &
 								 "UPPER ( NOM_ZONE ) = 'ALT_PLAF_PEC' " + " AND " + &
@@ -4311,7 +4316,7 @@ lRow1 = idw_wDivDet.Find ( "ID_GTI = " + String ( lIdGti ) + " AND " + &
 								 "VAL_CAR = 'O'", 1, idw_wDivDet.RowCount() )							
 
 If lIdEvt = 1083 And lRow <= 0 And lRow1 > 0 Then
-	// On shunte le contr$$HEX1$$f400$$ENDHEX$$le des refus.
+	// On shunte le contrôle des refus.
 	Return TRUE
 End IF
 
@@ -4325,7 +4330,7 @@ If	Not Uf_Rf_633 () Then	Return ( False )
 If	Not Uf_Rf_634 () Then	Return ( False )
 If	Not Uf_Rf_635 () Then	Return ( False )
 If	Not Uf_Rf_636 () Then	Return ( False ) // [DCMP070284]
-// If	Not Uf_Rf_637 () Then	Return ( False ) // [DCMP070284] Appel$$HEX2$$e9002000$$ENDHEX$$sur condition dans le refus 636
+// If	Not Uf_Rf_637 () Then	Return ( False ) // [DCMP070284] Appelé sur condition dans le refus 636
 If	Not Uf_Rf_631 () Then	Return ( False )
 If	Not Uf_Rf_680 () Then	Return ( False )
 if Not This.uf_GetAutorisation(208)  Then// #5 [DCMP090107] 
@@ -4396,7 +4401,7 @@ End If
 
 //////////////////////////////////// Coder les refus au dessus //////////////////////////////////////////
 
-// [PLAF_REF] Code $$HEX2$$e0002000$$ENDHEX$$laisser $$HEX2$$e0002000$$ENDHEX$$la fin
+// [PLAF_REF] Code à laisser à la fin
 
 // A garder en pour le MEP
 
@@ -4553,8 +4558,8 @@ private function boolean uf_rf_632 ();//*---------------------------------------
 //* Fonction		: Uf_Rf_632 (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 26/02/1998 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: D$$HEX1$$e900$$ENDHEX$$bit avant le sinistre
+//* Libellé			: 
+//* Commentaires	: Débit avant le sinistre
 //*
 //* Arguments		: Aucun
 //*
@@ -4570,15 +4575,15 @@ Boolean bRet, bOk
 Long lIdGti, lDeb, lCpt, lFin
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche ce motif dans le cas de la garantie Utilisations    */
-/* Frauduleuses. Si la date de d$$HEX1$$e900$$ENDHEX$$tail est inf$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date de   */
+/* On déclenche ce motif dans le cas de la garantie Utilisations    */
+/* Frauduleuses. Si la date de détail est inférieure à la date de   */
 /* survenance, on arme le motif 632.                                */
 /*------------------------------------------------------------------*/
 
 bRet = True
 /*------------------------------------------------------------------*/
 /* Le 27/05/1999.                                                   */
-/* Modif DGA. Gestion des UF T$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone Mobile.                      */
+/* Modif DGA. Gestion des UF Téléphone Mobile.                      */
 /*------------------------------------------------------------------*/
 lIdGti = idw_wDetailFF.GetItemNumber ( 1, "ID_GTI" )
 
@@ -4596,7 +4601,7 @@ If Not bOk Then Return TRUE
 
 /*------------------------------------------------------------------*/
 /* [DCMP060533] Deconnexion du refus 632 par l'option 68 pour la    */
-/* garantie param$$HEX1$$e900$$ENDHEX$$tr$$HEX1$$e900$$ENDHEX$$e dans l'option 68 du produit                  */
+/* garantie paramétrée dans l'option 68 du produit                  */
 /*------------------------------------------------------------------*/
 
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_wSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 68 )
@@ -4642,8 +4647,8 @@ private subroutine uf_cast_dtedet ();//*----------------------------------------
 //* Fonction		: Uf_Cast_DteDet (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 08/01/1998 17:14:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On va d$$HEX1$$e900$$ENDHEX$$composer la zone DTE_DET dans DTE_DET_DATE et HEU_DET
+//* Libellé			: 
+//* Commentaires	: On va décomposer la zone DTE_DET dans DTE_DET_DATE et HEU_DET
 //*
 //* Arguments		: Aucun
 //*
@@ -4692,7 +4697,7 @@ private subroutine uf_zn_idevt ();//*-------------------------------------------
 //* Fonction		: Uf_Zn_IdEvt (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 08/01/1998 17:14:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Controle de ID_EVT
 //*
 //* Arguments		: Aucun
@@ -4727,7 +4732,7 @@ If	sLibDet = "" Or IsNull ( sLibDet ) Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Pour les produits avec COD_ADH = 3 ou 4, on arme par d$$HEX1$$e900$$ENDHEX$$faut la   */
+/* Pour les produits avec COD_ADH = 3 ou 4, on arme par défaut la   */
 /* zone NUM_CARTE avec la valeur de ID_ADH. On en profite aussi     */
 /* pour armer ID_CARTE et ID_TYPE_CARTE.                            */
 /*------------------------------------------------------------------*/
@@ -4756,26 +4761,26 @@ Case Else
 End Choose
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re l'attribut du champ NUM_CARTE.                       */
+/* On récupére l'attribut du champ NUM_CARTE.                       */
 /*------------------------------------------------------------------*/
 sRet = idw_wDetailFF.Describe ( "NUM_CARTE.Visible" )
 F_DecomposerChaine ( sRet, "~t", sTab )
 /*------------------------------------------------------------------*/
-/* On enleve la derni$$HEX1$$e800$$ENDHEX$$re double quote.                              */
+/* On enleve la dernière double quote.                              */
 /*------------------------------------------------------------------*/
 sTab[2] = Left ( sTab[2], Len ( sTab[2] ) -1 )
 sRet = "Evaluate ( '" + sTab[2] + "', 1 ) "
 
 /*------------------------------------------------------------------*/
-/* On peut maintenant $$HEX1$$e900$$ENDHEX$$valuer l'attribut de la colonne.             */
+/* On peut maintenant évaluer l'attribut de la colonne.             */
 /* 1-> Visible.                                                     */
 /* 0-> Invisible.                                                   */
 /*------------------------------------------------------------------*/
 sRet = idw_wDetailFF.Describe ( sRet )
 
 /*------------------------------------------------------------------*/
-/* La zone NUM_CARTE est visible, on v$$HEX1$$e900$$ENDHEX$$rifie si on peut l'armer     */
-/* avec une valeur pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dente.                                      */
+/* La zone NUM_CARTE est visible, on vérifie si on peut l'armer     */
+/* avec une valeur précédente.                                      */
 /*------------------------------------------------------------------*/
 If	sRet = "1" Then
 	Choose Case sCodAdh 
@@ -4786,8 +4791,8 @@ If	sRet = "1" Then
 
 	Case "1", "2", "5", "6"
 /*------------------------------------------------------------------*/
-/* Pour les produits avec COD_ADH = 1,2,5,6, on arme par d$$HEX1$$e900$$ENDHEX$$faut la  */
-/* zone NUM_CARTE avec le dernier N$$HEX2$$b0002000$$ENDHEX$$saisi (s'il existe). On en     */
+/* Pour les produits avec COD_ADH = 1,2,5,6, on arme par défaut la  */
+/* zone NUM_CARTE avec le dernier N° saisi (s'il existe). On en     */
 /* profite pour armer les zones ID_CARTE et ID_TYPE_CARTE.          */
 /*------------------------------------------------------------------*/
 		lTotDetail	= idw_wDetailFF.iudwDetailSource.RowCount ()
@@ -4822,8 +4827,8 @@ End If
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* On arme le filtre sur la saisie du type de carte. Ce filtre      */
-/* sera dans tous les cas repositionn$$HEX4$$e9002000e0002000$$ENDHEX$$"" sur le CTRL+VAL de la   */
-/* fen$$HEX1$$ea00$$ENDHEX$$tre ou sur RETOUR.                                           */
+/* sera dans tous les cas repositionné à "" sur le CTRL+VAL de la   */
+/* fenêtre ou sur RETOUR.                                           */
 /*------------------------------------------------------------------*/
 
 idw_wDetailFF.GetChild ( "ID_TYPE_CARTE", dwChild )
@@ -4844,10 +4849,10 @@ public subroutine uf_zn_trt_focus (ref s_pass astpass);//*----------------------
 //* Fonction		: Uf_Zn_Trt (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:27:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Traitement sur les zones de dw_wDetailFF (On vient de ItemFocusChanged)
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
@@ -4867,8 +4872,8 @@ private function boolean uf_rf_633 ();//*---------------------------------------
 //* Fonction		: Uf_Rf_633 (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 26/02/1998 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: D$$HEX1$$e900$$ENDHEX$$bit apr$$HEX1$$e900$$ENDHEX$$s opposition
+//* Libellé			: 
+//* Commentaires	: Débit aprés opposition
 //*
 //* Arguments		: Aucun
 //*
@@ -4883,8 +4888,8 @@ Boolean bRet, bOk
 Long lIdGti, lDeb, lFin, lCpt
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche ce motif dans le cas de la garantie Utilisations    */
-/* Frauduleuses. Si la date de d$$HEX1$$e900$$ENDHEX$$tail est sup$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date      */
+/* On déclenche ce motif dans le cas de la garantie Utilisations    */
+/* Frauduleuses. Si la date de détail est supérieure à la date      */
 /* d'opposition, on arme le motif 633.                              */
 /*------------------------------------------------------------------*/
 bRet = True
@@ -4894,7 +4899,7 @@ If lDeb > 0 Then Return True
 
 /*------------------------------------------------------------------*/
 /* Le 27/05/1999.                                                   */
-/* Modif DGA. Gestion des UF T$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone Mobile.                      */
+/* Modif DGA. Gestion des UF Téléphone Mobile.                      */
 /*------------------------------------------------------------------*/
 lIdGti = idw_wDetailFF.GetItemNumber ( 1, "ID_GTI" )
 
@@ -4945,8 +4950,8 @@ private function boolean uf_rf_634 ();//*---------------------------------------
 //* Fonction		: Uf_Rf_634 (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 26/02/1998 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Esp$$HEX1$$e900$$ENDHEX$$ces retir$$HEX1$$e900$$ENDHEX$$es apr$$HEX1$$e800$$ENDHEX$$s le sinistre
+//* Libellé			: 
+//* Commentaires	: Espéces retirées après le sinistre
 //*
 //* Arguments		: Aucun
 //*
@@ -4962,8 +4967,8 @@ Boolean bRet, bOk
 Long lDeb, lFin, lCpt, lIdGti
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche ce motif dans le cas de la garantie Esp$$HEX1$$e900$$ENDHEX$$ces. Si la  */
-/* date de d$$HEX1$$e900$$ENDHEX$$tail est sup$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date de survenance, on arme   */
+/* On déclenche ce motif dans le cas de la garantie Espéces. Si la  */
+/* date de détail est supérieure à la date de survenance, on arme   */
 /* le motif 634.                                                    */
 /*------------------------------------------------------------------*/
 
@@ -5015,8 +5020,8 @@ private function boolean uf_rf_631 ();//*---------------------------------------
 //* Fonction		: Uf_Rf_631 (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 26/02/1998 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Achats apr$$HEX1$$e800$$ENDHEX$$s le sinistre
+//* Libellé			: 
+//* Commentaires	: Achats après le sinistre
 //*
 //* Arguments		: Aucun
 //*
@@ -5025,9 +5030,9 @@ private function boolean uf_rf_631 ();//*---------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
-//* 	  JFF    22/09/99 On d$$HEX1$$e900$$ENDHEX$$clenche maintenant ce refus pour la garantie 9
-//*							si les dates et heures d'oppo n'ont pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$saisie et 
-//*						   que la date du d$$HEX1$$e900$$ENDHEX$$tail soit post$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date du sinistre.		
+//* 	  JFF    22/09/99 On déclenche maintenant ce refus pour la garantie 9
+//*							si les dates et heures d'oppo n'ont pas été saisie et 
+//*						   que la date du détail soit postérieure à la date du sinistre.		
 //* #1  JFF    18/04/06 [BUG_180406] Modification lGti en lIdGti
 //*-----------------------------------------------------------------
 Date 	  dDteSurv, dDteDet, dDetOppo
@@ -5036,8 +5041,8 @@ Boolean bRet, bGestionDateAchat, bGestionSpecialeGti9, bOk
 long	  lDeb, lFin, lCpt, lIdGti
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche ce motif dans le cas de la garantie Achats. Si la   */
-/* date de d$$HEX1$$e900$$ENDHEX$$tail est sup$$HEX1$$e900$$ENDHEX$$rieuere $$HEX2$$e0002000$$ENDHEX$$la date de survenance, on arme  */
+/* On déclenche ce motif dans le cas de la garantie Achats. Si la   */
+/* date de détail est supérieuere à la date de survenance, on arme  */
 /* le motif 631.                                                    */
 /*------------------------------------------------------------------*/
 
@@ -5083,8 +5088,8 @@ private function boolean uf_rf_680 ();//*---------------------------------------
 //* Fonction		: Uf_Rf_680 (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 26/02/1998 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Plafond par sinistre d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gl$$HEX1$$e900$$ENDHEX$$
+//* Libellé			: 
+//* Commentaires	: Plafond par sinistre déjà réglé
 //*
 //* Arguments		: Aucun
 //*
@@ -5093,10 +5098,10 @@ private function boolean uf_rf_680 ();//*---------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    	11/04/2003  Traitement des Plafonds paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$sur le contr$$HEX1$$f400$$ENDHEX$$ler
+//* #1 	 JFF    	11/04/2003  Traitement des Plafonds paramatrés sur les +NS, +DT, +TR
+//*								  déclenché sur le contrôler
 //* #2	 PHG		26/10/2009 [DCMP071000] rf 655+651: Annexe : Correction Bug
-//*								  pr$$HEX1$$e900$$ENDHEX$$sent sur toute les fonctions de refus.
+//*								  présent sur toute les fonctions de refus.
 //*-----------------------------------------------------------------
 
 Long lTotPlaf, lLig, lCptDetail, lNbrDetail, lIdEvt, lCpt
@@ -5122,13 +5127,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail de sinistre
+			sIdNivPlaf = "+DT"  // Détail de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -5136,7 +5141,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond 										  */
+	/* On vérifie s'il existe un plafond 										  */
 	/*------------------------------------------------------------------*/
 	// #2 [DCMP071000] Lecture ID_GTI dans idw_wDetailFF ald de idw_wGarSin
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
@@ -5153,7 +5158,7 @@ For lCpt = 2 to 5
 
 	/*------------------------------------------------------------------*/
 	/* On vient de trouver le plafond, on va calculer la somme des      */
-	/* montants d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gl$$HEX1$$e900$$ENDHEX$$s. (Pour le m$$HEX1$$ea00$$ENDHEX$$me $$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement, la m$$HEX1$$ea00$$ENDHEX$$me           */
+	/* montants déjà réglés. (Pour le même événement, la même           */
 	/* garantie).                                                       */
 	/*------------------------------------------------------------------*/
 		lIdEvt		= idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" )
@@ -5167,8 +5172,8 @@ For lCpt = 2 to 5
 		Next
 
 	/*------------------------------------------------------------------*/
-	/* Si le montant d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gl$$HEX2$$e9002000$$ENDHEX$$est sup$$HEX1$$e900$$ENDHEX$$rieur ou $$HEX1$$e900$$ENDHEX$$gal au montant du     */
-	/* plafond, on d$$HEX1$$e900$$ENDHEX$$clenche le refus 680.                              */
+	/* Si le montant déjà réglé est supérieur ou égal au montant du     */
+	/* plafond, on déclenche le refus 680.                              */
 	/*------------------------------------------------------------------*/
 		dcMtPlaf = idw_Plafond.GetItemDecimal ( lLig, "MT_PLAF" )
 		If	dcTotDejaRegle >= idw_Plafond.GetItemDecimal ( lLig, "MT_PLAF" ) Then
@@ -5185,7 +5190,7 @@ private function boolean uf_rf_650 ();//*---------------------------------------
 //* Fonction		: Uf_Rf_650 (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 26/02/1998 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Seuil d'intervention non atteint
 //*
 //* Arguments		: Aucun
@@ -5195,10 +5200,10 @@ private function boolean uf_rf_650 ();//*---------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$sur le contr$$HEX1$$f400$$ENDHEX$$ler
+//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatrés sur les +NS, +DT, +TR
+//*								  déclenché sur le contrôler
 //* #2		PHG	26/10/2009 [DCMP071000] rf 655+651: Annexe : Correction Bug
-//*								  pr$$HEX1$$e900$$ENDHEX$$sent sur toute les fonctions de refus.
+//*								  présent sur toute les fonctions de refus.
 //*-----------------------------------------------------------------
 
 Long lTotPlaf, lLig, lCpt
@@ -5214,7 +5219,7 @@ lTotPlaf 		= idw_Plafond.RowCount ()
 dcMtPrej			= idw_wDetailFF.GetItemDecimal ( 1, "MT_PREJ" )
 
 /*------------------------------------------------------------------*/
-/* Si le montant du pr$$HEX1$$e900$$ENDHEX$$judice est NULL ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro, on ne g$$HEX1$$e900$$ENDHEX$$re   */
+/* Si le montant du préjudice est NULL ou égal à zéro, on ne gére   */
 /* pas de refus.                                                    */
 /*------------------------------------------------------------------*/
 If	IsNull ( dcMtPrej ) Or dcMtPrej = 0 Then Return ( bRet )
@@ -5232,13 +5237,13 @@ For lCpt = 1 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail de sinistre
+			sIdNivPlaf = "+DT"  // Détail de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -5246,7 +5251,7 @@ For lCpt = 1 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond 										  */
+	/* On vérifie s'il existe un plafond 										  */
 	/*------------------------------------------------------------------*/
 	// #3 [DCMP071000] Lecture ID_GTI dans idw_wDetailFF ald de idw_wGarSin
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
@@ -5261,8 +5266,8 @@ For lCpt = 1 to 5
 
 	If	lLig > 0 Then
 /*------------------------------------------------------------------*/
-/* Si le montant du pr$$HEX1$$e900$$ENDHEX$$judice est strictement inf$$HEX1$$e900$$ENDHEX$$rieur au montant  */
-/* du plafond, on d$$HEX1$$e900$$ENDHEX$$clenche le refus 650.                           */
+/* Si le montant du préjudice est strictement inférieur au montant  */
+/* du plafond, on déclenche le refus 650.                           */
 /*------------------------------------------------------------------*/
 		If	dcMtPrej < idw_Plafond.GetItemDecimal ( lLig, "MT_PLAF" )	Then
 			bRet = Uf_RF_EcrireRefus ( 650 )
@@ -5278,8 +5283,8 @@ private function boolean uf_rf_660 ();//*---------------------------------------
 //* Fonction		: Uf_Rf_650 (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 26/02/1998 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Plafond d'intervention d$$HEX1$$e900$$ENDHEX$$pass$$HEX1$$e900$$ENDHEX$$
+//* Libellé			: 
+//* Commentaires	: Plafond d'intervention dépassé
 //*
 //* Arguments		: Aucun
 //*
@@ -5288,10 +5293,10 @@ private function boolean uf_rf_660 ();//*---------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$sur le contr$$HEX1$$f400$$ENDHEX$$ler
+//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatrés sur les +NS, +DT, +TR
+//*								  déclenché sur le contrôler
 //* #2		PHG	26/10/2009 [DCMP071000] rf 655+651: Annexe : Correction Bug
-//*								  pr$$HEX1$$e900$$ENDHEX$$sent sur toute les fonctions de refus.
+//*								  présent sur toute les fonctions de refus.
 //*-----------------------------------------------------------------
 
 Long lTotPlaf, lLig, lCpt
@@ -5320,13 +5325,13 @@ For lCpt = 1 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail de sinistre
+			sIdNivPlaf = "+DT"  // Détail de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -5334,7 +5339,7 @@ For lCpt = 1 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond 										  */
+	/* On vérifie s'il existe un plafond 										  */
 	/*------------------------------------------------------------------*/
 	// #1 [DCMP071000] Lecture ID_GTI dans idw_wDetailFF ald de idw_wGarSin
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
@@ -5350,8 +5355,8 @@ For lCpt = 1 to 5
 	If	lLig > 0 Then
 
 		/*------------------------------------------------------------------*/
-		/* Si le montant du pr$$HEX1$$e900$$ENDHEX$$judice est strictement sup$$HEX1$$e900$$ENDHEX$$rieur au montant  */
-		/* du plafond, on d$$HEX1$$e900$$ENDHEX$$clenche le refus 660.                           */
+		/* Si le montant du préjudice est strictement supérieur au montant  */
+		/* du plafond, on déclenche le refus 660.                           */
 		/*------------------------------------------------------------------*/
 		If	dcMtPrej > idw_Plafond.GetItemDecimal ( lLig, "MT_PLAF" )	Then
 			bRet = Uf_RF_EcrireRefus ( 660 )
@@ -5368,8 +5373,8 @@ private function string uf_determiner_etat (integer aitype);//*-----------------
 //* Fonction		: Uf_Determiner_Etat (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:27:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: D$$HEX1$$e900$$ENDHEX$$termination du Code Etat du d$$HEX1$$e900$$ENDHEX$$tail
+//* Libellé			: 
+//* Commentaires	: Détermination du Code Etat du détail
 //*
 //* Arguments		: Integer		aiType			(Val) 
 //*
@@ -5377,9 +5382,9 @@ private function string uf_determiner_etat (integer aitype);//*-----------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$sur le contr$$HEX1$$f400$$ENDHEX$$ler
-//* #2    MADM    06/07/2006 DCMP 060472 FNAC Suissse-Belgique permettre le r$$HEX1$$e800$$ENDHEX$$glement $$HEX2$$e0002000$$ENDHEX$$0 euros sur option 57   
+//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatrés sur les +NS, +DT, +TR
+//*								  déclenché sur le contrôler
+//* #2    MADM    06/07/2006 DCMP 060472 FNAC Suissse-Belgique permettre le règlement à 0 euros sur option 57   
 //* #3    JFF   04/06/2007   [DCMP070163-070164-070248-070318] Gestion Prise en charge
 //*-----------------------------------------------------------------
 
@@ -5396,7 +5401,7 @@ lIdEvt   = idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" )
 sRet		= ""
 
 Choose Case aiType
-Case 1					//	D$$HEX1$$e900$$ENDHEX$$termination du Code Etat Machine (COD_DEC_MAC)
+Case 1					//	Détermination du Code Etat Machine (COD_DEC_MAC)
 
 	If			idw_wDetailFF.GetItemString ( 1, "ALT_BLOC" ) = "O"	Then
 				lVal = 1
@@ -5404,8 +5409,8 @@ Case 1					//	D$$HEX1$$e900$$ENDHEX$$termination du Code Etat Machine (COD_DEC_M
 				lVal = 900
 	Else
 /*------------------------------------------------------------------*/
-/* Si au moins un refus (Op$$HEX1$$e900$$ENDHEX$$rateur ou Machine) est coch$$HEX1$$e900$$ENDHEX$$, on        */
-/* positionne le code $$HEX2$$e0002000$$ENDHEX$$200.                                        */
+/* Si au moins un refus (Opérateur ou Machine) est coché, on        */
+/* positionne le code à 200.                                        */
 /*------------------------------------------------------------------*/
 				lTotRefus = iuoTagRefus.dw_Trt.RowCount ()
 				For	lCpt = 1 To lTotRefus
@@ -5417,7 +5422,7 @@ Case 1					//	D$$HEX1$$e900$$ENDHEX$$termination du Code Etat Machine (COD_DEC_M
 						End If
 				Next
 /*------------------------------------------------------------------*/
-/* Si on r$$HEX1$$e900$$ENDHEX$$clame au moins une pi$$HEX1$$e800$$ENDHEX$$ce on positionne le code $$HEX2$$e0002000$$ENDHEX$$100.    */
+/* Si on réclame au moins une pièce on positionne le code à 100.    */
 /*------------------------------------------------------------------*/
 				If	lVal = 0	Then
 					lTotPce = iuoTagPiece.dw_Trt.RowCount ()
@@ -5430,19 +5435,19 @@ Case 1					//	D$$HEX1$$e900$$ENDHEX$$termination du Code Etat Machine (COD_DEC_M
 				End If
 /*------------------------------------------------------------------*/
 /* Si le dossier est en attente, ALT_ATT = 'O', on positionne le    */
-/* code $$HEX2$$e0002000$$ENDHEX$$100.                                                      */
+/* code à 100.                                                      */
 /*------------------------------------------------------------------*/
 				If	lVal = 0 And idw_wDetailFF.GetItemString ( 1, "ALT_ATT" ) = "O"	Then
 					lVal = 100
 				End If
 /*------------------------------------------------------------------*/
-/* Si le montant de pr$$HEX1$$e900$$ENDHEX$$judice n'est pas renseign$$HEX1$$e900$$ENDHEX$$, on positionne    */
-/* le code $$HEX2$$e0002000$$ENDHEX$$0. (Non control$$HEX1$$e900$$ENDHEX$$).                                     */
+/* Si le montant de préjudice n'est pas renseigné, on positionne    */
+/* le code à 0. (Non controlé).                                     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* # Modification SFR # Le 17/07/2002.                              */
 /*------------------------------------------------------------------*/
-/* Pour les produits SFR, le montant du pr$$HEX1$$e900$$ENDHEX$$judice peut $$HEX1$$ea00$$ENDHEX$$tre $$HEX1$$e900$$ENDHEX$$gal $$HEX3$$e00020002000$$ENDHEX$$*/
+/* Pour les produits SFR, le montant du préjudice peut être égal à  */
 /* 0 pour la garantie PANNE uniquement.                             */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
@@ -5478,7 +5483,7 @@ Case 1					//	D$$HEX1$$e900$$ENDHEX$$termination du Code Etat Machine (COD_DEC_M
 	End If
 	idw_wDetailFF.SetItem ( 1, "COD_DEC_MAC", lVal )
 
-Case 2					//	D$$HEX1$$e900$$ENDHEX$$termination du Code Etat Op$$HEX1$$e900$$ENDHEX$$rateur (COD_DEC_OPE)
+Case 2					//	Détermination du Code Etat Opérateur (COD_DEC_OPE)
 
 	If			idw_wDetailFF.GetItemString ( 1, "ALT_BLOC" ) = "O"	Then
 				lVal = 1
@@ -5488,8 +5493,8 @@ Case 2					//	D$$HEX1$$e900$$ENDHEX$$termination du Code Etat Op$$HEX1$$e900$$EN
 				lVal = 900
 	Else
 /*------------------------------------------------------------------*/
-/* Si au moins un refus (Op$$HEX1$$e900$$ENDHEX$$rateur) est coch$$HEX1$$e900$$ENDHEX$$, on positionne le     */
-/* code $$HEX2$$e0002000$$ENDHEX$$200.                                                      */
+/* Si au moins un refus (Opérateur) est coché, on positionne le     */
+/* code à 200.                                                      */
 /*------------------------------------------------------------------*/
 				lTotRefus = iuoTagRefus.dw_Trt.RowCount ()
 				For	lCpt = 1 To lTotRefus
@@ -5499,7 +5504,7 @@ Case 2					//	D$$HEX1$$e900$$ENDHEX$$termination du Code Etat Op$$HEX1$$e900$$EN
 						End If
 				Next
 /*------------------------------------------------------------------*/
-/* Si on r$$HEX1$$e900$$ENDHEX$$clame au moins une pi$$HEX1$$e800$$ENDHEX$$ce on positionne le code $$HEX2$$e0002000$$ENDHEX$$100.    */
+/* Si on réclame au moins une pièce on positionne le code à 100.    */
 /*------------------------------------------------------------------*/
 				If	lVal = 0	Then
 					lTotPce = iuoTagPiece.dw_Trt.RowCount ()
@@ -5512,14 +5517,14 @@ Case 2					//	D$$HEX1$$e900$$ENDHEX$$termination du Code Etat Op$$HEX1$$e900$$EN
 				End If
 /*------------------------------------------------------------------*/
 /* Si le dossier est en attente, ALT_ATT = 'O', on positionne le    */
-/* code $$HEX2$$e0002000$$ENDHEX$$100.                                                      */
+/* code à 100.                                                      */
 /*------------------------------------------------------------------*/
 				If	lVal = 0 And idw_wDetailFF.GetItemString ( 1, "ALT_ATT" ) = "O"	Then
 					lVal = 100
 				End If
 /*------------------------------------------------------------------*/
-/* Si au moins un des refus (Machine) est coch$$HEX1$$e900$$ENDHEX$$, on positionne le   */
-/* code $$HEX2$$e0002000$$ENDHEX$$200.                                                      */
+/* Si au moins un des refus (Machine) est coché, on positionne le   */
+/* code à 200.                                                      */
 /*------------------------------------------------------------------*/
 				If	lVal = 0 Then
 					For	lCpt = 1 To lTotRefus
@@ -5530,13 +5535,13 @@ Case 2					//	D$$HEX1$$e900$$ENDHEX$$termination du Code Etat Op$$HEX1$$e900$$EN
 					Next
 				End If
 /*------------------------------------------------------------------*/
-/* Si le montant de pr$$HEX1$$e900$$ENDHEX$$judice n'est pas renseign$$HEX1$$e900$$ENDHEX$$, on positionne    */
-/* le code $$HEX2$$e0002000$$ENDHEX$$0. (Non control$$HEX1$$e900$$ENDHEX$$).                                     */
+/* Si le montant de préjudice n'est pas renseigné, on positionne    */
+/* le code à 0. (Non controlé).                                     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* # Modification SFR # Le 17/07/2002.                              */
 /*------------------------------------------------------------------*/
-/* Pour les produits SFR, le montant du pr$$HEX1$$e900$$ENDHEX$$judice peut $$HEX1$$ea00$$ENDHEX$$tre $$HEX1$$e900$$ENDHEX$$gal $$HEX3$$e00020002000$$ENDHEX$$*/
+/* Pour les produits SFR, le montant du préjudice peut être égal à  */
 /* 0 pour la garantie PANNE uniquement.                             */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
@@ -5571,22 +5576,22 @@ Case 2					//	D$$HEX1$$e900$$ENDHEX$$termination du Code Etat Op$$HEX1$$e900$$EN
 	End If
 	idw_wDetailFF.SetItem ( 1, "COD_DEC_OPE", lVal )
 
-Case 3					//	D$$HEX1$$e900$$ENDHEX$$termination du Code Etat (COD_ETAT)
+Case 3					//	Détermination du Code Etat (COD_ETAT)
 
 	lCodDecOpe	= idw_wDetailFF.GetItemNumber ( 1, "COD_DEC_OPE" )
 	lCodDecMac	= idw_wDetailFF.GetItemNumber ( 1, "COD_DEC_MAC" )
 	lCodEtat		= 0
 
 /*------------------------------------------------------------------*/
-/* Si l'un des $$HEX1$$e900$$ENDHEX$$tats est $$HEX2$$e0002000$$ENDHEX$$0, il manque des informations, on        */
-/* positionne le COD_ETAT $$HEX2$$e0002000$$ENDHEX$$Non control$$HEX1$$e900$$ENDHEX$$.                           */
+/* Si l'un des états est à 0, il manque des informations, on        */
+/* positionne le COD_ETAT à Non controlé.                           */
 /*------------------------------------------------------------------*/
 	If	lCodDecOpe = 0 Or lCodDecMac = 0	Then
 /*------------------------------------------------------------------*/
 /* # Modification SFR # Le 17/07/2002.                              */
 /*------------------------------------------------------------------*/
-/* Affichage d'un message d'erreur sp$$HEX1$$e900$$ENDHEX$$cifique pour le cas ou le     */
-/* gestionnaire veuille r$$HEX1$$e900$$ENDHEX$$gler $$HEX2$$e0002000$$ENDHEX$$0 Euros, sans saisir de commande.  */
+/* Affichage d'un message d'erreur spécifique pour le cas ou le     */
+/* gestionnaire veuille régler à 0 Euros, sans saisir de commande.  */
 /*------------------------------------------------------------------*/
 		sRech			= "ID_GTI = 18 And COD_ETAT <> 'ANN'"
 		lTotCmdDet	= idw_LstCmdeDet.RowCount ()
@@ -5598,7 +5603,7 @@ Case 3					//	D$$HEX1$$e900$$ENDHEX$$termination du Code Etat (COD_ETAT)
 					stMessage.sCode		= "WDET150"
 		End If
 
-		stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le sur le d$$HEX1$$e900$$ENDHEX$$tail"
+		stMessage.sTitre		= "Contrôle sur le détail"
 		stMessage.Icon			= Information!
 		stMessage.bErreurG	= False
 
@@ -5618,9 +5623,9 @@ Case 3					//	D$$HEX1$$e900$$ENDHEX$$termination du Code Etat (COD_ETAT)
 		End If
 	End If
 /*------------------------------------------------------------------*/
-/* Si le COD_ETAT est $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$500 (A REGLER), on va v$$HEX1$$e900$$ENDHEX$$rifier que     */
-/* toutes les zones n$$HEX1$$e900$$ENDHEX$$cessaires (Sinistre, D$$HEX1$$e900$$ENDHEX$$tail) sont bien        */
-/* renseign$$HEX1$$e900$$ENDHEX$$es.                                                     */
+/* Si le COD_ETAT est égal à 500 (A REGLER), on va vérifier que     */
+/* toutes les zones nécessaires (Sinistre, Détail) sont bien        */
+/* renseignées.                                                     */
 /*------------------------------------------------------------------*/
 	If	lCodEtat = 500	Then
 		/*------------------------------------------------------------------*/
@@ -5642,12 +5647,12 @@ Case 3					//	D$$HEX1$$e900$$ENDHEX$$termination du Code Etat (COD_ETAT)
 			lCodEtat = 0
 		Else
 /*------------------------------------------------------------------*/
-/* On va v$$HEX1$$e900$$ENDHEX$$rifier s'il existe d'autres d$$HEX1$$e900$$ENDHEX$$tails 'A REGLER' pour des  */
-/* sinistres diff$$HEX1$$e900$$ENDHEX$$rents de celui en cours de traitement. (Avec      */
-/* adh$$HEX1$$e900$$ENDHEX$$sion identique).                                             */
+/* On va vérifier s'il existe d'autres détails 'A REGLER' pour des  */
+/* sinistres différents de celui en cours de traitement. (Avec      */
+/* adhésion identique).                                             */
 /* Si c'est le cas et qu'il existe au moins un plafond pour cette   */
-/* garantie-r$$HEX1$$e900$$ENDHEX$$vision, on doit bloquer le dossier et avertir le      */
-/* gestionnaire de valider le sinistre li$$HEX2$$e9002000$$ENDHEX$$avant.                   */
+/* garantie-révision, on doit bloquer le dossier et avertir le      */
+/* gestionnaire de valider le sinistre lié avant.                   */
 /*------------------------------------------------------------------*/
 			lTotPlaf	= idw_Plafond.RowCount ()
 			dcPlafSav = 0
@@ -5662,13 +5667,13 @@ Case 3					//	D$$HEX1$$e900$$ENDHEX$$termination du Code Etat (COD_ETAT)
 						sIdNivPlaf = "+NS"  // Nature de sinistre
 						sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 					Case 3
-						sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+						sIdNivPlaf = "+TR"  // Territorialité
 						sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 					Case 4
-						sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+						sIdNivPlaf = "+DT"  // Détail
 						sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 					Case 5
-						sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+						sIdNivPlaf = "+EV"  // Evénement de garantie
 						sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 				End Choose
@@ -5676,7 +5681,7 @@ Case 3					//	D$$HEX1$$e900$$ENDHEX$$termination du Code Etat (COD_ETAT)
 				If IsNull ( sIdRefPlaf ) Then Continue
 
 				/*------------------------------------------------------------------*/
-				/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+				/* On vérifie s'il existe un plafond										  */
 				/*------------------------------------------------------------------*/
 				sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 								"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -5724,8 +5729,8 @@ Case 3					//	D$$HEX1$$e900$$ENDHEX$$termination du Code Etat (COD_ETAT)
 
 				itrTrans.PS_S01_W_DETAIL_A_REGLER ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdGti, dcIdEvt, dtDteSurv, lNbDetail )
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e.                                    */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée.                                    */
 /*------------------------------------------------------------------*/
 				If	Not F_Procedure ( stMessage, itrTrans, "PS_S01_W_DETAIL_A_REGLER" )	Then
 					f_Message ( stMessage )
@@ -5733,7 +5738,7 @@ Case 3					//	D$$HEX1$$e900$$ENDHEX$$termination du Code Etat (COD_ETAT)
 					lCodEtat = 0
 				Else
 					If	lNbDetail > 0 Then
-						stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le sur le d$$HEX1$$e900$$ENDHEX$$tail"
+						stMessage.sTitre		= "Contrôle sur le détail"
 						stMessage.Icon			= Information!
 						stMessage.sVar[1]		= String ( lNbDetail )
 						stMessage.bErreurG	= False
@@ -5752,8 +5757,8 @@ Case 3					//	D$$HEX1$$e900$$ENDHEX$$termination du Code Etat (COD_ETAT)
 
 /*------------------------------------------------------------------*/
 /* Le 10/12/1998                                                    */
-/* Si le d$$HEX1$$e900$$ENDHEX$$tail n'est pas A REGLER (COD_ETAT=500), on positionne    */
-/* la zone ID_I_REG $$HEX2$$e0002000$$ENDHEX$$NULL.                                         */
+/* Si le détail n'est pas A REGLER (COD_ETAT=500), on positionne    */
+/* la zone ID_I_REG à NULL.                                         */
 /*------------------------------------------------------------------*/
 	If	idw_wDetailFF.GetItemNumber ( 1, "COD_ETAT" ) <> 500	Then
 		idw_wDetailFF.SetItem ( 1, "ID_I_REG", stNul.dcm )
@@ -5772,8 +5777,8 @@ private subroutine uf_fran_fixe ();//*------------------------------------------
 //* Fonction		: Uf_Fran_Fixe (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 26/02/1998 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Application d'une franchise fixe $$HEX1$$e900$$ENDHEX$$ventuelle
+//* Libellé			: 
+//* Commentaires	: Application d'une franchise fixe éventuelle
 //*
 //* Arguments		: Aucun
 //*
@@ -5781,14 +5786,14 @@ private subroutine uf_fran_fixe ();//*------------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$sur le contr$$HEX1$$f400$$ENDHEX$$ler
+//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatrés sur les +NS, +DT, +TR
+//*								  déclenché sur le contrôler
 //* #2	 JFF	  04/06/2004  DCMP 040235
 //* #3	 CAG	  25/06/2004  Les franchises de type NS, DT et TR n'ont pas de sens 
-//*								  sur le d$$HEX1$$e900$$ENDHEX$$tail puisqu'on les applique d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$sur la gti.
-//*								  ( Sinon appliqu$$HEX1$$e900$$ENDHEX$$es 2 fois, m$$HEX1$$ea00$$ENDHEX$$me si dans param on ne
-//*									 peut mettre une franchise que sur une gti XOR des d$$HEX1$$e900$$ENDHEX$$tails )
-//* #4	 CAG	  25/06/2004  Calcul de la franchise apr$$HEX1$$e800$$ENDHEX$$s application des plafonds => mt_plaf
+//*								  sur le détail puisqu'on les applique déjà sur la gti.
+//*								  ( Sinon appliquées 2 fois, même si dans param on ne
+//*									 peut mettre une franchise que sur une gti XOR des détails )
+//* #4	 CAG	  25/06/2004  Calcul de la franchise après application des plafonds => mt_plaf
 //			 JFF    13/01/2010  [PC363].[10%]
 //			 JFF    11/01/2010  [MANTIS3458][PC724]
 // 		 JFF	  01/06/2016  [VDOC20980]
@@ -5819,7 +5824,7 @@ For lCpt = 5 to 5
 
 	Choose Case lCpt
 		Case 5
-			sIdNivFra = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivFra = "+EV"  // Evénement de garantie
 			sIdRefFra = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 	End Choose
 
@@ -5829,7 +5834,7 @@ For lCpt = 5 to 5
 	For lCptTypFra = 1 To 3
 
 		/*------------------------------------------------------------------*/
-		/* Le cas 2 est trait$$HEX2$$e9002000$$ENDHEX$$par l'objet des garantie.	                 */
+		/* Le cas 2 est traité par l'objet des garantie.	                 */
 		/*------------------------------------------------------------------*/
 		Choose Case lCptTypFra
 			Case 1
@@ -5845,7 +5850,7 @@ For lCpt = 5 to 5
 		End Choose 
 
 		/*------------------------------------------------------------------*/
-		/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+		/* On vérifie s'il existe un plafond										  */
 		/*------------------------------------------------------------------*/
 		sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 						"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -5899,7 +5904,7 @@ lLig = lLigFinale
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
-/* On vient de trouver la franchise, Il ne reste plus qu'$$HEX11$$e0002000200020002000200020002000200020002000$$ENDHEX$$*/
+/* On vient de trouver la franchise, Il ne reste plus qu'à          */
 /* l'appliquer.                                                     */
 /*------------------------------------------------------------------*/
 If	lLig > 0 Then
@@ -5933,13 +5938,13 @@ If	lLig > 0 Then
 //	idw_wDetailFF.SetItem ( 1, "MT_NPLAF", dcMtPlaf )
 	idw_wDetailFF.SetItem ( 1, "MT_PLAF", dcMtPlaf )
 /*------------------------------------------------------------------*/
-/* Ne jamais faire un SetItem avec un GetItemNumber (Probl$$HEX1$$e800$$ENDHEX$$me de    */
-/* pr$$HEX1$$e900$$ENDHEX$$cision). Il faut passer dans une variable interm$$HEX1$$e900$$ENDHEX$$diaire.      */
+/* Ne jamais faire un SetItem avec un GetItemNumber (Problème de    */
+/* précision). Il faut passer dans une variable intermédiaire.      */
 /*------------------------------------------------------------------*/
 	idw_wDetailFF.SetItem ( 1, "MT_FRAN", dcMtFra )
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de franchise dans la DW uniquement si    */
-/* le montant est sup$$HEX1$$e900$$ENDHEX$$rieur $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro.                                 */
+/* On insére le paragraphe de franchise dans la DW uniquement si    */
+/* le montant est supérieur à zéro.                                 */
 /*------------------------------------------------------------------*/
 	If	dcMtFra > 0 Then
 		sIdPara	= idw_Franchise.GetItemString ( lLig, "ID_PARA" )
@@ -5949,8 +5954,8 @@ If	lLig > 0 Then
 End If
 
 //	 [PC363].[10%]
-//  Cette franchise est particuli$$HEX1$$e800$$ENDHEX$$re, param$$HEX1$$e800$$ENDHEX$$tr$$HEX1$$e900$$ENDHEX$$e dans les
-//  plafonds car utilis$$HEX2$$e9002000$$ENDHEX$$aussi dans les PEC.
+//  Cette franchise est particulière, paramètrée dans les
+//  plafonds car utilisé aussi dans les PEC.
 lTotPlaf = idw_Plafond.RowCount ()
 sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 				"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -5969,8 +5974,8 @@ If	lLig > 0 Then  // #2
 		// Condition : appareil incomplet chez O2M ?
 		bAppIncomplet = idw_LstCmdeSin.Find ( "COD_ETAT <> 'ANN' AND POS ( INFO_FRN_SPB_CPLT, 'APP_INCOMPLET=OUI', 1) >0", 1, idw_LstCmdeSin.RowCount () ) > 0
 
-		// Y a-t-il eu d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$une pec, si oui, on n'applique la franchise sur le r$$HEX1$$e900$$ENDHEX$$glt
-		// Car d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$appliqu$$HEX2$$e9002000$$ENDHEX$$sur la pec.
+		// Y a-t-il eu déjà une pec, si oui, on n'applique la franchise sur le réglt
+		// Car déjà appliqué sur la pec.
 		bPriseEnCharge = idw_wDivDet.Find ( &
 			 "ID_GTI = " + String ( idw_wDetailFF.GetItemNumber ( 1, "ID_GTI" ) ) + " AND " + &
 			 "ID_DETAIL = " + String ( idw_wDetailFF.GetItemNumber ( 1, "ID_DETAIL" ) ) + " AND " + &
@@ -5984,7 +5989,7 @@ If	lLig > 0 Then  // #2
 	
 				idw_wDetailFF.SetItem ( 1, "MT_PLAF", dcMtPlaf )
 				/*------------------------------------------------------------------*/
-				/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+				/* On insére le paragraphe de plafond dans la DW.                   */
 				/*------------------------------------------------------------------*/
 				sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 				sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -6019,8 +6024,8 @@ If	lLig > 0 Then  // #2
 			bCoqueNonAdapte = idw_wDivSin.GetItemString ( lRow, "VAL_CAR" ) = "O"
 		End If			
 
-		// Y a-t-il eu d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$une pec, si oui, on n'applique la franchise sur le r$$HEX1$$e900$$ENDHEX$$glt
-		// Car d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$appliqu$$HEX2$$e9002000$$ENDHEX$$sur la pec.
+		// Y a-t-il eu déjà une pec, si oui, on n'applique la franchise sur le réglt
+		// Car déjà appliqué sur la pec.
 		bPriseEnCharge = idw_wDivDet.Find ( &
 			 "ID_GTI = " + String ( idw_wDetailFF.GetItemNumber ( 1, "ID_GTI" ) ) + " AND " + &
 			 "ID_DETAIL = " + String ( idw_wDetailFF.GetItemNumber ( 1, "ID_DETAIL" ) ) + " AND " + &
@@ -6035,7 +6040,7 @@ If	lLig > 0 Then  // #2
 				idw_wDetailFF.SetItem ( 1, "MT_PLAF", dcMtPlaf )
 				idw_wDetailFF.SetItem ( 1, "MT_FRAN", dcMtFranchise )
 				/*------------------------------------------------------------------*/
-				/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+				/* On insére le paragraphe de plafond dans la DW.                   */
 				/*------------------------------------------------------------------*/
 				sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 				sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -6070,8 +6075,8 @@ If	lLig > 0 Then  // #2
 			bCoqueNeProtegePas = idw_wDivSin.GetItemString ( lRow, "VAL_CAR" ) = "O"
 		End If			
 
-		// Y a-t-il eu d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$une pec, si oui, on n'applique la franchise sur le r$$HEX1$$e900$$ENDHEX$$glt
-		// Car d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$appliqu$$HEX2$$e9002000$$ENDHEX$$sur la pec.
+		// Y a-t-il eu déjà une pec, si oui, on n'applique la franchise sur le réglt
+		// Car déjà appliqué sur la pec.
 		bPriseEnCharge = idw_wDivDet.Find ( &
 			 "ID_GTI = " + String ( idw_wDetailFF.GetItemNumber ( 1, "ID_GTI" ) ) + " AND " + &
 			 "ID_DETAIL = " + String ( idw_wDetailFF.GetItemNumber ( 1, "ID_DETAIL" ) ) + " AND " + &
@@ -6086,7 +6091,7 @@ If	lLig > 0 Then  // #2
 				idw_wDetailFF.SetItem ( 1, "MT_PLAF", dcMtPlaf )
 				idw_wDetailFF.SetItem ( 1, "MT_FRAN", dcMtFranchise )					
 				/*------------------------------------------------------------------*/
-				/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+				/* On insére le paragraphe de plafond dans la DW.                   */
 				/*------------------------------------------------------------------*/
 				sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 				sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -6132,8 +6137,8 @@ If	lLig > 0 Then  // #2
 			Next
 		End if
 					
-		// Y a-t-il eu d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$une pec, si oui, on n'applique la franchise sur le r$$HEX1$$e900$$ENDHEX$$glt
-		// Car d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$appliqu$$HEX2$$e9002000$$ENDHEX$$sur la pec.
+		// Y a-t-il eu déjà une pec, si oui, on n'applique la franchise sur le réglt
+		// Car déjà appliqué sur la pec.
 		bPriseEnCharge = idw_wDivDet.Find ( &
 			 "ID_GTI = " + String ( idw_wDetailFF.GetItemNumber ( 1, "ID_GTI" ) ) + " AND " + &
 			 "ID_DETAIL = " + String ( idw_wDetailFF.GetItemNumber ( 1, "ID_DETAIL" ) ) + " AND " + &
@@ -6148,7 +6153,7 @@ If	lLig > 0 Then  // #2
 				idw_wDetailFF.SetItem ( 1, "MT_PLAF", dcMtPlaf )
 				idw_wDetailFF.SetItem ( 1, "MT_FRAN", dcMtFranchise )
 				/*------------------------------------------------------------------*/
-				/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+				/* On insére le paragraphe de plafond dans la DW.                   */
 				/*------------------------------------------------------------------*/
 				sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 				sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -6165,8 +6170,8 @@ private function string uf_controlersaisie_si_reglement ();//*------------------
 //* Fonction		: Uf_ControlerSaisie_Si_Reglement (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Contr$$HEX1$$f400$$ENDHEX$$le de saisie du d$$HEX1$$e900$$ENDHEX$$tail s'il est $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gler
+//* Libellé			: 
+//* Commentaires	: Contrôle de saisie du détail s'il est à régler
 //*
 //* Arguments		: Aucun
 //*
@@ -6175,12 +6180,12 @@ private function string uf_controlersaisie_si_reglement ();//*------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
-//*  #1 JFF		23/11/99 Ajout de contr$$HEX1$$f400$$ENDHEX$$les pour r$$HEX1$$e900$$ENDHEX$$gler Gti 9
+//*  #1 JFF		23/11/99 Ajout de contrôles pour régler Gti 9
 //*  #2 JFF		12/05/04 DCMP 040149 GMP (gti 23 )
 //*  #3 JCA	   11/12/2007	DCMP 70920 / 70943 - 
 //*  #4 JFF    05/02/2008   [DCMP070921]
 //*  #4 JFF    16/11/2012   [VDOC9485]
-//*  #4 JFF    06/02/2013   [VDOC9485] Retour arri$$HEX1$$e800$$ENDHEX$$re
+//*  #4 JFF    06/02/2013   [VDOC9485] Retour arrière
 //*     JFF    03/09/2014   [DT92_FACTU_CASTO]
 //      JFF    21/05/2015   [VDOC17414]
 //      JFF    24/05/2019   [DT391-1]
@@ -6211,7 +6216,7 @@ bReglFourn = idw_LstInter.Find ( "ID_I = " + String ( lIdIAReg	) + " AND COD_INT
 
 
 /*------------------------------------------------------------------*/
-/* Le montant MT_PLAF doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$si ALT_REG est $$HEX1$$e900$$ENDHEX$$gal $$HEX6$$e00020002000200020002000$$ENDHEX$$*/
+/* Le montant MT_PLAF doit être renseigné si ALT_REG est égal à     */
 /* OUI.                                                             */
 /*------------------------------------------------------------------*/
 dcMtPlaf = idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF" )
@@ -6219,7 +6224,7 @@ If	IsNull ( dcMtPlaf ) Then dcMtPlaf = 0
 
 If	idw_wDetailFF.GetItemString ( 1, "ALT_REG" ) = "O" And dcMtPlaf <= 0	Then
 	If sPos = "" Then sPos = "MT_PLAF"
-	sText = sText + " - Le montant plafonn$$HEX1$$e900$$ENDHEX$$" + sNouvelleLigne
+	sText = sText + " - Le montant plafonné" + sNouvelleLigne
 End If
 
 // #3
@@ -6229,12 +6234,12 @@ End If
 
 /*------------------------------------------------------------------*/
 /* Le 27/05/1999.                                                   */
-/* Modif DGA. Gestion des UF T$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone Mobile.                      */
+/* Modif DGA. Gestion des UF Téléphone Mobile.                      */
 /*------------------------------------------------------------------*/
 /* #1 Le 23/11/1999	JFF														  */
-/* Date Utilisation obligatoire pour r$$HEX1$$e900$$ENDHEX$$gler Gti 9.						  */	
+/* Date Utilisation obligatoire pour régler Gti 9.						  */	
 /*------------------------------------------------------------------*/
-/* La date de l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement est obligatoire.                          */
+/* La date de l'événement est obligatoire.                          */
 /*------------------------------------------------------------------*/
 // #2
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_wSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 42 ) // Gestion Date Achat
@@ -6243,7 +6248,7 @@ If lDeb > 0 And Not This.uf_GetAutorisation ( 208 ) Then
 		If	lIdGti = idw_DetPro.GetItemNumber ( lCpt, "ID_CODE_NUM" ) Then
 			If	IsNull ( idw_wDetailFF.GetItemDate ( 1, "DTE_DET_DATE" )	) Then
 				If sPos = "" Then sPos = "DTE_DET_DATE"
-				sText = sText + " - La date de l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement" + sNouvelleLigne
+				sText = sText + " - La date de l'événement" + sNouvelleLigne
 			End If
 			Exit
 		End If
@@ -6252,15 +6257,15 @@ End If
 
 /*------------------------------------------------------------------*/
 /* Le 27/05/1999.                                                   */
-/* Modif DGA. Gestion des UF T$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone Mobile.                      */
+/* Modif DGA. Gestion des UF Téléphone Mobile.                      */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* L'heure de l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement est obligatoire dans certains cas.        */
+/* L'heure de l'événement est obligatoire dans certains cas.        */
 /*------------------------------------------------------------------*/
 If	lIdGti = 2 Or ( lIdGti = 7 And ( lIdEvt >= 710 And lIdEvt <= 719 ) )	Or ( lIdGti = 8 And ( lIdEvt >= 801 And lIdEvt <= 819 ) ) Then
 	If	IsNull ( idw_wDetailFF.GetItemString ( 1, "HEU_DET" ) ) Or idw_wDetailFF.GetItemString ( 1, "HEU_DET" ) = "" Then
 		If	sPos = "" Then sPos = "HEU_DET"
-		sText = sText + " - L'heure de l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement" + sNouvelleLigne
+		sText = sText + " - L'heure de l'événement" + sNouvelleLigne
 	End If
 End If
 
@@ -6268,10 +6273,10 @@ End If
 /* Le 21/04/1999. Modif. pour la couverture UF des autres cartes.   */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* Le N$$HEX2$$b0002000$$ENDHEX$$de carte est obligatoire dans certains cas.                */
+/* Le N° de carte est obligatoire dans certains cas.                */
 /*------------------------------------------------------------------*/
 /* #1 Le 23/11/1999	JFF														  */
-/* N$$HEX2$$b0002000$$ENDHEX$$Carte obligatoire pour r$$HEX1$$e900$$ENDHEX$$gler Gti 9.								  */	
+/* N° Carte obligatoire pour régler Gti 9.								  */	
 /*------------------------------------------------------------------*/
 
 // [VDOC28814]
@@ -6279,7 +6284,7 @@ End If
 	sNumCarte = idw_wDetailFF.GetItemString ( 1, "NUM_CARTE" )
 	If	IsNull ( sNumCarte ) And ( ( lIdGti = 7 And  lIdEvt >=710 And lIdEvt <= 719 ) Or lIdGti = 9 ) Then
 		If sPos = "" Then sPos = "NUM_CARTE"
-		sText = sText + " - Le num$$HEX1$$e900$$ENDHEX$$ro de la carte" + sNouvelleLigne
+		sText = sText + " - Le numéro de la carte" + sNouvelleLigne
 	End If
 	
 	/*------------------------------------------------------------------*/
@@ -6288,16 +6293,16 @@ End If
 	/*------------------------------------------------------------------*/
 	If	Len ( sNumCarte ) < 4 And ( lIdGti = 7 )  And ( lIdEvt >=716 And lIdEvt <= 719 )	Then
 		If sPos = "" Then sPos = "NUM_CARTE"
-		sText = sText + " - Le num$$HEX1$$e900$$ENDHEX$$ro de la carte (au moins 4 Chiffres)" + sNouvelleLigne
+		sText = sText + " - Le numéro de la carte (au moins 4 Chiffres)" + sNouvelleLigne
 	End If
 */
 
 /*------------------------------------------------------------------*/
-/* Le destinataire du r$$HEX1$$e800$$ENDHEX$$glement est obligatoire.                    */
+/* Le destinataire du règlement est obligatoire.                    */
 /*------------------------------------------------------------------*/
 If	IsNull ( idw_wDetailFF.GetItemNumber ( 1, "ID_I_REG" ) ) Then
 	If sPos = "" Then sPos = "ID_I_REG"
-	sText = sText + " - Le destinataire du r$$HEX1$$e800$$ENDHEX$$glement" + sNouvelleLigne
+	sText = sText + " - Le destinataire du règlement" + sNouvelleLigne
 End If
 
 /*------------------------------------------------------------------*/
@@ -6314,7 +6319,7 @@ If lDeb > 0 Then
 	Next
 
 	If bOk Then
-		sLib = " - Le nouveau prix constat$$HEX1$$e900$$ENDHEX$$"
+		sLib = " - Le nouveau prix constaté"
 	Else
 		lDeb = 0
 	End If
@@ -6337,7 +6342,7 @@ End If
 
 /*------------------------------------------------------------------*/
 /* La date de survenance du sinistre est obligatoire. On se         */
-/* positionne par d$$HEX1$$e900$$ENDHEX$$faut sur la zone ID_EVT du d$$HEX1$$e900$$ENDHEX$$tail.              */
+/* positionne par défaut sur la zone ID_EVT du détail.              */
 /*------------------------------------------------------------------*/
 If	IsNull ( idw_wSin.GetItemDate ( 1, "DTE_SURV_DATE" ) ) Then
 	If sPos = "" Then sPos = "ID_EVT"
@@ -6345,25 +6350,25 @@ If	IsNull ( idw_wSin.GetItemDate ( 1, "DTE_SURV_DATE" ) ) Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Le N$$HEX2$$b0002000$$ENDHEX$$adh$$HEX1$$e900$$ENDHEX$$sion est obligatoire. On se positionne par d$$HEX1$$e900$$ENDHEX$$faut sur  */
-/* la zone ID_EVT du d$$HEX1$$e900$$ENDHEX$$tail.                                        */
+/* Le N° adhésion est obligatoire. On se positionne par défaut sur  */
+/* la zone ID_EVT du détail.                                        */
 /*------------------------------------------------------------------*/
 If	IsNull ( idw_wSin.GetItemString ( 1, "ID_ADH" ) ) Then
 	If sPos = "" Then sPos = "ID_EVT"
-	sText = sText + " - La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence de l'adh$$HEX1$$e900$$ENDHEX$$sion" + sNouvelleLigne
+	sText = sText + " - La référence de l'adhésion" + sNouvelleLigne
 End If
 
 /*------------------------------------------------------------------*/
-/* Le N$$HEX2$$b0002000$$ENDHEX$$ETS est obligatoire. On se positionne par d$$HEX1$$e900$$ENDHEX$$faut sur la    */
-/* zone ID_EVT du d$$HEX1$$e900$$ENDHEX$$tail.                                           */
+/* Le N° ETS est obligatoire. On se positionne par défaut sur la    */
+/* zone ID_EVT du détail.                                           */
 /*------------------------------------------------------------------*/
 If	IsNull ( idw_wSin.GetItemNumber ( 1, "ID_ETS" ) ) Then
 	If sPos = "" Then sPos = "ID_EVT"
-	sText = sText + " - La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence ETS" + sNouvelleLigne
+	sText = sText + " - La référence ETS" + sNouvelleLigne
 End If
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re certaines zones pour faciliter les tests suivants.   */
+/* On récupére certaines zones pour faciliter les tests suivants.   */
 /*------------------------------------------------------------------*/
 sHeureDet	= idw_wDetailFF.GetItemString ( 1, "HEU_DET" )
 If	sHeureDet = "" Then sHeureDet = stNul.str
@@ -6378,7 +6383,7 @@ dDteOppo		= idw_wGarSin.GetItemDate ( 1, "DTE_OPPO_DATE" )
 
 /*------------------------------------------------------------------*/
 /* L'heure de survenance est obligatoire dans certains cas. On se   */
-/* positionne par d$$HEX1$$e900$$ENDHEX$$faut sur la zone ID_EVT du d$$HEX1$$e900$$ENDHEX$$tail.              */
+/* positionne par défaut sur la zone ID_EVT du détail.              */
 /*------------------------------------------------------------------*/
 If	lIdGti = 7 And ( ( lIdEvt >= 710 And lIdEvt <= 719 ) Or ( lIdEvt >= 700 And lIdEvt <= 709 ) ) And Not IsNull ( sHeureDet ) And &
 	IsNull ( sHeureSurv ) Then
@@ -6394,7 +6399,7 @@ End If
 
 /*------------------------------------------------------------------*/
 /* Le 27/05/1999.                                                   */
-/* Modif DGA. Gestion des UF T$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone Mobile.                      */
+/* Modif DGA. Gestion des UF Téléphone Mobile.                      */
 /*------------------------------------------------------------------*/
 If	lIdGti = 8 And ( lIdEvt >= 801 And lIdEvt <= 819 ) And IsNull ( sHeureSurv ) Then
 	If sPos = "" Then sPos = "ID_EVT"
@@ -6403,7 +6408,7 @@ End If
 
 /*------------------------------------------------------------------*/
 /* L'heure d'opposition est obligatoire dans certains cas. On se    */
-/* positionne par d$$HEX1$$e900$$ENDHEX$$faut sur la zone ID_EVT du d$$HEX1$$e900$$ENDHEX$$tail.              */
+/* positionne par défaut sur la zone ID_EVT du détail.              */
 /*------------------------------------------------------------------*/
 If	lIdGti = 7 And ( ( lIdEvt >= 710 And lIdEvt <= 719 ) Or ( lIdEvt >= 700 And lIdEvt <= 709 ) ) And Not IsNull ( sHeureDet ) And &
 	IsNull ( sHeureOppo ) Then
@@ -6413,7 +6418,7 @@ End If
 
 /*------------------------------------------------------------------*/
 /* Le 27/05/1999.                                                   */
-/* Modif DGA. Gestion des UF T$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone Mobile.                      */
+/* Modif DGA. Gestion des UF Téléphone Mobile.                      */
 /*------------------------------------------------------------------*/
 If	lIdGti = 8 And ( lIdEvt >= 801 And lIdEvt <= 819 ) And Not IsNull ( sHeureDet ) And IsNull ( sHeureOppo ) Then
 	If sPos = "" Then sPos = "ID_EVT"
@@ -6422,15 +6427,15 @@ End If
 
 /*------------------------------------------------------------------*/
 /* La date d'opposition est obligatoire dans certains cas. On se    */
-/* positionne par d$$HEX1$$e900$$ENDHEX$$faut sur la zone ID_EVT du d$$HEX1$$e900$$ENDHEX$$tail.              */
+/* positionne par défaut sur la zone ID_EVT du détail.              */
 /*------------------------------------------------------------------*/
 /* Modif DBI le 15/04/1999                                          */
-/* Modif du contr$$HEX1$$f400$$ENDHEX$$le                                                */
+/* Modif du contrôle                                                */
 /*      lIdEvt >= 700 And lIdEvt <= 709 And Not IsNull ( sHeureDet )*/
-/* remplac$$HEX2$$e9002000$$ENDHEX$$par                                                     */
+/* remplacé par                                                     */
 /*      lIdEvt >= 700 And lIdEvt <= 709                             */
-/* Si la date de l'evt est saisi, il faut syst$$HEX1$$e900$$ENDHEX$$matiquement v$$HEX1$$e900$$ENDHEX$$rifier */
-/* que la date d'opposition est renseign$$HEX1$$e900$$ENDHEX$$e pour r$$HEX1$$e800$$ENDHEX$$gler              */
+/* Si la date de l'evt est saisi, il faut systématiquement vérifier */
+/* que la date d'opposition est renseignée pour règler              */
 /*------------------------------------------------------------------*/
 If	lIdGti = 7 And ( ( lIdEvt >= 710 And lIdEvt <= 719 ) Or ( lIdEvt >= 700 And lIdEvt <= 709 ) ) And &
 	IsNull ( dDteOppo ) Then
@@ -6440,7 +6445,7 @@ End If
 
 /*------------------------------------------------------------------*/
 /* Le 27/05/1999.                                                   */
-/* Modif DGA. Gestion des UF T$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone Mobile.                      */
+/* Modif DGA. Gestion des UF Téléphone Mobile.                      */
 /*------------------------------------------------------------------*/
 If	lIdGti = 8 And ( lIdEvt >= 801 And lIdEvt <= 819 ) And IsNull ( dDteOppo ) Then
 	If sPos = "" Then sPos = "ID_EVT"
@@ -6448,13 +6453,13 @@ If	lIdGti = 8 And ( lIdEvt >= 801 And lIdEvt <= 819 ) And IsNull ( dDteOppo ) Th
 End If
 
 /*------------------------------------------------------------------*/
-/* Si la valeur de la r$$HEX1$$e900$$ENDHEX$$vison est $$HEX2$$e0002000$$ENDHEX$$-1, il faut arreter le          */
-/* contr$$HEX1$$f400$$ENDHEX$$le. Le gestionnaire devra bloquer le d$$HEX1$$e900$$ENDHEX$$tail pour           */
+/* Si la valeur de la révison est à -1, il faut arreter le          */
+/* contrôle. Le gestionnaire devra bloquer le détail pour           */
 /* l'enregistrer.                                                   */
 /*------------------------------------------------------------------*/
 If	idw_wSin.GetItemNumber ( 1, "ID_REV" ) = -1	Then
 	If sPos = "" Then sPos = "ID_EVT"
-	sText = sText + " - la r$$HEX1$$e900$$ENDHEX$$vision du produit" + sNouvelleLigne
+	sText = sText + " - la révision du produit" + sNouvelleLigne
 End If
 
 /*------------------------------------------------------------------*/
@@ -6473,9 +6478,9 @@ If	ilCodTel = 21 And lIdGti = 18	Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Pour R$$HEX1$$e900$$ENDHEX$$gler CASTO, au une d$$HEX1$$e900$$ENDHEX$$cision CASTO doit $$HEX1$$ea00$$ENDHEX$$tre pr$$HEX1$$e900$$ENDHEX$$sente.     */
+/* Pour Régler CASTO, au une décision CASTO doit être présente.     */
 /*------------------------------------------------------------------*/
-// [DT92_FACTU_CASTO] $$HEX2$$e0002000$$ENDHEX$$Supprimer $$HEX2$$e0002000$$ENDHEX$$la d$$HEX1$$e900$$ENDHEX$$sact.
+// [DT92_FACTU_CASTO] à Supprimer à la désact.
 /* [DT92_FACTU_CASTO_2]
 	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 43 ) // CASTO
 	If lDeb > 0 And sPos = "" Then 
@@ -6486,7 +6491,7 @@ End If
 		If IsNull ( sCodAction ) Then sCodAction = "" 
 		If Trim ( sCodAction ) = "" And sIdFour = "CAS" Then
 			If sPos = "" Then sPos = "LIB_DET"
-			sText = sText + " - Au moins une d$$HEX1$$e900$$ENDHEX$$cision provenant de CASTORAMA est n$$HEX1$$e900$$ENDHEX$$cessaire pour r$$HEX1$$e900$$ENDHEX$$gler l'interlocuteur CASTORAMA" + sNouvelleLigne
+			sText = sText + " - Au moins une décision provenant de CASTORAMA est nécessaire pour régler l'interlocuteur CASTORAMA" + sNouvelleLigne
 		End If
 	End If
 End If
@@ -6506,11 +6511,11 @@ If lDeb > 0 And lIdGti = 7 Then
 End If 
 
 /*------------------------------------------------------------------*/
-/* Affichage de la cha$$HEX1$$ee00$$ENDHEX$$ne correspondant au message d'erreur         */
+/* Affichage de la chaîne correspondant au message d'erreur         */
 /*------------------------------------------------------------------*/
 If	sPos <> "" Then
 
-	stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de saisie du d$$HEX1$$e900$$ENDHEX$$tail"
+	stMessage.sTitre		= "Contrôle de saisie du détail"
 	stMessage.Icon			= Information!
 	stMessage.Bouton		= OK!
 	stMessage.sVar[1] 	= sText
@@ -6535,7 +6540,7 @@ Else
 /*
 		If	IsNull ( sNumCarte ) And ( lIdGti = 7 )  And ( lIdEvt >=701 And lIdEvt <= 709 )	Then
 	
-			stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de saisie du d$$HEX1$$e900$$ENDHEX$$tail"
+			stMessage.sTitre		= "Contrôle de saisie du détail"
 			stMessage.Icon			= Question!
 			stMessage.Bouton		= YesNo!
 			stMessage.bErreurG	= FALSE
@@ -6559,8 +6564,8 @@ private subroutine uf_recalcul_autre_detail ();//*------------------------------
 //* Fonction		: Uf_Recalcul_Autre_Detail (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 26/02/1998 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Faut-il recalculer les autres d$$HEX1$$e900$$ENDHEX$$tails ?
+//* Libellé			: 
+//* Commentaires	: Faut-il recalculer les autres détails ?
 //*
 //* Arguments		: Aucun
 //*
@@ -6575,7 +6580,7 @@ Decimal {2} dcMtPlafCourant
 String sRech
 
 /*------------------------------------------------------------------*/
-/* On va v$$HEX1$$e900$$ENDHEX$$rifier s'il existe au moins un plafond (680, 691, 692,   */
+/* On va vérifier s'il existe au moins un plafond (680, 691, 692,   */
 /* 693, 694).                                                       */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
@@ -6593,8 +6598,8 @@ lLig = idw_Plafond.Find ( sRech, 1, lTotPlaf )
 If	lLig > 0 Then
 	lTotDetail = idw_wDetailFF.iudwDetailSource.RowCount ()
 /*------------------------------------------------------------------*/
-/* On va v$$HEX1$$e900$$ENDHEX$$rifier les autres d$$HEX1$$e900$$ENDHEX$$tails si le montant MT_PLAF diminue  */
-/* par rapport $$HEX2$$e0002000$$ENDHEX$$la valeur initiale, ou si le d$$HEX1$$e900$$ENDHEX$$tail $$HEX1$$e900$$ENDHEX$$tait bloqu$$HEX1$$e900$$ENDHEX$$.  */
+/* On va vérifier les autres détails si le montant MT_PLAF diminue  */
+/* par rapport à la valeur initiale, ou si le détail était bloqué.  */
 /*------------------------------------------------------------------*/
 
 	dcMtPlafCourant = idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF" )
@@ -6602,14 +6607,14 @@ If	lLig > 0 Then
 	If	( dcMtPlafCourant < idcMtPlafInitial ) Or ( isAltBlocInitial = "O" ) Then
 		For	lCpt = 1 To lTotDetail
 /*------------------------------------------------------------------*/
-/* On ne traite pas le d$$HEX1$$e900$$ENDHEX$$tail courant.                              */
+/* On ne traite pas le détail courant.                              */
 /*------------------------------------------------------------------*/
 				If		idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "ID_DETAIL" ) = lIdDetail	Then
 						Continue
 				Else
 /*------------------------------------------------------------------*/
-/* Si le d$$HEX1$$e900$$ENDHEX$$tail est 'A REGLE' et qu'il est plafonn$$HEX2$$e9002000$$ENDHEX$$(ALT_PLAF =     */
-/* OUI), on repositionne COD_ETAT $$HEX2$$e0002000$$ENDHEX$$'NON CONTROLE'.                 */
+/* Si le détail est 'A REGLE' et qu'il est plafonné (ALT_PLAF =     */
+/* OUI), on repositionne COD_ETAT à 'NON CONTROLE'.                 */
 /*------------------------------------------------------------------*/
 						If	idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "COD_ETAT" ) = 500 And &
 							idw_wDetailFF.iudwDetailSource.GetItemString ( lCpt, "ALT_PLAF" ) = "O"	Then
@@ -6630,10 +6635,10 @@ private subroutine uf_preparersupprimer (ref s_pass astpass);//*----------------
 //* Fonction		: U_Gs_Sp_wDetail::Uf_PreparerSupprimer
 //* Auteur			: Erick John Stark
 //* Date				: 28/01/1998 09:42:07
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On veut supprimer un d$$HEX1$$e900$$ENDHEX$$tail
+//* Libellé			: 
+//* Commentaires	: On veut supprimer un détail
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
@@ -6650,7 +6655,7 @@ iRet = 1
 ibInsert = FALSE // [DCMP070056]
 
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie si on se trouve sur l'onglet N$$HEX2$$b0002000$$ENDHEX$$01. (Onglet Detail).  */
+/* On vérifie si on se trouve sur l'onglet N° 01. (Onglet Detail).  */
 /* On affiche un message qui demande si on veut supprimer le frais  */
 /* courant                                                          */
 /*------------------------------------------------------------------*/
@@ -6659,11 +6664,11 @@ If	iuoOng.Uf_RecupererOngletCourant () <> "01" Then
 End If
 
 /*------------------------------------------------------------------*/
-/* y a-t-il des commandes pour ce d$$HEX1$$e900$$ENDHEX$$tail ?                          */
+/* y a-t-il des commandes pour ce détail ?                          */
 /*------------------------------------------------------------------*/
 If idw_LstCmdeDet.Rowcount () > 0 Then
 
-	stMessage.sTitre		= "Suppression d'un d$$HEX1$$e900$$ENDHEX$$tail"
+	stMessage.sTitre		= "Suppression d'un détail"
 	stMessage.Icon			= Question!
 	stMessage.bouton	 	= YesNo!
 	stMessage.bErreurG	= FALSE
@@ -6683,9 +6688,9 @@ End If
 /* pas surcharger.																  */
 /*------------------------------------------------------------------*/
 If Not bEffCmde Then
-	stMessage.sTitre		= "Suppression d'un d$$HEX1$$e900$$ENDHEX$$tail"
+	stMessage.sTitre		= "Suppression d'un détail"
 	stMessage.Icon			= Question!
-	stMessage.sVar[1] 	= "ce d$$HEX1$$e900$$ENDHEX$$tail "
+	stMessage.sVar[1] 	= "ce détail "
 	stMessage.bouton	 	= YesNo!
 	stMessage.bErreurG	= FALSE
 	stMessage.sCode		= "GENE020"
@@ -6699,9 +6704,9 @@ End If
 
 If iRet = 1 Then
 /*------------------------------------------------------------------*/
-/* On supprime un d$$HEX1$$e900$$ENDHEX$$tail, il faut supprimer toutes les pi$$HEX1$$e800$$ENDHEX$$ces et    */
+/* On supprime un détail, il faut supprimer toutes les pièces et    */
 /* les refus. L'optimisation - pour les commandes DELETE - sera     */
-/* fa$$HEX1$$ee00$$ENDHEX$$te sur la garantie.                                           */
+/* faîte sur la garantie.                                           */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* PIECE                                                            */
@@ -6758,29 +6763,29 @@ If iRet = 1 Then
 /* DETAIL_SUPP                                                      */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re une ligne pour le d$$HEX1$$e900$$ENDHEX$$tail dans une DataWindow           */
-/* external. En effet la liste des d$$HEX1$$e900$$ENDHEX$$tails ne poss$$HEX1$$e900$$ENDHEX$$de pas d'objet   */
+/* On insére une ligne pour le détail dans une DataWindow           */
+/* external. En effet la liste des détails ne posséde pas d'objet   */
 /* de transaction, donc il n'y a pas de buffer de suppression.      */
 /*------------------------------------------------------------------*/
 	lLig = idw_wDetailSupp.InsertRow ( 0 )
 /*------------------------------------------------------------------*/
-/* Ne jamais faire un SetItem avec un GetItemNumber (Probl$$HEX1$$e800$$ENDHEX$$me de    */
-/* pr$$HEX1$$e900$$ENDHEX$$cision). Il faut passer dans une variable interm$$HEX1$$e900$$ENDHEX$$diaire.      */
+/* Ne jamais faire un SetItem avec un GetItemNumber (Problème de    */
+/* précision). Il faut passer dans une variable intermédiaire.      */
 /*------------------------------------------------------------------*/
 	lIdDetail = idw_wDetailFF.GetItemNumber ( 1, "ID_DETAIL" )
 	idw_wDetailSupp.SetItem ( lLig, "ID_DETAIL", lIdDetail )
 
 /*------------------------------------------------------------------*/
-/* On supprime un d$$HEX1$$e900$$ENDHEX$$tail, on va v$$HEX1$$e900$$ENDHEX$$rifier s'il faut repositionner    */
-/* les autres d$$HEX1$$e900$$ENDHEX$$tails.                                              */
+/* On supprime un détail, on va vérifier s'il faut repositionner    */
+/* les autres détails.                                              */
 /*------------------------------------------------------------------*/
 	Uf_Recalcul_Autre_Detail ()
 
 	lTotDivDet = idw_wDivDet.RowCount ()	
 	For lCpt = lTotDivDet To 1 Step -1
 		/*------------------------------------------------------------------*/
-		/* La Dw doit avoir la capacit$$HEX2$$e9002000$$ENDHEX$$d'updater, afin que le buffer       */
-		/* DELETE! soit pris en compte, ainsi la ligne sera plac$$HEX2$$e9002000$$ENDHEX$$dans le   */
+		/* La Dw doit avoir la capacité d'updater, afin que le buffer       */
+		/* DELETE! soit pris en compte, ainsi la ligne sera placé dans le   */
 		/* le buffer DELETE!																  */
 		/*------------------------------------------------------------------*/
 		idw_wDivDet.SetItemStatus ( lCpt, 0, PRIMARY!, DATAMODIFIED! )
@@ -6791,7 +6796,7 @@ If iRet = 1 Then
 	Uf_PreparerValider_OngDivers ()
 
 /*------------------------------------------------------------------*/
-/* Suppression des commandes li$$HEX1$$e900$$ENDHEX$$s au  d$$HEX1$$e900$$ENDHEX$$tail.                       */
+/* Suppression des commandes liés au  détail.                       */
 /* Seulement au niveau garantie, pas au niveau sinistre, car on peut*/
 /* encore faire retour au niveau garantie.								  */
 /*------------------------------------------------------------------*/
@@ -6800,8 +6805,8 @@ If iRet = 1 Then
 		lTotCmdeDet = idw_LstCmdeDet.RowCount ()	
 		For lCpt = lTotCmdeDet To 1 Step -1
 			/*------------------------------------------------------------------*/
-			/* La Dw doit avoir la capacit$$HEX2$$e9002000$$ENDHEX$$d'updater, afin que le buffer       */
-			/* DELETE! soit pris en compte, ainsi la ligne sera plac$$HEX2$$e9002000$$ENDHEX$$dans le   */
+			/* La Dw doit avoir la capacité d'updater, afin que le buffer       */
+			/* DELETE! soit pris en compte, ainsi la ligne sera placé dans le   */
 			/* le buffer DELETE!																  */
 			/*------------------------------------------------------------------*/
 			idw_LstCmdeDet.SetItemStatus ( lCpt, 0, PRIMARY!, DATAMODIFIED! )
@@ -6811,7 +6816,7 @@ If iRet = 1 Then
 		/*------------------------------------------------------------------*/
 		/* Pour toutes les lignes contenues dans le buffer Deleted! de      */
 		/* DwNivInf...                                                      */
-		/* Le compteur est $$HEX2$$e0002000$$ENDHEX$$l'envers, car on D$$HEX1$$e900$$ENDHEX$$truit des rows sur IdwRe-   */
+		/* Le compteur est à l'envers, car on Détruit des rows sur IdwRe-   */
 		/* questor dans Uf_CopierLigne												  */
 		/*------------------------------------------------------------------*/
 		lTotCmdeDet = idw_LstCmdeDet.DeletedCount () 
@@ -6819,14 +6824,14 @@ If iRet = 1 Then
 		For lCpt = lTotCmdeDet To 1 Step -1
 
 		/*------------------------------------------------------------------*/
-		/* ...on construit la cl$$HEX2$$e9002000$$ENDHEX$$de chaque enregistrement contenus dans    */
+		/* ...on construit la clé de chaque enregistrement contenus dans    */
 		/* le buffer Delete! de DwNivInf.                                   */
 		/*------------------------------------------------------------------*/
 			sCle = "ID_SEQ = " + String ( idw_LstCmdeDet.GetItemNumber ( lCpt, "ID_SEQ", DELETE!, TRUE ) ) 
 
 		/*------------------------------------------------------------------*/
-		/* Avec cette ligne identifi$$HEX1$$e900$$ENDHEX$$e, on effectue le traitement           */
-		/* n$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$ssaire sur la DataWindow de niveau sup$$HEX1$$e900$$ENDHEX$$rieur. Voir fonction  */
+		/* Avec cette ligne identifiée, on effectue le traitement           */
+		/* nécéssaire sur la DataWindow de niveau supérieur. Voir fonction  */
 		/* Uf_CopierLigne.                                                  */
 		/*------------------------------------------------------------------*/
 			This.Uf_CopierLigne_Inf2Sup ( "BD", lCpt, sCle, iDw_LstCmdeGti, iDw_LstCmdeDet )
@@ -6852,8 +6857,8 @@ private function string uf_plaf_adherent_renouvellement ();//*------------------
 //* Fonction		: Uf_Plaf_Adherent_Renouvellement (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 26/02/1998 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Application d'un plafond par adh$$HEX1$$e900$$ENDHEX$$rent/Ann$$HEX1$$e900$$ENDHEX$$e renouvellement
+//* Libellé			: 
+//* Commentaires	: Application d'un plafond par adhérent/Année renouvellement
 //*
 //* Arguments		: Aucun
 //*
@@ -6861,8 +6866,8 @@ private function string uf_plaf_adherent_renouvellement ();//*------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$sur le contr$$HEX1$$f400$$ENDHEX$$ler
+//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatrés sur les +NS, +DT, +TR
+//*								  déclenché sur le contrôler
 //*       JFF    27/07/2011  [PLAF_REF]
 //  		 JFF		29/05/2012 [VDOC6662]
 //       JFF   16/11/2015 [DT159-1]
@@ -6882,7 +6887,7 @@ String       sUntPerRnv_Adh
 
 sPos = ""
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par sinistre.                  */
+/* On vérifie s'il existe un plafond par sinistre.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -6897,13 +6902,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -6911,7 +6916,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -6950,15 +6955,15 @@ lLig = lLigFinale
 If	lLig > 0 Then
 	lTotDetail = idw_wDetailFF.iudwDetailSource.RowCount ()
 /*------------------------------------------------------------------*/
-/* On s'occupe du d$$HEX1$$e900$$ENDHEX$$tail courant, en insertion ou en modification.  */
-/* Ce d$$HEX1$$e900$$ENDHEX$$tail ne sera pas trait$$HEX2$$e9002000$$ENDHEX$$dans la boucle.                     */
+/* On s'occupe du détail courant, en insertion ou en modification.  */
+/* Ce détail ne sera pas traité dans la boucle.                     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Modification DBI le 12/08/1998                                   */
 /*                                                                  */
-/* La zone $$HEX2$$e0002000$$ENDHEX$$prendre en compte pour le calcul du montant plafonn$$HEX4$$e900200020002000$$ENDHEX$$*/
+/* La zone à prendre en compte pour le calcul du montant plafonné   */
 /* n'est pas MT_NPLAF      mais MT_PLAF      sinon on ne            */
-/* tient pas compte des plafonds appliqu$$HEX1$$e900$$ENDHEX$$s successivement           */
+/* tient pas compte des plafonds appliqués successivement           */
 /*------------------------------------------------------------------*/
 
 	dcMtPlaf		= idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF"   )
@@ -6966,13 +6971,13 @@ If	lLig > 0 Then
 
 	For	lCpt = 1 To lTotDetail
 /*------------------------------------------------------------------*/
-/* On ne traite pas le d$$HEX1$$e900$$ENDHEX$$tail courant.                              */
+/* On ne traite pas le détail courant.                              */
 /*------------------------------------------------------------------*/
 			If		idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "ID_DETAIL" ) = lIdDetail	Then
 					Continue
 			Else
 /*------------------------------------------------------------------*/
-/* Le d$$HEX1$$e900$$ENDHEX$$tail est 'REGLE' ou 'A REGLE', on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le montant       */
+/* Le détail est 'REGLE' ou 'A REGLE', on récupére le montant       */
 /* MT_PLAF.                                                         */
 /*------------------------------------------------------------------*/
 					If	( idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "COD_ETAT" ) = 500 Or &
@@ -6985,8 +6990,8 @@ If	lLig > 0 Then
 	Next
 
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -7002,7 +7007,7 @@ If	lLig > 0 Then
    sUntPerRnv_Adh		= idw_produit.GetItemString ( 1, "UNT_PERRNV_ADH" )
 /*----------------------------------------------------------------------*/
 /* On calcule la date du dernier renouvellement.                        */
-/* En fonction de l'unit$$HEX2$$e9002000$$ENDHEX$$de periode de renouvellement (ANNEE,MOIS,JOUR)*/
+/* En fonction de l'unité de periode de renouvellement (ANNEE,MOIS,JOUR)*/
 /*----------------------------------------------------------------------*/
    Choose Case sUntPerRnv_Adh
 	   Case "A"
@@ -7029,14 +7034,14 @@ If	lLig > 0 Then
 	itrTrans.PS_S04_W_DETAIL_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dcIdGti, dcIdEvt, dtDteSurv, dtDteAdhRenouv, sMtAutreSinistre )
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S04_W_DETAIL_MT_PLAF" )	Then
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e.                                    */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée.                                    */
 /*------------------------------------------------------------------*/
 		sPos		= "ALT_BLOC"
 		F_Message ( stMessage )
 	Else
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine si on d$$HEX1$$e900$$ENDHEX$$passe le plafond.                           */
+/* On détermine si on dépasse le plafond.                           */
 /*------------------------------------------------------------------*/
 
 		dcMtAutreSinistre = Dec ( sMtAutreSinistre )
@@ -7070,7 +7075,7 @@ If	lLig > 0 Then
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -7089,8 +7094,8 @@ private function string uf_plaf_adherent_survenance ();//*----------------------
 //* Fonction		: Uf_Plaf_Adherent_Survenance (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 26/02/1998 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Application d'un plafond par adh$$HEX1$$e900$$ENDHEX$$rent/Ann$$HEX1$$e900$$ENDHEX$$e survenace glissante
+//* Libellé			: 
+//* Commentaires	: Application d'un plafond par adhérent/Année survenace glissante
 //*
 //* Arguments		: Aucun
 //*
@@ -7098,8 +7103,8 @@ private function string uf_plaf_adherent_survenance ();//*----------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$sur le contr$$HEX1$$f400$$ENDHEX$$ler
+//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatrés sur les +NS, +DT, +TR
+//*								  déclenché sur le contrôler
 //*       JFF    27/07/2011  [PLAF_REF]
 //  		 JFF	  29/05/2012  [VDOC6662]
 //        JFF    16/11/2015  [DT159-1]
@@ -7116,7 +7121,7 @@ String		sMtAutreSinistre
 
 sPos = ""
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par adh$$HEX1$$e900$$ENDHEX$$rent.                  */
+/* On vérifie s'il existe un plafond par adhérent.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -7131,13 +7136,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -7145,7 +7150,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -7183,15 +7188,15 @@ lLig = lLigFinale
 If	lLig > 0 Then
 	lTotDetail = idw_wDetailFF.iudwDetailSource.RowCount ()
 /*------------------------------------------------------------------*/
-/* On s'occupe du d$$HEX1$$e900$$ENDHEX$$tail courant, en insertion ou en modification.  */
-/* Ce d$$HEX1$$e900$$ENDHEX$$tail ne sera pas trait$$HEX2$$e9002000$$ENDHEX$$dans la boucle.                     */
+/* On s'occupe du détail courant, en insertion ou en modification.  */
+/* Ce détail ne sera pas traité dans la boucle.                     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Modification DBI le 12/08/1998                                   */
 /*                                                                  */
-/* La zone $$HEX2$$e0002000$$ENDHEX$$prendre en compte pour le calcul du montant plafonn$$HEX4$$e900200020002000$$ENDHEX$$*/
+/* La zone à prendre en compte pour le calcul du montant plafonné   */
 /* n'est pas MT_NPLAF      mais MT_PLAF      sinon on ne            */
-/* tient pas compte des plafonds appliqu$$HEX1$$e900$$ENDHEX$$s successivement           */
+/* tient pas compte des plafonds appliqués successivement           */
 /*------------------------------------------------------------------*/
 
 	dcMtPlaf		= idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF"   )
@@ -7199,13 +7204,13 @@ If	lLig > 0 Then
 
 	For	lCpt = 1 To lTotDetail
 /*------------------------------------------------------------------*/
-/* On ne traite pas le d$$HEX1$$e900$$ENDHEX$$tail courant.                              */
+/* On ne traite pas le détail courant.                              */
 /*------------------------------------------------------------------*/
 			If		idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "ID_DETAIL" ) = lIdDetail	Then
 					Continue
 			Else
 /*------------------------------------------------------------------*/
-/* Le d$$HEX1$$e900$$ENDHEX$$tail est 'REGLE' ou 'A REGLE', on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le montant       */
+/* Le détail est 'REGLE' ou 'A REGLE', on récupére le montant       */
 /* MT_PLAF.                                                         */
 /*------------------------------------------------------------------*/
 					If	( idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "COD_ETAT" ) = 500 Or &
@@ -7218,8 +7223,8 @@ If	lLig > 0 Then
 	Next
 
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -7236,14 +7241,14 @@ If	lLig > 0 Then
 	itrTrans.PS_S02_W_DETAIL_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dcIdGti, dcIdEvt, dtDteSurv, sMtAutreSinistre )
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S02_W_DETAIL_MT_PLAF" )	Then
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e.                                    */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée.                                    */
 /*------------------------------------------------------------------*/
 		sPos		= "ALT_BLOC"
 		F_Message ( stMessage )
 	Else
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine si on d$$HEX1$$e900$$ENDHEX$$passe le plafond.                           */
+/* On détermine si on dépasse le plafond.                           */
 /*------------------------------------------------------------------*/
 
 		dcMtAutreSinistre = Dec ( sMtAutreSinistre )
@@ -7277,7 +7282,7 @@ If	lLig > 0 Then
 
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -7297,8 +7302,8 @@ private function string uf_plaf_adhesion_renouvellement ();//*------------------
 //* Fonction		: Uf_Plaf_Adhesion_Renouvellement (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 26/02/1998 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Application d'un plafond par adh$$HEX1$$e900$$ENDHEX$$sion/Ann$$HEX1$$e900$$ENDHEX$$e renouvellement
+//* Libellé			: 
+//* Commentaires	: Application d'un plafond par adhésion/Année renouvellement
 //*
 //* Arguments		: Aucun
 //*
@@ -7306,8 +7311,8 @@ private function string uf_plaf_adhesion_renouvellement ();//*------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$sur le contr$$HEX1$$f400$$ENDHEX$$ler
+//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatrés sur les +NS, +DT, +TR
+//*								  déclenché sur le contrôler
 //*       JFF    27/07/2011  [PLAF_REF]
 //  		 JFF	  29/05/2012 [VDOC6662]
 //        JFF    16/11/2015 [DT159-1]
@@ -7327,7 +7332,7 @@ String       sUntPerRnv_Adh
 
 sPos = ""
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par sinistre.                  */
+/* On vérifie s'il existe un plafond par sinistre.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -7342,13 +7347,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -7356,7 +7361,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -7395,15 +7400,15 @@ lLig = lLigFinale
 If	lLig > 0 Then
 	lTotDetail = idw_wDetailFF.iudwDetailSource.RowCount ()
 /*------------------------------------------------------------------*/
-/* On s'occupe du d$$HEX1$$e900$$ENDHEX$$tail courant, en insertion ou en modification.  */
-/* Ce d$$HEX1$$e900$$ENDHEX$$tail ne sera pas trait$$HEX2$$e9002000$$ENDHEX$$dans la boucle.                     */
+/* On s'occupe du détail courant, en insertion ou en modification.  */
+/* Ce détail ne sera pas traité dans la boucle.                     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Modification DBI le 12/08/1998                                   */
 /*                                                                  */
-/* La zone $$HEX2$$e0002000$$ENDHEX$$prendre en compte pour le calcul du montant plafonn$$HEX4$$e900200020002000$$ENDHEX$$*/
+/* La zone à prendre en compte pour le calcul du montant plafonné   */
 /* n'est pas MT_NPLAF      mais MT_PLAF      sinon on ne            */
-/* tient pas compte des plafonds appliqu$$HEX1$$e900$$ENDHEX$$s successivement           */
+/* tient pas compte des plafonds appliqués successivement           */
 /*------------------------------------------------------------------*/
 
 	dcMtPlaf		= idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF"   )
@@ -7411,13 +7416,13 @@ If	lLig > 0 Then
 
 	For	lCpt = 1 To lTotDetail
 /*------------------------------------------------------------------*/
-/* On ne traite pas le d$$HEX1$$e900$$ENDHEX$$tail courant.                              */
+/* On ne traite pas le détail courant.                              */
 /*------------------------------------------------------------------*/
 			If		idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "ID_DETAIL" ) = lIdDetail	Then
 					Continue
 			Else
 /*------------------------------------------------------------------*/
-/* Le d$$HEX1$$e900$$ENDHEX$$tail est 'REGLE' ou 'A REGLE', on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le montant       */
+/* Le détail est 'REGLE' ou 'A REGLE', on récupére le montant       */
 /* MT_PLAF.                                                         */
 /*------------------------------------------------------------------*/
 					If	( idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "COD_ETAT" ) = 500 Or &
@@ -7430,8 +7435,8 @@ If	lLig > 0 Then
 	Next
 
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -7446,7 +7451,7 @@ If	lLig > 0 Then
    sUntPerRnv_Adh		= idw_produit.GetItemString ( 1, "UNT_PERRNV_ADH" )
 /*----------------------------------------------------------------------*/
 /* On calcule la date du dernier renouvellement.                        */
-/* En fonction de l'unit$$HEX2$$e9002000$$ENDHEX$$de periode de renouvellement (ANNEE,MOIS,JOUR)*/
+/* En fonction de l'unité de periode de renouvellement (ANNEE,MOIS,JOUR)*/
 /*----------------------------------------------------------------------*/
    Choose Case sUntPerRnv_Adh
 	   Case "A"
@@ -7473,14 +7478,14 @@ If	lLig > 0 Then
 	itrTrans.PS_S03_W_DETAIL_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdGti, dcIdEvt, dtDteSurv, dtDteAdhRenouv, sMtAutreSinistre )
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S03_W_DETAIL_MT_PLAF" )	Then
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e.                                    */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée.                                    */
 /*------------------------------------------------------------------*/
 		sPos		= "ALT_BLOC"
 		F_Message ( stMessage )
 	Else
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine si on d$$HEX1$$e900$$ENDHEX$$passe le plafond.                           */
+/* On détermine si on dépasse le plafond.                           */
 /*------------------------------------------------------------------*/
 
 		dcMtAutreSinistre = Dec ( sMtAutreSinistre )
@@ -7516,7 +7521,7 @@ If	lLig > 0 Then
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -7535,8 +7540,8 @@ private function string uf_plaf_adhesion_survenance ();//*----------------------
 //* Fonction		: Uf_Plaf_Adhesion_Survenance (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 26/02/1998 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Application d'un plafond par adh$$HEX1$$e900$$ENDHEX$$sion/Ann$$HEX1$$e900$$ENDHEX$$e survenace glissante
+//* Libellé			: 
+//* Commentaires	: Application d'un plafond par adhésion/Année survenace glissante
 //*
 //* Arguments		: Aucun
 //*
@@ -7544,8 +7549,8 @@ private function string uf_plaf_adhesion_survenance ();//*----------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$sur le contr$$HEX1$$f400$$ENDHEX$$ler
+//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatrés sur les +NS, +DT, +TR
+//*								  déclenché sur le contrôler
 //*       JFF    27/07/2011  [PLAF_REF]
 //  		 JFF		29/05/2012 [VDOC6662]
 //       JFF   16/11/2015 [DT159-1]
@@ -7563,7 +7568,7 @@ String sRech, sPos, sIdAdh, sIdPara, sCptVer
 
 sPos = ""
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par sinistre.                  */
+/* On vérifie s'il existe un plafond par sinistre.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -7578,13 +7583,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -7592,7 +7597,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -7631,15 +7636,15 @@ lLig = lLigFinale
 If	lLig > 0 Then
 	lTotDetail = idw_wDetailFF.iudwDetailSource.RowCount ()
 /*------------------------------------------------------------------*/
-/* On s'occupe du d$$HEX1$$e900$$ENDHEX$$tail courant, en insertion ou en modification.  */
-/* Ce d$$HEX1$$e900$$ENDHEX$$tail ne sera pas trait$$HEX2$$e9002000$$ENDHEX$$dans la boucle.                     */
+/* On s'occupe du détail courant, en insertion ou en modification.  */
+/* Ce détail ne sera pas traité dans la boucle.                     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Modification DBI le 12/08/1998                                   */
 /*                                                                  */
-/* La zone $$HEX2$$e0002000$$ENDHEX$$prendre en compte pour le calcul du montant plafonn$$HEX4$$e900200020002000$$ENDHEX$$*/
+/* La zone à prendre en compte pour le calcul du montant plafonné   */
 /* n'est pas MT_NPLAF      mais MT_PLAF      sinon on ne            */
-/* tient pas compte des plafonds appliqu$$HEX1$$e900$$ENDHEX$$s successivement           */
+/* tient pas compte des plafonds appliqués successivement           */
 /*------------------------------------------------------------------*/
 
 	dcMtPlaf		= idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF"   )
@@ -7647,13 +7652,13 @@ If	lLig > 0 Then
 
 	For	lCpt = 1 To lTotDetail
 /*------------------------------------------------------------------*/
-/* On ne traite pas le d$$HEX1$$e900$$ENDHEX$$tail courant.                              */
+/* On ne traite pas le détail courant.                              */
 /*------------------------------------------------------------------*/
 			If		idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "ID_DETAIL" ) = lIdDetail	Then
 					Continue
 			Else
 /*------------------------------------------------------------------*/
-/* Le d$$HEX1$$e900$$ENDHEX$$tail est 'REGLE' ou 'A REGLE', on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le montant       */
+/* Le détail est 'REGLE' ou 'A REGLE', on récupére le montant       */
 /* MT_PLAF.                                                         */
 /*------------------------------------------------------------------*/
 					If	( idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "COD_ETAT" ) = 500 Or &
@@ -7665,8 +7670,8 @@ If	lLig > 0 Then
 			End If
 	Next
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -7683,14 +7688,14 @@ If	lLig > 0 Then
 	itrTrans.PS_S01_W_DETAIL_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdGti, dcIdEvt, dtDteSurv, sMtAutreSinistre )
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S01_W_DETAIL_MT_PLAF" )	Then
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e.                                    */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée.                                    */
 /*------------------------------------------------------------------*/
 		sPos		= "ALT_BLOC"
 		F_Message ( stMessage )
 	Else
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine si on d$$HEX1$$e900$$ENDHEX$$passe le plafond.                           */
+/* On détermine si on dépasse le plafond.                           */
 /*------------------------------------------------------------------*/
 
 		dcMtAutreSinistre = Dec ( sMtAutreSinistre )
@@ -7723,7 +7728,7 @@ If	lLig > 0 Then
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -7741,8 +7746,8 @@ private function string uf_calcul_montantregle ();//*---------------------------
 //* Fonction		: Uf_Calcul_MontantRegle (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 26/02/1998 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Calcul du Montant $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gler
+//* Libellé			: 
+//* Commentaires	: Calcul du Montant à régler
 //*
 //* Arguments		: Aucun
 //*
@@ -7750,8 +7755,8 @@ private function string uf_calcul_montantregle ();//*---------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1	 CAG		 14/06/04	DCMP 040176 : cr$$HEX1$$e900$$ENDHEX$$ation d'un plafond par ann$$HEX1$$e900$$ENDHEX$$e civile
-//* #2	 CAG		 25/06/04	Calcul de la franchise apr$$HEX1$$e800$$ENDHEX$$s les plafonds
+//* #1	 CAG		 14/06/04	DCMP 040176 : création d'un plafond par année civile
+//* #2	 CAG		 25/06/04	Calcul de la franchise après les plafonds
 //* #3	 PHG		 16/04/07	[DCMP060777] : Ajout des plafonds 707 a 710
 //*									( Nb Ev adherent|adhesion/renouvellement|survenance )	
 //*	 #4 PHG		 24/12/2009  [O2M_DIAG_NOMADE].Lot2 Point 3.1
@@ -7784,8 +7789,8 @@ bCasto = lDeb > 0
 bBloque = idw_wDetailFF.GetItemString ( 1, "ALT_BLOC" ) = "O"
 
 /*------------------------------------------------------------------*/
-/* On positionne les toutes les valeurs $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro. Ensuite si le       */
-/* d$$HEX1$$e900$$ENDHEX$$tail est 'A REGLE', on d$$HEX1$$e900$$ENDHEX$$marre le calcul (Franchise, Plafond). */
+/* On positionne les toutes les valeurs à zéro. Ensuite si le       */
+/* détail est 'A REGLE', on démarre le calcul (Franchise, Plafond). */
 /*------------------------------------------------------------------*/
 idw_wDetailFF.SetItem ( 1, "MT_NPLAF", 0.00 )
 idw_wDetailFF.SetItem ( 1, "MT_FRAN", 	0.00 )
@@ -7815,8 +7820,8 @@ If	idw_wDetailFF.GetItemNumber ( 1, "COD_ETAT" ) = 500	Then
 	End If // :[O2M_DIAG_NOMADE].Lot2 Point 3.1
 	
 	/*------------------------------------------------------------------*/
-	/* Si la date de facture est visible, alors elle doit $$HEX1$$ea00$$ENDHEX$$tre          */
-	/* renseign$$HEX1$$e900$$ENDHEX$$e pour r$$HEX1$$e900$$ENDHEX$$gler.                                          */
+	/* Si la date de facture est visible, alors elle doit être          */
+	/* renseignée pour régler.                                          */
 	/*------------------------------------------------------------------*/
 	If sPos = "" And idw_wDetailFF.Describe ( "dte_facture.visible" ) = "1" Then
 
@@ -7851,7 +7856,7 @@ If	idw_wDetailFF.GetItemNumber ( 1, "COD_ETAT" ) = 500	Then
 				// [VDOC9650] supp de "ECL"
 				// ITSM205361 ajout DEF
 				Case "RPC", "ANN", "RFO", "RSP", "DEF"
-					// On peut r$$HEX1$$e900$$ENDHEX$$gler
+					// On peut régler
 				Case Else
 					stMessage.sTitre		= "Date de facture"
 					stMessage.Icon			= Information!
@@ -7879,7 +7884,7 @@ If	idw_wDetailFF.GetItemNumber ( 1, "COD_ETAT" ) = 500	Then
 
 		sNumFacture = idw_wDetailFF.GetItemString ( 1, "NUM_FACTURE" )
 		If sPos = "" and ( IsNull ( sNumFacture ) Or sNumFacture = "" ) Then
-			stMessage.sTitre		= "Num$$HEX1$$e900$$ENDHEX$$ro de facture"
+			stMessage.sTitre		= "Numéro de facture"
 			stMessage.Icon			= Information!
 			stMessage.bErreurG	= FALSE
 			stMessage.Bouton		= OK!
@@ -7893,13 +7898,13 @@ If	idw_wDetailFF.GetItemNumber ( 1, "COD_ETAT" ) = 500	Then
 
 	dcMtPrej = idw_wDetailFF.GetItemDecimal ( 1, "MT_PREJ" )
 /*------------------------------------------------------------------*/
-/* Si le r$$HEX1$$e900$$ENDHEX$$glement est forc$$HEX1$$e900$$ENDHEX$$, on positionne le montant MT_PLAF      */
+/* Si le réglement est forcé, on positionne le montant MT_PLAF      */
 /* dans MT_NPLAF.                                                   */
 /*------------------------------------------------------------------*/
 	If	idw_wDetailFF.GetItemString ( 1, "ALT_REG" ) = "O"	Then
 /*------------------------------------------------------------------*/
-/* Ne jamais faire un SetItem avec un GetItemNumber (Probl$$HEX1$$e800$$ENDHEX$$me de    */
-/* pr$$HEX1$$e900$$ENDHEX$$cision). Il faut passer dans une variable interm$$HEX1$$e900$$ENDHEX$$diaire.      */
+/* Ne jamais faire un SetItem avec un GetItemNumber (Problème de    */
+/* précision). Il faut passer dans une variable intermédiaire.      */
 /*------------------------------------------------------------------*/
 		dcMtPlaf = idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF" )
 		idw_wDetailFF.SetItem ( 1, "MT_NPLAF", dcMtPlaf )
@@ -7914,7 +7919,7 @@ If	idw_wDetailFF.GetItemNumber ( 1, "COD_ETAT" ) = 500	Then
 		This.uf_Calcul_MontantRegle_Gti_GMP ( dcMtPrej )
 
 /*------------------------------------------------------------------*/
-/* On positionne la zone ALT_BOUGE de DW_PLAF_DETAIL $$HEX15$$e00020002000200020002000200020002000200020002000200020002000$$ENDHEX$$*/
+/* On positionne la zone ALT_BOUGE de DW_PLAF_DETAIL à              */
 /* (S)upprime. Cela va nous permettre de savoir si on vient de      */
 /* toucher aux plafonds. On optimise ainsi les commandes SQL.       */
 /*------------------------------------------------------------------*/
@@ -7980,10 +7985,10 @@ If	idw_wDetailFF.GetItemNumber ( 1, "COD_ETAT" ) = 500	Then
 		If sPos = "" Then sPos = Uf_Plaf_Adhesion_Survenance_GtiDp351 ()	
 	
 /*------------------------------------------------------------------*/
-/* #2 CAG 25/06/2004 : cet appel $$HEX1$$e900$$ENDHEX$$tait avant le calcul des plafonds */
+/* #2 CAG 25/06/2004 : cet appel était avant le calcul des plafonds */
 /*------------------------------------------------------------------*/
-/* On va maintenant appliquer une franchise $$HEX1$$e900$$ENDHEX$$ventuelle, puis les    */
-/* plafonds successifs dans le cas ou on ne force pas le r$$HEX1$$e800$$ENDHEX$$glement. */
+/* On va maintenant appliquer une franchise éventuelle, puis les    */
+/* plafonds successifs dans le cas ou on ne force pas le règlement. */
 /*------------------------------------------------------------------*/
 		Uf_Fran_Fixe ()
 
@@ -8005,8 +8010,8 @@ If	idw_wDetailFF.GetItemNumber ( 1, "COD_ETAT" ) = 500	Then
 End If	
 
 /*------------------------------------------------------------------*/
-/* Si le d$$HEX1$$e900$$ENDHEX$$tail n'est pas bloqu$$HEX1$$e900$$ENDHEX$$, on va v$$HEX1$$e900$$ENDHEX$$rifier s'il faut          */
-/* repositionner les autres d$$HEX1$$e900$$ENDHEX$$tails.                                */
+/* Si le détail n'est pas bloqué, on va vérifier s'il faut          */
+/* repositionner les autres détails.                                */
 /*------------------------------------------------------------------*/
 If	Not bBloque And sPos = "" Then
 	Uf_Recalcul_Autre_Detail ()
@@ -8020,8 +8025,8 @@ private subroutine uf_calculer_dt_1er_uf ();//*---------------------------------
 //* Fonction		: Uf_Calculer_Dt_1er_Uf (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 09/04/1998 17:30:47
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On calcule la date de 1$$HEX1$$e800$$ENDHEX$$re utilisation frauduleuse
+//* Libellé			: 
+//* Commentaires	: On calcule la date de 1ère utilisation frauduleuse
 //*
 //* Arguments		: Aucun
 //*
@@ -8040,7 +8045,7 @@ lTotDetail	= idw_LstDetail.RowCount ()
 dcIdDetail  = idw_wDetailFF.GetItemNumber ( 1, "ID_DETAIL" ) 
 
 /*------------------------------------------------------------------*/
-/* On g$$HEX1$$e800$$ENDHEX$$re la date du d$$HEX1$$e900$$ENDHEX$$tail actuel                                 */
+/* On gère la date du détail actuel                                 */
 /* si elle n'est pas null on initialise date mini avec              */
 /*------------------------------------------------------------------*/
 
@@ -8053,14 +8058,14 @@ End If
 
 /*------------------------------------------------------------------*/
 /* Le 27/05/1999.                                                   */
-/* Modif DGA. Gestion des UF T$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone Mobile.                      */
+/* Modif DGA. Gestion des UF Téléphone Mobile.                      */
 /*------------------------------------------------------------------*/
 lIdGti = idw_wGarSin.GetItemNumber ( 1, "ID_GTI" )
 If	lIdGti = 7 Or lIdGti = 8	Then
 
 	For	lCpt = 1 To lTotDetail
 /*------------------------------------------------------------------*/
-/* On calcule la plus petite date de tous les d$$HEX1$$e900$$ENDHEX$$tails, qui ne sont  */
+/* On calcule la plus petite date de tous les détails, qui ne sont  */
 /* pas SANS SUITE.                                                  */
 /*------------------------------------------------------------------*/
 
@@ -8069,12 +8074,12 @@ If	lIdGti = 7 Or lIdGti = 8	Then
 
 /*----------------------------------------------------------------------------*/
 /* Modification DBI : le 12/08/1998                                           */
-/* La zone DTE_DET_DATE n'est renseign$$HEX1$$e900$$ENDHEX$$e que lors de la saisie d'un d$$HEX1$$e900$$ENDHEX$$tail    */
-/* et n'est utile qu'$$HEX2$$e0002000$$ENDHEX$$ce moment                                              */
+/* La zone DTE_DET_DATE n'est renseignée que lors de la saisie d'un détail    */
+/* et n'est utile qu'à ce moment                                              */
 /*                                                                            */
-/* si on vient uniquement sur la garantie sans contr$$HEX1$$f400$$ENDHEX$$ler et valider le        */
-/* d$$HEX1$$e900$$ENDHEX$$tail                                                                     */
-/* elle n'est pas renseign$$HEX1$$e900$$ENDHEX$$e                                                  */
+/* si on vient uniquement sur la garantie sans contrôler et valider le        */
+/* détail                                                                     */
+/* elle n'est pas renseignée                                                  */
 /*                                                                            */
 /* Seule la zone DTE_DET ( format datetime ) est toujours valide.             */
 /*                                                                            */
@@ -8085,8 +8090,8 @@ If	lIdGti = 7 Or lIdGti = 8	Then
 				dDteDet = Date ( idw_LstDetail.GetItemDateTime ( lCpt, "DTE_DET" ) )
 				If	Not IsNull ( dDteDet )	Then
 /*------------------------------------------------------------------*/
-/* Si tous les d$$HEX1$$e900$$ENDHEX$$tails sont SANS SUITE, il faut mettre la zone      */
-/* DTE_1ER_UF $$HEX2$$e0002000$$ENDHEX$$NULL.                                               */
+/* Si tous les détails sont SANS SUITE, il faut mettre la zone      */
+/* DTE_1ER_UF à NULL.                                               */
 /*------------------------------------------------------------------*/
 					If	IsNull ( dDteMini )	Then
 						dDteMini = dDteDet
@@ -8108,8 +8113,8 @@ private function boolean uf_rf_625 ();//*---------------------------------------
 //* Fonction		: Uf_Rf_625 (PRIVATE)
 //* Auteur			: DBI
 //* Date				: 23/09/1998 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: D$$HEX1$$e900$$ENDHEX$$lai 1er Uf/Dte Det
+//* Libellé			: 
+//* Commentaires	: Délai 1er Uf/Dte Det
 //*
 //* Arguments		: Aucun
 //*
@@ -8118,10 +8123,10 @@ private function boolean uf_rf_625 ();//*---------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    11/04/2003  Traitement des D$$HEX1$$e900$$ENDHEX$$lai paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$surle contr$$HEX1$$f400$$ENDHEX$$le de garantie.
+//* #1 	 JFF    11/04/2003  Traitement des Délai paramatrés sur les +NS, +DT, +TR
+//*								  déclenché surle contrôle de garantie.
 //* #2		PHG	26/10/2009 [DCMP071000] rf 655+651: Annexe : Correction Bug
-//*								  pr$$HEX1$$e900$$ENDHEX$$sent sur toute les fonctions de refus.
+//*								  présent sur toute les fonctions de refus.
 //*-----------------------------------------------------------------
 
 Long lTotDelai, lLig, lDuree, lCpt 
@@ -8148,13 +8153,13 @@ For lCpt = 1 to 5
 			sIdNivDel = "+NS"  // Nature de sinistre
 			sIdRefDel = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivDel = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivDel = "+TR"  // Territorialité
 			sIdRefDel = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivDel = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail de sinistre
+			sIdNivDel = "+DT"  // Détail de sinistre
 			sIdRefDel = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivDel = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivDel = "+EV"  // Evénement de garantie
 			sIdRefDel = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 
@@ -8163,7 +8168,7 @@ For lCpt = 1 to 5
 	If IsNull ( sIdRefDel ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un d$$HEX1$$e900$$ENDHEX$$lai 625 pour la garantie.            */
+	/* On vérifie s'il existe un délai 625 pour la garantie.            */
 	/*------------------------------------------------------------------*/
 	// #2 [DCMP071000] Lecture ID_GTI dans idw_wDetailFF ald de idw_wGarSin
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
@@ -8178,9 +8183,9 @@ For lCpt = 1 to 5
 
 	If	lLig > 0 Then
 	/*------------------------------------------------------------------*/
-	/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le d$$HEX1$$e900$$ENDHEX$$lai maximum autoris$$HEX2$$e9002000$$ENDHEX$$entre la survenance du     */
-	/* sinistre et la date de d$$HEX1$$e900$$ENDHEX$$claration. On v$$HEX1$$e900$$ENDHEX$$rifie si ce d$$HEX1$$e900$$ENDHEX$$lai est   */
-	/* d$$HEX1$$e900$$ENDHEX$$pass$$HEX1$$e900$$ENDHEX$$.                                                         */
+	/* On récupére le délai maximum autorisé entre la survenance du     */
+	/* sinistre et la date de déclaration. On vérifie si ce délai est   */
+	/* dépassé.                                                         */
 	/*------------------------------------------------------------------*/
 
 		dDte1erUF= Date (idw_wGarSin.GetItemDateTime ( 1, "DTE_1ER_UF" ) ) // [PI056]
@@ -8193,7 +8198,7 @@ For lCpt = 1 to 5
 
 		If	dDteDet > dDteMax	Then
 		/*------------------------------------------------------------------*/
-		/* La dur$$HEX1$$e900$$ENDHEX$$e maximum est d$$HEX1$$e900$$ENDHEX$$pass$$HEX1$$e900$$ENDHEX$$e, on d$$HEX1$$e900$$ENDHEX$$clenche le refus 625.        */
+		/* La durée maximum est dépassée, on déclenche le refus 625.        */
 		/*------------------------------------------------------------------*/
 			bRet = Uf_RF_EcrireRefus ( 625 )
 		End If
@@ -8209,8 +8214,8 @@ private function boolean uf_rf_622 ();//*---------------------------------------
 //* Fonction		: Uf_Rf_622 (PRIVATE)
 //* Auteur			: DBI
 //* Date				: 23/09/1998 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: D$$HEX1$$e900$$ENDHEX$$lai date det/Dte survenance
+//* Libellé			: 
+//* Commentaires	: Délai date det/Dte survenance
 //*
 //* Arguments		: Aucun
 //*
@@ -8219,17 +8224,17 @@ private function boolean uf_rf_622 ();//*---------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    11/04/2003  Traitement des D$$HEX1$$e900$$ENDHEX$$lai paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$surle contr$$HEX1$$f400$$ENDHEX$$le de garantie.
-//* #2	 PHG	  04/04/2007  [DCMP070234] Prise en compte du delai *Min* du d$$HEX1$$e900$$ENDHEX$$lais 622
-//*								  Cas de d$$HEX1$$e900$$ENDHEX$$clechement du refus :
+//* #1 	 JFF    11/04/2003  Traitement des Délai paramatrés sur les +NS, +DT, +TR
+//*								  déclenché surle contrôle de garantie.
+//* #2	 PHG	  04/04/2007  [DCMP070234] Prise en compte du delai *Min* du délais 622
+//*								  Cas de déclechement du refus :
 //*								  			DMax         Dmin        Dsurv
 //*								  1 : Dt---[------------]--------------|---- => Refus
 //*								  2 :   ---[----Dt------]--------------|---- => Ok
 //*								  3 :   ---[------------]----Dt--------|---- => Refus
 //*								  4 :   ---[------------]--------------|--Dt => Refus
 //* #3		PHG	26/10/2009 [DCMP071000] rf 655+651: Annexe : Correction Bug
-//*								  pr$$HEX1$$e900$$ENDHEX$$sent sur toute les fonctions de refus.
+//*								  présent sur toute les fonctions de refus.
 //*        JFf    23/12/2010 [VDOC6416][PC494]
 //*-----------------------------------------------------------------
 Long 		lTotDelai, lLig, lDuree, lNbJour, lNbHeu, lHeuDet, lHeuMax, lCpt, lDeb, lFin, lCpt2, lRow
@@ -8238,7 +8243,7 @@ String 	sRech, sUnite, sHeuDet, sHeuSurv, sIdNivDel, sIdRefDel, sTypDatePivot, s
 Date		dDteSurv, dDteDet, dDteMax, dtDteRelassComm 
 Time		hHeuMax
 DateTime dtDteMax, dtSurv
-long 		lDelaiMin // [DCMP070234]D$$HEX1$$e900$$ENDHEX$$lai pour calculer la Dmin $$HEX2$$e0002000$$ENDHEX$$partir de Dsurv
+long 		lDelaiMin // [DCMP070234]Délai pour calculer la Dmin à partir de Dsurv
 DateTime	dtDteMin  // DateTime Min pour lequel le dt doit etre *INFERIEUR OU EGAL* 
 long 		lNbJrMin, lNbHMin, lHeuMin // Variables de calcul de dtDteMin
 time		hHeuMin							// Variables de calcul de dtDteMin, suite
@@ -8264,13 +8269,13 @@ For lCpt = 1 to 5
 			sIdNivDel = "+NS"  // Nature de sinistre
 			sIdRefDel = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivDel = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivDel = "+TR"  // Territorialité
 			sIdRefDel = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivDel = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail de sinistre
+			sIdNivDel = "+DT"  // Détail de sinistre
 			sIdRefDel = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivDel = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivDel = "+EV"  // Evénement de garantie
 			sIdRefDel = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 
@@ -8279,7 +8284,7 @@ For lCpt = 1 to 5
 	If IsNull ( sIdRefDel ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un d$$HEX1$$e900$$ENDHEX$$lai de d$$HEX1$$e900$$ENDHEX$$claration pour la garantie. */
+	/* On vérifie s'il existe un délai de déclaration pour la garantie. */
 	/*------------------------------------------------------------------*/
 	// #3 [DCMP071000] Lecture ID_GTI dans idw_wDetailFF ald de idw_wGarSin
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
@@ -8295,15 +8300,15 @@ For lCpt = 1 to 5
 	If	lLig > 0 Then
 
 	/*------------------------------------------------------------------*/
-	/* Le cas du d$$HEX1$$e900$$ENDHEX$$lai en heure est g$$HEX1$$e900$$ENDHEX$$r$$HEX4$$e9002000e0002000$$ENDHEX$$part car on doit travailler  */
+	/* Le cas du délai en heure est géré à part car on doit travailler  */
 	/* sur des datetime et non sur des dates.                           */
 	/* De plus, on ne peut pas utiliser uniquement f_plus_date pour le  */
-	/* calcul de la date de r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence                                   */
+	/* calcul de la date de référence                                   */
 	/*------------------------------------------------------------------*/
 
 		sUnite	= idw_Delai.GetItemString ( lLig, "UNT_DEL" )
 		lDuree	= idw_Delai.GetItemNumber ( lLig, "DUR_MAX" )
-		// [DCMP070234]On lit le d$$HEX1$$e900$$ENDHEX$$lai minimum
+		// [DCMP070234]On lit le délai minimum
 		lDelaiMin = idw_Delai.GetItemNumber ( lLig, "DUR_MIN" )
 		//
 		dDteDet 	= Date ( idw_wDetailFF.GetItemDateTime ( 1, "DTE_DET" ) )
@@ -8332,13 +8337,13 @@ For lCpt = 1 to 5
 								Return bRet
 							End If
 							
-							// On affecte dtDteRelassComm $$HEX2$$e0002000$$ENDHEX$$dDteSurv et on laisse se poursuivre le reste de la fonction
+							// On affecte dtDteRelassComm à dDteSurv et on laisse se poursuivre le reste de la fonction
 							dDteSurv = dtDteRelassComm 
 						
 						End If
 
 					Case "DTE_SURV"							
-						// On ne fait rien, c'est le d$$HEX1$$e900$$ENDHEX$$faut.
+						// On ne fait rien, c'est le défaut.
 				End CHoose
 				
 			End If
@@ -8348,18 +8353,18 @@ For lCpt = 1 to 5
 		If sUnite = 'H' Then
 
 	/*------------------------------------------------------------------*/
-	/* on additionne les heures $$HEX2$$e0002000$$ENDHEX$$la date du d$$HEX1$$e900$$ENDHEX$$tail.                    */
-	/* On commence par d$$HEX1$$e900$$ENDHEX$$terminer $$HEX2$$e0002000$$ENDHEX$$combien de jours et d'heures        */
+	/* on additionne les heures à la date du détail.                    */
+	/* On commence par déterminer à combien de jours et d'heures        */
 	/* correspond lDuree                                                */
 	/*------------------------------------------------------------------*/
 
-			lNbJour	=	Truncate ( ( lDuree / 24 ), 0 )		// Partie enti$$HEX1$$e800$$ENDHEX$$re du nombre d'heures / 24
+			lNbJour	=	Truncate ( ( lDuree / 24 ), 0 )		// Partie entière du nombre d'heures / 24
 			lNbHeu	=	Mod ( lDuree, 24 )						// Reste de la division du nb heures / 24
 			
 			sHeuDet	=	idw_wDetailFF.GetItemString 	( 1, "HEU_DET" )		
 			sHeuSurv	=	idw_wSin.GetItemString 			( 1, "HEU_SURV" )		
 
-			// [DCMP070234] On calcule le nombre de jour + heure que repr$$HEX1$$e900$$ENDHEX$$sente le d$$HEX1$$e900$$ENDHEX$$lai min
+			// [DCMP070234] On calcule le nombre de jour + heure que représente le délai min
 			lNbJrMin	=	Truncate ( ( lDelaiMin / 24 ), 0 )
 			lNbHMin  =	Mod ( lDelaiMin, 24 )
 			//
@@ -8372,8 +8377,8 @@ For lCpt = 1 to 5
 				lHeuMax  =  lHeuDet + lNbHeu
 
 	/*------------------------------------------------------------------*/
-	/* Si le nombre d'heures obtenu d$$HEX1$$e900$$ENDHEX$$passe une journ$$HEX1$$e900$$ENDHEX$$e, on ajoute un   */
-	/* jour et on enl$$HEX1$$e800$$ENDHEX$$ve 24 heures $$HEX2$$e0002000$$ENDHEX$$heuMax                             */
+	/* Si le nombre d'heures obtenu dépasse une journée, on ajoute un   */
+	/* jour et on enlève 24 heures à heuMax                             */
 	/*------------------------------------------------------------------*/
 
 				If lHeuMax > 23 Then
@@ -8396,10 +8401,10 @@ For lCpt = 1 to 5
 	// [DCMP070234] On calcule sur le meme principe la dateMin mais en partant de DteSurv,
 	// et avec un calcul a reours ( soustraction de date et heure et non plus addition )
 				lHeuMin  = Long ( Left ( sHeuSurv, 2 ) ) - lNbHMin
-				If lHeuMin <0 Then // Si le nombre d'heure resultant est n$$HEX1$$e900$$ENDHEX$$gatif
-					lHeuMin 	= 24 - abs(lHeuMin) // On d$$HEX1$$e900$$ENDHEX$$termine l'heure correcte en prenant 
-														  // le complement $$HEX2$$e0002000$$ENDHEX$$24
-					lNbJrMin	--						  // On enl$$HEX1$$e800$$ENDHEX$$ve un jour
+				If lHeuMin <0 Then // Si le nombre d'heure resultant est négatif
+					lHeuMin 	= 24 - abs(lHeuMin) // On détermine l'heure correcte en prenant 
+														  // le complement à 24
+					lNbJrMin	--						  // On enlève un jour
 				End If
 				hHeuMin	= Time ( String ( lHeuMin ) + ':' + Right ( sHeuSurv, 2 ) )
 				dDteMin  = F_Plus_Date ( dDteSurv, lNbJrMin * -1, 'J' ) // On calcule a rebours
@@ -8410,7 +8415,7 @@ For lCpt = 1 to 5
 				
 				If	dtSurv > dtDteMax	or dtDteDet > dtDteMin Then // [DCMP070234] on teste aussi la borne Min
 	/*------------------------------------------------------------------*/
-	/* La dur$$HEX1$$e900$$ENDHEX$$e maximum est d$$HEX1$$e900$$ENDHEX$$pass$$HEX1$$e900$$ENDHEX$$e, on d$$HEX1$$e900$$ENDHEX$$clenche le refus 622.        */
+	/* La durée maximum est dépassée, on déclenche le refus 622.        */
 	/*------------------------------------------------------------------*/
 					bRet = Uf_RF_EcrireRefus ( 622 )
 				End If
@@ -8420,9 +8425,9 @@ For lCpt = 1 to 5
 				dDteMax	= F_Plus_Date ( dDteDet, lNbJour, 'J' )
 				dDteMin  = F_Plus_Date ( dDteSurv, lNbJrMin * -1, 'J' ) // [DCMP070234] On calcule a rebours
 
-				If	dDteSurv > dDteMax or dDteDet > dDteMin	Then // [DCMP070234] On teste en plus le d$$HEX1$$e900$$ENDHEX$$lais min
+				If	dDteSurv > dDteMax or dDteDet > dDteMin	Then // [DCMP070234] On teste en plus le délais min
 		/*------------------------------------------------------------------*/
-		/* La dur$$HEX1$$e900$$ENDHEX$$e maximum est d$$HEX1$$e900$$ENDHEX$$pass$$HEX1$$e900$$ENDHEX$$e, on d$$HEX1$$e900$$ENDHEX$$clenche le refus 622.        */
+		/* La durée maximum est dépassée, on déclenche le refus 622.        */
 		/*------------------------------------------------------------------*/
 					bRet = Uf_RF_EcrireRefus ( 622 )
 				End If
@@ -8433,9 +8438,9 @@ For lCpt = 1 to 5
 			dDteMax	= F_Plus_Date ( dDteDet, lDuree, sUnite )
 			dDteMin  = F_Plus_Date ( dDteSurv, lDelaiMin * -1, 'J' ) // [DCMP070234] On calcule a rebours
 
-			If	dDteSurv > dDteMax or dDteDet > dDteMin   Then // [DCMP070234] On teste en plus le d$$HEX1$$e900$$ENDHEX$$lais min
+			If	dDteSurv > dDteMax or dDteDet > dDteMin   Then // [DCMP070234] On teste en plus le délais min
 		/*------------------------------------------------------------------*/
-		/* La dur$$HEX1$$e900$$ENDHEX$$e maximum est d$$HEX1$$e900$$ENDHEX$$pass$$HEX1$$e900$$ENDHEX$$e, on d$$HEX1$$e900$$ENDHEX$$clenche le refus 622.        */
+		/* La durée maximum est dépassée, on déclenche le refus 622.        */
 		/*------------------------------------------------------------------*/
 				bRet = Uf_RF_EcrireRefus ( 622 )
 			End If
@@ -8451,7 +8456,7 @@ private subroutine uf_gestion_str2nul ();//*------------------------------------
 //* Fonction		: U_Gs_Sp_Sinistre_wDetail::Uf_Gestion_Str2Nul (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 17/10/1998 18:05:58
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Cette fonction transforme les chaines vides en NULL
 //*
 //* Arguments		: Aucun
@@ -8466,13 +8471,13 @@ Long lCpt, lNbrCol
 
 /*------------------------------------------------------------------*/
 /* Le but de cette fonction est de transformer toutes les zones au  */
-/* format STRING dans la DW courante en NULL. Cela $$HEX1$$e900$$ENDHEX$$vitera d'avoir  */
+/* format STRING dans la DW courante en NULL. Cela évitera d'avoir  */
 /* sur le moteurs des zones avec des blancs. Cette fonction doit    */
-/* $$HEX1$$ea00$$ENDHEX$$tre appel$$HEX1$$e900$$ENDHEX$$e avant la fonction Uf_ControlerSaisie ().            */
+/* être appelée avant la fonction Uf_ControlerSaisie ().            */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* De plus si le gestionnaire saisi des blancs DEVANT la zone,      */
-/* ces caract$$HEX1$$e800$$ENDHEX$$res sont automatiquement enlev$$HEX1$$e900$$ENDHEX$$s.                     */
+/* ces caractères sont automatiquement enlevés.                     */
 /*------------------------------------------------------------------*/
 
 lNbrCol				= UpperBound ( sCol )
@@ -8495,9 +8500,9 @@ Next
 /*------------------------------------------------------------------*/
 /* Le 10/12/1998                                                    */
 /* Si le dossier est SANS SUITE, il n'y a pas de test sur la        */
-/* valeur MT_PREJ. Donc si cette valeur est $$HEX2$$e0002000$$ENDHEX$$NULL, cela pose un    */
+/* valeur MT_PREJ. Donc si cette valeur est à NULL, cela pose un    */
 
-/* probl$$HEX1$$e800$$ENDHEX$$me.                                                        */
+/* problème.                                                        */
 /*------------------------------------------------------------------*/
 If	IsNull ( idw_wDetailFF.GetItemDecimal ( 1, "MT_PREJ" ) )	Then
 	idw_wDetailFF.SetItem ( 1, "MT_PREJ", 0.00 )
@@ -8511,8 +8516,8 @@ private subroutine uf_gestion_plafond (integer aitype);//*----------------------
 //* Fonction		: Uf_Gestion_Plafond_Piece (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 22/01/1998 16:31:31
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Gestion des plafonds pour le d$$HEX1$$e900$$ENDHEX$$tail
+//* Libellé			: 
+//* Commentaires	: Gestion des plafonds pour le détail
 //*
 //* Arguments		: Integer		aiType			(Val)	Type d'action
 //*
@@ -8526,19 +8531,19 @@ Long lTotPlafondTag
 
 Choose Case aiType
 /*------------------------------------------------------------------*/
-/* On est en insertion d'un d$$HEX1$$e900$$ENDHEX$$tail.                                 */
+/* On est en insertion d'un détail.                                 */
 /*------------------------------------------------------------------*/
 Case 1
 	idw_wPlaf_Detail.Reset ()
 
 /*------------------------------------------------------------------*/
-/* On est en modification d'un d$$HEX1$$e900$$ENDHEX$$tail.                              */
+/* On est en modification d'un détail.                              */
 /*------------------------------------------------------------------*/
 Case 2
 	idw_wPlaf_Detail.Reset ()
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re dans DW_WPLAF_DETAIL les plafonds d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$positionn$$HEX1$$e900$$ENDHEX$$s.    */
+/* On insére dans DW_WPLAF_DETAIL les plafonds déjà positionnés.    */
 /* Pour cela on filtre sur ID_GTI et ID_DETAIL.                     */
 /*------------------------------------------------------------------*/
 	sFiltre = "ID_GTI = " + String ( idw_wDetailFF.GetItemNumber ( 1, "ID_GTI" ) ) + &
@@ -8567,10 +8572,10 @@ private subroutine uf_preparervalider_plafond (ref s_pass astpass);//*----------
 //* Fonction		: Uf_PreparerValider_Plafond (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Pr$$HEX1$$e900$$ENDHEX$$paration de la validation d'un d$$HEX1$$e900$$ENDHEX$$tail (Niveau PLAFOND)
+//* Libellé			: 
+//* Commentaires	: Préparation de la validation d'un détail (Niveau PLAFOND)
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
@@ -8584,13 +8589,13 @@ Boolean 		bModif
 bModif		= False
 
 /*------------------------------------------------------------------*/
-/* On s'occupe du transfert des plafonds du d$$HEX1$$e900$$ENDHEX$$tail.                 */
+/* On s'occupe du transfert des plafonds du détail.                 */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* On va v$$HEX1$$e900$$ENDHEX$$rifier si l'un des plafonds a boug$$HEX1$$e900$$ENDHEX$$. Il suffit de        */
-/* tester s'il existe une ligne avec ALT_BOUGE $$HEX2$$e0002000$$ENDHEX$$(S)upprime.        */
+/* On va vérifier si l'un des plafonds a bougé. Il suffit de        */
+/* tester s'il existe une ligne avec ALT_BOUGE à (S)upprime.        */
 /* Fonction Uf_Calcul_MontantRegle (). Si c'est le cas on supprime  */
-/* tous les plafonds et on ins$$HEX1$$e900$$ENDHEX$$re les autres s'ils existent.        */
+/* tous les plafonds et on insére les autres s'ils existent.        */
 /* (ALT_BOUGE = OUI).                                               */
 /*------------------------------------------------------------------*/
 lTotPlafTag = idw_wPlaf_Detail.RowCount ()
@@ -8605,7 +8610,7 @@ Next
 If	bModif	Then
 	If	Not astPass.bInsert Then
 /*------------------------------------------------------------------*/
-/* On a touch$$HEX4$$e9002000e0002000$$ENDHEX$$l'un des plafonds. On supprime, en modification,   */
+/* On a touché à l'un des plafonds. On supprime, en modification,   */
 /* tous les plafonds.                                               */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
@@ -8630,7 +8635,7 @@ If	bModif	Then
 End If
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re les nouveaux plafonds.                                 */
+/* On insére les nouveaux plafonds.                                 */
 /*------------------------------------------------------------------*/
 sFiltre = "ALT_BOUGE = 'O'"
 
@@ -8659,8 +8664,8 @@ private function boolean uf_rf_635 ();//*---------------------------------------
 //* Fonction		: Uf_Rf_635 (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 26/02/1998 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Carte diff$$HEX1$$e900$$ENDHEX$$rente de la carte couverte
+//* Libellé			: 
+//* Commentaires	: Carte différente de la carte couverte
 //*
 //* Arguments		: Aucun
 //*
@@ -8674,16 +8679,16 @@ Boolean bRet
 
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche ce refus pour les produits avec COD_ADH = 3 ou 4    */
-/* (Adh$$HEX1$$e900$$ENDHEX$$sion par Carte). Si la zone ID_ADH (correspondant au N$$HEX2$$b0002000$$ENDHEX$$de  */
-/* la carte couverte) est saisie, on verifie si ce N$$HEX2$$b0002000$$ENDHEX$$est           */
-/* identique au N$$HEX2$$b0002000$$ENDHEX$$de carte du d$$HEX1$$e900$$ENDHEX$$tail que l'on vient de saisir.(Si  */
-/* ce N$$HEX2$$b0002000$$ENDHEX$$de carte n'est pas NULL, bien sur). Dans le cas ou les     */
-/* deux N$$HEX2$$b0002000$$ENDHEX$$sont diff$$HEX1$$e900$$ENDHEX$$rents, on arme le motif 635.                   */
+/* On déclenche ce refus pour les produits avec COD_ADH = 3 ou 4    */
+/* (Adhésion par Carte). Si la zone ID_ADH (correspondant au N° de  */
+/* la carte couverte) est saisie, on verifie si ce N° est           */
+/* identique au N° de carte du détail que l'on vient de saisir.(Si  */
+/* ce N° de carte n'est pas NULL, bien sur). Dans le cas ou les     */
+/* deux N° sont différents, on arme le motif 635.                   */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* La zone COD_ADH est arm$$HEX1$$e900$$ENDHEX$$e sur la DW de Sinistre par Denis. On    */
-/* peut donc la r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer directement.                              */
+/* La zone COD_ADH est armée sur la DW de Sinistre par Denis. On    */
+/* peut donc la récupérer directement.                              */
 /*------------------------------------------------------------------*/
 bRet		= True
 sCodAdh 	= idw_wSin.GetItemString ( 1, "COD_ADH" )
@@ -8709,12 +8714,12 @@ private subroutine uf_plaf_ecrirepara (string asidtypplaf, string asidpara, stri
 //* Fonction		: Uf_Plaf_EcrirePara (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 23/01/1998 17:40:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Insertion du paragraphe de plafond ou de franchise
 //*
 //* Arguments		: String			asIdTypPlaf		(Val) Identifiant du Type de plafond/franchise
 //* 					: String			asIdPara			(Val) Identifiant du paragraphe
-//* 					: String			asCptVer			(Val) R$$HEX1$$e900$$ENDHEX$$vision du paragraphe
+//* 					: String			asCptVer			(Val) Révision du paragraphe
 //*
 //* Retourne		: Rien
 //*
@@ -8724,7 +8729,7 @@ private subroutine uf_plaf_ecrirepara (string asidtypplaf, string asidpara, stri
 Long lLig, lIdSin, lIdGti, lIdDetail, lIdI
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re une ligne dans la DW idw_wPlaf_Detail.                 */
+/* On insére une ligne dans la DW idw_wPlaf_Detail.                 */
 /*------------------------------------------------------------------*/
 lLig = idw_wPlaf_Detail.InsertRow ( 0 )
 
@@ -8733,16 +8738,16 @@ lIdGti 		= idw_wDetailFF.GetItemNumber ( 1, "ID_GTI" )
 lIdDetail	= idw_wDetailFF.GetItemNumber ( 1, "ID_DETAIL" )
 
 /*------------------------------------------------------------------*/
-/* Pour la zone ID_I, on prend la valeur actuelle du d$$HEX1$$e900$$ENDHEX$$tail. S'il   */
-/* existe plusieurs ID_I pour les d$$HEX1$$e900$$ENDHEX$$tails, il sera impossible de    */
+/* Pour la zone ID_I, on prend la valeur actuelle du détail. S'il   */
+/* existe plusieurs ID_I pour les détails, il sera impossible de    */
 /* valider la garantie.                                             */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* Les zones CREE_LE, MAJ_LE, MAJ_PAR seront renseign$$HEX1$$e900$$ENDHEX$$es sur        */
-/* l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement SqlPreview () de la DW idw_wParaPlafond.             */
+/* Les zones CREE_LE, MAJ_LE, MAJ_PAR seront renseignées sur        */
+/* l'événement SqlPreview () de la DW idw_wParaPlafond.             */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* Attention, pour information la zone ID_PARA peut $$HEX1$$ea00$$ENDHEX$$tre NULLE.     */
+/* Attention, pour information la zone ID_PARA peut être NULLE.     */
 /*------------------------------------------------------------------*/
 lIdI			= idw_wDetailFF.GetItemNumber ( 1, "ID_I_REG" )
 
@@ -8766,7 +8771,7 @@ private function boolean uf_rf_626 ();//*---------------------------------------
 //* Fonction		: Uf_Rf_626 (PRIVATE)
 //* Auteur			: FABRY F
 //* Date				: 19/11/1999 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: DELAI DTE OPPO./DATE DETAIL DEPASSE  REFUS 626
 //*
 //* Arguments		: Aucun
@@ -8775,10 +8780,10 @@ private function boolean uf_rf_626 ();//*---------------------------------------
 //*										Faux = Le refus n'existe pas.
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    11/04/2003  Traitement des D$$HEX1$$e900$$ENDHEX$$lai paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$surle contr$$HEX1$$f400$$ENDHEX$$le de garantie.
+//* #1 	 JFF    11/04/2003  Traitement des Délai paramatrés sur les +NS, +DT, +TR
+//*								  déclenché surle contrôle de garantie.
 //* #2		PHG	26/10/2009 [DCMP071000] rf 655+651: Annexe : Correction Bug
-//*								  pr$$HEX1$$e900$$ENDHEX$$sent sur toute les fonctions de refus.
+//*								  présent sur toute les fonctions de refus.
 //*-----------------------------------------------------------------
 
 Boolean  bRet, bGestionDateUF, bOk
@@ -8791,7 +8796,7 @@ lTotDelai = idw_Delai.RowCount ()
 bRet   = True
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche le motif 626 dans le cas de la garantie Usage abusif*/
+/* On déclenche le motif 626 dans le cas de la garantie Usage abusif*/
 /* et dans certaines conditions.												  */ 
 /*------------------------------------------------------------------*/
 lIdGti = idw_wGarSin.GetItemNumber ( 1, "ID_GTI" )
@@ -8822,13 +8827,13 @@ For lCpt = 1 to 5
 			sIdNivDel = "+NS"  // Nature de sinistre
 			sIdRefDel = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivDel = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivDel = "+TR"  // Territorialité
 			sIdRefDel = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivDel = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail de sinistre
+			sIdNivDel = "+DT"  // Détail de sinistre
 			sIdRefDel = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivDel = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivDel = "+EV"  // Evénement de garantie
 			sIdRefDel = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 
@@ -8837,7 +8842,7 @@ For lCpt = 1 to 5
 	If IsNull ( sIdRefDel ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un d$$HEX1$$e900$$ENDHEX$$lai 626 pour la garantie. 			  */
+	/* On vérifie s'il existe un délai 626 pour la garantie. 			  */
 	/*------------------------------------------------------------------*/
 	// #2 [DCMP071000] Lecture ID_GTI dans idw_wDetailFF ald de idw_wGarSin
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
@@ -8850,9 +8855,9 @@ For lCpt = 1 to 5
 	lLig = idw_Delai.Find ( sRech, 1, lTotDelai )
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie qu'il y ait une date d'opposition de saisie, une      */
-	/* heure d'oppo, une date d'utilisation sur le d$$HEX1$$e900$$ENDHEX$$tail ainsi qu'une  */
-	/* heure d'utilisation, sans quoi ce refus ne peut $$HEX1$$ea00$$ENDHEX$$tre d$$HEX1$$e900$$ENDHEX$$clench$$HEX1$$e900$$ENDHEX$$.  */
+	/* On vérifie qu'il y ait une date d'opposition de saisie, une      */
+	/* heure d'oppo, une date d'utilisation sur le détail ainsi qu'une  */
+	/* heure d'utilisation, sans quoi ce refus ne peut être déclenché.  */
 	/*------------------------------------------------------------------*/
 	If lLig > 0 Then
 
@@ -8871,8 +8876,8 @@ For lCpt = 1 to 5
 
 
 		/*------------------------------------------------------------------*/
-		/* R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration du DatteTime d'opposition et du DateTime            */
-		/* d'utilisation du d$$HEX1$$e900$$ENDHEX$$tail.                                         */
+		/* Récupération du DatteTime d'opposition et du DateTime            */
+		/* d'utilisation du détail.                                         */
 		/*------------------------------------------------------------------*/
 
 		dDteOppo		= idw_wGarSin.GetItemDate ( 1, "DTE_OPPO_DATE" )
@@ -8883,24 +8888,24 @@ For lCpt = 1 to 5
 
 
 		/*------------------------------------------------------------------*/
-		/* Ecart en minutes et $$HEX2$$e0002000$$ENDHEX$$la minute pr$$HEX1$$e800$$ENDHEX$$s, entre Date oppo et Date    */
-		/* du d$$HEX1$$e900$$ENDHEX$$tail.                                                       */
-		/* La date du d$$HEX1$$e900$$ENDHEX$$tail n'est pas obligatoire, on la fixe par d$$HEX1$$e900$$ENDHEX$$faut $$HEX2$$e0002000$$ENDHEX$$*/
+		/* Ecart en minutes et à la minute près, entre Date oppo et Date    */
+		/* du détail.                                                       */
+		/* La date du détail n'est pas obligatoire, on la fixe par défaut à */
 	   /* 23H59																				  */		
 		/*------------------------------------------------------------------*/
 		lEcartOppoDet = F_DateDiff ( "n", "dt", dDteOppo, tDteOppo, dDteDet, 23:59:00 )
 
 		/*------------------------------------------------------------------*/
-		/* On s'arr$$HEX1$$ea00$$ENDHEX$$te si la date d'utilisation est ant$$HEX1$$e900$$ENDHEX$$rieure ($$HEX2$$e0002000$$ENDHEX$$la        */
-		/* minute pr$$HEX1$$e800$$ENDHEX$$s $$HEX2$$e0002000$$ENDHEX$$la date d'oppo ).                                  */
-		/* Il n'y $$HEX2$$e0002000$$ENDHEX$$pas de refus dans ce cas.										  */
+		/* On s'arrête si la date d'utilisation est antérieure (à la        */
+		/* minute près à la date d'oppo ).                                  */
+		/* Il n'y à pas de refus dans ce cas.										  */
 		/*------------------------------------------------------------------*/
 		If lEcartOppoDet >= 0 Then
 
 			/*------------------------------------------------------------------*/
-			/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le d$$HEX1$$e900$$ENDHEX$$lai maximum autoris$$HEX2$$e9002000$$ENDHEX$$entre la date              */
-			/* d'opposition et la date d'utilisation du d$$HEX1$$e900$$ENDHEX$$tail. On v$$HEX1$$e900$$ENDHEX$$rifie si   */
-			/* ce d$$HEX1$$e900$$ENDHEX$$lai est d$$HEX1$$e900$$ENDHEX$$pass$$HEX1$$e900$$ENDHEX$$.                                            */
+			/* On récupére le délai maximum autorisé entre la date              */
+			/* d'opposition et la date d'utilisation du détail. On vérifie si   */
+			/* ce délai est dépassé.                                            */
 			/*------------------------------------------------------------------*/
 			sUnite	= idw_Delai.GetItemString ( lLig, "UNT_DEL" )
 			lDuree	= idw_Delai.GetItemNumber ( lLig, "DUR_MAX" )
@@ -8908,8 +8913,8 @@ For lCpt = 1 to 5
 			dDteMax	= F_Plus_Date ( dDteOppo, lDuree, sUnite )
 
 			/*------------------------------------------------------------------*/
-			/* Ecart en minutes et $$HEX2$$e0002000$$ENDHEX$$la minute pr$$HEX1$$e800$$ENDHEX$$s, entre la Date oppo et la   */
-			/* Date maximum couvrant le d$$HEX1$$e900$$ENDHEX$$tail construite $$HEX2$$e0002000$$ENDHEX$$partir du d$$HEX1$$e900$$ENDHEX$$lai     */
+			/* Ecart en minutes et à la minute près, entre la Date oppo et la   */
+			/* Date maximum couvrant le détail construite à partir du délai     */
 			/* maximum.                                                         */
 			/* VU AVEC DENIS, LE DERNIER JOUR IL EST COUVERT JUSQU'A 23H59		  */
 			/*------------------------------------------------------------------*/
@@ -8917,9 +8922,9 @@ For lCpt = 1 to 5
 
 
 			/*------------------------------------------------------------------*/
-			/* Si le nombre de minutes entre la Date d'oppo et le d$$HEX1$$e900$$ENDHEX$$tail et     */
+			/* Si le nombre de minutes entre la Date d'oppo et le détail et     */
 			/* plus grande que le nombre de minutes entre la Date Oppo et la    */
-			/* date maximum couvrant le d$$HEX1$$e900$$ENDHEX$$tail, alors on d$$HEX1$$e900$$ENDHEX$$clenche le refus.    */
+			/* date maximum couvrant le détail, alors on déclenche le refus.    */
 			/*------------------------------------------------------------------*/
 			If lEcartOppoDet > lEcartOppoDelMax Then
 					bRet = Uf_RF_EcrireRefus ( 626 )
@@ -8937,7 +8942,7 @@ private subroutine uf_gestion_commandes ();//*----------------------------------
 //* Fonction		: Uf_Gestion_Commandes (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 11/09/2001 16:31:31
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Gestion des Commandes
+//* Libellé			: Gestion des Commandes
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -8970,7 +8975,7 @@ idw_InfoCmde.SetItem ( 1, "NBRE_DET", lTotCmdeGti )
 idw_InfoCmde.SetItem ( 1, "NBRE_NOUV", 0 )	
 
 /*------------------------------------------------------------------*/
-/* Choix Action Commander ou s$$HEX1$$e900$$ENDHEX$$lectionner pour courrier visible ou  */
+/* Choix Action Commander ou sélectionner pour courrier visible ou  */
 /* pas ?                                                            */
 /*------------------------------------------------------------------*/
 idw_ChoixAction.InsertRow ( 0 )
@@ -8978,7 +8983,7 @@ idw_ChoixAction.SetItem ( 1, "CHOIX_ACTION", "C" )
 icbCommander.Text = "Commander >>"
 
 /*------------------------------------------------------------------*/
-/* Descentes des lignes du niveau Garanties vers D$$HEX1$$e900$$ENDHEX$$tails.           */
+/* Descentes des lignes du niveau Garanties vers Détails.           */
 /*------------------------------------------------------------------*/
 sFiltre = "ID_GTI = " + String ( idw_wDetailFF.GetItemNumber ( 1, "ID_GTI" ) ) + &
 			 " AND ID_DETAIL = " + String ( idw_wDetailFF.GetItemNumber ( 1, "ID_DETAIL" ) )
@@ -8989,7 +8994,7 @@ idw_LstCmdeGti.Sort ()
 lNbrLig = idw_LstCmdeGti.RowCount()
 
 /*------------------------------------------------------------------*/
-/* Copie des lignes niveau sup$$HEX1$$e900$$ENDHEX$$rieur vers niveau inf$$HEX1$$e900$$ENDHEX$$rieur.         */
+/* Copie des lignes niveau supérieur vers niveau inférieur.         */
 /* (Attention, on recopie le buffer primare, le client est donc     */
 /* libre de le filtrer.)                                            */
 /*------------------------------------------------------------------*/
@@ -9004,8 +9009,8 @@ lNbrCol = Long ( idw_LstCmdeGti.Describe ("DataWindow.Column.Count" ) )
 For lCptLig = 1 to lNbrLig
 
    /*------------------------------------------------------------------*/
-	/* De fa$$HEX1$$e700$$ENDHEX$$ons $$HEX3$$e0002000ea00$$ENDHEX$$tre s$$HEX1$$fb00$$ENDHEX$$r de pouvoir modifier les status de           */
-	/* colonnes, on force le status de la ligne $$HEX2$$e0002000$$ENDHEX$$DATAMODIFIED!         */
+	/* De façons à être sûr de pouvoir modifier les status de           */
+	/* colonnes, on force le status de la ligne à DATAMODIFIED!         */
 	/*------------------------------------------------------------------*/
 	idw_LstCmdeDet.SetItemStatus ( lCptLig, 0, Primary!, DataModified! )
 
@@ -9019,7 +9024,7 @@ For lCptLig = 1 to lNbrLig
 	Next
 
 	/*------------------------------------------------------------------*/
-	/* Les status de colonne $$HEX1$$e900$$ENDHEX$$tant recopi$$HEX1$$e900$$ENDHEX$$s, on recopie $$HEX2$$e0002000$$ENDHEX$$ce moment le  */
+	/* Les status de colonne étant recopiés, on recopie à ce moment le  */
 	/* status de la ligne.                                              */
 	/*------------------------------------------------------------------*/
 	lStatusDw = idw_LstCmdeGti.GetItemStatus ( lCptLig, 0, Primary! )
@@ -9042,8 +9047,8 @@ private function integer uf_preparervalider_commande ();//*---------------------
 //* Fonction		: Uf_PreparerValider_Commande (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 12/09/2001 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Pr$$HEX1$$e900$$ENDHEX$$paration de la validation d'une Commande.
+//* Libellé			: 
+//* Commentaires	: Préparation de la validation d'une Commande.
 //*
 //* Arguments		:
 //*
@@ -9057,7 +9062,7 @@ String		 sCle
 /*------------------------------------------------------------------*/
 /* Pour toutes les lignes contenues dans le buffer Deleted! de      */
 /* DwNivInf...                                                      */
-/* Le compteur est $$HEX2$$e0002000$$ENDHEX$$l'envers, car on D$$HEX1$$e900$$ENDHEX$$truit des rows sur IdwRe-   */
+/* Le compteur est à l'envers, car on Détruit des rows sur IdwRe-   */
 /* questor dans Uf_CopierLigne												  */
 /*------------------------------------------------------------------*/
 lNbrTotLig = idw_LstCmdeDet.DeletedCount () 
@@ -9065,14 +9070,14 @@ lNbrTotLig = idw_LstCmdeDet.DeletedCount ()
 For lCptLig = lNbrTotLig To 1 Step -1
 
 /*------------------------------------------------------------------*/
-/* ...on construit la cl$$HEX2$$e9002000$$ENDHEX$$de chaque enregistrement contenus dans    */
+/* ...on construit la clé de chaque enregistrement contenus dans    */
 /* le buffer Delete! de DwNivInf.                                   */
 /*------------------------------------------------------------------*/
 	sCle = "ID_SEQ = " + String ( idw_LstCmdeDet.GetItemNumber ( lCptLig, "ID_SEQ", DELETE!, TRUE ) ) 
 
 /*------------------------------------------------------------------*/
-/* Avec cette ligne identifi$$HEX1$$e900$$ENDHEX$$e, on effectue le traitement           */
-/* n$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$ssaire sur la DataWindow de niveau sup$$HEX1$$e900$$ENDHEX$$rieur. Voir fonction  */
+/* Avec cette ligne identifiée, on effectue le traitement           */
+/* nécéssaire sur la DataWindow de niveau supérieur. Voir fonction  */
 /* Uf_CopierLigne.                                                  */
 /*------------------------------------------------------------------*/
 	If This.Uf_CopierLigne_Inf2Sup ( "BD", lCptLig, sCle, iDw_LstCmdeGti, iDw_LstCmdeDet )	< 0  Then Return -1
@@ -9089,15 +9094,15 @@ For lCptLig = 1 To lNbrTotLig
 
 
 /*------------------------------------------------------------------*/
-/* ...on construit la cl$$HEX2$$e9002000$$ENDHEX$$de chaque enregistrement contenus dans    */
+/* ...on construit la clé de chaque enregistrement contenus dans    */
 /* le buffer Primaire de DwNivInf.                                  */
 /*------------------------------------------------------------------*/
 	sCle = "ID_SEQ = " + String ( idw_LstCmdeDet.GetItemNumber ( lCptLig, "ID_SEQ", PRIMARY!, TRUE ) ) 
 
 
 	/*------------------------------------------------------------------*/
-	/* Avec cette ligne identifi$$HEX1$$e900$$ENDHEX$$e, on effectue le traitement           */
-	/* n$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$ssaire sur la DataWindow de niveau sup$$HEX1$$e900$$ENDHEX$$rieur. Voir fonction  */
+	/* Avec cette ligne identifiée, on effectue le traitement           */
+	/* nécéssaire sur la DataWindow de niveau supérieur. Voir fonction  */
 	/* Uf_CopierLigne.                                                  */
 	/*------------------------------------------------------------------*/
 	If This.Uf_CopierLigne_Inf2Sup ( "BP", lCptLig, sCle, idw_LstCmdeGti, idw_LstCmdeDet )	< 0   Then Return -1
@@ -9116,8 +9121,8 @@ public subroutine uf_bt_annuler_commande ();//*---------------------------------
 //* Fonction		: Uf_Bt_Annuler_Commande (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 12/09/2001 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Pr$$HEX1$$e900$$ENDHEX$$paration de la validation d'une Commande.
+//* Libellé			: 
+//* Commentaires	: Préparation de la validation d'une Commande.
 //*
 //* Arguments		:
 //*
@@ -9162,8 +9167,8 @@ public function integer uf_bt_commander ();//*----------------------------------
 //* Fonction		: U_Gs_Sp_Sinistre_wDetail::uf_bt_Commander (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 21/07/2002 09:31:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Traitement du CLICK sur le bouton COMMANDER de la fen$$HEX1$$ea00$$ENDHEX$$tre de DETAIL
+//* Libellé			: 
+//* Commentaires	: Traitement du CLICK sur le bouton COMMANDER de la fenêtre de DETAIL
 //*
 //* Arguments		: Aucun
 //*
@@ -9172,9 +9177,9 @@ public function integer uf_bt_commander ();//*----------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1	 CAG	 02/10/2002	  Si on est dans le cas d'une gti BRIS (11)
-//*								  Question : Mobile endommag$$HEX2$$e9002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$ceptionn$$HEX2$$e9002000$$ENDHEX$$?
+//*								  Question : Mobile endommagé réceptionné ?
 //*								  si oui ouvrir sinon retour
-//*								  Vu avec B. Hanin, on ne g$$HEX1$$e800$$ENDHEX$$re pas de date de r$$HEX1$$e900$$ENDHEX$$ception
+//*								  Vu avec B. Hanin, on ne gère pas de date de réception
 //*								  du mobile, une simple box de confirmation suffit. (p38)
 //* #2	 CAG	 29/01/20023  Annexe 22 : on ne pose la question ci-dessus
 //*												  que si evt <> 845, et non compris entre 850 et 853 (inclus)
@@ -9193,7 +9198,7 @@ iRet = 1
 /*------------------------------------------------------------------*/
 /* Pour la garantie PANNE (18)                                      */
 /*------------------------------------------------------------------*/
-/* Il est impossible de passer une PReStation aupr$$HEX1$$e900$$ENDHEX$$s de CETELEC si  */
+/* Il est impossible de passer une PReStation auprés de CETELEC si  */
 /* une garantie BRIS existe.                                        */
 /*------------------------------------------------------------------*/
 If	ilCodTel = 21	Then
@@ -9215,7 +9220,7 @@ If	ilCodTel = 21	Then
 /*------------------------------------------------------------------*/
 /* Pour une garantie BRIS (11)                                      */
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie que la garantie PANNE est close s'il existe au moins  */
+/* On vérifie que la garantie PANNE est close s'il existe au moins  */
 /* une commande active pour cette garantie.                         */
 /*------------------------------------------------------------------*/
 	If	iRet = 1		Then
@@ -9246,8 +9251,8 @@ If	ilCodTel = 21	Then
 /*------------------------------------------------------------------*/
 /* Pour une garantie BRIS (11)                                      */
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie que toutes les commandes en cours pour la garantie    */
-/* PANNE poss$$HEX1$$e900$$ENDHEX$$dent une valeur renseign$$HEX1$$e900$$ENDHEX$$e pour la zone DTE_RET_PRET. */
+/* On vérifie que toutes les commandes en cours pour la garantie    */
+/* PANNE possédent une valeur renseignée pour la zone DTE_RET_PRET. */
 /*------------------------------------------------------------------*/
 	If	iRet = 1	Then
 		If	idw_wDetailFF.GetItemNumber ( 1, "ID_GTI" ) = 11	Then		
@@ -9265,7 +9270,7 @@ If	ilCodTel = 21	Then
 /* Pour une garantie BRIS (11)                                      */
 /*------------------------------------------------------------------*/
 /* On verifie si l'une des commandes en cours pour la garantie      */
-/* PANNE n'autorise pas la cr$$HEX1$$e900$$ENDHEX$$ation d'une commande pour CEGETEL     */
+/* PANNE n'autorise pas la création d'une commande pour CEGETEL     */
 /* (ID_BSP=0).                                                      */
 /*------------------------------------------------------------------*/
 						If		lIdBsp = 0	Then
@@ -9282,7 +9287,7 @@ If	ilCodTel = 21	Then
 /*------------------------------------------------------------------*/
 /* Pour une garantie BRIS (11)                                      */
 /*------------------------------------------------------------------*/
-/* S'il s'agit d'un BRIS sur PANNE, (R$$HEX1$$e900$$ENDHEX$$parable) la saisie d'une     */
+/* S'il s'agit d'un BRIS sur PANNE, (Réparable) la saisie d'une     */
 /* commande chez CEGETEL est interdite.                             */
 /*------------------------------------------------------------------*/
 						ElseIf		Not IsNull ( dtDteRetPret ) And lIdBsp = 1	Then
@@ -9348,7 +9353,7 @@ private subroutine uf_rendre_visible_idireg (integer aichoix);//*---------------
 //* Fonction		: U_Gs_Sp_Sinistre_wDetail::uf_Rendre_Visible_IdiReg (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 21/07/2002 09:31:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On va rendre visible ou invisible les zones ID_I_REG et ID_I_REG_T
 //*
 //* Arguments		: (Val)		Integer		aiChoix
@@ -9358,10 +9363,10 @@ private subroutine uf_rendre_visible_idireg (integer aichoix);//*---------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* #1    CAG   03/02/2003   Annexe 22 : si l'une des prestations li$$HEX1$$e900$$ENDHEX$$es
-//*									$$HEX2$$e0002000$$ENDHEX$$ce d$$HEX1$$e900$$ENDHEX$$tail poss$$HEX1$$e800$$ENDHEX$$de un id_bsp > 0 la zone
-//*									destinataire r$$HEX1$$e800$$ENDHEX$$glement doit $$HEX1$$ea00$$ENDHEX$$tre invisible
-//* #2    MADM    06/07/2006 DCMP 060472 FNAC Suissse-Belgique permettre le r$$HEX1$$e800$$ENDHEX$$glement $$HEX2$$e0002000$$ENDHEX$$0 euros sur option 57   
+//* #1    CAG   03/02/2003   Annexe 22 : si l'une des prestations liées
+//*									à ce détail possède un id_bsp > 0 la zone
+//*									destinataire règlement doit être invisible
+//* #2    MADM    06/07/2006 DCMP 060472 FNAC Suissse-Belgique permettre le règlement à 0 euros sur option 57   
 //*-----------------------------------------------------------------
 /*------------------------------------------------------------------*/
 /* # Modification SFR # Le 17/07/2002.                              */
@@ -9385,15 +9390,15 @@ Case 1
 Case 2
 	lIdEvt = Long ( idw_wDetailFF.GetText () )
 	//*------------------------------------------------------*/
-	//*#2 on lit le montant du pr$$HEX1$$e900$$ENDHEX$$judice : si dcMtPrej > o   */
-	//* le champ zone $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gler est visible                   */
+	//*#2 on lit le montant du préjudice : si dcMtPrej > o   */
+	//* le champ zone à régler est visible                   */
 	//*------------------------------------------------------*/
 	dcMtPrej = idw_wDetailFF.GetItemNumber ( 1, "MT_PREJ" )
 End Choose
 
 /*------------------------------------------------------------------*/
-/* Dans le cas des produits SFR, on peut 'r$$HEX1$$e900$$ENDHEX$$gler' le dossier avec   */
-/* un montant MT_PREJ $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro. Il faut donc rendre les zones         */
+/* Dans le cas des produits SFR, on peut 'régler' le dossier avec   */
+/* un montant MT_PREJ à zéro. Il faut donc rendre les zones         */
 /* ID_I_REG et ID_I_REG_T visibles.                                 */
 /*------------------------------------------------------------------*/
 sFiltre = "ID_GTI = " + String ( lIdGti ) + &
@@ -9418,8 +9423,8 @@ End If
 
 /*------------------------------------------------------------------*/
 /* #2 MADM 06/07/2006 DCMP 060472		                             */
-/* On cherche l'option 57 si trouv$$HEX2$$e9002000$$ENDHEX$$et les conditions ci-dessous    */
-/* reunies alors on rend visible le champ zone $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gler             */
+/* On cherche l'option 57 si trouvé et les conditions ci-dessous    */
+/* reunies alors on rend visible le champ zone à régler             */
 /*------------------------------------------------------------------*/
 If Not bVisible And dcMtPrej <= 0 Then
        F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 57 )
@@ -9455,10 +9460,10 @@ public subroutine uf_majvargamme (long alRetGamme);//*--------------------------
 //* Fonction      : U_Gs_Sp_Sinistre_WDetail::uf_MajVarGamme ( PUBLIC )
 //* Auteur        : Catherine ABDMEZIEM
 //* Date          : 27/09/2002 15:39:58
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Maj de la variable d'instance gamme
+//* Libellé       : Maj de la variable d'instance gamme
 //* Commentaires  : 
 //*
-//* Arguments     : ( Val )	Long	alRetGamme	:	la gamme retourn$$HEX1$$e900$$ENDHEX$$e par la fen$$HEX1$$ea00$$ENDHEX$$tre des gammes
+//* Arguments     : ( Val )	Long	alRetGamme	:	la gamme retournée par la fenêtre des gammes
 //*
 //* Retourne      : Rien
 //*
@@ -9477,11 +9482,11 @@ private subroutine uf_controlergestion_si_val_achat (ref string aspos);//*------
 //* Fonction		: Uf_ControlerGestion_Si_Val_Achat (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 06/11/2003 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Contr$$HEX1$$f400$$ENDHEX$$le de saisie li$$HEX1$$e900$$ENDHEX$$s $$HEX2$$e0002000$$ENDHEX$$l'utilisation de la zone MT_VAL_ACHAT
+//* Libellé			: 
+//* Commentaires	: Contrôle de saisie liés à l'utilisation de la zone MT_VAL_ACHAT
 //*					  (initialement pour DARTY)
 //*
-//* Arguments		: String		asPos		R$$HEX1$$e900$$ENDHEX$$f.
+//* Arguments		: String		asPos		Réf.
 //*
 //* Retourne		: Rien
 //*
@@ -9504,13 +9509,13 @@ sNouvelleLigne		= "~r~n"
 sTbLibEvt [1] = "REMPL"
 sTbLibEvt [2] = "REMBO"
 sTbLibEvt [3] = "REPAR"
-sTbLibEvt [4] = "R$$HEX1$$c900$$ENDHEX$$PAR"
+sTbLibEvt [4] = "RÉPAR"
 
 bValAchRens = FALSE
 iRet = 1
 
 /*------------------------------------------------------------------*/
-/* Si l'utilisation de la valeur d'achat n'est pas param$$HEX1$$e800$$ENDHEX$$tr$$HEX1$$e900$$ENDHEX$$, on    */
+/* Si l'utilisation de la valeur d'achat n'est pas paramètré, on    */
 /* ressort.                                                         */
 /*------------------------------------------------------------------*/
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 9 )
@@ -9533,11 +9538,11 @@ sLibEvt  = Upper ( idw_wDetailFF.Describe ( "Evaluate ('LookUpDisplay ( ID_EVT )
 lTotTb = UpperBound ( sTbLibEvt )
 
 /*------------------------------------------------------------------*/
-/* On recherche par le libell$$HEX2$$e9002000$$ENDHEX$$de l'Evt s'il s'agit d'un            */
-/* Remplacement, Remboursement ou r$$HEX1$$e900$$ENDHEX$$paration. Je fais cette         */
-/* recherche par libell$$HEX2$$e9002000$$ENDHEX$$et non par ID afin que ce code prenne en   */
-/* compte tous les nouveaux Evt de ce type qui pourraient $$HEX1$$ea00$$ENDHEX$$tre      */
-/* cr$$HEX2$$e900e900$$ENDHEX$$s par la suite.                                              */
+/* On recherche par le libellé de l'Evt s'il s'agit d'un            */
+/* Remplacement, Remboursement ou réparation. Je fais cette         */
+/* recherche par libellé et non par ID afin que ce code prenne en   */
+/* compte tous les nouveaux Evt de ce type qui pourraient être      */
+/* créés par la suite.                                              */
 /*------------------------------------------------------------------*/
 For lCpt = 1 to lTotTb 
 	lPos = Pos ( sLibEvt, sTbLibEvt [lCpt], 1 )
@@ -9548,7 +9553,7 @@ For lCpt = 1 to lTotTb
 Next
 
 /*------------------------------------------------------------------*/
-/* Pour Chaque Type d'Evt, le cas peut $$HEX1$$ea00$$ENDHEX$$tre diff$$HEX1$$e900$$ENDHEX$$rent.              */
+/* Pour Chaque Type d'Evt, le cas peut être différent.              */
 /*------------------------------------------------------------------*/
 Choose Case sVal
 	Case  "REMPL", "REMBO"
@@ -9563,10 +9568,10 @@ Choose Case sVal
 			iRet = 1
 		End If
 
-	Case  "REPAR", "R$$HEX1$$c900$$ENDHEX$$PAR"
+	Case  "REPAR", "RÉPAR"
 		/*------------------------------------------------------------------*/
-		/* Vu avec BH le 06/11/03, pour la R$$HEX1$$e900$$ENDHEX$$par. la valeur d'achat n'est   */
-		/* pas obligatoire en effet le paiement aupr$$HEX1$$e800$$ENDHEX$$s d'ANOVO est un       */
+		/* Vu avec BH le 06/11/03, pour la Répar. la valeur d'achat n'est   */
+		/* pas obligatoire en effet le paiement auprès d'ANOVO est un       */
 		/* forfait.																			  */
 		/*------------------------------------------------------------------*/
 		iRet = 1
@@ -9583,7 +9588,7 @@ If iRet = -1 Then
 
 	asPos = "MT_VAL_ACHAT"	
 	stMessage.bErreurG	= FALSE
-	stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de saisie du d$$HEX1$$e900$$ENDHEX$$tail"
+	stMessage.sTitre		= "Contrôle de saisie du détail"
 	stMessage.Icon			= Information!
 
 	f_Message ( stMessage )
@@ -9597,7 +9602,7 @@ public function decimal uf_maxttc_mobilechoisi ();//*---------------------------
 //* Fonction      : u_gs_sp_sinistre_wdetail::uf_MaxTTC_MobileChoisi (PUBLIC)
 //* Auteur        : Fabry JF
 //* Date          : 14/11/2003 15:46:26
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Retourne le Max TTC des mobile (TYP_ART = TEL) command$$HEX1$$e900$$ENDHEX$$/choisi
+//* Libellé       : Retourne le Max TTC des mobile (TYP_ART = TEL) commandé/choisi
 //*					  su le sinistre.
 //* Commentaires  : 
 //*
@@ -9677,8 +9682,8 @@ private subroutine uf_calcul_montantregle_gti_gmp (decimal adcmtprej);//*-------
 //* Fonction		: uf_Calcul_MontantRegle_Gti_GMP (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 26/02/1998 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Calcul du Montant $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gler
+//* Libellé			: 
+//* Commentaires	: Calcul du Montant à régler
 //*
 //* Arguments		: Decimal		adcMtPrej				Val
 //*
@@ -9731,8 +9736,8 @@ private function string uf_plaf_adhesion_annee_civile ();//*--------------------
 //* Fonction		: Uf_Plaf_Adhesion_Annee_Civile (PRIVATE)
 //* Auteur			: Catherine Abdmeziem
 //* Date				: 14/06/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Application d'un plafond par Ann$$HEX1$$e900$$ENDHEX$$e civile
+//* Libellé			: 
+//* Commentaires	: Application d'un plafond par Année civile
 //*
 //* Arguments		: Aucun
 //*
@@ -9740,8 +9745,8 @@ private function string uf_plaf_adhesion_annee_civile ();//*--------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$sur le contr$$HEX1$$f400$$ENDHEX$$ler
+//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatrés sur les +NS, +DT, +TR
+//*								  déclenché sur le contrôler
 //*       JFF    27/07/2011  [PLAF_REF]
 //  		 JFF		29/05/2012 [VDOC6662]
 //        JFF    16/11/2015  [DT159-1]
@@ -9761,7 +9766,7 @@ String sRech, sPos, sIdAdh, sIdPara, sCptVer
 
 sPos = ""
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par sinistre.                  */
+/* On vérifie s'il existe un plafond par sinistre.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -9776,13 +9781,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -9790,7 +9795,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -9829,15 +9834,15 @@ lLig = lLigFinale
 If	lLig > 0 Then
 	lTotDetail = idw_wDetailFF.iudwDetailSource.RowCount ()
 /*------------------------------------------------------------------*/
-/* On s'occupe du d$$HEX1$$e900$$ENDHEX$$tail courant, en insertion ou en modification.  */
-/* Ce d$$HEX1$$e900$$ENDHEX$$tail ne sera pas trait$$HEX2$$e9002000$$ENDHEX$$dans la boucle.                     */
+/* On s'occupe du détail courant, en insertion ou en modification.  */
+/* Ce détail ne sera pas traité dans la boucle.                     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Modification DBI le 12/08/1998                                   */
 /*                                                                  */
-/* La zone $$HEX2$$e0002000$$ENDHEX$$prendre en compte pour le calcul du montant plafonn$$HEX4$$e900200020002000$$ENDHEX$$*/
+/* La zone à prendre en compte pour le calcul du montant plafonné   */
 /* n'est pas MT_NPLAF      mais MT_PLAF      sinon on ne            */
-/* tient pas compte des plafonds appliqu$$HEX1$$e900$$ENDHEX$$s successivement           */
+/* tient pas compte des plafonds appliqués successivement           */
 /*------------------------------------------------------------------*/
 
 	dcMtPlaf		= idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF"   )
@@ -9845,13 +9850,13 @@ If	lLig > 0 Then
 
 	For	lCpt = 1 To lTotDetail
 /*------------------------------------------------------------------*/
-/* On ne traite pas le d$$HEX1$$e900$$ENDHEX$$tail courant.                              */
+/* On ne traite pas le détail courant.                              */
 /*------------------------------------------------------------------*/
 			If		idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "ID_DETAIL" ) = lIdDetail	Then
 					Continue
 			Else
 /*------------------------------------------------------------------*/
-/* Le d$$HEX1$$e900$$ENDHEX$$tail est 'REGLE' ou 'A REGLE', on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le montant       */
+/* Le détail est 'REGLE' ou 'A REGLE', on récupére le montant       */
 /* MT_PLAF.                                                         */
 /*------------------------------------------------------------------*/
 					If	( idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "COD_ETAT" ) = 500 Or &
@@ -9863,8 +9868,8 @@ If	lLig > 0 Then
 			End If
 	Next
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -9880,14 +9885,14 @@ If	lLig > 0 Then
 	itrTrans.PS_S05_W_DETAIL_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdGti, dcIdEvt, dtDteSurv, sMtAutreSinistre )
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S05_W_DETAIL_MT_PLAF" )	Then
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e.                                    */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée.                                    */
 /*------------------------------------------------------------------*/
 		sPos		= "ALT_BLOC"
 		F_Message ( stMessage )
 	Else
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine si on d$$HEX1$$e900$$ENDHEX$$passe le plafond.                           */
+/* On détermine si on dépasse le plafond.                           */
 /*------------------------------------------------------------------*/
 
 		dcMtAutreSinistre = Dec ( sMtAutreSinistre )
@@ -9920,7 +9925,7 @@ If	lLig > 0 Then
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -9939,8 +9944,8 @@ private function string uf_plaf_adherent_annee_civile ();//*--------------------
 //* Fonction		: Uf_Plaf_Adherent_Annee_Civile (PRIVATE)
 //* Auteur			: Catherine Abdmeziem
 //* Date				: 14/06/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Application d'un plafond par adh$$HEX1$$e900$$ENDHEX$$rent/Ann$$HEX1$$e900$$ENDHEX$$e civile
+//* Libellé			: 
+//* Commentaires	: Application d'un plafond par adhérent/Année civile
 //*
 //* Arguments		: Aucun
 //*
@@ -9948,8 +9953,8 @@ private function string uf_plaf_adherent_annee_civile ();//*--------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$sur le contr$$HEX1$$f400$$ENDHEX$$ler
+//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatrés sur les +NS, +DT, +TR
+//*								  déclenché sur le contrôler
 //*       JFF    27/07/2011  [PLAF_REF]
 //  		 JFF		29/05/2012 [VDOC6662]
 //        JFF    16/11/2015 [DT159-1]
@@ -9967,7 +9972,7 @@ String		sMtAutreSinistre
 
 sPos = ""
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par adh$$HEX1$$e900$$ENDHEX$$rent.                  */
+/* On vérifie s'il existe un plafond par adhérent.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -9982,13 +9987,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -9996,7 +10001,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -10034,15 +10039,15 @@ lLig = lLigFinale
 If	lLig > 0 Then
 	lTotDetail = idw_wDetailFF.iudwDetailSource.RowCount ()
 /*------------------------------------------------------------------*/
-/* On s'occupe du d$$HEX1$$e900$$ENDHEX$$tail courant, en insertion ou en modification.  */
-/* Ce d$$HEX1$$e900$$ENDHEX$$tail ne sera pas trait$$HEX2$$e9002000$$ENDHEX$$dans la boucle.                     */
+/* On s'occupe du détail courant, en insertion ou en modification.  */
+/* Ce détail ne sera pas traité dans la boucle.                     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Modification DBI le 12/08/1998                                   */
 /*                                                                  */
-/* La zone $$HEX2$$e0002000$$ENDHEX$$prendre en compte pour le calcul du montant plafonn$$HEX4$$e900200020002000$$ENDHEX$$*/
+/* La zone à prendre en compte pour le calcul du montant plafonné   */
 /* n'est pas MT_NPLAF      mais MT_PLAF      sinon on ne            */
-/* tient pas compte des plafonds appliqu$$HEX1$$e900$$ENDHEX$$s successivement           */
+/* tient pas compte des plafonds appliqués successivement           */
 /*------------------------------------------------------------------*/
 
 	dcMtPlaf		= idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF"   )
@@ -10050,13 +10055,13 @@ If	lLig > 0 Then
 
 	For	lCpt = 1 To lTotDetail
 /*------------------------------------------------------------------*/
-/* On ne traite pas le d$$HEX1$$e900$$ENDHEX$$tail courant.                              */
+/* On ne traite pas le détail courant.                              */
 /*------------------------------------------------------------------*/
 			If		idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "ID_DETAIL" ) = lIdDetail	Then
 					Continue
 			Else
 /*------------------------------------------------------------------*/
-/* Le d$$HEX1$$e900$$ENDHEX$$tail est 'REGLE' ou 'A REGLE', on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le montant       */
+/* Le détail est 'REGLE' ou 'A REGLE', on récupére le montant       */
 /* MT_PLAF.                                                         */
 /*------------------------------------------------------------------*/
 					If	( idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "COD_ETAT" ) = 500 Or &
@@ -10069,8 +10074,8 @@ If	lLig > 0 Then
 	Next
 
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -10087,14 +10092,14 @@ If	lLig > 0 Then
 	itrTrans.PS_S06_W_DETAIL_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dcIdGti, dcIdEvt, dtDteSurv, sMtAutreSinistre )
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S02_W_DETAIL_MT_PLAF" )	Then
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e.                                    */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée.                                    */
 /*------------------------------------------------------------------*/
 		sPos		= "ALT_BLOC"
 		F_Message ( stMessage )
 	Else
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine si on d$$HEX1$$e900$$ENDHEX$$passe le plafond.                           */
+/* On détermine si on dépasse le plafond.                           */
 /*------------------------------------------------------------------*/
 
 		dcMtAutreSinistre = Dec ( sMtAutreSinistre )
@@ -10126,7 +10131,7 @@ If	lLig > 0 Then
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -10145,7 +10150,7 @@ public function integer uf_bt_valachatdefaut ();//*-----------------------------
 //* Fonction		: U_Gs_Sp_Sinistre_wDetail::uf_bt_ValAchatDefaut (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 12/05/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Traitement du CLICK sur le bouton VALEUR ACHAT PAR DEFAUT.
 //*
 //* Arguments		: Aucun
@@ -10208,7 +10213,7 @@ public function boolean uf_getautorisation (long alidDroit);//*-----------------
 //* Fonction      : u_gs_sp_sinistre_wdetail::uf_GetAutorisation (PUBLIC)
 //* Auteur        : Fabry JF
 //* Date          : 18/05/2005 12:59:19
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Lecture simple d'une autorisation
+//* Libellé       : Lecture simple d'une autorisation
 //* Commentaires  : 
 //*
 //* Arguments     : Long	alIdDroit		Val
@@ -10245,7 +10250,7 @@ private subroutine uf_set_profilfacturation ();//*------------------------------
 //* Fonction      : u_gs_sp_sinistre_wdetail::uf_Set_ProfilFacturation (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 18/05/2005 17:15:35
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Profil de facturation si -NA/208
+//* Libellé       : Profil de facturation si -NA/208
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -10261,7 +10266,7 @@ private subroutine uf_set_profilfacturation ();//*------------------------------
 Long lTot, lCpt
 
 /*------------------------------------------------------------------*/
-/* R$$HEX1$$f400$$ENDHEX$$le de facturation, droit -NA/208										  */
+/* Rôle de facturation, droit -NA/208										  */
 /*------------------------------------------------------------------*/
 If Not This.uf_GetAutorisation ( 208 ) Then 
 	idw_wDetailFF.Modify ( "dte_facture_t.visible = 0 dte_facture.visible = 0 num_facture_t.visible = 0 num_facture.visible = 0" )
@@ -10288,7 +10293,7 @@ private function integer uf_get_fournisseur_aregler ();//*----------------------
 //* Fonction      : u_gs_sp_sinistre_wdetail::uf_Get_Fournisseur_ARegler (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 18/05/2005 17:26:30
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$termination du fournisseur $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gler
+//* Libellé       : Détermination du fournisseur à régler
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -10307,7 +10312,7 @@ String sIdGti, sIdDetail, sIdFour
 Int  iIdI
 
 /*------------------------------------------------------------------*/
-/* R$$HEX1$$f400$$ENDHEX$$le de facturation, droit -NA/208										  */
+/* Rôle de facturation, droit -NA/208										  */
 /*------------------------------------------------------------------*/
 If Not This.uf_GetAutorisation ( 208 ) Then Return -1
 
@@ -10317,8 +10322,8 @@ sIdDetail = String ( idw_wDetailFF.GetItemNumber ( 1, "ID_DETAIL" ))
 lRow = idw_LstCmdeDet.Find ( "ID_GTI = " + sIdGti + " AND ID_DETAIL = " + sIdDetail, 1, idw_LstCmdeDet.RowCount () )
 
 /*------------------------------------------------------------------*/
-/* Aucune commande ne correspond OU plus d'une commande EST li$$HEX6$$e9002000e000200020002000$$ENDHEX$$*/
-/* ce d$$HEX1$$e900$$ENDHEX$$tail, donc on sort (-1) car impossible de trouver le FRN    */
+/* Aucune commande ne correspond OU plus d'une commande EST lié à   */
+/* ce détail, donc on sort (-1) car impossible de trouver le FRN    */
 /*------------------------------------------------------------------*/
 If lRow <> 1 Then Return -1
 
@@ -10327,7 +10332,7 @@ sIdFour = idw_LstCmdeDet.GetItemString ( lRow, "ID_FOUR" )
 lRow = idw_LstInter.Find ( "ID_FOUR = '" + Upper ( sIdFour ) + "'", 1, idw_LstInter.RowCount ())
 
 /*------------------------------------------------------------------*/
-/* Aucun Interlocuteur Fournisseur trouv$$HEX1$$e900$$ENDHEX$$.								  */
+/* Aucun Interlocuteur Fournisseur trouvé.								  */
 /*------------------------------------------------------------------*/
 If lRow <=0  Then Return -1
 
@@ -10341,21 +10346,21 @@ private function integer uf_copierligne_inf2sup (string asswitch, long alligdwni
 //* Fonction		: u_gs_sp_sinistre_wdetail::uf_CopierLigne_Inf2Sup (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 05/11/1999 15:51:33
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Recopie LA LIGNE SPECIFIEE d'une DW d'un niveau inf$$HEX1$$e900$$ENDHEX$$rieur (2,3,..)
-//*					  vers un niveau sup$$HEX1$$e900$$ENDHEX$$rieur (0,1...) en replacant les ItemStatus.
-//* Commentaires	: Les results set des deux Dw doivent $$HEX1$$ea00$$ENDHEX$$tre identiques.
-//*					  Points $$HEX2$$e0002000$$ENDHEX$$respecter : 
-//*						 - La DataWindow de niveau inf$$HEX1$$e900$$ENDHEX$$rieur doit avoir la capacit$$HEX2$$e9002000$$ENDHEX$$d'updater
-//*							afin de pouvoir g$$HEX1$$e900$$ENDHEX$$rer le buffer DELETE!.
+//* Libellé			: Recopie LA LIGNE SPECIFIEE d'une DW d'un niveau inférieur (2,3,..)
+//*					  vers un niveau supérieur (0,1...) en replacant les ItemStatus.
+//* Commentaires	: Les results set des deux Dw doivent être identiques.
+//*					  Points à respecter : 
+//*						 - La DataWindow de niveau inférieur doit avoir la capacité d'updater
+//*							afin de pouvoir gérer le buffer DELETE!.
 //*					
 //*
 //* Arguments		: String			asSwitch				(Val)				Valeur : "BP" (Traitement du Buffer Primaire de DW INF)
 //*																					Valeur : "BD" (Traitement du Buffer Deleted de DW INF)
 //*					  Long			alLigDwNivInf		(Val)				Ligne en cours sur la Dw Niv Inf
-//*					  String			asCle					(Val)				Cl$$HEX2$$e9002000$$ENDHEX$$permettant d'identifier une ligne sur DW SUP
+//*					  String			asCle					(Val)				Clé permettant d'identifier une ligne sur DW SUP
 //*																					EX: "ID_SIN = 5 AND ID_GTI = 2"
-//*					  u_DataWindow_Detail	adwSup						Datawindows Sup$$HEX1$$e900$$ENDHEX$$rieur
-//*					  u_DataWindow_Detail	adwInf						Datawindows Inf$$HEX1$$e900$$ENDHEX$$rieur
+//*					  u_DataWindow_Detail	adwSup						Datawindows Supérieur
+//*					  u_DataWindow_Detail	adwInf						Datawindows Inférieur
 //*
 //* Retourne		: Integer  0  NO ACTION
 //*								  1  SUCCESS
@@ -10387,8 +10392,8 @@ CHOOSE CASE Upper ( asSwitch )
 		If lLigDwNivSup > 0  Then 
 
 				/*------------------------------------------------------------------*/
-				/* Si on est en MultiNiveaux, on force le status de la ligne $$HEX5$$e0002000090020002000$$ENDHEX$$*/
-				/* effacer $$HEX2$$e0002000$$ENDHEX$$DATAMODIFIED! afin que la suppression place cette 	  */
+				/* Si on est en MultiNiveaux, on force le status de la ligne à 	  */
+				/* effacer à DATAMODIFIED! afin que la suppression place cette 	  */
 				/* ligne dans le buffer DELETE!,	quelque soit son status.			  */
 				/*------------------------------------------------------------------*/
 				adwSup.SetItemStatus ( lLigDwNivSup, 0, PRIMARY!, DATAMODIFIED! )
@@ -10460,14 +10465,14 @@ private function integer uf_copierligne_sup2inf (boolean abdwnivinfreset, ref u_
 //* Fonction		: u_gs_sp_sinistre_wdetail::uf_CopierLigne_Sup2Inf (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 05/11/1999 14:44:32
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Copie TOUTES LES LIGNES du buffer PRIMAIRE d'une DW d'un niveau sup$$HEX1$$e900$$ENDHEX$$rieur (0,1,..)
-//*					  vers un niveau inf$$HEX1$$e900$$ENDHEX$$rieur (2,3...) en replacant les ItemStatus.
-//* Commentaires	: Les result set des deux Dw doivent $$HEX1$$ea00$$ENDHEX$$tre identiques.
+//* Libellé			: Copie TOUTES LES LIGNES du buffer PRIMAIRE d'une DW d'un niveau supérieur (0,1,..)
+//*					  vers un niveau inférieur (2,3...) en replacant les ItemStatus.
+//* Commentaires	: Les result set des deux Dw doivent être identiques.
 //*					  uf_CopierLigneInf2Sup
 //*
 //* Arguments		: Boolean 					abDwNivInfReset			val  // Reset la dw niv inf.
-//*					  u_DataWindow_Detail	adwSup						Datawindows Sup$$HEX1$$e900$$ENDHEX$$rieur
-//*					  u_DataWindow_Detail	adwInf						Datawindows Inf$$HEX1$$e900$$ENDHEX$$rieur
+//*					  u_DataWindow_Detail	adwSup						Datawindows Supérieur
+//*					  u_DataWindow_Detail	adwInf						Datawindows Inférieur
 
 //*
 //* Retourne		: Integer  0  NO ACTION
@@ -10486,7 +10491,7 @@ DwItemStatus disStatus
 If abDwNivInfReset Then adwInf.Reset ()
 
 /*------------------------------------------------------------------*/
-/* Copie des lignes niveau sup$$HEX1$$e900$$ENDHEX$$rieur vers niveau inf$$HEX1$$e900$$ENDHEX$$rieur.         */
+/* Copie des lignes niveau supérieur vers niveau inférieur.         */
 /* (Attention, on recopie le buffer primare, le client est donc     */
 /* libre de le filtrer.)                                            */
 /*------------------------------------------------------------------*/
@@ -10506,8 +10511,8 @@ If lNbrCol < 0 Or lNbrLig < 0 Then Return -1
 For lCptLig = 1 to lNbrLig
 
    /*------------------------------------------------------------------*/
-	/* De fa$$HEX1$$e700$$ENDHEX$$ons $$HEX3$$e0002000ea00$$ENDHEX$$tre s$$HEX1$$fb00$$ENDHEX$$r de pouvoir modifier les status de           */
-	/* colonnes, on force le status de la ligne $$HEX2$$e0002000$$ENDHEX$$DATAMODIFIED!         */
+	/* De façons à être sûr de pouvoir modifier les status de           */
+	/* colonnes, on force le status de la ligne à DATAMODIFIED!         */
 	/*------------------------------------------------------------------*/
 	adwInf.SetItemStatus ( lCptLig, 0, Primary!, DataModified! )
 
@@ -10521,7 +10526,7 @@ For lCptLig = 1 to lNbrLig
 	Next
 
 	/*------------------------------------------------------------------*/
-	/* Les status de colonne $$HEX1$$e900$$ENDHEX$$tant recopi$$HEX1$$e900$$ENDHEX$$s, on recopie $$HEX2$$e0002000$$ENDHEX$$ce moment le  */
+	/* Les status de colonne étant recopiés, on recopie à ce moment le  */
 	/* status de la ligne.                                              */
 	/*------------------------------------------------------------------*/
 	disStatus = adwSup.GetItemStatus ( lCptLig, 0, Primary! ) 
@@ -10537,7 +10542,7 @@ private subroutine uf_gestion_detaildivers ();//*-------------------------------
 //* Fonction		: Uf_Gestion_DetailDivers (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 04/10/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Gestion des DetailDivers
+//* Libellé			: Gestion des DetailDivers
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -10569,21 +10574,21 @@ public subroutine uf_initialiser_dw_desc (ref u_datawindow_detail adw_lstgarsin,
 //* Fonction		: Uf_Initialiser_Dw_Desc (Public)
 //* Auteur			: Erick John Stark
 //* Date				: 19/10/1997 18:47:02
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Initialisation des instances pour le NVUO
 //*
-//* Arguments		: U_DataWindow_Detail	adw_LstGarSin		(R$$HEX1$$e900$$ENDHEX$$f)	DataWindow sur la liste des garanties
-//*					  U_DataWindow_Detail	adw_LstInter		(R$$HEX1$$e900$$ENDHEX$$f)	DataWindow sur la liste des interlocuteurs
-//*					  U_DataWindow_Detail	adw_LstDetail		(R$$HEX1$$e900$$ENDHEX$$f)	DataWindow sur la liste des d$$HEX1$$e900$$ENDHEX$$tails de la garantie
-//*					  U_DataWindow_Detail	adw_LstCmdeGti		(R$$HEX1$$e900$$ENDHEX$$f)	DataWindow sur la liste des commandes de la garantie
-//*					  U_DataWindow_Detail	adw_LstCmdeSin		(R$$HEX1$$e900$$ENDHEX$$f)	DataWindow sur la liste des commandes du sinistre
-//*					  U_DataWindow				adw_wDivSin			(R$$HEX1$$e900$$ENDHEX$$f)	DataWindow sur w_Div_Sin
-//*					  U_DataWindow_Detail	adw_wDivDetsin		(R$$HEX1$$e900$$ENDHEX$$f)	Dw divers detail sur fen sinistre
-//*					  U_DataWindow_Detail	adw_wDivDet			(R$$HEX1$$e900$$ENDHEX$$f)	Dw divers detail sur fen detail
-//*					  U_DataWindow				adw_wDetailFF		(R$$HEX1$$e900$$ENDHEX$$f)	DataWindow sur le d$$HEX1$$e900$$ENDHEX$$tail en cours de saisie
-//*					  U_DataWindow				adw_wGarSin			(R$$HEX1$$e900$$ENDHEX$$f)	DataWindow sur la garantie en cours de saisie
-//*					  DataWindow				adw_Norm[]			(R$$HEX1$$e900$$ENDHEX$$f)	Tableau de DataWindow 
-//*					  U_DataWindow_Detail	adw_UdwDet []		(R$$HEX1$$e900$$ENDHEX$$f)	Tableau de u_Dw_Detail local $$HEX2$$e0002000$$ENDHEX$$la fen$$HEX1$$ea00$$ENDHEX$$tre d$$HEX1$$e900$$ENDHEX$$tail
+//* Arguments		: U_DataWindow_Detail	adw_LstGarSin		(Réf)	DataWindow sur la liste des garanties
+//*					  U_DataWindow_Detail	adw_LstInter		(Réf)	DataWindow sur la liste des interlocuteurs
+//*					  U_DataWindow_Detail	adw_LstDetail		(Réf)	DataWindow sur la liste des détails de la garantie
+//*					  U_DataWindow_Detail	adw_LstCmdeGti		(Réf)	DataWindow sur la liste des commandes de la garantie
+//*					  U_DataWindow_Detail	adw_LstCmdeSin		(Réf)	DataWindow sur la liste des commandes du sinistre
+//*					  U_DataWindow				adw_wDivSin			(Réf)	DataWindow sur w_Div_Sin
+//*					  U_DataWindow_Detail	adw_wDivDetsin		(Réf)	Dw divers detail sur fen sinistre
+//*					  U_DataWindow_Detail	adw_wDivDet			(Réf)	Dw divers detail sur fen detail
+//*					  U_DataWindow				adw_wDetailFF		(Réf)	DataWindow sur le détail en cours de saisie
+//*					  U_DataWindow				adw_wGarSin			(Réf)	DataWindow sur la garantie en cours de saisie
+//*					  DataWindow				adw_Norm[]			(Réf)	Tableau de DataWindow 
+//*					  U_DataWindow_Detail	adw_UdwDet []		(Réf)	Tableau de u_Dw_Detail local à la fenêtre détail
 //*
 //* Retourne		: Rien
 //*-----------------------------------------------------------------
@@ -10701,7 +10706,7 @@ idw_wPPlafond_Detail	= adw_Norm[12]
 idw_wPlaf_Detail	= adw_Norm[13]
 
 /*------------------------------------------------------------------*/
-/* DataWindow external permettant de garder les d$$HEX1$$e900$$ENDHEX$$tails supprim$$HEX1$$e900$$ENDHEX$$s   */
+/* DataWindow external permettant de garder les détails supprimés   */
 /*------------------------------------------------------------------*/
 idw_wDetailSupp	= adw_Norm[14]
 
@@ -10711,7 +10716,7 @@ idw_wDetailSupp	= adw_Norm[14]
 idw_InfoCmde		= adw_Norm[15]
 
 /*------------------------------------------------------------------*/
-/* DataWindow permettant de choisir entre commander et s$$HEX1$$e900$$ENDHEX$$lectionner */
+/* DataWindow permettant de choisir entre commander et sélectionner */
 /* les mobiles pour apparation sur courrier.								  */
 /*------------------------------------------------------------------*/
 idw_ChoixAction	= adw_Norm[16]
@@ -10723,7 +10728,7 @@ idwStkIfr 			= adw_Norm[17]
 idwCodEquiv 		= adw_Norm[18]
 
 /*------------------------------------------------------------------*/
-/* DataWindow sur les commandes local $$HEX2$$e0002000$$ENDHEX$$la fen$$HEX1$$ea00$$ENDHEX$$tre d$$HEX1$$e900$$ENDHEX$$tail.			  */
+/* DataWindow sur les commandes local à la fenêtre détail.			  */
 /*------------------------------------------------------------------*/
 idw_LstCmdeDet		= adw_UdwDet [1]
 
@@ -10751,7 +10756,7 @@ private subroutine uf_gestong_divers_caspart_finaux ();//*----------------------
 //* Fonction      : u_gs_sp_sinistre_detail::uf_GestOng_Divers_CasPart_Finaux (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 04/10/2005
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Gestion des cas particulier $$HEX2$$e0002000$$ENDHEX$$la fin du traitement de l'onglet Divers.
+//* Libellé       : Gestion des cas particulier à la fin du traitement de l'onglet Divers.
 //* Commentaires  : 
 //*
 //* Arguments		: 
@@ -10931,7 +10936,7 @@ For lCpt = 1 To lTot
 //			End Choose 
 
 /*------------------------------------------------------------------*/
-/* CODIC DARTY, toujours prot$$HEX1$$e900$$ENDHEX$$ger, jamais saisissable (vu avec DGA) */
+/* CODIC DARTY, toujours protéger, jamais saisissable (vu avec DGA) */
 /*------------------------------------------------------------------*/
 		Case "CODIC"
 
@@ -10943,7 +10948,7 @@ For lCpt = 1 To lTot
 //			If Long ( sData ) = 0 Then sData = ""
 //
 ///*------------------------------------------------------------------*/
-///* Si Pas de CODIC, on ne g$$HEX1$$e800$$ENDHEX$$re pas le dossier, Probl$$HEX1$$e800$$ENDHEX$$me.			     */
+///* Si Pas de CODIC, on ne gère pas le dossier, Problème.			     */
 ///*------------------------------------------------------------------*/
 //			If sData = "" And isTypeTrt = "S" Then
 //				stMessage.sTitre		= "CODIC Absent !"
@@ -10971,8 +10976,8 @@ public subroutine uf_gestong_divers_dddw (string asData, string asNomCol, long a
 //* Fonction      : u_gs_sp_sinistre_detail::uf_GestOng_Divers_DDDW (PUBLIC)
 //* Auteur        : Fabry JF
 //* Date          : 04/10/2005
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Gestion des listes DDDW de l'onglet Divers
-//* Commentaires  : Traitement particuliers afin de pouvoir g$$HEX1$$e800$$ENDHEX$$rer plusieurs
+//* Libellé       : Gestion des listes DDDW de l'onglet Divers
+//* Commentaires  : Traitement particuliers afin de pouvoir gèrer plusieurs
 //*					  liste "code_car" et plusieurs list "code"
 //*
 //* Arguments		: String		asData		Val
@@ -11028,10 +11033,10 @@ private function string uf_controlergestion_ongletdivers (ref string asong);//*-
 //* Fonction		: Uf_ControlerGestion_OngletDivers (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 16/07/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Gestion du contr$$HEX1$$f400$$ENDHEX$$le de saisie/gestion li$$HEX4$$e9002000e0002000$$ENDHEX$$l'onglet DIVERS
+//* Libellé			: Gestion du contrôle de saisie/gestion lié à l'onglet DIVERS
 //* Commentaires	: 
 //*
-//* Arguments		: String			asOng					R$$HEX1$$e900$$ENDHEX$$f
+//* Arguments		: String			asOng					Réf
 //*
 //* Retourne		: Rien
 //*
@@ -11075,7 +11080,7 @@ End If
 // :[CONFO][CUISINE][PC680]
 
 /*------------------------------------------------------------------*/
-/* Si la dw des gestion renseign$$HEX1$$e900$$ENDHEX$$e, ne comporte aucune zone, on     */
+/* Si la dw des gestion renseignée, ne comporte aucune zone, on     */
 /* ressort.                                                         */
 /*------------------------------------------------------------------*/
 If idw_wDivDet.RowCount () <= 0 Then Return ""
@@ -11088,19 +11093,19 @@ lTotZoneDet = idw_wDivDet.RowCount ()
 lTotZoneParam = idwDivPDet.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Le d$$HEX1$$e900$$ENDHEX$$tail est-il $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gler ?                                      */
+/* Le détail est-il à régler ?                                      */
 /*------------------------------------------------------------------*/
 bDetAREG = idw_wDetailFF.GetItemNumber ( 1, "COD_ETAT" ) = 500
 
 /*------------------------------------------------------------------*/
-/* Pour chaque zone de l'onglet Divers affich$$HEX1$$e900$$ENDHEX$$e sur le dossier.     */
+/* Pour chaque zone de l'onglet Divers affichée sur le dossier.     */
 /*------------------------------------------------------------------*/
 For lCpt = 1 To lTotZoneDet
 
 /*------------------------------------------------------------------*/
 /* id_code lib_code                                                 */
 /* ------- -----------------------------------                      */
-/* -1      Unit$$HEX2$$e9002000$$ENDHEX$$div_pro div_sin                                    */
+/* -1      Unité div_pro div_sin                                    */
 /* C       Chaine                                                   */
 /* D       Date                                                     */
 /* LC      Liste de valeur CAR                                      */
@@ -11110,7 +11115,7 @@ For lCpt = 1 To lTotZoneDet
 /* S       Montant                                                  */
 /* X       Alt                                                      */
 /*------------------------------------------------------------------*/
-/* La donn$$HEX1$$e900$$ENDHEX$$e est-elle renseign$$HEX1$$e900$$ENDHEX$$e												  */
+/* La donnée est-elle renseignée												  */
 /*------------------------------------------------------------------*/
 	Choose Case Upper ( idw_wDivDet.GetItemString ( lCpt, "ID_TYP_ZONE" ) )
 		Case "C", "LC", "X"
@@ -11126,7 +11131,7 @@ For lCpt = 1 To lTotZoneDet
 	End Choose
 
 /*------------------------------------------------------------------*/
-/* Si la donn$$HEX1$$e900$$ENDHEX$$e est renseign$$HEX1$$e900$$ENDHEX$$e, on passe au suivant.	              */
+/* Si la donnée est renseignée, on passe au suivant.	              */
 /*------------------------------------------------------------------*/
 	If IsNull ( sVal ) Then sVal = ""
 
@@ -11145,18 +11150,18 @@ For lCpt = 1 To lTotZoneDet
 	bAltProt  = idw_wDivDet.GetItemString ( lCpt, "ALT_PROT" ) = "O"
 
 /*------------------------------------------------------------------*/
-/* La zone trouv$$HEX1$$e900$$ENDHEX$$e sur le dossier a-t-elle (encore) un param$$HEX1$$e800$$ENDHEX$$trage  */
+/* La zone trouvée sur le dossier a-t-elle (encore) un paramètrage  */
 /* actif ?                                                          */
 /*------------------------------------------------------------------*/
 	lRow = idwDivPDet.Find ( "ID_PROD = " + String ( lIdProd ) + " AND NOM_ZONE = '" + sCodeZone + "'", 1, lTotZoneParam )
 
 /*------------------------------------------------------------------*/
-/* Si Oui, on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le param.                                    */
+/* Si Oui, on récupére le param.                                    */
 /*------------------------------------------------------------------*/
 	If lRow > 0 Then
 		bTjsOblig = idwDivPDet.GetItemString ( lRow, "ALT_OBLIG" ) = "O"
 /*------------------------------------------------------------------*/
-/* Sinon on le fixe par d$$HEX1$$e900$$ENDHEX$$faut.                                     */
+/* Sinon on le fixe par défaut.                                     */
 /*------------------------------------------------------------------*/
 	ELse
 		bTjsOblig = FALSE
@@ -11164,10 +11169,10 @@ For lCpt = 1 To lTotZoneDet
 
 
 /*------------------------------------------------------------------*/
-/* !! AJOUTER les nlles zn $$HEX2$$e0002000$$ENDHEX$$contr$$HEX1$$f400$$ENDHEX$$ler, ICI !!							  */
+/* !! AJOUTER les nlles zn à contrôler, ICI !!							  */
 /*------------------------------------------------------------------*/
-/* En fonction de la zone trouv$$HEX1$$e900$$ENDHEX$$e sur l'onglet Divers, on           */
-/* d$$HEX1$$e900$$ENDHEX$$clenche un action.                                             */
+/* En fonction de la zone trouvée sur l'onglet Divers, on           */
+/* déclenche un action.                                             */
 /*------------------------------------------------------------------*/
 	Choose Case sCodeZone 
 
@@ -11188,18 +11193,18 @@ For lCpt = 1 To lTotZoneDet
 
 			If bTjsOblig And Not bAltProt Then
 				If sPos = "" Then sPos = "ALT_BLOC"
-				sText += "- La mod$$HEX1$$e800$$ENDHEX$$le de l'appareil (ou description si aucune marque)" + sAide + sNouvelleLigne
+				sText += "- La modèle de l'appareil (ou description si aucune marque)" + sAide + sNouvelleLigne
 			End If 
 
 		/*------------------------------------------------------------------*/
-		/* Zone : Quantit$$HEX2$$e9002000$$ENDHEX$$(casto)														  */
+		/* Zone : Quantité (casto)														  */
 		// :[CONFO][CUISINE][PC680]
 		/*------------------------------------------------------------------*/
 		Case "qte"
 
 			If bTjsOblig And Not bAltProt And Not bExcepConfo Then
 				If sPos = "" Then sPos = "ALT_BLOC"
-				sText += "- La quantit$$HEX1$$e900$$ENDHEX$$" + sAide + sNouvelleLigne
+				sText += "- La quantité" + sAide + sNouvelleLigne
 			End If 
 
 		/*------------------------------------------------------------------*/
@@ -11237,7 +11242,7 @@ For lCpt = 1 To lTotZoneDet
 		Case "lib_article"
 			If bTjsOblig And Not bAltProt And Not bExcepConfo Then
 				If sPos = "" Then sPos = "ALT_BLOC"
-				sText += "- Le libell$$HEX2$$e9002000$$ENDHEX$$de article" + sAide + sNouvelleLigne
+				sText += "- Le libellé de article" + sAide + sNouvelleLigne
 			End If 
 			
 		// [CONFO][CUISINE]			
@@ -11267,7 +11272,7 @@ For lCpt = 1 To lTotZoneDet
 			If bTjsOblig And Not bAltProt And Not bExcepConfo Then
 				If ( IsNull ( sVal ) Or Trim ( sVal ) = "" ) And dcMtValAChat <= 200 Then
 					If sPos = "" Then sPos = "ALT_BLOC"
-					sText += "- l'avis du client sur la r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration du bien est obligatoire pour les valeurs d'achat inf$$HEX1$$e900$$ENDHEX$$rieures ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$200$$HEX1$$ac20$$ENDHEX$$" + sAide + sNouvelleLigne
+					sText += "- l'avis du client sur la récupération du bien est obligatoire pour les valeurs d'achat inférieures ou égale à 200€" + sAide + sNouvelleLigne
 				End If
 			End If 
 */
@@ -11279,7 +11284,7 @@ Next
 If sPos <> "" Then 
 	stMessage.bErreurG	= TRUE
 	stMessage.sCode		= "GENE001"
-	stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de gestion"
+	stMessage.sTitre		= "Contrôle de gestion"
 	stMessage.Icon			= Information!
 	stMessage.Bouton		= Ok!
 	stMessage.sVar [1]   = sText
@@ -11296,7 +11301,7 @@ public function string uf_gestong_divers_trouver (string asnomzone);//*---------
 //* Fonction      : u_gs_sp_sinistre_detail::uf_GestOng_Divers_Trouver (PUBLIC)
 //* Auteur        : Fabry JF
 //* Date          : 07/10/2005
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Trouver une valeur sur une zone de l'oglet divers
+//* Libellé       : Trouver une valeur sur une zone de l'oglet divers
 //* Commentaires  : 
 //*
 //* Arguments		: String			asNomZone		Val
@@ -11307,8 +11312,8 @@ public function string uf_gestong_divers_trouver (string asnomzone);//*---------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....
 //*
-//* #1	 PHG	 29/02/2008	  [DCMP080111] Cr$$HEX1$$e900$$ENDHEX$$ation des Variables ZVAR35 $$HEX2$$e0002000$$ENDHEX$$39
-//* 								  Refonte Fonction => Forme G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rique
+//* #1	 PHG	 29/02/2008	  [DCMP080111] Création des Variables ZVAR35 à 39
+//* 								  Refonte Fonction => Forme Générique
 //*-----------------------------------------------------------------
 
 Long lTot, lFound
@@ -11394,8 +11399,8 @@ private function boolean uf_rf_653 ();//*---------------------------------------
 //* Fonction		: Uf_Rf_653 (PRIVATE)
 //* Auteur			: FABRY JF
 //* Date				: 11/10/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Seuil d'intervention non atteint
-//* Commentaires	: Seuil sp$$HEX1$$e900$$ENDHEX$$cial : ( La QTE (ong divers) / Val Achat ) > au seuil pour pass$$HEX1$$e900$$ENDHEX$$
+//* Libellé			: Seuil d'intervention non atteint
+//* Commentaires	: Seuil spécial : ( La QTE (ong divers) / Val Achat ) > au seuil pour passé
 //*
 //* Arguments		: Aucun
 //*
@@ -11405,7 +11410,7 @@ private function boolean uf_rf_653 ();//*---------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1		PHG	26/10/2009 [DCMP071000] rf 655+651: Annexe : Correction Bug
-//*								  pr$$HEX1$$e900$$ENDHEX$$sent sur toute les fonctions de refus.
+//*								  présent sur toute les fonctions de refus.
 //*-----------------------------------------------------------------
 
 Long lTotPlaf, lLig, lCpt, lQte, lDeb, lFin
@@ -11414,7 +11419,7 @@ Boolean bRet
 
 Decimal {2} dcMtValAchat
 
-/* Cr$$HEX1$$e900$$ENDHEX$$er $$HEX2$$e0002000$$ENDHEX$$l'origine pour Castoram -DP/43 */
+/* Créer à l'origine pour Castoram -DP/43 */
 
 String sRech
 bRet				= True
@@ -11423,7 +11428,7 @@ dcMtValAchat	= idw_wDetailFF.GetItemDecimal ( 1, "MT_VAL_ACHAT" )
 lQte 				= Long ( This.uf_GestOng_Divers_Trouver ("QTE" ) )
 
 /*------------------------------------------------------------------*/
-/* Si le montant du pr$$HEX1$$e900$$ENDHEX$$judice est NULL ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro, on ne g$$HEX1$$e900$$ENDHEX$$re   */
+/* Si le montant du préjudice est NULL ou égal à zéro, on ne gére   */
 /* pas de refus.                                                    */
 /*------------------------------------------------------------------*/
 If	IsNull ( dcMtValAchat ) Or dcMtValAchat = 0 Then Return ( bRet )
@@ -11442,13 +11447,13 @@ For lCpt = 1 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail de sinistre
+			sIdNivPlaf = "+DT"  // Détail de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -11456,7 +11461,7 @@ For lCpt = 1 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond 										  */
+	/* On vérifie s'il existe un plafond 										  */
 	/*------------------------------------------------------------------*/
 	// #1 [DCMP071000] Lecture ID_GTI dans idw_wDetailFF ald de idw_wGarSin
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
@@ -11471,8 +11476,8 @@ For lCpt = 1 to 5
 
 	If	lLig > 0 Then
 /*------------------------------------------------------------------*/
-/* Si le montant du pr$$HEX1$$e900$$ENDHEX$$judice est strictement inf$$HEX1$$e900$$ENDHEX$$rieur au montant  */
-/* du plafond, on d$$HEX1$$e900$$ENDHEX$$clenche le refus 653.                           */
+/* Si le montant du préjudice est strictement inférieur au montant  */
+/* du plafond, on déclenche le refus 653.                           */
 /*------------------------------------------------------------------*/
 		If	( dcMtValAchat / lQte ) < idw_Plafond.GetItemDecimal ( lLig, "MT_PLAF" )	Then
 			bRet = Uf_RF_EcrireRefus ( 653 )
@@ -11489,12 +11494,12 @@ private function string uf_rechecherplafond_pec ();//*--------------------------
 //* Fonction		: u_gs_sp_sinistre_wdetail::Uf_RechecherPlafond_Pec (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 11/10/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Recherche des plafonds en amont pour les gestions de prise en charge
+//* Libellé			: Recherche des plafonds en amont pour les gestions de prise en charge
 //* Commentaires	: 
 //*
 //* Arguments		: 
 //*
-//* Retourne		: O/N : O=Au moins plaf s'est d$$HEX1$$e900$$ENDHEX$$clenche
+//* Retourne		: O/N : O=Au moins plaf s'est déclenche
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
@@ -11504,7 +11509,7 @@ private function string uf_rechecherplafond_pec ();//*--------------------------
 //*       JFF    27/07/2011  [PLAF_REF]	
 //*----------------------------------------------------------------
 
-// #1 fonction revu int$$HEX1$$e900$$ENDHEX$$gralement.
+// #1 fonction revu intégralement.
 
 Long lIdGti, lIdDetail, lRow, lTotDetail, lCptDet, lDeb, lFin, lCpt
 s_Plafond_Pec stPlafPec
@@ -11653,20 +11658,20 @@ private subroutine uf_controlergestion_pec (ref string aspos);//*---------------
 //* Fonction		: Uf_ControlerGestion_PEC (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 06/11/2003 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Contr$$HEX1$$f400$$ENDHEX$$le de gestion particulier pour les prises en charges.
+//* Libellé			: 
+//* Commentaires	: Contrôle de gestion particulier pour les prises en charges.
 //*
-//* Arguments		: String		asPos		R$$HEX1$$e900$$ENDHEX$$f.
+//* Arguments		: String		asPos		Réf.
 //*
 //* Retourne		: Rien
 //*
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
-//* #1  JFF  13/10/2006 DCMP 060755 Forc$$HEX1$$e700$$ENDHEX$$age dossier Casto
+//* #1  JFF  13/10/2006 DCMP 060755 Forcçage dossier Casto
 //* #2  JFF  04/06/2007   [DCMP070163-070164-070248-070318] Gestion Prise en charge
 //* #3  JFF  04/07/2007   [DCMP070163-070164-070248-070318] Gestion Prise en charge : Modif
-//*								  on autorise la PEc m$$HEX1$$ea00$$ENDHEX$$me avec dem de pi$$HEX1$$e800$$ENDHEX$$ce
-//* #4  JFF  03/06/2008   [DCMP080077].BUG1 On Autorise une refus op$$HEX1$$e900$$ENDHEX$$rateur si presta li$$HEX1$$e900$$ENDHEX$$e ne irr$$HEX1$$e900$$ENDHEX$$p. 21
+//*								  on autorise la PEc même avec dem de pièce
+//* #4  JFF  03/06/2008   [DCMP080077].BUG1 On Autorise une refus opérateur si presta liée ne irrép. 21
 //* #5  JFF  01/07/2008   [DCMP080370]
 //* #6  PHG  24/12/2009   [O2M_DIAG_NOMADE].Lot2 Point 3.2
 //* #7  JFF  15/01/2010   [O2M_DIAG_NOMADE].Lot2.JFF
@@ -11760,8 +11765,8 @@ If bAumoinsUnePiece Or bAumoinsUnRefusOpe Then
 			   // :#4 [DCMP080077].BUG1
 														  
 
-				// #3 Si pr$$HEX1$$e900$$ENDHEX$$sence d'une r$$HEX1$$e900$$ENDHEX$$paration et dem de pi$$HEX1$$e800$$ENDHEX$$cen, on ne d$$HEX1$$e900$$ENDHEX$$clenche pas le blocage.
-			   // #4 [DCMP080077].BUG1 Si pr$$HEX1$$e900$$ENDHEX$$sence d'une r$$HEX1$$e900$$ENDHEX$$paration irr$$HEX1$$e900$$ENDHEX$$p ET AMU un refus Op$$HEX1$$e900$$ENDHEX$$, on ne d$$HEX1$$e900$$ENDHEX$$clenche pas le blocage.
+				// #3 Si présence d'une réparation et dem de piècen, on ne déclenche pas le blocage.
+			   // #4 [DCMP080077].BUG1 Si présence d'une réparation irrép ET AMU un refus Opé, on ne déclenche pas le blocage.
 				// [ITSM129341]
 				// [PM280-2] 1426
 				If Not ( &
@@ -11774,7 +11779,7 @@ If bAumoinsUnePiece Or bAumoinsUnRefusOpe Then
 					Then
 				
 					stMessage.bErreurG	= FALSE
-					stMessage.sTitre		= "Action incoh$$HEX1$$e900$$ENDHEX$$rente"
+					stMessage.sTitre		= "Action incohérente"
 					stMessage.Icon			= Information!
 					stMessage.sCode = "WDET528"
 					asPos = "LIB_DET"
@@ -11831,9 +11836,9 @@ End If
 
 
 /*------------------------------------------------------------------*/
-/* Si au moins un plafond a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$d$$HEX1$$e900$$ENDHEX$$clench$$HEX1$$e900$$ENDHEX$$, sans qu'il y ait de      */
-/* refus alors je force moi-m$$HEX1$$ea00$$ENDHEX$$me un refus/plafond (660) m$$HEX1$$ea00$$ENDHEX$$me s'il   */
-/* n'est pas param$$HEX1$$e800$$ENDHEX$$tr$$HEX1$$e900$$ENDHEX$$.															  */
+/* Si au moins un plafond a été déclenché, sans qu'il y ait de      */
+/* refus alors je force moi-même un refus/plafond (660) même s'il   */
+/* n'est pas paramètré.															  */
 /*------------------------------------------------------------------*/
 // #2
 If asPos = "" And bCasto And bAuMoinsUnPlafond And Not bAuMoinsUnRefus Then
@@ -11846,7 +11851,7 @@ If asPos = "" And bCasto And bAuMoinsUnPlafond And Not bAuMoinsUnRefus Then
 End If
 
 /*------------------------------------------------------------------*/
-/* S'il y a refus ET que la PEC est coch$$HEX2$$e9002000$$ENDHEX$$SANS $$HEX1$$ea00$$ENDHEX$$tre forc$$HEX1$$e900$$ENDHEX$$e, ALORS   */
+/* S'il y a refus ET que la PEC est coché SANS être forcée, ALORS   */
 /* REFUS+MESS.                                                      */
 /*------------------------------------------------------------------*/
 // #4 [DCMP080077].BUG1 ajout du cas LRowPrs21 > 0 And bAumoinsUnRefusOpe
@@ -11871,7 +11876,7 @@ If asPos = "" And bAuMoinsUnRefus And bPriseEnChargeCoche And Not bForcagePriseE
 		idw_wDetailFF.SetItem ( 1, "COD_ETAT", 0 )						
 		
 		stMessage.bErreurG	= FALSE
-		stMessage.sTitre		= "Action incoh$$HEX1$$e900$$ENDHEX$$rente"
+		stMessage.sTitre		= "Action incohérente"
 		stMessage.Icon			= Information!
 		stMessage.sCode = "WDET529"
 
@@ -11917,7 +11922,7 @@ If asPos = "" And bAuMoinsUnRefus And bPriseEnChargeCoche And Not bForcagePriseE
 End If
 
 /*------------------------------------------------------------------*/
-/* S'il y a refus ET que la PEC est coch$$HEX1$$e900$$ENDHEX$$e ETANT forc$$HEX1$$e900$$ENDHEX$$e, ALORS      */
+/* S'il y a refus ET que la PEC est cochée ETANT forcée, ALORS      */
 /* MESS sans REFUS.                                                 */
 /*------------------------------------------------------------------*/
 If asPos = "" And bPriseEnChargeCoche And bForcagePriseEnChargeCoche Then
@@ -11951,7 +11956,7 @@ If asPos = "" And bPriseEnChargeCoche And bForcagePriseEnChargeCoche Then
 
 		// [VDOC10608]
 		If Not bShunt1 Then
-			stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de saisie du d$$HEX1$$e900$$ENDHEX$$tail"
+			stMessage.sTitre		= "Contrôle de saisie du détail"
 			stMessage.Icon			= Information!
 			stMessage.Bouton		= OK!
 			stMessage.bErreurG	= FALSE
@@ -12023,8 +12028,8 @@ private function integer uf_preparervalider_ongdivers ();//*--------------------
 //* Fonction		: Uf_PreparerValider_OngDivers (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 04/10/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Pr$$HEX1$$e900$$ENDHEX$$paration de la validation de l'onglet Divers.
+//* Libellé			: 
+//* Commentaires	: Préparation de la validation de l'onglet Divers.
 //*
 //* Arguments		: 
 //*
@@ -12040,7 +12045,7 @@ Long 			 lRow, lCpt, lTotRow
 lTotRow = idw_wDivDet.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* On supprime la zone 'X_TEMPO_X' ne servant $$HEX2$$e0002000$$ENDHEX$$rien.               */
+/* On supprime la zone 'X_TEMPO_X' ne servant à rien.               */
 /*------------------------------------------------------------------*/
 lRow = idw_wDivDet.Find ( "NOM_ZONE = 'X_TEMPO_X'", 1, lTotRow  )
 If lRow > 0 Then idw_wDivDet.RowsDiscard ( lRow, lRow, Primary! )
@@ -12048,8 +12053,8 @@ If lRow > 0 Then idw_wDivDet.RowsDiscard ( lRow, lRow, Primary! )
 lTotRow = idw_wDivDet.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* On supprime toutes les zones cr$$HEX2$$e900e900$$ENDHEX$$es qui n'ont pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$modifi$$HEX1$$e900$$ENDHEX$$e,  */
-/* cela ne sert $$HEX2$$e0002000$$ENDHEX$$rien de les int$$HEX1$$e900$$ENDHEX$$grer en base.                     */
+/* On supprime toutes les zones créées qui n'ont pas été modifiée,  */
+/* cela ne sert à rien de les intégrer en base.                     */
 /*------------------------------------------------------------------*/
 For lCpt = lTotRow To 1 Step -1
 	Choose case idw_wDivDet.GetItemString ( lCpt, "ALT_SUPP" )
@@ -12061,7 +12066,7 @@ Next
 /*------------------------------------------------------------------*/
 /* Pour toutes les lignes contenues dans le buffer Deleted! de      */
 /* DwNivInf...                                                      */
-/* Le compteur est $$HEX2$$e0002000$$ENDHEX$$l'envers, car on D$$HEX1$$e900$$ENDHEX$$truit des rows sur IdwRe-   */
+/* Le compteur est à l'envers, car on Détruit des rows sur IdwRe-   */
 /* questor dans Uf_CopierLigne												  */
 /*------------------------------------------------------------------*/
 lNbrTotLig = idw_wDivDet.DeletedCount () 
@@ -12069,7 +12074,7 @@ lNbrTotLig = idw_wDivDet.DeletedCount ()
 For lCptLig = lNbrTotLig To 1 Step -1
 
 /*------------------------------------------------------------------*/
-/* ...on construit la cl$$HEX2$$e9002000$$ENDHEX$$de chaque enregistrement contenus dans    */
+/* ...on construit la clé de chaque enregistrement contenus dans    */
 /* le buffer Delete! de DwNivInf.                                   */
 /*------------------------------------------------------------------*/
 	sCle = "ID_GTI = " + String ( idw_wDivDet.GetItemNumber ( lCptLig, "ID_GTI", DELETE!, TRUE ) ) + " AND " + &
@@ -12077,8 +12082,8 @@ For lCptLig = lNbrTotLig To 1 Step -1
 			 "UPPER ( NOM_ZONE ) = '" + Upper ( idw_wDivDet.GetItemString ( lCptLig, "NOM_ZONE", DELETE!, TRUE ) ) + "'"
 
 /*------------------------------------------------------------------*/
-/* Avec cette ligne identifi$$HEX1$$e900$$ENDHEX$$e, on effectue le traitement           */
-/* n$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$ssaire sur la DataWindow de niveau sup$$HEX1$$e900$$ENDHEX$$rieur. Voir fonction  */
+/* Avec cette ligne identifiée, on effectue le traitement           */
+/* nécéssaire sur la DataWindow de niveau supérieur. Voir fonction  */
 /* Uf_CopierLigne.                                                  */
 /*------------------------------------------------------------------*/
 	If This.Uf_CopierLigne_Inf2Sup ( "BD", lCptLig, sCle, idw_wDivDetGti, idw_wDivDet )	< 0  Then Return -1
@@ -12094,7 +12099,7 @@ For lCptLig = 1 To lNbrTotLig
 
 
 /*------------------------------------------------------------------*/
-/* ...on construit la cl$$HEX2$$e9002000$$ENDHEX$$de chaque enregistrement contenus dans    */
+/* ...on construit la clé de chaque enregistrement contenus dans    */
 /* le buffer Primaire de DwNivInf.                                  */
 /*------------------------------------------------------------------*/
 	sCle = "ID_GTI = " + String ( idw_wDivDet.GetItemNumber ( lCptLig, "ID_GTI", PRIMARY!, TRUE ) ) + " AND " + &
@@ -12104,8 +12109,8 @@ For lCptLig = 1 To lNbrTotLig
 
 
 	/*------------------------------------------------------------------*/
-	/* Avec cette ligne identifi$$HEX1$$e900$$ENDHEX$$e, on effectue le traitement           */
-	/* n$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$ssaire sur la DataWindow de niveau sup$$HEX1$$e900$$ENDHEX$$rieur. Voir fonction  */
+	/* Avec cette ligne identifiée, on effectue le traitement           */
+	/* nécéssaire sur la DataWindow de niveau supérieur. Voir fonction  */
 	/* Uf_CopierLigne.                                                  */
 	/*------------------------------------------------------------------*/
 	If This.Uf_CopierLigne_Inf2Sup ( "BP", lCptLig, sCle, idw_wDivDetGti, idw_wDivDet )	< 0   Then Return -1
@@ -12123,7 +12128,7 @@ private function boolean uf_rf_697 ();//*---------------------------------------
 //* Fonction		: Uf_Rf_697 (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 04/11/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Refus CASTORAMA suite expertise
 //*
 //* Arguments		: Aucun
@@ -12171,7 +12176,7 @@ Choose Case sCas
 		lCodAction = Long ( This.uf_GestOng_Divers_Trouver ("COD_ACTION" ) )
 		
 		/*------------------------------------------------------------------*/
-		/* Si un "refus suite expertise" est trouv$$HEX2$$e9002000$$ENDHEX$$alors on coche.         */
+		/* Si un "refus suite expertise" est trouvé alors on coche.         */
 		/*------------------------------------------------------------------*/
 		If lCodAction = 55 Then
 			bRet = Uf_RF_EcrireRefus ( 697 )
@@ -12207,7 +12212,7 @@ private function long uf_zn_altssui ();//*--------------------------------------
 //* Fonction		: Uf_Zn_AltSsui (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 08/01/1998 17:14:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Controle de ALT_SSUI
 //*
 //* Arguments		: Aucun
@@ -12221,13 +12226,13 @@ private function long uf_zn_altssui ();//*--------------------------------------
 
 Long lTotLigne, lLigPce, lLigRef
 
-stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le sur le d$$HEX1$$e900$$ENDHEX$$tail"
+stMessage.sTitre		= "Contrôle sur le détail"
 stMessage.Icon			= Information!
 stMessage.bErreurG	= False
 
 /*------------------------------------------------------------------*/
-/* On veut mettre la zone ALT_SSUI $$HEX2$$e0002000$$ENDHEX$$OUI, on v$$HEX1$$e900$$ENDHEX$$rifie qu'il          */
-/* n'existe pas de pi$$HEX1$$e800$$ENDHEX$$ces ou de motifs coch$$HEX1$$e900$$ENDHEX$$s.                      */
+/* On veut mettre la zone ALT_SSUI à OUI, on vérifie qu'il          */
+/* n'existe pas de pièces ou de motifs cochés.                      */
 /*------------------------------------------------------------------*/
 If	idw_wDetailFF.GetText () = "O" Then
 
@@ -12241,7 +12246,7 @@ If	idw_wDetailFF.GetText () = "O" Then
 		If	lLigRef = 0	Then
 /*------------------------------------------------------------------*/
 /* Il est impossible de mettre le dossier SANS SUITE si ALT_ATT     */
-/* est positionn$$HEX1$$e900$$ENDHEX$$.                                                  */
+/* est positionné.                                                  */
 /*------------------------------------------------------------------*/
 			If			idw_wDetailFF.GetItemString ( 1, "ALT_ATT" ) = "O" Then
 						stMessage.sCode = "WDET190"
@@ -12249,7 +12254,7 @@ If	idw_wDetailFF.GetText () = "O" Then
 
 /*------------------------------------------------------------------*/
 /* Il est impossible de mettre le dossier SANS SUITE si on force    */
-/* le r$$HEX1$$e800$$ENDHEX$$glement. (ALT_REG = O).                                     */
+/* le règlement. (ALT_REG = O).                                     */
 /*------------------------------------------------------------------*/
 			ElseIf	idw_wDetailFF.GetItemString ( 1, "ALT_REG" ) = "O" Then
 						stMessage.sCode = "WDET200"
@@ -12266,21 +12271,21 @@ If	idw_wDetailFF.GetText () = "O" Then
 	End If
 
 	If	lLigPce > 0 Then
-		stMessage.sVar[1]		= "La pi$$HEX1$$e800$$ENDHEX$$ce N$$HEX2$$b0002000$$ENDHEX$$" + String ( iuoTagPiece.dw_Trt.GetItemNumber ( lLigPce, "ID_PCE" ) ) + " est r$$HEX1$$e900$$ENDHEX$$clam$$HEX1$$e900$$ENDHEX$$e."
+		stMessage.sVar[1]		= "La pièce N° " + String ( iuoTagPiece.dw_Trt.GetItemNumber ( lLigPce, "ID_PCE" ) ) + " est réclamée."
 		stMessage.sCode		= "WDET120"
 		
 		f_Message ( stMessage )
 	End If
 
 	If	lLigRef > 0 Then
-		stMessage.sVar[1]		= "Le refus N$$HEX2$$b0002000$$ENDHEX$$" + String ( iuoTagRefus.dw_Trt.GetItemNumber ( lLigRef, "ID_MOTIF" ) ) + " est coch$$HEX1$$e900$$ENDHEX$$."
+		stMessage.sVar[1]		= "Le refus N° " + String ( iuoTagRefus.dw_Trt.GetItemNumber ( lLigRef, "ID_MOTIF" ) ) + " est coché."
 		stMessage.sCode		= "WDET120"
 
 		f_Message ( stMessage )
 	End If
 
 /*------------------------------------------------------------------*/
-/* On vient de mettre la zone Sans Suite $$HEX2$$e0002000$$ENDHEX$$NON.                     */
+/* On vient de mettre la zone Sans Suite à NON.                     */
 /*------------------------------------------------------------------*/
 Else
 	idw_wDetailFF.SetItem ( 1, "ALT_SSUI", "N" )
@@ -12303,7 +12308,7 @@ private function long uf_zn_altreg ();//*---------------------------------------
 //* Fonction		: Uf_Zn_AltReg (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 08/01/1998 17:14:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Controle de ALT_REG
 //*
 //* Arguments		: Aucun
@@ -12322,12 +12327,12 @@ Date dDteAdh
 
 /*------------------------------------------------------------------*/
 /* On teste la valeur de ALT_REG. Si NON, on repositionne le        */
-/* montant MT_PLAF $$HEX2$$e0002000$$ENDHEX$$0. Ensuite, on positionne les TabOrder.        */
+/* montant MT_PLAF à 0. Ensuite, on positionne les TabOrder.        */
 /*------------------------------------------------------------------*/
 If	idw_wDetailFF.GetText () = "O" Then
 	If idw_wDetailFF.GetItemString ( 1, "ALT_SSUI" ) = "O" Then
 
-		stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le sur le d$$HEX1$$e900$$ENDHEX$$tail"
+		stMessage.sTitre		= "Contrôle sur le détail"
 		stMessage.Icon			= Information!
 		stMessage.bErreurG	= False
 		stMessage.sCode		= "WDET210"
@@ -12372,7 +12377,7 @@ private function long uf_zn_altatt ();//*---------------------------------------
 //* Fonction		: Uf_Zn_AltAtt (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 08/01/1998 17:14:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Controle de ALT_ATT
 //*
 //* Arguments		: Aucun
@@ -12388,13 +12393,13 @@ long	ll_ret = 0
 //Fin Migration PB8-WYNIWYG-03/2006 OR
 
 /*------------------------------------------------------------------*/
-/* On veut mettre ALT_ATT $$HEX2$$e0002000$$ENDHEX$$OUI, il faut v$$HEX1$$e900$$ENDHEX$$rifier si ALT_SSUI est   */
-/* $$HEX2$$e0002000$$ENDHEX$$NON.                                                           */
+/* On veut mettre ALT_ATT à OUI, il faut vérifier si ALT_SSUI est   */
+/* à NON.                                                           */
 /*------------------------------------------------------------------*/
 
 If	idw_wDetailFF.GetText () = "O" Then
 	If	idw_wDetailFF.GetItemString ( 1, "ALT_SSUI" ) = "O"	Then
-		stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le sur le d$$HEX1$$e900$$ENDHEX$$tail"
+		stMessage.sTitre		= "Contrôle sur le détail"
 		stMessage.Icon			= Information!
 		stMessage.bErreurG	= False
 		stMessage.sCode		= "WDET130"
@@ -12418,7 +12423,7 @@ private function long uf_zn_heudet ();//*---------------------------------------
 //* Fonction		: Uf_Zn_HeuDet (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 08/01/1998 17:14:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Controle de HEU_DET
 //*
 //* Arguments		: Aucun
@@ -12468,7 +12473,7 @@ private function long uf_zn_numcarte ();//*-------------------------------------
 //* Fonction		: Uf_Zn_NumCarte (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 08/01/1998 17:14:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Controle de NUM_CARTE
 //*
 //* Arguments		: Aucun
@@ -12506,14 +12511,14 @@ lIdProd			= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
 
 /*------------------------------------------------------------------*/
 /* Le gestionnaire vient d'effacer le contenu de la zone. Gestion   */
-/* du iiCarNul standard avec r$$HEX1$$e900$$ENDHEX$$initialisation d'un certain nombre   */
-/* de zones $$HEX2$$e0002000$$ENDHEX$$la fin du script.                                     */
+/* du iiCarNul standard avec réinitialisation d'un certain nombre   */
+/* de zones à la fin du script.                                     */
 /*------------------------------------------------------------------*/
 If	sNumCarte = ""	Then
 	iAction = 1
 Else
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie le N$$HEX2$$b0002000$$ENDHEX$$de carte.                                       */
+/* On vérifie le N° de carte.                                       */
 /*------------------------------------------------------------------*/
 	bVerifCarte = F_Carte ( sNumCarte, "111" )
 /*------------------------------------------------------------------*/
@@ -12524,8 +12529,8 @@ Else
 
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S01_CARTE_SINISTRE" )	Then
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e, on d$$HEX1$$e900$$ENDHEX$$clenche un ItemError.         */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée, on déclenche un ItemError.         */
 /*------------------------------------------------------------------*/
 		iAction 						= 1
 		idw_wDetailFF.iiErreur	= 2
@@ -12538,18 +12543,18 @@ Else
 	Case 701, 702, 703, 704, 705, 712, 713, 714, 715
 		If	bVerifCarte	= False Then
 /*------------------------------------------------------------------*/
-/* Il y a une erreur de saisie sur le N$$HEX2$$b0002000$$ENDHEX$$de carte.                  */
+/* Il y a une erreur de saisie sur le N° de carte.                  */
 /*------------------------------------------------------------------*/
 			iAction 						= 1
 			idw_wDetailFF.iiErreur	= 1
 		Else
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie si la carte est connue, si elle ne l'est pas, on      */
+/* On vérifie si la carte est connue, si elle ne l'est pas, on      */
 /* affiche non bloquant d'avertissement.                            */
 /*------------------------------------------------------------------*/
 			If	sIdTypeCarte = "   "	And bProc = True Then
 
-				stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le sur le d$$HEX1$$e900$$ENDHEX$$tail"
+				stMessage.sTitre		= "Contrôle sur le détail"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= False
 				stMessage.bTrace		= False
@@ -12571,13 +12576,13 @@ Else
 	Case 701, 710, 711
 		If	bVerifCarte	= False Then
 /*------------------------------------------------------------------*/
-/* Il y a une erreur de saisie sur le N$$HEX2$$b0002000$$ENDHEX$$de carte.                  */
+/* Il y a une erreur de saisie sur le N° de carte.                  */
 /*------------------------------------------------------------------*/
 			iAction 						= 1
 			idw_wDetailFF.iiErreur	= 1
 		Else
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie si la carte est connue, et que la valeur de ID_GRP    */
+/* On vérifie si la carte est connue, et que la valeur de ID_GRP    */
 /* est bonne.                                                       */
 /*------------------------------------------------------------------*/
 			// [VDoc3118]
@@ -12596,8 +12601,8 @@ Else
 	
 				If	Not F_Procedure ( stMessage, itrTrans, "PS_S01_CARTE_UF" )	Then
 	/*------------------------------------------------------------------*/
-	/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-	/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e, on d$$HEX1$$e900$$ENDHEX$$clenche un ItemError.         */
+	/* Il y a une erreur dans l'appel de la procédure, la structure     */
+	/* stMessage vient d'être armée, on déclenche un ItemError.         */
 	/*------------------------------------------------------------------*/
 					iAction 						= 1
 					idw_wDetailFF.iiErreur	= 2
@@ -12625,8 +12630,8 @@ End If
 ll_ret = iAction
 //Fin Migration PB8-WYNIWYG-03/2006 OR
 /*------------------------------------------------------------------*/
-/* Il est important de faire un ActionCode $$HEX2$$e0002000$$ENDHEX$$2. En effet la         */
-/* fonction SetActionCode n'est pas imm$$HEX1$$e900$$ENDHEX$$diate. Il faut attendre la  */
+/* Il est important de faire un ActionCode à 2. En effet la         */
+/* fonction SetActionCode n'est pas immédiate. Il faut attendre la  */
 /* fin de la fonction appelante.                                    */
 /*------------------------------------------------------------------*/
 If	iAction = 2 Then
@@ -12639,11 +12644,11 @@ If	iAction = 2 Then
 Else
 
 /*------------------------------------------------------------------*/
-/* Il vient d'y avoir une erreur. (N$$HEX2$$b0002000$$ENDHEX$$de carte incorrecte, Erreur   */
-/* de saisie, Erreur de proc$$HEX1$$e900$$ENDHEX$$dure, Carte non couverte). On ne va    */
-/* pas r$$HEX1$$e900$$ENDHEX$$initialiser la valeur de ID_ADH avec la valeur pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dente  */
+/* Il vient d'y avoir une erreur. (N° de carte incorrecte, Erreur   */
+/* de saisie, Erreur de procédure, Carte non couverte). On ne va    */
+/* pas réinitialiser la valeur de ID_ADH avec la valeur précédente  */
 /* selon le souhait de Denis. Il faut donc annuler les valeurs      */
-/* pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dentes pour ID_CARTE et ID_TYPE_CARTE.                      */
+/* précédentes pour ID_CARTE et ID_TYPE_CARTE.                      */
 /*------------------------------------------------------------------*/
 
 	idw_wDetailFF.SetItem ( 1, "ID_CARTE", 0 )
@@ -12655,7 +12660,7 @@ Else
 		idw_wDetailFF.SetItem ( 1, "ID_TYPE_CARTE", stNul.str )
 	End If
 
-//Suite $$HEX2$$e0002000$$ENDHEX$$la d$$HEX1$$e900$$ENDHEX$$tection d'un probl$$HEX1$$e800$$ENDHEX$$me. Je positionne ID_TYPE_CARTE $$HEX2$$e0002000$$ENDHEX$$NULL.
+//Suite à la détection d'un problème. Je positionne ID_TYPE_CARTE à NULL.
 End If
 //Migration PB8-WYNIWYG-03/2006 OR
 return ll_ret
@@ -12669,7 +12674,7 @@ private function long uf_zn_idevt_telephonie ();//*-----------------------------
 //* Fonction		: Uf_Zn_IdEvt_Telephonie (PRIVATE)
 //* Auteur			: FABRY JF
 //* Date				: 06/01/1998 09:27:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -12682,12 +12687,12 @@ private function long uf_zn_idevt_telephonie ();//*-----------------------------
 //*-----------------------------------------------------------------
 //* #2	 CAG	 29/01/2002  Annexe 22 : on ne pose la question ci-dessus
 //*												  que si evt <> 845, et non compris entre 850 et 853 (inclus)
-//* #3	 JFF   15/10/2003	 Les anciens EVT de replacement MUST ne doivent plus $$HEX1$$ea00$$ENDHEX$$tre choisis.
-//* #4    MADM  17/07/2006  DCMP 060472 FNAC Suissse-Belgique permettre le r$$HEX1$$e800$$ENDHEX$$glement $$HEX2$$e0002000$$ENDHEX$$0 euros sur option 57
+//* #3	 JFF   15/10/2003	 Les anciens EVT de replacement MUST ne doivent plus être choisis.
+//* #4    MADM  17/07/2006  DCMP 060472 FNAC Suissse-Belgique permettre le règlement à 0 euros sur option 57
 //* #5    JFF   04/06/2007  [DCMP070163-070164-070248-070318] Gestion Prise en charge
 //* #6    JFF   25/03/2008  [DCMP080200]
 //* #7    JFF   02/03/2010  [MSS_LOT2]
-//			 FPI	 25/07/2011	 [VDoc4788] Ev$$HEX1$$e800$$ENDHEX$$nement indit pour autre que facturation
+//			 FPI	 25/07/2011	 [VDoc4788] Evènement indit pour autre que facturation
 //			 JFF   19/09/2012  [MANTIS4026]
 // 		 JFF	 29/01/2013  [PC801_MANTIS6481]
 // 		 FPI	 27/12/2013  [PC845][ITSM192266] Ajout de l'evt 1415
@@ -12696,6 +12701,7 @@ private function long uf_zn_idevt_telephonie ();//*-----------------------------
 //        JFF   02/09/2019  [DT424]
 //        JFF   23/03/2022  [RS1507_CONS_MAN]
 //        JFF   20/12/2023  [RS6269_EVOL_CONFO]
+//        JFF   05/08/2024  [MCO602_PNEU]
 //*-----------------------------------------------------------------
 
 Long	lNbreNouv, lTotCmdeDet, lSeqMax, lSeqMax1, lCpt, lIdEvt, lDeb, lFin, lRow, lIdEvtGetText, lIdEvtITem, lIdDetail 
@@ -12710,7 +12716,7 @@ lIdEvtGetText = Long ( idw_wDetailFF.GetText () ) // [DT424]
 lIdEvtITem = idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) // [DT424]
 
 /*---------------------------------------------------------------------------------------*/
-/* #4 on lit le montant du pr$$HEX1$$e900$$ENDHEX$$judice : si dcMtPrej > o le champ zone $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gler est visible*/
+/* #4 on lit le montant du préjudice : si dcMtPrej > o le champ zone à régler est visible*/
 /*---------------------------------------------------------------------------------------*/
 This.uf_Rendre_Visible_IdiReg (2)
 
@@ -12720,7 +12726,7 @@ bCasto = lDeb > 0
 // #5
 //If bCasto And iAction = 0 Then
 If iAction = 0 Then	
-	// ON ne touche $$HEX2$$e0002000$$ENDHEX$$rien une fois la prise en charge coch$$HEX1$$e900$$ENDHEX$$e.
+	// ON ne touche à rien une fois la prise en charge cochée.
 	If This.uf_GestOng_Divers_Trouver ("PEC" ) = "O" Then
 		idw_wDetailFF.iiErreur = 3
 		iAction = 1
@@ -12740,7 +12746,7 @@ If iAction = 0 Then
 				bContinuer = FALSE
 
 		//* #6  JFF    25/03/2008 [DCMP080200]
-		Case 	1089, 1090, 1091, 1415 // [PC845][ITSM192266] Ajout de l'evt 1415
+		Case 	1089, 1090, 1091, 1415, 1489 // [PC845][ITSM192266] Ajout de l'evt 1415 [MCO602_PNEU]
 				If Not this.uf_GetAutorisation(208) Then
 					idw_wDetailFF.iiErreur = 4
 					iAction = 1
@@ -12780,7 +12786,7 @@ If ibAltCmde And iAction = 0 Then
 /*------------------------------------------------------------------*/
 /* JFF Le 06/11/2003 : Je n'utilise plus ce code, mais je le garde  */
 /* pour le cas il je devrais                                        */
-/* faire marche arri$$HEX1$$e800$$ENDHEX$$re si cela ne convient pas $$HEX2$$e0002000$$ENDHEX$$la gestion.       */
+/* faire marche arrière si cela ne convient pas à la gestion.       */
 /* ( COMD018 ancien message )													  */
 /* DEBUT :                                                          */
 /*------------------------------------------------------------------*/
@@ -12821,7 +12827,7 @@ If ibAltCmde And iAction = 0 Then
 	End If
 
 /*------------------------------------------------------------------*/
-/* Si l'utilisateur a r$$HEX1$$e900$$ENDHEX$$pondu oui $$HEX2$$e0002000$$ENDHEX$$la question "voulez-vous    	  */
+/* Si l'utilisateur a répondu oui à la question "voulez-vous    	  */
 /* continuer ?"																     */
 /*------------------------------------------------------------------*/
 /* #2 CAG 29/01/03																  */
@@ -12847,7 +12853,7 @@ If ibAltCmde And iAction = 0 Then
 
 	End If
 	
-	// Afin de ne pas d$$HEX1$$e900$$ENDHEX$$clencher de message sur l'itemError
+	// Afin de ne pas déclencher de message sur l'itemError
 	stMessage.sCode		= ""
 End If
 
@@ -12943,7 +12949,7 @@ If F_CLE_A_TRUE ( "RS6269_EVOL_CONFO" ) Then
 	If iAction = 0 And lDeb > 0 Then
 		lIdDetail = idw_wDetailFF.GetItemNumber ( 1, "ID_DETAIL" ) 
 		
-		// Si premier d$$HEX1$$e900$$ENDHEX$$tail
+		// Si premier détail
 		If lIdDetail = 0 Then 
 			Choose Case lIdEvtGetText
 				Case 1083, 1317
@@ -12968,7 +12974,7 @@ private function long uf_zn_dtefacture ();//*-----------------------------------
 //* Fonction		: uf_zn_DteFacture (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 18/05/2005 17:14:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Controle de la date de facture fournisseur
 //*
 //* Arguments		: Aucun
@@ -13007,7 +13013,7 @@ private function long uf_zn_idireg ();//*---------------------------------------
 //* Fonction		: Uf_Zn_IdIReg (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 18/05/2005 17:14:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Controle de ID_I_REG
 //*
 //* Arguments		: Aucun
@@ -13021,10 +13027,10 @@ private function long uf_zn_idireg ();//*---------------------------------------
 //* #1	JCA	25/09/2006	DCMP06652
 //* #2	JFF	20/10/2008	[FNAC_PROD_ECH_TECH]
 //* 		JFF   04/11/2010 [PC301].[LOT2]
-//*			FPI	08/03/2011 [PC321] - R$$HEX1$$e800$$ENDHEX$$glement $$HEX2$$e0002000$$ENDHEX$$0
+//*			FPI	08/03/2011 [PC321] - Règlement à 0
 //* 		JFF   09/05/2012 [PC302]
 //*      JFF   02/07/2012 [PM103]
-//		FPI	26/12/2013	[PC864_1] Mantis 8099 - r$$HEX1$$e800$$ENDHEX$$glement du d$$HEX1$$e900$$ENDHEX$$tail $$HEX2$$e0002000$$ENDHEX$$0
+//		FPI	26/12/2013	[PC864_1] Mantis 8099 - règlement du détail à 0
 //*-----------------------------------------------------------------
 
 Int iAction
@@ -13106,7 +13112,7 @@ choose case idw_LstInter.GetItemString ( lRow, "COD_INTER" )
 		
 	case "F"
 		/*------------------------------------------------------------------*/
-		/* Il faut avoir un r$$HEX1$$f400$$ENDHEX$$le de facturation pour r$$HEX1$$e900$$ENDHEX$$gler un fournisseur. */
+		/* Il faut avoir un rôle de facturation pour régler un fournisseur. */
 		/*------------------------------------------------------------------*/
 		If Not This.uf_GetAutorisation ( 208 ) And &
 			Not gbModeReprise_223 &
@@ -13140,7 +13146,7 @@ choose case idw_LstInter.GetItemString ( lRow, "COD_INTER" )
 			End If
 		
 			If lRow <= 0 Then
-				stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le interlocuteur r$$HEX1$$e900$$ENDHEX$$glement"
+				stMessage.sTitre		= "Contrôle interlocuteur réglement"
 				stMessage.Icon			= Exclamation!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= YesNo!
@@ -13171,7 +13177,7 @@ private function long uf_zn_numfacture ();//*-----------------------------------
 //* Fonction		: Uf_Zn_NumFacture  (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 25/05/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Controle du NumFacture
 //*
 //* Arguments		: Aucun
@@ -13209,7 +13215,7 @@ private function long uf_zn_trt_divdet_vallst (string asdata, string asnomcol, l
 //* Fonction		: u_gs_sp_sinistre_wdetail::Uf_Zn_Trt_DivDet_ValLst (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 04/10/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de coh$$HEX1$$e900$$ENDHEX$$rence sur les valeurs de liste choisies et 
+//* Libellé			: Contrôle de cohérence sur les valeurs de liste choisies et 
 //*					  le nom de la zone d'affectation (uniquement dans l'onglet divers)
 //* Commentaires	: 	
 //*
@@ -13271,7 +13277,7 @@ private function long uf_zn_trt_divdet_marqapp (string asdata, string asnomcol, 
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_MarqApp (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/10/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone MarqApp
+//* Libellé			: Contrôle de la zone MarqApp
 //* Commentaires	: 
 //*
 //* Arguments		: String 		asData			Val
@@ -13300,7 +13306,7 @@ bCasto = lDeb > 0
 Choose Case TRUE
 	Case bCasto
 
-		// ON ne touche $$HEX2$$e0002000$$ENDHEX$$rien une fois la prise en charge coch$$HEX1$$e900$$ENDHEX$$e.
+		// ON ne touche à rien une fois la prise en charge cochée.
 		If This.uf_GestOng_Divers_Trouver ("PEC" ) = "O" Then
 			idw_wDivDet.iiErreur = 2
 			iAction = 1
@@ -13331,7 +13337,7 @@ private function long uf_zn_trt_divdet_aucunemarq (string asdata, string asnomco
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_AucuneMarq (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/10/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone AucuneMarq
+//* Libellé			: Contrôle de la zone AucuneMarq
 //* Commentaires	: 
 //*
 //* Arguments		: String 		asData			Val
@@ -13360,7 +13366,7 @@ bCasto = lDeb > 0
 Choose Case TRUE
 	Case bCasto
 
-		// ON ne touche $$HEX2$$e0002000$$ENDHEX$$rien une fois la prise en charge coch$$HEX1$$e900$$ENDHEX$$e.
+		// ON ne touche à rien une fois la prise en charge cochée.
 		If This.uf_GestOng_Divers_Trouver ("PEC" ) = "O" Then
 			idw_wDivDet.iiErreur = 3
 			iAction = 1
@@ -13397,7 +13403,7 @@ private function long uf_zn_trt_divdet_pec (string asdata, string asnomcol, long
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_Pec (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/10/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone Pec (Prise En Charge)
+//* Libellé			: Contrôle de la zone Pec (Prise En Charge)
 //* Commentaires	: 
 //*
 //* Arguments		: String 		asData			Val
@@ -13531,7 +13537,7 @@ If lDeb > 0 Then
 	Next
 End IF
 
-// #1 On g$$HEX1$$e800$$ENDHEX$$re Casto $$HEX2$$e0002000$$ENDHEX$$l'ancienne m$$HEX1$$e900$$ENDHEX$$thode.
+// #1 On gère Casto à l'ancienne méthode.
 If Not bCasto And Not bGestPec Then
 	idw_wDivDet.iiErreur = 12
 	iAction = 1	
@@ -13543,7 +13549,7 @@ lCodEtat = idw_wDetailFF.GetItemNumber ( 1, "COD_ETAT" )
 // #1
 Choose Case lCodEtat
 	Case 100, 0, 1, 200
-		// Ok on peut cocher/d$$HEX1$$e900$$ENDHEX$$cocher
+		// Ok on peut cocher/décocher
 	Case Else 
 		idw_wDivDet.iiErreur = 10
 		iAction = 1
@@ -13565,19 +13571,19 @@ Choose Case asData
 					sMess = "La nature du sinistre"
 					sMess2 = "couverte"
 				Case 3
-					sIdTypCode = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+					sIdTypCode = "+TR"  // Territorialité
 					sIdCode = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
-					sMess = "La territorialit$$HEX1$$e900$$ENDHEX$$"
+					sMess = "La territorialité"
 					sMess2 = "couverte"
 				Case 4
-					sIdTypCode = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail de sinistre
+					sIdTypCode = "+DT"  // Détail de sinistre
 					sIdCode = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
-					sMess = "Le d$$HEX1$$e900$$ENDHEX$$tail de sinistre "					
+					sMess = "Le détail de sinistre "					
 					sMess2 = "couvert"
 				Case 5
-					sIdTypCode = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+					sIdTypCode = "+EV"  // Evénement de garantie
 					sIdCode = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
-					sMess = "L'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement du d$$HEX1$$e900$$ENDHEX$$tail de garantie"
+					sMess = "L'événement du détail de garantie"
 					sMess2 = "couvert"
 	
 			End Choose
@@ -13814,7 +13820,7 @@ Choose Case TRUE
 				End IF
 
 				If iAction = 0 Then
-					// On ne lit pas la valeur d'achat, mais on fait la somme des MT_PEC des autres d$$HEX1$$e900$$ENDHEX$$tail.
+					// On ne lit pas la valeur d'achat, mais on fait la somme des MT_PEC des autres détail.
 					// dcMtPec = idw_wDetailFF.GetItemDecimal ( 1, "MT_VAL_ACHAT" )
 					dcMtPec = 0
 
@@ -13831,7 +13837,7 @@ Choose Case TRUE
 					For lCptDiv1 = 1 To lCountDiv1 
 						If Upper ( idw_wDivDetGti.GetItemString ( lCptDiv1, "NOM_ZONE" ) ) <> "MT_PEC" Then Continue
 						
-						dcMtPec1 = idw_wDivDetGti.GetItemDecimal ( lCptDiv1, "VAL_MT" )  // En pr$$HEX1$$e900$$ENDHEX$$vision...
+						dcMtPec1 = idw_wDivDetGti.GetItemDecimal ( lCptDiv1, "VAL_MT" )  // En prévision...
 						If IsNull ( dcMtPec1 ) Then dcMtPec1 = 0
 						If dcMtPec1 <= 0 Then continue
 						
@@ -13846,7 +13852,7 @@ Choose Case TRUE
 							, 1, lCountDiv1 )
 													
 						If lRowDiv1 > 0 Then
-							Continue // D$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$pris sur une carte Cadeau
+							Continue // Déjà pris sur une carte Cadeau
 						End If
 						
 						lRowDet1 = idw_LstDetail.Find ( &
@@ -13873,7 +13879,7 @@ Choose Case TRUE
 								, 1, lCountDiv1 )
 								
 								If lRowDiv1 <=0 Then
-									Continue // Refus$$HEX2$$e9002000$$ENDHEX$$sans force, on passe.
+									Continue // Refusé sans force, on passe.
 								End If
 							Case 500, 600, 900, 0
 								Continue // On passe
@@ -13902,9 +13908,9 @@ Choose Case TRUE
 							, 1, lCountDiv1 )
 						
 						If lIdEvt = 1317 Then
-							idw_wDivDetGti.SetItem ( lRowDiv1, "VAL_NBRE", lMarquageCC ) // Marqu$$HEX1$$e900$$ENDHEX$$
-							idw_LstDetail.SetItem ( lRowDet1, "COD_ETAT", 600 ) // mis comme r$$HEX1$$e900$$ENDHEX$$gl$$HEX1$$e900$$ENDHEX$$
-							idw_LstDetail.SetItem ( lRowDet1, "ALT_ATT", "N" ) // mis comme r$$HEX1$$e900$$ENDHEX$$gl$$HEX1$$e900$$ENDHEX$$
+							idw_wDivDetGti.SetItem ( lRowDiv1, "VAL_NBRE", lMarquageCC ) // Marqué
+							idw_LstDetail.SetItem ( lRowDet1, "COD_ETAT", 600 ) // mis comme réglé
+							idw_LstDetail.SetItem ( lRowDet1, "ALT_ATT", "N" ) // mis comme réglé
 						End If
 					Next
 
@@ -14007,7 +14013,7 @@ Choose Case TRUE
 				lCountDiv1 = idw_wDivDetGti.RowCount()
 				For lCptDiv1 = 1 To lCountDiv1 
 					
-					idw_wDivDetGti.SetItem ( lCptDiv1, "VAL_NBRE", 0 ) // Marqu$$HEX1$$e900$$ENDHEX$$
+					idw_wDivDetGti.SetItem ( lCptDiv1, "VAL_NBRE", 0 ) // Marqué
 					lIdDetailDiv1 = idw_wDivDetGti.GetItemNumber ( lCptDiv1, "ID_DETAIL" )
 					
 					lRowDet1 = idw_LstDetail.Find ( &
@@ -14016,7 +14022,7 @@ Choose Case TRUE
 						, 1, idw_LstDetail.Rowcount () )
 					
 					If lIdEvt = 1317 Then
-						idw_LstDetail.SetItem ( lRowDet1, "COD_ETAT", 0 ) // mis comme r$$HEX1$$e900$$ENDHEX$$gl$$HEX1$$e900$$ENDHEX$$
+						idw_LstDetail.SetItem ( lRowDet1, "COD_ETAT", 0 ) // mis comme réglé
 					End If
 				Next
 
@@ -14033,7 +14039,7 @@ Choose Case TRUE
 
 End Choose
 
-// #1 Calcul et d$$HEX1$$e900$$ENDHEX$$termination des zones li$$HEX1$$e900$$ENDHEX$$s $$HEX2$$e0002000$$ENDHEX$$la PEC
+// #1 Calcul et détermination des zones liés à la PEC
 // Option 86 uniquement
 If Not bCasto And bGestPEC And iAction = 0 Then
 	If asData = "O" Then
@@ -14239,7 +14245,7 @@ If Not bCasto And bGestPEC And iAction = 0 Then
 		If This.uf_GestOng_Divers_Trouver ("ALT_PEC" ) = "O" Then
 			istPec.TextColor = 255 // rouge
 		Else
-			istPec.TextColor = 32768 // Vert fonc$$HEX1$$e900$$ENDHEX$$
+			istPec.TextColor = 32768 // Vert foncé
 		End IF
 
 		lRow = idw_wDivDet.Find ( "UPPER ( NOM_ZONE ) = 'ALT_PLAF_PEC'" , 1, idw_wDivDet.RowCount ())
@@ -14323,7 +14329,7 @@ private function long uf_zn_trt_divdet_modlapp (string asdata, string asnomcol, 
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_ModlApp (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/10/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone ModlApp
+//* Libellé			: Contrôle de la zone ModlApp
 //* Commentaires	: 
 //*
 //* Arguments		: String 		asData			Val
@@ -14352,7 +14358,7 @@ bCasto = lDeb > 0
 Choose Case TRUE
 	Case bCasto
 
-		// ON ne touche $$HEX2$$e0002000$$ENDHEX$$rien une fois la prise en charge coch$$HEX1$$e900$$ENDHEX$$e.
+		// ON ne touche à rien une fois la prise en charge cochée.
 		If This.uf_GestOng_Divers_Trouver ("PEC" ) = "O" Then
 			idw_wDivDet.iiErreur = 2
 			iAction = 1
@@ -14375,7 +14381,7 @@ private function long uf_zn_trt_divdet_qte (string asdata, string asnomcol, long
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_qte (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/10/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone MarqApp
+//* Libellé			: Contrôle de la zone MarqApp
 //* Commentaires	: 
 //*
 //* Arguments		: String 		asData			Val
@@ -14410,9 +14416,9 @@ bConfo = lDeb > 0
 
 lIdEvt = idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" )
 
-//  [CONFO][CUISINE] Suppression de la contrainte Casto, ce contr$$HEX1$$f400$$ENDHEX$$le est valable tout le temps.
+//  [CONFO][CUISINE] Suppression de la contrainte Casto, ce contrôle est valable tout le temps.
 
-// ON ne touche $$HEX2$$e0002000$$ENDHEX$$rien une fois la prise en charge coch$$HEX1$$e900$$ENDHEX$$e.
+// ON ne touche à rien une fois la prise en charge cochée.
 If This.uf_GestOng_Divers_Trouver ("PEC" ) = "O" Then
 	idw_wDivDet.iiErreur = 1
 	iAction = 1
@@ -14443,7 +14449,7 @@ private function long uf_zn_dte_det_date ();//*---------------------------------
 //* Fonction		: uf_zn_Dte_Det_Date (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 18/05/2005 17:14:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Controle de la date d'achat
 //*
 //* Arguments		: Aucun
@@ -14477,10 +14483,10 @@ bCasto = lDeb > 0
 
 //If iAction = 0 And bCasto Then #1
 If iAction = 0 Then  // #1
-	// ON ne touche $$HEX2$$e0002000$$ENDHEX$$rien une fois la prise en charge coch$$HEX1$$e900$$ENDHEX$$e.
+	// ON ne touche à rien une fois la prise en charge cochée.
 	If This.uf_GestOng_Divers_Trouver ("PEC" ) = "O" Then
 
-		// [PLAF_REF] autorisation de la modification de la dte_det dans un cas tr$$HEX1$$e800$$ENDHEX$$s pr$$HEX1$$e900$$ENDHEX$$cis.
+		// [PLAF_REF] autorisation de la modification de la dte_det dans un cas très précis.
 		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_wSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 42 )
 		If lDeb > 0 Then
 			For lCpt = lDeb to lFin 
@@ -14539,7 +14545,7 @@ private function long uf_zn_trt_divdet_alt_pec (string asdata, string asnomcol, 
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_Alt_Pec (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/10/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone AltPec (Forcer la Prise En Charge)
+//* Libellé			: Contrôle de la zone AltPec (Forcer la Prise En Charge)
 //* Commentaires	: 
 //*
 //* Arguments		: String 		asData			Val
@@ -14579,8 +14585,8 @@ Integer i
 Boolean bBitMap
 
 // ITSM134028
-// Cl$$HEX2$$e9002000$$ENDHEX$$permanente $$HEX2$$e0002000$$ENDHEX$$ne pas supprimer
-// On shunt les contr$$HEX1$$f400$$ENDHEX$$les bloquant, on autorise le for$$HEX1$$e700$$ENDHEX$$age.
+// Clé permanente à ne pas supprimer
+// On shunt les contrôles bloquant, on autorise le forçage.
 If F_CLE_A_TRUE ( "SHUNT_CTRLE_FORC_PEC" ) Then
 	Choose Case stGlb.sCodOper
 		Case "JFF", "FPI"
@@ -14615,7 +14621,7 @@ If lDeb > 0 Then
 	Next
 End If
 
-// #1 On g$$HEX1$$e800$$ENDHEX$$re Casto $$HEX2$$e0002000$$ENDHEX$$l'ancienne m$$HEX1$$e900$$ENDHEX$$thode.
+// #1 On gère Casto à l'ancienne méthode.
 If Not bCasto And Not bGestPec Then
 	idw_wDivDet.iiErreur = 12
 	iAction = 1	
@@ -14625,7 +14631,7 @@ End If
 // #1
 Choose Case lCodEtat
 	Case 100, 0, 1, 200
-		// Ok on peut d$$HEX1$$e900$$ENDHEX$$coch$$HEX1$$e900$$ENDHEX$$
+		// Ok on peut décoché
 	Case Else 
 		idw_wDivDet.iiErreur = 10
 		iAction = 1
@@ -14639,7 +14645,7 @@ If This.uf_Deja_Une_Commande () Then
 End If
 
 
-// #1 Le gt peut-il forcer ? (cocher/d$$HEX1$$e900$$ENDHEX$$cocher)
+// #1 Le gt peut-il forcer ? (cocher/décocher)
 // [DOC4684]
 bForcerOK = ( Long ( stGlb.sTypOper ) >= idw_Produit.GetItemNumber ( 1, "COD_NIV_OPE" ) ) OR &
 				Mid ( gsBINDroit, 18, 1 ) = "1"
@@ -14701,7 +14707,7 @@ Choose Case TRUE
 		If iAction = 0 Then
 			Choose Case lCodEtat
 				Case 100, 0, 1
-					// Ok on peut d$$HEX1$$e900$$ENDHEX$$coch$$HEX1$$e900$$ENDHEX$$
+					// Ok on peut décoché
 				Case Else 
 					idw_wDivDet.iiErreur = 10
 					iAction = 1
@@ -14740,7 +14746,7 @@ If Not bCasto And bGestPEC And iAction = 0 Then
 			idw_wDivDet.SetItem ( lRow, "ALT_PROT", "O" )
 		End If 
 		
-		istPec.TextColor = 32768 // Vert fonc$$HEX3$$e90009000900$$ENDHEX$$
+		istPec.TextColor = 32768 // Vert foncé		
 
 		// [PC545].[BUG_BGE_721]
 		//	 [PC363].[10%]
@@ -14882,10 +14888,10 @@ public function long uf_zn_trt (ref s_pass astpass);//*-------------------------
 //* Fonction		: Uf_Zn_Trt (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:27:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Traitement sur les zones de dw_wDetailFF (On vient de ItemChanged)
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
@@ -14897,7 +14903,7 @@ public function long uf_zn_trt (ref s_pass astpass);//*-------------------------
 //*-----------------------------------------------------------------
 
 //Migration PB8-WYNIWYG-03/2006 FM
-//variable permettant la r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration et le retour de la fonction appel$$HEX1$$e900$$ENDHEX$$e
+//variable permettant la récupération et le retour de la fonction appelée
 long	ll_ret = 0
 //Fin Migration PB8-WYNIWYG-03/2006 FM
 
@@ -14969,7 +14975,7 @@ public function long uf_zn_trt_divdet (string asdata, string asnomcol, long alro
 //* Fonction		: Uf_Zn_Trt_DivDet (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 17/06/2004 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Traitement sur les zones de dw_w_div_det. (On vient de ItemChanged)
 //*
 //* Arguments		: String		asData		Val
@@ -15160,7 +15166,7 @@ If ll_Ret = 0 Then
 	idw_wDivDet.SetItem ( alRow, "MAJ_PAR", stGlb.sCodOper )
 	idw_wDivDet.SetItem ( alRow, "ALT_SUPP", "N" )
 	
-	// #1 Plus logique de mettre aussi $$HEX2$$e0002000$$ENDHEX$$jour w_sin
+	// #1 Plus logique de mettre aussi à jour w_sin
 	idw_wDetailFF.SetItem ( 1, "MAJ_LE", dtMajLe  )
 	idw_wDetailFF.SetItem ( 1, "MAJ_PAR", stGlb.sCodOper )		
 
@@ -15177,7 +15183,7 @@ private function boolean uf_rf_654 ();//*---------------------------------------
 //* Fonction		: Uf_Rf_654 (PRIVATE)
 //* Auteur			: PHG, d'apres Uf_rf_654
 //* Date				: 31/06/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Seuil d'intervention non atteint
 //*
 //* Arguments		: Aucun
@@ -15187,13 +15193,13 @@ private function boolean uf_rf_654 ();//*---------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* Modif d$$HEX1$$e900$$ENDHEX$$ja r$$HEX1$$e900$$ENDHEX$$alis$$HEX2$$e9002000$$ENDHEX$$dans la uf_rf_650
-//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$sur le contr$$HEX1$$f400$$ENDHEX$$ler
+//* Modif déja réalisé dans la uf_rf_650
+//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatrés sur les +NS, +DT, +TR
+//*								  déclenché sur le contrôler
 //* Modif specifique uf_rf_654
 //* [DCMP060272]	PHG	31/05/2006 : Ajout refus 654
 //* #2		PHG	26/10/2009 [DCMP071000] rf 655+651: Annexe : Correction Bug
-//*								  pr$$HEX1$$e900$$ENDHEX$$sent sur toute les fonctions de refus.
+//*								  présent sur toute les fonctions de refus.
 
 //*-----------------------------------------------------------------
 
@@ -15210,7 +15216,7 @@ lTotPlaf 		= idw_Plafond.RowCount ()
 dcValAchat		= idw_wDetailFF.GetItemDecimal ( 1, "MT_VAL_ACHAT" )
 
 /*------------------------------------------------------------------*/
-/* Si le montant d'achat est NULL ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro, on ne g$$HEX1$$e900$$ENDHEX$$re   */
+/* Si le montant d'achat est NULL ou égal à zéro, on ne gére   */
 /* pas de refus.                                                    */
 /*------------------------------------------------------------------*/
 If	IsNull ( dcValAchat ) Or dcValAchat = 0 Then Return ( bRet )
@@ -15228,13 +15234,13 @@ For lCpt = 1 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail de sinistre
+			sIdNivPlaf = "+DT"  // Détail de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -15242,7 +15248,7 @@ For lCpt = 1 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond 										  */
+	/* On vérifie s'il existe un plafond 										  */
 	/*------------------------------------------------------------------*/
 	// #2 [DCMP071000] Lecture ID_GTI dans idw_wDetailFF ald de idw_wGarSin
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
@@ -15257,8 +15263,8 @@ For lCpt = 1 to 5
 
 	If	lLig > 0 Then
 /*------------------------------------------------------------------*/
-/* Si le montant du pr$$HEX1$$e900$$ENDHEX$$judice est strictement inf$$HEX1$$e900$$ENDHEX$$rieur au montant  */
-/* du plafond, on d$$HEX1$$e900$$ENDHEX$$clenche le refus 654.                           */
+/* Si le montant du préjudice est strictement inférieur au montant  */
+/* du plafond, on déclenche le refus 654.                           */
 /*------------------------------------------------------------------*/
 		If	dcValAchat < idw_Plafond.GetItemDecimal ( lLig, "MT_PLAF" )	Then
 			bRet = Uf_RF_EcrireRefus ( 654 )
@@ -15274,7 +15280,7 @@ private function long uf_zn_trt_divdet_doschargespb (string asdata, string asnom
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_DosChargeSPB (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 19/07/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone Dos_Charge_SPB (Forcer la Prise En Charge)
+//* Libellé			: Contrôle de la zone Dos_Charge_SPB (Forcer la Prise En Charge)
 //* Commentaires	: 
 //*
 //* Arguments		: String 		asData			Val
@@ -15305,7 +15311,7 @@ public function string uf_gestion_mediasaturn ();//*----------------------------
 //* Fonction      : u_gs_sp_sinistre_wdetail::uf_Gestion_MediaSaturn (PUBLIC)
 //* Auteur        : Fabry JF
 //* Date          : 09/10/2006 15:05:09
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Gestion du produit MEDIA SATURN
+//* Libellé       : Gestion du produit MEDIA SATURN
 //* Commentaires  : Option -DP,71
 //*
 //* Arguments     : 
@@ -15314,7 +15320,7 @@ public function string uf_gestion_mediasaturn ();//*----------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1   MADM   20/07/2006   DCMP 060528 Gestion particuli$$HEX1$$e900$$ENDHEX$$re sur la marque CREATIVE 
+//* #1   MADM   20/07/2006   DCMP 060528 Gestion particuliére sur la marque CREATIVE 
 //*
 //*-----------------------------------------------------------------
 
@@ -15333,11 +15339,11 @@ asRet = ""
 
 /*------------------------------------------------------------------*/
 /* En fonction de Garantie (BRIS/VOL) 										  */
-/* on d$$HEX1$$e900$$ENDHEX$$finit un aiguillage.                                        */
+/* on définit un aiguillage.                                        */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
-/* #1 R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration de la marque via la grille de sinistre           */
+/* #1 Récupération de la marque via la grille de sinistre           */
 /*------------------------------------------------------------------*/
 Choose Case lIdGti
 	
@@ -15359,10 +15365,10 @@ private subroutine uf_controlergestion_208 (ref string aspos);//*---------------
 //* Fonction		: Uf_ControlerGestion_208 (PRIVATE)
 //* Auteur			: JCA
 //* Date				: 13/11/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: DCMP 060826	- Contr$$HEX1$$f400$$ENDHEX$$le de saisie li$$HEX1$$e900$$ENDHEX$$s au r$$HEX1$$e900$$ENDHEX$$glement des fournisseurs par les personnes ayant le droit 208
+//* Libellé			: 
+//* Commentaires	: DCMP 060826	- Contrôle de saisie liés au réglement des fournisseurs par les personnes ayant le droit 208
 //*
-//* Arguments		: String		asPos		R$$HEX1$$e900$$ENDHEX$$f.
+//* Arguments		: String		asPos		Réf.
 //*
 //* Retourne		: Rien
 //*
@@ -15391,7 +15397,7 @@ If idw_LstInter.GetItemString ( lRow, "COD_INTER" ) = "F" and &
 	Then 		asPos = "ID_I_REG"
 
 If asPos <> "" Then
-	stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le interlocuteur r$$HEX1$$e900$$ENDHEX$$glement"
+	stMessage.sTitre		= "Contrôle interlocuteur réglement"
 	stMessage.bErreurG	= FALSE
 	stMessage.sCode		= "WDET260"
 
@@ -15435,7 +15441,7 @@ If idw_LstInter.GetItemString ( lRow, "COD_INTER" ) = "F" and &
 	End If 
 	
 	If asPos <> ""THen
-		stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le li$$HEX4$$e9002000e0002000$$ENDHEX$$la facturation"
+		stMessage.sTitre		= "Contrôle lié à la facturation"
 		stMessage.bErreurG	= FALSE
 		stMessage.sCode		= "WDET261"
 		
@@ -15454,7 +15460,7 @@ If asPos="" Then
 		
 		If Dec(sVal) > 0 Then
 			If idw_wDetailFF.GetItemDecimal( 1, "MT_PREJ")  > Dec(sVal) Then
-				stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le li$$HEX4$$e9002000e0002000$$ENDHEX$$la facturation"
+				stMessage.sTitre		= "Contrôle lié à la facturation"
 				stMessage.bErreurG	= FALSE
 				stMessage.sCode		= "WDET619"
 				stMessage.bouton=YesNo!
@@ -15475,7 +15481,7 @@ sRech = "ID_GTI = " + String ( idw_wDetailFF.GetItemDecimal( 1, "ID_GTI") ) + " 
 		  "COD_ETAT = 'ANN' And ID_FOUR='" + sIdFour + "'"
 		  
 If idw_LstCmdeSin.Find ( sRech, 1, idw_LstCmdeSin.RowCount () ) > 0 Then
-	stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le li$$HEX4$$e9002000e0002000$$ENDHEX$$la facturation"
+	stMessage.sTitre		= "Contrôle lié à la facturation"
 	stMessage.bErreurG	= FALSE
 	stMessage.Icon			= Exclamation!
 	stMessage.sCode		= "WDET622"
@@ -15494,7 +15500,7 @@ private function boolean uf_deja_une_commande ();//*----------------------------
 //* Fonction      : u_gs_sp_sinistre_wdetail::uf_Deja_Une_Commande (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 14/12/2006 15:46:26
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Retourne TRUE si pr$$HEX1$$e900$$ENDHEX$$sence d'une commande pour ce d$$HEX1$$e900$$ENDHEX$$tail
+//* Libellé       : Retourne TRUE si présence d'une commande pour ce détail
 //*					  su le sinistre.
 //* Commentaires  : 
 //*
@@ -15574,8 +15580,8 @@ private function boolean uf_rf_627 ();//*---------------------------------------
 //* Fonction		: Uf_Rf_627 (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 30/01/2007 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [DCMP060794]
-//* Commentaires	: Date Surv/Date D$$HEX1$$e900$$ENDHEX$$tail (Det>Surv+Dl)
+//* Libellé			: [DCMP060794]
+//* Commentaires	: Date Surv/Date Détail (Det>Surv+Dl)
 //*
 //* Arguments		: Aucun
 //*
@@ -15585,7 +15591,7 @@ private function boolean uf_rf_627 ();//*---------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1		PHG	26/10/2009 [DCMP071000] rf 655+651: Annexe : Correction Bug
-//*								  pr$$HEX1$$e900$$ENDHEX$$sent sur toute les fonctions de refus.
+//*								  présent sur toute les fonctions de refus.
 //*-----------------------------------------------------------------
 Long 		lTotDelai, lLig, lDuree, lNbJour, lNbHeu, lHeuSurv, lHeuMax, lCpt
 Boolean 	bRet
@@ -15611,13 +15617,13 @@ For lCpt = 1 to 5
 			sIdNivDel = "+NS"  // Nature de sinistre
 			sIdRefDel = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivDel = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivDel = "+TR"  // Territorialité
 			sIdRefDel = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivDel = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail de sinistre
+			sIdNivDel = "+DT"  // Détail de sinistre
 			sIdRefDel = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivDel = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivDel = "+EV"  // Evénement de garantie
 			sIdRefDel = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 
@@ -15626,7 +15632,7 @@ For lCpt = 1 to 5
 	If IsNull ( sIdRefDel ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un d$$HEX1$$e900$$ENDHEX$$lai de d$$HEX1$$e900$$ENDHEX$$claration pour la garantie. */
+	/* On vérifie s'il existe un délai de déclaration pour la garantie. */
 	/*------------------------------------------------------------------*/
 	// #1 [DCMP071000] Lecture ID_GTI dans idw_wDetailFF ald de idw_wGarSin
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
@@ -15642,10 +15648,10 @@ For lCpt = 1 to 5
 	If	lLig > 0 Then
 
 	/*------------------------------------------------------------------*/
-	/* Le cas du d$$HEX1$$e900$$ENDHEX$$lai en heure est g$$HEX1$$e900$$ENDHEX$$r$$HEX4$$e9002000e0002000$$ENDHEX$$part car on doit travailler  */
+	/* Le cas du délai en heure est géré à part car on doit travailler  */
 	/* sur des datetime et non sur des dates.                           */
 	/* De plus, on ne peut pas utiliser uniquement f_plus_date pour le  */
-	/* calcul de la date de r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence                                   */
+	/* calcul de la date de référence                                   */
 	/*------------------------------------------------------------------*/
 
 		sUnite	= idw_Delai.GetItemString ( lLig, "UNT_DEL" )
@@ -15657,12 +15663,12 @@ For lCpt = 1 to 5
 		If sUnite = 'H' Then
 
 	/*------------------------------------------------------------------*/
-	/* on additionne les heures $$HEX2$$e0002000$$ENDHEX$$la date du d$$HEX1$$e900$$ENDHEX$$tail.                    */
-	/* On commence par d$$HEX1$$e900$$ENDHEX$$terminer $$HEX2$$e0002000$$ENDHEX$$combien de jours et d'heures        */
+	/* on additionne les heures à la date du détail.                    */
+	/* On commence par déterminer à combien de jours et d'heures        */
 	/* correspond lDuree                                                */
 	/*------------------------------------------------------------------*/
 
-			lNbJour	=	Truncate ( ( lDuree / 24 ), 0 )		// Partie enti$$HEX1$$e800$$ENDHEX$$re du nombre d'heures / 24
+			lNbJour	=	Truncate ( ( lDuree / 24 ), 0 )		// Partie entière du nombre d'heures / 24
 			lNbHeu	=	Mod ( lDuree, 24 )						// Reste de la division du nb heures / 24
 
 			sHeuDet	=	idw_wDetailFF.GetItemString 	( 1, "HEU_DET" )		
@@ -15676,8 +15682,8 @@ For lCpt = 1 to 5
 				lHeuMax  =  lHeuSurv + lNbHeu
 
 	/*------------------------------------------------------------------*/
-	/* Si le nombre d'heures obtenu d$$HEX1$$e900$$ENDHEX$$passe une journ$$HEX1$$e900$$ENDHEX$$e, on ajoute un   */
-	/* jour et on enl$$HEX1$$e800$$ENDHEX$$ve 24 heures $$HEX2$$e0002000$$ENDHEX$$heuMax                             */
+	/* Si le nombre d'heures obtenu dépasse une journée, on ajoute un   */
+	/* jour et on enlève 24 heures à heuMax                             */
 	/*------------------------------------------------------------------*/
 
 				If lHeuMax > 23 Then
@@ -15699,7 +15705,7 @@ For lCpt = 1 to 5
 
 				If	dtDet > dtDteMax Then
 	/*------------------------------------------------------------------*/
-	/* La dur$$HEX1$$e900$$ENDHEX$$e maximum est d$$HEX1$$e900$$ENDHEX$$pass$$HEX1$$e900$$ENDHEX$$e, on d$$HEX1$$e900$$ENDHEX$$clenche le refus 627.        */
+	/* La durée maximum est dépassée, on déclenche le refus 627.        */
 	/*------------------------------------------------------------------*/
 					bRet = Uf_RF_EcrireRefus ( 627 )
 				End If
@@ -15710,7 +15716,7 @@ For lCpt = 1 to 5
 
 				If	dDteDet > dDteMax	Then
 		/*------------------------------------------------------------------*/
-		/* La dur$$HEX1$$e900$$ENDHEX$$e maximum est d$$HEX1$$e900$$ENDHEX$$pass$$HEX1$$e900$$ENDHEX$$e, on d$$HEX1$$e900$$ENDHEX$$clenche le refus 627.        */
+		/* La durée maximum est dépassée, on déclenche le refus 627.        */
 		/*------------------------------------------------------------------*/
 					bRet = Uf_RF_EcrireRefus ( 627 )
 				End If
@@ -15722,7 +15728,7 @@ For lCpt = 1 to 5
 
 			If	dDteDet > dDteMax	Then
 		/*------------------------------------------------------------------*/
-		/* La dur$$HEX1$$e900$$ENDHEX$$e maximum est d$$HEX1$$e900$$ENDHEX$$pass$$HEX1$$e900$$ENDHEX$$e, on d$$HEX1$$e900$$ENDHEX$$clenche le refus 627.        */
+		/* La durée maximum est dépassée, on déclenche le refus 627.        */
 		/*------------------------------------------------------------------*/
 				bRet = Uf_RF_EcrireRefus ( 627 )
 			End If
@@ -15739,10 +15745,10 @@ private subroutine uf_controlergestion_cle (ref string aspos);//*---------------
 //* Fonction		: Uf_ControlerGestion_cle (PRIVATE)
 //* Auteur			: JCA
 //* Date				: 13/02/2007
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: DCMP 060928	- Contr$$HEX1$$f400$$ENDHEX$$le de compl$$HEX1$$e900$$ENDHEX$$mentaire sur la garantie cle (id_gti = 1)
+//* Libellé			: 
+//* Commentaires	: DCMP 060928	- Contrôle de complémentaire sur la garantie cle (id_gti = 1)
 //*
-//* Arguments		: String		asPos		R$$HEX1$$e900$$ENDHEX$$f.
+//* Arguments		: String		asPos		Réf.
 //*
 //* Retourne		: Rien
 //*
@@ -15757,7 +15763,7 @@ iIdGti = idw_wDetailFF.object.id_gti[1]
 iCodEtat = idw_wDetailFF.object.cod_etat[1]
 
 If iIdGti = 1 And ( iCodEtat = 100 Or iCodEtat = 500 ) Then
-	stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le d$$HEX1$$e900$$ENDHEX$$tail garantie"
+	stMessage.sTitre		= "Contrôle détail garantie"
 	stMessage.Bouton		= YesNo!
 	stMessage.bErreurG	= FALSE
 	stMessage.sCode		= "WDET510"
@@ -15776,7 +15782,7 @@ private subroutine uf_gestong_divers ();//*-------------------------------------
 //* Fonction      : u_gs_sp_sinistre_wdetail::uf_GestOng_Divers (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 16/06/2004 11:13:57
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Gestion de l'onglet DIVERS
+//* Libellé       : Gestion de l'onglet DIVERS
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -15785,7 +15791,7 @@ private subroutine uf_gestong_divers ();//*-------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1    JFF    19/03/2008  Bug remont$$HEX2$$e9002000$$ENDHEX$$par N. B$$HEX1$$e900$$ENDHEX$$ch$$HEX1$$e900$$ENDHEX$$ri
+//* #1    JFF    19/03/2008  Bug remonté par N. Béchéri
 //*       JFF    15/01/2020  [VDOC28827]/[VDOC28866]
 //*-----------------------------------------------------------------
 
@@ -15823,7 +15829,7 @@ If isTypeTrt = "S" Then
 		lRowDS	 = idw_wDivDet.Find ( "Lower ( NOM_ZONE ) = '" + sNomZoneP + "'", 1, lTotDivD ) 
 
 	/*------------------------------------------------------------------*/
-	/* Le row n'est pas trouv$$HEX1$$e900$$ENDHEX$$, donc on l'ins$$HEX1$$e800$$ENDHEX$$re                        */
+	/* Le row n'est pas trouvé, donc on l'insère                        */
 	/*------------------------------------------------------------------*/
 		If lRowDS <= 0 Then
 			lRowDS = idw_wDivDet.InsertRow (0)
@@ -15857,15 +15863,15 @@ If isTypeTrt = "S" Then
 					idw_wDivDet.SetItem ( lRowDS, "VAL_CAR", "N" )
 			End Choose 
 
-//			A voir plus tard si n$$HEX1$$e900$$ENDHEX$$cessaire.
+//			A voir plus tard si nécessaire.
 //			This.uf_GestOng_Divers_DefautZone ( sNomZoneP , idw_wSin.GetItemNumber ( 1, "ID_PROD" ), lRowDS )
 
 		End If
 	Next
 End If
 /*------------------------------------------------------------------*/
-/* Suite $$HEX2$$e0002000$$ENDHEX$$l'insertion dans idw_wDivDet des lignes manquantes, on   */
-/* les mets maintenant $$HEX2$$e0002000$$ENDHEX$$jour si besoin.                            */
+/* Suite à l'insertion dans idw_wDivDet des lignes manquantes, on   */
+/* les mets maintenant à jour si besoin.                            */
 /*------------------------------------------------------------------*/
 lTotDivD  = idw_wDivDet.RowCount ()
 
@@ -15880,8 +15886,8 @@ For lCptDivD = 1 To lTotDivD
 	sIdTypListe = idw_wDivDet.GetItemString ( lCptDivD, "ID_TYP_LISTE" ) 
 
 /*---------------------------------------------------------------------*/
-/* Liste $$HEX2$$e0002000$$ENDHEX$$charger : Cette Technique de chargement permet d'utiliser   */
-/* plusieurs liste du m$$HEX1$$ea00$$ENDHEX$$me type (liste de code_car par exemple)		  */
+/* Liste à charger : Cette Technique de chargement permet d'utiliser   */
+/* plusieurs liste du même type (liste de code_car par exemple)		  */
 /*---------------------------------------------------------------------*/
 	If sIdTypListe <> "-1" Then
 		sAltLstCodeCar = idw_wDivDet.GetItemString ( lCptDivD, "ALT_LISTE_CODECAR" ) 
@@ -15933,7 +15939,7 @@ For lCptDivD = 1 To lTotDivD
 Next
 
 /*------------------------------------------------------------------*/
-/* Il est impossible de prot$$HEX1$$e900$$ENDHEX$$ger par 'protect=1' toutes lignes et   */
+/* Il est impossible de protéger par 'protect=1' toutes lignes et   */
 /* col d'une dw, au moins une zone doit avoir le focus.             */
 /*------------------------------------------------------------------*/
 If lTotDivD > 0 Then
@@ -15954,7 +15960,7 @@ idw_wDivDet.Sort ()
 
 /*------------------------------------------------------------------*/
 /* Protection des zones dynamique de dw_w_Div_Sin en Validation.    */
-/* Attention, on ne prot$$HEX1$$e900$$ENDHEX$$ge par le dernier $$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$ment d$$HEX1$$e900$$ENDHEX$$plac$$HEX4$$e9002000e0002000$$ENDHEX$$X=10000*/
+/* Attention, on ne protége par le dernier élément déplacé à X=10000*/
 /*------------------------------------------------------------------*/
 If isTypeTrt <> "S" Or lCodEtat = 600 OR lCodEtat = 900 Or lCodEtat = 200 Then
 	lTotDivD = idw_wDivDet.rowcount() 
@@ -15968,13 +15974,13 @@ If isTypeTrt = "S" And lCodEtat = 100 Then
 	lTotDivD = idw_wDivDet.rowcount() 
 	For lCptDivD = 1 to lTotDivD 
 
-		// #1 Attention, uniquement les zones pouvant $$HEX1$$ea00$$ENDHEX$$tre d$$HEX1$$e900$$ENDHEX$$prot$$HEX1$$e900$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$es.
+		// #1 Attention, uniquement les zones pouvant être déprotégées.
 		Choose Case lower ( idw_wDivDet.GetItemString ( lCptDivD, "NOM_ZONE" ) )
 			Case "pec_redresse", "alt_plaf_pec", "cod_action", "alt_modif"
-				// Elles devraient normalement $$HEX1$$ea00$$ENDHEX$$tre d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$prot$$HEX1$$e900$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$, mais on les reprot$$HEX1$$e800$$ENDHEX$$ge pour en $$HEX1$$ea00$$ENDHEX$$tre certain
+				// Elles devraient normalement être déjà protégé, mais on les reprotège pour en être certain
 				idw_wDivDet.SetItem ( lCptDivD ,"ALT_PROT", "O" )				
 			Case Else 
-				// pour toutes les autres, on d$$HEX1$$e900$$ENDHEX$$prot$$HEX1$$e800$$ENDHEX$$ge.
+				// pour toutes les autres, on déprotège.
 				idw_wDivDet.SetItem ( lCptDivD ,"ALT_PROT", "N" )				
 		End Choose
 	Next
@@ -15994,7 +16000,7 @@ private function string uf_gestion_cond_plaf_671_675 ();//*---------------------
 //* Fonction      : u_gs_sp_sinistre_wdetail::uf_Gestion_cond_plaf_671_675 (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 16/06/2004 11:13:57
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: V$$HEX1$$e900$$ENDHEX$$rifie si le Tel command$$HEX2$$e9002000$$ENDHEX$$est le m$$HEX1$$ea00$$ENDHEX$$me que celui sinistr$$HEX1$$e900$$ENDHEX$$.
+//* Libellé       : Vérifie si le Tel commandé est le même que celui sinistré.
 //* Commentaires  : [DCMP070059]
 //*
 //* Arguments     : 
@@ -16042,8 +16048,8 @@ private function string uf_plaf_nbev_gti_adherent_renouvellement ();//*---------
 //* Fonction		: Uf_Plaf_NbEvt_Gti_Adherent_Renouvellement (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 28/09/2005 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Application d'un plafond par adh$$HEX1$$e900$$ENDHEX$$rent/Renouvellement (Nbre evt par ann$$HEX1$$e900$$ENDHEX$$e)
+//* Libellé			: 
+//* Commentaires	: Application d'un plafond par adhérent/Renouvellement (Nbre evt par année)
 //*
 //* Arguments		: Aucun
 //*
@@ -16052,7 +16058,7 @@ private function string uf_plaf_nbev_gti_adherent_renouvellement ();//*---------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1	FPI		01/10/2009	[DCMP090539] Correction calcul nb evt
-//* #2   FPI      05/03/2010  [20100305140001227] Correctif calcul de plafond (nb de d$$HEX1$$e900$$ENDHEX$$tails)
+//* #2   FPI      05/03/2010  [20100305140001227] Correctif calcul de plafond (nb de détails)
 //*      JFF      27/07/2011  [PLAF_REF]			
 //  		 JFF		29/05/2012  [VDOC6662]
 //*-----------------------------------------------------------------
@@ -16072,7 +16078,7 @@ String       sUntPerRnv_Adh
 
 sPos = ""
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par sinistre.                  */
+/* On vérifie s'il existe un plafond par sinistre.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -16087,13 +16093,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -16101,7 +16107,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -16139,8 +16145,8 @@ lLig = lLigFinale
 
 If	lLig > 0 Then
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -16156,7 +16162,7 @@ If	lLig > 0 Then
 	sUntPerRnv_Adh		= idw_produit.GetItemString ( 1, "UNT_PERRNV_ADH" )
 /*---------------------------------------------------------------------*/
 /* On calcule la date du dernier renouvellement.                       */
-/*En fonction de l'unit$$HEX2$$e9002000$$ENDHEX$$de periode de renouvellement (ANNEE,MOIS,JOUR)*/
+/*En fonction de l'unité de periode de renouvellement (ANNEE,MOIS,JOUR)*/
 /*---------------------------------------------------------------------*/
    Choose Case sUntPerRnv_Adh
 	   Case "A"
@@ -16184,8 +16190,8 @@ If	lLig > 0 Then
 
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S10_W_DETAIL_NBEVT" )	Then 
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e, on affiche le message.             */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée, on affiche le message.             */
 /*------------------------------------------------------------------*/
 		f_Message ( stMessage )
 		sPos = "MT_PREJ"
@@ -16211,7 +16217,7 @@ If	lLig > 0 Then
 			idw_wDetailFF.SetItem ( 1, "MT_PLAF", 0 )
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -16234,8 +16240,8 @@ private function string uf_plaf_nbev_gti_adherent_survenance ();//*-------------
 //* Fonction		: Uf_Plaf_NbEv_Gti_Adherent_Survenance (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 28/09/2005 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Application d'un plafond par adh$$HEX1$$e900$$ENDHEX$$rent/Ann$$HEX1$$e900$$ENDHEX$$e survenance glissante (Nbre evt par ann$$HEX1$$e900$$ENDHEX$$e)
+//* Libellé			: 
+//* Commentaires	: Application d'un plafond par adhérent/Année survenance glissante (Nbre evt par année)
 //*
 //* Arguments		: Aucun
 //*
@@ -16244,7 +16250,7 @@ private function string uf_plaf_nbev_gti_adherent_survenance ();//*-------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1	FPI		01/10/2009	[DCMP090539] Correction calcul nb evt
-//* #2   FPI      05/03/2010  [20100305140001227] Correctif calcul de plafond (nb de d$$HEX1$$e900$$ENDHEX$$tails)
+//* #2   FPI      05/03/2010  [20100305140001227] Correctif calcul de plafond (nb de détails)
 //*      JFF      27/07/2011  [PLAF_REF]			
 //  		 JFF		29/05/2012  [VDOC6662]
 //*-----------------------------------------------------------------
@@ -16263,7 +16269,7 @@ String sRech, sPos, sIdAdh, sIdPara, sCptVer
 
 sPos = ""
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par sinistre.                  */
+/* On vérifie s'il existe un plafond par sinistre.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -16278,13 +16284,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -16292,7 +16298,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -16330,8 +16336,8 @@ lLig = lLigFinale
 
 If	lLig > 0 Then
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -16348,8 +16354,8 @@ If	lLig > 0 Then
 
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S08_W_DETAIL_NBSIN" )	Then 
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e, on affiche le message.             */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée, on affiche le message.             */
 /*------------------------------------------------------------------*/
 		f_Message ( stMessage )
 		sPos = "MT_PREJ"
@@ -16376,7 +16382,7 @@ If	lLig > 0 Then
 			idw_wDetailFF.SetItem ( 1, "MT_PLAF", 0 )
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -16398,8 +16404,8 @@ private function string uf_plaf_nbev_gti_adhesion_renouvellement ();//*---------
 //* Fonction		: Uf_Plaf_NbEvUf_Plaf_NbEv_Gti_Adhesion_Renouvellement_Adhesion_Renouvellement (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 28/09/2005 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Application d'un plafond par adh$$HEX1$$e900$$ENDHEX$$sion/Renouvellement (Nbre evt par ann$$HEX1$$e900$$ENDHEX$$e)
+//* Libellé			: 
+//* Commentaires	: Application d'un plafond par adhésion/Renouvellement (Nbre evt par année)
 //*
 //* Arguments		: Aucun
 //*
@@ -16427,7 +16433,7 @@ String       sUntPerRnv_Adh
 
 sPos = ""
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par sinistre.                  */
+/* On vérifie s'il existe un plafond par sinistre.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -16442,13 +16448,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -16456,7 +16462,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -16494,8 +16500,8 @@ lLig = lLigFinale
 
 If	lLig > 0 Then
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -16510,7 +16516,7 @@ If	lLig > 0 Then
 	sUntPerRnv_Adh		= idw_produit.GetItemString ( 1, "UNT_PERRNV_ADH" )
 /*---------------------------------------------------------------------*/
 /* On calcule la date du dernier renouvellement.                       */
-/*En fonction de l'unit$$HEX2$$e9002000$$ENDHEX$$de periode de renouvellement (ANNEE,MOIS,JOUR)*/
+/*En fonction de l'unité de periode de renouvellement (ANNEE,MOIS,JOUR)*/
 /*---------------------------------------------------------------------*/
    Choose Case sUntPerRnv_Adh
 	   Case "A"
@@ -16538,8 +16544,8 @@ If	lLig > 0 Then
 
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S09_W_DETAIL_NBSIN" )	Then 
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e, on affiche le message.             */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée, on affiche le message.             */
 /*------------------------------------------------------------------*/
 		f_Message ( stMessage )
 		sPos = "MT_PREJ"
@@ -16566,7 +16572,7 @@ If	lLig > 0 Then
 			idw_wDetailFF.SetItem ( 1, "MT_PLAF", 0 )
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", 	"O" )
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -16590,8 +16596,8 @@ private function string uf_plaf_nbev_gti_adhesion_survenance ();//*-------------
 //* Fonction		: Uf_Plaf_NbEv_Gti_Adhesion_Survenance (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 28/09/2005 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Application d'un plafond par adh$$HEX1$$e900$$ENDHEX$$sion/Ann$$HEX1$$e900$$ENDHEX$$e survenace glissante (Nbre evt par ann$$HEX1$$e900$$ENDHEX$$e)
+//* Libellé			: 
+//* Commentaires	: Application d'un plafond par adhésion/Année survenace glissante (Nbre evt par année)
 //*
 //* Arguments		: Aucun
 //*
@@ -16600,7 +16606,7 @@ private function string uf_plaf_nbev_gti_adhesion_survenance ();//*-------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1	FPI		01/10/2009	[DCMP090539] Correction calcul nb evt
-//* #2   FPI      05/03/2010  [20100305140001227] Correctif calcul de plafond (nb de d$$HEX1$$e900$$ENDHEX$$tails)
+//* #2   FPI      05/03/2010  [20100305140001227] Correctif calcul de plafond (nb de détails)
 //*      JFF      27/07/2011  [PLAF_REF]			
 //  		 JFF		29/05/2012  [VDOC6662]
 //*-----------------------------------------------------------------
@@ -16619,7 +16625,7 @@ String sRech, sPos, sIdAdh, sIdPara, sCptVer
 
 sPos = ""
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par sinistre.                  */
+/* On vérifie s'il existe un plafond par sinistre.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -16634,13 +16640,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -16648,7 +16654,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -16686,8 +16692,8 @@ lLig = lLigFinale
 
 If	lLig > 0 Then
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -16703,8 +16709,8 @@ If	lLig > 0 Then
 
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S07_W_DETAIL_NBSIN" )	Then 
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e, on affiche le message.             */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée, on affiche le message.             */
 /*------------------------------------------------------------------*/
 		f_Message ( stMessage )
 		sPos = "MT_PREJ"
@@ -16730,7 +16736,7 @@ If	lLig > 0 Then
 			idw_wDetailFF.SetItem ( 1, "MT_PLAF", 0 )
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", 	"O" )
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -16751,10 +16757,10 @@ end function
 private function string uf_plaf_nbev_sin_adherent_renouvellement ();//*-----------------------------------------------------------------
 //*
 //* Fonction		: Uf_Plaf_NbEv_Sin_Adherent_Renouvellement (PRIVATE)
-//* Auteur			: PHG, d'apr$$HEX1$$e800$$ENDHEX$$s Fabry JF
+//* Auteur			: PHG, d'après Fabry JF
 //* Date				: 13/04/2007
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Application d'un plafond par adh$$HEX1$$e900$$ENDHEX$$rent/Renouvellement (Nbre evt par ann$$HEX1$$e900$$ENDHEX$$e)
+//* Libellé			: 
+//* Commentaires	: Application d'un plafond par adhérent/Renouvellement (Nbre evt par année)
 //*					  Recherche des evenement au niveau Sinistre et non pas Gti
 //*
 //* Arguments		: Aucun
@@ -16764,7 +16770,7 @@ private function string uf_plaf_nbev_sin_adherent_renouvellement ();//*---------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1	FPI		01/10/2009	[DCMP090539] Correction calcul nb evt
-//* #2   FPI      05/03/2010  [20100305140001227] Correctif calcul de plafond (nb de d$$HEX1$$e900$$ENDHEX$$tails)
+//* #2   FPI      05/03/2010  [20100305140001227] Correctif calcul de plafond (nb de détails)
 //*      JFF      27/07/2011  [PLAF_REF]			
 //  		 JFF		29/05/2012  [VDOC6662]
 //*-----------------------------------------------------------------
@@ -16788,7 +16794,7 @@ String       sUntPerRnv_Adh
 
 sPos = ""
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par sinistre.                  */
+/* On vérifie s'il existe un plafond par sinistre.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -16803,13 +16809,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -16817,7 +16823,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -16855,8 +16861,8 @@ lLig = lLigFinale
 
 If	lLig > 0 Then
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -16872,7 +16878,7 @@ If	lLig > 0 Then
 	sUntPerRnv_Adh		= idw_produit.GetItemString ( 1, "UNT_PERRNV_ADH" )
 /*---------------------------------------------------------------------*/
 /* On calcule la date du dernier renouvellement.                       */
-/*En fonction de l'unit$$HEX2$$e9002000$$ENDHEX$$de periode de renouvellement (ANNEE,MOIS,JOUR)*/
+/*En fonction de l'unité de periode de renouvellement (ANNEE,MOIS,JOUR)*/
 /*---------------------------------------------------------------------*/
    Choose Case sUntPerRnv_Adh
 	   Case "A"
@@ -16900,8 +16906,8 @@ If	lLig > 0 Then
 
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S14_W_DETAIL_NBEVT" )	Then 
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e, on affiche le message.             */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée, on affiche le message.             */
 /*------------------------------------------------------------------*/
 		f_Message ( stMessage )
 		sPos = "MT_PREJ"
@@ -16928,7 +16934,7 @@ If	lLig > 0 Then
 			idw_wDetailFF.SetItem ( 1, "MT_PLAF", 0 )
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -16950,10 +16956,10 @@ end function
 private function string uf_plaf_nbev_sin_adherent_survenance ();//*-----------------------------------------------------------------
 //*
 //* Fonction		: Uf_Plaf_NbEv_Sin_Adherent_Survenance (PRIVATE)
-//* Auteur			: PHG, d'apr$$HEX1$$e800$$ENDHEX$$s Fabry JF
+//* Auteur			: PHG, d'après Fabry JF
 //* Date				: 13/04/2007 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Application d'un plafond par adh$$HEX1$$e900$$ENDHEX$$rent/Ann$$HEX1$$e900$$ENDHEX$$e survenance glissante (Nbre evt par ann$$HEX1$$e900$$ENDHEX$$e)
+//* Libellé			: 
+//* Commentaires	: Application d'un plafond par adhérent/Année survenance glissante (Nbre evt par année)
 //*					  Toute garantie confondue
 //*
 //* Arguments		: Aucun
@@ -16963,7 +16969,7 @@ private function string uf_plaf_nbev_sin_adherent_survenance ();//*-------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1	FPI		01/10/2009	[DCMP090539] Correction calcul nb evt
-//* #2   FPI      05/03/2010  [20100305140001227] Correctif calcul de plafond (nb de d$$HEX1$$e900$$ENDHEX$$tails)
+//* #2   FPI      05/03/2010  [20100305140001227] Correctif calcul de plafond (nb de détails)
 //*      JFF      27/07/2011  [PLAF_REF]			
 //  		 JFF		29/05/2012  [VDOC6662]
 //*-----------------------------------------------------------------
@@ -16982,7 +16988,7 @@ String sRech, sPos, sIdAdh, sIdPara, sCptVer
 
 sPos = ""
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par sinistre.                  */
+/* On vérifie s'il existe un plafond par sinistre.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -16997,13 +17003,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -17011,7 +17017,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -17049,8 +17055,8 @@ lLig = lLigFinale
 
 If	lLig > 0 Then
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -17068,8 +17074,8 @@ If	lLig > 0 Then
 
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S12_W_DETAIL_NBSIN" )	Then 
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e, on affiche le message.             */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée, on affiche le message.             */
 /*------------------------------------------------------------------*/
 		f_Message ( stMessage )
 		sPos = "MT_PREJ"
@@ -17096,7 +17102,7 @@ If	lLig > 0 Then
 			idw_wDetailFF.SetItem ( 1, "MT_PLAF", 0 )
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -17117,10 +17123,10 @@ end function
 private function string uf_plaf_nbev_sin_adhesion_renouvellement ();//*-----------------------------------------------------------------
 //*
 //* Fonction		: Uf_Plaf_NbEv_Sin_Adhesion_Renouvellement (PRIVATE)
-//* Auteur			: PHG, d'apr$$HEX1$$e800$$ENDHEX$$s Fabry JF
+//* Auteur			: PHG, d'après Fabry JF
 //* Date				: 13/04/2007
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Application d'un plafond par adh$$HEX1$$e900$$ENDHEX$$sion/Renouvellement (Nbre evt par ann$$HEX1$$e900$$ENDHEX$$e)
+//* Libellé			: 
+//* Commentaires	: Application d'un plafond par adhésion/Renouvellement (Nbre evt par année)
 //*					  toute garantie confondue
 //*
 //* Arguments		: Aucun
@@ -17130,7 +17136,7 @@ private function string uf_plaf_nbev_sin_adhesion_renouvellement ();//*---------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1	FPI		01/10/2009	[DCMP090539] Correction calcul nb evt
-//* #2   FPI      05/03/2010  [20100305140001227] Correctif calcul de plafond (nb de d$$HEX1$$e900$$ENDHEX$$tails)
+//* #2   FPI      05/03/2010  [20100305140001227] Correctif calcul de plafond (nb de détails)
 //*      JFF      27/07/2011  [PLAF_REF]			
 //  		 JFF		29/05/2012  [VDOC6662]
 //*-----------------------------------------------------------------
@@ -17150,7 +17156,7 @@ String       sUntPerRnv_Adh
 
 sPos = ""
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par sinistre.                  */
+/* On vérifie s'il existe un plafond par sinistre.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -17165,13 +17171,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -17179,7 +17185,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -17217,8 +17223,8 @@ lLig = lLigFinale
 
 If	lLig > 0 Then
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -17233,7 +17239,7 @@ If	lLig > 0 Then
 	sUntPerRnv_Adh		= idw_produit.GetItemString ( 1, "UNT_PERRNV_ADH" )
 /*---------------------------------------------------------------------*/
 /* On calcule la date du dernier renouvellement.                       */
-/*En fonction de l'unit$$HEX2$$e9002000$$ENDHEX$$de periode de renouvellement (ANNEE,MOIS,JOUR)*/
+/*En fonction de l'unité de periode de renouvellement (ANNEE,MOIS,JOUR)*/
 /*---------------------------------------------------------------------*/
    Choose Case sUntPerRnv_Adh
 	   Case "A"
@@ -17261,8 +17267,8 @@ If	lLig > 0 Then
 
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S13_W_DETAIL_NBSIN" )	Then 
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e, on affiche le message.             */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée, on affiche le message.             */
 /*------------------------------------------------------------------*/
 		f_Message ( stMessage )
 		sPos = "MT_PREJ"
@@ -17289,7 +17295,7 @@ If	lLig > 0 Then
 			idw_wDetailFF.SetItem ( 1, "MT_PLAF", 0 )
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", 	"O" )
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -17313,8 +17319,8 @@ private function string uf_plaf_nbev_sin_adhesion_survenance ();//*-------------
 //* Fonction		: Uf_Plaf_NbEv_Gti_Adhesion_Survenance (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 28/09/2005 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Application d'un plafond par adh$$HEX1$$e900$$ENDHEX$$sion/Ann$$HEX1$$e900$$ENDHEX$$e survenace glissante (Nbre evt par ann$$HEX1$$e900$$ENDHEX$$e)
+//* Libellé			: 
+//* Commentaires	: Application d'un plafond par adhésion/Année survenace glissante (Nbre evt par année)
 //* 					  Toute Garantie Confondue
 //*
 //* Arguments		: Aucun
@@ -17324,7 +17330,7 @@ private function string uf_plaf_nbev_sin_adhesion_survenance ();//*-------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1	FPI		01/10/2009	[DCMP090539] Correction calcul nb evt
-//* #2   FPI      05/03/2010  [20100305140001227] Correctif calcul de plafond (nb de d$$HEX1$$e900$$ENDHEX$$tails)
+//* #2   FPI      05/03/2010  [20100305140001227] Correctif calcul de plafond (nb de détails)
 //*      JFF      27/07/2011  [PLAF_REF]			
 //  		 JFF		29/05/2012  [VDOC6662]
 //*-----------------------------------------------------------------
@@ -17343,7 +17349,7 @@ String sRech, sPos, sIdAdh, sIdPara, sCptVer
 
 sPos = ""
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par sinistre.                  */
+/* On vérifie s'il existe un plafond par sinistre.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -17358,13 +17364,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -17372,7 +17378,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -17410,8 +17416,8 @@ lLig = lLigFinale
 
 If	lLig > 0 Then
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -17428,8 +17434,8 @@ If	lLig > 0 Then
 
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S11_W_DETAIL_NBSIN" )	Then 
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e, on affiche le message.             */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée, on affiche le message.             */
 /*------------------------------------------------------------------*/
 		f_Message ( stMessage )
 		sPos = "MT_PREJ"
@@ -17456,7 +17462,7 @@ If	lLig > 0 Then
 			idw_wDetailFF.SetItem ( 1, "MT_PLAF", 0 )
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", 	"O" )
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -17478,7 +17484,7 @@ private function long uf_zn_codmotssui ();//*-----------------------------------
 //* Fonction		: Uf_Zn_CodMotSsui (PRIVATE)
 //* Auteur			: PHG
 //* Date				: 26/04/2007
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controle de COD_MOT_SSUI ( Motif de classement sans suite )
+//* Libellé			: Controle de COD_MOT_SSUI ( Motif de classement sans suite )
 //* Commentaires	: [DCMP070275] Creation uf_zn_codmotssui
 //*
 //* Arguments		: Aucun
@@ -17532,8 +17538,8 @@ public function boolean uf_controlergestion_donnee_pgc (long alidgti, long alide
 //* Fonction		: u_gs_sp_sinistre_wdetail::uf_controlergestion_donnee_pgc
 //* Auteur			: Pierre-Henri Gillot
 //* Date				: 24/05/2007 17:16:35
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [DCMP070284] Gestion PGC
-//* Commentaires	: Controle la bonne saisie des donn$$HEX1$$e900$$ENDHEX$$es
+//* Libellé			: [DCMP070284] Gestion PGC
+//* Commentaires	: Controle la bonne saisie des données
 //*					  indispensable au calcul de la PGC
 //*					  ( Option 85, Prolongation Garantie Constructeur. )
 //*
@@ -17544,7 +17550,7 @@ public function boolean uf_controlergestion_donnee_pgc (long alidgti, long alide
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1	JCA	23/10/2007	DCMP 70755 - Annulation du contr$$HEX1$$f400$$ENDHEX$$le si detail existant pour garantie 15
+//* #1	JCA	23/10/2007	DCMP 70755 - Annulation du contrôle si detail existant pour garantie 15
 //       JFF   22/11/2023 [RS6175_GC_SCRP_SIM2]
 //*-----------------------------------------------------------------
 
@@ -17554,15 +17560,15 @@ long		lDeb, lFin, lCpt, lIdGti, lIdEvt, lIdProd, lFound, lDurGtiOrg
 date 		dDteAchat
 string 	sFindString
 
-// pour d$$HEX1$$e900$$ENDHEX$$coincer les cas de probl$$HEX1$$e800$$ENDHEX$$me en factu en attendant que je fasse la modif ad$$HEX1$$e900$$ENDHEX$$quat (JFF)
+// pour décoincer les cas de problème en factu en attendant que je fasse la modif adéquat (JFF)
 // Return True
 
-// Si la personne a le r$$HEX1$$f400$$ENDHEX$$le de facturation, on ressort.
+// Si la personne a le rôle de facturation, on ressort.
 If This.uf_GetAutorisation ( 208 ) Then Return True
 
 // #1
 string sFindGti
-// on ne fait pas le controle si le detail est 200 : refus$$HEX1$$e900$$ENDHEX$$, 600 : r$$HEX1$$e900$$ENDHEX$$gl$$HEX1$$e900$$ENDHEX$$, 900 : sans suite (hors detail en cours) 
+// on ne fait pas le controle si le detail est 200 : refusé, 600 : réglé, 900 : sans suite (hors detail en cours) 
 sFindGti = "ID_GTI = " + string(idw_wDetailFF.object.id_gti[1]) + " AND ID_DETAIL <> " + string(idw_wDetailFF.object.id_detail[1]) + " AND COD_ETAT IN ( 200, 600, 900 )"
 lFound = idw_LstDetail.Find( sFindGti, 1, idw_LstDetail.rowcount()) 
 
@@ -17599,7 +17605,7 @@ If bPGCActif Then
 				bret = FALSE
 			End If
 
-			// Controle Dur$$HEX1$$e900$$ENDHEX$$e d'Origine
+			// Controle Durée d'Origine
 			// [RS6175_GC_SCRP_SIM2]
 			If F_CLE_A_TRUE ( "RS6175_GC_SCRP_SIM2" ) Then
 				sFindString = "UPPER(NOM_ZONE) = 'DUREE_GTI_ORIG'"
@@ -17612,7 +17618,7 @@ If bPGCActif Then
 				lDurGtiOrg = idw_wDivSin.object.val_nbre[lFound]
 			End If  
 			If lFound = 0 or lDurGtiOrg = 0 or IsNull(lDurGtiOrg) then
-				asText = asText + " - La dur$$HEX1$$e900$$ENDHEX$$e de garantie constructeur" + "~n~r"
+				asText = asText + " - La durée de garantie constructeur" + "~n~r"
 				If asPos = "" Then asPos = "DTE_DET_DATE"
 				bret = FALSE
 			End If
@@ -17633,7 +17639,7 @@ private function boolean uf_rf_636 ();//*---------------------------------------
 //* Fonction		: Uf_Rf_636 (PRIVATE)
 //* Auteur			: PHG
 //* Date				: 25/05/2007 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [DCMP070284]
+//* Libellé			: [DCMP070284]
 //* Commentaires	: REfus : Date de survenance couverte par la garantie Contructeur.
 //*
 //* Arguments		: Aucun
@@ -17644,7 +17650,7 @@ private function boolean uf_rf_636 ();//*---------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*     JFF  20/01/2011  [PC363].[PANNE_PGC]
-// 		FPI	31/07/2013	[PC936] PGC exprim$$HEX1$$e900$$ENDHEX$$e en jours
+// 		FPI	31/07/2013	[PC936] PGC exprimée en jours
 //       JFF   22/11/2023 [RS6175_GC_SCRP_SIM2]
 //*-----------------------------------------------------------------
 Date 	  dDteSurv, dDteFinGC, dDteAchat
@@ -17661,9 +17667,9 @@ String sUnite, sValCar // [PC936]
 n_cst_string lnvPFCString
 
 //*------------------------------------------------------------------*/
-//* On d$$HEX1$$e900$$ENDHEX$$clenche ce motif dans le cas de la garantie Prolongation    */
-//* Garantie Constructeur. Si la date de Survenance est  Inf$$HEX1$$e900$$ENDHEX$$rieure  */
-//* $$HEX2$$e0002000$$ENDHEX$$la Date D'achat + la dur$$HEX1$$e900$$ENDHEX$$e de la GC => REfus 636		         */
+//* On déclenche ce motif dans le cas de la garantie Prolongation    */
+//* Garantie Constructeur. Si la date de Survenance est  Inférieure  */
+//* à la Date D'achat + la durée de la GC => REfus 636		         */
 //* Ex :																				   */
 //* Pas de Refus 636
 //* ---+=======---|------>
@@ -17691,7 +17697,7 @@ lIdGti	= idw_wDetailFF.GetItemNumber ( 1, "ID_GTI" )
 lIdEvt	= idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" )
 dDteSurv = idw_wSin.GetItemDate ( 1, "DTE_SURV_DATE" )
 
-// L'Option K_DP85_GESTIONPGC est-elle pr$$HEX1$$e900$$ENDHEX$$sente pour le produit/gti/evt ?
+// L'Option K_DP85_GESTIONPGC est-elle présente pour le produit/gti/evt ?
 sFindString =	sRechDetPro[1] + string (lIdProd) + sRechDetPro[2] + string(K_DP85_GESTIONPGC) &
 					+ sRechDetPro[3] + string (lIdGti) + sRechDetPro[4] + string(lIdEvt)
 lRet = idw_detpro.Find( sFindString, 1, idw_detpro.RowCount() )
@@ -17701,10 +17707,10 @@ if lRet > 0 then // Oui, on effectue le calcul du refus
 	// [PC936]
 	sValCar = idw_detpro.GetItemString( lRet, "VAL_CAR")
 	sUnite=lnvPFCString.of_getkeyvalue( sValCar, "UNITE", ";")
-	If sUnite="" Then sUnite="M" //en mois par d$$HEX1$$e900$$ENDHEX$$faut
+	If sUnite="" Then sUnite="M" //en mois par défaut
 	// :[PC936]
 
-	// recherche de l'option 42 pour d$$HEX1$$e900$$ENDHEX$$terminer la lecture de la date d'achat.
+	// recherche de l'option 42 pour déterminer la lecture de la date d'achat.
 	sFindString =	sRechDetPro[1] + string (lIdProd) + sRechDetPro[2] + "42" + &
 						sRechDetPro[3] + string (lIdGti)
 	lRet = idw_detpro.Find( sFindString, 1, idw_detpro.RowCount() )
@@ -17714,7 +17720,7 @@ if lRet > 0 then // Oui, on effectue le calcul du refus
 	Else
 		dDteAchat = Date(idw_wSin.GetItemDateTime ( 1, "DTE_ACH_PORT" ) ) // [PI056]
 	End If
-	// Lecture de la valeur de la dur$$HEX1$$e900$$ENDHEX$$e de garantie d'origine (lDuGC)
+	// Lecture de la valeur de la durée de garantie d'origine (lDuGC)
 
 	// [RS6175_GC_SCRP_SIM2]
 	If F_CLE_A_TRUE ( "RS6175_GC_SCRP_SIM2" ) Then
@@ -17733,7 +17739,7 @@ if lRet > 0 then // Oui, on effectue le calcul du refus
 		dDteFinGC = F_PLUS_DATE ( dDteAchat, lDuGC, sUnite )
 		// :[PC936]
 		
-		If	dDteSurv < dDteFinGC	Then // Si date de surv < $$HEX2$$e0002000$$ENDHEX$$la date de fin de GC, refus 636
+		If	dDteSurv < dDteFinGC	Then // Si date de surv < à la date de fin de GC, refus 636
 
 			// [PC363].[PANNE_PGC]
 			If iRefus = 638 Then
@@ -17764,9 +17770,9 @@ private function boolean uf_rf_637 ();//*---------------------------------------
 //* Fonction		: uf_Rf_637 (PRIVATE)
 //* Auteur			: PHG
 //* Date				: 25/05/2007 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [DCMP070284]
+//* Libellé			: [DCMP070284]
 //* Commentaires	: REfus : Date de survenance au dela 
-//*					  de la date de fin de la Garantie Constructeur prolong$$HEX1$$e900$$ENDHEX$$e.
+//*					  de la date de fin de la Garantie Constructeur prolongée.
 //*
 //* Arguments		: Aucun
 //*
@@ -17775,8 +17781,8 @@ private function boolean uf_rf_637 ();//*---------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
-//* #1  JFF  09/07/07   Si GC non saisie, alors on ne d$$HEX1$$e900$$ENDHEX$$clenche pas le refus 637, vu avec Maryline le 09/07
-// 		FPI	31/07/2013	[PC936] PGC exprim$$HEX1$$e900$$ENDHEX$$e en jours
+//* #1  JFF  09/07/07   Si GC non saisie, alors on ne déclenche pas le refus 637, vu avec Maryline le 09/07
+// 		FPI	31/07/2013	[PC936] PGC exprimée en jours
 //*-----------------------------------------------------------------
 Date 	  dDteSurv, dDteFinGC, dDteAchat
 Boolean bRet, bGestionDateAchat, bOk
@@ -17792,14 +17798,14 @@ n_cst_string lnvPFCString
 String sUnite // [PC936]
 
 //*------------------------------------------------------------------*/
-//* On d$$HEX1$$e900$$ENDHEX$$clenche ce motif dans le cas de la garantie Prolongation    */
+//* On déclenche ce motif dans le cas de la garantie Prolongation    */
 //* Garantie Constructeur. 
-//* Si la date de Survenance est post$$HEX1$$e900$$ENDHEX$$rieur $$HEX2$$e0002000$$ENDHEX$$la fin de la garantie
-//* contrusteur Prolong$$HEX1$$e900$$ENDHEX$$e, Refus 637
+//* Si la date de Survenance est postérieur à la fin de la garantie
+//* contrusteur Prolongée, Refus 637
 //* Ex :																				   */
-//* x => Dur$$HEX1$$e900$$ENDHEX$$e de la prolongation de GC lue dans le param$$HEX1$$e900$$ENDHEX$$trage
+//* x => Durée de la prolongation de GC lue dans le paramétrage
 //*		qui est fonction de la DuGC.
-//* = => Dur$$HEX1$$e900$$ENDHEX$$e de la Garantie Constructeur 
+//* = => Durée de la Garantie Constructeur 
 //* Pas de Refus 637
 //* ---+=======xxxxx|x--------->
 //*   Da 		     DSurv
@@ -17819,7 +17825,7 @@ lIdGti	= idw_wDetailFF.GetItemNumber ( 1, "ID_GTI" )
 lIdEvt	= idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" )
 dDteSurv = idw_wSin.GetItemDate ( 1, "DTE_SURV_DATE" )
 
-// Lecture de la valeur de la dur$$HEX1$$e900$$ENDHEX$$e de garantie d'origine (lDuGC)
+// Lecture de la valeur de la durée de garantie d'origine (lDuGC)
 if isvalid(idw_wDivSin) then
 	
 	// [RS6175_GC_SCRP_SIM2]
@@ -17832,7 +17838,7 @@ if isvalid(idw_wDivSin) then
 	lRet = idw_wDivSin.Find(sFindString, 1 , idw_wDivSin.RowCount())
 End If
 
-if lRet > 0 then // Si trouv$$HEX1$$e900$$ENDHEX$$e, on continue le calcul du refus
+if lRet > 0 then // Si trouvée, on continue le calcul du refus
 	lDuGC = idw_wDivSin.object.val_nbre[lRet] // d'abord Memorisation de la DuGC
 
 	// #1
@@ -17841,11 +17847,11 @@ if lRet > 0 then // Si trouv$$HEX1$$e900$$ENDHEX$$e, on continue le calcul du re
 	End If
 
 	// Lecture de la Prolongation de Garantie Constructeur
-	// On cherche quelle est la Dur$$HEX1$$e900$$ENDHEX$$e de PGC a appliquer
-	// en fonction de la DuGC et du param$$HEX1$$e900$$ENDHEX$$trage :
-	// DuPGC trouv$$HEX1$$e900$$ENDHEX$$e quand :
-	// DuGC >= $$HEX2$$e0002000$$ENDHEX$$la dur$$HEX1$$e900$$ENDHEX$$e  minimale de DuGc pour application prolongation (lGCMMin)
-	// DuGC <= $$HEX2$$e0002000$$ENDHEX$$la dur$$HEX1$$e900$$ENDHEX$$e  maximale de DuGc pour application prolongation (lGCMMax)
+	// On cherche quelle est la Durée de PGC a appliquer
+	// en fonction de la DuGC et du paramétrage :
+	// DuPGC trouvée quand :
+	// DuGC >= à la durée  minimale de DuGc pour application prolongation (lGCMMin)
+	// DuGC <= à la durée  maximale de DuGc pour application prolongation (lGCMMax)
 	
 	// ... Lecture de l'option K_DP85_GESTIONPGC
 	sFindString =	sRechDetPro[1] + string (lIdProd) + sRechDetPro[2] + string(K_DP85_GESTIONPGC) &
@@ -17854,7 +17860,7 @@ if lRet > 0 then // Si trouv$$HEX1$$e900$$ENDHEX$$e, on continue le calcul du re
 	
 	If lRet > 0 Then
 		do
-			lGCMMin = 0; lGCMMax = 0; lDuPGC = 0 // R$$HEX1$$e900$$ENDHEX$$init
+			lGCMMin = 0; lGCMMax = 0; lDuPGC = 0 // Réinit
 			sValCar = idw_detpro.GetItemString( lRet, "VAL_CAR")
 		
 			// [PC936]
@@ -17864,7 +17870,7 @@ if lRet > 0 then // Si trouv$$HEX1$$e900$$ENDHEX$$e, on continue le calcul du re
 					lGCMMin = long ( lnvPFCString.of_getkeyvalue( sValCar, "GC_JOUR_MIN", ";"))
 					lGCMMax = long ( lnvPFCString.of_getkeyvalue( sValCar, "GC_JOUR_MAX", ";"))
 					lDuPGC  = long ( lnvPFCString.of_getkeyvalue( sValCar, "PGC_JOUR", ";"))
-				Case Else // en mois par d$$HEX1$$e900$$ENDHEX$$faut
+				Case Else // en mois par défaut
 					lGCMMin = long ( lnvPFCString.of_getkeyvalue( sValCar, "GC_MOIS_MIN", ";"))
 					lGCMMax = long ( lnvPFCString.of_getkeyvalue( sValCar, "GC_MOIS_MAX", ";"))
 					lDuPGC  = long ( lnvPFCString.of_getkeyvalue( sValCar, "PGC_MOIS", ";"))
@@ -17873,14 +17879,14 @@ if lRet > 0 then // Si trouv$$HEX1$$e900$$ENDHEX$$e, on continue le calcul du re
 			// :[PC936]
 	
 			if lDuGC >= lGCMMin and lDuGC <= lGCMMax then
-				lRet = -10 // -10 : Indiqe que c'est trouv$$HEX1$$e900$$ENDHEX$$
+				lRet = -10 // -10 : Indiqe que c'est trouvé
 			else
 				lRet = idw_detpro.Find( sFindString, lRet+1, idw_detpro.RowCount()+1 )
 			End IF
 		loop until lRet <= 0 
 		
 		if lRet = -10 then
-			// recherche de l'option 42 pour d$$HEX1$$e900$$ENDHEX$$terminer la lecture de la date d'achat.
+			// recherche de l'option 42 pour déterminer la lecture de la date d'achat.
 			sFindString =	sRechDetPro[1] + string (lIdProd) + sRechDetPro[2] + "42" + &
 								sRechDetPro[3] + string (lIdGti)
 			lRet = idw_detpro.Find( sFindString, 1, idw_detpro.RowCount() )
@@ -17902,13 +17908,13 @@ if lRet > 0 then // Si trouv$$HEX1$$e900$$ENDHEX$$e, on continue le calcul du re
 				dDteFinGC = F_PLUS_DATE ( dDteAchat, lDuGC + lDuPGC, sUnite )
 				// :[PC936]
 				
-				If	dDteSurv > dDteFinGC	Then // Si date de surv > $$HEX2$$e0002000$$ENDHEX$$la nouvelle date de fin de GC,
+				If	dDteSurv > dDteFinGC	Then // Si date de surv > à la nouvelle date de fin de GC,
 													  // refus 637
 					bRet = Uf_RF_EcrireRefus ( 637 )
 				End If
 			End If
 		Else
-			bRet = Uf_RF_EcrireRefus ( 637 ) // Aucune PGC trouv$$HEX2$$e9002000$$ENDHEX$$
+			bRet = Uf_RF_EcrireRefus ( 637 ) // Aucune PGC trouvé 
 		End If
 	End If
 End If
@@ -17922,13 +17928,13 @@ public subroutine uf_gestong_divers_majzone (string asnomzone, long alrow, any a
 //* Fonction      : u_gs_sp_sinistre::uf_GestOng_Divers_MajZone (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 05/06/2007
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Mise $$HEX2$$e0002000$$ENDHEX$$Jour par script d'une zone de l'onglet Divers
-//*					  + gestion des valeurs par d$$HEX1$$e900$$ENDHEX$$faut si Initialisation
-//* Commentaires  : Cr$$HEX3$$e900e9002000$$ENDHEX$$pour [DCMP070163-070164-070248-070318] Gestion Prise en charge
+//* Libellé       : Mise à Jour par script d'une zone de l'onglet Divers
+//*					  + gestion des valeurs par défaut si Initialisation
+//* Commentaires  : Créé pour [DCMP070163-070164-070248-070318] Gestion Prise en charge
 //*
 //* Arguments		: String			asNomZone		Val
 //*					  Long			alRow				Val
-//*					  any				aaValue			Val : valeur $$HEX2$$e0002000$$ENDHEX$$positionner dans le champs
+//*					  any				aaValue			Val : valeur à positionner dans le champs
 //* Retourne      : 
 //*
 //*-----------------------------------------------------------------
@@ -18006,7 +18012,7 @@ If	bMajZone Then
 	idw_wDivDet.SetItem ( alRow, "MAJ_PAR", stGlb.sCodOper )
 	idw_wDivDet.SetItem ( alRow, "ALT_SUPP", "N" )
 	
-	// #1 Plus logique de mettre aussi $$HEX2$$e0002000$$ENDHEX$$jour w_sin
+	// #1 Plus logique de mettre aussi à jour w_sin
 	idw_wDetailFF.SetItem ( 1, "MAJ_LE", dtMajLe  )
 	idw_wDetailFF.SetItem ( 1, "MAJ_PAR", stGlb.sCodOper )	
 	
@@ -18019,16 +18025,16 @@ public subroutine uf_initialiser_objets (ref u_tagger aupiece, ref u_tagger aure
 //* Fonction		: Uf_Initialiser_Objets (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 22/01/1998 15:23:57
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Initialisation des objets de la fen$$HEX1$$ea00$$ENDHEX$$tre W_Td_Sp_W_Detail
+//* Libellé			: 
+//* Commentaires	: Initialisation des objets de la fenêtre W_Td_Sp_W_Detail
 //*
-//* Arguments		: U_Tagger				auoPiece		(R$$HEX1$$e900$$ENDHEX$$f)	User Objet pour les pieces
-//*					  U_Tagger				auoRefus		(R$$HEX1$$e900$$ENDHEX$$f)	User Objet pour les refus
-//*					  CommandButton		acbTarif		(R$$HEX1$$e900$$ENDHEX$$f)	Bouton sur l'aide du TARIF PAPIER
-//*					  CommandButton		acbCommander(R$$HEX1$$e900$$ENDHEX$$f)	Bouton Commander
-//*					  CommandButton		acbValAchDef(R$$HEX1$$e900$$ENDHEX$$f)	Bouton Valeur Achat par d$$HEX1$$e900$$ENDHEX$$faut
-//*					  StaticText			astPec		(R$$HEX1$$e900$$ENDHEX$$f) Static text informatif sur la PEC // #1
-//*					  StaticText			astLabPec	(R$$HEX1$$e900$$ENDHEX$$f) Statix text informatif sur la PEC // #1
+//* Arguments		: U_Tagger				auoPiece		(Réf)	User Objet pour les pieces
+//*					  U_Tagger				auoRefus		(Réf)	User Objet pour les refus
+//*					  CommandButton		acbTarif		(Réf)	Bouton sur l'aide du TARIF PAPIER
+//*					  CommandButton		acbCommander(Réf)	Bouton Commander
+//*					  CommandButton		acbValAchDef(Réf)	Bouton Valeur Achat par défaut
+//*					  StaticText			astPec		(Réf) Static text informatif sur la PEC // #1
+//*					  StaticText			astLabPec	(Réf) Statix text informatif sur la PEC // #1
 //* Retourne		: Rien
 //*
 //*-----------------------------------------------------------------
@@ -18040,7 +18046,7 @@ iUoTagRefus	= auRefus
 
 /*------------------------------------------------------------------*/
 /* On initialise la DW de traitement maintenant. On n'utilise pas   */
-/* la fonction Uf_Initialiser () car elle affecte $$HEX2$$e0002000$$ENDHEX$$nouveau le      */
+/* la fonction Uf_Initialiser () car elle affecte à nouveau le      */
 /* itrTrans. Ce qui est inutile.                                    */
 /*------------------------------------------------------------------*/
 iuoTagPiece.dw_Trt.DataObject		= "d_Lst_Sin_W_Piece_Affecte"
@@ -18068,7 +18074,7 @@ private function long uf_zn_trt_divdet_mtpec (string asdata, string asnomcol, lo
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_MtPec (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 12/06/2007
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone MtPec (Prise En Charge)
+//* Libellé			: Contrôle de la zone MtPec (Prise En Charge)
 //* Commentaires	: [DCMP070163-070164-070248-070318] Gestion Prise en charge
 //*
 //* Arguments		: String 		asData			Val
@@ -18110,7 +18116,7 @@ If Not bGestPEC Then
 	Return iAction
 End If
 
-// Pec et for$$HEX1$$e700$$ENDHEX$$age de pec sont obligatoire
+// Pec et forçage de pec sont obligatoire
 If Not ( This.uf_GestOng_Divers_Trouver ("ALT_PEC" ) = "O" And &
 	  	 This.uf_GestOng_Divers_Trouver ("PEC" ) = "O" ) Then
 	idw_wDivDet.iiErreur = 1
@@ -18118,14 +18124,14 @@ If Not ( This.uf_GestOng_Divers_Trouver ("ALT_PEC" ) = "O" And &
 	Return iAction
 End If
 
-// Il ne doit pas y avoir de commande sur le d$$HEX1$$e900$$ENDHEX$$tail.
+// Il ne doit pas y avoir de commande sur le détail.
 If This.uf_Deja_Une_Commande () Then
 	idw_wDivDet.iiErreur = 2
 	iAction = 1
 	Return iAction			
 End If			
 
-// Si le mt de pec $$HEX2$$e0002000$$ENDHEX$$d$$HEX1$$e900$$ENDHEX$$j$$HEX3$$e0002000e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$valid$$HEX1$$e900$$ENDHEX$$e, interdiction de le modifier.
+// Si le mt de pec à déjà été validée, interdiction de le modifier.
 lRow = idw_wDivDet.Find ( "Upper (nom_zone) = 'MT_PEC'", 1, idw_wDivDet.RowCount () )
 If lRow > 0 Then
 	If idw_wDivDet.GetItemNumber ( lRow, "CPT_VALIDE" ) > 0 Then
@@ -18162,7 +18168,7 @@ private function long uf_zn_trt_divdet_accordrempl (string asdata, string asnomc
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_AccordRempl (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 19/07/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone Accord Remplacement pour les irr$$HEX1$$e900$$ENDHEX$$parable [DCMP070431]
+//* Libellé			: Contrôle de la zone Accord Remplacement pour les irréparable [DCMP070431]
 //* Commentaires	: 
 //*
 //* Arguments		: String 		asData			Val
@@ -18179,7 +18185,7 @@ Int iAction
 
 iAction = 0
 
-// Droit 210/-NA Autoriser cmde de rempl suit irr$$HEX1$$e900$$ENDHEX$$parable.
+// Droit 210/-NA Autoriser cmde de rempl suit irréparable.
 // [PM103][1]
 If Not This.uf_GetAutorisation ( 210 ) And Not gbModeReprise_223 Then 
 	idw_wDivDet.iiErreur = 1
@@ -18201,10 +18207,10 @@ private subroutine uf_controlergestion_factuetaccordrempl (ref string aspos);//*
 //* Fonction		: Uf_ControlerGestion_FactuEtAccordRempl (PRIVATE)
 //* Auteur			: FABRY JF
 //* Date				: 13/11/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [DCMP070431] 
 //*
-//* Arguments		: String		asPos		R$$HEX1$$e900$$ENDHEX$$f.
+//* Arguments		: String		asPos		Réf.
 //*
 //* Retourne		: Rien
 //*
@@ -18212,7 +18218,7 @@ private subroutine uf_controlergestion_factuetaccordrempl (ref string aspos);//*
 //* MAJ PAR		Date		Modification
 //* #1  JFF  17/09/2007 Gestion de l'existant
 //* #4  JFF  16/11/2012 [VDOC9485]
-//* #4  JFF  06/02/2013 [VDOC9485] Retour arri$$HEX1$$e800$$ENDHEX$$re
+//* #4  JFF  06/02/2013 [VDOC9485] Retour arrière
 //*     JFF  28/08/2014 [BUG_WDET534]
 //*-----------------------------------------------------------------
 
@@ -18221,7 +18227,7 @@ DateTime dtCreeLe
 String sTypApp
 
 // [VDOC9485] ajout This.uf_GetAutorisation ( 208 )
-// [VDOC9485] Retour arri$$HEX1$$e800$$ENDHEX$$re
+// [VDOC9485] Retour arrière
 // If This.uf_GetAutorisation ( 208 ) Then Return
 
 lCodEtat = idw_wDetailFF.GetItemNumber ( 1, "COD_ETAT"  )
@@ -18231,10 +18237,10 @@ lIdDetail= idw_wDetailFF.GetItemNumber ( 1, "ID_DETAIL"  )
 
 If lCodEtat <> 500 Then Return
 
-// #1 Date du placement du contr$$HEX1$$f400$$ENDHEX$$le
+// #1 Date du placement du contrôle
 If dtCreeLe < DateTime ( 2007-09-05 ) Then Return
 
-// nouveau Contr$$HEX1$$f400$$ENDHEX$$le
+// nouveau Contrôle
 lRow = idw_LstCmdeDet.Find ( "ID_GTI=" + String (lIdGti) + " AND ID_DETAIL=" + String (lIdDetail) + "AND ID_TYP_ART = 'PRS' AND STATUS_GC = 21", 1, idw_LstCmdeDet.RowCount () )
 lRow2 = idw_wDivSin.Find ( "NOM_ZONE = 'type_app'", 1,  idw_wDivSin.RowCount () )
 
@@ -18244,7 +18250,7 @@ End If
 
 If lRow > 0 Then
 
-	// Si pr$$HEX1$$e900$$ENDHEX$$sent, l'accord pour le rempl est-il pr$$HEX1$$e900$$ENDHEX$$sent ?
+	// Si présent, l'accord pour le rempl est-il présent ?
 	lRow = idw_wDivDet.Find ( "ID_GTI = " + String ( lIdGti ) + " AND " + &
 								  "ID_DETAIL = " + String ( lIdDetail ) + " AND " + &
 								  "UPPER ( NOM_ZONE ) = 'ACCORD_REMPL' AND VAL_LST_NBRE = 1", 1, idw_wDivDet.RowCount ( ) ) 
@@ -18254,7 +18260,7 @@ If lRow > 0 Then
 
 	// Si absent, Message bloquant.
 	If lRow > 0 And lRow3 <=0 Then
-		stMessage.sTitre		= "Cmde rempl sur irr$$HEX1$$e900$$ENDHEX$$parable"
+		stMessage.sTitre		= "Cmde rempl sur irréparable"
 		stMessage.Icon			= Information!
 		stMessage.bErreurG	= FALSE
 		stMessage.Bouton		= OK!
@@ -18273,10 +18279,10 @@ private subroutine uf_controlergestion_o2m (ref string aspos);//*---------------
 //* Fonction		: Uf_ControlerGestion_O2M (PRIVATE)
 //* Auteur			: PHG
 //* Date				: 12/12/2007
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Contr$$HEX1$$f400$$ENDHEX$$le de gestion pour Flux O2M sur Detail contenant des Flux O2M.
+//* Libellé			: 
+//* Commentaires	: Contrôle de gestion pour Flux O2M sur Detail contenant des Flux O2M.
 //*
-//* Arguments		: String		asPos		R$$HEX1$$e900$$ENDHEX$$f.
+//* Arguments		: String		asPos		Réf.
 //*
 //* Retourne		: Rien
 //*
@@ -18289,7 +18295,7 @@ Boolean bPresenseDiagRFO, bPresenceRefuserAReexp
 Decimal {2} dcMtPrej
 
 // LE 24/12/2007, code volontairement shunter par JF, sur demande d'Audrey et MCB
-// En effet, dans tous les cas, le d$$HEX1$$e900$$ENDHEX$$tail se terminera par SANS SUITE.
+// En effet, dans tous les cas, le détail se terminera par SANS SUITE.
 Return
 
 If idw_wDetailFF.GetItemString ( 1, "ALT_BLOC" ) = "O" Then Return
@@ -18316,20 +18322,20 @@ bPresenceRefuserAReexp = idw_LstCmdeDet.Find (	"ID_GTI = " + String ( lIdGti ) +
 
 if lCodeEtatDetail = 200 and ( bPresenseDiagRFO and Not bPresenceRefuserAReexp ) Then
 		stMessage.bErreurG	= FALSE
-		stMessage.sTitre		= "Action incoh$$HEX1$$e900$$ENDHEX$$rente"
+		stMessage.sTitre		= "Action incohérente"
 		stMessage.Icon			= Information!
 		stMessage.bouton		= YesNo!
 		stMessage.sCode = "WDET540" 
 		asPos = "LIB_DET"
 		if f_Message ( stMessage ) <> 1 then
-			asPos = "" // R$$HEX1$$e900$$ENDHEX$$ponse NON : On Continue
+			asPos = "" // Réponse NON : On Continue
 		End If
 		Return
 End If
 
 if lCodeEtatDetail <> 200 and ( bPresenseDiagRFO and bPresenceRefuserAReexp ) Then
 		stMessage.bErreurG	= FALSE
-		stMessage.sTitre		= "Action incoh$$HEX1$$e900$$ENDHEX$$rente"
+		stMessage.sTitre		= "Action incohérente"
 		stMessage.Icon			= Information!
 		stMessage.bouton		= Ok!
 		stMessage.sCode = "WDET550" 
@@ -18346,8 +18352,8 @@ private function boolean uf_rf_698 ();//*---------------------------------------
 //* Fonction		: Uf_Rf_698 (PRIVATE)
 //* Auteur			: MADM
 //* Date				: 11/07/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Refus automatique entre $$HEX1$$e900$$ENDHEX$$v$$HEX1$$e800$$ENDHEX$$nements et nature de sinistre [DCMP 050393]
+//* Libellé			: 
+//* Commentaires	: Refus automatique entre évènements et nature de sinistre [DCMP 050393]
 //*
 //* Arguments		: Aucun
 //*
@@ -18356,13 +18362,13 @@ private function boolean uf_rf_698 ();//*---------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1	 PHG		22/01/2008 [DCMP070815] Changement du param$$HEX1$$e900$$ENDHEX$$trage Det_pro ( utilisation n_cst_string... )
+//* #1	 PHG		22/01/2008 [DCMP070815] Changement du paramétrage Det_pro ( utilisation n_cst_string... )
 //* #2    JFF     12/01/2009 [20090112160907947]
 //*-----------------------------------------------------------------
 
 Long  lDeb, lFin, lIdGti, lIdEvt, lIdNatSin, lCpt, lRech
-String	sDpParam 		// #1 [DCMP070815] Param$$HEX1$$e900$$ENDHEX$$trage enregistr$$HEX2$$e9002000$$ENDHEX$$dans detpro.val_car
-n_cst_string lnv_string // #1 [DCMP070815] utilisation de fct de d$$HEX1$$e900$$ENDHEX$$coupage de chaine.
+String	sDpParam 		// #1 [DCMP070815] Paramétrage enregistré dans detpro.val_car
+n_cst_string lnv_string // #1 [DCMP070815] utilisation de fct de découpage de chaine.
 Boolean bRet
 
 bRet				= True
@@ -18385,12 +18391,12 @@ For lCpt = lDeb TO lFin
 	// #2 [20090112160907947]
 	If lRech <= 0 Then continue
 
-	// #1 [DCMP070815] Lecture du param$$HEX1$$e900$$ENDHEX$$trage
+	// #1 [DCMP070815] Lecture du paramétrage
 	// #2 [20090112160907947]	
 	sDpParam = idw_DetPro.GetItemString ( lCpt, "VAL_CAR" )
 	
 	/*------------------------------------------------------------------------------------*/
-	/* Si lors de la boucle les 3 $$HEX1$$e900$$ENDHEX$$galit$$HEX1$$e900$$ENDHEX$$s sont v$$HEX1$$e900$$ENDHEX$$rifi$$HEX2$$e900e900$$ENDHEX$$s alors on d$$HEX1$$e900$$ENDHEX$$clenche le refus 698.*/
+	/* Si lors de la boucle les 3 égalités sont vérifiéés alors on déclenche le refus 698.*/
 	/*------------------------------------------------------------------------------------*/
 	If	( long(lnv_string.of_getkeyvalue( sDpParam, "ID_GTI", ";")) = lIdGti ) and 		&
 		( long(lnv_string.of_getkeyvalue( sDpParam, "ID_EVT", ";")) = lIdEvt ) and 		&
@@ -18412,7 +18418,7 @@ private function long uf_zn_mtvalpublique ();//*--------------------------------
 //* Fonction		: Uf_Zn_MtValPublique (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 31/01/2008 17:14:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [DCMP080028]
+//* Libellé			: [DCMP080028]
 //* Commentaires	: Controle de MT_VAL_ACHAT
 //*
 //* Arguments		: Aucun
@@ -18491,7 +18497,7 @@ private function long uf_zn_trt_divdet_accordrempl2 (string asdata, string asnom
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_AccordRempl2 (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 19/07/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone Accord Remplacement2 pour les Accord suite $$HEX2$$e0002000$$ENDHEX$$2 r$$HEX1$$e900$$ENDHEX$$paration [DCMP070921]
+//* Libellé			: Contrôle de la zone Accord Remplacement2 pour les Accord suite à 2 réparation [DCMP070921]
 //* Commentaires	: 
 //*
 //* Arguments		: String 		asData			Val
@@ -18502,14 +18508,14 @@ private function long uf_zn_trt_divdet_accordrempl2 (string asdata, string asnom
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1    JFF    13/06/2008  [20080613] vu avec Aur$$HEX1$$e900$$ENDHEX$$lien, on supprime ce contr$$HEX1$$f400$$ENDHEX$$le g$$HEX1$$ea00$$ENDHEX$$nant.
+//* #1    JFF    13/06/2008  [20080613] vu avec Aurélien, on supprime ce contrôle gênant.
 //        JFF    23/05/2012  [PM103][1]
 //*-----------------------------------------------------------------
 Int iAction
 
 iAction = 0
 
-// Droit 212/-NA Autoriser cmde de rempl suit irr$$HEX1$$e900$$ENDHEX$$parable.
+// Droit 212/-NA Autoriser cmde de rempl suit irréparable.
 // [PM103][1]
 If Not This.uf_GetAutorisation ( 212 ) And Not gbModeReprise_223 Then 
 	idw_wDivDet.iiErreur = 3
@@ -18524,7 +18530,7 @@ If iAction = 0 And ( idw_LstCmdeSin.Find ( "ID_TYP_ART = 'TEL' AND COD_ETAT <> '
 End If
 */
 
-// Il ne doit pas y avoir de commande sur le d$$HEX1$$e900$$ENDHEX$$tail.
+// Il ne doit pas y avoir de commande sur le détail.
 If iAction = 0  And This.uf_Deja_Une_Commande () Then
 	idw_wDivDet.iiErreur = 4
 	iAction = 1
@@ -18540,7 +18546,7 @@ private function long uf_zn_trt_divdet_rejetzone_droit (string asdata, string as
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_RejetZone_Droit (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 25/11/2008
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Zone sp$$HEX1$$e900$$ENDHEX$$cial pour traiter les rejets.
+//* Libellé			: Zone spécial pour traiter les rejets.
 //* Commentaires	: 
 //*
 //* Arguments		: String 		asData			Val
@@ -18605,7 +18611,7 @@ private function long uf_zn_trt_divdet_fncnumfact (string asdata, string asnomco
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_FncNumFact (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 28/01/2009
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone FncNumFact
+//* Libellé			: Contrôle de la zone FncNumFact
 //* Commentaires	: [FNAC_PROD_ECH_TECH].[20090127140540720]
 //*
 //* Arguments		: String 		asData			Val
@@ -18642,7 +18648,7 @@ private function long uf_zn_trt_divdet_fncdteticket (string asdata, string asnom
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_FncDteTicket (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 28/01/2009
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone FncNumFact
+//* Libellé			: Contrôle de la zone FncNumFact
 //* Commentaires	: [FNAC_PROD_ECH_TECH].[20090127140540720]
 //*
 //* Arguments		: String 		asData			Val
@@ -18679,7 +18685,7 @@ private function long uf_zn_mtvalachat (string asval);//*-----------------------
 //* Fonction		: Uf_Zn_MtValAchat (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 06/11/2003 17:14:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Controle de MT_VAL_ACHAT
 //*
 //* Arguments		: Aucun
@@ -18693,12 +18699,12 @@ private function long uf_zn_mtvalachat (string asval);//*-----------------------
 //* #2	 JFF	 01/04/2009   [20090401102753490]
 //* #3    JFF   26/08/2009   [GEST_VAL_ACH_ADH]
 //* #4    JFF 	 22/10/2009   [O2M_DIAG_NOMADE].[JFF].[20091022224855853]
-//* #5	FPI	04/03/2010	[DCMP100114] - autoriser une premi$$HEX1$$e800$$ENDHEX$$re saisie du montant de valeur d'achat
+//* #5	FPI	04/03/2010	[DCMP100114] - autoriser une première saisie du montant de valeur d'achat
 //*       JFF   29/11/2010   [PC474]
 //		FPI	08/03/2011	[PC321]
 //        JFF   01/03/2012  [CONFO][MEUBLE][PC542]
 //* JFF  10/09/2012  [PLAF_REF]
-//		FPI	18/04/2013	[VDoc10924] Ajout ctrl valeur d'achat diff$$HEX1$$e900$$ENDHEX$$rent
+//		FPI	18/04/2013	[VDoc10924] Ajout ctrl valeur d'achat différent
 //        JFF   01/07/2014   [PC786-1_AUCHAN_GEM][MANTIS11397] 
 //        JFF   13/05/2016   [BUG_MANTIS_20726]
 //       JFF   07/11/2016 [PC151259]
@@ -18757,7 +18763,7 @@ If iAction = 0 Then  // #1
 			bPlaf675 = FALSE
 		End If 
 		
-		// [PLAF_REF] autorisation de la modification de la dte_det dans un cas tr$$HEX1$$e800$$ENDHEX$$s pr$$HEX1$$e900$$ENDHEX$$cis.
+		// [PLAF_REF] autorisation de la modification de la dte_det dans un cas très précis.
 		If lIdEvt = 1083 And bPlaf675 Then
 			iAction = 0			
 		Else
@@ -18818,7 +18824,7 @@ If iAction=0  and (not uf_getautorisation( 208)) Then
 		If lRow > 0 Then
 			stMessage.sVar[1]=String(idw_lstdetail.GetItemnumber( lRow, "ID_DETAIL"))
 			stMessage.sVar[2]=String(idw_lstdetail.GetItemDecimal( lRow, "MT_VAL_ACHAT"))
-			stMessage.sTitre		= "Valeur achat diff$$HEX1$$e900$$ENDHEX$$rente"
+			stMessage.sTitre		= "Valeur achat différente"
 			stMessage.Icon			= Question!
 			stMessage.bErreurG	= FALSE
 			stMessage.Bouton		= YesNo!
@@ -18886,7 +18892,7 @@ If isReferentiel <> "IFR" Then
 					idw_wDivDet.SetItem ( lRowDD , "ALT_PROT", "O" )
 					idw_wDivDet.SetItem ( lRowDD , "CPT_TRI", 500 )
 					idw_wDivDet.SetItem ( lRowDD , "VAL_DTE", stNul.dtm )	// [PI056].20190926
-					idw_wDivDet.SetItem ( lRowDD , "VAL_CAR", "ValAchat x (1- (" + String (dcTauxVetuste) +"/100)xAnct$$HEX1$$e900$$ENDHEX$$_Mois)" )
+					idw_wDivDet.SetItem ( lRowDD , "VAL_CAR", "ValAchat x (1- (" + String (dcTauxVetuste) +"/100)xAncté_Mois)" )
 					idw_wDivDet.SetItem ( lRowDD , "VAL_NBRE", stNul.lng )
 					idw_wDivDet.SetItem ( lRowDD , "VAL_MT", stNul.dcm )
 					idw_wDivDet.SetItem ( lRowDD , "ALT_SUPP", "N" )
@@ -18897,7 +18903,7 @@ If isReferentiel <> "IFR" Then
 					lRow = idw_wDivDet.Find ( "Upper (nom_zone) = 'MT_VAL_PUBLIQUE_FORMULE'", 1, idw_wDivDet.RowCount () )
 					If lRow > 0 Then
 						// [PC171933][V4]
-						This.uf_GestOng_Divers_MajZone ( "MT_VAL_PUBLIQUE_FORMULE", lRow, "ValAchat x (1- (" + String (dcTauxVetuste) +"/100)xAnct$$HEX1$$e900$$ENDHEX$$_Mois)" )
+						This.uf_GestOng_Divers_MajZone ( "MT_VAL_PUBLIQUE_FORMULE", lRow, "ValAchat x (1- (" + String (dcTauxVetuste) +"/100)xAncté_Mois)" )
 					End If 			
 				End If				
 		End CHoose
@@ -18936,9 +18942,9 @@ private subroutine uf_gestion_mtvalachat ();//*---------------------------------
 //* Fonction      : u_gs_sp_Sinistre_Wdetail::uf_Gestion_MtValAchat (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 26/08/2009 14:10:05
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: [GEST_VAL_ACH_ADH]
-//* Commentaires  : A la cr$$HEX1$$e900$$ENDHEX$$ation du d$$HEX1$$e900$$ENDHEX$$tail uniquement, on insert la valeur d'achat 
-//*                 provenant des adh$$HEX1$$e900$$ENDHEX$$sions si elle elle pr$$HEX1$$e900$$ENDHEX$$sente du w_div_sin 
+//* Libellé       : [GEST_VAL_ACH_ADH]
+//* Commentaires  : A la création du détail uniquement, on insert la valeur d'achat 
+//*                 provenant des adhésions si elle elle présente du w_div_sin 
 //*
 //* Arguments     : 
 //*
@@ -18957,14 +18963,14 @@ If IsNull ( dcMtValAchatActuelle ) Then dcMtValAchatActuelle = 0
 
 If dcMtValAchatActuelle > 0 Then Return
 
-// G$$HEX1$$e800$$ENDHEX$$re-t-on la valeur d'achat
+// Gère-t-on la valeur d'achat
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 9 )
 If lDeb <= 0 Then Return
 
-// #3 On cherche d'abord sur Div_sin si un Val achat a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$m$$HEX1$$e900$$ENDHEX$$moris$$HEX1$$e900$$ENDHEX$$e
+// #3 On cherche d'abord sur Div_sin si un Val achat a été mémorisée
 lRowDS = idw_wDivSin.Find ( "NOM_ZONE = 'mt_val_achat_adh'", 1, idw_wDivSin.RowCount () )				
 If lRowDS <= 0 Then Return
-// #3 On la lis le cas $$HEX1$$e900$$ENDHEX$$ch$$HEX1$$e900$$ENDHEX$$ant
+// #3 On la lis le cas échéant
 dcMtValAchatAdh = idw_wDivSin.GetItemDecimal ( lRowDS, "VAL_MT" )
 
 If IsNull ( dcMtValAchatAdh ) Then dcMtValAchatAdh = 0
@@ -18981,7 +18987,7 @@ private function boolean uf_rf_629 ();//*---------------------------------------
 //* Fonction		: u_gs_sp_sinistre_wdetail::uf_rf_629
 //* Auteur			: F. Pinon
 //* Date				: 29/09/2009 15:34:24
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [DCMP090573]
 //*
 //* Arguments		: 
@@ -18992,7 +18998,7 @@ private function boolean uf_rf_629 ();//*---------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
 //* #1	PHG	26/10/2009 [DCMP071000] rf 655+651: Annexe : Correction Bug
-//*								  pr$$HEX1$$e900$$ENDHEX$$sent sur toute les fonctions de refus.
+//*								  présent sur toute les fonctions de refus.
 //*-----------------------------------------------------------------
 
 Long 		lTotDelai, lLig, lDuree, lNbJour, lNbHeu, lHeuDet, lHeuMax, lCpt
@@ -19016,13 +19022,13 @@ For lCpt = 1 to 5
 			sIdNivDel = "+NS"  // Nature de sinistre
 			sIdRefDel = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivDel = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivDel = "+TR"  // Territorialité
 			sIdRefDel = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivDel = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail de sinistre
+			sIdNivDel = "+DT"  // Détail de sinistre
 			sIdRefDel = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivDel = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivDel = "+EV"  // Evénement de garantie
 			sIdRefDel = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 
@@ -19031,7 +19037,7 @@ For lCpt = 1 to 5
 	If IsNull ( sIdRefDel ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un d$$HEX1$$e900$$ENDHEX$$lai de d$$HEX1$$e900$$ENDHEX$$claration pour la garantie. */
+	/* On vérifie s'il existe un délai de déclaration pour la garantie. */
 	/*------------------------------------------------------------------*/
 	// #1 [DCMP071000] Lecture ID_GTI dans idw_wDetailFF ald de idw_wGarSin
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
@@ -19047,10 +19053,10 @@ For lCpt = 1 to 5
 	If	lLig > 0 Then
 
 	/*------------------------------------------------------------------*/
-	/* Le cas du d$$HEX1$$e900$$ENDHEX$$lai en heure est g$$HEX1$$e900$$ENDHEX$$r$$HEX4$$e9002000e0002000$$ENDHEX$$part car on doit travailler  */
+	/* Le cas du délai en heure est géré à part car on doit travailler  */
 	/* sur des datetime et non sur des dates.                           */
 	/* De plus, on ne peut pas utiliser uniquement f_plus_date pour le  */
-	/* calcul de la date de r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence                                   */
+	/* calcul de la date de référence                                   */
 	/*------------------------------------------------------------------*/
 
 		sUnite	= idw_Delai.GetItemString ( lLig, "UNT_DEL" )
@@ -19062,17 +19068,17 @@ For lCpt = 1 to 5
 		If sUnite = 'H' Then
 
 	/*------------------------------------------------------------------*/
-	/* on additionne les heures $$HEX2$$e0002000$$ENDHEX$$la date du d$$HEX1$$e900$$ENDHEX$$tail.                    */
-	/* On commence par d$$HEX1$$e900$$ENDHEX$$terminer $$HEX2$$e0002000$$ENDHEX$$combien de jours et d'heures        */
+	/* on additionne les heures à la date du détail.                    */
+	/* On commence par déterminer à combien de jours et d'heures        */
 	/* correspond lDuree                                                */
 	/*------------------------------------------------------------------*/
 
-			lNbJour	=	Truncate ( ( lDuree / 24 ), 0 )		// Partie enti$$HEX1$$e800$$ENDHEX$$re du nombre d'heures / 24
+			lNbJour	=	Truncate ( ( lDuree / 24 ), 0 )		// Partie entière du nombre d'heures / 24
 			lNbHeu	=	Mod ( lDuree, 24 )						// Reste de la division du nb heures / 24
 
 			sHeuDet	=	idw_wDetailFF.GetItemString 	( 1, "HEU_DET" )		
 			
-			if isNull(sHeuDet) Then sHeuDet="0000" // On force l'heure $$HEX2$$e0002000$$ENDHEX$$00:00 
+			if isNull(sHeuDet) Then sHeuDet="0000" // On force l'heure à 00:00 
 			
 			If ( Not isNull ( sHeuDet  ) ) Then
 
@@ -19080,8 +19086,8 @@ For lCpt = 1 to 5
 				lHeuMax  =  lHeuDet + lNbHeu
 
 	/*------------------------------------------------------------------*/
-	/* Si le nombre d'heures obtenu d$$HEX1$$e900$$ENDHEX$$passe une journ$$HEX1$$e900$$ENDHEX$$e, on ajoute un   */
-	/* jour et on enl$$HEX1$$e800$$ENDHEX$$ve 24 heures $$HEX2$$e0002000$$ENDHEX$$heuMax                             */
+	/* Si le nombre d'heures obtenu dépasse une journée, on ajoute un   */
+	/* jour et on enlève 24 heures à heuMax                             */
 	/*------------------------------------------------------------------*/
 
 				If lHeuMax > 23 Then
@@ -19103,7 +19109,7 @@ For lCpt = 1 to 5
 
 				If	dtDecl > dtDteMax Then
 	/*------------------------------------------------------------------*/
-	/* La dur$$HEX1$$e900$$ENDHEX$$e maximum est d$$HEX1$$e900$$ENDHEX$$pass$$HEX1$$e900$$ENDHEX$$e, on d$$HEX1$$e900$$ENDHEX$$clenche le refus 629.        */
+	/* La durée maximum est dépassée, on déclenche le refus 629.        */
 	/*------------------------------------------------------------------*/
 					bRet = Uf_RF_EcrireRefus ( 629 )
 				End If
@@ -19114,7 +19120,7 @@ For lCpt = 1 to 5
 
 				If	dDteDet > dDteMax	Then
 		/*------------------------------------------------------------------*/
-		/* La dur$$HEX1$$e900$$ENDHEX$$e maximum est d$$HEX1$$e900$$ENDHEX$$pass$$HEX1$$e900$$ENDHEX$$e, on d$$HEX1$$e900$$ENDHEX$$clenche le refus 629.        */
+		/* La durée maximum est dépassée, on déclenche le refus 629.        */
 		/*------------------------------------------------------------------*/
 					bRet = Uf_RF_EcrireRefus ( 629 )
 				End If
@@ -19126,7 +19132,7 @@ For lCpt = 1 to 5
 
 			If	dDteDecl > dDteMax	Then
 		/*------------------------------------------------------------------*/
-		/* La dur$$HEX1$$e900$$ENDHEX$$e maximum est d$$HEX1$$e900$$ENDHEX$$pass$$HEX1$$e900$$ENDHEX$$e, on d$$HEX1$$e900$$ENDHEX$$clenche le refus 629.        */
+		/* La durée maximum est dépassée, on déclenche le refus 629.        */
 		/*------------------------------------------------------------------*/
 				bRet = Uf_RF_EcrireRefus ( 629 )
 			End If
@@ -19144,7 +19150,7 @@ private function boolean uf_rf_655 ();//*---------------------------------------
 //* Fonction		: Uf_Rf_655 (PRIVATE)
 //* Auteur			: PHG
 //* Date				: 26/10/2009
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [DCMP071000] Seuil d'intervention Pour la garantie Meilleur Prix
 //*
 //* Arguments		: Aucun
@@ -19171,7 +19177,7 @@ dcMtPrej			= idw_wDetailFF.GetItemDecimal ( 1, "MT_PREJ" )
 dcMtValAchat	= idw_wDetailFF.GetItemDecimal ( 1, "MT_VAL_ACHAT" )
 
 /*------------------------------------------------------------------*/
-/* Si le montant du pr$$HEX1$$e900$$ENDHEX$$judice est NULL ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro, on ne g$$HEX1$$e900$$ENDHEX$$re   */
+/* Si le montant du préjudice est NULL ou égal à zéro, on ne gére   */
 /* pas de refus.                                                    */
 /*------------------------------------------------------------------*/
 If	IsNull ( dcMtPrej ) Or dcMtPrej = 0 Then Return ( bRet )
@@ -19189,13 +19195,13 @@ For lCpt = 1 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail de sinistre
+			sIdNivPlaf = "+DT"  // Détail de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -19203,7 +19209,7 @@ For lCpt = 1 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond 										  */
+	/* On vérifie s'il existe un plafond 										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -19217,11 +19223,11 @@ For lCpt = 1 to 5
 
 	If	lLig > 0 Then
 		/*----------------------------------------------------------------------*/
-		/* Si Valeur d'achat d'origine - Prix Constat$$HEX2$$e9002000$$ENDHEX$$<= Seuil d'intervention  */
+		/* Si Valeur d'achat d'origine - Prix Constaté <= Seuil d'intervention  */
 		/*    Alors Refus,                                                      */
-		/* d$$HEX1$$e900$$ENDHEX$$nomination :                                                       */
+		/* dénomination :                                                       */
 		/* Mt_Prej = Valeur Achat origine                                       */
-		/* Mt_Val_Achat = Prix constat$$HEX42$$e90020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000$$ENDHEX$$*/
+		/* Mt_Val_Achat = Prix constaté                                         */
 		/* Mt_plaf = Seuil d'intervention                                       */
 		/*----------------------------------------------------------------------*/
 
@@ -19239,10 +19245,10 @@ private function boolean uf_rf_651 ();//*---------------------------------------
 //* Fonction		: Uf_Rf_651 (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 11/05/2004 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Si Prix constat$$HEX2$$e9002000$$ENDHEX$$> Valeur Achat origine (MT_PREJ) Alors Refus
-//*					  d$$HEX1$$e900$$ENDHEX$$nomination : Mt_Prej = Valeur Achat origine 
-//*										  Mt_Val_Achat = Prix constat$$HEX1$$e900$$ENDHEX$$
+//* Libellé			: 
+//* Commentaires	: Si Prix constaté > Valeur Achat origine (MT_PREJ) Alors Refus
+//*					  dénomination : Mt_Prej = Valeur Achat origine 
+//*										  Mt_Val_Achat = Prix constaté
 //*
 //* Arguments		: Aucun
 //*
@@ -19269,7 +19275,7 @@ dcPxConst		= idw_wDetailFF.GetItemDecimal ( 1, "MT_VAL_ACHAT" )
 
 
 /*------------------------------------------------------------------*/
-/* Si le montant du pr$$HEX1$$e900$$ENDHEX$$judice est NULL ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro, on ne g$$HEX1$$e900$$ENDHEX$$re   */
+/* Si le montant du préjudice est NULL ou égal à zéro, on ne gére   */
 /* pas de refus.                                                    */
 /*------------------------------------------------------------------*/
 If	IsNull ( dcMtPrej ) Or dcMtPrej = 0 Then Return ( bRet )
@@ -19284,13 +19290,13 @@ For lCpt = 1 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail de sinistre
+			sIdNivPlaf = "+DT"  // Détail de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -19298,7 +19304,7 @@ For lCpt = 1 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond 										  */
+	/* On vérifie s'il existe un plafond 										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -19312,9 +19318,9 @@ For lCpt = 1 to 5
 
 	If	lLig > 0 Then
 		/*------------------------------------------------------------------*/
-		/* Si Prix constat$$HEX2$$e9002000$$ENDHEX$$>= Valeur Achat origine Alors Refus ,           */
-		/* d$$HEX1$$e900$$ENDHEX$$nomination : Mt_Prej = Valeur Achat origine Mt_Val_Achat =     */
-		/* Prix constat$$HEX53$$e9002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000$$ENDHEX$$*/
+		/* Si Prix constaté >= Valeur Achat origine Alors Refus ,           */
+		/* dénomination : Mt_Prej = Valeur Achat origine Mt_Val_Achat =     */
+		/* Prix constaté                                                    */
 		/*------------------------------------------------------------------*/
 		If	dcPxConst >= dcMtPrej Then
 			bRet = Uf_RF_EcrireRefus ( 651 )
@@ -19330,10 +19336,10 @@ Return ( bRet )
 ////* Fonction		: Uf_Rf_651 (PRIVATE)
 ////* Auteur			: Fabry JF
 ////* Date				: 11/05/2004 15:07:49
-////* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-////* Commentaires	: Si Prix constat$$HEX2$$e9002000$$ENDHEX$$> Valeur Achat origine Alors Refus
-////*					  d$$HEX1$$e900$$ENDHEX$$nomination : Mt_Prej = Valeur Achat origine 
-////*										  Mt_Val_Achat = Prix constat$$HEX1$$e900$$ENDHEX$$
+////* Libellé			: 
+////* Commentaires	: Si Prix constaté > Valeur Achat origine Alors Refus
+////*					  dénomination : Mt_Prej = Valeur Achat origine 
+////*										  Mt_Val_Achat = Prix constaté
 ////*
 ////* Arguments		: Aucun
 ////*
@@ -19375,15 +19381,15 @@ Return ( bRet )
 //If Not bOk Then Return TRUE
 //
 ///*------------------------------------------------------------------*/
-///* Si le montant du pr$$HEX1$$e900$$ENDHEX$$judice est NULL ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro, on ne g$$HEX1$$e900$$ENDHEX$$re   */
+///* Si le montant du préjudice est NULL ou égal à zéro, on ne gére   */
 ///* pas de refus.                                                    */
 ///*------------------------------------------------------------------*/
 //If	IsNull ( dcMtPrej ) Or dcMtPrej = 0 Then Return ( bRet )
 //
 ///*------------------------------------------------------------------*/
-///* Si Prix constat$$HEX2$$e9002000$$ENDHEX$$> Valeur Achat origine Alors Refus ,            */
-///* d$$HEX1$$e900$$ENDHEX$$nomination : Mt_Prej = Valeur Achat origine Mt_Val_Achat =     */
-///* Prix constat$$HEX53$$e9002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000$$ENDHEX$$*/
+///* Si Prix constaté > Valeur Achat origine Alors Refus ,            */
+///* dénomination : Mt_Prej = Valeur Achat origine Mt_Val_Achat =     */
+///* Prix constaté                                                    */
 ///*------------------------------------------------------------------*/
 //If	dcPxConst > dcMtPrej Then
 //	bRet = Uf_RF_EcrireRefus ( 651 )
@@ -19398,12 +19404,12 @@ public function boolean uf_controlergestion_o2m_apprecuprecycl ();//*-----------
 //* Fonction		: u_gs_sp_sinistre_wdetail::uf_controlergestion_o2m_apprecuprecycl
 //* Auteur			: Pierre-Henri Gillot
 //* Date				: 24/12/2009 14:08:29
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [O2M_DIAG_NOMADE].Lot2
+//* Libellé			: [O2M_DIAG_NOMADE].Lot2
 //* Commentaires	: 
 //*
 //* Arguments		: (None)
 //*
-//* Retourne		: TRUE :	Pr$$HEX1$$e900$$ENDHEX$$sence d'une pr$$HEX1$$e900$$ENDHEX$$station APP_RECUP_RECYCL
+//* Retourne		: TRUE :	Présence d'une préstation APP_RECUP_RECYCL
 //*									en process 435 et Status Gc <> 166
 //*
 //*-----------------------------------------------------------------
@@ -19446,7 +19452,7 @@ private function boolean uf_rf_644 ();//*---------------------------------------
 //* Fonction		: u_gs_sp_sinistre_wdetail::uf_rf_644
 //* Auteur			: F. Pinon
 //* Date				: 10/02/2010 11:09:14
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [CASTO_SWAP]
 //*
 //* Arguments		: 
@@ -19465,8 +19471,8 @@ long	  lDeb, lFin, lCpt, lIdGti
 String sValCar
 n_cst_string lnv_String
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche ce motif dans le cas de la garantie Achats. Si la   */
-/* date de d$$HEX1$$e900$$ENDHEX$$tail est sup$$HEX1$$e900$$ENDHEX$$rieuere $$HEX2$$e0002000$$ENDHEX$$la date de survenance, on arme  */
+/* On déclenche ce motif dans le cas de la garantie Achats. Si la   */
+/* date de détail est supérieuere à la date de survenance, on arme  */
 /* le motif 631.                                                    */
 /*------------------------------------------------------------------*/
 
@@ -19520,7 +19526,7 @@ public function boolean uf_garantierevision ();//*------------------------------
 //* Fonction		: u_gs_sp_sinistre::uf_GarantieRevision (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 06/05/2010 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: TRUE si c'est garantie est couverte par un assureur, m$$HEX1$$ea00$$ENDHEX$$me s'il y a for$$HEX1$$e700$$ENDHEX$$age
+//* Libellé			: TRUE si c'est garantie est couverte par un assureur, même s'il y a forçage
 //* Commentaires	: [20100506164646807]
 //*
 //* Arguments		: 
@@ -19551,7 +19557,7 @@ private function long uf_zn_trt_divdet_numprs (string asdata, string asnomcol, l
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_NumPrs (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/05/2010
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone Num_Prs
+//* Libellé			: Contrôle de la zone Num_Prs
 //* Commentaires	: [DCMP100331]
 //*
 //* Arguments		: String 		asData			Val
@@ -19590,7 +19596,7 @@ private function boolean uf_rf_1438 ();//*--------------------------------------
 //* Fonction		: u_gs_sp_sinistre_wdetail::uf_rf_1438
 //* Auteur			: F. Pinon
 //* Date				: 22/10/2010 11:09:14
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PC516]
 //*
 //* Arguments		: 
@@ -19664,7 +19670,7 @@ private function long uf_zn_trt_divdet_adr_imm_etg (string asdata, string asnomc
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_adr_imm_etg (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/05/2010
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone Num_Prs
+//* Libellé			: Contrôle de la zone Num_Prs
 //* Commentaires	: [PC301].[LOT2]
 //*
 //* Arguments		: String 		asData			Val
@@ -19697,7 +19703,7 @@ private function long uf_zn_trt_divdet_vetuste (string asdata, string asnomcol, 
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_Vetuste (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/10/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone MarqApp
+//* Libellé			: Contrôle de la zone MarqApp
 //* Commentaires	: [PC301][VESTUSTE]
 //*
 //* Arguments		: String 		asData			Val
@@ -19719,7 +19725,7 @@ iAction = 0
 
 
 
-// ON ne touche $$HEX2$$e0002000$$ENDHEX$$rien une fois la prise en charge coch$$HEX1$$e900$$ENDHEX$$e.
+// ON ne touche à rien une fois la prise en charge cochée.
 If This.uf_GestOng_Divers_Trouver ("PEC" ) = "O" Then
 	idw_wDivDet.iiErreur = 3
 	iAction = 1
@@ -19735,7 +19741,7 @@ private function integer uf_zn_mtprej ();//*------------------------------------
 //* Fonction		: Uf_Zn_MtPrej (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 18/05/2005 17:14:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Controle de MT_PREJ
 //*
 //* Arguments		: Aucun
@@ -19843,12 +19849,12 @@ End If
 
 
 /*------------------------------------------------------------------*/
-/* R$$HEX1$$f400$$ENDHEX$$le de facturation, droit -NA/208										  */
+/* Rôle de facturation, droit -NA/208										  */
 /*------------------------------------------------------------------*/
 If This.uf_GetAutorisation ( 208 ) Then 
 
 	/*------------------------------------------------------------------*/
-	/* On force l'inter $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gler.                                       */
+	/* On force l'inter à régler.                                       */
 	/*------------------------------------------------------------------*/
 	iIdi = This.uf_Get_Fournisseur_ARegler ()
 	If iIdi > 0 Then
@@ -19856,7 +19862,7 @@ If This.uf_GetAutorisation ( 208 ) Then
 	End If
 
 	/*------------------------------------------------------------------*/
-	/* si ValAchat entre 1 et 10 alors on force $$HEX2$$e0002000$$ENDHEX$$9999                  */
+	/* si ValAchat entre 1 et 10 alors on force à 9999                  */
 	/*------------------------------------------------------------------*/
 	If IsNull ( dcMtValAchat ) Then dcMtValAchat = 0
 	If dcMtValAchat >=1 And dcMtValAchat <=10 Then idw_wDetailFF.SetItem ( 1, "MT_VAL_ACHAT", 9999 )
@@ -19885,7 +19891,7 @@ private function decimal uf_calcul_montantvetuste (string ascas, decimal adcmtva
 //* Fonction		: uf_Calcul_MontantVetuste (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 21/12/2010
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PC301][VESTUSTE]
+//* Libellé			: [PC301][VESTUSTE]
 //* Commentaires	: Calcul du Montant en fonction de la vestuste
 //*
 //* Arguments		: String		asCas					Val
@@ -19949,7 +19955,7 @@ If IsNull ( dcMtValPublique ) Then dcMtValPublique = 0
 // [PC192235] // [VDOC29747]
 Choose Case True
 	Case bSC2FoyerNomade, bProtectEffPers
-		// Pas de contr$$HEX1$$f400$$ENDHEX$$le
+		// Pas de contrôle
 	Case Else 
 		If dcMtValPublique > 0 Then
 			stMessage.sTitre		= "Prise en charge"
@@ -20028,7 +20034,7 @@ Choose Case Upper ( asCas )
 				
 				Case 12
 			
-					// non g$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$par SPB, g$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$par carrefour $$HEX2$$e0002000$$ENDHEX$$0.9%
+					// non géré par SPB, géré par carrefour à 0.9%
 					If iVetuste > 12 and iVetuste <= 24 Then
 						dcValRetour = 0
 					End If
@@ -20057,14 +20063,14 @@ Choose Case Upper ( asCas )
 
 		// [VDOC29747]			
 		If bProtectEffPers Then
-			// 2% de v$$HEX1$$e900$$ENDHEX$$tust$$HEX2$$e9002000$$ENDHEX$$par mois sur iVetuste mois : soir 
+			// 2% de vétusté par mois sur iVetuste mois : soir 
 			dcValRetour = adcMtValPivot * 0.98^iVetuste
 		End IF 
 		
 		
 		// [PC192235]
 		If bSC2FoyerNomade Then
-			// 1% par mois d'anciennet$$HEX1$$e900$$ENDHEX$$
+			// 1% par mois d'ancienneté
 			dcValRetour = adcMtValPivot * ( 1 - ( 0.01 * iVetuste ))
 		End IF 
 		
@@ -20097,10 +20103,10 @@ End If
 // [PC192235]
 Choose Case True
 	Case bSC2FoyerNomade, bProtectEffPers
-		// Pas de contr$$HEX1$$f400$$ENDHEX$$le
+		// Pas de contrôle
 	Case Else 
 		If dcMtValPublique > 0 Then
-			sVetusteModifie = sVetuste + " /vPubliq.existante non calcul$$HEX1$$e900$$ENDHEX$$e"
+			sVetusteModifie = sVetuste + " /vPubliq.existante non calculée"
 		
 			lRow = idw_wDivDet.Find ( "Upper (nom_zone) = 'VETUSTE'", 1, idw_wDivDet.RowCount () )
 			If lRow > 0 Then
@@ -20121,7 +20127,7 @@ private function long uf_zn_trt_divdet_calculvetuste (string asdata, string asno
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_CalculVetuste (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/10/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Calcul de la vetuste
+//* Libellé			: Calcul de la vetuste
 //* Commentaires	: 
 //*
 //* Arguments		: String 		asData			Val
@@ -20329,18 +20335,18 @@ private function string uf_plaf_evt ();//*--------------------------------------
 //* Fonction		: Uf_Plaf_Evt (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 26/02/1998 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Application d'un plafond par $$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement
+//* Libellé			: 
+//* Commentaires	: Application d'un plafond par événement
 //*
 //* Arguments		: Aucun
 //*
 //* Retourne		: sPos
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1    JFF   14/11/2003	  Ajouts de deux gestion particul$$HEX1$$e800$$ENDHEX$$res de plafonds :
-//*								  .1 : Plaf type 671 param$$HEX1$$e900$$ENDHEX$$tr$$HEX2$$e9002000$$ENDHEX$$sur EVT alors --> Plaf sur Mt_prej avec ValAchat saisi, 
+//* #1    JFF   14/11/2003	  Ajouts de deux gestion particulères de plafonds :
+//*								  .1 : Plaf type 671 paramétré sur EVT alors --> Plaf sur Mt_prej avec ValAchat saisi, 
 //*										 puis sur Evt ensuite
-//*								  .2 : Plaf type 672 parm$$HEX1$$e900$$ENDHEX$$tr$$HEX2$$e9002000$$ENDHEX$$sur EVT --> Plaf sur Max (TTC) Des TEL choisi, puis Evt
+//*								  .2 : Plaf type 672 parmétré sur EVT --> Plaf sur Max (TTC) Des TEL choisi, puis Evt
 //* #2    JFF   23/02/2007   [DCMP070059]
 //*       JFF   21/01/2011  [PC301].[V15_EVOL_VETUSTE]
 //*       JFF   27/07/2011  [PLAF_REF]
@@ -20406,7 +20412,7 @@ If bAutoriserTRT Then
 	
 End If 
 
-// [VDOC29747] Gestion d'une v$$HEX1$$e900$$ENDHEX$$tust$$HEX2$$e9002000$$ENDHEX$$pour produit mon$$HEX1$$e900$$ENDHEX$$tique (juste mt_prej)
+// [VDOC29747] Gestion d'une vétusté pour produit monétique (juste mt_prej)
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 355 )
 If lDeb > 0 Then
 	dtDteAchatDet = idw_wDetailFF.GetItemDateTime ( 1, "DTE_DET" )
@@ -20447,7 +20453,7 @@ If	lLig > 0 And Not bMobSinEgMobCmde Then  // #2
 
 	/*------------------------------------------------------------------*/
 	/* Minoration ou Majoration du plafond avec un pourcentage saisi    */
-	/* sur le param$$HEX1$$e800$$ENDHEX$$trage du produit.                                   */
+	/* sur le paramètrage du produit.                                   */
 	/*------------------------------------------------------------------*/
 	dcPlafond += dcPlafond * idw_Plafond.GetItemDecimal ( lLig, "MT_PLAF" )
 
@@ -20461,7 +20467,7 @@ If	lLig > 0 And Not bMobSinEgMobCmde Then  // #2
 	End If
 
 	// [PM462-1] Cplt de paiement PayBox par CB sru le SCM ?
-	// SI oui, on le prend en compte pour $$HEX1$$e900$$ENDHEX$$viter de forcer le dossier.
+	// SI oui, on le prend en compte pour éviter de forcer le dossier.
 	// [PM462-1]
 	If F_CLE_A_TRUE ( "PM462-1" ) Then
 		lRow = idw_LstCmdeSin.Find ( & 
@@ -20503,7 +20509,7 @@ If	lLig > 0 And Not bMobSinEgMobCmde Then  // #2
 			End If			
 
 			/*------------------------------------------------------------------*/
-			/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+			/* On insére le paragraphe de plafond dans la DW.                   */
 			/*------------------------------------------------------------------*/
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
@@ -20537,7 +20543,7 @@ If	lLig > 0 Then
 
 	/*------------------------------------------------------------------*/
 	/* Minoration ou Majoration du plafond avec un pourcentage saisi    */
-	/* sur le param$$HEX1$$e800$$ENDHEX$$trage du produit.                                   */
+	/* sur le paramètrage du produit.                                   */
 	/*------------------------------------------------------------------*/
 	dcPlafond += dcPlafond * idw_Plafond.GetItemDecimal ( lLig, "MT_PLAF" )
 
@@ -20571,7 +20577,7 @@ If	lLig > 0 Then
 			End If			
 
 			/*------------------------------------------------------------------*/
-			/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+			/* On insére le paragraphe de plafond dans la DW.                   */
 			/*------------------------------------------------------------------*/
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
@@ -20596,8 +20602,8 @@ sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+
 lLig = idw_Plafond.Find ( sRech, 1, lTotPlaf )
 
 /*------------------------------------------------------------------*/
-/* contr$$HEX1$$f400$$ENDHEX$$le : On n'applique ce plafond que si le dossier a          */
-/* $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$cr$$HEX3$$e900e9002000$$ENDHEX$$post$$HEX1$$e900$$ENDHEX$$rieurement $$HEX2$$e0002000$$ENDHEX$$la mep du projet Equiv. Fct. Vu avec  */
+/* contrôle : On n'applique ce plafond que si le dossier a          */
+/* été créé postérieurement à la mep du projet Equiv. Fct. Vu avec  */
 /* C. Chauvin le 28/10/2004                                         */
 /*------------------------------------------------------------------*/
 /* Date de mise en production de l'Equiv Fct.                       */
@@ -20614,7 +20620,7 @@ If	lLig > 0 And Date ( idw_wSin.GetItemDateTime ( 1, "CREE_LE" ) ) >= Date ( sDt
 
 	/*------------------------------------------------------------------*/
 	/* Minoration ou Majoration du plafond avec un pourcentage saisi    */
-	/* sur le param$$HEX1$$e800$$ENDHEX$$trage du produit.                                   */
+	/* sur le paramètrage du produit.                                   */
 	/*------------------------------------------------------------------*/
 	dcPlafond += dcPlafond * idw_Plafond.GetItemDecimal ( lLig, "MT_PLAF" )
 
@@ -20628,7 +20634,7 @@ If	lLig > 0 And Date ( idw_wSin.GetItemDateTime ( 1, "CREE_LE" ) ) >= Date ( sDt
 	End If
 
 	// [PM462-1] Cplt de paiement PayBox par CB sru le SCM ?
-	// SI oui, on le prend en compte pour $$HEX1$$e900$$ENDHEX$$viter de forcer le dossier.
+	// SI oui, on le prend en compte pour éviter de forcer le dossier.
 	// [PM462-1]
 	If F_CLE_A_TRUE ( "PM462-1" ) Then
 		lRow = idw_LstCmdeSin.Find ( & 
@@ -20671,7 +20677,7 @@ If	lLig > 0 And Date ( idw_wSin.GetItemDateTime ( 1, "CREE_LE" ) ) >= Date ( sDt
 			End If 
 
 			/*------------------------------------------------------------------*/
-			/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+			/* On insére le paragraphe de plafond dans la DW.                   */
 			/*------------------------------------------------------------------*/
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
@@ -20683,7 +20689,7 @@ If	lLig > 0 And Date ( idw_wSin.GetItemDateTime ( 1, "CREE_LE" ) ) >= Date ( sDt
 End If
 
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par $$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement.                 */
+/* On vérifie s'il existe un plafond par événement.                 */
 /*------------------------------------------------------------------*/
 sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 				"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -20728,7 +20734,7 @@ If	lLig > 0 Then
 			End If
 
 		/*------------------------------------------------------------------*/
-		/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+		/* On insére le paragraphe de plafond dans la DW.                   */
 		/*------------------------------------------------------------------*/
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
@@ -20822,7 +20828,7 @@ If	lLig > 0 Then  // #2
 			End If
 
 			/*------------------------------------------------------------------*/
-			/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+			/* On insére le paragraphe de plafond dans la DW.                   */
 			/*------------------------------------------------------------------*/
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
@@ -20844,7 +20850,7 @@ private function string uf_plaf_sin ();//*--------------------------------------
 //* Fonction		: Uf_Plaf_Sin (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 26/02/1998 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Application d'un plafond par sinistre
 //*
 //* Arguments		: Aucun
@@ -20853,8 +20859,8 @@ private function string uf_plaf_sin ();//*--------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$sur le contr$$HEX1$$f400$$ENDHEX$$ler
+//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatrés sur les +NS, +DT, +TR
+//*								  déclenché sur le contrôler
 //*       JFF    27/07/2011  [PLAF_REF]			
 //  		 JFF		29/05/2012  [VDOC6662]
 //        JFF    11/10/2013  [VDOC12475]
@@ -20868,7 +20874,7 @@ String sRech, sIdPara, sCptVer, sIdNivPlaf, sIdRefPlaf, sPos
 n_cst_string lnvPFCString
 
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par sinistre.                  */
+/* On vérifie s'il existe un plafond par sinistre.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -20885,13 +20891,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement
+			sIdNivPlaf = "+EV"  // Evénement
 			sIdRefPlaf = String ( idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -20899,7 +20905,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -20938,15 +20944,15 @@ lLig = lLigFinale
 If	lLig > 0 Then
 	lTotDetail = idw_wDetailFF.iudwDetailSource.RowCount ()
 /*------------------------------------------------------------------*/
-/* On s'occupe du d$$HEX1$$e900$$ENDHEX$$tail courant, en insertion ou en modification.  */
-/* Ce d$$HEX1$$e900$$ENDHEX$$tail ne sera pas trait$$HEX2$$e9002000$$ENDHEX$$dans la boucle.                     */
+/* On s'occupe du détail courant, en insertion ou en modification.  */
+/* Ce détail ne sera pas traité dans la boucle.                     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Modification DBI le 12/08/1998                                   */
 /*                                                                  */
-/* La zone $$HEX2$$e0002000$$ENDHEX$$prendre en compte pour le calcul du montant plafonn$$HEX4$$e900200020002000$$ENDHEX$$*/
+/* La zone à prendre en compte pour le calcul du montant plafonné   */
 /* n'est pas MT_NPLAF      mais MT_PLAF      sinon on ne            */
-/* tient pas compte des plafonds appliqu$$HEX1$$e900$$ENDHEX$$s successivement           */
+/* tient pas compte des plafonds appliqués successivement           */
 /*------------------------------------------------------------------*/
 
 	dcMtPlaf		= idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF" )
@@ -20954,13 +20960,13 @@ If	lLig > 0 Then
 
 	For	lCpt = 1 To lTotDetail
 /*------------------------------------------------------------------*/
-/* On ne traite pas le d$$HEX1$$e900$$ENDHEX$$tail courant.                              */
+/* On ne traite pas le détail courant.                              */
 /*------------------------------------------------------------------*/
 			If		idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "ID_DETAIL" ) = lIdDetail	Then
 					Continue
 			Else
 /*------------------------------------------------------------------*/
-/* Le d$$HEX1$$e900$$ENDHEX$$tail est 'REGLE' ou 'A REGLE', on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le montant       */
+/* Le détail est 'REGLE' ou 'A REGLE', on récupére le montant       */
 /* MT_PLAF.                                                         */
 /*------------------------------------------------------------------*/
 				// [VDOC12475]
@@ -20973,7 +20979,7 @@ If	lLig > 0 Then
 			End If
 	Next
 /*------------------------------------------------------------------*/
-/* On additionne la somme des d$$HEX1$$e900$$ENDHEX$$tails avec le montant du d$$HEX1$$e900$$ENDHEX$$tail     */
+/* On additionne la somme des détails avec le montant du détail     */
 /* courant.                                                         */
 /*------------------------------------------------------------------*/
 
@@ -21007,7 +21013,7 @@ If	lLig > 0 Then
 
 		idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 		/*------------------------------------------------------------------*/
-		/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+		/* On insére le paragraphe de plafond dans la DW.                   */
 		/*------------------------------------------------------------------*/
 		sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 		sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -21031,8 +21037,8 @@ private function string uf_plaf_sin_carte ();//*--------------------------------
 //* Fonction		: Uf_Plaf_Sin_Carte (PRIVATE)
 //* Auteur			: Fabyr JF
 //* Date				: 12/03/2002
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Application d'un plafond par sinistre pour les op$$HEX1$$e900$$ENDHEX$$rations
+//* Libellé			: 
+//* Commentaires	: Application d'un plafond par sinistre pour les opérations
 //*					  par Cartes (682) DCMP20115
 //*
 //* Arguments		: Aucun
@@ -21041,8 +21047,8 @@ private function string uf_plaf_sin_carte ();//*--------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$sur le contr$$HEX1$$f400$$ENDHEX$$ler
+//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatrés sur les +NS, +DT, +TR
+//*								  déclenché sur le contrôler
 //*       JFF    27/07/2011  [PLAF_REF]			
 //  		 JFF		29/05/2012  [VDOC6662]
 //       JFF     16/11/2015 [DT159-1]
@@ -21060,7 +21066,7 @@ dcPlafSav = 0
 sPos = ""
 
 /*------------------------------------------------------------------*/
-/* On applique ce plafond que pour un $$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement par carte.          */
+/* On applique ce plafond que pour un événement par carte.          */
 /*------------------------------------------------------------------*/
 lIdEvt = idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" )
 
@@ -21087,13 +21093,13 @@ For lCpt = 1 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement
+			sIdNivPlaf = "+EV"  // Evénement
 			sIdRefPlaf = String ( idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -21101,7 +21107,7 @@ For lCpt = 1 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -21140,15 +21146,15 @@ lLig = lLigFinale
 If	lLig > 0 Then
 	lTotDetail = idw_wDetailFF.iudwDetailSource.RowCount ()
 /*------------------------------------------------------------------*/
-/* On s'occupe du d$$HEX1$$e900$$ENDHEX$$tail courant, en insertion ou en modification.  */
-/* Ce d$$HEX1$$e900$$ENDHEX$$tail ne sera pas trait$$HEX2$$e9002000$$ENDHEX$$dans la boucle.                     */
+/* On s'occupe du détail courant, en insertion ou en modification.  */
+/* Ce détail ne sera pas traité dans la boucle.                     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Modification DBI le 12/08/1998                                   */
 /*                                                                  */
-/* La zone $$HEX2$$e0002000$$ENDHEX$$prendre en compte pour le calcul du montant plafonn$$HEX4$$e900200020002000$$ENDHEX$$*/
+/* La zone à prendre en compte pour le calcul du montant plafonné   */
 /* n'est pas MT_NPLAF      mais MT_PLAF      sinon on ne            */
-/* tient pas compte des plafonds appliqu$$HEX1$$e900$$ENDHEX$$s successivement           */
+/* tient pas compte des plafonds appliqués successivement           */
 /*------------------------------------------------------------------*/
 
 	dcMtPlaf		= idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF" )
@@ -21158,7 +21164,7 @@ If	lLig > 0 Then
 	For	lCpt = 1 To lTotDetail
 
 /*------------------------------------------------------------------*/
-/* On ne cumule que les op$$HEX1$$e900$$ENDHEX$$rations par Cartes.                      */
+/* On ne cumule que les opérations par Cartes.                      */
 /*------------------------------------------------------------------*/
 			lIdEvt = idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "ID_EVT" )
 
@@ -21172,13 +21178,13 @@ If	lLig > 0 Then
 			End Choose 
 				
 /*------------------------------------------------------------------*/
-/* On ne traite pas le d$$HEX1$$e900$$ENDHEX$$tail courant.                              */
+/* On ne traite pas le détail courant.                              */
 /*------------------------------------------------------------------*/
 			If		idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "ID_DETAIL" ) = lIdDetail	Then
 					Continue
 			Else
 /*------------------------------------------------------------------*/
-/* Le d$$HEX1$$e900$$ENDHEX$$tail est 'REGLE' ou 'A REGLE', on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le montant       */
+/* Le détail est 'REGLE' ou 'A REGLE', on récupére le montant       */
 /* MT_PLAF.                                                         */
 /*------------------------------------------------------------------*/
 				If	( idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "COD_ETAT" ) = 500   Or  &
@@ -21189,7 +21195,7 @@ If	lLig > 0 Then
 			End If
 	Next
 /*------------------------------------------------------------------*/
-/* On additionne la somme des d$$HEX1$$e900$$ENDHEX$$tails avec le montant du d$$HEX1$$e900$$ENDHEX$$tail     */
+/* On additionne la somme des détails avec le montant du détail     */
 /* courant.                                                         */
 /*------------------------------------------------------------------*/
 
@@ -21226,7 +21232,7 @@ If	lLig > 0 Then
 		idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 
 		/*------------------------------------------------------------------*/
-		/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+		/* On insére le paragraphe de plafond dans la DW.                   */
 		/*------------------------------------------------------------------*/
 		sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 		sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -21248,10 +21254,10 @@ private subroutine uf_controlergestion_altregparam (ref string aspos);//*-------
 //* Fonction		: Uf_ControlerGestion_AltRegParam (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 27/10/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [VDOC5453]
+//* Libellé			: [VDOC5453]
 //* Commentaires	: 
 //*
-//* Arguments		: String		asPos		R$$HEX1$$e900$$ENDHEX$$f.
+//* Arguments		: String		asPos		Réf.
 //*
 //* Retourne		: Rien
 //*
@@ -21281,19 +21287,19 @@ For lCpt = 2 to 5
 			sMess = "La nature du sinistre"
 			sMess2 = "couverte"
 		Case 3
-			sIdTypCode = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdTypCode = "+TR"  // Territorialité
 			sIdCode = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
-			sMess = "La territorialit$$HEX1$$e900$$ENDHEX$$"
+			sMess = "La territorialité"
 			sMess2 = "couverte"
 		Case 4
-			sIdTypCode = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail de sinistre
+			sIdTypCode = "+DT"  // Détail de sinistre
 			sIdCode = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
-			sMess = "Le d$$HEX1$$e900$$ENDHEX$$tail de sinistre "					
+			sMess = "Le détail de sinistre "					
 			sMess2 = "couvert"
 		Case 5
-			sIdTypCode = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdTypCode = "+EV"  // Evénement de garantie
 			sIdCode = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
-			sMess = "L'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement du d$$HEX1$$e900$$ENDHEX$$tail de garantie"
+			sMess = "L'événement du détail de garantie"
 			sMess2 = "couvert"
 
 	End Choose
@@ -21309,8 +21315,8 @@ For lCpt = 2 to 5
 	lLig = idw_Condition.Find ( sRech, 1, idw_Condition.RowCount () )
 
 	If	lLig > 0 Then
-		// param pr$$HEX1$$e900$$ENDHEX$$sent mais n'autorisant pas.
-		stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le d$$HEX1$$e900$$ENDHEX$$tail garantie"
+		// param présent mais n'autorisant pas.
+		stMessage.sTitre		= "Contrôle détail garantie"
 		stMessage.Bouton		= ok!
 		stMessage.bErreurG	= FALSE
 		stMessage.sCode		= "WDET595"
@@ -21332,7 +21338,7 @@ For lCpt = 2 to 5
 	
 		If	lLig <= 0 Then
 			//absence de param
-			stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le d$$HEX1$$e900$$ENDHEX$$tail garantie"
+			stMessage.sTitre		= "Contrôle détail garantie"
 			stMessage.Bouton		= Ok!
 			stMessage.bErreurG	= FALSE
 			stMessage.sCode		= "WDET596"
@@ -21354,7 +21360,7 @@ private function long uf_zn_trt_divdet_collerinfo (string asdata, string asnomco
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_CollerInfo (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 25/01/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Coller le presse papier dans certaines zones
+//* Libellé			: Coller le presse papier dans certaines zones
 //* Commentaires	: 
 //*
 //* Arguments		: String 		asData			Val
@@ -21377,13 +21383,13 @@ n_cst_string lnvPFCString
 
 iAction = 0 
 
-// ON ne touche $$HEX2$$e0002000$$ENDHEX$$rien une fois la prise en charge coch$$HEX1$$e900$$ENDHEX$$e.
+// ON ne touche à rien une fois la prise en charge cochée.
 If This.uf_GestOng_Divers_Trouver ("PEC" ) = "O" Then
 	idw_wDivDet.iiErreur = 3
 	iAction = 1
 End If
 
-// #1 On g$$HEX1$$e800$$ENDHEX$$re Casto $$HEX2$$e0002000$$ENDHEX$$l'ancienne m$$HEX1$$e900$$ENDHEX$$thode.
+// #1 On gère Casto à l'ancienne méthode.
 If asData = "O" and iAction = 0 Then
 	// Confo
 	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 207 )
@@ -21432,8 +21438,8 @@ public function boolean uf_rf_601 ();//*----------------------------------------
 //* Fonction		: Uf_Rf_601 (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 25/01/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [CONFO][CUISINE]
-//* Commentaires	: Adh$$HEX1$$e900$$ENDHEX$$sion r$$HEX1$$e900$$ENDHEX$$sili$$HEX1$$e900$$ENDHEX$$e
+//* Libellé			: [CONFO][CUISINE]
+//* Commentaires	: Adhésion résiliée
 //*
 //* Arguments		: Aucun
 //*
@@ -21457,10 +21463,10 @@ bConfo = lDeb > 0
 lIdEvt = idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" )
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche ce motif de refus si la date de fin de garantie     */
-/* est connue ( donc adh$$HEX1$$e900$$ENDHEX$$sion SPB ) et inf$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date du      */
+/* On déclenche ce motif de refus si la date de fin de garantie     */
+/* est connue ( donc adhésion SPB ) et inférieure à la date du      */
 /* sinistre.                                                        */
-/* Il faut $$HEX1$$e900$$ENDHEX$$galement de la date de r$$HEX1$$e900$$ENDHEX$$siliation soit renseign$$HEX1$$e900$$ENDHEX$$e (    */
+/* Il faut également de la date de résiliation soit renseignée (    */
 /* sinon voir refus 603 )                                           */
 /*------------------------------------------------------------------*/
 
@@ -21475,7 +21481,7 @@ If	Not isNull ( dDteFinGti )		And	&
 	If dDteFinGti < dDteSurv Then
 
 /*------------------------------------------------------------------*/
-/* L'adh$$HEX1$$e900$$ENDHEX$$sion est r$$HEX1$$e900$$ENDHEX$$sili$$HEX1$$e900$$ENDHEX$$e et la fin de garantie a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$atteinte     */
+/* L'adhésion est résiliée et la fin de garantie a été atteinte     */
 /* avant le sinistre                                                */
 /*------------------------------------------------------------------*/
 		// PC543_MANTIS5894
@@ -21504,8 +21510,8 @@ public function boolean uf_rf_603 ();//*----------------------------------------
 //* Fonction		: Uf_Rf_603 (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 25/01/2012 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [CONFO][CUISINE]
-//* Commentaires	: pas de primes per$$HEX1$$e700$$ENDHEX$$ues
+//* Libellé			: [CONFO][CUISINE]
+//* Commentaires	: pas de primes perçues
 //*
 //* Arguments		: Aucun
 //*
@@ -21513,7 +21519,7 @@ public function boolean uf_rf_603 ();//*----------------------------------------
 //*										Faux = Le refus n'existe pas.
 //*
 //*-----------------------------------------------------------------
-//	FPI	09/11/2011	[Vdoc5870] D$$HEX1$$e900$$ENDHEX$$clenchement autre refus sur cl$$HEX2$$e9002000$$ENDHEX$$dans DP29
+//	FPI	09/11/2011	[Vdoc5870] Déclenchement autre refus sur clé dans DP29
 //*-----------------------------------------------------------------
 
 Date dDteResil, dDteSurv, dDteFinGti
@@ -21531,12 +21537,12 @@ lIdEvt = idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" )
 
 sRefus = "603"
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche ce motif de refus si la date de fin de garantie     */
-/* est connue ( donc adh$$HEX1$$e900$$ENDHEX$$sion SPB ) et inf$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date du      */
+/* On déclenche ce motif de refus si la date de fin de garantie     */
+/* est connue ( donc adhésion SPB ) et inférieure à la date du      */
 /* sinistre.                                                        */
 /*------------------------------------------------------------------*/
-/* Il ne doit pas y avoir de date de r$$HEX1$$e900$$ENDHEX$$siliation sans quoi          */
-/* s'est le motif 601 qui sera d$$HEX1$$e900$$ENDHEX$$clench$$HEX29$$e9002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000$$ENDHEX$$*/
+/* Il ne doit pas y avoir de date de résiliation sans quoi          */
+/* s'est le motif 601 qui sera déclenché                            */
 /*------------------------------------------------------------------*/
 
 dDteFinGti 	= Date ( This.uf_GestOng_Divers_Trouver ( "DTE_FIN_GTI_ARTICLE" ) )
@@ -21550,7 +21556,7 @@ If	Not isNull ( dDteFinGti )		And	&
 	If dDteFinGti < dDteSurv Then
 
 /*------------------------------------------------------------------*/
-/* L'adh$$HEX1$$e900$$ENDHEX$$sion est r$$HEX1$$e900$$ENDHEX$$sili$$HEX1$$e900$$ENDHEX$$e et la fin de garantie a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$atteinte     */
+/* L'adhésion est résiliée et la fin de garantie a été atteinte     */
 /* avant le sinistre                                                */
 /*------------------------------------------------------------------*/
 		// 	[Vdoc5870]
@@ -21586,8 +21592,8 @@ private function string uf_plaf_nbev_gti_adhesion ();//*------------------------
 //* Fonction		: Uf_Plaf_NbEv_Gti_Adhesion (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 25/01/2012 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [CONFO][CUISINE][PC680]
-//* Commentaires	: Application d'un plafond par adh$$HEX1$$e900$$ENDHEX$$sion
+//* Libellé			: [CONFO][CUISINE][PC680]
+//* Commentaires	: Application d'un plafond par adhésion
 //*
 //* Arguments		: Aucun
 //*
@@ -21615,7 +21621,7 @@ String       sUntPerRnv_Adh
 
 sPos = ""
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par sinistre.                  */
+/* On vérifie s'il existe un plafond par sinistre.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -21630,13 +21636,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -21644,7 +21650,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -21682,8 +21688,8 @@ lLig = lLigFinale
 
 If	lLig > 0 Then
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -21698,8 +21704,8 @@ If	lLig > 0 Then
 
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S_W_DETAIL_NBEVT_GTI_ADHESION" )	Then 
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e, on affiche le message.             */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée, on affiche le message.             */
 /*------------------------------------------------------------------*/
 		f_Message ( stMessage )
 		sPos = "MT_PREJ"
@@ -21726,7 +21732,7 @@ If	lLig > 0 Then
 			idw_wDetailFF.SetItem ( 1, "MT_PLAF", 0 )
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", 	"O" )
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -21750,7 +21756,7 @@ private function long uf_zn_trt_divdet_code_article (string asdata, string asnom
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_code_article (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/10/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone MarqApp
+//* Libellé			: Contrôle de la zone MarqApp
 //* Commentaires	: 
 //*
 //* Arguments		: String 		asData			Val
@@ -21775,7 +21781,7 @@ Boolean bCasto  // cas Castorama
 
 //  [CONFO][CUISINE] 
 
-// ON ne touche $$HEX2$$e0002000$$ENDHEX$$rien une fois la prise en charge coch$$HEX1$$e900$$ENDHEX$$e.
+// ON ne touche à rien une fois la prise en charge cochée.
 If This.uf_GestOng_Divers_Trouver ("PEC" ) = "O" Then
 	idw_wDivDet.iiErreur = 2
 	iAction = 1
@@ -21793,7 +21799,7 @@ private function long uf_zn_trt_divdet_lib_article (string asdata, string asnomc
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_lib_article (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/10/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone MarqApp
+//* Libellé			: Contrôle de la zone MarqApp
 //* Commentaires	: 
 //*
 //* Arguments		: String 		asData			Val
@@ -21818,7 +21824,7 @@ Boolean bCasto  // cas Castorama
 
 //  [CONFO][CUISINE] 
 
-// ON ne touche $$HEX2$$e0002000$$ENDHEX$$rien une fois la prise en charge coch$$HEX1$$e900$$ENDHEX$$e.
+// ON ne touche à rien une fois la prise en charge cochée.
 If This.uf_GestOng_Divers_Trouver ("PEC" ) = "O" Then
 	idw_wDivDet.iiErreur = 2
 	iAction = 1
@@ -21836,7 +21842,7 @@ private function long uf_zn_trt_divdet_dte_fin_gti_article (string asdata, strin
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_dte_fin_gti_article (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/10/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone MarqApp
+//* Libellé			: Contrôle de la zone MarqApp
 //* Commentaires	: 
 //*
 //* Arguments		: String 		asData			Val
@@ -21861,7 +21867,7 @@ Boolean bCasto  // cas Castorama
 
 //  [CONFO][CUISINE] 
 
-// ON ne touche $$HEX2$$e0002000$$ENDHEX$$rien une fois la prise en charge coch$$HEX1$$e900$$ENDHEX$$e.
+// ON ne touche à rien une fois la prise en charge cochée.
 If This.uf_GestOng_Divers_Trouver ("PEC" ) = "O" Then
 	idw_wDivDet.iiErreur = 1
 	iAction = 1
@@ -21879,7 +21885,7 @@ private function long uf_zn_trt_divdet_code_rgpr_element (string asdata, string 
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_code_rgpr_element (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/10/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone MarqApp
+//* Libellé			: Contrôle de la zone MarqApp
 //* Commentaires	: 
 //*
 //* Arguments		: String 		asData			Val
@@ -21904,7 +21910,7 @@ Boolean bCasto  // cas Castorama
 
 //  [CONFO][CUISINE] 
 
-// ON ne touche $$HEX2$$e0002000$$ENDHEX$$rien une fois la prise en charge coch$$HEX1$$e900$$ENDHEX$$e.
+// ON ne touche à rien une fois la prise en charge cochée.
 If This.uf_GestOng_Divers_Trouver ("PEC" ) = "O" Then
 	idw_wDivDet.iiErreur = 1
 	iAction = 1
@@ -21937,7 +21943,7 @@ If iAction = 0 And Len ( Trim ( asData )) > 0 And Not IsNull ( asData ) Then
 	
    If sChaine <> "" And Not IsNull ( sChaine ) Then
 		stMessage.bErreurG	= FALSE
-		stMessage.sTitre		= "Dossier ayant d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$ce code de regroupement"
+		stMessage.sTitre		= "Dossier ayant déjà ce code de regroupement"
 		stMessage.Icon			= Information!
 		stMessage.bouton		= Ok!
 		stMessage.sVar[1]    = sChaine
@@ -21959,8 +21965,8 @@ private function string uf_plaf_nbcodergpt_distinct_gti_adhesion ();//*---------
 //* Fonction		: uf_plaf_nbcodergpt_distinct_gti_adhesion (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 25/01/2012 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [CONFO][CUISINE][PC680]
-//* Commentaires	: Application d'un plafond par adh$$HEX1$$e900$$ENDHEX$$sion
+//* Libellé			: [CONFO][CUISINE][PC680]
+//* Commentaires	: Application d'un plafond par adhésion
 //*
 //* Arguments		: Aucun
 //*
@@ -21992,7 +21998,7 @@ sPos = ""
 bDeclenchementPlafond = FALSE
 
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par sinistre.                  */
+/* On vérifie s'il existe un plafond par sinistre.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -22007,13 +22013,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -22021,7 +22027,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -22059,8 +22065,8 @@ lLig = lLigFinale
 
 If	lLig > 0 Then
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -22075,8 +22081,8 @@ If	lLig > 0 Then
 
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S_W_DETAIL_NBEVT_GTI_ADHESION" )	Then 
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e, on affiche le message.             */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée, on affiche le message.             */
 /*------------------------------------------------------------------*/
 		f_Message ( stMessage )
 		sPos = "MT_PREJ"
@@ -22088,7 +22094,7 @@ If	lLig > 0 Then
 		If Not bDeclenchementPlafond Then
 			bDeclenchementPlafond = TRUE
 			
-			// LEs d$$HEX1$$e900$$ENDHEX$$tails du sinistre en cours pour la m$$HEX1$$ea00$$ENDHEX$$me gti
+			// LEs détails du sinistre en cours pour la même gti
 			lIdDetailEnCours = idw_wdetailff.GetItemNumber (1,"ID_DETAIL")
 			lIdGtiEnCours    = idw_wdetailff.GetItemNumber ( 1, "ID_GTI" )
 
@@ -22121,7 +22127,7 @@ If	lLig > 0 Then
 			idw_LstDetail.SetFilter ( "" )
 			idw_LstDetail.Filter ()											  
 
-		 // le d$$HEX1$$e900$$ENDHEX$$tail en cours
+		 // le détail en cours
 			lRowDivDet = idw_wDivDet.Find ( &
 			"ID_GTI = " + String ( lIdGtiEnCours ) + " AND " + &
 			"ID_DETAIL = " + String ( lIdDetailEnCours )	+ " AND " + &
@@ -22164,7 +22170,7 @@ private function long uf_zn_trt_divdet_taillearticle (string asdata, string asno
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_TailleArticle (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 25/01/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [CONFO][MEUBLE][PC542]
+//* Libellé			: [CONFO][MEUBLE][PC542]
 //* Commentaires	: 
 //*
 //* Arguments		: String 		asData			Val
@@ -22187,7 +22193,7 @@ n_cst_string lnvPFCString
 
 iAction = 0 
 
-// ON ne touche $$HEX2$$e0002000$$ENDHEX$$rien une fois la prise en charge coch$$HEX1$$e900$$ENDHEX$$e.
+// ON ne touche à rien une fois la prise en charge cochée.
 If This.uf_GestOng_Divers_Trouver ("PEC" ) = "O" Then
 	idw_wDivDet.iiErreur = 5
 	iAction = 1
@@ -22203,7 +22209,7 @@ public function string uf_gestion_dartynomade (decimal adcmtvalachat, string asc
 //* Fonction      : u_gs_sp_sinistre_wdetail::uf_Gestion_DartyNomade (PUBLIC)
 //* Auteur        : Fabry JF
 //* Date          : 18/01/2005 15:05:09
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Gestion du produit DARTY NOMADE (8691, 8692)
+//* Libellé       : Gestion du produit DARTY NOMADE (8691, 8692)
 //* Commentaires  : Projet NM-2004-04-121V1, option -DP,31
 //*
 //* Arguments     : Decimal      adcMtValAchat            Val   // 
@@ -22212,9 +22218,9 @@ public function string uf_gestion_dartynomade (decimal adcmtvalachat, string asc
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date        Modification
-//* #1   MADM   20/07/2006   DCMP 060528 Gestion particuli$$HEX1$$e900$$ENDHEX$$re sur la marque CREATIVE 
-//* #2   JFF    01/10/2007   [DCMP070689] compl$$HEX1$$e800$$ENDHEX$$ment Darty Swap&DartyMP
-//* #3   JFF    14/12/2007   [DCMP070968] compl$$HEX1$$e800$$ENDHEX$$ment Darty Swap&DartyMP
+//* #1   MADM   20/07/2006   DCMP 060528 Gestion particuliére sur la marque CREATIVE 
+//* #2   JFF    01/10/2007   [DCMP070689] complèment Darty Swap&DartyMP
+//* #3   JFF    14/12/2007   [DCMP070968] complèment Darty Swap&DartyMP
 //* #4   JFF    28/01/2008   [DCMP080028] 
 //* #5   JFF    23/04/2008   [DCMP080283]
 //* #6   PHG    30/06/2009     [O2M_DIAG_NOMADE] Gestion des message de process.
@@ -22277,8 +22283,8 @@ lIdEvt = idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" )
 lCptValide = idw_wDetailFF.GetItemNumber ( 1, "CPT_VALIDE" )
 
 /*------------------------------------------------------------------*/
-/* Si l'evt de Remboursement 965 est plac$$HEX2$$e9002000$$ENDHEX$$avant la saisie de la    */
-/* valeur d'achat alors, on ne g$$HEX1$$e800$$ENDHEX$$re aucun cas.                      */
+/* Si l'evt de Remboursement 965 est placé avant la saisie de la    */
+/* valeur d'achat alors, on ne gère aucun cas.                      */
 /*------------------------------------------------------------------*/
 // #9 [O2M_DIAG_NOMADE].[JFF].[20090811160805277]
 
@@ -22293,8 +22299,8 @@ stMessage.sCode = ""
 asRet = ""
 
 /*------------------------------------------------------------------*/
-/* En fonction de Garantie (BRIS/VOL) et type de mat$$HEX1$$e900$$ENDHEX$$riel sinistr$$HEX3$$e90020002000$$ENDHEX$$*/
-/* on d$$HEX1$$e900$$ENDHEX$$finit un aiguillage.                                        */
+/* En fonction de Garantie (BRIS/VOL) et type de matériel sinistré  */
+/* on définit un aiguillage.                                        */
 /*------------------------------------------------------------------*/
 stMessage.sTitre      = "Commandes"
 stMessage.Icon         = Information!
@@ -22309,19 +22315,19 @@ Else
 End If
 
 /*------------------------------------------------------------------*/
-/* En fonction de Garantie (BRIS/VOL) et type de mat$$HEX1$$e900$$ENDHEX$$riel sinistr$$HEX3$$e90020002000$$ENDHEX$$*/
-/* on d$$HEX1$$e900$$ENDHEX$$finit un aiguillage.                                        */
+/* En fonction de Garantie (BRIS/VOL) et type de matériel sinistré  */
+/* on définit un aiguillage.                                        */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
-/* #1 R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration de la marque via la grille de sinistre           */
+/* #1 Récupération de la marque via la grille de sinistre           */
 /*------------------------------------------------------------------*/
 sMarque = Upper ( idW_wSin.GetItemString ( 1, "MARQ_PORT3" ) )
 
 // [O2M_DPN_JFF]
-// Armement ici d'un boolean r$$HEX1$$e900$$ENDHEX$$pondant $$HEX2$$e0002000$$ENDHEX$$la phrase de l'analyse 
-// bTrouveO2MDiagNAnn="Rechercher si une prestation de diagnostic O2M non annul$$HEX1$$e900$$ENDHEX$$e existe"
-// #6 [O2M_DIAG_NOMADE] Rechercher si une prestation de diagnostic O2M non annul$$HEX1$$e900$$ENDHEX$$e existe"
+// Armement ici d'un boolean répondant à la phrase de l'analyse 
+// bTrouveO2MDiagNAnn="Rechercher si une prestation de diagnostic O2M non annulée existe"
+// #6 [O2M_DIAG_NOMADE] Rechercher si une prestation de diagnostic O2M non annulée existe"
 
 /* #7   [O2M_DIAG_NOMADE].[JFF].[20090810163647500]
 bTrouveO2MDiagNAnn = &
@@ -22357,15 +22363,15 @@ Choose Case lIdGti
                   Case bDartySwap, bDartyMP
                      //[O2M_DPN_JFF]
                      // Si Not bTrouveO2MDiagNAnn Alors vers Diag O2M
-                        // Nouveau message identique au 141 mais modifi$$HEX1$$e900$$ENDHEX$$
+                        // Nouveau message identique au 141 mais modifié
                         /*
                            - Le sinistre est un bris
-                           - La valeur d'achat est inf$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$300$$HEX1$$ac20$$ENDHEX$$
+                           - La valeur d'achat est inférieure ou égale à 300€
    
-                           =>Choisissez l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e800$$ENDHEX$$nement Action O2M
+                           =>Choisissez l'évènement Action O2M
                            =>Passer une demande de diagnostic
                         */
-                     // Sinon 141 existant mais modifi$$HEX2$$e9002000$$ENDHEX$$avec - Suite au retour de diagnostic d'O2M, alors :
+                     // Sinon 141 existant mais modifié avec - Suite au retour de diagnostic d'O2M, alors :
 
                      // #6 [O2M_DIAG_NOMADE] 
 							// #11 [O2M_DIAG_NOMADE].[JFF].[20091022224855853]
@@ -22395,7 +22401,7 @@ Choose Case lIdGti
             
             Choose Case TRUE
 
-					Case bDartySwap   // #3 Ce cas doit $$HEX1$$ea00$$ENDHEX$$tre au 1er Rang, extr. important !!
+					Case bDartySwap   // #3 Ce cas doit être au 1er Rang, extr. important !!
 
                   // #4#5
                   Choose Case sTypApp
@@ -22456,7 +22462,7 @@ Choose Case lIdGti
                   End Choose
                
                /*---------------------------------------------------------------------------*/
-               /* #1 Si la marque est CREATIVE, on traite $$HEX2$$e0002000$$ENDHEX$$l'identique du cas < $$HEX2$$e0002000$$ENDHEX$$300 euros*/
+               /* #1 Si la marque est CREATIVE, on traite à l'identique du cas < à 300 euros*/
                /*---------------------------------------------------------------------------*/
                Case    sMarque = "CREATIVE"
                   stMessage.sVar[1]    = sMarque
@@ -22520,7 +22526,7 @@ Choose Case lIdGti
                   End CHoose
 
 
-               // Inf$$HEX1$$e900$$ENDHEX$$rieur $$HEX2$$e0002000$$ENDHEX$$300 E
+               // Inférieur à 300 E
                Case adcMtValAchat <= 300
 
                   // #4
@@ -22575,23 +22581,23 @@ Choose Case lIdGti
                   End CHoose
 
 
-               // Sup$$HEX1$$e900$$ENDHEX$$rieur $$HEX2$$e0002000$$ENDHEX$$300 E
+               // Supérieur à 300 E
                Case adcMtValAchat > 300
 
                   /*------------------------------------------------------------------*/
-                  /* Deux Cas : Si aucune PRS $$HEX2$$e0002000$$ENDHEX$$DST alors => DST sinon CMD DTY si     */
-                  /* DST poss$$HEX1$$e800$$ENDHEX$$de un code -GC $$HEX2$$e0002000$$ENDHEX$$30                                     */
+                  /* Deux Cas : Si aucune PRS à DST alors => DST sinon CMD DTY si     */
+                  /* DST possède un code -GC à 30                                     */
                   /*------------------------------------------------------------------*/
                   lRow = idw_LstCmdeSin.Find ( "ID_FOUR = 'DST'", 1, idw_LstCmdeSin.RowCount () )
                   If lRow > 0 Then
-                     // Process 2$$HEX1$$e800$$ENDHEX$$me Tour      
+                     // Process 2ème Tour      
                      stMessage.sCode   = "COMD132"
                      asRet = "11/NPCP/>300/PRS_DST_EC"
                      sCodEtat = idw_LstCmdeSin.GetItemString ( lRow, "COD_ETAT" )
                      lStatutGc= idw_LstCmdeSin.GetItemNumber ( lRow, "STATUS_GC" )
 
                   /*------------------------------------------------------------------*/
-                  /* PRS annuler et statut = "Non r$$HEX1$$e900$$ENDHEX$$parable par tremblay"              */
+                  /* PRS annuler et statut = "Non réparable par tremblay"              */
                   /*------------------------------------------------------------------*/
 							// ITSM108109
                      If lStatutGc = 30 OR sCodEtat = "ANN" Then
@@ -22610,7 +22616,7 @@ Choose Case lIdGti
 						End If
 
 						If bTrouveO2MPRSNAnnRepare Or bTrouveO2MDiagNAnn Then
-							// Process 2$$HEX1$$e800$$ENDHEX$$me Tour      
+							// Process 2ème Tour      
 							stMessage.sCode   = "COMD134"
 							asRet = "11/NPCP/>300/PRS_O2M_EC"
 
@@ -22688,7 +22694,7 @@ private function string uf_plaf_refus (string astypplaf, string ascas);//*------
 //* Fonction		: Uf_Plaf_Refus (PRIVATE)
 //* Auteur			: Fabry JFF
 //* Date				: 29/07/2011 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PLAF_REF]
 //*
 //* Arguments		: String  asTypPlaf   Val
@@ -22756,7 +22762,7 @@ private function long uf_zn_trt_divdet_enlvbien (string asdata, string asnomcol,
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_EnlvBien (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 25/01/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [CONFO][MEUBLE][PC542]
+//* Libellé			: [CONFO][MEUBLE][PC542]
 //* Commentaires	: 
 //*
 //* Arguments		: String 		asData			Val
@@ -22780,7 +22786,7 @@ Boolean bConfoMeuble, bConfoLiterie, bConfoSiege
 
 iAction = 0 
 
-// ON ne touche $$HEX2$$e0002000$$ENDHEX$$rien une fois la prise en charge coch$$HEX1$$e900$$ENDHEX$$e.
+// ON ne touche à rien une fois la prise en charge cochée.
 If This.uf_GestOng_Divers_Trouver ("PEC" ) = "O" Then
 	idw_wDivDet.iiErreur = 1
 	iAction = 1
@@ -22832,7 +22838,7 @@ private function boolean uf_rf_1590 ();//*--------------------------------------
 //* Fonction		: u_gs_sp_sinistre_wdetail::uf_rf_1590
 //* Auteur			: F. Pinon
 //* Date				: 22/10/2010 11:09:14
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PC869]
 //*
 //* Arguments		: 
@@ -22843,7 +22849,7 @@ private function boolean uf_rf_1590 ();//*--------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
 // 			FPI	30/12/2010	[ITSM55084] Correction
-//			FPI	10/12/2012	[VDoc9173] Sp$$HEX1$$e900$$ENDHEX$$cification par garantie
+//			FPI	10/12/2012	[VDoc9173] Spécification par garantie
 //*-----------------------------------------------------------------
 
 Date 	  dDteDp, dDteDet
@@ -22878,7 +22884,7 @@ Choose Case lnv_String.of_getkeyvalue( sValCar, "ID_GTI", ";")
 		// Toutes garanties
 		sFiltre="( MT_PLAF_AREG > 0 OR MT_PLAF_REG > 0 )"
 	Case Else
-		// On d$$HEX1$$e900$$ENDHEX$$cortique
+		// On décortique
 		lnv_string.of_parsetoarray(  lnv_String.of_getkeyvalue( sValCar, "ID_GTI", ";"),  "#",  sIdGti )
 		sFiltre="( MT_PLAF_AREG > 0 OR MT_PLAF_REG > 0 ) And ID_GTI IN ("
 		For lCpt=1 To UpperBound(sIdGti)
@@ -22911,8 +22917,8 @@ private function boolean uf_rf_1599 ();//*--------------------------------------
 //* Fonction		: Uf_Rf_1599 (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 31/10/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PC680][MANTIS4919]
-//* Commentaires	: D$$HEX1$$e900$$ENDHEX$$lai entre 1er $$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$ment et Dernier $$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$ment (pour les produits CONFO)
+//* Libellé			: [PC680][MANTIS4919]
+//* Commentaires	: Délai entre 1er élément et Dernier élément (pour les produits CONFO)
 //*
 //* Arguments		: Aucun
 //*
@@ -22947,13 +22953,13 @@ For lCpt = 1 to 5
 			sIdNivDel = "+NS"  // Nature de sinistre
 			sIdRefDel = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivDel = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivDel = "+TR"  // Territorialité
 			sIdRefDel = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivDel = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail de sinistre
+			sIdNivDel = "+DT"  // Détail de sinistre
 			sIdRefDel = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivDel = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivDel = "+EV"  // Evénement de garantie
 			sIdRefDel = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 
@@ -22962,7 +22968,7 @@ For lCpt = 1 to 5
 	If IsNull ( sIdRefDel ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un d$$HEX1$$e900$$ENDHEX$$lai 625 pour la garantie.            */
+	/* On vérifie s'il existe un délai 625 pour la garantie.            */
 	/*------------------------------------------------------------------*/
 	// #2 [DCMP071000] Lecture ID_GTI dans idw_wDetailFF ald de idw_wGarSin
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
@@ -22977,9 +22983,9 @@ For lCpt = 1 to 5
 
 	If	lLig > 0 Then
 	/*------------------------------------------------------------------*/
-	/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le d$$HEX1$$e900$$ENDHEX$$lai maximum autoris$$HEX2$$e9002000$$ENDHEX$$entre la survenance du     */
-	/* sinistre et la date de d$$HEX1$$e900$$ENDHEX$$claration. On v$$HEX1$$e900$$ENDHEX$$rifie si ce d$$HEX1$$e900$$ENDHEX$$lai est   */
-	/* d$$HEX1$$e900$$ENDHEX$$pass$$HEX1$$e900$$ENDHEX$$.                                                         */
+	/* On récupére le délai maximum autorisé entre la survenance du     */
+	/* sinistre et la date de déclaration. On vérifie si ce délai est   */
+	/* dépassé.                                                         */
 	/*------------------------------------------------------------------*/
 
 		sFiltreOri = idw_LstDetail.Describe ( "datawindow.table.filter" )
@@ -23030,7 +23036,7 @@ private function boolean uf_rf_1604 ();//*--------------------------------------
 //* Fonction		: Uf_Rf_1604 (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 28/11/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: PC543_MANTIS5297
+//* Libellé			: PC543_MANTIS5297
 //* Commentaires	: DATE PRISE POSS ANTERIEURE DTE ADH
 //*
 //* Arguments		: Aucun
@@ -23045,8 +23051,8 @@ Date dDteAdh, dDteDet
 Boolean bRet 
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche ce motif dans le cas de la garantie Utilisations    */
-/* Frauduleuses. Si la date de d$$HEX1$$e900$$ENDHEX$$tail est inf$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date de   */
+/* On déclenche ce motif dans le cas de la garantie Utilisations    */
+/* Frauduleuses. Si la date de détail est inférieure à la date de   */
 /* survenance, on arme le motif 632.                                */
 /*------------------------------------------------------------------*/
 
@@ -23070,7 +23076,7 @@ private function boolean uf_rf_1605 ();//*--------------------------------------
 //* Fonction		: Uf_Rf_1605 (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 28/11/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: PC543_MANTIS5297
+//* Libellé			: PC543_MANTIS5297
 //* Commentaires	: DATE PRISE POSS ANTERIEURE DTE ADH
 //*
 //* Arguments		: Aucun
@@ -23085,8 +23091,8 @@ Date dDteSurv, dDteDet
 Boolean bRet 
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche ce motif dans le cas de la garantie Utilisations    */
-/* Frauduleuses. Si la date de d$$HEX1$$e900$$ENDHEX$$tail est inf$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date de   */
+/* On déclenche ce motif dans le cas de la garantie Utilisations    */
+/* Frauduleuses. Si la date de détail est inférieure à la date de   */
 /* survenance, on arme le motif 632.                                */
 /*------------------------------------------------------------------*/
 
@@ -23110,7 +23116,7 @@ private function boolean uf_rf_1678 ();//*--------------------------------------
 //* Fonction		: u_gs_sp_sinistre_wdetail::uf_rf_1678
 //* Auteur			: F. Pinon
 //* Date				: 17/06/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [VDOC10633]
 //*
 //* Arguments		: 
@@ -23137,7 +23143,7 @@ If lDeb <=0 Then return TRUE
 
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_wSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 242 )
 If lDeb <= 0 Then
-	stmessage.stitre="Contr$$HEX1$$f400$$ENDHEX$$le sur le d$$HEX1$$e900$$ENDHEX$$tail"
+	stmessage.stitre="Contrôle sur le détail"
 	stmessage.berreurg=FALSE
 	stMessage.svar[1]="1678"
 	stMessage.svar[2]="242"
@@ -23166,7 +23172,7 @@ public function boolean uf_rf_1694 ();//*---------------------------------------
 //* Fonction		: u_gs_sp_sinistre_wdetail::uf_rf_1694
 //* Auteur			: F. Pinon
 //* Date				: 23/07/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PC940]
 //*
 //* Arguments		: 
@@ -23199,13 +23205,13 @@ For lCpt = 1 to 5
 			sIdNivDel = "+NS"  // Nature de sinistre
 			sIdRefDel = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivDel = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivDel = "+TR"  // Territorialité
 			sIdRefDel = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivDel = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail de sinistre
+			sIdNivDel = "+DT"  // Détail de sinistre
 			sIdRefDel = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivDel = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivDel = "+EV"  // Evénement de garantie
 			sIdRefDel = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 
@@ -23214,7 +23220,7 @@ For lCpt = 1 to 5
 	If IsNull ( sIdRefDel ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un d$$HEX1$$e900$$ENDHEX$$lai de d$$HEX1$$e900$$ENDHEX$$claration pour la garantie. */
+	/* On vérifie s'il existe un délai de déclaration pour la garantie. */
 	/*------------------------------------------------------------------*/
 	// #1 [DCMP071000] Lecture ID_GTI dans idw_wDetailFF ald de idw_wGarSin
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
@@ -23230,10 +23236,10 @@ For lCpt = 1 to 5
 	If	lLig > 0 Then
 
 	/*------------------------------------------------------------------*/
-	/* Le cas du d$$HEX1$$e900$$ENDHEX$$lai en heure est g$$HEX1$$e900$$ENDHEX$$r$$HEX4$$e9002000e0002000$$ENDHEX$$part car on doit travailler  */
+	/* Le cas du délai en heure est géré à part car on doit travailler  */
 	/* sur des datetime et non sur des dates.                           */
 	/* De plus, on ne peut pas utiliser uniquement f_plus_date pour le  */
-	/* calcul de la date de r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence                                   */
+	/* calcul de la date de référence                                   */
 	/*------------------------------------------------------------------*/
 
 		sUnite	= idw_Delai.GetItemString ( lLig, "UNT_DEL" )
@@ -23246,7 +23252,7 @@ For lCpt = 1 to 5
 
 		If	dDteDecl < dDteMax	Then
 		/*------------------------------------------------------------------*/
-		/* La dur$$HEX1$$e900$$ENDHEX$$e maximum est d$$HEX1$$e900$$ENDHEX$$pass$$HEX1$$e900$$ENDHEX$$e, on d$$HEX1$$e900$$ENDHEX$$clenche le refus 1694.        */
+		/* La durée maximum est dépassée, on déclenche le refus 1694.        */
 		/*------------------------------------------------------------------*/
 			bRet = Uf_RF_EcrireRefus ( 1694 )
 		End If
@@ -23263,8 +23269,8 @@ protected function string uf_plaf_adhesion_annee_civile_val_achat ();//*--------
 //* Fonction		: Uf_Plaf_Adhesion_Annee_Civile_val_achat (PRIVATE)
 //* Auteur			: Catherine Abdmeziem / JFF
 //* Date				: 31/07/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PC845]PC845_NOUVPLAF
-//* Commentaires	: Application d'un plafond par Ann$$HEX1$$e900$$ENDHEX$$e civile
+//* Libellé			: [PC845]PC845_NOUVPLAF
+//* Commentaires	: Application d'un plafond par Année civile
 //*
 //* Arguments		: Aucun
 //*
@@ -23272,8 +23278,8 @@ protected function string uf_plaf_adhesion_annee_civile_val_achat ();//*--------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$sur le contr$$HEX1$$f400$$ENDHEX$$ler
+//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatrés sur les +NS, +DT, +TR
+//*								  déclenché sur le contrôler
 //*       JFF    27/07/2011  [PLAF_REF]
 //  		 JFF		29/05/2012 [VDOC6662]
 //       JFF   16/11/2015 [DT159-1]
@@ -23293,7 +23299,7 @@ String sRech, sPos, sIdAdh, sIdPara, sCptVer
 
 sPos = ""
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par sinistre.                  */
+/* On vérifie s'il existe un plafond par sinistre.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -23308,13 +23314,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -23322,7 +23328,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -23361,33 +23367,33 @@ lLig = lLigFinale
 If	lLig > 0 Then
 	lTotDetail = idw_wDetailFF.iudwDetailSource.RowCount ()
 /*------------------------------------------------------------------*/
-/* On s'occupe du d$$HEX1$$e900$$ENDHEX$$tail courant, en insertion ou en modification.  */
-/* Ce d$$HEX1$$e900$$ENDHEX$$tail ne sera pas trait$$HEX2$$e9002000$$ENDHEX$$dans la boucle.                     */
+/* On s'occupe du détail courant, en insertion ou en modification.  */
+/* Ce détail ne sera pas traité dans la boucle.                     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Modification DBI le 12/08/1998                                   */
 /*                                                                  */
-/* La zone $$HEX2$$e0002000$$ENDHEX$$prendre en compte pour le calcul du montant plafonn$$HEX4$$e900200020002000$$ENDHEX$$*/
+/* La zone à prendre en compte pour le calcul du montant plafonné   */
 /* n'est pas MT_NPLAF      mais MT_PLAF      sinon on ne            */
-/* tient pas compte des plafonds appliqu$$HEX1$$e900$$ENDHEX$$s successivement           */
+/* tient pas compte des plafonds appliqués successivement           */
 /*------------------------------------------------------------------*/
 
 //	dcMtPlaf		= idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF"   )
-// [PC845] C'est la variante de ce plafond, on garde les requ$$HEX1$$ea00$$ENDHEX$$te existante du 673 et 674, mais on ne compare
-// pas $$HEX2$$e0002000$$ENDHEX$$une valeur fixe param$$HEX1$$e800$$ENDHEX$$tr$$HEX1$$e900$$ENDHEX$$e sur le plafond, mais $$HEX2$$e0002000$$ENDHEX$$la valeur d'achat du d$$HEX1$$e900$$ENDHEX$$tail
+// [PC845] C'est la variante de ce plafond, on garde les requête existante du 673 et 674, mais on ne compare
+// pas à une valeur fixe paramètrée sur le plafond, mais à la valeur d'achat du détail
 	dcMtPlaf		= idw_wDetailFF.GetItemDecimal ( 1, "MT_VAL_ACHAT"   )
 
 	lIdDetail	= idw_wDetailFF.GetItemNumber ( 1, "ID_DETAIL" )
 
 	For	lCpt = 1 To lTotDetail
 /*------------------------------------------------------------------*/
-/* On ne traite pas le d$$HEX1$$e900$$ENDHEX$$tail courant.                              */
+/* On ne traite pas le détail courant.                              */
 /*------------------------------------------------------------------*/
 			If		idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "ID_DETAIL" ) = lIdDetail	Then
 					Continue
 			Else
 /*------------------------------------------------------------------*/
-/* Le d$$HEX1$$e900$$ENDHEX$$tail est 'REGLE' ou 'A REGLE', on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le montant       */
+/* Le détail est 'REGLE' ou 'A REGLE', on récupére le montant       */
 /* MT_PLAF.                                                         */
 /*------------------------------------------------------------------*/
 					If	( idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "COD_ETAT" ) = 500 Or &
@@ -23399,8 +23405,8 @@ If	lLig > 0 Then
 			End If
 	Next
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -23416,20 +23422,20 @@ If	lLig > 0 Then
 	itrTrans.PS_S05_W_DETAIL_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdGti, dcIdEvt, dtDteSurv, sMtAutreSinistre )
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S05_W_DETAIL_MT_PLAF" )	Then
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e.                                    */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée.                                    */
 /*------------------------------------------------------------------*/
 		sPos		= "ALT_BLOC"
 		F_Message ( stMessage )
 	Else
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine si on d$$HEX1$$e900$$ENDHEX$$passe le plafond.                           */
+/* On détermine si on dépasse le plafond.                           */
 /*------------------------------------------------------------------*/
 
 		dcMtAutreSinistre = Dec ( sMtAutreSinistre )
 //		dcPlafond			= idw_Plafond.GetItemDecimal ( lLig, "MT_PLAF" )
-// [PC845] C'est la variante de ce plafond, on garde les requ$$HEX1$$ea00$$ENDHEX$$te existante du 673 et 674, mais on ne compare
-// pas $$HEX2$$e0002000$$ENDHEX$$une valeur fixe param$$HEX1$$e800$$ENDHEX$$tr$$HEX1$$e900$$ENDHEX$$e sur le plafond, mais $$HEX2$$e0002000$$ENDHEX$$la valeur d'achat du d$$HEX1$$e900$$ENDHEX$$tail
+// [PC845] C'est la variante de ce plafond, on garde les requête existante du 673 et 674, mais on ne compare
+// pas à une valeur fixe paramètrée sur le plafond, mais à la valeur d'achat du détail
 		dcPlafond			= idw_wDetailFF.GetItemDecimal ( 1, "MT_VAL_ACHAT"   )
 
 		// [DT159-1]
@@ -23459,7 +23465,7 @@ If	lLig > 0 Then
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -23478,8 +23484,8 @@ private function string uf_plaf_adherent_annee_civile_val_achat ();//*----------
 //* Fonction		: Uf_Plaf_Adherent_Annee_Civile_val_achat (PRIVATE)
 //* Auteur			: Catherine Abdmeziem / JFF
 //* Date				: 31/07/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PC845]PC845_NOUVPLAF
-//* Commentaires	: Application d'un plafond par adh$$HEX1$$e900$$ENDHEX$$rent/Ann$$HEX1$$e900$$ENDHEX$$e civile
+//* Libellé			: [PC845]PC845_NOUVPLAF
+//* Commentaires	: Application d'un plafond par adhérent/Année civile
 //*
 //* Arguments		: Aucun
 //*
@@ -23487,8 +23493,8 @@ private function string uf_plaf_adherent_annee_civile_val_achat ();//*----------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$sur le contr$$HEX1$$f400$$ENDHEX$$ler
+//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatrés sur les +NS, +DT, +TR
+//*								  déclenché sur le contrôler
 //*       JFF    27/07/2011  [PLAF_REF]
 //  		 JFF		29/05/2012 [VDOC6662]
 //        JFF    16/11/2015 [DT159-1]
@@ -23505,7 +23511,7 @@ String		sMtAutreSinistre
 
 sPos = ""
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par adh$$HEX1$$e900$$ENDHEX$$rent.                  */
+/* On vérifie s'il existe un plafond par adhérent.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -23520,13 +23526,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -23534,7 +23540,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -23572,33 +23578,33 @@ lLig = lLigFinale
 If	lLig > 0 Then
 	lTotDetail = idw_wDetailFF.iudwDetailSource.RowCount ()
 /*------------------------------------------------------------------*/
-/* On s'occupe du d$$HEX1$$e900$$ENDHEX$$tail courant, en insertion ou en modification.  */
-/* Ce d$$HEX1$$e900$$ENDHEX$$tail ne sera pas trait$$HEX2$$e9002000$$ENDHEX$$dans la boucle.                     */
+/* On s'occupe du détail courant, en insertion ou en modification.  */
+/* Ce détail ne sera pas traité dans la boucle.                     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Modification DBI le 12/08/1998                                   */
 /*                                                                  */
-/* La zone $$HEX2$$e0002000$$ENDHEX$$prendre en compte pour le calcul du montant plafonn$$HEX4$$e900200020002000$$ENDHEX$$*/
+/* La zone à prendre en compte pour le calcul du montant plafonné   */
 /* n'est pas MT_NPLAF      mais MT_PLAF      sinon on ne            */
-/* tient pas compte des plafonds appliqu$$HEX1$$e900$$ENDHEX$$s successivement           */
+/* tient pas compte des plafonds appliqués successivement           */
 /*------------------------------------------------------------------*/
 
 //	dcMtPlaf		= idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF"   )
-// [PC845] C'est la variante de ce plafond, on garde les requ$$HEX1$$ea00$$ENDHEX$$te existante du 673 et 674, mais on ne compare
-// pas $$HEX2$$e0002000$$ENDHEX$$une valeur fixe param$$HEX1$$e800$$ENDHEX$$tr$$HEX1$$e900$$ENDHEX$$e sur le plafond, mais $$HEX2$$e0002000$$ENDHEX$$la valeur d'achat du d$$HEX1$$e900$$ENDHEX$$tail
+// [PC845] C'est la variante de ce plafond, on garde les requête existante du 673 et 674, mais on ne compare
+// pas à une valeur fixe paramètrée sur le plafond, mais à la valeur d'achat du détail
 	dcMtPlaf		= idw_wDetailFF.GetItemDecimal ( 1, "MT_VAL_ACHAT"   )
 	
 	lIdDetail	= idw_wDetailFF.GetItemNumber ( 1, "ID_DETAIL" )
 
 	For	lCpt = 1 To lTotDetail
 /*------------------------------------------------------------------*/
-/* On ne traite pas le d$$HEX1$$e900$$ENDHEX$$tail courant.                              */
+/* On ne traite pas le détail courant.                              */
 /*------------------------------------------------------------------*/
 			If		idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "ID_DETAIL" ) = lIdDetail	Then
 					Continue
 			Else
 /*------------------------------------------------------------------*/
-/* Le d$$HEX1$$e900$$ENDHEX$$tail est 'REGLE' ou 'A REGLE', on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le montant       */
+/* Le détail est 'REGLE' ou 'A REGLE', on récupére le montant       */
 /* MT_PLAF.                                                         */
 /*------------------------------------------------------------------*/
 					If	( idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "COD_ETAT" ) = 500 Or &
@@ -23611,8 +23617,8 @@ If	lLig > 0 Then
 	Next
 
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -23629,20 +23635,20 @@ If	lLig > 0 Then
 	itrTrans.PS_S06_W_DETAIL_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdsDos, dcIdGti, dcIdEvt, dtDteSurv, sMtAutreSinistre )
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S02_W_DETAIL_MT_PLAF" )	Then
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e.                                    */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée.                                    */
 /*------------------------------------------------------------------*/
 		sPos		= "ALT_BLOC"
 		F_Message ( stMessage )
 	Else
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine si on d$$HEX1$$e900$$ENDHEX$$passe le plafond.                           */
+/* On détermine si on dépasse le plafond.                           */
 /*------------------------------------------------------------------*/
 
 		dcMtAutreSinistre = Dec ( sMtAutreSinistre )
 //		dcPlafond			= idw_Plafond.GetItemDecimal ( lLig, "MT_PLAF" )
-// [PC845] C'est la variante de ce plafond, on garde les requ$$HEX1$$ea00$$ENDHEX$$te existante du 673 et 674, mais on ne compare
-// pas $$HEX2$$e0002000$$ENDHEX$$une valeur fixe param$$HEX1$$e800$$ENDHEX$$tr$$HEX1$$e900$$ENDHEX$$e sur le plafond, mais $$HEX2$$e0002000$$ENDHEX$$la valeur d'achat du d$$HEX1$$e900$$ENDHEX$$tail
+// [PC845] C'est la variante de ce plafond, on garde les requête existante du 673 et 674, mais on ne compare
+// pas à une valeur fixe paramètrée sur le plafond, mais à la valeur d'achat du détail
 		dcPlafond			= idw_wDetailFF.GetItemDecimal ( 1, "MT_VAL_ACHAT"   )
 
 		// [DT159-1]
@@ -23671,7 +23677,7 @@ If	lLig > 0 Then
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -23690,12 +23696,12 @@ public function boolean uf_controler_sanction_eco ();//*------------------------
 //* Fonction		: uf_controler_sanction_eco (PUBLIC)
 //* Auteur			: FPI
 //* Date				: 14/08/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [DT58]
-//* Commentaires	: Contr$$HEX1$$f400$$ENDHEX$$le territoire sous sanction $$HEX1$$e900$$ENDHEX$$conomique USA
+//* Libellé			: [DT58]
+//* Commentaires	: Contrôle territoire sous sanction économique USA
 //*
 //* Arguments		: 
 //*
-//* Retourne		: TRUE si on peut commander/r$$HEX1$$e900$$ENDHEX$$gler sur le dossier ; FALSE sinon
+//* Retourne		: TRUE si on peut commander/régler sur le dossier ; FALSE sinon
 //*
 //*-----------------------------------------------------------------
 Boolean bRet=TRUE
@@ -23705,7 +23711,7 @@ String sVal
 F_rechdetpro(lDeb, lFin, idw_detpro, idw_wsin.GetItemNumber(1,"ID_PROD"), "-DP", 246)
 If ldeb <= 0 Then return TRUE
 
-// R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration de la ligne indiquant que le pays de survenance est sous sanction $$HEX1$$e900$$ENDHEX$$conomique USA
+// Récupération de la ligne indiquant que le pays de survenance est sous sanction économique USA
 lRow=idw_wdivsin.Find("UPPER(NOM_ZONE)='SANCTION_ECO'",1, idw_wdivsin.RowCount())
 If lRow <=0 Then 
 		bRet=FALSE
@@ -23714,9 +23720,9 @@ If lRow <=0 Then
 End if
 
 If bRet Then
-	If idw_wdivsin.GetItemString(lRow,"VAL_CAR") = "N" Then return TRUE // Pays non concern$$HEX1$$e900$$ENDHEX$$
+	If idw_wdivsin.GetItemString(lRow,"VAL_CAR") = "N" Then return TRUE // Pays non concerné
 	
-	// R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration du r$$HEX1$$e900$$ENDHEX$$sultat de la demande d'accord Chubb
+	// Récupération du résultat de la demande d'accord Chubb
 	lRow=idw_wdivsin.Find("UPPER(NOM_ZONE)='ACCORD_CHUBB'",1, idw_wdivsin.RowCount())
 	If lRow <=0 Then 
 		bRet=FALSE
@@ -23728,13 +23734,13 @@ If bRet Then
 End if
 
 If bRet Then 
-	// Contr$$HEX1$$f400$$ENDHEX$$le du r$$HEX1$$e900$$ENDHEX$$sultat de la demande d'accord Chubb
+	// Contrôle du résultat de la demande d'accord Chubb
 	bRet=(sVal="2")
 	If not bRet Then
 		// Resultat <> "Accord"
 		Choose Case sVal
 			Case "0"
-				// Non renseign$$HEX1$$e900$$ENDHEX$$
+				// Non renseigné
 				stMessage.scode="WDET632"
 			Case "1"
 				// Demande en cours
@@ -23748,7 +23754,7 @@ End if
 
 If not bRet Then
 	// Affichage du message d'erreur
-	stmessage.stitre="Pays sous sanction $$HEX1$$e900$$ENDHEX$$conomique USA"
+	stmessage.stitre="Pays sous sanction économique USA"
 	stmessage.berreurg=FALSE
 	
 	f_message(stMessage)
@@ -23762,8 +23768,8 @@ protected function string uf_plaf_evt1397_regle_resil_adh ();//*----------------
 //* Fonction		: Uf_Plaf_Evt1397_regle_resil_adh (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 31/07/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PC845]
-//* Commentaires	: Application d'un plafond si evt 1397 r$$HEX1$$e900$$ENDHEX$$gl$$HEX1$$e900$$ENDHEX$$.
+//* Libellé			: [PC845]
+//* Commentaires	: Application d'un plafond si evt 1397 réglé.
 //*
 //* Arguments		: Aucun
 //*
@@ -23771,8 +23777,8 @@ protected function string uf_plaf_evt1397_regle_resil_adh ();//*----------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$sur le contr$$HEX1$$f400$$ENDHEX$$ler
+//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatrés sur les +NS, +DT, +TR
+//*								  déclenché sur le contrôler
 //*       JFF    27/07/2011  [PLAF_REF]
 //  		 JFF		29/05/2012 [VDOC6662]
 //       JFF   16/11/2015 [DT159-1]
@@ -23790,7 +23796,7 @@ String sRech, sPos, sIdAdh, sIdPara, sCptVer
 
 sPos = ""
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par sinistre.                  */
+/* On vérifie s'il existe un plafond par sinistre.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -23805,13 +23811,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -23819,7 +23825,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -23858,20 +23864,20 @@ lLig = lLigFinale
 If	lLig > 0 Then
 	lTotDetail = idw_wDetailFF.iudwDetailSource.RowCount ()
 /*------------------------------------------------------------------*/
-/* On s'occupe du d$$HEX1$$e900$$ENDHEX$$tail courant, en insertion ou en modification.  */
-/* Ce d$$HEX1$$e900$$ENDHEX$$tail ne sera pas trait$$HEX2$$e9002000$$ENDHEX$$dans la boucle.                     */
+/* On s'occupe du détail courant, en insertion ou en modification.  */
+/* Ce détail ne sera pas traité dans la boucle.                     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Modification DBI le 12/08/1998                                   */
 /*                                                                  */
-/* La zone $$HEX2$$e0002000$$ENDHEX$$prendre en compte pour le calcul du montant plafonn$$HEX4$$e900200020002000$$ENDHEX$$*/
+/* La zone à prendre en compte pour le calcul du montant plafonné   */
 /* n'est pas MT_NPLAF      mais MT_PLAF      sinon on ne            */
-/* tient pas compte des plafonds appliqu$$HEX1$$e900$$ENDHEX$$s successivement           */
+/* tient pas compte des plafonds appliqués successivement           */
 /*------------------------------------------------------------------*/
 
 //	dcMtPlaf		= idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF"   )
-// [PC845] C'est la variante de ce plafond, on garde les requ$$HEX1$$ea00$$ENDHEX$$te existante du 673 et 674
-// On recherche juste un evt 1397 r$$HEX1$$e900$$ENDHEX$$gl$$HEX1$$e900$$ENDHEX$$.
+// [PC845] C'est la variante de ce plafond, on garde les requête existante du 673 et 674
+// On recherche juste un evt 1397 réglé.
 	dcPlafond			= idw_Plafond.GetItemDecimal ( lLig, "MT_PLAF" )
 
 	// [DT159-1]
@@ -23892,8 +23898,8 @@ If	lLig > 0 Then
 	lIdDetail	= idw_wDetailFF.GetItemNumber ( 1, "ID_DETAIL" )
 
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -23909,20 +23915,20 @@ If	lLig > 0 Then
 	itrTrans.PS_S_W_DETAIL_MT_PLAF_EVT_REGLE ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdEvt, sMtAutreSinistre )
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S_W_DETAIL_MT_PLAF_EVT_REGLE" )	Then
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e.                                    */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée.                                    */
 /*------------------------------------------------------------------*/
 		sPos		= "ALT_BLOC"
 		F_Message ( stMessage )
 	Else
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine si on d$$HEX1$$e900$$ENDHEX$$passe le plafond.                           */
+/* On détermine si on dépasse le plafond.                           */
 /*------------------------------------------------------------------*/
 
 		dcMtAutreSinistre = Dec ( sMtAutreSinistre )
 //		dcPlafond			= idw_Plafond.GetItemDecimal ( lLig, "MT_PLAF" )
-// [PC845] C'est la variante de ce plafond, on garde les requ$$HEX1$$ea00$$ENDHEX$$te existante du 673 et 674, mais on ne compare
-// pas $$HEX2$$e0002000$$ENDHEX$$une valeur fixe param$$HEX1$$e800$$ENDHEX$$tr$$HEX1$$e900$$ENDHEX$$e sur le plafond, mais $$HEX2$$e0002000$$ENDHEX$$la valeur d'achat du d$$HEX1$$e900$$ENDHEX$$tail
+// [PC845] C'est la variante de ce plafond, on garde les requête existante du 673 et 674, mais on ne compare
+// pas à une valeur fixe paramètrée sur le plafond, mais à la valeur d'achat du détail
 
 		If	dcSommeDetail + dcMtAutreSinistre > 0 Then
 
@@ -23934,7 +23940,7 @@ If	lLig > 0 Then
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -23952,8 +23958,8 @@ private function string uf_plaf_nbev_gti_adhesion_renou_dte_surv ();//*---------
 //* Fonction		: uf_plaf_nbev_gti_adhesion_renou_dte_surv (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 04/10/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [VDOC11880]
-//* Commentaires	: Application d'un plafond par adh$$HEX1$$e900$$ENDHEX$$sion/Renouvellement (Nbre evt par ann$$HEX1$$e900$$ENDHEX$$e)
+//* Libellé			: [VDOC11880]
+//* Commentaires	: Application d'un plafond par adhésion/Renouvellement (Nbre evt par année)
 //*
 //* Arguments		: Aucun
 //*
@@ -23981,7 +23987,7 @@ String       sUntPerRnv_Adh
 
 sPos = ""
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par sinistre.                  */
+/* On vérifie s'il existe un plafond par sinistre.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -23996,13 +24002,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -24010,7 +24016,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -24048,8 +24054,8 @@ lLig = lLigFinale
 
 If	lLig > 0 Then
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -24064,7 +24070,7 @@ If	lLig > 0 Then
 	sUntPerRnv_Adh		= idw_produit.GetItemString ( 1, "UNT_PERRNV_ADH" )
 /*---------------------------------------------------------------------*/
 /* On calcule la date du dernier renouvellement.                       */
-/*En fonction de l'unit$$HEX2$$e9002000$$ENDHEX$$de periode de renouvellement (ANNEE,MOIS,JOUR)*/
+/*En fonction de l'unité de periode de renouvellement (ANNEE,MOIS,JOUR)*/
 /*---------------------------------------------------------------------*/
    Choose Case sUntPerRnv_Adh
 	   Case "A"
@@ -24092,8 +24098,8 @@ If	lLig > 0 Then
 
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S09_W_DETAIL_NBSIN" )	Then 
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e, on affiche le message.             */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée, on affiche le message.             */
 /*------------------------------------------------------------------*/
 		f_Message ( stMessage )
 		sPos = "MT_PREJ"
@@ -24120,7 +24126,7 @@ If	lLig > 0 Then
 			idw_wDetailFF.SetItem ( 1, "MT_PLAF", 0 )
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", 	"O" )
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -24144,7 +24150,7 @@ private function boolean uf_rf_1802 ();//*--------------------------------------
 //* Fonction		: u_gs_sp_sinistre_wdetail::uf_rf_1802
 //* Auteur			: Fabry JF
 //* Date				: 22/09/2016
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -24180,7 +24186,7 @@ private subroutine uf_gestion_mtvalpublique ();//*------------------------------
 //* Fonction      : u_gs_sp_Sinistre_Wdetail::uf_Gestion_MtValPublique (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 05/10/2004 14:10:05
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Gestion de la valeur $$HEX2$$e0002000$$ENDHEX$$placer dans la zone Mt_Val_Publique
+//* Libellé       : Gestion de la valeur à placer dans la zone Mt_Val_Publique
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -24208,7 +24214,7 @@ private subroutine uf_gestion_mtvalpublique ();//*------------------------------
 /*------------------------------------------------------------------*/
 /* Regle :                                                          */
 /* 																					  */
-/* - On place le prix TTC fr$$HEX1$$e900$$ENDHEX$$quent du mobile renseign$$HEX2$$e9002000$$ENDHEX$$sur la gri   */
+/* - On place le prix TTC fréquent du mobile renseigné sur la gri   */
 /* e de sinistre                                                    */
 /* s'il est issu du fichier IFR, et que le type d'appareil est      */
 /* TEL.                                                             */
@@ -24250,7 +24256,7 @@ End If
 Choose Case iCodEtatDet 
 	Case 0, 100, 1 // #2
 	
-		// Si lRow <= 0 alors PEC suite placement projet, sinon, PEC r$$HEX2$$e900e900$$ENDHEX$$l
+		// Si lRow <= 0 alors PEC suite placement projet, sinon, PEC réél
 		lRow = idw_wDivDet.Find ( "ID_GTI = " + String ( lIdGti ) + " AND " + &
 										 "ID_DETAIL = " + String ( lIdDetail ) + " AND " + &
 										 "UPPER ( NOM_ZONE ) = 'ALT_PLAF_PEC' " + " AND " + &
@@ -24267,11 +24273,11 @@ Choose Case iCodEtatDet
 		End IF
 				
 /*------------------------------------------------------------------*/
-/* Suite entretien JFF/MGA le 15/02 ci-dessous la r$$HEX1$$e800$$ENDHEX$$gle de maj      */
-/* d$$HEX1$$e900$$ENDHEX$$finit pour le montant de la valeur publique de chaque d$$HEX1$$e900$$ENDHEX$$tail.  */
-/* Le montant IFR se met $$HEX2$$e0002000$$ENDHEX$$jour si ( Aucune commande/R$$HEX1$$e900$$ENDHEX$$paration     */
-/* n'a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$cr$$HEX3$$e900e9002000$$ENDHEX$$ET qu'aucun r$$HEX1$$e900$$ENDHEX$$glement n'a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$effectu$$HEX2$$e9002000$$ENDHEX$$sur le       */
-/* dossier ) OU si le d$$HEX1$$e900$$ENDHEX$$tail et en cr$$HEX1$$e900$$ENDHEX$$ation.                        */
+/* Suite entretien JFF/MGA le 15/02 ci-dessous la règle de maj      */
+/* définit pour le montant de la valeur publique de chaque détail.  */
+/* Le montant IFR se met à jour si ( Aucune commande/Réparation     */
+/* n'a été créé ET qu'aucun réglement n'a été effectué sur le       */
+/* dossier ) OU si le détail et en création.                        */
 /*------------------------------------------------------------------*/
 /*
 		bAutoriserMajValPub = 	 	( idw_LstCmdeSin.RowCount () <= 0 And &
@@ -24281,7 +24287,7 @@ Choose Case iCodEtatDet
 											  Or ibInsert
 */
 
-		// #3 dcMtPrixFrequent <=0 g$$HEX1$$e800$$ENDHEX$$re les cas du scripting.
+		// #3 dcMtPrixFrequent <=0 gère les cas du scripting.
 		bAutoriserMajValPub = ibInsert Or dcMtPrixFrequent <=0 Or IsNull ( dcMtPrixFrequent  )
 									 
 		If Not bAutoriserMajValPub Then Return
@@ -24315,7 +24321,7 @@ If bAutoriserSaisie Then
 			End If 
 			
 		Case Else
-			// rien $$HEX2$$e0002000$$ENDHEX$$faire.			
+			// rien à faire.			
 	End Choose
 	
 End If
@@ -24382,7 +24388,7 @@ End If
 //* :#5 [DCMP080401].SAISIE_VAL_PUBLIQUE
 
 /*------------------------------------------------------------------*/
-/* Si la ligne n'est pas trouv$$HEX2$$e9002000$$ENDHEX$$-> 0 Euro									  */
+/* Si la ligne n'est pas trouvé -> 0 Euro									  */
 /*------------------------------------------------------------------*/
 If isReferentiel = "" Then 
 	idw_wDetailFF.SetItem ( 1, "MT_VAL_PUBLIQUE", 0 )
@@ -24396,17 +24402,17 @@ If isReferentiel = "IFR" And bAutoriserSaisie Then
 End If 
 
 /*------------------------------------------------------------------*/
-/* L'appareil n'est pas un t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone, donc on permet l'ouverture.   */
+/* L'appareil n'est pas un téléphone, donc on permet l'ouverture.   */
 /*------------------------------------------------------------------*/
 Choose Case isReferentiel
 	Case "IFR"
 		
 		dcMtPrixFrequent = 0 
 		
-		// #3 On cherche d'abord sur Div_sin si un VP a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$m$$HEX1$$e900$$ENDHEX$$moris$$HEX1$$e900$$ENDHEX$$e
+		// #3 On cherche d'abord sur Div_sin si un VP a été mémorisée
 		lRowDS = idw_wDivSin.Find ( "NOM_ZONE = 'mt_val_publique'", 1, idw_wDivSin.RowCount () )				
 
-		// #3 On la lis le cas $$HEX1$$e900$$ENDHEX$$ch$$HEX1$$e900$$ENDHEX$$ant
+		// #3 On la lis le cas échéant
 		If lRowDS > 0 Then
 			dcMtPrixFrequent = idw_wDivSin.GetItemDecimal ( lRowDS, "VAL_MT" )
 		End If
@@ -24415,7 +24421,7 @@ Choose Case isReferentiel
 		If dcMtPrixFrequent = 0 Or IsNull ( dcMtPrixFrequent ) Then
 			lRowDS = idw_LstDetail.Find ( "MT_VAL_PUBLIQUE > 0", 1, idw_LstDetail.RowCount () )
 
-			// #3 On la lis le cas $$HEX1$$e900$$ENDHEX$$ch$$HEX1$$e900$$ENDHEX$$ant
+			// #3 On la lis le cas échéant
 			If lRowDS > 0 Then
 				dcMtPrixFrequent = idw_LstDetail.GetItemDecimal ( lRowDS, "MT_VAL_PUBLIQUE" )
 			End IF
@@ -24440,7 +24446,7 @@ Choose Case isReferentiel
 		// [RS2980_IFR]
 			sCodeRetPrixIfrSav = gsCodeRetPrixIfr 
 			
-			gsCodeRetPrixIfr = "" // On r$$HEX1$$e900$$ENDHEX$$initialise puisqu'on rappelle
+			gsCodeRetPrixIfr = "" // On réinitialise puisqu'on rappelle
 				
 			sCodeRet = Space ( 20 )
 			
@@ -24455,7 +24461,7 @@ Choose Case isReferentiel
 				If sCodeRetPrixIfrSav = "" Then 
 					bFin = False
 					Do While Not bFin
-						stMessage.sTitre		= "RS2980 : Prix IFR $$HEX2$$e0002000$$ENDHEX$$revoir"
+						stMessage.sTitre		= "RS2980 : Prix IFR à revoir"
 						stMessage.Icon			= Exclamation!
 						stMessage.bErreurG	= FALSE
 						stMessage.Bouton		= YESNO!
@@ -24480,18 +24486,18 @@ Choose Case isReferentiel
 
 		End If 
 		/*------------------------------------------------------------------*/
-		/* Dernier contr$$HEX1$$f400$$ENDHEX$$le : On n'applique la date que si le dossier a     */
-		/* $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$cr$$HEX3$$e900e9002000$$ENDHEX$$post$$HEX1$$e900$$ENDHEX$$rieurement $$HEX2$$e0002000$$ENDHEX$$la mep du projet Equiv. Fct. Vu avec  */
+		/* Dernier contrôle : On n'applique la date que si le dossier a     */
+		/* été créé postérieurement à la mep du projet Equiv. Fct. Vu avec  */
 		/* C. Chauvin le 28/10/2004                                         */
 		/*------------------------------------------------------------------*/
 		/* Date de mise en production de l'Equiv Fct.                       */
 		/*------------------------------------------------------------------*/
-			/* D$$HEX1$$e900$$ENDHEX$$but nouveau code #1
-				Dans tous les cas $$HEX2$$e0002000$$ENDHEX$$pr$$HEX1$$e900$$ENDHEX$$sent, si le r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rentiel est IFR (et mobile existe)
+			/* Début nouveau code #1
+				Dans tous les cas à présent, si le référentiel est IFR (et mobile existe)
 				on place le montant prix public.
-				En aval, lors de la commande puis du r$$HEX1$$e900$$ENDHEX$$glement, on utilisera cette valeur 
-				si pr$$HEX1$$e900$$ENDHEX$$sence plafond 675.
-				Si EQF d$$HEX1$$e900$$ENDHEX$$connect$$HEX1$$e900$$ENDHEX$$e, on peut tout m$$HEX1$$ea00$$ENDHEX$$me utiliser le prix IFR pour plafonner sur plafond ASSURER.
+				En aval, lors de la commande puis du réglement, on utilisera cette valeur 
+				si présence plafond 675.
+				Si EQF déconnectée, on peut tout même utiliser le prix IFR pour plafonner sur plafond ASSURER.
 				A l'inverse, on pourra avoir l'EQF et le plafond 675 absent.	
 			*/
 			
@@ -24569,7 +24575,7 @@ Choose Case isReferentiel
 
 	Case "REF_CODIC_DARTY"
 		idw_wDetailFF.SetItem ( 1, "MT_VAL_PUBLIQUE", 0 )
-		/* #5 [DCMP080401].SAISIE_VAL_PUBLIQUE (code remont$$HEX2$$e9002000$$ENDHEX$$en haut)
+		/* #5 [DCMP080401].SAISIE_VAL_PUBLIQUE (code remonté en haut)
 		If	isTypeTrt = "S" And bAutoriserSaisie Then
 			idw_wDetailFF.Uf_Proteger ( { "MT_VAL_PUBLIQUE" } , "0" ) // #4
 		End If 
@@ -24593,8 +24599,8 @@ private function string uf_plaf_adhesion_annee_civile_tt_gti ();//*-------------
 //* Fonction		: Uf_Plaf_Adhesion_Annee_Civile_tt_gti (PRIVATE)
 //* Auteur			: FABRY JF
 //* Date				: 04/10/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [VDOC24781]
-//* Commentaires	: Application d'un plafond par Ann$$HEX1$$e900$$ENDHEX$$e civile
+//* Libellé			: [VDOC24781]
+//* Commentaires	: Application d'un plafond par Année civile
 //*
 //* Arguments		: Aucun
 //*
@@ -24602,8 +24608,8 @@ private function string uf_plaf_adhesion_annee_civile_tt_gti ();//*-------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$sur le contr$$HEX1$$f400$$ENDHEX$$ler
+//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatrés sur les +NS, +DT, +TR
+//*								  déclenché sur le contrôler
 //*       JFF    27/07/2011  [PLAF_REF]
 //  		 JFF		29/05/2012 [VDOC6662]
 //        JFF    16/11/2015  [DT159-1]
@@ -24623,7 +24629,7 @@ String sRech, sPos, sIdAdh, sIdPara, sCptVer
 
 sPos = ""
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par sinistre.                  */
+/* On vérifie s'il existe un plafond par sinistre.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -24638,13 +24644,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -24652,7 +24658,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -24691,15 +24697,15 @@ lLig = lLigFinale
 If	lLig > 0 Then
 	lTotDetail = idw_wDetailFF.iudwDetailSource.RowCount ()
 /*------------------------------------------------------------------*/
-/* On s'occupe du d$$HEX1$$e900$$ENDHEX$$tail courant, en insertion ou en modification.  */
-/* Ce d$$HEX1$$e900$$ENDHEX$$tail ne sera pas trait$$HEX2$$e9002000$$ENDHEX$$dans la boucle.                     */
+/* On s'occupe du détail courant, en insertion ou en modification.  */
+/* Ce détail ne sera pas traité dans la boucle.                     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Modification DBI le 12/08/1998                                   */
 /*                                                                  */
-/* La zone $$HEX2$$e0002000$$ENDHEX$$prendre en compte pour le calcul du montant plafonn$$HEX4$$e900200020002000$$ENDHEX$$*/
+/* La zone à prendre en compte pour le calcul du montant plafonné   */
 /* n'est pas MT_NPLAF      mais MT_PLAF      sinon on ne            */
-/* tient pas compte des plafonds appliqu$$HEX1$$e900$$ENDHEX$$s successivement           */
+/* tient pas compte des plafonds appliqués successivement           */
 /*------------------------------------------------------------------*/
 
 	dcMtPlaf		= idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF"   )
@@ -24707,13 +24713,13 @@ If	lLig > 0 Then
 
 	For	lCpt = 1 To lTotDetail
 /*------------------------------------------------------------------*/
-/* On ne traite pas le d$$HEX1$$e900$$ENDHEX$$tail courant.                              */
+/* On ne traite pas le détail courant.                              */
 /*------------------------------------------------------------------*/
 			If		idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "ID_DETAIL" ) = lIdDetail	Then
 					Continue
 			Else
 /*------------------------------------------------------------------*/
-/* Le d$$HEX1$$e900$$ENDHEX$$tail est 'REGLE' ou 'A REGLE', on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le montant       */
+/* Le détail est 'REGLE' ou 'A REGLE', on récupére le montant       */
 /* MT_PLAF.                                                         */
 /*------------------------------------------------------------------*/
 					If	( idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "COD_ETAT" ) = 500 Or &
@@ -24725,8 +24731,8 @@ If	lLig > 0 Then
 			End If
 	Next
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -24742,14 +24748,14 @@ If	lLig > 0 Then
 	itrTrans.PS_S05_W_DETAIL_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdGti, dcIdEvt, dtDteSurv, sMtAutreSinistre )
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S05_W_DETAIL_MT_PLAF" )	Then
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e.                                    */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée.                                    */
 /*------------------------------------------------------------------*/
 		sPos		= "ALT_BLOC"
 		F_Message ( stMessage )
 	Else
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine si on d$$HEX1$$e900$$ENDHEX$$passe le plafond.                           */
+/* On détermine si on dépasse le plafond.                           */
 /*------------------------------------------------------------------*/
 
 		dcMtAutreSinistre = Dec ( sMtAutreSinistre )
@@ -24782,7 +24788,7 @@ If	lLig > 0 Then
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -24801,8 +24807,8 @@ private function boolean uf_rf_97 ();//*----------------------------------------
 //* Fonction		: Uf_Rf_97 (PRIVATE)
 //* Auteur			: FABRY JF
 //* Date				: 19/01/2018
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Ev$$HEX1$$e900$$ENDHEX$$nement non couvert
+//* Libellé			: 
+//* Commentaires	: Evénement non couvert
 //*
 //* Arguments		: Aucun
 //*
@@ -24819,8 +24825,8 @@ String sRech, sChaineBcv, sVal
 Boolean bRet
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche ce motif si l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement saisi n'est pas couvert.    */
-/* On envoie le test uniquement si la r$$HEX1$$e900$$ENDHEX$$vision est connue.          */
+/* On déclenche ce motif si l'événement saisi n'est pas couvert.    */
+/* On envoie le test uniquement si la révision est connue.          */
 /*------------------------------------------------------------------*/
 bRet = True
 lIdGti  = idw_wDetailFF.GetItemNumber ( 1, "ID_GTI" )
@@ -24849,7 +24855,7 @@ If	idw_wSin.GetItemNumber ( 1, "ID_REV" ) <> -1	Then
 	lLig = idw_Condition.Find ( sRech, 1, lTotCondition )
 
 /*------------------------------------------------------------------*/
-/* L'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement n'est pas couvert, on d$$HEX1$$e900$$ENDHEX$$clenche le refus.            */
+/* L'événement n'est pas couvert, on déclenche le refus.            */
 /*------------------------------------------------------------------*/
 	If	lLig = 0 Then
 		bRet = Uf_RF_EcrireRefus ( 97 )
@@ -24869,7 +24875,7 @@ private function boolean uf_rf_dp307 ();//*-------------------------------------
 //* Fonction		: u_gs_sp_sinistre_wdetail::uf_rf_dp307
 //* Auteur			: FPI
 //* Date				: 18/07/2018
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [VDOC26406]
 //*
 //* Arguments		: 
@@ -24910,7 +24916,7 @@ private function long uf_zn_trt_divdet_souplesse (string asdata, string asnomcol
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_Souplesse (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 25/09/2018
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [DT344]
+//* Libellé			: [DT344]
 //* Commentaires	: 
 //*
 //* Arguments		: String 		asData			Val
@@ -24952,8 +24958,8 @@ private function string uf_plaf_adhesion_renouv_typepers ();//*-----------------
 //* Fonction		: uf_plaf_adhesion_renouv_typepers (PRIVATE)
 //* Auteur			: FABRYJF
 //* Date				: 17/10/2018 15:07:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Application d'un plafond par adh$$HEX1$$e900$$ENDHEX$$sion/Ann$$HEX1$$e900$$ENDHEX$$e renouvellement et par type de personne
+//* Libellé			: 
+//* Commentaires	: Application d'un plafond par adhésion/Année renouvellement et par type de personne
 //*
 //* Arguments		: Aucun
 //*
@@ -24961,8 +24967,8 @@ private function string uf_plaf_adhesion_renouv_typepers ();//*-----------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$sur le contr$$HEX1$$f400$$ENDHEX$$ler
+//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatrés sur les +NS, +DT, +TR
+//*								  déclenché sur le contrôler
 //*       JFF    27/07/2011  [PLAF_REF]
 //  		 JFF	  29/05/2012 [VDOC6662]
 //        JFF    16/11/2015 [DT159-1]
@@ -24981,7 +24987,7 @@ String       sUntPerRnv_Adh, sTypePersonne
 
 sPos = ""
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par sinistre.                  */
+/* On vérifie s'il existe un plafond par sinistre.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -24996,13 +25002,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -25010,7 +25016,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -25049,15 +25055,15 @@ lLig = lLigFinale
 If	lLig > 0 Then
 	lTotDetail = idw_wDetailFF.iudwDetailSource.RowCount ()
 /*------------------------------------------------------------------*/
-/* On s'occupe du d$$HEX1$$e900$$ENDHEX$$tail courant, en insertion ou en modification.  */
-/* Ce d$$HEX1$$e900$$ENDHEX$$tail ne sera pas trait$$HEX2$$e9002000$$ENDHEX$$dans la boucle.                     */
+/* On s'occupe du détail courant, en insertion ou en modification.  */
+/* Ce détail ne sera pas traité dans la boucle.                     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Modification DBI le 12/08/1998                                   */
 /*                                                                  */
-/* La zone $$HEX2$$e0002000$$ENDHEX$$prendre en compte pour le calcul du montant plafonn$$HEX4$$e900200020002000$$ENDHEX$$*/
+/* La zone à prendre en compte pour le calcul du montant plafonné   */
 /* n'est pas MT_NPLAF      mais MT_PLAF      sinon on ne            */
-/* tient pas compte des plafonds appliqu$$HEX1$$e900$$ENDHEX$$s successivement           */
+/* tient pas compte des plafonds appliqués successivement           */
 /*------------------------------------------------------------------*/
 
 	dcMtPlaf		= idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF"   )
@@ -25065,13 +25071,13 @@ If	lLig > 0 Then
 
 	For	lCpt = 1 To lTotDetail
 /*------------------------------------------------------------------*/
-/* On ne traite pas le d$$HEX1$$e900$$ENDHEX$$tail courant.                              */
+/* On ne traite pas le détail courant.                              */
 /*------------------------------------------------------------------*/
 			If		idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "ID_DETAIL" ) = lIdDetail	Then
 					Continue
 			Else
 /*------------------------------------------------------------------*/
-/* Le d$$HEX1$$e900$$ENDHEX$$tail est 'REGLE' ou 'A REGLE', on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le montant       */
+/* Le détail est 'REGLE' ou 'A REGLE', on récupére le montant       */
 /* MT_PLAF.                                                         */
 /*------------------------------------------------------------------*/
 					If	( idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "COD_ETAT" ) = 500 Or &
@@ -25084,8 +25090,8 @@ If	lLig > 0 Then
 	Next
 
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -25108,7 +25114,7 @@ If	lLig > 0 Then
    sUntPerRnv_Adh		= idw_produit.GetItemString ( 1, "UNT_PERRNV_ADH" )
 /*----------------------------------------------------------------------*/
 /* On calcule la date du dernier renouvellement.                        */
-/* En fonction de l'unit$$HEX2$$e9002000$$ENDHEX$$de periode de renouvellement (ANNEE,MOIS,JOUR)*/
+/* En fonction de l'unité de periode de renouvellement (ANNEE,MOIS,JOUR)*/
 /*----------------------------------------------------------------------*/
    Choose Case sUntPerRnv_Adh
 	   Case "A"
@@ -25135,14 +25141,14 @@ If	lLig > 0 Then
 	itrTrans.PS_S_W_DETAIL_MT_PLAF_756 ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, sTypePersonne, dcIdGti, dcIdEvt, dtDteSurv, dtDteAdhRenouv, sMtAutreSinistre )
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S03_W_DETAIL_MT_PLAF" )	Then
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e.                                    */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée.                                    */
 /*------------------------------------------------------------------*/
 		sPos		= "ALT_BLOC"
 		F_Message ( stMessage )
 	Else
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine si on d$$HEX1$$e900$$ENDHEX$$passe le plafond.                           */
+/* On détermine si on dépasse le plafond.                           */
 /*------------------------------------------------------------------*/
 
 		dcMtAutreSinistre = Dec ( sMtAutreSinistre )
@@ -25168,7 +25174,7 @@ If	lLig > 0 Then
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -25187,7 +25193,7 @@ private function long uf_zn_trt_divdet_refusscb (string asdata, string asnomcol,
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivDet_RefusSCB (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 24/05/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [DT391-1]
+//* Libellé			: [DT391-1]
 //* Commentaires	: 
 //*
 //* Arguments		: String 		asData			Val
@@ -25223,10 +25229,10 @@ private subroutine uf_controlergestion_franchise_cb_extr (ref string aspos);//*-
 //* Fonction		: Uf_ControlerGestion_Franchise_CB_EXTR (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 03/10/2019 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PM462-1][V3]
-//* Commentaires	: Contr$$HEX1$$f400$$ENDHEX$$les li$$HEX1$$e900$$ENDHEX$$s au remboursement de Franchise CB Extranet
+//* Libellé			: [PM462-1][V3]
+//* Commentaires	: Contrôles liés au remboursement de Franchise CB Extranet
 //*
-//* Arguments		: String		asPos		R$$HEX1$$e900$$ENDHEX$$f.
+//* Arguments		: String		asPos		Réf.
 //*
 //* Retourne		: Rien
 //*
@@ -25245,7 +25251,7 @@ lIdEvt = idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" )
 Choose Case lIdEvt 
 	Case 1461 	
 	
-		// 1/ Contr$$HEX1$$f400$$ENDHEX$$le sur l$$HEX1$$1920$$ENDHEX$$evt : On autorise si la SUM des reglements CB (+/-) > 0 car si =0, plus rien n$$HEX1$$1920$$ENDHEX$$est $$HEX2$$e0002000$$ENDHEX$$rembourser.
+		// 1/ Contrôle sur l’evt : On autorise si la SUM des reglements CB (+/-) > 0 car si =0, plus rien n’est à rembourser.
 		lRet = SQLCA.PS_I_PM462_1_CTRLE_REMB_FRANCHISE ( dcIdSin, "SUM_FRANCHISE_CB_REG_POSITIF", dcMtFranCBprej )
 		
 		If lRet < 0 Then
@@ -25259,14 +25265,14 @@ Choose Case lIdEvt
 		End If 
 		
 		
-		// 2/ Le remboursement d$$HEX1$$1920$$ENDHEX$$une franchise sur l$$HEX1$$1920$$ENDHEX$$evt (le montant) doit correspondre $$HEX2$$e0002000$$ENDHEX$$un des montants de franche CB/EXTR existant dans reglement.
+		// 2/ Le remboursement d’une franchise sur l’evt (le montant) doit correspondre à un des montants de franche CB/EXTR existant dans reglement.
 		lRet = SQLCA.PS_I_PM462_1_CTRLE_REMB_FRANCHISE ( dcIdSin, "FRANCHISE_EGALE_AMU_MT_CB_DS_REGL", dcMtFranCBprej )
 		
 		If lRet < 0 Then
 			asPos = "ID_I_REG"
 			stMessage.bErreurG	= FALSE
 			stMessage.sCode		= "WDET674"
-			stMessage.sVar[1]    = String ( dcMtFranCBprej ) + "$$HEX1$$ac20$$ENDHEX$$"
+			stMessage.sVar[1]    = String ( dcMtFranCBprej ) + "€"
 			stMessage.Icon			= Exclamation!
 			stMessage.bouton = Ok!
 			F_Message ( stMessage )
@@ -25274,31 +25280,31 @@ Choose Case lIdEvt
 		End If 
 		
 		
-		// 3/ La SUM des reglements CB (+/-) > 0 + le pr$$HEX1$$e900$$ENDHEX$$sent remboursement (n$$HEX1$$e900$$ENDHEX$$gatif) ne doit as donner un nombre n$$HEX1$$e900$$ENDHEX$$gatif, sinon, interdire (probl$$HEX1$$e800$$ENDHEX$$me cas anormal). Cela doit rester positif ou nulle (0)
+		// 3/ La SUM des reglements CB (+/-) > 0 + le présent remboursement (négatif) ne doit as donner un nombre négatif, sinon, interdire (problème cas anormal). Cela doit rester positif ou nulle (0)
 		lRet = SQLCA.PS_I_PM462_1_CTRLE_REMB_FRANCHISE ( dcIdSin, "SUM_FRANCHISE_CB_PLUS_MT_PREJ_POSITIF_OU_ZERO", dcMtFranCBprej )
 		
 		If lRet < 0 Then
 			asPos = "ID_I_REG"
 			stMessage.bErreurG	= FALSE
 			stMessage.sCode		= "WDET675"
-			stMessage.sVar[1]    = String ( dcMtFranCBprej ) + "$$HEX1$$ac20$$ENDHEX$$"
+			stMessage.sVar[1]    = String ( dcMtFranCBprej ) + "€"
 			stMessage.Icon			= Exclamation!
 			stMessage.bouton = Ok!
 			F_Message ( stMessage )
 			Return
 		End If 
 		
-		// 5/ Forcer le r$$HEX1$$e800$$ENDHEX$$glement sur l$$HEX1$$1920$$ENDHEX$$evt 1461 pour r$$HEX1$$e900$$ENDHEX$$gler la franchise et supprimer ce for$$HEX1$$e700$$ENDHEX$$age par la suite.
+		// 5/ Forcer le règlement sur l’evt 1461 pour régler la franchise et supprimer ce forçage par la suite.
 		idw_wDetailFF.SetItem ( 1, "ALT_REG", "O" )
 
 	Case Else
-		// 4/ A contr$$HEX1$$f400$$ENDHEX$$ler sur un RN : si le montant de l$$HEX1$$1920$$ENDHEX$$evt (quel qu$$HEX1$$1920$$ENDHEX$$il soit) soit $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$un des montants de Franchise pay$$HEX1$$e900$$ENDHEX$$, alors avertir le GT par un message $$HEX2$$ab002000$$ENDHEX$$Erreur ou Ok ? $$HEX3$$bb0009000900$$ENDHEX$$
+		// 4/ A contrôler sur un RN : si le montant de l’evt (quel qu’il soit) soit égale à un des montants de Franchise payé, alors avertir le GT par un message « Erreur ou Ok ? »		
 		lRet = SQLCA.PS_I_PM462_1_CTRLE_REMB_FRANCHISE ( dcIdSin, "RN_REEL_OU_REMB_FRANCHISE", dcMtFranCBprej )
 		
 		If lRet < 0 Then
 			stMessage.bErreurG	= FALSE
 			stMessage.sCode		= "WDET676"
-			stMessage.sVar[1]    = String ( dcMtFranCBprej ) + "$$HEX1$$ac20$$ENDHEX$$"
+			stMessage.sVar[1]    = String ( dcMtFranCBprej ) + "€"
 			stMessage.Icon			= Exclamation!
 			stMessage.bouton = YESNO!
 			If F_Message ( stMessage ) = 2 Then	asPos = "ID_I_REG"
@@ -25320,8 +25326,8 @@ public function string uf_plaf_adhesion_survenance_ttegti ();//*----------------
 //* Fonction		: Uf_Plaf_Adhesion_Survenance_TteGti (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 26/11/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PC192290]
-//* Commentaires	: Application d'un plafond par adh$$HEX1$$e900$$ENDHEX$$sion/Ann$$HEX1$$e900$$ENDHEX$$e survenace glissante
+//* Libellé			: [PC192290]
+//* Commentaires	: Application d'un plafond par adhésion/Année survenace glissante
 //*
 //* Arguments		: Aucun
 //*
@@ -25329,8 +25335,8 @@ public function string uf_plaf_adhesion_survenance_ttegti ();//*----------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$sur le contr$$HEX1$$f400$$ENDHEX$$ler
+//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatrés sur les +NS, +DT, +TR
+//*								  déclenché sur le contrôler
 //* #2	 JFF	  22/03/2005  DCMP 050003.
 //*       JFF    27/07/2011  [PLAF_REF]
 //  		 JFF	  29/05/2012  [VDOC6662]
@@ -25346,7 +25352,7 @@ n_cst_string lnvPFCString
 sPos = ""
 
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par sinistre.                  */
+/* On vérifie s'il existe un plafond par sinistre.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -25361,13 +25367,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -25375,7 +25381,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -25415,15 +25421,15 @@ If	lLig > 0 Then
 	
 	lTotDetail = idw_wDetailFF.iudwDetailSource.RowCount ()
 /*------------------------------------------------------------------*/
-/* On s'occupe du d$$HEX1$$e900$$ENDHEX$$tail courant, en insertion ou en modification.  */
-/* Ce d$$HEX1$$e900$$ENDHEX$$tail ne sera pas trait$$HEX2$$e9002000$$ENDHEX$$dans la boucle.                     */
+/* On s'occupe du détail courant, en insertion ou en modification.  */
+/* Ce détail ne sera pas traité dans la boucle.                     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Modification DBI le 12/08/1998                                   */
 /*                                                                  */
-/* La zone $$HEX2$$e0002000$$ENDHEX$$prendre en compte pour le calcul du montant plafonn$$HEX4$$e900200020002000$$ENDHEX$$*/
+/* La zone à prendre en compte pour le calcul du montant plafonné   */
 /* n'est pas MT_NPLAF      mais MT_PLAF      sinon on ne            */
-/* tient pas compte des plafonds appliqu$$HEX1$$e900$$ENDHEX$$s successivement           */
+/* tient pas compte des plafonds appliqués successivement           */
 /*------------------------------------------------------------------*/
 
 	dcMtPlaf		= idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF"   )
@@ -25431,13 +25437,13 @@ If	lLig > 0 Then
 
 	For	lCpt = 1 To lTotDetail
 /*------------------------------------------------------------------*/
-/* On ne traite pas le d$$HEX1$$e900$$ENDHEX$$tail courant.                              */
+/* On ne traite pas le détail courant.                              */
 /*------------------------------------------------------------------*/
 			If		idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "ID_DETAIL" ) = lIdDetail	Then
 					Continue
 			Else
 /*------------------------------------------------------------------*/
-/* Le d$$HEX1$$e900$$ENDHEX$$tail est 'REGLE' ou 'A REGLE', on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le montant       */
+/* Le détail est 'REGLE' ou 'A REGLE', on récupére le montant       */
 /* MT_PLAF.                                                         */
 /*------------------------------------------------------------------*/
 					If	( idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "COD_ETAT" ) = 500 Or &
@@ -25450,8 +25456,8 @@ If	lLig > 0 Then
 	Next	
 	
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -25466,22 +25472,22 @@ If	lLig > 0 Then
 	itrTrans.PS_S734_W_DETAIL_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdEvt, dtDteSurv, sMtAutreSinistre )
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S734_W_DETAIL_MT_PLAF" )	Then 
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e, on affiche le message.             */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée, on affiche le message.             */
 /*------------------------------------------------------------------*/
 		f_Message ( stMessage )
 		sPos = "MT_PROV"
 	Else
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine si on d$$HEX1$$e900$$ENDHEX$$passe le plafond.                           */
+/* On détermine si on dépasse le plafond.                           */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
 /* Modification DBI le 12/08/1998                                   */
 /*                                                                  */
-/* La zone $$HEX2$$e0002000$$ENDHEX$$prendre en compte pour le calcul du montant plafonn$$HEX4$$e900200020002000$$ENDHEX$$*/
+/* La zone à prendre en compte pour le calcul du montant plafonné   */
 /* n'est pas MT_NPLAF_AREG mais MT_PLAF_AREG sinon on ne            */
-/* tient pas compte des plafonds appliqu$$HEX1$$e900$$ENDHEX$$s successivement           */
+/* tient pas compte des plafonds appliqués successivement           */
 /*------------------------------------------------------------------*/
 
 		dcMtAutreSinistre = Dec ( sMtAutreSinistre )
@@ -25514,7 +25520,7 @@ If	lLig > 0 Then
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -25539,7 +25545,7 @@ public subroutine uf_gestong_divers_caspart_liste (string asnomzone, long alidpr
 //* Fonction      : u_gs_sp_sinistre_wdetail::uf_GestOng_Divers_CasPart_Liste (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 29/09/2004 11:13:57
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Gestion des cas particuliers lors du chargement des listes l'onglet divers
+//* Libellé       : Gestion des cas particuliers lors du chargement des listes l'onglet divers
 //* Commentaires  : 
 //*
 //* Arguments		: String			asNomZone		Val
@@ -25588,8 +25594,8 @@ public function string uf_plaf_adhesion_survenance_gtidp351 ();//*--------------
 //* Fonction		: Uf_Plaf_Adhesion_Survenance_GtiDp351 (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 08/09/2020
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PC202551]
-//* Commentaires	: Application d'un plafond par adh$$HEX1$$e900$$ENDHEX$$sion/Ann$$HEX1$$e900$$ENDHEX$$e survenace glissante
+//* Libellé			: [PC202551]
+//* Commentaires	: Application d'un plafond par adhésion/Année survenace glissante
 //*
 //* Arguments		: Aucun
 //*
@@ -25597,8 +25603,8 @@ public function string uf_plaf_adhesion_survenance_gtidp351 ();//*--------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatr$$HEX1$$e900$$ENDHEX$$s sur les +NS, +DT, +TR
-//*								  d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$sur le contr$$HEX1$$f400$$ENDHEX$$ler
+//* #1 	 JFF    11/04/2003  Traitement des Plafonds paramatrés sur les +NS, +DT, +TR
+//*								  déclenché sur le contrôler
 //* #2	 JFF	  22/03/2005  DCMP 050003.
 //*       JFF    27/07/2011  [PLAF_REF]
 //  		 JFF	  29/05/2012  [VDOC6662]
@@ -25614,7 +25620,7 @@ n_cst_string lnvPFCString
 sPos = ""
 
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond par sinistre.                  */
+/* On vérifie s'il existe un plafond par sinistre.                  */
 /*------------------------------------------------------------------*/
 lTotPlaf = idw_Plafond.RowCount ()
 dcPlafSav = 0
@@ -25629,13 +25635,13 @@ For lCpt = 2 to 5
 			sIdNivPlaf = "+NS"  // Nature de sinistre
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
 		Case 3
-			sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+			sIdNivPlaf = "+TR"  // Territorialité
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
 		Case 4
-			sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+			sIdNivPlaf = "+DT"  // Détail
 			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
 		Case 5
-			sIdNivPlaf = "+EV"  // Ev$$HEX1$$e900$$ENDHEX$$nement de garantie
+			sIdNivPlaf = "+EV"  // Evénement de garantie
 			sIdRefPlaf = String (idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) )
 
 	End Choose
@@ -25643,7 +25649,7 @@ For lCpt = 2 to 5
 	If IsNull ( sIdRefPlaf ) Then Continue
 
 	/*------------------------------------------------------------------*/
-	/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe un plafond										  */
+	/* On vérifie s'il existe un plafond										  */
 	/*------------------------------------------------------------------*/
 	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -25683,15 +25689,15 @@ If	lLig > 0 Then
 	
 	lTotDetail = idw_wDetailFF.iudwDetailSource.RowCount ()
 /*------------------------------------------------------------------*/
-/* On s'occupe du d$$HEX1$$e900$$ENDHEX$$tail courant, en insertion ou en modification.  */
-/* Ce d$$HEX1$$e900$$ENDHEX$$tail ne sera pas trait$$HEX2$$e9002000$$ENDHEX$$dans la boucle.                     */
+/* On s'occupe du détail courant, en insertion ou en modification.  */
+/* Ce détail ne sera pas traité dans la boucle.                     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Modification DBI le 12/08/1998                                   */
 /*                                                                  */
-/* La zone $$HEX2$$e0002000$$ENDHEX$$prendre en compte pour le calcul du montant plafonn$$HEX4$$e900200020002000$$ENDHEX$$*/
+/* La zone à prendre en compte pour le calcul du montant plafonné   */
 /* n'est pas MT_NPLAF      mais MT_PLAF      sinon on ne            */
-/* tient pas compte des plafonds appliqu$$HEX1$$e900$$ENDHEX$$s successivement           */
+/* tient pas compte des plafonds appliqués successivement           */
 /*------------------------------------------------------------------*/
 
 	dcMtPlaf		= idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF"   )
@@ -25699,13 +25705,13 @@ If	lLig > 0 Then
 
 	For	lCpt = 1 To lTotDetail
 /*------------------------------------------------------------------*/
-/* On ne traite pas le d$$HEX1$$e900$$ENDHEX$$tail courant.                              */
+/* On ne traite pas le détail courant.                              */
 /*------------------------------------------------------------------*/
 			If		idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "ID_DETAIL" ) = lIdDetail	Then
 					Continue
 			Else
 /*------------------------------------------------------------------*/
-/* Le d$$HEX1$$e900$$ENDHEX$$tail est 'REGLE' ou 'A REGLE', on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le montant       */
+/* Le détail est 'REGLE' ou 'A REGLE', on récupére le montant       */
 /* MT_PLAF.                                                         */
 /*------------------------------------------------------------------*/
 					If	( idw_wDetailFF.iudwDetailSource.GetItemNumber ( lCpt, "COD_ETAT" ) = 500 Or &
@@ -25718,8 +25724,8 @@ If	lLig > 0 Then
 	Next	
 	
 /*------------------------------------------------------------------*/
-/* On recup$$HEX1$$e900$$ENDHEX$$re les autres sinistres si besoin, on fait appel $$HEX2$$e0002000$$ENDHEX$$la   */
-/* proc$$HEX1$$e900$$ENDHEX$$dure stock$$HEX1$$e900$$ENDHEX$$e.                                               */
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
 /*------------------------------------------------------------------*/
 	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
@@ -25734,22 +25740,22 @@ If	lLig > 0 Then
 	itrTrans.PS_S759_W_DETAIL_MT_PLAF ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, dcIdEvt, dtDteSurv, sMtAutreSinistre )
 	If	Not F_Procedure ( stMessage, itrTrans, "PS_S759_W_DETAIL_MT_PLAF" )	Then 
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e, on affiche le message.             */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée, on affiche le message.             */
 /*------------------------------------------------------------------*/
 		f_Message ( stMessage )
 		sPos = "MT_PROV"
 	Else
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine si on d$$HEX1$$e900$$ENDHEX$$passe le plafond.                           */
+/* On détermine si on dépasse le plafond.                           */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
 /* Modification DBI le 12/08/1998                                   */
 /*                                                                  */
-/* La zone $$HEX2$$e0002000$$ENDHEX$$prendre en compte pour le calcul du montant plafonn$$HEX4$$e900200020002000$$ENDHEX$$*/
+/* La zone à prendre en compte pour le calcul du montant plafonné   */
 /* n'est pas MT_NPLAF_AREG mais MT_PLAF_AREG sinon on ne            */
-/* tient pas compte des plafonds appliqu$$HEX1$$e900$$ENDHEX$$s successivement           */
+/* tient pas compte des plafonds appliqués successivement           */
 /*------------------------------------------------------------------*/
 
 		dcMtAutreSinistre = Dec ( sMtAutreSinistre )
@@ -25782,7 +25788,7 @@ If	lLig > 0 Then
 			idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re le paragraphe de plafond dans la DW.                   */
+/* On insére le paragraphe de plafond dans la DW.                   */
 /*------------------------------------------------------------------*/
 			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
 			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
@@ -25807,9 +25813,9 @@ private subroutine uf_gestion_dtedet ();//*-------------------------------------
 //* Fonction      : u_gs_sp_Sinistre_Wdetail::uf_Gestion_DteDet (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 11/09/2020 14:10:05
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: [VDOC29630]
-//* Commentaires  : A la cr$$HEX1$$e900$$ENDHEX$$ation du d$$HEX1$$e900$$ENDHEX$$tail uniquement, on insert la valeur d'achat 
-//*                 provenant des adh$$HEX1$$e900$$ENDHEX$$sions si elle elle pr$$HEX1$$e900$$ENDHEX$$sente du w_div_sin 
+//* Libellé       : [VDOC29630]
+//* Commentaires  : A la création du détail uniquement, on insert la valeur d'achat 
+//*                 provenant des adhésions si elle elle présente du w_div_sin 
 //*
 //* Arguments     : 
 //*
@@ -25850,8 +25856,8 @@ public function boolean uf_rf_dp370_val_div_det ();//*--------------------------
 //* Fonction		: Uf_Rf_dp370_val_div_det (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 18/09/2023
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [RS5875_DIF_DIV_DET]
-//* Commentaires	: Adh$$HEX1$$e900$$ENDHEX$$sion r$$HEX1$$e900$$ENDHEX$$sili$$HEX1$$e900$$ENDHEX$$e
+//* Libellé			: [RS5875_DIF_DIV_DET]
+//* Commentaires	: Adhésion résiliée
 //*
 //* Arguments		: Aucun
 //*
@@ -25870,12 +25876,12 @@ bRet = True
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 370 )
 If lDeb <=0 Then Return True
 
-// Initialisation des donn$$HEX1$$e900$$ENDHEX$$es du d$$HEX1$$e900$$ENDHEX$$tail de garantie
+// Initialisation des données du détail de garantie
 iIdGti = idw_wDetailFF.GetItemNumber ( 1, "ID_GTI" )
 
 For lCptDp = lDeb To lFin
 	
-	// Initialisation des donn$$HEX1$$e900$$ENDHEX$$es de param
+	// Initialisation des données de param
 	sValCar = idw_DetPro.GetItemString ( lCptDp, "VAL_CAR" ) 
 	sLstGti = lnvPFCString.of_getkeyvalue (sValCar, "ID_GTI", ";")
 	sNomZone = Upper ( lnvPFCString.of_getkeyvalue (sValCar, "NOM_ZONE", ";"))

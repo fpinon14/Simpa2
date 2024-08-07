@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_td_sp_w_detail.srw
-$PBExportComments$-} Fen$$HEX1$$ea00$$ENDHEX$$tre de traitement pour la saisie des d$$HEX1$$e900$$ENDHEX$$tails.
+﻿$PBExportHeader$w_td_sp_w_detail.srw
+$PBExportComments$-} Fenêtre de traitement pour la saisie des détails.
 forward
 global type w_td_sp_w_detail from w_8_traitement_detail
 end type
@@ -133,7 +133,7 @@ on ue_quitteronglet011;call w_8_traitement_detail::ue_quitteronglet011;//*------
 //* Evenement 		: Ue_QuitterOngler011
 //* Auteur			: Erick John Stark
 //* Date				: 05/02/1998 15:50:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -142,7 +142,7 @@ on ue_quitteronglet011;call w_8_traitement_detail::ue_quitteronglet011;//*------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* Si la fen$$HEX1$$ea00$$ENDHEX$$tre de consultation des paragraphes est visible, on    */
+/* Si la fenêtre de consultation des paragraphes est visible, on    */
 /* la rend invisible.                                               */
 /*------------------------------------------------------------------*/
 Wf_Fermer_Consulter_Paragraphe ()
@@ -150,7 +150,7 @@ Wf_Fermer_Consulter_Paragraphe ()
 cb_valachdef.Visible = False
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche un ItemFocusChanged avant toute chose. Cela         */
+/* On déclenche un ItemFocusChanged avant toute chose. Cela         */
 /* concerne la zone ID_EVT.                                         */
 /*------------------------------------------------------------------*/
 
@@ -169,7 +169,7 @@ on ue_quitteronglet021;call w_8_traitement_detail::ue_quitteronglet021;//*------
 //* Evenement 		: Ue_QuitterOngler021
 //* Auteur			: Erick John Stark
 //* Date				: 05/02/1998 15:50:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On va quitter l'onglet 02
 //*				  
 //*-----------------------------------------------------------------
@@ -178,7 +178,7 @@ on ue_quitteronglet021;call w_8_traitement_detail::ue_quitteronglet021;//*------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* Si la fen$$HEX1$$ea00$$ENDHEX$$tre de consultation des paragraphes est visible, on    */
+/* Si la fenêtre de consultation des paragraphes est visible, on    */
 /* la rend invisible.                                               */
 /*------------------------------------------------------------------*/
 Wf_Fermer_Consulter_Paragraphe ()
@@ -191,7 +191,7 @@ on ue_quitteronglet031;call w_8_traitement_detail::ue_quitteronglet031;//*------
 //* Evenement 		: Ue_QuitterOngler031
 //* Auteur			: Erick John Stark
 //* Date				: 05/02/1998 15:50:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On va quitter l'onglet 03
 //*				  
 //*-----------------------------------------------------------------
@@ -200,7 +200,7 @@ on ue_quitteronglet031;call w_8_traitement_detail::ue_quitteronglet031;//*------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* Si la fen$$HEX1$$ea00$$ENDHEX$$tre de consultation des paragraphes est visible, on    */
+/* Si la fenêtre de consultation des paragraphes est visible, on    */
 /* la rend invisible.                                               */
 /*------------------------------------------------------------------*/
 Wf_Fermer_Consulter_Paragraphe ()
@@ -213,7 +213,7 @@ on ue_affichage;call w_8_traitement_detail::ue_affichage;//*--------------------
 //* Evenement     : ue_Affichage
 //* Auteur        : Fabry JF
 //* Date          : 12/05/2005 16:29:10
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -248,7 +248,7 @@ on ue_entreronglet011;call w_8_traitement_detail::ue_entreronglet011;//*--------
 //* Evenement 		: Ue_EntrerOnglet011
 //* Auteur			: Fabry JF
 //* Date				: 18/07/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -266,7 +266,7 @@ on ue_entreronglet041;call w_8_traitement_detail::ue_entreronglet041;//*--------
 //* Evenement 		: Ue_EntrerOnglet011
 //* Auteur			: Fabry JF
 //* Date				: 18/07/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -284,7 +284,7 @@ event ue_setfocus;//*-----------------------------------------------------------
 //* Evenement 		: Ue_EntrerOnglet011
 //* Auteur			: Fabry JF
 //* Date				: 18/07/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -302,14 +302,14 @@ event ue_taillefenetre();//*----------------------------------------------------
 //* Evenement 		: Ue_TailleFenetre
 //* Auteur			: Fabry JF
 //* Date				: 16/10/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*-----------------------------------------------------------------
 
-// Je r$$HEX1$$e900$$ENDHEX$$ajuste la hauteur pour W10
+// Je réajuste la hauteur pour W10
 
 This.Height = 1810
 
@@ -320,7 +320,7 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //* Fonction		: W_Td_Sp_W_Detail::Wf_PositionnerObjets (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 15:27:47
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On positionne et on taille tous les objets
 //*
 //* Arguments		: Aucun
@@ -331,8 +331,8 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On positionne tous les objets n$$HEX1$$e900$$ENDHEX$$cessaires $$HEX2$$e0002000$$ENDHEX$$la gestion, pour     */
-/* faciliter le d$$HEX1$$e900$$ENDHEX$$veloppement. (On peut bouger les objets).         */
+/* On positionne tous les objets nécessaires à la gestion, pour     */
+/* faciliter le développement. (On peut bouger les objets).         */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
@@ -351,7 +351,7 @@ Dw_1.Width		= 3484
 Dw_1.Height		= 1230
 
 /*------------------------------------------------------------------*/
-/* On positionne l'obet de marquage des pi$$HEX1$$e800$$ENDHEX$$ces.                     */
+/* On positionne l'obet de marquage des pièces.                     */
 /*------------------------------------------------------------------*/
 Uo_Piece.X				= Dw_1.X
 Uo_Piece.Y				= Dw_1.Y
@@ -418,7 +418,7 @@ cb_Gamme.Width				= 174
 cb_Gamme.Height			= 153
 
 /*------------------------------------------------------------------*/
-/* Bouton Valeur Achat par D$$HEX1$$e900$$ENDHEX$$faut											  */
+/* Bouton Valeur Achat par Défaut											  */
 /*------------------------------------------------------------------*/
 cb_valachdef.X				= 2131
 cb_valachdef.Y				=  733
@@ -455,8 +455,8 @@ public function boolean wf_preparermodifier ();//*------------------------------
 //* Fonction		: W_Td_Sp_W_Detail::Wf_PreparerModifier
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Op$$HEX1$$e900$$ENDHEX$$ration avant modification
+//* Libellé			: 
+//* Commentaires	: Opération avant modification
 //*
 //* Arguments		: Rien
 //*
@@ -464,7 +464,7 @@ public function boolean wf_preparermodifier ();//*------------------------------
 //*										Faux = Il y a une erreur
 //*
 //*-----------------------------------------------------------------
-//* #1	jca	15/09/2006	dcmp05530 - on grise l'onglet "pieces" si on ne peut pas d$$HEX1$$e900$$ENDHEX$$terminer la revision
+//* #1	jca	15/09/2006	dcmp05530 - on grise l'onglet "pieces" si on ne peut pas déterminer la revision
 //* #2   JFF   28/01/2008  [DCMP080028]
 //* #3	FPI	06/10/2009	[DCMP090595] Ajout du bouton cb_valid_factu
 //* #4	FPI	09/02/2010 [DCMP090595.Correctif] On cache le bouton cb_valid_factu quand controler disable
@@ -482,7 +482,7 @@ boolean bIdRev // #1
 
 /*------------------------------------------------------------------*/
 /* Modification SFR # Le 27/09/02 : initialisation de la gamme. La  */
-/* valeur -1 signifie que la fen$$HEX1$$ea00$$ENDHEX$$tre des gammes n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX10$$e900200020002000200020002000200020002000$$ENDHEX$$*/
+/* valeur -1 signifie que la fenêtre des gammes n'a pas été         */
 /* ouverte.                                                         */
 /*------------------------------------------------------------------*/
 ilRetGamme = -1
@@ -496,13 +496,13 @@ If stGlb.sCodOper = "JFF" Then
 End If
 */
 
-/* le 10/03/2006 JFF : Je courcircuite cet init. $$HEX2$$e0002000$$ENDHEX$$cet endroit, cause d'un bug g$$HEX1$$ea00$$ENDHEX$$nant.
+/* le 10/03/2006 JFF : Je courcircuite cet init. à cet endroit, cause d'un bug gênant.
    L'init. se fait un fois pour toute sur u_gs_sp_sinitre::uf_preparer_modifier
 */
 // gsCasGestionDartyNomade = ""
 
 /*------------------------------------------------------------------*/
-/* On arme le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre avec le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre       */
+/* On arme le titre de la fenêtre avec le titre de la fenêtre       */
 /* Parent.                                                          */
 /*------------------------------------------------------------------*/
 This.Title = istPass.sTab [ 1 ]
@@ -514,8 +514,8 @@ iuoGsSpwDetail.Uf_Traitement ( 2, stPass_Dga )
 ilMarquaGeBLCODE = 0
 
 /*------------------------------------------------------------------*/
-/* L'acc$$HEX1$$e800$$ENDHEX$$s au bouton 'COMMANDER' est donn$$HEX2$$e9002000$$ENDHEX$$en fonction du           */
-/* param$$HEX1$$e800$$ENDHEX$$trage (apparition seulement en saisie).                    */
+/* L'accès au bouton 'COMMANDER' est donné en fonction du           */
+/* paramètrage (apparition seulement en saisie).                    */
 /*------------------------------------------------------------------*/
 lCodEtatDet = dw_1.GetItemNumber ( 1, "COD_ETAT" ) 
 
@@ -534,11 +534,11 @@ Choose Case dw_1.GetItemNumber ( 1, "ID_GTI" )
 
 	Case 11
 		dw_Choix_Action.SetItem ( 1, "CHOIX_ACTION", "R" )
-		cb_Commander.Text = "R$$HEX1$$e900$$ENDHEX$$parer >>"
+		cb_Commander.Text = "Réparer >>"
 
 	Case else
 		dw_Choix_Action.SetItem ( 1, "CHOIX_ACTION", "R" )
-		cb_Commander.Text = "R$$HEX1$$e900$$ENDHEX$$parer >>"
+		cb_Commander.Text = "Réparer >>"
 
 End Choose 
 
@@ -546,7 +546,7 @@ End Choose
 /*------------------------------------------------------------------*/
 /* Zone MT prix publique visible uniquement si Cod_Tel > 0          */
 /*------------------------------------------------------------------*/
-/* #2 Ce code n'est plus necessaire du fait de la pr$$HEX1$$e900$$ENDHEX$$sence de l'option 41 plus bas.
+/* #2 Ce code n'est plus necessaire du fait de la présence de l'option 41 plus bas.
 If istPass.dwNorm [ 1 ].GetItemNumber ( 1, "COD_TEL" ) > 0 Then
 	dw_1.Modify ( "mt_val_publique.visible = 1 mt_val_publique_t.visible = 1" )
 Else 
@@ -555,12 +555,12 @@ End If
 */
 
 /*------------------------------------------------------------------*/
-/* L'acc$$HEX1$$e900$$ENDHEX$$s au bouton SUPPRIMER est g$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$dans la fonction du NVUO.   */
+/* L'accés au bouton SUPPRIMER est géré dans la fonction du NVUO.   */
 /*------------------------------------------------------------------*/
 pb_Supprimer.Enabled = stPass_Dga.bSupprime
 
 /*------------------------------------------------------------------*/
-/* L'acc$$HEX1$$e900$$ENDHEX$$s au bouton CONTROLER est g$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$dans la fonction du NVUO.   */
+/* L'accés au bouton CONTROLER est géré dans la fonction du NVUO.   */
 /* En effet dans le cas d'un dossier REGLE, il est impossible de    */
 /* faire un CTL-VAL.                                                */
 /*------------------------------------------------------------------*/
@@ -586,7 +586,7 @@ cb_Gamme.Visible	=	FALSE
 cb_Gamme.Enabled	=	FALSE
 
 /*------------------------------------------------------------------*/
-/* On arme la valeur de la monnaie avec celle de la fen$$HEX1$$ea00$$ENDHEX$$tre de      */
+/* On arme la valeur de la monnaie avec celle de la fenêtre de      */
 /* GARANTIE. (En consultation uniquement).                          */
 /*------------------------------------------------------------------*/
 If	isTypeTrt = "C"	Then
@@ -606,11 +606,11 @@ End If
 
 Uo_Ong.Uf_ActiverOnglet ( "04", dw_w_div_det.RowCount () > 0 )
 
-// Mise en commentaire suite $$HEX2$$e0002000$$ENDHEX$$probl$$HEX1$$e800$$ENDHEX$$me fonctionnel avec le scripting
+// Mise en commentaire suite à problème fonctionnel avec le scripting
 /*
 // #1
 // istPass.dwNorm[11] --> datawindow de w_piece
-// id_detail <> -1  --> piece demand$$HEX1$$e900$$ENDHEX$$e au niveau detail de garantie (evenement)
+// id_detail <> -1  --> piece demandée au niveau detail de garantie (evenement)
 if idwWsin.GetItemNumber ( 1, "ID_REV") = -1 and &
 		istPass.dwNorm [ 11 ].Find ( "ID_DETAIL <> -1", 1, istPass.dwNorm [ 11 ].rowcount() ) = 0 then
 	bIdRev = false
@@ -659,8 +659,8 @@ public function boolean wf_preparerinserer ();//*-------------------------------
 //* Fonction		: W_Td_Sp_W_Detail::Wf_PreparerInserer
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Op$$HEX1$$e900$$ENDHEX$$ration avant insertion
+//* Libellé			: 
+//* Commentaires	: Opération avant insertion
 //*
 //* Arguments		: Rien
 //*
@@ -668,7 +668,7 @@ public function boolean wf_preparerinserer ();//*-------------------------------
 //*										Faux = Il y a une erreur
 //*
 //*-----------------------------------------------------------------
-//* #1	jca	15/09/2006	dcmp05530 - on grise l'onglet "pieces" si on ne peut pas d$$HEX1$$e900$$ENDHEX$$terminer la revision
+//* #1	jca	15/09/2006	dcmp05530 - on grise l'onglet "pieces" si on ne peut pas déterminer la revision
 //* #2	FPI	06/10/2009	[DCMP090595] Ajout du bouton cb_valid_factu
 //* #3	FPI	09/02/2010 [DCMP090595.Correctif] On cache le bouton cb_valid_factu quand controler disable
 //       JFF   23/05/2012 [PM103][1]
@@ -682,7 +682,7 @@ boolean bIdRev // #1
 
 /*------------------------------------------------------------------*/
 /* Modification SFR # Le 27/09/02 : initialisation de la gamme. La  */
-/* valeur -1 signifie que la fen$$HEX1$$ea00$$ENDHEX$$tre des gammes n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX10$$e900200020002000200020002000200020002000$$ENDHEX$$*/
+/* valeur -1 signifie que la fenêtre des gammes n'a pas été         */
 /* ouverte.                                                         */
 /*------------------------------------------------------------------*/
 ilRetGamme = -1
@@ -694,13 +694,13 @@ If stGlb.sCodOper = "JFF" Then
 End If
 */
 
-/* le 10/03/2006 JFF : Je courcircuite cet init. $$HEX2$$e0002000$$ENDHEX$$cet endroit, cause d'un bug g$$HEX1$$ea00$$ENDHEX$$nant.
+/* le 10/03/2006 JFF : Je courcircuite cet init. à cet endroit, cause d'un bug gênant.
    L'init. se fait un fois pour toute sur u_gs_sp_sinitre::uf_preparer_modifier
 */
 // gsCasGestionDartyNomade = ""
 
 /*------------------------------------------------------------------*/
-/* On arme le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre avec le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre       */
+/* On arme le titre de la fenêtre avec le titre de la fenêtre       */
 /* Parent.                                                          */
 /*------------------------------------------------------------------*/
 This.Title = istPass.sTab [ 1 ]
@@ -713,8 +713,8 @@ ilMarquaGeBLCODE = 0
 iuoGsSpwDetail.Uf_Traitement ( 3, stPass_Dga )
 
 /*------------------------------------------------------------------*/
-/* L'acc$$HEX1$$e800$$ENDHEX$$s au bouton 'COMMANDER' est donn$$HEX2$$e9002000$$ENDHEX$$en fonction du           */
-/* param$$HEX1$$e800$$ENDHEX$$trage (apparition seulement en saisie).                    */
+/* L'accès au bouton 'COMMANDER' est donné en fonction du           */
+/* paramètrage (apparition seulement en saisie).                    */
 /*------------------------------------------------------------------*/
 bVisible = istPass.bTab [ 1 ]	And isTypeTrt = "S" And wf_Cmde_Sur_Gti ()
 
@@ -732,11 +732,11 @@ Choose Case dw_1.GetItemNumber ( 1, "ID_GTI" )
 
 	Case 11
 		dw_Choix_Action.SetItem ( 1, "CHOIX_ACTION", "R" )
-		cb_Commander.Text = "R$$HEX1$$e900$$ENDHEX$$parer >>"
+		cb_Commander.Text = "Réparer >>"
 
 	Case else
 		dw_Choix_Action.SetItem ( 1, "CHOIX_ACTION", "R" )
-		cb_Commander.Text = "R$$HEX1$$e900$$ENDHEX$$parer >>"
+		cb_Commander.Text = "Réparer >>"
 
 End Choose 
 
@@ -756,7 +756,7 @@ cb_Gamme.Visible	=	FALSE
 cb_Gamme.Enabled	=	FALSE
 
 /*------------------------------------------------------------------*/
-/* On autorise le bouton CONTROLE. Il est peut-$$HEX1$$ea00$$ENDHEX$$tre d$$HEX1$$e900$$ENDHEX$$sactiv$$HEX2$$e9002000$$ENDHEX$$(Cas  */
+/* On autorise le bouton CONTROLE. Il est peut-être désactivé (Cas  */
 /* d'un dossier REGLE).                                             */
 /*------------------------------------------------------------------*/
 This.pb_Controler.Enabled = True
@@ -774,11 +774,11 @@ End If
 
 Uo_Ong.Uf_ActiverOnglet ( "04", dw_w_div_det.RowCount () > 0 )
 
-// Mise en commentaire suite $$HEX2$$e0002000$$ENDHEX$$probl$$HEX1$$e800$$ENDHEX$$me fonctionnel avec le scripting
+// Mise en commentaire suite à problème fonctionnel avec le scripting
 /*
 // #1
 // istPass.dwNorm[11] --> datawindow de w_piece
-// id_detail <> -1  --> piece demand$$HEX1$$e900$$ENDHEX$$e au niveau detail de garantie (evenement)
+// id_detail <> -1  --> piece demandée au niveau detail de garantie (evenement)
 
 if idwWsin.GetItemNumber ( 1, "ID_REV") = -1 and &
 		istPass.dwNorm [ 11 ].Find ( "ID_DETAIL <> -1", 1, istPass.dwNorm [ 11 ].rowcount() ) = 0 then
@@ -822,8 +822,8 @@ public function boolean wf_preparervalider ();//*-------------------------------
 //* Fonction		: W_Td_Sp_W_Detail::Wf_PreparerValider
 //* Auteur			: Erick John Stark
 //* Date				: 28/01/1998 09:27:24
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On veut valider un d$$HEX1$$e900$$ENDHEX$$tail
+//* Libellé			: 
+//* Commentaires	: On veut valider un détail
 //*
 //* Arguments		: 
 //*
@@ -835,7 +835,7 @@ public function boolean wf_preparervalider ();//*-------------------------------
 s_Pass stPass_Dga
 
 /*------------------------------------------------------------------*/
-/* Si la fen$$HEX1$$ea00$$ENDHEX$$tre de consultation des paragraphes est visible, on    */
+/* Si la fenêtre de consultation des paragraphes est visible, on    */
 /* la rend invisible.                                               */
 /*------------------------------------------------------------------*/
 Wf_Fermer_Consulter_Paragraphe ()
@@ -852,8 +852,8 @@ public function boolean wf_preparersupprimer ();//*-----------------------------
 //* Fonction		: W_Td_Sp_W_Detail::Wf_PreparerSupprimer
 //* Auteur			: Erick John Stark
 //* Date				: 28/01/1998 09:27:24
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On veut supprimer le d$$HEX1$$e900$$ENDHEX$$tail
+//* Libellé			: 
+//* Commentaires	: On veut supprimer le détail
 //*
 //* Arguments		: 
 //*
@@ -865,7 +865,7 @@ public function boolean wf_preparersupprimer ();//*-----------------------------
 s_Pass stPass_Dga
 
 /*------------------------------------------------------------------*/
-/* Si la fen$$HEX1$$ea00$$ENDHEX$$tre de consultation des paragraphes est visible, on    */
+/* Si la fenêtre de consultation des paragraphes est visible, on    */
 /* la rend invisible.                                               */
 /*------------------------------------------------------------------*/
 Wf_Fermer_Consulter_Paragraphe ()
@@ -881,8 +881,8 @@ public function string wf_controlersaisie ();//*--------------------------------
 //* Fonction		: Wf_ControlerSaisie (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:50:46
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Contr$$HEX1$$f400$$ENDHEX$$le de la saisie
+//* Libellé			: 
+//* Commentaires	: Contrôle de la saisie
 //*
 //* Arguments		: Aucun
 //*
@@ -893,7 +893,7 @@ public function string wf_controlersaisie ();//*--------------------------------
 s_Pass	stPass_Dga
 
 /*------------------------------------------------------------------*/
-/* Si la fen$$HEX1$$ea00$$ENDHEX$$tre de consultation des paragraphes est visible, on    */
+/* Si la fenêtre de consultation des paragraphes est visible, on    */
 /* la rend invisible.                                               */
 /*------------------------------------------------------------------*/
 Wf_Fermer_Consulter_Paragraphe ()
@@ -916,8 +916,8 @@ private subroutine wf_fermer_consulter_paragraphe ();//*------------------------
 //* Fonction		: W_Tm_Sp_W_Detail::Wf_Fermer_Consulter_Paragraphe (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 16/07/1998 15:00:13
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Si la fen$$HEX1$$ea00$$ENDHEX$$tre de consultation est ouverte, on la rend invisible
+//* Libellé			: 
+//* Commentaires	: Si la fenêtre de consultation est ouverte, on la rend invisible
 //*
 //* Arguments		: Aucun
 //*
@@ -941,7 +941,7 @@ private subroutine wf_tb_consultation ();//*------------------------------------
 //* Fonction		: W_Td_Sp_W_Detail::Wf_Tb_Consultation (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 23/07/1998 15:44:13
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On est en validation/Consultation, on rend les boutons invisibles
 //*
 //* Arguments		: Aucun
@@ -958,7 +958,7 @@ DataWindow	dwNorm[]
 //Fin Migration PB8-WYNIWYG-03/2006 CP
 
 /*------------------------------------------------------------------*/
-/* Cette fonction est appel$$HEX1$$e900$$ENDHEX$$e sur Ue_Initialiser de la fen$$HEX1$$ea00$$ENDHEX$$tre.     */
+/* Cette fonction est appelée sur Ue_Initialiser de la fenêtre.     */
 /*------------------------------------------------------------------*/
 
 pb_Controler.Visible 	= False
@@ -1004,8 +1004,8 @@ private function boolean wf_cmde_sur_gti ();//*---------------------------------
 //* Evenement 		: 
 //* Auteur			: Fabry JF
 //* Date				: 13/09/1998 16:37:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Cette Gti g$$HEX1$$e800$$ENDHEX$$re-t-elle les commandes
+//* Libellé			: 
+//* Commentaires	: Cette Gti gère-t-elle les commandes
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -1031,7 +1031,7 @@ private function boolean wf_condition_ouverture (string aschoixaction);//*------
 //* Fonction      : w_td_sp_w_detail::wf_Condition_Ouverture (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 05/10/2004 14:40:47
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: V$$HEX1$$e900$$ENDHEX$$rification des conditions d'ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre de commandes
+//* Libellé       : Vérification des conditions d'ouverture de la fenêtre de commandes
 //* Commentaires  : 
 //*
 //* Arguments     : String		asChoixAction		String
@@ -1041,17 +1041,17 @@ private function boolean wf_condition_ouverture (string aschoixaction);//*------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JFF    22/03/2005  DCMP 050160 M LEGAC
-//* #2	 JFF	  16/10/2006  Optimisation (d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$e suite d$$HEX1$$e900$$ENDHEX$$v et tests MEDIA SATURN)
+//* #2	 JFF	  16/10/2006  Optimisation (détectée suite dév et tests MEDIA SATURN)
 //* #3	 JFF	  06/02/2006  [SITE_CMDE] Gestion des nouvelles option d'autorisation 79, 80, 81
 //* #4    JFF    04/06/2007  [DCMP070163-070164-070248-070318] Gestion Prise en charge
 //* #5    JFF    27/08/2007  [DCMP070431] : Autorisation pour commander suite irreparable.
 //* #6    JFF    17/09/2007  Gestion de l'existant
 //* #7	 JCA	  12/11/2007  [DCMP070811] Pas plus de trois prestations sur le dossier si au moins deux prestations sont en RPC
-//* #8	 PHG	  10/12/2007  [O2M]D$$HEX1$$e900$$ENDHEX$$sactivation du Controle de la PEC si Informer + EDI avec O2M
+//* #8	 PHG	  10/12/2007  [O2M]Désactivation du Controle de la PEC si Informer + EDI avec O2M
 //* #9	 JCA	  11/12/2007  DCMP 70920 / 70943 
 //* #10   JFF    05/02/2008  [DCMP070921]
 //* #11   JFF    08/09/2008  Modif JFF suite Bug JCA sur #7
-//* #12	 FPI    24/03/2009  [DCMP090051] Bloquer envoi en r$$HEX1$$e900$$ENDHEX$$paration si prix IFR < un forfait
+//* #12	 FPI    24/03/2009  [DCMP090051] Bloquer envoi en réparation si prix IFR < un forfait
 //* #13	 JFF    15/04/2009  [DMDI25498] tranformation < en <=
 //* #14   JFF    02/09/2009  [DCMP090327].[SBETV]
 //* #15   JFF    26/09/2009  [DCMP090474]
@@ -1063,9 +1063,9 @@ private function boolean wf_condition_ouverture (string aschoixaction);//*------
 //*		 JFF    05/01/2011  [PC202].[DOM_COM]
 //*       JFF    27/05/2011  [VDOC4132]
 //*       JFF    27/07/2011  [PLAF_REF]
-//*		 FPI	  25/08/2011  [PC469] Ajout du flux demande d'enl$$HEX1$$e800$$ENDHEX$$vement
+//*		 FPI	  25/08/2011  [PC469] Ajout du flux demande d'enlèvement
 //*       JFF    19/09/2011  [PM82][LOT1]
-//		FPI	24/10/2011	  [VDoc4274] Avertissement dem. pi$$HEX1$$e800$$ENDHEX$$ces+presta
+//		FPI	24/10/2011	  [VDoc4274] Avertissement dem. pièces+presta
 //        JFF    24/01/2012  [CONFO][CUISINE][PC680]
 //        JFF    01/03/2012  [CONFO][LITERIE][PC543]
 //        JFF   01/03/2012  [CONFO][SIEGE][PC716]
@@ -1081,7 +1081,7 @@ private function boolean wf_condition_ouverture (string aschoixaction);//*------
 //     JFF   30/07/2014 [PM234-4_V1]
 //       JFF   29/01/2015 [PM280-1]
 //       JFF   18/02/2015 [ITSM274734]
-// 		FPI	27/02/2015	[VDOC16821] On se base sur le cp de l'assur$$HEX2$$e9002000$$ENDHEX$$ald la caisse
+// 		FPI	27/02/2015	[VDOC16821] On se base sur le cp de l'assuré ald la caisse
 //       JFF   10/03/2014 [PC13321]
 //       JFF   20/03/2015 [PC13321][MANTIS14803]
 //       JFF   09/04/2015 [DT141]
@@ -1108,6 +1108,7 @@ private function boolean wf_condition_ouverture (string aschoixaction);//*------
 //       JFF   23/06/2020 [PC202553_SELECTRA]
 //       JFF   06/04/2023 [PMO139_RS4926]
 //       JFF   07/03/2024 [HP252_276_HUB_PRESTA]
+//       JFF   05/08/2024 [MCO602_PNEU]
 //*-----------------------------------------------------------------
 
 String sTypApp, sMarque, sModele, sMes, sTypArt, sFiltreFrn, sIdGti, sDteProdEqvFc, sBVIEPresent, sSortOri, sChaine, sInterdictionAutor
@@ -1177,7 +1178,7 @@ End If
 // [PM234-4_V1]
 If bDeclaWebAtlas And bManqueInfoAtlas Then
 	bOk = False
-	stMessage.sTitre		= "D$$HEX1$$e900$$ENDHEX$$cla Atlas/Infos manquantes"
+	stMessage.sTitre		= "Décla Atlas/Infos manquantes"
 	stMessage.Icon			= Information!
 	stMessage.bErreurG	= FALSE
 	stMessage.Bouton		= OK!
@@ -1190,18 +1191,36 @@ End If
 // [PM246][MANTIS10235]
 Choose Case lIdEvt 
 	Case 1083 
-		// On ne r$$HEX1$$e900$$ENDHEX$$initilise pas.
+		// On ne réinitilise pas.
 	Case Else
 		gAutoriseDiag = FALSE
 End CHoose
 
 Choose Case lIdEvt 
 	Case 841, 936 
-		// On ne r$$HEX1$$e900$$ENDHEX$$initilise pas.
+		// On ne réinitilise pas.
 	Case Else
 		gAutoriseRempl = FALSE
 End CHoose
 // [PM246][MANTIS10235]		
+
+// [MCO602_PNEU]
+If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
+
+	CHoose Case lIdEvt 
+		Case 1391, 1397
+			stMessage.sTitre		= "Evt non éligible à une prestation"
+			stMessage.Icon			= Information!
+			stMessage.bErreurG	= FALSE
+			stMessage.Bouton		= OK!
+			stMessage.sCode		= "WDET681"
+	
+			F_Message ( stMessage )
+			
+			Return False			
+	End Choose
+
+End If
 
 
 // #15 [DCMP090474]
@@ -1284,7 +1303,7 @@ If bConfo Then
 	lIdEvt = dw_1.GetItemNumber ( 1, "ID_EVT" )
 	Choose Case lIdEvt
 		Case 1317, 1083
-			// Autoris$$HEX1$$e900$$ENDHEX$$
+			// Autorisé
 		Case Else
 			
 			stMessage.sTitre		= "Prise en charge"
@@ -1302,7 +1321,7 @@ If bConfo Then
 	// [CONFO][SIEGE][PC716]
 	If ( bConfoMeuble Or bConfoLiterie Or bConfoSiege ) And asChoixAction = "I" Then
 
-		// On ne lit pas la valeur d'achat, mais on fait la somme des MT_PEC des autres d$$HEX1$$e900$$ENDHEX$$tail.
+		// On ne lit pas la valeur d'achat, mais on fait la somme des MT_PEC des autres détail.
 		// dcMtPec = idw_wDetailFF.GetItemDecimal ( 1, "MT_VAL_ACHAT" )
 
 		dcMtPec = 0
@@ -1323,7 +1342,7 @@ If bConfo Then
 		For lCptDiv1 = 1 To lCountDiv1 
 			If Upper ( idwDivDetGti.GetItemString ( lCptDiv1, "NOM_ZONE" ) ) <> "MT_PEC" Then Continue
 			
-			dcMtPec1 = idwDivDetGti.GetItemDecimal ( lCptDiv1, "VAL_MT" )  // En pr$$HEX1$$e900$$ENDHEX$$vision...
+			dcMtPec1 = idwDivDetGti.GetItemDecimal ( lCptDiv1, "VAL_MT" )  // En prévision...
 			If IsNull ( dcMtPec1 ) Then dcMtPec1 = 0
 			If dcMtPec1 <= 0 Then continue
 			
@@ -1337,7 +1356,7 @@ If bConfo Then
 				, 1, lCountDiv1 )
 										
 			If lRowDiv1 > 0 Then
-				Continue // D$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$pris sur une carte Cadeau ou une presta blcode
+				Continue // Déjà pris sur une carte Cadeau ou une presta blcode
 			End If
 
 			// istPass.dwTab[1] = idw_LstDetail
@@ -1368,7 +1387,7 @@ If bConfo Then
 					, 1, lCountDiv1 )
 					
 					If lRowDiv1 <=0 Then
-						Continue // Refus$$HEX2$$e9002000$$ENDHEX$$sans force, on passe.
+						Continue // Refusé sans force, on passe.
 					End If
 				Case 500, 600, 900, 0
 					Continue // On passe
@@ -1396,7 +1415,7 @@ If bConfo Then
 
 			// [CONFO][SIEGE][PC716]
 			If dcMtValAchat2 > 200 And lTailleArticle = 1 And ( bConfoMeuble Or ( bConfoSiege And iIdNatSin <> 38) ) Then
-				sInterdictionAutor = "interdite (Val.Achat > 200$$HEX2$$ac202000$$ENDHEX$$et petit bien)"
+				sInterdictionAutor = "interdite (Val.Achat > 200€ et petit bien)"
 				lCptEligible ++
 			Else
 */				
@@ -1410,10 +1429,10 @@ If bConfo Then
 			lEnlvBien = Long ( idwDivDetGti.GetItemString ( lRowDiv1, "VAL_CAR" ) )
 			
 			If ( bConfoMeuble Or bConfoSiege ) And lEnlvBien <> 2 Then
-				sInterdictionAutor = "interdite (l'assur$$HEX2$$e9002000$$ENDHEX$$n'en a pas $$HEX1$$e900$$ENDHEX$$mis le souhait)"
+				sInterdictionAutor = "interdite (l'assuré n'en a pas émis le souhait)"
 				lCptEligible ++
 			Else
-				sInterdictionAutor = "autoris$$HEX1$$e900$$ENDHEX$$e"				
+				sInterdictionAutor = "autorisée"				
 				bAutorise = True
 				lCptEligible ++
 				// Marquage
@@ -1423,10 +1442,10 @@ If bConfo Then
 					"UPPER ( NOM_ZONE ) = 'PRIS_PRESTA_BLCODE' " &
 					, 1, lCountDiv1 )
 					
-				idwDivDetGti.SetItem ( lRowDiv1, "VAL_NBRE", lMarquageCC ) // Marqu$$HEX1$$e900$$ENDHEX$$
+				idwDivDetGti.SetItem ( lRowDiv1, "VAL_NBRE", lMarquageCC ) // Marqué
 			End If	
 			
-			sChaine += "Detail n$$HEX1$$b000$$ENDHEX$$" + String ( lIdDetailDiv1 ) + ", Meuble n$$HEX1$$b000$$ENDHEX$$" + String ( lCodeRgprElt ) + ", prestation BLCODE " + sInterdictionAutor + Char (13)
+			sChaine += "Detail n°" + String ( lIdDetailDiv1 ) + ", Meuble n°" + String ( lCodeRgprElt ) + ", prestation BLCODE " + sInterdictionAutor + Char (13)
 	
 		Next
 
@@ -1495,7 +1514,7 @@ bO2MPresent = idwFourn.Find("ID_GTI = " + sIdGti 		+		&
 											" AND ID_CODE_ART = 'EDI'" , &
 											1, idwFourn.RowCount()+1)>0
 
-// #8 [O2M]D$$HEX1$$e900$$ENDHEX$$sactivation du controle PEC si "Informer" et EDI pour O2M
+// #8 [O2M]Désactivation du controle PEC si "Informer" et EDI pour O2M
 
 // [PLAF_REF]
 bPec = 	iuoGsSpwDetail.uf_GestOng_Divers_Trouver ("PEC" ) = "O"
@@ -1513,9 +1532,9 @@ If Not bPec Then
 End If
 
 // #18 [O2M_DIAG_NOMADE].Lot2 Point 3.3 :
-//Si D$$HEX1$$e900$$ENDHEX$$clenchement du contr$$HEX1$$f400$$ENDHEX$$le 435 (*)
+//Si Déclenchement du contrôle 435 (*)
 //ET
-//Si absence de *for$$HEX1$$e700$$ENDHEX$$age* de la pec du d$$HEX1$$e900$$ENDHEX$$tail courant, Alors msg WDET571
+//Si absence de *forçage* de la pec du détail courant, Alors msg WDET571
 
 if	iuoGsSpwDetail.uf_GestOng_Divers_Trouver ("" ) <> "O" and	&
 	iuoGsSpwDetail.uf_controlergestion_o2m_apprecuprecycl() Then
@@ -1546,7 +1565,7 @@ Choose Case asChoixAction
 
 
 	Case "R"
-		sMes = "Pour effectuer une r$$HEX1$$e900$$ENDHEX$$paration, "
+		sMes = "Pour effectuer une réparation, "
 
 		bOk = dcMtValAchat <> 0
 		sMes += "la valeur d'achat est obligatoire."
@@ -1555,7 +1574,7 @@ Choose Case asChoixAction
 		If asChoixAction = "C" Then
 			sMes = "Pour effectuer une commande, "
 		Else
-			sMes = "Pour effectuer une s$$HEX1$$e900$$ENDHEX$$lection sur courrier, "
+			sMes = "Pour effectuer une sélection sur courrier, "
 		End If
 
 		bOk = sTypApp <> "AUT" 
@@ -1572,7 +1591,7 @@ Choose Case asChoixAction
 			idwFourn.SetFilter ( "" )
 			idwFourn.Filter ( )
 
-			If Not bOk Then sMes += "le type d'appareil doit $$HEX1$$ea00$$ENDHEX$$tre diff$$HEX1$$e900$$ENDHEX$$rent de 'AUTRE APPAREIL' (Onglet divers)."			
+			If Not bOk Then sMes += "le type d'appareil doit être différent de 'AUTRE APPAREIL' (Onglet divers)."			
 			
 		End If
 
@@ -1591,13 +1610,13 @@ Choose Case asChoixAction
 			bOk = dcMtValPublique <> 0 
 	
 			/*------------------------------------------------------------------*/
-			/* Si dossier cr$$HEX3$$e900e9002000$$ENDHEX$$avant date de mise en production de l'EQF,       */
+			/* Si dossier créé avant date de mise en production de l'EQF,       */
 			/* alors on force le controle                                       */
 			/*------------------------------------------------------------------*/
 			If Date ( idwwSin.GetItemDateTime ( 1, "CREE_LE" ) ) < Date (sDteProdEqvFc) Then bOk = TRUE
 
 			/*------------------------------------------------------------------*/
-			/* Si EQF d$$HEX1$$e900$$ENDHEX$$connect$$HEX1$$e900$$ENDHEX$$, on force le controle aussi                    */
+			/* Si EQF déconnecté, on force le controle aussi                    */
 			/*------------------------------------------------------------------*/
 			F_RechDetPro ( lDeb, lFin, idwDetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 24 )
 			If lDeb > 0 Then bOk = True
@@ -1624,11 +1643,11 @@ If Not bOk Then
 End If 
 
 /*------------------------------------------------------------------*/
-/* Y a-t-il au un Frn r$$HEX1$$e900$$ENDHEX$$pondant $$HEX2$$e0002000$$ENDHEX$$l'action choisie ?					  */
+/* Y a-t-il au un Frn répondant à l'action choisie ?					  */
 /*------------------------------------------------------------------*/
 If bOk Then
 
-	sMes = "Aucun fournisseur n'est param$$HEX1$$e800$$ENDHEX$$tr$$HEX2$$e9002000$$ENDHEX$$pour ce choix d'action (pour ce produit et cette garantie)."
+	sMes = "Aucun fournisseur n'est paramètré pour ce choix d'action (pour ce produit et cette garantie)."
 
 	Choose Case asChoixAction
 		Case "I"
@@ -1666,12 +1685,12 @@ End If
 // #7
 if bOk then
 
-/*	#11 Je shunte ce contr$$HEX1$$f400$$ENDHEX$$le sur l'option 25 qui s'av$$HEX1$$e800$$ENDHEX$$re g$$HEX1$$ea00$$ENDHEX$$nant pour l'asus et qui ne sert $$HEX2$$e0002000$$ENDHEX$$rien $$HEX2$$e0002000$$ENDHEX$$l'arriv$$HEX1$$e900$$ENDHEX$$e.
-       On bloque pour tout appareil la troisi$$HEX1$$e800$$ENDHEX$$me r$$HEX1$$e900$$ENDHEX$$paration et plus, du moment o$$HEX2$$f9002000$$ENDHEX$$il y en a d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$eu deux en RPC.
-	// Le r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rentiel de t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phonie est-il li$$HEX1$$e900$$ENDHEX$$
+/*	#11 Je shunte ce contrôle sur l'option 25 qui s'avère gênant pour l'asus et qui ne sert à rien à l'arrivée.
+       On bloque pour tout appareil la troisième réparation et plus, du moment où il y en a déjà eu deux en RPC.
+	// Le référentiel de téléphonie est-il lié
 	F_RechDetPro ( lDeb, lFin, idwDetPro, istPass.dwMaster.GetItemNumber ( 1, "ID_PROD" ), '-DP',  25 )    
 	If lDeb > 0 Then
-		// Param de t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phonie Pr$$HEX1$$e900$$ENDHEX$$sent.
+		// Param de téléphonie Présent.
 		If idwDetPro.GetItemString ( lDeb, "ID_CODE_CAR" ) = "TEL" Then
 */
 	
@@ -1697,7 +1716,7 @@ if bOk then
 			idwLstCmdeSin.SetSort ( sSortOri ) // [JFF20120312]
 			idwLstCmdeSin.Sort ()	
 
-			//[VDOC4132] Shunt sur condition particulier donn$$HEX1$$e900$$ENDHEX$$es par A. Rault
+			//[VDOC4132] Shunt sur condition particulier données par A. Rault
 			If lRow >= 2 Then
 				sFiltrePrs = "ID_TYP_ART = 'PRS' AND COD_ETAT IN ('RPC', 'RFO')"
 				idwLstCmdeSin.setfilter(sFiltrePrs)
@@ -1728,7 +1747,7 @@ if bOk then
 end if
 // FIN - #7 #10
 
-// Cas GO MICRO, (ALAPAGE) Si R$$HEX1$$e900$$ENDHEX$$paration alors uniquement pour les PCP et PCB
+// Cas GO MICRO, (ALAPAGE) Si Réparation alors uniquement pour les PCP et PCB
 F_RechDetPro ( lDeb, lFin, idwDetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 89 )
 If lDeb > 0 And asChoixAction = "R" Then
 	Choose Case sTypApp
@@ -1737,7 +1756,7 @@ If lDeb > 0 And asChoixAction = "R" Then
 		Case Else
 
 			bOk = False
-			stMessage.sTitre		= "R$$HEX1$$e900$$ENDHEX$$paration"
+			stMessage.sTitre		= "Réparation"
 			stMessage.Icon			= Information!
 			stMessage.bErreurG	= FALSE
 			stMessage.Bouton		= OK!
@@ -1784,7 +1803,7 @@ If bOk Then
 						End If
 		
 						If Not bOk Then
-							stMessage.sTitre		= "Zones $$HEX2$$e0002000$$ENDHEX$$saisie"
+							stMessage.sTitre		= "Zones à saisie"
 							stMessage.Icon			= Information!
 							stMessage.bErreurG	= FALSE
 							stMessage.Bouton		= OK!
@@ -1816,13 +1835,13 @@ If lDeb > 0 Then
 				//(971) Guadeloupe 
 				// (972) Martinique 
 				// (973) Guyane 
-				// (974) La R$$HEX1$$e900$$ENDHEX$$union 
+				// (974) La Réunion 
 				// (975) Saint-Pierre-et-Miquelon 
 				// (976) Mayotte 
 				// (984) Terres Australes et Antarctiques 
 				// (986) Wallis et Futuna 
-				// (987) Polyn$$HEX1$$e900$$ENDHEX$$sie Fran$$HEX1$$e700$$ENDHEX$$aise 
-				// (988) Nouvelle-Cal$$HEX1$$e900$$ENDHEX$$donie 
+				// (987) Polynésie Française 
+				// (988) Nouvelle-Calédonie 
 				// ON contredit le process alors 
 				bOk = False
 				stMessage.sTitre		= "Pas de commande pour les DOM COM"
@@ -1870,7 +1889,7 @@ End if
 // [PC202553_SELECTRA]
 If bOk Then
 	
-	// Recherche for$$HEX1$$e700$$ENDHEX$$age Pec
+	// Recherche forçage Pec
 	lRow = dw_w_div_det.Find ( &
 						"ID_GTI = " + String ( lIdGti ) + " AND " + &
 						"ID_DETAIL = " + String ( lIdDetail ) + " AND " + &
@@ -1878,7 +1897,7 @@ If bOk Then
 						"VAL_LST_CAR = 'O'" &																		
 						, 1, dw_w_div_det.Rowcount() ) 
 	
-	// Si Pec Forc$$HEX2$$e9002000$$ENDHEX$$=> pas de blocage
+	// Si Pec Forcé => pas de blocage
 	If lRow <= 0 Then 
 		lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'FRANCHISE_PAYBOX'", 1, idwWDivSin.RowCount () ) 
 		If lRow <=0 Then sVal = "N"
@@ -1965,7 +1984,7 @@ If bOk And sVarianteELD = "BLANC" Then
 	lIdEvt = dw_1.GetItemNumber ( 1, "ID_EVT" )
 	
 	If lIdEvt = 1083 And dcMtValAchat >= 200 Then
-		stMessage.sTitre		= "Contrainte Electro D$$HEX1$$e900$$ENDHEX$$p$$HEX1$$f400$$ENDHEX$$t"
+		stMessage.sTitre		= "Contrainte Electro Dépôt"
 		stMessage.Icon			= Information!
 		stMessage.bErreurG	= FALSE
 		stMessage.Bouton		= OK!
@@ -1978,7 +1997,7 @@ If bOk And sVarianteELD = "BLANC" Then
 	End If
 
 	If lIdEvt = 937 And dcMtValAchat < 200 Then
-		stMessage.sTitre		= "Contrainte Electro D$$HEX1$$e900$$ENDHEX$$p$$HEX1$$f400$$ENDHEX$$t"
+		stMessage.sTitre		= "Contrainte Electro Dépôt"
 		stMessage.Icon			= Information!
 		stMessage.bErreurG	= FALSE
 		stMessage.Bouton		= OK!
@@ -1997,7 +2016,7 @@ If bOk And sVarianteELD = "GRIS" Then
 	lIdEvt = dw_1.GetItemNumber ( 1, "ID_EVT" )
 
 	If lIdEvt = 1083 And dcMtValAchat >= 200 Then
-		stMessage.sTitre		= "Contrainte Electro D$$HEX1$$e900$$ENDHEX$$p$$HEX1$$f400$$ENDHEX$$t"
+		stMessage.sTitre		= "Contrainte Electro Dépôt"
 		stMessage.Icon			= Information!
 		stMessage.bErreurG	= FALSE
 		stMessage.Bouton		= OK!
@@ -2015,7 +2034,7 @@ If bOk And sVarianteELD = "GRIS" Then
 		lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'TELEDIAG_OK'", 1, idwWDivSin.RowCount () ) 
 		If lRow > 0 Then 
 			If Upper ( idwWDivSin.GetItemString ( lRow, "VAL_ALT" ) ) = "O" Then
-				stMessage.sTitre		= "Contrainte Electro D$$HEX1$$e900$$ENDHEX$$p$$HEX1$$f400$$ENDHEX$$t"
+				stMessage.sTitre		= "Contrainte Electro Dépôt"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
@@ -2027,7 +2046,7 @@ If bOk And sVarianteELD = "GRIS" Then
 	End If
 
 	If lIdEvt = 937 And dcMtValAchat < 200 Then
-		stMessage.sTitre		= "Contrainte Electro D$$HEX1$$e900$$ENDHEX$$p$$HEX1$$f400$$ENDHEX$$t"
+		stMessage.sTitre		= "Contrainte Electro Dépôt"
 		stMessage.Icon			= Information!
 		stMessage.bErreurG	= FALSE
 		stMessage.Bouton		= OK!
@@ -2051,7 +2070,7 @@ If bOk And sVarianteELD = "BRUN" Then
 		lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'TELEDIAG_OK'", 1, idwWDivSin.RowCount () ) 
 		If lRow > 0 Then 
 			If Upper ( idwWDivSin.GetItemString ( lRow, "VAL_ALT" ) ) = "O" Then
-				stMessage.sTitre		= "Contrainte Electro D$$HEX1$$e900$$ENDHEX$$p$$HEX1$$f400$$ENDHEX$$t"
+				stMessage.sTitre		= "Contrainte Electro Dépôt"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
@@ -2073,7 +2092,7 @@ If bOk Then
 	// Autor Cmde Gestionnaire
 	F_RechDetPro ( lDeb, lFin, idwDetPro, istPass.dwMaster.GetItemNumber ( 1, "ID_PROD" ), '-DP', 79 )
 
-	// Autor Cmde Assur$$HEX1$$e900$$ENDHEX$$
+	// Autor Cmde Assuré
 	IF lDeb <= 0 Then
 		F_RechDetPro ( lDeb, lFin, idwDetPro, istPass.dwMaster.GetItemNumber ( 1, "ID_PROD" ), '-DP', 80 )
 	End If
@@ -2086,9 +2105,9 @@ If bOk Then
 	bOk = lDeb > 0 
 
 	If Not bOk Then
-			sMes = "Le param$$HEX1$$e800$$ENDHEX$$trage n'autorise pas cette action, contactez la cellule param$$HEX1$$e800$$ENDHEX$$trage au 2245 (-DP/79/80/81)"
+			sMes = "Le paramètrage n'autorise pas cette action, contactez la cellule paramètrage au 2245 (-DP/79/80/81)"
 			
-			stMessage.sTitre		= "Param$$HEX1$$e800$$ENDHEX$$trage"
+			stMessage.sTitre		= "Paramètrage"
 			stMessage.Icon			= Information!
 			stMessage.bErreurG	= FALSE
 			stMessage.Bouton		= OK!
@@ -2117,7 +2136,7 @@ If lRow2 <= 0 Then
 	Choose Case lIdEvt 
 		Case 1422, 1426
 			bOk = False
-			stMessage.sTitre		= "Param$$HEX1$$e800$$ENDHEX$$trage"
+			stMessage.sTitre		= "Paramètrage"
 			stMessage.Icon			= Information!
 			stMessage.bErreurG	= FALSE
 			stMessage.Bouton		= OK!
@@ -2130,21 +2149,21 @@ End If
 
 // #1
 /*------------------------------------------------------------------*/
-/* L'action est-elle valide avec le choix de l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement.           */
+/* L'action est-elle valide avec le choix de l'événement.           */
 /*------------------------------------------------------------------*/
 If bOk Then
 	sTbLibEvt [1] = "REMPL"
 	sTbLibEvt [2] = "REPAR"
-	sTbLibEvt [3] = "R$$HEX1$$c900$$ENDHEX$$PAR"
+	sTbLibEvt [3] = "RÉPAR"
 
 	//* #14 [DCMP090327].[SBETV]
 	sTbLibEvt [4] = "DIAG/BROKER" // #8 JFF
    sTbLibEvt [5] = "DEMANDE ENL" // [PC469]
 	sTbLibEvt [6] = "BON EMARGE"  // [DT209]
-	sTbLibEvt [7] = "BON $$HEX1$$c900$$ENDHEX$$MARG$$HEX1$$c900$$ENDHEX$$" // [DT209]
+	sTbLibEvt [7] = "BON ÉMARGÉ" // [DT209]
 	sTbLibEvt [8] = "CONTESTATION" // [DT209]
 	sTbLibEvt [9] = "INFORMER" // [DT288-3_LOT1_2EME_VS]
-	sTbLibEvt [10] = "CONTR$$HEX1$$d400$$ENDHEX$$LE IMEI" // [PC874_2_V1]	
+	sTbLibEvt [10] = "CONTRÔLE IMEI" // [PC874_2_V1]	
 
 // [PM82][LOT1]
 // [ITSM274734]
@@ -2303,7 +2322,7 @@ If bOk Then
 				
 				// [PM82][LOT1]
 				// [HP252_276_HUB_PRESTA] bPrestaHubCodeVerrouManquant 
-				Case "REPAR", "R$$HEX1$$c900$$ENDHEX$$PAR"
+				Case "REPAR", "RÉPAR"
 				
 					// [PM330-1]
 					If Not bPRS_Retour_153_154 And Not bPRS_Retour_21 And Not bPrestaHubCodeVerrouManquant Then
@@ -2312,7 +2331,7 @@ If bOk Then
 					End If
 				// [PM82][LOT1]
 				
-				Case "BON EMARGE", "BON $$HEX1$$c900$$ENDHEX$$MARG$$HEX1$$c900$$ENDHEX$$"
+				Case "BON EMARGE", "BON ÉMARGÉ"
 				
 					lRow  = idwLstCmdeSin.Find ( "ID_FOUR = 'SBE' AND COD_ETAT IN ( 'RPC', 'RFO' ) AND STATUS_GC IN ( 2, 21, 152, 178)", 1, idwLstCmdeSin.RowCount() )									
 					If lRow <= 0 Then
@@ -2347,7 +2366,7 @@ If bOk Then
 						stMessage.sCode = "COMD978"
 					End IF 
 				
-				Case "CONTR$$HEX1$$d400$$ENDHEX$$LE IMEI"
+				Case "CONTRÔLE IMEI"
 					// [PC874_2_V1]
 					// OK
 				
@@ -2362,12 +2381,12 @@ If bOk Then
 
 
 /*------------------------------------------------------------------*/
-/* Le 25/03/2005 JFF : Courcircuit$$HEX2$$e9002000$$ENDHEX$$suite entretien verbal avec M.  */
-/* Legac, ce contr$$HEX1$$f400$$ENDHEX$$le est g$$HEX1$$ea00$$ENDHEX$$nant pour MSS.                          */
+/* Le 25/03/2005 JFF : Courcircuité suite entretien verbal avec M.  */
+/* Legac, ce contrôle est gênant pour MSS.                          */
 /*------------------------------------------------------------------*/
 		Case "R"  // #2
 			Choose Case sVal
-				Case  "REPAR", "R$$HEX1$$c900$$ENDHEX$$PAR"
+				Case  "REPAR", "RÉPAR"
 					// OK
 				Case Else
 					bOk = False
@@ -2446,7 +2465,7 @@ If bOk Then
 			// [DT168] 
 			If Not bOk Then lDeb = -1
 
-			// #15 [DCMP090474] Pour ces cas, on shunt dans tous les cas le retour de l'option en for$$HEX1$$e700$$ENDHEX$$ant $$HEX2$$e0002000$$ENDHEX$$-1
+			// #15 [DCMP090474] Pour ces cas, on shunt dans tous les cas le retour de l'option en forçant à -1
 			// #16 [DMDI26886]
 			Choose Case sMarque 
 				 Case "SAMSUNG"
@@ -2482,7 +2501,7 @@ If bOk Then
 				lIdDetail = dw_1.GetItemNumber ( 1, "ID_DETAIL" )
 
 
-				// Recherche for$$HEX1$$e700$$ENDHEX$$age Pec
+				// Recherche forçage Pec
 				lRow = dw_w_div_det.Find ( &
 									"ID_GTI = " + String ( lIdGti ) + " AND " + &
 									"ID_DETAIL = " + String ( lIdDetail ) + " AND " + &
@@ -2571,7 +2590,7 @@ If bOk Then
 				bBlocageGeoloc = lnvPFCString.of_getkeyvalue (idwDetPro.GetItemString ( lDeb, "VAL_CAR" ), "BLOCAGE_GEOLOC", ";")  = "OUI"
 				sVal = ""
 				
-				// Recherche for$$HEX1$$e700$$ENDHEX$$age Pec
+				// Recherche forçage Pec
 				lRowForPec = dw_w_div_det.Find ( &
 									"ID_GTI = " + String ( lIdGti ) + " AND " + &
 									"ID_DETAIL = " + String ( lIdDetail ) + " AND " + &
@@ -2579,7 +2598,7 @@ If bOk Then
 									"VAL_LST_CAR = 'O'" &																		
 									, 1, dw_w_div_det.Rowcount() ) 
 
-				// Condition d'appel du WS revu avec H$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e800$$ENDHEX$$ne par rapport $$HEX2$$e0002000$$ENDHEX$$la NDC
+				// Condition d'appel du WS revu avec Hélène par rapport à la NDC
 				// [DT288-1][MODIF_CHRISTINE]
 				If ( ( sVal = "ORANGE_V3BIS" OR sVal = "ORANGE_V3TER" ) &
 					  Or &
@@ -2595,8 +2614,8 @@ If bOk Then
 					
 					If F_IMEI ( sIMEI, sIMEICorrige ) Then
 						
-						// Je pr$$HEX1$$e900$$ENDHEX$$viens le GT par un msgbox que l'appel peut prendre en tre 15 et 30s
-						stMessage.sTitre		= "Appel de WebService Ext$$HEX1$$e900$$ENDHEX$$rieur"
+						// Je préviens le GT par un msgbox que l'appel peut prendre en tre 15 et 30s
+						stMessage.sTitre		= "Appel de WebService Extérieur"
 						stMessage.Icon			= Information!
 						stMessage.bErreurG	= FALSE
 						stMessage.Bouton		= OK!
@@ -2612,7 +2631,7 @@ If bOk Then
 						// iGeolocalise = 0  // Shunt
 
 						If iGeolocalise = -1 Then
-							stMessage.sTitre		= "G$$HEX1$$e900$$ENDHEX$$olocalis$$HEX1$$e900$$ENDHEX$$"
+							stMessage.sTitre		= "Géolocalisé"
 							stMessage.Icon			= Information!
 							stMessage.bErreurG	= FALSE
 							stMessage.Bouton		= OK!
@@ -2620,9 +2639,9 @@ If bOk Then
 						
 						End If
 						
-						// G$$HEX1$$e900$$ENDHEX$$olo par d$$HEX1$$e900$$ENDHEX$$faut car invalide (vu avec H$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e800$$ENDHEX$$ne)
+						// Géolo par défaut car invalide (vu avec Hélène)
 						If iGeolocalise < 0 And iGeolocalise <> -1 Then
-							stMessage.sTitre		= "G$$HEX1$$e900$$ENDHEX$$olocalis$$HEX1$$e900$$ENDHEX$$"
+							stMessage.sTitre		= "Géolocalisé"
 							stMessage.Icon			= Information!
 							stMessage.bErreurG	= FALSE
 							stMessage.Bouton		= OK!
@@ -2630,9 +2649,9 @@ If bOk Then
 						
 						End If
 						
-						// G$$HEX1$$e900$$ENDHEX$$oloc normal
+						// Géoloc normal
 						If iGeolocalise = 1 Then
-							stMessage.sTitre		= "G$$HEX1$$e900$$ENDHEX$$olocalis$$HEX1$$e900$$ENDHEX$$"
+							stMessage.sTitre		= "Géolocalisé"
 							stMessage.Icon			= Information!
 							stMessage.bErreurG	= FALSE
 							stMessage.Bouton		= OK!
@@ -2640,9 +2659,9 @@ If bOk Then
 							
 						End If
 						
-						// D$$HEX1$$e900$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$olc
+						// Dégéolc
 						If iGeolocalise = 0 Then
-							stMessage.sTitre		= "D$$HEX1$$e900$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$olocalis$$HEX1$$e900$$ENDHEX$$"
+							stMessage.sTitre		= "Dégéolocalisé"
 							stMessage.Icon			= Information!
 							stMessage.bErreurG	= FALSE
 							stMessage.Bouton		= OK!
@@ -2650,7 +2669,7 @@ If bOk Then
 						
 							F_Message ( stMessage )		
 						
-						// Marquage D$$HEX1$$e900$$ENDHEX$$G$$HEX1$$e900$$ENDHEX$$oloc								
+						// Marquage DéGéoloc								
 							lRow = idwWDivSin.Find("Upper(NOM_ZONE)='GEOLOC_SIMPA2'", 1, idwWDivSin.RowCount())
 							If lRow > 0 Then
 								idwWDivSin.SetItem(lRow,"VAL_CAR","N")
@@ -2662,7 +2681,7 @@ If bOk Then
 							
 						End If
 
-						// Marquage G$$HEX1$$e900$$ENDHEX$$oloc
+						// Marquage Géoloc
 						If iGeolocalise < 0 Or iGeolocalise = 1 Then
 							bOk = False
 							lRow = idwWDivSin.Find("Upper(NOM_ZONE)='GEOLOC_SIMPA2'", 1, idwWDivSin.RowCount())
@@ -2679,7 +2698,7 @@ If bOk Then
 						Destroy nWsCordon
 					
 					Else
-						// G$$HEX1$$e900$$ENDHEX$$oloc par d$$HEX1$$e900$$ENDHEX$$faut car aucun IMEI n'est saisi
+						// Géoloc par défaut car aucun IMEI n'est saisi
 					
 					End If 						
 
@@ -2716,8 +2735,8 @@ If bOk Then
 
 
 					// [VDOC27799]
-					// X. Robert a eu "la bonne id$$HEX1$$e900$$ENDHEX$$e" (hum...) de marquer sur KSL la possibilit$$HEX2$$e9002000$$ENDHEX$$de n'$$HEX1$$e900$$ENDHEX$$mettre qu'un seul BGE ELD sur un m$$HEX1$$ea00$$ENDHEX$$me sinistre
-					// Nous sommes donc oblig$$HEX1$$e900$$ENDHEX$$s de bloquer l'envoi d'un deuxi$$HEX1$$e800$$ENDHEX$$me car il ne sera jamais g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$par KSL.
+					// X. Robert a eu "la bonne idée" (hum...) de marquer sur KSL la possibilité de n'émettre qu'un seul BGE ELD sur un même sinistre
+					// Nous sommes donc obligés de bloquer l'envoi d'un deuxième car il ne sera jamais généré par KSL.
 /*
 						F_RechDetPro ( lDeb, lFin, idwDetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 266 )
 						If lDeb > 0 Then
@@ -2743,7 +2762,7 @@ If bOk Then
 						// [ITSM529150]
 						Choose Case lIdGti
 							Case 10, 8, 12
-								// Pas de r$$HEX1$$e900$$ENDHEX$$paration, c'est normal
+								// Pas de réparation, c'est normal
 							Case Else
 								Choose case lIdEvt 
 									Case 1396
@@ -2784,7 +2803,7 @@ If bOk Then
 	If Not bOk Then
 
 		stMessage.bErreurG	= FALSE
-		stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de saisie du d$$HEX1$$e900$$ENDHEX$$tail"
+		stMessage.sTitre		= "Contrôle de saisie du détail"
 		stMessage.Icon			= Information!
 
 		f_Message ( stMessage )
@@ -2807,7 +2826,7 @@ public function boolean wf_vdoc17797 ();//*-------------------------------------
 //* Fonction      : w_td_sp_w_detail::wf_vDoc17797 (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 04/06/2015 
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Pour Tamet, on ne tient pas compte du forfait
+//* Libellé       : Pour Tamet, on ne tient pas compte du forfait
 //* Commentaires  : [VDOC17797]
 //*
 //* Arguments     : 
@@ -2864,7 +2883,7 @@ public subroutine wf_marquageetatpiecesherpa (integer aid_pce, string asetat_pce
 //* Fonction		: W_Td_Sp_w_detail::Wf_MarquageEtatPieceSherpa (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 03/01/2020
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PC192290]
 //*
 //* Arguments		: Aucun
@@ -2898,7 +2917,7 @@ public subroutine wf_marquageetatpiecesherpa_rs5656 (integer aid_gti, integer ai
 //* Fonction		: W_Td_Sp_w_detail::Wf_MarquageEtatPieceSherpa_RS5656 (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 03/01/2020
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PC192290]
 //*
 //* Arguments		: Aucun
@@ -2915,7 +2934,7 @@ String sModeFctDp345, sCodePce
 n_cst_string lnvPFCString
 Long lDeb, lFin
 
-// Determination de la M$$HEX1$$e900$$ENDHEX$$thode  // [RS5656_MOD_PCE_DIF]
+// Determination de la Méthode  // [RS5656_MOD_PCE_DIF]
 F_RechDetPro(lDeb, lFin, idwdetpro, idwProduit.GetItemNumber( 1,"ID_PROD"),"-DP",345)
 sModeFctDp345 = lnvPFCString.of_getkeyvalue (idwDetPro.GetItemString ( lDeb, "VAL_CAR" ), "MODE_FCT", ";")
 If sModeFctDp345 = "" Then sModeFctDp345 = "UNIQUE"
@@ -2951,26 +2970,26 @@ event ue_item5;call super::ue_item5;//*-----------------------------------------
 //* Evenement 		: ue_Item5
 //* Auteur			: Fabry JF
 //* Date				: 19/09/01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$clenchement du Click sur le bouton Commander
+//* Libellé			: Déclenchement du Click sur le bouton Commander
 //* Commentaires	: 
 //*				  
 //*--------------------------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //* #1  CAG  18/02/2003 DCMP 030103 : Ajout d'une box pour confirmer
 //*								saisie d'une cmde/prs alors qu'il en existe
-//*								d$$HEX1$$e900$$ENDHEX$$j$$HEX1$$e000$$ENDHEX$$.
+//*								déjà.
 //* #2  JFF  30/10/2003	MtValAchat (si DET_PRO=9) obligatoire pour commander
 //* #3  JFF		03/03/2004 DCMP 040098 : Modification pour ORANGE Marketing.
-//*   MADM	09/01/2006 DCMP 060007 : HANDSPRING peut $$HEX1$$ea00$$ENDHEX$$tre command$$HEX1$$e900$$ENDHEX$$e maintenant.
-//* #4  JFF  22/03/2006  R$$HEX1$$e900$$ENDHEX$$initialisation du sRech (Bug sinon)
-//* #5 MADM  20/07/2007  DCMP 060538 bloquer l'envoi en centre de r$$HEX1$$e900$$ENDHEX$$paration de la marque VK
-//* #6 MADM  28/07/2006  DCMP 060555 bloquer l'envoi en centre de r$$HEX1$$e900$$ENDHEX$$paration des marques ETEN et MIO
-//* #7 MADM  03/08/2006 DCMP 060562 bloquer l'envoi en centre de r$$HEX1$$e900$$ENDHEX$$paration de la marque PALMONE et PALM (M$$HEX1$$ea00$$ENDHEX$$me marque)
+//*   MADM	09/01/2006 DCMP 060007 : HANDSPRING peut être commandée maintenant.
+//* #4  JFF  22/03/2006  Réinitialisation du sRech (Bug sinon)
+//* #5 MADM  20/07/2007  DCMP 060538 bloquer l'envoi en centre de réparation de la marque VK
+//* #6 MADM  28/07/2006  DCMP 060555 bloquer l'envoi en centre de réparation des marques ETEN et MIO
+//* #7 MADM  03/08/2006 DCMP 060562 bloquer l'envoi en centre de réparation de la marque PALMONE et PALM (Même marque)
 //* #8 MADM  09/10/2006 DCMP 060693 Gestion Media Saturn
 //* -- JFF   06/11/2006 DCMP 060805 Interdiction "Asus"
 //* -- JFF   20/11/2006 DCMP 060842 Interdiction "BENQ SIEMENS"
 //* #9 PHG	 25/11/2006 [CRAO_LOT2] Desactivation Option 19
-//* #10 JFF    01/10/2007   [DCMP070689] compl$$HEX1$$e800$$ENDHEX$$ment Darty Swap&DartyMP
+//* #10 JFF    01/10/2007   [DCMP070689] complèment Darty Swap&DartyMP
 //* #11 JFF	 20/12/2007 [O2M]
 //* #12 JFF  31/10/2007 [DCMP070819]
 //* #13 JFF  10/01/2007 [DCMP080033] Ajout APPLE en interdiction Totale
@@ -2986,7 +3005,7 @@ event ue_item5;call super::ue_item5;//*-----------------------------------------
 //* #22 JFF  25/09/2008 [DMDI23918]
 //* #23 JFF  06/01/2009 [DMDI24606]
 //* #24 JFF  06/01/2009 [DMDI24655]
-//* #25 FPI  20/03/2009 [DCMP090109] O2M R$$HEX1$$e900$$ENDHEX$$parateur IPhone
+//* #25 FPI  20/03/2009 [DCMP090109] O2M Réparateur IPhone
 //* #26 JFF	 20/04/2009 [DMDI25515][DMDI25516]
 //* #27 JFF  12/06/2009 [DCMP090243]
 //* #28 JFF  12/06/2009 [DMDI25906]
@@ -3000,12 +3019,12 @@ event ue_item5;call super::ue_item5;//*-----------------------------------------
 //* #36 JFF  19/01/2009 [DCMP100026]
 //* #37 FPI	 29/03/2010	[DCMP100233]
 //* #38 FPI	 30/03/2010	[DCMP100183]
-// 	  FPI  27/04/2010 [DCMP100306] Ajout de 39400 $$HEX2$$e0002000$$ENDHEX$$39404
+// 	  FPI  27/04/2010 [DCMP100306] Ajout de 39400 à 39404
 //      JFF	 29/04/2010 [MSS_LOT2].[20100429165933570]
 //      JFF  03/06/2010 [PC397/443_IPAD]
 //      JFF  29/06/2010 [PC41]
 //      JFF  22/07/2010 [PM140]
-//		  FPI	 27/10/2010	[VDoc1338] Interdiction r$$HEX1$$e900$$ENDHEX$$paration mobile DELL
+//		  FPI	 27/10/2010	[VDoc1338] Interdiction réparation mobile DELL
 //      JFF  13/12/2010 [PC551]
 //      JFF  21/12/2010 [PC474]
 //		FPI	18/02/2011	[PC321]
@@ -3013,20 +3032,20 @@ event ue_item5;call super::ue_item5;//*-----------------------------------------
 //      FPI	 11/04/2011	[PC434]
 //      FPI	 11/04/2011	[PC442]
 //		  JFF  15/04/2011 [PC323]	9620		
-//		FPI	18/04/2011	[VDoc3926] Interdiction de r$$HEX1$$e900$$ENDHEX$$parer la marque OWASYS
-//		FPI	19/04/2011	[PC581] ajout du 10940 pour la r$$HEX1$$e900$$ENDHEX$$paration d'IPAD
+//		FPI	18/04/2011	[VDoc3926] Interdiction de réparer la marque OWASYS
+//		FPI	19/04/2011	[PC581] ajout du 10940 pour la réparation d'IPAD
 //		FPI	02/05/2011	[PC595]
 //		FPI	11/05/2011	[PC514]
-//		FPI	31/05/2011	 [PC581] [PC514] [PC512-1] Ajout d'IPhone en r$$HEX1$$e900$$ENDHEX$$paration
+//		FPI	31/05/2011	 [PC581] [PC514] [PC512-1] Ajout d'IPhone en réparation
 //		FPI	04/07/2011	 [PC514-1] 
-//    JFF   12/07/2011   [PC547] Ajout produit 30800 $$HEX2$$e0002000$$ENDHEX$$30803
+//    JFF   12/07/2011   [PC547] Ajout produit 30800 à 30803
 //	FPI	01/08/2011	 [PC413-1_Lot1] Ajout 22511 to 22514
-//		FPI	16/08/2011	[VDoc4995] Interdiction de MTT en r$$HEX1$$e900$$ENDHEX$$paration
+//		FPI	16/08/2011	[VDoc4995] Interdiction de MTT en réparation
 //	FPI	16/08/2011	 [PC521] Ajout de 44500 pour l'IPhone
 //*       JFF   19/09/2011   [PM82][LOT1]
 // 		FPI	27/09/2011	[PC514-1] Ajout 36812,36813 pour l'IPad
 // 		FPI	05/10/2011	[VDoc4564] Option 200 pour les IPad & Iphones
-// 		FPI	30/11/2011	[VDoc6143] Ajout mod$$HEX1$$e800$$ENDHEX$$les d'Iphone 4S
+// 		FPI	30/11/2011	[VDoc6143] Ajout modèles d'Iphone 4S
 //*      JFF    16/02/2012   [ITSM105388]
 //*      JFF    23/02/2012   [VDOC7066]
 //*      JFF    22/03/2012   [VDOC7214]
@@ -3132,7 +3151,7 @@ bSavRDC = lDeb > 0
 
 // #20 [DCMP080204]
 lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'TYPE_APP'", 1, idwWDivSin.RowCount () ) 
-//Si Row non trouv$$HEX2$$e9002000$$ENDHEX$$alors HP interdit
+//Si Row non trouvé alors HP interdit
 If lRow <= 0 Then 
 	sTypApp = ""
 Else
@@ -3171,7 +3190,7 @@ Choose Case sChoixAction
 		SQLCA.PS_S01_AUTORISATION ( 206, '*', lIdProd, lTrouve )
 		If lTrouve <= 0 Then sRech = ""
 
-		stMessage.sVar [1]  = "d'une r$$HEX1$$e900$$ENDHEX$$paration"
+		stMessage.sVar [1]  = "d'une réparation"
 
 	Case "C"
 		sRech = "ID_NAT_OPER = 207 AND " + &
@@ -3217,7 +3236,7 @@ sModele = Upper ( idwWSin.GetItemString ( 1, "MODL_PORT" ) ) // #18
 sRech = ""
 // Fin #4
 
-// Interdiction par marque mod$$HEX1$$e800$$ENDHEX$$le pour tout produit, tout r$$HEX1$$e900$$ENDHEX$$parateur
+// Interdiction par marque modèle pour tout produit, tout réparateur
 Choose Case sChoixAction 
 	Case "R"
 
@@ -3227,7 +3246,7 @@ Choose Case sChoixAction
 					Choose Case sModele
 						Case "EEEPC / CLE3G+"
 							sRech = "TROUVE"
-							stMessage.sVar [1]  = sMarque + " mod$$HEX1$$e800$$ENDHEX$$le " + sModele
+							stMessage.sVar [1]  = sMarque + " modèle " + sModele
 							stMessage.sCode	  = "COMD113"
 							
 					End Choose
@@ -3236,7 +3255,7 @@ Choose Case sChoixAction
 					Choose Case sModele
 						Case "CLE3G+ E172", "228"
 							sRech = "TROUVE"
-							stMessage.sVar [1]  = sMarque + " mod$$HEX1$$e800$$ENDHEX$$le " + sModele
+							stMessage.sVar [1]  = sMarque + " modèle " + sModele
 							stMessage.sCode	  = "COMD113"
 							
 					End Choose
@@ -3245,7 +3264,7 @@ Choose Case sChoixAction
 					Choose Case sModele
 						Case "111", "227", "228", "231", "MY POCKET 521"
 							sRech = "TROUVE"
-							stMessage.sVar [1]  = sMarque + " mod$$HEX1$$e800$$ENDHEX$$le " + sModele
+							stMessage.sVar [1]  = sMarque + " modèle " + sModele
 							stMessage.sCode	  = "COMD113"
 							
 					End Choose
@@ -3254,7 +3273,7 @@ Choose Case sChoixAction
 					Choose Case sModele
 						Case "MY POCKET 521"
 							sRech = "TROUVE"
-							stMessage.sVar [1]  = sMarque + " mod$$HEX1$$e800$$ENDHEX$$le " + sModele
+							stMessage.sVar [1]  = sMarque + " modèle " + sModele
 							stMessage.sCode	  = "COMD113"
 							
 					End Choose
@@ -3263,7 +3282,7 @@ Choose Case sChoixAction
 					Choose Case sModele
 						Case "3G+"
 							sRech = "TROUVE"
-							stMessage.sVar [1]  = sMarque + " mod$$HEX1$$e800$$ENDHEX$$le " + sModele
+							stMessage.sVar [1]  = sMarque + " modèle " + sModele
 							stMessage.sCode	  = "COMD113"
 							
 					End Choose
@@ -3272,7 +3291,7 @@ Choose Case sChoixAction
 					Choose Case sModele
 						Case "PC P200", "SGHE900HUMMER"
 							sRech = "TROUVE"
-							stMessage.sVar [1]  = sMarque + " mod$$HEX1$$e800$$ENDHEX$$le " + sModele
+							stMessage.sVar [1]  = sMarque + " modèle " + sModele
 							stMessage.sCode	  = "COMD113"
 							
 					End Choose
@@ -3283,8 +3302,8 @@ Choose Case sChoixAction
 			/* #5 DCMP 060538 : M Legac													  */
 			/* #6 DCMP 060555                                                   */
 			/*--------------------------------------------------------------------------------------------------------------------------*/	
-			/*MADM 20/04/2006 : DCMP 060184 : La Marque HP ne doit plus $$HEX1$$ea00$$ENDHEX$$tre envoy$$HEX2$$e9002000$$ENDHEX$$en r$$HEX1$$e900$$ENDHEX$$paration mais fera l'objet d'un retour ches SPB*/
-			/*Cela ne concerne que la t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phonie     										    																	 */
+			/*MADM 20/04/2006 : DCMP 060184 : La Marque HP ne doit plus être envoyé en réparation mais fera l'objet d'un retour ches SPB*/
+			/*Cela ne concerne que la téléphonie     										    																	 */
 			/* #7 MADM 18/08/2006 DCMP 060562 IDEM pour la marque PALMONE, PALM							   											 */
 			/*--------------------------------------------------------------------------------------------------------------------------*/	
 			// #38 -[DCMP100183] Ajout ALCATEL et SAGEM
@@ -3413,9 +3432,9 @@ IF sChoixAction = "R" And lRow > 0 Then
 	
 	F_Message ( stMessage )		
 
-	istPass.sTab [ 4 ]=  idwLstCmdeSin.GetItemString(lRow, "ID_SERIE_NOUV") // n$$HEX2$$b0002000$$ENDHEX$$IMEI provenant de l'adh$$HEX1$$e900$$ENDHEX$$sion (a pu $$HEX1$$ea00$$ENDHEX$$tre modifi$$HEX2$$e9002000$$ENDHEX$$depuis l'ouverture du sinistre)
-	istPass.sTab [ 5 ] = idwLstCmdeSin.GetItemString(lRow, "ID_MARQ_ART") // Marque portable adh$$HEX1$$e900$$ENDHEX$$sion.
-	istPass.sTab [ 6 ] = idwLstCmdeSin.GetItemString(lRow, "ID_MODL_ART")  // Mod$$HEX1$$e800$$ENDHEX$$le portable adh$$HEX1$$e900$$ENDHEX$$sion.
+	istPass.sTab [ 4 ]=  idwLstCmdeSin.GetItemString(lRow, "ID_SERIE_NOUV") // n° IMEI provenant de l'adhésion (a pu être modifié depuis l'ouverture du sinistre)
+	istPass.sTab [ 5 ] = idwLstCmdeSin.GetItemString(lRow, "ID_MARQ_ART") // Marque portable adhésion.
+	istPass.sTab [ 6 ] = idwLstCmdeSin.GetItemString(lRow, "ID_MODL_ART")  // Modèle portable adhésion.
 	
 	sRech = ""
 	// [PM280-1][ITSM304152]
@@ -3435,9 +3454,9 @@ Then
 	
 	F_Message ( stMessage )		
 
-	istPass.sTab [ 4 ]=  idwLstCmdeSin.GetItemString(lRow, "ID_SERIE_NOUV") // n$$HEX2$$b0002000$$ENDHEX$$IMEI provenant de l'adh$$HEX1$$e900$$ENDHEX$$sion (a pu $$HEX1$$ea00$$ENDHEX$$tre modifi$$HEX2$$e9002000$$ENDHEX$$depuis l'ouverture du sinistre)
-	istPass.sTab [ 5 ] = idwLstCmdeSin.GetItemString(lRow, "ID_MARQ_ART") // Marque portable adh$$HEX1$$e900$$ENDHEX$$sion.
-	istPass.sTab [ 6 ] = idwLstCmdeSin.GetItemString(lRow, "ID_MODL_ART")  // Mod$$HEX1$$e800$$ENDHEX$$le portable adh$$HEX1$$e900$$ENDHEX$$sion.
+	istPass.sTab [ 4 ]=  idwLstCmdeSin.GetItemString(lRow, "ID_SERIE_NOUV") // n° IMEI provenant de l'adhésion (a pu être modifié depuis l'ouverture du sinistre)
+	istPass.sTab [ 5 ] = idwLstCmdeSin.GetItemString(lRow, "ID_MARQ_ART") // Marque portable adhésion.
+	istPass.sTab [ 6 ] = idwLstCmdeSin.GetItemString(lRow, "ID_MODL_ART")  // Modèle portable adhésion.
 	
 	sRech = ""
 	// [PM280-1][ITSM304152]
@@ -3450,7 +3469,7 @@ End If
 // [ITSM332030]
 F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 256 )
 If lDeb > 0 And sRech = "TROUVE" And sChoixAction = "R" And sMarque = "APPLE" Then
-	sRech = "" // Car $$HEX1$$e700$$ENDHEX$$a va chez SRR et non O2M
+	sRech = "" // Car ça va chez SRR et non O2M
 End If
 
 // [PC13313]
@@ -3507,7 +3526,7 @@ If sRech = "TROUVE" Then
 								
 							If lRow > 0 Then
 								If lnv_key[2].iakeyValue = "ACCORD_48H" Then
-									// Question si bris concerne uniquement l'$$HEX1$$e900$$ENDHEX$$cran ?WDET566
+									// Question si bris concerne uniquement l'écran ?WDET566
 									stMessage.sTitre		= "Commandes"
 									stMessage.Icon			= Question!
 									stMessage.bErreurG	= FALSE
@@ -3517,7 +3536,7 @@ If sRech = "TROUVE" Then
 									bDejaEuMsg = TRUE
 									
 									If F_Message ( stMessage ) = 1 Then
-										// Oui donc assur$$HEX2$$e9002000$$ENDHEX$$ok pour r$$HEX1$$e900$$ENDHEX$$paration ou pas ?
+										// Oui donc assuré ok pour réparation ou pas ?
 											stMessage.sTitre		= "Commandes"
 											stMessage.Icon			= Question!
 											stMessage.bErreurG	= FALSE
@@ -3528,7 +3547,7 @@ If sRech = "TROUVE" Then
 											if F_Message ( stMessage ) = 1 Then
 												sRech=""
 											Else
-												// Refus de r$$HEX1$$e900$$ENDHEX$$paration par l'assur$$HEX1$$e900$$ENDHEX$$, passer une demande de diagnostic
+												// Refus de réparation par l'assuré, passer une demande de diagnostic
 												stMessage.sCode = "WDET569"
 												
 												F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 239)
@@ -3539,7 +3558,7 @@ If sRech = "TROUVE" Then
 											End If
 											
 									Else 
-										// Ce cas ne rel$$HEX1$$e800$$ENDHEX$$ve pas d$$HEX1$$1920$$ENDHEX$$une r$$HEX1$$e900$$ENDHEX$$paration, passez par une demande de diagnostic.
+										// Ce cas ne relève pas d’une réparation, passez par une demande de diagnostic.
 										stMessage.sCode = "WDET567"	
 										
 										F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 239)
@@ -3552,8 +3571,8 @@ If sRech = "TROUVE" Then
 								
 									// [PC869]
 									If lnv_key[2].iakeyValue <> "AUCUNE" And lnv_key[2].iakeyValue <> "REPA_PSM" Then // [DT173].Mt17057
-										// M$$HEX1$$e900$$ENDHEX$$thode Standard
-										// Question si bris concerne uniquement l'$$HEX1$$e900$$ENDHEX$$cran ?WDET566
+										// Méthode Standard
+										// Question si bris concerne uniquement l'écran ?WDET566
 										stMessage.sTitre		= "Commandes"
 										stMessage.Icon			= Question!
 										stMessage.bErreurG	= FALSE
@@ -3566,7 +3585,7 @@ If sRech = "TROUVE" Then
 											// Oui on passe, 	sRech = ""
 											sRech=""
 										Else 
-											// Ce cas ne rel$$HEX1$$e800$$ENDHEX$$ve pas d$$HEX1$$1920$$ENDHEX$$une r$$HEX1$$e900$$ENDHEX$$paration, passez par une demande de diagnostic.
+											// Ce cas ne relève pas d’une réparation, passez par une demande de diagnostic.
 											stMessage.sCode = "WDET567"			
 											// [PC938_ORANGE_V3]
 											F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 239)
@@ -3588,9 +3607,9 @@ If sRech = "TROUVE" Then
 									
 								End If
 							End if
-					End Choose // mod$$HEX1$$e800$$ENDHEX$$le
+					End Choose // modèle
 
-					// toujours le mod$$HEX1$$e800$$ENDHEX$$le mais de fa$$HEX1$$e700$$ENDHEX$$ons diff$$HEX1$$e900$$ENDHEX$$rente 'demande d'Aur$$HEX1$$e900$$ENDHEX$$lien)
+					// toujours le modèle mais de façons différente 'demande d'Aurélien)
 					// [VDOC7507][VDOC7577]
 					Choose Case True
 						Case Pos ( sModele, "IPAD" ) > 0
@@ -3634,7 +3653,7 @@ If sRech = "TROUVE" Then
 
 								//[DT173].Mt17057 suite erreur FPI.
 								If lnv_key[2].iakeyValue <> "AUCUNE" Then // [DT173].Mt17057
-									// Question si bris concerne uniquement l'$$HEX1$$e900$$ENDHEX$$cran ?WDET566
+									// Question si bris concerne uniquement l'écran ?WDET566
 									stMessage.sTitre		= "Commandes"
 									stMessage.Icon			= Question!
 									stMessage.bErreurG	= FALSE
@@ -3647,7 +3666,7 @@ If sRech = "TROUVE" Then
 										// Oui on passe, 	sRech = ""
 										sRech=""
 									Else 
-										// Ce cas ne rel$$HEX1$$e800$$ENDHEX$$ve pas d$$HEX1$$1920$$ENDHEX$$une r$$HEX1$$e900$$ENDHEX$$paration, passez par une demande de diagnostic.
+										// Ce cas ne relève pas d’une réparation, passez par une demande de diagnostic.
 										stMessage.sCode = "WDET567"		
 										bRefusIpad=TRUE // [PC413-1Lot1]
 									End if
@@ -3662,7 +3681,7 @@ If sRech = "TROUVE" Then
 							
 							// [VDOC12693]
 							if lRow <=0 Then
-								// On autorise la presta de r$$HEX1$$e900$$ENDHEX$$paration d'IPAD pour les produits Carrefour Casse/Vol
+								// On autorise la presta de réparation d'IPAD pour les produits Carrefour Casse/Vol
 								F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 141)
 								If lDeb > 0 Then
 									sRech=""
@@ -3670,7 +3689,7 @@ If sRech = "TROUVE" Then
 							End if
 							// :[VDOC12693]
 							
-					End Choose // Mod$$HEX1$$e800$$ENDHEX$$le
+					End Choose // Modèle
 			End Choose // marque
 			
 	End Choose // action
@@ -3725,7 +3744,7 @@ If sRech <> "TROUVE" And Not bDejaEuMsg Then
 						If sVal <> "" And IsDate ( sVal ) Then
 							dtDtePivotDT447 = DateTime ( sVal )
 			
-							// Traitement apr$$HEX1$$e800$$ENDHEX$$s MEP DT447
+							// Traitement après MEP DT447
 							If dtCreeLeDos >= dtDtePivotDT447 Then
 							
 								Choose Case sVal1
@@ -3736,11 +3755,11 @@ If sRech <> "TROUVE" And Not bDejaEuMsg Then
 											ibBrisEcran = False
 										Else
 											if F_Message ( stMessage ) = 1 Then
-												// Oui on passe, 	sRech = "" (On ira en r$$HEX1$$e900$$ENDHEX$$par chez PSM)
+												// Oui on passe, 	sRech = "" (On ira en répar chez PSM)
 												sRech=""
 												ibBrisEcran = True
 											Else 
-												// Oui on passe, 	sRech = "" (On ira en r$$HEX1$$e900$$ENDHEX$$par chez O2M)
+												// Oui on passe, 	sRech = "" (On ira en répar chez O2M)
 												sRech=""
 												ibBrisEcran = False
 											End if								
@@ -3751,7 +3770,7 @@ If sRech <> "TROUVE" And Not bDejaEuMsg Then
 											// Oui on passe, 	sRech = ""
 											sRech=""
 										Else 
-											// Ce cas ne rel$$HEX1$$e800$$ENDHEX$$ve pas d$$HEX1$$1920$$ENDHEX$$une r$$HEX1$$e900$$ENDHEX$$paration, passez par une demande de diagnostic.
+											// Ce cas ne relève pas d’une réparation, passez par une demande de diagnostic.
 											sRech="TROUVE"
 											stMessage.sCode = "WDET567"			
 										End if	
@@ -3763,7 +3782,7 @@ If sRech <> "TROUVE" And Not bDejaEuMsg Then
 									// Oui on passe, 	sRech = ""
 									sRech=""
 								Else 
-									// Ce cas ne rel$$HEX1$$e800$$ENDHEX$$ve pas d$$HEX1$$1920$$ENDHEX$$une r$$HEX1$$e900$$ENDHEX$$paration, passez par une demande de diagnostic.
+									// Ce cas ne relève pas d’une réparation, passez par une demande de diagnostic.
 									sRech="TROUVE"
 									stMessage.sCode = "WDET567"			
 								End if								
@@ -3774,7 +3793,7 @@ If sRech <> "TROUVE" And Not bDejaEuMsg Then
 								// Oui on passe, 	sRech = ""
 								sRech=""
 							Else 
-								// Ce cas ne rel$$HEX1$$e800$$ENDHEX$$ve pas d$$HEX1$$1920$$ENDHEX$$une r$$HEX1$$e900$$ENDHEX$$paration, passez par une demande de diagnostic.
+								// Ce cas ne relève pas d’une réparation, passez par une demande de diagnostic.
 								sRech="TROUVE"
 								stMessage.sCode = "WDET567"			
 							End if							
@@ -3784,7 +3803,7 @@ If sRech <> "TROUVE" And Not bDejaEuMsg Then
 							// Oui on passe, 	sRech = ""
 							sRech=""
 						Else 
-							// Ce cas ne rel$$HEX1$$e800$$ENDHEX$$ve pas d$$HEX1$$1920$$ENDHEX$$une r$$HEX1$$e900$$ENDHEX$$paration, passez par une demande de diagnostic.
+							// Ce cas ne relève pas d’une réparation, passez par une demande de diagnostic.
 							sRech="TROUVE"
 							stMessage.sCode = "WDET567"			
 						End if							
@@ -3795,7 +3814,7 @@ If sRech <> "TROUVE" And Not bDejaEuMsg Then
 End If
 // [PC202][LOT2][PC041][LOT2]
 
-// [VDOC18734] Doit rester $$HEX2$$e0002000$$ENDHEX$$cet endroit en dernier avant le message, pour les contr$$HEX1$$f400$$ENDHEX$$les suivant, coder au dessus.
+// [VDOC18734] Doit rester à cet endroit en dernier avant le message, pour les contrôles suivant, coder au dessus.
 If sRech <> "TROUVE" Then
 	Choose Case sChoixAction 
 		Case "R"
@@ -3870,10 +3889,10 @@ If sRech <> "" Then
 End If
 
 /*------------------------------------------------------------------*/
-/* #3 : Si IMEI de controle non renseign$$HEX1$$e900$$ENDHEX$$e, on ne commande pas      */
+/* #3 : Si IMEI de controle non renseignée, on ne commande pas      */
 /* Si option 19																	  */
 /*------------------------------------------------------------------*/
-/* #9 [CRAO_LOT2] D$$HEX1$$e900$$ENDHEX$$sactivation Option 19 : On report               */
+/* #9 [CRAO_LOT2] Désactivation Option 19 : On report               */
 /* reporter ce controle pour l'option 75 et #cra_suivi_imei# <> 2    */
 /*------------------------------------------------------------------*/
 //F_RechDetPro ( lDeb, lFin, idwDetPro, istPass.dwMaster.GetItemNumber ( 1, "ID_PROD" ), '-DP', 19 )
@@ -3891,7 +3910,7 @@ End If
 //		Return 
 //	End If
 //End If 
-// remplac$$HEX2$$e9002000$$ENDHEX$$par :
+// remplacé par :
 F_RechDetPro ( lDeb, lFin, idwDetPro, istPass.dwMaster.GetItemNumber ( 1, "ID_PROD" ), '-DP', 75 )
 IF lDeb > 0 Then
 	lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'CRA_SUIVI_IMEI'", 1, idwWDivSin.RowCount () ) 
@@ -3920,7 +3939,7 @@ End If
 If	iuoGsSpwDetail.uf_bt_Commander () < 1	Then Return
 
 /*------------------------------------------------------------------*/
-/* Cas ou l'on ne peut pas passer une 2$$HEX1$$e800$$ENDHEX$$me commande (sauf pour      */
+/* Cas ou l'on ne peut pas passer une 2ème commande (sauf pour      */
 /* AG/RG)  DCMP20103                                                */
 /*------------------------------------------------------------------*/
 // #11
@@ -3955,9 +3974,9 @@ If IsNull ( lIdEvt ) Then
 		Case "C"
 			stMessage.sVar [1]	= "de commander"
 		Case "R"
-			stMessage.sVar [1]	= "de r$$HEX1$$e900$$ENDHEX$$parer"
+			stMessage.sVar [1]	= "de réparer"
 		Case "S"
-			stMessage.sVar [1]	= "de s$$HEX1$$e900$$ENDHEX$$lectionner"
+			stMessage.sVar [1]	= "de sélectionner"
 		Case "I"
 			stMessage.sVar [1]	= "d'informer"
 	End Choose 
@@ -3987,7 +4006,7 @@ ElseIf lDeb > 0 And ( dcMtValAchat <= 0 Or IsNull ( dcMtValAchat ) ) Then
 /*------------------------------------------------------------------*/
 ElseIf Not bCommander And stGlb.sTypOper < "5" And ( sChoixAction = "C" Or sChoixAction = "R" Or sChoixAction = "I") Then
 
-	// [MSS_LOT2].[20100429165933570] Cas d'exception ou on laisse pass$$HEX2$$e9002000$$ENDHEX$$tout de m$$HEX1$$ea00$$ENDHEX$$me
+	// [MSS_LOT2].[20100429165933570] Cas d'exception ou on laisse passé tout de même
 	// [VDOC4097] ajout Or sChoixAction = "C" )
 	// [PC292]
 	// [VDOC9304_PM82_LOT1]
@@ -4037,9 +4056,9 @@ ElseIf Not bCommander And stGlb.sTypOper < "5" And ( sChoixAction = "C" Or sChoi
 End If 
 
 /*------------------------------------------------------------------*/
-/* Gestion Tr$$HEX1$$e800$$ENDHEX$$s particuli$$HEX1$$e800$$ENDHEX$$re DARTY NOMADE                           */
+/* Gestion Très particulière DARTY NOMADE                           */
 /*------------------------------------------------------------------*/
-/* le 10/03/2006 JFF : Je courcircuite cet init. $$HEX2$$e0002000$$ENDHEX$$cet endroit, cause d'un bug g$$HEX1$$ea00$$ENDHEX$$nant.
+/* le 10/03/2006 JFF : Je courcircuite cet init. à cet endroit, cause d'un bug gênant.
    L'init. se fait un fois pour toute sur u_gs_sp_sinitre::uf_preparer_modifier
 */
 // gsCasGestionDartyNomade = ""
@@ -4086,7 +4105,7 @@ If lDeb > 0 Then
 		F_RechDetPro ( lDeb2, lFin2, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 31 )
 
 		// [PC430][V10]
-		// [PC547] Ajout produit 30800 $$HEX2$$e0002000$$ENDHEX$$30803
+		// [PC547] Ajout produit 30800 à 30803
 		// [ITSM105388]
 		bDartyIPAD = lDeb > 0 Or ( lDeb2 > 0 And sTypApp = "TPC"  And Pos ( sModele, "IPAD", 1 ) >0 )
 
@@ -4266,8 +4285,8 @@ End If
 //* #20 [DCMP080204]
 // [PM395-1] TPC
 If bCmd And ( sTypApp = "TEL" OR ( sTypApp = "TPC" ))  AND Not iuoGsSpwDetail.uf_GestOng_Divers_Trouver ("ALT_PEC" ) = "O" Then
-	// On cherche les prestas R$$HEX1$$e900$$ENDHEX$$gl$$HEX1$$e900$$ENDHEX$$es non irr$$HEX1$$e900$$ENDHEX$$parables dont l'envoi au client date de plus de 3 mois.
-	// Si la PEC n'est pas Forc$$HEX1$$e900$$ENDHEX$$e.
+	// On cherche les prestas Réglées non irréparables dont l'envoi au client date de plus de 3 mois.
+	// Si la PEC n'est pas Forcée.
 
 	// [PM395-1]
 	SQLCA.PS_S01_POLICE ( dcIdProd, dcIdRev, dcIdGti, dcIdCie )
@@ -4303,8 +4322,8 @@ If bCmd And ( sTypApp = "TEL" OR ( sTypApp = "TPC" ))  AND Not iuoGsSpwDetail.uf
 		Case "APPLE"
 
 			// [PM222-1]
-			lMoisApple = 12 // Variable en mois $$HEX2$$e0002000$$ENDHEX$$modifier si besoin, dur$$HEX1$$e900$$ENDHEX$$e de la gti de la r$$HEX1$$e900$$ENDHEX$$paration par le CTR
-			lMois = 12 // Variable en mois $$HEX2$$e0002000$$ENDHEX$$modifier si besoin, dur$$HEX1$$e900$$ENDHEX$$e de la gti de la r$$HEX1$$e900$$ENDHEX$$paration par le CTR
+			lMoisApple = 12 // Variable en mois à modifier si besoin, durée de la gti de la réparation par le CTR
+			lMois = 12 // Variable en mois à modifier si besoin, durée de la gti de la réparation par le CTR
 			
 			// [PM395-1]
 			If bDelaiSavLaParisienne Then
@@ -4322,9 +4341,9 @@ If bCmd And ( sTypApp = "TEL" OR ( sTypApp = "TPC" ))  AND Not iuoGsSpwDetail.uf
 
 		Case Else	
 
-			lMoisHApple1 = 3  // Variable en mois $$HEX2$$e0002000$$ENDHEX$$modifier si besoin, dur$$HEX1$$e900$$ENDHEX$$e de la gti de la r$$HEX1$$e900$$ENDHEX$$paration par le CTR
-			lMoisHApple2 = 12  // Variable en mois $$HEX2$$e0002000$$ENDHEX$$modifier si besoin, dur$$HEX1$$e900$$ENDHEX$$e de la gti de la r$$HEX1$$e900$$ENDHEX$$paration par le CTR				
-			lMois = 12  // Variable en mois $$HEX2$$e0002000$$ENDHEX$$modifier si besoin, dur$$HEX1$$e900$$ENDHEX$$e de la gti de la r$$HEX1$$e900$$ENDHEX$$paration par le CTR
+			lMoisHApple1 = 3  // Variable en mois à modifier si besoin, durée de la gti de la réparation par le CTR
+			lMoisHApple2 = 12  // Variable en mois à modifier si besoin, durée de la gti de la réparation par le CTR				
+			lMois = 12  // Variable en mois à modifier si besoin, durée de la gti de la réparation par le CTR
 			
 			// [PM395-1]
 			If bDelaiSavLaParisienne Then
@@ -4365,7 +4384,7 @@ If bCmd And ( sTypApp = "TEL" OR ( sTypApp = "TPC" ))  AND Not iuoGsSpwDetail.uf
 
 	lTotCmd = idwLstCmdeSin.RowCount ()
 
-	// Cl$$HEX2$$e9002000$$ENDHEX$$permanente $$HEX2$$e0002000$$ENDHEX$$ne pas supprimer	
+	// Clé permanente à ne pas supprimer	
 	If F_CLE_A_TRUE ( "SHUNT_CTRLE_PRS3MOIS" ) Then
 		Choose Case stGlb.sCodOper
 			Case "JFF", "FPI"
@@ -4542,13 +4561,13 @@ idwLstCmdeSin.Filter ()
 idwLstCmdeSin.Sort ()
 
 //* #21 [DCMP080426]
-// [DT288][M24507] suppression de ce contr$$HEX1$$f400$$ENDHEX$$le pour tout fournisseur, vu avec Sma$$HEX1$$ef00$$ENDHEX$$n et H$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e800$$ENDHEX$$ne le 03/04/2017
+// [DT288][M24507] suppression de ce contrôle pour tout fournisseur, vu avec Smaïn et Hélène le 03/04/2017
 /*
 If bCmd And sTypApp = "TEL" AND Not iuoGsSpwDetail.uf_GestOng_Divers_Trouver ("ALT_PEC" ) = "O" Then
-	// On interdit les nouvelles PRS si AMU PRS pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dente $$HEX2$$e0002000$$ENDHEX$$un comment [BNV]
-	// ET Si la PEC n'est pas Forc$$HEX1$$e900$$ENDHEX$$e.
+	// On interdit les nouvelles PRS si AMU PRS précédente à un comment [BNV]
+	// ET Si la PEC n'est pas Forcée.
 
-	sCle = "[BNV]" // cl$$HEX4$$e9002000e0002000$$ENDHEX$$trouver
+	sCle = "[BNV]" // clé à trouver
 	
 	lTotCmd = idwLstCmdeSin.RowCount ()
 	For lCptCmd = 1 To lTotCmd 
@@ -4576,7 +4595,7 @@ If bCmd And sTypApp = "TEL" AND Not iuoGsSpwDetail.uf_GestOng_Divers_Trouver ("A
 
 	// [PM82][LOT1]
 	// [MANTIS3276]
-/* // [MANTIS3276] je shunte d$$HEX1$$e900$$ENDHEX$$finitvement cette partie, elle n'a plus de $$HEX2$$e0002000$$ENDHEX$$pr$$HEX1$$e900$$ENDHEX$$sent avec la vDoc7285 en aval.
+/* // [MANTIS3276] je shunte définitvement cette partie, elle n'a plus de à présent avec la vDoc7285 en aval.
 	sRech =  "ID_FOUR = 'O2M' AND ID_TYP_ART = 'PRS' AND POS ( ID_MODL_ART, 'IPHONE', 1 ) > 0 "
 	sRech += "AND COD_ETAT NOT IN ( 'ANN' ) AND STATUS_GC NOT IN ( 153, 154 )"
 	
@@ -4606,7 +4625,7 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		: Ue_Initialiser
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -4633,23 +4652,23 @@ Wf_PositionnerObjets ()
 isTypeTrt = istPass.sTab[ 2 ]
 
 /*------------------------------------------------------------------*/
-/* On commence $$HEX2$$e0002000$$ENDHEX$$initialiser les NVUO.                              */
+/* On commence à initialiser les NVUO.                              */
 /*------------------------------------------------------------------*/
 iuoGsSpwDetail = Create U_Gs_Sp_Sinistre_wDetail
 
 idwDetPro  			= istPass.dwNorm [ 22 ]
 idwProduit 			= istPass.dwNorm [  1 ]
-idwStkIfr   		= istPass.dwNorm [ 25 ] // Dw des Donn$$HEX1$$e900$$ENDHEX$$es IFR
-idwCodEquiv 		= istPass.dwNorm [ 26 ] // Dw des Libell$$HEX1$$e900$$ENDHEX$$s IFR Traduits
+idwStkIfr   		= istPass.dwNorm [ 25 ] // Dw des Données IFR
+idwCodEquiv 		= istPass.dwNorm [ 26 ] // Dw des Libellés IFR Traduits
 idwFourn				= istPass.dwNorm [ 15 ]  // Dw choix des fournisseurs
 idwAutorisation 	= istPass.dwNorm [ 27 ]  // Table des autorisations
-idwStkCodicDarty 	= istPass.dwNorm [ 28 ]   // Table donn$$HEX1$$e900$$ENDHEX$$es CODIC DARTY
-idwDivPDet 			= istPass.dwNorm [ 30 ] // DataWindow Stockage Donn$$HEX1$$e900$$ENDHEX$$es param onglet divers details
+idwStkCodicDarty 	= istPass.dwNorm [ 28 ]   // Table données CODIC DARTY
+idwDivPDet 			= istPass.dwNorm [ 30 ] // DataWindow Stockage Données param onglet divers details
 idwPieceGti 			= istPass.dwNorm [ 33 ] // DataWindow Piece de la garantie - [VDoc4274]
 
 idwWSin	   		= istPass.dwMaster	
 idwWDivSin  		= istPass.udwTab [  1 ]  // Dw_w_Div_Sin
-idwDivDetGti 		= istPass.udwTab [  2 ]    // DataWindow Stockage Donn$$HEX1$$e900$$ENDHEX$$es onglet divers details
+idwDivDetGti 		= istPass.udwTab [  2 ]    // DataWindow Stockage Données onglet divers details
 
 idwLstCmdeSin		= istPass.dwTab[5] // #1
 idwLstDetail		= istPass.dwTab[1]
@@ -4688,13 +4707,13 @@ dwNorm[24] = istPass.dwNorm [ 34 ] // [CONFO][NV_PROCESS] dw detail de plus haut
 dwUDwDet [1] = dw_w_commande
 
 /*------------------------------------------------------------------*/
-/* Ces fonctions sont issues du NVUO anc$$HEX1$$ea00$$ENDHEX$$tre.                       */
+/* Ces fonctions sont issues du NVUO ancêtre.                       */
 /*------------------------------------------------------------------*/
 iuoGsSpwDetail.Uf_Initialisation ( istPass.dwMaster, itrTrans, Uo_Ong, isTypeTrt )
 iuoGsSpwDetail.Uf_Initialiser_Dw ( idwProduit, idwDetPro , False )
 
 /*------------------------------------------------------------------*/
-/* istPass.dwTab[1] = u_DataWindow_Detail -> Lst des d$$HEX1$$e900$$ENDHEX$$tails        */
+/* istPass.dwTab[1] = u_DataWindow_Detail -> Lst des détails        */
 /* istPass.dwTab[2] = u_DataWindow_Detail -> Lst des garanties      */
 /* istPass.dwTab[3] = u_DataWindow_Detail -> Lst des interlocuteurs */
 /* istPass.dwTab[4] = u_DataWindow_Detail -> Lst des Commandes	(Gti)*/
@@ -4716,7 +4735,7 @@ iuoGsSpwDetail.Uf_Initialiser_Dw_Desc &
 	  dwUDwDet []  )
 
 /*------------------------------------------------------------------*/
-/* On initialise l'objet de marquage des pi$$HEX1$$e800$$ENDHEX$$ces et des refus.       */
+/* On initialise l'objet de marquage des pièces et des refus.       */
 /*------------------------------------------------------------------*/
 /* Le 28/11/2001.                                                   */
 /* Modif DGA. DCMP 010375                                           */
@@ -4727,14 +4746,14 @@ iuoGsSpwDetail.Uf_Initialiser_Objets ( Uo_Piece, Uo_Refus, Cb_Tarif, Cb_Commande
 /* Initialisation de l'onglet.                                      */
 /*------------------------------------------------------------------*/
 Uo_Ong.Uf_Initialiser ( 4, 1 )
-Uo_Ong.Uf_EnregistrerOnglet ( "01", "D$$HEX1$$e900$$ENDHEX$$tail", 			"", dw_1,			True )
-Uo_Ong.Uf_EnregistrerOnglet ( "02", "Pi$$HEX1$$e800$$ENDHEX$$ces", 			"", Uo_Piece,			False )
+Uo_Ong.Uf_EnregistrerOnglet ( "01", "Détail", 			"", dw_1,			True )
+Uo_Ong.Uf_EnregistrerOnglet ( "02", "Pièces", 			"", Uo_Piece,			False )
 Uo_Ong.Uf_EnregistrerOnglet ( "03", "Refus",				"", Uo_Refus,			False )
 Uo_Ong.Uf_EnregistrerOnglet ( "04", "Divers",			"", dw_w_div_det,	False )
 
 /*------------------------------------------------------------------*/
 /* Si on est en Consultation/Validation (C)(V), on bouge la         */
-/* cosm$$HEX1$$e900$$ENDHEX$$tique de la fen$$HEX1$$ea00$$ENDHEX$$tre.                                        */
+/* cosmétique de la fenêtre.                                        */
 /*------------------------------------------------------------------*/
 If	isTypeTrt <> "S"	Then
 	Wf_Tb_Consultation ()
@@ -4743,7 +4762,7 @@ End If
 iuoGsSpwDetail.Uf_Traitement ( 1, stPass_Dga )
 
 /*------------------------------------------------------------------*/
-/* Gestion du Passage $$HEX2$$e0002000$$ENDHEX$$l'EURO.                                     */
+/* Gestion du Passage à l'EURO.                                     */
 /*------------------------------------------------------------------*/
 N_Cst_Passage_Euro	nvPassageEuro
 
@@ -4767,7 +4786,7 @@ event show;call super::show;//*-------------------------------------------------
 //* Evenement     : Show
 //* Auteur        : Fabry JF
 //* Date          : 12/05/2005 16:29:10
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -4790,9 +4809,9 @@ event ue_creer;call super::ue_creer;//*-----------------------------------------
 //* Evenement 		: Ue_Creer
 //* Auteur			: Fabry JF
 //* Date				: 13/09/1998 16:37:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Ouverture des Fen$$HEX1$$ea00$$ENDHEX$$tres de d$$HEX1$$e900$$ENDHEX$$tail.
-//*				     (On est en modification d'un d$$HEX1$$e900$$ENDHEX$$tail)
+//* Libellé			: 
+//* Commentaires	: Ouverture des Fenêtres de détail.
+//*				     (On est en modification d'un détail)
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -4808,7 +4827,7 @@ s_Pass stPass
 stPass = istPass
 
 /*------------------------------------------------------------------*/
-/* Si la fen$$HEX1$$ea00$$ENDHEX$$tre de consultation des paragraphes est visible, on    */
+/* Si la fenêtre de consultation des paragraphes est visible, on    */
 /* la rend invisible.                                               */
 /*------------------------------------------------------------------*/
 Wf_Fermer_Consulter_Paragraphe ()
@@ -4824,25 +4843,25 @@ Choose Case isDetailActif
 		stPass.sTab [ 1 ]	= This.Title
 		stPass.sTab [ 2 ]	= isTypeTrt
 		stPass.sTab [ 3 ]	= Uo_Consult_Euro.Uf_Recuperer_Monnaie_Courante ()
-		stPass.sTab [ 4 ]	= istPass.sTab [ 4 ]  // n$$HEX2$$b0002000$$ENDHEX$$IMEI provenant de l'adh$$HEX1$$e900$$ENDHEX$$sion (a pu $$HEX1$$ea00$$ENDHEX$$tre modifi$$HEX2$$e9002000$$ENDHEX$$depuis l'ouverture du sinistre)
-		stPass.sTab [ 5 ]	= istPass.sTab [ 5 ]  // Marque portable adh$$HEX1$$e900$$ENDHEX$$sion.
-		stPass.sTab [ 6 ]	= istPass.sTab [ 6 ]  // Mod$$HEX1$$e800$$ENDHEX$$le portable adh$$HEX1$$e900$$ENDHEX$$sion.
-		stPass.sTab [ 7 ]	= istPass.sTab [ 7 ]  // DCMP 030407 n$$HEX2$$b0002000$$ENDHEX$$IMEI provenant de l'adh$$HEX1$$e900$$ENDHEX$$sion (N'A PAS ETE modifi$$HEX2$$e9002000$$ENDHEX$$depuis l'ouverture du sinistre)
-		stPass.sTab [ 8 ]	= Upper ( dw_Choix_Action.GetItemString ( 1, "CHOIX_ACTION" ) ) // Choix Action "C"ommander/"S"$$HEX1$$e900$$ENDHEX$$lectionner courrier
+		stPass.sTab [ 4 ]	= istPass.sTab [ 4 ]  // n° IMEI provenant de l'adhésion (a pu être modifié depuis l'ouverture du sinistre)
+		stPass.sTab [ 5 ]	= istPass.sTab [ 5 ]  // Marque portable adhésion.
+		stPass.sTab [ 6 ]	= istPass.sTab [ 6 ]  // Modèle portable adhésion.
+		stPass.sTab [ 7 ]	= istPass.sTab [ 7 ]  // DCMP 030407 n° IMEI provenant de l'adhésion (N'A PAS ETE modifié depuis l'ouverture du sinistre)
+		stPass.sTab [ 8 ]	= Upper ( dw_Choix_Action.GetItemString ( 1, "CHOIX_ACTION" ) ) // Choix Action "C"ommander/"S"électionner courrier
 		stPass.sTab [ 9 ]	= gsCasGestion
 
 		stPass.lTab [ 1 ]	= ilMarquaGeBLCODE  // [BLCODE]
 
 
-		stPass.bTab [ 1 ]	= istPass.bTab [ 1 ] // Acc$$HEX1$$e800$$ENDHEX$$s ou pas aux commandes.
-		stPass.bTab [ 2 ]	= istPass.bTab [ 2 ] // Acc$$HEX1$$e800$$ENDHEX$$s ou pas aux communes.
+		stPass.bTab [ 1 ]	= istPass.bTab [ 1 ] // Accès ou pas aux commandes.
+		stPass.bTab [ 2 ]	= istPass.bTab [ 2 ] // Accès ou pas aux communes.
 		stPass.bTab [ 3 ] = ibBrisEcran        // [DT447]
 
 
 		stPass.dwTab [ 1 ]	= istPass.dwTab [ 2 ]   // Gar_Sin Sup
 		stPass.dwTab [ 2 ]	= istPass.dwTab [ 3 ]   // LSt Inter
 		stPass.dwTab [ 3 ]	= dw_w_Commande			// En local sur fen Detail
-		stPass.dwTab [ 4 ]	= istPass.dwTab [ 5 ]	// dw_w_Commande au niveau sinistre pour r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer les DDDW en Share.
+		stPass.dwTab [ 4 ]	= istPass.dwTab [ 5 ]	// dw_w_Commande au niveau sinistre pour récupérer les DDDW en Share.
 		stPass.dwTab [ 5 ]	= istPass.dwTab [ 4 ]	// dw_w_Commande au niveau garantie.
 		stPass.dwTab [ 6 ]   = dw_w_div_det  // #2
 		stPass.dwTab [ 7 ]   = idwLstDetail		// [BLCODE]
@@ -4871,11 +4890,11 @@ Choose Case isDetailActif
 		stPass.dwNorm [ 8  ]  = istPass.dwNorm  [ 22 ]   // DataWindow sur la table DET_PRO
 		stPass.dwNorm [ 9  ]  = istPass.dwNorm  [ 23 ]   // DataWindow des Communes
 		stPass.dwNorm [ 10 ]  = istPass.dwNorm  [ 24 ]   // DataWindow des Communes
-		stPass.dwNorm [ 11 ]  = istPass.dwNorm  [ 25 ]   // Dw des Donn$$HEX1$$e900$$ENDHEX$$es IFR
-		stPass.dwNorm [ 12 ]  = istPass.dwNorm  [ 26 ]   // Dw des Libell$$HEX1$$e900$$ENDHEX$$s IFR Traduits
+		stPass.dwNorm [ 11 ]  = istPass.dwNorm  [ 25 ]   // Dw des Données IFR
+		stPass.dwNorm [ 12 ]  = istPass.dwNorm  [ 26 ]   // Dw des Libellés IFR Traduits
   		stPass.dwNorm [ 13 ]  = idwAutorisation   		 // [ 27 ] Table autorisation
 		//* #2 [FNAC_PROD_ECH_TECH].[20090224144248310]
-  		stPass.dwNorm [ 14 ]  = istPass.dwNorm  [ 33 ]   // Pi$$HEX1$$e800$$ENDHEX$$ce coch$$HEX2$$e9002000$$ENDHEX$$actuellement sur la garantie.
+  		stPass.dwNorm [ 14 ]  = istPass.dwNorm  [ 33 ]   // Pièce coché actuellement sur la garantie.
 
 		If	stPass.sTab [ 3 ]	<> stGLB.sMonnaieFormatDesire		Then	Uo_Consult_Euro.Uf_Changer_Monnaie ( stGLB.sMonnaieFormatDesire )
 
@@ -4891,7 +4910,7 @@ on we_childactivate;call w_8_traitement_detail::we_childactivate;//*------------
 //* Evenement 		: We_ChildActivate
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 17:53:35
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -4913,7 +4932,7 @@ event ue_retour;call super::ue_retour;//*---------------------------------------
 //* Evenement 		: Ue_Retour
 //* Auteur			: Erick John Stark
 //* Date				: 05/02/1998 15:50:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -4934,7 +4953,7 @@ If iuoGsSpwDetail.ibCochageCCConfoEncours Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Si la fen$$HEX1$$ea00$$ENDHEX$$tre de consultation des paragraphes est visible, on    */
+/* Si la fenêtre de consultation des paragraphes est visible, on    */
 /* la rend invisible.                                               */
 /*------------------------------------------------------------------*/
 Wf_Fermer_Consulter_Paragraphe ()
@@ -4943,8 +4962,8 @@ Wf_Fermer_Consulter_Paragraphe ()
 /* Le 21/04/1999. Modif. pour la couverture UF des autres cartes.   */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$sactive le filtre sur ID_TYPE_CARTE. Ce filtre peut $$HEX1$$ea00$$ENDHEX$$tre    */
-/* positionn$$HEX2$$e9002000$$ENDHEX$$dans la fonction Uf_Zn_IdEvt ()                       */
+/* On désactive le filtre sur ID_TYPE_CARTE. Ce filtre peut être    */
+/* positionné dans la fonction Uf_Zn_IdEvt ()                       */
 /*------------------------------------------------------------------*/
 sFiltre = ""
 
@@ -4960,8 +4979,8 @@ event close;call super::close;//*-----------------------------------------------
 //* Evenement 		: Close
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 18:46:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Fermeture d$$HEX1$$e900$$ENDHEX$$finitive de la fen$$HEX1$$ea00$$ENDHEX$$tre.
+//* Libellé			: 
+//* Commentaires	: Fermeture définitive de la fenêtre.
 //*				     On supprime tous les NVUO.
 //*				  
 //*-----------------------------------------------------------------
@@ -5075,7 +5094,7 @@ on dw_1::ue_btcontroler;call w_8_traitement_detail`dw_1::ue_btcontroler;//*-----
 //* Evenement 		: ue_Btcontroler
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:35:04
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Modification des zones
 //*				  
 //*-----------------------------------------------------------------
@@ -5092,13 +5111,13 @@ event dw_1::itemerror;//*-------------------------------------------------------
 //* Evenement 		: ItemError
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:47:59
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion des messages d'erreur
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
-//* #1  JFF		13/11/03 La valeur d'achat ne peut pas $$HEX1$$ea00$$ENDHEX$$tre null, sinon 
-//*							probl$$HEX1$$e800$$ENDHEX$$me avec les mobiles d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$choisi.
+//* #1  JFF		13/11/03 La valeur d'achat ne peut pas être null, sinon 
+//*							problème avec les mobiles déjà choisi.
 //*							Le fonctionnement de u_datawindow accepte dans tous les
 //*							null (itemerror sur l'ancetre), je courcircuite cela pour
 //*							la zone MT_VAL_ACHAT uniquement.
@@ -5121,7 +5140,7 @@ long	ll_ret = 0
 n_cst_string lnv_String //[SUISSE].LOT3 : Gestion msg Err avec monnaie
 
 /*------------------------------------------------------------------*/
-/* On ne peut pas remettre la valeur d'achat $$HEX2$$e0002000$$ENDHEX$$null.                */
+/* On ne peut pas remettre la valeur d'achat à null.                */
 /*------------------------------------------------------------------*/
 Choose Case Upper ( This.GetColumnName () ) 
 	Case "MT_VAL_ACHAT" , "NUM_FACTURE", "MT_VAL_PUBLIQUE" // #3
@@ -5144,7 +5163,7 @@ Choose Case Upper ( This.GetColumnName () )
 		isErrCol		= Upper ( This.GetColumnName () )
 
 	Case Else
-		// Sinon on d$$HEX1$$e900$$ENDHEX$$clenche l'anc$$HEX1$$ea00$$ENDHEX$$tre, et la suite ci-dessous
+		// Sinon on déclenche l'ancêtre, et la suite ci-dessous
 		Call super::itemerror
 //Migration PB8-WYNIWYG-03/2006 FM
 		ll_ret = AncestorReturnValue
@@ -5154,7 +5173,7 @@ End Choose
 
 If	ibErreur Then
 
-	stMessage.sTitre		= "Gestion des d$$HEX1$$e900$$ENDHEX$$tails - SIMPA2"
+	stMessage.sTitre		= "Gestion des détails - SIMPA2"
 	stMessage.Icon			= Information!
 
 	stMessage.bErreurG	= TRUE
@@ -5170,9 +5189,9 @@ If	ibErreur Then
 			stMessage.bErreurG	= FALSE
 			stMessage.Bouton		= Ok!
 			stMessage.sCode		= "SFRP071"
-//		Case 2 // [SUISSE].LOT3 : Gestion msg Err avec monnaie => Ce cas n'est pas utilis$$HEX1$$e900$$ENDHEX$$. Vu avec JFF
+//		Case 2 // [SUISSE].LOT3 : Gestion msg Err avec monnaie => Ce cas n'est pas utilisé. Vu avec JFF
 //			stMessage.bErreurG	= FALSE
-//			stMessage.sVar[1] = "l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement"		
+//			stMessage.sVar[1] = "l'événement"		
 //			stMessage.sCode	= "COMD062"
 
 		Case 3	// ID_EVT : Casto / Aucune modif si PEC
@@ -5183,7 +5202,7 @@ If	ibErreur Then
 			stMessage.sCode		= "WDET310"
 			
 //* #4  JFF    25/03/2008 [DCMP080200]			
-		Case 4  // ID_EVT : $$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement r$$HEX1$$e900$$ENDHEX$$serv$$HEX4$$e9002000e0002000$$ENDHEX$$la facturation
+		Case 4  // ID_EVT : événement réservé à la facturation
 			stMessage.sTitre		= "Modification interdite"
 			stMessage.Icon			= Information!
 			stMessage.bErreurG	= FALSE
@@ -5191,8 +5210,8 @@ If	ibErreur Then
 			stMessage.sCode		= "WDET564"
 
 // #6 [MSS_LOT2]
-		Case 5  // ID_EVT : $$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement r$$HEX1$$e900$$ENDHEX$$serv$$HEX4$$e9002000e0002000$$ENDHEX$$la facturation
-			stMessage.sTitre		= "Ev$$HEX1$$e800$$ENDHEX$$nement interdit"
+		Case 5  // ID_EVT : événement réservé à la facturation
+			stMessage.sTitre		= "Evènement interdit"
 			stMessage.Icon			= Exclamation!
 			stMessage.bErreurG	= FALSE
 			stMessage.Bouton		= OK!
@@ -5200,29 +5219,29 @@ If	ibErreur Then
 
 		// [MANTIS4026]
 		Case 6  // ID_EVT : 1377 interdit si IPHONE
-			stMessage.sTitre		= "Ev$$HEX1$$e800$$ENDHEX$$nement interdit"
+			stMessage.sTitre		= "Evènement interdit"
 			stMessage.Icon			= Exclamation!
 			stMessage.bErreurG	= FALSE
 			stMessage.Bouton		= OK!
 			stMessage.sCode		= "WDET620"
 		
 		// [PC13174]
-		Case 7 // ID_EVT=1419 interdit si pas coch$$HEX2$$e9002000$$ENDHEX$$dans div_sin
-			stMessage.sTitre		= "Ev$$HEX1$$e900$$ENDHEX$$nement interdit"
+		Case 7 // ID_EVT=1419 interdit si pas coché dans div_sin
+			stMessage.sTitre		= "Evénement interdit"
 			stMessage.Icon			= Exclamation!
 			stMessage.bErreurG	= FALSE
 			stMessage.Bouton		= OK!
 			stMessage.sCode		= "WDET640"
 			
-		Case 8 // [PM319-1] Interdit de moifier si prix Orange utilis$$HEX1$$e900$$ENDHEX$$
-			stMessage.sTitre		= "Prix Orange d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$utilis$$HEX1$$e900$$ENDHEX$$"
+		Case 8 // [PM319-1] Interdit de moifier si prix Orange utilisé
+			stMessage.sTitre		= "Prix Orange déjà utilisé"
 			stMessage.Icon			= Exclamation!
 			stMessage.bErreurG	= FALSE
 			stMessage.Bouton		= OK!
 			stMessage.sCode		= "WDET647"
 			
 		Case 9 // [RS6269_EVOL_CONFO]
-			stMessage.sTitre		= "Ev$$HEX1$$e800$$ENDHEX$$nement interdit en 1er d$$HEX1$$e900$$ENDHEX$$tail"
+			stMessage.sTitre		= "Evènement interdit en 1er détail"
 			stMessage.Icon			= Information!
 			stMessage.bErreurG	= FALSE
 			stMessage.Bouton		= OK!
@@ -5248,12 +5267,12 @@ If	ibErreur Then
 		stMessage.bErreurG	= False
 		Choose Case This.iiErreur
 		Case 1
-			stMessage.sVar[1] 	= "l'heure du d$$HEX1$$e900$$ENDHEX$$tail"			// Erreur de saisie - Il faut saisir 4 caract$$HEX1$$e800$$ENDHEX$$res
+			stMessage.sVar[1] 	= "l'heure du détail"			// Erreur de saisie - Il faut saisir 4 caractères
 			stMessage.bErreurG	= False
 			stMessage.sCode		= "WSIN120"
 
 		Case 2
-			stMessage.sVar[1] 	= "L'heure du d$$HEX1$$e900$$ENDHEX$$tail"			// Erreur de saisie - L'heure est incorrecte
+			stMessage.sVar[1] 	= "L'heure du détail"			// Erreur de saisie - L'heure est incorrecte
 			stMessage.bErreurG	= False
 			stMessage.sCode		= "WSIN130"
 		End Choose
@@ -5267,27 +5286,27 @@ If	ibErreur Then
 
 		Choose Case This.iiErreur
 		Case 0
-			stMessage.sVar[1] = "num$$HEX1$$e900$$ENDHEX$$ro de carte"				// Erreur de Validation - - Le N$$HEX2$$b0002000$$ENDHEX$$de carte est incorrect
+			stMessage.sVar[1] = "numéro de carte"				// Erreur de Validation - - Le N° de carte est incorrect
 			stMessage.sCode	= "GENE003"
 		Case 1
-			stMessage.bErreurG= False								// Erreur de saisie - Le N$$HEX2$$b0002000$$ENDHEX$$de carte est incorrect.
+			stMessage.bErreurG= False								// Erreur de saisie - Le N° de carte est incorrect.
 			stMessage.sCode	= "WORK130"
 		Case 2
 /*------------------------------------------------------------------*/
-/* La commande PS_S01_CARTE_SINISTRE vient d'$$HEX1$$e900$$ENDHEX$$chouer. La structure  */
-/* de message est arm$$HEX1$$e900$$ENDHEX$$e sur F_Procedure.                            */
+/* La commande PS_S01_CARTE_SINISTRE vient d'échouer. La structure  */
+/* de message est armée sur F_Procedure.                            */
 /*------------------------------------------------------------------*/
 			stMessage.Icon			= StopSign!
 		Case 3
 			stMessage.bErreurG	= False							// Cette carte n'est pas couverte
 			stMessage.sCode		= "WORK120"
 		Case 4
-			stMessage.bErreurG	= False							// Echec sur la proc$$HEX1$$e900$$ENDHEX$$dure PS_S01_CARTE_UF
+			stMessage.bErreurG	= False							// Echec sur la procédure PS_S01_CARTE_UF
 			stMessage.sCode		= "WDET636" 					// [ITSM198506] ald WDET220
 		End Choose
 
 	Case "LIB_DET"
-		stMessage.sVar[1] = "libell$$HEX2$$e9002000$$ENDHEX$$du d$$HEX1$$e900$$ENDHEX$$tail"				// Erreur de Validation - 
+		stMessage.sVar[1] = "libellé du détail"				// Erreur de Validation - 
 		stMessage.sCode	= "GENE003"
 
 	Case "MT_PREJ"
@@ -5295,7 +5314,7 @@ If	ibErreur Then
 		// [PC301][VESTUSTE]
 		Choose Case This.iiErreur		
 			Case 0
-				stMessage.sVar[1] = "montant du pr$$HEX1$$e900$$ENDHEX$$judice"			// Erreur de Validation - 
+				stMessage.sVar[1] = "montant du préjudice"			// Erreur de Validation - 
 				stMessage.sCode	= "GENE003"
 			Case 1
 				stMessage.bErreurG= FALSE
@@ -5303,26 +5322,26 @@ If	ibErreur Then
 				
 			Case 24	// PEC : Manque zone duree gti origine
 				stMessage.bErreurG= FALSE
-				stMessage.sTitre		= "R$$HEX1$$e800$$ENDHEX$$glement"
+				stMessage.sTitre		= "Règlement"
 				stMessage.sCode		= "WDET581"
 
-			Case 25	// PEC : duree gti origine n$$HEX1$$e900$$ENDHEX$$gative ou null
+			Case 25	// PEC : duree gti origine négative ou null
 				stMessage.bErreurG= FALSE
-				stMessage.sTitre		= "R$$HEX1$$e800$$ENDHEX$$glement"
+				stMessage.sTitre		= "Règlement"
 				stMessage.sCode		= "WDET582"
 
 			Case 26	// PEC : Vetuste absente.
 				stMessage.bErreurG= FALSE
-				stMessage.sTitre		= "R$$HEX1$$e800$$ENDHEX$$glement"
+				stMessage.sTitre		= "Règlement"
 				stMessage.sCode		= "WDET583"
 				
 			Case ELSE
-				stMessage.sVar[1] = "montant du pr$$HEX1$$e900$$ENDHEX$$judice"			// Erreur de Validation - 
+				stMessage.sVar[1] = "montant du préjudice"			// Erreur de Validation - 
 				stMessage.sCode	= "GENE003"
 		End Choose		
 
 	Case "MT_PLAF"
-		stMessage.sVar[1] = "montant plafonn$$HEX1$$e900$$ENDHEX$$"					// Erreur de Validation - 
+		stMessage.sVar[1] = "montant plafonné"					// Erreur de Validation - 
 		stMessage.sCode	= "GENE003"
 
 	Case "MT_VAL_ACHAT"
@@ -5346,7 +5365,7 @@ If	ibErreur Then
 				stMessage.sCode		= "WDET310"
 
 			//* #5  [GEST_VAL_ACH_ADH][GEST_VAL_ACH_ADH]
-			Case 3	// MT_VAL_ACHAT : Modif sur droit si pr$$HEX1$$e900$$ENDHEX$$sence val_achat_adh
+			Case 3	// MT_VAL_ACHAT : Modif sur droit si présence val_achat_adh
 				stMessage.sTitre		= "Modification interdite"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -5354,7 +5373,7 @@ If	ibErreur Then
 				stMessage.sCode		= "WDET311"
 			// [VDoc10924] 
 			Case 4
-				// Message affich$$HEX2$$e9002000$$ENDHEX$$dans le uf_zn de l'objet de d$$HEX1$$e900$$ENDHEX$$tail		
+				// Message affiché dans le uf_zn de l'objet de détail		
 	End Choose
 
 // #3
@@ -5393,7 +5412,7 @@ If	ibErreur Then
 		stMessage.sCode	= "GENE002"
 
 	Case "NUM_FACTURE"
-		stMessage.sVar[1] = "num$$HEX1$$e900$$ENDHEX$$ro de facture"
+		stMessage.sVar[1] = "numéro de facture"
 		stMessage.sCode	= "GENE003"
 
 	Case "ID_I_REG"
@@ -5409,7 +5428,7 @@ If	ibErreur Then
 
 				
 			End Choose
-	// #3 [DCMP070275]Code motif sans suite reserv$$HEX4$$e9002000e0002000$$ENDHEX$$la facturation
+	// #3 [DCMP070275]Code motif sans suite reservé à la facturation
 	Case "COD_MOT_SSUI"
 			Choose Case This.iiErreur
 				Case 1
@@ -5441,7 +5460,7 @@ on dw_1::itemfocuschanged;call w_8_traitement_detail`dw_1::itemfocuschanged;//*-
 //* Evenement 		: ItemChanged
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:35:04
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Modification des zones
 //*				  
 //*-----------------------------------------------------------------
@@ -5475,7 +5494,7 @@ event dw_1::itemchanged;call super::itemchanged;//*-----------------------------
 //* Evenement 		: ItemChanged
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:35:04
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Modification des zones
 //*				  
 //*-----------------------------------------------------------------
@@ -5572,7 +5591,7 @@ on pb_controler::clicked;//*----------------------------------------------------
 //* Evenement 		: 
 //* Auteur			: Erick John Stark
 //* Date				: 05/02/1998 15:50:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -5581,7 +5600,7 @@ on pb_controler::clicked;//*----------------------------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche un ItemFocusChanged avant toute chose. Cela         */
+/* On déclenche un ItemFocusChanged avant toute chose. Cela         */
 /* concerne la zone ID_EVT.                                         */
 /*------------------------------------------------------------------*/
 
@@ -5621,7 +5640,7 @@ on constructor;//*--------------------------------------------------------------
 //* Evenement 		: Constructor
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 14:57:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -5660,8 +5679,8 @@ on ue_dwtrt_rbuttondown;call u_tagger::ue_dwtrt_rbuttondown;//*-----------------
 //* Evenement 		: Ue_DwTrt_rButtonDown
 //* Auteur			: Erick John Stark
 //* Date				: 16/07/1998 11:00:16
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On va visualiser le texte associ$$HEX2$$e9002000$$ENDHEX$$au paragraphe
+//* Libellé			: 
+//* Commentaires	: On va visualiser le texte associé au paragraphe
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -5675,14 +5694,14 @@ String sCol, sIdPara, sCptVer
 s_Pass	stPass_Dga
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine si on se trouve sur une ligne valide.               */
+/* On détermine si on se trouve sur une ligne valide.               */
 /*------------------------------------------------------------------*/
 lLig = F_GetObjectAtPointer ( This.dw_Trt, sCol )
 
 If	lLig > 0 Then
 /*------------------------------------------------------------------*/
 /* On a besoin d'un objet de transaction. Le seul valide qui        */
-/* existe est celui de la fen$$HEX1$$ea00$$ENDHEX$$tre. Il n'y a aucun objet de          */
+/* existe est celui de la fenêtre. Il n'y a aucun objet de          */
 /* transaction sur les DW.                                          */
 /*------------------------------------------------------------------*/
 
@@ -5715,7 +5734,7 @@ event ue_dwtrt_itemchanged;call super::ue_dwtrt_itemchanged;//*-----------------
 //* Evenement 		: Ue_DwTrt_ItemChanged
 //* Auteur			: Erick John Stark
 //* Date				: 11/02/1998 14:38:47
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -5742,8 +5761,8 @@ iIdGti	= dw_1.GetItemNumber (1,"ID_GTI")  // [RS5656_MOD_PCE_DIF]
 iIdDetail = dw_1.GetItemNumber (1,"ID_DETAIL")  // [RS5656_MOD_PCE_DIF]
 
 /*------------------------------------------------------------------*/
-/* Si le d$$HEX1$$e900$$ENDHEX$$tail poss$$HEX1$$e900$$ENDHEX$$de un code $$HEX1$$e900$$ENDHEX$$tat "REGLE" (COD_ETAT=600), on ne  */
-/* peut pas toucher aux pi$$HEX1$$e800$$ENDHEX$$ces.                                     */
+/* Si le détail posséde un code état "REGLE" (COD_ETAT=600), on ne  */
+/* peut pas toucher aux pièces.                                     */
 /*------------------------------------------------------------------*/
 If	dw_1.GetItemNumber ( 1, "COD_ETAT" ) = 600	Then
 
@@ -5769,11 +5788,11 @@ Case "ALT_RECLAME"
 		
 	Else
 /*------------------------------------------------------------------*/
-/* Si la zone ALT_SSUI est positionn$$HEX1$$e900$$ENDHEX$$e $$HEX2$$e0002000$$ENDHEX$$OUI, on ne peut pas        */
-/* cocher de pi$$HEX1$$e800$$ENDHEX$$ce.                                                 */
+/* Si la zone ALT_SSUI est positionnée à OUI, on ne peut pas        */
+/* cocher de pièce.                                                 */
 /*------------------------------------------------------------------*/
 		If	dw_1.GetItemString ( 1, "ALT_SSUI" ) = "O"	Then
-			stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le sur le d$$HEX1$$e900$$ENDHEX$$tail"
+			stMessage.sTitre		= "Contrôle sur le détail"
 			stMessage.Icon			= Information!
 			stMessage.bErreurG	= False
 			stMessage.sCode		= "WDET100"
@@ -5800,7 +5819,7 @@ Case "ALT_RECLAME"
 	// :[VDoc21594]
 	
 	// [PC192290]
-	// Service de validation de pi$$HEX1$$e800$$ENDHEX$$ce reli$$HEX4$$e9002000e0002000$$ENDHEX$$SHERPA
+	// Service de validation de pièce relié à SHERPA
 	sCodePce = String ( This.dw_Trt.GetItemNumber ( lLigne, "ID_PCE" ))
 
 	iIdI = This.dw_Trt.GetItemNumber ( lLigne, "ID_I" )
@@ -5812,7 +5831,7 @@ Case "ALT_RECLAME"
 	F_RechDetPro(lDeb, lFin, idwdetpro, idwProduit.GetItemNumber( 1,"ID_PROD"),"-DP",345)
 	If lDeb > 0 And iIdI = 0 Then
 
-		// Determination de la M$$HEX1$$e900$$ENDHEX$$thode  // [RS5656_MOD_PCE_DIF]
+		// Determination de la Méthode  // [RS5656_MOD_PCE_DIF]
 		sModeFctDp345 = lnvPFCString.of_getkeyvalue (idwDetPro.GetItemString ( lDeb, "VAL_CAR" ), "MODE_FCT", ";")
 		If sModeFctDp345 = "" Then sModeFctDp345 = "UNIQUE"
 		
@@ -5841,7 +5860,7 @@ Case "ALT_RECLAME"
 							sLibEtatPce = "Non conforme"							
 					End Choose 
 
-					stMessage.sTitre		= "Nouvelle demande pi$$HEX1$$e800$$ENDHEX$$ce"
+					stMessage.sTitre		= "Nouvelle demande pièce"
 					stMessage.Icon			= Exclamation!
 					stMessage.bErreurG	= False
 					stMessage.sCode		= "WGAR431"
@@ -5849,17 +5868,17 @@ Case "ALT_RECLAME"
 					stMessage.sVar[2]		= sLibEtatPce				
 					stMessage.bouton 		= YesNo!
 					
-					// OUI, erase et r$$HEX1$$e900$$ENDHEX$$clame $$HEX2$$e0002000$$ENDHEX$$nouveau
+					// OUI, erase et réclame à nouveau
 					If F_Message ( stMessage ) = 1 Then					
 						
 						// TRT : ROWSDISCARD
 						gdsPieceSherpa.RowsDiscard ( iRow, iRow, primary!)
 						// On laisse cocher nativement
 					
-					// NON, on ne touche $$HEX2$$e0002000$$ENDHEX$$rien
+					// NON, on ne touche à rien
 					Else 
 					
-						// TRT : On d$$HEX1$$e900$$ENDHEX$$coche !!
+						// TRT : On décoche !!
 						This.dw_Trt.SetItem ( lLigne, "ALT_RECLAME", "N" )
 						This.dw_Trt.SetItem ( lLigne, "ID_I", stNul.dcm )
 					
@@ -5869,17 +5888,17 @@ Case "ALT_RECLAME"
 		End If 
 		
 		If sVal = "N" Then
-			stMessage.sTitre		= "Validation de la pi$$HEX1$$e800$$ENDHEX$$ce"
+			stMessage.sTitre		= "Validation de la pièce"
 			stMessage.Icon			= Exclamation!
 			stMessage.bErreurG	= False
 			stMessage.sCode		= "WGAR426"
 			stMessage.sVar[1]		= sCodePce
 			stMessage.bouton = YesNo!
 			
-			// Avez-vous re$$HEX1$$e700$$ENDHEX$$u cette pi$$HEX1$$e800$$ENDHEX$$ce # ?@@OUI, je l'ai re$$HEX1$$e700$$ENDHEX$$u@@NON, je ne l'ai pas re$$HEX1$$e700$$ENDHEX$$u et je ne veux plus la r$$HEX1$$e900$$ENDHEX$$clamer.
-			// OUI re$$HEX1$$e700$$ENDHEX$$u
+			// Avez-vous reçu cette pièce # ?@@OUI, je l'ai reçu@@NON, je ne l'ai pas reçu et je ne veux plus la réclamer.
+			// OUI reçu
 			If F_Message ( stMessage ) = 1 Then
-				stMessage.sTitre		= "Validation de la pi$$HEX1$$e800$$ENDHEX$$ce"
+				stMessage.sTitre		= "Validation de la pièce"
 				stMessage.Icon			= Exclamation!
 				stMessage.bErreurG	= False
 				stMessage.sCode		= "WGAR428"
@@ -5898,24 +5917,24 @@ Case "ALT_RECLAME"
 						Parent.Wf_MarquageEtatPieceSherpa ( Integer ( sCodePce ), "PVL", iIdI )
 					End If 
 					
-					// D$$HEX1$$e900$$ENDHEX$$cochage natif
+					// Décochage natif
 					This.dw_Trt.SetItem ( lLigne, "ALT_RECLAME", "N" )
 					This.dw_Trt.SetItem ( lLigne, "ID_I", stNul.dcm )						
 					
 				// NON, Non conforme
 				Else 
-					stMessage.sTitre		= "Validation de la pi$$HEX1$$e800$$ENDHEX$$ce"
+					stMessage.sTitre		= "Validation de la pièce"
 					stMessage.Icon			= Exclamation!
 					stMessage.bErreurG	= False
 					stMessage.sCode		= "WGAR429"
 					stMessage.sVar[1]		= sCodePce
 					stMessage.bouton = YesNo!
 					
-					// OUI, de nouveau la r$$HEX1$$e900$$ENDHEX$$clamer
+					// OUI, de nouveau la réclamer
 					If F_Message ( stMessage ) = 1 Then
 
 						Do While Not bFin
-							stMessage.sTitre		= "Validation de la pi$$HEX1$$e800$$ENDHEX$$ce"
+							stMessage.sTitre		= "Validation de la pièce"
 							stMessage.Icon			= Exclamation!
 							stMessage.bErreurG	= False
 							stMessage.sCode		= "WGAR430"
@@ -5936,7 +5955,7 @@ Case "ALT_RECLAME"
 						// TRT : on laisse cocher !!
 						This.dw_Trt.SetItem ( lLigne, "ALT_RECLAME", "O" )
 						
-					// NON, ne plus la r$$HEX1$$e900$$ENDHEX$$clamer
+					// NON, ne plus la réclamer
 					Else 
 						
 						// [RS5656_MOD_PCE_DIF]
@@ -5948,7 +5967,7 @@ Case "ALT_RECLAME"
 							Parent.Wf_MarquageEtatPieceSherpa ( Integer ( sCodePce ), "PNV", iIdI )
 						End If 						
 						
-						// D$$HEX1$$e900$$ENDHEX$$cochage natif
+						// Décochage natif
 						This.dw_Trt.SetItem ( lLigne, "ALT_RECLAME", "N" )
 						This.dw_Trt.SetItem ( lLigne, "ID_I", stNul.dcm )
 						
@@ -5958,26 +5977,26 @@ Case "ALT_RECLAME"
 				End If 
 
 
-			// NON pas re$$HEX1$$e700$$ENDHEX$$u
+			// NON pas reçu
 			Else 
-				// Souhaitez-vous toujours la r$$HEX1$$e900$$ENDHEX$$clamer # ? @@OUI, je souhaite toujours la r$$HEX1$$e900$$ENDHEX$$clamer@@NON, je ne souhaite plus la r$$HEX1$$e900$$ENDHEX$$clamer.				
-				stMessage.sTitre		= "Validation de la pi$$HEX1$$e800$$ENDHEX$$ce"
+				// Souhaitez-vous toujours la réclamer # ? @@OUI, je souhaite toujours la réclamer@@NON, je ne souhaite plus la réclamer.				
+				stMessage.sTitre		= "Validation de la pièce"
 				stMessage.Icon			= Exclamation!
 				stMessage.bErreurG	= False
 				stMessage.sCode		= "WGAR427"
 				stMessage.sVar[1]		= sCodePce
 				stMessage.bouton = YesNo!
 				
-				// OUI la r$$HEX1$$e900$$ENDHEX$$clamer
+				// OUI la réclamer
 				If F_Message ( stMessage ) = 1 Then
 					
 					// TRT on laisse cocher !!
 					This.dw_Trt.SetItem ( lLigne, "ALT_RECLAME", "O" )					
 					
-				// NON, ne plus la r$$HEX1$$e900$$ENDHEX$$clamer
+				// NON, ne plus la réclamer
 				Else 
 					
-					// On laisse filer, d$$HEX1$$e900$$ENDHEX$$coche natif
+					// On laisse filer, décoche natif
 					This.dw_Trt.SetItem ( lLigne, "ALT_RECLAME", "N" )
 					This.dw_Trt.SetItem ( lLigne, "ID_I", stNul.dcm )
 					
@@ -5989,8 +6008,8 @@ Case "ALT_RECLAME"
 	
 	
 /*------------------------------------------------------------------*/
-/* On affiche un bitmap sur l'onglet si au moins l'une des pi$$HEX1$$e800$$ENDHEX$$ces   */
-/* est r$$HEX1$$e900$$ENDHEX$$clam$$HEX1$$e900$$ENDHEX$$e.                                                    */
+/* On affiche un bitmap sur l'onglet si au moins l'une des pièces   */
+/* est réclamée.                                                    */
 /*------------------------------------------------------------------*/
 	lTot		= This.dw_Trt.RowCount ()
 	sRech 	= "ALT_RECLAME = 'O'"
@@ -6018,7 +6037,7 @@ on constructor;call u_tagger::constructor;//*-----------------------------------
 //* Evenement 		: Constructor
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 14:57:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -6027,7 +6046,7 @@ on constructor;call u_tagger::constructor;//*-----------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* L'objet ne poss$$HEX1$$e900$$ENDHEX$$de pas de titre.                                 */
+/* L'objet ne posséde pas de titre.                                 */
 /*------------------------------------------------------------------*/
 ibTitre			= False
 
@@ -6042,8 +6061,8 @@ ibIndicateur	= False
 ibEffet3D		= False
 
 /*------------------------------------------------------------------*/
-/* On enl$$HEX1$$e900$$ENDHEX$$ve la bordure, qui permet de mieux l'objet pendant le     */
-/* d$$HEX1$$e900$$ENDHEX$$veloppement.                                                   */
+/* On enléve la bordure, qui permet de mieux l'objet pendant le     */
+/* développement.                                                   */
 /*------------------------------------------------------------------*/
 This.Border = False
 
@@ -6068,8 +6087,8 @@ on ue_dwtrt_rbuttondown;call u_tagger::ue_dwtrt_rbuttondown;//*-----------------
 //* Evenement 		: Ue_DwTrt_rButtonDown
 //* Auteur			: Erick John Stark
 //* Date				: 16/07/1998 11:00:16
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On va visualiser le texte associ$$HEX2$$e9002000$$ENDHEX$$au paragraphe
+//* Libellé			: 
+//* Commentaires	: On va visualiser le texte associé au paragraphe
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -6083,14 +6102,14 @@ String sCol, sIdPara, sCptVer
 s_Pass	stPass_Dga
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine si on se trouve sur une ligne valide.               */
+/* On détermine si on se trouve sur une ligne valide.               */
 /*------------------------------------------------------------------*/
 lLig = F_GetObjectAtPointer ( This.dw_Trt, sCol )
 
 If	lLig > 0 Then
 /*------------------------------------------------------------------*/
 /* On a besoin d'un objet de transaction. Le seul valide qui        */
-/* existe est celui de la fen$$HEX1$$ea00$$ENDHEX$$tre. Il n'y a aucun objet de          */
+/* existe est celui de la fenêtre. Il n'y a aucun objet de          */
 /* transaction sur les DW.                                          */
 /*------------------------------------------------------------------*/
 	stPass_Dga.trTrans = Parent.itrTrans
@@ -6121,7 +6140,7 @@ event ue_dwtrt_itemchanged;call super::ue_dwtrt_itemchanged;//*-----------------
 //* Evenement 		: Ue_DwTrt_ItemChanged
 //* Auteur			: Erick John Stark
 //* Date				: 11/02/1998 14:38:47
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -6139,7 +6158,7 @@ sVal		= This.dw_Trt.GetText ()
 lLigne	= This.dw_Trt.GetRow ()
 
 /*------------------------------------------------------------------*/
-/* Si le d$$HEX1$$e900$$ENDHEX$$tail poss$$HEX1$$e900$$ENDHEX$$de un code $$HEX1$$e900$$ENDHEX$$tat "REGLE" (COD_ETAT=600), on ne  */
+/* Si le détail posséde un code état "REGLE" (COD_ETAT=600), on ne  */
 /* peut pas toucher aux refus.                                      */
 /*------------------------------------------------------------------*/
 If	dw_1.GetItemNumber ( 1, "COD_ETAT" ) = 600	Then
@@ -6167,11 +6186,11 @@ Case "ALT_INIT_ID_I"
 Case "ALT_OPE"
 	If	sVal = "O"	Then
 /*------------------------------------------------------------------*/
-/* Si la zone ALT_SSUI est positionn$$HEX1$$e900$$ENDHEX$$e $$HEX2$$e0002000$$ENDHEX$$OUI, on ne peut pas        */
+/* Si la zone ALT_SSUI est positionnée à OUI, on ne peut pas        */
 /* cocher de refus.                                                 */
 /*------------------------------------------------------------------*/
 		If	dw_1.GetItemString ( 1, "ALT_SSUI" ) = "O"	Then
-			stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le sur le d$$HEX1$$e900$$ENDHEX$$tail"
+			stMessage.sTitre		= "Contrôle sur le détail"
 			stMessage.Icon			= Information!
 			stMessage.bErreurG	= False
 			stMessage.sCode		= "WDET110"
@@ -6190,7 +6209,7 @@ Case "ALT_OPE"
 
 /*------------------------------------------------------------------*/
 /* On affiche un bitmap sur l'onglet si au moins l'un des refus     */
-/* op$$HEX1$$e900$$ENDHEX$$rateur est coch$$HEX1$$e900$$ENDHEX$$.                                             */
+/* opérateur est coché.                                             */
 /*------------------------------------------------------------------*/
 	lTot		= This.dw_Trt.RowCount ()
 	sRech 	= "ALT_OPE = 'O'"
@@ -6221,7 +6240,7 @@ on constructor;call u_tagger::constructor;//*-----------------------------------
 //* Evenement 		: Constructor
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 14:57:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -6230,7 +6249,7 @@ on constructor;call u_tagger::constructor;//*-----------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* L'objet ne poss$$HEX1$$e900$$ENDHEX$$de pas de titre.                                 */
+/* L'objet ne posséde pas de titre.                                 */
 /*------------------------------------------------------------------*/
 ibTitre			= False
 
@@ -6245,8 +6264,8 @@ ibIndicateur	= False
 ibEffet3D		= False
 
 /*------------------------------------------------------------------*/
-/* On enl$$HEX1$$e900$$ENDHEX$$ve la bordure, qui permet de mieux l'objet pendant le     */
-/* d$$HEX1$$e900$$ENDHEX$$veloppement.                                                   */
+/* On enléve la bordure, qui permet de mieux l'objet pendant le     */
+/* développement.                                                   */
 /*------------------------------------------------------------------*/
 This.Border = False
 
@@ -6299,7 +6318,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Click
 //* Auteur			: Fabry JF
 //* Date				: 19/09/01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -6354,7 +6373,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Click
 //* Auteur			: Fabry JF
 //* Date				: 19/09/01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*
@@ -6385,8 +6404,8 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked				
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2001 14:58:03
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre des tarifs pour les papiers.
+//* Libellé			: 
+//* Commentaires	: Ouverture de la fenêtre des tarifs pour les papiers.
 //*				  
 //* Arguments		: 
 //*
@@ -6430,7 +6449,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Catherine ABDMEZIEM
 //* Date          : 27/09/2002 10:57:19
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -6481,7 +6500,7 @@ on itemchanged;//*--------------------------------------------------------------
 //* Evenement     : ItemChanged
 //* Auteur        : Fabry JF
 //* Date          : 31/12/2003 15:38:29
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -6498,9 +6517,9 @@ Choose Case Upper ( This.GetText () )
 	Case "C"
 		cb_Commander.Text = "Commander >>"
 	Case "S"
-		cb_Commander.Text = "S$$HEX1$$e900$$ENDHEX$$l.Courrier >>"
+		cb_Commander.Text = "Sél.Courrier >>"
 	Case "R"
-		cb_Commander.Text = "R$$HEX1$$e900$$ENDHEX$$parer >>"
+		cb_Commander.Text = "Réparer >>"
 	Case "I"
 		cb_Commander.Text = "Informer >>"
 End Choose
@@ -6520,7 +6539,7 @@ integer weight = 400
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
-string text = "D$$HEX1$$e900$$ENDHEX$$f."
+string text = "Déf."
 end type
 
 on clicked;//*-----------------------------------------------------------------
@@ -6529,7 +6548,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : clicked
 //* Auteur        : Fabry JF
 //* Date          : 12/05/2005 16:54:48
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -6563,7 +6582,7 @@ event itemerror;call super::itemerror;//*---------------------------------------
 //* Evenement 		: ItemError
 //* Auteur			: Fabry JF
 //* Date				: 17/06/2004 09:47:59
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion des messages d'erreur
 //*				  
 //*-----------------------------------------------------------------
@@ -6660,7 +6679,7 @@ Choose Case isErrCol
 		Choose case This.iiErreur
 			// #2
 			Case 1	// Accord remplacement : Vous n'avez pas les droits suffisants
-				stMessage.sTitre		= "Accord remplacement suite irr$$HEX1$$e900$$ENDHEX$$parable"
+				stMessage.sTitre		= "Accord remplacement suite irréparable"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
@@ -6668,8 +6687,8 @@ Choose Case isErrCol
 				stMessage.sCode		= "WDET500"
 
 			// #2
-			Case 2	// Accord remplacement : d$$HEX1$$e900$$ENDHEX$$cochage impossible car CMDE TEL pr$$HEX1$$e900$$ENDHEX$$sent
-				stMessage.sTitre		= "Accord remplacement suite irr$$HEX1$$e900$$ENDHEX$$parable"
+			Case 2	// Accord remplacement : décochage impossible car CMDE TEL présent
+				stMessage.sTitre		= "Accord remplacement suite irréparable"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
@@ -6677,7 +6696,7 @@ Choose Case isErrCol
 
 			// #3
 			Case 3	// Accord remplacement2: Vous n'avez pas les droits suffisants
-				stMessage.sTitre		= "Accord remplacement suite 2 r$$HEX1$$e900$$ENDHEX$$parations"
+				stMessage.sTitre		= "Accord remplacement suite 2 réparations"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
@@ -6685,7 +6704,7 @@ Choose Case isErrCol
 				stMessage.sCode		= "WDET500"
 
 			// #4
-			Case 4	// MT_PEC : Impossible de modifier si pr$$HEX1$$e900$$ENDHEX$$sence d'une commande
+			Case 4	// MT_PEC : Impossible de modifier si présence d'une commande
 				stMessage.sTitre		= "Prise en charge"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -6732,7 +6751,7 @@ Choose Case isErrCol
 				stMessage.sCode		= "WDET526"
 
 			// #1
-			Case 2	// MT_PEC : Impossible de modifier si pr$$HEX1$$e900$$ENDHEX$$sence d'une commande
+			Case 2	// MT_PEC : Impossible de modifier si présence d'une commande
 				stMessage.sTitre		= "Prise en charge"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -6740,7 +6759,7 @@ Choose Case isErrCol
 				stMessage.sCode		= "WDET352"
 
 			// #1
-			Case 3	// PEC : Impossible de d$$HEX1$$e900$$ENDHEX$$cocher PEC si CPT_VALIDE > 0 et PEC = "O"
+			Case 3	// PEC : Impossible de décocher PEC si CPT_VALIDE > 0 et PEC = "O"
 				stMessage.sTitre		= "Prise en charge"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -6756,7 +6775,7 @@ Choose Case isErrCol
 				stMessage.sCode		= "WDET522"				
 
 			// [VDOC4684]
-			Case 5	// MT_PEC : Impossible de modifier si pr$$HEX1$$e900$$ENDHEX$$sence d'une commande
+			Case 5	// MT_PEC : Impossible de modifier si présence d'une commande
 				stMessage.sTitre		= "Prise en charge"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -6764,7 +6783,7 @@ Choose Case isErrCol
 				stMessage.sCode		= "WDET592"
 
 			// [ITSM137898]
-			Case 6	// PEC : Impossible de d$$HEX1$$e900$$ENDHEX$$cocher PEC si CPT_VALIDE > 0 et PEC = "O"
+			Case 6	// PEC : Impossible de décocher PEC si CPT_VALIDE > 0 et PEC = "O"
 				stMessage.sTitre		= "Prise en charge"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -6798,14 +6817,14 @@ Choose Case isErrCol
 
 		// [DCMP100331]					
 			Case 3
-				stMessage.sTitre		= "Num$$HEX1$$e900$$ENDHEX$$ro de r$$HEX1$$e900$$ENDHEX$$paration"
+				stMessage.sTitre		= "Numéro de réparation"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
 				stMessage.sCode		= "WDET577"
 
 			Case 4
-				stMessage.sTitre		= "Num$$HEX1$$e900$$ENDHEX$$ro de r$$HEX1$$e900$$ENDHEX$$paration"
+				stMessage.sTitre		= "Numéro de réparation"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
@@ -6826,7 +6845,7 @@ Choose Case isErrCol
 
 	Case "VAL_ALT"
 		Choose case This.iiErreur
-			Case 1	// PEC : Casto / Impossible car MtValAchat $$HEX2$$e0002000$$ENDHEX$$0
+			Case 1	// PEC : Casto / Impossible car MtValAchat à 0
 				stMessage.sTitre		= "Prise en charge"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -6834,7 +6853,7 @@ Choose Case isErrCol
 				stMessage.sCode		= "WDET290"
 				stMessage.svar[1]		= lnv_string.of_GlobalReplace( stGlb.smonnaiesymboledesire, "\", "" ) // [SUISSE].LOT3 : Gestion msg Err avec monnaie
 
-			Case 2	// PEC : Casto / Impossible car Qt$$HEX4$$e9002000e0002000$$ENDHEX$$0
+			Case 2	// PEC : Casto / Impossible car Qté à 0
 				stMessage.sTitre		= "Prise en charge"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -6848,28 +6867,28 @@ Choose Case isErrCol
 				stMessage.Bouton		= OK!
 				stMessage.sCode		= "WDET310"
 
-			Case 4	// PEC : Casto / Impossible car Marque ou Mod$$HEX1$$e800$$ENDHEX$$le non renseign$$HEX1$$e900$$ENDHEX$$s
+			Case 4	// PEC : Casto / Impossible car Marque ou Modèle non renseignés
 				stMessage.sTitre		= "Prise en charge"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
 				stMessage.sCode		= "WDET320"
 
-			Case 5	// PEC : Casto / Impossible car Date achat non renseign$$HEX1$$e900$$ENDHEX$$e
+			Case 5	// PEC : Casto / Impossible car Date achat non renseignée
 				stMessage.sTitre		= "Prise en charge"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
 				stMessage.sCode		= "WDET330"
 
-			Case 6	// PEC : Casto / Impossible de d$$HEX1$$e900$$ENDHEX$$cocher PEC si CPT_VALIDE > 0 et PEC = "O"
+			Case 6	// PEC : Casto / Impossible de décocher PEC si CPT_VALIDE > 0 et PEC = "O"
 				stMessage.sTitre		= "Prise en charge"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
 				stMessage.sCode		= "WDET350"
 
-			Case 7	// ALT_PEC : Casto / for$$HEX1$$e700$$ENDHEX$$age PEC R$$HEX1$$e900$$ENDHEX$$serv$$HEX2$$e9002000$$ENDHEX$$aux personne habilit$$HEX1$$e900$$ENDHEX$$.
+			Case 7	// ALT_PEC : Casto / forçage PEC Réservé aux personne habilité.
 				stMessage.sTitre		= "Prise en charge"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -6883,7 +6902,7 @@ Choose Case isErrCol
 				stMessage.Bouton		= OK!
 				stMessage.sCode		= "WDET370"
 
-			Case 9	// PEC : Casto / Si Pec forcer, impossible d$$HEX1$$e900$$ENDHEX$$cocher PEC
+			Case 9	// PEC : Casto / Si Pec forcer, impossible décocher PEC
 				stMessage.sTitre		= "Prise en charge"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -6897,8 +6916,8 @@ Choose Case isErrCol
 				stMessage.Bouton		= OK!
 				stMessage.sCode		= "WDET440"
 
-			Case 11	// DOS_CHARGE_SPB : Vous n'$$HEX1$$ea00$$ENDHEX$$tes pas autoris$$HEX2$$e9002000$$ENDHEX$$
-				stMessage.sTitre		= "Dossier $$HEX2$$e0002000$$ENDHEX$$charge SPB"
+			Case 11	// DOS_CHARGE_SPB : Vous n'êtes pas autorisé 
+				stMessage.sTitre		= "Dossier à charge SPB"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
@@ -6922,7 +6941,7 @@ Choose Case isErrCol
 				stMessage.sCode		= "WDET524"
 
 			// #1
-			Case 14	// PEC : Le param n'autorise pas le r$$HEX1$$e900$$ENDHEX$$glement
+			Case 14	// PEC : Le param n'autorise pas le réglement
 				stMessage.sTitre		= "Prise en charge"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -6930,7 +6949,7 @@ Choose Case isErrCol
 				stMessage.sCode		= "WDET523"
 
 			// #1
-			Case 15	// PEC : Erreur de param li$$HEX1$$e900$$ENDHEX$$e $$HEX2$$e0002000$$ENDHEX$$la -DP/86
+			Case 15	// PEC : Erreur de param liée à la -DP/86
 				stMessage.sTitre		= "Prise en charge"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -6938,7 +6957,7 @@ Choose Case isErrCol
 				stMessage.sCode		= "WDET525"
 	
 			// #1
-			Case 16	// PEC : Impossible de d$$HEX1$$e900$$ENDHEX$$cocher PEC si CPT_VALIDE > 0 et PEC = "O"
+			Case 16	// PEC : Impossible de décocher PEC si CPT_VALIDE > 0 et PEC = "O"
 				stMessage.sTitre		= "Prise en charge"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -6946,7 +6965,7 @@ Choose Case isErrCol
 				stMessage.sCode		= "WDET351"
 
 			// #1
-			Case 17	// PEC : Impossible de cocher si pr$$HEX1$$e900$$ENDHEX$$sence d'une commande
+			Case 17	// PEC : Impossible de cocher si présence d'une commande
 				stMessage.sTitre		= "Prise en charge"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -6961,7 +6980,7 @@ Choose Case isErrCol
 				stMessage.Bouton		= OK!
 				stMessage.sCode		= "WDET291"
 
-			Case 19	// PEC : Impossible car Date achat non renseign$$HEX1$$e900$$ENDHEX$$e sur sinistre
+			Case 19	// PEC : Impossible car Date achat non renseignée sur sinistre
 				stMessage.sTitre		= "Prise en charge"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -7009,7 +7028,7 @@ Choose Case isErrCol
 				stMessage.Bouton		= OK!
 				stMessage.sCode		= "WDET581"
 
-			Case 25	// PEC : duree gti origine n$$HEX1$$e900$$ENDHEX$$gative ou null
+			Case 25	// PEC : duree gti origine négative ou null
 				stMessage.sTitre		= "Prise en charge"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
@@ -7039,7 +7058,7 @@ Choose Case isErrCol
 				stMessage.sCode		= "WDET598"		
 
 			Case 29
-				stMessage.sTitre		= "Libell$$HEX2$$e9002000$$ENDHEX$$de l'Article"
+				stMessage.sTitre		= "Libellé de l'Article"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
@@ -7061,7 +7080,7 @@ Choose Case isErrCol
 				stMessage.sCode		= "WDET601"		
 	
 			Case 32
-				stMessage.sTitre		= "Quantit$$HEX1$$e900$$ENDHEX$$"
+				stMessage.sTitre		= "Quantité"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
@@ -7075,7 +7094,7 @@ Choose Case isErrCol
 				stMessage.sCode		= "WDET604"		
 
 			Case 34
-				stMessage.sTitre		= "Libell$$HEX2$$e9002000$$ENDHEX$$de l'Article"
+				stMessage.sTitre		= "Libellé de l'Article"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
@@ -7096,7 +7115,7 @@ Choose Case isErrCol
 				stMessage.sCode		= "WDET607"		
 
 			Case 37
-				stMessage.sTitre		= "Montant de carte cadeau $$HEX2$$e0002000$$ENDHEX$$0$$HEX1$$ac20$$ENDHEX$$"
+				stMessage.sTitre		= "Montant de carte cadeau à 0€"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
@@ -7135,8 +7154,8 @@ Choose Case isErrCol
 				stMessage.Bouton		= OK!
 				stMessage.sCode		= "WDET310"
 
-			Case 2	// QTE : Casto / QTE doit $$HEX1$$ea00$$ENDHEX$$tre > 0
-				stMessage.sTitre		= "Quantit$$HEX1$$e900$$ENDHEX$$"
+			Case 2	// QTE : Casto / QTE doit être > 0
+				stMessage.sTitre		= "Quantité"
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
@@ -7184,7 +7203,7 @@ event itemchanged;call super::itemchanged;//*-----------------------------------
 //* Evenement 		: ItemChanged
 //* Auteur			: Fabry JF
 //* Date				: 04/10/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Modification des zones
 //*				  
 //*-----------------------------------------------------------------
@@ -7218,7 +7237,7 @@ on losefocus;call u_datawindow_detail::losefocus;//*----------------------------
 //* Evenement     : LoseFocus
 //* Auteur        : Fabry JF
 //* Date          : 17/06/2004 16:09:21
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -7241,7 +7260,7 @@ on rowfocuschanged;call u_datawindow_detail::rowfocuschanged;//*----------------
 //* Evenement 		: RowFocusChanged
 //* Auteur			: Fabry JF
 //* Date				: 04/10/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Changement de zone 
 //*				  
 //*-----------------------------------------------------------------
@@ -7319,7 +7338,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 06/10/2009 11:47:43
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [DCMP090595]
 //*				  
 //* Arguments		: 
@@ -7404,7 +7423,7 @@ event clicked;//*
 //* Fonction		: Clicked
 //* Auteur			: JFF
 //* Date				: 23/05/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PM103]
 //*
 //* Arguments		: 
