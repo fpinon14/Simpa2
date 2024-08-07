@@ -12,7 +12,7 @@ table(column=(type=decimal(0) updatewhereclause=yes name=id_sin dbname="id_sin" 
  column=(type=decimal(2) updatewhereclause=yes name=mte_fact dbname="mte_fact" )
  column=(type=char(3) updatewhereclause=no name=id_fourn dbname="id_fourn" )
  column=(type=char(5) updatewhereclause=no name=id_typ_art dbname="id_typ_art" )
- column=(type=number updatewhereclause=yes name=a_forcer dbname="a_forcer" )
+ column=(type=char(8) updatewhereclause=yes name=a_forcer dbname="a_forcer" )
  column=(type=decimal(2) updatewhereclause=yes name=indem_princ_1 dbname="indem_princ_1" )
  column=(type=number updatewhereclause=yes name=frais_anex_2 dbname="frais_anex_2" )
  column=(type=number updatewhereclause=yes name=frais_anex_3 dbname="frais_anex_3" )
