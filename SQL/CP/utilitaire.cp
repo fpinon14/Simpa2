@@ -7003,4 +7003,45 @@ Return @iRet
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Fonction             :       FN_CHAMPSFIXE
+-- Auteur               :       (anonyme)
+-- Date                 :       2008-05-23 16:46:43.013
+-- Libellé              :		
+-- Commentaires         :       
+-- Références           :       
+--
+--------------------------------------------------------------------
+-- JFF 31/07/2024 ajout du 255 au varchar Set @sReturn = LEFT(ISNULL(LTRIM(RTRIM(CONVERT(varchar, @asqlvAny))), '') + REPLICATE(@asFill, @aiTaille), @aiTaille)  
+--------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_CHAMPSFIXE' AND type = 'FN' )
+        DROP function sysadm.FN_CHAMPSFIXE
+Go
 
+CREATE FUNCTION sysadm.FN_CHAMPSFIXE (   
+ @asqlvAny as sql_variant,   
+ @aiTaille as integer,   
+ @asSens as char(1),   
+ @asFill as char(1) )  
+RETURNS varchar(255)  
+AS  
+BEGIN  
+ Declare @sReturn as varchar(255)  
+ -- Controle des parametre : retourne null si param incorrect, comme ca, ca se voit de suite dans un concaténation de chaine  
+ IF (@aiTaille IS NULL) OR ( @asSens IS NULL ) OR (@asFill IS NULL) OR (@asSens NOT IN ('G', 'D') ) RETURN NULL  
+   
+ IF @asSens = 'D'  
+ BEGIN  
+  Set @sReturn = LEFT(ISNULL(LTRIM(RTRIM(CONVERT(varchar (255), @asqlvAny))), '') + REPLICATE(@asFill, @aiTaille), @aiTaille)  
+ END  
+  
+ IF @asSens = 'G'  
+ BEGIN  
+  Set @sReturn = RIGHT(REPLICATE(@asFill, @aiTaille)+ ISNULL(LTRIM(RTRIM(CONVERT(varchar (255), @asqlvAny))), ''), @aiTaille)  
+ END  
+  
+ RETURN @sReturn  
+END 
+
+Go

@@ -12316,3 +12316,166 @@ Where id_sin = @dcIdSin
 And   id_seq = @iIdSeq
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Procedure            :       PS_I_PRESTA_LECLERC_PNEU_MCO602
+-- Auteur               :       Fabry JF
+-- Date                 :       06/08/2024
+-- Libelle              :        
+-- Commentaires         :       [RS3220][RS3220_MODDEGR_TELST]
+-- References           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_PRESTA_LECLERC_PNEU_MCO602' AND type = 'P' )
+        DROP procedure sysadm.PS_I_PRESTA_LECLERC_PNEU_MCO602
+GO
+
+CREATE procedure sysadm.PS_I_PRESTA_LECLERC_PNEU_MCO602
+        @adcIdSin        Decimal (  10, 0 ) -- [PI062]
+As
+
+Declare @iPrestaCal Integer
+Declare @iRegltAssure Integer
+Declare @iIdReg Integer
+Declare @dcIdEvt Decimal ( 7 )
+Declare @dcIdGti Decimal ( 7 )
+Declare @dcNewIdDetail Decimal ( 7 )
+Declare @dcMtForfaitPresta Decimal ( 11, 2)
+Declare @dcIdProd decimal ( 7 )
+Declare @iNewIdSeq Integer
+Declare @sIdTypArt VarChar ( 3 )
+Declare @iStatuGc Integer
+
+Select	@iPrestaCal = COUNT(*)
+From	sysadm.commande c
+Where	c.id_sin = @adcIdSin
+And		c.id_four = 'CAL'
+And		c.cod_etat <> 'ANN'
+If @iPrestaCal is null Set @iPrestaCal = 0 
+
+If @iPrestaCal > 0 Return
+
+Select  @iRegltAssure = COUNT(*)
+From	sysadm.w_a_virer wa
+Where   wa.id_sin = @adcIdSin
+And		wa.cod_inter = 'A'
+And		wa.cod_pos = 0
+If @iRegltAssure is null Set @iRegltAssure = 0 
+
+If @iRegltAssure <= 0 Return
+
+Select Top 1 @iIdReg = wa.id_reg
+From sysadm.w_a_virer wa
+Where wa.id_sin = @adcIdSin
+If @iIdReg is null Set @iIdReg = 0 
+
+Select	@dcIdEvt = dt.id_evt,
+		@dcIdGti = dt.id_gti
+From	sysadm.detail dt
+Where	dt.id_sin = @adcIdSin
+And		dt.id_reg = @iIdReg
+
+Select	@dcIdProd = id_prod
+From	sysadm.sinistre 
+Where	id_sin = @adcIdSin
+
+If @dcIdEvt is null Return
+
+If @dcIdEvt = 1391 
+	Begin 
+		Select @dcMtForfaitPresta = Convert ( Decimal (11, 2), sysadm.FN_CLE_VAL ( 'FRAIS_REPA', RTRIM ( val_car ) + rtrim ( val_car ), ';') )
+		From sysadm.det_pro dp
+		Where dp.id_prod = @dcIdProd
+		And	  dp.id_code_dp = 299
+
+		Set @sIdTypArt = 'PRS'
+		Set @iStatuGc = 2
+
+	End 
+
+If @dcIdEvt = 1397 
+	Begin 
+		Select @dcMtForfaitPresta = Convert ( Decimal (11, 2), sysadm.FN_CLE_VAL ( 'FRAIS_REMPL', RTRIM ( val_car ) + rtrim ( val_car ), ';') )
+		From sysadm.det_pro dp
+		Where dp.id_prod = @dcIdProd
+		And	  dp.id_code_dp = 299
+
+		Set @sIdTypArt = 'PNE'
+		Set @iStatuGc = 178
+
+	End 
+
+Select	@dcNewIdDetail = max ( id_detail ) 
+From	sysadm.detail
+where   id_sin = @adcIdSin
+and     id_gti = @dcIdGti 
+
+If @dcNewIdDetail is null Set @dcNewIdDetail = 0
+Set @dcNewIdDetail = @dcNewIdDetail + 1
+
+Select @iNewIdSeq = max ( id_seq ) From sysadm.commande where id_sin = @adcIdSin 
+
+If @iNewIdSeq is null Set @iNewIdSeq = 0
+Set @iNewIdSeq = @iNewIdSeq + 1
+
+Insert into sysadm.detail ( id_sin,    id_gti,   id_detail,      id_evt,   id_reg,   id_i_reg,   lib_det,   dte_det,   heu_det, num_carte,   mt_prej,   mt_fran,   mt_nplaf,   mt_plaf,   alt_plaf,   alt_reg,   alt_att,   alt_ssui,   cod_mot_ssui,   cod_dec_mac, cod_dec_ope, cod_etat,   id_carte,   id_type_carte, valide_le, valide_par, cree_le,   maj_le  ,   maj_par,    dte_cmd,   dte_livr,   mt_val_achat,			mt_val_publique,    num_facture )
+Values					  ( @adcIdSin, @dcIdGti, @dcNewIdDetail, 1489,     null,     null,       null,      null,      null,    null,		 0,			0,		   0,		   0,		  'N',		  'N'	 ,   'O'    ,   'N'     ,   0,		     	100,		 100,		  100     ,   0   ,       '00',          getdate(), 'AUTO',     getdate(), getdate(),  'AUTO',     null,      null,       @dcMtForfaitPresta,   @dcMtForfaitPresta, null        )
+
+Insert into sysadm.div_det ( id_sin,    id_gti,   id_detail,      nom_zone, lib_label,         id_typ_liste, alt_liste_codecar, id_typ_zone, alt_oblig, alt_prot , cpt_tri, val_nbre, val_mt, val_dte, val_car, cree_le,   maj_le,     maj_par, valide_le, valide_par )    
+Values					   ( @adcIdSin, @dcIdGti, @dcNewIdDetail, 'pec',    'Prise en charge', '-1',         'N',               'X',   	     'N',       'N'      , 40,      null,     null,   null,    'O',     getdate(), getdate(),  'AUTO',  getdate(), 'AUTO'     )
+
+Insert into sysadm.div_det ( id_sin,    id_gti,   id_detail,      nom_zone, lib_label,		              id_typ_liste, alt_liste_codecar, id_typ_zone, alt_oblig, alt_prot , cpt_tri, val_nbre, val_mt, val_dte,   val_car, cree_le,   maj_le,     maj_par, valide_le, valide_par )    
+Values					   ( @adcIdSin, @dcIdGti, @dcNewIdDetail, 'dte_pec', 'Date de prise en charge',   '-1',         'N',               'X',   	     'N',       'N'      , 43,     null,     null,   GETDATE(), null,    getdate(), getdate(),  'AUTO',  getdate(), 'AUTO'     )
+
+Insert into sysadm.div_det ( id_sin,    id_gti,   id_detail,      nom_zone, lib_label,		              id_typ_liste, alt_liste_codecar, id_typ_zone, alt_oblig, alt_prot , cpt_tri, val_nbre, val_mt, val_dte, val_car, cree_le,   maj_le,     maj_par, valide_le, valide_par )    
+Values					   ( @adcIdSin, @dcIdGti, @dcNewIdDetail, 'mt_pec', 'Mt maxi de prise en charge', '-1',         'N',               'X',   	     'N',       'N'      , 44,     null,     null,   null,    'O',     getdate(), getdate(),  'AUTO',  getdate(), 'AUTO'     )
+
+
+
+Insert into sysadm.commande ( id_sin,    id_seq,     id_gti,   id_detail,      id_four,   id_typ_art  , id_marq_art,   id_modl_art,   mt_ttc_cmde,        adr_nom, adr_prenom, adr_livr1, adr_livr2, adr_livr_cpl, adr_cp,   adr_ville,   adr_tel1,	  adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, probleme,                                                                                                                             id_cmd_frn, id_serie_nouv, id_bon_transp, dte_rcp_frn, dte_env_cli, cod_etat, comment_frn, nom_gest, id_lot_cmd, cmd_gen_le, cmd_gen_par, cree_le,   maj_le,    maj_par, valide_le, valide_par, id_zone, id_bsp, dte_ret_pret, adr_cod_civ, id_ref_four,   id_orian_marque, id_orian_modele, dte_elv_mobile, status_gc, dte_emis_devis, mt_devis, alt_dev_acp, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli, info_spb_frn, id_marq_art_ifr, id_modl_art_ifr, info_spb_frn_cplt, info_frn_spb_cplt)
+Select 						  @adcIdSin, @iNewIdSeq, @dcIdGti, @dcNewIdDetail, a.id_four, a.id_typ_art, a.id_marq_art, a.id_modl_art, @dcMtForfaitPresta ,p.nom  , p.prenom,   p.adr_1,   p.adr_2  , null,         p.adr_cp, p.adr_ville, s.num_port, null,     null    , null,     null,        null,         null,         null,         'Prestation automatique pour règler le forfait d''intervention de ' + CONVERT ( varchar ( 20), @dcMtForfaitPresta ) + ' € à LECLERC', null,       null,          null,          null,        Getdate(),   'RPC',    null,        'AUTO',   999980    , GETDATE(),  'AUTO',      GETDATE(), GETDATE(), 'AUTO',  GETDATE(), 'AUTO',     null,    null,   null,         null,        a.id_ref_four, null,            null,            null,           @iStatuGc, null,           null,     null,        null,        null,          null,      null,         null,        null,        null,           null,     null,        null,          null,             null,             null,   null,            null,            null,            null,       null,            990,          null,            null,            null,              null  
+From sysadm.article a,
+	 sysadm.sinistre s,
+	 sysadm.personne p
+Where a.id_four = 'CAL'
+And	  a.id_typ_art = @sIdTypArt
+And	  s.id_sin = @adcIdSin
+And   p.id_ordre = s.id_ordre
+
+
+If Exists ( Select * from w_sin where id_sin = @adcIdSin )
+	Begin
+
+		Insert into sysadm.w_detail ( id_sin,    id_gti,   id_detail,      id_evt,	lib_det,   dte_det,   heu_det, num_carte,   mt_prej,   mt_fran,   mt_nplaf,   mt_plaf,   id_i_reg, alt_plaf,   alt_bloc, alt_reg,   alt_att,   alt_valide, cpt_valide, alt_ssui,   cod_mot_ssui,   cod_dec_mac, cod_dec_ope, cod_etat,   id_carte,   id_type_carte,  cree_le,   maj_le  ,   maj_par,    dte_cmd,   dte_livr,   mt_val_achat,			mt_val_publique,    num_facture )
+		Values					    ( @adcIdSin, @dcIdGti, @dcNewIdDetail, 1489,    null,      null,      null,    null,		0,		   0,		  0,		  0,		 null,     'N',		   'N',      'N'	,   'O'    ,   'N',        1,          'N'     ,   0,			   100,		    100,		 100     ,   0   ,       '00',           getdate(), getdate(),  'AUTO',     null,      null,       @dcMtForfaitPresta,   @dcMtForfaitPresta,    null        )
+
+		Insert into sysadm.w_div_det ( id_sin,    id_gti,   id_detail,      nom_zone, lib_label,         id_typ_liste, alt_liste_codecar, id_typ_zone, alt_oblig, alt_prot , cpt_tri, val_nbre, val_mt, val_dte, val_car, cpt_valide, cree_le,   maj_le,     maj_par )    
+		Values					     ( @adcIdSin, @dcIdGti, @dcNewIdDetail, 'pec',    'Prise en charge', '-1',         'N',               'X',   	   'N',       'N'      , 40,      null,     null,   null,    'O',     1,          getdate(), getdate(),  'AUTO'  )
+
+		Insert into sysadm.w_div_det ( id_sin,    id_gti,   id_detail,      nom_zone, lib_label,		              id_typ_liste, alt_liste_codecar, id_typ_zone, alt_oblig, alt_prot , cpt_tri, val_nbre, val_mt, val_dte,   val_car, cpt_valide, cree_le,   maj_le,     maj_par )
+		Values					     ( @adcIdSin, @dcIdGti, @dcNewIdDetail, 'dte_pec', 'Date de prise en charge',   '-1',         'N',               'X',   	     'N',       'N'      , 43,     null,     null,   GETDATE(), null,    1,          getdate(), getdate(),  'AUTO'  )
+
+		Insert into sysadm.w_div_det ( id_sin,    id_gti,   id_detail,      nom_zone, lib_label,		              id_typ_liste, alt_liste_codecar, id_typ_zone, alt_oblig, alt_prot , cpt_tri, val_nbre, val_mt, val_dte, val_car, cpt_valide, cree_le,   maj_le,     maj_par )
+		Values					     ( @adcIdSin, @dcIdGti, @dcNewIdDetail, 'mt_pec', 'Mt maxi de prise en charge', '-1',         'N',               'X',   	     'N',       'N'      , 44,     null,     null,   null,    'O',     1,          getdate(), getdate(),  'AUTO'  )
+
+		Insert into sysadm.w_commande ( id_sin,    id_seq,     id_gti,   id_detail,      id_four,   id_typ_art  , id_marq_art,   id_modl_art,   mt_ttc_cmde,        adr_nom, adr_prenom, adr_livr1, adr_livr2, adr_livr_cpl, adr_cp,   adr_ville,   adr_tel1,	  adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, probleme,                                                                                                                             id_cmd_frn, id_serie_nouv, id_bon_transp, dte_rcp_frn, dte_env_cli, cod_etat, comment_frn, cpt_valide, nom_gest, cree_le,   maj_le,    maj_par, id_zone, id_bsp, dte_ret_pret, adr_cod_civ, id_ref_four,   id_orian_marque, id_orian_modele, dte_elv_mobile, status_gc, dte_emis_devis, mt_devis, alt_dev_acp, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli, info_spb_frn, id_marq_art_ifr, id_modl_art_ifr, info_spb_frn_cplt, info_frn_spb_cplt)
+		Select 						    @adcIdSin, @iNewIdSeq, @dcIdGti, @dcNewIdDetail, a.id_four, a.id_typ_art, a.id_marq_art, a.id_modl_art, @dcMtForfaitPresta ,p.nom  , p.prenom,   p.adr_1,   p.adr_2  , null,         p.adr_cp, p.adr_ville, s.num_port,   null,     null    , null,     null,        null,         null,         null,         'Prestation automatique pour règler le forfait d''intervention de ' + CONVERT ( varchar ( 20), @dcMtForfaitPresta ) + ' € à LECLERC', null,       null,          null,          null,        Getdate(),   'RPC',    null,        0,          'AUTO',   GETDATE(), GETDATE(), 'AUTO',  null,    null,   null,         null,        a.id_ref_four, null,            null,            null,           @iStatuGc, null,           null,     null,        null,        null,          null,      null,         null,        null,        null,           null,     null,        null,          null,             null,             null,   null,            null,            null,            null,       null,            990,          null,            null,            null,              null  
+		From sysadm.article a,
+			 sysadm.sinistre s,
+			 sysadm.personne p
+		Where a.id_four = 'CAL'
+		And	  a.id_typ_art = @sIdTypArt
+		And	  s.id_sin = @adcIdSin
+		And   p.id_ordre = s.id_ordre
+	End 
+
+
+Go
+
+
+
