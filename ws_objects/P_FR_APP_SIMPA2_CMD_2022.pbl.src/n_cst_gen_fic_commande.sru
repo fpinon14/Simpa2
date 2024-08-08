@@ -7769,11 +7769,16 @@ private function integer uf_generer_fichier_lbe (long alidlotcmd);//*-----------
 //       JFF   19/01/2015 [MANTIS14006] 
 //		FPI	02/03/2015	[DT125_V3] Civilité longue
 // 		JFF   21/06/2018 [VDOC26276]
+//        JFF   05/08/2024  [MCO602_PNEU]
 //*-----------------------------------------------------------------
 
 Int	iRet, iFic
 Long	lTot, lCpt, lCptCas, lRow
 String	sNomFic, sTypArt, sAction, sFiltre, sTypArtNul, sEnrg, sSep, sTel, sVal, sAdrMail, sTypCarte
+Boolean bF_CLE_A_TRUE_MCO602_PNEU
+
+// [MCO602_PNEU]
+bF_CLE_A_TRUE_MCO602_PNEU = F_CLE_A_TRUE ( "MCO602_PNEU" ) 
 
 iRet = 1
 /*------------------------------------------------------------------*/
@@ -7813,7 +7818,13 @@ For lCpt = 1 To lTot
 	
 	// [DT125_LECLERC]
 	sAdrMail = idwFicCharg.GetItemString ( lCpt, "ADR_MAIL" )
-	sTypCarte = "2027"
+
+	// [MCO602_PNEU]
+	If bF_CLE_A_TRUE_MCO602_PNEU Then
+		sTypCarte = "PE27"
+	Else 
+		sTypCarte = "2027"		
+	End If 
 	
 	// [DT125_LECLERC]
 	/*	[MANTIS14006] le 19/01/2015 JF

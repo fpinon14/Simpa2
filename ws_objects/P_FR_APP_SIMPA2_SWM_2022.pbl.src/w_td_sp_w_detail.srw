@@ -1205,6 +1205,7 @@ End CHoose
 // [PM246][MANTIS10235]		
 
 // [MCO602_PNEU]
+/*
 If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
 
 	CHoose Case lIdEvt 
@@ -1221,7 +1222,7 @@ If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
 	End Choose
 
 End If
-
+*/
 
 // #15 [DCMP090474]
 sMarque = Upper ( idwWSin.GetItemString ( 1, "MARQ_PORT" ) )
