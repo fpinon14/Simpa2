@@ -12388,7 +12388,7 @@ If @dcIdEvt is null Return
 
 If @dcIdEvt = 1391 
 	Begin 
-		Select @dcMtForfaitPresta = Convert ( Decimal (11, 2), sysadm.FN_CLE_VAL ( 'FRAIS_REPA', RTRIM ( val_car ) + rtrim ( val_car ), ';') )
+		Select @dcMtForfaitPresta = Convert ( Decimal (11, 2), sysadm.FN_CLE_VAL ( 'FRAIS_REPA', RTRIM ( val_car ) + rtrim ( val_car2 ), ';') )
 		From sysadm.det_pro dp
 		Where dp.id_prod = @dcIdProd
 		And	  dp.id_code_dp = 299
@@ -12400,7 +12400,7 @@ If @dcIdEvt = 1391
 
 If @dcIdEvt = 1397 
 	Begin 
-		Select @dcMtForfaitPresta = Convert ( Decimal (11, 2), sysadm.FN_CLE_VAL ( 'FRAIS_REMPL', RTRIM ( val_car ) + rtrim ( val_car ), ';') )
+		Select @dcMtForfaitPresta = Convert ( Decimal (11, 2), sysadm.FN_CLE_VAL ( 'FRAIS_REMPL', RTRIM ( val_car ) + rtrim ( val_car2 ), ';') )
 		From sysadm.det_pro dp
 		Where dp.id_prod = @dcIdProd
 		And	  dp.id_code_dp = 299

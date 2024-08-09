@@ -2928,3 +2928,131 @@ Insert into sysadm.trace_cmde_web (
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procedure            :       PS_S_MCO602_EXTRAC_PRESTA_CAL_POUR_REGLEMENT
+-- Auteur               :       JFF
+-- Date                 :       07/08/2024
+-- Libelle              :       
+-- Commentaires         :       
+-- References           :       
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MCO602_EXTRAC_PRESTA_CAL_POUR_REGLEMENT' AND type = 'P' )
+        DROP procedure sysadm.PS_S_MCO602_EXTRAC_PRESTA_CAL_POUR_REGLEMENT
+GO
+
+CREATE procedure sysadm.PS_S_MCO602_EXTRAC_PRESTA_CAL_POUR_REGLEMENT
+	@dtDteDeb       DateTime,
+    @dtDteFin       DateTime  
+AS 
+
+Select	s.id_orian_boutique 'tiers_volcanes',
+		( Select top 1 bt.adr_nom
+		  From sysadm.boutique bt
+		  Where bt.id_prod = s.id_prod
+		  And   bt.id_boutique = s.id_orian_boutique
+		) 'nom_mag',
+		( Select top 1 bt.adr_ville
+		  From sysadm.boutique bt
+		  Where bt.id_prod = s.id_prod
+		  And   bt.id_boutique = s.id_orian_boutique
+		) 'ville_mag',
+		( Select top 1 bt.adr_cp
+		  From sysadm.boutique bt
+		  Where bt.id_prod = s.id_prod
+		  And   bt.id_boutique = s.id_orian_boutique
+		) 'cp_mag',
+		( Select top 1 ag.lib_ag
+		  From sysadm.boutique bt,
+			   sysadm.agence ag
+		  Where bt.id_prod = s.id_prod
+		  And   bt.id_boutique = s.id_orian_boutique
+		  And	ag.id_ag = 'CAL'
+		  And   ag.id_bq = bt.id_four_fact
+		) 'nom_fact',
+		( Select top 1 ag.adr_ville
+		  From sysadm.boutique bt,
+			   sysadm.agence ag
+		  Where bt.id_prod = s.id_prod
+		  And   bt.id_boutique = s.id_orian_boutique
+		  And	ag.id_ag = 'CAL'
+		  And   ag.id_bq = bt.id_four_fact
+		) 'ville_fact',
+		( Select top 1 ag.adr_cp
+		  From sysadm.boutique bt,
+			   sysadm.agence ag
+		  Where bt.id_prod = s.id_prod
+		  And   bt.id_boutique = s.id_orian_boutique
+		  And	ag.id_ag = 'CAL'
+		  And   ag.id_bq = bt.id_four_fact
+		) 'cp_fact',
+		( Select top 1 i.nom
+		  From sysadm.inter i
+		  Where i.id_sin = s.id_sin
+		  And   i.cod_inter = 'A'
+		) 'nom_assure',
+		( Select top 1 i.adr_ville
+		  From sysadm.inter i
+		  Where i.id_sin = s.id_sin
+		  And   i.cod_inter = 'A'
+		) 'ville_assure',	
+		( Select top 1 i.adr_cp
+		  From sysadm.inter i
+		  Where i.id_sin = s.id_sin
+		  And   i.cod_inter = 'A'
+		) 'cp_assure',
+		c.id_sin,
+		c.id_seq,
+		Convert ( VarChar ( 10), DateAdd ( day, -1, Convert ( Datetime, Stuff ( CONVERT ( VarChar ( 10 ), GetDate(), 103 ), 1, 2, '01'))), 103 ) 'dte_fact',
+		'FRAIS EXP ' + 
+				Convert ( Varchar, 
+						  Case 		
+							When Month ( Getdate()) = 1 Then '12'
+							Else Right ( '0' + Convert ( varchar, Month ( Getdate()) -1 ), 2 ) 
+						  End
+					     )
+					 + '/' +   
+				Case 		
+					When Month ( Getdate()) = 1 Then Convert ( Varchar, Year ( Getdate()) - 1 )
+					Else Convert ( VarChar, Year ( Getdate()))
+				End  'num_facture',
+		c.mt_ttc_cmde 'mte_fact',
+		( Select top 1 bt.id_four_fact
+		  From sysadm.boutique bt
+		  Where bt.id_prod = s.id_prod
+		  And   bt.id_boutique = s.id_orian_boutique
+		) 'id_fourn',
+		Case c.id_typ_art
+			When 'PRS' Then 'REPA'
+			When 'PNE' Then 'REMPL'
+		    Else c.id_typ_art
+		End 'cat_fact' ,
+		null 'a_forcer',
+		c.mt_ttc_cmde 'indem_princ_1',
+		0 'frais_anex_2',
+		0 'frais_anex_3',
+		0 'frais_anex_4',
+		0 'frais_anex_5',
+		0 'frais_anex_6',
+		0 'frais_anex_7',
+		0 'frais_anex_8',
+		0 'frais_anex_9',
+		0 'frais_anex_10',
+		0 'frais_anex_11'
+
+From sysadm.commande c,
+	 sysadm.detail dt,
+	 sysadm.sinistre s
+Where c.id_four = 'CAL'
+And   c.dte_env_cli between @dtDteDeb and @dtDteFin
+And   dt.id_sin = c.id_sin 
+And   dt.id_gti = c.id_gti
+And   dt.id_detail = c.id_detail
+And   dt.cod_etat <> 600
+And   s.id_sin = c.id_sin
+Go
+
+
