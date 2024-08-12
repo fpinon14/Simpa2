@@ -1,0 +1,9 @@
+$ProjectName=SIMPA2
+$ApplicationName=Simpa2
+$PBTFile=P_FR_APP_SIMPA2_2022.PBT
+$EXEPath=P_FR_APP_Simpa2_main_2022.exe
+$ICOPath=K:\PB4OBJ\BMP\simpa2.ICO
+$PBRPath=K:\PB4OBJ\BMP\PB4OBJ.PBR
+
+$PBDPath=K:\GEN_PB\FR\PB_2019\REGEN_FW4\PBD_EXE
+$PBTPath=C:\Gen\SVN\SIMPA2\PB_2019\p_fr_app_simpa2_2019.pbt
