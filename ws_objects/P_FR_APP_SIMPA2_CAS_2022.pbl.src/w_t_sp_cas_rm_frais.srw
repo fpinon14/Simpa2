@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_t_sp_cas_rm_frais.srw
+﻿$PBExportHeader$w_t_sp_cas_rm_frais.srw
 $PBExportComments$[PM72.2]
 forward
 global type w_t_sp_cas_rm_frais from w_8_accueil
@@ -10,7 +10,7 @@ end forward
 global type w_t_sp_cas_rm_frais from w_8_accueil
 integer width = 4073
 integer height = 2216
-string title = "Saisie d$$HEX1$$1920$$ENDHEX$$un montant de frais d$$HEX1$$1920$$ENDHEX$$envoi"
+string title = "Saisie d’un montant de frais d’envoi"
 dw_2 dw_2
 end type
 global w_t_sp_cas_rm_frais w_t_sp_cas_rm_frais
@@ -46,7 +46,7 @@ event ue_initialiser;//*--------------------------------------------------------
 //* Evenement 		: ue_initialiser
 //* Auteur			: F. Pinon
 //* Date				: 17/08/2011 13:39:23
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -107,7 +107,7 @@ integer x = 5
 integer y = 36
 integer width = 3694
 integer height = 1100
-string title = "Saisie d$$HEX1$$1920$$ENDHEX$$un montant de frais d$$HEX1$$1920$$ENDHEX$$envoi li$$HEX2$$e9002000$$ENDHEX$$au PM72"
+string title = "Saisie d’un montant de frais d’envoi lié au PM72"
 string dataobject = "d_sp_cas_rm_frais"
 boolean vscrollbar = false
 boolean border = false
@@ -119,7 +119,7 @@ event dw_1::clicked;call super::clicked;//*-------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 17/08/2011 13:40:37
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value integer xpos	 */
@@ -132,16 +132,43 @@ event dw_1::clicked;call super::clicked;//*-------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* 
+//        JFF   12/08/2024   [MCO834_JOUVRE]
 //*-----------------------------------------------------------------
+
+Int iRet
+DateTime dtDteSource, dtDtePossible
+Integer iPJOMMC
 
 If isnull(dwo) Then return 0
 
 if Upper(dwo.name) = "B_CHARGER" Then
 	
 	If This.AcceptText() = -1 Then return 0
+
 	
-	iuo_rmfrais.uf_charger()
+	// [MCO834_JOUVRE]
+	If F_CLE_A_TRUE ( "MCO834_JOUVRE" ) Then
+		dtDteSource = DateTime ( Today())
+		iRet = SQLCA.PS_S_PROCHAIN_JOUR_OUVRE_DU_MEME_MOIS_CALENDAIRE ( dtDteSource, iPJOMMC, dtDtePossible )
+		
+		If iRet < 0 Then Return 0
+		
+		If iPJOMMC <= 0 Then
+			stMessage.sTitre  	= "Règlement non autorisé ce jour"
+			stMessage.Icon			= Information!
+			stMessage.bErreurG	= FALSE
+			stMessage.Bouton		= Ok!
+			stMessage.sVar [1] = String ( dtDtePossible, "dd/mm/yyyy" )
+			stMessage.sCode = "WSIN904"		
+			F_Message ( stMessage )
+			
+			Return 0
+		End If 
+
+		iuo_rmfrais.uf_charger()
+	Else
+		iuo_rmfrais.uf_charger()
+	End If
 
 End if
 end event
@@ -157,7 +184,7 @@ event dw_1::itemerror;call super::itemerror;//*---------------------------------
 //* Evenement 		: itemerror
 //* Auteur			: F. Pinon
 //* Date				: 17/08/2011 15:44:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value long row	 */
@@ -174,7 +201,7 @@ event dw_1::itemerror;call super::itemerror;//*---------------------------------
 
 If	ibErreur Then
 
-	stMessage.sTitre		= "R$$HEX1$$e800$$ENDHEX$$glement manuel frais d$$HEX1$$1920$$ENDHEX$$envoi PM72"
+	stMessage.sTitre		= "Règlement manuel frais d’envoi PM72"
 	stMessage.Icon			= Information!
 	stMessage.bouton=OK!
 
@@ -183,7 +210,7 @@ If	ibErreur Then
 	Choose Case isErrCol
 		Case "ID_SIN_1"
 			This.iiReset = 1
-			stMessage.sVar[1] = "r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence sinistre"				
+			stMessage.sVar[1] = "référence sinistre"				
 			stMessage.sCode	= "GENE002"
 	End Choose
 
@@ -226,7 +253,7 @@ event clicked;call super::clicked;//*-------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 17/08/2011 13:40:37
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value integer xpos	 */
@@ -246,7 +273,7 @@ Decimal dcIdSin
 Choose Case Upper(dwo.name)
 	Case "B_ANNULER"
 		
-		stmessage.sTitre="R$$HEX1$$e800$$ENDHEX$$glement manuel frais d$$HEX1$$1920$$ENDHEX$$envoi PM72 "
+		stmessage.sTitre="Règlement manuel frais d’envoi PM72 "
 		stmessage.berreurg=FALSE
 		stmessage.scode="WFRA013"
 		stMessage.bouton=YesNo!
@@ -275,7 +302,7 @@ event itemerror;call super::itemerror;//*---------------------------------------
 //* Evenement 		: itemerror
 //* Auteur			: F. Pinon
 //* Date				: 17/08/2011 16:31:02
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value long row	 */
@@ -287,7 +314,7 @@ event itemerror;call super::itemerror;//*---------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-// 			FPI	 26/12/2011	[PM72_DOMCOM] Sur les dom_com, pas de montant > $$HEX2$$e0002000$$ENDHEX$$50
+// 			FPI	 26/12/2011	[PM72_DOMCOM] Sur les dom_com, pas de montant > à 50
 //*-----------------------------------------------------------------
 
 Long ll_return
@@ -309,7 +336,7 @@ End Choose
 
 If	ibErreur Then
 
-	stMessage.sTitre		= "R$$HEX1$$e800$$ENDHEX$$glement manuel frais d$$HEX1$$1920$$ENDHEX$$envoi PM72 "
+	stMessage.sTitre		= "Règlement manuel frais d’envoi PM72 "
 	stMessage.Icon			= Information!
 	stMessage.bouton=OK!
 
@@ -320,11 +347,11 @@ If	ibErreur Then
 	Case "MT_REG"
 		Choose Case This.iiErreur
 		Case 1
-			stMessage.sVar[1] =  "montant du r$$HEX1$$e800$$ENDHEX$$glement"			
+			stMessage.sVar[1] =  "montant du règlement"			
 			stMessage.sCode	= "GENE001"
 
 		Case 2
-			stMessage.sVar[1] = "montant du r$$HEX1$$e800$$ENDHEX$$glement"
+			stMessage.sVar[1] = "montant du règlement"
 			stMessage.sCode	= "GENE002"
 
 		Case 3

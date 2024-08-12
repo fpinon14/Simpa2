@@ -1,4 +1,4 @@
-HA$PBExportHeader$u_transaction.sru
+﻿$PBExportHeader$u_transaction.sru
 forward
 global type u_transaction from u_trans_anc
 end type
@@ -42,7 +42,7 @@ subroutine IM_I01_GARANTIE(long dcIdProd,long dcIdRev,long dcIdRevAnc,datetime d
 subroutine IM_I01_MOTIF(long dcIdProd,long dcIdRev,long dcIdRevAnc,datetime dtCreeLe,datetime dtMajLe,string sMajPar) RPCFUNC ALIAS FOR "sysadm.IM_I01_MOTIF"
 subroutine IM_I01_PIECE(long dcIdProd,long dcIdRev,long dcIdRevAnc,datetime dtCreeLe,datetime dtMajLe,string sMajPar) RPCFUNC ALIAS FOR "sysadm.IM_I01_PIECE"
 
-// [MIGPB11] [EMD] : Debut Migration : Report SUISSE : Les params (dtDteEff et dtDteFin) peuvent $$HEX1$$ea00$$ENDHEX$$tre du format date. Or SNC ne g$$HEX1$$e800$$ENDHEX$$re pas ce cas pour r$$HEX1$$e900$$ENDHEX$$soudre le Pb on le passe en string SQL fait le transtypage
+// [MIGPB11] [EMD] : Debut Migration : Report SUISSE : Les params (dtDteEff et dtDteFin) peuvent être du format date. Or SNC ne gère pas ce cas pour résoudre le Pb on le passe en string SQL fait le transtypage
 //subroutine DW_I01_REVISION(long dcIdProd,long dcIdRev,string sLibRev,string sCodEffRev,datetime dtDteEff,datetime dtDteFin,datetime dtCreeLe,datetime dtMajLe,string sMajPar) RPCFUNC ALIAS FOR "sysadm.DW_I01_REVISION"
 subroutine DW_I01_REVISION(long dcIdProd,long dcIdRev,string sLibRev,string sCodEffRev,string dtDteEff,string dtDteFin,datetime dtCreeLe,datetime dtMajLe,string sMajPar) RPCFUNC ALIAS FOR "sysadm.DW_I01_REVISION"
 // [MIGPB11] [EMD] : Fin Migration
@@ -98,7 +98,7 @@ subroutine DW_D01_W_PARA_INFO(long dcIdSin,long dcIdI) RPCFUNC ALIAS FOR "sysadm
 subroutine DW_I01_W_FRAIS(long dcIdSin,long dcIdI,long dcIdFrais,long dcIdTypFrais,string sLibFrais,string sAltCour,real dcMtFrais,long dcCodEtat,datetime dtCreeLe,datetime dtMajLe,string sMajPar) RPCFUNC ALIAS FOR "sysadm.DW_I01_W_FRAIS"
 subroutine DW_D01_W_FRAIS(long dcIdSin,long dcIdI, long dcIdFrais) RPCFUNC ALIAS FOR "sysadm.DW_D01_W_FRAIS"
 
-// [MIGPB11] [EMD] : Debut Migration : Report SUISSE : Le param dDte1erUf peut $$HEX1$$ea00$$ENDHEX$$tre du format date. Or SNC ne g$$HEX1$$e800$$ENDHEX$$re pas ce cas pour r$$HEX1$$e900$$ENDHEX$$soudre le Pb on le passe en string SQL fait le transtypage
+// [MIGPB11] [EMD] : Debut Migration : Report SUISSE : Le param dDte1erUf peut être du format date. Or SNC ne gère pas ce cas pour résoudre le Pb on le passe en string SQL fait le transtypage
 //subroutine DW_I01_W_GTI( long dcIdsin, long dcIdGti, datetime dDteOppo, string sHeuOppo, datetime dDte1erUf, real dcMtTotPrej, real dcMtPrejAreg, real dcMtFranaReg, real dcMtNPlafAreg, real dcMtPlafAreg, real dcMtDeduAreg, real dcMtPrejReg, real dcMtDeduReg, real dcMtFranReg, real dcMtNplafReg, real dcMtPlafReg, real dcMtProv, long dcCodDecMac, long dcCodDecOpe, long dcCodEtat, string sTxtMess, string sAltBloc, string sAltAtt, string sAltPlaf, string sAltSsui, long dcCodMotSsui, string sAltValide, long dcCptValide, long dcCptIAreg, datetime dtCreeLe, datetime dtMajLe, string sMajPar ) RPCFUNC ALIAS FOR "sysadm.DW_I01_W_GTI"
 subroutine DW_I01_W_GTI( long dcIdsin, long dcIdGti, datetime dDteOppo, string sHeuOppo,  string dDte1erUf, real dcMtTotPrej, real dcMtPrejAreg, real dcMtFranaReg, real dcMtNPlafAreg, real dcMtPlafAreg, real dcMtDeduAreg, real dcMtPrejReg, real dcMtDeduReg, real dcMtFranReg, real dcMtNplafReg, real dcMtPlafReg, real dcMtProv, long dcCodDecMac, long dcCodDecOpe, long dcCodEtat, string sTxtMess, string sAltBloc, string sAltAtt, string sAltPlaf, string sAltSsui, long dcCodMotSsui, string sAltValide, long dcCptValide, long dcCptIAreg, datetime dtCreeLe, datetime dtMajLe, string sMajPar ) RPCFUNC ALIAS FOR "sysadm.DW_I01_W_GTI"
 // [MIGPB11] [EMD] : Fin Migration
@@ -111,7 +111,7 @@ subroutine DW_D01_W_REFUS(long dcIdSin,long dcIdGti,long dcIdDetail) RPCFUNC ALI
 subroutine DW_I01_W_PARA_PLAFOND(long dcIdSin,long dcIdGti, long dcIdDetail, string sIdTypPlaf, string sIdPara, long dcIdI, datetime dtCreeLe, datetime dtMajLe, string sMajPar) RPCFUNC ALIAS FOR "sysadm.DW_I01_W_PARA_PLAFOND"
 subroutine DW_D01_W_PARA_PLAFOND(long dcIdSin,long dcIdGti,long dcIdDetail) RPCFUNC ALIAS FOR "sysadm.DW_D01_W_PARA_PLAFOND"
 
-// [MIGPB11] [EMD] : Debut Migration : certains params peuvent $$HEX1$$ea00$$ENDHEX$$tre du format date or SNC ne g$$HEX1$$e800$$ENDHEX$$re pas ce cas. Pour r$$HEX1$$e900$$ENDHEX$$soudre le pb on les passe en string et SQL fait le transtypage
+// [MIGPB11] [EMD] : Debut Migration : certains params peuvent être du format date or SNC ne gère pas ce cas. Pour résoudre le pb on les passe en string et SQL fait le transtypage
 //subroutine DW_I01_W_DETAIL ( long dcIdsin, long dcIdGti, long dcIdDetail, long dcIdEvt, string sLibDet, datetime dDteDet, string sHeuDet, string sNumCarte, real dcMtPrej, real dcMtFran, real dcMtnPlaf, real dcMtPlaf, long dcIdiReg, string sAltBloc, string sAltCour, string sAltPlaf, string sAltReg, string sAltAtt, string sAltValide, long dcCptValide, string sAltSsui, long dcCodMotSsui, long dcCodDecMac, long dcCodDecOpe, long dcCodEtat, long dcIdCarte, string dcIdTypeCarte, datetime dtCreeLe, datetime dtMajLe, string sMajPar, datetime dte_cmd, datetime dte_livr, real dcMtValAchat, real dcMtValPublique, string sNumFacture ) RPCFUNC ALIAS FOR "sysadm.DW_I01_W_DETAIL"
 subroutine DW_I01_W_DETAIL ( long dcIdsin, long dcIdGti, long dcIdDetail, long dcIdEvt, string sLibDet, string sDteDet, string sHeuDet, string sNumCarte, real dcMtPrej, real dcMtFran, real dcMtnPlaf, real dcMtPlaf, long dcIdiReg, string sAltBloc, string sAltCour, string sAltPlaf, string sAltReg, string sAltAtt, string sAltValide, long dcCptValide, string sAltSsui, long dcCodMotSsui, long dcCodDecMac, long dcCodDecOpe, long dcCodEtat, long dcIdCarte, string dcIdTypeCarte, datetime dtCreeLe, datetime dtMajLe, string sMajPar, string sDte_cmd, string sDte_livr, real dcMtValAchat, real dcMtValPublique, string sNumFacture ) RPCFUNC ALIAS FOR "sysadm.DW_I01_W_DETAIL"
 // [MIGPB11] [EMD] : Fin Migration
@@ -233,14 +233,14 @@ subroutine PS_S06_W_GTI_NBSIN(long dcIdSin,long dcIdProd,long dcIdEts,string sId
 subroutine PS_S09_COMMANDE (long dcIdSin, string sFourn1, string sFourn2, string sMarq, string sModl, string sdcRepartFourn1, Datetime dtDtePivot, Ref string sFournRetenu) RPCFUNC ALIAS FOR "sysadm.PS_S09_COMMANDE" // JFF [DCMP080500] le 19/06/2008
 subroutine PS_S10_COMMANDE (long dcIdSin, long iIdSeq, ref string sIdRefFour, ref string sIdTypArt) RPCFUNC ALIAS FOR "sysadm.PS_S10_COMMANDE " // JFF [DCMP080615] le 08/08/2008
 subroutine PS_I02_IFR ( string sCasTrt, string sLibRefRf, string sMarque, string sReference, Integer iIdCtgApp, decimal {2} dcFrequence, string sColFonct, string sValFonct, string sOperateur, String AdrMailSPB, Ref long lIdTrait, Ref long lValRet ) RPCFUNC ALIAS FOR "sysadm.PS_I02_IFR" // JFF [DCMP080388] le 05/08/2008
-// [DCMP80334] - Contr$$HEX1$$f400$$ENDHEX$$le de double validation
+// [DCMP80334] - Contrôle de double validation
 function long IM_S01_AUTORISATION(long iIdNatOper,string sCodOper,ref string sAlt) RPCFUNC ALIAS FOR "sysadm.IM_S01_AUTORISATION"
 // [DCMP80862]
 function long PS_I01_REF_CODIC_DARTY(string sProvenance,string sTypeApp,long iCodic,string sMarque,string sModele,string sMajPar,ref string sAltTraite) RPCFUNC ALIAS FOR "sysadm.PS_I01_REF_CODIC_DARTY"
 function long PS_S01_CODE_CAR(string sIdCode,string sIdTypCode) RPCFUNC ALIAS FOR "sysadm.PS_S01_CODE_CAR"
 // FPI - Recopie de produits
 function long PS_I01_TRACE_RECOPIE_PRODUIT(decimal dcIdProdSource,decimal dcIdRevSource,decimal dcIdProdDest,decimal dcIdRevDest,string sLibLong,string sLibCourt,string sEffRevDest,string sLibRevDest,datetime dteEffRev,string sMajPar,string sAltCopieBoutique,string sSuppOption,string sSuppGti,string sResultat, ref long iIdCle) RPCFUNC ALIAS FOR "sysadm.PS_I01_TRACE_RECOPIE_PRODUIT"
-// FPI - 15/01/2009 - Int$$HEX1$$e900$$ENDHEX$$gration des fichiers TAC_IMEI
+// FPI - 15/01/2009 - Intégration des fichiers TAC_IMEI
 function long PS_I01_TAC_IMEI(long iIdTac,string sMarque,string sModele,string sMajPar,ref string sAltTraite) RPCFUNC ALIAS FOR "sysadm.PS_I01_TAC_IMEI"
 function long PS_D01_TAC_IMEI() RPCFUNC ALIAS FOR "sysadm.PS_D01_TAC_IMEI"
 function long PS_I01_SMSPUSH ( long dcIdSin, string sBase, string sNumGsm, string sLogin, string MdPasse, string SmsBody, String CodeTrt, String sTypSms, Long iIdAppli ) RPCFUNC ALIAS FOR "sysadm.PS_I01_SMSPUSH" // 	[FNAC_PROD_ECH_TECH].[SMS]
@@ -406,29 +406,29 @@ function long Iwd_Update_Iwd_Router_Dossier(string sIdSin,string sIdCorb,string 
 // JFF 28/01/2014 [VDOC12917]
 function long PS_I_RM_AVOIR_VDOC12917_V01 (long dcIdSin, integer iIdSeq, string sIdFour, real dcMtAvoir, string sLibRM, string sCodOper, ref string sResult ) RPCFUNC ALIAS FOR "sysadm.PS_I_RM_AVOIR_VDOC12917_V01" 
 
-//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V1 quand V2 d$$HEX1$$e900$$ENDHEX$$finitivement en prod.
+//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V1 quand V2 définitivement en prod.
 function long PS_I_RM_AVOIR_VDOC12917_V02 (long dcIdSin, integer iIdSeq, string sIdFour, real dcMtAvoir, string sLibRM, string sCodOper, decimal{2} dcMtIndemPrinc_1, decimal{2} dcMtFraisAnex_2, decimal{2} dcMtFraisAnex_3, decimal{2} dcMtFraisAnex_4, decimal{2} dcMtFraisAnex_5, decimal{2} dcMtFraisAnex_6, decimal{2} dcMtFraisAnex_7, decimal{2} dcMtFraisAnex_8, decimal{2} dcMtFraisAnex_9, decimal{2} dcMtFraisAnex_10, decimal{2} dcMtFraisAnex_11, ref string sResult ) RPCFUNC ALIAS FOR "sysadm.PS_I_RM_AVOIR_VDOC12917_V02" 
 
 // JFF   30/11/2016 [PM375-1]
 function long PS_I_RP_AVOIR_PM375 (long dcIdSin, integer iIdSeq, string sIdFour, real dcMtAvoir, string sLibRP, string sCodOper, ref string sResult ) RPCFUNC ALIAS FOR "sysadm.PS_I_RP_AVOIR_PM375" 
 
-//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer 00 quand V01 d$$HEX1$$e900$$ENDHEX$$finitivement en prod.
+//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer 00 quand V01 définitivement en prod.
 function long PS_I_RP_AVOIR_PM375_V01 (long dcIdSin, integer iIdSeq, string sIdFour, real dcMtAvoir, string sLibRP, string sCodOper, decimal{2} dcMtIndemPrinc_1, decimal{2} dcMtFraisAnex_2, decimal{2} dcMtFraisAnex_3, decimal{2} dcMtFraisAnex_4, decimal{2} dcMtFraisAnex_5, decimal{2} dcMtFraisAnex_6, decimal{2} dcMtFraisAnex_7, decimal{2} dcMtFraisAnex_8, decimal{2} dcMtFraisAnex_9, decimal{2} dcMtFraisAnex_10, decimal{2} dcMtFraisAnex_11, ref string sResult ) RPCFUNC ALIAS FOR "sysadm.PS_I_RP_AVOIR_PM375_V01" 
 
 function long PS_I_RM_SIMPLE_PM375 (long dcIdSin, long dcIdRegBase, real dcMtRM, string sLibRM, string sCodOper, ref string sResult ) RPCFUNC ALIAS FOR "sysadm.PS_I_RM_SIMPLE_PM375" 
 
-//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer 00 quand V01 d$$HEX1$$e900$$ENDHEX$$finitivement en prod.
+//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer 00 quand V01 définitivement en prod.
 function long PS_I_RM_SIMPLE_PM375_V01 (long dcIdSin, long dcIdRegBase, real dcMtRM, string sLibRM, string sCodOper, decimal{2} dcMtIndemPrinc_1, decimal{2} dcMtFraisAnex_2, decimal{2} dcMtFraisAnex_3, decimal{2} dcMtFraisAnex_4, decimal{2} dcMtFraisAnex_5, decimal{2} dcMtFraisAnex_6, decimal{2} dcMtFraisAnex_7, decimal{2} dcMtFraisAnex_8, decimal{2} dcMtFraisAnex_9, decimal{2} dcMtFraisAnex_10, decimal{2} dcMtFraisAnex_11, ref string sResult ) RPCFUNC ALIAS FOR "sysadm.PS_I_RM_SIMPLE_PM375_V01" 
 
 function long PS_I_RP_SIMPLE_PM375 (long dcIdSin, long dcIdRegBase, real dcMtRP, string sLibRP, string sCodOper, ref string sResult ) RPCFUNC ALIAS FOR "sysadm.PS_I_RP_SIMPLE_PM375" 
 
-//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer 00 quand V01 d$$HEX1$$e900$$ENDHEX$$finitivement en prod.
+//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer 00 quand V01 définitivement en prod.
 function long PS_I_RP_SIMPLE_PM375_V01 (long dcIdSin, long dcIdRegBase, real dcMtRP, string sLibRP, string sCodOper, decimal{2} dcMtIndemPrinc_1, decimal{2} dcMtFraisAnex_2, decimal{2} dcMtFraisAnex_3, decimal{2} dcMtFraisAnex_4, decimal{2} dcMtFraisAnex_5, decimal{2} dcMtFraisAnex_6, decimal{2} dcMtFraisAnex_7, decimal{2} dcMtFraisAnex_8, decimal{2} dcMtFraisAnex_9, decimal{2} dcMtFraisAnex_10, decimal{2} dcMtFraisAnex_11, ref string sResult ) RPCFUNC ALIAS FOR "sysadm.PS_I_RP_SIMPLE_PM375_V01" 
 
 
 function long PS_I_RN_FRAIS_FACTU_PM375 ( long dcIdSin, real dcMtRN, string sLibRN, String sIdFourFct, string sCodOper, ref string sResult ) RPCFUNC ALIAS FOR "sysadm.PS_I_RN_FRAIS_FACTU_PM375"
 
-//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer 00 quand V01 d$$HEX1$$e900$$ENDHEX$$finitivement en prod.
+//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer 00 quand V01 définitivement en prod.
 function long PS_I_RN_FRAIS_FACTU_PM375_V01 ( long dcIdSin, real dcMtRN, string sLibRN, String sIdFourFct, string sCodOper, decimal{2} dcMtIndemPrinc_1, decimal{2} dcMtFraisAnex_2, decimal{2} dcMtFraisAnex_3, decimal{2} dcMtFraisAnex_4, decimal{2} dcMtFraisAnex_5, decimal{2} dcMtFraisAnex_6, decimal{2} dcMtFraisAnex_7, decimal{2} dcMtFraisAnex_8, decimal{2} dcMtFraisAnex_9, decimal{2} dcMtFraisAnex_10, decimal{2} dcMtFraisAnex_11, ref string sResult ) RPCFUNC ALIAS FOR "sysadm.PS_I_RN_FRAIS_FACTU_PM375_V01"
 
 
@@ -512,28 +512,28 @@ subroutine PS_S_W_QUEUE_COD_TYP_RECU ( decimal dcIdSin, Ref String sCodTypRecu )
 //       JFF   11/04/2016 [PM336-1]
 function long PS_U03_DETAIL_MAJ_FACTU_V01 (long dcIdSin, integer iIdSeq, datetime dtDteFact,string sNumFact, real dcMtFact, string sCatFact, String sChaine, ref string sAltTraite ) RPCFUNC ALIAS FOR "sysadm.PS_U03_DETAIL_MAJ_FACTU_V01" // [DCMP080166] Ajout sCatFact
 
-//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V1 quand V2 d$$HEX1$$e900$$ENDHEX$$finitivement en prod.
+//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V1 quand V2 définitivement en prod.
 function long PS_U03_DETAIL_MAJ_FACTU_V02 (long dcIdSin, integer iIdSeq, datetime dtDteFact,string sNumFact, real dcMtFact, string sCatFact, decimal{2} dcMtIndemPrinc_1, decimal{2} dcMtFraisAnex_2, decimal{2} dcMtFraisAnex_3, decimal{2} dcMtFraisAnex_4, decimal{2} dcMtFraisAnex_5, decimal{2} dcMtFraisAnex_6, decimal{2} dcMtFraisAnex_7, decimal{2} dcMtFraisAnex_8, decimal{2} dcMtFraisAnex_9, decimal{2} dcMtFraisAnex_10, decimal{2} dcMtFraisAnex_11, String sChaine, ref string sAltTraite ) RPCFUNC ALIAS FOR "sysadm.PS_U03_DETAIL_MAJ_FACTU_V02" // [DCMP080166] Ajout sCatFact
 
 
 //       JFF   11/04/2016 [PM336-1]
 function long PS_U031_DETAIL_MAJ_FACTU_V01 (long dcIdSin, integer iIdSeq, string sIdFourn, datetime dtDteFact,string sNumFact, real dcMtFact, string sCatFact, String sChaine, ref string sAltTraite ) RPCFUNC ALIAS FOR "sysadm.PS_U031_DETAIL_MAJ_FACTU_V01" // [FACTU_VIP_CDS] PS_U031_DETAIL_MAJ_FACTU  22/10/2014
 
-//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V2 quand V3 d$$HEX1$$e900$$ENDHEX$$finitivement en prod.
+//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V2 quand V3 définitivement en prod.
 function long PS_U031_DETAIL_MAJ_FACTU_V02 (long dcIdSin, integer iIdSeq, string sIdFourn, datetime dtDteFact,string sNumFact, real dcMtFact, string sCatFact, decimal{2} dcMtIndemPrinc_1, decimal{2} dcMtFraisAnex_2, decimal{2} dcMtFraisAnex_3, decimal{2} dcMtFraisAnex_4, decimal{2} dcMtFraisAnex_5, decimal{2} dcMtFraisAnex_6, decimal{2} dcMtFraisAnex_7, decimal{2} dcMtFraisAnex_8, decimal{2} dcMtFraisAnex_9, decimal{2} dcMtFraisAnex_10, decimal{2} dcMtFraisAnex_11, String sChaine, ref string sAltTraite ) RPCFUNC ALIAS FOR "sysadm.PS_U031_DETAIL_MAJ_FACTU_V02" // [FACTU_VIP_CDS] PS_U031_DETAIL_MAJ_FACTU  22/10/2014
 
 
 //       JFF   11/04/2016 [PM336-1]
 function long PS_U032_DETAIL_MAJ_FACTU_V01 (long dcIdSin, String sCasIdSeq, string sIdFourn, datetime dtDteFact,string sNumFact, real dcMtFact, string sCatFact, String sChaine, ref string sAltTraite, ref Long lIdSeq ) RPCFUNC ALIAS FOR "sysadm.PS_U032_DETAIL_MAJ_FACTU_V01" // [VDOC14469] JFF 
 
-//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V2 quand V3 d$$HEX1$$e900$$ENDHEX$$finitivement en prod.
+//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V2 quand V3 définitivement en prod.
 function long PS_U032_DETAIL_MAJ_FACTU_V02 (long dcIdSin, String sCasIdSeq, string sIdFourn, datetime dtDteFact,string sNumFact, real dcMtFact, string sCatFact, decimal{2} dcMtIndemPrinc_1, decimal{2} dcMtFraisAnex_2, decimal{2} dcMtFraisAnex_3, decimal{2} dcMtFraisAnex_4, decimal{2} dcMtFraisAnex_5, decimal{2} dcMtFraisAnex_6, decimal{2} dcMtFraisAnex_7, decimal{2} dcMtFraisAnex_8, decimal{2} dcMtFraisAnex_9, decimal{2} dcMtFraisAnex_10, decimal{2} dcMtFraisAnex_11, String sChaine, ref string sAltTraite, ref Long lIdSeq ) RPCFUNC ALIAS FOR "sysadm.PS_U032_DETAIL_MAJ_FACTU_V02" // [VDOC14469] JFF 
 
 function long PS_U04_DETAIL_MAJ_FACTU (long dcIdSin, string sIdFourn, datetime dtDteFact, string sNumFact, real dcMtFact, string sCatFact, ref string sAltTraite ) RPCFUNC ALIAS FOR "sysadm.PS_U04_DETAIL_MAJ_FACTU" // [DCMP080166] Ajout sCatFact
 //       JFF   11/04/2016 [PM336-1]
 function long PS_U04_DETAIL_MAJ_FACTU_V02 (long dcIdSin, string sIdFourn, datetime dtDteFact, string sNumFact, real dcMtFact, string sCatFact, String sChaine, ref string sAltTraite, ref Long lIdSeq ) RPCFUNC ALIAS FOR "sysadm.PS_U04_DETAIL_MAJ_FACTU_V02" // [DCMP080166] Ajout sCatFact [PM251-2]
 
-//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V2 quand V3 d$$HEX1$$e900$$ENDHEX$$finitivement en prod.
+//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V2 quand V3 définitivement en prod.
 function long PS_U04_DETAIL_MAJ_FACTU_V03 (long dcIdSin, string sIdFourn, datetime dtDteFact, string sNumFact, real dcMtFact, string sCatFact, decimal{2} dcMtIndemPrinc_1, decimal{2} dcMtFraisAnex_2, decimal{2} dcMtFraisAnex_3, decimal{2} dcMtFraisAnex_4, decimal{2} dcMtFraisAnex_5, decimal{2} dcMtFraisAnex_6, decimal{2} dcMtFraisAnex_7, decimal{2} dcMtFraisAnex_8, decimal{2} dcMtFraisAnex_9, decimal{2} dcMtFraisAnex_10, decimal{2} dcMtFraisAnex_11, String sChaine, ref string sAltTraite, ref Long lIdSeq ) RPCFUNC ALIAS FOR "sysadm.PS_U04_DETAIL_MAJ_FACTU_V03" // [DCMP080166] Ajout sCatFact [PM251-2]
 
 //       JFF   11/04/2016 [PM336-1]
@@ -542,40 +542,40 @@ function long PS_U05_DETAIL_MAJ_FACTU_V01 (long dcIdSin, string sIdFourn, dateti
 //       JFF   11/04/2016 [PM336-1]
 function long PS_U06_DETAIL_MAJ_FACTU_V01 (long dcIdSin, long dcIdSeq, datetime dtDteFact, string sNumFact, real dcMtFact, string sCatFact, string sSocCptable, string sMagRempl, string sHeuTicket, string sCaisse, string sHote, string sTicket, real dcMt_ticket, string sLstFacture, string sLstArticle1, string sLstArticle2, string sLstArticle3, String sChaine, ref string sAltTraite ) RPCFUNC ALIAS FOR "sysadm.PS_U06_DETAIL_MAJ_FACTU_V01" // [FNAC_PROD_ECH_TECH]
 
-//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V2 quand V3 d$$HEX1$$e900$$ENDHEX$$finitivement en prod.
+//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V2 quand V3 définitivement en prod.
 function long PS_U06_DETAIL_MAJ_FACTU_V02 (long dcIdSin, long dcIdSeq, datetime dtDteFact, string sNumFact, real dcMtFact, string sCatFact, string sSocCptable, string sMagRempl, string sHeuTicket, string sCaisse, string sHote, string sTicket, real dcMt_ticket, string sLstFacture, string sLstArticle1, string sLstArticle2, string sLstArticle3, decimal{2} dcMtIndemPrinc_1, decimal{2} dcMtFraisAnex_2, decimal{2} dcMtFraisAnex_3, decimal{2} dcMtFraisAnex_4, decimal{2} dcMtFraisAnex_5, decimal{2} dcMtFraisAnex_6, decimal{2} dcMtFraisAnex_7, decimal{2} dcMtFraisAnex_8, decimal{2} dcMtFraisAnex_9, decimal{2} dcMtFraisAnex_10, decimal{2} dcMtFraisAnex_11, String sChaine, ref string sAltTraite ) RPCFUNC ALIAS FOR "sysadm.PS_U06_DETAIL_MAJ_FACTU_V02" // [FNAC_PROD_ECH_TECH]
 
 // [VDOC9586] // JFF 03/09/2014 [DT92_FACTU_CASTO]
 //       JFF   11/04/2016 [PM336-1]
 function long PS_U08_DETAIL_MAJ_FACTU_V02 (long dcIdSin, String sIdFourFactu, datetime dtDteFact,string sNumFact, real dcMtFact, string sCatFact, String sChaine, ref string sAltTraite, ref string sResult ) RPCFUNC ALIAS FOR "sysadm.PS_U08_DETAIL_MAJ_FACTU_V02" 
-//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V2 quand V3 d$$HEX1$$e900$$ENDHEX$$finitivement en prod.
+//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V2 quand V3 définitivement en prod.
 function long PS_U08_DETAIL_MAJ_FACTU_V03 (long dcIdSin, String sIdFourFactu, datetime dtDteFact,string sNumFact, real dcMtFact, string sCatFact, decimal{2} dcMtIndemPrinc_1, decimal{2} dcMtFraisAnex_2, decimal{2} dcMtFraisAnex_3, decimal{2} dcMtFraisAnex_4, decimal{2} dcMtFraisAnex_5, decimal{2} dcMtFraisAnex_6, decimal{2} dcMtFraisAnex_7, decimal{2} dcMtFraisAnex_8, decimal{2} dcMtFraisAnex_9, decimal{2} dcMtFraisAnex_10, decimal{2} dcMtFraisAnex_11, String sChaine, ref string sAltTraite, ref string sResult ) RPCFUNC ALIAS FOR "sysadm.PS_U08_DETAIL_MAJ_FACTU_V03"
 
 // [DT57_CMDE_IPHONE_SFR]
 //       JFF   11/04/2016 [PM336-1]
 function long PS_U09_DETAIL_MAJ_FACTU_V01 (long dcIdSin, String sIdFourFactu, datetime dtDteFact,string sNumFact, real dcMtFact, string sCatFact, String sChaine, ref string sAltTraite ) RPCFUNC ALIAS FOR "sysadm.PS_U09_DETAIL_MAJ_FACTU_V01" 
 
-//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V1 quand V2 d$$HEX1$$e900$$ENDHEX$$finitivement en prod.
+//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V1 quand V2 définitivement en prod.
 function long PS_U09_DETAIL_MAJ_FACTU_V02 (long dcIdSin, String sIdFourFactu, datetime dtDteFact,string sNumFact, real dcMtFact, string sCatFact, decimal{2} dcMtIndemPrinc_1, decimal{2} dcMtFraisAnex_2, decimal{2} dcMtFraisAnex_3, decimal{2} dcMtFraisAnex_4, decimal{2} dcMtFraisAnex_5, decimal{2} dcMtFraisAnex_6, decimal{2} dcMtFraisAnex_7, decimal{2} dcMtFraisAnex_8, decimal{2} dcMtFraisAnex_9, decimal{2} dcMtFraisAnex_10, decimal{2} dcMtFraisAnex_11, String sChaine, ref string sAltTraite ) RPCFUNC ALIAS FOR "sysadm.PS_U09_DETAIL_MAJ_FACTU_V02" 
 
 // JFF 07/10/2013 [DT044-1_V5]
 function long PS_U_DETAIL_MAJ_FACTU_SANS_REGL_DT44_V01 (long dcIdSin, integer iIdSeq, datetime dtDteFact,string sNumFact, real dcMtFact, string sCatFact, String sChaine, ref string sAltTraite ) RPCFUNC ALIAS FOR "sysadm.PS_U_DETAIL_MAJ_FACTU_SANS_REGL_DT44_V01" // [DT044-1_V5]
 
-//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V1 quand V2 d$$HEX1$$e900$$ENDHEX$$finitivement en prod.
+//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V1 quand V2 définitivement en prod.
 function long PS_U_DETAIL_MAJ_FACTU_SANS_REGL_DT44_V02 (long dcIdSin, integer iIdSeq, datetime dtDteFact,string sNumFact, real dcMtFact, string sCatFact, decimal{2} dcMtIndemPrinc_1, decimal{2} dcMtFraisAnex_2, decimal{2} dcMtFraisAnex_3, decimal{2} dcMtFraisAnex_4, decimal{2} dcMtFraisAnex_5, decimal{2} dcMtFraisAnex_6, decimal{2} dcMtFraisAnex_7, decimal{2} dcMtFraisAnex_8, decimal{2} dcMtFraisAnex_9, decimal{2} dcMtFraisAnex_10, decimal{2} dcMtFraisAnex_11, String sChaine, ref string sAltTraite ) RPCFUNC ALIAS FOR "sysadm.PS_U_DETAIL_MAJ_FACTU_SANS_REGL_DT44_V02" // [DT044-1_V5]
 
 
 // JFF 05/11/2013 [PM210]
 function long PS_U_DETAIL_MAJ_FACTU_DIAG_O2M_V01 (long dcIdSin, integer iIdSeq, datetime dtDteFact,string sNumFact, real dcMtFact, string sCatFact, String sChaine, ref string sAltTraite ) RPCFUNC ALIAS FOR "sysadm.PS_U_DETAIL_MAJ_FACTU_DIAG_O2M_V01" // [PM210]
 
-//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V1 quand V2 d$$HEX1$$e900$$ENDHEX$$finitivement en prod.
+//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V1 quand V2 définitivement en prod.
 function long PS_U_DETAIL_MAJ_FACTU_DIAG_O2M_V02 (long dcIdSin, integer iIdSeq, datetime dtDteFact,string sNumFact, real dcMtFact, string sCatFact, decimal{2} dcMtIndemPrinc_1, decimal{2} dcMtFraisAnex_2, decimal{2} dcMtFraisAnex_3, decimal{2} dcMtFraisAnex_4, decimal{2} dcMtFraisAnex_5, decimal{2} dcMtFraisAnex_6, decimal{2} dcMtFraisAnex_7, decimal{2} dcMtFraisAnex_8, decimal{2} dcMtFraisAnex_9, decimal{2} dcMtFraisAnex_10, decimal{2} dcMtFraisAnex_11, String sChaine, ref string sAltTraite ) RPCFUNC ALIAS FOR "sysadm.PS_U_DETAIL_MAJ_FACTU_DIAG_O2M_V02" // [PM210]
 
 
 // JFF 05/11/2013 [PM210]
 function long PS_U_DETAIL_MAJ_FACTU_BNP_SECU_V02 (decimal dcIdProd,decimal dcIdEts,string sIdAdh,string sIdFour, datetime dtDteFact,string sNumFact,decimal{2} dcMtFact,string sCatFact, String sChaine,ref string sAltTraite) RPCFUNC ALIAS FOR "sysadm.PS_U_DETAIL_MAJ_FACTU_BNP_SECU_V02"
 
-//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V1 quand V2 d$$HEX1$$e900$$ENDHEX$$finitivement en prod.
+//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V1 quand V2 définitivement en prod.
 function long PS_U_DETAIL_MAJ_FACTU_BNP_SECU_V03 (decimal dcIdProd,decimal dcIdEts,string sIdAdh,string sIdFour, datetime dtDteFact,string sNumFact,decimal{2} dcMtFact,string sCatFact, decimal{2} dcMtIndemPrinc_1, decimal{2} dcMtFraisAnex_2, decimal{2} dcMtFraisAnex_3, decimal{2} dcMtFraisAnex_4, decimal{2} dcMtFraisAnex_5, decimal{2} dcMtFraisAnex_6, decimal{2} dcMtFraisAnex_7, decimal{2} dcMtFraisAnex_8, decimal{2} dcMtFraisAnex_9, decimal{2} dcMtFraisAnex_10, decimal{2} dcMtFraisAnex_11, String sChaine,ref string sAltTraite) RPCFUNC ALIAS FOR "sysadm.PS_U_DETAIL_MAJ_FACTU_BNP_SECU_V03"
 
 
@@ -583,7 +583,7 @@ function long PS_U_DETAIL_MAJ_FACTU_BNP_SECU_V03 (decimal dcIdProd,decimal dcIdE
 function long PS_U10_DETAIL_MAJ_FACTU_ADVISE (long dcIdSin, string sIdFourn, datetime dtDteFact, string sNumFact, real dcMtFact, string sCatFact, String sChaine, ref string sAltTraite, ref Long lIdSeq ) RPCFUNC ALIAS FOR "sysadm.PS_U10_DETAIL_MAJ_FACTU_ADVISE" 
 
 
-//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V0 quand V1 d$$HEX1$$e900$$ENDHEX$$finitivement en prod.
+//       JFF   09/09/2022   [PM80_FA12_FRANEX]  Supprimer V0 quand V1 définitivement en prod.
 function long PS_U10_DETAIL_MAJ_FACTU_ADVISE_V01 (long dcIdSin, string sIdFourn, datetime dtDteFact, string sNumFact, real dcMtFact, string sCatFact, decimal{2} dcMtIndemPrinc_1, decimal{2} dcMtFraisAnex_2, decimal{2} dcMtFraisAnex_3, decimal{2} dcMtFraisAnex_4, decimal{2} dcMtFraisAnex_5, decimal{2} dcMtFraisAnex_6, decimal{2} dcMtFraisAnex_7, decimal{2} dcMtFraisAnex_8, decimal{2} dcMtFraisAnex_9, decimal{2} dcMtFraisAnex_10, decimal{2} dcMtFraisAnex_11, String sChaine, ref string sAltTraite, ref Long lIdSeq ) RPCFUNC ALIAS FOR "sysadm.PS_U10_DETAIL_MAJ_FACTU_ADVISE_V01" 
 
 
@@ -799,6 +799,9 @@ subroutine PS_HP276_S_S2_RECUPERER_ID_SEQ_ORIG  ( Long adcIdSin, Ref Int aiIdSeq
 
 //  JFF  19/03/2024 [HP252_276_HUB_PRESTA]
 subroutine PS_HP276_S_S2_LIB_ACTIVITY_MAPPING  ( String asActivityCode, String asActivityReturnCode, String asActivityReasonCode, Ref String asLibActivity ) RPCFUNC ALIAS FOR "sysadm.PS_HP276_S_S2_LIB_ACTIVITY_MAPPING"
+
+//  JFF  12/08/2024 [MCO834_JOUVRE]
+function Integer PS_S_PROCHAIN_JOUR_OUVRE_DU_MEME_MOIS_CALENDAIRE ( DateTime dtDteSource, Ref Integer iPJOMMC, ref DateTime dtDtePossible ) RPCFUNC ALIAS FOR "sysadm.PS_S_PROCHAIN_JOUR_OUVRE_DU_MEME_MOIS_CALENDAIRE"
 
 end prototypes
 type variables
