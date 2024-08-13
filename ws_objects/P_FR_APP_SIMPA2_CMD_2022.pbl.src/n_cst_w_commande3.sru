@@ -27079,6 +27079,7 @@ private function string uf_controlergestion_centreautoleclerc (long alcpt);//*--
 //*
 //*-----------------------------------------------------------------
 //* MAJ	PAR	Date			Modification
+//       JFF   05/08/2024  [MCO602_PNEU]
 //*-----------------------------------------------------------------
 
 Long lDeb, lFin, lRow
@@ -27086,22 +27087,35 @@ String sVal, sPos, sIdFour
 
 sIdFour = idwArticle.GetItemString ( alCpt, "ID_FOUR" )
 
-F_RechDetPro ( lDeb, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 299 )
-If lDeb > 0 Then
-	lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'LIEU_REPAR'", 1, idwWDivSin.RowCount () ) 
-	If lRow >0 Then 
-		sVal = Upper ( idwWDivSin.GetItemString ( lRow, "VAL_CAR" ) )
-		
-		If sVal <> sIdFour Then
-			stMessage.sCode = "COMD946" // 
-			stMessage.bouton = Ok!
-			F_Message ( stMessage )
-			sPos = "ALT_CHOIX"
-			Return "G" + "ALT_CHOIX"			
-		End If
-		
-	End If 
+
+// [MCO602_PNEU]
+If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
+	stMessage.sCode = "COMT005" // 
+	stMessage.bouton = Ok!
+	F_Message ( stMessage )
+	sPos = "ALT_CHOIX"
+	Return "G" + "ALT_CHOIX"			
+
+Else 
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 299 )
+	If lDeb > 0 Then
+		lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'LIEU_REPAR'", 1, idwWDivSin.RowCount () ) 
+		If lRow >0 Then 
+			sVal = Upper ( idwWDivSin.GetItemString ( lRow, "VAL_CAR" ) )
+			
+			If sVal <> sIdFour Then
+				stMessage.sCode = "COMD946" // 
+				stMessage.bouton = Ok!
+				F_Message ( stMessage )
+				sPos = "ALT_CHOIX"
+				Return "G" + "ALT_CHOIX"			
+			End If
+			
+		End If 
+	End If
+	
 End If
+
 
 
 Return sPos

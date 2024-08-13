@@ -414,6 +414,7 @@ private function string uf_controlergestion_hub_prestataire ()
 private function string uf_validation_finale_sql_hubprestataire (ref datastore adshubdonneesprestasimpa2)
 private function boolean uf_gestiontranssqlhubpresta (string ascas)
 public subroutine uf_initialiser_dw_desc (ref u_datawindow_detail adw_inter, ref u_datawindow_detail adw_gti, ref datawindow adw_norm[], ref u_libelle_dga aulibelle, ref u_datawindow_detail adw_contact, ref datawindow adw_corbeille, ref u_datawindow adw_dossuivipar, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_boitearchive, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref picturebutton apbcontroler, ref statictext astpauseapi_lab, ref statictext astattente_diverse)
+private function long uf_zn_trt_divsin_typ_presta (string asdata, string asnomcol, long alrow)
 end prototypes
 
 public subroutine uf_traitement (integer aitype, ref s_pass astpass);//*-----------------------------------------------------------------
@@ -19317,6 +19318,7 @@ public function long uf_zn_trt_divsin (string asdata, string asnomcol, long alro
 //       JFF   28/02/2019 [VDOC27557]
 //       JFF   26/08/2021 [RS962_DYSFONC_EXTRA]
 //       JFF   22/11/2023 [RS6175_GC_SCRP_SIM2]
+//       JFF   05/08/2024 [MCO602_PNEU]
 //*-----------------------------------------------------------------
 
 //Migration PB8-WYNIWYG-03/2006 FM
@@ -19386,6 +19388,12 @@ Choose Case asNomCol
 				Case "PERSONNE_SIN"
 					// [PC171999]
 					ll_ret = This.Uf_Zn_Trt_DivSin_Personne_Sin ( Upper ( asData ), Upper( asNomCol ), alRow )
+
+				// [MCO602_PNEU]
+				Case "TYP_PRESTA"
+					// [DT227]
+					ll_ret = This.Uf_Zn_Trt_DivSin_Typ_Presta	( Upper ( asData ), Upper( asNomCol ), alRow )
+
 
 			End Choose 
 		End If // #1
@@ -54860,6 +54868,45 @@ If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 End If
 
 end subroutine
+
+private function long uf_zn_trt_divsin_typ_presta (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
+//*
+//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_Typ_Presta (PRIVATE)
+//* Auteur			: FABRY JF
+//* Date				: 12/08/2024
+//* Libellé			: 
+//* Commentaires	: [MCO602_PNEU]
+//*
+//* Arguments		: String 		asData			Val
+//*					  String 		asNomCol			Val
+//*					  Long			alRow				Val
+//*
+//* Retourne		: long
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//*-----------------------------------------------------------------
+
+Integer iAction
+
+Long lRow, lDeb, lFin, lRow2
+
+asData = Upper ( asData )
+iAction = 0
+
+lRow = idw_LstwCommande.Find ( "COD_ETAT <> 'ANN'", 1, idw_LstwCommande.RowCount () ) 
+
+lRow = idw_wDetail.Find ( "( COD_ETAT = 600 OR COD_ETAT = 500 )", 1, idw_wDetail.RowCount () ) + &
+	    idw_LstwCommande.Find ( "COD_ETAT <> 'ANN'", 1, idw_LstwCommande.RowCount () )
+
+If lRow > 0 Then
+	idw_wDivSin.iiErreur = 13
+	iAction = 1
+End If
+
+Return iAction
+
+end function
 
 on u_gs_sp_sinistre.create
 call super::create

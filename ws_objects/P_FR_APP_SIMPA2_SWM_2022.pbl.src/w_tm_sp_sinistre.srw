@@ -8215,6 +8215,7 @@ event itemerror;call super::itemerror;//*---------------------------------------
 //       JFF   28/02/2019 [VDOC27557]
 //       JFF   23/06/2020 [PC202553_SELECTRA]
 //       JFF   26/09/2023 [RS5928_FRCH_CHQ]
+//       JFF   05/08/2024 [MCO602_PNEU]
 //*-----------------------------------------------------------------
 
 Choose Case isErrCol
@@ -8318,6 +8319,13 @@ Choose Case isErrCol
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
 				stMessage.sCode		= "WSIN897"  // L'état de votre sinistre ne permet plus cette modification.
+
+			Case 13  // #1
+				stMessage.sTitre		= "Type de prestation "
+				stMessage.Icon			= Information!
+				stMessage.bErreurG	= FALSE
+				stMessage.Bouton		= OK!
+				stMessage.sCode		= "WSIN905" // Une prestation de commande ou un règlement est présent sur le dossier, il vous est impossible de modifier le type de prestation.
 			
 			
 			Case Else

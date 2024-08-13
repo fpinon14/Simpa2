@@ -1204,6 +1204,7 @@ Choose Case lIdEvt
 End CHoose
 // [PM246][MANTIS10235]		
 
+
 // [MCO602_PNEU]
 /*
 If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
@@ -2166,6 +2167,10 @@ If bOk Then
 	sTbLibEvt [9] = "INFORMER" // [DT288-3_LOT1_2EME_VS]
 	sTbLibEvt [10] = "CONTRÔLE IMEI" // [PC874_2_V1]	
 
+	//[MCO602_PNEU]
+	sTbLibEvt [11] = "BANQUE EDEL" 
+
+
 // [PM82][LOT1]
 // [ITSM274734]
 	bPRS_Retour_153_154 = False
@@ -2793,6 +2798,12 @@ If bOk Then
 						
 					End If
 					// :[PM246]
+					
+				//[MCO602_PNEU]
+				Case "BANQUE EDEL"
+
+					// OK 					
+					
 					
 				Case Else 
 					bOk = False
