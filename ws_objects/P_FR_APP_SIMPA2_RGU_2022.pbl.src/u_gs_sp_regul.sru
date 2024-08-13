@@ -516,8 +516,6 @@ Long lIdRgpt, lIdI, lTotRegGti, lTotInter, lLig
 
 sTab = "~t"
 
-String a="5"
-
 /*------------------------------------------------------------------*/
 /* S'il existe une ligne dans la DW c'est que l'on vient de         */
 /* valider une régularisation. On positionne la DW de manière       */
