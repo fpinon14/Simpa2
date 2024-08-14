@@ -6728,3 +6728,81 @@ And not exists (
 	   and co.id_code = p.id_corb
 	   )
 Go
+
+--------------------------------------------------------------------
+--
+-- Procedure            :       PS_S_PROCHAIN_JOUR_OUVRE_DU_MEME_MOIS_CALENDAIRE
+-- Auteur               :       Fabry JF
+-- Date                 :       27/01/2023
+-- Libelle              :       [MCO834_JOUVRE]
+-- Commentaires         :       Renvoie la prochaine date ouvré sur le même mois calendaire
+--
+-- Arguments            :       
+--
+-- Retourne             :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_PROCHAIN_JOUR_OUVRE_DU_MEME_MOIS_CALENDAIRE' AND type = 'P' )
+        DROP procedure sysadm.PS_S_PROCHAIN_JOUR_OUVRE_DU_MEME_MOIS_CALENDAIRE
+GO
+
+CREATE procedure sysadm.PS_S_PROCHAIN_JOUR_OUVRE_DU_MEME_MOIS_CALENDAIRE
+	@dtDteSource DateTime,
+	@iPJOMMC Integer Output, -- Prochain jour ouvré sur le même mois calendaire ? 1:Oui, 0: Non
+	@dtDtePossible DateTime OutPut -- Prochaine date possible pour passer le règlement
+AS
+
+Declare @iTrouve Integer
+Declare @dtWork DateTime
+Declare @dtPaques DateTime
+Declare @Year Integer
+
+If @dtDteSource Is Null 
+	Begin 
+		Set @dtDtePossible = null
+		Return -1
+	End 
+
+Set @iTrouve = 0
+Set @dtWork = Convert ( DateTime, convert ( varchar ( 10), @dtDteSource, 103 ))
+
+While @iTrouve = 0
+	Begin
+
+		Set @dtWork = DateAdd ( day, 1, @dtWork )
+
+		-- Samedi et Dimanche
+		If DATEPART ( dw, @dtWork) in ( 6,7 ) continue
+
+		Set @Year = Year ( @dtWork )
+
+		Set @dtPaques = sysadm.FN_GET_PAQUES ( @Year )
+
+		If @dtWork = sysadm.FN_GET_PAQUES ( @Year ) Continue
+		If @dtWork = sysadm.FN_GET_LUNDI_DE_PAQUES ( @dtPaques  ) Continue
+		If @dtWork = sysadm.FN_GET_ASCENSION ( @dtPaques ) Continue
+		If @dtWork = sysadm.FN_GET_PENTECOTE ( @dtPaques  ) Continue
+		If @dtWork = sysadm.FN_GET_LUNDI_DE_PENTECOTE ( @dtPaques  ) Continue
+
+		If @dtWork = '01/01/' + CONVERT ( VarChar(4), @Year) Continue
+		If @dtWork = '01/05/' + CONVERT ( VarChar(4), @Year) Continue
+		If @dtWork = '08/05/' + CONVERT ( VarChar(4), @Year) Continue
+		If @dtWork = '14/07/' + CONVERT ( VarChar(4), @Year) Continue
+		If @dtWork = '15/08/' + CONVERT ( VarChar(4), @Year) Continue
+		If @dtWork = '01/11/' + CONVERT ( VarChar(4), @Year) Continue
+		If @dtWork = '11/11/' + CONVERT ( VarChar(4), @Year) Continue
+		If @dtWork = '25/12/' + CONVERT ( VarChar(4), @Year) Continue
+
+		Set @iTrouve = 1
+
+	End 
+
+Set @iPJOMMC = 0
+If MONTH ( @dtWork ) = MONTH ( @dtDteSource ) Set @iPJOMMC = 1
+Set @dtDtePossible = @dtWork 
+
+Return 1
+
+Go
+
+

@@ -12350,6 +12350,7 @@ Declare @dcIdProd decimal ( 7 )
 Declare @iNewIdSeq Integer
 Declare @sIdTypArt VarChar ( 3 )
 Declare @iStatuGc Integer
+Declare @sTypePresta VarChar ( 10 )
 
 Select	@iPrestaCal = COUNT(*)
 From	sysadm.commande c
@@ -12381,12 +12382,14 @@ Where	dt.id_sin = @adcIdSin
 And		dt.id_reg = @iIdReg
 
 Select	@dcIdProd = id_prod
-From	sysadm.sinistre 
+From	sysadm.sinistre
 Where	id_sin = @adcIdSin
 
 If @dcIdEvt is null Return
 
-If @dcIdEvt = 1391 
+Set @sTypePresta = sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'typ_presta', 'P', 'RETOUR=CODE' )
+
+If @sTypePresta = 'REP'
 	Begin 
 		Select @dcMtForfaitPresta = Convert ( Decimal (11, 2), sysadm.FN_CLE_VAL ( 'FRAIS_REPA', RTRIM ( val_car ) + rtrim ( val_car2 ), ';') )
 		From sysadm.det_pro dp
@@ -12398,7 +12401,7 @@ If @dcIdEvt = 1391
 
 	End 
 
-If @dcIdEvt = 1397 
+If @sTypePresta = 'RMP'
 	Begin 
 		Select @dcMtForfaitPresta = Convert ( Decimal (11, 2), sysadm.FN_CLE_VAL ( 'FRAIS_REMPL', RTRIM ( val_car ) + rtrim ( val_car2 ), ';') )
 		From sysadm.det_pro dp
@@ -12474,8 +12477,4 @@ If Exists ( Select * from w_sin where id_sin = @adcIdSin )
 		And   p.id_ordre = s.id_ordre
 	End 
 
-
 Go
-
-
-
