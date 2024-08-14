@@ -12340,9 +12340,9 @@ CREATE procedure sysadm.PS_I_PRESTA_LECLERC_PNEU_MCO602
 As
 
 Declare @iPrestaCal Integer
+Declare @iPrestaLbe Integer
 Declare @iRegltAssure Integer
 Declare @iIdReg Integer
-Declare @dcIdEvt Decimal ( 7 )
 Declare @dcIdGti Decimal ( 7 )
 Declare @dcNewIdDetail Decimal ( 7 )
 Declare @dcMtForfaitPresta Decimal ( 11, 2)
@@ -12368,24 +12368,40 @@ And		wa.cod_inter = 'A'
 And		wa.cod_pos = 0
 If @iRegltAssure is null Set @iRegltAssure = 0 
 
-If @iRegltAssure <= 0 Return
+Select	@iPrestaLbe = COUNT(*)
+From	sysadm.commande c
+Where	c.id_sin = @adcIdSin
+And		c.id_four = 'LBE'
+And		c.cod_etat <> 'ANN'
+If @iPrestaLbe is null Set @iPrestaLbe = 0 
 
-Select Top 1 @iIdReg = wa.id_reg
-From sysadm.w_a_virer wa
-Where wa.id_sin = @adcIdSin
-If @iIdReg is null Set @iIdReg = 0 
+If @iRegltAssure <= 0 And @iPrestaLbe <= 0 Return
 
-Select	@dcIdEvt = dt.id_evt,
-		@dcIdGti = dt.id_gti
-From	sysadm.detail dt
-Where	dt.id_sin = @adcIdSin
-And		dt.id_reg = @iIdReg
+If @iRegltAssure > 0 
+	Begin 
+		Select Top 1 @iIdReg = wa.id_reg
+		From sysadm.w_a_virer wa
+		Where wa.id_sin = @adcIdSin
+		If @iIdReg is null Set @iIdReg = 0 
+
+		Select	@dcIdGti = dt.id_gti
+		From	sysadm.detail dt
+		Where	dt.id_sin = @adcIdSin
+		And		dt.id_reg = @iIdReg
+	End 
+
+If @iPrestaLbe > 0 And  @iRegltAssure <= 0 
+	Begin 
+		Select	@dcIdGti = c.id_gti
+		From	sysadm.commande c
+		Where	c.id_sin = @adcIdSin
+		And		c.id_four = 'LBE'
+		And		c.cod_etat <> 'ANN'
+	End 
 
 Select	@dcIdProd = id_prod
 From	sysadm.sinistre
 Where	id_sin = @adcIdSin
-
-If @dcIdEvt is null Return
 
 Set @sTypePresta = sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'typ_presta', 'P', 'RETOUR=CODE' )
 
@@ -12450,12 +12466,11 @@ And	  a.id_typ_art = @sIdTypArt
 And	  s.id_sin = @adcIdSin
 And   p.id_ordre = s.id_ordre
 
-
 If Exists ( Select * from w_sin where id_sin = @adcIdSin )
 	Begin
 
-		Insert into sysadm.w_detail ( id_sin,    id_gti,   id_detail,      id_evt,	lib_det,   dte_det,   heu_det, num_carte,   mt_prej,   mt_fran,   mt_nplaf,   mt_plaf,   id_i_reg, alt_plaf,   alt_bloc, alt_reg,   alt_att,   alt_valide, cpt_valide, alt_ssui,   cod_mot_ssui,   cod_dec_mac, cod_dec_ope, cod_etat,   id_carte,   id_type_carte,  cree_le,   maj_le  ,   maj_par,    dte_cmd,   dte_livr,   mt_val_achat,			mt_val_publique,    num_facture )
-		Values					    ( @adcIdSin, @dcIdGti, @dcNewIdDetail, 1489,    null,      null,      null,    null,		0,		   0,		  0,		  0,		 null,     'N',		   'N',      'N'	,   'O'    ,   'N',        1,          'N'     ,   0,			   100,		    100,		 100     ,   0   ,       '00',           getdate(), getdate(),  'AUTO',     null,      null,       @dcMtForfaitPresta,   @dcMtForfaitPresta,    null        )
+		Insert into sysadm.w_detail ( id_sin,    id_gti,   id_detail,      id_evt,	lib_det,   dte_det,   heu_det, num_carte,   mt_prej,   mt_fran,   mt_nplaf,   mt_plaf,   id_i_reg,    alt_bloc, alt_cour, alt_plaf, alt_reg,   alt_att,   alt_valide, cpt_valide, alt_ssui,   cod_mot_ssui,   cod_dec_mac, cod_dec_ope, cod_etat,   id_carte,   id_type_carte,  cree_le,   maj_le  ,   maj_par,    dte_cmd,   dte_livr,   mt_val_achat,			mt_val_publique,    num_facture )
+		Values					    ( @adcIdSin, @dcIdGti, @dcNewIdDetail, 1489,    null,      null,      null,    null,		0,		   0,		  0,		  0,		 null,        'N',		'N'     , 'N',      'N'	,   'O'    ,   'N',        1,          'N'     ,   0,			   100,		    100,		 100     ,   0   ,       '00',           getdate(), getdate(),  'AUTO',     null,      null,       @dcMtForfaitPresta,   @dcMtForfaitPresta,    null        )
 
 		Insert into sysadm.w_div_det ( id_sin,    id_gti,   id_detail,      nom_zone, lib_label,         id_typ_liste, alt_liste_codecar, id_typ_zone, alt_oblig, alt_prot , cpt_tri, val_nbre, val_mt, val_dte, val_car, cpt_valide, cree_le,   maj_le,     maj_par )    
 		Values					     ( @adcIdSin, @dcIdGti, @dcNewIdDetail, 'pec',    'Prise en charge', '-1',         'N',               'X',   	   'N',       'N'      , 40,      null,     null,   null,    'O',     1,          getdate(), getdate(),  'AUTO'  )
