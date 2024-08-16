@@ -135,7 +135,7 @@
                 },
                 {
                     "Library": "p_fr_app_simpa2_main_2022.pbl",
-                    "GeneralPBD": false,
+                    "GeneralPBD": true,
                     "PBRFileName": ""
                 },
                 {
