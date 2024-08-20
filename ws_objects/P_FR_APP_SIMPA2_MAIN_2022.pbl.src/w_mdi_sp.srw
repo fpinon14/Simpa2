@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_mdi_sp.srw
-$PBExportComments$---} Fen$$HEX1$$ea00$$ENDHEX$$tre MDI de l'application SIMPA 2.
+﻿$PBExportHeader$w_mdi_sp.srw
+$PBExportComments$---} Fenêtre MDI de l'application SIMPA 2.
 forward
 global type w_mdi_sp from w_mdi
 end type
@@ -48,13 +48,13 @@ event ue_saisie_automatique;//*-------------------------------------------------
 //* Evenement 		: ue_saisie_automatique
 //* Auteur			: FS
 //* Date				: 12/02/2002
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Ouverture de fen$$HEX1$$ea00$$ENDHEX$$tres en automatique
+//* Libellé			: 
+//* Commentaires	: Ouverture de fenêtres en automatique
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //* #1  PLJ  25/07/2002	Ajout de l'ouverture automatique pour la validation Via Sherpa	
-//* #2  FS   20/09/2002 Gestion des ordres de tests si fen$$HEX1$$ea00$$ENDHEX$$tres saisie/validation ouvertes		  
+//* #2  FS   20/09/2002 Gestion des ordres de tests si fenêtres saisie/validation ouvertes		  
 //*      JFF  17/01/2020 Modif position de l'appli en consultation et ajout en gestion
 //*-----------------------------------------------------------------
 String sMesErr
@@ -66,13 +66,13 @@ Choose Case gsAction
 	CASE "CONSULTER"
 
 	/*----------------------------------------------------------------------------*/
-	/* Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil de consultation de sinistre.             */
+	/* Ouverture de la fenêtre d'accueil de consultation de sinistre.             */
 	/*----------------------------------------------------------------------------*/
 
 		SetPointer ( HourGlass! )
 
 		// [POSITION_SIMPA2]
-		This.x = 3500 	// ... Coordonn$$HEX1$$e900$$ENDHEX$$es de l'application
+		This.x = 3500 	// ... Coordonnées de l'application
 		This.y = 600
 		
 		If IsValid ( W_Ac_Sp_Dossier_2000 ) Then 
@@ -88,7 +88,7 @@ Choose Case gsAction
    CASE "FIN_CONSULTER"
 
 		/*----------------------------------------------------------------------------*/
-		/* Fermeture du dossier ouvert sur la fen$$HEX1$$ea00$$ENDHEX$$tre de consultation de sinistre     */
+		/* Fermeture du dossier ouvert sur la fenêtre de consultation de sinistre     */
 		/*----------------------------------------------------------------------------*/
 
 		If IsValid ( W_Ac_Sp_Dossier_2000 ) Then
@@ -100,7 +100,7 @@ Choose Case gsAction
    CASE "TEST_CONSULTER"
 
 	/*----------------------------------------------------------------------------*/
-	/* Test La fen$$HEX1$$ea00$$ENDHEX$$tre de consultation est-elle ouverte                           */
+	/* Test La fenêtre de consultation est-elle ouverte                           */
 	/*----------------------------------------------------------------------------*/
 
       gsParam = "FERME"
@@ -117,10 +117,10 @@ Choose Case gsAction
 	CASE "GERER"
 
 	/*------------------------------------------------------------------*/
-	/* Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre de gestion du dossier                    */
+	/* Ouverture de la fenêtre de gestion du dossier                    */
 	/*------------------------------------------------------------------*/
 		// [POSITION_SIMPA2]
-		This.x = 3500 	// ... Coordonn$$HEX1$$e900$$ENDHEX$$es de l'application
+		This.x = 3500 	// ... Coordonnées de l'application
 		This.y = 600
 	
 		If IsValid ( w_a_sp_Wkf_Saisie ) Then 
@@ -137,12 +137,12 @@ Choose Case gsAction
    CASE "TEST_GERER"
 
 	/*------------------------------------------------------------------*/
-	/* Test : La fen$$HEX1$$ea00$$ENDHEX$$tre de gestion est-elle ouverte ?                  */
+	/* Test : La fenêtre de gestion est-elle ouverte ?                  */
 	/*------------------------------------------------------------------*/
 
      gsParam = "FERME"
 
-		If IsValid ( w_a_sp_Wkf_Saisie ) Then   // ... La fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil est ouverte
+		If IsValid ( w_a_sp_Wkf_Saisie ) Then   // ... La fenêtre d'accueil est ouverte
 
          If w_a_sp_wkf_Saisie.Visible Then w_a_sp_wkf_Saisie.TriggerEvent ( "ue_saisie_automatique" )
 
@@ -155,7 +155,7 @@ Choose Case gsAction
 
 	CASE "VALIDER"
 		/*------------------------------------------------------------------*/
-		/* Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre de validation du dossier                 */
+		/* Ouverture de la fenêtre de validation du dossier                 */
 		/*------------------------------------------------------------------*/
 		If IsValid ( w_a_sp_Wkf_Validation ) Then 
 			w_a_sp_Wkf_Validation.Show()
@@ -167,7 +167,7 @@ Choose Case gsAction
 
 /*------------------------------------------------------------------*/
 /* [MIGPB8COR]                                                      */
-/* DGA. Probl$$HEX1$$e800$$ENDHEX$$me affichage Word. On essaye avec un PostEvent.       */
+/* DGA. Problème affichage Word. On essaye avec un PostEvent.       */
 /*------------------------------------------------------------------*/
 //		w_a_sp_Wkf_Validation.TriggerEvent ("ue_Saisie_Automatique")
 		W_A_Sp_Wkf_Validation.Event Post ue_Saisie_Automatique (0,0)
@@ -177,12 +177,12 @@ Choose Case gsAction
    CASE "TEST_VALIDER"
 
 	/*------------------------------------------------------------------*/
-	/* Test : La fen$$HEX1$$ea00$$ENDHEX$$tre de validation est-elle ouverte ?               */
+	/* Test : La fenêtre de validation est-elle ouverte ?               */
 	/*------------------------------------------------------------------*/
 
      gsParam = "FERME"
 
-		If IsValid ( w_a_sp_Wkf_Validation ) Then   	// ... La fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil est ouverte
+		If IsValid ( w_a_sp_Wkf_Validation ) Then   	// ... La fenêtre d'accueil est ouverte
 
          If w_a_sp_wkf_Validation.Visible Then w_a_sp_wkf_Validation.TriggerEvent ( "ue_saisie_automatique" )
 
@@ -193,7 +193,7 @@ Choose Case gsAction
   CASE "EDITER"
 
 		/*------------------------------------------------------------------*/
-		/* Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre d'$$HEX1$$e900$$ENDHEX$$dition des courriers                  */
+		/* Ouverture de la fenêtre d'édition des courriers                  */
 		/*------------------------------------------------------------------*/
 		/* Si on est en SVE                                                 */
 		/*------------------------------------------------------------------*/
@@ -223,7 +223,7 @@ Choose Case gsAction
    CASE "REEDITER"
 
 		/*------------------------------------------------------------------*/
-		/* Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre de r$$HEX2$$e900e900$$ENDHEX$$dition des courriers               */
+		/* Ouverture de la fenêtre de réédition des courriers               */
 		/*------------------------------------------------------------------*/
 		/* Si on est en SVE                                                 */
 		/*------------------------------------------------------------------*/
@@ -238,7 +238,7 @@ Choose Case gsAction
 			W_Ae_Sp_ReEdition_Dcmp060589.TriggerEvent ("ue_Saisie_Automatique")
 
 		/*------------------------------------------------------------------*/
-		/* Sinon m$$HEX1$$e900$$ENDHEX$$thode ancienne                                           */
+		/* Sinon méthode ancienne                                           */
 		/*------------------------------------------------------------------*/
 		Else	
 			If IsValid (  W_ae_Sp_ReEdit_Sinistre_Wkf_2000 ) Then 
@@ -263,7 +263,7 @@ END CHOOSE
 /* Modification DGA. Le 30/03/2006.                                 */
 /*------------------------------------------------------------------*/
 /* Il ne faut pas faire un OpenChannel ( WarmLink ), car il y a un  */
-/* probl$$HEX1$$e800$$ENDHEX$$me avec le CloseChannel. Il vaut mieux essayer un          */
+/* problème avec le CloseChannel. Il vaut mieux essayer un          */
 /* ColdLink (Lancement du ExecRemote uniquement)                    */
 /*------------------------------------------------------------------*/
 If Left ( gsAction, 4 ) = "TEST" Then
@@ -300,13 +300,13 @@ event ue_saisie_automatique_sherpa;//*------------------------------------------
 //* Evenement 		: ue_saisie_automatique
 //* Auteur			: FS
 //* Date				: 12/02/2002
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Ouverture de fen$$HEX1$$ea00$$ENDHEX$$tres en automatique
+//* Libellé			: 
+//* Commentaires	: Ouverture de fenêtres en automatique
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //* #1  PLJ  25/07/2002	Ajout de l'ouverture automatique pour la validation Via Sherpa	
-//* #2  FS   20/09/2002 Gestion des ordres de tests si fen$$HEX1$$ea00$$ENDHEX$$tres saisie/validation ouvertes		  
+//* #2  FS   20/09/2002 Gestion des ordres de tests si fenêtres saisie/validation ouvertes		  
 //*-----------------------------------------------------------------
 
 If	lParam = 0	Then gsParam = ""
@@ -346,6 +346,12 @@ ibActiverSend = True
 ilLongParm	= lParam
 ilWordParm	= wParam
 
+
+Choose Case stGlb.sCodOper 
+	Case "JFF", "FS", "FPI"
+		MessageBox ("", "lParam=" + String ( lParam ) + ", wParam=" + String ( wParam ) + ", gsAction=" + gsAction )
+End Choose 
+
 This.TriggerEvent ( "Ue_Saisie_Automatique" )
 
 end event
@@ -356,7 +362,7 @@ event ue_ctrle_rep_courrier();//*-----------------------------------------------
 //* Evenement 		: ue_Ctrle_Rep_Courrier
 //* Auteur			: JFF
 //* Date				: 27/12/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -382,12 +388,12 @@ public function integer wf_browse_fenetre (string astitre);////*----------------
 ////* Fonction		: W_Mdi_Sp::Wf_Browse_Fenetre	(PUBLIC)
 ////* Auteur			: Erick John Stark
 ////* Date				: 04/04/2005 03:10:01
-////* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-////* Commentaires	: On va browser l'ensemble des fen$$HEX1$$ea00$$ENDHEX$$tres ouvertes afin de trouver les applications SIMPA2 et SAVANE
+////* Libellé			: 
+////* Commentaires	: On va browser l'ensemble des fenêtres ouvertes afin de trouver les applications SIMPA2 et SAVANE
 ////*
-////* Arguments		: String			asTitre				(Val)	Titre de la fen$$HEX1$$ea00$$ENDHEX$$tre
+////* Arguments		: String			asTitre				(Val)	Titre de la fenêtre
 ////*
-////* Retourne		: Long			Identifiant de la fen$$HEX1$$ea00$$ENDHEX$$tre
+////* Retourne		: Long			Identifiant de la fenêtre
 ////*
 ////*-----------------------------------------------------------------
 ////* MAJ      PAR      Date	  Modification
@@ -403,8 +409,8 @@ sClassNamePB = { "FNWND380", "FNWNS380", "FNWND3115", "FNWNS3115", "FNWND3120", 
 return Wf_Browse_Fenetre ( astitre, sClassNamePB )
 
 ///*------------------------------------------------------------------*/
-///* Attention, la variable asClassName ne doit pas d$$HEX1$$e900$$ENDHEX$$passer 255      */
-///* caract$$HEX1$$e800$$ENDHEX$$res de long.                                              */
+///* Attention, la variable asClassName ne doit pas dépasser 255      */
+///* caractères de long.                                              */
 ///*------------------------------------------------------------------*/
 //String sNomWindow, sNomClasse
 //
@@ -426,20 +432,20 @@ return Wf_Browse_Fenetre ( astitre, sClassNamePB )
 //	sNomWindow	= Space ( MAX_WIDTH )
 //	sNomClasse	= Space ( MAX_WIDTH )
 ///*------------------------------------------------------------------*/
-///* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le ClassName de la fen$$HEX1$$ea00$$ENDHEX$$tre que l'on vient de         */
+///* On récupére le ClassName de la fenêtre que l'on vient de         */
 ///* trouver.                                                         */
 ///*------------------------------------------------------------------*/
 //	GetClassNameA ( lHandleChild, sNomClasse, MAX_WIDTH )
 ///*------------------------------------------------------------------*/
-///* S'agit-il d'une fen$$HEX1$$ea00$$ENDHEX$$tre PowerBuilder 8.                          */
+///* S'agit-il d'une fenêtre PowerBuilder 8.                          */
 ///*------------------------------------------------------------------*/
 //	If	sNomClasse = sClassNamePB[1] Or sNomClasse = sClassNamePB[2]	Then
 ///*------------------------------------------------------------------*/
-///* Oui, donc on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le nom de la fen$$HEX1$$ea00$$ENDHEX$$tre.                      */
+///* Oui, donc on récupére le nom de la fenêtre.                      */
 ///*------------------------------------------------------------------*/
 //		GetWindowTextA ( lHandleChild, sNomWindow, MAX_WIDTH )
 ///*------------------------------------------------------------------*/
-///* Le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre correspond $$HEX2$$e0002000$$ENDHEX$$la fen$$HEX1$$ea00$$ENDHEX$$tre recherch$$HEX1$$e900$$ENDHEX$$e.       */
+///* Le titre de la fenêtre correspond à la fenêtre recherchée.       */
 ///*------------------------------------------------------------------*/
 //		If	Left ( sNomWindow, Len ( asTitre ) ) = asTitre	Then
 //			Return ( lHandleChild )
@@ -456,13 +462,13 @@ public function integer wf_browse_fenetre (string astitre, string asclassname[])
 //* Fonction		: W_Mdi_Sp::Wf_Browse_Fenetre	(PUBLIC)
 //* Auteur			: Erick John Stark		: JCA
 //* Date				: 04/04/2005 03:10:01	: 22/02/2008
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On va browser l'ensemble des fen$$HEX1$$ea00$$ENDHEX$$tres ouvertes afin de trouver les applications SIMPA2 et SAVANE
+//* Libellé			: 
+//* Commentaires	: On va browser l'ensemble des fenêtres ouvertes afin de trouver les applications SIMPA2 et SAVANE
 //*
-//* Arguments		: String			asTitre				(Val)	Titre de la fen$$HEX1$$ea00$$ENDHEX$$tre
+//* Arguments		: String			asTitre				(Val)	Titre de la fenêtre
 //*
-//* Retourne		: Long			Identifiant de la fen$$HEX1$$ea00$$ENDHEX$$tre
-//* 					  string array	Classe des fen$$HEX1$$ea00$$ENDHEX$$tres que l'on recherche
+//* Retourne		: Long			Identifiant de la fenêtre
+//* 					  string array	Classe des fenêtres que l'on recherche
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	  Modification
@@ -476,8 +482,8 @@ integer i
 sClassNamePB = asclassname
 
 /*------------------------------------------------------------------*/
-/* Attention, la variable asClassName ne doit pas d$$HEX1$$e900$$ENDHEX$$passer 255      */
-/* caract$$HEX1$$e800$$ENDHEX$$res de long.                                              */
+/* Attention, la variable asClassName ne doit pas dépasser 255      */
+/* caractères de long.                                              */
 /*------------------------------------------------------------------*/
 String sNomWindow, sNomClasse
 
@@ -500,23 +506,23 @@ Do	While	lHandleChild > 0
 	sNomClasse	= Space ( MAX_WIDTH )
 	
 	/*------------------------------------------------------------------*/
-	/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le ClassName de la fen$$HEX1$$ea00$$ENDHEX$$tre que l'on vient de         */
+	/* On récupére le ClassName de la fenêtre que l'on vient de         */
 	/* trouver.                                                         */
 	/*------------------------------------------------------------------*/
 	GetClassNameA ( lHandleChild, sNomClasse, MAX_WIDTH )
 	
 	/*------------------------------------------------------------------*/
-	/* S'agit-il d'une fen$$HEX1$$ea00$$ENDHEX$$tre PowerBuilder 8.                          */
+	/* S'agit-il d'une fenêtre PowerBuilder 8.                          */
 	/*------------------------------------------------------------------*/
 	for i = 1 to upperbound(sClassNamePB)
 		if sNomClasse = sClassNamePB[i]  then
 			/*------------------------------------------------------------------*/
-			/* Oui, donc on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le nom de la fen$$HEX1$$ea00$$ENDHEX$$tre.                      */
+			/* Oui, donc on récupére le nom de la fenêtre.                      */
 			/*------------------------------------------------------------------*/
 			GetWindowTextA ( lHandleChild, sNomWindow, MAX_WIDTH )
 			
 			/*------------------------------------------------------------------*/
-			/* Le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre correspond $$HEX2$$e0002000$$ENDHEX$$la fen$$HEX1$$ea00$$ENDHEX$$tre recherch$$HEX1$$e900$$ENDHEX$$e.       */
+			/* Le titre de la fenêtre correspond à la fenêtre recherchée.       */
 			/*------------------------------------------------------------------*/
 			If	pos ( lower(sNomWindow), lower(asTitre) ) > 0	Then
 				Return ( lHandleChild )
@@ -537,7 +543,7 @@ event open;call super::open;//*-------------------------------------------------
 //* Evenement 		: Open
 //* Auteur			: FS
 //* Date				: 12/02/2002
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$marrage comme serveur DDE
+//* Libellé			: Démarrage comme serveur DDE
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -550,7 +556,7 @@ event open;call super::open;//*-------------------------------------------------
 //*									assurances des gti du produit du dr DCMP 030381
 //* 		 JFF   08/11/2018   [MSG_SIM_VERSION_BASE]
 //*       JFF   26/11/2019 [PC192290]
-//*       JFF   26/12/2022 Contr$$HEX1$$f400$$ENDHEX$$le r$$HEX1$$e900$$ENDHEX$$pertoire courrier
+//*       JFF   26/12/2022 Contrôle répertoire courrier
 //        JFF   04/09/2023 [RS5656_MOD_PCE_DIF]
 //*-----------------------------------------------------------------
 
@@ -559,11 +565,11 @@ Long lRevSvn, lRetAccordRevSvn
 Datetime dtDteVersBaseSim, dtDteSqlQuotBaseSim
 Integer iAlerte, iAlerteSqlQuot
 
-// V$$HEX1$$e900$$ENDHEX$$rifie si acc$$HEX1$$e800$$ENDHEX$$s SIMPA2 autoris$$HEX1$$e900$$ENDHEX$$
+// Vérifie si accès SIMPA2 autorisé
 F_Couper_Acces_SIMPA2 ()
 
 /*------------------------------------------------------------------*/
-/* #1 CAG 09/07/04 : r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration de la ref de la mdi pas seulement */
+/* #1 CAG 09/07/04 : récupération de la ref de la mdi pas seulement */
 /*							dans le cas de OpCon (cf timer)					  */
 /*------------------------------------------------------------------*/
 gWMdi = This	
@@ -604,7 +610,7 @@ If F_CLE_A_TRUE ( "VERIF_REVSVN" ) Then
 			stMessage.berreurg=FALSE
 			stMessage.bouton=Ok!
 			stMessage.icon=Exclamation!
-			stMessage.stitre="Version SIMPA2 Obsol$$HEX1$$e800$$ENDHEX$$te"
+			stMessage.stitre="Version SIMPA2 Obsolète"
 			stMessage.scode ="WSIN783"
 			stMessage.sVar [1] = String ( lRevSvn )
 			
@@ -636,7 +642,7 @@ If Upper(SQLCA.Database) <> "SIMPA2_PRO" Then
 		stMessage.berreurg=FALSE
 		stMessage.bouton=Ok!
 		stMessage.icon=Exclamation!
-		stMessage.stitre="Base de Simulation Obsol$$HEX1$$e800$$ENDHEX$$te"
+		stMessage.stitre="Base de Simulation Obsolète"
 		stMessage.scode ="WSIN832"
 		stMessage.sVar [1] = String ( dtDteVersBaseSim, "dd/mm/yyyy hh:mm:ss" )
 		
@@ -678,7 +684,7 @@ End If
 gdsPieceSherpa.Reset ()
 
 // [POSITION_SIMPA2]
-This.x = 1980 	// ... Coordonn$$HEX1$$e900$$ENDHEX$$es de l'application
+This.x = 1980 	// ... Coordonnées de l'application
 This.y = 600
 
 
@@ -690,7 +696,7 @@ on timer;call w_mdi::timer;//*--------------------------------------------------
 //* Evenement     : timer
 //* Auteur        : Fabry JF
 //* Date          : 19/12/2002 14:16:19
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -711,14 +717,14 @@ If iiTimer > 5 Then
 
 	/*------------------------------------------------------------------*/
 	/* Affectation de la MDI une instance globale afin d'avoir une      */
-	/* r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence sur w_main_sp_commandes pour pouvoir quitter SIMPA2.   */
+	/* référence sur w_main_sp_commandes pour pouvoir quitter SIMPA2.   */
 	/* Cette affectation ne se fait que pour si le user est OPCO.       */
 	/*------------------------------------------------------------------*/
 //Migration PB8-WYNIWYG-03/2006 FM
 //	gWMdi = This	
 
 	/*------------------------------------------------------------------*/
-	/* Click simul$$HEX2$$e9002000$$ENDHEX$$surle module des Commandes                          */
+	/* Click simulé surle module des Commandes                          */
 	/*------------------------------------------------------------------*/
 	This.MenuId.Item[6].TriggerEvent ( Clicked! )
 
@@ -731,7 +737,7 @@ event closequery;//*------------------------------------------------------------
 //* Evenement     : closequery
 //* Auteur        : Fabry JF
 //* Date          : 16/12/2002 16:37:30
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -774,14 +780,14 @@ event ue_initialisation;call super::ue_initialisation;//*-----------------------
 //* Evenement 		: ue_Initialisation
 //* Auteur			: JFF
 //* Date				: 27/12/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*-----------------------------------------------------------------
 
-// Contr$$HEX1$$f400$$ENDHEX$$le r$$HEX1$$e900$$ENDHEX$$pertoire courrier
+// Contrôle répertoire courrier
 If Not F_CLE_A_TRUE ( "CTRLE_PARA_REP_COURR" ) Then Return
 
 String sRepDestProduction, sFrequenceMin, sRacineUNCDest
