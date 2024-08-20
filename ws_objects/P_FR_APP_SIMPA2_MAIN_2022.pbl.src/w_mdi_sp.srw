@@ -399,12 +399,14 @@ public function integer wf_browse_fenetre (string astitre);////*----------------
 ////* MAJ      PAR      Date	  Modification
 //* #1		FPI		06/11/2009 [MIGPB11] Communication avec Sherpa PB 11
 //				PHG		22/09/2011 [I037] Communication avec Sherpa PB12
+//				FPI		20/08/2024	[MIG_PB2022] Communication avec Sherpa PB2022
 ////*-----------------------------------------------------------------
 //
 
 String sClassNamePB[]
 //sClassNamePB = { "FNWND380", "FNWNS380", "FNWND3115", "FNWNS3115"} // #1 Ajout de classes
-sClassNamePB = { "FNWND380", "FNWNS380", "FNWND3115", "FNWNS3115", "FNWND3120", "FNWNS3120"} // #1 Ajout de classes
+//[MIG_PB2022] ajout de  FNWND3
+sClassNamePB = { "FNWND380", "FNWNS380", "FNWND3115", "FNWNS3115", "FNWND3120", "FNWNS3120", "FNWND3", "FNWNS3"} // #1 Ajout de classes
 
 return Wf_Browse_Fenetre ( astitre, sClassNamePB )
 
