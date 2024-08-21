@@ -1,4 +1,4 @@
-HA$PBExportHeader$n_cst_sp_droit_courrier.sru
+﻿$PBExportHeader$n_cst_sp_droit_courrier.sru
 $PBExportComments$nvuo pour la gestion dses droits de courrier
 forward
 global type n_cst_sp_droit_courrier from nonvisualobject
@@ -37,7 +37,7 @@ public function integer uf_preparer ();//*--------------------------------------
 //* Fonction      : n_cst_sp_droit_courrier::uf_Preparer (PUBLIC)
 //* Auteur        : Fabry JF
 //* Date          : 19/02/2004 16:59:52
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -57,7 +57,7 @@ Long	lRow
 sIdOper = ""
 
 /*------------------------------------------------------------------*/
-/* On va se connecter $$HEX2$$e0002000$$ENDHEX$$la base qui g$$HEX1$$e900$$ENDHEX$$re la gestion des acc$$HEX1$$e900$$ENDHEX$$s.      */
+/* On va se connecter à la base qui gére la gestion des accés.      */
 /*------------------------------------------------------------------*/
 trSesame = CREATE U_Transaction
 
@@ -66,8 +66,8 @@ sErrConnect			= ""
 
 If F_ConnectSqlServer ( sFicIniAppli, "SESAME BASE", trSesame, sErrConnect, "SESAME", stGlb.sCodOper ) Then
 /*------------------------------------------------------------------*/
-/* On va populiser une DataWindow pour r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer la liste des       */
-/* op$$HEX1$$e900$$ENDHEX$$rateurs qui peuvent se connecter $$HEX2$$e0002000$$ENDHEX$$l'application.             */
+/* On va populiser une DataWindow pour récupérer la liste des       */
+/* opérateurs qui peuvent se connecter à l'application.             */
 /*------------------------------------------------------------------*/
 	idw1.SetTransObject ( trSesame )
 	If idw1.Retrieve ( stGlb.sCodAppli ) < 0 Then
@@ -98,11 +98,11 @@ idwParamDroit.Retrieve ()
 
 lRow = idwProduit.InsertRow (0)
 idwProduit.SetItem ( lRow, "ID_PROD", -1 )
-idwProduit.SetItem ( lRow, "LIB_PROD", "Par d$$HEX1$$e900$$ENDHEX$$faut, pour tout produit affect$$HEX4$$e9002000e0002000$$ENDHEX$$ce gestionnaire" )
+idwProduit.SetItem ( lRow, "LIB_PROD", "Par défaut, pour tout produit affecté à ce gestionnaire" )
 
 lRow = idwParamDroit.InsertRow (0)
 idwParamDroit.SetItem ( lRow, "ID_CODE", 0 )
-idwParamDroit.SetItem ( lRow, "LIBELLE", "Contr$$HEX1$$f400$$ENDHEX$$le Total" )
+idwParamDroit.SetItem ( lRow, "LIBELLE", "Contrôle Total" )
 idwParamDroit.SetItem ( lRow, "AUTORISER", "N" )
 idwParamDroit.SetItem ( lRow, "REFUSER", "N" )
 
@@ -129,7 +129,7 @@ public subroutine uf_filtre_dwproduit (string asidoper, string asnom);//*-------
 //* Fonction      : n_cst_sp_droit_courrier::uf_Filtre_DwProduit (PUBLIC)
 //* Auteur        : Fabry JF
 //* Date          : 20/02/2004 09:17:00
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : String		asIdOper		Val,
@@ -139,7 +139,7 @@ public subroutine uf_filtre_dwproduit (string asidoper, string asnom);//*-------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//*       JFF    11/12/2018  On pr$$HEX1$$e900$$ENDHEX$$sente la ligne de d$$HEX1$$e900$$ENDHEX$$faut m$$HEX1$$ea00$$ENDHEX$$me si aucune corbeille pr$$HEX1$$e900$$ENDHEX$$sente.
+//*       JFF    11/12/2018  On présente la ligne de défaut même si aucune corbeille présente.
 //*
 //*-----------------------------------------------------------------
 
@@ -150,11 +150,11 @@ lIdProd  = 0
 
 idwProduit.SetRedraw ( False )
 
-// On pr$$HEX1$$e900$$ENDHEX$$sente la ligne de d$$HEX1$$e900$$ENDHEX$$faut m$$HEX1$$ea00$$ENDHEX$$me si aucune corbeille pr$$HEX1$$e900$$ENDHEX$$sente.
+// On présente la ligne de défaut même si aucune corbeille présente.
 idwProduit.SetFilter ( "ID_OPER = '" + asIdOper  + "' OR ID_PROD = -1" )
 idwProduit.Filter ()
 
-idwProduit.modify ( "oper_t.text = 'Produit(s) affect$$HEX1$$e900$$ENDHEX$$(s) $$HEX2$$e0002000$$ENDHEX$$" + asNom + "'" )
+idwProduit.modify ( "oper_t.text = 'Produit(s) affecté(s) à " + asNom + "'" )
 
 lTotProd = idwProduit.RowCount ()
 If lTotProd > 0 Then
@@ -194,7 +194,7 @@ public subroutine uf_afficher_droit (string asidoper, long alidprod);//*--------
 //* Fonction      : n_cst_sp_droit_courrier::uf_Afficher_Droit (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 20/02/2004 10:00:35
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Affichage des droits actuel
+//* Libellé       : Affichage des droits actuel
 //* Commentaires  : 
 //*
 //* Arguments     : String		asIdOper			Val
@@ -260,11 +260,11 @@ private function integer uf_zn_autoriser (string asdata, long alrow);//*--------
 //* Fonction		: n_cst_sp_droit_courrier::Uf_Zn_Autoriser (PRIVATE)
 //* Auteur			: FABRY JF
 //* Date				: 20/02/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Zone Autoriser
+//* Libellé			: Zone Autoriser
 //* Commentaires	: On trouve plusieurs fois dans la fonction "idwDroitExistant.RowCount ()".
 //*					  Il faut absolument le laisser et ne pas le stocker en variable. 
-//*					  Cela est du $$HEX2$$e0002000$$ENDHEX$$la fonction r$$HEX1$$e900$$ENDHEX$$cursive incluse ci-dessous, le compteur peut donc 
-//*					  varier et doit $$HEX1$$ea00$$ENDHEX$$tre recalcul$$HEX4$$e9002000e0002000$$ENDHEX$$chaque fois.
+//*					  Cela est du à la fonction récursive incluse ci-dessous, le compteur peut donc 
+//*					  varier et doit être recalculé à chaque fois.
 //*
 //* Arguments		: asData			String		Val
 //*					  alRow			String		Val
@@ -274,12 +274,13 @@ private function integer uf_zn_autoriser (string asdata, long alrow);//*--------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1   MADM   27/07/2006   Projet DNTMAIL1/2 Mails sortant en remplacement des courriers
-//* #2   JCA	07/03/2007		DCMP 070161 - Ajout d'un droit sur la validation avec r$$HEX1$$e900$$ENDHEX$$glement
-//* #3   FPI	28/10/2008		Correction cases $$HEX2$$e0002000$$ENDHEX$$cocher Autoriser/Refuser tout
+//* #2   JCA	07/03/2007		DCMP 070161 - Ajout d'un droit sur la validation avec réglement
+//* #3   FPI	28/10/2008		Correction cases à cocher Autoriser/Refuser tout
 //*      JFF   13/09/2012     [DROIT223_19]
 //*      JFF   04/02/2014     [DROITS_SANDRINE]
 //		FPI	03/07/2014		   [VDOC14806]
 //*	   JFF   29/10/2018     [CONS_REST_CARDIF]
+//*		JFF   21/08/2024		[SUPP_RESTRICTION]
 //*---------------------------------------------------------------
 
 Int iRet, iRet2
@@ -311,7 +312,7 @@ lDebParam   = alRow
 lFinParam   = alRow
 
 /*------------------------------------------------------------------*/
-/* Gestion du contr$$HEX1$$f400$$ENDHEX$$le total.                                       */
+/* Gestion du contrôle total.                                       */
 /*------------------------------------------------------------------*/
 If lIdNatOper = 0 Then
 	lDebParam  = 1
@@ -390,6 +391,8 @@ For lCptParam = lDebParam To lFinParam
 		Case "O"
 			
 			// [CONS_REST_CARDIF]
+			// [SUPP_RESTRICTION]
+			/*			
 			If lIdNatOper = 31 Then
 				Choose Case stGlb.sCodOper
 					Case "JFF", "FS", "YNA", "RGI", "JBV", "NRI", "RVR", "RPB"
@@ -406,6 +409,7 @@ For lCptParam = lDebParam To lFinParam
 						Return 2
 				End Choose 
 			End If
+			*/
 			
 			sRech    = "ID_NAT_OPER = " + String ( lIdNatOper ) + " AND " + &
 						  "ID_OPER     = '" + sIdOper + "' AND " + &
@@ -422,7 +426,7 @@ For lCptParam = lDebParam To lFinParam
 			End If
 
 			// Si l'on autorise ce droit pour ce produit, 
-			// on ne peut donc pas le refuser pour ce m$$HEX1$$ea00$$ENDHEX$$me produit
+			// on ne peut donc pas le refuser pour ce même produit
 			This.uf_Zn_Refuser ( "N", lCptParam )
 
 			/*------------------------------------------------------------------*/
@@ -487,7 +491,7 @@ For lCptParam = lDebParam To lFinParam
 
 			/*-------------------------------------------------------------------*/
 			/* # 2																					*/
-			/* Si l'on coche 'Validation avec r$$HEX1$$e900$$ENDHEX$$glement', alors il faut cocher  	*/
+			/* Si l'on coche 'Validation avec réglement', alors il faut cocher  	*/
 			/* 'Phase de Validation'                                            	*/
 			/*-------------------------------------------------------------------*/
 			If lIdNatOper = 17 Then
@@ -512,7 +516,7 @@ For lCptParam = lDebParam To lFinParam
 			// [DROITS_SANDRINE]
 			Choose Case lIdNatOper 
 				Case 20 TO 26
-					stMessage.sTitre		= "!! Droit r$$HEX1$$e900$$ENDHEX$$serv$$HEX2$$e9002000$$ENDHEX$$aux RE!!"
+					stMessage.sTitre		= "!! Droit réservé aux RE!!"
 					stMessage.Icon			= Exclamation!
 					stMessage.bErreurG	= FALSE
 					stMessage.sCode		= "GENE171 "
@@ -528,6 +532,8 @@ For lCptParam = lDebParam To lFinParam
 		Case "N"
 
 			// [CONS_REST_CARDIF]
+			// [SUPP_RESTRICTION]
+			/*			
 			If lIdNatOper = 31 Then
 				Choose Case stGlb.sCodOper
 					Case "JFF", "FS", "YNA", "RGI", "JBV", "NRI", "RVR", "RPB"
@@ -544,6 +550,7 @@ For lCptParam = lDebParam To lFinParam
 						Return 2
 				End Choose 
 			End If
+			*/
 			
 			sRech    = "ID_NAT_OPER = " + String ( lIdNatOper ) + " AND " + &
 						  "ID_OPER     = '" + sIdOper + "' AND " + &
@@ -554,9 +561,9 @@ For lCptParam = lDebParam To lFinParam
 			End If
 
 			/*----------------------------------------------------------------------*/
-			/* Si l'on d$$HEX1$$e900$$ENDHEX$$coche 'Phase de Validation alors', alors il faut d$$HEX1$$e900$$ENDHEX$$dcocher */
+			/* Si l'on décoche 'Phase de Validation alors', alors il faut dédcocher */
 			/* 'Validation Autonome'                                                */
-			/* #2 et 'Validation avec r$$HEX1$$e900$$ENDHEX$$glement'                                    */
+			/* #2 et 'Validation avec réglement'                                    */
 			/*----------------------------------------------------------------------*/
 			If lIdNatOper = 7 Then
 				lRowRech = idwParamDroit.Find ( "ID_CODE = 6", 1, idwParamDroit.RowCount () )
@@ -576,8 +583,8 @@ For lCptParam = lDebParam To lFinParam
 			/* #1 MADM 27/07/2006  Projet DNTMAIL1/2                            */
 			/*------------------------------------------------------------------*/
 			/*----------------------------------------------------------------------*/
-			/* Si l'on d$$HEX1$$e900$$ENDHEX$$coche 'Envoi courrier par mail' droit 12, alors            */
-			/* il faut d$$HEX1$$e900$$ENDHEX$$cocher 'Envoi courrier particulier par mail' droit 16      */
+			/* Si l'on décoche 'Envoi courrier par mail' droit 12, alors            */
+			/* il faut décocher 'Envoi courrier particulier par mail' droit 16      */
 			/*----------------------------------------------------------------------*/
 			If lIdNatOper = 12 Then
 				lRowRech = idwParamDroit.Find ( "ID_CODE = 16", 1, idwParamDroit.RowCount () )
@@ -613,7 +620,7 @@ public function integer uf_controlerzone (string asnomcol, string asdata, long a
 //* Fonction		: n_cst_sp_droit_courrier::Uf_ControlerZone (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 20/02/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controle de zones
+//* Libellé			: Controle de zones
 //* Commentaires	: 
 //*
 //* Arguments		: asNomcol		String		Val
@@ -651,11 +658,11 @@ private function integer uf_zn_refuser (string asdata, long alrow);//*----------
 //* Fonction		: n_cst_sp_droit_courrier::Uf_Zn_Refuser (PRIVATE)
 //* Auteur			: FABRY JF
 //* Date				: 20/02/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Zone Refuser
+//* Libellé			: Zone Refuser
 //* Commentaires	: On trouve plusieurs fois dans la fonction "idwDroitExistant.RowCount ()".
 //*					  Il faut absolument le laisser et ne pas le stocker en variable. 
-//*					  Cela est du $$HEX2$$e0002000$$ENDHEX$$la fonction r$$HEX1$$e900$$ENDHEX$$cursive incluse ci-dessous, le compteur peut donc 
-//*					  varier et doit $$HEX1$$ea00$$ENDHEX$$tre recalcul$$HEX4$$e9002000e0002000$$ENDHEX$$chaque fois.
+//*					  Cela est du à la fonction récursive incluse ci-dessous, le compteur peut donc 
+//*					  varier et doit être recalculé à chaque fois.
 //*
 //* Arguments		: asData			String		Val
 //*					  alRow			String		Val
@@ -665,11 +672,12 @@ private function integer uf_zn_refuser (string asdata, long alrow);//*----------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1   MADM   27/07/2006   Projet DNTMAIL1/2 Mails sortant en remplacement des courriers   
-//* #2   JCA	07/03/2007		DCMP 070161 - Ajout d'un droit sur la validation avec r$$HEX1$$e900$$ENDHEX$$glement
-//* #3   FPI	28/10/2008		Correction cases $$HEX2$$e0002000$$ENDHEX$$cocher Autoriser/Refuser tout
+//* #2   JCA	07/03/2007		DCMP 070161 - Ajout d'un droit sur la validation avec réglement
+//* #3   FPI	28/10/2008		Correction cases à cocher Autoriser/Refuser tout
 //*      JFF   13/09/2012     [DROIT223_19]
 //*      JFF   04/02/2014     [DROITS_SANDRINE]
 //*	   JFF   29/10/2018     [CONS_REST_CARDIF]
+//*		JFF   21/08/2024		[SUPP_RESTRICTION]
 //*---------------------------------------------------------------
 
 Int iRet
@@ -699,7 +707,7 @@ lDebParam   = alRow
 lFinParam   = alRow
 
 /*------------------------------------------------------------------*/
-/* Gestion du contr$$HEX1$$f400$$ENDHEX$$le total.                                       */
+/* Gestion du contrôle total.                                       */
 /*------------------------------------------------------------------*/
 If lIdNatOper = 0 Then
 	lDebParam  = 1
@@ -756,6 +764,7 @@ For lCptParam = lDebParam To lFinParam
 		Case "O"
 			
 			// [CONS_REST_CARDIF]
+			/* [SUPP_RESTRICTION]			
 			If lIdNatOper = 131 Then
 				Choose Case stGlb.sCodOper
 					Case "JFF", "FS", "YNA", "RGI", "JBV", "NRI", "RVR", "RPB"
@@ -772,6 +781,7 @@ For lCptParam = lDebParam To lFinParam
 						Return 2
 				End Choose 
 			End If
+			*/
 			
 			sRech    = "ID_NAT_OPER = " + String ( lIdNatOper ) + " AND " + &
 						  "ID_OPER     = '" + sIdOper + "' AND " + &
@@ -788,13 +798,13 @@ For lCptParam = lDebParam To lFinParam
 			End If
 
 			// Si l'on autorise ce droit pour ce produit, 
-			// on ne peut donc pas le refuser pour ce m$$HEX1$$ea00$$ENDHEX$$me produit
+			// on ne peut donc pas le refuser pour ce même produit
 			This.uf_Zn_Autoriser ( "N", lCptParam )
 
 			/*----------------------------------------------------------------------*/
 			/* Si l'on refuse 'Phase de Validation', alors il faut refuser				*/
 			/* 'Validation Autonome'                                                */
-			/* #2 et 'Validation avec r$$HEX1$$e900$$ENDHEX$$glement'                                    */
+			/* #2 et 'Validation avec réglement'                                    */
 			/*----------------------------------------------------------------------*/
 			If lIdNatOper = 107 Then
 				lRowRech = idwParamDroit.Find ( "ID_CODE = 6", 1, idwParamDroit.RowCount () )
@@ -816,7 +826,7 @@ For lCptParam = lDebParam To lFinParam
 			/*------------------------------------------------------------------*/
 			/*----------------------------------------------------------------------*/
 			/* Si l'on coche 'Refuser Envoi mail' Refus droit 112, alors            */
-			/* il faut d$$HEX1$$e900$$ENDHEX$$cocher 'Envoi Courrier particulier par mail'  droit 16     */
+			/* il faut décocher 'Envoi Courrier particulier par mail'  droit 16     */
 			/*----------------------------------------------------------------------*/
 			If lIdNatOper = 112 Then
 				lRowRech = idwParamDroit.Find ( "ID_CODE = 16", 1, idwParamDroit.RowCount () )
@@ -831,6 +841,7 @@ For lCptParam = lDebParam To lFinParam
 		Case "N"
 
 			// [CONS_REST_CARDIF]
+			/* [SUPP_RESTRICTION]
 			If lIdNatOper = 131 Then
 				Choose Case stGlb.sCodOper
 					Case "JFF", "FS", "YNA", "RGI", "JBV", "NRI", "RVR", "RPB"
@@ -847,7 +858,7 @@ For lCptParam = lDebParam To lFinParam
 						Return 2
 				End Choose 
 			End If
-						
+			*/						
 			
 			sRech    = "ID_NAT_OPER = " + String ( lIdNatOper ) + " AND " + &
 						  "ID_OPER     = '" + sIdOper + "' AND " + &
@@ -882,7 +893,7 @@ public function integer uf_valider ();//*---------------------------------------
 //* Fonction      : n_cst_sp_droit_courrier::uf_Valider (PUBLIC)
 //* Auteur        : Fabry JF
 //* Date          : 20/02/2004 16:17:04
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -916,12 +927,12 @@ public subroutine uf_initialiser (ref u_datawindow adw1, ref s_pass astpass, ref
 //* Fonction      : n_cst_sp_droit_courrier::uf_initialiser (PUBLIC)
 //* Auteur        : Fabry JF
 //* Date          : 19/02/2004 16:59:52
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
-//* Arguments     : u_DataWindow		aDw1			R$$HEX1$$e900$$ENDHEX$$f
-//*					  s_Pass				asPass		R$$HEX1$$e900$$ENDHEX$$f
-//*					  StaticText		astTemSav	R$$HEX1$$e900$$ENDHEX$$f
+//* Arguments     : u_DataWindow		aDw1			Réf
+//*					  s_Pass				asPass		Réf
+//*					  StaticText		astTemSav	Réf
 //*
 //* Retourne      : 
 //*
