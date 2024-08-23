@@ -803,6 +803,9 @@ subroutine PS_HP276_S_S2_LIB_ACTIVITY_MAPPING  ( String asActivityCode, String a
 //  JFF  12/08/2024 [MCO834_JOUVRE]
 function Integer PS_S_PROCHAIN_JOUR_OUVRE_DU_MEME_MOIS_CALENDAIRE ( DateTime dtDteSource, Ref Integer iPJOMMC, ref DateTime dtDtePossible ) RPCFUNC ALIAS FOR "sysadm.PS_S_PROCHAIN_JOUR_OUVRE_DU_MEME_MOIS_CALENDAIRE"
 
+//  JFF   05/08/2024  [MCO602_PNEU]
+function Integer PS_S_PRODUIT_ADH_SAGA2 ( Long lIdProd ) RPCFUNC ALIAS FOR "sysadm.PS_S_PRODUIT_ADH_SAGA2"
+
 end prototypes
 type variables
 Private:

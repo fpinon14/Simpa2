@@ -21810,6 +21810,30 @@ If F_CLE_A_TRUE ( "RS6114_MAIL_CMA" ) Then
 	End IF 
 End If
 
+// [MCO602_PNEU]
+If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 380)
+	If lDeb > 0 Then
+		
+		// SAGA2
+		If SQLCA.PS_S_PRODUIT_ADH_SAGA2 ( idw_WSin.GetItemNumber ( 1, "ID_PROD" ) ) > 0 Then
+		
+			sSql = "Exec sysadm.PS_I_RESIL_ADH_SAGA2 " + &
+					 String ( lIdSin ) + "., " + &
+					 "'" + stGlb.sCodOper + "', " + &
+					 "null"
+					 
+			F_Execute ( sSql, SQLCA )
+			bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0	
+			
+		// FFM
+		Else 
+			// Coder ici le cas FFM si besoin un jour.
+		End If 	
+		
+	End If 
+End If
+
 // [HP252_276_HUB_PRESTA]
 // /!\ A laisser en dernier /!\
 If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
