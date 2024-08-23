@@ -346,11 +346,12 @@ ibActiverSend = True
 ilLongParm	= lParam
 ilWordParm	= wParam
 
-
+/*
 Choose Case stGlb.sCodOper 
 	Case "JFF", "FS", "FPI"
 		MessageBox ("", "lParam=" + String ( lParam ) + ", wParam=" + String ( wParam ) + ", gsAction=" + gsAction )
 End Choose 
+*/
 
 This.TriggerEvent ( "Ue_Saisie_Automatique" )
 
