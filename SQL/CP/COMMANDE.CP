@@ -12351,6 +12351,10 @@ Declare @iNewIdSeq Integer
 Declare @sIdTypArt VarChar ( 3 )
 Declare @iStatuGc Integer
 Declare @sTypePresta VarChar ( 10 )
+Declare @sCAL VarChar ( 35 )
+
+Select @sCAL = sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'lieu_repar', 'P', 'RETOUR=CODE')
+If @sCAL <> 'CAL' Return
 
 Select	@iPrestaCal = COUNT(*)
 From	sysadm.commande c
