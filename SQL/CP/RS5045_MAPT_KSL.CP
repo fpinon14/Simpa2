@@ -111,7 +111,7 @@ Go
 -- Arguments            :       
 --
 -- Retourne             :       Rien
---
+-- JFF      05/08/2024   [MCO602_PNEU]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2' AND type = 'P' )
         DROP procedure sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2
@@ -164,7 +164,8 @@ Declare @sDateDeSurvenanceSinistre varchar (35)
 Declare @sHeureDeSurvenanceSinistre varchar (20)
 Declare @sNotTelInterAssure varchar (35)
 Declare @sLibNature varchar (35)
-
+Declare @sCodeGarantie varchar (50)
+Declare @sGarantie varchar (50)
 
 
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
@@ -258,8 +259,9 @@ BEGIN
 					Select convert ( VarChar ( 5 ), p.cod_prod_dms ) + '-' + convert ( varchar ( 5), s.id_ets ) + '-' + lTrim ( rTrim ( s.id_adh )) + '-' + Convert ( varchar (2), s.id_sdos )
 					From SIMPA2_PRO.sysadm.produit p
 					Where p.id_prod = s.id_prod 
-					) 
-			End
+					)
+			End,
+		   @sAssureur = SIMPA2_PRO.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'P' ) -- [MCO602_PNEU]
 	From SIMPA2_PRO.sysadm.sinistre s
 	Where id_sin = @adcIdSin
 
@@ -288,10 +290,34 @@ BEGIN
 						From SIMPA2_PRO.sysadm.produit p
 						Where p.id_prod = s.id_prod 
 						) 
-				End
+				End,
+			   @sAssureur = SIMPA2_PRO.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'W' ) -- [MCO602_PNEU]
 
 		From SIMPA2_PRO.sysadm.w_sin s
 		Where id_sin = @adcIdSin
+	 End 
+
+    -- *************************************
+	-- ** Données liées au garantie       **
+    -- *************************************
+	-- [MCO602_PNEU]
+	Select Top 1 
+		   @sCodeGarantie = Convert ( varchar (50), g.id_gti ),
+	       @sGarantie = ( Select Upper ( lTrim ( rTrim ( cg.lib_gti))) From SIMPA2_PRO.sysadm.code_garantie cg Where cg.id_prod = s.id_prod and cg.id_gti = g.id_gti )
+	From SIMPA2_PRO.sysadm.gar_sin g,
+		 SIMPA2_PRO.sysadm.sinistre s
+	Where s.id_sin = @adcIdSin
+	And g.id_sin = s.id_sin
+
+	If @@RowCount <= 0
+	 Begin 
+		Select Top 1 
+			   @sCodeGarantie = Convert ( varchar (50), g.id_gti ),
+		       @sGarantie = ( Select Upper ( lTrim ( rTrim ( cg.lib_gti))) From SIMPA2_PRO.sysadm.code_garantie cg Where cg.id_prod = s.id_prod and cg.id_gti = g.id_gti )
+		From SIMPA2_PRO.sysadm.w_gar_sin g,
+			 SIMPA2_PRO.sysadm.w_sin s
+		Where s.id_sin = @adcIdSin
+		And g.id_sin = s.id_sin
 	 End 
 
     -- *************************************
@@ -320,7 +346,7 @@ BEGIN
 	-- *************************************
 	-- ** Données liées assureur/police   **
     -- *************************************
-	Select @sAssureur = SIMPA2_PRO.sysadm.FN_LIB_CIE ( @dcIdSin )
+	-- Select @sAssureur = SIMPA2_PRO.sysadm.FN_LIB_CIE ( @dcIdSin )  Reporter plus haut car dépendant de W/P
 	Select @sNoPolice = SIMPA2_PRO.sysadm.FN_GET_LIB_POLICE_V01(@dcIdSin,@dcIdProd, @dcIdRev,-1,NULL) 
 	If @sNoPolice is null or lTrim ( rTrim ( @sNoPolice )) = '' Select @sNoPolice = SIMPA2_PRO.sysadm.FN_LIB_POLICE ( @dcIdSin )
 
@@ -418,7 +444,8 @@ BEGIN
 					From SIMPA2_TRT.sysadm.produit p
 					Where p.id_prod = s.id_prod 
 					) 
-			End
+			End,
+		   @sAssureur = SIMPA2_TRT.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'P' ) -- [MCO602_PNEU]
 	From SIMPA2_TRT.sysadm.sinistre s
 	Where id_sin = @adcIdSin
 
@@ -447,10 +474,34 @@ BEGIN
 						From SIMPA2_TRT.sysadm.produit p
 						Where p.id_prod = s.id_prod 
 						) 
-				End
+				End,
+			   @sAssureur = SIMPA2_TRT.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'W' ) -- [MCO602_PNEU]
 
 		From SIMPA2_TRT.sysadm.w_sin s
 		Where id_sin = @adcIdSin
+	 End 
+
+    -- *************************************
+	-- ** Données liées au garantie       **
+    -- *************************************
+	-- [MCO602_PNEU]
+	Select Top 1 
+		   @sCodeGarantie = Convert ( varchar (50), g.id_gti ),
+	       @sGarantie = ( Select Upper ( lTrim ( rTrim ( cg.lib_gti))) From SIMPA2_TRT.sysadm.code_garantie cg Where cg.id_prod = s.id_prod and cg.id_gti = g.id_gti )
+	From SIMPA2_TRT.sysadm.gar_sin g,
+		 SIMPA2_TRT.sysadm.sinistre s
+	Where s.id_sin = @adcIdSin
+	And g.id_sin = s.id_sin
+
+	If @@RowCount <= 0
+	 Begin 
+		Select Top 1 
+			   @sCodeGarantie = Convert ( varchar (50), g.id_gti ),
+		       @sGarantie = ( Select Upper ( lTrim ( rTrim ( cg.lib_gti))) From SIMPA2_TRT.sysadm.code_garantie cg Where cg.id_prod = s.id_prod and cg.id_gti = g.id_gti )
+		From SIMPA2_TRT.sysadm.w_gar_sin g,
+			 SIMPA2_TRT.sysadm.w_sin s
+		Where s.id_sin = @adcIdSin
+		And g.id_sin = s.id_sin
 	 End 
 
     -- *************************************
@@ -479,7 +530,7 @@ BEGIN
 	-- *************************************
 	-- ** Données liées assureur/police   **
     -- *************************************
-	Select @sAssureur = SIMPA2_TRT.sysadm.FN_LIB_CIE ( @dcIdSin )
+	-- Select @sAssureur = SIMPA2_TRT.sysadm.FN_LIB_CIE ( @dcIdSin )  Reporter plus haut car dépendant de W/P
 	Select @sNoPolice = SIMPA2_TRT.sysadm.FN_GET_LIB_POLICE_V01(@dcIdSin,@dcIdProd, @dcIdRev,-1,NULL) 
 	If @sNoPolice is null or lTrim ( rTrim ( @sNoPolice )) = '' Select @sNoPolice = SIMPA2_TRT.sysadm.FN_LIB_POLICE ( @dcIdSin )
 
@@ -526,7 +577,9 @@ Set civ = @sCodCivCourt,
 	date_de_survenance_sinistre = @sDateDeSurvenanceSinistre,
 	heure_de_survenance_sinistre = @sHeureDeSurvenanceSinistre,
 	no_tel_inter_assure = @sNotTelInterAssure,
-	lib_nature = @sLibNature 
+	lib_nature = @sLibNature ,
+	code_garantie = @sCodeGarantie,  -- [MCO602_PNEU]
+	garantie = @sGarantie  -- [MCO602_PNEU]
 
 Where id_xml = @aiIdXml
 
@@ -1147,6 +1200,7 @@ Go
 -- Retourne             :       Rien
 --
 -- JFF      18/09/2023   [RS5875_DIF_DIV_DET]
+-- JFF      05/08/2024   [MCO602_PNEU]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE' AND type = 'P' )
         DROP procedure sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE
@@ -1375,7 +1429,11 @@ Where cm.cod_maq = @sCodeMaquette
 			date_de_survenance_sinistre as 'courrier/@date_de_survenance_sinistre',
 			heure_de_survenance_sinistre as 'courrier/@heure_de_survenance_sinistre',
 			texte_1 as 'courrier/@texte_1',
-			type_de_bien as 'courrier/@type_de_bien'
+			type_de_bien as 'courrier/@type_de_bien',
+			code_garantie as 'courrier/@code_garantie', -- [MCO602_PNEU]
+			garantie as 'courrier/@garantie', -- [MCO602_PNEU]
+			fait_generateur as 'courrier/@fait_generateur', -- [MCO602_PNEU]
+			circonstances as 'courrier/@circonstances' -- [MCO602_PNEU]
 
 		from sysadm.variable_xml_ksl_rs5045 v
 		Where id_xml = @iIdXml
