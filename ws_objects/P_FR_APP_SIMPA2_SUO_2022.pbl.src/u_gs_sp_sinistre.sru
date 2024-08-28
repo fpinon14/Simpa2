@@ -2755,6 +2755,7 @@ private subroutine uf_controlersaisie (ref s_pass astpass);//*------------------
 // 				FPI		21/10/2016	[PI056] dte_ach_port en datetime
 //					FPI		31/07/2017	[CTL_MAIL] Ajout contrôle des emails
 //       		JFF   	15/05/2019 	[DT386_EXTR_AXA]
+//        		JFF   	05/08/2024  [MCO602_PNEU]
 //*-----------------------------------------------------------------
 
 String 				sCol [], sErr [], sVal [], sValFinale, sValQuote, sFind, sMarq, sIdContratAbonne, sIMEI, s15Zero
@@ -2762,7 +2763,7 @@ String 				sNouvelleLigne, sText, sPos, sOng, sHeure, sCodAdh, sCodModeReg, sIdA
 String				sPosRef, sIMEICorrige, sTypeApp, sIMEIOrigLu,sIdEvtDetPro, sValTempo, sDtePivot
 String 				sVal1
 Long 					lCpt, lNbrCol, lTotInter, lTotGti, lCodEtat, lIdGti, lTotDetail, lIdProd, lIdCarte, lFUSIONProd, lFUSIONIdCarte
-Long					lCptQT1, iCptQT, iPosQT, lRow, lDeb, lFin, lCodTel, lVal, lCodEtatSin, lCodEtatSinActuel, lIdGtiDetPro, lCpt2, lIdEvt
+Long					lCptQT1, iCptQT, iPosQT, lRow, lDeb2, lFin2, lDeb, lFin, lCodTel, lVal, lCodEtatSin, lCodEtatSinActuel, lIdGtiDetPro, lCpt2, lIdEvt
 Int					iTC, iFUSION, iFUSIONSLASH
 Time					tTime
 Boolean				bModifGti, bModifDteSurv, bAltBloc, bOkPourCtrl, bDejaRegleUnefois, bPresenceDuneCmdeAValider
@@ -3082,7 +3083,6 @@ End If
 /*------------------------------------------------------------------*/
 /* Le N° série doit être saisie												  */
 /*------------------------------------------------------------------*/
-// [ICI]
 // [DT262]
 sIMEI = Trim ( idw_wSin.GetItemString ( 1, "NUM_IMEI_PORT" ) )
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 308 )
@@ -3092,7 +3092,15 @@ If lDeb > 0 Then
 	// S'il est saisi, mais non valide, le contrôle qui suit s'applique toujours.
 End If 
 
-If lDeb <= 0 And sTypeApp <> "TEL" And sTypeApp <> "" And sPos = "" And Not bAltBloc And lCodTel > 0 Then
+// [MCO602_PNEU]
+If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
+	F_RechDetPro ( lDeb2, lFin2, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 382 )	
+Else
+	lDeb2 = 0
+End If
+
+// [MCO602_PNEU]
+If lDeb2 <= 0 And lDeb <= 0 And sTypeApp <> "TEL" And sTypeApp <> "" And sPos = "" And Not bAltBloc And lCodTel > 0 Then
 	If	IsNull ( sIMEI  ) Or sIMEI = "" Then
 		sText = sText + " - Un n° de série" + sNouvelleLigne
 		If sPos = "" Then sPos = "NUM_IMEI_PORT" 
@@ -18585,6 +18593,7 @@ private function long uf_zn_trt_divsin_typeapp (string asdata, string asnomcol, 
 //			FPI	19/08/2015	[DT167]
 //       JFF   11/05/2022   [RS2980_IFR]
 //       JFF   06/04/2023 [PMO139_RS4926]
+//        JFF   05/08/2024  [MCO602_PNEU]
 //*-----------------------------------------------------------------
 
 String sTypeApp, sIdMarq, sVal
@@ -18825,8 +18834,14 @@ End If
 
 // [PC845]
 If sTypeApp="PNE" Then
-	idw_Wsin.Modify ( "num_imei_port_t.text = 'Immat.'" ) 
-End if
+	// [MCO602_PNEU]
+	If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
+		sVal = idw_Wsin.GetItemString ( 1, "num_imei_port" )
+		If IsNull ( sVal ) Or Trim ( sVal ) = "" Then idw_Wsin.SetItem ( 1, "num_imei_port", "AUCUN" )
+	Else 	
+		idw_Wsin.Modify ( "num_imei_port_t.text = 'Immat.'" ) 
+	End If 
+End If 
 
 // [PC954].Mantis8916
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 141 )

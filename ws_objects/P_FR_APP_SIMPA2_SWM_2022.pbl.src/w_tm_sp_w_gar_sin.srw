@@ -692,7 +692,7 @@ private function boolean wf_condition_ouverture ();//*--------------------------
 //*-----------------------------------------------------------------
 
 String sTypApp, sVal, sMarque, sModele, sIMEI, sIMEICorrige, sTypeApp, sIMEIOrigLu, sResult, sChaineBcv, sCodeRet
-Long   lRow, lCodTel, lDeb, lFin, lVal, lRowDS, lRowDet, lIdGti, lCptDetPro, lRow1, lRow2, lIdSin, lVal1, lVal2, lVal3 
+Long   lRow, lCodTel, lDeb2, lFin2, lDeb, lFin, lVal, lRowDS, lRowDet, lIdGti, lCptDetPro, lRow1, lRow2, lIdSin, lVal1, lVal2, lVal3 
 Decimal {2} dcMtValPub
 Boolean bOk, bTelephonie, bAppSin, bAlimSin, bBattSin, bModeRempl, bAccSin, bRecupDonnee, bRecupMateriel, bVarOrange, bFin 
 Integer iNatSinCplt
@@ -1447,7 +1447,15 @@ If IsNull ( sIMEI ) Then sIMEI = ""
 
 F_RechDetPro ( lDeb, lFin, idwDetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 308 )
 
-If bOk And Not bTelephonie And lCodTel > 0 And Trim ( sIMEI ) = "" And lDeb <= 0 Then
+// [MCO602_PNEU]
+If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
+	F_RechDetPro ( lDeb2, lFin2, idwDetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 382 )	
+Else
+	lDeb2 = 0
+End If
+
+// [MCO602_PNEU]
+If bOk And Not bTelephonie And lCodTel > 0 And Trim ( sIMEI ) = "" And lDeb <= 0 And lDeb2 <=0 Then
 	bOk = False
 	stMessage.sTitre		= "Identification de l'appareil"
 	stMessage.Icon			= Information!
@@ -1710,8 +1718,68 @@ If lDeb > 0 Then
 					F_Message ( stMessage )
 				End If
 			End If 
+
+			lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'ASS_POS_TJRS_APP'", 1, idwWDivSin.RowCount () ) 
+			If lRow >0 Then 
+				sVal = Upper ( idwWDivSin.GetItemString ( lRow, "VAL_CAR" ) )
+				If IsNull ( sVal ) Or Trim ( sVal ) = "" Then
+					bOk = False
+					stMessage.sTitre		= "Type prestation "
+					stMessage.Icon			= Information!
+					stMessage.bErreurG	= FALSE
+					stMessage.Bouton		= OK!
+					stMessage.sCode		= "WGAR440"
+					stMessage.sVar[1]		= "l'information sur la posséssion de l'appareil"
+					F_Message ( stMessage )
+				End If
+			End If 
+			
+			lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'NB_PNEUS'", 1, idwWDivSin.RowCount () ) 
+			If lRow >0 Then 
+				sVal = String ( idwWDivSin.GetItemNumber ( lRow, "VAL_NBRE" ) )
+				If sVal = "0" Then
+					bOk = False
+					stMessage.sTitre		= "Type prestation "
+					stMessage.Icon			= Information!
+					stMessage.bErreurG	= FALSE
+					stMessage.Bouton		= OK!
+					stMessage.sCode		= "WGAR440"
+					stMessage.sVar[1]		= "Le nombre de pneus"
+					F_Message ( stMessage )
+				End If
+			End If 	
+
+			lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'NUM_IMMAT'", 1, idwWDivSin.RowCount () ) 
+			If lRow >0 Then 
+				sVal = Upper ( idwWDivSin.GetItemString ( lRow, "VAL_CAR" ) )
+				If IsNull ( sVal ) Or Trim ( sVal ) = "" Then
+					bOk = False
+					stMessage.sTitre		= "Type prestation "
+					stMessage.Icon			= Information!
+					stMessage.bErreurG	= FALSE
+					stMessage.Bouton		= OK!
+					stMessage.sCode		= "WGAR440"
+					stMessage.sVar[1]		= "La plaque d'immatriculation"
+					F_Message ( stMessage )
+				End If				
+			End If 
+			
+
+			lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'UTILISATION_PROF'", 1, idwWDivSin.RowCount () ) 
+			If lRow >0 Then 
+				sVal = Upper ( idwWDivSin.GetItemString ( lRow, "VAL_CAR" ) )
+				If IsNull ( sVal ) Or Trim ( sVal ) = "" Then
+					bOk = False
+					stMessage.sTitre		= "Type prestation "
+					stMessage.Icon			= Information!
+					stMessage.bErreurG	= FALSE
+					stMessage.Bouton		= OK!
+					stMessage.sCode		= "WGAR440"
+					stMessage.sVar[1]		= "Le mode d'utilisation"
+					F_Message ( stMessage )
+				End If				
+			End If 
 		End If
-		
 	End If
 
 End If
