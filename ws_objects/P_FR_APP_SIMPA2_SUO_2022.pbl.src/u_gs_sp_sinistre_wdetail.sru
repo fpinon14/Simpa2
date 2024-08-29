@@ -276,6 +276,7 @@ public subroutine uf_gestong_divers_caspart_liste (string asnomzone, long alidpr
 public function string uf_plaf_adhesion_survenance_gtidp351 ()
 private subroutine uf_gestion_dtedet ()
 public function boolean uf_rf_dp370_val_div_det ()
+public function string uf_epurezone (string asvaleur)
 end prototypes
 
 event ue_mt_prej();//*-----------------------------------------------------------------
@@ -2877,6 +2878,7 @@ private subroutine uf_controlergestion (ref s_pass astpass);//*-----------------
 //    JFF   15/01/2020  [VDOC28827]/[VDOC28866]
 //    JFF   22/12/2021  [RS1472_DT432_BRED]
 //    JFF   05/08/2024  [MCO602_PNEU]
+//    JFF   29/08/2024  [CAR_SPEC_LCL]
 //*-----------------------------------------------------------------
 String 		sPos, sOng, sPosPec, sFiltreOrig, sVal1, sVal 
 Long lTotwRefus, lCpt, lDeb, lFin, lCptDetPro, lVal, lIdProd, lTrouve, lVal1, lValOrig
@@ -2963,6 +2965,12 @@ bPresencePRS_FrnECO = idw_LstCmdeSin.Find ( &
 " AND ID_DETAIL = " +  String ( idw_wDetailFF.GetItemNumber ( 1, "ID_DETAIL" ) ) + &
 " AND ID_FOUR = 'ECO' AND ID_TYP_ART = 'PRS' AND COD_ETAT <> 'ANN'", 1, idw_LstCmdeSin.Rowcount () ) > 0
 
+// [CAR_SPEC_LCL]
+If F_CLE_A_TRUE ( "CAR_SPEC_LCL" ) Then
+	sVal = idw_wDetailFF.GetItemString ( 1, "LIB_DET" ) 
+	sVal = This.uf_EpureZone ( sVal )
+	idw_wDetailFF.SetItem ( 1, "LIB_DET", sVal ) 
+End If 
 
 // [DT209]
 If F_CLE_A_TRUE ( "DT209" ) Then
@@ -25908,6 +25916,60 @@ Next
 
 Return ( bRet )
 
+end function
+
+public function string uf_epurezone (string asvaleur);//*-----------------------------------------------------------------
+//* 
+//* Fonction		: u_gs_sp_sinistre_detail::uf_epurezone
+//* Auteur			: F. Pinon
+//* Date				: 11/10/2010 15:34:44
+//* Libellé			: Foncion d'épuration du contenu de zone (tab + retours chariots)
+//* Commentaires	: [FPI.11102010] 
+//*
+//* Arguments		: value string asvaleur	 */
+//*
+//* Retourne		: string	
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//* #..   ...   ../../....   
+//* 		FPI	30/05/2012	[EpureModele]	Suppr des ; dans marque/modèle
+//			FPI	27/11/2012	[VDoc9391]
+//			FPI	27/09/2013	[VDoc12269]
+//       JFF   31/05/2021  ajout ”  (c'est un double quote spécial) [EPUR_MODL]
+//*-----------------------------------------------------------------
+
+String sRet
+Long lPos, lPos2
+
+if isnull(asvaleur) then return asvaleur
+
+sRet=asvaleur
+
+// [VDoc9391] On supprime tout ce qu'il y a à droite du retour chariot
+lPos =Pos(sRet,Char(13))
+If lPos <=0 Then 
+	lPos =Pos(sRet,Char(10))
+else 
+	lPos2=Pos(sRet,Char(10))
+	If lPos2>0 Then lPos=Min(lPos,  lPos2)
+End if
+
+If lPos > 0 Then sRet=Left(sRet, lPos - 1)
+// :[VDoc9391]
+
+sRet = f_remplace(sRet,Char(13)," ")
+sRet = f_remplace(sRet,Char(10)," ")
+sRet = f_remplace(sRet,Char(9)," ")
+sRet = f_remplace(sRet,Char(11)," ")
+sRet = f_remplace(sRet,";"," ")	// [EpureModele]	
+sRet = f_remplace(sRet,"~"","p")// [VDoc12269]
+
+// [EPUR_MODL]
+sRet = f_remplace(sRet,"”","p")
+
+
+Return sRet
 end function
 
 on u_gs_sp_sinistre_wdetail.create
