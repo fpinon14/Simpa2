@@ -391,11 +391,9 @@ For lCptParam = lDebParam To lFinParam
 		Case "O"
 			
 			// [CONS_REST_CARDIF]
-			// [SUPP_RESTRICTION]
-			/*			
 			If lIdNatOper = 31 Then
 				Choose Case stGlb.sCodOper
-					Case "JFF", "FS", "YNA", "RGI", "JBV", "NRI", "RVR", "RPB"
+					Case "JFF", "FS", "YNA", "PPK", "HRT", "FFN" 
 						// Ok pour modifier
 					Case Else 
 						idwParamDroit.SetItem ( lCptParam, "AUTORISER", sValActuelleAuto )
@@ -409,7 +407,6 @@ For lCptParam = lDebParam To lFinParam
 						Return 2
 				End Choose 
 			End If
-			*/
 			
 			sRech    = "ID_NAT_OPER = " + String ( lIdNatOper ) + " AND " + &
 						  "ID_OPER     = '" + sIdOper + "' AND " + &
@@ -532,11 +529,9 @@ For lCptParam = lDebParam To lFinParam
 		Case "N"
 
 			// [CONS_REST_CARDIF]
-			// [SUPP_RESTRICTION]
-			/*			
 			If lIdNatOper = 31 Then
 				Choose Case stGlb.sCodOper
-					Case "JFF", "FS", "YNA", "RGI", "JBV", "NRI", "RVR", "RPB"
+					Case "JFF", "FS", "YNA", "PPK", "HRT", "FFN" 
 						// Ok pour modifier
 					Case Else 
 						idwParamDroit.SetItem ( lCptParam, "AUTORISER", sValActuelleAuto )
@@ -550,7 +545,6 @@ For lCptParam = lDebParam To lFinParam
 						Return 2
 				End Choose 
 			End If
-			*/
 			
 			sRech    = "ID_NAT_OPER = " + String ( lIdNatOper ) + " AND " + &
 						  "ID_OPER     = '" + sIdOper + "' AND " + &
@@ -764,10 +758,9 @@ For lCptParam = lDebParam To lFinParam
 		Case "O"
 			
 			// [CONS_REST_CARDIF]
-			/* [SUPP_RESTRICTION]			
 			If lIdNatOper = 131 Then
 				Choose Case stGlb.sCodOper
-					Case "JFF", "FS", "YNA", "RGI", "JBV", "NRI", "RVR", "RPB"
+					Case "JFF", "FS", "YNA", "PPK", "HRT", "FFN" 
 						// Ok pour modifier
 					Case Else 
 						idwParamDroit.SetItem ( lCptParam, "REFUSER", sValActuelleRefu )
@@ -781,7 +774,6 @@ For lCptParam = lDebParam To lFinParam
 						Return 2
 				End Choose 
 			End If
-			*/
 			
 			sRech    = "ID_NAT_OPER = " + String ( lIdNatOper ) + " AND " + &
 						  "ID_OPER     = '" + sIdOper + "' AND " + &
@@ -841,10 +833,9 @@ For lCptParam = lDebParam To lFinParam
 		Case "N"
 
 			// [CONS_REST_CARDIF]
-			/* [SUPP_RESTRICTION]
 			If lIdNatOper = 131 Then
 				Choose Case stGlb.sCodOper
-					Case "JFF", "FS", "YNA", "RGI", "JBV", "NRI", "RVR", "RPB"
+					Case "JFF", "FS", "YNA", "PPK", "HRT", "FFN" 
 						// Ok pour modifier
 					Case Else 
 						idwParamDroit.SetItem ( lCptParam, "REFUSER", sValActuelleRefu )
@@ -858,7 +849,6 @@ For lCptParam = lDebParam To lFinParam
 						Return 2
 				End Choose 
 			End If
-			*/						
 			
 			sRech    = "ID_NAT_OPER = " + String ( lIdNatOper ) + " AND " + &
 						  "ID_OPER     = '" + sIdOper + "' AND " + &
