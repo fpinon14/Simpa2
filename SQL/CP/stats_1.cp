@@ -19997,3 +19997,57 @@ Where  cc.id_typ_code = '-FR'
 Order by 4, 1
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_GT_UE_ET_HORS_UE
+-- Auteur               :       JFF
+-- Date                 :       08/06/2022
+-- Libellé              :        
+-- Commentaires         :       
+-- Références           :       
+--
+--	
+-- Arguments            :      
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_GT_UE_ET_HORS_UE' AND type = 'P' )
+        DROP procedure sysadm.PS_S_GT_UE_ET_HORS_UE
+GO
+
+CREATE procedure sysadm.PS_S_GT_UE_ET_HORS_UE
+As
+
+Declare @sSql VarChar ( 1000 )
+Declare @sInstance VarChar ( 50 )
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+BEGIN
+	Set @sInstance = ''
+END 
+Else
+BEGIN
+	Set @sInstance = '[LS-SINISTRES].'
+END 
+
+Set @sSql = '
+	Select	op.id_oper, 
+			RTRIM ( nom ) ''nom'', 
+			RTRIM ( prenom) ''prenom'',
+			Case 
+				When Exists ( Select Top 1 1 From sysadm.autorisation a Where a.id_oper = op.id_oper and id_nat_oper = 31 ) Then ''GT Hors UE''
+				When Exists ( Select Top 1 1 From sysadm.autorisation a Where a.id_oper = op.id_oper and id_nat_oper = 131 ) Then ''GT UE''
+				Else ''GT UE''
+			End ''Profil_GT''
+
+	from ' + @sInstance + 'SESAME_PRO.sysadm.connexion co,' 
+		   + @sInstance + 'SESAME_PRO.sysadm.operateur op 
+	where co.id_appli = ''SIM8''
+	and op.id_oper = co.id_oper'
+
+Exec ( @sSql ) 
+
+Go
+
