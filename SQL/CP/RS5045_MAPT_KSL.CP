@@ -2295,7 +2295,7 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
   
 	Set @sServeurProduction = 'PRO'
 
-	Set @sDestinataire = 'jff@spb.fr,cbourdoiseau@spb.eu,cfrappat@spb.eu'
+	Set @sDestinataire = 'jff@spb.fr,cbourdoiseau@spb.eu'
 
 	-- Obtention répertoire local pour le cas des courriers Word 
 	Select @sRepBlobLocal = 
@@ -3403,7 +3403,9 @@ If @iRowCountWord + @iRowCountHWord  > 0
 			Set @sMailBody = @sMailBody + '  Select * from ' + DB_NAME () + '.sysadm.trace_matp_es_sinistre_ksl_rs5045 where cod_etat = ''ERR'' and cree_le > ''' + @sDateHeureDebTrt + ''' order by 1' + CHAR ( 10 )
 			Set @sMailBody = @sMailBody + '  Select * from ' + DB_NAME () + '.sysadm.trace_matp_es_sinistre_ksl_rs5045 where cree_le > ''' + @sDateHeureDebTrt + ''' order by 1 desc' + CHAR ( 10 )
 			Set @sMailBody = @sMailBody + CHAR ( 10 )
+			Set @sMailBody = @sMailBody + 'Aucun mail n''est perdu, ils sont en attente de traitement.' + CHAR ( 10 )
 			Set @sMailBody = @sMailBody + 'L''alerte reviendra dans 20 minutes tant que le problème ne sera pas résolu.' + CHAR ( 10 )
+			Set @sMailBody = @sMailBody + 'Le programme est fait de façon à résoudre seul certains problèmes, si l''alerte ne revient pas dans 20 minutes, le programme aura résolu le problème.' + CHAR ( 10 )
 			Set @sMailBody = @sMailBody + CHAR ( 10 )
 			Set @sMailBody = @sMailBody + 'Cordialement,'
 			Set @sMailBody = @sMailBody + CHAR ( 10 )
