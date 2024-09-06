@@ -2879,6 +2879,7 @@ private subroutine uf_controlergestion (ref s_pass astpass);//*-----------------
 //    JFF   22/12/2021  [RS1472_DT432_BRED]
 //    JFF   05/08/2024  [MCO602_PNEU]
 //    JFF   29/08/2024  [CAR_SPEC_LCL]
+//    JFF   06/09/2024  [KSV516]
 //*-----------------------------------------------------------------
 String 		sPos, sOng, sPosPec, sFiltreOrig, sVal1, sVal 
 Long lTotwRefus, lCpt, lDeb, lFin, lCptDetPro, lVal, lIdProd, lTrouve, lVal1, lValOrig
@@ -2905,7 +2906,7 @@ DataWindowChild dwChild // [VDOC16817]
 Long lIdDetail, lTot 
 String sTabSpl [] // [DT344]
 Boolean bSC2FoyerNomade // [PC192235]
-Boolean bFranchiseSelectra // [PC202553]
+Boolean bFranchiseSelectra, bVarianteSelectra2024  // [PC202553]  [KSV516]
 String sRech
 Long lLig
 
@@ -4070,6 +4071,12 @@ If Not bDetailBloque And Not bAltReg And iEtat = 500 Then
 	
 	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 348 )
 	bFranchiseSelectra = lDeb > 0 
+
+	// [KSV516]
+	bVarianteSelectra2024 = FALSE
+	If bFranchiseSelectra Then 
+		bVarianteSelectra2024 = F_CLE_VAL ( "VARIANTE", idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), ";" ) = "SELECTRA_OFFRE_2024"
+	End If 	
 	
 	sRech	=		"ID_PROD = "		+ String ( lIdProd ) 			+ " AND " 	+ &
 					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -4085,7 +4092,8 @@ If Not bDetailBloque And Not bAltReg And iEtat = 500 Then
 	
 	
 	Choose Case True 
-		Case bFranchiseSelectra 
+		// [KSV516]
+		Case bFranchiseSelectra And Not bVarianteSelectra2024 
 			if sVal="N" Then 
 				stMessage.sTitre		= "Franchise Paybox"
 				stMessage.Icon			= Information!

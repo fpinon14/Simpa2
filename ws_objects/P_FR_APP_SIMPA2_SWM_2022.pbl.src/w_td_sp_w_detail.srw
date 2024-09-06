@@ -1109,6 +1109,7 @@ private function boolean wf_condition_ouverture (string aschoixaction);//*------
 //       JFF   06/04/2023 [PMO139_RS4926]
 //       JFF   07/03/2024 [HP252_276_HUB_PRESTA]
 //       JFF   05/08/2024 [MCO602_PNEU]
+//       JFF   06/09/2024 [KSV516]
 //*-----------------------------------------------------------------
 
 String sTypApp, sMarque, sModele, sMes, sTypArt, sFiltreFrn, sIdGti, sDteProdEqvFc, sBVIEPresent, sSortOri, sChaine, sInterdictionAutor
@@ -1128,6 +1129,7 @@ String  sIMEI, sIMEICorrige, sRech, sChaineBcv
 DateTime dtMajLe
 Long lRowForPec 
 Boolean bBlocageGeoloc, bFranchiseAuchan, bFranchiseSelectra, bPrestaHubCodeVerrouManquant
+Boolean bVarianteSelectra2024 // [KSV516]
 
 string sFiltreOri, sFiltrePrs // #7
 String sPathIE 
@@ -1911,6 +1913,12 @@ If bOk Then
 		
 		F_RechDetPro ( lDeb, lFin, idwDetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 348 )
 		bFranchiseSelectra = lDeb > 0 
+
+		// [KSV516]
+		bVarianteSelectra2024 = FALSE
+		If bFranchiseSelectra Then 
+			bVarianteSelectra2024 = F_CLE_VAL ( "VARIANTE", idwDetPro.GetItemString ( lDeb, "VAL_CAR" ), ";" ) = "SELECTRA_OFFRE_2024"
+		End If 		
 		
 		sRech	=		"ID_PROD = "		+ String ( idwWSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
 						"ID_REV = "			+ String ( idwWSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
@@ -1941,7 +1949,8 @@ If bOk Then
 					bOk=False
 				End if
 				
-			Case bFranchiseSelectra 
+			// [KSV516]
+			Case bFranchiseSelectra And Not bVarianteSelectra2024 
 				if sVal="N" Then 
 					stMessage.sTitre		= "Franchise Paybox"
 					stMessage.Icon			= Information!
@@ -1954,6 +1963,7 @@ If bOk Then
 					
 					bOk=False
 				End if				
+				
 		End Choose
 	End If 
 	
