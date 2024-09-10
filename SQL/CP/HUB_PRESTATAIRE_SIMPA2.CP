@@ -78,6 +78,8 @@ Go
 --
 -- Retourne             :       rien
 -------------------------------------------------------------------
+-- [20240910134438210]   JFF  10/09/2024 Ajout COULEUR, DUALSIM, CAPACITE sur demande Boulenouar
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_S2_OBTENTION_DONNEES_PRESTA_SIMPA2_POUR_PREPARATION_CREATION_HUB_PRESTATAIRE' AND type = 'P' )
         DROP procedure sysadm.PS_HP276_S_S2_OBTENTION_DONNEES_PRESTA_SIMPA2_POUR_PREPARATION_CREATION_HUB_PRESTATAIRE
 GO
@@ -166,6 +168,9 @@ Declare
 	@sDesimlocke				VarChar( 20 )			,	-- Appareil désimlocké OUI/NON
 	@sInfo_spb_frn_cplt			VarChar ( 800 )				-- Chaîne sérialisée contenant de multiples informations
 
+Declare @sCouleur	Varchar ( 50 ), 
+		@sCapacite	Varchar ( 50 ), 
+		@sDualSim	Varchar ( 50 )
 
 Select	@iIdSin			= Convert ( integer, @adcIdsin),
 		@sLibPersoGti	= cg.lib_gti,
@@ -299,6 +304,25 @@ From sysadm.commande c
 Where c.id_sin = @adcIdsin
 And   c.id_seq = @aiIdSeq
 
+-- [20240910134438210]
+If @sRefAppSin = 'IFR' 
+	Begin
+		Select 
+			@sCouleur = rTrim ( lTrim ( packtype )), 
+			@sCapacite = rTrim ( lTrim ( java )), 
+			@sDualSim = IIF ( stndby = 'DUALSIM', 'OUI', 'NON' )
+		From sysadm.ifr i
+		Where i.marque = @sMarqAppSin
+		And   i.reference = @sModlAppSin
+	End 
+If @sCouleur is null Set @sCouleur = ''
+If @sCapacite is null Set @sCapacite = ''
+If @sDualSim is null Set @sDualSim = ''
+
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'COULEUR', @sCouleur, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'CAPACITE', @sCapacite, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DUALSIM', @sDualSim, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+-- /[20240910134438210]
 
 Select 
 	@aiCas	'iCas',
