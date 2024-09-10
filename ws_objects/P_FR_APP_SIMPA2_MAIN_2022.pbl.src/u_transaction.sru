@@ -806,6 +806,10 @@ function Integer PS_S_PROCHAIN_JOUR_OUVRE_DU_MEME_MOIS_CALENDAIRE ( DateTime dtD
 //  JFF   05/08/2024  [MCO602_PNEU]
 function Integer PS_S_PRODUIT_ADH_SAGA2 ( Long lIdProd ) RPCFUNC ALIAS FOR "sysadm.PS_S_PRODUIT_ADH_SAGA2"
 
+// JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
+function String FN_GET_CHEMIN ( String asCleChem ) RPCFUNC ALIAS FOR "sysadm.FN_GET_CHEMIN"
+
+
 end prototypes
 type variables
 Private:

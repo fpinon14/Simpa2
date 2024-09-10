@@ -1,5 +1,5 @@
-HA$PBExportHeader$u_sp_gs_trait_etat.sru
-$PBExportComments$--- } UserObjet pour gestion des etats p$$HEX1$$e900$$ENDHEX$$riodiques
+﻿$PBExportHeader$u_sp_gs_trait_etat.sru
+$PBExportComments$--- } UserObjet pour gestion des etats périodiques
 forward
 global type u_sp_gs_trait_etat from u_sp_gs_trait_anc
 end type
@@ -13,14 +13,14 @@ type variables
 Public :
 
 //Migration PB8-WYNIWYG-03/2006 FM
-//Ces variables sont d$$HEX1$$e900$$ENDHEX$$clar$$HEX1$$e900$$ENDHEX$$es dans l'anc$$HEX1$$ea00$$ENDHEX$$tre
+//Ces variables sont déclarées dans l'ancêtre
 //	Long			ilNbLig
 //	Long			ilNumEtat
 //Fin Migration PB8-WYNIWYG-03/2006 FM
 	u_Volcane		iDw_volcane
 	
 constant string 	K_FICTRTSMA  = "TRTSP2.DAT"// [DCMP080109] Nom du Fichier de Sortie SMA
-constant long		K_BASEERRSMA = 10000			// [DCMP080109]N$$HEX2$$b0002000$$ENDHEX$$de base pour Code Erreur SMA
+constant long		K_BASEERRSMA = 10000			// [DCMP080109]N° de base pour Code Erreur SMA
 
 
 end variables
@@ -51,7 +51,7 @@ public subroutine uf_generer_dw (string astyptrt);//*---------------------------
 //* Fonction		: uf_Generer_Dw
 //* Auteur			: DBI
 //* Date				: 12/11/1998 16:16:55
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Cr$$HEX1$$e900$$ENDHEX$$e la Datawindow d'accueil du traitement et la charge
+//* Libellé			: Crée la Datawindow d'accueil du traitement et la charge
 //* Commentaires	: 
 //*
 //* Arguments		: String			asTypTrt				// Type Traitement ( Mensuel, trimestriel... )
@@ -59,18 +59,22 @@ public subroutine uf_generer_dw (string astyptrt);//*---------------------------
 //* Retourne		: 
 //*
 //*-----------------------------------------------------------------
+//* JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
+//*-----------------------------------------------------------------
+
 
 //Migration PB8-WYNIWYG-03/2006 FM
-//String 					sTables[3]			//Tableau pour les tables d'o$$HEX2$$f9002000$$ENDHEX$$proviennent les champs de la datawindow
-String 					sTables[]			//Tableau pour les tables d'o$$HEX2$$f9002000$$ENDHEX$$proviennent les champs de la datawindow
+//String 					sTables[3]			//Tableau pour les tables d'où proviennent les champs de la datawindow
+String 					sTables[]			//Tableau pour les tables d'où proviennent les champs de la datawindow
 //Fin Migration PB8-WYNIWYG-03/2006 FM
-// [SQL_2K8_CH] [I027] - Variables pour l'insertion de la jointure externe $$HEX2$$e0002000$$ENDHEX$$la norme SQL ANSI-92
-string sFromClause
+// [SQL_2K8_CH] [I027] - Variables pour l'insertion de la jointure externe à la norme SQL ANSI-92
+string sFromClause, sChemUncServProd, sVal  
+Long lTot, lCpt 
 
 // [DCMP060192] Forcage du DEPARTMENT a 9999 (DFC) pour les etat utilisant les dataobjects
 // dr_reg1, dl_reg11, dl_reg4, dl_reg5
-// La colonne 'sysadm.produit.id_dept' est remplac$$HEX1$$e900$$ENDHEX$$e par le CASE ci-dessous
-// #1	PHG	17/12/2009 [MIGPB11] Agrandissement Zone nom_fic $$HEX2$$e0002000$$ENDHEX$$255
+// La colonne 'sysadm.produit.id_dept' est remplacée par le CASE ci-dessous
+// #1	PHG	17/12/2009 [MIGPB11] Agrandissement Zone nom_fic à 255
 
 string ls_PatchClauseSelect = &
 " CASE "+ &
@@ -217,12 +221,12 @@ sTables[ 2 ]   = "traitement"
 sTables[ 3 ]   = "produit"
 
 /*------------------------------------------------------------------*/
-/* Positionnement de la jointure en fonction de de la p$$HEX1$$e900$$ENDHEX$$riodicit$$HEX4$$e900200020002000$$ENDHEX$$*/
+/* Positionnement de la jointure en fonction de de la périodicité   */
 /* du traitement                                                    */
 /*------------------------------------------------------------------*/
 
 // [SQL_2K8_CH] [I027] Optimisation et suppression de jointure externe
-// CE qui suit rempalc$$HEX2$$e9002000$$ENDHEX$$par ce qui est tagg$$HEX2$$e9002000$$ENDHEX$$: [SQL_2K8_CH] [I027]
+// CE qui suit rempalcé par ce qui est taggé : [SQL_2K8_CH] [I027]
 /*
 Choose Case asTypTrt
 
@@ -247,7 +251,7 @@ Choose Case asTypTrt
 								" sysadm.traitement.alt_a = ~~'O~~'"
 */
 
-//[SQL_2K8_CH] [I027] la jointure exerne en *= a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$supprim$$HEX1$$e900$$ENDHEX$$e
+//[SQL_2K8_CH] [I027] la jointure exerne en *= a été supprimée
 iDw_1.isJointure=" WHERE sysadm.etat_stat.id_etat = sysadm.traitement.id_etat and "
 Choose Case asTypTrt
 	Case "M"
@@ -261,7 +265,7 @@ Choose Case asTypTrt
 End Choose
 
 /*------------------------------------------------------------------*/
-/* Cr$$HEX1$$e900$$ENDHEX$$ation de la Data Window d'Accueil                             */
+/* Création de la Data Window d'Accueil                             */
 /*------------------------------------------------------------------*/
 iDw_1.Uf_Creer_Tout ( iDw_1.istCol, sTables, itrTrans )
 iDw_1.isTri = "#16 A, #1 A"
@@ -271,7 +275,7 @@ iDw_1.isSelect = f_remplace ( iDw_1.isSelect, 'sysadm.produit.id_dept', ls_Patch
 
 iDw_1.isSelect += iDw_1.isJointure
 
-//[SQL_2K8_CH] [I027] Remplacement de la clause FROM autog$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$e pour int$$HEX1$$e900$$ENDHEX$$grer une clause FROM  avec la 
+//[SQL_2K8_CH] [I027] Remplacement de la clause FROM autogénérée pour intégrer une clause FROM  avec la 
 // jointure externe au format ANSI
 sFromClause = "sysadm."+sTables[ 1 ]	+', sysadm.' + sTables[ 2 ] + ' LEFT OUTER JOIN sysadm.' + sTables[ 3 ] + ' ON ( sysadm.traitement.id_prod = sysadm.produit.id_prod ) '
 iDw_1.uf_Setfromclause( sFromClause )
@@ -281,6 +285,23 @@ iDw_1.Modify ( "datawindow.table.select = ~'" + iDw_1.isSelect  + "~'")
 
 iDw_1.Retrieve()
 
+// [20240910162546267]
+If F_CLE_A_TRUE ( "UNC_SERV_PROD" ) Then
+	sChemUncServProd = SQLCA.FN_GET_CHEMIN ( "SERV_FIC_PROD" )
+	IF Trim ( sChemUncServProd ) = "" Then SetNull ( sChemUncServProd ) 
+	
+	If Not IsNull ( sChemUncServProd ) Then
+
+		lTot = iDw_1.RowCount ()
+		For lCpt = 1 To lTot
+			sVal = Upper ( iDw_1.GetItemString	( lCpt, "NOM_FIC"	))
+			sVal = F_Remplace ( sVal, "\\SPB.LAN\APPLIS\SPB\", sChemUncServProd )
+			iDw_1.SetItem ( lCpt, "NOM_FIC", sVal )
+		Next 
+		
+	End If 	
+End If 
+
 iDw_1.SelectRow ( 0, True )
 end subroutine
 
@@ -289,8 +310,8 @@ private subroutine uf_initdefil ();//*------------------------------------------
 //* Fonction		: uf_InitDefil	( Private )
 //* Auteur			: DBI
 //* Date				: 28/12/1998 16:21:37
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: initialisation de l'objet de d$$HEX1$$e900$$ENDHEX$$filement
-//* Commentaires	: Lecture du nombre d'$$HEX1$$e900$$ENDHEX$$tat s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$avant mis $$HEX1$$e000$$ENDHEX$$
+//* Libellé			: initialisation de l'objet de défilement
+//* Commentaires	: Lecture du nombre d'état sélectionné avant mis à
 //*						jour de uo_defil
 //* Arguments		: Aucun
 //*
@@ -302,7 +323,7 @@ UnsignedLong		ulNbEtat	= 0
 Long					lLig
 
 /*------------------------------------------------------------------*/
-/* Recherche du nombre d'$$HEX1$$e900$$ENDHEX$$tats s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX1$$e900$$ENDHEX$$s                         */
+/* Recherche du nombre d'états sélectionnés                         */
 /*------------------------------------------------------------------*/
 
 lLig = iDw_1.GetSelectedRow ( 0 )
@@ -326,7 +347,7 @@ private function boolean uf_lireperiode (ref long alperiodedeb, ref long alperio
 //* Fonction		: uf_LirePeriode ( Private )
 //* Auteur			: DBI
 //* Date				: 28/12/1998 13:46:52
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Lecture des p$$HEX1$$e900$$ENDHEX$$riodes de d$$HEX1$$e900$$ENDHEX$$but et de fin de traitement
+//* Libellé			: Lecture des périodes de début et de fin de traitement
 //* Commentaires	: 
 //*
 //* Arguments		: Long	alPeriodeDeb	
@@ -347,14 +368,14 @@ Long					lLig
 Boolean				bRet	=	True
 
 /*------------------------------------------------------------------*/
-/* La zone p$$HEX1$$e900$$ENDHEX$$riode est positionn$$HEX1$$e900$$ENDHEX$$e dans la fonction                 */
+/* La zone période est positionnée dans la fonction                 */
 /* uf_verifierdates avec la valeur de DTE_FIN                       */
 /*------------------------------------------------------------------*/
 
 alPeriodeFin=	idw_Dates.GetItemNumber ( 1, "ID_PERIODE" )
 
 /*------------------------------------------------------------------*/
-/* Chargement de la p$$HEX1$$e900$$ENDHEX$$riode de d$$HEX1$$e900$$ENDHEX$$but                                */
+/* Chargement de la période de début                                */
 /*------------------------------------------------------------------*/
 
 idw_Dates.GetChild ( "DTE_FIN", dwChild )
@@ -376,7 +397,7 @@ End If
 /*------------------------------------------------------------------*/
 /* Il faut positionner une heure mini sur dteDeb et une heure maxi  */
 /* sur dteFin                                                       */
-/* sinon on risque d'oublier une journ$$HEX1$$e900$$ENDHEX$$e dans les select            */
+/* sinon on risque d'oublier une journée dans les select            */
 /*------------------------------------------------------------------*/
 
 adtDteDeb	=	Datetime ( dDateDebut, Time ( "00:00" ) )
@@ -390,14 +411,14 @@ public function boolean uf_zn_dtefin (string astypetrt, string asval);//*-------
 //* Fonction		: uf_zn_dtefin (Public)
 //* Auteur			: JFF
 //* Date				: 12/01/1999
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Calcul de la date de d$$HEX1$$e900$$ENDHEX$$but en fonction 
-//* Commentaires	: de la date de fin et de la p$$HEX1$$e900$$ENDHEX$$riode de traitement
+//* Libellé			: Calcul de la date de début en fonction 
+//* Commentaires	: de la date de fin et de la période de traitement
 //*
 //* Arguments		: String			asTypeTrt			(Val)	Type de traitement
 //*				  	  String			asVal					(Val) La date de fin
 //*
-//* Retourne		: True si aucun probl$$HEX1$$e800$$ENDHEX$$me ( On consid$$HEX1$$e800$$ENDHEX$$re que le fichier est toujours correctement renseign$$HEX2$$e9002000$$ENDHEX$$)
-//* 					  False si la p$$HEX1$$e900$$ENDHEX$$riode de d$$HEX1$$e900$$ENDHEX$$but est incalculable en fonction de la p$$HEX1$$e900$$ENDHEX$$riode de fin
+//* Retourne		: True si aucun problème ( On considère que le fichier est toujours correctement renseigné )
+//* 					  False si la période de début est incalculable en fonction de la période de fin
 //*-----------------------------------------------------------------
 
 DataWindowChild	dwChild
@@ -410,16 +431,16 @@ dDteFin	= Date ( asVal )
 
 /*------------------------------------------------------------------*/
 /* En fonction du type de traitement (M)ensuel, (T)rimestriel,      */
-/* (S)emestriel, on calcule la date de d$$HEX1$$e900$$ENDHEX$$but de traitement. On      */
+/* (S)emestriel, on calcule la date de début de traitement. On      */
 /* part du principe que le fichier PERIODE est correctement         */
-/* positionn$$HEX1$$e900$$ENDHEX$$. Il faut aussi positionner la valeur de ID_PERIODE.   */
+/* positionné. Il faut aussi positionner la valeur de ID_PERIODE.   */
 /*------------------------------------------------------------------*/
 
 Choose Case asTypeTrt
 	Case "M"
 		iType = 0
 
-	Case "T", "D"		// ...."D" Trimestriel d$$HEX1$$e900$$ENDHEX$$cal$$HEX1$$e900$$ENDHEX$$
+	Case "T", "D"		// ...."D" Trimestriel décalé
 		iType = 2
 
 	Case "S"
@@ -428,7 +449,7 @@ Choose Case asTypeTrt
 End Choose
 
 
-// ... D$$HEX1$$e900$$ENDHEX$$termination de la p$$HEX1$$e900$$ENDHEX$$riode $$HEX2$$e0002000$$ENDHEX$$partir de la ligne actuelle
+// ... Détermination de la période à partir de la ligne actuelle
 
 	idw_Dates.GetChild ( "DTE_FIN", dwChild )
 	lLig 			= dwChild.GetRow ()
@@ -436,18 +457,18 @@ End Choose
 
 
 /*------------------------------------------------------------------*/
-/* ATTENTION ! : La dropdown doit $$HEX1$$ea00$$ENDHEX$$tre tri$$HEX2$$e9002000$$ENDHEX$$dans un d$$HEX1$$e900$$ENDHEX$$croissant     */
+/* ATTENTION ! : La dropdown doit être trié dans un décroissant     */
 /* ce qui explique le '+' si dessous (et non un '-')					  */
 /*------------------------------------------------------------------*/
 	lLig = lLig + iType
 
 
-// ... Sortie imm$$HEX1$$e900$$ENDHEX$$diate si on tombe en dehors de la datawindow
+// ... Sortie immédiate si on tombe en dehors de la datawindow
 
 	If lLig > dwChild.RowCount() Then 
 		bok = False
 
-		stMessage.sTitre  = "Contr$$HEX1$$f400$$ENDHEX$$le des dates"	
+		stMessage.sTitre  = "Contrôle des dates"	
 		stMessage.sCode   = "EWK0009"	
 		stMessage.icon	   = StopSign!
 		f_Message ( stMessage )
@@ -456,7 +477,7 @@ End Choose
 
 	
 
-// ... Calcul de la date de d$$HEX1$$e900$$ENDHEX$$but
+// ... Calcul de la date de début
 
 	dDteDeb = dwChild.GetItemDate ( lLig, "DTE_DEB" )
 
@@ -473,7 +494,7 @@ public subroutine uf_d_l_reg1 ();//*--------------------------------------------
 //* Fonction		: uf_d_l_reg1
 //* Auteur			: DBI
 //* Date				: 13/01/1999 11:21:21
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Traitement particulier pour $$HEX1$$e900$$ENDHEX$$tat D_L_REG1
+//* Libellé			: Traitement particulier pour état D_L_REG1
 //* Commentaires	: Permet de supprimer les montants en double de reg_gti
 //*
 //* Arguments		: 
@@ -524,11 +545,11 @@ public subroutine uf_lancertrt (ref u_datawindow adwaff, string astyptrt);//*---
 //* Fonction		: uf_LancerTrt
 //* Auteur			: DBI
 //* Date				: 22/12/1998 14:36:12
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Lancement du traitement 
+//* Libellé			: Lancement du traitement 
 //* Commentaires	: 
 //*
-//* Arguments		: 	u_DataWindow	aDwAff		(Ref)	 DataWindow d'affichage, (peut $$HEX1$$ea00$$ENDHEX$$tre diff$$HEX1$$e900$$ENDHEX$$rent de Dw_1, notamment pour le traitement
-//*																	 $$HEX2$$e0002000$$ENDHEX$$la demande.) 
+//* Arguments		: 	u_DataWindow	aDwAff		(Ref)	 DataWindow d'affichage, (peut être différent de Dw_1, notamment pour le traitement
+//*																	 à la demande.) 
 //*						String			asTypTrt		(Val)  Type de traitement ( M:Mensuel, T:Trimestriel... )
 //*					  
 //* Retourne		: Rien
@@ -536,43 +557,43 @@ public subroutine uf_lancertrt (ref u_datawindow adwaff, string astyptrt);//*---
 //*
 //*-----------------------------------------------------------------
 //* MAJ 			PAR		Date		Modification
-//* #1  			JFF		21/05/99	Ajout d'un COMMIT apr$$HEX1$$e800$$ENDHEX$$s le retrieve de 
-//*										chaque $$HEX1$$e900$$ENDHEX$$tat. Le COMMIT se fait juste apr$$HEX1$$e800$$ENDHEX$$s
+//* #1  			JFF		21/05/99	Ajout d'un COMMIT après le retrieve de 
+//*										chaque état. Le COMMIT se fait juste après
 //*										le End Choose.				  
-//* #2			JFF		05/03/01 DEEI1799 : Modification afin que certains $$HEX1$$e900$$ENDHEX$$tat sortent en Euros.
+//* #2			JFF		05/03/01 DEEI1799 : Modification afin que certains état sortent en Euros.
 //* #3			PHG		04/02/08 [DCMP080109] Mise en Place d'un code de Sortie pour SMA
 //					FPI		05/12/2016	[ITSM430676]
 // 	   		JFF      09/03/2023  [RS4721_TRT_EXC8]
 //*-----------------------------------------------------------------
 
-Long					lTrt, lTrtAff		// Etat trait$$HEX2$$e9002000$$ENDHEX$$sur Dw_1, Ligne d'affiche sur aDwAff
-Long					lPeriodeDeb			// P$$HEX1$$e900$$ENDHEX$$riode de d$$HEX1$$e900$$ENDHEX$$but de traitement
-Long					lPeriodeFin			// P$$HEX1$$e900$$ENDHEX$$riode de fin de traitement
+Long					lTrt, lTrtAff		// Etat traité sur Dw_1, Ligne d'affiche sur aDwAff
+Long					lPeriodeDeb			// Période de début de traitement
+Long					lPeriodeFin			// Période de fin de traitement
 
-DateTime				dtDteDeb				// Date de d$$HEX1$$e900$$ENDHEX$$but de traitement
+DateTime				dtDteDeb				// Date de début de traitement
 DateTime				dtDteFin				// Date de fin de traitement
 
-String				sDw					//Nom de la datawindow pour l'$$HEX1$$e900$$ENDHEX$$tat en cours
-String				sAltDteDeb			//Sp$$HEX1$$e900$$ENDHEX$$cifie si on doit prendre en compte la date de 
-												//d$$HEX1$$e900$$ENDHEX$$but pour le retrieve
-String				sAltDteFin			//Sp$$HEX1$$e900$$ENDHEX$$cifie si on doit prendre en compte la date de 
+String				sDw					//Nom de la datawindow pour l'état en cours
+String				sAltDteDeb			//Spécifie si on doit prendre en compte la date de 
+												//début pour le retrieve
+String				sAltDteFin			//Spécifie si on doit prendre en compte la date de 
 												//fin pour le retrieve
-String				sCodTypEtat			//Type d'$$HEX1$$e900$$ENDHEX$$tat $$HEX2$$e0002000$$ENDHEX$$produire
-String				sCodEdt				//Format de g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration de l'$$HEX1$$e900$$ENDHEX$$tat
-String				sMod					//Variable pour le modify de la datawindow des $$HEX1$$e900$$ENDHEX$$tats
-String				sNomFic				//Nom du fichier $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer
+String				sCodTypEtat			//Type d'état à produire
+String				sCodEdt				//Format de génération de l'état
+String				sMod					//Variable pour le modify de la datawindow des états
+String				sNomFic				//Nom du fichier à générer
 String 				sNomMachine			//Nom de la machine 
-String				sDebTrt				//Heure de d$$HEX1$$e900$$ENDHEX$$but de traitement
+String				sDebTrt				//Heure de début de traitement
 String				sFinTrt				//Heure de Fin de traitement
 String				sRet					//Retour test describe
-String				sLibEtat				//Nom de l'$$HEX1$$e900$$ENDHEX$$tat pour affichage job edition
-String				sDocName				//Libell$$HEX2$$e9002000$$ENDHEX$$affich$$HEX2$$e9002000$$ENDHEX$$pour edition
-String            sText					//Ligne $$HEX3$$e0002000e900$$ENDHEX$$crire dans le fichier de log
-String				sTempo				//Chaine de caract$$HEX1$$e800$$ENDHEX$$res temporaire
+String				sLibEtat				//Nom de l'état pour affichage job edition
+String				sDocName				//Libellé affiché pour edition
+String            sText					//Ligne à écrire dans le fichier de log
+String				sTempo				//Chaine de caractères temporaire
 
-UnsignedLong 		ulCptEtat	= 0	//Compteur des etats trait$$HEX1$$e900$$ENDHEX$$s
+UnsignedLong 		ulCptEtat	= 0	//Compteur des etats traités
 
-Int					iNbrExp				//Nombre d'exemplaire $$HEX3$$e0002000e900$$ENDHEX$$diter
+Int					iNbrExp				//Nombre d'exemplaire à éditer
 Int					i						//Compteur
 Long					iIdProd				//Identifiant Produit
 
@@ -580,7 +601,7 @@ Decimal{0}			dcCodArg1			//Valeur du premier argument
 Decimal{0}			dcCodArg2			//Valeur du second argument
 
 Boolean				bOk
-Boolean				bSuite = True		// True : On pase $$HEX2$$e0002000$$ENDHEX$$la suite.
+Boolean				bSuite = True		// True : On pase à la suite.
 long					lErrSMA	= 0		// #3 [DCMP080109] Code Erreur de Sortie SMA : 	0 		-> OK
 												//															>	10000	-> Erreur
 string				sLibErrSMA			// #3 [DCMP080109] Libelle Erreur de Sortie SMA
@@ -595,21 +616,21 @@ n_cst_string	lnv_string // [SUISSE].LOT3
 sFileSMA = ProfileString(stglb.sfichierini, "GEST_COMMANDES", "OPCON_OUT", "") + K_FICTRTSMA
 FileDelete(sFileSMA)
 // #3 [DCMP080109]
-//Ceci est la petite ligne de code $$HEX2$$e0002000$$ENDHEX$$ajouter $$HEX2$$e0002000$$ENDHEX$$chaque d$$HEX1$$e900$$ENDHEX$$tection d'erreur :
+//Ceci est la petite ligne de code à ajouter à chaque détection d'erreur :
 //		lErrSMA=K_BASEERRSMA + 10; sLibErrSMA = string(lErrSMA)+"/Erreur" // #3 [DCMP080109]
 
 
 /*----------------------------------------------------------------------------*/
-/* #2 : Lorsqu'un nouvel $$HEX1$$e900$$ENDHEX$$tat doit g$$HEX1$$e900$$ENDHEX$$rer l'euro :                             */
-/*  - Modifier la requ$$HEX1$$ea00$$ENDHEX$$te SQL                                                 */
-/*  - Mettre dans la table Traitement le produit ( COD_ARG1 ) en n$$HEX1$$e900$$ENDHEX$$gatif      */
-/*  - Ouvrir la Dw et y posait un St_text indiquant EURO en haut $$HEX2$$e0002000$$ENDHEX$$gauche		*/
+/* #2 : Lorsqu'un nouvel état doit gérer l'euro :                             */
+/*  - Modifier la requête SQL                                                 */
+/*  - Mettre dans la table Traitement le produit ( COD_ARG1 ) en négatif      */
+/*  - Ouvrir la Dw et y posait un St_text indiquant EURO en haut à gauche		*/
 /*----------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
-/* On va d'abord v$$HEX1$$e900$$ENDHEX$$rifier les dates de traitement. On va aussi      */
-/* armer la date de d$$HEX1$$e900$$ENDHEX$$but de traitement et la periode.              */
-/* Modif JFF le 08/03/99 : Seulement si ce n'est pas un trt $$HEX2$$e0002000$$ENDHEX$$la dde*/
+/* On va d'abord vérifier les dates de traitement. On va aussi      */
+/* armer la date de début de traitement et la periode.              */
+/* Modif JFF le 08/03/99 : Seulement si ce n'est pas un trt à la dde*/
 /*------------------------------------------------------------------*/
 If asTypTrt <> "D" Then
 	If Not Uf_VerifierDatesTrt ( asTypTrt ) Then 
@@ -619,7 +640,7 @@ If asTypTrt <> "D" Then
 End IF
 
 /*------------------------------------------------------------------*/
-/* Lecture de la p$$HEX1$$e900$$ENDHEX$$riode de d$$HEX1$$e900$$ENDHEX$$but de traitement de de la p$$HEX1$$e900$$ENDHEX$$riode    */
+/* Lecture de la période de début de traitement de de la période    */
 /* de fin de traitement                                             */
 /*------------------------------------------------------------------*/
 If bSuite Then
@@ -630,9 +651,9 @@ If bSuite Then
 End IF
 
 /*------------------------------------------------------------------*/
-/* R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration du nom de la machine puis destruction du user       */
+/* Récupération du nom de la machine puis destruction du user       */
 /* object                                                           */
-/* pour $$HEX1$$e900$$ENDHEX$$criture du fichier de trace                                */
+/* pour écriture du fichier de trace                                */
 /*------------------------------------------------------------------*/
 If bSuite Then
 //	uoDeclarationFuncky	= Create u_DeclarationFuncky
@@ -643,14 +664,14 @@ If bSuite Then
 
 	/*------------------------------------------------------------------*/
 	/* Initialisation du fichier de log											  */
-	/* & Informations pour l'ent$$HEX1$$ea00$$ENDHEX$$te du fichier de log                   */
+	/* & Informations pour l'entête du fichier de log                   */
 	/*------------------------------------------------------------------*/
 
 	// ... Si le fichier ne s'ouvre pas, on ne lance pas le traitement
-	// ... et on referme le fichier de trace ($$HEX2$$e0002000$$ENDHEX$$la fin du script),
-   // ... car on a tent$$HEX2$$e9002000$$ENDHEX$$de l'ouvrir.
+	// ... et on referme le fichier de trace (à la fin du script),
+   // ... car on a tenté de l'ouvrir.
 	bSuite = This.Uf_Log ( 1, "", asTypTrt) and sFileSMA <> "" // #3 [DCMP080109]Il faut que le fichier de Sortie
-																				  // SMA ai pu etre initialis$$HEX1$$e900$$ENDHEX$$.
+																				  // SMA ai pu etre initialisé.
 	if not bSuite Then lErrSMA=K_BASEERRSMA + 30; sLibErrSMA = string(lErrSMA)+"/LOG_OU_SMA_NOK" // #3 [DCMP080109]
 
 End IF
@@ -661,38 +682,38 @@ If bSuite Then
 	This.Uf_Log ( 2, "", asTypTrt)
 
 	sText = "Le " + String ( Datetime( Today(), Now() ), "dd/mm/yyyy hh:mm" ) + &
-   	     " Lanc$$HEX2$$e9002000$$ENDHEX$$par Op$$HEX1$$e900$$ENDHEX$$rateur " + stglb.sCodOper + " (Machine " + sNomMachine + ") " + &
+   	     " Lancé par Opérateur " + stglb.sCodOper + " (Machine " + sNomMachine + ") " + &
       	  "Traitement du " + String ( dtDteDeb,"dd/mm/yyyy" ) + " au " + String ( dtDteFin, "dd/mm/yyyy" )
 
 	This.Uf_Log ( 3, sText, asTypTrt )
 
-	// ... On $$HEX1$$e900$$ENDHEX$$crit de quelle(s) p$$HEX1$$e900$$ENDHEX$$riode(s) il s'agit
+	// ... On écrit de quelle(s) période(s) il s'agit
 
 
 	If lPeriodeDeb <> lPeriodeFin Then
-		sText = "P$$HEX1$$e900$$ENDHEX$$riode de " + F_Mois_En_Lettre ( Integer ( Right ( String ( lPeriodeDeb ), 2 ) ) ) + " " + Left ( String ( lPeriodeDeb ), 4 ) + &
-				  " $$HEX2$$e0002000$$ENDHEX$$" + F_Mois_En_Lettre ( Integer ( Right ( String ( lPeriodeFin ), 2 ) ) ) + " " + Left ( String ( lPeriodeFin ), 4 ) 
+		sText = "Période de " + F_Mois_En_Lettre ( Integer ( Right ( String ( lPeriodeDeb ), 2 ) ) ) + " " + Left ( String ( lPeriodeDeb ), 4 ) + &
+				  " à " + F_Mois_En_Lettre ( Integer ( Right ( String ( lPeriodeFin ), 2 ) ) ) + " " + Left ( String ( lPeriodeFin ), 4 ) 
 	Else 
-		sText = "P$$HEX1$$e900$$ENDHEX$$riode de " + F_Mois_En_Lettre ( Integer ( Right ( String ( lPeriodeDeb ), 2 ) ) ) + " " + Left ( String ( lPeriodeDeb ), 4 )
+		sText = "Période de " + F_Mois_En_Lettre ( Integer ( Right ( String ( lPeriodeDeb ), 2 ) ) ) + " " + Left ( String ( lPeriodeDeb ), 4 )
 
 	End If
 
-	sText += ", lanc$$HEX2$$e9002000$$ENDHEX$$sur le serveur " + ItrTrans.ServerName + ", base " + ItrTrans.DataBase
+	sText += ", lancé sur le serveur " + ItrTrans.ServerName + ", base " + ItrTrans.DataBase
 
 	This.Uf_Log ( 3, sText, asTypTrt )
 	This.Uf_Log ( 2, "", asTypTrt)
 
 
 	/*------------------------------------------------------------------*/
-	/* Initialiation objet d$$HEX1$$e900$$ENDHEX$$filement                                   */
+	/* Initialiation objet défilement                                   */
 	/*------------------------------------------------------------------*/
 	Uf_InitDefil ()
 
 	/*------------------------------------------------------------------*/
-	/* D$$HEX1$$e900$$ENDHEX$$marrage du traitement                                          */
+	/* Démarrage du traitement                                          */
 	/*------------------------------------------------------------------*/
 	/*------------------------------------------------------------------*/
-	/* Recherche du prochain $$HEX1$$e900$$ENDHEX$$tat $$HEX2$$e0002000$$ENDHEX$$traiter                             */
+	/* Recherche du prochain état à traiter                             */
 	/*------------------------------------------------------------------*/
 	lTrt = iDw_1.GetSelectedRow ( lTrt )
 	If lTrt > 0 Then 
@@ -707,8 +728,8 @@ If bSuite Then
 End IF
 
 /*------------------------------------------------------------------*/
-/* Modif JFF le 08/03/99 (d$$HEX2$$fb002000$$ENDHEX$$au traitement sur demande)				  */
-/* Recherche de la premi$$HEX1$$e800$$ENDHEX$$re ligne s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX1$$e900$$ENDHEX$$e sur aDwAff			  */
+/* Modif JFF le 08/03/99 (dû au traitement sur demande)				  */
+/* Recherche de la première ligne sélectionnée sur aDwAff			  */
 /*------------------------------------------------------------------*/
 If bSuite Then
 	lTrtAff = aDwAff.GetSelectedRow ( lTrtAff )
@@ -719,7 +740,7 @@ If bSuite Then
 End IF
 
 /*------------------------------------------------------------------*/
-/* Lancement des $$HEX1$$e900$$ENDHEX$$tats.                                             */
+/* Lancement des états.                                             */
 /*------------------------------------------------------------------*/
 If bSuite Then
 	Do
@@ -729,14 +750,14 @@ If bSuite Then
 		
 		ulCptEtat	= ulCptEtat + 1
 		sDebTrt		= String ( Now(), "hh:mm" )
-		aDwAff.SetItem	 ( lTrtAff, "MAJ_PAR", "En Cours...D$$HEX1$$e900$$ENDHEX$$but : " + sDebTrt )		
+		aDwAff.SetItem	 ( lTrtAff, "MAJ_PAR", "En Cours...Début : " + sDebTrt )		
 
 		For i = 1 To 2
 			Yield ()
 		Next
 
 		/*----------------------------------------------------------------------------*/
-		/* Lecture des informations de l'$$HEX1$$e900$$ENDHEX$$tat $$HEX2$$e0002000$$ENDHEX$$produire.                             */
+		/* Lecture des informations de l'état à produire.                             */
 		/*----------------------------------------------------------------------------*/
 		
 		iIdProd			= iDw_1.GetItemNumber 	( lTrt, "ID_PROD" 		)
@@ -756,8 +777,8 @@ If bSuite Then
 /* Renseignement pour le log													  */
 /*------------------------------------------------------------------*/
 /* MODIF JFF le 26/01/1999 : Je teste TOUTES les variables que je   */
-/* concat$$HEX1$$e800$$ENDHEX$$ne afin qu'elles ne soient pas $$HEX2$$e0002000$$ENDHEX$$NULL, m$$HEX1$$ea00$$ENDHEX$$me si certaines  */
-/* ne le seront jamais, comme sDw par exemple, je pr$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e800$$ENDHEX$$re g$$HEX1$$e900$$ENDHEX$$rer     */
+/* concatène afin qu'elles ne soient pas à NULL, même si certaines  */
+/* ne le seront jamais, comme sDw par exemple, je préfère gérer     */
 /* tous les cas afin que nous n'ayant aucun doute par la suite.	  */	
 /*------------------------------------------------------------------*/
 		sText = ""
@@ -818,7 +839,7 @@ If bSuite Then
 
 			
 /*------------------------------------------------------------------*/
-/* Pr$$HEX1$$e900$$ENDHEX$$paration de la datawindow pour le traitement de l'$$HEX1$$e900$$ENDHEX$$tat.       */
+/* Préparation de la datawindow pour le traitement de l'état.       */
 /*------------------------------------------------------------------*/
 		iDw_Etat.dataObject = sDw
 		iDw_Etat.SetTransObject ( itrTrans )
@@ -834,30 +855,30 @@ If bSuite Then
 
 			Choose Case stGlb.sMonnaieFormatDesire
 
-				// La base est en francs fran$$HEX1$$e700$$ENDHEX$$ais
-				// On garde la possibilit$$HEX2$$e9002000$$ENDHEX$$de sortir des $$HEX1$$e900$$ENDHEX$$tats Francs / Euros
+				// La base est en francs français
+				// On garde la possibilité de sortir des états Francs / Euros
 				Case "F"
 
 					/*------------------------------------------------------------------*/
-					/* #2	: si le code produit est positif, les montants seront exprim$$HEX1$$e900$$ENDHEX$$s*/
-					/* en FRF, sinon si prod n$$HEX1$$e900$$ENDHEX$$gatif alors montants en Euros.			  */
+					/* #2	: si le code produit est positif, les montants seront exprimés*/
+					/* en FRF, sinon si prod négatif alors montants en Euros.			  */
 					/*------------------------------------------------------------------*/
 					If dcCodArg1 >= 0 Then 
-						idw_Etat.Modify ( "unite.text='Les montants sont exprim$$HEX1$$e900$$ENDHEX$$s en Francs Fran$$HEX1$$e700$$ENDHEX$$ais'" )
+						idw_Etat.Modify ( "unite.text='Les montants sont exprimés en Francs Français'" )
 					Else
-						idw_Etat.Modify ( "unite.text='Les montants sont exprim$$HEX1$$e900$$ENDHEX$$s en $$HEX1$$ac20$$ENDHEX$$UROS'" )
+						idw_Etat.Modify ( "unite.text='Les montants sont exprimés en €UROS'" )
 					End If
 
 				// La base est en Euros
-				// on ne sort que des $$HEX1$$e900$$ENDHEX$$tats en Euros
+				// on ne sort que des états en Euros
 				Case "EURO" // [SUISSE].LOT3 Remplacement de "E" en "EURO"
 					
 					dcCodArg1 = Abs ( dcCodArg1 )
-					idw_Etat.Modify ( "unite.text='Les montants sont exprim$$HEX1$$e900$$ENDHEX$$s en $$HEX1$$ac20$$ENDHEX$$UROS'" )
+					idw_Etat.Modify ( "unite.text='Les montants sont exprimés en €UROS'" )
 		
 				// Monnaie non reconnue
-				// [SUISSE].LOT3 On g$$HEX1$$e800$$ENDHEX$$re le cas : Monnaie non d$$HEX1$$e900$$ENDHEX$$finie
-				//					  Sinon, on fais une phrase avec le Symbole Mon$$HEX1$$e900$$ENDHEX$$taire
+				// [SUISSE].LOT3 On gère le cas : Monnaie non définie
+				//					  Sinon, on fais une phrase avec le Symbole Monétaire
 				Case Else
 					if lnv_string.of_isEmpty( stGlb.sMonnaieFormatDesire) Then
 						This.Uf_Log ( 3, "ERREUR ! - Pas de monnaie dans le fichier INI", asTypTrt )
@@ -865,7 +886,7 @@ If bSuite Then
 						lErrSMA=K_BASEERRSMA + 50; sLibErrSMA = string(lErrSMA)+"/MONNAIENOK" // #3 [DCMP080109]
 					Else
 						dcCodArg1 = Abs ( dcCodArg1 )
-						idw_Etat.Modify ( "unite.text='Les montants sont exprim$$HEX1$$e900$$ENDHEX$$s en "+ stGlb.sMonnaieLitteralDesire +"'" )
+						idw_Etat.Modify ( "unite.text='Les montants sont exprimés en "+ stGlb.sMonnaieLitteralDesire +"'" )
 					End If
 
 			End Choose
@@ -893,7 +914,7 @@ If bSuite Then
 		idw_Etat.Modify ( "DataWindow.Print.DocumentName = '" + sDocName + "'" )
 
 /*------------------------------------------------------------------*/
-/* Traitement selon le type d'$$HEX1$$e900$$ENDHEX$$tat $$HEX2$$e0002000$$ENDHEX$$produire                       */
+/* Traitement selon le type d'état à produire                       */
 /*------------------------------------------------------------------*/
 		Choose Case sCodTypEtat
 
@@ -901,11 +922,11 @@ If bSuite Then
 
 			/*------------------------------------------------------------------*/
 			/* Traitement des combinaisons d'arguments possibles                */
-			/* Si la date de d$$HEX1$$e900$$ENDHEX$$but est $$HEX2$$e0002000$$ENDHEX$$utiliser la date de fin est obligatoire*/
+			/* Si la date de début est à utiliser la date de fin est obligatoire*/
 			/*------------------------------------------------------------------*/
 
 			/*------------------------------------------------------------------*/
-			/* Date de d$$HEX1$$e900$$ENDHEX$$but + date fin + arg1 + Arg2                           */
+			/* Date de début + date fin + arg1 + Arg2                           */
 			/*------------------------------------------------------------------*/
 			If ( sAltDteDeb <> "N" ) And ( Not isNull( dcCodArg1 ) ) And ( Not isNull( dcCodArg2 ) ) Then 
 
@@ -919,7 +940,7 @@ If bSuite Then
 			End If
 
 			/*------------------------------------------------------------------*/
-			/* Date de d$$HEX1$$e900$$ENDHEX$$but + date fin + arg1                                  */
+			/* Date de début + date fin + arg1                                  */
 			/*------------------------------------------------------------------*/
 			If ( sAltDteDeb <> "N" ) And ( Not isNull( dcCodArg1 ) ) And ( isNull( dcCodArg2 ) ) Then 
 
@@ -933,7 +954,7 @@ If bSuite Then
 			End If
 
 			/*------------------------------------------------------------------*/
-			/* Date de d$$HEX1$$e900$$ENDHEX$$but + date fin                                         */
+			/* Date de début + date fin                                         */
 			/*------------------------------------------------------------------*/
 			If ( sAltDteDeb <> "N" ) And ( isNull( dcCodArg1 ) ) And ( isNull( dcCodArg2 ) ) Then 
 
@@ -1023,16 +1044,16 @@ If bSuite Then
 		End Choose
 
 		/*------------------------------------------------------------------*/
-		/* #1 IMPORTANT ! : Il faut "commiter" apr$$HEX1$$e800$$ENDHEX$$s le Retrieve, car les   */
-		/* requ$$HEX1$$ea00$$ENDHEX$$tes peuvent contenir des Insert dans une table temporaire.  */
+		/* #1 IMPORTANT ! : Il faut "commiter" après le Retrieve, car les   */
+		/* requêtes peuvent contenir des Insert dans une table temporaire.  */
 		/*------------------------------------------------------------------*/
 		F_Commit ( iTrTrans, True )
 
 /*------------------------------------------------------------------*/
-/* D$$HEX1$$e900$$ENDHEX$$clenche l'$$HEX1$$e900$$ENDHEX$$vt ue_Personnaliser de la fen$$HEX1$$ea00$$ENDHEX$$tre du traitement     */
+/* Déclenche l'évt ue_Personnaliser de la fenêtre du traitement     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* MODIF JFF Le 15/03/99 : On ne d$$HEX1$$e900$$ENDHEX$$clenche plus un $$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement sur    */
+/* MODIF JFF Le 15/03/99 : On ne déclenche plus un événement sur    */
 /* Dw_Etat, mais une fonction sur l'objet de traitement             */
 /* (uf_personnaliser)                                               */
 /*------------------------------------------------------------------*/
@@ -1041,16 +1062,16 @@ If bSuite Then
 		If	ilNbLig > 0 Then
 
 /*------------------------------------------------------------------*/
-/* Tri et r$$HEX1$$e900$$ENDHEX$$organisation de l'$$HEX1$$e900$$ENDHEX$$tat suite au retrieve.               */
+/* Tri et réorganisation de l'état suite au retrieve.               */
 /*------------------------------------------------------------------*/
 			iDw_Etat.Sort ()
 			iDw_Etat.GroupCalc ()
 
   /*------------------------------------------------------------------*/
-  /* Lancement de l'$$HEX1$$e900$$ENDHEX$$dition de l'$$HEX1$$e900$$ENDHEX$$tat trait$$HEX1$$e900$$ENDHEX$$.                         */
+  /* Lancement de l'édition de l'état traité.                         */
   /*------------------------------------------------------------------*/
 			If sCodTypEtat <> "ERR" Then 
-				FileDelete(sNomFic) // #3 [DCMP080109] Suppression de l'ancien fichier avant cr$$HEX1$$e900$$ENDHEX$$ation.
+				FileDelete(sNomFic) // #3 [DCMP080109] Suppression de l'ancien fichier avant création.
 				bOk = uf_EditionEtat	( aDwAff, sCodEdt, iNbrExp, sNomFic, lTrtAff )
 			Else	
 				bOk = False
@@ -1063,13 +1084,13 @@ If bSuite Then
 				If sCodTypEtat = "ERR" Then 
 					aDwAff.SetItem	 ( lTrtAff, "MAJ_PAR", "!!Erreur - Pas de monnaie - Fin: " +sFinTrt )
 				Else
-					aDwAff.SetItem	 ( lTrtAff, "MAJ_PAR", "!!Erreur - D$$HEX1$$e900$$ENDHEX$$b: " + sDebTrt + " - Fin: " +sFinTrt )
+					aDwAff.SetItem	 ( lTrtAff, "MAJ_PAR", "!!Erreur - Déb: " + sDebTrt + " - Fin: " +sFinTrt )
 					lErrSMA=K_BASEERRSMA + 60; sLibErrSMA = string(lErrSMA)+"/ERREURSTAT" // #3 [DCMP080109]
 
 				End If
 			Else
 
-				aDwAff.SetItem	 ( lTrtAff, "MAJ_PAR", "Termin$$HEX2$$e9002000$$ENDHEX$$- D$$HEX1$$e900$$ENDHEX$$b: " + sDebTrt + " - Fin: " +sFinTrt )
+				aDwAff.SetItem	 ( lTrtAff, "MAJ_PAR", "Terminé - Déb: " + sDebTrt + " - Fin: " +sFinTrt )
 			End If
 			
 		Else
@@ -1082,12 +1103,12 @@ If bSuite Then
 
 				If ilNbLig < 0 Then		// Erreur sur chargement Dw
 
-					aDwAff.SetItem	 ( lTrtAff, "MAJ_PAR", "!!Erreur - D$$HEX1$$e900$$ENDHEX$$b: " + sDebTrt + " - Fin: " +sFinTrt )
+					aDwAff.SetItem	 ( lTrtAff, "MAJ_PAR", "!!Erreur - Déb: " + sDebTrt + " - Fin: " +sFinTrt )
 					bOk	=	False
 					lErrSMA=K_BASEERRSMA + 60; sLibErrSMA = string(lErrSMA)+"/ERREURSTAT" // #3 [DCMP080109]
 				Else							// Pas de ligne sur Dw
 		
-					aDwAff.SetItem	 ( lTrtAff, "MAJ_PAR", "Aucun - D$$HEX1$$e900$$ENDHEX$$b: " + sDebTrt + " - Fin: " +sFinTrt )
+					aDwAff.SetItem	 ( lTrtAff, "MAJ_PAR", "Aucun - Déb: " + sDebTrt + " - Fin: " +sFinTrt )
 					bOk	=	True
 				End If
 			End If
@@ -1106,23 +1127,23 @@ If bSuite Then
 	This.Uf_Log ( 3, sText, asTypTrt )
 
 	/*------------------------------------------------------------------*/
-	/* Arr$$HEX1$$ea00$$ENDHEX$$t du traitement si erreur                                    */
+	/* Arrêt du traitement si erreur                                    */
 	/*------------------------------------------------------------------*/
 
 	If ( Not bOk ) Then Exit
 
 	/*----------------------------------------------------------------------------*/
-	/* Mise $$HEX2$$e0002000$$ENDHEX$$jour de la variable d'instance du nombre d'$$HEX1$$e900$$ENDHEX$$tats trait$$HEX1$$e900$$ENDHEX$$s            */
+	/* Mise à jour de la variable d'instance du nombre d'états traités            */
 	/*----------------------------------------------------------------------------*/
 	iUoDefil.Uf_Progression ( ulCptEtat )
 
 	/*----------------------------------------------------------------------------*/
-	/* D$$HEX1$$e900$$ENDHEX$$s$$HEX1$$e900$$ENDHEX$$lection de l'$$HEX1$$e900$$ENDHEX$$tat trait$$HEX48$$e90020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000$$ENDHEX$$*/
+	/* Désélection de l'état traité                                               */
 	/*----------------------------------------------------------------------------*/
 	aDwAff.SelectRow ( lTrtAff, False )
 
 	/*----------------------------------------------------------------------------*/
-	/* Recherche du prochain $$HEX1$$e900$$ENDHEX$$tat $$HEX2$$e0002000$$ENDHEX$$traiter.                                      */
+	/* Recherche du prochain état à traiter.                                      */
 	/*----------------------------------------------------------------------------*/
 	//... Pour l'affichage
 	lTrtAff = aDwAff.GetSelectedRow ( lTrtAff )
@@ -1166,24 +1187,24 @@ private function boolean uf_editionetat (ref u_datawindow adwaff, string ascoded
 //* Fonction		:	uf_EditionEtat
 //* Auteur			:	DBI
 //* Date				:	28/12/1998 16:52:17
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration de l'$$HEX1$$e900$$ENDHEX$$tat selectionn$$HEX2$$e9002000$$ENDHEX$$au format d$$HEX1$$e900$$ENDHEX$$sir$$HEX1$$e900$$ENDHEX$$
+//* Libellé			:	Génération de l'état selectionné au format désiré
 //*
 //* Commentaires	:	
 //*
-//* Arguments		:	u_DataWindow	aDwAff		(Ref)	 DataWindow d'affichage, (peut $$HEX1$$ea00$$ENDHEX$$tre diff$$HEX1$$e900$$ENDHEX$$rent de Dw_1, notamment pour le traitement
-//*																	 $$HEX2$$e0002000$$ENDHEX$$la demande.) 
-//*						String			asCodEdt		( Val )	Format d$$HEX1$$e900$$ENDHEX$$sir$$HEX1$$e900$$ENDHEX$$
-//*						Integer			aiNbExp		( Val )	Nombre d'exemplaire ( utilis$$HEX2$$e9002000$$ENDHEX$$pour etats papier )	
-//*						String			asNomFic		( Val )	Nom du fichier $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer ( Utilis$$HEX2$$e9002000$$ENDHEX$$pour g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration de fichiers Excel )
-//*						Long     		alLigTrt		( Val )  Ligne de l'$$HEX1$$e900$$ENDHEX$$tat en cours de traitement
+//* Arguments		:	u_DataWindow	aDwAff		(Ref)	 DataWindow d'affichage, (peut être différent de Dw_1, notamment pour le traitement
+//*																	 à la demande.) 
+//*						String			asCodEdt		( Val )	Format désiré
+//*						Integer			aiNbExp		( Val )	Nombre d'exemplaire ( utilisé pour etats papier )	
+//*						String			asNomFic		( Val )	Nom du fichier à générer ( Utilisé pour génération de fichiers Excel )
+//*						Long     		alLigTrt		( Val )  Ligne de l'état en cours de traitement
 //*
-//* Retourne		:	Bool$$HEX1$$e900$$ENDHEX$$en
+//* Retourne		:	Booléen
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JFF	  21/01/2010  [O2M_DIAG_NOMADE].Lot2.JFF
 //*				  24/03/2011  [PM02].[TRT_MENS_EXTR]
-//			FPI	07/12/2011	[FPI.20111207] Cr$$HEX1$$e900$$ENDHEX$$ation automatique des r$$HEX1$$e900$$ENDHEX$$pertoires
+//			FPI	07/12/2011	[FPI.20111207] Création automatique des répertoires
 //			FPI	06/09/2012	[PM72-4]
 //			FPI		10/10/2013	[VDoc11966]
 //			FPI		26/12/2014	[ETAT_XLSX]
@@ -1191,15 +1212,15 @@ private function boolean uf_editionetat (ref u_datawindow adwaff, string ascoded
 //*-----------------------------------------------------------------
 Boolean	bRet 			= True	//Valeur de retour
 Int		iCpt						//Compteur pour le nombre d'exemplaires
-Int		iRet						//Valeur de retour de la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier
-String	sAvancement				//Point de l'avancement de l'$$HEX1$$e900$$ENDHEX$$dition
+Int		iRet						//Valeur de retour de la génération du fichier
+String	sAvancement				//Point de l'avancement de l'édition
 
 // 	[ETAT_XLSX]
-If Right(idw_1.isselect,1)="." Then // Etat sur demande, on v$$HEX1$$e900$$ENDHEX$$rifie que le fichier sortira
+If Right(idw_1.isselect,1)="." Then // Etat sur demande, on vérifie que le fichier sortira
 	if (ascodedt="2" or ascodedt="4") &
 		and idw_etat.RowCount() > 65000 and Upper(Right(asNomFic,3)) = "XLS" Then
 			asNomFic+="X"
-			MessageBox("Information", "Le nombre de lignes d$$HEX1$$e900$$ENDHEX$$passe 65000. ~nLe fichier sera enregistr$$HEX2$$e9002000$$ENDHEX$$sous " + asNomfic)
+			MessageBox("Information", "Le nombre de lignes dépasse 65000. ~nLe fichier sera enregistré sous " + asNomfic)
 	End if
 
 End if
@@ -1207,7 +1228,7 @@ End if
 Choose Case asCodEdt
 
 	/*----------------------------------------------------------------------------*/
-	/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration de l'$$HEX1$$e900$$ENDHEX$$tat statistique sur papier                                */
+	/* Génération de l'état statistique sur papier                                */
 	/*----------------------------------------------------------------------------*/
 	Case "1" 
 
@@ -1219,15 +1240,15 @@ Choose Case asCodEdt
 				Exit
 			End If
 		Next
-		aDwAff.SetItem	( alLigTrt, "MAJ_PAR", "Termin$$HEX1$$e900$$ENDHEX$$."  )
+		aDwAff.SetItem	( alLigTrt, "MAJ_PAR", "Terminé."  )
 	
 
 	/*----------------------------------------------------------------------------*/
-	/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration de l'$$HEX1$$e900$$ENDHEX$$tat statistique sous forme de fichier Excel               */
+	/* Génération de l'état statistique sous forme de fichier Excel               */
 	/*----------------------------------------------------------------------------*/
 	Case "2" 
 
-		aDwAff.SetItem 	( alLigTrt	, "MAJ_PAR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier..." )
+		aDwAff.SetItem 	( alLigTrt	, "MAJ_PAR", "Génération du fichier..." )
 // #1 [O2M_DIAG_NOMADE].Lot2.JFF	
 //		iRet = iDw_Etat.SaveAs ( asNomFic, EXCEL!, TRUE ) 
 
@@ -1261,7 +1282,7 @@ Choose Case asCodEdt
 // #1 [O2M_DIAG_NOMADE].Lot2.JFF	
 
 		/*----------------------------------------------------------------------------*/
-		/* V$$HEX1$$e900$$ENDHEX$$rification du r$$HEX1$$e900$$ENDHEX$$sultat.                                                  */
+		/* Vérification du résultat.                                                  */
 		/*----------------------------------------------------------------------------*/
 		If iRet = 1 Then 
 
@@ -1272,7 +1293,7 @@ Choose Case asCodEdt
 		End If
 
 	/*----------------------------------------------------------------------------*/
-	/* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration de l'$$HEX1$$e900$$ENDHEX$$tat statistique sous forme de fichier Excel + papier      */
+	/* Génération de l'état statistique sous forme de fichier Excel + papier      */
 	/*----------------------------------------------------------------------------*/
 	Case "4" 
 
@@ -1285,7 +1306,7 @@ Choose Case asCodEdt
 			End If
 		Next
 
-		aDwAff.SetItem 	( alLigTrt	, "MAJ_PAR", "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier..." )
+		aDwAff.SetItem 	( alLigTrt	, "MAJ_PAR", "Génération du fichier..." )
 		uf_creerdossier( asNomFic) //[FPI.20111207]
 		
 		If Right(Upper(asNomFic), 4) = "XLSX" Then // [ETAT_XLSX]
@@ -1296,7 +1317,7 @@ Choose Case asCodEdt
 		End if
 
 		/*----------------------------------------------------------------------------*/
-		/* V$$HEX1$$e900$$ENDHEX$$rification du r$$HEX1$$e900$$ENDHEX$$sultat.                                                  */
+		/* Vérification du résultat.                                                  */
 		/*----------------------------------------------------------------------------*/
 		If iRet = 1 Then 
 
@@ -1322,19 +1343,19 @@ public subroutine uf_personnaliser ();//*---------------------------------------
 //* Fonction 		: uf_Personnaliser
 //* Auteur			: DBI
 //* Date				: 28/12/1998 16:33:10
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Personnalisation des $$HEX1$$e900$$ENDHEX$$tats Stats
+//* Libellé			: Personnalisation des états Stats
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
-//* JFF        15/03/99	Je d$$HEX1$$e900$$ENDHEX$$place cet $$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement de la Dw_Etat, en une fonction
+//* JFF        15/03/99	Je déplace cet événement de la Dw_Etat, en une fonction
 //*							que je positionne sur l'objet de traitement. 
 //			FPI	19/08/2013	[PC932]
 //			JFF   23/04/2024  [MCO389] ajout 139
 //*-----------------------------------------------------------------
 
-Date dtDteDeb		// Date d$$HEX1$$e900$$ENDHEX$$but Trt
-Date dtDteFin		// Date d$$HEX1$$e900$$ENDHEX$$but Fin
+Date dtDteDeb		// Date début Trt
+Date dtDteFin		// Date début Fin
 
 Choose Case This.ilNumEtat
 
@@ -1345,7 +1366,7 @@ Case 2		// Fichier Volcane
 
 	This.ilNbLig	= idw_Volcane.Uf_Volcane ( stGLB, itrTrans, dtDteDeb, dtDteFin )
 
-Case 9, 11, 51, 52, 57, 59, 139 // Etat d$$HEX1$$e900$$ENDHEX$$riv$$HEX1$$e900$$ENDHEX$$s d_l_reg1, d_l_reg2	: Liste des dossiers r$$HEX1$$e900$$ENDHEX$$gl$$HEX1$$e900$$ENDHEX$$s
+Case 9, 11, 51, 52, 57, 59, 139 // Etat dérivés d_l_reg1, d_l_reg2	: Liste des dossiers réglés
 
 	This.Uf_d_l_Reg1 ( )	
 
@@ -1366,16 +1387,16 @@ public subroutine uf_initialiser (ref u_datawindow_detail adw_1, ref datawindow 
 //* Fonction		: U_Sp_Gs_Trai_Anc::Uf_Initialiser (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 24/11/1998 15:56:13
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
-//* Arguments		: U_DataWindow_Detail	adw_1					(R$$HEX1$$e900$$ENDHEX$$f)	
-//*					  DataWindow				adw_Dates			(R$$HEX1$$e900$$ENDHEX$$f)
-//*					  u_Volcane					adw_Volcane			(R$$HEX1$$e900$$ENDHEX$$f)
-//*					  DataWindow				adw_Dept				(R$$HEX1$$e900$$ENDHEX$$f)
-//*					  U_BarreDefif				auoDefil				(R$$HEX1$$e900$$ENDHEX$$f)
-//*					  Datawindow				adwEtat				(R$$HEX1$$e900$$ENDHEX$$f)
-//*					  U_Transaction			atrTrans				(R$$HEX1$$e900$$ENDHEX$$f)
+//* Arguments		: U_DataWindow_Detail	adw_1					(Réf)	
+//*					  DataWindow				adw_Dates			(Réf)
+//*					  u_Volcane					adw_Volcane			(Réf)
+//*					  DataWindow				adw_Dept				(Réf)
+//*					  U_BarreDefif				auoDefil				(Réf)
+//*					  Datawindow				adwEtat				(Réf)
+//*					  U_Transaction			atrTrans				(Réf)
 //*
 //* Retourne		: Rien
 //*
@@ -1397,8 +1418,8 @@ public subroutine uf_d_l_reg13 ();//*-------------------------------------------
 //* Fonction		: uf_d_l_reg13
 //* Auteur			: MADM
 //* Date				: 27/12/2005 17:45:00
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Traitement particulier pour $$HEX1$$e900$$ENDHEX$$tat D_L_REG13
-//* Commentaires	: Permet pour un m$$HEX1$$ea00$$ENDHEX$$me sinistre et la m$$HEX1$$ea00$$ENDHEX$$me garantie ouverte de ne renseigner qu'une seule fois 
+//* Libellé			: Traitement particulier pour état D_L_REG13
+//* Commentaires	: Permet pour un même sinistre et la même garantie ouverte de ne renseigner qu'une seule fois 
 //*					: les colonnes suivantes MONTANT_DECLARE , VALEUR_ACHAT_ORIGINE , VALEUR_PUBLIQUE_ARGUS	
 //*
 //* Arguments		: 
@@ -1445,8 +1466,8 @@ private function integer uf_d_l_relance_btq_broker (string asnomfic);//*--------
 //* Fonction		: Uf_d_l_relance_btq_broker (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 21/01/2010
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Traitement particulier pour $$HEX1$$e900$$ENDHEX$$tat d_l_relance_btq_broker
-//* Commentaires	: Plusieurs fichiers vont se g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer 
+//* Libellé			: Traitement particulier pour état d_l_relance_btq_broker
+//* Commentaires	: Plusieurs fichiers vont se générer 
 //*
 //* Arguments		: Value	String	asNomFic
 //*
@@ -1455,7 +1476,7 @@ private function integer uf_d_l_relance_btq_broker (string asnomfic);//*--------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JFF	  21/01/2010  [O2M_DIAG_NOMADE].Lot2.JFF	
-//			FPI	07/12/2011	[FPI.20111207] Cr$$HEX1$$e900$$ENDHEX$$ation automatique des r$$HEX1$$e900$$ENDHEX$$pertoires
+//			FPI	07/12/2011	[FPI.20111207] Création automatique des répertoires
 // 	   JFF      09/03/2023  [RS4721_TRT_EXC8]
 //*-----------------------------------------------------------------
 
@@ -1518,8 +1539,8 @@ private function integer uf_d_l_pm02_fic_xxxx (string asnomfic);//*-------------
 //* Fonction		: Uf_d_l_pm02_fic_xxxx (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 24/03/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PM02].[TRT_MENS_EXTR]
-//* Commentaires	: Etats li$$HEX2$$e9002000$$ENDHEX$$au PM02
+//* Libellé			: [PM02].[TRT_MENS_EXTR]
+//* Commentaires	: Etats lié au PM02
 //*
 //* Arguments		: Value	String	asNomFic
 //*
@@ -1527,7 +1548,7 @@ private function integer uf_d_l_pm02_fic_xxxx (string asnomfic);//*-------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//			FPI	07/12/2011	[FPI.20111207] Cr$$HEX1$$e900$$ENDHEX$$ation automatique des r$$HEX1$$e900$$ENDHEX$$pertoires
+//			FPI	07/12/2011	[FPI.20111207] Création automatique des répertoires
 // 	   JFF      09/03/2023  [RS4721_TRT_EXC8]
 //*-----------------------------------------------------------------
 
@@ -1562,7 +1583,7 @@ Choose Case ilNumEtat
 			idw_Etat.Filter ( )
 			idw_Etat.Sort ()
 
-			// la ligne est forc$$HEX1$$e900$$ENDHEX$$ment pr$$HEX1$$e900$$ENDHEX$$sente
+			// la ligne est forcément présente
 			lIdPeriode = iDw_Etat.GetItemNumber ( 1, "ID_PERIODE" ) 
 			lIdTrt = iDw_Etat.GetItemNumber ( 1, "ID_TRT" ) 
 			
@@ -1642,7 +1663,7 @@ protected subroutine uf_creerdossier (string asnomfichier);//*------------------
 //* Fonction		: u_sp_gs_trait_etat::uf_creerdossier
 //* Auteur			: F. Pinon
 //* Date				: 07/12/2011 09:56:12
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [FPI.20111207]
 //*
 //* Arguments		: value string asnomfichier	 */
@@ -1676,7 +1697,7 @@ private function integer uf_d_l_stat_frais_presta_2 (string asnomfic);//*-------
 //* Fonction		: uf_d_l_stat_frais_presta_2 (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 29/06/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Traitement particulier pour $$HEX1$$e900$$ENDHEX$$tat d_l_stat_frais_presta_2
+//* Libellé			: Traitement particulier pour état d_l_stat_frais_presta_2
 //* Commentaires	: [PM72-4] 
 //*
 //* Arguments		: Value	String	asNomFic
@@ -1712,12 +1733,12 @@ public function integer uf_d_l_reg_frais_presta_volcane (string asnomfic);//*---
 //* Fonction		: uf_d_l_reg_frais_presta_volcane
 //* Auteur			: FPI
 //* Date				: 06/09/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PM72-4] G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re le fichier frais-presta pour volcane
-//* Commentaires	: Si un fichier du m$$HEX1$$ea00$$ENDHEX$$me nom existait, il est $$HEX1$$e900$$ENDHEX$$cras$$HEX1$$e900$$ENDHEX$$
+//* Libellé			: [PM72-4] Génère le fichier frais-presta pour volcane
+//* Commentaires	: Si un fichier du même nom existait, il est écrasé
 //*
 //* Arguments		: 	String			asNomFic - Nom Complet du fichier Volcane
 //*						
-//* Retourne		: 	Long 		1 si Ok , Valeur n$$HEX1$$e900$$ENDHEX$$gative si Pb
+//* Retourne		: 	Long 		1 si Ok , Valeur négative si Pb
 //*										
 //*
 //*-----------------------------------------------------------------
@@ -1727,20 +1748,20 @@ public function integer uf_d_l_reg_frais_presta_volcane (string asnomfic);//*---
 
 
 String		sCodAppli		// Code de l'application
-String		sIdSin			// Num$$HEX1$$e900$$ENDHEX$$ro de sinistre
-String		sIdProdSin			// Num$$HEX1$$e900$$ENDHEX$$ro de produit du sinistre
-String		sIdProdAdh			// Num$$HEX1$$e900$$ENDHEX$$ro de produit adh$$HEX1$$e900$$ENDHEX$$sion
-String		sMtRbt			// Montant du r$$HEX1$$e800$$ENDHEX$$glement
+String		sIdSin			// Numéro de sinistre
+String		sIdProdSin			// Numéro de produit du sinistre
+String		sIdProdAdh			// Numéro de produit adhésion
+String		sMtRbt			// Montant du règlement
 String 	sPeriode, sLibProd, sNoContrat, sLibCie
 String 	sNom, sPrenom, sTypeApp
 String 	sCodeProcess, sLibProcess, sDateTraitement, sOrgRbt
 
-String		sEnr				// Enregistrement $$HEX3$$e0002000e900$$ENDHEX$$crire dans le fichier
+String		sEnr				// Enregistrement à écrire dans le fichier
 
-Decimal{2}	dcMtSin			// Montant du r$$HEX1$$e800$$ENDHEX$$glement
+Decimal{2}	dcMtSin			// Montant du règlement
 
-Integer		iFic				// Fichier Dans lequel on va $$HEX1$$e900$$ENDHEX$$crire
-Integer		iRet				// Utilis$$HEX2$$e9002000$$ENDHEX$$Pour Test FileWrite
+Integer		iFic				// Fichier Dans lequel on va écrire
+Integer		iRet				// Utilisé Pour Test FileWrite
 
 Long			lCpt				// Compteur de boucle
 Long			lRet = 1			// Valeur de retour de la fonction
@@ -1803,7 +1824,7 @@ If iFic > 0 Then
 		
 		dcMtSin			=	idw_Etat.GetItemNumber ( lCpt, "MONTANT" )
 
-		// le montant du rbt est multipli$$HEX2$$e9002000$$ENDHEX$$par 100 pour supprimer la virgule
+		// le montant du rbt est multiplié par 100 pour supprimer la virgule
 
 		sMtRbt			=	Right ( "000000000000"							+ &
 								String ( dcMtSin*100,								 		+ &
@@ -1845,7 +1866,7 @@ iRet 	=	FileClose ( iFic )
 
 If iRet < 0 And lRet > 0 Then
 
-	lRet	= -4		// Erreur $$HEX2$$e0002000$$ENDHEX$$la fermeture du fichier
+	lRet	= -4		// Erreur à la fermeture du fichier
 End If
 
 Return lRet
@@ -1856,7 +1877,7 @@ public subroutine uf_d_l_reg_rassureo ();//*------------------------------------
 //* Fonction		: uf_d_l_reg_rassureo
 //* Auteur			: FPI
 //* Date				: 19/08/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Traitement particulier pour $$HEX1$$e900$$ENDHEX$$tat D_L_REG_RASSUREO
+//* Libellé			: Traitement particulier pour état D_L_REG_RASSUREO
 //* Commentaires	: [PC932]
 //*
 //* Arguments		: 
@@ -1872,13 +1893,13 @@ Decimal dcTotal=0
 
 For lCpt = 1 to ilNbLig
 
-	dcTotal+=idw_Etat.GetItemDecimal(lCpt,"montant_de_l_indemnit$$HEX1$$e900$$ENDHEX$$")
+	dcTotal+=idw_Etat.GetItemDecimal(lCpt,"montant_de_l_indemnité")
 Next
 
 lCpt=idw_Etat.InsertRow(0)
 
 idw_Etat.SetItem(lCpt,"point_de_vente_ou_centrale","TOTAL GENERAL")
-idw_Etat.SetItem(lCpt,"montant_de_l_indemnit$$HEX1$$e900$$ENDHEX$$", dcTotal)
+idw_Etat.SetItem(lCpt,"montant_de_l_indemnité", dcTotal)
 
 
 end subroutine
@@ -1904,12 +1925,12 @@ public function long uf_saveas_csv_point_virugule (string asnomfic);//*---------
 //* Fonction		: uf_saveas_csv_point_virugule
 //* Auteur			: FPI
 //* Date				: 27/03/2015
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [VDoc17201] G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re le fichier CSV avec le s$$HEX1$$e900$$ENDHEX$$parateur ;
-//* Commentaires	: Si un fichier du m$$HEX1$$ea00$$ENDHEX$$me nom existait, il est $$HEX1$$e900$$ENDHEX$$cras$$HEX1$$e900$$ENDHEX$$
+//* Libellé			: [VDoc17201] Génère le fichier CSV avec le séparateur ;
+//* Commentaires	: Si un fichier du même nom existait, il est écrasé
 //*
 //* Arguments		: 	String			asNomFic - Nom Complet du fichier 
 //*						
-//* Retourne		: 	Long 		1 si Ok , Valeur n$$HEX1$$e900$$ENDHEX$$gative si Pb
+//* Retourne		: 	Long 		1 si Ok , Valeur négative si Pb
 //*										
 //*
 //*-----------------------------------------------------------------
@@ -1924,7 +1945,7 @@ iFic	=	FileOpen ( asNomFic, LineMode!, Write!, LockReadWrite!, Replace! )
 
 If iFic > 0 Then
 
-	// Ecriture de l'ent$$HEX1$$ea00$$ENDHEX$$te
+	// Ecriture de l'entête
 	sEnr=""
 	For lCpt=1 to lTotCol
 		sEnr+= idw_Etat.Describe ( "#" + String(lCpt) + ".DbName" ) + ";"
@@ -1935,7 +1956,7 @@ If iFic > 0 Then
 	iRet	=	FileWrite ( iFic, sEnr )
 	
 	If iRet < 0 Then
-		iRet=-3 // Erreur d'$$HEX1$$e900$$ENDHEX$$criture
+		iRet=-3 // Erreur d'écriture
 	End if
 	
 	// Ecriture du contenu de la dw
@@ -1981,7 +2002,7 @@ If iFic > 0 Then
 			iRet	=	FileWrite ( iFic, sEnr )
 			
 			If iRet < 0 Then
-				iRet=-3 // Erreur d'$$HEX1$$e900$$ENDHEX$$criture
+				iRet=-3 // Erreur d'écriture
 				exit 
 			End if
 			
@@ -1991,7 +2012,7 @@ If iFic > 0 Then
 	// Fermeture du fichier
 	iRet 	=	FileClose ( iFic )
 	If iRet < 0 Then
-		iRet	= -4		// Erreur $$HEX2$$e0002000$$ENDHEX$$la fermeture du fichier
+		iRet	= -4		// Erreur à la fermeture du fichier
 	End If
 	
 Else
