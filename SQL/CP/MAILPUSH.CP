@@ -20754,6 +20754,7 @@ Go
 -- JFF      03/07/2023   [RS5124_ATM_ATP]
 -- JFF      26/04/2023   [RS5045_REF_MATP]
 -- JFF      08/01/2024   [RS6314]je supprime le critère DTE_PIVOT_DT364 qui n'est plus d'actualité et n'apporte plus rien
+-- JFF      06/09/2024   [KSV740] Modifie délai en dur dans le mail ATP/ATM
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAILPUSH_RELANCE_PCE_DT262' AND type = 'P' )
         DROP procedure sysadm.PS_S_MAILPUSH_RELANCE_PCE_DT262
@@ -21629,7 +21630,7 @@ While Exists ( Select * From @tb where marquage = 0 )
 			Set @sMailBody  = @sMailBody  + '- soit par courrier à l''adresse postale suivante : ' + @sAdrAdPostaleProd + '.' + @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
 			Set @sMailBody  = @sMailBody  + 'Dès réception, nous étudierons votre demande et vous informerons de la suite donnée.' + @sSaut
-			Set @sMailBody  = @sMailBody  + 'Si nous n’avons pas de réponse de votre part dans un délai de 60 jours, nous serons dans l''obligation de clôturer votre dossier.' + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Si nous n’avons pas de réponse de votre part dans un délai de 40 jours, nous serons dans l''obligation de clôturer votre dossier.' + @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
 			Set @sMailBody  = @sMailBody  + 'Nous restons à votre entière disposition pour toute question complémentaire au ' + @sNumTelProd + '.'+ @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
@@ -21655,7 +21656,7 @@ While Exists ( Select * From @tb where marquage = 0 )
 			Set @sMailBody  = @sMailBody  + '- soit par courrier à l''adresse postale suivante : ' + @sAdrAdPostaleProd + '.' + @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
 			Set @sMailBody  = @sMailBody  + 'Dès réception, nous étudierons votre demande et vous informerons de la suite donnée.' + @sSaut
-			Set @sMailBody  = @sMailBody  + 'Si nous n’avons pas de réponse de votre part dans un délai de 60 jours, nous serons dans l''obligation de clôturer votre dossier.' + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Si nous n’avons pas de réponse de votre part dans un délai de 40 jours, nous serons dans l''obligation de clôturer votre dossier.' + @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
 			Set @sMailBody  = @sMailBody  + 'Nous restons à votre entière disposition pour toute question complémentaire au ' + @sNumTelProd + '.'+ @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut

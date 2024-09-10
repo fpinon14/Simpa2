@@ -1941,7 +1941,7 @@ Where ws.cod_etat = 0
 And i.marque = ws.marq_port
 And i.reference = ws.modl_port
 and i.dern_maj_prix_dte < DateAdd ( month, i.per_rev_prix_mois * (-1), getdate() )
-And i.dern_maj_prix_trt not in ( 'URGE', 'FERM' ) 
+And i.dern_maj_rix_trt not in ( 'URGE', 'FERM' ) 
 
 -- Détecte les objets SQL supprimé de façon malveillante
 Exec sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
@@ -1983,6 +1983,7 @@ CREATE procedure sysadm.PS_CORRECTION_BASE_NUIT_1
 -- JFF      12/02/2016   [PI062]
 -- JFF      20/02/2023   [RS4616_RET_TLS]
 -- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
+-- JFF      10/09/2024   [20240910131137363] Nettoyage Répertoire
 -------------------------------------------------------------------
 AS
 
@@ -2479,6 +2480,9 @@ If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0
  Begin
 	Exec sysadm.PS_U_RS4616_MAJ_CMDE_TLS 'HUP', 2
  End 
+
+-- [20240910131137363] Nettoyage Répertoire
+Exec sysadm.PS_NETTOYAGE_REPERTOIRE '\\spb.lan\applis\spb\SHERPA\BlobSaga2' 
 
 GO
 
@@ -6805,4 +6809,55 @@ Return 1
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_NETTOYAGE_REPERTOIRE
+-- Auteur               :       FABRY JF
+-- Date                 :       30/01/2024
+-- Libellé              :       Supprimer tous les fichiers du répertoire
+-- Commentaires         :       
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_NETTOYAGE_REPERTOIRE' AND type = 'P' )
+        DROP procedure sysadm.PS_NETTOYAGE_REPERTOIRE
+GO
+  
+CREATE procedure sysadm.PS_NETTOYAGE_REPERTOIRE  
+	@sRepertoireUNC VarChar ( 255 )
+AS
+
+Declare @sDIR Varchar ( 255 )
+Declare @TbTemp Table ( nom_fic varchar ( 255) ) 
+Declare @TbRepCour Table ( id_trt int identity (1,1), nom_fic varchar ( 255), marquage int null ) 
+Declare @nom_fic VarChar ( 255 )
+Declare @iIdTrt Int
+Declare @CmdShell VarChar ( 300 )
+
+Set @sRepertoireUNC = lTrim ( RTRIM ( @sRepertoireUNC ))
+
+If Right ( @sRepertoireUNC, 1 ) <> '\' Set @sRepertoireUNC = @sRepertoireUNC + '\'
+
+Set @sDIR = 'DIR "' + @sRepertoireUNC + '*.*" /b'
+
+Insert into @TbTemp  EXEC master.dbo.xp_cmdshell @sDIR 
+Delete @TbTemp where nom_fic is null
+Insert into @TbRepCour Select nom_fic, 0  from @TbTemp  
+
+While Exists ( Select Top 1 1 From @TbRepCour where marquage = 0 )
+ Begin
+	Select 	Top 1 
+		@nom_fic = nom_fic,
+		@iIdTrt = id_trt
+	From	@TbRepCour
+	Where	marquage = 0
+
+	Set @CmdShell = 'Del ' + @sRepertoireUNC + @nom_fic
+
+ 	EXEC master.dbo.xp_cmdshell @CmdShell 
+
+	Update @TbRepCour Set marquage = 1 Where id_trt = @iIdTrt
+ End
+
+Go
 
