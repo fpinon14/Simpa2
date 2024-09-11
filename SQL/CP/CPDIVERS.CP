@@ -6851,7 +6851,8 @@ Set @sDIR = 'DIR "' + @sRepertoireUNC + '*.*" /b'
 
 Insert into @TbTemp  EXEC master.dbo.xp_cmdshell @sDIR 
 Delete @TbTemp where nom_fic is null
-Insert into @TbRepCour Select nom_fic, 0  from @TbTemp  
+Insert into @TbRepCour Select nom_fic, 0  from @TbTemp 
+Update @TbRepCour Set nom_fic = '"' + nom_fic + '"'
 
 While Exists ( Select Top 1 1 From @TbRepCour where marquage = 0 )
  Begin
