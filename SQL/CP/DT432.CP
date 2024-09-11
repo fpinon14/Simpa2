@@ -3054,6 +3054,8 @@ Go
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
+-- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_DT432_ENVOI_MAIL_LOG_ERREUR' AND type = 'P' )
         DROP procedure sysadm.PS_S_DT432_ENVOI_MAIL_LOG_ERREUR
 GO
@@ -3269,7 +3271,9 @@ While Exists ( Select Top 1 1 From @tb where marquage_ttp = 0 )
 				convert( varchar ( 10), CONVERT ( Datetime, @dtMinTraiteLe , 103 ), 112 )  + '_' + 
 				replace ( Convert ( varchar (30), @dtMinTraiteLe, 114 ), ':', '' ) + '_REJETS_ET_SUCCES_SINISTRES_LOT_SPB_' + Convert ( varchar ( 10), @iIdLotTtp) + '_ID_FIC_BRED_' + Convert ( varchar ( 10), @iIdNumFicEmetteur) + '_LOG_BRED.TXT'
 			Else 
-				'\\SPB.LAN\APPLIS\SPB\SIMPA2\XLS\AUTRES\DT432_LOG_REJET_AUTRES_DEST\' + 
+				-- [20240910162546267]
+				-- '\\SPB.LAN\APPLIS\SPB\SIMPA2\XLS\AUTRES\DT432_LOG_REJET_AUTRES_DEST\' + 
+				sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\AUTRES\DT432_LOG_REJET_AUTRES_DEST\' + 
 				convert( varchar ( 10), CONVERT ( Datetime, @dtMinTraiteLe , 103 ), 112 )  + '_' + 
 				replace ( Convert ( varchar (30), @dtMinTraiteLe, 114 ), ':', '' ) + '_REJETS_SINISTRES_LOT_SPB_' + Convert ( varchar ( 10), @iIdLotTtp) + '_ID_FIC_BRED_' +  Convert ( varchar ( 10), @iIdNumFicEmetteur) + '_LOG_AUTRES_DEST.TXT'
 		End

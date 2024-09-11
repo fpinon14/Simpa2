@@ -1201,6 +1201,7 @@ Go
 --
 -------------------------------------------------------------------
 -- MAJ	LE		    PAR		 Description
+-- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_PM240_NBRE_COURRIER_MAIL_1' AND type = 'P' )
         DROP procedure sysadm.PS_S_PM240_NBRE_COURRIER_MAIL_1
@@ -1222,7 +1223,10 @@ DECLARE @sCommande   VarChar(250),
 	@iRetOsql	int	
 
 -- chemin d'enregistrement du Result Set
-Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_PM240_Nbre_Courrier\'
+-- [20240910162546267]
+-- Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_PM240_Nbre_Courrier\'
+Set @sPath 	= sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Extraction_PM240_Nbre_Courrier\'
+
 Set @sFileName	= 'PM240_NBRE_COURRIER_' + Replace ( convert ( varchar(10), GETDATE(), 112 ) + CONVERT (varchar(8), GETDATE(), 108), ':', '' )
 Set @sFileExt	= 'xls'
 
@@ -1267,6 +1271,7 @@ Go
 --
 -------------------------------------------------------------------
 -- MAJ	LE		    PAR		 Description
+-- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_PM240_NBRE_COURRIER_MAIL_2' AND type = 'P' )
         DROP procedure sysadm.PS_S_PM240_NBRE_COURRIER_MAIL_2
@@ -1288,7 +1293,10 @@ DECLARE @sCommande   VarChar(250),
 	@iRetOsql	int	
 
 -- chemin d'enregistrement du Result Set
-Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_PM240_Nbre_Courrier\'
+-- [20240910162546267]
+-- Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_PM240_Nbre_Courrier\'
+Set @sPath 	= sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Extraction_PM240_Nbre_Courrier\'
+
 Set @sFileName	= 'PM240_NBRE_COURRIER_2'
 Set @sFileExt	= 'xls'
 

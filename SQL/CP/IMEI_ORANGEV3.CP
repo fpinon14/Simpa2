@@ -194,48 +194,51 @@ go
 --
 -------------------------------------------------------------------
 -- MAJ	LE		PAR	Description
+-- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_GET_IMEI_ORANGEV3_FIC' AND type = 'P' )
         DROP procedure sysadm.PS_GET_IMEI_ORANGEV3_FIC
 GO
 
-CREATE procedure sysadm.PS_GET_IMEI_ORANGEV3_FIC
-AS
+  
+CREATE procedure sysadm.PS_GET_IMEI_ORANGEV3_FIC  
+AS  
+  
+  
+DECLARE @sCommande   VarChar(250),  
+        @sObjet      VarChar(255),  
+        @sFicOut     VarChar(255),  
+        @sNomServeur VarChar(255),  
+        @sPath  VarChar(255),  
+        @sFileName   VarChar(255),  
+        @sFileExt    VarChar(3),  
+		@sOsqlOption VarChar(255),  
+		@iRetOsql int   
+  
+  
+-- chemin d'enregistrement du Result Set  
+-- [20240910162546267]
+-- Set @sPath  = '\\spb.lan\applis\spb\RecCmd\ORANGE\Imei_OrangeV3\'  
+Set @sPath  = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'RecCmd\ORANGE\Imei_OrangeV3\'  
 
-
-DECLARE @sCommande   VarChar(250),
-        @sObjet      VarChar(255),
-        @sFicOut     VarChar(255),
-        @sNomServeur VarChar(255),
-        @sPath  VarChar(255),
-        @sFileName   VarChar(255),
-        @sFileExt    VarChar(3),
-	@sOsqlOption VarChar(255),
-	@iRetOsql	int	
-
-
-
-
--- chemin d'enregistrement du Result Set
-Set @sPath 	= '\\spb.lan\applis\spb\RecCmd\ORANGE\Imei_OrangeV3\'
-Set @sFileName	= 'Imei_OrangeV3_' + substring(@@SERVERNAME,charindex('\',@@SERVERNAME) + 1,3) -- [PI056]
-Set @sFileExt	= 'txt'
-
-SET @sFicOut = @sPath + @sFileName + '.' + @sFileExt
-
-SET @sNomServeur = @@servername
--- Options additionelles pour osql
--- /s"	" 	=> Separateur Tabulation
--- /b 	=> Genere un code ERRORLEVEL exploitable par batch.
--- /u	=> Unicode
-
-Set @sOsqlOption = ' ' + '/s"	"'+ ' /b' + ' /u'
-
-SET @sCommande = 	'sqlcmd /S' + @sNomServeur + ' /E /Q"' + 
-	'exec ' + db_name() + '.sysadm.PS_GET_IMEI_ORANGEV3_DATA ' + 
-	'" /o' + @sFicOut + ' -w5000' + @sOsqlOption
-EXEC @iRetOsql = master.dbo.xp_cmdshell @sCommande, no_output
-
+Set @sFileName = 'Imei_OrangeV3_' + substring(@@SERVERNAME,charindex('\',@@SERVERNAME) + 1,3) -- [PI056]  
+Set @sFileExt = 'txt'  
+  
+SET @sFicOut = @sPath + @sFileName + '.' + @sFileExt  
+  
+SET @sNomServeur = @@servername  
+-- Options additionelles pour osql  
+-- /s" "  => Separateur Tabulation  
+-- /b  => Genere un code ERRORLEVEL exploitable par batch.  
+-- /u => Unicode  
+  
+Set @sOsqlOption = ' ' + '/s" "'+ ' /b' + ' /u'  
+  
+SET @sCommande =  'sqlcmd /S' + @sNomServeur + ' /E /Q"' +   
+ 'exec ' + db_name() + '.sysadm.PS_GET_IMEI_ORANGEV3_DATA ' +   
+ '" /o' + @sFicOut + ' -w5000' + @sOsqlOption  
+EXEC @iRetOsql = master.dbo.xp_cmdshell @sCommande, no_output  
+  
 Go
 
 grant execute on sysadm.PS_GET_IMEI_ORANGEV3_FIC to rolebddsinistres

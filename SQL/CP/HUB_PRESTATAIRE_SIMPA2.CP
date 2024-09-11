@@ -777,6 +777,8 @@ Go
 --
 -- Retourne             :       rien
 -------------------------------------------------------------------
+-- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_SU_S2_MOTEUR_TRT_RETOUR_HUB' AND type = 'P' )
         DROP procedure sysadm.PS_HP276_SU_S2_MOTEUR_TRT_RETOUR_HUB
 GO
@@ -948,7 +950,10 @@ If @sEnv = 'PROD'
 Else
 	Begin 
 		Set @sInstanceHub = '[S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].'
-		Set @sCheminDepotFichierMPRRacine  = '\\SPB.LAN\APPLIS\SPB\RECCMD\'
+		-- [20240910162546267]
+		-- Set @sCheminDepotFichierMPRRacine  = '\\SPB.LAN\APPLIS\SPB\RECCMD\'
+		Set @sCheminDepotFichierMPRRacine  = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'RECCMD\'
+
 		Exec [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '-1', -1, '-1', '', '', @iIdLotTrc output
 		Set @sDestErrTech = 'jff@spb.fr,VANDRE@spb.eu,BKHELIFA_ext@spb.eu,OCHAOUACHI@spb.eu'
 		Set @sDestErrCoherenceHub = 'jff@spb.fr,VANDRE@spb.eu,BKHELIFA_ext@spb.eu,OCHAOUACHI@spb.eu'

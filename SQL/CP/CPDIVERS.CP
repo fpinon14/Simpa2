@@ -1668,6 +1668,7 @@ CREATE procedure sysadm.PS_CORRECTION_BASE_TEMPS_3
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
 -- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
+-- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
 AS
 
@@ -1783,7 +1784,10 @@ If @@Rowcount > 0
 -- /MOUCHARD_REFUS
 
 -- Maintence option dp/W8 automatique pour les *.DOT
-Set @sRepCourDest = '\\SPB.LAN\APPLIS\SPB\SIMPA2\COURRIER\'
+-- [20240910162546267]
+-- Set @sRepCourDest = '\\SPB.LAN\APPLIS\SPB\SIMPA2\COURRIER\'
+Set @sRepCourDest = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\COURRIER\'
+
 Set @sDIR = 'DIR "' + @sRepCourDest + '*.DOT" /b'
 
 -- @TbRepCour se charge avec la liste des fichiers du répertoire
@@ -1984,6 +1988,7 @@ CREATE procedure sysadm.PS_CORRECTION_BASE_NUIT_1
 -- JFF      20/02/2023   [RS4616_RET_TLS]
 -- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
 -- JFF      10/09/2024   [20240910131137363] Nettoyage Répertoire
+-- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
 AS
 
@@ -1991,16 +1996,18 @@ SET NOCOUNT ON
 
 -- Temps 2 s
 
-DECLARE  @dcIdSin        Decimal (10), -- [PI062]
+DECLARE  
+	 @dcIdSin        Decimal (10), -- [PI062]
 	 @dcMaxIdSin     Decimal (10), -- [PI062]
 	 @dcIdGti        Decimal (7),
 	 @dcCodEtat      Decimal (7),
-         @iIdLot         Integer,
- 	 @sRet    	varchar(60),
+     @iIdLot         Integer,
+ 	 @sRet    		 varchar(60),
 	 @sBody          VarChar ( 2000 ),
 	 @sObjet         VarChar ( 200 ),
 	 @sRetourErr     VARCHAR ( 255 ),
-	 @iCptValide     int
+	 @iCptValide     int,
+	 @sVal			 VarChar ( 255 )
 
 -----------------------------------------------------------------
 -- Correction lots édités et non archivés.		       --
@@ -2482,7 +2489,9 @@ If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0
  End 
 
 -- [20240910131137363] Nettoyage Répertoire
-Exec sysadm.PS_NETTOYAGE_REPERTOIRE '\\spb.lan\applis\spb\SHERPA\BlobSaga2' 
+-- [20240910162546267]
+Set @sVal = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SHERPA\BlobSaga2'
+Exec sysadm.PS_NETTOYAGE_REPERTOIRE @sVal
 
 GO
 

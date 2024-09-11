@@ -126,8 +126,8 @@ Go
 -- Retourne             :       Rien
 --
 -- Exemple : exec sysadm.PS_GET_TRACE_FIC_DAY_FICHIER '20/10/2016','TRACE_C','SIMPA2', '\\spb.lan\applis\spb\SIMPA2\XLS\test.txt'
+-- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
-
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_GET_TRACE_FIC_DAY_FICHIER' AND type = 'P' )
         DROP procedure sysadm.PS_GET_TRACE_FIC_DAY_FICHIER
 GO
@@ -161,7 +161,9 @@ Begin
 End
 
 -- chemin d'enregistrement du Result Set
-Set @sPath 	= Replace(@sNomFichier,'K:\','\\spb.lan\applis\spb\')
+-- [20240910162546267]
+-- Set @sPath 	= Replace(@sNomFichier,'K:\','\\spb.lan\applis\spb\')
+Set @sPath 	= Replace(@sNomFichier,'K:\', sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ))
 
 SET @sNomServeur = @@servername
 -- Options additionelles pour osql

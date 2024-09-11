@@ -9396,75 +9396,80 @@ Go
 --
 -------------------------------------------------------------------
 -- MAJ	LE		PAR	Description
+-- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S13_090623_CG13_HEBDO_MAIL' AND type = 'P' )
         DROP procedure sysadm.PS_S13_090623_CG13_HEBDO_MAIL
 GO
 
-CREATE procedure sysadm.PS_S13_090623_CG13_HEBDO_MAIL
-AS
+  
+CREATE procedure sysadm.PS_S13_090623_CG13_HEBDO_MAIL  
+AS  
+  
+  
+DECLARE @sCommande   VarChar(250),  
+        @sMessage    Varchar(255),  
+        @sObjet      VarChar(255),  
+        @sFicOut     VarChar(255),  
+		@sRetourErrMail VarChar(255),  
+        @sNomServeur VarChar(255),  
+        @sPath  VarChar(255),  
+        @sFileName   VarChar(255),  
+        @sFileExt    VarChar(3),  
+		@sOsqlOption VarChar(255),  
+		@iRetOsql int   
+  
+-- chemin d'enregistrement du Result Set  
+-- [20240910162546267]
+-- Set @sPath  = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_Hebdo_CG13_090623\'  
+Set @sPath  = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Extraction_Hebdo_CG13_090623\'  
 
-
-DECLARE @sCommande   VarChar(250),
-        @sMessage    Varchar(255),
-        @sObjet      VarChar(255),
-        @sFicOut     VarChar(255),
-	@sRetourErrMail VarChar(255),
-        @sNomServeur VarChar(255),
-        @sPath  VarChar(255),
-        @sFileName   VarChar(255),
-        @sFileExt    VarChar(3),
-	@sOsqlOption VarChar(255),
-	@iRetOsql	int	
-
--- chemin d'enregistrement du Result Set
-Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_Hebdo_CG13_090623\'
-Set @sFileName	= 'DCMP090623_HEBDO_CG13'
-Set @sFileExt	= 'xls'
-
-SET @sFicOut = @sPath + @sFileName + '.' + @sFileExt
-
-SET @sNomServeur = @@servername
--- Options additionelles pour osql
--- /s"	" 	=> Separateur Tabulation
--- /b 	=> Genere un code ERRORLEVEL exploitable par batch.
--- /u	=> Unicode
-
-Set @sOsqlOption = ' ' + '/s"	"'+ ' /b' + ' /u'
-
-IF @@servername = master.dbo.SPB_FN_ServerName ('PRO')
-   SET @sCommande = 	'sqlcmd /S' + @sNomServeur + ' /E /Q"' + 
-			"SIMPA2_PRO.sysadm.PS_S13_090623_CG13_HEBDO " + 
-			'" /o' + @sFicOut + ' -w5000' + @sOsqlOption
-Else
-   SET @sCommande = 	'sqlcmd /S' + @sNomServeur + ' /E /Q"' + 
-			"SIMPA2_TRT.sysadm.PS_S13_090623_CG13_HEBDO " + 
-			'" /o' + @sFicOut + ' -w5000' + @sOsqlOption
-EXEC @iRetOsql = master.dbo.xp_cmdshell @sCommande, no_output
-
-Set @sObjet    = "Extraction Hebdomadaire CG13 DCMP090623"
-set @sMessage  = "Veuillez trouver ci-joint l'extraction des sinistres déclarés depuis l'origine du produit 379."
-
-if @iRetOsql <> 0
-BEGIN
-	set @sMessage  = @sMessage + 'ATTENTION : Le fichier joint comporte des Erreurs SQL. Fichier non exploitable. Contacter Service DES.'
-END
-/* JFF le 06/02/12 : je génère à présent sur \\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_Hebdo_CG13_090623\ donc plus d'envoi par mail.
-EXEC master.dbo.SPB_PS_MAIL_OUTLOOK 
-		@sRetourErrMail OUTPUT, 
-		--'GG_DDI-DTA-RP_Coll@spb.eu,GG_DDI-DTA-RP_Resp@spb.eu', -- [ITSM68110] - changement de nom
-		'GG_DDI-DTA-DSR@spb.eu',
-		@sMessage, 
-		@sObjet, 
-		'', 
-		'', 
-		@sFicOut, 
-		NULL, 
-		NULL, 
-		NULL, 
-		NULL
-*/
-
+Set @sFileName = 'DCMP090623_HEBDO_CG13'  
+Set @sFileExt = 'xls'  
+  
+SET @sFicOut = @sPath + @sFileName + '.' + @sFileExt  
+  
+SET @sNomServeur = @@servername  
+-- Options additionelles pour osql  
+-- /s" "  => Separateur Tabulation  
+-- /b  => Genere un code ERRORLEVEL exploitable par batch.  
+-- /u => Unicode  
+  
+Set @sOsqlOption = ' ' + '/s" "'+ ' /b' + ' /u'  
+  
+IF @@servername = master.dbo.SPB_FN_ServerName ('PRO')  
+   SET @sCommande =  'sqlcmd /S' + @sNomServeur + ' /E /Q"' +   
+   "SIMPA2_PRO.sysadm.PS_S13_090623_CG13_HEBDO " +   
+   '" /o' + @sFicOut + ' -w5000' + @sOsqlOption  
+Else  
+   SET @sCommande =  'sqlcmd /S' + @sNomServeur + ' /E /Q"' +   
+   "SIMPA2_TRT.sysadm.PS_S13_090623_CG13_HEBDO " +   
+   '" /o' + @sFicOut + ' -w5000' + @sOsqlOption  
+EXEC @iRetOsql = master.dbo.xp_cmdshell @sCommande, no_output  
+  
+Set @sObjet    = "Extraction Hebdomadaire CG13 DCMP090623"  
+set @sMessage  = "Veuillez trouver ci-joint l'extraction des sinistres déclarés depuis l'origine du produit 379."  
+  
+if @iRetOsql <> 0  
+BEGIN  
+ set @sMessage  = @sMessage + 'ATTENTION : Le fichier joint comporte des Erreurs SQL. Fichier non exploitable. Contacter Service DES.'  
+END  
+/* JFF le 06/02/12 : je génère à présent sur \\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_Hebdo_CG13_090623\ donc plus d'envoi par mail.  
+EXEC master.dbo.SPB_PS_MAIL_OUTLOOK   
+  @sRetourErrMail OUTPUT,   
+  --'GG_DDI-DTA-RP_Coll@spb.lan,GG_DDI-DTA-RP_Resp@spb.lan', -- [ITSM68110] - changement de nom  
+  'GG_DDI-DTA-DSR@spb.lan',  
+  @sMessage,   
+  @sObjet,   
+  '',   
+  '',   
+  @sFicOut,   
+  NULL,   
+  NULL,   
+  NULL,   
+  NULL  
+*/  
+  
 Go
 
 grant execute on sysadm.PS_S13_090623_CG13_HEBDO_MAIL to rolebddsinistres
@@ -10174,8 +10179,8 @@ GO
 --
 -------------------------------------------------------------------
 -- MAJ	LE		PAR	Description
+-- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
-
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_LANCEUR_STAT_DARTY ' AND type = 'P' )
         DROP procedure sysadm.PS_S_LANCEUR_STAT_DARTY 
 GO
@@ -10212,7 +10217,10 @@ IF @@servername = master.dbo.SPB_FN_ServerName ('PRO') Set @sBase = 'SIMPA2_PRO'
 
 
 -- Stat O2M
-Set @sChemin = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Darty\'
+-- [20240910162546267]
+-- Set @sChemin = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Darty\'
+Set @sChemin = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Darty\'
+
 Set @sFichier = @sNomFichier + '_O2M'
 Set @sRequete = 'PS_S_DARTY_O2M'
 
@@ -10225,7 +10233,10 @@ SET @sCommande = 'sqlcmd /S' + @sNomServeur + ' /E /Q"' +
 EXEC @iRetOsql = master.dbo.xp_cmdshell @sCommande, no_output
 
 -- Stat CLIENT
-Set @sChemin = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Darty\'
+-- [20240910162546267]
+-- Set @sChemin = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Darty\'
+Set @sChemin = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Darty\'
+
 Set @sFichier = @sNomFichier + '_CLIENT'
 Set @sRequete = 'PS_S_DARTY_CLIENT'
 
@@ -11374,6 +11385,7 @@ Go
 --	FPI	29/09/2015	[VDoc18783]
 --  FPI 05/09/2016	Suppression de l'envoi par mail
 --	FPI - 12/09/2016 [VDoc21259] appel de PS_S_IRREP_PSM
+--  JFF	- 10/09/2024 [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MENS_VDOC9850_PSM_MAIL' AND type = 'P' )
         DROP procedure sysadm.PS_S_MENS_VDOC9850_PSM_MAIL
@@ -11381,7 +11393,6 @@ GO
 
 CREATE procedure sysadm.PS_S_MENS_VDOC9850_PSM_MAIL
 AS
-
 
 DECLARE @sCommande   VarChar(250),
         @sMessage    Varchar(500),
@@ -11405,7 +11416,11 @@ Declare @sFicOut2 VarChar(255) -- [VDoc17539]
 
 -- chemin d'enregistrement du Result Set
 --Set @sPath 	= master.sysadm.SPB_FN_GET_ROOT()+'Sinistre\Extraction_PSM_Mens_vDoc9850\'
-Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_PSM_Mens_vDoc9850\'
+
+-- [20240910162546267]
+-- Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_PSM_Mens_vDoc9850\'
+Set @sPath 	= sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Extraction_PSM_Mens_vDoc9850\'
+
 Set @sFileName	= 'Export_PSM_Mens_vDoc9850'
 Set @sFileExt	= 'xls'
 
@@ -12624,6 +12639,7 @@ Go
 --
 -------------------------------------------------------------------
 -- MAJ	LE		    PAR		 Description
+-- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_VDOC12748_1_CQUERTIER_ORV3_MAIL' AND type = 'P' )
         DROP procedure sysadm.PS_S_VDOC12748_1_CQUERTIER_ORV3_MAIL
@@ -12648,7 +12664,10 @@ DECLARE @sCommande   VarChar(250),
 	
 
 -- chemin d'enregistrement du Result Set
-Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_vDoc12748_C_Quertier_ORV3\'
+-- [20240910162546267]
+-- Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_vDoc12748_C_Quertier_ORV3\'
+Set @sPath 	= sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Extraction_vDoc12748_C_Quertier_ORV3\'
+
 Set @sFileName	= 'VDOC12748_C_QUERTIER_1'
 Set @sFileExt	= 'xls'
 
@@ -12700,6 +12719,7 @@ Go
 --
 -------------------------------------------------------------------
 -- MAJ	LE		    PAR		 Description
+-- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_VDOC12748_2_CQUERTIER_ORV3_MAIL' AND type = 'P' )
         DROP procedure sysadm.PS_S_VDOC12748_2_CQUERTIER_ORV3_MAIL
@@ -12723,10 +12743,12 @@ DECLARE @sCommande   VarChar(250),
 	@sDest VarChar ( 200 )
 	
 -- chemin d'enregistrement du Result Set
-Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_vDoc12748_C_Quertier_ORV3\'
+-- [20240910162546267]
+-- Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_vDoc12748_C_Quertier_ORV3\'
+Set @sPath 	= sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Extraction_vDoc12748_C_Quertier_ORV3\'
+
 Set @sFileName	= 'VDOC12748_C_QUERTIER_2'
 Set @sFileExt	= 'xls'
-
 
 SET @sFicOut = @sPath + @sFileName + '.' + @sFileExt
 /*
@@ -12880,6 +12902,7 @@ Go
 --
 -------------------------------------------------------------------
 -- MAJ	LE		    PAR		 Description
+-- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_VDOC12795_CQUERTIER_ORV3_MAIL' AND type = 'P' )
         DROP procedure sysadm.PS_S_VDOC12795_CQUERTIER_ORV3_MAIL
@@ -12904,7 +12927,10 @@ DECLARE @sCommande   VarChar(250),
 	
 
 -- chemin d'enregistrement du Result Set
-Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_vDoc12795_C_Quertier_ORV3\'
+-- [20240910162546267]
+-- Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_vDoc12795_C_Quertier_ORV3\'
+Set @sPath 	= sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Extraction_vDoc12795_C_Quertier_ORV3\'
+
 Set @sFileName	= 'VDOC12795_C_QUERTIER'
 Set @sFileExt	= 'xls'
 
@@ -13059,6 +13085,7 @@ Go
 --
 -------------------------------------------------------------------
 -- MAJ	LE		PAR	Description
+-- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_VDOC12921_V_DEMYMUID_O2M_MAIL_1' AND type = 'P' )
         DROP procedure sysadm.PS_S_VDOC12921_V_DEMYMUID_O2M_MAIL_1
@@ -13081,7 +13108,10 @@ DECLARE @sCommande   VarChar(250),
 	@iRetOsql	int	
 
 -- chemin d'enregistrement du Result Set
-Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_vDoc12921_V_DEMYMUID_O2M\'
+-- [20240910162546267]
+-- Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_vDoc12921_V_DEMYMUID_O2M\'
+Set @sPath 	= sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Extraction_vDoc12921_V_DEMYMUID_O2M\'
+
 Set @sFileName	= 'VDOC12921_V_DEMYMUID_O2M'
 Set @sFileExt	= 'xls'
 
@@ -13125,6 +13155,7 @@ Go
 --
 -------------------------------------------------------------------
 -- MAJ	LE		PAR	Description
+-- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_VDOC12921_V_DEMYMUID_O2M_MAIL_2' AND type = 'P' )
         DROP procedure sysadm.PS_S_VDOC12921_V_DEMYMUID_O2M_MAIL_2
@@ -13147,7 +13178,9 @@ DECLARE @sCommande   VarChar(250),
 	@iRetOsql	int	
 
 -- chemin d'enregistrement du Result Set
-Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_vDoc12921_V_DEMYMUID_O2M\'
+-- [20240910162546267]
+-- Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_vDoc12921_V_DEMYMUID_O2M\'
+Set @sPath 	= sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Extraction_vDoc12921_V_DEMYMUID_O2M\'
 
 Set @sFileName	= 'VDOC12921_V_DEMYMUID_O2M_2'
 Set @sFileExt	= 'xls'
@@ -13326,6 +13359,8 @@ Go
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
+-- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_ADVISE_CTRLE_FACTURATION_FICHIER' AND type = 'P' )
         DROP procedure sysadm.PS_S_ADVISE_CTRLE_FACTURATION_FICHIER
 GO
@@ -13348,7 +13383,9 @@ DECLARE @sCommande   VarChar(250),
 	@iCount Integer
 
 -- chemin d'enregistrement du Result Set
-Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Controle_Facture_Advise\'
+-- [20240910162546267]
+-- Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Controle_Facture_Advise\'
+Set @sPath 	= sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Controle_Facture_Advise\'
 
 Set @sFileName	= 'CONTROLE_FACTURE_ADVISE_' + Replace ( convert ( varchar(10), GETDATE(), 112 ) + CONVERT (varchar(8), GETDATE(), 108), ':', '' )
 Set @sFileExt	= 'xls'
@@ -13377,7 +13414,9 @@ Else
 			'" /o' + @sFicOut + ' -w5000' + @sOsqlOption
 EXEC @iRetOsql = master.dbo.xp_cmdshell @sCommande, no_output
 
+-- [20240910162546267]
 Set @sMessage = 'Un fichier a été généré sur ' + Replace ( @sFicOut, '\\spb.lan\applis\spb', 'K:' )
+Set @sMessage = 'Un fichier a été généré sur ' + Replace ( @sFicOut,  sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) , 'K:\' )
 
 EXEC master.dbo.SPB_PS_MAIL 
 		@sRetourErrMail OUTPUT, 
@@ -13936,6 +13975,8 @@ Go
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
+-- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_EXTR_VIPP_VDOC13070_FICHIER' AND type = 'P' )
         DROP procedure sysadm.PS_S_EXTR_VIPP_VDOC13070_FICHIER
 GO
@@ -13958,7 +13999,10 @@ DECLARE @sCommande   VarChar(250),
 	@iCount Integer
 
 -- chemin d'enregistrement du Result Set
-Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_vDoc12070_M_Lepere_Vipp\'
+-- [20240910162546267]
+-- Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_vDoc12070_M_Lepere_Vipp\'
+Set @sPath 	= sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Extraction_vDoc12070_M_Lepere_Vipp\'
+
 Set @sFileName	= 'PRESTA_VIPP_Générées_du_' + Replace ( Convert ( varchar(10), DATEADD ( Month, -1, GETDATE() ), 103 ), '/', '_') + '_Au_' +
 				Replace ( Convert ( varchar(10), DATEADD ( Day, -1, GETDATE()), 103 ) , '/', '_') + '__' +
 				Replace ( convert ( varchar(10), GETDATE(), 112 ) + CONVERT (varchar(8), GETDATE(), 108), ':', '' )
@@ -14666,6 +14710,7 @@ Go
 --
 -------------------------------------------------------------------
 -- MAJ	LE		PAR	Description
+-- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S01_LISTE_CODES_CSV ' AND type = 'P' )
         DROP procedure sysadm.PS_S01_LISTE_CODES_CSV 
@@ -14683,7 +14728,10 @@ Declare @sFicOut     VarChar(1000),
 	@sSql varchar(1000)
 
 --Set @sPath 	=master.sysadm.SPB_FN_GET_ROOT() + '\Sinistre\Referentiel\'
-Set @sPath 	='\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_vDoc14935_m_Deschamps_Referentiel\'
+-- [20240910162546267]
+-- Set @sPath 	='\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_vDoc14935_m_Deschamps_Referentiel\'
+Set @sPath = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Extraction_vDoc14935_m_Deschamps_Referentiel\'
+
 Set @sFileExt	= 'csv'
 
 
@@ -15114,6 +15162,7 @@ Go
 --
 -------------------------------------------------------------------
 -- MAJ	LE		PAR	Description
+-- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_VDOC15044_S_VABRE_MAIL' AND type = 'P' )
         DROP procedure sysadm.PS_S_VDOC15044_S_VABRE_MAIL
@@ -15144,7 +15193,11 @@ Declare @iJour Integer
 
 -- chemin d'enregistrement du Result Set
 -- Set @sPath 	= master.sysadm.SPB_FN_GET_ROOT()+'Sinistre\Export_DT076_IRR_PSM_VERS_O2M\'
-Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_VDOC15044_S_VABRE\'
+
+-- [20240910162546267]
+-- Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_VDOC15044_S_VABRE\'
+Set @sPath 	= sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Extraction_VDOC15044_S_VABRE\'
+
 Set @sFileName	= 'VDOC15044_S_VABRE'
 Set @sFileExt	= 'xls'
 
@@ -15172,7 +15225,11 @@ set @sMessage  = 'Bonjour,'
 set @sMessage  = @sMessage + char ( 10) + char ( 10)
 set @sMessage  = @sMessage + 'Veuillez-trouver à l''emplacement ci-dessous, l''extraction liée à la vDoc citée en objet.'
 set @sMessage  = @sMessage + char ( 10) + char ( 10)
-set @sMessage  = @sMessage + '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_VDOC15044_S_VABRE\VDOC15044_S_VABRE.XLS'
+
+-- [20240910162546267]
+-- set @sMessage  = @sMessage + '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_VDOC15044_S_VABRE\VDOC15044_S_VABRE.XLS'
+set @sMessage  = @sMessage + sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Extraction_VDOC15044_S_VABRE\VDOC15044_S_VABRE.XLS'
+
 set @sMessage  = @sMessage + char ( 10) + char ( 10)
 set @sMessage  = @sMessage + 'Cordialement,'
 set @sMessage  = @sMessage + char ( 10) + char ( 10)
@@ -16567,6 +16624,7 @@ Go
 -------------------------------------------------------------------
 -- MAJ	LE		PAR	Description
 -- JFF  05/02/2016  [VDOC19871] ATC
+-- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_VDOC16155_SKRIZEZ_FIC' AND type = 'P' )
         DROP procedure sysadm.PS_S_VDOC16155_SKRIZEZ_FIC
@@ -16599,14 +16657,18 @@ While @iCptTour <= 2
 	-- chemin d'enregistrement du Result Set
 	If @iCptTour = 1 
 	  Begin
-		Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_vDoc16155_SKRIZEZ\'
+	    -- [20240910162546267]
+		-- Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_vDoc16155_SKRIZEZ\'
+		Set @sPath 	= sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Extraction_vDoc16155_SKRIZEZ\'
 		Set @sFileName	= 'Extraction_VDOC16155_' + convert( varchar ( 10), GETDATE(), 112 ) + replace ( convert( varchar ( 10), GETDATE(), 108 ) , ':', '' ) 
 		Set @sFileExt	= 'xls'
 	  End
 
 	If @iCptTour = 2
 	  Begin
-		Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_vDoc19871_SKRIZEZ\'
+	  	-- [20240910162546267]
+		-- Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_vDoc19871_SKRIZEZ\'
+		Set @sPath 	= sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Extraction_vDoc19871_SKRIZEZ\'
 		Set @sFileName	= 'Extraction_VDOC19871_' + convert( varchar ( 10), GETDATE(), 112 ) + replace ( convert( varchar ( 10), GETDATE(), 108 ) , ':', '' ) 
 		Set @sFileExt	= 'xls'
 	  End
@@ -17573,6 +17635,7 @@ Go
 --
 -------------------------------------------------------------------
 -- MAJ	LE		PAR	Description
+-- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_VDOC17803_FICHIERS' AND type = 'P' )
        DROP procedure sysadm.PS_VDOC17803_FICHIERS
@@ -17593,7 +17656,9 @@ As
 	Set @dtDteFin=convert(datetime,'01/' + convert(varchar(2),month(getdate())) + '/' + convert(varchar(4),year(getdate())),103)
 	Set @dtDteDeb=dateadd(MONTH,-1,@dtDteFin)
 	
-	Select @sChemin = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_vDoc17803_S_Loison\',
+	-- [20240910162546267]
+	-- Select @sChemin = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_vDoc17803_S_Loison\',
+	Select @sChemin = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Extraction_vDoc17803_S_Loison\',
 		@suffixe='_' + convert(varchar(4),year(@dtDteDeb),103) + RIGHT('0' + convert(varchar(2),month(@dtDteDeb)),2)
 
 	Set @sOsqlOption = ' ' + '/s"	"'+ ' /b' + ' /u'
@@ -17696,6 +17761,7 @@ Go
 --
 -------------------------------------------------------------------
 -- MAJ	LE		PAR	Description
+-- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_VDOC18868_SMAIN_KRIZEZ_FIC' AND type = 'P' )
        DROP procedure sysadm.PS_VDOC18868_SMAIN_KRIZEZ_FIC
@@ -17722,7 +17788,9 @@ DECLARE @sCommande   VarChar(250),
 
 				 
 -- chemin d'enregistrement du Result Set
-Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_vDoc18868_SKRIZEZ\'
+-- [20240910162546267]
+-- Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Extraction_vDoc18868_SKRIZEZ\'
+Set @sPath 	= sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Extraction_vDoc18868_SKRIZEZ\'
 Set @sFileName	= 'Extraction_VDOC18868_' + convert( varchar ( 10), GETDATE(), 112 ) + replace ( convert( varchar ( 10), GETDATE(), 108 ) , ':', '' ) 
 Set @sFileExt	= 'xls'
 

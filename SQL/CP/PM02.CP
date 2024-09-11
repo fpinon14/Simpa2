@@ -1894,8 +1894,8 @@ Go
 -------------------------------------------------------------------
 -- JFF 06/06/2012 [VDOC7722]
 -- JFF 27/05/2019 [PM478-1]
+-- JFF	10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
-
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_PM02_BATCH_LANCEMENT' AND type = 'P' )
         DROP procedure sysadm.PS_I_PM02_BATCH_LANCEMENT
 GO
@@ -1979,7 +1979,11 @@ Exec sysadm.PS_D01_PM02_DOUBLON @iIdTrt, @iIdPeriode, 'PM02'
 -- Ecrire des fichiers (des états) --
 -------------------------------------
 Set @iCpt = 1
-Set @sChemin = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\PM02_Factu_Broker_Reprise_Mat\'
+
+-- [20240910162546267]
+-- Set @sChemin = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\PM02_Factu_Broker_Reprise_Mat\'
+Set @sChemin = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\PM02_Factu_Broker_Reprise_Mat\'
+
 Set @sFichierFactExcel = '[PER]_[ID_TRT]_[BRK]_PM02_Facturation_Reprise_Materiel.xls'
 
 -- [PM478-1]

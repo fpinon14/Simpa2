@@ -706,8 +706,8 @@ GO
 --      FPI     23/06/2011      PM02
 --	FPI - 09/09/2014 [20140909.FPI] Désactivation des relances pour la recopie
 --	FPI	- 09/09/2016 [DP306] Suppression de la recopie de la DP 306
+--  JFF	  10/09/2024  [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
-
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I01_RECOPIE_PRODUIT' AND type = 'P' )
             DROP procedure sysadm.PS_I01_RECOPIE_PRODUIT
 GO
@@ -1440,7 +1440,9 @@ INSERT INTO sysadm.traitement
 select max(id_trt) + 1, 57, @dcIdProdDest,  
 	@dcIdProdDest, 'O','N','N','N',
 	2, 1, 
-	'\\spb.lan\applis\spb\Simpa2\XLS\' + convert(varchar(10), @dcIdProdDest) + '\MENS\' + convert(varchar(10), @dcIdProdDest) + 'LR1.XLS',
+	-- [20240910162546267]
+	-- '\\spb.lan\applis\spb\Simpa2\XLS\' + convert(varchar(10), @dcIdProdDest) + '\MENS\' + convert(varchar(10), @dcIdProdDest) + 'LR1.XLS',
+	sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'Simpa2\XLS\' + convert(varchar(10), @dcIdProdDest) + '\MENS\' + convert(varchar(10), @dcIdProdDest) + 'LR1.XLS',
 	getdate(), getdate(), @sTrigramme
 from sysadm.traitement
 where not exists (select 1 from sysadm.traitement t

@@ -7045,3 +7045,38 @@ BEGIN
 END 
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Fonction             :       FN_GET_CHEMIN
+-- Auteur               :       JFF
+-- Date                 :       10/09/2024
+-- Libellé              :		
+-- Commentaires         :       
+-- Références           :       
+--
+--------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_GET_CHEMIN' AND type = 'FN' )
+        DROP function sysadm.FN_GET_CHEMIN
+Go
+
+CREATE FUNCTION sysadm.FN_GET_CHEMIN (   
+	@sCleChem VarChar ( 50 )
+	)
+RETURNS varchar(255)  
+AS  
+BEGIN  
+
+Declare @sChemin VarChar ( 255 )
+
+Select @sChemin = lTrim ( rTrim ( c.chemin ) )
+From sysadm.chemin c
+Where c.cle_chem = @sCleChem
+
+IF Right ( @sChemin, 1 ) <> '\' Set @sChemin = @sChemin + '\'
+
+Return @sChemin
+
+END
+Go
+

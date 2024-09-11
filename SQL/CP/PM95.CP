@@ -55,6 +55,7 @@
 -- JFF  12/02/2016  [PI062]
 -- JFF  15/05/2017  [PC13321-3]
 -- JFF  28/02/2022  [RS1985]
+-- JFF	10/09/2024  [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_PM95_BATCH_LANCEMENT' AND type = 'P' )
         DROP procedure sysadm.PS_U_PM95_BATCH_LANCEMENT
@@ -305,15 +306,25 @@ Set @iCpt = 1
 
 If @RecProd = 'PROD' 
   Begin 
-	Set @sCheminR1 = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\PM287_Rel_Four\Relance1\' -- [PM287-2]
-	Set @sCheminR2 = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\PM287_Rel_Four\Relance2\' -- [PM287-2]
+	-- [20240910162546267]
+	-- Set @sCheminR1 = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\PM287_Rel_Four\Relance1\' -- [PM287-2]
+	Set @sCheminR1 = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\PM287_Rel_Four\Relance1\' -- [PM287-2]
+
+	-- [20240910162546267]
+	-- Set @sCheminR2 = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\PM287_Rel_Four\Relance2\' -- [PM287-2]
+	Set @sCheminR2 = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\PM287_Rel_Four\Relance2\' -- [PM287-2]
 
 	Set @sCheminR3 = '\\F4T\Simpa2\PSM\fic_relances\Relance1\' -- [PM287-2][MANTIS20794]
   End
 Else
   Begin 
-	Set @sCheminR1 = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Recette_PM287\Relance1\'-- [PM287-2]
-	Set @sCheminR2 = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Recette_PM287\Relance2\'  -- [PM287-2]
+	-- [20240910162546267]
+	-- Set @sCheminR1 = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Recette_PM287\Relance1\'-- [PM287-2]
+	Set @sCheminR1 = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Recette_PM287\Relance1\'-- [PM287-2]
+
+	-- [20240910162546267]
+	-- Set @sCheminR2 = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Recette_PM287\Relance2\'  -- [PM287-2]
+	Set @sCheminR2 = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Recette_PM287\Relance2\'  -- [PM287-2]
   End
 
 Set @sFichierRelance1 = '[DATE]_R1_[FOUR]_[SECT].xls'
@@ -4893,6 +4904,7 @@ Go
 -------------------------------------------------------------------
 -- JFF  19/12/2012  [VDOC9779]
 -- JFF  12/02/2016  [PI062]
+-- JFF	10/09/2024  [20240910162546267] Changement chemin UNC Serveur fichier prod
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PM95_PM287_PS_REECRIRE_LES_FICHIERS' AND type = 'P' )
         DROP procedure sysadm.PM95_PM287_PS_REECRIRE_LES_FICHIERS
@@ -4971,15 +4983,25 @@ Set @iCpt = 1
 
 If @RecProd = 'PROD' 
   Begin 
-	Set @sCheminR1 = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\PM287_Rel_Four\Relance1\' -- [PM287-2]
-	Set @sCheminR2 = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\PM287_Rel_Four\Relance2\' -- [PM287-2]
+	-- [20240910162546267]
+	-- Set @sCheminR1 = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\PM287_Rel_Four\Relance1\' -- [PM287-2]
+	Set @sCheminR1 = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\PM287_Rel_Four\Relance1\' -- [PM287-2]
+
+	-- [20240910162546267]
+	-- Set @sCheminR2 = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\PM287_Rel_Four\Relance2\' -- [PM287-2]
+	Set @sCheminR2 = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\PM287_Rel_Four\Relance2\' -- [PM287-2]
 
 	Set @sCheminR3 = '\\F4T\Simpa2\PSM\fic_relances\Relance1\' -- [PM287-2][MANTIS20794]
   End
 Else
   Begin 
-	Set @sCheminR1 = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Recette_PM287\Relance1\'-- [PM287-2]
-	Set @sCheminR2 = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Recette_PM287\Relance2\'  -- [PM287-2]
+	-- [20240910162546267]
+	-- Set @sCheminR1 = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Recette_PM287\Relance1\'-- [PM287-2]
+	Set @sCheminR1 = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Recette_PM287\Relance1\'-- [PM287-2]
+
+	-- [20240910162546267]
+	-- Set @sCheminR2 = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\Recette_PM287\Relance2\'  -- [PM287-2]
+	Set @sCheminR2 = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\Recette_PM287\Relance2\'  -- [PM287-2]
   End
 
 Set @sFichierRelance1 = '[DATE]_R1_[FOUR]_[SECT].xls'
