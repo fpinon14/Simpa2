@@ -68,6 +68,10 @@ String gTModeleCP [] // [RS5045_REF_MATP]
 
 end variables
 
+<<<<<<< .mine
+global type simpa2 from application
+string appname = "simpa2"
+=======
 global type simpa2 from application
 string appname = "simpa2"
 string themepath = "C:\Program Files (x86)\Appeon\PowerBuilder 22.0\IDE\theme"
@@ -80,6 +84,17 @@ long richtexteditx64type = 5
 long richtexteditversion = 3
 string richtexteditkey = ""
 string appicon = ""
+>>>>>>> .r27274
+string themepath = "C:\Program Files (x86)\Appeon\PowerBuilder 22.0\IDE\theme"
+string themename = "Do Not Use Themes"
+boolean nativepdfvalid = false
+boolean nativepdfincludecustomfont = false
+string nativepdfappname = ""
+long richtextedittype = 5
+long richtexteditx64type = 5
+long richtexteditversion = 3
+string richtexteditkey = ""
+string appicon = "K:\PB4OBJ\BMP\simpa2.ICO"
 string appruntimeversion = "22.2.0.3356"
 boolean manualsession = false
 boolean unsupportedapierror = false
