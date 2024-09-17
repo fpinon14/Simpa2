@@ -46838,7 +46838,7 @@ lVal2 = idw_LstwCommande.Find ( "( ID_REF_FOUR = 'A_REPARER' OR POS ( INFO_SPB_F
 If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 	If lVal2 = 0 Then
 		lVal2 = idw_LstwCommande.Find ( "ID_REF_FOUR = 'A_DIAGNOSTIQUER' AND POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0 AND COD_ETAT NOT IN ( 'RFO', 'RPC', 'ANN') AND STATUS_GC IN ( 154 )", 1, idw_LstwCommande.rowCount()+1 ) 							
-		bDiag = True
+		If lVal2 > 0 Then bDiag = True 
 	End If 		
 End If
 
@@ -54338,8 +54338,8 @@ sTab [3,1]="iIdSeq"  ;  sTab [3,2]="number"
 sTab [4,1]="sIdHubPresta"  ;  sTab [4,2]="char(20)"
 sTab [5,1]="sIdFour"  ;  sTab [5,2]="char(3)"
 sTab [6,1]="sTypDommage"  ;  sTab [6,2]="char(100)"
-sTab [7,1]="sPointService"  ;  sTab [7,2]="char(20)"
-sTab [8,1]="sModeProcess"  ;  sTab [8,2]="char(20)"
+sTab [7,1]="sPointService"  ;  sTab [7,2]="char(40)"
+sTab [8,1]="sModeLogis"  ;  sTab [8,2]="char(40)"
 sTab [9,1]="sCodePickUp"  ;  sTab [9,2]="char(20)"
 sTab [10,1]="sAdrNomPickUp"  ;  sTab [10,2]="char(40)"
 sTab [11,1]="sAdrReferenceAssPickUp"  ;  sTab [11,2]="char(40)"

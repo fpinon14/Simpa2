@@ -28983,7 +28983,7 @@ Choose Case ascas
 		sTabValRet [2] ="HP_ID_FOUR"
 		sTabValRet [3] ="HP_TYP_DOM"
 		sTabValRet [4] ="HP_ID_POINT_SERV"
-		sTabValRet [5] ="HP_ID_MODE_PROCESS"
+		sTabValRet [5] ="HP_ID_MODE_LOGIS"
 		sTabValRet [6] ="CODE_PICK_UP"
 		sTabValRet [7] ="NOM_PICK_UP"
 		sTabValRet [8] ="REFASS_PICK_UP"

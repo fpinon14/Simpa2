@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_sp_trt_saisie_hub_prestataire.srw
+﻿$PBExportHeader$w_sp_trt_saisie_hub_prestataire.srw
 $PBExportComments$[HP252_276_HUB_PRESTA]
 forward
 global type w_sp_trt_saisie_hub_prestataire from window
@@ -24,6 +24,7 @@ boolean controlmenu = true
 windowtype windowtype = response!
 long backcolor = 67108864
 string icon = "AppIcon!"
+boolean righttoleft = true
 boolean center = true
 event chargement_typ_dommage ( )
 event chargement_consult_aller_s2_vers_hub ( )
@@ -97,10 +98,10 @@ end prototypes
 event chargement_typ_dommage();//*-----------------------------------------------------------------
 //*
 //* Objet			: w_sp_trt_saisie_hub_prestataire
-//* Evenement 		: chargement_typ_dommage
+//* Evenement 		: 
 //* Auteur			: JFF
 //* Date				: 11/03/2024
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -162,7 +163,7 @@ event chargement_consult_aller_s2_vers_hub();//*--------------------------------
 //* Evenement 		: Chargement_consult_aller_s2_vers_hub
 //* Auteur			: JFF
 //* Date				: 11/03/2024
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -203,7 +204,7 @@ event chargement_consult_retour_hub_vers_s2();//*-------------------------------
 //* Evenement 		: Chargement_consult_retour_hub_vers_s2
 //* Auteur			: JFF
 //* Date				: 11/03/2024
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -255,7 +256,7 @@ public subroutine wf_deconnexion_hub_prestataire ();//*-------------------------
 //* Fonction 		: wf_deconnexion_hub_prestataire
 //* Auteur			: JFF
 //* Date				: 11/03/2024
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -279,7 +280,7 @@ public function boolean wf_connexion_hub_prestataire ();//*---------------------
 //* Fonction 		: wf_connexion_hub_prestataire
 //* Auteur			: JFF
 //* Date				: 11/03/2024
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -321,7 +322,7 @@ public subroutine wf_recuperation_point_service ();//*--------------------------
 //* Fonction 		: wf_recuperation_point_service
 //* Auteur			: JFF
 //* Date				: 11/03/2024
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -349,9 +350,9 @@ isTrtFen = "POINTSERVICE"
 
 st_attente_hub.Height = 690
 st_attente_hub.Y = 200
-st_attente_hub.text  = "~n~rEn attente de r$$HEX1$$e900$$ENDHEX$$ponse du HUB PRESTATAIRE....~n~r"
+st_attente_hub.text  = "~n~rEn attente de réponse du HUB PRESTATAIRE....~n~r"
 st_attente_hub.text += "~n~r"
-st_attente_hub.text += "Appel ext$$HEX1$$e900$$ENDHEX$$rieur par API~n~r"
+st_attente_hub.text += "Appel extérieur par API~n~r"
 st_attente_hub.text += "Recherche des points de services disponibles~n~r"
 st_attente_hub.text += "~n~r"
 st_attente_hub.text += "Cela peut prendre quelques minutes...~n~r"
@@ -445,17 +446,18 @@ For iCpt = 1 To iTotRow
 
 	
 	dw_1.SetITem ( iCpt, "LibFour", sVal )
-	
-	sVal = dw_1.GetItemString ( iCpt, "idModeProcess" ) 
+
+	/* Plus nécessaire, on garde le code du mode tel que donné par le Hub et on a à présent la variable de libellé donné par BLN
+	sVal = dw_1.GetItemString ( iCpt, "idModeLogis" ) 
 	Choose Case sVal 
 		Case "CENTRALIZATION" 
 			sVal = "Centralisation"
-			dw_1.SetItem ( icpt, "StatutPointServ", "Accept$$HEX1$$e900$$ENDHEX$$" ) // forc$$HEX2$$e9002000$$ENDHEX$$dans ts les cas si CENTRAL, vu avec Boulenouar
+			dw_1.SetItem ( icpt, "StatutPointServ", "Accepté" ) // forcé dans ts les cas si CENTRAL, vu avec Boulenouar
 		Case "PROXIMITY" 
-			sVal = "Proximit$$HEX1$$e900$$ENDHEX$$"
+			sVal = "Proximité"
 	End Choose 
-	dw_1.SetITem ( iCpt, "idModeProcess", sVal )			
-
+	dw_1.SetITem ( iCpt, "idModeLogis", sVal )			
+	*/
 		
 	sVal = dw_1.GetItemString ( iCpt, "codePaysPointServ" ) 		
 	Choose Case sVal 
@@ -467,13 +469,13 @@ For iCpt = 1 To iTotRow
 	sVal = dw_1.GetItemString ( iCpt, "statutPointServ" ) 		
 	Choose Case sVal 
 		Case "ACCEPTED" 
-			sVal = "Accept$$HEX1$$e900$$ENDHEX$$"
+			sVal = "Accepté"
 		Case "REJECTED"
-			sVal = "Rejet$$HEX1$$e900$$ENDHEX$$"
+			sVal = "Rejeté"
 		Case "UNAVAILABLE" 
 			sVal = "Indisponible"
 		case "UNVERIFIED" 
-			sVal = "Non v$$HEX1$$e900$$ENDHEX$$rifi$$HEX1$$e900$$ENDHEX$$"
+			sVal = "Non vérifié"
 	End Choose 
 	dw_1.SetITem ( iCpt, "statutPointServ", sVal )			
 
@@ -519,7 +521,7 @@ cb_valider.enabled = FALSE
 st_attente_hub.Hide()
 st_attente_hub.Height = 228
 st_attente_hub.Y = 412
-st_attente_hub.text = "~n~rEn attente de r$$HEX1$$e900$$ENDHEX$$ponse du HUB PRESTATAIRE...."
+st_attente_hub.text = "~n~rEn attente de réponse du HUB PRESTATAIRE...."
 
 cb_valider.Show ()
 cb_abandonner.Show ()
@@ -563,7 +565,7 @@ public function boolean wf_valider_process_acheminement ();//*------------------
 //* Fonction 		: wf_valider_process_acheminement
 //* Auteur			: JFF
 //* Date				: 11/03/2024
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -576,7 +578,7 @@ public function boolean wf_valider_process_acheminement ();//*------------------
 //*-----------------------------------------------------------------
 
 n_cst_string lnvPFCString
-String sIdModeProcess, sRetAPI 
+String sIdModeLogis, sRetAPI 
 st_point_relai_chronopost relai_chrono
 Boolean bDecision
 
@@ -585,18 +587,18 @@ bDecision = False
 Choose case isTypActionS2 
 	Case "A_REPARER", "A_DIAGNOSTIQUER"
 
-		sIdModeProcess = Upper( lnvPFCString.of_Getkeyvalue ( isChaineRetour, "HP_ID_MODE_PROCESS", ";"))
+		sIdModeLogis = Upper( lnvPFCString.of_Getkeyvalue ( isChaineRetour, "HP_ID_MODE_LOGIS", ";"))
 		
-		If Left ( sIdModeProcess,4) = "PROX" Then
+		If sIdModeLogis = "PROXIMITY" Then
 			lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_INFO_SPB_FRN", "3530", ";")
 			Return True
 		End If 
 		
-		If sIdModeProcess = "CENTRALISATION" Then
+		If sIdModeLogis = "CENTRALIZATION" Then
 			
 			Do While NOT bDecision
 			
-				stMessage.sTitre		= "Choix process Centralisation"
+				stMessage.sTitre		= "Choix mode logistique Centralisation"
 				stMessage.Icon			= Question!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= YESNO!
@@ -620,7 +622,7 @@ Choose case isTypActionS2
 
 			Do While NOT bDecision
 		
-				stMessage.sTitre		= "Choix process Centralisation"
+				stMessage.sTitre		= "Choix mode logistique Centralisation"
 				stMessage.Icon			= Question!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= YESNO!
@@ -650,7 +652,7 @@ public function boolean wf_valider_point_service ();//*-------------------------
 //* Fonction 		: wf_valider_point_service
 //* Auteur			: JFF
 //* Date				: 11/03/2024
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -662,7 +664,7 @@ public function boolean wf_valider_point_service ();//*-------------------------
 //* #..   ...   ../../....   
 //*-----------------------------------------------------------------
 
-String sIdFour, sIdPointService, sIdModeProcess, sIdHubPresta, sMesErr
+String sIdFour, sIdPointService, sIdModeLogis, sIdHubPresta, sMesErr
 Integer iTotRow, iCpt, iRowSelect, iRow
 n_cst_string lnvPFCString
 Boolean bRet
@@ -678,7 +680,7 @@ If iRowSelect <= 0 Then Return False
 
 sIdFour = Dw_1.GetItemString ( iRowSelect, "idFour" ) 
 sIdPointService = Dw_1.GetItemString ( iRowSelect, "idPointServ" ) 
-sIdModeProcess = Dw_1.GetItemString ( iRowSelect, "idModeProcess" ) 
+sIdModeLogis = Dw_1.GetItemString ( iRowSelect, "idModeLogis" ) 
 sIdHubPresta = Dw_1.GetItemString ( iRowSelect, "idHubPresta" ) 
 
 IF IsNull ( sIdFour ) Or sIdFour = "" Then
@@ -691,9 +693,9 @@ IF IsNull ( sIdPointService ) Or sIdPointService = "" Then
 	sMesErr += "- Le code du point de service" + "~n~r"
 End If 
 
-IF IsNull ( sIdModeProcess ) Or sIdModeProcess = "" Then
+IF IsNull ( sIdModeLogis ) Or sIdModeLogis = "" Then
 	bRet = False
-	sMesErr += "- Le mode logistic (mode process)" + "~n~r"
+	sMesErr += "- Le mode logistic" + "~n~r"
 End If 
 
 IF IsNull ( sIdHubPresta ) Or sIdHubPresta = "" Then
@@ -703,7 +705,7 @@ End If
 
 
 If Not bRet Then
-	stMessage.sTitre  	= "Donn$$HEX1$$e900$$ENDHEX$$e non fournie par le HUB PRESTATAIRE"
+	stMessage.sTitre  	= "Donnée non fournie par le HUB PRESTATAIRE"
 	stMessage.Icon			= Exclamation!
 	stMessage.bErreurG	= FALSE
 	stMessage.sCode		= "HUBP007"
@@ -713,11 +715,11 @@ If Not bRet Then
 	Return False
 End If 	
 
-
+// [ICI] Reprendre ces 4 données en arg de la PS RecupProcess en plus des args précédent du point de service.
 lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_ID_HUB_PRESTA", sIdHubPresta , ";")
 lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_ID_FOUR", sIdFour, ";")
 lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_ID_POINT_SERV", sIdPointService, ";")
-lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_ID_MODE_PROCESS", sIdModeProcess, ";")
+lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_ID_MODE_LOGIS", sIdModeLogis, ";")
 
 Return True
 end function
@@ -728,7 +730,7 @@ public function boolean wf_valider_type_dommage_et_action ();//*----------------
 //* Fonction 		: wf_valider_type_dommage_et_action
 //* Auteur			: JFF
 //* Date				: 11/03/2024
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -788,7 +790,7 @@ Choose Case isTypActionS2
 	
 End Choose 
 
-// D$$HEX1$$e900$$ENDHEX$$termination du type d'action et controle de coh$$HEX1$$e900$$ENDHEX$$rence
+// Détermination du type d'action et controle de cohérence
 dsTypActionHub = Create dataStore
 dsTypActionHub.DataObject = "d_trt_saisie_hub_type_action"
 dsTypActionHub.SetTransObject ( itrHubPrestataire )
@@ -808,7 +810,7 @@ Destroy dsTypActionHub
 
 If iRow <= 0 Then
 	st_attente_hub.Hide()
-	stMessage.sTitre  	= "Incoh$$HEX1$$e900$$ENDHEX$$rence type d'action HUB PRESTATAIRE"
+	stMessage.sTitre  	= "Incohérence type d'action HUB PRESTATAIRE"
 	stMessage.Icon			= Information!
 	stMessage.bErreurG	= FALSE
 	stMessage.bouton 		= Ok!
@@ -837,7 +839,7 @@ public subroutine wf_consultation_aller_s2_vers_hub ();//*----------------------
 //* Fonction 		: wf_consultation_aller_s2_vers_hub
 //* Auteur			: JFF
 //* Date				: 11/03/2024
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -877,7 +879,7 @@ cb_abandonner.X = ( This.Width / 2 ) - ( cb_abandonner.Width / 2 )
 st_attente_hub.Hide()
 st_attente_hub.Height = 228
 st_attente_hub.Y = 412
-st_attente_hub.text = "~n~rEn attente de r$$HEX1$$e900$$ENDHEX$$ponse du HUB PRESTATAIRE...."
+st_attente_hub.text = "~n~rEn attente de réponse du HUB PRESTATAIRE...."
 dw_1.Show ()
 dw_1.BringToTop = TRUE
 dw_1.SetFocus ()
@@ -890,7 +892,7 @@ public function boolean wf_appel_relais_pickup ();//*---------------------------
 //* Fonction 		: wf_appel_relais_pickup
 //* Auteur			: JFF
 //* Date				: 11/03/2024
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -904,7 +906,7 @@ public function boolean wf_appel_relais_pickup ();//*---------------------------
 
 
 n_cst_string lnvPFCString
-String sIdModeProcess, sRetAPI 
+String sIdModeLogis, sRetAPI 
 st_point_relai_chronopost relai_chrono
 
 			
@@ -1007,7 +1009,7 @@ event open;//*-----------------------------------------------------------------
 //* Evenement 		: open
 //* Auteur			: JFF
 //* Date				: 11/03/2024
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -1090,7 +1092,7 @@ Choose Case isTrtFen
 End Choose 
 
 
-st_attente_hub.text = "~n~rEn attente de r$$HEX1$$e900$$ENDHEX$$ponse du HUB PRESTATAIRE...."
+st_attente_hub.text = "~n~rEn attente de réponse du HUB PRESTATAIRE...."
 st_attente_hub.Show()
 st_attente_hub.BringToTop = TRUE
 
@@ -1120,7 +1122,7 @@ event close;//*-----------------------------------------------------------------
 //* Evenement 		: close
 //* Auteur			: JFF
 //* Date				: 11/03/2024
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -1171,7 +1173,7 @@ fontfamily fontfamily = swiss!
 string facename = "MS Sans Serif"
 long backcolor = 15780518
 boolean enabled = false
-string text = "En attente de r$$HEX1$$e900$$ENDHEX$$ponse du HUB PRESTATAIRE...."
+string text = "En attente de réponse du HUB PRESTATAIRE...."
 alignment alignment = center!
 boolean border = true
 borderstyle borderstyle = styleraised!
@@ -1199,7 +1201,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: JFF
 //* Date				: 11/03/2024
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -1237,7 +1239,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: JFF
 //* Date				: 11/03/2024
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -1261,6 +1263,9 @@ Choose Case isTrtFen
 		
 	Case "POINTSERVICE"
 		bRet = Parent.wf_Valider_Point_Service ()
+		
+		// [Ici] appeler une Parent.wf_Recuperation_Process_Acheminement ()
+		// avec un type de fren "PROCESS_ACHEMINEMENT"
 		
 		If bRet Then
 			bRet = Parent.wf_Valider_Process_Acheminement ()
@@ -1296,7 +1301,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: JFF
 //* Date				: 11/03/2024
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -1317,7 +1322,7 @@ If isTrtFen = "CONS_RETOUR"	Then Return
 If isTrtFen = "POINTSERVICE" Then 
 	sVal = This.GetItemString ( row, "StatutPointServ" )
 	
-	If sVal <> "Accept$$HEX1$$e900$$ENDHEX$$" Then Return
+	If sVal <> "Accepté" Then Return
 	
 	This.SelectRow ( 0, False)
 
@@ -1350,7 +1355,7 @@ event buttonclicked;//*---------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: JFF
 //* Date				: 11/03/2024
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
