@@ -1110,12 +1110,12 @@ st_attente_hub.text += "Cela peut prendre quelques minutes...~n~r"
 st_attente_hub.Show()
 st_attente_hub.BringToTop = TRUE
 
-This.Height = 1300
-This.Width  = 3540
+This.Height = 1350
+This.Width  = 3560
 dw_1.X = 23
 dw_1.Y = 16
 dw_1.Height = 980
-dw_1.Width  = This.Width - 80 
+dw_1.Width  = This.Width - 120
 cb_abandonner.X = 1247
 cb_abandonner.Y = 1032
 cb_Valider.X = 1737
@@ -1585,13 +1585,13 @@ If isTrtFen = "POINTSERVICE" Then
 	
 	If sVal <> "Accepté" Then Return
 	
-	This.SelectRow ( 0, False)
+	If row > 0 Then This.SelectRow ( 0, False)
 
 End If 
 
 
 If isTrtFen = "PROCESS_ACHEMINEMENT" Then 
-	This.SelectRow ( 0, False)
+	If row > 0 Then This.SelectRow ( 0, False)
 End If 
 
 
