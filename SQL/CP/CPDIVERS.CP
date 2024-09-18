@@ -5954,8 +5954,8 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 	Set @sMailBody = @sMailBody + '  Le problème sera résolu lorsque vous ne recevrez plus aucun mail.' + char (10)
 	Set @sMailBody = @sMailBody + char (10)
 	Set @sMailBody = @sMailBody + char (10)
-	Set @sMailBody = @sMailBody + '- Pour TELCO/Johann :' + char (10)
-	Set @sMailBody = @sMailBody + '  Si l''erreur concerne plusieurs prestataire (plusieurs mails reçus concernant des prestataires différents) à la même fréquence (30 minutes), c''est que le problème vient vraisemblablement de chez nous (spb), nous n''arrivons pas appeler les WebService extérieurs ou bien l''appel est très lent et tombe en Time Out.' + char (10)
+	Set @sMailBody = @sMailBody + '- Pour INFRA/TELCO :' + char (10)
+	Set @sMailBody = @sMailBody + '  Si l''erreur concerne plusieurs prestataire (plusieurs mails reçus concernant des prestataires différents) à la même fréquence (30 minutes), c''est que le problème vient vraisemblablement de chez nous (spb), nous n''arrivons pas appeler les WebService/API extérieurs ou bien l''appel est très lent et tombe en Time Out.' + char (10)
 	Set @sMailBody = @sMailBody + '  Attendre de voir si l''alerte se répète sur des fréquences de 30 minutes sur tous ces prestataires afin de confirmer le problème, et si cela se confirme, agir alors.' + char (10)
 	Set @sMailBody = @sMailBody + CHAR ( 10 )
 
@@ -5981,7 +5981,7 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 		Begin
 			EXEC master.dbo.SPB_PS_MAIL 
 					@sRetourErrMail OUTPUT, 
-					'GG_DSI-DO-UTIL@spb.eu,GG_DSI-DO-PI@spb.eu,jff@spb.fr,fsale@spb.eu,GG_DSI-DO-TELCO@spb.eu,cbourdoiseau@spb.eu,rpo@spb.eu,JALLIX@spb.eu,HLIEGEARD@spb.eu,DBOUCQ@spb.eu,MHARDY@spb.eu',
+					'GG_DSI-DO-UTIL@spb.eu,GG_DSI-DO-PI@spb.eu,GG_DSI-DO-INFRA-SERVEUR@spb.eu,jff@spb.fr,fsale@spb.eu,GG_DSI-DO-TELCO@spb.eu,cbourdoiseau@spb.eu,rpo@spb.eu,JALLIX@spb.eu,HLIEGEARD@spb.eu,DBOUCQ@spb.eu,MHARDY@spb.eu,CVERRIER@spb.eu',
 --					'jff@spb.fr',
 					@sMailBody, 
 					@sObjet, 
@@ -6835,6 +6835,8 @@ GO
 CREATE procedure sysadm.PS_NETTOYAGE_REPERTOIRE  
 	@sRepertoireUNC VarChar ( 255 )
 AS
+
+Return -- Je suspends pour l'instant
 
 Declare @sDIR Varchar ( 255 )
 Declare @TbTemp Table ( nom_fic varchar ( 255) ) 
