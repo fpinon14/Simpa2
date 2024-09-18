@@ -105,6 +105,7 @@ Declare
 	@sTypDommage				VarChar ( 100 )			,	-- Chaine contenant les codes des types de dommage sous la forme '#TD1#TD4#TD5#'
 	@sPointService				VarChar ( 40 )			,	-- Code du point de service	   
 	@sModeLogis					VarChar ( 40 )			,	-- Mode de logistique (CENTRALISATION / PROXIMITE )
+	@sProcessAchem				VarChar ( 30 )			,	-- Process d'acheminement	
 	@sCodePickUp				VarChar ( 20 )			,	-- Code du relais si CENTRALISATION et Choix PickUp
 	@sAdrNomPickUp				VarChar ( 40 )			,	-- Nom du relais si CENTRALISATION et Choix PickUp	
 	@sAdrReferenceAssPickUp		VarChar ( 40 )			,	-- référence du sinistre SPB et du nom de l'assuré à mettre sur le colis du Relais PickUp (dans le cas d'un renvoi)
@@ -193,9 +194,9 @@ Select	@iIdSin			= Convert ( integer, @adcIdsin),
 						   		   nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'CODE_VERROU_SHERPA_SCRIPT', 'P', '' ), '' )),
 		@sDesimlocke	= nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'DESIMLOCKE', 'P', '' ), '' ),
 		@dtDateAchat	= s.dte_ach_port,
-		@iIdAssureur	= sysadm.FN_ID_CIE (s.id_sin),
-		@sLibAssureur   = sysadm.FN_LIB_CIE (s.id_sin),
-		@sLibPolice		= sysadm.FN_LIB_POLICE (s.id_sin)
+		@iIdAssureur	= sysadm.FN_ID_CIE_V02 (s.id_sin, 'P'),
+		@sLibAssureur   = sysadm.FN_LIB_CIE_V02 (s.id_sin, 'P'),
+		@sLibPolice		= sysadm.FN_LIB_POLICE_V02 (s.id_sin, 'P')
 
 From	sysadm.sinistre s, 
 		sysadm.commande c,
@@ -222,6 +223,7 @@ Select 	@dtDeposeLe		= GETDATE(),
 		@sIdFour		= c.id_four,
 		@sPointService	= nullif ( sysadm.FN_CLE_VAL ('HP_ID_POINT_SERV' , c.info_spb_frn_cplt, ';'), ''),
 		@sModeLogis		= nullif ( sysadm.FN_CLE_VAL ('HP_ID_MODE_LOGIS' , c.info_spb_frn_cplt, ';'), ''),
+		@sProcessAchem  = nullif ( sysadm.FN_CLE_VAL ('HP_ID_PROCESS_ACHEM' , c.info_spb_frn_cplt, ';'), ''),
 		@sCodePickUp	= nullif ( sysadm.FN_CLE_VAL ('CODE_PICK_UP' , c.info_spb_frn_cplt, ';'), ''),
 		@sAdrNomPickUp	= nullif ( sysadm.FN_CLE_VAL ('NOM_PICK_UP' , c.info_spb_frn_cplt, ';'), ''),
 		@sAdrReferenceAssPickUp= nullif ( sysadm.FN_CLE_VAL ('REFASS_PICK_UP' , c.info_spb_frn_cplt, ';'), ''),
@@ -322,6 +324,7 @@ If @sDualSim is null Set @sDualSim = ''
 Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'COULEUR', @sCouleur, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
 Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'CAPACITE', @sCapacite, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
 Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DUALSIM', @sDualSim, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'HP_ID_PROCESS_ACHEM', @sProcessAchem, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
 -- /[20240910134438210]
 
 Select 
@@ -440,6 +443,7 @@ Declare
 	@sTypDommage				VarChar ( 100 )			,	-- Chaine contenant les codes des types de dommage sous la forme '#TD1#TD4#TD5#'
 	@sPointService				VarChar ( 40 )			,	-- Code du point de service	   
 	@sModeLogis					VarChar ( 40 )			,	-- Mode de logistique (CENTRALISATION / PROXIMITE )
+	@sProcessAchem				VarChar ( 30 )			,	-- Process d'acheminement	
 	@sCodePickUp				VarChar ( 20 )			,	-- Code du relais si CENTRALISATION et Choix PickUp
 	@sAdrNomPickUp				VarChar ( 40 )			,	-- Nom du relais si CENTRALISATION et Choix PickUp	
 	@sAdrReferenceAssPickUp		VarChar ( 40 )			,	-- référence du sinistre SPB et du nom de l'assuré à mettre sur le colis du Relais PickUp (dans le cas d'un renvoi)
@@ -503,6 +507,9 @@ Declare
 	@sDesimlocke				VarChar( 20 )			,	-- Appareil désimlocké OUI/NON
 	@sInfo_spb_frn_cplt			VarChar ( 800 )				-- Chaîne sérialisée contenant de multiples informations
 
+Declare @sCouleur	Varchar ( 50 ), 
+		@sCapacite	Varchar ( 50 ), 
+		@sDualSim	Varchar ( 50 )
 
 Select	@iIdSin			= Convert ( integer, @adcIdsin),
 		@sLibPersoGti	= cg.lib_gti,
@@ -553,6 +560,7 @@ Select 	@dtDeposeLe		= GETDATE(),
 		@sIdFour		= c.id_four,
 		@sPointService	= nullif ( sysadm.FN_CLE_VAL ('HP_ID_POINT_SERV' , c.info_spb_frn_cplt, ';'), ''),
 		@sModeLogis		= nullif ( sysadm.FN_CLE_VAL ('HP_ID_MODE_LOGIS' , c.info_spb_frn_cplt, ';'), ''),
+		@sProcessAchem  = nullif ( sysadm.FN_CLE_VAL ('HP_ID_PROCESS_ACHEM' , c.info_spb_frn_cplt, ';'), ''),
 		@sCodePickUp	= nullif ( sysadm.FN_CLE_VAL ('CODE_PICK_UP' , c.info_spb_frn_cplt, ';'), ''),
 		@sAdrNomPickUp	= nullif ( sysadm.FN_CLE_VAL ('NOM_PICK_UP' , c.info_spb_frn_cplt, ';'), ''),
 		@sAdrReferenceAssPickUp= nullif ( sysadm.FN_CLE_VAL ('REFASS_PICK_UP' , c.info_spb_frn_cplt, ';'), ''),
@@ -635,6 +643,26 @@ From sysadm.w_commande c
 Where c.id_sin = @adcIdsin
 And   c.id_seq = @aiIdSeq
 
+-- [20240910134438210]
+If @sRefAppSin = 'IFR' 
+	Begin
+		Select 
+			@sCouleur = rTrim ( lTrim ( packtype )), 
+			@sCapacite = rTrim ( lTrim ( java )), 
+			@sDualSim = IIF ( stndby = 'DUALSIM', 'OUI', 'NON' )
+		From sysadm.ifr i
+		Where i.marque = @sMarqAppSin
+		And   i.reference = @sModlAppSin
+	End 
+If @sCouleur is null Set @sCouleur = ''
+If @sCapacite is null Set @sCapacite = ''
+If @sDualSim is null Set @sDualSim = ''
+
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'COULEUR', @sCouleur, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'CAPACITE', @sCapacite, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DUALSIM', @sDualSim, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'HP_ID_PROCESS_ACHEM', @sProcessAchem, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+-- /[20240910134438210]
 
 Select 
 	@aiCas	'iCas',
@@ -990,13 +1018,7 @@ Set @sSql =
 '		dhs.activity_code, '+
 '		dhs.activity_return_code, '+
 '		dhs.activity_reason_code, '+
-'		Case ' +
-'			When dsh.mode_logis = ''CENTRALIZATION'' and code_pickup is not null ' +
-'				Then ''RPICKUP''' +
-'			When dsh.mode_logis = ''CENTRALIZATION'' and code_pickup is null ' +
-'				Then ''BPPAYE''' +
-'			Else null ' + 
-'		End typ_ba_aller, ' +	
+'		rTrim ( dsh.mode_logis ) + ''/'' + sysadm.FN_CLE_VAL ( ''HP_ID_PROCESS_ACHEM'', dsh.info_spb_frn_cplt, '';'' ) typ_ba_aller,' +
 '		dhs.perte_aller, '+
 '		dhs.diag_video_engage, '+
 '		dhs.resolu_diag_video, '+

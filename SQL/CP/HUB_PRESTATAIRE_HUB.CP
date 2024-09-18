@@ -2018,9 +2018,10 @@ If @aiCas in ( 1, 2 )
   Begin
 	WaitFor Delay '00:00:00'
 
-	Select 'AUCUN', null
+	-- Select 'AUCUN', null
+	-- Select null, null from edi.DepotHubToSimpa2Presta
 
-	/*
+	
 	Select	LEFT ( 'POST_OFFICE', 30 ) 'Id_Process_Achem_Hp',
 			Left ( 'Bureau de poste', 40 ) 'Lib_Process_Achem_Hp' --  [A_REPRENDRE]
 	Union
@@ -2029,10 +2030,32 @@ If @aiCas in ( 1, 2 )
 	Union
 	Select	LEFT ( 'PICK_UP_TRANSPORTATION', 30 ),
 			Left ( 'Enlèvement transporteur', 40 ) 
+/*
 	Union
 	Select	REPLICATE ( 'A', 29 ) + 'B',
 			REPLICATE ( 'a', 39 ) + 'b'
-	*/
+
+
+	Union
+	Select	LEFT ( 'PICK_UP_POIjjjjNT', 30 ), 
+			Left ( 'Point relais', 40 ) 
+	Union
+	Select	LEFT ( 'PICK_UP_TRANSPeeeORTATION', 30 ),
+			Left ( 'Enlèvement transporteur', 40 ) 
+	Union
+	Select	REPLICATE ( 'A', 29 ) + 'B',
+			REPLICATE ( 'a', 39 ) + 'b'
+	Union
+	Select	LEFT ( 'PICK_ffffUP_POINT', 30 ), 
+			Left ( 'Point relais', 40 ) 
+	Union
+	Select	LEFT ( 'PICK_UP_TRANzzzSPORTATION', 30 ),
+			Left ( 'Enlèvement transporteur', 40 ) 
+	Union
+	Select	REPLICATE ( 'A', 29 ) + 'B',
+			REPLICATE ( 'a', 39 ) + 'b'			
+
+*/
 
   End
 
