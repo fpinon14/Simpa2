@@ -72,6 +72,9 @@ String isCodePickUp
 String isAdrMailAss
 String isIdHubPresta
 
+String isIdAdh, isLibGrpContractant
+Int 	 iiIdGrpContractant
+
 Long   ilIdprod
 Long   ilIdGti
 Long   ilAdrCodCiv	
@@ -93,12 +96,13 @@ public function boolean wf_valider_point_service ()
 public function boolean wf_valider_type_dommage_et_action ()
 public subroutine wf_consultation_aller_s2_vers_hub ()
 public function boolean wf_appel_relais_pickup ()
+public subroutine wf_recuperation_process_acheminement ()
 end prototypes
 
 event chargement_typ_dommage();//*-----------------------------------------------------------------
 //*
 //* Objet			: w_sp_trt_saisie_hub_prestataire
-//* Evenement 		: 
+//* Evenement 		: chargement_typ_dommage
 //* Auteur			: JFF
 //* Date				: 11/03/2024
 //* Libellé			: 
@@ -117,6 +121,8 @@ Long lTotRow
 Int iCle
 
 iCle = F_CLE_NUMERIQUE ( "HP252_276_HUB_PRESTA" )
+
+This.Title = "Connexion au HUB PRESTATAIRE : Choix du type de dommage"
 
 cb_valider.Hide ()
 cb_abandonner.Hide ()
@@ -343,8 +349,9 @@ Int iCle, iIdGrpContractant, iCpt
 sCodePays = ""
 If Len ( Trim ( isAdrCp) ) = 5 And Trim ( isAdrCp ) <> '00000' Then sCodePays = "FR"
 
-
 iCle = F_CLE_NUMERIQUE ( "HP252_276_HUB_PRESTA" )
+
+This.Title = "Connexion au HUB PRESTATAIRE : Choix du point de service"
 
 isTrtFen = "POINTSERVICE"
 
@@ -421,7 +428,7 @@ For iCpt = 1 To iTotRow
 		dw_1.SetFocus ()
 		
 		F_message(stMessage)
-		cb_Abandonner.PostEvent ( Clicked!)	
+		cb_Abandonner.PostEvent ( Clicked!)
 	End IF 
 	
 	sVal1 = sVal
@@ -446,7 +453,7 @@ For iCpt = 1 To iTotRow
 
 	
 	dw_1.SetITem ( iCpt, "LibFour", sVal )
-
+	
 	/* Plus nécessaire, on garde le code du mode tel que donné par le Hub et on a à présent la variable de libellé donné par BLN
 	sVal = dw_1.GetItemString ( iCpt, "idModeLogis" ) 
 	Choose Case sVal 
@@ -456,8 +463,8 @@ For iCpt = 1 To iTotRow
 		Case "PROXIMITY" 
 			sVal = "Proximité"
 	End Choose 
-	dw_1.SetITem ( iCpt, "idModeLogis", sVal )			
-	*/
+	dw_1.SetITem ( iCpt, "idModeLogis", sVal ) 
+	*/  
 		
 	sVal = dw_1.GetItemString ( iCpt, "codePaysPointServ" ) 		
 	Choose Case sVal 
@@ -549,14 +556,16 @@ If iTotRow <= 0 Then
 	cb_Abandonner.PostEvent ( Clicked!)	
 End IF 
 
+/* même pour un point de service, je veux que le GT le vois et le choissise, pas d'automatisation
 If isTypActionS2 = "A_COMMANDER" And dw_1.RowCount() = 1 Then
 	dw_1.SelectRow (1, True)
 	cb_Valider.PostEvent ( Clicked! )
 Else	
-	dw_1.Show ()
-	dw_1.BringToTop = TRUE
-	dw_1.SetFocus ()
-End IF 
+*/	
+dw_1.Show ()
+dw_1.BringToTop = TRUE
+dw_1.SetFocus ()
+
 end subroutine
 
 public function boolean wf_valider_process_acheminement ();//*-----------------------------------------------------------------
@@ -578,16 +587,90 @@ public function boolean wf_valider_process_acheminement ();//*------------------
 //*-----------------------------------------------------------------
 
 n_cst_string lnvPFCString
-String sIdModeLogis, sRetAPI 
+String sIdModeLogis, sRetAPI, sIdHubProcessAchem
 st_point_relai_chronopost relai_chrono
+Integer iTotRow, iCpt, iRowSelect
 Boolean bDecision
 
 bDecision = False
 
+dw_1.AcceptText()
+
+iRowSelect = Dw_1.GetSelectedRow ( 0 ) 
+
+sIdHubProcessAchem = Dw_1.GetItemString ( iRowSelect, "id_process_achem_hp" ) 
+
+If IsNull ( sIdHubProcessAchem ) Or Trim ( sIdHubProcessAchem ) = "" Then
+	stMessage.sTitre		= "Pas de retour Hub Prestataire"
+	stMessage.sCode		= "HUBP017"
+	stMessage.Icon			= Exclamation!
+	stMessage.bErreurG	= FALSE
+	stMessage.Bouton		= Ok!
+
+	If IsNull ( sIdHubProcessAchem ) Then stMessage.sVar[1]    = "null"
+	If Trim ( sIdHubProcessAchem ) = "" Then stMessage.sVar[1]    = "vide"	
+
+	dw_1.Show ()
+	dw_1.BringToTop = TRUE
+	dw_1.SetFocus ()
+	
+	F_message(stMessage)
+	cb_Abandonner.PostEvent ( Clicked!)	
+	Return False
+End IF 
+
+If sIdHubProcessAchem = "AUCUN" Then
+	lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_INFO_SPB_FRN", "3520", ";")
+	
+	stMessage.sTitre		= "Pas de retour Hub Prestataire"
+	stMessage.sCode		= "HUBP019"
+	stMessage.Icon			= Information!
+	stMessage.bErreurG	= FALSE
+	stMessage.Bouton		= Ok!	
+	
+	F_message(stMessage)
+	
+Else 
+	lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_INFO_SPB_FRN", "3510", ";")  
+End If 
+
+lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_ID_PROCESS_ACHEM", sIdHubProcessAchem , ";")	
+
+// CAS du Relais Pick Up client/assuré
+If sIdHubProcessAchem = "PICK_UP_POINT" Then
+
+	Do While NOT bDecision
+	
+		bDecision = This.wf_appel_relais_pickup ()
+		
+		If NOT bDecision Then
+			stMessage.sTitre		= "Abandon de la prestation ?"
+			stMessage.sCode		= "HUBP018 "
+			stMessage.Icon			= Information!
+			stMessage.bErreurG	= FALSE
+			stMessage.Bouton		= YESNO!
+			
+			If F_message(stMessage) = 1 Then 
+				bDecision = TRUE
+				cb_Abandonner.PostEvent ( Clicked!)	
+				Return False
+			End If 
+
+		End If 
+		
+	Loop 		
+End IF 
+
+Return True
+
+
+
+
+/*
 Choose case isTypActionS2 
 	Case "A_REPARER", "A_DIAGNOSTIQUER"
 
-		sIdModeLogis = Upper( lnvPFCString.of_Getkeyvalue ( isChaineRetour, "HP_ID_MODE_LOGIS", ";"))
+		sIdModeLogis = Upper( lnvPFCString.of_Getkeyvalue ( isChaineRetour, "HP_ID_MODE_LOGIS", ";")) 
 		
 		If sIdModeLogis = "PROXIMITY" Then
 			lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_INFO_SPB_FRN", "3530", ";")
@@ -598,7 +681,7 @@ Choose case isTypActionS2
 			
 			Do While NOT bDecision
 			
-				stMessage.sTitre		= "Choix mode logistique Centralisation"
+				stMessage.sTitre		= "Choix mode logistique Centralisation" 
 				stMessage.Icon			= Question!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= YESNO!
@@ -622,7 +705,7 @@ Choose case isTypActionS2
 
 			Do While NOT bDecision
 		
-				stMessage.sTitre		= "Choix mode logistique Centralisation"
+				stMessage.sTitre		= "Choix mode logistique Centralisation" 
 				stMessage.Icon			= Question!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= YESNO!
@@ -642,8 +725,9 @@ Choose case isTypActionS2
 			Loop 		
 
 End CHoose 
+*/
 
-Return True
+
 end function
 
 public function boolean wf_valider_point_service ();//*-----------------------------------------------------------------
@@ -695,7 +779,7 @@ End If
 
 IF IsNull ( sIdModeLogis ) Or sIdModeLogis = "" Then
 	bRet = False
-	sMesErr += "- Le mode logistic" + "~n~r"
+	sMesErr += "- Le mode logistic" + "~n~r" 
 End If 
 
 IF IsNull ( sIdHubPresta ) Or sIdHubPresta = "" Then
@@ -715,7 +799,7 @@ If Not bRet Then
 	Return False
 End If 	
 
-// [ICI] Reprendre ces 4 données en arg de la PS RecupProcess en plus des args précédent du point de service.
+
 lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_ID_HUB_PRESTA", sIdHubPresta , ";")
 lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_ID_FOUR", sIdFour, ";")
 lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_ID_POINT_SERV", sIdPointService, ";")
@@ -906,7 +990,7 @@ public function boolean wf_appel_relais_pickup ();//*---------------------------
 
 
 n_cst_string lnvPFCString
-String sIdModeLogis, sRetAPI 
+String sIdModeLogis, sRetAPI
 st_point_relai_chronopost relai_chrono
 
 			
@@ -981,6 +1065,182 @@ lnvPFCString.of_Setkeyvalue ( isChaineRetour, "ADRVILLE_PICK_UP", isAdrVillePick
 			
 Return True
 end function
+
+public subroutine wf_recuperation_process_acheminement ();//*-----------------------------------------------------------------
+//*
+//* Objet			: w_sp_trt_saisie_hub_prestataire
+//* Fonction 		: wf_recuperation_Process_Acheminement
+//* Auteur			: JFF
+//* Date				: 11/03/2024
+//* Libellé			: 
+//* Commentaires	: 
+//*
+//* Arguments		: 
+//*
+//* Retourne		: long
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//* #..   ...   ../../....   
+//*-----------------------------------------------------------------
+
+String sTypDom, sVal, sCodePays, sVal1
+String sIdFour, sIdPointService, sIdModeLogis 
+n_cst_string lnvPFCString
+Int iCoefH, iCoefV, iTotRow, iAjoutCoefV 
+Int iCle, iCpt 
+
+sCodePays = ""
+If Len ( Trim ( isAdrCp) ) = 5 And Trim ( isAdrCp ) <> '00000' Then sCodePays = "FR"
+
+iCle = F_CLE_NUMERIQUE ( "HP252_276_HUB_PRESTA" )
+
+This.Title = "Connexion au HUB PRESTATAIRE : Choix du process d'acheminement"
+
+isTrtFen = "PROCESS_ACHEMINEMENT"
+
+st_attente_hub.Height = 690
+st_attente_hub.Y = 200
+st_attente_hub.text  = "~n~rEn attente de réponse du HUB PRESTATAIRE....~n~r"
+st_attente_hub.text += "~n~r"
+st_attente_hub.text += "Appel extérieur par API~n~r"
+st_attente_hub.text += "Recherche des process d~'acheminement disponibles~n~r"
+st_attente_hub.text += "~n~r"
+st_attente_hub.text += "Cela peut prendre quelques minutes...~n~r"
+st_attente_hub.Show()
+st_attente_hub.BringToTop = TRUE
+
+This.Height = 1300
+This.Width  = 3540
+dw_1.X = 23
+dw_1.Y = 16
+dw_1.Height = 980
+dw_1.Width  = This.Width - 80 
+cb_abandonner.X = 1247
+cb_abandonner.Y = 1032
+cb_Valider.X = 1737
+cb_Valider.Y = 1032
+
+cb_valider.Hide()
+cb_abandonner.Hide()
+st_info.Hide ()
+dw_1.Hide ()
+
+isIdAdh = Fill ( "", 50)
+isLibGrpContractant = Fill ( "", 35)
+SQLCA.PS_HP276_S_S2_DATA_DOSSIER  ( ilIdSin, isIdAdh, iiIdGrpContractant, isLibGrpContractant )
+
+
+dw_1.DataObject = "d_trt_saisie_hub_process_acheminement"
+dw_1.SetTransObject ( itrHubPrestataire )
+
+
+
+sTypDom = lnvPFCString.of_Getkeyvalue ( isChaineRetour, "HP_TYP_DOM", ";")
+sIdFour = F_CLE_VAL ( "HP_ID_FOUR", isChaineRetour, ";")
+sIdPointService = F_CLE_VAL ( "HP_ID_POINT_SERV", isChaineRetour, ";")
+sIdModeLogis = F_CLE_VAL ( "HP_ID_MODE_LOGIS", sIdModeLogis, ";")
+
+iTotRow = dw_1.Retrieve ( & 
+	iCle, &
+	ilIdprod, &
+	ilIdGti, &
+	isMarqAppSin, &
+	isModlAppSin, &
+	isTypAppSin, &
+	sTypDom, &
+	isTypActionS2, &
+	isIdAdh, &
+	ilIdSin, &
+	iiIdGrpContractant, &
+	isLibGrpContractant, &
+	ilAdrCodCiv, &
+	isAdrNom, &
+	isAdrPreNom, &
+	isAdrLivr1, &
+	isAdrLivr2, &
+	isAdrCplt, &
+	isAdrCp, &
+	isAdrVille, &
+	sCodePays, &
+	sIdFour, &
+	sIdPointService, &
+	sIdModeLogis )	
+
+If iTotRow <= 0 Then
+	stMessage.sTitre		= "Erreur Hub Prestataire"
+	stMessage.sCode		= "HUBP016"
+	stMessage.Icon			= Exclamation!
+	stMessage.bErreurG	= FALSE
+	stMessage.Bouton		= Ok!
+	
+	dw_1.Show ()
+	dw_1.BringToTop = TRUE
+	dw_1.SetFocus ()
+	
+	F_message(stMessage)
+	cb_Abandonner.PostEvent ( Clicked!)		
+End If 
+
+dw_1.Sort ()
+
+sVal1 = Upper ( dw_1.GetItemString ( 1, "id_process_achem_hp" ))
+
+If iTotRow = 1 And sVal1 = "AUCUN" Then 
+	st_attente_hub.Hide()
+	dw_1.SelectRow (1, True)
+	cb_Valider.PostEvent ( Clicked! )
+	Return
+End If 
+
+
+
+
+/*
+iCoefH = 500
+iCoefV = 500
+iAjoutCoefV = 500
+iCoefV = iTotRow * iCoefV 
+If iCoefV > 1800 Then iCoefV = 1800
+
+This.X = This.X - iCoefH / 2
+This.Y = This.Y - iCoefV / 2
+
+This.Width = This.Width + iCoefH
+dw_1.Width = dw_1.Width + iCoefH
+
+If iTotRow >= 4 Then
+	This.Height = This.Height + iCoefV + iAjoutCoefV
+	dw_1.Height = dw_1.Height + iCoefV + iAjoutCoefV
+	cb_abandonner.Y = cb_abandonner.Y  + iCoefV + iAjoutCoefV
+	cb_Valider.Y = cb_Valider.Y + iCoefV + iAjoutCoefV	
+	st_info.Y = st_info.Y + iCoefV + iAjoutCoefV	
+Else 	
+	This.Height = This.Height + iCoefV 
+	dw_1.Height = dw_1.Height + iCoefV
+	cb_abandonner.Y = cb_abandonner.Y  + iCoefV 
+	cb_Valider.Y = cb_Valider.Y + iCoefV 	
+	st_info.Y = st_info.Y + iCoefV 
+End If 
+
+cb_abandonner.X = cb_abandonner.X + iCoefH / 2
+cb_Valider.X = cb_Valider.X + iCoefH / 2
+st_info.X = st_info.X + iCoefH / 2
+*/
+
+cb_valider.enabled = FALSE
+
+st_attente_hub.Hide()
+st_attente_hub.Height = 228
+st_attente_hub.Y = 412
+st_attente_hub.text = "~n~rEn attente de réponse du HUB PRESTATAIRE...."
+
+dw_1.Show ()
+cb_valider.Show ()
+cb_abandonner.Show ()
+
+
+end subroutine
 
 on w_sp_trt_saisie_hub_prestataire.create
 this.st_info=create st_info
@@ -1264,12 +1524,13 @@ Choose Case isTrtFen
 	Case "POINTSERVICE"
 		bRet = Parent.wf_Valider_Point_Service ()
 		
-		// [Ici] appeler une Parent.wf_Recuperation_Process_Acheminement ()
-		// avec un type de fren "PROCESS_ACHEMINEMENT"
-		
-		If bRet Then
-			bRet = Parent.wf_Valider_Process_Acheminement ()
+		If bRet then
+			Parent.wf_Recuperation_Process_Acheminement ()
 		End If 
+		
+	Case "PROCESS_ACHEMINEMENT"
+		
+		bRet = Parent.wf_Valider_Process_Acheminement ()
 		
 		If bRet Then
 			// messagebox ("", isChaineRetour )
@@ -1327,6 +1588,12 @@ If isTrtFen = "POINTSERVICE" Then
 	This.SelectRow ( 0, False)
 
 End If 
+
+
+If isTrtFen = "PROCESS_ACHEMINEMENT" Then 
+	This.SelectRow ( 0, False)
+End If 
+
 
 If row > 0 Then 
 	

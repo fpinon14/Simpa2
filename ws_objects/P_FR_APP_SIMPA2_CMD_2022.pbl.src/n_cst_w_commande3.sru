@@ -28993,7 +28993,7 @@ Choose Case ascas
 		sTabValRet [12] ="ADRCP_PICK_UP"
 		sTabValRet [13] ="ADRVILLE_PICK_UP"
 		sTabValRet [14] ="HP_INFO_SPB_FRN"
-
+		sTabValRet [15] ="HP_ID_PROCESS_ACHEM" 
 
 		iTotTabValRet = UpperBound ( sTabValRet  )
 		For iCpt = 1 To iTotTabValRet 
