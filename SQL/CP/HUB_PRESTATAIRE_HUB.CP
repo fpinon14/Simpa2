@@ -34,7 +34,7 @@ Go
 -- LES TABLES  --
 -----------------
 
-/*
+
 If Exists ( Select Top 1 1 From sys.objects where name = 'parametre' and type = 'U' ) Drop Table edi.parametre
 
 CREATE TABLE edi.parametre(
@@ -67,8 +67,8 @@ CREATE TABLE edi.DepotSimpa2ToHubPresta(
 	id_hub_presta				VarChar ( 20 )			NOT NULL,   -- Identifiant sur le Hub Prestataire de la prestation
 	id_four						Char (3)				NOT NULL,   -- /!\ IMPORTANT : Code Fournisseur officiel SPB, ce code sera associé à un RIB de règlement du fournisseur chez Volcanes
 	typ_dommage					VarChar ( 100 )				NULL,	-- Chaine contenant les codes des types de dommage sous la forme '#TD1#TD4#TD5#'
-	point_service				VarChar ( 20 )				NULL,	-- Code du point de service	   
-	mode_logis					VarChar ( 20 )				NULL,	-- Mode de logistique (CENTRALISATION / PROXIMITE )
+	point_service				VarChar ( 40 )				NULL,	-- Code du point de service	   
+	mode_logis					VarChar ( 40 )				NULL,	-- Mode de logistique (CENTRALISATION / PROXIMITE )
 	code_pickup					VarChar ( 20 )				NULL,	-- Code du relais si CENTRALISATION et Choix PickUp
 	nom_pickup					VarChar ( 40 )				NULL,	-- Nom du relais si CENTRALISATION et Choix PickUp	
 	ref_ass_pickup				VarChar ( 40 )				NULL,	-- référence du sinistre SPB et du nom de l'assuré à mettre sur le colis du Relais PickUp (dans le cas d'un renvoi)
@@ -172,8 +172,8 @@ CREATE TABLE edi.DepotHubToSimpa2Presta(
 	diag_video_engage			VarChar ( 3  )				NULL,   -- OUI/NON Diag vidéo engagé
 	resolu_diag_video			VarChar ( 3  )				NULL,   -- OUI/NON résolu par Diag vidéo 
 	dte_rdv_conf				DateTime					NULL,   -- Date de rdv confirmé pour déplacement à domicile 
-	mode_logis_ret				VarChar ( 20 )				NULL,   -- CENTRALISATION / PROXIMITE, Confirmation du prestataire sur le mode rééllement utilisé par l'assuré
-	point_service_ret			VarChar ( 20 )				NULL,   -- Code du point de service où l'assuré s'est rééllement rendu ou bien a envoyé son appareil
+	mode_logis_ret				VarChar ( 40 )				NULL,   -- CENTRALISATION / PROXIMITE, Confirmation du prestataire sur le mode rééllement utilisé par l'assuré
+	point_service_ret			VarChar ( 40 )				NULL,   -- Code du point de service où l'assuré s'est rééllement rendu ou bien a envoyé son appareil
 	dte_rcp_frn					DateTime					NULL,   -- Date de réception de l'appareil chez le prestataire
 	site_action					VarChar ( 20 )				NULL,   -- STATION/DOMICILE
 	app_incomplet				VarChar ( 3  )				NULL,   -- OUI/NON si appareil incomplet
@@ -240,7 +240,7 @@ Create index idx4_TraceRecupRetourParSimpa2 on edi.TraceRecupRetourParSimpa2 (id
 
 Delete edi.parametre where ref_cpt = 'ID_LOT_TRC'
 Insert into edi.parametre Values ( 'ID_LOT_TRC', 0, 1 )
-*/
+
 
 -----------------
 -- LES PS      --
@@ -456,8 +456,9 @@ If @aiCas in ( 1, 2 )
 		Select	LEFT ( 'AUYPSQZMJB', 20 ) 'idHubPresta',
 				Left ( 'ANV', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
 				null,
-				Left ( 'ANV0001', 20) 'idPointServ', 
-				Left ( 'CENTRALIZATION', 20 ) 'idModeProcess', 
+				Left ( 'ANV0001', 40) 'idPointServ', 
+				Left ( 'CENTRALIZATION', 40 ) 'idModeLogis', 
+				Left ( 'Centralisation', 40 ) 'LibModeLogis', --  [A_REPRENDRE]
 				Left ( 'Nom point de service ANV', 255 ) 'nomPointServ',
 				Left ( 'Adresse1 point de service ANV', 255 ) 'adr1PointServ',
 				Left ( 'Adresse2 point de service ANV', 255 ) 'adr2PointServ',
@@ -472,8 +473,9 @@ If @aiCas in ( 1, 2 )
 	Select	LEFT ( 'AUYPSQZMJB', 20 ) 'idHubPresta',
 			Left ( 'ANV', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
 			null,
-			Left ( 'ANV0001', 20) 'idPointServ', 
-			Left ( 'CENTRALIZATION', 20 ) 'idModeProcess', 
+			Left ( 'ANV0001', 40) 'idPointServ', 
+			Left ( 'CENTRALIZATION', 40 ) 'idModeLogis', 
+			Left ( 'Centralisation', 40 ) 'LibModeLogis', --  [A_REPRENDRE]
 			Left ( 'Nom point de service ANV', 255 ) 'nomPointServ',
 			Left ( 'Adresse1 point de service ANV', 255 ) 'adr1PointServ',
 			Left ( 'Adresse2 point de service ANV', 255 ) 'adr2PointServ',
@@ -488,7 +490,8 @@ If @aiCas in ( 1, 2 )
 			Left ( 'ANV', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
 			null,
 			Left ( 'ANV0002', 20) 'idPointServ', 
-			Left ( 'PROXIMITY', 20 ) 'idModeProcess', 
+			Left ( 'PROXIMITY', 40 ) 'idModeLogis', 
+			Left ( 'Proximité', 40 ) 'LibModeLogis', --  [A_REPRENDRE]
 			Left ( 'Nom point de service ANV', 255 ) 'nomPointServ',
 			Left ( 'Adresse1 point de service ANV', 255 ) 'adr1PointServ',
 			Left ( 'Adresse2 point de service ANV', 255 ) 'adr2PointServ',
@@ -503,7 +506,8 @@ If @aiCas in ( 1, 2 )
 			Left ( 'ANV', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
 			null,
 			Left ( 'ANV0003', 20) 'idPointServ', 
-			Left ( 'PROXIMITY', 20 ) 'idModeProcess', 
+			Left ( 'PROXI_CENTRALIZATION', 40 ) 'idModeLogis', 
+			Left ( 'Proximité / Centralisation', 40 ) 'LibModeLogis', --  [A_REPRENDRE]
 			Left ( 'Nom point de service ANV', 255 ) 'nomPointServ',
 			Left ( 'Adresse1 point de service ANV', 255 ) 'adr1PointServ',
 			Left ( 'Adresse2 point de service ANV', 255 ) 'adr2PointServ',
@@ -518,7 +522,8 @@ If @aiCas in ( 1, 2 )
 			Left ( 'ANV', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
 			null,
 			Left ( 'ANV0004', 20) 'idPointServ', 
-			Left ( 'PROXIMITY', 20 ) 'idModeProcess', 
+			Left ( 'AT_HOME', 40 ) 'idModeLogis', 
+			Left ( 'À domicile', 40 ) 'LibModeLogis', --  [A_REPRENDRE]
 			Left ( 'Nom point de service ANV', 255 ) 'nomPointServ',
 			Left ( 'Adresse1 point de service ANV', 255 ) 'adr1PointServ',
 			Left ( 'Adresse2 point de service ANV', 255 ) 'adr2PointServ',
@@ -533,7 +538,8 @@ If @aiCas in ( 1, 2 )
 			Left ( 'ANV', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
 			null,
 			Left ( 'ANV0005', 20) 'idPointServ', 
-			Left ( 'PROXIMITY', 20 ) 'idModeProcess', 
+			Left ( 'REMOTELY', 40 ) 'idModeLogis', 
+			Left ( 'À distance', 40 ) 'LibModeLogis', --  [A_REPRENDRE]
 			Left ( 'Nom point de service ANV', 255 ) 'nomPointServ',
 			Left ( 'Adresse1 point de service ANV', 255 ) 'adr1PointServ',
 			Left ( 'Adresse2 point de service ANV', 255 ) 'adr2PointServ',
@@ -548,7 +554,8 @@ If @aiCas in ( 1, 2 )
 			Left ( 'ASF', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
 			null,
 			Left ( 'ASF0001', 20) 'idPointServ', 
-			Left ( 'CENTRALIZATION', 20 ) 'idModeProcess', 
+			Left ( 'CENTRALIZATION', 20 ) 'idModeLogis', 
+			Left ( 'Centralisation', 40 ) 'LibModeLogis', --  [A_REPRENDRE]
 			Left ( 'Nom point de service ASF', 255 ) 'nomPointServ',
 			Left ( 'Adresse1 point de service ASF', 255 ) 'adr1PointServ',
 			Left ( 'Adresse2 point de service ASF', 255 ) 'adr2PointServ',
@@ -563,7 +570,8 @@ If @aiCas in ( 1, 2 )
 			Left ( 'ASF', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
 			null,
 			Left ( 'ASF0002', 20) 'idPointServ', 
-			Left ( 'PROXIMITY', 20 ) 'idModeProcess', 
+			Left ( 'PROXIMITY', 20 ) 'idModeLogis', 
+			Left ( 'Proximité', 40 ) 'LibModeLogis', --  [A_REPRENDRE]
 			Left ( 'Nom point de service ASF', 255 ) 'nomPointServ',
 			Left ( 'Adresse1 point de service ASF', 255 ) 'adr1PointServ',
 			Left ( 'Adresse2 point de service ASF', 255 ) 'adr2PointServ',
@@ -578,7 +586,8 @@ If @aiCas in ( 1, 2 )
 			Left ( 'ASF', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
 			null,
 			Left ( 'ASF0003', 20) 'idPointServ', 
-			Left ( 'PROXIMITY', 20 ) 'idModeProcess', 
+			Left ( 'PROXIMITY', 20 ) 'idModeLogis', 
+			Left ( 'Proximité', 40 ) 'LibModeLogis', --  [A_REPRENDRE]
 			Left ( 'Nom point de service ASF', 255 ) 'nomPointServ',
 			Left ( 'Adresse1 point de service ASF', 255 ) 'adr1PointServ',
 			Left ( 'Adresse2 point de service ASF', 255 ) 'adr2PointServ',
@@ -654,8 +663,8 @@ CREATE procedure edi.PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATAIRE
 		@sIdHubPresta VarChar ( 20 ) ,
 		@sIdFour VarChar ( 3 ) ,
 		@sTypDommage VarChar ( 100 ) ,
-		@sPointService VarChar ( 20 ) ,
-		@sModeProcess VarChar ( 20 ) ,
+		@sPointService VarChar ( 40 ) ,
+		@sModeLogis VarChar ( 40 ) ,
 		@sCodePickUp VarChar ( 20 ) ,
 		@sAdrNomPickUp VarChar ( 40 ) ,
 		@sAdrReferenceAssPickUp VarChar ( 40 ) ,
@@ -852,7 +861,7 @@ If @aiCas in ( 2, 3 )
 			@sIdFour,
 			@sTypDommage,
 			@sPointService,
-			@sModeProcess,
+			@sModeLogis,
 			@sCodePickUp,
 			@sAdrNomPickUp,
 			@sAdrReferenceAssPickUp,
@@ -1352,8 +1361,8 @@ CREATE procedure edi.PS_HP276_I_HP_INSERTION_ACTIVITY_HUB_TO_SIMPA2
 	@asDiagVideoEngage		VarChar ( 3  ),
 	@asResoluDiagVideo		VarChar ( 3  ),
 	@adtDteRdvConf		DateTime,
-	@asModeLogisRet		VarChar ( 20 ),
-	@asPointServiceRet	VarChar ( 20 ),
+	@asModeLogisRet		VarChar ( 40 ),
+	@asPointServiceRet	VarChar ( 40 ),
 	@adtDteRcpFrn		DateTime,
 	@asSiteAction		VarChar ( 20 ),
 	@adtDteFinTrait		DateTime,
@@ -1634,8 +1643,8 @@ CREATE procedure edi.PS_HP276_I_HP_TRANSFERT_PRESTA_VERS_HUB_PRESTATAIRE
 		@sIdHubPresta VarChar ( 20 ) ,
 		@sIdFour VarChar ( 3 ) ,
 		@sTypDommage VarChar ( 100 ) ,
-		@sPointService VarChar ( 20 ) ,
-		@sModeProcess VarChar ( 20 ) ,
+		@sPointService VarChar ( 40 ) ,
+		@sModeLogis VarChar ( 40 ) ,
 		@sCodePickUp VarChar ( 20 ) ,
 		@sAdrNomPickUp VarChar ( 40 ) ,
 		@sAdrReferenceAssPickUp VarChar ( 40 ) ,
@@ -1713,7 +1722,7 @@ Declare @iError Integer
 			@sIdFour,
 			@sTypDommage,
 			@sPointService,
-			@sModeProcess,
+			@sModeLogis,
 			@sCodePickUp,
 			@sAdrNomPickUp,
 			@sAdrReferenceAssPickUp,
@@ -1952,5 +1961,99 @@ From edi.DepotHubToSimpa2Presta dhs
 Where dhs.id_hub_presta = @sIdHubPresta
 Order by id_depot_hub
 
+Go
+
+
+-------------------------------------------------------------------
+--
+-- Procédure            :       PS_HP276_S_HP_PROCESS_ACHEMINEMENT
+-- Auteur               :       JFF
+-- Date                 :       12/09/2024
+-- Libell‚              :       [HP252_276_HUB_PRESTA]
+-- Commentaires         :       Renvoie vers SIMPA2, à partir du HUB, les process d'acheminement possibles que propose le HUB selon "n" critères
+--                              /!\ A COMPILER SUR LA BASE PRESTATAIRE /!\
+--
+--								Prévoir de changer le schéma sysdam en [edi] pour la compil sur la base du HUB
+--
+-- Retourne             :       rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_PROCESS_ACHEMINEMENT' AND type = 'P' )
+        DROP procedure edi.PS_HP276_S_HP_PROCESS_ACHEMINEMENT
+GO
+
+
+CREATE procedure edi.PS_HP276_S_HP_PROCESS_ACHEMINEMENT
+	    @aiCas				Tinyint,
+		@adcIdProd			Integer,
+		@adcIdGti			Integer,
+		@asMarqAppSin		VarChar ( 35 ),
+		@asModlAppSin		VarChar ( 35 ),
+		@asTypAppSin		VarChar ( 35 ),
+		@asTypDommage		VarChar ( 100 ),
+		@asTypPrestation    VarChar ( 20 ),
+		@asIdAdh			VarChar ( 19 ),
+		@aiIdSin			Integer,
+		@aiIdGrpContractant Integer,
+		@asLibGrpContractant Varchar ( 35 ),
+		@aiCiv				Integer,
+		@asNom				VarChar ( 35 ),
+		@asPrenom			VarChar ( 35 ),
+		@asAdr1				VarChar ( 35 ),
+		@asAdr2				VarChar ( 35 ),
+		@asAdrCplt			VarChar ( 35 ),
+		@asAdrCP			VarChar ( 5 ),
+		@asAdrVille			VarChar ( 35 ),
+		@asCodePays			VarChar ( 5 ),
+		@asIdFour			Varchar ( 3 ), -- Ajout pour Acheminement
+		@asIdPointService   VarChar ( 40 ), -- Ajout pour Acheminement
+		@asIdModeLogistique	VarChar ( 40 ) -- Ajout pour Acheminement
+
+AS
+
+---------------------------------------------------------------------------------
+-- Cas Test Pour JF sur la base SIMPA2 Et HUB PRESTA, Retour en dur (bouchon)  --
+-- /!\ A laisser !													           --
+---------------------------------------------------------------------------------
+If @aiCas in ( 1, 2 )
+  Begin
+	WaitFor Delay '00:00:00'
+
+	Select 'AUCUN', null
+
+	/*
+	Select	LEFT ( 'POST_OFFICE', 30 ) 'Id_Process_Achem_Hp',
+			Left ( 'Bureau de poste', 40 ) 'Lib_Process_Achem_Hp' --  [A_REPRENDRE]
+	Union
+	Select	LEFT ( 'PICK_UP_POINT', 30 ), 
+			Left ( 'Point relais', 40 ) 
+	Union
+	Select	LEFT ( 'PICK_UP_TRANSPORTATION', 30 ),
+			Left ( 'Enlèvement transporteur', 40 ) 
+	Union
+	Select	REPLICATE ( 'A', 29 ) + 'B',
+			REPLICATE ( 'a', 39 ) + 'b'
+	*/
+
+  End
+
+-------------------------------------------------------------------------------
+-- Cas réél de retour pour Boulenouar, SELECT Réél sur la base  HUB Presta   --
+-- à créer par BLN en respectant les formats des champs/colonnes du SELECT.  --
+-------------------------------------------------------------------------------
+If @aiCas = 3 
+  Begin
+	Select 'TOTO'
+	/*
+	SELECT 
+
+	FROM
+
+	WHERE 
+
+	ORDER BY
+
+
+	*/
+  End
 Go
 

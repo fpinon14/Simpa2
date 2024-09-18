@@ -103,8 +103,8 @@ Declare
 	@sIdHubPresta				VarChar ( 20 )			,   -- Identifiant sur le Hub Prestataire de la prestation
 	@sIdFour					VarChar ( 3 )			,   -- /!\ IMPORTANT : Code Fournisseur officiel SPB, ce code sera associé à un RIB de règlement du fournisseur chez Volcanes
 	@sTypDommage				VarChar ( 100 )			,	-- Chaine contenant les codes des types de dommage sous la forme '#TD1#TD4#TD5#'
-	@sPointService				VarChar ( 20 )			,	-- Code du point de service	   
-	@sModeProcess				VarChar ( 20 )			,	-- Mode de logistique (CENTRALISATION / PROXIMITE )
+	@sPointService				VarChar ( 40 )			,	-- Code du point de service	   
+	@sModeLogis					VarChar ( 40 )			,	-- Mode de logistique (CENTRALISATION / PROXIMITE )
 	@sCodePickUp				VarChar ( 20 )			,	-- Code du relais si CENTRALISATION et Choix PickUp
 	@sAdrNomPickUp				VarChar ( 40 )			,	-- Nom du relais si CENTRALISATION et Choix PickUp	
 	@sAdrReferenceAssPickUp		VarChar ( 40 )			,	-- référence du sinistre SPB et du nom de l'assuré à mettre sur le colis du Relais PickUp (dans le cas d'un renvoi)
@@ -221,7 +221,7 @@ Select 	@dtDeposeLe		= GETDATE(),
 		@sTypDommage    = nullif ( sysadm.FN_CLE_VAL ('HP_TYP_DOM' , c.info_spb_frn_cplt, ';'), ''),
 		@sIdFour		= c.id_four,
 		@sPointService	= nullif ( sysadm.FN_CLE_VAL ('HP_ID_POINT_SERV' , c.info_spb_frn_cplt, ';'), ''),
-		@sModeProcess	= nullif ( sysadm.FN_CLE_VAL ('HP_ID_MODE_PROCESS' , c.info_spb_frn_cplt, ';'), ''),
+		@sModeLogis		= nullif ( sysadm.FN_CLE_VAL ('HP_ID_MODE_LOGIS' , c.info_spb_frn_cplt, ';'), ''),
 		@sCodePickUp	= nullif ( sysadm.FN_CLE_VAL ('CODE_PICK_UP' , c.info_spb_frn_cplt, ';'), ''),
 		@sAdrNomPickUp	= nullif ( sysadm.FN_CLE_VAL ('NOM_PICK_UP' , c.info_spb_frn_cplt, ';'), ''),
 		@sAdrReferenceAssPickUp= nullif ( sysadm.FN_CLE_VAL ('REFASS_PICK_UP' , c.info_spb_frn_cplt, ';'), ''),
@@ -332,7 +332,7 @@ Select
 	@sIdFour	'sIdFour',
 	@sTypDommage	'sTypDommage',
 	@sPointService	'sPointService',
-	@sModeProcess	'sModeProcess',
+	@sModeLogis	'sModeLogis',
 	@sCodePickUp	'sCodePickUp',
 	@sAdrNomPickUp	'sAdrNomPickUp',
 	@sAdrReferenceAssPickUp	'sAdrReferenceAssPickUp',
@@ -438,8 +438,8 @@ Declare
 	@sIdHubPresta				VarChar ( 20 )			,   -- Identifiant sur le Hub Prestataire de la prestation
 	@sIdFour					VarChar ( 3 )			,   -- /!\ IMPORTANT : Code Fournisseur officiel SPB, ce code sera associé à un RIB de règlement du fournisseur chez Volcanes
 	@sTypDommage				VarChar ( 100 )			,	-- Chaine contenant les codes des types de dommage sous la forme '#TD1#TD4#TD5#'
-	@sPointService				VarChar ( 20 )			,	-- Code du point de service	   
-	@sModeProcess				VarChar ( 20 )			,	-- Mode de logistique (CENTRALISATION / PROXIMITE )
+	@sPointService				VarChar ( 40 )			,	-- Code du point de service	   
+	@sModeLogis					VarChar ( 40 )			,	-- Mode de logistique (CENTRALISATION / PROXIMITE )
 	@sCodePickUp				VarChar ( 20 )			,	-- Code du relais si CENTRALISATION et Choix PickUp
 	@sAdrNomPickUp				VarChar ( 40 )			,	-- Nom du relais si CENTRALISATION et Choix PickUp	
 	@sAdrReferenceAssPickUp		VarChar ( 40 )			,	-- référence du sinistre SPB et du nom de l'assuré à mettre sur le colis du Relais PickUp (dans le cas d'un renvoi)
@@ -552,7 +552,7 @@ Select 	@dtDeposeLe		= GETDATE(),
 		@sTypDommage    = nullif ( sysadm.FN_CLE_VAL ('HP_TYP_DOM' , c.info_spb_frn_cplt, ';'), ''),
 		@sIdFour		= c.id_four,
 		@sPointService	= nullif ( sysadm.FN_CLE_VAL ('HP_ID_POINT_SERV' , c.info_spb_frn_cplt, ';'), ''),
-		@sModeProcess	= nullif ( sysadm.FN_CLE_VAL ('HP_ID_MODE_PROCESS' , c.info_spb_frn_cplt, ';'), ''),
+		@sModeLogis		= nullif ( sysadm.FN_CLE_VAL ('HP_ID_MODE_LOGIS' , c.info_spb_frn_cplt, ';'), ''),
 		@sCodePickUp	= nullif ( sysadm.FN_CLE_VAL ('CODE_PICK_UP' , c.info_spb_frn_cplt, ';'), ''),
 		@sAdrNomPickUp	= nullif ( sysadm.FN_CLE_VAL ('NOM_PICK_UP' , c.info_spb_frn_cplt, ';'), ''),
 		@sAdrReferenceAssPickUp= nullif ( sysadm.FN_CLE_VAL ('REFASS_PICK_UP' , c.info_spb_frn_cplt, ';'), ''),
@@ -644,7 +644,7 @@ Select
 	@sIdFour	'sIdFour',
 	@sTypDommage	'sTypDommage',
 	@sPointService	'sPointService',
-	@sModeProcess	'sModeProcess',
+	@sModeLogis	'sModeLogis',
 	@sCodePickUp	'sCodePickUp',
 	@sAdrNomPickUp	'sAdrNomPickUp',
 	@sAdrReferenceAssPickUp	'sAdrReferenceAssPickUp',
@@ -815,8 +815,8 @@ Declare  @TbHubToSimpa2Work TABLE (
 	diag_video_engage			VarChar ( 3  )				NULL,   -- O/N Diag vidéo engagé
 	resolu_diag_video			VarChar ( 3  )				NULL,   -- O/N résolu par Diag vidéo 
 	dte_rdv_conf				DateTime					NULL,   -- Date de rdv confirmé pour déplacement à domicile 
-	mode_logis_ret				VarChar ( 20 )				NULL,   -- CENTRALISATION / PROXIMITE, Confirmation du prestataire sur le mode rééllement utilisé par l'assuré
-	point_service_ret			VarChar ( 20 )				NULL,   -- Code du point de service où l'assuré s'est rééllement rendu ou bien a envoyé son appareil
+	mode_logis_ret				VarChar ( 40 )				NULL,   -- CENTRALISATION / PROXIMITE, Confirmation du prestataire sur le mode rééllement utilisé par l'assuré
+	point_service_ret			VarChar ( 40 )				NULL,   -- Code du point de service où l'assuré s'est rééllement rendu ou bien a envoyé son appareil
 	dte_rcp_frn					DateTime					NULL,   -- Date de réception de l'appareil chez le prestataire
 	site_action					VarChar ( 20 )				NULL,   -- STATION/DOMICILE
 	app_incomplet				VarChar ( 3  )				NULL,   -- O/N si appareil incomplet
@@ -908,8 +908,8 @@ Declare @iIdWorkRow			int,
 		@sDiagVideoEngage	VarChar ( 3  ),
 		@sResoluDiagVideo	VarChar ( 3  ),
 		@dtDteRdvConf		DateTime,
-		@sModeLogisRet		VarChar ( 20 ),
-		@sPointServiceRet	VarChar ( 20 ),
+		@sModeLogisRet		VarChar ( 40 ),
+		@sPointServiceRet	VarChar ( 40 ),
 		@dtDteRcpFrn		DateTime,
 		@sSiteAction		VarChar ( 20 ),
 		@sAppIncomplet		VarChar ( 3  ),
@@ -991,9 +991,9 @@ Set @sSql =
 '		dhs.activity_return_code, '+
 '		dhs.activity_reason_code, '+
 '		Case ' +
-'			When dsh.mode_logis = ''CENTRALISATION'' and code_pickup is not null ' +
+'			When dsh.mode_logis = ''CENTRALIZATION'' and code_pickup is not null ' +
 '				Then ''RPICKUP''' +
-'			When dsh.mode_logis = ''CENTRALISATION'' and code_pickup is null ' +
+'			When dsh.mode_logis = ''CENTRALIZATION'' and code_pickup is null ' +
 '				Then ''BPPAYE''' +
 '			Else null ' + 
 '		End typ_ba_aller, ' +	
@@ -1360,8 +1360,10 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 				If Len ( @sNumCmdFrn ) > 20 Set @sNumCmdFrn = LEFT ( @sNumCmdFrn, 17 ) + '...'
 					
 					-- mode_log_ret
+				/* plus de traduction pour le mode logistique
 				If UPPER ( @sModeLogisRet ) = 'PROXIMITY' Set @sModeLogisRet = 'PROXIMITE'
-				If UPPER ( @sPointServiceRet ) = 'CENTRALIZATION' Set @sPointServiceRet = 'CENTRALISATION'
+				If UPPER ( @sModeLogisRet ) = 'CENTRALIZATION' Set @sModeLogisRet = 'CENTRALISATION'
+				*/
 
 				-- Détermination du statut SIMPA2 de la prestation
 				Set @sChaineBCVretourDetStatut = SPACE ( 255 )
@@ -2053,8 +2055,8 @@ CREATE procedure sysadm.PS_HP276_I_S2_ATTENTE_TRANSFERT_VERS_HP
 		@sIdHubPresta VarChar ( 20 ) ,
 		@sIdFour VarChar ( 3 ) ,
 		@sTypDommage VarChar ( 100 ) ,
-		@sPointService VarChar ( 20 ) ,
-		@sModeProcess VarChar ( 20 ) ,
+		@sPointService VarChar ( 40 ) ,
+		@sModeLogis VarChar ( 40 ) ,
 		@sCodePickUp VarChar ( 20 ) ,
 		@sAdrNomPickUp VarChar ( 40 ) ,
 		@sAdrReferenceAssPickUp VarChar ( 40 ) ,
@@ -2240,7 +2242,7 @@ Values
 	@sIdFour,
 	@sTypDommage,
 	@sPointService,
-	@sModeProcess,
+	@sModeLogis,
 	@sCodePickUp,
 	@sAdrNomPickUp,
 	@sAdrReferenceAssPickUp,
@@ -2342,8 +2344,8 @@ Declare @TB_EnAttenteTransfertVersHpWork Table (
 	id_hub_presta				VarChar ( 20 )			NOT NULL,   -- Identifiant sur le Hub Prestataire de la prestation
 	id_four						Char (3)				NOT NULL,   -- /!\ IMPORTANT : Code Fournisseur officiel SPB, ce code sera associé à un RIB de règlement du fournisseur chez Volcanes
 	typ_dommage					VarChar ( 100 )				NULL,	-- Chaine contenant les codes des types de dommage sous la forme '#TD1#TD4#TD5#'
-	point_service				VarChar ( 20 )				NULL,	-- Code du point de service	   
-	mode_logis					VarChar ( 20 )				NULL,	-- Mode de logistique (CENTRALISATION / PROXIMITE )
+	point_service				VarChar ( 40 )				NULL,	-- Code du point de service	   
+	mode_logis					VarChar ( 40 )				NULL,	-- Mode de logistique (CENTRALISATION / PROXIMITE )
 	code_pickup					VarChar ( 20 )				NULL,	-- Code du relais si CENTRALISATION et Choix PickUp
 	nom_pickup					VarChar ( 40 )				NULL,	-- Nom du relais si CENTRALISATION et Choix PickUp	
 	ref_ass_pickup				VarChar ( 40 )				NULL,	-- référence du sinistre SPB et du nom de l'assuré à mettre sur le colis du Relais PickUp (dans le cas d'un renvoi)
@@ -2415,8 +2417,8 @@ Declare
 		@sIdHubPresta VarChar ( 20 ) ,
 		@sIdFour VarChar ( 3 ) ,
 		@sTypDommage VarChar ( 100 ) ,
-		@sPointService VarChar ( 20 ) ,
-		@sModeProcess VarChar ( 20 ) ,
+		@sPointService VarChar ( 40 ) ,
+		@sModeLogis VarChar ( 40 ) ,
 		@sCodePickUp VarChar ( 20 ) ,
 		@sAdrNomPickUp VarChar ( 40 ) ,
 		@sAdrReferenceAssPickUp VarChar ( 40 ) ,
@@ -2580,7 +2582,7 @@ While Exists ( Select Top 1 1 From @TB_EnAttenteTransfertVersHpWork where alt_tr
 		  @sIdFour = id_four,
 		  @sTypDommage = typ_dommage,
 		  @sPointService = point_service,
-		  @sModeProcess = mode_logis,
+		  @sModeLogis = mode_logis,
 		  @sCodePickUp = code_pickup,
 		  @sAdrNomPickUp = nom_pickup,
 		  @sAdrReferenceAssPickUp = ref_ass_pickup,
@@ -2658,7 +2660,7 @@ While Exists ( Select Top 1 1 From @TB_EnAttenteTransfertVersHpWork where alt_tr
 				@sIdFour,
 				@sTypDommage,
 				@sPointService,
-				@sModeProcess,
+				@sModeLogis,
 				@sCodePickUp,
 				@sAdrNomPickUp,
 				@sAdrReferenceAssPickUp,
@@ -2735,7 +2737,7 @@ While Exists ( Select Top 1 1 From @TB_EnAttenteTransfertVersHpWork where alt_tr
 				@sIdFour,
 				@sTypDommage,
 				@sPointService,
-				@sModeProcess,
+				@sModeLogis,
 				@sCodePickUp,
 				@sAdrNomPickUp,
 				@sAdrReferenceAssPickUp,
