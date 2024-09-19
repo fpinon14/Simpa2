@@ -1180,6 +1180,10 @@ Select
 	etat_app_sin,
 	code_verrou,
 	desimlocke,
+	edi.FN_CLE_VAL ( 'HP_ID_PROCESS_ACHEM', info_spb_frn_cplt, ';') process_achem,
+	edi.FN_CLE_VAL ( 'COULEUR', info_spb_frn_cplt, ';') couleur,	
+	edi.FN_CLE_VAL ( 'CAPACITE', info_spb_frn_cplt, ';') capacite,	
+	edi.FN_CLE_VAL ( 'DUALSIM', info_spb_frn_cplt, ';') dualsim,
 	info_spb_frn_cplt
 
 From edi.DepotSimpa2ToHubPresta dps2

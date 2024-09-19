@@ -2795,6 +2795,7 @@ Exec sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
 Exec sysadm.PS_DU_NETTOYAGE_CORBEILLES
 
 -- changement Exe Simulation pour le lendemain
+/*
 If sysadm.FN_CLE_NUMERIQUE ( 'EXE_TSP8') > 0 
  Begin
 	Update SESAME_PRO.sysadm.application Set lib_commande = 'C:\SPB\S_FR_APP_Simpa2_main_121.EXE' where id_appli = 'TSP8'
@@ -2803,13 +2804,15 @@ Else
  Begin
 	Update SESAME_PRO.sysadm.application Set lib_commande = 'C:\SPB\P_FR_APP_Simpa2_main_121.EXE' where id_appli = 'TSP8'
  End
- 
+*/
+
  -- Purge Trace.
 If sysadm.FN_CLE_NUMERIQUE ( 'RS6179_TRG_WQ') > 0 
 	Begin
 		Delete sysadm.w_queue_histo Where cree_le_action < DATEADD ( month, -6, Getdate() )
 		Delete TRACE_MAIL_PRO.sysadm.trace_matp_es_sinistre_ksl_rs5045 Where cree_le < DATEADD ( month, -6, Getdate() )
 	End 
+
 GO
 
 grant execute on sysadm.PS_CORRECTION_BASE_NUIT_2 to rolebddsinistres
@@ -3857,7 +3860,7 @@ If @NbreFoisSupAn >= 2
 
 	EXEC master.dbo.SPB_PS_MAIL 
 			@sRetourErrMail OUTPUT, 
-			'jff@spb.fr,GG_DSI-DO-INFRA-SERVEUR@spb.eu,fs@spb.fr,cbo@spb.eu',
+			'jff@spb.fr,GG_DSI-DO-INFRA-SERVEUR_Coll@spb.eu,GG_DSI-DO-INFRA-SERVEUR_Ext@spb.eu,fs@spb.fr,dboucq@spb.eu',
 			@sMessage, 
 			@sObjet, 
 			'jff@spb.fr', 
@@ -5981,7 +5984,7 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 		Begin
 			EXEC master.dbo.SPB_PS_MAIL 
 					@sRetourErrMail OUTPUT, 
-					'GG_DSI-DO-UTIL@spb.eu,GG_DSI-DO-PI@spb.eu,GG_DSI-DO-INFRA-SERVEUR@spb.eu,jff@spb.fr,fsale@spb.eu,GG_DSI-DO-TELCO@spb.eu,cbourdoiseau@spb.eu,rpo@spb.eu,JALLIX@spb.eu,HLIEGEARD@spb.eu,DBOUCQ@spb.eu,MHARDY@spb.eu,CVERRIER@spb.eu',
+					'GG_DSI-DO-UTIL@spb.eu,GG_DSI-DO-PI@spb.eu,GG_DSI-DO-INFRA-SERVEUR_Coll@spb.eu,GG_DSI-DO-INFRA-SERVEUR_Ext@spb.eu,jff@spb.fr,fsale@spb.eu,GG_DSI-DO-TELCO@spb.eu,cbourdoiseau@spb.eu,rpo@spb.eu,JALLIX@spb.eu,HLIEGEARD@spb.eu,DBOUCQ@spb.eu,MHARDY@spb.eu,CVERRIER@spb.eu',
 --					'jff@spb.fr',
 					@sMailBody, 
 					@sObjet, 
