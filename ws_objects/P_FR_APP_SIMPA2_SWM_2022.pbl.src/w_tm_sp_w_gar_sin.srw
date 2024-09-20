@@ -209,7 +209,7 @@ event ue_taillefenetre();//*----------------------------------------------------
 
 // Je réajuste la hauteur pour W10
 
-This.Height = 1810
+// This.Height = 1810 // [PB2022_TAILLE_FEN] Je commente
 
 end event
 
@@ -241,7 +241,7 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 /* Barre Onglet                                                     */
 /*------------------------------------------------------------------*/
 Uo_Ong.X			=   10
-Uo_Ong.Y			=  157
+Uo_Ong.Y			=  157 + 1  // [PB2022_TAILLE_FEN]
 Uo_Ong.Width	=  109
 
 /*------------------------------------------------------------------*/
@@ -2921,8 +2921,12 @@ event we_childactivate;call super::we_childactivate;//*-------------------------
 
 This.X			=    1
 This.Y			=    1
-This.Height		= 1769
-This.Width		= 3598
+// [PB2022_TAILLE_FEN] + xxx
+This.Height		= 1769 + 90
+
+
+// [PB2022_TAILLE_FEN] + xxx
+This.Width		= 3598 + 50
 
 //Migration PB8-WYNIWYG-03/2006 FM
 //sélection de la 1ere ligne de la liste s' elle existe

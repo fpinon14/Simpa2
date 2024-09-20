@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_cm_sp_travail.srw
-$PBExportComments$---} Fen$$HEX1$$ea00$$ENDHEX$$tre de consultation des travaux
+﻿$PBExportHeader$w_cm_sp_travail.srw
+$PBExportComments$---} Fenêtre de consultation des travaux
 forward
 global type w_cm_sp_travail from w_8_ancetre_consultation
 end type
@@ -20,10 +20,10 @@ end type
 end forward
 
 global type w_cm_sp_travail from w_8_ancetre_consultation
-int Width=3649
-int Height=1805
-boolean ControlMenu=false
-boolean MinBox=false
+integer width = 3648
+integer height = 1804
+boolean controlmenu = false
+boolean minbox = false
 dw_1 dw_1
 dw_dddw_produit dw_dddw_produit
 dw_dddw_corbeille dw_dddw_corbeille
@@ -50,7 +50,7 @@ public function boolean wf_preparerconsulter ();//*-----------------------------
 //* Fonction		: wf_PreparerConsulter
 //* Auteur			: FABRY JF
 //* Date				: 16/12/1998 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Appel de uf_preparer_consulter
+//* Libellé			: Appel de uf_preparer_consulter
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun.
@@ -74,7 +74,7 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //* Fonction		: w_cm_Sp_Travail::Wf_PositionnerObjets (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 16/12/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On positionne et on taille tous les objets
 //*
 //* Arguments		: Aucun
@@ -85,7 +85,7 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 
 
 /*------------------------------------------------------------------*/
-/* Dw_1  DataWindow : Dw r$$HEX1$$e800$$ENDHEX$$glement sur Fen$$HEX1$$ea00$$ENDHEX$$tre R$$HEX1$$e800$$ENDHEX$$glement            */
+/* Dw_1  DataWindow : Dw règlement sur Fenêtre Règlement            */
 /*------------------------------------------------------------------*/
 Dw_1.X				=   71
 Dw_1.Y				=  180
@@ -104,7 +104,7 @@ on ue_initialiser;call w_8_ancetre_consultation::ue_initialiser;//*-------------
 //* Evenement 		:	UE_INITIALISER - Extend
 //* Auteur			:	Fabry JF
 //* Date				:	12/12/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Initialisation de la fen$$HEX1$$ea00$$ENDHEX$$tre de consultation du travail
+//* Libellé			:	Initialisation de la fenêtre de consultation du travail
 //*	
 //* Commentaires	:	
 //*				  
@@ -115,13 +115,13 @@ on ue_initialiser;call w_8_ancetre_consultation::ue_initialiser;//*-------------
 
 
 /*------------------------------------------------------------------*/
-/* Positionnement des objets de la fen$$HEX1$$ea00$$ENDHEX$$tre                          */
+/* Positionnement des objets de la fenêtre                          */
 /*------------------------------------------------------------------*/
 
 wf_PositionnerObjets()
 
 /*------------------------------------------------------------------*/
-/* D$$HEX1$$e900$$ENDHEX$$claration du nvuo li$$HEX1$$e900$$ENDHEX$$e $$HEX2$$e0002000$$ENDHEX$$la fen$$HEX1$$ea00$$ENDHEX$$tre                            */
+/* Déclaration du nvuo liée à la fenêtre                            */
 /*------------------------------------------------------------------*/
 
 iuoConsultation = Create u_Cs_Sp_Travail
@@ -129,10 +129,10 @@ iuoConsultation = Create u_Cs_Sp_Travail
 
 /*------------------------------------------------------------------------------*/
 /* itrTrans							Objet de transaction										  */	
-/* Dw_1								DataWindow principale sur fen$$HEX1$$ea00$$ENDHEX$$tre w_cm_sp_Travail */
-/* Dw_dddw_Produit				Dddw des produits sur fen$$HEX1$$ea00$$ENDHEX$$tre w_cm_sp_Travail     */
-/* Dw_dddw_Corbeille				Dddw des Corbeille sur fen$$HEX1$$ea00$$ENDHEX$$tre w_cm_sp_Travail    */
-/* Dw_dddw_Cod_Etat				Dddw des Codes Etats sur fen$$HEX1$$ea00$$ENDHEX$$tre w_cm_sp_Travail  */
+/* Dw_1								DataWindow principale sur fenêtre w_cm_sp_Travail */
+/* Dw_dddw_Produit				Dddw des produits sur fenêtre w_cm_sp_Travail     */
+/* Dw_dddw_Corbeille				Dddw des Corbeille sur fenêtre w_cm_sp_Travail    */
+/* Dw_dddw_Cod_Etat				Dddw des Codes Etats sur fenêtre w_cm_sp_Travail  */
 /* Dw_dddw_Cod_Type_Recu		Dddw des Codes Type Recu sur fen. w_cm_sp_Travail */
 /* Dw_dddw_CodRecu				Dddw des Codes Recu sur fen. w_cm_sp_Travail 	  */
 /* Dw_dddw_CodIProv				Dddw des Codes Inter Provenance sur fen. Idem	  */
@@ -150,13 +150,13 @@ iuoConsultation.uf_Init_Travail ( itrTrans, 						&
 
 end on
 
-on we_childactivate;call w_8_ancetre_consultation::we_childactivate;//*-----------------------------------------------------------------
+event we_childactivate;call super::we_childactivate;//*-----------------------------------------------------------------
 //*
 //* Objet 			: W_Cm_Sp_Travail (Extend)
 //* Evenement 		: We_ChildActivate
 //* Auteur			: JFF
 //* Date				: 15/12/1998 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Placement de la fen$$HEX1$$ea00$$ENDHEX$$tre
+//* Libellé			: Placement de la fenêtre
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -167,13 +167,17 @@ on we_childactivate;call w_8_ancetre_consultation::we_childactivate;//*---------
 
 This.X			=    1
 This.Y			=    1
-This.Height		= 1769
-This.Width		= 3598
-end on
+// [PB2022_TAILLE_FEN] + xxx
+This.Height		= 1769 + 90
+
+
+// [PB2022_TAILLE_FEN] + xxx
+This.Width		= 3598 + 50
+end event
 
 on w_cm_sp_travail.create
 int iCurrent
-call w_8_ancetre_consultation::create
+call super::create
 this.dw_1=create dw_1
 this.dw_dddw_produit=create dw_dddw_produit
 this.dw_dddw_corbeille=create dw_dddw_corbeille
@@ -182,17 +186,17 @@ this.dw_dddw_cod_type_recu=create dw_dddw_cod_type_recu
 this.dw_dddw_cod_recu=create dw_dddw_cod_recu
 this.dw_dddw_cod_i_prov=create dw_dddw_cod_i_prov
 iCurrent=UpperBound(this.Control)
-this.Control[iCurrent+1]=dw_1
-this.Control[iCurrent+2]=dw_dddw_produit
-this.Control[iCurrent+3]=dw_dddw_corbeille
-this.Control[iCurrent+4]=dw_dddw_cod_etat
-this.Control[iCurrent+5]=dw_dddw_cod_type_recu
-this.Control[iCurrent+6]=dw_dddw_cod_recu
-this.Control[iCurrent+7]=dw_dddw_cod_i_prov
+this.Control[iCurrent+1]=this.dw_1
+this.Control[iCurrent+2]=this.dw_dddw_produit
+this.Control[iCurrent+3]=this.dw_dddw_corbeille
+this.Control[iCurrent+4]=this.dw_dddw_cod_etat
+this.Control[iCurrent+5]=this.dw_dddw_cod_type_recu
+this.Control[iCurrent+6]=this.dw_dddw_cod_recu
+this.Control[iCurrent+7]=this.dw_dddw_cod_i_prov
 end on
 
 on w_cm_sp_travail.destroy
-call w_8_ancetre_consultation::destroy
+call super::destroy
 destroy(this.dw_1)
 destroy(this.dw_dddw_produit)
 destroy(this.dw_dddw_corbeille)
@@ -202,94 +206,99 @@ destroy(this.dw_dddw_cod_recu)
 destroy(this.dw_dddw_cod_i_prov)
 end on
 
+type cb_debug from w_8_ancetre_consultation`cb_debug within w_cm_sp_travail
+end type
+
 type st_titre from w_8_ancetre_consultation`st_titre within w_cm_sp_travail
-int X=3205
-int Y=21
-int Width=357
-boolean Visible=false
+boolean visible = false
+integer x = 3205
+integer y = 20
+integer width = 357
 end type
 
 type pb_retour from w_8_ancetre_consultation`pb_retour within w_cm_sp_travail
-int X=14
-int Y=13
-int TabOrder=10
+integer x = 14
+integer y = 12
+integer width = 242
+integer height = 144
+integer taborder = 10
 end type
 
 type dw_1 from datawindow within w_cm_sp_travail
-int X=51
-int Y=165
-int Width=508
-int Height=453
-int TabOrder=20
-boolean BringToTop=true
-string DataObject="d_sp_c_travail"
-boolean Border=false
-boolean LiveScroll=true
+integer x = 50
+integer y = 164
+integer width = 507
+integer height = 452
+integer taborder = 20
+boolean bringtotop = true
+string dataobject = "d_sp_c_travail"
+boolean border = false
+boolean livescroll = true
 end type
 
 type dw_dddw_produit from datawindow within w_cm_sp_travail
-int X=3283
-int Y=269
-int Width=275
-int Height=165
-int TabOrder=30
-boolean Visible=false
-boolean BringToTop=true
-string DataObject="dddw_sp_produit"
+boolean visible = false
+integer x = 3282
+integer y = 268
+integer width = 274
+integer height = 164
+integer taborder = 30
+boolean bringtotop = true
+string dataobject = "dddw_sp_produit"
 end type
 
 type dw_dddw_corbeille from datawindow within w_cm_sp_travail
-int X=3283
-int Y=497
-int Width=275
-int Height=165
-int TabOrder=40
-boolean Visible=false
-boolean BringToTop=true
-string DataObject="dddw_spb_code"
+boolean visible = false
+integer x = 3282
+integer y = 496
+integer width = 274
+integer height = 164
+integer taborder = 40
+boolean bringtotop = true
+string dataobject = "dddw_spb_code"
 end type
 
 type dw_dddw_cod_etat from datawindow within w_cm_sp_travail
-int X=3283
-int Y=725
-int Width=275
-int Height=165
-int TabOrder=50
-boolean Visible=false
-boolean BringToTop=true
-string DataObject="dddw_sp_code_car"
+boolean visible = false
+integer x = 3282
+integer y = 724
+integer width = 274
+integer height = 164
+integer taborder = 50
+boolean bringtotop = true
+string dataobject = "dddw_sp_code_car"
 end type
 
 type dw_dddw_cod_type_recu from datawindow within w_cm_sp_travail
-int X=3283
-int Y=953
-int Width=275
-int Height=165
-int TabOrder=60
-boolean Visible=false
-boolean BringToTop=true
-string DataObject="dddw_sp_code_car"
+boolean visible = false
+integer x = 3282
+integer y = 952
+integer width = 274
+integer height = 164
+integer taborder = 60
+boolean bringtotop = true
+string dataobject = "dddw_sp_code_car"
 end type
 
 type dw_dddw_cod_recu from datawindow within w_cm_sp_travail
-int X=3283
-int Y=1181
-int Width=275
-int Height=165
-int TabOrder=70
-boolean Visible=false
-boolean BringToTop=true
-string DataObject="dddw_sp_code_car"
+boolean visible = false
+integer x = 3282
+integer y = 1180
+integer width = 274
+integer height = 164
+integer taborder = 70
+boolean bringtotop = true
+string dataobject = "dddw_sp_code_car"
 end type
 
 type dw_dddw_cod_i_prov from datawindow within w_cm_sp_travail
-int X=3283
-int Y=1409
-int Width=275
-int Height=165
-int TabOrder=80
-boolean Visible=false
-boolean BringToTop=true
-string DataObject="dddw_sp_code_car"
+boolean visible = false
+integer x = 3282
+integer y = 1408
+integer width = 274
+integer height = 164
+integer taborder = 80
+boolean bringtotop = true
+string dataobject = "dddw_sp_code_car"
 end type
 

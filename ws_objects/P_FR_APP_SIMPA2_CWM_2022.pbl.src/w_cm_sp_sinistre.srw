@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_cm_sp_sinistre.srw
+﻿$PBExportHeader$w_cm_sp_sinistre.srw
 forward
 global type w_cm_sp_sinistre from w_8_ancetre_consultation
 end type
@@ -148,16 +148,18 @@ event ue_taillefenetre();//*----------------------------------------------------
 //* Evenement 		: Ue_TailleFenetre
 //* Auteur			: Fabry JF
 //* Date				: 16/10/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*-----------------------------------------------------------------
 
-// Je r$$HEX1$$e900$$ENDHEX$$ajuste la hauteur pour W10
+// Je réajuste la hauteur pour W10
 
-This.Height = 1810
+// This.Height = 1810 // [PB2022_TAILLE_FEN] je commente
+
+
 
 
 end event
@@ -167,9 +169,9 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //* Fonction		: W_cm_sp_sinistre::Wf_PositionnerObjets (PRIVATE)
 //* Auteur			: PLJ
 //* Date				: 16/07/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On positionne et on taille tous les objets
-//*                 sauf uo_bord3d qui est positionn$$HEX2$$e9002000$$ENDHEX$$et taill$$HEX1$$e900$$ENDHEX$$
+//*                 sauf uo_bord3d qui est positionné et taillé
 //*                 par son constructor
 //*
 //* Arguments		: Aucun
@@ -185,19 +187,19 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On positionne tous les objets n$$HEX1$$e900$$ENDHEX$$cessaires $$HEX2$$e0002000$$ENDHEX$$la gestion, pour     */
-/* faciliter le d$$HEX1$$e900$$ENDHEX$$veloppement. (On peut bouger les objets).         */
+/* On positionne tous les objets nécessaires à la gestion, pour     */
+/* faciliter le développement. (On peut bouger les objets).         */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
 /* Barre Onglet                                                     */
 /*------------------------------------------------------------------*/
 Uo_Onglet.X			=   10
-Uo_Onglet.Y			=  157
+Uo_Onglet.Y			=  157 + 1  // [PB2022_TAILLE_FEN] + 1
 Uo_Onglet.Height	=  109
 
 /*------------------------------------------------------------------*/
-/* Dw_1  DataWindow : En-t$$HEX1$$ea00$$ENDHEX$$te sinistre                              */
+/* Dw_1  DataWindow : En-tête sinistre                              */
 /*------------------------------------------------------------------*/
 Dw_1.X				=   60
 Dw_1.Y				=  280
@@ -221,7 +223,7 @@ Dw_Gti.Width		= Dw_1.Width
 Dw_Gti.Height		= Dw_1.Height 
 
 /*------------------------------------------------------------------*/
-/* Dw_Reglement DataWindow : liste des r$$HEX1$$e800$$ENDHEX$$glements                   */
+/* Dw_Reglement DataWindow : liste des règlements                   */
 /*------------------------------------------------------------------*/
 Dw_Reglement.X    	= Dw_1.X	
 Dw_Reglement.Y			= Dw_1.Y
@@ -264,7 +266,7 @@ End If
 /* Gestion des boites archives.                                     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* N$$HEX2$$b0002000$$ENDHEX$$bo$$HEX1$$ee00$$ENDHEX$$te archive                                                 */
+/* N° boîte archive                                                 */
 /*------------------------------------------------------------------*/
 dw_BoiteArchive.X			= 1235
 dw_BoiteArchive.Y			=   21
@@ -319,7 +321,7 @@ public function boolean wf_preparerconsulter ();//*-----------------------------
 //* Fonction		: wf_PreparerConsulter
 //* Auteur			: PLJ
 //* Date				: 17/07/1998 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Appel de uf_preparer_consulter
+//* Libellé			: Appel de uf_preparer_consulter
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun.
@@ -331,7 +333,7 @@ public function boolean wf_preparerconsulter ();//*-----------------------------
 //* DCMP990451	JFF		29/09/99 Affichage du message d'ouverture de 
 //*										de pochette			
 //* #2		   JFF		05/09/2002 Gestion de la gestion de contact uniquement pour Sherpa
-//* #3			PLJ		12/09/2003 Gestion du text de st_pochette $$HEX2$$e0002000$$ENDHEX$$l'identique de la fen$$HEX1$$ea00$$ENDHEX$$tre d'insruction
+//* #3			PLJ		12/09/2003 Gestion du text de st_pochette à l'identique de la fenêtre d'insruction
 //*            JFF      11/01/2010 [DECIMAL_PAPILLON]
 //             JFF      22/10/2019 [PI087_PM473_2]
 //*-----------------------------------------------------------------
@@ -354,10 +356,10 @@ bOk = iuoConsultation.Uf_Preparer_Consulter( istPass )
 
 If bOk Then 
 
-	This.Title = 	iuoConsultation.Uf_titre()				// Constitution du titre de la fen$$HEX1$$ea00$$ENDHEX$$tre
+	This.Title = 	iuoConsultation.Uf_titre()				// Constitution du titre de la fenêtre
 
 	/*------------------------------------------------------------------*/
-	/* On m$$HEX1$$e900$$ENDHEX$$morise la Gestion Contact.									  		  */
+	/* On mémorise la Gestion Contact.									  		  */
 	/*------------------------------------------------------------------*/
 	ibAltContact = dw_Produit.GetItemString ( 1, "ALT_CONTACT" ) = "O"
 	ibAltContactSherpa = False
@@ -371,7 +373,7 @@ If bOk Then
 	ibAltCmdMobile = dw_Produit.GetItemString ( 1, "ALT_CMD_MOBILE" ) = "O"
 
 	/*------------------------------------------------------------------*/
-	/* Alternativement on fait appara$$HEX1$$ee00$$ENDHEX$$tre l'onglet contact.		  		  */
+	/* Alternativement on fait apparaître l'onglet contact.		  		  */
 	/*------------------------------------------------------------------*/
 	Uo_Onglet.Uf_ActiverOnglet ( "05", dw_Div_Sin.Rowcount () > 0 )
 	Uo_Onglet.Uf_ActiverOnglet ( "06", ibAltCmdMobile )
@@ -383,7 +385,7 @@ If bOk Then
 
 	iTrTrans.PS_S02_W_QUEUE_POCHETTE	( Dw_1.GetItemNumber ( 1, "ID_SIN"), "CONSULT" , lPochette )
 
-	// << Veuillez ouvrir une pochette pour ce compl$$HEX1$$e900$$ENDHEX$$ment >>
+	// << Veuillez ouvrir une pochette pour ce complément >>
 	If lPochette = 1 Then
 
 //		st_Pochette.X			= 1542
@@ -396,7 +398,7 @@ If bOk Then
 		st_Pochette.Show()
 	
 
-	// << Pochette $$HEX2$$e0002000$$ENDHEX$$Ouvrir lors de la r$$HEX1$$e900$$ENDHEX$$ception du prochain compl$$HEX1$$e900$$ENDHEX$$ment >>
+	// << Pochette à Ouvrir lors de la réception du prochain complément >>
 	ElseIf lPochette = 2 Then
 
 //		st_Pochette.X			= 1542
@@ -436,7 +438,7 @@ If bOk Then
 				USING	 SqlCa;
 	
 				If Not IsNull ( sNoboite ) Then 	
-					dw_boitearchive.Modify ( "Text_t.Text = 'Pr$$HEX1$$e900$$ENDHEX$$sent dans bo$$HEX1$$ee00$$ENDHEX$$te " + sNoBoite + "'" )
+					dw_boitearchive.Modify ( "Text_t.Text = 'Présent dans boîte " + sNoBoite + "'" )
 				Else
 					dw_boitearchive.Modify ( "Text_t.Text = ''" )
 				End If
@@ -493,15 +495,15 @@ on ue_initialiser;call w_8_ancetre_consultation::ue_initialiser;//*-------------
 //* Evenement 		:	UE_INITIALISER - Extend
 //* Auteur			:	PLJ
 //* Date				:	16/07/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Initialisation de la fen$$HEX1$$ea00$$ENDHEX$$tre de consultation de 
+//* Libellé			:	Initialisation de la fenêtre de consultation de 
 //*					 	sinistre
 //* Commentaires	:	
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
-//* #1  CAG  07/02/2003  DCMP 020450 : Ajout des bo$$HEX1$$ee00$$ENDHEX$$tes archives
+//* #1  CAG  07/02/2003  DCMP 020450 : Ajout des boîtes archives
 //* #2  CAG	 20/02/2003 modifs suite Test JFF sur DCMP 020450 : 
-//*										en fonction de la pr$$HEX1$$e900$$ENDHEX$$sence dans DET_PRO
+//*										en fonction de la présence dans DET_PRO
 //*										(gestion des BARC pour certains produits)
 //*-----------------------------------------------------------------
 
@@ -512,7 +514,7 @@ DataWindow	dwNorm[]
 String		sNoBoite
 
 /*------------------------------------------------------------------*/
-/* Positionnement des objets de la fen$$HEX1$$ea00$$ENDHEX$$tre                          */
+/* Positionnement des objets de la fenêtre                          */
 /*------------------------------------------------------------------*/
 iTrTrans =SQLCA
 
@@ -526,20 +528,20 @@ Uo_Onglet.Uf_Initialiser ( 6, 1 )
 Uo_Onglet.Uf_EnregistrerOnglet ( "01", "Sinistre"      , "", Dw_1,         True  )
 Uo_Onglet.Uf_EnregistrerOnglet ( "02", "Garanties"     , "", Dw_Gti,       False )
 Uo_Onglet.Uf_EnregistrerOnglet ( "03", "Interlocuteurs", "", Dw_Inter,     False )
-Uo_Onglet.Uf_EnregistrerOnglet ( "04", "R$$HEX1$$e800$$ENDHEX$$glements",     "", Dw_Reglement, False )
+Uo_Onglet.Uf_EnregistrerOnglet ( "04", "Règlements",     "", Dw_Reglement, False )
 Uo_Onglet.Uf_EnregistrerOnglet ( "05", "Divers",			"", dw_div_sin,	False )
 Uo_Onglet.Uf_EnregistrerOnglet ( "06", "Commandes",		"", dw_Lst_Cmde,	False )
 Uo_Onglet.Uf_ActiverOnglet ( "06", False )
 
 /*------------------------------------------------------------------*/
-/* D$$HEX1$$e900$$ENDHEX$$claration du nvuo li$$HEX1$$e900$$ENDHEX$$e $$HEX2$$e0002000$$ENDHEX$$la fen$$HEX1$$ea00$$ENDHEX$$tre                            */
+/* Déclaration du nvuo liée à la fenêtre                            */
 /*------------------------------------------------------------------*/
 
 iuoConsultation = Create u_Cs_Sp_Sinistre
 iuoCpSpContTrace = Create U_Gs_Sp_Sinistre_Contact_Trace
 
 /*------------------------------------------------------------------*/
-/* #1 : ajout de bo$$HEX1$$ee00$$ENDHEX$$te archive                                      */
+/* #1 : ajout de boîte archive                                      */
 /*------------------------------------------------------------------*/
 /* #2 : ajout dw_det_pro                                            */
 /*------------------------------------------------------------------*/
@@ -609,7 +611,7 @@ event ue_modifier;call super::ue_modifier;//*-----------------------------------
 //* Evenement 		:	ue_Modifier
 //* Auteur			:	PLJ
 //* Date				:	20/07/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Gestion de la s$$HEX1$$e900$$ENDHEX$$lection d'une u_datawindow_detail
+//* Libellé			:	Gestion de la sélection d'une u_datawindow_detail
 //* Commentaires	:	
 //*		
 //*-----------------------------------------------------------------
@@ -754,7 +756,7 @@ Case "06"
 	stPass.bInsert		= False
 	stPass.bControl		= True
 
-	stPass.sTab [ 1 ]	= This.Title + "/ Commande n$$HEX2$$b0002000$$ENDHEX$$" + String (dw_lst_cmde.GetItemNumber ( dw_lst_cmde.GetRow (), "ID_SEQ" ))
+	stPass.sTab [ 1 ]	= This.Title + "/ Commande n° " + String (dw_lst_cmde.GetItemNumber ( dw_lst_cmde.GetRow (), "ID_SEQ" ))
 	stPass.sTab [ 2 ]	= "C"
 	stPass.sTab [ 3 ]	= Uo_Consult_Euro.Uf_Recuperer_Monnaie_Courante ()
 
@@ -780,7 +782,7 @@ on hide;call w_8_ancetre_consultation::hide;//*---------------------------------
 //* Evenement 		: Hide
 //* Auteur			: Catherine Abdmeziem
 //* Date				: 15/07/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: DCMP 030381 : fermeture de la popup sur hide
 //*				     
 //*				  
@@ -798,8 +800,8 @@ on ue_retour;//*----------------------------------------------------------------
 //* Evenement 		: Ue_Retour
 //* Auteur			: PLJ
 //* Date				: 13/08/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Fermeture d$$HEX1$$e900$$ENDHEX$$finitive de la fen$$HEX1$$ea00$$ENDHEX$$tre.
+//* Libellé			: 
+//* Commentaires	: Fermeture définitive de la fenêtre.
 //*				     On supprime tous les NVUO.
 //*				  
 //*-----------------------------------------------------------------
@@ -846,7 +848,7 @@ event ue_enablefenetre;call super::ue_enablefenetre;//*-------------------------
 //* Evenement 		: Ue_EnableFenetre
 //* Auteur			: Erick John Stark
 //* Date				: 25/03/1999 17:06:51
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -857,9 +859,9 @@ event ue_enablefenetre;call super::ue_enablefenetre;//*-------------------------
 String sMonnaie
 
 /*------------------------------------------------------------------*/
-/* On est en consultation, on d$$HEX1$$e900$$ENDHEX$$termine d'ou l'on vient (GTI,       */
-/* INTER ou REGLEMENT), on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re la valeur de la monnaie pour    */
-/* cette fen$$HEX1$$ea00$$ENDHEX$$tre, et on positionne la m$$HEX1$$ea00$$ENDHEX$$me valeur pour la fen$$HEX1$$ea00$$ENDHEX$$tre   */
+/* On est en consultation, on détermine d'ou l'on vient (GTI,       */
+/* INTER ou REGLEMENT), on récupére la valeur de la monnaie pour    */
+/* cette fenêtre, et on positionne la même valeur pour la fenêtre   */
 /* en cours.                                                        */
 /*------------------------------------------------------------------*/
 Choose Case isDetailConsult
@@ -888,7 +890,7 @@ on ue_creer;call w_8_ancetre_consultation::ue_creer;//*-------------------------
 //* Evenement 		:	ue_Creer
 //* Auteur			:	Fabry JF
 //* Date				:	14/01/01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	
+//* Libellé			:	
 //* Commentaires	:	
 //*				  
 //*-----------------------------------------------------------------
@@ -958,9 +960,9 @@ on ue_item5;call w_8_ancetre_consultation::ue_item5;//*-------------------------
 //* Evenement 		: Item5
 //* Auteur			: FABRY JF
 //* Date				: 01/02/2002
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Evenement d$$HEX1$$e900$$ENDHEX$$clench$$HEX4$$e9002000e0002000$$ENDHEX$$partir de la fen$$HEX1$$ea00$$ENDHEX$$tre contacts
-//*					  en consultation pour r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer les init de la personne
+//* Libellé			: 
+//* Commentaires	: Evenement déclenché à partir de la fenêtre contacts
+//*					  en consultation pour récupérer les init de la personne
 //*					  qui va traiter le travail.
 //*				  
 //*-----------------------------------------------------------------
@@ -979,8 +981,8 @@ on close;call w_8_ancetre_consultation::close;//*-------------------------------
 //* Evenement 		: Close
 //* Auteur			: PLJ
 //* Date				: 16/07/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Fermeture d$$HEX1$$e900$$ENDHEX$$finitive de la fen$$HEX1$$ea00$$ENDHEX$$tre.
+//* Libellé			: 
+//* Commentaires	: Fermeture définitive de la fenêtre.
 //*				     On supprime tous les NVUO.
 //*				  
 //*-----------------------------------------------------------------
@@ -1004,13 +1006,13 @@ If IsValid ( w_T_Sp_Popup_Pol_Ass ) Then Close ( w_T_Sp_Popup_Pol_Ass )
 
 end on
 
-on we_childactivate;call w_8_ancetre_consultation::we_childactivate;//*-----------------------------------------------------------------
+event we_childactivate;call super::we_childactivate;//*-----------------------------------------------------------------
 //*
 //* Objet 			: W_Cm_Sp_Sinistre (Extend)
 //* Evenement 		: We_ChildActivate
 //* Auteur			: PLJ
 //* Date				: 16/07/1998 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1020,11 +1022,14 @@ on we_childactivate;call w_8_ancetre_consultation::we_childactivate;//*---------
 
 This.X			=    1
 This.Y			=    1
-This.Height		= 1769
-This.Width		= 3598
+// [PB2022_TAILLE_FEN] + xxx
+This.Height		= 1769 + 90
 
 
-end on
+// [PB2022_TAILLE_FEN] + xxx
+This.Width		= 3598 + 50
+
+end event
 
 on w_cm_sp_sinistre.create
 int iCurrent
@@ -1145,7 +1150,7 @@ event show;call super::show;
 //* Evenement 		: Show
 //* Auteur			: Fabry JF
 //* Date				: 16/10/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1195,7 +1200,7 @@ on constructor;//*--------------------------------------------------------------
 //* Evenement 		: Constructor
 //* Auteur			: PLJ
 //* Date				: 16/07/1998 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Positionnement de de l'objet uo_Bord3d
+//* Libellé			: Positionnement de de l'objet uo_Bord3d
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1238,7 +1243,7 @@ event ue_ouvrir_fentrv;//*------------------------------------------------------
 //* Evenement 		: ue_Ouvrir_FenTrv
 //* Auteur			: FABRY JF
 //* Date				: 09/05/2001 14:02:05
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Overture de la fen$$HEX1$$ea00$$ENDHEX$$tre des travaux
+//* Libellé			: Overture de la fenêtre des travaux
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -1254,14 +1259,14 @@ event ue_ouvrir_fentrv;//*------------------------------------------------------
 s_Pass	stPass
 
 /*----------------------------------------------------------------------------*/
-/* Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre des travaux en invisible $$HEX2$$e0002000$$ENDHEX$$partir de l'objet       */
+/* Ouverture de la fenêtre des travaux en invisible à partir de l'objet       */
 /* contact_trace.                                                             */
 /*----------------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* Initialisation de la structure pour le passage des param$$HEX1$$e800$$ENDHEX$$tres    */
+/* Initialisation de la structure pour le passage des paramètres    */
 /*------------------------------------------------------------------*/
 stPass.trTrans 	= itrTrans
-stPass.bControl	= True		// Utilisation du bouton Cont$$HEX1$$f400$$ENDHEX$$ler.
+stPass.bControl	= True		// Utilisation du bouton Contôler.
 stPass.wParent		= Parent
 stPass.sTab [ 1 ] = String ( This.GetItemNumber ( 1, "ID_SIN" ) )
 stPass.bInsert		= True
@@ -1294,7 +1299,7 @@ on ue_ouvrir_fensaisie;call u_datawindow::ue_ouvrir_fensaisie;//*---------------
 //* Evenement 		: ue_Ouvrir_FenSaisie
 //* Auteur			: FABRY JF
 //* Date				: 09/05/2001 14:02:05
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Overture de la fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil dce saisie de sinistre
+//* Libellé			: Overture de la fenêtre d'accueil dce saisie de sinistre
 //* Commentaires	: 
 //*				 
 //* Arguments		: 
@@ -1308,7 +1313,7 @@ on ue_ouvrir_fensaisie;call u_datawindow::ue_ouvrir_fensaisie;//*---------------
 //*-----------------------------------------------------------------
 
 /*----------------------------------------------------------------------------*/
-/* Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil de saisie de sinistre.                   */
+/* Ouverture de la fenêtre d'accueil de saisie de sinistre.                   */
 /*----------------------------------------------------------------------------*/
 SetPointer ( HourGlass! )
 
@@ -1329,7 +1334,7 @@ on doubleclicked;call u_datawindow::doubleclicked;//*---------------------------
 //* Evenement 		:	DoubleClicked
 //* Auteur			:	PLJ
 //* Date				:	23/07/1998 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Consultation du message Post It
+//* Libellé			:	Consultation du message Post It
 //* Commentaires	:	
 //*				  
 //*-----------------------------------------------------------------
@@ -1370,7 +1375,7 @@ on ue_modifiermenu;call u_datawindow_detail::ue_modifiermenu;//*----------------
 //* Evenement 		: 	ue_ModifierMenu
 //* Auteur			: 	PLJ
 //* Date				: 	31/07/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 	Changement des propri$$HEX1$$e900$$ENDHEX$$t$$HEX1$$e900$$ENDHEX$$s du menu contextuel li$$HEX1$$e900$$ENDHEX$$
+//* Libellé			: 	Changement des propriétés du menu contextuel lié
 //*						au u_datawindow_detail
 //* Commentaires	: 
 //*				     
@@ -1386,8 +1391,8 @@ Uf_Mnu_ChangerText ( 2, "Consulter" )		// modifier
 end on
 
 event rbuttondown;//Migration PB8-WYNIWYG-03/2006 FM
-//ce code remplace le code de l'anc$$HEX1$$ea00$$ENDHEX$$tre, 
-//il permet la s$$HEX1$$e900$$ENDHEX$$lection de la ligne sur le click droit
+//ce code remplace le code de l'ancêtre, 
+//il permet la sélection de la ligne sur le click droit
 
 If Row > 0 Then
 	This.SetRow(Row)
@@ -1419,7 +1424,7 @@ on ue_modifiermenu;call u_datawindow_detail::ue_modifiermenu;//*----------------
 //* Evenement 		: 	ue_ModifierMenu
 //* Auteur			: 	PLJ
 //* Date				: 	31/07/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 	Changement des propri$$HEX1$$e900$$ENDHEX$$t$$HEX1$$e900$$ENDHEX$$s du menu contextuel li$$HEX1$$e900$$ENDHEX$$
+//* Libellé			: 	Changement des propriétés du menu contextuel lié
 //*						au u_datawindow_detail
 //* Commentaires	: 
 //*				     
@@ -1435,8 +1440,8 @@ Uf_Mnu_ChangerText ( 2, "Consulter" )		// modifier
 end on
 
 event rbuttondown;//Migration PB8-WYNIWYG-03/2006 FM
-//ce code remplace le code de l'anc$$HEX1$$ea00$$ENDHEX$$tre, 
-//il permet la s$$HEX1$$e900$$ENDHEX$$lection de la ligne sur le click droit
+//ce code remplace le code de l'ancêtre, 
+//il permet la sélection de la ligne sur le click droit
 
 If Row > 0 Then
 	This.SetRow(Row)
@@ -1559,7 +1564,7 @@ on ue_modifiermenu;call u_datawindow_detail::ue_modifiermenu;//*----------------
 //* Evenement 		: 	ue_ModifierMenu
 //* Auteur			: 	PLJ
 //* Date				: 	31/07/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 	Changement des propri$$HEX1$$e900$$ENDHEX$$t$$HEX1$$e900$$ENDHEX$$s du menu contextuel li$$HEX1$$e900$$ENDHEX$$
+//* Libellé			: 	Changement des propriétés du menu contextuel lié
 //*						au u_datawindow_detail
 //* Commentaires	: 
 //*				     
@@ -1658,7 +1663,7 @@ event itemchanged;call super::itemchanged;//*-----------------------------------
 //* Fonction		: ItemChanged
 //* Auteur			: Fabry JF
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Rien
@@ -1695,7 +1700,7 @@ event itemerror;call super::itemerror;//*---------------------------------------
 //* Fonction		: ItemError
 //* Auteur			: Fabry JF
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Rien
@@ -1705,7 +1710,7 @@ event itemerror;call super::itemerror;//*---------------------------------------
 //*-----------------------------------------------------------------
 
 
-stMessage.sTitre		= "Dossier $$HEX2$$e0002000$$ENDHEX$$traiter par"
+stMessage.sTitre		= "Dossier à traiter par"
 stMessage.Icon			= Information!
 stMessage.sCode		= "CONT019"
 stMessage.bErreurG	= False
@@ -1739,7 +1744,7 @@ event sqlpreview;call super::sqlpreview;//*-------------------------------------
 //* Evenement 		: SqlPreview
 //* Auteur			: JFF
 //* Date				: 30/04/2001 15:42:44
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Insertion des Contacts d'un sinistre.
 //*				  
 //*-----------------------------------------------------------------
@@ -1747,9 +1752,9 @@ event sqlpreview;call super::sqlpreview;//*-------------------------------------
 //*				  
 //*-----------------------------------------------------------------
 
-String		sSql, sTxtMess1, sTxtMess2	// commande SQL qui doit $$HEX1$$ea00$$ENDHEX$$tre envoy$$HEX1$$e900$$ENDHEX$$e.
-Long			lLig					// N$$HEX2$$b0002000$$ENDHEX$$de la ligne $$HEX2$$e0002000$$ENDHEX$$ins$$HEX1$$e800$$ENDHEX$$rer ou supprimer.
-dwBuffer		dwBuf					// buffer de donn$$HEX1$$e900$$ENDHEX$$e de la Dw.
+String		sSql, sTxtMess1, sTxtMess2	// commande SQL qui doit être envoyée.
+Long			lLig					// N° de la ligne à insèrer ou supprimer.
+dwBuffer		dwBuf					// buffer de donnée de la Dw.
 
 //Migration PB8-WYNIWYG-03/2006 FM
 //sSql = This.GetSqlPreview ()
@@ -1826,7 +1831,7 @@ on ue_modifiermenu;call u_datawindow_detail::ue_modifiermenu;//*****************
 // Evenement 	: ue_ModifierMenu
 //	Auteur		: Fabry JF
 //	Date			: 04/09/01
-// Libell$$HEX3$$e90009000900$$ENDHEX$$: Menu contextuel 
+// Libellé		: Menu contextuel 
 // Commentaires: 
 //					  
 // ----------------------------------------------------------------------------
@@ -1957,8 +1962,8 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : clicked
 //* Auteur        : PLJ
 //* Date          : 05/09/2003 09:46:33
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
-//* Commentaires  : Ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre de gestion des num$$HEX1$$e900$$ENDHEX$$ros de bo$$HEX1$$ee00$$ENDHEX$$te
+//* Libellé       : 
+//* Commentaires  : Ouvre la fenêtre de gestion des numéros de boîte
 //*
 //* Arguments     : 
 //*
@@ -2012,7 +2017,7 @@ event clicked;//*---------------------------------------------------------------
 //* Fonction      : W_Tm_Sp_Sinistre::Click
 //* Auteur        : Catherine ABDMEZIEM
 //* Date          : 15/07/2004 
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : Ajout du bouton pour affichage polices et 
 //*						assurances des gti du produit du dr DCMP 030381
 //* Arguments     : 
@@ -2106,8 +2111,8 @@ event clicked;//*---------------------------------------------------------------
 //* Fonction      : W_Cm_Sp_Sinistre::Click
 //* Auteur        : FABRY JF
 //* Date          : 19/02/2007 
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
-//* Commentaires  : Info donnant l'URL du site de commande li$$HEX2$$e9002000$$ENDHEX$$au produit
+//* Libellé       : 
+//* Commentaires  : Info donnant l'URL du site de commande lié au produit
 //* Arguments     : 
 //*
 //* Retourne      : 
@@ -2149,7 +2154,7 @@ F_RechDetPro ( lDeb, lFin, dw_Det_Pro, lIdProd, "-DP", 80 )
 If lDeb > 0 Then
 	sURL = lnvPFCString.of_getkeyvalue (dw_Det_Pro.GetItemString ( lDeb, "VAL_CAR" ), "URL", ";")
 	If Pos ( Upper ( sURL ), "HTTP://", 1 ) <= 0 Then
-			sURL = "L'URL est mal param$$HEX1$$e800$$ENDHEX$$tr$$HEX1$$e900$$ENDHEX$$e, contactez la cellule param$$HEX1$$e800$$ENDHEX$$trage au 2245"
+			sURL = "L'URL est mal paramètrée, contactez la cellule paramètrage au 2245"
 	End If
 	stMessage.sVar[1] = sURL
 	stMessage.sCode = "COMD442"
@@ -2185,7 +2190,7 @@ event clicked;//*---------------------------------------------------------------
 //* Fonction      : W_Tm_Sp_Sinistre::Click
 //* Auteur        : Fabry JF
 //* Date          : 07/05/2019
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*						
 //* Arguments     : 

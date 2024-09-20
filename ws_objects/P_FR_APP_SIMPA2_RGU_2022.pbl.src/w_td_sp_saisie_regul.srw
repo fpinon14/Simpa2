@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_td_sp_saisie_regul.srw
-$PBExportComments$-} Fen$$HEX1$$ea00$$ENDHEX$$tre de traitement d$$HEX1$$e900$$ENDHEX$$tail pour la saisie des r$$HEX1$$e900$$ENDHEX$$gularisations.
+﻿$PBExportHeader$w_td_sp_saisie_regul.srw
+$PBExportComments$-} Fenêtre de traitement détail pour la saisie des régularisations.
 forward
 global type w_td_sp_saisie_regul from w_8_traitement_detail
 end type
@@ -46,16 +46,17 @@ event ue_taillefenetre();//*----------------------------------------------------
 //* Evenement 		: Ue_TailleFenetre
 //* Auteur			: Fabry JF
 //* Date				: 16/10/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*-----------------------------------------------------------------
 
-// Je r$$HEX1$$e900$$ENDHEX$$ajuste la hauteur pour W10
+// Je réajuste la hauteur pour W10
 
-This.Height = 1825
+// This.Height = 1825 // [PB2022_TAILLE_FEN] je commente
+
 end event
 
 event setfocus();
@@ -73,7 +74,7 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //* Fonction		: W_Td_Sp_Saisie_Regul::Wf_PositionnerObjets (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 15:27:47
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On positionne et on taille tous les objets
 //*
 //* Arguments		: Aucun
@@ -83,8 +84,8 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On positionne tous les objets n$$HEX1$$e900$$ENDHEX$$cessaires $$HEX2$$e0002000$$ENDHEX$$la gestion, pour     */
-/* faciliter le d$$HEX1$$e900$$ENDHEX$$veloppement. (On peut bouger les objets).         */
+/* On positionne tous les objets nécessaires à la gestion, pour     */
+/* faciliter le développement. (On peut bouger les objets).         */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
@@ -95,7 +96,7 @@ Uo_Ong.Y					=  157
 Uo_Ong.Width			=  109
 
 /*------------------------------------------------------------------*/
-/* DataWindow pour la saisie de la r$$HEX1$$e900$$ENDHEX$$gularisation.                  */
+/* DataWindow pour la saisie de la régularisation.                  */
 /*------------------------------------------------------------------*/
 Dw_Regul_FF.X			=   60
 Dw_Regul_FF.Y			=  310
@@ -122,8 +123,8 @@ public function boolean wf_preparermodifier ();//*------------------------------
 //* Fonction		: W_Td_Sp_Saisie_Regul::Wf_PreparerModifier
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Op$$HEX1$$e900$$ENDHEX$$ration avant modification
+//* Libellé			: 
+//* Commentaires	: Opération avant modification
 //*
 //* Arguments		: Rien
 //*
@@ -135,13 +136,13 @@ public function boolean wf_preparermodifier ();//*------------------------------
 s_Pass	stPass_Dga
 
 /*------------------------------------------------------------------*/
-/* On arme le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre avec le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre       */
+/* On arme le titre de la fenêtre avec le titre de la fenêtre       */
 /* Parent.                                                          */
 /*------------------------------------------------------------------*/
 This.Title = istPass.sTab [ 1 ]
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le type de r$$HEX1$$e900$$ENDHEX$$gularisation (RI, RM, RP)               */
+/* On récupére le type de régularisation (RI, RM, RP)               */
 /*------------------------------------------------------------------*/
 stPass_Dga.sTab[1] = istPass.sTab [ 2 ]
 
@@ -160,8 +161,8 @@ public function boolean wf_preparervalider ();//*-------------------------------
 //* Fonction		: W_Td_Sp_Saisie_Regul::Wf_PreparerValider
 //* Auteur			: Erick John Stark
 //* Date				: 28/01/1998 09:27:24
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On veut valider une r$$HEX1$$e900$$ENDHEX$$gularisaton
+//* Libellé			: 
+//* Commentaires	: On veut valider une régularisaton
 //*
 //* Arguments		: 
 //*
@@ -184,8 +185,8 @@ public function string wf_controlersaisie ();//*--------------------------------
 //* Fonction		: W_Td_Sp_Saisie_Regul::Wf_ControlerSaisie (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:50:46
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Contr$$HEX1$$f400$$ENDHEX$$le de la saisie
+//* Libellé			: 
+//* Commentaires	: Contrôle de la saisie
 //*
 //* Arguments		: Aucun
 //*
@@ -223,7 +224,7 @@ on ue_initialiser;call w_8_traitement_detail::ue_initialiser;//*----------------
 //* Evenement 		: Ue_Initialiser
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -249,7 +250,7 @@ dwNorm[3] = istPass.dwNorm[3]		// DataWindow FRAIS
 dwNorm[4] = istPass.dwNorm[4]		// DataWindow REG_GTI
 
 /*------------------------------------------------------------------*/
-/* On commence $$HEX2$$e0002000$$ENDHEX$$initialiser les NVUO.                              */
+/* On commence à initialiser les NVUO.                              */
 /*------------------------------------------------------------------*/
 iuoGsSpRegulDetail = Create U_Gs_Sp_Regul_Detail
 
@@ -260,13 +261,13 @@ iuoGsSpRegulDetail.Uf_Initialiser_Dw ( istPass.dwTab[1], dw_1, dw_Regul_FF, istP
 /* Initialisation de l'onglet.                                      */
 /*------------------------------------------------------------------*/
 Uo_Ong.Uf_Initialiser ( 1, 1 )
-Uo_Ong.Uf_EnregistrerOnglet ( "01", "R$$HEX1$$e900$$ENDHEX$$gularisation", 	"", dw_Regul_FF,			True )
+Uo_Ong.Uf_EnregistrerOnglet ( "01", "Régularisation", 	"", dw_Regul_FF,			True )
 
 
 iuoGsSpRegulDetail.Uf_Traitement ( 1, stPass_Dga )
 
 /*------------------------------------------------------------------*/
-/* Gestion du Passage $$HEX2$$e0002000$$ENDHEX$$l'EURO.                                     */
+/* Gestion du Passage à l'EURO.                                     */
 /*------------------------------------------------------------------*/
 N_Cst_Passage_Euro	nvPassageEuro
 
@@ -287,8 +288,8 @@ event close;call super::close;//*-----------------------------------------------
 //* Evenement 		: Close
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 18:46:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Fermeture d$$HEX1$$e900$$ENDHEX$$finitive de la fen$$HEX1$$ea00$$ENDHEX$$tre.
+//* Libellé			: 
+//* Commentaires	: Fermeture définitive de la fenêtre.
 //*				     On supprime tous les NVUO.
 //*				  
 //*-----------------------------------------------------------------
@@ -304,13 +305,13 @@ If IsValid(iUoGsSpRegulDetail) Then Destroy iUoGsSpRegulDetail
 
 end event
 
-on we_childactivate;call w_8_traitement_detail::we_childactivate;//*-----------------------------------------------------------------
+event we_childactivate;call super::we_childactivate;//*-----------------------------------------------------------------
 //*
 //* Objet 			: W_Td_Sp_Saisie_Regul::We_ChildActivate
 //* Evenement 		: We_ChildActivate
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 17:53:35
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -320,9 +321,13 @@ on we_childactivate;call w_8_traitement_detail::we_childactivate;//*------------
 
 This.X			=    1
 This.Y			=    1
-This.Height		= 1769
-This.Width		= 3598
-end on
+// [PB2022_TAILLE_FEN] + xxx
+This.Height		= 1769 + 90
+
+
+// [PB2022_TAILLE_FEN] + xxx
+This.Width		= 3598 + 50
+end event
 
 on w_td_sp_saisie_regul.create
 int iCurrent
@@ -349,7 +354,7 @@ event show;call super::show;//*-------------------------------------------------
 //* Evenement 		: Show
 //* Auteur			: Fabry JF
 //* Date				: 16/10/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -417,7 +422,7 @@ on pb_controler::clicked;//*----------------------------------------------------
 //* Evenement 		: 
 //* Auteur			: Erick John Stark
 //* Date				: 05/02/1998 15:50:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -426,7 +431,7 @@ on pb_controler::clicked;//*----------------------------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche un ItemFocusChanged avant toute chose. Cela         */
+/* On déclenche un ItemFocusChanged avant toute chose. Cela         */
 /* concerne la zone ID_EVT.                                         */
 /*------------------------------------------------------------------*/
 
@@ -457,7 +462,7 @@ on constructor;//*--------------------------------------------------------------
 //* Evenement 		: Constructor
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 14:57:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -508,7 +513,7 @@ event itemerror;call super::itemerror;//*---------------------------------------
 //* Evenement 		: ItemError
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:47:59
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion des messages d'erreur
 //*				  
 //*-----------------------------------------------------------------
@@ -518,14 +523,14 @@ event itemerror;call super::itemerror;//*---------------------------------------
 
 If	ibErreur Then
 
-	stMessage.sTitre		= "Gestion des r$$HEX1$$e900$$ENDHEX$$gularisations - SIMPA2"
+	stMessage.sTitre		= "Gestion des régularisations - SIMPA2"
 	stMessage.Icon			= Information!
 
 	stMessage.bErreurG	= TRUE
 
 	Choose Case isErrCol
 	Case "LIB_REG"
-		stMessage.sVar[1] 		= "libell$$HEX2$$e9002000$$ENDHEX$$de la r$$HEX1$$e900$$ENDHEX$$gularisation"					// Erreur de Validation - 
+		stMessage.sVar[1] 		= "libellé de la régularisation"					// Erreur de Validation - 
 		stMessage.sCode			= "GENE003"
 
 	Case "RIB_BQ"
@@ -537,13 +542,13 @@ If	ibErreur Then
 		stMessage.sCode			= "GENE003"
 
 	Case "RIB_CPT"
-		stMessage.sVar[1]			= "num$$HEX1$$e900$$ENDHEX$$ro du compte"									// Erreur de Validation - 
+		stMessage.sVar[1]			= "numéro du compte"									// Erreur de Validation - 
 		stMessage.sCode			= "GENE003"
 
 	Case "RIB_CLE"
 		Choose Case iiErreur
 		Case 0
-			stMessage.sVar[1] 	= "cl$$HEX2$$e9002000$$ENDHEX$$RIB"												// Erreur de Validation - 
+			stMessage.sVar[1] 	= "clé RIB"												// Erreur de Validation - 
 			stMessage.sCode		= "GENE002"
 
 		Case 1
@@ -561,7 +566,7 @@ If	ibErreur Then
 	Case "MT_TOT_REG"
 		Choose Case iiErreur
 		Case 1
-			stMessage.sVar[1] 		= "n$$HEX1$$e900$$ENDHEX$$gatif"											// Montant incorrect (RM)
+			stMessage.sVar[1] 		= "négatif"											// Montant incorrect (RM)
 			stMessage.bErreurG		= False
 			stMessage.sCode			= "REGU120"
 
@@ -610,7 +615,7 @@ event itemchanged;call super::itemchanged;//*-----------------------------------
 //* Evenement 		: ItemChanged
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:35:04
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Modification des zones
 //*				  
 //*-----------------------------------------------------------------

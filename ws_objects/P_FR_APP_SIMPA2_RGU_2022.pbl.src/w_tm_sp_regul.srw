@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_tm_sp_regul.srw
-$PBExportComments$-} Fen$$HEX1$$ea00$$ENDHEX$$tre de traitement pour la saisie des r$$HEX1$$e900$$ENDHEX$$gularisations
+﻿$PBExportHeader$w_tm_sp_regul.srw
+$PBExportComments$-} Fenêtre de traitement pour la saisie des régularisations
 forward
 global type w_tm_sp_regul from w_8_traitement_master
 end type
@@ -68,12 +68,12 @@ event ue_regul;//*--------------------------------------------------------------
 //* Evenement 		: Ue_Regul
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 16:37:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre de d$$HEX1$$e900$$ENDHEX$$tail.
+//* Libellé			: 
+//* Commentaires	: Ouverture de la fenêtre de détail.
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1    JFF     01/08/2005 Contr$$HEX1$$f400$$ENDHEX$$le particuliers si RM demand$$HEX1$$e900$$ENDHEX$$e.
+//* #1    JFF     01/08/2005 Contrôle particuliers si RM demandée.
 //*-----------------------------------------------------------------
 
 Long lTypeRegul
@@ -90,7 +90,7 @@ lTypeRegul			= Message.WordParm
 // [REGL_LBE]
 lRow=Dw_lst_reg.GetSelectedRow (0)
 if Upper ( Trim ( dw_Lst_Reg.GetItemString ( lRow, "COD_MODE_REG" ) ) )  = "XA" Then
-	stMessage.sTitre		= "Gestion des r$$HEX1$$e900$$ENDHEX$$gularisations"
+	stMessage.sTitre		= "Gestion des régularisations"
 	stMessage.Icon			= Exclamation!
 	stMessage.bErreurG	= FALSE
 	stMessage.sCode		= "REGU220"
@@ -102,7 +102,7 @@ End if
 // :[REGL_LBE]
 
 /*------------------------------------------------------------------*/
-/* #1 : Contr$$HEX1$$f400$$ENDHEX$$le particuliers si RM demand$$HEX1$$e900$$ENDHEX$$e.                       */
+/* #1 : Contrôle particuliers si RM demandée.                       */
 /*------------------------------------------------------------------*/
 Choose Case lTypeRegul 
 	Case 2,4
@@ -111,8 +111,8 @@ Choose Case lTypeRegul
 End Choose
 
 /*------------------------------------------------------------------*/
-/* On arme une variable d'instance de la fen$$HEX1$$ea00$$ENDHEX$$tre pour le choix du   */
-/* type de r$$HEX1$$e900$$ENDHEX$$gularisation. Cette variable sera utilis$$HEX1$$e900$$ENDHEX$$e sur         */
+/* On arme une variable d'instance de la fenêtre pour le choix du   */
+/* type de régularisation. Cette variable sera utilisée sur         */
 /* Ue_EnableFenetre.                                                */
 /*------------------------------------------------------------------*/
 isTypeRegul			= String ( lTypeRegul )
@@ -121,9 +121,9 @@ SetPointer ( HourGlass! )
 /*------------------------------------------------------------------*/
 /* On arme la structure pour expliquer un certain nombre de         */
 /* choses. On est en modification, on ne veut pas du bouton CTRL.   */
-/* On passe la DW de d$$HEX1$$e900$$ENDHEX$$tail ainsi que la DW Master (Sinistre).      */
-/* Cette derni$$HEX1$$e800$$ENDHEX$$re est tr$$HEX1$$e900$$ENDHEX$$s importante. Elle va $$HEX1$$e900$$ENDHEX$$viter d'utiliser    */
-/* des instances de fen$$HEX1$$ea00$$ENDHEX$$tres.                                       */
+/* On passe la DW de détail ainsi que la DW Master (Sinistre).      */
+/* Cette dernière est trés importante. Elle va éviter d'utiliser    */
+/* des instances de fenêtres.                                       */
 /*------------------------------------------------------------------*/
 stPass_Dga.bInsert		= False
 stPass_Dga.bSupprime		= False
@@ -152,8 +152,8 @@ on ue_item10;call w_8_traitement_master::ue_item10;//*--------------------------
 //* Evenement 		: Ue_Item10
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 16:37:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Saisie d'un RP li$$HEX4$$e9002000e0002000$$ENDHEX$$une Garantie
+//* Libellé			: 
+//* Commentaires	: Saisie d'un RP lié à une Garantie
 //*
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -169,16 +169,16 @@ event ue_taillefenetre();//*----------------------------------------------------
 //* Evenement 		: Ue_TailleFenetre
 //* Auteur			: Fabry JF
 //* Date				: 16/10/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*-----------------------------------------------------------------
 
-// Je r$$HEX1$$e900$$ENDHEX$$ajuste la hauteur pour W10
+// Je réajuste la hauteur pour W10
 
-This.Height = 1825
+// This.Height = 1825 // [PB2022_TAILLE_FEN] je commente
 
 end event
 
@@ -187,7 +187,7 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //* Fonction		: W_Tm_Sp_Regul::Wf_PositionnerObjets (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 15:27:47
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On positionne et on taille tous les objets
 //*
 //* Arguments		: Aucun
@@ -197,8 +197,8 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On positionne tous les objets n$$HEX1$$e900$$ENDHEX$$cessaires $$HEX2$$e0002000$$ENDHEX$$la gestion, pour     */
-/* faciliter le d$$HEX1$$e900$$ENDHEX$$veloppement. (On peut bouger les objets).         */
+/* On positionne tous les objets nécessaires à la gestion, pour     */
+/* faciliter le développement. (On peut bouger les objets).         */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
@@ -226,7 +226,7 @@ Dw_Inter.Width		= Dw_1.Width
 Dw_Inter.Height	= Dw_1.Height
 
 /*------------------------------------------------------------------*/
-/* Liste des R$$HEX1$$e800$$ENDHEX$$glements.                                            */
+/* Liste des Règlements.                                            */
 /*------------------------------------------------------------------*/
 Dw_Lst_Reg.X			= Uo_3D.X
 Dw_Lst_Reg.Y			= Dw_1.Y + Dw_1.Height + 40
@@ -234,7 +234,7 @@ Dw_Lst_Reg.Width		= Uo_3D.Width
 Dw_Lst_Reg.Height		= 480
 
 /*------------------------------------------------------------------*/
-/* Apparition de la r$$HEX1$$e900$$ENDHEX$$gularisation. (Si au moins une ligne)         */
+/* Apparition de la régularisation. (Si au moins une ligne)         */
 /*------------------------------------------------------------------*/
 Dw_Regul_FF.X			= 2220
 Dw_Regul_FF.Y			= Dw_1.Y
@@ -247,8 +247,8 @@ public function boolean wf_preparermodifier ();//*------------------------------
 //* Fonction		: W_Tm_Sp_Regul::Wf_PreparerModifier
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Op$$HEX1$$e900$$ENDHEX$$ration avant modification
+//* Libellé			: 
+//* Commentaires	: Opération avant modification
 //*
 //* Arguments		: Rien
 //*
@@ -264,9 +264,9 @@ stPass_Dga.sTab [ 1 ] = istPass.sTab [ 1 ]			// ID_SIN en cours de traitement
 iuoGsSpRegul.Uf_Traitement ( 2, stPass_Dga )
 
 /*------------------------------------------------------------------*/
-/* Au retour, on arme le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre de la mani$$HEX1$$e800$$ENDHEX$$re          */
+/* Au retour, on arme le titre de la fenêtre de la manière          */
 /* suivante.                                                        */
-/* Code Produit + Libell$$HEX2$$e9002000$$ENDHEX$$Produit + N$$HEX2$$b0002000$$ENDHEX$$Dossier + Nom + Pr$$HEX1$$e900$$ENDHEX$$nom.      */
+/* Code Produit + Libellé Produit + N° Dossier + Nom + Prénom.      */
 /*------------------------------------------------------------------*/
 
 If	stPass_Dga.bRetour Then
@@ -274,7 +274,7 @@ If	stPass_Dga.bRetour Then
 End If
 
 /*------------------------------------------------------------------*/
-/* L'acc$$HEX1$$e900$$ENDHEX$$s au bouton CONTROLER est g$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$dans la fonction du NVUO.   */
+/* L'accés au bouton CONTROLER est géré dans la fonction du NVUO.   */
 /* En effet, s'il existe un travail en cours ou un virement dans    */
 /* W_A_VIRER il est impossible de faire CTL-VAL.                    */
 /*------------------------------------------------------------------*/
@@ -293,8 +293,8 @@ public function boolean wf_valider ();//*---------------------------------------
 //* Fonction		: W_Tm_Sp_Regul::Wf_Valider (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On g$$HEX1$$e900$$ENDHEX$$re enti$$HEX1$$e900$$ENDHEX$$rement la validation, sans faire appel $$HEX2$$e0002000$$ENDHEX$$la fonction anc$$HEX1$$ea00$$ENDHEX$$tre
+//* Libellé			: 
+//* Commentaires	: On gére entiérement la validation, sans faire appel à la fonction ancêtre
 //*
 //* Arguments		: Rien
 //*
@@ -329,8 +329,8 @@ public function string wf_controlersaisie ();//*--------------------------------
 //* Fonction		: W_Tm_Sp_Regul::Wf_ControlerSaisie (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:50:46
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Contr$$HEX1$$f400$$ENDHEX$$le de la saisie
+//* Libellé			: 
+//* Commentaires	: Contrôle de la saisie
 //*
 //* Arguments		: Aucun
 //*
@@ -359,7 +359,7 @@ sCodModeReg=dw_regul_ff.GetItemString(1,"COD_MODE_REG")
 // [VDOC14621]
 If sCodModeReg="FM"  Then
 	if not wf_droit_factu( ) Then
-		stMessage.sTitre		= "R$$HEX1$$e900$$ENDHEX$$gularisation FM"
+		stMessage.sTitre		= "Régularisation FM"
 		stMessage.Icon			= Exclamation!
 		stMessage.bErreurG	= FALSE
 		stMessage.Bouton		= OK!
@@ -380,7 +380,7 @@ public function boolean wf_droit_factu ();//*-----------------------------------
 //* Fonction		: w_tm_sp_regul::wf_droit_factu
 //* Auteur			: F. Pinon
 //* Date				: 24/06/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [VDoc14621]
+//* Libellé			: [VDoc14621]
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -395,8 +395,8 @@ public function boolean wf_droit_factu ();//*-----------------------------------
 Long 		lTotLigne
 
 /*--------------------------------------------------------------------*/
-/* La pr$$HEX1$$e900$$ENDHEX$$sence d'une ligne 208 pour l'op$$HEX1$$e900$$ENDHEX$$rateur */
-/* connect$$HEX60$$e90020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000$$ENDHEX$$*/   
+/* La présence d'une ligne 208 pour l'opérateur */
+/* connecté                                                           */   
 /*--------------------------------------------------------------------*/
 
 SELECT count(*) INTO :lTotLigne
@@ -414,7 +414,7 @@ on ue_initialiser;call w_8_traitement_master::ue_initialiser;//*----------------
 //* Evenement 		: Ue_Initialiser
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -432,7 +432,7 @@ DataWindow	dwPassageEuro[]
 Wf_PositionnerObjets ()
 
 /*------------------------------------------------------------------*/
-/* On commence $$HEX2$$e0002000$$ENDHEX$$initialiser les NVUO.                              */
+/* On commence à initialiser les NVUO.                              */
 /*------------------------------------------------------------------*/
 iuoGsSpRegul = Create U_Gs_Sp_Regul
 
@@ -463,7 +463,7 @@ Uo_Ong.Uf_EnregistrerOnglet ( "02", "Interlocuteurs", 	"", dw_Inter,		False )
 iuoGsSpRegul.Uf_Traitement ( 1, stPass_Dga )
 
 /*------------------------------------------------------------------*/
-/* Gestion du Passage $$HEX2$$e0002000$$ENDHEX$$l'EURO.                                     */
+/* Gestion du Passage à l'EURO.                                     */
 /*------------------------------------------------------------------*/
 N_Cst_Passage_Euro	nvPassageEuro
 
@@ -485,8 +485,8 @@ on ue_majaccueil;call w_8_traitement_master::ue_majaccueil;//*------------------
 //* Evenement 		: Ue_MajAccueil
 //* Auteur			: Erick John Stark
 //* Date				: 28/08/1998 16:03:59
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Construction de la chaine pour mettre $$HEX2$$e0002000$$ENDHEX$$jour la fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil
+//* Libellé			: 
+//* Commentaires	: Construction de la chaine pour mettre à jour la fenêtre d'accueil
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -523,8 +523,8 @@ on ue_enablefenetre;call w_8_traitement_master::ue_enablefenetre;//*------------
 //* Evenement 		: Ue_EnableFenetre
 //* Auteur			: Erick John Stark
 //* Date				: 16/03/1999 17:11:54
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On vient de la fen$$HEX1$$ea00$$ENDHEX$$tre de saisie des r$$HEX1$$e900$$ENDHEX$$gularisations
+//* Libellé			: 
+//* Commentaires	: On vient de la fenêtre de saisie des régularisations
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -545,8 +545,8 @@ on ue_item11;call w_8_traitement_master::ue_item11;//*--------------------------
 //* Evenement 		: Ue_Item11
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 16:37:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Saisie d'un RP li$$HEX4$$e9002000e0002000$$ENDHEX$$un Frais
+//* Libellé			: 
+//* Commentaires	: Saisie d'un RP lié à un Frais
 //*
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -562,8 +562,8 @@ on ue_item8;call w_8_traitement_master::ue_item8;//*----------------------------
 //* Evenement 		: Ue_Item8
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 16:37:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Saisie d'un RM li$$HEX4$$e9002000e0002000$$ENDHEX$$un Frais
+//* Libellé			: 
+//* Commentaires	: Saisie d'un RM lié à un Frais
 //*
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -619,8 +619,8 @@ on close;call w_8_traitement_master::close;//*----------------------------------
 //* Evenement 		: Close
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 18:46:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Fermeture d$$HEX1$$e900$$ENDHEX$$finitive de la fen$$HEX1$$ea00$$ENDHEX$$tre.
+//* Libellé			: 
+//* Commentaires	: Fermeture définitive de la fenêtre.
 //*				     On supprime tous les NVUO.
 //*				  
 //*-----------------------------------------------------------------
@@ -632,13 +632,13 @@ Destroy iUoGsSpRegul
 
 end on
 
-on we_childactivate;call w_8_traitement_master::we_childactivate;//*-----------------------------------------------------------------
+event we_childactivate;call super::we_childactivate;//*-----------------------------------------------------------------
 //*
 //* Objet 			: W_Tm_Sp_Regul::We_ChildActivate
 //* Evenement 		: We_ChildActivate
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 17:53:35
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -648,9 +648,13 @@ on we_childactivate;call w_8_traitement_master::we_childactivate;//*------------
 
 This.X			=    1
 This.Y			=    1
-This.Height		= 1769
-This.Width		= 3598
-end on
+// [PB2022_TAILLE_FEN] + xxx
+This.Height		= 1769 + 90
+
+
+// [PB2022_TAILLE_FEN] + xxx
+This.Width		= 3598 + 50
+end event
 
 on ue_item5;call w_8_traitement_master::ue_item5;//*-----------------------------------------------------------------
 //*
@@ -658,7 +662,7 @@ on ue_item5;call w_8_traitement_master::ue_item5;//*----------------------------
 //* Evenement 		: Ue_Item5
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 16:37:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Saisie d'un RI
 //*
 //*-----------------------------------------------------------------
@@ -676,8 +680,8 @@ on ue_item7;call w_8_traitement_master::ue_item7;//*----------------------------
 //* Evenement 		: Ue_Item7
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 16:37:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Saisie d'un RM li$$HEX4$$e9002000e0002000$$ENDHEX$$la Garantie
+//* Libellé			: 
+//* Commentaires	: Saisie d'un RM lié à la Garantie
 //*
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -693,7 +697,7 @@ event show;call super::show;//*-------------------------------------------------
 //* Evenement 		: Show
 //* Auteur			: Fabry JF
 //* Date				: 16/10/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -777,7 +781,7 @@ on constructor;//*--------------------------------------------------------------
 //* Evenement 		: Constructor
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 14:57:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -829,7 +833,7 @@ event ue_modifiermenu;call super::ue_modifiermenu;//*---------------------------
 //* Evenement 		: Ue_ModifierMenu
 //* Auteur			: Erick John Stark
 //* Date				: 11/03/1999 17:50:12
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -849,15 +853,15 @@ For	lCpt = 1	To 4
 Next
 
 /*------------------------------------------------------------------*/
-/* #1 Dor$$HEX1$$e900$$ENDHEX$$navant toute R$$HEX1$$e900$$ENDHEX$$gul RI/RM/RP doit se faire par rapport $$HEX4$$e000200020002000$$ENDHEX$$*/
-/* un RN de r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence, donc il doit au moins y avoir une ligne      */
-/* cliqu$$HEX1$$e900$$ENDHEX$$e.                                                         */
+/* #1 Dorénavant toute Régul RI/RM/RP doit se faire par rapport à   */
+/* un RN de référence, donc il doit au moins y avoir une ligne      */
+/* cliquée.                                                         */
 /*------------------------------------------------------------------*/
 If This.ilLigneClick <=0 Then bOk = False
 
 /*------------------------------------------------------------------*/
-/* #1 Dor$$HEX1$$e900$$ENDHEX$$navant toute R$$HEX1$$e900$$ENDHEX$$gul RI/RM/RP doit se faire par rapport $$HEX4$$e000200020002000$$ENDHEX$$*/
-/* un RN de r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence															  */
+/* #1 Dorénavant toute Régul RI/RM/RP doit se faire par rapport à   */
+/* un RN de référence															  */
 /*------------------------------------------------------------------*/
 If bOk Then
 	sCodMotReg = This.GetItemString ( This.ilLigneClick, "COD_MOT_REG" )
@@ -868,14 +872,14 @@ If bOk Then
 End If
 
 /*------------------------------------------------------------------*/
-/* #1 Fin premiers contr$$HEX1$$f400$$ENDHEX$$le													  */
+/* #1 Fin premiers contrôle													  */
 /*------------------------------------------------------------------*/
 If Not bOk Then
 	For	lCpt = 5 To 11
 			This.Uf_Mnu_CacherItem ( lCpt )
 	Next
 
-	stMessage.sTitre		= "R$$HEX1$$e900$$ENDHEX$$gul. Impossible"
+	stMessage.sTitre		= "Régul. Impossible"
 	stMessage.Icon			= Exclamation!
 	stMessage.bErreurG	= FALSE
 	stMessage.Bouton		= OK!
@@ -885,7 +889,7 @@ If Not bOk Then
 End If
 
 /*------------------------------------------------------------------*/
-/* On ne peut saisir qu'une seule r$$HEX1$$e900$$ENDHEX$$gularisation $$HEX2$$e0002000$$ENDHEX$$la fois.         */
+/* On ne peut saisir qu'une seule régularisation à la fois.         */
 /*------------------------------------------------------------------*/
 If	dw_Regul_FF.RowCount () > 0	Then 
 	For	lCpt = 5 To 11
@@ -896,17 +900,17 @@ If	dw_Regul_FF.RowCount () > 0	Then
 End If
 
 /*------------------------------------------------------------------*/
-/* On va d'abord modifier tous les libell$$HEX1$$e900$$ENDHEX$$s des menus.              */
+/* On va d'abord modifier tous les libellés des menus.              */
 /*------------------------------------------------------------------*/
-This.Uf_Mnu_ChangerText ( 5, "RI Repr$$HEX1$$e900$$ENDHEX$$sentation Impay$$HEX1$$e900$$ENDHEX$$s sur R$$HEX1$$e900$$ENDHEX$$glement de r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence N$$HEX1$$b000$$ENDHEX$$" + String ( This.ilLigneClick ) + "/" + sCodMotReg + "/" + sCodModeReg + "/" + sCodInter )   // Code 1
+This.Uf_Mnu_ChangerText ( 5, "RI Représentation Impayés sur Réglement de référence N°" + String ( This.ilLigneClick ) + "/" + sCodMotReg + "/" + sCodModeReg + "/" + sCodInter )   // Code 1
 This.Uf_Mnu_ChangerText ( 6, "-" )
 
-This.Uf_Mnu_ChangerText ( 7, "RM $$HEX2$$e0002000$$ENDHEX$$d$$HEX1$$e900$$ENDHEX$$duire sur garantie sur R$$HEX1$$e900$$ENDHEX$$glement de r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence N$$HEX1$$b000$$ENDHEX$$" + String ( This.ilLigneClick ) + "/" + sCodMotReg + "/" + sCodModeReg + "/" + sCodInter )  // Code 2
-This.Uf_Mnu_ChangerText ( 8, "RM $$HEX2$$e0002000$$ENDHEX$$d$$HEX1$$e900$$ENDHEX$$duire sur frais sur R$$HEX1$$e900$$ENDHEX$$glement de r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence N$$HEX1$$b000$$ENDHEX$$" + String ( This.ilLigneClick ) + "/" + sCodMotReg + "/" + sCodModeReg + "/" + sCodInter )    // Code 3
+This.Uf_Mnu_ChangerText ( 7, "RM à déduire sur garantie sur Réglement de référence N°" + String ( This.ilLigneClick ) + "/" + sCodMotReg + "/" + sCodModeReg + "/" + sCodInter )  // Code 2
+This.Uf_Mnu_ChangerText ( 8, "RM à déduire sur frais sur Réglement de référence N°" + String ( This.ilLigneClick ) + "/" + sCodMotReg + "/" + sCodModeReg + "/" + sCodInter )    // Code 3
 This.Uf_Mnu_ChangerText ( 9, "-" )
 
-This.Uf_Mnu_ChangerText ( 10, "RP $$HEX2$$e0002000$$ENDHEX$$ajouter sur garantie sur R$$HEX1$$e900$$ENDHEX$$glement de r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence N$$HEX1$$b000$$ENDHEX$$" + String ( This.ilLigneClick ) + "/" + sCodMotReg + "/" + sCodModeReg + "/" + sCodInter )  // Code 4
-This.Uf_Mnu_ChangerText ( 11, "RP $$HEX2$$e0002000$$ENDHEX$$ajouter sur frais sur R$$HEX1$$e900$$ENDHEX$$glement de r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence N$$HEX1$$b000$$ENDHEX$$" + String ( This.ilLigneClick ) + "/" + sCodMotReg + "/" + sCodModeReg + "/" + sCodInter )     // Code 5
+This.Uf_Mnu_ChangerText ( 10, "RP à ajouter sur garantie sur Réglement de référence N°" + String ( This.ilLigneClick ) + "/" + sCodMotReg + "/" + sCodModeReg + "/" + sCodInter )  // Code 4
+This.Uf_Mnu_ChangerText ( 11, "RP à ajouter sur frais sur Réglement de référence N°" + String ( This.ilLigneClick ) + "/" + sCodMotReg + "/" + sCodModeReg + "/" + sCodInter )     // Code 5
 
 /*------------------------------------------------------------------*/
 /* On fait apparaitre les menus.                                    */
@@ -926,7 +930,7 @@ If sCodModeReg = "FM" Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Attention s'il n'existe aucun r$$HEX1$$e800$$ENDHEX$$glement pour le sinistre         */
+/* Attention s'il n'existe aucun règlement pour le sinistre         */
 /* ilLigneClick est NULL.                                           */
 /*------------------------------------------------------------------*/
 If	This.ilLigneClick > 0	Then

@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_cd_sp_detail.srw
+﻿$PBExportHeader$w_cd_sp_detail.srw
 forward
 global type w_cd_sp_detail from w_8_ancetre_consultation
 end type
@@ -52,7 +52,7 @@ on ue_quitteronglet011;call w_8_ancetre_consultation::ue_quitteronglet011;//*---
 //* Evenement 		: Ue_QuitterOnglet011
 //* Auteur			: PLJ
 //* Date				: 13/08/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On va quitter l'onglet 01
 //*				  
 //*-----------------------------------------------------------------
@@ -61,7 +61,7 @@ on ue_quitteronglet011;call w_8_ancetre_consultation::ue_quitteronglet011;//*---
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* Si la fen$$HEX1$$ea00$$ENDHEX$$tre de consultation des paragraphes est visible, on    */
+/* Si la fenêtre de consultation des paragraphes est visible, on    */
 /* la rend invisible.                                               */
 /*------------------------------------------------------------------*/
 Wf_Fermer_Consulter_Paragraphe ()
@@ -73,7 +73,7 @@ on ue_quitteronglet021;call w_8_ancetre_consultation::ue_quitteronglet021;//*---
 //* Evenement 		: Ue_QuitterOnglet021
 //* Auteur			: PLJ
 //* Date				: 13/08/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On va quitter l'onglet 02
 //*				  
 //*-----------------------------------------------------------------
@@ -82,7 +82,7 @@ on ue_quitteronglet021;call w_8_ancetre_consultation::ue_quitteronglet021;//*---
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* Si la fen$$HEX1$$ea00$$ENDHEX$$tre de consultation des paragraphes est visible, on    */
+/* Si la fenêtre de consultation des paragraphes est visible, on    */
 /* la rend invisible.                                               */
 /*------------------------------------------------------------------*/
 Wf_Fermer_Consulter_Paragraphe ()
@@ -94,16 +94,16 @@ event ue_taillefenetre();//*----------------------------------------------------
 //* Evenement 		: Ue_TailleFenetre
 //* Auteur			: Fabry JF
 //* Date				: 16/10/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*-----------------------------------------------------------------
 
-// Je r$$HEX1$$e900$$ENDHEX$$ajuste la hauteur pour W10
+// Je réajuste la hauteur pour W10
 
-This.Height = 1810
+// This.Height = 1810 // [PB2022_TAILLE_FEN] je commente
 end event
 
 private subroutine wf_positionnerobjets ();//*-----------------------------------------------------------------
@@ -111,9 +111,9 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //* Fonction		: W_cd_sp_Detail::Wf_PositionnerObjets (PRIVATE)
 //* Auteur			: PLJ
 //* Date				: 29/07/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On positionne et on taille tous les objets
-//*                 sauf uo_bord3d qui est positionn$$HEX2$$e9002000$$ENDHEX$$et taill$$HEX1$$e900$$ENDHEX$$
+//*                 sauf uo_bord3d qui est positionné et taillé
 //*                 par son constructor
 //*
 //* Arguments		: Aucun
@@ -123,8 +123,8 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On positionne tous les objets n$$HEX1$$e900$$ENDHEX$$cessaires $$HEX2$$e0002000$$ENDHEX$$la gestion, pour     */
-/* faciliter le d$$HEX1$$e900$$ENDHEX$$veloppement. (On peut bouger les objets).         */
+/* On positionne tous les objets nécessaires à la gestion, pour     */
+/* faciliter le développement. (On peut bouger les objets).         */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
@@ -135,7 +135,7 @@ Uo_Onglet.Y			=  157
 Uo_Onglet.Height	=  109
 
 /*------------------------------------------------------------------*/
-/* Dw_1  DataWindow : En-t$$HEX1$$ea00$$ENDHEX$$te D$$HEX1$$e900$$ENDHEX$$tail		                          */
+/* Dw_1  DataWindow : En-tête Détail		                          */
 /*------------------------------------------------------------------*/
 Dw_1.X				=   33
 Dw_1.Y				=  273
@@ -162,7 +162,7 @@ public function boolean wf_preparerconsulter ();//*-----------------------------
 //* Fonction		: wf_PreparerConsulter
 //* Auteur			: PLJ
 //* Date				: 27/07/1998 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Appel de uf_preparer_consulter
+//* Libellé			: Appel de uf_preparer_consulter
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun.
@@ -195,8 +195,8 @@ private subroutine wf_fermer_consulter_paragraphe ();//*------------------------
 //* Fonction		: W_Cm_Sp_Detail::Wf_Fermer_Consulter_Paragraphe (PRIVATE)
 //* Auteur			: PLJ
 //* Date				: 13/08/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Si la fen$$HEX1$$ea00$$ENDHEX$$tre de consultation est ouverte, on la rend invisible
+//* Libellé			: 
+//* Commentaires	: Si la fenêtre de consultation est ouverte, on la rend invisible
 //*
 //* Arguments		: Aucun
 //*
@@ -215,7 +215,7 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		:	UE_INITIALISER - Extend
 //* Auteur			:	PLJ
 //* Date				:	29/07/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Initialisation de la fen$$HEX1$$ea00$$ENDHEX$$tre de consultation  
+//* Libellé			:	Initialisation de la fenêtre de consultation  
 //*					 	d'Interlocuteur
 //* Commentaires	:	
 //*				  
@@ -230,7 +230,7 @@ DataWindow	dwNorm[]
 //Fin Migration PB8-WYNIWYG-03/2006 FM
 
 /*------------------------------------------------------------------*/
-/* Positionnement des objets de la fen$$HEX1$$ea00$$ENDHEX$$tre                          */
+/* Positionnement des objets de la fenêtre                          */
 /*------------------------------------------------------------------*/
 wf_PositionnerObjets()
 
@@ -239,12 +239,12 @@ wf_PositionnerObjets()
 /*------------------------------------------------------------------*/
 Uo_Onglet.Uf_Initialiser ( 3, 1 )
 
-Uo_Onglet.Uf_EnregistrerOnglet ( "01", "D$$HEX1$$e900$$ENDHEX$$tail", "", Dw_1    , True  )
+Uo_Onglet.Uf_EnregistrerOnglet ( "01", "Détail", "", Dw_1    , True  )
 Uo_Onglet.Uf_EnregistrerOnglet ( "02", "Refus",  "", Uo_Refus, False )
 Uo_Onglet.Uf_EnregistrerOnglet ( "03", "Divers", "", dw_div_det,	False )
 
 /*------------------------------------------------------------------*/
-/* D$$HEX1$$e900$$ENDHEX$$claration du nvuo li$$HEX1$$e900$$ENDHEX$$e $$HEX2$$e0002000$$ENDHEX$$la fen$$HEX1$$ea00$$ENDHEX$$tre                            */
+/* Déclaration du nvuo liée à la fenêtre                            */
 /*------------------------------------------------------------------*/
 
 iuoConsultation = Create u_Cs_Sp_Detail
@@ -278,7 +278,7 @@ iuoConsultation.uf_Init_Detail (	iTrTrans,				&
 											istPass.dwNorm [ 9 ], &
 											istPass.dwNorm [ 10 ], &
 											istPass.udwTab[2] &
-								 		) // [VDoc5059] Ajout du dernier param$$HEX1$$e800$$ENDHEX$$tre
+								 		) // [VDoc5059] Ajout du dernier paramètre
 
 /*------------------------------------------------------------------*/
 /* On initialise le tableau de DW pour la consultation EURO.        */
@@ -296,8 +296,8 @@ on ue_retour;call w_8_ancetre_consultation::ue_retour;//*-----------------------
 //* Evenement 		:	Ue_Retour
 //* Auteur			:	PLJ
 //* Date				:	31/07/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Op$$HEX1$$e900$$ENDHEX$$rations $$HEX2$$e0002000$$ENDHEX$$effectuer $$HEX2$$e0002000$$ENDHEX$$la fermeture de la 
-//*					 	fen$$HEX1$$ea00$$ENDHEX$$tre 
+//* Libellé			:	Opérations à effectuer à la fermeture de la 
+//*					 	fenêtre 
 //* Commentaires	:
 //*				  
 //*-----------------------------------------------------------------
@@ -315,8 +315,8 @@ on close;call w_8_ancetre_consultation::close;//*-------------------------------
 //* Evenement 		:	Close
 //* Auteur			:	PLJ
 //* Date				:	31/07/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Op$$HEX1$$e900$$ENDHEX$$rations $$HEX2$$e0002000$$ENDHEX$$effectuer $$HEX2$$e0002000$$ENDHEX$$la fermeture de la 
-//*					 	fen$$HEX1$$ea00$$ENDHEX$$tre 
+//* Libellé			:	Opérations à effectuer à la fermeture de la 
+//*					 	fenêtre 
 //* Commentaires	:
 //*				  
 //*-----------------------------------------------------------------
@@ -358,13 +358,13 @@ destroy(this.uo_consult_euro)
 destroy(this.dw_div_det)
 end on
 
-on we_childactivate;call w_8_ancetre_consultation::we_childactivate;//*-----------------------------------------------------------------
+event we_childactivate;call super::we_childactivate;//*-----------------------------------------------------------------
 //*
 //* Objet 			: W_Cd_Sp_Detail
 //* Evenement 		: We_ChildActivate
 //* Auteur			: PLJ
 //* Date				: 29/07/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -374,9 +374,13 @@ on we_childactivate;call w_8_ancetre_consultation::we_childactivate;//*---------
 
 This.X			=    1
 This.Y			=    1
-This.Height		= 1769
-This.Width		= 3598
-end on
+// [PB2022_TAILLE_FEN] + xxx
+This.Height		= 1769 + 90
+
+
+// [PB2022_TAILLE_FEN] + xxx
+This.Width		= 3598 + 50
+end event
 
 event show;call super::show;//*-----------------------------------------------------------------
 //*
@@ -384,7 +388,7 @@ event show;call super::show;//*-------------------------------------------------
 //* Evenement 		: Show
 //* Auteur			: Fabry JF
 //* Date				: 16/10/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -427,7 +431,7 @@ on constructor;//*--------------------------------------------------------------
 //* Evenement 		: Constructor
 //* Auteur			: PLJ
 //* Date				: 29/07/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -485,7 +489,7 @@ on constructor;call u_tagger::constructor;//*-----------------------------------
 //* Evenement 		: Constructor
 //* Auteur			: PLJ
 //* Date				: 03/08/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -494,7 +498,7 @@ on constructor;call u_tagger::constructor;//*-----------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* L'objet ne poss$$HEX1$$e800$$ENDHEX$$de pas de titre.                                 */
+/* L'objet ne possède pas de titre.                                 */
 /*------------------------------------------------------------------*/
 ibTitre			= False
 
@@ -509,8 +513,8 @@ ibIndicateur	= False
 ibEffet3D		= False
 
 /*------------------------------------------------------------------*/
-/* On enl$$HEX1$$e800$$ENDHEX$$ve la bordure, qui permet de mieux g$$HEX1$$e900$$ENDHEX$$rer l'objet pendant  */
-/* le d$$HEX1$$e900$$ENDHEX$$veloppement.                                                */
+/* On enlève la bordure, qui permet de mieux gérer l'objet pendant  */
+/* le développement.                                                */
 /*------------------------------------------------------------------*/
 This.Border = False
 
@@ -522,8 +526,8 @@ on ue_dwtrt_rbuttondown;call u_tagger::ue_dwtrt_rbuttondown;//*-----------------
 //* Evenement 		: ue_dwtrt_rButtonDown
 //* Auteur			: PLJ
 //* Date				: 31/07/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Visualisation du texte associ$$HEX2$$e9002000$$ENDHEX$$au paragraphe
+//* Libellé			: 
+//* Commentaires	: Visualisation du texte associé au paragraphe
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -538,14 +542,14 @@ String sCol, sIdPara, sCptVer
 s_Pass	stPass
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine si on se trouve sur une ligne valide.               */
+/* On détermine si on se trouve sur une ligne valide.               */
 /*------------------------------------------------------------------*/
 lLig = F_GetObjectAtPointer ( This.dw_Trt, sCol )
 
 If	lLig > 0 Then
 /*------------------------------------------------------------------*/
 /* On a besoin d'un objet de transaction. Le seul valide qui        */
-/* existe est celui de la fen$$HEX1$$ea00$$ENDHEX$$tre. Il n'y a aucun objet de          */
+/* existe est celui de la fenêtre. Il n'y a aucun objet de          */
 /* transaction sur les DW.                                          */
 /*------------------------------------------------------------------*/
 	stPass.trTrans = Parent.itrTrans

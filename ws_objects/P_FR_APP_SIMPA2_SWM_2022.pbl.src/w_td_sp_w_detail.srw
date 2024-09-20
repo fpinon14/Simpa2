@@ -311,7 +311,7 @@ event ue_taillefenetre();//*----------------------------------------------------
 
 // Je réajuste la hauteur pour W10
 
-This.Height = 1810
+// This.Height = 1810 [PB2022_TAILLE_FEN] Je commente
 
 end event
 
@@ -4926,7 +4926,7 @@ Choose Case isDetailActif
 End Choose
 end event
 
-on we_childactivate;call w_8_traitement_detail::we_childactivate;//*-----------------------------------------------------------------
+event we_childactivate;call super::we_childactivate;//*-----------------------------------------------------------------
 //*
 //* Objet 			: W_Td_Sp_W_Detail::We_ChildActivate
 //* Evenement 		: We_ChildActivate
@@ -4942,11 +4942,15 @@ on we_childactivate;call w_8_traitement_detail::we_childactivate;//*------------
 
 This.X			=    1
 This.Y			=    1
-This.Height		= 1769
-This.Width		= 3598
+// [PB2022_TAILLE_FEN] + xxx
+This.Height		= 1769 + 90
 
 
-end on
+// [PB2022_TAILLE_FEN] + xxx
+This.Width		= 3598 + 50
+
+
+end event
 
 event ue_retour;call super::ue_retour;//*-----------------------------------------------------------------
 //*

@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_t_sp_banque.srw
-$PBExportComments$-} Fen$$HEX1$$ea00$$ENDHEX$$tre de traitement pour la recherche des agences.
+﻿$PBExportHeader$w_t_sp_banque.srw
+$PBExportComments$-} Fenêtre de traitement pour la recherche des agences.
 forward
 global type w_t_sp_banque from w_ancetre
 end type
@@ -22,7 +22,7 @@ integer y = 0
 integer width = 3570
 integer height = 1744
 boolean titlebar = true
-string title = "Recherche des coordonn$$HEX1$$e900$$ENDHEX$$es bancaires"
+string title = "Recherche des coordonnées bancaires"
 dw_lst_agence dw_lst_agence
 dw_1 dw_1
 pb_valider pb_valider
@@ -45,14 +45,14 @@ event ue_valider;call super::ue_valider;//*-------------------------------------
 //* Evenement 		: Ue_Valider
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 10:02:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date			Modification
-//* #1  JFF		01/10/2002	DCMP020321 A.Gaudin : Mettre m$$HEX1$$ea00$$ENDHEX$$me m$$HEX1$$e900$$ENDHEX$$thode de formatage
-//*								pour le Cr$$HEX1$$e900$$ENDHEX$$dit Lyonnais que pour la BNP.
-//* #2  JFF		10/05/2004	Modif demand$$HEX2$$e9002000$$ENDHEX$$par P.Oslaj (m$$HEX1$$e900$$ENDHEX$$mo du 10/05/2004).
+//* #1  JFF		01/10/2002	DCMP020321 A.Gaudin : Mettre même méthode de formatage
+//*								pour le Crédit Lyonnais que pour la BNP.
+//* #2  JFF		10/05/2004	Modif demandé par P.Oslaj (mémo du 10/05/2004).
 //* #3  JFF		13/10/2008	[DCMP080707]
 //*-----------------------------------------------------------------
 String sNom, sAdr1, sAdr2, sAdrCp, sAdrVille, sIdBq
@@ -99,7 +99,7 @@ If	lLig > 0 Then
 	Case "30002"
 /*------------------------------------------------------------------*/
 /* #1 : Cas du CREDIT LYONNAIS.                                     */
-/* (Idem $$HEX2$$e0002000$$ENDHEX$$BNP)																	  */
+/* (Idem à BNP)																	  */
 /*------------------------------------------------------------------*/
 //* #3  [DCMP080707]
 /*
@@ -166,12 +166,12 @@ If	lLig > 0 Then
 	End Choose 
 
 /*------------------------------------------------------------------*/
-/* Les coordonn$$HEX1$$e900$$ENDHEX$$es deviennent non saisissables.                     */
+/* Les coordonnées deviennent non saisissables.                     */
 /*------------------------------------------------------------------*/
 	iwParentDet.TriggerEvent ( "Ue_Banque" )
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement Ue_Retour, uniquement si la ligne de    */
+/* On déclenche l'événement Ue_Retour, uniquement si la ligne de    */
 /* dw_Lst_Agence est valide.                                        */
 /*------------------------------------------------------------------*/
 
@@ -185,7 +185,7 @@ on ue_interro;call w_ancetre::ue_interro;//*------------------------------------
 //* Evenement 		: Ue_Interro
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 11:55:16
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -203,7 +203,7 @@ If	dw_1.AcceptText () > 0 Then
 	sCodAg = Trim ( dw_1.GetItemString ( 1, "COD_AG" ) )
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine si le COD_BQ contient "*".                          */
+/* On détermine si le COD_BQ contient "*".                          */
 /*------------------------------------------------------------------*/
 	lPos = Pos ( sCodBq, "*" )
 	If	lPos > 0 Then sCodBq = Left ( sCodBq, ( lPos - 1 ) ) + "%"
@@ -212,7 +212,7 @@ If	dw_1.AcceptText () > 0 Then
 		sCodAg = "%"
 	Else
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine si le COD_AG contient "*".                          */
+/* On détermine si le COD_AG contient "*".                          */
 /*------------------------------------------------------------------*/
 		lPos = Pos ( sCodAg, "*" )
 		If	lPos > 0 Then sCodAg = Left ( sCodAg, ( lPos - 1 ) ) + "%"
@@ -231,7 +231,7 @@ If	dw_1.AcceptText () > 0 Then
 	dw_Lst_Agence.Uf_Modify ( sMod )
 
 /*------------------------------------------------------------------*/
-/* On rend la fen$$HEX1$$ea00$$ENDHEX$$tre non saisissable pendant la recherche.         */
+/* On rend la fenêtre non saisissable pendant la recherche.         */
 /*------------------------------------------------------------------*/
 	This.Enabled = False
 
@@ -240,7 +240,7 @@ If	dw_1.AcceptText () > 0 Then
 	dw_Lst_Agence.SetRedraw ( True )
 
 /*------------------------------------------------------------------*/
-/* On rend la fen$$HEX1$$ea00$$ENDHEX$$tre saisissable apr$$HEX1$$e900$$ENDHEX$$s la recherche.               */
+/* On rend la fenêtre saisissable aprés la recherche.               */
 /*------------------------------------------------------------------*/
 	This.Enabled = True
 	dw_Lst_Agence.SetFocus ()
@@ -254,7 +254,7 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		: Ue_Initialiser
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 09:55:15
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -263,31 +263,31 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On va cr$$HEX1$$e900$$ENDHEX$$er la DW de d$$HEX1$$e900$$ENDHEX$$tail pour les agences.                    */
+/* On va créer la DW de détail pour les agences.                    */
 /*------------------------------------------------------------------*/
 iuoGsDetail = Create u_Gs_Sp_Sinistre_Creer_Lst_Detail
 iuoGsDetail.Uf_Creer_Detail ( 1, dw_lst_agence, istPass.trTrans )
 Destroy iuoGsDetail
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re une ligne dans la DW dw_1 pour permettre la saisie.    */
+/* On insére une ligne dans la DW dw_1 pour permettre la saisie.    */
 /*------------------------------------------------------------------*/
 dw_1.InsertRow ( 0 )
 
 /*------------------------------------------------------------------*/
-/* On arrete la recherche $$HEX2$$e0002000$$ENDHEX$$150 lignes dans Dw_Lst_Agence.          */
+/* On arrete la recherche à 150 lignes dans Dw_Lst_Agence.          */
 /*------------------------------------------------------------------*/
 dw_Lst_Agence.Uf_Activer_Menu ( False )
 dw_Lst_Agence.ilMaxLig = 150
 
 /*------------------------------------------------------------------*/
 /* On positionne la variable qui permet d'attaquer la DW de la      */
-/* fen$$HEX1$$ea00$$ENDHEX$$tre PARENT.                                                  */
+/* fenêtre PARENT.                                                  */
 /*------------------------------------------------------------------*/
 iwParentDet = istPass.wParent
 
 /*------------------------------------------------------------------*/
-/* On rend la fen$$HEX1$$ea00$$ENDHEX$$tre PARENT non saisissable.                       */
+/* On rend la fenêtre PARENT non saisissable.                       */
 /*------------------------------------------------------------------*/
 iwParentDet.Enabled = False
 
@@ -301,13 +301,13 @@ End If
 
 end event
 
-on we_childactivate;call w_ancetre::we_childactivate;//*-----------------------------------------------------------------
+event we_childactivate;call super::we_childactivate;//*-----------------------------------------------------------------
 //*
 //* Objet 			: W_T_Sp_Banque::We_ChildActivate
 //* Evenement 		: We_ChildActivate
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 17:53:35
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -317,9 +317,13 @@ on we_childactivate;call w_ancetre::we_childactivate;//*------------------------
 
 This.X			=    1
 This.Y			=    1
-This.Height		= 1769
-This.Width		= 3598
-end on
+// [PB2022_TAILLE_FEN] + xxx
+This.Height		= 1769 + 90
+
+
+// [PB2022_TAILLE_FEN] + xxx
+This.Width		= 3598 + 50
+end event
 
 event open;call super::open;//*-----------------------------------------------------------------
 //*
@@ -327,7 +331,7 @@ event open;call super::open;//*-------------------------------------------------
 //* Evenement 		: Open
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 09:49:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -373,7 +377,7 @@ on ue_retour;call w_ancetre::ue_retour;//*--------------------------------------
 //* Evenement 		: Ue_Retour
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 10:02:13
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -382,12 +386,12 @@ on ue_retour;call w_ancetre::ue_retour;//*--------------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On rend la fen$$HEX1$$ea00$$ENDHEX$$tre PARENT saisissable.                           */
+/* On rend la fenêtre PARENT saisissable.                           */
 /*------------------------------------------------------------------*/
 iwParentDet.Enabled = True
 
 /*------------------------------------------------------------------*/
-/* On referme la fen$$HEX1$$ea00$$ENDHEX$$tre.                                           */
+/* On referme la fenêtre.                                           */
 /*------------------------------------------------------------------*/
 Close ( This )
 end on
@@ -413,8 +417,8 @@ on retrieverow;call u_datawindow_detail::retrieverow;//*------------------------
 //* Evenement 		: RetrieveRow!
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 12:11:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Incr$$HEX1$$e900$$ENDHEX$$mentation du nombre de lignes retrouv$$HEX1$$e900$$ENDHEX$$es
+//* Libellé			: 
+//* Commentaires	: Incrémentation du nombre de lignes retrouvées
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -425,7 +429,7 @@ This.ilNbrLig ++
 
 If	This.ilNbrLig = This.ilMaxLig Then
 	DbCancel ()
-	MessageBox ( "Arr$$HEX1$$ea00$$ENDHEX$$t", "Le nombre maximum de lignes est atteint~n~rLa s$$HEX1$$e900$$ENDHEX$$lection est incompl$$HEX1$$e800$$ENDHEX$$te" )
+	MessageBox ( "Arrêt", "Le nombre maximum de lignes est atteint~n~rLa sélection est incomplète" )
 End If
 
 
@@ -437,7 +441,7 @@ on doubleclicked;//*------------------------------------------------------------
 //* Evenement 		: DoubleClicked!
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 11:36:10
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -465,7 +469,7 @@ event itemchanged;call super::itemchanged;//*-----------------------------------
 //* Evenement 		: ItemChanged
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:35:04
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Modification des zones
 //*				  
 //*-----------------------------------------------------------------
@@ -536,7 +540,7 @@ event itemerror;call super::itemerror;//*---------------------------------------
 //* Evenement 		: ItemError
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:47:59
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion des messages d'erreur
 //*				  
 //*-----------------------------------------------------------------

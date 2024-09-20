@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_trt_choix_regen_courrier_simpa2.srw
+﻿$PBExportHeader$w_trt_choix_regen_courrier_simpa2.srw
 forward
 global type w_trt_choix_regen_courrier_simpa2 from window
 end type
@@ -16,7 +16,7 @@ integer y = 220
 integer width = 1504
 integer height = 580
 boolean titlebar = true
-string title = "Pr$$HEX1$$e900$$ENDHEX$$paration des courriers"
+string title = "Préparation des courriers"
 windowtype windowtype = response!
 long backcolor = 12632256
 cb_continuer cb_continuer
@@ -52,8 +52,8 @@ private subroutine wf_positionnerobjet ();//*-----------------------------------
 //* Fonction		: W_Trt_Choix_Regen_Courrier::Wf_PositionnerObjet		(PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 13/10/2001 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Positionnement dynamique des objets de la fen$$HEX1$$ea00$$ENDHEX$$tre
+//* Libellé			: 
+//* Commentaires	: Positionnement dynamique des objets de la fenêtre
 //*
 //* Arguments		: Aucun
 //*
@@ -66,12 +66,12 @@ private subroutine wf_positionnerobjet ();//*-----------------------------------
 
 
 /*------------------------------------------------------------------*/
-/* Position de la fen$$HEX1$$ea00$$ENDHEX$$tre.                                          */
+/* Position de la fenêtre.                                          */
 /*------------------------------------------------------------------*/
 This.X			=  900
 This.Y			= 1500
-This.Width		= 4370 // #1 4270  //3990
-This.Height		=  790  //750
+This.Width		= 4370 + 50 // [PB2022_TAILLE_FEN]
+This.Height		=  790 + 50 // [PB2022_TAILLE_FEN]
 
 /*------------------------------------------------------------------*/
 /* Position de la DataWindow.                                       */
@@ -98,7 +98,7 @@ private subroutine wf_affecter_typdoc ();//*------------------------------------
 //* Fonction		: W_Trt_Choix_Regen_Courrier_simpa2::Wf_Affecter_TypDoc		(PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 13/10/2001 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun
@@ -110,10 +110,10 @@ private subroutine wf_affecter_typdoc ();//*------------------------------------
 //* #1		JFF		04/05/04  	DCMP 040020 SVE
 //* #2		JCA		05/09/06		DCMP 60574 - Ajout de nouvelle nature de document
 //* #3		PHG		06/08/08		[DCMP080573] Option DP/103 : 
-//*										Autorisation Choix Cat$$HEX1$$e900$$ENDHEX$$gorie de courrier
+//*										Autorisation Choix Catégorie de courrier
 //* #4		PHG		12/01/08		[DCMP090023] Extension DP/103 : 
-//*										Affectation de la cat$$HEX1$$e900$$ENDHEX$$gorie suivant 
-//*										un code courrier param$$HEX1$$e900$$ENDHEX$$tr$$HEX1$$e900$$ENDHEX$$.
+//*										Affectation de la catégorie suivant 
+//*										un code courrier paramétré.
 //*         JFF      12/10/10    [20101012145945137] ajout ctg LCL
 //			FPI	18/04/2011	[VDoc3573] Modification de l'option 69
 // 			FPI	19/06/2014	[VDOC14696] Si DR, on ne tient pas compte de la 103
@@ -143,8 +143,8 @@ String sVal
 If	invTrtAttrib.sTab[1] = "SAVANE" Then Return
 
 /*------------------------------------------------------------------*/
-/* Si le Code Banque appartient $$HEX2$$e0002000$$ENDHEX$$BNP, on le positionne dans le     */
-/* type de document afin de pr$$HEX1$$e900$$ENDHEX$$venir le gestionnaire.               */
+/* Si le Code Banque appartient à BNP, on le positionne dans le     */
+/* type de document afin de prévenir le gestionnaire.               */
 /*------------------------------------------------------------------*/
 lTotLig		= dw_1.RowCount ()
 lTotInter	= invTrtAttrib.dwTab[1].RowCount ()
@@ -152,7 +152,7 @@ lTotInter	= invTrtAttrib.dwTab[1].RowCount ()
 For	lCpt = 1 To lTotLig 
 
 /*------------------------------------------------------------------*/
-/* #1 : Priorit$$HEX2$$e9002000$$ENDHEX$$au droits fournis par le BIN.                      */
+/* #1 : Priorité au droits fournis par le BIN.                      */
 /*------------------------------------------------------------------*/
 /* Rang 9 : Gestionnaire DSC                                        */
 /*------------------------------------------------------------------*/
@@ -165,7 +165,7 @@ For	lCpt = 1 To lTotLig
 		
 			if invTrtAttrib.dwTab[1].GetItemString ( lLigInter, "COD_MODE_REG") = "C" and & 
 				invTrtAttrib.dwTab[1].GetItemNumber ( lLigInter, "MT_A_REG") > 0  then 
-				dw_1.SetItem ( lCpt, "ID_TYP_DOC", 82 )  // Retour au DR - Ch$$HEX1$$e800$$ENDHEX$$que $$HEX2$$e0002000$$ENDHEX$$joindre
+				dw_1.SetItem ( lCpt, "ID_TYP_DOC", 82 )  // Retour au DR - Chèque à joindre
 			End if
 			// :[VDOC14696]
 			
@@ -175,10 +175,10 @@ For	lCpt = 1 To lTotLig
 			
 			Choose Case True
 				Case Not IsNull ( lIdIDB ) And sCodInter = "A"
-					dw_1.SetItem ( lCpt, "ID_TYP_DOC", 88 )  // DR - Assur$$HEX2$$e9002000$$ENDHEX$$avec double banque
+					dw_1.SetItem ( lCpt, "ID_TYP_DOC", 88 )  // DR - Assuré avec double banque
 
 				Case Not IsNull ( lIdIDB ) And sCodInter = "B"
-					dw_1.SetItem ( lCpt, "ID_TYP_DOC", 87 )  // DR - Banque avec double assur$$HEX1$$e900$$ENDHEX$$
+					dw_1.SetItem ( lCpt, "ID_TYP_DOC", 87 )  // DR - Banque avec double assuré
 					
 			End Choose 
 			// /[PM425-1]			
@@ -188,7 +188,7 @@ For	lCpt = 1 To lTotLig
 
 		If Upper ( dw_1.GetItemString ( lCpt, "COD_INTER" ) ) = "B" Then
 /*------------------------------------------------------------------*/
-/* On recherche la ligne correspondant $$HEX2$$e0002000$$ENDHEX$$l'interlocuteur BANQUE     */
+/* On recherche la ligne correspondant à l'interlocuteur BANQUE     */
 /* dans la liste des interlocuteurs.                                */
 /*------------------------------------------------------------------*/
 			Choose Case invTrtAttrib.sTab[1]
@@ -200,7 +200,7 @@ For	lCpt = 1 To lTotLig
 
 			lLig	= invTrtAttrib.dwTab[1].Find ( sRech, 1, lTotInter )
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il s'agit de la BNP.                                */
+/* On vérifie s'il s'agit de la BNP.                                */
 /*------------------------------------------------------------------*/
 			If invTrtAttrib.dwTab[1].GetItemString ( lLig, "COD_BQ" ) = "30004" Then
 				dw_1.SetItem ( lCpt, "ID_TYP_DOC", 1 ) 		// ... BNP
@@ -245,7 +245,7 @@ For	lCpt = 1 To lTotLig
 			Case 223 // ID_GRP de SFR
 				if invTrtAttrib.dwTab[1].GetItemString ( lLigInter, "COD_MODE_REG") = "C" and & 
 						invTrtAttrib.dwTab[1].GetItemNumber ( lLigInter, "MT_A_REG") > 0  then 
-					dw_1.SetItem ( lCpt, "ID_TYP_DOC", 21 ) 		// SFR+Ch$$HEX1$$e800$$ENDHEX$$que $$HEX2$$e0002000$$ENDHEX$$joindre	
+					dw_1.SetItem ( lCpt, "ID_TYP_DOC", 21 ) 		// SFR+Chèque à joindre	
 					Continue
 				else
 					dw_1.SetItem ( lCpt, "ID_TYP_DOC", 20 ) 		// SFR			
@@ -255,7 +255,7 @@ For	lCpt = 1 To lTotLig
 			Case 254 // ID_GRP d'ORANGE
 				if invTrtAttrib.dwTab[1].GetItemString ( lLigInter, "COD_MODE_REG") = "C" and & 
 						invTrtAttrib.dwTab[1].GetItemNumber ( lLigInter, "MT_A_REG") > 0  then 
-					dw_1.SetItem ( lCpt, "ID_TYP_DOC", 24 ) 		// Orange+Ch$$HEX1$$e800$$ENDHEX$$que $$HEX2$$e0002000$$ENDHEX$$joindre	
+					dw_1.SetItem ( lCpt, "ID_TYP_DOC", 24 ) 		// Orange+Chèque à joindre	
 					Continue
 				else
 					dw_1.SetItem ( lCpt, "ID_TYP_DOC", 23 ) 		// Orange
@@ -265,7 +265,7 @@ For	lCpt = 1 To lTotLig
 			Case else
 				if invTrtAttrib.dwTab[1].GetItemString ( lLigInter, "COD_MODE_REG") = "C" and & 
 						invTrtAttrib.dwTab[1].GetItemNumber ( lLigInter, "MT_A_REG") > 0  then 
-					dw_1.SetItem ( lCpt, "ID_TYP_DOC", 27 ) 		// Distrib+Ch$$HEX1$$e800$$ENDHEX$$que $$HEX2$$e0002000$$ENDHEX$$joindre	
+					dw_1.SetItem ( lCpt, "ID_TYP_DOC", 27 ) 		// Distrib+Chèque à joindre	
 					Continue					
 				else
 					dw_1.SetItem ( lCpt, "ID_TYP_DOC", 26 ) 		// Distrib
@@ -275,27 +275,27 @@ For	lCpt = 1 To lTotLig
 		// :[VDoc3573]
 	Else
 		// #4 [DCMP090023] L'algorithme de l'option 103 est le suivant
-		// Si Option trouv$$HEX1$$e900$$ENDHEX$$e, avec Cl$$HEX2$$e9002000$$ENDHEX$$FORCAGE_ID_COUR_ASS param$$HEX1$$e900$$ENDHEX$$tr$$HEX1$$e900$$ENDHEX$$e, et inter = A
-		// Alors positionnement de la cat$$HEX1$$e900$$ENDHEX$$gorie de courrier si le code courrier est l'un 
-		// des codes courrier param$$HEX1$$e900$$ENDHEX$$tr$$HEX1$$e900$$ENDHEX$$.
-		// Sinon, utilisation du code de gestion du mot Cl$$HEX2$$e9002000$$ENDHEX$$"DEFAUT" existant.
+		// Si Option trouvée, avec Clé FORCAGE_ID_COUR_ASS paramétrée, et inter = A
+		// Alors positionnement de la catégorie de courrier si le code courrier est l'un 
+		// des codes courrier paramétré.
+		// Sinon, utilisation du code de gestion du mot Clé "DEFAUT" existant.
 		lDeb = 0
 		F_RechDetPro ( lDeb, lFin, invTrtAttrib.dwNorm[4], invTrtAttrib.lTab[1], "-DP", 103) // Option 103
-		if lDeb > 0 and Upper ( dw_1.GetItemString ( lCpt, "COD_INTER" ) ) = "A" Then // Inter = Assur$$HEX1$$e900$$ENDHEX$$
-			do while lDeb > 0 // On recherche une option det_pro 103 parmi celle trouv$$HEX2$$e9002000$$ENDHEX$$avec la cl$$HEX2$$e9002000$$ENDHEX$$FORCAGE...
+		if lDeb > 0 and Upper ( dw_1.GetItemString ( lCpt, "COD_INTER" ) ) = "A" Then // Inter = Assuré
+			do while lDeb > 0 // On recherche une option det_pro 103 parmi celle trouvé avec la clé FORCAGE...
 									// dans val_car.
 				lDeb = invTrtAttrib.dwNorm[4].Find("VAL_CAR LIKE '%"+sKeyForcage+"%'", lDeb, lFin+1)
 				
-				// On lit la valeur de la cl$$HEX2$$e9002000$$ENDHEX$$FORCAGE... avec of_GetKeyValue, puis on d$$HEX1$$e900$$ENDHEX$$coupe cette valeur
+				// On lit la valeur de la clé FORCAGE... avec of_GetKeyValue, puis on découpe cette valeur
 				// avec of_parsetoarray, afin de pouvoir effectuer la comparaison sur chacun des codes
-				// courriers param$$HEX1$$e900$$ENDHEX$$tr$$HEX1$$e900$$ENDHEX$$s.
+				// courriers paramétrés.
 				if lDeb > 0 Then 
 					lnvString.of_parsetoarray( &
 						lnvString.of_getkeyvalue( invTrtAttrib.dwNorm[4].object.val_car[lDeb], sKeyForcage, ";"), &
 						"/", &
 						sTabIdCour)
 					
-					// on compare les code courrier param$$HEX1$$e900$$ENDHEX$$tr$$HEX2$$e9002000$$ENDHEX$$avec le code courrier pr$$HEX1$$e900$$ENDHEX$$sent sur l'inter.
+					// on compare les code courrier paramétré avec le code courrier présent sur l'inter.
 					if upperbound(sTabIdCour) = 0 Then
 						bIdCourOk = FALSE
 					Else
@@ -305,15 +305,15 @@ For	lCpt = 1 To lTotLig
 						Next 
 					End If
 					if bIdCourOk Then 
-						Exit // Si courrier trouv$$HEX2$$e9002000$$ENDHEX$$on sort, lDeb point sur la bonne option det_pro avec la
-							  // cat$$HEX1$$e900$$ENDHEX$$gorie de courrier.
+						Exit // Si courrier trouvé on sort, lDeb point sur la bonne option det_pro avec la
+							  // catégorie de courrier.
 					Else
-						// On incr$$HEX1$$e900$$ENDHEX$$mente le lDeb de 1 car la ligne det_pro en cours a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$trait$$HEX1$$e900$$ENDHEX$$e
-						// et correspondait $$HEX2$$e0002000$$ENDHEX$$un param$$HEX1$$e900$$ENDHEX$$trage FORCAGE..., mais le l'id_cour n'a
-						// pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$trouv$$HEX1$$e900$$ENDHEX$$.
+						// On incrémente le lDeb de 1 car la ligne det_pro en cours a été traitée
+						// et correspondait à un paramétrage FORCAGE..., mais le l'id_cour n'a
+						// pas été trouvé.
 						lDeb ++
 					End If
-				Else // Si pas de FORCAGE... d$$HEX1$$e900$$ENDHEX$$fini, on sort, on passe $$HEX2$$e0002000$$ENDHEX$$la version "DEFAUT"
+				Else // Si pas de FORCAGE... défini, on sort, on passe à la version "DEFAUT"
 					  // de l'option 103
 					bIdCourOk = FALSE
 				End If
@@ -322,8 +322,8 @@ For	lCpt = 1 To lTotLig
 				dw_1.SetItem ( lCpt, "ID_TYP_DOC", invTrtAttrib.dwNorm[4].object.id_code_num[lDeb] )
 			End IF
 		End If
-		if Not bIdCourOk Then // Si pas de code courrier trouv$$HEX2$$e9002000$$ENDHEX$$ci-dessus, on fait l'option 103 classique
-			// #3 [DCMP080573] Si Option 103, et cat$$HEX1$$e900$$ENDHEX$$gorie par d$$HEX1$$e900$$ENDHEX$$faut => forcage
+		if Not bIdCourOk Then // Si pas de code courrier trouvé ci-dessus, on fait l'option 103 classique
+			// #3 [DCMP080573] Si Option 103, et catégorie par défaut => forcage
 			lDeb = 0
 			lnvKey[1].iskeyname = "DEFAUT"
 			lnvKey[1].iakeyvalue = "OUI"
@@ -343,10 +343,10 @@ For	lCpt = 1 To lTotLig
 	
 	Choose Case True
 		Case Not IsNull ( lIdIDB ) And sCodInter = "A"
-			dw_1.SetItem ( lCpt, "ID_TYP_DOC", 13 )  // Assur$$HEX2$$e9002000$$ENDHEX$$avec double banque
+			dw_1.SetItem ( lCpt, "ID_TYP_DOC", 13 )  // Assuré avec double banque
 
 		Case Not IsNull ( lIdIDB ) And sCodInter = "B"
-			dw_1.SetItem ( lCpt, "ID_TYP_DOC", 12 )  // Banque avec double assur$$HEX1$$e900$$ENDHEX$$
+			dw_1.SetItem ( lCpt, "ID_TYP_DOC", 12 )  // Banque avec double assuré
 			
 	End Choose 
 	// /[PM425-1]
@@ -361,7 +361,7 @@ private subroutine wf_controlergestion ();//*-----------------------------------
 //* Fonction		: wf_ControlerGestion
 //* Auteur			: MADM
 //* Date				: 14/08/2006 14:21:37
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de gestion de la saisie
+//* Libellé			: Contrôle de gestion de la saisie
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun 
@@ -372,7 +372,7 @@ private subroutine wf_controlergestion ();//*-----------------------------------
 //*-----------------------------------------------------------------
 //* MAJ	Le				Par	Description
 //* #1	07/08/2008	PHG	[DCMP080573] Option 103 : Controle si 
-//*								cat$$HEX1$$e900$$ENDHEX$$gorie de courrier autoris$$HEX1$$e900$$ENDHEX$$e
+//*								catégorie de courrier autorisée
 // 			19/06/2014	FPI	[VDOC14696] Si DR, on ne tient pas compte de la 103
 //*-----------------------------------------------------------------
 
@@ -385,7 +385,7 @@ invTrtAttrib.sTab[2] = "CONTINUER"
 
 For lcpt = 1 to ltotligne
 
-	// #1 [DCMP080573] Controle si cat$$HEX1$$e900$$ENDHEX$$gorie de courrier autoris$$HEX1$$e900$$ENDHEX$$e, si Option 103
+	// #1 [DCMP080573] Controle si catégorie de courrier autorisée, si Option 103
 	F_RechDetPro ( lDeb, lFin, invTrtAttrib.dwNorm[4], invTrtAttrib.lTab[1], "-DP", 103 )
 	
 	// [VDOC14696]
@@ -399,7 +399,7 @@ For lcpt = 1 to ltotligne
 									" "+dw_1.object.nom[lCpt]
 		End Choose
 		
-		lDeb=0 			// On enl$$HEX1$$e800$$ENDHEX$$ve le contr$$HEX1$$f400$$ENDHEX$$le de la DP 103
+		lDeb=0 			// On enlève le contrôle de la DP 103
 	End if
 	// :[VDOC14696]
 	
@@ -408,7 +408,7 @@ For lcpt = 1 to ltotligne
 												 "ID_PROD = "+ string(invTrtAttrib.lTab[1]) + " AND " +&
 												 "ID_CODE_NUM = "+string(dw_1.object.id_typ_doc[lCpt]),&
 												 lDeb, lFin+1) = 0 Then
-		   invTrtAttrib.sTab[2] = "ARRETER4" // Si *NON* trouv$$HEX1$$e900$$ENDHEX$$, on arrete
+		   invTrtAttrib.sTab[2] = "ARRETER4" // Si *NON* trouvé, on arrete
 			stMessage.svar[1] = 	dw_1.describe("Evaluate('LookupDisplay(COD_INTER)',"+string(lCpt)+")") + &
 										" "+dw_1.object.nom[lCpt]
 			Exit
@@ -453,12 +453,12 @@ private function boolean wf_controler_canal (string ascas, long alrow, string as
 //* Fonction		: W_Trt_Choix_Regen_Courrier_simpa2::Wf_Controler_Canal		(PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 20/07/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PM159]
+//* Libellé			: [PM159]
 //* Commentaires	: 
 //*
 //* Arguments		: String	 	asCas  (val)   "TOUT", "ROW"
-//*					  Long		alRow	 (val)   le row $$HEX2$$e0002000$$ENDHEX$$ctrler (si besoin de lecture d'une donn$$HEX1$$e900$$ENDHEX$$e)
-//*					  String 	asData (val)	La nouvelle donn$$HEX1$$e900$$ENDHEX$$e 
+//*					  Long		alRow	 (val)   le row à ctrler (si besoin de lecture d'une donnée)
+//*					  String 	asData (val)	La nouvelle donnée 
 //*
 //* Retourne		: Boolean
 //*
@@ -490,7 +490,7 @@ F_RechDetPro ( lDeb, lFin, invTrtAttrib.dwNorm[4], invTrtAttrib.lTab[1], "-DP", 
 
 For lCpt = lCptDeb To lCptFin
 	
-	// ITSM 81555 ajout du $$HEX1$$e900$$ENDHEX$$gal
+	// ITSM 81555 ajout du égal
 	If lDeb <= 0 Then 
 		dw_1.SetItem ( lCpt, "ID_CANAL", "CO" )
 		Continue
@@ -517,12 +517,12 @@ For lCpt = lCptDeb To lCptFin
 	sCodInterParam= lnvPFCString.of_getkeyvalue (invTrtAttrib.dwNorm[4].GetItemString ( lRow, "VAL_CAR" ), "COD_INTER", ";")
 	sIdTypDocParam= lnvPFCString.of_getkeyvalue (invTrtAttrib.dwNorm[4].GetItemString ( lRow, "VAL_CAR" ), "ID_TYP_DOC", ";")
 
-	// Si une adresse mail valide est pr$$HEX1$$e900$$ENDHEX$$sente.
+	// Si une adresse mail valide est présente.
 	If NOT (Isnull (sAdrMail) OR Trim ( sAdrMail ) = "" ) Then
 		If sCodInterParam = sCodInter And Pos ( sIdTypDocParam, "#" + sIdTypDoc + "#", 1 ) > 0 Then
 			dw_1.SetItem ( lCpt, "ID_CANAL", "MA" ) 
 		Else
-			// Binome inter+id_typ_doc non autoris$$HEX2$$e9002000$$ENDHEX$$pour le mode Mail, je reforce $$HEX2$$e0002000$$ENDHEX$$COurrier.
+			// Binome inter+id_typ_doc non autorisé pour le mode Mail, je reforce à COurrier.
 			dw_1.SetItem ( lCpt, "ID_CANAL", "CO" ) 
 		End If
 	Else
@@ -541,7 +541,7 @@ event open;//*-----------------------------------------------------------------
 //* Evenement 		: Open
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2001 14:58:03
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -559,15 +559,15 @@ event open;//*-----------------------------------------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* La structure de passage doit $$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e de la mani$$HEX1$$e800$$ENDHEX$$re suivante.  */
+/* La structure de passage doit être armée de la manière suivante.  */
 /*------------------------------------------------------------------*/
 /* dwNorm[1] = Liste des types de documents.                        */
-/* dwNorm[2] = Liste des courriers $$HEX2$$e0002000$$ENDHEX$$recopier dans Dw_1.            */
+/* dwNorm[2] = Liste des courriers à recopier dans Dw_1.            */
 /*                                                                  */
 /* dwTab[1]  = Liste des Interlocuteurs. U_DataWindow_Detail        */
 /*                                                                  */
 /* sTab[1]   = Nom de l'application (SAVANE,SIMPA2,SINDI)           */
-/* sTab[2]   = Arm$$HEX1$$e900$$ENDHEX$$e en sortie de fen$$HEX1$$ea00$$ENDHEX$$tre par CONTINUER/ARRETER.    */
+/* sTab[2]   = Armée en sortie de fenêtre par CONTINUER/ARRETER.    */
 /*------------------------------------------------------------------*/
 invTrtAttrib = Message.PowerObjectParm
 DataWindowchild	dwChild, dwChild1, dwchildcanal
@@ -575,20 +575,20 @@ Long					lTotLigne, lCpt, lLigTot, lIdInter, lLigTrv, lTotLigInter, lCpt2, lTotC
 String 				sFiltre, sAltSuiviMail, sAdrMail
 
 /*------------------------------------------------------------------*/
-/* Positionnement des objets dans la fen$$HEX1$$ea00$$ENDHEX$$tre.                       */
+/* Positionnement des objets dans la fenêtre.                       */
 /*------------------------------------------------------------------*/
 This.Wf_PositionnerObjet ()
 
 /*------------------------------------------------------------------*/
-/* Droit $$HEX2$$e0002000$$ENDHEX$$d$$HEX1$$e900$$ENDHEX$$couper (voir u_gs_sp_sinistre::uf_GetAutorisation)     */
+/* Droit à découper (voir u_gs_sp_sinistre::uf_GetAutorisation)     */
 /*------------------------------------------------------------------*/
 isAutresDroits = invTrtAttrib.sTab[2]
 
 
 /*------------------------------------------------------------------*/
 /* En fonction de l'application SAVANE, SIMPA2, SINDI les noms de   */
-/* colonnes sont diff$$HEX1$$e900$$ENDHEX$$rents. Il faut donc armer une constante pour  */
-/* que cette fen$$HEX1$$ea00$$ENDHEX$$tre puisse fonctionner dans tous les cas de        */
+/* colonnes sont différents. Il faut donc armer une constante pour  */
+/* que cette fenêtre puisse fonctionner dans tous les cas de        */
 /* figure.                                                          */
 /*------------------------------------------------------------------*/
 Choose Case invTrtAttrib.sTab[1]
@@ -610,7 +610,7 @@ long	ll_ret
 ll_ret = Dw_1.Reset ()
 //Fin Migration PB8-WYNIWYG-03/2006 FM
 
-This.Title = "Pr$$HEX1$$e900$$ENDHEX$$paration des courriers."
+This.Title = "Préparation des courriers."
 dw_1.Modify ( "p_attention.filename = 'K:\PB4OBJ\BMP\EXCL2.BMP'" )
 ibFermerFenetre = FALSE
 
@@ -630,7 +630,7 @@ ll_ret = dwChild.SetTransObject(SQLCA)
 
 /*-----------------------------------------------------------------------*/
 /* #2 : 01/08/206 MADM																	 */	
-/* Armement de la DDDW des m$$HEX1$$e900$$ENDHEX$$dias de sortie $$HEX2$$e0002000$$ENDHEX$$partir de dddw_sp_code_car.*/
+/* Armement de la DDDW des médias de sortie à partir de dddw_sp_code_car.*/
 /*-----------------------------------------------------------------------*/
 ll_ret = dw_1.GetChild ( "ID_CANAL", ( dwchildcanal ) )
 ll_ret = dwchildcanal.SetTransObject(SQLCA)
@@ -711,7 +711,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2001 14:58:03
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -723,7 +723,7 @@ event clicked;//*---------------------------------------------------------------
 //* #1   DGA   01/02/2002	Gestion du WORD
 //* #1   MADM  30/08/2006	Projet DNTMAIL1/2
 //* #2	JCA	28/09/2007	DCMP 40324 - Gestion edition pour le DSC
-//* #3	PHG   07/08/2008	[DCMP080573] - Option 103, Msg erreur si pas autoris$$HEX1$$e900$$ENDHEX$$
+//* #3	PHG   07/08/2008	[DCMP080573] - Option 103, Msg erreur si pas autorisé
 //*      JFF   18/07/2010  [PM159]
 //			FPI	20/06/2014	 [VDOC14696]
 //*-----------------------------------------------------------------
@@ -818,11 +818,11 @@ invTrtAttrib.sTab[2] = "CONTINUER"
 //
 //F_SetVersionWord ( nvWord, FALSE )																// #1
 
-// On cale l'appli bien $$HEX2$$e0002000$$ENDHEX$$droite pour laisser le word $$HEX2$$e0002000$$ENDHEX$$gauche
+// On cale l'appli bien à droite pour laisser le word à gauche
 // afin d'avoir le bouton valider visible.
 
 // [POSITION_SIMPA2]
-w_mdi_sp.x = 3500 	// ... Coordonn$$HEX1$$e900$$ENDHEX$$es de l'application
+w_mdi_sp.x = 3500 	// ... Coordonnées de l'application
 w_mdi_sp.y = 600
 
 CloseWithReturn ( Parent, invTrtAttrib )
@@ -840,7 +840,7 @@ integer weight = 400
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "MS Sans Serif"
-string text = "Arr$$HEX1$$ea00$$ENDHEX$$ter"
+string text = "Arrêter"
 end type
 
 on clicked;//*-----------------------------------------------------------------
@@ -849,7 +849,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2001 14:58:03
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -891,10 +891,10 @@ event itemchanged;//*-----------------------------------------------------------
 //* Evenement 		: ItemChanged
 //* Auteur			: JCA
 //* Date				: 19/09/2007
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: DCMP 40324
 //*-----------------------------------------------------------------
-//		FPI	18/10/2011	[ITSM83504] Interdire type de courrier retour DSC si op$$HEX1$$e900$$ENDHEX$$rateur pas du DSC
+//		FPI	18/10/2011	[ITSM83504] Interdire type de courrier retour DSC si opérateur pas du DSC
 //    JFF   11/06/2019  [PM425-1]
 //*-----------------------------------------------------------------
 
@@ -941,17 +941,17 @@ event itemerror;
 //* Evenement 		: ItemChanged
 //* Auteur			: JCA
 //* Date				: 19/09/2007
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: DCMP 40324
 //*-----------------------------------------------------------------
-//		FPI	18/10/2011	[ITSM83504] Interdire type de courrier retour DSC si op$$HEX1$$e900$$ENDHEX$$rateur pas du DSC
+//		FPI	18/10/2011	[ITSM83504] Interdire type de courrier retour DSC si opérateur pas du DSC
 //   JFF   11/06/2019 [PM425-1]
 //*-----------------------------------------------------------------
 
 integer iAction
 
 iAction = 0
-stMessage.sTitre		= "Gestion des $$HEX1$$e900$$ENDHEX$$ditions - SIMPA2"
+stMessage.sTitre		= "Gestion des éditions - SIMPA2"
 stMessage.Icon			= Information!
 stMessage.berreurg	= false
 

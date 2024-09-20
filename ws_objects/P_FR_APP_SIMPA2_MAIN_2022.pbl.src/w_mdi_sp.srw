@@ -6,6 +6,8 @@ end type
 end forward
 
 global type w_mdi_sp from w_mdi
+integer x = 1
+integer y = 1
 integer width = 3735
 integer height = 2392
 string title = "DECES/INVALIDITE"
@@ -690,6 +692,9 @@ gdsPieceSherpa.Reset ()
 This.x = 1980 	// ... Coordonnées de l'application
 This.y = 600
 
+// [PB2022_TAILLE_FEN]
+This.width = 3735 + 30    + 50
+This.Height = 2392 + 55   + 50
 
 end event
 

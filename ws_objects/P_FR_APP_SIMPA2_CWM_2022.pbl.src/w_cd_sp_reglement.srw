@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_cd_sp_reglement.srw
+﻿$PBExportHeader$w_cd_sp_reglement.srw
 forward
 global type w_cd_sp_reglement from w_8_ancetre_consultation
 end type
@@ -52,16 +52,17 @@ event ue_taillefenetre();//*----------------------------------------------------
 //* Evenement 		: Ue_TailleFenetre
 //* Auteur			: Fabry JF
 //* Date				: 16/10/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*-----------------------------------------------------------------
 
-// Je r$$HEX1$$e900$$ENDHEX$$ajuste la hauteur pour W10
+// Je réajuste la hauteur pour W10
 
-This.Height = 1810
+// This.Height = 1810 // [PB2022_TAILLE_FEN] je commente
+
 
 end event
 
@@ -71,7 +72,7 @@ public function boolean wf_preparerconsulter ();//*-----------------------------
 //* Fonction		: wf_PreparerConsulter
 //* Auteur			: FABRY JF
 //* Date				: 03/12/1998 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Appel de uf_preparer_consulter
+//* Libellé			: Appel de uf_preparer_consulter
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun.
@@ -113,9 +114,9 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //* Fonction		: W_cd_sp_Inter::Wf_PositionnerObjets (PRIVATE)
 //* Auteur			: PLJ
 //* Date				: 21/07/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On positionne et on taille tous les objets
-//*                 sauf uo_bord3d qui est positionn$$HEX2$$e9002000$$ENDHEX$$et taill$$HEX1$$e900$$ENDHEX$$
+//*                 sauf uo_bord3d qui est positionné et taillé
 //*                 par son constructor
 //*
 //* Arguments		: Aucun
@@ -125,12 +126,12 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On positionne tous les objets n$$HEX1$$e900$$ENDHEX$$cessaires $$HEX2$$e0002000$$ENDHEX$$la gestion, pour     */
-/* faciliter le d$$HEX1$$e900$$ENDHEX$$veloppement. (On peut bouger les objets).         */
+/* On positionne tous les objets nécessaires à la gestion, pour     */
+/* faciliter le développement. (On peut bouger les objets).         */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
-/* Dw_1  DataWindow : Dw r$$HEX1$$e800$$ENDHEX$$glement sur Fen$$HEX1$$ea00$$ENDHEX$$tre R$$HEX1$$e800$$ENDHEX$$glement            */
+/* Dw_1  DataWindow : Dw règlement sur Fenêtre Règlement            */
 /*------------------------------------------------------------------*/
 Dw_1.X				=   80
 Dw_1.Y				=  200
@@ -138,8 +139,8 @@ Dw_1.Width			= 1564
 Dw_1.Height			= 1225
 
 /*------------------------------------------------------------------*/
-/* Dw_Reg_Gti  DataWindow : Dw r$$HEX1$$e800$$ENDHEX$$glement par garantie sur  			  */	
-/* Fen$$HEX1$$ea00$$ENDHEX$$tre R$$HEX1$$e800$$ENDHEX$$glement            												  */
+/* Dw_Reg_Gti  DataWindow : Dw règlement par garantie sur  			  */	
+/* Fenêtre Règlement            												  */
 /*------------------------------------------------------------------*/
 Dw_Reg_Gti.X		= Dw_1.Width + 150
 Dw_Reg_Gti.Y		= Dw_1.Y
@@ -147,8 +148,8 @@ Dw_Reg_Gti.Width	= 1830
 Dw_Reg_Gti.Height	= 750
 
 /*------------------------------------------------------------------*/
-/* Dw_Reg_Gti  DataWindow : Dw r$$HEX1$$e800$$ENDHEX$$glement par garantie sur  			  */	
-/* Fen$$HEX1$$ea00$$ENDHEX$$tre R$$HEX1$$e800$$ENDHEX$$glement            												  */
+/* Dw_Reg_Gti  DataWindow : Dw règlement par garantie sur  			  */	
+/* Fenêtre Règlement            												  */
 /*------------------------------------------------------------------*/
 Dw_Reg_Frais.X			= Dw_1.Width + 150
 Dw_Reg_Frais.Y			= Dw_Reg_Gti.Y + Dw_Reg_Gti.Height + 71
@@ -168,8 +169,8 @@ private subroutine wf_afficher_autre_montant (string asmonnaie);//*-------------
 //* Fonction		: W_Cd_Sp_Reglement::Wf_Afficher_Autre_Montant (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 29/03/1999 14:12:22
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Affichage des colonnes calcul$$HEX1$$e900$$ENDHEX$$es au bon format
+//* Libellé			: 
+//* Commentaires	: Affichage des colonnes calculées au bon format
 //*
 //* Arguments		: String			asMonnaie			(Val)	Valeur de la monnaie
 //*
@@ -189,8 +190,8 @@ Choose Case asMonnaie
 		sFormat1 = "TOT_GTI.Format='#,##0.00 \"+stGlb.sMonnaiesymboleDesire+"'"
 		sFormat2 = "TOT_FRAIS.Format='#,##0.00 \"+stGlb.sMonnaiesymboleDesire+"'"
 	Case Else
-		sFormat1 = "TOT_GTI.Format='#,##0.00 \$$HEX1$$ac20$$ENDHEX$$'"
-		sFormat2 = "TOT_FRAIS.Format='#,##0.00 \$$HEX1$$ac20$$ENDHEX$$'"
+		sFormat1 = "TOT_GTI.Format='#,##0.00 \€'"
+		sFormat2 = "TOT_FRAIS.Format='#,##0.00 \€'"
 End Choose
 
 dw_Reg_Gti.Modify ( sFormat1 )
@@ -203,7 +204,7 @@ public subroutine wf_traduction_mvt_financier ();//*----------------------------
 //* Fonction		: wf_Traduction_Mvt_Financier
 //* Auteur			: FABRY JF
 //* Date				: 14/12/2016
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun.
@@ -228,76 +229,76 @@ st_1.Text = ""
 
 Choose Case TRUE
 	Case sCodMotReg = "RI"
-		st_1.Text = "Suite rejet de la banque, SPB repr$$HEX1$$e900$$ENDHEX$$sente le r$$HEX1$$e800$$ENDHEX$$glement du RN de r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$" + sNomInter + ", du m$$HEX1$$ea00$$ENDHEX$$me montant, mais ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re aucun mouvement financier vers l'assureur." 
+		st_1.Text = "Suite rejet de la banque, SPB représente le règlement du RN de référence à " + sNomInter + ", du même montant, mais ne génère aucun mouvement financier vers l'assureur." 
 		
 		
 	Case sCodMotReg = "RP" And sCodModeReg = "FM"
-		st_1.Text = "SPB r$$HEX1$$e900$$ENDHEX$$clame ce montant $$HEX2$$e0002000$$ENDHEX$$l'assureur et r$$HEX1$$e800$$ENDHEX$$gle le fournisseur " + sNomInter + " de ce m$$HEX1$$ea00$$ENDHEX$$me montant." 
+		st_1.Text = "SPB réclame ce montant à l'assureur et règle le fournisseur " + sNomInter + " de ce même montant." 
 		
 		
 	Case sCodMotReg = "RM" And sCodModeReg = "FM"		
 
-		st_1.Text = "SPB redonne ce montant $$HEX2$$e0002000$$ENDHEX$$l'assureur et d$$HEX1$$e900$$ENDHEX$$duit ce montant du prochain r$$HEX1$$e800$$ENDHEX$$glement au fournisseur " + sNomInter + "."		
+		st_1.Text = "SPB redonne ce montant à l'assureur et déduit ce montant du prochain règlement au fournisseur " + sNomInter + "."		
 		
 		
 	Case sCodMotReg = "RP" And sCodModeReg = "C"	And sLibInter = "FOURN."
 
-		st_1.Text = "SPB r$$HEX1$$e900$$ENDHEX$$clame ce montant $$HEX2$$e0002000$$ENDHEX$$l'assureur mais ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re aucun mouvement financier vers le fournisseur " + sNomInter + "."		
+		st_1.Text = "SPB réclame ce montant à l'assureur mais ne génère aucun mouvement financier vers le fournisseur " + sNomInter + "."		
 		
 	Case sCodMotReg = "RM" And sCodModeReg = "C" And sLibInter = "FOURN."
 
-		st_1.Text = "SPB redonne ce montant $$HEX2$$e0002000$$ENDHEX$$l'assureur mais ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re aucun mouvement financier vers le fournisseur " + sNomInter + "."		
+		st_1.Text = "SPB redonne ce montant à l'assureur mais ne génère aucun mouvement financier vers le fournisseur " + sNomInter + "."		
 
 	Case sCodMotReg = "RP" And sCodModeReg = "C"	
 		
-		st_1.Text = "SPB r$$HEX1$$e900$$ENDHEX$$clame ce montant $$HEX2$$e0002000$$ENDHEX$$l'assureur mais ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re aucun mouvement financier vers " + sNomInter + "."		
+		st_1.Text = "SPB réclame ce montant à l'assureur mais ne génère aucun mouvement financier vers " + sNomInter + "."		
 
 	Case sCodMotReg = "RP" And sCodModeReg = "XA"	And sLibInter = "FOURN."
 
-		st_1.Text = "SPB r$$HEX1$$e900$$ENDHEX$$clame ce montant $$HEX2$$e0002000$$ENDHEX$$l'assureur pour maj du dossier uniquement, sans mvt financier r$$HEX2$$e900e900$$ENDHEX$$l, mais ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re aucun mouvement financier vers le fournisseur " + sNomInter + "."		
+		st_1.Text = "SPB réclame ce montant à l'assureur pour maj du dossier uniquement, sans mvt financier réél, mais ne génère aucun mouvement financier vers le fournisseur " + sNomInter + "."		
 		
 	Case sCodMotReg = "RM" And sCodModeReg = "XA" And sLibInter = "FOURN."
 
-		st_1.Text = "SPB redonne ce montant $$HEX2$$e0002000$$ENDHEX$$l'assureur pour maj du dossier uniquement, sans mvt financier r$$HEX2$$e900e900$$ENDHEX$$l, mais ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re aucun mouvement financier vers le fournisseur " + sNomInter + "."		
+		st_1.Text = "SPB redonne ce montant à l'assureur pour maj du dossier uniquement, sans mvt financier réél, mais ne génère aucun mouvement financier vers le fournisseur " + sNomInter + "."		
 
 	Case sCodMotReg = "RP" And sCodModeReg = "XA"	
 		
-		st_1.Text = "SPB r$$HEX1$$e900$$ENDHEX$$clame ce montant $$HEX2$$e0002000$$ENDHEX$$l'assureur pour maj du dossier uniquement, sans mvt financier r$$HEX2$$e900e900$$ENDHEX$$l, mais ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re aucun mouvement financier vers " + sNomInter + "."		
+		st_1.Text = "SPB réclame ce montant à l'assureur pour maj du dossier uniquement, sans mvt financier réél, mais ne génère aucun mouvement financier vers " + sNomInter + "."		
 		
 	Case sCodMotReg = "RM" And sCodModeReg = "XA"			
 
-		st_1.Text = "SPB redonne ce montant $$HEX2$$e0002000$$ENDHEX$$l'assureur pour maj du dossier uniquement, sans mvt financier r$$HEX2$$e900e900$$ENDHEX$$l, mais ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re aucun mouvement financier vers le fournisseur " + sNomInter + "."		
+		st_1.Text = "SPB redonne ce montant à l'assureur pour maj du dossier uniquement, sans mvt financier réél, mais ne génère aucun mouvement financier vers le fournisseur " + sNomInter + "."		
 				
 
 	Case sCodMotReg = "RM" And sCodModeReg = "C"			
 
-		st_1.Text = "SPB redonne ce montant $$HEX2$$e0002000$$ENDHEX$$l'assureur mais ne g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e800$$ENDHEX$$re aucun mouvement financier vers " + sNomInter + "."				
+		st_1.Text = "SPB redonne ce montant à l'assureur mais ne génère aucun mouvement financier vers " + sNomInter + "."				
 		
 	Case sCodMotReg = "RN" And sCodModeReg = "FM"		
 
-		st_1.Text = "SPB r$$HEX1$$e900$$ENDHEX$$gle le fournisseur " + sNomInter + ", ce montant sera donc r$$HEX1$$e900$$ENDHEX$$clam$$HEX4$$e9002000e0002000$$ENDHEX$$l'assureur."
+		st_1.Text = "SPB régle le fournisseur " + sNomInter + ", ce montant sera donc réclamé à l'assureur."
 
 	Case sCodMotReg = "RN" And sCodModeReg = "XA" And sLibInter = "FOURN."		 
 
-		st_1.Text = "SPB r$$HEX1$$e900$$ENDHEX$$gle le fournisseur " + sNomInter + " pour maj du dossier uniquement, sans mvt financier r$$HEX2$$e900e900$$ENDHEX$$l, ce montant ne sera donc pas r$$HEX1$$e900$$ENDHEX$$clam$$HEX4$$e9002000e0002000$$ENDHEX$$l'assureur."
+		st_1.Text = "SPB régle le fournisseur " + sNomInter + " pour maj du dossier uniquement, sans mvt financier réél, ce montant ne sera donc pas réclamé à l'assureur."
 			
 	Case sCodMotReg = "RN" And sCodModeReg = "XA" 	 
 
-		st_1.Text = "SPB r$$HEX1$$e900$$ENDHEX$$gle " + sNomInter + " pour maj du dossier uniquement, sans mvt financier r$$HEX2$$e900e900$$ENDHEX$$l, ce montant ne sera donc pas r$$HEX1$$e900$$ENDHEX$$clam$$HEX4$$e9002000e0002000$$ENDHEX$$l'assureur."		
+		st_1.Text = "SPB régle " + sNomInter + " pour maj du dossier uniquement, sans mvt financier réél, ce montant ne sera donc pas réclamé à l'assureur."		
 
 	Case sCodMotReg = "RN" 
 
-		st_1.Text = "SPB r$$HEX1$$e900$$ENDHEX$$gle " + sNomInter + ", ce montant sera donc r$$HEX1$$e900$$ENDHEX$$clam$$HEX4$$e9002000e0002000$$ENDHEX$$l'assureur."		
+		st_1.Text = "SPB régle " + sNomInter + ", ce montant sera donc réclamé à l'assureur."		
 
 	// [PM462-1][V3]
 	Case sCodMotReg = "PF" And sCodModeReg = "CB"		
 
-		st_1.Text = sNomInter + " a pay$$HEX4$$e9002000e0002000$$ENDHEX$$SPB sa franchise par Carte Bancaire $$HEX2$$e0002000$$ENDHEX$$partir de l'extranet (mvt financier pour m$$HEX1$$e900$$ENDHEX$$moire non transmis $$HEX2$$e0002000$$ENDHEX$$l'assureur)."
+		st_1.Text = sNomInter + " a payé à SPB sa franchise par Carte Bancaire à partir de l'extranet (mvt financier pour mémoire non transmis à l'assureur)."
 
 	// [PM462-1][V3]
 	Case sCodMotReg = "RF" And sCodModeReg = "CB"		
 
-		st_1.Text = "SPB r$$HEX1$$e900$$ENDHEX$$gularise le remboursement. de franchise que l'assur$$HEX2$$e9002000$$ENDHEX$$" + sNomInter + " avait pay$$HEX4$$e9002000e0002000$$ENDHEX$$SPB par Carte Bancaire (type PF) $$HEX2$$e0002000$$ENDHEX$$partir de l'extranet et qui lui a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$rembours$$HEX2$$e9002000$$ENDHEX$$par un virement ou ch$$HEX1$$e800$$ENDHEX$$que (mvt financier pour m$$HEX1$$e900$$ENDHEX$$moire annulant le PF non transmis $$HEX2$$e0002000$$ENDHEX$$l'assureur)."				
+		st_1.Text = "SPB régularise le remboursement. de franchise que l'assuré " + sNomInter + " avait payé à SPB par Carte Bancaire (type PF) à partir de l'extranet et qui lui a été remboursé par un virement ou chèque (mvt financier pour mémoire annulant le PF non transmis à l'assureur)."				
 		
 End Choose 
 
@@ -309,7 +310,7 @@ public subroutine wf_voirventilfraisanxfrn ();//*-------------------------------
 //* Fonction		: wf_VoirVentilFraisAnxFrn
 //* Auteur			: FABRY JF
 //* Date				: 14/10/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PM80_FA12_FRANEX]
 //*
 //* Arguments		: Aucun.
@@ -333,8 +334,8 @@ If SQLCA.PS_S03_REG_FRAIS_ANNEXE_FRN ( stPass.lTab[1] , stPass.lTab[2], dtPivotM
 
 	If  dtCreeLe < dtPivotMepPm80 Then 
 		stMessage.sCode	= "GENE186"
-		stMessage.sVar [1]= String ( dtCreeLe, "dd/mm/yyyy $$HEX2$$e0002000$$ENDHEX$$hh:mm:ss" ) 
-		stMessage.sVar [2]= String ( dtPivotMepPm80, "dd/mm/yyyy $$HEX2$$e0002000$$ENDHEX$$hh:mm:ss" ) 
+		stMessage.sVar [1]= String ( dtCreeLe, "dd/mm/yyyy à hh:mm:ss" ) 
+		stMessage.sVar [2]= String ( dtPivotMepPm80, "dd/mm/yyyy à hh:mm:ss" ) 
 	Else 
 		stMessage.sCode	= "GENE187"		
 	End IF 
@@ -358,8 +359,8 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		:	UE_INITIALISER - Extend
 //* Auteur			:	JFF
 //* Date				:	07/12/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Initialisation de la fen$$HEX1$$ea00$$ENDHEX$$tre de consultation  
-//*					 	des r$$HEX1$$e900$$ENDHEX$$glements
+//* Libellé			:	Initialisation de la fenêtre de consultation  
+//*					 	des réglements
 //* Commentaires	:	
 //*				  
 //*-----------------------------------------------------------------
@@ -373,18 +374,18 @@ DataWindow	dwNorm[]
 //Fin Migration PB8-WYNIWYG-03/2006 FM
 
 /*------------------------------------------------------------------*/
-/* Positionnement des objets de la fen$$HEX1$$ea00$$ENDHEX$$tre                          */
+/* Positionnement des objets de la fenêtre                          */
 /*------------------------------------------------------------------*/
 wf_PositionnerObjets()
 
 /*------------------------------------------------------------------*/
-/* D$$HEX1$$e900$$ENDHEX$$claration du nvuo li$$HEX1$$e900$$ENDHEX$$e $$HEX2$$e0002000$$ENDHEX$$la fen$$HEX1$$ea00$$ENDHEX$$tre                            */
+/* Déclaration du nvuo liée à la fenêtre                            */
 /*------------------------------------------------------------------*/
 
 iuoConsultation = Create u_Cs_Sp_Reglement
 
 /*------------------------------------------------------------------*/
-/* Sur fen$$HEX1$$ea00$$ENDHEX$$tre Sinistre															  */
+/* Sur fenêtre Sinistre															  */
 /*	stPass.sTab   [ 1 ]	= This.Title										  */
 /* stPass.dwMaster		= dw_1				// DataWindow Sinistre	  */
 /*  																					  */
@@ -420,13 +421,13 @@ Uo_Consult_Euro.Uf_Initialiser ( dwNorm[] )
 
 end event
 
-on we_childactivate;call w_8_ancetre_consultation::we_childactivate;//*-----------------------------------------------------------------
+event we_childactivate;call super::we_childactivate;//*-----------------------------------------------------------------
 //*
 //* Objet 			: W_Cd_Sp_Reglement
 //* Evenement 		: We_ChildActivate
 //* Auteur			: FABRY JF
 //* Date				: 03/12/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -436,10 +437,14 @@ on we_childactivate;call w_8_ancetre_consultation::we_childactivate;//*---------
 
 This.X			=    1
 This.Y			=    1
-This.Height		= 1769
-This.Width		= 3598
+// [PB2022_TAILLE_FEN] + xxx
+This.Height		= 1769 + 90
 
-end on
+
+// [PB2022_TAILLE_FEN] + xxx
+This.Width		= 3598 + 50
+
+end event
 
 on w_cd_sp_reglement.create
 int iCurrent
@@ -475,8 +480,8 @@ on close;call w_8_ancetre_consultation::close;//*-------------------------------
 //* Evenement 		:	Close
 //* Auteur			:	FABRY JF
 //* Date				:	03/12/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Op$$HEX1$$e900$$ENDHEX$$rations $$HEX2$$e0002000$$ENDHEX$$effectuer $$HEX2$$e0002000$$ENDHEX$$la fermeture de la 
-//*					 	fen$$HEX1$$ea00$$ENDHEX$$tre 
+//* Libellé			:	Opérations à effectuer à la fermeture de la 
+//*					 	fenêtre 
 //* Commentaires	:
 //*				  
 //*-----------------------------------------------------------------
@@ -494,7 +499,7 @@ event show;call super::show;//*-------------------------------------------------
 //* Evenement 		: Show
 //* Auteur			: Fabry JF
 //* Date				: 16/10/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -570,8 +575,8 @@ on ue_changer_monnaie;call u_consultation_euro::ue_changer_monnaie;//*----------
 //* Evenement 		: Ue_Changer_Monnaie
 //* Auteur			: Erick John Stark
 //* Date				: 29/03/1999 12:07:52
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Dans cette fen$$HEX1$$ea00$$ENDHEX$$tre, il a deux zones calcul$$HEX1$$e900$$ENDHEX$$es
+//* Libellé			: 
+//* Commentaires	: Dans cette fenêtre, il a deux zones calculées
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -603,7 +608,7 @@ fontfamily fontfamily = swiss!
 string facename = "Tahoma"
 long textcolor = 16711680
 long backcolor = 15793151
-string text = "Traduction r$$HEX1$$e900$$ENDHEX$$elle de ce mouvement financier"
+string text = "Traduction réelle de ce mouvement financier"
 boolean border = true
 boolean focusrectangle = false
 end type

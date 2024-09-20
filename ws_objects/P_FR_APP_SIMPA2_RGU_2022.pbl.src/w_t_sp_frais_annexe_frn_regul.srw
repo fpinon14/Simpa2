@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_t_sp_frais_annexe_frn_regul.srw
+﻿$PBExportHeader$w_t_sp_frais_annexe_frn_regul.srw
 $PBExportComments$PM80
 forward
 global type w_t_sp_frais_annexe_frn_regul from window
@@ -10,10 +10,10 @@ end type
 end forward
 
 global type w_t_sp_frais_annexe_frn_regul from window
-integer width = 4448
-integer height = 952
+integer width = 4535
+integer height = 1004
 boolean titlebar = true
-string title = "Saisie manuelle des frais annexes prestataires sur r$$HEX1$$e900$$ENDHEX$$gularisation"
+string title = "Saisie manuelle des frais annexes prestataires sur régularisation"
 windowtype windowtype = response!
 long backcolor = 12632256
 string icon = "AppIcon!"
@@ -42,7 +42,7 @@ public function integer wf_controler ();//*-------------------------------------
 //* Evenement 		: 
 //* Auteur			: FABRY JF
 //* Date				: 07/10/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				     
 //*				  
@@ -61,7 +61,7 @@ Long lTypeDuFrais
 If dw_reg_frais_anx.GetItemDecimal ( 1, "compute_2" ) <> 0 Then
  
  	stMessage.sCode		= "REGU285"		
- 	stMessage.sTitre		= "Montant non ventil$$HEX1$$e900$$ENDHEX$$"
+ 	stMessage.sTitre		= "Montant non ventilé"
  	stMessage.Icon			= Information!
  	stMessage.bErreurG	= FALSE
  	stMessage.Bouton		= OK!
@@ -94,11 +94,11 @@ If  dw_reg_frais_anx.GetItemString ( 1, "COD_MOT_REG" ) = "RM" Then
 
 	If sVentilFraisEncoursCtrle <> sVentilFraisOrig Then
 	 	stMessage.sCode		= "REGU270"		
-		stMessage.sTitre		= "Incoh$$HEX1$$e900$$ENDHEX$$rence sur la ventilation"
+		stMessage.sTitre		= "Incohérence sur la ventilation"
 		stMessage.Icon			= Information!
 		stMessage.bErreurG	= FALSE
 		stMessage.Bouton		= OK!
-		stMessage.sVar[1]		= "Un ou plusieurs types de frais du RM (" + sVentilFraisEncoursAff + ") n'ont jamais $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gl$$HEX2$$e9002000$$ENDHEX$$sur le RN d'origine ou RP li$$HEX2$$e9002000$$ENDHEX$$au RN d'origine (" + sVentilFraisOrig + ")." 		
+		stMessage.sVar[1]		= "Un ou plusieurs types de frais du RM (" + sVentilFraisEncoursAff + ") n'ont jamais été réglé sur le RN d'origine ou RP lié au RN d'origine (" + sVentilFraisOrig + ")." 		
 		F_Message ( stMessage )
 
 		Return -1
@@ -108,11 +108,11 @@ If  dw_reg_frais_anx.GetItemString ( 1, "COD_MOT_REG" ) = "RM" Then
 
 	If iRetCtrleSomFrais < 0 Then
 	 	stMessage.sCode		= "REGU270"		
-		stMessage.sTitre		= "Incoh$$HEX1$$e900$$ENDHEX$$rence sur la ventilation"
+		stMessage.sTitre		= "Incohérence sur la ventilation"
 		stMessage.Icon			= Information!
 		stMessage.bErreurG	= FALSE
 		stMessage.Bouton		= OK!
-		stMessage.sVar[1]		= "La somme des RN/RM/RP du frais " + String ( lTypeDuFrais ) + " (" + SQLCA.FN_CODE_NUM ( lTypeDuFrais, "-W7" ) + ") est de " + String ( dcMtFraisAnexExistant) + "$$HEX1$$ac20$$ENDHEX$$, vous ne pouvez donc soustraire un RM de -" + String ( abs (dcMtFraisAPasser )) + "$$HEX1$$ac20$$ENDHEX$$, cela donnerait un nombre n$$HEX1$$e900$$ENDHEX$$gatif au final (" + string ( dcMtDifFraisAnx ) + "$$HEX1$$ac20$$ENDHEX$$)."
+		stMessage.sVar[1]		= "La somme des RN/RM/RP du frais " + String ( lTypeDuFrais ) + " (" + SQLCA.FN_CODE_NUM ( lTypeDuFrais, "-W7" ) + ") est de " + String ( dcMtFraisAnexExistant) + "€, vous ne pouvez donc soustraire un RM de -" + String ( abs (dcMtFraisAPasser )) + "€, cela donnerait un nombre négatif au final (" + string ( dcMtDifFraisAnx ) + "€)."
 		F_Message ( stMessage )
 
 		Return -1
@@ -141,7 +141,7 @@ event open;//*-----------------------------------------------------------------
 //* Evenement 		: Close
 //* Auteur			: FABRY JF
 //* Date				: 07/10/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				     
 //*				  
@@ -163,7 +163,7 @@ event show;//*-----------------------------------------------------------------
 //* Evenement 		: 
 //* Auteur			: FABRY JF
 //* Date				: 07/10/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				     
 //*				  
@@ -218,7 +218,7 @@ event itemchanged;//*-----------------------------------------------------------
 //* Evenement 		: Close
 //* Auteur			: FABRY JF
 //* Date				: 07/10/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				     
 //*				  
@@ -250,7 +250,7 @@ event itemerror;//*-------------------------------------------------------------
 //* Evenement 		: Close
 //* Auteur			: FABRY JF
 //* Date				: 07/10/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				     
 //*				  
@@ -270,7 +270,7 @@ Choose Case iiErreur
 	Case 2 
 		iiErreur = 0
 		stMessage.sCode		= "REGU275"
-		stMessage.sVar[1]    = "n$$HEX1$$e900$$ENDHEX$$gatif"
+		stMessage.sVar[1]    = "négatif"
 		
 	Case Else 	
 		iiErreur = 0
@@ -278,7 +278,7 @@ Choose Case iiErreur
 		
 End Choose 
 
-stMessage.sTitre		= "Donn$$HEX1$$e900$$ENDHEX$$es non valide"
+stMessage.sTitre		= "Données non valide"
 stMessage.Icon			= Exclamation!
 stMessage.bErreurG	= FALSE
 stMessage.Bouton		= OK!
@@ -314,7 +314,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: Close
 //* Auteur			: FABRY JF
 //* Date				: 07/10/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				     
 //*				  

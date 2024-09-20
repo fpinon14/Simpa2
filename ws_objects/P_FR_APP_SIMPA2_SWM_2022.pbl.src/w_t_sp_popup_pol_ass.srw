@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_t_sp_popup_pol_ass.srw
-$PBExportComments$Fen$$HEX1$$ea00$$ENDHEX$$tre de traitement simple pour afficher police / assurance des gtis (DCMP 030381)
+﻿$PBExportHeader$w_t_sp_popup_pol_ass.srw
+$PBExportComments$Fenêtre de traitement simple pour afficher police / assurance des gtis (DCMP 030381)
 forward
 global type w_t_sp_popup_pol_ass from window
 end type
@@ -12,8 +12,8 @@ end forward
 global type w_t_sp_popup_pol_ass from window
 integer x = 1344
 integer y = 688
-integer width = 3639
-integer height = 656
+integer width = 3726
+integer height = 728
 boolean titlebar = true
 string title = "Liste des polices et assurances par garantie"
 boolean controlmenu = true
@@ -39,8 +39,8 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //* Fonction		: W_T_Sp_Popup_Pol_Ass::Wf_PositionnerObjet		(PRIVATE)
 //* Auteur			: Catherine ABDMEZIEM
 //* Date				: 08/07/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Positionnement dynamique des objets de la fen$$HEX1$$ea00$$ENDHEX$$tre
+//* Libellé			: 
+//* Commentaires	: Positionnement dynamique des objets de la fenêtre
 //*
 //* Arguments		: Aucun
 //*
@@ -54,7 +54,7 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 Long	lX, lY
 
 /*------------------------------------------------------------------*/
-/* Position de la fen$$HEX1$$ea00$$ENDHEX$$tre.                                          */
+/* Position de la fenêtre.                                          */
 /*------------------------------------------------------------------*/
 lX = gwmdi.x
 lY = gwmdi.y
@@ -69,7 +69,7 @@ event open;//*-----------------------------------------------------------------
 //* Fonction      : W_T_Sp_Popup_Pol_Ass::open
 //* Auteur        : Catherine ABDMEZIEM
 //* Date          : 07/07/2004 09:18:58
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : Chargement de la dw contenant les polices et
 //*						assurances pour chaque gti du produit du dr DCMP 030381
 //* Arguments     : 
@@ -80,7 +80,7 @@ event open;//*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....
 //* #1	 FPI	 26/10/2009	[EXPANSION5.LIB_POLICE] Ajout du param id_boutique_adh
-//*		SBA 	21/07/2010	[PC202] Correction lib_police lors d'une gestion particuli$$HEX1$$e800$$ENDHEX$$re
+//*		SBA 	21/07/2010	[PC202] Correction lib_police lors d'une gestion particulière
 //*-----------------------------------------------------------------
 
 Long			lNb, lCpt, lFind
@@ -103,14 +103,14 @@ SetNull(sIdBoutique)
 if Upperbound(istPass.sTab) > 1 Then sIdBoutique = istPass.sTab [ 2 ]
 // Fin #1 - [EXPANSION5.LIB_POLICE]
 	
-// Positionnement de la fen$$HEX1$$ea00$$ENDHEX$$tre
+// Positionnement de la fenêtre
 wf_PositionnerObjets ()
 
 If istPass.sTab [ 1 ] = "T" Then
 /*------------------------------------------------------------------*/
-/* La popup est appel$$HEX1$$e900$$ENDHEX$$e de w_tm_sp_sinistre                         */
+/* La popup est appelée de w_tm_sp_sinistre                         */
 /*------------------------------------------------------------------*/
-	// R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration des dw de garantie et police d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$es dans w_tm_sp_sinistre
+	// Récupération des dw de garantie et police déjà chargées dans w_tm_sp_sinistre
 	dwGarantie	= istPass.dwNorm [ 1 ]
 	dwPolice		= istPass.dwNorm [ 2 ]
 	dwLstGti		= istPass.dwTab [ 1 ]
@@ -140,18 +140,18 @@ If istPass.sTab [ 1 ] = "T" Then
 		sLibGti = dwChild.GetItemString ( lFind, "LIB_GTI" )
 		dw_1.SetItem ( lCpt, "LIB_GTI", String ( dwGarantie.GetItemNumber ( lCpt, "ID_GTI" ) ) + " - " + sLibGti )
 
-		// ... n$$HEX2$$b0002000$$ENDHEX$$de police $$HEX2$$e0002000$$ENDHEX$$partir de la garantie
+		// ... n° de police à partir de la garantie
 		lIdPolice = dwGarantie.GetItemNumber ( lCpt, "ID_POLICE" )
 		dw_1.SetItem ( lCpt, "ID_POLICE", lIdPolice )
 
 		// #1 - [EXPANSION5.LIB_POLICE]
 		
-		// ... gestion normal : libell$$HEX2$$e9002000$$ENDHEX$$police repris de police
+		// ... gestion normal : libellé police repris de police
 		if isNull(sIdBoutique) Then
 			lFind = dwPolice.Find ( "ID_POLICE = " + String ( lIdPolice ), 0, dwPolice.RowCount () )
 			sLibPolice = dwPolice.GetItemString ( lFind, "LIB_POLICE" )
 
-		// ... gestion particuli$$HEX1$$e800$$ENDHEX$$re Police/Cie    			
+		// ... gestion particulière Police/Cie    			
 		Else
 			sLibPolice=""
 			dsLibPolice.Retrieve(lIdSin, lIdProd, lIdRev, lIdGti,lIdPolice)  // [PC202]
@@ -176,9 +176,9 @@ If istPass.sTab [ 1 ] = "T" Then
 	
 Else
 /*------------------------------------------------------------------*/
-/* La popup est appel$$HEX1$$e900$$ENDHEX$$e de w_cm_sp_sinistre. On n'y dispose pas de  */
-/* la dw des polices. On fait donc une requ$$HEX1$$ea00$$ENDHEX$$te directe $$HEX2$$e0002000$$ENDHEX$$chaque     */
-/* appui sur le bouton dans la fen$$HEX1$$ea00$$ENDHEX$$tre w_cm_sp_sinistre.            */
+/* La popup est appelée de w_cm_sp_sinistre. On n'y dispose pas de  */
+/* la dw des polices. On fait donc une requête directe à chaque     */
+/* appui sur le bouton dans la fenêtre w_cm_sp_sinistre.            */
 /*------------------------------------------------------------------*/
 	dw_1.SetTransObject ( istPass.trTrans )
 	dwSin = istPass.dwMaster

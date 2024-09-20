@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_t_sp_homonyme.srw
-$PBExportComments$-} Fen$$HEX1$$ea00$$ENDHEX$$tre de traitement SIMPLE pour la recherche des homonymes.
+﻿$PBExportHeader$w_t_sp_homonyme.srw
+$PBExportComments$-} Fenêtre de traitement SIMPLE pour la recherche des homonymes.
 forward
 global type w_t_sp_homonyme from w_ancetre
 end type
@@ -16,13 +16,13 @@ end type
 end forward
 
 global type w_t_sp_homonyme from w_ancetre
-int X=1
-int Y=1
-int Width=3571
-int Height=1745
-boolean Visible=true
-boolean TitleBar=true
-string Title="Recherche des homonymes"
+boolean visible = true
+integer x = 0
+integer y = 0
+integer width = 3570
+integer height = 1744
+boolean titlebar = true
+string title = "Recherche des homonymes"
 pb_valider pb_valider
 pb_retour pb_retour
 dw_1 dw_1
@@ -44,7 +44,7 @@ on ue_initialiser;call w_ancetre::ue_initialiser;//*----------------------------
 //* Evenement 		: Ue_Initialiser
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 09:55:15
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -60,22 +60,22 @@ String sTitre, sRech
 
 /*------------------------------------------------------------------*/
 /* On positionne la variable qui permet d'attaquer la DW de la      */
-/* fen$$HEX1$$ea00$$ENDHEX$$tre PARENT.                                                  */
+/* fenêtre PARENT.                                                  */
 /*------------------------------------------------------------------*/
 iwParentDet = istPass.wParent
 
 /*------------------------------------------------------------------*/
-/* On rend la fen$$HEX1$$ea00$$ENDHEX$$tre PARENT non saisissable.                       */
+/* On rend la fenêtre PARENT non saisissable.                       */
 /*------------------------------------------------------------------*/
 iwParentDet.Enabled = False
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re toutes les lignes pour les homonymes.                */
+/* On récupére toutes les lignes pour les homonymes.                */
 /*------------------------------------------------------------------*/
 istPass.dwNorm[1].ShareData ( dw_1 )
 
 /*------------------------------------------------------------------*/
-/* La DW dw_2 sert $$HEX2$$e0002000$$ENDHEX$$afficher les sinistres li$$HEX1$$e900$$ENDHEX$$s $$HEX2$$e0002000$$ENDHEX$$la personne.     */
+/* La DW dw_2 sert à afficher les sinistres liés à la personne.     */
 /*------------------------------------------------------------------*/
 lTotHomonyme = istPass.dwNorm[1].RowCount ()
 istPass.dwNorm[1].RowsCopy ( 1, lTotHomonyme, Primary!, dw_2, 1, Primary! )
@@ -86,7 +86,7 @@ istPass.dwNorm[1].RowsCopy ( 1, lTotHomonyme, Primary!, dw_2, 1, Primary! )
 dw_1.SetRowFocusIndicator ( p_Focus, 50, 90 )
 
 /*------------------------------------------------------------------*/
-/* On s'occupe de faire apparaitre la civilit$$HEX2$$e9002000$$ENDHEX$$correctement.        */
+/* On s'occupe de faire apparaitre la civilité correctement.        */
 /*------------------------------------------------------------------*/
 istPass.dwNorm[1].GetChild ( "COD_CIV", dwChild )
 dw_1.GetChild ( "COD_CIV", dwChild1 )
@@ -96,13 +96,13 @@ dwChild.ShareData ( dwChild1 )
 /* On affiche le titre dans dw_1.                                   */
 /*------------------------------------------------------------------*/
 sTitre = "Le nom commence par " + Left ( iwParentDet.dw_1.GetItemString ( 1, "NOM" ), 5 ) + & 
-			" - Le pr$$HEX1$$e900$$ENDHEX$$nom commence par " + Left ( iwParentDet.dw_1.GetItemString ( 1, "PRENOM" ), 5 )
+			" - Le prénom commence par " + Left ( iwParentDet.dw_1.GetItemString ( 1, "PRENOM" ), 5 )
 
 sTitre = "st_Titre.Text = '" + sTitre  + "'"
 dw_1.Modify ( sTitre )
 
 /*------------------------------------------------------------------*/
-/* On fait un petit traitement pour $$HEX1$$e900$$ENDHEX$$jecter les doublons sur dw_1.  */
+/* On fait un petit traitement pour éjecter les doublons sur dw_1.  */
 /*------------------------------------------------------------------*/
 lIdOrdre = 0
 For	lCpt = lTotHomonyme To 1 Step -1
@@ -119,8 +119,8 @@ Next
 lTotHomonyme = dw_1.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* S'il existe un N$$HEX2$$b0002000$$ENDHEX$$d'ordre de positionn$$HEX1$$e900$$ENDHEX$$, on se met dessus,       */
-/* sinon on se positionne sur la premi$$HEX1$$e800$$ENDHEX$$re ligne.                    */
+/* S'il existe un N° d'ordre de positionné, on se met dessus,       */
+/* sinon on se positionne sur la première ligne.                    */
 /*------------------------------------------------------------------*/
 lIdOrdre = iwParentDet.dw_1.GetItemNumber ( 1, "ID_ORDRE" )
 
@@ -151,7 +151,7 @@ on ue_valider;call w_ancetre::ue_valider;//*------------------------------------
 //* Evenement 		: Ue_Valider
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 10:02:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -163,10 +163,10 @@ Long lLig, lIdOrdre, lIdOrdreDepart, lIdSin
 Boolean bErreur, bSinLie
 
 /*------------------------------------------------------------------*/
-/* La variable ilRetour sert $$HEX2$$e0002000$$ENDHEX$$savoir si on appuie sur le bouton    */
+/* La variable ilRetour sert à savoir si on appuie sur le bouton    */
 /* PRENDRE ou le bouton RETOUR. On vient d'appuyer sur le bouton    */
-/* PRENDRE, on arme donc la valeur avec le N$$HEX2$$b0002000$$ENDHEX$$d'ordre de la ligne   */
-/* s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX1$$e900$$ENDHEX$$e.                                                    */
+/* PRENDRE, on arme donc la valeur avec le N° d'ordre de la ligne   */
+/* sélectionnée.                                                    */
 /*------------------------------------------------------------------*/
 lLig		= dw_1.GetRow ()
 bErreur	= False
@@ -175,8 +175,8 @@ If	lLig > 0 Then
 	lIdOrdre = dw_1.GetItemNumber ( lLig, "ID_ORDRE" )
 
 /*------------------------------------------------------------------*/
-/* Si le N$$HEX2$$b0002000$$ENDHEX$$d'ordre est NULL, le gestionnaire doit d'abord valider  */
-/* le sinistre de cet assur$$HEX1$$e900$$ENDHEX$$.                                       */
+/* Si le N° d'ordre est NULL, le gestionnaire doit d'abord valider  */
+/* le sinistre de cet assuré.                                       */
 /*------------------------------------------------------------------*/
 	If	IsNull ( lIdOrdre ) Then
 		bErreur = True
@@ -194,8 +194,8 @@ If	lLig > 0 Then
 	Else
 		lIdOrdreDepart = iwParentDet.dw_1.GetItemNumber ( 1, "ID_ORDRE" )
 /*------------------------------------------------------------------*/
-/* Si le gestionnaire choisit un N$$HEX2$$b0002000$$ENDHEX$$d'ordre diff$$HEX1$$e900$$ENDHEX$$rent de celui      */
-/* r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$lors des sinistres li$$HEX1$$e900$$ENDHEX$$s, il y a une erreur. Il faut     */
+/* Si le gestionnaire choisit un N° d'ordre différent de celui      */
+/* récupéré lors des sinistres liés, il y a une erreur. Il faut     */
 /* corriger la base manuellement.                                   */
 /*------------------------------------------------------------------*/
 		bSinLie = istPass.bRetour
@@ -229,7 +229,7 @@ on ue_retour;call w_ancetre::ue_retour;//*--------------------------------------
 //* Evenement 		: Ue_Retour
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 10:02:13
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -238,30 +238,30 @@ on ue_retour;call w_ancetre::ue_retour;//*--------------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On rend la fen$$HEX1$$ea00$$ENDHEX$$tre PARENT saisissable.                           */
+/* On rend la fenêtre PARENT saisissable.                           */
 /*------------------------------------------------------------------*/
 iwParentDet.Enabled = True
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche le script de la fen$$HEX1$$ea00$$ENDHEX$$tre parent. On lui passe en     */
-/* param$$HEX1$$e800$$ENDHEX$$tre la valeur ilRetour. Cela $$HEX1$$e900$$ENDHEX$$vite d'avoir deux            */
-/* $$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nements $$HEX2$$e0002000$$ENDHEX$$d$$HEX1$$e900$$ENDHEX$$crire.                                            */
+/* On déclenche le script de la fenêtre parent. On lui passe en     */
+/* paramètre la valeur ilRetour. Cela évite d'avoir deux            */
+/* événements à décrire.                                            */
 /*------------------------------------------------------------------*/
 iwParentDet.TriggerEvent ( "Ue_Homonyme", 0, ilRetour )
 
 /*------------------------------------------------------------------*/
-/* On referme la fen$$HEX1$$ea00$$ENDHEX$$tre.                                           */
+/* On referme la fenêtre.                                           */
 /*------------------------------------------------------------------*/
 Close ( This )
 end on
 
-on we_childactivate;call w_ancetre::we_childactivate;//*-----------------------------------------------------------------
+event we_childactivate;call super::we_childactivate;//*-----------------------------------------------------------------
 //*
 //* Objet 			: W_T_Sp_Homonyme::We_ChildActivate
 //* Evenement 		: We_ChildActivate
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 17:53:35
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -271,9 +271,13 @@ on we_childactivate;call w_ancetre::we_childactivate;//*------------------------
 
 This.X			=    1
 This.Y			=    1
-This.Height		= 1769
-This.Width		= 3598
-end on
+// [PB2022_TAILLE_FEN] + xxx
+This.Height		= 1769 + 90
+
+
+// [PB2022_TAILLE_FEN] + xxx
+This.Width		= 3598 + 50
+end event
 
 on open;call w_ancetre::open;//*-----------------------------------------------------------------
 //*
@@ -281,7 +285,7 @@ on open;call w_ancetre::open;//*------------------------------------------------
 //* Evenement 		: Open
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 09:49:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -292,8 +296,8 @@ on open;call w_ancetre::open;//*------------------------------------------------
 istPass = Message.PowerObjectParm
 
 /*------------------------------------------------------------------*/
-/* La variable ilRetour sert $$HEX2$$e0002000$$ENDHEX$$savoir si on appuie sur le bouton    */
-/* PRENDRE ou le bouton RETOUR. Par d$$HEX1$$e900$$ENDHEX$$faut on arme la valeur $$HEX2$$e0002000$$ENDHEX$$0,   */
+/* La variable ilRetour sert à savoir si on appuie sur le bouton    */
+/* PRENDRE ou le bouton RETOUR. Par défaut on arme la valeur à 0,   */
 /* ce qui correspond au bouton RETOUR.                              */
 /*------------------------------------------------------------------*/
 ilRetour = 0
@@ -305,22 +309,22 @@ end on
 
 on w_t_sp_homonyme.create
 int iCurrent
-call w_ancetre::create
+call super::create
 this.pb_valider=create pb_valider
 this.pb_retour=create pb_retour
 this.dw_1=create dw_1
 this.dw_2=create dw_2
 this.p_focus=create p_focus
 iCurrent=UpperBound(this.Control)
-this.Control[iCurrent+1]=pb_valider
-this.Control[iCurrent+2]=pb_retour
-this.Control[iCurrent+3]=dw_1
-this.Control[iCurrent+4]=dw_2
-this.Control[iCurrent+5]=p_focus
+this.Control[iCurrent+1]=this.pb_valider
+this.Control[iCurrent+2]=this.pb_retour
+this.Control[iCurrent+3]=this.dw_1
+this.Control[iCurrent+4]=this.dw_2
+this.Control[iCurrent+5]=this.p_focus
 end on
 
 on w_t_sp_homonyme.destroy
-call w_ancetre::destroy
+call super::destroy
 destroy(this.pb_valider)
 destroy(this.pb_retour)
 destroy(this.dw_1)
@@ -328,32 +332,39 @@ destroy(this.dw_2)
 destroy(this.p_focus)
 end on
 
+type cb_debug from w_ancetre`cb_debug within w_t_sp_homonyme
+end type
+
 type pb_valider from u_8_pbvalider within w_t_sp_homonyme
-int X=279
-int Y=29
-int TabOrder=20
-string Text="&Prendre"
-int TextSize=-7
-string FaceName="Arial"
+integer x = 279
+integer y = 28
+integer width = 242
+integer height = 144
+integer taborder = 20
+integer textsize = -7
+string facename = "Arial"
+string text = "&Prendre"
 end type
 
 type pb_retour from u_8_pbretour within w_t_sp_homonyme
-int X=33
-int Y=29
-int TabOrder=10
-boolean Cancel=true
+integer x = 32
+integer y = 28
+integer width = 242
+integer height = 144
+integer taborder = 10
+boolean cancel = true
 end type
 
 type dw_1 from datawindow within w_t_sp_homonyme
-int X=37
-int Y=181
-int Width=2177
-int Height=1453
-int TabOrder=30
-boolean Visible=false
-string DataObject="d_sp_wkf_homonyme"
-BorderStyle BorderStyle=StyleShadowBox!
-boolean VScrollBar=true
+boolean visible = false
+integer x = 37
+integer y = 180
+integer width = 2176
+integer height = 1452
+integer taborder = 30
+string dataobject = "d_sp_wkf_homonyme"
+boolean vscrollbar = true
+borderstyle borderstyle = styleshadowbox!
 end type
 
 on rowfocuschanged;//*-----------------------------------------------------------------
@@ -362,7 +373,7 @@ on rowfocuschanged;//*----------------------------------------------------------
 //* Evenement 		: RowFocusChanged
 //* Auteur			: Erick John Stark
 //* Date				: 27/08/1998 12:07:02
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -408,24 +419,24 @@ End If
 end on
 
 type dw_2 from datawindow within w_t_sp_homonyme
-int X=2250
-int Y=189
-int Width=1294
-int Height=1449
-int TabOrder=40
-boolean Visible=false
-string DataObject="d_sp_wkf_homonyme_sin"
-boolean VScrollBar=true
+boolean visible = false
+integer x = 2249
+integer y = 188
+integer width = 1294
+integer height = 1448
+integer taborder = 40
+string dataobject = "d_sp_wkf_homonyme_sin"
+boolean vscrollbar = true
 end type
 
 type p_focus from picture within w_t_sp_homonyme
-int X=3383
-int Y=33
-int Width=92
-int Height=77
-boolean Visible=false
-string PictureName="k:\pb4obj\bmp\focus_1.bmp"
-boolean FocusRectangle=false
-boolean OriginalSize=true
+boolean visible = false
+integer x = 3383
+integer y = 32
+integer width = 91
+integer height = 76
+boolean originalsize = true
+string picturename = "k:\pb4obj\bmp\focus_1.bmp"
+boolean focusrectangle = false
 end type
 

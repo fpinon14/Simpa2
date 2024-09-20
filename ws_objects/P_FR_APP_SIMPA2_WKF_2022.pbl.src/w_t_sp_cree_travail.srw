@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_t_sp_cree_travail.srw
-$PBExportComments$-} Fen$$HEX1$$ea00$$ENDHEX$$tre de traitement SIMPLE pour la cr$$HEX1$$e900$$ENDHEX$$ation d'un travail.
+﻿$PBExportHeader$w_t_sp_cree_travail.srw
+$PBExportComments$-} Fenêtre de traitement SIMPLE pour la création d'un travail.
 forward
 global type w_t_sp_cree_travail from w_8_traitement
 end type
@@ -137,7 +137,7 @@ on ue_quitteronglet011;call w_8_traitement::ue_quitteronglet011;//*-------------
 //* Evenement 		: Ue_QuitterOngler011
 //* Auteur			: Erick John Stark
 //* Date				: 05/02/1998 15:50:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -171,7 +171,7 @@ on ue_sinistres_lies;call w_8_traitement::ue_sinistres_lies;//*-----------------
 //* Evenement 		: Ue_Sinistres_Lies
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 14:29:14
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -182,9 +182,9 @@ on ue_sinistres_lies;call w_8_traitement::ue_sinistres_lies;//*-----------------
 s_Pass	stPass_Dga
 
 /*------------------------------------------------------------------*/
-/* Cet $$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement est d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$par la fen$$HEX1$$ea00$$ENDHEX$$tre de recherche des      */
-/* sinistres li$$HEX1$$e900$$ENDHEX$$s. Il faut r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer le param$$HEX1$$e800$$ENDHEX$$tre pour savoir si    */
-/* on prend la r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence de la personne, ou si on abandonne.        */
+/* Cet événement est déclenché par la fenêtre de recherche des      */
+/* sinistres liés. Il faut récupérer le paramètre pour savoir si    */
+/* on prend la référence de la personne, ou si on abandonne.        */
 /*------------------------------------------------------------------*/
 stPass_Dga.lTab[1] = Message.LongParm
 
@@ -198,7 +198,7 @@ on ue_homonyme;call w_8_traitement::ue_homonyme;//*-----------------------------
 //* Evenement 		: Ue_Sinistres_Lies
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 14:29:14
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -209,8 +209,8 @@ on ue_homonyme;call w_8_traitement::ue_homonyme;//*-----------------------------
 Long lIdOrdre
 
 /*------------------------------------------------------------------*/
-/* Cet $$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement est d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$par la fen$$HEX1$$ea00$$ENDHEX$$tre de recherche des      */
-/* homonymes. Il faut r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer le param$$HEX1$$e800$$ENDHEX$$tre pour conna$$HEX1$$ee00$$ENDHEX$$tre le N$$HEX4$$b000200020002000$$ENDHEX$$*/
+/* Cet événement est déclenché par la fenêtre de recherche des      */
+/* homonymes. Il faut récupérer le paramètre pour connaître le N°   */
 /* d'ordre.                                                         */
 /*------------------------------------------------------------------*/
 lIdOrdre = Message.LongParm
@@ -237,7 +237,7 @@ on ue_ouvrir_fensaisie;call w_8_traitement::ue_ouvrir_fensaisie;//*-------------
 //* Evenement 		: ue_Ouvrir_FenSaisie
 //* Auteur			: FABRY JF
 //* Date				: 09/05/2001 14:02:05
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Overture de la fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil dce saisie de sinistre
+//* Libellé			: Overture de la fenêtre d'accueil dce saisie de sinistre
 //* Commentaires	: 
 //*				 
 //* Arguments		: 
@@ -255,7 +255,7 @@ sMesErr = stGlb.sMessageErreur
 stGlb.sMessageErreur = String ( Dw_1.GetItemNumber ( 1, "ID_SIN" ) )
 
 /*----------------------------------------------------------------------------*/
-/* Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil de saisie de sinistre.                   */
+/* Ouverture de la fenêtre d'accueil de saisie de sinistre.                   */
 /*----------------------------------------------------------------------------*/
 SetPointer ( HourGlass! )
 
@@ -277,7 +277,7 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //* Fonction		: W_T_Sp_Cree_Wkf::Wf_PositionnerObjets (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 15:27:47
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On positionne et on taille tous les objets
 //*
 //* Arguments		: Aucun
@@ -291,8 +291,8 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On positionne tous les objets n$$HEX1$$e900$$ENDHEX$$cessaires $$HEX2$$e0002000$$ENDHEX$$la gestion, pour     */
-/* faciliter le d$$HEX1$$e900$$ENDHEX$$veloppement. (On peut bouger les objets).         */
+/* On positionne tous les objets nécessaires à la gestion, pour     */
+/* faciliter le développement. (On peut bouger les objets).         */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
@@ -335,8 +335,8 @@ public function string wf_controlersaisie ();//*--------------------------------
 //* Fonction		: W_T_Sp_Cree_Travail::Wf_ControlerSaisie (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:50:46
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Contr$$HEX1$$f400$$ENDHEX$$le de la saisie
+//* Libellé			: 
+//* Commentaires	: Contrôle de la saisie
 //*
 //* Arguments		: Aucun
 //*
@@ -354,8 +354,8 @@ s_Pass	stPass_Dga
 iuoGsSpWkf.Uf_Traitement ( 4, stPass_Dga )
 
 /*------------------------------------------------------------------*/
-/*  Le controle de saisie se passe bien, on v$$HEX1$$e900$$ENDHEX$$rifie s'il existe     */
-/* des homonymes dans la DW. Il faut v$$HEX1$$e900$$ENDHEX$$rifier le traitement dans    */
+/*  Le controle de saisie se passe bien, on vérifie s'il existe     */
+/* des homonymes dans la DW. Il faut vérifier le traitement dans    */
 /* la fonction Uf_ControlerSaisie () si besoin.                     */
 /*------------------------------------------------------------------*/
 If	stPass_Dga.sTab [ 1 ] = ""	Then
@@ -383,8 +383,8 @@ public function boolean wf_preparermodifier ();//*------------------------------
 //* Fonction		: W_T_Sp_Cree_Travail::Wf_PreparerModifier
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Op$$HEX1$$e900$$ENDHEX$$ration avant modification
+//* Libellé			: 
+//* Commentaires	: Opération avant modification
 //*
 //* Arguments		: Rien
 //*
@@ -408,8 +408,8 @@ public function boolean wf_preparerinserer ();//*-------------------------------
 //* Fonction		: W_T_Sp_Cree_Travail::Wf_PreparerInserer
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Op$$HEX1$$e900$$ENDHEX$$ration avant insertion
+//* Libellé			: 
+//* Commentaires	: Opération avant insertion
 //*
 //* Arguments		: Rien
 //*
@@ -439,8 +439,8 @@ public function boolean wf_valider ();//*---------------------------------------
 //* Fonction		: W_T_Sp_Cree_Travail::Wf_Valider (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On g$$HEX1$$e900$$ENDHEX$$re enti$$HEX1$$e900$$ENDHEX$$rement la validation, sans faire appel $$HEX2$$e0002000$$ENDHEX$$la fonction anc$$HEX1$$ea00$$ENDHEX$$tre
+//* Libellé			: 
+//* Commentaires	: On gére entiérement la validation, sans faire appel à la fonction ancêtre
 //*
 //* Arguments		: Rien
 //*
@@ -473,7 +473,7 @@ iuoGsSpWkf.Uf_Traitement ( 7, stPass_Dga )
 If stPass_Dga.bRetour Then	st_Pochette.Hide()
 
 /*----------------------------------------------------------------------------*/
-/* Ouverture automatique de la fen$$HEX1$$ea00$$ENDHEX$$tre de sinistre.                           */
+/* Ouverture automatique de la fenêtre de sinistre.                           */
 /*----------------------------------------------------------------------------*/
 CHOOSE CASE istPass.sTab [3]
 	CASE "TEL", "COURRIER"
@@ -496,7 +496,7 @@ on ue_initialiser;call w_8_traitement::ue_initialiser;//*-----------------------
 //* Evenement 		: Ue_Initialiser
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -510,12 +510,12 @@ DataWindow	dwNorm[]
 Wf_PositionnerObjets ()
 
 /*------------------------------------------------------------------*/
-/* On commence $$HEX2$$e0002000$$ENDHEX$$initialiser les NVUO.                              */
+/* On commence à initialiser les NVUO.                              */
 /*------------------------------------------------------------------*/
 iuoGsSpWkf = Create U_Gs_Sp_Cree_Wkf
 
 /*------------------------------------------------------------------*/
-/* Ces fonctions sont issues du NVUO anc$$HEX1$$ea00$$ENDHEX$$tre.                       */
+/* Ces fonctions sont issues du NVUO ancêtre.                       */
 /*------------------------------------------------------------------*/
 iuoGsSpWkf.Uf_Initialisation ( dw_1, itrTrans, Uo_Ong, st_Pochette, st_Message )
 
@@ -564,8 +564,8 @@ iuoGsSpWkf.Uf_Initialiser_Dw_Desc ( dwNorm[] )
 /*------------------------------------------------------------------*/
 Uo_Ong.Uf_Initialiser ( 3, 1 )
 Uo_Ong.Uf_EnregistrerOnglet ( "01", "Travail", 		"", dw_1,			True )
-Uo_Ong.Uf_EnregistrerOnglet ( "02", "Adh$$HEX1$$e900$$ENDHEX$$sion", 	"", dw_Adh,			False )
-Uo_Ong.Uf_EnregistrerOnglet ( "03", "R$$HEX1$$e900$$ENDHEX$$ponses", 	"", dw_1,			False )
+Uo_Ong.Uf_EnregistrerOnglet ( "02", "Adhésion", 	"", dw_Adh,			False )
+Uo_Ong.Uf_EnregistrerOnglet ( "03", "Réponses", 	"", dw_1,			False )
 
 Uo_Ong.Uf_ActiverOnglet ( "03", False )
 
@@ -585,8 +585,8 @@ event close;call super::close;//*-----------------------------------------------
 //* Evenement 		: Close
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 18:46:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Fermeture d$$HEX1$$e900$$ENDHEX$$finitive de la fen$$HEX1$$ea00$$ENDHEX$$tre.
+//* Libellé			: 
+//* Commentaires	: Fermeture définitive de la fenêtre.
 //*				     On supprime tous les NVUO.
 //*				  
 //*-----------------------------------------------------------------
@@ -614,8 +614,8 @@ on ue_majaccueil;call w_8_traitement::ue_majaccueil;//*-------------------------
 //* Evenement 		: Ue_MajAccueil
 //* Auteur			: Erick John Stark
 //* Date				: 28/08/1998 16:03:59
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Construction de la chaine pour mettre $$HEX2$$e0002000$$ENDHEX$$jour la fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil
+//* Libellé			: 
+//* Commentaires	: Construction de la chaine pour mettre à jour la fenêtre d'accueil
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -659,7 +659,7 @@ on ue_retour;call w_8_traitement::ue_retour;//*---------------------------------
 //* Evenement 		: ue_Retour
 //* Auteur			: Fabry JF
 //* Date				: 29/09/1999 11:08:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Click sur le bouton Retour
+//* Libellé			: Click sur le bouton Retour
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -685,7 +685,7 @@ event we_childactivate;//*------------------------------------------------------
 //* Evenement 		: We_ChildActivate
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 17:53:35
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -702,17 +702,17 @@ If ( ibAInitialiser ) Then
 	istPass = Message.PowerObjectParm
 
 	itrTrans						=  istPass.trTrans	// Objet transaction de la fenetre appelante
-	iwParent						=	istPass.wParent	// Fenetre Appelante ( utilis$$HEX1$$e900$$ENDHEX$$e pour enable )	
+	iwParent						=	istPass.wParent	// Fenetre Appelante ( utilisée pour enable )	
 
 	istPass.wParent			=	This			// Fenetre appelante pour fenetre de traitment
 	istPass.trTrans			=	itrTrans		// Objet de transaction par defaut
 //	istPass.bEnableParent	= 	False			// Doit on rendre la fenetre appelante disable
-														// lors de l'appel d'une fen$$HEX1$$ea00$$ENDHEX$$tre de traitement	This.TriggerEvent ( "ue_Initialiser" )
-//	istPass.bCloseRetour		=	False			// Doit on fermer la fen$$HEX1$$ea00$$ENDHEX$$tre sur le bouton retour. D$$HEX1$$e900$$ENDHEX$$cision du script client
+														// lors de l'appel d'une fenêtre de traitement	This.TriggerEvent ( "ue_Initialiser" )
+//	istPass.bCloseRetour		=	False			// Doit on fermer la fenêtre sur le bouton retour. Décision du script client
 
 	wf_ActiverMajAccueil( True )	
 
-	// Si il s'agit d'une fen$$HEX1$$ea00$$ENDHEX$$tre fille d'un master on la stock pour pouvoir la fermer
+	// Si il s'agit d'une fenêtre fille d'un master on la stock pour pouvoir la fermer
 
 	If ( ibOpen ) Then
 
@@ -726,7 +726,7 @@ If ( ibAInitialiser ) Then
 
 				CASE "WORKFLOW_EN_CONSULT_SAISIE", "WORKFLOW_EN_CONSULT_PERM"
 
-					// Aucune affectation, les fen$$HEX1$$ea00$$ENDHEX$$tres ne sont pas du m$$HEX1$$ea00$$ENDHEX$$me types.					
+					// Aucune affectation, les fenêtres ne sont pas du même types.					
 
 			END CHOOSE
 		End If
@@ -776,7 +776,7 @@ If ( ibAInitialiser ) Then
 
 	End If
 
-	// Arr$$HEX1$$ea00$$ENDHEX$$t d'ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre si probl$$HEX1$$e800$$ENDHEX$$me
+	// Arrêt d'ouverture de la fenêtre si problème
 
 	If Not bOk Then
 
@@ -808,16 +808,24 @@ CHOOSE CASE istPass.sTab[2]
 	CASE "WORKFLOW_EN_SAISIE"
 		This.X			=    1
 		This.Y			=    1
-		This.Height		= 1769
-		This.Width		= 3598
+		// [PB2022_TAILLE_FEN] + xxx
+		This.Height		= 1769 + 90
+		
+		
+		// [PB2022_TAILLE_FEN] + xxx
+		This.Width		= 3598 + 50
 
 	CASE "WORKFLOW_EN_CONSULT_SAISIE", "WORKFLOW_EN_CONSULT_PERM"
 
-		// On cache la fen$$HEX1$$ea00$$ENDHEX$$tre en la d$$HEX1$$e900$$ENDHEX$$portant hors de l'$$HEX1$$e900$$ENDHEX$$cran
+		// On cache la fenêtre en la déportant hors de l'écran
 		This.X			= 10000
 		This.Y			= 10000
-		This.Height		= 1769
-		This.Width		= 3598
+		// [PB2022_TAILLE_FEN] + xxx
+		This.Height		= 1769 + 90
+		
+		
+		// [PB2022_TAILLE_FEN] + xxx
+		This.Width		= 3598 + 50
 
 END CHOOSE
 
@@ -926,6 +934,9 @@ destroy(this.cb_notice)
 destroy(this.cb_1)
 end on
 
+type cb_debug from w_8_traitement`cb_debug within w_t_sp_cree_travail
+end type
+
 type dw_1 from w_8_traitement`dw_1 within w_t_sp_cree_travail
 integer x = 41
 integer y = 328
@@ -943,7 +954,7 @@ event dw_1::itemchanged;call super::itemchanged;//*-----------------------------
 //* Evenement 		: ItemChanged
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:35:04
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Modification des zones
 //*				  
 //*-----------------------------------------------------------------
@@ -993,7 +1004,7 @@ event dw_1::itemerror;call super::itemerror;//*---------------------------------
 //* Evenement 		: ItemError
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:47:59
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion des messages d'erreur
 //*				  
 //*-----------------------------------------------------------------
@@ -1003,7 +1014,7 @@ event dw_1::itemerror;call super::itemerror;//*---------------------------------
 
 If	ibErreur Then
 
-	stMessage.sTitre		= "Cr$$HEX1$$e900$$ENDHEX$$ation d'un travail - SIMPA2"
+	stMessage.sTitre		= "Création d'un travail - SIMPA2"
 	stMessage.Icon			= Information!
 
 	stMessage.bErreurG	= TRUE
@@ -1012,16 +1023,16 @@ If	ibErreur Then
 	Case "DTE_COUR_CLI"
 		Choose Case This.iiErreur
 		Case 0
-			stMessage.sVar[1] = "date du courrier client"		// Erreur de Validation - Date sup$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$date du jour
+			stMessage.sVar[1] = "date du courrier client"		// Erreur de Validation - Date supérieure à date du jour
 			stMessage.sCode	= "GENE002"
 		Case 1
 			stMessage.sVar[1] = "date du courrier client"		// Date du courrier client > Date Recu
-			stMessage.sVar[2] = "inf$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale"
-			stMessage.sVar[3] = "date de r$$HEX1$$e900$$ENDHEX$$ception SPB"
+			stMessage.sVar[2] = "inférieure ou égale"
+			stMessage.sVar[3] = "date de réception SPB"
 			stMessage.sCode	= "GENE007"
 		Case 2
 			stMessage.sVar[1] = "date du courrier client"		// Date du courrier client < Date de survenance
-			stMessage.sVar[2] = "sup$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale"
+			stMessage.sVar[2] = "supérieure ou égale"
 			stMessage.sVar[3] = "date de survenance"
 			stMessage.sCode	= "GENE007"
 		End Choose
@@ -1029,16 +1040,16 @@ If	ibErreur Then
 	Case "DTE_RECU"
 		Choose Case This.iiErreur
 		Case 0
-			stMessage.sVar[1] = "date de r$$HEX1$$e900$$ENDHEX$$ception"				// Erreur de Validation - Date sup$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$date du jour
+			stMessage.sVar[1] = "date de réception"				// Erreur de Validation - Date supérieure à date du jour
 			stMessage.sCode	= "GENE002"
 		Case 1
-			stMessage.sVar[1] = "date de r$$HEX1$$e900$$ENDHEX$$ception SPB"			// Date du courrier client > Date Recu
-			stMessage.sVar[2] = "sup$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale"
+			stMessage.sVar[1] = "date de réception SPB"			// Date du courrier client > Date Recu
+			stMessage.sVar[2] = "supérieure ou égale"
 			stMessage.sVar[3] = "date du courrier client"		
 			stMessage.sCode	= "GENE007"
 		Case 2
-			stMessage.sVar[1] = "date de r$$HEX1$$e900$$ENDHEX$$ception SPB"			// Date Recu < Date de survenance
-			stMessage.sVar[2] = "sup$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale"
+			stMessage.sVar[1] = "date de réception SPB"			// Date Recu < Date de survenance
+			stMessage.sVar[2] = "supérieure ou égale"
 			stMessage.sVar[3] = "date de survenance"
 			stMessage.sCode	= "GENE007"
 		End Choose
@@ -1046,17 +1057,17 @@ If	ibErreur Then
 	Case "NB_PAGE"
 		Choose Case This.iiErreur
 		Case 0
-			stMessage.bErreurG= False									// Erreur de Validation - Le nombre de page est inf$$HEX1$$e900$$ENDHEX$$rieur $$HEX2$$e0002000$$ENDHEX$$0
+			stMessage.bErreurG= False									// Erreur de Validation - Le nombre de page est inférieur à 0
 			stMessage.sCode	= "WORK110"
 		End Choose
 
 	Case "ID_SIN"
 		Choose Case This.iiErreur
 		Case 0
-			stMessage.sVar[1] = "r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence sinistre"				// Erreur de Validation - 
+			stMessage.sVar[1] = "référence sinistre"				// Erreur de Validation - 
 			stMessage.sCode	= "GENE002"
 		Case 1
-			stMessage.bErreurG= False									// Erreur de saisie - Le N$$HEX2$$b0002000$$ENDHEX$$de r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence sinistre n'existe pas
+			stMessage.bErreurG= False									// Erreur de saisie - Le N° de référence sinistre n'existe pas
 			stMessage.sCode	= "WORK100"
 		End Choose
 
@@ -1069,17 +1080,17 @@ If	ibErreur Then
 
 		Choose Case This.iiErreur
 		Case 0
-			stMessage.sVar[1] = "num$$HEX1$$e900$$ENDHEX$$ro d'adh$$HEX1$$e900$$ENDHEX$$sion"				// Erreur de Validation - 
+			stMessage.sVar[1] = "numéro d'adhésion"				// Erreur de Validation - 
 			stMessage.sCode	= "GENE003"
 		Case 1
-			stMessage.bErreurG= False									// Erreur de saisie - Le N$$HEX2$$b0002000$$ENDHEX$$de carte est incorrect.
+			stMessage.bErreurG= False									// Erreur de saisie - Le N° de carte est incorrect.
 			stMessage.sCode	= "WORK130"
 		Case 2
 /*------------------------------------------------------------------*/
-/* La commande PS_S01_CARTE_SINISTRE vient d'$$HEX1$$e900$$ENDHEX$$chouer. La structure  */
-/* de message est arm$$HEX1$$e900$$ENDHEX$$e sur F_Procedure.                            */
+/* La commande PS_S01_CARTE_SINISTRE vient d'échouer. La structure  */
+/* de message est armée sur F_Procedure.                            */
 /*------------------------------------------------------------------*/
-			stMessage.sTitre		= "Cr$$HEX1$$e900$$ENDHEX$$ation d'un travail - SIMPA2"
+			stMessage.sTitre		= "Création d'un travail - SIMPA2"
 			stMessage.Icon			= StopSign!
 		Case 3
 			stMessage.bErreurG	= False								// Cette carte n'est pas couverte
@@ -1089,69 +1100,69 @@ If	ibErreur Then
 	Case "ID_SDOS"
 		Choose Case This.iiErreur
 		Case 0
-			stMessage.sVar[1] = "num$$HEX1$$e900$$ENDHEX$$ro de sous dossier"			// Erreur de Validation - ID_SDOS doit $$HEX1$$ea00$$ENDHEX$$tre num$$HEX1$$e900$$ENDHEX$$rique
+			stMessage.sVar[1] = "numéro de sous dossier"			// Erreur de Validation - ID_SDOS doit être numérique
 			stMessage.sCode	= "GENE003"
 		End Choose
 
 	Case "NOM"
-		stMessage.sVar[1] = "nom de l'assur$$HEX1$$e900$$ENDHEX$$"						// Erreur de Validation - 
+		stMessage.sVar[1] = "nom de l'assuré"						// Erreur de Validation - 
 		stMessage.sCode	= "GENE003"
 
 	Case "PRENOM"
-		stMessage.sVar[1] = "pr$$HEX1$$e900$$ENDHEX$$nom de l'assur$$HEX1$$e900$$ENDHEX$$"					// Erreur de Validation - 
+		stMessage.sVar[1] = "prénom de l'assuré"					// Erreur de Validation - 
 		stMessage.sCode	= "GENE003"
 
 	Case "ADR_1"
-		stMessage.sVar[1] = "adresse 1 de l'assur$$HEX1$$e900$$ENDHEX$$"				// Erreur de Validation - 
+		stMessage.sVar[1] = "adresse 1 de l'assuré"				// Erreur de Validation - 
 		stMessage.sCode	= "GENE008"
 
 	Case "ADR_2"
-		stMessage.sVar[1] = "adresse 2 de l'assur$$HEX1$$e900$$ENDHEX$$"				// Erreur de Validation - 
+		stMessage.sVar[1] = "adresse 2 de l'assuré"				// Erreur de Validation - 
 		stMessage.sCode	= "GENE008"
 
 	Case "ADR_CP"
-		stMessage.sVar[1] = "code postal de l'assur$$HEX1$$e900$$ENDHEX$$"			// Erreur de Validation - 
+		stMessage.sVar[1] = "code postal de l'assuré"			// Erreur de Validation - 
 		stMessage.sCode	= "GENE003"
 
 	Case "ADR_VILLE"
-		stMessage.sVar[1] = "ville de l'assur$$HEX1$$e900$$ENDHEX$$"					// Erreur de Validation - 
+		stMessage.sVar[1] = "ville de l'assuré"					// Erreur de Validation - 
 		stMessage.sCode	= "GENE003"
 
 	Case "DTE_ADH"
 		Choose Case This.iiErreur
 		Case 0
-			stMessage.sVar[1] = "date d'adh$$HEX1$$e900$$ENDHEX$$sion"					// Erreur de Validation - Date sup$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$date du jour
+			stMessage.sVar[1] = "date d'adhésion"					// Erreur de Validation - Date supérieure à date du jour
 			stMessage.sCode	= "GENE002"
 		End Choose
 
 	Case "DTE_SURV"
 		Choose Case This.iiErreur
 		Case 0
-			stMessage.sVar[1] = "date de survenance"				// Erreur de Validation - Date sup$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$date du jour
+			stMessage.sVar[1] = "date de survenance"				// Erreur de Validation - Date supérieure à date du jour
 			stMessage.sCode	= "GENE002"
 		Case 1
 			stMessage.sVar[1] = "date de survenance" 				// Date du courrier client < Date de survenance
-			stMessage.sVar[2] = "inf$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale"
+			stMessage.sVar[2] = "inférieure ou égale"
 			stMessage.sVar[3] = "date du courrier client"
 			stMessage.sCode	= "GENE007"
 		Case 2
 			stMessage.sVar[1] = "date de survenance"				// Date Recu < Date de survenance
-			stMessage.sVar[2] = "inf$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale"
-			stMessage.sVar[3] = "date de r$$HEX1$$e900$$ENDHEX$$ception SPB"
+			stMessage.sVar[2] = "inférieure ou égale"
+			stMessage.sVar[3] = "date de réception SPB"
 			stMessage.sCode	= "GENE007"
 		End Choose
 
 	Case "NUM_PORT"
 		Choose Case This.iiErreur
 		Case 0
-			stMessage.sVar[1] = "num$$HEX1$$e900$$ENDHEX$$ro de portable"				// Erreur de Validation - Saisir des chiffres
+			stMessage.sVar[1] = "numéro de portable"				// Erreur de Validation - Saisir des chiffres
 			stMessage.sCode	= "GENE003"
 		End Choose
 
 	Case "NUM_IMEI_PORT"
 		Choose Case This.iiErreur
 		Case 0
-			stMessage.sVar[1] = "num$$HEX1$$e900$$ENDHEX$$ro IMEI"						// Erreur de Validation - Saisir des chiffres
+			stMessage.sVar[1] = "numéro IMEI"						// Erreur de Validation - Saisir des chiffres
 			stMessage.sCode	= "GENE003"
 		End Choose
 
@@ -1165,7 +1176,7 @@ If	ibErreur Then
 	Case "MODL_PORT"
 		Choose Case This.iiErreur
 		Case 0
-			stMessage.sVar[1] = "mod$$HEX1$$e900$$ENDHEX$$le du portable"				// Erreur de Validation - Saisie incorrecte
+			stMessage.sVar[1] = "modéle du portable"				// Erreur de Validation - Saisie incorrecte
 			stMessage.sCode	= "GENE002"
 		End Choose
 
@@ -1214,30 +1225,40 @@ end type
 type pb_retour from w_8_traitement`pb_retour within w_t_sp_cree_travail
 integer x = 14
 integer y = 12
+integer width = 242
+integer height = 144
 integer taborder = 110
 end type
 
 type pb_valider from w_8_traitement`pb_valider within w_t_sp_cree_travail
 integer x = 507
 integer y = 12
+integer width = 242
+integer height = 144
 integer taborder = 130
 end type
 
 type pb_imprimer from w_8_traitement`pb_imprimer within w_t_sp_cree_travail
 integer x = 1006
 integer y = 12
+integer width = 242
+integer height = 144
 integer taborder = 150
 end type
 
 type pb_controler from w_8_traitement`pb_controler within w_t_sp_cree_travail
 integer x = 261
 integer y = 12
+integer width = 242
+integer height = 144
 integer taborder = 120
 end type
 
 type pb_supprimer from w_8_traitement`pb_supprimer within w_t_sp_cree_travail
 integer x = 754
 integer y = 12
+integer width = 242
+integer height = 144
 integer taborder = 140
 end type
 
@@ -1254,7 +1275,7 @@ on constructor;call u_bord3d::constructor;//*-----------------------------------
 //* Evenement 		: Constructor
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 14:57:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1416,7 +1437,7 @@ on retrieverow;//*--------------------------------------------------------------
 //* Evenement 		: RetrieveRow
 //* Auteur			: Erick John Stark
 //* Date				: 27/08/1998 14:50:24
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1431,7 +1452,7 @@ ilNbrHomonyme ++
 If	ilNbrHomonyme = ilMaxHomonyme Then
 	This.DbCancel ()
 
-	stMessage.sTitre		= "Recherche des homonymes - cr$$HEX1$$e900$$ENDHEX$$ation d'un travail"
+	stMessage.sTitre		= "Recherche des homonymes - création d'un travail"
 	stMessage.Icon			= StopSign!
 	stMessage.bErreurG	= False
 	stMessage.bTrace		= False
@@ -1450,7 +1471,7 @@ on retrievestart;//*------------------------------------------------------------
 //* Evenement 		: RetrieveStart
 //* Auteur			: Erick John Stark
 //* Date				: 27/08/1998 14:45:36
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1601,7 +1622,7 @@ event itemchanged;//*-----------------------------------------------------------
 //* Fonction		: ItemChanged
 //* Auteur			: Fabry JF
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Rien
@@ -1644,7 +1665,7 @@ event itemerror;//*-------------------------------------------------------------
 //* Fonction		: ItemError
 //* Auteur			: Fabry JF
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Rien
@@ -1654,7 +1675,7 @@ event itemerror;//*-------------------------------------------------------------
 //*-----------------------------------------------------------------
 
 
-stMessage.sTitre		= "Dossier $$HEX2$$e0002000$$ENDHEX$$traiter par"
+stMessage.sTitre		= "Dossier à traiter par"
 stMessage.Icon			= Information!
 stMessage.sCode		= "CONT019"
 stMessage.bErreurG	= False
@@ -1712,8 +1733,8 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked				
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2001 14:58:03
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre des tarifs pour les papiers.
+//* Libellé			: 
+//* Commentaires	: Ouverture de la fenêtre des tarifs pour les papiers.
 //*				  
 //* Arguments		: 
 //*
@@ -1768,7 +1789,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 27/02/2002 12:06:40
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -1804,7 +1825,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 27/02/2002 12:06:40
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -1839,7 +1860,7 @@ integer weight = 400
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
-string text = "R$$HEX1$$e900$$ENDHEX$$serv$$HEX2$$e9002000$$ENDHEX$$JF"
+string text = "Réservé JF"
 end type
 
 event clicked;dw_1.SetItem ( 1, "COD_CIV", 1 )

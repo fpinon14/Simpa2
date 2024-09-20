@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_a_sp_wkf_saisie.srw
-$PBExportComments$-} Fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil pour la saisie des dossiers
+﻿$PBExportHeader$w_a_sp_wkf_saisie.srw
+$PBExportComments$-} Fenêtre d'accueil pour la saisie des dossiers
 forward
 global type w_a_sp_wkf_saisie from w_a_spb_workflow
 end type
@@ -36,7 +36,7 @@ String	isBoutonRac
 String      isAction
 String      isParam
 
-// True : On cherche a ouvrir le dossier $$HEX2$$e0002000$$ENDHEX$$partir de Sherpa 
+// True : On cherche a ouvrir le dossier à partir de Sherpa 
 // False : On cherche a ouvrir le dossier en double cliquant
 // dessus, donc impossible.
 Boolean	ibVenuParSherpa
@@ -55,7 +55,7 @@ event ue_saisie_automatique;//*-------------------------------------------------
 //* Evenement 		: ue_SaisieAutomatique
 //* Auteur			: FABRY JF
 //* Date				: 09/05/2001 14:02:05
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Overture de la fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil dce saisie de sinistre
+//* Libellé			: Overture de la fenêtre d'accueil dce saisie de sinistre
 //* Commentaires	: 
 //*				 
 //* Arguments		: 
@@ -64,9 +64,9 @@ event ue_saisie_automatique;//*-------------------------------------------------
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1    FS     15/03/2002  Interpr$$HEX1$$e900$$ENDHEX$$tation des ordres de sherpa
-//* #2    FS    25/09/2002   M$$HEX1$$e900$$ENDHEX$$morisation de gsParam et gsAction en instance
-//*                          pour utilisation ult$$HEX1$$e900$$ENDHEX$$rieure sur ue_message_sherpa
+//* #1    FS     15/03/2002  Interprétation des ordres de sherpa
+//* #2    FS    25/09/2002   Mémorisation de gsParam et gsAction en instance
+//*                          pour utilisation ultérieure sur ue_message_sherpa
 //*-----------------------------------------------------------------
 
 String sIdsin
@@ -76,19 +76,19 @@ s_Pass stPass
 isAction = gsAction 
 isParam  = gsParam
 
-// ... #1 D$$HEX1$$e900$$ENDHEX$$but de modification
+// ... #1 Début de modification
 
 CHOOSE CASE gsaction
 
    CASE "TEST_GERER"
 
 		/*----------------------------------------------------------------------------*/
-		/* La fen$$HEX1$$ea00$$ENDHEX$$tre de gestion est-elle ouverte ?                                   */
+		/* La fenêtre de gestion est-elle ouverte ?                                   */
 		/*----------------------------------------------------------------------------*/
 
       gsParam = "FERME"
 
-		If IsValid ( W_Tm_Sp_Sinistre ) Then // ... La fen$$HEX1$$ea00$$ENDHEX$$tre de traitement est ouverte
+		If IsValid ( W_Tm_Sp_Sinistre ) Then // ... La fenêtre de traitement est ouverte
 
 			IF W_Tm_Sp_Sinistre.visible then gsParam = "OUVERT"
 
@@ -102,7 +102,7 @@ CHOOSE CASE gsaction
 		/* Simulation automatique de consultation.                                    */
 		/*----------------------------------------------------------------------------*/
 
-		// ... Si la fen$$HEX1$$ea00$$ENDHEX$$tre est encore ouverte : on n'ouvre pas le dossier
+		// ... Si la fenêtre est encore ouverte : on n'ouvre pas le dossier
 
 		If IsValid ( W_Tm_Sp_Sinistre ) Then
 			IF W_Tm_Sp_Sinistre.visible then
@@ -129,7 +129,7 @@ CHOOSE CASE gsaction
 		Message.PowerObjectParm = stPass
 		This.TriggerEvent ( "ue_Fin_Interro" )
 
-		// ... On provoque l'ouverture du dossier $$HEX2$$e0002000$$ENDHEX$$partir du travail de dw_1
+		// ... On provoque l'ouverture du dossier à partir du travail de dw_1
 
 		If dw_1.RowCount () > 0 Then
 			dw_1.ilLigneClick = 1
@@ -260,7 +260,7 @@ If isParam <> "" Then
 		
    End If
 
-   // Envoi du message $$HEX2$$e0002000$$ENDHEX$$sherpa
+   // Envoi du message à sherpa
 
 // DCMP 70647
 		lHandleSherpa = w_mdi_sp.Wf_Browse_Fenetre ( "SHERPA" )
@@ -294,7 +294,7 @@ public subroutine wf_anonymationensim (long adcidsin);//*-----------------------
 //* Fonction		: W_T_Sp_Cree_Wkf::wf_AnonymationEnSim (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 13/02/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PM473-1]
 //*
 //* Arguments		: adcidsin
@@ -324,11 +324,11 @@ end subroutine
 
 event ue_item6;call super::ue_item6;//*-----------------------------------------------------------------
 //*
-//* Objet			: Fen$$HEX1$$ea00$$ENDHEX$$tre
+//* Objet			: Fenêtre
 //* Evenement 		: ue_item6
 //* Auteur			: FABRY JF
 //* Date				: 09/05/2001 14:02:05
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Ouverture fen$$HEX1$$ea00$$ENDHEX$$tre en raccourci.
+//* Libellé			: Ouverture fenêtre en raccourci.
 //* Commentaires	: 
 //*				 
 //* Arguments		: 
@@ -342,7 +342,7 @@ event ue_item6;call super::ue_item6;//*-----------------------------------------
 //*-----------------------------------------------------------------
 
 /*----------------------------------------------------------------------------*/
-/* Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil de saisie de sinistre.                   */
+/* Ouverture de la fenêtre d'accueil de saisie de sinistre.                   */
 /*----------------------------------------------------------------------------*/
 SetPointer ( HourGlass! )
 
@@ -428,7 +428,7 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		: ue_initialiser
 //* Auteur			: FABRY JF
 //* Date				: 09/05/2001 14:02:05
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				 
 //* Arguments		: 
@@ -437,11 +437,11 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #2	 JFF		05/09/2002 Gestion de l'acc$$HEX1$$e800$$ENDHEX$$s au workflow (Sherpa)
+//* #2	 JFF		05/09/2002 Gestion de l'accès au workflow (Sherpa)
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* Initialisation des boutons de t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phonie.                        */
+/* Initialisation des boutons de téléphonie.                        */
 /*------------------------------------------------------------------*/
 /* #2 : JFF le 04/09/2002														  */
 /*------------------------------------------------------------------*/
@@ -470,12 +470,12 @@ event ue_modifier;//*-----------------------------------------------------------
 //* Evenement 		: Ue_Modifier
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 11:03:18
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre de gestion des sinistres
+//* Libellé			: 
+//* Commentaires	: Ouverture de la fenêtre de gestion des sinistres
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
-//* #1	 JFF		05/09/2002 Acitvation/D$$HEX1$$e900$$ENDHEX$$sactivation de la Dw d'accueil
+//* #1	 JFF		05/09/2002 Acitvation/Désactivation de la Dw d'accueil
 //* #2	FPI	 12/10/2009	[DCMP090616] Dossier suivi par oblig
 //*     JFF    29/10/2018  [CONS_REST_CARDIF]
 //*       JFF   11/02/2019 [PM473-1]
@@ -489,7 +489,7 @@ Boolean bRet
 If Not ibRaccActif And Not ibVenuParSherpa Then Return 
 
 /*------------------------------------------------------------------*/
-/* #1 : JFF le 04/09/2002, on r$$HEX1$$e900$$ENDHEX$$appelle le script anc$$HEX1$$ea00$$ENDHEX$$tre sinon.	  */
+/* #1 : JFF le 04/09/2002, on réappelle le script ancêtre sinon.	  */
 /*------------------------------------------------------------------*/
 Call Super::ue_Modifier
 
@@ -503,8 +503,8 @@ If ibContinuerModifier Then
 	istPass.sTab[1] 	= dw_1.GetItemString ( dw_1.ilLigneClick, "ID_SIN" )
 	istPass.sTab[2] 	= "S"				// Nous sommes en saisie
 /*------------------------------------------------------------------*/
-/* Le 16/06/1998 : Pour la d$$HEX1$$e900$$ENDHEX$$termination du Code courrier $$HEX10$$e000200020002000200020002000200020002000$$ENDHEX$$*/
-/* envoyer $$HEX2$$e0002000$$ENDHEX$$chacun des interlocuteurs, on a besoin de conna$$HEX1$$ee00$$ENDHEX$$tre    */
+/* Le 16/06/1998 : Pour la détermination du Code courrier à         */
+/* envoyer à chacun des interlocuteurs, on a besoin de connaître    */
 /* dans la fonction Uf_Determiner_Courrier de U_Gs_Sinistre la      */
 /* provenance du courrier.                                          */
 /*------------------------------------------------------------------*/
@@ -521,7 +521,7 @@ If ibContinuerModifier Then
 	istPass.sTab[6] 	= dw_1.GetItemString ( dw_1.ilLigneClick, "COD_TYP_RECU" )
 
 	If SQLCA.PS_S_CONS_RESTR_EXCL( Long ( istPass.sTab[1]), stGlb.sCodOper, "W" ) < 0 Then
-		stMessage.sTitre		= "Acc$$HEX1$$e800$$ENDHEX$$s interdit"
+		stMessage.sTitre		= "Accès interdit"
 		stMessage.Icon		   = Exclamation!
 		stMessage.bErreurG	= FALSE
 		stMessage.Bouton		= OK!
@@ -568,8 +568,8 @@ event ue_workflow;call super::ue_workflow;//*-----------------------------------
 //* Evenement 		: Ue_WorkFlow
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 11:04:37
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Gestion d'une fen$$HEX1$$ea00$$ENDHEX$$tre de workflow
+//* Libellé			: 
+//* Commentaires	: Gestion d'une fenêtre de workflow
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -595,7 +595,7 @@ event ue_fermer_interro;call super::ue_fermer_interro;//*-----------------------
 //* Evenement 		: Ue_Fermer_Interro (EXTEND)
 //* Auteur			: Erick John Stark
 //* Date				: 24/10/1997 15:30:45
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -620,7 +620,7 @@ event ue_preparer_interro;call super::ue_preparer_interro;//*-------------------
 //* Evenement 		: Ue_Preparer_Interro (EXTEND)
 //* Auteur			: Erick John Stark
 //* Date				: 24/10/1997 15:30:45
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Populise la liste des corbeilles dans la dw d'interro
 //*				  
 //*-----------------------------------------------------------------
@@ -672,7 +672,7 @@ event ue_fin_interro;call super::ue_fin_interro;//*-----------------------------
 //* Evenement 		: Ue_Fin_Interro
 //* Auteur			: FABRY JF
 //* Date				: 13/02/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -735,6 +735,33 @@ End If
 
 end event
 
+event ue_taillerhauteur;//*****************************************************************************
+//
+// Objet 		: w_Accueil
+// Evenement 	: UE_TAILLERHAUTEUR
+//	Auteur		: Erick John Stark
+//	Date			: 20/02/1996
+// Libellé		: 
+// Commentaires: Centrage de la DW d'accueil dans la hauteur de la Fenêtre
+//						  /!\ OVERRIDE /!\
+//					  
+// ----------------------------------------------------------------------------
+// MAJ PAR		Date		Modification
+//
+//*****************************************************************************
+
+// [PB2022_TAILLE_FEN] (- 50)
+dw_1.Uf_Hauteur ( This.Height - 70 , 0 )
+
+// [PB2022_TAILLE_FEN] 
+dw_1.X += 50
+
+If	dw_1.Visible = False Then
+	dw_1.Visible = True
+End If
+
+end event
+
 type cb_debug from w_a_spb_workflow`cb_debug within w_a_sp_wkf_saisie
 end type
 
@@ -765,7 +792,7 @@ on dw_1::ue_modifiermenu;//*----------------------------------------------------
 //* Evenement     : ue_modifiermenu  (!! OVERRIDE !! )
 //* Auteur        : Fabry JF
 //* Date          : 02/10/2002 12:34:39
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Shunt Pour Mise en place Sherpa
+//* Libellé       : Shunt Pour Mise en place Sherpa
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -797,9 +824,9 @@ on dw_1::constructor;call w_a_spb_workflow`dw_1::constructor;//*----------------
 //* Evenement 		: ::Constructor
 //* Auteur			: DBI
 //* Date				: 22/09/1999 16:47:40
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Suppression de la limitation $$HEX2$$e0002000$$ENDHEX$$150 lignes 
-//* Commentaires	: la limite pose des probl$$HEX1$$e800$$ENDHEX$$mes lors de la v$$HEX1$$e900$$ENDHEX$$rification des
-//*				     anciens travaux non trait$$HEX1$$e900$$ENDHEX$$s
+//* Libellé			: Suppression de la limitation à 150 lignes 
+//* Commentaires	: la limite pose des problèmes lors de la vérification des
+//*				     anciens travaux non traités
 //*				  
 //*-----------------------------------------------------------------
 
@@ -807,8 +834,8 @@ ilMaxLig = 0
 end on
 
 event dw_1::rbuttondown;//Migration PB8-WYNIWYG-03/2006 FM
-//ce code remplace le code de l'anc$$HEX1$$ea00$$ENDHEX$$tre, 
-//il permet la s$$HEX1$$e900$$ENDHEX$$lection de la ligne sur le click droit
+//ce code remplace le code de l'ancêtre, 
+//il permet la sélection de la ligne sur le click droit
 
 If Row > 0 Then
 	This.SetRow(Row)
@@ -867,7 +894,7 @@ integer weight = 400
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
-string text = "D$$HEX1$$e900$$ENDHEX$$cl.T$$HEX1$$e900$$ENDHEX$$l."
+string text = "Décl.Tél."
 boolean originalsize = true
 string picturename = "k:\pb4obj\bmp\8_tel.bmp"
 end type
@@ -878,7 +905,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: FABRY JF
 //* Date				: 09/05/2001 14:02:05
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				 
 //* Arguments		: 
@@ -918,7 +945,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: FABRY JF
 //* Date				: 09/05/2001 14:02:05
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				 
 //* Arguments		: 
@@ -959,7 +986,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: FABRY JF
 //* Date				: 09/05/2001 14:02:05
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				 
 //* Arguments		: 
@@ -1000,7 +1027,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: FABRY JF
 //* Date				: 09/05/2001 14:02:05
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				 
 //* Arguments		: 
@@ -1041,7 +1068,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: FABRY JF
 //* Date				: 09/05/2001 14:02:05
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				 
 //* Arguments		: 

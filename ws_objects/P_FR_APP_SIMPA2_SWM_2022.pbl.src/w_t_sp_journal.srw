@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_t_sp_journal.srw
+﻿$PBExportHeader$w_t_sp_journal.srw
 forward
 global type w_t_sp_journal from window
 end type
@@ -23,10 +23,10 @@ end type
 end forward
 
 global type w_t_sp_journal from window
-integer width = 3872
-integer height = 2332
+integer width = 3918
+integer height = 2424
 boolean titlebar = true
-string title = "Journal des modifications/cr$$HEX1$$e900$$ENDHEX$$ations fonctionnelles sur SIMPA2"
+string title = "Journal des modifications/créations fonctionnelles sur SIMPA2"
 boolean controlmenu = true
 windowtype windowtype = response!
 long backcolor = 67108864
@@ -107,8 +107,8 @@ cbx_MEP.Visible = upper ( SQLCA.DataBase ) <> "SIMPA2_PRO"
 
 This.X			=   50
 This.Y			=  20
-This.Width		= 3863
-This.Height		= 3820
+This.Width		= 3863 + 100  // [PB2022_TAILLE_FEN]
+This.Height		= 3820 + 100  // [PB2022_TAILLE_FEN]
 
 Dw_1.X			=   50
 Dw_1.Y			=  376
@@ -252,7 +252,7 @@ fontfamily fontfamily = swiss!
 string facename = "Tahoma"
 long textcolor = 33554432
 long backcolor = 67108864
-string text = "Informations g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rales"
+string text = "Informations générales"
 end type
 
 event clicked;
@@ -315,7 +315,7 @@ fontfamily fontfamily = swiss!
 string facename = "Tahoma"
 long textcolor = 33554432
 long backcolor = 67108864
-string text = "Informations li$$HEX1$$e900$$ENDHEX$$es uniquement au produit de ce sinistre"
+string text = "Informations liées uniquement au produit de ce sinistre"
 end type
 
 event clicked;
@@ -404,7 +404,7 @@ Choose Case  dwo.name
 	if RegistryGet("HKEY_CLASSES_ROOT\.doc", "", sClasseWord) = -1 Then sRepWord = "Winword.exe"
 	if RegistryGet("HKEY_CLASSES_ROOT\"+sClasseWord + "\shell\open\command", "", sRepWord ) = -1 Then sRepWord = "Winword.exe"
 	
-	// Oblig$$HEX2$$e9002000$$ENDHEX$$d'ajouter $$HEX1$$e700$$ENDHEX$$a car il y a e la merde $$HEX2$$e0002000$$ENDHEX$$la fin de la chaine.
+	// Obligé d'ajouter ça car il y a e la merde à la fin de la chaine.
 	// "C:\Program Files\Microsoft Office\Office16\WINWORD.EXE" /n "%1" /o "%u"
 	iPos = Pos ( sRepWord , '"' )
 	If iPos > 0 Then iPos = Pos ( sRepWord , '"', iPos + 1 )
@@ -413,7 +413,7 @@ Choose Case  dwo.name
 	sRun = sRepWord + " " + sFicTmp 
 	
 	/*------------------------------------------------------------------*/
-	/* La suppression du fichier temporaire $$HEX3$$e0002000e900$$ENDHEX$$chou$$HEX1$$e900$$ENDHEX$$.						  */
+	/* La suppression du fichier temporaire à échoué.						  */
 	/*------------------------------------------------------------------*/
 	
 	If f_FileExists ( sFicTmp ) Then 

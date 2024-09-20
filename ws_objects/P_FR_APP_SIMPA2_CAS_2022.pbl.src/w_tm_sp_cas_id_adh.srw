@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_tm_sp_cas_id_adh.srw
+﻿$PBExportHeader$w_tm_sp_cas_id_adh.srw
 forward
 global type w_tm_sp_cas_id_adh from w_8_traitement_master
 end type
@@ -54,7 +54,7 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //* Fonction		: W_Tm_Sp_Cas_Id_Adh::Wf_PositionnerObjets (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 15:27:47
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On positionne et on taille tous les objets
 //*
 //* Arguments		: Aucun
@@ -64,8 +64,8 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On positionne tous les objets n$$HEX1$$e900$$ENDHEX$$cessaires $$HEX2$$e0002000$$ENDHEX$$la gestion, pour     */
-/* faciliter le d$$HEX1$$e900$$ENDHEX$$veloppement. (On peut bouger les objets).         */
+/* On positionne tous les objets nécessaires à la gestion, pour     */
+/* faciliter le développement. (On peut bouger les objets).         */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
@@ -84,7 +84,7 @@ Dw_1.Width		= 2980
 Dw_1.Height		= 1080
 
 /*------------------------------------------------------------------*/
-/* Sinistres Li$$HEX1$$e900$$ENDHEX$$s avant modification.                               */
+/* Sinistres Liés avant modification.                               */
 /*------------------------------------------------------------------*/
 Dw_Sinistre_Lie.X			= Dw_1.X
 Dw_Sinistre_Lie.Y			= Dw_1.Y
@@ -92,7 +92,7 @@ Dw_Sinistre_Lie.Width	= Dw_1.Width
 Dw_Sinistre_Lie.Height	= Dw_1.Height
 
 /*------------------------------------------------------------------*/
-/* Sinistres Li$$HEX1$$e900$$ENDHEX$$s apr$$HEX1$$e900$$ENDHEX$$s modification.                               */
+/* Sinistres Liés aprés modification.                               */
 /*------------------------------------------------------------------*/
 Dw_Sinistre_Lie_Nouveau.X			= Dw_1.X
 Dw_Sinistre_Lie_Nouveau.Y			= Dw_1.Y
@@ -105,8 +105,8 @@ public function boolean wf_preparermodifier ();//*------------------------------
 //* Fonction		: W_Tm_Sp_Cas_Id_Adh::Wf_PreparerModifier
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Op$$HEX1$$e900$$ENDHEX$$ration avant modification
+//* Libellé			: 
+//* Commentaires	: Opération avant modification
 //*
 //* Arguments		: Rien
 //*
@@ -123,9 +123,9 @@ stPass_Dga.sTab [ 2 ] = istPass.sTab [ 2 ]			// Nous sommes en saisie
 iuoGsSpCasIdAdh.Uf_Traitement ( 2, stPass_Dga )
 
 /*------------------------------------------------------------------*/
-/* Au retour, on arme le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre de la mani$$HEX1$$e800$$ENDHEX$$re          */
+/* Au retour, on arme le titre de la fenêtre de la manière          */
 /* suivante.                                                        */
-/* Code Produit + Libell$$HEX2$$e9002000$$ENDHEX$$Produit + N$$HEX2$$b0002000$$ENDHEX$$Dossier + Nom + Pr$$HEX1$$e900$$ENDHEX$$nom.      */
+/* Code Produit + Libellé Produit + N° Dossier + Nom + Prénom.      */
 /*------------------------------------------------------------------*/
 
 If	stPass_Dga.bRetour Then
@@ -133,8 +133,8 @@ If	stPass_Dga.bRetour Then
 End If
 
 /*------------------------------------------------------------------*/
-/* L'acc$$HEX1$$e900$$ENDHEX$$s au bouton CONTROLER est g$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$dans la fonction du NVUO.   */
-/* En effet, si le dossier en cours poss$$HEX1$$e900$$ENDHEX$$de plusieurs ID_ORDRE, il  */
+/* L'accés au bouton CONTROLER est géré dans la fonction du NVUO.   */
+/* En effet, si le dossier en cours posséde plusieurs ID_ORDRE, il  */
 /* est impossible de faire un CTL-VAL.                              */
 /*------------------------------------------------------------------*/
 
@@ -153,8 +153,8 @@ public function string wf_controlersaisie ();//*--------------------------------
 //* Fonction		: W_T_Sp_Cas_Id_Adh::Wf_ControlerSaisie (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:50:46
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Contr$$HEX1$$f400$$ENDHEX$$le de la saisie
+//* Libellé			: 
+//* Commentaires	: Contrôle de la saisie
 //*
 //* Arguments		: Aucun
 //*
@@ -178,8 +178,8 @@ public function boolean wf_valider ();//*---------------------------------------
 //* Fonction		: W_T_Sp_Cas_Id_Adh::Wf_Valider (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On g$$HEX1$$e900$$ENDHEX$$re enti$$HEX1$$e900$$ENDHEX$$rement la validation, sans faire appel $$HEX2$$e0002000$$ENDHEX$$la fonction anc$$HEX1$$ea00$$ENDHEX$$tre
+//* Libellé			: 
+//* Commentaires	: On gére entiérement la validation, sans faire appel à la fonction ancêtre
 //*
 //* Arguments		: Rien
 //*
@@ -212,7 +212,7 @@ on ue_initialiser;call w_8_traitement_master::ue_initialiser;//*----------------
 //* Evenement 		: Ue_Initialiser
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -235,7 +235,7 @@ Wf_PositionnerObjets ()
 isTypeTrt = istPass.sTab[ 2 ]
 
 /*------------------------------------------------------------------*/
-/* On commence $$HEX2$$e0002000$$ENDHEX$$initialiser les NVUO.                              */
+/* On commence à initialiser les NVUO.                              */
 /*------------------------------------------------------------------*/
 iuoGsSpCasIdAdh = Create U_Gs_Sp_Cas_Id_Adh
 
@@ -258,13 +258,13 @@ iuoGsSpCasIdAdh .Uf_Initialiser_Dw ( dwNorm[] )
 /*------------------------------------------------------------------*/
 Uo_Ong.Uf_Initialiser ( 3, 1 )
 Uo_Ong.Uf_EnregistrerOnglet ( "01", "Sinistre", 			"", dw_1,							True )
-Uo_Ong.Uf_EnregistrerOnglet ( "02", "Sin. Li$$HEX1$$e900$$ENDHEX$$s Avt", 	"", dw_Sinistre_Lie,				False )
-Uo_Ong.Uf_EnregistrerOnglet ( "03", "Sin. Li$$HEX1$$e900$$ENDHEX$$s Apr", 	"", dw_Sinistre_Lie_Nouveau,	False )
+Uo_Ong.Uf_EnregistrerOnglet ( "02", "Sin. Liés Avt", 	"", dw_Sinistre_Lie,				False )
+Uo_Ong.Uf_EnregistrerOnglet ( "03", "Sin. Liés Apr", 	"", dw_Sinistre_Lie_Nouveau,	False )
 
 iuoGsSpCasIdAdh.Uf_Traitement ( 1, stPass_Dga )
 
 /*------------------------------------------------------------------*/
-/* Gestion du Passage $$HEX2$$e0002000$$ENDHEX$$l'EURO.                                     */
+/* Gestion du Passage à l'EURO.                                     */
 /*------------------------------------------------------------------*/
 N_Cst_Passage_Euro	nvPassageEuro
 
@@ -285,7 +285,7 @@ on ue_majaccueil;call w_8_traitement_master::ue_majaccueil;//*------------------
 //* Evenement 		: Ue_MajAccueil
 //* Auteur			: Erick John Stark
 //* Date				: 03/06/1997 11:57:04
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -294,14 +294,14 @@ on ue_majaccueil;call w_8_traitement_master::ue_majaccueil;//*------------------
 //*-----------------------------------------------------------------
 
 /*----------------------------------------------------------------------------*/
-/* Appel de la mise $$HEX2$$e0002000$$ENDHEX$$jour du WorkFlow                                        */
+/* Appel de la mise à jour du WorkFlow                                        */
 /*----------------------------------------------------------------------------*/
 
-istPass.sTab[1]	=	"MAN"						// Mise $$HEX2$$e0002000$$ENDHEX$$jour manuelle de la fen$$HEX1$$ea00$$ENDHEX$$tre de WORKFLOW
+istPass.sTab[1]	=	"MAN"						// Mise à jour manuelle de la fenêtre de WORKFLOW
 
 Message.PowerObjectParm = istPass
 
-iwParent.TriggerEvent ( "UE_MAJACCUEIL" )	// R$$HEX1$$e900$$ENDHEX$$alise les mises $$HEX2$$e0002000$$ENDHEX$$jour li$$HEX1$$e900$$ENDHEX$$es au WorkFlow
+iwParent.TriggerEvent ( "UE_MAJACCUEIL" )	// Réalise les mises à jour liées au WorkFlow
 end on
 
 on ue_retour;//*-----------------------------------------------------------------
@@ -310,8 +310,8 @@ on ue_retour;//*----------------------------------------------------------------
 //* Evenement 		: Ue_Retour
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 17:29:51
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Op$$HEX1$$e900$$ENDHEX$$rations  $$HEX2$$e0002000$$ENDHEX$$effectuer avant la fermeture de la fen$$HEX1$$ea00$$ENDHEX$$tre
+//* Libellé			: 
+//* Commentaires	: Opérations  à effectuer avant la fermeture de la fenêtre
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -320,10 +320,10 @@ on ue_retour;//*----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
 /* Il faut mettre le script en OVERRIDE.                            */
-/* Appel de l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement UE_MajAccueil avant le retour de la         */
-/* fen$$HEX1$$ea00$$ENDHEX$$tre.                                                         */
+/* Appel de l'événement UE_MajAccueil avant le retour de la         */
+/* fenêtre.                                                         */
 /* En effet UE_Retour ne traite pas Ue_MajAccueil si la variable    */
-/* ibMajAccueil est $$HEX2$$e0002000$$ENDHEX$$Faux.                                         */
+/* ibMajAccueil est à Faux.                                         */
 /*------------------------------------------------------------------*/
 
 This.TriggerEvent ( "UE_MajAccueil" )
@@ -368,8 +368,8 @@ event close;call super::close;//*-----------------------------------------------
 //* Evenement 		: Close
 //* Auteur			: Erick John Stark
 //* Date				: 29/01/1999 16:27:07
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Fermeture d$$HEX1$$e900$$ENDHEX$$finitive de la fen$$HEX1$$ea00$$ENDHEX$$tre
+//* Libellé			: 
+//* Commentaires	: Fermeture définitive de la fenêtre
 //*					  On supprime tous les NVUO
 //*				  
 //*-----------------------------------------------------------------
@@ -390,10 +390,10 @@ on show;call w_8_traitement_master::show;//*------------------------------------
 //* Evenement 		: Show
 //* Auteur			: Erick John Stark
 //* Date				: 05/12/1997 16:25:00
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Initialisation de la variable ibMajAccueil $$HEX2$$e0002000$$ENDHEX$$Faux
-//*				  	  pour que la gestion automatique de la fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil
-//*				     ne soit pas effectu$$HEX1$$e900$$ENDHEX$$e. La mise $$HEX2$$e0002000$$ENDHEX$$jour de l'accueil est r$$HEX1$$e900$$ENDHEX$$alis$$HEX1$$e900$$ENDHEX$$e
+//* Libellé			: 
+//* Commentaires	: Initialisation de la variable ibMajAccueil à Faux
+//*				  	  pour que la gestion automatique de la fenêtre d'accueil
+//*				     ne soit pas effectuée. La mise à jour de l'accueil est réalisée
 //*				     dans W_ACCUEIL_WORKFLOW.
 //*				  
 //*-----------------------------------------------------------------
@@ -405,13 +405,13 @@ ibMajAccueil = False
 
 end on
 
-on we_childactivate;call w_8_traitement_master::we_childactivate;//*-----------------------------------------------------------------
+event we_childactivate;call super::we_childactivate;//*-----------------------------------------------------------------
 //*
 //* Objet 			: W_Tm_Sp_Cas_Id_Adh::We_ChildActivate
 //* Evenement 		: We_ChildActivate
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 17:53:35
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -421,9 +421,16 @@ on we_childactivate;call w_8_traitement_master::we_childactivate;//*------------
 
 This.X			=    1
 This.Y			=    1
-This.Height		= 1769
-This.Width		= 3598
-end on
+// [PB2022_TAILLE_FEN] + xxx
+This.Height		= 1769 + 90
+
+
+// [PB2022_TAILLE_FEN] + xxx
+This.Width		= 3598 + 50
+end event
+
+type cb_debug from w_8_traitement_master`cb_debug within w_tm_sp_cas_id_adh
+end type
 
 type dw_1 from w_8_traitement_master`dw_1 within w_tm_sp_cas_id_adh
 integer x = 41
@@ -441,7 +448,7 @@ event dw_1::itemerror;call super::itemerror;//*---------------------------------
 //* Evenement 		: ItemError
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:47:59
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion des messages d'erreur
 //*				  
 //*-----------------------------------------------------------------
@@ -466,15 +473,15 @@ If	ibErreur Then
 
 		Choose Case This.iiErreur
 		Case 0
-			stMessage.sVar[1] = "num$$HEX1$$e900$$ENDHEX$$ro d'adh$$HEX1$$e900$$ENDHEX$$sion"				// Erreur de Validation - 
+			stMessage.sVar[1] = "numéro d'adhésion"				// Erreur de Validation - 
 			stMessage.sCode	= "GENE003"
 		Case 1
-			stMessage.bErreurG= False									// Erreur de saisie - Le N$$HEX2$$b0002000$$ENDHEX$$de carte est incorrect.
+			stMessage.bErreurG= False									// Erreur de saisie - Le N° de carte est incorrect.
 			stMessage.sCode	= "WORK130"
 		Case 2
 /*------------------------------------------------------------------*/
-/* La commande PS_S01_CARTE_SINISTRE vient d'$$HEX1$$e900$$ENDHEX$$chouer. La structure  */
-/* de message est arm$$HEX1$$e900$$ENDHEX$$e sur F_Procedure.                            */
+/* La commande PS_S01_CARTE_SINISTRE vient d'échouer. La structure  */
+/* de message est armée sur F_Procedure.                            */
 /*------------------------------------------------------------------*/
 			stMessage.sTitre		= "Gestion des cas particuliers - SIMPA2"
 			stMessage.Icon			= StopSign!
@@ -506,7 +513,7 @@ event dw_1::itemchanged;call super::itemchanged;//*-----------------------------
 //* Evenement 		: ItemChanged
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:35:04
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Modification des zones
 //*				  
 //*-----------------------------------------------------------------
@@ -546,6 +553,8 @@ end type
 type pb_retour from w_8_traitement_master`pb_retour within w_tm_sp_cas_id_adh
 integer x = 9
 integer y = 8
+integer width = 242
+integer height = 144
 integer taborder = 50
 end type
 
@@ -555,7 +564,7 @@ on pb_retour::clicked;//*-------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Erick John Stark
 //* Date				: 05/12/1997 16:45:25
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Positionnement du code action
 //*				  
 //*-----------------------------------------------------------------
@@ -571,6 +580,8 @@ end on
 type pb_valider from w_8_traitement_master`pb_valider within w_tm_sp_cas_id_adh
 integer x = 494
 integer y = 8
+integer width = 242
+integer height = 144
 integer taborder = 70
 end type
 
@@ -585,6 +596,8 @@ end type
 type pb_controler from w_8_traitement_master`pb_controler within w_tm_sp_cas_id_adh
 integer x = 251
 integer y = 8
+integer width = 242
+integer height = 144
 integer taborder = 60
 end type
 
@@ -609,7 +622,7 @@ on constructor;//*--------------------------------------------------------------
 //* Evenement 		: Constructor
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 14:57:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------

@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_t_resume_action_gestion.srw
+﻿$PBExportHeader$w_t_resume_action_gestion.srw
 forward
 global type w_t_resume_action_gestion from window
 end type
@@ -19,10 +19,10 @@ end type
 end forward
 
 global type w_t_resume_action_gestion from window
-integer width = 3264
-integer height = 1868
+integer width = 3337
+integer height = 1904
 boolean titlebar = true
-string title = "R$$HEX1$$e900$$ENDHEX$$sum$$HEX2$$e9002000$$ENDHEX$$des actions sensibles / Alertes (vDoc12845 Claudie Souchard/H$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e800$$ENDHEX$$ne Liegeard)"
+string title = "Résumé des actions sensibles / Alertes (vDoc12845 Claudie Souchard/Hélène Liegeard)"
 boolean controlmenu = true
 windowtype windowtype = response!
 long backcolor = 67108864
@@ -47,36 +47,36 @@ u_DataWindow_Detail	idw_LstwCommande
 DataWindow		idw_wDetail
 
 // Actions en cours de saisie sur le dossier.
-Boolean ibRegNumInterAssSurGti  // R$$HEX1$$e800$$ENDHEX$$glement num inter A sur une Gti.
-Boolean ibRegFournPRS2  		  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$
-Boolean ibRegFournPRS21  		  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration irr$$HEX1$$e900$$ENDHEX$$parable
-Boolean ibRegFournPRSSav  		  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration SAV
-Boolean ibRegFournRempl  		  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un remplacement
-Boolean ibRegFournDiagConf  	  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour d$$HEX1$$1920$$ENDHEX$$un diagnostic conforme
-Boolean ibRegFournDiagNConf  	  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour d$$HEX1$$1920$$ENDHEX$$un diagnostic non conforme
-Boolean ibPrestaRemplCNV  		  // Passage d$$HEX1$$1920$$ENDHEX$$un remplacement
-Boolean ibPrestaRepaCNV  		  // Passage d$$HEX1$$1920$$ENDHEX$$une r$$HEX1$$e900$$ENDHEX$$paration
-Boolean ibPrestaDiagCNV  		  // Passage d$$HEX1$$1920$$ENDHEX$$un diagnostic
-Boolean ibPrestaRepaSavCNV  	  // Passage d$$HEX1$$1920$$ENDHEX$$une r$$HEX1$$e900$$ENDHEX$$paration SAV
+Boolean ibRegNumInterAssSurGti  // Règlement num inter A sur une Gti.
+Boolean ibRegFournPRS2  		  // Règlement d’un fournisseur pour un réparation réparé
+Boolean ibRegFournPRS21  		  // Règlement d’un fournisseur pour un réparation irréparable
+Boolean ibRegFournPRSSav  		  // Règlement d’un fournisseur pour un réparation SAV
+Boolean ibRegFournRempl  		  // Règlement d’un fournisseur pour un remplacement
+Boolean ibRegFournDiagConf  	  // Règlement d’un fournisseur pour d’un diagnostic conforme
+Boolean ibRegFournDiagNConf  	  // Règlement d’un fournisseur pour d’un diagnostic non conforme
+Boolean ibPrestaRemplCNV  		  // Passage d’un remplacement
+Boolean ibPrestaRepaCNV  		  // Passage d’une réparation
+Boolean ibPrestaDiagCNV  		  // Passage d’un diagnostic
+Boolean ibPrestaRepaSavCNV  	  // Passage d’une réparation SAV
 
-// Actions valid$$HEX1$$e900$$ENDHEX$$es en base.
-Boolean ibBSRegNumInterAssSurGtiSansRM	// Bin 1  // R$$HEX1$$e800$$ENDHEX$$glement num inter A sur une Gti sans Somme de RM Total
-Boolean ibBSRegFourRepaRepaSansRM 		// Bin 2  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$e Somme de RM Total
-Boolean ibBSRegFourRepaIRRepaSansRM 	// Bin 3  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration irr$$HEX1$$e900$$ENDHEX$$parable sans Somme de RM Total
-Boolean ibBSRegFourRepaSAVSansRM 		// Bin 4  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration SAV sans Somme de RM Total
-Boolean ibBSRegFourRemplSansRM 			// Bin 5  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un remplacement sans Somme de RM Total
-Boolean ibBSRegFourDiagConfSansRM 		// Bin 6  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic conforme sans Somme de RM
-Boolean ibBSRegFourDiagNConfSansRM 		// Bin 7  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic non conforme sans Somme de RM
-Boolean ibBSRemplacementNonAnn 			// Bin 8  // Remplacement (Non annul$$HEX1$$e900$$ENDHEX$$)
-Boolean ibBSRepaRepaNonAnn 				// Bin 9  // R$$HEX1$$e900$$ENDHEX$$paration (r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$) (Non annul$$HEX1$$e900$$ENDHEX$$)
-Boolean ibBSRepaIRRepaNonAnn 				// Bin 10 // R$$HEX1$$e900$$ENDHEX$$paration (irr$$HEX1$$e900$$ENDHEX$$parable) (Non annul$$HEX1$$e900$$ENDHEX$$)
-Boolean ibBSRepaSAVNonAnn 					// Bin 11 // R$$HEX1$$e900$$ENDHEX$$paration SAV (Non annul$$HEX1$$e900$$ENDHEX$$)
-Boolean ibBSDiagConfNonAnn 				// Bin 12 // Diag (conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
-Boolean ibBSDiagNConfNonAnn 				// Bin 13 // Diag (non conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
-Boolean ibBSSwapCTRNonAnn 					// Bin 14 // Swap par CTR (Non annul$$HEX1$$e900$$ENDHEX$$)
+// Actions validées en base.
+Boolean ibBSRegNumInterAssSurGtiSansRM	// Bin 1  // Règlement num inter A sur une Gti sans Somme de RM Total
+Boolean ibBSRegFourRepaRepaSansRM 		// Bin 2  // Règlement d’un fournisseur pour une réparation réparée Somme de RM Total
+Boolean ibBSRegFourRepaIRRepaSansRM 	// Bin 3  // Règlement d’un fournisseur pour un réparation irréparable sans Somme de RM Total
+Boolean ibBSRegFourRepaSAVSansRM 		// Bin 4  // Règlement d’un fournisseur pour un réparation SAV sans Somme de RM Total
+Boolean ibBSRegFourRemplSansRM 			// Bin 5  // Règlement d’un fournisseur pour un remplacement sans Somme de RM Total
+Boolean ibBSRegFourDiagConfSansRM 		// Bin 6  // Règlement d’un fournisseur pour un diagnostic conforme sans Somme de RM
+Boolean ibBSRegFourDiagNConfSansRM 		// Bin 7  // Règlement d’un fournisseur pour un diagnostic non conforme sans Somme de RM
+Boolean ibBSRemplacementNonAnn 			// Bin 8  // Remplacement (Non annulé)
+Boolean ibBSRepaRepaNonAnn 				// Bin 9  // Réparation (réparé) (Non annulé)
+Boolean ibBSRepaIRRepaNonAnn 				// Bin 10 // Réparation (irréparable) (Non annulé)
+Boolean ibBSRepaSAVNonAnn 					// Bin 11 // Réparation SAV (Non annulé)
+Boolean ibBSDiagConfNonAnn 				// Bin 12 // Diag (conforme) (Non annulé)
+Boolean ibBSDiagNConfNonAnn 				// Bin 13 // Diag (non conforme) (Non annulé)
+Boolean ibBSSwapCTRNonAnn 					// Bin 14 // Swap par CTR (Non annulé)
 
 
-Boolean ibAMU_Incoherence					// Au Moins Une Incoh$$HEX1$$e900$$ENDHEX$$rence
+Boolean ibAMU_Incoherence					// Au Moins Une Incohérence
 Boolean ibPasseParClose
 
 Long 	  iCptCompteur					// Compteur de lien
@@ -111,7 +111,7 @@ public function boolean wf_amu_incoherence ();//*-------------------------------
 //* Fonction		: w_t_resume_action_gestion::wf_amu_incoherence
 //* Auteur			: JFF
 //* Date				: 05/02/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [VDOC12845]
+//* Libellé			: [VDOC12845]
 //* Commentaires	:
 //*
 //* Arguments		: 
@@ -132,192 +132,192 @@ iCptCompteur	 = 0
 
 /*
 // Actions en cours de saisie sur le dossier.
-1_Boolean ibRegNumInterAssSurGti  // R$$HEX1$$e800$$ENDHEX$$glement num inter A sur une Gti.
-2_Boolean ibRegFournPRS2  		  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$
-3_Boolean ibRegFournPRS21  		  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration irr$$HEX1$$e900$$ENDHEX$$parable
-4_Boolean ibRegFournPRSSav  		  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration SAV
-5_Boolean ibRegFournRempl  		  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un remplacement
-6_Boolean ibRegFournDiagConf  	  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour d$$HEX1$$1920$$ENDHEX$$un diagnostic conforme
-7_Boolean ibRegFournDiagNConf  	  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour d$$HEX1$$1920$$ENDHEX$$un diagnostic non conforme
-8_Boolean ibPrestaRemplCNV  		  // Passage d$$HEX1$$1920$$ENDHEX$$un remplacement
-9_Boolean ibPrestaRepaCNV  		  // Passage d$$HEX1$$1920$$ENDHEX$$une r$$HEX1$$e900$$ENDHEX$$paration
-10_Boolean ibPrestaDiagCNV  		  // Passage d$$HEX1$$1920$$ENDHEX$$un diagnostic
-11_Boolean ibPrestaRepaSavCNV  	  // Passage d$$HEX1$$1920$$ENDHEX$$une r$$HEX1$$e900$$ENDHEX$$paration SAV
+1_Boolean ibRegNumInterAssSurGti  // Règlement num inter A sur une Gti.
+2_Boolean ibRegFournPRS2  		  // Règlement d’un fournisseur pour un réparation réparé
+3_Boolean ibRegFournPRS21  		  // Règlement d’un fournisseur pour un réparation irréparable
+4_Boolean ibRegFournPRSSav  		  // Règlement d’un fournisseur pour un réparation SAV
+5_Boolean ibRegFournRempl  		  // Règlement d’un fournisseur pour un remplacement
+6_Boolean ibRegFournDiagConf  	  // Règlement d’un fournisseur pour d’un diagnostic conforme
+7_Boolean ibRegFournDiagNConf  	  // Règlement d’un fournisseur pour d’un diagnostic non conforme
+8_Boolean ibPrestaRemplCNV  		  // Passage d’un remplacement
+9_Boolean ibPrestaRepaCNV  		  // Passage d’une réparation
+10_Boolean ibPrestaDiagCNV  		  // Passage d’un diagnostic
+11_Boolean ibPrestaRepaSavCNV  	  // Passage d’une réparation SAV
 
-// Actions valid$$HEX1$$e900$$ENDHEX$$es en base.
-Boolean ibBSRegNumInterAssSurGtiSansRM	// Bin 1  // R$$HEX1$$e800$$ENDHEX$$glement num inter A sur une Gti sans Somme de RM Total
-Boolean ibBSRegFourRepaRepaSansRM 		// Bin 2  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$e Somme de RM Total
-Boolean ibBSRegFourRepaIRRepaSansRM 	// Bin 3  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration irr$$HEX1$$e900$$ENDHEX$$parable sans Somme de RM Total
-Boolean ibBSRegFourRepaSAVSansRM 		// Bin 4  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration SAV sans Somme de RM Total
-Boolean ibBSRegFourRemplSansRM 			// Bin 5  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un remplacement sans Somme de RM Total
-Boolean ibBSRegFourDiagConfSansRM 		// Bin 6  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic conforme sans Somme de RM
-Boolean ibBSRegFourDiagNConfSansRM 		// Bin 7  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic non conforme sans Somme de RM
-Boolean ibBSRemplacementNonAnn 			// Bin 8  // Remplacement (Non annul$$HEX1$$e900$$ENDHEX$$)
-Boolean ibBSRepaRepaNonAnn 				// Bin 9  // R$$HEX1$$e900$$ENDHEX$$paration (r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$) (Non annul$$HEX1$$e900$$ENDHEX$$)
-Boolean ibBSRepaIRRepaNonAnn 				// Bin 10 // R$$HEX1$$e900$$ENDHEX$$paration (irr$$HEX1$$e900$$ENDHEX$$parable) (Non annul$$HEX1$$e900$$ENDHEX$$)
-Boolean ibBSRepaSAVNonAnn 					// Bin 11 // R$$HEX1$$e900$$ENDHEX$$paration SAV (Non annul$$HEX1$$e900$$ENDHEX$$)
-Boolean ibBSDiagConfNonAnn 				// Bin 12 // Diag (conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
-Boolean ibBSDiagNConfNonAnn 				// Bin 13 // Diag (non conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
-Boolean ibBSSwapCTRNonAnn 					// Bin 14 // Swap par CTR (Non annul$$HEX1$$e900$$ENDHEX$$) [PM254_V1]
+// Actions validées en base.
+Boolean ibBSRegNumInterAssSurGtiSansRM	// Bin 1  // Règlement num inter A sur une Gti sans Somme de RM Total
+Boolean ibBSRegFourRepaRepaSansRM 		// Bin 2  // Règlement d’un fournisseur pour une réparation réparée Somme de RM Total
+Boolean ibBSRegFourRepaIRRepaSansRM 	// Bin 3  // Règlement d’un fournisseur pour un réparation irréparable sans Somme de RM Total
+Boolean ibBSRegFourRepaSAVSansRM 		// Bin 4  // Règlement d’un fournisseur pour un réparation SAV sans Somme de RM Total
+Boolean ibBSRegFourRemplSansRM 			// Bin 5  // Règlement d’un fournisseur pour un remplacement sans Somme de RM Total
+Boolean ibBSRegFourDiagConfSansRM 		// Bin 6  // Règlement d’un fournisseur pour un diagnostic conforme sans Somme de RM
+Boolean ibBSRegFourDiagNConfSansRM 		// Bin 7  // Règlement d’un fournisseur pour un diagnostic non conforme sans Somme de RM
+Boolean ibBSRemplacementNonAnn 			// Bin 8  // Remplacement (Non annulé)
+Boolean ibBSRepaRepaNonAnn 				// Bin 9  // Réparation (réparé) (Non annulé)
+Boolean ibBSRepaIRRepaNonAnn 				// Bin 10 // Réparation (irréparable) (Non annulé)
+Boolean ibBSRepaSAVNonAnn 					// Bin 11 // Réparation SAV (Non annulé)
+Boolean ibBSDiagConfNonAnn 				// Bin 12 // Diag (conforme) (Non annulé)
+Boolean ibBSDiagNConfNonAnn 				// Bin 13 // Diag (non conforme) (Non annulé)
+Boolean ibBSSwapCTRNonAnn 					// Bin 14 // Swap par CTR (Non annulé) [PM254_V1]
 */
 
 ibAMU_Incoherence	= False
 iDtCleInsert = DateTime ( Today (), Now() )
 
-// Cas 1 : // R$$HEX1$$e800$$ENDHEX$$glement num inter A sur une Gti.
+// Cas 1 : // Règlement num inter A sur une Gti.
 If ibRegNumInterAssSurGti Then
 	
-	// Bin 1  // R$$HEX1$$e800$$ENDHEX$$glement num inter A sur une Gti sans Somme de RM Total
+	// Bin 1  // Règlement num inter A sur une Gti sans Somme de RM Total
 	If ibBSRegNumInterAssSurGtiSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegNumInterAssSurGti", "ibBSRegNumInterAssSurGtiSansRM" )
 	End If
 
-	// Bin 2  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$e Somme de RM Total
+	// Bin 2  // Règlement d’un fournisseur pour une réparation réparée Somme de RM Total
 	If ibBSRegFourRepaRepaSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegNumInterAssSurGti", "ibBSRegFourRepaRepaSansRM" )
 	End If
 
-	// Bin 4  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration SAV sans Somme de RM Total
+	// Bin 4  // Règlement d’un fournisseur pour un réparation SAV sans Somme de RM Total
 	If ibBSRegFourRepaSAVSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegNumInterAssSurGti", "ibBSRegFourRepaSAVSansRM" )
 	End If
 
-	// Bin 5  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un remplacement sans Somme de RM Total
+	// Bin 5  // Règlement d’un fournisseur pour un remplacement sans Somme de RM Total
 	If ibBSRegFourRemplSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegNumInterAssSurGti", "ibBSRegFourRemplSansRM" )
 	End If
 
-	// Bin 8  // Remplacement (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 8  // Remplacement (Non annulé)
 	If ibBSRemplacementNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegNumInterAssSurGti", "ibBSRemplacementNonAnn" )
 	End If
 
-	// BBin 9  // R$$HEX1$$e900$$ENDHEX$$paration (r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// BBin 9  // Réparation (réparé) (Non annulé)
 	If ibBSRepaRepaNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegNumInterAssSurGti", "ibBSRepaRepaNonAnn" )
 	End If
 
-	// Bin 10 // R$$HEX1$$e900$$ENDHEX$$paration (irr$$HEX1$$e900$$ENDHEX$$parable) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 10 // Réparation (irréparable) (Non annulé)
 	If ibBSRepaIRRepaNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegNumInterAssSurGti", "ibBSRepaIRRepaNonAnn" )
 	End If
 
-	// Bin 11 // R$$HEX1$$e900$$ENDHEX$$paration SAV (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 11 // Réparation SAV (Non annulé)
 	If ibBSRepaSAVNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegNumInterAssSurGti", "ibBSRepaSAVNonAnn" )
 	End If
 
-	// Bin 13 // Diag (non conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 13 // Diag (non conforme) (Non annulé)
 	If ibBSDiagNConfNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegNumInterAssSurGti", "ibBSDiagNConfNonAnn" )
 	End If
 	
-	// Bin 14 // Swap par CTR (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 14 // Swap par CTR (Non annulé)
 	If ibBSSwapCTRNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegNumInterAssSurGti", "ibBSSwapCTRNonAnn" )
 	End If
 End If	
 
 
-// Cas 2 : // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$e
+// Cas 2 : // Règlement d’un fournisseur pour une réparation réparée
 If ibRegFournPRS2 Then
 
-	// Bin 1  // R$$HEX1$$e800$$ENDHEX$$glement num inter A sur une Gti sans Somme de RM Total
+	// Bin 1  // Règlement num inter A sur une Gti sans Somme de RM Total
 	If ibBSRegNumInterAssSurGtiSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRS2", "ibBSRegNumInterAssSurGtiSansRM" )
 	End If
 	
-	// Bin 2  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$e Somme de RM Total
+	// Bin 2  // Règlement d’un fournisseur pour une réparation réparée Somme de RM Total
 	If ibBSRegFourRepaRepaSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRS2", "ibBSRegFourRepaRepaSansRM" )
 	End If
 
-	// Bin 3  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration irr$$HEX1$$e900$$ENDHEX$$parable sans Somme de RM Total
+	// Bin 3  // Règlement d’un fournisseur pour une réparation irréparable sans Somme de RM Total
 	If ibBSRegFourRepaIRRepaSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRS2", "ibBSRegFourRepaIRRepaSansRM" )
 	End If
 	
-	// Bin 4  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration irr$$HEX1$$e900$$ENDHEX$$parable sans Somme de RM Total
+	// Bin 4  // Règlement d’un fournisseur pour une réparation irréparable sans Somme de RM Total
 	If ibBSRegFourRepaSAVSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRS2", "ibBSRegFourRepaSAVSansRM" )
 	End If
 
-	// Bin 5  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un remplacement sans Somme de RM Total
+	// Bin 5  // Règlement d’un fournisseur pour un remplacement sans Somme de RM Total
 	If ibBSRegFourRemplSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRS2", "ibBSRegFourRemplSansRM" )
 	End If
 
-	// Bin 6  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic conforme sans Somme de RM
+	// Bin 6  // Règlement d’un fournisseur pour un diagnostic conforme sans Somme de RM
 	If ibBSRegFourDiagConfSansRM  Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRS2", "ibBSRegFourDiagConfSansRM" )
 	End If
 
-	// Bin 7  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic non conforme sans Somme de RM
+	// Bin 7  // Règlement d’un fournisseur pour un diagnostic non conforme sans Somme de RM
 	If ibBSRegFourDiagNConfSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRS2", "ibBSRegFourDiagNConfSansRM" )
 	End If
 	
-	// Bin 8  // Remplacement (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 8  // Remplacement (Non annulé)
 	If ibBSRemplacementNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRS2", "ibBSRemplacementNonAnn" )
 	End If
 	
-	// Bin 10 // R$$HEX1$$e900$$ENDHEX$$paration (irr$$HEX1$$e900$$ENDHEX$$parable) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 10 // Réparation (irréparable) (Non annulé)
 	If ibBSRepaIRRepaNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRS2", "ibBSRepaIRRepaNonAnn" )
 	End If
 
-	// Bin 12 // Diag (conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 12 // Diag (conforme) (Non annulé)
 	If ibBSDiagConfNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRS2", "ibBSDiagConfNonAnn" )
 	End If
 
-	// Bin 13 // Diag (non conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 13 // Diag (non conforme) (Non annulé)
 	If ibBSDiagNConfNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRS2", "ibBSDiagNConfNonAnn" )
 	End If
 	
 End If
 
-// Cas 3 : // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration irr$$HEX1$$e900$$ENDHEX$$parable
+// Cas 3 : // Règlement d’un fournisseur pour un réparation irréparable
 If ibRegFournPRS21 Then
 	
-	// Bin 2 // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$e Somme de RM Total
+	// Bin 2 // Règlement d’un fournisseur pour une réparation réparée Somme de RM Total
 	If ibBSRegFourRepaRepaSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRS21", "ibBSRegFourRepaRepaSansRM" )
 	End If
 
-	// Bin 3  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration irr$$HEX1$$e900$$ENDHEX$$parable sans Somme de RM Total
+	// Bin 3  // Règlement d’un fournisseur pour un réparation irréparable sans Somme de RM Total
 	If ibBSRegFourRepaIRRepaSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRS21", "ibBSRegFourRepaIRRepaSansRM" )
 	End If
 
-	// Bin 4  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration irr$$HEX1$$e900$$ENDHEX$$parable sans Somme de RM Total
+	// Bin 4  // Règlement d’un fournisseur pour une réparation irréparable sans Somme de RM Total
 	If ibBSRegFourRepaSAVSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRS21", "ibBSRegFourRepaSAVSansRM" )
 	End If
 
-	// Bin 6  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic conforme sans Somme de RM
+	// Bin 6  // Règlement d’un fournisseur pour un diagnostic conforme sans Somme de RM
 	If ibBSRegFourDiagConfSansRM  Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRS21", "ibBSRegFourDiagConfSansRM" )
 	End If
 
-	// Bin 7  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic non conforme sans Somme de RM
+	// Bin 7  // Règlement d’un fournisseur pour un diagnostic non conforme sans Somme de RM
 	If ibBSRegFourDiagNConfSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRS21", "ibBSRegFourDiagNConfSansRM" )
 	End If
 
-	// Bin 9  // R$$HEX1$$e900$$ENDHEX$$paration (r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 9  // Réparation (réparé) (Non annulé)
 	If ibBSRepaRepaNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRS21", "ibBSRepaRepaNonAnn" )
 	End If
 
-	// Bin 12 // Diag (conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 12 // Diag (conforme) (Non annulé)
 	If ibBSDiagConfNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRS21", "ibBSDiagConfNonAnn" )
 	End If
 
-	// Bin 13 // Diag (non conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 13 // Diag (non conforme) (Non annulé)
 	If ibBSDiagNConfNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRS21", "ibBSDiagNConfNonAnn" )
 	End If
@@ -325,49 +325,49 @@ If ibRegFournPRS21 Then
 
 End If
 
-// Cas 4 : // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration SAV
+// Cas 4 : // Règlement d’un fournisseur pour un réparation SAV
 If ibRegFournPRSSav Then
-	// Bin 2 // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$e Somme de RM Total
+	// Bin 2 // Règlement d’un fournisseur pour une réparation réparée Somme de RM Total
 	If ibBSRegFourRepaRepaSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRSSav", "ibBSRegFourRepaRepaSansRM" )
 	End If
 
-	// Bin 3  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration irr$$HEX1$$e900$$ENDHEX$$parable sans Somme de RM Total
+	// Bin 3  // Règlement d’un fournisseur pour un réparation irréparable sans Somme de RM Total
 	If ibBSRegFourRepaIRRepaSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRSSav", "ibBSRegFourRepaIRRepaSansRM" )
 	End If
 
-	// Bin 4  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration irr$$HEX1$$e900$$ENDHEX$$parable sans Somme de RM Total
+	// Bin 4  // Règlement d’un fournisseur pour une réparation irréparable sans Somme de RM Total
 	If ibBSRegFourRepaSAVSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRSSav", "ibBSRegFourRepaSAVSansRM" )
 	End If
 
-	// Bin 6  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic conforme sans Somme de RM
+	// Bin 6  // Règlement d’un fournisseur pour un diagnostic conforme sans Somme de RM
 	If ibBSRegFourDiagConfSansRM  Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRSSav", "ibBSRegFourDiagConfSansRM" )
 	End If
 
-	// Bin 7  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic non conforme sans Somme de RM
+	// Bin 7  // Règlement d’un fournisseur pour un diagnostic non conforme sans Somme de RM
 	If ibBSRegFourDiagNConfSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRSSav", "ibBSRegFourDiagNConfSansRM" )
 	End If
 
-	// Bin 10  // R$$HEX1$$e900$$ENDHEX$$paration (irr$$HEX1$$e900$$ENDHEX$$parable) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 10  // Réparation (irréparable) (Non annulé)
 	If ibBSRepaIRRepaNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRSSav", "ibBSRepaIRRepaNonAnn" )
 	End If
 
-	// Bin 11  // R$$HEX1$$e900$$ENDHEX$$paration SAV (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 11  // Réparation SAV (Non annulé)
 	If ibBSRepaSAVNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRSSav", "ibBSRepaSAVNonAnn" )
 	End If
 
-	// Bin 12 // Diag (conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 12 // Diag (conforme) (Non annulé)
 	If ibBSDiagConfNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRSSav", "ibBSDiagConfNonAnn" )
 	End If
 
-	// Bin 13 // Diag (non conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 13 // Diag (non conforme) (Non annulé)
 	If ibBSDiagNConfNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournPRSSav", "ibBSDiagNConfNonAnn" )
 	End If
@@ -375,107 +375,107 @@ If ibRegFournPRSSav Then
 End If
 
 
-// Cas 5 : // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un remplacement
+// Cas 5 : // Règlement d’un fournisseur pour un remplacement
 If ibRegFournRempl Then
 
-	// Bin 1 // R$$HEX1$$e800$$ENDHEX$$glement num inter A sur une Gti sans Somme de RM Total
+	// Bin 1 // Règlement num inter A sur une Gti sans Somme de RM Total
 	If ibBSRegNumInterAssSurGtiSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournRempl", "ibBSRegNumInterAssSurGtiSansRM" )
 	End If
 
-	// Bin 2 // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$e Somme de RM Total
+	// Bin 2 // Règlement d’un fournisseur pour une réparation réparée Somme de RM Total
 	If ibBSRegFourRepaRepaSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournRempl", "ibBSRegFourRepaRepaSansRM" )
 	End If
 	
-	// Bin 4 // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration SAV sans Somme de RM Total
+	// Bin 4 // Règlement d’un fournisseur pour un réparation SAV sans Somme de RM Total
 	If ibBSRegFourRepaSAVSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournRempl", "ibBSRegFourRepaSAVSansRM" )
 	End If
 
-	// Bin 5 // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un remplacement sans Somme de RM Total
+	// Bin 5 // Règlement d’un fournisseur pour un remplacement sans Somme de RM Total
 	If ibBSRegFourRemplSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournRempl", "ibBSRegFourRemplSansRM" )
 	End If
 
-	// Bin 7 // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic non conforme sans Somme de RM
+	// Bin 7 // Règlement d’un fournisseur pour un diagnostic non conforme sans Somme de RM
 	If ibBSRegFourDiagNConfSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournRempl", "ibBSRegFourDiagNConfSansRM" )
 	End If
 
-	// Bin 8 // Remplacement (Non annul$$HEX1$$e900$$ENDHEX$$)
-	/*  [Vdoc15083], g$$HEX1$$ea00$$ENDHEX$$ne Maryse.
+	// Bin 8 // Remplacement (Non annulé)
+	/*  [Vdoc15083], gêne Maryse.
 	If ibBSRemplacementNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournRempl", "ibBSRemplacementNonAnn" )
 	End If
 	*/
 	
-	// Bin 9  // R$$HEX1$$e900$$ENDHEX$$paration (r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 9  // Réparation (réparé) (Non annulé)
 	If ibBSRepaRepaNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournRempl", "ibBSRepaRepaNonAnn" )
 	End If
 
-	// Bin 13 // Diag (non conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 13 // Diag (non conforme) (Non annulé)
 	If ibBSDiagNConfNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournRempl", "ibBSDiagNConfNonAnn" )
 	End If
 	
 End If
 
-// Cas 6 : // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic conforme
+// Cas 6 : // Règlement d’un fournisseur pour un diagnostic conforme
 If ibRegFournDiagConf Then
 
-	// Bin 1  // R$$HEX1$$e800$$ENDHEX$$glement num inter A sur une Gti sans Somme de RM Total
+	// Bin 1  // Règlement num inter A sur une Gti sans Somme de RM Total
 	If ibBSRegNumInterAssSurGtiSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagConf", "ibBSRegNumInterAssSurGtiSansRM" )
 	End If
 
-	// Bin 2  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$e Somme de RM Total
+	// Bin 2  // Règlement d’un fournisseur pour une réparation réparée Somme de RM Total
 	If ibBSRegFourRepaRepaSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagConf", "ibBSRegFourRepaRepaSansRM" )
 	End If
 
-	// Bin 3  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration irr$$HEX1$$e900$$ENDHEX$$parable sans Somme de RM Total
+	// Bin 3  // Règlement d’un fournisseur pour un réparation irréparable sans Somme de RM Total
 	If ibBSRegFourRepaIRRepaSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagConf", "ibBSRegFourRepaIRRepaSansRM" )
 	End If
 
-	// Bin 4  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration SAV sans Somme de RM Total
+	// Bin 4  // Règlement d’un fournisseur pour un réparation SAV sans Somme de RM Total
 	If ibBSRegFourRepaSAVSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagConf", "ibBSRegFourRepaSAVSansRM" )
 	End If
 
-	// Bin 6  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic conforme sans Somme de RM
+	// Bin 6  // Règlement d’un fournisseur pour un diagnostic conforme sans Somme de RM
 	If ibBSRegFourDiagConfSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagConf", "ibBSRegFourDiagConfSansRM" )
 	End If
 
-	// Bin 7  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic non conforme sans Somme de RM
+	// Bin 7  // Règlement d’un fournisseur pour un diagnostic non conforme sans Somme de RM
 	If ibBSRegFourDiagNConfSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagConf", "ibBSRegFourDiagNConfSansRM" )
 	End If
 
-	// Bin 9  // R$$HEX1$$e900$$ENDHEX$$paration (r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 9  // Réparation (réparé) (Non annulé)
 	If ibBSRepaRepaNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagConf", "ibBSRepaRepaNonAnn" )
 	End If
 
-	// Bin 10 // R$$HEX1$$e900$$ENDHEX$$paration (irr$$HEX1$$e900$$ENDHEX$$parable) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 10 // Réparation (irréparable) (Non annulé)
 	If ibBSRepaIRRepaNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagConf", "ibBSRepaIRRepaNonAnn" )
 	End If
 
-	// Bin 11 // R$$HEX1$$e900$$ENDHEX$$paration SAV (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 11 // Réparation SAV (Non annulé)
 	If ibBSRepaSAVNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagConf", "ibBSRepaSAVNonAnn" )
 	End If
 
-	// Bin 12 // Diag (conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 12 // Diag (conforme) (Non annulé)
 	If ibBSDiagConfNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagConf", "ibBSDiagConfNonAnn" )
 	End If
 
-	// Bin 13 // Diag (non conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 13 // Diag (non conforme) (Non annulé)
 	If ibBSDiagNConfNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagConf", "ibBSDiagNConfNonAnn" )
 	End If
@@ -483,65 +483,65 @@ If ibRegFournDiagConf Then
 
 End If
 
-// Cas 7 : // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour d$$HEX1$$1920$$ENDHEX$$un diagnostic non conforme
+// Cas 7 : // Règlement d’un fournisseur pour d’un diagnostic non conforme
 If ibRegFournDiagNConf Then
 
-	// Bin 1  // R$$HEX1$$e800$$ENDHEX$$glement num inter A sur une Gti sans Somme de RM Total
+	// Bin 1  // Règlement num inter A sur une Gti sans Somme de RM Total
 	If ibBSRegNumInterAssSurGtiSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagNConf", "ibBSRegNumInterAssSurGtiSansRM" )
 	End If
 
-	// Bin 2 // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$e Somme de RM Total
+	// Bin 2 // Règlement d’un fournisseur pour une réparation réparée Somme de RM Total
 	If ibBSRegFourRepaRepaSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagNConf", "ibBSRegFourRepaRepaSansRM" )
 	End If
 
-	// Bin 3 // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration irr$$HEX1$$e900$$ENDHEX$$parable sans Somme de RM Total
+	// Bin 3 // Règlement d’un fournisseur pour un réparation irréparable sans Somme de RM Total
 	If ibBSRegFourRepaIRRepaSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagNConf", "ibBSRegFourRepaIRRepaSansRM" )
 	End If
 
-	// Bin 4  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration SAV sans Somme de RM Total
+	// Bin 4  // Règlement d’un fournisseur pour un réparation SAV sans Somme de RM Total
 	If ibBSRegFourRepaSAVSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagNConf", "ibBSRegFourRepaSAVSansRM" )
 	End If
 
-	// Bin 5  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un remplacement sans Somme de RM Total
+	// Bin 5  // Règlement d’un fournisseur pour un remplacement sans Somme de RM Total
 	If ibBSRegFourRemplSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagNConf", "ibBSRegFourRemplSansRM" )
 	End If
 
-	// Bin 6  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic conforme sans Somme de RM
+	// Bin 6  // Règlement d’un fournisseur pour un diagnostic conforme sans Somme de RM
 	If ibBSRegFourDiagConfSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagNConf", "ibBSRegFourDiagConfSansRM" )
 	End If
 	
-	// Bin 7  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic non conforme sans Somme de RM
+	// Bin 7  // Règlement d’un fournisseur pour un diagnostic non conforme sans Somme de RM
 	If ibBSRegFourDiagNConfSansRM Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagNConf", "ibBSRegFourDiagNConfSansRM" )
 	End If
 
-	// Bin 9  // R$$HEX1$$e900$$ENDHEX$$paration (r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 9  // Réparation (réparé) (Non annulé)
 	If ibBSRepaRepaNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagNConf", "ibBSRepaRepaNonAnn" )
 	End If
 
-	// Bin 10 // R$$HEX1$$e900$$ENDHEX$$paration (irr$$HEX1$$e900$$ENDHEX$$parable) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 10 // Réparation (irréparable) (Non annulé)
 	If ibBSRepaIRRepaNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagNConf", "ibBSRepaIRRepaNonAnn" )
 	End If
 
-	// Bin 11 // R$$HEX1$$e900$$ENDHEX$$paration SAV (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 11 // Réparation SAV (Non annulé)
 	If ibBSRepaSAVNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagNConf", "ibBSRepaSAVNonAnn" )
 	End If
 
-	// Bin 12 // Diag (conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 12 // Diag (conforme) (Non annulé)
 	If ibBSDiagConfNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagNConf", "ibBSDiagConfNonAnn" )
 	End If
 	
-	// Bin 13 // Diag (non conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 13 // Diag (non conforme) (Non annulé)
 	If ibBSDiagNConfNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibRegFournDiagNConf", "ibBSDiagNConfNonAnn" )
 	End If
@@ -550,125 +550,125 @@ If ibRegFournDiagNConf Then
 End If
 
 
-// Cas 8 : // Passage d$$HEX1$$1920$$ENDHEX$$un remplacement
+// Cas 8 : // Passage d’un remplacement
 If ibPrestaRemplCNV Then
 
-	// Bin 1 // R$$HEX1$$e800$$ENDHEX$$glement num inter A sur une Gti sans Somme de RM Total
+	// Bin 1 // Règlement num inter A sur une Gti sans Somme de RM Total
 	If ibBSRegNumInterAssSurGtiSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRemplCNV", "ibBSRegNumInterAssSurGtiSansRM" )
 	End If
 
-	// Bin 2  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$e Somme de RM Total
+	// Bin 2  // Règlement d’un fournisseur pour une réparation réparée Somme de RM Total
 	If ibBSRegFourRepaRepaSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRemplCNV", "ibBSRegFourRepaRepaSansRM" )
 	End If
 
-	// Bin 4  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration SAV sans Somme de RM Total
+	// Bin 4  // Règlement d’un fournisseur pour un réparation SAV sans Somme de RM Total
 	If ibBSRegFourRepaSAVSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRemplCNV", "ibBSRegFourRepaSAVSansRM" )
 	End If
 
-	// Bin 5  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un remplacement sans Somme de RM Total
+	// Bin 5  // Règlement d’un fournisseur pour un remplacement sans Somme de RM Total
 	If ibBSRegFourRemplSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRemplCNV", "ibBSRegFourRemplSansRM" )
 	End If
 
-	// Bin 7  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic non conforme sans Somme de RM
+	// Bin 7  // Règlement d’un fournisseur pour un diagnostic non conforme sans Somme de RM
 	If ibBSRegFourDiagNConfSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRemplCNV", "ibBSRegFourDiagNConfSansRM" )
 	End If
 
-	// Bin 8  // Remplacement (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 8  // Remplacement (Non annulé)
 	If ibBSRemplacementNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRemplCNV", "ibBSRemplacementNonAnn" )
 	End If
 
-	// Bin 9  // R$$HEX1$$e900$$ENDHEX$$paration (r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 9  // Réparation (réparé) (Non annulé)
 	If ibBSRepaRepaNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRemplCNV", "ibBSRepaRepaNonAnn" )
 	End If
 
-	// Bin 11 // R$$HEX1$$e900$$ENDHEX$$paration SAV (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 11 // Réparation SAV (Non annulé)
 	If ibBSRepaSAVNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRemplCNV", "ibBSRepaSAVNonAnn" )
 	End If
 
-	// Bin 13 // Diag (non conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 13 // Diag (non conforme) (Non annulé)
 	If ibBSDiagNConfNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRemplCNV", "ibBSDiagNConfNonAnn" )
 	End If
 
-	// Bin 14 // Swap par CTR (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 14 // Swap par CTR (Non annulé)
 	If ibBSSwapCTRNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRemplCNV", "ibBSSwapCTRNonAnn" )
 	End If
 End If
 
 
-// Cas 9 : // Passage d$$HEX1$$1920$$ENDHEX$$une r$$HEX1$$e900$$ENDHEX$$paration
+// Cas 9 : // Passage d’une réparation
 If ibPrestaRepaCNV Then
 
-	// Bin 1  // R$$HEX1$$e800$$ENDHEX$$glement num inter A sur une Gti sans Somme de RM Total
+	// Bin 1  // Règlement num inter A sur une Gti sans Somme de RM Total
 	If ibBSRegNumInterAssSurGtiSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaCNV", "ibBSRegNumInterAssSurGtiSansRM" )
 	End If
 
-	// Bin 2  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$e Somme de RM Total
+	// Bin 2  // Règlement d’un fournisseur pour une réparation réparée Somme de RM Total
 	If ibBSRegFourRepaRepaSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaCNV", "ibBSRegFourRepaRepaSansRM" )
 	End If
 	
-	// Bin 3  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration irr$$HEX1$$e900$$ENDHEX$$parable sans Somme de RM Total
+	// Bin 3  // Règlement d’un fournisseur pour un réparation irréparable sans Somme de RM Total
 	If ibBSRegFourRepaIRRepaSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaCNV", "ibBSRegFourRepaIRRepaSansRM" )
 	End If
 
-	// Bin 4  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration SAV sans Somme de RM Total
+	// Bin 4  // Règlement d’un fournisseur pour un réparation SAV sans Somme de RM Total
 	If ibBSRegFourRepaSAVSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaCNV", "ibBSRegFourRepaSAVSansRM" )
 	End If
 
-	// Bin 5  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un remplacement sans Somme de RM Total
+	// Bin 5  // Règlement d’un fournisseur pour un remplacement sans Somme de RM Total
 	If ibBSRegFourRemplSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaCNV", "ibBSRegFourRemplSansRM" )
 	End If
 
-	// Bin 6  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic conforme sans Somme de RM
+	// Bin 6  // Règlement d’un fournisseur pour un diagnostic conforme sans Somme de RM
 	If ibBSRegFourDiagConfSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaCNV", "ibBSRegFourDiagConfSansRM" )
 	End If
 
-	// Bin 7  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic non conforme sans Somme de RM
+	// Bin 7  // Règlement d’un fournisseur pour un diagnostic non conforme sans Somme de RM
 	If ibBSRegFourDiagNConfSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaCNV", "ibBSRegFourDiagNConfSansRM" )
 	End If
 
-	// Bin 8  // Remplacement (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 8  // Remplacement (Non annulé)
 	If ibBSRemplacementNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaCNV", "ibBSRemplacementNonAnn" )
 	End If
 
-	// Bin 9  // R$$HEX1$$e900$$ENDHEX$$paration (r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 9  // Réparation (réparé) (Non annulé)
 	If ibBSRepaRepaNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaCNV", "ibBSRepaRepaNonAnn" )
 	End If
 
-	// Bin 10 // R$$HEX1$$e900$$ENDHEX$$paration (irr$$HEX1$$e900$$ENDHEX$$parable) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 10 // Réparation (irréparable) (Non annulé)
 	If ibBSRepaIRRepaNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaCNV", "ibBSRepaIRRepaNonAnn" )
 	End If
 
-	// Bin 11 // R$$HEX1$$e900$$ENDHEX$$paration SAV (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 11 // Réparation SAV (Non annulé)
 	If ibBSRepaSAVNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaCNV", "ibBSRepaSAVNonAnn" )
 	End If
 
-	// Bin 12 // Diag (conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 12 // Diag (conforme) (Non annulé)
 	If ibBSDiagConfNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaCNV", "ibBSDiagConfNonAnn" )
 	End If
 
-	// Bin 13 // Diag (non conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 13 // Diag (non conforme) (Non annulé)
 	If ibBSDiagNConfNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaCNV", "ibBSDiagNConfNonAnn" )
 	End If
@@ -676,135 +676,135 @@ If ibPrestaRepaCNV Then
 End If
 
 
-// Cas 10 : // Passage d$$HEX1$$1920$$ENDHEX$$un diagnostic
+// Cas 10 : // Passage d’un diagnostic
 If ibPrestaDiagCNV Then
 
-	// Bin 1  // R$$HEX1$$e800$$ENDHEX$$glement num inter A sur une Gti sans Somme de RM Total
+	// Bin 1  // Règlement num inter A sur une Gti sans Somme de RM Total
 	If ibBSRegNumInterAssSurGtiSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaDiagCNV", "ibBSRegNumInterAssSurGtiSansRM" )
 	End If
 
-	// Bin 2  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$e Somme de RM Total
+	// Bin 2  // Règlement d’un fournisseur pour une réparation réparée Somme de RM Total
 	If ibBSRegFourRepaRepaSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaDiagCNV", "ibBSRegFourRepaRepaSansRM" )
 	End If
 
-	// Bin 3  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration irr$$HEX1$$e900$$ENDHEX$$parable sans Somme de RM Total
+	// Bin 3  // Règlement d’un fournisseur pour un réparation irréparable sans Somme de RM Total
 	If ibBSRegFourRepaIRRepaSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaDiagCNV", "ibBSRegFourRepaIRRepaSansRM" )
 	End If
 
-	// Bin 4  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration SAV sans Somme de RM Total
+	// Bin 4  // Règlement d’un fournisseur pour un réparation SAV sans Somme de RM Total
 	If ibBSRegFourRepaSAVSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaDiagCNV", "ibBSRegFourRepaSAVSansRM" )
 	End If
 
-	// Bin 5  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un remplacement sans Somme de RM Total
+	// Bin 5  // Règlement d’un fournisseur pour un remplacement sans Somme de RM Total
 	If ibBSRegFourRemplSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaDiagCNV", "ibBSRegFourRemplSansRM" )
 	End If
 
-	// Bin 6  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic conforme sans Somme de RM
+	// Bin 6  // Règlement d’un fournisseur pour un diagnostic conforme sans Somme de RM
 	If ibBSRegFourDiagConfSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaDiagCNV", "ibBSRegFourDiagConfSansRM" )
 	End If
 
-	// Bin 7  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic non conforme sans Somme de RM
+	// Bin 7  // Règlement d’un fournisseur pour un diagnostic non conforme sans Somme de RM
 	If ibBSRegFourDiagNConfSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaDiagCNV", "ibBSRegFourDiagNConfSansRM" )
 	End If
 
-	// Bin 8  // Remplacement (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 8  // Remplacement (Non annulé)
 	If ibBSRemplacementNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibPrestaDiagCNV", "ibBSRemplacementNonAnn" )
 	End If
 
-	// Bin 9  // R$$HEX1$$e900$$ENDHEX$$paration (r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 9  // Réparation (réparé) (Non annulé)
 	If ibBSRepaRepaNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibPrestaDiagCNV", "ibBSRepaRepaNonAnn" )
 	End If
 
-	// Bin 10 // R$$HEX1$$e900$$ENDHEX$$paration (irr$$HEX1$$e900$$ENDHEX$$parable) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 10 // Réparation (irréparable) (Non annulé)
 	If ibBSRepaIRRepaNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibPrestaDiagCNV", "ibBSRepaIRRepaNonAnn" )
 	End If
 
-	// Bin 11 // R$$HEX1$$e900$$ENDHEX$$paration SAV (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 11 // Réparation SAV (Non annulé)
 	If ibBSRepaSAVNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibPrestaDiagCNV", "ibBSRepaSAVNonAnn" )
 	End If
 
-	// Bin 12 // Diag (conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 12 // Diag (conforme) (Non annulé)
 	If ibBSDiagConfNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibPrestaDiagCNV", "ibBSDiagConfNonAnn" )
 	End If
 
-	// Bin 13 // Diag (non conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 13 // Diag (non conforme) (Non annulé)
 	If ibBSDiagNConfNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibPrestaDiagCNV", "ibBSDiagNConfNonAnn" )
 	End If
 
 End If
 
-// Cas 11 : // Passage d$$HEX1$$1920$$ENDHEX$$une r$$HEX1$$e900$$ENDHEX$$paration SAV
+// Cas 11 : // Passage d’une réparation SAV
 If ibPrestaRepaSavCNV Then
 
-	// Bin 1  // R$$HEX1$$e800$$ENDHEX$$glement num inter A sur une Gti sans Somme de RM Total
+	// Bin 1  // Règlement num inter A sur une Gti sans Somme de RM Total
 	If ibBSRegNumInterAssSurGtiSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaSavCNV", "ibBSRegNumInterAssSurGtiSansRM" )
 	End If
 
-	// Bin 3  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration irr$$HEX1$$e900$$ENDHEX$$parable sans Somme de RM Total
+	// Bin 3  // Règlement d’un fournisseur pour un réparation irréparable sans Somme de RM Total
 	If ibBSRegFourRepaIRRepaSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaSavCNV", "ibBSRegFourRepaIRRepaSansRM" )
 	End If
 
-	// Bin 4  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration SAV sans Somme de RM Total
+	// Bin 4  // Règlement d’un fournisseur pour un réparation SAV sans Somme de RM Total
 	If ibBSRegFourRepaSAVSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaSavCNV", "ibBSRegFourRepaSAVSansRM" )
 	End If
 
-	// Bin 5  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un remplacement sans Somme de RM Total
+	// Bin 5  // Règlement d’un fournisseur pour un remplacement sans Somme de RM Total
 	If ibBSRegFourRemplSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaSavCNV", "ibBSRegFourRemplSansRM" )
 	End If
 
-	// Bin 6  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic conforme sans Somme de RM
+	// Bin 6  // Règlement d’un fournisseur pour un diagnostic conforme sans Somme de RM
 	If ibBSRegFourDiagConfSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaSavCNV", "ibBSRegFourDiagConfSansRM" )
 	End If
 
-	// Bin 7  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic non conforme sans Somme de RM
+	// Bin 7  // Règlement d’un fournisseur pour un diagnostic non conforme sans Somme de RM
 	If ibBSRegFourDiagNConfSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaSavCNV", "ibBSRegFourDiagNConfSansRM" )
 	End If
 
-	// Bin 7  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic non conforme sans Somme de RM
+	// Bin 7  // Règlement d’un fournisseur pour un diagnostic non conforme sans Somme de RM
 	If ibBSRegFourDiagNConfSansRM Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaSavCNV", "ibBSRegFourDiagNConfSansRM" )
 	End If
 
-	// Bin 8  // Remplacement (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 8  // Remplacement (Non annulé)
 	If ibBSRemplacementNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaSavCNV", "ibBSRemplacementNonAnn" )
 	End If
 
-	// Bin 10 // R$$HEX1$$e900$$ENDHEX$$paration (irr$$HEX1$$e900$$ENDHEX$$parable) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 10 // Réparation (irréparable) (Non annulé)
 	If ibBSRepaIRRepaNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaSavCNV", "ibBSRepaIRRepaNonAnn" )
 	End If
 
-	// Bin 11 // R$$HEX1$$e900$$ENDHEX$$paration SAV (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 11 // Réparation SAV (Non annulé)
 	If ibBSRepaSAVNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaSavCNV", "ibBSRepaSAVNonAnn" )
 	End If
 
-	// Bin 12 // Diag (conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 12 // Diag (conforme) (Non annulé)
 	If ibBSDiagConfNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaSavCNV", "ibBSDiagConfNonAnn" )
 	End If
 
-	// Bin 12 // Bin 13 // Diag (non conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
+	// Bin 12 // Bin 13 // Diag (non conforme) (Non annulé)
 	If ibBSDiagNConfNonAnn Then
 		This.wf_DeclencherIncoherence ( "ibPrestaRepaSavCNV", "ibBSDiagNConfNonAnn" )
 	End If
@@ -821,7 +821,7 @@ public subroutine wf_detectiondescas ();//*-------------------------------------
 //* Fonction		: w_t_resume_action_gestion::Wf_DetectionDesCas 
 //* Auteur			: JFF
 //* Date				: 05/02/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [VDOC12845]
+//* Libellé			: [VDOC12845]
 //* Commentaires	:
 //*
 //* Arguments		: 
@@ -835,17 +835,17 @@ public subroutine wf_detectiondescas ();//*-------------------------------------
 Long lTotInter, lCptInter, lIdI, lRow, lIdSin, lRowDet
 String sResult
 
-// R$$HEX1$$e800$$ENDHEX$$glement num inter A sur une Gti hors UF (8).
+// Règlement num inter A sur une Gti hors UF (8).
 ibRegNumInterAssSurGti = idw_LstInter.Find ( "MT_A_REG > 0", 1, idw_LstInter.RowCount ()) > 0 And &
 								 idw_wDetail.Find ( "COD_ETAT = 500 AND ID_I_REG = 0 AND ID_GTI NOT IN (8)", 1, idw_wDetail.RowCount ()) > 0 
 
-// R$$HEX1$$e800$$ENDHEX$$glement li$$HEX4$$e9002000e0002000$$ENDHEX$$un fournisseur
-ibRegFournPRS2 = FALSE // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$
-ibRegFournPRS21 = FALSE // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration irr$$HEX1$$e900$$ENDHEX$$parable
-ibRegFournPRSSav = FALSE // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration SAV
-ibRegFournRempl = False  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un remplacement
-ibRegFournDiagConf = False  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour d$$HEX1$$1920$$ENDHEX$$un diagnostic conforme
-ibRegFournDiagNConf = False // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour d$$HEX1$$1920$$ENDHEX$$un diagnostic non conforme
+// Règlement lié à un fournisseur
+ibRegFournPRS2 = FALSE // Règlement d’un fournisseur pour un réparation réparé
+ibRegFournPRS21 = FALSE // Règlement d’un fournisseur pour un réparation irréparable
+ibRegFournPRSSav = FALSE // Règlement d’un fournisseur pour un réparation SAV
+ibRegFournRempl = False  // Règlement d’un fournisseur pour un remplacement
+ibRegFournDiagConf = False  // Règlement d’un fournisseur pour d’un diagnostic conforme
+ibRegFournDiagNConf = False // Règlement d’un fournisseur pour d’un diagnostic non conforme
 
 lTotInter = idw_LstInter.RowCount ()
 
@@ -934,12 +934,12 @@ Next
 
 
 // Passage d'un flux 
-ibPrestaRemplCNV = False // Passage d$$HEX1$$1920$$ENDHEX$$un remplacement
-ibPrestaRepaCNV = False // Passage d$$HEX1$$1920$$ENDHEX$$une r$$HEX1$$e900$$ENDHEX$$paration
-ibPrestaDiagCNV = False // Passage d$$HEX1$$1920$$ENDHEX$$un diagnostic	  
-ibPrestaRepaSavCNV = False // Passage d$$HEX1$$1920$$ENDHEX$$une r$$HEX1$$e900$$ENDHEX$$paration SAV
+ibPrestaRemplCNV = False // Passage d’un remplacement
+ibPrestaRepaCNV = False // Passage d’une réparation
+ibPrestaDiagCNV = False // Passage d’un diagnostic	  
+ibPrestaRepaSavCNV = False // Passage d’une réparation SAV
 
-// Passage d$$HEX1$$1920$$ENDHEX$$un remplacement
+// Passage d’un remplacement
 lRow = idw_LstwCommande.Find &
 		 ( "COD_ETAT = 'CNV' AND " + &
 			"ID_TYP_ART NOT IN ( 'EDI', 'PRS', 'DEV', 'AEF', 'CAS', 'SMS', 'BAM', 'ALE', 'ACC', " + & 
@@ -949,7 +949,7 @@ If lRow > 0 Then
 	ibPrestaRemplCNV = TRUE
 End If
 
-// Passage d$$HEX1$$1920$$ENDHEX$$une r$$HEX1$$e900$$ENDHEX$$paration
+// Passage d’une réparation
 lRow = idw_LstwCommande.Find &
 		 ( "ID_TYP_ART = 'PRS' AND COD_ETAT = 'CNV'" &
 		   ,1, idw_LstwCommande.RowCount () )
@@ -958,7 +958,7 @@ If lRow > 0 Then
 End If
 
 
-// Passage d$$HEX1$$1920$$ENDHEX$$un diagnostic
+// Passage d’un diagnostic
 lRow = idw_LstwCommande.Find &
 		 ( "ID_REF_FOUR = 'A_DIAGNOSTIQUER' AND COD_ETAT = 'CNV'" &
 		   ,1, idw_LstwCommande.RowCount () )
@@ -966,7 +966,7 @@ If lRow > 0 Then
 	ibPrestaDiagCNV = TRUE
 End If
 
-// Passage d$$HEX1$$1920$$ENDHEX$$une r$$HEX1$$e900$$ENDHEX$$paration SAV
+// Passage d’une réparation SAV
 lRow = idw_LstwCommande.Find &
 		 ( "ID_TYP_ART = 'PRS' AND COD_ETAT = 'CNV' AND POS ( INFO_SPB_FRN_CPLT, '_SAV=OUI' ) > 0" &
 		   ,1, idw_LstwCommande.RowCount () )
@@ -974,7 +974,7 @@ If lRow > 0 Then
 	ibPrestaRepaCNV = TRUE
 End If
 
-// PS pour les actions d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$pass$$HEX1$$e900$$ENDHEX$$es
+// PS pour les actions déjà passées
 sResult = Fill ( "", 255 )
 SQLCA.PS_S_REGL_PRESTA_VDOC12845  ( lIdSin , sResult )
 
@@ -1000,7 +1000,7 @@ public subroutine wf_definitiondesactions ();//*--------------------------------
 //* Fonction		: w_t_resume_action_gestion::wf_definitiondesactions
 //* Auteur			: JFF
 //* Date				: 05/02/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [VDOC12845]
+//* Libellé			: [VDOC12845]
 //* Commentaires	:
 //*
 //* Arguments		: 
@@ -1015,111 +1015,111 @@ public subroutine wf_definitiondesactions ();//*--------------------------------
 
 // Action Courante
 
-// R$$HEX1$$e800$$ENDHEX$$glement num inter A sur une Gti Hors GTi UF (8).
+// Règlement num inter A sur une Gti Hors GTi UF (8).
 isTbLibActionCourante [1,1] = "ibRegNumInterAssSurGti"
-isTbLibActionCourante [1,2] = "Vous r$$HEX1$$e900$$ENDHEX$$glez l'assur$$HEX2$$e9002000$$ENDHEX$$sur une garantie (hors UF)"
+isTbLibActionCourante [1,2] = "Vous réglez l'assuré sur une garantie (hors UF)"
 
-// R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$
+// Règlement d’un fournisseur pour un réparation réparé
 isTbLibActionCourante [2,1] = "ibRegFournPRS2"  
-isTbLibActionCourante [2,2] = "Vous r$$HEX1$$e900$$ENDHEX$$glez un fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration (r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$e)"
+isTbLibActionCourante [2,2] = "Vous réglez un fournisseur pour une réparation (réparée)"
 
-// R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration irr$$HEX1$$e900$$ENDHEX$$parable
+// Règlement d’un fournisseur pour un réparation irréparable
 isTbLibActionCourante [3,1] = "ibRegFournPRS21"  
-isTbLibActionCourante [3,2] = "Vous r$$HEX1$$e900$$ENDHEX$$glez un fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration (irr$$HEX1$$e900$$ENDHEX$$parable)"
+isTbLibActionCourante [3,2] = "Vous réglez un fournisseur pour une réparation (irréparable)"
 
-// R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration SAV
+// Règlement d’un fournisseur pour un réparation SAV
 isTbLibActionCourante [4,1] = "ibRegFournPRSSav"  
-isTbLibActionCourante [4,2] = "Vous r$$HEX1$$e900$$ENDHEX$$glez un fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration en mode SAV"
+isTbLibActionCourante [4,2] = "Vous réglez un fournisseur pour une réparation en mode SAV"
 
-// R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un remplacement
+// Règlement d’un fournisseur pour un remplacement
 isTbLibActionCourante [5,1] = "ibRegFournRempl"
-isTbLibActionCourante [5,2] = "Vous r$$HEX1$$e900$$ENDHEX$$glez un fournisseur pour un remplacement"
+isTbLibActionCourante [5,2] = "Vous réglez un fournisseur pour un remplacement"
 
-// R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour d$$HEX1$$1920$$ENDHEX$$un diagnostic conforme
+// Règlement d’un fournisseur pour d’un diagnostic conforme
 isTbLibActionCourante [6,1] = "ibRegFournDiagConf"  
-isTbLibActionCourante [6,2] = "Vous r$$HEX1$$e900$$ENDHEX$$glez un fournisseur pour un diagnostic (conforme)"
+isTbLibActionCourante [6,2] = "Vous réglez un fournisseur pour un diagnostic (conforme)"
 
-// R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour d$$HEX1$$1920$$ENDHEX$$un diagnostic non conforme
+// Règlement d’un fournisseur pour d’un diagnostic non conforme
 isTbLibActionCourante [7,1] = "ibRegFournDiagNConf"
-isTbLibActionCourante [7,2] = "Vous r$$HEX1$$e900$$ENDHEX$$glez un fournisseur pour d'un diagnostic (non conforme)"
+isTbLibActionCourante [7,2] = "Vous réglez un fournisseur pour d'un diagnostic (non conforme)"
 
-// Passage d$$HEX1$$1920$$ENDHEX$$un remplacement
+// Passage d’un remplacement
 isTbLibActionCourante [8,1] = "ibPrestaRemplCNV"  
 isTbLibActionCourante [8,2] = "Vous passez une prestation de remplacement, Bon d'achat, etc"
 
-// Passage d$$HEX1$$1920$$ENDHEX$$une r$$HEX1$$e900$$ENDHEX$$paration
+// Passage d’une réparation
 isTbLibActionCourante [9,1] = "ibPrestaRepaCNV"  
-isTbLibActionCourante [9,2] = "Vous passez une prestation de r$$HEX1$$e900$$ENDHEX$$paration, d$$HEX1$$e900$$ENDHEX$$soxydation"
+isTbLibActionCourante [9,2] = "Vous passez une prestation de réparation, désoxydation"
 
-// Passage d$$HEX1$$1920$$ENDHEX$$un diagnostic
+// Passage d’un diagnostic
 isTbLibActionCourante [10,1] = "ibPrestaDiagCNV"  
 isTbLibActionCourante [10,2] = "Vous passez une prestation de diagnostic"
 
-// Passage d$$HEX1$$1920$$ENDHEX$$une r$$HEX1$$e900$$ENDHEX$$paration en mode SAV
+// Passage d’une réparation en mode SAV
 isTbLibActionCourante [11,1] = "ibPrestaRepaSavCNV"  
-isTbLibActionCourante [11,2] = "Vous passez une r$$HEX1$$e900$$ENDHEX$$paration en mode SAV"
+isTbLibActionCourante [11,2] = "Vous passez une réparation en mode SAV"
 
 
 
 
 // Action Existante
 
-// Bin 1  // R$$HEX1$$e800$$ENDHEX$$glement num inter A sur une Gti sans Somme de RM Total Hors UF
+// Bin 1  // Règlement num inter A sur une Gti sans Somme de RM Total Hors UF
 isTbLibActionExistante [1,1] = "ibBSRegNumInterAssSurGtiSansRM"
-isTbLibActionExistante [1,2] = "R$$HEX1$$e800$$ENDHEX$$glement assur$$HEX2$$e9002000$$ENDHEX$$sur une garantie (hors UF) sans Somme Totale RM"
+isTbLibActionExistante [1,2] = "Règlement assuré sur une garantie (hors UF) sans Somme Totale RM"
 
-// Bin 2  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$e Somme de RM Total
+// Bin 2  // Règlement d’un fournisseur pour une réparation réparée Somme de RM Total
 isTbLibActionExistante [2,1] = "ibBSRegFourRepaRepaSansRM" 
-isTbLibActionExistante [2,2] = "R$$HEX1$$e800$$ENDHEX$$glement fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration (r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$e) sans Somme Totale RM"
+isTbLibActionExistante [2,2] = "Règlement fournisseur pour une réparation (réparée) sans Somme Totale RM"
 
-// Bin 3  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration irr$$HEX1$$e900$$ENDHEX$$parable sans Somme de RM Total
+// Bin 3  // Règlement d’un fournisseur pour un réparation irréparable sans Somme de RM Total
 isTbLibActionExistante [3,1] = "ibBSRegFourRepaIRRepaSansRM"
-isTbLibActionExistante [3,2] = "R$$HEX1$$e800$$ENDHEX$$glement fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration (irr$$HEX1$$e900$$ENDHEX$$parable) sans Somme Totale RM"
+isTbLibActionExistante [3,2] = "Règlement fournisseur pour une réparation (irréparable) sans Somme Totale RM"
 
-// Bin 4  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un r$$HEX1$$e900$$ENDHEX$$paration SAV sans Somme de RM Total
+// Bin 4  // Règlement d’un fournisseur pour un réparation SAV sans Somme de RM Total
 isTbLibActionExistante [4,1] = "ibBSRegFourRepaSAVSansRM" 
-isTbLibActionExistante [4,2] = "R$$HEX1$$e800$$ENDHEX$$glement fournisseur pour une r$$HEX1$$e900$$ENDHEX$$paration mode SAV sans Somme Totale RM"
+isTbLibActionExistante [4,2] = "Règlement fournisseur pour une réparation mode SAV sans Somme Totale RM"
 
-// Bin 5  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un remplacement sans Somme de RM Total
+// Bin 5  // Règlement d’un fournisseur pour un remplacement sans Somme de RM Total
 isTbLibActionExistante [5,1] = "ibBSRegFourRemplSansRM"
-isTbLibActionExistante [5,2] = "R$$HEX1$$e800$$ENDHEX$$glement fournisseur pour un remplacement sans Somme Totale RM"
+isTbLibActionExistante [5,2] = "Règlement fournisseur pour un remplacement sans Somme Totale RM"
 
-// Bin 6  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic conforme sans Somme de RM
+// Bin 6  // Règlement d’un fournisseur pour un diagnostic conforme sans Somme de RM
 isTbLibActionExistante [6,1] = "ibBSRegFourDiagConfSansRM" 
-isTbLibActionExistante [6,2] = "R$$HEX1$$e800$$ENDHEX$$glement fournisseur pour un diagnostic (conforme) sans Somme Totale RM"
+isTbLibActionExistante [6,2] = "Règlement fournisseur pour un diagnostic (conforme) sans Somme Totale RM"
 
-// Bin 7  // R$$HEX1$$e800$$ENDHEX$$glement d$$HEX1$$1920$$ENDHEX$$un fournisseur pour un diagnostic non conforme sans Somme de RM
+// Bin 7  // Règlement d’un fournisseur pour un diagnostic non conforme sans Somme de RM
 isTbLibActionExistante [7,1] = "ibBSRegFourDiagNConfSansRM" 
-isTbLibActionExistante [7,2] = "R$$HEX1$$e800$$ENDHEX$$glement fournisseur pour un diagnostic (non conforme) sans Somme Totale RM"
+isTbLibActionExistante [7,2] = "Règlement fournisseur pour un diagnostic (non conforme) sans Somme Totale RM"
 
-// Bin 8  // Remplacement (Non annul$$HEX1$$e900$$ENDHEX$$)
+// Bin 8  // Remplacement (Non annulé)
 isTbLibActionExistante [8,1] = "ibBSRemplacementNonAnn" 
-isTbLibActionExistante [8,2] = "Remplacement (non annul$$HEX1$$e900$$ENDHEX$$)"
+isTbLibActionExistante [8,2] = "Remplacement (non annulé)"
 
-// Bin 9  // R$$HEX1$$e900$$ENDHEX$$paration (r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$) (Non annul$$HEX1$$e900$$ENDHEX$$)
+// Bin 9  // Réparation (réparé) (Non annulé)
 isTbLibActionExistante [9,1] = "ibBSRepaRepaNonAnn" 
-isTbLibActionExistante [9,2] = "R$$HEX1$$e900$$ENDHEX$$paration (r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$e) (non annul$$HEX1$$e900$$ENDHEX$$e)"
+isTbLibActionExistante [9,2] = "Réparation (réparée) (non annulée)"
 
-// Bin 10 // R$$HEX1$$e900$$ENDHEX$$paration (irr$$HEX1$$e900$$ENDHEX$$parable) (Non annul$$HEX1$$e900$$ENDHEX$$)
+// Bin 10 // Réparation (irréparable) (Non annulé)
 isTbLibActionExistante [10,1] = "ibBSRepaIRRepaNonAnn" 
-isTbLibActionExistante [10,2] = "R$$HEX1$$e900$$ENDHEX$$paration (irr$$HEX1$$e900$$ENDHEX$$parable) (non annul$$HEX1$$e900$$ENDHEX$$e)"
+isTbLibActionExistante [10,2] = "Réparation (irréparable) (non annulée)"
 
-// Bin 11 // R$$HEX1$$e900$$ENDHEX$$paration SAV (Non annul$$HEX1$$e900$$ENDHEX$$)
+// Bin 11 // Réparation SAV (Non annulé)
 isTbLibActionExistante [11,1] = "ibBSRepaSAVNonAnn"
-isTbLibActionExistante [11,2] = "R$$HEX1$$e900$$ENDHEX$$paration en mode SAV (non annul$$HEX1$$e900$$ENDHEX$$e)"
+isTbLibActionExistante [11,2] = "Réparation en mode SAV (non annulée)"
 
-// Bin 12 // Diag (conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
+// Bin 12 // Diag (conforme) (Non annulé)
 isTbLibActionExistante [12,1] = "ibBSDiagConfNonAnn" 
-isTbLibActionExistante [12,2] = "Diagnostic (conforme) (non annul$$HEX1$$e900$$ENDHEX$$)"
+isTbLibActionExistante [12,2] = "Diagnostic (conforme) (non annulé)"
 
-// Bin 13 // Diag (non conforme) (Non annul$$HEX1$$e900$$ENDHEX$$)
+// Bin 13 // Diag (non conforme) (Non annulé)
 isTbLibActionExistante [13,1] = "ibBSDiagNConfNonAnn"
-isTbLibActionExistante [13,2] = "Diagnostic (non conforme) (non annul$$HEX1$$e900$$ENDHEX$$)"
+isTbLibActionExistante [13,2] = "Diagnostic (non conforme) (non annulé)"
 
 // [PM254_V1]
-// Bin 14 // Swap par CTR (Non annul$$HEX1$$e900$$ENDHEX$$)
+// Bin 14 // Swap par CTR (Non annulé)
 isTbLibActionExistante [14,1] = "ibBSSwapCTRNonAnn"
-isTbLibActionExistante [14,2] = "Swap effectu$$HEX2$$e9002000$$ENDHEX$$par le CTR (Non annul$$HEX1$$e900$$ENDHEX$$)"
+isTbLibActionExistante [14,2] = "Swap effectué par le CTR (Non annulé)"
 
 end subroutine
 
@@ -1128,7 +1128,7 @@ public subroutine wf_declencherincoherence (string asactioncourante, string asac
 //* Fonction		: w_t_resume_action_gestion::wf_declencherincoherence
 //* Auteur			: JFF
 //* Date				: 05/02/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [VDOC12845]
+//* Libellé			: [VDOC12845]
 //* Commentaires	:
 //*
 //* Arguments		: 
@@ -1231,7 +1231,7 @@ event open;//*-----------------------------------------------------------------
 //* Fonction		: w_t_resume_action_gestion::open
 //* Auteur			: JFF
 //* Date				: 05/02/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [VDOC12845]
+//* Libellé			: [VDOC12845]
 //* Commentaires	:
 //*
 //* Arguments		: 
@@ -1372,7 +1372,7 @@ fontfamily fontfamily = swiss!
 string facename = "Tahoma"
 long textcolor = 33554432
 long backcolor = 67108864
-string text = "Cette fen$$HEX1$$ea00$$ENDHEX$$tre n~'est pas bloquante, elle a simplement pour but de vous alerter sur d~'$$HEX1$$e900$$ENDHEX$$ventuelles incoh$$HEX1$$e900$$ENDHEX$$rences de gestion."
+string text = "Cette fenêtre n~'est pas bloquante, elle a simplement pour but de vous alerter sur d~'éventuelles incohérences de gestion."
 boolean focusrectangle = false
 end type
 
@@ -1389,7 +1389,7 @@ fontfamily fontfamily = swiss!
 string facename = "Tahoma"
 long textcolor = 33554432
 long backcolor = 67108864
-string text = "...semblent incoh$$HEX1$$e900$$ENDHEX$$rentes avec des actions de gestion d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$valid$$HEX1$$e900$$ENDHEX$$es sur ce dossier (ci-dessous)"
+string text = "...semblent incohérentes avec des actions de gestion déjà validées sur ce dossier (ci-dessous)"
 boolean focusrectangle = false
 end type
 
@@ -1406,7 +1406,7 @@ fontfamily fontfamily = swiss!
 string facename = "Tahoma"
 long textcolor = 33554432
 long backcolor = 67108864
-string text = "les actions de gestion que vous $$HEX1$$ea00$$ENDHEX$$tes en train de passer (ci-dessous)..."
+string text = "les actions de gestion que vous êtes en train de passer (ci-dessous)..."
 boolean focusrectangle = false
 end type
 

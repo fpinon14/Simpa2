@@ -81,7 +81,9 @@ event ue_taillefenetre();//*----------------------------------------------------
 
 // Je réajuste la hauteur pour W10
 
-This.Height = 1810
+// This.Height = 1810 // [PB2022_TAILLE_FEN] je commente
+
+
 
 end event
 
@@ -732,7 +734,7 @@ dw_1.Modify("probleme.Edit.AutoSelect='No'")
 
 end event
 
-on we_childactivate;//*-----------------------------------------------------------------
+event we_childactivate;//*-----------------------------------------------------------------
 //*
 //* Objet 			: W_Sp_Gs_W_Commande::We_ChildActivate (!!OVERRIDE!!)
 //* Evenement 		: We_ChildActivate
@@ -751,8 +753,13 @@ w_traitement_master	wMasterParent
 
 This.X			=    1
 This.Y			=    1
-This.Height		= 1769
-This.Width		= 3598
+// [PB2022_TAILLE_FEN] + xxx
+This.Height		= 1769 + 90
+
+
+// [PB2022_TAILLE_FEN] + xxx
+This.Width		= 3598 + 50
+
 
 If ( ibAInitialiser ) Then
 
@@ -826,7 +833,7 @@ If ( ibAInitialiser ) Then
 
 End If
 
-end on
+end event
 
 on w_sp_c_commande2.create
 int iCurrent

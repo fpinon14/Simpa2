@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_cd_sp_inter.srw
+﻿$PBExportHeader$w_cd_sp_inter.srw
 forward
 global type w_cd_sp_inter from w_8_ancetre_consultation
 end type
@@ -53,16 +53,17 @@ event ue_taillefenetre();//*----------------------------------------------------
 //* Evenement 		: Ue_TailleFenetre
 //* Auteur			: Fabry JF
 //* Date				: 16/10/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*-----------------------------------------------------------------
 
-// Je r$$HEX1$$e900$$ENDHEX$$ajuste la hauteur pour W10
+// Je réajuste la hauteur pour W10
 
-This.Height = 1810
+// This.Height = 1810 // [PB2022_TAILLE_FEN] je commente
+
 
 end event
 
@@ -71,9 +72,9 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //* Fonction		: W_cd_sp_Inter::Wf_PositionnerObjets (PRIVATE)
 //* Auteur			: PLJ
 //* Date				: 21/07/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On positionne et on taille tous les objets
-//*                 sauf uo_bord3d qui est positionn$$HEX2$$e9002000$$ENDHEX$$et taill$$HEX1$$e900$$ENDHEX$$
+//*                 sauf uo_bord3d qui est positionné et taillé
 //*                 par son constructor
 //*
 //* Arguments		: Aucun
@@ -83,8 +84,8 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On positionne tous les objets n$$HEX1$$e900$$ENDHEX$$cessaires $$HEX2$$e0002000$$ENDHEX$$la gestion, pour     */
-/* faciliter le d$$HEX1$$e900$$ENDHEX$$veloppement. (On peut bouger les objets).         */
+/* On positionne tous les objets nécessaires à la gestion, pour     */
+/* faciliter le développement. (On peut bouger les objets).         */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
@@ -95,7 +96,7 @@ Uo_Onglet.Y			=  157
 Uo_Onglet.Height	=  109
 
 /*------------------------------------------------------------------*/
-/* Dw_1  DataWindow : En-t$$HEX1$$ea00$$ENDHEX$$te Interlocuteur                         */
+/* Dw_1  DataWindow : En-tête Interlocuteur                         */
 /*------------------------------------------------------------------*/
 Dw_1.X				=   51
 Dw_1.Y				=  273
@@ -119,7 +120,7 @@ public function boolean wf_preparerconsulter ();//*-----------------------------
 //* Fonction		: wf_PreparerConsulter
 //* Auteur			: PLJ
 //* Date				: 22/07/1998 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Appel de uf_preparer_consulter
+//* Libellé			: Appel de uf_preparer_consulter
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun.
@@ -151,7 +152,7 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		:	UE_INITIALISER - Extend
 //* Auteur			:	PLJ
 //* Date				:	21/07/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Initialisation de la fen$$HEX1$$ea00$$ENDHEX$$tre de consultation  
+//* Libellé			:	Initialisation de la fenêtre de consultation  
 //*					 	d'Interlocuteur
 //* Commentaires	:	
 //*				  
@@ -168,7 +169,7 @@ DataWindowChild dwChild_EF
 
 
 /*------------------------------------------------------------------*/
-/* Positionnement des objets de la fen$$HEX1$$ea00$$ENDHEX$$tre                          */
+/* Positionnement des objets de la fenêtre                          */
 /*------------------------------------------------------------------*/
 wf_PositionnerObjets()
 
@@ -183,7 +184,7 @@ Uo_Onglet.Uf_EnregistrerOnglet ( "02", "Frais",         "", Dw_Lst_Frais , False
 
 
 /*------------------------------------------------------------------*/
-/* D$$HEX1$$e900$$ENDHEX$$claration du nvuo li$$HEX1$$e900$$ENDHEX$$e $$HEX2$$e0002000$$ENDHEX$$la fen$$HEX1$$ea00$$ENDHEX$$tre                            */
+/* Déclaration du nvuo liée à la fenêtre                            */
 /*------------------------------------------------------------------*/
 
 iuoConsultation = Create u_Cs_Sp_Inter
@@ -223,13 +224,13 @@ If F_CLE_A_TRUE ( "PMO89_RS4822" ) Then
 End If
 end event
 
-on we_childactivate;call w_8_ancetre_consultation::we_childactivate;//*-----------------------------------------------------------------
+event we_childactivate;call super::we_childactivate;//*-----------------------------------------------------------------
 //*
 //* Objet 			: W_Cd_Sp_Inter
 //* Evenement 		: We_ChildActivate
 //* Auteur			: PLJ
 //* Date				: 22/07/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -239,9 +240,13 @@ on we_childactivate;call w_8_ancetre_consultation::we_childactivate;//*---------
 
 This.X			=    1
 This.Y			=    1
-This.Height		= 1769
-This.Width		= 3598
-end on
+// [PB2022_TAILLE_FEN] + xxx
+This.Height		= 1769 + 90
+
+
+// [PB2022_TAILLE_FEN] + xxx
+This.Width		= 3598 + 50
+end event
 
 on close;call w_8_ancetre_consultation::close;//*-----------------------------------------------------------------
 //*
@@ -249,8 +254,8 @@ on close;call w_8_ancetre_consultation::close;//*-------------------------------
 //* Evenement 		:	Close
 //* Auteur			:	PLJ
 //* Date				:	31/07/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Op$$HEX1$$e900$$ENDHEX$$rations $$HEX2$$e0002000$$ENDHEX$$effectuer $$HEX2$$e0002000$$ENDHEX$$la fermeture de la 
-//*					 	fen$$HEX1$$ea00$$ENDHEX$$tre 
+//* Libellé			:	Opérations à effectuer à la fermeture de la 
+//*					 	fenêtre 
 //* Commentaires	:
 //*				  
 //*-----------------------------------------------------------------
@@ -297,7 +302,7 @@ event show;call super::show;
 //* Evenement 		: Show
 //* Auteur			: Fabry JF
 //* Date				: 16/10/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -348,7 +353,7 @@ event constructor;call super::constructor;//*-----------------------------------
 //* Evenement 		: Constructor
 //* Auteur			: PLJ
 //* Date				: 21/07/1998 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Positionnement de de l'objet uo_Bord3d
+//* Libellé			: Positionnement de de l'objet uo_Bord3d
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -399,7 +404,7 @@ on ue_modifiermenu;call u_datawindow_detail::ue_modifiermenu;//*----------------
 //* Evenement 		: 	ue_ModifierMenu
 //* Auteur			: 	PLJ
 //* Date				: 	31/07/1998
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 	Changement des propri$$HEX1$$e900$$ENDHEX$$t$$HEX1$$e900$$ENDHEX$$s du menu contextuel li$$HEX1$$e900$$ENDHEX$$
+//* Libellé			: 	Changement des propriétés du menu contextuel lié
 //*						au u_datawindow_detail
 //* Commentaires	: 
 //*				     

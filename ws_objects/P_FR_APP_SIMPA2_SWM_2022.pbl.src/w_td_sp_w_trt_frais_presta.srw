@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_td_sp_w_trt_frais_presta.srw
-$PBExportComments$-} Fen$$HEX1$$ea00$$ENDHEX$$tre d'information des frai presta
+﻿$PBExportHeader$w_td_sp_w_trt_frais_presta.srw
+$PBExportComments$-} Fenêtre d'information des frai presta
 forward
 global type w_td_sp_w_trt_frais_presta from window
 end type
@@ -14,8 +14,8 @@ end type
 end forward
 
 global type w_td_sp_w_trt_frais_presta from window
-integer width = 3378
-integer height = 820
+integer width = 3461
+integer height = 868
 boolean titlebar = true
 string title = "Frais prestataires"
 windowtype windowtype = response!
@@ -57,7 +57,7 @@ event open;//*-----------------------------------------------------------------
 //* Evenement 		: open
 //* Auteur			: F. Pinon
 //* Date				: 04/01/2010 17:23:46
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -75,7 +75,7 @@ invtrtattrib=Message.Powerobjectparm
 
 lIdSin = invtrtattrib.ltab[1]
 
-This.Title="Frais prestataire / Sinistre N$$HEX2$$b0002000$$ENDHEX$$" + string(lIdSin)
+This.Title="Frais prestataire / Sinistre N° " + string(lIdSin)
 
 dw_1.SetTransobject( SQLCA)
 
@@ -97,7 +97,7 @@ integer weight = 400
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
-string text = "Arr$$HEX1$$ea00$$ENDHEX$$ter"
+string text = "Arrêter"
 end type
 
 event clicked;//*-----------------------------------------------------------------
@@ -106,7 +106,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 04/01/2010 17:31:43
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -138,7 +138,7 @@ fontfamily fontfamily = swiss!
 string facename = "Arial"
 long textcolor = 33554432
 long backcolor = 12632256
-string text = "Les frais d~'envoi suivants ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$automatiquement pass$$HEX1$$e900$$ENDHEX$$s sur ce dossier lors de l~'int$$HEX1$$e900$$ENDHEX$$gration du suivi de commande."
+string text = "Les frais d~'envoi suivants ont été automatiquement passés sur ce dossier lors de l~'intégration du suivi de commande."
 boolean focusrectangle = false
 end type
 
@@ -162,7 +162,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 04/01/2010 17:31:36
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 

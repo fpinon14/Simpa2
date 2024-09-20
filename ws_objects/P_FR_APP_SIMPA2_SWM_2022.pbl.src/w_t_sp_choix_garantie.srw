@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_t_sp_choix_garantie.srw
-$PBExportComments$-} Fen$$HEX1$$ea00$$ENDHEX$$tre de traitement pour le choix d'une garantie.
+﻿$PBExportHeader$w_t_sp_choix_garantie.srw
+$PBExportComments$-} Fenêtre de traitement pour le choix d'une garantie.
 forward
 global type w_t_sp_choix_garantie from w_ancetre
 end type
@@ -15,8 +15,8 @@ global type w_t_sp_choix_garantie from w_ancetre
 boolean visible = true
 integer x = 919
 integer y = 388
-integer width = 1367
-integer height = 924
+integer width = 1481
+integer height = 992
 pb_valider pb_valider
 pb_retour pb_retour
 dw_choixgti dw_choixgti
@@ -36,7 +36,7 @@ event ue_retour;call super::ue_retour;//*---------------------------------------
 //* Evenement 		: Ue_Retour
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 10:02:13
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -45,23 +45,23 @@ event ue_retour;call super::ue_retour;//*---------------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On referme la fen$$HEX1$$ea00$$ENDHEX$$tre.                                           */
+/* On referme la fenêtre.                                           */
 /*------------------------------------------------------------------*/
 //dw_ChoixGti.ShareDataOff ()
 
 /*------------------------------------------------------------------*/
-/* On rend la fen$$HEX1$$ea00$$ENDHEX$$tre PARENT saisissable.                           */
+/* On rend la fenêtre PARENT saisissable.                           */
 /*------------------------------------------------------------------*/
 iwParentDet.Enabled = True
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche le script de la fen$$HEX1$$ea00$$ENDHEX$$tre parent. On lui passe en     */
-/* param$$HEX1$$e800$$ENDHEX$$tre la valeur ilRetour.                                    */
+/* On déclenche le script de la fenêtre parent. On lui passe en     */
+/* paramètre la valeur ilRetour.                                    */
 /*------------------------------------------------------------------*/
 iwParentDet.TriggerEvent ( "Ue_Choix_Garantie", 0, ilRetour )
 
 /*------------------------------------------------------------------*/
-/* On referme la fen$$HEX1$$ea00$$ENDHEX$$tre.                                           */
+/* On referme la fenêtre.                                           */
 /*------------------------------------------------------------------*/
 Close ( This )
 
@@ -74,7 +74,7 @@ on ue_initialiser;call w_ancetre::ue_initialiser;//*----------------------------
 //* Evenement 		: Ue_Initialiser
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 09:55:15
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -84,30 +84,30 @@ on ue_initialiser;call w_ancetre::ue_initialiser;//*----------------------------
 
 /*------------------------------------------------------------------*/
 /* On positionne la variable qui permet d'attaquer la DW de la      */
-/* fen$$HEX1$$ea00$$ENDHEX$$tre PARENT.                                                  */
+/* fenêtre PARENT.                                                  */
 /*------------------------------------------------------------------*/
 iwParentDet = istPass.wParent
 
 /*------------------------------------------------------------------*/
-/* On rend la fen$$HEX1$$ea00$$ENDHEX$$tre PARENT non saisissable.                       */
+/* On rend la fenêtre PARENT non saisissable.                       */
 /*------------------------------------------------------------------*/
 iwParentDet.Enabled = False
 
 /*------------------------------------------------------------------*/
 /* On positionne la variable qui permet d'attaquer la DW de la      */
-/* fen$$HEX1$$ea00$$ENDHEX$$tre PARENT.                                                  */
+/* fenêtre PARENT.                                                  */
 /*------------------------------------------------------------------*/
 istPass.dwNorm[1].ShareData ( dw_ChoixGti )
 
 /*------------------------------------------------------------------*/
-/* On s$$HEX1$$e900$$ENDHEX$$lectionne la 1$$HEX1$$e900$$ENDHEX$$re ligne de la DW par d$$HEX1$$e900$$ENDHEX$$faut.                */
+/* On sélectionne la 1ére ligne de la DW par défaut.                */
 /*------------------------------------------------------------------*/
 dw_ChoixGti.SelectRow ( 1, True )
 
 /*------------------------------------------------------------------*/
-/* Par d$$HEX1$$e900$$ENDHEX$$faut, on initialise la valeur de retour $$HEX2$$e0002000$$ENDHEX$$-1, donc pas de  */
+/* Par défaut, on initialise la valeur de retour à -1, donc pas de  */
 /* garantie choisie.                                                */
-/* Cette valeur est positionn$$HEX1$$e900$$ENDHEX$$e uniquement sur Ue_Valider.          */
+/* Cette valeur est positionnée uniquement sur Ue_Valider.          */
 /*------------------------------------------------------------------*/
 ilRetour = -1
 
@@ -124,7 +124,7 @@ on ue_valider;call w_ancetre::ue_valider;//*------------------------------------
 //* Evenement 		: Ue_Valider
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 10:02:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -138,7 +138,7 @@ lLig = dw_ChoixGti.GetSelectedRow ( 0 )
 
 If	lLig > 0 Then
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement Ue_Retour, uniquement si la ligne de    */
+/* On déclenche l'événement Ue_Retour, uniquement si la ligne de    */
 /* dw_ChoixGti est valide.                                          */
 /*------------------------------------------------------------------*/
 	ilRetour	= dw_ChoixGti.GetItemNumber ( lLig, "ID_GTI" )
@@ -153,7 +153,7 @@ on open;//*-----------------------------------------------------------------
 //* Evenement 		: Open
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 09:49:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -228,7 +228,7 @@ on doubleclicked;//*------------------------------------------------------------
 //* Evenement 		: DoubleClicked!
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 11:36:10
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -246,7 +246,7 @@ on rowfocuschanged;//*----------------------------------------------------------
 //* Evenement 		: RowFocusChanged
 //* Auteur			: Erick John Stark
 //* Date				: 27/01/1998 16:27:43
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------

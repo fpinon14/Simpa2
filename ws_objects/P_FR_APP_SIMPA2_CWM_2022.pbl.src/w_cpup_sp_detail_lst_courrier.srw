@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_cpup_sp_detail_lst_courrier.srw
-$PBExportComments$---} Fen$$HEX1$$ea00$$ENDHEX$$tre de consultation des travaux
+﻿$PBExportHeader$w_cpup_sp_detail_lst_courrier.srw
+$PBExportComments$---} Fenêtre de consultation des travaux
 forward
 global type w_cpup_sp_detail_lst_courrier from window
 end type
@@ -46,7 +46,7 @@ event open;//*-----------------------------------------------------------------
 //* Evenement 		: Open
 //* Auteur			: JFF
 //* Date				: 27/12/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -59,10 +59,10 @@ Int iCoef
 dw_1.SetTransObject ( SQLCA ) 
 dw_1.Retrieve ( istPassData1.lTab[1] )
 
-This.Title = "Liste d$$HEX1$$e900$$ENDHEX$$taill$$HEX1$$e900$$ENDHEX$$e des courriers du sinistre " + String ( istPassData1.lTab[1] ) + ", assur$$HEX2$$e9002000$$ENDHEX$$" + dw_1.GetItemString ( 1, "NOM_ASS" )  
+This.Title = "Liste détaillée des courriers du sinistre " + String ( istPassData1.lTab[1] ) + ", assuré " + dw_1.GetItemString ( 1, "NOM_ASS" )  
 
-This.width  = 7200
-This.Height = 1000
+This.width  = 7200 // + 300 // [PB2022_TAILLE_FEN] 
+This.Height = 1000 // + 300 // [PB2022_TAILLE_FEN] 
 This.x 		= 10
 This.y 		= 10
 
@@ -73,8 +73,8 @@ If iCoef >= 1 Then
 	This.Height += ( 400 * iCoef - 1 )
 End If 
 
-dw_1.width = This.width - 75
-dw_1.height = This.Height - 335
+dw_1.width = This.width - 75 - 50 // [PB2022_TAILLE_FEN]
+dw_1.height = This.Height - 335 - 50 // [PB2022_TAILLE_FEN]
 dw_1.X		= 18
 dw_1.Y		= 200
 
@@ -87,7 +87,7 @@ event close;//*-----------------------------------------------------------------
 //* Evenement 		: Close
 //* Auteur			: JFF
 //* Date				: 27/12/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------

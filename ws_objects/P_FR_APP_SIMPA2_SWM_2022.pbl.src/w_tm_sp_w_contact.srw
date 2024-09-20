@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_tm_sp_w_contact.srw
-$PBExportComments$Fen$$HEX1$$ea00$$ENDHEX$$tres de saisie d'un contact
+﻿$PBExportHeader$w_tm_sp_w_contact.srw
+$PBExportComments$Fenêtres de saisie d'un contact
 forward
 global type w_tm_sp_w_contact from w_8_traitement_master
 end type
@@ -36,7 +36,7 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //* Fonction		: W_Tm_Sp_W_Contact::Wf_PositionnerObjets (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 24/04/2001 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On positionne et on taille tous les objets
 //*
 //* Arguments		: Aucun
@@ -67,8 +67,8 @@ public function boolean wf_preparermodifier ();//*------------------------------
 //* Fonction		: W_Td_Sp_W_Contact::Wf_PreparerModifier
 //* Auteur			: Fabry JF
 //* Date				: 25/04/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Op$$HEX1$$e900$$ENDHEX$$ration avant modification
+//* Libellé			: 
+//* Commentaires	: Opération avant modification
 //*
 //* Arguments		: Rien
 //*
@@ -77,7 +77,7 @@ public function boolean wf_preparermodifier ();//*------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On arme le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre avec le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre       */
+/* On arme le titre de la fenêtre avec le titre de la fenêtre       */
 /* Parent.                                                          */
 /*------------------------------------------------------------------*/
 This.Title = istPass.sTab [ 1 ]
@@ -92,8 +92,8 @@ public function boolean wf_preparerinserer ();//*-------------------------------
 //* Fonction		: W_Td_Sp_W_Contact::Wf_PreparerInserer
 //* Auteur			: Fabry JF
 //* Date				: 25/04/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Op$$HEX1$$e900$$ENDHEX$$ration avant insertion
+//* Libellé			: 
+//* Commentaires	: Opération avant insertion
 //*
 //* Arguments		: Rien
 //*
@@ -102,7 +102,7 @@ public function boolean wf_preparerinserer ();//*-------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On arme le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre avec le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre       */
+/* On arme le titre de la fenêtre avec le titre de la fenêtre       */
 /* Parent.                                                          */
 /*------------------------------------------------------------------*/
 This.Title = istPass.sTab [ 1 ]
@@ -117,7 +117,7 @@ public function string wf_controlersaisie ();//*--------------------------------
 //* Fonction		: Wf_ControlerSaisie
 //* Auteur			: Fabry JF
 //* Date				: 26/04/2001 13:59:07
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de saisie des zones
+//* Libellé			: Contrôle de saisie des zones
 //*					  
 //* Commentaires	: Aucun
 //*
@@ -138,7 +138,7 @@ public function string wf_controlergestion ();//*-------------------------------
 //* Fonction		: Wf_ControlerGestion
 //* Auteur			: Fabry JF
 //* Date				: 26/04/2001 13:59:07
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de gestion
+//* Libellé			: Contrôle de gestion
 //*					  
 //* Commentaires	: Aucun
 //*
@@ -157,7 +157,7 @@ public function boolean wf_preparersupprimer ();//*-----------------------------
 //* Fonction		: Wf_PreparerSupprimer
 //* Auteur			: Fabry JF
 //* Date				: 27/04/01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Demande de confirmation avant suppression
+//* Libellé			: Demande de confirmation avant suppression
 //* Commentaires	: Aucun
 //*
 //* Arguments		: Aucun
@@ -174,7 +174,7 @@ on ue_valider;//*---------------------------------------------------------------
 //* Fonction		: W_Td_Sp_W_Contact::ue_Valider (OVERRIDE !!)
 //* Auteur			: Fabry JF
 //* Date				: 25/04/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Validation
 //*
 //* Arguments		: Rien
@@ -183,8 +183,8 @@ on ue_valider;//*---------------------------------------------------------------
 //*
 //*-----------------------------------------------------------------
 
-// R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration des Initiales de la personne qui va traiter le dossier
-// $$HEX2$$e0002000$$ENDHEX$$partir de la fen$$HEX1$$ea00$$ENDHEX$$tre de sinistre.
+// Récupération des Initiales de la personne qui va traiter le dossier
+// à partir de la fenêtre de sinistre.
 If iuoGsSpContact.uf_Valider () Then iwParent.TriggerEvent ("ue_Item5")
 
 Call super::ue_valider
@@ -196,7 +196,7 @@ on ue_initialiser;call w_8_traitement_master::ue_initialiser;//*----------------
 //* Evenement 		: Ue_Initialiser
 //* Auteur			: Fabry JF
 //* Date				: 05/01/1998 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -218,7 +218,7 @@ isTypeTrt = istPass.sTab[ 2 ]
 
 
 /*------------------------------------------------------------------*/
-/* On commence $$HEX2$$e0002000$$ENDHEX$$initialiser les NVUO.                              */
+/* On commence à initialiser les NVUO.                              */
 /*------------------------------------------------------------------*/
 iuoGsSpContact = Create U_Gs_Sp_Sinistre_Contact
 
@@ -249,13 +249,13 @@ on ue_majaccueil;call w_8_traitement_master::ue_majaccueil;istPass.dwTab [ 1 ].S
 istPass.dwTab [ 1 ].Sort ()
 end on
 
-on we_childactivate;call w_8_traitement_master::we_childactivate;//*-----------------------------------------------------------------
+event we_childactivate;call super::we_childactivate;//*-----------------------------------------------------------------
 //*
 //* Objet 			: W_Tm_Sp_W_Gar_Sin::We_ChildActivate
 //* Evenement 		: We_ChildActivate
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 17:53:35
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -265,11 +265,15 @@ on we_childactivate;call w_8_traitement_master::we_childactivate;//*------------
 
 This.X			=    1
 This.Y			=    1
-This.Height		= 1769
-This.Width		= 3598
+// [PB2022_TAILLE_FEN] + xxx
+This.Height		= 1769 + 90
 
 
-end on
+// [PB2022_TAILLE_FEN] + xxx
+This.Width		= 3598 + 50
+
+
+end event
 
 on w_tm_sp_w_contact.create
 int iCurrent
@@ -290,7 +294,7 @@ on close;call w_8_traitement_master::close;//*----------------------------------
 //* Evenement 		: Close
 //* Auteur			: Fabry JF
 //* Date				: 25/04/2001 18:46:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -300,6 +304,9 @@ on close;call w_8_traitement_master::close;//*----------------------------------
 
 Destroy iUoGsSpContact
 end on
+
+type cb_debug from w_8_traitement_master`cb_debug within w_tm_sp_w_contact
+end type
 
 type dw_1 from w_8_traitement_master`dw_1 within w_tm_sp_w_contact
 integer x = 64
@@ -317,7 +324,7 @@ on dw_1::itemerror;call w_8_traitement_master`dw_1::itemerror;//*---------------
 //* Evenement 		: itemError
 //* Auteur			: Fabry JF
 //* Date				: 05/01/1998 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -334,7 +341,7 @@ on dw_1::itemchanged;call w_8_traitement_master`dw_1::itemchanged;//*-----------
 //* Evenement 		: itemChanged
 //* Auteur			: Fabry JF
 //* Date				: 05/01/1998 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -357,12 +364,16 @@ end type
 type pb_retour from w_8_traitement_master`pb_retour within w_tm_sp_w_contact
 integer x = 9
 integer y = 8
+integer width = 242
+integer height = 144
 integer taborder = 30
 end type
 
 type pb_valider from w_8_traitement_master`pb_valider within w_tm_sp_w_contact
 integer x = 494
 integer y = 8
+integer width = 242
+integer height = 144
 integer taborder = 50
 end type
 
@@ -370,18 +381,24 @@ type pb_imprimer from w_8_traitement_master`pb_imprimer within w_tm_sp_w_contact
 boolean visible = false
 integer x = 3008
 integer y = 140
+integer width = 242
+integer height = 144
 integer taborder = 70
 end type
 
 type pb_controler from w_8_traitement_master`pb_controler within w_tm_sp_w_contact
 integer x = 251
 integer y = 8
+integer width = 242
+integer height = 144
 integer taborder = 40
 end type
 
 type pb_supprimer from w_8_traitement_master`pb_supprimer within w_tm_sp_w_contact
 integer x = 736
 integer y = 8
+integer width = 242
+integer height = 144
 integer taborder = 60
 end type
 
@@ -401,7 +418,7 @@ event itemchanged;call super::itemchanged;//*-----------------------------------
 //* Fonction		: ItemChanged
 //* Auteur			: Fabry JF
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Rien
@@ -442,7 +459,7 @@ event itemerror;call super::itemerror;//*---------------------------------------
 //* Fonction		: ItemError
 //* Auteur			: Fabry JF
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Rien
@@ -452,7 +469,7 @@ event itemerror;call super::itemerror;//*---------------------------------------
 //*-----------------------------------------------------------------
 
 
-stMessage.sTitre		= "Dossier $$HEX2$$e0002000$$ENDHEX$$traiter par"
+stMessage.sTitre		= "Dossier à traiter par"
 stMessage.Icon			= Information!
 stMessage.sCode		= "CONT019"
 stMessage.bErreurG	= False

@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_t_sp_categ_cour.srw
-$PBExportComments$Fen$$HEX1$$ea00$$ENDHEX$$tre d'affichage des courriers avant validation pour visualisation de la cat$$HEX1$$e900$$ENDHEX$$gorie DCMP 040366
+﻿$PBExportHeader$w_t_sp_categ_cour.srw
+$PBExportComments$Fenêtre d'affichage des courriers avant validation pour visualisation de la catégorie DCMP 040366
 forward
 global type w_t_sp_categ_cour from window
 end type
@@ -14,10 +14,10 @@ end forward
 global type w_t_sp_categ_cour from window
 integer x = 1335
 integer y = 688
-integer width = 4411
-integer height = 536
+integer width = 4462
+integer height = 584
 boolean titlebar = true
-string title = "Cat$$HEX1$$e900$$ENDHEX$$gorie des courriers"
+string title = "Catégorie des courriers"
 boolean controlmenu = true
 windowtype windowtype = response!
 long backcolor = 12632256
@@ -45,8 +45,8 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //* Fonction		: W_T_Sp_Categ_Cour::Wf_PositionnerObjet		(PRIVATE)
 //* Auteur			: Catherine ABDMEZIEM
 //* Date				: 05/11/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Positionnement dynamique des objets de la fen$$HEX1$$ea00$$ENDHEX$$tre
+//* Libellé			: 
+//* Commentaires	: Positionnement dynamique des objets de la fenêtre
 //*
 //* Arguments		: Aucun
 //*
@@ -60,7 +60,7 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 Long	lX, lY
 
 /*------------------------------------------------------------------*/
-/* Position de la fen$$HEX1$$ea00$$ENDHEX$$tre.                                          */
+/* Position de la fenêtre.                                          */
 /*------------------------------------------------------------------*/
 lX = gwmdi.x
 lY = gwmdi.y
@@ -75,7 +75,7 @@ event open;//*-----------------------------------------------------------------
 //* Fonction      : W_T_Sp_Categ_Cour::open
 //* Auteur        : Catherine ABDMEZIEM
 //* Date          : 05/11/2004
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : Chargement de la dw avec w_cour_blob_arch du dossier
 //*						DCMP 040366
 //* Arguments     : 
@@ -105,7 +105,7 @@ idwWCourrier = istPass.dwNorm [ 2 ]
 dw_W_Cour_Blob.SetTransObject ( istPass.trTrans )
 
 /*------------------------------------------------------------------*/
-/* Positionnement de la fen$$HEX1$$ea00$$ENDHEX$$tre                                     */
+/* Positionnement de la fenêtre                                     */
 /*------------------------------------------------------------------*/
 wf_PositionnerObjets ()
 // On rend la zone id_typ_doc inaccessible tout le temps
@@ -114,7 +114,7 @@ dw_1.Modify ( "ID_TYP_DOC.border = 6" )
 dw_1.Modify ( "ID_TYP_DOC.protect = 1" )
 
 /*------------------------------------------------------------------*/
-/* R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration de la dddw des natures de documents d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$populis$$HEX1$$e900$$ENDHEX$$s  */
+/* Récupération de la dddw des natures de documents déjà populisés  */
 /* dans w_tm_sp_sinistre                                            */
 /*------------------------------------------------------------------*/
 dw_1.GetChild ( "ID_TYP_DOC", dwChildDest )
@@ -132,11 +132,11 @@ if dw_1.Getchild ( "COD_INTER", dwChild) = 1 then
 End If
 
 /*------------------------------------------------------------------*/
-/* R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration des courriers                                       */
+/* Récupération des courriers                                       */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
-/* Chargement de la dw des w_cour_blob avec le n$$HEX2$$b0002000$$ENDHEX$$de sinistre       */
+/* Chargement de la dw des w_cour_blob avec le n° de sinistre       */
 /*------------------------------------------------------------------*/
 dw_W_Cour_Blob.Retrieve ( istPass.lTab [ 1 ] )
 
@@ -175,8 +175,8 @@ For lCpt = 1 To dw_W_Cour_Blob.RowCount ()
 	If idwWCourrier.GetItemString ( lLigTrv, "ALT_PART" ) = "O" Then
 		dw_1.SetItem ( lLig, "TYPE_COUR", "CP")
 		/*------------------------------------------------------------------*/
-		/* La date de modification est celle sp$$HEX1$$e900$$ENDHEX$$cifi$$HEX1$$e900$$ENDHEX$$e uniquement pour les  */
-		/* CP dans le chmp txt_compo1 de w_courrier et est positionn$$HEX1$$e900$$ENDHEX$$e apr$$HEX1$$e800$$ENDHEX$$s*/
+		/* La date de modification est celle spécifiée uniquement pour les  */
+		/* CP dans le chmp txt_compo1 de w_courrier et est positionnée après*/
 		/* le mot clef DTEMOD                                               */
 		/*------------------------------------------------------------------*/
 		sTxtCompo1 = idwWCourrier.GetItemString ( lLigTrv, "TXT_COMPO1" )
@@ -189,7 +189,7 @@ For lCpt = 1 To dw_W_Cour_Blob.RowCount ()
 	dw_1.SetItem ( lLig, "ID_TYP_DOC", dw_W_Cour_Blob.GetItemNumber ( lCpt, "ID_TYP_DOC" ) )
 
 	/*------------------------------------------------------------------*/
-	/* On force la colonne "droit" de toutes les lignes $$HEX2$$e0002000$$ENDHEX$$1 pour que    */
+	/* On force la colonne "droit" de toutes les lignes à 1 pour que    */
 	/* le sens interdit n'apparaisse jamais                             */
 	/*------------------------------------------------------------------*/
 	dw_1.SetItem ( lLig, "DROIT", 1 )
@@ -256,7 +256,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Fonction      : W_Tm_Sp_Sinistre::Click
 //* Auteur        : Catherine ABDMEZIEM
 //* Date          : 11/10/2004
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*						
 //* Arguments     : 

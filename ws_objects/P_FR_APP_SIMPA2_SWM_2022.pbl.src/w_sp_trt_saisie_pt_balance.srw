@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_sp_trt_saisie_pt_balance.srw
+﻿$PBExportHeader$w_sp_trt_saisie_pt_balance.srw
 $PBExportComments$[PT_BALANCE_LDE]
 forward
 global type w_sp_trt_saisie_pt_balance from window
@@ -14,10 +14,10 @@ end type
 end forward
 
 global type w_sp_trt_saisie_pt_balance from window
-integer width = 2976
-integer height = 1188
+integer width = 3013
+integer height = 1224
 boolean titlebar = true
-string title = "S$$HEX1$$e900$$ENDHEX$$lection point de balance LDE"
+string title = "Sélection point de balance LDE"
 boolean controlmenu = true
 windowtype windowtype = response!
 long backcolor = 67108864
@@ -84,7 +84,7 @@ event open;//*-----------------------------------------------------------------
 //* Evenement 		: open
 //* Auteur			: F. Pinon
 //* Date				: 30/04/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -124,7 +124,7 @@ fontfamily fontfamily = swiss!
 string facename = "Arial"
 long textcolor = 33554432
 long backcolor = 67108864
-string text = "Merci de s$$HEX1$$e900$$ENDHEX$$lectionner un point de balance"
+string text = "Merci de sélectionner un point de balance"
 alignment alignment = center!
 boolean focusrectangle = false
 end type
@@ -169,7 +169,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 30/04/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -206,7 +206,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 15/06/2009 14:26:07
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 

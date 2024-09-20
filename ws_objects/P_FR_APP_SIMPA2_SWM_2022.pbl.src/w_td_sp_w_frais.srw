@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_td_sp_w_frais.srw
-$PBExportComments$-} Fen$$HEX1$$ea00$$ENDHEX$$tre de traitement pour la saisie des frais.
+﻿$PBExportHeader$w_td_sp_w_frais.srw
+$PBExportComments$-} Fenêtre de traitement pour la saisie des frais.
 forward
 global type w_td_sp_w_frais from w_8_traitement_detail
 end type
@@ -47,7 +47,7 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //* Fonction		: W_Td_Sp_W_Frais::Wf_PositionnerObjets (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 15:27:47
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On positionne et on taille tous les objets
 //*
 //* Arguments		: Aucun
@@ -57,8 +57,8 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On positionne tous les objets n$$HEX1$$e900$$ENDHEX$$cessaires $$HEX2$$e0002000$$ENDHEX$$la gestion, pour     */
-/* faciliter le d$$HEX1$$e900$$ENDHEX$$veloppement. (On peut bouger les objets).         */
+/* On positionne tous les objets nécessaires à la gestion, pour     */
+/* faciliter le développement. (On peut bouger les objets).         */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
@@ -81,8 +81,8 @@ public function boolean wf_preparermodifier ();//*------------------------------
 //* Fonction		: W_Td_Sp_W_Frais::Wf_PreparerModifier
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Op$$HEX1$$e900$$ENDHEX$$ration avant modification
+//* Libellé			: 
+//* Commentaires	: Opération avant modification
 //*
 //* Arguments		: Rien
 //*
@@ -95,7 +95,7 @@ s_Pass	stPass_Dga
 String sMonnaie
 
 /*------------------------------------------------------------------*/
-/* On arme le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre avec le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre       */
+/* On arme le titre de la fenêtre avec le titre de la fenêtre       */
 /* Parent.                                                          */
 /*------------------------------------------------------------------*/
 This.Title = istPass.sTab [ 1 ]
@@ -103,12 +103,12 @@ This.Title = istPass.sTab [ 1 ]
 iuoGsSpwFrais.Uf_Traitement ( 2, stPass_Dga )
 
 /*------------------------------------------------------------------*/
-/* L'acc$$HEX1$$e900$$ENDHEX$$s au bouton SUPPRIMER est g$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$dans la fonction du NVUO.   */
+/* L'accés au bouton SUPPRIMER est géré dans la fonction du NVUO.   */
 /*------------------------------------------------------------------*/
 pb_Supprimer.Enabled = stPass_Dga.bSupprime
 
 /*------------------------------------------------------------------*/
-/* L'acc$$HEX1$$e900$$ENDHEX$$s au bouton CONTROLER est g$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$dans la fonction du NVUO.   */
+/* L'accés au bouton CONTROLER est géré dans la fonction du NVUO.   */
 /* En effet dans le cas d'un frais REGLE, il est impossible de      */
 /* faire un CTL-VAL.                                                */
 /*------------------------------------------------------------------*/
@@ -119,7 +119,7 @@ Else
 End If
 
 /*------------------------------------------------------------------*/
-/* On arme la valeur de la monnaie avec celle de la fen$$HEX1$$ea00$$ENDHEX$$tre des     */
+/* On arme la valeur de la monnaie avec celle de la fenêtre des     */
 /* INTERLOCUTEURS. (En consultation uniquement).                    */
 /*------------------------------------------------------------------*/
 If	isTypeTrt = "C"	Then
@@ -138,8 +138,8 @@ public function boolean wf_preparerinserer ();//*-------------------------------
 //* Fonction		: W_Td_Sp_W_Frais::Wf_PreparerInserer
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Op$$HEX1$$e900$$ENDHEX$$ration avant insertion
+//* Libellé			: 
+//* Commentaires	: Opération avant insertion
 //*
 //* Arguments		: Rien
 //*
@@ -151,7 +151,7 @@ public function boolean wf_preparerinserer ();//*-------------------------------
 s_Pass	stPass_Dga
 
 /*------------------------------------------------------------------*/
-/* On arme le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre avec le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre       */
+/* On arme le titre de la fenêtre avec le titre de la fenêtre       */
 /* Parent.                                                          */
 /*------------------------------------------------------------------*/
 This.Title = istPass.sTab [ 1 ]
@@ -159,7 +159,7 @@ This.Title = istPass.sTab [ 1 ]
 iuoGsSpwFrais.Uf_Traitement ( 3, stPass_Dga )
 
 /*------------------------------------------------------------------*/
-/* On autorise le bouton CONTROLE. Il est peut-$$HEX1$$ea00$$ENDHEX$$tre d$$HEX1$$e900$$ENDHEX$$sactiv$$HEX2$$e9002000$$ENDHEX$$(Cas  */
+/* On autorise le bouton CONTROLE. Il est peut-être désactivé (Cas  */
 /* d'un frais REGLE).                                               */
 /*------------------------------------------------------------------*/
 This.pb_Controler.Enabled = True
@@ -176,7 +176,7 @@ public function boolean wf_preparervalider ();//*-------------------------------
 //* Fonction		: W_Td_Sp_W_Frais::Wf_PreparerValider
 //* Auteur			: Erick John Stark
 //* Date				: 28/01/1998 09:27:24
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On veut valider un frais
 //*
 //* Arguments		: 
@@ -185,7 +185,7 @@ public function boolean wf_preparervalider ();//*-------------------------------
 //*										False = La validation s'arrete.
 //*
 //*-----------------------------------------------------------------
-//* #1	FPI	[FRAIS_O2M] Fen$$HEX1$$ea00$$ENDHEX$$tre d'information sur les frais presta
+//* #1	FPI	[FRAIS_O2M] Fenêtre d'information sur les frais presta
 //* #2	PHG   [FRAIS_O2M] Mise en attente du code suite merge MSS_DIAG
 //*-----------------------------------------------------------------
 
@@ -223,7 +223,7 @@ public function boolean wf_preparersupprimer ();//*-----------------------------
 //* Fonction		: W_Td_Sp_W_Frais::Wf_PreparerSupprimer
 //* Auteur			: Erick John Stark
 //* Date				: 28/01/1998 09:27:24
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On veut supprimer le frais
 //*
 //* Arguments		: 
@@ -246,8 +246,8 @@ public function string wf_controlersaisie ();//*--------------------------------
 //* Fonction		: W_Td_Sp_W_Frais::Wf_ControlerSaisie (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:50:46
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Contr$$HEX1$$f400$$ENDHEX$$le de la saisie
+//* Libellé			: 
+//* Commentaires	: Contrôle de la saisie
 //*
 //* Arguments		: Aucun
 //*
@@ -271,7 +271,7 @@ private subroutine wf_tb_consultation ();//*------------------------------------
 //* Fonction		: W_Td_Sp_W_Frais::Wf_Tb_Consultation (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 23/07/1998 15:44:13
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On est en validation/Consultation, on rend les boutons invisibles
 //*
 //* Arguments		: Aucun
@@ -288,7 +288,7 @@ DataWindow dwNorm[]
 
 
 /*------------------------------------------------------------------*/
-/* Cette fonction est appel$$HEX1$$e900$$ENDHEX$$e sur Ue_Initialiser de la fen$$HEX1$$ea00$$ENDHEX$$tre.     */
+/* Cette fonction est appelée sur Ue_Initialiser de la fenêtre.     */
 /*------------------------------------------------------------------*/
 
 pb_Controler.Visible 	= False
@@ -324,7 +324,7 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		: Ue_Initialiser
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -351,7 +351,7 @@ Wf_PositionnerObjets ()
 isTypeTrt = istPass.sTab[ 2 ]
 
 /*------------------------------------------------------------------*/
-/* On commence $$HEX2$$e0002000$$ENDHEX$$initialiser les NVUO.                              */
+/* On commence à initialiser les NVUO.                              */
 /*------------------------------------------------------------------*/
 iuoGsSpwFrais = Create U_Gs_Sp_Sinistre_wFrais
 
@@ -365,7 +365,7 @@ dwNorm[ 3] = istPass.dwNorm [ 4 ]		// [PM72.1] commande_type_frn
 idwDivSin = istPass.udwTab [ 1 ]
 
 /*------------------------------------------------------------------*/
-/* Ces fonctions sont issues du NVUO anc$$HEX1$$ea00$$ENDHEX$$tre.                       */
+/* Ces fonctions sont issues du NVUO ancêtre.                       */
 /*------------------------------------------------------------------*/
 /* #1                                                               */
 /*------------------------------------------------------------------*/
@@ -388,7 +388,7 @@ Uo_Ong.Uf_EnregistrerOnglet ( "01", "Frais", 			"", dw_1,			True )
 
 /*------------------------------------------------------------------*/
 /* Si on est en Consultation/Validation (C)(V), on bouge la         */
-/* cosm$$HEX1$$e900$$ENDHEX$$tique de la fen$$HEX1$$ea00$$ENDHEX$$tre.                                        */
+/* cosmétique de la fenêtre.                                        */
 /*------------------------------------------------------------------*/
 If	isTypeTrt <> "S"	Then
 	Wf_Tb_Consultation ()
@@ -397,7 +397,7 @@ End If
 iuoGsSpwFrais.Uf_Traitement ( 1, stPass_Dga )
 
 /*------------------------------------------------------------------*/
-/* Gestion du Passage $$HEX2$$e0002000$$ENDHEX$$l'EURO.                                     */
+/* Gestion du Passage à l'EURO.                                     */
 /*------------------------------------------------------------------*/
 N_Cst_Passage_Euro	nvPassageEuro
 
@@ -420,8 +420,8 @@ on close;call w_8_traitement_detail::close;//*----------------------------------
 //* Evenement 		: Close
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 18:46:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Fermeture d$$HEX1$$e900$$ENDHEX$$finitive de la fen$$HEX1$$ea00$$ENDHEX$$tre.
+//* Libellé			: 
+//* Commentaires	: Fermeture définitive de la fenêtre.
 //*				     On supprime tous les NVUO.
 //*				  
 //*-----------------------------------------------------------------
@@ -434,13 +434,13 @@ Destroy iUoGsSpwFrais
 
 end on
 
-on we_childactivate;call w_8_traitement_detail::we_childactivate;//*-----------------------------------------------------------------
+event we_childactivate;call super::we_childactivate;//*-----------------------------------------------------------------
 //*
 //* Objet 			: W_Td_Sp_W_Frais::We_ChildActivate
 //* Evenement 		: We_ChildActivate
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 17:53:35
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -450,9 +450,13 @@ on we_childactivate;call w_8_traitement_detail::we_childactivate;//*------------
 
 This.X			=    1
 This.Y			=    1
-This.Height		= 1769
-This.Width		= 3598
-end on
+// [PB2022_TAILLE_FEN] + xxx
+This.Height		= 1769 + 90
+
+
+// [PB2022_TAILLE_FEN] + xxx
+This.Width		= 3598 + 50
+end event
 
 on w_td_sp_w_frais.create
 int iCurrent
@@ -491,7 +495,7 @@ event dw_1::itemerror;call super::itemerror;//*---------------------------------
 //* Evenement 		: ItemError
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:47:59
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion des messages d'erreur
 //*				  
 //*-----------------------------------------------------------------
@@ -511,7 +515,7 @@ If	ibErreur Then
 
 	Choose Case isErrCol
 	Case "LIB_FRAIS"
-		stMessage.sVar[1] = "libell$$HEX2$$e9002000$$ENDHEX$$du frais"					// Erreur de Validation - 
+		stMessage.sVar[1] = "libellé du frais"					// Erreur de Validation - 
 		stMessage.sCode	= "GENE003"
 
 	Case "MT_FRAIS"
@@ -566,7 +570,7 @@ event dw_1::itemchanged;call super::itemchanged;//*-----------------------------
 //* Evenement 		: ItemChanged
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:35:04
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Modification des zones
 //*				  
 //*-----------------------------------------------------------------
@@ -633,7 +637,7 @@ on pb_controler::clicked;//*----------------------------------------------------
 //* Evenement 		: 
 //* Auteur			: Erick John Stark
 //* Date				: 05/02/1998 15:50:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -642,7 +646,7 @@ on pb_controler::clicked;//*----------------------------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche un ItemFocusChanged avant toute chose. Cela         */
+/* On déclenche un ItemFocusChanged avant toute chose. Cela         */
 /* concerne la zone ID_EVT.                                         */
 /*------------------------------------------------------------------*/
 
@@ -673,7 +677,7 @@ on constructor;//*--------------------------------------------------------------
 //* Evenement 		: Constructor
 //* Auteur			: Erick John Stark
 //* Date				: 09/01/1998 14:57:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------

@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_t_rech_ifr.srw
+﻿$PBExportHeader$w_t_rech_ifr.srw
 forward
 global type w_t_rech_ifr from window
 end type
@@ -11,10 +11,10 @@ end type
 end forward
 
 global type w_t_rech_ifr from window
-integer width = 2971
-integer height = 3412
+integer width = 3022
+integer height = 3460
 boolean titlebar = true
-string title = "Moteur de recherche des appareils li$$HEX1$$e900$$ENDHEX$$s $$HEX2$$e0002000$$ENDHEX$$la base IFR"
+string title = "Moteur de recherche des appareils liés à la base IFR"
 boolean controlmenu = true
 windowtype windowtype = response!
 long backcolor = 67108864
@@ -168,7 +168,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: close
 //* Auteur			: JFF
 //* Date				: 12/05/2016
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 

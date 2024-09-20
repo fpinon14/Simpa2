@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_t_sp_frais_annexe_frn.srw
+﻿$PBExportHeader$w_t_sp_frais_annexe_frn.srw
 forward
 global type w_t_sp_frais_annexe_frn from window
 end type
@@ -9,8 +9,8 @@ end type
 end forward
 
 global type w_t_sp_frais_annexe_frn from window
-integer width = 4448
-integer height = 952
+integer width = 4549
+integer height = 1016
 boolean titlebar = true
 string title = "Saisie manuelle des frais annexes prestataires"
 windowtype windowtype = response!
@@ -45,7 +45,7 @@ event open;//*-----------------------------------------------------------------
 //* Evenement 		: Close
 //* Auteur			: FABRY JF
 //* Date				: 07/10/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				     
 //*				  
@@ -125,7 +125,7 @@ event itemchanged;//*-----------------------------------------------------------
 //* Evenement 		: Close
 //* Auteur			: FABRY JF
 //* Date				: 07/10/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				     
 //*				  
@@ -150,7 +150,7 @@ event itemerror;//*-------------------------------------------------------------
 //* Evenement 		: Close
 //* Auteur			: FABRY JF
 //* Date				: 07/10/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				     
 //*				  
@@ -172,7 +172,7 @@ Choose Case iiErreur
 		
 End Choose 
 
-stMessage.sTitre		= "Donn$$HEX1$$e900$$ENDHEX$$es non valide"
+stMessage.sTitre		= "Données non valide"
 stMessage.Icon			= Exclamation!
 stMessage.bErreurG	= FALSE
 stMessage.Bouton		= OK!
@@ -208,7 +208,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: Close
 //* Auteur			: FABRY JF
 //* Date				: 07/10/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				     
 //*				  
@@ -224,7 +224,7 @@ dw_reg_frais_anx.AcceptText ()
 If dw_reg_frais_anx.GetItemDecimal ( 1, "compute_2" ) <> 0 Then
 
 	stMessage.sCode		= "WSIN889"		
-	stMessage.sTitre		= "Montant non ventil$$HEX1$$e900$$ENDHEX$$"
+	stMessage.sTitre		= "Montant non ventilé"
 	stMessage.Icon			= Information!
 	stMessage.bErreurG	= FALSE
 	stMessage.Bouton		= OK!

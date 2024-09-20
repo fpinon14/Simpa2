@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_t_sp_choix_courrier_cp.srw
-$PBExportComments$permet de choisir son mod$$HEX1$$e800$$ENDHEX$$le de courrier particulier
+﻿$PBExportHeader$w_t_sp_choix_courrier_cp.srw
+$PBExportComments$permet de choisir son modèle de courrier particulier
 forward
 global type w_t_sp_choix_courrier_cp from window
 end type
@@ -18,8 +18,8 @@ end type
 end forward
 
 global type w_t_sp_choix_courrier_cp from window
-integer width = 1742
-integer height = 524
+integer width = 1769
+integer height = 548
 boolean titlebar = true
 string title = "Untitled"
 windowtype windowtype = response!
@@ -53,7 +53,7 @@ on ue_charger;//*---------------------------------------------------------------
 //* Evenement     : Close
 //* Auteur        : Fabry JF
 //* Date          : 08/01/2003 17:14:47
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -86,7 +86,7 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //* Fonction      : wf_PositionnerObjets (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 21/08/2003 14:49:51
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -125,7 +125,7 @@ private subroutine wf_creer ();//*----------------------------------------------
 //* Fonction      : w_t_sp_choix_courrier_cp::wf_creer (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 08/01/2004 16:26:44
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -181,7 +181,7 @@ on close;//*-----------------------------------------------------------------
 //* Evenement     : Close
 //* Auteur        : Fabry JF
 //* Date          : 08/01/2003 17:14:47
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -209,7 +209,7 @@ on open;//*-----------------------------------------------------------------
 //* Evenement     : Close
 //* Auteur        : Fabry JF
 //* Date          : 08/01/2003 17:14:47
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -235,7 +235,7 @@ dw_modele_courrier.InsertRow ( 0 )
 
 This.wf_PositionnerObjets ()
 
-This.Title = "Choix du mod$$HEX1$$e800$$ENDHEX$$le de Courrier Particulier"
+This.Title = "Choix du modèle de Courrier Particulier"
 
 PostEvent ("UE_CHARGER") 
 
@@ -279,7 +279,7 @@ fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Tahoma"
 long textcolor = 33554432
-string text = "Cette fonction vous ouvre un courrier particulier vide, standard (Continuer). Si vous souhaitez un mod$$HEX1$$e800$$ENDHEX$$le, passez par un COURRIER GESTIONNAIRE dans ce cas (Retour)."
+string text = "Cette fonction vous ouvre un courrier particulier vide, standard (Continuer). Si vous souhaitez un modèle, passez par un COURRIER GESTIONNAIRE dans ce cas (Retour)."
 boolean focusrectangle = false
 end type
 
@@ -300,7 +300,7 @@ on itemchanged;//*--------------------------------------------------------------
 //* Evenement     : ItemChanged
 //* Auteur        : Fabry JF
 //* Date          : 09/01/2004 14:31:23
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -376,7 +376,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 21/08/2003 09:33:09
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -414,7 +414,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 21/08/2003 09:33:09
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 

@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_sp_gs_w_commande3.srw
-$PBExportComments$Fen$$HEX1$$ea00$$ENDHEX$$tre en dessous du niveau d$$HEX1$$e900$$ENDHEX$$tail permettant de passer une commande
+﻿$PBExportHeader$w_sp_gs_w_commande3.srw
+$PBExportComments$Fenêtre en dessous du niveau détail permettant de passer une commande
 forward
 global type w_sp_gs_w_commande3 from w_8_traitement_detail
 end type
@@ -98,7 +98,7 @@ u_DataWindow_Detail	idwCmdeSin
 /*--------------------------------------------------------------------*/
 /* CAG 06/01/04 : ajout de boutons prem et dern */
 /*--------------------------------------------------------------------*/
-Integer			iiNbMaxPg 	//  nbre de pages max $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$rer
+Integer			iiNbMaxPg 	//  nbre de pages max à gérer
 Integer 			iiNbMinPg
 Integer			iiCptPgCte	//  compteur de page courante
 
@@ -124,16 +124,16 @@ event ue_taillefenetre();//*----------------------------------------------------
 //* Evenement 		: Ue_TailleFenetre
 //* Auteur			: Fabry JF
 //* Date				: 16/10/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //*-----------------------------------------------------------------
 
-// Je r$$HEX1$$e900$$ENDHEX$$ajuste la hauteur pour W10
+// Je réajuste la hauteur pour W10
 
-This.Height = 1810
+// This.Height = 1810 // [PB2022_TAILLE_FEN] Je commente
 
 st_Titre.X     = 851
 st_Titre.Y     =   09
@@ -149,7 +149,7 @@ private function boolean wf_preparerinserer ();//*------------------------------
 //* Evenement 		: wf_PreparerInserer
 //* Auteur			: Fabry JF
 //* Date				: 18/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -159,7 +159,7 @@ private function boolean wf_preparerinserer ();//*------------------------------
 //* #3  JFF	  09/06/08  [DCMP070798]
 //*     JFF	  29/11/10  [PC474]
 //      JFF   23/05/2012 [PM103][1]
-//		FPI	19/08/2015	[REPAR_GTI] - pour une r$$HEX1$$e900$$ENDHEX$$paration on n'active pas la page d'$$HEX1$$e900$$ENDHEX$$quiv fonct
+//		FPI	19/08/2015	[REPAR_GTI] - pour une réparation on n'active pas la page d'équiv fonct
 //       JFF   17/05/2016 [PM280-2]
 //       JFF   17/09/2019 [DT447]
 //*-----------------------------------------------------------------
@@ -172,11 +172,11 @@ Long lRow, lDeb, lFin, lIdEvt
 // [PM280-2]
 lIdEvt = istPass.dwMaster1.GetItemNumber ( 1, "ID_EVT" ) 
 
-stPass.sTab [ 1 ]	= istPass.sTab [ 4 ]  // n$$HEX2$$b0002000$$ENDHEX$$IMEI provenant de l'adh$$HEX1$$e900$$ENDHEX$$sion (a pu $$HEX1$$ea00$$ENDHEX$$tre modifi$$HEX2$$e9002000$$ENDHEX$$depuis l'ouverture du sinistre)
-stPass.sTab [ 2 ]	= istPass.sTab [ 5 ]  // Marque portable adh$$HEX1$$e900$$ENDHEX$$sion.
-stPass.sTab [ 3 ]	= istPass.sTab [ 6 ]  // Mod$$HEX1$$e800$$ENDHEX$$le portable adh$$HEX1$$e900$$ENDHEX$$sion.
-stPass.sTab [ 4 ]	= istPass.sTab [ 7 ]  // DCMP 030407 n$$HEX2$$b0002000$$ENDHEX$$IMEI provenant de l'adh$$HEX1$$e900$$ENDHEX$$sion (N'A PAS ETE modifi$$HEX2$$e9002000$$ENDHEX$$depuis l'ouverture du sinistre)
-stPass.sTab [ 5 ]	= istPass.sTab [ 8 ]  // Choix Action "C"ommander/"S"$$HEX1$$e900$$ENDHEX$$lectionner courrier
+stPass.sTab [ 1 ]	= istPass.sTab [ 4 ]  // n° IMEI provenant de l'adhésion (a pu être modifié depuis l'ouverture du sinistre)
+stPass.sTab [ 2 ]	= istPass.sTab [ 5 ]  // Marque portable adhésion.
+stPass.sTab [ 3 ]	= istPass.sTab [ 6 ]  // Modèle portable adhésion.
+stPass.sTab [ 4 ]	= istPass.sTab [ 7 ]  // DCMP 030407 n° IMEI provenant de l'adhésion (N'A PAS ETE modifié depuis l'ouverture du sinistre)
+stPass.sTab [ 5 ]	= istPass.sTab [ 8 ]  // Choix Action "C"ommander/"S"électionner courrier
 stPass.sTab [ 6 ]	= istPass.sTab [ 9 ]  // Cas de Gestion DARTY NOMADE
 
 stPass.bTab [ 3 ]	= istPass.bTab [ 3 ]  // [DT447] Bris Ecran O/N
@@ -185,7 +185,7 @@ stPass.bTab [ 3 ]	= istPass.bTab [ 3 ]  // [DT447] Bris Ecran O/N
 ibTrigger_RFC_TypArt = TRUE
 
 /*------------------------------------------------------------------*/
-/* On commande ou on s$$HEX1$$e900$$ENDHEX$$lectionne pour le courrier                   */
+/* On commande ou on sélectionne pour le courrier                   */
 /*------------------------------------------------------------------*/
 isChoixAction = istPass.sTab[8]
 
@@ -193,16 +193,16 @@ Choose Case isChoixAction
 	Case "C"
 		st_Titre.Text = "Commander un appareil"		
 	Case "S"
-		st_Titre.Text = "S$$HEX1$$e900$$ENDHEX$$lection sur courrier"		
+		st_Titre.Text = "Sélection sur courrier"		
 	Case "R"
-		st_Titre.Text = "R$$HEX1$$e900$$ENDHEX$$parer un appareil"		
+		st_Titre.Text = "Réparer un appareil"		
 	Case "I"
 		st_Titre.Text = "Envoyer des informations"		
 
 End Choose 
 
 /*------------------------------------------------------------------*/
-/* Disponibilit$$HEX2$$e9002000$$ENDHEX$$bouton tout pouvoir.                               */
+/* Disponibilité bouton tout pouvoir.                               */
 /* Droit 204 dans table Autorisation (-NA)								  */
 /*------------------------------------------------------------------*/
 bDroit204 = idwAutorisation.Find ( "ID_NAT_OPER = 204", 1, idwAutorisation.RowCount () ) > 0 
@@ -218,7 +218,7 @@ pb_tout.Enabled = bDroit204 And isChoixAction <> "R" And isChoixAction <> "I" An
 iiCptPgCte = 0
 
 /*------------------------------------------------------------------*/
-/* Si Typ appareil = AUT, pas de premi$$HEX1$$e800$$ENDHEX$$re page.                     */
+/* Si Typ appareil = AUT, pas de première page.                     */
 /*------------------------------------------------------------------*/
 lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'TYPE_APP'", 1, idwWDivSin.RowCount () ) 
 If lRow > 0 Then 
@@ -249,7 +249,7 @@ End IF
 
 Choose Case isTypApp 
 	Case "TEL", "PC2"
-		// [REPAR_GTI] - pour une r$$HEX1$$e900$$ENDHEX$$paration on n'active pas la page d'$$HEX1$$e900$$ENDHEX$$quiv fonct
+		// [REPAR_GTI] - pour une réparation on n'active pas la page d'équiv fonct
 		if isChoixaction="R" Or lIdEvt = 1426 Then 
 			iiNbMinPg  = 2
 		else
@@ -288,7 +288,7 @@ public function boolean wf_controler ();//*-------------------------------------
 //* Evenement 		: wf_controler
 //* Auteur			: Fabry JF
 //* Date				: 18/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -308,7 +308,7 @@ This.SetRedraw ( False )
 For lCpt = 1 To 2
 
 	/*------------------------------------------------------------------*/
-	/* Contr$$HEX1$$f400$$ENDHEX$$le de saisie.                                              */
+	/* Contrôle de saisie.                                              */
 	/*------------------------------------------------------------------*/
 	If lCpt = 1 Then
 		Choose Case isChoixAction 
@@ -322,7 +322,7 @@ For lCpt = 1 To 2
 	End If
 
 	/*------------------------------------------------------------------*/
-	/* Contr$$HEX1$$f400$$ENDHEX$$le de Gestion.                                             */
+	/* Contrôle de Gestion.                                             */
 	/*------------------------------------------------------------------*/
 	If lCpt = 2 Then
 		Choose Case isChoixAction 
@@ -387,7 +387,7 @@ public function boolean wf_preparervalider ();//*-------------------------------
 //* Evenement 		: wf_PreparerInserer
 //* Auteur			: Fabry JF
 //* Date				: 18/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -405,7 +405,7 @@ public function integer wf_positionnerobjets ();//*-----------------------------
 //* Fonction		: W_Sp_Gs_Commande3::Wf_PositionnerObjets
 //* Auteur			: Fabry JF
 //* Date				: 26/09/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Positionnement des objets
 //*
 //* Arguments		: Rien
@@ -497,7 +497,7 @@ cb_commune_livr.width	= 83
 cb_commune_livr.height	= 73
 
 
-cb_commune_fact.Hide () // Cacher car l'adresse de facturation n'est plus n$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$ssaire.
+cb_commune_fact.Hide () // Cacher car l'adresse de facturation n'est plus nécéssaire.
 cb_commune_fact.x		= 3400
 cb_commune_fact.y		= 795
 cb_commune_fact.width	= 83
@@ -549,8 +549,8 @@ private subroutine wf_passage_euro ();//*---------------------------------------
 //* Fonction		: w_sp_gs_w_commande3::wf_Passage_Euro (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 24/03/1999 10:34:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Modification des colonnes qui ne peuvent $$HEX1$$ea00$$ENDHEX$$tre modifi$$HEX1$$e900$$ENDHEX$$e
+//* Libellé			: 
+//* Commentaires	: Modification des colonnes qui ne peuvent être modifiée
 //*					  par l'objet de Daniel.
 //*
 //* Arguments		: Aucun
@@ -565,11 +565,11 @@ String sFormat
 // #1 [SUISSE].LOT3 Gestion Dynamique de la monnaie
 //CHOOSE CASE stGLB.sMonnaieFormatDesire
 //	CASE "E"
-//		sFormat = ".Format='#,##0.00 \$$HEX1$$ac20$$ENDHEX$$'"
+//		sFormat = ".Format='#,##0.00 \€'"
 //	CASE "F"
 //		sFormat = ".Format='#,##0.00 \F'"
 //END CHOOSE
-//remplac$$HEX2$$e9002000$$ENDHEX$$par
+//remplacé par
 sFormat = ".Format='#,##0.00 \" + stGLB.sMonnaieSymboleDesire+ "'"
 
 dw_Article.Modify ( "mt_prix_ttc" + sFormat )
@@ -586,10 +586,10 @@ private subroutine wf_boutons (integer ainumpg, string asbouton);//*------------
 //* Evenement 		: wf_Boutons
 //* Auteur			: Fabry JF
 //* Date				: 18/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //* Arguments	   : ( Val )	Integer	aiNumPg	:	indique la page sur laquelle on se positionne (0 si appui sur un bouton)
-//*					  ( Val )	String	asBouton	:	indique le bouton sur lequel on a appuy$$HEX2$$e9002000$$ENDHEX$$(vide si on se positionne sur une pg pr$$HEX1$$e900$$ENDHEX$$cise)
+//*					  ( Val )	String	asBouton	:	indique le bouton sur lequel on a appuyé (vide si on se positionne sur une pg précise)
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
 //* #1  JFF   31/12/03  DCMP 030483 				  
@@ -623,7 +623,7 @@ This.SetRedraw ( FALSE )
 /*------------------------------------------------------------------*/
 /* #2 CAG : 06/01/2004										                 */
 /*------------------------------------------------------------------*/
-/* Gestion des boutons de d$$HEX1$$e900$$ENDHEX$$filement de page								  */
+/* Gestion des boutons de défilement de page								  */
 /*------------------------------------------------------------------*/
 Choose Case TRUE
 	Case (iiCptPgCte = iiNbMaxPg) And (iiCptPgCte = iiNbMinPg)
@@ -649,7 +649,7 @@ Choose Case TRUE
 End Choose
 
 /*------------------------------------------------------------------*/
-/* Par d$$HEX1$$e900$$ENDHEX$$faut on rends tout non visible                             */
+/* Par défaut on rends tout non visible                             */
 /*------------------------------------------------------------------*/
 dw_Commande.visible 		= FALSE
 cb_Commune_Livr.visible = FALSE
@@ -674,7 +674,7 @@ dw_Commande.AcceptText ()
 
 /*------------------------------------------------------------------*/
 /* Par la suite, selon le cas on ne rends visible que ce qui doit   */
-/* l'$$HEX1$$ea00$$ENDHEX$$tre                                                           */
+/* l'être                                                           */
 /*------------------------------------------------------------------*/
 Choose Case iiCptPgCte
 	Case 1
@@ -701,7 +701,7 @@ Choose Case iiCptPgCte
 End Choose
 
 /*------------------------------------------------------------------*/
-/* Traitement sp$$HEX1$$e900$$ENDHEX$$ciaux et raffra$$HEX1$$ee00$$ENDHEX$$chissement                         */
+/* Traitement spéciaux et raffraîchissement                         */
 /*------------------------------------------------------------------*/
 Choose Case iiCptPgCte
 	Case 1
@@ -749,7 +749,7 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		: Ue_Initialiser
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -776,7 +776,7 @@ dw_type_article.SetRowFocusIndicator ( p_curseur,1,5 )
 idwWDivsin = istPass.udwTab [ 1 ]
 
 /*------------------------------------------------------------------*/
-/* Le bouton de r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration de l'IMEI adh corrig$$HEX2$$e9002000$$ENDHEX$$n'est            */
+/* Le bouton de récupération de l'IMEI adh corrigé n'est            */
 /* disponible que sur Option.                                       */
 /*------------------------------------------------------------------*/
 F_RechDetPro ( lDeb, lFin, istPass.dwNorm [8], istPass.dwNorm [2].GetItemNumber ( 1, "ID_PROD" ), '-DP', 7 )
@@ -784,33 +784,33 @@ cb_Imei.Enabled = lDeb > 0
 
 /*------------------------------------------------------------------*/
 /* Nous sommes en saisie (S) ou en Consultation/Validation (C)(V)   */
-/* Bien que cette fen$$HEX1$$ea00$$ENDHEX$$tre n'appara$$HEX1$$ee00$$ENDHEX$$tra qu'en Saisie.					  */
+/* Bien que cette fenêtre n'apparaîtra qu'en Saisie.					  */
 /*------------------------------------------------------------------*/
 isTypeTrt = istPass.sTab[ 2 ]
 
 /*------------------------------------------------------------------*/
-/* DCMP 030362 : Acc$$HEX1$$e800$$ENDHEX$$s ou pas au contr$$HEX1$$f400$$ENDHEX$$le des communes.             */
+/* DCMP 030362 : Accès ou pas au contrôle des communes.             */
 /*------------------------------------------------------------------*/
 ibAltCommune = istPass.bTab[ 2 ]
 stPass.bTab [1] = ibAltCommune 
 
 /*------------------------------------------------------------------*/
-/* On commence $$HEX2$$e0002000$$ENDHEX$$initialiser les NVUO.                              */
+/* On commence à initialiser les NVUO.                              */
 /*------------------------------------------------------------------*/
 invCmd = Create n_cst_w_commande3
 
-stPass.dwTab  [1] = dw_commande			 // dw_commande en local sur cette fen$$HEX1$$ea00$$ENDHEX$$tre.
+stPass.dwTab  [1] = dw_commande			 // dw_commande en local sur cette fenêtre.
 stPass.dwTab  [2]	= istPass.dwTab [2]   // LSt Inter
 
-stPass.dwTab  [3]	= istPass.dwTab [4]	 // dw_w_Commande au niveau sinistre pour r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer les DDDW en Share.
+stPass.dwTab  [3]	= istPass.dwTab [4]	 // dw_w_Commande au niveau sinistre pour récupérer les DDDW en Share.
 idwCmdeSin = istPass.dwTab [4]
 
 stPass.lTab   [1] = istPass.lTab [1]   // ilMarquaGeBLCODE = // [BLCODE]
 
 
-stPass.dwTab  [4]	= istPass.dwTab [3]	 // dw_w_Commande au niveau du d$$HEX1$$e900$$ENDHEX$$tail, on y remontera les lignes.
+stPass.dwTab  [4]	= istPass.dwTab [3]	 // dw_w_Commande au niveau du détail, on y remontera les lignes.
 stPass.dwTab  [5]	= istPass.dwTab [5]	 // dw_w_Commande au niveau garantie
-stPass.dwTab  [6]	= istPass.dwTab [6]	 // dw_w_div_det  au niveau d$$HEX1$$e900$$ENDHEX$$tail // #2
+stPass.dwTab  [6]	= istPass.dwTab [6]	 // dw_w_div_det  au niveau détail // #2
 stPass.dwTab  [7]	= istPass.dwTab [7]	 // idwLstDetail  // [BLCODE]
 
 stPass.dwNorm [1] = dw_Fournisseur
@@ -826,12 +826,12 @@ stPass.dwNorm [10]= istPass.dwNorm [5]  // DataWindow sur COMMANDE_TYPE, pour le
 
 stPass.dwNorm [11]= istPass.dwNorm [9]  // DataWindow des communes
 stPass.dwNorm [12]= istPass.dwNorm [10]  // DataWindow des TAC_IMEI
-stPass.dwNorm [13]= istPass.dwNorm [ 11 ]  // Dw des Donn$$HEX1$$e900$$ENDHEX$$es IFR
-stPass.dwNorm [14]= istPass.dwNorm [ 12 ]  // Dw des Libell$$HEX1$$e900$$ENDHEX$$s IFR Traduits
+stPass.dwNorm [13]= istPass.dwNorm [ 11 ]  // Dw des Données IFR
+stPass.dwNorm [14]= istPass.dwNorm [ 12 ]  // Dw des Libellés IFR Traduits
 stPass.dwNorm [15]= istPass.dwNorm [ 13 ] // Table autorisation
 
 //* #3 [FNAC_PROD_ECH_TECH].[20090224144248310]
-stPass.dwNorm [16]= istPass.dwNorm [ 14 ] // Pi$$HEX1$$e800$$ENDHEX$$ce coch$$HEX1$$e900$$ENDHEX$$e sur la garantie
+stPass.dwNorm [16]= istPass.dwNorm [ 14 ] // Pièce cochée sur la garantie
 
 
 // #2
@@ -840,7 +840,7 @@ stPass.sttab  [1] = st_altpec
 idwAutorisation = istPass.dwNorm [ 13 ] // Table autorisation
 
 /*------------------------------------------------------------------*/
-/* # Modification SFR # Le 17/07/2002. + CAG 12/09/02 : $$HEX2$$e0002000$$ENDHEX$$compl$$HEX1$$e900$$ENDHEX$$ter : dwTabX $$HEX2$$e0002000$$ENDHEX$$initialiser */
+/* # Modification SFR # Le 17/07/2002. + CAG 12/09/02 : à compléter : dwTabX à initialiser */
 /*------------------------------------------------------------------*/
 invCmd.Uf_Initialiser_Dw_Sfr ( istPass.dwNorm [6], istPass.dwNorm [7], dwTab1, dwTab2, dwTab3, FALSE )
 
@@ -850,7 +850,7 @@ invCmd.Uf_Initialiser_Dw_Sfr ( istPass.dwNorm [6], istPass.dwNorm [7], dwTab1, d
 invCmd.Uf_Initialiser_Dw ( istPass.dwNorm [2], istPass.dwNorm [8], False )
 
 stPass.dwMaster  = istPass.dwMaster       // Fen Sinistre de plus niveau
-stPass.dwMaster1 = istPass.dwMaster1      // Dw_1 sur fen Detail afin de r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer ID_GTI, ID_DETAIL
+stPass.dwMaster1 = istPass.dwMaster1      // Dw_1 sur fen Detail afin de récupérer ID_GTI, ID_DETAIL
 
 stPass.udwTab [ 1 ] = istPass.udwTab [ 1 ]   // Dw_w_Div_Sin
 stPass.udwTab [ 2 ] = istPass.udwTab [ 2 ]   // idwDivDetGti = // [BLCODE]
@@ -858,7 +858,7 @@ stPass.udwTab [ 2 ] = istPass.udwTab [ 2 ]   // idwDivDetGti = // [BLCODE]
 invCmd.uf_Initialiser ( stPass, uo_equiv_fonct )
 
 /*------------------------------------------------------------------*/
-/* Gestion du Passage $$HEX2$$e0002000$$ENDHEX$$l'EURO.                                     */
+/* Gestion du Passage à l'EURO.                                     */
 /*------------------------------------------------------------------*/
 N_Cst_Passage_Euro	nvPassageEuro
 
@@ -874,7 +874,7 @@ nvPassageEuro.uf_Initialiser ( dwPassageEuro[] )
 If IsValid(nvPassageEuro) Then DESTROY nvPassageEuro
 //Fin Migration PB8-WYNIWYG-03/2006 FM
 
-// Les champs calcul$$HEX1$$e900$$ENDHEX$$s ne peuvent $$HEX1$$ea00$$ENDHEX$$tre modifi$$HEX1$$e900$$ENDHEX$$s par cet Objet
+// Les champs calculés ne peuvent être modifiés par cet Objet
 wf_Passage_Euro ()
 
 
@@ -886,7 +886,7 @@ on ue_item7;call w_8_traitement_detail::ue_item7;//*----------------------------
 //* Evenement     : ue_item7
 //* Auteur        : Fabry JF
 //* Date          : 07/10/2004 09:57:42
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$clencher par un PostEvent, apr$$HEX1$$e800$$ENDHEX$$s tous les uf_RowFocusChanged 
+//* Libellé       : Déclencher par un PostEvent, après tous les uf_RowFocusChanged 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -913,7 +913,7 @@ event ue_retour;//**************************************************************
 // Evenement 	: Ue_Retour
 //	Auteur		: Fabry JF
 //	Date			: 20/09/2001
-// Libell$$HEX3$$e90009000900$$ENDHEX$$: 
+// Libellé		: 
 // Commentaires: 
 // ----------------------------------------------------------------------------
 // MAJ PAR		Date			Modification
@@ -926,7 +926,7 @@ If gProcessTempoOrangeV3Action Then
 End If
 
 If isBtClick = "RETOUR" Then 
-	stMessage.sTitre  	= "Quitter la fen$$HEX1$$ea00$$ENDHEX$$tre de commandes"
+	stMessage.sTitre  	= "Quitter la fenêtre de commandes"
 	stMessage.Icon			= Question!
 	stMessage.bErreurG	= FALSE
 	stMessage.Bouton		= YesNo!
@@ -952,7 +952,7 @@ event show;call super::show;//*-------------------------------------------------
 //* Evenement     : Show
 //* Auteur        : Fabry JF
 //* Date          : 31/12/2003 16:34:35
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -969,7 +969,7 @@ event show;call super::show;//*-------------------------------------------------
 invCmd.uf_Switch_CtrlSaisie ( TRUE )
 
 /*------------------------------------------------------------------*/
-/* On cache dw_Article, car cette page n'est plus la premi$$HEX1$$e800$$ENDHEX$$re.      */
+/* On cache dw_Article, car cette page n'est plus la première.      */
 /*------------------------------------------------------------------*/
 This.PostEvent ( "ue_item7" )
 This.PostEvent ( "ue_TailleFenetre" )
@@ -984,14 +984,14 @@ event ue_controler;//***********************************************************
 // Evenement 	: ue_Controler
 //	Auteur		: Fabry JF
 //	Date			: 20/09/01
-// Libell$$HEX3$$e90009000900$$ENDHEX$$: Controle des informations de la fen$$HEX1$$ea00$$ENDHEX$$tre
+// Libellé		: Controle des informations de la fenêtre
 // Commentaires: 
 //					  
 // ----------------------------------------------------------------------------
 // MAJ PAR		Date		Modification
 //
 //* #1  CAG	  06/01/04  Ajout de boutons prem et dern : chgt d'arg de wf_boutons
-//*			FPI	20/10/2010	 [PC321] Correction si saisie dans probl$$HEX1$$e800$$ENDHEX$$me
+//*			FPI	20/10/2010	 [PC321] Correction si saisie dans problème
 //*****************************************************************************
 
 
@@ -1004,10 +1004,10 @@ If	dw_Commande.AcceptText () > 0 Then
 				If wf_Controler () Then wf_Pb_Ctl_Vld ( 1 )	
 			End If
 		Else
-			This.wf_boutons ( 2, "" ) // [PC321] Correction si saisie dans probl$$HEX1$$e800$$ENDHEX$$me (2 ald 1)
+			This.wf_boutons ( 2, "" ) // [PC321] Correction si saisie dans problème (2 ald 1)
 		End If
 	Else
-		This.wf_boutons ( 2, "" ) // [PC321] Correction si saisie dans probl$$HEX1$$e800$$ENDHEX$$me
+		This.wf_boutons ( 2, "" ) // [PC321] Correction si saisie dans problème
 	End If
 Else
 	This.wf_boutons ( 2, "" )
@@ -1024,7 +1024,7 @@ on ue_item6;call w_8_traitement_detail::ue_item6;//*----------------------------
 //* Evenement     : ue_Item6
 //* Auteur        : Fabry JF
 //* Date          : 23/09/2003 17:22:30
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Armement de l'IMEI de l'adh$$HEX1$$e900$$ENDHEX$$sion, corrig$$HEX1$$e900$$ENDHEX$$
+//* Libellé       : Armement de l'IMEI de l'adhésion, corrigé
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -1045,19 +1045,19 @@ sIMEIAdh = istPass.sTab [ 7 ]
 bRet = F_IMEI ( sIMEIAdh, sIMEICorrige )
 
 /*------------------------------------------------------------------*/
-/* Placement de l'IMEI Corrig$$HEX2$$e9002000$$ENDHEX$$(ou pas) dans le clipboard.          */
+/* Placement de l'IMEI Corrigé (ou pas) dans le clipboard.          */
 /*------------------------------------------------------------------*/
 ClipBoard ( sIMEICorrige )
 
 /*------------------------------------------------------------------*/
-/* S'il est bon sur l'adh$$HEX1$$e900$$ENDHEX$$sion												  */
+/* S'il est bon sur l'adhésion												  */
 /*------------------------------------------------------------------*/
 If bRet Then
 	stMessage.sCode		= "SFRP130"
 	stMessage.sVar[1]		= sIMEICorrige 
 
 /*------------------------------------------------------------------*/
-/* S'il a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$corrig$$HEX1$$e900$$ENDHEX$$.                                              */
+/* S'il a été corrigé.                                              */
 /*------------------------------------------------------------------*/
 ElseIf Not bRet And sIMEICorrige <> "" Then
 	stMessage.sCode		= "SFRP140"
@@ -1071,7 +1071,7 @@ Else
 
 End If
 
-stMessage.sTitre		= "Armement IMEI provenant de l'adh$$HEX1$$e900$$ENDHEX$$sion"
+stMessage.sTitre		= "Armement IMEI provenant de l'adhésion"
 stMessage.Icon			= Information!
 stMessage.bErreurG	= FALSE
 stMessage.Bouton		= Ok!
@@ -1088,7 +1088,7 @@ event close;call super::close;//************************************************
 // Evenement 	: Destroy
 //	Auteur		: La Recrue
 //	Date			: 17/12/1996
-// Libell$$HEX3$$e90009000900$$ENDHEX$$: 
+// Libellé		: 
 // Commentaires: 
 // ----------------------------------------------------------------------------
 // MAJ PAR		Date			Modification
@@ -1108,7 +1108,7 @@ on ue_valider;//****************************************************************
 // Evenement 	: ue_Valider
 //	Auteur		: FABRY JF
 //	Date			: 24/09/2001
-// Libell$$HEX3$$e90009000900$$ENDHEX$$: 
+// Libellé		: 
 // Commentaires: 
 //					  
 //*****************************************************************************
@@ -1128,9 +1128,9 @@ event we_childactivate;//*******************************************************
 // Evenement 	: we_ChildActivate
 //	Auteur		: La Recrue
 //	Date			: 17/12/1996
-// Libell$$HEX3$$e90009000900$$ENDHEX$$: 
-// Commentaires: Est d$$HEX1$$e900$$ENDHEX$$clanch$$HEX2$$e9002000$$ENDHEX$$lorsque la fen$$HEX1$$ea00$$ENDHEX$$tre est montr$$HEX1$$e900$$ENDHEX$$e qu'elle soit de type
-//					  Chil! ou Popup! effectue ce qui $$HEX1$$e900$$ENDHEX$$tait coder sur l'Open
+// Libellé		: 
+// Commentaires: Est déclanché lorsque la fenêtre est montrée qu'elle soit de type
+//					  Chil! ou Popup! effectue ce qui était coder sur l'Open
 // ----------------------------------------------------------------------------
 // MAJ PAR		Date			Modification
 //
@@ -1142,8 +1142,12 @@ long	ll_ret
 
 This.X			=    1
 This.Y			=    1
-This.Height		= 1769
-This.Width		= 3598
+// [PB2022_TAILLE_FEN] + xxx
+This.Height		= 1769 + 90
+
+
+// [PB2022_TAILLE_FEN] + xxx
+This.Width		= 3598 + 50
 
 If ( ibAInitialiser ) Then
 
@@ -1152,18 +1156,18 @@ If ( ibAInitialiser ) Then
 	istPass = Message.PowerObjectParm
 
 	itrTrans						=  istPass.trTrans	// Objet transaction de la fenetre appelante
-	iwParent						=	istPass.wParent	// Fenetre Appelante ( utilis$$HEX1$$e900$$ENDHEX$$e pour enable )	
+	iwParent						=	istPass.wParent	// Fenetre Appelante ( utilisée pour enable )	
 
 	istPass.wParent			=	This			// Fenetre appelante pour fenetre de traitment
 	istPass.trTrans			=	itrTrans		// Objet de transaction par defaut
 //	istPass.bEnableParent	= 	False			// Doit on rendre la fenetre appelante disable
-														// lors de l'appel d'une fen$$HEX1$$ea00$$ENDHEX$$tre de traitement	This.TriggerEvent ( "ue_Initialiser" )
-//	istPass.bCloseRetour		=	False			// Doit on fermer la fen$$HEX1$$ea00$$ENDHEX$$tre sur le bouton retour. D$$HEX1$$e900$$ENDHEX$$cision du script client
+														// lors de l'appel d'une fenêtre de traitement	This.TriggerEvent ( "ue_Initialiser" )
+//	istPass.bCloseRetour		=	False			// Doit on fermer la fenêtre sur le bouton retour. Décision du script client
 
 
 	wf_ActiverMajAccueil( True )	
 
-	// Si il s'agit d'une fen$$HEX1$$ea00$$ENDHEX$$tre fille d'un master on la stock pour pouvoir la fermer
+	// Si il s'agit d'une fenêtre fille d'un master on la stock pour pouvoir la fermer
 
 	If ( ibOpen ) Then
 
@@ -1217,7 +1221,7 @@ If ( ibAInitialiser ) Then
 
 	End If
 
-	// Arr$$HEX1$$ea00$$ENDHEX$$t d'ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre si probl$$HEX1$$e800$$ENDHEX$$me
+	// Arrêt d'ouverture de la fenêtre si problème
 
 	If Not bOk Then
 
@@ -1360,7 +1364,7 @@ event pb_retour::clicked;call super::clicked;//*********************************
 // Evenement 	: Ue_Retour
 //	Auteur		: Fabry JF
 //	Date			: 20/09/2001
-// Libell$$HEX3$$e90009000900$$ENDHEX$$: 
+// Libellé		: 
 // Commentaires: 
 // ----------------------------------------------------------------------------
 // MAJ PAR		Date			Modification
@@ -1393,7 +1397,7 @@ on pb_valider::clicked;call w_8_traitement_detail`pb_valider::clicked;//********
 // Evenement 	: Ue_Valider
 //	Auteur		: Fabry JF
 //	Date			: 20/09/2001
-// Libell$$HEX3$$e90009000900$$ENDHEX$$: 
+// Libellé		: 
 // Commentaires: 
 // ----------------------------------------------------------------------------
 // MAJ PAR		Date			Modification
@@ -1448,7 +1452,7 @@ on ue_rfc_true;//*--------------------------------------------------------------
 //* Evenement     : ue_RFC_True
 //* Auteur        : Fabry JF
 //* Date          : 21/01/2005 15:09:16
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: autorise le RowFocusChanged
+//* Libellé       : autorise le RowFocusChanged
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -1471,7 +1475,7 @@ on ue_rfc_false;//*-------------------------------------------------------------
 //* Evenement     : ue_RFC_False
 //* Auteur        : Fabry JF
 //* Date          : 21/01/2005 15:09:16
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: n'autorise pas le RowFocusChanged
+//* Libellé       : n'autorise pas le RowFocusChanged
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -1493,7 +1497,7 @@ on rowfocuschanged;//*----------------------------------------------------------
 //* Evenement 		: RowFocusChanged
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1502,8 +1506,8 @@ on rowfocuschanged;//*----------------------------------------------------------
 //*-----------------------------------------------------------------
 
 // Je met un IsValid, en effet une erreur bizarre
-// appara$$HEX1$$ee00$$ENDHEX$$t sur cette fonction (objet $$HEX2$$e0002000$$ENDHEX$$null) $$HEX2$$e0002000$$ENDHEX$$la 
-// fermeture de la fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil sinistre ???
+// apparaît sur cette fonction (objet à null) à la 
+// fermeture de la fenêtre d'accueil sinistre ???
 
 If ibTrigger_RFC_TypArt Then
 	Parent.SetRedraw ( False )
@@ -1532,7 +1536,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1552,7 +1556,7 @@ event itemerror;//**************************************************************
 // Evenement 	: ItemError
 //	Auteur		: Fabry JF
 //	Date			: 05/09/01
-// Libell$$HEX3$$e90009000900$$ENDHEX$$: Controle des zones
+// Libellé		: Controle des zones
 // Commentaires: 
 //					  
 // ----------------------------------------------------------------------------
@@ -1570,7 +1574,7 @@ event itemchanged;//*-----------------------------------------------------------
 //* Evenement 		: ItemChanged
 //* Auteur			: Fabry JF
 //* Date				: 18/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1605,7 +1609,7 @@ event itemerror;//**************************************************************
 // Evenement 	: ItemError
 //	Auteur		: Fabry JF
 //	Date			: 05/09/01
-// Libell$$HEX3$$e90009000900$$ENDHEX$$: Controle des zones
+// Libellé		: Controle des zones
 // Commentaires: 
 //					  
 // ----------------------------------------------------------------------------
@@ -1622,7 +1626,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1642,7 +1646,7 @@ event itemchanged;//*-----------------------------------------------------------
 //* Evenement 		: ItemChanged
 //* Auteur			: Fabry JF
 //* Date				: 18/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1733,7 +1737,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: cb_Prec
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1766,7 +1770,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: cb_Suiv
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1798,7 +1802,7 @@ event ue_retour;//*-------------------------------------------------------------
 //* Evenement 		: ItemChanged
 //* Auteur			: Fabry JF
 //* Date				: 18/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$clench$$HEX4$$e9002000e0002000$$ENDHEX$$partir de n_cst_w_commande3::uf_ExistenceMobile
+//* Libellé			: Déclenché à partir de n_cst_w_commande3::uf_ExistenceMobile
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1819,8 +1823,8 @@ event ue_Init_Par_defaut();//*--------------------------------------------------
 //* Evenement 		: ue_Chgt_Fourn_Fct_Mobile
 //* Auteur			: Fabry JF
 //* Date				: 03/09/2009
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$clench$$HEX4$$e9002000e0002000$$ENDHEX$$partir de n_cst_w_commande3::uf_ExistenceMobile
-//* Commentaires	: Oblig$$HEX2$$e9002000$$ENDHEX$$de passer par ce biais cuase plantage PB sinon pour ouverture Response.
+//* Libellé			: Déclenché à partir de n_cst_w_commande3::uf_ExistenceMobile
+//* Commentaires	: Obligé de passer par ce biais cuase plantage PB sinon pour ouverture Response.
 //*					  [DCMP090327].[SBETV]
 //*				  
 //*-----------------------------------------------------------------
@@ -1837,7 +1841,7 @@ event itemerror;call super::itemerror;//****************************************
 // Evenement 	: ItemError
 //	Auteur		: Fabry JF
 //	Date			: 05/09/01
-// Libell$$HEX3$$e90009000900$$ENDHEX$$: Controle des zones
+// Libellé		: Controle des zones
 // Commentaires: 
 //					  
 // ----------------------------------------------------------------------------
@@ -1856,7 +1860,7 @@ event itemchanged;call super::itemchanged;//*-----------------------------------
 //* Evenement 		: ItemChanged
 //* Auteur			: Fabry JF
 //* Date				: 18/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1890,7 +1894,7 @@ event ue_share();//*------------------------------------------------------------
 //* Evenement 		: Ue_Share
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1914,7 +1918,7 @@ on rowfocuschanged;//*----------------------------------------------------------
 //* Evenement 		: RowFocusChanged
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2001 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1923,8 +1927,8 @@ on rowfocuschanged;//*----------------------------------------------------------
 //*-----------------------------------------------------------------
 
 // Je met un IsValid, en effet une erreur bizarre
-// appara$$HEX1$$ee00$$ENDHEX$$t sur cette fonction (objet $$HEX2$$e0002000$$ENDHEX$$null) $$HEX2$$e0002000$$ENDHEX$$la 
-// fermeture de la fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil sinistre ???
+// apparaît sur cette fonction (objet à null) à la 
+// fermeture de la fenêtre d'accueil sinistre ???
 
 Parent.SetRedraw ( False )
 If IsValid ( invCmd ) Then invCmd.Uf_RowfocusChanged ( "DWFOURN" )
@@ -1970,7 +1974,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 20/08/2003 17:07:58
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Bouton d'ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre de recherche
+//* Libellé       : Bouton d'ouverture de la fenêtre de recherche
 //*					  des communes
 //* Commentaires  : 
 //*
@@ -2036,7 +2040,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 20/08/2003 17:07:58
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Bouton d'ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre de recherche
+//* Libellé       : Bouton d'ouverture de la fenêtre de recherche
 //*					  des communes
 //* Commentaires  : 
 //*
@@ -2094,7 +2098,7 @@ integer weight = 400
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
-string text = "R$$HEX1$$e900$$ENDHEX$$cup. IMEI Adh. Corrig$$HEX1$$e900$$ENDHEX$$"
+string text = "Récup. IMEI Adh. Corrigé"
 end type
 
 on clicked;//*-----------------------------------------------------------------
@@ -2103,7 +2107,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 23/09/2003 17:24:44
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Armement IMEI de l'adh$$HEX1$$e900$$ENDHEX$$sion Corrig$$HEX1$$e900$$ENDHEX$$
+//* Libellé       : Armement IMEI de l'adhésion Corrigé
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -2142,7 +2146,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: cb_Dern
 //* Auteur			: Abdmeziem Catherine
 //* Date				: 06/01/2004 11:35:00
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -2175,7 +2179,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: cb_Prem
 //* Auteur			: Abdmeziem Catherine
 //* Date				: 06/01/2004 11:35:00
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -2228,7 +2232,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 15/10/2004 13:57:15
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -2262,7 +2266,7 @@ on ue_cocher;call u_sp_ifr_pilote::ue_cocher;//*--------------------------------
 //* Evenement     : 
 //* Auteur        : Fabry JF
 //* Date          : 25/10/2004 10:35:24
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -2296,7 +2300,7 @@ fontfamily fontfamily = swiss!
 string facename = "Arial"
 long textcolor = 255
 long backcolor = 12632256
-string text = "PEC Forc$$HEX1$$e900$$ENDHEX$$e !"
+string text = "PEC Forcée !"
 alignment alignment = center!
 boolean border = true
 borderstyle borderstyle = styleraised!
@@ -2342,7 +2346,7 @@ event clicked;//*
 //* Fonction		: Clicked
 //* Auteur			: JFF
 //* Date				: 23/05/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PM103]
 //*
 //* Arguments		: 

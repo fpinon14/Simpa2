@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_cm_sp_contact.srw
-$PBExportComments$Fen$$HEX1$$ea00$$ENDHEX$$tre cons perm des contacts
+﻿$PBExportHeader$w_cm_sp_contact.srw
+$PBExportComments$Fenêtre cons perm des contacts
 forward
 global type w_cm_sp_contact from w_8_ancetre_consultation
 end type
@@ -16,9 +16,6 @@ end type
 end forward
 
 global type w_cm_sp_contact from w_8_ancetre_consultation
-integer x = 1075
-integer y = 481
-integer height = 1637
 boolean controlmenu = false
 boolean minbox = false
 dw_1 dw_1
@@ -52,7 +49,7 @@ public subroutine wf_positionnerobjets ();//*-----------------------------------
 //* Fonction		: W_Cm_Sp_Contact::Wf_PositionnerObjets (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 24/04/2001 
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On positionne et on taille tous les objets
 //*
 //* Arguments		: Aucun
@@ -82,8 +79,8 @@ public function boolean wf_preparerinserer ();//*-------------------------------
 //* Fonction		: W_Td_Sp_W_Contact::Wf_PreparerInserer
 //* Auteur			: Fabry JF
 //* Date				: 25/04/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Op$$HEX1$$e900$$ENDHEX$$ration avant insertion
+//* Libellé			: 
+//* Commentaires	: Opération avant insertion
 //*
 //* Arguments		: Rien
 //*
@@ -92,7 +89,7 @@ public function boolean wf_preparerinserer ();//*-------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On arme le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre avec le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre       */
+/* On arme le titre de la fenêtre avec le titre de la fenêtre       */
 /* Parent.                                                          */
 /*------------------------------------------------------------------*/
 This.Title = istPass.sTab [ 1 ]
@@ -107,7 +104,7 @@ public function boolean wf_preparersupprimer ();//*-----------------------------
 //* Fonction		: Wf_PreparerSupprimer
 //* Auteur			: Fabry JF
 //* Date				: 27/04/01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Demande de confirmation avant suppression
+//* Libellé			: Demande de confirmation avant suppression
 //* Commentaires	: Aucun
 //*
 //* Arguments		: Aucun
@@ -124,7 +121,7 @@ public function string wf_controlersaisie ();//*--------------------------------
 //* Fonction		: Wf_ControlerSaisie
 //* Auteur			: Fabry JF
 //* Date				: 26/04/2001 13:59:07
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de saisie des zones
+//* Libellé			: Contrôle de saisie des zones
 //*					  
 //* Commentaires	: Aucun
 //*
@@ -144,7 +141,7 @@ public function string wf_controlergestion ();//*-------------------------------
 //* Fonction		: Wf_ControlerGestion
 //* Auteur			: Fabry JF
 //* Date				: 26/04/2001 13:59:07
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de gestion
+//* Libellé			: Contrôle de gestion
 //*					  
 //* Commentaires	: Aucun
 //*
@@ -163,8 +160,8 @@ public function boolean Wf_PreparerModifier ();//*------------------------------
 //* Fonction		: W_Cm_Sp_Contact::Wf_PreparerModifier
 //* Auteur			: Fabry JF
 //* Date				: 25/04/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Op$$HEX1$$e900$$ENDHEX$$ration avant modification
+//* Libellé			: 
+//* Commentaires	: Opération avant modification
 //*
 //* Arguments		: Rien
 //*
@@ -173,7 +170,7 @@ public function boolean Wf_PreparerModifier ();//*------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On arme le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre avec le titre de la fen$$HEX1$$ea00$$ENDHEX$$tre       */
+/* On arme le titre de la fenêtre avec le titre de la fenêtre       */
 /* Parent.                                                          */
 /*------------------------------------------------------------------*/
 This.Title = istPass.sTab [ 1 ]
@@ -187,11 +184,11 @@ public function boolean wf_controler ();//**************************************
 // Fonction            	: w_Traitement::wf_Controler
 //	Auteur              	: D.Bizien
 //	Date 					 	: 11/03/1996
-//	Libell$$HEX6$$e90009000900090009000900$$ENDHEX$$: Proc$$HEX1$$e900$$ENDHEX$$dure centrale de controle 
+//	Libellé					: Procédure centrale de controle 
 // Commentaires			: Elle appelle les fonctions de controles de saisie et de controle de gestion
 // Arguments				: Aucun
 //
-// Retourne					: Bool$$HEX1$$e900$$ENDHEX$$en - Vrai si tout Ok
+// Retourne					: Booléen - Vrai si tout Ok
 //								  
 //*******************************************************************************************
 
@@ -204,7 +201,7 @@ sCol = wf_ControlerSaisie( )
 
 If ( sCol <> "" ) Then
 
-	//	----------	Gestion du bouton de contr$$HEX1$$f400$$ENDHEX$$le.
+	//	----------	Gestion du bouton de contrôle.
 
 	pb_Controler.Enabled		=	True
 	pb_Valider.Enabled		=	False
@@ -220,13 +217,13 @@ If ( sCol <> "" ) Then
 
 Else
 
-	//	----------	Contr$$HEX1$$f400$$ENDHEX$$le de gestion et bouton de contr$$HEX1$$f400$$ENDHEX$$le.
+	//	----------	Contrôle de gestion et bouton de contrôle.
 
 	sCol	= wf_ControlerGestion ( )
 
 	If ( sCol <> "" ) Then
 
-		//	----------	Gestion du bouton de contr$$HEX1$$f400$$ENDHEX$$le.
+		//	----------	Gestion du bouton de contrôle.
 
 		pb_Controler.Enabled		=	True
 		pb_Valider.Enabled		=	False
@@ -267,14 +264,14 @@ on ue_valider;call w_8_ancetre_consultation::ue_valider;//**********************
 // Evenement 	: ue_Valider
 //	Auteur		: D.Bizien
 //	Date			: 13/03/1996
-// Libell$$HEX3$$e90009000900$$ENDHEX$$: Enregistrement des informations
+// Libellé		: Enregistrement des informations
 // Commentaires: 
 //					  
 // ----------------------------------------------------------------------------
 // MAJ PAR		Date		Modification
 //	La Recrue	20/02/97	MOD-0017
-// $$HEX2$$e0002000$$ENDHEX$$la fin du script execution d'un PostEvent pour la fermeture de la fen$$HEX1$$ea00$$ENDHEX$$tre
-// apr$$HEX1$$e800$$ENDHEX$$s une validation.
+// à la fin du script execution d'un PostEvent pour la fermeture de la fenêtre
+// après une validation.
 //*****************************************************************************
 
 Boolean bRet
@@ -291,8 +288,8 @@ If Not istPass.bInsert Then
 	If lRow > 0 Then istPass.dwTab [1].DeleteRow ( lRow )
 End If
 
-// R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration des Initiales de la personne qui va traiter le dossier
-// $$HEX2$$e0002000$$ENDHEX$$partir de la fen$$HEX1$$ea00$$ENDHEX$$tre de sinistre.
+// Récupération des Initiales de la personne qui va traiter le dossier
+// à partir de la fenêtre de sinistre.
 If iuoCpSpContact.uf_Valider () Then iwParent.TriggerEvent ("ue_Item5")
 
 lTotLig = istPass.dwTab [1].RowCount ()
@@ -318,7 +315,7 @@ on close;call w_8_ancetre_consultation::close;//*-------------------------------
 //* Evenement 		: Close
 //* Auteur			: Fabry JF
 //* Date				: 25/04/2001 18:46:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -335,14 +332,14 @@ on ue_supprimer;call w_8_ancetre_consultation::ue_supprimer;//******************
 // Evenement 	: ue_Supprimer
 //	Auteur		: D.Bizien
 //	Date			: 18/03/1996
-// Libell$$HEX3$$e90009000900$$ENDHEX$$: Suppression des informations
+// Libellé		: Suppression des informations
 // Commentaires: 
 //					  
 // ----------------------------------------------------------------------------
 // MAJ PAR		Date		Modification
 //	La Recrue	20/02/97	MOD-0017
-// $$HEX2$$e0002000$$ENDHEX$$la fin du script execution d'un PostEvent pour la fermeture de la fen$$HEX1$$ea00$$ENDHEX$$tre
-// apr$$HEX1$$e800$$ENDHEX$$s une suppression.
+// à la fin du script execution d'un PostEvent pour la fermeture de la fenêtre
+// après une suppression.
 //*****************************************************************************
 
 Boolean bRet
@@ -390,7 +387,7 @@ on ue_controler;call w_8_ancetre_consultation::ue_controler;//******************
 // Evenement 	: ue_Controler
 //	Auteur		: D.Bizien
 //	Date			: 11/03/1996
-// Libell$$HEX3$$e90009000900$$ENDHEX$$: Controle des informations de la fen$$HEX1$$ea00$$ENDHEX$$tre
+// Libellé		: Controle des informations de la fenêtre
 // Commentaires: Le 07/04/1996 -> Erick John Stark 
 //					  
 // ----------------------------------------------------------------------------
@@ -407,13 +404,13 @@ Else
 End If
 end on
 
-on we_childactivate;//*-----------------------------------------------------------------
+event we_childactivate;//*-----------------------------------------------------------------
 //*
 //* Objet 			: W_Cm_Sp_Contact::We_ChildActivate (OVERRIDE )
 //* Evenement 		: We_ChildActivate
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 17:53:35
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -425,9 +422,12 @@ Boolean					bOk
 
 This.X			=    1
 This.Y			=    1
-This.Height		= 1769
-This.Width		= 3598
+// [PB2022_TAILLE_FEN] + xxx
+This.Height		= 1769 + 90
 
+
+// [PB2022_TAILLE_FEN] + xxx
+This.Width		= 3598 + 50
 
 If ( ibAInitialiser ) Then
 
@@ -436,7 +436,7 @@ If ( ibAInitialiser ) Then
 	istPass = Message.PowerObjectParm
 
 	itrTrans						=  istPass.trTrans	// Objet transaction de la fenetre appelante
-	iwParent						=	istPass.wParent	// Fenetre Appelante ( utilis$$HEX1$$e900$$ENDHEX$$e pour enable )	
+	iwParent						=	istPass.wParent	// Fenetre Appelante ( utilisée pour enable )	
 
 	istPass.wParent			=	This					// Fenetre appelante pour fenetre de traitment
 	istPass.trTrans			=	itrTrans				// Objet de transaction par defaut
@@ -496,7 +496,7 @@ If ( ibAInitialiser ) Then
 
 	End If
 
-	// Arr$$HEX1$$ea00$$ENDHEX$$t d'ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre si probl$$HEX1$$e800$$ENDHEX$$me
+	// Arrêt d'ouverture de la fenêtre si problème
 
 	If Not bOk Then
 
@@ -523,7 +523,7 @@ If ( ibAInitialiser ) Then
 
 End If
 
-end on
+end event
 
 on ue_initialiser;call w_8_ancetre_consultation::ue_initialiser;//*-----------------------------------------------------------------
 //*
@@ -531,7 +531,7 @@ on ue_initialiser;call w_8_ancetre_consultation::ue_initialiser;//*-------------
 //* Evenement 		: Ue_Initialiser
 //* Auteur			: Fabry JF
 //* Date				: 05/01/1998 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -553,7 +553,7 @@ isTypeTrt = istPass.sTab[ 2 ]
 
 
 /*------------------------------------------------------------------*/
-/* On commence $$HEX2$$e0002000$$ENDHEX$$initialiser les NVUO.                              */
+/* On commence à initialiser les NVUO.                              */
 /*------------------------------------------------------------------*/
 iuoCpSpContact = Create U_Gs_Sp_Sinistre_Contact
 
@@ -605,6 +605,9 @@ destroy(this.pb_supprimer)
 destroy(this.dw_a_traiter_par)
 end on
 
+type cb_debug from w_8_ancetre_consultation`cb_debug within w_cm_sp_contact
+end type
+
 type st_titre from w_8_ancetre_consultation`st_titre within w_cm_sp_contact
 boolean visible = false
 end type
@@ -612,6 +615,8 @@ end type
 type pb_retour from w_8_ancetre_consultation`pb_retour within w_cm_sp_contact
 integer x = 9
 integer y = 8
+integer width = 242
+integer height = 144
 integer taborder = 60
 end type
 
@@ -631,7 +636,7 @@ on itemchanged;call u_datawindow::itemchanged;//*-------------------------------
 //* Evenement 		: itemChanged
 //* Auteur			: Fabry JF
 //* Date				: 05/01/1998 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -650,7 +655,7 @@ on itemerror;call u_datawindow::itemerror;
 //* Evenement 		: itemError
 //* Auteur			: Fabry JF
 //* Date				: 05/01/1998 17:59:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -664,8 +669,8 @@ end on
 type pb_controler from u_pbcontroler within w_cm_sp_contact
 integer x = 251
 integer y = 8
-integer width = 233
-integer height = 136
+integer width = 242
+integer height = 144
 integer taborder = 40
 integer textsize = -7
 string facename = "Arial"
@@ -675,8 +680,8 @@ end type
 type pb_valider from u_pbvalider within w_cm_sp_contact
 integer x = 494
 integer y = 8
-integer width = 233
-integer height = 136
+integer width = 242
+integer height = 144
 integer taborder = 30
 integer textsize = -7
 string facename = "Arial"
@@ -691,8 +696,8 @@ end on
 type pb_supprimer from u_pbsupprimer within w_cm_sp_contact
 integer x = 736
 integer y = 8
-integer width = 233
-integer height = 136
+integer width = 242
+integer height = 144
 integer taborder = 20
 integer textsize = -7
 string facename = "Arial"
@@ -719,7 +724,7 @@ event itemchanged;call super::itemchanged;//*-----------------------------------
 //* Fonction		: ItemChanged
 //* Auteur			: Fabry JF
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Rien
@@ -756,7 +761,7 @@ event itemerror;call super::itemerror;//*---------------------------------------
 //* Fonction		: ItemError
 //* Auteur			: Fabry JF
 //* Date				: 05/01/1998 18:25:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Rien
@@ -766,7 +771,7 @@ event itemerror;call super::itemerror;//*---------------------------------------
 //*-----------------------------------------------------------------
 
 
-stMessage.sTitre		= "Dossier $$HEX2$$e0002000$$ENDHEX$$traiter par"
+stMessage.sTitre		= "Dossier à traiter par"
 stMessage.Icon			= Information!
 stMessage.sCode		= "CONT019"
 stMessage.bErreurG	= False

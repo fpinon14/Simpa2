@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_t_sp_sinistres_lies.srw
-$PBExportComments$-} Fen$$HEX1$$ea00$$ENDHEX$$tre de traitement SIMPLE pour la recherche des sinistres li$$HEX1$$e900$$ENDHEX$$s.
+﻿$PBExportHeader$w_t_sp_sinistres_lies.srw
+$PBExportComments$-} Fenêtre de traitement SIMPLE pour la recherche des sinistres liés.
 forward
 global type w_t_sp_sinistres_lies from w_ancetre
 end type
@@ -26,7 +26,7 @@ integer y = 0
 integer width = 3570
 integer height = 1744
 boolean titlebar = true
-string title = "Recherche des sinistres li$$HEX1$$e900$$ENDHEX$$s"
+string title = "Recherche des sinistres liés"
 pb_valider pb_valider
 pb_retour pb_retour
 dw_1 dw_1
@@ -50,7 +50,7 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		: Ue_Initialiser
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 09:55:15
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -75,20 +75,20 @@ sNouvelleLigne		= "~r~n"
 
 /*------------------------------------------------------------------*/
 /* On positionne la variable qui permet d'attaquer la DW de la      */
-/* fen$$HEX1$$ea00$$ENDHEX$$tre PARENT.                                                  */
+/* fenêtre PARENT.                                                  */
 /*------------------------------------------------------------------*/
 iwParentDet = istPass.wParent
 
 /*------------------------------------------------------------------*/
-/* On rend la fen$$HEX1$$ea00$$ENDHEX$$tre PARENT non saisissable.                       */
+/* On rend la fenêtre PARENT non saisissable.                       */
 /*------------------------------------------------------------------*/
 iwParentDet.Enabled = False
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re les lignes correspondant aux sinistres li$$HEX1$$e900$$ENDHEX$$s.         */
+/* On récupére les lignes correspondant aux sinistres liés.         */
 /*------------------------------------------------------------------*/
 //Migration PB8-WYNIWYG-03/2006 FM
-//Il faut partager les donn$$HEX1$$e900$$ENDHEX$$es des childs avant de partager les donn$$HEX1$$e900$$ENDHEX$$es de la dw principale
+//Il faut partager les données des childs avant de partager les données de la dw principale
 //sinon la fenetre des retrieve arg s'affiche!!
 long	ll_res
 ll_res = istPass.dwNorm[1].GetChild("cod_civ", dwchild)
@@ -99,7 +99,7 @@ ll_res = istPass.dwNorm[1].ShareData ( dw_1 )
 //Fin Migration PB8-WYNIWYG-03/2006 FM
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re la DW de saisie de la fen$$HEX1$$ea00$$ENDHEX$$tre parente.               */
+/* On récupére la DW de saisie de la fenêtre parente.               */
 /*------------------------------------------------------------------*/
 //Migration PB8-WYNIWYG-03/2006 FM
 ll_res = iwParentDet.dw_1.GetChild("cod_civ", dwchild)
@@ -121,10 +121,10 @@ ll_res = iwParentDet.dw_1.ShareData ( dw_wTravail )
 //Fin Migration PB8-WYNIWYG-03/2006 FM
 
 /*------------------------------------------------------------------*/
-/* On s'occupe de faire apparaitre la civilit$$HEX2$$e9002000$$ENDHEX$$correctement.        */
+/* On s'occupe de faire apparaitre la civilité correctement.        */
 /*------------------------------------------------------------------*/
 //Migration PB8-WYNIWYG-03/2006 FM
-//le partage de donn$$HEX1$$e900$$ENDHEX$$es des child est d$$HEX1$$e900$$ENDHEX$$plac$$HEX2$$e9002000$$ENDHEX$$avant le partage de donn$$HEX1$$e900$$ENDHEX$$e des dw m$$HEX1$$e800$$ENDHEX$$res
+//le partage de données des child est déplacé avant le partage de donnée des dw mères
 //ll_res = istPass.dwNorm[1].GetChild ( "COD_CIV", dwChild )
 //ll_res = dw_1.GetChild ( "COD_CIV", dwChild1 )
 //ll_res = dwChild.ShareData ( dwChild1 )
@@ -134,7 +134,7 @@ ll_res = iwParentDet.dw_1.ShareData ( dw_wTravail )
 //Fin Migration PB8-WYNIWYG-03/2006 FM
 
 /*------------------------------------------------------------------*/
-/* On arme le titre de la DW. Ce titre est g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$dans la fonction  */
+/* On arme le titre de la DW. Ce titre est généré dans la fonction  */
 /* Uf_Recuperer_Sinistres_Lies ().                                  */
 /*------------------------------------------------------------------*/
 sTitre = "st_Titre.Text = '" + istPass.sTab[1] + "'"
@@ -142,11 +142,11 @@ dw_1.Modify ( sTitre )
 
 lTotSinistre = dw_1.RowCount ()
 /*------------------------------------------------------------------*/
-/* On traite maintenant les diff$$HEX1$$e900$$ENDHEX$$rents probl$$HEX1$$e800$$ENDHEX$$mes.                   */
+/* On traite maintenant les différents problèmes.                   */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* S'il existe des num$$HEX1$$e900$$ENDHEX$$ros d'ordre diff$$HEX1$$e900$$ENDHEX$$rents, il y a un probl$$HEX1$$e800$$ENDHEX$$me   */
-/* d'attribution de N$$HEX2$$b0002000$$ENDHEX$$d'ordre $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gler par le service              */
+/* S'il existe des numéros d'ordre différents, il y a un problème   */
+/* d'attribution de N° d'ordre à régler par le service              */
 /* informatique. Il faut interdire la validation.                   */
 /*------------------------------------------------------------------*/
 lIdOrdre = dw_1.GetItemNumber ( 1, "ID_ORDRE" )
@@ -159,7 +159,7 @@ For	lCpt = 2 To lTotSinistre
 			cb_Prendre2.Enabled = False
 			cb_Prendre2.Visible = False
 			
-			stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le sur les sinistres li$$HEX1$$e900$$ENDHEX$$s"
+			stMessage.sTitre		= "Contrôle sur les sinistres liés"
 			stMessage.Icon			= StopSign!
 			stMessage.bErreurG	= False
 			stMessage.sCode		= "WORK180"
@@ -187,7 +187,7 @@ If	Not bErreur Then
 				cb_Prendre2.Visible = False
 
 			
-				stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le sur les sinistres li$$HEX1$$e900$$ENDHEX$$s"
+				stMessage.sTitre		= "Contrôle sur les sinistres liés"
 				stMessage.Icon			= StopSign!
 				stMessage.bErreurG	= False
 				stMessage.sVar[1]		= String ( dw_1.GetItemNumber ( lCpt, "ID_SIN" ) )
@@ -201,10 +201,10 @@ If	Not bErreur Then
 End If
 
 /*------------------------------------------------------------------*/
-/* S'il existe diff$$HEX1$$e900$$ENDHEX$$rentes dates d'adh$$HEX1$$e900$$ENDHEX$$sion pour les sinistres, il  */
-/* faut pr$$HEX1$$e900$$ENDHEX$$venir le service informatique et interdire la            */
-/* validation. Ce test est r$$HEX1$$e900$$ENDHEX$$alis$$HEX2$$e9002000$$ENDHEX$$sur les dates que l'on poss$$HEX1$$e900$$ENDHEX$$de   */
-/* d$$HEX1$$e900$$ENDHEX$$j$$HEX1$$e000$$ENDHEX$$. On ne v$$HEX1$$e900$$ENDHEX$$rifie pas cette date unique avec la date que l'on  */
+/* S'il existe différentes dates d'adhésion pour les sinistres, il  */
+/* faut prévenir le service informatique et interdire la            */
+/* validation. Ce test est réalisé sur les dates que l'on posséde   */
+/* déjà. On ne vérifie pas cette date unique avec la date que l'on  */
 /* vient de saisir (COD_ADH = 2,3,4,5), ou que l'on vient de        */
 /* calculer (COD_ADH = 1).                                          */
 /*------------------------------------------------------------------*/
@@ -220,7 +220,7 @@ If	Not bErreur Then
 				cb_Prendre2.Enabled = False
 				cb_Prendre2.Visible = False
 			
-				stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le sur les sinistres li$$HEX1$$e900$$ENDHEX$$s"
+				stMessage.sTitre		= "Contrôle sur les sinistres liés"
 				stMessage.Icon			= StopSign!
 				stMessage.bErreurG	= False
 				stMessage.sCode		= "WORK250"
@@ -234,10 +234,10 @@ If	Not bErreur Then
 End If
 
 /*------------------------------------------------------------------*/
-/* On compare les informations r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$es lors de la recherche      */
-/* adh$$HEX1$$e900$$ENDHEX$$sion $$HEX2$$e0002000$$ENDHEX$$celle que l'on vient de r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer. On affiche les     */
-/* diff$$HEX1$$e900$$ENDHEX$$rences pour pr$$HEX1$$e900$$ENDHEX$$venir l'utilisateur. Ce test ne doit $$HEX1$$ea00$$ENDHEX$$tre    */
-/* r$$HEX1$$e900$$ENDHEX$$alis$$HEX2$$e9002000$$ENDHEX$$que pour les produits avec COD_ADH = 1 et 6.             */
+/* On compare les informations récupérées lors de la recherche      */
+/* adhésion à celle que l'on vient de récupérer. On affiche les     */
+/* différences pour prévenir l'utilisateur. Ce test ne doit être    */
+/* réalisé que pour les produits avec COD_ADH = 1 et 6.             */
 /*------------------------------------------------------------------*/
 If	Not bErreur Then
 	iwParentDet.dw_1.GetChild ( "ID_PROD", dwChild )
@@ -283,8 +283,8 @@ If	Not bErreur Then
 			sCodCivAdh = dw_wTravail.Describe ( "Evaluate ( 'LookUpDisplay ( COD_CIV )', 1 ) " )
 			sCodCivSin = dw_1.Describe ( "Evaluate ( 'LookUpDisplay ( COD_CIV )', 1 ) " )
 			
-			sVar = sVar + "Civilit$$HEX2$$e9002000$$ENDHEX$$(Adh)	" + sCodCivAdh + sNouvelleLigne + &
-							  "Civilit$$HEX2$$e9002000$$ENDHEX$$(Sin)	" + sCodCivSin + sNouvelleLigne + sNouvelleLigne
+			sVar = sVar + "Civilité (Adh)	" + sCodCivAdh + sNouvelleLigne + &
+							  "Civilité (Sin)	" + sCodCivSin + sNouvelleLigne + sNouvelleLigne
 		End If
 
 		If	sNomAdh <> sNomSin Then
@@ -293,8 +293,8 @@ If	Not bErreur Then
 		End If
 
 		If	sPrenomAdh <> sPrenomSin Then
-			sVar = sVar + "Pr$$HEX1$$e900$$ENDHEX$$nom (Adh)	" + sPrenomAdh + sNouvelleLigne + &
-							  "Pr$$HEX1$$e900$$ENDHEX$$nom (Sin)	" + sPrenomSin + sNouvelleLigne + sNouvelleLigne
+			sVar = sVar + "Prénom (Adh)	" + sPrenomAdh + sNouvelleLigne + &
+							  "Prénom (Sin)	" + sPrenomSin + sNouvelleLigne + sNouvelleLigne
 		End If
 
 		If	sAdr1Adh <> sAdr1Sin And lAdrDms = 1 Then
@@ -324,7 +324,7 @@ If	Not bErreur Then
 
 		If	sVar <> "" Then 
 
-			stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le sur les sinistres li$$HEX1$$e900$$ENDHEX$$s"
+			stMessage.sTitre		= "Contrôle sur les sinistres liés"
 			stMessage.Icon			= Information!
 			stMessage.bErreurG	= False
 			stMessage.sVar[1]		= sVar
@@ -352,7 +352,7 @@ on ue_retour;call w_ancetre::ue_retour;//*--------------------------------------
 //* Evenement 		: Ue_Retour
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 10:02:13
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -361,30 +361,30 @@ on ue_retour;call w_ancetre::ue_retour;//*--------------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On rend la fen$$HEX1$$ea00$$ENDHEX$$tre PARENT saisissable.                           */
+/* On rend la fenêtre PARENT saisissable.                           */
 /*------------------------------------------------------------------*/
 iwParentDet.Enabled = True
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$clenche le script de la fen$$HEX1$$ea00$$ENDHEX$$tre parent. On lui passe en     */
-/* param$$HEX1$$e800$$ENDHEX$$tre la valeur ilRetour. Cela $$HEX1$$e900$$ENDHEX$$vite d'avoir deux            */
-/* $$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nements $$HEX2$$e0002000$$ENDHEX$$d$$HEX1$$e900$$ENDHEX$$crire.                                            */
+/* On déclenche le script de la fenêtre parent. On lui passe en     */
+/* paramètre la valeur ilRetour. Cela évite d'avoir deux            */
+/* événements à décrire.                                            */
 /*------------------------------------------------------------------*/
 iwParentDet.TriggerEvent ( "Ue_Sinistres_Lies", 0, ilRetour )
 
 /*------------------------------------------------------------------*/
-/* On referme la fen$$HEX1$$ea00$$ENDHEX$$tre.                                           */
+/* On referme la fenêtre.                                           */
 /*------------------------------------------------------------------*/
 Close ( This )
 end on
 
-on we_childactivate;call w_ancetre::we_childactivate;//*-----------------------------------------------------------------
+event we_childactivate;call super::we_childactivate;//*-----------------------------------------------------------------
 //*
 //* Objet 			: W_T_Sp_Sinistres_Lies::We_ChildActivate
 //* Evenement 		: We_ChildActivate
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 17:53:35
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -394,9 +394,13 @@ on we_childactivate;call w_ancetre::we_childactivate;//*------------------------
 
 This.X			=    1
 This.Y			=    1
-This.Height		= 1769
-This.Width		= 3598
-end on
+// [PB2022_TAILLE_FEN] + xxx
+This.Height		= 1769 + 90
+
+
+// [PB2022_TAILLE_FEN] + xxx
+This.Width		= 3598 + 50
+end event
 
 event open;call super::open;//*-----------------------------------------------------------------
 //*
@@ -404,7 +408,7 @@ event open;call super::open;//*-------------------------------------------------
 //* Evenement 		: Open
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 09:49:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -415,8 +419,8 @@ event open;call super::open;//*-------------------------------------------------
 istPass = Message.PowerObjectParm
 
 /*------------------------------------------------------------------*/
-/* La variable ilRetour sert $$HEX2$$e0002000$$ENDHEX$$savoir si on appuie sur le bouton    */
-/* PRENDRE ou le bouton RETOUR. Par d$$HEX1$$e900$$ENDHEX$$faut on arme la valeur $$HEX2$$e0002000$$ENDHEX$$0,   */
+/* La variable ilRetour sert à savoir si on appuie sur le bouton    */
+/* PRENDRE ou le bouton RETOUR. Par défaut on arme la valeur à 0,   */
 /* ce qui correspond au bouton RETOUR.                              */
 /*------------------------------------------------------------------*/
 ilRetour = 0
@@ -525,7 +529,7 @@ fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
 boolean enabled = false
-string text = "&Prendre avec les coordonn$$HEX1$$e900$$ENDHEX$$es des adh$$HEX1$$e900$$ENDHEX$$sions"
+string text = "&Prendre avec les coordonnées des adhésions"
 end type
 
 on clicked;//*-----------------------------------------------------------------
@@ -534,7 +538,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked!
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 10:02:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -543,9 +547,9 @@ on clicked;//*-----------------------------------------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* La variable ilRetour sert $$HEX2$$e0002000$$ENDHEX$$savoir si on appuie sur le bouton    */
+/* La variable ilRetour sert à savoir si on appuie sur le bouton    */
 /* PRENDRE ou le bouton RETOUR. On vient d'appuyer sur le bouton    */
-/* PRENDRE, on arme donc la valeur $$HEX2$$e0002000$$ENDHEX$$2.                             */
+/* PRENDRE, on arme donc la valeur à 2.                             */
 /*------------------------------------------------------------------*/
 ilRetour = 2
 
@@ -564,7 +568,7 @@ integer weight = 700
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
-string text = "&Prendre les coordon$$HEX1$$e900$$ENDHEX$$es du sinistre pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dent"
+string text = "&Prendre les coordonées du sinistre précédent"
 end type
 
 on clicked;//*-----------------------------------------------------------------
@@ -573,7 +577,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked!
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 10:02:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -582,9 +586,9 @@ on clicked;//*-----------------------------------------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* La variable ilRetour sert $$HEX2$$e0002000$$ENDHEX$$savoir si on appuie sur le bouton    */
+/* La variable ilRetour sert à savoir si on appuie sur le bouton    */
 /* PRENDRE ou le bouton RETOUR. On vient d'appuyer sur le bouton    */
-/* PRENDRE, on arme donc la valeur $$HEX2$$e0002000$$ENDHEX$$1.                             */
+/* PRENDRE, on arme donc la valeur à 1.                             */
 /*------------------------------------------------------------------*/
 ilRetour = 1
 
@@ -613,7 +617,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked!
 //* Auteur			: Erick John Stark
 //* Date				: 21/01/1998 10:02:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------

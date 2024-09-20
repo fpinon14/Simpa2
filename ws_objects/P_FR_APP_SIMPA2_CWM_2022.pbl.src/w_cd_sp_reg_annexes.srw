@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_cd_sp_reg_annexes.srw
+﻿$PBExportHeader$w_cd_sp_reg_annexes.srw
 $PBExportComments$PM80
 forward
 global type w_cd_sp_reg_annexes from window
@@ -10,8 +10,8 @@ end type
 end forward
 
 global type w_cd_sp_reg_annexes from window
-integer width = 2007
-integer height = 1684
+integer width = 2053
+integer height = 1708
 boolean titlebar = true
 string title = "Ventilation des frais annexes fournisseurs"
 boolean controlmenu = true
@@ -50,8 +50,8 @@ end event
 type dw_1 from datawindow within w_cd_sp_reg_annexes
 integer x = 37
 integer y = 176
-integer width = 1920
-integer height = 1376
+integer width = 1970
+integer height = 1416
 integer taborder = 20
 string title = "none"
 string dataobject = "d_sp_c_detail_reg_frais_annexe"
