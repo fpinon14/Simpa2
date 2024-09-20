@@ -2438,7 +2438,7 @@ This.Height				= 2057
 /* Onglet 01                                                        */
 /*------------------------------------------------------------------*/
 Uo_Onglets.X     		=   10
-Uo_Onglets.Y     		=  160
+Uo_Onglets.Y     		=  160 + 5 // [PB2022_TAILLE_FEN]
 Uo_Onglets.Height		=  109
 
 /*------------------------------------------------------------------*/
@@ -2454,7 +2454,7 @@ Dw_1.Height				= 1330
 /* Courriers.                                                       */
 /*------------------------------------------------------------------*/
 uo_Onglets3.X			= Dw_1.X + 10
-uo_Onglets3.Y			= Dw_1.Y + 10
+uo_Onglets3.Y			= Dw_1.Y + 10 + 5 // [PB2022_TAILLE_FEN]
 uo_Onglets3.Height	= 109
 
 uo_Courrier.X			= Dw_1.X + 70
@@ -2487,7 +2487,7 @@ uo_Info.Height			= Dw_1.Height
 /* Garanties/Conditions.                                            */
 /*------------------------------------------------------------------*/
 uo_Onglets2.X			= Dw_1.X + 10
-uo_Onglets2.Y			= Dw_1.Y + 10
+uo_Onglets2.Y			= Dw_1.Y + 10 + 5 // [PB2022_TAILLE_FEN]
 uo_Onglets2.Height	= 109
 
 uo_Garantie.X			= Dw_1.X + 70
