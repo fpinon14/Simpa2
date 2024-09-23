@@ -18837,7 +18837,7 @@ If sTypeApp="PNE" Then
 	// [MCO602_PNEU]
 	If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
 		sVal = idw_Wsin.GetItemString ( 1, "num_imei_port" )
-		If IsNull ( sVal ) Or Trim ( sVal ) = "" Then idw_Wsin.SetItem ( 1, "num_imei_port", "AUCUN" )
+		idw_Wsin.SetItem ( 1, "num_imei_port", "AUCUN" )
 	Else 	
 		idw_Wsin.Modify ( "num_imei_port_t.text = 'Immat.'" ) 
 	End If 
