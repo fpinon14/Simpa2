@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_a_sp_trt_m.srw
-$PBExportComments$--- } Fen$$HEX1$$ea00$$ENDHEX$$tre Traitement Mensuel
+﻿$PBExportHeader$w_a_sp_trt_m.srw
+$PBExportComments$--- } Fenêtre Traitement Mensuel
 forward
 global type w_a_sp_trt_m from w_a_sp_trt
 end type
@@ -17,7 +17,7 @@ on ue_definirtrt;call w_a_sp_trt::ue_definirtrt;//*-----------------------------
 //* Evenement 		: ue_DefinirTrt
 //* Auteur			: DBI
 //* Date				: 26/01/1999 11:19:56
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Armement de la variable isTypTrt
+//* Libellé			: Armement de la variable isTypTrt
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -25,7 +25,7 @@ on ue_definirtrt;call w_a_sp_trt::ue_definirtrt;//*-----------------------------
 //*				  
 //*-----------------------------------------------------------------
 
-isTypTrt	=	"M"
+isTypTrt	=	"M" 
 end on
 
 on w_a_sp_trt_m.create
