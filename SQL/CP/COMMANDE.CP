@@ -12352,6 +12352,7 @@ Declare @sIdTypArt VarChar ( 3 )
 Declare @iStatuGc Integer
 Declare @sTypePresta VarChar ( 10 )
 Declare @sCAL VarChar ( 35 )
+Declare @sNumTelInter VarChar ( 20 )
 
 Select @sCAL = sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'lieu_repar', 'P', 'RETOUR=CODE')
 If @sCAL <> 'CAL' Return
@@ -12407,6 +12408,12 @@ Select	@dcIdProd = id_prod
 From	sysadm.sinistre
 Where	id_sin = @adcIdSin
 
+Select  @sNumTelInter = i.num_teld
+From	sysadm.inter i
+Where	i.id_sin = @adcIdSin
+
+If  @sNumTelInter is null Set @sNumTelInter = '0000000000'
+
 Set @sTypePresta = sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'typ_presta', 'P', 'RETOUR=CODE' )
 
 If @sTypePresta = 'REP'
@@ -12461,7 +12468,7 @@ Values					   ( @adcIdSin, @dcIdGti, @dcNewIdDetail, 'mt_pec', 'Mt maxi de prise
 
 
 Insert into sysadm.commande ( id_sin,    id_seq,     id_gti,   id_detail,      id_four,   id_typ_art  , id_marq_art,   id_modl_art,   mt_ttc_cmde,        adr_nom, adr_prenom, adr_livr1, adr_livr2, adr_livr_cpl, adr_cp,   adr_ville,   adr_tel1,	  adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, probleme,                                                                                                                             id_cmd_frn, id_serie_nouv, id_bon_transp, dte_rcp_frn, dte_env_cli, cod_etat, comment_frn, nom_gest, id_lot_cmd, cmd_gen_le, cmd_gen_par, cree_le,   maj_le,    maj_par, valide_le, valide_par, id_zone, id_bsp, dte_ret_pret, adr_cod_civ, id_ref_four,   id_orian_marque, id_orian_modele, dte_elv_mobile, status_gc, dte_emis_devis, mt_devis, alt_dev_acp, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli, info_spb_frn, id_marq_art_ifr, id_modl_art_ifr, info_spb_frn_cplt, info_frn_spb_cplt)
-Select 						  @adcIdSin, @iNewIdSeq, @dcIdGti, @dcNewIdDetail, a.id_four, a.id_typ_art, a.id_marq_art, a.id_modl_art, @dcMtForfaitPresta ,p.nom  , p.prenom,   p.adr_1,   p.adr_2  , null,         p.adr_cp, p.adr_ville, s.num_port, null,     null    , null,     null,        null,         null,         null,         'Prestation automatique pour règler le forfait d''intervention de ' + CONVERT ( varchar ( 20), @dcMtForfaitPresta ) + ' € à LECLERC', null,       null,          null,          null,        Getdate(),   'RPC',    null,        'AUTO',   999980    , GETDATE(),  'AUTO',      GETDATE(), GETDATE(), 'AUTO',  GETDATE(), 'AUTO',     null,    null,   null,         null,        a.id_ref_four, null,            null,            null,           @iStatuGc, null,           null,     null,        null,        null,          null,      null,         null,        null,        null,           null,     null,        null,          null,             null,             null,   null,            null,            null,            null,       null,            990,          null,            null,            null,              null  
+Select 						  @adcIdSin, @iNewIdSeq, @dcIdGti, @dcNewIdDetail, a.id_four, a.id_typ_art, a.id_marq_art, a.id_modl_art, @dcMtForfaitPresta ,p.nom  , p.prenom,   p.adr_1,   p.adr_2  , null,         p.adr_cp, p.adr_ville, @sNumTelInter, null,     null    , null,     null,        null,         null,         null,         'Prestation automatique pour règler le forfait d''intervention de ' + CONVERT ( varchar ( 20), @dcMtForfaitPresta ) + ' € à LECLERC', null,       null,          null,          null,        Getdate(),   'RPC',    null,        'AUTO',   999980    , GETDATE(),  'AUTO',      GETDATE(), GETDATE(), 'AUTO',  GETDATE(), 'AUTO',     null,    null,   null,         null,        a.id_ref_four, null,            null,            null,           @iStatuGc, null,           null,     null,        null,        null,          null,      null,         null,        null,        null,           null,     null,        null,          null,             null,             null,   null,            null,            null,            null,       null,            990,          null,            null,            null,              null  
 From sysadm.article a,
 	 sysadm.sinistre s,
 	 sysadm.personne p
@@ -12472,6 +12479,12 @@ And   p.id_ordre = s.id_ordre
 
 If Exists ( Select * from w_sin where id_sin = @adcIdSin )
 	Begin
+
+		Select  @sNumTelInter = i.num_teld
+		From	sysadm.w_inter i
+		Where	i.id_sin = @adcIdSin
+
+		If  @sNumTelInter is null Set @sNumTelInter = '0000000000'
 
 		Insert into sysadm.w_detail ( id_sin,    id_gti,   id_detail,      id_evt,	lib_det,   dte_det,   heu_det, num_carte,   mt_prej,   mt_fran,   mt_nplaf,   mt_plaf,   id_i_reg,    alt_bloc, alt_cour, alt_plaf, alt_reg,   alt_att,   alt_valide, cpt_valide, alt_ssui,   cod_mot_ssui,   cod_dec_mac, cod_dec_ope, cod_etat,   id_carte,   id_type_carte,  cree_le,   maj_le  ,   maj_par,    dte_cmd,   dte_livr,   mt_val_achat,			mt_val_publique,    num_facture )
 		Values					    ( @adcIdSin, @dcIdGti, @dcNewIdDetail, 1489,    null,      null,      null,    null,		0,		   0,		  0,		  0,		 null,        'N',		'N'     , 'N',      'N'	,   'O'    ,   'N',        1,          'N'     ,   0,			   100,		    100,		 100     ,   0   ,       '00',           getdate(), getdate(),  'AUTO',     null,      null,       @dcMtForfaitPresta,   @dcMtForfaitPresta,    null        )
@@ -12486,7 +12499,7 @@ If Exists ( Select * from w_sin where id_sin = @adcIdSin )
 		Values					     ( @adcIdSin, @dcIdGti, @dcNewIdDetail, 'mt_pec', 'Mt maxi de prise en charge', '-1',         'N',               'X',   	     'N',       'N'      , 44,     null,     null,   null,    'O',     1,          getdate(), getdate(),  'AUTO'  )
 
 		Insert into sysadm.w_commande ( id_sin,    id_seq,     id_gti,   id_detail,      id_four,   id_typ_art  , id_marq_art,   id_modl_art,   mt_ttc_cmde,        adr_nom, adr_prenom, adr_livr1, adr_livr2, adr_livr_cpl, adr_cp,   adr_ville,   adr_tel1,	  adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, probleme,                                                                                                                             id_cmd_frn, id_serie_nouv, id_bon_transp, dte_rcp_frn, dte_env_cli, cod_etat, comment_frn, cpt_valide, nom_gest, cree_le,   maj_le,    maj_par, id_zone, id_bsp, dte_ret_pret, adr_cod_civ, id_ref_four,   id_orian_marque, id_orian_modele, dte_elv_mobile, status_gc, dte_emis_devis, mt_devis, alt_dev_acp, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli, info_spb_frn, id_marq_art_ifr, id_modl_art_ifr, info_spb_frn_cplt, info_frn_spb_cplt)
-		Select 						    @adcIdSin, @iNewIdSeq, @dcIdGti, @dcNewIdDetail, a.id_four, a.id_typ_art, a.id_marq_art, a.id_modl_art, @dcMtForfaitPresta ,p.nom  , p.prenom,   p.adr_1,   p.adr_2  , null,         p.adr_cp, p.adr_ville, s.num_port,   null,     null    , null,     null,        null,         null,         null,         'Prestation automatique pour règler le forfait d''intervention de ' + CONVERT ( varchar ( 20), @dcMtForfaitPresta ) + ' € à LECLERC', null,       null,          null,          null,        Getdate(),   'RPC',    null,        0,          'AUTO',   GETDATE(), GETDATE(), 'AUTO',  null,    null,   null,         null,        a.id_ref_four, null,            null,            null,           @iStatuGc, null,           null,     null,        null,        null,          null,      null,         null,        null,        null,           null,     null,        null,          null,             null,             null,   null,            null,            null,            null,       null,            990,          null,            null,            null,              null  
+		Select 						    @adcIdSin, @iNewIdSeq, @dcIdGti, @dcNewIdDetail, a.id_four, a.id_typ_art, a.id_marq_art, a.id_modl_art, @dcMtForfaitPresta ,p.nom  , p.prenom,   p.adr_1,   p.adr_2  , null,         p.adr_cp, p.adr_ville, @sNumTelInter,   null,     null    , null,     null,        null,         null,         null,         'Prestation automatique pour règler le forfait d''intervention de ' + CONVERT ( varchar ( 20), @dcMtForfaitPresta ) + ' € à LECLERC', null,       null,          null,          null,        Getdate(),   'RPC',    null,        0,          'AUTO',   GETDATE(), GETDATE(), 'AUTO',  null,    null,   null,         null,        a.id_ref_four, null,            null,            null,           @iStatuGc, null,           null,     null,        null,        null,          null,      null,         null,        null,        null,           null,     null,        null,          null,             null,             null,   null,            null,            null,            null,       null,            990,          null,            null,            null,              null  
 		From sysadm.article a,
 			 sysadm.sinistre s,
 			 sysadm.personne p

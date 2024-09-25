@@ -16241,6 +16241,7 @@ Go
 -- JFF      22/08/2022   [RS3179_SHUNT_RECLA]
 -- JFF      26/04/2023   [RS5045_REF_MATP]
 -- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
+-- JFF      24/09/2024   [KSV793]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAILPUSH_APP_NON_RECP_EN_CTR' AND type = 'P' )
         DROP procedure sysadm.PS_S_MAILPUSH_APP_NON_RECP_EN_CTR
@@ -16251,6 +16252,7 @@ AS
 DECLARE @tb TABLE 
 	( id_seq	integer identity,
 	  id_sin	decimal (10 ), -- [PI062]
+	  id_prod   decimal ( 7 ), -- [KSV793]
 	  id_seq_cmde integer,
 	  type_rel  VarChar ( 10 ), -- [DT364]
 	  dte_decl  VarChar ( 10 ), -- [DT364]
@@ -16324,6 +16326,7 @@ Declare @dcIdInter Decimal ( 2 ) -- [RS5045_REF_MATP]
 Declare @sCodeMaquette VarChar ( 255 ) -- [RS5045_REF_MATP]
 Declare @sErrOutPut VarChar ( 255 ) -- [RS5045_REF_MATP]
 Declare @sXMLVar   VarChar ( max ) -- [RS5045_REF_MATP]  
+Declare @NosNotreRelances VarChar ( 50 ) -- [KSV793]
 
 Set @dtDateJour = GetDate()
 
@@ -16352,7 +16355,8 @@ Where dp.id_code_dp = 301
 -- [DT364]
 Insert into @tb
 select distinct 
-		c.id_sin, 
+		c.id_sin,
+		dp.id_prod, -- [KSV793]
 		c.id_seq,
 		'REL1', -- [DT364]
 		sysadm.FN_AFF_DATE ( s.dte_decl, 'SH' ),  -- [DT364]
@@ -16401,6 +16405,7 @@ And		i.adr_mail is not null
 Insert into @tb
 select distinct 
 		c.id_sin, 
+		dp.id_prod, -- [KSV793]
 		c.id_seq,
 		'REL2', -- [DT364]
 		sysadm.FN_AFF_DATE ( s.dte_decl, 'SH' ),  -- [DT364]
@@ -16450,6 +16455,7 @@ And		i.adr_mail is not null
 Insert into @tb
 select distinct 
 		c.id_sin, 
+		dp.id_prod, -- [KSV793]
 		c.id_seq,
 		'REL3', -- [DT364]
 		sysadm.FN_AFF_DATE ( s.dte_decl, 'SH' ),  -- [DT364]
@@ -16499,6 +16505,7 @@ And		i.adr_mail is not null
 Insert into @tb
 select distinct 
 		c.id_sin, 
+		dp.id_prod, -- [KSV793]
 		c.id_seq,
 		'REL4', -- [DT364]
 		sysadm.FN_AFF_DATE ( s.dte_decl, 'SH' ),  -- [DT364]
@@ -16670,7 +16677,15 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 	@sAltSuiviSMS OUTPUT, -- #5 [FNAC_PROD_ECH_TECH].[SMS]
 	@sNumGsmSMS  OUTPUT -- #5 [FNAC_PROD_ECH_TECH].[SMS]
 
-	
+	-- [KSV793]
+	Select Top 1 @NosNotreRelances = 
+					Case 
+						When z2eme_rel = 'OUI' Then 'nos relances'
+						Else 'notre relance'
+					End 
+	From @det_pro dp
+	Where dp.id_prod = @dcIdProd
+
 	-- Le but pour Orange V3 et de toujours mettre une adresse mail si l'adresse réél n'est pas là, pour justement
 	-- déclencher l'échec de distribution et donc envoyer le courrier en automatique.
 	If @iRet = -7 
@@ -16686,8 +16701,8 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 
 	Set @sMailObjet = 'Dossier de sinistre SPB n°' + sysadm.FN_TRIM ( Right ( Replicate ( '0', 10 ) + Convert ( VarChar, @dcIdSin ), 10 ) ) + ' ' + @sLibProd + ' - Gestion en cours' -- [PI062]
 
-	-- [PM519-1]
-	If @sVariante = 'MOBILEO' 
+	-- [PM519-1] -- [KSV793]
+	If @sVariante in ( 'MOBILEO', 'ATMATP' )
 	  Begin
 		If @sTypRel = 'REL1'
 		  Begin
@@ -16705,7 +16720,6 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 		  End 
 
 	  End 
-
 
 	Set @sMailBody  = @sMailBody  + @sCiv
 	Set @sMailBody  = @sMailBody  + @sSaut
@@ -16907,7 +16921,7 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 		  Begin
 			Set @sMailBody  = @sMailBody  + 'Vous nous avez déclaré un sinistre le ' + @sDteDecl + ', au titre de votre contrat ' + @sLibProd + ' concernant votre appareil ' + @sMarque + ' ' + @sModele + '.' + @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
-			Set @sMailBody  = @sMailBody  + 'Malgré nos relances nous n''avons pas reçu l''appareil sinistré et n''avons pas pu étudier votre dossier.' + @sSaut
+			Set @sMailBody  = @sMailBody  + 'Malgré ' + @NosNotreRelances + ' nous n''avons pas reçu l''appareil sinistré et n''avons pas pu étudier votre dossier.' + @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
 			Set @sMailBody  = @sMailBody  + 'Nous vous informons donc de la clôture de votre demande.' + @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
@@ -16927,7 +16941,7 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 			Set @sMailBody  = @sMailBody  + 'Vous nous avez déclaré un sinistre le ' + @sDteDecl + ' dans le cadre de votre contrat ' + @sLibProd + ' qui couvre votre appareil ' + @sMarque + ' ' + @sModele + '.' 
 			Set @sMailBody  = @sMailBody  + @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
-			Set @sMailBody  = @sMailBody  + 'Malgré nos relances et en l''absence de réception de l''appareil sinistré, nous n''avons pas pu procéder à l''examen de votre dossier.' 
+			Set @sMailBody  = @sMailBody  + 'Malgré ' + @NosNotreRelances + ' et en l''absence de réception de l''appareil sinistré, nous n''avons pas pu procéder à l''examen de votre dossier.' 
 			Set @sMailBody  = @sMailBody  + @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
 			Set @sMailBody  = @sMailBody  + 'Nous vous informons donc de la clôture de votre demande.'
@@ -16945,7 +16959,7 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 			Set @sMailBody  = @sMailBody  + 'Vous nous avez déclaré un sinistre le ' + @sDteDecl + ' dans le cadre de votre contrat ' + @sLibProd + ' qui couvre votre appareil ' + @sMarque + ' ' + @sModele + '.' 
 			Set @sMailBody  = @sMailBody  + @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
-			Set @sMailBody  = @sMailBody  + 'Malgré nos relances et en l''absence de réception de l''appareil sinistré, nous n''avons pas pu procéder à l''examen de votre dossier.' 
+			Set @sMailBody  = @sMailBody  + 'Malgré ' + @NosNotreRelances + ' et en l''absence de réception de l''appareil sinistré, nous n''avons pas pu procéder à l''examen de votre dossier.' 
 			Set @sMailBody  = @sMailBody  + @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
 			Set @sMailBody  = @sMailBody  + 'Nous vous informons donc de la clôture de votre demande.'
@@ -20755,6 +20769,7 @@ Go
 -- JFF      26/04/2023   [RS5045_REF_MATP]
 -- JFF      08/01/2024   [RS6314]je supprime le critère DTE_PIVOT_DT364 qui n'est plus d'actualité et n'apporte plus rien
 -- JFF      06/09/2024   [KSV740] Modifie délai en dur dans le mail ATP/ATM
+-- JFF      24/09/2024   [KSV793]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAILPUSH_RELANCE_PCE_DT262' AND type = 'P' )
         DROP procedure sysadm.PS_S_MAILPUSH_RELANCE_PCE_DT262
@@ -20765,6 +20780,7 @@ AS
 DECLARE @tb TABLE 
 	( id_seq	integer identity,
 	  id_sin	decimal (10 ), -- [PI062]
+	  id_prod   decimal ( 7 ), -- [KSV793]
 	  type_rel  VarChar ( 10 ),
 	  dte_decl  VarChar ( 10 ),
 	  nom_contrat VarChar ( 150 ),
@@ -20861,6 +20877,7 @@ Declare @dcIdInter Decimal ( 2 ) -- [RS5045_REF_MATP]
 Declare @sCodeMaquette VarChar ( 255 ) -- [RS5045_REF_MATP]
 Declare @sErrOutPut VarChar ( 255 ) -- [RS5045_REF_MATP]
 Declare @sXMLVar   VarChar ( max ) -- [RS5045_REF_MATP]   
+Declare @NosNotreRelances VarChar ( 50 ) -- [KSV793]
 
 Set @dtDateJour = GetDate()
 
@@ -20914,7 +20931,8 @@ Where dp.id_code_dp = 309
 
 Insert into @tb
 select  Distinct 
-		s.id_sin, 
+		s.id_sin,
+		dp.id_prod, -- [KSV793]
 		'REL1', 
 		sysadm.FN_AFF_DATE ( s.dte_decl, 'SH' ), 
 		dp.lib_prod_dp66_Et_dp67, 
@@ -20956,6 +20974,7 @@ And     Not Exists ( Select Top 1 1 From sysadm.w_queue wq where wq.id_sin = s.i
 Insert into @tb
 select Distinct
 		s.id_sin, 
+		dp.id_prod, -- [KSV793]
 		'REL2', 
 		sysadm.FN_AFF_DATE ( s.dte_decl, 'SH' ), 
 		dp.lib_prod_dp66_Et_dp67, 
@@ -20992,6 +21011,7 @@ And     Not Exists ( Select Top 1 1 From sysadm.w_queue wq where wq.id_sin = s.i
 Insert into @tb
 select Distinct
 		s.id_sin, 
+		dp.id_prod, -- [KSV793]
 		'REL3', 
 		sysadm.FN_AFF_DATE ( s.dte_decl, 'SH' ), 
 		dp.lib_prod_dp66_Et_dp67, 
@@ -21027,7 +21047,8 @@ And     Not Exists ( Select Top 1 1 From sysadm.w_queue wq where wq.id_sin = s.i
 
 Insert into @tb
 select Distinct
-		s.id_sin, 
+		s.id_sin,
+		dp.id_prod, -- [KSV793]
 		'REL4', 
 		sysadm.FN_AFF_DATE ( s.dte_decl, 'SH' ), 
 		dp.lib_prod_dp66_Et_dp67, 
@@ -21064,6 +21085,7 @@ And     Not Exists ( Select Top 1 1 From sysadm.w_queue wq where wq.id_sin = s.i
 Insert into @tb
 select Distinct
 		s.id_sin, 
+		dp.id_prod, -- [KSV793]
 		'REL5', 
 		sysadm.FN_AFF_DATE ( s.dte_decl, 'SH' ), 
 		dp.lib_prod_dp66_Et_dp67, 
@@ -21231,6 +21253,14 @@ While Exists ( Select * From @tb where marquage = 0 )
 	@sAltSuiviSMS OUTPUT, -- #5 [FNAC_PROD_ECH_TECH].[SMS]
 	@sNumGsmSMS  OUTPUT -- #5 [FNAC_PROD_ECH_TECH].[SMS]
 
+	-- [KSV793]
+	Select Top 1 @NosNotreRelances = 
+					Case 
+						When z2eme_rel = 'OUI' Then 'nos relances'
+						Else 'notre relance'
+					End 
+	From @det_pro dp
+	Where dp.id_prod = @dcIdProd
 	
 	-- Le but pour Orange V3 et de toujours mettre une adresse mail si l'adresse réél n'est pas là, pour justement
 	-- déclencher l'échec de distribution et donc envoyer le courrier en automatique.
@@ -21364,7 +21394,7 @@ While Exists ( Select * From @tb where marquage = 0 )
 			  Begin
 				Set @sMailBody  = @sMailBody  + 'Vous avez déclaré un sinistre le ' + @sDteDecl + ' concernant votre appareil ' + @sMarque + ' ' + @sModele + ', au titre de votre contrat ' + @sLibProd + '.' + @sSaut
 				Set @sMailBody  = @sMailBody  + @sSaut
-				Set @sMailBody  = @sMailBody  + 'Malgré nos relances nous n''avons pas reçu le(s) document(s) demandé(s) pour procéder à l''étude de votre dossier.'+ @sSaut
+				Set @sMailBody  = @sMailBody  + 'Malgré ' + @NosNotreRelances + ' nous n''avons pas reçu le(s) document(s) demandé(s) pour procéder à l''étude de votre dossier.'+ @sSaut
 				Set @sMailBody  = @sMailBody  + @sSaut
 				Set @sMailBody  = @sMailBody  + 'Nous vous informons donc de la clôture de votre dossier.'+ @sSaut
 				Set @sMailBody  = @sMailBody  + @sSaut
@@ -21385,7 +21415,7 @@ While Exists ( Select * From @tb where marquage = 0 )
 				Set @sMailBody  = @sMailBody  + 'Vous nous avez déclaré un sinistre le ' + @sDteDecl + ' dans le cadre de votre contrat ' + @sLibProd + ' qui couvre votre appareil ' + @sMarque + ' ' + @sModele + '.' 
 				Set @sMailBody  = @sMailBody  + @sSaut
 				Set @sMailBody  = @sMailBody  + @sSaut
-				Set @sMailBody  = @sMailBody  + 'Malgré nos relances et en l''absence de réception des pièces justificatives demandées nous n''avons pas pu procéder à l''examen de votre dossier.' 
+				Set @sMailBody  = @sMailBody  + 'Malgré ' + @NosNotreRelances + ' et en l''absence de réception des pièces justificatives demandées nous n''avons pas pu procéder à l''examen de votre dossier.' 
 				Set @sMailBody  = @sMailBody  + @sSaut
 				Set @sMailBody  = @sMailBody  + @sSaut
 				Set @sMailBody  = @sMailBody  + 'Nous vous informons donc de la clôture de votre demande.'
@@ -21409,7 +21439,7 @@ While Exists ( Select * From @tb where marquage = 0 )
 				Set @sMailBody  = @sMailBody  + 'Vous nous avez déclaré un sinistre le ' + @sDteDecl + ' dans le cadre de votre contrat ' + @sLibProd + '.' 
 				Set @sMailBody  = @sMailBody  + @sSaut
 				Set @sMailBody  = @sMailBody  + @sSaut
-				Set @sMailBody  = @sMailBody  + 'Malgré nos relances et en l''absence de réception des pièces justificatives demandées nous n''avons pas pu procéder à l''examen de votre dossier.' 
+				Set @sMailBody  = @sMailBody  + 'Malgré ' + @NosNotreRelances + ' et en l''absence de réception des pièces justificatives demandées nous n''avons pas pu procéder à l''examen de votre dossier.' 
 				Set @sMailBody  = @sMailBody  + @sSaut
 				Set @sMailBody  = @sMailBody  + @sSaut
 				Set @sMailBody  = @sMailBody  + 'Nous vous informons donc de la clôture de votre demande.'
@@ -21433,7 +21463,7 @@ While Exists ( Select * From @tb where marquage = 0 )
 				Set @sMailBody  = @sMailBody  + 'Vous nous avez déclaré un sinistre le ' + @sDteDecl + ' dans le cadre de votre contrat ' + @sLibProd + ' qui couvre votre appareil ' + @sMarque + ' ' + @sModele + '.' 
 				Set @sMailBody  = @sMailBody  + @sSaut
 				Set @sMailBody  = @sMailBody  + @sSaut
-				Set @sMailBody  = @sMailBody  + 'Malgré nos relances et en l''absence de réception des pièces justificatives demandées nous n''avons pas pu procéder à l''examen de votre dossier.' 
+				Set @sMailBody  = @sMailBody  + 'Malgré ' + @NosNotreRelances + ' et en l''absence de réception des pièces justificatives demandées nous n''avons pas pu procéder à l''examen de votre dossier.' 
 				Set @sMailBody  = @sMailBody  + @sSaut
 				Set @sMailBody  = @sMailBody  + @sSaut
 				Set @sMailBody  = @sMailBody  + 'Nous vous informons donc de la clôture de votre demande.'
