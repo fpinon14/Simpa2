@@ -16242,6 +16242,7 @@ Go
 -- JFF      26/04/2023   [RS5045_REF_MATP]
 -- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
 -- JFF      24/09/2024   [KSV793]
+-- JFF      24/09/2024   [KSV795]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAILPUSH_APP_NON_RECP_EN_CTR' AND type = 'P' )
         DROP procedure sysadm.PS_S_MAILPUSH_APP_NON_RECP_EN_CTR
@@ -20770,6 +20771,7 @@ Go
 -- JFF      08/01/2024   [RS6314]je supprime le critère DTE_PIVOT_DT364 qui n'est plus d'actualité et n'apporte plus rien
 -- JFF      06/09/2024   [KSV740] Modifie délai en dur dans le mail ATP/ATM
 -- JFF      24/09/2024   [KSV793]
+-- JFF      24/09/2024   [KSV795]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAILPUSH_RELANCE_PCE_DT262' AND type = 'P' )
         DROP procedure sysadm.PS_S_MAILPUSH_RELANCE_PCE_DT262
@@ -20951,17 +20953,30 @@ From	sysadm.sinistre s with (nolock),
 		sysadm.inter i  with (nolock)
 Where	a.id_prod = dp.id_prod 
 And		Substring ( a.id_cour_orig, 4, 1 ) = 'P'
+And		a.id_inter = 0 -- [KSV795]
+And		a.id_doc = ( -- [KSV795] -- le dernier courrier de dde de pce pour cet inter
+			select Max ( a1.id_doc ) 
+			From sysadm.archive a1  with (nolock)
+			Where a1.id_sin = a.id_sin
+			And	  a1.id_inter = a.id_inter
+		) -- [KSV795]
+/*
 And		a.id_arch = ( 
 			select Max ( a1.id_arch ) 
 			From sysadm.archive a1  with (nolock)
 			Where a1.id_sin = a.id_sin
 			And	  Substring ( a1.id_cour_orig, 4, 1 ) = 'P'
 		)
+*/
 And		a.dte_edit < dp.dte_del_1ere_rel_j 
 And		a.dte_edit > dte_pivot
-And		Not Exists ( Select Top 1 1 From sysadm.div_sin ds3  with (nolock) Where ds3.id_sin = s.id_sin and ds3.nom_zone = 'dte_rel1_mail_ddepce_dt262' )
+-- [KSV795] 
+-- And		Not Exists ( Select Top 1 1 From sysadm.div_sin ds3  with (nolock) Where ds3.id_sin = s.id_sin and ds3.nom_zone = 'dte_rel1_mail_ddepce_dt262' )
+-- ...Et que la précédente rel1 soit antérieure ou absente (donc pour absente je transforme en une date très antérieure pour passer donc 01/01/1990 )
+And		IsNull ( ( Select Top 1 val_dte From sysadm.div_sin ds3  with (nolock) Where ds3.id_sin = s.id_sin and ds3.nom_zone = 'dte_rel1_mail_ddepce_dt262' ), '01/01/1990' ) < a.dte_edit
+-- [KSV795] 
 And		wp.id_sin = a.id_sin -- cette jointure suffit à la présence d'une pièce toujours cochée
-And		wp.id_i = 0 -- assuré
+And		wp.id_i = a.id_inter -- assuré -- [KSV795] 
 And     i.id_sin = wp.id_sin
 And     i.id_i = wp.id_i
 And     i.adr_mail is not null
@@ -21006,6 +21021,8 @@ And		Not Exists ( Select Top 1 1  From sysadm.div_sin ds3 with (nolock) Where ds
 And		wp.id_sin = s.id_sin -- cette jointure suffit à la présence d'une pièce toujours cochée
 And		wp.id_i = 0 -- assuré
 And     Not Exists ( Select Top 1 1 From sysadm.w_queue wq where wq.id_sin = s.id_sin ) -- [RS-536]
+-- [KSV795] ça ne peut être qu'une REL1 déjà présente, mais juste la présence du sinistre suffit
+And     Not Exists ( Select Top 1 1 From  @tb t where t.id_sin = s.id_sin ) -- [KSV795] 
 
 -- [DT364]
 Insert into @tb
@@ -21044,6 +21061,9 @@ And		Not Exists ( Select Top 1 1 From sysadm.div_sin ds3  with (nolock) Where ds
 And		wp.id_sin = s.id_sin -- cette jointure suffit à la présence d'une pièce toujours cochée
 And		wp.id_i = 0 -- assuré
 And     Not Exists ( Select Top 1 1 From sysadm.w_queue wq where wq.id_sin = s.id_sin ) -- [RS-536]
+-- [KSV795] ça ne peut être qu'une REL1 déjà présente, mais juste la présence du sinistre suffit
+And     Not Exists ( Select Top 1 1 From  @tb t where t.id_sin = s.id_sin ) -- [KSV795] 
+
 
 Insert into @tb
 select Distinct
@@ -21081,6 +21101,9 @@ And		Not Exists ( Select Top 1 1 From sysadm.div_sin ds3  with (nolock) Where ds
 And		wp.id_sin = s.id_sin -- cette jointure suffit à la présence d'une pièce toujours cochée
 And		wp.id_i = 0 -- assuré
 And     Not Exists ( Select Top 1 1 From sysadm.w_queue wq where wq.id_sin = s.id_sin ) -- [RS-536]
+-- [KSV795] ça ne peut être qu'une REL1 déjà présente, mais juste la présence du sinistre suffit
+And     Not Exists ( Select Top 1 1 From  @tb t where t.id_sin = s.id_sin ) -- [KSV795] 
+
 
 Insert into @tb
 select Distinct
@@ -21123,6 +21146,9 @@ And		Not Exists ( Select Top 1 1  From sysadm.div_sin ds3  with (nolock) Where d
 And		wp.id_sin = s.id_sin -- cette jointure suffit à la présence d'une pièce toujours cochée
 And		wp.id_i = 0 -- assuré
 And     Not Exists ( Select Top 1 1 From sysadm.w_queue wq where wq.id_sin = s.id_sin ) -- [RS-536]
+-- [KSV795] ça ne peut être qu'une REL1 déjà présente, mais juste la présence du sinistre suffit
+And     Not Exists ( Select Top 1 1 From  @tb t where t.id_sin = s.id_sin ) -- [KSV795] 
+
 
 While Exists ( Select * From @tb where marquage = 0 )
  Begin
@@ -21254,14 +21280,34 @@ While Exists ( Select * From @tb where marquage = 0 )
 	@sNumGsmSMS  OUTPUT -- #5 [FNAC_PROD_ECH_TECH].[SMS]
 
 	-- [KSV793]
+	-- [KSV795] à reprendre, si dern chiffre RELx >= 2 Alors 'nos relances'
 	Select Top 1 @NosNotreRelances = 
 					Case 
-						When z2eme_rel = 'OUI' Then 'nos relances'
+						When z2eme_rel = 'OUI' And convert ( tinyint, Right ( @sTypRel, 1 )) > 2  Then 'nos relances'
 						Else 'notre relance'
 					End 
 	From @det_pro dp
 	Where dp.id_prod = @dcIdProd
 	
+	-- [KSV795] Nettoyage des marquages div_sin(w), si TYP = REL1 alors Del REL1=>REL5
+	If @sTypRel = 'REL1' 
+		Begin
+			Delete sysadm.div_sin where id_sin = @dcIdSin and nom_zone in ( 
+				'dte_rel1_mail_ddepce_dt262', 
+				'dte_rel2_mail_ddepce_dt262', 
+				'dte_rel3_mail_ddepce_dt262', 
+				'dte_rel4_mail_ddepce_dt262',
+				'dte_rel5_mail_ddepce_dt262' )
+
+			Delete sysadm.w_div_sin where id_sin = @dcIdSin and nom_zone in ( 
+				'dte_rel1_mail_ddepce_dt262', 
+				'dte_rel2_mail_ddepce_dt262', 
+				'dte_rel3_mail_ddepce_dt262', 
+				'dte_rel4_mail_ddepce_dt262',
+				'dte_rel5_mail_ddepce_dt262' )
+		End 
+
+
 	-- Le but pour Orange V3 et de toujours mettre une adresse mail si l'adresse réél n'est pas là, pour justement
 	-- déclencher l'échec de distribution et donc envoyer le courrier en automatique.
 	If @iRet = -7 

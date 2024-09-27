@@ -3029,3 +3029,157 @@ Else
 End 
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Proc‚dure            :       v_produit_1
+-- Auteur               :       Fabry JF
+-- Date                 :       27/06/2024
+-- Libell‚              :       Vu simple produit 1
+-- Commentaires         :
+-- R‚f‚rences           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'v_produit_1' AND type = 'V' )
+            DROP view sysadm.v_produit_1
+GO
+  
+CREATE view sysadm.v_produit_1  
+As  
+Select Distinct  
+    g.id_prod 'id_prod',  
+    sysadm.FN_LIB_PROD ( g.id_prod ) 'lib_prod',  
+    Isnull ( ( Select sysadm.FN_CODE_NUM ( id_code_num, '-UO' ) From sysadm.det_pro dp where dp.id_prod = g.id_prod and dp.id_code_dp = 99 ), 'Aucun') 'pole_dept',  
+    sysadm.FN_CODE_NUM ( p.id_corb, '-CO' ) 'id_corb',  
+    po.id_police 'id_police',  
+    po.lib_police 'lib_police',  
+    p.id_grp 'id_grp',  
+    gr.lib_grp 'lib_grp',  
+    cie.id_cie 'id_cie',  
+    cie.lib_cie 'lib_cie'  
+  
+from sysadm.garantie g,  
+  sysadm.produit p,  
+  sysadm.groupe gr,  
+  sysadm.police po,  
+  sysadm.compagnie cie,  
+  sysadm.revision r  
+  
+where p.id_prod = g.id_prod  
+And gr.id_grp = p.id_grp  
+And po.id_police = g.id_police  
+And cie.id_cie = po.id_cie  
+And r.id_prod = g.id_prod  
+And r.id_rev = g.id_rev  
+/*Order by g.id_prod,  
+      po.lib_police,  
+      gr.lib_grp,  
+      cie.lib_cie  
+*/  
+Go
+
+--------------------------------------------------------------------
+--
+-- Proc‚dure            :       v_produit_2
+-- Auteur               :       Fabry JF
+-- Date                 :       27/06/2024
+-- Libell‚              :       Vu complexe produit 2
+-- Commentaires         :
+-- R‚f‚rences           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'v_produit_2' AND type = 'V' )
+            DROP view sysadm.v_produit_2
+GO
+  
+CREATE view sysadm.v_produit_2  
+As  
+ With tbSherpa ( id_prod_sin, id_prod_adh, result )  
+ As   
+     (Select  p.id_prod,  
+     SHERPA_SIM.sysadm.FN_GET_ID_PROD_ADH(p.id_prod) id_prod_adh,  
+     Case  
+      When COUNT(*) = 0 Then 'Non' -- Non exclu -- Fred  
+      When isnull( MIN(pa.id_typ_code), '-1' ) = '-1'  and COUNT(*) >0 Then 'Oui' -- exclu -- Fred  
+      When isnull( MIN(pa.id_typ_code), '-1' ) <> '-1' and COUNT(*) >0 Then 'Partiellement en fonction des ets' -- partiel par ets -- Fred  
+     End   
+   From   
+    SHERPA_SIM.sysadm.famille pa, -- Fred  
+    sysadm.garantie g,  
+    sysadm.produit p,  
+    sysadm.groupe gr,  
+    sysadm.police po,  
+    sysadm.compagnie cie,  
+    sysadm.revision r  
+  
+   where p.id_prod = g.id_prod  
+   And gr.id_grp = p.id_grp  
+   And po.id_police = g.id_police  
+   And cie.id_cie = po.id_cie  
+   And r.id_prod = g.id_prod  
+   And r.id_rev = g.id_rev  
+   And pa.id_fam=150 -- Fred  
+   And pa.id_code = p.cod_prod_dms -- Fred  
+  
+   Group by p.id_prod, SHERPA_SIM.sysadm.FN_GET_ID_PROD_ADH(p.id_prod) -- Fred  
+   )  
+ Select Distinct  
+     g.id_prod id_prod,  
+     sysadm.FN_LIB_PROD ( g.id_prod ) 'lib_prod',  
+     Isnull ( ( Select sysadm.FN_CODE_NUM ( id_code_num, '-UO' ) From sysadm.det_pro dp where dp.id_prod = g.id_prod and dp.id_code_dp = 99 ), 'Aucun') 'pole_dept',  
+     p.id_corb,  
+     sysadm.FN_CODE_NUM ( p.id_corb, '-CO' ) 'lib_corb',  
+     po.id_police,   
+     po.lib_police 'lib_police',  
+     gr.id_grp,   
+     gr.lib_grp 'lib_grp',  
+     cie.id_cie,   
+     cie.lib_cie,   
+     g.id_gti,  
+     sysadm.FN_CODE_NUM ( g.id_gti, '-GA') 'lib_gti',  
+     r.id_rev 'id_rev',  
+     r.lib_rev 'lib_rev',  
+     Case r.cod_eff_rev  
+     When 'DTE_SURV' Then 'Effet de Survenance'  
+     When 'DTE_RNV' Then 'Effet de Renouvellement'  
+     When 'DTE_SOUS' Then 'Effet de Souscription'  
+     Else r.cod_eff_rev  
+   End 'effet_avenant',  
+     convert ( Varchar ( 10), r.dte_eff, 103) 'date_eff_avenant',  
+     IIF ( r.dte_fin > '01/01/2050', 'Avenant Ouvert', convert ( Varchar ( 10), r.dte_fin, 103) ) 'date_fin_avenant',  
+     Case   
+    When Exists ( Select Top 1 1   
+        From sysadm.produit_excl_hors_ue pex  
+        WHere ( pex.id_prod = -1 Or pex.id_prod = p.id_prod )   
+        And   pex.id_cie  = cie.id_cie   
+      ) Then 'Oui'  
+    Else 'Non'  
+     End 'prod&assureur_SIMPA2_Exclu_Hors_UE',  
+     p.cod_prod_dms 'id_prod_adhesion_Simpa2',  
+     IsNull ( Convert ( varChar ( 10), tbsh.id_prod_adh), '') 'id_prod_adhesion_Sherpa',  
+     IsNull ( tbsh.result, 'Aucune info SHERPA') 'Prod_Adhésion_SHERPA_Exclu_Hors_UE'  
+  
+ from sysadm.garantie g   
+   inner join sysadm.produit p on p.id_prod = g.id_prod  
+   inner join sysadm.groupe gr on gr.id_grp = p.id_grp  
+   inner join sysadm.police po on po.id_police = g.id_police  
+   inner join sysadm.compagnie cie on cie.id_cie = po.id_cie  
+   inner join sysadm.revision r on  r.id_prod = g.id_prod and r.id_rev = g.id_rev  
+   Left outer join tbSherpa tbsh On tbsh.id_prod_sin = p.id_prod  
+ -- Where p.cod_prod_dms <>  tbsh.id_prod_adh  
+ /*  
+ Order by g.id_prod,   
+    r.id_rev  
+    gr.lib_grp ,  
+    po.lib_police ,  
+    cie.lib_cie,  
+    sysadm.FN_CODE_NUM ( g.id_gti, '-GA') */  
+Go

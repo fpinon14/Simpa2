@@ -8939,4 +8939,368 @@ AS
 	Delete sysadm.pre_trt_relance where id_sin = @dcIdSin And id_i = @dcIdInter And id_doc = @dcIdDoc
 Go
 
+--------------------------------------------------------------------
+--
+-- Procédure            :       v_relance_1
+-- Auteur               :       Fabry JF
+-- Date                 :       27/09/2023
+-- Libellé              :        
+-- Commentaires         :       Vu qui ressort tout le param des relances et soldages SIMPA2
+-- Références           :       
 
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'v_relance_1' AND type = 'V' )
+            DROP view sysadm.v_relance_1
+GO
+
+CREATE view sysadm.v_relance_1
+As
+
+-- système Relance 1
+
+Select	Distinct
+		vp.id_prod 'Code produit',
+		vp.lib_prod 'Libellé produit',
+		vp.pole_dept 'Pole dépt',
+		vp.id_corb 'Corbeille',
+		'Systeme 1 : Relance Dde de Pce par courrier (mail ou voie postale)' 'Système de relance' ,
+		IIF ( pr.alt_rl1 = 'O', 'Oui', 'Non' ) 'Première Relance',
+		Convert ( varchar, dur_rl1_min ) 'Délai minimum Rel1',
+		Convert ( varchar, dur_rl1_max ) 'Délai maximum Rel1',
+		Case unt_rl1 
+			When 'J' Then 'Jour'
+			When 'M' Then 'Mois'
+			When 'A' Then 'Année'
+			Else unt_rl1 
+		End 'Unité Période Rel1',
+		IIF ( pr.alt_rl2 = 'O', 'Oui', 'Non' ) 'Deuxième Relance',
+		Convert ( varchar, dur_rl2 ) 'Délai Rel2',
+		Case unt_rl2 
+			When 'J' Then 'Jour'
+			When 'M' Then 'Mois'
+			When 'A' Then 'Année'
+			Else unt_rl2
+		End 'Unité Période Rel2',
+		'NC' 'Troisième Relance',
+		'NC' 'Délai Rel3',
+	   'NC' 'Unité Délai Rel3',
+		'NC' 'Quatrième Relance',
+		'NC' 'Délai Rel4',
+	   'NC' 'Unité Délai Rel4',
+		'NC' 'Dern Relance et Clôture',
+		'NC' 'Délai Rel&Clôture',
+	   'NC' 'Unité Délai Rel&Clôture',
+		IIF ( pr.alt_sold = 'O', 'Oui', 'Non' ) 'Soldage automatique',
+		Convert ( varchar, dur_sold_rl ) 'Période Sold Dern Rel',
+		Case unt_sold_rl 
+			When 'J' Then 'Jour'
+			When 'M' Then 'Mois'
+			When 'A' Then 'Année'
+			Else unt_sold_rl 
+		End 'Unité Période SoldDernRel',
+		Convert ( varchar, dur_sold_pc ) 'Période Soldage Général',
+		Case unt_sold_pc 
+			When 'J' Then 'Jour'
+			When 'M' Then 'Mois'
+			When 'A' Then 'Année'
+			Else unt_sold_pc 
+		End 'Unité Période Sold Général'
+
+from ( Select	Distinct
+				vp.id_prod,
+				vp.lib_prod,
+				vp.pole_dept,
+				vp.id_corb
+	   From sysadm.v_produit_1 vp ) vp
+	 Inner Join sysadm.produit pr on vp.id_prod = pr.id_prod
+
+Union All 
+
+-- système Relance 2
+
+Select  vp.id_prod,
+		vp.lib_prod,
+		vp.pole_dept,
+		vp.id_corb,
+		'Systeme 2 : Relance Dde de Pce par mail_push simple uniquement',
+		IIF ( sysadm.FN_CLE_VAL ( 'DEL_1ERE_REL_J', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' ) <> '', 'Oui', 'Non' ) 'Première_Relance',
+		'NC' 'Période_pivot_minimum_Rel1',
+		sysadm.FN_CLE_VAL ( 'DEL_1ERE_REL_J', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' ) 'Délai_Rel1',
+		IIF ( sysadm.FN_CLE_VAL ( 'DEL_1ERE_REL_J', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' ) <> '', 'Jour', '' ) 'Unité_Délai_Rel1',
+		IIF ( Upper ( sysadm.FN_CLE_VAL ( '2EME_REL', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' )) =  'OUI', 'Oui', 'Non' ) 'Deuxième_Relance',
+		sysadm.FN_CLE_VAL ( 'DEL_2EME_REL_J', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' ) 'Délai_Rel2',
+		IIF ( Upper ( sysadm.FN_CLE_VAL ( '2EME_REL', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' )) =  'OUI', 'Jour', '' ) 'Unité_Délai_Rel2',
+		IIF ( Upper ( sysadm.FN_CLE_VAL ( '3EME_REL', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' )) =  'OUI', 'Oui', 'Non' ) 'Troisième_Relance',
+		sysadm.FN_CLE_VAL ( 'DEL_3EME_REL_J', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' ) 'Délai_Rel3',
+		IIF ( Upper ( sysadm.FN_CLE_VAL ( '3EME_REL', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' )) =  'OUI', 'Jour', '' )  'Unité_Délai_Rel3',
+		IIF ( Upper ( sysadm.FN_CLE_VAL ( '4EME_REL', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' )) =  'OUI', 'Oui', 'Non' ) 'Quatrième_Relance',
+		sysadm.FN_CLE_VAL ( 'DEL_4EME_REL_J', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' ) 'Délai_Rel4',
+		IIF ( Upper ( sysadm.FN_CLE_VAL ( '4EME_REL', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' )) =  'OUI', 'Jour', '' )  'Unité_Délai_Rel4',
+		IIF ( Upper ( sysadm.FN_CLE_VAL ( 'CLOTURE_DOS', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' )) =  'OUI', 'Oui', 'Non' ) 'Dern_Relance_et_Clôture',
+		sysadm.FN_CLE_VAL ( 'DEL_CLOTURE_DOS_J', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' ) 'Délai_Rel&Clôture',
+		IIF ( Upper ( sysadm.FN_CLE_VAL ( 'CLOTURE_DOS', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' )) =  'OUI', 'Jour', '' ) 'Unité_Délai_Rel&Clôture',
+		'NC' 'Soldage_automatique',
+		'NC' 'Période_SoldDernRel',
+		'NC' 'Unité_Période_SoldDernRel',
+		'NC' 'Période_SoldGénéral',
+		'NC' 'Unité_Période_SoldGénéral'
+
+from ( Select	Distinct
+				vp.id_prod,
+				vp.lib_prod,
+				vp.pole_dept,
+				vp.id_corb
+	   From sysadm.v_produit_1 vp ) vp
+	 Left outer join sysadm.det_pro dp on dp.id_prod = vp.id_prod And dp.id_code_dp = 309
+
+Union All
+
+-- système Relance 3 (BRED)
+
+Select  vp.id_prod,
+		vp.lib_prod,
+		vp.pole_dept,
+		vp.id_corb,
+		'Systeme 3 : Relance Dde de Pce dédié à BRED par courrier (mail ou voie postale)',
+		IsNull ( dp.rel_1, 'Non' ) 'Première_Relance',
+		IsNull ( dp.del_min_rel1, '' ) 'Période_pivot_minimum_Rel1',
+		IsNull ( dp.del_max_rel1, '' ) 'Période_pivot_maximum_Rel1',
+		IsNull ( 
+			Case dp.unt_rel1
+				When 'J' Then 'Jour'
+				When 'M' Then 'Mois'
+				When 'A' Then 'Année'
+				Else dp.unt_rel1 
+			End, '')  'Unité_Délai_Rel1',
+		IsNull ( dp.rel_2, 'Non') 'Deuxième_Relance',
+		IsNull ( dp.del_rel2, '' ) 'Délai_Rel2',
+		IsNull ( 
+			Case dp.unt_rel2
+				When 'J' Then 'Jour'
+				When 'M' Then 'Mois'
+				When 'A' Then 'Année'
+				Else dp.unt_rel2
+			End, '')  'Unité_Délai_Rel2',
+		IsNull ( dp.rel_3, 'Non' ) 'Troisième_Relance',
+		IsNull ( dp.del_rel3, '' ) 'Délai_Rel3',
+		IsNull ( 
+			Case dp.unt_rel3
+				When 'J' Then 'Jour'
+				When 'M' Then 'Mois'
+				When 'A' Then 'Année'
+				Else dp.unt_rel3 
+			End, '')  'Unité_Délai_Rel3',
+		'NC' 'Quatrième_Relance',
+		'NC' 'Délai_Rel4',
+		'NC' 'Unité_Délai_Rel4',
+		'NC' 'Dern_Relance_et_Clôture',
+		'NC' 'Délai_Rel&Clôture',
+		'NC' 'Unité_Délai_Rel&Clôture',
+		IsNull ( dp.soldage, 'Non' ) 'Soldage_automatique',
+		IsNull ( dp.del_sold_dern_rel, '' ) 'Période_SoldDernRel',
+		IsNull ( 
+			Case dp.unite_del_sold_dern_rel
+				When 'J' Then 'Jour'
+				When 'M' Then 'Mois'
+				When 'A' Then 'Année'
+				Else dp.unite_del_sold_dern_rel 
+			End, '')  'Unité_Période_SoldDernRel',
+		IsNull ( dp.del_sold_oblig, '' ) 'Période_SoldGénéral',
+		IsNull ( 
+			Case dp.unite_del_sold_oblig
+				When 'J' Then 'Jour'
+				When 'M' Then 'Mois'
+				When 'A' Then 'Année'
+				Else dp.unite_del_sold_oblig 
+			End, '')  'Unité_Période_SoldGénéral'
+
+from ( Select	Distinct
+				vp.id_prod,
+				vp.lib_prod,
+				vp.pole_dept,
+				vp.id_corb
+	   From sysadm.v_produit_1 vp 
+	   Where id_grp in ( 8, 109) ) vp -- BRED
+	 Left outer join 
+	 ( Select   dp1.id_prod,
+				IsNull ( 
+							(	Select Top 1 'Oui'
+								From sysadm.det_pro dp2 
+								Where dp2.id_prod = dp1.id_prod
+								And   dp2.id_code_dp = dp1.id_code_dp 
+								And   dp2.id_code_car = 'RELANC'
+								And   sysadm.FN_CLE_VAL ( 'ID_REL', lTrim ( rTrim ( dp2.val_car )) + LTRIM ( rtrim ( dp2.val_car2 ) ), ';' ) = '1'
+							),
+						'Non') 'rel_1',
+				IsNull ( 
+							(	Select Top 1 sysadm.FN_CLE_VAL ( 'DEL_REL_MIN', lTrim ( rTrim ( dp2.val_car )) + LTRIM ( rtrim ( dp2.val_car2 ) ), ';' )
+								From sysadm.det_pro dp2 
+								Where dp2.id_prod = dp1.id_prod
+								And   dp2.id_code_dp = dp1.id_code_dp 
+								And   dp2.id_code_car = 'RELANC'
+								And   sysadm.FN_CLE_VAL ( 'ID_REL', lTrim ( rTrim ( dp2.val_car )) + LTRIM ( rtrim ( dp2.val_car2 ) ), ';' ) = '1'
+							),
+						'0')  'del_min_rel1',
+				IsNull ( 
+							(	Select Top 1 sysadm.FN_CLE_VAL ( 'DEL_REL_MAX', lTrim ( rTrim ( dp2.val_car )) + LTRIM ( rtrim ( dp2.val_car2 ) ), ';' )
+								From sysadm.det_pro dp2 
+								Where dp2.id_prod = dp1.id_prod
+								And   dp2.id_code_dp = dp1.id_code_dp 
+								And   dp2.id_code_car = 'RELANC'
+								And   sysadm.FN_CLE_VAL ( 'ID_REL', lTrim ( rTrim ( dp2.val_car )) + LTRIM ( rtrim ( dp2.val_car2 ) ), ';' ) = '1'
+							),
+						'0')  'del_max_rel1',
+				IsNull ( 
+							(	Select Top 1 sysadm.FN_CLE_VAL ( 'UNITE_DEL', lTrim ( rTrim ( dp2.val_car )) + LTRIM ( rtrim ( dp2.val_car2 ) ), ';' )
+								From sysadm.det_pro dp2 
+								Where dp2.id_prod = dp1.id_prod
+								And   dp2.id_code_dp = dp1.id_code_dp 
+								And   dp2.id_code_car = 'RELANC'
+								And   sysadm.FN_CLE_VAL ( 'ID_REL', lTrim ( rTrim ( dp2.val_car )) + LTRIM ( rtrim ( dp2.val_car2 ) ), ';' ) = '1'
+							),
+						'0')  'unt_rel1',
+				IsNull ( 
+							(	Select Top 1 'Oui'
+								From sysadm.det_pro dp2 
+								Where dp2.id_prod = dp1.id_prod
+								And   dp2.id_code_dp = dp1.id_code_dp 
+								And   dp2.id_code_car = 'RELANC'
+								And   sysadm.FN_CLE_VAL ( 'ID_REL', lTrim ( rTrim ( dp2.val_car )) + LTRIM ( rtrim ( dp2.val_car2 ) ), ';' ) = '2'
+							),
+						'Non') 'rel_2',
+				IsNull ( 
+							(	Select Top 1 sysadm.FN_CLE_VAL ( 'DEL_REL', lTrim ( rTrim ( dp2.val_car )) + LTRIM ( rtrim ( dp2.val_car2 ) ), ';' )
+								From sysadm.det_pro dp2 
+								Where dp2.id_prod = dp1.id_prod
+								And   dp2.id_code_dp = dp1.id_code_dp 
+								And   dp2.id_code_car = 'RELANC'
+								And   sysadm.FN_CLE_VAL ( 'ID_REL', lTrim ( rTrim ( dp2.val_car )) + LTRIM ( rtrim ( dp2.val_car2 ) ), ';' ) = '2'
+							),
+						'0')  'del_rel2',
+				IsNull ( 
+							(	Select Top 1 sysadm.FN_CLE_VAL ( 'UNITE_DEL', lTrim ( rTrim ( dp2.val_car )) + LTRIM ( rtrim ( dp2.val_car2 ) ), ';' )
+								From sysadm.det_pro dp2 
+								Where dp2.id_prod = dp1.id_prod
+								And   dp2.id_code_dp = dp1.id_code_dp 
+								And   dp2.id_code_car = 'RELANC'
+								And   sysadm.FN_CLE_VAL ( 'ID_REL', lTrim ( rTrim ( dp2.val_car )) + LTRIM ( rtrim ( dp2.val_car2 ) ), ';' ) = '2'
+							),
+						'0')  'unt_rel2',
+				IsNull ( 
+							(	Select Top 1 'Oui'
+								From sysadm.det_pro dp2 
+								Where dp2.id_prod = dp1.id_prod
+								And   dp2.id_code_dp = dp1.id_code_dp 
+								And   dp2.id_code_car = 'RELANC'
+								And   sysadm.FN_CLE_VAL ( 'ID_REL', lTrim ( rTrim ( dp2.val_car )) + LTRIM ( rtrim ( dp2.val_car2 ) ), ';' ) = '3'
+							),
+						'Non') 'rel_3',
+				IsNull ( 
+							(	Select Top 1 sysadm.FN_CLE_VAL ( 'DEL_REL', lTrim ( rTrim ( dp2.val_car )) + LTRIM ( rtrim ( dp2.val_car2 ) ), ';' )
+								From sysadm.det_pro dp2 
+								Where dp2.id_prod = dp1.id_prod
+								And   dp2.id_code_dp = dp1.id_code_dp 
+								And   dp2.id_code_car = 'RELANC'
+								And   sysadm.FN_CLE_VAL ( 'ID_REL', lTrim ( rTrim ( dp2.val_car )) + LTRIM ( rtrim ( dp2.val_car2 ) ), ';' ) = '3'
+							),
+						'0')  'del_rel3',
+				IsNull ( 
+							(	Select Top 1 sysadm.FN_CLE_VAL ( 'UNITE_DEL', lTrim ( rTrim ( dp2.val_car )) + LTRIM ( rtrim ( dp2.val_car2 ) ), ';' )
+								From sysadm.det_pro dp2 
+								Where dp2.id_prod = dp1.id_prod
+								And   dp2.id_code_dp = dp1.id_code_dp 
+								And   dp2.id_code_car = 'RELANC'
+								And   sysadm.FN_CLE_VAL ( 'ID_REL', lTrim ( rTrim ( dp2.val_car )) + LTRIM ( rtrim ( dp2.val_car2 ) ), ';' ) = '3'
+							),
+						'0')  'unt_rel3',
+				IsNull ( 
+							(	Select Top 1 'Oui'
+								From sysadm.det_pro dp2 
+								Where dp2.id_prod = dp1.id_prod
+								And   dp2.id_code_dp = dp1.id_code_dp 
+								And   dp2.id_code_car = 'SOLDAG'
+							),
+						'Non') 'soldage',
+				IsNull ( 
+							(	Select Top 1 sysadm.FN_CLE_VAL ( 'DEL_SOLD_DERN_REL', lTrim ( rTrim ( dp2.val_car )) + LTRIM ( rtrim ( dp2.val_car2 ) ), ';' )
+								From sysadm.det_pro dp2 
+								Where dp2.id_prod = dp1.id_prod
+								And   dp2.id_code_dp = dp1.id_code_dp 
+								And   dp2.id_code_car = 'SOLDAG'
+							), 
+						'0')  'del_sold_dern_rel',
+				IsNull ( 
+							(	Select Top 1 sysadm.FN_CLE_VAL ( 'UNITE_DEL_SOLD_DERN_REL', lTrim ( rTrim ( dp2.val_car )) + LTRIM ( rtrim ( dp2.val_car2 ) ), ';' )
+								From sysadm.det_pro dp2 
+								Where dp2.id_prod = dp1.id_prod
+								And   dp2.id_code_dp = dp1.id_code_dp 
+								And   dp2.id_code_car = 'SOLDAG'
+							),
+						'0')  'unite_del_sold_dern_rel',
+				IsNull ( 
+							(	Select Top 1 sysadm.FN_CLE_VAL ( 'DEL_SOLD_OBLIG', lTrim ( rTrim ( dp2.val_car )) + LTRIM ( rtrim ( dp2.val_car2 ) ), ';' )
+								From sysadm.det_pro dp2 
+								Where dp2.id_prod = dp1.id_prod
+								And   dp2.id_code_dp = dp1.id_code_dp 
+								And   dp2.id_code_car = 'SOLDAG'
+							), 
+						'0')  'del_sold_oblig',
+				IsNull ( 
+							(	Select Top 1 sysadm.FN_CLE_VAL ( 'UNITE_DEL_SOLD_OBLIG', lTrim ( rTrim ( dp2.val_car )) + LTRIM ( rtrim ( dp2.val_car2 ) ), ';' )
+								From sysadm.det_pro dp2 
+								Where dp2.id_prod = dp1.id_prod
+								And   dp2.id_code_dp = dp1.id_code_dp 
+								And   dp2.id_code_car = 'SOLDAG'
+							),
+						'0')  'unite_del_sold_oblig'
+
+
+	   From sysadm.det_pro dp1
+	   Where id_code_dp = 323 and id_code_car = '-1') as dp on dp.id_prod = vp.id_prod 
+
+Union All
+
+-- système Relance 4
+
+Select  vp.id_prod,
+		vp.lib_prod,
+		vp.pole_dept,
+		vp.id_corb,
+		'Systeme 4 : Relance Colis non réceptionné par mail_push simple uniquement',
+		IIF ( sysadm.FN_CLE_VAL ( 'DELAI_J', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' ) <> '', 'Oui', 'Non' ) 'Première_Relance',
+		'NC' 'Période_pivot_minimum_Rel1',
+		sysadm.FN_CLE_VAL ( 'DELAI_J', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' ) 'Délai_Rel1',
+		IIF ( sysadm.FN_CLE_VAL ( 'DELAI_J', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' ) <> '', 'Jour', '' ) 'Unité_Délai_Rel1',
+		IIF ( Upper ( sysadm.FN_CLE_VAL ( '2EME_REL', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' )) =  'OUI', 'Oui', 'Non' ) 'Deuxième_Relance',
+		sysadm.FN_CLE_VAL ( 'DEL_2EME_REL_J', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' ) 'Délai_Rel2',
+		IIF ( Upper ( sysadm.FN_CLE_VAL ( '2EME_REL', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' )) =  'OUI', 'Jour', '' ) 'Unité_Délai_Rel2',
+		IIF ( Upper ( sysadm.FN_CLE_VAL ( '3EME_REL', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' )) =  'OUI', 'Oui', 'Non' ) 'Troisième_Relance',
+		sysadm.FN_CLE_VAL ( 'DEL_3EME_REL_J', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' ) 'Délai_Rel3',
+		IIF ( Upper ( sysadm.FN_CLE_VAL ( '3EME_REL', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' )) =  'OUI', 'Jour', '' )  'Unité_Délai_Rel3',
+		'NC' 'Quatrième_Relance',
+		'NC' 'Délai_Rel4',
+		'NC'  'Unité_Délai_Rel4',
+		IIF ( Upper ( sysadm.FN_CLE_VAL ( 'CLOTURE_DOS', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' )) =  'OUI', 'Oui', 'Non' ) 'Dern_Relance_et_Clôture',
+		sysadm.FN_CLE_VAL ( 'DEL_CLOTURE_DOS_J', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' ) 'Délai_Rel&Clôture',
+		IIF ( Upper ( sysadm.FN_CLE_VAL ( 'CLOTURE_DOS', lTrim ( rTrim ( dp.val_car )) + LTRIM ( rtrim ( dp.val_car2 ) ), ';' )) =  'OUI', 'Jour', '' ) 'Unité_Délai_Rel&Clôture',
+		'NC' 'Soldage_automatique',
+		'NC' 'Période_SoldDernRel',
+		'NC' 'Unité_Période_SoldDernRel',
+		'NC' 'Période_SoldGénéral',
+		'NC' 'Unité_Période_SoldGénéral'
+
+from ( Select	Distinct
+				vp.id_prod,
+				vp.lib_prod,
+				vp.pole_dept,
+				vp.id_corb
+	   From sysadm.v_produit_1 vp,
+			sysadm.commande_type ct
+	   Where ct.id_prod = vp.id_prod
+	   And   ct.id_code_art in ( 'PRS', 'EDI')
+	   ) vp 
+	 Left outer join sysadm.det_pro dp on dp.id_prod = vp.id_prod And dp.id_code_dp = 301
+-- Order by 1,5
+Go
