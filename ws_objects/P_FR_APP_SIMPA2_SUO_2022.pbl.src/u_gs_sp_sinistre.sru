@@ -595,6 +595,7 @@ private subroutine uf_preparermodifier (ref s_pass astpass);//*-----------------
 //       JFF   29/08/2023 [RS5666_DOS_SUIVI_PAR]
 //       JFF   04/09/2023 [RS5656_MOD_PCE_DIF]
 //       JFF   04/09/2023  [RS5656_MOD_PCE_DIF]
+//       JFF   05/08/2024  [MCO602_PNEU]
 //*-----------------------------------------------------------------
 
 String sCol[], sValCar, sValCar2, sIdAdh, sSIREN, sVal, sVal2, sPctRisque, sAltPart 
@@ -983,7 +984,15 @@ If	bRet Then
 				/* sinon les deux dates sont distinctes.                                      */
 				/*----------------------------------------------------------------------------*/
 				If idDteOuvLig = 1900-01-01 Then
-					idw_wSin.SetItem ( 1, "DTE_OUVLIG_PORT", idw_wSin.GetItemDateTime ( 1, "DTE_ACH_PORT" ) )  // [PI056]
+					// [MCO602_PNEU] [A_REPORTER]
+					If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
+						F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 383 )
+						If lDeb <= 0 Then
+							idw_wSin.SetItem ( 1, "DTE_OUVLIG_PORT", idw_wSin.GetItemDateTime ( 1, "DTE_ACH_PORT" ) )  // [PI056]							
+						End IF 
+					Else 			
+						idw_wSin.SetItem ( 1, "DTE_OUVLIG_PORT", idw_wSin.GetItemDateTime ( 1, "DTE_ACH_PORT" ) )  // [PI056]
+					End If					
 				End If
 			   idDteOuvLig = Date(idw_wSin.GetItemDateTime ( 1, "DTE_OUVLIG_PORT" )) // [PI056]
 				If IsNull ( idDteOuvLig ) Then  idDteOuvLig = Date ( "01/01/1900" )
@@ -18833,6 +18842,7 @@ If iAction = 0 Then
 End If
 
 // [PC845]
+/* [A_REPORTER]
 If sTypeApp="PNE" Then
 	// [MCO602_PNEU]
 	If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
@@ -18842,6 +18852,7 @@ If sTypeApp="PNE" Then
 		idw_Wsin.Modify ( "num_imei_port_t.text = 'Immat.'" ) 
 	End If 
 End If 
+*/
 
 // [PC954].Mantis8916
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 141 )

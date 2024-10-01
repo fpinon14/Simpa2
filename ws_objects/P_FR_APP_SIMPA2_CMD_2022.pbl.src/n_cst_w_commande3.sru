@@ -1188,6 +1188,7 @@ public function string uf_controlersaisie ();//*--------------------------------
 //		FPI	15/06/2012	[SFRP085.FPI] Désactivation du contrôle du n° de tel
 //*   JFF   25/10/2012  ITSM133780
 //*   JFF   21/03/2016  [370853_ITSM]
+//*   JFF   01/10/2024  [MCO602_PNEU][A_REPORTER]
 //*-----------------------------------------------------------------
 String sCol [ ], sErr [ ], sTabNull [], sIdFourAdr, sTabAdrFour[], s15Zero, sIdFour1, sIdTypArt1, sIdFour2, sIdTypArt2
 String 		sNouvelleLigne, sPos, sText, sVal, sDw, sAdrTel1, sAdrTel, sFind, sTriActuel, sIMEICorr, sMessErr
@@ -1196,7 +1197,7 @@ Long 			lCpt, lNbrCol, lTot, lCptCol, lRow, lCptFourDif, lDeb, lFin
 Integer		iDeptInterdit[26] = { 4, 5, 6, 9, 11, 12, 13, 15, 30, 31, 32, 34, 40, 43, 46, 47, 48, 64, 65, 66, 73, 74, 81, 82, 83, 84 }
 String		sIdFour, sIdTypArt, sFiltreOrig
 Long			lAdrCp
-Boolean		bDeptTrouve, bAuMoinsUnePRS
+Boolean		bDeptTrouve, bAuMoinsUnePRS, bDp382
 Date			dDteRdvCli
 n_cst_string lnvPFCString
 
@@ -1205,6 +1206,14 @@ sPos					= ""
 sText					= sNouvelleLigne
 sFind					= ""
 s15Zero				= Fill ( "0", 15)
+
+// [MCO602_PNEU] [A_REPORTER]
+bDp382 = False
+If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 382 )
+	bDp382 = lDeb > 0 
+End If 
+
 
 sFiltreOrig = iDwArticle.Describe ( "datawindow.table.filter" ) 
 If sFiltreOrig = "?" Then sFiltreOrig = ""
@@ -1399,6 +1408,7 @@ stMessage.bErreurG	= TRUE
 stMessage.Bouton		= Ok!
 stMessage.sCode		= "GENE001"
 
+
 /*------------------------------------------------------------------*/
 /* Le numéro IMEI est obligatoire pour tous les articles, s'il y a  */
 /* au moins une prestation ou commande										  */
@@ -1412,13 +1422,25 @@ For	lCpt = 1 To lTot
 		Continue
 	End If
 	// :[PC321]
-
-	sVal =  Trim ( idwArticle.GetItemString ( lCpt, sCol [ 2 ] ))
-
-	If IsNull ( sVal ) or sVal = ""	Then
-		If sPos = "" Then sPos = sCol [ 2 ]
-		sText = sText + sErr[ 2 ] + sNouvelleLigne
-	End If
+	
+	// [MCO602_PNEU][A_REPORTER]
+	If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
+		If Not bDp382 Then
+			sVal =  Trim ( idwArticle.GetItemString ( lCpt, sCol [ 2 ] ))
+		
+			If IsNull ( sVal ) or sVal = ""	Then
+				If sPos = "" Then sPos = sCol [ 2 ]
+				sText = sText + sErr[ 2 ] + sNouvelleLigne
+			End If
+		End If 
+	Else
+		sVal =  Trim ( idwArticle.GetItemString ( lCpt, sCol [ 2 ] ))
+	
+		If IsNull ( sVal ) or sVal = ""	Then
+			If sPos = "" Then sPos = sCol [ 2 ]
+			sText = sText + sErr[ 2 ] + sNouvelleLigne
+		End If
+	End IF 	
 
 	If sPos <> "" Then 
 		sDw = "G"
