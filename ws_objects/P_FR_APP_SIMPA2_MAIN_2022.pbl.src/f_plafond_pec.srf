@@ -1,4 +1,4 @@
-HA$PBExportHeader$f_plafond_pec.srf
+﻿$PBExportHeader$f_plafond_pec.srf
 global type f_plafond_pec from function_object
 end type
 
@@ -11,16 +11,16 @@ global function s_plafond_pec f_plafond_pec (string astyprech, ref u_datawindow 
 //* Fonction		: F_Plafond_Pec
 //* Auteur			: Fabry JF
 //* Date				: 13/09/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Recherche des plafonds en amont du r$$HEX1$$e800$$ENDHEX$$glement 
+//* Libellé			: Recherche des plafonds en amont du règlement 
 //*					  pour la gestion de prise en charge
-//*					  Fonctionnalit$$HEX2$$e9002000$$ENDHEX$$utilis$$HEX1$$e900$$ENDHEX$$e pour envoyer une PEC $$HEX2$$e0002000$$ENDHEX$$un tiers fournisseur.
+//*					  Fonctionnalité utilisée pour envoyer une PEC à un tiers fournisseur.
 //* Commentaires	: 
 //*
 //* Arguments		: 	String			asTypRech	   Val
-//*							1: Type Darty ( niveau sinistre ) N'EST PLUS UTILISE, fusionn$$HEX2$$e9002000$$ENDHEX$$avec le type 3
+//*							1: Type Darty ( niveau sinistre ) N'EST PLUS UTILISE, fusionné avec le type 3
 //*							2: Type Castorama (niveau garantie)
 //*							3: Type Gestion de commande (niveau detail/commande)
-//*							4: = au type 3, mais on force $$HEX2$$e0002000$$ENDHEX$$ne pas prendre en compte le for$$HEX1$$e700$$ENDHEX$$age de PEC
+//*							4: = au type 3, mais on force à ne pas prendre en compte le forçage de PEC
 //*							5: = au type 2, mais pour l'option -DP/86 (Gestion de PEC). #3
 //*						uDataWindow		aDwSin			Ref
 //*						uDataWindow		adwdivsin		Ref
@@ -46,7 +46,7 @@ global function s_plafond_pec f_plafond_pec (string astyprech, ref u_datawindow 
 //* #2    JFF    11/12/2006  [DCMP060908]
 //* #3    JFF    04/06/2007  [DCMP070163-070164-070248-070318] Gestion Prise en charge
 //* #4	 JCA		25/10/2007 DCMP 70428 Memoriser les paragraphes de plafonds pour les utiliser dans l'appelant
-//			 FPI		24/06/2010 [DCMP100410] Ajout des plafonds 711 $$HEX2$$e0002000$$ENDHEX$$718
+//			 FPI		24/06/2010 [DCMP100410] Ajout des plafonds 711 à 718
 //			 JFF	  08/12/2010  [PC397][PC441][PC443]
 //			 JFF    13/01/2010  [PC363].[10%]
 //*       JFF    21/01/2011  [PC301].[V15_EVOL_VETUSTE]
@@ -67,13 +67,14 @@ global function s_plafond_pec f_plafond_pec (string astyprech, ref u_datawindow 
 // 		 FPI	  21/10/2016  [PI056] dte_ach_port en datetime
 //        JFF    06/11/2017  [PC171933]
 //        JFF    03/08/2021  Ajout 750/751
+//        JFF    05/08/2024  [MCO602_PNEU]
 //*-----------------------------------------------------------------
 
 Long lTot, lCpt, lDeb1, lDeb2, lFin, lRow, lCptNivPlaf, lTotDivDet, lIdGti, lIdEvt, lRowDetail, lPos
 Long lTotDetail, lCptDet, lIdProd, lDeb, lBorneMin, lBorneMax
-String	sIdGti, sIdEvt, sIdDetail, sNull, sFiltre, sFiltreOrigPlafond
+String	sIdGti, sIdEvt, sIdDetail, sNull, sFiltre, sFiltreOrigPlafond, sPlafond
 String   sPlafAutre , sIdNivPlaf, sIdTypPlaf, sIdRefPlaf, sFiltreOrigLstCommande
-String   sRech, sIdTypArt, sVal
+String   sRech, sIdTypArt, sVal, sTypePrestaDp384, sTypePrestaDs
 Decimal {2} dcPlafGti, dcPlafEvt, dcPlafValAch, dcPlafDef, dcPlafMtPec, dcMtPecAvecFranchise
 Decimal {2} dcPlafSav, dcPlafValPublique, dPlafParam, dcMtMaxTTC_Cmde, dcMtPecForcee, dcFranchiseFixe 
 Decimal {2} dcMtLu, dcMtMaxLu, dcMtMaxPlaf722, dcEcoTaxe
@@ -162,7 +163,7 @@ End If
 // :[PC363].[10%]
 
 
-// #3 = au type 3, mais on force $$HEX2$$e0002000$$ENDHEX$$ne pas prendre en compte le for$$HEX1$$e700$$ENDHEX$$age de PEC
+// #3 = au type 3, mais on force à ne pas prendre en compte le forçage de PEC
 If asTypRech = "4" Then
 	bPriseEncompteForcagePec = FALSE
 	asTypRech = "3" 
@@ -172,7 +173,7 @@ Choose Case asTypRech
 
 	Case "1"
 
-		// #3 le cas 1 n'existe plus, il est repris par le cas 3 de fa$$HEX1$$e700$$ENDHEX$$on g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ral.
+		// #3 le cas 1 n'existe plus, il est repris par le cas 3 de façon général.
 
 	Case "2", "5" // #3
 
@@ -183,7 +184,7 @@ Choose Case asTypRech
 		// #3
 		/*------------------------------------------------------------------*/
 		/* Pour le 672, tout part d'ici pour trouver ID_GTI et ID_EVT       */
-		/* s'ils ne sont pas pr$$HEX1$$e900$$ENDHEX$$cis$$HEX1$$e900$$ENDHEX$$s.												  */
+		/* s'ils ne sont pas précisés.												  */
 		/*------------------------------------------------------------------*/
 		If aiIdGti = -1 And aiIdDetail = -1 Then
 			// Sav du filtre original
@@ -202,16 +203,16 @@ Choose Case asTypRech
 			sIdGti = ""
 			sIdEvt = ""
 			
-			// Sur quelle Gti et quel Evt ce mobile a-t-il $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$choisi ?
+			// Sur quelle Gti et quel Evt ce mobile a-t-il été choisi ?
 			lRow = adwLstwCommande.Find ( "MT_TTC_CMDE = " + String ( dcMtMaxTTC_Cmde, "#####0.00" ), 1, adwLstwCommande.RowCount () )
 			
-			// Mobile Trouv$$HEX1$$e900$$ENDHEX$$, m$$HEX1$$e900$$ENDHEX$$morisation de la garantie
+			// Mobile Trouvé, mémorisation de la garantie
 			If lRow > 0 Then
 				sIdGti = String ( adwLstwCommande.GetItemNumber ( lRow, "ID_GTI" ) )
 				aiIdGti = Long ( sIdGti )
 			End If
 			
-			// Mobile Trouv$$HEX1$$e900$$ENDHEX$$, m$$HEX1$$e900$$ENDHEX$$morisation de l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement
+			// Mobile Trouvé, mémorisation de l'événement
 			If lRow > 0 Then
 				sIdDetail = String ( adwLstwCommande.GetItemNumber ( lRow, "ID_DETAIL" ) )
 				aiIdDetail = Long ( sIdDetail )
@@ -235,7 +236,7 @@ Choose Case asTypRech
 				aiIdDetail = -1
 			End If
 			
-			// Cas 1 pour d$$HEX1$$e900$$ENDHEX$$terminer les deux
+			// Cas 1 pour déterminer les deux
 		// :#3			
 		Else
 		
@@ -250,7 +251,7 @@ Choose Case asTypRech
 		End If
 		
 		If bPriseEncompteForcagePec Then
-			// #3 Gestion for$$HEX1$$e700$$ENDHEX$$age MT_PEC
+			// #3 Gestion forçage MT_PEC
 			// attention armement adIdDetail et sIdDetail
 			sFiltre = "ID_GTI = " + String ( aiIdGti ) + &
 						 " AND ID_DETAIL = " + String ( aiIdDetail ) + & 
@@ -259,7 +260,7 @@ Choose Case asTypRech
 						 
 			lRow = adwDivDet.Find ( sFiltre , 1, adwDivDet.RowCount ()) 
 			
-			// Un for$$HEX1$$e700$$ENDHEX$$age de PEC a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$d$$HEX1$$e900$$ENDHEX$$tect$$HEX2$$e9002000$$ENDHEX$$sur le d$$HEX1$$e900$$ENDHEX$$tail de garantie
+			// Un forçage de PEC a été détecté sur le détail de garantie
 			If lRow > 0 Then
 				sFiltre = "ID_GTI = " + String ( aiIdGti ) + &
 							 " AND ID_DETAIL = " + String ( aiIdDetail ) + & 
@@ -267,7 +268,7 @@ Choose Case asTypRech
 	
 				lRow = adwDivDet.Find ( sFiltre , 1, adwDivDet.RowCount ()) 
 	
-				asTypRech = "99" // M$$HEX1$$e900$$ENDHEX$$moire du for$$HEX1$$e700$$ENDHEX$$age pour passer les autres contr$$HEX1$$f400$$ENDHEX$$les.
+				asTypRech = "99" // Mémoire du forçage pour passer les autres contrôles.
 				
 				If lRow > 0 Then
 					dcMtPecForcee = adwDivDet.GetItemDecimal ( lRow, "VAL_MT" )
@@ -286,7 +287,7 @@ lIdEvt = Long ( sIdEvt )
 Choose Case asTypRech
 	Case "1", "2", "3", "5" // #3
 		/*------------------------------------------------------------------*/
-		// Plafond de garanties (num$$HEX1$$e900$$ENDHEX$$raire)
+		// Plafond de garanties (numéraire)
 		/*------------------------------------------------------------------*/
 		dcPlafGti = 0
 		dcPlafSav = 0
@@ -310,13 +311,13 @@ Choose Case asTypRech
 					sTempTypParaVer = "" // #4
 					
 				Case 3
-					sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+					sIdNivPlaf = "+TR"  // Territorialité
 					sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_TERRIT" ) )
 					
 					sTempTypParaVer = "" // #4
 					
 				Case 4
-					sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+					sIdNivPlaf = "+DT"  // Détail
 					sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_DETSIN" ) )
 					
 					sTempTypParaVer = "" // #4
@@ -353,7 +354,7 @@ Choose Case asTypRech
 				sIdPara	= adwPlafond.GetItemString ( lCpt, "ID_PARA" ) // #4
 				sCptVer	= adwPlafond.GetItemString ( lCpt, "CPT_VER" ) // #4
 			
-				sIdNivPlaf = "-GA" // For$$HEX1$$e700$$ENDHEX$$age indispensable.
+				sIdNivPlaf = "-GA" // Forçage indispensable.
 				dcPlafGti = F_Plafond_Pec_Numeraire_Annee ( sIdTypPlaf,	dPlafParam, sIdNivPlaf, aDwSin, aDwDetail, aDwProduit, lIdGti, lIdEvt ) 
 
 				If ( dcPlafGti < dcPlafSav And dcPlafGti > 0 ) Or dcPlafSav = 0 Then
@@ -395,13 +396,13 @@ Choose Case asTypRech
 					sTempTypParaVer = "" // #4
 					
 				Case 3
-					sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+					sIdNivPlaf = "+TR"  // Territorialité
 					sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_TERRIT" ) )
 					
 					sTempTypParaVer = "" // #4
 					
 				Case 4
-					sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+					sIdNivPlaf = "+DT"  // Détail
 					sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_DETSIN" ) )
 					
 					sTempTypParaVer = "" // #4
@@ -449,8 +450,8 @@ End Choose
 Choose Case asTypRech
 	Case "2"
 		/*------------------------------------------------------------------*/
-		/* #1 Plafond (non codifi$$HEX1$$e900$$ENDHEX$$) en dure, par Valeur d'Achat cumul$$HEX7$$e900200020002000200020002000$$ENDHEX$$*/
-		/* sp$$HEX1$$e900$$ENDHEX$$cifique $$HEX2$$e0002000$$ENDHEX$$CASTORAMA							                       */
+		/* #1 Plafond (non codifié) en dure, par Valeur d'Achat cumulé      */
+		/* spécifique à CASTORAMA							                       */
 		/*------------------------------------------------------------------*/
 			lTot = aDwDetail.RowCount ()
 			lTotDivDet = adwdivdet.Rowcount ()
@@ -481,7 +482,7 @@ Choose Case asTypRech
 		
 End Choose
 
-// #3 (petite nouveaut$$HEX1$$e900$$ENDHEX$$)
+// #3 (petite nouveauté)
 Choose Case asTypRech
 	Case "5"
 		/*------------------------------------------------------------------*/
@@ -528,7 +529,7 @@ Choose Case asTypRech
 	Case "1", "3"
 
 		/*------------------------------------------------------------------*/
-		/* Plafond Detail (num$$HEX1$$e900$$ENDHEX$$raire)                                       */
+		/* Plafond Detail (numéraire)                                       */
 		/*------------------------------------------------------------------*/
 		dcPlafEvt = 0
 		dcPlafSav = 0
@@ -545,19 +546,19 @@ Choose Case asTypRech
 					sTempTypParaVer = "" // #4					
 					
 				Case 3
-					sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+					sIdNivPlaf = "+TR"  // Territorialité
 					sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_TERRIT" ) )
 					
 					sTempTypParaVer = "" // #4					
 					
 				Case 4
-					sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+					sIdNivPlaf = "+DT"  // Détail
 					sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_DETSIN" ) )
 
 					sTempTypParaVer = "" // #4					
 					
 				Case 5
-					sIdNivPlaf = "+EV"  // D$$HEX1$$e900$$ENDHEX$$tail
+					sIdNivPlaf = "+EV"  // Détail
 					sIdRefPlaf = sIdEvt
 					
 					sTempTypParaVer = "" // #4										
@@ -565,7 +566,7 @@ Choose Case asTypRech
 			End CHoose
 
 			sFiltre  = "ID_GTI = " + sIdGti + " AND ID_NIV_PLAF = '" + sIdNivPlaf + "' AND ID_REF_PLAF = " + sIdRefPlaf 
-			sFiltre += " AND ID_TYP_PLAF IN ( '670', '673', '674', '680', '691', '692', '693', '694', '739', '740' ) "
+			sFiltre += " AND ID_TYP_PLAF IN ( '670', '673', '674', '680', '691', '692', '693', '694', '739', '740', '763' ) " // [MCO602_PNEU]
 		
 			adwPlafond.SetFilter ( sFiltre )
 			adwPlafond.Filter ()
@@ -586,14 +587,43 @@ Choose Case asTypRech
 						Else
 							dPlafParam = 0
 						End If	
+					
+					Case "763" // [MCO602_PNEU]
+
+						lRow = adwdivsin.Find ( "NOM_ZONE = 'typ_presta'", 1,  adwdivsin.RowCount () )
+						sTypePrestaDs = ""
+						If lRow > 0 Then
+							sTypePrestaDs = adwdivsin.GetItemString ( lRow, "VAL_CAR" ) 
+						End If	
+				
+						sTypePrestaDp384 = ""
+						dPlafParam = 0
+						If sTypePrestaDs <> "" Then
+							F_RechDetPro ( lDeb, lFin, aDwDetPro, aDwSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 384 )
+				
+							If lDeb > 0 Then 
+								For lCpt = lDeb To lFin 
+									sVal = aDwDetPro.GetItemString ( lCpt, "VAL_CAR" ) 
+									sTypePrestaDp384 = F_CLE_VAL ( "TYP_PRESTA", sVal, ";" )
+									If sTypePrestaDp384 = sTypePrestaDs Then
+										sPlafond = F_CLE_VAL ( "MT_PLAF", sVal, ";" )						
+										dPlafParam = 0
+										If IsNumber ( sPlafond ) Then
+											dPlafParam = Dec ( sPlafond ) 
+											Exit
+										End If 
+									End If 
+								Next 
+							End IF 
+						End If 	
 
 				End Choose
 				// :[PC845_NOUVPLAF]
-
+				
 				sIdPara	= adwPlafond.GetItemString ( lCpt, "ID_PARA" ) // #4
 				sCptVer	= adwPlafond.GetItemString ( lCpt, "CPT_VER" ) // #4
 
-				sIdNivPlaf = "+EV" // For$$HEX1$$e700$$ENDHEX$$age indispensable.
+				sIdNivPlaf = "+EV" // Forçage indispensable.
 				dcPlafEvt = F_Plafond_Pec_Numeraire_Annee ( sIdTypPlaf,	dPlafParam, sIdNivPlaf, aDwSin, aDwDetail, aDwProduit, lIdGti, lIdEvt ) 
 	
 				If ( dcPlafEvt < dcPlafSav And dcPlafEvt > 0 ) Or dcPlafSav = 0 Then
@@ -629,19 +659,19 @@ Choose Case asTypRech
 						sTempTypParaVer = "" // #4
 						
 					Case 3
-						sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+						sIdNivPlaf = "+TR"  // Territorialité
 						sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_TERRIT" ) )
 						
 						sTempTypParaVer = "" // #4
 						
 					Case 4
-						sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+						sIdNivPlaf = "+DT"  // Détail
 						sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_DETSIN" ) )
 
 						sTempTypParaVer = "" // #4
 						
 					Case 5
-						sIdNivPlaf = "+EV"  // D$$HEX1$$e900$$ENDHEX$$tail
+						sIdNivPlaf = "+EV"  // Détail
 						sIdRefPlaf = sIdEvt
 
 						sTempTypParaVer = "" // #4						
@@ -681,7 +711,7 @@ Choose Case asTypRech
 		End If
 		
 		/*------------------------------------------------------------------*/
-		/* Plafond Detail (num$$HEX1$$e900$$ENDHEX$$raire) sur la valeur d'achat min/major$$HEX1$$e900$$ENDHEX$$e     */
+		/* Plafond Detail (numéraire) sur la valeur d'achat min/majorée     */
 		/*------------------------------------------------------------------*/
 		adwPlafond.SetFilter ( sFiltreOrigPlafond )
 		adwPlafond.Filter ()
@@ -705,19 +735,19 @@ Choose Case asTypRech
 					sTempTypParaVer = "" // #4
 					
 				Case 3
-					sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+					sIdNivPlaf = "+TR"  // Territorialité
 					sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_TERRIT" ) )
 					
 					sTempTypParaVer = "" // #4
 					
 				Case 4
-					sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+					sIdNivPlaf = "+DT"  // Détail
 					sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_DETSIN" ) )
 					
 					sTempTypParaVer = "" // #4					
 					
 				Case 5
-					sIdNivPlaf = "+EV"  // D$$HEX1$$e900$$ENDHEX$$tail
+					sIdNivPlaf = "+EV"  // Détail
 					sIdRefPlaf = sIdEvt
 					
 					sTempTypParaVer = "" // #4					
@@ -750,13 +780,13 @@ Choose Case asTypRech
 // #1 Shunt Sur Demande LR/DGA/DBI par JFF le 04/10/2006 17H49
 //		dcPlafValAch = dcPlafSav
 
-// #2 On r$$HEX1$$e900$$ENDHEX$$active suite DCMP060908
+// #2 On réactive suite DCMP060908
 		dcPlafValAch = dcPlafSav
 		sTypParaVer += sTempTypParaVer // #4		
 
 
 		/*------------------------------------------------------------------*/
-		/* Plafond Detail (num$$HEX1$$e900$$ENDHEX$$raire) sur la valeur publique min/major$$HEX1$$e900$$ENDHEX$$e    */
+		/* Plafond Detail (numéraire) sur la valeur publique min/majorée    */
 		/*------------------------------------------------------------------*/
 		adwPlafond.SetFilter ( sFiltreOrigPlafond )
 		adwPlafond.Filter ()		
@@ -777,19 +807,19 @@ Choose Case asTypRech
 					sTempTypParaVer = "" // #4
 					
 				Case 3
-					sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+					sIdNivPlaf = "+TR"  // Territorialité
 					sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_TERRIT" ) )
 					
 					sTempTypParaVer = "" // #4					
 					
 				Case 4
-					sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+					sIdNivPlaf = "+DT"  // Détail
 					sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_DETSIN" ) )
 					
 					sTempTypParaVer = "" // #4					
 					
 				Case 5
-					sIdNivPlaf = "+EV"  // D$$HEX1$$e900$$ENDHEX$$tail
+					sIdNivPlaf = "+EV"  // Détail
 					sIdRefPlaf = sIdEvt
 					
 					sTempTypParaVer = "" // #4					
@@ -824,7 +854,7 @@ Choose Case asTypRech
 
 		// #3
 		/*------------------------------------------------------------------*/
-		/* Plafond Detail (num$$HEX1$$e900$$ENDHEX$$raire) sur Max TTC des commandes CNV         */
+		/* Plafond Detail (numéraire) sur Max TTC des commandes CNV         */
 		/*------------------------------------------------------------------*/
 		adwPlafond.SetFilter ( sFiltreOrigPlafond )
 		adwPlafond.Filter ()		
@@ -841,19 +871,19 @@ Choose Case asTypRech
 					sTempTypParaVer = "" // #4					
 					
 				Case 3
-					sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+					sIdNivPlaf = "+TR"  // Territorialité
 					sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_TERRIT" ) )
 					
 					sTempTypParaVer = "" // #4					
 					
 				Case 4
-					sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+					sIdNivPlaf = "+DT"  // Détail
 					sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_DETSIN" ) )
 					
 					sTempTypParaVer = "" // #4
 					
 				Case 5
-					sIdNivPlaf = "+EV"  // D$$HEX1$$e900$$ENDHEX$$tail
+					sIdNivPlaf = "+EV"  // Détail
 					sIdRefPlaf = sIdEvt
 					
 					sTempTypParaVer = "" // #4					
@@ -869,7 +899,7 @@ Choose Case asTypRech
 
 				/*------------------------------------------------------------------*/
 				/* Minoration ou Majoration du plafond avec un pourcentage saisi    */
-				/* sur le param$$HEX1$$e800$$ENDHEX$$trage du produit.                                   */
+				/* sur le paramètrage du produit.                                   */
 				/*------------------------------------------------------------------*/
 				dcMtMaxTTC_Cmde += dcMtMaxTTC_Cmde * adwPlafond.GetItemNumber ( lRow, "MT_PLAF" )
 				
@@ -895,7 +925,7 @@ Choose Case asTypRech
 
 
 		/*------------------------------------------------------------------*/
-		/* Plafond Detail 722 (num$$HEX1$$e900$$ENDHEX$$raire)											  */
+		/* Plafond Detail 722 (numéraire)											  */
 		/*------------------------------------------------------------------*/
 		// [PC301].[V15_EVOL_VETUSTE]		
 		adwPlafond.SetFilter ( sFiltreOrigPlafond )
@@ -938,19 +968,19 @@ Choose Case asTypRech
 					sTempTypParaVer = "" // #4					
 					
 				Case 3
-					sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+					sIdNivPlaf = "+TR"  // Territorialité
 					sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_TERRIT" ) )
 					
 					sTempTypParaVer = "" // #4					
 					
 				Case 4
-					sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+					sIdNivPlaf = "+DT"  // Détail
 					sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_DETSIN" ) )
 					
 					sTempTypParaVer = "" // #4
 					
 				Case 5
-					sIdNivPlaf = "+EV"  // D$$HEX1$$e900$$ENDHEX$$tail
+					sIdNivPlaf = "+EV"  // Détail
 					sIdRefPlaf = sIdEvt
 					
 					sTempTypParaVer = "" // #4					
@@ -966,7 +996,7 @@ Choose Case asTypRech
 
 				/*------------------------------------------------------------------*/
 				/* Minoration ou Majoration du plafond avec un pourcentage saisi    */
-				/* sur le param$$HEX1$$e800$$ENDHEX$$trage du produit.                                   */
+				/* sur le paramètrage du produit.                                   */
 				/*------------------------------------------------------------------*/
 				dcMtMaxLu += dcMtMaxLu * adwPlafond.GetItemNumber ( lRow, "MT_PLAF" )
 				
@@ -989,7 +1019,7 @@ Choose Case asTypRech
 		dcMtMaxLu = dcPlafSav
 
 		If ( dcMtMaxLu < dcPlafEvt And dcMtMaxLu > 0 ) Or dcPlafEvt = 0 Then
-			dcPlafEvt = dcMtMaxLu   // Stockage dans le plafond de l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e800$$ENDHEX$$nement pour la suite.
+			dcPlafEvt = dcMtMaxLu   // Stockage dans le plafond de l'évènement pour la suite.
 			sTypParaVer += sTempTypParaVer // #4
 		End If
 
@@ -1002,14 +1032,14 @@ Choose Case asTypRech
 		// [PC363].[10%]
 		If bFranchise_721 Then 
 			/*------------------------------------------------------------------*/
-			/* Franchise Detail (num$$HEX1$$e900$$ENDHEX$$raire) sur calcul de la valeur de PEC,     */
-			/*	pourcentage appliqu$$HEX2$$e9002000$$ENDHEX$$sur pr$$HEX1$$e900$$ENDHEX$$sence cl$$HEX2$$e9002000$$ENDHEX$$APP_INCOMPLET=OUI sur la   */
+			/* Franchise Detail (numéraire) sur calcul de la valeur de PEC,     */
+			/*	pourcentage appliqué sur présence clé APP_INCOMPLET=OUI sur la   */
 			/* commande		 																	  */
-			/* $$HEX2$$e0002000$$ENDHEX$$toujours laisser en dernier.											  */
+			/* à toujours laisser en dernier.											  */
 			/* Principe :																		  */
 			/*  - On calcul le montant de pec final									  */
 			/*  - On applique la franchise 												  */
-			/*  - On remet $$HEX2$$e0002000$$ENDHEX$$jour dcPlafEvt												  */
+			/*  - On remet à jour dcPlafEvt												  */
 			/*------------------------------------------------------------------*/
 			adwPlafond.SetFilter ( sFiltreOrigPlafond )
 			adwPlafond.Filter ()
@@ -1033,19 +1063,19 @@ Choose Case asTypRech
 						sTempTypParaVer = "" // #4
 						
 					Case 3
-						sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+						sIdNivPlaf = "+TR"  // Territorialité
 						sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_TERRIT" ) )
 						
 						sTempTypParaVer = "" // #4
 						
 					Case 4
-						sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+						sIdNivPlaf = "+DT"  // Détail
 						sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_DETSIN" ) )
 						
 						sTempTypParaVer = "" // #4					
 						
 					Case 5
-						sIdNivPlaf = "+EV"  // D$$HEX1$$e900$$ENDHEX$$tail
+						sIdNivPlaf = "+EV"  // Détail
 						sIdRefPlaf = sIdEvt
 						
 						sTempTypParaVer = "" // #4					
@@ -1088,17 +1118,17 @@ Choose Case asTypRech
 	// #1 Shunt Sur Demande LR/DGA/DBI par JFF le 04/10/2006 17H49
 	//		dcPlafValAch = dcPlafSav
 	
-	// #2 On r$$HEX1$$e900$$ENDHEX$$active suite DCMP060908
+	// #2 On réactive suite DCMP060908
 			dcMtPecAvecFranchise = dcPlafSav
 			If ( dcMtPecAvecFranchise < dcPlafEvt And dcMtPecAvecFranchise > 0 ) Or dcPlafEvt = 0 Then
-				dcPlafEvt = dcMtPecAvecFranchise  // Stockage dans le plafond de l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e800$$ENDHEX$$nement pour la suite.
+				dcPlafEvt = dcMtPecAvecFranchise  // Stockage dans le plafond de l'évènement pour la suite.
 				sTypParaVer += sTempTypParaVer // #4
 			End If
 		End If
 
 		// [PC947&977]
 		/*------------------------------------------------------------------*/
-		/* Plafond/Franchise Detail 744 (num$$HEX1$$e900$$ENDHEX$$raire)								  */
+		/* Plafond/Franchise Detail 744 (numéraire)								  */
 		/*------------------------------------------------------------------*/
 		adwPlafond.SetFilter ( sFiltreOrigPlafond )
 		adwPlafond.Filter ()		
@@ -1121,19 +1151,19 @@ Choose Case asTypRech
 					sTempTypParaVer = "" // #4					
 					
 				Case 3
-					sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+					sIdNivPlaf = "+TR"  // Territorialité
 					sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_TERRIT" ) )
 					
 					sTempTypParaVer = "" // #4					
 					
 				Case 4
-					sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+					sIdNivPlaf = "+DT"  // Détail
 					sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_DETSIN" ) )
 					
 					sTempTypParaVer = "" // #4
 					
 				Case 5
-					sIdNivPlaf = "+EV"  // D$$HEX1$$e900$$ENDHEX$$tail
+					sIdNivPlaf = "+EV"  // Détail
 					sIdRefPlaf = sIdEvt
 					
 					sTempTypParaVer = "" // #4					
@@ -1166,7 +1196,7 @@ Choose Case asTypRech
 		// :#3
 		
 		/*------------------------------------------------------------------*/
-		/* Plafond/Franchise Detail 745 (num$$HEX1$$e900$$ENDHEX$$raire)								  */
+		/* Plafond/Franchise Detail 745 (numéraire)								  */
 		/*------------------------------------------------------------------*/
 		adwPlafond.SetFilter ( sFiltreOrigPlafond )
 		adwPlafond.Filter ()		
@@ -1191,19 +1221,19 @@ Choose Case asTypRech
 					sTempTypParaVer = "" // #4					
 					
 				Case 3
-					sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+					sIdNivPlaf = "+TR"  // Territorialité
 					sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_TERRIT" ) )
 					
 					sTempTypParaVer = "" // #4					
 					
 				Case 4
-					sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+					sIdNivPlaf = "+DT"  // Détail
 					sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_DETSIN" ) )
 					
 					sTempTypParaVer = "" // #4
 					
 				Case 5
-					sIdNivPlaf = "+EV"  // D$$HEX1$$e900$$ENDHEX$$tail
+					sIdNivPlaf = "+EV"  // Détail
 					sIdRefPlaf = sIdEvt
 					
 					sTempTypParaVer = "" // #4					
@@ -1238,7 +1268,7 @@ Choose Case asTypRech
 		
 		// [PC171933]
 		/*------------------------------------------------------------------*/
-		/* Plafond/Franchise Detail 754 (num$$HEX1$$e900$$ENDHEX$$raire)								  */
+		/* Plafond/Franchise Detail 754 (numéraire)								  */
 		/*------------------------------------------------------------------*/
 		// [PC171933]
 		adwPlafond.SetFilter ( sFiltreOrigPlafond )
@@ -1258,19 +1288,19 @@ Choose Case asTypRech
 					sTempTypParaVer = "" // #4					
 					
 				Case 3
-					sIdNivPlaf = "+TR"  // Territorialit$$HEX1$$e900$$ENDHEX$$
+					sIdNivPlaf = "+TR"  // Territorialité
 					sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_TERRIT" ) )
 					
 					sTempTypParaVer = "" // #4					
 					
 				Case 4
-					sIdNivPlaf = "+DT"  // D$$HEX1$$e900$$ENDHEX$$tail
+					sIdNivPlaf = "+DT"  // Détail
 					sIdRefPlaf = String ( adwsin.GetItemNumber ( 1, "ID_DETSIN" ) )
 					
 					sTempTypParaVer = "" // #4
 					
 				Case 5
-					sIdNivPlaf = "+EV"  // D$$HEX1$$e900$$ENDHEX$$tail
+					sIdNivPlaf = "+EV"  // Détail
 					sIdRefPlaf = sIdEvt
 					
 					sTempTypParaVer = "" // #4					
@@ -1323,7 +1353,7 @@ End Choose
 adwPlafond.SetFilter ( sFiltreOrigPlafond )
 adwPlafond.Filter ()
 
-// #3 Gestion du for$$HEX1$$e700$$ENDHEX$$age, on applique le Mt de PEC Forc$$HEX1$$e900$$ENDHEX$$e, sur tous les plafonds.
+// #3 Gestion du forçage, on applique le Mt de PEC Forcée, sur tous les plafonds.
 If asTypRech = "99" Then
 	stPlafPec.dcPlafGti = dcMtPecForcee
 	stPlafPec.dcPlafEvt = dcMtPecForcee

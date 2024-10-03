@@ -440,6 +440,7 @@ event ue_choix_garantie;//*-----------------------------------------------------
 //*			FPI	01/12/2010	[ITSM49138]
 //*     JFF  26/06/2012 [CONFO][NV_PROCESS]
 //      JFF  07/05/2013 [RS3552_REVCOUVGTI]
+//      JFF  03/10/2024 [20241003154106547]
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
@@ -462,27 +463,14 @@ stPass_Dga.lTab[1] = Message.LongParm
 lIdProd = dw_1.GetItemNumber ( 1, "ID_PROD" ) 
 lIdRev  = dw_1.GetItemNumber ( 1, "ID_REV" ) 
 
-If lIdRev < 0 Then
-	stMessage.sTitre		= "Dossier non couvert"
-	stMessage.Icon			= Exclamation!
-	stMessage.bErreurG	= False
-	stMessage.bouton     = YesNo!
-	stMessage.sCode = "WSIN883 "
-	If f_Message ( stMessage )	= 2 Then 
-		sFiltre = ""
-		dw_CodeGarantie.SetFilter ( sFiltre )
-		dw_CodeGarantie.Filter ()
-		dw_CodeGarantie.Sort ()
-		Return
-	End If 
-Else 
-	If SQLCA.PS_S_GTI_COUVERTE_SUR_REV ( lIdProd, lIdRev, stPass_Dga.lTab[1] ) <= 0 Then
-		stMessage.sTitre		= "Garantie non couverte"
+// [20241003154106547]
+If stPass_Dga.lTab[1] > 0 Then
+	If lIdRev < 0 Then
+		stMessage.sTitre		= "Dossier non couvert"
 		stMessage.Icon			= Exclamation!
 		stMessage.bErreurG	= False
-		stMessage.bouton     = YesNo!			
-		stMessage.sCode = "WSIN884"
-		stMessage.sVar[1] = String ( lIdRev ) 
+		stMessage.bouton     = YesNo!
+		stMessage.sCode = "WSIN883 "
 		If f_Message ( stMessage )	= 2 Then 
 			sFiltre = ""
 			dw_CodeGarantie.SetFilter ( sFiltre )
@@ -490,8 +478,24 @@ Else
 			dw_CodeGarantie.Sort ()
 			Return
 		End If 
-	End If 
-End IF 
+	Else 
+		If SQLCA.PS_S_GTI_COUVERTE_SUR_REV ( lIdProd, lIdRev, stPass_Dga.lTab[1] ) <= 0 Then
+			stMessage.sTitre		= "Garantie non couverte"
+			stMessage.Icon			= Exclamation!
+			stMessage.bErreurG	= False
+			stMessage.bouton     = YesNo!			
+			stMessage.sCode = "WSIN884"
+			stMessage.sVar[1] = String ( lIdRev ) 
+			If f_Message ( stMessage )	= 2 Then 
+				sFiltre = ""
+				dw_CodeGarantie.SetFilter ( sFiltre )
+				dw_CodeGarantie.Filter ()
+				dw_CodeGarantie.Sort ()
+				Return
+			End If 
+		End If 
+	End IF 
+End If 
 
 /*------------------------------------------------------------------*/
 /* On teste la valeur de retour qui correspond à l'armement de      */

@@ -1,5 +1,5 @@
-HA$PBExportHeader$n_cst_int_fic_suivicmd.sru
-$PBExportComments$Objet g$$HEX1$$e900$$ENDHEX$$rant l'int$$HEX1$$e900$$ENDHEX$$gration du fichier de suivi des commandes en provenance du fournisseur.
+﻿$PBExportHeader$n_cst_int_fic_suivicmd.sru
+$PBExportComments$Objet gérant l'intégration du fichier de suivi des commandes en provenance du fournisseur.
 forward
 global type n_cst_int_fic_suivicmd from nonvisualobject
 end type
@@ -39,7 +39,7 @@ String 		K_FIC12		 = "RET_CTRLE_IMEI_OOP_" // [DT424]
 String		K_FICLOG = "LOGCMD\FIC_MOV.LOG"
 /*------------------------------------------------------------------*/  
 /* #1. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 //String		K_FICTMP = "\TEMP\FICFOURN.TXT"
 String		K_FICTMP = "FICFOURN.TXT"
@@ -196,7 +196,7 @@ public subroutine uf_preparer ();//*--------------------------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Preparer (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Preparer avant traitement
+//* Libellé			: Preparer avant traitement
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -218,7 +218,7 @@ ibErrIntegr = False // [PI065]
 isNomFicOrig = "" // [PI065]
 
 /*------------------------------------------------------------------*/
-/* Pr$$HEX1$$e900$$ENDHEX$$paration dw fournisseur.                                      */
+/* Préparation dw fournisseur.                                      */
 /*------------------------------------------------------------------*/
 idwFourn.Reset ()
 idwFourn.InsertRow ( 0 )
@@ -240,7 +240,7 @@ public subroutine uf_bouton_chxfichier ();//*-----------------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Bouton_ChxFichier (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Choix du fichier manuellement
+//* Libellé			: Choix du fichier manuellement
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -250,7 +250,7 @@ public subroutine uf_bouton_chxfichier ();//*-----------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1    JFF    30/08/2002  Le nom du r$$HEX1$$e900$$ENDHEX$$pertoire de g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration n'est plus le code
+//* #1    JFF    30/08/2002  Le nom du répertoire de génération n'est plus le code
 //*								  du fournisseur -FR mais le nom complet (<8 car) -FL
 //*-----------------------------------------------------------------
 
@@ -290,7 +290,7 @@ sNomComplet = Left ( sRepFicCmd, Len ( sRepFicCmd ) -1 )
 
 iRetour = GetFileSaveName( "Fichier Articles/Stocks", sNomComplet, sNomFic, "", &
 									"Du jour (" + sJoker + ")," + sJoker + "," + &
-									"Non Trait$$HEX2$$e9002000$$ENDHEX$$(M*.0*),M*.0*," + &
+									"Non Traité (M*.0*),M*.0*," + &
 									"Tous (M*.*),M*.*," + &
 									"Tous Fichiers (*.*),*.*")
 
@@ -307,7 +307,7 @@ public function string uf_detection_auto_nomfic (string aidfourn);//*-----------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Detection_Auto_nomFic (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$tection automatique du nom de fichier
+//* Libellé			: Détection automatique du nom de fichier
 //* Commentaires	: 
 //*
 //* Arguments		: aIdFourn		String		Val
@@ -316,7 +316,7 @@ public function string uf_detection_auto_nomfic (string aidfourn);//*-----------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1    JFF    30/08/2002  Le nom du r$$HEX1$$e900$$ENDHEX$$pertoire de g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration n'est plus le code
+//* #1    JFF    30/08/2002  Le nom du répertoire de génération n'est plus le code
 //*								  du fournisseur -FR mais le nom complet (<8 car) -FL
 //* #2    JFF   05/09/08 	  [MICROMANIA]
 //* #3    JFF   16/11/2009   [FNAC_PROD_ECH_TECH].[BGE].[20091116163039640]
@@ -357,7 +357,7 @@ sRepFic =  ProfileString ( stGlb.sFichierIni, "GEST_COMMANDES", "REP_GEN", "" ) 
 
 For lCptCas = 1 TO 13
 
-// Ordre extr$$HEX1$$ea00$$ENDHEX$$mement important !
+// Ordre extrêmement important !
 	CHOOSE CASE lCptCas
 		CASE 1
 			sVar = K_FIC1
@@ -507,10 +507,10 @@ For lCpt = lTotLig To 1 Step -1
 		Case Else
 			
 			// [HP252_276_HUB_PRESTA] 
-			// Fournisseur li$$HEX2$$e9002000$$ENDHEX$$au Hub Prestataire
+			// Fournisseur lié au Hub Prestataire
 			If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 	
-				// Par d$$HEX1$$e900$$ENDHEX$$faut, si le fournisseur est li$$HEX2$$e9002000$$ENDHEX$$au HP, on affecte le DO HUB par d$$HEX1$$e900$$ENDHEX$$faut
+				// Par défaut, si le fournisseur est lié au HP, on affecte le DO HUB par défaut
 				If ibPrestaHub Then
 					idwTri.SetItem ( lRow, "TYPE_FIC", Upper ( Left ( sItem, 3 ) ) )
 					idwTri.SetItem ( lRow, "JOUR",     Mid  ( sItem, 4, 2 ) ) 
@@ -589,7 +589,7 @@ public function integer uf_controler_saisie ();//*------------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Controler_Saisie (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la saisie
+//* Libellé			: Controler de la saisie
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -600,7 +600,7 @@ public function integer uf_controler_saisie ();//*------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* 		FPI	04/01/2010	[20110104.FPI] Am$$HEX1$$e900$$ENDHEX$$lioration contr$$HEX1$$f400$$ENDHEX$$le du chemin du fichier (mis en Upper)
+//* 		FPI	04/01/2010	[20110104.FPI] Amélioration contrôle du chemin du fichier (mis en Upper)
 //			FPI	18/10/2012	[PC884] Fichier XML pour LBE
 //*-----------------------------------------------------------------
 
@@ -611,7 +611,7 @@ Long		lRow
 iRet = 1
 
 /*------------------------------------------------------------------*/
-/* 1 : Le fournisseur est-il renseign$$HEX2$$e9002000$$ENDHEX$$?                            */
+/* 1 : Le fournisseur est-il renseigné ?                            */
 /*------------------------------------------------------------------*/
 sIdfourn = idwFourn.GetItemString ( 1, "ID_FOURN" ) 
 If IsNull ( sIdFourn ) Then 
@@ -623,7 +623,7 @@ If IsNull ( sIdFourn ) Then
 End If
 
 /*------------------------------------------------------------------*/
-/* 2 : Le Nom du fichier est-il renseign$$HEX2$$e9002000$$ENDHEX$$?                         */
+/* 2 : Le Nom du fichier est-il renseigné ?                         */
 /*------------------------------------------------------------------*/
 If iRet > 0 Then 
 	sNomFic = isTxtNomFic.Text
@@ -664,10 +664,10 @@ If iRet > 0 Then
 End If
 
 /*------------------------------------------------------------------*/
-/* 4 : Le Nom du fichier n'est pas $$HEX2$$e0002000$$ENDHEX$$la date du jour.					  */
+/* 4 : Le Nom du fichier n'est pas à la date du jour.					  */
 /*------------------------------------------------------------------*/
-/* Le 20/11/2001, JFF : Pour l'instant, je shunt ce contr$$HEX1$$f400$$ENDHEX$$le sans   */
-/* supprimer le code, en effet cette box "trouble" l'$$HEX1$$e900$$ENDHEX$$quipe ADD.    */
+/* Le 20/11/2001, JFF : Pour l'instant, je shunt ce contrôle sans   */
+/* supprimer le code, en effet cette box "trouble" l'équipe ADD.    */
 /*------------------------------------------------------------------*/
 //If iRet > 0 Then 
 //
@@ -686,7 +686,7 @@ End If
 //End If
 
 /*------------------------------------------------------------------*/
-/* 5 : Le Fichier a d$$HEX1$$e900$$ENDHEX$$j$$HEX3$$e0002000e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$trait$$HEX1$$e900$$ENDHEX$$.										  */
+/* 5 : Le Fichier a déjà été traité.										  */
 /*------------------------------------------------------------------*/
 If iRet > 0 Then 
 
@@ -715,7 +715,7 @@ public function integer uf_lancer_trt ();//*------------------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Lancer_Trt (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 31/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Lancement du Traitement
+//* Libellé			: Lancement du Traitement
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -725,7 +725,7 @@ public function integer uf_lancer_trt ();//*------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     		Modification
-//* #1 	DGA       19/09/2006    Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire DCMP-060643
+//* #1 	DGA       19/09/2006    Gestion d'un répertoire temporaire DCMP-060643
 //       JFF       21/03/2017    [PI065]
 //       JFF   	 07/03/2024   	[HP252_276_HUB_PRESTA]
 //*-----------------------------------------------------------------
@@ -750,7 +750,7 @@ End If
 If uf_Trace ( "INIT", "") <= 0 Then iRet = -1
 
 // [PI065]
-This.uf_Trace ( "ECR", "Num$$HEX1$$e900$$ENDHEX$$ro de lot d'int$$HEX1$$e900$$ENDHEX$$gration : " + String ( ilIdLotLog ) )
+This.uf_Trace ( "ECR", "Numéro de lot d'intégration : " + String ( ilIdLotLog ) )
 
 /*------------------------------------------------------------------*/
 /* Chargement du fichier fournisseur.                               */
@@ -763,7 +763,7 @@ If iRet > 0 Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Contr$$HEX1$$f400$$ENDHEX$$le de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier fournisseur.                  */
+/* Contrôle de la validité du fichier fournisseur.                  */
 /*------------------------------------------------------------------*/
 If iRet > 0 Then
 	If uf_Ctrl_Fichier_Fournisseur () <= 0 Then iRet = -1
@@ -771,36 +771,36 @@ End If
 
 
 /*------------------------------------------------------------------*/
-/* Int$$HEX1$$e900$$ENDHEX$$gration du fichier fournisseur dans la base.                 */
+/* Intégration du fichier fournisseur dans la base.                 */
 /*------------------------------------------------------------------*/
 If iRet > 0 Then
 	If uf_Integration_Fichier_Fournisseur () <= 0 Then iRet = -1
 End If
 
 If iRet <= 0 Then 
-	This.uf_Trace ( "ECR", "Le traitement se termine anormalement, le fichier n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$trait$$HEX2$$e9002000$$ENDHEX$$!!!." )
+	This.uf_Trace ( "ECR", "Le traitement se termine anormalement, le fichier n'a pas été traité !!!." )
 Else
-	This.uf_Trace ( "ECR", "Le traitement se termine normalement, le fichier a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$trait$$HEX1$$e900$$ENDHEX$$." )
+	This.uf_Trace ( "ECR", "Le traitement se termine normalement, le fichier a été traité." )
 End If
 
 idwSuiviTrt.ScrollToRow ( idwSuiviTrt.RowCount () )
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$truit le fichier temporaire.                                */
+/* On détruit le fichier temporaire.                                */
 /*------------------------------------------------------------------*/
 
 //Migration PB8-WYNIWYG-03/2006 CP
 //If FileExists ( stGlb.sWinDir + K_FICTMP ) Then FileDelete ( stGlb.sWinDir + K_FICTMP )
 /*------------------------------------------------------------------*/  
 /* #1. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 //If f_FileExists ( stGlb.sWinDir + K_FICTMP ) Then FileDelete ( stGlb.sWinDir + K_FICTMP )
 If f_FileExists ( stGlb.sRepTempo + K_FICTMP ) Then FileDelete ( stGLB.sRepTempo + K_FICTMP )
 //Fin Migration PB8-WYNIWYG-03/2006 CP
 
 /*------------------------------------------------------------------*/
-/* Enfin on regarde si un autre fichier est $$HEX2$$e0002000$$ENDHEX$$traiter.              */
+/* Enfin on regarde si un autre fichier est à traiter.              */
 /*------------------------------------------------------------------*/
 This.uf_Detection_Auto_NomFic ( sIdFourn )
 
@@ -812,7 +812,7 @@ private function long uf_charger_fichierfourn ();//*----------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Charger_FichierFourn (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 31/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Chargement du fichier fournisseur
+//* Libellé			: Chargement du fichier fournisseur
 //* Commentaires	: 18/09/2007 [ALAPAGE]
 //*
 //* Arguments		: 
@@ -828,7 +828,7 @@ private function long uf_charger_fichierfourn ();//*----------------------------
 //* #2	 CAG	 23/09/2004	  DCMP 040403 : Ajout des colonnes dte_emis_devis et mt_devis pour SBE
 //* #3	 MADM	 06/02/2006	  [DCMP060119]: Ajout du frn AEVUM/AVM
 //* #4	 MADM	 09/05/2006	  [DCMP060356]: Rempl du frn AEVUM/AVM par CORDON/COR
-//* #5 	 DGA   19/09/2006   Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire DCMP-060643
+//* #5 	 DGA   19/09/2006   Gestion d'un répertoire temporaire DCMP-060643
 //* #6	 JFF   18/09/2007   [ALAPAGE]
 //* #7	 PHG	 29/11/2007	  [O2M]
 //* #8    JFF   09/09/2008   [MICROMANIA]
@@ -872,11 +872,11 @@ isNomFicOrig = sNomFicOrig // [PM254_V1][PI065]
 idwFicFourn.Reset ()
 idwFicFourn.DataObject = ""
 
-This.uf_Trace ( "ECR", "R$$HEX1$$e900$$ENDHEX$$vision SVN : " + stGLB.sRevisionSvn )
+This.uf_Trace ( "ECR", "Révision SVN : " + stGLB.sRevisionSvn )
 
-This.uf_Trace ( "ECR", "Fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$: (" + sIdFourn + ") " + &
+This.uf_Trace ( "ECR", "Fournisseur sélectionné : (" + sIdFourn + ") " + &
 								Upper ( idwFourn.Describe ( "Evaluate ( 'LookUpDisplay ( ID_FOURN )', 1 )" ) ) )
-This.uf_Trace ( "ECR", "Fichier s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$: " + Upper ( sNomFicOrig ) )
+This.uf_Trace ( "ECR", "Fichier sélectionné : " + Upper ( sNomFicOrig ) )
 
 /*------------------------------------------------------------------*/
 /* Recopie du fichier original en un fichier temporaire en local    */
@@ -885,7 +885,7 @@ This.uf_Trace ( "ECR", "Fichier s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$
 F_LireFichierBlob ( blBlob, sNomFicOrig ) 
 /*------------------------------------------------------------------*/  
 /* #5. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 //sNomFicTmp = stGlb.sWinDir + K_FICTMP
 sNomFicTmp = stGLB.sRepTempo + K_FICTMP
@@ -893,8 +893,8 @@ F_EcrireFichierBlob ( blBlob, sNomFicTmp )
 
 /*------------------------------------------------------------------*/
 /* Choix du dataobject (format du fichier), en fonction du          */
-/* fournisseur, en effet le fichier peut $$HEX1$$ea00$$ENDHEX$$tre diff$$HEX1$$e900$$ENDHEX$$rent d'un        */
-/* fournisseur $$HEX2$$e0002000$$ENDHEX$$l'autre.                                           */
+/* fournisseur, en effet le fichier peut être différent d'un        */
+/* fournisseur à l'autre.                                           */
 /*------------------------------------------------------------------*/
 CHOOSE CASE Upper ( sIdFourn )
 	
@@ -951,7 +951,7 @@ CHOOSE CASE Upper ( sIdFourn )
 	CASE "MCM"
 		idwFicFourn.DataObject = "d_trt_int_fic_suivicmd_MICROMANIA"
 		If This.uf_TransformationSeparateur ( sNomFicTmp, ";", "~t", "" ) < 0 Then
-			This.uf_Trace ( "ECR", "ERREUR : Erreur lors de la substition du s$$HEX1$$e900$$ENDHEX$$parateur" )
+			This.uf_Trace ( "ECR", "ERREUR : Erreur lors de la substition du séparateur" )
 			Return -1
 		End If
 
@@ -978,7 +978,7 @@ CHOOSE CASE Upper ( sIdFourn )
 	CASE "FNC"
 		idwFicFourn.DataObject = "d_trt_int_fic_suivicmd_FNAC"
 		If This.uf_TransformationSeparateur ( sNomFicTmp, ";", "~t", "FNAC_BGE" ) < 0 Then
-			This.uf_Trace ( "ECR", "ERREUR : Erreur lors de la substition du s$$HEX1$$e900$$ENDHEX$$parateur" )
+			This.uf_Trace ( "ECR", "ERREUR : Erreur lors de la substition du séparateur" )
 			Return -1
 		End If		
 
@@ -1027,7 +1027,7 @@ CHOOSE CASE Upper ( sIdFourn )
 		End If
 		
 		If This.uf_TransformationSeparateur ( sNomFicTmp, ";", "~t", "" ) < 0 Then
-			This.uf_Trace ( "ECR", "ERREUR : Erreur lors de la substition du s$$HEX1$$e900$$ENDHEX$$parateur" )
+			This.uf_Trace ( "ECR", "ERREUR : Erreur lors de la substition du séparateur" )
 			Return -1
 		End If
 	
@@ -1074,19 +1074,19 @@ CHOOSE CASE Upper ( sIdFourn )
 	CASE Else
 
 		// [HP252_276_HUB_PRESTA] 
-		// Fournisseur li$$HEX2$$e9002000$$ENDHEX$$au Hub Prestataire
+		// Fournisseur lié au Hub Prestataire
 		If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 
-			// Par d$$HEX1$$e900$$ENDHEX$$faut, si le fournisseur est li$$HEX2$$e9002000$$ENDHEX$$au HP, on affecte le DO HUB par d$$HEX1$$e900$$ENDHEX$$faut
+			// Par défaut, si le fournisseur est lié au HP, on affecte le DO HUB par défaut
 			If ibPrestaHub Then
 				idwFicFourn.DataObject = "d_trt_int_fic_suivicmd_hub_prestataire"	
 			Else
-				This.uf_Trace ( "ECR", "ERREUR : Ce fournisseur n'est pas d$$HEX1$$e900$$ENDHEX$$clar$$HEX2$$e9002000$$ENDHEX$$dans le programme, il faut modifier le code pour ajouter son traitement" )
+				This.uf_Trace ( "ECR", "ERREUR : Ce fournisseur n'est pas déclaré dans le programme, il faut modifier le code pour ajouter son traitement" )
 				Return -1
 			End If 
 			
 		Else 
-			This.uf_Trace ( "ECR", "ERREUR : Ce fournisseur n'est pas d$$HEX1$$e900$$ENDHEX$$clar$$HEX2$$e9002000$$ENDHEX$$dans le programme, il faut modifier le code pour ajouter son traitement" )
+			This.uf_Trace ( "ECR", "ERREUR : Ce fournisseur n'est pas déclaré dans le programme, il faut modifier le code pour ajouter son traitement" )
 			Return -1
 		End IF 
 
@@ -1107,8 +1107,8 @@ If FileLength ( sNomFicTmp ) > 0 Then
 	If lTotLig <= 0 Then
 		iRet = -1
 		ibErrIntegr = True // [PI065]
-		This.uf_Trace ( "ECR", "Chargement du fichier : ERREUR IMPORTFILE (" + String ( lTotLig ) + ") ligne " + string (ilNumLigErrImport) + ", colonne " + Upper ( isColLigErrImport ) + ", probl$$HEX1$$e800$$ENDHEX$$me de format de fichier, une donn$$HEX1$$e900$$ENDHEX$$e n'est pas du bon type ou est trop longue."  ) // [PI065]
-		This.uf_Trace ( "ECR", "Chargement du fichier : Text posant probl$$HEX1$$e800$$ENDHEX$$me : " + Trim ( isDataErrImport )  ) // [PI065]
+		This.uf_Trace ( "ECR", "Chargement du fichier : ERREUR IMPORTFILE (" + String ( lTotLig ) + ") ligne " + string (ilNumLigErrImport) + ", colonne " + Upper ( isColLigErrImport ) + ", problème de format de fichier, une donnée n'est pas du bon type ou est trop longue."  ) // [PI065]
+		This.uf_Trace ( "ECR", "Chargement du fichier : Text posant problème : " + Trim ( isDataErrImport )  ) // [PI065]
 	Else
 		This.uf_Trace ( "ECR", "Chargement du fichier : " + String ( lTotLig ) + " ligne(s)"  )
 	End If
@@ -1124,7 +1124,7 @@ private function integer uf_trace (string ascas, string astexte);//*------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Trace (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Trace des op$$HEX1$$e900$$ENDHEX$$rations
+//* Libellé			: Trace des opérations
 //* Commentaires	: 
 //*
 //* Arguments		: asCas			String		Val
@@ -1176,7 +1176,7 @@ CHOOSE CASE Upper ( asCas )
 				This.uf_Sortie_OpCon ( "ECR", 351, "ERR351/TRACE/INIT", TRUE )
 
 			ELSE
-				F_COMMIT ( SQLCA, TRUE  ) // Commit du num$$HEX1$$e900$$ENDHEX$$ro de lot
+				F_COMMIT ( SQLCA, TRUE  ) // Commit du numéro de lot
 				
 				sSql  = "Exec sysadm.PS_I_TRACE_LOG_MPR "
 				sSql += "'" + isIdFour + "'," 
@@ -1191,12 +1191,12 @@ CHOOSE CASE Upper ( asCas )
 					Else 
 						iRet = -1
 						F_commit ( SQLCA, False ) 
-						This.uf_Trace ( "ECR", "ERREUR Trace1/Base : Probl$$HEX1$$e800$$ENDHEX$$me d'Insert sur la table de trace sysadm.trace_log_mpr" ) 
+						This.uf_Trace ( "ECR", "ERREUR Trace1/Base : Problème d'Insert sur la table de trace sysadm.trace_log_mpr" ) 
 					End If
 				Else
 					iRet = -1
 					F_commit ( SQLCA, False ) 
-					This.uf_Trace ( "ECR", "ERREUR Trace1/Base : Probl$$HEX1$$e800$$ENDHEX$$me d'Insert sur la table de trace sysadm.trace_log_mpr" ) 
+					This.uf_Trace ( "ECR", "ERREUR Trace1/Base : Problème d'Insert sur la table de trace sysadm.trace_log_mpr" ) 
 				End If					
 				
 			End If				
@@ -1230,12 +1230,12 @@ CHOOSE CASE Upper ( asCas )
 				Else 
 					iRet = -1
 					F_commit ( SQLCA, False ) 
-					This.uf_Trace ( "ECR", "ERREUR Trace2/Base : Probl$$HEX1$$e800$$ENDHEX$$me d'Insert sur la table de trace sysadm.trace_log_mpr" ) 
+					This.uf_Trace ( "ECR", "ERREUR Trace2/Base : Problème d'Insert sur la table de trace sysadm.trace_log_mpr" ) 
 				End If
 			Else
 				iRet = -1
 				F_commit ( SQLCA, False ) 
-				This.uf_Trace ( "ECR", "ERREUR Trace2/Base : Probl$$HEX1$$e800$$ENDHEX$$me d'Insert sur la table de trace sysadm.trace_log_mpr" ) 
+				This.uf_Trace ( "ECR", "ERREUR Trace2/Base : Problème d'Insert sur la table de trace sysadm.trace_log_mpr" ) 
 			End If					
 
 END CHOOSE
@@ -1250,7 +1250,7 @@ private function integer uf_ctrl_fichier_fournisseur ();//*---------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Crtl_Fichier_Fournisseur (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier fournisseur
+//* Libellé			: Controler de la validité du fichier fournisseur
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -1439,10 +1439,10 @@ CHOOSE CASE Upper ( sIdFourn )
 		
 	Case Else 
 		// [HP252_276_HUB_PRESTA] 
-		// Fournisseur li$$HEX2$$e9002000$$ENDHEX$$au Hub Prestataire
+		// Fournisseur lié au Hub Prestataire
 		If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 
-			// Par d$$HEX1$$e900$$ENDHEX$$faut, si le fournisseur est li$$HEX2$$e9002000$$ENDHEX$$au HP, on appelle le CTRLE HUB par d$$HEX1$$e900$$ENDHEX$$faut
+			// Par défaut, si le fournisseur est lié au HP, on appelle le CTRLE HUB par défaut
 			If ibPrestaHub Then
 				iRet = This.uf_Ctrl_Fichier_FRN_HUB ()		
 			End If 
@@ -1469,7 +1469,7 @@ private function integer uf_integration_fichier_fournisseur ();//*--------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Integration_Fichier_Fournisseur (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 31/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier fournisseur dans la base.
+//* Libellé			: Intégration du fichier fournisseur dans la base.
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -1483,7 +1483,7 @@ private function integer uf_integration_fichier_fournisseur ();//*--------------
 //* #2	 CAG	  20/09/2004  DCMP 040381 : Ajout du frn MSS
 //* #3    MADM   06/02/2006  [DCMP060119]: Ajout du frn AVM
 //* #4    MADM   09/05/2006  [DCMP060356]: Rempl du frn AVM par COR
-//* #5    JFF    23/08/2006  Modif apport$$HEX1$$e900$$ENDHEX$$e suite probl$$HEX1$$e800$$ENDHEX$$me lenteur
+//* #5    JFF    23/08/2006  Modif apportée suite problème lenteur
 //* #6	 JFF    18/09/2007  [ALAPAGE]
 //* #7	 PHG	  29/11/2007  [O2M]
 //* #8    JFF    05/09/2008  [MICROMANIA]
@@ -1561,7 +1561,7 @@ CHOOSE CASE Upper ( sIdFourn )
 	CASE "COR"
 		iRet = This.uf_Integration_Fichier_CORDON ( lNbLig, lNbLigMod, lNbLigNonTraitee )	
 
-	// #7 [O2M] Appel de l'int$$HEX1$$e900$$ENDHEX$$gratino du fichier.
+	// #7 [O2M] Appel de l'intégratino du fichier.
 	CASE "O2M"
 		iRet = This.uf_Integration_Fichier_O2M ( lNbLig, lNbLigMod, lNbLigNonTraitee )
 
@@ -1664,14 +1664,14 @@ CHOOSE CASE Upper ( sIdFourn )
 
 	Case Else
 		// [HP252_276_HUB_PRESTA] 
-		// Fournisseur li$$HEX2$$e9002000$$ENDHEX$$au Hub Prestataire
+		// Fournisseur lié au Hub Prestataire
 		If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 
-			// Par d$$HEX1$$e900$$ENDHEX$$faut, si le fournisseur est li$$HEX2$$e9002000$$ENDHEX$$au HP, on affecte le DO HUB par d$$HEX1$$e900$$ENDHEX$$faut
+			// Par défaut, si le fournisseur est lié au HP, on affecte le DO HUB par défaut
 			If ibPrestaHub Then
 				iRet = This.uf_Integration_Fichier_Frn_Hub ( lNbLig, lNbLigMod, lNbLigNonTraitee )
 			Else
-				This.uf_Trace ( "ECR", "ERREUR : Ce fournisseur n'est pas d$$HEX1$$e900$$ENDHEX$$clar$$HEX2$$e9002000$$ENDHEX$$dans le programme d'int$$HEX1$$e900$$ENDHEX$$gration, il faut modifier le code pour ajouter son traitement" )
+				This.uf_Trace ( "ECR", "ERREUR : Ce fournisseur n'est pas déclaré dans le programme d'intégration, il faut modifier le code pour ajouter son traitement" )
 				Return -1
 			End If 
 		End IF 
@@ -1683,16 +1683,16 @@ END CHOOSE
 /* MAJ de la table Article en base.                                 */
 /*------------------------------------------------------------------*/
 If iRet > 0 Then 
-	This.uf_Trace ( "ECR", String ( lNbLigMod ) + " ligne(s) mise(s) $$HEX2$$e0002000$$ENDHEX$$jour en base, sur " + String ( lNbLig ) + " lignes au total." )
-	This.uf_Trace ( "ECR", String ( lNbLigNonTraitee ) + " ligne(s) non trait$$HEX1$$e900$$ENDHEX$$e(s), sur " + String ( lNbLig ) + " lignes au total." )
-	This.uf_Trace ( "ECR", "Table Commande mise $$HEX2$$e0002000$$ENDHEX$$jour normalement." )
+	This.uf_Trace ( "ECR", String ( lNbLigMod ) + " ligne(s) mise(s) à jour en base, sur " + String ( lNbLig ) + " lignes au total." )
+	This.uf_Trace ( "ECR", String ( lNbLigNonTraitee ) + " ligne(s) non traitée(s), sur " + String ( lNbLig ) + " lignes au total." )
+	This.uf_Trace ( "ECR", "Table Commande mise à jour normalement." )
 
 	/*------------------------------------------------------------------*/
-	/* #1 : DCMP 040206 : Envoi de mail suite r$$HEX1$$e900$$ENDHEX$$glement automatique ou  */
+	/* #1 : DCMP 040206 : Envoi de mail suite réglement automatique ou  */
 	/* rejets.                                                          */
 	/*------------------------------------------------------------------*/
 	sNomFic = isTxtNomFic.Text
-	sDateHeureTrt = String ( Today () ) + " $$HEX2$$e0002000$$ENDHEX$$" + String ( Now () )
+	sDateHeureTrt = String ( Today () ) + " à " + String ( Now () )
 	sMessRet = Fill ( " ", 250 )
 
 
@@ -1704,7 +1704,7 @@ If iRet > 0 Then
 
 	/*------------------------------------------------------------------*/
 	/* On renomme le fichier fournisseur, afin de marquer le fait       */
-	/* qu'il a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$trait$$HEX1$$e900$$ENDHEX$$.                                              */
+	/* qu'il a été traité.                                              */
 	/*------------------------------------------------------------------*/
 	sNomFicOrig = isTxtNomFic.Text
 	
@@ -1715,7 +1715,7 @@ If iRet > 0 Then
 	End if
 	
 	/*------------------------------------------------------------------*/
-	/* Recopie du fichier original vers le fichier renomm$$HEX1$$e900$$ENDHEX$$.				  */
+	/* Recopie du fichier original vers le fichier renommé.				  */
 	/* dont l'ext. est "TXT".                                           */
 	/*------------------------------------------------------------------*/
 	If Upper ( sNomFicOrig ) <> Upper ( sNomFicRen ) then 
@@ -1728,25 +1728,25 @@ If iRet > 0 Then
 
 	If Not bRet Then 
 		This.uf_Trace ( "ECR", "ERREUR : Impossible de renommer le fichier fournisseur !" )
-		stMessage.sTitre = "Int$$HEX1$$e900$$ENDHEX$$gration Fichier Fournisseur"
+		stMessage.sTitre = "Intégration Fichier Fournisseur"
 		stMessage.sCode = "COMD009"
 		stMessage.icon = Exclamation!
 		This.uf_Sortie_OpCon ( "ECR", 370, "ERR370/INTFICFOUR", FALSE )				
 	Else
-		This.uf_Trace ( "ECR", "Fichier fournisseur renomm$$HEX2$$e9002000$$ENDHEX$$en " + Upper ( sNomFicRen ) )
+		This.uf_Trace ( "ECR", "Fichier fournisseur renommé en " + Upper ( sNomFicRen ) )
 		isTxtNomFic.Text = ""
 	End If
 
 Else
 	iRet = -1
-	This.uf_Trace ( "ECR", "ERREUR : Probl$$HEX1$$e800$$ENDHEX$$me lors de l'UPDATE en base sur la table commande." )
-	This.uf_Trace ( "ECR", String ( lNbLigMod ) + " ligne(s) mise(s) $$HEX2$$e0002000$$ENDHEX$$jour en base, sur " + String ( lNbLig ) + " lignes au total." )
-	This.uf_Trace ( "ECR", String ( lNbLigNonTraitee ) + " ligne(s) non trait$$HEX1$$e900$$ENDHEX$$e(s), sur " + String ( lNbLig ) + " lignes au total." )
-	This.uf_Trace ( "ECR", "Le fichier n'est pas renomm$$HEX1$$e900$$ENDHEX$$, renommez $$HEX2$$e0002000$$ENDHEX$$la main en .BAD et demandez au fournisseur de nous le retourner corrig$$HEX1$$e900$$ENDHEX$$." )
+	This.uf_Trace ( "ECR", "ERREUR : Problème lors de l'UPDATE en base sur la table commande." )
+	This.uf_Trace ( "ECR", String ( lNbLigMod ) + " ligne(s) mise(s) à jour en base, sur " + String ( lNbLig ) + " lignes au total." )
+	This.uf_Trace ( "ECR", String ( lNbLigNonTraitee ) + " ligne(s) non traitée(s), sur " + String ( lNbLig ) + " lignes au total." )
+	This.uf_Trace ( "ECR", "Le fichier n'est pas renommé, renommez à la main en .BAD et demandez au fournisseur de nous le retourner corrigé." )
 End If
 
 If iRet < 0 Then 
-	stMessage.sTitre = "Int$$HEX1$$e900$$ENDHEX$$gration Fichier Fournisseur"
+	stMessage.sTitre = "Intégration Fichier Fournisseur"
 	stMessage.sCode = "COMD009"
 	stMessage.icon = Exclamation!
 	This.uf_Sortie_OpCon ( "ECR", 380, "ERR380/INTFICFOUR", FALSE )				
@@ -1762,7 +1762,7 @@ public subroutine uf_initialiser (ref s_pass astpass, ref statictext astxtnomfic
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Initialiser (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Initialisation de l'objet
+//* Libellé			: Initialisation de l'objet
 //* Commentaires	: 
 //*
 //* Arguments		: astPass		s_Pass		Ref
@@ -1801,7 +1801,7 @@ idwStkRepFourn.SetTransObject ( SQLCA )
 idwStkRepFourn.Retrieve ( "-FL" )
 
 /*------------------------------------------------------------------*/
-/* Tableau des fournisseurs $$HEX2$$e0002000$$ENDHEX$$traiter par OpCon/XPS.                */
+/* Tableau des fournisseurs à traiter par OpCon/XPS.                */
 /*------------------------------------------------------------------*/
 isTabFrIntSui = stGlb.sTab_OpCon_XPS
 
@@ -1821,10 +1821,10 @@ private subroutine uf_formatchaine (ref string asVal);//*-----------------------
 //* Fonction      : N_Cst_Int_Fic_SuiviCmd::uf_FormatChaine
 //* Auteur        : Catherine ABDMEZIEM
 //* Date          : 18/10/2002 14:36:00
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Remplace certains caract$$HEX1$$e800$$ENDHEX$$res dans une cha$$HEX1$$ee00$$ENDHEX$$ne par des blancs
+//* Libellé       : Remplace certains caractères dans une chaîne par des blancs
 //* Commentaires  : 
 //*
-//* Arguments     : ( Ref )	String	asVal	:	cha$$HEX1$$ee00$$ENDHEX$$ne $$HEX2$$e0002000$$ENDHEX$$traiter
+//* Arguments     : ( Ref )	String	asVal	:	chaîne à traiter
 //*
 //* Retourne      : Rien
 //*
@@ -1843,7 +1843,7 @@ sTabSubst 	[1] = " "
 lTotSubst = UpperBound ( sTabSubst )
 
 /*------------------------------------------------------------------*/
-/* On remplace les caract$$HEX1$$e800$$ENDHEX$$res voulus.										  */
+/* On remplace les caractères voulus.										  */
 /*------------------------------------------------------------------*/
 
 lTotLet = Len ( asVal )
@@ -1868,7 +1868,7 @@ private function integer uf_sortie_opcon (string ascas, integer aicodeerreur, st
 //* Fonction		: n_cst_in_fic_SuiviCmd::uf_Sortie_OpCon (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 16/12/2002
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Fichier de sortie des erreurs pour OpCon
+//* Libellé			: Fichier de sortie des erreurs pour OpCon
 //* Commentaires	: 
 //*
 //* Arguments		: asCas			String		Val
@@ -1882,7 +1882,7 @@ private function integer uf_sortie_opcon (string ascas, integer aicodeerreur, st
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* #1    JFF    05/04/2006  ajout du "+ K_FIC_SORTIE_OPCON" derri$$HEX1$$e800$$ENDHEX$$re isRepFicOpcon  
+//* #1    JFF    05/04/2006  ajout du "+ K_FIC_SORTIE_OPCON" derrière isRepFicOpcon  
 //        JFF    21/03/2017  [PI065]
 //        JFF    14/04/2017  [DT288][MANTIS24757]
 //*-----------------------------------------------------------------
@@ -1933,7 +1933,7 @@ CHOOSE CASE Upper ( asCas )
 			If iRet < 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR renommage BAD " + &
-				" : le syst$$HEX1$$e800$$ENDHEX$$me n'a pas pu renommer le fichier " + isNomFicOrig + " en BAD !" )					
+				" : le système n'a pas pu renommer le fichier " + isNomFicOrig + " en BAD !" )					
 			End If
 			
 			sSql  = "Exec sysadm.PS_S_ENVOI_MAIL_LOG_PRESTA "
@@ -1948,17 +1948,17 @@ CHOOSE CASE Upper ( asCas )
 				Else 
 					iRet = -1
 					F_commit ( SQLCA, False ) 
-					This.uf_Trace ( "ECR", "ERREUR mail presta : Probl$$HEX1$$e800$$ENDHEX$$me envoi mail/log presta PS_S_ENVOI_MAIL_LOG_PRESTA" ) 
+					This.uf_Trace ( "ECR", "ERREUR mail presta : Problème envoi mail/log presta PS_S_ENVOI_MAIL_LOG_PRESTA" ) 
 				End If
 			Else
 				iRet = -1
 				F_commit ( SQLCA, False ) 
-				This.uf_Trace ( "ECR", "ERREUR mail presta : Probl$$HEX1$$e800$$ENDHEX$$me envoi mail/log presta PS_S_ENVOI_MAIL_LOG_PRESTA" ) 
+				This.uf_Trace ( "ECR", "ERREUR mail presta : Problème envoi mail/log presta PS_S_ENVOI_MAIL_LOG_PRESTA" ) 
 			End If					
 			
 		End If
 		/*------------------------------------------------------------------*/
-		/* On est connect$$HEX2$$e9002000$$ENDHEX$$avec OpCon, donc sortie en fichier Erreur.       */
+		/* On est connecté avec OpCon, donc sortie en fichier Erreur.       */
 		/*------------------------------------------------------------------*/
 		If gbOpCon Then 
 
@@ -1989,7 +1989,7 @@ public function integer uf_trt_opcon (string ascas);//*-------------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Trt_OpCon (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 16/12/2002
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Traitement de certaines partie en Automatique
+//* Libellé			: Traitement de certaines partie en Automatique
 //* Commentaires	: 
 //*
 //* Arguments		: asCas			String		Val
@@ -2037,12 +2037,12 @@ Choose Case Upper ( asCas )
 			// [DCMP100428]
 
 			/*------------------------------------------------------------------*/
-			/* Compteur de fichier pour un m$$HEX1$$ea00$$ENDHEX$$me fournisseur                     */
+			/* Compteur de fichier pour un même fournisseur                     */
 			/*------------------------------------------------------------------*/
 			DO UNTIL istxtNomFic.Text = "" Or iRet < 0
 				iRet = This.uf_Lancer_Trt ()
 				
-				// On ne tient pas compte de l'$$HEX1$$e900$$ENDHEX$$rreur, on enchaine sur les autres fichiers.
+				// On ne tient pas compte de l'érreur, on enchaine sur les autres fichiers.
 				// Souhait de PI
 				iRet = 1			
 			LOOP
@@ -2068,7 +2068,7 @@ private function integer uf_ctrl_fichier_dme ();//*-----------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_DME (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier du DME
+//* Libellé			: Controler de la validité du fichier du DME
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -2122,16 +2122,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -2139,12 +2139,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -2167,13 +2167,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -2182,7 +2182,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 3 : NUM_CMD_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 4 : NUM_IMEI_NOU														  */
@@ -2192,25 +2192,25 @@ For lCpt = lTotLig To 1 Step -1
 	If Len ( sVal ) <> 15 And Len ( sVal ) > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Un num$$HEX1$$e900$$ENDHEX$$ro d'IMEI doit contenir 15 chiffres" )
+		" : Un numéro d'IMEI doit contenir 15 chiffres" )
 	End If
 
 	If Not F_IMEI ( sVal, sIMEICorr ) And Len ( sVal ) > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Num$$HEX1$$e900$$ENDHEX$$ro d'IMEI non valide" )
+		" : Numéro d'IMEI non valide" )
 	End If 
 
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 5 : DTE_RCP_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 6 : DTE_ENV_CLI 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 7 : DEST_ENVOI	 														  */
@@ -2224,7 +2224,7 @@ For lCpt = lTotLig To 1 Step -1
 			CASE ELSE	
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le Destinataire de l'envoi doit $$HEX1$$ea00$$ENDHEX$$tre null ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$SPB ou CLIENT, mais pas " + sVal )
+				" : Le Destinataire de l'envoi doit être null ou égal à SPB ou CLIENT, mais pas " + sVal )
 		END CHOOSE
 
 	End If
@@ -2232,7 +2232,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 8 : NUM_BON_TRP 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 9 : COD_ETAT_CMD														  */
@@ -2246,7 +2246,7 @@ For lCpt = lTotLig To 1 Step -1
 			CASE ELSE	
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le code $$HEX1$$e900$$ENDHEX$$tat doit $$HEX1$$ea00$$ENDHEX$$tre null ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$ANN ou RPC, mais pas " + sVal )
+				" : Le code état doit être null ou égal à ANN ou RPC, mais pas " + sVal )
 		END CHOOSE
 
 	End If
@@ -2257,14 +2257,14 @@ For lCpt = lTotLig To 1 Step -1
 	If Not IsNull ( dtVal ) And Not IsNull ( dtVal1 ) And dtVal1 < dtVal Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la DTE_RCP_FRN." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit être postérieure ou égale à la DTE_RCP_FRN." )
 	End If
 	// :[VDOC9337]	
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 10 : COMMENT_FRN														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	// [CTRLE_DATE_INTRG_FOU]
 	sVal = String ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_RCP_FRN" ) )  
@@ -2282,7 +2282,7 @@ For lCpt = lTotLig To 1 Step -1
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -2294,7 +2294,7 @@ private function integer uf_integration_fichier_dme (ref long alnblig, ref long 
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_DME (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 31/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier du DME dans la base
+//* Libellé			: Intégration du fichier du DME dans la base
 //* Commentaires	: 
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -2307,10 +2307,10 @@ private function integer uf_integration_fichier_dme (ref long alnblig, ref long 
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JCA    09/06/2006  MAILPUSH
-//* #2    JFF    23/08/2006  Modif apport$$HEX1$$e900$$ENDHEX$$e suite probl$$HEX1$$e800$$ENDHEX$$me lenteur
+//* #2    JFF    23/08/2006  Modif apportée suite problème lenteur
 //* #3 	 PHG	 24/04/2008	  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
-//* #4	FPI	10/12/2009	[SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
-//*       JFF    11/03/2011 [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+//* #4	FPI	10/12/2009	[SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
+//*       JFF    11/03/2011 [ITSM62176] ajout du point de décimal
 //       JFF   18/08/2014 [PM254_V1]
 //*-----------------------------------------------------------------
 
@@ -2346,17 +2346,17 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
-// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+// [ITSM62176] ajout du point de décimal
 	sSql += Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) + "., "
 	// #1
 	lIdSin = Long ( Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) )
@@ -2572,7 +2572,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 	//	Exit  #2
 		Continue // #2
 	End If
@@ -2598,7 +2598,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -2616,7 +2616,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -2634,8 +2634,8 @@ private subroutine uf_definir_codetat_dme (ref string asval, long alcpt);//*----
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_DME (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: 
 //*
 //* Arguments		: asVal		String		Ref
@@ -2656,29 +2656,29 @@ String	sDestEnvoi
 asVal = Upper ( asVal ) 
 
 /*------------------------------------------------------------------*/
-/* !!!! Code $$HEX1$$e900$$ENDHEX$$tat Fix$$HEX1$$e900$$ENDHEX$$s !!!! 					     							  */
+/* !!!! Code état Fixés !!!! 					     							  */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
-/* Le code $$HEX1$$e900$$ENDHEX$$tat lu dans le fichier est ANNULEE PAR GESTIONNAIRE,    */
-/* on le laisse s'$$HEX1$$e900$$ENDHEX$$crire en base.                                   */
+/* Le code état lu dans le fichier est ANNULEE PAR GESTIONNAIRE,    */
+/* on le laisse s'écrire en base.                                   */
 /*------------------------------------------------------------------*/
 If asVal = "ANN" Then Return
 
 /*------------------------------------------------------------------*/
-/* Le code $$HEX1$$e900$$ENDHEX$$tat lu dans le fichier est RECU PAR LE CLIENT, on le    */
-/* s'$$HEX1$$e900$$ENDHEX$$crire en base.                                                */
+/* Le code état lu dans le fichier est RECU PAR LE CLIENT, on le    */
+/* s'écrire en base.                                                */
 /*------------------------------------------------------------------*/
 If asVal = "RPC" Then Return
 
 
 /*------------------------------------------------------------------*/
-/* !!!! Code $$HEX1$$e900$$ENDHEX$$tat D$$HEX1$$e900$$ENDHEX$$termin$$HEX1$$e900$$ENDHEX$$s en fonction des dates 					  */
+/* !!!! Code état Déterminés en fonction des dates 					  */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
 /* Si le CodEtat du fichier n'est pas un de ces deux codes, alors   */
-/* on va le d$$HEX1$$e900$$ENDHEX$$terminer $$HEX2$$e0002000$$ENDHEX$$partir des dates.                          */
+/* on va le déterminer à partir des dates.                          */
 /*------------------------------------------------------------------*/
 dtDteRcpFrn = idwFicFourn.GetItemDateTime ( alCpt, "DTE_RCP_FRN" ) 
 dtDteEnvCli = idwFicFourn.GetItemDateTime ( alCpt, "DTE_ENV_CLI" )
@@ -2692,7 +2692,7 @@ If Not IsNull ( dDteEnvCli ) Then
 
 	CHOOSE CASE sDestEnvoi	
 		CASE "SPB"
-			// Retourn$$HEX4$$e9002000e0002000$$ENDHEX$$la SPB par le fournisseur
+			// Retourné à la SPB par le fournisseur
 			asVal = "RSP"			
 
 		CASE ELSE
@@ -2700,7 +2700,7 @@ If Not IsNull ( dDteEnvCli ) Then
 			asVal = "ECL"			
 	END CHOOSE
 
-	// De plus si la dDteRcpFrn n'$$HEX1$$e900$$ENDHEX$$tait pas renseign$$HEX1$$e900$$ENDHEX$$
+	// De plus si la dDteRcpFrn n'était pas renseigné
 	//	On y met la dDteEnvCli
 	If IsNull ( dDteRcpFrn ) Then idwFicFourn.SetItem ( alCpt, "DTE_RCP_FRN", dDteEnvCli )
 
@@ -2724,7 +2724,7 @@ private function integer uf_ctrl_fichier_sbe ();//*-----------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_SBE (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 10/04/2015
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier SBE
+//* Libellé			: Controler de la validité du fichier SBE
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -2776,7 +2776,7 @@ lTotLig = idwFicFourn.RowCount ()
 // [MODIF_SUITE_REDR]
 If lTotLig <= 0 And FileLength64 ( isTxtNomFic.Text ) > 0 Then
 	iRet = -1
-	This.uf_Trace ( "ECR", "ERREUR : 0 Ligne charg$$HEX1$$e900$$ENDHEX$$e ! , pour PI : Taille du fichier positive et chargement $$HEX2$$e0002000$$ENDHEX$$0 ligne => Anormal. R$$HEX1$$e900$$ENDHEX$$essayez l'int$$HEX1$$e900$$ENDHEX$$gration (cause $$HEX1$$e900$$ENDHEX$$ventuelle => le fichier est peut-$$HEX1$$ea00$$ENDHEX$$tre en format Unicode au lieu d'Ansi, $$HEX2$$e0002000$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$rifier)." )
+	This.uf_Trace ( "ECR", "ERREUR : 0 Ligne chargée ! , pour PI : Taille du fichier positive et chargement à 0 ligne => Anormal. Réessayez l'intégration (cause éventuelle => le fichier est peut-être en format Unicode au lieu d'Ansi, à vérifier)." )
 End If		
 
 sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
@@ -2804,16 +2804,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+	// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -2821,12 +2821,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 	End If
@@ -2849,14 +2849,14 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour And sVal <> "BLC" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 	// [BLCODE]
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -2876,7 +2876,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Not isNull(dtVal) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre vide.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de réception fournisseur (DTE_RCP_FRN) doit être vide.")
 			End if
 
 		// [PM01].[LOT3&4]
@@ -2887,14 +2887,14 @@ For lCpt = lTotLig To 1 Step -1
 			If isNull(dtVal) And iInfoSpbFrn <> 957 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de réception fournisseur (DTE_RCP_FRN) doit être renseignée.")
 			End if
 			
 			// [PC13321][MANTIS14042]			
 			If Not isNull(dtVal) And iInfoSpbFrn = 957 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", et pour le process sp$$HEX1$$e900$$ENDHEX$$cifique 957, la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre vide.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", et pour le process spécifique 957, la date de réception fournisseur (DTE_RCP_FRN) doit être vide.")
 			End If			
 			
 	End Choose
@@ -2912,13 +2912,13 @@ For lCpt = lTotLig To 1 Step -1
 		If Len ( sVal ) <> 15 And Len ( sVal ) > 0 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (NUM_IMEI_NOU) Un num$$HEX1$$e900$$ENDHEX$$ro d'IMEI doit contenir 15 chiffres" )
+			" : (NUM_IMEI_NOU) Un numéro d'IMEI doit contenir 15 chiffres" )
 		End If
 	
 		If Not F_IMEI ( sVal, sIMEICorr ) And Len ( sVal ) > 0 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (NUM_IMEI_NOU) Num$$HEX1$$e900$$ENDHEX$$ro d'IMEI non valide" )
+			" : (NUM_IMEI_NOU) Numéro d'IMEI non valide" )
 		End If 
 	End If
 	
@@ -2936,13 +2936,13 @@ For lCpt = lTotLig To 1 Step -1
 				If Len ( sVal ) <> 15 And Len ( sVal ) > 0 Then
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (NUM_IMEI_ANC) Un num$$HEX1$$e900$$ENDHEX$$ro d'IMEI doit contenir 15 chiffres" )
+					" : (NUM_IMEI_ANC) Un numéro d'IMEI doit contenir 15 chiffres" )
 				End If
 			
 				If Not F_IMEI ( sVal, sIMEICorr ) And Len ( sVal ) > 0 Then
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (NUM_IMEI_ANC) Num$$HEX1$$e900$$ENDHEX$$ro d'IMEI non valide" )
+					" : (NUM_IMEI_ANC) Numéro d'IMEI non valide" )
 				End If 
 		End choose 
 	End If		
@@ -3004,7 +3004,7 @@ For lCpt = lTotLig To 1 Step -1
 	If Not IsNumber ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (MT_TTC_REMPL) Cette zone doit contenir une valeur num$$HEX1$$e900$$ENDHEX$$rique" )
+		" : (MT_TTC_REMPL) Cette zone doit contenir une valeur numérique" )
 	End if
 
 	/*------------------------------------------------------------------*/
@@ -3027,7 +3027,7 @@ For lCpt = lTotLig To 1 Step -1
 			if Isnull(dtVal) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit être renseignée.")
 			End if
 			// :[DT168].Mantis16805
 			
@@ -3036,14 +3036,14 @@ For lCpt = lTotLig To 1 Step -1
 			if Not Isnull(dtVal) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit $$HEX1$$ea00$$ENDHEX$$tre vide.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit être vide.")
 			End if
 
 		Case Else
 			If ( lVal = 0 Or IsNull ( lVal ) ) And Not IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Lorsque la date de fin de traitement (DTE_FIN_TRAIT) est renseign$$HEX1$$e900$$ENDHEX$$e, un statut GC est obligatoire.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Lorsque la date de fin de traitement (DTE_FIN_TRAIT) est renseignée, un statut GC est obligatoire.")
 			End If 
 			
 	End Choose
@@ -3059,14 +3059,14 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( sVal ) Or Len ( sVal ) <= 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone NUM_BON_TRP doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e sur le statut " + String ( lVal ) )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone NUM_BON_TRP doit être renseignée sur le statut " + String ( lVal ) )
 			End If
 		//  [VDoc4752]
 		Case 165
 			If iInfoSpbFrn = 970 and (IsNull ( sVal ) Or Len ( sVal ) <= 0 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone NUM_BON_TRP doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e sur le statut " + String ( lVal ) +  " pour le process 970.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone NUM_BON_TRP doit être renseignée sur le statut " + String ( lVal ) +  " pour le process 970.")
 			End If
 		// :[VDoc4752]
 	End Choose
@@ -3083,15 +3083,15 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 7 : STATUS_GC														     */
 	/*------------------------------------------------------------------*/
-	// [O2M] : V$$HEX1$$e900$$ENDHEX$$rification de l'appartenance du code retourn$$HEX2$$e9002000$$ENDHEX$$au param$$HEX1$$e900$$ENDHEX$$trage.
+	// [O2M] : Vérification de l'appartenance du code retourné au paramétrage.
 	sVal = String ( idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) )
 
 	If ( IsNull ( sVal ) Or Trim ( sVal ) = "" ) And iStatusGc > 0 Then sVal = String ( iStatusGc )
 	
-//	if dsCode.retrieve('-GC') > 0  then											// #9 - Chargement au d$$HEX1$$e900$$ENDHEX$$but de la fct
-			// #3 [FNAC_PROD_ECH_TECH] agrandissement jusqu'$$HEX2$$e0002000$$ENDHEX$$160
+//	if dsCode.retrieve('-GC') > 0  then											// #9 - Chargement au début de la fct
+			// #3 [FNAC_PROD_ECH_TECH] agrandissement jusqu'à 160
 			// #4 [DCMP090109] ajout 2, 21
-			// #5 [DCMP090085] ajout jusqu'$$HEX2$$e0002000$$ENDHEX$$169
+			// #5 [DCMP090085] ajout jusqu'à 169
 			// #6 [DCMP090327].[SBETV] (171)
 			// [PM166][O2M]
 			// [MANTIS3067] ajout 231
@@ -3112,14 +3112,14 @@ For lCpt = lTotLig To 1 Step -1
 // [PM82][LOT1] je remonte cette linge plus haut.
 // [RECUP_DONNEE_O2M] PCM 
 // [VDOC4970]
-// [PM250] Modif suite demande d'H$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e800$$ENDHEX$$ne (et O2M)
+// [PM250] Modif suite demande d'Hélène (et O2M)
 	Choose Case Upper ( sIdTypArt ) 
 		Case "EDI", "PRS", "PCM"
 			Choose Case Long ( sVal ) 
 				Case 177, 178
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le Status GC " + sVal + " n'est autoris$$HEX2$$e9002000$$ENDHEX$$que pour les commandes de mat$$HEX1$$e900$$ENDHEX$$riel (hors Batterie amovible BAM et C$$HEX1$$e200$$ENDHEX$$ble d'alimentation ALE)" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le Status GC " + sVal + " n'est autorisé que pour les commandes de matériel (hors Batterie amovible BAM et Câble d'alimentation ALE)" )
 			End Choose
 		Case Else
 			Choose Case Long ( sVal ) 
@@ -3132,14 +3132,14 @@ For lCpt = lTotLig To 1 Step -1
 						If Not ( sIdTypArt = "PST" And Trim ( lnvPFCString.of_Getkeyvalue ( sInfoSpbFrnCplt, "TYP_RELAI", ";")) <> "PRET" ) Then
 							iRet = -1
 							This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-							" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Status GC " + sVal + " autoris$$HEX2$$e9002000$$ENDHEX$$uniquement sur une presta de type PST sans PRET" )
+							" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Status GC " + sVal + " autorisé uniquement sur une presta de type PST sans PRET" )
 						End If
 					End If 
 					
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Status GC " + sVal + " non autoris$$HEX2$$e9002000$$ENDHEX$$pour une commande de mat$$HEX1$$e900$$ENDHEX$$riel (hors Batterie amovible BAM et C$$HEX1$$e200$$ENDHEX$$ble d'alimentation ALE)" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Status GC " + sVal + " non autorisé pour une commande de matériel (hors Batterie amovible BAM et Câble d'alimentation ALE)" )
 
 			End Choose
 			
@@ -3152,32 +3152,32 @@ For lCpt = lTotLig To 1 Step -1
 		Case 1503, 1504, 435, 1502
 			Choose Case Long ( sVal ) 
 				Case 166
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoy$$HEX2$$e9002000$$ENDHEX$$sur la prestation d'origine, le Status GC " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$en retour" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Status GC " + sVal + " n'est pas autorisé en retour" )
 			End Choose
 			
 		Case 1505
 			Choose Case Long ( sVal ) 
 				Case 167, 168
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoy$$HEX2$$e9002000$$ENDHEX$$sur la prestation d'origine, le Status GC " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$en retour" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Status GC " + sVal + " n'est pas autorisé en retour" )
 			End Choose
 		// [VDoc4752]
 		Case 970
 			Choose Case Long ( sVal )
 					// [VDoc6082] ajout du statut_gc 164
 				Case 165,164
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoy$$HEX2$$e9002000$$ENDHEX$$sur la prestation d'origine, le Status GC " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$en retour" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Status GC " + sVal + " n'est pas autorisé en retour" )
 			End Choose
 			// :[VDoc4752]
 			
@@ -3185,11 +3185,11 @@ For lCpt = lTotLig To 1 Step -1
 		Case 964, 969
 			Choose Case Long ( sVal )
 				Case 179
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoy$$HEX2$$e9002000$$ENDHEX$$sur la prestation d'origine, le Status GC " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$en retour" )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Status GC " + sVal + " n'est pas autorisé en retour" )
 			End Choose			
 			
 	End Choose		
@@ -3199,32 +3199,32 @@ For lCpt = lTotLig To 1 Step -1
 			// [VDOC5774] 435, 1502
 			Choose Case iInfoSpbFrn
 				Case 1503, 1504, 435, 1502
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$sur le process " + String ( iInfoSpbFrn ) )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autorisé sur le process " + String ( iInfoSpbFrn ) )
 			End Choose
 			
 		Case 167, 168
 			Choose Case iInfoSpbFrn
 				Case 1505
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$sur le process " + String ( iInfoSpbFrn ) )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autorisé sur le process " + String ( iInfoSpbFrn ) )
 			End Choose
 			
 		// [VDOC6300] // [PC877]
 		Case 179
 			Choose Case iInfoSpbFrn
 				Case 964, 969
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$sur le process " + String ( iInfoSpbFrn ) )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autorisé sur le process " + String ( iInfoSpbFrn ) )
 			End Choose
 	End Choose			
 	// :[VDOC3731]	
@@ -3236,7 +3236,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Upper ( sIdTypArt ) <> "PRS" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autoris$$HEX2$$e9002000$$ENDHEX$$que sur une action de REPARATION." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autorisé que sur une action de REPARATION." )
 			End If
 
 	End Choose
@@ -3248,7 +3248,7 @@ For lCpt = lTotLig To 1 Step -1
 			If lVal = 232 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autoris$$HEX2$$e9002000$$ENDHEX$$que sur une action de REPARATION." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autorisé que sur une action de REPARATION." )
 			End If
 
 	End Choose
@@ -3283,7 +3283,7 @@ For lCpt = lTotLig To 1 Step -1
 	If len ( Trim ( sVal ) ) > 0 And Not IsDate ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone s$$HEX1$$e900$$ENDHEX$$rialis$$HEX1$$e900$$ENDHEX$$e DTE_RCP_MOB_CLI ne contient pas une date valide" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone sérialisée DTE_RCP_MOB_CLI ne contient pas une date valide" )
 	End If 
 
 	// [PC938_ORANGE_V3]
@@ -3294,7 +3294,7 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone s$$HEX1$$e900$$ENDHEX$$rialis$$HEX1$$e900$$ENDHEX$$e DTE_RCP_MOB_CLI ne peut $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e sans le statut 178, 233, 263, 234, 2, 21" )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone sérialisée DTE_RCP_MOB_CLI ne peut être renseignée sans le statut 178, 233, 263, 234, 2, 21" )
 		End Choose
 	End If
 
@@ -3302,14 +3302,14 @@ For lCpt = lTotLig To 1 Step -1
 	If len ( Trim ( sVal ) ) > 0 And ( lVal = 178 Or lVal = 233 Or lVal = 263 ) And ( IsNull ( dtVal ) Or Date ( dtVal ) = 1900-01-01 ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone DTE_FIN_TRAIT doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e avant de renseigner la zone DTE_RCP_MOB_CLI et de donner le statut 178 ou 233 ou 263" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone DTE_FIN_TRAIT doit être renseignée avant de renseigner la zone DTE_RCP_MOB_CLI et de donner le statut 178 ou 233 ou 263" )
 	End If
 
   /* [VDOC9908]		
 	If lVal = 178 And len ( Trim ( sVal ) ) <= 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut 178 oblige $$HEX2$$e0002000$$ENDHEX$$avoir la zone s$$HEX1$$e900$$ENDHEX$$rialis$$HEX1$$e900$$ENDHEX$$e DTE_RCP_MOB_CLI renseign$$HEX1$$e900$$ENDHEX$$e." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut 178 oblige à avoir la zone sérialisée DTE_RCP_MOB_CLI renseignée." )
 	End If
 	*/
 	// [PM166][O2M]
@@ -3326,7 +3326,7 @@ For lCpt = lTotLig To 1 Step -1
 			If len ( Trim ( sVal ) ) > 0 OR len ( Trim ( sVal1 ) ) > 0 OR len ( Trim ( sVal2 ) ) > 0 OR len ( Trim ( sVal3 ) ) > 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7926) : Les bin$$HEX1$$f400$$ENDHEX$$mes cl$$HEX1$$e900$$ENDHEX$$s/valeurs pour les cl$$HEX1$$e900$$ENDHEX$$s MARQUE_REMPL, MODELE_REMPL, PRIX_TTC_PUBLIC, PRIX_TTC_FACTU_O2M ne sont pas autoris$$HEX1$$e900$$ENDHEX$$s pour le produit " + String ( dcIdProd ) + "." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7926) : Les binômes clés/valeurs pour les clés MARQUE_REMPL, MODELE_REMPL, PRIX_TTC_PUBLIC, PRIX_TTC_FACTU_O2M ne sont pas autorisés pour le produit " + String ( dcIdProd ) + "." )
 			End If
 			
 	End Choose
@@ -3338,23 +3338,23 @@ For lCpt = lTotLig To 1 Step -1
 	If Not IsNull ( dtVal ) And Not IsNull ( dtVal1 ) And dtVal1 < dtVal Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la DTE_RCP_FRN." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit être postérieure ou égale à la DTE_RCP_FRN." )
 	End If
 	// [VDOC9337]	
 	
 	// [VDOC9907]
-	// Mettre en place pour O2M ces r$$HEX1$$e800$$ENDHEX$$gles, rejet du fichier MPR si : 
-	// - pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] ou [BRIS] avec un status_gc diff$$HEX1$$e900$$ENDHEX$$rent de 21 
+	// Mettre en place pour O2M ces règles, rejet du fichier MPR si : 
+	// - présence d’une clé de type [SAV_NO_OK] ou [BRIS] avec un status_gc différent de 21 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )		
 	If lVal <> 21 And ( Pos ( sVal, "[SAV_NO_OK]" ) > 0 Or Pos ( sVal, "[BRIS]" ) > 0 ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9907/A.RAULT) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] ou [BRIS] avec un status_gc diff$$HEX1$$e900$$ENDHEX$$rent de 21 , interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9907/A.RAULT) : présence d’une clé de type [SAV_NO_OK] ou [BRIS] avec un status_gc différent de 21 , interdit " )
 	End IF
 
-	// Mettre en place pour O2M ces r$$HEX1$$e800$$ENDHEX$$gles, rejet du fichier MPR si : 
-	// - pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] ou [BRIS] dans un retour $$HEX2$$e0002000$$ENDHEX$$une commande avec action = A_REPARER ou A_REPARER_FORCE 
+	// Mettre en place pour O2M ces règles, rejet du fichier MPR si : 
+	// - présence d’une clé de type [SAV_NO_OK] ou [BRIS] dans un retour à une commande avec action = A_REPARER ou A_REPARER_FORCE 
 	// [PM222-1]	
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )		
 	If ( Pos ( sVal, "[SAV_NO_OK]" ) > 0 Or Pos ( sVal, "[BRIS]" ) > 0 ) &
@@ -3364,7 +3364,7 @@ For lCpt = lTotLig To 1 Step -1
 	Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9907/A.RAULT) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] ou [BRIS] dans un retour sur une commande sans demande de SAV (donc n$$HEX1$$1920$$ENDHEX$$impliquant pas d$$HEX1$$1920$$ENDHEX$$action = A_REPARER_SAV ou A_CONTROLER_SAV ), interdit" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9907/A.RAULT) : présence d’une clé de type [SAV_NO_OK] ou [BRIS] dans un retour sur une commande sans demande de SAV (donc n’impliquant pas d’action = A_REPARER_SAV ou A_CONTROLER_SAV ), interdit" )
 	End IF 
 	// :[VDOC9907]
 	
@@ -3386,7 +3386,7 @@ For lCpt = lTotLig To 1 Step -1
 		If Dec ( sVal ) > Dec ( sVal3 ) Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC10029/A.RAULT) : le montant du prix facturable par O2M concernant la proposition est sup$$HEX1$$e900$$ENDHEX$$rieur au prix public indiqu$$HEX1$$e900$$ENDHEX$$, ce qui est incoh$$HEX1$$e900$$ENDHEX$$rent" )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC10029/A.RAULT) : le montant du prix facturable par O2M concernant la proposition est supérieur au prix public indiqué, ce qui est incohérent" )
 		End If
 		
 	End If
@@ -3408,7 +3408,7 @@ For lCpt = lTotLig To 1 Step -1
 		If sIdRefFour = "A_DIAGNOSTIQUER" And lVal <> 151 And lVal <> 152 And lVal <> 159 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (ORANGE V3) : Pour Orange v3, seul le 151 ou 152 sont autoris$$HEX2$$e9002000$$ENDHEX$$sur le Diag apr$$HEX1$$e800$$ENDHEX$$s remplacement" )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (ORANGE V3) : Pour Orange v3, seul le 151 ou 152 sont autorisé sur le Diag après remplacement" )
 		End IF 
 	End IF 			
 	// [PC938_ORANGE_V3]
@@ -3418,21 +3418,21 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> "" And Len(sVal) > 35 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donn$$HEX1$$e900$$ENDHEX$$e MODL_RST_FRN trop longue (35 caract$$HEX1$$e800$$ENDHEX$$res maximum autoris$$HEX1$$e900$$ENDHEX$$s)." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donnée MODL_RST_FRN trop longue (35 caractères maximum autorisés)." )
 	End if
 	
 	sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "MARQ_RST_FRN", ";"))						
 	If sVal <> "" And Len(sVal) > 35 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donn$$HEX1$$e900$$ENDHEX$$e MARQ_RST_FRN trop longue (35 caract$$HEX1$$e800$$ENDHEX$$res maximum autoris$$HEX1$$e900$$ENDHEX$$s)." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donnée MARQ_RST_FRN trop longue (35 caractères maximum autorisés)." )
 	End if
 
 	sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ID_REF_FOUR_RST_FRN", ";"))						
 	If sVal <> "" And Len(sVal) > 20 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donn$$HEX1$$e900$$ENDHEX$$e ID_REF_FOUR_RST_FRN trop longue (20 caract$$HEX1$$e800$$ENDHEX$$res maximum autoris$$HEX1$$e900$$ENDHEX$$s)." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donnée ID_REF_FOUR_RST_FRN trop longue (20 caractères maximum autorisés)." )
 	End if
 	// [20140728.FPI] 
 
@@ -3443,7 +3443,7 @@ For lCpt = lTotLig To 1 Step -1
 	
 			lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 			
-			// [VDOC17191] je ne d$$HEX1$$e900$$ENDHEX$$clenche pas le message sur le 159
+			// [VDOC17191] je ne déclenche pas le message sur le 159
 			Choose Case lVal
 				Case 301, 159, 156	
 					// Ok
@@ -3451,7 +3451,7 @@ For lCpt = lTotLig To 1 Step -1
 					If iStatusGc <> lVal Then
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit int$$HEX1$$e900$$ENDHEX$$grer cette r$$HEX1$$e800$$ENDHEX$$gle dans son syst$$HEX1$$e800$$ENDHEX$$me." )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit intégrer cette règle dans son système." )
 					End If
 
 			End CHoose
@@ -3462,7 +3462,7 @@ For lCpt = lTotLig To 1 Step -1
 	If lVal = 155 And sIdRefFour <> "REFUSE_A_REEXP" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " ne peut $$HEX1$$ea00$$ENDHEX$$tre renvoy$$HEX2$$e9002000$$ENDHEX$$que sur une prestation de type REFUSE_A_REEXP" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " ne peut être renvoyé que sur une prestation de type REFUSE_A_REEXP" )
 	End If
 	
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
@@ -3472,7 +3472,7 @@ For lCpt = lTotLig To 1 Step -1
 			If lVal > 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il est interdit de r$$HEX1$$e900$$ENDHEX$$pondre sur les prestations de type A_REPARER_FORCE, et A_DESOXYDER_FORCE, or vous renvoyez le Statut " + String ( lVal ) + ". Si une r$$HEX1$$e900$$ENDHEX$$ponse doit $$HEX1$$ea00$$ENDHEX$$tre apport$$HEX1$$e900$$ENDHEX$$e, vous devez r$$HEX1$$e900$$ENDHEX$$pondre sur la pr$$HEX1$$e900$$ENDHEX$$station d'origine li$$HEX1$$e900$$ENDHEX$$e $$HEX2$$e0002000$$ENDHEX$$ce for$$HEX1$$e700$$ENDHEX$$age." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il est interdit de répondre sur les prestations de type A_REPARER_FORCE, et A_DESOXYDER_FORCE, or vous renvoyez le Statut " + String ( lVal ) + ". Si une réponse doit être apportée, vous devez répondre sur la préstation d'origine liée à ce forçage." )
 			End If
 	End Choose		
 
@@ -3486,7 +3486,7 @@ For lCpt = lTotLig To 1 Step -1
 				Case Else 
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Statut de retour (" + String ( lVal ) + ") autoris$$HEX2$$e9002000$$ENDHEX$$uniquement pour la r$$HEX1$$e900$$ENDHEX$$paration." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Statut de retour (" + String ( lVal ) + ") autorisé uniquement pour la réparation." )
 			End Choose
 		Case 151, 152
 			Choose Case sIdRefFour
@@ -3495,7 +3495,7 @@ For lCpt = lTotLig To 1 Step -1
 				Case Else 
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Statut de retour (" + String ( lVal ) + ") autoris$$HEX2$$e9002000$$ENDHEX$$uniquement pour le diagnostic." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Statut de retour (" + String ( lVal ) + ") autorisé uniquement pour le diagnostic." )
 			End Choose
 			
 		// VDOC18329
@@ -3506,7 +3506,7 @@ For lCpt = lTotLig To 1 Step -1
 				Case Else 
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Statut de retour (" + String ( lVal ) + ") autoris$$HEX2$$e9002000$$ENDHEX$$uniquement pour une commande de remplacement." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Statut de retour (" + String ( lVal ) + ") autorisé uniquement pour une commande de remplacement." )
 			End Choose
 
 		// VDOC18329				
@@ -3517,7 +3517,7 @@ For lCpt = lTotLig To 1 Step -1
 				Case Else 
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Statut de retour (" + String ( lVal ) + ") autoris$$HEX2$$e9002000$$ENDHEX$$uniquement pour un  Refus$$HEX4$$e9002000e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$exp$$HEX1$$e900$$ENDHEX$$dier (REFUSE_A_REEXP)." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Statut de retour (" + String ( lVal ) + ") autorisé uniquement pour un  Refusé à réexpédier (REFUSE_A_REEXP)." )
 			End Choose
 		
 	End Choose				
@@ -3530,7 +3530,7 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( sVal ) Or sVal = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " doit obligatoirement $$HEX1$$ea00$$ENDHEX$$tre accompagn$$HEX2$$e9002000$$ENDHEX$$d'un commentaire." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " doit obligatoirement être accompagné d'un commentaire." )
 			End If
 			
 	End CHoose
@@ -3541,7 +3541,7 @@ For lCpt = lTotLig To 1 Step -1
 		If sVal1 = "OUI" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " n'est autoris$$HEX2$$e9002000$$ENDHEX$$que pour une commande de remplacement." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " n'est autorisé que pour une commande de remplacement." )
 		End If	
 		
 	End If
@@ -3556,7 +3556,7 @@ For lCpt = lTotLig To 1 Step -1
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$sur une prestation de type BON EMARGE." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " n'est pas autorisé sur une prestation de type BON EMARGE." )
 			End Choose
 		End If 
 	End If
@@ -3595,7 +3595,7 @@ For lCpt = lTotLig To 1 Step -1
 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$PRBLE_LIVRAISON, n'est pas valide." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé PRBLE_LIVRAISON, n'est pas valide." )
 
 		End Choose 
 	End If 
@@ -3618,14 +3618,14 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$PEC_PRBLE_LIVRAISON, n'est pas valide." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé PEC_PRBLE_LIVRAISON, n'est pas valide." )
 
 		End Choose 
 		
 		If sVal1 = "" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la cl$$HEX2$$e9002000$$ENDHEX$$PEC_PRBLE_LIVRAISON n'est autoris$$HEX1$$e900$$ENDHEX$$e que si pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$demment il y a au un cl$$HEX2$$e9002000$$ENDHEX$$PRBLE_LIVRAISON, qui est justement absente." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la clé PEC_PRBLE_LIVRAISON n'est autorisée que si précédemment il y a au un clé PRBLE_LIVRAISON, qui est justement absente." )
 		End If 			
 	End If 	
 
@@ -3640,7 +3640,7 @@ For lCpt = lTotLig To 1 Step -1
 	
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 if isvalid(dsCode) Then destroy dsCode
 
@@ -3653,7 +3653,7 @@ private function integer uf_reglauto (long alidsin, long alidseq, string asidfou
 //* Fonction      : n_cst_int_Fic_SuiviCmd::uf_ReglAuto (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 12/07/2004 13:00:12
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 	Long					alIdSin			Val
@@ -3661,11 +3661,11 @@ private function integer uf_reglauto (long alidsin, long alidseq, string asidfou
 //*						String				asIdFour			Val
 //*					   DateTime 			adtDteRcpFrn	Val
 //*						Decimal (11,2)		adcMtFrais		Val
-//*						String   			asMesRetour  	R$$HEX1$$e900$$ENDHEX$$f
+//*						String   			asMesRetour  	Réf
 //*
-//* Retourne      :  0  DteRcpFrn non renseign$$HEX1$$e900$$ENDHEX$$e
-//*						1  Ok, R$$HEX1$$e900$$ENDHEX$$glement pass$$HEX1$$e900$$ENDHEX$$
-//*						2  Le r$$HEX1$$e900$$ENDHEX$$glement Automatique n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$pour le produit/gti/four du sinistre li$$HEX1$$e900$$ENDHEX$$
+//* Retourne      :  0  DteRcpFrn non renseignée
+//*						1  Ok, Réglement passé
+//*						2  Le réglement Automatique n'est pas autorisé pour le produit/gti/four du sinistre lié
 //*						-1 Erreur (asMesRetour)
 //*
 //*-----------------------------------------------------------------
@@ -3680,15 +3680,15 @@ Boolean bReglAutoAutorise
 asMesRetour = Fill ( " ", 250 )
 
 /*------------------------------------------------------------------*/
-/* Le produit/gti/fournisseur li$$HEX2$$e9002000$$ENDHEX$$au sinistre ont-ils le param$$HEX1$$e800$$ENDHEX$$tre  */
-/* (-DP,23) permettant les r$$HEX1$$e900$$ENDHEX$$glement automatiques ?                 */
+/* Le produit/gti/fournisseur lié au sinistre ont-ils le paramètre  */
+/* (-DP,23) permettant les réglement automatiques ?                 */
 /*------------------------------------------------------------------*/
 SQLCA.PS_S02_COMMANDE_TYPE ( alIdSin, alIdSeq, asIdFour, lRet)
 
 bReglAutoAutorise = lRet > 0
 
 If Not bReglAutoAutorise Then 
-	asMesRetour = "R$$HEX1$$e900$$ENDHEX$$glement automatique non autoris$$HEX2$$e9002000$$ENDHEX$$le produit/gti/four du sinistre concern$$HEX1$$e900$$ENDHEX$$"
+	asMesRetour = "Réglement automatique non autorisé le produit/gti/four du sinistre concerné"
 	Return 2
 End If 
 
@@ -3707,14 +3707,14 @@ private function integer uf_integration_envoimail (string asnomfic, string asdat
 //* Fonction      : n_cst_int_Fic_SuiviCmd::uf_Integration_EnvoiMail (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 16/07/2004 11:21:26
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Envoi de mail suite int$$HEX1$$e900$$ENDHEX$$gration fichier suivi Fournisseur
+//* Libellé       : Envoi de mail suite intégration fichier suivi Fournisseur
 //*					  et Virement automatique
 //* Commentaires  : 
 //*
 //* Arguments     : String asNomFic 			Val
 //*					  String asDateHeureTrt 	Val
 //*					  String asIdFourn			Val
-//*					  String asMessRet			R$$HEX1$$e900$$ENDHEX$$f
+//*					  String asMessRet			Réf
 //*
 //* Retourne      : 
 //*
@@ -3731,21 +3731,21 @@ bFichierMPR = Pos ( Upper (asNomFic), "FIC_MOV\MPR",  1 ) > 0
 
 /*------------------------------------------------------------------*/
 /* Information : Je mets ici en dur les fournisseurs pour lesquels  */
-/* nous sommes suceptibles d'avoir fait des r$$HEX1$$e900$$ENDHEX$$glements auto. En     */
-/* effet dans la fonction uf_ReglAuto, une proc$$HEX1$$e900$$ENDHEX$$dure contr$$HEX1$$f400$$ENDHEX$$le si    */
-/* pour le produit/gti/frn l'option (-DP,23) est pr$$HEX1$$e900$$ENDHEX$$sente,          */
-/* indiquant la gestion de r$$HEX1$$e900$$ENDHEX$$glement automatique pour le trinome    */
+/* nous sommes suceptibles d'avoir fait des réglements auto. En     */
+/* effet dans la fonction uf_ReglAuto, une procédure contrôle si    */
+/* pour le produit/gti/frn l'option (-DP,23) est présente,          */
+/* indiquant la gestion de réglement automatique pour le trinome    */
 /* par sinistre. Mais ici nous n'avons plus connaissance des        */
 /* produits, nous connaissons juste le fournisseur pour lequel      */
-/* on a int$$HEX1$$e900$$ENDHEX$$gr$$HEX2$$e9002000$$ENDHEX$$le fichier. Si de nouveaux fournisseurs sont $$HEX7$$e000200020002000200020002000$$ENDHEX$$*/
-/* ajouter pour les r$$HEX1$$e900$$ENDHEX$$glements auto, il faudra penser $$HEX2$$e0002000$$ENDHEX$$maintenir   */
+/* on a intégré le fichier. Si de nouveaux fournisseurs sont à      */
+/* ajouter pour les réglements auto, il faudra penser à maintenir   */
 /* cette fonction pour l'envoi des mails.                           */
 /*------------------------------------------------------------------*/
-/* VOIR Daniel pour la cr$$HEX1$$e900$$ENDHEX$$ation obligatoire du r$$HEX1$$e900$$ENDHEX$$pertoire sur Q2K !!*/
+/* VOIR Daniel pour la création obligatoire du répertoire sur Q2K !!*/
 /*------------------------------------------------------------------*/
 Choose Case bFichierMPR 
 	
-	// Fichier de r$$HEX1$$e900$$ENDHEX$$paration
+	// Fichier de réparation
 	Case TRUE 
 
 		Choose Case Upper ( asIdFourn )
@@ -3784,7 +3784,7 @@ private function integer uf_ctrl_fichier_mss ();//*-----------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_MSS (PRIVATE)
 //* Auteur			: Catherine Abdmeziem
 //* Date				: 20/09/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: DCMP 040381 : Contr$$HEX1$$f400$$ENDHEX$$le de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier MSS
+//* Libellé			: DCMP 040381 : Contrôle de la validité du fichier MSS
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -3822,16 +3822,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nul, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nul, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -3839,12 +3839,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -3864,13 +3864,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -3879,22 +3879,22 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 3 : NUM_CMD_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 4 : DTE_ELV_MOBILE														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 5 : DTE_RCP_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 6 : DTE_ENV_CLI 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 7 : DEST_ENVOI	 														  */
@@ -3908,7 +3908,7 @@ For lCpt = lTotLig To 1 Step -1
 			CASE ELSE	
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le Destinataire de l'envoi doit $$HEX1$$ea00$$ENDHEX$$tre null ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$SAV FNAC, mais pas " + sVal )
+				" : Le Destinataire de l'envoi doit être null ou égal à SAV FNAC, mais pas " + sVal )
 		END CHOOSE
 
 	End If
@@ -3925,7 +3925,7 @@ For lCpt = lTotLig To 1 Step -1
 			CASE ELSE	
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le code $$HEX1$$e900$$ENDHEX$$tat doit $$HEX1$$ea00$$ENDHEX$$tre null ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$ANN ou RPC, mais pas " + sVal )
+				" : Le code état doit être null ou égal à ANN ou RPC, mais pas " + sVal )
 		END CHOOSE
 
 	End If
@@ -3937,19 +3937,19 @@ For lCpt = lTotLig To 1 Step -1
 	If Not IsNull ( dtVal ) And Not IsNull ( dtVal1 ) And dtVal1 < dtVal Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la DTE_RCP_FRN." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit être postérieure ou égale à la DTE_RCP_FRN." )
 	End If
 	// :[VDOC9337]
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 9 : COMMENT_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 10 : STATUS_GC															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	// #3 [MSS_DIAG].[20091207111441740]
 	// [20091228114718123]
@@ -3962,7 +3962,7 @@ For lCpt = lTotLig To 1 Step -1
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -3974,7 +3974,7 @@ private function integer uf_integration_fichier_mss (ref long alnblig, ref long 
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_MSS (PRIVATE)
 //* Auteur			: Catherine Abdmeziem
 //* Date				: 20/09/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: DCMP 040381 : Int$$HEX1$$e900$$ENDHEX$$gration du fichier MSS dans la base
+//* Libellé			: DCMP 040381 : Intégration du fichier MSS dans la base
 //* Commentaires	: 
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -3988,10 +3988,10 @@ private function integer uf_integration_fichier_mss (ref long alnblig, ref long 
 //* MAJ   PAR      Date	     Modification
 //* #1    JFF    12/07/2004  DCMP 040206
 //* #2    JCA    09/06/2006  MAILPUSH
-//* #3    JFF    23/08/2006  Modif apport$$HEX1$$e900$$ENDHEX$$e suite probl$$HEX1$$e800$$ENDHEX$$me lenteur
+//* #3    JFF    23/08/2006  Modif apportée suite problème lenteur
 //* #4 	 PHG	  24/04/2008	  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
-//* #5	FPI	10/12/2009	[SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
-//*       JFF    11/03/2011 [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+//* #5	FPI	10/12/2009	[SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
+//*       JFF    11/03/2011 [ITSM62176] ajout du point de décimal
 //       JFF   18/08/2014 [PM254_V1]
 //*-----------------------------------------------------------------
 
@@ -4028,19 +4028,19 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
 	lIdSin = Long ( Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) )
 
-// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+// [ITSM62176] ajout du point de décimal
 	sSql += String ( lIdSin ) + "., "
 
 	/*------------------------------------------------------------------*/
@@ -4255,7 +4255,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #3
 		F_commit ( SQLCA, False ) // #3
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/RECP_APP_EN_CTR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/RECP_APP_EN_CTR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
 		Continue // #3
 	End If
 	//#2 FIN
@@ -4280,7 +4280,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -4298,7 +4298,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -4317,8 +4317,8 @@ private subroutine uf_definir_codetat_mss (ref string asval, long alcpt);//*----
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_MSS (PRIVATE)
 //* Auteur			: Catherine Abdmeziem
 //* Date				: 20/09/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: DCMP 040381 : ajout du nouveau fournisseur MSS
 //*
 //* Arguments		: asVal		String		Ref
@@ -4339,29 +4339,29 @@ String	sDestEnvoi
 asVal = Upper ( asVal ) 
 
 /*------------------------------------------------------------------*/
-/* !!!! Code $$HEX1$$e900$$ENDHEX$$tat Fix$$HEX1$$e900$$ENDHEX$$s !!!! 					     							  */
+/* !!!! Code état Fixés !!!! 					     							  */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
-/* Le code $$HEX1$$e900$$ENDHEX$$tat lu dans le fichier est ANNULEE PAR GESTIONNAIRE,    */
-/* on le laisse s'$$HEX1$$e900$$ENDHEX$$crire en base.                                   */
+/* Le code état lu dans le fichier est ANNULEE PAR GESTIONNAIRE,    */
+/* on le laisse s'écrire en base.                                   */
 /*------------------------------------------------------------------*/
 If asVal = "ANN" Then Return
 
 /*------------------------------------------------------------------*/
-/* Le code $$HEX1$$e900$$ENDHEX$$tat lu dans le fichier est RECU PAR LE CLIENT, on le    */
-/* s'$$HEX1$$e900$$ENDHEX$$crire en base.                                                */
+/* Le code état lu dans le fichier est RECU PAR LE CLIENT, on le    */
+/* s'écrire en base.                                                */
 /*------------------------------------------------------------------*/
 If asVal = "RPC" Then Return
 
 
 /*------------------------------------------------------------------*/
-/* !!!! Code $$HEX1$$e900$$ENDHEX$$tat D$$HEX1$$e900$$ENDHEX$$termin$$HEX1$$e900$$ENDHEX$$s en fonction des dates 					  */
+/* !!!! Code état Déterminés en fonction des dates 					  */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
 /* Si le CodEtat du fichier n'est pas un de ces deux codes, alors   */
-/* on va le d$$HEX1$$e900$$ENDHEX$$terminer $$HEX2$$e0002000$$ENDHEX$$partir des dates.                          */
+/* on va le déterminer à partir des dates.                          */
 /*------------------------------------------------------------------*/
 dtDteRcpFrn = idwFicFourn.GetItemDateTime ( alCpt, "DTE_RCP_FRN" ) 
 dtDteEnvCli = idwFicFourn.GetItemDateTime ( alCpt, "DTE_ENV_CLI" )
@@ -4375,7 +4375,7 @@ If Not IsNull ( dDteEnvCli ) Then
 
 	CHOOSE CASE sDestEnvoi	
 		CASE "SPB"
-			// Retourn$$HEX4$$e9002000e0002000$$ENDHEX$$la SPB par le fournisseur
+			// Retourné à la SPB par le fournisseur
 			asVal = "RSP"			
 
 		CASE ELSE
@@ -4383,7 +4383,7 @@ If Not IsNull ( dDteEnvCli ) Then
 			asVal = "ECL"			
 	END CHOOSE
 
-	// De plus si la dDteRcpFrn n'$$HEX1$$e900$$ENDHEX$$tait pas renseign$$HEX1$$e900$$ENDHEX$$
+	// De plus si la dDteRcpFrn n'était pas renseigné
 	//	On y met la dDteEnvCli
 	If IsNull ( dDteRcpFrn ) Then idwFicFourn.SetItem ( alCpt, "DTE_RCP_FRN", dDteEnvCli )
 
@@ -4407,7 +4407,7 @@ private function integer uf_ctrl_fichier_cegetel ();//*-------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_CEGETEL (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 23/06/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier du CEGETEL
+//* Libellé			: Controler de la validité du fichier du CEGETEL
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -4458,16 +4458,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -4475,12 +4475,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -4503,13 +4503,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -4518,7 +4518,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 3 : NUM_CMD_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 4 : NUM_IMEI_NOU														  */
@@ -4535,13 +4535,13 @@ For lCpt = lTotLig To 1 Step -1
 			If Len ( sVal ) <> 15 And Len ( sVal ) > 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Un num$$HEX1$$e900$$ENDHEX$$ro d'IMEI doit contenir 15 chiffres" )
+				" : Un numéro d'IMEI doit contenir 15 chiffres" )
 			End If
 		
 			If Not F_IMEI ( sVal, sIMEICorr ) And Len ( sVal ) > 0 Then		
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Num$$HEX1$$e900$$ENDHEX$$ro d'IMEI non valide" )
+				" : Numéro d'IMEI non valide" )
 			End If 
 		End If
 	End If
@@ -4550,12 +4550,12 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 5 : DTE_RCP_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 6 : DTE_ENV_CLI 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 7 : DEST_ENVOI	 														  */
@@ -4569,7 +4569,7 @@ For lCpt = lTotLig To 1 Step -1
 			CASE ELSE	
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le Destinataire de l'envoi doit $$HEX1$$ea00$$ENDHEX$$tre null ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$SPB ou CLIENT, mais pas " + sVal )
+				" : Le Destinataire de l'envoi doit être null ou égal à SPB ou CLIENT, mais pas " + sVal )
 		END CHOOSE
 
 	End If
@@ -4577,7 +4577,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 8 : NUM_BON_TRP 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 9 : COD_ETAT_CMD														  */
@@ -4591,7 +4591,7 @@ For lCpt = lTotLig To 1 Step -1
 			CASE ELSE	
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le code $$HEX1$$e900$$ENDHEX$$tat doit $$HEX1$$ea00$$ENDHEX$$tre null ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$ANN ou RPC, mais pas " + sVal )
+				" : Le code état doit être null ou égal à ANN ou RPC, mais pas " + sVal )
 		END CHOOSE
 
 	End If
@@ -4599,7 +4599,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 10 : COMMENT_FRN														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	// [CTRLE_DATE_INTRG_FOU]
 	sVal = String ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_ENV_CLI" ) )  // Normal, pas le choix
@@ -4617,7 +4617,7 @@ For lCpt = lTotLig To 1 Step -1
 	
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -4629,7 +4629,7 @@ private function integer uf_integration_fichier_cegetel (ref long alnblig, ref l
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_CEGETEL (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 23/06/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier du CEGETEL dans la base
+//* Libellé			: Intégration du fichier du CEGETEL dans la base
 //* Commentaires	: 
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -4642,10 +4642,10 @@ private function integer uf_integration_fichier_cegetel (ref long alnblig, ref l
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JCA    09/06/2006  MAILPUSH
-//* #2    JFF    23/08/2006  Modif apport$$HEX1$$e900$$ENDHEX$$e suite probl$$HEX1$$e800$$ENDHEX$$me lenteur
+//* #2    JFF    23/08/2006  Modif apportée suite problème lenteur
 //* #3 	 PHG	  24/04/2008  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
-//* #4	 FPI	  10/12/2009	[SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
-//*       JFF    11/03/2011  [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+//* #4	 FPI	  10/12/2009	[SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
+//*       JFF    11/03/2011  [ITSM62176] ajout du point de décimal
 //        JFF    26/08/2013  [DT57_CMDE_IPHONE_SFR]
 //       JFF   18/08/2014 [PM254_V1]
 //*-----------------------------------------------------------------
@@ -4683,17 +4683,17 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
-// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+// [ITSM62176] ajout du point de décimal
 	sSql += Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) + "., "
 	// #1
 	lIdSin = Long ( Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) )
@@ -4910,7 +4910,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 	//	Exit  #2
 		Continue // #2
 	End If		
@@ -4936,7 +4936,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -4954,7 +4954,7 @@ For lCpt = 1 To lTotLig
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")				
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 		F_commit ( SQLCA, False )
 			
@@ -4973,8 +4973,8 @@ private subroutine uf_definir_codetat_cegetel (ref string asval, long alcpt);//*
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_CEGETEL (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 23/06/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: 
 //*
 //* Arguments		: asVal		String		Ref
@@ -4995,29 +4995,29 @@ String	sDestEnvoi
 asVal = Upper ( asVal ) 
 
 /*------------------------------------------------------------------*/
-/* !!!! Code $$HEX1$$e900$$ENDHEX$$tat Fix$$HEX1$$e900$$ENDHEX$$s !!!! 					     							  */
+/* !!!! Code état Fixés !!!! 					     							  */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
-/* Le code $$HEX1$$e900$$ENDHEX$$tat lu dans le fichier est ANNULEE PAR GESTIONNAIRE,    */
-/* on le laisse s'$$HEX1$$e900$$ENDHEX$$crire en base.                                   */
+/* Le code état lu dans le fichier est ANNULEE PAR GESTIONNAIRE,    */
+/* on le laisse s'écrire en base.                                   */
 /*------------------------------------------------------------------*/
 If asVal = "ANN" Then Return
 
 /*------------------------------------------------------------------*/
-/* Le code $$HEX1$$e900$$ENDHEX$$tat lu dans le fichier est RECU PAR LE CLIENT, on le    */
-/* s'$$HEX1$$e900$$ENDHEX$$crire en base.                                                */
+/* Le code état lu dans le fichier est RECU PAR LE CLIENT, on le    */
+/* s'écrire en base.                                                */
 /*------------------------------------------------------------------*/
 If asVal = "RPC" Then Return
 
 
 /*------------------------------------------------------------------*/
-/* !!!! Code $$HEX1$$e900$$ENDHEX$$tat D$$HEX1$$e900$$ENDHEX$$termin$$HEX1$$e900$$ENDHEX$$s en fonction des dates 					  */
+/* !!!! Code état Déterminés en fonction des dates 					  */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
 /* Si le CodEtat du fichier n'est pas un de ces deux codes, alors   */
-/* on va le d$$HEX1$$e900$$ENDHEX$$terminer $$HEX2$$e0002000$$ENDHEX$$partir des dates.                          */
+/* on va le déterminer à partir des dates.                          */
 /*------------------------------------------------------------------*/
 dtDteRcpFrn = idwFicFourn.GetItemDateTime ( alCpt, "DTE_RCP_FRN" ) 
 dtDteEnvCli = idwFicFourn.GetItemDateTime ( alCpt, "DTE_ENV_CLI" )
@@ -5031,7 +5031,7 @@ If Not IsNull ( dDteEnvCli ) Then
 
 	CHOOSE CASE sDestEnvoi	
 		CASE "SPB"
-			// Retourn$$HEX4$$e9002000e0002000$$ENDHEX$$la SPB par le fournisseur
+			// Retourné à la SPB par le fournisseur
 			asVal = "RSP"			
 
 		CASE ELSE
@@ -5039,7 +5039,7 @@ If Not IsNull ( dDteEnvCli ) Then
 			asVal = "ECL"			
 	END CHOOSE
 
-	// De plus si la dDteRcpFrn n'$$HEX1$$e900$$ENDHEX$$tait pas renseign$$HEX1$$e900$$ENDHEX$$
+	// De plus si la dDteRcpFrn n'était pas renseigné
 	//	On y met la dDteEnvCli
 	If IsNull ( dDteRcpFrn ) Then idwFicFourn.SetItem ( alCpt, "DTE_RCP_FRN", dDteEnvCli )
 
@@ -5063,7 +5063,7 @@ private function integer uf_integration_fichier_cdiscount (ref long alnblig, ref
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_CDISCOUNT (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 12/07/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier du DEBITEL dans la base
+//* Libellé			: Intégration du fichier du DEBITEL dans la base
 //* Commentaires	: 
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -5075,10 +5075,10 @@ private function integer uf_integration_fichier_cdiscount (ref long alnblig, ref
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1    JFF    23/08/2006  Modif apport$$HEX1$$e900$$ENDHEX$$e suite probl$$HEX1$$e800$$ENDHEX$$me lenteur
+//* #1    JFF    23/08/2006  Modif apportée suite problème lenteur
 //* #2 	 PHG	  24/04/2008  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
-//* #3	 FPI	  10/12/2009  [SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
-//*       JFF    11/03/2011  [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+//* #3	 FPI	  10/12/2009  [SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
+//*       JFF    11/03/2011  [ITSM62176] ajout du point de décimal
 //        JFF   18/08/2014 [PM254_V1]
 //        JFF   04/02/2020 [DT431]
 //*-----------------------------------------------------------------
@@ -5107,17 +5107,17 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
-// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+// [ITSM62176] ajout du point de décimal
 	sSql += Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) + "., "
 
 	/*------------------------------------------------------------------*/
@@ -5331,14 +5331,14 @@ For lCpt = 1 To lTotLig
 			iRet = -1
 			alNbLigNonTraitee	++ // #1
 			F_commit ( SQLCA, False ) // #1
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2
 			Continue // #1
 		End If
 	Else
 		iRet = -1
 		alNbLigNonTraitee	++ // #1
 		F_commit ( SQLCA, False ) // #1
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2
 		Continue // #1
 	End If
 
@@ -5354,7 +5354,7 @@ private function integer uf_ctrl_fichier_cdiscount ();//*-----------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_CDISCOUNT (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 12/07/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier du CDISCOUNT
+//* Libellé			: Controler de la validité du fichier du CDISCOUNT
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -5392,24 +5392,24 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		
 		If lPos <= 0 Then 
 			// [201312241000.FPI]
 			If long ( sVal ) <= 5000000 Then
 				This.uf_Trace ( "ECR", "INFO Ligne " + String ( lCpt ) + &
-					" : C'est un sinistre SAGA2, la ligne ne sera pas trait$$HEX1$$e900$$ENDHEX$$e par SIMPA2." )
+					" : C'est un sinistre SAGA2, la ligne ne sera pas traitée par SIMPA2." )
 				idwFicFourn.Rowsdiscard( lCpt,lCpt, Primary!)
 				Continue
 			End If 
 				
 			This.uf_Trace ( "ECR", "INFO Ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-', elle ne sera pas trait$$HEX1$$e900$$ENDHEX$$e." )
+				" : Le n° de commande SPB ne contient pas de '-', elle ne sera pas traitée." )
 			idwFicFourn.Rowsdiscard( lCpt,lCpt, Primary!)
 			Continue
 			
@@ -5418,7 +5418,7 @@ For lCpt = lTotLig To 1 Step -1
 
 			If long ( sVal ) <= 5000000 Then
 				This.uf_Trace ( "ECR", "INFO Ligne " + String ( lCpt ) + &
-					" : C'est un sinistre SAGA2, la ligne ne sera pas trait$$HEX1$$e900$$ENDHEX$$e par SIMPA2." )
+					" : C'est un sinistre SAGA2, la ligne ne sera pas traitée par SIMPA2." )
 				idwFicFourn.Rowsdiscard( lCpt,lCpt, Primary!)
 				Continue
 			End If 
@@ -5428,12 +5428,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -5453,13 +5453,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -5468,7 +5468,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 3 : CODE																	  */
 	/*------------------------------------------------------------------*/
-	// Aucun contr$$HEX1$$f400$$ENDHEX$$le
+	// Aucun contrôle
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 4 : TYPE																	  */
@@ -5478,13 +5478,13 @@ For lCpt = lTotLig To 1 Step -1
 	If Not IsNumber ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le type doit $$HEX1$$ea00$$ENDHEX$$tre un nombre (et non '" + sval + "')" )
+		" : Le type doit être un nombre (et non '" + sval + "')" )
 	End IF
 
 	If iRet > 0 And ( Long (sVal) < 40 Or Long (sVal) > 43 ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le type doit $$HEX1$$ea00$$ENDHEX$$tre compris entre 40 et 43 (et non '" + sVal + "')" )
+		" : Le type doit être compris entre 40 et 43 (et non '" + sVal + "')" )
 	End IF
 
 	/*------------------------------------------------------------------*/
@@ -5521,7 +5521,7 @@ For lCpt = lTotLig To 1 Step -1
 	
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -5533,8 +5533,8 @@ private subroutine uf_definir_codetat_cdiscount (ref string asval, long alcpt);/
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_CDISCOUNT (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 23/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: 
 //*
 //* Arguments		: asVal		String		Ref
@@ -5561,7 +5561,7 @@ private function decimal uf_determiner_montant_frais_envoi (string asfour, long 
 //* Fonction      : n_cst_w_commande3::uf_Determiner_Montant_Frais_Envoi (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 29/09/2005 11:06:05
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: DCMP 050549 M. Legac
+//* Libellé       : DCMP 050549 M. Legac
 //* Commentaires  : Gestion du montant des frais
 //*
 //* Arguments     : String		asFour				Val
@@ -5569,8 +5569,8 @@ private function decimal uf_determiner_montant_frais_envoi (string asfour, long 
 //*					  Long		alIdSeq				Val
 //*
 //* Retourne      : Decimal	dcMtFrais	
-//*						> 0      Montant des frais $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$gler
-//*						-100		Aucun date de cr$$HEX1$$e900$$ENDHEX$$ation de la commande trouv$$HEX1$$e900$$ENDHEX$$e.
+//*						> 0      Montant des frais à régler
+//*						-100		Aucun date de création de la commande trouvée.
 //*						-200		Le reglement ne se fait pas SPB		
 //*
 //*-----------------------------------------------------------------
@@ -5594,7 +5594,7 @@ dDatePivotReglParSbe	= 2005-12-19
 
 
 /*------------------------------------------------------------------*/
-/* R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration de la date de cr$$HEX1$$e900$$ENDHEX$$ation de la commande en base.      */
+/* Récupération de la date de création de la commande en base.      */
 /*------------------------------------------------------------------*/
 SQLCA.PS_S06_COMMANDE ( alIdSin, alIdSeq, dtCreeLe, dtCmdGenLe )
 If SQLCA.SqlDbCode <> 0 Or SQLCA.SqlCode <> 0 Then return -100
@@ -5621,7 +5621,7 @@ Choose Case asFour
 	/*--------------------------------------------------------------------------------------------*/	
 	/* #1   MADM   09/05/2006   [DCMP060356] Remplacement du Fournisseur AEVUM/AVM par CORDON/COR */
 	/*--------------------------------------------------------------------------------------------*/
-	// Pour le Frn CORDON, SPB ne r$$HEX1$$e900$$ENDHEX$$gle pas de frais d'envoi, c'est CORDON qui s'en charge.
+	// Pour le Frn CORDON, SPB ne régle pas de frais d'envoi, c'est CORDON qui s'en charge.
 	
 	Case "COR"	
 		dcMtFrais = -200
@@ -5744,44 +5744,44 @@ choose case sIdFour
 		sVal1 = Trim ( Upper ( idwFicFourn.GetItemString ( alCpt, "INFO_FRN_SPB_CPLT" ) ) )
 		sVal = lnvPFCString.of_getkeyvalue (sVal1, "PRBLE_LIVRAISON", ";")
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If
 
 		sVal = lnvPFCString.of_getkeyvalue (sVal1, "DTE_ARR_PLATFORM", ";")
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If
 
 		sVal = lnvPFCString.of_getkeyvalue (sVal1, "DTE_ARR_CENTR_DISTRIB", ";")
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If
 		
 		sVal = lnvPFCString.of_getkeyvalue (sVal1, "DTE_DEP_CENTR_DISTRIB", ";")
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If
 
 		sVal = lnvPFCString.of_getkeyvalue (sVal1, "DTE_RCP_MOB_CLI", ";")
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If			
 
 		sVal = lnvPFCString.of_getkeyvalue (sVal1, "CODE_ERREUR_LIVR", ";")
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If			
 
 		// [PM251-2]
 		sVal = lnvPFCString.of_getkeyvalue (sVal1, "REMIS_EN_STK", ";")
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If			
 
@@ -5789,7 +5789,7 @@ choose case sIdFour
 		sVal = lnvPFCString.of_getkeyvalue (sVal, "DTE_RESTIT_APP_PRET", ";")
 		sVal2 = lnvPFCString.of_getkeyvalue (sVal, "ETAT_APP_PRET", ";")
 		If ( Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 ) Or ( Not IsNull ( sVal2 ) And Len ( Trim ( sVal2 ) ) > 0 ) And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If			
 			
@@ -5800,14 +5800,14 @@ choose case sIdFour
 
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And Not IsNull ( sVal2 ) And Len ( Trim ( sVal2 ) ) > 0 &
 			And sVal <> sVal2 And sCodEtat <> "ANN" Then
-		// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+		// On laisse, on accepte l'écrasement
 			Return bRet
 		End If			
 
 		// [DT288-3_LOT1_2EME_VS]
 		iStatusGcLuFic = idwFicFourn.GetItemNumber ( alCpt, "STATUS_GC" ) 
 		If iStatusGcLuFic = 612 And iStatusGc <> 612 then
-		// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+		// On laisse, on accepte l'écrasement
 			Return bRet
 		End If				
 
@@ -5826,7 +5826,7 @@ choose case sIdFour
 				// [VDOC9304_PM82_LOT1]
 				// [VDOC15485]
 				If ( ( iStatusGc = 153 Or iStatusGc = 154 ) And sIdTypArt = "PRS" ) Then
-					// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+					// On laisse, on accepte l'écrasement
 				Else
 					idwFicFourn.RowsDiscard ( alCpt, alCpt, primary!)
 					bRet = false
@@ -5850,7 +5850,7 @@ choose case sIdFour
 		sVal = lnvPFCString.of_getkeyvalue (sVal, "PRBLE_LIVRAISON", ";")
 		
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If
 
@@ -5859,31 +5859,31 @@ choose case sIdFour
 
 		sVal = lnvPFCString.of_getkeyvalue (sVal1, "DTE_ARR_PLATFORM", ";")
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If
 
 		sVal = lnvPFCString.of_getkeyvalue (sVal1, "DTE_ARR_CENTR_DISTRIB", ";")
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If
 		
 		sVal = lnvPFCString.of_getkeyvalue (sVal1, "DTE_DEP_CENTR_DISTRIB", ";")
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If
 
 		sVal = lnvPFCString.of_getkeyvalue (sVal1, "DTE_RCP_MOB_CLI", ";")
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If			
 
 		sVal = lnvPFCString.of_getkeyvalue (sVal1, "CODE_ERREUR_LIVR", ";")
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If
 
@@ -5892,7 +5892,7 @@ choose case sIdFour
 
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And Not IsNull ( sVal2 ) And Len ( Trim ( sVal2 ) ) > 0 &
 			And sVal <> sVal2 And sCodEtat <> "ANN" Then
-		// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+		// On laisse, on accepte l'écrasement
 			Return bRet
 		End If
 		
@@ -5930,7 +5930,7 @@ choose case sIdFour
 		sVal = lnvPFCString.of_getkeyvalue (sVal, "PRBLE_LIVRAISON", ";")
 		
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If
 
@@ -5939,31 +5939,31 @@ choose case sIdFour
 
 		sVal = lnvPFCString.of_getkeyvalue (sVal1, "DTE_ARR_PLATFORM", ";")
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If
 
 		sVal = lnvPFCString.of_getkeyvalue (sVal1, "DTE_ARR_CENTR_DISTRIB", ";")
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If
 		
 		sVal = lnvPFCString.of_getkeyvalue (sVal1, "DTE_DEP_CENTR_DISTRIB", ";")
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If
 
 		sVal = lnvPFCString.of_getkeyvalue (sVal1, "DTE_RCP_MOB_CLI", ";")
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If			
 
 		sVal = lnvPFCString.of_getkeyvalue (sVal1, "CODE_ERREUR_LIVR", ";")
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If			
 
@@ -5974,7 +5974,7 @@ choose case sIdFour
 
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And Not IsNull ( sVal2 ) And Len ( Trim ( sVal2 ) ) > 0 &
 			And sVal <> sVal2 And sCodEtat <> "ANN" Then
-		// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+		// On laisse, on accepte l'écrasement
 			Return bRet
 		End If			
 	
@@ -6001,7 +6001,7 @@ choose case sIdFour
 		sVal = lnvPFCString.of_getkeyvalue (sVal, "PRBLE_LIVRAISON", ";")
 		
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If
 
@@ -6010,31 +6010,31 @@ choose case sIdFour
 
 		sVal = lnvPFCString.of_getkeyvalue (sVal1, "DTE_ARR_PLATFORM", ";")
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If
 
 		sVal = lnvPFCString.of_getkeyvalue (sVal1, "DTE_ARR_CENTR_DISTRIB", ";")
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If
 		
 		sVal = lnvPFCString.of_getkeyvalue (sVal1, "DTE_DEP_CENTR_DISTRIB", ";")
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If
 
 		sVal = lnvPFCString.of_getkeyvalue (sVal1, "DTE_RCP_MOB_CLI", ";")
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If			
 
 		sVal = lnvPFCString.of_getkeyvalue (sVal1, "CODE_ERREUR_LIVR", ";")
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-			// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+			// On laisse, on accepte l'écrasement
 			Return bRet
 		End If			
 
@@ -6045,7 +6045,7 @@ choose case sIdFour
 
 		If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And Not IsNull ( sVal2 ) And Len ( Trim ( sVal2 ) ) > 0 &
 			And sVal <> sVal2 And sCodEtat <> "ANN" Then
-		// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+		// On laisse, on accepte l'écrasement
 			Return bRet
 		End If			
 		
@@ -6066,7 +6066,7 @@ choose case sIdFour
 
 	// [PM289_CDP]		
 	Case "CDP"
-		// Sinon, en prod lors dela d$$HEX1$$e900$$ENDHEX$$sact de de cl$$HEX1$$e900$$ENDHEX$$, aucun contr$$HEX1$$f400$$ENDHEX$$le, on prend tout 
+		// Sinon, en prod lors dela désact de de clé, aucun contrôle, on prend tout 
 		// le temps l'egnr car il peut s'agir du fichier d'anomalie			
 	
 		// [ITSM302330]
@@ -6105,32 +6105,32 @@ choose case sIdFour
 		
 		// [HP252_276_HUB_PRESTA]
 		If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
-			// Par d$$HEX1$$e900$$ENDHEX$$faut, si le fournisseur est li$$HEX2$$e9002000$$ENDHEX$$au HP
+			// Par défaut, si le fournisseur est lié au HP
 			If ibPrestaHub Then
 				sVal1 = Trim ( Upper ( idwFicFourn.GetItemString ( alCpt, "INFO_FRN_SPB_CPLT" ) ) )
 				
 				// [PM246]
 				sVal = idwFicFourn.GetItemString ( alCpt, "PRBLE_LIVRAISON" )
 				If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
-					// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+					// On laisse, on accepte l'écrasement
 					Return bRet
 				End If
 
 				dtVal = idwFicFourn.GetItemDateTime ( alCpt, "DTE_RCP_APP_CLI" )
 				If Not IsNull ( dtVal ) And sCodEtat <> "ANN" Then
-					// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+					// On laisse, on accepte l'écrasement
 					Return bRet
 				End If			
 
 				sVal = lnvPFCString.of_getkeyvalue (sVal1, "DDE_SAV", ";")
 				If sVal="OUI" And sCodEtat <> "ANN" Then
-					// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+					// On laisse, on accepte l'écrasement
 					Return bRet
 				End If			
 
 				sVal = lnvPFCString.of_getkeyvalue (sVal1, "AUTO_PEC_RAR", ";")
 				If sVal="OUI" And sCodEtat <> "ANN" Then
-					// On laisse, on accepte l'$$HEX1$$e900$$ENDHEX$$crasement
+					// On laisse, on accepte l'écrasement
 					Return bRet
 				End If			
 
@@ -6175,8 +6175,8 @@ private function integer uf_integration_fichier_o2m (ref long alnblig, ref long 
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_O2M (PRIVATE)
 //* Auteur			: PHG
 //* Date				: 29/11/2007
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier O2M dans la base
-//* Commentaires	: [O2M] Int$$HEX1$$e900$$ENDHEX$$gration de Fichier O2M
+//* Libellé			: Intégration du fichier O2M dans la base
+//* Commentaires	: [O2M] Intégration de Fichier O2M
 //*
 //* Arguments		: Long		alNbLig		Ref
 //*					  Long		alNbLigMod	Ref
@@ -6190,10 +6190,10 @@ private function integer uf_integration_fichier_o2m (ref long alnblig, ref long 
 //* #1 	 PHG	 24/04/2008	  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
 //* #2    JFF   28/04/2008   [DCMP080202] MailPush O2M
 //* #3	 JFF	 20/10/2008	  [FNAC_PROD_ECH_TECH]
-//* #4	 FPI	 10/12/2009	  [SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
+//* #4	 FPI	 10/12/2009	  [SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
 //*       JFF   30/06/2010   [PC363_AUCHAN]
 //*       JFF   07/03/2011   [VDOC3290]
-//*       JFF   11/03/2011   [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+//*       JFF   11/03/2011   [ITSM62176] ajout du point de décimal
 //*       JFF   19/09/2011   [PM82][LOT1]
 //*       JFF   05/01/2012   [RECUP_DONNEE_O2M]
 //        JFF   06/08/2012   [BLCODE]
@@ -6202,7 +6202,7 @@ private function integer uf_integration_fichier_o2m (ref long alnblig, ref long 
 //       JFF   08/04/2014 [PM255]
 //       JFF   07/05/2013 [PM250-1]
 //       JFF   02/06/2014 [PC929_CDISCOUNT][PC929-2-V3]
-// 		FPI	21/07/2014 [PM250-1].FPI Correction r$$HEX1$$e900$$ENDHEX$$init de date avant lecture de la ligne
+// 		FPI	21/07/2014 [PM250-1].FPI Correction réinit de date avant lecture de la ligne
 //       JFF   18/08/2014 [PM254_V1]
 //       JFF   25/08/2014 [DT100]
 //       JFF   16/09/2014 [PM250-2]
@@ -6275,19 +6275,19 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
 	lIdSin = Long ( Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) )
 
-// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+// [ITSM62176] ajout du point de décimal
 	sSql += String ( lIdSin ) + "., "
 
 	/*------------------------------------------------------------------*/
@@ -6491,7 +6491,7 @@ For lCpt = 1 To lTotLig
 	sSql += sVal + ", "
 
 
-	// Pr$$HEX1$$e900$$ENDHEX$$paration zone INFO_FRN_SPB_CPLT 
+	// Préparation zone INFO_FRN_SPB_CPLT 
 	// Trt zone virtuelle RDV_CONF vers sInfoFrnSpbCplt
 	//* #3 [FNAC_PROD_ECH_TECH]
 	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "RDV_CONF" ) ) )
@@ -6784,7 +6784,7 @@ For lCpt = 1 To lTotLig
 	
 	/*------------------------------------------------------------------*/
 	/* ZONE 31 : INFO_FRN_SPB_CPLT ( zone multiple )[FNAC_PROD_ECH_TECH]*/
-	/* Une seule affectation $$HEX2$$e0002000$$ENDHEX$$sSql                                     */
+	/* Une seule affectation à sSql                                     */
 	/*------------------------------------------------------------------*/
 	sSql += "'" + sInfoFrnSpbCplt + "'"
 
@@ -6798,7 +6798,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ 
 		F_commit ( SQLCA, False ) 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/RECP_APP_EN_CTR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/RECP_APP_EN_CTR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
 		Continue 
 	End If
 	// :#2
@@ -6809,7 +6809,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 	//	Exit  #2
 		Continue // #2
 	End If	
@@ -6820,7 +6820,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/PS_S_MAILPUSH_ARR_PLATFORM, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/PS_S_MAILPUSH_ARR_PLATFORM, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 		Continue // #2
 	End If				
 	
@@ -6829,7 +6829,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/PS_S_MAILPUSH_DEP_CENTRDISTRIB, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/PS_S_MAILPUSH_DEP_CENTRDISTRIB, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 		Continue // #2
 	End If				
 	// [PM250-1]	
@@ -6855,7 +6855,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -6872,14 +6872,14 @@ For lCpt = 1 To lTotLig
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")	
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + sVal )
 
 		F_commit ( SQLCA, False )
 			
 		Continue 
 	End If
 	
-	// [RECUP_DONNEE_O2M] Ici absolument, les donn$$HEX1$$e900$$ENDHEX$$es sont relues de la base !
+	// [RECUP_DONNEE_O2M] Ici absolument, les données sont relues de la base !
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	Choose Case lVal	
 		Case 178
@@ -6890,7 +6890,7 @@ For lCpt = 1 To lTotLig
 				iRet = -1
 				alNbLigNonTraitee	++ 
 				F_commit ( SQLCA, False ) 
-				This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/RECUP_DONNEES_MAIL_AXALOT, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
+				This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/RECUP_DONNEES_MAIL_AXALOT, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
 				Continue 
 			End If */
 	End Choose
@@ -6906,7 +6906,7 @@ private function integer uf_ctrl_fichier_o2m ();//*-----------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_O2M (PRIVATE)
 //* Auteur			: PHG
 //* Date				: 29/11/2007
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier O2M
+//* Libellé			: Controler de la validité du fichier O2M
 //* Commentaires	: [O2M]
 //*
 //* Arguments		: 
@@ -6938,7 +6938,7 @@ private function integer uf_ctrl_fichier_o2m ();//*-----------------------------
 //* 		FPI   01/12/2011     [VDoc6082]
 //*      JFF   05/01/2012 		[RECUP_DONNEE_O2M]
 //*      JFF   23/01/2012     [VDOC6300]
-//*      JFF   20/03/2012     [CTRL_IMEI_O2M] ajout contr$$HEX1$$f400$$ENDHEX$$le IMEI
+//*      JFF   20/03/2012     [CTRL_IMEI_O2M] ajout contrôle IMEI
 //*      JFF   04/04/2012     [MANTIS3067] satut 231
 //*      JFF   30/05/2012	   [VDOC7926]
 //       JFF   06/08/2012     [BLCODE]
@@ -7017,7 +7017,7 @@ lTotLig = idwFicFourn.RowCount ()
 // [MODIF_SUITE_REDR]
 If lTotLig <= 0 And FileLength64 ( isTxtNomFic.Text ) > 0 Then
 	iRet = -1
-	This.uf_Trace ( "ECR", "ERREUR : 0 Ligne charg$$HEX1$$e900$$ENDHEX$$e ! , pour PI : Taille du fichier positive et chargement $$HEX2$$e0002000$$ENDHEX$$0 ligne => Anormal. R$$HEX1$$e900$$ENDHEX$$essayez l'int$$HEX1$$e900$$ENDHEX$$gration (cause $$HEX1$$e900$$ENDHEX$$ventuelle => le fichier est peut-$$HEX1$$ea00$$ENDHEX$$tre en format Unicode au lieu d'Ansi, $$HEX2$$e0002000$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$rifier)." )
+	This.uf_Trace ( "ECR", "ERREUR : 0 Ligne chargée ! , pour PI : Taille du fichier positive et chargement à 0 ligne => Anormal. Réessayez l'intégration (cause éventuelle => le fichier est peut-être en format Unicode au lieu d'Ansi, à vérifier)." )
 End If		
 
 sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
@@ -7047,16 +7047,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+	// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -7064,12 +7064,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 	End If
@@ -7095,14 +7095,14 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour And sVal <> "BLC" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 	// [BLCODE]
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -7122,7 +7122,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Not isNull(dtVal) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre vide.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de réception fournisseur (DTE_RCP_FRN) doit être vide.")
 			End if
 
 		// [PM01].[LOT3&4]
@@ -7135,14 +7135,14 @@ For lCpt = lTotLig To 1 Step -1
 			If isNull(dtVal) And iInfoSpbFrn <> 957 And sVal <> "OUI" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de réception fournisseur (DTE_RCP_FRN) doit être renseignée.")
 			End if
 			
 			// [PC13321][MANTIS14042]			
 			If Not isNull(dtVal) And iInfoSpbFrn = 957 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", et pour le process sp$$HEX1$$e900$$ENDHEX$$cifique 957, la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre vide.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", et pour le process spécifique 957, la date de réception fournisseur (DTE_RCP_FRN) doit être vide.")
 			End If			
 
 	End Choose
@@ -7151,7 +7151,7 @@ For lCpt = lTotLig To 1 Step -1
 		If Year ( Date (dtVal )) < 2000 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") l'ann$$HEX1$$e900$$ENDHEX$$e de la date de r$$HEX1$$e900$$ENDHEX$$ception n'est pas valide." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") l'année de la date de réception n'est pas valide." )
 		End If
 	End If
 	// Fin #9
@@ -7166,13 +7166,13 @@ For lCpt = lTotLig To 1 Step -1
 		If Len ( sVal ) <> 15 And Len ( sVal ) > 0 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Un num$$HEX1$$e900$$ENDHEX$$ro d'IMEI doit contenir 15 chiffres" )
+			" : Un numéro d'IMEI doit contenir 15 chiffres" )
 		End If
 	
 		If Not F_IMEI ( sVal, sIMEICorr ) And Len ( sVal ) > 0 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Num$$HEX1$$e900$$ENDHEX$$ro d'IMEI non valide" )
+			" : Numéro d'IMEI non valide" )
 		End If 
 	End If
 
@@ -7196,27 +7196,27 @@ For lCpt = lTotLig To 1 Step -1
 				If Not Isnull (dtVal) Then
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					", PM82_LOT1 : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + " en r$$HEX1$$e900$$ENDHEX$$paration, la date de fin de traitement (DTE_FIN_TRAIT) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+					", PM82_LOT1 : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + " en réparation, la date de fin de traitement (DTE_FIN_TRAIT) ne doit pas être renseignée.")
 				End If
 
 			Elseif Isnull(dtVal) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit être renseignée.")
 			End if
 		// [VDOC8041] 232
 		Case 156, 157, 158, 159, 162, 163, 164, 169, 232, 174
 			if Not Isnull(dtVal) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit $$HEX1$$ea00$$ENDHEX$$tre vide.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit être vide.")
 			End if
 			
 		Case Else
 			If ( lVal = 0 Or IsNull ( lVal ) ) And Not IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Lorsque la date de fin de traitement (DTE_FIN_TRAIT) est renseign$$HEX1$$e900$$ENDHEX$$e, un statut GC est obligatoire.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Lorsque la date de fin de traitement (DTE_FIN_TRAIT) est renseignée, un statut GC est obligatoire.")
 			End If 
 			
 	End Choose
@@ -7226,7 +7226,7 @@ For lCpt = lTotLig To 1 Step -1
 		If Year ( Date (dtVal )) < 2000 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") l'ann$$HEX1$$e900$$ENDHEX$$e de la date DTE_FIN_TRAIT n'est pas valide." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") l'année de la date DTE_FIN_TRAIT n'est pas valide." )
 		End If
 	End If
 
@@ -7242,14 +7242,14 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( sVal ) Or Len ( sVal ) <= 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone NUM_BON_TRP doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e sur le statut " + String ( lVal ) )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone NUM_BON_TRP doit être renseignée sur le statut " + String ( lVal ) )
 			End If
 		//  [VDoc4752]
 		Case 165
 			If iInfoSpbFrn = 970 and (IsNull ( sVal ) Or Len ( sVal ) <= 0 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone NUM_BON_TRP doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e sur le statut " + String ( lVal ) +  " pour le process 970.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone NUM_BON_TRP doit être renseignée sur le statut " + String ( lVal ) +  " pour le process 970.")
 			End If
 		// :[VDoc4752]
 	End Choose
@@ -7266,15 +7266,15 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 7 : STATUS_GC														     */
 	/*------------------------------------------------------------------*/
-	// [O2M] : V$$HEX1$$e900$$ENDHEX$$rification de l'appartenance du code retourn$$HEX2$$e9002000$$ENDHEX$$au param$$HEX1$$e900$$ENDHEX$$trage.
+	// [O2M] : Vérification de l'appartenance du code retourné au paramétrage.
 	sVal = String ( idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) )
 
 	If ( IsNull ( sVal ) Or Trim ( sVal ) = "" ) And iStatusGc > 0 Then sVal = String ( iStatusGc )
 	
-//	if dsCode.retrieve('-GC') > 0  then											// #9 - Chargement au d$$HEX1$$e900$$ENDHEX$$but de la fct
-			// #3 [FNAC_PROD_ECH_TECH] agrandissement jusqu'$$HEX2$$e0002000$$ENDHEX$$160
+//	if dsCode.retrieve('-GC') > 0  then											// #9 - Chargement au début de la fct
+			// #3 [FNAC_PROD_ECH_TECH] agrandissement jusqu'à 160
 			// #4 [DCMP090109] ajout 2, 21
-			// #5 [DCMP090085] ajout jusqu'$$HEX2$$e0002000$$ENDHEX$$169
+			// #5 [DCMP090085] ajout jusqu'à 169
 			// #6 [DCMP090327].[SBETV] (171)
 			// [PM166][O2M]
 			// [MANTIS3067] ajout 231
@@ -7298,14 +7298,14 @@ For lCpt = lTotLig To 1 Step -1
 // [PM82][LOT1] je remonte cette linge plus haut.
 // [RECUP_DONNEE_O2M] PCM 
 // [VDOC4970]
-// [PM250] Modif suite demande d'H$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e800$$ENDHEX$$ne (et O2M)
+// [PM250] Modif suite demande d'Hélène (et O2M)
 	Choose Case Upper ( sIdTypArt ) 
 		Case "EDI", "PRS", "PCM"
 			Choose Case Long ( sVal ) 
 				Case 177, 178
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le Status GC " + sVal + " n'est autoris$$HEX2$$e9002000$$ENDHEX$$que pour les commandes de mat$$HEX1$$e900$$ENDHEX$$riel (hors Batterie amovible BAM et C$$HEX1$$e200$$ENDHEX$$ble d'alimentation ALE)" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le Status GC " + sVal + " n'est autorisé que pour les commandes de matériel (hors Batterie amovible BAM et Câble d'alimentation ALE)" )
 			End Choose
 		Case Else
 			Choose Case Long ( sVal ) 
@@ -7318,14 +7318,14 @@ For lCpt = lTotLig To 1 Step -1
 						If Not ( sIdTypArt = "REA") And Not ( sIdTypArt = "PST" And Trim ( lnvPFCString.of_Getkeyvalue ( sInfoSpbFrnCplt, "TYP_RELAI", ";")) <> "PRET" ) Then
 							iRet = -1
 							This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-							" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Status GC " + sVal + " autoris$$HEX2$$e9002000$$ENDHEX$$uniquement sur une presta de type PST sans PRET ou une presta de type REA" )
+							" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Status GC " + sVal + " autorisé uniquement sur une presta de type PST sans PRET ou une presta de type REA" )
 						End If
 					End If 
 					
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Status GC " + sVal + " non autoris$$HEX2$$e9002000$$ENDHEX$$pour une commande de mat$$HEX1$$e900$$ENDHEX$$riel (hors Batterie amovible BAM et C$$HEX1$$e200$$ENDHEX$$ble d'alimentation ALE)" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Status GC " + sVal + " non autorisé pour une commande de matériel (hors Batterie amovible BAM et Câble d'alimentation ALE)" )
 
 			End Choose
 			
@@ -7338,32 +7338,32 @@ For lCpt = lTotLig To 1 Step -1
 		Case 1503, 1504, 435, 1502, 1506
 			Choose Case Long ( sVal ) 
 				Case 166
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoy$$HEX2$$e9002000$$ENDHEX$$sur la prestation d'origine, le Status GC " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$en retour" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Status GC " + sVal + " n'est pas autorisé en retour" )
 			End Choose
 			
 		Case 1505
 			Choose Case Long ( sVal ) 
 				Case 167, 168
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoy$$HEX2$$e9002000$$ENDHEX$$sur la prestation d'origine, le Status GC " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$en retour" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Status GC " + sVal + " n'est pas autorisé en retour" )
 			End Choose
 		// [VDoc4752]
 		Case 970
 			Choose Case Long ( sVal )
 					// [VDoc6082] ajout du statut_gc 164
 				Case 165,164
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoy$$HEX2$$e9002000$$ENDHEX$$sur la prestation d'origine, le Status GC " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$en retour" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Status GC " + sVal + " n'est pas autorisé en retour" )
 			End Choose
 			// :[VDoc4752]
 			
@@ -7371,11 +7371,11 @@ For lCpt = lTotLig To 1 Step -1
 		Case 964, 969
 			Choose Case Long ( sVal )
 				Case 179
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoy$$HEX2$$e9002000$$ENDHEX$$sur la prestation d'origine, le Status GC " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$en retour" )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Status GC " + sVal + " n'est pas autorisé en retour" )
 			End Choose			
 			
 	End Choose		
@@ -7385,32 +7385,32 @@ For lCpt = lTotLig To 1 Step -1
 			// [VDOC5774] 435, 1502
 			Choose Case iInfoSpbFrn
 				Case 1503, 1504, 435, 1502, 1506
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$sur le process " + String ( iInfoSpbFrn ) )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autorisé sur le process " + String ( iInfoSpbFrn ) )
 			End Choose
 			
 		Case 167, 168
 			Choose Case iInfoSpbFrn
 				Case 1505
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$sur le process " + String ( iInfoSpbFrn ) )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autorisé sur le process " + String ( iInfoSpbFrn ) )
 			End Choose
 			
 		// [VDOC6300] // [PC877]
 		Case 179
 			Choose Case iInfoSpbFrn
 				Case 964, 969
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$sur le process " + String ( iInfoSpbFrn ) )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autorisé sur le process " + String ( iInfoSpbFrn ) )
 			End Choose
 	End Choose			
 	// :[VDOC3731]	
@@ -7422,7 +7422,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Upper ( sIdTypArt ) <> "PRS" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autoris$$HEX2$$e9002000$$ENDHEX$$que sur une action de REPARATION." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autorisé que sur une action de REPARATION." )
 			End If
 
 	End Choose
@@ -7434,7 +7434,7 @@ For lCpt = lTotLig To 1 Step -1
 			If lVal = 232 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autoris$$HEX2$$e9002000$$ENDHEX$$que sur une action de REPARATION." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autorisé que sur une action de REPARATION." )
 			End If
 
 	End Choose
@@ -7489,14 +7489,14 @@ For lCpt = lTotLig To 1 Step -1
 	If len ( Trim ( sVal ) ) > 0 And Not IsDate ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone s$$HEX1$$e900$$ENDHEX$$rialis$$HEX1$$e900$$ENDHEX$$e DTE_RCP_MOB_CLI ne contient pas une date valide" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone sérialisée DTE_RCP_MOB_CLI ne contient pas une date valide" )
 	End If 
 
 	If Not IsNull ( sVal ) And Date ( sVal ) <> 1900-01-01 Then
 		If Year ( Date (sVal )) < 2000 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") l'ann$$HEX1$$e900$$ENDHEX$$e de la date DTE_RCP_MOB_CLI n'est pas valide." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") l'année de la date DTE_RCP_MOB_CLI n'est pas valide." )
 		End If
 	End If
 
@@ -7509,7 +7509,7 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone s$$HEX1$$e900$$ENDHEX$$rialis$$HEX1$$e900$$ENDHEX$$e DTE_RCP_MOB_CLI ne peut $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e sans le statut 178, 233, 263, 234, 2, 21" )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone sérialisée DTE_RCP_MOB_CLI ne peut être renseignée sans le statut 178, 233, 263, 234, 2, 21" )
 		End Choose
 	End If
 
@@ -7517,14 +7517,14 @@ For lCpt = lTotLig To 1 Step -1
 	If len ( Trim ( sVal ) ) > 0 And ( lVal = 178 Or lVal = 233 Or lVal = 263 ) And ( IsNull ( dtVal ) Or Date ( dtVal ) = 1900-01-01 ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone DTE_FIN_TRAIT doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e avant de renseigner la zone DTE_RCP_MOB_CLI et de donner le statut 178 ou 233 ou 263" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone DTE_FIN_TRAIT doit être renseignée avant de renseigner la zone DTE_RCP_MOB_CLI et de donner le statut 178 ou 233 ou 263" )
 	End If
 
   /* [VDOC9908]		
 	If lVal = 178 And len ( Trim ( sVal ) ) <= 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut 178 oblige $$HEX2$$e0002000$$ENDHEX$$avoir la zone s$$HEX1$$e900$$ENDHEX$$rialis$$HEX1$$e900$$ENDHEX$$e DTE_RCP_MOB_CLI renseign$$HEX1$$e900$$ENDHEX$$e." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut 178 oblige à avoir la zone sérialisée DTE_RCP_MOB_CLI renseignée." )
 	End If
 	*/
 	// [PM166][O2M]
@@ -7541,7 +7541,7 @@ For lCpt = lTotLig To 1 Step -1
 			If len ( Trim ( sVal ) ) > 0 OR len ( Trim ( sVal1 ) ) > 0 OR len ( Trim ( sVal2 ) ) > 0 OR len ( Trim ( sVal3 ) ) > 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7926) : Les bin$$HEX1$$f400$$ENDHEX$$mes cl$$HEX1$$e900$$ENDHEX$$s/valeurs pour les cl$$HEX1$$e900$$ENDHEX$$s MARQUE_REMPL, MODELE_REMPL, PRIX_TTC_PUBLIC, PRIX_TTC_FACTU_O2M ne sont pas autoris$$HEX1$$e900$$ENDHEX$$s pour le produit " + String ( dcIdProd ) + "." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7926) : Les binômes clés/valeurs pour les clés MARQUE_REMPL, MODELE_REMPL, PRIX_TTC_PUBLIC, PRIX_TTC_FACTU_O2M ne sont pas autorisés pour le produit " + String ( dcIdProd ) + "." )
 			End If
 			
 	End Choose
@@ -7553,23 +7553,23 @@ For lCpt = lTotLig To 1 Step -1
 	If Not IsNull ( dtVal ) And Not IsNull ( dtVal1 ) And dtVal1 < dtVal Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la DTE_RCP_FRN." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit être postérieure ou égale à la DTE_RCP_FRN." )
 	End If
 	// [VDOC9337]	
 	
 	// [VDOC9907]
-	// Mettre en place pour O2M ces r$$HEX1$$e800$$ENDHEX$$gles, rejet du fichier MPR si : 
-	// - pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] ou [BRIS] avec un status_gc diff$$HEX1$$e900$$ENDHEX$$rent de 21 
+	// Mettre en place pour O2M ces règles, rejet du fichier MPR si : 
+	// - présence d’une clé de type [SAV_NO_OK] ou [BRIS] avec un status_gc différent de 21 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )		
 	If lVal <> 21 And ( Pos ( sVal, "[SAV_NO_OK]" ) > 0 Or Pos ( sVal, "[BRIS]" ) > 0 ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9907/A.RAULT) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] ou [BRIS] avec un status_gc diff$$HEX1$$e900$$ENDHEX$$rent de 21 , interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9907/A.RAULT) : présence d’une clé de type [SAV_NO_OK] ou [BRIS] avec un status_gc différent de 21 , interdit " )
 	End IF
 
-	// Mettre en place pour O2M ces r$$HEX1$$e800$$ENDHEX$$gles, rejet du fichier MPR si : 
-	// - pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] ou [BRIS] dans un retour $$HEX2$$e0002000$$ENDHEX$$une commande avec action = A_REPARER ou A_REPARER_FORCE 
+	// Mettre en place pour O2M ces règles, rejet du fichier MPR si : 
+	// - présence d’une clé de type [SAV_NO_OK] ou [BRIS] dans un retour à une commande avec action = A_REPARER ou A_REPARER_FORCE 
 	// [PM222-1]	
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )		
 	If ( Pos ( sVal, "[SAV_NO_OK]" ) > 0 Or Pos ( sVal, "[BRIS]" ) > 0 ) &
@@ -7580,7 +7580,7 @@ For lCpt = lTotLig To 1 Step -1
 	Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9907/A.RAULT) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] ou [BRIS] dans un retour sur une commande sans demande de SAV (donc n$$HEX1$$1920$$ENDHEX$$impliquant pas d$$HEX1$$1920$$ENDHEX$$action = A_REPARER_SAV ou A_CONTROLER_SAV ), interdit" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9907/A.RAULT) : présence d’une clé de type [SAV_NO_OK] ou [BRIS] dans un retour sur une commande sans demande de SAV (donc n’impliquant pas d’action = A_REPARER_SAV ou A_CONTROLER_SAV ), interdit" )
 	End IF 
 	// :[VDOC9907]
 	
@@ -7602,7 +7602,7 @@ For lCpt = lTotLig To 1 Step -1
 		If Dec ( sVal ) > Dec ( sVal3 ) Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC10029/A.RAULT) : le montant du prix facturable par O2M concernant la proposition est sup$$HEX1$$e900$$ENDHEX$$rieur au prix public indiqu$$HEX1$$e900$$ENDHEX$$, ce qui est incoh$$HEX1$$e900$$ENDHEX$$rent" )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC10029/A.RAULT) : le montant du prix facturable par O2M concernant la proposition est supérieur au prix public indiqué, ce qui est incohérent" )
 		End If
 		
 	End If
@@ -7613,7 +7613,7 @@ For lCpt = lTotLig To 1 Step -1
 		If sIdRefFour = "A_DIAGNOSTIQUER" And lVal <> 151 And lVal <> 152 And lVal <> 159 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (ORANGE V3) : Pour Orange v3, seul le 151 ou 152 sont autoris$$HEX2$$e9002000$$ENDHEX$$sur le Diag apr$$HEX1$$e800$$ENDHEX$$s remplacement" )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (ORANGE V3) : Pour Orange v3, seul le 151 ou 152 sont autorisé sur le Diag après remplacement" )
 		End IF 
 	End IF 			
 	// [PC938_ORANGE_V3]
@@ -7625,28 +7625,28 @@ For lCpt = lTotLig To 1 Step -1
 		If sVal = "" or Len(sVal) <=0 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donn$$HEX1$$e900$$ENDHEX$$e MODL_RST_FRN obligatoire pour une commande de type INFO_RUPTURE_STOCK." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donnée MODL_RST_FRN obligatoire pour une commande de type INFO_RUPTURE_STOCK." )
 		End if
 		
 		sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "MARQ_RST_FRN", ";"))						
 		If sVal = "" or Len(sVal) <=0 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donn$$HEX1$$e900$$ENDHEX$$e MARQ_RST_FRN obligatoire pour une commande de type INFO_RUPTURE_STOCK." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donnée MARQ_RST_FRN obligatoire pour une commande de type INFO_RUPTURE_STOCK." )
 		End if
 	
 		sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ID_REF_FOUR_RST_FRN", ";"))						
 		If sVal = "" or Len(sVal) <=0 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donn$$HEX1$$e900$$ENDHEX$$e ID_REF_FOUR_RST_FRN obligatoire pour une commande de type INFO_RUPTURE_STOCK." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donnée ID_REF_FOUR_RST_FRN obligatoire pour une commande de type INFO_RUPTURE_STOCK." )
 		End if
 		
 		sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "PRIX_HT_RST_FRN", ";"))						
 		If sVal = "" or Len(sVal) <=0 Then			
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donn$$HEX1$$e900$$ENDHEX$$e PRIX_HT_RST_FRN obligatoire pour une commande de type INFO_RUPTURE_STOCK." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donnée PRIX_HT_RST_FRN obligatoire pour une commande de type INFO_RUPTURE_STOCK." )
 		End if		
 
 		// [BUG_RST_PRIX_O2M]
@@ -7654,7 +7654,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Long ( sVal) = 0 Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donn$$HEX1$$e900$$ENDHEX$$e PRIX_HT_RST_FRN obligatoire pour une commande de type INFO_RUPTURE_STOCK." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donnée PRIX_HT_RST_FRN obligatoire pour une commande de type INFO_RUPTURE_STOCK." )
 			End if		
 		End If 
 		
@@ -7676,7 +7676,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( sVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (vDoc25657) : La valeur " + sVal + " n'est pas autoris$$HEX1$$e900$$ENDHEX$$e pour le bcv GRADE_REC. La valeur doit $$HEX1$$ea00$$ENDHEX$$tre num$$HEX1$$e900$$ENDHEX$$rique entre 0 et 9." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (vDoc25657) : La valeur " + sVal + " n'est pas autorisée pour le bcv GRADE_REC. La valeur doit être numérique entre 0 et 9." )
 			End If
 		End If
 		
@@ -7691,7 +7691,7 @@ For lCpt = lTotLig To 1 Step -1
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (vDoc25770) : La valeur " + sVal + " n'est pas autoris$$HEX1$$e900$$ENDHEX$$e pour le bcv GRADE_REC. La valeur doit $$HEX1$$ea00$$ENDHEX$$tre AIG ou O2M." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (vDoc25770) : La valeur " + sVal + " n'est pas autorisée pour le bcv GRADE_REC. La valeur doit être AIG ou O2M." )
 			End CHoose 				
 		End If
 	End If
@@ -7701,28 +7701,28 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> "" And Len(sVal) > 35 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donn$$HEX1$$e900$$ENDHEX$$e MODL_RST_FRN trop longue (35 caract$$HEX1$$e800$$ENDHEX$$res maximum autoris$$HEX1$$e900$$ENDHEX$$s)." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donnée MODL_RST_FRN trop longue (35 caractères maximum autorisés)." )
 	End if
 	
 	sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "MARQ_RST_FRN", ";"))						
 	If sVal <> "" And Len(sVal) > 35 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donn$$HEX1$$e900$$ENDHEX$$e MARQ_RST_FRN trop longue (35 caract$$HEX1$$e800$$ENDHEX$$res maximum autoris$$HEX1$$e900$$ENDHEX$$s)." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donnée MARQ_RST_FRN trop longue (35 caractères maximum autorisés)." )
 	End if
 
 	sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ID_REF_FOUR_RST_FRN", ";"))						
 	If sVal <> "" And Len(sVal) > 20 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donn$$HEX1$$e900$$ENDHEX$$e ID_REF_FOUR_RST_FRN trop longue (20 caract$$HEX1$$e800$$ENDHEX$$res maximum autoris$$HEX1$$e900$$ENDHEX$$s)." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donnée ID_REF_FOUR_RST_FRN trop longue (20 caractères maximum autorisés)." )
 	End if
 	
 	sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "PRIX_HT_RST_FRN", ";"))						
 	If sVal <> "" And Len(sVal) > 0 And Not IsNumber ( sVal )  Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donn$$HEX1$$e900$$ENDHEX$$e PRIX_HT_RST_FRN doit $$HEX1$$ea00$$ENDHEX$$tre un nombre d$$HEX1$$e900$$ENDHEX$$cimal (montant)." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donnée PRIX_HT_RST_FRN doit être un nombre décimal (montant)." )
 	End if		
 	
 	// [20140728.FPI] 
@@ -7734,7 +7734,7 @@ For lCpt = lTotLig To 1 Step -1
 	
 			lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 			
-			// [VDOC17191] je ne d$$HEX1$$e900$$ENDHEX$$clenche pas le message sur le 159
+			// [VDOC17191] je ne déclenche pas le message sur le 159
 			Choose Case lVal
 				Case 301, 159, 156
 					// Ok
@@ -7742,7 +7742,7 @@ For lCpt = lTotLig To 1 Step -1
 					If iStatusGc <> lVal Then
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit int$$HEX1$$e900$$ENDHEX$$grer cette r$$HEX1$$e800$$ENDHEX$$gle dans son syst$$HEX1$$e800$$ENDHEX$$me." )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit intégrer cette règle dans son système." )
 					End If
 
 			End CHoose
@@ -7753,7 +7753,7 @@ For lCpt = lTotLig To 1 Step -1
 	If lVal = 155 And sIdRefFour <> "REFUSE_A_REEXP" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " ne peut $$HEX1$$ea00$$ENDHEX$$tre renvoy$$HEX2$$e9002000$$ENDHEX$$que sur une prestation de type REFUSE_A_REEXP" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " ne peut être renvoyé que sur une prestation de type REFUSE_A_REEXP" )
 	End If
 
 	// [CTRLE_REF_A_REEXP]
@@ -7771,7 +7771,7 @@ For lCpt = lTotLig To 1 Step -1
 			If lVal > 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il est interdit de r$$HEX1$$e900$$ENDHEX$$pondre sur les prestations de type A_REPARER_FORCE, et A_DIAG_FORCE, or vous renvoyez le Statut " + String ( lVal ) + ". Si une r$$HEX1$$e900$$ENDHEX$$ponse doit $$HEX1$$ea00$$ENDHEX$$tre apport$$HEX1$$e900$$ENDHEX$$e, vous devez r$$HEX1$$e900$$ENDHEX$$pondre sur la pr$$HEX1$$e900$$ENDHEX$$station d'origine li$$HEX1$$e900$$ENDHEX$$e $$HEX2$$e0002000$$ENDHEX$$ce for$$HEX1$$e700$$ENDHEX$$age." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il est interdit de répondre sur les prestations de type A_REPARER_FORCE, et A_DIAG_FORCE, or vous renvoyez le Statut " + String ( lVal ) + ". Si une réponse doit être apportée, vous devez répondre sur la préstation d'origine liée à ce forçage." )
 			End If
 	End Choose		
 	
@@ -7785,7 +7785,7 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( sVal ) Or sVal = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " doit obligatoirement $$HEX1$$ea00$$ENDHEX$$tre accompagn$$HEX2$$e9002000$$ENDHEX$$d'un commentaire." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " doit obligatoirement être accompagné d'un commentaire." )
 			End If
 			
 	End CHoose
@@ -7796,7 +7796,7 @@ For lCpt = lTotLig To 1 Step -1
 		If sVal1 = "OUI" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " n'est autoris$$HEX2$$e9002000$$ENDHEX$$que pour une commande de remplacement." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " n'est autorisé que pour une commande de remplacement." )
 		End If	
 	End If
 
@@ -7809,7 +7809,7 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$pour le produit " + string ( dcIdProd ) + "." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " n'est pas autorisé pour le produit " + string ( dcIdProd ) + "." )
 		End Choose 
 	End If			
 	
@@ -7821,7 +7821,7 @@ For lCpt = lTotLig To 1 Step -1
 		If lVal = 305 And lnvPFCString.of_getkeyvalue (sChaineBCV, "GESTION_GEOLOCALISATION", ";") <> "OUI" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le produit " + String ( dcIdprod ) + " n'est pas $$HEX1$$e900$$ENDHEX$$ligible au projet DT150 g$$HEX1$$e900$$ENDHEX$$rant la g$$HEX1$$e900$$ENDHEX$$olocalisation. Si ce projet doit rentrer dans ce p$$HEX1$$e900$$ENDHEX$$rim$$HEX1$$e800$$ENDHEX$$tre, voir avec DPG pour ajouter le produit, sinon transmettre l'information au fournisseur que ce produit est interdit pour ce code retour." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le produit " + String ( dcIdprod ) + " n'est pas éligible au projet DT150 gérant la géolocalisation. Si ce projet doit rentrer dans ce périmètre, voir avec DPG pour ajouter le produit, sinon transmettre l'information au fournisseur que ce produit est interdit pour ce code retour." )
 		End If
 		
 		lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )				
@@ -7841,7 +7841,7 @@ For lCpt = lTotLig To 1 Step -1
 				If isnull(sVal1) Or sVal1 = "" Then
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le num$$HEX1$$e900$$ENDHEX$$ro de s$$HEX1$$e900$$ENDHEX$$rie/IMEI de l'appareil de remplacement n'est pas renseign$$HEX1$$e900$$ENDHEX$$." )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le numéro de série/IMEI de l'appareil de remplacement n'est pas renseigné." )
 				End If	
 		End Choose 
 	End If
@@ -7866,7 +7866,7 @@ For lCpt = lTotLig To 1 Step -1
 				Case 2
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") R$$HEX1$$e900$$ENDHEX$$paration interdite sur ce type de prestation, il faut r$$HEX1$$e900$$ENDHEX$$pondre 21 Irr$$HEX1$$e900$$ENDHEX$$parable dans tous les cas et qualifier l'irr$$HEX1$$e900$$ENDHEX$$parabilit$$HEX2$$e9002000$$ENDHEX$$dans le commentaire par un mot cl$$HEX1$$e900$$ENDHEX$$." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Réparation interdite sur ce type de prestation, il faut répondre 21 Irréparable dans tous les cas et qualifier l'irréparabilité dans le commentaire par un mot clé." )
 			End Choose 
 	End if
 
@@ -7876,7 +7876,7 @@ For lCpt = lTotLig To 1 Step -1
 	If lVal = iStatusGc And lVal = 308 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le statut retour 308 est d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$pr$$HEX1$$e900$$ENDHEX$$sent sur ce dossier, le fournisseur l'a d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$envoy$$HEX2$$e9002000$$ENDHEX$$et doit donc attendre le retour de l'assur$$HEX2$$e9002000$$ENDHEX$$et ne plus retourner d'information sur cette prestation pour l'instant, voir livraison PM287-3." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le statut retour 308 est déjà présent sur ce dossier, le fournisseur l'a déjà envoyé et doit donc attendre le retour de l'assuré et ne plus retourner d'information sur cette prestation pour l'instant, voir livraison PM287-3." )
 	End If
 */	
 
@@ -7885,7 +7885,7 @@ For lCpt = lTotLig To 1 Step -1
 	If lVal = 311 And iStatusGc <> 308 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le statut retour 311 n'est autoris$$HEX2$$e9002000$$ENDHEX$$que si le dernier statut envoy$$HEX2$$e9002000$$ENDHEX$$par le fournisseur est 308, voir livraison PM287-3." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le statut retour 311 n'est autorisé que si le dernier statut envoyé par le fournisseur est 308, voir livraison PM287-3." )
 	End If
 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
@@ -7893,7 +7893,7 @@ For lCpt = lTotLig To 1 Step -1
 	If lVal = 308 And lVal1 <= 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le statut retour 308 vous oblige $$HEX2$$e0002000$$ENDHEX$$renseigner le bcv IFDNMQ_RET (InFos DoNn$$HEX1$$e900$$ENDHEX$$es ManQuante RETour) avec un codage particulier, voir livraison PM287-3." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le statut retour 308 vous oblige à renseigner le bcv IFDNMQ_RET (InFos DoNnées ManQuante RETour) avec un codage particulier, voir livraison PM287-3." )
 	End If
 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
@@ -7901,7 +7901,7 @@ For lCpt = lTotLig To 1 Step -1
 	If lVal <> 308 And lVal1 > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + String ( lVal ) + " interdit la pr$$HEX1$$e900$$ENDHEX$$sence du bcv IFDNMQ_RET (InFos DoNn$$HEX1$$e900$$ENDHEX$$es ManQuante RETour) dans la zone s$$HEX1$$e900$$ENDHEX$$rialis$$HEX1$$e900$$ENDHEX$$e, voir livraison PM287-3." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + String ( lVal ) + " interdit la présence du bcv IFDNMQ_RET (InFos DoNnées ManQuante RETour) dans la zone sérialisée, voir livraison PM287-3." )
 	End If
 
 
@@ -7919,7 +7919,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Pos ( sVal2, "#" + sTabVal [lCptVal] + "#" ) <= 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La valeur #" + sTabVal [lCptVal] + "# n'est pas autoris$$HEX1$$e900$$ENDHEX$$e dans le BCV IFDNMQ_RET pour le statut 308, voir livraison PM287-3." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La valeur #" + sTabVal [lCptVal] + "# n'est pas autorisée dans le BCV IFDNMQ_RET pour le statut 308, voir livraison PM287-3." )
 			End If
 
 			If iRet > 0  Then
@@ -7957,7 +7957,7 @@ For lCpt = lTotLig To 1 Step -1
 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" /PM280-2 : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il manque dans le commentaire un des mots cl$$HEX1$$e900$$ENDHEX$$s obligatoire qualifiant l'irr$$HEX1$$e900$$ENDHEX$$parable." )
+			" /PM280-2 : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il manque dans le commentaire un des mots clés obligatoire qualifiant l'irréparable." )
 
 	End If 
 	
@@ -7977,7 +7977,7 @@ For lCpt = lTotLig To 1 Step -1
 		If sIdRefFour <> "CONTEST_SUR_REMPL" Then
 			iRet = -1				
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" /PM280-2 : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le bcv A_CHARGE ne peut $$HEX1$$ea00$$ENDHEX$$tre donn$$HEX2$$e9002000$$ENDHEX$$que sur une prestation de contestation (voir FTU PM280-2)." )
+			" /PM280-2 : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le bcv A_CHARGE ne peut être donné que sur une prestation de contestation (voir FTU PM280-2)." )
 		End If
 		
 	End If
@@ -7987,13 +7987,13 @@ For lCpt = lTotLig To 1 Step -1
 		If Not IsNumber ( sVal ) Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" /PM280-2 : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le bcv DECLASS_PCT doit avoir une valeur num$$HEX1$$e900$$ENDHEX$$rique entre 0 et 100 (valeur entre 0.x et 1 exclues)." )
+			" /PM280-2 : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le bcv DECLASS_PCT doit avoir une valeur numérique entre 0 et 100 (valeur entre 0.x et 1 exclues)." )
 		End If
 		
 		If sIdRefFour <> "CONTEST_SUR_REMPL" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" /PM280-2 : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le bcv DECLASS_PCT ne peut $$HEX1$$ea00$$ENDHEX$$tre donn$$HEX2$$e9002000$$ENDHEX$$que sur une prestation de contestation (voir FTU PM280-2)." )
+			" /PM280-2 : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le bcv DECLASS_PCT ne peut être donné que sur une prestation de contestation (voir FTU PM280-2)." )
 		End If
 		
 	End If
@@ -8004,7 +8004,7 @@ For lCpt = lTotLig To 1 Step -1
 		If Dec ( sVal ) >= 0.01 And Dec ( sVal ) < 1 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" /PM280-2 : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le bcv DECLASS_PCT doit avoir une valeur num$$HEX1$$e900$$ENDHEX$$rique entre 0 et 100 (valeur entre 0.x et 1 exclues)." )
+			" /PM280-2 : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le bcv DECLASS_PCT doit avoir une valeur numérique entre 0 et 100 (valeur entre 0.x et 1 exclues)." )
 		End If
 
 	End If
@@ -8042,7 +8042,7 @@ For lCpt = lTotLig To 1 Step -1
 			) Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Le SWAP O2M n'est autoris$$HEX2$$e9002000$$ENDHEX$$que sur un irr$$HEX1$$e900$$ENDHEX$$parable 21/23 avec un mot cl$$HEX2$$e9002000$$ENDHEX$$[BVIE]/[BVID]/[BVIP]/[BVIT]/[BVIEOX] ou [PIE]." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Le SWAP O2M n'est autorisé que sur un irréparable 21/23 avec un mot clé [BVIE]/[BVID]/[BVIP]/[BVIT]/[BVIEOX] ou [PIE]." )
 		End If 				
 			
 		If iRet > 0 Then
@@ -8050,43 +8050,43 @@ For lCpt = lTotLig To 1 Step -1
 			If Trim ( sVal ) = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP O2M le BCV MARQSW doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e avec la marque IFR du nouveau mat$$HEX1$$e900$$ENDHEX$$riel." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP O2M le BCV MARQSW doit être renseignée avec la marque IFR du nouveau matériel." )
 			End If 	
 			
 			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "MODLSW", ";"))		
 			If Trim ( sVal ) = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP O2M le BCV MODLSW doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$avec le mod$$HEX1$$e800$$ENDHEX$$le IFR du nouveau mat$$HEX1$$e900$$ENDHEX$$riel." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP O2M le BCV MODLSW doit être renseigné avec le modèle IFR du nouveau matériel." )
 			End If 					
 
 			If iRet > 0 Then
 				Choose Case sIdTypArtSin
 					Case "TEL", "TPC"
-						// Autoris$$HEX1$$e900$$ENDHEX$$
+						// Autorisé
 					Case Else 
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Type d'appareil (" + sIdTypArt+ ") non autoris$$HEX2$$e9002000$$ENDHEX$$pour un SWAP O2M." )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Type d'appareil (" + sIdTypArt+ ") non autorisé pour un SWAP O2M." )
 				End Choose
 			End If 
 
-			// Controle binome marq/modl appartient $$HEX2$$e0002000$$ENDHEX$$IFR $$HEX2$$e0002000$$ENDHEX$$ajouter
+			// Controle binome marq/modl appartient à IFR à ajouter
 			If iRet > 0 Then
 				sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "MARQSW", ";"))
 				sVal1 = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "MODLSW", ";"))
 				If SQLCA.PS_S_VERIF_MARQ_MODL_IFR_V01 ( dcIdprod, sIdTypArtSin, sVal, sVal1 ) <= 0 Then
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Sur un SWAP O2M, pour ce dossier, la Marque et le Mod$$HEX1$$e800$$ENDHEX$$le du nouveau mat$$HEX1$$e900$$ENDHEX$$riel (" + sVal + " " + sVal1 + ") doivent appartenir au r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rentiel IFR." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Sur un SWAP O2M, pour ce dossier, la Marque et le Modèle du nouveau matériel (" + sVal + " " + sVal1 + ") doivent appartenir au référentiel IFR." )
 				End If
 			End If
 			
-			sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_IMEI" ) ) // Le ctrle de validit$$HEX2$$e9002000$$ENDHEX$$est faite plus haut
+			sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_IMEI" ) ) // Le ctrle de validité est faite plus haut
 			If Trim ( sVal ) = "" Or IsNull ( sVal )  Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP O2M la zone NUM_IMEI doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e par l'IMEI (ou num$$HEX1$$e900$$ENDHEX$$ro de s$$HEX1$$e900$$ENDHEX$$rie si Tablette) du nouveau mat$$HEX1$$e900$$ENDHEX$$riel." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP O2M la zone NUM_IMEI doit être renseignée par l'IMEI (ou numéro de série si Tablette) du nouveau matériel." )
 			End If 					
 
 
@@ -8094,7 +8094,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Trim ( sVal ) = "" Or Not IsNumber ( sVal ) Or Pos ( sVal, ",") > 0 Or Pos ( sVal, "E") > 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP O2M le BCV MTTTCSW doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$avec le montant TTC de l'appareil de remplacement (avec un point en s$$HEX1$$e900$$ENDHEX$$parateur de d$$HEX1$$e900$$ENDHEX$$cimal)." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP O2M le BCV MTTTCSW doit être renseigné avec le montant TTC de l'appareil de remplacement (avec un point en séparateur de décimal)." )
 			End If 
 
 			// [BUG_RST_PRIX_O2M]
@@ -8102,7 +8102,7 @@ For lCpt = lTotLig To 1 Step -1
 				If Long ( sVal) = 0 Then 
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP O2M le BCV MTTTCSW doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$avec le montant TTC de l'appareil de remplacement (avec un montant positif)." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP O2M le BCV MTTTCSW doit être renseigné avec le montant TTC de l'appareil de remplacement (avec un montant positif)." )
 				End if		
 			End If 
 
@@ -8125,7 +8125,7 @@ For lCpt = lTotLig To 1 Step -1
 				If Not IsNumber ( sVal ) Then
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (vDoc25657) : La valeur " + sVal + " n'est pas autoris$$HEX1$$e900$$ENDHEX$$e pour le bcv GRADE_REC. La valeur doit $$HEX1$$ea00$$ENDHEX$$tre num$$HEX1$$e900$$ENDHEX$$rique entre 0 et 9." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (vDoc25657) : La valeur " + sVal + " n'est pas autorisée pour le bcv GRADE_REC. La valeur doit être numérique entre 0 et 9." )
 				End If
 			End If
 
@@ -8140,7 +8140,7 @@ For lCpt = lTotLig To 1 Step -1
 					Case Else
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (vDoc25770) : La valeur " + sVal + " n'est pas autoris$$HEX1$$e900$$ENDHEX$$e pour le bcv GRADE_REC. La valeur doit $$HEX1$$ea00$$ENDHEX$$tre AIG ou O2M." )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (vDoc25770) : La valeur " + sVal + " n'est pas autorisée pour le bcv GRADE_REC. La valeur doit être AIG ou O2M." )
 				End CHoose 				
 			End If
 	
@@ -8151,7 +8151,7 @@ For lCpt = lTotLig To 1 Step -1
 			If ( IsNull ( sVal ) Or Trim ( sVal ) = "" ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP O2M, Le num$$HEX1$$e900$$ENDHEX$$ro de bon transporteur est obligatoire." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP O2M, Le numéro de bon transporteur est obligatoire." )
 			End IF 
 
 		End If		
@@ -8162,7 +8162,7 @@ For lCpt = lTotLig To 1 Step -1
 	If iInfoSpbFrn = 984 And sVal <> "OUI" And sIdTypArt <> "PST" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT290) : Sur un process 984, le SWAP est obligatoire, pas de process alternatif donc le bcv APP_SWAP doit obligatoirement $$HEX1$$ea00$$ENDHEX$$tre $$HEX2$$e0002000$$ENDHEX$$OUI." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT290) : Sur un process 984, le SWAP est obligatoire, pas de process alternatif donc le bcv APP_SWAP doit obligatoirement être à OUI." )
 	End If
 	
 	// [PM383-1]
@@ -8176,7 +8176,7 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM383-1) : le bcv SOUS_GC=OUI n'est accept$$HEX2$$e9002000$$ENDHEX$$qu'avec le retour 2 (r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$)." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM383-1) : le bcv SOUS_GC=OUI n'est accepté qu'avec le retour 2 (réparé)." )
 		End Choose 
 	End If
 	// [PM383-1]
@@ -8212,7 +8212,7 @@ For lCpt = lTotLig To 1 Step -1
 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il manque dans le commentaire un des mots cl$$HEX1$$e900$$ENDHEX$$s obligatoire qualifiant l'irr$$HEX1$$e900$$ENDHEX$$parable." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il manque dans le commentaire un des mots clés obligatoire qualifiant l'irréparable." )
 
 	End If 
 
@@ -8221,7 +8221,7 @@ For lCpt = lTotLig To 1 Step -1
 	If sIdRefFour = "INFORMATION" And lVal <> 612 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") : un flux de type INFORMATION ne peut avoir pour r$$HEX1$$e900$$ENDHEX$$ponse qu'un statut 612" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") : un flux de type INFORMATION ne peut avoir pour réponse qu'un statut 612" )
 	End IF 
 
 	// [CTRLE_DATE_INTRG_FOU]
@@ -8258,7 +8258,7 @@ For lCpt = lTotLig To 1 Step -1
 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$PRBLE_LIVRAISON, n'est pas valide." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé PRBLE_LIVRAISON, n'est pas valide." )
 
 		End Choose 
 	End If 
@@ -8276,7 +8276,7 @@ For lCpt = lTotLig To 1 Step -1
 		If IsNull ( dtVal ) And sVal1 <> "" And sVal = "" And sIdRefFour <> "REFUSE_A_REEXP" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Un num$$HEX1$$e900$$ENDHEX$$ro de tracking ALLER doit $$HEX1$$ea00$$ENDHEX$$tre accompagn$$HEX2$$e9002000$$ENDHEX$$du bcv TYP_BA_ALLER." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Un numéro de tracking ALLER doit être accompagné du bcv TYP_BA_ALLER." )
 		End IF
 		
 		If sVal <> "" Then
@@ -8290,7 +8290,7 @@ For lCpt = lTotLig To 1 Step -1
 	
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$TYP_BA_ALLER, n'est pas valide." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé TYP_BA_ALLER, n'est pas valide." )
 	
 			End Choose 
 		End If 
@@ -8324,26 +8324,26 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal1 = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le bcv PRBLE_LIVRAISON doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$." )
+				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le bcv PRBLE_LIVRAISON doit être renseigné." )
 			End If 
 			
 			If sVal3 = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le num$$HEX1$$e900$$ENDHEX$$ro de tracking (NUM_BON_TRP) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$." )
+				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le numéro de tracking (NUM_BON_TRP) doit être renseigné." )
 			End If 
 
 			If Not IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, la date de r$$HEX1$$e900$$ENDHEX$$ception ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e." )
+				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, la date de réception ne doit pas être renseignée." )
 			End If 
 			
 			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "APP_SWAP", ";"))		
 			If lVal <> 0 AND ( lVal <> 21 AND sVal <> "OUI" ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le statut ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$." )
+				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le statut ne doit pas être renseigné." )
 			End If 
 		End IF 
 	End If	
@@ -8366,14 +8366,14 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$PEC_PRBLE_LIVRAISON, n'est pas valide." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé PEC_PRBLE_LIVRAISON, n'est pas valide." )
 
 		End Choose 
 		
 		If sVal1 = "" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la cl$$HEX2$$e9002000$$ENDHEX$$PEC_PRBLE_LIVRAISON n'est autoris$$HEX1$$e900$$ENDHEX$$e que si pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$demment il y a au un cl$$HEX2$$e9002000$$ENDHEX$$PRBLE_LIVRAISON, qui est justement absente." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la clé PEC_PRBLE_LIVRAISON n'est autorisée que si précédemment il y a au un clé PRBLE_LIVRAISON, qui est justement absente." )
 		End If 			
 	End If 	
 	
@@ -8401,11 +8401,11 @@ For lCpt = lTotLig To 1 Step -1
 					If sVal = "" Then
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") sur un retour 152/BuyBack, le BCV QUALIF_NC est obligatoire dans la chaine s$$HEX1$$e900$$ENDHEX$$rialis$$HEX1$$e900$$ENDHEX$$e avec une valeur valide." )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") sur un retour 152/BuyBack, le BCV QUALIF_NC est obligatoire dans la chaine sérialisée avec une valeur valide." )
 					Else 
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$QUALIF_NC, n'est pas valide." )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé QUALIF_NC, n'est pas valide." )
 					End If	
 			End Choose 
 			
@@ -8443,7 +8443,7 @@ For lCpt = lTotLig To 1 Step -1
 				Case Else 
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$DIAG_VIDEO_ENGAGE, n'est pas valide. les valeurs autoris$$HEX1$$e900$$ENDHEX$$es sont OUI ou NON." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé DIAG_VIDEO_ENGAGE, n'est pas valide. les valeurs autorisées sont OUI ou NON." )
 	
 			End Choose 
 		End If 	
@@ -8465,7 +8465,7 @@ For lCpt = lTotLig To 1 Step -1
 	
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 if isvalid(dsCode) Then destroy dsCode
 
@@ -8478,7 +8478,7 @@ private function integer uf_ctrl_fichier_micromania ();//*----------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_MICROMANIA (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 09/09/2008
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier MICROMANIA
+//* Libellé			: Controler de la validité du fichier MICROMANIA
 //* Commentaires	: [MICROMANIA]
 //*
 //* Arguments		: 
@@ -8514,16 +8514,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_SIN_FLX" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -8531,12 +8531,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -8556,13 +8556,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -8582,7 +8582,7 @@ For lCpt = lTotLig To 1 Step -1
 	If NOT ISNUMBER ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone DECISION attend une valeur num$$HEX1$$e900$$ENDHEX$$rique." )
+		" : La zone DECISION attend une valeur numérique." )
 	End If
 	
 	If ISNUMBER ( sVal ) Then
@@ -8648,7 +8648,7 @@ For lCpt = lTotLig To 1 Step -1
 	If NOT ISNUMBER ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone PRIX_TTC attend une valeur num$$HEX1$$e900$$ENDHEX$$rique." )
+		" : La zone PRIX_TTC attend une valeur numérique." )
 	End If
 
 	/*------------------------------------------------------------------*/
@@ -8678,7 +8678,7 @@ For lCpt = lTotLig To 1 Step -1
 	
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -8690,8 +8690,8 @@ private subroutine uf_definir_codetat_micromania (ref string asval, long alcpt);
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_MICROMANIA (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 09/09/2008
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: [MICROMANIA]
 //*
 //* Arguments		: asVal		String		Ref
@@ -8720,7 +8720,7 @@ private function integer uf_integration_fichier_micromania (ref long alnblig, re
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_MICROMANIA (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 09/09/2008
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier du MICROMANIA dans la base
+//* Libellé			: Intégration du fichier du MICROMANIA dans la base
 //* Commentaires	: [MICROMANIA]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -8733,8 +8733,8 @@ private function integer uf_integration_fichier_micromania (ref long alnblig, re
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JFF    11/02/2009 [20090211133609560]
-//* #2	FPI	10/12/2009	[SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
-//*       JFF    11/03/2011 [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+//* #2	FPI	10/12/2009	[SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
+//*       JFF    11/03/2011 [ITSM62176] ajout du point de décimal
 //        JFF    18/08/2014 [PM254_V1]
 //*-----------------------------------------------------------------
 
@@ -8769,19 +8769,19 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
 	lIdSin = Long ( Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) )
 
-// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+// [ITSM62176] ajout du point de décimal
 	sSql += String ( lIdSin ) + "., "
 
 	/*------------------------------------------------------------------*/
@@ -9025,7 +9025,7 @@ For lCpt = 1 To lTotLig
 		Case -100
 			iRet = -1
 		Case -200
-			// SPB ne r$$HEX1$$e800$$ENDHEX$$gle rien, c'est le fournisseur qui s'en charge.
+			// SPB ne règle rien, c'est le fournisseur qui s'en charge.
 		Case Else 
 			iRet = This.uf_ReglAuto ( lIdSin, &
 											  lIdSeq, &
@@ -9041,8 +9041,8 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #3
 		F_commit ( SQLCA, False ) // #3
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me d'insertion r$$HEX1$$e800$$ENDHEX$$glement automatique " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: " + sMesRetour  ) // #3
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème d'insertion règlement automatique " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : " + sMesRetour  ) // #3
 		Continue // #3
 	End If
 
@@ -9053,7 +9053,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #3
 		F_commit ( SQLCA, False ) // #3
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/RECP_APP_EN_CTR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/RECP_APP_EN_CTR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
 		Continue // #3
 	End If
 	
@@ -9062,7 +9062,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #3
 		F_commit ( SQLCA, False ) // #3
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
 		Continue // #3
 	End If				
 	// Fin #2
@@ -9079,14 +9079,14 @@ For lCpt = 1 To lTotLig
 			iRet = -1
 			alNbLigNonTraitee	++ // #3
 			F_commit ( SQLCA, False ) // #3
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #4
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #4
 			Continue // #3
 		End If
 	Else
 		iRet = -1
 		alNbLigNonTraitee	++ // #3
 		F_commit ( SQLCA, False ) // #3
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #4
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #4
 		Continue // #3
 	End If
 
@@ -9102,7 +9102,7 @@ private function integer uf_ctrl_fichier_cdiscountpro ();//*--------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_CDISCOUNTPRO (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 20/04/2009
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier du CDISCOUNTPRO
+//* Libellé			: Controler de la validité du fichier du CDISCOUNTPRO
 //* Commentaires	: [DCMP090102]
 //*
 //* Arguments		: 
@@ -9139,16 +9139,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -9156,12 +9156,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -9181,13 +9181,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -9196,7 +9196,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 3 : NUM_CMD_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 4 : NUM_IMEI_NOU														  */
@@ -9210,13 +9210,13 @@ For lCpt = lTotLig To 1 Step -1
 		If Len ( sVal ) <> 15 And Len ( sVal ) > 0 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Un num$$HEX1$$e900$$ENDHEX$$ro d'IMEI doit contenir 15 chiffres" )
+			" : Un numéro d'IMEI doit contenir 15 chiffres" )
 		End If
 	
 		If Not F_IMEI ( sVal, sIMEICorr ) And Len ( sVal ) > 0 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Num$$HEX1$$e900$$ENDHEX$$ro d'IMEI non valide" )
+			" : Numéro d'IMEI non valide" )
 		End If 
 	Else
 		If IsNull ( sVal ) Or sVal = "" Then
@@ -9229,12 +9229,12 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 5 : DTE_RCP_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 6 : DTE_ENV_CLI 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 7 : DEST_ENVOI	 														  */
@@ -9248,7 +9248,7 @@ For lCpt = lTotLig To 1 Step -1
 			CASE ELSE	
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le Destinataire de l'envoi doit $$HEX1$$ea00$$ENDHEX$$tre null ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$SPB ou CLIENT, mais pas " + sVal )
+				" : Le Destinataire de l'envoi doit être null ou égal à SPB ou CLIENT, mais pas " + sVal )
 		END CHOOSE
 
 	End If
@@ -9256,7 +9256,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 8 : NUM_BON_TRP 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 9 : COD_ETAT_CMD														  */
@@ -9270,7 +9270,7 @@ For lCpt = lTotLig To 1 Step -1
 			CASE ELSE	
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le code $$HEX1$$e900$$ENDHEX$$tat doit $$HEX1$$ea00$$ENDHEX$$tre null ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$ANN ou RPC, mais pas " + sVal )
+				" : Le code état doit être null ou égal à ANN ou RPC, mais pas " + sVal )
 		END CHOOSE
 
 	End If
@@ -9281,14 +9281,14 @@ For lCpt = lTotLig To 1 Step -1
 	If Not IsNull ( dtVal ) And Not IsNull ( dtVal1 ) And dtVal1 < dtVal Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la DTE_RCP_FRN." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit être postérieure ou égale à la DTE_RCP_FRN." )
 	End If
 	// :[VDOC9337]	
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 10 : COMMENT_FRN														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	// #2 [MSS_DIAG].[20091207111441740]
 	// [20091228114718123]
@@ -9301,7 +9301,7 @@ For lCpt = lTotLig To 1 Step -1
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -9313,7 +9313,7 @@ private function integer uf_ctrl_fichier_phoneandphone ();//*-------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_PHONEANDPHONE (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 20/04/2009
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier du PHONEANDPHONE
+//* Libellé			: Controler de la validité du fichier du PHONEANDPHONE
 //* Commentaires	: [DCMP090140]
 //*
 //* Arguments		: 
@@ -9356,16 +9356,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -9373,12 +9373,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -9398,13 +9398,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -9413,7 +9413,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 3 : NUM_CMD_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 4 : NUM_IMEI_NOU														  */
@@ -9423,36 +9423,36 @@ For lCpt = lTotLig To 1 Step -1
 	If Len ( sVal ) <> 15 And Len ( sVal ) > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Un num$$HEX1$$e900$$ENDHEX$$ro d'IMEI doit contenir 15 chiffres" )
+		" : Un numéro d'IMEI doit contenir 15 chiffres" )
 	End If
 
 	If Not F_IMEI ( sVal, sIMEICorr ) And Len ( sVal ) > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Num$$HEX1$$e900$$ENDHEX$$ro d'IMEI non valide" )
+		" : Numéro d'IMEI non valide" )
 	End If 
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 5 : DTE_RCP_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 6 : DTE_ENV_CLI 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 7 : STATUS_GC														     */
 	/*------------------------------------------------------------------*/
-	// [O2M] : V$$HEX1$$e900$$ENDHEX$$rification de l'appartenance du code retourn$$HEX2$$e9002000$$ENDHEX$$au param$$HEX1$$e900$$ENDHEX$$trage.
+	// [O2M] : Vérification de l'appartenance du code retourné au paramétrage.
 	sVal = String ( idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) )
 	
-//	if dsCode.retrieve('-GC') > 0  then											// #9 - Chargement au d$$HEX1$$e900$$ENDHEX$$but de la fct
-			// #3 [FNAC_PROD_ECH_TECH] agrandissement jusqu'$$HEX2$$e0002000$$ENDHEX$$160
+//	if dsCode.retrieve('-GC') > 0  then											// #9 - Chargement au début de la fct
+			// #3 [FNAC_PROD_ECH_TECH] agrandissement jusqu'à 160
 			// #4 [DCMP090109] ajout 2, 21
-			// #5 [DCMP090085] ajout jusqu'$$HEX2$$e0002000$$ENDHEX$$169
+			// #5 [DCMP090085] ajout jusqu'à 169
 			// #6 [DCMP090327].[SBETV] (171)
 			// [PM166][O2M]
 			// [MANTIS3067] ajout 231
@@ -9470,7 +9470,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 8 : NUM_BON_TRP 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	// [VDOC9337]
 	dtVal =  idwFicFourn.GetItemDatetime( lCpt, "DTE_RCP_FRN")
@@ -9478,14 +9478,14 @@ For lCpt = lTotLig To 1 Step -1
 	If Not IsNull ( dtVal ) And Not IsNull ( dtVal1 ) And dtVal1 < dtVal Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la DTE_RCP_FRN." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit être postérieure ou égale à la DTE_RCP_FRN." )
 	End If
 	// :[VDOC9337]	
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 10 : COMMENT_FRN														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	// #3 [MSS_DIAG].[20091207111441740]
 	// [20091228114718123]
@@ -9498,7 +9498,7 @@ For lCpt = lTotLig To 1 Step -1
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -9510,8 +9510,8 @@ private subroutine uf_definir_codetat_cdiscountpro (ref string asval, long alcpt
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_CDISCOUNTPRO (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/03/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: [DCMP090102]
 //*
 //* Arguments		: asVal		String		Ref
@@ -9532,29 +9532,29 @@ String	sDestEnvoi
 asVal = Upper ( asVal ) 
 
 /*------------------------------------------------------------------*/
-/* !!!! Code $$HEX1$$e900$$ENDHEX$$tat Fix$$HEX1$$e900$$ENDHEX$$s !!!! 					     							  */
+/* !!!! Code état Fixés !!!! 					     							  */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
-/* Le code $$HEX1$$e900$$ENDHEX$$tat lu dans le fichier est ANNULEE PAR GESTIONNAIRE,    */
-/* on le laisse s'$$HEX1$$e900$$ENDHEX$$crire en base.                                   */
+/* Le code état lu dans le fichier est ANNULEE PAR GESTIONNAIRE,    */
+/* on le laisse s'écrire en base.                                   */
 /*------------------------------------------------------------------*/
 If asVal = "ANN" Then Return
 
 /*------------------------------------------------------------------*/
-/* Le code $$HEX1$$e900$$ENDHEX$$tat lu dans le fichier est RECU PAR LE CLIENT, on le    */
-/* s'$$HEX1$$e900$$ENDHEX$$crire en base.                                                */
+/* Le code état lu dans le fichier est RECU PAR LE CLIENT, on le    */
+/* s'écrire en base.                                                */
 /*------------------------------------------------------------------*/
 If asVal = "RPC" Then Return
 
 
 /*------------------------------------------------------------------*/
-/* !!!! Code $$HEX1$$e900$$ENDHEX$$tat D$$HEX1$$e900$$ENDHEX$$termin$$HEX1$$e900$$ENDHEX$$s en fonction des dates 					  */
+/* !!!! Code état Déterminés en fonction des dates 					  */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
 /* Si le CodEtat du fichier n'est pas un de ces deux codes, alors   */
-/* on va le d$$HEX1$$e900$$ENDHEX$$terminer $$HEX2$$e0002000$$ENDHEX$$partir des dates.                          */
+/* on va le déterminer à partir des dates.                          */
 /*------------------------------------------------------------------*/
 dtDteRcpFrn = idwFicFourn.GetItemDateTime ( alCpt, "DTE_RCP_FRN" ) 
 dtDteEnvCli = idwFicFourn.GetItemDateTime ( alCpt, "DTE_ENV_CLI" )
@@ -9568,7 +9568,7 @@ If Not IsNull ( dDteEnvCli ) Then
 
 	CHOOSE CASE sDestEnvoi	
 		CASE "SPB"
-			// Retourn$$HEX4$$e9002000e0002000$$ENDHEX$$la SPB par le fournisseur
+			// Retourné à la SPB par le fournisseur
 			asVal = "RSP"			
 
 		CASE ELSE
@@ -9576,7 +9576,7 @@ If Not IsNull ( dDteEnvCli ) Then
 			asVal = "ECL"			
 	END CHOOSE
 
-	// De plus si la dDteRcpFrn n'$$HEX1$$e900$$ENDHEX$$tait pas renseign$$HEX1$$e900$$ENDHEX$$
+	// De plus si la dDteRcpFrn n'était pas renseigné
 	//	On y met la dDteEnvCli
 	If IsNull ( dDteRcpFrn ) Then idwFicFourn.SetItem ( alCpt, "DTE_RCP_FRN", dDteEnvCli )
 
@@ -9600,7 +9600,7 @@ private function integer uf_integration_fichier_cdiscountpro (ref long alnblig, 
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_CDiscountPRO (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 31/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier du CDiscountPRO dans la base
+//* Libellé			: Intégration du fichier du CDiscountPRO dans la base
 //* Commentaires	: 
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -9613,10 +9613,10 @@ private function integer uf_integration_fichier_cdiscountpro (ref long alnblig, 
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JCA    09/06/2006  MAILPUSH
-//* #2    JFF    23/08/2006  Modif apport$$HEX1$$e900$$ENDHEX$$e suite probl$$HEX1$$e800$$ENDHEX$$me lenteur
+//* #2    JFF    23/08/2006  Modif apportée suite problème lenteur
 //* #3 	 PHG	 24/04/2008	  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
-//* #4	FPI	10/12/2009	  [SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
-//*       JFF    11/03/2011  [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+//* #4	FPI	10/12/2009	  [SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
+//*       JFF    11/03/2011  [ITSM62176] ajout du point de décimal
 //       JFF   18/08/2014 [PM254_V1]
 //*-----------------------------------------------------------------
 
@@ -9651,17 +9651,17 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
-// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+// [ITSM62176] ajout du point de décimal
 	sSql += Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) + "., "
 	// #1
 	lIdSin = Long (Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ))
@@ -9878,7 +9878,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 	//	Exit  #2
 		Continue // #2
 	End If				
@@ -9904,7 +9904,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -9922,7 +9922,7 @@ For lCpt = 1 To lTotLig
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")				
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 		F_commit ( SQLCA, False )
 			
@@ -9940,7 +9940,7 @@ private function integer uf_integration_fichier_phoneandphone (ref long alnblig,
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_PhoneAndPhone (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 31/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier du CDiscountPRO dans la base
+//* Libellé			: Intégration du fichier du CDiscountPRO dans la base
 //* Commentaires	: 
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -9953,10 +9953,10 @@ private function integer uf_integration_fichier_phoneandphone (ref long alnblig,
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JCA    09/06/2006  MAILPUSH
-//* #2    JFF    23/08/2006  Modif apport$$HEX1$$e900$$ENDHEX$$e suite probl$$HEX1$$e800$$ENDHEX$$me lenteur
+//* #2    JFF    23/08/2006  Modif apportée suite problème lenteur
 //* #3 	 PHG	 24/04/2008	  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
-//* #4	FPI	10/12/2009	  [SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
-//*       JFF    11/03/2011  [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+//* #4	FPI	10/12/2009	  [SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
+//*       JFF    11/03/2011  [ITSM62176] ajout du point de décimal
 //       JFF   18/08/2014 [PM254_V1]
 //*-----------------------------------------------------------------
 
@@ -9998,17 +9998,17 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
-// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+// [ITSM62176] ajout du point de décimal
 	sSql += Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) + "., "
 	// #1
 	lIdSin = Long (Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ))
@@ -10210,7 +10210,7 @@ For lCpt = 1 To lTotLig
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 31 : INFO_FRN_SPB_CPLT ( zone multiple )[FNAC_PROD_ECH_TECH]*/
-	/* Une seule affectation $$HEX2$$e0002000$$ENDHEX$$sSql                                     */
+	/* Une seule affectation à sSql                                     */
 	/*------------------------------------------------------------------*/
 	// [PM254_V1]
 	If IsNull ( isNomFicOrig ) Then isNomFicOrig = ""
@@ -10232,7 +10232,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 	//	Exit  #2
 		Continue // #2
 	End If				
@@ -10250,14 +10250,14 @@ For lCpt = 1 To lTotLig
 			iRet = -1
 			alNbLigNonTraitee	++ // #2
 			F_commit ( SQLCA, False ) // #2			
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2
 			Continue // #2
 		End If
 	Else
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2			
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2
 		Continue // #2
 	End If
 Next
@@ -10272,7 +10272,7 @@ private function integer uf_ctrl_fichier_sbetv ();//*---------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_SBETV (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 02/09/2009
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier SBETV
+//* Libellé			: Controler de la validité du fichier SBETV
 //* Commentaires	: [DCMP090327].[SBETV]
 //*
 //* Arguments		: 
@@ -10290,12 +10290,12 @@ private function integer uf_ctrl_fichier_sbetv ();//*---------------------------
 //* #6    JFF   07/12/2009   [MSS_DIAG].[20091207111441740]
 //* #7    JFF   28/12/2009  [20091228114718123]
 //* #8	FPI	25/01/2010	[DCMP090759] 
-//* #9	FPI	05/02/2010	[DCMP090759].[20100205.FPI] Ajout du m$$HEX1$$ea00$$ENDHEX$$me contr$$HEX1$$f400$$ENDHEX$$le pour SBE TV
+//* #9	FPI	05/02/2010	[DCMP090759].[20100205.FPI] Ajout du même contrôle pour SBE TV
 //*		SBA	22/06/2010 [DCMP100443]
 //*   		SBA	25/06/2010 [BUG.CTRLFICSUIVI]
 //* 		 JFF     04/11/2010 [PC301].[LOT2]
-//			FPI	19/10/2011	[VDoc5609] Renforcement des contr$$HEX1$$f400$$ENDHEX$$les
-//			FPI	05/11/2011	[VDoc6249] Correction cotr$$HEX1$$f400$$ENDHEX$$le sur GC 170 & 171
+//			FPI	19/10/2011	[VDoc5609] Renforcement des contrôles
+//			FPI	05/11/2011	[VDoc6249] Correction cotrôle sur GC 170 & 171
 //			JFF   23/12/2011  [VDOC6410] sur PEC_A_RECYCLER, DTE_LIVR_BROKER obligatoire
 // 		 JFF   13/02/2012   [VDOC6449]
 //*      JFF   30/05/2012	   [VDOC7926]
@@ -10343,16 +10343,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -10360,12 +10360,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -10385,13 +10385,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -10400,7 +10400,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 3 : DTE_RCP_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	// #9 [DCMP090759].[20100205.FPI] 
 	dtVal =  idwFicFourn.GetItemDatetime( lCpt, "DTE_RCP_FRN")
@@ -10412,7 +10412,7 @@ For lCpt = lTotLig To 1 Step -1
 			Case 156, 157, 158, 160, 161, 163, 174 // 	[VDoc5609] Ajout du 174
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Pour le statut GC " + String(lVal)  + ", la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre vide.")
+				" : Pour le statut GC " + String(lVal)  + ", la date de réception fournisseur (DTE_RCP_FRN) doit être vide.")
 		End Choose
 		
 	Else
@@ -10423,7 +10423,7 @@ For lCpt = lTotLig To 1 Step -1
 			Case 151, 152, 162, 169
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Pour le statut GC " + String(lVal)  + ", la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : Pour le statut GC " + String(lVal)  + ", la date de réception fournisseur (DTE_RCP_FRN) doit être renseignée.")
 		End Choose
 		// 	:[VDoc5609]
 	End if
@@ -10432,14 +10432,14 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 4 : NUM_IMEI_NOU														  */
 	/*------------------------------------------------------------------*/
-	// [O2M].M383 : Anomalie Mantis : On ne v$$HEX1$$e900$$ENDHEX$$rifie pas l'IMEI.
+	// [O2M].M383 : Anomalie Mantis : On ne vérifie pas l'IMEI.
 	
 //	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_IMEI" ) )
 //
 //	If Len ( sVal ) <> 15 And Len ( sVal ) > 0 Then
 //		iRet = -1
 //		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-//		" : Un num$$HEX1$$e900$$ENDHEX$$ro d'IMEI doit contenir 15 chiffres" )
+//		" : Un numéro d'IMEI doit contenir 15 chiffres" )
 //	End If
 
 	/*------------------------------------------------------------------*/
@@ -10454,13 +10454,13 @@ For lCpt = lTotLig To 1 Step -1
 			if Isnull(dtVal) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Pour le statut GC " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit $$HEX1$$ea00$$ENDHEX$$tre remplie.")
+				" : Pour le statut GC " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit être remplie.")
 			End if
 		Case 156, 157, 158, 159, 160, 162, 163, 164, 169
 			if Not Isnull(dtVal) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Pour le statut GC " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit $$HEX1$$ea00$$ENDHEX$$tre vide.")
+				" : Pour le statut GC " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit être vide.")
 			End if
 	End Choose
 	// Fin #9
@@ -10468,21 +10468,21 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 6 : NUM_BON_TRP 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 7 : STATUS_GC														     */
 	/*------------------------------------------------------------------*/
-	// [O2M] : V$$HEX1$$e900$$ENDHEX$$rification de l'appartenance du code retourn$$HEX2$$e9002000$$ENDHEX$$au param$$HEX1$$e900$$ENDHEX$$trage.
+	// [O2M] : Vérification de l'appartenance du code retourné au paramétrage.
 
 	sVal = String ( idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) )
 
 	If ( IsNull ( sVal ) Or Trim ( sVal ) = "" ) And iStatusGc > 0 Then sVal = String ( iStatusGc )
 	
-//	if dsCode.retrieve('-GC') > 0  then											// #8 - d$$HEX1$$e900$$ENDHEX$$placement du retrieve
-			// #3 [FNAC_PROD_ECH_TECH] agrandissement jusqu'$$HEX2$$e0002000$$ENDHEX$$160
+//	if dsCode.retrieve('-GC') > 0  then											// #8 - déplacement du retrieve
+			// #3 [FNAC_PROD_ECH_TECH] agrandissement jusqu'à 160
 			// #4 [DCMP090109] ajout 2, 21
-			// #5 [DCMP090085] ajout jusqu'$$HEX2$$e0002000$$ENDHEX$$169
+			// #5 [DCMP090085] ajout jusqu'à 169
 		if dsCode.find("( ( ID_CODE BETWEEN 151 AND 174 ) Or ( ID_CODE IN ( 2, 21 ) ) ) AND ID_CODE = "+sVal, 1, dsCode.RowCount()+1 ) = 0 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
@@ -10490,7 +10490,7 @@ For lCpt = lTotLig To 1 Step -1
 		End If
 //	End IF			// #8
 
-	// Demand$$HEX2$$e9002000$$ENDHEX$$par AUR le 18/09 suite retour de test de recette.
+	// Demandé par AUR le 18/09 suite retour de test de recette.
 	// [DCMP100443]
 	SQLCA.PS_S11_COMMANDE_V07 ( lIdSin, lIdSeq, sIdFourBase, sCodEtat, iStatusGc, sIdRefFour, iInfoSpbFrn, sIdTypArt, dcIdProd, sInfoSpbFrnCplt, sInfoFrnSpbCplt, sChaineBCV )
 	Choose Case Long ( sVal )
@@ -10498,7 +10498,7 @@ For lCpt = lTotLig To 1 Step -1
 			If iStatusGc = 162 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le statut 171 ou 170 incoh$$HEX1$$e900$$ENDHEX$$rent alors qu'un statut GC 162 se trouve d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$en base." )
+				" : Le statut 171 ou 170 incohérent alors qu'un statut GC 162 se trouve déjà en base." )
 			End If
 			
 	End Choose
@@ -10508,14 +10508,14 @@ For lCpt = lTotLig To 1 Step -1
 	if Long(sVal)=171 and isNull(dtVal) And iInfoSpbFrn <> 1120 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Pour le statut GC " + String(lVal)  + ", la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+		" : Pour le statut GC " + String(lVal)  + ", la date de réception fournisseur (DTE_RCP_FRN) doit être renseignée.")
 	End if
 	//:[VDoc6249]
 	
 	// [PC301].[LOT2]
 	Choose Case Long ( sVal )
 		Case 170, 171, 156, 174
-			// Code Accept$$HEX2$$e9000900$$ENDHEX$$
+			// Code Accepté	
 		Case Else
 			If iInfoSpbFrn = 1120 Then
 				iRet = -1
@@ -10555,7 +10555,7 @@ For lCpt = lTotLig To 1 Step -1
 	If sIdRefFour = "PEC_A_RECYCLER" and ( IsNull ( sVal ) Or Len ( sVal ) <= 0 ) Then
 		iRet =-1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La DTE_LIVR_SBE est obligatoire (sur zone s$$HEX1$$e900$$ENDHEX$$rialis$$HEX1$$e900$$ENDHEX$$e) pour une prestation du type PEC_A_RECYCLER" )
+		" : La DTE_LIVR_SBE est obligatoire (sur zone sérialisée) pour une prestation du type PEC_A_RECYCLER" )
 	End If
 
 	/*------------------------------------------------------------------*/
@@ -10586,7 +10586,7 @@ For lCpt = lTotLig To 1 Step -1
 		If Not IsDate ( sVal ) Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si ETAT_SG est renseign$$HEX1$$e900$$ENDHEX$$, DATE_ETAT_SG doit contenir une date valide" )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si ETAT_SG est renseigné, DATE_ETAT_SG doit contenir une date valide" )
 		End If
 	End If 
 
@@ -10597,7 +10597,7 @@ For lCpt = lTotLig To 1 Step -1
 		If len ( Trim ( sVal ) ) <= 0  Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si DATE_ETAT_SG est renseign$$HEX1$$e900$$ENDHEX$$, ETAT_SG doit $$HEX1$$ea00$$ENDHEX$$tre renseig$$HEX1$$e900$$ENDHEX$$" )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si DATE_ETAT_SG est renseigné, ETAT_SG doit être renseigé" )
 		End If
 	End If 
 	
@@ -10608,7 +10608,7 @@ For lCpt = lTotLig To 1 Step -1
 		If Not IsDate ( sVal ) Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si TV_HG est renseign$$HEX1$$e900$$ENDHEX$$, DATE_TV_HG doit contenir une date valide" )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si TV_HG est renseigné, DATE_TV_HG doit contenir une date valide" )
 		End If
 	End If 
 
@@ -10619,7 +10619,7 @@ For lCpt = lTotLig To 1 Step -1
 		If len ( Trim ( sVal ) ) <= 0  Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si DATE_TV_HG est renseign$$HEX1$$e900$$ENDHEX$$, TV_HG doit $$HEX1$$ea00$$ENDHEX$$tre renseig$$HEX1$$e900$$ENDHEX$$" )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si DATE_TV_HG est renseigné, TV_HG doit être renseigé" )
 		End If
 	End If 
 
@@ -10628,7 +10628,7 @@ For lCpt = lTotLig To 1 Step -1
 	If len ( Trim ( sVal1 ) ) <= 0 And len ( Trim ( sVal ) ) > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si ETAT_SG est renseign$$HEX1$$e900$$ENDHEX$$, DTE_LIVR_SBE doit contenir une date valide" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si ETAT_SG est renseigné, DTE_LIVR_SBE doit contenir une date valide" )
 	End If
 
 	sVal1 = Trim ( idwFicFourn.GetItemString ( lCpt, "DTE_LIVR_SBE" ) )
@@ -10636,7 +10636,7 @@ For lCpt = lTotLig To 1 Step -1
 	If len ( Trim ( sVal1 ) ) <= 0 And len ( Trim ( sVal ) ) > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si TV_HG est renseign$$HEX1$$e900$$ENDHEX$$, DTE_LIVR_SBE doit contenir une date valide" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si TV_HG est renseigné, DTE_LIVR_SBE doit contenir une date valide" )
 	End If
 
 	sVal1 = Trim ( idwFicFourn.GetItemString ( lCpt, "DTE_LIVR_SBE" ) )
@@ -10644,7 +10644,7 @@ For lCpt = lTotLig To 1 Step -1
 	If len ( Trim ( sVal1 ) ) <= 0 And len ( Trim ( sVal ) ) > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si DATE_ETAT_SG est renseign$$HEX1$$e900$$ENDHEX$$, DTE_LIVR_SBE doit contenir une date valide" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si DATE_ETAT_SG est renseigné, DTE_LIVR_SBE doit contenir une date valide" )
 	End If
 
 	sVal1 = Trim ( idwFicFourn.GetItemString ( lCpt, "DTE_LIVR_SBE" ) )
@@ -10652,7 +10652,7 @@ For lCpt = lTotLig To 1 Step -1
 	If len ( Trim ( sVal1 ) ) <= 0 And len ( Trim ( sVal ) ) > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si DATE_TV_HG est renseign$$HEX1$$e900$$ENDHEX$$, DATE_TV_HG doit contenir une date valide" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si DATE_TV_HG est renseigné, DATE_TV_HG doit contenir une date valide" )
 	End If
 
 	// [VDOC9337]
@@ -10661,7 +10661,7 @@ For lCpt = lTotLig To 1 Step -1
 	If Not IsNull ( dtVal ) And Not IsNull ( dtVal1 ) And dtVal1 < dtVal Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la DTE_RCP_FRN." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit être postérieure ou égale à la DTE_RCP_FRN." )
 	End If
 	// [VDOC9337]	
 
@@ -10677,7 +10677,7 @@ For lCpt = lTotLig To 1 Step -1
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 if isvalid(dsCode) Then destroy dsCode
 
@@ -10690,8 +10690,8 @@ private function integer uf_integration_fichier_sbetv (ref long alnblig, ref lon
 //* Fonction		: n_cst_int_fic_SuiviCmd::uf_Integration_Fichier_SBETV (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 29/11/2007
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier O2M dans la base
-//* Commentaires	: [DCMP090327].[SBETV] Int$$HEX1$$e900$$ENDHEX$$gration de Fichier SBETV
+//* Libellé			: Intégration du fichier O2M dans la base
+//* Commentaires	: [DCMP090327].[SBETV] Intégration de Fichier SBETV
 //*
 //* Arguments		: Long		alNbLig		Ref
 //*					  Long		alNbLigMod	Ref
@@ -10705,9 +10705,9 @@ private function integer uf_integration_fichier_sbetv (ref long alnblig, ref lon
 //* #1 	 PHG	 24/04/2008	  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
 //* #2    JFF   28/04/2008   [DCMP080202] MailPush O2M
 //* #3	 JFF	 20/10/2008	  [FNAC_PROD_ECH_TECH]
-//* #4	FPI	10/12/2009	  [SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
+//* #4	FPI	10/12/2009	  [SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
 //*       JFF   07/03/2011   [VDOC3290]
-//*       JFF    11/03/2011  [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+//*       JFF    11/03/2011  [ITSM62176] ajout du point de décimal
 // 		 JFF   13/02/2012   [VDOC6449]
 //       JFF   18/08/2014 [PM254_V1]
 //*-----------------------------------------------------------------
@@ -10750,19 +10750,19 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
 	lIdSin = Long ( Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) )
 
-// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+// [ITSM62176] ajout du point de décimal
 	sSql += String ( lIdSin ) + "., "
 
 	/*------------------------------------------------------------------*/
@@ -11013,7 +11013,7 @@ For lCpt = 1 To lTotLig
 	
 	/*------------------------------------------------------------------*/
 	/* ZONE 31 : INFO_FRN_SPB_CPLT ( zone multiple )[FNAC_PROD_ECH_TECH]*/
-	/* Une seule affectation $$HEX2$$e0002000$$ENDHEX$$sSql                                     */
+	/* Une seule affectation à sSql                                     */
 	/*------------------------------------------------------------------*/
 	sSql += "'" + sInfoFrnSpbCplt + "'"
 
@@ -11023,7 +11023,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ 
 		F_commit ( SQLCA, False ) 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/RECP_APP_EN_CTR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/RECP_APP_EN_CTR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
 		Continue 
 	End If
 	// :#2
@@ -11040,14 +11040,14 @@ For lCpt = 1 To lTotLig
 			iRet = -1
 			alNbLigNonTraitee	++
 			F_commit ( SQLCA, False )
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) )
 			Continue
 		End If
 	Else
 		iRet = -1
 		alNbLigNonTraitee	++
 		F_commit ( SQLCA, False )
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) )
 		Continue 
 	End If
 Next
@@ -11062,7 +11062,7 @@ private function integer uf_transformationseparateur (string asfichiersource, st
 //* Fonction		: n_cst_int_fic_suivicmd::uf_TransformationSeparateur (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 18/09/2008 13:46:43
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: //* [MICROMANIA]
+//* Libellé			: //* [MICROMANIA]
 //* Commentaires	: 
 //*
 //* Arguments		: 	value string asFichierSource
@@ -11140,7 +11140,7 @@ private function integer uf_ctrl_fichier_fnac ();//*----------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_FNAC (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 09/09/2008
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier FNAC
+//* Libellé			: Controler de la validité du fichier FNAC
 //* Commentaires	: [FNAC_PROD_ECH_TECH].[BGE].[20091116163039640]
 //*
 //* Arguments		: 
@@ -11192,7 +11192,7 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> "E" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Donn$$HEX1$$e900$$ENDHEX$$e $$HEX1$$e900$$ENDHEX$$ronn$$HEX1$$e900$$ENDHEX$$e sur la zone TYP (contacter V$$HEX1$$e900$$ENDHEX$$ronique Si ALI au 2905)" )
+		" : Donnée éronnée sur la zone TYP (contacter Véronique Si ALI au 2905)" )
 	End If
 
 	/*------------------------------------------------------------------*/
@@ -11202,7 +11202,7 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> "0100" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Donn$$HEX1$$e900$$ENDHEX$$e $$HEX1$$e900$$ENDHEX$$ronn$$HEX1$$e900$$ENDHEX$$e sur la zone C_PRES (contacter V$$HEX1$$e900$$ENDHEX$$ronique Si ALI au 2905)" )
+		" : Donnée éronnée sur la zone C_PRES (contacter Véronique Si ALI au 2905)" )
 	End If
 
 
@@ -11217,13 +11217,13 @@ For lCpt = lTotLig To 1 Step -1
 	If Not IsDate ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone D_ENC_BGE contient une date non valide (contacter V$$HEX1$$e900$$ENDHEX$$ronique Si ALI au 2905)" )
+		" : La zone D_ENC_BGE contient une date non valide (contacter Véronique Si ALI au 2905)" )
 	End If		
 
 	If Not IsTime ( sVal2 ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone H_ENC_BGE contient une Heure non valide (contacter V$$HEX1$$e900$$ENDHEX$$ronique Si ALI au 2905)" )
+		" : La zone H_ENC_BGE contient une Heure non valide (contacter Véronique Si ALI au 2905)" )
 	End If		
 
 	If iRet > 0 Then
@@ -11238,13 +11238,13 @@ For lCpt = lTotLig To 1 Step -1
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone N_BGE est vide (contacter V$$HEX1$$e900$$ENDHEX$$ronique Si ALI au 2905)" )
+		" : La zone N_BGE est vide (contacter Véronique Si ALI au 2905)" )
 	End If 
 
 	If Not ISNUMBER ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : le N_BGE contient des caract$$HEX1$$e800$$ENDHEX$$res autre que des chiffres (contacter V$$HEX1$$e900$$ENDHEX$$ronique Si ALI au 2905)" )
+		" : le N_BGE contient des caractères autre que des chiffres (contacter Véronique Si ALI au 2905)" )
 	End If 
 
 	If iRet > 0 Then
@@ -11278,7 +11278,7 @@ For lCpt = lTotLig To 1 Step -1
 		If sIdFourBase <> "FNC" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : le N_BGE ne correspond pas un BGE FNAC (contacter V$$HEX1$$e900$$ENDHEX$$ronique Si ALI au 2905)" )
+			" : le N_BGE ne correspond pas un BGE FNAC (contacter Véronique Si ALI au 2905)" )
 		End If
 		// :#1 [FNAC_PROD_ECH_TECH].[BGE].[20091118100834793]		
 	End If
@@ -11291,7 +11291,7 @@ For lCpt = lTotLig To 1 Step -1
 	
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -11303,8 +11303,8 @@ private subroutine uf_definir_codetat_fnac (ref string asval, long alcpt);//*---
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_FNAC (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 16/11/2009
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: [FNAC_PROD_ECH_TECH].[BGE].[20091116163039640]
 //*
 //* Arguments		: asVal		String		Ref
@@ -11323,29 +11323,29 @@ String sDteEnvCli
 asVal = Upper ( asVal ) 
 
 /*------------------------------------------------------------------*/
-/* !!!! Code $$HEX1$$e900$$ENDHEX$$tat Fix$$HEX1$$e900$$ENDHEX$$s !!!! 					     							  */
+/* !!!! Code état Fixés !!!! 					     							  */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
-/* Le code $$HEX1$$e900$$ENDHEX$$tat lu dans le fichier est ANNULEE PAR GESTIONNAIRE,    */
-/* on le laisse s'$$HEX1$$e900$$ENDHEX$$crire en base.                                   */
+/* Le code état lu dans le fichier est ANNULEE PAR GESTIONNAIRE,    */
+/* on le laisse s'écrire en base.                                   */
 /*------------------------------------------------------------------*/
 If asVal = "ANN" Then Return
 
 /*------------------------------------------------------------------*/
-/* Le code $$HEX1$$e900$$ENDHEX$$tat lu dans le fichier est RECU PAR LE CLIENT, on le    */
-/* s'$$HEX1$$e900$$ENDHEX$$crire en base.                                                */
+/* Le code état lu dans le fichier est RECU PAR LE CLIENT, on le    */
+/* s'écrire en base.                                                */
 /*------------------------------------------------------------------*/
 If asVal = "RPC" Then Return
 
 
 /*------------------------------------------------------------------*/
-/* !!!! Code $$HEX1$$e900$$ENDHEX$$tat D$$HEX1$$e900$$ENDHEX$$termin$$HEX1$$e900$$ENDHEX$$s en fonction des dates 					  */
+/* !!!! Code état Déterminés en fonction des dates 					  */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
 /* Si le CodEtat du fichier n'est pas un de ces deux codes, alors   */
-/* on va le d$$HEX1$$e900$$ENDHEX$$terminer $$HEX2$$e0002000$$ENDHEX$$partir des dates.                          */
+/* on va le déterminer à partir des dates.                          */
 /*------------------------------------------------------------------*/
 sDteEnvCli = idwFicFourn.GetItemString ( alCpt, "SPBCTRL_DTE_ENCAISS" )
 
@@ -11362,7 +11362,7 @@ private function integer uf_integration_fichier_fnac (ref long alnblig, ref long
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_Fnac (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 09/09/2008
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier du FNAC dans la base
+//* Libellé			: Intégration du fichier du FNAC dans la base
 //* Commentaires	: [FNAC_PROD_ECH_TECH].[BGE].[20091116163039640]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -11374,8 +11374,8 @@ private function integer uf_integration_fichier_fnac (ref long alnblig, ref long
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1	FPI	10/12/2009	[SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
-//*       JFF    11/03/2011 [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal.
+//* #1	FPI	10/12/2009	[SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
+//*       JFF    11/03/2011 [ITSM62176] ajout du point de décimal.
 //       JFF   18/08/2014 [PM254_V1]
 //*-----------------------------------------------------------------
 
@@ -11408,19 +11408,19 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "SPBCTRL_ID_SIN" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
 	lIdSin = Long ( sVal)
 
-// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+// [ITSM62176] ajout du point de décimal
 	sSql += String ( lIdSin ) + "., "
 
 	/*------------------------------------------------------------------*/
@@ -11643,8 +11643,8 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #3
 		F_commit ( SQLCA, False ) // #3
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me d'insertion r$$HEX1$$e800$$ENDHEX$$glement automatique " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: " + sMesRetour  ) // #3
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème d'insertion règlement automatique " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : " + sMesRetour  ) // #3
 		Continue // #3
 	End If
 
@@ -11660,14 +11660,14 @@ For lCpt = 1 To lTotLig
 			iRet = -1
 			alNbLigNonTraitee	++ // #3
 			F_commit ( SQLCA, False ) // #3
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #4
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #4
 			Continue // #3
 		End If
 	Else
 		iRet = -1
 		alNbLigNonTraitee	++ // #3
 		F_commit ( SQLCA, False ) // #3
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #4
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #4
 		Continue // #3
 	End If
 
@@ -11683,7 +11683,7 @@ private function integer uf_ctrl_fichier_mss_diag ();//*------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_MSS_DIAG (PRIVATE)
 //* Auteur			: PHG
 //* Date				: 29/11/2007
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier O2M
+//* Libellé			: Controler de la validité du fichier O2M
 //* Commentaires	: [MSS_DIAG]
 //*
 //* Arguments		: 
@@ -11703,7 +11703,7 @@ private function integer uf_ctrl_fichier_mss_diag ();//*------------------------
 //* #8    JFF   28/12/2009  [20091228114718123]
 //* #9	FPI	25/01/2010	[DCMP090759] 
 //*   		SBA	25/06/2010 [BUG.CTRLFICSUIVI]
-//			FPI	25/02/2011	[DCMP100574] Contr$$HEX1$$f400$$ENDHEX$$le de dates
+//			FPI	25/02/2011	[DCMP100574] Contrôle de dates
 //       JFF   20/12/2012     [VDOC9337]
 //*-----------------------------------------------------------------
 
@@ -11733,16 +11733,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -11750,12 +11750,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -11775,13 +11775,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -11790,7 +11790,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 3 : DTE_RCP_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 	// [DCMP100574]
 	dtVal =  idwFicFourn.GetItemDatetime( lCpt, "DTE_RCP_FRN")
 	lVal =  idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) 
@@ -11800,13 +11800,13 @@ For lCpt = lTotLig To 1 Step -1
 			If Not isNull(dtVal) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Pour le statut GC " + String(lVal)  + ", la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre vide.")
+				" : Pour le statut GC " + String(lVal)  + ", la date de réception fournisseur (DTE_RCP_FRN) doit être vide.")
 			End if
 		Case 151, 152, 153, 154, 159, 162, 169, 173, 175
 			If isNull(dtVal) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Pour le statut GC " + String(lVal)  + ", la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : Pour le statut GC " + String(lVal)  + ", la date de réception fournisseur (DTE_RCP_FRN) doit être renseignée.")
 			End if
 	End Choose
 
@@ -11815,20 +11815,20 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 4 : NUM_IMEI_NOU														  */
 	/*------------------------------------------------------------------*/
-	// [O2M].M383 : Anomalie Mantis : On ne v$$HEX1$$e900$$ENDHEX$$rifie pas l'IMEI.
+	// [O2M].M383 : Anomalie Mantis : On ne vérifie pas l'IMEI.
 	
 //	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_IMEI" ) )
 //
 //	If Len ( sVal ) <> 15 And Len ( sVal ) > 0 Then
 //		iRet = -1
 //		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-//		" : Un num$$HEX1$$e900$$ENDHEX$$ro d'IMEI doit contenir 15 chiffres" )
+//		" : Un numéro d'IMEI doit contenir 15 chiffres" )
 //	End If
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 5 : DTE_FIN_TRAIT 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 	// [DCMP100574]
 	dtVal =  idwFicFourn.GetItemDatetime( lCpt, "DTE_FIN_TRAIT")
 	lVal =  idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) 
@@ -11838,13 +11838,13 @@ For lCpt = lTotLig To 1 Step -1
 			If Not isNull(dtVal) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Pour le statut GC " + String(lVal)  + ", la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_FIN_TRAIT) doit $$HEX1$$ea00$$ENDHEX$$tre vide.")
+				" : Pour le statut GC " + String(lVal)  + ", la date de réception fournisseur (DTE_FIN_TRAIT) doit être vide.")
 			End if
 		Case 151, 152, 153, 154, 155, 160, 165, 172, 173, 175, 176
 			If isNull(dtVal) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Pour le statut GC " + String(lVal)  + ", la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_FIN_TRAIT) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : Pour le statut GC " + String(lVal)  + ", la date de réception fournisseur (DTE_FIN_TRAIT) doit être renseignée.")
 			End if
 	End Choose
 
@@ -11854,19 +11854,19 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 6 : NUM_BON_TRP 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 7 : STATUS_GC														     */
 	/*------------------------------------------------------------------*/
-	// [O2M] : V$$HEX1$$e900$$ENDHEX$$rification de l'appartenance du code retourn$$HEX2$$e9002000$$ENDHEX$$au param$$HEX1$$e900$$ENDHEX$$trage.
+	// [O2M] : Vérification de l'appartenance du code retourné au paramétrage.
 
 	sVal = String ( idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) )
 	
 	// if dsCode.retrieve('-GC') > 0  then		// #9
-			// #3 [FNAC_PROD_ECH_TECH] agrandissement jusqu'$$HEX2$$e0002000$$ENDHEX$$160
+			// #3 [FNAC_PROD_ECH_TECH] agrandissement jusqu'à 160
 			// #4 [DCMP090109] ajout 2, 21
-			// #5 [DCMP090085] ajout jusqu'$$HEX2$$e0002000$$ENDHEX$$169
+			// #5 [DCMP090085] ajout jusqu'à 169
 			// #6 [DCMP090327].[SBETV] (171)
 
 		if dsCode.find("( ID_CODE BETWEEN 151 AND 176 OR ID_CODE IN (2, 21 )) AND ID_CODE = "+sVal, 1, dsCode.RowCount()+1 ) = 0 Then
@@ -11893,7 +11893,7 @@ For lCpt = lTotLig To 1 Step -1
 	If Not IsNull ( dtVal ) And Not IsNull ( dtVal1 ) And dtVal1 < dtVal Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la DTE_RCP_FRN." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit être postérieure ou égale à la DTE_RCP_FRN." )
 	End If
 	// [VDOC9337]					
 				
@@ -11907,7 +11907,7 @@ For lCpt = lTotLig To 1 Step -1
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 if isvalid(dsCode) Then destroy dsCode
 
@@ -11920,8 +11920,8 @@ private subroutine uf_definir_codetat_mss_diag (ref string asval, long alcpt);//
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_MSS_DIAG (PRIVATE)
 //* Auteur			: PHG
 //* Date				: 29/11/2007
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: [MSS_DIAG]
 //*
 //* Arguments		: asVal		String		Ref
@@ -11955,8 +11955,8 @@ private function integer uf_integration_fichier_mss_diag (ref long alnblig, ref 
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_MSS_DIAG (PRIVATE)
 //* Auteur			: FABRY JF
 //* Date				: 29/11/2007
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier O2M dans la base
-//* Commentaires	: [MSS_DIAG] Int$$HEX1$$e900$$ENDHEX$$gration de Fichier MSS DIAG (MS1)
+//* Libellé			: Intégration du fichier O2M dans la base
+//* Commentaires	: [MSS_DIAG] Intégration de Fichier MSS DIAG (MS1)
 //*
 //* Arguments		: Long		alNbLig		Ref
 //*					  Long		alNbLigMod	Ref
@@ -11970,9 +11970,9 @@ private function integer uf_integration_fichier_mss_diag (ref long alnblig, ref 
 //* #1 	 PHG	 24/04/2008	  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
 //* #2    JFF   28/04/2008   [DCMP080202] MailPush O2M
 //* #3	 JFF	 20/10/2008	  [FNAC_PROD_ECH_TECH]
-//* #4	FPI	10/12/2009	[SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
+//* #4	FPI	10/12/2009	[SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
 //*       JFF   07/03/2011   [VDOC3290]
-//*       JFF    11/03/2011 [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+//*       JFF    11/03/2011 [ITSM62176] ajout du point de décimal
 //*-----------------------------------------------------------------
 
 // [MSS_DIAG].[##] 
@@ -12014,19 +12014,19 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
 	lIdSin = Long ( Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) )
 
-// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+// [ITSM62176] ajout du point de décimal
 	sSql += String ( lIdSin ) + "., "
 
 	/*------------------------------------------------------------------*/
@@ -12236,7 +12236,7 @@ For lCpt = 1 To lTotLig
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 31 : INFO_FRN_SPB_CPLT ( zone multiple )[FNAC_PROD_ECH_TECH]*/
-	/* Une seule affectation $$HEX2$$e0002000$$ENDHEX$$sSql                                     */
+	/* Une seule affectation à sSql                                     */
 	/*------------------------------------------------------------------*/
 	sSql += "'" + sInfoFrnSpbCplt + "'"
 
@@ -12246,7 +12246,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ 
 		F_commit ( SQLCA, False ) 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/RECP_APP_EN_CTR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/RECP_APP_EN_CTR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
 		Continue 
 	End If
 	// :#2
@@ -12263,14 +12263,14 @@ For lCpt = 1 To lTotLig
 			iRet = -1
 			alNbLigNonTraitee	++
 			F_commit ( SQLCA, False )
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) )
 			Continue
 		End If
 	Else
 		iRet = -1
 		alNbLigNonTraitee	++
 		F_commit ( SQLCA, False )
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) )
 		Continue 
 	End If
 Next
@@ -12339,12 +12339,12 @@ If Isnull(sIdfour) or Trim(sIdfour) = "" Then
 		bRet = False
 		
 		// [SAGA2][MICROMANIA]
-		// On ne fait plus les contr$$HEX1$$f400$$ENDHEX$$les Micromania, demande Thomas Gaiddon le 21/11/2012
+		// On ne fait plus les contrôles Micromania, demande Thomas Gaiddon le 21/11/2012
 		If asIdFourCtrl = "MCM" Then
 			bRet = True
 		Else
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( alCpt ) + &
-						" - Cet enregistrement (" + string(aidsin) + "-" + string(aidseq) + ") ne r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e800$$ENDHEX$$re aucune prestation en base." ) // #8
+						" - Cet enregistrement (" + string(aidsin) + "-" + string(aidseq) + ") ne réfère aucune prestation en base." ) // #8
 		End If
 		// [SAGA2][MICROMANIA]
 		
@@ -12359,18 +12359,18 @@ Else
 		bRet = False
 		
 		// [SAGA2][MICROMANIA]
-		// On ne fait plus les contr$$HEX1$$f400$$ENDHEX$$les Micromania, demande Thomas Gaiddon le 21/11/2012
+		// On ne fait plus les contrôles Micromania, demande Thomas Gaiddon le 21/11/2012
 		If asIdFourCtrl = "MCM" Then
 			bRet = True
 /*
 			This.uf_Trace ( "ECR", "AVERTISSEMENT ligne " + String ( alCpt ) + &
-			" - Cet enregistrement " +  Upper ( asIdFourCtrl ) + "  (" + string(aidsin) + "-" + string(aidseq) + ") pr$$HEX1$$e900$$ENDHEX$$sent dans le fichier r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e800$$ENDHEX$$re en base une prestation " + sIdFour ) // #5 // #8
+			" - Cet enregistrement " +  Upper ( asIdFourCtrl ) + "  (" + string(aidsin) + "-" + string(aidseq) + ") présent dans le fichier réfère en base une prestation " + sIdFour ) // #5 // #8
 */			
 		// [SAGA2][MICROMANIA]
 
 		Else
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( alCpt ) + &
-						" - Cet enregistrement " +  Upper ( asIdFourCtrl ) + "  (" + string(aidsin) + "-" + string(aidseq) + ") pr$$HEX1$$e900$$ENDHEX$$sent dans le fichier r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e800$$ENDHEX$$re en base une prestation " + sIdFour ) // #5 // #8
+						" - Cet enregistrement " +  Upper ( asIdFourCtrl ) + "  (" + string(aidsin) + "-" + string(aidseq) + ") présent dans le fichier réfère en base une prestation " + sIdFour ) // #5 // #8
 		End If
 
 
@@ -12392,8 +12392,8 @@ private subroutine uf_definir_codetat_sbetv (long alidsin, long alidseq, ref str
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_SBETV (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 02/09/2009
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: [DCMP090327].[SBETV]
 //*
 //* Arguments		: asVal		String		Ref
@@ -12458,7 +12458,7 @@ private function integer uf_ctrl_fichier_auchan ();//*--------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_Auchan (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 06/07/2010
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PC363_AUCHAN]
 //*
 //* Arguments		: 
@@ -12508,16 +12508,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -12525,12 +12525,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -12552,13 +12552,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -12583,13 +12583,13 @@ For lCpt = lTotLig To 1 Step -1
 	If IsNull ( sVal) or Not IsNumber ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" :Num$$HEX1$$e900$$ENDHEX$$ro carte cadeau non valide, nous attendons un num$$HEX1$$e900$$ENDHEX$$rique (cf NDC PC363 Auchan)" )
+		" :Numéro carte cadeau non valide, nous attendons un numérique (cf NDC PC363 Auchan)" )
 	End If
 
 	If Len ( sVal ) <> 6 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" :Num$$HEX1$$e900$$ENDHEX$$ro carte cadeau non valide, nous attendons un num$$HEX1$$e900$$ENDHEX$$rique de 6 chiffre (cf NDC PC363 Auchan)" )
+		" :Numéro carte cadeau non valide, nous attendons un numérique de 6 chiffre (cf NDC PC363 Auchan)" )
 	End If
 
 	If iRet > 0 Then
@@ -12601,7 +12601,7 @@ For lCpt = lTotLig To 1 Step -1
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -12613,8 +12613,8 @@ private subroutine uf_definir_codetat_auchan (ref string asval, long alcpt);//*-
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_AUCHAN (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 06/07/2010
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: [PC363_AUCHAN]
 //*
 //* Arguments		: asVal		String		Ref
@@ -12643,7 +12643,7 @@ private function integer uf_integration_fichier_auchan (ref long alnblig, ref lo
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_AUCHAN (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 06/07/10
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier du AUCHAN dans la base
+//* Libellé			: Intégration du fichier du AUCHAN dans la base
 //* Commentaires	: [MICROMANIA]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -12656,8 +12656,8 @@ private function integer uf_integration_fichier_auchan (ref long alnblig, ref lo
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JFF    11/02/2009 [20090211133609560]
-//* #2	 FPI	  10/12/2009 [SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
-//*       JFF    11/03/2011 [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+//* #2	 FPI	  10/12/2009 [SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
+//*       JFF    11/03/2011 [ITSM62176] ajout du point de décimal
 //        JFF   18/08/2014 [PM254_V1]
 //*-----------------------------------------------------------------
 
@@ -12690,19 +12690,19 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
 	lIdSin = Long ( Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) )
 
-	// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+	// [ITSM62176] ajout du point de décimal
 	sSql += String ( lIdSin ) + "., "
 
 	/*------------------------------------------------------------------*/
@@ -12937,7 +12937,7 @@ For lCpt = 1 To lTotLig
 		Case -100
 			iRet = -1
 		Case -200
-			// SPB ne r$$HEX1$$e800$$ENDHEX$$gle rien, c'est le fournisseur qui s'en charge.
+			// SPB ne règle rien, c'est le fournisseur qui s'en charge.
 		Case Else 
 			iRet = This.uf_ReglAuto ( lIdSin, &
 											  lIdSeq, &
@@ -12953,8 +12953,8 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #3
 		F_commit ( SQLCA, False ) // #3
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me d'insertion r$$HEX1$$e800$$ENDHEX$$glement automatique " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: " + sMesRetour  ) // #3
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème d'insertion règlement automatique " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : " + sMesRetour  ) // #3
 		Continue // #3
 	End If
 
@@ -12979,7 +12979,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -12997,7 +12997,7 @@ For lCpt = 1 To lTotLig
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")				
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 		F_commit ( SQLCA, False )
 			
@@ -13016,7 +13016,7 @@ private function integer uf_ctrl_fichier_carrefour ();//*-----------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_Carrefour (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 10/11/2010
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier du Carrefour
+//* Libellé			: Controler de la validité du fichier du Carrefour
 //* Commentaires	: [PC301].[LOT2]
 //*
 //* Arguments		: 
@@ -13052,16 +13052,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -13069,12 +13069,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -13094,13 +13094,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -13124,7 +13124,7 @@ For lCpt = lTotLig To 1 Step -1
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -13136,8 +13136,8 @@ private subroutine uf_definir_codetat_carrefour (ref string asval, long alcpt);/
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_BRIGHTPOINT (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/03/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: [PC301].[LOT2]
 //*
 //* Arguments		: asVal		String		Ref
@@ -13156,29 +13156,29 @@ Date 	dDteRcpMobCli
 asVal = Upper ( asVal ) 
 
 /*------------------------------------------------------------------*/
-/* !!!! Code $$HEX1$$e900$$ENDHEX$$tat Fix$$HEX1$$e900$$ENDHEX$$s !!!! 					     							  */
+/* !!!! Code état Fixés !!!! 					     							  */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
-/* Le code $$HEX1$$e900$$ENDHEX$$tat lu dans le fichier est ANNULEE PAR GESTIONNAIRE,    */
-/* on le laisse s'$$HEX1$$e900$$ENDHEX$$crire en base.                                   */
+/* Le code état lu dans le fichier est ANNULEE PAR GESTIONNAIRE,    */
+/* on le laisse s'écrire en base.                                   */
 /*------------------------------------------------------------------*/
 If asVal = "ANN" Then Return
 
 /*------------------------------------------------------------------*/
-/* Le code $$HEX1$$e900$$ENDHEX$$tat lu dans le fichier est RECU PAR LE CLIENT, on le    */
-/* s'$$HEX1$$e900$$ENDHEX$$crire en base.                                                */
+/* Le code état lu dans le fichier est RECU PAR LE CLIENT, on le    */
+/* s'écrire en base.                                                */
 /*------------------------------------------------------------------*/
 If asVal = "RPC" Then Return
 
 
 /*------------------------------------------------------------------*/
-/* !!!! Code $$HEX1$$e900$$ENDHEX$$tat D$$HEX1$$e900$$ENDHEX$$termin$$HEX1$$e900$$ENDHEX$$s en fonction des dates 					  */
+/* !!!! Code état Déterminés en fonction des dates 					  */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
 /* Si le CodEtat du fichier n'est pas un de ces deux codes, alors   */
-/* on va le d$$HEX1$$e900$$ENDHEX$$terminer $$HEX2$$e0002000$$ENDHEX$$partir des dates.                          */
+/* on va le déterminer à partir des dates.                          */
 /*------------------------------------------------------------------*/
 dDteRcpMobCli = idwFicFourn.GetItemDate ( alCpt, "DTE_RCP_MOB_CLI" )
 
@@ -13198,7 +13198,7 @@ private function integer uf_integration_fichier_carrefour (ref long alnblig, ref
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_Carrefour (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 31/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier du BrightPointdans la base
+//* Libellé			: Intégration du fichier du BrightPointdans la base
 //* Commentaires	: [PC301].[LOT2]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -13211,10 +13211,10 @@ private function integer uf_integration_fichier_carrefour (ref long alnblig, ref
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JCA    09/06/2006  MAILPUSH
-//* #2    JFF    23/08/2006  Modif apport$$HEX1$$e900$$ENDHEX$$e suite probl$$HEX1$$e800$$ENDHEX$$me lenteur
+//* #2    JFF    23/08/2006  Modif apportée suite problème lenteur
 //* #3 	 PHG	 24/04/2008	  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
-//* #4	FPI	10/12/2009	[SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
-//*       JFF    11/03/2011 [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+//* #4	FPI	10/12/2009	[SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
+//*       JFF    11/03/2011 [ITSM62176] ajout du point de décimal
 //       JFF   18/08/2014 [PM254_V1]
 //*-----------------------------------------------------------------
 
@@ -13249,17 +13249,17 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
-	// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+	// [ITSM62176] ajout du point de décimal
 	sSql += Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) + "., "
 	// #1
 	lIdSin = Long (Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ))
@@ -13459,7 +13459,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 	//	Exit  #2
 		Continue // #2
 	End If				
@@ -13485,7 +13485,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -13503,7 +13503,7 @@ For lCpt = 1 To lTotLig
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")				
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 		F_commit ( SQLCA, False )
 			
@@ -13521,7 +13521,7 @@ private function integer uf_ctrl_fichier_coriolis ();//*------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_CORIOLIS (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/03/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier du CORIOLIS
+//* Libellé			: Controler de la validité du fichier du CORIOLIS
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -13593,16 +13593,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -13610,12 +13610,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -13631,11 +13631,11 @@ For lCpt = lTotLig To 1 Step -1
 	
 				lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 				
-				// [VDOC17191] je ne d$$HEX1$$e900$$ENDHEX$$clenche pas le message sur le 159
+				// [VDOC17191] je ne déclenche pas le message sur le 159
 				If iStatusGc <> lVal Then
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit int$$HEX1$$e900$$ENDHEX$$grer cette r$$HEX1$$e800$$ENDHEX$$gle dans son syst$$HEX1$$e800$$ENDHEX$$me." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit intégrer cette règle dans son système." )
 				End If
 	
 		End CHoose
@@ -13655,13 +13655,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -13670,7 +13670,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 3 : NUM_CMD_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 4 : NUM_IMEI_NOU														  */
@@ -13680,24 +13680,24 @@ For lCpt = lTotLig To 1 Step -1
 	If Len ( sVal ) <> 15 And Len ( sVal ) > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Un num$$HEX1$$e900$$ENDHEX$$ro d'IMEI doit contenir 15 chiffres" )
+		" : Un numéro d'IMEI doit contenir 15 chiffres" )
 	End If
 
 	If Not F_IMEI ( sVal, sIMEICorr ) And Len ( sVal ) > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Num$$HEX1$$e900$$ENDHEX$$ro d'IMEI non valide" )
+		" : Numéro d'IMEI non valide" )
 	End If 
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 5 : DTE_RCP_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 6 : DTE_ENV_CLI 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 7 : DEST_ENVOI	 														  */
@@ -13711,7 +13711,7 @@ For lCpt = lTotLig To 1 Step -1
 			CASE ELSE	
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le Destinataire de l'envoi doit $$HEX1$$ea00$$ENDHEX$$tre null ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$SPB ou CLIENT, mais pas " + sVal )
+				" : Le Destinataire de l'envoi doit être null ou égal à SPB ou CLIENT, mais pas " + sVal )
 		END CHOOSE
 
 	End If
@@ -13728,7 +13728,7 @@ For lCpt = lTotLig To 1 Step -1
 				If IsNull ( sVal ) Or Len ( sVal ) <= 0 Then
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone NUM_BON_TRP doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e sur le statut " + String ( lVal ) )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone NUM_BON_TRP doit être renseignée sur le statut " + String ( lVal ) )
 				End If
 		End Choose
 	
@@ -13774,7 +13774,7 @@ For lCpt = lTotLig To 1 Step -1
 				CASE ELSE	
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : Le code $$HEX1$$e900$$ENDHEX$$tat doit $$HEX1$$ea00$$ENDHEX$$tre null ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$ANN ou RPC, mais pas " + sVal )
+					" : Le code état doit être null ou égal à ANN ou RPC, mais pas " + sVal )
 			END CHOOSE
 	
 		End If
@@ -13786,14 +13786,14 @@ For lCpt = lTotLig To 1 Step -1
 		If ( sVal = "RPC" And IsNull ( sVal2 ) ) Or ( sVal <> "RPC" And Not IsNull ( sVal2 ) ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le code $$HEX1$$e900$$ENDHEX$$tat RPC et la date de r$$HEX1$$e900$$ENDHEX$$ception du mat$$HEX1$$e900$$ENDHEX$$riel par l'assur$$HEX2$$e9002000$$ENDHEX$$doivent $$HEX1$$ea00$$ENDHEX$$tre transmises simultan$$HEX1$$e900$$ENDHEX$$ment.")
+				" : Le code état RPC et la date de réception du matériel par l'assuré doivent être transmises simultanément.")
 		End If
 		
 		sVal2 = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) ) )
 		If Pos ( sVal2, "INSTANCE" ) > 0 And sVal <> "RPC" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Si la chaine INSTANCE est pr$$HEX1$$e900$$ENDHEX$$sente dans le commentaire, alors le code $$HEX1$$e900$$ENDHEX$$tat RPC est obligatoire.")
+			" : Si la chaine INSTANCE est présente dans le commentaire, alors le code état RPC est obligatoire.")
 		End If
 	End If
 	
@@ -13803,7 +13803,7 @@ For lCpt = lTotLig To 1 Step -1
 	If Not IsNull ( dtVal ) And Not IsNull ( dtVal1 ) And dtVal1 < dtVal Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la DTE_RCP_FRN." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit être postérieure ou égale à la DTE_RCP_FRN." )
 	End If
 	// [VDOC9337]	
 
@@ -13843,7 +13843,7 @@ For lCpt = lTotLig To 1 Step -1
 	
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$PRBLE_LIVRAISON, n'est pas valide." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé PRBLE_LIVRAISON, n'est pas valide." )
 	
 			End Choose 
 			
@@ -13866,14 +13866,14 @@ For lCpt = lTotLig To 1 Step -1
 					Case Else 
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$PEC_PRBLE_LIVRAISON, n'est pas valide." )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé PEC_PRBLE_LIVRAISON, n'est pas valide." )
 		
 				End Choose 
 				
 				If sVal1 = "" Then
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la cl$$HEX2$$e9002000$$ENDHEX$$PEC_PRBLE_LIVRAISON n'est autoris$$HEX1$$e900$$ENDHEX$$e que si pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$demment il y a au un cl$$HEX2$$e9002000$$ENDHEX$$PRBLE_LIVRAISON, qui est justement absente." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la clé PEC_PRBLE_LIVRAISON n'est autorisée que si précédemment il y a au un clé PRBLE_LIVRAISON, qui est justement absente." )
 				End If 			
 			End If 	
 		
@@ -13883,7 +13883,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 10 : COMMENT_FRN														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 	// #3 [MSS_DIAG].[20091207111441740]
 	// [20091228114718123]
 	If iRet > 0 Then
@@ -13896,7 +13896,7 @@ For lCpt = lTotLig To 1 Step -1
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -13908,8 +13908,8 @@ private subroutine uf_definir_codetat_coriolis (ref string asval, long alcpt);//
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_Coriolis (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/03/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: [PM178][CORIOLIS]
 //*
 //* Arguments		: asVal		String		Ref
@@ -13931,28 +13931,28 @@ asVal = Upper ( asVal )
 
 
 /*------------------------------------------------------------------*/
-/* !!!! Code $$HEX1$$e900$$ENDHEX$$tat Fix$$HEX1$$e900$$ENDHEX$$s !!!! 					     							  */
+/* !!!! Code état Fixés !!!! 					     							  */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
-/* Le code $$HEX1$$e900$$ENDHEX$$tat lu dans le fichier est ANNULEE PAR GESTIONNAIRE,    */
-/* on le laisse s'$$HEX1$$e900$$ENDHEX$$crire en base.                                   */
+/* Le code état lu dans le fichier est ANNULEE PAR GESTIONNAIRE,    */
+/* on le laisse s'écrire en base.                                   */
 /*------------------------------------------------------------------*/
 If asVal = "ANN" Then Return
 
 /*------------------------------------------------------------------*/
-/* Le code $$HEX1$$e900$$ENDHEX$$tat lu dans le fichier est RECU PAR LE CLIENT, on le    */
-/* s'$$HEX1$$e900$$ENDHEX$$crire en base.                                                */
+/* Le code état lu dans le fichier est RECU PAR LE CLIENT, on le    */
+/* s'écrire en base.                                                */
 /*------------------------------------------------------------------*/
 If asVal = "RPC" Then Return
 
 /*------------------------------------------------------------------*/
-/* !!!! Code $$HEX1$$e900$$ENDHEX$$tat D$$HEX1$$e900$$ENDHEX$$termin$$HEX1$$e900$$ENDHEX$$s en fonction des dates 					  */
+/* !!!! Code état Déterminés en fonction des dates 					  */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
 /* Si le CodEtat du fichier n'est pas un de ces deux codes, alors   */
-/* on va le d$$HEX1$$e900$$ENDHEX$$terminer $$HEX2$$e0002000$$ENDHEX$$partir des dates.                          */
+/* on va le déterminer à partir des dates.                          */
 /*------------------------------------------------------------------*/
 dtDteRcpFrn = idwFicFourn.GetItemDateTime ( alCpt, "DTE_RCP_FRN" ) 
 dtDteEnvCli = idwFicFourn.GetItemDateTime ( alCpt, "DTE_ENV_CLI" )
@@ -13966,7 +13966,7 @@ If Not IsNull ( dDteEnvCli ) Then
 
 	CHOOSE CASE sDestEnvoi	
 		CASE "SPB"
-			// Retourn$$HEX4$$e9002000e0002000$$ENDHEX$$la SPB par le fournisseur
+			// Retourné à la SPB par le fournisseur
 			asVal = "RSP"			
 
 		CASE ELSE
@@ -13974,7 +13974,7 @@ If Not IsNull ( dDteEnvCli ) Then
 			asVal = "ECL"			
 	END CHOOSE
 
-	// De plus si la dDteRcpFrn n'$$HEX1$$e900$$ENDHEX$$tait pas renseign$$HEX1$$e900$$ENDHEX$$
+	// De plus si la dDteRcpFrn n'était pas renseigné
 	//	On y met la dDteEnvCli
 	If IsNull ( dDteRcpFrn ) Then idwFicFourn.SetItem ( alCpt, "DTE_RCP_FRN", dDteEnvCli )
 
@@ -13998,7 +13998,7 @@ private function integer uf_integration_fichier_coriolis (ref long alnblig, ref 
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_Coriolis (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 31/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier du Coriolis dans la base
+//* Libellé			: Intégration du fichier du Coriolis dans la base
 //* Commentaires	: //[PM178][CORIOLIS]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -14011,11 +14011,11 @@ private function integer uf_integration_fichier_coriolis (ref long alnblig, ref 
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JCA    09/06/2006  MAILPUSH
-//* #2    JFF    23/08/2006  Modif apport$$HEX1$$e900$$ENDHEX$$e suite probl$$HEX1$$e800$$ENDHEX$$me lenteur
+//* #2    JFF    23/08/2006  Modif apportée suite problème lenteur
 //* #3 	 PHG	  24/04/2008  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
-//* #4	 FPI	  10/12/2009  [SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
-//*       JFF    11/03/2011  [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
-//  			FPI	04/08/2011	[FPI.04082011] Prise en compte de la date de r$$HEX1$$e900$$ENDHEX$$ception des mobiles par les assur$$HEX1$$e900$$ENDHEX$$s
+//* #4	 FPI	  10/12/2009  [SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
+//*       JFF    11/03/2011  [ITSM62176] ajout du point de décimal
+//  			FPI	04/08/2011	[FPI.04082011] Prise en compte de la date de réception des mobiles par les assurés
 //       JFF   18/08/2014 [PM254_V1]
 //		FPI	18/07/2018	[ITSM546478]
 //       JFF   28/01/2019 [PM450-1]
@@ -14065,17 +14065,17 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
-	// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+	// [ITSM62176] ajout du point de décimal
 	sSql += Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) + "., "
 	// #1
 	lIdSin = Long (Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ))
@@ -14334,7 +14334,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 	//	Exit  #2
 		Continue // #2
 	End If				
@@ -14360,7 +14360,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -14378,7 +14378,7 @@ For lCpt = 1 To lTotLig
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")				
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 		F_commit ( SQLCA, False )
 			
@@ -14396,8 +14396,8 @@ private subroutine uf_definir_codetat_o2m (ref string asval, long alcpt, long al
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_O2M (PRIVATE)
 //* Auteur			: PHG
 //* Date				: 29/11/2007
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: [O2M][PM82][LOT1]
 //*
 //* Arguments		: asVal		String		Ref
@@ -14493,7 +14493,7 @@ private function integer uf_ctrl_fichier_psm ();//*-----------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_PSM (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 09/05/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controle de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier PSM/PSM
+//* Libellé			: Controle de la validité du fichier PSM/PSM
 //* Commentaires	: [PM200][PSM]
 //*
 //* Arguments		: 
@@ -14563,7 +14563,7 @@ lTotLig = idwFicFourn.RowCount ()
 // [MODIF_SUITE_REDR]
 If lTotLig <= 0 And FileLength64 ( isTxtNomFic.Text ) > 0 Then
 	iRet = -1
-	This.uf_Trace ( "ECR", "ERREUR : 0 Ligne charg$$HEX1$$e900$$ENDHEX$$e ! , pour PI : Taille du fichier positive et chargement $$HEX2$$e0002000$$ENDHEX$$0 ligne => Anormal. R$$HEX1$$e900$$ENDHEX$$essayez l'int$$HEX1$$e900$$ENDHEX$$gration (cause $$HEX1$$e900$$ENDHEX$$ventuelle => le fichier est peut-$$HEX1$$ea00$$ENDHEX$$tre en format Unicode au lieu d'Ansi, $$HEX2$$e0002000$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$rifier)." )
+	This.uf_Trace ( "ECR", "ERREUR : 0 Ligne chargée ! , pour PI : Taille du fichier positive et chargement à 0 ligne => Anormal. Réessayez l'intégration (cause éventuelle => le fichier est peut-être en format Unicode au lieu d'Ansi, à vérifier)." )
 End If	
 
 lTotLig = idwFicFourn.RowCount ()
@@ -14575,11 +14575,11 @@ dsCode.SetTransObject(SQLCA)
 dsCode.retrieve('-GC') 	
 
 // [VDOC25984]
-// Contr$$HEX1$$f400$$ENDHEX$$le entete et fin
+// Contrôle entete et fin
 If lTotLig < 2 Then
 	iRet = -1
 	This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-	" : Le fichier doit comporter au minimum 2 engistrements : ent$$HEX1$$ea00$$ENDHEX$$te & fin")
+	" : Le fichier doit comporter au minimum 2 engistrements : entête & fin")
 	lTotLig = 0
 End If
 
@@ -14588,7 +14588,7 @@ If iRet > 0 Then
 	If Pos ( sVal, "DEBUT#" ) <= 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La ligne d'ent$$HEX1$$ea00$$ENDHEX$$te n'est pas conforme (attendu : DEBUT#xx)")
+		" : La ligne d'entête n'est pas conforme (attendu : DEBUT#xx)")
 		lTotLig = 0
 	End If
 End If
@@ -14599,7 +14599,7 @@ If iRet > 0 Then
 	If Not IsNumber ( sVal )  Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La ligne d'ent$$HEX1$$ea00$$ENDHEX$$te n'est pas conforme, la valeur d$$HEX1$$e900$$ENDHEX$$rri$$HEX1$$e800$$ENDHEX$$re DEBUT# doit $$HEX1$$ea00$$ENDHEX$$tre un nombre")
+		" : La ligne d'entête n'est pas conforme, la valeur dérrière DEBUT# doit être un nombre")
 		lTotLig = 0
 	End If
 End If
@@ -14628,7 +14628,7 @@ If iRet > 0 Then
 	If Not IsNumber ( sVal )  Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La ligne de fin n'est pas conforme, la valeur d$$HEX1$$e900$$ENDHEX$$rri$$HEX1$$e800$$ENDHEX$$re FIN# doit $$HEX1$$ea00$$ENDHEX$$tre un nombre")
+		" : La ligne de fin n'est pas conforme, la valeur dérrière FIN# doit être un nombre")
 		lTotLig = 0
 	End If
 End If
@@ -14645,7 +14645,7 @@ If iRet > 0 Then
 	If lNbreLignDeb <> lNbreLignFin Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le nombre de ligne entre la ligne d'ent$$HEX1$$ea00$$ENDHEX$$te et la ligne de fin n'est pas identique")
+		" : Le nombre de ligne entre la ligne d'entête et la ligne de fin n'est pas identique")
 		lTotLig = 0		
 	End If 
 End If
@@ -14654,7 +14654,7 @@ If iRet > 0 Then
 	If lNbreLignDeb <> lTotLig Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le nombre de ligne du fichier dans la ligne d'ent$$HEX1$$ea00$$ENDHEX$$te (" + String ( lNbreLignDeb ) + ") ne correspond pas au nombre de ligne r$$HEX1$$e900$$ENDHEX$$el du fichier (" + String ( lTotLig ) + ")" )
+		" : Le nombre de ligne du fichier dans la ligne d'entête (" + String ( lNbreLignDeb ) + ") ne correspond pas au nombre de ligne réel du fichier (" + String ( lTotLig ) + ")" )
 		lTotLig = 0		
 	End If 
 End If
@@ -14682,16 +14682,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -14699,12 +14699,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -14728,13 +14728,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -14743,7 +14743,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 3 : NUM_CMD_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 4 : NUM_IMEI_NOU														  */
@@ -14755,13 +14755,13 @@ For lCpt = lTotLig To 1 Step -1
 		If Len ( sVal ) <> 15 And Len ( sVal ) > 0 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Un num$$HEX1$$e900$$ENDHEX$$ro d'IMEI doit contenir 15 chiffres" )
+			" : Un numéro d'IMEI doit contenir 15 chiffres" )
 		End If
 	
 		If Not F_IMEI ( sVal, sIMEICorr ) And Len ( sVal ) > 0 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Num$$HEX1$$e900$$ENDHEX$$ro d'IMEI non valide" )
+			" : Numéro d'IMEI non valide" )
 		End If 
 	End If
 
@@ -14773,7 +14773,7 @@ For lCpt = lTotLig To 1 Step -1
 		If Year ( Date (dtVal )) < 2000 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") l'ann$$HEX1$$e900$$ENDHEX$$e de la date de r$$HEX1$$e900$$ENDHEX$$ception n'est pas valide." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") l'année de la date de réception n'est pas valide." )
 		End If
 	End If
 	
@@ -14789,7 +14789,7 @@ For lCpt = lTotLig To 1 Step -1
 				If Not isNull(dtVal) Then
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre vide.")
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de réception fournisseur (DTE_RCP_FRN) doit être vide.")
 				End if
 	
 			// [PM01].[LOT3&4]
@@ -14802,14 +14802,14 @@ For lCpt = lTotLig To 1 Step -1
 				If isNull(dtVal) And iInfoSpbFrn <> 957 And sVal <> "OUI" Then
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de réception fournisseur (DTE_RCP_FRN) doit être renseignée.")
 				End if
 				
 				// [PC13321][MANTIS14042]			
 				If Not isNull(dtVal) And iInfoSpbFrn = 957 Then
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", et pour le process sp$$HEX1$$e900$$ENDHEX$$cifique 957, la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre vide.")
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", et pour le process spécifique 957, la date de réception fournisseur (DTE_RCP_FRN) doit être vide.")
 				End If			
 	
 		End Choose
@@ -14823,7 +14823,7 @@ For lCpt = lTotLig To 1 Step -1
 		If Year ( Date (dtVal )) < 2000 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") l'ann$$HEX1$$e900$$ENDHEX$$e de la date de traitement/envoi client n'est pas valide." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") l'année de la date de traitement/envoi client n'est pas valide." )
 		End If
 	End If
 
@@ -14832,7 +14832,7 @@ For lCpt = lTotLig To 1 Step -1
 	If ( lVal = 0 Or IsNull ( lVal ) ) And Not IsNull ( dtVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Lorsque la date de fin de traitement (DTE_ENV_CLI) est renseign$$HEX1$$e900$$ENDHEX$$e, un statut GC est obligatoire.")
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Lorsque la date de fin de traitement (DTE_ENV_CLI) est renseignée, un statut GC est obligatoire.")
 	End If 
 	
 
@@ -14848,7 +14848,7 @@ For lCpt = lTotLig To 1 Step -1
 			CASE ELSE	
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le Destinataire de l'envoi doit $$HEX1$$ea00$$ENDHEX$$tre null ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$SPB ou CLIENT, mais pas " + sVal )
+				" : Le Destinataire de l'envoi doit être null ou égal à SPB ou CLIENT, mais pas " + sVal )
 		END CHOOSE
 
 	End If
@@ -14856,7 +14856,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 8 : NUM_BON_TRP 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 	
 	/*------------------------------------------------------------------*/
 	/* ZONE 9 : COD_ETAT_CMD														  */
@@ -14876,7 +14876,7 @@ For lCpt = lTotLig To 1 Step -1
 						If IsNull ( sVal)  Then
 							iRet = -1
 							This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-							" : (vDoc8945) Le code RPC avec un DEST_ENVOI=CLIENT impose la pr$$HEX1$$e900$$ENDHEX$$sent d'une DTE_ENV_CLI" )
+							" : (vDoc8945) Le code RPC avec un DEST_ENVOI=CLIENT impose la présent d'une DTE_ENV_CLI" )
 						End IF
 					End If
 				End If
@@ -14884,7 +14884,7 @@ For lCpt = lTotLig To 1 Step -1
 			CASE ELSE	
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le code $$HEX1$$e900$$ENDHEX$$tat doit $$HEX1$$ea00$$ENDHEX$$tre null ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$ANN ou RPC, mais pas " + sVal )
+				" : Le code état doit être null ou égal à ANN ou RPC, mais pas " + sVal )
 		END CHOOSE
 
 	End If
@@ -14892,7 +14892,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 7 : STATUS_GC														     */
 	/*------------------------------------------------------------------*/
-	// [O2M] : V$$HEX1$$e900$$ENDHEX$$rification de l'appartenance du code retourn$$HEX2$$e9002000$$ENDHEX$$au param$$HEX1$$e900$$ENDHEX$$trage.
+	// [O2M] : Vérification de l'appartenance du code retourné au paramétrage.
 
 	sVal = String ( idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) )
 	
@@ -14939,21 +14939,21 @@ For lCpt = lTotLig To 1 Step -1
 		If len ( Trim ( sVal ) ) <= 0 Or IsNull ( sVal ) Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si l'assur$$HEX2$$e9002000$$ENDHEX$$s'est rendu en point vente, il faut renseigner le nom point du vente (voir CDC)" )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si l'assuré s'est rendu en point vente, il faut renseigner le nom point du vente (voir CDC)" )
 		End If			
 		
 		sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "NUM_PDV", ";"))
 		If len ( Trim ( sVal ) ) <= 0 Or IsNull ( sVal ) Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si l'assur$$HEX2$$e9002000$$ENDHEX$$s'est rendu en point vente, il faut renseigner le num$$HEX1$$e900$$ENDHEX$$ro du point de vente (voir CDC)" )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si l'assuré s'est rendu en point vente, il faut renseigner le numéro du point de vente (voir CDC)" )
 		End If			
 	
 	End If 
 
-	// Contr$$HEX1$$f400$$ENDHEX$$le suppl$$HEX1$$e800$$ENDHEX$$mentaire vDoc7572
+	// Contrôle supplèmentaire vDoc7572
 	// [VDOC7572]	
-	// pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 2 mais avec une zone COMMENTAIRES vide = rejet. 
+	// présence d’un status_gc 2 mais avec une zone COMMENTAIRES vide = rejet. 
 	
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) ) )
@@ -14964,33 +14964,33 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( sVal ) Or sVal = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " doit obligatoirement $$HEX1$$ea00$$ENDHEX$$tre accompagn$$HEX2$$e9002000$$ENDHEX$$d'un commentaire." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " doit obligatoirement être accompagné d'un commentaire." )
 			End If
 			
 	End CHoose
 
 	
-	// pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 21 mais avec une zone COMMENTAIRES sans cl$$HEX2$$e9002000$$ENDHEX$$de type [BVIE], [BNV], etc. = rejet. 
+	// présence d’un status_gc 21 mais avec une zone COMMENTAIRES sans clé de type [BVIE], [BNV], etc. = rejet. 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemstring ( lCpt, "COMMENT_FRN" ) )
 	
 	If lVal = 21 And Not ( Pos ( sVal, "[") >0 And Pos ( sVal, "]") >0 ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : Le statut 21 doit obligatoirement $$HEX1$$ea00$$ENDHEX$$tre accompagn$$HEX2$$e9002000$$ENDHEX$$d'un mot cl$$HEX2$$e9002000$$ENDHEX$$entre crochet dans le commentaire" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : Le statut 21 doit obligatoirement être accompagné d'un mot clé entre crochet dans le commentaire" )
 	End If			
 	
-	// pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [BVIE], [BNV], etc. dans la zone COMMENTAIRES, mais sans status_gc = rejet. 
+	// présence d’une clé de type [BVIE], [BNV], etc. dans la zone COMMENTAIRES, mais sans status_gc = rejet. 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )
 	
 	If lVal = 0 And Pos ( sVal, "[") >0 And Pos ( sVal, "]") >0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : La pr$$HEX1$$e900$$ENDHEX$$sence d'un mot cl$$HEX2$$e9002000$$ENDHEX$$dans le commentaire doit $$HEX1$$ea00$$ENDHEX$$tre accompagn$$HEX2$$e9002000$$ENDHEX$$d'une statut" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : La présence d'un mot clé dans le commentaire doit être accompagné d'une statut" )
 	End If			
 
-	// pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une date de r$$HEX1$$e900$$ENDHEX$$ception par l$$HEX1$$1920$$ENDHEX$$assur$$HEX2$$e9002000$$ENDHEX$$(ou date de restitution en proximit$$HEX1$$e900$$ENDHEX$$) ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date de r$$HEX1$$e900$$ENDHEX$$ception initiale chez PSM = rejet. 
+	// présence d’une date de réception par l’assuré (ou date de restitution en proximité) antérieure à la date de réception initiale chez PSM = rejet. 
 	sVal = String ( Date ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_RCP_FRN" ) ) )
 	sVal1 = String ( Date ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_RCP_MOB_CLI" ) ) )
 
@@ -14998,30 +14998,30 @@ For lCpt = lTotLig To 1 Step -1
 		If Year ( Date (sVal )) < 2000 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") l'ann$$HEX1$$e900$$ENDHEX$$e de la date DTE_RCP_MOB_CLI n'est pas valide." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") l'année de la date DTE_RCP_MOB_CLI n'est pas valide." )
 		End If
 	End If
 	
 	If Not IsDate ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : La date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur est invalide" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : La date de réception fournisseur est invalide" )
 	End If			
 
 	If Not IsDate ( sVal1 ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : La date de r$$HEX1$$e900$$ENDHEX$$ception de l'appareil par l'assur$$HEX2$$e9002000$$ENDHEX$$est invalide" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : La date de réception de l'appareil par l'assuré est invalide" )
 	End If			
 	
 	If IsDate ( sVal1 ) And IsDate ( sVal1 ) And Date ( sVal1 ) < Date ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : La date de r$$HEX1$$e900$$ENDHEX$$ception de l'appareil par l'assur$$HEX2$$e9002000$$ENDHEX$$doit $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la date de r$$HEX1$$e900$$ENDHEX$$ception du mat$$HEX1$$e900$$ENDHEX$$riel sinistr$$HEX2$$e9002000$$ENDHEX$$par PSM" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : La date de réception de l'appareil par l'assuré doit être postérieure ou égale à la date de réception du matériel sinistré par PSM" )
 	End If			
 
-	// pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une date de r$$HEX1$$e900$$ENDHEX$$ception par l$$HEX1$$1920$$ENDHEX$$assur$$HEX2$$e9002000$$ENDHEX$$(ou date de restitution en proximit$$HEX1$$e900$$ENDHEX$$) 
-	// avec un status_gc 21 ET une cl$$HEX2$$e9002000$$ENDHEX$$[BVIE] ou [BVIEOX] = rejet. 
+	// présence d’une date de réception par l’assuré (ou date de restitution en proximité) 
+	// avec un status_gc 21 ET une clé [BVIE] ou [BVIEOX] = rejet. 
 	sVal1 = String ( Date ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_RCP_MOB_CLI" ) ) )
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )
@@ -15030,12 +15030,12 @@ For lCpt = lTotLig To 1 Step -1
 	If IsDate ( sVal1 ) And lVal = 21 And ( Pos ( sVal, "[BVIE]") >0 Or Pos (sVal,  "[BVID]" ) > 0 Or Pos (sVal,  "[BVIP]" ) > 0 Or Pos (sVal,  "[BVIT]" ) > 0 Or Pos ( sVal, "[PIE]") >0 Or Pos ( sVal, "[BVIEOX]") >0 ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : La pr$$HEX1$$e900$$ENDHEX$$sence d'une date r$$HEX1$$e900$$ENDHEX$$ception par l'assur$$HEX2$$e9002000$$ENDHEX$$avec une statut 21 et un des mots cl$$HEX2$$e9002000$$ENDHEX$$[BVIE]/[BVID]/[BVIP]/[BVIT] ou [BVIEOX] est incoh$$HEX1$$e900$$ENDHEX$$rent" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : La présence d'une date réception par l'assuré avec une statut 21 et un des mots clé [BVIE]/[BVID]/[BVIP]/[BVIT] ou [BVIEOX] est incohérent" )
 	End If			
 	
 
 	// [PM200][LOT2][DESOX]
-	//	pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 23 sans une cl$$HEX2$$e9002000$$ENDHEX$$de type [BNVSOX] OU [BVIEOX] Ou [BRIS] Ou  [SAV_NO_OK] Ou [OXY] = rejet
+	//	présence d’un status_gc 23 sans une clé de type [BNVSOX] OU [BVIEOX] Ou [BRIS] Ou  [SAV_NO_OK] Ou [OXY] = rejet
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )
 	
@@ -15048,10 +15048,10 @@ For lCpt = lTotLig To 1 Step -1
 		Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM200LOT2) : Le statut 23 doit obligatoirement avoir d'un mot cl$$HEX2$$e9002000$$ENDHEX$$dans le commentaire (conf$$HEX1$$e800$$ENDHEX$$re CDC)" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM200LOT2) : Le statut 23 doit obligatoirement avoir d'un mot clé dans le commentaire (confère CDC)" )
 	End If			
 
-	// pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 23 avec tout autre cl$$HEX2$$e9002000$$ENDHEX$$diff$$HEX1$$e900$$ENDHEX$$rente de [BNVSOX] OU [BVIEOX] Ou [BRIS] Ou  [SAV_NO_OK] Ou [OXY] = rejet
+	// présence d’un status_gc 23 avec tout autre clé différente de [BNVSOX] OU [BVIEOX] Ou [BRIS] Ou  [SAV_NO_OK] Ou [OXY] = rejet
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )
 	sVal = F_REMPLACE ( sVal, "[BNVSOX]", "" )
@@ -15063,10 +15063,10 @@ For lCpt = lTotLig To 1 Step -1
 	If lVal = 23 And Pos ( sVal, "[") > 0 And Pos ( sVal, "]") > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM200LOT2) : Le statut 23 n'autorise pas ce mot cl$$HEX2$$e9002000$$ENDHEX$$dans le commentaire" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM200LOT2) : Le statut 23 n'autorise pas ce mot clé dans le commentaire" )
 	End If			
 
-	// pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 23 avec un bin$$HEX1$$f400$$ENDHEX$$me cl$$HEX1$$e900$$ENDHEX$$/valeur PRESENCE_OX=OUI ET la cl$$HEX2$$e9002000$$ENDHEX$$de type [BNVSOX] = rejet
+	// présence d’un status_gc 23 avec un binôme clé/valeur PRESENCE_OX=OUI ET la clé de type [BNVSOX] = rejet
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )
 	sVal1 = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "PRESENCE_OX", ";"))
@@ -15074,12 +15074,12 @@ For lCpt = lTotLig To 1 Step -1
 	If lVal = 23 And Upper ( sVal1 ) = "OUI" And Pos ( sVal, "[BNVSOX]") > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM200LOT2) : Le Trin$$HEX1$$f400$$ENDHEX$$me Statut $$HEX2$$e0002000$$ENDHEX$$23 ET Presence_OX $$HEX2$$e0002000$$ENDHEX$$OUI ET Cl$$HEX2$$e9002000$$ENDHEX$$commentaire [BNVSOX] est incoh$$HEX1$$e900$$ENDHEX$$rent" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM200LOT2) : Le Trinôme Statut à 23 ET Presence_OX à OUI ET Clé commentaire [BNVSOX] est incohérent" )
 	End If			
 
 	// [VDOC9142]
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur la r$$HEX1$$e900$$ENDHEX$$paration, rejet du fichier si : 
-	// -   en retour $$HEX2$$e0002000$$ENDHEX$$une commande avec ACTION = A_REPARER, cl$$HEX2$$e9002000$$ENDHEX$$de type [OXY], [BRIS], ou [BNVSOX] dans la zone COMMENTAIRES 
+	// Règles de cohérence à respecter sur la réparation, rejet du fichier si : 
+	// -   en retour à une commande avec ACTION = A_REPARER, clé de type [OXY], [BRIS], ou [BNVSOX] dans la zone COMMENTAIRES 
 	// [PM222-1]
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )
 	If ( Pos ( sVal, "[OXY]" ) > 0 Or Pos ( sVal,"[BRIS]"  ) > 0 Or Pos ( sVal, "[BNVSOX]" ) > 0 ) &
@@ -15089,11 +15089,11 @@ For lCpt = lTotLig To 1 Step -1
 											Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/REPARATION) : Retour $$HEX2$$e0002000$$ENDHEX$$une presta ACTION=A_REPARER ou A_REPARER_FORCE avec cl$$HEX2$$e9002000$$ENDHEX$$d$$HEX1$$e900$$ENDHEX$$di$$HEX1$$e900$$ENDHEX$$e SAV de type [OXY], [BRIS], ou [BNVSOX] dans la zone COMMENTAIRES, interdit" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/REPARATION) : Retour à une presta ACTION=A_REPARER ou A_REPARER_FORCE avec clé dédiée SAV de type [OXY], [BRIS], ou [BNVSOX] dans la zone COMMENTAIRES, interdit" )
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur la r$$HEX1$$e900$$ENDHEX$$paration, rejet du fichier si : 
-	// -   pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 21 sans une cl$$HEX2$$e9002000$$ENDHEX$$de type [BVIE], ou [BVIEOX], ou [BNV] dans la zone COMMENTAIRES 
+	// Règles de cohérence à respecter sur la réparation, rejet du fichier si : 
+	// -   présence d’un status_gc 21 sans une clé de type [BVIE], ou [BVIEOX], ou [BNV] dans la zone COMMENTAIRES 
 	// Ajout [PNC] [PC877]
 	// [VDOC27123]BVID/BVIP/BVIT
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
@@ -15111,11 +15111,11 @@ For lCpt = lTotLig To 1 Step -1
 															Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/REPARATION) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 21 sans une cl$$HEX2$$e9002000$$ENDHEX$$de type [PNC], ou [BVIE], ou [BVIEOX], ou [BNV] dans la zone COMMENTAIRES, interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/REPARATION) : présence d’un status_gc 21 sans une clé de type [PNC], ou [BVIE], ou [BVIEOX], ou [BNV] dans la zone COMMENTAIRES, interdit " )
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur la r$$HEX1$$e900$$ENDHEX$$paration, rejet du fichier si : 
-	// -   pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 155 utilis$$HEX1$$e900$$ENDHEX$$e en r$$HEX1$$e900$$ENDHEX$$ponse $$HEX2$$e0002000$$ENDHEX$$une action A_REPARER ou A_REPARER_FORCE ou A_REPARER_SAV 
+	// Règles de cohérence à respecter sur la réparation, rejet du fichier si : 
+	// -   présence d’un status_gc 155 utilisée en réponse à une action A_REPARER ou A_REPARER_FORCE ou A_REPARER_SAV 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	If lVal = 155 And ( sIdRefFour = "A_REPARER" Or &
 							  sIdRefFour = "A_REPARER_FORCE" Or &
@@ -15124,21 +15124,21 @@ For lCpt = lTotLig To 1 Step -1
 							  ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/REPARATION) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 155 utilis$$HEX1$$e900$$ENDHEX$$e en r$$HEX1$$e900$$ENDHEX$$ponse $$HEX2$$e0002000$$ENDHEX$$une action A_REPARER ou A_REPARER_FORCE ou A_REPARER_SAV, interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/REPARATION) : présence d’un status_gc 155 utilisée en réponse à une action A_REPARER ou A_REPARER_FORCE ou A_REPARER_SAV, interdit " )
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur la r$$HEX1$$e900$$ENDHEX$$paration, rejet du fichier si : 
-	// -  pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] avec un status_gc diff$$HEX1$$e900$$ENDHEX$$rent de 21 
+	// Règles de cohérence à respecter sur la réparation, rejet du fichier si : 
+	// -  présence d’une clé de type [SAV_NO_OK] avec un status_gc différent de 21 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )		
 	If sIdRefFour = "A_REPARER" And lVal <> 21 And Pos ( sVal, "[SAV_NO_OK]" ) > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/REPARATION) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] avec un status_gc diff$$HEX1$$e900$$ENDHEX$$rent de 21, interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/REPARATION) : présence d’une clé de type [SAV_NO_OK] avec un status_gc différent de 21, interdit " )
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur la r$$HEX1$$e900$$ENDHEX$$paration, rejet du fichier si : 
-	// -   pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] dans un retour sur une commande avec action = A_REPARER ou A_REPARER_FORCE 
+	// Règles de cohérence à respecter sur la réparation, rejet du fichier si : 
+	// -   présence d’une clé de type [SAV_NO_OK] dans un retour sur une commande avec action = A_REPARER ou A_REPARER_FORCE 
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )		
 	If Pos ( sVal, "[SAV_NO_OK]" ) > 0 And ( sIdRefFour = "A_REPARER" Or sIdRefFour = "A_REPARER_FORCE" ) &
 												  And lnvPFCString.of_Getkeyvalue ( sInfoSpbFrnCplt , "A_REPARER_SAV", ";") <> "OUI" &
@@ -15146,11 +15146,11 @@ For lCpt = lTotLig To 1 Step -1
 	Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/REPARATION) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] dans un retour sur une commande sans demande de SAV (donc n$$HEX1$$1920$$ENDHEX$$impliquant pas d$$HEX1$$1920$$ENDHEX$$action = A_REPARER_SAV ou A_CONTROLER_SAV), interdit" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/REPARATION) : présence d’une clé de type [SAV_NO_OK] dans un retour sur une commande sans demande de SAV (donc n’impliquant pas d’action = A_REPARER_SAV ou A_CONTROLER_SAV), interdit" )
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur la d$$HEX1$$e900$$ENDHEX$$soxydation, rejet du fichier si : 
-	// -   en retour $$HEX2$$e0002000$$ENDHEX$$une commande avec ACTION = A_DESOXYDER, cl$$HEX2$$e9002000$$ENDHEX$$de type [OXY], [BRIS], ou [BNV] dans la zone COMMENTAIRES 
+	// Règles de cohérence à respecter sur la désoxydation, rejet du fichier si : 
+	// -   en retour à une commande avec ACTION = A_DESOXYDER, clé de type [OXY], [BRIS], ou [BNV] dans la zone COMMENTAIRES 
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )
 	If ( Pos (sVal, "[OXY]" ) > 0 Or Pos ( sVal, "[BRIS]" ) > 0 Or Pos ( sVal, "[BNV]" ) > 0 ) &
 											And ( sIdRefFour = "A_DESOXYDER" Or sIdRefFour = "A_DESOXYDER_FORCE" ) &
@@ -15160,11 +15160,11 @@ For lCpt = lTotLig To 1 Step -1
 											Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/DESOXYDATION) : Retour $$HEX2$$e0002000$$ENDHEX$$une presta ACTION=A_DESOXYDER ou A_DESOXYDER_FORCE avec cl$$HEX2$$e9002000$$ENDHEX$$d$$HEX1$$e900$$ENDHEX$$di$$HEX1$$e900$$ENDHEX$$e SAV de type [OXY], [BRIS], ou [BNV] dans la zone COMMENTAIRES, interdit" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/DESOXYDATION) : Retour à une presta ACTION=A_DESOXYDER ou A_DESOXYDER_FORCE avec clé dédiée SAV de type [OXY], [BRIS], ou [BNV] dans la zone COMMENTAIRES, interdit" )
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur la d$$HEX1$$e900$$ENDHEX$$soxydation, rejet du fichier si : 
-	// -   pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 23 sans une cl$$HEX2$$e9002000$$ENDHEX$$de type [BVIEOX], ou [BNVSOX] dans la zone COMMENTAIRES 
+	// Règles de cohérence à respecter sur la désoxydation, rejet du fichier si : 
+	// -   présence d’un status_gc 23 sans une clé de type [BVIEOX], ou [BNVSOX] dans la zone COMMENTAIRES 
 	// [VDOC11296] ajout => And Pos ( sVal, "[BRIS]") <= 0 &
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )
@@ -15176,11 +15176,11 @@ For lCpt = lTotLig To 1 Step -1
 															  Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/DESOXYDATION) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 23 sans une cl$$HEX2$$e9002000$$ENDHEX$$de type [BVIEOX], ou [BNVSOX] dans la zone COMMENTAIRES, interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/DESOXYDATION) : présence d’un status_gc 23 sans une clé de type [BVIEOX], ou [BNVSOX] dans la zone COMMENTAIRES, interdit " )
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur la d$$HEX1$$e900$$ENDHEX$$soxydation, rejet du fichier si : 
-	// -   pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 155 utilis$$HEX1$$e900$$ENDHEX$$e en r$$HEX1$$e900$$ENDHEX$$ponse $$HEX2$$e0002000$$ENDHEX$$une action A_DESOXYDER ou A_DESOXYDER_FORCE ou A_DESOXYDER_SAV 
+	// Règles de cohérence à respecter sur la désoxydation, rejet du fichier si : 
+	// -   présence d’un status_gc 155 utilisée en réponse à une action A_DESOXYDER ou A_DESOXYDER_FORCE ou A_DESOXYDER_SAV 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	If lVal = 155 And ( sIdRefFour = "A_DESOXYDER" Or &
 							  sIdRefFour = "A_DESOXYDER_FORCE" Or &
@@ -15188,21 +15188,21 @@ For lCpt = lTotLig To 1 Step -1
 							  ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/DESOXYDATION) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 155 utilis$$HEX1$$e900$$ENDHEX$$e en r$$HEX1$$e900$$ENDHEX$$ponse $$HEX2$$e0002000$$ENDHEX$$une action A_DESOXYDER ou A_DESOXYDER_FORCE ou A_DESOXYDER_SAV, interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/DESOXYDATION) : présence d’un status_gc 155 utilisée en réponse à une action A_DESOXYDER ou A_DESOXYDER_FORCE ou A_DESOXYDER_SAV, interdit " )
 	End IF 		
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur la d$$HEX1$$e900$$ENDHEX$$soxydation, rejet du fichier si : 
-	// -   pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] avec un status_gc diff$$HEX1$$e900$$ENDHEX$$rent de 23 
+	// Règles de cohérence à respecter sur la désoxydation, rejet du fichier si : 
+	// -   présence d’une clé de type [SAV_NO_OK] avec un status_gc différent de 23 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )		
 	If sIdRefFour = "A_DESOXYDER" And lVal <> 23 And Pos ( sVal, "[SAV_NO_OK]" ) > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/DESOXYDATION) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] avec un status_gc diff$$HEX1$$e900$$ENDHEX$$rent de 23, interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/DESOXYDATION) : présence d’une clé de type [SAV_NO_OK] avec un status_gc différent de 23, interdit " )
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur la d$$HEX1$$e900$$ENDHEX$$soxydation, rejet du fichier si : 
-	//- pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] dans un retour sur une commande avec action = A_DESOXYDER ou A_DESOXYDER_FORCE 
+	// Règles de cohérence à respecter sur la désoxydation, rejet du fichier si : 
+	//- présence d’une clé de type [SAV_NO_OK] dans un retour sur une commande avec action = A_DESOXYDER ou A_DESOXYDER_FORCE 
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )		
 	If Pos (sVal,  "[SAV_NO_OK]" ) > 0 And ( sIdRefFour = "A_DESOXYDER" Or sIdRefFour = "A_DESOXYDER_FORCE" ) &
 												  And lnvPFCString.of_Getkeyvalue ( sInfoSpbFrnCplt , "A_DESOXYDER_SAV", ";") <> "OUI" & 
@@ -15211,32 +15211,32 @@ For lCpt = lTotLig To 1 Step -1
 												  Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/DESOXYDATION) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] dans un retour sur une commande sans demande de SAV (donc n$$HEX1$$1920$$ENDHEX$$impliquant pas d$$HEX1$$1920$$ENDHEX$$action = A_DESOXYDER_SAV), interdit" )			
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/DESOXYDATION) : présence d’une clé de type [SAV_NO_OK] dans un retour sur une commande sans demande de SAV (donc n’impliquant pas d’action = A_DESOXYDER_SAV), interdit" )			
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur les deux process, rejet du fichier si :
-	// -   pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un COD_ETAT_CMD $$HEX2$$e0002000$$ENDHEX$$RPC et d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [BVIE], ou [BVIEOX], ou [BNV], ou [BNVSOX], dans la zone COMMENTAIRES		
+	// Règles de cohérence à respecter sur les deux process, rejet du fichier si :
+	// -   présence d’un COD_ETAT_CMD à RPC et d’une clé de type [BVIE], ou [BVIEOX], ou [BNV], ou [BNVSOX], dans la zone COMMENTAIRES		
 	// [VDOC27123]BVID/BVIP/BVIT	
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )		
 	sVal1 = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "COD_ETAT_CMD" ) ) ) 
 	If sVal1 = "RPC" And ( Pos ( sVal, "[BVIEOX]" ) > 0 Or Pos ( sVal, "[BVIE]" ) > 0 Or Pos (sVal,  "[BVID]" ) > 0 Or Pos (sVal,  "[BVIP]" ) > 0 Or Pos (sVal,  "[BVIT]" ) > 0 Or Pos ( sVal, "[PIE]" ) > 0 Or Pos ( sVal, "[BNV]" ) > 0 Or Pos ( sVal, "[BNVSOX]" ) > 0) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un COD_ETAT_CMD $$HEX2$$e0002000$$ENDHEX$$RPC et d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [BVIE]/[BVID]/[BVIP]/[BVIT], ou [PIE] ou [BVIEOX], ou [BNV], ou [BNVSOX], dans la zone COMMENTAIRES, interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT) : présence d’un COD_ETAT_CMD à RPC et d’une clé de type [BVIE]/[BVID]/[BVIP]/[BVIT], ou [PIE] ou [BVIEOX], ou [BNV], ou [BNVSOX], dans la zone COMMENTAIRES, interdit " )
 	End IF 
 	
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur les deux process, rejet du fichier si :
-	// - pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un COD_ETAT_CMD $$HEX2$$e0002000$$ENDHEX$$RPC sans date indiqu$$HEX1$$e900$$ENDHEX$$e dans la zone DTE_ENV_CLI 
+	// Règles de cohérence à respecter sur les deux process, rejet du fichier si :
+	// - présence d’un COD_ETAT_CMD à RPC sans date indiquée dans la zone DTE_ENV_CLI 
 	sVal = String ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_ENV_CLI" ) )  
 	sVal1 = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "COD_ETAT_CMD" ) ) ) 
 	If sVal1 = "RPC" And isNull( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un COD_ETAT_CMD $$HEX2$$e0002000$$ENDHEX$$RPC sans date indiqu$$HEX1$$e900$$ENDHEX$$e dans la zone DTE_ENV_CLI, interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT) : présence d’un COD_ETAT_CMD à RPC sans date indiquée dans la zone DTE_ENV_CLI, interdit " )
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur les deux process, rejet du fichier si :
-	// -   absence d$$HEX1$$1920$$ENDHEX$$une information dans la zone NUM_BON_TRP et pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une date dans la zone DTE_ENV_CLI et pr$$HEX1$$e900$$ENDHEX$$sence du BCV ASSURE_ENVOIE_S=OUI dans la zone INFO_FRN_SPB_CPLT.
+	// Règles de cohérence à respecter sur les deux process, rejet du fichier si :
+	// -   absence d’une information dans la zone NUM_BON_TRP et présence d’une date dans la zone DTE_ENV_CLI et présence du BCV ASSURE_ENVOIE_S=OUI dans la zone INFO_FRN_SPB_CPLT.
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = idwFicFourn.GetItemString ( lCpt, "NUM_BON_TRP" ) 
 	sVal1 = String ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_ENV_CLI" ) )  		
@@ -15246,12 +15246,12 @@ For lCpt = lTotLig To 1 Step -1
 			If ( IsNull ( sVal ) Or Trim ( sVal ) = "" ) And (not isnull ( sVal1 )) And lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ASSURE_ENVOIE_COLIS", ";") = "OUI" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT) : absence d$$HEX1$$1920$$ENDHEX$$une information dans la zone NUM_BON_TRP et pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une date dans la zone DTE_ENV_CLI et pr$$HEX1$$e900$$ENDHEX$$sence du BCV ASSURE_ENVOIE_COLIS=OUI dans la zone INFO_FRN_SPB_CPLT, interdit " )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT) : absence d’une information dans la zone NUM_BON_TRP et présence d’une date dans la zone DTE_ENV_CLI et présence du BCV ASSURE_ENVOIE_COLIS=OUI dans la zone INFO_FRN_SPB_CPLT, interdit " )
 			End IF 
 	End Choose 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur les deux process, rejet du fichier si :		
-	// -   pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une date dans la zone DTE_RCP_FRN, et Absence d$$HEX1$$1920$$ENDHEX$$un BCV ASSURE_ENVOIE_COLIS=OUI ou d$$HEX1$$1920$$ENDHEX$$un BCV NUM_PDV=XX (o$$HEX2$$f9002000$$ENDHEX$$XX est le n$$HEX2$$b0002000$$ENDHEX$$du point de vente PSM) dans la zone INFO_FRN_SPB_CPLT 
+	// Règles de cohérence à respecter sur les deux process, rejet du fichier si :		
+	// -   présence d’une date dans la zone DTE_RCP_FRN, et Absence d’un BCV ASSURE_ENVOIE_COLIS=OUI ou d’un BCV NUM_PDV=XX (où XX est le n° du point de vente PSM) dans la zone INFO_FRN_SPB_CPLT 
 	sVal = String ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_RCP_FRN" ) ) 
 	
 	If (not isnull ( sVal )) And lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "INTER_A_DOMICILE", ";") <> "OUI" And &
@@ -15259,17 +15259,17 @@ For lCpt = lTotLig To 1 Step -1
 									 Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "NUM_PDV", ";")) = ""  Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une date dans la zone DTE_RCP_FRN, et Absence d$$HEX1$$1920$$ENDHEX$$un BCV ASSURE_ENVOIE_COLIS=OUI ou d$$HEX1$$1920$$ENDHEX$$un BCV NUM_PDV=XX (o$$HEX2$$f9002000$$ENDHEX$$XX est le n$$HEX2$$b0002000$$ENDHEX$$du point de vente PSM) dans la zone INFO_FRN_SPB_CPLT, interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT) : présence d’une date dans la zone DTE_RCP_FRN, et Absence d’un BCV ASSURE_ENVOIE_COLIS=OUI ou d’un BCV NUM_PDV=XX (où XX est le n° du point de vente PSM) dans la zone INFO_FRN_SPB_CPLT, interdit " )
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur les deux process, rejet du fichier si :		
-	// -   pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 153 ou 154 avec un COD_ETAT_CMD $$HEX2$$e0002000$$ENDHEX$$RPC 
+	// Règles de cohérence à respecter sur les deux process, rejet du fichier si :		
+	// -   présence d’un status_gc 153 ou 154 avec un COD_ETAT_CMD à RPC 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal1 = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "COD_ETAT_CMD" ) ) ) 
 	If ( lVal = 153 Or lVal = 154 ) And sVal1 = "RPC" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 153 ou 154 avec un COD_ETAT_CMD $$HEX2$$e0002000$$ENDHEX$$RPC, interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT) : présence d’un status_gc 153 ou 154 avec un COD_ETAT_CMD à RPC, interdit " )
 	End IF 
 	// :[VDOC9142]
 
@@ -15279,7 +15279,7 @@ For lCpt = lTotLig To 1 Step -1
 	If Not IsNull ( dtVal ) And Not IsNull ( dtVal1 ) And dtVal1 < dtVal Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la DTE_RCP_FRN." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit être postérieure ou égale à la DTE_RCP_FRN." )
 	End If
 	// [VDOC9337]	
 	
@@ -15299,7 +15299,7 @@ For lCpt = lTotLig To 1 Step -1
 		Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM254) : le mot cl$$HEX2$$e9002000$$ENDHEX$$[SWAP] ne peut $$HEX1$$ea00$$ENDHEX$$tre plac$$HEX2$$e9002000$$ENDHEX$$que sur un irr$$HEX1$$e900$$ENDHEX$$parable 21/23 avec un mot cl$$HEX2$$e9002000$$ENDHEX$$[BVIE]/[BVID]/[BVIP]/[BVIT]/[BVIEOX] ou [PIE]." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM254) : le mot clé [SWAP] ne peut être placé que sur un irréparable 21/23 avec un mot clé [BVIE]/[BVID]/[BVIP]/[BVIT]/[BVIEOX] ou [PIE]." )
 	End If 
 	// [PM254_V1]
 
@@ -15313,7 +15313,7 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$pour le produit " + string ( dcIdProd ) + "." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " n'est pas autorisé pour le produit " + string ( dcIdProd ) + "." )
 		End Choose 
 	End If			
 	
@@ -15323,19 +15323,19 @@ For lCpt = lTotLig To 1 Step -1
 	If  Trim ( lnvPFCString.of_Getkeyvalue ( sInfoSpbFrnCplt, "A_CONTROLER_SAV", ";")) ="OUI" and lVal <> 21 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Seul le retour 21 est autoris$$HEX2$$e9002000$$ENDHEX$$pour une prestation de type A_CONTROLER_SAV." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Seul le retour 21 est autorisé pour une prestation de type A_CONTROLER_SAV." )
 	End if
 	// :[PM222-1]
 
 	
 	// [PM295-1]
-	/* Annul$$HEX2$$e9002000$$ENDHEX$$par Marion
+	/* Annulé par Marion
 	If F_C_L_E_A_TRUE ( "PM295-1" ) Then
 		If lnvPFCString.of_getkeyvalue (sChaineBCV, "CHGT_CARTE_MERE", ";") <> "OUI" And &
 			Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "CHGT_CM", ";")) ="OUI" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM295-1/M.DESCHAMPS) : Le code produit sinistre li$$HEX4$$e9002000e0002000$$ENDHEX$$ce dossier n'est pas $$HEX1$$e900$$ENDHEX$$ligible $$HEX2$$e0002000$$ENDHEX$$un changement de carte m$$HEX1$$e800$$ENDHEX$$re." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM295-1/M.DESCHAMPS) : Le code produit sinistre lié à ce dossier n'est pas éligible à un changement de carte mère." )
 		End If
 
 		lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )		
@@ -15349,7 +15349,7 @@ For lCpt = lTotLig To 1 Step -1
 					
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM295-1/M.DESCHAMPS) : Retour 2 et 21 interdits sur les actions de d$$HEX1$$e900$$ENDHEX$$soxydation sur les codes produits sinistres $$HEX1$$e900$$ENDHEX$$ligibles au PM295-1" )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM295-1/M.DESCHAMPS) : Retour 2 et 21 interdits sur les actions de désoxydation sur les codes produits sinistres éligibles au PM295-1" )
 					End If
 			End Choose
 		End If
@@ -15364,7 +15364,7 @@ For lCpt = lTotLig To 1 Step -1
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM295-1/M.DESCHAMPS) : Sur le retour 22, pour les codes produits sinistres $$HEX1$$e900$$ENDHEX$$ligibles au PM295-1, une valeur OUI ou NON est obligatoire sur le BCV CHGT_CM" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM295-1/M.DESCHAMPS) : Sur le retour 22, pour les codes produits sinistres éligibles au PM295-1, une valeur OUI ou NON est obligatoire sur le BCV CHGT_CM" )
 
 			End Choose
 		End If
@@ -15375,7 +15375,7 @@ For lCpt = lTotLig To 1 Step -1
 			If lVal = 305 And lnvPFCString.of_getkeyvalue (sChaineBCV, "GESTION_GEOLOCALISATION", ";") <> "OUI" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le produit " + String ( dcIdprod ) + " n'est pas $$HEX1$$e900$$ENDHEX$$ligible au projet DT150 g$$HEX1$$e900$$ENDHEX$$rant la g$$HEX1$$e900$$ENDHEX$$olocalisation. Si ce projet doit rentrer dans ce p$$HEX1$$e900$$ENDHEX$$rim$$HEX1$$e800$$ENDHEX$$tre, voir avec DPG pour ajouter le produit, sinon transmettre l'information au fournisseur que ce produit est interdit pour ce code retour." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le produit " + String ( dcIdprod ) + " n'est pas éligible au projet DT150 gérant la géolocalisation. Si ce projet doit rentrer dans ce périmètre, voir avec DPG pour ajouter le produit, sinon transmettre l'information au fournisseur que ce produit est interdit pour ce code retour." )
 			End If
 			
 			lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )				
@@ -15396,7 +15396,7 @@ For lCpt = lTotLig To 1 Step -1
 	If lVal = 311 And iStatusGc <> 308 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le statut retour 311 n'est autoris$$HEX2$$e9002000$$ENDHEX$$que si le dernier statut envoy$$HEX2$$e9002000$$ENDHEX$$par le fournisseur est 308, voir livraison PM287-3." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le statut retour 311 n'est autorisé que si le dernier statut envoyé par le fournisseur est 308, voir livraison PM287-3." )
 	End If
 	
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
@@ -15404,7 +15404,7 @@ For lCpt = lTotLig To 1 Step -1
 	If lVal = 308 And lVal1 <= 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le statut retour 308 vous oblige $$HEX2$$e0002000$$ENDHEX$$renseigner le bcv IFDNMQ_RET (InFos DoNn$$HEX1$$e900$$ENDHEX$$es ManQuante RETour) avec un codage particulier, voir livraison PM287-3." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le statut retour 308 vous oblige à renseigner le bcv IFDNMQ_RET (InFos DoNnées ManQuante RETour) avec un codage particulier, voir livraison PM287-3." )
 	End If
 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
@@ -15412,7 +15412,7 @@ For lCpt = lTotLig To 1 Step -1
 	If lVal <> 308 And lVal1 > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + String ( lVal ) + " interdit la pr$$HEX1$$e900$$ENDHEX$$sence du bcv IFDNMQ_RET (InFos DoNn$$HEX1$$e900$$ENDHEX$$es ManQuante RETour) dans la zone s$$HEX1$$e900$$ENDHEX$$rialis$$HEX1$$e900$$ENDHEX$$e, voir livraison PM287-3." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + String ( lVal ) + " interdit la présence du bcv IFDNMQ_RET (InFos DoNnées ManQuante RETour) dans la zone sérialisée, voir livraison PM287-3." )
 	End If
 
 
@@ -15430,7 +15430,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Pos ( sVal2, "#" + sTabVal [lCptVal] + "#" ) <= 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La valeur #" + sTabVal [lCptVal] + "# n'est pas autoris$$HEX1$$e900$$ENDHEX$$e dans le BCV IFDNMQ_RET pour le statut 308, voir livraison PM287-3." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La valeur #" + sTabVal [lCptVal] + "# n'est pas autorisée dans le BCV IFDNMQ_RET pour le statut 308, voir livraison PM287-3." )
 			End If
 
 			If iRet > 0  Then
@@ -15452,7 +15452,7 @@ For lCpt = lTotLig To 1 Step -1
 				Case 2
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") R$$HEX1$$e900$$ENDHEX$$paration interdite sur ce type de prestation, il faut r$$HEX1$$e900$$ENDHEX$$pondre 21 Irr$$HEX1$$e900$$ENDHEX$$parable dans tous les cas et qualifier l'irr$$HEX1$$e900$$ENDHEX$$parabilit$$HEX2$$e9002000$$ENDHEX$$dans le commentaire par un mot cl$$HEX1$$e900$$ENDHEX$$." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Réparation interdite sur ce type de prestation, il faut répondre 21 Irréparable dans tous les cas et qualifier l'irréparabilité dans le commentaire par un mot clé." )
 			End Choose 
 	End if
 
@@ -15473,7 +15473,7 @@ For lCpt = lTotLig To 1 Step -1
 			) Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Le SWAP PSM n'est autoris$$HEX2$$e9002000$$ENDHEX$$que sur un irr$$HEX1$$e900$$ENDHEX$$parable 21/23 avec un mot cl$$HEX2$$e9002000$$ENDHEX$$[BVIE]/[BVID]/[BVIP]/[BVIT]//[BVIEOX] ou [PIE]." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Le SWAP PSM n'est autorisé que sur un irréparable 21/23 avec un mot clé [BVIE]/[BVID]/[BVIP]/[BVIT]//[BVIEOX] ou [PIE]." )
 		End If 				
 			
 		If iRet > 0 Then
@@ -15481,51 +15481,51 @@ For lCpt = lTotLig To 1 Step -1
 			If Trim ( sVal ) = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Sur un SWAP PSM le BCV MARQSW doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e avec la marque IFR du nouveau mat$$HEX1$$e900$$ENDHEX$$riel." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Sur un SWAP PSM le BCV MARQSW doit être renseignée avec la marque IFR du nouveau matériel." )
 			End If 	
 			
 			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "MODLSW", ";"))		
 			If Trim ( sVal ) = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Sur un SWAP PSM le BCV MODLSW doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$avec le mod$$HEX1$$e800$$ENDHEX$$le IFR du nouveau mat$$HEX1$$e900$$ENDHEX$$riel." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Sur un SWAP PSM le BCV MODLSW doit être renseigné avec le modèle IFR du nouveau matériel." )
 			End If 					
 
 			If iRet > 0 Then
 				Choose Case sIdTypArtSin
 					Case "TEL", "TPC"
-						// Autoris$$HEX1$$e900$$ENDHEX$$
+						// Autorisé
 					Case Else 
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Type d'appareil (" + sIdTypArt+ ") non autoris$$HEX2$$e9002000$$ENDHEX$$pour un SWAP PSM." )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Type d'appareil (" + sIdTypArt+ ") non autorisé pour un SWAP PSM." )
 				End Choose
 			End If
 		
-			// Controle binome marq/modl appartient $$HEX2$$e0002000$$ENDHEX$$IFR $$HEX2$$e0002000$$ENDHEX$$ajouter
+			// Controle binome marq/modl appartient à IFR à ajouter
 			If iRet > 0 Then
 				sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "MARQSW", ";"))
 				sVal1 = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "MODLSW", ";"))
 				If SQLCA.PS_S_VERIF_MARQ_MODL_IFR_V01 ( dcIdprod, sIdTypArtSin, sVal, sVal1 ) <= 0 Then
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Sur un SWAP PSM, pour ce dossier, la Marque et le Mod$$HEX1$$e800$$ENDHEX$$le du nouveau mat$$HEX1$$e900$$ENDHEX$$riel (" + sVal + " " + sVal1 + ") doivent appartenir au r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rentiel IFR." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Sur un SWAP PSM, pour ce dossier, la Marque et le Modèle du nouveau matériel (" + sVal + " " + sVal1 + ") doivent appartenir au référentiel IFR." )
 				End If
 			End If
 		
 
-			sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_IMEI_NOU" ) ) // Le ctrle de validit$$HEX2$$e9002000$$ENDHEX$$est faite plus haut
+			sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_IMEI_NOU" ) ) // Le ctrle de validité est faite plus haut
 			If Trim ( sVal ) = "" Or IsNull ( sVal )  Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Sur un SWAP PSM la zone NUM_IMEI_NOUV doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e par l'IMEI (ou num$$HEX1$$e900$$ENDHEX$$ro de s$$HEX1$$e900$$ENDHEX$$rie si Tablette) du nouveau mat$$HEX1$$e900$$ENDHEX$$riel." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Sur un SWAP PSM la zone NUM_IMEI_NOUV doit être renseignée par l'IMEI (ou numéro de série si Tablette) du nouveau matériel." )
 			End If 					
 
 			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "MTTTCSW", ";"))
 			If Trim ( sVal ) = "" Or Not IsNumber ( sVal ) Or Pos ( sVal, ",") > 0 Or Pos ( sVal, "E") > 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Sur un SWAP PSM le BCV MTTTCSW doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$avec le montant TTC de l'appareil de remplacement (avec un point en s$$HEX1$$e900$$ENDHEX$$parateur de d$$HEX1$$e900$$ENDHEX$$cimal)." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Sur un SWAP PSM le BCV MTTTCSW doit être renseigné avec le montant TTC de l'appareil de remplacement (avec un point en séparateur de décimal)." )
 			End If 
 
 			// [BUG_RST_PRIX_O2M]
@@ -15533,7 +15533,7 @@ For lCpt = lTotLig To 1 Step -1
 				If Long ( sVal) = 0 Then 
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Sur un SWAP PSM le BCV MTTTCSW doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$avec le montant TTC de l'appareil de remplacement (avec un montant positif)." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Sur un SWAP PSM le BCV MTTTCSW doit être renseigné avec le montant TTC de l'appareil de remplacement (avec un montant positif)." )
 				End if		
 			End If 
 
@@ -15556,7 +15556,7 @@ For lCpt = lTotLig To 1 Step -1
 			If ( IsNull ( sVal ) Or Trim ( sVal ) = "" ) And lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ASSURE_ENVOIE_COLIS", ";") = "OUI" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Sur un SWAP PSM en << Envoi colis >> Le num$$HEX1$$e900$$ENDHEX$$ro de bon transporteur est obligatoire." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Sur un SWAP PSM en << Envoi colis >> Le numéro de bon transporteur est obligatoire." )
 			End IF 
 
 		End If		
@@ -15574,7 +15574,7 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM383-1) : le bcv SOUS_GC=OUI n'est accept$$HEX2$$e9002000$$ENDHEX$$qu'avec les retours 2 (r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$) ou 22 (d$$HEX1$$e900$$ENDHEX$$soxyd$$HEX1$$e900$$ENDHEX$$)." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM383-1) : le bcv SOUS_GC=OUI n'est accepté qu'avec les retours 2 (réparé) ou 22 (désoxydé)." )
 		End Choose 
 	End If
 	// [PM383-1]
@@ -15605,7 +15605,7 @@ For lCpt = lTotLig To 1 Step -1
 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il manque dans le commentaire un des mots cl$$HEX1$$e900$$ENDHEX$$s obligatoire qualifiant l'irr$$HEX1$$e900$$ENDHEX$$parable." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il manque dans le commentaire un des mots clés obligatoire qualifiant l'irréparable." )
 
 	End If 
 
@@ -15619,7 +15619,7 @@ For lCpt = lTotLig To 1 Step -1
 			Case 155, 269 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " ne peut $$HEX1$$ea00$$ENDHEX$$tre renvoy$$HEX2$$e9002000$$ENDHEX$$que sur une prestation de type REFUSE_A_REEXP" )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " ne peut être renvoyé que sur une prestation de type REFUSE_A_REEXP" )
 		End Choose					
 	End If
 		
@@ -15642,7 +15642,7 @@ For lCpt = lTotLig To 1 Step -1
 	If sIdRefFour = "INFORMATION" And lVal <> 612 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") : un flux de type INFORMATION ne peut avoir pour r$$HEX1$$e900$$ENDHEX$$ponse qu'un statut 612" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") : un flux de type INFORMATION ne peut avoir pour réponse qu'un statut 612" )
 	End IF 
 
 	// [CTRLE_DATE_INTRG_FOU]
@@ -15679,7 +15679,7 @@ For lCpt = lTotLig To 1 Step -1
 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$PRBLE_LIVRAISON, n'est pas valide." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé PRBLE_LIVRAISON, n'est pas valide." )
 
 		End Choose 
 	End IF 
@@ -15690,7 +15690,7 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal = "OUI" And sVal1 = "OUI" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") incoh$$HEX1$$e900$$ENDHEX$$rence sur les cl$$HEX1$$e900$$ENDHEX$$s ASSURE_ENVOIE_COLIS/ASSURE_EN_PDV, l'assur$$HEX2$$e9002000$$ENDHEX$$ne peut pas avoir envoy$$HEX2$$e9002000$$ENDHEX$$son colis en centralisation ET s'$$HEX1$$ea00$$ENDHEX$$tre d$$HEX1$$e900$$ENDHEX$$plac$$HEX2$$e9002000$$ENDHEX$$en proximit$$HEX2$$e9002000$$ENDHEX$$pour le d$$HEX1$$e900$$ENDHEX$$poser." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") incohérence sur les clés ASSURE_ENVOIE_COLIS/ASSURE_EN_PDV, l'assuré ne peut pas avoir envoyé son colis en centralisation ET s'être déplacé en proximité pour le déposer." )
 	End If
 
 	// [DT398]
@@ -15698,13 +15698,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal1 = "OUI" And sVal2 = "OUI" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") incoh$$HEX1$$e900$$ENDHEX$$rence sur les cl$$HEX1$$e900$$ENDHEX$$s TCH_BPP/ASSURE_EN_PDV, l'assur$$HEX2$$e9002000$$ENDHEX$$ne peut pas avoir t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$charg$$HEX2$$e9002000$$ENDHEX$$un BPP ET s'$$HEX1$$ea00$$ENDHEX$$tre d$$HEX1$$e900$$ENDHEX$$plac$$HEX2$$e9002000$$ENDHEX$$en proximit$$HEX2$$e9002000$$ENDHEX$$pour d$$HEX1$$e900$$ENDHEX$$poser son colis." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") incohérence sur les clés TCH_BPP/ASSURE_EN_PDV, l'assuré ne peut pas avoir téléchargé un BPP ET s'être déplacé en proximité pour déposer son colis." )
 	End If
 	
 	If sVal <> "OUI" And sVal2 = "OUI" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") incoh$$HEX1$$e900$$ENDHEX$$rence sur les cl$$HEX1$$e900$$ENDHEX$$s TCH_BPP/ASSURE_ENVOIE_COLIS, Le t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$chargement du BPP ne peut $$HEX1$$ea00$$ENDHEX$$tre $$HEX2$$e0002000$$ENDHEX$$OUI que si l'assur$$HEX2$$e9002000$$ENDHEX$$a envoy$$HEX2$$e9002000$$ENDHEX$$son colis." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") incohérence sur les clés TCH_BPP/ASSURE_ENVOIE_COLIS, Le téléchargement du BPP ne peut être à OUI que si l'assuré a envoyé son colis." )
 	End If
 
 
@@ -15722,7 +15722,7 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( dtVal ) And sVal1 <> "" And sVal = "" And sIdRefFour <> "REFUSE_A_REEXP" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Un num$$HEX1$$e900$$ENDHEX$$ro de tracking ALLER doit $$HEX1$$ea00$$ENDHEX$$tre accompagn$$HEX2$$e9002000$$ENDHEX$$du bcv TYP_BA_ALLER." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Un numéro de tracking ALLER doit être accompagné du bcv TYP_BA_ALLER." )
 			End IF
 			
 			If sVal <> "" Then
@@ -15736,7 +15736,7 @@ For lCpt = lTotLig To 1 Step -1
 		
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$TYP_BA_ALLER, n'est pas valide." )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé TYP_BA_ALLER, n'est pas valide." )
 		
 				End Choose 
 			End If 
@@ -15771,26 +15771,26 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal1 = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le bcv PRBLE_LIVRAISON doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$." )
+				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le bcv PRBLE_LIVRAISON doit être renseigné." )
 			End If 
 			
 			If sVal3 = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le num$$HEX1$$e900$$ENDHEX$$ro de tracking (NUM_BON_TRP) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$." )
+				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le numéro de tracking (NUM_BON_TRP) doit être renseigné." )
 			End If 
 
 			If Not IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, la date de r$$HEX1$$e900$$ENDHEX$$ception ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e." )
+				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, la date de réception ne doit pas être renseignée." )
 			End If 
 			
 			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "APP_SWAP", ";"))		
 			If lVal <> 0 AND ( lVal <> 21 AND sVal <> "OUI" ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le statut ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$." )
+				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le statut ne doit pas être renseigné." )
 			End If 
 		End IF 		
 	End If	
@@ -15813,14 +15813,14 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$PEC_PRBLE_LIVRAISON, n'est pas valide." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé PEC_PRBLE_LIVRAISON, n'est pas valide." )
 
 		End Choose 
 		
 		If sVal1 = "" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la cl$$HEX2$$e9002000$$ENDHEX$$PEC_PRBLE_LIVRAISON n'est autoris$$HEX1$$e900$$ENDHEX$$e que si pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$demment il y a au un cl$$HEX2$$e9002000$$ENDHEX$$PRBLE_LIVRAISON, qui est justement absente." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la clé PEC_PRBLE_LIVRAISON n'est autorisée que si précédemment il y a au un clé PRBLE_LIVRAISON, qui est justement absente." )
 		End If 			
 	End If 
 	// Coder au dessus de cette ligne.
@@ -15837,7 +15837,7 @@ For lCpt = lTotLig To 1 Step -1
 	
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -15849,7 +15849,7 @@ private function integer uf_integration_fichier_psm (ref long alnblig, ref long 
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_PSM (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 13/02/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier de CORDON dans la base
+//* Libellé			: Intégration du fichier de CORDON dans la base
 //* Commentaires	: [PM200][PSM]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -15865,18 +15865,18 @@ private function integer uf_integration_fichier_psm (ref long alnblig, ref long 
 //* #2	 CAG	  23/09/2004  DCMP 040403 : ajout des colonnes dte_emis_devis et mt_devis
 //* #3	 MADM	  09/05/2006  DCMP 060356 : Rempl du frn AEVUM/AVM par CORDON/COR
 //* #4    JCA    09/06/2006  MAILPUSH
-//* #5    JFF    23/08/2006  Modif apport$$HEX1$$e900$$ENDHEX$$e suite probl$$HEX1$$e800$$ENDHEX$$me lenteur
+//* #5    JFF    23/08/2006  Modif apportée suite problème lenteur
 //* #6 	 PHG	 24/04/2008	  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
-//* #7    JFF    29/07/2009  [20090729111054510] Optimisation int$$HEX1$$e900$$ENDHEX$$gration (suppression Regl Auto)
-//* #8	FPI	10/12/2009	[SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
-//*       JFF    11/03/2011 [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+//* #7    JFF    29/07/2009  [20090729111054510] Optimisation intégration (suppression Regl Auto)
+//* #8	FPI	10/12/2009	[SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
+//*       JFF    11/03/2011 [ITSM62176] ajout du point de décimal
 //*       JFF   19/09/2011   [PM82][LOT1]
 //       JFF     17/04/2012   [PM200][LOT2][DESOX]
 //       JFF    26/11/2012  [PC877]
 //       JFF   07/05/2013 [PC938_ORANGE_V3]
 //       JFF   07/05/2013 [PC929-1]
 //       JFF   13/01/2014 [PM246]
-// 		FPI	21/07/2014 [PM250-1].FPI Correction r$$HEX1$$e900$$ENDHEX$$init de date avant lecture de la ligne
+// 		FPI	21/07/2014 [PM250-1].FPI Correction réinit de date avant lecture de la ligne
 //       JFF   18/08/2014 [PM254_V1]
 //       JFF   28/07/2015 [PM295-1]
 //       JFF   02/11/2016 [DT276]
@@ -15931,19 +15931,19 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
 	lIdSin = Long ( Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) )
 
-// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+// [ITSM62176] ajout du point de décimal
 	sSql += String ( lIdSin ) + "., "
 
 	/*------------------------------------------------------------------*/
@@ -16146,7 +16146,7 @@ For lCpt = 1 To lTotLig
 	sVal = "null"
 	sSql += sVal + ", "
 
-	// Pr$$HEX1$$e900$$ENDHEX$$paration zone INFO_FRN_SPB_CPLT 
+	// Préparation zone INFO_FRN_SPB_CPLT 
 	sVal = String ( idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) )
 	// [VDOC3290]
 	Choose Case sVal 
@@ -16169,7 +16169,7 @@ For lCpt = 1 To lTotLig
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 31 : INFO_FRN_SPB_CPLT ( zone multiple )[FNAC_PROD_ECH_TECH]*/
-	/* Une seule affectation $$HEX2$$e0002000$$ENDHEX$$sSql                                     */
+	/* Une seule affectation à sSql                                     */
 	/*------------------------------------------------------------------*/
 	sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ASSURE_EN_PDV", ";")
 	If Len ( Trim ( sVal ) ) > 0 Then
@@ -16261,7 +16261,7 @@ For lCpt = 1 To lTotLig
 	End If		
 
 	// [PM295-1]
-	/* Annul$$HEX2$$e9002000$$ENDHEX$$par Marion
+	/* Annulé par Marion
 	If F_C_L_E_A_TRUE ( "PM295-1" ) Then
 		sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "CHGT_CM", ";") 		
 		if Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
@@ -16356,7 +16356,7 @@ For lCpt = 1 To lTotLig
 			iRet = -1
 			alNbLigNonTraitee	++ // #5
 			F_commit ( SQLCA, False ) // #5
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/RECP_APP_EN_CTR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #5
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/RECP_APP_EN_CTR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #5
 			Continue // #5
 		End If
 	End If
@@ -16369,7 +16369,7 @@ For lCpt = 1 To lTotLig
 			iRet = -1
 			alNbLigNonTraitee	++ // #4
 			F_commit ( SQLCA, False ) // #4
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
 			Continue // #4
 		End If
 	End if 
@@ -16380,7 +16380,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/PS_S_MAILPUSH_ARR_PLATFORM, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/PS_S_MAILPUSH_ARR_PLATFORM, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 		Continue // #2
 	End If				
 	
@@ -16389,7 +16389,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/PS_S_MAILPUSH_DEP_CENTRDISTRIB, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/PS_S_MAILPUSH_DEP_CENTRDISTRIB, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 		Continue // #2
 	End If				
 	// [PM250-1]		
@@ -16414,7 +16414,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -16432,7 +16432,7 @@ For lCpt = 1 To lTotLig
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")				
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 		F_commit ( SQLCA, False )
 			
@@ -16452,7 +16452,7 @@ private function integer uf_ctrl_fichier_lbe ();//*-----------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_LBE (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 18/10/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PC884]
 //*
 //* Arguments		: 
@@ -16488,15 +16488,15 @@ For lCpt = 1 to lTotLig
 	
 	sNoCmdLu=sVal
 	
-	If sNoCmdLu="" And sNoCmdActuel="" Then Continue  // Le n$$HEX2$$b0002000$$ENDHEX$$commande n'est pas renseign$$HEX1$$e900$$ENDHEX$$
+	If sNoCmdLu="" And sNoCmdActuel="" Then Continue  // Le n° commande n'est pas renseigné
 	
 	If sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR commande " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -16504,12 +16504,12 @@ For lCpt = 1 to lTotLig
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR commande " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref. CMD." )
+				" : Le n° de commande SPB est erroné sur la partie Ref. CMD." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR commande " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref. CMD." )
+				" : Le n° de commande SPB est erroné sur la partie Ref. CMD." )
 			End If
 		End if
 		
@@ -16522,7 +16522,7 @@ For lCpt = 1 to lTotLig
 		If sNoCmdActuel="-" or sNoCmdActuel="" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR commande " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB n'est pas renseign$$HEX1$$e900$$ENDHEX$$." )
+				" : Le n° de commande SPB n'est pas renseigné." )
 			End if
 	End If
 
@@ -16566,7 +16566,7 @@ For lCpt = 1 to lTotLig
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -16578,7 +16578,7 @@ private function integer uf_integration_fichier_lbe (ref long alnblig, ref long 
 //* Fonction		: n_cst_int_fic_SuiviCmd::uf_Integration_Fichier_LBE (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 18/10/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier du LBE dans la base
+//* Libellé			: Intégration du fichier du LBE dans la base
 //* Commentaires	: [PC884]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -16592,6 +16592,7 @@ private function integer uf_integration_fichier_lbe (ref long alnblig, ref long 
 //* MAJ   PAR      Date	     Modification
 //       JFF   18/08/2014 [PM254_V1]
 // 		FPI	02/02/2015 [SUIVI_EDEL] Correction pour ne plus utiliser PS_U02_COMMANDE_EDEL
+//        JFF   05/08/2024  [MCO602_PNEU]
 //*-----------------------------------------------------------------
 
 Int iRet, iCptCarte, iCptCol
@@ -16630,7 +16631,7 @@ For lCpt = 1 To lTotLig
 		
 		if lCpt = 1 or sRefCmdPrec="" Then
 			alNbLigNonTraitee	++
-			This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+			This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 			Continue		
 		End if
 				
@@ -16648,17 +16649,23 @@ For lCpt = 1 To lTotLig
 		sRefCmdActu=sVal
 	End if
 	
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
 	lIdSin = Long ( Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) )
+
+	// [MCO602_PNEU]
+	// Cas des sinistre SAGA2, que je shunte, je ne les traite pas.
+	If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
+		If lIdSin <= 4000000 Then Continue
+	End If
 
 	sSql += String ( lIdSin ) + "., "
 
@@ -16928,7 +16935,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ 
 		F_commit ( SQLCA, False ) 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: " + sMesRetour  ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : " + sMesRetour  ) 
 		Continue 
 	End If
 
@@ -16952,7 +16959,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -16970,7 +16977,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -16989,8 +16996,8 @@ private subroutine uf_definir_codetat_psm (ref string asval, long alcpt, long al
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_PSM (PRIVATE)
 //* Auteur			: MADM
 //* Date				: 09/05/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	:  [DCMP060356]
 //*
 //* Arguments		: asVal		String		Ref
@@ -17031,29 +17038,29 @@ sChaineBCV = fill(" ", 255)
 asVal = Upper ( asVal ) 
 
 /*------------------------------------------------------------------*/
-/* !!!! Code $$HEX1$$e900$$ENDHEX$$tat Fix$$HEX1$$e900$$ENDHEX$$s !!!! 					     							  */
+/* !!!! Code état Fixés !!!! 					     							  */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
-/* Le code $$HEX1$$e900$$ENDHEX$$tat lu dans le fichier est ANNULEE PAR GESTIONNAIRE,    */
-/* on le laisse s'$$HEX1$$e900$$ENDHEX$$crire en base.                                   */
+/* Le code état lu dans le fichier est ANNULEE PAR GESTIONNAIRE,    */
+/* on le laisse s'écrire en base.                                   */
 /*------------------------------------------------------------------*/
 If asVal = "ANN" Then Return
 
 /*------------------------------------------------------------------*/
-/* Le code $$HEX1$$e900$$ENDHEX$$tat lu dans le fichier est RECU PAR LE CLIENT, on le    */
-/* s'$$HEX1$$e900$$ENDHEX$$crire en base.                                                */
+/* Le code état lu dans le fichier est RECU PAR LE CLIENT, on le    */
+/* s'écrire en base.                                                */
 /*------------------------------------------------------------------*/
 If asVal = "RPC" Then Return
 
 
 /*------------------------------------------------------------------*/
-/* !!!! Code $$HEX1$$e900$$ENDHEX$$tat D$$HEX1$$e900$$ENDHEX$$termin$$HEX1$$e900$$ENDHEX$$s en fonction des dates 					  */
+/* !!!! Code état Déterminés en fonction des dates 					  */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
 /* Si le CodEtat du fichier n'est pas un de ces deux codes, alors   */
-/* on va le d$$HEX1$$e900$$ENDHEX$$terminer $$HEX2$$e0002000$$ENDHEX$$partir des dates.                          */
+/* on va le déterminer à partir des dates.                          */
 /*------------------------------------------------------------------*/
 dtDteRcpFrn = idwFicFourn.GetItemDateTime ( alCpt, "DTE_RCP_FRN" ) 
 dtDteEnvCli = idwFicFourn.GetItemDateTime ( alCpt, "DTE_ENV_CLI" )
@@ -17071,7 +17078,7 @@ If Not IsNull ( dDteEnvCli ) Then
 
 	CHOOSE CASE sDestEnvoi	
 		CASE "SPB"
-			// Retourn$$HEX4$$e9002000e0002000$$ENDHEX$$la SPB par le fournisseur
+			// Retourné à la SPB par le fournisseur
 			asVal = "RSP"			
 
 		CASE ELSE
@@ -17079,7 +17086,7 @@ If Not IsNull ( dDteEnvCli ) Then
 			asVal = "ECL"			
 	END CHOOSE
 
-	// De plus si la dDteRcpFrn n'$$HEX1$$e900$$ENDHEX$$tait pas renseign$$HEX1$$e900$$ENDHEX$$
+	// De plus si la dDteRcpFrn n'était pas renseigné
 	//	On y met la dDteEnvCli
 	If IsNull ( dDteRcpFrn ) Then idwFicFourn.SetItem ( alCpt, "DTE_RCP_FRN", dDteEnvCli )
 
@@ -17121,7 +17128,7 @@ Choose Case lVal
 		
 End Choose
 
-// [VDOC21652] au moment de la d$$HEX1$$e900$$ENDHEX$$sact, remettre le 
+// [VDOC21652] au moment de la désact, remettre le 
 lVal = idwFicFourn.GetItemNumber ( alCpt, "STATUS_GC" ) 
 Choose Case lVal
 	Case 2, 21, 22, 23
@@ -17136,7 +17143,7 @@ private function integer uf_ctrl_fichier_mtt ();//*-----------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_MTT (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/03/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier du MTT
+//* Libellé			: Controler de la validité du fichier du MTT
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -17163,8 +17170,8 @@ private subroutine uf_definir_codetat_mtt (ref string asval, long alcpt, long al
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_MTT (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 30/12/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: [PC13348&13408]
 //*
 //* Arguments		: asVal		String		Ref
@@ -17255,8 +17262,8 @@ private function integer uf_integration_fichier_mtt (ref long alnblig, ref long 
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_MTT (PRIVATE)
 //* Auteur			: PHG
 //* Date				: 29/11/2007
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier MTT dans la base
-//* Commentaires	: [O2M] Int$$HEX1$$e900$$ENDHEX$$gration de Fichier MTT
+//* Libellé			: Intégration du fichier MTT dans la base
+//* Commentaires	: [O2M] Intégration de Fichier MTT
 //*
 //* Arguments		: Long		alNbLig		Ref
 //*					  Long		alNbLigMod	Ref
@@ -17270,10 +17277,10 @@ private function integer uf_integration_fichier_mtt (ref long alnblig, ref long 
 //* #1 	 PHG	 24/04/2008	  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
 //* #2    JFF   28/04/2008   [DCMP080202] MailPush O2M
 //* #3	 JFF	 20/10/2008	  [FNAC_PROD_ECH_TECH]
-//* #4	 FPI	 10/12/2009	  [SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
+//* #4	 FPI	 10/12/2009	  [SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
 //*       JFF   30/06/2010   [PC363_AUCHAN]
 //*       JFF   07/03/2011   [VDOC3290]
-//*       JFF   11/03/2011   [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+//*       JFF   11/03/2011   [ITSM62176] ajout du point de décimal
 //*       JFF   19/09/2011   [PM82][LOT1]
 //*       JFF   05/01/2012   [RECUP_DONNEE_O2M]
 //        JFF   06/08/2012   [BLCODE]
@@ -17327,19 +17334,19 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
 	lIdSin = Long ( Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) )
 
-// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+// [ITSM62176] ajout du point de décimal
 	sSql += String ( lIdSin ) + "., "
 
 	/*------------------------------------------------------------------*/
@@ -17563,7 +17570,7 @@ For lCpt = 1 To lTotLig
 	
 	/*------------------------------------------------------------------*/
 	/* ZONE 31 : INFO_FRN_SPB_CPLT ( zone multiple )[FNAC_PROD_ECH_TECH]*/
-	/* Une seule affectation $$HEX2$$e0002000$$ENDHEX$$sSql                                     */
+	/* Une seule affectation à sSql                                     */
 	/*------------------------------------------------------------------*/
 	sSql += "'" + sInfoFrnSpbCplt + "'"
 
@@ -17573,7 +17580,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ 
 		F_commit ( SQLCA, False ) 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/RECP_APP_EN_CTR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/RECP_APP_EN_CTR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
 		Continue 
 	End If
 	// :#2
@@ -17598,7 +17605,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -17616,14 +17623,14 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
 			Continue
 	End If
 	
-	// [RECUP_DONNEE_O2M] Ici absolument, les donn$$HEX1$$e900$$ENDHEX$$es sont relues de la base !
+	// [RECUP_DONNEE_O2M] Ici absolument, les données sont relues de la base !
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	Choose Case lVal	
 		Case 178
@@ -17634,7 +17641,7 @@ For lCpt = 1 To lTotLig
 				iRet = -1
 				alNbLigNonTraitee	++ 
 				F_commit ( SQLCA, False ) 
-				This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/RECUP_DONNEES_MAIL_AXALOT, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
+				This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/RECUP_DONNEES_MAIL_AXALOT, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
 				Continue 
 			End If */
 	End Choose
@@ -17650,7 +17657,7 @@ private function integer uf_ctrl_fichier_electrodepot ();//*--------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_ElectroDepot (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 18/12/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier du ElectroDepot
+//* Libellé			: Controler de la validité du fichier du ElectroDepot
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -17700,13 +17707,13 @@ For lCpt = lTotLig To 1 Step -1
 	If IsNull ( sVal ) Or Trim ( sVal ) = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone NUM_TICKET (r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence sinistre) est vide." )
+		" : La zone NUM_TICKET (référence sinistre) est vide." )
 	End If
 	
 	If Not IsNumber ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone NUM_TICKET (r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence sinistre) n'est pas valide" )
+		" : La zone NUM_TICKET (référence sinistre) n'est pas valide" )
 	End If
 
 	lIdSin = Long ( sVal )
@@ -17721,7 +17728,7 @@ For lCpt = lTotLig To 1 Step -1
 		If IsNull ( sVal ) Or Trim ( sVal ) = "" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : La zone NUM_CARTE_ED (r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence prestation) est vide." )
+			" : La zone NUM_CARTE_ED (référence prestation) est vide." )
 		End If
 
 		If iRet >= 1 Then
@@ -17729,17 +17736,17 @@ For lCpt = lTotLig To 1 Step -1
 			If lPos <= 0 Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence SPB id_sin-id_seq ne contient pas de '-'." )
+				" : Le n° de référence SPB id_sin-id_seq ne contient pas de '-'." )
 			Else
 				If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+					" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 	
 				ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+					" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 				Else
 					lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 					lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -17755,7 +17762,7 @@ For lCpt = lTotLig To 1 Step -1
 		If IsNull ( lIdSeq ) Or lIdSeq <= 0 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" :  Impossible de d$$HEX1$$e900$$ENDHEX$$terminer la s$$HEX1$$e900$$ENDHEX$$quence de la commande." )
+			" :  Impossible de déterminer la séquence de la commande." )
 		End If
 	End If
 	
@@ -17781,13 +17788,13 @@ For lCpt = lTotLig To 1 Step -1
 //	If sVal <> sIdFour Then
 //		iRet = -1
 //		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + "/" + String ( lIdSin ) + "-" + String ( lIdSeq ) + &
-//		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+//		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 //	End If 
 //
 //	If Len ( sVal ) > 3 Then
 //		iRet = -1
 //		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + "/" + String ( lIdSin ) + "-" + String ( lIdSeq ) + &
-//		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+//		" : La longueur du fournisseur doit être sur 3 caractères." )
 //	End If
 //
 //	//* [20091228114718123]
@@ -17816,7 +17823,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 10 : COMMENT_FRN														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	// [CTRLE_DATE_INTRG_FOU]
 	sVal = idwFicFourn.GetItemString ( lCpt, "DTE_EMISS" ) 
@@ -17837,7 +17844,7 @@ For lCpt = lTotLig To 1 Step -1
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -17849,8 +17856,8 @@ private subroutine uf_definir_codetat_electrodepot (ref string asval, long alcpt
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_ElectroDepot (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 12/12/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: [PC13321]
 //*
 //* Arguments		: asVal		String		Ref
@@ -17871,18 +17878,18 @@ String	sDestEnvoi
 asVal = Upper ( asVal ) 
 
 /*------------------------------------------------------------------*/
-/* !!!! Code $$HEX1$$e900$$ENDHEX$$tat Fix$$HEX1$$e900$$ENDHEX$$s !!!! 					     							  */
+/* !!!! Code état Fixés !!!! 					     							  */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
-/* Le code $$HEX1$$e900$$ENDHEX$$tat lu dans le fichier est ANNULEE PAR GESTIONNAIRE,    */
-/* on le laisse s'$$HEX1$$e900$$ENDHEX$$crire en base.                                   */
+/* Le code état lu dans le fichier est ANNULEE PAR GESTIONNAIRE,    */
+/* on le laisse s'écrire en base.                                   */
 /*------------------------------------------------------------------*/
 If asVal = "ANN" Then Return
 
 /*------------------------------------------------------------------*/
-/* Le code $$HEX1$$e900$$ENDHEX$$tat lu dans le fichier est RECU PAR LE CLIENT, on le    */
-/* s'$$HEX1$$e900$$ENDHEX$$crire en base.                                                */
+/* Le code état lu dans le fichier est RECU PAR LE CLIENT, on le    */
+/* s'écrire en base.                                                */
 /*------------------------------------------------------------------*/
 If asVal = "RPC" Then Return
 
@@ -17903,7 +17910,7 @@ private function integer uf_integration_fichier_electrodepot (ref long alnblig, 
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_ElectroDepot (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 12/12/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier du ElectroDepot dans la base
+//* Libellé			: Intégration du fichier du ElectroDepot dans la base
 //* Commentaires	: [PC13321]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -17916,11 +17923,11 @@ private function integer uf_integration_fichier_electrodepot (ref long alnblig, 
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JCA    09/06/2006  MAILPUSH
-//* #2    JFF    23/08/2006  Modif apport$$HEX1$$e900$$ENDHEX$$e suite probl$$HEX1$$e800$$ENDHEX$$me lenteur
+//* #2    JFF    23/08/2006  Modif apportée suite problème lenteur
 //* #3 	 PHG	  24/04/2008  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
-//* #4	 FPI	  10/12/2009  [SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
-//*       JFF    11/03/2011  [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
-//  			FPI	04/08/2011	[FPI.04082011] Prise en compte de la date de r$$HEX1$$e900$$ENDHEX$$ception des mobiles par les assur$$HEX1$$e900$$ENDHEX$$s
+//* #4	 FPI	  10/12/2009  [SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
+//*       JFF    11/03/2011  [ITSM62176] ajout du point de décimal
+//  			FPI	04/08/2011	[FPI.04082011] Prise en compte de la date de réception des mobiles par les assurés
 //       JFF   18/08/2014 [PM254_V1]
 // 		JFF   05/04/2019 [VDOC27799]
 //       JFF   19/12/2022 [RS4093_EVOL_ELD]
@@ -17963,17 +17970,17 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_TICKET" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
-	// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+	// [ITSM62176] ajout du point de décimal
 	sSql += sVal + "., "
 	// #1
 	lIdSin = Long ( sVal )
@@ -18033,14 +18040,14 @@ For lCpt = 1 To lTotLig
 	// [VDOC27799]
 	Choose Case sVal 
 		Case "OK"
-			sVal = "'Carte marqu$$HEX1$$e900$$ENDHEX$$e et pr$$HEX1$$ea00$$ENDHEX$$te $$HEX3$$e0002000ea00$$ENDHEX$$tre consomm$$HEX1$$e900$$ENDHEX$$e'"
+			sVal = "'Carte marquée et prête à être consommée'"
 		Case "KO" 
 
 			// [RS4093_EVOL_ELD]
 			If bF_CLE_A_TRUE_RS4093_EVOL_ELD Then
-				sVal = "'Carte non autoris$$HEX1$$e900$$ENDHEX$$e, prestation automatiquement annul$$HEX1$$e900$$ENDHEX$$e'"
+				sVal = "'Carte non autorisée, prestation automatiquement annulée'"
 			Else
-				sVal = "Carte non autoris$$HEX1$$e900$$ENDHEX$$e, prestation automatiquement annul$$HEX1$$e900$$ENDHEX$$e"
+				sVal = "Carte non autorisée, prestation automatiquement annulée"
 				sVal1 = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "CODE_ERR" ) ) ) 
 				If IsNull ( sVal1 ) Then sVal1 = ""
 				sVal += ". Erreur (" + sVal1 + "), "
@@ -18237,7 +18244,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_TICKET" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_TICKET" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -18255,7 +18262,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_TICKET" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_TICKET" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -18273,7 +18280,7 @@ private function integer uf_ctrl_fichier_tamet ();//*---------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_TAMET (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 09/05/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controle de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier TAMET/TAMET
+//* Libellé			: Controle de la validité du fichier TAMET/TAMET
 //* Commentaires	: [PM200][TAMET]
 //*
 //* Arguments		: 
@@ -18342,16 +18349,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -18359,12 +18366,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -18386,13 +18393,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -18401,7 +18408,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 3 : NUM_CMD_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 4 : NUM_IMEI_NOU														  */
@@ -18413,25 +18420,25 @@ For lCpt = lTotLig To 1 Step -1
 		If Len ( sVal ) <> 15 And Len ( sVal ) > 0 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Un num$$HEX1$$e900$$ENDHEX$$ro d'IMEI doit contenir 15 chiffres" )
+			" : Un numéro d'IMEI doit contenir 15 chiffres" )
 		End If
 	
 		If Not F_IMEI ( sVal, sIMEICorr ) And Len ( sVal ) > 0 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Num$$HEX1$$e900$$ENDHEX$$ro d'IMEI non valide" )
+			" : Numéro d'IMEI non valide" )
 		End If 
 	End If
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 5 : DTE_RCP_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 6 : DTE_ENV_CLI 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 7 : DEST_ENVOI	 														  */
@@ -18445,7 +18452,7 @@ For lCpt = lTotLig To 1 Step -1
 			CASE ELSE	
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le Destinataire de l'envoi doit $$HEX1$$ea00$$ENDHEX$$tre null ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$SPB ou CLIENT, mais pas " + sVal )
+				" : Le Destinataire de l'envoi doit être null ou égal à SPB ou CLIENT, mais pas " + sVal )
 		END CHOOSE
 
 	End If
@@ -18453,7 +18460,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 8 : NUM_BON_TRP 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 9 : COD_ETAT_CMD														  */
@@ -18473,7 +18480,7 @@ For lCpt = lTotLig To 1 Step -1
 						If IsNull ( sVal)  Then
 							iRet = -1
 							This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-							" : (vDoc8945) Le code RPC avec un DEST_ENVOI=CLIENT impose la pr$$HEX1$$e900$$ENDHEX$$sent d'une DTE_ENV_CLI" )
+							" : (vDoc8945) Le code RPC avec un DEST_ENVOI=CLIENT impose la présent d'une DTE_ENV_CLI" )
 						End IF
 					End If
 				End If
@@ -18481,7 +18488,7 @@ For lCpt = lTotLig To 1 Step -1
 			CASE ELSE	
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le code $$HEX1$$e900$$ENDHEX$$tat doit $$HEX1$$ea00$$ENDHEX$$tre null ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$ANN ou RPC, mais pas " + sVal )
+				" : Le code état doit être null ou égal à ANN ou RPC, mais pas " + sVal )
 		END CHOOSE
 
 	End If
@@ -18489,7 +18496,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 7 : STATUS_GC														     */
 	/*------------------------------------------------------------------*/
-	// [O2M] : V$$HEX1$$e900$$ENDHEX$$rification de l'appartenance du code retourn$$HEX2$$e9002000$$ENDHEX$$au param$$HEX1$$e900$$ENDHEX$$trage.
+	// [O2M] : Vérification de l'appartenance du code retourné au paramétrage.
 
 	sVal = String ( idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) )
 
@@ -18524,76 +18531,76 @@ For lCpt = lTotLig To 1 Step -1
 		If len ( Trim ( sVal ) ) <= 0 Or IsNull ( sVal ) Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si l'assur$$HEX2$$e9002000$$ENDHEX$$s'est rendu en point vente, il faut renseigner le nom point du vente (voir CDC)" )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si l'assuré s'est rendu en point vente, il faut renseigner le nom point du vente (voir CDC)" )
 		End If			
 		
 		sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "NUM_PDV", ";"))
 		If len ( Trim ( sVal ) ) <= 0 Or IsNull ( sVal ) Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si l'assur$$HEX2$$e9002000$$ENDHEX$$s'est rendu en point vente, il faut renseigner le num$$HEX1$$e900$$ENDHEX$$ro du point de vente (voir CDC)" )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Si l'assuré s'est rendu en point vente, il faut renseigner le numéro du point de vente (voir CDC)" )
 		End If			
 	
 	End If 
 
-	// Contr$$HEX1$$f400$$ENDHEX$$le suppl$$HEX1$$e800$$ENDHEX$$mentaire vDoc7572
+	// Contrôle supplèmentaire vDoc7572
 	// [VDOC7572]	
-	// pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 2 mais avec une zone COMMENTAIRES vide = rejet. 
+	// présence d’un status_gc 2 mais avec une zone COMMENTAIRES vide = rejet. 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )
 	
 	If lVal = 2 And ( len ( Trim ( sVal ) ) <= 0 Or IsNull ( sVal ) ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : Le statut 2 doit obligatoirement est accompagn$$HEX2$$e9002000$$ENDHEX$$d'un commentaire" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : Le statut 2 doit obligatoirement est accompagné d'un commentaire" )
 	End If			
 	
 	
-	// pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 21 mais avec une zone COMMENTAIRES sans cl$$HEX2$$e9002000$$ENDHEX$$de type [BVIE], [BNV], etc. = rejet. 
+	// présence d’un status_gc 21 mais avec une zone COMMENTAIRES sans clé de type [BVIE], [BNV], etc. = rejet. 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemstring ( lCpt, "COMMENT_FRN" ) )
 	
 	If lVal = 21 And Not ( Pos ( sVal, "[") >0 And Pos ( sVal, "]") >0 ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : Le statut 21 doit obligatoirement $$HEX1$$ea00$$ENDHEX$$tre accompagn$$HEX2$$e9002000$$ENDHEX$$d'un mot cl$$HEX2$$e9002000$$ENDHEX$$entre crochet dans le commentaire" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : Le statut 21 doit obligatoirement être accompagné d'un mot clé entre crochet dans le commentaire" )
 	End If			
 	
-	// pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [BVIE], [BNV], etc. dans la zone COMMENTAIRES, mais sans status_gc = rejet. 
+	// présence d’une clé de type [BVIE], [BNV], etc. dans la zone COMMENTAIRES, mais sans status_gc = rejet. 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )
 	
 	If lVal = 0 And Pos ( sVal, "[") >0 And Pos ( sVal, "]") >0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : La pr$$HEX1$$e900$$ENDHEX$$sence d'un mot cl$$HEX2$$e9002000$$ENDHEX$$dans le commentaire doit $$HEX1$$ea00$$ENDHEX$$tre accompagn$$HEX2$$e9002000$$ENDHEX$$d'une statut" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : La présence d'un mot clé dans le commentaire doit être accompagné d'une statut" )
 	End If			
 
 
-	// pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une date de r$$HEX1$$e900$$ENDHEX$$ception par l$$HEX1$$1920$$ENDHEX$$assur$$HEX2$$e9002000$$ENDHEX$$(ou date de restitution en proximit$$HEX1$$e900$$ENDHEX$$) ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date de r$$HEX1$$e900$$ENDHEX$$ception initiale chez TAMET = rejet. 
+	// présence d’une date de réception par l’assuré (ou date de restitution en proximité) antérieure à la date de réception initiale chez TAMET = rejet. 
 	sVal = String ( Date ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_RCP_FRN" ) ) )
 	sVal1 = String ( Date ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_RCP_MOB_CLI" ) ) )
 	
 	If Not IsDate ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : La date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur est invalide" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : La date de réception fournisseur est invalide" )
 	End If			
 
 	If Not IsDate ( sVal1 ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : La date de r$$HEX1$$e900$$ENDHEX$$ception de l'appareil par l'assur$$HEX2$$e9002000$$ENDHEX$$est invalide" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : La date de réception de l'appareil par l'assuré est invalide" )
 	End If			
 	
 	If IsDate ( sVal1 ) And IsDate ( sVal1 ) And Date ( sVal1 ) < Date ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : La date de r$$HEX1$$e900$$ENDHEX$$ception de l'appareil par l'assur$$HEX2$$e9002000$$ENDHEX$$doit $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la date de r$$HEX1$$e900$$ENDHEX$$ception du mat$$HEX1$$e900$$ENDHEX$$riel sinistr$$HEX2$$e9002000$$ENDHEX$$par TAMET" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : La date de réception de l'appareil par l'assuré doit être postérieure ou égale à la date de réception du matériel sinistré par TAMET" )
 	End If			
 
-	// pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une date de r$$HEX1$$e900$$ENDHEX$$ception par l$$HEX1$$1920$$ENDHEX$$assur$$HEX2$$e9002000$$ENDHEX$$(ou date de restitution en proximit$$HEX1$$e900$$ENDHEX$$) 
-	// avec un status_gc 21 ET une cl$$HEX2$$e9002000$$ENDHEX$$[BVIE] ou [BVIEOX] = rejet. 
+	// présence d’une date de réception par l’assuré (ou date de restitution en proximité) 
+	// avec un status_gc 21 ET une clé [BVIE] ou [BVIEOX] = rejet. 
 	sVal1 = String ( Date ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_RCP_MOB_CLI" ) ) )
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )
@@ -18602,12 +18609,12 @@ For lCpt = lTotLig To 1 Step -1
 	If IsDate ( sVal1 ) And lVal = 21 And ( Pos ( sVal, "[BVIE]" ) >0 Or Pos (sVal,  "[BVID]" ) > 0 Or Pos (sVal,  "[BVIP]" ) > 0 Or Pos (sVal,  "[BVIT]" ) > 0 Or Pos ( sVal, "[PIE]") >0 Or Pos ( sVal, "[BVIEOX]") >0 ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : La pr$$HEX1$$e900$$ENDHEX$$sence d'une date r$$HEX1$$e900$$ENDHEX$$ception par l'assur$$HEX2$$e9002000$$ENDHEX$$avec une statut 21 et un des mots cl$$HEX2$$e9002000$$ENDHEX$$[BVIE] ou [BVIEOX] est incoh$$HEX1$$e900$$ENDHEX$$rent" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7572) : La présence d'une date réception par l'assuré avec une statut 21 et un des mots clé [BVIE] ou [BVIEOX] est incohérent" )
 	End If			
 	
 
 	// [PM200][LOT2][DESOX]
-	//	pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 23 sans une cl$$HEX2$$e9002000$$ENDHEX$$de type [BNVSOX] OU [BVIEOX] Ou [BRIS] Ou  [SAV_NO_OK] Ou [OXY] = rejet
+	//	présence d’un status_gc 23 sans une clé de type [BNVSOX] OU [BVIEOX] Ou [BRIS] Ou  [SAV_NO_OK] Ou [OXY] = rejet
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )
 	
@@ -18620,10 +18627,10 @@ For lCpt = lTotLig To 1 Step -1
 		Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM200LOT2) : Le statut 23 doit obligatoirement avoir d'un mot cl$$HEX2$$e9002000$$ENDHEX$$dans le commentaire (conf$$HEX1$$e800$$ENDHEX$$re CDC)" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM200LOT2) : Le statut 23 doit obligatoirement avoir d'un mot clé dans le commentaire (confère CDC)" )
 	End If			
 
-	// pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 23 avec tout autre cl$$HEX2$$e9002000$$ENDHEX$$diff$$HEX1$$e900$$ENDHEX$$rente de [BNVSOX] OU [BVIEOX] Ou [BRIS] Ou  [SAV_NO_OK] Ou [OXY] = rejet
+	// présence d’un status_gc 23 avec tout autre clé différente de [BNVSOX] OU [BVIEOX] Ou [BRIS] Ou  [SAV_NO_OK] Ou [OXY] = rejet
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )
 	sVal = F_REMPLACE ( sVal, "[BNVSOX]", "" )
@@ -18635,10 +18642,10 @@ For lCpt = lTotLig To 1 Step -1
 	If lVal = 23 And Pos ( sVal, "[") > 0 And Pos ( sVal, "]") > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM200LOT2) : Le statut 23 n'autorise pas ce mot cl$$HEX2$$e9002000$$ENDHEX$$dans le commentaire" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM200LOT2) : Le statut 23 n'autorise pas ce mot clé dans le commentaire" )
 	End If			
 
-	// pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 23 avec un bin$$HEX1$$f400$$ENDHEX$$me cl$$HEX1$$e900$$ENDHEX$$/valeur PRESENCE_OX=OUI ET la cl$$HEX2$$e9002000$$ENDHEX$$de type [BNVSOX] = rejet
+	// présence d’un status_gc 23 avec un binôme clé/valeur PRESENCE_OX=OUI ET la clé de type [BNVSOX] = rejet
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )
 	sVal1 = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "PRESENCE_OX", ";"))
@@ -18646,12 +18653,12 @@ For lCpt = lTotLig To 1 Step -1
 	If lVal = 23 And Upper ( sVal1 ) = "OUI" And Pos ( sVal, "[BNVSOX]") > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM200LOT2) : Le Trin$$HEX1$$f400$$ENDHEX$$me Statut $$HEX2$$e0002000$$ENDHEX$$23 ET Presence_OX $$HEX2$$e0002000$$ENDHEX$$OUI ET Cl$$HEX2$$e9002000$$ENDHEX$$commentaire [BNVSOX] est incoh$$HEX1$$e900$$ENDHEX$$rent" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM200LOT2) : Le Trinôme Statut à 23 ET Presence_OX à OUI ET Clé commentaire [BNVSOX] est incohérent" )
 	End If			
 
 	// [VDOC9142]
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur la r$$HEX1$$e900$$ENDHEX$$paration, rejet du fichier si : 
-	// -   en retour $$HEX2$$e0002000$$ENDHEX$$une commande avec ACTION = A_REPARER, cl$$HEX2$$e9002000$$ENDHEX$$de type [OXY], [BRIS], ou [BNVSOX] dans la zone COMMENTAIRES 
+	// Règles de cohérence à respecter sur la réparation, rejet du fichier si : 
+	// -   en retour à une commande avec ACTION = A_REPARER, clé de type [OXY], [BRIS], ou [BNVSOX] dans la zone COMMENTAIRES 
 	// [PM222-1]
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )
 	If ( Pos ( sVal, "[OXY]" ) > 0 Or Pos ( sVal,"[BRIS]"  ) > 0 Or Pos ( sVal, "[BNVSOX]" ) > 0 ) &
@@ -18661,11 +18668,11 @@ For lCpt = lTotLig To 1 Step -1
 											Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/REPARATION) : Retour $$HEX2$$e0002000$$ENDHEX$$une presta ACTION=A_REPARER ou A_REPARER_FORCE avec cl$$HEX2$$e9002000$$ENDHEX$$d$$HEX1$$e900$$ENDHEX$$di$$HEX1$$e900$$ENDHEX$$e SAV de type [OXY], [BRIS], ou [BNVSOX] dans la zone COMMENTAIRES, interdit" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/REPARATION) : Retour à une presta ACTION=A_REPARER ou A_REPARER_FORCE avec clé dédiée SAV de type [OXY], [BRIS], ou [BNVSOX] dans la zone COMMENTAIRES, interdit" )
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur la r$$HEX1$$e900$$ENDHEX$$paration, rejet du fichier si : 
-	// -   pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 21 sans une cl$$HEX2$$e9002000$$ENDHEX$$de type [BVIE], ou [BVIEOX], ou [BNV] dans la zone COMMENTAIRES 
+	// Règles de cohérence à respecter sur la réparation, rejet du fichier si : 
+	// -   présence d’un status_gc 21 sans une clé de type [BVIE], ou [BVIEOX], ou [BNV] dans la zone COMMENTAIRES 
 	// Ajout [PNC] [PC877]
 	// [VDOC27123]BVID/BVIP/BVIT
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
@@ -18683,11 +18690,11 @@ For lCpt = lTotLig To 1 Step -1
 															Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/REPARATION) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 21 sans une cl$$HEX2$$e9002000$$ENDHEX$$de type [PNC], ou [BVIE]/[BVID]/[BVIP]/[BVIT], ou [BVIEOX], ou [BNV] dans la zone COMMENTAIRES, interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/REPARATION) : présence d’un status_gc 21 sans une clé de type [PNC], ou [BVIE]/[BVID]/[BVIP]/[BVIT], ou [BVIEOX], ou [BNV] dans la zone COMMENTAIRES, interdit " )
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur la r$$HEX1$$e900$$ENDHEX$$paration, rejet du fichier si : 
-	// -   pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 155 utilis$$HEX1$$e900$$ENDHEX$$e en r$$HEX1$$e900$$ENDHEX$$ponse $$HEX2$$e0002000$$ENDHEX$$une action A_REPARER ou A_REPARER_FORCE ou A_REPARER_SAV 
+	// Règles de cohérence à respecter sur la réparation, rejet du fichier si : 
+	// -   présence d’un status_gc 155 utilisée en réponse à une action A_REPARER ou A_REPARER_FORCE ou A_REPARER_SAV 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	If lVal = 155 And ( sIdRefFour = "A_REPARER" Or &
 							  sIdRefFour = "A_REPARER_FORCE" Or &
@@ -18696,21 +18703,21 @@ For lCpt = lTotLig To 1 Step -1
 							  ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/REPARATION) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 155 utilis$$HEX1$$e900$$ENDHEX$$e en r$$HEX1$$e900$$ENDHEX$$ponse $$HEX2$$e0002000$$ENDHEX$$une action A_REPARER ou A_REPARER_FORCE ou A_REPARER_SAV, interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/REPARATION) : présence d’un status_gc 155 utilisée en réponse à une action A_REPARER ou A_REPARER_FORCE ou A_REPARER_SAV, interdit " )
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur la r$$HEX1$$e900$$ENDHEX$$paration, rejet du fichier si : 
-	// -  pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] avec un status_gc diff$$HEX1$$e900$$ENDHEX$$rent de 21 
+	// Règles de cohérence à respecter sur la réparation, rejet du fichier si : 
+	// -  présence d’une clé de type [SAV_NO_OK] avec un status_gc différent de 21 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )		
 	If sIdRefFour = "A_REPARER" And lVal <> 21 And Pos ( sVal, "[SAV_NO_OK]" ) > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/REPARATION) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] avec un status_gc diff$$HEX1$$e900$$ENDHEX$$rent de 21, interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/REPARATION) : présence d’une clé de type [SAV_NO_OK] avec un status_gc différent de 21, interdit " )
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur la r$$HEX1$$e900$$ENDHEX$$paration, rejet du fichier si : 
-	// -   pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] dans un retour sur une commande avec action = A_REPARER ou A_REPARER_FORCE 
+	// Règles de cohérence à respecter sur la réparation, rejet du fichier si : 
+	// -   présence d’une clé de type [SAV_NO_OK] dans un retour sur une commande avec action = A_REPARER ou A_REPARER_FORCE 
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )		
 	If Pos ( sVal, "[SAV_NO_OK]" ) > 0 And ( sIdRefFour = "A_REPARER" Or sIdRefFour = "A_REPARER_FORCE" ) &
 												  And lnvPFCString.of_Getkeyvalue ( sInfoSpbFrnCplt , "A_REPARER_SAV", ";") <> "OUI" &
@@ -18718,11 +18725,11 @@ For lCpt = lTotLig To 1 Step -1
 	Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/REPARATION) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] dans un retour sur une commande sans demande de SAV (donc n$$HEX1$$1920$$ENDHEX$$impliquant pas d$$HEX1$$1920$$ENDHEX$$action = A_REPARER_SAV ou A_CONTROLER_SAV), interdit" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/REPARATION) : présence d’une clé de type [SAV_NO_OK] dans un retour sur une commande sans demande de SAV (donc n’impliquant pas d’action = A_REPARER_SAV ou A_CONTROLER_SAV), interdit" )
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur la d$$HEX1$$e900$$ENDHEX$$soxydation, rejet du fichier si : 
-	// -   en retour $$HEX2$$e0002000$$ENDHEX$$une commande avec ACTION = A_DESOXYDER, cl$$HEX2$$e9002000$$ENDHEX$$de type [OXY], [BRIS], ou [BNV] dans la zone COMMENTAIRES 
+	// Règles de cohérence à respecter sur la désoxydation, rejet du fichier si : 
+	// -   en retour à une commande avec ACTION = A_DESOXYDER, clé de type [OXY], [BRIS], ou [BNV] dans la zone COMMENTAIRES 
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )
 	If ( Pos (sVal, "[OXY]" ) > 0 Or Pos ( sVal, "[BRIS]" ) > 0 Or Pos ( sVal, "[BNV]" ) > 0 ) &
 											And ( sIdRefFour = "A_DESOXYDER" Or sIdRefFour = "A_DESOXYDER_FORCE" ) &
@@ -18732,11 +18739,11 @@ For lCpt = lTotLig To 1 Step -1
 											Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/DESOXYDATION) : Retour $$HEX2$$e0002000$$ENDHEX$$une presta ACTION=A_DESOXYDER ou A_DESOXYDER_FORCE avec cl$$HEX2$$e9002000$$ENDHEX$$d$$HEX1$$e900$$ENDHEX$$di$$HEX1$$e900$$ENDHEX$$e SAV de type [OXY], [BRIS], ou [BNV] dans la zone COMMENTAIRES, interdit" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/DESOXYDATION) : Retour à une presta ACTION=A_DESOXYDER ou A_DESOXYDER_FORCE avec clé dédiée SAV de type [OXY], [BRIS], ou [BNV] dans la zone COMMENTAIRES, interdit" )
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur la d$$HEX1$$e900$$ENDHEX$$soxydation, rejet du fichier si : 
-	// -   pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 23 sans une cl$$HEX2$$e9002000$$ENDHEX$$de type [BVIEOX], ou [BNVSOX] dans la zone COMMENTAIRES 
+	// Règles de cohérence à respecter sur la désoxydation, rejet du fichier si : 
+	// -   présence d’un status_gc 23 sans une clé de type [BVIEOX], ou [BNVSOX] dans la zone COMMENTAIRES 
 	// [VDOC11296] ajout => And Pos ( sVal, "[BRIS]") <= 0 &
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )
@@ -18748,11 +18755,11 @@ For lCpt = lTotLig To 1 Step -1
 															  Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/DESOXYDATION) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 23 sans une cl$$HEX2$$e9002000$$ENDHEX$$de type [BVIEOX], ou [BNVSOX] dans la zone COMMENTAIRES, interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/DESOXYDATION) : présence d’un status_gc 23 sans une clé de type [BVIEOX], ou [BNVSOX] dans la zone COMMENTAIRES, interdit " )
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur la d$$HEX1$$e900$$ENDHEX$$soxydation, rejet du fichier si : 
-	// -   pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 155 utilis$$HEX1$$e900$$ENDHEX$$e en r$$HEX1$$e900$$ENDHEX$$ponse $$HEX2$$e0002000$$ENDHEX$$une action A_DESOXYDER ou A_DESOXYDER_FORCE ou A_DESOXYDER_SAV 
+	// Règles de cohérence à respecter sur la désoxydation, rejet du fichier si : 
+	// -   présence d’un status_gc 155 utilisée en réponse à une action A_DESOXYDER ou A_DESOXYDER_FORCE ou A_DESOXYDER_SAV 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	If lVal = 155 And ( sIdRefFour = "A_DESOXYDER" Or &
 							  sIdRefFour = "A_DESOXYDER_FORCE" Or &
@@ -18760,21 +18767,21 @@ For lCpt = lTotLig To 1 Step -1
 							  ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/DESOXYDATION) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 155 utilis$$HEX1$$e900$$ENDHEX$$e en r$$HEX1$$e900$$ENDHEX$$ponse $$HEX2$$e0002000$$ENDHEX$$une action A_DESOXYDER ou A_DESOXYDER_FORCE ou A_DESOXYDER_SAV, interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/DESOXYDATION) : présence d’un status_gc 155 utilisée en réponse à une action A_DESOXYDER ou A_DESOXYDER_FORCE ou A_DESOXYDER_SAV, interdit " )
 	End IF 		
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur la d$$HEX1$$e900$$ENDHEX$$soxydation, rejet du fichier si : 
-	// -   pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] avec un status_gc diff$$HEX1$$e900$$ENDHEX$$rent de 23 
+	// Règles de cohérence à respecter sur la désoxydation, rejet du fichier si : 
+	// -   présence d’une clé de type [SAV_NO_OK] avec un status_gc différent de 23 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )		
 	If sIdRefFour = "A_DESOXYDER" And lVal <> 23 And Pos ( sVal, "[SAV_NO_OK]" ) > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/DESOXYDATION) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] avec un status_gc diff$$HEX1$$e900$$ENDHEX$$rent de 23, interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/DESOXYDATION) : présence d’une clé de type [SAV_NO_OK] avec un status_gc différent de 23, interdit " )
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur la d$$HEX1$$e900$$ENDHEX$$soxydation, rejet du fichier si : 
-	//- pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] dans un retour sur une commande avec action = A_DESOXYDER ou A_DESOXYDER_FORCE 
+	// Règles de cohérence à respecter sur la désoxydation, rejet du fichier si : 
+	//- présence d’une clé de type [SAV_NO_OK] dans un retour sur une commande avec action = A_DESOXYDER ou A_DESOXYDER_FORCE 
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )		
 	If Pos (sVal,  "[SAV_NO_OK]" ) > 0 And ( sIdRefFour = "A_DESOXYDER" Or sIdRefFour = "A_DESOXYDER_FORCE" ) &
 												  And lnvPFCString.of_Getkeyvalue ( sInfoSpbFrnCplt , "A_DESOXYDER_SAV", ";") <> "OUI" & 
@@ -18783,11 +18790,11 @@ For lCpt = lTotLig To 1 Step -1
 												  Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/DESOXYDATION) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] dans un retour sur une commande sans demande de SAV (donc n$$HEX1$$1920$$ENDHEX$$impliquant pas d$$HEX1$$1920$$ENDHEX$$action = A_DESOXYDER_SAV), interdit" )			
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT/DESOXYDATION) : présence d’une clé de type [SAV_NO_OK] dans un retour sur une commande sans demande de SAV (donc n’impliquant pas d’action = A_DESOXYDER_SAV), interdit" )			
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur les deux process, rejet du fichier si :
-	// -   pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un COD_ETAT_CMD $$HEX2$$e0002000$$ENDHEX$$RPC et d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [BVIE], ou [BVIEOX], ou [BNV], ou [BNVSOX], dans la zone COMMENTAIRES		
+	// Règles de cohérence à respecter sur les deux process, rejet du fichier si :
+	// -   présence d’un COD_ETAT_CMD à RPC et d’une clé de type [BVIE], ou [BVIEOX], ou [BNV], ou [BNVSOX], dans la zone COMMENTAIRES		
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )		
 	sVal1 = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "COD_ETAT_CMD" ) ) ) 
 
@@ -18795,31 +18802,31 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal1 = "RPC" And ( Pos ( sVal, "[BVIEOX]" ) > 0 Or Pos ( sVal, "[BVIE]" ) > 0 Or Pos (sVal,  "[BVID]" ) > 0 Or Pos (sVal,  "[BVIP]" ) > 0 Or Pos (sVal,  "[BVIT]" ) > 0 Or Pos ( sVal, "[PIE]" ) > 0 Or Pos ( sVal, "[BNV]" ) > 0 Or Pos ( sVal, "[BNVSOX]" ) > 0) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un COD_ETAT_CMD $$HEX2$$e0002000$$ENDHEX$$RPC et d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [BVIE]/[BVID]/[BVIP]/[BVIT], ou [PIE] ou [BVIEOX], ou [BNV], ou [BNVSOX], dans la zone COMMENTAIRES, interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT) : présence d’un COD_ETAT_CMD à RPC et d’une clé de type [BVIE]/[BVID]/[BVIP]/[BVIT], ou [PIE] ou [BVIEOX], ou [BNV], ou [BNVSOX], dans la zone COMMENTAIRES, interdit " )
 	End IF 
 	
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur les deux process, rejet du fichier si :
-	// - pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un COD_ETAT_CMD $$HEX2$$e0002000$$ENDHEX$$RPC sans date indiqu$$HEX1$$e900$$ENDHEX$$e dans la zone DTE_ENV_CLI 
+	// Règles de cohérence à respecter sur les deux process, rejet du fichier si :
+	// - présence d’un COD_ETAT_CMD à RPC sans date indiquée dans la zone DTE_ENV_CLI 
 	sVal = String ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_ENV_CLI" ) )  
 	sVal1 = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "COD_ETAT_CMD" ) ) ) 
 	If sVal1 = "RPC" And isNull( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un COD_ETAT_CMD $$HEX2$$e0002000$$ENDHEX$$RPC sans date indiqu$$HEX1$$e900$$ENDHEX$$e dans la zone DTE_ENV_CLI, interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT) : présence d’un COD_ETAT_CMD à RPC sans date indiquée dans la zone DTE_ENV_CLI, interdit " )
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur les deux process, rejet du fichier si :
-	// -   absence d$$HEX1$$1920$$ENDHEX$$une information dans la zone NUM_BON_TRP et pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une date dans la zone DTE_ENV_CLI et pr$$HEX1$$e900$$ENDHEX$$sence du BCV ASSURE_ENVOIE_S=OUI dans la zone INFO_FRN_SPB_CPLT.
+	// Règles de cohérence à respecter sur les deux process, rejet du fichier si :
+	// -   absence d’une information dans la zone NUM_BON_TRP et présence d’une date dans la zone DTE_ENV_CLI et présence du BCV ASSURE_ENVOIE_S=OUI dans la zone INFO_FRN_SPB_CPLT.
 	sVal = idwFicFourn.GetItemString ( lCpt, "NUM_BON_TRP" ) 
 	sVal1 = String ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_ENV_CLI" ) )  		
 	If ( IsNull ( sVal ) Or Trim ( sVal ) = "" ) And (not isnull ( sVal1 )) And lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ASSURE_ENVOIE_COLIS", ";") = "OUI" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT) : absence d$$HEX1$$1920$$ENDHEX$$une information dans la zone NUM_BON_TRP et pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une date dans la zone DTE_ENV_CLI et pr$$HEX1$$e900$$ENDHEX$$sence du BCV ASSURE_ENVOIE_COLIS=OUI dans la zone INFO_FRN_SPB_CPLT, interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT) : absence d’une information dans la zone NUM_BON_TRP et présence d’une date dans la zone DTE_ENV_CLI et présence du BCV ASSURE_ENVOIE_COLIS=OUI dans la zone INFO_FRN_SPB_CPLT, interdit " )
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur les deux process, rejet du fichier si :		
-	// -   pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une date dans la zone DTE_RCP_FRN, et Absence d$$HEX1$$1920$$ENDHEX$$un BCV ASSURE_ENVOIE_COLIS=OUI ou d$$HEX1$$1920$$ENDHEX$$un BCV NUM_PDV=XX (o$$HEX2$$f9002000$$ENDHEX$$XX est le n$$HEX2$$b0002000$$ENDHEX$$du point de vente TAMET) dans la zone INFO_FRN_SPB_CPLT 
+	// Règles de cohérence à respecter sur les deux process, rejet du fichier si :		
+	// -   présence d’une date dans la zone DTE_RCP_FRN, et Absence d’un BCV ASSURE_ENVOIE_COLIS=OUI ou d’un BCV NUM_PDV=XX (où XX est le n° du point de vente TAMET) dans la zone INFO_FRN_SPB_CPLT 
 	sVal = String ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_RCP_FRN" ) ) 
 	
 	If (not isnull ( sVal )) And lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "INTER_A_DOMICILE", ";") <> "OUI" And &
@@ -18827,17 +18834,17 @@ For lCpt = lTotLig To 1 Step -1
 									 Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "NUM_PDV", ";")) = ""  Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une date dans la zone DTE_RCP_FRN, et Absence d$$HEX1$$1920$$ENDHEX$$un BCV ASSURE_ENVOIE_COLIS=OUI ou d$$HEX1$$1920$$ENDHEX$$un BCV NUM_PDV=XX (o$$HEX2$$f9002000$$ENDHEX$$XX est le n$$HEX2$$b0002000$$ENDHEX$$du point de vente TAMET) dans la zone INFO_FRN_SPB_CPLT, interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT) : présence d’une date dans la zone DTE_RCP_FRN, et Absence d’un BCV ASSURE_ENVOIE_COLIS=OUI ou d’un BCV NUM_PDV=XX (où XX est le n° du point de vente TAMET) dans la zone INFO_FRN_SPB_CPLT, interdit " )
 	End IF 
 
-	// R$$HEX1$$e800$$ENDHEX$$gles de coh$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$respecter sur les deux process, rejet du fichier si :		
-	// -   pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 153 ou 154 avec un COD_ETAT_CMD $$HEX2$$e0002000$$ENDHEX$$RPC 
+	// Règles de cohérence à respecter sur les deux process, rejet du fichier si :		
+	// -   présence d’un status_gc 153 ou 154 avec un COD_ETAT_CMD à RPC 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal1 = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "COD_ETAT_CMD" ) ) ) 
 	If ( lVal = 153 Or lVal = 154 ) And sVal1 = "RPC" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$un status_gc 153 ou 154 avec un COD_ETAT_CMD $$HEX2$$e0002000$$ENDHEX$$RPC, interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9142/A.RAULT) : présence d’un status_gc 153 ou 154 avec un COD_ETAT_CMD à RPC, interdit " )
 	End IF 
 	// :[VDOC9142]
 
@@ -18847,7 +18854,7 @@ For lCpt = lTotLig To 1 Step -1
 	If Not IsNull ( dtVal ) And Not IsNull ( dtVal1 ) And dtVal1 < dtVal Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la DTE_RCP_FRN." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit être postérieure ou égale à la DTE_RCP_FRN." )
 	End If
 	// [VDOC9337]	
 	
@@ -18858,7 +18865,7 @@ For lCpt = lTotLig To 1 Step -1
 	If Pos (sVal,  "[SWAP]" ) > 0 And lVal <> 21 And Pos (sVal,  "[BVIE]" ) <= 0 And Pos (sVal,  "[BVID]" ) <= 0 And Pos (sVal,  "[BVIP]" ) <= 0 And Pos (sVal,  "[BVIT]" ) <= 0 And Pos (sVal,  "[PIE]" ) <= 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM254) : le mot cl$$HEX2$$e9002000$$ENDHEX$$[SWAP] ne peut $$HEX1$$ea00$$ENDHEX$$tre plac$$HEX2$$e9002000$$ENDHEX$$que sur un irr$$HEX1$$e900$$ENDHEX$$parable 21 avec un mot cl$$HEX2$$e9002000$$ENDHEX$$[BVIE]/[BVID]/[BVIP]/[BVIT]." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM254) : le mot clé [SWAP] ne peut être placé que sur un irréparable 21 avec un mot clé [BVIE]/[BVID]/[BVIP]/[BVIT]." )
 	End If 
 	// [PM254_V1]
 
@@ -18878,7 +18885,7 @@ For lCpt = lTotLig To 1 Step -1
 	
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -18890,8 +18897,8 @@ private subroutine uf_definir_codetat_tamet (ref string asval, long alcpt, long 
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_Tamet (PRIVATE)
 //* Auteur			: MADM
 //* Date				: 09/05/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	:  [DCMP060356]
 //*
 //* Arguments		: asVal		String		Ref
@@ -18928,29 +18935,29 @@ sChaineBCV = fill(" ", 255)
 asVal = Upper ( asVal ) 
 
 /*------------------------------------------------------------------*/
-/* !!!! Code $$HEX1$$e900$$ENDHEX$$tat Fix$$HEX1$$e900$$ENDHEX$$s !!!! 					     							  */
+/* !!!! Code état Fixés !!!! 					     							  */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
-/* Le code $$HEX1$$e900$$ENDHEX$$tat lu dans le fichier est ANNULEE PAR GESTIONNAIRE,    */
-/* on le laisse s'$$HEX1$$e900$$ENDHEX$$crire en base.                                   */
+/* Le code état lu dans le fichier est ANNULEE PAR GESTIONNAIRE,    */
+/* on le laisse s'écrire en base.                                   */
 /*------------------------------------------------------------------*/
 If asVal = "ANN" Then Return
 
 /*------------------------------------------------------------------*/
-/* Le code $$HEX1$$e900$$ENDHEX$$tat lu dans le fichier est RECU PAR LE CLIENT, on le    */
-/* s'$$HEX1$$e900$$ENDHEX$$crire en base.                                                */
+/* Le code état lu dans le fichier est RECU PAR LE CLIENT, on le    */
+/* s'écrire en base.                                                */
 /*------------------------------------------------------------------*/
 If asVal = "RPC" Then Return
 
 
 /*------------------------------------------------------------------*/
-/* !!!! Code $$HEX1$$e900$$ENDHEX$$tat D$$HEX1$$e900$$ENDHEX$$termin$$HEX1$$e900$$ENDHEX$$s en fonction des dates 					  */
+/* !!!! Code état Déterminés en fonction des dates 					  */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
 /* Si le CodEtat du fichier n'est pas un de ces deux codes, alors   */
-/* on va le d$$HEX1$$e900$$ENDHEX$$terminer $$HEX2$$e0002000$$ENDHEX$$partir des dates.                          */
+/* on va le déterminer à partir des dates.                          */
 /*------------------------------------------------------------------*/
 dtDteRcpFrn = idwFicFourn.GetItemDateTime ( alCpt, "DTE_RCP_FRN" ) 
 dtDteEnvCli = idwFicFourn.GetItemDateTime ( alCpt, "DTE_ENV_CLI" )
@@ -18968,7 +18975,7 @@ If Not IsNull ( dDteEnvCli ) Then
 
 	CHOOSE CASE sDestEnvoi	
 		CASE "SPB"
-			// Retourn$$HEX4$$e9002000e0002000$$ENDHEX$$la SPB par le fournisseur
+			// Retourné à la SPB par le fournisseur
 			asVal = "RSP"			
 
 		CASE ELSE
@@ -18976,7 +18983,7 @@ If Not IsNull ( dDteEnvCli ) Then
 			asVal = "ECL"			
 	END CHOOSE
 
-	// De plus si la dDteRcpFrn n'$$HEX1$$e900$$ENDHEX$$tait pas renseign$$HEX1$$e900$$ENDHEX$$
+	// De plus si la dDteRcpFrn n'était pas renseigné
 	//	On y met la dDteEnvCli
 	If IsNull ( dDteRcpFrn ) Then idwFicFourn.SetItem ( alCpt, "DTE_RCP_FRN", dDteEnvCli )
 
@@ -19024,7 +19031,7 @@ private function integer uf_integration_fichier_tamet (ref long alnblig, ref lon
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_TAMET (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 13/02/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier de CORDON dans la base
+//* Libellé			: Intégration du fichier de CORDON dans la base
 //* Commentaires	: [PM200][PSM]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -19040,18 +19047,18 @@ private function integer uf_integration_fichier_tamet (ref long alnblig, ref lon
 //* #2	 CAG	  23/09/2004  DCMP 040403 : ajout des colonnes dte_emis_devis et mt_devis
 //* #3	 MADM	  09/05/2006  DCMP 060356 : Rempl du frn AEVUM/AVM par CORDON/COR
 //* #4    JCA    09/06/2006  MAILPUSH
-//* #5    JFF    23/08/2006  Modif apport$$HEX1$$e900$$ENDHEX$$e suite probl$$HEX1$$e800$$ENDHEX$$me lenteur
+//* #5    JFF    23/08/2006  Modif apportée suite problème lenteur
 //* #6 	 PHG	 24/04/2008	  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
-//* #7    JFF    29/07/2009  [20090729111054510] Optimisation int$$HEX1$$e900$$ENDHEX$$gration (suppression Regl Auto)
-//* #8	FPI	10/12/2009	[SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
-//*       JFF    11/03/2011 [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+//* #7    JFF    29/07/2009  [20090729111054510] Optimisation intégration (suppression Regl Auto)
+//* #8	FPI	10/12/2009	[SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
+//*       JFF    11/03/2011 [ITSM62176] ajout du point de décimal
 //*       JFF   19/09/2011   [PM82][LOT1]
 //       JFF     17/04/2012   [PM200][LOT2][DESOX]
 //       JFF    26/11/2012  [PC877]
 //       JFF   07/05/2013 [PC938_ORANGE_V3]
 //       JFF   07/05/2013 [PC929-1]
 //       JFF   13/01/2014 [PM246]
-// 		FPI	21/07/2014 [PM250-1].FPI Correction r$$HEX1$$e900$$ENDHEX$$init de date avant lecture de la ligne
+// 		FPI	21/07/2014 [PM250-1].FPI Correction réinit de date avant lecture de la ligne
 //       JFF   18/08/2014 [PM254_V1]
 //*-----------------------------------------------------------------
 
@@ -19098,19 +19105,19 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
 	lIdSin = Long ( Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) )
 
-// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+// [ITSM62176] ajout du point de décimal
 	sSql += String ( lIdSin ) + "., "
 
 	/*------------------------------------------------------------------*/
@@ -19313,7 +19320,7 @@ For lCpt = 1 To lTotLig
 	sVal = "null"
 	sSql += sVal + ", "
 
-	// Pr$$HEX1$$e900$$ENDHEX$$paration zone INFO_FRN_SPB_CPLT 
+	// Préparation zone INFO_FRN_SPB_CPLT 
 	sVal = String ( idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) )
 	// [VDOC3290]
 	Choose Case sVal 
@@ -19332,7 +19339,7 @@ For lCpt = 1 To lTotLig
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 31 : INFO_FRN_SPB_CPLT ( zone multiple )[FNAC_PROD_ECH_TECH]*/
-	/* Une seule affectation $$HEX2$$e0002000$$ENDHEX$$sSql                                     */
+	/* Une seule affectation à sSql                                     */
 	/*------------------------------------------------------------------*/
 	sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ASSURE_EN_PDV", ";")
 	If Len ( Trim ( sVal ) ) > 0 Then
@@ -19439,7 +19446,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #5
 		F_commit ( SQLCA, False ) // #5
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/RECP_APP_EN_CTR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #5
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/RECP_APP_EN_CTR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #5
 		Continue // #5
 	End If
 	//#4 FIN
@@ -19451,7 +19458,7 @@ For lCpt = 1 To lTotLig
 			iRet = -1
 			alNbLigNonTraitee	++ // #4
 			F_commit ( SQLCA, False ) // #4
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
 			Continue // #4
 		End If
 	End if 
@@ -19462,7 +19469,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/PS_S_MAILPUSH_ARR_PLATFORM, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/PS_S_MAILPUSH_ARR_PLATFORM, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 		Continue // #2
 	End If				
 	
@@ -19471,7 +19478,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/PS_S_MAILPUSH_DEP_CENTRDISTRIB, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/PS_S_MAILPUSH_DEP_CENTRDISTRIB, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 		Continue // #2
 	End If				
 	// [PM250-1]		
@@ -19488,14 +19495,14 @@ For lCpt = 1 To lTotLig
 			iRet = -1
 			alNbLigNonTraitee	++ // #5
 			F_commit ( SQLCA, False ) // #5
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #5
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #5
 			Continue // #5
 		End If
 	Else
 		iRet = -1
 		alNbLigNonTraitee	++ // #5
 		F_commit ( SQLCA, False ) // #5
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #5
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #5
 		Continue // #5
 	End If
 
@@ -19512,7 +19519,7 @@ private function integer uf_ctrl_fichier_cdiscountpro_new ();//*----------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_CDISCOUNTPRO (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 20/04/2009
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier du CDISCOUNTPRO
+//* Libellé			: Controler de la validité du fichier du CDISCOUNTPRO
 //* Commentaires	: [DCMP090102]
 //*
 //* Arguments		: 
@@ -19562,16 +19569,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -19579,12 +19586,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -19599,12 +19606,12 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 6 : DTE_ENV_CLI 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 8 : NUM_BON_TRP 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 
 	// [CTRLE_DATE_INTRG_FOU]
@@ -19623,7 +19630,7 @@ For lCpt = lTotLig To 1 Step -1
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -19635,7 +19642,7 @@ private function integer uf_integration_fichier_cdiscountpro_new (ref long alnbl
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_CDiscountPRO (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 31/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier du CDiscountPRO dans la base
+//* Libellé			: Intégration du fichier du CDiscountPRO dans la base
 //* Commentaires	: 
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -19648,10 +19655,10 @@ private function integer uf_integration_fichier_cdiscountpro_new (ref long alnbl
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JCA    09/06/2006  MAILPUSH
-//* #2    JFF    23/08/2006  Modif apport$$HEX1$$e900$$ENDHEX$$e suite probl$$HEX1$$e800$$ENDHEX$$me lenteur
+//* #2    JFF    23/08/2006  Modif apportée suite problème lenteur
 //* #3 	 PHG	 24/04/2008	  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
-//* #4	FPI	10/12/2009	  [SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
-//*       JFF    11/03/2011  [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+//* #4	FPI	10/12/2009	  [SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
+//*       JFF    11/03/2011  [ITSM62176] ajout du point de décimal
 //       JFF   18/08/2014 [PM254_V1]
 //       JFF   02/03/2015 [PM289_CDP]
 //       JFF   10/12/2015 [VDOC19376]
@@ -19690,17 +19697,17 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
-// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+// [ITSM62176] ajout du point de décimal
 	sSql += Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) + "., "
 	// #1
 	lIdSin = Long (Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ))
@@ -19796,25 +19803,25 @@ For lCpt = 1 To lTotLig
 	// [VDOC30171]
 	Choose Case True
 		Case sVal2 = "A"
-			sVal = "Commande annul$$HEX1$$e900$$ENDHEX$$e par le fournisseur, veuillez repasser une commande"
+			sVal = "Commande annulée par le fournisseur, veuillez repasser une commande"
 
 		Case sVal1 = "C" And sVal2 = ""
-			sVal = "Commande cr$$HEX2$$e900e900$$ENDHEX$$e, non valid$$HEX1$$e900$$ENDHEX$$e, non exp$$HEX1$$e900$$ENDHEX$$di$$HEX1$$e900$$ENDHEX$$e."
+			sVal = "Commande créée, non validée, non expédiée."
 
 		Case sVal1 = "V" And sVal2 = ""
-			sVal = "Commande cr$$HEX2$$e900e900$$ENDHEX$$e, valid$$HEX1$$e900$$ENDHEX$$e, non exp$$HEX1$$e900$$ENDHEX$$di$$HEX1$$e900$$ENDHEX$$e."
+			sVal = "Commande créée, validée, non expédiée."
 			
 		Case ( sVal1 = "V" And sVal2 = "P" ) OR ( sVal1 = "" And sVal2 = "P" ) Or ( sVal1 = "V" And sVal2 = "C" ) Or ( sVal1 = "" And sVal2 = "C" )
-			sVal = "Commande cr$$HEX2$$e900e900$$ENDHEX$$e, valid$$HEX1$$e900$$ENDHEX$$e, en pr$$HEX1$$e900$$ENDHEX$$paration d'exp$$HEX1$$e900$$ENDHEX$$dition."
+			sVal = "Commande créée, validée, en préparation d'expédition."
 			
 		Case sVal2 = "V"  Or sVal2 = "S" 
-			sVal = "Commande cr$$HEX2$$e900e900$$ENDHEX$$e, valid$$HEX1$$e900$$ENDHEX$$e, exp$$HEX1$$e900$$ENDHEX$$di$$HEX1$$e900$$ENDHEX$$e."
+			sVal = "Commande créée, validée, expédiée."
 
 		// [VDOC30171]
 		Case sVal2 = "P" Or sVal2 = "C"
 			Choose Case sVal1 
 				Case "S" 
-					sVal = "Commande cr$$HEX2$$e900e900$$ENDHEX$$e, valid$$HEX1$$e900$$ENDHEX$$e, exp$$HEX1$$e900$$ENDHEX$$di$$HEX1$$e900$$ENDHEX$$e."
+					sVal = "Commande créée, validée, expédiée."
 				Case Else
 					sVal = ""
 			End Choose 
@@ -20010,7 +20017,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 	//	Exit  #2
 		Continue // #2
 	End If				
@@ -20036,7 +20043,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -20054,7 +20061,7 @@ For lCpt = 1 To lTotLig
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")				
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 		F_commit ( SQLCA, False )
 			
@@ -20072,7 +20079,7 @@ private function integer uf_ctrl_fichier_cdiscountpro_ano ();//*----------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_CDISCOUNTPRO_ano (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 04/03/2015
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PM289_CDP]
 //*
 //* Arguments		: 
@@ -20110,16 +20117,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -20127,12 +20134,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -20145,12 +20152,12 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 6 : DTE_ENV_CLI 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 8 : NUM_BON_TRP 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 
 	// #2 [MSS_DIAG].[20091207111441740]
@@ -20164,7 +20171,7 @@ For lCpt = lTotLig To 1 Step -1
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -20176,7 +20183,7 @@ private function integer uf_integration_fichier_cdiscountpro_ano (ref long alnbl
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_CDiscountPRO_ano (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 31/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier du CDiscountPRO dans la base
+//* Libellé			: Intégration du fichier du CDiscountPRO dans la base
 //* Commentaires	: 
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -20189,10 +20196,10 @@ private function integer uf_integration_fichier_cdiscountpro_ano (ref long alnbl
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JCA    09/06/2006  MAILPUSH
-//* #2    JFF    23/08/2006  Modif apport$$HEX1$$e900$$ENDHEX$$e suite probl$$HEX1$$e800$$ENDHEX$$me lenteur
+//* #2    JFF    23/08/2006  Modif apportée suite problème lenteur
 //* #3 	 PHG	 24/04/2008	  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
-//* #4	FPI	10/12/2009	  [SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
-//*       JFF    11/03/2011  [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+//* #4	FPI	10/12/2009	  [SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
+//*       JFF    11/03/2011  [ITSM62176] ajout du point de décimal
 //       JFF   18/08/2014 [PM254_V1]
 //       JFF   02/03/2015 [PM289_CDP]
 //*-----------------------------------------------------------------
@@ -20224,24 +20231,24 @@ For lCpt = 1 To lTotLig
 
 	sMesErr = Trim ( idwFicFourn.GetItemString ( lCpt, "MESSAGEERROR" ) )
 	If IsNull ( sMesErr ) Then sMesErr = ""
-	If Left ( sMesErr, 11) <> "Non trait$$HEX1$$e900$$ENDHEX$$e" Then Continue
+	If Left ( sMesErr, 11) <> "Non traitée" Then Continue
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 1 : ID_SIN	                                               */
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
-// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+// [ITSM62176] ajout du point de décimal
 	sSql += Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) + "., "
 	// #1
 	lIdSin = Long (Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ))
@@ -20296,7 +20303,7 @@ For lCpt = 1 To lTotLig
 	sVal = sMesErr
 	sCommentFrn = sVal	
 	This.uf_FormatChaine ( sVal )
-	sVal = "'" + sVal + ". Commande annul$$HEX1$$e900$$ENDHEX$$e par le fournisseur, veuillez r$$HEX1$$e800$$ENDHEX$$gler l''assur$$HEX2$$e9002000$$ENDHEX$$en num$$HEX1$$e900$$ENDHEX$$raire" + "'"
+	sVal = "'" + sVal + ". Commande annulée par le fournisseur, veuillez règler l''assuré en numéraire" + "'"
 
 	If IsNull ( sVal ) Or sVal = "" Or sVal = "''" Then sVal = "null"
 	sSql += sVal + ", "
@@ -20458,7 +20465,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -20476,7 +20483,7 @@ For lCpt = 1 To lTotLig
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")				
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 		F_commit ( SQLCA, False )
 			
@@ -20494,7 +20501,7 @@ private function integer uf_ctrl_fichier_sbe_old ();//*-------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_SBE (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 21/06/2003
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier SBE
+//* Libellé			: Controler de la validité du fichier SBE
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -20536,16 +20543,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #1
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #1
@@ -20553,12 +20560,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -20578,13 +20585,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -20593,7 +20600,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 3 : NUM_CMD_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 4 : NUM_IMEI_NOU														  */
@@ -20603,24 +20610,24 @@ For lCpt = lTotLig To 1 Step -1
 	If Len ( sVal ) <> 15 And Len ( sVal ) > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Un num$$HEX1$$e900$$ENDHEX$$ro d'IMEI doit contenir 15 chiffres" )
+		" : Un numéro d'IMEI doit contenir 15 chiffres" )
 	End If
 
 	If Not F_IMEI ( sVal, sIMEICorr ) And Len ( sVal ) > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Num$$HEX1$$e900$$ENDHEX$$ro d'IMEI non valide" )
+		" : Numéro d'IMEI non valide" )
 	End If 
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 5 : DTE_RCP_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 6 : DTE_ENV_CLI 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 7 : DEST_ENVOI	 														  */
@@ -20634,7 +20641,7 @@ For lCpt = lTotLig To 1 Step -1
 			CASE ELSE	
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le Destinataire de l'envoi doit $$HEX1$$ea00$$ENDHEX$$tre null ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$SPB ou CLIENT, mais pas " + sVal )
+				" : Le Destinataire de l'envoi doit être null ou égal à SPB ou CLIENT, mais pas " + sVal )
 		END CHOOSE
 
 	End If
@@ -20642,7 +20649,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 8 : NUM_BON_TRP 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 9 : COD_ETAT_CMD														  */
@@ -20656,7 +20663,7 @@ For lCpt = lTotLig To 1 Step -1
 			CASE ELSE	
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le code $$HEX1$$e900$$ENDHEX$$tat doit $$HEX1$$ea00$$ENDHEX$$tre null ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$ANN ou RPC, mais pas " + sVal )
+				" : Le code état doit être null ou égal à ANN ou RPC, mais pas " + sVal )
 		END CHOOSE
 
 	End If
@@ -20664,12 +20671,12 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 7 : STATUS_GC														     */
 	/*------------------------------------------------------------------*/
-	// [O2M] : V$$HEX1$$e900$$ENDHEX$$rification de l'appartenance du code retourn$$HEX2$$e9002000$$ENDHEX$$au param$$HEX1$$e900$$ENDHEX$$trage.
+	// [O2M] : Vérification de l'appartenance du code retourné au paramétrage.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 10 : COMMENT_FRN														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	// #2 [MSS_DIAG].[20091207111441740]
 	// [20091228114718123]
@@ -20682,7 +20689,7 @@ For lCpt = lTotLig To 1 Step -1
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -20694,8 +20701,8 @@ private subroutine uf_definir_codetat_sbe (ref string asval, long alcpt, long al
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_SBE (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 12/07/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: 
 //*
 //* Arguments		: asVal		String		Ref
@@ -20770,7 +20777,7 @@ private function integer uf_integration_fichier_sbe (ref long alnblig, ref long 
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_SBE (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 10/04/2015
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier SBE dans la base
+//* Libellé			: Intégration du fichier SBE dans la base
 //* Commentaires	: // [DT141]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -20785,10 +20792,10 @@ private function integer uf_integration_fichier_sbe (ref long alnblig, ref long 
 //* #1 	 PHG	 24/04/2008	  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
 //* #2    JFF   28/04/2008   [DCMP080202] MailPush O2M
 //* #3	 JFF	 20/10/2008	  [FNAC_PROD_ECH_TECH]
-//* #4	 FPI	 10/12/2009	  [SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
+//* #4	 FPI	 10/12/2009	  [SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
 //*       JFF   30/06/2010   [PC363_AUCHAN]
 //*       JFF   07/03/2011   [VDOC3290]
-//*       JFF   11/03/2011   [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+//*       JFF   11/03/2011   [ITSM62176] ajout du point de décimal
 //*       JFF   19/09/2011   [PM82][LOT1]
 //*       JFF   05/01/2012   [RECUP_DONNEE_O2M]
 //        JFF   06/08/2012   [BLCODE]
@@ -20797,7 +20804,7 @@ private function integer uf_integration_fichier_sbe (ref long alnblig, ref long 
 //       JFF   08/04/2014 [PM255]
 //       JFF   07/05/2013 [PM250-1]
 //       JFF   02/06/2014 [PC929_CDISCOUNT][PC929-2-V3]
-// 		FPI	21/07/2014 [PM250-1].FPI Correction r$$HEX1$$e900$$ENDHEX$$init de date avant lecture de la ligne
+// 		FPI	21/07/2014 [PM250-1].FPI Correction réinit de date avant lecture de la ligne
 //       JFF   18/08/2014 [PM254_V1]
 //       JFF   25/08/2014 [DT100]
 //       JFF   16/09/2014 [PM250-2]
@@ -20854,19 +20861,19 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
 	lIdSin = Long ( Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) )
 
-// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+// [ITSM62176] ajout du point de décimal
 	sSql += String ( lIdSin ) + "., "
 
 	/*------------------------------------------------------------------*/
@@ -21099,7 +21106,7 @@ For lCpt = 1 To lTotLig
 		lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "MT_TTC_REMPL", sVal, ";")
 	End If
 
-	// Pr$$HEX1$$e900$$ENDHEX$$paration zone INFO_FRN_SPB_CPLT 
+	// Préparation zone INFO_FRN_SPB_CPLT 
 	/*
 	If Not IsNull( sInfoFrnSpbCpltLu ) and Trim ( sInfoFrnSpbCpltLu ) <> "" Then 
 		sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "MARQUE_REMPL", ";")
@@ -21199,7 +21206,7 @@ For lCpt = 1 To lTotLig
 	
 	/*------------------------------------------------------------------*/
 	/* ZONE 31 : INFO_FRN_SPB_CPLT ( zone multiple )[FNAC_PROD_ECH_TECH]*/
-	/* Une seule affectation $$HEX2$$e0002000$$ENDHEX$$sSql                                     */
+	/* Une seule affectation à sSql                                     */
 	/*------------------------------------------------------------------*/
 	sSql += "'" + sInfoFrnSpbCplt + "'"
 
@@ -21209,7 +21216,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ 
 		F_commit ( SQLCA, False ) 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/RECP_APP_EN_CTR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/RECP_APP_EN_CTR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
 		Continue 
 	End If
 	// :#2
@@ -21220,7 +21227,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 	//	Exit  #2
 		Continue // #2
 	End If	
@@ -21231,7 +21238,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/PS_S_MAILPUSH_ARR_PLATFORM, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/PS_S_MAILPUSH_ARR_PLATFORM, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 		Continue // #2
 	End If				
 	
@@ -21240,7 +21247,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/PS_S_MAILPUSH_DEP_CENTRDISTRIB, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/PS_S_MAILPUSH_DEP_CENTRDISTRIB, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 		Continue // #2
 	End If				
 	// [PM250-1]	
@@ -21266,7 +21273,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -21283,7 +21290,7 @@ For lCpt = 1 To lTotLig
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")	
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + sVal )
 
 		F_commit ( SQLCA, False )
 			
@@ -21303,7 +21310,7 @@ public function integer uf_mailpush (string ascas, long adcidsin, integer aiidse
 //* Fonction      : n_cst_int_Fic_SuiviCmd::uf_MailPush (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 08/06/2006 
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Envoi de mail en Push sur Evt d$$HEX1$$e900$$ENDHEX$$clencheur en provenance du Frn
+//* Libellé       : Envoi de mail en Push sur Evt déclencheur en provenance du Frn
 //* Commentaires  : 
 //*
 //* Arguments     : String asCas					Val
@@ -21367,7 +21374,7 @@ private function integer uf_ctrl_fichier_carma ();//*---------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_Carma (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 11/05/2016
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controle de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier Carma
+//* Libellé			: Controle de la validité du fichier Carma
 //* Commentaires	: [DT111]
 //*
 //* Arguments		: 
@@ -21415,16 +21422,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -21432,12 +21439,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -21461,13 +21468,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	sIdFourCtrl = sVal
@@ -21488,7 +21495,7 @@ For lCpt = lTotLig To 1 Step -1
 	
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -21500,7 +21507,7 @@ private function integer uf_integration_fichier_carma (ref long alnblig, ref lon
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_Carma (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 12/05/2016
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier de CARMA dans la base
+//* Libellé			: Intégration du fichier de CARMA dans la base
 //* Commentaires	: [DT111]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -21556,13 +21563,13 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
@@ -21757,7 +21764,7 @@ For lCpt = 1 To lTotLig
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 31 : INFO_FRN_SPB_CPLT ( zone multiple )[FNAC_PROD_ECH_TECH]*/
-	/* Une seule affectation $$HEX2$$e0002000$$ENDHEX$$sSql                                     */
+	/* Une seule affectation à sSql                                     */
 	/*------------------------------------------------------------------*/
 	sInfoFrnSpbCplt= sInfoFrnSpbCpltLu
 		
@@ -21784,7 +21791,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -21802,7 +21809,7 @@ For lCpt = 1 To lTotLig
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")				
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 		F_commit ( SQLCA, False )
 			
@@ -21822,7 +21829,7 @@ private function integer uf_ctrl_fichier_bak2 ();//*----------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_bak2 (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/03/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier du CORIOLIS
+//* Libellé			: Controler de la validité du fichier du CORIOLIS
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -21886,16 +21893,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -21903,12 +21910,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -21931,13 +21938,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -21946,7 +21953,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 3 : NUM_CMD_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 4 : NUM_IMEI_NOU														  */
@@ -21956,19 +21963,19 @@ For lCpt = lTotLig To 1 Step -1
 	If Len ( sVal ) <> 15 And Len ( sVal ) > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Un num$$HEX1$$e900$$ENDHEX$$ro d'IMEI doit contenir 15 chiffres" )
+		" : Un numéro d'IMEI doit contenir 15 chiffres" )
 	End If
 
 	If Not F_IMEI ( sVal, sIMEICorr ) And Len ( sVal ) > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Num$$HEX1$$e900$$ENDHEX$$ro d'IMEI non valide" )
+		" : Numéro d'IMEI non valide" )
 	End If 
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 5 : DTE_RCP_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 6 : DTE_ENV_CLI 														  */
@@ -21979,7 +21986,7 @@ For lCpt = lTotLig To 1 Step -1
 	If Not IsNull ( dtVal ) And Not IsNull ( dtVal1 ) And dtVal1 < dtVal Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la DTE_RCP_FRN." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit être postérieure ou égale à la DTE_RCP_FRN." )
 	End If
 	// [VDOC9337]	
 
@@ -21995,7 +22002,7 @@ For lCpt = lTotLig To 1 Step -1
 			CASE ELSE	
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le Destinataire de l'envoi doit $$HEX1$$ea00$$ENDHEX$$tre null ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$SPB ou CLIENT, mais pas " + sVal )
+				" : Le Destinataire de l'envoi doit être null ou égal à SPB ou CLIENT, mais pas " + sVal )
 		END CHOOSE
 
 	End If
@@ -22003,21 +22010,21 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 8 : NUM_BON_TRP 														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 10 : STATUS_GC														     */
 	/*------------------------------------------------------------------*/
-	// [O2M] : V$$HEX1$$e900$$ENDHEX$$rification de l'appartenance du code retourn$$HEX2$$e9002000$$ENDHEX$$au param$$HEX1$$e900$$ENDHEX$$trage.
+	// [O2M] : Vérification de l'appartenance du code retourné au paramétrage.
 	sVal = String ( idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) )
 
 	If ( IsNull ( sVal ) Or Trim ( sVal ) = "" ) And iStatusGc > 0 Then sVal = String ( iStatusGc )
 	
-//	if dsCode.retrieve('-GC') > 0  then											// #9 - Chargement au d$$HEX1$$e900$$ENDHEX$$but de la fct
-			// #3 [FNAC_PROD_ECH_TECH] agrandissement jusqu'$$HEX2$$e0002000$$ENDHEX$$160
+//	if dsCode.retrieve('-GC') > 0  then											// #9 - Chargement au début de la fct
+			// #3 [FNAC_PROD_ECH_TECH] agrandissement jusqu'à 160
 			// #4 [DCMP090109] ajout 2, 21
-			// #5 [DCMP090085] ajout jusqu'$$HEX2$$e0002000$$ENDHEX$$169
+			// #5 [DCMP090085] ajout jusqu'à 169
 			// #6 [DCMP090327].[SBETV] (171)
 			// [PM166][O2M]
 			// [MANTIS3067] ajout 231
@@ -22032,7 +22039,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 11 : COMMENT_FRN														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 	
 	// [CTRLE_DATE_INTRG_FOU]
 	sVal  = String ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_RCP_FRN" ) )  	
@@ -22068,7 +22075,7 @@ For lCpt = lTotLig To 1 Step -1
 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$PRBLE_LIVRAISON, n'est pas valide." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé PRBLE_LIVRAISON, n'est pas valide." )
 
 		End Choose 
 	End IF 
@@ -22091,14 +22098,14 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$PEC_PRBLE_LIVRAISON, n'est pas valide." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé PEC_PRBLE_LIVRAISON, n'est pas valide." )
 
 		End Choose 
 		
 		If sVal1 = "" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la cl$$HEX2$$e9002000$$ENDHEX$$PEC_PRBLE_LIVRAISON n'est autoris$$HEX1$$e900$$ENDHEX$$e que si pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$demment il y a au un cl$$HEX2$$e9002000$$ENDHEX$$PRBLE_LIVRAISON, qui est justement absente." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la clé PEC_PRBLE_LIVRAISON n'est autorisée que si précédemment il y a au un clé PRBLE_LIVRAISON, qui est justement absente." )
 		End If 			
 	End If 	
 	
@@ -22114,7 +22121,7 @@ For lCpt = lTotLig To 1 Step -1
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 if isvalid(dsCode) Then destroy dsCode
 
@@ -22128,7 +22135,7 @@ private function integer uf_integration_fichier_bak2 (ref long alnblig, ref long
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_Bak2 (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 31/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier du Coriolis dans la base
+//* Libellé			: Intégration du fichier du Coriolis dans la base
 //* Commentaires	: //[PM178][CORIOLIS]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -22141,11 +22148,11 @@ private function integer uf_integration_fichier_bak2 (ref long alnblig, ref long
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JCA    09/06/2006  MAILPUSH
-//* #2    JFF    23/08/2006  Modif apport$$HEX1$$e900$$ENDHEX$$e suite probl$$HEX1$$e800$$ENDHEX$$me lenteur
+//* #2    JFF    23/08/2006  Modif apportée suite problème lenteur
 //* #3 	 PHG	  24/04/2008  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
-//* #4	 FPI	  10/12/2009  [SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
-//*       JFF    11/03/2011  [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
-//  			FPI	04/08/2011	[FPI.04082011] Prise en compte de la date de r$$HEX1$$e900$$ENDHEX$$ception des mobiles par les assur$$HEX1$$e900$$ENDHEX$$s
+//* #4	 FPI	  10/12/2009  [SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
+//*       JFF    11/03/2011  [ITSM62176] ajout du point de décimal
+//  			FPI	04/08/2011	[FPI.04082011] Prise en compte de la date de réception des mobiles par les assurés
 //       JFF   18/08/2014 [PM254_V1]
 //       JFF   28/01/2019 [PM450-1]
 //*-----------------------------------------------------------------
@@ -22186,17 +22193,17 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
-	// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+	// [ITSM62176] ajout du point de décimal
 	sSql += Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) + "., "
 	// #1
 	lIdSin = Long (Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ))
@@ -22434,7 +22441,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 	//	Exit  #2
 		Continue // #2
 	End If				
@@ -22460,7 +22467,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -22478,7 +22485,7 @@ For lCpt = 1 To lTotLig
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")				
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 		F_commit ( SQLCA, False )
 			
@@ -22496,8 +22503,8 @@ private subroutine uf_definir_codetat_bak2 (ref string asval, long alcpt, long a
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_Bak2 (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 12/20/2016
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: // [DT076-2]
 //*
 //* Arguments		: asVal		String		Ref
@@ -22552,7 +22559,7 @@ private function integer uf_ctrl_fichier_cordon ();//*--------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_CORDON (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 24/02/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier CORDON
+//* Libellé			: Controler de la validité du fichier CORDON
 //* Commentaires	: [DT288]
 //*
 //* Arguments		: 
@@ -22584,7 +22591,7 @@ private function integer uf_ctrl_fichier_cordon ();//*--------------------------
 //* 		FPI   01/12/2011     [VDoc6082]
 //*      JFF   05/01/2012 		[RECUP_DONNEE_O2M]
 //*      JFF   23/01/2012     [VDOC6300]
-//*      JFF   20/03/2012     [CTRL_IMEI_O2M] ajout contr$$HEX1$$f400$$ENDHEX$$le IMEI
+//*      JFF   20/03/2012     [CTRL_IMEI_O2M] ajout contrôle IMEI
 //*      JFF   04/04/2012     [MANTIS3067] satut 231
 //*      JFF   30/05/2012	   [VDOC7926]
 //       JFF   06/08/2012     [BLCODE]
@@ -22655,7 +22662,7 @@ lTotLig = idwFicFourn.RowCount ()
 // [MODIF_SUITE_REDR]
 If lTotLig <= 0 And FileLength64 ( isTxtNomFic.Text ) > 0 Then
 	iRet = -1
-	This.uf_Trace ( "ECR", "ERREUR : 0 Ligne charg$$HEX1$$e900$$ENDHEX$$e ! , pour PI : Taille du fichier positive et chargement $$HEX2$$e0002000$$ENDHEX$$0 ligne => Anormal. R$$HEX1$$e900$$ENDHEX$$essayez l'int$$HEX1$$e900$$ENDHEX$$gration (cause $$HEX1$$e900$$ENDHEX$$ventuelle => le fichier est peut-$$HEX1$$ea00$$ENDHEX$$tre en format Unicode au lieu d'Ansi, $$HEX2$$e0002000$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$rifier)." )
+	This.uf_Trace ( "ECR", "ERREUR : 0 Ligne chargée ! , pour PI : Taille du fichier positive et chargement à 0 ligne => Anormal. Réessayez l'intégration (cause éventuelle => le fichier est peut-être en format Unicode au lieu d'Ansi, à vérifier)." )
 End If		
 
 sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
@@ -22666,11 +22673,11 @@ dsCode.SetTransObject(SQLCA)
 dsCode.retrieve('-GC') 		// #9
 
 // [DT288][M24505]
-// Contr$$HEX1$$f400$$ENDHEX$$le entete et fin
+// Contrôle entete et fin
 If lTotLig < 2 Then
 	iRet = -1
 	This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-	" : Le fichier doit comporter au minimum 2 engistrements : ent$$HEX1$$ea00$$ENDHEX$$te & fin")
+	" : Le fichier doit comporter au minimum 2 engistrements : entête & fin")
 	lTotLig = 0
 End If
 
@@ -22679,7 +22686,7 @@ If iRet > 0 Then
 	If Pos ( sVal, "DEBUT#" ) <= 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La ligne d'ent$$HEX1$$ea00$$ENDHEX$$te n'est pas conforme (attendu : DEBUT#xx)")
+		" : La ligne d'entête n'est pas conforme (attendu : DEBUT#xx)")
 		lTotLig = 0
 	End If
 End If
@@ -22690,7 +22697,7 @@ If iRet > 0 Then
 	If Not IsNumber ( sVal )  Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La ligne d'ent$$HEX1$$ea00$$ENDHEX$$te n'est pas conforme, la valeur d$$HEX1$$e900$$ENDHEX$$rri$$HEX1$$e800$$ENDHEX$$re DEBUT# doit $$HEX1$$ea00$$ENDHEX$$tre un nombre")
+		" : La ligne d'entête n'est pas conforme, la valeur dérrière DEBUT# doit être un nombre")
 		lTotLig = 0
 	End If
 End If
@@ -22719,7 +22726,7 @@ If iRet > 0 Then
 	If Not IsNumber ( sVal )  Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La ligne de fin n'est pas conforme, la valeur d$$HEX1$$e900$$ENDHEX$$rri$$HEX1$$e800$$ENDHEX$$re FIN# doit $$HEX1$$ea00$$ENDHEX$$tre un nombre")
+		" : La ligne de fin n'est pas conforme, la valeur dérrière FIN# doit être un nombre")
 		lTotLig = 0
 	End If
 End If
@@ -22736,7 +22743,7 @@ If iRet > 0 Then
 	If lNbreLignDeb <> lNbreLignFin Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le nombre de ligne entre la ligne d'ent$$HEX1$$ea00$$ENDHEX$$te et la ligne de fin n'est pas identique")
+		" : Le nombre de ligne entre la ligne d'entête et la ligne de fin n'est pas identique")
 		lTotLig = 0		
 	End If 
 End If
@@ -22745,7 +22752,7 @@ If iRet > 0 Then
 	If lNbreLignDeb <> lTotLig Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le nombre de ligne du fichier dans la ligne d'ent$$HEX1$$ea00$$ENDHEX$$te (" + String ( lTotLig ) + ") ne correspond pas au nombre de ligne r$$HEX1$$e900$$ENDHEX$$el du fichier (" + String ( lNbreLignDeb ) + ")" )
+		" : Le nombre de ligne du fichier dans la ligne d'entête (" + String ( lTotLig ) + ") ne correspond pas au nombre de ligne réel du fichier (" + String ( lNbreLignDeb ) + ")" )
 		lTotLig = 0		
 	End If 
 End If
@@ -22770,16 +22777,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+	// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -22787,12 +22794,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 	End If
@@ -22818,14 +22825,14 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour And sVal <> "BLC" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 	// [BLCODE]
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -22845,7 +22852,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Not isNull(dtVal) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre vide.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de réception fournisseur (DTE_RCP_FRN) doit être vide.")
 			End if
 
 		// [PM01].[LOT3&4]
@@ -22858,14 +22865,14 @@ For lCpt = lTotLig To 1 Step -1
 			If isNull(dtVal) And iInfoSpbFrn <> 957 And sVal <> "OUI" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de réception fournisseur (DTE_RCP_FRN) doit être renseignée.")
 			End if
 			
 			// [PC13321][MANTIS14042]			
 			If Not isNull(dtVal) And iInfoSpbFrn = 957 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", et pour le process sp$$HEX1$$e900$$ENDHEX$$cifique 957, la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre vide.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", et pour le process spécifique 957, la date de réception fournisseur (DTE_RCP_FRN) doit être vide.")
 			End If			
 
 	End Choose
@@ -22888,13 +22895,13 @@ For lCpt = lTotLig To 1 Step -1
 	If ( sVal <> "" OR sVal1 <> "" ) And sVal2 <> "OUI" And sVal3 <> "OUI" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Les zones NUM_IMEI_NOUV et NUM_IMEI_SERIE ne peuvent $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$s que sur un SWAP ou une commande de Remplacement." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Les zones NUM_IMEI_NOUV et NUM_IMEI_SERIE ne peuvent être renseignés que sur un SWAP ou une commande de Remplacement." )
 	End If
 
 	If iRet > 0 And sVal <> "" And sVal1 <> "" And ( sVal2 = "OUI" Or sVal3 = "OUI" ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Les zones deux zones NUM_IMEI_NOUV et NUM_IMEI_SERIE ne peuvent pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$es toutes les deux, choisissez." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Les zones deux zones NUM_IMEI_NOUV et NUM_IMEI_SERIE ne peuvent pas être renseignées toutes les deux, choisissez." )
 	End If
 
 	sNumImeiSerie = ""
@@ -22907,13 +22914,13 @@ For lCpt = lTotLig To 1 Step -1
 		If Len ( sVal ) <> 15 And Len ( sVal ) > 0 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Un num$$HEX1$$e900$$ENDHEX$$ro d'IMEI doit contenir 15 chiffres" )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Un numéro d'IMEI doit contenir 15 chiffres" )
 		End If
 	
 		If Not F_IMEI ( sVal, sIMEICorr ) And Len ( sVal ) > 0 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Num$$HEX1$$e900$$ENDHEX$$ro d'IMEI non valide" )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Numéro d'IMEI non valide" )
 		End If 
 	End If
 
@@ -22937,20 +22944,20 @@ For lCpt = lTotLig To 1 Step -1
 				If Not Isnull (dtVal) Then
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					", PM82_LOT1 : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + " en r$$HEX1$$e900$$ENDHEX$$paration, la date de fin de traitement (DTE_FIN_TRAIT) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+					", PM82_LOT1 : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + " en réparation, la date de fin de traitement (DTE_FIN_TRAIT) ne doit pas être renseignée.")
 				End If
 
 			Elseif Isnull(dtVal) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit être renseignée.")
 			End if
 		// [VDOC8041] 232
 		Case 156, 157, 158, 159, 162, 163, 164, 169, 232, 174
 			if Not Isnull(dtVal) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit $$HEX1$$ea00$$ENDHEX$$tre vide.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit être vide.")
 			End if
 			
 		Case Else
@@ -22958,7 +22965,7 @@ For lCpt = lTotLig To 1 Step -1
 			If ( lVal = 0 Or IsNull ( lVal ) ) And Not IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Lorsque la date de fin de traitement (DTE_FIN_TRAIT) est renseign$$HEX1$$e900$$ENDHEX$$e, un statut GC est obligatoire.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Lorsque la date de fin de traitement (DTE_FIN_TRAIT) est renseignée, un statut GC est obligatoire.")
 			End If 
 	
 			
@@ -22978,14 +22985,14 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( sVal ) Or Len ( sVal ) <= 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone NUM_BON_TRP doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e sur le statut " + String ( lVal ) )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone NUM_BON_TRP doit être renseignée sur le statut " + String ( lVal ) )
 			End If
 		//  [VDoc4752]
 		Case 165
 			If iInfoSpbFrn = 970 and (IsNull ( sVal ) Or Len ( sVal ) <= 0 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone NUM_BON_TRP doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e sur le statut " + String ( lVal ) +  " pour le process 970.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone NUM_BON_TRP doit être renseignée sur le statut " + String ( lVal ) +  " pour le process 970.")
 			End If
 		// :[VDoc4752]
 	End Choose
@@ -23002,14 +23009,14 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 7 : STATUS_GC														     */
 	/*------------------------------------------------------------------*/
-	// [O2M] : V$$HEX1$$e900$$ENDHEX$$rification de l'appartenance du code retourn$$HEX2$$e9002000$$ENDHEX$$au param$$HEX1$$e900$$ENDHEX$$trage.
+	// [O2M] : Vérification de l'appartenance du code retourné au paramétrage.
 	sVal = String ( idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) )
 	If ( IsNull ( sVal ) Or Trim ( sVal ) = "" ) And iStatusGc > 0 Then sVal = String ( iStatusGc )
 	
-//	if dsCode.retrieve('-GC') > 0  then											// #9 - Chargement au d$$HEX1$$e900$$ENDHEX$$but de la fct
-			// #3 [FNAC_PROD_ECH_TECH] agrandissement jusqu'$$HEX2$$e0002000$$ENDHEX$$160
+//	if dsCode.retrieve('-GC') > 0  then											// #9 - Chargement au début de la fct
+			// #3 [FNAC_PROD_ECH_TECH] agrandissement jusqu'à 160
 			// #4 [DCMP090109] ajout 2, 21
-			// #5 [DCMP090085] ajout jusqu'$$HEX2$$e0002000$$ENDHEX$$169
+			// #5 [DCMP090085] ajout jusqu'à 169
 			// #6 [DCMP090327].[SBETV] (171)
 			// [PM166][O2M]
 			// [MANTIS3067] ajout 231
@@ -23033,14 +23040,14 @@ For lCpt = lTotLig To 1 Step -1
 // [PM82][LOT1] je remonte cette linge plus haut.
 // [RECUP_DONNEE_O2M] PCM 
 // [VDOC4970]
-// [PM250] Modif suite demande d'H$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e800$$ENDHEX$$ne (et CORDON)
+// [PM250] Modif suite demande d'Hélène (et CORDON)
 	Choose Case Upper ( sIdTypArt ) 
 		Case "EDI", "PRS", "PCM"
 			Choose Case Long ( sVal ) 
 				Case 177, 178
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le Status GC " + sVal + " n'est autoris$$HEX2$$e9002000$$ENDHEX$$que pour les commandes de mat$$HEX1$$e900$$ENDHEX$$riel (hors Batterie amovible BAM et C$$HEX1$$e200$$ENDHEX$$ble d'alimentation ALE)" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le Status GC " + sVal + " n'est autorisé que pour les commandes de matériel (hors Batterie amovible BAM et Câble d'alimentation ALE)" )
 			End Choose
 		Case Else
 			Choose Case Long ( sVal ) 
@@ -23053,14 +23060,14 @@ For lCpt = lTotLig To 1 Step -1
 						If Not ( sIdTypArt = "REA") And Not ( sIdTypArt = "PST" And Trim ( lnvPFCString.of_Getkeyvalue ( sInfoSpbFrnCplt, "TYP_RELAI", ";")) <> "PRET" ) Then
 							iRet = -1
 							This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-							" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Status GC " + sVal + " autoris$$HEX2$$e9002000$$ENDHEX$$uniquement sur une presta de type PST sans PRET ou une presta de type REA" )
+							" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Status GC " + sVal + " autorisé uniquement sur une presta de type PST sans PRET ou une presta de type REA" )
 						End If
 					End If 
 					
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Status GC " + sVal + " non autoris$$HEX2$$e9002000$$ENDHEX$$pour une commande de mat$$HEX1$$e900$$ENDHEX$$riel (hors Batterie amovible BAM et C$$HEX1$$e200$$ENDHEX$$ble d'alimentation ALE)" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Status GC " + sVal + " non autorisé pour une commande de matériel (hors Batterie amovible BAM et Câble d'alimentation ALE)" )
 
 			End Choose
 			
@@ -23073,32 +23080,32 @@ For lCpt = lTotLig To 1 Step -1
 		Case 1503, 1504, 435, 1502
 			Choose Case Long ( sVal ) 
 				Case 166
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoy$$HEX2$$e9002000$$ENDHEX$$sur la prestation d'origine, le Status GC " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$en retour" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Status GC " + sVal + " n'est pas autorisé en retour" )
 			End Choose
 			
 		Case 1505
 			Choose Case Long ( sVal ) 
 				Case 167, 168
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoy$$HEX2$$e9002000$$ENDHEX$$sur la prestation d'origine, le Status GC " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$en retour" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Status GC " + sVal + " n'est pas autorisé en retour" )
 			End Choose
 		// [VDoc4752]
 		Case 970
 			Choose Case Long ( sVal )
 					// [VDoc6082] ajout du statut_gc 164
 				Case 165,164
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoy$$HEX2$$e9002000$$ENDHEX$$sur la prestation d'origine, le Status GC " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$en retour" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Status GC " + sVal + " n'est pas autorisé en retour" )
 			End Choose
 			// :[VDoc4752]
 			
@@ -23106,11 +23113,11 @@ For lCpt = lTotLig To 1 Step -1
 		Case 964, 969
 			Choose Case Long ( sVal )
 				Case 179
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoy$$HEX2$$e9002000$$ENDHEX$$sur la prestation d'origine, le Status GC " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$en retour" )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Status GC " + sVal + " n'est pas autorisé en retour" )
 			End Choose			
 			
 	End Choose		
@@ -23120,32 +23127,32 @@ For lCpt = lTotLig To 1 Step -1
 			// [VDOC5774] 435, 1502
 			Choose Case iInfoSpbFrn
 				Case 1503, 1504, 435, 1502
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$sur le process " + String ( iInfoSpbFrn ) )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autorisé sur le process " + String ( iInfoSpbFrn ) )
 			End Choose
 			
 		Case 167, 168
 			Choose Case iInfoSpbFrn
 				Case 1505
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$sur le process " + String ( iInfoSpbFrn ) )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autorisé sur le process " + String ( iInfoSpbFrn ) )
 			End Choose
 			
 		// [VDOC6300] // [PC877]
 		Case 179
 			Choose Case iInfoSpbFrn
 				Case 964, 969
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$sur le process " + String ( iInfoSpbFrn ) )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autorisé sur le process " + String ( iInfoSpbFrn ) )
 			End Choose
 	End Choose			
 	// :[VDOC3731]	
@@ -23157,7 +23164,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Upper ( sIdTypArt ) <> "PRS" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autoris$$HEX2$$e9002000$$ENDHEX$$que sur une action de REPARATION." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autorisé que sur une action de REPARATION." )
 			End If
 
 	End Choose
@@ -23169,7 +23176,7 @@ For lCpt = lTotLig To 1 Step -1
 			If lVal = 232 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autoris$$HEX2$$e9002000$$ENDHEX$$que sur une action de REPARATION." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autorisé que sur une action de REPARATION." )
 			End If
 
 	End Choose
@@ -23203,7 +23210,7 @@ For lCpt = lTotLig To 1 Step -1
 	If len ( Trim ( sVal ) ) > 0 And Not IsDate ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone s$$HEX1$$e900$$ENDHEX$$rialis$$HEX1$$e900$$ENDHEX$$e DTE_RCP_MOB_CLI ne contient pas une date valide" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone sérialisée DTE_RCP_MOB_CLI ne contient pas une date valide" )
 	End If 
 
 	// [PC938_ORANGE_V3]
@@ -23214,7 +23221,7 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone s$$HEX1$$e900$$ENDHEX$$rialis$$HEX1$$e900$$ENDHEX$$e DTE_RCP_MOB_CLI ne peut $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e sans le statut 178, 233, 263, 234, 2, 21" )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone sérialisée DTE_RCP_MOB_CLI ne peut être renseignée sans le statut 178, 233, 263, 234, 2, 21" )
 		End Choose
 	End If
 
@@ -23222,14 +23229,14 @@ For lCpt = lTotLig To 1 Step -1
 	If len ( Trim ( sVal ) ) > 0 And ( lVal = 178 Or lVal = 233 Or lVal = 263 ) And ( IsNull ( dtVal ) Or Date ( dtVal ) = 1900-01-01 ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone DTE_FIN_TRAIT doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e avant de renseigner la zone DTE_RCP_MOB_CLI et de donner le statut 178 ou 233 ou 263" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone DTE_FIN_TRAIT doit être renseignée avant de renseigner la zone DTE_RCP_MOB_CLI et de donner le statut 178 ou 233 ou 263" )
 	End If
 
   /* [VDOC9908]		
 	If lVal = 178 And len ( Trim ( sVal ) ) <= 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut 178 oblige $$HEX2$$e0002000$$ENDHEX$$avoir la zone s$$HEX1$$e900$$ENDHEX$$rialis$$HEX1$$e900$$ENDHEX$$e DTE_RCP_MOB_CLI renseign$$HEX1$$e900$$ENDHEX$$e." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut 178 oblige à avoir la zone sérialisée DTE_RCP_MOB_CLI renseignée." )
 	End If
 	*/
 	// [PM166][O2M]
@@ -23246,7 +23253,7 @@ For lCpt = lTotLig To 1 Step -1
 			If len ( Trim ( sVal ) ) > 0 OR len ( Trim ( sVal1 ) ) > 0 OR len ( Trim ( sVal2 ) ) > 0 OR len ( Trim ( sVal3 ) ) > 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7926) : Les bin$$HEX1$$f400$$ENDHEX$$mes cl$$HEX1$$e900$$ENDHEX$$s/valeurs pour les cl$$HEX1$$e900$$ENDHEX$$s MARQUE_REMPL, MODELE_REMPL, PRIX_TTC_PUBLIC, PRIX_TTC_FACTU_O2M ne sont pas autoris$$HEX1$$e900$$ENDHEX$$s pour le produit " + String ( dcIdProd ) + "." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7926) : Les binômes clés/valeurs pour les clés MARQUE_REMPL, MODELE_REMPL, PRIX_TTC_PUBLIC, PRIX_TTC_FACTU_O2M ne sont pas autorisés pour le produit " + String ( dcIdProd ) + "." )
 			End If
 			
 	End Choose
@@ -23258,23 +23265,23 @@ For lCpt = lTotLig To 1 Step -1
 	If Not IsNull ( dtVal ) And Not IsNull ( dtVal1 ) And dtVal1 < dtVal Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la DTE_RCP_FRN." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit être postérieure ou égale à la DTE_RCP_FRN." )
 	End If
 	// [VDOC9337]	
 	
 	// [VDOC9907]
-	// Mettre en place pour CORDON ces r$$HEX1$$e800$$ENDHEX$$gles, rejet du fichier MPR si : 
-	// - pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] ou [BRIS] avec un status_gc diff$$HEX1$$e900$$ENDHEX$$rent de 21 
+	// Mettre en place pour CORDON ces règles, rejet du fichier MPR si : 
+	// - présence d’une clé de type [SAV_NO_OK] ou [BRIS] avec un status_gc différent de 21 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )		
 	If lVal <> 21 And ( Pos ( sVal, "[SAV_NO_OK]" ) > 0 Or Pos ( sVal, "[BRIS]" ) > 0 ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9907/A.RAULT) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] ou [BRIS] avec un status_gc diff$$HEX1$$e900$$ENDHEX$$rent de 21 , interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9907/A.RAULT) : présence d’une clé de type [SAV_NO_OK] ou [BRIS] avec un status_gc différent de 21 , interdit " )
 	End IF
 
-	// Mettre en place pour CORDON ces r$$HEX1$$e800$$ENDHEX$$gles, rejet du fichier MPR si : 
-	// - pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] ou [BRIS] dans un retour $$HEX2$$e0002000$$ENDHEX$$une commande avec action = A_REPARER ou A_REPARER_FORCE 
+	// Mettre en place pour CORDON ces règles, rejet du fichier MPR si : 
+	// - présence d’une clé de type [SAV_NO_OK] ou [BRIS] dans un retour à une commande avec action = A_REPARER ou A_REPARER_FORCE 
 	// [PM222-1]	
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )		
 	If ( Pos ( sVal, "[SAV_NO_OK]" ) > 0 Or Pos ( sVal, "[BRIS]" ) > 0 ) &
@@ -23285,7 +23292,7 @@ For lCpt = lTotLig To 1 Step -1
 	Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9907/A.RAULT) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] ou [BRIS] dans un retour sur une commande sans demande de SAV (donc n$$HEX1$$1920$$ENDHEX$$impliquant pas d$$HEX1$$1920$$ENDHEX$$action = A_REPARER_SAV ou A_CONTROLER_SAV ), interdit" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9907/A.RAULT) : présence d’une clé de type [SAV_NO_OK] ou [BRIS] dans un retour sur une commande sans demande de SAV (donc n’impliquant pas d’action = A_REPARER_SAV ou A_CONTROLER_SAV ), interdit" )
 	End IF 
 	// :[VDOC9907]
 	
@@ -23307,7 +23314,7 @@ For lCpt = lTotLig To 1 Step -1
 		If Dec ( sVal ) > Dec ( sVal3 ) Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC10029/A.RAULT) : le montant du prix facturable par CORDON concernant la proposition est sup$$HEX1$$e900$$ENDHEX$$rieur au prix public indiqu$$HEX1$$e900$$ENDHEX$$, ce qui est incoh$$HEX1$$e900$$ENDHEX$$rent" )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC10029/A.RAULT) : le montant du prix facturable par CORDON concernant la proposition est supérieur au prix public indiqué, ce qui est incohérent" )
 		End If
 		
 	End If
@@ -23318,7 +23325,7 @@ For lCpt = lTotLig To 1 Step -1
 		If sIdRefFour = "A_DIAGNOSTIQUER" And lVal <> 151 And lVal <> 152 And lVal <> 159 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (ORANGE V3) : Pour Orange v3, seul le 151 ou 152 sont autoris$$HEX2$$e9002000$$ENDHEX$$sur le Diag apr$$HEX1$$e800$$ENDHEX$$s remplacement" )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (ORANGE V3) : Pour Orange v3, seul le 151 ou 152 sont autorisé sur le Diag après remplacement" )
 		End IF 
 	End IF 			
 	// [PC938_ORANGE_V3]
@@ -23328,21 +23335,21 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> "" And Len(sVal) > 35 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donn$$HEX1$$e900$$ENDHEX$$e MODL_RST_FRN trop longue (35 caract$$HEX1$$e800$$ENDHEX$$res maximum autoris$$HEX1$$e900$$ENDHEX$$s)." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donnée MODL_RST_FRN trop longue (35 caractères maximum autorisés)." )
 	End if
 	
 	sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "MARQ_RST_FRN", ";"))						
 	If sVal <> "" And Len(sVal) > 35 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donn$$HEX1$$e900$$ENDHEX$$e MARQ_RST_FRN trop longue (35 caract$$HEX1$$e800$$ENDHEX$$res maximum autoris$$HEX1$$e900$$ENDHEX$$s)." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donnée MARQ_RST_FRN trop longue (35 caractères maximum autorisés)." )
 	End if
 
 	sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ID_REF_FOUR_RST_FRN", ";"))						
 	If sVal <> "" And Len(sVal) > 20 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donn$$HEX1$$e900$$ENDHEX$$e ID_REF_FOUR_RST_FRN trop longue (20 caract$$HEX1$$e800$$ENDHEX$$res maximum autoris$$HEX1$$e900$$ENDHEX$$s)." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donnée ID_REF_FOUR_RST_FRN trop longue (20 caractères maximum autorisés)." )
 	End if
 	// [20140728.FPI] 
 
@@ -23353,7 +23360,7 @@ For lCpt = lTotLig To 1 Step -1
 	
 			lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 			
-			// [VDOC17191] je ne d$$HEX1$$e900$$ENDHEX$$clenche pas le message sur le 159
+			// [VDOC17191] je ne déclenche pas le message sur le 159
 			Choose Case lVal
 				Case 301, 159, 156
 					// Ok
@@ -23361,7 +23368,7 @@ For lCpt = lTotLig To 1 Step -1
 					If iStatusGc <> lVal Then
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit int$$HEX1$$e900$$ENDHEX$$grer cette r$$HEX1$$e800$$ENDHEX$$gle dans son syst$$HEX1$$e800$$ENDHEX$$me." )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit intégrer cette règle dans son système." )
 					End If
 
 			End CHoose
@@ -23372,7 +23379,7 @@ For lCpt = lTotLig To 1 Step -1
 	If lVal = 155 And sIdRefFour <> "REFUSE_A_REEXP" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " ne peut $$HEX1$$ea00$$ENDHEX$$tre renvoy$$HEX2$$e9002000$$ENDHEX$$que sur une prestation de type REFUSE_A_REEXP" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " ne peut être renvoyé que sur une prestation de type REFUSE_A_REEXP" )
 	End If
 
 	// [CTRLE_REF_A_REEXP]
@@ -23390,7 +23397,7 @@ For lCpt = lTotLig To 1 Step -1
 			If lVal > 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il est interdit de r$$HEX1$$e900$$ENDHEX$$pondre sur les prestations de type A_REPARER_FORCE, et A_DIAG_FORCE, or vous renvoyez le Statut " + String ( lVal ) + ". Si une r$$HEX1$$e900$$ENDHEX$$ponse doit $$HEX1$$ea00$$ENDHEX$$tre apport$$HEX1$$e900$$ENDHEX$$e, vous devez r$$HEX1$$e900$$ENDHEX$$pondre sur la pr$$HEX1$$e900$$ENDHEX$$station d'origine li$$HEX1$$e900$$ENDHEX$$e $$HEX2$$e0002000$$ENDHEX$$ce for$$HEX1$$e700$$ENDHEX$$age." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il est interdit de répondre sur les prestations de type A_REPARER_FORCE, et A_DIAG_FORCE, or vous renvoyez le Statut " + String ( lVal ) + ". Si une réponse doit être apportée, vous devez répondre sur la préstation d'origine liée à ce forçage." )
 			End If
 	End Choose		
 	
@@ -23405,7 +23412,7 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( sVal ) Or sVal = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " doit obligatoirement $$HEX1$$ea00$$ENDHEX$$tre accompagn$$HEX2$$e9002000$$ENDHEX$$d'un commentaire." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " doit obligatoirement être accompagné d'un commentaire." )
 			End If
 			
 	End CHoose
@@ -23416,7 +23423,7 @@ For lCpt = lTotLig To 1 Step -1
 		If sVal1 = "OUI" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " n'est autoris$$HEX2$$e9002000$$ENDHEX$$que pour une commande de remplacement." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " n'est autorisé que pour une commande de remplacement." )
 		End If	
 	End If
 
@@ -23426,7 +23433,7 @@ For lCpt = lTotLig To 1 Step -1
 		If Trim ( sVal ) = "" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT288) : Sur une commande de remplacement, la zone SWAP_GSX doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e par OUI ou NON." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT288) : Sur une commande de remplacement, la zone SWAP_GSX doit être renseignée par OUI ou NON." )
 		End If 					
 	
 		// [DT288]
@@ -23434,7 +23441,7 @@ For lCpt = lTotLig To 1 Step -1
 		If Trim ( sVal ) = "" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT288) : Sur commande de remplacement, la zone REF_ORANGE doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT288) : Sur commande de remplacement, la zone REF_ORANGE doit être renseignée." )
 		End If 
 	End If
 	
@@ -23447,7 +23454,7 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$pour le produit " + string ( dcIdProd ) + "." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " n'est pas autorisé pour le produit " + string ( dcIdProd ) + "." )
 		End Choose 
 	End If			
 	
@@ -23459,7 +23466,7 @@ For lCpt = lTotLig To 1 Step -1
 		If lVal = 305 And lnvPFCString.of_getkeyvalue (sChaineBCV, "GESTION_GEOLOCALISATION", ";") <> "OUI" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le produit " + String ( dcIdprod ) + " n'est pas $$HEX1$$e900$$ENDHEX$$ligible au projet DT150 g$$HEX1$$e900$$ENDHEX$$rant la g$$HEX1$$e900$$ENDHEX$$olocalisation. Si ce projet doit rentrer dans ce p$$HEX1$$e900$$ENDHEX$$rim$$HEX1$$e800$$ENDHEX$$tre, voir avec DPG pour ajouter le produit, sinon transmettre l'information au fournisseur que ce produit est interdit pour ce code retour." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le produit " + String ( dcIdprod ) + " n'est pas éligible au projet DT150 gérant la géolocalisation. Si ce projet doit rentrer dans ce périmètre, voir avec DPG pour ajouter le produit, sinon transmettre l'information au fournisseur que ce produit est interdit pour ce code retour." )
 		End If
 		
 		lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )				
@@ -23479,7 +23486,7 @@ For lCpt = lTotLig To 1 Step -1
 				If isnull(sVal1) Or sVal1 = "" Then
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le num$$HEX1$$e900$$ENDHEX$$ro de s$$HEX1$$e900$$ENDHEX$$rie/IMEI de l'appareil de remplacement n'est pas renseign$$HEX1$$e900$$ENDHEX$$." )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le numéro de série/IMEI de l'appareil de remplacement n'est pas renseigné." )
 				End If	
 		End Choose 
 	End If
@@ -23504,7 +23511,7 @@ For lCpt = lTotLig To 1 Step -1
 				Case 2
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") R$$HEX1$$e900$$ENDHEX$$paration interdite sur ce type de prestation, il faut r$$HEX1$$e900$$ENDHEX$$pondre 21 Irr$$HEX1$$e900$$ENDHEX$$parable dans tous les cas et qualifier l'irr$$HEX1$$e900$$ENDHEX$$parabilit$$HEX2$$e9002000$$ENDHEX$$dans le commentaire par un mot cl$$HEX1$$e900$$ENDHEX$$." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Réparation interdite sur ce type de prestation, il faut répondre 21 Irréparable dans tous les cas et qualifier l'irréparabilité dans le commentaire par un mot clé." )
 			End Choose 
 	End if
 
@@ -23514,7 +23521,7 @@ For lCpt = lTotLig To 1 Step -1
 	If lVal = iStatusGc And lVal = 308 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le statut retour 308 est d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$pr$$HEX1$$e900$$ENDHEX$$sent sur ce dossier, le fournisseur l'a d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$envoy$$HEX2$$e9002000$$ENDHEX$$et doit donc attendre le retour de l'assur$$HEX2$$e9002000$$ENDHEX$$et ne plus retourner d'information sur cette prestation pour l'instant, voir livraison PM287-3." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le statut retour 308 est déjà présent sur ce dossier, le fournisseur l'a déjà envoyé et doit donc attendre le retour de l'assuré et ne plus retourner d'information sur cette prestation pour l'instant, voir livraison PM287-3." )
 	End If
 */	
 
@@ -23528,7 +23535,7 @@ For lCpt = lTotLig To 1 Step -1
 			If lVal = 311 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le statut retour 311 n'est autoris$$HEX2$$e9002000$$ENDHEX$$que si le dernier statut envoy$$HEX2$$e9002000$$ENDHEX$$par le fournisseur est 308, voir livraison PM287-3." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le statut retour 311 n'est autorisé que si le dernier statut envoyé par le fournisseur est 308, voir livraison PM287-3." )
 			End If
 	End Choose 				
 	*/
@@ -23538,7 +23545,7 @@ For lCpt = lTotLig To 1 Step -1
 	If lVal = 308 And lVal1 <= 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le statut retour 308 vous oblige $$HEX2$$e0002000$$ENDHEX$$renseigner le bcv IFDNMQ_RET (InFos DoNn$$HEX1$$e900$$ENDHEX$$es ManQuante RETour) avec un codage particulier, voir livraison PM287-3." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le statut retour 308 vous oblige à renseigner le bcv IFDNMQ_RET (InFos DoNnées ManQuante RETour) avec un codage particulier, voir livraison PM287-3." )
 	End If
 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
@@ -23546,7 +23553,7 @@ For lCpt = lTotLig To 1 Step -1
 	If lVal <> 308 And lVal1 > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + String ( lVal ) + " interdit la pr$$HEX1$$e900$$ENDHEX$$sence du bcv IFDNMQ_RET (InFos DoNn$$HEX1$$e900$$ENDHEX$$es ManQuante RETour) dans la zone s$$HEX1$$e900$$ENDHEX$$rialis$$HEX1$$e900$$ENDHEX$$e, voir livraison PM287-3." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + String ( lVal ) + " interdit la présence du bcv IFDNMQ_RET (InFos DoNnées ManQuante RETour) dans la zone sérialisée, voir livraison PM287-3." )
 	End If
 
 
@@ -23564,7 +23571,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Pos ( sVal2, "#" + sTabVal [lCptVal] + "#" ) <= 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La valeur #" + sTabVal [lCptVal] + "# n'est pas autoris$$HEX1$$e900$$ENDHEX$$e dans le BCV IFDNMQ_RET pour le statut 308, voir livraison PM287-3." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La valeur #" + sTabVal [lCptVal] + "# n'est pas autorisée dans le BCV IFDNMQ_RET pour le statut 308, voir livraison PM287-3." )
 			End If
 
 			If iRet > 0  Then
@@ -23595,7 +23602,7 @@ For lCpt = lTotLig To 1 Step -1
 			) Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Le SWAP CORDON n'est autoris$$HEX2$$e9002000$$ENDHEX$$que sur un irr$$HEX1$$e900$$ENDHEX$$parable 21/23 avec un mot cl$$HEX2$$e9002000$$ENDHEX$$[BVIE]/[BVID]/[BVIP]/[BVIT]/[BVIEOX] ou [PIE]." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Le SWAP CORDON n'est autorisé que sur un irréparable 21/23 avec un mot clé [BVIE]/[BVID]/[BVIP]/[BVIT]/[BVIEOX] ou [PIE]." )
 		End If 				
 			
 		If iRet > 0 Then
@@ -23603,43 +23610,43 @@ For lCpt = lTotLig To 1 Step -1
 			If Trim ( sVal ) = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CORDON le BCV MARQSW doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e avec la marque IFR du nouveau mat$$HEX1$$e900$$ENDHEX$$riel." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CORDON le BCV MARQSW doit être renseignée avec la marque IFR du nouveau matériel." )
 			End If 	
 			
 			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "MODLSW", ";"))		
 			If Trim ( sVal ) = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CORDON le BCV MODLSW doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$avec le mod$$HEX1$$e800$$ENDHEX$$le IFR du nouveau mat$$HEX1$$e900$$ENDHEX$$riel." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CORDON le BCV MODLSW doit être renseigné avec le modèle IFR du nouveau matériel." )
 			End If 					
 
 			If iRet > 0 Then
 				Choose Case sIdTypArtSin
 					Case "TEL", "TPC"
-						// Autoris$$HEX1$$e900$$ENDHEX$$
+						// Autorisé
 					Case Else 
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Type d'appareil (" + sIdTypArt+ ") non autoris$$HEX2$$e9002000$$ENDHEX$$pour un SWAP CORDON." )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Type d'appareil (" + sIdTypArt+ ") non autorisé pour un SWAP CORDON." )
 				End Choose
 			End If 
 
-			// Controle binome marq/modl appartient $$HEX2$$e0002000$$ENDHEX$$IFR $$HEX2$$e0002000$$ENDHEX$$ajouter
+			// Controle binome marq/modl appartient à IFR à ajouter
 			If iRet > 0 Then
 				sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "MARQSW", ";"))
 				sVal1 = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "MODLSW", ";"))
 				If SQLCA.PS_S_VERIF_MARQ_MODL_IFR_V01 ( dcIdprod, sIdTypArtSin, sVal, sVal1 ) <= 0 Then
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Sur un SWAP CORDON, pour ce dossier, la Marque et le Mod$$HEX1$$e800$$ENDHEX$$le du nouveau mat$$HEX1$$e900$$ENDHEX$$riel (" + sVal + " " + sVal1 + ") doivent appartenir au r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rentiel IFR." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Sur un SWAP CORDON, pour ce dossier, la Marque et le Modèle du nouveau matériel (" + sVal + " " + sVal1 + ") doivent appartenir au référentiel IFR." )
 				End If
 			End If
 			
-			sVal = sNumImeiSerie // Le ctrle de validit$$HEX2$$e9002000$$ENDHEX$$est faite plus haut
+			sVal = sNumImeiSerie // Le ctrle de validité est faite plus haut
 			If Trim ( sVal ) = "" Or IsNull ( sVal )  Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CORDON la zone NUM_IMEI_NOUV ou NUM_SERIE_NOUV doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e par l'IMEI/SERIE du nouveau mat$$HEX1$$e900$$ENDHEX$$riel." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CORDON la zone NUM_IMEI_NOUV ou NUM_SERIE_NOUV doit être renseignée par l'IMEI/SERIE du nouveau matériel." )
 			End If 					
 
 
@@ -23647,16 +23654,16 @@ For lCpt = lTotLig To 1 Step -1
 			If Trim ( sVal ) = "" Or Not IsNumber ( sVal ) Or Pos ( sVal, ",") > 0 Or Pos ( sVal, "E") > 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CORDON le BCV MTTTCSW doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$avec le montant TTC de l'appareil de remplacement (avec un point en s$$HEX1$$e900$$ENDHEX$$parateur de d$$HEX1$$e900$$ENDHEX$$cimal)." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CORDON le BCV MTTTCSW doit être renseigné avec le montant TTC de l'appareil de remplacement (avec un point en séparateur de décimal)." )
 			End If 
 
 			// [BUG_RST_PRIX_O2M]
-/* // On coupe le contr$$HEX1$$f400$$ENDHEX$$le qui g$$HEX1$$ea00$$ENDHEX$$ne CORDON
+/* // On coupe le contrôle qui gêne CORDON
 				If IsNumber ( sVal ) Then
 					If Long ( sVal) = 0 Then 
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CORDON le BCV MTTTCSW doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$avec le montant TTC de l'appareil de remplacement (avec un montant positif)." )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CORDON le BCV MTTTCSW doit être renseigné avec le montant TTC de l'appareil de remplacement (avec un montant positif)." )
 					End if		
 				End If 
 */
@@ -23679,7 +23686,7 @@ For lCpt = lTotLig To 1 Step -1
 			If ( IsNull ( sVal ) Or Trim ( sVal ) = "" ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CORDON, Le num$$HEX1$$e900$$ENDHEX$$ro de bon transporteur est obligatoire." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CORDON, Le numéro de bon transporteur est obligatoire." )
 			End IF 
 
 			// [DT288]
@@ -23687,7 +23694,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Trim ( sVal ) = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT288) : Sur un SWAP CORDON la zone SWAP_GSX doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e par OUI ou NON." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT288) : Sur un SWAP CORDON la zone SWAP_GSX doit être renseignée par OUI ou NON." )
 			End If 					
 
 			// [DT288]
@@ -23695,7 +23702,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Trim ( sVal ) = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT288) : Sur un SWAP CORDON la zone REF_ORANGE doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT288) : Sur un SWAP CORDON la zone REF_ORANGE doit être renseignée." )
 			End If 					
 
 		End If		
@@ -23707,7 +23714,7 @@ For lCpt = lTotLig To 1 Step -1
 	If iInfoSpbFrn = 984 And sVal <> "OUI" And sIdTypArt <> "PST" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT290) : Sur un process 984, le SWAP est obligatoire, pas de process alternatif donc le bcv APP_SWAP doit obligatoirement $$HEX1$$ea00$$ENDHEX$$tre $$HEX2$$e0002000$$ENDHEX$$OUI." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT290) : Sur un process 984, le SWAP est obligatoire, pas de process alternatif donc le bcv APP_SWAP doit obligatoirement être à OUI." )
 	End If
 
 	// [PM383-1]
@@ -23721,7 +23728,7 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM383-1) : le bcv SOUS_GC=OUI n'est accept$$HEX2$$e9002000$$ENDHEX$$qu'avec le retour 2 (r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$)." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM383-1) : le bcv SOUS_GC=OUI n'est accepté qu'avec le retour 2 (réparé)." )
 		End Choose 
 	End If
 	// [PM383-1]	
@@ -23751,7 +23758,7 @@ For lCpt = lTotLig To 1 Step -1
 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il manque dans le commentaire un des mots cl$$HEX1$$e900$$ENDHEX$$s obligatoire qualifiant l'irr$$HEX1$$e900$$ENDHEX$$parable." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il manque dans le commentaire un des mots clés obligatoire qualifiant l'irréparable." )
 
 	End If 
 	
@@ -23760,7 +23767,7 @@ For lCpt = lTotLig To 1 Step -1
 	If sIdRefFour = "INFORMATION" And lVal <> 612 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") : un flux de type INFORMATION ne peut avoir pour r$$HEX1$$e900$$ENDHEX$$ponse qu'un statut 612" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") : un flux de type INFORMATION ne peut avoir pour réponse qu'un statut 612" )
 	End IF 
 
 	// [CTRLE_DATE_INTRG_FOU]
@@ -23797,7 +23804,7 @@ For lCpt = lTotLig To 1 Step -1
 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$PRBLE_LIVRAISON, n'est pas valide." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé PRBLE_LIVRAISON, n'est pas valide." )
 
 		End Choose 
 	End If 
@@ -23817,7 +23824,7 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( dtVal ) And sVal1 <> "" And sVal = "" And sIdRefFour <> "REFUSE_A_REEXP" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Un num$$HEX1$$e900$$ENDHEX$$ro de tracking ALLER doit $$HEX1$$ea00$$ENDHEX$$tre accompagn$$HEX2$$e9002000$$ENDHEX$$du bcv TYP_BA_ALLER." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Un numéro de tracking ALLER doit être accompagné du bcv TYP_BA_ALLER." )
 			End IF
 			
 			If sVal <> "" Then
@@ -23831,7 +23838,7 @@ For lCpt = lTotLig To 1 Step -1
 		
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$TYP_BA_ALLER, n'est pas valide." )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé TYP_BA_ALLER, n'est pas valide." )
 		
 				End Choose 
 			End If 
@@ -23866,26 +23873,26 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal1 = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le bcv PRBLE_LIVRAISON doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$." )
+				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le bcv PRBLE_LIVRAISON doit être renseigné." )
 			End If 
 			
 			If sVal3 = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le num$$HEX1$$e900$$ENDHEX$$ro de tracking (NUM_BON_TRP) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$." )
+				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le numéro de tracking (NUM_BON_TRP) doit être renseigné." )
 			End If 
 
 			If Not IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, la date de r$$HEX1$$e900$$ENDHEX$$ception ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e." )
+				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, la date de réception ne doit pas être renseignée." )
 			End If 
 			
 			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "APP_SWAP", ";"))		
 			If lVal <> 0 AND ( lVal <> 21 AND sVal <> "OUI" ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le statut ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$." )
+				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le statut ne doit pas être renseigné." )
 			End If 
 		End IF 
 
@@ -23909,14 +23916,14 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$PEC_PRBLE_LIVRAISON, n'est pas valide." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé PEC_PRBLE_LIVRAISON, n'est pas valide." )
 
 		End Choose 
 		
 		If sVal1 = "" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la cl$$HEX2$$e9002000$$ENDHEX$$PEC_PRBLE_LIVRAISON n'est autoris$$HEX1$$e900$$ENDHEX$$e que si pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$demment il y a au un cl$$HEX2$$e9002000$$ENDHEX$$PRBLE_LIVRAISON, qui est justement absente." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la clé PEC_PRBLE_LIVRAISON n'est autorisée que si précédemment il y a au un clé PRBLE_LIVRAISON, qui est justement absente." )
 		End If 			
 	End If 	
 	
@@ -23934,7 +23941,7 @@ For lCpt = lTotLig To 1 Step -1
 	
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 if isvalid(dsCode) Then destroy dsCode
 
@@ -23947,8 +23954,8 @@ private subroutine uf_definir_codetat_cordon (ref string asval, long alcpt, long
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_CORDON (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 02/01/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: [DT253]
 //*
 //* Arguments		: asVal		String		Ref
@@ -24024,7 +24031,7 @@ private function integer uf_integration_fichier_cordon (ref long alnblig, ref lo
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_CORDON (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 24/01/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier CORDON dans la base
+//* Libellé			: Intégration du fichier CORDON dans la base
 //* Commentaires	: [DT288]
 //*
 //*
@@ -24040,10 +24047,10 @@ private function integer uf_integration_fichier_cordon (ref long alnblig, ref lo
 //* #1 	 PHG	 24/04/2008	  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
 //* #2    JFF   28/04/2008   [DCMP080202] MailPush O2M
 //* #3	 JFF	 20/10/2008	  [FNAC_PROD_ECH_TECH]
-//* #4	 FPI	 10/12/2009	  [SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
+//* #4	 FPI	 10/12/2009	  [SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
 //*       JFF   30/06/2010   [PC363_AUCHAN]
 //*       JFF   07/03/2011   [VDOC3290]
-//*       JFF   11/03/2011   [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+//*       JFF   11/03/2011   [ITSM62176] ajout du point de décimal
 //*       JFF   19/09/2011   [PM82][LOT1]
 //*       JFF   05/01/2012   [RECUP_DONNEE_O2M]
 //        JFF   06/08/2012   [BLCODE]
@@ -24052,7 +24059,7 @@ private function integer uf_integration_fichier_cordon (ref long alnblig, ref lo
 //       JFF   08/04/2014 [PM255]
 //       JFF   07/05/2013 [PM250-1]
 //       JFF   02/06/2014 [PC929_CDISCOUNT][PC929-2-V3]
-// 		FPI	21/07/2014 [PM250-1].FPI Correction r$$HEX1$$e900$$ENDHEX$$init de date avant lecture de la ligne
+// 		FPI	21/07/2014 [PM250-1].FPI Correction réinit de date avant lecture de la ligne
 //       JFF   18/08/2014 [PM254_V1]
 //       JFF   25/08/2014 [DT100]
 //       JFF   16/09/2014 [PM250-2]
@@ -24117,19 +24124,19 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
 	lIdSin = Long ( Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) )
 
-// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+// [ITSM62176] ajout du point de décimal
 	sSql += String ( lIdSin ) + "., "
 
 	/*------------------------------------------------------------------*/
@@ -24341,7 +24348,7 @@ For lCpt = 1 To lTotLig
 	sSql += sVal + ", "
 
 
-	// Pr$$HEX1$$e900$$ENDHEX$$paration zone INFO_FRN_SPB_CPLT 
+	// Préparation zone INFO_FRN_SPB_CPLT 
 	// Trt zone virtuelle RDV_CONF vers sInfoFrnSpbCplt
 
 	sVal = String ( idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) )
@@ -24452,7 +24459,7 @@ For lCpt = 1 To lTotLig
 		lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "SWAP_GSX", sVal, ";")
 	End If			
 
-	sVal = Left ( idwFicFourn.GetItemString ( lCpt, "REF_ORANGE" ) , 30 ) // Je n'en prend que 30, ne connaissant pas la longueur de cette donn$$HEX1$$e900$$ENDHEX$$e.
+	sVal = Left ( idwFicFourn.GetItemString ( lCpt, "REF_ORANGE" ) , 30 ) // Je n'en prend que 30, ne connaissant pas la longueur de cette donnée.
 	If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
 		lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "REF_ORANGE", sVal, ";")
 	End If			
@@ -24484,7 +24491,7 @@ For lCpt = 1 To lTotLig
 	
 	/*------------------------------------------------------------------*/
 	/* ZONE 31 : INFO_FRN_SPB_CPLT ( zone multiple )[FNAC_PROD_ECH_TECH]*/
-	/* Une seule affectation $$HEX2$$e0002000$$ENDHEX$$sSql                                     */
+	/* Une seule affectation à sSql                                     */
 	/*------------------------------------------------------------------*/
 	sSql += "'" + sInfoFrnSpbCplt + "'"
 
@@ -24497,7 +24504,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ 
 		F_commit ( SQLCA, False ) 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/RECP_APP_EN_CTR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/RECP_APP_EN_CTR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
 		Continue 
 	End If
 	// :#2
@@ -24508,7 +24515,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 	//	Exit  #2
 		Continue // #2
 	End If	
@@ -24519,7 +24526,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/PS_S_MAILPUSH_ARR_PLATFORM, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/PS_S_MAILPUSH_ARR_PLATFORM, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 		Continue // #2
 	End If				
 	
@@ -24528,7 +24535,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/PS_S_MAILPUSH_DEP_CENTRDISTRIB, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/PS_S_MAILPUSH_DEP_CENTRDISTRIB, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 		Continue // #2
 	End If				
 	// [PM250-1]	
@@ -24554,7 +24561,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -24571,7 +24578,7 @@ For lCpt = 1 To lTotLig
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")	
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + sVal )
 
 		F_commit ( SQLCA, False )
 			
@@ -24590,7 +24597,7 @@ public function long uf_charger_fichierfournhalt (long alnumligerrimport, string
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Charger_FichierFournHALT (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 10/04/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Stoppe l'appli sans blocage sur la fen$$HEX1$$ea00$$ENDHEX$$tre Continue de l'importfile.
+//* Libellé			: Stoppe l'appli sans blocage sur la fenêtre Continue de l'importfile.
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -24605,19 +24612,19 @@ public function long uf_charger_fichierfournhalt (long alnumligerrimport, string
 Int		iRet
 Long     lTotLig 
 
-iRet = 1 // C'est le 1 du return ItemError, mais $$HEX1$$e700$$ENDHEX$$a n'aura pas d'importance, je stoppe l'appli $$HEX2$$e0002000$$ENDHEX$$cet endroit
+iRet = 1 // C'est le 1 du return ItemError, mais ça n'aura pas d'importance, je stoppe l'appli à cet endroit
 
 If Not gbOpCon Then Return 0
 
 iRet = -1
 lTotLig = -4
 ibErrIntegr = True // [PI065]
-This.uf_Trace ( "ECR", "Chargement du fichier : ERREUR IMPORTFILE (" + String ( lTotLig ) + ") ligne " + string (alNumLigErrImport) + ", colonne " + Upper ( asColLigErrImport ) + ", probl$$HEX1$$e800$$ENDHEX$$me de format de fichier, une donn$$HEX1$$e900$$ENDHEX$$e n'est pas du bon type ou est trop longue."  ) // [PI065]
-This.uf_Trace ( "ECR", "Chargement du fichier : Text posant probl$$HEX1$$e800$$ENDHEX$$me : " + Trim ( asData)  ) // [PI065]
+This.uf_Trace ( "ECR", "Chargement du fichier : ERREUR IMPORTFILE (" + String ( lTotLig ) + ") ligne " + string (alNumLigErrImport) + ", colonne " + Upper ( asColLigErrImport ) + ", problème de format de fichier, une donnée n'est pas du bon type ou est trop longue."  ) // [PI065]
+This.uf_Trace ( "ECR", "Chargement du fichier : Text posant problème : " + Trim ( asData)  ) // [PI065]
 
 This.uf_Sortie_OpCon ( "ECR", 340, "ERR340/CHARGFICFOUR", FALSE )						
 
-This.uf_Trace ( "ECR", "Le traitement se termine anormalement, le fichier n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$trait$$HEX2$$e9002000$$ENDHEX$$!!!." )
+This.uf_Trace ( "ECR", "Le traitement se termine anormalement, le fichier n'a pas été traité !!!." )
 
 // idwSuiviTrt.ScrollToRow ( idwSuiviTrt.RowCount () )
 
@@ -24636,8 +24643,8 @@ public subroutine uf_set_numligerrimport (long alnumligerrimport, string ascolli
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Set_NumLigErrImport (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/04/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: 
+//*					  retourné dans le fichier.
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -24661,7 +24668,7 @@ private function integer uf_ctrl_date (string ascas, integer airet, long alcpt, 
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Date (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 22/09/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [CTRLE_DATE_INTRG_FOURN]
 //*
 //* Arguments		: 
@@ -24691,46 +24698,46 @@ Choose Case asCas
 		dtDteRcpFrnFic = Date ( asVal ) 
 		dtDteEnvcliFic = Date ( asVal1 ) 	
 				
-		// dte_env_cli et dte_rcp_frn ne peuvent pas $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date du jour d$$HEX1$$1920$$ENDHEX$$int$$HEX1$$e900$$ENDHEX$$gration.
+		// dte_env_cli et dte_rcp_frn ne peuvent pas être postérieure à la date du jour d’intégration.
 		If dtDteRcpFrnFic > dtToday Then
 			aiRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( alCpt ) + &
-			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de r$$HEX1$$e900$$ENDHEX$$ception du mat$$HEX1$$e900$$ENDHEX$$riel (" + String ( dtDteRcpFrnFic, "dd/mm/yyyy" ) + ") chez le fournisseur ne peut pas $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure au jour d'int$$HEX1$$e900$$ENDHEX$$gration (" + sToday + ")" )
+			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de réception du matériel (" + String ( dtDteRcpFrnFic, "dd/mm/yyyy" ) + ") chez le fournisseur ne peut pas être postérieure au jour d'intégration (" + sToday + ")" )
 		End If
 		
-		// dte_env_cli et dte_rcp_frn ne peuvent pas $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date du jour d$$HEX1$$1920$$ENDHEX$$int$$HEX1$$e900$$ENDHEX$$gration.
+		// dte_env_cli et dte_rcp_frn ne peuvent pas être postérieure à la date du jour d’intégration.
 		If dtDteEnvcliFic > dtToday Then
 			aiRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( alCpt ) + &
-			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de traitement/envoi du mat$$HEX1$$e900$$ENDHEX$$riel (" + String ( dtDteEnvcliFic, "dd/mm/yyyy" ) + ") par le fournisseur ne peut pas $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure au jour d'int$$HEX1$$e900$$ENDHEX$$gration (" + sToday + ")" )
+			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de traitement/envoi du matériel (" + String ( dtDteEnvcliFic, "dd/mm/yyyy" ) + ") par le fournisseur ne peut pas être postérieure au jour d'intégration (" + sToday + ")" )
 		End If
 
-		// dte_env_cli et dte_rcp_frn ne peuvent pas $$HEX1$$ea00$$ENDHEX$$tre ant$$HEX1$$e900$$ENDHEX$$rieures $$HEX2$$e0002000$$ENDHEX$$la date de cr$$HEX1$$e900$$ENDHEX$$ation du sinistre
+		// dte_env_cli et dte_rcp_frn ne peuvent pas être antérieures à la date de création du sinistre
 		If dtDteRcpFrnFic < dtCreeLeSin Then
 			aiRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( alCpt ) + &
-			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de r$$HEX1$$e900$$ENDHEX$$ception du mat$$HEX1$$e900$$ENDHEX$$riel (" + String ( dtDteRcpFrnFic, "dd/mm/yyyy" ) + ") chez le fournisseur ne peut pas $$HEX1$$ea00$$ENDHEX$$tre ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date de cr$$HEX1$$e900$$ENDHEX$$ation du sinistre (" + String ( dtCreeLeSin, "dd/mm/yyyy" ) + ")" )
+			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de réception du matériel (" + String ( dtDteRcpFrnFic, "dd/mm/yyyy" ) + ") chez le fournisseur ne peut pas être antérieure à la date de création du sinistre (" + String ( dtCreeLeSin, "dd/mm/yyyy" ) + ")" )
 		End If
 		
-		// dte_env_cli et dte_rcp_frn ne peuvent pas $$HEX1$$ea00$$ENDHEX$$tre ant$$HEX1$$e900$$ENDHEX$$rieures $$HEX2$$e0002000$$ENDHEX$$la date de cr$$HEX1$$e900$$ENDHEX$$ation du sinistre
+		// dte_env_cli et dte_rcp_frn ne peuvent pas être antérieures à la date de création du sinistre
 		If dtDteEnvcliFic < dtCreeLeSin Then
 			aiRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( alCpt ) + &
-			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de traitement/envoi du mat$$HEX1$$e900$$ENDHEX$$riel (" + String ( dtDteEnvcliFic, "dd/mm/yyyy" ) + ") par le fournisseur ne peut pas $$HEX1$$ea00$$ENDHEX$$tre ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date de cr$$HEX1$$e900$$ENDHEX$$ation du sinistre (" + String ( dtCreeLeSin, "dd/mm/yyyy" ) + ")" )
+			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de traitement/envoi du matériel (" + String ( dtDteEnvcliFic, "dd/mm/yyyy" ) + ") par le fournisseur ne peut pas être antérieure à la date de création du sinistre (" + String ( dtCreeLeSin, "dd/mm/yyyy" ) + ")" )
 		End If
 
-		// dte_env_cli ne peut pas $$HEX1$$ea00$$ENDHEX$$tre ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$dte_rcp_frn
+		// dte_env_cli ne peut pas être antérieure à dte_rcp_frn
 		If dtDteEnvcliFic < dtDteRcpFrnBase Then
 			aiRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( alCpt ) + &
-			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de traitement/envoi du mat$$HEX1$$e900$$ENDHEX$$riel (" + String ( dtDteEnvcliFic, "dd/mm/yyyy" ) + ") par le fournisseur ne peut pas $$HEX1$$ea00$$ENDHEX$$tre ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date de r$$HEX1$$e900$$ENDHEX$$ception du mat$$HEX1$$e900$$ENDHEX$$riel (" + String ( dtDteRcpFrnBase, "dd/mm/yyyy" ) + ")" )
+			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de traitement/envoi du matériel (" + String ( dtDteEnvcliFic, "dd/mm/yyyy" ) + ") par le fournisseur ne peut pas être antérieure à la date de réception du matériel (" + String ( dtDteRcpFrnBase, "dd/mm/yyyy" ) + ")" )
 		End If
 
-		// dte_env_cli ne peut pas $$HEX1$$ea00$$ENDHEX$$tre ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$dte_rcp_frn
+		// dte_env_cli ne peut pas être antérieure à dte_rcp_frn
 		If dtDteEnvcliFic < dtDteRcpFrnFic And ( IsNull ( dtDteRcpFrnBase ) OR dtDteRcpFrnBase = 1900-01-01 ) Then
 			aiRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( alCpt ) + &
-			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de traitement/envoi du mat$$HEX1$$e900$$ENDHEX$$riel (" + String ( dtDteEnvcliFic, "dd/mm/yyyy" ) + ") par le fournisseur ne peut pas $$HEX1$$ea00$$ENDHEX$$tre ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date de r$$HEX1$$e900$$ENDHEX$$ception du mat$$HEX1$$e900$$ENDHEX$$riel (" + String ( dtDteRcpFrnFic, "dd/mm/yyyy" ) + ")" )
+			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de traitement/envoi du matériel (" + String ( dtDteEnvcliFic, "dd/mm/yyyy" ) + ") par le fournisseur ne peut pas être antérieure à la date de réception du matériel (" + String ( dtDteRcpFrnFic, "dd/mm/yyyy" ) + ")" )
 		End If
 
 
@@ -24740,18 +24747,18 @@ Case "CAS2"
 		dtDte1 = Date ( asVal ) 
 		dtDte2 = Date ( asVal1 ) 	
 				
-		// dte_fin_trait ne peut pas $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date du jour d$$HEX1$$1920$$ENDHEX$$int$$HEX1$$e900$$ENDHEX$$gration.
+		// dte_fin_trait ne peut pas être postérieure à la date du jour d’intégration.
 		If dtDte1 > dtToday Then
 			aiRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( alCpt ) + &
-			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de traitement (" + String ( dtDte1, "dd/mm/yyyy" ) + ") chez le fournisseur ne peut pas $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure au jour d'int$$HEX1$$e900$$ENDHEX$$gration (" + sToday + ")" )
+			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de traitement (" + String ( dtDte1, "dd/mm/yyyy" ) + ") chez le fournisseur ne peut pas être postérieure au jour d'intégration (" + sToday + ")" )
 		End If
 
-		// dte_fin_trait ne peut pas $$HEX1$$ea00$$ENDHEX$$tre ant$$HEX1$$e900$$ENDHEX$$rieures $$HEX2$$e0002000$$ENDHEX$$la date de cr$$HEX1$$e900$$ENDHEX$$ation du sinistre
+		// dte_fin_trait ne peut pas être antérieures à la date de création du sinistre
 		If dtDte1 < dtCreeLeSin Then
 			aiRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( alCpt ) + &
-			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de traitement (" + String ( dtDte1, "dd/mm/yyyy" ) + ") chez le fournisseur ne peut pas $$HEX1$$ea00$$ENDHEX$$tre ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date de cr$$HEX1$$e900$$ENDHEX$$ation du sinistre (" + String ( dtCreeLeSin, "dd/mm/yyyy" ) + ")" )
+			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de traitement (" + String ( dtDte1, "dd/mm/yyyy" ) + ") chez le fournisseur ne peut pas être antérieure à la date de création du sinistre (" + String ( dtCreeLeSin, "dd/mm/yyyy" ) + ")" )
 		End If
 
 // [DT424]
@@ -24760,18 +24767,18 @@ Case "CAS3"
 		dtDte1 = Date ( asVal ) 
 		dtDte2 = Date ( asVal1 ) 	
 
-		// dte_fin_trait ne peut pas $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date du jour d$$HEX1$$1920$$ENDHEX$$int$$HEX1$$e900$$ENDHEX$$gration.
+		// dte_fin_trait ne peut pas être postérieure à la date du jour d’intégration.
 		If dtDte1 > dtToday Then
 			aiRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( alCpt ) + &
-			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de traitement (" + String ( dtDte1, "dd/mm/yyyy" ) + ") chez le fournisseur ne peut pas $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure au jour d'int$$HEX1$$e900$$ENDHEX$$gration (" + sToday + ")" )
+			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de traitement (" + String ( dtDte1, "dd/mm/yyyy" ) + ") chez le fournisseur ne peut pas être postérieure au jour d'intégration (" + sToday + ")" )
 		End If				
 				
-		// dte_env_cli ne peut pas $$HEX1$$ea00$$ENDHEX$$tre ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$dte_rcp_frn
+		// dte_env_cli ne peut pas être antérieure à dte_rcp_frn
 		If dtDte2 < dtDte1 Then
 			aiRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( alCpt ) + &
-			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de derni$$HEX1$$e800$$ENDHEX$$re utilisation  (" + String ( dtDte2, "dd/mm/yyyy" ) + ") ne peut pas $$HEX1$$ea00$$ENDHEX$$tre ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$la date de 1$$HEX1$$e800$$ENDHEX$$re utilisation (" + String ( dtDte1, "dd/mm/yyyy" ) + ")" )
+			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de dernière utilisation  (" + String ( dtDte2, "dd/mm/yyyy" ) + ") ne peut pas être antérieure à la date de 1ère utilisation (" + String ( dtDte1, "dd/mm/yyyy" ) + ")" )
 		End If
 
 // [PMO89_RS4822]
@@ -24783,19 +24790,19 @@ Case "CAS4"
 		If dtDte1 > dtToday Then
 			aiRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( alCpt ) + &
-			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de r$$HEX1$$e900$$ENDHEX$$ception du flux (" + String ( dtDte1, "dd/mm/yyyy" ) + ") chez le fournisseur ne peut pas $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure au jour d'int$$HEX1$$e900$$ENDHEX$$gration (" + sToday + ")" )
+			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de réception du flux (" + String ( dtDte1, "dd/mm/yyyy" ) + ") chez le fournisseur ne peut pas être postérieure au jour d'intégration (" + sToday + ")" )
 		End If				
 
 		If dtDte2 > dtToday Then
 			aiRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( alCpt ) + &
-			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de traitement du flux (" + String ( dtDte1, "dd/mm/yyyy" ) + ") chez le fournisseur ne peut pas $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure au jour d'int$$HEX1$$e900$$ENDHEX$$gration (" + sToday + ")" )
+			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de traitement du flux (" + String ( dtDte1, "dd/mm/yyyy" ) + ") chez le fournisseur ne peut pas être postérieure au jour d'intégration (" + sToday + ")" )
 		End If				
 
 		If dtDte2 < dtDte1 Then
 			aiRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( alCpt ) + &
-			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de traitement du flux (" + String ( dtDte2, "dd/mm/yyyy" ) + ") ne peut pas $$HEX1$$ea00$$ENDHEX$$tre ant$$HEX1$$e900$$ENDHEX$$rieure $$HEX2$$e0002000$$ENDHEX$$La date de r$$HEX1$$e900$$ENDHEX$$ception du flux (" + String ( dtDte1, "dd/mm/yyyy" ) + ")" )
+			" : (" + String ( alIdsin) + "-" + String (alIdSeq) + ") : La date de traitement du flux (" + String ( dtDte2, "dd/mm/yyyy" ) + ") ne peut pas être antérieure à La date de réception du flux (" + String ( dtDte1, "dd/mm/yyyy" ) + ")" )
 		End If
 
 End CHoose 
@@ -24811,8 +24818,8 @@ private subroutine uf_definir_codetat_phoneandphone (ref string asval, long alcp
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_PHONEANDPHONE (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 21/04/2009
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: [DCMP090140]
 //*
 //* Arguments		: asVal		String		Ref
@@ -24892,8 +24899,8 @@ public subroutine uf_definir_codetat_coriolis_pm426_1 (ref string asval, integer
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_Coriolis (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/03/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: [PM178][CORIOLIS]
 //*
 //* Arguments		: asVal		String		Ref
@@ -24956,7 +24963,7 @@ private function integer uf_ctrl_fichier_ceat ();//*----------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_CEAT (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 04/09/2018
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier CEAT
+//* Libellé			: Controler de la validité du fichier CEAT
 //* Commentaires	: [DT361]
 //*
 //* Arguments		: 
@@ -24988,7 +24995,7 @@ private function integer uf_ctrl_fichier_ceat ();//*----------------------------
 //* 		FPI   01/12/2011     [VDoc6082]
 //*      JFF   05/01/2012 		[RECUP_DONNEE_O2M]
 //*      JFF   23/01/2012     [VDOC6300]
-//*      JFF   20/03/2012     [CTRL_IMEI_O2M] ajout contr$$HEX1$$f400$$ENDHEX$$le IMEI
+//*      JFF   20/03/2012     [CTRL_IMEI_O2M] ajout contrôle IMEI
 //*      JFF   04/04/2012     [MANTIS3067] satut 231
 //*      JFF   30/05/2012	   [VDOC7926]
 //       JFF   06/08/2012     [BLCODE]
@@ -25055,7 +25062,7 @@ lTotLig = idwFicFourn.RowCount ()
 // [MODIF_SUITE_REDR]
 If lTotLig <= 0 And FileLength64 ( isTxtNomFic.Text ) > 0 Then
 	iRet = -1
-	This.uf_Trace ( "ECR", "ERREUR : 0 Ligne charg$$HEX1$$e900$$ENDHEX$$e ! , pour PI : Taille du fichier positive et chargement $$HEX2$$e0002000$$ENDHEX$$0 ligne => Anormal. R$$HEX1$$e900$$ENDHEX$$essayez l'int$$HEX1$$e900$$ENDHEX$$gration (cause $$HEX1$$e900$$ENDHEX$$ventuelle => le fichier est peut-$$HEX1$$ea00$$ENDHEX$$tre en format Unicode au lieu d'Ansi, $$HEX2$$e0002000$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$rifier)." )
+	This.uf_Trace ( "ECR", "ERREUR : 0 Ligne chargée ! , pour PI : Taille du fichier positive et chargement à 0 ligne => Anormal. Réessayez l'intégration (cause éventuelle => le fichier est peut-être en format Unicode au lieu d'Ansi, à vérifier)." )
 End If		
 
 sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
@@ -25066,11 +25073,11 @@ dsCode.SetTransObject(SQLCA)
 dsCode.retrieve('-GC') 		// #9
 
 // [DT288][M24505]
-// Contr$$HEX1$$f400$$ENDHEX$$le entete et fin
+// Contrôle entete et fin
 If lTotLig < 2 Then
 	iRet = -1
 	This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-	" : Le fichier doit comporter au minimum 2 engistrements : ent$$HEX1$$ea00$$ENDHEX$$te & fin")
+	" : Le fichier doit comporter au minimum 2 engistrements : entête & fin")
 	lTotLig = 0
 End If
 
@@ -25079,7 +25086,7 @@ If iRet > 0 Then
 	If Pos ( sVal, "DEBUT#" ) <= 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La ligne d'ent$$HEX1$$ea00$$ENDHEX$$te n'est pas conforme (attendu : DEBUT#xx)")
+		" : La ligne d'entête n'est pas conforme (attendu : DEBUT#xx)")
 		lTotLig = 0
 	End If
 End If
@@ -25090,7 +25097,7 @@ If iRet > 0 Then
 	If Not IsNumber ( sVal )  Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La ligne d'ent$$HEX1$$ea00$$ENDHEX$$te n'est pas conforme, la valeur d$$HEX1$$e900$$ENDHEX$$rri$$HEX1$$e800$$ENDHEX$$re DEBUT# doit $$HEX1$$ea00$$ENDHEX$$tre un nombre")
+		" : La ligne d'entête n'est pas conforme, la valeur dérrière DEBUT# doit être un nombre")
 		lTotLig = 0
 	End If
 End If
@@ -25119,7 +25126,7 @@ If iRet > 0 Then
 	If Not IsNumber ( sVal )  Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La ligne de fin n'est pas conforme, la valeur d$$HEX1$$e900$$ENDHEX$$rri$$HEX1$$e800$$ENDHEX$$re FIN# doit $$HEX1$$ea00$$ENDHEX$$tre un nombre")
+		" : La ligne de fin n'est pas conforme, la valeur dérrière FIN# doit être un nombre")
 		lTotLig = 0
 	End If
 End If
@@ -25136,7 +25143,7 @@ If iRet > 0 Then
 	If lNbreLignDeb <> lNbreLignFin Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le nombre de ligne entre la ligne d'ent$$HEX1$$ea00$$ENDHEX$$te et la ligne de fin n'est pas identique")
+		" : Le nombre de ligne entre la ligne d'entête et la ligne de fin n'est pas identique")
 		lTotLig = 0		
 	End If 
 End If
@@ -25145,7 +25152,7 @@ If iRet > 0 Then
 	If lNbreLignDeb <> lTotLig Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le nombre de ligne du fichier dans la ligne d'ent$$HEX1$$ea00$$ENDHEX$$te (" + String ( lTotLig ) + ") ne correspond pas au nombre de ligne r$$HEX1$$e900$$ENDHEX$$el du fichier (" + String ( lNbreLignDeb ) + ")" )
+		" : Le nombre de ligne du fichier dans la ligne d'entête (" + String ( lTotLig ) + ") ne correspond pas au nombre de ligne réel du fichier (" + String ( lNbreLignDeb ) + ")" )
 		lTotLig = 0		
 	End If 
 End If
@@ -25169,16 +25176,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+	// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -25186,12 +25193,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 	End If
@@ -25217,14 +25224,14 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour And sVal <> "BLC" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 	// [BLCODE]
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -25244,7 +25251,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Not isNull(dtVal) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre vide.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de réception fournisseur (DTE_RCP_FRN) doit être vide.")
 			End if
 
 		// [PM01].[LOT3&4]
@@ -25255,14 +25262,14 @@ For lCpt = lTotLig To 1 Step -1
 			If isNull(dtVal) And iInfoSpbFrn <> 957 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de réception fournisseur (DTE_RCP_FRN) doit être renseignée.")
 			End if
 			
 			// [PC13321][MANTIS14042]			
 			If Not isNull(dtVal) And iInfoSpbFrn = 957 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", et pour le process sp$$HEX1$$e900$$ENDHEX$$cifique 957, la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre vide.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", et pour le process spécifique 957, la date de réception fournisseur (DTE_RCP_FRN) doit être vide.")
 			End If			
 
 	End Choose
@@ -25289,27 +25296,27 @@ For lCpt = lTotLig To 1 Step -1
 				If Not Isnull (dtVal) Then
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					", PM82_LOT1 : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + " en r$$HEX1$$e900$$ENDHEX$$paration, la date de fin de traitement (DTE_FIN_TRAIT) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+					", PM82_LOT1 : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + " en réparation, la date de fin de traitement (DTE_FIN_TRAIT) ne doit pas être renseignée.")
 				End If
 
 			Elseif Isnull(dtVal) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit être renseignée.")
 			End if
 		// [VDOC8041] 232
 		Case 156, 157, 158, 159, 162, 163, 164, 169, 232, 174
 			if Not Isnull(dtVal) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit $$HEX1$$ea00$$ENDHEX$$tre vide.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit être vide.")
 			End if
 			
 		Case Else
 			If ( lVal = 0 Or IsNull ( lVal ) ) And Not IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Lorsque la date de fin de traitement (DTE_FIN_TRAIT) est renseign$$HEX1$$e900$$ENDHEX$$e, un statut GC est obligatoire.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Lorsque la date de fin de traitement (DTE_FIN_TRAIT) est renseignée, un statut GC est obligatoire.")
 			End If 
 		
 	End Choose
@@ -25325,14 +25332,14 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( sVal ) Or Len ( sVal ) <= 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone NUM_BON_TRP doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e sur le statut " + String ( lVal ) )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone NUM_BON_TRP doit être renseignée sur le statut " + String ( lVal ) )
 			End If
 		//  [VDoc4752]
 		Case 165
 			If iInfoSpbFrn = 970 and (IsNull ( sVal ) Or Len ( sVal ) <= 0 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone NUM_BON_TRP doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e sur le statut " + String ( lVal ) +  " pour le process 970.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone NUM_BON_TRP doit être renseignée sur le statut " + String ( lVal ) +  " pour le process 970.")
 			End If
 		// :[VDoc4752]
 	End Choose
@@ -25349,14 +25356,14 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 7 : STATUS_GC														     */
 	/*------------------------------------------------------------------*/
-	// [O2M] : V$$HEX1$$e900$$ENDHEX$$rification de l'appartenance du code retourn$$HEX2$$e9002000$$ENDHEX$$au param$$HEX1$$e900$$ENDHEX$$trage.
+	// [O2M] : Vérification de l'appartenance du code retourné au paramétrage.
 	sVal = String ( idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) )
 	If ( IsNull ( sVal ) Or Trim ( sVal ) = "" ) And iStatusGc > 0 Then sVal = String ( iStatusGc )
 	
-//	if dsCode.retrieve('-GC') > 0  then											// #9 - Chargement au d$$HEX1$$e900$$ENDHEX$$but de la fct
-			// #3 [FNAC_PROD_ECH_TECH] agrandissement jusqu'$$HEX2$$e0002000$$ENDHEX$$160
+//	if dsCode.retrieve('-GC') > 0  then											// #9 - Chargement au début de la fct
+			// #3 [FNAC_PROD_ECH_TECH] agrandissement jusqu'à 160
 			// #4 [DCMP090109] ajout 2, 21
-			// #5 [DCMP090085] ajout jusqu'$$HEX2$$e0002000$$ENDHEX$$169
+			// #5 [DCMP090085] ajout jusqu'à 169
 			// #6 [DCMP090327].[SBETV] (171)
 			// [PM166][O2M]
 			// [MANTIS3067] ajout 231
@@ -25380,14 +25387,14 @@ For lCpt = lTotLig To 1 Step -1
 // [PM82][LOT1] je remonte cette linge plus haut.
 // [RECUP_DONNEE_O2M] PCM 
 // [VDOC4970]
-// [PM250] Modif suite demande d'H$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e800$$ENDHEX$$ne (et CEAT)
+// [PM250] Modif suite demande d'Hélène (et CEAT)
 	Choose Case Upper ( sIdTypArt ) 
 		Case "EDI", "PRS", "PCM"
 			Choose Case Long ( sVal ) 
 				Case 177, 178
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le Status GC " + sVal + " n'est autoris$$HEX2$$e9002000$$ENDHEX$$que pour les commandes de mat$$HEX1$$e900$$ENDHEX$$riel (hors Batterie amovible BAM et C$$HEX1$$e200$$ENDHEX$$ble d'alimentation ALE)" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le Status GC " + sVal + " n'est autorisé que pour les commandes de matériel (hors Batterie amovible BAM et Câble d'alimentation ALE)" )
 			End Choose
 		Case Else
 			Choose Case Long ( sVal ) 
@@ -25400,14 +25407,14 @@ For lCpt = lTotLig To 1 Step -1
 						If Not ( sIdTypArt = "REA") And Not ( sIdTypArt = "PST" And Trim ( lnvPFCString.of_Getkeyvalue ( sInfoSpbFrnCplt, "TYP_RELAI", ";")) <> "PRET" ) Then
 							iRet = -1
 							This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-							" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Status GC " + sVal + " autoris$$HEX2$$e9002000$$ENDHEX$$uniquement sur une presta de type PST sans PRET ou une presta de type REA" )
+							" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Status GC " + sVal + " autorisé uniquement sur une presta de type PST sans PRET ou une presta de type REA" )
 						End If
 					End If 
 					
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Status GC " + sVal + " non autoris$$HEX2$$e9002000$$ENDHEX$$pour une commande de mat$$HEX1$$e900$$ENDHEX$$riel (hors Batterie amovible BAM et C$$HEX1$$e200$$ENDHEX$$ble d'alimentation ALE)" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Status GC " + sVal + " non autorisé pour une commande de matériel (hors Batterie amovible BAM et Câble d'alimentation ALE)" )
 
 			End Choose
 			
@@ -25420,32 +25427,32 @@ For lCpt = lTotLig To 1 Step -1
 		Case 1503, 1504, 435, 1502
 			Choose Case Long ( sVal ) 
 				Case 166
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoy$$HEX2$$e9002000$$ENDHEX$$sur la prestation d'origine, le Status GC " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$en retour" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Status GC " + sVal + " n'est pas autorisé en retour" )
 			End Choose
 			
 		Case 1505
 			Choose Case Long ( sVal ) 
 				Case 167, 168
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoy$$HEX2$$e9002000$$ENDHEX$$sur la prestation d'origine, le Status GC " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$en retour" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Status GC " + sVal + " n'est pas autorisé en retour" )
 			End Choose
 		// [VDoc4752]
 		Case 970
 			Choose Case Long ( sVal )
 					// [VDoc6082] ajout du statut_gc 164
 				Case 165,164
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoy$$HEX2$$e9002000$$ENDHEX$$sur la prestation d'origine, le Status GC " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$en retour" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Status GC " + sVal + " n'est pas autorisé en retour" )
 			End Choose
 			// :[VDoc4752]
 			
@@ -25453,11 +25460,11 @@ For lCpt = lTotLig To 1 Step -1
 		Case 964, 969
 			Choose Case Long ( sVal )
 				Case 179
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoy$$HEX2$$e9002000$$ENDHEX$$sur la prestation d'origine, le Status GC " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$en retour" )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Status GC " + sVal + " n'est pas autorisé en retour" )
 			End Choose			
 			
 	End Choose		
@@ -25467,32 +25474,32 @@ For lCpt = lTotLig To 1 Step -1
 			// [VDOC5774] 435, 1502
 			Choose Case iInfoSpbFrn
 				Case 1503, 1504, 435, 1502
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$sur le process " + String ( iInfoSpbFrn ) )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autorisé sur le process " + String ( iInfoSpbFrn ) )
 			End Choose
 			
 		Case 167, 168
 			Choose Case iInfoSpbFrn
 				Case 1505
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$sur le process " + String ( iInfoSpbFrn ) )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autorisé sur le process " + String ( iInfoSpbFrn ) )
 			End Choose
 			
 		// [VDOC6300] // [PC877]
 		Case 179
 			Choose Case iInfoSpbFrn
 				Case 964, 969
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$sur le process " + String ( iInfoSpbFrn ) )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autorisé sur le process " + String ( iInfoSpbFrn ) )
 			End Choose
 	End Choose			
 	// :[VDOC3731]	
@@ -25504,7 +25511,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Upper ( sIdTypArt ) <> "PRS" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autoris$$HEX2$$e9002000$$ENDHEX$$que sur une action de REPARATION." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autorisé que sur une action de REPARATION." )
 			End If
 
 	End Choose
@@ -25516,7 +25523,7 @@ For lCpt = lTotLig To 1 Step -1
 			If lVal = 232 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autoris$$HEX2$$e9002000$$ENDHEX$$que sur une action de REPARATION." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autorisé que sur une action de REPARATION." )
 			End If
 
 	End Choose
@@ -25550,7 +25557,7 @@ For lCpt = lTotLig To 1 Step -1
 	If len ( Trim ( sVal ) ) > 0 And Not IsDate ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone s$$HEX1$$e900$$ENDHEX$$rialis$$HEX1$$e900$$ENDHEX$$e DTE_RCP_MOB_CLI ne contient pas une date valide" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone sérialisée DTE_RCP_MOB_CLI ne contient pas une date valide" )
 	End If 
 
 	// [PC938_ORANGE_V3]
@@ -25561,7 +25568,7 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone s$$HEX1$$e900$$ENDHEX$$rialis$$HEX1$$e900$$ENDHEX$$e DTE_RCP_MOB_CLI ne peut $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e sans le statut 178, 233, 263, 234, 2, 21" )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone sérialisée DTE_RCP_MOB_CLI ne peut être renseignée sans le statut 178, 233, 263, 234, 2, 21" )
 		End Choose
 	End If
 
@@ -25569,14 +25576,14 @@ For lCpt = lTotLig To 1 Step -1
 	If len ( Trim ( sVal ) ) > 0 And ( lVal = 178 Or lVal = 233 Or lVal = 263 ) And ( IsNull ( dtVal ) Or Date ( dtVal ) = 1900-01-01 ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone DTE_FIN_TRAIT doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e avant de renseigner la zone DTE_RCP_MOB_CLI et de donner le statut 178 ou 233 ou 263" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone DTE_FIN_TRAIT doit être renseignée avant de renseigner la zone DTE_RCP_MOB_CLI et de donner le statut 178 ou 233 ou 263" )
 	End If
 
   /* [VDOC9908]		
 	If lVal = 178 And len ( Trim ( sVal ) ) <= 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut 178 oblige $$HEX2$$e0002000$$ENDHEX$$avoir la zone s$$HEX1$$e900$$ENDHEX$$rialis$$HEX1$$e900$$ENDHEX$$e DTE_RCP_MOB_CLI renseign$$HEX1$$e900$$ENDHEX$$e." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut 178 oblige à avoir la zone sérialisée DTE_RCP_MOB_CLI renseignée." )
 	End If
 	*/
 	// [PM166][O2M]
@@ -25593,7 +25600,7 @@ For lCpt = lTotLig To 1 Step -1
 			If len ( Trim ( sVal ) ) > 0 OR len ( Trim ( sVal1 ) ) > 0 OR len ( Trim ( sVal2 ) ) > 0 OR len ( Trim ( sVal3 ) ) > 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7926) : Les bin$$HEX1$$f400$$ENDHEX$$mes cl$$HEX1$$e900$$ENDHEX$$s/valeurs pour les cl$$HEX1$$e900$$ENDHEX$$s MARQUE_REMPL, MODELE_REMPL, PRIX_TTC_PUBLIC, PRIX_TTC_FACTU_O2M ne sont pas autoris$$HEX1$$e900$$ENDHEX$$s pour le produit " + String ( dcIdProd ) + "." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC7926) : Les binômes clés/valeurs pour les clés MARQUE_REMPL, MODELE_REMPL, PRIX_TTC_PUBLIC, PRIX_TTC_FACTU_O2M ne sont pas autorisés pour le produit " + String ( dcIdProd ) + "." )
 			End If
 			
 	End Choose
@@ -25605,23 +25612,23 @@ For lCpt = lTotLig To 1 Step -1
 	If Not IsNull ( dtVal ) And Not IsNull ( dtVal1 ) And dtVal1 < dtVal Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la DTE_RCP_FRN." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit être postérieure ou égale à la DTE_RCP_FRN." )
 	End If
 	// [VDOC9337]	
 	
 	// [VDOC9907]
-	// Mettre en place pour CEAT ces r$$HEX1$$e800$$ENDHEX$$gles, rejet du fichier MPR si : 
-	// - pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] ou [BRIS] avec un status_gc diff$$HEX1$$e900$$ENDHEX$$rent de 21 
+	// Mettre en place pour CEAT ces règles, rejet du fichier MPR si : 
+	// - présence d’une clé de type [SAV_NO_OK] ou [BRIS] avec un status_gc différent de 21 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )		
 	If lVal <> 21 And ( Pos ( sVal, "[SAV_NO_OK]" ) > 0 Or Pos ( sVal, "[BRIS]" ) > 0 ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9907/A.RAULT) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] ou [BRIS] avec un status_gc diff$$HEX1$$e900$$ENDHEX$$rent de 21 , interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9907/A.RAULT) : présence d’une clé de type [SAV_NO_OK] ou [BRIS] avec un status_gc différent de 21 , interdit " )
 	End IF
 
-	// Mettre en place pour CEAT ces r$$HEX1$$e800$$ENDHEX$$gles, rejet du fichier MPR si : 
-	// - pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] ou [BRIS] dans un retour $$HEX2$$e0002000$$ENDHEX$$une commande avec action = A_REPARER ou A_REPARER_FORCE 
+	// Mettre en place pour CEAT ces règles, rejet du fichier MPR si : 
+	// - présence d’une clé de type [SAV_NO_OK] ou [BRIS] dans un retour à une commande avec action = A_REPARER ou A_REPARER_FORCE 
 	// [PM222-1]	
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )		
 	If ( Pos ( sVal, "[SAV_NO_OK]" ) > 0 Or Pos ( sVal, "[BRIS]" ) > 0 ) &
@@ -25632,7 +25639,7 @@ For lCpt = lTotLig To 1 Step -1
 	Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9907/A.RAULT) : pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] ou [BRIS] dans un retour sur une commande sans demande de SAV (donc n$$HEX1$$1920$$ENDHEX$$impliquant pas d$$HEX1$$1920$$ENDHEX$$action = A_REPARER_SAV ou A_CONTROLER_SAV ), interdit" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9907/A.RAULT) : présence d’une clé de type [SAV_NO_OK] ou [BRIS] dans un retour sur une commande sans demande de SAV (donc n’impliquant pas d’action = A_REPARER_SAV ou A_CONTROLER_SAV ), interdit" )
 	End IF 
 	// :[VDOC9907]
 	
@@ -25654,7 +25661,7 @@ For lCpt = lTotLig To 1 Step -1
 		If Dec ( sVal ) > Dec ( sVal3 ) Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC10029/A.RAULT) : le montant du prix facturable par CEAT concernant la proposition est sup$$HEX1$$e900$$ENDHEX$$rieur au prix public indiqu$$HEX1$$e900$$ENDHEX$$, ce qui est incoh$$HEX1$$e900$$ENDHEX$$rent" )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC10029/A.RAULT) : le montant du prix facturable par CEAT concernant la proposition est supérieur au prix public indiqué, ce qui est incohérent" )
 		End If
 		
 	End If
@@ -25665,7 +25672,7 @@ For lCpt = lTotLig To 1 Step -1
 		If sIdRefFour = "A_DIAGNOSTIQUER" And lVal <> 151 And lVal <> 152 And lVal <> 159 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (ORANGE V3) : Pour Orange v3, seul le 151 ou 152 sont autoris$$HEX2$$e9002000$$ENDHEX$$sur le Diag apr$$HEX1$$e800$$ENDHEX$$s remplacement" )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (ORANGE V3) : Pour Orange v3, seul le 151 ou 152 sont autorisé sur le Diag après remplacement" )
 		End IF 
 	End IF 			
 	// [PC938_ORANGE_V3]
@@ -25675,21 +25682,21 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> "" And Len(sVal) > 35 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donn$$HEX1$$e900$$ENDHEX$$e MODL_RST_FRN trop longue (35 caract$$HEX1$$e800$$ENDHEX$$res maximum autoris$$HEX1$$e900$$ENDHEX$$s)." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donnée MODL_RST_FRN trop longue (35 caractères maximum autorisés)." )
 	End if
 	
 	sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "MARQ_RST_FRN", ";"))						
 	If sVal <> "" And Len(sVal) > 35 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donn$$HEX1$$e900$$ENDHEX$$e MARQ_RST_FRN trop longue (35 caract$$HEX1$$e800$$ENDHEX$$res maximum autoris$$HEX1$$e900$$ENDHEX$$s)." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donnée MARQ_RST_FRN trop longue (35 caractères maximum autorisés)." )
 	End if
 
 	sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ID_REF_FOUR_RST_FRN", ";"))						
 	If sVal <> "" And Len(sVal) > 20 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donn$$HEX1$$e900$$ENDHEX$$e ID_REF_FOUR_RST_FRN trop longue (20 caract$$HEX1$$e800$$ENDHEX$$res maximum autoris$$HEX1$$e900$$ENDHEX$$s)." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Donnée ID_REF_FOUR_RST_FRN trop longue (20 caractères maximum autorisés)." )
 	End if
 	// [20140728.FPI] 
 
@@ -25700,7 +25707,7 @@ For lCpt = lTotLig To 1 Step -1
 	
 			lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 			
-			// [VDOC17191] je ne d$$HEX1$$e900$$ENDHEX$$clenche pas le message sur le 159
+			// [VDOC17191] je ne déclenche pas le message sur le 159
 			Choose Case lVal
 				Case 301, 159, 156	
 					// Ok
@@ -25708,7 +25715,7 @@ For lCpt = lTotLig To 1 Step -1
 					If iStatusGc <> lVal Then
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit int$$HEX1$$e900$$ENDHEX$$grer cette r$$HEX1$$e800$$ENDHEX$$gle dans son syst$$HEX1$$e800$$ENDHEX$$me." )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit intégrer cette règle dans son système." )
 					End If
 
 			End CHoose
@@ -25719,7 +25726,7 @@ For lCpt = lTotLig To 1 Step -1
 	If lVal = 155 And sIdRefFour <> "REFUSE_A_REEXP" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " ne peut $$HEX1$$ea00$$ENDHEX$$tre renvoy$$HEX2$$e9002000$$ENDHEX$$que sur une prestation de type REFUSE_A_REEXP" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " ne peut être renvoyé que sur une prestation de type REFUSE_A_REEXP" )
 	End If
 
 	// [CTRLE_REF_A_REEXP]
@@ -25737,7 +25744,7 @@ For lCpt = lTotLig To 1 Step -1
 			If lVal > 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il est interdit de r$$HEX1$$e900$$ENDHEX$$pondre sur les prestations de type A_REPARER_FORCE, et A_DIAG_FORCE, or vous renvoyez le Statut " + String ( lVal ) + ". Si une r$$HEX1$$e900$$ENDHEX$$ponse doit $$HEX1$$ea00$$ENDHEX$$tre apport$$HEX1$$e900$$ENDHEX$$e, vous devez r$$HEX1$$e900$$ENDHEX$$pondre sur la pr$$HEX1$$e900$$ENDHEX$$station d'origine li$$HEX1$$e900$$ENDHEX$$e $$HEX2$$e0002000$$ENDHEX$$ce for$$HEX1$$e700$$ENDHEX$$age." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il est interdit de répondre sur les prestations de type A_REPARER_FORCE, et A_DIAG_FORCE, or vous renvoyez le Statut " + String ( lVal ) + ". Si une réponse doit être apportée, vous devez répondre sur la préstation d'origine liée à ce forçage." )
 			End If
 	End Choose		
 	
@@ -25752,7 +25759,7 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( sVal ) Or sVal = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " doit obligatoirement $$HEX1$$ea00$$ENDHEX$$tre accompagn$$HEX2$$e9002000$$ENDHEX$$d'un commentaire." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " doit obligatoirement être accompagné d'un commentaire." )
 			End If
 			
 	End CHoose
@@ -25763,7 +25770,7 @@ For lCpt = lTotLig To 1 Step -1
 		If sVal1 = "OUI" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " n'est autoris$$HEX2$$e9002000$$ENDHEX$$que pour une commande de remplacement." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " n'est autorisé que pour une commande de remplacement." )
 		End If	
 	End If
 
@@ -25773,7 +25780,7 @@ For lCpt = lTotLig To 1 Step -1
 		If Trim ( sVal ) = "" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT288) : Sur une commande de remplacement, la zone SWAP_GSX doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e par OUI ou NON." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT288) : Sur une commande de remplacement, la zone SWAP_GSX doit être renseignée par OUI ou NON." )
 		End If 					
 	
 		// [DT288]
@@ -25781,7 +25788,7 @@ For lCpt = lTotLig To 1 Step -1
 		If Trim ( sVal ) = "" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT288) : Sur commande de remplacement, la zone REF_ORANGE doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT288) : Sur commande de remplacement, la zone REF_ORANGE doit être renseignée." )
 		End If 
 	End If
 	
@@ -25794,7 +25801,7 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$pour le produit " + string ( dcIdProd ) + "." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " n'est pas autorisé pour le produit " + string ( dcIdProd ) + "." )
 		End Choose 
 	End If			
 	
@@ -25806,7 +25813,7 @@ For lCpt = lTotLig To 1 Step -1
 		If lVal = 305 And lnvPFCString.of_getkeyvalue (sChaineBCV, "GESTION_GEOLOCALISATION", ";") <> "OUI" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le produit " + String ( dcIdprod ) + " n'est pas $$HEX1$$e900$$ENDHEX$$ligible au projet DT150 g$$HEX1$$e900$$ENDHEX$$rant la g$$HEX1$$e900$$ENDHEX$$olocalisation. Si ce projet doit rentrer dans ce p$$HEX1$$e900$$ENDHEX$$rim$$HEX1$$e800$$ENDHEX$$tre, voir avec DPG pour ajouter le produit, sinon transmettre l'information au fournisseur que ce produit est interdit pour ce code retour." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le produit " + String ( dcIdprod ) + " n'est pas éligible au projet DT150 gérant la géolocalisation. Si ce projet doit rentrer dans ce périmètre, voir avec DPG pour ajouter le produit, sinon transmettre l'information au fournisseur que ce produit est interdit pour ce code retour." )
 		End If
 		
 		lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )				
@@ -25826,7 +25833,7 @@ For lCpt = lTotLig To 1 Step -1
 				If isnull(sVal1) Or sVal1 = "" Then
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le num$$HEX1$$e900$$ENDHEX$$ro de s$$HEX1$$e900$$ENDHEX$$rie/IMEI de l'appareil de remplacement n'est pas renseign$$HEX1$$e900$$ENDHEX$$." )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le numéro de série/IMEI de l'appareil de remplacement n'est pas renseigné." )
 				End If	
 		End Choose 
 	End If
@@ -25851,7 +25858,7 @@ For lCpt = lTotLig To 1 Step -1
 				Case 2
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") R$$HEX1$$e900$$ENDHEX$$paration interdite sur ce type de prestation, il faut r$$HEX1$$e900$$ENDHEX$$pondre 21 Irr$$HEX1$$e900$$ENDHEX$$parable dans tous les cas et qualifier l'irr$$HEX1$$e900$$ENDHEX$$parabilit$$HEX2$$e9002000$$ENDHEX$$dans le commentaire par un mot cl$$HEX1$$e900$$ENDHEX$$." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Réparation interdite sur ce type de prestation, il faut répondre 21 Irréparable dans tous les cas et qualifier l'irréparabilité dans le commentaire par un mot clé." )
 			End Choose 
 	End if
 
@@ -25861,7 +25868,7 @@ For lCpt = lTotLig To 1 Step -1
 	If lVal = 308 And lVal1 <= 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le statut retour 308 vous oblige $$HEX2$$e0002000$$ENDHEX$$renseigner le bcv IFDNMQ_RET (InFos DoNn$$HEX1$$e900$$ENDHEX$$es ManQuante RETour) avec un codage particulier, voir livraison PM287-3." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le statut retour 308 vous oblige à renseigner le bcv IFDNMQ_RET (InFos DoNnées ManQuante RETour) avec un codage particulier, voir livraison PM287-3." )
 	End If
 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
@@ -25869,7 +25876,7 @@ For lCpt = lTotLig To 1 Step -1
 	If lVal <> 308 And lVal1 > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + String ( lVal ) + " interdit la pr$$HEX1$$e900$$ENDHEX$$sence du bcv IFDNMQ_RET (InFos DoNn$$HEX1$$e900$$ENDHEX$$es ManQuante RETour) dans la zone s$$HEX1$$e900$$ENDHEX$$rialis$$HEX1$$e900$$ENDHEX$$e, voir livraison PM287-3." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + String ( lVal ) + " interdit la présence du bcv IFDNMQ_RET (InFos DoNnées ManQuante RETour) dans la zone sérialisée, voir livraison PM287-3." )
 	End If
 
 
@@ -25887,7 +25894,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Pos ( sVal2, "#" + sTabVal [lCptVal] + "#" ) <= 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La valeur #" + sTabVal [lCptVal] + "# n'est pas autoris$$HEX1$$e900$$ENDHEX$$e dans le BCV IFDNMQ_RET pour le statut 308, voir livraison PM287-3." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La valeur #" + sTabVal [lCptVal] + "# n'est pas autorisée dans le BCV IFDNMQ_RET pour le statut 308, voir livraison PM287-3." )
 			End If
 
 			If iRet > 0  Then
@@ -25919,7 +25926,7 @@ For lCpt = lTotLig To 1 Step -1
 			) Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Le SWAP CEAT n'est autoris$$HEX2$$e9002000$$ENDHEX$$que sur un irr$$HEX1$$e900$$ENDHEX$$parable 21/23 avec un mot cl$$HEX2$$e9002000$$ENDHEX$$[BVIE]/[BVID]/[BVIP]/[BVIT]/[BVIEOX] ou [PIE]." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Le SWAP CEAT n'est autorisé que sur un irréparable 21/23 avec un mot clé [BVIE]/[BVID]/[BVIP]/[BVIT]/[BVIEOX] ou [PIE]." )
 		End If 				
 			
 		If iRet > 0 Then
@@ -25927,43 +25934,43 @@ For lCpt = lTotLig To 1 Step -1
 			If Trim ( sVal ) = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CEAT le BCV MARQSW doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e avec la marque IFR du nouveau mat$$HEX1$$e900$$ENDHEX$$riel." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CEAT le BCV MARQSW doit être renseignée avec la marque IFR du nouveau matériel." )
 			End If 	
 			
 			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "MODLSW", ";"))		
 			If Trim ( sVal ) = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CEAT le BCV MODLSW doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$avec le mod$$HEX1$$e800$$ENDHEX$$le IFR du nouveau mat$$HEX1$$e900$$ENDHEX$$riel." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CEAT le BCV MODLSW doit être renseigné avec le modèle IFR du nouveau matériel." )
 			End If 					
 
 			If iRet > 0 Then
 				Choose Case sIdTypArtSin
 					Case "TEL", "TPC"
-						// Autoris$$HEX1$$e900$$ENDHEX$$
+						// Autorisé
 					Case Else 
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Type d'appareil (" + sIdTypArt+ ") non autoris$$HEX2$$e9002000$$ENDHEX$$pour un SWAP CEAT." )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Type d'appareil (" + sIdTypArt+ ") non autorisé pour un SWAP CEAT." )
 				End Choose
 			End If 
 
-			// Controle binome marq/modl appartient $$HEX2$$e0002000$$ENDHEX$$IFR $$HEX2$$e0002000$$ENDHEX$$ajouter
+			// Controle binome marq/modl appartient à IFR à ajouter
 			If iRet > 0 Then
 				sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "MARQSW", ";"))
 				sVal1 = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "MODLSW", ";"))
 				If SQLCA.PS_S_VERIF_MARQ_MODL_IFR_V01 ( dcIdprod, sIdTypArtSin, sVal, sVal1 ) <= 0 Then
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Sur un SWAP CEAT, pour ce dossier, la Marque et le Mod$$HEX1$$e800$$ENDHEX$$le du nouveau mat$$HEX1$$e900$$ENDHEX$$riel (" + sVal + " " + sVal1 + ") doivent appartenir au r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rentiel IFR." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Sur un SWAP CEAT, pour ce dossier, la Marque et le Modèle du nouveau matériel (" + sVal + " " + sVal1 + ") doivent appartenir au référentiel IFR." )
 				End If
 			End If
 			
-			sVal = sNumImeiSerie // Le ctrle de validit$$HEX2$$e9002000$$ENDHEX$$est faite plus haut
+			sVal = sNumImeiSerie // Le ctrle de validité est faite plus haut
 			If Trim ( sVal ) = "" Or IsNull ( sVal )  Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CEAT la zone NUM_IMEI_NOUV ou NUM_SERIE_NOUV doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e par l'IMEI/SERIE du nouveau mat$$HEX1$$e900$$ENDHEX$$riel." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CEAT la zone NUM_IMEI_NOUV ou NUM_SERIE_NOUV doit être renseignée par l'IMEI/SERIE du nouveau matériel." )
 			End If 					
 
 
@@ -25971,7 +25978,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Trim ( sVal ) = "" Or Not IsNumber ( sVal ) Or Pos ( sVal, ",") > 0 Or Pos ( sVal, "E") > 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CEAT le BCV MTTTCSW doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$avec le montant TTC de l'appareil de remplacement (avec un point en s$$HEX1$$e900$$ENDHEX$$parateur de d$$HEX1$$e900$$ENDHEX$$cimal)." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CEAT le BCV MTTTCSW doit être renseigné avec le montant TTC de l'appareil de remplacement (avec un point en séparateur de décimal)." )
 			End If 
 
 			// [BUG_RST_PRIX_O2M]
@@ -25979,7 +25986,7 @@ For lCpt = lTotLig To 1 Step -1
 				If Long ( sVal) = 0 Then 
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CEAT le BCV MTTTCSW doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$avec le montant TTC de l'appareil de remplacement (avec un montant positif)." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CEAT le BCV MTTTCSW doit être renseigné avec le montant TTC de l'appareil de remplacement (avec un montant positif)." )
 				End if		
 			End If 
 
@@ -26000,7 +26007,7 @@ For lCpt = lTotLig To 1 Step -1
 			If ( IsNull ( sVal ) Or Trim ( sVal ) = "" ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CEAT, Le num$$HEX1$$e900$$ENDHEX$$ro de bon transporteur est obligatoire." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT280) : Sur un SWAP CEAT, Le numéro de bon transporteur est obligatoire." )
 			End IF 
 
 			// [DT288]
@@ -26008,7 +26015,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Trim ( sVal ) = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT288) : Sur un SWAP CEAT la zone SWAP_GSX doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e par OUI ou NON." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT288) : Sur un SWAP CEAT la zone SWAP_GSX doit être renseignée par OUI ou NON." )
 			End If 					
 
 			// [DT288]
@@ -26016,7 +26023,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Trim ( sVal ) = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT288) : Sur un SWAP CEAT la zone REF_ORANGE doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT288) : Sur un SWAP CEAT la zone REF_ORANGE doit être renseignée." )
 			End If 					
 
 		End If		
@@ -26028,7 +26035,7 @@ For lCpt = lTotLig To 1 Step -1
 	If iInfoSpbFrn = 984 And sVal <> "OUI" And sIdTypArt <> "PST" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT290) : Sur un process 984, le SWAP est obligatoire, pas de process alternatif donc le bcv APP_SWAP doit obligatoirement $$HEX1$$ea00$$ENDHEX$$tre $$HEX2$$e0002000$$ENDHEX$$OUI." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT290) : Sur un process 984, le SWAP est obligatoire, pas de process alternatif donc le bcv APP_SWAP doit obligatoirement être à OUI." )
 	End If
 
 	// [PM383-1]
@@ -26042,7 +26049,7 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM383-1) : le bcv SOUS_GC=OUI n'est accept$$HEX2$$e9002000$$ENDHEX$$qu'avec le retour 2 (r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$)." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (PM383-1) : le bcv SOUS_GC=OUI n'est accepté qu'avec le retour 2 (réparé)." )
 		End Choose 
 	End If
 	// [PM383-1]	
@@ -26073,7 +26080,7 @@ For lCpt = lTotLig To 1 Step -1
 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il manque dans le commentaire un des mots cl$$HEX1$$e900$$ENDHEX$$s obligatoire qualifiant l'irr$$HEX1$$e900$$ENDHEX$$parable." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il manque dans le commentaire un des mots clés obligatoire qualifiant l'irréparable." )
 
 	End If 
 	
@@ -26082,7 +26089,7 @@ For lCpt = lTotLig To 1 Step -1
 	If sIdRefFour = "INFORMATION" And lVal <> 612 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") : un flux de type INFORMATION ne peut avoir pour r$$HEX1$$e900$$ENDHEX$$ponse qu'un statut 612" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") : un flux de type INFORMATION ne peut avoir pour réponse qu'un statut 612" )
 	End IF 
 
 	// [CTRLE_DATE_INTRG_FOU]
@@ -26119,7 +26126,7 @@ For lCpt = lTotLig To 1 Step -1
 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$PRBLE_LIVRAISON, n'est pas valide." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé PRBLE_LIVRAISON, n'est pas valide." )
 
 		End Choose 
 	End If 
@@ -26142,14 +26149,14 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$PEC_PRBLE_LIVRAISON, n'est pas valide." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé PEC_PRBLE_LIVRAISON, n'est pas valide." )
 
 		End Choose 
 		
 		If sVal1 = "" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la cl$$HEX2$$e9002000$$ENDHEX$$PEC_PRBLE_LIVRAISON n'est autoris$$HEX1$$e900$$ENDHEX$$e que si pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$demment il y a au un cl$$HEX2$$e9002000$$ENDHEX$$PRBLE_LIVRAISON, qui est justement absente." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la clé PEC_PRBLE_LIVRAISON n'est autorisée que si précédemment il y a au un clé PRBLE_LIVRAISON, qui est justement absente." )
 		End If 			
 	End If 	
 	
@@ -26167,7 +26174,7 @@ For lCpt = lTotLig To 1 Step -1
 	
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 if isvalid(dsCode) Then destroy dsCode
 
@@ -26180,8 +26187,8 @@ private subroutine uf_definir_codetat_ceat (ref string asval, long alcpt, long a
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_CEAT (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 02/01/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: [DT253]
 //*
 //* Arguments		: asVal		String		Ref
@@ -26257,7 +26264,7 @@ private function integer uf_integration_fichier_ceat (ref long alnblig, ref long
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_CEAT (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 24/01/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier CORDON dans la base
+//* Libellé			: Intégration du fichier CORDON dans la base
 //* Commentaires	: [DT288]
 //*
 //*
@@ -26273,10 +26280,10 @@ private function integer uf_integration_fichier_ceat (ref long alnblig, ref long
 //* #1 	 PHG	 24/04/2008	  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
 //* #2    JFF   28/04/2008   [DCMP080202] MailPush O2M
 //* #3	 JFF	 20/10/2008	  [FNAC_PROD_ECH_TECH]
-//* #4	 FPI	 10/12/2009	  [SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
+//* #4	 FPI	 10/12/2009	  [SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
 //*       JFF   30/06/2010   [PC363_AUCHAN]
 //*       JFF   07/03/2011   [VDOC3290]
-//*       JFF   11/03/2011   [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+//*       JFF   11/03/2011   [ITSM62176] ajout du point de décimal
 //*       JFF   19/09/2011   [PM82][LOT1]
 //*       JFF   05/01/2012   [RECUP_DONNEE_O2M]
 //        JFF   06/08/2012   [BLCODE]
@@ -26285,7 +26292,7 @@ private function integer uf_integration_fichier_ceat (ref long alnblig, ref long
 //       JFF   08/04/2014 [PM255]
 //       JFF   07/05/2013 [PM250-1]
 //       JFF   02/06/2014 [PC929_CDISCOUNT][PC929-2-V3]
-// 		FPI	21/07/2014 [PM250-1].FPI Correction r$$HEX1$$e900$$ENDHEX$$init de date avant lecture de la ligne
+// 		FPI	21/07/2014 [PM250-1].FPI Correction réinit de date avant lecture de la ligne
 //       JFF   18/08/2014 [PM254_V1]
 //       JFF   25/08/2014 [DT100]
 //       JFF   16/09/2014 [PM250-2]
@@ -26349,19 +26356,19 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
 	lIdSin = Long ( Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) )
 
-// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+// [ITSM62176] ajout du point de décimal
 	sSql += String ( lIdSin ) + "., "
 
 	/*------------------------------------------------------------------*/
@@ -26565,7 +26572,7 @@ For lCpt = 1 To lTotLig
 	sSql += sVal + ", "
 
 
-	// Pr$$HEX1$$e900$$ENDHEX$$paration zone INFO_FRN_SPB_CPLT 
+	// Préparation zone INFO_FRN_SPB_CPLT 
 	// Trt zone virtuelle RDV_CONF vers sInfoFrnSpbCplt
 
 	sVal = String ( idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) )
@@ -26684,7 +26691,7 @@ For lCpt = 1 To lTotLig
 	
 	/*------------------------------------------------------------------*/
 	/* ZONE 31 : INFO_FRN_SPB_CPLT ( zone multiple )[FNAC_PROD_ECH_TECH]*/
-	/* Une seule affectation $$HEX2$$e0002000$$ENDHEX$$sSql                                     */
+	/* Une seule affectation à sSql                                     */
 	/*------------------------------------------------------------------*/
 	sSql += "'" + sInfoFrnSpbCplt + "'"
 
@@ -26697,7 +26704,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ 
 		F_commit ( SQLCA, False ) 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/RECP_APP_EN_CTR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/RECP_APP_EN_CTR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #3
 		Continue 
 	End If
 	// :#2
@@ -26708,7 +26715,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 	//	Exit  #2
 		Continue // #2
 	End If	
@@ -26719,7 +26726,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/PS_S_MAILPUSH_ARR_PLATFORM, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/PS_S_MAILPUSH_ARR_PLATFORM, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 		Continue // #2
 	End If				
 	
@@ -26728,7 +26735,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/PS_S_MAILPUSH_DEP_CENTRDISTRIB, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/PS_S_MAILPUSH_DEP_CENTRDISTRIB, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 		Continue // #2
 	End If				
 	// [PM250-1]	
@@ -26754,7 +26761,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -26771,7 +26778,7 @@ For lCpt = 1 To lTotLig
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")	
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + sVal )
 
 		F_commit ( SQLCA, False )
 			
@@ -26790,7 +26797,7 @@ private function integer uf_ctrl_fichier_agora_place ();//*---------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_AGORA_PLACE (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/03/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier du AGORA_PLACE
+//* Libellé			: Controler de la validité du fichier du AGORA_PLACE
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -26854,16 +26861,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -26871,12 +26878,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -26889,11 +26896,11 @@ For lCpt = lTotLig To 1 Step -1
 
 			lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 			
-			// [VDOC17191] je ne d$$HEX1$$e900$$ENDHEX$$clenche pas le message sur le 159
+			// [VDOC17191] je ne déclenche pas le message sur le 159
 			If iStatusGc <> lVal Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit int$$HEX1$$e900$$ENDHEX$$grer cette r$$HEX1$$e800$$ENDHEX$$gle dans son syst$$HEX1$$e800$$ENDHEX$$me." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit intégrer cette règle dans son système." )
 			End If
 
 	End CHoose
@@ -26912,13 +26919,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -26927,7 +26934,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 3 : NUM_CMD_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 4 : NUM_IMEI_NOU														  */
@@ -26937,13 +26944,13 @@ For lCpt = lTotLig To 1 Step -1
 	If Len ( sVal ) <> 15 And Len ( sVal ) > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Un num$$HEX1$$e900$$ENDHEX$$ro d'IMEI doit contenir 15 chiffres" )
+		" : Un numéro d'IMEI doit contenir 15 chiffres" )
 	End If
 
 	If Not F_IMEI ( sVal, sIMEICorr ) And Len ( sVal ) > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Num$$HEX1$$e900$$ENDHEX$$ro d'IMEI non valide" )
+		" : Numéro d'IMEI non valide" )
 	End If 
 
 	/*------------------------------------------------------------------*/
@@ -26955,7 +26962,7 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La date de r$$HEX1$$e900$$ENDHEX$$ception du flux SPB chez AGORA PLACE est obligatoire" )		
+		" : La date de réception du flux SPB chez AGORA PLACE est obligatoire" )		
 	End IF 
 
 	/*------------------------------------------------------------------*/
@@ -26974,7 +26981,7 @@ For lCpt = lTotLig To 1 Step -1
 	If ( lVal = 0 Or IsNull ( lVal ) ) And sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Lorsque la date de fin de traitement (DTE_ENV_CLI) est renseign$$HEX1$$e900$$ENDHEX$$e, un statut GC est obligatoire.")
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Lorsque la date de fin de traitement (DTE_ENV_CLI) est renseignée, un statut GC est obligatoire.")
 	End If 
 
 
@@ -26990,7 +26997,7 @@ For lCpt = lTotLig To 1 Step -1
 			CASE ELSE	
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le Destinataire de l'envoi doit $$HEX1$$ea00$$ENDHEX$$tre null ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$SPB ou CLIENT, mais pas " + sVal )
+				" : Le Destinataire de l'envoi doit être null ou égal à SPB ou CLIENT, mais pas " + sVal )
 		END CHOOSE
 
 	End If
@@ -27014,7 +27021,7 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( sVal ) Or Len ( sVal ) <= 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone NUM_BON_TRP doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e sur le statut " + String ( lVal ) )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone NUM_BON_TRP doit être renseignée sur le statut " + String ( lVal ) )
 			End If
 	End Choose
 
@@ -27050,7 +27057,7 @@ For lCpt = lTotLig To 1 Step -1
 	If Not IsNull ( dtVal ) And Not IsNull ( dtVal1 ) And dtVal1 < dtVal Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la DTE_RCP_FRN." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit être postérieure ou égale à la DTE_RCP_FRN." )
 	End If
 	// [VDOC9337]	
 
@@ -27088,7 +27095,7 @@ For lCpt = lTotLig To 1 Step -1
 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$PRBLE_LIVRAISON, n'est pas valide." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé PRBLE_LIVRAISON, n'est pas valide." )
 
 		End Choose 
 	End IF 	
@@ -27111,21 +27118,21 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$PEC_PRBLE_LIVRAISON, n'est pas valide." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé PEC_PRBLE_LIVRAISON, n'est pas valide." )
 
 		End Choose 
 		
 		If sVal1 = "" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la cl$$HEX2$$e9002000$$ENDHEX$$PEC_PRBLE_LIVRAISON n'est autoris$$HEX1$$e900$$ENDHEX$$e que si pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$demment il y a au un cl$$HEX2$$e9002000$$ENDHEX$$PRBLE_LIVRAISON, qui est justement absente." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la clé PEC_PRBLE_LIVRAISON n'est autorisée que si précédemment il y a au un clé PRBLE_LIVRAISON, qui est justement absente." )
 		End If 			
 	End If 	
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 10 : COMMENT_FRN														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 	// #3 [MSS_DIAG].[20091207111441740]
 	// [20091228114718123]
 	If iRet > 0 Then
@@ -27138,7 +27145,7 @@ For lCpt = lTotLig To 1 Step -1
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -27150,7 +27157,7 @@ private function integer uf_integration_fichier_agora_place (ref long alnblig, r
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_AGORA_PLACE (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 17/09/2018
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier du Coriolis dans la base
+//* Libellé			: Intégration du fichier du Coriolis dans la base
 //* Commentaires	: //[PM444-1]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -27163,11 +27170,11 @@ private function integer uf_integration_fichier_agora_place (ref long alnblig, r
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JCA    09/06/2006  MAILPUSH
-//* #2    JFF    23/08/2006  Modif apport$$HEX1$$e900$$ENDHEX$$e suite probl$$HEX1$$e800$$ENDHEX$$me lenteur
+//* #2    JFF    23/08/2006  Modif apportée suite problème lenteur
 //* #3 	 PHG	  24/04/2008  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
-//* #4	 FPI	  10/12/2009  [SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
-//*       JFF    11/03/2011  [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
-//  			FPI	04/08/2011	[FPI.04082011] Prise en compte de la date de r$$HEX1$$e900$$ENDHEX$$ception des mobiles par les assur$$HEX1$$e900$$ENDHEX$$s
+//* #4	 FPI	  10/12/2009  [SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
+//*       JFF    11/03/2011  [ITSM62176] ajout du point de décimal
+//  			FPI	04/08/2011	[FPI.04082011] Prise en compte de la date de réception des mobiles par les assurés
 //       JFF   18/08/2014 [PM254_V1]
 //		FPI	18/07/2018	[ITSM546478]
 //*-----------------------------------------------------------------
@@ -27205,17 +27212,17 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
-	// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+	// [ITSM62176] ajout du point de décimal
 	sSql += Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) + "., "
 	// #1
 	lIdSin = Long (Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ))
@@ -27454,7 +27461,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 	//	Exit  #2
 		Continue // #2
 	End If				
@@ -27480,7 +27487,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -27498,7 +27505,7 @@ For lCpt = 1 To lTotLig
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")				
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 		F_commit ( SQLCA, False )
 			
@@ -27516,8 +27523,8 @@ public subroutine uf_definir_codetat_agora_place (ref string asval, integer alcp
 //* Fonction		: n_cst_int_fic_suivicmd::uf_definir_codetat_agora_place (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 17/09/2018
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: [PM444-1]
 //*
 //* Arguments		: asVal		String		Ref
@@ -27579,7 +27586,7 @@ private function integer uf_ctrl_fichier_omt_ctrle_imei ();//*------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_OMT_ctrle_imei (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 28/11/2018
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier IMEI OMT
+//* Libellé			: Controler de la validité du fichier IMEI OMT
 //* Commentaires	: [PC874_2_V1]
 //*
 //* Arguments		: 
@@ -27615,7 +27622,7 @@ lTotLig = idwFicFourn.RowCount ()
 // [MODIF_SUITE_REDR]
 If lTotLig <= 0 And FileLength64 ( isTxtNomFic.Text ) > 0 Then
 	iRet = -1
-	This.uf_Trace ( "ECR", "ERREUR : 0 Ligne charg$$HEX1$$e900$$ENDHEX$$e ! , pour PI : Taille du fichier positive et chargement $$HEX2$$e0002000$$ENDHEX$$0 ligne => Anormal. R$$HEX1$$e900$$ENDHEX$$essayez l'int$$HEX1$$e900$$ENDHEX$$gration (cause $$HEX1$$e900$$ENDHEX$$ventuelle => le fichier est peut-$$HEX1$$ea00$$ENDHEX$$tre en format Unicode au lieu d'Ansi, $$HEX2$$e0002000$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$rifier)." )
+	This.uf_Trace ( "ECR", "ERREUR : 0 Ligne chargée ! , pour PI : Taille du fichier positive et chargement à 0 ligne => Anormal. Réessayez l'intégration (cause éventuelle => le fichier est peut-être en format Unicode au lieu d'Ansi, à vérifier)." )
 End If		
 
 sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
@@ -27643,16 +27650,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+	// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -27660,12 +27667,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 	End If
@@ -27688,13 +27695,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -27713,7 +27720,7 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( dtVal ) Or Not IsDate ( String ( Date ( dtVal ) )) Then
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La date de fin de derni$$HEX1$$e800$$ENDHEX$$re utilisation de l'IMEI est obligatoire pour le retour 621 et doit $$HEX1$$ea00$$ENDHEX$$tre une date valide.")
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La date de fin de dernière utilisation de l'IMEI est obligatoire pour le retour 621 et doit être une date valide.")
 			End If 
 			
 		Case 622
@@ -27724,7 +27731,7 @@ For lCpt = lTotLig To 1 Step -1
 				If Not IsDate ( String ( Date ( dtVal ) )) Then
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La date de fin de derni$$HEX1$$e800$$ENDHEX$$re utilisation de l'IMEI doit $$HEX1$$ea00$$ENDHEX$$tre une date valide si elle est transmise pour le retour 622.")
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La date de fin de dernière utilisation de l'IMEI doit être une date valide si elle est transmise pour le retour 622.")
 				End If 
 			End If 
 		
@@ -27736,7 +27743,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 7 : STATUS_GC														     */
 	/*------------------------------------------------------------------*/
-	// [O2M] : V$$HEX1$$e900$$ENDHEX$$rification de l'appartenance du code retourn$$HEX2$$e9002000$$ENDHEX$$au param$$HEX1$$e900$$ENDHEX$$trage.
+	// [O2M] : Vérification de l'appartenance du code retourné au paramétrage.
 	sVal = String ( idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) )
 
 	If ( IsNull ( sVal ) Or Trim ( sVal ) = "" ) And iStatusGc > 0 Then sVal = String ( iStatusGc )
@@ -27764,7 +27771,7 @@ For lCpt = lTotLig To 1 Step -1
 	
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 if isvalid(dsCode) Then destroy dsCode
 
@@ -27777,7 +27784,7 @@ private subroutine uf_definir_codetat_omt_ctrle_imei (ref string asval, long alc
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_OMT_CTRLE_IME (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 28/11/2018
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PC874_2_V1]
 //*
 //* Arguments		: asVal		String		Ref
@@ -27834,7 +27841,7 @@ private function integer uf_integration_fichier_omt_ctrle_imei (ref long alnblig
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_integration_fichier_omt_ctrle_imei (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 28/11/2018
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier OMT dans la base
+//* Libellé			: Intégration du fichier OMT dans la base
 //* Commentaires	: [PC874_2_V1]
 //*
 //*
@@ -27897,19 +27904,19 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
 	lIdSin = Long ( Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) )
 
-// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+// [ITSM62176] ajout du point de décimal
 	sSql += String ( lIdSin ) + "., "
 
 	/*------------------------------------------------------------------*/
@@ -28104,7 +28111,7 @@ For lCpt = 1 To lTotLig
 	
 	/*------------------------------------------------------------------*/
 	/* ZONE 31 : INFO_FRN_SPB_CPLT ( zone multiple )[FNAC_PROD_ECH_TECH]*/
-	/* Une seule affectation $$HEX2$$e0002000$$ENDHEX$$sSql                                     */
+	/* Une seule affectation à sSql                                     */
 	/*------------------------------------------------------------------*/
 	sInfoFrnSpbCplt = ""
 	sSql += "'" + sInfoFrnSpbCplt + "'"
@@ -28129,7 +28136,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -28146,7 +28153,7 @@ For lCpt = 1 To lTotLig
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")	
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + sVal )
 
 		F_commit ( SQLCA, False )
 			
@@ -28165,7 +28172,7 @@ private function integer uf_ctrl_fichier_orangegrandpublic ();//*---------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_OrangeGrandPublic (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 06/09/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier du OrangeGrandPublic
+//* Libellé			: Controler de la validité du fichier du OrangeGrandPublic
 //* Commentaires	: [DT424]
 //*
 //* Arguments		: 
@@ -28218,16 +28225,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -28235,12 +28242,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -28254,11 +28261,11 @@ For lCpt = lTotLig To 1 Step -1
 
 			lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 			
-			// [VDOC17191] je ne d$$HEX1$$e900$$ENDHEX$$clenche pas le message sur le 159
+			// [VDOC17191] je ne déclenche pas le message sur le 159
 			If iStatusGc <> lVal Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit int$$HEX1$$e900$$ENDHEX$$grer cette r$$HEX1$$e800$$ENDHEX$$gle dans son syst$$HEX1$$e800$$ENDHEX$$me." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit intégrer cette règle dans son système." )
 			End If
 
 	End CHoose
@@ -28277,13 +28284,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -28297,7 +28304,7 @@ For lCpt = lTotLig To 1 Step -1
 	If IsNull ( dtVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la date de traitement (DTE_FIN_TRT) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e dans tous les cas.")
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la date de traitement (DTE_FIN_TRT) doit être renseignée dans tous les cas.")
 	End if	
 	
 	sVal = String ( dtVal )
@@ -28316,7 +28323,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de 1$$HEX1$$e800$$ENDHEX$$re utilisation (DTE_1_UTIL_1) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de 1ère utilisation (DTE_1_UTIL_1) ne doit pas être renseignée.")
 			End if	
 
 		Case Else 
@@ -28324,7 +28331,7 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de 1$$HEX1$$e800$$ENDHEX$$re utilisation (DTE_1_UTIL_1) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de 1ère utilisation (DTE_1_UTIL_1) doit être renseignée.")
 			End if	
 
 	End Choose 
@@ -28343,7 +28350,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de derni$$HEX1$$e800$$ENDHEX$$re utilisation (DTE_DDU_1) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de dernière utilisation (DTE_DDU_1) ne doit pas être renseignée.")
 			End if	
 
 		Case Else 
@@ -28351,7 +28358,7 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de derni$$HEX1$$e800$$ENDHEX$$re utilisation (DTE_DDU_1) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de dernière utilisation (DTE_DDU_1) doit être renseignée.")
 			End if	
 
 	End Choose 
@@ -28368,7 +28375,7 @@ For lCpt = lTotLig To 1 Step -1
 	iRet = This.Uf_Ctrl_Date ( "CAS3", iRet, lCpt, lIdSin, lIdseq, sIdRefFour, sChaineBCV, sVal, sVal1 )
 
 	/*------------------------------------------------------------------*/
-	/* ZONE 5 : IMSI_1  (num$$HEX1$$e900$$ENDHEX$$ro carte SIM)                              */
+	/* ZONE 5 : IMSI_1  (numéro carte SIM)                              */
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "IMSI_1" ) )
 
@@ -28379,7 +28386,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal <> "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le num$$HEX1$$e900$$ENDHEX$$ro de carte SIM (IMSI_1) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le numéro de carte SIM (IMSI_1) ne doit pas être renseigné.")
 			End if	
 
 		Case Else 
@@ -28387,13 +28394,13 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal = "" Or Len ( sVal ) <> 14 Or Not IsNumber ( sVal ) Then // 14 en France          Len ( sVal ) < 12 Or Len ( sVal ) > 20 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le num$$HEX1$$e900$$ENDHEX$$ro de carte SIM (IMSI_1) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$et $$HEX1$$ea00$$ENDHEX$$tre valide (num$$HEX1$$e900$$ENDHEX$$ro de 14 chiffres en France).")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le numéro de carte SIM (IMSI_1) doit être renseigné et être valide (numéro de 14 chiffres en France).")
 			End if	
 
 	End Choose 
 
 	/*------------------------------------------------------------------*/
-	/* ZONE 6 : MSISDN_1  (num$$HEX1$$e900$$ENDHEX$$ro du tel) 			 						    */
+	/* ZONE 6 : MSISDN_1  (numéro du tel) 			 						    */
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "MSISDN_1" ) )
 
@@ -28404,7 +28411,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal <> "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le num$$HEX1$$e900$$ENDHEX$$ro du t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone (MSISDN_1) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le numéro du téléphone (MSISDN_1) ne doit pas être renseigné.")
 			End if	
 
 		Case Else 
@@ -28412,7 +28419,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal = "" Or Len ( sVal ) <> 10 Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le num$$HEX1$$e900$$ENDHEX$$ro du t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone (MSISDN_1) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$et $$HEX1$$ea00$$ENDHEX$$tre valide (num$$HEX1$$e900$$ENDHEX$$ro de 10 chiffres).")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le numéro du téléphone (MSISDN_1) doit être renseigné et être valide (numéro de 10 chiffres).")
 			End if	
 
 	End Choose 
@@ -28429,7 +28436,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal <> "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le nom du client (NOM_CLI_1) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le nom du client (NOM_CLI_1) ne doit pas être renseigné.")
 			End if	
 
 		Case Else 
@@ -28437,7 +28444,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal = "" Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le nom du client (NOM_CLI_1) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le nom du client (NOM_CLI_1) doit être renseigné.")
 			End if	
 
 	End Choose 
@@ -28454,7 +28461,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal <> "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le pr$$HEX1$$e900$$ENDHEX$$nom du client (PRENOM_CLI_1) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le prénom du client (PRENOM_CLI_1) ne doit pas être renseigné.")
 			End if	
 
 		Case Else 
@@ -28462,7 +28469,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal = "" Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le pr$$HEX1$$e900$$ENDHEX$$nom du client (PRENOM_CLI_1) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le prénom du client (PRENOM_CLI_1) doit être renseigné.")
 			End if	
 
 	End Choose 
@@ -28478,7 +28485,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de 1$$HEX1$$e800$$ENDHEX$$re utilisation (DTE_1_UTIL_2) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de 1ère utilisation (DTE_1_UTIL_2) ne doit pas être renseignée.")
 			End if	
 
 		Case Else 
@@ -28486,7 +28493,7 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de 1$$HEX1$$e800$$ENDHEX$$re utilisation (DTE_1_UTIL_2) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de 1ère utilisation (DTE_1_UTIL_2) doit être renseignée.")
 			End if	
 
 	End Choose 
@@ -28505,7 +28512,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de derni$$HEX1$$e800$$ENDHEX$$re utilisation (DTE_DDU_2) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de dernière utilisation (DTE_DDU_2) ne doit pas être renseignée.")
 			End if	
 
 		Case Else 
@@ -28513,7 +28520,7 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de derni$$HEX1$$e800$$ENDHEX$$re utilisation (DTE_DDU_2) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de dernière utilisation (DTE_DDU_2) doit être renseignée.")
 			End if	
 
 	End Choose 
@@ -28530,7 +28537,7 @@ For lCpt = lTotLig To 1 Step -1
 	iRet = This.Uf_Ctrl_Date ( "CAS3", iRet, lCpt, lIdSin, lIdseq, sIdRefFour, sChaineBCV, sVal, sVal1 )
 
 	/*------------------------------------------------------------------*/
-	/* ZONE 5 : IMSI_2  (num$$HEX1$$e900$$ENDHEX$$ro carte SIM)                              */
+	/* ZONE 5 : IMSI_2  (numéro carte SIM)                              */
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "IMSI_2" ) )
 
@@ -28541,7 +28548,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal <> "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le num$$HEX1$$e900$$ENDHEX$$ro de carte SIM (IMSI_2) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le numéro de carte SIM (IMSI_2) ne doit pas être renseigné.")
 			End if	
 
 		Case Else 
@@ -28549,13 +28556,13 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal = "" Or Len ( sVal ) <> 14 Then // 14 en France          Len ( sVal ) < 12 Or Len ( sVal ) > 20 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le num$$HEX1$$e900$$ENDHEX$$ro de carte SIM (IMSI_2) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$et $$HEX1$$ea00$$ENDHEX$$tre valide (num$$HEX1$$e900$$ENDHEX$$ro de 14 chiffres en France).")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le numéro de carte SIM (IMSI_2) doit être renseigné et être valide (numéro de 14 chiffres en France).")
 			End if	
 
 	End Choose 
 
 	/*------------------------------------------------------------------*/
-	/* ZONE 6 : MSISDN_2  (num$$HEX1$$e900$$ENDHEX$$ro du tel) 			 						    */
+	/* ZONE 6 : MSISDN_2  (numéro du tel) 			 						    */
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "MSISDN_2" ) )
 
@@ -28566,7 +28573,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal <> "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le num$$HEX1$$e900$$ENDHEX$$ro du t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone (MSISDN_2) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le numéro du téléphone (MSISDN_2) ne doit pas être renseigné.")
 			End if	
 
 		Case Else 
@@ -28574,7 +28581,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal = "" Or Len ( sVal ) <> 10 Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le num$$HEX1$$e900$$ENDHEX$$ro du t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone (MSISDN_2) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$et $$HEX1$$ea00$$ENDHEX$$tre valide (num$$HEX1$$e900$$ENDHEX$$ro de 10 chiffres).")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le numéro du téléphone (MSISDN_2) doit être renseigné et être valide (numéro de 10 chiffres).")
 			End if	
 
 	End Choose 
@@ -28591,7 +28598,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal <> "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le nom du client (NOM_CLI_2) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le nom du client (NOM_CLI_2) ne doit pas être renseigné.")
 			End if	
 
 		Case Else 
@@ -28599,7 +28606,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal = "" Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le nom du client (NOM_CLI_2) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le nom du client (NOM_CLI_2) doit être renseigné.")
 			End if	
 
 	End Choose 
@@ -28616,7 +28623,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal <> "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le pr$$HEX1$$e900$$ENDHEX$$nom du client (PRENOM_CLI_2) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le prénom du client (PRENOM_CLI_2) ne doit pas être renseigné.")
 			End if	
 
 		Case Else 
@@ -28624,7 +28631,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal = "" Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le pr$$HEX1$$e900$$ENDHEX$$nom du client (PRENOM_CLI_2) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le prénom du client (PRENOM_CLI_2) doit être renseigné.")
 			End if	
 
 	End Choose 
@@ -28649,12 +28656,12 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 16 : COMMENT_FRN														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 17 : INFO_FRN_SPB_CPLT												  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier pour l'instant.
+	// Pas de contrôle particulier pour l'instant.
 
 	If iRet > 0 Then
 
@@ -28666,7 +28673,7 @@ For lCpt = lTotLig To 1 Step -1
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -28678,7 +28685,7 @@ private function integer uf_ctrl_fichier_orangeopenpro ();//*-------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_OrangeOpenPro (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 06/09/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier du OrangeOpenPro
+//* Libellé			: Controler de la validité du fichier du OrangeOpenPro
 //* Commentaires	: [DT424]
 //*
 //* Arguments		: 
@@ -28731,16 +28738,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -28748,12 +28755,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -28767,11 +28774,11 @@ For lCpt = lTotLig To 1 Step -1
 
 			lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 			
-			// [VDOC17191] je ne d$$HEX1$$e900$$ENDHEX$$clenche pas le message sur le 159
+			// [VDOC17191] je ne déclenche pas le message sur le 159
 			If iStatusGc <> lVal Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit int$$HEX1$$e900$$ENDHEX$$grer cette r$$HEX1$$e800$$ENDHEX$$gle dans son syst$$HEX1$$e800$$ENDHEX$$me." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit intégrer cette règle dans son système." )
 			End If
 
 	End CHoose
@@ -28790,13 +28797,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -28810,7 +28817,7 @@ For lCpt = lTotLig To 1 Step -1
 	If IsNull ( dtVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la date de traitement (DTE_FIN_TRT) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e dans tous les cas.")
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la date de traitement (DTE_FIN_TRT) doit être renseignée dans tous les cas.")
 	End if	
 	
 	sVal = String ( dtVal )
@@ -28829,7 +28836,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de 1$$HEX1$$e800$$ENDHEX$$re utilisation (DTE_1_UTIL_1) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de 1ère utilisation (DTE_1_UTIL_1) ne doit pas être renseignée.")
 			End if	
 
 		Case Else 
@@ -28837,7 +28844,7 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de 1$$HEX1$$e800$$ENDHEX$$re utilisation (DTE_1_UTIL_1) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de 1ère utilisation (DTE_1_UTIL_1) doit être renseignée.")
 			End if	
 
 	End Choose 
@@ -28856,7 +28863,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de derni$$HEX1$$e800$$ENDHEX$$re utilisation (DTE_DDU_1) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de dernière utilisation (DTE_DDU_1) ne doit pas être renseignée.")
 			End if	
 
 		Case Else 
@@ -28864,7 +28871,7 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de derni$$HEX1$$e800$$ENDHEX$$re utilisation (DTE_DDU_1) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de dernière utilisation (DTE_DDU_1) doit être renseignée.")
 			End if	
 
 	End Choose 
@@ -28881,7 +28888,7 @@ For lCpt = lTotLig To 1 Step -1
 	iRet = This.Uf_Ctrl_Date ( "CAS3", iRet, lCpt, lIdSin, lIdseq, sIdRefFour, sChaineBCV, sVal, sVal1 )
 
 	/*------------------------------------------------------------------*/
-	/* ZONE 5 : IMSI_1  (num$$HEX1$$e900$$ENDHEX$$ro carte SIM)                              */
+	/* ZONE 5 : IMSI_1  (numéro carte SIM)                              */
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "IMSI_1" ) )
 
@@ -28892,7 +28899,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal <> "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le num$$HEX1$$e900$$ENDHEX$$ro de carte SIM (IMSI_1) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le numéro de carte SIM (IMSI_1) ne doit pas être renseigné.")
 			End if	
 
 		Case Else 
@@ -28900,13 +28907,13 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal = "" Or Len ( sVal ) <> 14 Or Not IsNumber ( sVal ) Then // 14 en France          Len ( sVal ) < 12 Or Len ( sVal ) > 20 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le num$$HEX1$$e900$$ENDHEX$$ro de carte SIM (IMSI_1) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$et $$HEX1$$ea00$$ENDHEX$$tre valide (num$$HEX1$$e900$$ENDHEX$$ro de 14 chiffres en France).")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le numéro de carte SIM (IMSI_1) doit être renseigné et être valide (numéro de 14 chiffres en France).")
 			End if	
 
 	End Choose 
 
 	/*------------------------------------------------------------------*/
-	/* ZONE 6 : MSISDN_1  (num$$HEX1$$e900$$ENDHEX$$ro du tel) 			 						    */
+	/* ZONE 6 : MSISDN_1  (numéro du tel) 			 						    */
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "MSISDN_1" ) )
 
@@ -28917,7 +28924,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal <> "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le num$$HEX1$$e900$$ENDHEX$$ro du t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone (MSISDN_1) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le numéro du téléphone (MSISDN_1) ne doit pas être renseigné.")
 			End if	
 
 		Case Else 
@@ -28925,7 +28932,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal = "" Or Len ( sVal ) <> 10 Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le num$$HEX1$$e900$$ENDHEX$$ro du t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone (MSISDN_1) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$et $$HEX1$$ea00$$ENDHEX$$tre valide (num$$HEX1$$e900$$ENDHEX$$ro de 10 chiffres).")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le numéro du téléphone (MSISDN_1) doit être renseigné et être valide (numéro de 10 chiffres).")
 			End if	
 
 	End Choose 
@@ -28942,7 +28949,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal <> "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le nom du client (NOM_CLI_1) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le nom du client (NOM_CLI_1) ne doit pas être renseigné.")
 			End if	
 
 		Case Else 
@@ -28950,7 +28957,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal = "" Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le nom du client (NOM_CLI_1) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le nom du client (NOM_CLI_1) doit être renseigné.")
 			End if	
 
 	End Choose 
@@ -28967,7 +28974,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal <> "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le pr$$HEX1$$e900$$ENDHEX$$nom du client (PRENOM_CLI_1) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le prénom du client (PRENOM_CLI_1) ne doit pas être renseigné.")
 			End if	
 
 		Case Else 
@@ -28975,7 +28982,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal = "" Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le pr$$HEX1$$e900$$ENDHEX$$nom du client (PRENOM_CLI_1) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le prénom du client (PRENOM_CLI_1) doit être renseigné.")
 			End if	
 
 	End Choose 
@@ -28991,7 +28998,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de 1$$HEX1$$e800$$ENDHEX$$re utilisation (DTE_1_UTIL_2) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de 1ère utilisation (DTE_1_UTIL_2) ne doit pas être renseignée.")
 			End if	
 
 		Case Else 
@@ -28999,7 +29006,7 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de 1$$HEX1$$e800$$ENDHEX$$re utilisation (DTE_1_UTIL_2) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de 1ère utilisation (DTE_1_UTIL_2) doit être renseignée.")
 			End if	
 
 	End Choose 
@@ -29018,7 +29025,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de derni$$HEX1$$e800$$ENDHEX$$re utilisation (DTE_DDU_2) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de dernière utilisation (DTE_DDU_2) ne doit pas être renseignée.")
 			End if	
 
 		Case Else 
@@ -29026,7 +29033,7 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de derni$$HEX1$$e800$$ENDHEX$$re utilisation (DTE_DDU_2) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", la date de dernière utilisation (DTE_DDU_2) doit être renseignée.")
 			End if	
 
 	End Choose 
@@ -29043,7 +29050,7 @@ For lCpt = lTotLig To 1 Step -1
 	iRet = This.Uf_Ctrl_Date ( "CAS3", iRet, lCpt, lIdSin, lIdseq, sIdRefFour, sChaineBCV, sVal, sVal1 )
 
 	/*------------------------------------------------------------------*/
-	/* ZONE 5 : IMSI_2  (num$$HEX1$$e900$$ENDHEX$$ro carte SIM)                              */
+	/* ZONE 5 : IMSI_2  (numéro carte SIM)                              */
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "IMSI_2" ) )
 
@@ -29054,7 +29061,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal <> "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le num$$HEX1$$e900$$ENDHEX$$ro de carte SIM (IMSI_2) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le numéro de carte SIM (IMSI_2) ne doit pas être renseigné.")
 			End if	
 
 		Case Else 
@@ -29062,13 +29069,13 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal = "" Or Len ( sVal ) <> 14 Then // 14 en France          Len ( sVal ) < 12 Or Len ( sVal ) > 20 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le num$$HEX1$$e900$$ENDHEX$$ro de carte SIM (IMSI_2) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$et $$HEX1$$ea00$$ENDHEX$$tre valide (num$$HEX1$$e900$$ENDHEX$$ro de 14 chiffres en France).")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le numéro de carte SIM (IMSI_2) doit être renseigné et être valide (numéro de 14 chiffres en France).")
 			End if	
 
 	End Choose 
 
 	/*------------------------------------------------------------------*/
-	/* ZONE 6 : MSISDN_2  (num$$HEX1$$e900$$ENDHEX$$ro du tel) 			 						    */
+	/* ZONE 6 : MSISDN_2  (numéro du tel) 			 						    */
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "MSISDN_2" ) )
 
@@ -29079,7 +29086,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal <> "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le num$$HEX1$$e900$$ENDHEX$$ro du t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone (MSISDN_2) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le numéro du téléphone (MSISDN_2) ne doit pas être renseigné.")
 			End if	
 
 		Case Else 
@@ -29087,7 +29094,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal = "" Or Len ( sVal ) <> 10 Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le num$$HEX1$$e900$$ENDHEX$$ro du t$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$phone (MSISDN_2) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$et $$HEX1$$ea00$$ENDHEX$$tre valide (num$$HEX1$$e900$$ENDHEX$$ro de 10 chiffres).")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le numéro du téléphone (MSISDN_2) doit être renseigné et être valide (numéro de 10 chiffres).")
 			End if	
 
 	End Choose 
@@ -29104,7 +29111,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal <> "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le nom du client (NOM_CLI_2) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le nom du client (NOM_CLI_2) ne doit pas être renseigné.")
 			End if	
 
 		Case Else 
@@ -29112,7 +29119,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal = "" Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le nom du client (NOM_CLI_2) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le nom du client (NOM_CLI_2) doit être renseigné.")
 			End if	
 
 	End Choose 
@@ -29129,7 +29136,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal <> "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le pr$$HEX1$$e900$$ENDHEX$$nom du client (PRENOM_CLI_2) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le prénom du client (PRENOM_CLI_2) ne doit pas être renseigné.")
 			End if	
 
 		Case Else 
@@ -29137,7 +29144,7 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal = "" Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le pr$$HEX1$$e900$$ENDHEX$$nom du client (PRENOM_CLI_2) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut GC " + String(lVal)  + ", le prénom du client (PRENOM_CLI_2) doit être renseigné.")
 			End if	
 
 	End Choose 
@@ -29162,12 +29169,12 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 16 : COMMENT_FRN														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 17 : INFO_FRN_SPB_CPLT												  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier pour l'instant.
+	// Pas de contrôle particulier pour l'instant.
 
 	If iRet > 0 Then
 
@@ -29179,7 +29186,7 @@ For lCpt = lTotLig To 1 Step -1
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -29191,7 +29198,7 @@ private function integer uf_integration_fichier_orangegrandpublic (ref long alnb
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_OrangeGrandPublic (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 10/09/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier du OrangeGrandPublic dans la base
+//* Libellé			: Intégration du fichier du OrangeGrandPublic dans la base
 //* Commentaires	: //[DT424]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -29240,17 +29247,17 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
-	// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+	// [ITSM62176] ajout du point de décimal
 	sSql += Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) + "., "
 	// #1
 	lIdSin = Long (Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ))
@@ -29536,7 +29543,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -29554,7 +29561,7 @@ For lCpt = 1 To lTotLig
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")				
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 		F_commit ( SQLCA, False )
 			
@@ -29572,8 +29579,8 @@ public subroutine uf_definir_codetat_orangegrandpublic (ref string asval, intege
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_OrangeGrandPublic (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 10/09/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: [DT424]]
 //*
 //* Arguments		: asVal		String		Ref
@@ -29626,8 +29633,8 @@ public subroutine uf_definir_codetat_orangeopenpro (ref string asval, integer al
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_OrangeOpenPro (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 10/09/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: [DT424]]
 //*
 //* Arguments		: asVal		String		Ref
@@ -29680,7 +29687,7 @@ private function integer uf_integration_fichier_orangeopenpro (ref long alnblig,
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_OrangeOpenPro (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 10/09/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier de OrangeOpenPro dans la base
+//* Libellé			: Intégration du fichier de OrangeOpenPro dans la base
 //* Commentaires	: //[DT424]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -29729,17 +29736,17 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
-	// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+	// [ITSM62176] ajout du point de décimal
 	sSql += Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) + "., "
 	// #1
 	lIdSin = Long (Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ))
@@ -30025,7 +30032,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -30043,7 +30050,7 @@ For lCpt = 1 To lTotLig
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")				
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 		F_commit ( SQLCA, False )
 			
@@ -30062,7 +30069,7 @@ private function integer uf_ctrl_fichier_telstore ();//*------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_TELSTORE (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 17/08/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier du TELSTORE
+//* Libellé			: Controler de la validité du fichier du TELSTORE
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -30099,9 +30106,9 @@ Int iStatusGc, iInfoSpbFrn
 
 iRet = 1
 
-// Suite demande de Julien Berg$$HEX1$$e800$$ENDHEX$$re et Rafa$$HEX1$$eb00$$ENDHEX$$le adam le 11/10, la premi$$HEX1$$e800$$ENDHEX$$re ligne sera une ligne d'ent$$HEX1$$ea00$$ENDHEX$$te, $$HEX2$$e0002000$$ENDHEX$$ne pas integrer donc.
-// On supprime donc la premi$$HEX1$$e800$$ENDHEX$$re ligne
-/* Annul$$HEX2$$e9002000$$ENDHEX$$par Camille le 03/11/22 car au final TLS n'envoie pas de 1$$HEX1$$e800$$ENDHEX$$re et donc je supprime chaque 1$$HEX1$$e800$$ENDHEX$$re ligne de cmde !! :-(
+// Suite demande de Julien Bergère et Rafaële adam le 11/10, la première ligne sera une ligne d'entête, à ne pas integrer donc.
+// On supprime donc la première ligne
+/* Annulé par Camille le 03/11/22 car au final TLS n'envoie pas de 1ère et donc je supprime chaque 1ère ligne de cmde !! :-(
 If idwFicFourn.RowCount () > 0 Then
 	idwFicFourn.RowsDiscard ( 1, 1, primary! ) 
 End IF 
@@ -30135,16 +30142,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -30152,12 +30159,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -30170,11 +30177,11 @@ For lCpt = lTotLig To 1 Step -1
 
 			lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 			
-			// [VDOC17191] je ne d$$HEX1$$e900$$ENDHEX$$clenche pas le message sur le 159
+			// [VDOC17191] je ne déclenche pas le message sur le 159
 			If iStatusGc <> lVal Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit int$$HEX1$$e900$$ENDHEX$$grer cette r$$HEX1$$e800$$ENDHEX$$gle dans son syst$$HEX1$$e800$$ENDHEX$$me." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit intégrer cette règle dans son système." )
 			End If
 
 	End CHoose
@@ -30193,13 +30200,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -30208,7 +30215,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 3 : NUM_CMD_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 4 : NUM_IMEI_NOU														  */
@@ -30218,13 +30225,13 @@ For lCpt = lTotLig To 1 Step -1
 	If Len ( sVal ) <> 15 And Len ( sVal ) > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Un num$$HEX1$$e900$$ENDHEX$$ro d'IMEI doit contenir 15 chiffres" )
+		" : Un numéro d'IMEI doit contenir 15 chiffres" )
 	End If
 
 	If Not F_IMEI ( sVal, sIMEICorr ) And Len ( sVal ) > 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Num$$HEX1$$e900$$ENDHEX$$ro d'IMEI non valide" )
+		" : Numéro d'IMEI non valide" )
 	End If 
 
 	/*------------------------------------------------------------------*/
@@ -30236,7 +30243,7 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La date de r$$HEX1$$e900$$ENDHEX$$ception du flux SPB chez TELSTORE est obligatoire" )		
+		" : La date de réception du flux SPB chez TELSTORE est obligatoire" )		
 	End IF 
 
 	/*------------------------------------------------------------------*/
@@ -30255,7 +30262,7 @@ For lCpt = lTotLig To 1 Step -1
 	If ( lVal = 0 Or IsNull ( lVal ) ) And sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Lorsque la date de fin de traitement (DTE_FIN_TRAIT) est renseign$$HEX1$$e900$$ENDHEX$$e, un ETAT_RETOUR est obligatoire.")
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Lorsque la date de fin de traitement (DTE_FIN_TRAIT) est renseignée, un ETAT_RETOUR est obligatoire.")
 	End If 
 
 
@@ -30271,7 +30278,7 @@ For lCpt = lTotLig To 1 Step -1
 			CASE ELSE	
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le Destinataire de l'envoi doit $$HEX1$$ea00$$ENDHEX$$tre null ou $$HEX1$$e900$$ENDHEX$$gal $$HEX2$$e0002000$$ENDHEX$$SPB ou CLIENT, mais pas " + sVal )
+				" : Le Destinataire de l'envoi doit être null ou égal à SPB ou CLIENT, mais pas " + sVal )
 		END CHOOSE
 
 	End If
@@ -30297,7 +30304,7 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( sVal ) Or Len ( sVal ) <= 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone NUM_BON_TRP doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e sur le statut " + String ( lVal ) )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La zone NUM_BON_TRP doit être renseignée sur le statut " + String ( lVal ) )
 			End If
 	End Choose
 
@@ -30333,7 +30340,7 @@ For lCpt = lTotLig To 1 Step -1
 	If Not IsNull ( dtVal ) And Not IsNull ( dtVal1 ) And dtVal1 < dtVal Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la DTE_RCP_FRN." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (VDOC9337) : la DTE_ENV_CLI doit être postérieure ou égale à la DTE_RCP_FRN." )
 	End If
 	// [VDOC9337]	
 
@@ -30345,7 +30352,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 10 : COMMENT_FRN														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 
 	/*------------------------------------------------------------------*/
@@ -30382,7 +30389,7 @@ For lCpt = lTotLig To 1 Step -1
 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$PRBLE_LIVRAISON, n'est pas valide." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé PRBLE_LIVRAISON, n'est pas valide." )
 
 		End Choose 
 	End IF 	
@@ -30405,14 +30412,14 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la cl$$HEX2$$e9002000$$ENDHEX$$PEC_PRBLE_LIVRAISON, n'est pas valide." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé PEC_PRBLE_LIVRAISON, n'est pas valide." )
 
 		End Choose 
 		
 		If sVal1 = "" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la cl$$HEX2$$e9002000$$ENDHEX$$PEC_PRBLE_LIVRAISON n'est autoris$$HEX1$$e900$$ENDHEX$$e que si pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$demment il y a au un cl$$HEX2$$e9002000$$ENDHEX$$PRBLE_LIVRAISON, qui est justement absente." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la clé PEC_PRBLE_LIVRAISON n'est autorisée que si précédemment il y a au un clé PRBLE_LIVRAISON, qui est justement absente." )
 		End If 			
 	End If 	
 
@@ -30434,7 +30441,7 @@ For lCpt = lTotLig To 1 Step -1
 		If sVal1 = "" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le mod$$HEX1$$e800$$ENDHEX$$le de remplacement est obligatoire." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le modèle de remplacement est obligatoire." )
 		End If 		
 		
 		If sVal2 = "" Then
@@ -30446,7 +30453,7 @@ For lCpt = lTotLig To 1 Step -1
 		If sVal3 = "" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La capacit$$HEX2$$e9002000$$ENDHEX$$de stockage de remplacement est obligatoire." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La capacité de stockage de remplacement est obligatoire." )
 		End If 		
 	End If 		
 	
@@ -30466,7 +30473,7 @@ For lCpt = lTotLig To 1 Step -1
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -30478,7 +30485,7 @@ private function integer uf_integration_fichier_telstore (ref long alnblig, ref 
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_TELSTORE (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 17/08/2022
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier du TELSTORE dans la base
+//* Libellé			: Intégration du fichier du TELSTORE dans la base
 //* Commentaires	: 
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -30491,11 +30498,11 @@ private function integer uf_integration_fichier_telstore (ref long alnblig, ref 
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JCA    09/06/2006  MAILPUSH
-//* #2    JFF    23/08/2006  Modif apport$$HEX1$$e900$$ENDHEX$$e suite probl$$HEX1$$e800$$ENDHEX$$me lenteur
+//* #2    JFF    23/08/2006  Modif apportée suite problème lenteur
 //* #3 	 PHG	  24/04/2008  [DCMP080199] Prise en Compte du Champs "Nom Transporteur"
-//* #4	 FPI	  10/12/2009  [SQLNRows] Correction sur le retour SQLNRows incorrect $$HEX2$$e0002000$$ENDHEX$$cause des triggers
-//*       JFF    11/03/2011  [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
-//  			FPI	04/08/2011	[FPI.04082011] Prise en compte de la date de r$$HEX1$$e900$$ENDHEX$$ception des mobiles par les assur$$HEX1$$e900$$ENDHEX$$s
+//* #4	 FPI	  10/12/2009  [SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
+//*       JFF    11/03/2011  [ITSM62176] ajout du point de décimal
+//  			FPI	04/08/2011	[FPI.04082011] Prise en compte de la date de réception des mobiles par les assurés
 //       JFF   18/08/2014 [PM254_V1]
 //		FPI	18/07/2018	[ITSM546478]
 //       JFF   20/02/2023 [RS4616_RET_TLS]
@@ -30534,17 +30541,17 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
-	// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+	// [ITSM62176] ajout du point de décimal
 	sSql += Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) + "., "
 	// #1
 	lIdSin = Long (Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ))
@@ -30816,7 +30823,7 @@ For lCpt = 1 To lTotLig
 		iRet = -1
 		alNbLigNonTraitee	++ // #2
 		F_commit ( SQLCA, False ) // #2		
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non trait$$HEX2$$e9002000$$ENDHEX$$: Probl$$HEX1$$e800$$ENDHEX$$me MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + ", enregistrement non traité : Problème MAILPUSH/ENVTEL_REMP_REPAR, Erreur " + String ( iRetMailPush  ) + ", num_cmde " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) ) // #2 ajout ", ligne " + String ( lcpt ) 
 	//	Exit  #2
 		Continue // #2
 	End If				
@@ -30842,7 +30849,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -30860,7 +30867,7 @@ For lCpt = 1 To lTotLig
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")				
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 		F_commit ( SQLCA, False )
 			
@@ -30878,7 +30885,7 @@ private function integer uf_ctrl_fichier_cardif ();//*--------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_CARDIF (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/06/2023
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier du CARDIF
+//* Libellé			: Controler de la validité du fichier du CARDIF
 //* Commentaires	: // [PMO89_RS4822]
 //*
 //* Arguments		: 
@@ -30905,9 +30912,9 @@ Int iStatusGc, iInfoSpbFrn
 
 iRet = 1
 
-// Suite demande de Julien Berg$$HEX1$$e800$$ENDHEX$$re et Rafa$$HEX1$$eb00$$ENDHEX$$le adam le 11/10, la premi$$HEX1$$e800$$ENDHEX$$re ligne sera une ligne d'ent$$HEX1$$ea00$$ENDHEX$$te, $$HEX2$$e0002000$$ENDHEX$$ne pas integrer donc.
-// On supprime donc la premi$$HEX1$$e800$$ENDHEX$$re ligne
-/* Annul$$HEX2$$e9002000$$ENDHEX$$par Camille le 03/11/22 car au final TLS n'envoie pas de 1$$HEX1$$e800$$ENDHEX$$re et donc je supprime chaque 1$$HEX1$$e800$$ENDHEX$$re ligne de cmde !! :-(
+// Suite demande de Julien Bergère et Rafaële adam le 11/10, la première ligne sera une ligne d'entête, à ne pas integrer donc.
+// On supprime donc la première ligne
+/* Annulé par Camille le 03/11/22 car au final TLS n'envoie pas de 1ère et donc je supprime chaque 1ère ligne de cmde !! :-(
 If idwFicFourn.RowCount () > 0 Then
 	idwFicFourn.RowsDiscard ( 1, 1, primary! ) 
 End IF 
@@ -30941,16 +30948,16 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-		// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -30958,12 +30965,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 
@@ -30976,11 +30983,11 @@ For lCpt = lTotLig To 1 Step -1
 
 			lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 			
-			// [VDOC17191] je ne d$$HEX1$$e900$$ENDHEX$$clenche pas le message sur le 159
+			// [VDOC17191] je ne déclenche pas le message sur le 159
 			If iStatusGc <> lVal Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit int$$HEX1$$e900$$ENDHEX$$grer cette r$$HEX1$$e800$$ENDHEX$$gle dans son syst$$HEX1$$e800$$ENDHEX$$me." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit intégrer cette règle dans son système." )
 			End If
 
 	End CHoose
@@ -30999,13 +31006,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	//* [20091228114718123]
@@ -31014,7 +31021,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 3 : NUM_CMD_FRN															  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 5 : DTE_RCP_FRN															  */
@@ -31025,7 +31032,7 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La date de r$$HEX1$$e900$$ENDHEX$$ception du flux SPB chez CARDIF est obligatoire" )		
+		" : La date de réception du flux SPB chez CARDIF est obligatoire" )		
 	End IF 
 
 	/*------------------------------------------------------------------*/
@@ -31044,7 +31051,7 @@ For lCpt = lTotLig To 1 Step -1
 	If ( lVal = 0 Or IsNull ( lVal ) ) And sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Lorsque la date de fin de traitement (DTE_FIN_TRAIT) est renseign$$HEX1$$e900$$ENDHEX$$e, un ETAT_RETOUR est obligatoire.")
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Lorsque la date de fin de traitement (DTE_FIN_TRAIT) est renseignée, un ETAT_RETOUR est obligatoire.")
 	End If 
 
 
@@ -31073,7 +31080,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 10 : COMMENT_FRN														  */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 
 	/*------------------------------------------------------------------*/
@@ -31095,7 +31102,7 @@ For lCpt = lTotLig To 1 Step -1
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -31107,8 +31114,8 @@ public subroutine uf_definir_codetat_cardif (ref string asval, integer alcpt, lo
 //* Fonction		: n_cst_int_fic_suivicmd::uf_definir_codetat_cardif (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/06/2023
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: [PMO89_RS4822]
 //*
 //* Arguments		: asVal		String		Ref
@@ -31161,7 +31168,7 @@ private function integer uf_integration_fichier_cardif (ref long alnblig, ref lo
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_CARDIF (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/06/2023
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier du CARDIF dans la base
+//* Libellé			: Intégration du fichier du CARDIF dans la base
 //* Commentaires	: [PMO89_RS4822]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -31205,17 +31212,17 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
-	// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+	// [ITSM62176] ajout du point de décimal
 	sSql += Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) + "., "
 	// #1
 	lIdSin = Long (Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ))
@@ -31282,9 +31289,9 @@ For lCpt = 1 To lTotLig
 	
 	Choose Case lVal
 		Case 810 
-			sVal += ". Interlocuteur accept$$HEX2$$e9002000$$ENDHEX$$(OK) par l'assureur."
+			sVal += ". Interlocuteur accepté (OK) par l'assureur."
 		Case 820
-			sVal += ". Interlocuteur rejet$$HEX2$$e9002000$$ENDHEX$$(KO) par l'assureur."			
+			sVal += ". Interlocuteur rejeté (KO) par l'assureur."			
 	End Choose 
 	
 	sCommentFrn = sVal	
@@ -31460,7 +31467,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -31478,7 +31485,7 @@ For lCpt = 1 To lTotLig
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")				
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + + sVal )
 
 		F_commit ( SQLCA, False )
 			
@@ -31496,7 +31503,7 @@ private function integer uf_ctrl_fichier_frn_hub ();//*-------------------------
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_frn_Hub (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 30/04/2024
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [HP252_276_HUB_PRESTA]
+//* Libellé			: [HP252_276_HUB_PRESTA]
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -31528,7 +31535,7 @@ lTotLig = idwFicFourn.RowCount ()
 // [MODIF_SUITE_REDR]
 If lTotLig <= 0 And FileLength64 ( isTxtNomFic.Text ) > 0 Then
 	iRet = -1
-	This.uf_Trace ( "ECR", "ERREUR : 0 Ligne charg$$HEX1$$e900$$ENDHEX$$e ! , pour PI : Taille du fichier positive et chargement $$HEX2$$e0002000$$ENDHEX$$0 ligne => Anormal. R$$HEX1$$e900$$ENDHEX$$essayez l'int$$HEX1$$e900$$ENDHEX$$gration (cause $$HEX1$$e900$$ENDHEX$$ventuelle => le fichier est peut-$$HEX1$$ea00$$ENDHEX$$tre en format Unicode au lieu d'Ansi, $$HEX2$$e0002000$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$rifier)." )
+	This.uf_Trace ( "ECR", "ERREUR : 0 Ligne chargée ! , pour PI : Taille du fichier positive et chargement à 0 ligne => Anormal. Réessayez l'intégration (cause éventuelle => le fichier est peut-être en format Unicode au lieu d'Ansi, à vérifier)." )
 End If		
 
 // connexion au Hub Prestataire
@@ -31545,7 +31552,7 @@ If Not bRet Then
 	sVal = f_remplace(sVal,Char(11)," ")				
 	sVal = f_remplace(sVal,Char(13)," ")	
 
-	This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me de connexion (Ctrl) au Hub Prestataire, msg SqlServer => : " + sVal )
+	This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème de connexion (Ctrl) au Hub Prestataire, msg SqlServer => : " + sVal )
 	
 	Return iRet
 			
@@ -31576,16 +31583,16 @@ For lCpt = lTotLig To 1 Step -1
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 	sNumCmdSpb = sVal
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de cette cmde par les 
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
 	// gestionnaires.
 	If Not IsNull ( sVal ) And sVal <> "" Then
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de commande doit $$HEX1$$ea00$$ENDHEX$$tr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+	// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
 		lPos = Pos ( sVal, "-", 1 )
 		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-			" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB ne contient pas de '-'." )
+			" : Le n° de commande SPB ne contient pas de '-'." )
 		Else
 			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
 			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
@@ -31593,12 +31600,12 @@ For lCpt = lTotLig To 1 Step -1
 			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Ref.Sin." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
 
 			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : Le n$$HEX2$$b0002000$$ENDHEX$$de commande SPB est erron$$HEX2$$e9002000$$ENDHEX$$sur la partie Id.Cmde." )
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			End If
 		End If
 	End If
@@ -31614,7 +31621,7 @@ For lCpt = lTotLig To 1 Step -1
 	SQLCA.PS_S11_COMMANDE_V07 ( lidsin, lidseq, sIdFourBase, sCodEtat, iStatusGc, sIdRefFour, iInfoSpbFrn, sIdTypArt, dcIdprod, sInfoSpbFrnCplt, sInfoFrnSpbCplt, sChaineBCV )
 
 	/*------------------------------------------------------------------*/
-	/* Stockage de certaines donn$$HEX1$$e900$$ENDHEX$$es                                    */
+	/* Stockage de certaines données                                    */
 	/*------------------------------------------------------------------*/	
 	// TYP_APP_DS
 	sIdTypArtSin = lnvPFCString.of_getkeyvalue (sChaineBCV, "TYP_APP_DS", ";") 
@@ -31638,7 +31645,7 @@ For lCpt = lTotLig To 1 Step -1
 	If Not IsNull ( dtVal ) Then dtDteRcpFrn = dtVal
 
 	/*------------------------------------------------------------------*/
-	/* Contr$$HEX1$$f400$$ENDHEX$$le systeme HUB															  */
+	/* Contrôle systeme HUB															  */
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "SYSTEME" ) ) )
 	sVal1= Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "FOURNISSEUR" ) ) )
@@ -31646,13 +31653,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal = "HUB" and Not ibPrestaHub Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-		" : Ce fournisseur (" + sVal1 + ") n'est pas d$$HEX1$$e900$$ENDHEX$$clar$$HEX2$$e9002000$$ENDHEX$$comme $$HEX1$$e900$$ENDHEX$$tant li$$HEX2$$e9002000$$ENDHEX$$au Hub Prestataire (-WP)." )		
+		" : Ce fournisseur (" + sVal1 + ") n'est pas déclaré comme étant lié au Hub Prestataire (-WP)." )		
 	End If 
 	
 	If sVal <> "HUB" and ibPrestaHub Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-		" : Ce fichier ne provient du Hub Prestataire or le fournisseur (" + sVal1 + ") est d$$HEX1$$e900$$ENDHEX$$clar$$HEX2$$e9002000$$ENDHEX$$comme $$HEX1$$e900$$ENDHEX$$tant li$$HEX2$$e9002000$$ENDHEX$$au Hub Prestataire." )		
+		" : Ce fichier ne provient du Hub Prestataire or le fournisseur (" + sVal1 + ") est déclaré comme étant lié au Hub Prestataire." )		
 	End If 
 	
 	/*------------------------------------------------------------------*/
@@ -31669,13 +31676,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	sIdFourCtrl = sVal
@@ -31683,13 +31690,13 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* NUM_CMD_FRN															           */
 	/*------------------------------------------------------------------*/
-	// Pas de contr$$HEX1$$f400$$ENDHEX$$le particulier.
+	// Pas de contrôle particulier.
 
 	
 	/*------------------------------------------------------------------*/
 	/* STATUS_GC														              */
 	/*------------------------------------------------------------------*/
-	// V$$HEX1$$e900$$ENDHEX$$rification de l'appartenance au param$$HEX1$$e900$$ENDHEX$$trage du code retourn$$HEX2$$e9002000$$ENDHEX$$.
+	// Vérification de l'appartenance au paramétrage du code retourné .
 	sVal = String ( idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) )
 
 /*
@@ -31699,7 +31706,7 @@ For lCpt = lTotLig To 1 Step -1
 	If ( IsNull ( sVal ) Or Trim ( sVal ) = "" ) And iStatusGc > 0 Then sVal = String ( iStatusGc )
 	If IsNull ( sVal ) Or Trim ( sVal ) = ""  Then sVal = "0"
 	
-	// Cas sp$$HEX1$$e900$$ENDHEX$$cial $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$rer o$$HEX2$$f9002000$$ENDHEX$$il n'y a pas de statut retourn$$HEX2$$e9002000$$ENDHEX$$mais il peux y avoir un date de fin de trait repris d'un pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dent eng sur le hub
+	// Cas spécial à gérer où il n'y a pas de statut retourné mais il peux y avoir un date de fin de trait repris d'un précédent eng sur le hub
 	If sVal = "0" Then
 		Choose Case TRUE
 			Case sVal1 = "OUI" 
@@ -31716,7 +31723,7 @@ For lCpt = lTotLig To 1 Step -1
 				Case 177, 178
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le Statut " + sVal + " n'est autoris$$HEX2$$e9002000$$ENDHEX$$que pour les commandes de remplacement." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le Statut " + sVal + " n'est autorisé que pour les commandes de remplacement." )
 			End Choose
 		Case Else
 			Choose Case Long ( sVal ) 
@@ -31725,7 +31732,7 @@ For lCpt = lTotLig To 1 Step -1
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Statut " + sVal + " non autoris$$HEX2$$e9002000$$ENDHEX$$pour une commande de remplacement." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Statut " + sVal + " non autorisé pour une commande de remplacement." )
 
 			End Choose
 			
@@ -31735,32 +31742,32 @@ For lCpt = lTotLig To 1 Step -1
 		Case 1503, 1504, 435, 1502, 1506
 			Choose Case Long ( sVal ) 
 				Case 166
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoy$$HEX2$$e9002000$$ENDHEX$$sur la prestation d'origine, le Statut " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$en retour" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Statut " + sVal + " n'est pas autorisé en retour" )
 			End Choose
 			
 		Case 1505
 			Choose Case Long ( sVal ) 
 				Case 167, 168
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoy$$HEX2$$e9002000$$ENDHEX$$sur la prestation d'origine, le Statut " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$en retour" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Statut " + sVal + " n'est pas autorisé en retour" )
 			End Choose
 		// [VDoc4752]
 		Case 970
 			Choose Case Long ( sVal )
 					// [VDoc6082] ajout du statut_gc 164
 				Case 165,164
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoy$$HEX2$$e9002000$$ENDHEX$$sur la prestation d'origine, le Statut " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$en retour" )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Statut " + sVal + " n'est pas autorisé en retour" )
 			End Choose
 			// :[VDoc4752]
 			
@@ -31768,11 +31775,11 @@ For lCpt = lTotLig To 1 Step -1
 		Case 964, 969
 			Choose Case Long ( sVal )
 				Case 179
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoy$$HEX2$$e9002000$$ENDHEX$$sur la prestation d'origine, le Statut " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$en retour" )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Statut " + sVal + " n'est pas autorisé en retour" )
 			End Choose			
 			
 	End Choose
@@ -31782,31 +31789,31 @@ For lCpt = lTotLig To 1 Step -1
 			// [VDOC5774] 435, 1502
 			Choose Case iInfoSpbFrn
 				Case 1503, 1504, 435, 1502, 1506
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$sur le process " + String ( iInfoSpbFrn ) )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autorisé sur le process " + String ( iInfoSpbFrn ) )
 			End Choose
 			
 		Case 167, 168
 			Choose Case iInfoSpbFrn
 				Case 1505
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$sur le process " + String ( iInfoSpbFrn ) )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autorisé sur le process " + String ( iInfoSpbFrn ) )
 			End Choose
 			
 		Case 179
 			Choose Case iInfoSpbFrn
 				Case 964, 969
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autoris$$HEX2$$e9002000$$ENDHEX$$sur le process " + String ( iInfoSpbFrn ) )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autorisé sur le process " + String ( iInfoSpbFrn ) )
 			End Choose
 	End Choose			
 
@@ -31816,7 +31823,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Upper ( sIdTypArt ) <> "PRS" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autoris$$HEX2$$e9002000$$ENDHEX$$que sur une action de REPARATION." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autorisé que sur une action de REPARATION." )
 			End If
 
 	End Choose
@@ -31828,7 +31835,7 @@ For lCpt = lTotLig To 1 Step -1
 			If lVal = 232 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autoris$$HEX2$$e9002000$$ENDHEX$$que sur une action de REPARATION." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autorisé que sur une action de REPARATION." )
 			End If
 
 	End Choose
@@ -31850,7 +31857,7 @@ For lCpt = lTotLig To 1 Step -1
 		If IsNull ( dtVal ) And sVal1 <> "" And sVal = "" And sIdRefFour <> "REFUSE_A_REEXP" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Un num$$HEX1$$e900$$ENDHEX$$ro de tracking ALLER doit $$HEX1$$ea00$$ENDHEX$$tre accompagn$$HEX2$$e9002000$$ENDHEX$$du champ TYP_BA_ALLER renseign$$HEX1$$e900$$ENDHEX$$." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Un numéro de tracking ALLER doit être accompagné du champ TYP_BA_ALLER renseigné." )
 		End IF
 		
 		If sVal <> "" Then
@@ -31904,26 +31911,26 @@ For lCpt = lTotLig To 1 Step -1
 			If sVal1 = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le champ PRBLE_LIVRAISON doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$." )
+				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le champ PRBLE_LIVRAISON doit être renseigné." )
 			End If 
 			
 			If sVal3 = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le num$$HEX1$$e900$$ENDHEX$$ro de tracking (NUM_BON_TRP) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$." )
+				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le numéro de tracking (NUM_BON_TRP) doit être renseigné." )
 			End If 
 
 			If Not IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, la date de r$$HEX1$$e900$$ENDHEX$$ception ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$." )
+				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, la date de réception ne doit pas être renseigné." )
 			End If 
 			
 			sVal = idwFicFourn.GetItemString ( lCpt, "APP_SWAP" )		
 			If lVal <> 0 AND ( lVal <> 21 AND sVal <> "OUI" ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le statut ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$." )
+				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le statut ne doit pas être renseigné." )
 			End If 
 		End IF 
 	End If	
@@ -31946,7 +31953,7 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur le champ DIAG_VIDEO_ENGAGE, n'est pas valide. les valeurs autoris$$HEX1$$e900$$ENDHEX$$es sont OUI ou NON." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur le champ DIAG_VIDEO_ENGAGE, n'est pas valide. les valeurs autorisées sont OUI ou NON." )
 
 		End Choose 
 	End If 	
@@ -31969,7 +31976,7 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur le champ RESOLU_DIAG_VIDEO, n'est pas valide. les valeurs autoris$$HEX1$$e900$$ENDHEX$$es sont OUI ou NON." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur le champ RESOLU_DIAG_VIDEO, n'est pas valide. les valeurs autorisées sont OUI ou NON." )
 
 		End Choose 
 	End If 	
@@ -31983,7 +31990,7 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal = "OUI" And sVal1 = "2" THen
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " (Oui) contenue sur le champ RESOLU_DIAG_VIDEO, n'est coh$$HEX1$$e900$$ENDHEX$$rente avec le statut (2) <<R$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$>> de la prestation." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " (Oui) contenue sur le champ RESOLU_DIAG_VIDEO, n'est cohérente avec le statut (2) <<Réparé>> de la prestation." )
 	End IF 
 
 
@@ -32027,7 +32034,7 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur le champ MODE_LOGIS_RET, n'est pas valide. les valeurs autoris$$HEX1$$e900$$ENDHEX$$es sont PROXIMITE (PROXIMITY) ou CENTRALISATION (CENTRALIZATION)." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur le champ MODE_LOGIS_RET, n'est pas valide. les valeurs autorisées sont PROXIMITE (PROXIMITY) ou CENTRALISATION (CENTRALIZATION)." )
 
 		End Choose 
 	End If 
@@ -32035,13 +32042,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal1 <> "" And iRet > 0 And sVal = "" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") si un point de service de retour est fourni (" + sVal1 + "), alors un mode logistique de retour doit aussi $$HEX1$$ea00$$ENDHEX$$tre fourni." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") si un point de service de retour est fourni (" + sVal1 + "), alors un mode logistique de retour doit aussi être fourni." )
 	End If 
 
 	If sVal <> "" And iRet > 0 And sVal1 = "" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") si un mode logistique de retour est fourni (" + sVal + "), alors un point de service de retour doit aussi $$HEX1$$ea00$$ENDHEX$$tre fourni." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") si un mode logistique de retour est fourni (" + sVal + "), alors un point de service de retour doit aussi être fourni." )
 	End If 
 
 
@@ -32057,7 +32064,7 @@ For lCpt = lTotLig To 1 Step -1
 			If Not isNull(dtVal) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut " + String(lVal)  + ", la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre vide.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut " + String(lVal)  + ", la date de réception fournisseur (DTE_RCP_FRN) doit être vide.")
 			End if
 
 		Case 151, 152, 153, 154, 159, 162, 166, 167, 168, 169, 2, 21, 175, 232
@@ -32066,13 +32073,13 @@ For lCpt = lTotLig To 1 Step -1
 			If isNull(dtVal) And iInfoSpbFrn <> 957 And sVal <> "O" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut " + String(lVal)  + ", la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut " + String(lVal)  + ", la date de réception fournisseur (DTE_RCP_FRN) doit être renseigné.")
 			End if
 			
 			If Not isNull(dtVal) And iInfoSpbFrn = 957 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut " + String(lVal)  + ", et pour le process sp$$HEX1$$e900$$ENDHEX$$cifique 957, la date de r$$HEX1$$e900$$ENDHEX$$ception fournisseur (DTE_RCP_FRN) doit $$HEX1$$ea00$$ENDHEX$$tre vide.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut " + String(lVal)  + ", et pour le process spécifique 957, la date de réception fournisseur (DTE_RCP_FRN) doit être vide.")
 			End If			
 
 	End Choose
@@ -32081,14 +32088,14 @@ For lCpt = lTotLig To 1 Step -1
 		If Year ( Date (dtVal )) < 2020 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") l'ann$$HEX1$$e900$$ENDHEX$$e de la date de r$$HEX1$$e900$$ENDHEX$$ception n'est pas valide." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") l'année de la date de réception n'est pas valide." )
 		End If
 	End If
 
 	If lVal = 159 And IsNull ( dtVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut (159) de la r$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$ption du mat$$HEX1$$e900$$ENDHEX$$riel doit absolument s'accompagner de la date de r$$HEX1$$e900$$ENDHEX$$ception du mat$$HEX1$$e900$$ENDHEX$$riel (DTE_RCP_FRN)." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut (159) de la récéption du matériel doit absolument s'accompagner de la date de réception du matériel (DTE_RCP_FRN)." )
 	End If 
 
 
@@ -32109,7 +32116,7 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur le champ SITE_ACTION, n'est pas valide. les valeurs autoris$$HEX1$$e900$$ENDHEX$$es sont STATION ou DOMICILE." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur le champ SITE_ACTION, n'est pas valide. les valeurs autorisées sont STATION ou DOMICILE." )
 
 		End Choose 
 	End If 	
@@ -32131,7 +32138,7 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur le champ APP_INCOMPLET, n'est pas valide. les valeurs autoris$$HEX1$$e900$$ENDHEX$$es sont OUI ou NON." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur le champ APP_INCOMPLET, n'est pas valide. les valeurs autorisées sont OUI ou NON." )
 
 		End Choose 
 	End If 	
@@ -32147,13 +32154,13 @@ For lCpt = lTotLig To 1 Step -1
 		If Len ( sVal ) <> 15 And Len ( sVal ) > 0 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Un num$$HEX1$$e900$$ENDHEX$$ro d'IMEI doit contenir 15 chiffres (" + sVal + ")" )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Un numéro d'IMEI doit contenir 15 chiffres (" + sVal + ")" )
 		End If
 	
 		If Not F_IMEI ( sVal, sIMEICorr ) And Len ( sVal ) > 0 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Num$$HEX1$$e900$$ENDHEX$$ro d'IMEI non valide (" + sVal + ")" )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Numéro d'IMEI non valide (" + sVal + ")" )
 		End If 
 	End If
 
@@ -32167,7 +32174,7 @@ For lCpt = lTotLig To 1 Step -1
 		If Len ( sVal ) > 0 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour un appareil de type TEL, le num$$HEX1$$e900$$ENDHEX$$ro de s$$HEX1$$e900$$ENDHEX$$rie ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX3$$e90020002000$$ENDHEX$$(" + sVal + "), seul l'IMEI doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$sur le champ NUM_IMEI_REMPL." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour un appareil de type TEL, le numéro de série ne doit pas être renseigné  (" + sVal + "), seul l'IMEI doit être renseigné sur le champ NUM_IMEI_REMPL." )
 		End If
 		
 
@@ -32189,27 +32196,27 @@ For lCpt = lTotLig To 1 Step -1
 				If Not Isnull (dtVal) Then
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut " + String(lVal)  + " en r$$HEX1$$e900$$ENDHEX$$paration, la date de fin de traitement (DTE_FIN_TRAIT) ne doit pas $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut " + String(lVal)  + " en réparation, la date de fin de traitement (DTE_FIN_TRAIT) ne doit pas être renseigné.")
 				End If
 
 			Elseif Isnull(dtVal) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit être renseigné.")
 			End if
 
 		Case 156, 157, 158, 159, 162, 163, 164, 169, 232, 174
 			if Not Isnull(dtVal) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit $$HEX1$$ea00$$ENDHEX$$tre vide.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit être vide.")
 			End if
 			
 		Case Else
 			If ( lVal = 0 Or IsNull ( lVal ) ) And Not IsNull ( dtVal ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Lorsque la date de fin de traitement (DTE_FIN_TRAIT) est renseign$$HEX1$$e900$$ENDHEX$$, un statut est obligatoire.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Lorsque la date de fin de traitement (DTE_FIN_TRAIT) est renseigné, un statut est obligatoire.")
 			End If 
 			
 	End Choose
@@ -32218,7 +32225,7 @@ For lCpt = lTotLig To 1 Step -1
 		If Year ( Date (dtVal )) < 2020 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") l'ann$$HEX1$$e900$$ENDHEX$$e de la date DTE_FIN_TRAIT n'est pas valide." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") l'année de la date DTE_FIN_TRAIT n'est pas valide." )
 		End If
 	End If
 
@@ -32228,7 +32235,7 @@ For lCpt = lTotLig To 1 Step -1
 	If Not IsNull ( dtVal ) And Not IsNull ( dtVal1 ) And dtVal > dtVal1 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la DTE_FIN_TRAIT doit $$HEX1$$ea00$$ENDHEX$$tre post$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la DTE_RCP_FRN." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la DTE_FIN_TRAIT doit être postérieure ou égale à la DTE_RCP_FRN." )
 	End If
 
 
@@ -32263,14 +32270,14 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( sVal ) Or Len ( sVal ) <= 0 And sVal1 <> "PROXIMITE" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le champ NUM_BON_TRP doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$sur le statut " + String ( lVal ) )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le champ NUM_BON_TRP doit être renseigné sur le statut " + String ( lVal ) )
 			End If
 
 		Case 165
 			If iInfoSpbFrn = 970 and (IsNull ( sVal ) Or Len ( sVal ) <= 0 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La champ NUM_BON_TRP doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$sur le statut " + String ( lVal ) +  " pour le process 970.")
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La champ NUM_BON_TRP doit être renseigné sur le statut " + String ( lVal ) +  " pour le process 970.")
 			End If
 	End Choose
 
@@ -32294,13 +32301,13 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal = "" And sVal1 <> "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le NOM_TRANSPORTEUR doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$si un NUM_BON_TRP est renseign$$HEX1$$e900$$ENDHEX$$.")
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le NOM_TRANSPORTEUR doit être renseigné si un NUM_BON_TRP est renseigné.")
 	End If 
 
 	If sVal <> "" And sVal1 = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le NUM_BON_TRP doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$si un NOM_TRANSPORTEUR est renseign$$HEX1$$e900$$ENDHEX$$.")
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le NUM_BON_TRP doit être renseigné si un NOM_TRANSPORTEUR est renseigné.")
 	End If 
 
 	/*------------------------------------------------------------------*/
@@ -32319,7 +32326,7 @@ For lCpt = lTotLig To 1 Step -1
 			Case Else
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le champ DTE_RCP_APP_CLI ne peut $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$sans le statut 178, 233, 263, 234, 2, 21" )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le champ DTE_RCP_APP_CLI ne peut être renseigné sans le statut 178, 233, 263, 234, 2, 21" )
 		End Choose
 	End If
 
@@ -32352,7 +32359,7 @@ For lCpt = lTotLig To 1 Step -1
 			) Or sVal1 = "OUI" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") : Le SWAP n'est autoris$$HEX2$$e9002000$$ENDHEX$$que sur un irr$$HEX1$$e900$$ENDHEX$$parable 21/23 avec un mot cl$$HEX2$$e9002000$$ENDHEX$$[BVIE]/[BVID]/[BVIP]/[BVIT]/[BVIEOX] ou [PIE]." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") : Le SWAP n'est autorisé que sur un irréparable 21/23 avec un mot clé [BVIE]/[BVID]/[BVIP]/[BVIT]/[BVIEOX] ou [PIE]." )
 		End If 				
 		
 	End If 
@@ -32375,7 +32382,7 @@ For lCpt = lTotLig To 1 Step -1
 		If Len ( sVal2 ) > 0 And sVal1 <> "OUI" And sVal <> "OUI" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") : Les champ MARQUE_REMPL, MODELE_REMPL, COULEUR_REMPL, CAP_STK_REMPL, NEUF_REC_REMPL, PRIX_TTC_REMPL, ne sont autoris$$HEX1$$e900$$ENDHEX$$s que sur un SWAP suite app irr$$HEX1$$e900$$ENDHEX$$parable OU une Commande de Remplacement." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") : Les champ MARQUE_REMPL, MODELE_REMPL, COULEUR_REMPL, CAP_STK_REMPL, NEUF_REC_REMPL, PRIX_TTC_REMPL, ne sont autorisés que sur un SWAP suite app irréparable OU une Commande de Remplacement." )
 		End If 	
 		
 	End If 
@@ -32392,7 +32399,7 @@ For lCpt = lTotLig To 1 Step -1
 		If Trim ( sVal ) = "" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement le champ MARQUE_REMPL doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$avec la marque du nouveau mat$$HEX1$$e900$$ENDHEX$$riel." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement le champ MARQUE_REMPL doit être renseigné avec la marque du nouveau matériel." )
 		End If 	
 		
 		sVal = idwFicFourn.GetItemString ( lCpt, "MODELE_REMPL" )
@@ -32400,23 +32407,23 @@ For lCpt = lTotLig To 1 Step -1
 		If Trim ( sVal ) = "" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement le champ MODELE_REMPL doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$avec la marque du nouveau mat$$HEX1$$e900$$ENDHEX$$riel." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement le champ MODELE_REMPL doit être renseigné avec la marque du nouveau matériel." )
 		End If 	
 
 		/*
 		If iRet > 0 Then
 			Choose Case sIdTypArtSin
 				Case "TEL", "TPC"
-					// Autoris$$HEX1$$e900$$ENDHEX$$
+					// Autorisé
 				Case Else 
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Type d'appareil (" + sIdTypArt+ ") non autoris$$HEX2$$e9002000$$ENDHEX$$pour un SWAP O2M." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Type d'appareil (" + sIdTypArt+ ") non autorisé pour un SWAP O2M." )
 			End Choose
 		End If 
 		*/
 
-		// Controle binome marq/modl appartient $$HEX2$$e0002000$$ENDHEX$$IFR ou pas 
+		// Controle binome marq/modl appartient à IFR ou pas 
 		/*
 		sVal = idwFicFourn.GetItemString ( lCpt, "REF_APP_REMPL" )
 		If IsNull ( sVal ) Then sVal = ""			
@@ -32427,32 +32434,32 @@ For lCpt = lTotLig To 1 Step -1
 			If SQLCA.PS_S_VERIF_MARQ_MODL_IFR_V01 ( dcIdprod, sIdTypArtSin, sVal, sVal1 ) <= 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement, si le champ REF_APP_REMPL indique le r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rentiel de contr$$HEX1$$f400$$ENDHEX$$le IFR, alors la Marque et le Mod$$HEX1$$e800$$ENDHEX$$le du nouveau mat$$HEX1$$e900$$ENDHEX$$riel (" + sVal + " " + sVal1 + ") doivent appartenir au r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rentiel IFR, ce qui n'est pas le cas." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement, si le champ REF_APP_REMPL indique le référentiel de contrôle IFR, alors la Marque et le Modèle du nouveau matériel (" + sVal + " " + sVal1 + ") doivent appartenir au référentiel IFR, ce qui n'est pas le cas." )
 			End If
 		End If
 
 		If sVal = "IFR" and sVal1 <> "" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement, si le champ REF_APP_REMPL indique le r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rentiel de contr$$HEX1$$f400$$ENDHEX$$le IFR, alors le champ AUTRES_INFOS_REMPL doit $$HEX1$$ea00$$ENDHEX$$tre null." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement, si le champ REF_APP_REMPL indique le référentiel de contrôle IFR, alors le champ AUTRES_INFOS_REMPL doit être null." )
 		End If 
 		*/
 
 
 		Choose Case sIdTypArtSin
 			Case "TEL"
-				sVal = idwFicFourn.GetItemString ( lCpt, "NUM_IMEI_REMPL" )  // Le ctrle de validit$$HEX2$$e9002000$$ENDHEX$$est faite plus haut
+				sVal = idwFicFourn.GetItemString ( lCpt, "NUM_IMEI_REMPL" )  // Le ctrle de validité est faite plus haut
 				If Trim ( sVal ) = "" Or IsNull ( sVal )  Then
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement le champ NUM_IMEI_REMPL doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$par l'IMEI du nouveau mat$$HEX1$$e900$$ENDHEX$$riel." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement le champ NUM_IMEI_REMPL doit être renseigné par l'IMEI du nouveau matériel." )
 				End If 					
 			Case Else 
 				sVal = idwFicFourn.GetItemString ( lCpt, "NUM_SERIE_REMPL" )  
 				If Trim ( sVal ) = "" Or IsNull ( sVal )  Then
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement le champ NUM_SERIE_REMPL (Hors TEL) doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$par le num$$HEX1$$e900$$ENDHEX$$ro de s$$HEX1$$e900$$ENDHEX$$rie du nouveau mat$$HEX1$$e900$$ENDHEX$$riel." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement le champ NUM_SERIE_REMPL (Hors TEL) doit être renseigné par le numéro de série du nouveau matériel." )
 				End If 					
 		End Choose
 
@@ -32467,7 +32474,7 @@ For lCpt = lTotLig To 1 Step -1
 					If sVal = "" Then
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement, si le champ AUTRES_INFOS_REMPL est renseign$$HEX2$$e9002000$$ENDHEX$$avec COULEUR_ET_CAPACITE, la couleur doit donc $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e." )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement, si le champ AUTRES_INFOS_REMPL est renseigné avec COULEUR_ET_CAPACITE, la couleur doit donc être renseignée." )
 					End If 					
 
 					sVal = idwFicFourn.GetItemString ( lCpt, "CAP_STK_REMPL" )
@@ -32475,7 +32482,7 @@ For lCpt = lTotLig To 1 Step -1
 					If sVal = "" Then
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement, si le champ AUTRES_INFOS_REMPL est renseign$$HEX2$$e9002000$$ENDHEX$$avec COULEUR_ET_CAPACITE, la capacit$$HEX2$$e9002000$$ENDHEX$$de stockage doit donc $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e." )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement, si le champ AUTRES_INFOS_REMPL est renseigné avec COULEUR_ET_CAPACITE, la capacité de stockage doit donc être renseignée." )
 					End If 					
 					
 					
@@ -32486,7 +32493,7 @@ For lCpt = lTotLig To 1 Step -1
 					If sVal = "" Then
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement, si le champ AUTRES_INFOS_REMPL est renseign$$HEX2$$e9002000$$ENDHEX$$avec COULEUR, la couleur doit donc $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e." )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement, si le champ AUTRES_INFOS_REMPL est renseigné avec COULEUR, la couleur doit donc être renseignée." )
 					End If 						
 					
 				case "CAPACITE"
@@ -32496,7 +32503,7 @@ For lCpt = lTotLig To 1 Step -1
 					If sVal = "" Then
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement, si le champ AUTRES_INFOS_REMPL est renseign$$HEX2$$e9002000$$ENDHEX$$avec CAPACITE, la capacit$$HEX2$$e9002000$$ENDHEX$$de stockage doit donc $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX1$$e900$$ENDHEX$$e." )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement, si le champ AUTRES_INFOS_REMPL est renseigné avec CAPACITE, la capacité de stockage doit donc être renseignée." )
 					End If 					
 										
 			End Choose 
@@ -32505,17 +32512,17 @@ For lCpt = lTotLig To 1 Step -1
 		sVal = String ( idwFicFourn.GetItemDecimal ( lCpt, "PRIX_TTC_REMPL" ))
 		If IsNull ( sVal ) Then sVal = "0"
 
-		If sVal = "" Or Not IsNumber ( sVal ) Or Pos ( sVal, ",") > 0 Or Pos ( sVal, "E") > 0 Or Pos ( sVal, "$$HEX1$$ac20$$ENDHEX$$") > 0 Then
+		If sVal = "" Or Not IsNumber ( sVal ) Or Pos ( sVal, ",") > 0 Or Pos ( sVal, "E") > 0 Or Pos ( sVal, "€") > 0 Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement le champ PRIX_TTC_REMPL doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$avec le montant TTC de l'appareil de remplacement avec un point en s$$HEX1$$e900$$ENDHEX$$parateur de d$$HEX1$$e900$$ENDHEX$$cimal et aucun symbole de monnaie." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement le champ PRIX_TTC_REMPL doit être renseigné avec le montant TTC de l'appareil de remplacement avec un point en séparateur de décimal et aucun symbole de monnaie." )
 		End If 
 
 		If IsNumber ( sVal ) Then
 			If Long ( sVal) = 0 Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") sur un SWAP ou un Remplacement le champ PRIX_TTC_REMPL doit $$HEX1$$ea00$$ENDHEX$$tre renseign$$HEX2$$e9002000$$ENDHEX$$avec le montant TTC de l'appareil de remplacement avec un montant positif." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") sur un SWAP ou un Remplacement le champ PRIX_TTC_REMPL doit être renseigné avec le montant TTC de l'appareil de remplacement avec un montant positif." )
 			End if		
 		End If 
 
@@ -32586,7 +32593,7 @@ For lCpt = lTotLig To 1 Step -1
 		If sVal1 = "" Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le champ PEC_PRBLE_LIVRAISON n'est autoris$$HEX2$$e9002000$$ENDHEX$$que si pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$demment il y a eu une valeur sur PRBLE_LIVRAISON, qui est justement absente." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le champ PEC_PRBLE_LIVRAISON n'est autorisé que si précédemment il y a eu une valeur sur PRBLE_LIVRAISON, qui est justement absente." )
 		End If 			
 	End If 	
 
@@ -32608,12 +32615,12 @@ For lCpt = lTotLig To 1 Step -1
 					Case Else 
 						iRet = -1
 						This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour demander un SAV, la prestation d'origine doit $$HEX1$$ea00$$ENDHEX$$tre en $$HEX1$$e900$$ENDHEX$$tat <<R$$HEX1$$e900$$ENDHEX$$para>> (2)" )
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour demander un SAV, la prestation d'origine doit être en état <<Répara>> (2)" )
 				End Choose					
 			Case Else 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour demander un SAV, la prestation d'origine doit Ferm$$HEX1$$e900$$ENDHEX$$e (non annul$$HEX1$$e900$$ENDHEX$$e)" )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour demander un SAV, la prestation d'origine doit Fermée (non annulée)" )
 				
 		End Choose
 	End If 
@@ -32649,7 +32656,7 @@ For lCpt = lTotLig To 1 Step -1
 						Case Else 
 							iRet = -1
 							This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-							" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Les demandes automatique de PEC_A_RECYCLER ou REFUSE_A_REEXP ne peuvent se faire que sur une prestation d'origine ferm$$HEX1$$e900$$ENDHEX$$e" )
+							" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Les demandes automatique de PEC_A_RECYCLER ou REFUSE_A_REEXP ne peuvent se faire que sur une prestation d'origine fermée" )
 					End CHoose 					
 			End Choose 
 			
@@ -32659,19 +32666,19 @@ For lCpt = lTotLig To 1 Step -1
 
 
 	/*------------------------------------------------------------------*/
-	/* AUTRES CONTROLES de comparaison de donn$$HEX1$$e900$$ENDHEX$$es                       */ 
+	/* AUTRES CONTROLES de comparaison de données                       */ 
 	/*------------------------------------------------------------------*/
 	
-	// - pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] ou [BRIS] avec un status_gc diff$$HEX1$$e900$$ENDHEX$$rent de 21 
+	// - présence d’une clé de type [SAV_NO_OK] ou [BRIS] avec un status_gc différent de 21 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )		
 	If lVal <> 21 And ( Pos ( sVal, "[SAV_NO_OK]" ) > 0 Or Pos ( sVal, "[BRIS]" ) > 0 ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] ou [BRIS] avec un statut diff$$HEX1$$e900$$ENDHEX$$rent de 21 => interdit " )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") présence d’une clé de type [SAV_NO_OK] ou [BRIS] avec un statut différent de 21 => interdit " )
 	End IF
 
-	// - pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] ou [BRIS] dans un retour $$HEX2$$e0002000$$ENDHEX$$une commande avec action = A_REPARER ou A_REPARER_FORCE 
+	// - présence d’une clé de type [SAV_NO_OK] ou [BRIS] dans un retour à une commande avec action = A_REPARER ou A_REPARER_FORCE 
 	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )		
 	If ( Pos ( sVal, "[SAV_NO_OK]" ) > 0 Or Pos ( sVal, "[BRIS]" ) > 0 ) &
 		 And ( sIdRefFour = "A_REPARER" Or sIdRefFour = "A_REPARER_FORCE" ) &
@@ -32681,10 +32688,10 @@ For lCpt = lTotLig To 1 Step -1
 	Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") pr$$HEX1$$e900$$ENDHEX$$sence d$$HEX1$$1920$$ENDHEX$$une cl$$HEX2$$e9002000$$ENDHEX$$de type [SAV_NO_OK] ou [BRIS] dans un retour sur une commande sans demande de SAV (donc n$$HEX1$$1920$$ENDHEX$$impliquant pas d$$HEX1$$1920$$ENDHEX$$action = A_REPARER_SAV ou A_CONTROLER_SAV ) => interdit" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") présence d’une clé de type [SAV_NO_OK] ou [BRIS] dans un retour sur une commande sans demande de SAV (donc n’impliquant pas d’action = A_REPARER_SAV ou A_CONTROLER_SAV ) => interdit" )
 	End IF 
 
-	// Le statut en base ne peut plus $$HEX1$$ea00$$ENDHEX$$tre modifi$$HEX1$$e900$$ENDHEX$$
+	// Le statut en base ne peut plus être modifié
 	Choose Case iStatusGc
 		Case 2, 11, 12, 21, 151, 152, 155, 157, 160, 161, 165, 166, 170, 171, 172, 173, 176, 175, 167, 168, 178, 179, 303, 304, 601, 602
 	
@@ -32693,7 +32700,7 @@ For lCpt = lTotLig To 1 Step -1
 			If iStatusGc <> lVal And lVal > 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit int$$HEX1$$e900$$ENDHEX$$grer cette r$$HEX1$$e800$$ENDHEX$$gle dans son syst$$HEX1$$e800$$ENDHEX$$me." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit intégrer cette règle dans son système." )
 			End If
 
 	End CHoose
@@ -32703,7 +32710,7 @@ For lCpt = lTotLig To 1 Step -1
 	If lVal = 155 And sIdRefFour <> "REFUSE_A_REEXP" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " ne peut $$HEX1$$ea00$$ENDHEX$$tre renvoy$$HEX2$$e9002000$$ENDHEX$$que sur une prestation de type REFUSE_A_REEXP" )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " ne peut être renvoyé que sur une prestation de type REFUSE_A_REEXP" )
 	End If
 
 
@@ -32721,7 +32728,7 @@ For lCpt = lTotLig To 1 Step -1
 			If lVal > 0 Then
 				iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il est interdit de r$$HEX1$$e900$$ENDHEX$$pondre sur les prestations de type A_REPARER_FORCE, et A_DIAG_FORCE, or vous renvoyez le Statut " + String ( lVal ) + ". Si une r$$HEX1$$e900$$ENDHEX$$ponse doit $$HEX1$$ea00$$ENDHEX$$tre apport$$HEX1$$e900$$ENDHEX$$e, vous devez r$$HEX1$$e900$$ENDHEX$$pondre sur la pr$$HEX1$$e900$$ENDHEX$$station d'origine li$$HEX1$$e900$$ENDHEX$$e $$HEX2$$e0002000$$ENDHEX$$ce for$$HEX1$$e700$$ENDHEX$$age." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il est interdit de répondre sur les prestations de type A_REPARER_FORCE, et A_DIAG_FORCE, or vous renvoyez le Statut " + String ( lVal ) + ". Si une réponse doit être apportée, vous devez répondre sur la préstation d'origine liée à ce forçage." )
 			End If
 	End Choose		
 	
@@ -32734,7 +32741,7 @@ For lCpt = lTotLig To 1 Step -1
 			If IsNull ( sVal ) Or sVal = "" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " doit obligatoirement $$HEX1$$ea00$$ENDHEX$$tre accompagn$$HEX2$$e9002000$$ENDHEX$$d'un commentaire." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " doit obligatoirement être accompagné d'un commentaire." )
 			End If
 			
 	End CHoose
@@ -32769,7 +32776,7 @@ For lCpt = lTotLig To 1 Step -1
 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il manque dans le commentaire un des mots cl$$HEX1$$e900$$ENDHEX$$s obligatoire qualifiant l'irr$$HEX1$$e900$$ENDHEX$$parable." )
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il manque dans le commentaire un des mots clés obligatoire qualifiant l'irréparable." )
 
 	End If 
 
@@ -32806,13 +32813,13 @@ For lCpt = lTotLig To 1 Step -1
 				Case 2, 21
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le code retour " + String ( lVal ) + " n'est pas valide pour un retour de DIAGNOSTIC (c'est un retour valable pour un r$$HEX1$$e900$$ENDHEX$$paration)." )
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le code retour " + String ( lVal ) + " n'est pas valide pour un retour de DIAGNOSTIC (c'est un retour valable pour un réparation)." )
 			
 			End Choose 				
 			
 	End Choose 	
 
-	// Contr$$HEX1$$f400$$ENDHEX$$le des donn$$HEX1$$e900$$ENDHEX$$es li$$HEX1$$e900$$ENDHEX$$es au SAV
+	// Contrôle des données liées au SAV
    sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "DDE_SAV", ";") 
 	sVal1 = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "id_hub_presta_sav" ) ) )
 	
@@ -32825,7 +32832,7 @@ For lCpt = lTotLig To 1 Step -1
 	End IF 
 
 
-	// Marquage du nbre de SAV actuel, exploit$$HEX2$$e9002000$$ENDHEX$$dans l'int$$HEX1$$e900$$ENDHEX$$gration physique en Aval
+	// Marquage du nbre de SAV actuel, exploité dans l'intégration physique en Aval
 	If sVal = "OUI" And sVal1 <> "" Then
 		sVal = lnvPFCString.of_getkeyvalue (sChaineBCV, "NBRE_SAV_ACTUEL", ";")
 		lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCpltLu, "NBRE_SAV_ACTUEL", sVal, ";")
@@ -32844,11 +32851,11 @@ For lCpt = lTotLig To 1 Step -1
 		end if
 	End If
 
-	// Maj du rejet c$$HEX1$$f400$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$Hub
+	// Maj du rejet côté Hub
 	sVal = lnvPFCString.of_getkeyvalue (sInfoFrnSpbCpltLu, "ID_DEPOT_HUB", ";")	
 	If iRet = -1 Then // Rejet (R)
 		sSqlHub = "Update edi.DepotHubToSimpa2Presta Set alt_trt = 'R' where id_depot_hub = '" + sVal + "'"
-	Else // Trait$$HEX2$$e9002000$$ENDHEX$$(O)
+	Else // Traité (O)
 		sSqlHub = "Update edi.DepotHubToSimpa2Presta Set alt_trt = 'O' where id_depot_hub = '" + sVal + "'"		
 	End If 
 	lErrorHubPresta = F_Execute_Hub_Prestataire ( sSqlHub, itrHubPrestataire, lIndentityHubPresta, lRowCountHubPresta )
@@ -32860,11 +32867,11 @@ For lCpt = lTotLig To 1 Step -1
 		F_Commit_Hub_Prestataire ( itrHubPrestataire, False )	
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Probl$$HEX1$$e800$$ENDHEX$$me de mise $$HEX2$$e0002000$$ENDHEX$$R/O sur le HUB lors du contr$$HEX1$$f400$$ENDHEX$$le (id_depot_hub = " + String (sVal) + "." )
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Problème de mise à R/O sur le HUB lors du contrôle (id_depot_hub = " + String (sVal) + "." )
 	End If 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 
 // connexion au Hub Prestataire
@@ -32879,8 +32886,8 @@ private function integer uf_integration_fichier_frn_hub (ref long alnblig, ref l
 //* Fonction		: n_cst_pg_in_fic_SuiviCmd::uf_Integration_Fichier_Frn_Hub (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 28/05/2024
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration des fichier en base des frn li$$HEX2$$e9002000$$ENDHEX$$au Hub
-//* Commentaires	: [HP252_276_HUB_PRESTA] Int$$HEX1$$e900$$ENDHEX$$gration de Fichier Hub Presta
+//* Libellé			: Intégration des fichier en base des frn lié au Hub
+//* Commentaires	: [HP252_276_HUB_PRESTA] Intégration de Fichier Hub Presta
 //*
 //* Arguments		: Long		alNbLig		Ref
 //*					  
@@ -32932,7 +32939,7 @@ If Not bRet Then
 	sVal = f_remplace(sVal,Char(11)," ")				
 	sVal = f_remplace(sVal,Char(13)," ")	
 
-	This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me de connexion au Hub Prestataire, msg SqlServer => : " + sVal )
+	This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème de connexion au Hub Prestataire, msg SqlServer => : " + sVal )
 	
 	F_commit ( SQLCA, False )
 	Return iRet
@@ -32966,19 +32973,19 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
 
-	// Le n$$HEX2$$b0002000$$ENDHEX$$de Cmde peut $$HEX1$$ea00$$ENDHEX$$tre nulle, en effet le syst$$HEX1$$e800$$ENDHEX$$me de gestion de commandes
-	// n'$$HEX1$$e900$$ENDHEX$$tait peut-$$HEX1$$ea00$$ENDHEX$$tre pas encore en production au moment de "cette" cmde par les 
+	// Le n° de Cmde peut être nulle, en effet le système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de "cette" cmde par les 
 	// gestionnaires.
 
 	If IsNull ( sVal ) Or sVal = "" Then 
 		alNbLigNonTraitee	++
-		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non trait$$HEX1$$e900$$ENDHEX$$, pas de n$$HEX2$$b0002000$$ENDHEX$$de Commande..." )
+		This.uf_Trace ( "ECR", "AVERTISSEMENT ! : Enregistrement " + String ( lCpt ) + " non traité, pas de n° de Commande..." )
 		Continue		
 	End If 
 
 	lIdSin = Long ( Left ( sVal, Pos ( sVal, "-", 1 ) - 1 ) )
 
-// [ITSM62176] ajout du point de d$$HEX1$$e900$$ENDHEX$$cimal
+// [ITSM62176] ajout du point de décimal
 	sSql += String ( lIdSin ) + "., "
 
 	/*------------------------------------------------------------------*/
@@ -33183,7 +33190,7 @@ For lCpt = 1 To lTotLig
 	sSql += sVal + ", "
 
 
-	// Pr$$HEX1$$e900$$ENDHEX$$paration zone INFO_FRN_SPB_CPLT 
+	// Préparation zone INFO_FRN_SPB_CPLT 
 	// Trt zone virtuelle RDV_CONF vers sInfoFrnSpbCplt
 	
 	sVal =  Left ( Trim ( String ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_RDV_CONF" ) ) ), 10 )
@@ -33320,7 +33327,7 @@ For lCpt = 1 To lTotLig
 	If IsNull ( isNomFicOrig ) Then isNomFicOrig = ""
 	lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "NOM_FIC_FRN", isNomFicOrig, ";")		
 	
-	/* Section pour renseigner la chaine bcv sInfoFrnSpbCplt $$HEX2$$e0002000$$ENDHEX$$partir de la chaine bcv sInfoFrnSpbCpltLu */
+	/* Section pour renseigner la chaine bcv sInfoFrnSpbCplt à partir de la chaine bcv sInfoFrnSpbCpltLu */
 	If Not IsNull( sInfoFrnSpbCpltLu ) and Trim ( sInfoFrnSpbCpltLu ) <> "" Then 
 
 		// DDE_SAV
@@ -33355,7 +33362,7 @@ For lCpt = 1 To lTotLig
 			lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "AUTO_PEC_RAR", sVal, ";")
 		End If 
 		
-			// PRESTA_AUTO li$$HEX4$$e9002000e0002000$$ENDHEX$$AUTO_PEC_RAR
+			// PRESTA_AUTO lié à AUTO_PEC_RAR
 			sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "PRESTA_AUTO", ";")
 			If Len ( Trim ( sVal ) ) > 0 Then
 				lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "PRESTA_AUTO", sVal, ";")
@@ -33368,7 +33375,7 @@ For lCpt = 1 To lTotLig
 	
 	/*------------------------------------------------------------------*/
 	/* ZONE 31 : INFO_FRN_SPB_CPLT ( zone multiple )[FNAC_PROD_ECH_TECH]*/
-	/* Une seule affectation $$HEX2$$e0002000$$ENDHEX$$sSql                                     */
+	/* Une seule affectation à sSql                                     */
 	/*------------------------------------------------------------------*/
 	sSql += "'" + sInfoFrnSpbCplt + "'"
 
@@ -33392,7 +33399,7 @@ For lCpt = 1 To lTotLig
 				
 				If Not ( iIdSeqSavRet > 0 ) Then
 					iRet = -1
-					This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me de r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration de l'iIdSeqSavRet sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) )
+					This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème de récupération de l'iIdSeqSavRet sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) )
 		
 					F_commit ( SQLCA, False )					
 					Continue
@@ -33417,7 +33424,7 @@ For lCpt = 1 To lTotLig
 						F_Commit_Hub_Prestataire ( itrHubPrestataire, True )
 						Continue
 						
-					Else // 2$$HEX1$$e800$$ENDHEX$$me Maj SIMPA2 Non Ok donc rollback Hub et SIMPA2
+					Else // 2ème Maj SIMPA2 Non Ok donc rollback Hub et SIMPA2
 						iRet = -1
 						alNbLigNonTraitee	++
 						// [MODIF_SUITE_REDR]
@@ -33429,7 +33436,7 @@ For lCpt = 1 To lTotLig
 						sVal = f_remplace(sVal,Char(11)," ")				
 						sVal = f_remplace(sVal,Char(13)," ")				
 			
-						This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update PS_HP276_U_S2_MAJ_GEN_PRESTA sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + sVal )
+						This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update PS_HP276_U_S2_MAJ_GEN_PRESTA sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + sVal )
 	
 						F_Commit_Hub_Prestataire ( itrHubPrestataire, False)
 						F_commit ( SQLCA, False)
@@ -33448,7 +33455,7 @@ For lCpt = 1 To lTotLig
 					sVal = f_remplace(sVal,Char(11)," ")				
 					sVal = f_remplace(sVal,Char(13)," ")				
 		
-					This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'INSERT de la prestation sur le Hub Prestataire sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + ", msg SqlServer => : " + sVal )
+					This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'INSERT de la prestation sur le Hub Prestataire sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + ", msg SqlServer => : " + sVal )
 				
 					F_Commit_Hub_Prestataire ( itrHubPrestataire, False)
 					F_commit ( SQLCA, False)
@@ -33470,7 +33477,7 @@ For lCpt = 1 To lTotLig
 			sVal = f_remplace(sVal,Char(11)," ")				
 			sVal = f_remplace(sVal,Char(13)," ")				
 
-			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + sVal )
+			This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + sVal )
 
 			F_commit ( SQLCA, False )
 				
@@ -33487,7 +33494,7 @@ For lCpt = 1 To lTotLig
 		sVal = f_remplace(sVal,Char(11)," ")				
 		sVal = f_remplace(sVal,Char(13)," ")	
 
-		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Probl$$HEX1$$e800$$ENDHEX$$me d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + sVal )
+		This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème d'Update sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) + " msg SqlServer => : " + sVal )
 
 		F_commit ( SQLCA, False )
 			
@@ -33510,8 +33517,8 @@ private subroutine uf_definir_codetat_frn_hub (ref string asval, long alcpt, lon
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Definir_CodEtat_Frn_Hub (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 28/05/2024
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$finition de la commande en fonction des donn$$HEX1$$e900$$ENDHEX$$es 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: Définition de la commande en fonction des données 
+//*					  retourné dans le fichier.
 //* Commentaires	: [HP252_276_HUB_PRESTA]
 //*
 //* Arguments		: asVal		String		Ref
@@ -33586,13 +33593,13 @@ private function boolean uf_hub_gestiontranssqlhubpresta (string ascas);//*-----
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Hub_GestionTransSqlHubPresta			(PRIVATE)
 //* Auteur			: JFF
 //* Date				: 21/03/2024
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [HP252_276_HUB_PRESTA]
+//* Libellé			: [HP252_276_HUB_PRESTA]
 //* Commentaires	: Gestion de la transaction avec la base du HUB PRESTATAIRE
 //*
 //* Arguments		: Aucun
 //*
 //* Retourne		: Boolean			TRUE 	= Tout se passe bien
-//*										 	FALSE	= Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*										 	FALSE	= Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	  Modification
@@ -33631,7 +33638,7 @@ private function string uf_hub_sql_hubprestataire (ref datastore adshubdonneespr
 //* Fonction      : n_cst_int_fic_suivicmd:: (PRIVATE)
 //* Auteur        : JFF
 //* Date          : 20/03/2024
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Construction du SQL qui sera inject$$HEX2$$e9002000$$ENDHEX$$dans le Hub Prestataire
+//* Libellé       : Construction du SQL qui sera injecté dans le Hub Prestataire
 //* Commentaires  : [HP252_276_HUB_PRESTA]
 //*
 //* Arguments     : 

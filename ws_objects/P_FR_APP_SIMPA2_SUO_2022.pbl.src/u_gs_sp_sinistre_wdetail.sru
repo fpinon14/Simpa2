@@ -20372,16 +20372,17 @@ private function string uf_plaf_evt ();//*--------------------------------------
 //       JFF   16/11/2015 [DT159-1]
 //       JFF   07/08/2019 [PM462-1]
 // 		JFF	22/10/2020 [VDOC29747]
+//       JFF   05/08/2024 [MCO602_PNEU]
 //*-----------------------------------------------------------------
-Long lTotPlaf, lLig, lTotDetail, lCptDet, lRow, lDeb, lFin
+Long lTotPlaf, lLig, lTotDetail, lCptDet, lRow, lDeb, lFin, lCpt
 Decimal {2} dcPlafond, dcMtnPlaf, dcMtPlaf, dcTxMinMajPlafond, dcMtLu, dcMtMaxLu, dcEcoTaxe, dcMtCpltPayBoxSCM, dcMtVal, dcMtPrej 
 Boolean bMobSinEgMobCmde // #2
-String sRech, sIdPara, sCptVer, sDteProdEqvFc, sPos, sVal
+String sRech, sIdPara, sCptVer, sDteProdEqvFc, sPos, sVal, sPlafond
 Decimal {5} dcTxVetustePC
 DateTime dtDteSurv, dtDteAchat, dtDteAchatDet 
 boolean bAutoriserTRT 
 Long lIdProd , lIdGti, lIdDetail
-String sIdTypArt
+String sIdTypArt, sTypePrestaDp384, sTypePrestaDs
 n_cst_string lnvPFCString
 
 dcMtCpltPayBoxSCM = 0
@@ -20762,8 +20763,11 @@ If	lLig > 0 Then
 	End If
 End If
 
-If idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF" ) < 0 Then
-	idw_wDetailFF.SetItem ( 1, "MT_PLAF", 0 )
+// [MCO602_PNEU]
+If Not F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
+	If idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF" ) < 0 Then
+		idw_wDetailFF.SetItem ( 1, "MT_PLAF", 0 )
+	End If
 End If
 
 // [PC301].[V15_EVOL_VETUSTE]
@@ -20856,6 +20860,94 @@ If	lLig > 0 Then  // #2
 	End If
 End If
 // :[PC301].[V15_EVOL_VETUSTE]
+
+// [MCO602_PNEU]
+If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
+	
+	/*------------------------------------------------------------------*/
+	/* On vérifie s'il existe un plafond par événement.                 */
+	/*------------------------------------------------------------------*/
+	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
+					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
+					"ID_GTI = "			+ String ( idw_wDetailFF.GetItemNumber ( 1, "ID_GTI" ) )		+ " AND " 	+ &
+					"ID_NIV_PLAF = '+EV'" 																			+ " AND " 	+ &
+					"ID_REF_PLAF = "	+ String ( idw_wDetailFF.GetItemNumber ( 1, "ID_EVT" ) ) 	+ " AND " 	+ &
+					"ID_CPT_PLAF = 0"	 																				+ " AND " 	+ &
+					"ID_TYP_PLAF = '763'"
+	
+	
+	lLig = idw_Plafond.Find ( sRech, 1, lTotPlaf )
+	If	lLig > 0 Then
+
+		lRow = idw_wDivSin.Find ( "NOM_ZONE = 'typ_presta'", 1,  idw_wDivSin.RowCount () )
+		sTypePrestaDs = ""
+		If lRow > 0 Then
+			sTypePrestaDs = idw_wDivSin.GetItemString ( lRow, "VAL_CAR" ) 
+		End If	
+
+		sTypePrestaDp384 = ""
+		dcPlafond = 0
+		If sTypePrestaDs <> "" Then
+			F_RechDetPro ( lDeb, lFin, iDw_DetPro, iDw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 384)
+
+			If lDeb > 0 Then 
+				For lCpt = lDeb To lFin 
+					sVal = iDw_DetPro.GetItemString ( lCpt, "VAL_CAR" ) 
+					sTypePrestaDp384 = F_CLE_VAL ( "TYP_PRESTA", sVal, ";" )
+					If sTypePrestaDp384 = sTypePrestaDs Then
+						sPlafond = F_CLE_VAL ( "MT_PLAF", sVal, ";" )						
+						dcPlafond = 0
+						If IsNumber ( sPlafond ) Then
+							dcPlafond = Dec ( sPlafond ) 
+							Exit
+						End If 
+					End If 
+				Next 
+			End IF 
+		End If 		
+		
+		If dcPlafond > 0 Then
+			
+			dcMtnPlaf = idw_wDetailFF.GetItemDecimal ( 1, "MT_NPLAF" )
+			dcMtPlaf  = idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF" )
+	
+			If	 ( dcMtPlaf > dcPlafond ) Or ( dcMtnPlaf > dcPlafond And dcMtPlaf = 0 ) Then
+	
+				If dcPlafond > 0 Then
+					idw_wDetailFF.SetItem ( 1, "MT_PLAF", dcPlafond )
+					
+					// [PLAF_REF] // [VDOC6662]
+					ibPlafNumeraire = TRUE // [PLAF_REF]				
+					sPos = Uf_Plaf_Refus ( "763", "REF_PLAF_NUM_>0" )
+					
+				Else
+					idw_wDetailFF.SetItem ( 1, "MT_PLAF", 0 )
+					// [PLAF_REF]
+					ibPlafNumeraire = TRUE // [PLAF_REF]				
+					sPos = Uf_Plaf_Refus ( "763", "NORMAL" )
+				End If
+	
+			/*------------------------------------------------------------------*/
+			/* On insére le paragraphe de plafond dans la DW.                   */
+			/*------------------------------------------------------------------*/
+				idw_wDetailFF.SetItem ( 1, "ALT_PLAF", "O" )
+				sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
+				sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
+				Uf_Plaf_EcrirePara ( "763", sIdPara, sCptVer )
+				
+				
+			End If
+		End If
+	End If
+End IF 
+
+// [MCO602_PNEU]
+// A laisser à la fin
+If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
+	If idw_wDetailFF.GetItemDecimal ( 1, "MT_PLAF" ) < 0 Then
+		idw_wDetailFF.SetItem ( 1, "MT_PLAF", 0 )
+	End If
+End If
 
 
 Return sPos // [PLAF_REF]
