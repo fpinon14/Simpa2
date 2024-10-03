@@ -984,7 +984,7 @@ If	bRet Then
 				/* sinon les deux dates sont distinctes.                                      */
 				/*----------------------------------------------------------------------------*/
 				If idDteOuvLig = 1900-01-01 Then
-					// [MCO602_PNEU] [A_REPORTER]
+					// [MCO602_PNEU]
 					If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
 						F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 383 )
 						If lDeb <= 0 Then
@@ -18842,7 +18842,7 @@ If iAction = 0 Then
 End If
 
 // [PC845]
-/* [A_REPORTER]
+/* 
 If sTypeApp="PNE" Then
 	// [MCO602_PNEU]
 	If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then

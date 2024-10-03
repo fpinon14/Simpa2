@@ -1188,7 +1188,7 @@ public function string uf_controlersaisie ();//*--------------------------------
 //		FPI	15/06/2012	[SFRP085.FPI] Désactivation du contrôle du n° de tel
 //*   JFF   25/10/2012  ITSM133780
 //*   JFF   21/03/2016  [370853_ITSM]
-//*   JFF   01/10/2024  [MCO602_PNEU][A_REPORTER]
+//*   JFF   01/10/2024  [MCO602_PNEU]
 //*-----------------------------------------------------------------
 String sCol [ ], sErr [ ], sTabNull [], sIdFourAdr, sTabAdrFour[], s15Zero, sIdFour1, sIdTypArt1, sIdFour2, sIdTypArt2
 String 		sNouvelleLigne, sPos, sText, sVal, sDw, sAdrTel1, sAdrTel, sFind, sTriActuel, sIMEICorr, sMessErr
@@ -1207,7 +1207,7 @@ sText					= sNouvelleLigne
 sFind					= ""
 s15Zero				= Fill ( "0", 15)
 
-// [MCO602_PNEU] [A_REPORTER]
+// [MCO602_PNEU]
 bDp382 = False
 If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
 	F_RechDetPro ( lDeb, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 382 )
@@ -1423,7 +1423,7 @@ For	lCpt = 1 To lTot
 	End If
 	// :[PC321]
 	
-	// [MCO602_PNEU][A_REPORTER]
+	// [MCO602_PNEU]
 	If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
 		If Not bDp382 Then
 			sVal =  Trim ( idwArticle.GetItemString ( lCpt, sCol [ 2 ] ))
