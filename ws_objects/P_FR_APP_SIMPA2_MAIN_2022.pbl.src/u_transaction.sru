@@ -634,7 +634,8 @@ Subroutine PS_S_REMB_RNFR (long dcIdSin, Long dcIdReg, Ref string sChaine ) RPCF
 function long PS_U_COMMANDE_AAS(decimal dcIdSin,long iIdSeq,string sMarq,string sModl,string sMarqIfr,string sModlIfr,string sIdSerieNouv,decimal{2} dcMtTTCCmde) RPCFUNC ALIAS FOR "sysadm.PS_U_COMMANDE_AAS"
 
 // [DT344]
-function long PS_S_SOUPLESSE(decimal dcIdProd,decimal dcIdGti,string sIdSpl ) RPCFUNC ALIAS FOR "sysadm.PS_S_SOUPLESSE"
+// JFF   08/10/2024 [MCO194]
+function long PS_S_SOUPLESSE_V01 (decimal dcIdProd,decimal id_rev, decimal dcIdGti,string sIdSpl ) RPCFUNC ALIAS FOR "sysadm.PS_S_SOUPLESSE_V01"
 
 // [PC171999]
 subroutine PS_S_W_GTI_MT_PLAF_756 (long dcIdSin,long dcIdProd,long dcIdEts,string sIdAdh,string sTypPers, long dcIdGti,datetime dtSurv,datetime dtAdhRenouv,Ref string dcMtPlafReg) RPCFUNC ALIAS FOR "sysadm.PS_S_W_GTI_MT_PLAF_756"
@@ -803,10 +804,10 @@ subroutine PS_HP276_S_S2_LIB_ACTIVITY_MAPPING  ( String asActivityCode, String a
 //  JFF  12/08/2024 [MCO834_JOUVRE]
 function Integer PS_S_PROCHAIN_JOUR_OUVRE_DU_MEME_MOIS_CALENDAIRE ( DateTime dtDteSource, Ref Integer iPJOMMC, ref DateTime dtDtePossible ) RPCFUNC ALIAS FOR "sysadm.PS_S_PROCHAIN_JOUR_OUVRE_DU_MEME_MOIS_CALENDAIRE"
 
-//  JFF   05/08/2024  [MCO602_PNEU]
+//  JFF  05/08/2024  [MCO602_PNEU]
 function Integer PS_S_PRODUIT_ADH_SAGA2 ( Long lIdProd ) RPCFUNC ALIAS FOR "sysadm.PS_S_PRODUIT_ADH_SAGA2"
 
-// JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
+// JFF	10/09/2024 [20240910162546267] Changement chemin UNC Serveur fichier prod
 function String FN_GET_CHEMIN ( String asCleChem ) RPCFUNC ALIAS FOR "sysadm.FN_GET_CHEMIN"
 
 

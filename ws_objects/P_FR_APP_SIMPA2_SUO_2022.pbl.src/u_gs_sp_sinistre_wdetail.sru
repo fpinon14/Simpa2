@@ -272,11 +272,11 @@ private function string uf_plaf_adhesion_renouv_typepers ()
 private function long uf_zn_trt_divdet_refusscb (string asdata, string asnomcol, long alrow)
 private subroutine uf_controlergestion_franchise_cb_extr (ref string aspos)
 public function string uf_plaf_adhesion_survenance_ttegti ()
-public subroutine uf_gestong_divers_caspart_liste (string asnomzone, long alidprod, long alidgti)
 public function string uf_plaf_adhesion_survenance_gtidp351 ()
 private subroutine uf_gestion_dtedet ()
 public function boolean uf_rf_dp370_val_div_det ()
 public function string uf_epurezone (string asvaleur)
+public subroutine uf_gestong_divers_caspart_liste (string asnomzone, long alidprod, long alidrev, long alidgti)
 end prototypes
 
 event ue_mt_prej();//*-----------------------------------------------------------------
@@ -2881,7 +2881,7 @@ private subroutine uf_controlergestion (ref s_pass astpass);//*-----------------
 //    JFF   29/08/2024  [CAR_SPEC_LCL]
 //    JFF   06/09/2024  [KSV516]
 //*-----------------------------------------------------------------
-String 		sPos, sOng, sPosPec, sFiltreOrig, sVal1, sVal 
+String sPos, sOng, sPosPec, sFiltreOrig, sVal1, sVal 
 Long lTotwRefus, lCpt, lDeb, lFin, lCptDetPro, lVal, lIdProd, lTrouve, lVal1, lValOrig
 n_cst_string lnvPFCString
 DateTime dtDt1, dtDt2, dtDt3, dtCreeLe
@@ -15809,6 +15809,7 @@ private subroutine uf_gestong_divers ();//*-------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JFF    19/03/2008  Bug remonté par N. Béchéri
 //*       JFF    15/01/2020  [VDOC28827]/[VDOC28866]
+//        JFF    08/10/2024  [MCO194]
 //*-----------------------------------------------------------------
 
 Long lTotParam, lCptParam, lCptDivD, lRowDS, lRowDP, lTotDivD, lNull, lCptVal, lTotVal, lRowChild, lCodEtat, lIdGti
@@ -15916,8 +15917,11 @@ For lCptDivD = 1 To lTotDivD
 
 				// [VDOC28827] et [VDOC28866]
 //				Permet d'exclure des valeur la liste charger, en fct param sur DetPro
+//				[MCO194] id_rev
 				This.uf_GestOng_Divers_CasPart_Liste ( idw_wDivDet.GetItemString ( lCptDivD, "NOM_ZONE" ), &
-															idw_wSin.GetItemNumber ( 1, "ID_PROD" ), lIdGti  )
+																	idw_wSin.GetItemNumber ( 1, "ID_PROD" ), &
+																	idw_wSin.GetItemNumber ( 1, "ID_REV" ), &
+																	lIdGti  )
 				
 				lTotVal = idddw_CodeCar_wDivDet_Charg_Tempo.RowCount ()
 							
@@ -15936,8 +15940,11 @@ For lCptDivD = 1 To lTotDivD
 
 				// [VDOC28827] et [VDOC28866]
 //				Permet d'exclure des valeur la liste charger, en fct param sur DetPro
+//				[MCO194] id_rev
 				This.uf_GestOng_Divers_CasPart_Liste ( idw_wDivDet.GetItemString ( lCptDivD, "NOM_ZONE" ), &
-																idw_wSin.GetItemNumber ( 1, "ID_PROD" ), lIdGti  )
+																	idw_wSin.GetItemNumber ( 1, "ID_PROD" ), &
+																	idw_wSin.GetItemNumber ( 1, "ID_REV" ), &
+																	lIdGti )
 
 
 				lTotVal = idddw_Code_wDivDet_Charg_Tempo.RowCount ()
@@ -25034,22 +25041,25 @@ private function long uf_zn_trt_divdet_souplesse (string asdata, string asnomcol
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
+//  JFF   08/10/2024  [MCO194]
 //*-----------------------------------------------------------------
 
-Long    dcIdProd, dcIdGti, lRet
+Long    dcIdProd, dcIdGti, lRet, dcIdRev
 Int	  iAction
 
 iAction = 0 
 
 dcIdProd = idw_wSin.GetItemNumber ( 1, "ID_PROD" )
+dcIdRev  = idw_wSin.GetItemNumber ( 1, "ID_REV" )
 dcIdGti  = idw_wGarSin.GetItemNumber ( 1, "ID_GTI" )
+
 asData 	= Trim ( asData )
 If IsNull ( asData ) Then asData = ""
 
 // [VDOC28827] et [VDOC28866]
 If asData = "AAA" Then Return iAction
 
-lRet = SQLCA.PS_S_SOUPLESSE ( dcIdProd, dcIdGti, asData )
+lRet = SQLCA.PS_S_SOUPLESSE_V01 ( dcIdProd, dcIdRev, dcIdGti, asData )
 
 If lRet < 0 Then
 	idw_wDivDet.iiErreur = 4
@@ -25648,55 +25658,6 @@ Return ( sPos )
 
 end function
 
-public subroutine uf_gestong_divers_caspart_liste (string asnomzone, long alidprod, long alidgti);//*-----------------------------------------------------------------
-//*
-//* Fonction      : u_gs_sp_sinistre_wdetail::uf_GestOng_Divers_CasPart_Liste (PRIVATE)
-//* Auteur        : Fabry JF
-//* Date          : 29/09/2004 11:13:57
-//* Libellé       : Gestion des cas particuliers lors du chargement des listes l'onglet divers
-//* Commentaires  : 
-//*
-//* Arguments		: String			asNomZone		Val
-//*					  String			alIdProd			Val
-//* Retourne      : 
-//*
-//*-----------------------------------------------------------------
-//* MAJ   PAR      Date	     Modification
-//* #..   ...   ../../....
-//*
-//*-----------------------------------------------------------------
-Long lDeb, lFin, lTot1, lTot2, lCpt1, lCpt2, lRet
-Boolean bTrouve
-String	sIdCode
-
-asNomZone = Upper ( asNomZone )
-
-
-Choose Case asNomZone	
-
-	Case "SOUPLESSE_1", "SOUPLESSE_2", "SOUPLESSE_3"
-
-		lTot1 = idddw_CodeCar_wDivDet_Charg_Tempo.RowCount ()
-		
-		For lCpt1 = lTot1 To 1 Step -1
-			sIdCode = idddw_CodeCar_wDivDet_Charg_Tempo.GetItemString ( lCpt1, "ID_CODE" )
-			
-			If sIdCode = "AAA" Then Continue
-			
-			lRet = SQLCA.PS_S_SOUPLESSE ( alIdProd, alIdGti, sIdCode )
-			
-			If lRet < 0 Then
-				idddw_CodeCar_wDivDet_Charg_Tempo.RowsDiscard ( lCpt1, lCpt1, Primary! )				
-			End If 
-			
-		Next
-
-End Choose
-
-
-
-end subroutine
-
 public function string uf_plaf_adhesion_survenance_gtidp351 ();//*-----------------------------------------------------------------
 //*
 //* Fonction		: Uf_Plaf_Adhesion_Survenance_GtiDp351 (PRIVATE)
@@ -26071,6 +26032,55 @@ sRet = f_remplace(sRet,"”","p")
 
 Return sRet
 end function
+
+public subroutine uf_gestong_divers_caspart_liste (string asnomzone, long alidprod, long alidrev, long alidgti);//*-----------------------------------------------------------------
+//*
+//* Fonction      : u_gs_sp_sinistre_wdetail::uf_GestOng_Divers_CasPart_Liste (PRIVATE)
+//* Auteur        : Fabry JF
+//* Date          : 29/09/2004 11:13:57
+//* Libellé       : Gestion des cas particuliers lors du chargement des listes l'onglet divers
+//* Commentaires  : 
+//*
+//* Arguments		: String			asNomZone		Val
+//*					  String			alIdProd			Val
+//* Retourne      : 
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//        JFF   08/10/2024   [MCO194]
+//*
+//*-----------------------------------------------------------------
+Long lDeb, lFin, lTot1, lTot2, lCpt1, lCpt2, lRet
+Boolean bTrouve
+String	sIdCode
+
+asNomZone = Upper ( asNomZone )
+
+
+Choose Case asNomZone	
+
+	Case "SOUPLESSE_1", "SOUPLESSE_2", "SOUPLESSE_3"
+
+		lTot1 = idddw_CodeCar_wDivDet_Charg_Tempo.RowCount ()
+		
+		For lCpt1 = lTot1 To 1 Step -1
+			sIdCode = idddw_CodeCar_wDivDet_Charg_Tempo.GetItemString ( lCpt1, "ID_CODE" )
+			
+			If sIdCode = "AAA" Then Continue
+			
+			lRet = SQLCA.PS_S_SOUPLESSE_V01 ( alIdProd, alIdRev, alIdGti, sIdCode ) // [MCO194]
+			
+			If lRet < 0 Then
+				idddw_CodeCar_wDivDet_Charg_Tempo.RowsDiscard ( lCpt1, lCpt1, Primary! )				
+			End If 
+			
+		Next
+
+End Choose
+
+
+
+end subroutine
 
 on u_gs_sp_sinistre_wdetail.create
 call super::create
