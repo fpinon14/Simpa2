@@ -116,6 +116,7 @@ Private :
 	Boolean			ibCodicDartyValide
 	Boolean			ibPI052_GenEdtKsl2 // [PI052]
 	Boolean			ibPM506_AssureARisque // [PM506-1]
+	Boolean			ibDp385 // [MCO602_PNEU]
 	String			isTabVarOrange[7,2] // 3 Dim : D1=Inter, D2=Code cour Orange D3=Nb cour
 
 	String			isCodTypRecu		// [DCMP090616]
@@ -660,6 +661,7 @@ invSaisieValSin.ibFinGenerationPDFOk = FALSE // [PI052]
 ibPI052_GenEdtKsl2 = FALSE // [PI052]
 
 ibPM506_AssureARisque = False // [PM506-1]
+ibDp385 = False
 
 // Armement pour les ZVAR du courrier
 // [PM255]
@@ -733,7 +735,6 @@ End Choose
 If	idw_wSin.Retrieve ( Dec ( astPass.sTab [ 1 ] ) ) <= 0 Then bRet = False
 
 	dtCreeLeDos = idw_wSin.GetItemDateTime ( 1, "CREE_LE") // [DT288-1]
-
 
 	// #14
 	idw_wSin.SetItem ( 1, "NUM_PORT", F_Format_Num_Tel ( Trim ( Upper ( idw_wSin.GetItemString ( 1, "NUM_PORT" ) ) ), TRUE ) )
@@ -833,6 +834,11 @@ If	bRet Then
 			idw_DetPro.SetItem ( lCptDp, "VAL_CAR", sValCar + sValCar2 )
 		Next
 		//* :#16 [DCMP090327].[SBETV]
+
+		// [MCO602_PNEU]
+		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 385 )
+		ibDp385 = lDeb > 0 // On ne demande pas le num_port
+	
 
 		// [DT447]		
 		This.uf_PreparerModifier_ModifDynParam ( "DT447" )			
@@ -3045,7 +3051,8 @@ End If
 /*If ( ( bOption75 and sCraCtrlImei = "O" ) Or bPresenceCmdeWeb ) And &
    sTypeApp = "TEL" And sPos = "" And Not bAltBloc And lCodTel > 0 Then */
 
-If sTypeApp = "TEL" And sPos = "" And Not bAltBloc And lCodTel > 0 And Not uf_Getautorisation2( 208 ) Then
+// [MCO602_PNEU] and Not iDp385 
+If sTypeApp = "TEL" And sPos = "" And Not bAltBloc And lCodTel > 0 And Not uf_Getautorisation2( 208 ) and Not ibDp385 Then
 	If bOption75 Then
 		If sCraCtrlImei = "O" Then
 			If	IsNull ( sNumPort  ) Or sNumPort = "" Then
@@ -3076,8 +3083,9 @@ End If
 //* :#22 [20090331230441250]
 
 // #16 Test sur le format du num tel portable
+// [MCO602_PNEU] and Not iDp385 
 sDtePivot = "21/02/2007"
-If sTypeApp = "TEL" And sPos = "" And Not bAltBloc And lCodTel > 0 And dCreele >= Date ( sDtePivot )Then
+If sTypeApp = "TEL" And sPos = "" And Not bAltBloc And lCodTel > 0 And dCreele >= Date ( sDtePivot ) and Not ibDp385 Then
 	sValTempo = F_Format_Num_Tel ( sNumPort, FALSE )
 	If	Not IsNull ( sValTempo ) And sValTempo <> "" Then
 		//[NUM_TEL_07]
