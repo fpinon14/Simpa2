@@ -287,11 +287,7 @@ If lNumLig >  0 And Dw_3.RowCount ( ) > 0 Then
 /* modification de DATE sera effectuée dans la macro.               */
 /*------------------------------------------------------------------*/
 	sFicWinIni	= stGLB.sWinDir + "\WIN.INI"
-	// [DBG20241015131529340] 
-	messagebox ("stGLB.sWinDir", stGLB.sWinDir )
-	messagebox ("sFicWinIni", sFicWinIni	 )
-	// /[DBG20241015131529340]
-	
+
 /*------------------------------------------------------------------*/
 /* On supprime le dernier fichier consulté.                         */
 /*------------------------------------------------------------------*/
