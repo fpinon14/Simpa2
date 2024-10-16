@@ -274,6 +274,8 @@ Declare @iIdProdAdh	Integer
 Declare @iIdEts Integer
 Declare @sIdAdh	VarChar ( 19 )
 Declare @iIdSdos Integer
+Declare @dtDteRemb DateTime
+Declare @dtDteGti DateTime
 
 Set @iResil = 0
 
@@ -304,7 +306,9 @@ If @iResil = 1
 				@iIdProdAdh	= p.cod_prod_dms,
 				@iIdEts		= s.id_ets,
 				@sIdAdh		= s.id_adh,
-				@iIdSdos	= s.id_sdos
+				@iIdSdos	= s.id_sdos,
+				@dtDteRemb  = s.valide_le,
+				@dtDteGti   = s.dte_fin_gti
 		From	sysadm.sinistre s,
 				sysadm.produit p
 		Where   s.id_sin = @dcIdSin
@@ -316,6 +320,8 @@ If @iResil = 1
 			id_ets,
 			id_adh,
 			id_sdos,
+			dte_remb,
+			dte_fin_gti,
 			cod_trt,
 			chaine_seria,
 			cree_le,
@@ -329,6 +335,8 @@ If @iResil = 1
 			@iIdEts,
 			rtrim ( ltrim ( @sIdAdh)),
 			@iIdSdos,
+			@dtDteRemb,
+			@dtDteGti,
 			'N',
 			rtrim ( ltrim ( @sChaineSeria)),
 			Getdate(),
@@ -405,6 +413,8 @@ Declare @TB_EnAttenteTransfert Table (
 	[id_ets] decimal (7) NOT NULL,
 	[id_adh] varchar(19) NOT NULL,
 	[id_sdos] decimal (7) NOT NULL,
+	[dte_remb] DateTime NOT NULL,
+	[dte_fin_gti] DateTime NOT NULL,
 	[cod_trt] varchar ( 1 ) NOT NULL,
 	[chaine_seria] varchar ( 100 ) null,
 	[cree_le] [datetime] NOT NULL,
@@ -423,7 +433,9 @@ Declare
 	@sChaineSeria varchar ( 100 ),
 	@dtCreeLe datetime,
 	@dtMajLe datetime,
-	@sMajPar char(4) 
+	@sMajPar char(4), 
+	@dtDteRemb DateTime,
+	@dtDteGti DateTime
 
 Insert into @TB_EnAttenteTransfert
 Select 
@@ -433,6 +445,8 @@ Select
 	id_ets,
 	id_adh,
 	id_sdos,
+	dte_remb,
+	dte_fin_gti,
 	cod_trt,
 	chaine_seria,
 	cree_le,
@@ -452,6 +466,8 @@ While Exists ( Select Top 1 1 From @TB_EnAttenteTransfert where cod_trt = 'T' )
 		@iIdEts = id_ets,
 		@sIdAdh = id_adh,
 		@iIdSdos = id_sdos,
+		@dtDteRemb  = dte_remb,
+		@dtDteGti = dte_fin_gti,
 		@sCodTrt ='N',
 		@sChaineSeria = chaine_seria,
 		@dtCreeLe = cree_le,
@@ -468,6 +484,8 @@ While Exists ( Select Top 1 1 From @TB_EnAttenteTransfert where cod_trt = 'T' )
 				@iIdEts,
 				@sIdAdh,
 				@iIdSdos,
+				@dtDteRemb,
+				@dtDteGti,
 				@sCodTrt,
 				@sChaineSeria,
 				@dtCreeLe,
@@ -482,6 +500,8 @@ While Exists ( Select Top 1 1 From @TB_EnAttenteTransfert where cod_trt = 'T' )
 				@iIdEts,
 				@sIdAdh,
 				@iIdSdos,
+				@dtDteRemb,
+				@dtDteGti,
 				@sCodTrt,
 				@sChaineSeria,
 				@dtCreeLe,
@@ -623,6 +643,8 @@ CREATE procedure edi.PS_I_SIMPA2_RESIL_ADH_SAGA2
 	@iIdEts integer,
 	@sIdAdh varchar(19),
 	@iIdSdos integer,
+	@dtDteRemb DateTime,
+	@dtDteGti DateTime,
 	@sCodTrt varchar ( 1 ),
 	@sChaineSeria varchar ( 100 ),
 	@dtCreeLe datetime,
@@ -637,6 +659,8 @@ Insert into edi.simpa2_resil_adh_saga2
 	id_ets,
 	id_adh,
 	id_sdos,
+	dte_remb,
+	dte_fin_gti,
 	cod_trt,
 	chaine_seria,
 	cree_le,
@@ -650,6 +674,8 @@ Values
 	@iIdEts,
 	@sIdAdh,
 	@iIdSdos,
+	@dtDteRemb,
+	@dtDteGti,
 	@sCodTrt,
 	@sChaineSeria,
 	@dtCreeLe,
