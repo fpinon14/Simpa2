@@ -286,7 +286,20 @@ If lNumLig >  0 And Dw_3.RowCount ( ) > 0 Then
 /* positionnne la date d'édition de ce courrier dans une CLE. La    */
 /* modification de DATE sera effectuée dans la macro.               */
 /*------------------------------------------------------------------*/
+// [DBG20241015131529340][CS_USPR_ALD_WINDIR] 
+If F_CLE_A_TRUE ( "CS_USPR_ALD_WINDIR" ) Then
+	sFicWinIni	= stGlb.uoWin.uf_getenvironment("USERPROFILE") + "\Windows\WIN.INI"
+Else
 	sFicWinIni	= stGLB.sWinDir + "\WIN.INI"
+End If 
+
+If stGlb.sCodOper = "JFF" Then
+	MessageBox ( "stGLB.sWinDir", stGLB.sWinDir)
+	MessageBox ( "stGlb.uoWin.uf_getenvironment('USERPROFILE')", stGlb.uoWin.uf_getenvironment("USERPROFILE"))
+End IF 
+
+
+// /[DBG20241015131529340] 
 
 /*------------------------------------------------------------------*/
 /* On supprime le dernier fichier consulté.                         */
