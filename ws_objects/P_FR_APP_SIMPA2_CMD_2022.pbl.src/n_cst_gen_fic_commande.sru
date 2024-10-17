@@ -388,8 +388,7 @@ CHOOSE CASE Upper ( asCas )
 			stMessage.icon = StopSign!
 			This.uf_Sortie_OpCon ( "ECR", 520, "ERR520/TRACE/INIT", TRUE )
 		Else
-			// sMes = Fill( "*", 80 )
-			sMes = Fill( "-*", 40 )
+			sMes = Fill( "*", 80 )
 			FileWrite ( iiFicTrc, sMes )
 			FileClose ( iiFicTrc )
 		End If
