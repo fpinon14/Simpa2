@@ -441,6 +441,7 @@ event ue_choix_garantie;//*-----------------------------------------------------
 //*     JFF  26/06/2012 [CONFO][NV_PROCESS]
 //      JFF  07/05/2013 [RS3552_REVCOUVGTI]
 //      JFF  03/10/2024 [20241003154106547]
+//      JFF  17/10/2024 [MON209_POPUP]
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
@@ -453,8 +454,8 @@ event ue_choix_garantie;//*-----------------------------------------------------
 s_Pass	stPass_Dga
 String sRech, sFiltre, sVal
 Long lTotCodeGarantie, lLig, lIdProd, lIdRev
-Boolean bRet						// [ITSM49138]
-Long lDeb, lFin, lCptDetPro 
+Boolean bRet, bFin
+Long lDeb, lFin, lCptDetPro, lCpt360
 n_cst_string lnvString
 
 stPass_Dga.lTab[1] = Message.LongParm
@@ -495,6 +496,31 @@ If stPass_Dga.lTab[1] > 0 Then
 			End If 
 		End If 
 	End IF 
+	
+	// MON209_POPUP
+	If F_CLE_A_TRUE ( "MON209_POPUP" ) Then
+		If stPass_Dga.lTab[1] = 7 Then
+			
+			F_RechDetPro ( lDeb, lFin, dw_Det_Pro, dw_1.GetItemNumber ( 1, "ID_PROD" ), "-DP", 360 )
+			For lCpt360 = lDeb To lFin 
+				sVal = F_CLE_VAL ( "ID_CAS", dw_Det_Pro.GetItemString( lCpt360, "VAL_CAR"), ";")
+				If sVal = "MON209_DECLA_UFS_LCL_CB" Then
+					bFin = False
+					Do While Not bFin
+						stMessage.sTitre		= "déclaration UFs LCL CB"
+						stMessage.Icon			= Exclamation!
+						stMessage.bErreurG	= FALSE
+						stMessage.Bouton		= YESNO!
+						stMessage.sCode		= "WSIN906"
+						If F_Message ( stMessage ) = 1 Then bFin = TRUE
+					Loop
+					Exit
+				End If
+			Next 
+		End If 
+	End If 
+	
+	
 End If 
 
 /*------------------------------------------------------------------*/
