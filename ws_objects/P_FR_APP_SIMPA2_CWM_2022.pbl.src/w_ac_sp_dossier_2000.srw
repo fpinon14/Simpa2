@@ -292,13 +292,6 @@ If F_CLE_A_TRUE ( "CS_USPR_ALD_WINDIR" ) Then
 Else
 	sFicWinIni	= stGLB.sWinDir + "\WIN.INI"
 End If 
-
-If stGlb.sCodOper = "JFF" Then
-	MessageBox ( "stGLB.sWinDir", stGLB.sWinDir)
-	MessageBox ( "stGlb.uoWin.uf_getenvironment('USERPROFILE')", stGlb.uoWin.uf_getenvironment("USERPROFILE"))
-End IF 
-
-
 // /[DBG20241015131529340] 
 
 /*------------------------------------------------------------------*/
