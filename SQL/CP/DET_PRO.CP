@@ -928,3 +928,42 @@ Select distinct sysadm.FN_CLE_VAL (  'CHEMIN', rtrim ( val_car ) + rtrim ( val_c
 
 Go
 
+-------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_S2_NE_PAS_AFFICHER_DTE_FIN_GTI_SUR_SHERPA
+-- Auteur               :       JFF
+-- Date                 :       18/10/2024
+-- Libellé              :       Permet de ne pas afficher la date de fin de garantie sur SHERPA
+--								Dans un contexte très précis sur SIMPA2
+-- Commentaires         :
+-- Références           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_S2_NE_PAS_AFFICHER_DTE_FIN_GTI_SUR_SHERPA' AND type = 'P' )
+        DROP procedure sysadm.PS_S_S2_NE_PAS_AFFICHER_DTE_FIN_GTI_SUR_SHERPA
+GO
+
+CREATE procedure sysadm.PS_S_S2_NE_PAS_AFFICHER_DTE_FIN_GTI_SUR_SHERPA
+	@adcIdProd Decimal ( 7 )
+AS
+
+If Exists ( 
+	Select Top 1 1 
+	From sysadm.produit p,
+		 sysadm.det_pro dp
+	Where p.id_prod = @adcIdProd
+	And   p.cod_adh = 6
+	And   dp.id_prod = p.id_prod
+	And   dp.id_code_dp = 29
+)
+Begin 
+	Return 1
+End 
+
+Return 0
+
+Go
