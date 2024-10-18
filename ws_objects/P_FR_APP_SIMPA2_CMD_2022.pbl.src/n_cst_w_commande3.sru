@@ -18930,6 +18930,7 @@ private subroutine uf_chgt_fourn_fct_mobile (integer aicas);//*-----------------
 //       JFF   30/09/2019 [DT447-1]
 //       JFF   23/06/2020 [PC202553_SELECTRA]
 //       JFF   07/03/2024 [HP252_276_HUB_PRESTA]
+//       JFF   18/10/2024 [HP252_276_HUB_PRESTA][HUB577]
 //*-----------------------------------------------------------------
 
 String sIdGti, sRech, sIdFourModif, sModlRepart, sTypPresta, sDept, sVal, sDimSup150cm, sPoidsSup30cm, sIdFourPM82LOT1, sVal1, sVal2
@@ -18951,7 +18952,7 @@ String sTabIphonePSM []
 DateTime dtDt1, dtDt2, dtDt3, dtCreeLe 
 Boolean bOkPassCtrleDP315, bSAVInterdit, bTestSavInterdit, bPsmRepa, bHubPossible, bPrestaExisteNonHub 
 DateTime dtDtePivotDT1288, dtCreeLeDos, dtDtePivotDT401, dtDtePivotDT447 
-String sFind, sLibFour, sSysExploit, sIdFourO2mOuHubPresta 
+String sFind, sLibFour, sSysExploit, sIdFourO2mOuHubPresta, sLstAppHub 
 Int iFind
 
 lIdSin  = idwDetail.GetItemNumber ( 1, "ID_SIN" )
@@ -19061,7 +19062,22 @@ If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 		Else 
 			F_RechDetPro ( lDeb, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 379 )
 			If lDeb > 0 Then
-				sIdFourO2mOuHubPresta = "HUB"		
+				
+				//[HP252_276_HUB_PRESTA][HUB577]
+				sVal = idw_DetPro.GetItemString ( lCptDetPro, "VAL_CAR" )
+				sLstAppHub = F_CLE_VAL ( "TYP_APP_HUB", sVal, ";" )
+				If IsNull ( sLstAppHub ) Then sLstAppHub = ""
+				
+				// Si Pas de liste Hub spécifie, tous les appareils vont vers le HUB
+				If sLstAppHub = "" Then
+					sIdFourO2mOuHubPresta = "HUB"		
+
+				// Sinon si AMU app Hub Spécifié, alors ce sont uniquement les app de la liste qui vont vers le HUB
+				Else
+					If Pos ( sLstAppHub, "#" + isTypApp + "#", 1 ) > 0 Then					
+						sIdFourO2mOuHubPresta = "HUB"
+					End If 
+				End IF 
 			End If 
 		End If
 
