@@ -1984,7 +1984,8 @@ Set @iCpt = 1
 -- Set @sChemin = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\PM02_Factu_Broker_Reprise_Mat\'
 Set @sChemin = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\PM02_Factu_Broker_Reprise_Mat\'
 
-Set @sFichierFactExcel = '[PER]_[ID_TRT]_[BRK]_PM02_Facturation_Reprise_Materiel.xls'
+-- Set @sFichierFactExcel = '[PER]_[ID_TRT]_[BRK]_PM02_Facturation_Reprise_Materiel.xls'
+Set @sFichierFactExcel = '[PER]_[ID_TRT]_[BRK]_PM02_Fact_Repr_Mat.xls' -- Réduction du nom car pose problème avec le chemin réel (trop long) en lieu et place du DFS (plus court)
 
 -- [PM478-1]
 If sysadm.FN_CLE_NUMERIQUE ( 'PM478-1') > 0 
@@ -1997,7 +1998,9 @@ Else
  End 
 
 
-Set @sFichierVolcanes  = '[PER]_[ID_TRT]_PM02_Facturation_Reprise_Materiel_Volcanes.[EXT]'
+-- Set @sFichierVolcanes  = '[PER]_[ID_TRT]_PM02_Facturation_Reprise_Materiel_Volcanes.[EXT]'
+Set @sFichierVolcanes  = '[PER]_[ID_TRT]_PM02_Fact_Repr_Mat_Volcs.[EXT]'
+
 Set @sFichierVolcanesRequete = 'PS_S01_PM02_FICHIER_SORTIE_VOLCANES'
 
 Set @sFichierRejetExcel  = '[PER]_[ID_TRT]_PM02_Rejets_Infos.xls'
@@ -2786,3 +2789,105 @@ If Not exists (
 
 Return 1
 Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_PM02_RESSORTIR_UN_FICHIER
+-- Auteur               :       FABRY JF
+-- Date                 :       16/10/2024
+-- Libellé              :        
+-- Commentaires         :       [PM02][PM478-1]
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_PM02_RESSORTIR_UN_FICHIER' AND type = 'P' )
+        DROP procedure sysadm.PS_S_PM02_RESSORTIR_UN_FICHIER 
+GO
+
+CREATE procedure sysadm.PS_S_PM02_RESSORTIR_UN_FICHIER
+	@iIdPeriode integer
+AS
+Declare @sFicOut     VarChar(255)
+Declare @sChemin    VarChar ( 255 )
+Declare @sFichierFactExcel VarChar ( 255 )
+Declare @sRequete	 VarChar ( 100 )
+Declare @sFichierFactExcelRequete VarChar ( 255 )
+Declare	@iIdTrt	    integer
+Declare @sIdBrk	     VarChar ( 3 )
+Declare @sCommande	 VarChar ( 255 )
+Declare @sNomServeur VarChar(255)
+Declare @sOsqlOption VarChar(255)
+Declare @iRetOsql    int	
+Declare @sBase		 VarChar ( 15 )
+
+DECLARE @tb TABLE 
+	( id_brk	Varchar ( 3 ) null ,
+	  marquage	integer null 
+	)
+
+Select Top 1 @iIdTrt = id_trt From sysadm.cum_ftu_brk where id_periode = @iIdPeriode
+If @iIdTrt < 0 Or @iIdTrt is null Set @iIdTrt = 0
+
+Set @sChemin = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\PM02_Factu_Broker_Reprise_Mat\'
+-- Set @sFichierFactExcel = '[PER]_[ID_TRT]_[BRK]_PM02_Facturation_Reprise_Materiel.xls'
+Set @sFichierFactExcel = '[PER]_[ID_TRT]_[BRK]_PM02_Fact_Repr_Mat.xls' -- Réduction du nom car pose problème avec le chemin réel (trop long) en lieu et place du DFS (plus court)
+
+
+If sysadm.FN_CLE_NUMERIQUE ( 'PM478-1') > 0 
+ Begin
+	Set @sFichierFactExcelRequete = 'PS_S01_PM02_FICHIER_SORTIE_XLS_V01'
+ End 
+Else
+ Begin
+	Set @sFichierFactExcelRequete = 'PS_S01_PM02_FICHIER_SORTIE_XLS'
+ End 
+
+Select @sFicOut = @sChemin + @sFichierFactExcel
+Select @sRequete = @sFichierFactExcelRequete
+			   
+Set @sRequete = @sRequete + ' ' + Convert ( VarChar ( 6 ) , @iIdPeriode ) + ', ' + Convert ( VarChar (6), @iIdTrt )
+
+Set @sFicOut = Replace ( @sFicOut, '[PER]', Convert ( VarChar ( 6 ), @iIdPeriode ) )
+Set @sFicOut = Replace ( @sFicOut, '[ID_TRT]', Convert ( VarChar ( 6 ), @iIdTrt ) )
+
+Set @sNomServeur = @@servername
+
+-- Options additionelles pour osql
+-- /s"	" 	=> Separateur Tabulation
+-- /b 	=> Genere un code ERRORLEVEL exploitable par batch.
+-- /u	=> Unicode
+Set @sOsqlOption = ' ' + '/s"	"'+ ' /b' + ' /u'
+
+IF @@servername = master.dbo.SPB_FN_ServerName ('PRO') Set @sBase = 'SIMPA2_PRO' Else Set @sBase = 'SIMPA2_TRT'
+	
+Insert into @tb
+Select  Distinct 
+	c.id_brk,
+	0
+From	sysadm.cum_ftu_brk c,
+	sysadm.produit p
+Where   c.id_periode = @iIdPeriode
+And	c.id_trt = @iIdTrt
+		
+While Exists ( Select * From @tb where marquage = 0 )
+	Begin
+		Select 	Top 1 
+			@sIdBrk = rTrim ( id_brk )
+		From	@tb
+		Where	marquage = 0
+
+		Set @sFicOut = Replace ( @sFicOut, '[BRK]', @sIdBrk )
+		Set @sRequete = @sRequete + ', ''' + @sIdBrk + ''''
+
+		SET @sCommande = 'sqlcmd /S' + @sNomServeur + ' /E /Q"' + 
+					@sBase + '.sysadm.' + @sRequete + ' ' + 
+					'" /o' + @sFicOut + ' -w5000' + @sOsqlOption
+
+		EXEC @iRetOsql = master.dbo.xp_cmdshell @sCommande, no_output
+
+		Update @tb
+		Set marquage = 1
+		Where id_brk = @sIdBrk
+	End
+
+ Go
