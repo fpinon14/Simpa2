@@ -2813,6 +2813,9 @@ If sysadm.FN_CLE_NUMERIQUE ( 'RS6179_TRG_WQ') > 0
 		Delete TRACE_MAIL_PRO.sysadm.trace_matp_es_sinistre_ksl_rs5045 Where cree_le < DATEADD ( month, -6, Getdate() )
 	End 
 
+-- [LGY11]
+Exec sysadm.PS_U_REDRESS_W_QUEUE_STATUT_IWD  
+
 GO
 
 grant execute on sysadm.PS_CORRECTION_BASE_NUIT_2 to rolebddsinistres
@@ -6872,6 +6875,130 @@ While Exists ( Select Top 1 1 From @TbRepCour where marquage = 0 )
  	EXEC master.dbo.xp_cmdshell @CmdShell 
 
 	Update @TbRepCour Set marquage = 1 Where id_trt = @iIdTrt
+ End
+
+Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_U_REDRESS_W_QUEUE_STATUT_IWD
+-- Auteur               :       FABRY JF
+-- Date                 :       21/10/2024
+-- Libellé              :       Redresse les travaux en fonction de l'état iwd
+-- Commentaires         :       [LGY11]
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_REDRESS_W_QUEUE_STATUT_IWD' AND type = 'P' )
+        DROP procedure sysadm.PS_U_REDRESS_W_QUEUE_STATUT_IWD
+GO
+  
+CREATE procedure sysadm.PS_U_REDRESS_W_QUEUE_STATUT_IWD  
+AS
+
+/*De : CHRISTOPHE BOURDOISEAU <cbourdoiseau@spb.eu> 
+Envoyé : vendredi 18 octobre 2024 18:01
+À : JEAN-FRANCOIS FABRY <JFABRY@spb.eu>; OLIVIER PONS <opons@spb.eu>; DAVID IBERSIEN <dibersien@spb.eu>
+Cc : STEPHANIE BARTHELEMY <SBARTHELEMY@spb.eu>
+Objet : RE: Exploitation de la Table Iwd cco 
+ 
+bonjour jean françois,
+ 
+A mon avis, à valider par Olivier et David, voici la regle, 
+ 
+A partir de la clé de jointure 
+ 
+      ID_iWD (w_queue) = interaction_id (Gcloud)
+ 
+Si 
+      media_cd = email 
+      et  interaction_end_ts est différent de null 
+      et code etat_iWD = 2
+alors
+      update 
+            code etat_iwd = 1 
+            et id_iwd = null
+*/
+/*
+Update	wq
+Set		wq.etat_iwd = 1,
+		wq.id_iwd = null,
+		trv_maj_le = GETDATE(),
+		trv_maj_par = 'IWT'
+From	sysadm.w_queue wq,
+		[SQL14BI\SINISTRESBI].DATA_HUB.dbo.cco_w_queue_simpa2 cco
+Where wq.etat_iwd = 2
+And   wq.id_iwd is not null
+And	  cco.interaction_id = wq.id_iwd
+And   cco.media_cd = 'EMAIL'
+And   cco.interaction_end_ts is not null
+*/
+
+If Not ( sysadm.FN_CLE_NUMERIQUE ( 'LGY11_IDW_WQ') > 0 ) Return
+
+Declare @TbTrt Table ( 
+			id_seq integer identity (1,1) , 
+			marquage int,
+			id_sin integer, 
+			nom_agent varchar ( 100 ),
+			trigramme varchar ( 10 ),
+			fin_tache_iwd DateTime
+			) 
+
+Declare @iIdSeq Integer
+Declare @iIdSin Integer
+Declare @sNomAgent VarChar ( 100 )
+Declare @sTrg VarChar ( 10 )
+Declare @dtFinTacheIwd DateTime
+Declare @sMess Varchar ( 508 )
+Declare @iIdCt Integer
+
+Insert into @TbTrt
+Select  0,
+		wq.id_sin,
+		lTrim ( rtrim ( cco.nom_agent )),
+		lTrim ( rtrim ( cco.trigramme )),
+		cco.interaction_end_ts
+From	sysadm.w_queue wq,
+		[SQL14BI\SINISTRESBI].DATA_HUB.dbo.cco_w_queue_simpa2 cco
+Where wq.etat_iwd = 2
+-- And   wq.id_iwd is not null  pas nécessaire
+And	  cco.interaction_id = wq.id_iwd
+And   cco.media_cd = 'EMAIL'
+And   cco.interaction_end_ts is not null
+
+While Exists ( Select Top 1 1 From @TbTrt where marquage = 0 )
+ Begin
+	Select 	Top 1 
+		@iIdSeq = id_seq,
+		@iIdSin = id_sin,
+		@sNomAgent = nom_agent,
+		@sTrg = trigramme,
+		@dtFinTacheIwd = fin_tache_iwd
+	From	@TbTrt
+	Where	marquage = 0
+
+	Update	wq
+	Set		wq.etat_iwd = 1,
+			wq.id_iwd = null,
+			trv_maj_le = GETDATE(),
+			trv_maj_par = 'IWD'
+	From	sysadm.w_queue wq
+	Where   wq.id_sin = @iIdSin
+	
+	set @sMess = 'Le/la gestionnaire ' + @sNomAgent + ' (' + @sTrg + ') a terminé et clôturé sa tâche IWD le ' + convert ( varchar(10), @dtFinTacheIwd, 103 ) + ' à ' + CONVERT (varchar(8), @dtFinTacheIwd, 108) 
+	set @sMess = @sMess + ', mais il/elle a oublié de valider son dossier, il n''y a eu aucune action, aucune décision de prise sur le dossier. Merci de redresser la situation en validant le dossier après avoir effectué votre action de gestion, c''est pourquoi la tâche est présentement redistribuée.'
+
+	IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+	BEGIN
+		Exec  SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 3161, 'C', @iIdSin, 2, @sMess,	'IWD', 300, @iIdCt OUTPUT
+	END
+	ELSE
+	BEGIN
+		Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 3161, 'C', @iIdSin, 2, @sMess,	'IWD', 300, @iIdCt OUTPUT
+	END
+
+	Update @TbTrt Set marquage = 1 Where id_seq = @iIdSeq
  End
 
 Go
