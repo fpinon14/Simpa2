@@ -20259,6 +20259,7 @@ private function boolean uf_validation_finale_trt_particuliers ();//*-----------
 //       JFF   03/11/2023 [RS6114_MAIL_CMA]
 //       JFF   07/03/2024 [HP252_276_HUB_PRESTA]
 //       JFF   05/08/2024 [MCO602_PNEU]
+//       JFF   05/08/2024 [MCO602_PNEU][MCO1050]
 //*-----------------------------------------------------------------
 
 Date dtPivotFranchisePBox
@@ -20268,7 +20269,7 @@ Long lDeb, lFin, lRow, lVal, lIdSeq, lTot, lCpt, lTotRefus, lCptRefus, lIdNatSin
 Decimal {2} dcMtAReg
 dwItemStatus	Status
 n_cst_string lnvPFCString
-DateTime dtCreeLeDos, dtVal, dtPivotCourHTMLviaWSSaga2, dtDtePivotDT401, dtDteSurv
+DateTime dtCreeLeDos, dtVal, dtPivotCourHTMLviaWSSaga2, dtDtePivotDT401, dtDteSurv, dtDtePivotDp386 
 String sZnDS_pceSherpaRacine, sZnDS_pceSherpa, sLibMemoire, sFiltre
 Int iZnDS_pceSherpa, iCodResilAdh, iCleNum
 Boolean bEnvMailChapeauDemat
@@ -21847,7 +21848,7 @@ End If
 // [MCO602_PNEU]
 If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
 	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 380)
-	If lDeb > 0 Then
+	If bRet And lDeb > 0 Then
 		
 		// SAGA2
 		If SQLCA.PS_S_PRODUIT_ADH_SAGA2 ( idw_WSin.GetItemNumber ( 1, "ID_PROD" ) ) > 0 Then
@@ -21866,7 +21867,37 @@ If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
 		End If 	
 		
 	End If 
+	
+	// [MCO602_PNEU][MCO1050] Envoi mail récap sur validation
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 386)
+	If bRet And lDeb > 0 Then
+		
+		sVal = F_CLE_VAL ( "DTE_PIVOT", idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), ";" )
+		sVal1 = This.uf_GestOng_Divers_Trouver ( "MAIL_RECAP_ENVOYE" )
+	
+		If Not IsNull ( sVal ) and Trim ( sVal ) <> "" And sVal1 <> "O" Then
+			dtDtePivotDp386 = DateTime ( sVal ) 
+			If dtCreeLeDos >= dtDtePivotDp386 Then 					
+			
+				lVal = SQLCA.PS_S_VERIF_ENVOI_MAIL_RECAP_DECLA ( lIdSin )
+				
+				If lVal > 0 Then
+					sSql = "Exec sysadm.Atlas_Envoi_Mail_Recap_Decla " + &
+					String ( lIdSin ) + "., " + &
+					"null"
+				 
+					F_Execute ( sSql, SQLCA )
+					bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0						
+				End If 
+				
+			End IF 							
+		End IF 			
+	End IF 	
+
+	
 End If
+
+
 
 // [HP252_276_HUB_PRESTA]
 // /!\ A laisser en dernier /!\

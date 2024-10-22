@@ -810,6 +810,8 @@ function Integer PS_S_PRODUIT_ADH_SAGA2 ( Long lIdProd ) RPCFUNC ALIAS FOR "sysa
 // JFF	10/09/2024 [20240910162546267] Changement chemin UNC Serveur fichier prod
 function String FN_GET_CHEMIN ( String asCleChem ) RPCFUNC ALIAS FOR "sysadm.FN_GET_CHEMIN"
 
+//  JFF  05/08/2024  [MCO1050]
+function Integer PS_S_VERIF_ENVOI_MAIL_RECAP_DECLA ( Long adcIdSin ) RPCFUNC ALIAS FOR "sysadm.PS_S_VERIF_ENVOI_MAIL_RECAP_DECLA"
 
 end prototypes
 type variables
