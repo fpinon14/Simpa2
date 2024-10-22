@@ -2482,16 +2482,21 @@ Exec sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
 -- [RS4616_RET_TLS]
 Exec sysadm.PS_U_RS4616_MAJ_CMDE_TLS 'TLS', 2
 
+-- [20240910131137363] Nettoyage Répertoire
+-- [20240910162546267]
+Set @sVal = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SHERPA\BlobSaga2'
+Exec sysadm.PS_NETTOYAGE_REPERTOIRE @sVal
+
+-- Redressement param incohérent suite suppression
+Exec sysadm.PS_D_NETTOYAGE_VIEUX_PARAM_INCOHERENT  
+
+
+-- /!\ Laisser à la fin de préférence
 -- [HP252_276_HUB_PRESTA]
 If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
  Begin
 	Exec sysadm.PS_U_RS4616_MAJ_CMDE_TLS 'HUP', 2
  End 
-
--- [20240910131137363] Nettoyage Répertoire
--- [20240910162546267]
-Set @sVal = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SHERPA\BlobSaga2'
-Exec sysadm.PS_NETTOYAGE_REPERTOIRE @sVal
 
 GO
 
@@ -6842,8 +6847,6 @@ CREATE procedure sysadm.PS_NETTOYAGE_REPERTOIRE
 	@sRepertoireUNC VarChar ( 255 )
 AS
 
-Return -- Je suspends pour l'instant
-
 Declare @sDIR Varchar ( 255 )
 Declare @TbTemp Table ( nom_fic varchar ( 255) ) 
 Declare @TbRepCour Table ( id_trt int identity (1,1), nom_fic varchar ( 255), marquage int null ) 
@@ -6966,6 +6969,14 @@ Where wq.etat_iwd = 2
 And	  cco.interaction_id = wq.id_iwd
 And   cco.media_cd = 'EMAIL'
 And   cco.interaction_end_ts is not null
+And   ( wq.routage_iwd is null 
+		Or 
+		( wq.routage_iwd is Not null 
+		  And 
+		  wq.trv_route_le < DateAdd ( day, -7, Getdate()) 
+		)
+	  )
+
 
 While Exists ( Select Top 1 1 From @TbTrt where marquage = 0 )
  Begin
@@ -7003,3 +7014,308 @@ While Exists ( Select Top 1 1 From @TbTrt where marquage = 0 )
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_VERIF_ENVOI_MAIL_RECAP_DECLA
+-- Auteur               :       FABRY JF
+-- Date                 :       22/10/2024
+-- Libellé              :       Vérifie que l'appel à la PS : sysadm.Atlas_Envoi_Mail_Recap_Decla sera possible
+--                              appel sur présence dp/386 par validation du GT
+-- Commentaires         :       [MCO602_PNEU][MCO1050]
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_VERIF_ENVOI_MAIL_RECAP_DECLA' AND type = 'P' )
+        DROP procedure sysadm.PS_S_VERIF_ENVOI_MAIL_RECAP_DECLA
+GO
+  
+CREATE procedure sysadm.PS_S_VERIF_ENVOI_MAIL_RECAP_DECLA  
+        @adcIdSin		Decimal (10)
+AS
+	   
+Declare @sMess			VarChar ( 2000 ),
+		@sErr			Varchar(60),
+		@iIdCt			integer,	
+		@iVal			integer, 
+		@sAdrMailErr VarChar ( 150 ),
+		@sFaitGenerateur VarChar ( 35 )
+
+-- Ctrle Sinistre
+If Not Exists ( Select Top 1 1 From sysadm.w_sin where id_sin = @adcIdSin ) 
+  Begin
+	 Return -1
+  End 
+
+Declare @Tb Table ( 
+	id_seq integer Identity,
+	lib_det varchar ( 65 ),
+	dte_achat varchar ( 35 ),
+	mt_prej varchar ( 35),
+	etat_du_bien varchar ( 35),
+	moyen_de_paiement varchar ( 35),
+	marquage integer
+)
+
+
+-- [MCO602_PNEU]
+If Exists ( Select Top 1 1 From sysadm.w_div_sin wds where wds.id_sin = @adcIdSin And wds.nom_zone = 'type_app' )
+	Begin
+		Insert into @Tb
+		Select 
+				IsNull ( 
+					Case 
+						When Exists ( Select Top 1 1 From sysadm.det_pro dp where dp.id_prod = ws.id_prod and dp.id_code_dp = 106 and dp.id_code_car = wds.val_car ) 
+							Then ( Select lTrim ( rTrim ( val_car )) From sysadm.det_pro dp where dp.id_prod = ws.id_prod and dp.id_code_dp = 106 and dp.id_code_car = wds.val_car )
+						Else sysadm.FN_CODE_CAR ( wds.val_car, '-AR' )
+					End, '') 'lib_det',
+				IsNull ( convert ( varchar ( 10 ), ws.dte_ach_port, 103 ), '') 'dte_det',
+				sysadm.FN_GET_DIV_SIN (ws.id_sin, 'mt_val_achat_adh', 'W', '' ) 'mt_prej',
+				'' 'etat_du_bien',
+				'' 'moyen_de_paiement',
+				0
+
+		From sysadm.w_sin ws,
+			 sysadm.w_div_sin wds
+		Where ws.id_sin = @adcIdSin
+		And   wds.id_sin = ws.id_sin
+		And   wds.nom_zone = 'type_app'
+
+		If Exists ( Select Top 1 1 From @Tb ) 
+			Begin
+				If Exists ( 
+						Select Top 1 1 
+						From @Tb
+						Where lib_det is not null
+						and   ltrim ( rtrim ( lib_det )) <> ''
+						and   dte_achat is not null
+						and   ltrim ( rtrim ( dte_achat )) <> ''
+						and   mt_prej is not null
+						and   ltrim ( rtrim ( mt_prej  )) <> ''
+				) Return 1
+				Else Return -2
+
+			End
+		Else
+			Begin
+				Return -2
+			End
+	End 
+Else
+	Begin
+		Insert into @Tb
+		Select distinct 
+			IsNull (lTrim ( rTrim ( lower ( wd.lib_det ))), '') ,
+			IsNull ( convert ( varchar ( 10 ), wd.dte_det, 103 ), ''),
+			IsNull ( convert ( varchar ( 20 ), wd.mt_prej ), ''),
+			IsNull ( ( Select Top 1 lTrim ( rTrim ( sysadm.FN_CODE_CAR ( wdt.val_car, '-G6' ))) From sysadm.w_div_det wdt where wdt.id_sin = wd.id_sin And wdt.id_gti = wd.id_gti And wdt.id_detail = wd.id_detail and wdt.nom_zone = 'etat_du_bien' ), ''), 
+			IsNull ( ( Select Top 1 lTrim ( rTrim ( sysadm.FN_CODE_CAR ( wdt.val_car, '-G7' ))) From sysadm.w_div_det wdt where wdt.id_sin = wd.id_sin And wdt.id_gti = wd.id_gti And wdt.id_detail = wd.id_detail and wdt.nom_zone = 'moyen_de_paiement'), '' ), 
+			0
+		FROM sysadm.w_detail wd,
+			 sysadm.w_sin ws
+		Where ws.id_sin = @adcIdSin
+		and   wd.id_sin = ws.id_sin
+
+		If Exists ( Select Top 1 1 From @Tb ) 
+			Begin
+				If Exists ( 
+						Select Top 1 1 
+						From @Tb
+						Where lib_det is not null
+						and   ltrim ( rtrim ( lib_det )) <> ''
+						and   dte_achat is not null
+						and   ltrim ( rtrim ( dte_achat )) <> ''
+						and   mt_prej is not null
+						and   ltrim ( rtrim ( mt_prej  )) <> ''
+						and   etat_du_bien is not null
+						and   ltrim ( rtrim ( etat_du_bien  )) <> ''
+						and   moyen_de_paiement is not null
+						and   ltrim ( rtrim ( moyen_de_paiement  )) <> ''
+				) Return 1
+				Else Return -2
+
+			End
+		Else
+			Begin
+				Return -2
+			End
+
+	End 
+
+GO
+
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_D_NETTOYAGE_VIEUX_PARAM_INCOHERENT
+-- Auteur               :       FABRY JF
+-- Date                 :       22/10/2024
+-- Libellé              :       Nettoie le vieux param incohérent
+--                              
+-- Commentaires         :       [MCO602_PNEU][MCO1050]
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_D_NETTOYAGE_VIEUX_PARAM_INCOHERENT' AND type = 'P' )
+        DROP procedure sysadm.PS_D_NETTOYAGE_VIEUX_PARAM_INCOHERENT
+GO
+  
+CREATE procedure sysadm.PS_D_NETTOYAGE_VIEUX_PARAM_INCOHERENT  
+AS
+
+Delete pl
+from sysadm.plafond pl
+Where pl.id_niv_plaf = '-GA'
+and Not Exists ( 
+	Select Top 1 1 
+	From sysadm.code_garantie g
+	Where g.id_prod = pl.id_prod
+	And   g.id_gti  = pl.id_gti
+)
+
+Delete fr
+from sysadm.franchise fr
+Where fr.id_niv_fra = '-GA'
+and Not Exists ( 
+	Select Top 1 1 
+	From sysadm.code_garantie g
+	Where g.id_prod = fr.id_prod
+	And   g.id_gti  = fr.id_gti
+)
+
+Delete dl
+from sysadm.delai dl
+Where dl.id_niv_del = '-GA'
+and Not Exists ( 
+	Select Top 1 1 
+	From sysadm.code_garantie g
+	Where g.id_prod = dl.id_prod
+	And   g.id_gti  = dl.id_gti
+)
+
+Delete pl
+from sysadm.plafond pl
+Where pl.id_niv_plaf = '+EV'
+and Not Exists ( 
+	Select Top 1 1 
+	From sysadm.code_condition cc
+	Where cc.id_prod = pl.id_prod
+	And   cc.id_gti  = pl.id_gti
+	and   cc.id_typ_code = pl.id_niv_plaf
+	And   cc.id_code = pl.id_ref_plaf
+)
+
+Delete fr
+from sysadm.franchise fr
+Where fr.id_niv_fra = '+EV'
+and Not Exists ( 
+	Select Top 1 1 
+	From sysadm.code_condition cc
+	Where cc.id_prod = fr.id_prod
+	And   cc.id_gti  = fr.id_gti
+	and   cc.id_typ_code = fr.id_niv_fra
+	And   cc.id_code = fr.id_ref_fra
+)
+
+Delete dl
+from sysadm.delai dl
+Where dl.id_niv_del = '+EV'
+and Not Exists ( 
+	Select Top 1 1 
+	From sysadm.code_condition cc
+	Where cc.id_prod = dl.id_prod
+	And   cc.id_gti  = dl.id_gti
+	and   cc.id_typ_code = dl.id_niv_del
+	And   cc.id_code = dl.id_ref_del
+)
+
+
+Delete pl
+from sysadm.plafond pl
+Where pl.id_niv_plaf Not in ( '-GA', '+EV' ) 
+and Not Exists ( 
+	Select Top 1 1 
+	From sysadm.code_condition cc
+	Where cc.id_prod = pl.id_prod
+	and   cc.id_typ_code = pl.id_niv_plaf
+	And   cc.id_code = pl.id_ref_plaf
+)
+
+Delete fr
+from sysadm.franchise fr
+Where fr.id_niv_fra Not in ( '-GA', '+EV' ) 
+and Not Exists ( 
+	Select Top 1 1 
+	From sysadm.code_condition cc
+	Where cc.id_prod = fr.id_prod
+	and   cc.id_typ_code = fr.id_niv_fra
+	And   cc.id_code = fr.id_ref_fra
+)
+
+
+Delete dl
+from sysadm.delai dl
+Where dl.id_niv_del Not in ( '-GA', '+EV' ) 
+and Not Exists ( 
+	Select Top 1 1 
+	From sysadm.code_condition cc
+	Where cc.id_prod = dl.id_prod
+	and   cc.id_typ_code = dl.id_niv_del
+	And   cc.id_code = dl.id_ref_del
+)
+
+Delete co
+from sysadm.condition co
+Where Not Exists ( 
+	Select Top 1 1 
+	From sysadm.code_condition cc
+	Where cc.id_prod = co.id_prod
+	And   cc.id_gti  = co.id_gti
+)
+
+Delete co
+from sysadm.condition co
+Where Not Exists ( 
+	Select Top 1 1 
+	From sysadm.code_condition cc
+	Where cc.id_prod = co.id_prod
+	And   cc.id_gti  = co.id_gti
+)
+
+Delete g
+from sysadm.garantie g
+Where Not Exists ( 
+	Select Top 1 1 
+	From sysadm.code_garantie cg
+	Where g.id_prod = cg.id_prod
+	And   g.id_gti  = cg.id_gti
+)
+
+Delete p
+from sysadm.piece p
+Where Not Exists ( 
+	Select Top 1 1 
+	From sysadm.code_garantie cg
+	Where p.id_prod = cg.id_prod
+	And   p.id_gti  = cg.id_gti
+)
+
+Delete m
+from sysadm.motif m
+Where Not Exists ( 
+	Select Top 1 1 
+	From sysadm.code_garantie cg
+	Where m.id_prod = cg.id_prod
+	And   m.id_gti  = cg.id_gti
+)
+
+Delete a
+from sysadm.affilier a
+Where Not Exists ( 
+	Select Top 1 1 
+	From sysadm.code_garantie cg
+	Where a.id_prod = cg.id_prod
+	And   a.id_gti  = cg.id_gti
+)
+
+
+Go
