@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_a_sp_relance.srw
-$PBExportComments$---} Fen$$HEX1$$ea00$$ENDHEX$$tre des Relances/Soldage.
+﻿$PBExportHeader$w_a_sp_relance.srw
+$PBExportComments$---} Fenêtre des Relances/Soldage.
 forward
 global type w_a_sp_relance from w_accueil_edition_2000
 end type
@@ -61,7 +61,7 @@ Protected :
 
 	u_Gs_Sp_Relance	iuo_Rel
 
-	Boolean	ibInit = False	// A true, la fen$$HEX1$$ea00$$ENDHEX$$tre $$HEX2$$e0002000$$ENDHEX$$d$$HEX1$$e900$$ENDHEX$$j$$HEX3$$e0002000e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$initialis$$HEX1$$e900$$ENDHEX$$e.
+	Boolean	ibInit = False	// A true, la fenêtre à déjà été initialisée.
 	String	isNbrCourrier
 	String	isTypTrtWord   // C ou E
 	String	isFicCourrierIni // Fichier INI pour Edition
@@ -92,10 +92,10 @@ public subroutine wf_initialiser (string atyptrt);//*---------------------------
 //* Fonction		: wf_Initialiser (Public)
 //* Auteur			: Fabry JF
 //* Date				: 23/06/1999 12:25:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Initialisation de la fen$$HEX1$$ea00$$ENDHEX$$tre.
-//* Commentaires	: Cette initialisation vient en compl$$HEX1$$e800$$ENDHEX$$ment du ue_Initialiser
-//*					  et est d$$HEX1$$e900$$ENDHEX$$clench$$HEX2$$e9002000$$ENDHEX$$apr$$HEX1$$e800$$ENDHEX$$s l'ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre sur le menu
-//*					  apr$$HEX1$$e800$$ENDHEX$$s le F_OuvreAccueil.
+//* Libellé			: Initialisation de la fenêtre.
+//* Commentaires	: Cette initialisation vient en complèment du ue_Initialiser
+//*					  et est déclenché après l'ouverture de la fenêtre sur le menu
+//*					  après le F_OuvreAccueil.
 //*
 //* Arguments		: String			asTypTrt			(Val) 		Type de traitement
 //*
@@ -107,7 +107,7 @@ public subroutine wf_initialiser (string atyptrt);//*---------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On initialise une seule fois la fen$$HEX1$$ea00$$ENDHEX$$tre (ibInit).                */
+/* On initialise une seule fois la fenêtre (ibInit).                */
 /*------------------------------------------------------------------*/
 If Not ibInit Then
 
@@ -120,22 +120,22 @@ If Not ibInit Then
 	CHOOSE CASE isTypTrt
 
 		CASE "R1A"
-			This.Title = "Premi$$HEX1$$e800$$ENDHEX$$res Relances Normales."
+			This.Title = "Premières Relances Normales."
 
 		CASE "R1U"
-			This.Title = "Premi$$HEX1$$e800$$ENDHEX$$res Relances Automatiques pour les garanties UF avec Dem. Pces. $$HEX2$$e0002000$$ENDHEX$$la banque."
+			This.Title = "Premières Relances Automatiques pour les garanties UF avec Dem. Pces. à la banque."
 
 		CASE "R1T"
-			This.Title = "Premi$$HEX1$$e800$$ENDHEX$$res Relances Particuli$$HEX1$$e800$$ENDHEX$$res."
+			This.Title = "Premières Relances Particulières."
 
 		CASE "R1P"
-			This.Title = "Premi$$HEX1$$e800$$ENDHEX$$res Relances Ponctuelles."
+			This.Title = "Premières Relances Ponctuelles."
 
 		CASE "R2"
-			This.Title = "Deuxi$$HEX1$$e800$$ENDHEX$$mes Relances."
+			This.Title = "Deuxièmes Relances."
 
 		CASE "DR1"
-			This.Title = "Annulation d'une Premi$$HEX1$$e800$$ENDHEX$$re Relance."
+			This.Title = "Annulation d'une Première Relance."
 
 	END CHOOSE
 
@@ -166,7 +166,7 @@ public subroutine wf_retaillerobjet ();//*--------------------------------------
 //* Fonction		: wf_RetaillerObjet (Public)
 //* Auteur			: Fabry JF
 //* Date				: 25/06/1999 15:16:48
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Retaille les objets pour certains cas de traitement.
+//* Libellé			: Retaille les objets pour certains cas de traitement.
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun
@@ -214,7 +214,7 @@ CHOOSE CASE isTypTrt
 	CASE "DR1"
 
 		Pb_Lancer.PictureName = "K:\PB4OBJ\BMP\8_SUPPR.BMP"
-		Pb_Lancer.Text			 = "&D$$HEX1$$e900$$ENDHEX$$truire"
+		Pb_Lancer.Text			 = "&Détruire"
 
 END CHOOSE
 
@@ -226,7 +226,7 @@ protected function boolean wf_lire_blob (long adcidsin, long adcidinter, long ad
 //* Fonction		:	Wf_Lire_Blob() ( Protected )
 //* Auteur			:	Fabry Jf
 //* Date				:	17/06/1999
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	
+//* Libellé			:	
 //* Commentaires	:	Lecture du blob sur ARCHIVE_BLOB
 //*
 //* Arguments		:	
@@ -266,7 +266,7 @@ Boolean bOk = True
 											" Sin " + String ( adcidsin   ) + &
 											" Int " + String ( adcIdInter ) + &
 											" Doc " + String ( adcIdDoc   ) + &
-											" .... Impression stopp$$HEX1$$e900$$ENDHEX$$e.~r~n" )		
+											" .... Impression stoppée.~r~n" )		
 		bOk = False
 
 	End If
@@ -278,10 +278,10 @@ end function
 public subroutine wf_actualiseredition (long alnumcourrier);//*-----------------------------------------------------------------
 //*
 //* Fonction		:	Wf_ActualiserEdition ()
-////* Auteur			:	N$$HEX1$$b000$$ENDHEX$$6
+////* Auteur			:	N°6
 //* Date				:	07/05/97 11:05:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	
-//* Commentaires	:	Met $$HEX2$$e0002000$$ENDHEX$$jour la zone indiquant le nombre de courriers $$HEX1$$e900$$ENDHEX$$dit$$HEX1$$e900$$ENDHEX$$s.
+//* Libellé			:	
+//* Commentaires	:	Met à jour la zone indiquant le nombre de courriers édités.
 //*
 //* Arguments		:	Long			alNumCourrier			
 //*
@@ -309,7 +309,7 @@ public subroutine wf_positionnerobjet_relance ();//*----------------------------
 //* Fonction		: wf_PostionnerObjet (Public)
 //* Auteur			: Fabry JF
 //* Date				: 21/06/1999 14:10:22
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun
@@ -387,7 +387,7 @@ protected function long wf_editer_relance ();//*--------------------------------
 //* Objet			:	w_a_Sp_Rel_Sold::wf_Editer_Relance		(PRIVATE)
 //* Auteur			:	Fabry JF
 //* Date				:	17/06/1999 11:00:00
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Impression des dossiers selectionn$$HEX1$$e900$$ENDHEX$$s
+//* Libellé			:	Impression des dossiers selectionnés
 //* Commentaires	:	
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -414,7 +414,7 @@ wf_SetStopTraitement ( FALSE )
 lRet = invEditionCourrier.uf_Initialiser ( isTypTrtWord )
 
 If	lRet <> 1	Then
-	sText = "L'initialisation du fichier INI vient d'$$HEX1$$e900$$ENDHEX$$chouer. "							+ & 
+	sText = "L'initialisation du fichier INI vient d'échouer. "							+ & 
 			  "(Erreur : " + String ( lRet ) + ")"												+ &
 			  sK_RETOUR + sK_NEWLINE
 
@@ -423,12 +423,12 @@ If	lRet <> 1	Then
 End If
 
 /*------------------------------------------------------------------*/
-/* On essaye de d$$HEX1$$e900$$ENDHEX$$marrer WORD.                                      */
+/* On essaye de démarrer WORD.                                      */
 /*------------------------------------------------------------------*/
 lRet = invEditionCourrier.uf_InitialiserWord ( FALSE )
 
 If	lRet <> 1 Then
-	sText = "L'initialisation de la communication avec WORD vient d'$$HEX1$$e900$$ENDHEX$$chouer. "		+ & 
+	sText = "L'initialisation de la communication avec WORD vient d'échouer. "		+ & 
 			  "(Erreur : " + String ( lRet ) + ")"												+ &
 			  sK_RETOUR + sK_NEWLINE
 			  
@@ -443,13 +443,13 @@ End If
 This.TriggerEvent ( "SPB_PreparerImpression" )
 
 // // // // // // // // // // // // // // // // // // // // // // // // // // //
-// Nombre de dossiers qui seront trait$$HEX1$$e900$$ENDHEX$$s
+// Nombre de dossiers qui seront traités
 iuo_rel.iCptTraite = 0
 
 ilDossier = dw_1.Rowcount ()
 
 /*------------------------------------------------------------------*/
-/* Boucle de g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration des courriers de relance.                   */
+/* Boucle de génération des courriers de relance.                   */
 /*------------------------------------------------------------------*/
 Do While ( ilDossier > 0 ) And ( Not wf_GetStopTraitement () )
 
@@ -496,10 +496,10 @@ private subroutine wf_modifierentete (date aDteEditDocOrig);//*-----------------
 //* Fonction      : wf_ModifierEntete
 //* Auteur        : Fabry JF
 //* Date          : 16/04/2004 11:00:45
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Choix de l'entete selon la date de l'edition du courrier d'origirine
+//* Libellé       : Choix de l'entete selon la date de l'edition du courrier d'origirine
 //* Commentaires  : 
 //*
-//* Arguments     : Date		aDteEditDocOrig			Val		// Date d'$$HEX1$$e900$$ENDHEX$$dition du doc original
+//* Arguments     : Date		aDteEditDocOrig			Val		// Date d'édition du doc original
 //*
 //* Retourne      : 
 //*
@@ -512,20 +512,20 @@ private subroutine wf_modifierentete (date aDteEditDocOrig);//*-----------------
 String sEntete
 
 /*------------------------------------------------------------------*/
-/* #1 : Si la Date d'$$HEX1$$e900$$ENDHEX$$dition est strictement avant le premier jour  */
-/* de mise en production de la SVE alors c'est une edition $$HEX9$$e00020002000200020002000200020002000$$ENDHEX$$*/
-/* l'ancienne m$$HEX1$$e900$$ENDHEX$$thode (fusion avec DT) ET avec l'ancien fichier     */
+/* #1 : Si la Date d'édition est strictement avant le premier jour  */
+/* de mise en production de la SVE alors c'est une edition à        */
+/* l'ancienne méthode (fusion avec DT) ET avec l'ancien fichier     */
 /* d'entete.                                                        */
 /*------------------------------------------------------------------*/
 If aDteEditDocOrig < idDteProdSve Then
 	sEntete = isFicEnteteAnc
 
 /*------------------------------------------------------------------*/
-/* #1 : Si la Date d'$$HEX1$$e900$$ENDHEX$$dition est sup$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale $$HEX2$$e0002000$$ENDHEX$$la date de   */
-/* mise en prod de la SVE, c'est donc un nouveau courrier $$HEX2$$e0002000$$ENDHEX$$la      */
-/* m$$HEX1$$e900$$ENDHEX$$thode SVE, cr$$HEX3$$e900e9002000$$ENDHEX$$avec le nouvel entete. Pour m$$HEX1$$e900$$ENDHEX$$moire on         */
-/* m$$HEX1$$e900$$ENDHEX$$morise le nouvel ent$$HEX1$$ea00$$ENDHEX$$te, mais il ne servira pas $$HEX2$$e0002000$$ENDHEX$$la           */
-/* reconstruction du courrier qui est d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$fusionn$$HEX2$$e9002000$$ENDHEX$$(DO).           */
+/* #1 : Si la Date d'édition est supérieure ou égale à la date de   */
+/* mise en prod de la SVE, c'est donc un nouveau courrier à la      */
+/* méthode SVE, créé avec le nouvel entete. Pour mémoire on         */
+/* mémorise le nouvel entête, mais il ne servira pas à la           */
+/* reconstruction du courrier qui est déjà fusionné (DO).           */
 /*------------------------------------------------------------------*/
 ELse 
 	sEntete = isFicEnteteNouv
@@ -542,7 +542,7 @@ private subroutine wf_renommerfichieriniedition (string ascas);//*--------------
 //* Fonction      : dw_regle_coherence::wf_RenommerFichierIniEdition (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 16/04/2004 16:19:27
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Copie ou Restaure le fichier INI d'$$HEX1$$e900$$ENDHEX$$dition
+//* Libellé       : Copie ou Restaure le fichier INI d'édition
 //* Commentaires  : Cas : COPIER    > Copie le fichier SIM2_E.INI en un autre fichier SIM2_ESV.INI
 //*					  Cas : RESTAURER > Restaure le fichier SIM2_ESV en SIM2.INI
 //*
@@ -617,7 +617,7 @@ protected function integer wf_lireecrire_blob (long adcidsin, long adcidinter, l
 //* Fonction		:	Wf_LireEcrire_Blob () 
 //* Auteur			:	Fabry Jf
 //* Date				:	27/04/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	
+//* Libellé			:	
 //* Commentaires	:	Lecture du blob sur ARCHIVE_BLOB
 //*
 //* Arguments		:	
@@ -649,7 +649,7 @@ asNomFic = stGLB.sRepTempo + "PARTORI_" + string(adcIdInter) + ".DOC"
 This.wf_Lire_Blob ( adcIdSin, adcIdInter, adcIdDoc, asType, blBlob )
 
 /*------------------------------------------------------------------*/
-/* Le blob peut ne pas $$HEX1$$ea00$$ENDHEX$$tre valide, on passe au blob suivant.       */
+/* Le blob peut ne pas être valide, on passe au blob suivant.       */
 /*------------------------------------------------------------------*/
 If Len ( blBlob ) <= 0 Or IsNull ( blBlob )  Then 
 
@@ -659,7 +659,7 @@ If Len ( blBlob ) <= 0 Or IsNull ( blBlob )  Then
 			  " Sin.  : " + String ( adcIdSin )								+ &
 			  " inter : " + String ( adcIdinter )							+ &
 			  " Doc   : " + String ( adcIdDoc )								+ &
-			  " .... Traitement stopp$$HEX1$$e900$$ENDHEX$$.~r~n"
+			  " .... Traitement stoppé.~r~n"
 				 
 	Mle_Msg.Uf_AjouterText ( sText )
 	
@@ -668,7 +668,7 @@ If Len ( blBlob ) <= 0 Or IsNull ( blBlob )  Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Suppression du disque d'un $$HEX1$$e900$$ENDHEX$$ventuel fichier portant le m$$HEX1$$ea00$$ENDHEX$$me nom. */
+/* Suppression du disque d'un éventuel fichier portant le même nom. */
 /*------------------------------------------------------------------*/
 bFileDelete = False
 DO While Not bFileDelete
@@ -679,7 +679,7 @@ DO While Not bFileDelete
 	
 		If IsNull ( bFileDelete ) Or Not bFileDelete Then 
 
-			// Compteur au del$$HEX2$$e0002000$$ENDHEX$$de 50, car on n'arrive pas $$HEX2$$e0002000$$ENDHEX$$effacer le fichier.
+			// Compteur au delà de 50, car on n'arrive pas à effacer le fichier.
 			lCpt ++
 			asNomFic = sRep + String ( lCpt ) + ".DOC"
 			
@@ -691,9 +691,9 @@ DO While Not bFileDelete
 Loop	
 
 /*------------------------------------------------------------------*/	
-/* Ecriture du fichier en Local, si probl$$HEX1$$e800$$ENDHEX$$me on ne s'arr$$HEX1$$ea00$$ENDHEX$$te pas,    */
-/* il suffit peut-$$HEX1$$ea00$$ENDHEX$$tre de faire de la place sur le disque en        */
-/* local, on laisse le choix $$HEX2$$e0002000$$ENDHEX$$l'utilisateur pour r$$HEX1$$e900$$ENDHEX$$essayer via la  */
+/* Ecriture du fichier en Local, si problème on ne s'arrête pas,    */
+/* il suffit peut-être de faire de la place sur le disque en        */
+/* local, on laisse le choix à l'utilisateur pour réessayer via la  */
 /* box d'erreur..                                                   */
 /*------------------------------------------------------------------*/
 bFicOk 	= FALSE
@@ -704,7 +704,7 @@ DO WHILE Not bFicOk And Not bAbandon
 	bFicOk = F_EcrireFichierBlob ( blBlob, asNomFic )
 
 	/*------------------------------------------------------------------*/
-	/* Probl$$HEX1$$e800$$ENDHEX$$me d'$$HEX1$$e900$$ENDHEX$$criture ou manque de place sur disque dur.           */
+	/* Problème d'écriture ou manque de place sur disque dur.           */
 	/*------------------------------------------------------------------*/
 	If bFicOk = False Then
 		stMessage.sTitre = "Gestion des courriers"
@@ -736,7 +736,7 @@ iTotRow = dw_1.rowcount ()
 for i = iTotRow to 1 step -1
 	integer test
 	test = dw_1.object.selection[i]
-	if dw_1.object.selection[i] = 0 or isnull(dw_1.object.selection[i]) then // La ligne n'est pas s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX1$$e900$$ENDHEX$$e
+	if dw_1.object.selection[i] = 0 or isnull(dw_1.object.selection[i]) then // La ligne n'est pas sélectionnée
 		dw_1.rowsdiscard( i, i, PRIMARY!)
 		
 	end if
@@ -750,7 +750,7 @@ event spb_imprimerdossier;call super::spb_imprimerdossier;//*-------------------
 //* Evenement 		: SPB_ImprimerDossier
 //* Auteur			: Fabry JF
 //* Date				: 17/06/1999
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: imprime le courrier de relance et le courrier original.
+//* Libellé			: imprime le courrier de relance et le courrier original.
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -758,7 +758,7 @@ event spb_imprimerdossier;call super::spb_imprimerdossier;//*-------------------
 //* #1  JFF   16/04/04  DCMP 040020 SVE : Selon la methode, on change l'entete	 			  
 //*-----------------------------------------------------------------
 
-String		sIdCourTyp		// Identifiant du courrier compos$$HEX1$$e900$$ENDHEX$$.
+String		sIdCourTyp		// Identifiant du courrier composé.
 String		sAltPart			// Indique s'il s'agit d'un courrier divers ou particulier.
 Long	      lIdSin			// Identifiant du sinistre
 Long	      lIdInter  		// Identifiant interlocuteur
@@ -783,7 +783,7 @@ Long 		lIdProd, lDeb, lFin
 lIdLigne		= Message.WordParm
 
 // Initialisation des variables pour inforamtion
-// 	et g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du courrier original
+// 	et génération du courrier original
 sNom			= Dw_1.GetItemString ( lIdLigne, "NOM_INTER" )
 lIdSin 		= Dw_1.GetitemNumber ( lIdLigne, "ID_SIN" )
 lIdInter		= Dw_1.GetItemNumber ( lIdLigne, "ID_I" )
@@ -797,15 +797,15 @@ bOk = iuo_rel.uf_ChargerDwPolice (lIdProd)
 /*------------------------------------------------------------------*/
 /* informations sur le dossier en cours de traitement.				  */
 /*------------------------------------------------------------------*/
-Mle_Msg.Uf_AjouterText ( "Dossier : " + String ( lIdSin ) + " G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du courrier de relance adress$$HEX4$$e9002000e0002000$$ENDHEX$$" + sNom + "~r~n" )
+Mle_Msg.Uf_AjouterText ( "Dossier : " + String ( lIdSin ) + " Génération du courrier de relance adressé à " + sNom + "~r~n" )
 
-// Nettoyage de la datawindows de g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration des courriers avant chaque traitement de relance
+// Nettoyage de la datawindows de génération des courriers avant chaque traitement de relance
 dw_gencourrier.reset()
 
 /*------------------------------------------------------------------*/
 /*               C O U R R I E R   R E L A N C E                    */
 /*------------------------------------------------------------------*/
-// G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du courrier de relance
+// Génération du courrier de relance
 bOk = iuo_rel.uf_CreerCourrierRelance ( lIdLigne )
 
 /*------------------------------------------------------------------*/
@@ -813,7 +813,7 @@ bOk = iuo_rel.uf_CreerCourrierRelance ( lIdLigne )
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie le param$$HEX1$$e900$$ENDHEX$$trage de r$$HEX2$$e900e900$$ENDHEX$$dition de l'original				  */
+/* On vérifie le paramétrage de réédition de l'original				  */
 /*------------------------------------------------------------------*/
 F_RechDetPro ( lDeb, lFin, dw_DetPro, lIdProd, "-DP", 96 )
 
@@ -824,10 +824,10 @@ if lDeb > 0 then
 end if
 
 /*------------------------------------------------------------------*/
-/*  on ne r$$HEX2$$e900e900$$ENDHEX$$dite pas l'original :                                  */
+/*  on ne réédite pas l'original :                                  */
 /*  - Si le courrier original est un questionnaire                  */
-/*  - Si le traitement est "R2" (Deuxi$$HEX1$$e800$$ENDHEX$$me relances).                */
-/*	 - Si le param$$HEX1$$e900$$ENDHEX$$trage l'autorise											  */
+/*  - Si le traitement est "R2" (Deuxième relances).                */
+/*	 - Si le paramétrage l'autorise											  */
 /*------------------------------------------------------------------*/
 bContinuer = ( Left ( sIdCourTyp, 1 ) <> "Q" ) And	( isTypTrt <> "R2" ) and bAddOriginal
 
@@ -837,7 +837,7 @@ bContinuer = ( Left ( sIdCourTyp, 1 ) <> "Q" ) And	( isTypTrt <> "R2" ) and bAdd
 If bOk And bContinuer Then
 
 	/*------------------------------------------------------------------*/
-	/* Lecture du Blob et $$HEX1$$e900$$ENDHEX$$criture du fichier.                          */
+	/* Lecture du Blob et écriture du fichier.                          */
 	/*------------------------------------------------------------------*/
 	iRet = wf_LireEcrire_Blob ( lIdSin, lIdInter, lIdDoc, "DO", iuo_rel.isTxtCompoOri )
 	
@@ -856,14 +856,14 @@ If bOk And bContinuer Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Generation des courriers $$HEX2$$e0002000$$ENDHEX$$partir de datawindow.					  */
+/* Generation des courriers à partir de datawindow.					  */
 /*------------------------------------------------------------------*/
 if bOk then
 	bOk = iuo_rel.uf_Generer_Courrier (lIdLigne)
 end if
 
 /*------------------------------------------------------------------*/
-/* Arr$$HEX1$$ea00$$ENDHEX$$t du traitement.															  */
+/* Arrêt du traitement.															  */
 /*------------------------------------------------------------------*/
 if not bOk then wf_SetStopTraitement ( TRUE )
 	
@@ -873,7 +873,7 @@ if not bOk then wf_SetStopTraitement ( TRUE )
 iuo_rel.uf_ecriretrace (lIdLigne, 2)
 
 /*------------------------------------------------------------------*/
-/* Suppression du fichier fusionn$$HEX2$$e9002000$$ENDHEX$$toujours pr$$HEX1$$e900$$ENDHEX$$sent sur disque.     */
+/* Suppression du fichier fusionné toujours présent sur disque.     */
 /*------------------------------------------------------------------*/
 if bOk then
 	FileDelete ( "RELANCE.DOC" ) 
@@ -888,9 +888,9 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		: ue_Initialiser
 //* Auteur			: Fabry JF
 //* Date				: 23/06/1999 13:56:16
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Initialisation de la fen$$HEX1$$ea00$$ENDHEX$$tre
-//* Commentaires	: wf_Initialiser sera lanc$$HEX2$$e9002000$$ENDHEX$$par la suite 
-//*					  $$HEX2$$e0002000$$ENDHEX$$partir du menu.
+//* Libellé			: Initialisation de la fenêtre
+//* Commentaires	: wf_Initialiser sera lancé par la suite 
+//*					  à partir du menu.
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -916,8 +916,8 @@ isFicCourrierIni	= sRepCourrierIni + Left ( stGLB.sCodAppli, 6 ) + "_" + isTypTr
 iuo_Rel	= Create u_Gs_Sp_Relance
 
 /*------------------------------------------------------------------*/
-/* On ne d$$HEX1$$e900$$ENDHEX$$sire pas positionner les objets comme la fen$$HEX1$$ea00$$ENDHEX$$tre         */
-/* anc$$HEX1$$ea00$$ENDHEX$$tre. On laisse une fonction 'locale' pour le positionnement. */
+/* On ne désire pas positionner les objets comme la fenêtre         */
+/* ancêtre. On laisse une fonction 'locale' pour le positionnement. */
 /*------------------------------------------------------------------*/
 ibPositionnerObjet = FALSE
 This.wf_PositionnerObjet_Relance ()
@@ -932,7 +932,7 @@ event spb_preparerimpression;call super::spb_preparerimpression;//*-------------
 //* Evenement 		: SPB_PreparerImpression
 //* Auteur			: Fabry JF
 //* Date				: 14/06/1999
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$but impression des courriers.
+//* Libellé			: Début impression des courriers.
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -943,7 +943,7 @@ Long	l1erSin
 Long  lCpt, lTotRow, lNbRow
 
 /*------------------------------------------------------------------*/
-/* On compte le nombre de Row selectionn$$HEX1$$e900$$ENDHEX$$s.                         */
+/* On compte le nombre de Row selectionnés.                         */
 /*------------------------------------------------------------------*/
 lTotRow  = Dw_1.RowCount ()
 lNbRow   = 0
@@ -961,8 +961,8 @@ ilnumCourrier = 1
 wf_SetSupprimerLigne ( TRUE )
 
 /*------------------------------------------------------------------*/
-/* Chargement ilSin avec la valeur du premier sinistre $$HEX3$$e0002000e900$$ENDHEX$$diter     */
-/* pour que la rupture dans UE_IMPRIMERDOSSIER soit effectu$$HEX1$$e900$$ENDHEX$$e       */
+/* Chargement ilSin avec la valeur du premier sinistre à éditer     */
+/* pour que la rupture dans UE_IMPRIMERDOSSIER soit effectuée       */
 /* correctement                                                     */
 /*------------------------------------------------------------------*/
 l1erSin	=	Dw_1.GetSelectedRow ( 0 )
@@ -973,7 +973,7 @@ End If
 
 /*------------------------------------------------------------------*/
 /* On arme une variable d'instance pour indiquer le fichier des     */
-/* DATAS $$HEX2$$e0002000$$ENDHEX$$utiliser pour les impressions.                           */
+/* DATAS à utiliser pour les impressions.                           */
 /*------------------------------------------------------------------*/
 isRepCourrier	 = ProfileString ( stGLB.sFichierIni, "EDITION", "REP_COURRIER", "" )
 isFicEnteteAnc  = ProfileString ( stGLB.sFichierIni, "EDITION", "ENTETE_ANC1", "" )
@@ -989,7 +989,7 @@ event ue_enablefenetre;//*------------------------------------------------------
 //* Evenement 		: ue_EnableFenetre
 //* Auteur			: Fabry JF
 //* Date				: 18/06/1999 13:50:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: On rend Enabled certains objets apr$$HEX1$$e800$$ENDHEX$$s la fin traitement
+//* Libellé			: On rend Enabled certains objets après la fin traitement
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1011,8 +1011,8 @@ event ue_item7;call super::ue_item7;//*-----------------------------------------
 //* Evenement 		: ue_Item7
 //* Auteur			: Fabry JF
 //* Date				: 11/06/1999 10:15:39
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Lancement du Traitement
-//* Commentaires	: A ce Moment Dw_1 est d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$Charg$$HEX1$$e900$$ENDHEX$$e
+//* Libellé			: Lancement du Traitement
+//* Commentaires	: A ce Moment Dw_1 est déjà Chargée
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -1021,15 +1021,15 @@ event ue_item7;call super::ue_item7;//*-----------------------------------------
 
 Boolean	bOk     = True
 Boolean	bTrace  = False
-Boolean	bSaisie = True       // A false en retour, indique qu'une saisie contr$$HEX1$$f400$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$e par l'objet
+Boolean	bSaisie = True       // A false en retour, indique qu'une saisie contrôlée par l'objet
 										// est invalide.
 String 	sMes						// Message d'erreur
-String	sCodeMes 				// Code du message $$HEX2$$e0002000$$ENDHEX$$afficher
+String	sCodeMes 				// Code du message à afficher
 Icon		icIcon   				// Icon
 
 /*------------------------------------------------------------------*/
 /* Lancement du traitement (une partie sur l'objet, l'autre sur la  */
-/* la fen$$HEX1$$ea00$$ENDHEX$$tre).                                                 	  */
+/* la fenêtre).                                                 	  */
 /*------------------------------------------------------------------*/
 If bOk then
 	bOk = iuo_Rel.uf_LancerTrt ( bSaisie )
@@ -1037,7 +1037,7 @@ If bOk then
 	If Not bOk Then
 		TriggerEvent ("ue_enablefenetre")
 
-		// Ce n'est pas le traitement qui s'est plant$$HEX1$$e900$$ENDHEX$$
+		// Ce n'est pas le traitement qui s'est planté
 		// Mais la saisie qui n'est pas valide.
 		If not bSaisie Then
 			pb_Creer.enabled  = False
@@ -1060,7 +1060,7 @@ If bSaisie Then
 			If bOk Then
 				
 				if isTypTrt = "R1T" then
-					// Supprimer lignes non s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$avant lancement de relance
+					// Supprimer lignes non sélectionné avant lancement de relance
 					wf_discard_row()
 					
 				end if
@@ -1068,13 +1068,13 @@ If bSaisie Then
 				This.wf_Editer_Relance ()
 	
 				If wf_GetStopTraitement () Then
-					sMes				 	= "Probl$$HEX1$$e800$$ENDHEX$$me lors de l'$$HEX1$$e900$$ENDHEX$$dition. Le traitement se termine anormalement : pr$$HEX1$$e900$$ENDHEX$$venir le service informatique."
+					sMes				 	= "Problème lors de l'édition. Le traitement se termine anormalement : prévenir le service informatique."
 					sCodeMes				= "GENE012"
 					icIcon				= Exclamation!
 					bTrace				= True
 					
 				Else
-					sMes				 	= "Le traitement s'est termin$$HEX2$$e9002000$$ENDHEX$$normalement."
+					sMes				 	= "Le traitement s'est terminé normalement."
 					sCodeMes				= "RELA140"
 					icIcon				= Information!
 					bTrace				= False
@@ -1093,13 +1093,13 @@ If bSaisie Then
 		CASE "DR1"
 	
 				If Not bOk Then
-					sMes				 	= "Probl$$HEX1$$e800$$ENDHEX$$me lors de l'annulation de la relance. Le traitement se termine anormalement : pr$$HEX1$$e900$$ENDHEX$$venir le service informatique."
+					sMes				 	= "Problème lors de l'annulation de la relance. Le traitement se termine anormalement : prévenir le service informatique."
 					sCodeMes				= "GENE012"
 					icIcon				= Exclamation!
 					bTrace				= True
 					
 				Else
-					sMes				 	= "Premi$$HEX1$$e800$$ENDHEX$$re relance annul$$HEX1$$e900$$ENDHEX$$e. Le traitement s'est termin$$HEX2$$e9002000$$ENDHEX$$normalement."
+					sMes				 	= "Première relance annulée. Le traitement s'est terminé normalement."
 					sCodeMes				= "RELA140"
 					icIcon				= Information!
 					bTrace				= False
@@ -1128,7 +1128,7 @@ event spb_terminerimpression;call super::spb_terminerimpression;//*-------------
 //* Evenement 		: SPB_TerminerImpression
 //* Auteur			: Fabry JF
 //* Date				: 17/06/99 15:52:00
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Termine impression d'un lot.
+//* Libellé			: Termine impression d'un lot.
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1147,12 +1147,12 @@ stMessage.Bouton    = Ok!
 If Not Wf_GetStopTraitement () Then
 	
 	If	lRet = 1	Then
-		Mle_Msg.Uf_AjouterText ( "Fin de g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration des courriers de relance.~r~n" )
+		Mle_Msg.Uf_AjouterText ( "Fin de génération des courriers de relance.~r~n" )
 
 	Else
 		wf_SetStopTraitement ( FALSE )
 
-		stMessage.sVar[1]   = " Le traitement est arr$$HEX1$$ea00$$ENDHEX$$t$$HEX1$$e900$$ENDHEX$$."	
+		stMessage.sVar[1]   = " Le traitement est arrêté."	
 		f_Message ( stMessage )
 	End If
 End If
@@ -1164,7 +1164,7 @@ event ue_creer;call super::ue_creer;//*-----------------------------------------
 //* Evenement 		: ue_Creer
 //* Auteur			: Fabry JF
 //* Date				: 08/06/1999 16:10:27
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Chargement des Donn$$HEX1$$e900$$ENDHEX$$es
+//* Libellé			: Chargement des Données
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1272,7 +1272,7 @@ on close;call w_accueil_edition_2000::close;//*---------------------------------
 //* Evenement 		: Close
 //* Auteur			: Fabry JF
 //* Date				: 08/06/1999 14:27:13
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Fermeture de la fen$$HEX1$$ea00$$ENDHEX$$tre
+//* Libellé			: Fermeture de la fenêtre
 //* Commentaires	: Destruction des objets.
 //*				  
 //*-----------------------------------------------------------------
@@ -1290,7 +1290,7 @@ event ue_disablefenetre;//*-----------------------------------------------------
 //* Evenement 		: ue_DisableFenetre
 //* Auteur			: Fabry JF
 //* Date				: 18/06/1999 13:50:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: On rend disabled certains objets avant le lancement
+//* Libellé			: On rend disabled certains objets avant le lancement
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1313,7 +1313,7 @@ event ue_retour;call super::ue_retour;
 //* Evenement 		: ue_retour
 //* Auteur			: JCA
 //* Date				: 22/02/2008
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Fermeture du word et suppression du ficher word de consultation.
 //*				  
 //*-----------------------------------------------------------------
@@ -1382,7 +1382,7 @@ on dw_1::ue_trier;//*-----------------------------------------------------------
 //* Evenement 		: ue_Trier
 //* Auteur			: Fabry JF
 //* Date				: 09/06/1999 16:06:49
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: On ne tient plus compte du script anc$$HEX1$$ea00$$ENDHEX$$tre 
+//* Libellé			: On ne tient plus compte du script ancêtre 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1400,7 +1400,7 @@ event dw_1::clicked;//*---------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Fabry JF
 //* Date				: 09/06/1999 16:52:12
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: On ne tient plus compte du script anc$$HEX1$$ea00$$ENDHEX$$tre
+//* Libellé			: On ne tient plus compte du script ancêtre
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1428,7 +1428,7 @@ event dw_1::rbuttondown;//*-----------------------------------------------------
 //* Evenement 		: rButtonDown
 //* Auteur			: JCA
 //* Date				: 31/01/2008
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: On ne tient pas compte du script de l'anc$$HEX1$$ea00$$ENDHEX$$tre
+//* Libellé			: On ne tient pas compte du script de l'ancêtre
 //* Commentaires	: Permets d'afficher le courrier original pour la relance
 //*				  
 //*-----------------------------------------------------------------
@@ -1456,7 +1456,14 @@ if isTypTrt = "R1T" then
 	
 		setnull(blBlob)
 		
-		sFicWinIni	= stGLB.sWinDir + "\WIN.INI"
+		// [DBG20241015131529340][CS_USPR_ALD_WINDIR] 
+		If F_CLE_NUMERIQUE ( "CS_USPR_ALD_WINDIR" ) >= 2 Then
+			sFicWinIni	= stGlb.uoWin.uf_getenvironment("USERPROFILE") + "\Windows\WIN.INI"
+		Else
+			sFicWinIni	= stGLB.sWinDir + "\WIN.INI"
+		End If 
+		// /[DBG20241015131529340] 
+		
 		sNomFic = stGLB.sRepTempo + "CONSCOUR.DOC"
 
 		if f_FileExists (sNomFic) then FileDelete (sNomFic)
@@ -1468,18 +1475,18 @@ if isTypTrt = "R1T" then
 		SetProfileString ( sFicWinIni, "SIMPA2", "Dte Edition Nouveau Courrier", sDteEdit )
 				
 		/*------------------------------------------------------------------*/
-		/* On va cr$$HEX1$$e900$$ENDHEX$$er un Objet de Type OLE.                                */
+		/* On va créer un Objet de Type OLE.                                */
 		/*------------------------------------------------------------------*/
 		oleWord = CREATE OleObject
 	
 		/*------------------------------------------------------------------*/
-		/* On se connecte $$HEX2$$e0002000$$ENDHEX$$WORD.                                           */
+		/* On se connecte à WORD.                                           */
 		/*------------------------------------------------------------------*/
 		F_SetVersionWord ( nvWord, TRUE )
 		iRet = nvWord.uf_CreerOleObject_Word ( oleWord )
 	
 		/*------------------------------------------------------------------*/
-		/* La connexion $$HEX1$$e900$$ENDHEX$$choue, on arr$$HEX1$$ea00$$ENDHEX$$te tout.                             */
+		/* La connexion échoue, on arrête tout.                             */
 		/*------------------------------------------------------------------*/
 		If	iRet <> 0	Then
 			F_SetVersionWord ( nvWord, FALSE )
@@ -1488,8 +1495,8 @@ if isTypTrt = "R1T" then
 		End If
 	
 		/*------------------------------------------------------------------*/
-		/* Si Word est d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$ouvert, on v$$HEX1$$e900$$ENDHEX$$rifie s'il existe des documents    */
-		/* non sauvegard$$HEX1$$e900$$ENDHEX$$s. Si c'est le cas, on arr$$HEX1$$ea00$$ENDHEX$$te tout.                */
+		/* Si Word est déjà ouvert, on vérifie s'il existe des documents    */
+		/* non sauvegardés. Si c'est le cas, on arrête tout.                */
 		/*------------------------------------------------------------------*/
 		iRet = nvWord.uf_FichierOuvertDansWord ( oleWord, TRUE, FALSE )
 		If	iRet <> 1 Then
@@ -1511,7 +1518,7 @@ if isTypTrt = "R1T" then
 		F_EcrireFichierBlob ( blBlob, sNomFic )
 		
 		/*------------------------------------------------------------------*/
-		/* On ouvre le fichier mod$$HEX1$$e900$$ENDHEX$$le par d$$HEX1$$e900$$ENDHEX$$faut, et on ex$$HEX1$$e900$$ENDHEX$$cute la macro    */
+		/* On ouvre le fichier modéle par défaut, et on exécute la macro    */
 		/* DUPLICATA.                                                       */
 		/*------------------------------------------------------------------*/
 		sRepCourrier	= ProfileString ( stGLB.sFichierIni, "EDITION", "REP_COURRIER", "" )
@@ -1638,8 +1645,8 @@ event itemchanged;call super::itemchanged;//*-----------------------------------
 //* Evenement 		: ItemChanged
 //* Auteur			: Fabry JF
 //* Date				: 09/06/1999 14:19:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Changement de produit.
-//* Commentaires	: Une r$$HEX1$$e900$$ENDHEX$$initialisation de certain objet est n$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$ssaire
+//* Libellé			: Changement de produit.
+//* Commentaires	: Une réinitialisation de certain objet est nécéssaire
 //*					  Lorsque le produit change.
 //*				  
 //*-----------------------------------------------------------------
@@ -1667,8 +1674,8 @@ event itemerror;call super::itemerror;//*---------------------------------------
 //* Evenement 		: ItemError
 //* Auteur			: Fabry JF
 //* Date				: 09/06/1999 14:19:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Changement de produit.
-//* Commentaires	: Une r$$HEX1$$e900$$ENDHEX$$initialisation de certain objet est n$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$ssaire
+//* Libellé			: Changement de produit.
+//* Commentaires	: Une réinitialisation de certain objet est nécéssaire
 //*					  Lorsque le produit change.
 //*				  
 //*-----------------------------------------------------------------
@@ -1677,7 +1684,7 @@ event itemerror;call super::itemerror;//*---------------------------------------
 //*-----------------------------------------------------------------
 
 
-stMessage.sTitre		= "Relances automatis$$HEX1$$e900$$ENDHEX$$es"
+stMessage.sTitre		= "Relances automatisées"
 stMessage.Icon			= Information!
 stMessage.Bouton		= Ok!
 stMessage.bErreurG	= False
@@ -1753,7 +1760,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Cliked
 //* Auteur			: Fabry JF
 //* Date				: 11/06/1999 10:12:26
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1826,7 +1833,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: CLICKED
 //* Auteur			: PLJ
 //* Date				: 26/03/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Impression des pages blanches pour ligne coch$$HEX1$$e900$$ENDHEX$$e dans la liste
+//* Libellé			: Impression des pages blanches pour ligne cochée dans la liste
 //* Commentaires	: 
 //*					  
 //*				  
@@ -1914,8 +1921,8 @@ on constructor;call u_datawindow::constructor;//*-------------------------------
 //* Evenement 		: Constructeur
 //* Auteur			: Fabry JF
 //* Date				: 11/06/1999 16:56:09
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: On ne g$$HEX1$$e800$$ENDHEX$$re pas le bouclage, car il n'y a qu'un champs
-//*					  et cela pose quelques probl$$HEX1$$e800$$ENDHEX$$mes.
+//* Libellé			: On ne gère pas le bouclage, car il n'y a qu'un champs
+//*					  et cela pose quelques problèmes.
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1933,8 +1940,8 @@ event getfocus;call super::getfocus;//*-----------------------------------------
 //* Evenement 		: GetFocus
 //* Auteur			: Fabry JF
 //* Date				: 25/06/1999 14:19:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Changement de Ref Sin
-//* Commentaires	: Une r$$HEX1$$e900$$ENDHEX$$initialisation de certain objet est n$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$ssaire
+//* Libellé			: Changement de Ref Sin
+//* Commentaires	: Une réinitialisation de certain objet est nécéssaire
 //*					  Lorsque la Ref Sin change.
 //*				  
 //*-----------------------------------------------------------------
@@ -1961,7 +1968,7 @@ event itemchanged;call super::itemchanged;////*---------------------------------
 ////* Evenement 		: ItemChanged
 ////* Auteur			: Fabry JF
 ////* Date				: 23/06/1999 16:11:04
-////* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone
+////* Libellé			: Contrôle de la zone
 ////* Commentaires	: 
 ////*				  
 ////*-----------------------------------------------------------------
@@ -1982,7 +1989,7 @@ event itemerror;call super::itemerror;//*---------------------------------------
 //* Evenement 		: ItemError
 //* Auteur			: Fabry JF
 //* Date				: 23/06/1999 16:11:04
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Contr$$HEX1$$f400$$ENDHEX$$le de la zone
+//* Libellé			: Contrôle de la zone
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------

@@ -1,5 +1,5 @@
-HA$PBExportHeader$u_sp_gs_paragraphe.sru
-$PBExportComments$---} User Object pour les contr$$HEX1$$f400$$ENDHEX$$les de gestion relatifs aux paragraphes.
+﻿$PBExportHeader$u_sp_gs_paragraphe.sru
+$PBExportComments$---} User Object pour les contrôles de gestion relatifs aux paragraphes.
 forward
 global type u_sp_gs_paragraphe from u_spb_gs_anc
 end type
@@ -27,25 +27,25 @@ public function string uf_gs_sup_para (string asidpara);//*---------------------
 //* Fonction		:	uf_gs_sup_para
 //* Auteur			:	YP
 //* Date				:	13/06/1997 17:28:19
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	V$$HEX1$$e900$$ENDHEX$$rification de l'absence de composition, de motif, de piece ou
+//* Libellé			:	Vérification de l'absence de composition, de motif, de piece ou
 //*					 	de produit en relation avec le paragraphe avant la suppression
 //*					 	de celui-ci.
 //* Commentaires	:
 //*
 //* Arguments		:	String		asIdPara		// Identifiant du paragraphe
-//*														// $$HEX2$$e0002000$$ENDHEX$$supprimer.
-//* Retourne		:	String			"" 			--> Aucune contrainte d'int$$HEX1$$e900$$ENDHEX$$grit$$HEX1$$e900$$ENDHEX$$
-//*										sinon cha$$HEX1$$ee00$$ENDHEX$$ne d$$HEX1$$e900$$ENDHEX$$crivant la/les contrainte(s)				
+//*														// à supprimer.
+//* Retourne		:	String			"" 			--> Aucune contrainte d'intégrité
+//*										sinon chaîne décrivant la/les contrainte(s)				
 //*
 //*-----------------------------------------------------------------
 
-String 	sRet			= ""				// Cha$$HEX1$$ee00$$ENDHEX$$ne de retour de la fonction.
+String 	sRet			= ""				// Chaîne de retour de la fonction.
 String	sLiaison							// Mot de liaison de la chaine de message.
 
 String 	sCompo		= ""				// Texte de presence de compo.
 String 	sRefus		= ""				// Texte de presence de motif.
 String 	sPiece		= ""				// Texte de presence de piece.
-String	sProd			= ""				// Texte de pr$$HEX1$$e900$$ENDHEX$$sence de paragraphes d'infos pour un produit.
+String	sProd			= ""				// Texte de présence de paragraphes d'infos pour un produit.
 
 Long		lNbCompo						// Nombre de compositions en relation avec 
 											// le paragraphe.
@@ -144,7 +144,7 @@ private function string uf_nomfichierword ();//*--------------------------------
 //* Fonction		: uf_NomFichierWord  (Private)
 //* Auteur			: Fabry JF
 //* Date				: 09/04/1999 15:18:21
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Ram$$HEX1$$e800$$ENDHEX$$ne le nom du fichier word (choisi par l'utilisateur)
+//* Libellé			: Ramène le nom du fichier word (choisi par l'utilisateur)
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -153,13 +153,13 @@ private function string uf_nomfichierword ();//*--------------------------------
 //*			
 //*
 //*-----------------------------------------------------------------
-//* #1 DGA              19/09/2006              Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire DCMP-060643
+//* #1 DGA              19/09/2006              Gestion d'un répertoire temporaire DCMP-060643
 //*-----------------------------------------------------------------
 
 String			sNomComplet, sNomFic, sChemin, sNomDefaut
 Int				iRetour, iPos, iRepMessBox
 Boolean			bSuite = True
-Int				iNbrPara												// Nbre de paragraphe qui vont $$HEX1$$ea00$$ENDHEX$$tre trait$$HEX1$$e900$$ENDHEX$$s.
+Int				iNbrPara												// Nbre de paragraphe qui vont être traités.
 
 stMessage.bErreurG= TRUE
 stMessage.sTitre  = "SIMPA2 - Bible des paragraphes"
@@ -172,7 +172,7 @@ sNomComplet = ""
 //DESTROY iuoDeclarationFuncky
 /*------------------------------------------------------------------*/  
 /* #1. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 sNomDefaut	=	stGLB.sRepTempo + "PARA" + stGlb.sCodAppli + ".DOC"
 
@@ -190,13 +190,13 @@ iRepMessBox = F_Message ( stMessage )
 
 CHOOSE CASE iRepMessBox
 	
-	// OUI, on utilise le fichier par d$$HEX1$$e900$$ENDHEX$$faut
+	// OUI, on utilise le fichier par défaut
 	CASE 1
 		
 		sNomComplet = sNomDefaut
 
 
-	// NON, on n'utilise pas le fichier par d$$HEX1$$e900$$ENDHEX$$faut
+	// NON, on n'utilise pas le fichier par défaut
 	CASE 2
 
 
@@ -219,7 +219,7 @@ CHOOSE CASE iRepMessBox
 
 
 			/*------------------------------------------------------------------*/
-			/* On contr$$HEX1$$f400$$ENDHEX$$le le nom du fichier												  */
+			/* On contrôle le nom du fichier												  */
 			/*------------------------------------------------------------------*/
 
 			iPos = 1
@@ -253,25 +253,25 @@ private function boolean uf_creerliste (string asnomdocword);//*----------------
 //* Fonction		: uf_CreerListe  (Private)
 //* Auteur			: Fabry JF
 //* Date				: 16/04/1999 11:13:14
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Cr$$HEX1$$e900$$ENDHEX$$ation d'une liste des paragraphes sur disque.
-//* Commentaires	: Cr$$HEX1$$e900$$ENDHEX$$e un fichier texte sur le r$$HEX1$$e900$$ENDHEX$$pertoire temporaire de Windows
-//*					  contenant la liste des paragraphes, qui sera utilis$$HEX2$$e9002000$$ENDHEX$$ult$$HEX1$$e900$$ENDHEX$$rieurement par la macro Word.
-//*					  J'utilise le m$$HEX1$$ea00$$ENDHEX$$me fichier que la fonction de Daniel dans w_accueil, soit C:\WIN\TEMP\LISTE.TXT.
+//* Libellé			: Création d'une liste des paragraphes sur disque.
+//* Commentaires	: Crée un fichier texte sur le répertoire temporaire de Windows
+//*					  contenant la liste des paragraphes, qui sera utilisé ultérieurement par la macro Word.
+//*					  J'utilise le même fichier que la fonction de Daniel dans w_accueil, soit C:\WIN\TEMP\LISTE.TXT.
 //*					  De plus on suppose que la Dw_1 n'est pas vide, sans quoi on arrive pas jusqu'ici.
 //*			
 //* Arguments		: String		asNomDocWord		(VAL) 	// Nom du futur Document Word
 //*
-//* Retourne		: Boolean indiquant que l'$$HEX1$$e900$$ENDHEX$$criture du fichier s'est d$$HEX1$$e900$$ENDHEX$$roul$$HEX2$$e9002000$$ENDHEX$$normalement.
+//* Retourne		: Boolean indiquant que l'écriture du fichier s'est déroulé normalement.
 //*			
 //*
 //*-----------------------------------------------------------------
-//* #1 DGA              19/09/2006              Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire DCMP-060643
+//* #1 DGA              19/09/2006              Gestion d'un répertoire temporaire DCMP-060643
 //*-----------------------------------------------------------------
 
 //u_DeclarationFuncky uoDeclarationFuncky //[I037] Migration FUNCKy
 Boolean 		bOk = True
 String		sEntete										// Ligne d'entete du fichier LISTE.TXT
-String      sTab, sNew, sLigne, sRep  				// Variables de construction de cha$$HEX1$$ee00$$ENDHEX$$nes
+String      sTab, sNew, sLigne, sRep  				// Variables de construction de chaînes
 String		sFicData							
 Int			iFichier										// Pointeur sur fichier Texte					
 Int 			iCpt											// Compteur
@@ -281,17 +281,24 @@ stMessage.bErreurG = TRUE
 stMessage.sTitre  = "SIMPA2 - Bible des paragraphes"
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le nom du fichier $$HEX2$$e0002000$$ENDHEX$$cr$$HEX1$$e900$$ENDHEX$$er                            */
+/* On récupére le nom du fichier à créer                            */
 /*------------------------------------------------------------------*/
 //uoDeclarationFuncky = Create u_DeclarationFuncky
 //sRep = uoDeclarationFuncky.uf_WinDir ()
-sRep = stGlb.uoWin.uf_getwindowsdirectory( )
+
+// [DBG20241015131529340][CS_USPR_ALD_WINDIR] 
+If F_CLE_NUMERIQUE ( "CS_USPR_ALD_WINDIR" ) >= 2 Then
+	sRep= stGlb.uoWin.uf_getenvironment("USERPROFILE") 
+Else
+	sRep = stGlb.uoWin.uf_getwindowsdirectory( )
+End IF 
+
 /*------------------------------------------------------------------*/
-/* On $$HEX1$$e900$$ENDHEX$$crit cette information dans le fichier WIN.INI, pour que     */
+/* On écrit cette information dans le fichier WIN.INI, pour que     */
 /* l'on puisse le relire dans WORD                                  */
 /*------------------------------------------------------------------*/
 /* #1. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 //SetProfileString ( sRep + "\WIN.INI", "PB4OBJ", "ListeWinDir", sRep )
 SetProfileString ( sRep + "\WIN.INI", "PB4OBJ", "ListeWinDir", stGLB.sRepTempo )
@@ -300,7 +307,7 @@ SetProfileString ( sRep + "\WIN.INI", "PB4OBJ", "ListeWinDir", stGLB.sRepTempo )
 
 /*------------------------------------------------------------------*/  
 /* #1. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 //sFicData	 = sRep + "\TEMP\LISTE.TXT"
 //isFicIni  = sRep + "\TEMP\LISTE.INI"
@@ -308,7 +315,7 @@ sFicData		= stGLB.sRepTempo + "LISTE.TXT"
 isFicIni		= stGLB.sRepTempo + "LISTE.INI"
 
 /*------------------------------------------------------------------*/
-/* On $$HEX1$$e900$$ENDHEX$$crit les variables dans le fichier INI							  */
+/* On écrit les variables dans le fichier INI							  */
 /*------------------------------------------------------------------*/
 
 iFichier = FileOpen( isFicINI, LineMode!, Write!, Shared!, Replace!)
@@ -323,11 +330,11 @@ If iFichier > -1 Then
 	//..Personne qui lance le traitement
 	FileWrite ( iFichier, "User=" + stglb.sCodOper )
 
-	//..Nom du doc Word $$HEX2$$e0002000$$ENDHEX$$cr$$HEX1$$e900$$ENDHEX$$er
+	//..Nom du doc Word à créer
 	FileWrite ( iFichier, "DocWord=" + asNomDocWord )
 
-	//..A la fin de la l'execution de la Macro, Termin$$HEX2$$e9002000$$ENDHEX$$sera $$HEX2$$e0002000$$ENDHEX$$Oui
-	//..cela indiquera $$HEX2$$e0002000$$ENDHEX$$l'Appli SIMPA2, que l'on peut d$$HEX1$$e900$$ENDHEX$$truire
+	//..A la fin de la l'execution de la Macro, Terminé sera à Oui
+	//..cela indiquera à l'Appli SIMPA2, que l'on peut détruire
 	//..l'objet OLE.
 	FileWrite ( iFichier, "Termine=Non" )
 
@@ -339,7 +346,7 @@ If iFichier > -1 Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Probl$$HEX1$$e800$$ENDHEX$$me lors de l'ouverture du fichier.                         */
+/* Problème lors de l'ouverture du fichier.                         */
 /*------------------------------------------------------------------*/
 If iFichier = -1 Then
 
@@ -354,31 +361,31 @@ If iFichier = -1 Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Le fichier de donn$$HEX1$$e900$$ENDHEX$$es LISTE.TXT ne contiendra que trois	 		  */
+/* Le fichier de données LISTE.TXT ne contiendra que trois	 		  */
 /* colonne de iDw_1, soit id_para(1), cpt_ver(2), lib_para(3).      */
-/* on construit une ligne d'ent$$HEX1$$ea00$$ENDHEX$$tes pour le fichier Texte.		     */
-/* Cette ligne d'ent$$HEX1$$ea00$$ENDHEX$$te ne servira pas dans la macro, c'est juste   */
+/* on construit une ligne d'entêtes pour le fichier Texte.		     */
+/* Cette ligne d'entête ne servira pas dans la macro, c'est juste   */
 /* pour comprendre le fichier et savoir de quelles colonnes il 	  */
 /* s'agit en cas d'ouverture manuelle.										  */	
 /*------------------------------------------------------------------*/
 
 If bOk Then
 
-	//..Je s$$HEX1$$e900$$ENDHEX$$pare les champs par un ';', car je ne peux pas 
-   //..d$$HEX1$$e900$$ENDHEX$$couper la cha$$HEX1$$ee00$$ENDHEX$$ne sous word, s'il s'agit d'une tabulation.
+	//..Je sépare les champs par un ';', car je ne peux pas 
+   //..découper la chaîne sous word, s'il s'agit d'une tabulation.
 	sTab		= ";"
 	sEntete  = "ID_PARA" + sTab + "CPT_VER" + sTab + "LIB_PARA"
 
 
 	/*------------------------------------------------------------------*/
-	/* On $$HEX1$$e900$$ENDHEX$$crit maintenant le fichier texte.                            */
+	/* On écrit maintenant le fichier texte.                            */
 	/*------------------------------------------------------------------*/
 
 	iFichier = FileOpen( sFicData, LineMode!, Write!, Shared!, Replace!)
 
 	If iFichier > -1 Then
 	
-		//..Ecriture de l'ent$$HEX1$$ea00$$ENDHEX$$te.
+		//..Ecriture de l'entête.
 		FileWrite ( iFichier, sEntete )
 
 		//..Nbre de paragraphes contenus dans la DataWindow d'accueil
@@ -391,7 +398,7 @@ If bOk Then
 						iDw_1.GetItemString ( iCpt, 3 ) 
 	
 			/*------------------------------------------------------------------*/
-			/* On $$HEX1$$e900$$ENDHEX$$crit la ligne, et on g$$HEX1$$e800$$ENDHEX$$re un probl$$HEX1$$e800$$ENDHEX$$me $$HEX1$$e900$$ENDHEX$$ventuel.              */
+			/* On écrit la ligne, et on gère un problème éventuel.              */
 			/*------------------------------------------------------------------*/
 			If ( FileWrite ( iFichier, sLigne ) ) <= 0 Then
 				bOk = False
@@ -414,7 +421,7 @@ If bOk Then
 	End If
 
 	/*------------------------------------------------------------------*/
-	/* Probl$$HEX1$$e800$$ENDHEX$$me lors de l'ouverture du fichier.                         */
+	/* Problème lors de l'ouverture du fichier.                         */
 	/*------------------------------------------------------------------*/
 	If iFichier = -1 Then
 
@@ -437,10 +444,10 @@ public subroutine uf_bibleparagraphes (ref u_datawindow_accueil adw_1, ref stati
 //* Fonction		: uf_BibleParagraphes (Public)
 //* Auteur			: Fabry JF
 //* Date				: 09/04/1999 14:50:24
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Cr$$HEX1$$e900$$ENDHEX$$ation d'un Document Word contenant la liste des paragraphe.
+//* Libellé			: Création d'un Document Word contenant la liste des paragraphe.
 //* Commentaires	: 
 //*
-//* Arguments		: U_DataWindow_Accueil		aDw_1				(REF)	// Dw_1 pos$$HEX1$$e900$$ENDHEX$$e sur w_a_sp_paragraphe
+//* Arguments		: U_DataWindow_Accueil		aDw_1				(REF)	// Dw_1 posée sur w_a_sp_paragraphe
 //*					  StaticText					ast_EnCours 	(VAL) // Affiche un message "En cours.."
 //*
 //* Retourne		: Rien
@@ -458,7 +465,7 @@ stMessage.bErreurG = TRUE
 stMessage.sTitre  = "SIMPA2 - Bible des paragraphes"
 
 /*------------------------------------------------------------------*/
-/* S'il n'y a pas de paragraphes s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX1$$e900$$ENDHEX$$s, on ne lance rien.    */
+/* S'il n'y a pas de paragraphes sélectionnés, on ne lance rien.    */
 /*------------------------------------------------------------------*/
 If iDw_1.RowCount() <= 0 Then
 		
@@ -474,7 +481,7 @@ End IF
 
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine le nom du fichier WORD  dans lequel on $$HEX1$$e900$$ENDHEX$$crira les   */
+/* On détermine le nom du fichier WORD  dans lequel on écrira les   */
 /* paragraphes.                                                     */
 /*------------------------------------------------------------------*/
 If bSuite Then
@@ -490,7 +497,7 @@ End IF
 
 /*------------------------------------------------------------------*/
 /* Construction du fichier Texte contenant le code des              */
-/* paragraphes,  le lib$$HEX1$$e900$$ENDHEX$$ll$$HEX2$$e9002000$$ENDHEX$$des paragraphes, la r$$HEX1$$e900$$ENDHEX$$vision des        */
+/* paragraphes,  le libéllé des paragraphes, la révision des        */
 /* paragraphes.                                                     */
 /*------------------------------------------------------------------*/
 If bSuite Then
@@ -523,11 +530,11 @@ private function boolean uf_creerdocword (string asnomdocword, ref statictext as
 //* Fonction		: uf_CreerDocWord (Private)
 //* Auteur			: Fabry JF
 //* Date				: 27/04/1999 14:24:00
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Lancement de word et appel de la macro.
-//* Commentaires	: On va maintenant cr$$HEX1$$e900$$ENDHEX$$er le document Word contenant
-//*					  les paragraphes s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX1$$e900$$ENDHEX$$s, via Word.
+//* Libellé			: Lancement de word et appel de la macro.
+//* Commentaires	: On va maintenant créer le document Word contenant
+//*					  les paragraphes sélectionnés, via Word.
 //*
-//* Arguments		: String			asNomDocWord		(VAL)	// Nom du document word $$HEX2$$e0002000$$ENDHEX$$Ecrire.
+//* Arguments		: String			asNomDocWord		(VAL)	// Nom du document word à Ecrire.
 //*					  StaticText	ast_EnCours			(REF)	// Affichage message "en cours..."
 //*
 //* Retourne		: Boolean
@@ -544,9 +551,9 @@ String			sModele, sMacro
 stMessage.sTitre  = "SIMPA2 - Bible des paragraphes"
 
 /*------------------------------------------------------------------*/
-/* Il faut d'abord r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer les informations suivantes             */
-/*  Mod$$HEX1$$e900$$ENDHEX$$le $$HEX2$$e0002000$$ENDHEX$$utiliser                                               */
-/*  Macro $$HEX2$$e0002000$$ENDHEX$$lancer                                                  */
+/* Il faut d'abord récupérer les informations suivantes             */
+/*  Modéle à utiliser                                               */
+/*  Macro à lancer                                                  */
 /*------------------------------------------------------------------*/
 
 sMacro	= ProfileString ( stGLB.sFichierIni, "BIBLEPARA", "DEFAUTMACRO", "" )
@@ -565,14 +572,14 @@ If	sMacro = "" Or sModele = "" Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Cr$$HEX1$$e900$$ENDHEX$$ation de l'objet WordBasic                                    */
+/* Création de l'objet WordBasic                                    */
 /*------------------------------------------------------------------*/
 If bOk Then
 	OleWordBasic  = Create OleObject
 End IF
 
 /*------------------------------------------------------------------*/
-/* La connexion $$HEX2$$e0002000$$ENDHEX$$Word doit fonctionner                             */
+/* La connexion à Word doit fonctionner                             */
 /*------------------------------------------------------------------*/
 
 If bOk Then
@@ -590,14 +597,14 @@ End IF
 
 
 /*------------------------------------------------------------------*/
-/* Ouverture du mod$$HEX1$$e800$$ENDHEX$$le  Word.                                       */
+/* Ouverture du modèle  Word.                                       */
 /*------------------------------------------------------------------*/
 If bOk Then
 
 	SetPointer ( HourGlass! )
 
 	ast_EnCours.Show()
-	ast_EnCours.Text = "Cr$$HEX1$$e900$$ENDHEX$$ation de la liste des paragraphes en cours, cela peut prendre plusieurs minutes, veuillez patienter..."
+	ast_EnCours.Text = "Création de la liste des paragraphes en cours, cela peut prendre plusieurs minutes, veuillez patienter..."
 
 	OleWordBasic.FichierNouveau ( sModele, 0 )
 	OleWordBasic.OutilsMacro ( sMacro, True )
@@ -610,7 +617,7 @@ If bOk Then
 End IF
 
 /*------------------------------------------------------------------*/
-/* Destruction de l'objet WordBasic, quel que soit l'$$HEX1$$e900$$ENDHEX$$tat de fin du */
+/* Destruction de l'objet WordBasic, quel que soit l'état de fin du */
 /* Traitement.																		  */
 /*------------------------------------------------------------------*/
 If bOk Then
@@ -621,7 +628,7 @@ Destroy OleWordBasic
 
 
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie la bonne execution du traitement...                   */
+/* On vérifie la bonne execution du traitement...                   */
 /*------------------------------------------------------------------*/
 If bOk Then
 		
@@ -630,7 +637,7 @@ If bOk Then
 		stMessage.Bouton	= OK!
 
 		/*------------------------------------------------------------------*/
-		/* Tout s'est d$$HEX1$$e900$$ENDHEX$$roul$$HEX2$$e9002000$$ENDHEX$$normalement...										  */
+		/* Tout s'est déroulé normalement...										  */
 		/*------------------------------------------------------------------*/
 		If Upper ( ProfileString ( isFicIni, "LISTE", "TERMINE", "" ) ) = "OUI" Then
 			iNbreDocOuv = ProfileInt ( isFicIni, "LISTE", "NBREPARA", 0 )			
@@ -644,7 +651,7 @@ If bOk Then
 
 
 		/*------------------------------------------------------------------*/
-		/* Le document existe d$$HEX1$$e900$$ENDHEX$$j$$HEX1$$e000$$ENDHEX$$, et il impossible de l'effacer car il    */
+		/* Le document existe déjà, et il impossible de l'effacer car il    */
 		/* est ouvert par quelqu'un.                                        */
 		/*------------------------------------------------------------------*/
 		ElseIf Upper ( ProfileString ( isFicIni, "LISTE", "TERMINE", "" ) ) = "PBEFDOCWORD" Then
@@ -657,7 +664,7 @@ If bOk Then
 
 
 		/*------------------------------------------------------------------*/
-		/* La macro ne s'est pas termin$$HEX1$$e900$$ENDHEX$$e normalement.                      */
+		/* La macro ne s'est pas terminée normalement.                      */
 		/*------------------------------------------------------------------*/
 		Else
 

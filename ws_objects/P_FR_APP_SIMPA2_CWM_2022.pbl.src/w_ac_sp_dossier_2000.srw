@@ -287,7 +287,7 @@ If lNumLig >  0 And Dw_3.RowCount ( ) > 0 Then
 /* modification de DATE sera effectuée dans la macro.               */
 /*------------------------------------------------------------------*/
 // [DBG20241015131529340][CS_USPR_ALD_WINDIR] 
-If F_CLE_A_TRUE ( "CS_USPR_ALD_WINDIR" ) Then
+If F_CLE_NUMERIQUE ( "CS_USPR_ALD_WINDIR" ) >= 2 Then
 	sFicWinIni	= stGlb.uoWin.uf_getenvironment("USERPROFILE") + "\Windows\WIN.INI"
 Else
 	sFicWinIni	= stGLB.sWinDir + "\WIN.INI"
