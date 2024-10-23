@@ -276,8 +276,12 @@ Declare @sIdAdh	VarChar ( 19 )
 Declare @iIdSdos Integer
 Declare @dtDteRemb DateTime
 Declare @dtDteGti DateTime
+Declare @iIdMotifAdh Integer
+Declare @iIdMotifVieContrat Integer
 
 Set @iResil = 0
+Set @iIdMotifAdh = 0
+Set @iIdMotifVieContrat = 0
 
 Select @sCas = sysadm.FN_CLE_VAL ( 'CAS', rtrim ( val_car ) + rtrim ( val_car2), ';' ) 
 From sysadm.det_pro dp,
@@ -296,6 +300,8 @@ If @sCas = 'UNE_SEULE_INDEMNISATION'
 		If sysadm.FN_LIB_ETAT_DOS_ASSURE( @dcIdSin,'CODE' ) in ( 550, 600, 1500, 1510, 1520 )
 		 Begin
 			Set @iResil = 1
+			Set @iIdMotifAdh = 150
+			Set @iIdMotifVieContrat = 150
 		 End
 	End 
 
@@ -308,7 +314,7 @@ If @iResil = 1
 				@sIdAdh		= s.id_adh,
 				@iIdSdos	= s.id_sdos,
 				@dtDteRemb  = s.valide_le,
-				@dtDteGti   = s.dte_fin_gti
+				@dtDteGti   = s.valide_le  -- pas s.dte_fin_gti mais s.valide_le, souhait de Ludo Levesques
 		From	sysadm.sinistre s,
 				sysadm.produit p
 		Where   s.id_sin = @dcIdSin
@@ -322,6 +328,8 @@ If @iResil = 1
 			id_sdos,
 			dte_remb,
 			dte_fin_gti,
+			id_motif_adh,
+			id_motif_vie_contrat,
 			cod_trt,
 			chaine_seria,
 			cree_le,
@@ -337,6 +345,8 @@ If @iResil = 1
 			@iIdSdos,
 			@dtDteRemb,
 			@dtDteGti,
+			@iIdMotifAdh,
+			@iIdMotifVieContrat,
 			'N',
 			rtrim ( ltrim ( @sChaineSeria)),
 			Getdate(),
@@ -415,6 +425,8 @@ Declare @TB_EnAttenteTransfert Table (
 	[id_sdos] decimal (7) NOT NULL,
 	[dte_remb] DateTime NOT NULL,
 	[dte_fin_gti] DateTime NOT NULL,
+	[id_motif_adh] integer NULL,
+	[id_motif_vie_contrat] integer NULL,
 	[cod_trt] varchar ( 1 ) NOT NULL,
 	[chaine_seria] varchar ( 100 ) null,
 	[cree_le] [datetime] NOT NULL,
@@ -435,7 +447,9 @@ Declare
 	@dtMajLe datetime,
 	@sMajPar char(4), 
 	@dtDteRemb DateTime,
-	@dtDteGti DateTime
+	@dtDteGti DateTime,
+	@iIdMotifAdh Integer,
+	@iIdMotifVieContrat Integer
 
 Insert into @TB_EnAttenteTransfert
 Select 
@@ -447,6 +461,8 @@ Select
 	id_sdos,
 	dte_remb,
 	dte_fin_gti,
+	id_motif_adh,
+	id_motif_vie_contrat,
 	cod_trt,
 	chaine_seria,
 	cree_le,
@@ -468,6 +484,8 @@ While Exists ( Select Top 1 1 From @TB_EnAttenteTransfert where cod_trt = 'T' )
 		@iIdSdos = id_sdos,
 		@dtDteRemb  = dte_remb,
 		@dtDteGti = dte_fin_gti,
+		@iIdMotifAdh = id_motif_adh,
+		@iIdMotifVieContrat = id_motif_vie_contrat,
 		@sCodTrt ='N',
 		@sChaineSeria = chaine_seria,
 		@dtCreeLe = cree_le,
@@ -486,6 +504,8 @@ While Exists ( Select Top 1 1 From @TB_EnAttenteTransfert where cod_trt = 'T' )
 				@iIdSdos,
 				@dtDteRemb,
 				@dtDteGti,
+				@iIdMotifAdh,
+				@iIdMotifVieContrat,
 				@sCodTrt,
 				@sChaineSeria,
 				@dtCreeLe,
@@ -502,6 +522,8 @@ While Exists ( Select Top 1 1 From @TB_EnAttenteTransfert where cod_trt = 'T' )
 				@iIdSdos,
 				@dtDteRemb,
 				@dtDteGti,
+				@iIdMotifAdh,
+				@iIdMotifVieContrat,
 				@sCodTrt,
 				@sChaineSeria,
 				@dtCreeLe,
@@ -524,99 +546,6 @@ While Exists ( Select Top 1 1 From @TB_EnAttenteTransfert where cod_trt = 'T' )
 	Update sysadm.resil_adh_saga2 Set cod_trt = 'O', maj_le = GETDATE() Where id_seq = @iIdSeq
  End
 Go
-
-/*
-Declare @iNbreSource Integer
-Declare @iNbreDest Integer
-
-Update sysadm.resil_adh_saga2 Set cod_trt = 'T' where cod_trt = 'N'
-Select @iNbreSource = count(*) From sysadm.resil_adh_saga2 Where cod_trt = 'T'
-
-IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
-BEGIN
-	Insert [LS-SAGA2].SAGA2_PVC.edi.simpa2_resil_adh_saga2 ( 
-		id_sin,
-		id_prod_adh,
-		id_ets,
-		id_adh,
-		id_sdos,
-		cod_trt,
-		chaine_seria,
-		cree_le,
-		maj_le,
-		maj_par
-	)
-	Select 
-		id_sin,
-		id_prod_adh,
-		id_ets,
-		id_adh,
-		id_sdos,
-		cod_trt,
-		chaine_seria,
-		cree_le,
-		maj_le,
-		maj_par
-	From sysadm.resil_adh_saga2
-	Where cod_trt = 'T'
-
-	Select @iNbreDest = @@ROWCOUNT
-
-	If @iNbreSource = @iNbreDest
-		Begin
-			Update sysadm.resil_adh_saga2 Set cod_trt = 'O' where cod_trt = 'T'
-			Update [LS-SAGA2].SAGA2_PVC.edi.simpa2_resil_adh_saga2 Set cod_trt = 'N' where cod_trt = 'T'
-		End 
-	Else
-		Begin
-			Delete [LS-SAGA2].SAGA2_PVC.edi.simpa2_resil_adh_saga2 where cod_trt = 'T'
-			Update sysadm.resil_adh_saga2 Set cod_trt = 'N' where cod_trt = 'T'
-		End 
-END
-ELSE
-BEGIN
-	Insert [S2SQL14PP1\PPRSAGA2].SAGA2_PVC.edi.simpa2_resil_adh_saga2 ( 
-		id_sin,
-		id_prod_adh,
-		id_ets,
-		id_adh,
-		id_sdos,
-		cod_trt,
-		chaine_seria,
-		cree_le,
-		maj_le,
-		maj_par
-	)
-	Select 
-		id_sin,
-		id_prod_adh,
-		id_ets,
-		id_adh,
-		id_sdos,
-		cod_trt,
-		chaine_seria,
-		cree_le,
-		maj_le,
-		maj_par
-	From sysadm.resil_adh_saga2
-	Where cod_trt = 'T'
-
-	Select @iNbreDest = @@ROWCOUNT
-
-	If @iNbreSource = @iNbreDest
-		Begin
-			Update sysadm.resil_adh_saga2 Set cod_trt = 'O' where cod_trt = 'T'
-			Update [S2SQL14PP1\PPRSAGA2].SAGA2_PVC.edi.simpa2_resil_adh_saga2 Set cod_trt = 'N' where cod_trt = 'T'
-		End 
-	Else
-		Begin
-			Delete [S2SQL14PP1\PPRSAGA2].SAGA2_PVC.edi.simpa2_resil_adh_saga2 where cod_trt = 'T'
-			Update sysadm.resil_adh_saga2 Set cod_trt = 'N' where cod_trt = 'T'
-		End 
-END
-
-Go
-*/
 
 --------------------------------------------------------------------
 --
@@ -645,6 +574,8 @@ CREATE procedure edi.PS_I_SIMPA2_RESIL_ADH_SAGA2
 	@iIdSdos integer,
 	@dtDteRemb DateTime,
 	@dtDteGti DateTime,
+	@iIdMotifAdh Integer,
+	@iIdMotifVieContrat Integer,
 	@sCodTrt varchar ( 1 ),
 	@sChaineSeria varchar ( 100 ),
 	@dtCreeLe datetime,
@@ -661,6 +592,8 @@ Insert into edi.simpa2_resil_adh_saga2
 	id_sdos,
 	dte_remb,
 	dte_fin_gti,
+	id_motif_adh,
+	id_motif_vie_contrat,
 	cod_trt,
 	chaine_seria,
 	cree_le,
@@ -676,6 +609,8 @@ Values
 	@iIdSdos,
 	@dtDteRemb,
 	@dtDteGti,
+	@iIdMotifAdh,
+	@iIdMotifVieContrat,
 	@sCodTrt,
 	@sChaineSeria,
 	@dtCreeLe,
