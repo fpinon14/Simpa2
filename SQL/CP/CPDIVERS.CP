@@ -1362,6 +1362,8 @@ And 	mt_plaf > 0
 And	id_reg > 0
 And	cod_etat = 500
 
+Exec sysadm.PS_U_NETTOYAGE_DONNEES_ERRONEES_SUITE_DECLA_WEB  
+
 -- [HP252_276_HUB_PRESTA]
 If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
   Begin
@@ -1628,6 +1630,8 @@ And not exists ( Select Top 1 1 From sysadm.cour_prod cp where cp.id_prod = p.id
 And cp.id_cour = 'BLAX02'
 Order by p.id_prod, cp.id_cour, cp.id_ordre
 
+Exec sysadm.PS_U_NETTOYAGE_DONNEES_ERRONEES_SUITE_DECLA_WEB  
+
 -- [HP252_276_HUB_PRESTA]
 If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
   Begin
@@ -1825,6 +1829,8 @@ While Exists ( Select Top 1 1 From @TbRepCour where marquage = 0 )
 -- Détecte les objets SQL supprimé de façon malveillante
 Exec sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
 
+Exec sysadm.PS_U_NETTOYAGE_DONNEES_ERRONEES_SUITE_DECLA_WEB  
+
 -- [HP252_276_HUB_PRESTA]
 If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
   Begin
@@ -1945,10 +1951,12 @@ Where ws.cod_etat = 0
 And i.marque = ws.marq_port
 And i.reference = ws.modl_port
 and i.dern_maj_prix_dte < DateAdd ( month, i.per_rev_prix_mois * (-1), getdate() )
-And i.dern_maj_rix_trt not in ( 'URGE', 'FERM' ) 
+And i.dern_maj_prix_trt not in ( 'URGE', 'FERM' ) 
 
 -- Détecte les objets SQL supprimé de façon malveillante
 Exec sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
+
+Exec sysadm.PS_U_NETTOYAGE_DONNEES_ERRONEES_SUITE_DECLA_WEB  
 
 -- [HP252_276_HUB_PRESTA]
 If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
@@ -1958,6 +1966,7 @@ If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0
 
 
 GO
+
 SET QUOTED_IDENTIFIER OFF 
 GO
 SET ANSI_NULLS ON 
@@ -6992,6 +7001,8 @@ While Exists ( Select Top 1 1 From @TbTrt where marquage = 0 )
 	Update	wq
 	Set		wq.etat_iwd = 1,
 			wq.id_iwd = null,
+			wq.routage_iwd = null,
+			wq.responsable_iwd = null,
 			trv_maj_le = GETDATE(),
 			trv_maj_par = 'IWD'
 	From	sysadm.w_queue wq
@@ -7316,6 +7327,347 @@ Where Not Exists (
 	Where a.id_prod = cg.id_prod
 	And   a.id_gti  = cg.id_gti
 )
+
+
+Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_U_NETTOYAGE_DONNEES_ERRONEES_SUITE_DECLA_WEB
+-- Auteur               :       FABRY JF
+-- Date                 :       22/10/2024
+-- Libellé              :       Nettoie le vieux param incohérent
+--                              
+-- Commentaires         :       [MCO602_PNEU][MCO1050]
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_NETTOYAGE_DONNEES_ERRONEES_SUITE_DECLA_WEB' AND type = 'P' )
+        DROP procedure sysadm.PS_U_NETTOYAGE_DONNEES_ERRONEES_SUITE_DECLA_WEB
+GO
+  
+CREATE procedure sysadm.PS_U_NETTOYAGE_DONNEES_ERRONEES_SUITE_DECLA_WEB  
+AS
+
+
+Declare @Tb Table ( 
+			id_seq  integer identity (1,1),
+			id_sin  Decimal (10),
+			marquage integer )
+
+Declare @dcIdSin decimal (10 )
+Declare @iIdSeq integer
+Declare @sMess Varchar ( 508 )
+Declare @iIdCt Integer
+Declare @sNomZone Varchar ( 35 )
+Declare @sLibZone Varchar ( 35 )
+
+Set @sNomZone = 'verif_donnee_extranet'
+Set @sLibZone = 'Vérification des données extranet'
+
+Insert into @Tb 
+Select wds.id_sin,
+	   0
+from sysadm.w_div_sin wds,
+	 sysadm.w_sin ws
+where wds.nom_zone = 'alt_decla_web' 
+And   wds.val_car = 'O'
+And   ws.id_sin = wds.id_sin
+And   ws.cod_etat = 0
+And   Not exists ( 
+		Select Top 1 1 
+		From sysadm.w_queue wq
+		Where wq.id_sin = wds.id_sin
+		And   wq.alt_occupe = 'O'
+	  )
+and   Not Exists (
+		Select Top 1 1 
+		From sysadm.w_div_sin wds2
+		Where wds2.id_sin = wds.id_sin
+		And   wds2.nom_zone = 'verif_donnee_extranet'
+		And   wds2.val_car= 'O'
+	  )
+
+
+While Exists ( Select Top 1 1 From @Tb where marquage = 0 )
+ Begin
+	Select 	Top 1 
+		@iIdSeq = id_seq,
+		@dcIdSin = id_sin
+	From	@Tb
+	Where	marquage = 0
+
+	-- Ctrle sur la nature de sinistre
+	If Exists ( 
+			Select Top 1 1 
+			From sysadm.w_sin ws
+			Where ws.id_sin = @dcIdSin And 
+			Not Exists ( 
+				Select Top 1 1 
+				From sysadm.code_condition cc
+				Where cc.id_prod = ws.id_prod
+				and   cc.id_typ_code = '+NS'
+				ANd   cc.id_code = ws.id_natsin
+			) 
+		)
+		Begin
+			Update sysadm.w_sin Set id_natsin = 0 Where id_sin = @dcIdSin
+	
+			set @sMess = 'L''extranet a transmis à SIMPA2 un code de nature de sinistre n''appartenant pas au paramètrage de ce produit, la nature de sinistre a donc été réinitialisée en NON PRECISEE.'
+
+			IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+			BEGIN
+				Exec  SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 2, 'C', @dcIdSin, 2, @sMess,	'AUTO', 300, @iIdCt OUTPUT
+			END
+			ELSE
+			BEGIN
+				Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 2, 'C', @dcIdSin, 2, @sMess,	'AUTO', 300, @iIdCt OUTPUT
+			END
+		End 
+
+	-- Ctrle sur la territorialité
+	If Exists ( 
+			Select Top 1 1 
+			From sysadm.w_sin ws
+			Where ws.id_sin = @dcIdSin And 
+			Not Exists ( 
+				Select Top 1 1 
+				From sysadm.code_condition cc
+				Where cc.id_prod = ws.id_prod
+				and   cc.id_typ_code = '+TR'
+				ANd   cc.id_code = ws.id_territ
+			) 
+		)
+		Begin
+			Update sysadm.w_sin Set id_territ = 0 Where id_sin = @dcIdSin
+	
+			set @sMess = 'L''extranet a transmis à SIMPA2 un code de territorialité n''appartenant pas au paramètrage de ce produit, la territorialité a donc été réinitialisée en NON PRECISEE.'
+
+			IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+			BEGIN
+				Exec  SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 2, 'C', @dcIdSin, 2, @sMess,	'AUTO', 300, @iIdCt OUTPUT
+			END
+			ELSE
+			BEGIN
+				Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 2, 'C', @dcIdSin, 2, @sMess,	'AUTO', 300, @iIdCt OUTPUT
+			END
+		End 
+
+	-- Ctrle sur la territorialité
+	If Exists ( 
+			Select Top 1 1 
+			From sysadm.w_sin ws
+			Where ws.id_sin = @dcIdSin And 
+			Not Exists ( 
+				Select Top 1 1 
+				From sysadm.code_condition cc
+				Where cc.id_prod = ws.id_prod
+				and   cc.id_typ_code = '+DT'
+				ANd   cc.id_code = ws.id_detsin
+			) 
+		)
+		Begin
+			Update sysadm.w_sin Set id_detsin = 0 Where id_sin = @dcIdSin
+	
+			set @sMess = 'L''extranet a transmis à SIMPA2 un code de détail de sinistre n''appartenant pas au paramètrage de ce produit, le détail de sinistre a donc été réinitialisé en NON PRECISE.'
+
+			IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+			BEGIN
+				Exec  SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 2, 'C', @dcIdSin, 2, @sMess,	'AUTO', 300, @iIdCt OUTPUT
+			END
+			ELSE
+			BEGIN
+				Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 2, 'C', @dcIdSin, 2, @sMess,	'AUTO', 300, @iIdCt OUTPUT
+			END
+		End 
+
+	-- Ctrle des évènements sur Detail de garantie
+	If Exists ( 
+		Select Top 1 1  
+		from sysadm.w_detail wdt,
+				sysadm.w_sin ws
+		where wdt.id_sin = ws.id_sin 
+		And   ws.id_sin = @dcIdSin 
+		And  Not Exists ( 
+					Select Top 1 1 
+					From sysadm.code_condition cc
+					Where cc.id_prod = ws.id_prod
+					and   cc.id_typ_code = '+EV'
+					And   cc.id_gti = wdt.id_gti
+					ANd   cc.id_code = wdt.id_evt
+				) 
+		)
+		Begin
+			Update wdt
+			Set id_evt = 0
+			from sysadm.w_detail wdt,
+					sysadm.w_sin ws
+			where wdt.id_sin = ws.id_sin 
+			And   ws.id_sin = @dcIdSin 
+			And  Not Exists ( 
+						Select Top 1 1 
+						From sysadm.code_condition cc
+						Where cc.id_prod = ws.id_prod
+						and   cc.id_typ_code = '+EV'
+						And   cc.id_gti = wdt.id_gti
+						ANd   cc.id_code = wdt.id_evt
+					) 
+
+			set @sMess = 'L''extranet a transmis à SIMPA2 un/des code évènements sur le/les détails de garantie n''appartenant pas au paramètrage de ce produit, ce/ces évènement(s) a/ont donc été réinitialisé(s).'
+
+			IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+			BEGIN
+				Exec  SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 2, 'C', @dcIdSin, 2, @sMess,	'AUTO', 300, @iIdCt OUTPUT
+			END
+			ELSE
+			BEGIN
+				Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 2, 'C', @dcIdSin, 2, @sMess,	'AUTO', 300, @iIdCt OUTPUT
+			END
+		End 
+
+	-- Ctrle des garanties
+	If Exists ( 
+		Select Top 1 1  
+		from sysadm.w_gar_sin wg,
+			 sysadm.w_sin ws
+		where wg.id_sin = ws.id_sin 
+		And   ws.id_sin = @dcIdSin 
+		And  Not Exists ( 
+					Select Top 1 1 
+					From sysadm.code_garantie cg
+					Where cg.id_prod = ws.id_prod
+					And   cg.id_gti = wg.id_gti
+				) 
+		)
+		Begin
+			
+			Delete wc
+			from sysadm.w_gar_sin wg,
+				 sysadm.w_sin ws,
+				 sysadm.w_commande wc
+			where wg.id_sin = ws.id_sin 
+			And   ws.id_sin = @dcIdSin 
+			And   wc.id_sin = wg.id_sin
+			And   wc.id_gti = wg.id_gti
+			And  Not Exists ( 
+						Select Top 1 1 
+						From sysadm.code_garantie cg
+						Where cg.id_prod = ws.id_prod
+						And   cg.id_gti = wg.id_gti
+					) 
+			
+			Delete wr
+			from sysadm.w_gar_sin wg,
+				 sysadm.w_sin ws,
+				 sysadm.w_refus wr
+			where wg.id_sin = ws.id_sin 
+			And   ws.id_sin = @dcIdSin 
+			And   wr.id_sin = wg.id_sin
+			And   wr.id_gti = wg.id_gti
+			And  Not Exists ( 
+						Select Top 1 1 
+						From sysadm.code_garantie cg
+						Where cg.id_prod = ws.id_prod
+						And   cg.id_gti = wg.id_gti
+					) 
+
+			Delete wp
+			from sysadm.w_gar_sin wg,
+				 sysadm.w_sin ws,
+				 sysadm.w_piece wp
+			where wg.id_sin = ws.id_sin 
+			And   ws.id_sin = @dcIdSin 
+			And   wp.id_sin = wg.id_sin
+			And   wp.id_gti = wg.id_gti
+			And  Not Exists ( 
+						Select Top 1 1 
+						From sysadm.code_garantie cg
+						Where cg.id_prod = ws.id_prod
+						And   cg.id_gti = wg.id_gti
+					) 
+					
+			Delete wdd
+			from sysadm.w_gar_sin wg,
+				 sysadm.w_sin ws,
+				 sysadm.w_div_det wdd
+			where wg.id_sin = ws.id_sin 
+			And   ws.id_sin = @dcIdSin 
+			And   wdd.id_sin = wg.id_sin
+			And   wdd.id_gti = wg.id_gti
+			And  Not Exists ( 
+						Select Top 1 1 
+						From sysadm.code_garantie cg
+						Where cg.id_prod = ws.id_prod
+						And   cg.id_gti = wg.id_gti
+					)
+
+			Delete wdt
+			from sysadm.w_gar_sin wg,
+				 sysadm.w_sin ws,
+				 sysadm.w_detail wdt
+			where wg.id_sin = ws.id_sin 
+			And   ws.id_sin = @dcIdSin 
+			And   wdt.id_sin = wg.id_sin
+			And   wdt.id_gti = wg.id_gti
+			And  Not Exists ( 
+						Select Top 1 1 
+						From sysadm.code_garantie cg
+						Where cg.id_prod = ws.id_prod
+						And   cg.id_gti = wg.id_gti
+					)
+
+			Delete wg
+			from sysadm.w_gar_sin wg,
+				 sysadm.w_sin ws
+			where wg.id_sin = ws.id_sin 
+			And   ws.id_sin = @dcIdSin 
+			And  Not Exists ( 
+						Select Top 1 1 
+						From sysadm.code_garantie cg
+						Where cg.id_prod = ws.id_prod
+						And   cg.id_gti = wg.id_gti
+					)
+
+
+			set @sMess = 'L''extranet a transmis à SIMPA2 un/des code garantie n''appartenant pas au paramètrage de ce produit, ce/ces garantie(s) a/ont donc été supprimée(s).'
+
+			IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+			BEGIN
+				Exec  SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 2, 'C', @dcIdSin, 2, @sMess,	'AUTO', 300, @iIdCt OUTPUT
+			END
+			ELSE
+			BEGIN
+				Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 2, 'C', @dcIdSin, 2, @sMess,	'AUTO', 300, @iIdCt OUTPUT
+			END
+		End 
+
+
+		If Exists ( Select * From sysadm.w_sin ws Where ws.id_sin = @dcIdSin  )	
+		  Begin
+			If Exists ( Select * From sysadm.w_div_sin wds Where wds.id_sin = @dcIdSin And nom_zone = @sNomZone )
+			 Begin
+			   Update sysadm.w_div_sin Set val_car = 'O', maj_le = GETDATE(), maj_par = 'AUTO' Where id_sin = @dcIdSin And nom_zone = @sNomZone
+			 End 
+			Else
+			 Begin	 
+			   Insert into sysadm.w_div_sin values ( @dcIdSin, @sNomZone, @sLibZone, '-1', 'N', 'X', 'N', 'O', 800, null, null, null, 'O', 1, getdate(), getdate(), 'AUTO' ) 
+			 End
+		  End
+
+		If Exists ( Select * From sysadm.sinistre ws Where ws.id_sin = @dcIdSin  )	
+		  Begin
+			If Exists ( Select * From sysadm.div_sin wds Where wds.id_sin = @dcIdSin And nom_zone = @sNomZone)
+			 Begin
+			   Update sysadm.div_sin Set val_car = 'O', maj_le = GETDATE(), maj_par = 'AUTO' Where id_sin = @dcIdSin And nom_zone = @sNomZone
+			 End 
+			Else
+			 Begin	 
+			   Insert into sysadm.div_sin values ( @dcIdSin, @sNomZone, @sLibZone, '-1', 'N', 'X', 'N', 'O', 800, null, null, null, 'O', getdate(), getdate(), 'AUTO', getdate(), 'AUTO' ) 
+			 End
+		  End
+
+	Update @Tb Set marquage = 1 Where id_seq = @iIdSeq
+ End
 
 
 Go

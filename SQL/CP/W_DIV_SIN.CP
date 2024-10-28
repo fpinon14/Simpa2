@@ -8,10 +8,10 @@
 --
 -- Procédures           :       
 -- DW_S01_W_DIV_SIN
---	PS_I01_W_DIV_SIN_WKF
+-- PS_I01_W_DIV_SIN_WKF
 -- PS_I02_W_DIV_SIN     
 -- PS_I03_W_DIV_SIN  FS  24/10/2007 ( Sherpa ) Insertion W_DIV_SIN selon un élément paramétré sur DIV_PRO
-
+-- PS_I_DIV_SIN_SANS_DIV_PRO
 -------------------------------------------------------------------
 
 --------------------------------------------------------------------
@@ -351,36 +351,6 @@ INSERT INTO sysadm.w_div_sin
 
 GO
 
---------------------------------------------------------------------
---
--- Proc‚dure            :       DW_D01_W_DIV_SIN
--- Auteur               :       FPI
--- Date                 :       24/12/2010
--- Libell‚              :       
--- Commentaires         :       Suppression dans w_div_sin
--- R‚f‚rences           :       W_TM_SP_SINISTRE, SqlPreview
---
--- Arguments            :       @dcIdSin        Decimal (  7,0 )        (Val)
---                              @sNomZone        Varchar( 35 )        (Val)
---
--- Retourne             :       Rien
--------------------------------------------------------------------
--- JFF      12/02/2016   [PI062]
--------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'DW_D01_W_DIV_SIN' AND type = 'P' )
-        DROP procedure sysadm.DW_D01_W_DIV_SIN
-GO
-
-CREATE procedure sysadm.DW_D01_W_DIV_SIN
-        @dcIdSin        Decimal (  10,0 ), -- [PI062]
-	@sNomZone        Varchar( 35 )
-AS
-
- DELETE FROM    sysadm.w_div_sin
- WHERE          id_sin      = @dcIdSin      AND
-                nom_zone    = @sNomZone     
- 
-GO
 
 --------------------------------------------------------------------
 --
@@ -595,3 +565,261 @@ AS
 	And     ws.nom_zone = @sNomZone
 
 Go
+
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_I_DIV_SIN_SANS_DIV_PRO
+-- Auteur               :       JFF
+-- Date                 :       25/10/2024
+-- Libellé              :        
+-- Commentaires         :        
+-- Références           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+-------------------------------------------------------------------
+-- JFF      12/02/2016   [PI062]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_DIV_SIN_SANS_DIV_PRO' AND type = 'P' )
+        DROP procedure sysadm.PS_I_DIV_SIN_SANS_DIV_PRO
+GO
+
+CREATE procedure sysadm.PS_I_DIV_SIN_SANS_DIV_PRO
+        @adcIdSin        Decimal ( 10,0 ),-- Référence sinistre. -- [PI062]
+        @asNomZone       Varchar ( 35 ) , -- Nom technique de la zone
+		@asLibZone		 Varchar ( 35 ) , -- libellé d'affichage de la zone
+        @asValeur        VarChar ( 35 ) , -- Valeur à reporter
+		@asAltProteger   VarChar ( 1 ),   -- O : Donnée protégée (non modifiable), 'N' ou null sinon
+		@asTypValeur     VarChar ( 2 ),   -- Voir tableau
+		@aiRangTri		 Integer,         -- Tri (null=Tri Auto)
+        @asMajPar        Varchar ( 4 )    -- Opérateur (null=AUTO)
+AS
+
+/* Type Valeur
+N : nombre entier
+C : Chaine car
+X : Case à cocher
+S : Somme décimal
+D : DateTime
+*/
+
+Declare @iCptValide Integer
+
+Set @iCptValide = 0
+
+Set @asNomZone = lTrim ( rTrim ( @asNomZone ))
+Set @asLibZone = lTrim ( rTrim ( @asLibZone ))
+Set @asValeur = lTrim ( rTrim ( @asValeur ))
+
+If @asMajPar is null Set @asMajPar = 'AUTO'
+If @asAltProteger is null Set @asAltProteger = 'N'
+If @asAltProteger <> 'O' Set @asAltProteger = 'N'
+If @asTypValeur is null Set @asTypValeur = 'C'
+If @asTypValeur  = '' Set @asTypValeur = 'C'
+If @aiRangTri <= 0 Set @aiRangTri = null 
+
+
+If @aiRangTri is null 
+	Begin
+		Select @aiRangTri = IsNull ( Max ( cpt_tri ), 100 ) + 10
+		From sysadm.w_div_sin wds
+		Where wds.id_sin = @adcIdSin 
+
+		If @aiRangTri Is Null 
+			Begin
+				Select @aiRangTri = IsNull ( Max ( cpt_tri ), 100 ) + 10
+				From sysadm.div_sin wds
+				Where wds.id_sin = @adcIdSin 
+			End 
+
+		If @aiRangTri Is Null Set @aiRangTri = 110
+
+	End 
+
+If Exists ( Select Top 1 1 From sysadm.sinistre ws Where ws.id_sin = @adcIdSin  )	
+	Begin
+		Set @iCptValide = 1
+
+		If Exists ( Select Top 1 1 From sysadm.div_sin wds Where wds.id_sin = @adcIdSin And nom_zone = @asNomZone)
+			Begin
+				Update sysadm.div_sin 
+				Set alt_prot = @asAltProteger,
+					cpt_tri = @aiRangTri,
+					val_nbre =	Case @asTypValeur 
+									When 'N' Then Convert ( integer, @asValeur )
+									Else null
+								End,
+					val_mt =	Case @asTypValeur 
+									When 'S' Then Convert ( decimal (11,2), @asValeur ) 
+									Else null
+								End,
+					val_dte =	Case @asTypValeur 
+									When 'D' Then Convert ( datetime, @asValeur ) 
+									Else null
+								End,
+					val_car =	Case @asTypValeur 
+									When 'C' Then @asValeur  
+									When 'X' Then @asValeur  
+									Else null
+								End,
+					maj_le  = Getdate(),
+					maj_par = @asMajPar
+			End 
+		Else
+			Begin	 
+				Insert into sysadm.div_sin 
+				(
+					   [id_sin]
+					  ,[nom_zone]
+					  ,[lib_label]
+					  ,[id_typ_liste]
+					  ,[alt_liste_codecar]
+					  ,[id_typ_zone]
+					  ,[alt_oblig]
+					  ,[alt_prot]
+					  ,[cpt_tri]
+					  ,[val_nbre]
+					  ,[val_mt]
+					  ,[val_dte]
+					  ,[val_car]
+					  ,[cree_le]
+					  ,[maj_le]
+					  ,[maj_par]
+					  ,[valide_le]
+					  ,[valide_par]
+				)
+				values 
+				( 
+						@adcIdSin, 
+						@asNomZone, 
+						@asLibZone, 
+						'-1', 
+						'N', 
+						@asTypValeur, 
+						'N', 
+						@asAltProteger, 
+						@aiRangTri, 
+
+						Case @asTypValeur 
+							When 'N' Then Convert ( integer, @asValeur )
+							Else null
+						End,
+						Case @asTypValeur 
+							When 'S' Then Convert ( decimal (11,2), @asValeur ) 
+							Else null
+						End,
+						Case @asTypValeur 
+							When 'D' Then Convert ( datetime, @asValeur ) 
+							Else null
+						End,
+						Case @asTypValeur 
+							When 'C' Then @asValeur  
+							When 'X' Then @asValeur  
+							Else null
+						End,
+						getdate(), 
+						getdate(), 
+						@asMajPar,
+						getdate(), 
+						@asMajPar
+	
+				) 
+			End
+	End
+
+
+If Exists ( Select Top 1 1 From sysadm.w_sin ws Where ws.id_sin = @adcIdSin  )	
+	Begin
+	If Exists ( Select Top 1 1 From sysadm.w_div_sin wds Where wds.id_sin = @adcIdSin And nom_zone = @asNomZone )
+		Begin
+			Update sysadm.w_div_sin 
+			Set alt_prot = @asAltProteger,
+				cpt_tri  = @aiRangTri,
+				val_nbre =	Case @asTypValeur 
+								When 'N' Then Convert ( integer, @asValeur )
+								Else null
+							End,
+				val_mt =	Case @asTypValeur 
+								When 'S' Then Convert ( decimal (11,2), @asValeur ) 
+								Else null
+							End,
+				val_dte =	Case @asTypValeur 
+								When 'D' Then Convert ( datetime, @asValeur ) 
+								Else null
+							End,
+				val_car =	Case @asTypValeur 
+								When 'C' Then @asValeur  
+								When 'X' Then @asValeur  
+								Else null
+							End,
+				maj_le  = Getdate(),
+				maj_par = @asMajPar
+	
+			Where id_sin = @adcIdSin And nom_zone = @asNomZone
+		End 
+	Else
+		Begin	 
+			Insert into sysadm.w_div_sin 
+			(
+				   [id_sin]
+				  ,[nom_zone]
+				  ,[lib_label]
+				  ,[id_typ_liste]
+				  ,[alt_liste_codecar]
+				  ,[id_typ_zone]
+				  ,[alt_oblig]
+				  ,[alt_prot]
+				  ,[cpt_tri]
+				  ,[val_nbre]
+				  ,[val_mt]
+				  ,[val_dte]
+				  ,[val_car]
+				  ,[cpt_valide]
+				  ,[cree_le]
+				  ,[maj_le]
+				  ,[maj_par]
+			)
+			values 
+			( 
+					@adcIdSin, 
+					@asNomZone, 
+					@asLibZone, 
+					'-1', 
+					'N', 
+					@asTypValeur, 
+					'N', 
+					@asAltProteger, 
+					@aiRangTri, 
+
+					Case @asTypValeur 
+						When 'N' Then Convert ( integer, @asValeur )
+						Else null
+					End,
+					Case @asTypValeur 
+						When 'S' Then Convert ( decimal (11,2), @asValeur ) 
+						Else null
+					End,
+					Case @asTypValeur 
+						When 'D' Then Convert ( datetime, @asValeur ) 
+						Else null
+					End,
+					Case @asTypValeur 
+						When 'C' Then @asValeur  
+						When 'X' Then @asValeur  
+						Else null
+					End,
+
+					@iCptValide, 
+					getdate(), 
+					getdate(), 
+					@asMajPar
+			
+			) 
+		End
+	End
+
+
+Go
+
