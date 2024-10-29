@@ -223,6 +223,7 @@ Go
 --   JFF  26/12/2018  [PM421-2]
 --   JFF  01/09/2020  [VDOC29600]
 --   JFF  26/04/2023  [RS5045_REF_MATP]
+--   JFF  28/10/2024  [MCO0153]
 ------------------------------------------------------------------- 
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I03_ARCHIVE_BLOB_VAL' AND type = 'P' )
 DROP procedure sysadm.PS_I03_ARCHIVE_BLOB_VAL
@@ -271,6 +272,7 @@ Declare @sXMLVar2    VarChar ( max ) -- [RS5045_REF_MATP]
 Declare @sMailBody VarChar ( 5000 ) -- [RS5045_REF_MATP]
 Declare @sSaut	VarChar (10) -- [RS5045_REF_MATP]
 Declare @sVal	VarChar (255) -- [RS5045_REF_MATP]
+Declare @sPasDeReponse VarChar ( 100 ) -- [MCO10153)
 
 Set @sSaut = Char (10)
 Select  @iRet = 0
@@ -540,7 +542,18 @@ If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') >=3
 		Set @sMailBody = @sMailBody + @sSaut
 		Set @sMailBody = @sMailBody + 'Nous vous adressons ci-joint une correspondance suite à votre demande d''indemnisation.' + @sSaut
 		Set @sMailBody = @sMailBody + @sSaut 
-		Set @sMailBody = @sMailBody + 'Pour nous contacter, vous trouverez l''ensemble de nos coordonnées sur cette dernière (n''utilisez surtout pas l''adresse émettrice de ce mail qui ne permet pas de recevoir des réponses).' + @sSaut
+
+		-- [MCO1053]
+		Set @sPasDeReponse = ' (n''utilisez surtout pas l''adresse émettrice de ce mail qui ne permet pas de recevoir des réponses)' -- [MCO1053]
+		If sysadm.FN_CLE_NUMERIQUE ( 'MCO0153') > 0 
+			Begin
+				Set @sMailBody = @sMailBody + 'Pour nous contacter, vous trouverez l''ensemble de nos coordonnées sur cette dernière<PAS_DE_REPONSE>.' + @sSaut
+			End 
+		Else
+			Begin
+				Set @sMailBody = @sMailBody + 'Pour nous contacter, vous trouverez l''ensemble de nos coordonnées sur cette dernière (n''utilisez surtout pas l''adresse émettrice de ce mail qui ne permet pas de recevoir des réponses).' + @sSaut
+			End 
+
 		Set @sMailBody = @sMailBody + @sSaut 
 		Set @sMailBody = @sMailBody + 'Sincères salutations.' + @sSaut 
 		Set @sMailBody = @sMailBody + @sSaut 
@@ -567,6 +580,19 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 			Set @sMailBody = Replace ( @sMailBody, '<CIV>', @sVal )
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'nom', @sVal OutPut
 			Set @sMailBody = Replace ( @sMailBody, '<NOM>', @sVal )
+
+			If sysadm.FN_CLE_NUMERIQUE ( 'MCO0153') > 0 
+				Begin
+					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+					If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+					  Begin
+						Set @sMailBody = Replace ( @sMailBody, '<PAS_DE_REPONSE>', @sPasDeReponse )
+					  End 
+					Else
+					  Begin
+						Set @sMailBody = Replace ( @sMailBody, '<PAS_DE_REPONSE>', '' )
+					  End 
+				End 
 
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -646,6 +672,19 @@ Else
 				Set @sMailBody = Replace ( @sMailBody, '<CIV>', @sVal )
 				Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'nom', @sVal OutPut
 				Set @sMailBody = Replace ( @sMailBody, '<NOM>', @sVal )
+
+				If sysadm.FN_CLE_NUMERIQUE ( 'MCO0153') > 0 
+					Begin
+						Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+						If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+						  Begin
+							Set @sMailBody = Replace ( @sMailBody, '<PAS_DE_REPONSE>', @sPasDeReponse )
+						  End 
+						Else
+						  Begin
+							Set @sMailBody = Replace ( @sMailBody, '<PAS_DE_REPONSE>', '' )
+						  End 
+					End 
 
 				Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 				Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
