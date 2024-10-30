@@ -272,7 +272,7 @@ Declare @sXMLVar2    VarChar ( max ) -- [RS5045_REF_MATP]
 Declare @sMailBody VarChar ( 5000 ) -- [RS5045_REF_MATP]
 Declare @sSaut	VarChar (10) -- [RS5045_REF_MATP]
 Declare @sVal	VarChar (255) -- [RS5045_REF_MATP]
-Declare @sPasDeReponse VarChar ( 100 ) -- [MCO10153)
+Declare @sPasDeReponse VarChar ( 100 ) -- [MCO10153]
 
 Set @sSaut = Char (10)
 Select  @iRet = 0
@@ -581,6 +581,7 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'nom', @sVal OutPut
 			Set @sMailBody = Replace ( @sMailBody, '<NOM>', @sVal )
 
+			-- [MCO1053]
 			If sysadm.FN_CLE_NUMERIQUE ( 'MCO0153') > 0 
 				Begin
 					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
