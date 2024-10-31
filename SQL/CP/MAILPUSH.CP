@@ -867,6 +867,7 @@ Go
 --		JFF     06/10/2016  [PC13321]
 --      JFF     15/05/2019  [DT386_EXTR_AXA]
 --		JFF     26/04/2023  [RS5045_REF_MATP]
+--      JFF     28/10/2024  [MCO1054]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S02_MAILPUSH_RECP_APP_EN_CTR' AND type = 'P' ) 
         DROP procedure sysadm.PS_S02_MAILPUSH_RECP_APP_EN_CTR
@@ -913,7 +914,7 @@ Declare
   @sIdRefFour    VarChar ( 35 ), -- #4 [DCMP080202]
   @sSmsBody     VarChar ( 255 ), -- #5 [FNAC_PROD_ECH_TECH].[SMS]
   @sTopSMS	Integer, -- #5 [FNAC_PROD_ECH_TECH].[SMS]
-  @sVal		VarChar ( 70 ), -- #5 [FNAC_PROD_ECH_TECH].[SMS]
+  @sVal		VarChar ( 100 ), -- #5 [FNAC_PROD_ECH_TECH].[SMS]
   @sAltSuiviSMS VarChar ( 1 ),  -- #5 [FNAC_PROD_ECH_TECH].[SMS]  
   @sNumGsmSMS   VarChar ( 20 ),  -- #5 [FNAC_PROD_ECH_TECH].[SMS]  
   @sLogin VarChar ( 10 ),  -- #5 [FNAC_PROD_ECH_TECH].[SMS]  
@@ -1417,8 +1418,10 @@ End
 	  Set @sMailBody  = @sMailBody  + @sSaut
 	  Set @sMailBody  = @sMailBody  + 'Si votre contrat d''assurance dispose d''un site web de gestion de sinistre, vous pouvez à tout moment consulter et télécharger la ou les pièce(s) de votre dossier sur ce site communiqué par notre gestionnaire lors de votre déclaration.'
     End 
-  
+
   Set @sMailBody  = @sMailBody  + @sSaut
+
+/*   -- [MCO1054] Déporté sous condition plus bas au moment de la création du mail  
   Set @sMailBody  = @sMailBody  + @sSaut
   Set @sMailBody  = @sMailBody  + @sSaut
   Set @sMailBody  = @sMailBody  + '****************************************************************'
@@ -1428,6 +1431,8 @@ End
   Set @sMailBody  = @sMailBody  + '****************************************************************'
   Set @sMailBody  = @sMailBody  + @sSaut
   Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'
+*/
+
   
 /* -- #1  JFF  03/07/2006  suite mail de C.Rigal le 30/06/2006
   Set @sMailBody  = @sMailBody  + @sSaut
@@ -1572,6 +1577,22 @@ End
 					-- Ajout personnalisé du client appelant le système
 					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
 
+					-- [MCO1054]
+					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+					If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+						Begin
+							Set @sMailBody  = @sMailBody  + @sSaut    
+							Set @sMailBody  = @sMailBody  + @sSaut    
+							Set @sMailBody  = @sMailBody  + '****************************************************************'    
+							Set @sMailBody  = @sMailBody  + @sSaut    
+							Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+							Set @sMailBody  = @sMailBody  + @sSaut    
+							Set @sMailBody  = @sMailBody  + '****************************************************************'    
+							Set @sMailBody  = @sMailBody  + @sSaut    
+							Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+							Set @sMailBody  = @sMailBody  + @sSaut 
+						End 
+
 					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
 					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
@@ -1660,6 +1681,23 @@ End
 					Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2 @adcIdSin, @dcIdInter, @iIdXml
 					Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_OPTIMISER_CHAINE_DATA_XML_KSL @iIdXml, 'OUI', 'OUI', 'OUI'
 					Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_CODE_MAQUETTE_KSL_A_PARTIR_TYP_MAIL 'M2', @sCodeMaquette OutPut
+
+					-- [MCO1054]
+					Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+					If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+						Begin
+							Set @sMailBody  = @sMailBody  + @sSaut    
+							Set @sMailBody  = @sMailBody  + @sSaut    
+							Set @sMailBody  = @sMailBody  + '****************************************************************'    
+							Set @sMailBody  = @sMailBody  + @sSaut    
+							Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+							Set @sMailBody  = @sMailBody  + @sSaut    
+							Set @sMailBody  = @sMailBody  + '****************************************************************'    
+							Set @sMailBody  = @sMailBody  + @sSaut    
+							Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+							Set @sMailBody  = @sMailBody  + @sSaut 
+						End 
+
 
 					-- Ajout personnalisé du client appelant le système
 					Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
@@ -1807,12 +1845,12 @@ Go
 --     JFF  31/01/2023   [ISM344831] On n'envoie pas si CAF
 --     JFF  03/02/2023   [RS4521] Modif Push mail BA Physique RDC-Carrefour
 --	   JFF  26/04/2023   [RS5045_REF_MATP]
---     JFF  10/10/2023   [RS4521] Suppression critère restriction ISM [ISM344831] @sBA_PhysiqueCMA 
+--     JFF  10/10/2023   [RS4521] Suppression critère restriction ISM [ISM344831] @sBA_PhysiqueCMA
+--     JFF  28/10/2024   [MCO1054]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S03_MAILPUSH_ENVTEL_REMP_REPAR_V03' AND type = 'P' )
         DROP procedure sysadm.PS_S03_MAILPUSH_ENVTEL_REMP_REPAR_V03
 GO
-
   
 CREATE procedure sysadm.PS_S03_MAILPUSH_ENVTEL_REMP_REPAR_V03  
  @asIdAppli varchar (20),  
@@ -2439,7 +2477,10 @@ Declare
 		  Set @sMailBody  = @sMailBody  + @sSaut  
 		  Set @sMailBody  = @sMailBody  + 'Si votre contrat d''assurance dispose d''un site web de gestion de sinistre, vous pouvez à tout moment consulter et télécharger la ou les pièce(s) de votre dossier sur ce site communiqué par notre gestionnaire lors de votre déclaration.'  
 	  End   
+  
+  Set @sMailBody  = @sMailBody  + @sSaut  
 
+  /*   -- [MCO1054] Déporté sous condition plus bas au moment de la création du mail
   Set @sMailBody  = @sMailBody  + @sSaut  
   Set @sMailBody  = @sMailBody  + @sSaut  
   Set @sMailBody  = @sMailBody  + '****************************************************************'  
@@ -2449,7 +2490,7 @@ Declare
   Set @sMailBody  = @sMailBody  + '****************************************************************'  
   Set @sMailBody  = @sMailBody  + @sSaut  
   Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'  
-  
+  */
   
 --------------------------------------------------------------------------------------------------------------------  
 -- Gestion des SMS.  
@@ -2521,6 +2562,21 @@ Declare
 
 					-- Ajout personnalisé du client appelant le système
 					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+					If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+						Begin
+							Set @sMailBody  = @sMailBody  + @sSaut    
+							Set @sMailBody  = @sMailBody  + @sSaut    
+							Set @sMailBody  = @sMailBody  + '****************************************************************'    
+							Set @sMailBody  = @sMailBody  + @sSaut    
+							Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+							Set @sMailBody  = @sMailBody  + @sSaut    
+							Set @sMailBody  = @sMailBody  + '****************************************************************'    
+							Set @sMailBody  = @sMailBody  + @sSaut    
+							Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+							Set @sMailBody  = @sMailBody  + @sSaut 
+						End 
 
 					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -2614,6 +2670,21 @@ Declare
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -2798,6 +2869,7 @@ Go
 -- JFF    15/01/2021 [DT517]  
 -- JFF    26/04/2023 [RS5045_REF_MATP]
 -- JFF    07/03/2024 [HP252_276_HUB_PRESTA]
+-- JFF    28/10/2024 [MCO1054]
 ------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S04_MAILPUSH_INFO_REPAR_PASSE' AND type = 'P' )
         DROP procedure sysadm.PS_S04_MAILPUSH_INFO_REPAR_PASSE
@@ -2906,7 +2978,8 @@ Declare
   @sCodeMaquette VarChar ( 255 ), -- [RS5045_REF_MATP]
   @sErrOutPut VarChar ( 255 ), -- [RS5045_REF_MATP]
   @sXMLVar     	VarChar ( max ), -- [RS5045_REF_MATP]
-  @iPrestaHUB  Integer -- [HP252_276_HUB_PRESTA]
+  @iPrestaHUB  Integer, -- [HP252_276_HUB_PRESTA]
+  @sVal Varchar ( 100 ) -- [MCO1054]
 
   Set @asCasRetour = ''
   Set @sMailBody = ''
@@ -4507,6 +4580,8 @@ Exec sysadm.PS_I_MAIL_IOS7_VDOC12443 @asIdAppli, @asBase, @iOptionDP, @adcIdSin
     End 
 
   Set @sMailBody  = @sMailBody  + @sSaut
+
+  /*   -- [MCO1054] Déporté sous condition plus bas au moment de la création du mail
   Set @sMailBody  = @sMailBody  + @sSaut
   Set @sMailBody  = @sMailBody  + @sSaut
   Set @sMailBody  = @sMailBody  + '****************************************************************'
@@ -4516,6 +4591,7 @@ Exec sysadm.PS_I_MAIL_IOS7_VDOC12443 @asIdAppli, @asBase, @iOptionDP, @adcIdSin
   Set @sMailBody  = @sMailBody  + '****************************************************************'
   Set @sMailBody  = @sMailBody  + @sSaut
   Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'
+  */
 
 	Select @iOrangeV3 = COUNT ( * ) 
 	From   sysadm.det_pro d,
@@ -4601,6 +4677,22 @@ Exec sysadm.PS_I_MAIL_IOS7_VDOC12443 @asIdAppli, @asBase, @iOptionDP, @adcIdSin
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
 
+			-- [MCO1054]
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
+
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
@@ -4667,6 +4759,22 @@ Exec sysadm.PS_I_MAIL_IOS7_VDOC12443 @asIdAppli, @asBase, @iOptionDP, @adcIdSin
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -5099,6 +5207,7 @@ Go
 -- JFF      12/02/2016   [PI062]
 -- JFF      23/05/2018   [PM373-2]
 -- JFF      26/04/2023   [RS5045_REF_MATP]
+-- JFF  28/10/2024  [MCO1054]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S05_MAILPUSH_URL_MDP_SITE_CMDE' AND type = 'P' )
         DROP procedure sysadm.PS_S05_MAILPUSH_URL_MDP_SITE_CMDE
@@ -5154,7 +5263,8 @@ Declare
   @dcIdInter Decimal ( 2 ), -- [RS5045_REF_MATP]
   @sCodeMaquette VarChar ( 255 ), -- [RS5045_REF_MATP]
   @sErrOutPut VarChar ( 255 ), -- [RS5045_REF_MATP]
-  @sXMLVar   VarChar ( max ) -- [RS5045_REF_MATP]    
+  @sXMLVar   VarChar ( max ), -- [RS5045_REF_MATP]    
+  @sVal VarChar ( 100 ) -- [MCO1054]
 
   Set @asCasRetour = ''
   Set @sMailBody = ''
@@ -5428,7 +5538,9 @@ If Left ( @sNumProd, 5 ) not in ( '0 800', '0 825' )
 
 -- [PM373-2]
   Set @sMailBody  = @sMailBody + '* possédant au minimum les mêmes caractéristiques techniques à l''exception du poids, de la taille, du coloris ou du design.' + @sSaut
+  Set @sMailBody  = @sMailBody  + @sSaut
 
+/*   -- [MCO1054] Déporté sous condition plus bas au moment de la création du mail
   Set @sMailBody  = @sMailBody  + @sSaut
   Set @sMailBody  = @sMailBody  + '****************************************************************'
   Set @sMailBody  = @sMailBody  + @sSaut
@@ -5437,7 +5549,7 @@ If Left ( @sNumProd, 5 ) not in ( '0 800', '0 825' )
   Set @sMailBody  = @sMailBody  + '****************************************************************'
   Set @sMailBody  = @sMailBody  + @sSaut
   Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'
-
+*/
 
   -- On convertit pour l'appel de la PS
   Set @iIdSin  = Convert ( integer, @adcIdSin )
@@ -5470,6 +5582,22 @@ If Left ( @sNumProd, 5 ) not in ( '0 800', '0 825' )
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -5541,6 +5669,22 @@ If Left ( @sNumProd, 5 ) not in ( '0 800', '0 825' )
 
 			-- Appel pour construire et récupérer le XML dans @xmlResult
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec @iRet = TRACE_MAIL_TRT.sysadm.PS_RS5045_I_MAIL_PUSH_KSL
 				@asIdAppli,
@@ -5629,6 +5773,8 @@ If Left ( @sNumProd, 5 ) not in ( '0 800', '0 825' )
 	Set @sMailBody  = @sMailBody  + 'Votre gestionnaire SPB' + @sSaut
 
   Set @sMailBody  = @sMailBody  + @sSaut
+
+/*   -- [MCO1054] Déporté sous condition plus bas au moment de la création du mail
   Set @sMailBody  = @sMailBody  + @sSaut
   Set @sMailBody  = @sMailBody  + @sSaut
   Set @sMailBody  = @sMailBody  + '****************************************************************'
@@ -5638,6 +5784,7 @@ If Left ( @sNumProd, 5 ) not in ( '0 800', '0 825' )
   Set @sMailBody  = @sMailBody  + '****************************************************************'
   Set @sMailBody  = @sMailBody  + @sSaut
   Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'
+*/
 
 If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 
@@ -5652,6 +5799,22 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -5716,6 +5879,22 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -5803,6 +5982,7 @@ Go
 -- JFF      12/02/2016   [PI062]
 -- JFF      23/05/2018   [PM373-2]
 -- JFF      26/04/2023   [RS5045_REF_MATP]
+-- JFF      28/10/2024  [MCO1054]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S06_MAILPUSH_REGEN_MDP_SITE_CMDE' AND type = 'P' )
         DROP procedure sysadm.PS_S06_MAILPUSH_REGEN_MDP_SITE_CMDE
@@ -5857,8 +6037,8 @@ Declare
   @dcIdInter Decimal ( 2 ), -- [RS5045_REF_MATP]
   @sCodeMaquette VarChar ( 255 ), -- [RS5045_REF_MATP]
   @sErrOutPut VarChar ( 255 ), -- [RS5045_REF_MATP]
-  @sXMLVar   VarChar ( max ) -- [RS5045_REF_MATP]    
-  
+  @sXMLVar   VarChar ( max ), -- [RS5045_REF_MATP]    
+  @sVal	 VarChar ( 100 ) -- [MCO1054]  
 
   Set @asCasRetour = ''
   Set @sMailBody = ''
@@ -6095,6 +6275,8 @@ If Left ( @sNumProd, 5 ) not in ( '0 800', '0 825' )
 	Set @sMailBody  = @sMailBody  + 'Votre gestionnaire SPB' + @sSaut
 
   Set @sMailBody  = @sMailBody  + @sSaut
+  
+/*   -- [MCO1054] Déporté sous condition plus bas au moment de la création du mail
   Set @sMailBody  = @sMailBody  + @sSaut
   Set @sMailBody  = @sMailBody  + @sSaut
   Set @sMailBody  = @sMailBody  + '****************************************************************'
@@ -6104,7 +6286,7 @@ If Left ( @sNumProd, 5 ) not in ( '0 800', '0 825' )
   Set @sMailBody  = @sMailBody  + '****************************************************************'
   Set @sMailBody  = @sMailBody  + @sSaut
   Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'
-
+*/
 
   -- On convertit pour l'appel de la PS
   Set @iIdSin  = Convert ( integer, @adcIdSin )
@@ -6137,6 +6319,22 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -6203,6 +6401,22 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -6384,8 +6598,8 @@ GO
 -- JFF      12/02/2016  [PI062]
 -- JFF      23/05/2018  [PM373-2]
 -- JFF      26/04/2023  [RS5045_REF_MATP]
+-- JFF      28/10/2024  [MCO1054]
 -------------------------------------------------------------------
-
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S07_MAILPUSH_CONF_CMDE_WEB_ASS' AND type = 'P' )
         DROP procedure sysadm.PS_S07_MAILPUSH_CONF_CMDE_WEB_ASS
 GO
@@ -6439,8 +6653,8 @@ Declare
   @dcIdInter Decimal ( 2 ), -- [RS5045_REF_MATP]
   @sCodeMaquette VarChar ( 255 ), -- [RS5045_REF_MATP]
   @sErrOutPut VarChar ( 255 ), -- [RS5045_REF_MATP]
-  @sXMLVar   VarChar ( max ) -- [RS5045_REF_MATP]  
-  
+  @sXMLVar   VarChar ( max ), -- [RS5045_REF_MATP]  
+  @sVal	 VarChar ( 100 ) -- [MCO1054]  
 
   Set @asCasRetour = ''
   Set @sMailBody = ''
@@ -6535,6 +6749,8 @@ Declare
   Set @sMailBody  = @sMailBody  + 'Votre gestionnaire SPB' + @sSaut
 
   Set @sMailBody  = @sMailBody  + @sSaut
+
+/*   -- [MCO1054] Déporté sous condition plus bas au moment de la création du mail
   Set @sMailBody  = @sMailBody  + @sSaut
   Set @sMailBody  = @sMailBody  + @sSaut
   Set @sMailBody  = @sMailBody  + '****************************************************************'
@@ -6544,6 +6760,7 @@ Declare
   Set @sMailBody  = @sMailBody  + '****************************************************************'
   Set @sMailBody  = @sMailBody  + @sSaut
   Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'
+*/
 
   -- On convertit pour l'appel de la PS
   Set @iIdSin  = Convert ( integer, @adcIdSin )
@@ -6577,6 +6794,22 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -6642,6 +6875,22 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -10037,6 +10286,7 @@ Go
 --   JFF   23/05/2012 [PM103][1]
 -- JFF      12/02/2016   [PI062]
 -- JFF      26/04/2023   [RS5045_REF_MATP]
+-- JFF  28/10/2024  [MCO1054]
 ------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S11_MAILPUSH_SAV_CARREFOUR' AND type = 'P' )
         DROP procedure sysadm.PS_S11_MAILPUSH_SAV_CARREFOUR
@@ -10068,8 +10318,9 @@ Declare
   @dcIdInter Decimal ( 2 ), -- [RS5045_REF_MATP]
   @sCodeMaquette VarChar ( 255 ), -- [RS5045_REF_MATP]
   @sErrOutPut VarChar ( 255 ), -- [RS5045_REF_MATP]
-  @sXMLVar   VarChar ( max ) -- [RS5045_REF_MATP]	
-  
+  @sXMLVar   VarChar ( max ), -- [RS5045_REF_MATP]	
+  @sVal   VarChar ( 100 ) -- [MCO1054]
+
   Set @sMailBody = ''
   Set @sSaut = Char (10)
   Set @iRet = 0
@@ -10162,6 +10413,13 @@ Declare
 		-- Ajout personnalisé du client appelant le système
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
 
+		-- [MCO1054]
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+		If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+			Begin
+				Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'email_produit', @sMailFrom
+			End 
+
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
@@ -10222,6 +10480,13 @@ Declare
 
 		-- Ajout personnalisé du client appelant le système
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+		-- [MCO1054]
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+		If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+			Begin
+				Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'email_produit', @sMailFrom
+			End 
 
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -10302,6 +10567,7 @@ Go
 --      JFF   23/05/2012 [PM103][1]
 --		JFF   12/02/2016 [PI062]
 -- JFF      26/04/2023   [RS5045_REF_MATP]
+-- JFF  28/10/2024  [MCO1054]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S12_MAILPUSH_LDE' AND type = 'P' )
         DROP procedure sysadm.PS_S12_MAILPUSH_LDE
@@ -10348,8 +10614,9 @@ Declare
   @dcIdInter Decimal ( 2 ), -- [RS5045_REF_MATP]
   @sCodeMaquette VarChar ( 255 ), -- [RS5045_REF_MATP]
   @sErrOutPut VarChar ( 255 ), -- [RS5045_REF_MATP]
-  @sXMLVar   VarChar ( max ) -- [RS5045_REF_MATP]	
-  
+  @sXMLVar   VarChar ( max ),  -- [RS5045_REF_MATP]	
+  @sVal  VarChar ( 100 ) -- [MCO1054]
+
   Set @asCasRetour = ''
   Set @sMailBody = ''
   Set @sSaut = Char (10)
@@ -10573,6 +10840,22 @@ Declare
 		-- Ajout personnalisé du client appelant le système
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
 
+		-- [MCO1054]
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+		If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+			Begin
+				Set @sMailBody  = @sMailBody  + @sSaut    
+				Set @sMailBody  = @sMailBody  + @sSaut    
+				Set @sMailBody  = @sMailBody  + '****************************************************************'    
+				Set @sMailBody  = @sMailBody  + @sSaut    
+				Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+				Set @sMailBody  = @sMailBody  + @sSaut    
+				Set @sMailBody  = @sMailBody  + '****************************************************************'    
+				Set @sMailBody  = @sMailBody  + @sSaut    
+				Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+				Set @sMailBody  = @sMailBody  + @sSaut 
+			End 
+
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
@@ -10636,6 +10919,22 @@ Declare
 
 		-- Ajout personnalisé du client appelant le système
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+		-- [MCO1054]
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+		If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+			Begin
+				Set @sMailBody  = @sMailBody  + @sSaut    
+				Set @sMailBody  = @sMailBody  + @sSaut    
+				Set @sMailBody  = @sMailBody  + '****************************************************************'    
+				Set @sMailBody  = @sMailBody  + @sSaut    
+				Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+				Set @sMailBody  = @sMailBody  + @sSaut    
+				Set @sMailBody  = @sMailBody  + '****************************************************************'    
+				Set @sMailBody  = @sMailBody  + @sSaut    
+				Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+				Set @sMailBody  = @sMailBody  + @sSaut 
+			End 
 
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -12605,11 +12904,11 @@ Go
 -- JFF      12/02/2016   [PI062]
 -- JFF      02/01/2018   [PC874-1]
 -- JFF      26/04/2023   [RS5045_REF_MATP]
+-- JFF  28/10/2024  [MCO1054]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S17_MAILPUSH_ORE_CTL_IMEI' AND type = 'P' )
         DROP procedure sysadm.PS_S17_MAILPUSH_ORE_CTL_IMEI
 GO
-
 
 CREATE procedure sysadm.PS_S17_MAILPUSH_ORE_CTL_IMEI
 	@adcIdSin      	Decimal (10), -- [PI062]
@@ -12648,8 +12947,9 @@ Declare
   @dcIdInter Decimal ( 2 ), -- [RS5045_REF_MATP]
   @sCodeMaquette VarChar ( 255 ), -- [RS5045_REF_MATP]
   @sErrOutPut VarChar ( 255 ), -- [RS5045_REF_MATP]
-  @sXMLVar   VarChar ( max ) -- [RS5045_REF_MATP]
-  
+  @sXMLVar   VarChar ( max ), -- [RS5045_REF_MATP]
+  @sVal		VarChar ( 100 ) -- [MCO1054]
+
   Set @sMailBody = ''
   Set @iRet = 0
   Set @sSaut = Char (10)
@@ -12748,6 +13048,8 @@ Declare
 	
 	Set @sMailBody=@sMailBody + @sSaut
 	Set @sMailBody=@sMailBody + 'Nous restons à votre entière disposition pour tout renseignement complémentaire et vous prions d’agréer, nos salutations distinguées.' + @sSaut
+
+/* -- [MCO1054] Déporté sous condition plus bas au moment de la création du mail
 	Set @sMailBody=@sMailBody + @sSaut
 	Set @sMailBody=@sMailBody + '****************************************************************' + @sSaut
 	Set @sMailBody=@sMailBody + @sSaut
@@ -12757,6 +13059,7 @@ Declare
 	Set @sMailBody=@sMailBody + @sSaut
 	Set @sMailBody=@sMailBody + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.' + @sSaut
 	Set @sMailBody=@sMailBody + @sSaut
+*/
 		
 	-- On convertit pour l'appel de la PS
 	Set @iIdSin  = Convert ( integer, @adcIdSin )
@@ -12789,6 +13092,23 @@ Declare
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
+
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adr_mail', @sMailSend  -- Attention on n'envoie pas à l'assuré !! donc on écrase, 
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adr_mail_cc', @sMailCc 
 			
@@ -12854,6 +13174,23 @@ Declare
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
+
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adr_mail', @sMailSend  -- Attention on n'envoie pas à l'assuré !! donc on écrase, 
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adr_mail_cc', @sMailCc 
 
@@ -13881,6 +14218,7 @@ Go
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
 -- JFF      26/04/2023   [RS5045_REF_MATP]
+-- JFF  28/10/2024  [MCO1054]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAILPUSH_PTL_CTL_IMEI' AND type = 'P' )
         DROP procedure sysadm.PS_S_MAILPUSH_PTL_CTL_IMEI
@@ -13924,8 +14262,8 @@ Declare
   @dcIdInter Decimal ( 2 ), -- [RS5045_REF_MATP]
   @sCodeMaquette VarChar ( 255 ), -- [RS5045_REF_MATP]
   @sErrOutPut VarChar ( 255 ), -- [RS5045_REF_MATP]
-  @sXMLVar   VarChar ( max ) -- [RS5045_REF_MATP]
-
+  @sXMLVar   VarChar ( max ), -- [RS5045_REF_MATP]
+  @sVal		VarChar ( 100 ) -- [MCO1054]
   
   Set @sMailBody = ''
   Set @iRet = 0
@@ -14007,6 +14345,8 @@ Declare
 	
 	Set @sMailBody=@sMailBody + @sSaut
 	Set @sMailBody=@sMailBody + 'Nous restons à votre entière disposition pour tout renseignement complémentaire et vous prions d’agréer, nos salutations distinguées.' + @sSaut
+
+/*   -- [MCO1054] Déporté sous condition plus bas au moment de la création du mail
 	Set @sMailBody=@sMailBody + @sSaut
 	Set @sMailBody=@sMailBody + '****************************************************************' + @sSaut
 	Set @sMailBody=@sMailBody + @sSaut
@@ -14016,7 +14356,8 @@ Declare
 	Set @sMailBody=@sMailBody + @sSaut
 	Set @sMailBody=@sMailBody + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.' + @sSaut
 	Set @sMailBody=@sMailBody + @sSaut
-		
+*/
+
 	-- On convertit pour l'appel de la PS
 	Set @iIdSin  = Convert ( integer, @adcIdSin )
 	Set @iIdProd = Convert ( integer, @dcIdProd )
@@ -14048,6 +14389,23 @@ Declare
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
+
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adr_mail', @sMailSend  -- Attention on n'envoie pas à l'assuré !! donc on écrase, 
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adr_mail_cc', @sMailCc 
 			
@@ -14115,6 +14473,23 @@ Declare
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
+
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adr_mail', @sMailSend  -- Attention on n'envoie pas à l'assuré !! donc on écrase, 
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'adr_mail_cc', @sMailCc 
 
@@ -14462,6 +14837,7 @@ Go
 --
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
+-- JFF  28/10/2024  [MCO1054]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAILPUSH_ENV_APP_REMPL' AND type = 'P' )
         DROP procedure sysadm.PS_S_MAILPUSH_ENV_APP_REMPL
@@ -14678,6 +15054,8 @@ Declare
   Set @sMailBody  = @sMailBody  + @sSaut
   Set @sMailBody  = @sMailBody  + 'Nous restons à votre entière disposition pour tout renseignement complémentaire et vous prions d’agréer, ' + @sCiv + ' nos salutations distinguées.'
   Set @sMailBody  = @sMailBody  + @sSaut
+
+/*   -- [MCO1054] Déporté sous condition plus bas au moment de la création du mail
   Set @sMailBody  = @sMailBody  + @sSaut
   Set @sMailBody  = @sMailBody  + @sSaut
   Set @sMailBody  = @sMailBody  + '****************************************************************'
@@ -14687,7 +15065,7 @@ Declare
   Set @sMailBody  = @sMailBody  + '****************************************************************'
   Set @sMailBody  = @sMailBody  + @sSaut
   Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'
-
+*/
 
 --------------------------------------------------------------------------------------------------------------------
 -- Gestion des SMS.
@@ -14755,6 +15133,22 @@ Declare
 
 		-- Ajout personnalisé du client appelant le système
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+		-- [MCO1054]
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+		If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+			Begin
+				Set @sMailBody  = @sMailBody  + @sSaut    
+				Set @sMailBody  = @sMailBody  + @sSaut    
+				Set @sMailBody  = @sMailBody  + '****************************************************************'    
+				Set @sMailBody  = @sMailBody  + @sSaut    
+				Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+				Set @sMailBody  = @sMailBody  + @sSaut    
+				Set @sMailBody  = @sMailBody  + '****************************************************************'    
+				Set @sMailBody  = @sMailBody  + @sSaut    
+				Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+				Set @sMailBody  = @sMailBody  + @sSaut 
+			End 
 
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -14842,6 +15236,22 @@ Declare
 
 		-- Ajout personnalisé du client appelant le système
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+		-- [MCO1054]
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+		If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+			Begin
+				Set @sMailBody  = @sMailBody  + @sSaut    
+				Set @sMailBody  = @sMailBody  + @sSaut    
+				Set @sMailBody  = @sMailBody  + '****************************************************************'    
+				Set @sMailBody  = @sMailBody  + @sSaut    
+				Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+				Set @sMailBody  = @sMailBody  + @sSaut    
+				Set @sMailBody  = @sMailBody  + '****************************************************************'    
+				Set @sMailBody  = @sMailBody  + @sSaut    
+				Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+				Set @sMailBody  = @sMailBody  + @sSaut 
+			End 
 
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -14943,6 +15353,7 @@ Go
 --   JFF  12/02/2018  [DT346]
 --   JFF  23/06/2023  Stoppé car n'est plus envoyé depuis la migration SQL 2014 du 01/01/2020
 --   JFF  26/04/2023  [RS5045_REF_MATP]
+--   JFF  28/10/2024  [MCO1054]
 --------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_MAIL_IOS7_VDOC12443' AND type = 'P' )
         DROP procedure sysadm.PS_I_MAIL_IOS7_VDOC12443
@@ -15220,6 +15631,22 @@ Prévoir 2 flux vers KSL, 1 pour Orange (codes produit 091XX - 096XX - 962XX) et 
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
 			Set @sMailBody = Replace ( @sMailBody, '<EMAIL_PRODUIT>', @sVal )			
 
+			-- [MCO1054]
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
+
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
 
@@ -15302,6 +15729,22 @@ Prévoir 2 flux vers KSL, 1 pour Orange (codes produit 091XX - 096XX - 962XX) et 
 			Set @sMailBody = Replace ( @sMailBody, '<NUM_TEL_PROD>', @sVal )
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
 			Set @sMailBody = Replace ( @sMailBody, '<EMAIL_PRODUIT>', @sVal )			
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
@@ -16243,6 +16686,7 @@ Go
 -- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
 -- JFF      24/09/2024   [KSV793]
 -- JFF      24/09/2024   [KSV795]
+-- JFF		28/10/2024	 [MCO1054]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAILPUSH_APP_NON_RECP_EN_CTR' AND type = 'P' )
         DROP procedure sysadm.PS_S_MAILPUSH_APP_NON_RECP_EN_CTR
@@ -16328,6 +16772,7 @@ Declare @sCodeMaquette VarChar ( 255 ) -- [RS5045_REF_MATP]
 Declare @sErrOutPut VarChar ( 255 ) -- [RS5045_REF_MATP]
 Declare @sXMLVar   VarChar ( max ) -- [RS5045_REF_MATP]  
 Declare @NosNotreRelances VarChar ( 50 ) -- [KSV793]
+Declare @sVal   VarChar ( 255 ) -- [MCO1054]
 
 Set @dtDateJour = GetDate()
 
@@ -16974,6 +17419,8 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 		End 
 
 	Set @sMailBody  = @sMailBody  + @sSaut
+
+/*   -- [MCO1054] Déporté sous condition plus bas au moment de la création du mail
 	Set @sMailBody  = @sMailBody  + @sSaut
 	Set @sMailBody  = @sMailBody  + @sSaut
 	Set @sMailBody  = @sMailBody  + '****************************************************************'
@@ -16983,6 +17430,7 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 	Set @sMailBody  = @sMailBody  + '****************************************************************'
 	Set @sMailBody  = @sMailBody  + @sSaut
 	Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'
+*/
 
 	-- On convertit pour l'appel de la PS
 	Set @iIdSin  = Convert ( integer, @dcIdSin )
@@ -17016,6 +17464,22 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -17076,6 +17540,22 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -20149,6 +20629,8 @@ Go
 --					  <0 	Erreur SPB gérée 
 --
 -------------------------------------------------------------------
+-- JFF  28/10/2024  [MCO1054]
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAILPUSH_REFUSE_A_REEXP_RET_PICK_UP' AND type = 'P' )
         DROP procedure sysadm.PS_S_MAILPUSH_REFUSE_A_REEXP_RET_PICK_UP
 GO
@@ -20189,8 +20671,8 @@ Declare
   @dcIdInter Decimal ( 2 ), -- [RS5045_REF_MATP]
   @sCodeMaquette VarChar ( 255 ), -- [RS5045_REF_MATP]
   @sErrOutPut VarChar ( 255 ), -- [RS5045_REF_MATP]
-  @sXMLVar     	VarChar ( max ) -- [RS5045_REF_MATP]
-
+  @sXMLVar     	VarChar ( max ), -- [RS5045_REF_MATP]
+  @sVal			VarChar ( 100 ) -- [MCO1054]
  
   
   Set @asCasRetour = ''
@@ -20276,6 +20758,10 @@ Declare
 	Set @sMailBody=@sMailBody + @sSaut
 	Set @sMailBody=@sMailBody + 'Nous restons à votre entière disposition pour tout renseignement complémentaire et vous prions d’agréer, ' + @sCiv + ', nos salutations distinguées.' + @sSaut
 	Set @sMailBody=@sMailBody + @sSaut
+
+/*   -- [MCO1054] Déporté sous condition plus bas au moment de la création du mail
+	Set @sMailBody=@sMailBody + @sSaut
+	Set @sMailBody=@sMailBody + @sSaut
 	Set @sMailBody=@sMailBody + '****************************************************************' + @sSaut
 	Set @sMailBody=@sMailBody + @sSaut
 	Set @sMailBody=@sMailBody + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL' + @sSaut
@@ -20284,7 +20770,8 @@ Declare
 	Set @sMailBody=@sMailBody + @sSaut
 	Set @sMailBody=@sMailBody + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.' + @sSaut
 	Set @sMailBody=@sMailBody + @sSaut
-	
+*/
+
 	-- On convertit pour l'appel de la PS
 	Set @iIdSin  = Convert ( integer, @adcIdSin )
 	Set @iIdProd = Convert ( integer, @dcIdProd )
@@ -20316,6 +20803,22 @@ Declare
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -20379,6 +20882,22 @@ Declare
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -20451,6 +20970,7 @@ Go
 -- JFF      12/02/2016   [PI062]
 -- JFF      01/12/2020   [VDOC29875]
 -- JFF      26/04/2023   [RS5045_REF_MATP]
+-- JFF      28/10/2024   [MCO1054]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAILPUSH_APP_IRREPARABLE' AND type = 'P' )
         DROP procedure sysadm.PS_S_MAILPUSH_APP_IRREPARABLE
@@ -20493,8 +21013,10 @@ Declare
   @dcIdInter Decimal ( 2 ), -- [RS5045_REF_MATP]
   @sCodeMaquette VarChar ( 255 ), -- [RS5045_REF_MATP]
   @sErrOutPut VarChar ( 255 ), -- [RS5045_REF_MATP]
-  @sXMLVar   VarChar ( max ) -- [RS5045_REF_MATP]
-  
+  @sXMLVar   VarChar ( max ), -- [RS5045_REF_MATP]
+  @sVal	 VarChar ( 100 ) -- [MCO1054]
+
+
   Set @asCasRetour = ''
   Set @sMailBody = ''
   Set @iRet = 0
@@ -20580,6 +21102,10 @@ Declare
 
 	Set @sMailBody=@sMailBody + 'Nous restons à votre entière disposition pour tout renseignement complémentaire et vous prions d’agréer, nos salutations distinguées.' + @sSaut
 	Set @sMailBody=@sMailBody + @sSaut
+
+/*   -- [MCO1054] Déporté sous condition plus bas au moment de la création du mail
+	Set @sMailBody=@sMailBody + @sSaut
+	Set @sMailBody=@sMailBody + @sSaut
 	Set @sMailBody=@sMailBody + '****************************************************************' + @sSaut
 	Set @sMailBody=@sMailBody + @sSaut
 	Set @sMailBody=@sMailBody + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL' + @sSaut
@@ -20588,7 +21114,8 @@ Declare
 	Set @sMailBody=@sMailBody + @sSaut
 	Set @sMailBody=@sMailBody + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.' + @sSaut
 	Set @sMailBody=@sMailBody + @sSaut
-	
+*/
+
 	-- On convertit pour l'appel de la PS
 	Set @iIdSin  = Convert ( integer, @adcIdSin )
 	Set @iIdProd = Convert ( integer, @dcIdProd )
@@ -20623,6 +21150,21 @@ Declare
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
 			
+			-- [MCO1054]
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -20688,6 +21230,21 @@ Declare
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
 			
+			-- [MCO1054]
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -20772,6 +21329,7 @@ Go
 -- JFF      06/09/2024   [KSV740] Modifie délai en dur dans le mail ATP/ATM
 -- JFF      24/09/2024   [KSV793]
 -- JFF      24/09/2024   [KSV795]
+-- JFF		28/10/2024   [MCO1054]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAILPUSH_RELANCE_PCE_DT262' AND type = 'P' )
         DROP procedure sysadm.PS_S_MAILPUSH_RELANCE_PCE_DT262
@@ -20860,7 +21418,6 @@ Declare @sCodeMail VarChar ( 10 )
 Declare @sNomZoneDivPro VarChar ( 35 )
 Declare @sLibZoneDivPro VarChar ( 35 )
 Declare @iIdNatTache integer
-Declare @sVal VarChar ( 20 )
 Declare @iIdTypContact Integer
 Declare @sVariante varchar ( 35 ) -- [DT364]
 Declare @sAltQueue VarChar ( 1 )
@@ -20880,6 +21437,7 @@ Declare @sCodeMaquette VarChar ( 255 ) -- [RS5045_REF_MATP]
 Declare @sErrOutPut VarChar ( 255 ) -- [RS5045_REF_MATP]
 Declare @sXMLVar   VarChar ( max ) -- [RS5045_REF_MATP]   
 Declare @NosNotreRelances VarChar ( 50 ) -- [KSV793]
+Declare @sVal VarChar ( 100 ) -- [MCO1054]
 
 Set @dtDateJour = GetDate()
 
@@ -21884,7 +22442,7 @@ While Exists ( Select * From @tb where marquage = 0 )
 			Set @sMailBody  = @sMailBody  + @sSaut
 		End 
 
-
+/*   -- [MCO1054] Déporté sous condition plus bas au moment de la création du mail
 	Set @sMailBody  = @sMailBody  + '****************************************************************'
 	Set @sMailBody  = @sMailBody  + @sSaut
 	Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'
@@ -21892,6 +22450,7 @@ While Exists ( Select * From @tb where marquage = 0 )
 	Set @sMailBody  = @sMailBody  + '****************************************************************'
 	Set @sMailBody  = @sMailBody  + @sSaut
 	Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'
+*/
 
 	-- On convertit pour l'appel de la PS
 	Set @iIdSin  = Convert ( integer, @dcIdSin )
@@ -21926,6 +22485,22 @@ While Exists ( Select * From @tb where marquage = 0 )
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -21986,6 +22561,22 @@ While Exists ( Select * From @tb where marquage = 0 )
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -22100,6 +22691,7 @@ Go
 -- Retourne             :       0 si rien n'est parti, 1 un mail/sms parti, autre = erreur
 --
 -- JFF      26/04/2023   [RS5045_REF_MATP]
+-- JFF  28/10/2024  [MCO1054]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAILPUSH_CONFORME_611' AND type = 'P' )
         DROP procedure sysadm.PS_S_MAILPUSH_CONFORME_611
@@ -22261,6 +22853,8 @@ As
 	Set @sMailBody = @sMailBody + @sSaut
 	Set @sMailBody = @sMailBody  + '** : Selon la définition mentionnée dans la Notice d’information.'
 	Set @sMailBody = @sMailBody  + @sSaut
+
+/*   -- [MCO1054] Déporté sous condition plus bas au moment de la création du mail
 	Set @sMailBody = @sMailBody  + @sSaut
 	Set @sMailBody = @sMailBody  + @sSaut
 	Set @sMailBody = @sMailBody  + '****************************************************************'
@@ -22270,7 +22864,7 @@ As
 	Set @sMailBody = @sMailBody  + '****************************************************************'
 	Set @sMailBody = @sMailBody  + @sSaut
 	Set @sMailBody = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'
-		
+*/		
 
 	-- [RS5045_REF_MATP]
 	If Exists ( Select Top 1 1 From sysadm.w_sin where id_sin = @adcIdSin ) 
@@ -22298,6 +22892,22 @@ As
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -22364,6 +22974,22 @@ As
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -22439,6 +23065,7 @@ Go
 --
 -------------------------------------------------------------------
 -- JFF      26/04/2023   [RS5045_REF_MATP]
+-- JFF  28/10/2024  [MCO1054]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAILPUSH_DT288_4_INFO_REGL' AND type = 'P' )
         DROP procedure sysadm.PS_S_MAILPUSH_DT288_4_INFO_REGL
@@ -22566,6 +23193,8 @@ As
 	Set @sMailBody = @sMailBody + @sSaut
 	Set @sMailBody = @sMailBody  + 'Nous restons à votre entière disposition pour tout renseignement complémentaire et vous prions d’agréer, ' + @sCiv + ' nos salutations distinguées.'
 	Set @sMailBody = @sMailBody  + @sSaut
+
+/*   -- [MCO1054] Déporté sous condition plus bas au moment de la création du mail
 	Set @sMailBody = @sMailBody  + @sSaut
 	Set @sMailBody = @sMailBody  + @sSaut
 	Set @sMailBody = @sMailBody  + '****************************************************************'
@@ -22575,7 +23204,8 @@ As
 	Set @sMailBody = @sMailBody  + '****************************************************************'
 	Set @sMailBody = @sMailBody  + @sSaut
 	Set @sMailBody = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'
-		
+*/
+
   -- [RS5045_REF_MATP]
   If Exists ( Select Top 1 1 From sysadm.w_sin where id_sin = @adcIdSin ) 
    Begin
@@ -22600,6 +23230,22 @@ As
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -22665,6 +23311,22 @@ As
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -23784,7 +24446,8 @@ Go
 -- Retourne             :       
 --
 -------------------------------------------------------------------
--- JFF      26/04/2023   [RS5045_REF_MATP]
+-- JFF  26/04/2023  [RS5045_REF_MATP]
+-- JFF  28/10/2024  [MCO1054]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAILPUSH_DT361_INFO_REMPL' AND type = 'P' )
         DROP procedure sysadm.PS_S_MAILPUSH_DT361_INFO_REMPL
@@ -23983,6 +24646,8 @@ As
 	Set @sMailBody = @sMailBody  + '76095 Le Havre Cedex' + @sSaut
 	Set @sMailBody = @sMailBody  + 'Tel : ' + @sNumProd + @sSaut 
 	Set @sMailBody = @sMailBody  + @sSaut
+	
+/*   -- [MCO1054] Déporté sous condition plus bas au moment de la création du mail	
 	Set @sMailBody = @sMailBody  + @sSaut
 	Set @sMailBody = @sMailBody  + '****************************************************************'
 	Set @sMailBody = @sMailBody  + @sSaut
@@ -23991,6 +24656,7 @@ As
 	Set @sMailBody = @sMailBody  + '****************************************************************'
 	Set @sMailBody = @sMailBody  + @sSaut
 	Set @sMailBody = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'
+*/
 		
   -- [RS5045_REF_MATP]
   If Exists ( Select Top 1 1 From sysadm.w_sin where id_sin = @adcIdSin ) 
@@ -24016,6 +24682,22 @@ As
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -24082,6 +24764,23 @@ As
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
+
 
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -24160,6 +24859,7 @@ Go
 --
 -------------------------------------------------------------------
 -- JFF      26/04/2023   [RS5045_REF_MATP]
+-- JFF  28/10/2024  [MCO1054]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_MAILPUSH_VDOC28556_BVI' AND type = 'P' )
         DROP procedure sysadm.PS_I_MAILPUSH_VDOC28556_BVI
@@ -24200,7 +24900,8 @@ Declare @iRet	Integer,
 		@dcIdInter Decimal ( 2 ), -- [RS5045_REF_MATP]
 		@sCodeMaquette VarChar ( 255 ), -- [RS5045_REF_MATP]
 		@sErrOutPut VarChar ( 255 ), -- [RS5045_REF_MATP]
-		@sXMLVar   VarChar ( max ) -- [RS5045_REF_MATP]
+		@sXMLVar   VarChar ( max ), -- [RS5045_REF_MATP]
+		@sVal VarChar ( 100 ) -- [MCO1054]
 
 
   -- Ticket 143300 suite incident mail à tort sur un [BRIS] (ça aurait pu être sur un [BNV] etc...).
@@ -24314,6 +25015,8 @@ Declare @iRet	Integer,
 	Set @sMailBody = @sMailBody  + '76095 Le Havre Cedex' + @sSaut
 	Set @sMailBody = @sMailBody  + 'Tel : ' + @sNumProd + @sSaut 
 	Set @sMailBody = @sMailBody  + @sSaut
+
+/*
 	Set @sMailBody = @sMailBody  + @sSaut
 	Set @sMailBody = @sMailBody  + '****************************************************************'
 	Set @sMailBody = @sMailBody  + @sSaut
@@ -24322,6 +25025,7 @@ Declare @iRet	Integer,
 	Set @sMailBody = @sMailBody  + '****************************************************************'
 	Set @sMailBody = @sMailBody  + @sSaut
 	Set @sMailBody = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'
+*/
 
   -- [RS5045_REF_MATP]
   If Exists ( Select Top 1 1 From sysadm.w_sin where id_sin = @adcIdSin ) 
@@ -24348,6 +25052,22 @@ Declare @iRet	Integer,
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
@@ -24413,6 +25133,22 @@ Declare @iRet	Integer,
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
+
+			-- [MCO1054]
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'email_produit', @sVal OutPut
+			If Not ( Lower ( @sVal ) <> 'noreply@spb.eu' And Len ( @sVal ) > 0 )
+				Begin
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + '****************************************************************'    
+					Set @sMailBody  = @sMailBody  + @sSaut    
+					Set @sMailBody  = @sMailBody  + 'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+					Set @sMailBody  = @sMailBody  + @sSaut 
+				End 
 
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet

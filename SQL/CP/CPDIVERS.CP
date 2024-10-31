@@ -6711,7 +6711,7 @@ And not exists (
 Delete fa
 from sysadm.famille fa
 where fa.id_typ_code = '-CO'
-And fa.cree_le < DateAdd ( month, -3, Getdate() )
+And fa.cree_le < DateAdd ( month, -6, Getdate() )
 And not exists ( 
        Select Top 1 1 
        From sysadm.produit p 
@@ -6724,7 +6724,7 @@ where co.id_typ_code = '-CO'
 And fa.id_typ_code = co.id_typ_code
 And fa.id_code = co.id_code
 And co.id_code not in ( 997, 998, 999 )
-And co.cree_le < DateAdd ( month, -3, Getdate() )
+And co.cree_le < DateAdd ( month, -6, Getdate() )
 And not exists ( 
        Select Top 1 1 
        From sysadm.produit p 
@@ -6733,7 +6733,7 @@ And not exists (
 Delete co
 from sysadm.code co
 where co.id_typ_code = '-CO'
-And co.cree_le < DateAdd ( month, -3, Getdate() )
+And co.cree_le < DateAdd ( month, -6, Getdate() )
 And co.id_code not in ( 997, 998, 999 )
 And not exists ( 
        Select Top 1 1 
@@ -7669,5 +7669,43 @@ While Exists ( Select Top 1 1 From @Tb where marquage = 0 )
 	Update @Tb Set marquage = 1 Where id_seq = @iIdSeq
  End
 
+
+Go
+
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_MAIL_PREUVE_TICKET_JOUE
+-- Auteur               :       FABRY JF
+-- Date                 :       31/10/2024
+-- Libellé              :       
+--                              
+-- Commentaires         :       
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_MAIL_PREUVE_TICKET_JOUE' AND type = 'P' )
+        DROP procedure sysadm.PS_MAIL_PREUVE_TICKET_JOUE
+GO
+  
+CREATE procedure sysadm.PS_MAIL_PREUVE_TICKET_JOUE  
+	@asNomFicSql   VarChar ( 255 ),
+	@asCodeProjet  VarChar ( 255 ) 
+AS
+
+Declare @sObjetTicket VarChar ( 255 )
+Declare @sRetourErrMailTicket VarChar ( 255 )
+Declare @sFicOutTicket VarChar ( 255 )
+Declare @sExpediteurTicket Varchar ( 128 ) 
+
+If @asNomFicSql is null Set @asNomFicSql  = ''
+Set @asNomFicSql = lTrim ( rTrim ( @asNomFicSql ))
+
+If @asCodeProjet is null Set @asCodeProjet  = ''
+Set @asCodeProjet = lTrim ( rTrim ( @asCodeProjet ))
+
+Set @sObjetTicket = @asNomFicSql + ' - ' + @asCodeProjet + ' - Joué en production - le ' + convert ( varchar(10), getdate(), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108) 
+
+EXEC master.dbo.SPB_PS_MAIL @sRetourErrMailTicket OUTPUT, 'jfabry@spb.eu', '', @sObjetTicket, @sExpediteurTicket, '', @sFicOutTicket, NULL, NULL, NULL, NULL
 
 Go
