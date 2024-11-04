@@ -40668,7 +40668,7 @@ sMailBody += sSaut
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 136 )
 If lDeb > 0 Then 
 	sVal1 = idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ) 
-	sVal  = lnvPFCString.of_getkeyvalue ( sVal1, "ADR_MAIL_PROD", ";")
+//	sVal  = lnvPFCString.of_getkeyvalue ( sVal1, "ADR_MAIL_PROD", ";")
 	If sVal = "" Or sVal = "noreply@spb.eu" Then lDeb = 0
 End If 
 
