@@ -40537,10 +40537,13 @@ sSaut = char (10 )
 // [MCO1054]
 bNoBALproduit = True
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 136 )
+sVal = lnvPFCString.of_getkeyvalue ( idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "ADR_MAIL_PROD", ";")
+/*
 If lDeb > 0 Then 
-	sVal  = lnvPFCString.of_getkeyvalue ( idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "ADR_MAIL_PROD", ";")
+
 	bNoBALproduit = sVal = "" Or sVal = "noreply@spb.eu"
 End If 
+*/
 // [MCO1054]
 
 sIdSin = String ( idw_WSin.GetItemNumber ( 1, "ID_SIN" ))
