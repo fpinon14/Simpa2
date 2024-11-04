@@ -40664,6 +40664,25 @@ sMailBody += sSaut
 sMailBody +="Nous restons à votre entière disposition pour tout renseignement complémentaire et vous prions d’agréer, nos salutations distinguées." + sSaut
 sMailBody += sSaut
 
+// [MCO1054]
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 136 )
+If lDeb > 0 Then 
+	sVal = idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ) 
+	sVal = F_CLE_VAL ( "ADR_MAIL_PROD", sVal, ";" )
+	If sVal = "" Or sVal = "noreply@spb.eu" Then lDeb = 0
+End If 
+
+If lDeb <= 0 Then 
+	sMailBody +="****************************************************************" + sSaut
+	sMailBody += sSaut
+	sMailBody +="AVERTISSEMENT : NE PAS REPONDRE A CE MAIL" + sSaut
+	sMailBody += sSaut
+	sMailBody +="****************************************************************" + sSaut
+	sMailBody += sSaut
+	sMailBody +="Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l'adresse d'origine pour nous contacter, votre message ne pouvant être traité en retour." + sSaut
+End If 
+// [MCO1054]
+
 idw_LstwCommande.SetFilter ( sFiltreOrig )
 idw_LstwCommande.Filter ()
 
