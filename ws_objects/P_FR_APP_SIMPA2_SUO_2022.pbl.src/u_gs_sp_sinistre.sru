@@ -40666,8 +40666,8 @@ sMailBody += sSaut
 
 // [MCO1054]
 
-/*
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 136 )
+/*
 If lDeb > 0 Then 
 	sVal1 = idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ) 
 	sVal  = lnvPFCString.of_getkeyvalue ( sVal1, "ADR_MAIL_PROD", ";")
@@ -40675,11 +40675,6 @@ If lDeb > 0 Then
 End If 
 */
 
-String a,b,c,d
-a= "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
-b= "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
-c= "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
-d= "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
 
 If lDeb <= 0 Then 
 	sMailBody +="****************************************************************" + sSaut
