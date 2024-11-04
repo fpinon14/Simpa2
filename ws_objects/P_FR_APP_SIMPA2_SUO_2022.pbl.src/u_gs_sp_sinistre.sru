@@ -34146,9 +34146,359 @@ Return bRet
 
 end function
 
-private function boolean uf_validation_finale_darty_mail_nomade39 ();// [DBGICI]
-Return True
+private function boolean uf_validation_finale_darty_mail_nomade39 ();//*-----------------------------------------------------------------
+//*
+//* Fonction      : u_gs_sp_sinistre::uf_Validation_Finale_Darty_Mail_Nomade3  (PRIVATE)
+//* Auteur        : Fabry JF
+//* Date          : 25/01/2005 16:43:53
+//* Libellé       : Gestion Particulière pour DARTY NOMADE.
+//* Commentaires  : Cas de gestion : "11/PCP/PRS_DTY"
+//*
+//* Arguments     : 
+//*
+//* Retourne      : Boolean	
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//*       JFF    27/04/2011  [VDOC3763]
+//*       JFF    17/06/2011  [PC545].[BUG_BGE_721]
+//		  FPI	19/06/2012		[PM191-2] Refonte des mails pour KSL
+//		FPI	05/12/2014	[VDOC16132] CHARTIS devient AIG dans l'objet du mail
+// 		FPI	13/02/2017	[VDoc22982]
+//*       JFF    21/06/2017  [VDOC24056]
+//*-----------------------------------------------------------------
 
+Boolean bRet
+String  sFiltreOrig, sFiltre, sRep, sIdSin,  sNomMagasin, sIdGti, sIdEvt, sVille
+String  sIdDetail, sRech, sMtValAchat, sVal, sFiltreOrigDDDW
+String sMailDest, sMailFrom, sSaut, sMailBody, sTypMail, sMailObjet, sXml
+Long 	  lRow, lTotCmd, lCptCmd, lIdGti, lIdDetail, lTotDetail, lCptDet, lDeb, lFin
+Integer iIdAppli
+DataWindowChild dwChild
+Decimal{2}	dcMtMaxTTC, dcMtLu, dcMtMaxLu
+s_Plafond_Pec stPlafPec
+U_Datawindow udwNull
+n_cst_string lnvPFCString
+s_pass stPass
+Blob bMailBody
+String sMailCc, sMailCci
+
+sMailCc=""
+sVal = ""
+sSaut = char (10 )
+sMailBody=""
+sTypMail="CMDDTY"
+iIdAppli=2
+
+/*------------------------------------------------------------------*/
+/* Répertoire d'écriture.                                           */
+/*------------------------------------------------------------------*/
+
+sIdSin = String ( idw_WSin.GetItemNumber ( 1, "ID_SIN" ))
+
+/*--------------------------------------------------------------------*/
+/* Filtre pour ne récupérer que les prestations qui nous intéressent. */
+/*--------------------------------------------------------------------*/
+sFiltre = "ID_TYP_ART = 'PRS' AND " + &		
+			 "COD_ETAT   = 'CNV' AND " + &  
+			 "CPT_VALIDE <= 0    AND " + &
+			 "ID_FOUR    = 'DTY' " 
+
+/*------------------------------------------------------------------*/
+/* Recherche sur liste des commandes se trouvant au niveau du       */
+/* sinistre.                                                        */
+/*------------------------------------------------------------------*/
+sFiltreOrig = idw_LstwCommande.Describe ( "datawindow.table.filter" )
+If sFiltreOrig = "?" Then sFiltreOrig = ""
+
+idw_LstwCommande.SetFilter ( sFiltre )
+idw_LstwCommande.Filter ()
+
+lTotCmd = idw_LstwCommande.RowCount () 
+
+/*------------------------------------------------------------------*/
+/* Pas de prestation trouvée, donc problème dans ce cas de gestion. */
+/*------------------------------------------------------------------*/
+If lTotCmd <= 0 Then 
+	stMessage.sTitre		= "Problème construction mail"
+	stMessage.Icon			= Exclamation!
+	stMessage.bErreurG	= FALSE
+	stMessage.Bouton		= YESNO!
+	stMessage.sCode		= "COMD330"
+
+	If F_Message ( stMessage ) = 2 Then	
+		// ON stoppe
+		Return FALSE
+	Else
+		// ON continue sans mail
+		Return TRUE
+	End If
+End If
+
+/*------------------------------------------------------------------*/
+/* Plus d'une prestation vers TREMBLAY, on stoppe.                  */
+/*------------------------------------------------------------------*/
+If lTotCmd > 1 Then 
+	stMessage.sTitre		= "Problème construction mail"
+	stMessage.Icon			= Exclamation!
+	stMessage.bErreurG	= FALSE
+	stMessage.Bouton		= OK!
+	stMessage.sCode		= "COMD340"
+
+	F_Message ( stMessage ) 
+	Return FALSE
+End If
+
+For lCptCmd = 1 To lTotCmd 
+	If IsNull ( idw_LstwCommande.GetItemString ( lCptCmd, "ADR_LIVR2" ) ) Then
+		idw_LstwCommande.SetItem ( lCptCmd, "ADR_LIVR2", "" ) 
+	End If
+	If IsNull ( idw_LstwCommande.GetItemString ( 1, "ADR_LIVR_CPL" ) ) Then
+		idw_LstwCommande.SetItem ( lCptCmd, "ADR_LIVR_CPL", "" ) 
+	End If
+Next
+
+// Adresse mail from
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 215 )
+If lDeb > 0 Then
+	sVal=	idw_DetPro.GetItemString(lDeb,"VAL_CAR")
+	sMailFrom=lnvPFCString.of_getkeyvalue( sVal, "ADR_MAIL", ";")
+	sMailDest=lnvPFCString.of_getkeyvalue( sVal, "ADR_MAIL_DTY", ";")
+	sMailCci=lnvPFCString.of_getkeyvalue( sVal, "ADR_MAIL_PRODUIT", ";")
+End if
+
+/*------------------------------------------------------------------*/
+/* 1 : Ligne Objet du mail --> 1ère ligne du fichier Texte qui      */
+/* devra être Découpé par EIN et placé en objet.                    */
+/*------------------------------------------------------------------*/
+// [VDOC3763]
+// [VDOC16132]
+sMailObjet="AIG SPB_DARTYASSURANCEN°" + sIdSin + " (NOMADE/REPARATION PCP)" 
+// :[VDOC16132]
+
+/*------------------------------------------------------------------*/
+/* 1.1 #1 : Demande de C. Chauvin/O Caen, placer l'adresse de       */
+/* facturation.                                                     */
+/*------------------------------------------------------------------*/
+sMailBody+="ADRESSE_FACTURATION : SPB Darty Assurance Produit Nomade 76095 LE HAVRE CEDEX" + sSaut
+
+/*------------------------------------------------------------------*/
+/* 2 : Référence SPB																  */
+/*------------------------------------------------------------------*/
+sMailBody+= "REFERENCE_SIN_SPB : SP" + sIdSin + "-" + String ( idw_LstwCommande.GetItemNumber ( 1, "ID_SEQ" )) + sSaut
+
+/*------------------------------------------------------------------*/
+/* 3 : Personne SPB à contacter.												  */
+/*------------------------------------------------------------------*/
+sMailBody+=sSaut
+sMailBody+="PERSONNE_SPB_A_CONTACTER : " + sSaut
+sMailBody+= "N°_TELEPHONE_SPB : " + String ( idw_Produit.GetItemString ( 1, "NUM_TEL" ), "@@@@.@@@.@@@" ) + sSaut
+sMailBody+= "E-MAIL_EMETTEUR : dartyprodnomade@spb.fr" + sSaut
+sMailBody+= "(M3)" + sSaut
+
+/*------------------------------------------------------------------*/
+/* 4 : Personne DARTY à contacter.											  */
+/*------------------------------------------------------------------*/
+sMailBody+=sSaut
+sMailBody+= "PERSONNE_DARTY_A_CONTACTER : "  + sSaut
+sMailBody+= "Service assurance : 0980 984 984"  + sSaut
+sMailBody+= "E-MAIL : assurance@darty.fr"  + sSaut
+
+
+/*------------------------------------------------------------------*/
+/* 5 : Coordonnées de l'assuré et renseignements.					     */
+/*------------------------------------------------------------------*/
+sMailBody+=sSaut
+sMailBody+=sSaut
+sMailBody+= "NOM_ASSURE : " + Upper ( idw_LstwCommande.GetItemString ( 1, "ADR_NOM" )) + sSaut
+sMailBody+= "PRENOM_ASSURE : " + Upper ( idw_LstwCommande.GetItemString ( 1, "ADR_PRENOM" )) + sSaut
+sMailBody+="ADRESSE_CLIENT_1 : " + Upper ( idw_LstwCommande.GetItemString ( 1, "ADR_LIVR1" )) + sSaut
+sMailBody+= "ADRESSE_CLIENT_2 : " + Upper ( idw_LstwCommande.GetItemString ( 1, "ADR_LIVR2" )) + sSaut
+sMailBody+= "ADRESSE_CLIENT_3 : " + Upper ( idw_LstwCommande.GetItemString ( 1, "ADR_LIVR_CPL" )) + sSaut
+sMailBody+= "CODE POSTAL : " + idw_LstwCommande.GetItemString ( 1, "ADR_CP" ) + " " + Upper ( idw_LstwCommande.GetItemString ( 1, "ADR_VILLE" ) ) + sSaut
+sMailBody+="TEL_ASSURE : " + idw_LstwCommande.GetItemString ( 1, "ADR_TEL1" ) + sSaut
+sMailBody+= "DATE_SURVENANCE_SINISTRE : " + String ( Date ( idw_wSin.GetItemDateTime ( 1, "DTE_SURV" )), "dd/mm/yyyy" ) + sSaut
+sMailBody+= "DATE_ACHAT_APPAREIL_SINISTRE : " + String ( idw_wSin.GetItemDateTime ( 1, "DTE_ACH_PORT" ), "dd/mm/yyyy" ) + sSaut // [PI056]
+sMailBody+=sSaut
+
+sMailBody+="-- LES MONTANTS SONT EXPRIMES EN EUROS --" + sSaut
+
+
+/*------------------------------------------------------------------*/
+/* 6 : Appareil à réparer														  */
+/*------------------------------------------------------------------*/
+sMailBody+=sSaut
+
+/*------------------------------------------------------------------*/
+/* Récupération du libellé du type d'appareil                       */
+/* (l'Evaluate+LookUpDisplay ne fonctionne pas (!?)                 */
+/*------------------------------------------------------------------*/
+sVal= This.uf_GestOng_Divers_Trouver ( "TYPE_APP" )
+idw_WDivSin.GetChild ( "VAL_LST_CAR", dwChild )
+sFiltreOrigDDDW = dwChild.Describe ( "datawindow.table.filter" )
+dwChild.SetFilter ( "" ) 
+dwChild.Filter ( ) 
+lRow = dwChild.Find ( "ID_CODE = '" + sVal + "'", 1, dwChild.RowCount () )
+sVal = dwChild.GetItemString ( lRow, "LIB_CODE" ) 
+dwChild.SetFilter ( sFiltreOrigDDDW  ) 
+dwChild.Filter ( ) 
+
+sMailBody+= "APPAREIL_A_REPARER : " + Upper ( sVal ) + " " + Upper ( idw_wSin.GetItemString ( 1, "MARQ_PORT" ) ) + " " + Upper ( idw_wSin.GetItemString ( 1, "MODL_PORT" ) ) + sSaut
+sMailBody+=sSaut
+
+sMailBody+= "DESCRIPTION_DU_DOMMAGE : " + sSaut
+sVal = Upper ( idw_LstwCommande.GetItemString ( 1, "PROBLEME" ) )
+Do While Len ( sVal ) > 0 
+	sMailBody+= Left ( sVal, 60 ) + sSaut
+	sVal = Mid ( sVal, 61, Len ( sVal ) ) 
+Loop
+
+/*------------------------------------------------------------------*/
+/* 7 : Montant Maximum majoré													  */
+/*------------------------------------------------------------------*/
+// mémorisation de la garantie
+lIdGti = idw_LstwCommande.GetItemNumber ( 1, "ID_GTI" )
+sIdGti = String ( idw_LstwCommande.GetItemNumber ( 1, "ID_GTI" ) )
+// mémorisation de l'événement
+lIdDetail = idw_LstwCommande.GetItemNumber ( 1, "ID_DETAIL" )
+sIdDetail = String ( idw_LstwCommande.GetItemNumber ( 1, "ID_DETAIL" ) )
+
+lRow = idw_wDetail.Find ( "ID_GTI = " + sIdGti + " AND ID_DETAIL = " + sIdDetail, 1, idw_wDetail.RowCount () )
+dcMtMaxTTC = 0 
+If lRow > 0 Then
+	dcMtMaxTTC = idw_wDetail.GetItemDecimal ( lRow, "MT_VAL_ACHAT" )
+End If
+
+
+//* F_Plafond_Pec 
+//* Retourne		: Structure s_plafond_pec (0 indique qu'il n'y a pas de plafond)
+//*					  Pour le type Autre, le retour est sous cette forme
+//*					  O[704][3]    => OUI, plaf 704, x3 (en cours + autre)
+//*					  N[704][1]		=> NON, plaf 704, x1 ( juste l'en cours)
+
+sVal = ""
+// [PC545].[BUG_BGE_721]
+//	[PC363].[10%]
+lRow = idw_LstwCommande.Find ( "COD_ETAT <> 'ANN' AND POS ( INFO_FRN_SPB_CPLT, 'APP_INCOMPLET=OUI', 1) >0", 1, idw_LstwCommande.RowCount () )
+sVal = "[###]"
+
+If lRow > 0 Then
+	lnvPFCString.of_Setkeyvalue ( sVal, "APP_INCOMPLET", "OUI", ";")
+End If
+
+// [PC301].[V15_EVOL_VETUSTE]
+lTotDetail = idw_wDetail.RowCount ()
+dcMtLu = 0
+dcMtMaxLu = 0
+For lCptDet = 1 To lTotDetail	
+	
+	sRech	=		"ID_GTI = "	+ String ( idw_wDetail.GetItemNumber ( lCptDet, "ID_GTI" ) )	+ " AND " 	+ &
+					"ID_DETAIL = "	+ String ( idw_wDetail.GetItemNumber ( lCptDet, "ID_DETAIL" ) )	+ " AND " 	+ &
+					"UPPER ( NOM_ZONE ) = 'MT_MAX_PROPO_PLF722'"
+		
+	lRow = idw_wDivDet.Find ( sRech, 1, idw_wDivDet.RowCount () ) 
+	If lRow > 0 Then
+		dcMtLu = idw_wDivDet.GetItemDecimal ( lRow, "VAL_MT" )
+		If dcMtLu > dcMtMaxLu Then
+			dcMtMaxLu = dcMtLu 
+		End If
+	End If					
+	
+Next
+
+If dcMtMaxLu > 0 Then
+	lnvPFCString.of_Setkeyvalue ( sVal, "MT_MAX_PLAF_722", String ( dcMtMaxLu ), ";")
+End If
+// [PC301].[V15_EVOL_VETUSTE]
+// :[PC545].[BUG_BGE_721]
+
+stPlafPec = F_Plafond_Pec ( "3" + sVal, idw_WSin, idw_wDivSin, udwNull, idw_wdetail, idw_LstwCommande, idw_Plafond, idw_DetPro, idw_produit, idw_wDivDet, lIdGti, lIdDetail  )
+
+If ( dcMtMaxTTC > stPlafPec.dcPlafEvt And stPlafPec.dcPlafEvt > 0 ) Or dcMtMaxTTC <= 0 Then dcMtMaxTTC = stPlafPec.dcPlafEvt
+If ( dcMtMaxTTC > stPlafPec.dcPlafValAch And stPlafPec.dcPlafValAch > 0 ) Or dcMtMaxTTC <= 0 Then dcMtMaxTTC = stPlafPec.dcPlafValAch
+If ( dcMtMaxTTC > stPlafPec.dcPlafGti  And stPlafPec.dcPlafGti  > 0 ) Or dcMtMaxTTC <= 0 Then dcMtMaxTTC = stPlafPec.dcPlafGti  
+If ( dcMtMaxTTC > stPlafPec.dcPlafValPublique And stPlafPec.dcPlafValPublique > 0 ) Or dcMtMaxTTC <= 0 Then dcMtMaxTTC = stPlafPec.dcPlafValPublique
+If Left ( stPlafPec.sPlafAutre, 1 ) = "O" Then dcMtMaxTTC = 0 
+If dcMtMaxTTC <= 0 Then dcMtMaxTTC = 0
+
+
+sMailBody+=sSaut
+sMailBody+= "MONTANT_MAXIMUM_INDEMNISATION_TTC : " +  String ( dcMtMaxTTC , "#####0.00" ) + sSaut
+sMailBody+= "MONTANT_MAXIMUM_REPARATION_TTC : " + String ( dcMtMaxTTC * 0.7, "#####0.00" ) + sSaut
+
+
+/*------------------------------------------------------------------*/
+/* 8 : Client passe au magasin												  */
+/*------------------------------------------------------------------*/
+sMailBody+=sSaut
+sMailBody+=sSaut
+sMailBody+= "PRODUIT A DEPOSER PAR LE CLIENT : " + sSaut
+sMailBody+= "CODE_DU_MAGASIN : " + Upper ( String ( idw_WSin.GetItemNumber ( 1, "ID_ORIAN_BOUTIQUE" ) )) + sSaut
+
+sNomMagasin = Fill ( " ", 35 )
+//[VDoc22982]
+sVille = Fill ( " ", 35 )
+SQLCA.PS_S04_BOUTIQUE ( idw_WSin.GetItemNumber ( 1, "ID_PROD" ) , idw_WSin.GetItemNumber ( 1, "ID_ORIAN_BOUTIQUE" ), sNomMagasin, sVille ) 
+If sNomMagasin = "" Or IsNull ( sNomMagasin ) Then
+	sNomMagasin = "AUCUNE REF. SUR CE CODE MAG."
+Else
+	sNomMagasin=Trim(sNomMagasin)
+	if not isnull(sVille) Then sNomMagasin+=" - " + Trim(sVille)
+End if
+// :[VDoc22982]
+
+sMailBody+= "NOM_DU_MAGASIN : " + Upper ( sNomMagasin ) + sSaut
+
+/*------------------------------------------------------------------*/
+/* 9 : Etat de retour pour DARTY ASSURANCE								  */
+/*------------------------------------------------------------------*/
+sMailBody+=sSaut
+sMailBody+=sSaut
+sMailBody+="=========================================================================" + sSaut
+sMailBody+= "================ ZONE RESERVEE A DARTY ASSURANCE ===================" + sSaut
+sMailBody+= "=========================================================================" + sSaut
+sMailBody+=sSaut
+sMailBody+= "NUM_INTERVENTION : ________________________" + sSaut
+sMailBody+= "DATE_D_ENVOI :   _ _ / _ _ / _ _ _ _" + sSaut
+sMailBody+="BON_CHRONO   : ____________________________" + sSaut
+sMailBody+= "ETAT_PRESTATION_1 :  |_| Prise en charge par DARTY ASSURANCE et réparé" + sSaut
+sMailBody+= "ETAT_PRESTATION_2 :  |_| Non prise en charge par DARTY ASSURANCE et non réparé" + sSaut
+
+// Construction du XML
+stPass.ltab[1] = idw_LstwCommande.GetItemNumber ( 1, "ID_SEQ" )
+stPass.sTab[1] = idw_LstwCommande.GetItemString ( 1, "ID_FOUR" )
+stPass.sTab[2] = idw_LstwCommande.GetItemString ( 1, "ID_TYP_ART" )
+stPass.sTab[3] = "M3"
+
+sXml = uf_createxml_ksl( sMailObjet , sMailFrom, smaildest, "CMDKSL", "Mail_Commande", stpass)
+
+idw_LstwCommande.SetFilter ( sFiltreOrig )
+idw_LstwCommande.Filter ()
+
+bMailBody = Blob ( sMailBody, EncodingANSI! )
+
+bRet = SQLCA.PS_I02_MAILPUSH( &
+	Long ( sIdSin ), &
+	Upper ( SQLCA.DataBase ), &
+	sMailFrom, &
+	sMailDest, &
+	sMailCc, &
+	sMailCci, &
+	sMailObjet, &
+	bMailBody, &
+	'', &
+	sTypMail, &
+	iIdAppli, &
+	'KSL', &
+	-1, &
+	sXml &
+	) = 0
+
+If bRet Then 
+	bRet = SQLCA.SQLCode = 0 And SQLCA.SQLDBCode = 0 
+End If
+
+Return bRet
 
 end function
 
