@@ -40499,13 +40499,13 @@ private function boolean uf_validation_finale_mail_srr ();//*-------------------
 //*       JFF    30/10/2024  [MCO1054]
 //*-----------------------------------------------------------------
 
-Boolean bRet
+Boolean bRet, bNoBALproduit
 String  sFiltreOrig, sFiltre, sRep, sIdSin, sFic, sNomMagasin, sIdGti, sLibGti, sIdEvt
 String  sIdDetail, sRech, sMtValAchat, sVal, sFiltreOrigDDDW, sRepSav, sMailDest, sTelDest
 String  sMailBody, sSaut, sMailObjet, sBoiteMail, sTypMail, sAdrLibCiv, sVal1
 Blob    bMailBody
 Date    dVal
-Long 	  lRow, lTotCmd, lCptCmd, lIdGti, lTotDetail, lIdDetail, lRow2, iIdAppli, lDeb, lFin, lCptDet
+Long 	  lRow, lTotCmd, lCptCmd, lIdGti, lTotDetail, lIdDetail, lRow2, iIdAppli, lDeb, lFin, lCptDet 
 DataWindowChild dwChild
 Decimal{2}	dcMtMaxTTC, dcMtLu, dcMtMaxLu
 s_Plafond_Pec stPlafPec
@@ -40533,6 +40533,15 @@ iIdAppli = 2  // SIMPA2
 sMailBody = ""
 sMailObjet= ""
 sSaut = char (10 )
+
+// [MCO1054]
+bNoBALproduit = True
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 136 )
+If lDeb > 0 Then 
+	sVal  = lnvPFCString.of_getkeyvalue ( idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "ADR_MAIL_PROD", ";")
+	bNoBALproduit = sVal = "" Or sVal = "noreply@spb.eu"
+End If 
+// [MCO1054]
 
 sIdSin = String ( idw_WSin.GetItemNumber ( 1, "ID_SIN" ))
 
@@ -40665,19 +40674,7 @@ sMailBody +="Nous restons à votre entière disposition pour tout renseignement 
 sMailBody += sSaut
 
 // [MCO1054]
-
-F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 136 )
-If lDeb > 0 Then 
-	sVal1 = idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ) 
-	sVal  = lnvPFCString.of_getkeyvalue ( sVal1, "ADR_MAIL_PROD", ";")
-/*
-	If sVal = "" Or sVal = "noreply@spb.eu" Then lDeb = 0
-*/	
-End If 
-
-
-
-If lDeb <= 0 Then 
+If bNoBALproduit Then 
 	sMailBody +="****************************************************************" + sSaut
 	sMailBody += sSaut
 	sMailBody +="AVERTISSEMENT : NE PAS REPONDRE A CE MAIL" + sSaut
