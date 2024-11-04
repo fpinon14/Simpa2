@@ -40502,7 +40502,7 @@ private function boolean uf_validation_finale_mail_srr ();//*-------------------
 Boolean bRet
 String  sFiltreOrig, sFiltre, sRep, sIdSin, sFic, sNomMagasin, sIdGti, sLibGti, sIdEvt
 String  sIdDetail, sRech, sMtValAchat, sVal, sFiltreOrigDDDW, sRepSav, sMailDest, sTelDest
-String  sMailBody, sSaut, sMailObjet, sBoiteMail, sTypMail, sAdrLibCiv 
+String  sMailBody, sSaut, sMailObjet, sBoiteMail, sTypMail, sAdrLibCiv, sVal1
 Blob    bMailBody
 Date    dVal
 Long 	  lRow, lTotCmd, lCptCmd, lIdGti, lTotDetail, lIdDetail, lRow2, iIdAppli, lDeb, lFin, lCptDet
@@ -40667,8 +40667,8 @@ sMailBody += sSaut
 // [MCO1054]
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 136 )
 If lDeb > 0 Then 
-	sVal = idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ) 
-	sVal = lnvPFCString.of_getkeyvalue ( sVal, "ADR_MAIL_PROD", ";")
+	sVal1 = idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ) 
+	sVal  = lnvPFCString.of_getkeyvalue ( sVal1, "ADR_MAIL_PROD", ";")
 	If sVal = "" Or sVal = "noreply@spb.eu" Then lDeb = 0
 End If 
 
