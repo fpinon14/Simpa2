@@ -40665,6 +40665,7 @@ sMailBody +="Nous restons à votre entière disposition pour tout renseignement 
 sMailBody += sSaut
 
 // [MCO1054]
+
 /*
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 136 )
 If lDeb > 0 Then 
@@ -40673,6 +40674,12 @@ If lDeb > 0 Then
 	If sVal = "" Or sVal = "noreply@spb.eu" Then lDeb = 0
 End If 
 */
+
+String a,b,c,d
+a= "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
+b= "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
+c= "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
+d= "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
 
 If lDeb <= 0 Then 
 	sMailBody +="****************************************************************" + sSaut
