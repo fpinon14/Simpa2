@@ -6774,6 +6774,8 @@ Go
 --
 -- Retourne             :       
 --
+-- JFF   04/11/2024   [20241104105246567] j'ajoute un 2ème jour, il faut que les 2 prochains jours ouvrés soit sur le même mois calendaires
+-- 
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_PROCHAIN_JOUR_OUVRE_DU_MEME_MOIS_CALENDAIRE' AND type = 'P' )
         DROP procedure sysadm.PS_S_PROCHAIN_JOUR_OUVRE_DU_MEME_MOIS_CALENDAIRE
@@ -6789,6 +6791,7 @@ Declare @iTrouve Integer
 Declare @dtWork DateTime
 Declare @dtPaques DateTime
 Declare @Year Integer
+Declare @iNbreJourOuvre Integer
 
 If @dtDteSource Is Null 
 	Begin 
@@ -6797,6 +6800,7 @@ If @dtDteSource Is Null
 	End 
 
 Set @iTrouve = 0
+Set @iNbreJourOuvre = 0 
 Set @dtWork = Convert ( DateTime, convert ( varchar ( 10), @dtDteSource, 103 ))
 
 While @iTrouve = 0
@@ -6826,8 +6830,10 @@ While @iTrouve = 0
 		If @dtWork = '11/11/' + CONVERT ( VarChar(4), @Year) Continue
 		If @dtWork = '25/12/' + CONVERT ( VarChar(4), @Year) Continue
 
-		Set @iTrouve = 1
+		Set @iNbreJourOuvre = @iNbreJourOuvre + 1 
 
+		-- On est à +2 en jour ouvré, c'est bon.
+		If @iNbreJourOuvre = 2 Set @iTrouve = 1 
 	End 
 
 Set @iPJOMMC = 0

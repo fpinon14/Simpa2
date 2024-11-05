@@ -119,6 +119,7 @@
 --     JFF 26/04/2023   [RS5045_REF_MATP]
 --     JFF 30/05/2023   [PMO89_RS4822]
 --     JFF 07/03/2024   [HP252_276_HUB_PRESTA]
+--     JFF 04/11/2024   [20241104105246567]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U01_COMMANDE' AND type = 'P' )
         DROP procedure sysadm.PS_U01_COMMANDE
@@ -243,6 +244,10 @@ Declare @iNbreSavActuel Integer -- [HP252_276_HUB_PRESTA]
 Declare @sCasSav VarChar ( 30 ) -- [HP252_276_HUB_PRESTA]
 Declare @sPrestaAutoHub  VarChar ( 35 )-- [HP252_276_HUB_PRESTA]
 Declare @sDernIdRefFour VarChar ( 20 ) -- [HP252_276_HUB_PRESTA]
+Declare @dtDteSource DateTime
+Declare @iPJOMMC Integer  -- Prochain jour ouvré sur le même mois calendaire ? 1:Oui, 0: Non
+Declare @dtDtePossible DateTime -- Prochaine date possible pour passer le règlement
+
 
 Set @iCasPropoAutoO2m = 0 -- [PC877]
 Set @iTraite = 0 
@@ -1134,10 +1139,18 @@ If @sIdFour in ( 'BLC', 'O2M', 'COR', 'SBE', 'PSM', 'MTT', 'TMT', 'CEA' ) Or @iP
 If @sIdFour in ( 'BLC', 'O2M', 'SB1', 'MS1', 'PSM', 'MTT', 'TMT', 'SBE', 'COR', 'CEA' ) Or @iPrestaHUB > 0  -- [HP252_276_HUB_PRESTA]
 BEGIN
 	
-          -- #16 JFF 06/11/2009 [FRAIS_O2M]
-	  If @dtDteRcpFrnActuel is null And @dtDteRcpFrn is not null
+      -- #16 JFF 06/11/2009 [FRAIS_O2M]
+	  If @dtDteRcpFrnActuel is null And @dtDteRcpFrn is not null and @sIdFour in ('O2M', 'SBE') 
 	   Begin
-		 Exec sysadm.PS_I01_TRT_FRAIS_PRESTA @dcIdSin, @iIdSeq, @dcIdProd, @sIdFour, @dcIdGti, @iInfoSpbFrnActuel, 'OPCO'
+
+		 -- [20241104105246567]
+		Set @dtDteSource = Getdate()
+		Exec sysadm.PS_S_PROCHAIN_JOUR_OUVRE_DU_MEME_MOIS_CALENDAIRE @dtDteSource , @iPJOMMC output, @dtDtePossible output
+		
+		If @iPJOMMC > 0 
+		  Begin
+			 Exec sysadm.PS_I01_TRT_FRAIS_PRESTA @dcIdSin, @iIdSeq, @dcIdProd, @sIdFour, @dcIdGti, @iInfoSpbFrnActuel, 'OPCO'
+		  End 
 	   End 
 
 	
