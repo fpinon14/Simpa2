@@ -2295,7 +2295,7 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
   
 	Set @sServeurProduction = 'PRO'
 
-	Set @sDestinataire = 'jff@spb.fr,cbourdoiseau@spb.eu'
+	Set @sDestinataire = 'jff@spb.fr,cbourdoiseau@spb.eu,DBOUCQ@spb.eu,GG_DSI-DO-INFRA-SERVEUR_Coll@spb.eu,GG_DSI-DO-INFRA-SERVEUR_Ext@spb.eu'
 
 	-- Obtention répertoire local pour le cas des courriers Word 
 	Select @sRepBlobLocal = 
@@ -2579,7 +2579,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		Set @sMsgTrc = 'Erreur lors de l''instanciation de l''objet SqlServer ADODB.Stream, le traitement est arrêté à '  + Convert ( VarChar ( 10), Getdate(), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108) 
 		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INSOBJ', 'ERR', @sMsgTrc, @iIdLotTrc
 
-		Set @sObjet = '[ALERTE] [Traitement_MATP_SQL_C#] => Instanciation objet ADODB.Stream impossible'
+		Set @sObjet = '[ALERTE] [Traitement MATP SQL C#] => Instanciation objet ADODB.Stream impossible'
 
 		Set @sObjet = Left ( @sObjet + space ( 255 ), 255 )
 		Exec sysadm.PS_CASSER_REGLE_CHAINE @sObjet Output, '_', ' ' 
@@ -3385,7 +3385,7 @@ If @iRowCountWord + @iRowCountHWord  > 0
 		Begin	
 			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INFO', 'ERR', @sMsgTrc, @iIdLotTrc
 
-			Set @sObjet = '[ERREUR] [Traitement_MATP_SQL_C#] => Erreurs sur traitement Lot ' + CONVERT (VarChar ( 20), @iIdLotTrc ) + ', (' + Convert ( Varchar ( 20 ), @iCptTraite ) + '/' + Convert ( Varchar ( 20 ), @iRowCountWord + @iRowCountHWord ) + ')'
+			Set @sObjet = '[ERREUR] [Traitement MATP SQL C#] => Erreurs sur traitement Lot ' + CONVERT (VarChar ( 20), @iIdLotTrc ) + ', (' + Convert ( Varchar ( 20 ), @iCptTraite ) + '/' + Convert ( Varchar ( 20 ), @iRowCountWord + @iRowCountHWord ) + ')'
 
 			Set @sObjet = Left ( @sObjet + space ( 255 ), 255 )
 			Exec sysadm.PS_CASSER_REGLE_CHAINE @sObjet Output, '_', ' ' 
