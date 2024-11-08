@@ -269,11 +269,6 @@ If lNumLig >  0 And Dw_3.RowCount ( ) > 0 Then
 	lIdInter	= Dw_3.GetitemNumber  ( lNumLig, "ID_INTER" )
 	lIdDoc	= Dw_3.GetitemNumber  ( lNumLig, "ID_DOC"   )
 
-	// [TRACE_TS_COURRIER]
-	If F_CLE_A_TRUE ( "TRACE_TS_COURRIER" ) Then
-		This.wf_CourWord_TraceTsCourrier ( "DEBUT_GENERATION", lIdSin, lIdInter, lIdDoc )
-	End If 
-
 
 //#1 [DCMP-060643]-19/09/2006-PHG Gestion repertoire temporaire
 //	sFicConsult			= stGLB.sWinDir + "\TEMP\CONSCOUR.DOC"
@@ -312,12 +307,6 @@ End If
 
 
 	If	f_FileExists ( sFicConsult ) Then 
-
-		// [TRACE_TS_COURRIER]
-		If F_CLE_A_TRUE ( "TRACE_TS_COURRIER" ) Then
-			This.wf_CourWord_TraceTsCourrier ( "FIN_GENERATION_ERREUR", lIdSin, lIdInter, lIdDoc )
-		End If 
-		
 		Return
 	End If
 /*------------------------------------------------------------------*/
@@ -421,11 +410,6 @@ End If
 		stMessage.sCode		= "SVAL90"
 		stMessage.bTrace  	= False
 
-		// [TRACE_TS_COURRIER]
-		If F_CLE_A_TRUE ( "TRACE_TS_COURRIER" ) Then
-			This.wf_CourWord_TraceTsCourrier ( "FIN_GENERATION_ERREUR", lIdSin, lIdInter, lIdDoc )
-		End If 
-
 		F_Message ( stMessage )
 		Return			
 	End If
@@ -445,11 +429,6 @@ End If
 		stMessage.sCode		= "SVAL90"
 		stMessage.bTrace  	= False
 
-		// [TRACE_TS_COURRIER]
-		If F_CLE_A_TRUE ( "TRACE_TS_COURRIER" ) Then
-			This.wf_CourWord_TraceTsCourrier ( "FIN_GENERATION_ERREUR", lIdSin, lIdInter, lIdDoc )
-		End If 
-
 		F_Message ( stMessage )
 		Return			
 	End If
@@ -457,11 +436,6 @@ End If
 /* On va écrire le BLOB dans un fichier.                            */
 /*------------------------------------------------------------------*/
 	If Not F_EcrireFichierBlob ( blFicConsult, sFicConsult )	Then
-		// [TRACE_TS_COURRIER]
-		If F_CLE_A_TRUE ( "TRACE_TS_COURRIER" ) Then
-			This.wf_CourWord_TraceTsCourrier ( "FIN_GENERATION_ERREUR", lIdSin, lIdInter, lIdDoc )
-		End If 
-		
 		Return
 	End If 
 	
@@ -488,12 +462,7 @@ End If
 	If	iRet <> 0	Then
 		F_SetVersionWord ( nvWord, FALSE )
 		Destroy oleWord
-		
-		// [TRACE_TS_COURRIER]
-		If F_CLE_A_TRUE ( "TRACE_TS_COURRIER" ) Then
-			This.wf_CourWord_TraceTsCourrier ( "FIN_GENERATION_ERREUR", lIdSin, lIdInter, lIdDoc )
-		End If 		
-		
+
 		Return
 	End If
 /*------------------------------------------------------------------*/
@@ -504,11 +473,6 @@ End If
 	If	iRet <> 1 Then
 		F_SetVersionWord ( nvWord, FALSE )
 		Destroy oleWord
-		
-		// [TRACE_TS_COURRIER]
-		If F_CLE_A_TRUE ( "TRACE_TS_COURRIER" ) Then
-			This.wf_CourWord_TraceTsCourrier ( "FIN_GENERATION_ERREUR", lIdSin, lIdInter, lIdDoc )
-		End If 		
 		
 		Return
 	End If
@@ -543,11 +507,6 @@ End If
 		stMessage.sCode		= "WSIN850"
 		F_Message ( stMessage )
 
-	End If 
-	
-	// [TRACE_TS_COURRIER]
-	If F_CLE_A_TRUE ( "TRACE_TS_COURRIER" ) Then
-		This.wf_CourWord_TraceTsCourrier ( "FIN_GENERATION_SUCCES", lIdSin, lIdInter, lIdDoc )
 	End If 
 	
 End If

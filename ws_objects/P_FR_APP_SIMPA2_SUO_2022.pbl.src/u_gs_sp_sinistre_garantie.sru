@@ -1744,10 +1744,8 @@ Case 1
 					lGtiAuto		=	idw_DetPro.object.id_code_num[lBoucle]
 	
 					// [RS5656_MOD_PCE_DIF]
-					If F_CLE_A_TRUE ( "RS5656_MOD_PCE_DIF" ) Then
-						sIdEvtAuto = idw_DetPro.object.id_code_car[lBoucle]
-						If sIdEvtAuto = "-1" Then Continue
-					End If 
+					sIdEvtAuto = idw_DetPro.object.id_code_car[lBoucle]
+					If sIdEvtAuto = "-1" Then Continue
 
 					If lPieceAuto = lPiece And lGtiAuto = lGti Then
 						// [PM194] Evolution de la DP 77

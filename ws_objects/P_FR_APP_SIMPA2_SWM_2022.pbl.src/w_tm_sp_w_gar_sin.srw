@@ -1087,26 +1087,17 @@ Choose Case isReferentiel
 
 		If bOk Then
 			// [DT386_EXTR_AXA]
-			If F_CLE_A_TRUE ( "DT386_EXTR_AXA" ) Then
-				F_RechDetPro ( lDeb, lFin, idwDetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 336 )
-				If lDeb > 0 Then
-					bOk =True
-				Else
-					lRow = idwStkCodeMB.Find ( "LIB_CODE = Upper ('" + sMarque + "')", 1, idwStkCodeMB.RowCount() )
-		
-					/*------------------------------------------------------------------*/
-					/* Appareil trouvé/non trouvé, donc on ne permet ou pas l'ouverture.*/
-					/*------------------------------------------------------------------*/
-					bOk = lRow > 0 
-				End If 			
-			Else			
+			F_RechDetPro ( lDeb, lFin, idwDetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 336 )
+			If lDeb > 0 Then
+				bOk =True
+			Else
 				lRow = idwStkCodeMB.Find ( "LIB_CODE = Upper ('" + sMarque + "')", 1, idwStkCodeMB.RowCount() )
 	
 				/*------------------------------------------------------------------*/
 				/* Appareil trouvé/non trouvé, donc on ne permet ou pas l'ouverture.*/
 				/*------------------------------------------------------------------*/
 				bOk = lRow > 0 
-			End If 
+			End If 			
 		End If
 
 /*------------------------------------------------------------------*/
@@ -1792,10 +1783,8 @@ If F_CLE_A_TRUE ( "DT269" ) Then
 End If
 
 // [DT386_EXTR_AXA]
-If F_CLE_A_TRUE ( "DT386_EXTR_AXA" ) Then
-	If bOk Then
-		bOk = This.wf_Condition_Ouverture_DT386 ( )
-	End If
+If bOk Then
+	bOk = This.wf_Condition_Ouverture_DT386 ( )
 End If
 
 // [PC192290]
@@ -2089,6 +2078,7 @@ If lRow > 0 Then
 End If
 
 // [DT386_EXTR_AXA_V8]
+/*
 If F_CLE_NUMERIQUE ( "DT386_EXTR_AXA" ) >= 2 Then
 
 	lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'NUM_PCE_IDENTITE'", 1, idwWDivSin.RowCount () ) 
@@ -2147,6 +2137,8 @@ If F_CLE_NUMERIQUE ( "DT386_EXTR_AXA" ) >= 2 Then
 
 
 End If
+*/
+
 
 Return bOk
 
@@ -3462,17 +3454,12 @@ Case "ALT_RECLAME"
 		
 		If sVal = "O" Then 
 			// [RS5656_MOD_PCE_DIF]
-			If F_CLE_A_TRUE ( "RS5656_MOD_PCE_DIF" ) Then
-				Choose Case sModeFctDp345 
-					Case "UNIQUE"
-						iRow = gdsPieceSherpa.Find ( "ID_PCE = " + String ( sCodePce ), 1, gdsPieceSherpa.RowCount ()) 
-					Case "DET_GARANTIE"
-						iRow = gdsPieceSherpa.Find ( "ID_GTI = " + String ( iIdGti) + " AND ID_DETAIL = -1 AND ID_PCE = " + String ( sCodePce ), 1, gdsPieceSherpa.RowCount ()) 
-				End Choose 
-				
-			Else
-				iRow = gdsPieceSherpa.Find ( "ID_PCE = " + String ( sCodePce ), 1, gdsPieceSherpa.RowCount ()) 
-			End If
+			Choose Case sModeFctDp345 
+				Case "UNIQUE"
+					iRow = gdsPieceSherpa.Find ( "ID_PCE = " + String ( sCodePce ), 1, gdsPieceSherpa.RowCount ()) 
+				Case "DET_GARANTIE"
+					iRow = gdsPieceSherpa.Find ( "ID_GTI = " + String ( iIdGti) + " AND ID_DETAIL = -1 AND ID_PCE = " + String ( sCodePce ), 1, gdsPieceSherpa.RowCount ()) 
+			End Choose 
 			// /[RS5656_MOD_PCE_DIF]
 			
 			If iRow > 0 Then
@@ -3536,11 +3523,7 @@ Case "ALT_RECLAME"
 					// TRT : Marquage id_sin, id_pce pour sherpa PVL
 					
 					// [RS5656_MOD_PCE_DIF]
-					If F_CLE_A_TRUE ( "RS5656_MOD_PCE_DIF" ) Then
-						Parent.Wf_MarquageEtatPieceSherpa_RS5656 ( iIdGti, Integer ( sCodePce ), "PVL", iIdI )
-					Else
-						Parent.Wf_MarquageEtatPieceSherpa ( Integer ( sCodePce ), "PVL", iIdI )
-					End If 
+					Parent.Wf_MarquageEtatPieceSherpa_RS5656 ( iIdGti, Integer ( sCodePce ), "PVL", iIdI )
 					
 					// Décochage natif
 					This.dw_Trt.SetItem ( lLigne, "ALT_RECLAME", "N" )
@@ -3569,13 +3552,8 @@ Case "ALT_RECLAME"
 						Loop 
 						
 					// [RS5656_MOD_PCE_DIF]
-					If F_CLE_A_TRUE ( "RS5656_MOD_PCE_DIF" ) Then
-						// TRT : Marquage id_sin, id_pce pour sherpa PNV
-						Parent.Wf_MarquageEtatPieceSherpa_RS5656 ( iIdGti, Integer ( sCodePce ), "PNV", iIdI )
-					Else
-						// TRT : Marquage id_sin, id_pce pour sherpa PNV
-						Parent.Wf_MarquageEtatPieceSherpa ( Integer ( sCodePce ), "PNV", iIdI )
-					End If 
+					// TRT : Marquage id_sin, id_pce pour sherpa PNV
+					Parent.Wf_MarquageEtatPieceSherpa_RS5656 ( iIdGti, Integer ( sCodePce ), "PNV", iIdI )
 					
 					// TRT : on laisse cocher !!
 					This.dw_Trt.SetItem ( lLigne, "ALT_RECLAME", "O" )
@@ -3584,13 +3562,8 @@ Case "ALT_RECLAME"
 					Else 
 						
 						// [RS5656_MOD_PCE_DIF]
-						If F_CLE_A_TRUE ( "RS5656_MOD_PCE_DIF" ) Then
-							// TRT : Marquage id_sin, id_pce pour sherpa PNV
-							Parent.Wf_MarquageEtatPieceSherpa_RS5656 ( iIdGti, Integer ( sCodePce ), "PNV", iIdI )
-						Else
-							// TRT : Marquage id_sin, id_pce pour sherpa PNV
-							Parent.Wf_MarquageEtatPieceSherpa ( Integer ( sCodePce ), "PNV", iIdI )
-						End If 
+						// TRT : Marquage id_sin, id_pce pour sherpa PNV
+						Parent.Wf_MarquageEtatPieceSherpa_RS5656 ( iIdGti, Integer ( sCodePce ), "PNV", iIdI )
 						
 						// Décochage natif
 						This.dw_Trt.SetItem ( lLigne, "ALT_RECLAME", "N" )

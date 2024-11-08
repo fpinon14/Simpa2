@@ -6997,11 +6997,7 @@ datastore	dsCode
 Long dcIdProd, lTot
 String sInfoSpbFrnCplt, sChaineBCV
 String sTabVal[], sTabNull[]
-Boolean bF_CLE_A_TRUE_DT386_EXTR_AXA
 Boolean bF_CLE_A_TRUE_PMO139_RS4926
-
-// [PM445-1]
-bF_CLE_A_TRUE_DT386_EXTR_AXA = F_CLE_A_TRUE ( "DT386_EXTR_AXA" )
 
 // [PMO139_RS4926]
 bF_CLE_A_TRUE_PMO139_RS4926 = F_CLE_A_TRUE ( "PMO139_RS4926" )
@@ -8378,39 +8374,37 @@ For lCpt = lTotLig To 1 Step -1
 	End If 	
 	
 	// [DT386_EXTR_AXA]
-	If bF_CLE_A_TRUE_DT386_EXTR_AXA Then
-		lVal =  idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) 
-		sVal =  lnvPFCString.of_Getkeyvalue ( sInfoSpbFrnCplt , "BUYBACK", ";") 
+	lVal =  idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) 
+	sVal =  lnvPFCString.of_Getkeyvalue ( sInfoSpbFrnCplt , "BUYBACK", ";") 
 
-		If lVal = 152 And sVal = "OUI" Then
-			// Qualificatif du 152 Non Conforme 
-			sVal = Trim ( lnvPFCString.of_getkeyvalue (sInfoFrnSpbCpltLu, "QUALIF_NC", ";"))
+	If lVal = 152 And sVal = "OUI" Then
+		// Qualificatif du 152 Non Conforme 
+		sVal = Trim ( lnvPFCString.of_getkeyvalue (sInfoFrnSpbCpltLu, "QUALIF_NC", ";"))
+	
+		If IsNull ( sVal ) Then sVal = ""
+
+		Choose Case sVal
+			Case "APP_DEGRADE", &
+				  "APP_INCOMPLET", &
+				  "APP_DETERIORE", &
+				  "DTE_ACH_NC", &
+				  "PRIX_ACH_NC", &
+				  "BIEN_NC"
+					// Ok
+					
+			Case Else 
+				If sVal = "" Then
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") sur un retour 152/BuyBack, le BCV QUALIF_NC est obligatoire dans la chaine sérialisée avec une valeur valide." )
+				Else 
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé QUALIF_NC, n'est pas valide." )
+				End If	
+		End Choose 
 		
-			If IsNull ( sVal ) Then sVal = ""
-
-			Choose Case sVal
-				Case "APP_DEGRADE", &
-					  "APP_INCOMPLET", &
-					  "APP_DETERIORE", &
-					  "DTE_ACH_NC", &
-					  "PRIX_ACH_NC", &
-					  "BIEN_NC"
-						// Ok
-						
-				Case Else 
-					If sVal = "" Then
-						iRet = -1
-						This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") sur un retour 152/BuyBack, le BCV QUALIF_NC est obligatoire dans la chaine sérialisée avec une valeur valide." )
-					Else 
-						iRet = -1
-						This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé QUALIF_NC, n'est pas valide." )
-					End If	
-			End Choose 
-			
-		End If 
-	End If	
+	End If 
 
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )				
 	Choose Case sIdRefFour 

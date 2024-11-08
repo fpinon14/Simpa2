@@ -6,8 +6,6 @@ end type
 end forward
 
 global type w_mdi_sp from w_mdi
-integer x = 1
-integer y = 1
 integer width = 3735
 integer height = 2392
 string title = "DECES/INVALIDITE"
@@ -680,12 +678,7 @@ End If
 gdsPieceSherpa = Create DataStore 		
 
 // [RS5656_MOD_PCE_DIF]
-If F_CLE_A_TRUE ( "RS5656_MOD_PCE_DIF" ) Then
-	gdsPieceSherpa.DataObject = "d_stk_gestion_piece_sherpa_RS5656"
-Else
-	gdsPieceSherpa.DataObject = "d_stk_gestion_piece_sherpa"	
-End If
-
+gdsPieceSherpa.DataObject = "d_stk_gestion_piece_sherpa_RS5656"
 gdsPieceSherpa.Reset ()
 
 // [POSITION_SIMPA2]

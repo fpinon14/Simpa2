@@ -1,5 +1,5 @@
-HA$PBExportHeader$n_cst_saisie_validation_sinistre.sru
-$PBExportComments$------} NVUO servant $$HEX2$$e0002000$$ENDHEX$$la m$$HEX1$$e900$$ENDHEX$$thode Saisie/Validation/Edition pour la gestion du Sinistre.
+﻿$PBExportHeader$n_cst_saisie_validation_sinistre.sru
+$PBExportComments$------} NVUO servant à la méthode Saisie/Validation/Edition pour la gestion du Sinistre.
 forward
 global type n_cst_saisie_validation_sinistre from nonvisualobject
 end type
@@ -65,10 +65,10 @@ Private :
 
 	s_Pass			iTabVariable[]	// [PI052] Tableau de tableaux des variables par interlocuteur.
 	string			iTabCodeVar[]	// [PI052] Tableau des codes de variables.
-	String			iTabCleFichier [] // [PI052] Tableau des cl$$HEX2$$e9002000$$ENDHEX$$de fichiers g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$en XML et $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer en PDF.
-	String			iTabCleFichierLocal [] // [PI052] Tableau des cl$$HEX2$$e9002000$$ENDHEX$$de fichiers PDF en local.	
-	String			iTabCleKslEdt [] // [PI052] Tableau des cl$$HEX2$$e9002000$$ENDHEX$$pour l'$$HEX1$$e900$$ENDHEX$$dition sour KSL.	
-	String 			isCleRep	// [PI052] Cl$$HEX2$$e9002000$$ENDHEX$$du r$$HEX1$$e900$$ENDHEX$$pertoire.		
+	String			iTabCleFichier [] // [PI052] Tableau des clé de fichiers généré en XML et à récupérer en PDF.
+	String			iTabCleFichierLocal [] // [PI052] Tableau des clé de fichiers PDF en local.	
+	String			iTabCleKslEdt [] // [PI052] Tableau des clé pour l'édition sour KSL.	
+	String 			isCleRep	// [PI052] Clé du répertoire.		
 	String			isTextStPause // [PI052] Sav partie fixe
 	String			isExtFicOut // [PI052] Extension du fichier de sortir PDF/DOC
 	Constant String isFicFinGen = "FIN.TXT"
@@ -76,8 +76,8 @@ Private :
 	Long				ilNbreTour // [PI052]
 	constant Long 	K_FrequenceTimer = 0.5 // [PI052] en seconde
 
-   Long ilPos[] = { 850,10,1014,740 } // [PI052] Coordonn$$HEX1$$e900$$ENDHEX$$es AcrobatReader           
-//Long ilPos[] = { 10,10,200,200 } // [PI052] Coordonn$$HEX1$$e900$$ENDHEX$$es AcrobatReader           
+   Long ilPos[] = { 850,10,1014,740 } // [PI052] Coordonnées AcrobatReader           
+//Long ilPos[] = { 10,10,200,200 } // [PI052] Coordonnées AcrobatReader           
 
 	Long ilIdentityTraceTsCourrier // [TRACE_TS_COURRIER]
 
@@ -121,7 +121,6 @@ public function boolean uf_getautorisation2 (integer ainatoper, long alidprod)
 public function integer uf_pi052_recuperationcourrier ()
 public function integer uf_pi052_verif_presence_courrier ()
 public function integer uf_pi052_afficherdoc ()
-private subroutine uf_courword_tracetscourrier (string ascas)
 public subroutine uf_set_typetrt (string astypetrt)
 end prototypes
 
@@ -130,17 +129,17 @@ private function integer uf_populiser_dwgenerationcourrier ();//*---------------
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_Populiser_DwGenerationCourrier		(PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2000 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Populisation de la DW Dw_Generation_Courrier
 //*
 //* Arguments		: Aucun
 //*
 //* Retourne		: Integer						 1 = Tout est OK
-//*														-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*														-1 = Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	  		Modification
-//* #1 		 DGA      19/09/2006 Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire DCMP-060643
+//* #1 		 DGA      19/09/2006 Gestion d'un répertoire temporaire DCMP-060643
 //* #2		 PHG		 31/10/2006 [DNTMAIL1-2]
 //*          JFF      18/07/2010 [PM159]
 //*-----------------------------------------------------------------
@@ -158,7 +157,7 @@ iRet		= 1
 dtCreeLe = DateTime ( Today (), Now () )
 /*------------------------------------------------------------------*/  
 /* #1. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 //sRepTmp	= stGLB.sWinDir + "\TEMP\"
 sRepTmp	= stGLB.sRepTempo
@@ -169,7 +168,7 @@ idwwCourBlobSve.RowsDiscard ( 1, 999, Primary! )
 
 /*------------------------------------------------------------------*/
 /* On s'occupe maintenant de l'armement de la DW pour la            */
-/* g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration des courriers.                                        */
+/* génération des courriers.                                        */
 /*------------------------------------------------------------------*/
 idwGenCourrier.Reset ()
 
@@ -193,9 +192,9 @@ For	lCpt = 1 To lTotwCourSve
 		sAltPart		= idwwCourSve.GetItemString ( lCpt, "ALT_PART" )
 
 /*------------------------------------------------------------------*/
-/* On donne un titre $$HEX2$$e0002000$$ENDHEX$$la fen$$HEX1$$ea00$$ENDHEX$$tre. (XXXX99_X*.*)                    */
+/* On donne un titre à la fenêtre. (XXXX99_X*.*)                    */
 /*------------------------------------------------------------------*/
-/* XXXX = Code de l'application sur 4 caract$$HEX1$$e800$$ENDHEX$$res obligatoires.      */
+/* XXXX = Code de l'application sur 4 caractères obligatoires.      */
 /* 99   = ID_INTER sur deux positions obligatoires (Ex:02,12).      */
 /* 9    = COD_INTER.                                                */
 /*------------------------------------------------------------------*/
@@ -207,15 +206,15 @@ For	lCpt = 1 To lTotwCourSve
 
 /*--------------------------------------------------------------------------------------------------*/
 /* #2 30/10/2006 [DNTMAIL1-2] PHG                                                                   */
-/* Report code de l'open de la fenetre appelante suivante point 4.4.1 sp$$HEX1$$e900$$ENDHEX$$cification DNTMAIL1/2      */ 
-/* Initialisation du canal selon la r$$HEX1$$e900$$ENDHEX$$gle suivante : Si champ ADR_MAIL est renseign$$HEX17$$e9002000200020002000200020002000200020002000200020002000200020002000$$ENDHEX$$*/
-/* et que la zone ALT_SUIVI_MAIL est coch$$HEX2$$e9002000$$ENDHEX$$alors c'est un envoi par MAIL SINON envoi par COURRIER   */
+/* Report code de l'open de la fenetre appelante suivante point 4.4.1 spécification DNTMAIL1/2      */ 
+/* Initialisation du canal selon la régle suivante : Si champ ADR_MAIL est renseigné                */
+/* et que la zone ALT_SUIVI_MAIL est coché alors c'est un envoi par MAIL SINON envoi par COURRIER   */
 /*--------------------------------------------------------------------------------------------------*/
 		
 		lLigTrv  = idwLstInter.Find ("ID_I = " + String ( lIdInter ), 1, idwLstInter.RowCount()+1)
 		 			
 		sAltSuiviMail = idwLstInter.GetItemString (lLigTrv , "ALT_SUIVI_MAIL")
-		//[DNTMAIL1-2_MEP_DEF] For$$HEX1$$e700$$ENDHEX$$age $$HEX2$$e0002000$$ENDHEX$$supprimer lors de la MEP finale.
+		//[DNTMAIL1-2_MEP_DEF] Forçage à supprimer lors de la MEP finale.
 		// [PM159]
 		sAltSuiviMail = "O" // [PM159]				
 
@@ -229,12 +228,12 @@ For	lCpt = 1 To lTotwCourSve
 		// Fin [DNTMAIL1-2] PHG 30/10/2006
 
 /*------------------------------------------------------------------*/
-/* Tous les courriers sont $$HEX1$$e900$$ENDHEX$$dit$$HEX1$$e900$$ENDHEX$$s sur le bac du BAS.                */
+/* Tous les courriers sont édités sur le bac du BAS.                */
 /*------------------------------------------------------------------*/
 		sCodBac		= This.uf_GestionBac ( sIdCourTyp )
 
 /*------------------------------------------------------------------*/
-/* Par d$$HEX1$$e900$$ENDHEX$$daut on charge les datas de l'inter.                       */
+/* Par dédaut on charge les datas de l'inter.                       */
 /*------------------------------------------------------------------*/
 		sTxtData		= isDataInter[ lIdInter + 1 ]
 
@@ -282,7 +281,7 @@ private function string uf_courword (integer aitypetrt);//*---------------------
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_CourWord		(PRIVATE)
 //* Auteur			: Erick Jo hn Stark
 //* Date				: 15/10/2000 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: (Val)		Integer			aiTypeTrt		Type de traitement
@@ -303,15 +302,15 @@ sRet			= ""
 
 Choose Case aiTypeTrt
 /*------------------------------------------------------------------*/
-/* Traitement $$HEX2$$e0002000$$ENDHEX$$effectuer avant l'apparition de la fen$$HEX1$$ea00$$ENDHEX$$tre          */
-/* RESPONSE ou se fera le choix de la reg$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration des courriers.   */
+/* Traitement à effectuer avant l'apparition de la fenêtre          */
+/* RESPONSE ou se fera le choix de la regénération des courriers.   */
 /*------------------------------------------------------------------*/
 Case 1
 /*------------------------------------------------------------------*/
-/* On va maintenant fermer tous les documents WORD d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$ouverts.    */
-/* Si l'un des documents n'est pas sauvegard$$HEX1$$e900$$ENDHEX$$, on arr$$HEX1$$ea00$$ENDHEX$$te tout. Le   */
-/* gestionnaire devra d$$HEX1$$e900$$ENDHEX$$cider d'une sauvegarde $$HEX1$$e900$$ENDHEX$$ventuelle puis      */
-/* recommencer le contr$$HEX1$$f400$$ENDHEX$$le.                                         */
+/* On va maintenant fermer tous les documents WORD déjà ouverts.    */
+/* Si l'un des documents n'est pas sauvegardé, on arrête tout. Le   */
+/* gestionnaire devra décider d'une sauvegarde éventuelle puis      */
+/* recommencer le contrôle.                                         */
 /*------------------------------------------------------------------*/
 		iRet = This.uf_CourWord_ViderWord ( FALSE )
 /*------------------------------------------------------------------*/
@@ -319,13 +318,13 @@ Case 1
 /*------------------------------------------------------------------*/
 		If iRet = 1 Then iRet = This.uf_CourWord_PurgerCourriersLocal ( FALSE )
 /*------------------------------------------------------------------*/
-/* On populise une DW pour le choix des courrier $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer.         */
+/* On populise une DW pour le choix des courrier à générer.         */
 /*------------------------------------------------------------------*/
 		If iRet = 1 Then iRet = This.uf_CourWord_PopuliserDwChoix ()
 Case 2
 /*------------------------------------------------------------------*/
-/* On vient de proposer une fen$$HEX1$$ea00$$ENDHEX$$tre de choix de reg$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration au     */
-/* gestionnaire. On va remetter les zones $$HEX2$$e0002000$$ENDHEX$$jour si besoin.         */
+/* On vient de proposer une fenêtre de choix de regénération au     */
+/* gestionnaire. On va remetter les zones à jour si besoin.         */
 /*------------------------------------------------------------------*/
 		If iRet = 1 Then iRet = This.uf_CourWord_MajDwGenCour ()
 /*------------------------------------------------------------------*/
@@ -334,10 +333,10 @@ Case 2
 		If iRet = 1 Then iRet = This.uf_CourWord_AfficherCourrier ()
 Case 3
 /*------------------------------------------------------------------*/
-/* On va maintenant fermer tous les documents WORD d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$ouverts.    */
-/* Si l'un des documents n'est pas sauvegard$$HEX1$$e900$$ENDHEX$$, on arr$$HEX1$$ea00$$ENDHEX$$te tout. Le   */
-/* gestionnaire devra d$$HEX1$$e900$$ENDHEX$$cider d'une sauvegarde $$HEX1$$e900$$ENDHEX$$ventuelle puis      */
-/* recommencer le contr$$HEX1$$f400$$ENDHEX$$le.                                         */
+/* On va maintenant fermer tous les documents WORD déjà ouverts.    */
+/* Si l'un des documents n'est pas sauvegardé, on arrête tout. Le   */
+/* gestionnaire devra décider d'une sauvegarde éventuelle puis      */
+/* recommencer le contrôle.                                         */
 /*------------------------------------------------------------------*/
 		iRet = This.uf_CourWord_ViderWord ( FALSE )
 
@@ -345,10 +344,10 @@ Case 3
 
 Case 4
 /*------------------------------------------------------------------*/
-/* On est positionn$$HEX2$$e9002000$$ENDHEX$$dans la fonction Wf_SuiteValider () de la      */
-/* fen$$HEX1$$ea00$$ENDHEX$$tre de sinistre. On va updater la table W_COUR_BLOB et       */
-/* envoyer un COMMIT ou un ROLLBACk en fonction de la r$$HEX1$$e900$$ENDHEX$$ussite de   */
-/* l'op$$HEX1$$e900$$ENDHEX$$ration.                                                     */
+/* On est positionné dans la fonction Wf_SuiteValider () de la      */
+/* fenêtre de sinistre. On va updater la table W_COUR_BLOB et       */
+/* envoyer un COMMIT ou un ROLLBACk en fonction de la réussite de   */
+/* l'opération.                                                     */
 /*------------------------------------------------------------------*/
 		iRet = uf_CourWord_MajwCourBlob ()
 
@@ -364,18 +363,18 @@ private function integer uf_courword_majdwgencour ();//*------------------------
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_CourWord_MajDwGenCour		(PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2000 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Mise $$HEX2$$e0002000$$ENDHEX$$jour de la DW idwChoixCourGen au retour de la fen$$HEX1$$ea00$$ENDHEX$$tre RESPONSE
+//* Libellé			: 
+//* Commentaires	: Mise à jour de la DW idwChoixCourGen au retour de la fenêtre RESPONSE
 //*
 //* Arguments		: Aucun
 //*
 //* Retourne		: Integer						 1 = Tout est OK
-//*														-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*														-1 = Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	  		Modification
-//* #1 		 DGA      19/09/2006 Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire DCMP-060643
-//* #2		JCA		19/09/2007	DCMP 40324 - Gestion des $$HEX1$$e900$$ENDHEX$$ditions pour le DSC
+//* #1 		 DGA      19/09/2006 Gestion d'un répertoire temporaire DCMP-060643
+//* #2		JCA		19/09/2007	DCMP 40324 - Gestion des éditions pour le DSC
 //*-----------------------------------------------------------------
 
 Integer iRet
@@ -394,7 +393,7 @@ lTotInter	= idwLstInter.RowCount ()
 lTotLig		= idwChoixCourGen.RowCount ()
 /*------------------------------------------------------------------*/  
 /* #1. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 //sRepTmp		= stGLB.sWinDir + "\TEMP\"
 sRepTmp		= stGLB.sRepTempo
@@ -407,7 +406,7 @@ For	lCpt = 1 To lTotLig
 		idwGenCourrier.SetFilter ( sFiltre )
 		idwGenCourrier.Filter ()
 /*------------------------------------------------------------------*/
-/* On recherche tous les courriers $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer pour cet               */
+/* On recherche tous les courriers à générer pour cet               */
 /* interlocuteur.                                                   */
 /*------------------------------------------------------------------*/
 		lTotCourrier	= idwGenCourrier.RowCount ()
@@ -436,7 +435,7 @@ lTotGenCourrier = idwGenCourrier.RowCount ()
 For	lCpt = 1 To lTotGenCourrier
 		lIdInterDoubleProv = idwGenCourrier.GetItemNumber ( lCpt, "ID_INTER_DOUBLE_PROV" )
 /*------------------------------------------------------------------*/
-/* Ce courrier poss$$HEX1$$e900$$ENDHEX$$de t-il un double ?                             */
+/* Ce courrier posséde t-il un double ?                             */
 /*------------------------------------------------------------------*/
 		If	lIdInterDoubleProv < 0	Then Continue
 /*------------------------------------------------------------------*/
@@ -470,16 +469,16 @@ for lCpt = 1 to lTotLig
 	
 	if iInterLine > 0 then
 		for iGenCourrier = 1 to idwGenCourrier.rowcount()
-			// on supprime les courriers destin$$HEX1$$e900$$ENDHEX$$s $$HEX2$$e0002000$$ENDHEX$$l'interlocuteur
+			// on supprime les courriers destinés à l'interlocuteur
 			sFindDelInter = "ID_INTER = " + string(idwChoixCourGen.object.id_inter[lCpt])
 			iDelLine = idwGenCourrier.find(sFindDelInter, 1, idwGenCourrier.rowcount())
 			
 			if iDelLine > 0 then
 				idwGenCourrier.rowsdiscard( iDelLine, iDelLine, primary!)
-				// on d$$HEX1$$e900$$ENDHEX$$cremente car le rowdiscard fait remonter les lignes du dessous
+				// on décremente car le rowdiscard fait remonter les lignes du dessous
 				iGenCourrier --
 			end if
-			// pour que la remonter de ligne ne d$$HEX1$$e900$$ENDHEX$$passe pas le compteur
+			// pour que la remonter de ligne ne dépasse pas le compteur
 			if idwGenCourrier.rowcount() = iGenCourrier then exit
 	
 			// on supprime les doubles de courrier concernant l'interlocuteur
@@ -488,10 +487,10 @@ for lCpt = 1 to lTotLig
 			
 			if iDelLineDouble > 0 then
 				idwGenCourrier.rowsdiscard( iDelLineDouble, iDelLineDouble, primary!)
-				// on d$$HEX1$$e900$$ENDHEX$$cremente car le rowdiscard fait remonter les lignes du dessous
+				// on décremente car le rowdiscard fait remonter les lignes du dessous
 				iGenCourrier --
 			end if
-			// pour que la remonter de ligne ne d$$HEX1$$e900$$ENDHEX$$passe pas le compteur
+			// pour que la remonter de ligne ne dépasse pas le compteur
 			if idwGenCourrier.rowcount() = iGenCourrier then exit
 			
 		next
@@ -509,13 +508,13 @@ private function integer uf_courword_affichercourrier ();//*--------------------
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_CourWord_AfficherCourrier			(PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2000 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Affichage des courriers sous WORD
 //*
 //* Arguments		: Aucun
 //*
 //* Retourne		: Integer						 1 = Tout est OK
-//*														-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*														-1 = Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	   Modification
@@ -564,11 +563,11 @@ nvGenCourrier.uf_Initialiser ( "E" )
 If nvGenCourrier.uf_InitialiserWord ( FALSE ) = 1 then 
 	
 	// [RS5045_REF_MATP]
-	// Gestion des mod$$HEX1$$e800$$ENDHEX$$les pour le m$$HEX1$$e900$$ENDHEX$$dia MAIL
-	// R$$HEX1$$e800$$ENDHEX$$gles :
-	// Si M$$HEX1$$e900$$ENDHEX$$dia "Par mail" Et absence de DP368 Alors Mod$$HEX1$$e800$$ENDHEX$$le par d$$HEX1$$e900$$ENDHEX$$faut COURRIER_SPB.DOT pour A et T
-	// Si M$$HEX1$$e900$$ENDHEX$$dia "Par mail" Et pr$$HEX1$$e900$$ENDHEX$$sence de DP368 Alors Mod$$HEX1$$e800$$ENDHEX$$le de la DP368 pour l'Inter donn$$HEX1$$e900$$ENDHEX$$
-	// On n'emp$$HEX1$$ea00$$ENDHEX$$che l'armement plus g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ral et existant de la DP188, mais la DP/368 l'emportera dans le traitement sur n_cst_edition_courrier
+	// Gestion des modèles pour le média MAIL
+	// Règles :
+	// Si Média "Par mail" Et absence de DP368 Alors Modèle par défaut COURRIER_SPB.DOT pour A et T
+	// Si Média "Par mail" Et présence de DP368 Alors Modèle de la DP368 pour l'Inter donné
+	// On n'empêche l'armement plus général et existant de la DP188, mais la DP/368 l'emportera dans le traitement sur n_cst_edition_courrier
 
 	F_RechDetPro ( lDebDp188, lFin, idwDetPro, lIdProd, "-DP", 188 )
 	
@@ -593,25 +592,25 @@ If nvGenCourrier.uf_InitialiserWord ( FALSE ) = 1 then
 
 			If F_CLE_NUMERIQUE ( "RS5045_REF_MATP" ) >= 4 Then
 				If lDebDp188 <= 0 And sAltGestionPart <> "O" Then
-					// Par d$$HEX1$$e900$$ENDHEX$$faut, si le canal est mail, on mets au moins le mod$$HEX1$$e800$$ENDHEX$$le courrier_spb.dot qui pourrai $$HEX1$$ea00$$ENDHEX$$tre $$HEX1$$e900$$ENDHEX$$cras$$HEX2$$e9002000$$ENDHEX$$ensuite
+					// Par défaut, si le canal est mail, on mets au moins le modèle courrier_spb.dot qui pourrai être écrasé ensuite
 					TInter [iCpt_idwGenCourrier] = dcIdI
 					
 					Choose Case sIdCanal 
 						Case "MA"
 							TModele [iCpt_idwGenCourrier] = ProfileString ( stGLB.sFichierIni, "EDITION", "MODELE_MAIL",  "" )
-						Case Else // CO d$$HEX1$$e900$$ENDHEX$$faut
+						Case Else // CO défaut
 							TModele [iCpt_idwGenCourrier] = ProfileString ( stGLB.sFichierIni, "EDITION", "MODELE",  "" )
 					End Choose 
 				End If 
 			Else
 				If sIdCanal = "MA" And lDebDp188 <= 0 And sAltGestionPart <> "O" Then
-					// Par d$$HEX1$$e900$$ENDHEX$$faut, si le canal est mail, on mets au moins le mod$$HEX1$$e800$$ENDHEX$$le courrier_spb.dot qui pourrai $$HEX1$$ea00$$ENDHEX$$tre $$HEX1$$e900$$ENDHEX$$cras$$HEX2$$e9002000$$ENDHEX$$ensuite
+					// Par défaut, si le canal est mail, on mets au moins le modèle courrier_spb.dot qui pourrai être écrasé ensuite
 					TInter [iCpt_idwGenCourrier] = dcIdI
 					TModele [iCpt_idwGenCourrier] = ProfileString ( stGLB.sFichierIni, "EDITION", "MODELE_MAIL",  "" )
 				End If 
 			End If 
 
-			// Mais si l'option 368 dit autre chose en fonction du contexte..., on $$HEX1$$e900$$ENDHEX$$crase alors.
+			// Mais si l'option 368 dit autre chose en fonction du contexte..., on écrase alors.
 			F_RechDetPro ( lDeb, lFin, idwDetPro, lIdProd, "-DP", 368 )
 			If lDeb > 0 And sAltGestionPart <> "O" Then
 
@@ -666,7 +665,7 @@ If nvGenCourrier.uf_InitialiserWord ( FALSE ) = 1 then
 	If lDeb > 0 Then
 		sIdCie = lnvPFCString.of_getkeyvalue (idwDetPro.GetItemString ( lDeb, "VAL_CAR" ), "ID_CIE", ";")
 		If sIdCie = "" Then 
-			lFin = lDeb // Si pas de param IdCir sur la premi$$HEX1$$e800$$ENDHEX$$re, on ne va pas plus loin
+			lFin = lDeb // Si pas de param IdCir sur la première, on ne va pas plus loin
 			bIdCieTrouve = TRUE
 		End If 
 		
@@ -688,7 +687,7 @@ If nvGenCourrier.uf_InitialiserWord ( FALSE ) = 1 then
 			Next 
 		End If 
 		
-		// Si pr$$HEX1$$e900$$ENDHEX$$sence de dp/188 avec "des" mod$$HEX1$$e800$$ENDHEX$$les mais aucune correspondance id_cie, alors on garde courrier.dot.
+		// Si présence de dp/188 avec "des" modèles mais aucune correspondance id_cie, alors on garde courrier.dot.
 		If bIdCieTrouve Then
 			sModele = lnvPFCString.of_getkeyvalue (idwDetPro.GetItemString ( lDeb, "VAL_CAR" ), "MODELE", ";")
 
@@ -702,21 +701,9 @@ If nvGenCourrier.uf_InitialiserWord ( FALSE ) = 1 then
 					dcIdI = idwwCourSve.GetItemNumber ( iCpt_idwwCourSve, "ID_I" ) 
 					sModele_idwwCourSve = Trim ( idwwCourSve.GetItemString ( iCpt_idwwCourSve, "MODELE_WORD" ) )
 					
-					If Not IsNull ( sModele_idwwCourSve ) And sModele_idwwCourSve <> "" Then Continue // D$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$un mod$$HEX1$$e800$$ENDHEX$$le par inter, on passe
+					If Not IsNull ( sModele_idwwCourSve ) And sModele_idwwCourSve <> "" Then Continue // Déjà un modèle par inter, on passe
 
-					idwwCourSve.SetItem ( iCpt_idwwCourSve, "MODELE_WORD", sModele ) // Sinon on met le mod$$HEX1$$e800$$ENDHEX$$le par d$$HEX1$$e900$$ENDHEX$$faut g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ral de la DP188
-/*					
-					For iCpt_TInter = 1 To iTot_TInter 
-						If TInter [ iCpt_TInter ] = dcIdI Then
-							sModele_TModele = Trim ( TModele [ iCpt_TInter ] )
-							
-							If IsNull ( sModele_TModele ) Or sModele_TModele = "" Then
-
-							End IF 
-						End IF 
-
-					Next
-*/										
+					idwwCourSve.SetItem ( iCpt_idwwCourSve, "MODELE_WORD", sModele ) // Sinon on met le modèle par défaut général de la DP188
 				Next
 			End If 
 			
@@ -726,38 +713,9 @@ If nvGenCourrier.uf_InitialiserWord ( FALSE ) = 1 then
 		End IF 			
 		
 	End If 
-	
-	// [TRACE_TS_COURRIER]
-/*	
-	If F_CLE_A_TRUE ( "TRACE_TS_COURRIER" ) Then
-		nvGenCourrier.uf_set_CouperMsgedi025 ( TRUE ) 
-		iRet = nvGenCourrier.uf_Generer_Courrier ( idwGenCourrier, TRUE )			
-		nvGenCourrier.uf_set_CouperMsgedi025 ( FALSE) 
-	Else */
-		iRet = nvGenCourrier.uf_Generer_Courrier ( idwGenCourrier, TRUE )			
-//	End If 
 
-	// [TRACE_TS_COURRIER]
-/*	
-	If F_CLE_A_TRUE ( "TRACE_TS_COURRIER" ) Then
-		This.uf_CourWord_TraceTsCourrier ( "FIN_GENERATION" )
-		
-		IF iRet < 0 Then
+	iRet = nvGenCourrier.uf_Generer_Courrier ( idwGenCourrier, TRUE )			
 
-			nvGenCourrier.uf_Get_ErreurImprimerEDI025 ( sVarErr1, sVarErr2 )
-	
-			stMessage.sTitre		= "N_Cst_Edition_Courrier - uf_Imprimer()"
-			stMessage.sVar [1]	= sVarErr1
-			stMessage.sVar [2]	= sVarErr2			
-			stMessage.Icon			= Exclamation!
-			stMessage.bErreurG	= FALSE
-			stMessage.sCode		= "GENE183"
-			stMessage.bTrace  	= TRUE
-		
-			F_Message ( stMessage )			
-		End IF 
-	End If 
-*/	
 	
 End If
 
@@ -775,14 +733,14 @@ public function integer uf_courword_viderword (boolean abtout);//*--------------
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_CourWord_ViderWord		(PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2000 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Fermeture automatique de tous les courriers WORD
 //*
 //* Arguments		: (Val)		Boolean		abTout		Fermeture de tous les documents
 //*
 //*
 //* Retourne		: Integer						 1 = Tout est OK
-//*														-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*														-1 = Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	   Modification
@@ -790,10 +748,10 @@ public function integer uf_courword_viderword (boolean abtout);//*--------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* Si abTout est $$HEX2$$e0002000$$ENDHEX$$FALSE, fermeture de tous les courriers sans      */
+/* Si abTout est à FALSE, fermeture de tous les courriers sans      */
 /* demander l'enregistrement.                                       */
-/* Si abTout est $$HEX2$$e0002000$$ENDHEX$$TRUE, fermeture de tous les documents avec       */
-/* demande de sauvegarde $$HEX1$$e900$$ENDHEX$$ventuelle.                                */
+/* Si abTout est à TRUE, fermeture de tous les documents avec       */
+/* demande de sauvegarde éventuelle.                                */
 /*------------------------------------------------------------------*/
 
 N_Cst_Edition_Courrier		nvEditionCourrier
@@ -828,17 +786,17 @@ public function integer uf_courword_purgercourrierslocal (boolean abforcer);//*-
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_CourWord_PurgerCourriersLocal		(PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2000 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On efface les fichiers pr$$HEX1$$e900$$ENDHEX$$sents en local
+//* Libellé			: 
+//* Commentaires	: On efface les fichiers présents en local
 //*
 //* Arguments		: (Val)		Boolean		abForcer			On force la purge dans tous les cas
 //*
 //* Retourne		: Integer						 1 = Tout est OK
-//*														-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*														-1 = Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	  		Modification
-//* #1 		 DGA      19/09/2006 Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire DCMP-060643
+//* #1 		 DGA      19/09/2006 Gestion d'un répertoire temporaire DCMP-060643
 //           JFF      12/06/2014 [PI052]
 //*-----------------------------------------------------------------
 
@@ -849,17 +807,17 @@ Time tHeureFic
 Integer iRet
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re tous les fichiers du type                            */
+/* On récupére tous les fichiers du type                            */
 /* C:\WINNT\TEMP\XXXX99_X*.*.                                       */
 /*------------------------------------------------------------------*/
-/* XXXX = Code de l'application sur 4 caract$$HEX1$$e800$$ENDHEX$$res obligatoires.      */
+/* XXXX = Code de l'application sur 4 caractères obligatoires.      */
 /* 99   = ID_INTER sur deux positions obligatoires (Ex:02,12).      */
 /* 9    = COD_INTER.                                                */
 /*------------------------------------------------------------------*/
 iRet		= 1
 /*------------------------------------------------------------------*/  
 /* #1. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 //sRepTmp	= stGLB.sWinDir + "\TEMP\"
 
@@ -898,7 +856,7 @@ For lCpt2 = 1 To lTot2
 	
 			If	Not abForcer	Then
 	/*------------------------------------------------------------------*/
-	/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re la date et l'heure de chacun des fichiers trouv$$HEX1$$e900$$ENDHEX$$s.   */
+	/* On récupére la date et l'heure de chacun des fichiers trouvés.   */
 	/*------------------------------------------------------------------*/
 				ilb_Fichier.SelectItem ( lCpt )
 				sNomFic			= ilb_Fichier.SelectedItem ()
@@ -908,7 +866,7 @@ For lCpt2 = 1 To lTot2
 				If lCpt2 = 1 Then					
 					invWin.uf_GetLastWriteDateTime ( sNomFicComplet, dDateFic, tHeureFic )
 		/*------------------------------------------------------------------*/
-		/* Si la date est diff$$HEX1$$e900$$ENDHEX$$rente du 01/01/2000 et le time diff$$HEX1$$e900$$ENDHEX$$rent de  */
+		/* Si la date est différente du 01/01/2000 et le time différent de  */
 		/* 23:59 cela	signifie que le gestionnaire vient de modifier le    */
 		/* document WORD.                                                   */
 		/*------------------------------------------------------------------*/
@@ -953,7 +911,7 @@ For lCpt2 = 1 To lTot2
 Next
 
 /*------------------------------------------------------------------*/
-/* On supprime tous les fichiers temporaires g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$s par la macro   */
+/* On supprime tous les fichiers temporaires générés par la macro   */
 /* de courrier.                                                     */
 /*------------------------------------------------------------------*/
 ilb_Fichier.Reset ()
@@ -979,8 +937,8 @@ private function integer uf_courword_majwcourblob ();//*------------------------
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_CourWord_MajwCourBlob				(PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2000 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On va mettre $$HEX2$$e0002000$$ENDHEX$$jour les BLOBS de la table W_COUR_BLOB
+//* Libellé			: 
+//* Commentaires	: On va mettre à jour les BLOBS de la table W_COUR_BLOB
 //*
 //* Arguments		: Aucun
 //*
@@ -989,7 +947,7 @@ private function integer uf_courword_majwcourblob ();//*------------------------
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	  Modification
 //* #1		 JFF	29/03/04   DCMP 040020 SVE
-//* #2 		 DGA      19/09/2006 Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire DCMP-060643
+//* #2 		 DGA      19/09/2006 Gestion d'un répertoire temporaire DCMP-060643
 //*    		 JFF   11/01/2011    [DECIMAL_PAPILLON]
 //           JFF     12/06/2014 [PI052]
 //*-----------------------------------------------------------------
@@ -1003,7 +961,7 @@ Decimal {2} dcIdsin2, dcIdInter2, dcIdCpt2
 
 /*------------------------------------------------------------------*/  
 /* #2. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 //sRepTmp		= stGLB.sWinDir + "\TEMP\"
 sRepTmp		= stGLB.sRepTempo
@@ -1043,8 +1001,8 @@ lTotFichier = ilb_Fichier.TotalItems ()
 
 For	lCpt = 1 To lTotFichier
 /*------------------------------------------------------------------*/
-/* Il vient d'y avoir une erreur dans le traitement pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dent.      */
-/* (lCpt-1). On arr$$HEX1$$ea00$$ENDHEX$$te tout et on envoi un ROLLBACK.                */
+/* Il vient d'y avoir une erreur dans le traitement précédent.      */
+/* (lCpt-1). On arrête tout et on envoi un ROLLBACK.                */
 /*------------------------------------------------------------------*/
 		If	iRet = -1	Then Exit
 
@@ -1066,7 +1024,7 @@ For	lCpt = 1 To lTotFichier
 		
 		sIdI				= String ( lIdInter )
 /*------------------------------------------------------------------*/
-/* On va $$HEX1$$e900$$ENDHEX$$crire le blob dans la table W_COUR_BLOB.                  */
+/* On va écrire le blob dans la table W_COUR_BLOB.                  */
 /*------------------------------------------------------------------*/
 		SetNull ( blBlob )
 
@@ -1124,17 +1082,17 @@ private function integer uf_courword_majwcourrier ();//*------------------------
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_CourWord_MajwCourrier			(PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2000 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On va armer les tables W_COUR et W_COUR_BLOB
 //*
 //* Arguments		: Aucun
 //*
 //* Retourne		: Integer						 1 = Tout est OK
-//*														-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*														-1 = Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	  		Modification
-//* #1 		 DGA      19/09/2006 Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire DCMP-060643
+//* #1 		 DGA      19/09/2006 Gestion d'un répertoire temporaire DCMP-060643
 //* #2		 PHG		 31/10/2006 [DNTMAIL1-2] (JFF)
 //*          JFF      18/07/2010 [PM159]
 //* 			 JFF      02/05/2014 [VDOC13888]
@@ -1157,19 +1115,19 @@ SetNull ( sNul )
 SetNull ( lNull )
 
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il existe au moins un CP sur le disque.             */
+/* On vérifie s'il existe au moins un CP sur le disque.             */
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re tous les fichiers du type                            */
+/* On récupére tous les fichiers du type                            */
 /* C:\WINNT\TEMP\XXXX*.*.                                           */
 /*------------------------------------------------------------------*/
-/* XXXX = Code de l'application sur 4 caract$$HEX1$$e800$$ENDHEX$$res obligatoires.      */
+/* XXXX = Code de l'application sur 4 caractères obligatoires.      */
 /* 99   = ID_INTER sur deux positions obligatoires (Ex:02,12).      */
 /* 9    = COD_INTER.                                                */
 /*------------------------------------------------------------------*/
 bAuMoinsUnCp	= FALSE
 /*------------------------------------------------------------------*/  
 /* #1. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 //sRepTmp			= stGLB.sWinDir + "\TEMP\"
 sRepTmp			= stGLB.sRepTempo
@@ -1223,8 +1181,8 @@ If	lTotFichier > 0	Then
 	Next
 End If
 /*------------------------------------------------------------------*/
-/* Si le dossier poss$$HEX1$$e900$$ENDHEX$$de au moisn un CP et que l'$$HEX1$$e900$$ENDHEX$$dition n'est pas  */
-/* souhait$$HEX1$$e900$$ENDHEX$$e alors le gestionnaire doit confirmer la poursuite du   */
+/* Si le dossier posséde au moisn un CP et que l'édition n'est pas  */
+/* souhaitée alors le gestionnaire doit confirmer la poursuite du   */
 /* traitement.                                                      */
 /*------------------------------------------------------------------*/
 If	bAuMoinsUnCp And Not ibAltEdit	Then
@@ -1239,12 +1197,12 @@ If	bAuMoinsUnCp And Not ibAltEdit	Then
 	If F_Message ( stMessage ) = 2	Then Return ( -1 )					
 End If
 /*------------------------------------------------------------------*/
-/* Si on ne veut rien $$HEX1$$e900$$ENDHEX$$diter, on ne sauvegarde aucun courrier.      */
+/* Si on ne veut rien éditer, on ne sauvegarde aucun courrier.      */
 /*------------------------------------------------------------------*/
 If	Not ibAltEdit	Then idwwCourSve.Reset ()
 /*------------------------------------------------------------------*/
-/* Si le dossier est bloqu$$HEX1$$e900$$ENDHEX$$, on ne sauvegarde pas les courriers     */
-/* automatiques puisqu'ils seront reg$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$s.                        */
+/* Si le dossier est bloqué, on ne sauvegarde pas les courriers     */
+/* automatiques puisqu'ils seront regénérés.                        */
 /*------------------------------------------------------------------*/
 If	ibAltBloc	Then
 	idwwCourSve.SetFilter ( "ALT_PART = 'N' Or ( ALT_PART = 'O' And ISNULL ( ID_I_DB ) ) " )
@@ -1259,10 +1217,10 @@ End If
 
 // [PM159].[BUG_PM159_DSC]
 // BUG_PM159_DSC
-// Je reforce $$HEX2$$e0002000$$ENDHEX$$CO toute ligne se trouve dans idwwCourSve, car certaines, ne donneront pas de courrier
-// puisque la case de g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$d$$HEX1$$e900$$ENDHEX$$coch$$HEX1$$e900$$ENDHEX$$e, l'enregistrement en CO est donc imp$$HEX1$$e900$$ENDHEX$$ratif.
-// Plus loin, pour les courriers r$$HEX2$$e900e900$$ENDHEX$$llement existant sur disque, un nouvelle modification de cette zone est faite
-// en reprenant la valeur du canal de la fen$$HEX1$$ea00$$ENDHEX$$tre de g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration pour ce courrier.
+// Je reforce à CO toute ligne se trouve dans idwwCourSve, car certaines, ne donneront pas de courrier
+// puisque la case de générer a été décochée, l'enregistrement en CO est donc impératif.
+// Plus loin, pour les courriers rééllement existant sur disque, un nouvelle modification de cette zone est faite
+// en reprenant la valeur du canal de la fenêtre de génération pour ce courrier.
 lTotSve = idwwCourSve.RowCount ()
 For lCptSve = 1 To lTotSve 
 	idwwCourSve.SetItem ( lCptSve, "ID_CANAL", "CO" ) 	
@@ -1301,7 +1259,7 @@ For	lCpt = 1 To lTotFichier
 			End If
 		End If
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re la date de cr$$HEX1$$e900$$ENDHEX$$ation du fichier.                      */
+/* On récupére la date de création du fichier.                      */
 /*------------------------------------------------------------------*/
 		invWin.uf_GetLastWriteDateTime ( sNomFicComplet, dDateFic, tHeureFic )
 		lIdInter = Long ( Mid ( sNomFic, 5, 2 ) )
@@ -1320,15 +1278,15 @@ For	lCpt = 1 To lTotFichier
 
 /*--------------------------------------------------------------------------------------------------*/
 /* #2 30/10/2006 [DNTMAIL1-2] PHG (Ajout JFF, report commentaire PHG)                                                                  */
-/* Report code de l'open de la fenetre appelante suivante point 4.4.1 sp$$HEX1$$e900$$ENDHEX$$cification DNTMAIL1/2      */ 
-/* Initialisation du canal selon la r$$HEX1$$e900$$ENDHEX$$gle suivante : Si champ ADR_MAIL est renseign$$HEX17$$e9002000200020002000200020002000200020002000200020002000200020002000$$ENDHEX$$*/
-/* et que la zone ALT_SUIVI_MAIL est coch$$HEX2$$e9002000$$ENDHEX$$alors c'est un envoi par MAIL SINON envoi par COURRIER   */
+/* Report code de l'open de la fenetre appelante suivante point 4.4.1 spécification DNTMAIL1/2      */ 
+/* Initialisation du canal selon la régle suivante : Si champ ADR_MAIL est renseigné                */
+/* et que la zone ALT_SUIVI_MAIL est coché alors c'est un envoi par MAIL SINON envoi par COURRIER   */
 /*--------------------------------------------------------------------------------------------------*/
 		lLigTrv  = idwLstInter.Find ("ID_I = " + String ( lIdInter ), 1, idwLstInter.RowCount()+1)
 		 			
 //		sAltSuiviMail = idwLstInter.GetItemString (lLigTrv , "ALT_SUIVI_MAIL") plus utile [PM159]
 		sAdrMail =      idwLstInter.GetItemString (lLigTrv , "ADR_MAIL")
-		//[DNTMAIL1-2_MEP_DEF] For$$HEX1$$e700$$ENDHEX$$age $$HEX2$$e0002000$$ENDHEX$$supprimer lors de la MEP finale.
+		//[DNTMAIL1-2_MEP_DEF] Forçage à supprimer lors de la MEP finale.
 		// [PM159]
 		lRow = idwChoixCourGen.Find ( "ID_INTER = " + String ( lIdInter ), 1, idwChoixCourGen.RowCount () )
 		If lRow > 0 Then
@@ -1345,7 +1303,7 @@ For	lCpt = 1 To lTotFichier
 		// [PI052] And Not ibPI052_GenEdtKsl
 		If	( dDateFic <> 2000-01-01 Or Left ( String ( tHeureFic ), 5 ) <> "23:59"	) And Not ibPI052_GenEdtKsl Then
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie si le N$$HEX2$$b0002000$$ENDHEX$$de l'inter existe toujours.                  */
+/* On vérifie si le N° de l'inter existe toujours.                  */
 /*------------------------------------------------------------------*/
 			sRech 		= isZn_IdInter + " = " + String ( lIdInter ) 
 			lLigInter	= idwLstInter.Find ( sRech, 1, lTotInter )
@@ -1382,7 +1340,7 @@ For	lCpt = 1 To lTotFichier
 /* mais des courriers particuliers.                                 */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* On m$$HEX1$$e900$$ENDHEX$$morise le code courrier actuel.			                    */
+/* On mémorise le code courrier actuel.			                    */
 /*------------------------------------------------------------------*/
 			sIdCourOrig = idwLstInter.GetItemString ( lLigInter, "ID_NAT_COUR" )
 			sFiltre = "ID_I = " + String ( lIdInter ) 
@@ -1413,13 +1371,13 @@ For	lCpt = 1 To lTotFichier
 			idwwCourSve.SetFilter ( "" )
 			idwwCourSve.Filter ()
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re une ligne dans la table W_COUR pour indiquer un        */
+/* On insére une ligne dans la table W_COUR pour indiquer un        */
 /* courrier particulier.                                            */
 /*------------------------------------------------------------------*/
 			lLig = idwwCourSve.InsertRow ( 0 )
 			sIdCour		= "APART1"
 			sIdCourTyp	= "APART1"
-			sTxtCompo1	= "Courrier particulier (" + sNomFicComplet + ") modifi$$HEX2$$e9002000$$ENDHEX$$le : DTEMOD " + String ( dDateFic, "DD/MM/YYYY" ) + " " + String ( tHeureFic, "hh:mm:ss" )
+			sTxtCompo1	= "Courrier particulier (" + sNomFicComplet + ") modifié le : DTEMOD " + String ( dDateFic, "DD/MM/YYYY" ) + " " + String ( tHeureFic, "hh:mm:ss" )
 
 			idwwCourSve.SetItem ( lLig, "ID_SIN", ilIdSin )
 			idwwCourSve.SetItem ( lLig, "ID_I", lIdInter )
@@ -1446,8 +1404,8 @@ For	lCpt = 1 To lTotFichier
 /*------------------------------------------------------------------*/
 /* Le documennt n'est pas un CP mais un courrier automatique.       */
 /*------------------------------------------------------------------*/
-/* Si le dossier est bloqu$$HEX1$$e900$$ENDHEX$$, on ne sauvegarde pas les courriers     */
-/* automatiques.	Ils seront reg$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$s la fois suivante.             */
+/* Si le dossier est bloqué, on ne sauvegarde pas les courriers     */
+/* automatiques.	Ils seront regénérés la fois suivante.             */
 /*------------------------------------------------------------------*/
 
 			// [PM159]
@@ -1459,16 +1417,16 @@ For	lCpt = 1 To lTotFichier
 			/*
 			If F_CLE_A_TRUE ( "PI052" ) Then
 				If ibPI052_GenEdtKsl Then			
-					idwwCourSve.SetItem ( lLig, "ALT_PS", "P" )	// [PI052] Marque r$$HEX1$$e900$$ENDHEX$$p$$HEX1$$e800$$ENDHEX$$re PDF et non DOC
+					idwwCourSve.SetItem ( lLig, "ALT_PS", "P" )	// [PI052] Marque répère PDF et non DOC
 					
 					// [PI052]
 					// Autorisation Word/KSL
 					If This.uf_GetAutorisation2 ( 28, lIdProd ) Then
-						idwwCourSve.SetItem ( lLig, "ALT_PS", "D" ) // [PI052] Marque r$$HEX1$$e900$$ENDHEX$$p$$HEX1$$e800$$ENDHEX$$re DOC et non PDF
+						idwwCourSve.SetItem ( lLig, "ALT_PS", "D" ) // [PI052] Marque répère DOC et non PDF
 					End If
 
 					
-					idwwCourSve.SetItem ( lLig, "TXT_COMPO2", iTabCleKslEdt [ lIdInter +1 ] ) // [PI052] Marque cl$$HEX2$$e9002000$$ENDHEX$$edt KSL
+					idwwCourSve.SetItem ( lLig, "TXT_COMPO2", iTabCleKslEdt [ lIdInter +1 ] ) // [PI052] Marque clé edt KSL
 				End If
 			End If
 			*/
@@ -1531,7 +1489,7 @@ Next
 /*------------------------------------------------------------------*/
 /* Le 25/02/2002.                                                   */
 /* La zone TXT_COMPO n'accepte pas les valeurs NULL dans la table.  */
-/* Cette zone n'est pas arm$$HEX1$$e900$$ENDHEX$$e dans le cas d'un double de courrier   */
+/* Cette zone n'est pas armée dans le cas d'un double de courrier   */
 /* pariculier. On arme manuellement cette zone.                     */
 /*------------------------------------------------------------------*/
 lTotwCourSve = idwwCourSve.RowCount ()
@@ -1554,17 +1512,17 @@ private function integer uf_courword_populiserdwchoix ();//*--------------------
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_CourWord_PopuliserDwChoix		(PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2000 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Populisation de la DW proposant le choix des courriers $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer
+//* Libellé			: 
+//* Commentaires	: Populisation de la DW proposant le choix des courriers à générer
 //*
 //* Arguments		: Aucun
 //*
 //* Retourne		: Integer						 1 = Tout est OK
-//*														-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*														-1 = Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	  		Modification
-//* #1 		 DGA      19/09/2006 Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire DCMP-060643
+//* #1 		 DGA      19/09/2006 Gestion d'un répertoire temporaire DCMP-060643
 //* #2		 PHG		 31/10/2006 [DNTMAIL1-2] PHG 31/10/2006
 //*-----------------------------------------------------------------
 
@@ -1582,8 +1540,8 @@ iRet = 1
 lTotInter	= idwLstInter.RowCount ()
 lTotCourGen	= idwGenCourrier.RowCount ()
 /*------------------------------------------------------------------*/
-/* On remet la DW servant au choix des courriers $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer $$HEX7$$e000200020002000200020002000$$ENDHEX$$*/
-/* z$$HEX1$$e900$$ENDHEX$$ro.                                                            */
+/* On remet la DW servant au choix des courriers à régénérer à      */
+/* zéro.                                                            */
 /*------------------------------------------------------------------*/
 idwChoixCourGen.Reset ()
 
@@ -1605,17 +1563,17 @@ For	lCpt = 1 To lTotInter
 //
 
 /*------------------------------------------------------------------*/
-/* On recherche si un courrier est charg$$HEX2$$e9002000$$ENDHEX$$sur disque.               */
+/* On recherche si un courrier est chargé sur disque.               */
 /* C:\WINNT\TEMP\XXXX99_X*.*.                                       */
 /*------------------------------------------------------------------*/
-/* XXXX = Code de l'application sur 4 caract$$HEX1$$e800$$ENDHEX$$res obligatoires.      */
+/* XXXX = Code de l'application sur 4 caractères obligatoires.      */
 /* 99   = ID_INTER sur deux positions obligatoires (Ex:02,12).      */
 /* 9    = COD_INTER.                                                */
 /*------------------------------------------------------------------*/
 		sNomFic			= stGLB.sCodAppli + String ( lIdInter, "00" ) + "_" + sCodInter + ".DOC"
 /*------------------------------------------------------------------*/  
 /* #1. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 //		sNomFicComplet	= stGLB.sWinDir + "\TEMP\" + sNomFic
 		sNomFicComplet	= stGLB.sRepTempo + sNomFic
@@ -1625,11 +1583,11 @@ For	lCpt = 1 To lTotInter
 		If	Not f_FileExists ( sNomFicComplet )	Then
 //Fin Migration PB8-WYNIWYG-03/2006 FM
 /*------------------------------------------------------------------*/
-/* Si aucun courrier n'est $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer pour cet inter, on continue.   */
+/* Si aucun courrier n'est à générer pour cet inter, on continue.   */
 /*------------------------------------------------------------------*/
 			If	Not bUnCourAGen	Then Continue
 /*------------------------------------------------------------------*/
-/* Sinon, on va ins$$HEX1$$e900$$ENDHEX$$rer une ligne dans la DW pour le choix des      */
+/* Sinon, on va insérer une ligne dans la DW pour le choix des      */
 /* courriers.                                                       */
 /*------------------------------------------------------------------*/
 			lLig = idwChoixCourGen.InsertRow ( 0 )
@@ -1645,12 +1603,12 @@ For	lCpt = 1 To lTotInter
 /*------------------------------------------------------------------*/
 /* Un courrier existe sur le disque pour cet inter.                 */
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re la date et l'heure du fichier.                       */
+/* On récupére la date et l'heure du fichier.                       */
 /*------------------------------------------------------------------*/
 			invWin.uf_GetLastWriteDateTime ( sNomFicComplet, dDateFic, tHeureFic )
 /*------------------------------------------------------------------*/
-/* Si le document $$HEX3$$e0002000e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$modifi$$HEX2$$e9002000$$ENDHEX$$par le gestionnaire, il va          */
-/* appara$$HEX1$$ee00$$ENDHEX$$tre maintenant comme un CP.                               */
+/* Si le document à été modifié par le gestionnaire, il va          */
+/* apparaître maintenant comme un CP.                               */
 /*------------------------------------------------------------------*/
 			If	dDateFic <> 2000-01-01 Or Left ( String ( tHeureFic ), 5 ) <> "23:59"	Then
 				lLig = idwChoixCourGen.InsertRow ( 0 )
@@ -1659,7 +1617,7 @@ For	lCpt = 1 To lTotInter
 				idwChoixCourGen.SetItem ( lLig, "COD_INTER", sCodInter )
 				idwChoixCourGen.SetItem ( lLig, "NOM", sNom )
 				idwChoixCourGen.SetItem ( lLig, "TYPE_COUR", "CP" )	
-				idwChoixCourGen.SetItem ( lLig, "MAJ_LE", String ( dDateFic, "dd/mm/yyyy" ) + " $$HEX2$$e0002000$$ENDHEX$$" + &
+				idwChoixCourGen.SetItem ( lLig, "MAJ_LE", String ( dDateFic, "dd/mm/yyyy" ) + " à " + &
 																		String ( Long ( Left ( String ( tHeureFic ), 2 ) ), "00" ) + "H" +&
 																				String ( Long ( Mid  ( String ( tHeureFic ), 4, 2 ) ), "00" ) )	
 				idwChoixCourGen.SetItem ( lLig, "DROIT", iiDroitInter [ lIdInter + 1 ] )
@@ -1676,7 +1634,7 @@ private function integer uf_courword_lireblobbase ();//*------------------------
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_CourWord_LireBlobBase		(PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2000 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On va lire les BLOBS
 //*
 //* Arguments		: Aucun
@@ -1685,7 +1643,7 @@ private function integer uf_courword_lireblobbase ();//*------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	  		Modification
-//* #1 		 DGA      19/09/2006 Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire DCMP-060643
+//* #1 		 DGA      19/09/2006 Gestion d'un répertoire temporaire DCMP-060643
 //*    		 JFF      11/01/2011 [DECIMAL_PAPILLON]
 //*          JFF      xx/xx/2011 [ITSMxxxxx]
 //           JFF      12/06/2014 [PI052]
@@ -1703,12 +1661,12 @@ lTotInter		= idwLstInter.RowCount ()
 lTotwCour		= idwwCourSve.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* On supprime tous les courriers pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dents.                       */
+/* On supprime tous les courriers précédents.                       */
 /*------------------------------------------------------------------*/
 ilb_Fichier.Reset ()
 /*------------------------------------------------------------------*/  
 /* #1. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 //sRepTmp	= stGLB.sWinDir + "\TEMP\" 
 
@@ -1758,10 +1716,10 @@ For	lCpt = 1 To lTotBlob
 		lIdSeq	= idwwCourBlobSve.GetItemNumber ( lCpt, "ID_CPT" )
 
 /*------------------------------------------------------------------*/
-/* Il s'agit d'un courrier particulier. On va cr$$HEX1$$e900$$ENDHEX$$er le courrier     */
+/* Il s'agit d'un courrier particulier. On va créer le courrier     */
 /* particulier et positionner le bon DateTime sur le fichier.       */
 /*------------------------------------------------------------------*/
-/* Il faut r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer la zone COD_INTER afin de cr$$HEX1$$e900$$ENDHEX$$eer le courrier   */
+/* Il faut récupérer la zone COD_INTER afin de créeer le courrier   */
 /* particulier.                                                     */
 /*------------------------------------------------------------------*/
 		sRech = isZn_IdInter + " = " + String ( lIdInter ) 
@@ -1769,8 +1727,8 @@ For	lCpt = 1 To lTotBlob
 
 		sCodInter		= idwLstInter.GetItemString ( lLig, isZn_CodInter )
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le DateTime de cr$$HEX1$$e900$$ENDHEX$$ation du courrier particulier.     */
-/* Cette donn$$HEX1$$e900$$ENDHEX$$e est stock$$HEX1$$e900$$ENDHEX$$e dans la zone TXT_COMPO.                 */
+/* On récupére le DateTime de création du courrier particulier.     */
+/* Cette donnée est stockée dans la zone TXT_COMPO.                 */
 /*------------------------------------------------------------------*/
 		sRech				= isZn_IdInter + " = " + String ( lIdInter ) + " AND ID_CPT = " + String ( lIdSeq )
 		lLig				= idwwCourSve.Find ( sRech, 1, lTotwCour )
@@ -1791,7 +1749,7 @@ For	lCpt = 1 To lTotBlob
 		If F_CLE_A_TRUE ( "PI052" ) Then
 			This.uf_PI052_DroitParam ( "RECH" )
 			If ibPI052_GenEdtKsl Then
-				// R$$HEX1$$e900$$ENDHEX$$p$$HEX1$$e800$$ENDHEX$$re PDF et non Doc
+				// Répère PDF et non Doc
 				If	idwwCourSve.GetItemString ( lLig, "ALT_PS" ) = "P"	Then
 					sNomFic = stGLB.sCodAppli + String ( lIdInter, "00" ) + "_" + sCodInter + ".PDF"					
 				End If
@@ -1824,7 +1782,7 @@ For	lCpt = 1 To lTotBlob
 						sysadm.w_cour_blob.id_typ_blob	= 'DO'
 		USING	SQLCA		;
 	/*------------------------------------------------------------------*/
-	/* Le BLOB peut ne pas $$HEX1$$ea00$$ENDHEX$$tre valide.                                 */
+	/* Le BLOB peut ne pas être valide.                                 */
 	/*------------------------------------------------------------------*/
 		If Len ( blBlob ) <= 0 Or IsNull ( blBlob ) Then			// Or SQLCA.SqlnRows <> 1	Then
 			iRet = -1
@@ -1832,7 +1790,7 @@ For	lCpt = 1 To lTotBlob
 			If	Not F_EcrireFichierBlob ( blBlob, sNomFicComplet )	Then iRet = -1			
 		End If
 /*------------------------------------------------------------------*/
-/* On affiche un message d'erreur non bloquant $$HEX2$$e0002000$$ENDHEX$$l'utilisateur.     */
+/* On affiche un message d'erreur non bloquant à l'utilisateur.     */
 /*------------------------------------------------------------------*/
 		If	 iRet < 0	Then
 
@@ -1871,11 +1829,11 @@ public subroutine uf_preparer_instance (string asidsin, ref u_datawindow_detail 
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_Preparer_Instance		(PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2000 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Pr$$HEX1$$e900$$ENDHEX$$paration des variables d'instances
+//* Libellé			: 
+//* Commentaires	: Préparation des variables d'instances
 //*
-//* Arguments		: (Val)		String					asIdSin			N$$HEX2$$b0002000$$ENDHEX$$de la r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence sinistre en cours de traitement
-//*					  (R$$HEX1$$e900$$ENDHEX$$f)		U_DataWindow_Detail	adwLstInter		Liste des Interlocuteurs
+//* Arguments		: (Val)		String					asIdSin			N° de la référence sinistre en cours de traitement
+//*					  (Réf)		U_DataWindow_Detail	adwLstInter		Liste des Interlocuteurs
 //*					  (Val)		String					asTypeTrt		Type de traitement
 //*
 //* Retourne		: Aucun
@@ -1888,13 +1846,13 @@ public subroutine uf_preparer_instance (string asidsin, ref u_datawindow_detail 
 String sTypDoc // [PI052]
 
 /*------------------------------------------------------------------*/
-/* On arme les instances n$$HEX1$$e900$$ENDHEX$$cessaires au traitement des courriers.   */
+/* On arme les instances nécessaires au traitement des courriers.   */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* Cette fonction est appel$$HEX1$$e900$$ENDHEX$$e sur le Wf_PreparerModifier de la      */
-/* fen$$HEX1$$ea00$$ENDHEX$$tre des sinistres. En effet, on utilise la fonction          */
-/* uf_CourWord_PurgerCourriersLocal () sur l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement Ue_Retour    */
-/* de la fen$$HEX1$$ea00$$ENDHEX$$tre, et cette fonction se sert de idwLstInter et       */
+/* Cette fonction est appelée sur le Wf_PreparerModifier de la      */
+/* fenêtre des sinistres. En effet, on utilise la fonction          */
+/* uf_CourWord_PurgerCourriersLocal () sur l'événement Ue_Retour    */
+/* de la fenêtre, et cette fonction se sert de idwLstInter et       */
 /* ID_SIN.                                                          */
 /*------------------------------------------------------------------*/
 ilIdSin = Long ( asIdSin )
@@ -1930,7 +1888,7 @@ private function integer uf_courword_lire_wcour (string astypetrt);//*----------
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_Lire_wCour			(PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2000 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On va lire la table W_COUR
 //*
 //* Arguments		: (Val)			asTypeTrt		String		Type de traitement
@@ -1962,12 +1920,12 @@ private function string uf_recuperercompo (string asidcour);//*-----------------
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_RecupererCompo		(PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2000 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration de la composition pour la gestion des doubles.
+//* Libellé			: 
+//* Commentaires	: Récupération de la composition pour la gestion des doubles.
 //*
 //* Arguments		: (Val)		String					asIdCour			Code courrier (Du Type XCOPIE)
 //*
-//* Retourne		: String						"" = Probl$$HEX1$$e800$$ENDHEX$$me dans la r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration
+//* Retourne		: String						"" = Problème dans la récupération
 //*
 //*-----------------------------------------------------------------
 //* MAJ  PAR      Date	  	Modification
@@ -2008,13 +1966,13 @@ public function integer uf_positionner_focus ();//*-----------------------------
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_Positionner_Focus			(PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 30/01/2002 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On positionne le focus sur la fen$$HEX1$$ea00$$ENDHEX$$tre WORD
+//* Libellé			: 
+//* Commentaires	: On positionne le focus sur la fenêtre WORD
 //*
 //* Arguments		: Aucun
 //*
-//* Retourne		: Integer						 1 = WORD n'est pas la fen$$HEX1$$ea00$$ENDHEX$$tre active
-//*														-1 = WORD est d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$la fen$$HEX1$$ea00$$ENDHEX$$tre active
+//* Retourne		: Integer						 1 = WORD n'est pas la fenêtre active
+//*														-1 = WORD est déjà la fenêtre active
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	  Modification
@@ -2047,17 +2005,17 @@ public function integer uf_courword_purgertouslescourriers ();//*---------------
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_CourWord_PurgerTouslesCourriers	(PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 01/04/2004 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On efface tous les fichiers pr$$HEX1$$e900$$ENDHEX$$sents en local
+//* Libellé			: 
+//* Commentaires	: On efface tous les fichiers présents en local
 //*
 //* Arguments		: 
 //*
 //* Retourne		: Integer						 1 = Tout est OK
-//*														-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*														-1 = Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	  		Modification
-//* #1 		 DGA      19/09/2006 Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire DCMP-060643
+//* #1 		 DGA      19/09/2006 Gestion d'un répertoire temporaire DCMP-060643
 //           JFF      12/06/2014 [PI052]
 //*-----------------------------------------------------------------
 
@@ -2068,17 +2026,17 @@ Time tHeureFic
 Integer iRet
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re tous les fichiers du type                            */
+/* On récupére tous les fichiers du type                            */
 /* C:\WINNT\TEMP\XXXX99_X*.*.                                       */
 /*------------------------------------------------------------------*/
-/* XXXX = Code de l'application sur 4 caract$$HEX1$$e800$$ENDHEX$$res obligatoires.      */
+/* XXXX = Code de l'application sur 4 caractères obligatoires.      */
 /* 99   = ID_INTER sur deux positions obligatoires (Ex:02,12).      */
 /* 9    = COD_INTER.                                                */
 /*------------------------------------------------------------------*/
 iRet		= 1
 /*------------------------------------------------------------------*/  
 /* #1. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 //sRepTmp	= stGLB.sWinDir + "\TEMP\" 
 
@@ -2145,7 +2103,7 @@ For lCpt2 = 1 To lTot2
 	Next
 	
 	/*------------------------------------------------------------------*/
-	/* On supprime tous les fichiers temporaires g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$s par la macro   */
+	/* On supprime tous les fichiers temporaires générés par la macro   */
 	/* de courrier.                                                     */
 	/*------------------------------------------------------------------*/
 	ilb_Fichier.Reset ()
@@ -2173,7 +2131,7 @@ public subroutine uf_inscrire_droitsmodifcourrier (integer aiDroitInter[]);//*--
 //* Fonction		: N_Cst_Validation_Sinistre::uf_DroitsModifCourrier	(PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 29/03/2004 10:35:14
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Inscription du tableau des droits de modifications des courriers par interlocuteur.
+//* Libellé			: Inscription du tableau des droits de modifications des courriers par interlocuteur.
 //* Commentaires	: DCMP 040020 SVE
 //*
 //* Arguments		: Integer		aiDroitInter       Val
@@ -2196,7 +2154,7 @@ public subroutine uf_inscrire_autresdroits (string asautresdroits);//*----------
 //* Fonction		: N_Cst_Validation_Sinistre::uf_Inscrire_AutresDroits	(PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 29/03/2004 10:35:14
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Inscription d'une chaine de droit $$HEX2$$e0002000$$ENDHEX$$exploiter sur la fen$$HEX1$$ea00$$ENDHEX$$tre de choix.
+//* Libellé			: Inscription d'une chaine de droit à exploiter sur la fenêtre de choix.
 //* Commentaires	: DCMP 040020 SVE
 //*
 //* Arguments		: String			asAutreDroits			Val
@@ -2219,7 +2177,7 @@ private function string uf_gestionbac (string asidcour);//*---------------------
 //* Fonction      : n_cst_Saisie_Validation::uf_GestionBac (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 04/06/2004 15:48:42
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Gestion des BACs
+//* Libellé       : Gestion des BACs
 //* Commentaires  : 
 //*
 //* Arguments     : String			asIdCour			Val
@@ -2237,7 +2195,7 @@ String sBac
 Choose Case Left ( asIdCour, 1 )
 
 	/*------------------------------------------------------------------*/
-	/* Questionnaire et Doc $$HEX2$$e0002000$$ENDHEX$$joindre                                   */
+	/* Questionnaire et Doc à joindre                                   */
 	/*------------------------------------------------------------------*/
 	Case "Q"
 		sBac = "MILIEU"
@@ -2249,9 +2207,9 @@ Choose Case Left ( asIdCour, 1 )
 		sBac = "HAUT"
 
 	/*------------------------------------------------------------------*/
-	/* Courrier Assur$$HEX2$$e9002000$$ENDHEX$$+ autres (CP)                                    */
+	/* Courrier Assuré + autres (CP)                                    */
 	/*------------------------------------------------------------------*/
-	Case Else	// Courrier Assur$$HEX2$$e9002000$$ENDHEX$$+ autres
+	Case Else	// Courrier Assuré + autres
 		sBac = "BAS"
 
 End Choose	
@@ -2265,7 +2223,7 @@ public function Boolean uf_getautorisation (integer ainatoper);//*--------------
 //* Fonction		: u_gs_sp_sinistre::uf_getautorisation
 //* Auteur			: FABRY JF
 //* Date				: 09/09/2008 11:03:31
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [VDOC13888]
+//* Libellé			: [VDOC13888]
 //* Commentaires	: 
 //*
 //* Arguments		: value integer aiNatOper	 
@@ -2297,13 +2255,13 @@ public function integer uf_pi052_generer_xml ();//*-----------------------------
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_PI052_Generer_XML			(PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 12/06/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PI052]
 //*
 //* Arguments		: Aucun
 //*
 //* Retourne		: Integer						 1 = Tout est OK
-//*														-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*														-1 = Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //*
@@ -2333,7 +2291,7 @@ iRet = 1
 
 lIdProd = iDw_1.GetItemNumber( 1, "ID_PROD" )
 
-// Ent$$HEX1$$ea00$$ENDHEX$$te 
+// Entête 
 sTGEnteteVersion = '<?xml version="1.0" encoding="UTF-8" ?>'
 
 // Symboles
@@ -2391,10 +2349,10 @@ End If
 // /[DEBUG][PI052]
 
 
-// M$$HEX1$$e900$$ENDHEX$$morisation en instance de la cl$$HEX2$$e9002000$$ENDHEX$$du futur r$$HEX1$$e900$$ENDHEX$$pertoire PDF
+// Mémorisation en instance de la clé du futur répertoire PDF
 isCleRep	= sCleFicFixXML				
 
-// Je compl$$HEX1$$e800$$ENDHEX$$te ensuite la partie fixe de cl$$HEX2$$e9002000$$ENDHEX$$des fichiers
+// Je complète ensuite la partie fixe de clé des fichiers
 sCleFicFixXML += "_"				
 
 sPathPDF		= ProfileString ( stGlb.sFichierIni, "EDITION", "REP_PI052_KSL_RECUP_PDF", "" )
@@ -2428,7 +2386,7 @@ For lCpt_iTabVar = 1 To lTotVar
 	
 	sCleFicVar = sCleFicFixXML + sIdInter + "_" + sCodInter + sExtFicXML
 	
-	// M$$HEX1$$e900$$ENDHEX$$morisation en tableau instance de la cl$$HEX2$$e9002000$$ENDHEX$$de chaque fichier PDF
+	// Mémorisation en tableau instance de la clé de chaque fichier PDF
 	iTabCleFichier [ lCpt_iTabVar ] = sCleFicFixPDF + sIdInter + "_" + sCodInter + isExtFicOut
 
 	iFic = FileOpen ( sCleFicVar, LineMode!, Write!, LockWrite!, Replace!, EncodingUTF8! )
@@ -2443,7 +2401,7 @@ For lCpt_iTabVar = 1 To lTotVar
 	// '<?xml version="1.0" encoding="UTF-8" ?>'
 	iWrt = FileWrite ( iFic, sTGEnteteVersion )
 	If iWrt < 0 Then 
-		stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+		stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 		stMessage.Icon			= StopSign!
 		stMessage.sCode		= "PI52003"
 		F_Message ( stMessage )		
@@ -2454,7 +2412,7 @@ For lCpt_iTabVar = 1 To lTotVar
 	sChaine = sDeb + sTG_ListeDem + sFerm
 	iWrt = FileWrite ( iFic, sChaine)
 	If iWrt < 0 Then 
-		stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+		stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 		stMessage.Icon			= StopSign!
 		stMessage.sCode		= "PI52003"
 		F_Message ( stMessage )		
@@ -2465,7 +2423,7 @@ For lCpt_iTabVar = 1 To lTotVar
 		sChaine = Space (4) + sDeb + sTG_Demande + sFerm
 		iWrt = FileWrite ( iFic, sChaine)
 		If iWrt < 0 Then 
-			stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+			stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 			stMessage.Icon			= StopSign!
 			stMessage.sCode		= "PI52003"
 			F_Message ( stMessage )		
@@ -2499,7 +2457,7 @@ For lCpt_iTabVar = 1 To lTotVar
 			sChaine += sFin + sFerm
 			iWrt = FileWrite ( iFic, sChaine)
 			If iWrt < 0 Then 
-				stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+				stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 				stMessage.Icon			= StopSign!
 				stMessage.sCode		= "PI52003"
 				F_Message ( stMessage )		
@@ -2513,7 +2471,7 @@ For lCpt_iTabVar = 1 To lTotVar
 
 			iWrt = FileWrite ( iFic, sChaine)
 			If iWrt < 0 Then 
-				stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+				stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 				stMessage.Icon			= StopSign!
 				stMessage.sCode		= "PI52003"
 				F_Message ( stMessage )		
@@ -2531,7 +2489,7 @@ For lCpt_iTabVar = 1 To lTotVar
 				sZvar = iTabVariable[lCpt_iTabVar].sTab[lCpt_iTabCodVar]
 				If IsNull ( sZvar ) Then sZvar = ""
 				
-				// Caract$$HEX1$$e800$$ENDHEX$$re interdit dans le XML.
+				// Caractère interdit dans le XML.
 				sZvar = F_Remplace ( sZvar, "&", " et " )
 				sZvar = F_Remplace ( sZvar, '"', "''" )
 				
@@ -2541,7 +2499,7 @@ For lCpt_iTabVar = 1 To lTotVar
 			sChaine += sFerm
 			iWrt = FileWrite ( iFic, sChaine)
 			If iWrt < 0 Then 
-				stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+				stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 				stMessage.Icon			= StopSign!
 				stMessage.sCode		= "PI52003"
 				F_Message ( stMessage )		
@@ -2549,29 +2507,29 @@ For lCpt_iTabVar = 1 To lTotVar
 			End If
 			// "/courrier"
 
-				// "tableaux"  (les tableaux de pi$$HEX1$$e800$$ENDHEX$$ces, refus, para plaf, para inter etc...)
+				// "tableaux"  (les tableaux de pièces, refus, para plaf, para inter etc...)
 				sChaine  = Space (12) + sDeb + sTG_Tableau + sFerm
 				iWrt = FileWrite ( iFic, sChaine)
 				If iWrt < 0 Then 
-					stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+					stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 					stMessage.Icon			= StopSign!
 					stMessage.sCode		= "PI52003"
 					F_Message ( stMessage )		
 					Return -1
 				End If
 			
-					// "T1"  (les tableaux de pi$$HEX1$$e800$$ENDHEX$$ces)
+					// "T1"  (les tableaux de pièces)
 					sChaine  = Space (16) + sDeb + sTG_Tpiece + sFerm
 					iWrt = FileWrite ( iFic, sChaine)
 					If iWrt < 0 Then 
-						stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+						stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 						stMessage.Icon			= StopSign!
 						stMessage.sCode		= "PI52003"
 						F_Message ( stMessage )		
 						Return -1
 					End If
 
-						// "t1Lig"  (les Pi$$HEX1$$e800$$ENDHEX$$ces)
+						// "t1Lig"  (les Pièces)
 						sChaine  = Space (20) + sDeb + sTG_TpieceLig + Space (1) 
 
 						lTotPiece = idwwPiece.RowCount () 
@@ -2586,10 +2544,10 @@ For lCpt_iTabVar = 1 To lTotVar
 							If IsNull ( sVal ) Then sVal = ""
 							If IsNull ( sIdPara  ) Then sIdPara = ""
 
-							// Doublon, pi$$HEX1$$e800$$ENDHEX$$ce d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$trait$$HEX1$$e900$$ENDHEX$$e
+							// Doublon, pièce déjà traitée
 							If lCpt_Piece > 1 And idwwPiece.Find ( "ID_PCE = " + sVal + " AND ID_I = " + sIdInter + "", 1, lCpt_Piece - 1 ) > 0 Then Continue
 
-							// Caract$$HEX1$$e800$$ENDHEX$$re interdit dans le XML.
+							// Caractère interdit dans le XML.
 							sVal = F_Remplace ( sVal, "&", " et " )
 							sVal = F_Remplace ( sVal, '"', "''" )
 
@@ -2603,7 +2561,7 @@ For lCpt_iTabVar = 1 To lTotVar
 
 							iWrt = FileWrite ( iFic, sChaine)
 							If iWrt < 0 Then 
-								stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+								stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 								stMessage.Icon			= StopSign!
 								stMessage.sCode		= "PI52003"
 								F_Message ( stMessage )		
@@ -2616,7 +2574,7 @@ For lCpt_iTabVar = 1 To lTotVar
 					sChaine = Space (16) + sDeb + sFin + sTG_Tpiece + sFerm
 					iWrt = FileWrite ( iFic, sChaine)
 					If iWrt < 0 Then 
-						stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+						stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 						stMessage.Icon			= StopSign!
 						stMessage.sCode		= "PI52003"
 						F_Message ( stMessage )		
@@ -2629,7 +2587,7 @@ For lCpt_iTabVar = 1 To lTotVar
 					sChaine  = Space (16) + sDeb + sTG_Trefus + sFerm
 					iWrt = FileWrite ( iFic, sChaine)
 					If iWrt < 0 Then 
-						stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+						stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 						stMessage.Icon			= StopSign!
 						stMessage.sCode		= "PI52003"
 						F_Message ( stMessage )		
@@ -2652,10 +2610,10 @@ For lCpt_iTabVar = 1 To lTotVar
 							If IsNull ( sVal ) Then sVal = ""
 							If IsNull ( sIdPara  ) Then sIdPara = ""
 
-							// Doublon, pi$$HEX1$$e800$$ENDHEX$$ce d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$trait$$HEX1$$e900$$ENDHEX$$e
+							// Doublon, pièce déjà traitée
 							If lCpt_Refus > 1 And idwwRefus.Find ( "ID_MOTIF = " + sVal + " AND ID_I = " + sIdInter + "", 1, lCpt_Refus - 1 ) > 0 Then Continue
 
-							// Caract$$HEX1$$e800$$ENDHEX$$re interdit dans le XML.
+							// Caractère interdit dans le XML.
 							sVal = F_Remplace ( sVal, "&", " et " )
 							sVal = F_Remplace ( sVal, '"', "''" )
 
@@ -2669,7 +2627,7 @@ For lCpt_iTabVar = 1 To lTotVar
 
 							iWrt = FileWrite ( iFic, sChaine)
 							If iWrt < 0 Then 
-								stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+								stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 								stMessage.Icon			= StopSign!
 								stMessage.sCode		= "PI52003"
 								F_Message ( stMessage )		
@@ -2682,7 +2640,7 @@ For lCpt_iTabVar = 1 To lTotVar
 					sChaine = Space (16) + sDeb + sFin + sTG_Trefus + sFerm
 					iWrt = FileWrite ( iFic, sChaine)
 					If iWrt < 0 Then 
-						stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+						stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 						stMessage.Icon			= StopSign!
 						stMessage.sCode		= "PI52003"
 						F_Message ( stMessage )		
@@ -2694,7 +2652,7 @@ For lCpt_iTabVar = 1 To lTotVar
 					sChaine  = Space (16) + sDeb + sTG_TparaPlaf + sFerm
 					iWrt = FileWrite ( iFic, sChaine)
 					If iWrt < 0 Then 
-						stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+						stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 						stMessage.Icon			= StopSign!
 						stMessage.sCode		= "PI52003"
 						F_Message ( stMessage )		
@@ -2715,10 +2673,10 @@ For lCpt_iTabVar = 1 To lTotVar
 							sVal = idwwParaPlafond.GetItemString ( lCpt_ParaPlaf, "ID_PARA" ) 
 							If IsNull ( sVal ) Then sVal = ""
 
-							// Doublon, pi$$HEX1$$e800$$ENDHEX$$ce d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$trait$$HEX1$$e900$$ENDHEX$$e
+							// Doublon, pièce déjà traitée
 							If lCpt_ParaPlaf > 1 And idwwParaPlafond.Find ( "ID_PARA = '" + sVal + "' AND ID_I = " + sIdInter + "", 1, lCpt_ParaPlaf - 1 ) > 0 Then Continue
 
-							// Caract$$HEX1$$e800$$ENDHEX$$re interdit dans le XML.
+							// Caractère interdit dans le XML.
 							sVal = F_Remplace ( sVal, "&", " et " )
 							sVal = F_Remplace ( sVal, '"', "''" )
 							
@@ -2728,7 +2686,7 @@ For lCpt_iTabVar = 1 To lTotVar
 
 							iWrt = FileWrite ( iFic, sChaine)
 							If iWrt < 0 Then 
-								stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+								stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 								stMessage.Icon			= StopSign!
 								stMessage.sCode		= "PI52003"
 								F_Message ( stMessage )		
@@ -2741,7 +2699,7 @@ For lCpt_iTabVar = 1 To lTotVar
 					sChaine = Space (16) + sDeb + sFin + sTG_TparaPlaf + sFerm
 					iWrt = FileWrite ( iFic, sChaine)
 					If iWrt < 0 Then 
-						stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+						stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 						stMessage.Icon			= StopSign!
 						stMessage.sCode		= "PI52003"
 						F_Message ( stMessage )		
@@ -2753,7 +2711,7 @@ For lCpt_iTabVar = 1 To lTotVar
 					sChaine  = Space (16) + sDeb + sTG_TparaInter + sFerm
 					iWrt = FileWrite ( iFic, sChaine)
 					If iWrt < 0 Then 
-						stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+						stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 						stMessage.Icon			= StopSign!
 						stMessage.sCode		= "PI52003"
 						F_Message ( stMessage )		
@@ -2774,10 +2732,10 @@ For lCpt_iTabVar = 1 To lTotVar
 							sVal = idwwParaInfo.GetItemString ( lCpt_ParaInter, "ID_PARA" ) 
 							If IsNull ( sVal ) Then sVal = ""
 
-							// Doublon, pi$$HEX1$$e800$$ENDHEX$$ce d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$trait$$HEX1$$e900$$ENDHEX$$e
+							// Doublon, pièce déjà traitée
 							If lCpt_ParaInter > 1 And idwwParaInfo.Find ( "ID_PARA = '" + sVal + "' AND ID_I = " + sIdInter + "", 1, lCpt_ParaInter - 1 ) > 0 Then Continue
 
-							// Caract$$HEX1$$e800$$ENDHEX$$re interdit dans le XML.
+							// Caractère interdit dans le XML.
 							sVal = F_Remplace ( sVal, "&", " et " )
 							sVal = F_Remplace ( sVal, '"', "''" )
 							
@@ -2787,7 +2745,7 @@ For lCpt_iTabVar = 1 To lTotVar
 
 							iWrt = FileWrite ( iFic, sChaine)
 							If iWrt < 0 Then 
-								stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+								stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 								stMessage.Icon			= StopSign!
 								stMessage.sCode		= "PI52003"
 								F_Message ( stMessage )		
@@ -2800,7 +2758,7 @@ For lCpt_iTabVar = 1 To lTotVar
 					sChaine = Space (16) + sDeb + sFin + sTG_TparaInter + sFerm
 					iWrt = FileWrite ( iFic, sChaine)
 					If iWrt < 0 Then 
-						stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+						stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 						stMessage.Icon			= StopSign!
 						stMessage.sCode		= "PI52003"
 						F_Message ( stMessage )		
@@ -2817,7 +2775,7 @@ For lCpt_iTabVar = 1 To lTotVar
 				sChaine = Space (12) + sDeb + sFin + sTG_Tableau + sFerm
 				iWrt = FileWrite ( iFic, sChaine)
 				If iWrt < 0 Then 
-					stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+					stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 					stMessage.Icon			= StopSign!
 					stMessage.sCode		= "PI52003"
 					F_Message ( stMessage )		
@@ -2828,7 +2786,7 @@ For lCpt_iTabVar = 1 To lTotVar
 			sChaine = Space (8) + sDeb + sFin + sTG_Courrier + sFerm
 			iWrt = FileWrite ( iFic, sChaine)
 			If iWrt < 0 Then 
-				stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+				stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 				stMessage.Icon			= StopSign!
 				stMessage.sCode		= "PI52003"
 				F_Message ( stMessage )		
@@ -2839,7 +2797,7 @@ For lCpt_iTabVar = 1 To lTotVar
 		sChaine = Space (4) + sDeb + sFin + sTG_Demande + sFerm
 		iWrt = FileWrite ( iFic, sChaine)
 		If iWrt < 0 Then 
-			stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+			stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 			stMessage.Icon			= StopSign!
 			stMessage.sCode		= "PI52003"
 			F_Message ( stMessage )		
@@ -2850,7 +2808,7 @@ For lCpt_iTabVar = 1 To lTotVar
 	sChaine = sDeb + sFin + sTG_ListeDem + sFerm
 	iWrt = FileWrite ( iFic, sChaine)
 	If iWrt < 0 Then 
-		stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+		stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 		stMessage.Icon			= StopSign!
 		stMessage.sCode		= "PI52003"
 		F_Message ( stMessage )		
@@ -2859,7 +2817,7 @@ For lCpt_iTabVar = 1 To lTotVar
 	
 	iWrt = FileClose ( iFic )
 	If iWrt < 0 Then 
-		stMessage.sTitre		= "Impossible d'$$HEX1$$e900$$ENDHEX$$crire le fichier XML"
+		stMessage.sTitre		= "Impossible d'écrire le fichier XML"
 		stMessage.Icon			= StopSign!
 		stMessage.sCode		= "PI52003"
 		F_Message ( stMessage )		
@@ -2876,17 +2834,17 @@ public function string uf_generer_courrier (ref string asdatainter[], string ast
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_Generer_Courrier		(PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2000 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
-//* Arguments		: (R$$HEX1$$e900$$ENDHEX$$f)		String					asDataInter		Tableau des Datas pour les interlocuteurs
+//* Arguments		: (Réf)		String					asDataInter		Tableau des Datas pour les interlocuteurs
 //*					  (Val)		String					asTypeTrt		Type de Traitement.
-//*					  (Val)		Boolean					abAltEdit		Edition demand$$HEX1$$e900$$ENDHEX$$e sur le sinistre ?
-//*					  (Val)		Boolean					abAltBloc		Blocage du dossier demand$$HEX1$$e900$$ENDHEX$$e sur le sinistre ?
-//*					  (R$$HEX1$$e900$$ENDHEX$$f)		Boolean					abAuMoinUnCourrier	Voir Objet sinistre, uf_controler_gestion
-//*					  (R$$HEX1$$e900$$ENDHEX$$f)		s_Pass					anvTrtAttribGenCour	Structure de retour #1
-//*					  (R$$HEX1$$e900$$ENDHEX$$f)		s_Pass					aTabVariable[]	[PI052] Tableau de tableaux des variables par interlocuteur
-//*					  (R$$HEX1$$e900$$ENDHEX$$f)		string					aTabCodeVar[]	[PI052] Tableau des codes de variables
+//*					  (Val)		Boolean					abAltEdit		Edition demandée sur le sinistre ?
+//*					  (Val)		Boolean					abAltBloc		Blocage du dossier demandée sur le sinistre ?
+//*					  (Réf)		Boolean					abAuMoinUnCourrier	Voir Objet sinistre, uf_controler_gestion
+//*					  (Réf)		s_Pass					anvTrtAttribGenCour	Structure de retour #1
+//*					  (Réf)		s_Pass					aTabVariable[]	[PI052] Tableau de tableaux des variables par interlocuteur
+//*					  (Réf)		string					aTabCodeVar[]	[PI052] Tableau des codes de variables
 //*
 //* Retourne		: String
 //*
@@ -2905,7 +2863,7 @@ n_cst_string lnvPFCString
 Integer iRet
 
 /*------------------------------------------------------------------*/
-/* On arme les instances n$$HEX1$$e900$$ENDHEX$$cessaires au traitement des courriers.   */
+/* On arme les instances nécessaires au traitement des courriers.   */
 /*------------------------------------------------------------------*/
 isDataInter = sNul
 isDataInter = asDataInter
@@ -2917,7 +2875,7 @@ ibAltBloc	= abAltBloc
 /*------------------------------------------------------------------*/
 
 // [POSITION_SIMPA2]
-istPause.text = space (70 ) + "G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration des courriers en cours, veuillez patienter... ~n~r~n~r(ne faites aucune action au clavier et $$HEX2$$e0002000$$ENDHEX$$la souris pendant la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration des courriers svp !)" + space (150 )
+istPause.text = space (70 ) + "Génération des courriers en cours, veuillez patienter... ~n~r~n~r(ne faites aucune action au clavier et à la souris pendant la génération des courriers svp !)" + space (150 )
 
 istPause.BackColor 	= 12639424
 istPause.X				=  950
@@ -2956,9 +2914,9 @@ Case "CHOIX"
 	
 /*------------------------------------------------------------------*/
 /* On populise la DW pour la table W_COUR et la DW de stockage      */
-/* pour la gen$$HEX1$$e900$$ENDHEX$$ration des courriers en automatique. Les codes       */
+/* pour la genération des courriers en automatique. Les codes       */
 /* courriers, la composition et la zone ALT_PART sont correctement  */
-/* arm$$HEX1$$e900$$ENDHEX$$s $$HEX2$$e0002000$$ENDHEX$$ce niveau. (Voir uf_CompositionCourrier de               */
+/* armés à ce niveau. (Voir uf_CompositionCourrier de               */
 /* U_Sa_Compo_Inter.)                                               */
 /*------------------------------------------------------------------*/
 	This.uf_Populiser_DwGenerationCourrier ()
@@ -2974,7 +2932,7 @@ Case "CHOIX"
 /*------------------------------------------------------------------*/
 	sRet = This.uf_CourWord ( 1 )
 /*------------------------------------------------------------------*/
-/* Y-a-t-il au moins un courrier $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer ?                        */
+/* Y-a-t-il au moins un courrier à générer ?                        */
 /*------------------------------------------------------------------*/
 	abAuMoinUnCourrier = idwChoixCourGen.RowCount () > 0	
 
@@ -2983,7 +2941,7 @@ Case "CHOIX"
 
 	If	abAuMoinUnCourrier Then
 /*------------------------------------------------------------------*/
-/* Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre de choix de reg$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration.                */
+/* Ouverture de la fenêtre de choix de regénération.                */
 /*------------------------------------------------------------------*/
 		If	sRet = ""	Then
 			anvTrtAttribGenCour.dwNorm[1]	= iDddwTypeDoc
@@ -2996,33 +2954,27 @@ Case "CHOIX"
 		End If
 	End If
 
-// #1 Nouveau cas pour g$$HEX1$$e800$$ENDHEX$$rer la scission du cas "CHOIX"
+// #1 Nouveau cas pour gèrer la scission du cas "CHOIX"
 Case "CHOIX_2"
 
-	
-	// [TRACE_TS_COURRIER]
-	If F_CLE_A_TRUE ( "TRACE_TS_COURRIER" ) Then
-		This.uf_CourWord_TraceTsCourrier ( "DEBUT_GENERATION" )
-	End If 
-
 	/*------------------------------------------------------------------*/
-	/* Deuxi$$HEX1$$e900$$ENDHEX$$me passage.                                                */
+	/* Deuxiéme passage.                                                */
 	/* Uf_CourWord_MajDwGenCour ()                                      */
 	/* Uf_CourWord_AfficherCourrier ()                                  */
 	/*------------------------------------------------------------------*/
-	// #1 Code d$$HEX1$$e900$$ENDHEX$$port$$HEX1$$e900$$ENDHEX$$
+	// #1 Code déporté
 	istPause.Show ()
 	
-	// #1 Code d$$HEX1$$e900$$ENDHEX$$port$$HEX1$$e900$$ENDHEX$$
+	// #1 Code déporté
 	istPause.BringToTop	= TRUE
 
-	// #1 Code d$$HEX1$$e900$$ENDHEX$$port$$HEX1$$e900$$ENDHEX$$
+	// #1 Code déporté
 	sRet = This.uf_CourWord ( 2 )
 
-// #1 Nouveau cas pour g$$HEX1$$e800$$ENDHEX$$rer la scission du cas "CHOIX"
+// #1 Nouveau cas pour gèrer la scission du cas "CHOIX"
 Case "CHOIX_FIN"
 	
-	// #1 Dans tous les cas on remet la souris pointer fl$$HEX1$$e800$$ENDHEX$$che
+	// #1 Dans tous les cas on remet la souris pointer flèche
 	SetPointer ( Arrow! )
 
 	// #1 Dans tous les cas on cache la statictext de pause.
@@ -3067,23 +3019,23 @@ public function integer uf_initialiser (string asidappli, ref listbox albfichier
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_Initialiser			(PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2000 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On pr$$HEX1$$e900$$ENDHEX$$pare toutes les variables dont on va avoir besoin
+//* Libellé			: 
+//* Commentaires	: On prépare toutes les variables dont on va avoir besoin
 //*
 //* Arguments		: (Val)		String					asIdAppli				Nom de l'application
-//*					  (R$$HEX1$$e900$$ENDHEX$$f)		ListBox					albFichier				ListBox pos$$HEX2$$e9002000$$ENDHEX$$sur la fen$$HEX1$$ea00$$ENDHEX$$tre
-//*					  (R$$HEX1$$e900$$ENDHEX$$f)		DataWindow				adwGenCourrier			DataWindow External pos$$HEX1$$e900$$ENDHEX$$e sur la fen$$HEX1$$ea00$$ENDHEX$$tre
-//*					  (R$$HEX1$$e900$$ENDHEX$$f)		DataWindow				adwChoixCourRegen		DataWindow External pos$$HEX1$$e900$$ENDHEX$$e sur la fen$$HEX1$$ea00$$ENDHEX$$tre
-//*					  (R$$HEX1$$e900$$ENDHEX$$f)		StaticText				astPause					StaticText pos$$HEX2$$e9002000$$ENDHEX$$sur la fen$$HEX1$$ea00$$ENDHEX$$tre
-//*					  (R$$HEX1$$e900$$ENDHEX$$f)		DataWindow				aDddwTypeDoc			DDDW sur les types de document
-//*					  (R$$HEX1$$e900$$ENDHEX$$f)		DataWindow				aDwwCourSve				DW sur la table W_COUR
-//*					  (R$$HEX1$$e900$$ENDHEX$$f)		DataWindow				aDwwCourBlobSve		DW sur la table W_COURRIER_BLOB
-//*					  (R$$HEX1$$e900$$ENDHEX$$f)		DataWindow				aDwCompo					DW pour la composition d'un courrier
-//*					  (R$$HEX1$$e900$$ENDHEX$$f)		Data						aDw_1						DW_1
-//*					  (R$$HEX1$$e900$$ENDHEX$$f)		U_DataWindow			aDwDetPro
+//*					  (Réf)		ListBox					albFichier				ListBox posé sur la fenêtre
+//*					  (Réf)		DataWindow				adwGenCourrier			DataWindow External posée sur la fenêtre
+//*					  (Réf)		DataWindow				adwChoixCourRegen		DataWindow External posée sur la fenêtre
+//*					  (Réf)		StaticText				astPause					StaticText posé sur la fenêtre
+//*					  (Réf)		DataWindow				aDddwTypeDoc			DDDW sur les types de document
+//*					  (Réf)		DataWindow				aDwwCourSve				DW sur la table W_COUR
+//*					  (Réf)		DataWindow				aDwwCourBlobSve		DW sur la table W_COURRIER_BLOB
+//*					  (Réf)		DataWindow				aDwCompo					DW pour la composition d'un courrier
+//*					  (Réf)		Data						aDw_1						DW_1
+//*					  (Réf)		U_DataWindow			aDwDetPro
 //*
 //* Retourne		: Integer						 1 = Tout est OK
-//*														-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*														-1 = Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date		Modification
@@ -3096,8 +3048,8 @@ isIdAppli = asIdAppli
 
 /*------------------------------------------------------------------*/
 /* En fonction de l'application SAVANE, SIMPA2, SINDI les noms de   */
-/* colonnes sont diff$$HEX1$$e900$$ENDHEX$$rents. Il faut donc armer une constante pour  */
-/* que cette fen$$HEX1$$ea00$$ENDHEX$$tre puisse fonctionner dans tous les cas de        */
+/* colonnes sont différents. Il faut donc armer une constante pour  */
+/* que cette fenêtre puisse fonctionner dans tous les cas de        */
 /* figure.                                                          */
 /*------------------------------------------------------------------*/
 Choose Case isIdAppli
@@ -3129,13 +3081,13 @@ invWin = stGLB.uoWin
 
 /*------------------------------------------------------------------*/
 /* On positionne le DataObjet pour la DW servant au stockage des    */
-/* courriers $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer.                                             */
+/* courriers à générer.                                             */
 /*------------------------------------------------------------------*/
 idwGenCourrier = adwGenCourrier
 
 /*------------------------------------------------------------------*/
 /* On positionne le DataObjet pour la DW servant au traitement du   */
-/* choix des courriers $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer.                                   */
+/* choix des courriers à générer.                                   */
 /*------------------------------------------------------------------*/
 idwChoixCourGen = adwChoixCourGen
 istPause = astPause
@@ -3147,32 +3099,32 @@ istPause = astPause
 iDddwTypeDoc = aDddwTypeDoc
 
 /*------------------------------------------------------------------*/
-/* On positionne une instance sur la DW qui permet de r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer     */
+/* On positionne une instance sur la DW qui permet de récupérer     */
 /* les lignes de la table W_COUR.                                   */
 /*------------------------------------------------------------------*/
 idwwCourSve	= adwwCourSve
 
 /*------------------------------------------------------------------*/
-/* On positionne une instance sur la DW qui permet de r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer     */
+/* On positionne une instance sur la DW qui permet de récupérer     */
 /* les lignes de la table W_COUR_BLOB.                              */
 /*------------------------------------------------------------------*/
 idwwCourBlobSve	= adwwCourBlobSve
 
 /*------------------------------------------------------------------*/
-/* DataWindow pour r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer la composition lors de la cr$$HEX1$$e900$$ENDHEX$$ation     */
+/* DataWindow pour récupérer la composition lors de la création     */
 /* d'un double du courrier.                                         */
 /*------------------------------------------------------------------*/
 idwCompo	= adwCompo
 
 /*------------------------------------------------------------------*/
-/* La DW D_Sa_Lst_Paragraphe ne poss$$HEX1$$e900$$ENDHEX$$de par d'ordre de Tri. Pour    */
+/* La DW D_Sa_Lst_Paragraphe ne posséde par d'ordre de Tri. Pour    */
 /* le pas perturber le 'bon' fonctionnement de SAVANE, je           */
 /* positionne ici un ordre de tri dynamique.                        */
 /*------------------------------------------------------------------*/
 idwCompo.SetSort ( "ID_ORDRE A" )
 
 /*------------------------------------------------------------------*/
-/* DataWindow pour r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer la dw_1									     */
+/* DataWindow pour récupérer la dw_1									     */
 /*------------------------------------------------------------------*/
 idw_1	= adw_1
 
@@ -3196,13 +3148,13 @@ public function integer uf_pi052_gestiontimer (string ascas, integer aidelai);//
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_PI052_GestionTimer			(PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 12/06/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PI052]
 //*
 //* Arguments		: Aucun
 //*
 //* Retourne		: Integer						 1 = Tout est OK
-//*														-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*														-1 = Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	   Modification
@@ -3215,7 +3167,7 @@ Long 	  lDelaiAttenteMaxTimer
 
 iRet = 1
 
-// [PI052] en seconde, pas en seconde, voir la fr$$HEX1$$e900$$ENDHEX$$quence timer pour faire le calcul.
+// [PI052] en seconde, pas en seconde, voir la fréquence timer pour faire le calcul.
 lDelaiAttenteMaxTimer = Long ( ProfileString ( stGlb.sFichierIni, "EDITION", "DELAI_PI052_ATTENTE_MAX_TIMER", "20" ) )
 
 
@@ -3238,14 +3190,14 @@ Choose Case Upper ( asCas )
 
 	Case "SCRUTER"
 
-		// 15 tour max sinion arr$$HEX1$$ea00$$ENDHEX$$t
+		// 15 tour max sinion arrêt
 		If ilNbreTour >= lDelaiAttenteMaxTimer And Not ibFinGenerationPDFOk Then
 			SetPointer ( Arrow! )
 			istPause.Hide ()			
 			Return -1
 		End If 
 		
-		// Incr$$HEX1$$e900$$ENDHEX$$ment du nombre de tour, pour avoir le temps total : nbre tour x d$$HEX1$$e900$$ENDHEX$$lai
+		// Incrément du nombre de tour, pour avoir le temps total : nbre tour x délai
 		ilNbreTour ++
 
 		istPause.text = isTextStPause + " " + String ( ( lDelaiAttenteMaxTimer * K_FrequenceTimer ) - ( ilNbreTour * K_FrequenceTimer ) ) + "s"
@@ -3275,13 +3227,13 @@ public function integer uf_pi052 (string ascas);//*-----------------------------
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_PI052			(PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 12/06/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PI052]
 //*
 //* Arguments		: Aucun
 //*
 //* Retourne		: Integer						 1 = Tout est OK
-//*														-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*														-1 = Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	   Modification
@@ -3293,20 +3245,20 @@ Long    lTot
 
 Choose Case ascas
 	Case "1ER_TOUR"
-		// G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration des courriers XML
+		// Génération des courriers XML
 		iRet = This.uf_PI052_Generer_XML ()
 		
-		// D$$HEX1$$e900$$ENDHEX$$clenchement du timer d'attente de r$$HEX1$$e900$$ENDHEX$$ception des courriers PDF toutes les K_FrequenceTimer secondes
+		// Déclenchement du timer d'attente de réception des courriers PDF toutes les K_FrequenceTimer secondes
 		If iRet > 0 Then
 			iRet = This.uf_PI052_GestionTimer ( "DECLENCHER_TIMER", K_FrequenceTimer  ) 
 		End If
 
 	Case "2EME_TOUR"
 		
-		// R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration des PDF en local et suppression structure sur server
+		// Récupération des PDF en local et suppression structure sur server
 		iRet = This.uf_PI052_RecuperationCourrier ()
 		
-		// Affichage $$HEX2$$e0002000$$ENDHEX$$l'$$HEX1$$e900$$ENDHEX$$cran si tout est ok.
+		// Affichage à l'écran si tout est ok.
 		If iRet > 0 Then
 
 			stMessage.sTitre		= "Afficher courrier ?"
@@ -3324,7 +3276,7 @@ Choose Case ascas
 				End CHoose 
 			Else 
 				lTot = UpperBound ( iTabCleFichierLocal )
-				stMessage.sTitre		= "Courrier(s) g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$(s)"
+				stMessage.sTitre		= "Courrier(s) généré(s)"
 				stMessage.Icon			= INFORMATION!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
@@ -3336,14 +3288,14 @@ Choose Case ascas
 		End If
 
 		// [PI052]	
-// 	ibPI052_GenEdtKsl = False  G$$HEX1$$ea00$$ENDHEX$$ne $$HEX2$$e0002000$$ENDHEX$$cet endroit pour la majdu Blob
+// 	ibPI052_GenEdtKsl = False  Gêne à cet endroit pour la majdu Blob
 		ibTimerPI052 = False
 		ibFinGenerationPDFOk = False
 		iTabCleFichier = sNul
 //		iTabCleFichierLocal = sNul  j'aurai besoin des noms des fichiers pour les blober.
-//		isCleRep = "" G$$HEX1$$ea00$$ENDHEX$$ne $$HEX2$$e0002000$$ENDHEX$$cet endroit pour la majdu Blob
+//		isCleRep = "" Gêne à cet endroit pour la majdu Blob
 
-		// On remet le Enabled sur Valider et Disabled sur contr$$HEX1$$f400$$ENDHEX$$ler
+		// On remet le Enabled sur Valider et Disabled sur contrôler
 		Yield ()
 		idw_1.TriggerEvent ( "ue_MajEnabledBouton" )
 
@@ -3358,13 +3310,13 @@ public function integer uf_pi052_afficherpdf ();//*-----------------------------
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_PI052_AfficherPDF			(PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 12/06/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PI052]
 //*
 //* Arguments		: Aucun
 //*
 //* Retourne		: Integer						 1 = Tout est OK
-//*														-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*														-1 = Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	   Modification
@@ -3389,7 +3341,7 @@ For lCpt = 1 To lTot
 	
 	// Redimension
 	RegistryGet( "HKEY_CLASSES_ROOT\.pdf", "", sClassePdf ) 
-	// Nom r$$HEX2$$e900e900$$ENDHEX$$l actuellement sous version 11  => sClassePdf = AcroExch.Document.11
+	// Nom réél actuellement sous version 11  => sClassePdf = AcroExch.Document.11
 
 	sWindowClass=""
                 
@@ -3416,7 +3368,7 @@ Next
 
 Yield ()
 
-// On remet le Enabled sur Valider et Disabled sur contr$$HEX1$$f400$$ENDHEX$$ler
+// On remet le Enabled sur Valider et Disabled sur contrôler
 idw_1.TriggerEvent ( "ue_MajEnabledBouton" )
 
 Return iRet
@@ -3427,17 +3379,17 @@ private function integer uf_courword_visuvalidation (ref string astypdoc);//*---
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_CourWord_VisuValidation		(PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2000 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Visualisation des courriers en Validation
 //*
 //* Arguments		: Aucun
 //*
 //* Retourne		: Integer						 1 = Tout est OK
-//*														-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*														-1 = Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	  		Modification
-//* #1 		 DGA      19/09/2006 Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire DCMP-060643
+//* #1 		 DGA      19/09/2006 Gestion d'un répertoire temporaire DCMP-060643
 //* 
 //*-----------------------------------------------------------------
 
@@ -3450,12 +3402,12 @@ iTabCleFichierLocal = sNul // [PI052]
 iRet = 1
 
 /*------------------------------------------------------------------*/
-/* La premi$$HEX1$$e800$$ENDHEX$$re chose $$HEX2$$e0002000$$ENDHEX$$faire est de populiser la DW pour la         */
-/* g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration des courrriers.                                       */
+/* La première chose à faire est de populiser la DW pour la         */
+/* génération des courrriers.                                       */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/  
 /* #1. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 //sRepTmp	= stGLB.sWinDir + "\TEMP\" 
 sRepTmp	= stGLB.sRepTempo
@@ -3548,13 +3500,13 @@ public function boolean uf_pi052_droitparam (string ascas);//*------------------
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_PI052_DroitParam			(PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 12/06/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PI052]
 //*
 //* Arguments		: Aucun
 //*
 //* Retourne		: Integer						 1 = Tout est OK
-//*														-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*														-1 = Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	   Modification
@@ -3569,7 +3521,7 @@ If F_CLE_A_TRUE ( "PI052" ) Then
 	Choose Case asCas 
 		Case "RECH", "INFO"
 		
-			// Recherche si le produit (et User en recette) est $$HEX1$$e900$$ENDHEX$$ligible au PI052
+			// Recherche si le produit (et User en recette) est éligible au PI052
 			F_RechDetPro ( lDeb, lFin, idwDetPro, iDw_1.GetItemNumber( 1, "ID_PROD" ), "-DP", 262 )
 			If lDeb > 0 Then
 				
@@ -3614,7 +3566,7 @@ public function boolean uf_getautorisation2 (integer ainatoper, long alidprod);/
 //* Fonction		: u_gs_sp_sinistre::uf_getautorisation2
 //* Auteur			: FABRY JF
 //* Date				: 09/09/2008 11:03:31
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [VDOC13888]
+//* Libellé			: [VDOC13888]
 //* Commentaires	: 
 //*
 //* Arguments		: value integer aiNatOper	 
@@ -3646,13 +3598,13 @@ public function integer uf_pi052_recuperationcourrier ();//*--------------------
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_PI052_RecuperationCourrier			(PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 12/06/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PI052]
 //*
 //* Arguments		: Aucun
 //*
 //* Retourne		: Integer						 1 = Tout est OK
-//*														-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*														-1 = Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	   Modification
@@ -3671,7 +3623,7 @@ sRepTmp	= stGLB.sRepTempo
 sPathPDF	= ProfileString ( stGlb.sFichierIni, "EDITION", "REP_PI052_KSL_RECUP_PDF", "" )
 lTot = UpperBound ( iTabCleFichier )
 
-// R$$HEX1$$e900$$ENDHEX$$cup et copie en local.
+// Récup et copie en local.
 For lCpt = 1 To lTot
 	sFicPDFSource = iTabCleFichier [ lCpt ] 
 	sFicPDFDest   = F_Remplace ( iTabCleFichier [ lCpt ], sPathPDF + isCleRep + "\", sRepTmp )
@@ -3709,13 +3661,13 @@ public function integer uf_pi052_verif_presence_courrier ();//*-----------------
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_pi052_verif_presence_courrier	(PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 22/08/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PI052]
-//* Commentaires	: On teste la pr$$HEX1$$e900$$ENDHEX$$sence de PDF sur le disque
+//* Libellé			: [PI052]
+//* Commentaires	: On teste la présence de PDF sur le disque
 //*
 //* Arguments		: 
 //*
 //* Retourne		: Integer						 1 = Tout est OK
-//*														-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*														-1 = Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	  		Modification
@@ -3728,17 +3680,17 @@ Time tHeureFic
 Integer iRet
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re tous les fichiers du type                            */
+/* On récupére tous les fichiers du type                            */
 /* C:\WINNT\TEMP\XXXX99_X*.*.                                       */
 /*------------------------------------------------------------------*/
-/* XXXX = Code de l'application sur 4 caract$$HEX1$$e800$$ENDHEX$$res obligatoires.      */
+/* XXXX = Code de l'application sur 4 caractères obligatoires.      */
 /* 99   = ID_INTER sur deux positions obligatoires (Ex:02,12).      */
 /* 9    = COD_INTER.                                                */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/  
 /* #1. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 //sRepTmp	= stGLB.sWinDir + "\TEMP\" 
 
@@ -3807,13 +3759,13 @@ public function integer uf_pi052_afficherdoc ();//*-----------------------------
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_PI052_AfficherDoc			(PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 12/06/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PI052]
 //*
 //* Arguments		: Aucun
 //*
 //* Retourne		: Integer						 1 = Tout est OK
-//*														-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*														-1 = Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	   Modification
@@ -3838,7 +3790,7 @@ For lCpt = 1 To lTot
 	
 	// Redimension
 	RegistryGet( "HKEY_CLASSES_ROOT\.doc", "", sClasseWord ) 
-	// Nom r$$HEX2$$e900e900$$ENDHEX$$l actuellement sous version 11  => sClasseWord = AcroExch.Document.11
+	// Nom réél actuellement sous version 11  => sClasseWord = AcroExch.Document.11
 
 	sWindowClass=""
                 
@@ -3862,92 +3814,24 @@ Next
 
 Yield ()
 
-// On remet le Enabled sur Valider et Disabled sur contr$$HEX1$$f400$$ENDHEX$$ler
+// On remet le Enabled sur Valider et Disabled sur contrôler
 idw_1.TriggerEvent ( "ue_MajEnabledBouton" )
 
 Return iRet
 end function
-
-private subroutine uf_courword_tracetscourrier (string ascas);//*-----------------------------------------------------------------
-//*
-//* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_CourWord_TraceTsCourrier			(PRIVATE)
-//* Auteur			: Fabry JF
-//* Date				: 03/12/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Gestion de la trace des courriers sur TS
-//*
-//* Arguments		: Aucun
-//*
-//* Retourne		: Integer						 1 = Tout est OK
-//*														-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
-//*
-//*-----------------------------------------------------------------
-//* MAJ      PAR      Date	   Modification
-//*-----------------------------------------------------------------
-
-String	sRepCourrierIni, sFicCourrierIni, sStatus, sErreurWord, sFinChaine, sIdCour, sSql
-Long lCpt 
-
-If isTypeTrt = "V" Then Return
-
-Choose Case asCas
-	Case "DEBUT_GENERATION"
-		ilIdentityTraceTsCourrier  = 0
-		SQLCA.PS_I_TRACE_TS_COURRIER (ilidsin, SQLCA.uf_GetIdSql(), isTypeTrt, stNul.str, stNul.lng, stNul.lng, stGlb.sCodOper, 0, ilIdentityTraceTsCourrier   )
-		
-		F_Commit ( SQLCA, SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0 )
-
-	Case "FIN_GENERATION"		
-	
-		sRepCourrierIni	= stGlb.sRepTempo
-		sFicCourrierIni	= sRepCourrierIni + Left ( stGLB.sCodAppli, 6 ) + "_" + "E" + ".INI"
-
-		DO
-			sStatus = ProfileString ( sFicCourrierIni, "IMPRESSION", "STATUS", "" )
-			Yield ()
-		LOOP UNTIL sStatus = "OK" Or sStatus = "PAS OK"
-
-		If sStatus = "OK" Then
-			sSql = "Exec sysadm.PS_U_TRACE_TS_COURRIER " + String ( ilIdentityTraceTsCourrier ) + ", 1, null"
-			F_Execute ( sSql, SQLCA )
-			F_Commit ( SQLCA, SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0 )			
-			
-		Else 
-			sErreurWord = Trim ( ProfileString ( sFicCourrierIni, "IMPRESSION", "ERREUR_WORD", "" ))
-			sFinChaine  = Right ( sErreurWord, 2 ) 
-			sIdCour     = Left ( Trim ( ProfileString ( sFicCourrierIni, "COURRIER", "DOCUMENT" + sFinChaine , "" )), 6 ) 
-			
-			sSql = "Exec sysadm.PS_U_TRACE_TS_COURRIER " + String ( ilIdentityTraceTsCourrier ) + ", -1,'" + sIdCour + "'"
-			F_Execute ( sSql, SQLCA )
-			F_Commit ( SQLCA, SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0 )			
-			
-			Yield ()
-			RUN ( "taskkill /F  /IM WINWORD.EXE /T", minimized! )
-			Yield ()
-			
-		End If 
-		
-		
-End Choose 
-
-
-
-
-
-end subroutine
 
 public subroutine uf_set_typetrt (string astypetrt);//*-----------------------------------------------------------------
 //*
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_Set_TypeTrt			(PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 10/12/2019
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion de la trace des courriers sur TS
 //*
 //* Arguments		: Aucun
 //*
 //* Retourne		: Integer						 1 = Tout est OK
-//*														-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*														-1 = Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	   Modification

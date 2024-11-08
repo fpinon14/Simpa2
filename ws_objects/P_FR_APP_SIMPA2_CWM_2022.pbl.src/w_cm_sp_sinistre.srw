@@ -256,10 +256,7 @@ dw_DosSuiviPar.Height =   89
 
 
 // [RS5666_DOS_SUIVI_PAR]
-If F_CLE_A_TRUE ( "RS5666_DOS_SUIVI_PAR" ) Then
-	dw_DosSuiviPar.Hide()
-End If
-
+dw_DosSuiviPar.Hide()
 
 /*------------------------------------------------------------------*/
 /* DGA. Le 21/08/2003.                                              */

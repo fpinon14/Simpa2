@@ -564,23 +564,21 @@ idwArticle.Retrieve ( idwWSin.GetItemNumber ( 1, "ID_PROD" ), sChaine )
 // :#8
 
 // [DT386_EXTR_AXA]
-If F_CLE_A_TRUE ( "DT386_EXTR_AXA" ) Then
-	F_RechDetPro ( lDeb, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 337 ) 
-	If lDeb > 0 Then 
-		lRow = idw_DetPro.Find ( "ID_CODE_NUM = " + String ( lIdGti ), lDeb, lFin ) 
-		If lRow > 0 Then
-			sVal = idw_DetPro.GetItemString ( lRow, "VAL_CAR" )
-			sVal = lnv_String.of_getkeyvalue ( sVal, "EDI_CONSERVER", ";")
-		
-			idwArticle.SetFilter ( "ID_TYP_ART = 'EDI' AND POS ( '" + sVal + "', '#' + ID_REF_FOUR + '#' ) <= 0" ) 
-			idwArticle.Filter ( ) 
-			idwArticle.RowsDiscard ( 1, idwArticle.RowCount (), Primary!)
-			idwArticle.SetFilter ( "" ) 
-			idwArticle.Filter ( ) 
-			idwArticle.Sort ( ) 
-		End If 
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 337 ) 
+If lDeb > 0 Then 
+	lRow = idw_DetPro.Find ( "ID_CODE_NUM = " + String ( lIdGti ), lDeb, lFin ) 
+	If lRow > 0 Then
+		sVal = idw_DetPro.GetItemString ( lRow, "VAL_CAR" )
+		sVal = lnv_String.of_getkeyvalue ( sVal, "EDI_CONSERVER", ";")
+	
+		idwArticle.SetFilter ( "ID_TYP_ART = 'EDI' AND POS ( '" + sVal + "', '#' + ID_REF_FOUR + '#' ) <= 0" ) 
+		idwArticle.Filter ( ) 
+		idwArticle.RowsDiscard ( 1, idwArticle.RowCount (), Primary!)
+		idwArticle.SetFilter ( "" ) 
+		idwArticle.Filter ( ) 
+		idwArticle.Sort ( ) 
 	End If 
-End If
+End If 
 
 // [PC151259-3] [PC171933][V4]
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 252 )
@@ -10145,61 +10143,61 @@ Choose Case sIdRefFour
 		End If
 
 		// [DT386_EXTR_AXA]
-		If F_CLE_A_TRUE ( "DT386_EXTR_AXA" ) Then
-			If lIdGti = 54 Then
-					lnv_string.of_setkeyvalue( isInfoSpbFrnCplt, "BUYBACK", "OUI", ";")						
+		If lIdGti = 54 Then
+				lnv_string.of_setkeyvalue( isInfoSpbFrnCplt, "BUYBACK", "OUI", ";")						
+		End If
+
+		// [DT386_EXTR_AXA_V8]
+		/*
+		If F_CLE_NUMERIQUE ( "DT386_EXTR_AXA" ) >= 2 Then
+
+			lRow = idwWDivsin.Find ( "NOM_ZONE = 'type_pce_identite'", 1, idwWDivSin.RowCount () )
+			If lRow > 0 Then 
+				sVal = idwWDivSin.GetItemString ( lRow, "VAL_CAR" ) 
+				If IsNull ( sVal ) Then sVal = ""
+				If Len ( sVal ) > 0 Then
+				 lnv_string.of_setkeyvalue( isInfoSpbFrnCplt, "TYP_PCE_IDENT", sVal, ";")
+				End If				
 			End If
 
-			// [DT386_EXTR_AXA_V8]
-			If F_CLE_NUMERIQUE ( "DT386_EXTR_AXA" ) >= 2 Then
-
-				lRow = idwWDivsin.Find ( "NOM_ZONE = 'type_pce_identite'", 1, idwWDivSin.RowCount () )
-				If lRow > 0 Then 
-					sVal = idwWDivSin.GetItemString ( lRow, "VAL_CAR" ) 
-					If IsNull ( sVal ) Then sVal = ""
-					If Len ( sVal ) > 0 Then
-					 lnv_string.of_setkeyvalue( isInfoSpbFrnCplt, "TYP_PCE_IDENT", sVal, ";")
-					End If				
-				End If
-
-				lRow = idwWDivsin.Find ( "NOM_ZONE = 'autorite_pce_identite'", 1, idwWDivSin.RowCount () )
-				If lRow > 0 Then 
-					sVal = idwWDivSin.GetItemString ( lRow, "VAL_CAR" ) 
-					If IsNull ( sVal ) Then sVal = ""
-					If Len ( sVal ) > 0 Then
-					 lnv_string.of_setkeyvalue( isInfoSpbFrnCplt, "AUTOR_PCE_IDENT", sVal, ";")
-					End If				
-				End If
-
-				lRow = idwWDivsin.Find ( "NOM_ZONE = 'num_pce_identite'", 1, idwWDivSin.RowCount () )
-				If lRow > 0 Then 
-					sVal = idwWDivSin.GetItemString ( lRow, "VAL_CAR" ) 
-					If IsNull ( sVal ) Then sVal = ""
-					If Len ( sVal ) > 0 Then
-					 lnv_string.of_setkeyvalue( isInfoSpbFrnCplt, "NUM_PCE_IDENT", sVal, ";")
-					End If				
-				End If
-
-				lRow = idwWDivsin.Find ( "NOM_ZONE = 'dte_delivrance_pi'", 1, idwWDivSin.RowCount () )
-				If lRow > 0 Then 
-					sVal = String ( idwWDivSin.GetItemDateTime ( lRow, "VAL_DTE" ), "dd/mm/yyyy" ) // [PI056].20190926
-					If IsNull ( sVal ) Then sVal = ""
-					If Len ( sVal ) > 0 Then
-					 lnv_string.of_setkeyvalue( isInfoSpbFrnCplt, "DTE_DELIVR_PI", sVal, ";")
-					End If				
-				End If
-				
-				lRow = idwWDivsin.Find ( "NOM_ZONE = 'dte_fin_val_pi'", 1, idwWDivSin.RowCount () )
-				If lRow > 0 Then 
-					sVal = String ( idwWDivSin.GetItemDateTime ( lRow, "VAL_DTE" ), "dd/mm/yyyy" ) // [PI056].20190926
-					If IsNull ( sVal ) Then sVal = ""
-					If Len ( sVal ) > 0 Then
-					 lnv_string.of_setkeyvalue( isInfoSpbFrnCplt, "DTE_FIN_VAL_PI", sVal, ";")
-					End If				
+			lRow = idwWDivsin.Find ( "NOM_ZONE = 'autorite_pce_identite'", 1, idwWDivSin.RowCount () )
+			If lRow > 0 Then 
+				sVal = idwWDivSin.GetItemString ( lRow, "VAL_CAR" ) 
+				If IsNull ( sVal ) Then sVal = ""
+				If Len ( sVal ) > 0 Then
+				 lnv_string.of_setkeyvalue( isInfoSpbFrnCplt, "AUTOR_PCE_IDENT", sVal, ";")
 				End If				
+			End If
 
-			End IF 
-		End If 
+			lRow = idwWDivsin.Find ( "NOM_ZONE = 'num_pce_identite'", 1, idwWDivSin.RowCount () )
+			If lRow > 0 Then 
+				sVal = idwWDivSin.GetItemString ( lRow, "VAL_CAR" ) 
+				If IsNull ( sVal ) Then sVal = ""
+				If Len ( sVal ) > 0 Then
+				 lnv_string.of_setkeyvalue( isInfoSpbFrnCplt, "NUM_PCE_IDENT", sVal, ";")
+				End If				
+			End If
+
+			lRow = idwWDivsin.Find ( "NOM_ZONE = 'dte_delivrance_pi'", 1, idwWDivSin.RowCount () )
+			If lRow > 0 Then 
+				sVal = String ( idwWDivSin.GetItemDateTime ( lRow, "VAL_DTE" ), "dd/mm/yyyy" ) // [PI056].20190926
+				If IsNull ( sVal ) Then sVal = ""
+				If Len ( sVal ) > 0 Then
+				 lnv_string.of_setkeyvalue( isInfoSpbFrnCplt, "DTE_DELIVR_PI", sVal, ";")
+				End If				
+			End If
+			
+			lRow = idwWDivsin.Find ( "NOM_ZONE = 'dte_fin_val_pi'", 1, idwWDivSin.RowCount () )
+			If lRow > 0 Then 
+				sVal = String ( idwWDivSin.GetItemDateTime ( lRow, "VAL_DTE" ), "dd/mm/yyyy" ) // [PI056].20190926
+				If IsNull ( sVal ) Then sVal = ""
+				If Len ( sVal ) > 0 Then
+				 lnv_string.of_setkeyvalue( isInfoSpbFrnCplt, "DTE_FIN_VAL_PI", sVal, ";")
+				End If				
+			End If				
+
+		End IF 
+		*/
 
 		// [BLCODE]
 		Choose Case sIdFour
@@ -22337,10 +22335,8 @@ F_RechDetPro ( lDeb, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), "
 bSouplessePacifica = lDeb > 0 
 
 // [DT386_EXTR_AXA]
-If F_CLE_A_TRUE ( "DT386_EXTR_AXA" ) Then
-	F_RechDetPro ( lDeb, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 335 )
-	bBuyBackAXA = lDeb > 0 
-End If
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 335 )
+bBuyBackAXA = lDeb > 0 
 
 
 bDomCom = False
@@ -23239,14 +23235,10 @@ End If
 //			sVar[9] = lnv_Key[12].iakeyvalue
 
 			// [DT386_EXTR_AXA]
-			If F_CLE_A_TRUE ( "DT386_EXTR_AXA" ) Then
-				If bBuyBackAXA	Then
-					sVar[10] = ""
-				Else 
-					sVar[10] = sAdresseO2m					
-				End If 
+			If bBuyBackAXA	Then
+				sVar[10] = ""
 			Else 
-				sVar[10] = sAdresseO2m
+				sVar[10] = sAdresseO2m					
 			End If 
 			
 // :[ADRESSE_O2M]

@@ -1,4 +1,4 @@
-HA$PBExportHeader$u_gs_sp_sinistre_contact_trace.sru
+﻿$PBExportHeader$u_gs_sp_sinistre_contact_trace.sru
 $PBExportComments$---} User Object pour la gestion de la trace des contacts
 forward
 global type u_gs_sp_sinistre_contact_trace from nonvisualobject
@@ -44,7 +44,7 @@ public subroutine uf_ecriretrace (integer aimode);//*---------------------------
 //* Fonction		: uf_ecriretrace
 //* Auteur			: DBI
 //* Date				: 20/12/2000 11:06:52
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Enregistrement de la trace d'un contact
+//* Libellé			: Enregistrement de la trace d'un contact
 //* Commentaires	: 
 //*
 //* Arguments		: aiMode		1 : Consult ( on ne traite que les contacts alt_valide=N )
@@ -138,7 +138,7 @@ For lCpt = 1 To lNbContact
 	sTrace [13]	=	idwContact.GetItemString            ( lCpt, "ALT_VALIDE")
 
 /*------------------------------------------------------------------*/
-/* On traite les N-1 valeurs, puis la derni$$HEX1$$e800$$ENDHEX$$re. Pour terminer, on   */
+/* On traite les N-1 valeurs, puis la dernière. Pour terminer, on   */
 /* ecrit la ligne                                                   */
 /*------------------------------------------------------------------*/
 
@@ -146,7 +146,7 @@ For lCpt = 1 To lNbContact
 	sLigne	= ""
 
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie qu'il n'y ait plus de cha$$HEX1$$ee00$$ENDHEX$$ne nulle.                   */
+/* On vérifie qu'il n'y ait plus de chaîne nulle.                   */
 /*------------------------------------------------------------------*/
 
 	For	lCpt1 = 1 To lTot
@@ -156,7 +156,7 @@ For lCpt = 1 To lNbContact
 	Next
 
 /*------------------------------------------------------------------*/
-/* On traite les N-1 valeurs, puis la derni$$HEX1$$e800$$ENDHEX$$re. Pour terminer, on   */
+/* On traite les N-1 valeurs, puis la dernière. Pour terminer, on   */
 /* ecrit la ligne                                                   */
 /*------------------------------------------------------------------*/
 
@@ -177,7 +177,7 @@ private function boolean uf_verif_ecrituretrace ();//*--------------------------
 //* Fonction		: uf_Verif_EcritureTrace (PRIVATE)
 //* Auteur			: FABRY
 //* Date				: 02/05/2001 15:13:11
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Test d'$$HEX1$$e900$$ENDHEX$$criture de la trace
+//* Libellé			: Test d'écriture de la trace
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -196,9 +196,9 @@ If	f_Verifier_Ecriture_Trace ( isFicEssaiTrcCont ) < 0	Then
 
 /*------------------------------------------------------------------*/
 /* On affiche un message d'erreur que l'on ne peut tracer. On sort  */
-/* ensuite imm$$HEX1$$e900$$ENDHEX$$diatement de la fonction.                            */
+/* ensuite immédiatement de la fonction.                            */
 /*------------------------------------------------------------------*/
-	stMessage.sTitre		= "Cr$$HEX1$$e900$$ENDHEX$$ation d'un contact"
+	stMessage.sTitre		= "Création d'un contact"
 	stMessage.Icon			= StopSign!
 	stMessage.bErreurG	= TRUE
 	stMessage.sCode		= "APPLI09"
@@ -217,7 +217,7 @@ public subroutine uf_set_dtefingti (datetime adtdtefingti, Boolean abComplOk);//
 //* Fonction		: uf_Set_DteFinGti (PUBLIC)
 //* Auteur			: FABRY JF
 //* Date				: 09/05/2001 15:50:08
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -241,7 +241,7 @@ private subroutine uf_ecriretracetrv (long allignelst);//*----------------------
 //* Fonction		: Uf_EcrireTraceTrv ( Private )
 //* Auteur			: Erick John Stark
 //* Date				: 04/28/97 14:57:25
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun
@@ -263,16 +263,16 @@ dtNow = DateTime ( Today (), Now () )
 /* Cette trace contient dans l'ordre                                */
 /*                                                                  */
 /* COD_APPLI						01                                    */
-/* N$$HEX2$$b0002000$$ENDHEX$$Machine						02                                    */
+/* N° Machine						02                                    */
 /* COD_SERVICE						03                                    */
 /* ID_SIN							04                                    */
 /* ID_CORB 							05                                    */
 /* NOM + PRENOM					06                                    */
-/* COD_ETAT 						07  1 Par d$$HEX1$$e900$$ENDHEX$$faut                      */
+/* COD_ETAT 						07  1 Par défaut                      */
 /* COD_ACTION 						08                                    */
-/* ALT_BLOC 						09  N Par d$$HEX1$$e900$$ENDHEX$$faut                      */
-/* TRV_CREE_LE (D$$HEX1$$e900$$ENDHEX$$part)			10                                    */
-/* TRV_MAJ_LE (D$$HEX1$$e900$$ENDHEX$$part)			11                                    */
+/* ALT_BLOC 						09  N Par défaut                      */
+/* TRV_CREE_LE (Départ)			10                                    */
+/* TRV_MAJ_LE (Départ)			11                                    */
 /* TRV_MAJ_LE (Fin)				12                                    */
 /* TRV_MAJ_PAR (Fin)				13                                    */
 /* TRV_ROUTE_LE (Fin)			14  Vide                              */
@@ -343,7 +343,7 @@ sTrace[ 26 ]	= String ( Date ( dtNow) , "dd/mm/yyyy"  )
 
 sLigne	= ""
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie qu'il n'y ait plus de cha$$HEX1$$ee00$$ENDHEX$$ne nulle.                   */
+/* On vérifie qu'il n'y ait plus de chaîne nulle.                   */
 /*------------------------------------------------------------------*/
 For	lCpt = 1 To lTot
 		If	IsNull ( sTrace[ lCpt ] ) Or sTrace[ lCpt ] = "''" Then
@@ -352,7 +352,7 @@ For	lCpt = 1 To lTot
 Next
 
 /*------------------------------------------------------------------*/
-/* On traite les N-1 valeurs, puis la derni$$HEX1$$e800$$ENDHEX$$re. Pour terminer, on   */
+/* On traite les N-1 valeurs, puis la dernière. Pour terminer, on   */
 /* ecrit la ligne                                                   */
 /*------------------------------------------------------------------*/
 For	lCpt = 1 To lTot - 1
@@ -370,7 +370,7 @@ public subroutine uf_initialiser (ref u_datawindow adwsin, ref u_datawindow_deta
 //* Fonction		: uf_Initialiser (PUBLIC)
 //* Auteur			: FABRY JF
 //* Date				: 02/05/2001 11:08:23
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Initialisation des Dw pour gestion de contact
+//* Libellé			: Initialisation des Dw pour gestion de contact
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -399,7 +399,7 @@ sRep = ProfileString ( stGLB.sFichierIni, "TRACE", "REP_TRACE_CN", "ERREUR" )
 isFicTraceCont = sRep + String (Today (), "ddmmyyyy" ) + "." + Left ( stGLB.sCodAppli, 3 )
 
 /*------------------------------------------------------------------*/
-/* Le nom du fichier de trace pour l'essai d'$$HEX1$$e900$$ENDHEX$$criture des contacts. */
+/* Le nom du fichier de trace pour l'essai d'écriture des contacts. */
 /*------------------------------------------------------------------*/
 isFicEssaiTrcCont	= sRep + stGLB.sCodOper + String ( Today (), "ddmm" ) + ".TMP"
 
@@ -411,13 +411,13 @@ sRep = ProfileString ( stGLB.sFichierIni, "TRACE", "REP_TRACE_C", "Erreur" )
 isFicTraceTrv = sRep + String (Today (), "ddmmyyyy" ) + "." + Left ( stGLB.sCodAppli, 3 )
 
 /*------------------------------------------------------------------*/
-/* Le nom du fichier de trace pour l'essai d'$$HEX1$$e900$$ENDHEX$$criture du travail.   */
+/* Le nom du fichier de trace pour l'essai d'écriture du travail.   */
 /*------------------------------------------------------------------*/
 isFicEssaiTrcTrv	= sRep + stGLB.sCodOper + String ( Today (), "ddmm" ) + ".TMP"
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re maintenant le nom de la machine. On part du principe */
-/* que ce nom est positionn$$HEX2$$e9002000$$ENDHEX$$dans la valeur Dos (SQL=XXX)           */
+/* On récupére maintenant le nom de la machine. On part du principe */
+/* que ce nom est positionné dans la valeur Dos (SQL=XXX)           */
 /*------------------------------------------------------------------*/
 //uoDeclarationFuncky = Create u_DeclarationFuncky
 //isNomMachine = uoDeclarationFuncky.Uf_GetEnv ( "SQL" )
@@ -432,7 +432,7 @@ public function integer uf_retour_gestiontrace (ref boolean abokpourfermer, stri
 //* Fonction		: uf_Retour_GestionTrace (PUBLIC)
 //* Auteur			: FABRY JF
 //* Date				: 02/05/2001 14:30:32
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Gestion de la trace sur le bouton retour
+//* Libellé			: Gestion de la trace sur le bouton retour
 //* Commentaires	: 
 //*
 //* Arguments		: ref	Boolean	abOkPourFermer
@@ -466,7 +466,7 @@ lLigneLst=-1
 iRet		= 1
 
 /*------------------------------------------------------------------*/
-/* V$$HEX1$$e900$$ENDHEX$$rification du positionnement DOS_SUIVI_PAR                     */
+/* Vérification du positionnement DOS_SUIVI_PAR                     */
 /*------------------------------------------------------------------*/
 sDosSuiviPar	=	idwDosSuiviPar.GetItemString ( 1, "DOS_SUIVI_PAR" )
 
@@ -492,7 +492,7 @@ If ( isNull ( sDosSuiviPar ) Or ( sDosSuiviPar = "" ) ) Then
 
 		If iDwContact.GetItemStatus ( lCpt, 0, Primary! ) <> NotModified! And lLig	> 0 Then 
 
-			stMessage.sTitre 	= "Dossier affect$$HEX1$$e900$$ENDHEX$$"
+			stMessage.sTitre 	= "Dossier affecté"
 			stMessage.Icon 	= Information!
 			stMessage.sCode 	= "CONT020"
 			stMessage.bErreurG	= FALSE
@@ -508,7 +508,7 @@ If ( isNull ( sDosSuiviPar ) Or ( sDosSuiviPar = "" ) ) Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Mise $$HEX2$$e0002000$$ENDHEX$$jour par gestionnaire de la personne qui traite le        */
+/* Mise à jour par gestionnaire de la personne qui traite le        */
 /* dossier                                                          */
 /*------------------------------------------------------------------*/
 If iDwDosSuiviPar.GetItemStatus ( 1, 0, Primary! ) = NewModified!  Or &
@@ -518,17 +518,17 @@ If iDwDosSuiviPar.GetItemStatus ( 1, 0, Primary! ) = NewModified!  Or &
 End If
 
 /*----------------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie que le user est acc$$HEX1$$e800$$ENDHEX$$s au rep de trace workflow.                 */
+/* On vérifie que le user est accès au rep de trace workflow.                 */
 /*----------------------------------------------------------------------------*/
 If	F_Verifier_Ecriture_Trace ( isFicEssaiTrcTrv ) < 0	Then
-		stMessage.sTitre		= "Cr$$HEX1$$e900$$ENDHEX$$ation d'un travail en consultation"
+		stMessage.sTitre		= "Création d'un travail en consultation"
 		stMessage.Icon			= StopSign!
 		stMessage.bErreurG	= TRUE
 		stMessage.sCode		= "APPLI09"
 	   stMessage.bTrace  	= False
 		F_Message ( stMessage )
 
-		// Aucune Modification ne sera sauvegard$$HEX1$$e900$$ENDHEX$$e.
+		// Aucune Modification ne sera sauvegardée.
 		stMessage.Icon			= Information!
 		stMessage.bErreurG	= FALSE
 		stMessage.sCode		= "CONT017"
@@ -539,19 +539,19 @@ End If
 
 
 /*------------------------------------------------------------------*/
-/* V$$HEX1$$e900$$ENDHEX$$rification possibilit$$HEX2$$e9002000$$ENDHEX$$d'enregistrement de la trace du contact */
+/* Vérification possibilité d'enregistrement de la trace du contact */
 /*------------------------------------------------------------------*/
 If iRet > 0 Then
 	If Not This.uf_Verif_EcritureTrace ( ) Then	
 
-		stMessage.sTitre = "Enregistrement des donn$$HEX1$$e900$$ENDHEX$$es"
+		stMessage.sTitre = "Enregistrement des données"
 		stMessage.Bouton = OK!
 		stMessage.sCode = "CONT010"
 		stMessage.sCode  = "PROC003"
 		stMessage.bErreurG = False
 		f_Message ( stMessage )
 	
-		// Aucune Modification ne sera sauvegard$$HEX1$$e900$$ENDHEX$$e.
+		// Aucune Modification ne sera sauvegardée.
 		stMessage.Icon			= Information!
 		stMessage.bErreurG	= FALSE
 		stMessage.sCode		= "CONT017"
@@ -576,7 +576,7 @@ If iRet > 0 Then
 				lLigneLst = lCpt
 
 		/*------------------------------------------------------------------*/
-		/* V$$HEX1$$e900$$ENDHEX$$rification si necessit$$HEX2$$e9002000$$ENDHEX$$de cr$$HEX1$$e900$$ENDHEX$$ation automatique d'un travail   */
+		/* Vérification si necessité de création automatique d'un travail   */
 		/*------------------------------------------------------------------*/
 				sIdNat		=	String ( idwContact.GetItemNumber ( lCpt, "ID_NAT_MSG" ) )
 				sIdMsg		=	iDwContact.GetItemString ( lCpt, "ID_TYP_MSG" )
@@ -600,7 +600,7 @@ If iRet > 0 Then
 						bCreeTrv	=	dwcTemp.GetItemString ( lCpt1, "ALT_CREE_TRV" ) = "O"
 
 	/*------------------------------------------------------------------*/
-	/* Demande de confirmation si continuit$$HEX2$$e9002000$$ENDHEX$$sur travail en cours       */
+	/* Demande de confirmation si continuité sur travail en cours       */
 	/*------------------------------------------------------------------*/
 
 						If bCreeTrv Then 
@@ -612,7 +612,7 @@ If iRet > 0 Then
 
 							If f_Message ( stMessage ) = 2 Then 			// Stop
 
-								// Aucune Modification ne sera sauvegard$$HEX1$$e900$$ENDHEX$$e.
+								// Aucune Modification ne sera sauvegardée.
 								stMessage.Icon			= Information!
 								stMessage.Bouton		= OK!
 								stMessage.bErreurG	= FALSE
@@ -639,17 +639,17 @@ If iRet > 0 Then
 End If
 
 /*----------------------------------------------------------------------------*/
-/* On ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre de workflow en invisible ce qui permet de d$$HEX1$$e900$$ENDHEX$$clencher   */
-/* toutes la batterie de contr$$HEX1$$f400$$ENDHEX$$le li$$HEX4$$e9002000e0002000$$ENDHEX$$la cr$$HEX1$$e900$$ENDHEX$$ation d'un travail,             */
-/* de plus cela permet aussi de mettre $$HEX2$$e0002000$$ENDHEX$$jour la date de fin de gti.          */
+/* On ouvre la fenêtre de workflow en invisible ce qui permet de déclencher   */
+/* toutes la batterie de contrôle lié à la création d'un travail,             */
+/* de plus cela permet aussi de mettre à jour la date de fin de gti.          */
 /*----------------------------------------------------------------------------*/
 If iRet > 0 and bModif And bCreeTrv Then
 	
-	// Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre.
+	// Ouverture de la fenêtre.
 	idwSin.TriggerEvent ("ue_Ouvrir_FenTrv")
 
 	If Not ibComplementOk Then
-		stMessage.sTitre		= "Cr$$HEX1$$e900$$ENDHEX$$ation d'un travail en consultation"
+		stMessage.sTitre		= "Création d'un travail en consultation"
 		stMessage.Icon			= Information!
 		stMessage.Bouton		= YesNo!
 		stMessage.bErreurG	= FALSE
@@ -659,7 +659,7 @@ If iRet > 0 and bModif And bCreeTrv Then
 		// On sort 
 		If F_Message ( stMessage ) = 2 Then
 
-			stMessage.sTitre		= "Cr$$HEX1$$e900$$ENDHEX$$ation d'un travail en consultation"
+			stMessage.sTitre		= "Création d'un travail en consultation"
 			stMessage.Icon			= Information!
 			stMessage.bErreurG	= FALSE
 			stMessage.sCode		= "CONT017"
@@ -669,9 +669,9 @@ If iRet > 0 and bModif And bCreeTrv Then
 			abOkPourFermer = True
 			iRet = -1
 
-		// On r$$HEX1$$e900$$ENDHEX$$essaie.
+		// On réessaie.
 		Else
-			stMessage.sTitre		= "Cr$$HEX1$$e900$$ENDHEX$$ation d'un travail en consultation"
+			stMessage.sTitre		= "Création d'un travail en consultation"
 			stMessage.Icon			= Information!
 			stMessage.bErreurG	= FALSE
 			stMessage.sCode		= "CONT018"
@@ -686,11 +686,11 @@ End If
 
 
 /*------------------------------------------------------------------*/
-/* On ecrit en base $$HEX2$$e0002000$$ENDHEX$$partir de maintenant !!                       */
+/* On ecrit en base à partir de maintenant !!                       */
 /*------------------------------------------------------------------*/
 If iRet > 0 and bModif And bCreeTrv Then
 
-	// On ins$$HEX1$$e800$$ENDHEX$$re le travail 
+	// On insère le travail 
 	If Not ibATraiterPar Then asATraiterPar = ""
 	bRet = This.uf_Insertion_Travail ( lLigneLst, asATraiterPar )
 
@@ -703,7 +703,7 @@ If iRet > 0 and bModif And bCreeTrv Then
 		stMessage.sVar[2] = sVar[2]
 		stMessage.sVar[3] = sVar[3]
 		stMessage.bErreurG = True
-		stMessage.sTitre = "Erreur de mise $$HEX2$$e0002000$$ENDHEX$$jour"
+		stMessage.sTitre = "Erreur de mise à jour"
 		stMessage.sCode  = "PROC003"
 		f_Message ( stMessage )
 	End If
@@ -715,7 +715,7 @@ If iRet > 0 Then
 
 	If bModif Then 
 
-			stMessage.sTitre = "Enregistrement des donn$$HEX1$$e900$$ENDHEX$$es"
+			stMessage.sTitre = "Enregistrement des données"
 			stMessage.Bouton = OKCancel!
 			stMessage.sCode = "CONT012"
 
@@ -732,7 +732,7 @@ If iRet > 0 Then
 				sVar[3] = String ( itrTrans.SQLErrText )
 
 			Else
-				// Aucune Modification ne sera sauvegard$$HEX1$$e900$$ENDHEX$$e.
+				// Aucune Modification ne sera sauvegardée.
 				stMessage.Icon			= Information!
 				stMessage.Bouton		= OK!
 				stMessage.bErreurG	= FALSE
@@ -762,7 +762,7 @@ If iRet > 0 and bDosSuivi then
 End If
 
 /*----------------------------------------------------------------------------*/
-/* On Commit (ou RollBack) La mise $$HEX2$$e0002000$$ENDHEX$$jour des contacts et l'insertion du 		*/
+/* On Commit (ou RollBack) La mise à jour des contacts et l'insertion du 		*/
 /*	WorkFlow.          																			*/
 /*----------------------------------------------------------------------------*/
 If bModif Or bDosSuivi Then 
@@ -791,8 +791,8 @@ If iRet > 0 and bModif and bCreeTrv Then
 End If
 
 /*----------------------------------------------------------------------------*/
-/* Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil de saisie de sinistre.                   */
-/* Seulement si l'utilisateur $$HEX2$$e0002000$$ENDHEX$$l'acc$$HEX1$$e800$$ENDHEX$$s.													*/
+/* Ouverture de la fenêtre d'accueil de saisie de sinistre.                   */
+/* Seulement si l'utilisateur à l'accès.													*/
 /* Dans le cas contraire on n'affichage pas de box pour ne pas perturber.		*/
 /*----------------------------------------------------------------------------*/
 If iRet > 0 and stGlb.bSaisieSin and bCreeTrv And Not ibATraiterPar Then
@@ -812,7 +812,7 @@ private function boolean uf_insertion_travail (long alligne, string asatraiterpa
 //* Fonction		: uf_Insertion_Travail (PRIVATE)
 //* Auteur			: FABRY JF
 //* Date				: 02/05/2001 14:30:32
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Insertion du travail.
+//* Libellé			: Insertion du travail.
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -867,7 +867,7 @@ dtNow = DateTime ( Today (), Now () )
 SetNull ( dtNull )
 
 /*------------------------------------------------------------------*/
-/* On arme les variables dont on a besoin dans la proc$$HEX1$$e900$$ENDHEX$$dure.        */
+/* On arme les variables dont on a besoin dans la procédure.        */
 /*------------------------------------------------------------------*/
 
 sCodTypeRecu	= "C"
@@ -877,75 +877,75 @@ dtDteRecu		= dtNow
 
 dcNbPage			= 0
 dcIdSin			= iDwSin.GetItemNumber ( 1, "ID_SIN" )
-dcIdI				= -1 // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
+dcIdI				= -1 // Non utilisé en complément
 sCodIProv		= iDwContact.GetItemString ( alLigne, "COD_I_PROV" )
 
 dcIdProd			= iDwSin.GetItemNumber ( 1, "ID_PROD" )
-dcIdEts			= -1 // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
-sIdAdh			= "" // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
-dcIdsDos			= -1 // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
-dcOption			= -1 // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
+dcIdEts			= -1 // Non utilisé en complément
+sIdAdh			= "" // Non utilisé en complément
+dcIdsDos			= -1 // Non utilisé en complément
+dcOption			= -1 // Non utilisé en complément
 
-dtDteAdh			= dtNull // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
+dtDteAdh			= dtNull // Non utilisé en complément
 
 If IsNull ( idtDteFinGti ) Or Date ( idtDteFinGti ) = 1900-01-01 Then 
 	//dtDteFinGti		= DateTime ( idwSin.GetItemDate ( 1, "DTE_FIN_GTI" ),00:00:00 )
 	dtDteFinGti		= idwSin.GetItemDateTime ( 1, "DTE_FIN_GTI" ) // [PI056]
 Else
-	// La dteFinGti est mise $$HEX2$$e0002000$$ENDHEX$$jour
+	// La dteFinGti est mise à jour
 	dtDteFinGti		= idtDteFinGti
 End If
 
-dtDteResil		= dtNull // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
+dtDteResil		= dtNull // Non utilisé en complément
 
 dcIdCorb			= iDwProduit.GetItemNumber ( 1, "ID_CORB" )
 
-dtDteDecl		= dtNull // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
-dtDteSurv		= dtNull // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
+dtDteDecl		= dtNull // Non utilisé en complément
+dtDteSurv		= dtNull // Non utilisé en complément
 
-sCodCiv			= "" // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
+sCodCiv			= "" // Non utilisé en complément
 sNom				= Trim ( idwSin.GetItemString ( 1, "NOM" ) )
 sPrenom			= Trim ( idwSin.GetItemString ( 1, "PRENOM" ) )
-sAdr1				= "" // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
-sAdr2				= "" // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
-sAdrCp			= "" // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
-sAdrVille		= "" // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
-sNumTelD			= "" // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
-sNumTelB			= "" // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
-sNumFax			= "" // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
-sTxtMess1		= "Compl$$HEX1$$e900$$ENDHEX$$ment cr$$HEX3$$e900e9002000$$ENDHEX$$en Consultation suite contact."
+sAdr1				= "" // Non utilisé en complément
+sAdr2				= "" // Non utilisé en complément
+sAdrCp			= "" // Non utilisé en complément
+sAdrVille		= "" // Non utilisé en complément
+sNumTelD			= "" // Non utilisé en complément
+sNumTelB			= "" // Non utilisé en complément
+sNumFax			= "" // Non utilisé en complément
+sTxtMess1		= "Complément créé en Consultation suite contact."
 
 sCodOper			= stGLB.sCodOper
-dtMajLe			= dtNull // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
+dtMajLe			= dtNull // Non utilisé en complément
 dtCreeLe			= dtNow
 
-// R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration sur routage
+// Récupération sur routage
 itrTrans.PS_S01_ROUTAGE ( dcIdSin, isCodTravail, isAltQueue )
 sCodTravail = isCodTravail  
 sAltqueue = isAltqueue
 
-dtDteSous		= dtNull // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
-dtDteOpt			= dtNull // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
-dcIdCarte 		= -1 // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
-sIdTypeCarte	= "" // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
+dtDteSous		= dtNull // Non utilisé en complément
+dtDteOpt			= dtNull // Non utilisé en complément
+dcIdCarte 		= -1 // Non utilisé en complément
+sIdTypeCarte	= "" // Non utilisé en complément
 
-dcIdOrdre		= -1 // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
-sCodProvPers	= "" // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
+dcIdOrdre		= -1 // Non utilisé en complément
+sCodProvPers	= "" // Non utilisé en complément
 
-sCodModeRegA	= "" // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
+sCodModeRegA	= "" // Non utilisé en complément
 
-sRibBq			= "" // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
-sRibGui			= "" // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
-sRibCpt			= "" // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
-sRibCle			= "" // Non utilis$$HEX2$$e9002000$$ENDHEX$$en compl$$HEX1$$e900$$ENDHEX$$ment
+sRibBq			= "" // Non utilisé en complément
+sRibGui			= "" // Non utilisé en complément
+sRibCpt			= "" // Non utilisé en complément
+sRibCle			= "" // Non utilisé en complément
 
 sAltCreBqDms = "N"
 
 /*------------------------------------------------------------------*/
 /* # Modification SFR # Le 17/07/2002.                              */
 /*------------------------------------------------------------------*/
-/* Armement des valeurs par d$$HEX1$$e900$$ENDHEX$$faut. Cette gestion doit $$HEX1$$ea00$$ENDHEX$$tre         */
-/* r$$HEX1$$e900$$ENDHEX$$alis$$HEX1$$e900$$ENDHEX$$e en ActiveLinc Via SHERPA.                               */
+/* Armement des valeurs par défaut. Cette gestion doit être         */
+/* réalisée en ActiveLinc Via SHERPA.                               */
 /*------------------------------------------------------------------*/
 sIdContratAbonne	= "123456AA987654"
 lIdHlr				= 99
@@ -1030,15 +1030,15 @@ End If
 											sNvIdSin )
 
 /*------------------------------------------------------------------*/
-/* La zone sProc est pass$$HEX1$$e900$$ENDHEX$$e par r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence. Elle est arm$$HEX1$$e900$$ENDHEX$$e $$HEX2$$e0002000$$ENDHEX$$''      */
-/* dans la proc$$HEX1$$e900$$ENDHEX$$dure. Si une erreur survient, on arme cette cha$$HEX1$$ee00$$ENDHEX$$ne  */
+/* La zone sProc est passée par référence. Elle est armée à ''      */
+/* dans la procédure. Si une erreur survient, on arme cette chaîne  */
 /* pour expliquer ou est survenue l'erreur.                         */
 /*------------------------------------------------------------------*/
 sProc = Trim ( sProc )
 bRet  = sProc = "" 
 
 /*------------------------------------------------------------------*/
-/* Si SqlDbCode est arm$$HEX1$$e900$$ENDHEX$$, on part du principe qu'il y a eu une      */
+/* Si SqlDbCode est armé, on part du principe qu'il y a eu une      */
 /* erreur, et ce quel que soit la valeur de sProc.                  */
 /*------------------------------------------------------------------*/
 If bRet then bRet = itrTrans.SqlCode = 0 And itrTrans.SqlDBCode = 0
@@ -1054,7 +1054,7 @@ public subroutine uf_retour_gestionsherpa (boolean abokpourfermer);//*----------
 //* Fonction		: uf_Retour_GestionSherpa (PUBLIC)
 //* Auteur			: FABRY JF
 //* Date				: 05/09/2002 17:30:32
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Gestion pour Sherpa, uniquement le traitement du DosSuiviPar
+//* Libellé			: Gestion pour Sherpa, uniquement le traitement du DosSuiviPar
 //* Commentaires	: 
 //*
 //* Arguments		: ref	Boolean	abOkPourFermer
@@ -1070,32 +1070,6 @@ public subroutine uf_retour_gestionsherpa (boolean abokpourfermer);//*----------
 Boolean bRet
 
 abOkPourFermer = True
-
-/*------------------------------------------------------------------*/
-/* Mise $$HEX2$$e0002000$$ENDHEX$$jour par gestionnaire de la personne qui traite le        */
-/* dossier                                                          */
-/*------------------------------------------------------------------*/
-// [RS5666_DOS_SUIVI_PAR]
-If Not F_CLE_A_TRUE ( "RS5666_DOS_SUIVI_PAR" ) Then
-
-	If iDwDosSuiviPar.GetItemStatus ( 1, 0, Primary! ) = NewModified!  Or &
-		iDwDosSuiviPar.GetItemStatus ( 1, 0, Primary! ) = DataModified! Then
-	
-		stMessage.sTitre = "Enregistrement des donn$$HEX1$$e900$$ENDHEX$$es"
-		stMessage.Bouton = YesNo!
-		stMessage.sCode = "CONT012"
-	
-	/*----------------------------------------------------------------------------*/
-	/* On Update Dw_DosSuiviPar.                                                  */
-	/*----------------------------------------------------------------------------*/
-		If f_Message ( stMessage ) = 1 Then 
-			bRet = idwDosSuiviPar.Update ( True, False ) > 0
-			F_Commit ( itrTrans, bRet )
-		End If
-	End If
-
-End If 
-
 
 end subroutine
 

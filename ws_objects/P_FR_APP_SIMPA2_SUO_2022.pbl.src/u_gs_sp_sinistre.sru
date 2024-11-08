@@ -1143,11 +1143,9 @@ If	bRet Then
 
 
 // [RS5666_DOS_SUIVI_PAR]
-If F_CLE_A_TRUE ( "RS5666_DOS_SUIVI_PAR" ) Then
-	idw_DosSuiviPar.Hide ()
-	idw_DosSuiviPar.SetItem ( 1, "DOS_SUIVI_PAR", stNul.Str )
-End If	
-	
+idw_DosSuiviPar.Hide ()
+idw_DosSuiviPar.SetItem ( 1, "DOS_SUIVI_PAR", stNul.Str )
+
 
 /*------------------------------------------------------------------*/
 /* Gestion des commandes.														  */
@@ -1951,7 +1949,7 @@ End If
 
 
 // [PM234-6]
-If F_CLE_A_TRUE ( "PM234-6" ) Then
+/*
 	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 94 )
 	For lCptDetPro = lDeb To lFin
 		sVal = lnvString.of_getkeyvalue ( idw_DetPro.GetItemString ( lCptDetPro, "VAL_CAR" ), "COD_DW", ";")
@@ -1962,6 +1960,7 @@ If F_CLE_A_TRUE ( "PM234-6" ) Then
 		End Choose
 	Next
 End If
+*/
 // [PM234-4_V1]
 
 
@@ -2183,20 +2182,18 @@ If isTypeTrt = "S" Then
 End If 	
 
 // [DT386_EXTR_AXA]
-If F_CLE_A_TRUE ( "DT386_EXTR_AXA" ) Then
-	If isTypeTrt = "S" Then 
-		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 335 )
-		lRow = idw_LstWcommande.RowCount()		
-		IF lDeb > 0 And lRow <= 0 Then
-			stMessage.sTitre		= "Info importante"
-			stMessage.Icon			= Exclamation!
-			stMessage.bErreurG	= FALSE
-			stMessage.Bouton		= OK!
-			stMessage.sCode		= "WSIN845"
-			F_Message ( stMessage )			
-		End If 
-	ENd If 
-End If
+If isTypeTrt = "S" Then 
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 335 )
+	lRow = idw_LstWcommande.RowCount()		
+	IF lDeb > 0 And lRow <= 0 Then
+		stMessage.sTitre		= "Info importante"
+		stMessage.Icon			= Exclamation!
+		stMessage.bErreurG	= FALSE
+		stMessage.Bouton		= OK!
+		stMessage.sCode		= "WSIN845"
+		F_Message ( stMessage )			
+	End If 
+ENd If 
 
 // [PC192290]
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 345 )
@@ -2228,12 +2225,10 @@ If lDeb > 0 And isTypeTrt = "S" Then
 		sValTemp = Left ( sVal, iPos - 1 )
 		
 		// [RS5656_MOD_PCE_DIF]
-		If F_CLE_A_TRUE ( "RS5656_MOD_PCE_DIF" ) Then
-			sIdGti = lnvString.of_getkeyvalue (sValTemp, "IGA", ";")
-			sIdDetail = lnvString.of_getkeyvalue (sValTemp, "IDT", ";")
-			IF sIdGti = "" Then sIdGti = "-1"
-			IF sIdDetail = "" Then sIdDetail = "-1"			
-		End If 
+		sIdGti = lnvString.of_getkeyvalue (sValTemp, "IGA", ";")
+		sIdDetail = lnvString.of_getkeyvalue (sValTemp, "IDT", ";")
+		IF sIdGti = "" Then sIdGti = "-1"
+		IF sIdDetail = "" Then sIdDetail = "-1"			
 		
 		sIdPce = lnvString.of_getkeyvalue (sValTemp, "IP", ";")
 		sEtatPce = lnvString.of_getkeyvalue (sValTemp, "EP", ";")
@@ -2242,10 +2237,8 @@ If lDeb > 0 And isTypeTrt = "S" Then
 		iRow = gdsPieceSherpa.InsertRow ( 0 )
 
 		// [RS5656_MOD_PCE_DIF]
-		If F_CLE_A_TRUE ( "RS5656_MOD_PCE_DIF" ) Then
-			gdsPieceSherpa.SetItem ( iRow, "ID_GTI", Integer (sIdGti) )
-			gdsPieceSherpa.SetItem ( iRow, "ID_DETAIL", Integer (sIdDetail) )
-		End If 
+		gdsPieceSherpa.SetItem ( iRow, "ID_GTI", Integer (sIdGti) )
+		gdsPieceSherpa.SetItem ( iRow, "ID_DETAIL", Integer (sIdDetail) )
 
 		gdsPieceSherpa.SetItem ( iRow, "ID_PCE", Integer (sIdPce) ) 
 		gdsPieceSherpa.SetItem ( iRow, "ETAT_PCE", sEtatPce ) 
@@ -3512,20 +3505,14 @@ If sPos = "" Then
 		Case Else
 
 			// [DT386_EXTR_AXA]
-			If F_CLE_A_TRUE ( "DT386_EXTR_AXA" ) Then
-				F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 336 )
-				If lDeb > 0 Then
-					sFind = "LIB_CODE = 'PAS_DE_MARQUE'" // Juste afin de trouver qqchose
-				Else
-					sPosRef = "MARQ_PORT"
-					sMarq = idw_wSin.GetItemString ( 1, sPosRef )
-					sFind = "LIB_CODE = '" + sMarq + "'"
-				End If
-			Else 			
+			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 336 )
+			If lDeb > 0 Then
+				sFind = "LIB_CODE = 'PAS_DE_MARQUE'" // Juste afin de trouver qqchose
+			Else
 				sPosRef = "MARQ_PORT"
 				sMarq = idw_wSin.GetItemString ( 1, sPosRef )
 				sFind = "LIB_CODE = '" + sMarq + "'"
-			End If 
+			End If
 	End Choose
 
 	If Not IsNull ( sMarq ) And sMarq <> "" Then
@@ -4292,8 +4279,8 @@ If	Not bBloque Then
 			sPos =  uf_controler_param_AIG()
 		End If
 
-
 		// [RS4746_DBLE_BQE_ASS]
+		/*
 		If F_CLE_A_TRUE ( "RS4746_DBLE_BQE_ASS" ) Then
 			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 363)
 			If lDeb > 0 Then
@@ -4320,7 +4307,7 @@ If	Not bBloque Then
 				End If 
 			End IF 
 		End If
-
+	  */
 
 
 /*------------------------------------------------------------------*/
@@ -4521,11 +4508,7 @@ If	Not bBloque Then
 
 				// [PI052]
 				If Not ib2EmeTourPI052 Then
-					
-					If F_CLE_A_TRUE ( "TRACE_TS_COURRIER" ) Then
-						invSaisieValSin.uf_Set_TypeTrt ( isTypeTrt )
-					End If 
-					
+
 					sPos = invSaisieValSin.uf_Generer_Courrier ( sDataInter, "CHOIX", FALSE, FALSE, bAuMoinUnCourrier, nvTrtAttribGenCour, TabVariable[], TabCodeVar[] )  
 
 					// Debut #8 On ne lance cette partie que dans ce cas
@@ -4700,57 +4683,6 @@ If sPos = "" and ibAltcontact Then
 		iUoOng.Uf_ChangerOnglet ("04")	
 	End If
 End If
-
-/*------------------------------------------------------------------*/
-/* Vérification du positionnement DOS_SUIVI_PAR                     */
-/*------------------------------------------------------------------*/
-//       JFF   29/08/2023 [RS5666_DOS_SUIVI_PAR]
-// [RS5666_DOS_SUIVI_PAR] A supp
-If NOT F_CLE_A_TRUE ( "RS5666_DOS_SUIVI_PAR" ) Then
-	If sPos = "" and ibAltcontact Then
-	
-		sDosSuiviPar	=	idw_DosSuiviPar.GetItemString ( 1, "DOS_SUIVI_PAR" )
-	
-		If ( isNull ( sDosSuiviPar ) Or ( sDosSuiviPar = "" ) ) Then
-	
-			lNbContact = iDw_LstContact.RowCount ()
-			iDw_LstContact.GetChild ( "ID_NAT_MSG", ddwcNatMsg )
-	
-			lNbNat		= ddwcNatMsg.RowCount ()
-	
-			For lCptCtact = 1 To lNbContact 
-	
-				/*------------------------------------------------------------------*/
-				/* On passe tous les contacts de déclaration.							  */
-				/*------------------------------------------------------------------*/
-				If iDw_LstContact.GetItemString ( lCptCtact, "ID_TYP_MSG" ) = 'D' Then Continue
-	
-				sRech	=	"ID_CANAL	= '" + iDw_LstContact.GetItemString ( lCptCtact, "ID_CANAL" ) + "' AND " + &
-							"ID_TYP_MSG = '" + iDw_LstContact.GetItemString ( lCptCtact, "ID_TYP_MSG" ) + "' AND " + &
-							"ID_NAT_MSG = " + String ( iDw_LstContact.GetItemNumber ( lCptCtact, "ID_NAT_MSG" ) ) + " AND " + &
-							"ALT_AFFECTE= 'O'" 
-	
-				lLig	=	ddwcNatMsg.Find ( sRech, 1, lNbNat )
-	
-				If lLig	> 0 Then 
-	
-					stMessage.sTitre 	= "Dossier affecté"
-					stMessage.Icon 	= Information!
-					stMessage.sCode 	= "CONT020"
-					stMessage.bErreurG	= FALSE
-					f_Message ( stMessage )
-	
-					idw_DosSuiviPar.SetItem ( 1, "DOS_SUIVI_PAR", stGLB.sCodOper )
-					Exit
-	
-				End If
-		
-			Next
-	
-		End If
-	
-	End If
-End If 
 
 If Not bBloque And ibAltTelephonie And sPos = "" Then
 	dDteAchPort  = Date(idw_wSin.GetItemDateTime ( 1, "DTE_ACH_PORT" ) ) // [PI056]
@@ -5104,27 +5036,6 @@ if	Not bBloque and sPos = ""  And this.uf_GetAutorisation2 (208) then
 		stMessage.sCode		= "WSIN789"
 	End if
 End if
-
-// #24 - [DCMP090616]
-// [RS5666_DOS_SUIVI_PAR] A supp
-If NOT F_CLE_A_TRUE ( "RS5666_DOS_SUIVI_PAR" ) Then
-	If Not bBloque and sPos = ""  and Not uf_getautorisation2( 208 ) Then
-		lIdProd = idw_wSin.GetItemNumber ( 1, "ID_PROD" )
-		F_RechDetPro ( lDeb, lFin, idw_DetPro, lIdProd , '-DP', 123 )
-		If lDeb > 0 Then
-			sVal = idw_DosSuiviPar.GetItemString ( 1, "DOS_SUIVI_PAR" )
-			if isNull(sVal) or sVal = "" Then
-				sPos = "ALT_BLOC"
-				stMessage.sTitre		= "Contrôle de saisie du sinistre"
-				stMessage.Icon			= Information!
-				stMessage.bErreurG	= TRUE
-				stMessage.sCode		= "ANCE045"
-				stMessage.sVar[1]		= "Dossier suivi par~n"
-			End if
-		End if
-	End if
-End IF 
-// Fin #24
 
 // #25 [FNAC_PROD_ECH_TECH].[BGE].[20091027112156767]
 If Not bBloque and sPos = "" and Not uf_getautorisation2( 208 ) Then
@@ -5963,13 +5874,10 @@ if	not bBloque and sPos = "" then
 	If lDeb > 0 Then
 		
 		// [RS5656_MOD_PCE_DIF]
-		If F_CLE_A_TRUE ( "RS5656_MOD_PCE_DIF" ) Then
-		
-			// Determination de la Méthode  // [RS5656_MOD_PCE_DIF]
-			sModeFctDp345 = lnvPFCString.of_getkeyvalue (idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "MODE_FCT", ";")
-			If sModeFctDp345 = "" Then sModeFctDp345 = "UNIQUE"
+		// Determination de la Méthode  // [RS5656_MOD_PCE_DIF]
+		sModeFctDp345 = lnvPFCString.of_getkeyvalue (idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "MODE_FCT", ";")
+		If sModeFctDp345 = "" Then sModeFctDp345 = "UNIQUE"
 
-		End If
 		// /[RS5656_MOD_PCE_DIF]
 		
 		sChainePce = ""
@@ -5981,41 +5889,34 @@ if	not bBloque and sPos = "" then
 				iIdPce = gdsPieceSherpa.GetItemNumber ( lCptPce, "ID_PCE" ) 
 
 				// [RS5656_MOD_PCE_DIF]
-				If F_CLE_A_TRUE ( "RS5656_MOD_PCE_DIF" ) Then
-					iIdGtiPce = gdsPieceSherpa.GetItemNumber ( lCptPce, "ID_GTI" ) 
-					iIdDetailPce = gdsPieceSherpa.GetItemNumber ( lCptPce, "ID_DETAIL" ) 
-					
-					If iIdGtiPce > 0 Then
-						sChainePce += "Garantie (" + String ( iIdGtiPce ) + ") " + SQLCA.FN_CODE_NUM ( iIdGtiPce, "-GA" ) + "/"						
-					End If 
+				iIdGtiPce = gdsPieceSherpa.GetItemNumber ( lCptPce, "ID_GTI" ) 
+				iIdDetailPce = gdsPieceSherpa.GetItemNumber ( lCptPce, "ID_DETAIL" ) 
+				
+				If iIdGtiPce > 0 Then
+					sChainePce += "Garantie (" + String ( iIdGtiPce ) + ") " + SQLCA.FN_CODE_NUM ( iIdGtiPce, "-GA" ) + "/"						
+				End If 
 
-					If iIdDetailPce >= 0 Then
-						lRowIdEvtPce = idw_wDetail.Find ( "ID_GTI = " + String ( iIdGtiPce ) + " AND ID_DETAIL = " + String ( iIdDetailPce ), 1,  idw_wDetail.RowCount()) 
-						If lRowIdEvtPce > 0 Then
-							iIdEvtPce = idw_wDetail.GetItemNumber ( lRowIdEvtPce, "ID_EVT" ) 
-							If iIdEvtPce > 0 Then
-								sChainePce += "Détail (" + String ( iIdDetailPce ) + ") Evt ( " + String ( iIdEvtPce ) + ") "  + SQLCA.FN_CODE_NUM ( iIdEvtPce, "+EV" ) + "/"						
-							End IF 
+				If iIdDetailPce >= 0 Then
+					lRowIdEvtPce = idw_wDetail.Find ( "ID_GTI = " + String ( iIdGtiPce ) + " AND ID_DETAIL = " + String ( iIdDetailPce ), 1,  idw_wDetail.RowCount()) 
+					If lRowIdEvtPce > 0 Then
+						iIdEvtPce = idw_wDetail.GetItemNumber ( lRowIdEvtPce, "ID_EVT" ) 
+						If iIdEvtPce > 0 Then
+							sChainePce += "Détail (" + String ( iIdDetailPce ) + ") Evt ( " + String ( iIdEvtPce ) + ") "  + SQLCA.FN_CODE_NUM ( iIdEvtPce, "+EV" ) + "/"						
 						End IF 
-					End If 
-					
-				End If
+					End IF 
+				End If 
 
 				sChainePce += "Pièce (" + String ( iIdPce ) + ") " + SQLCA.FN_CODE_NUM ( iIdPce, "+PC" ) + " => "
 				sEtatPce = gdsPieceSherpa.GetItemString ( lCptPce, "ETAT_PCE" ) 
 				sChainePce += SQLCA.FN_CODE_CAR ( sEtatPce, "-WJ" )
 
 				// [RS5656_MOD_PCE_DIF]
-				If F_CLE_A_TRUE ( "RS5656_MOD_PCE_DIF" ) Then
-					Choose Case sModeFctDp345 
-						Case "UNIQUE"
-							lRow = idw_wpiece.Find ( "ID_PCE = " + String ( iIdPce ) + " AND ALT_RECLAME = 'O' AND ID_I = 0", 1, idw_wpiece.RowCount () )
-						Case "DET_GARANTIE"
-							lRow = idw_wpiece.Find ( "ID_GTI = " + String ( iIdGtiPce ) + " AND ID_DETAIL = " + String ( iIdDetailPce ) + " AND ID_PCE = " + String ( iIdPce ) + " AND ALT_RECLAME = 'O' AND ID_I = 0", 1, idw_wpiece.RowCount () )
-					End Choose 
-				Else
-					lRow = idw_wpiece.Find ( "ID_PCE = " + String ( iIdPce ) + " AND ALT_RECLAME = 'O' AND ID_I = 0", 1, idw_wpiece.RowCount () )
-				End If 
+				Choose Case sModeFctDp345 
+					Case "UNIQUE"
+						lRow = idw_wpiece.Find ( "ID_PCE = " + String ( iIdPce ) + " AND ALT_RECLAME = 'O' AND ID_I = 0", 1, idw_wpiece.RowCount () )
+					Case "DET_GARANTIE"
+						lRow = idw_wpiece.Find ( "ID_GTI = " + String ( iIdGtiPce ) + " AND ID_DETAIL = " + String ( iIdDetailPce ) + " AND ID_PCE = " + String ( iIdPce ) + " AND ALT_RECLAME = 'O' AND ID_I = 0", 1, idw_wpiece.RowCount () )
+				End Choose 
 				
 				If lRow > 0 Then
 					sChainePce += ", " + SQLCA.FN_CODE_CAR ( "PRL", "-WJ" )
@@ -6036,43 +5937,35 @@ if	not bBloque and sPos = "" then
 				iIdPce = idw_wPiece.GetItemNumber ( lCptPce, "ID_PCE" ) 				
 				
 				// [RS5656_MOD_PCE_DIF]
-				If F_CLE_A_TRUE ( "RS5656_MOD_PCE_DIF" ) Then
-					iIdGtiPce = idw_wPiece.GetItemNumber ( lCptPce, "ID_GTI" ) 
-					iIdDetailPce = idw_wPiece.GetItemNumber ( lCptPce, "ID_DETAIL" ) 
+				iIdGtiPce = idw_wPiece.GetItemNumber ( lCptPce, "ID_GTI" ) 
+				iIdDetailPce = idw_wPiece.GetItemNumber ( lCptPce, "ID_DETAIL" ) 
 
-					Choose Case sModeFctDp345 
-						Case "UNIQUE"
-							lRow = gdsPieceSherpa.Find ( "ID_PCE = " + String ( iIdPce ) + " AND ID_I = 0", 1, gdsPieceSherpa.RowCount () )					
-						Case "DET_GARANTIE"
-							lRow = gdsPieceSherpa.Find ( "ID_GTI = " + String ( iIdGtiPce ) + " AND ID_DETAIL = " + String ( iIdDetailPce ) + " AND ID_PCE = " + String ( iIdPce ) + " AND ID_I = 0", 1, gdsPieceSherpa.RowCount () )					
-					End Choose 
-				Else
-					lRow = gdsPieceSherpa.Find ( "ID_PCE = " + String ( iIdPce ) + " AND ID_I = 0", 1, gdsPieceSherpa.RowCount () )					
-				End If 
+				Choose Case sModeFctDp345 
+					Case "UNIQUE"
+						lRow = gdsPieceSherpa.Find ( "ID_PCE = " + String ( iIdPce ) + " AND ID_I = 0", 1, gdsPieceSherpa.RowCount () )					
+					Case "DET_GARANTIE"
+						lRow = gdsPieceSherpa.Find ( "ID_GTI = " + String ( iIdGtiPce ) + " AND ID_DETAIL = " + String ( iIdDetailPce ) + " AND ID_PCE = " + String ( iIdPce ) + " AND ID_I = 0", 1, gdsPieceSherpa.RowCount () )					
+				End Choose 
 				
 				If lRow > 0 Then continue
 						
 				// [RS5656_MOD_PCE_DIF]
-				If F_CLE_A_TRUE ( "RS5656_MOD_PCE_DIF" ) Then
-					If iIdGtiPce > 0 Then
-						sChainePce += "Garantie (" + String ( iIdGtiPce ) + ") " + SQLCA.FN_CODE_NUM ( iIdGtiPce, "-GA" ) + "/"						
-					End If 
+				If iIdGtiPce > 0 Then
+					sChainePce += "Garantie (" + String ( iIdGtiPce ) + ") " + SQLCA.FN_CODE_NUM ( iIdGtiPce, "-GA" ) + "/"						
+				End If 
 
-					If iIdDetailPce >= 0 Then
-						lRowIdEvtPce = idw_wDetail.Find ( "ID_GTI = " + String ( iIdGtiPce ) + " AND ID_DETAIL = " + String ( iIdDetailPce ), 1,  idw_wDetail.RowCount()) 
-						If lRowIdEvtPce > 0 Then
-							iIdEvtPce = idw_wDetail.GetItemNumber ( lRowIdEvtPce, "ID_EVT" ) 
-							If iIdEvtPce > 0 Then
-								sChainePce += "Détail (" + String ( iIdDetailPce ) + ") Evt ( " + String ( iIdEvtPce ) + ") "  + SQLCA.FN_CODE_NUM ( iIdEvtPce, "+EV" ) + "/"						
-							End IF 
+				If iIdDetailPce >= 0 Then
+					lRowIdEvtPce = idw_wDetail.Find ( "ID_GTI = " + String ( iIdGtiPce ) + " AND ID_DETAIL = " + String ( iIdDetailPce ), 1,  idw_wDetail.RowCount()) 
+					If lRowIdEvtPce > 0 Then
+						iIdEvtPce = idw_wDetail.GetItemNumber ( lRowIdEvtPce, "ID_EVT" ) 
+						If iIdEvtPce > 0 Then
+							sChainePce += "Détail (" + String ( iIdDetailPce ) + ") Evt ( " + String ( iIdEvtPce ) + ") "  + SQLCA.FN_CODE_NUM ( iIdEvtPce, "+EV" ) + "/"						
 						End IF 
-					End If 
+					End IF 
+				End If 
 
-					sChainePce += "Pièce (" + String ( iIdPce ) + ") " + SQLCA.FN_CODE_NUM ( iIdPce, "+PC" ) + " => "					
+				sChainePce += "Pièce (" + String ( iIdPce ) + ") " + SQLCA.FN_CODE_NUM ( iIdPce, "+PC" ) + " => "					
 					
-				Else 
-					sChainePce += "Pièce (" + String ( iIdPce ) + ") " + SQLCA.FN_CODE_NUM ( iIdPce, "+PC" ) + " => "
-				End IF 
 				sChainePce += SQLCA.FN_CODE_CAR ( "PRL", "-WJ" )				
 				
 				sChainePce = sChainePce + Char ( 10 )
@@ -10382,13 +10275,11 @@ If lDeb > 0 Then
 	For lCpt = 1 To lTot
 
 		// [RS5656_MOD_PCE_DIF]
-		If F_CLE_A_TRUE ( "RS5656_MOD_PCE_DIF" ) Then
-			sValTemp = String ( gdsPieceSherpa.GetItemNumber ( lCpt, "ID_GTI" ) )
-			sVal += "IGA=" + sValTemp + ";"
+		sValTemp = String ( gdsPieceSherpa.GetItemNumber ( lCpt, "ID_GTI" ) )
+		sVal += "IGA=" + sValTemp + ";"
 
-			sValTemp = String ( gdsPieceSherpa.GetItemNumber ( lCpt, "ID_DETAIL" ) )
-			sVal += "IDT=" + sValTemp + ";"
-		End If
+		sValTemp = String ( gdsPieceSherpa.GetItemNumber ( lCpt, "ID_DETAIL" ) )
+		sVal += "IDT=" + sValTemp + ";"
 		
 		sValTemp = String ( gdsPieceSherpa.GetItemNumber ( lCpt, "ID_PCE" ) )
 		sVal += "IP=" + sValTemp + ";"
@@ -49731,22 +49622,15 @@ If Not IsNull ( sGetText ) and sGetText <> "" And lRow <> -1 Then
 		Case Else
 
 			// [DT386_EXTR_AXA]
-			If F_CLE_A_TRUE ( "DT386_EXTR_AXA" ) Then
-				F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 336 )
-				If lDeb > 0 Then
-					// Saisie Libre sans Contrôle
-					lRow = 1				
-				Else 
-					idw_wSin.GetChild ( "MARQ_PORT", dwChild )
-					sFind = "LIB_CODE = '" + sGetText + "'"
-					lRow = dwChild.Find ( sFind, 1, dwChild.RowCount () )
-				End If 
-			Else
+			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 336 )
+			If lDeb > 0 Then
+				// Saisie Libre sans Contrôle
+				lRow = 1				
+			Else 
 				idw_wSin.GetChild ( "MARQ_PORT", dwChild )
 				sFind = "LIB_CODE = '" + sGetText + "'"
 				lRow = dwChild.Find ( sFind, 1, dwChild.RowCount () )
-			End If
-
+			End If 
 
 	End Choose 
 

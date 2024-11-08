@@ -755,10 +755,6 @@ If Not stPass_Dga.bRetour Then
 End If 
 
 If	ibSaisieValidation Then
-	// TRACE_TS_COURRIER
-	If F_CLE_A_TRUE ( "TRACE_TS_COURRIER" ) Then
-		invSaisieValSin.uf_Set_TypeTrt ( isTypeTrt )
-	End If 
 	invSaisieValSin.uf_Preparer_Instance ( String ( dw_1.GetItemNumber ( 1, "ID_SIN" )), dw_Lst_Inter, isTypeTrt )
 End If
 
@@ -1022,10 +1018,7 @@ dw_DosSuiviPar.width		= 1198
 dw_DosSuiviPar.Height	=   89
 
 // [RS5666_DOS_SUIVI_PAR]
-If F_CLE_A_TRUE ( "RS5666_DOS_SUIVI_PAR" ) Then
-	dw_DosSuiviPar.Hide()
-End If
-
+dw_DosSuiviPar.Hide()
 
 /*------------------------------------------------------------------*/
 /* DGA. Le 21/08/2003.                                              */
