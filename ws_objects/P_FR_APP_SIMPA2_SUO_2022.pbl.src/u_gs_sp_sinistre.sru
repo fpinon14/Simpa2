@@ -19,7 +19,8 @@ Public :
 
 Private :
 	u_gs_sp_sinistre_2 iUoGsSpSinistre2  // [20241112110249883][DIVOBJ][JFF]
-
+	u_gs_sp_sinistre iuoThis // [20241112110249883][DIVOBJ][JFF]
+	
 	u_Libelle_Dga		iUoLibelle
 	N_Cst_Saisie_Validation_Sinistre	invSaisieValSin
 
@@ -219,7 +220,6 @@ private function long uf_zn_heusurv ()
 private function long uf_zn_boutique ()
 private function long uf_zn_numimeiport ()
 private function long uf_zn_trt_divsin_vallst (string asdata, string asnomcol, long alrow)
-private function long uf_zn_trt_divsin_typeapp (string asdata, string asnomcol, long alrow, boolean abforcer)
 private function long uf_zn_trt_divsin_codic (string asdata, string asnomcol, long alrow, boolean abforcer)
 private function long uf_zn_trt_divsin_valdte (string asdata, string asnomcol, long alrow)
 private function long uf_zn_trt_divsin_provisionfrais (string asdata, string asnomcol, long alrow, boolean abforcer)
@@ -228,7 +228,6 @@ public function long uf_zn_trt_divsin (string asdata, string asnomcol, long alro
 public function long uf_paraexist (string astextcompo, string aspara[])
 private function long uf_decompo_adr_mail ()
 private function long uf_zn_trt_divsin_dteticket (string asdata, string asnomcol, long alrow)
-private function long uf_zn_trt_divsin_choixpack (string asdata, string asnomcol, long alrow, boolean abforcer)
 public subroutine uf_getautorisation (string asidnatcour, ref string asbin, ref boolean abmodifcour, ref boolean abvalauto, ref boolean abvalidation, integer aiidi)
 private function boolean uf_validation_finale_trt_particuliers ()
 private function boolean uf_validation_finale_mds_mail_nomade (string ascasgestionmds)
@@ -254,7 +253,6 @@ public function string uf_controler_param_aig ()
 private function boolean uf_validation_finale_scf_mail_ech_expr ()
 public function boolean uf_getautorisation (string assection, integer aino)
 private subroutine uf_controlersaisie_sms (ref string astext, ref string aspos)
-private function long uf_zn_trt_divsin_accessoire (string asdata, string asnomcol, long alrow)
 private subroutine uf_determiner_data_sinistre_plafpec (ref string asmtpecmonnaie, ref string asmtpeccentimes)
 private function long uf_zn_trt_divsin_moderemplacement (string asdata, string asnomcol, long alrow)
 private function boolean uf_validation_finale_envoi_sms ()
@@ -329,7 +327,6 @@ private function boolean uf_validation_finale_eco_mail_samsung ()
 private function long uf_zn_trt_divsin_gti_non_activee (string asdata, string asnomcol, long alrow)
 private function string uf_controlergestion_caution (ref boolean abmessage, string ascas)
 private function long uf_zn_trt_divsin_cra_suivi_imei (string asdata, string asnomcol, long alrow)
-private function long uf_zn_trt_divsin_accord_chubb (string asdata, string asnomcol, long alrow)
 private function long uf_zn_id_territ (boolean abmodified)
 public function boolean uf_controlergestion_sanction_eco_usa ()
 private function boolean uf_controler_sepa (string ascodebq, string ascodeag, long alidinter)
@@ -398,7 +395,6 @@ private function boolean uf_validation_finale_samsung_infopec ()
 private function boolean uf_controlergestion_pm445 ()
 private function long uf_zn_trt_divsin_personne_sin (string asdata, string asnomcol, long alrow)
 private function string uf_controlergestion_redrbtqcentralpsm ()
-private function long uf_zn_trt_divsin_bloquedretude (string asdata, string asnomcol, long alrow)
 private function boolean uf_validation_finale_adviserepa_mail (string ascas)
 private subroutine uf_ajoutdynamiquedivpro ()
 public function boolean uf_validation_finale_courhtmlviawssaga2 ()
@@ -1592,8 +1588,7 @@ If lDeb > 0 Then
 	// Fin #21
 End If
 
-
-This.Uf_Zn_Trt_DivSin_TypeApp ( "AUT", "", -1, TRUE )
+iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_TypeApp ( "AUT", "", -1, TRUE ) // [20241112110249883][DIVOBJ][JFF]
 
 /*------------------------------------------------------------------*/
 /* Le gestionnaire a-t-il le droit d'utiliser la sig elec ?         */
@@ -15482,7 +15477,7 @@ Choose Case asNomZone
 					If Upper ( Trim ( idw_DetPro.GetItemString ( lCpt, "VAL_CAR" ) ) ) = "DEFAUT" Then
 						sIdCode = idw_DetPro.GetItemString ( lCpt, "ID_CODE_CAR" ) 
 						idw_wDivSin.SetItem ( alRow, "VAL_CAR", sIdCode )
-						This.Uf_Zn_Trt_DivSin_TypeApp ( sIdCode, "VAL_LST_CAR", alRow, TRUE )
+						iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_TypeApp ( sIdCode, "VAL_LST_CAR", alRow, TRUE )  // [20241112110249883][DIVOBJ][JFF]
 						Exit
 					End If 
 				Next
@@ -15508,7 +15503,7 @@ Choose Case asNomZone
 					If Upper ( Trim ( idw_DetPro.GetItemString ( lCpt, "VAL_CAR" ) ) ) = "DEFAUT" Then
 						sIdCode = idw_DetPro.GetItemString ( lCpt, "ID_CODE_CAR" ) 
 						idw_wDivSin.SetItem ( alRow, "VAL_CAR", sIdCode )
-						This.Uf_Zn_Trt_DivSin_TypeApp ( sIdCode, "VAL_LST_CAR", alRow, TRUE )
+						iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_TypeApp ( sIdCode, "VAL_LST_CAR", alRow, TRUE ) // [20241112110249883][DIVOBJ][JFF]
 						Exit
 					End If 
 				Next
@@ -15535,7 +15530,7 @@ Choose Case asNomZone
 					If Upper ( Trim ( idw_DetPro.GetItemString ( lCpt, "VAL_CAR" ) ) ) = "DEFAUT" Then
 						sIdCode = idw_DetPro.GetItemString ( lCpt, "ID_CODE_CAR" ) 
 						idw_wDivSin.SetItem ( alRow, "VAL_CAR", sIdCode )
-						This.Uf_Zn_Trt_DivSin_TypeApp ( sIdCode, "VAL_LST_CAR", alRow, TRUE )
+						iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_TypeApp ( sIdCode, "VAL_LST_CAR", alRow, TRUE )  // [20241112110249883][DIVOBJ][JFF]
 						Exit
 					End If 
 				Next
@@ -15727,7 +15722,7 @@ For lCpt = 1 To lTot
 
 					sData = Upper ( This.uf_GestOng_Divers_Trouver ( "TYPE_APP" ) )
 			
-					This.Uf_Zn_Trt_DivSin_TypeApp ( sData, "VAL_LST_CAR", lCpt, TRUE )
+					iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_TypeApp ( sData, "VAL_LST_CAR", lCpt, TRUE ) // [20241112110249883][DIVOBJ][JFF]
 
 			End Choose 
 
@@ -18465,385 +18460,6 @@ Return iAction
 
 end function
 
-private function long uf_zn_trt_divsin_typeapp (string asdata, string asnomcol, long alrow, boolean abforcer);
-//*-----------------------------------------------------------------
-//*
-//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_TypeApp (PRIVATE)
-//* Auteur			: Fabry JF
-//* Date				: 30/09/2004
-//* Libellé			: Contrôle de la zone TYPE_APP
-//* Commentaires	: 	Gestion des différents référentiel
-//*
-//* Arguments		: String 		asData			Val
-//*					  String 		asNomCol			Val
-//*					  Long			alRow				Val
-//*					  Boolean		abForcer			Val
-//*
-//Migration PB8-WYNIWYG-03/2006 OR
-////* Retourne		: Rien
-//* Retourne		: long
-//Fin Migration PB8-WYNIWYG-03/2006 OR
-//*
-//*-----------------------------------------------------------------
-//* MAJ   PAR      Date	     Modification
-//* #..   ...   ../../....   
-//* #1    PHG    23/06/2009   [O2M_DIAG_NOMADE] GEstion de l'interdiction
-//*                          de modification de type_app si on est en
-//*                          process CDiscount et type_app = 'AUT'
-//* #2    JFF   07/08/2009   [O2M_DIAG_NOMADE].[JFF].[20090807110518433]
-//* #3    JFF   07/08/2009   [O2M_DIAG_NOMADE].[JFF].[20090807135106933]
-//* #4	 PHG   07/01/2010	[O2M_DIAG_NOMADE].Lot2 GEneralisation du controle
-//*									de modification de TYP_APP, si typapp= 'AUT' et AUT plus autorisé.
-//        JFF   03/06/2010 [PC397/443_IPAD]
-//			FPI	29/05/2013	[PC845]
-//			FPI	07/10/2013	[PC954].Mantis8916
-//       JFF   02/06/2014 [PC929_CDISCOUNT][PC929-2-V3]
-//			FPI	19/08/2015	[DT167]
-//       JFF   11/05/2022   [RS2980_IFR]
-//       JFF   06/04/2023 [PMO139_RS4926]
-//        JFF   05/08/2024  [MCO602_PNEU]
-//*-----------------------------------------------------------------
-
-String sTypeApp, sIdMarq, sVal
-
-//* #2 [O2M_DIAG_NOMADE].[JFF].[20090807110518433]
-String sTypeAppActuel 
-// #4	PHG 07/01/2010	[O2M_DIAG_NOMADE].Lot2
-//n_cst_attrib_key lnvKey[]
-boolean bDp25_no_Aut
-DataWindowChild dwChild
-Integer iAction, iIdNatSin
-Long lRow
-n_cst_string nvString
-Long lDeb, lFin, lIdProd // #1 [O2M_DIAG_NOMADE]
-
-
-lIdProd = long(idw_wSin.object.id_prod[1]) // #1 [O2M_DIAG_NOMADE]
-sTypeApp = Upper ( asData )
-
-//* #2 [O2M_DIAG_NOMADE].[JFF].[20090807110518433]
-If Not abForcer Then
-   sTypeAppActuel = idw_wDivSin.GetItemString ( alRow, asnomcol )
-Else
-   sTypeAppActuel = sTypeApp
-End If
-//* :#2 [O2M_DIAG_NOMADE].[JFF].[20090807110518433]
-
-iAction = 0
-
-/*------------------------------------------------------------------*/
-/* Pour Modifier lle Type d'app., il faut qu'aucun détail soit 'à   */
-/* régler' ou 'réglé' ET qu'aucune Prestation non annulée n'existe. */
-/*------------------------------------------------------------------*/
-// #1 [O2M_DIAG_NOMADE] Est-on en process Cdiscount et type_app a 'AUT' ?
-// Si oui, on autorise une fois le changement de type d'appareil.
-// Si non, controle existant cité ci-dessus.
-//F_Rechdetpro(lDeb, lFin,idw_DetPro, lIdProd, "-DP", 37)
-
-F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 25 )
-if lDeb > 0 Then
-	// Si Option 25 et Type Appareil  'Autre' non présent en paramétrage det_pro
-	bDp25_no_Aut = idw_detpro.Find ( "ID_PROD="+string(idw_WSin.GetItemNumber( 1, "ID_PROD" ))+&
-							" AND ID_CODE_DP=25" + &
-							" AND UPPER(ID_CODE_CAR)= 'AUT'", lDeb, lFin ) = 0
-End If
-
-//* #2 [O2M_DIAG_NOMADE].[JFF].[20090807110518433]
-// if lDeb > 0 and sTypeApp = "AUT" And Not abForcer Then
-//if lDeb > 0 and sTypeAppActuel = "AUT" And Not abForcer Then
-//* :#2 [O2M_DIAG_NOMADE].[JFF].[20090807110518433]
-if bDp25_no_Aut and ( sTypeAppActuel = "AUT" Or IsNull (sTypeAppActuel) ) And Not abForcer Then // #4	PHG 07/01/2010	[O2M_DIAG_NOMADE].Lot2
-
-// #3 [O2M_DIAG_NOMADE].[JFF].[20090807135106933]
-/*
-   stMessage.sTitre      = "Régularisation Dossier CDiscount"
-   stMessage.Icon         = Information!
-   stMessage.bErreurG   = FALSE
-   stMessage.sCode      = "WSIN680" //#1 [O2M_DIAG_NOMADE] : Message : Vous devez régulariser ce dossier en choisissant un type d'appareil précis.
-                                                                  //     ATTENTION : Choisissez bien, car une fois validé, aucune modification ultérieure ne sera possible.
-   F_Message ( stMessage )
-   iAction = 0
-*/
-//   stMessage.sTitre      = "Régularisation Dossier CDiscount"
-   stMessage.sTitre      = "Régularisation Dossier"// #4	PHG 07/01/2010	[O2M_DIAG_NOMADE].Lot2
-   stMessage.Icon         = Information!
-   stMessage.bErreurG   = FALSE
-   stMessage.sCode      = "WSIN681" //#1 [O2M_DIAG_NOMADE] : Message : Vous devez régulariser ce dossier en choisissant un type d'appareil précis.
-   stMessage.Bouton      = YesNo!
-
-   If F_Message ( stMessage ) = 1 Then
-      iAction = 0
-   Else
-      iAction = 1
-      idw_wDivSin.SetItem ( alRow, asnomcol, sTypeAppActuel )
-   End If
-   stMessage.Bouton      = Ok!
-
-// :#3 [O2M_DIAG_NOMADE].[JFF].[20090807135106933]
-Else
-	
-	If idw_wDetail.Find ( "COD_ETAT = 600 OR COD_ETAT = 500", 1, idw_wDetail.RowCount () ) + &
-		idw_LstwCommande.Find ( "COD_ETAT <> 'ANN' ", 1, idw_LstwCommande.RowCount () ) + &
-		idw_wDivDet.Find ( "UPPER ( NOM_ZONE ) = 'PEC' AND ( VAL_LST_CAR = 'O' Or VAL_CAR = 'O' )", 1, idw_wDivDet.Rowcount () ) > 0 And Not abForcer Then
-			idw_wDivSin.iiErreur = 1
-			iAction = 1
-	End If
-End If
-
-// :#1 [O2M_DIAG_NOMADE] ci-dessous ancien code
-//If idw_wDetail.Find ( "COD_ETAT = 600 OR COD_ETAT = 500", 1, idw_wDetail.RowCount () ) + &
-//   idw_LstwCommande.Find ( "COD_ETAT <> 'ANN' ", 1, idw_LstwCommande.RowCount () ) > 0 And Not abForcer Then
-//   idw_wDivSin.iiErreur = 1
-//   iAction = 1
-//End If
-
-/*------------------------------------------------------------------*/
-/* Pour DARTY (Profuit Mobile) Si CODIC trouvé ET Valide, alors     */
-/* tout est déterminé automatiquement, don interdiction de          */
-/* modifier la Marque/modele.                                       */
-/*------------------------------------------------------------------*/
-If iAction = 0 And Not abForcer Then
-	lRow = idw_WDivSin.Find ( "NOM_ZONE = 'codic'", 1,  idw_WDivSin.RowCount () ) 
-	If lRow > 0 And ibCodicDartyValide Then
-		iAction = 1
-		idw_wDivSin.iiErreur = 2
-	End If
-End If
-
-// [DT167]
-If iAction = 0 And Not abForcer Then
-	lRow=idw_detpro.Find ( "ID_PROD="+string(idw_WSin.GetItemNumber( 1, "ID_PROD" ))+&
-							" AND ID_CODE_DP=25" + &
-							" AND UPPER(ID_CODE_CAR)= '" + asData + "'",1, idw_detpro.RowCount( ))
-	if lRow > 0 Then
-		if nvString.of_getkeyvalue( idw_detpro.GetItemString(lRow,"VAL_CAR"), "EXCLU_DECLA", ";") = "OUI" Then
-			iAction = 1
-			idw_wDivSin.iiErreur = 8
-		End if
-	End if
-End if
-// :[DT167]
-
-If iAction = 0 Then
-
-/*------------------------------------------------------------------*/
-/* Quel référentiel utiliser ? Armement de isReferentielApp         */
-/*------------------------------------------------------------------*/
-	This.uf_Determiner_Referentiel ( sTypeApp )
-
-/*------------------------------------------------------------------*/
-/* Si l'on est en saisi, on masque tout les référentiels avant de   */
-/* rendre visible le bon.                                           */
-/*------------------------------------------------------------------*/
-	If isTypeTrt = "S" Then
-		idw_Wsin.Modify ( "marq_port.visible = 0" ) 
-		idw_Wsin.Modify ( "modl_port.visible = 0" ) 
-
-		idw_Wsin.Modify ( "marq_port2.visible = 0" ) 
-		idw_Wsin.Modify ( "modl_port2.visible = 0" ) 
-
-		idw_Wsin.Modify ( "marq_port3.visible = 0" ) 
-		idw_Wsin.Modify ( "modl_port3.visible = 0" ) 
-
-	End If
-
-	Choose Case isReferentielApp 
-
-/*------------------------------------------------------------------*/
-/* Référentiel IFR pour les téléphones uniquement => table IFR      */
-/*------------------------------------------------------------------*/
-		Case "IFR"
-
-			If isTypeTrt = "S" Then
-				idw_Wsin.Modify ( "marq_port2.visible = 1" ) 
-				idw_Wsin.Modify ( "modl_port2.visible = 1" ) 
-			End If
-
-			idw_Wsin.Modify ( "marq_port_t.text = 'Marque (IFR)'" ) 
-			idw_Wsin.Modify ( "modl_port_t.text = 'Modèle (IFR)'" ) 
-
-			// [PC397/443_IPAD]
-			Choose Case sTypeApp
-				Case "TEL", "PC1", "PC2", "PC3"
-					idw_Wsin.Modify ( "num_imei_port_t.text = 'n° IMEI'" ) 
-				Case Else
-					idw_Wsin.Modify ( "num_imei_port_t.text = 'n° Série'" ) 
-			End Choose
-			// [PC397/443_IPAD]			
-
-
-			sIdMarq = Trim ( Upper ( idw_Wsin.GetItemString ( 1, "MARQ_PORT2" ) )) 
-			If IsNull ( sIdMarq ) Then sIdMarq = ""
-			idw_Wsin.Getchild ( "MODL_PORT2", dwChild ) 
-			dwChild.SetFilter ( "MARQUE = '" + Upper ( sIdMarq ) + "'" )
-			dwChild.Filter ()
-			dwChild.Sort ()
-
-/*---------------------------------------------------------------------*/
-/* Référentiel DARTY pour autres types d'appareils sauf les téléphones */
-/* => table REF_CODIC_DARTY														  */
-/*---------------------------------------------------------------------*/
-		Case "REF_CODIC_DARTY"
-
-			If isTypeTrt = "S" Then
-				idw_Wsin.Modify ( "marq_port3.visible = 1" ) 
-				idw_Wsin.Modify ( "modl_port3.visible = 1" ) 
-			End If
-
-			idw_Wsin.Modify ( "marq_port_t.text = 'Marque (DARTY)'" ) 
-			idw_Wsin.Modify ( "modl_port_t.text = 'Modèle (DARTY)'" ) 
-			idw_Wsin.Modify ( "num_imei_port_t.text = 'n° Série'" ) 
-
-			idw_Wsin.Getchild ( "MARQ_PORT3", dwChild ) 
-			dwChild.SetFilter ( "TYPE_APP = '" + sTypeApp + "'")
-			dwChild.Filter ()
-			dwChild.Sort ()
-
-			sIdMarq = Trim ( Upper ( idw_Wsin.GetItemString ( 1, "MARQ_PORT3" ) )) 
-			If IsNull ( sIdMarq ) Then sIdMarq = ""
-			idw_Wsin.Getchild ( "MODL_PORT3", dwChild ) 
-
-			dwChild.SetFilter ( "MARQUE = '" + Upper ( sIdMarq ) + "' AND TYPE_APP = '" + sTypeApp + "'")
-			dwChild.Filter ()
-			dwChild.Sort ()
-
-/*---------------------------------------------------------------------*/
-/* Référentiel SPB pour tout autres types d'appareils       			  */
-/* => table CODE (-MB)																  */
-/*---------------------------------------------------------------------*/
-		Case "REF_SIMPA2_CODE_MB"
-
-			If isTypeTrt = "S" Then
-				idw_Wsin.Modify ( "marq_port.visible = 1" ) 
-				idw_Wsin.Modify ( "modl_port.visible = 1" ) 
-			End If
-
-			idw_Wsin.Modify ( "marq_port_t.text = 'Marque'" ) 
-			idw_Wsin.Modify ( "modl_port_t.text = 'Modèle'" ) 
-			idw_Wsin.Modify ( "num_imei_port_t.text = 'n° Série'" ) 
-
-/*---------------------------------------------------------------------*/
-/* Référentiel SPB par défaut pour tout autres types d'appareils       */
-/* => table CODE (-MB)																  */
-/*---------------------------------------------------------------------*/
-		Case Else
-
-			If isTypeTrt = "S" Then
-				idw_Wsin.Modify ( "marq_port.visible = 1" ) 
-				idw_Wsin.Modify ( "modl_port.visible = 1" ) 
-			End If
-
-			idw_Wsin.Modify ( "marq_port_t.text = 'Marque'" ) 
-			idw_Wsin.Modify ( "modl_port_t.text = 'Modèle'" ) 
-			idw_Wsin.Modify ( "num_imei_port_t.text = 'n° Série'" ) 
-
-	End Choose
-End If
-
-// [PC845]
-/* 
-If sTypeApp="PNE" Then
-	// [MCO602_PNEU]
-	If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
-		sVal = idw_Wsin.GetItemString ( 1, "num_imei_port" )
-		idw_Wsin.SetItem ( 1, "num_imei_port", "AUCUN" )
-	Else 	
-		idw_Wsin.Modify ( "num_imei_port_t.text = 'Immat.'" ) 
-	End If 
-End If 
-*/
-
-// [PC954].Mantis8916
-F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 141 )
-If lDeb <= 0 Then F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 212 ) // Mantis 9148
-
-If lDeb > 0 Then
-	
-	iIdNatSin=idw_WSin.GetItemNumber ( 1, "ID_NATSIN" )
-	if iIdNatSin=0 or iIdNatSin=28 Then // Message d'info si Panne
-		
-		sVal = nvString.of_getkeyvalue( idw_detpro.GetItemString(lDeb, "VAL_CAR"), "APP_NON_GERE_PANNE", ";")
-		If Pos(sVal,"#" + asData + "#") > 0 Then
-		
-			stMessage.sTitre      = "Gestion de sinistres SIMPA2"
-			stMessage.Icon         = Information!
-			stMessage.bErreurG   = FALSE
-			stMessage.sCode      = "WSIN758"
-			stMessage.Bouton      = OK!
-			
-			f_message(stMessage)
-		End if
-	End if 
-End if
-
-// [PC929_CDISCOUNT][PC929-2-V3]
-If isTypeTrt = "S" Then
-	sVal = This.uf_Gestong_Divers_Trouver ( "TV_SUPEG_32P" )
-	If IsNull ( sVal ) Then sVal = ""	
-	If sVal = "O" Then
-		Choose Case asData
-			Case "TL7", "TLO", "TPS"  // Les TV >= 32 pouces
-				// Cest ok
-			Case Else
-				If Not IsNull ( asData ) And len ( trim ( asData )) > 0 Then
-					stMessage.sTitre      = "Alerte non bloquante !!"
-					stMessage.Icon         = Exclamation!
-					stMessage.bErreurG   = FALSE
-					stMessage.sCode      = "WSIN773"
-					stMessage.Bouton      = OK!
-					
-					f_message(stMessage)
-				End If
-		End Choose
-	End If
-
-	If sVal <> "O" Then
-		If idw_wDivSin.Find ( "UPPER ( NOM_ZONE ) = 'TV_SUPEG_32P'", 1, idw_wDivSin.RowCount () ) > 0 Then
-			Choose Case asData
-				Case "TL7", "TLO", "TPS"  // Les TV >= 32 pouces
-					stMessage.sTitre      = "Alerte non bloquante !!"
-					stMessage.Icon         = Exclamation!
-					stMessage.bErreurG   = FALSE
-					stMessage.sCode      = "WSIN774"
-					stMessage.Bouton      = OK!
-					
-					f_message(stMessage)
-			End Choose
-		
-		End If
-
-	End If
-End If		
-// [PC929_CDISCOUNT][PC929-2-V3]
-
-If iAction = 0	Then
-	lRow = idw_WDivSin.Find ( "NOM_ZONE = 'mt_val_publique'", 1,  idw_WDivSin.RowCount () ) 
-	If lRow > 0 Then 
-		This.uf_gestong_divers_majzone( "MT_VAL_PUBLIQUE", lRow, K_MAJZONE, 0 )
-	End If
-End If
-
-// [RS2980_IFR]
-gsCodeRetPrixIfr = ""
-
-
-// [PMO139_RS4926]
-If iAction = 0 And Not abForcer Then
-	// On appelle l'API
-	lRow = idw_WDivSin.Find ( "NOM_ZONE = 'taille_tv'", 1,  idw_WDivSin.RowCount () )
-	If lRow > 0 Then
-		This.uf_gestong_divers_majzone( "TAILLE_TV", lRow, K_MAJZONE, "AUC" )
-	End If	
-End If 
-
-
-//Migration PB8-WYNIWYG-03/2006 OR
-//idw_wDivSin.SetActionCode ( iAction )
-Return iAction
-//Fin Migration PB8-WYNIWYG-03/2006 OR
-
-end function
-
 private function long uf_zn_trt_divsin_codic (string asdata, string asnomcol, long alrow, boolean abforcer);//*-----------------------------------------------------------------
 //*
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_Codic (PRIVATE)
@@ -18968,7 +18584,7 @@ If iAction = 0 Then
 	idw_WSin.SetItem ( 1, "MARQ_PORT", sMarque )
 	idw_WSin.SetItem ( 1, "MODL_PORT", sModele )
 
-	This.Uf_Zn_Trt_DivSin_TypeApp ( sTypeApp, "VAL_LST_CAR", lRow, TRUE )
+	iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_TypeApp ( sTypeApp, "VAL_LST_CAR", lRow, TRUE )  // [20241112110249883][DIVOBJ][JFF]
 
 	idw_wDivSin.SetItem ( lRow, "MAJ_LE", DateTime ( Today (), Now () ) )
 	idw_wDivSin.SetItem ( lRow, "MAJ_PAR", stGlb.sCodOper )
@@ -19266,14 +18882,14 @@ Choose Case asNomCol
 			Choose Case Upper ( asNomZone ) 
 
 				Case "TYPE_APP"
-					ll_ret = This.Uf_Zn_Trt_DivSin_TypeApp ( Upper ( asData ), Upper( asNomCol ), alRow, FALSE )
+					ll_ret = iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_TypeApp ( Upper ( asData ), Upper( asNomCol ), alRow, FALSE )  // [20241112110249883][DIVOBJ][JFF]
 
 				// [VDOC25738] 
 				Case "TYPAPP_AREC_ANEU"
 					ll_ret = This.Uf_Zn_Trt_DivSin_TypAppARecANeu ( Upper ( asData ), Upper( asNomCol ), alRow, FALSE )					
 
 				Case "CHOIX_PACK" // #2
-					ll_ret = This.Uf_Zn_Trt_DivSin_ChoixPack ( Upper ( asData ), Upper( asNomCol ), alRow, FALSE )
+					ll_ret = iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_ChoixPack ( Upper ( asData ), Upper( asNomCol ), alRow, FALSE )
 
 				Case "TYPAPP_REC_NEU" // [VDOC9376]
 					ll_ret = This.Uf_Zn_Trt_DivSin_TypAppRecNeu ( Upper ( asData ), Upper( asNomCol ), alRow, FALSE )
@@ -19293,7 +18909,7 @@ Choose Case asNomCol
 					
 				// [DT058]
 				Case "ACCORD_CHUBB"
-					ll_ret = This.Uf_Zn_Trt_DivSin_Accord_Chubb ( Upper ( asData ), Upper( asNomCol ), alRow )
+					ll_ret = iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_Accord_Chubb ( Upper ( asData ), Upper( asNomCol ), alRow )
 
 				// [DT227]
 				Case "LIEU_REPAR"
@@ -19340,7 +18956,7 @@ Choose Case asNomCol
 			//* #8 [FNAC_PROD_ECH_TECH]
 			//* #9 [MSS_LOT2]
 			Case "APP_SIN", "BATT_SIN", "ALIM_SIN", "AUT_ACC_SIN"  
-				ll_ret = This.Uf_Zn_Trt_DivSin_Accessoire ( Upper ( asData ), Upper( asNomCol ), alRow )
+				ll_ret = iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_Accessoire ( Upper ( asData ), Upper( asNomCol ), alRow )
 			//* :#8 [FNAC_PROD_ECH_TECH]
 
 			// [WEBSIM2].[FRANCE]
@@ -19417,7 +19033,7 @@ Choose Case asNomCol
 
 			// [VDOC27557]
 			Case "DOSSIER_BLOQUE_DR"
-				ll_ret = This.Uf_Zn_Trt_DivSin_BloqueDRetude ( Upper ( asData ), Upper( asNomCol ), alRow )
+				ll_ret = iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_BloqueDRetude ( Upper ( asData ), Upper( asNomCol ), alRow )
 
 			// [RS962_DYSFONC_EXTRA]
 			Case "DYSFONC_EXTRANET_FRANCHISE"
@@ -19673,69 +19289,6 @@ End If
 //idw_wDivSin.SetActionCode ( iAction )
 Return iAction
 //Fin Migration PB8-WYNIWYG-03/2006 OR
-
-end function
-
-private function long uf_zn_trt_divsin_choixpack (string asdata, string asnomcol, long alrow, boolean abforcer);
-//*-----------------------------------------------------------------
-//*
-//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_ChoixPack (PRIVATE)
-//* Auteur			: Fabry JF
-//* Date				: 20/06/2006
-//* Libellé			: Contrôle de la zone virtuelle ChoixPack
-//* Commentaires	: 	
-//*
-//* Arguments		: String 		asData			Val
-//*					  String 		asNomCol			Val
-//*					  Long			alRow				Val
-//*					  Boolean		abForcer			Val
-//*
-//* Retourne		: long
-//*
-//*-----------------------------------------------------------------
-//* MAJ   PAR      Date	     Modification
-//* #1    JFF    09/01/2009  [20090109130126653]
-//        JFF    02/04/2011  [PC694][SFR2012]
-//*-----------------------------------------------------------------
-
-String sTypeApp, sIdMarq 
-DataWindowChild dwChild
-Integer iAction
-Long lRow, lDeb, lFin
-
-sTypeApp = Upper ( asData )
-iAction = 0
-
-/*------------------------------------------------------------------*/
-/* Pour Modifier lle Type d'app., il faut qu'aucun détail soit 'à   */
-/* régler' ou 'réglé' ET qu'aucune Prestation non annulée n'existe. */
-/*------------------------------------------------------------------*/
-//If idw_LstwCommande.Find ( "COD_ETAT <> 'ANN' ", 1, idw_LstwCommande.RowCount () ) > 0 And Not abForcer Then
-// [20090109130126653]
-If idw_LstwCommande.Find ( "COD_ETAT <> 'ANN' AND ID_TYP_ART NOT IN ( 'EDI', 'PRS') ", 1, idw_LstwCommande.RowCount () ) > 0 And Not abForcer Then
-	idw_wDivSin.iiErreur = 3
-	iAction = 1
-End If
-
-// [PC301].[LOT2]
-F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 152 )
-If lDeb > 0 Then
-	idw_wDivSin.iiErreur = 4
-	iAction = 1
-End If
-// [PC301].[LOT2]
-
-// [PC694][SFR2012]
-lRow = idw_WDivSin.Find ( "NOM_ZONE = 'classe_ctg_sfr'", 1,  idw_WDivSin.RowCount () )
-If lRow > 0 Then
-	idw_wDivSin.iiErreur = 5
-	iAction = 1
-End If
-// [PC694][SFR2012]
-
-
-Return iAction
-
 
 end function
 
@@ -24601,44 +24154,6 @@ Next
 
 end subroutine
 
-private function long uf_zn_trt_divsin_accessoire (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
-//*
-//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_Accessoire (PRIVATE)
-//* Auteur			: FABRY JF
-//* Date				: 03/11/2008
-//* Libellé			: Contrôle de 3 zones App_Sin, Batt_sin, Alim_sin, Aut_Acc_Sin 
-//* Commentaires	: [FNAC_PROD_ECH_TECH][BLCODE]
-//*
-//* Arguments		: String 		asData			Val
-//*					  String 		asNomCol			Val
-//*					  Long			alRow				Val
-//*
-//* Retourne		: long
-//*
-//*-----------------------------------------------------------------
-//* MAJ   PAR      Date	     Modification
-//* #1    JFF    07/12/2009  [DCMP090327].[SBETV]
-//* #2    JFF    25/11/2009  [MSS_DIAG]
-//*-----------------------------------------------------------------
-
-Integer iAction
-
-Long lRow, lDeb, lFin
-
-asData = Upper ( asData )
-iAction = 0
-
-lRow = idw_LstwCommande.Find ( "COD_ETAT <> 'ANN' AND ID_FOUR IN ( 'BLC', 'O2M', 'SB1', 'MS1')", 1, idw_LstwCommande.RowCount () ) 
-
-If lRow > 0 Then
-	idw_wDivSin.iiErreur = 3
-	iAction = 1
-End If
-
-Return iAction
-
-end function
-
 private subroutine uf_determiner_data_sinistre_plafpec (ref string asmtpecmonnaie, ref string asmtpeccentimes);//*-----------------------------------------------------------------
 //*
 //* Fonction		: U_Gs_Sp_Sinistre::Uf_Determiner_Data_Sinistre_PlafPec (PRIVATE)
@@ -28663,7 +28178,7 @@ Choose Case asNomZone
 					If nvString.of_getkeyvalue( idw_DetPro.GetItemString ( lCpt, "VAL_CAR" ) , "DEFAUT",";") = "OUI" Then
 						sIdCode = idw_DetPro.GetItemString ( lCpt, "ID_CODE_CAR" ) 
 						idw_wDivSin.SetItem ( alRow, "VAL_CAR", sIdCode )
-						This.Uf_Zn_Trt_DivSin_TypeApp ( sIdCode, "VAL_LST_CAR", alRow, TRUE )
+						iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_TypeApp ( sIdCode, "VAL_LST_CAR", alRow, TRUE )  // [20241112110249883][DIVOBJ][JFF]
 						Exit
 					End If 
 					// :[DT167]
@@ -28707,7 +28222,8 @@ Choose Case asNomZone
 					If sValCar2 = "OUI" Then
 						sIdCode = idw_DetPro.GetItemString ( lCpt, "ID_CODE_CAR" ) 
 						idw_wDivSin.SetItem ( alRow, "VAL_CAR", sIdCode )
-						This.Uf_Zn_Trt_DivSin_TypeApp ( sIdCode, "VAL_LST_CAR", alRow, TRUE )
+						iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_TypeApp ( sIdCode, "VAL_LST_CAR", alRow, TRUE )  // [20241112110249883][DIVOBJ][JFF]
+
 						Exit
 					End If 
 				Next
@@ -39702,62 +39218,6 @@ If lDeb > 0 And sVal = "ORANGE_OPEN_PRO" Then
 		
 	Next 
 End If
-
-Return iAction
-
-
-end function
-
-private function long uf_zn_trt_divsin_accord_chubb (string asdata, string asnomcol, long alrow);
-//*-----------------------------------------------------------------
-//*
-//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_accord_chubb (PRIVATE)
-//* Auteur			: FPI
-//* Date				: 14/08/2013
-//* Libellé			: Contrôle de la zone ACCORD_CHUBB
-//* Commentaires	: 	[DT058]
-//*
-//* Arguments		: String 		asData			Val
-//*					  String 		asNomCol			Val
-//*					  Long			alRow				Val
-//*					  Boolean		abForcer			Val
-//*
-//*-----------------------------------------------------------------
-//* MAJ   PAR      Date	     Modification
-//* #..   ...   ../../....   
-//*-----------------------------------------------------------------
-
-Integer iAction
-Long lRow
-Long lValActuel, lVal
-Long lDeb, lFin, lIdProd // #1 [O2M_DIAG_NOMADE]
-
-lVal=Long(asData)
-lValActuel = idw_wDivSin.GetItemNumber ( alRow, asnomcol )
-iAction = 0
-
-Choose Case lVal
-	Case 0,1
-		// Non renseigné / Demande en cours
-	Case 2,3
-		stMessage.sTitre      = "Régularisation Dossier"
-		stMessage.Icon         = Information!
-		stMessage.bErreurG   = FALSE
-		stMessage.sCode      = "WSIN681" 
-		stMessage.Bouton      = YesNo!
-	
-		If F_Message ( stMessage ) = 1 Then
-			iAction = 0
-			idw_wDivSin.SetItem ( alRow,"ALT_PROT","O")
-		Else
-			iAction = 2
-			idw_wDivSin.SetItem ( alRow, asnomcol, lValActuel )
-		End If
-		stMessage.Bouton      = Ok!
-	Case 4
-		idw_wDivSin.iiErreur =7
-		iAction =1
-End Choose
 
 Return iAction
 
@@ -52218,43 +51678,6 @@ Return sPos
 
 end function
 
-private function long uf_zn_trt_divsin_bloquedretude (string asdata, string asnomcol, long alrow);
-//*-----------------------------------------------------------------
-//*
-//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_BloqueDRetude (PRIVATE)
-//* Auteur			: FABRY JF
-//* Date				: 28/02/2019
-//* Libellé			: 
-//* Commentaires	: [VDOC27557]
-//*
-//* Arguments		: String 		asData			Val
-//*					  String 		asNomCol			Val
-//*					  Long			alRow				Val
-//*
-//* Retourne		: long
-//*
-//*-----------------------------------------------------------------
-//* MAJ   PAR      Date	     Modification
-//* #..   ...   ../../....   
-//*-----------------------------------------------------------------
-
-Integer iAction
-
-Long lRow, lDeb, lFin, lVal1, lVal2
-
-asData = Upper ( asData )
-iAction = 0
-
-If Pos ( gsDroitDosBloqueDR, "#" + stGlb.sCodOper + "#" ) <= 0 Then
-		idw_wDivSin.iiErreur = 16
-		iAction = 1
-End If
-
-Return iAction
-
-
-end function
-
 private function boolean uf_validation_finale_adviserepa_mail (string ascas);//*-----------------------------------------------------------------
 //*
 //* Fonction      : u_gs_sp_sinistre::uf_validation_finale_adviserepa_mail  (PRIVATE)
@@ -54800,6 +54223,23 @@ If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 	idsHubDonneesPrestaSimpa2.SetTransObject ( This.itrTrans ) 
 End If
 
+
+// [20241112110249883][DIVOBJ][JFF]
+iuoThis = this 
+iUoGsSpSinistre2.uf_initialiser_1 (	&
+	iuoThis, &
+	idw_detpro, &
+	idw_wsin, & 
+	idw_lstwcommande, &
+	idw_wdivsin, &
+	idw_wdivdet, & 
+	ibcodicdartyvalide, &
+	istypetrt, &
+	isreferentielapp, &
+	K_MAJZONE, &
+	idw_wDetail &
+	)
+// /[20241112110249883][DIVOBJ][JFF]
 end subroutine
 
 private function long uf_zn_trt_divsin_typ_presta (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
@@ -54849,7 +54289,20 @@ on u_gs_sp_sinistre.destroy
 call super::destroy
 end on
 
-event destructor;call super::destructor;
+event destructor;call super::destructor;//*-----------------------------------------------------------------
+//*
+//* Fonction		: Destructeur
+//* Auteur			: Fabry JF
+//* Date				: 12/11/2024
+//* Libellé			: 
+//* Commentaires	: 
+//*
+//* Arguments		: 
+//*
+//* Retourne		: Rien
+//*
+//*-----------------------------------------------------------------
+
 // [HP252_276_HUB_PRESTA]
 If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 	If IsValid ( idsHubDonneesPrestaSimpa2 ) Then destroy ( idsHubDonneesPrestaSimpa2 ) 
@@ -54859,7 +54312,23 @@ End If
 If IsValid ( iUoGsSpSinistre2 ) Then destroy ( iUoGsSpSinistre2 ) 
 end event
 
-event constructor;call super::constructor;
+event constructor;call super::constructor;//*-----------------------------------------------------------------
+//*
+//* Fonction		: Constructor
+//* Auteur			: Fabry JF
+//* Date				: 12/11/2024
+//* Libellé			: [20241112110249883][DIVOBJ][JFF]
+//* Commentaires	: Initialisation des instances pour le NVUO n°2
+//*
+//* Arguments		: 
+//*
+//* Retourne		: Rien
+//*
+//*-----------------------------------------------------------------
+
 iUoGsSpSinistre2 = Create u_gs_sp_sinistre_2  // [20241112110249883][DIVOBJ][JFF]
+
+
+
 end event
 
