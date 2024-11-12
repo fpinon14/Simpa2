@@ -18,6 +18,8 @@ Public :
 	Boolean			ib2EmeTourPI052 // [PI052]	
 
 Private :
+	u_gs_sp_sinistre_2 iUoGsSpSinistre2  // [20241112110249883][DIVOBJ][JFF]
+
 	u_Libelle_Dga		iUoLibelle
 	N_Cst_Saisie_Validation_Sinistre	invSaisieValSin
 
@@ -54853,6 +54855,11 @@ If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 	If IsValid ( idsHubDonneesPrestaSimpa2 ) Then destroy ( idsHubDonneesPrestaSimpa2 ) 
 End If
 
+// [20241112110249883][DIVOBJ][JFF]
+If IsValid ( iUoGsSpSinistre2 ) Then destroy ( iUoGsSpSinistre2 ) 
+end event
 
+event constructor;call super::constructor;
+iUoGsSpSinistre2 = Create u_gs_sp_sinistre_2  // [20241112110249883][DIVOBJ][JFF]
 end event
 
