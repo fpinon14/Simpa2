@@ -5819,6 +5819,7 @@ If Not bBloque And sPos = "" Then
 End If 
 
 // [DT424]
+/*
 If F_CLE_A_TRUE ( "DT424" ) Then
 	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 268 )
 	If lDeb > 0 Then
@@ -5852,8 +5853,10 @@ If F_CLE_A_TRUE ( "DT424" ) Then
 
 	End If 
 End If
+*/
 
 // [PM462-1][V3]
+/*
 If F_CLE_A_TRUE ( "PM462-1" ) Then
 	if	not bBloque and sPos = "" then
 	
@@ -5867,6 +5870,7 @@ If F_CLE_A_TRUE ( "PM462-1" ) Then
 		end if				
 	end if
 End If
+*/
 
 // [PC192290]
 if	not bBloque and sPos = "" then	
@@ -6201,11 +6205,9 @@ If sPos = "" And gsCodeRetPrixIfr = "URGE" Then
 End If 
 
 // [PMO89_RS4822]
-If F_CLE_A_TRUE ( "PMO89_RS4822" ) Then
-	If Not bBloque And sPos = "" Then
-		sPos = This.uf_ControlerGestion_InterAssureur ( )	
-	End IF 
-End If
+If Not bBloque And sPos = "" Then
+	sPos = This.uf_ControlerGestion_InterAssureur ( )	
+End IF 
 
 // [HP252_276_HUB_PRESTA]
 If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
@@ -17245,15 +17247,11 @@ End If
 
 If IsNull ( adDteResil ) Then 
 	// [EVOL_REFUS_603_PNP] 
-	If F_CLE_A_TRUE ( "EVOL_REFUS_603_PNP" ) Then
-		dtDteSurv = idw_Wsin.GetItemDateTime ( 1, "DTE_SURV" ) 
-		dDteCalc = Date ( dtDteSurv )
-		dDteCalc = F_Plus_Date ( dDteCalc, 1, "J" )
-		dtDteCalc = DateTime ( dDteCalc )
-		idw_Wsin.SetItem ( 1, "DTE_FIN_GTI", dtDteCalc )
-	Else
-		idw_Wsin.SetItem ( 1, "DTE_FIN_GTI", dDteNull  )
-	End If 
+	dtDteSurv = idw_Wsin.GetItemDateTime ( 1, "DTE_SURV" ) 
+	dDteCalc = Date ( dtDteSurv )
+	dDteCalc = F_Plus_Date ( dDteCalc, 1, "J" )
+	dtDteCalc = DateTime ( dDteCalc )
+	idw_Wsin.SetItem ( 1, "DTE_FIN_GTI", dtDteCalc )
 	Return
 End If
 
@@ -18828,15 +18826,13 @@ gsCodeRetPrixIfr = ""
 
 
 // [PMO139_RS4926]
-If F_CLE_A_TRUE ( "PMO139_RS4926" ) Then
-	If iAction = 0 And Not abForcer Then
-		// On appelle l'API
-		lRow = idw_WDivSin.Find ( "NOM_ZONE = 'taille_tv'", 1,  idw_WDivSin.RowCount () )
-		If lRow > 0 Then
-			This.uf_gestong_divers_majzone( "TAILLE_TV", lRow, K_MAJZONE, "AUC" )
-		End If	
-	End If 
-End If
+If iAction = 0 And Not abForcer Then
+	// On appelle l'API
+	lRow = idw_WDivSin.Find ( "NOM_ZONE = 'taille_tv'", 1,  idw_WDivSin.RowCount () )
+	If lRow > 0 Then
+		This.uf_gestong_divers_majzone( "TAILLE_TV", lRow, K_MAJZONE, "AUC" )
+	End If	
+End If 
 
 
 //Migration PB8-WYNIWYG-03/2006 OR
@@ -19303,11 +19299,13 @@ Choose Case asNomCol
 					ll_ret = This.Uf_Zn_Trt_DivSin_Lieu_Repar	( Upper ( asData ), Upper( asNomCol ), alRow )
 
 				// [DT269]
+/*				
 				Case "TAILLE_ECRAN"
 					// [DT269]
 					If F_CLE_A_TRUE ( "DT269" ) Then
 						ll_ret = This.Uf_Zn_Trt_DivSin_taille_ecran	( Upper ( asData ), Upper( asNomCol ), alRow )
 					End If
+*/
 
 				// [DT269]
 				Case "PERSONNE_SIN"
@@ -20413,6 +20411,7 @@ If lDeb <=0 Then
 End If	
 
 // [PC151425-1]
+/*
 If F_CLE_A_TRUE ( "PC151425-1" ) Then
 	If lDeb <=0 Then
 		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 291)
@@ -20424,6 +20423,7 @@ If F_CLE_A_TRUE ( "PC151425-1" ) Then
 		End if
 	End If	
 End If	
+*/
 
 // [PC202553] Ajout SELECTRA
 If lDeb <=0 Then
@@ -21686,55 +21686,51 @@ If bRet Then
 End If
 
 // [PMO89_RS4822]
-If F_CLE_A_TRUE ( "PMO89_RS4822" ) Then
-	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 365 )
-	If bRet and lDeb > 0 Then
-		sSql = "Exec sysadm.PS_I_PMO89_RS4822_PRESTA_CTRLE_INTER_ASSUREUR  " + String ( idw_wsin.GetItemNumber  ( 1, "ID_SIN" ) ) + "."
-	
-		F_Execute ( sSql, SQLCA )
-	
-		bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
-	End If
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 365 )
+If bRet and lDeb > 0 Then
+	sSql = "Exec sysadm.PS_I_PMO89_RS4822_PRESTA_CTRLE_INTER_ASSUREUR  " + String ( idw_wsin.GetItemNumber  ( 1, "ID_SIN" ) ) + "."
+
+	F_Execute ( sSql, SQLCA )
+
+	bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
 End If
 
 
 // [RS6114_MAIL_CMA]
-If F_CLE_A_TRUE ( "RS6114_MAIL_CMA" ) Then
-	If bRet And bEnvMailChapeauDemat Then
+If bRet And bEnvMailChapeauDemat Then
 
-		sFiltre = "ID_TYP_ART = 'CAF' AND " + &		
-					 "ID_FOUR    = 'CMA' AND " + &  
-					 "POS ( INFO_SPB_FRN_CPLT, 'MAIL_CHAP_ENVOYE=OUI' ) <= 0 AND " + &
-					 "POS ( INFO_SPB_FRN_CPLT, 'TYPE_ENVOI=DEMATERIALISE' ) > 0 AND " + &			 
-					 "COD_ETAT IN ( 'CNV', 'ECT')"
-					 
-		idw_LstwCommande.SetFilter ( sFiltre )
-		idw_LstwCommande.Filter ()
-		
-		If idw_LstwCommande.RowCount () > 0 Then
-			lIdSeq = idw_LstwCommande.GetItemNumber ( 1, "ID_SEQ" ) 
-			sVal= String ( idw_LstwCommande.GetItemdecimal( 1, "MT_TTC_CMDE"),"0.00")
-			sSql = "Exec sysadm.PS_I_MAIL_CAF_CMA_DEMAT_CHAPEAU " + String ( idw_wsin.GetItemNumber  ( 1, "ID_SIN" ) ) + "., '" + sVal + "'"
-			F_Execute ( sSql, SQLCA )
-			bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0			
-
-			If bRet then 
-				// Ecriture sur la presta de l'envoi à OUI
-				sSql = "Exec sysadm.PS_U_COMMANDE_DT339_MAJ_PRESTA " + & 
-								String ( idw_wsin.GetItemNumber  ( 1, "ID_SIN" ) ) + "." + "," + &
-								String ( lIdSeq ) + "." + "," + &
-								"'OUI'"
-								
-				F_Execute ( sSql, SQLCA )
-				bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0						
-			End If 			
-		End If
-		
-		idw_LstwCommande.SetFilter ( sFiltreOrig )
-		idw_LstwCommande.Filter ()
+	sFiltre = "ID_TYP_ART = 'CAF' AND " + &		
+				 "ID_FOUR    = 'CMA' AND " + &  
+				 "POS ( INFO_SPB_FRN_CPLT, 'MAIL_CHAP_ENVOYE=OUI' ) <= 0 AND " + &
+				 "POS ( INFO_SPB_FRN_CPLT, 'TYPE_ENVOI=DEMATERIALISE' ) > 0 AND " + &			 
+				 "COD_ETAT IN ( 'CNV', 'ECT')"
+				 
+	idw_LstwCommande.SetFilter ( sFiltre )
+	idw_LstwCommande.Filter ()
 	
-	End IF 
-End If
+	If idw_LstwCommande.RowCount () > 0 Then
+		lIdSeq = idw_LstwCommande.GetItemNumber ( 1, "ID_SEQ" ) 
+		sVal= String ( idw_LstwCommande.GetItemdecimal( 1, "MT_TTC_CMDE"),"0.00")
+		sSql = "Exec sysadm.PS_I_MAIL_CAF_CMA_DEMAT_CHAPEAU " + String ( idw_wsin.GetItemNumber  ( 1, "ID_SIN" ) ) + "., '" + sVal + "'"
+		F_Execute ( sSql, SQLCA )
+		bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0			
+
+		If bRet then 
+			// Ecriture sur la presta de l'envoi à OUI
+			sSql = "Exec sysadm.PS_U_COMMANDE_DT339_MAJ_PRESTA " + & 
+							String ( idw_wsin.GetItemNumber  ( 1, "ID_SIN" ) ) + "." + "," + &
+							String ( lIdSeq ) + "." + "," + &
+							"'OUI'"
+							
+			F_Execute ( sSql, SQLCA )
+			bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0						
+		End If 			
+	End If
+	
+	idw_LstwCommande.SetFilter ( sFiltreOrig )
+	idw_LstwCommande.Filter ()
+
+End IF 
 
 // [MCO602_PNEU]
 If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
@@ -30493,42 +30489,7 @@ For lCpt = 1 To 2
 					This.uf_GestionTransSqlHubPresta	( "DECONNEXION_HUB" )	
 				End If 
 			End If
-
-
-			// [RS6114_MAIL_CMA] à supprimer par la suite
-			If NOT F_CLE_A_TRUE ( "RS6114_MAIL_CMA" ) Then
-					// [DT339]
-				bRet = This.uf_Validation_Finale_Trt_PartApresCommit ( sCasRetour )
-	
-				If bRet Then 
-					F_Commit ( itrTrans, True )
-				Else 
-	//					F_Commit ( itrTrans, False )
-					F_Commit ( itrTrans, True )  // On commit aussi si problème !!, car il y a des écritures qui ont été faites (contact, presta)
-	
-					stMessage.sTitre		= "Validation Finale Post Commit"
-					stMessage.Icon			= Exclamation!
-					
-					Choose Case sCasRetour
-						Case "CARMA_WS_SAGA2"
-							stMessage.bErreurG	= False
-							stMessage.sVar[1] 	= String ( itrTrans.SqlDbCode )
-							stMessage.sVar[2] 	= itrTrans.SqlErrText
-							stMessage.sCode		= "WSIN841"
-							stMessage.bTrace  	= True
-	
-					End Choose 
-	
-					/*------------------------------------------------------------------*/
-					/* On peut afficher le message sans risques.                        */
-					/*------------------------------------------------------------------*/
-					F_Message ( stMessage )		
-				
-					// Le bRet à False conservera la travail en validation.	
-								
-				End If 
-			End If 
-			
+		
 		Else
 	/*------------------------------------------------------------------*/
 	/* On charge les valeurs de la structure Message avec les valeurs   */
@@ -38854,57 +38815,55 @@ If asData = "CB" Then
 End If
 
 // [RS5928_FRCH_CHQ]
-If F_CLE_A_TRUE ( "RS5928_FRCH_CHQ" ) Then
-	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 298)
-	If lDeb > 0 Then
-	
-		sVal = This.uf_GestOng_Divers_Trouver ( "DTE_CMPLT_ADH_PAYE_ASS_PAYBOX" )
-		sDataActuelle = This.uf_GestOng_Divers_Trouver ( "MODE_PAIEMENT" )
-	
-		If IsNull ( sVal ) Then sVal = ""
-		If sVal <> "" Then
-			idw_wDivSin.iiErreur = 12
-			Return 1
-		End If 
-		
-		If asData = "CHQ" Then 
-	
-			stMessage.sTitre  	= "Confirmation demandée"
-			stMessage.Icon			= Question!
-			stMessage.bErreurG	= FALSE
-			stMessage.Bouton		= YESNO!
-			stMessage.sCode = "WSIN896"		
-	
-			If F_Message ( stMessage ) = 2 Then
-				idw_wDivSin.iiErreur = 0
-				This.uf_gestong_divers_majzone( "MODE_PAIEMENT", alRow, K_MAJZONE, sDataActuelle)
-				Return 2
-			End IF
-	
-			This.uf_gestong_divers_majzone( "MODE_PAIEMENT", alRow, K_MAJZONE, asData )
-			idw_wDivSin.SetItem ( alRow,"ALT_PROT", "O" )					
-			idw_wDivSin.SetRow ( idw_wDivSin.GetRow() + 1 ) 
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 298)
+If lDeb > 0 Then
 
-			stMessage.Icon			= Information!
-			stMessage.bErreurG	= FALSE
-			stMessage.Bouton		= Ok!
-			stMessage.sCode = "WSIN898"		
-			F_Message ( stMessage )
-	
-			lRow = idw_wPiece.Find ( "ID_PCE = 629" , 1, idw_wPiece.RowCount () ) 
-			If lRow > 0 Then
-				idw_wPiece.DeleteRow ( lRow ) 
-			End If 
-	
-			lRow = idw_WDivSin.Find ( "NOM_ZONE = 'dte_cmplt_adh_paye_ass_paybox'", 1,  idw_WDivSin.RowCount () )					
-			If lRow > 0 Then
-				This.uf_gestong_divers_majzone( "DTE_CMPLT_ADH_PAYE_ASS_PAYBOX", lRow, K_MAJZONE, String ( Today()) )
-			End If
-	
-		End If 
-	
+	sVal = This.uf_GestOng_Divers_Trouver ( "DTE_CMPLT_ADH_PAYE_ASS_PAYBOX" )
+	sDataActuelle = This.uf_GestOng_Divers_Trouver ( "MODE_PAIEMENT" )
+
+	If IsNull ( sVal ) Then sVal = ""
+	If sVal <> "" Then
+		idw_wDivSin.iiErreur = 12
+		Return 1
 	End If 
-End If
+	
+	If asData = "CHQ" Then 
+
+		stMessage.sTitre  	= "Confirmation demandée"
+		stMessage.Icon			= Question!
+		stMessage.bErreurG	= FALSE
+		stMessage.Bouton		= YESNO!
+		stMessage.sCode = "WSIN896"		
+
+		If F_Message ( stMessage ) = 2 Then
+			idw_wDivSin.iiErreur = 0
+			This.uf_gestong_divers_majzone( "MODE_PAIEMENT", alRow, K_MAJZONE, sDataActuelle)
+			Return 2
+		End IF
+
+		This.uf_gestong_divers_majzone( "MODE_PAIEMENT", alRow, K_MAJZONE, asData )
+		idw_wDivSin.SetItem ( alRow,"ALT_PROT", "O" )					
+		idw_wDivSin.SetRow ( idw_wDivSin.GetRow() + 1 ) 
+
+		stMessage.Icon			= Information!
+		stMessage.bErreurG	= FALSE
+		stMessage.Bouton		= Ok!
+		stMessage.sCode = "WSIN898"		
+		F_Message ( stMessage )
+
+		lRow = idw_wPiece.Find ( "ID_PCE = 629" , 1, idw_wPiece.RowCount () ) 
+		If lRow > 0 Then
+			idw_wPiece.DeleteRow ( lRow ) 
+		End If 
+
+		lRow = idw_WDivSin.Find ( "NOM_ZONE = 'dte_cmplt_adh_paye_ass_paybox'", 1,  idw_WDivSin.RowCount () )					
+		If lRow > 0 Then
+			This.uf_gestong_divers_majzone( "DTE_CMPLT_ADH_PAYE_ASS_PAYBOX", lRow, K_MAJZONE, String ( Today()) )
+		End If
+
+	End If 
+
+End If 
 
 Return iAction
 
@@ -42671,15 +42630,15 @@ End if
 If bEnvoyer Then
 	
 	// [DT424]
-	If F_CLE_A_TRUE ( "DT424" ) Then
+/*	If F_CLE_A_TRUE ( "DT424" ) Then
 		If bDT424_Flux Then
 			sSql = "Exec sysadm.PS_S_COMMANDE_ORANGE_CTL_IMEI " + String ( idw_wsin.GetItemNumber  ( 1, "ID_SIN" ) ) + "."
 		Else 
 			sSql = "Exec sysadm.PS_S_MAILPUSH_ORANGE_CTL_IMEI " + String ( idw_wsin.GetItemNumber  ( 1, "ID_SIN" ) ) + "."			
 		End If 
-	Else 
+	Else */
 		sSql = "Exec sysadm.PS_S_MAILPUSH_ORANGE_CTL_IMEI " + String ( idw_wsin.GetItemNumber  ( 1, "ID_SIN" ) ) + "."
-	End If 	
+//	End If 	
 		
 	F_Execute ( sSql, SQLCA )
 	bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
@@ -43219,47 +43178,44 @@ If lDeb > 0 Then
 End If
 
 // [RS6217_PARA_AUTO]
-If F_CLE_A_TRUE ( "RS6217_PARA_AUTO" ) Then
-	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 378 )
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 378 )
 
-	If lDeb > 0 Then
-		lIdCas = Long ( lnvString.of_getkeyvalue( idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "CAS", ";"))
-		sIdPara = lnvString.of_getkeyvalue( idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "ID_PARA", ";")		
+If lDeb > 0 Then
+	lIdCas = Long ( lnvString.of_getkeyvalue( idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "CAS", ";"))
+	sIdPara = lnvString.of_getkeyvalue( idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "ID_PARA", ";")		
 
-		lRow1 = idw_wParaInfo.Find ( "ID_I = 0 AND ID_PARA = '" + sIdPara + "'", 1, idw_wParaInfo.Rowcount () )
-		lRow2 = idw_ParaProd.Find ( "ID_PARA = '" + sIdPara + "'", 1, idw_ParaProd.Rowcount () )
-		
-		Choose Case lIdCas 
-			
-			// RS6217
-			Case 1
-
-				lVal = idw_wDetail.Find ( "( COD_ETAT = 200 )", 1, idw_wDetail.RowCount () ) + idw_LstGti.Find ( "( COD_ETAT = 200 )", 1, idw_LstGti.RowCount () )
-				lVal1 = idw_LstGti.Find ( "MT_PLAF_AREG > 0 ", 1, idw_LstGti.RowCount () )
-
-				If lVal > 0 Or lVal1 > 0 Then lRow = 1 
-			
-			
-		End Choose
+	lRow1 = idw_wParaInfo.Find ( "ID_I = 0 AND ID_PARA = '" + sIdPara + "'", 1, idw_wParaInfo.Rowcount () )
+	lRow2 = idw_ParaProd.Find ( "ID_PARA = '" + sIdPara + "'", 1, idw_ParaProd.Rowcount () )
 	
-		IF lRow > 0 And lRow1 <= 0 And lRow2 > 0 Then
-			sVal1 = idw_ParaProd.GetItemString ( lRow2, "CPT_VER" )
-			sVal2 = idw_ParaProd.GetItemString ( lRow2, "LIB_PARA" )
-			lIdSin = idw_wSin.GetItemNumber ( 1, "ID_SIN" )
+	Choose Case lIdCas 
+		
+		// RS6217
+		Case 1
 
-			lRow3 = idw_wParaInfo.InsertRow ( 0 )
-			idw_wParaInfo.SetItem ( lRow3, "ID_SIN", lIdSin  )
-			idw_wParaInfo.SetItem ( lRow3, "ID_I", 0 )
-			idw_wParaInfo.SetItem ( lRow3, "ID_PARA", sIdPara )			
-			idw_wParaInfo.SetItem ( lRow3, "CPT_TRI", 1 )
-			idw_wParaInfo.SetItem ( lRow3, "MAJ_PAR", stGlb.sCodOper )			
-			idw_wParaInfo.SetItem ( lRow3, "LIB_PARA", sVal2 )						
-			idw_wParaInfo.SetItem ( lRow3, "CPT_VER", sVal1 )									
-		End If
+			lVal = idw_wDetail.Find ( "( COD_ETAT = 200 )", 1, idw_wDetail.RowCount () ) + idw_LstGti.Find ( "( COD_ETAT = 200 )", 1, idw_LstGti.RowCount () )
+			lVal1 = idw_LstGti.Find ( "MT_PLAF_AREG > 0 ", 1, idw_LstGti.RowCount () )
 
-	End If 
-End If
+			If lVal > 0 Or lVal1 > 0 Then lRow = 1 
+		
+		
+	End Choose
 
+	IF lRow > 0 And lRow1 <= 0 And lRow2 > 0 Then
+		sVal1 = idw_ParaProd.GetItemString ( lRow2, "CPT_VER" )
+		sVal2 = idw_ParaProd.GetItemString ( lRow2, "LIB_PARA" )
+		lIdSin = idw_wSin.GetItemNumber ( 1, "ID_SIN" )
+
+		lRow3 = idw_wParaInfo.InsertRow ( 0 )
+		idw_wParaInfo.SetItem ( lRow3, "ID_SIN", lIdSin  )
+		idw_wParaInfo.SetItem ( lRow3, "ID_I", 0 )
+		idw_wParaInfo.SetItem ( lRow3, "ID_PARA", sIdPara )			
+		idw_wParaInfo.SetItem ( lRow3, "CPT_TRI", 1 )
+		idw_wParaInfo.SetItem ( lRow3, "MAJ_PAR", stGlb.sCodOper )			
+		idw_wParaInfo.SetItem ( lRow3, "LIB_PARA", sVal2 )						
+		idw_wParaInfo.SetItem ( lRow3, "CPT_VER", sVal1 )									
+	End If
+
+End If 
 
 // [RS_950_INS_PAR_DYN][RS950]
 // [RS_493_PARAINFOAUTO]
@@ -44750,11 +44706,7 @@ iuoLibelle.Uf_Initialiser_Tableau ( sVide [] )
 		dtValDate = Date ( sVal )
 		
 		// [RS6175_GC_SCRP_SIM2]
-		If F_CLE_A_TRUE ( "RS6175_GC_SCRP_SIM2" ) Then
-			sVal = Trim ( This.uf_GestOng_Divers_Trouver ( "DUREE_GTI_ORIG" )	)			
-		Else 
-			sVal = Trim ( This.uf_GestOng_Divers_Trouver ( "DUREE_GTI_ORIGINE" )	)
-		End If		
+		sVal = Trim ( This.uf_GestOng_Divers_Trouver ( "DUREE_GTI_ORIG" )	)			
 
 		If IsNull ( sVal ) Then sVal = ""
 
@@ -48170,6 +48122,7 @@ dtCreeLeParam = Date ( lnvPFCString.of_getkeyvalue (idw_DetPro.GetItemString ( l
 If Date ( idw_Wsin.GetItemDateTime ( 1, "CREE_LE" )) < dtCreeLeParam Then Return ""
 
 // [PC151425-1]
+/*
 If F_CLE_A_TRUE ( "PC151425-1" ) Then
 	dtPivotFranchisePBox = Date ( lnvPFCString.of_getkeyvalue (idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "DTE_EFFET_FRANCHISE_PBOX", ";"))
 	If Date ( idw_Wsin.GetItemDateTime ( 1, "CREE_LE" )) < dtPivotFranchisePBox Then bFranchisePaye = TRUE
@@ -48180,6 +48133,7 @@ If F_CLE_A_TRUE ( "PC151425-1" ) Then
 	// [PC151425-1][V4]
 	lCodePceDBL = Long ( lnvPFCString.of_getkeyvalue (idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "CODE_PCE_DBL", ";") )	
 End If 
+*/
 
 iPerCtrleMois = Long ( lnvPFCString.of_getkeyvalue (idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "PER_CTRL_MOIS", ";") )
 lCodePce = Long ( lnvPFCString.of_getkeyvalue (idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "CODE_PCE", ";") )
@@ -48223,6 +48177,7 @@ If IsNull ( sVal ) Then sVal = ""
 bCpltAdhPaye = Trim ( sVal ) <> ""
 
 // [PC151425-1]
+/*
 If F_CLE_A_TRUE ( "PC151425-1" ) Then
 	If Not bFranchisePaye Then
 		sVal = This.uf_GestOng_Divers_Trouver ( "DTE_FRANCHISE_PAYE_ASS_PAYBOX" )
@@ -48230,12 +48185,14 @@ If F_CLE_A_TRUE ( "PC151425-1" ) Then
 		bFranchisePaye = Trim ( sVal ) <> ""
 	End If 
 End If
+*/
 
 dtValDate = F_Plus_Date ( dDteAdh, iPerCtrleMois, "M" )
 dtValDate = F_Plus_Date ( dtValDate, -1, "J" )
 
 // -	Contrôle : Si la dte_fin_gti - dte_adh < 13 mois ET « Complément adhésion payé par PayBox » non coché sur divers Alors
 // [PC151425-1]
+/*
 If F_CLE_A_TRUE ( "PC151425-1" ) Then
 	// [EVOL_CTRLE_SMAIN]
 	If Not ( ( &
@@ -48249,7 +48206,7 @@ If F_CLE_A_TRUE ( "PC151425-1" ) Then
 				And iCodEtatBase <> 600 &
 				And Not bPrestaValidees &
 			 ) Then Return ""
-Else
+Else */
 	// [EVOL_CTRLE_SMAIN]
 	If Not ( dDteFinGti < dtValDate And &
 				Not bCpltAdhPaye &
@@ -48259,7 +48216,7 @@ Else
 				And iCodEtatBase <> 600 &
 				And Not bPrestaValidees &
 			 ) Then Return ""
-End If			 
+// End If			 
 
 If asCas = "OUVERTURE" Then
 	
@@ -48268,17 +48225,14 @@ If asCas = "OUVERTURE" Then
 	stMessage.bErreurG	= FALSE
 
 	// [PC151425-1]
+	/*
 	If F_CLE_A_TRUE ( "PC151425-1" ) Then
 		
 		If dDteFinGti < dtValDate And bFranchisePaye And Date ( idw_Wsin.GetItemDateTime ( 1, "CREE_LE" )) < dtPivotFranchisePBox Then 
 
 			// [RS5928_FRCH_CHQ]
-			If F_CLE_A_TRUE ( "RS5928_FRCH_CHQ" ) Then
-				stMessage.sCode		= "WSIN900"	
-			Else 
-				stMessage.sCode		= "WSIN796"	
-			End IF 
-			
+			stMessage.sCode		= "WSIN900"	
+		
 			stMessage.sVar [1]   = String ( lCodePce )	
 		End If
 		
@@ -48292,16 +48246,12 @@ If asCas = "OUVERTURE" Then
 			stMessage.sCode		= "WSIN843"	// Ancien WSIN796
 			stMessage.sVar [1]   = String ( lCodePceDBL )
 		End If
-	Else
+	Else */
 		// [RS5928_FRCH_CHQ]
-		If F_CLE_A_TRUE ( "RS5928_FRCH_CHQ" ) Then
-			stMessage.sCode		= "WSIN900"	
-		Else 
-			stMessage.sCode		= "WSIN796"	
-		End IF 
+		stMessage.sCode		= "WSIN900"	
 
 		stMessage.sVar [1]   = String ( lCodePce )		
-	End If 
+//	End If 
 	
 
 	stMessage.Bouton		= OK!
@@ -48408,6 +48358,7 @@ idw_LstwCommande.Sort ()
 lTot = idw_LstGti.RowCount ()
 
 // [PC151425-1]
+/*
 If F_CLE_A_TRUE ( "PC151425-1" ) Then
 	For lCpt = lTot To 1 Step -1
 		lIdSin = idw_LstGti.GetItemNumber ( lCpt, "ID_SIN" ) 
@@ -48577,7 +48528,7 @@ If F_CLE_A_TRUE ( "PC151425-1" ) Then
 		End If		
 	Next 
 	
-Else 
+Else */
 	For lCpt = lTot To 1 Step -1
 		lIdSin = idw_LstGti.GetItemNumber ( lCpt, "ID_SIN" ) 
 		lIdGti = idw_LstGti.GetItemNumber ( lCpt, "ID_GTI" ) 
@@ -48636,7 +48587,7 @@ Else
 		bMsgGeneral = True
 		
 	Next 
-End If
+// End If
 
 If bMsgGeneral Then
 	sPos = "ALT_BLOC" // Pour recontrôler les garanties & détails
@@ -48645,16 +48596,13 @@ If bMsgGeneral Then
 	stMessage.bErreurG	= FALSE
 
 	// [PC151425-1]
+/*	
 	If F_CLE_A_TRUE ( "PC151425-1" ) Then
 		
 		If dDteFinGti < dtValDate And bFranchisePaye And Date ( idw_Wsin.GetItemDateTime ( 1, "CREE_LE" )) < dtPivotFranchisePBox Then 
 
 			// [RS5928_FRCH_CHQ]
-			If F_CLE_A_TRUE ( "RS5928_FRCH_CHQ" ) Then
-				stMessage.sCode		= "WSIN899"					
-			Else
-				stMessage.sCode		= "WSIN794"	
-			End If
+			stMessage.sCode		= "WSIN899"					
 
 			stMessage.sVar [1]   = String ( lCodePce )	
 		End If
@@ -48669,17 +48617,13 @@ If bMsgGeneral Then
 			stMessage.sCode		= "WSIN844"	
 			stMessage.sVar [1]   = String ( lCodePceDBL )		
 		End If
-	Else
+	Else */
 
 		// [RS5928_FRCH_CHQ]
-		If F_CLE_A_TRUE ( "RS5928_FRCH_CHQ" ) Then
-			stMessage.sCode		= "WSIN899"					
-		Else
-			stMessage.sCode		= "WSIN794"	
-		End If		
+		stMessage.sCode		= "WSIN899"					
 		
 		stMessage.sVar [1]   = String ( lCodePce )
-	End If 
+//	End If 
 	
 	stMessage.Bouton		= OK!
 	

@@ -1256,25 +1256,22 @@ If bOk And lDeb > 0 Then
 	End If
 	
 	// [PMO139_RS4926]
-	If F_CLE_A_TRUE ( "PMO139_RS4926" ) Then
-		sChaineBcv = idwDetPro.GetItemString ( lDeb, "VAL_CAR" )
-		sVal = lnvPFCString.of_getkeyvalue (sChaineBcv, "PMO139", ";")
-		If sVal = "OUI" Then
-			sTypeApp = idwWDivSin.GetItemString ( idwWDivSin.Find ( "NOM_ZONE = 'type_app'", 1, idwWDivSin.RowCount () ), "VAL_LST_CAR" )
-			sVal = idwWDivSin.GetItemString ( idwWDivSin.Find ( "NOM_ZONE = 'taille_tv'", 1, idwWDivSin.RowCount () ), "VAL_LST_CAR" )
-			If sTypeApp = "TLC" and ( IsNull ( sVal ) or sVal = "" Or sVal = "AUC" ) Then
-				bOk = False
-				stMessage.sTitre		= "Taille TV"
-				stMessage.Icon			= Information!
-				stMessage.bErreurG	= FALSE
-				stMessage.Bouton		= OK!
-				stMessage.sCode		= "WGAR436"
-		
-				F_Message ( stMessage )
-			End IF 
-		End IF 
-	End If
+	sChaineBcv = idwDetPro.GetItemString ( lDeb, "VAL_CAR" )
+	sVal = lnvPFCString.of_getkeyvalue (sChaineBcv, "PMO139", ";")
+	If sVal = "OUI" Then
+		sTypeApp = idwWDivSin.GetItemString ( idwWDivSin.Find ( "NOM_ZONE = 'type_app'", 1, idwWDivSin.RowCount () ), "VAL_LST_CAR" )
+		sVal = idwWDivSin.GetItemString ( idwWDivSin.Find ( "NOM_ZONE = 'taille_tv'", 1, idwWDivSin.RowCount () ), "VAL_LST_CAR" )
+		If sTypeApp = "TLC" and ( IsNull ( sVal ) or sVal = "" Or sVal = "AUC" ) Then
+			bOk = False
+			stMessage.sTitre		= "Taille TV"
+			stMessage.Icon			= Information!
+			stMessage.bErreurG	= FALSE
+			stMessage.Bouton		= OK!
+			stMessage.sCode		= "WGAR436"
 	
+			F_Message ( stMessage )
+		End IF 
+	End IF 
 	
 End If
 
@@ -1776,11 +1773,13 @@ If lDeb > 0 Then
 End If
 
 // [DT269]
+/*
 If F_CLE_A_TRUE ( "DT269" ) Then
 	If bOk Then
 		bOk = This.wf_Condition_Ouverture_DT269 ( )
 	End If
 End If
+*/
 
 // [DT386_EXTR_AXA]
 If bOk Then

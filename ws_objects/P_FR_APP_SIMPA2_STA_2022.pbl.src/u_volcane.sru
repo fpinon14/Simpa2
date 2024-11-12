@@ -1,5 +1,5 @@
-HA$PBExportHeader$u_volcane.sru
-$PBExportComments$--- } G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier volcane
+﻿$PBExportHeader$u_volcane.sru
+$PBExportComments$--- } Génération du fichier volcane
 forward
 global type u_volcane from datawindow
 end type
@@ -25,22 +25,22 @@ public function long uf_ecrirefichier (string asnomfic, s_glb astglb, date addte
 //* Fonction		: U_Volcane::Uf_EcrireFichier
 //* Auteur			: DBI
 //* Date				: 22/09/1997 16:09:31
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Lit la DataWindow Dw_Volcanes Pour G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer le Fichier Volcane
-//* Commentaires	: Si un fichier du m$$HEX1$$ea00$$ENDHEX$$me nom existait, il est $$HEX1$$e900$$ENDHEX$$cras$$HEX1$$e900$$ENDHEX$$
+//* Libellé			: Lit la DataWindow Dw_Volcanes Pour Générer le Fichier Volcane
+//* Commentaires	: Si un fichier du même nom existait, il est écrasé
 //*
 //* Arguments		: 	String			asNomFic - Nom Complet du fichier Volcane
 //*						s_GLB				astGLB	- Structure globale de l'application
-//*						adDteDeb			Date	  	- Date de d$$HEX1$$e900$$ENDHEX$$but de traitement
+//*						adDteDeb			Date	  	- Date de début de traitement
 //*						adDteFin			Date	  	- Date de fin de traitement
-//*						asSeparateur	String	- S$$HEX1$$e900$$ENDHEX$$parateur de champ du fichier
+//*						asSeparateur	String	- Séparateur de champ du fichier
 //*						
-//* Retourne		: 	Long 		1 si Ok , Valeur n$$HEX1$$e900$$ENDHEX$$gative si Pb
+//* Retourne		: 	Long 		1 si Ok , Valeur négative si Pb
 //*										
 //*
 //*-----------------------------------------------------------------
-//* #1 JCA 118/05/2006 DCMP 60291 passage d'id_cie de 2 $$HEX2$$e0002000$$ENDHEX$$3 caract$$HEX1$$e800$$ENDHEX$$res
-//* #2 JCA 20/11/2007  DCMP 70864 Ajout du code produit sur 5 caract$$HEX1$$e800$$ENDHEX$$res
-//		 FPI 11/06/2012  [VDoc7448] Passage du lib_police $$HEX2$$e0002000$$ENDHEX$$60 caract$$HEX1$$e800$$ENDHEX$$res
+//* #1 JCA 118/05/2006 DCMP 60291 passage d'id_cie de 2 à 3 caractères
+//* #2 JCA 20/11/2007  DCMP 70864 Ajout du code produit sur 5 caractères
+//		 FPI 11/06/2012  [VDoc7448] Passage du lib_police à 60 caractères
 //     JFF 25/03/2013  [PC801_LOT1_V2]
 //     JFF 07/05/2013  [PC938_ORANGE_V3_V10]
 //     JFF 07/10/2013  [DT044-1_V5]
@@ -52,55 +52,55 @@ public function long uf_ecrirefichier (string asnomfic, s_glb astglb, date addte
 //*-----------------------------------------------------------------
 
 String		sCodAppli		// Code de l'application
-String		sIdSin			// Num$$HEX1$$e900$$ENDHEX$$ro de sinistre
-String		sIdI				// Suite demande Denis, le 09/03/1999, ajouter Interlocuteru r$$HEX1$$e900$$ENDHEX$$gl$$HEX1$$e900$$ENDHEX$$
-String		sIdReg			// Num$$HEX1$$e900$$ENDHEX$$ro de r$$HEX1$$e800$$ENDHEX$$glement
-String		sIdSeq			// Suite DCMP990009, ajout d'une zone ID_SEQ toujours $$HEX2$$e0002000$$ENDHEX$$0 pour SIMPA2, 
-									// et ne servant $$HEX2$$e0002000$$ENDHEX$$rien. Cette zone ne sert en faite que pour l'appli PEGED
-									// Mais cela $$HEX1$$e900$$ENDHEX$$vite de traiter plusieurs format de fichier
-String		sIdEnreg			// 1 si r$$HEX1$$e900$$ENDHEX$$glement de sinistre, 2 si remboursement re$$HEX1$$e700$$ENDHEX$$u
-String		sIdProd			// Num$$HEX1$$e900$$ENDHEX$$ro de produit du sinistre
+String		sIdSin			// Numéro de sinistre
+String		sIdI				// Suite demande Denis, le 09/03/1999, ajouter Interlocuteru réglé
+String		sIdReg			// Numéro de règlement
+String		sIdSeq			// Suite DCMP990009, ajout d'une zone ID_SEQ toujours à 0 pour SIMPA2, 
+									// et ne servant à rien. Cette zone ne sert en faite que pour l'appli PEGED
+									// Mais cela évite de traiter plusieurs format de fichier
+String		sIdEnreg			// 1 si réglement de sinistre, 2 si remboursement reçu
+String		sIdProd			// Numéro de produit du sinistre
 String		sIdEts			// Id_ets du sinistre
-String		sIdAdh			// Num$$HEX1$$e900$$ENDHEX$$ro d'adh$$HEX1$$e900$$ENDHEX$$sion ou num$$HEX1$$e900$$ENDHEX$$ro de carte
-String		sNosDoss			// Num$$HEX1$$e900$$ENDHEX$$ro de sous dossier si Adh$$HEX1$$e900$$ENDHEX$$sion Mini 0 sinon
-String		sIdCie			// Num$$HEX1$$e900$$ENDHEX$$ro de compagnie
-String		sCodContrat		// Num$$HEX1$$e900$$ENDHEX$$ro de contrat ou de police
-String		sCodReg			// Mode de r$$HEX1$$e800$$ENDHEX$$glement VA : Virt Auto, VM: Virt Manu, C: Ch$$HEX1$$e800$$ENDHEX$$que
-String		sCodDest			// A : Assur$$HEX1$$e900$$ENDHEX$$, B : Banque ...
-String		sMtSin			// Montant du r$$HEX1$$e800$$ENDHEX$$glement
-String		sDteReg			// Date de validation du r$$HEX1$$e800$$ENDHEX$$glement
-String		sRadical			// Radical SGCC associ$$HEX2$$e9002000$$ENDHEX$$au dossier ou chaine vide si inconnu
-String		sEnr				// Enregistrement $$HEX3$$e0002000e900$$ENDHEX$$crire dans le fichier
-String		sDteDeb			// Date de d$$HEX1$$e900$$ENDHEX$$but de traitement au format Volcane yyyymmdd
+String		sIdAdh			// Numéro d'adhésion ou numéro de carte
+String		sNosDoss			// Numéro de sous dossier si Adhésion Mini 0 sinon
+String		sIdCie			// Numéro de compagnie
+String		sCodContrat		// Numéro de contrat ou de police
+String		sCodReg			// Mode de règlement VA : Virt Auto, VM: Virt Manu, C: Chèque
+String		sCodDest			// A : Assuré, B : Banque ...
+String		sMtSin			// Montant du règlement
+String		sDteReg			// Date de validation du règlement
+String		sRadical			// Radical SGCC associé au dossier ou chaine vide si inconnu
+String		sEnr				// Enregistrement à écrire dans le fichier
+String		sDteDeb			// Date de début de traitement au format Volcane yyyymmdd
 String		sDteFin			// Date de fin de traitement au format Volcane yyyymmdd
 String		sDteJour			// Date du jour au format Volcane yyyymmdd
-String		sSigne			// Signe positif ou n$$HEX1$$e900$$ENDHEX$$gatif du montant
-String		sIdPdr			// Suite DCMP990042, ajout d'une zone ID_PDR toujours $$HEX2$$e0002000$$ENDHEX$$001 pour SIMPA2, 
-									// et ne servant $$HEX2$$e0002000$$ENDHEX$$rien. Cette zone ne sert en faite que pour l'appli PEGED
-									// Mais cela $$HEX1$$e900$$ENDHEX$$vite de traiter plusieurs format de fichier
+String		sSigne			// Signe positif ou négatif du montant
+String		sIdPdr			// Suite DCMP990042, ajout d'une zone ID_PDR toujours à 001 pour SIMPA2, 
+									// et ne servant à rien. Cette zone ne sert en faite que pour l'appli PEGED
+									// Mais cela évite de traiter plusieurs format de fichier
 String		sIdFour
 
-String		SIdProdSin			// Num$$HEX1$$e900$$ENDHEX$$ro de produit sur 5 caract$$HEX1$$e800$$ENDHEX$$res // #2
+String		SIdProdSin			// Numéro de produit sur 5 caractères // #2
 String		sChaine, sFiller1
 
-Decimal{2}	dcMtSin			// Montant du r$$HEX1$$e800$$ENDHEX$$glement
+Decimal{2}	dcMtSin			// Montant du règlement
 
-Integer		iFic				// Fichier Dans lequel on va $$HEX1$$e900$$ENDHEX$$crire
-Integer		iRet				// Utilis$$HEX2$$e9002000$$ENDHEX$$Pour Test FileWrite
+Integer		iFic				// Fichier Dans lequel on va écrire
+Integer		iRet				// Utilisé Pour Test FileWrite
 
 Long			lCpt				// Compteur de boucle
 Long			lRet = 1			// Valeur de retour de la fonction
 Long			lNbLig			// Nombre de lignes de Dw_1
 
-Boolean 		bPI062_VOLC_MENS, bPC151425_1, bPM462_1, bPI085
+Boolean 		bPI062_VOLC_MENS, bPI085
 
 //--------------------------------------------------------------------
 // Ouverture du fichier Volcane en Replace Exclusif
 //--------------------------------------------------------------------
 
 bPI062_VOLC_MENS = F_CLE_A_TRUE ( "PI062_VOLC_MENS" )
-bPC151425_1		  = F_CLE_A_TRUE ( "PC151425-1" )
-bPM462_1			  = F_CLE_A_TRUE ( "PM462-1" ) 
+// bPC151425_1		  = F_CLE_A_TRUE ( "PC151425-1" )
+// bPM462_1			  = F_CLE_A_TRUE ( "PM462-1" ) 
 bPI085			  = F_CLE_A_TRUE ( "PI085" ) 
 
 
@@ -112,7 +112,7 @@ If iFic > 0 Then
 
 	//--------------------------------------------------------------------
 	// Le premier enregistrement du fichier doit contenir les dates de 
-	// d$$HEX1$$e900$$ENDHEX$$but de traitement, de fin de traitement et la date du jour au format Volcane
+	// début de traitement, de fin de traitement et la date du jour au format Volcane
 	//--------------------------------------------------------------------
 
 	sDteDeb	=	String ( Year ( adDteDeb ) ) 						+ &
@@ -130,12 +130,12 @@ If iFic > 0 Then
 
 	//--------------------------------------------------------------------
 	// MODIF JFF le 17/02/99 : Suite au DCMP990009 et DCMP 990042, et suite
-	// $$HEX2$$e0002000$$ENDHEX$$la demande de Sylvie, ce jour, je rajoute 5 espace sur le premier
+	// à la demande de Sylvie, ce jour, je rajoute 5 espace sur le premier
 	// enregistrement afin que les colonnes ne se chevauchent pas. je passe
-	// donc de 86 $$HEX2$$e0002000$$ENDHEX$$91 la valeur de 'SPACE'.
-	// MODIF JFF le 09/03/99 : Suite modif demand$$HEX1$$e900$$ENDHEX$$e par denis, on passe de
-	// 91 $$HEX2$$e0002000$$ENDHEX$$95 (id_i + 2 sur id_seq)
-   // MODIF JFF le 10/03/05 : je passe de 95 $$HEX2$$e0002000$$ENDHEX$$96 pour g$$HEX1$$e800$$ENDHEX$$rer les sinistres 
+	// donc de 86 à 91 la valeur de 'SPACE'.
+	// MODIF JFF le 09/03/99 : Suite modif demandée par denis, on passe de
+	// 91 à 95 (id_i + 2 sur id_seq)
+   // MODIF JFF le 10/03/05 : je passe de 95 à 96 pour gèrer les sinistres 
 	// sur 7 Chiffres au lieu de 6
    // MODIF JFF le 21/06/05 : Ajout 3 car en fin pour gestion ID_Four
 	// #1 Ajout 1 espace : Space ( 97 )
@@ -156,7 +156,7 @@ If iFic > 0 Then
 	End IF
 
 	//--------------------------------------------------------------------
-	// Traitement des $$HEX1$$e900$$ENDHEX$$critures
+	// Traitement des écritures
 	//--------------------------------------------------------------------
 	If lRet > 0 Then
 
@@ -198,7 +198,7 @@ If iFic > 0 Then
 		dcMtSin			=	This.GetItemNumber ( lCpt, "MT_SIN" )
 
 		// Modif DBI le 16/03/1999
-		// Positionnement de l'id_seq = 0002 si il s'agit du montant n$$HEX1$$e900$$ENDHEX$$gatif du RI
+		// Positionnement de l'id_seq = 0002 si il s'agit du montant négatif du RI
 		// sinon doublon dans le chargement volcanes
 
 		If ( sIdEnreg = '4' ) And ( dcMtSin < 0 ) Then
@@ -219,7 +219,7 @@ If iFic > 0 Then
 		End If
 
 
-		// le montant du sinistre est multipli$$HEX2$$e9002000$$ENDHEX$$par 100 pour supprimer la virgule
+		// le montant du sinistre est multiplié par 100 pour supprimer la virgule
 
 		sMtSin			=	sSigne + Right ( "00000000000"							+ &
 								String ( dcMtSin*100,								 		+ &
@@ -242,7 +242,7 @@ If iFic > 0 Then
 		End Choose 
 
 		//--------------------------------------------------------------------
-		// Le radical est positionn$$HEX4$$e9002000e0002000$$ENDHEX$$"   " s'il n'est pas connu : exemple PE
+		// Le radical est positionné à "   " s'il n'est pas connu : exemple PE
 		//--------------------------------------------------------------------
 
 		If isNull ( sRadical ) Or Trim ( sRadical ) = "" Then sRadical = "000"
@@ -283,7 +283,7 @@ If iFic > 0 Then
 		End If			
 		
 		IF sFiller1 = Space ( 24 ) Then
-			// "1" = RN, Frais sp$$HEX1$$e900$$ENDHEX$$ciaux Orange V3
+			// "1" = RN, Frais spéciaux Orange V3
 			Choose Case sIdEnreg 
 				Case "1"
 					sChaine = Space ( 50 )  // 10 max pour la PS
@@ -303,7 +303,7 @@ If iFic > 0 Then
 		End If
 		// :[DT044-1_V5]
 		
-		// DT386_COST_CENTER Axa Buy Back Filler de 6 $$HEX2$$e0002000$$ENDHEX$$9 (4 position)
+		// DT386_COST_CENTER Axa Buy Back Filler de 6 à 9 (4 position)
 		sChaine = Left ( sFiller1 + Space (24), 24 )
 		SQLCA.PS_S_RN_AVEC_COST_CENTER ( long ( sIdSin) , Long ( sIdReg ), sIdEnreg, sCodReg, sChaine ) 
 		If IsNull ( sChaine ) Or Trim ( sChaine ) = "" Then sChaine = ""
@@ -311,8 +311,9 @@ If iFic > 0 Then
 	
 		
 		// [PM462-1][V3]
+/*
 		If bPM462_1 Then
-			// Pour les FM/RM et FM/RP particulier li$$HEX4$$e9002000e0002000$$ENDHEX$$la franchise on passe FM $$HEX2$$e0002000$$ENDHEX$$Sylvie (m$$HEX1$$ea00$$ENDHEX$$me si nous nous avons C)
+			// Pour les FM/RM et FM/RP particulier lié à la franchise on passe FM à Sylvie (même si nous nous avons C)
 			sChaine = sCodReg
 			SQLCA.PS_S_FM_ALD_C_CAS_PART ( long ( sIdSin) , Long ( sIdReg ) , sChaine ) 
 			sCodReg = Left ( sChaine + Space ( 2 ), 2 )
@@ -331,6 +332,7 @@ If iFic > 0 Then
 				End If
 			End IF 
 		End If
+*/
 
 		sEnr			=	sCodAppli			+ asSeparateur + &
 							sIdSin				+ asSeparateur + &
@@ -371,7 +373,7 @@ iRet 	=	FileClose ( iFic )
 
 If iRet < 0 And lRet > 0 Then
 
-	lRet	= -4		// Erreur $$HEX2$$e0002000$$ENDHEX$$la fermeture du fichier
+	lRet	= -4		// Erreur à la fermeture du fichier
 End If
 
 Return lRet
@@ -382,20 +384,20 @@ public function long uf_volcane (s_glb astglb, transaction atrtrans, date addted
 //* Fonction		: U_Volcane::Uf_Volcane
 //* Auteur			: DBI
 //* Date			: 23/09/1997 16:09:31
-//* Libell$$HEX3$$e90009000900$$ENDHEX$$: G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration automatique du fichier Volcane
-//* Commentaires	: Enchaine toutes les fonctions n$$HEX1$$e900$$ENDHEX$$cessaires pour g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer le fichier
-//*					  La proc$$HEX1$$e900$$ENDHEX$$dure PS_S01_VOLCANE doit $$HEX1$$ea00$$ENDHEX$$tre compil$$HEX1$$e900$$ENDHEX$$e sur la base de donn$$HEX1$$e900$$ENDHEX$$e
+//* Libellé		: Génération automatique du fichier Volcane
+//* Commentaires	: Enchaine toutes les fonctions nécessaires pour générer le fichier
+//*					  La procédure PS_S01_VOLCANE doit être compilée sur la base de donnée
 //* Arguments		: 	s_GLB			astGLB	- Structure globale de l'application
 //*						atrTrans		Transaction	- Objet de transaction
-//*						adDteDeb		Date	- Date de d$$HEX1$$e900$$ENDHEX$$but de traitement
+//*						adDteDeb		Date	- Date de début de traitement
 //*						adDteFin		Date	- Date de fin de traitement
 //*						
-//* Retourne		: 	Long 		Nombre de lignes trouv$$HEX1$$e900$$ENDHEX$$es
-//*						ou nombre n$$HEX1$$e900$$ENDHEX$$gatif si erreur
-//*						-1	 Entr$$HEX1$$e900$$ENDHEX$$e Rep_Volcane inexistante dans fichier Ini
+//* Retourne		: 	Long 		Nombre de lignes trouvées
+//*						ou nombre négatif si erreur
+//*						-1	 Entrée Rep_Volcane inexistante dans fichier Ini
 //*						-2	 Impossible d'ouvrir le fichier Volcane
-//*						-3	 Erreur lors de l'$$HEX1$$e900$$ENDHEX$$criture d'un enregistrement
-//*						-4	 Erreur $$HEX2$$e0002000$$ENDHEX$$la fermeture du fichier Volcane
+//*						-3	 Erreur lors de l'écriture d'un enregistrement
+//*						-4	 Erreur à la fermeture du fichier Volcane
 //*										
 //*
 //*-----------------------------------------------------------------
@@ -403,7 +405,7 @@ public function long uf_volcane (s_glb astglb, transaction atrtrans, date addted
 //		  FPI	  29/10/2014 [PI056]
 //*-----------------------------------------------------------------
 
-String			sNomFic		// Nom du fichier Volcane $$HEX2$$e0002000$$ENDHEX$$G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer
+String			sNomFic		// Nom du fichier Volcane à Générer
 
 Long			lRet = 1	// Valeur de retour des fonctions		
 Long			lNbLig 		// Nombre de lignes du retrieve
@@ -411,7 +413,7 @@ Long			lNbLig 		// Nombre de lignes du retrieve
 SetPointer ( HourGlass! )
 
 //*-----------------------------------------------------------------
-//* D$$HEX1$$e900$$ENDHEX$$termination du nom du fichier $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer
+//* Détermination du nom du fichier à générer
 //*-----------------------------------------------------------------
 
 lRet = Uf_NouveauFichier ( sNomFic, astGLB, adDteFin )
@@ -443,7 +445,7 @@ If lRet > 0 Then
 
 
 //*-----------------------------------------------------------------
-//* G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier
+//* Génération du fichier
 //*-----------------------------------------------------------------
 
 	lRet = Uf_EcrireFichier ( sNomFic, astGLB, adDteDeb, adDteFin, "" )
@@ -461,20 +463,20 @@ public function long uf_nouveaufichier (ref string asnomfic, s_glb astglb, date 
 //* Fonction		: U_Volcane::Uf_FichierNouveau
 //* Auteur			: DBI
 //* Date			: 22/09/1997 16:09:31
-//* Libell$$HEX3$$e90009000900$$ENDHEX$$: Cr$$HEX1$$e900$$ENDHEX$$e un nouveau fichier Volcane au format de transfert
-//* Commentaires	: Le nom du fichier Volcane se compose du r$$HEX1$$e900$$ENDHEX$$pertoire associ$$HEX1$$e900$$ENDHEX$$
-//* 				  $$HEX2$$e0002000$$ENDHEX$$l'entr$$HEX1$$e900$$ENDHEX$$e REP_VOLCANE du  fichier Ini de l'appli suivi de
+//* Libellé		: Crée un nouveau fichier Volcane au format de transfert
+//* Commentaires	: Le nom du fichier Volcane se compose du répertoire associé
+//* 				  à l'entrée REP_VOLCANE du  fichier Ini de l'appli suivi de
 //*
 //* 					Cod_Appli									-	Char (4)
-//* 					Compteur S$$HEX1$$e900$$ENDHEX$$quentiel au sein appli		-	Char (2)
+//* 					Compteur Séquentiel au sein appli		-	Char (2)
 //*						.
-//*						Jour en cours sur 2 caract$$HEX1$$e800$$ENDHEX$$res			-  	Char (2)
+//*						Jour en cours sur 2 caractères			-  	Char (2)
 //*						Mois en lettre 							-	Char (1)
 //*
 //*						suivant le principe suivant :
 //*
 //*						A	Janvier
-//*						B	F$$HEX1$$e900$$ENDHEX$$vrier
+//*						B	Février
 //*						C	Mars
 //*						D	Avril
 //*						E	Mai
@@ -484,19 +486,19 @@ public function long uf_nouveaufichier (ref string asnomfic, s_glb astglb, date 
 //*						I	Septembre
 //*						J	Octobre
 //*						K	Novembre
-//*						L	D$$HEX1$$e900$$ENDHEX$$cembre
+//*						L	Décembre
 //*
 //* Arguments		: 	s_GLB			astGLB	- Structure globale de l'application
 //*						REF String		asNomFic - Nom Complet du fichier Volcane
-//*						Date 			adDteFic - Date de r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence pour la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier 
-//*										( en g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ral date de fin de traitement )
-//* Retourne		: 	Long 		1 si Ok , Valeur n$$HEX1$$e900$$ENDHEX$$gative si Pb
+//*						Date 			adDteFic - Date de référence pour la génération du fichier 
+//*										( en général date de fin de traitement )
+//* Retourne		: 	Long 		1 si Ok , Valeur négative si Pb
 //*										
 //*
 //*-----------------------------------------------------------------
 
 String		sExtension 	// Extension du fichier Volcane
-String		sRepVolcane	// Nom du r$$HEX1$$e900$$ENDHEX$$pertoire pour la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier 
+String		sRepVolcane	// Nom du répertoire pour la génération du fichier 
 String		sTabMois[12]	// Liste des mois en lettre
 
 Long		lRet 	= 1			// Valeur de retour de la fonction

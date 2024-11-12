@@ -330,27 +330,25 @@ idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
 lVal = idw_wInter.GetItemNumber ( 1, "COD_ETAT_CTRLE_INTER" ) 
 If IsNull ( lVal ) Then idw_wInter.SetItem ( 1, "COD_ETAT_CTRLE_INTER", 0 ) 
 
-If F_CLE_A_TRUE ( "PMO89_RS4822" ) Then
-	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 365 )
-	If lDeb > 0 And isTypeTrt = "S" Then
-		sValCar = lnvString.of_getkeyvalue(idw_DetPro.GetItemString(lDeb,"VAL_CAR" ), "TYP_INTER", ";") 
-		sCodInter = idw_wInter.GetItemString ( 1, "COD_INTER" ) 
-		
-		If Not IsNull ( sCodInter ) And Pos ( sValCar, "#" + sCodInter + "#" ) > 0 Then
-			idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "0")
-		Else
-			idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
-		End If 
-		
-		lVal = idw_wInter.GetItemNumber ( 1, "COD_ETAT_CTRLE_INTER" ) 
-		If lVal > 0 Then
-			idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")			
-		End If 
-		
-	Else 
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 365 )
+If lDeb > 0 And isTypeTrt = "S" Then
+	sValCar = lnvString.of_getkeyvalue(idw_DetPro.GetItemString(lDeb,"VAL_CAR" ), "TYP_INTER", ";") 
+	sCodInter = idw_wInter.GetItemString ( 1, "COD_INTER" ) 
+	
+	If Not IsNull ( sCodInter ) And Pos ( sValCar, "#" + sCodInter + "#" ) > 0 Then
+		idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "0")
+	Else
 		idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
 	End If 
-End If
+	
+	lVal = idw_wInter.GetItemNumber ( 1, "COD_ETAT_CTRLE_INTER" ) 
+	If lVal > 0 Then
+		idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")			
+	End If 
+	
+Else 
+	idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
+End If 
 
 
 
@@ -461,22 +459,20 @@ astPass.bRetour = True
 
 // [PMO89_RS4822]
 idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
-If F_CLE_A_TRUE ( "PMO89_RS4822" ) Then
 
-	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 365 )
-	If lDeb > 0 Then
-		sValCar = lnvString.of_getkeyvalue(idw_DetPro.GetItemString(lDeb,"VAL_CAR" ), "TYP_INTER", ";") 
-		sCodInter = idw_wInter.GetItemString ( 1, "COD_INTER" ) 
-		
-		If Not IsNull ( sCodInter ) And Pos ( sValCar, "#" + sCodInter + "#" ) > 0 Then
-			idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "0")
-		Else
-			idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
-		End If 
-	Else 
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 365 )
+If lDeb > 0 Then
+	sValCar = lnvString.of_getkeyvalue(idw_DetPro.GetItemString(lDeb,"VAL_CAR" ), "TYP_INTER", ";") 
+	sCodInter = idw_wInter.GetItemString ( 1, "COD_INTER" ) 
+	
+	If Not IsNull ( sCodInter ) And Pos ( sValCar, "#" + sCodInter + "#" ) > 0 Then
+		idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "0")
+	Else
 		idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
 	End If 
-End If
+Else 
+	idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
+End If 
 
 
 
@@ -880,40 +876,38 @@ This.uf_ControlerSaisie_Commune ( sText, sPos )
 
 // [PMO89_RS4822]
 idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
-If F_CLE_A_TRUE ( "PMO89_RS4822" ) Then
-	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 365 )
-	If lDeb > 0 Then
-		sValCar = lnvString.of_getkeyvalue(idw_DetPro.GetItemString(lDeb,"VAL_CAR" ), "TYP_INTER", ";") 
-		sCodInter = idw_wInter.GetItemString ( 1, "COD_INTER" ) 
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 365 )
+If lDeb > 0 Then
+	sValCar = lnvString.of_getkeyvalue(idw_DetPro.GetItemString(lDeb,"VAL_CAR" ), "TYP_INTER", ";") 
+	sCodInter = idw_wInter.GetItemString ( 1, "COD_INTER" ) 
+	
+	If Not IsNull ( sCodInter ) And Pos ( sValCar, "#" + sCodInter + "#" ) > 0 Then
 		
-		If Not IsNull ( sCodInter ) And Pos ( sValCar, "#" + sCodInter + "#" ) > 0 Then
-			
-			bCasPMO89_RS4822_DP365 = TRUE
-			
-			idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "0")
+		bCasPMO89_RS4822_DP365 = TRUE
+		
+		idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "0")
 
-			For	lCpt = 17 To 19
-					If IsNull ( sVal[ lCpt ] ) or sVal[ lCpt ] = ""	Then
-						If sPos = "" Then sPos = sCol[ lCpt ]
-						sText = sText + sErr[ lCpt ] + sNouvelleLigne
-					End If
-			Next
+		For	lCpt = 17 To 19
+				If IsNull ( sVal[ lCpt ] ) or sVal[ lCpt ] = ""	Then
+					If sPos = "" Then sPos = sCol[ lCpt ]
+					sText = sText + sErr[ lCpt ] + sNouvelleLigne
+				End If
+		Next
 
-			dt = DateTime ( Date ( sVal[ 17 ] ) )
-			dt2 = DateTime ( Date ("01/01/1913") )
-			dtToday = Datetime ( Today(), now())
-			IF dt < dt2 Or dt > dtToday Then
-				If sPos = "" Then sPos = sCol[ 17 ]				
-				sText = sText + sErr[ 17 ] + " postérieure au 01/01/1913" + sNouvelleLigne
-			End If 
-			
-		Else
-			idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
+		dt = DateTime ( Date ( sVal[ 17 ] ) )
+		dt2 = DateTime ( Date ("01/01/1913") )
+		dtToday = Datetime ( Today(), now())
+		IF dt < dt2 Or dt > dtToday Then
+			If sPos = "" Then sPos = sCol[ 17 ]				
+			sText = sText + sErr[ 17 ] + " postérieure au 01/01/1913" + sNouvelleLigne
 		End If 
-	Else 
+		
+	Else
 		idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
 	End If 
-End If
+Else 
+	idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
+End If 
 
 
 /*------------------------------------------------------------------*/
@@ -1355,32 +1349,30 @@ End If
 
 // [PMO89_RS4822]
 idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")	
-If F_CLE_A_TRUE ( "PMO89_RS4822" ) Then
-	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 365 )
-	If lDeb > 0 Then
-		sValCar = lnvString.of_getkeyvalue(idw_DetPro.GetItemString(lDeb,"VAL_CAR" ), "TYP_INTER", ";") 
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 365 )
+If lDeb > 0 Then
+	sValCar = lnvString.of_getkeyvalue(idw_DetPro.GetItemString(lDeb,"VAL_CAR" ), "TYP_INTER", ";") 
+	
+	If Pos ( sValCar, "#" + sCodInter + "#" ) > 0 Then
+		idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "0")
+
 		
-		If Pos ( sValCar, "#" + sCodInter + "#" ) > 0 Then
-			idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "0")
+		Do While Not bFin
+			stMessage.sTitre		= "Contrôle d'interlocuteur par l'assureur"
+			stMessage.Icon			= Exclamation!
+			stMessage.bErreurG	= FALSE
+			stMessage.Bouton		= YesNo!
+			stMessage.sCode		= "WINT311"
 
-			
-			Do While Not bFin
-				stMessage.sTitre		= "Contrôle d'interlocuteur par l'assureur"
-				stMessage.Icon			= Exclamation!
-				stMessage.bErreurG	= FALSE
-				stMessage.Bouton		= YesNo!
-				stMessage.sCode		= "WINT311"
-
-				If F_Message ( stMessage ) = 1 Then bFin = True
-			Loop
-			
-		Else
-			idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
-		End If 
-	Else 
+			If F_Message ( stMessage ) = 1 Then bFin = True
+		Loop
+		
+	Else
 		idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
 	End If 
-End If
+Else 
+	idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
+End If 
 
 
 
@@ -3506,12 +3498,14 @@ For lCpt = lDeb To lFin
 Next
 
 // [PM462-1][V3]
+/*
 If F_CLE_A_TRUE ( "PM462-1" ) Then
 	// Même si le Param l'autorise, J'interdit en dur le mode CB.
 	If sCodModReg = "CB" Then 
 		bAutorise = False
 	End If 
 End If
+*/
 
 If Not bAutorise Then 
 	iAction = 1

@@ -1486,6 +1486,7 @@ End If
 
 // [PC151425-1][V4]
 // [PC151425-1]
+/*
 If F_CLE_A_TRUE ( "PC151425-1" ) Then
 	
 	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 291)
@@ -1538,6 +1539,7 @@ If F_CLE_A_TRUE ( "PC151425-1" ) Then
 		End If 			
 	End If 
 End If 
+*/
 
 // [BUG_MARC]
 If iuoTagRefus.dw_trt.Find ( "ID_GTI = " + String ( lIdGti ) + " AND ( ALT_OPE = 'O' OR ALT_MAC = 'O' )", 1, iuoTagRefus.dw_trt.Rowcount () ) <= 0 And &
@@ -7035,26 +7037,24 @@ If	Not isNull ( dDteFinGti )		And	&
 End If
 
 // [EVOL_REFUS_603_PNP] 
-If F_CLE_A_TRUE ( "EVOL_REFUS_603_PNP" ) Then
-	SQLCA.PS_S_DATE_PIVOT ( "EVOL_REFUS_603_PNP", dtDt1, dtDt2, dtDt3 ) 
+SQLCA.PS_S_DATE_PIVOT ( "EVOL_REFUS_603_PNP", dtDt1, dtDt2, dtDt3 ) 
+
+If Not bRefusDeclenche 	 And &
+	isNull ( dDteFinGti ) And &
+	sCodAdh = "1"  		 And &
+	dtCreeLe >= dtDt1		 Then
 	
-	If Not bRefusDeclenche 	 And &
-		isNull ( dDteFinGti ) And &
-		sCodAdh = "1"  		 And &
-		dtCreeLe >= dtDt1		 Then
+	bRefusDeclenche = True // [EVOL_REFUS_603_PNP] 
+
+	// [Vdoc5870]
+	F_RechDetPro(lDeb, lFin, idw_detpro, idw_wSin.GetItemNumber( 1,"ID_PROD"), "-DP", 29)
+	If lDeb > 0 Then
+		sRefus=nvString.of_getkeyvalue( idw_detpro.GetItemString(lDeb ,"VAL_CAR") , "REFUS", ";")
+		If sRefus="" Then sRefus="603"
+	End if
 		
-		bRefusDeclenche = True // [EVOL_REFUS_603_PNP] 
+	bRet = Uf_RF_EcrireRefus ( Long(sRefus) )
 	
-		// [Vdoc5870]
-		F_RechDetPro(lDeb, lFin, idw_detpro, idw_wSin.GetItemNumber( 1,"ID_PROD"), "-DP", 29)
-		If lDeb > 0 Then
-			sRefus=nvString.of_getkeyvalue( idw_detpro.GetItemString(lDeb ,"VAL_CAR") , "REFUS", ";")
-			If sRefus="" Then sRefus="603"
-		End if
-			
-		bRet = Uf_RF_EcrireRefus ( Long(sRefus) )
-		
-	End If 
 End If 
 
 Return ( bRet )

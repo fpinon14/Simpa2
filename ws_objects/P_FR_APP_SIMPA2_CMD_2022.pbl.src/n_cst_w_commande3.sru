@@ -10132,6 +10132,7 @@ Choose Case sIdRefFour
 		lnv_string.of_setkeyvalue( isInfoSpbFrnCplt, "SKU_IFR", sSkuIfr, ";")
 	
 			// [DT269]
+/*			
 		If F_CLE_A_TRUE ( "DT269" ) Then
 			lRow = idwWDivsin.Find ( "Upper (NOM_ZONE) = 'TAILLE_ECRAN'", 1, idwWDivSin.RowCount () )
 			If lRow > 0 Then 
@@ -10141,6 +10142,7 @@ Choose Case sIdRefFour
 				End If 
 			End If
 		End If
+*/
 
 		// [DT386_EXTR_AXA]
 		If lIdGti = 54 Then
@@ -11991,6 +11993,7 @@ End Choose
 //	[DT200]
 
 // [DT269]
+/*
 If F_CLE_A_TRUE ( "DT269" ) Then
 	lRow = idwWDivsin.Find ( "Upper (NOM_ZONE) = 'TAILLE_ECRAN'", 1, idwWDivSin.RowCount () )
 	If lRow > 0 Then 
@@ -12000,6 +12003,7 @@ If F_CLE_A_TRUE ( "DT269" ) Then
 		End If 
 	End If
 End If
+*/
 
 // [DT363]
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 252 )		
@@ -19366,6 +19370,7 @@ If lDeb > 0 and sTypPresta = "PRS" Then
 End If
 
 // [PC151425-1]
+/*
 If F_CLE_A_TRUE ( "PC151425-1" ) Then
 	F_RechDetPro ( lDeb, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 298 )	
 	If lDeb > 0 and sTypPresta = "PRS" Then
@@ -19379,6 +19384,7 @@ If F_CLE_A_TRUE ( "PC151425-1" ) Then
 		
 	End IF
 End If
+*/
 
 // [DT447] 
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 342)

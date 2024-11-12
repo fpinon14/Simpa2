@@ -1,5 +1,5 @@
-HA$PBExportHeader$u_gs_sp_regul_detail.sru
-$PBExportComments$---} User Object pour la gestion des r$$HEX1$$e900$$ENDHEX$$gularisations. (Saisie du d$$HEX1$$e900$$ENDHEX$$tail)
+﻿$PBExportHeader$u_gs_sp_regul_detail.sru
+$PBExportComments$---} User Object pour la gestion des régularisations. (Saisie du détail)
 forward
 global type u_gs_sp_regul_detail from nonvisualobject
 end type
@@ -61,18 +61,18 @@ public subroutine uf_traitement (integer aitype, ref s_pass astpass);//*--------
 //* Fonction		: Uf_Traitement (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:29:33
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Integer		aiType			(Val)	Type de traitement
-//*					  s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//*					  s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
 //*-----------------------------------------------------------------
 
 Choose Case aiType
-Case 1					// INITIALISATION		(Ue_Initialiser de la fen$$HEX1$$ea00$$ENDHEX$$tre)
+Case 1					// INITIALISATION		(Ue_Initialiser de la fenêtre)
 	Uf_InitialiserFenetre ()
 
 Case 2					// MODIFICATION		(Wf_PreparerModifier)
@@ -93,12 +93,12 @@ public subroutine uf_initialisation (ref u_datawindow adw_sin, ref u_transaction
 //* Fonction		: Uf_Initialisation (Public)
 //* Auteur			: Erick John Stark
 //* Date				: 19/10/1997 18:47:02
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Initialisation des instances pour le NVUO
 //*
-//* Arguments		: U_DataWindow				adw_Sin			(R$$HEX1$$e900$$ENDHEX$$f)	DataWindow de traitement du sinistre
-//*					  u_Transaction			atrTrans			(R$$HEX1$$e900$$ENDHEX$$f)	Objet de transaction
-//*					  u_Onglets					auOnglet			(R$$HEX1$$e900$$ENDHEX$$f)	Onglet
+//* Arguments		: U_DataWindow				adw_Sin			(Réf)	DataWindow de traitement du sinistre
+//*					  u_Transaction			atrTrans			(Réf)	Objet de transaction
+//*					  u_Onglets					auOnglet			(Réf)	Onglet
 //*
 //* Retourne		: Rien
 //*
@@ -115,8 +115,8 @@ private subroutine uf_initialiserfenetre ();//*---------------------------------
 //* Fonction		: Uf_InitialiserFenetre (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Initialisation de la fen$$HEX1$$ea00$$ENDHEX$$tre (FREEFORM) d'une r$$HEX1$$e900$$ENDHEX$$gularisation
+//* Libellé			: 
+//* Commentaires	: Initialisation de la fenêtre (FREEFORM) d'une régularisation
 //*
 //* Arguments		: Aucun
 //*
@@ -129,7 +129,7 @@ DataWindowChild		dwChild, dwChild1
 String sCol[8]
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re les DDDW qui ne changent jamais.                     */
+/* On récupére les DDDW qui ne changent jamais.                     */
 /* Colonnes COD_INTER, ID_I, COD_MODE_REG.                          */
 /*------------------------------------------------------------------*/
 idw_LstReg.GetChild ( "ID_I", dwChild )
@@ -172,10 +172,10 @@ private subroutine uf_preparermodifier (ref s_pass astpass);//*-----------------
 //* Fonction		: Uf_PreparerModifier (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Pr$$HEX1$$e900$$ENDHEX$$paration de la modification d'une r$$HEX1$$e900$$ENDHEX$$gularisation
+//* Libellé			: 
+//* Commentaires	: Préparation de la modification d'une régularisation
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
@@ -188,7 +188,7 @@ String sCodMod
 Long lIdSin, lRet 
 
 /*------------------------------------------------------------------*/
-/* On recopie la ligne de r$$HEX1$$e800$$ENDHEX$$glement de la fen$$HEX1$$ea00$$ENDHEX$$tre parent dans       */
+/* On recopie la ligne de règlement de la fenêtre parent dans       */
 /* dw_RegFF.                                                        */
 /*------------------------------------------------------------------*/
 idw_RegFF.Uf_CopierLigne ()
@@ -196,24 +196,24 @@ idw_RegFF.Uf_CopierLigne ()
 isTypeRegul = astPass.sTab[1]
 Choose Case isTypeRegul
 	Case "1"		// RI
-		sTitre = "Repr$$HEX1$$e900$$ENDHEX$$sentation Impay$$HEX2$$e9002000$$ENDHEX$$(RI)"
+		sTitre = "Représentation Impayé (RI)"
 
 	Case "2"		// RM (Garantie)
-		sTitre = "RM $$HEX2$$e0002000$$ENDHEX$$d$$HEX1$$e900$$ENDHEX$$duire sur garantie"
+		sTitre = "RM à déduire sur garantie"
 
 	Case "3"		// RM (Frais)
-		sTitre = "RM $$HEX2$$e0002000$$ENDHEX$$d$$HEX1$$e900$$ENDHEX$$duire sur frais"
+		sTitre = "RM à déduire sur frais"
 
 	Case "4"		// RP (Garantie)
-		sTitre = "RP $$HEX2$$e0002000$$ENDHEX$$ajouter sur garantie"
+		sTitre = "RP à ajouter sur garantie"
 
 	Case "5"		// RP (Frais)
-		sTitre = "RP $$HEX2$$e0002000$$ENDHEX$$ajouter sur frais"
+		sTitre = "RP à ajouter sur frais"
 End Choose
 
 /*------------------------------------------------------------------*/
 /* On modifie le titre de la DW pour la saisie de la                */
-/* r$$HEX1$$e900$$ENDHEX$$gularisation.                                                  */
+/* régularisation.                                                  */
 /*------------------------------------------------------------------*/
 sMod = "s_Titre.Text='" + sTitre + "'"
 idw_RegulFF.Uf_Modify ( sMod )
@@ -226,13 +226,14 @@ idw_RegFF.SetItem ( 1, "TYP_ENCOURS", idw_RegulFF.GetItemString ( 1, "COD_MOT_RE
 astPass.bRetour	= True
 
 // [PM462-1][V3]
+/*
 If F_CLE_A_TRUE ( "PM462-1" ) Then
  	sCodMod = idw_RegulFF.GetItemString ( 1, "COD_MODE_REG" )	
 	lIdSin = idw_Sin.GetItemNumber ( 1, "ID_SIN" )	
 	lRet = SQLCA.PS_S_PRESENCE_FRANCHISE_CB ( lIdSin ) 
 
 	If lRet > 0 And sCodMod = "FM" Then 
-		stMessage.sTitre		= "Pr$$HEX1$$e900$$ENDHEX$$sence Franchise CB..."
+		stMessage.sTitre		= "Présence Franchise CB..."
 		stMessage.Icon		= Exclamation!
 		stMessage.bErreurG	= FALSE
 		stMessage.Bouton		= OK!
@@ -240,7 +241,7 @@ If F_CLE_A_TRUE ( "PM462-1" ) Then
 		F_Message ( stMessage ) 
 	End If 
 End If
-
+*/
 
 end subroutine
 
@@ -249,7 +250,7 @@ private subroutine uf_initialisation_zone ();//*--------------------------------
 //* Fonction		: Uf_Initialisation_Zone (Private)
 //* Auteur			: Erick John Stark
 //* Date				: 19/10/1997 18:47:02
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun
@@ -258,7 +259,7 @@ private subroutine uf_initialisation_zone ();//*--------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1    JFF   02/10/2002   DCMP 020351 K.Letullier : Si RM sur RN en FM $$HEX2$$e0002000$$ENDHEX$$l'origine
+//* #1    JFF   02/10/2002   DCMP 020351 K.Letullier : Si RM sur RN en FM à l'origine
 //*			     				  Alors mettre le RM aussi en FM
 //*-----------------------------------------------------------------
 
@@ -274,7 +275,7 @@ dDteReg	= Date( Today () ) // [PI057]
 sTab		= "~t"
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re une ligne dans la DW qui va servir $$HEX2$$e0002000$$ENDHEX$$la saisie.        */
+/* On insére une ligne dans la DW qui va servir à la saisie.        */
 /*------------------------------------------------------------------*/
 idw_RegulFF.Reset ()
 idw_RegulFF.InsertRow ( 0 )
@@ -392,7 +393,7 @@ private subroutine uf_tb_saisie ();//*------------------------------------------
 //* Fonction		: Uf_Tb_Saisie (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 17:35:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Gestion des TabOrder en saisie
 //*
 //* Arguments		: Aucun
@@ -440,14 +441,14 @@ public subroutine uf_initialiser_dw (ref u_datawindow_detail adw_lstreg, ref u_d
 //* Fonction		: Uf_Initialiser_Dw (Public)
 //* Auteur			: Erick John Stark
 //* Date				: 19/10/1997 18:47:02
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Initialisation des instances pour le NVUO
 //*
-//* Arguments		: U_DataWindow_Detail	adw_LstReg			(R$$HEX1$$e900$$ENDHEX$$f)	DataWindow sur les r$$HEX1$$e800$$ENDHEX$$glements
-//*					  U_DataWindow				adw_RegFF			(R$$HEX1$$e900$$ENDHEX$$f)	DataWindow Master de la fen$$HEX1$$ea00$$ENDHEX$$tre
-//*					  U_DataWindow				adw_RegulFF			(R$$HEX1$$e900$$ENDHEX$$f)	
+//* Arguments		: U_DataWindow_Detail	adw_LstReg			(Réf)	DataWindow sur les règlements
+//*					  U_DataWindow				adw_RegFF			(Réf)	DataWindow Master de la fenêtre
+//*					  U_DataWindow				adw_RegulFF			(Réf)	
 //*					  U_DataWindow				adw_RegulMaster
-//*					  DataWindow				adw_Norm[4]			(R$$HEX1$$e900$$ENDHEX$$f)	Tableau de DataWindow
+//*					  DataWindow				adw_Norm[4]			(Réf)	Tableau de DataWindow
 //*
 //* Retourne		: Rien
 //*
@@ -504,8 +505,8 @@ private subroutine uf_armer_regroupement ();//*---------------------------------
 //* Fonction		: Uf_Armer_Regroupement (Private)
 //* Auteur			: Erick John Stark
 //* Date				: 19/10/1997 18:47:02
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On va armer la zone ID_RGPT en fonction du type de r$$HEX1$$e900$$ENDHEX$$gularisation
+//* Libellé			: 
+//* Commentaires	: On va armer la zone ID_RGPT en fonction du type de régularisation
 //*
 //* Arguments		: Aucun
 //*
@@ -555,7 +556,7 @@ Case "2", "3"										// RM (Garantie) et RM (Frais)
 	
 
 /*------------------------------------------------------------------*/
-/* On va traiter la premi$$HEX1$$e800$$ENDHEX$$re ligne.                                 */
+/* On va traiter la première ligne.                                 */
 /*------------------------------------------------------------------*/
 	If	lTot > 0 Then
 		lIdRgpt		= idw_RegGti.GetItemNumber ( 1, "ID_RGPT" )
@@ -574,7 +575,7 @@ Case "2", "3"										// RM (Garantie) et RM (Frais)
 				
 			If	lIdRgptLu <> lIdRgpt	And dcMtTotReg > 0 Then
 /*------------------------------------------------------------------*/
-/* Si le montant r$$HEX1$$e900$$ENDHEX$$gl$$HEX2$$e9002000$$ENDHEX$$est > 0. On positionne la ligne.             */
+/* Si le montant réglé est > 0. On positionne la ligne.             */
 /*------------------------------------------------------------------*/
 				lVal ++
 
@@ -591,7 +592,7 @@ Case "2", "3"										// RM (Garantie) et RM (Frais)
 	Next
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re la derni$$HEX1$$e800$$ENDHEX$$re ligne syst$$HEX1$$e900$$ENDHEX$$matiquement.                    */
+/* On insére la dernière ligne systématiquement.                    */
 /*------------------------------------------------------------------*/
 	If	lTot > 0 And dcMtTotReg > 0 Then
 		lVal ++
@@ -640,7 +641,7 @@ Case "4"											// RP (Garantie)
 	lTot = idw_RegGti.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* On va traiter la premi$$HEX1$$e800$$ENDHEX$$re ligne.                                 */
+/* On va traiter la première ligne.                                 */
 /*------------------------------------------------------------------*/
 	If	lTot > 0 Then
 		lIdRgpt		= idw_RegGti.GetItemNumber ( 1, "ID_RGPT" )
@@ -667,7 +668,7 @@ Case "4"											// RP (Garantie)
 	Next
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re la derni$$HEX1$$e800$$ENDHEX$$re ligne syst$$HEX1$$e900$$ENDHEX$$matiquement.                    */
+/* On insére la dernière ligne systématiquement.                    */
 /*------------------------------------------------------------------*/
 	If	lTot > 0 Then
 		lVal ++
@@ -678,7 +679,7 @@ Case "4"											// RP (Garantie)
 	End If
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re la liste de tous les interlocuteurs.                   */
+/* On insére la liste de tous les interlocuteurs.                   */
 /*------------------------------------------------------------------*/
 //	lTotInter = idw_Inter.RowCount ()
 //	For	lCpt = 1 To lTotInter
@@ -699,8 +700,8 @@ Case "4"											// RP (Garantie)
 
 Case "5"											// RP (Frais)
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re les 2 types de frais en DUR. Aucun RETRIEVE n'est      */
-/* effectu$$HEX2$$e9002000$$ENDHEX$$sur le moteur.                                          */
+/* On insére les 2 types de frais en DUR. Aucun RETRIEVE n'est      */
+/* effectué sur le moteur.                                          */
 /*------------------------------------------------------------------*/
 		sVal = "Frais Envoi" + sTab + "1"
 		idw_RegulFF.SetValue ( "ID_RGPT", 1, sVal )
@@ -709,7 +710,7 @@ Case "5"											// RP (Frais)
 		idw_RegulFF.SetValue ( "ID_RGPT", 2, sVal )
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re la liste de tous les interlocuteurs.                   */
+/* On insére la liste de tous les interlocuteurs.                   */
 /*------------------------------------------------------------------*/
 //	lTotInter = idw_Inter.RowCount ()
 //	For	lCpt = 1 To lTotInter
@@ -738,10 +739,10 @@ public subroutine uf_controlersaisie (ref s_pass astpass);//*-------------------
 //* Fonction		: Uf_ControlerSaisie (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Contr$$HEX1$$f400$$ENDHEX$$le de saisie d'une r$$HEX1$$e900$$ENDHEX$$gularisation
+//* Libellé			: 
+//* Commentaires	: Contrôle de saisie d'une régularisation
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
@@ -769,12 +770,12 @@ sCol[  4 ] = "RIB_GUI"
 sCol[  5 ] = "RIB_CPT"
 sCol[  6 ] = "RIB_CLE"
 
-sErr[  1 ] = " - Le libelle de la r$$HEX1$$e900$$ENDHEX$$gularisation"
-sErr[  2 ] = " - Le mode de r$$HEX1$$e800$$ENDHEX$$glement"
+sErr[  1 ] = " - Le libelle de la régularisation"
+sErr[  2 ] = " - Le mode de règlement"
 sErr[  3 ] = " - Le code banque"
 sErr[  4 ] = " - Le code guichet"
-sErr[  5 ] = " - Le num$$HEX1$$e900$$ENDHEX$$ro de compte"
-sErr[  6 ] = " - La cl$$HEX2$$e9002000$$ENDHEX$$RIB"
+sErr[  5 ] = " - Le numéro de compte"
+sErr[  6 ] = " - La clé RIB"
 
 For	lCpt = 1 To lNbrCol
 		sVal[ lCpt ] = Trim ( idw_RegulFF.GetItemString ( 1, sCol[ lCpt ] ) )
@@ -792,7 +793,7 @@ Next
 
 
 /*------------------------------------------------------------------*/
-/* Si on commence $$HEX2$$e0002000$$ENDHEX$$saisir un $$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$ment du RIB, il faut aller         */
+/* Si on commence à saisir un élément du RIB, il faut aller         */
 /* jusqu'au bout.                                                   */
 /*------------------------------------------------------------------*/
 If	sVal [ 3 ] <> "" Or sVal [ 4 ] <> "" Or sVal [ 5 ] <> "" Or sVal [ 6 ] <> "" Then
@@ -805,7 +806,7 @@ If	sVal [ 3 ] <> "" Or sVal [ 4 ] <> "" Or sVal [ 5 ] <> "" Or sVal [ 6 ] <> "" 
 End If
 
 /*------------------------------------------------------------------*/
-/* Si COD_MODE_REG est $$HEX2$$e0002000$$ENDHEX$$VA (Virement Automatique), alors la        */
+/* Si COD_MODE_REG est à VA (Virement Automatique), alors la        */
 /* saisie du RIB est obligatoire.                                   */
 /*------------------------------------------------------------------*/
 If	sVal[ 2 ] = "VA"	And IsNull ( sVal [ 3 ] )	Then
@@ -814,12 +815,12 @@ If	sVal[ 2 ] = "VA"	And IsNull ( sVal [ 3 ] )	Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Le montant de la r$$HEX1$$e900$$ENDHEX$$gularisation est obligatoire.                 */
+/* Le montant de la régularisation est obligatoire.                 */
 /*------------------------------------------------------------------*/
 dcMtTotReg = idw_RegulFF.GetItemDecimal ( 1, "MT_TOT_REG" )
 If	dcMtTotReg = 0 or IsNull ( dcMtTotReg )	Then
 	If sPos = "" Then sPos = "MT_TOT_REG"
-	sText = sText + " - le montant de la r$$HEX1$$e900$$ENDHEX$$gularisation" + sNouvelleLigne
+	sText = sText + " - le montant de la régularisation" + sNouvelleLigne
 End If
 
 /*------------------------------------------------------------------*/
@@ -844,7 +845,7 @@ End If
 
 /*------------------------------------------------------------------*/
 /* Dans le cas d'un RM (Garantie), le montant que l'on vient de     */
-/* saisir ne peut $$HEX1$$ea00$$ENDHEX$$tre sup$$HEX1$$e900$$ENDHEX$$rieur au montant r$$HEX1$$e900$$ENDHEX$$gl$$HEX2$$e9002000$$ENDHEX$$sur ID_RGPT pour  */
+/* saisir ne peut être supérieur au montant réglé sur ID_RGPT pour  */
 /* l'interlocuteur en cours.                                        */
 /*------------------------------------------------------------------*/
 If	sPos = ""	Then
@@ -900,11 +901,11 @@ Else
 End If
 
 /*------------------------------------------------------------------*/
-/* Affichage de la cha$$HEX1$$ee00$$ENDHEX$$ne correspondant au message d'erreur         */
+/* Affichage de la chaîne correspondant au message d'erreur         */
 /*------------------------------------------------------------------*/
 If	sPos <> "" Then
 
-	stMessage.sTitre		= "Contr$$HEX1$$f400$$ENDHEX$$le de saisie d'une r$$HEX1$$e900$$ENDHEX$$gularisation"
+	stMessage.sTitre		= "Contrôle de saisie d'une régularisation"
 	stMessage.Icon			= Information!
 
 	f_Message ( stMessage )
@@ -912,13 +913,14 @@ If	sPos <> "" Then
 End If
 
 // [PM462-1][V3]
+/*
 If F_CLE_A_TRUE ( "PM462-1" ) Then
  	sCodMod = idw_RegulFF.GetItemString ( 1, "COD_MODE_REG" )	
 	lIdSin = idw_Sin.GetItemNumber ( 1, "ID_SIN" )	
 	lRet = SQLCA.PS_S_PRESENCE_FRANCHISE_CB ( lIdSin ) 
 
 	If lRet > 0 And sCodMod = "FM" Then 
-		stMessage.sTitre		= "Pr$$HEX1$$e900$$ENDHEX$$sence Franchise CB..."
+		stMessage.sTitre		= "Présence Franchise CB..."
 		stMessage.Icon		= Exclamation!
 		stMessage.bErreurG	= FALSE
 		stMessage.Bouton		= OK!
@@ -927,7 +929,7 @@ If F_CLE_A_TRUE ( "PM462-1" ) Then
 		sPos = "MT_TOT_REG"
 	End If 
 End If
-
+*/
 
 
 astPass.lTab [ 1 ] 	= 1
@@ -942,7 +944,7 @@ private subroutine uf_zn_idrgpt ();//*------------------------------------------
 //* Fonction		: Uf_Zn_IdRgpt (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 15/01/1998 18:23:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On va populiser la liste des INTERS en fonction de la garantie choisie.
 //*
 //* Arguments		: Aucun
@@ -957,7 +959,7 @@ Long lTotInter, lLig, lRow
 Boolean bInsertIdI
 Long lInter[]
 
-// JFF le 15/09/2005 : Plus n$$HEX1$$e900$$ENDHEX$$cessaire.
+// JFF le 15/09/2005 : Plus nécessaire.
 Return
 
 sText 	= idw_RegulFF.GetText ()
@@ -998,7 +1000,7 @@ Case "2", "3"
 	Next
 
 /*------------------------------------------------------------------*/
-/* Il existe au moins un interlocuteur trouv$$HEX1$$e900$$ENDHEX$$.                      */
+/* Il existe au moins un interlocuteur trouvé.                      */
 /*------------------------------------------------------------------*/
 	lTotInter 	= idw_Inter.RowCount ()
 	lCptIndice 	= 1
@@ -1014,7 +1016,7 @@ Case "2", "3"
 	Next
 
 /*------------------------------------------------------------------*/
-/* S'il n'existe qu'un seul interlocuteur de concern$$HEX1$$e900$$ENDHEX$$, on rend la   */
+/* S'il n'existe qu'un seul interlocuteur de concerné, on rend la   */
 /* zone ID_I non saississable.                                      */
 /*------------------------------------------------------------------*/
 	If	UpperBound ( lInter ) = 1	Then
@@ -1041,10 +1043,10 @@ private subroutine uf_preparervalider (ref s_pass astpass);//*------------------
 //* Fonction		: Uf_PreparerValider (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Pr$$HEX1$$e900$$ENDHEX$$paration de la validation d'une R$$HEX1$$e900$$ENDHEX$$gularisation
+//* Libellé			: 
+//* Commentaires	: Préparation de la validation d'une Régularisation
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
@@ -1069,7 +1071,7 @@ idw_RegulMaster.Reset ()
 
 /*------------------------------------------------------------------*/
 /* S'il n'existe aucune ligne dans idw_RegFF (Cas d'un RP sur un    */
-/* dossier refus$$HEX2$$e9002000$$ENDHEX$$et jamais r$$HEX1$$e900$$ENDHEX$$gl$$HEX1$$e900$$ENDHEX$$). Il faut donc forcer             */
+/* dossier refusé et jamais réglé). Il faut donc forcer             */
 /* l'insertion d'une ligne dans idw_RegFF pour que les fonctions    */
 /* de l'ancetre (RECOPIE DETAIL) puissent marcher.                  */
 /*------------------------------------------------------------------*/
@@ -1087,14 +1089,14 @@ Case "2", "4"		// RM et RP (Garantie)
 	lIdRgpt 	= idw_RegulFF.GetItemNumber ( 1, "ID_RGPT" )
 
   /*------------------------------------------------------------------*/
-  /* DMDI6743 : IMPORTANT, actuellement DGA prend le 1er caract$$HEX1$$e800$$ENDHEX$$re    */
+  /* DMDI6743 : IMPORTANT, actuellement DGA prend le 1er caractère    */
   /* du code de regroupement,														 */
   /* ex si id_rgpt = 720 alors Gti = 7											 */
   /* ex si id_rgpt = 5 alors Gti = 5											 */
   /* en revanche si id_rgpt = 10 alors Gti = 1 !!! et c'est faux !!   */
   /* 																						 */
   /* Je modifie donc de la sorte :												 */
-  /* Si la longueur de id_rgpt >=3 alors on garde la m$$HEX1$$e900$$ENDHEX$$thode actuelle */
+  /* Si la longueur de id_rgpt >=3 alors on garde la méthode actuelle */
   /* Sinon id_gti = id_rgpt.														 */
   /*------------------------------------------------------------------*/
    If Len ( String ( lIdRgpt ) ) >= 3 Then
@@ -1125,7 +1127,7 @@ private subroutine uf_modification_rm_rp_fm ();//*------------------------------
 //* Fonction      : u_gs_sp_regul_detail::uf_Modification_Rm_Rp_Fm (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 05/08/2005 16:15:28
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Modification du des RM/RP de Type FM afin de rembouser le Four+Cie ou bien que la Cie
+//* Libellé       : Modification du des RM/RP de Type FM afin de rembouser le Four+Cie ou bien que la Cie
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -1161,7 +1163,7 @@ if right(sFour,4) = "/LBE" Then
 		stMessage.sTitre		= "Choix Rembourser CIE"
 		stMessage.sCode		= "REGU230"
 	Else
-		stMessage.sTitre		= "Choix R$$HEX1$$e900$$ENDHEX$$clamer CIE"
+		stMessage.sTitre		= "Choix Réclamer CIE"
 		stMessage.sCode		= "REGU240"
 	End if
 	
@@ -1177,12 +1179,12 @@ End if
 
 
 If sCodMotReg = "RM" Then
-	stMessage.sTitre		= "Choix Rembourser CIE + Avoir SPB aupr$$HEX1$$e800$$ENDHEX$$s du fournisseur"
+	stMessage.sTitre		= "Choix Rembourser CIE + Avoir SPB auprès du fournisseur"
 	stMessage.sCode		= "REGU190"
 End If
 
 If sCodMotReg = "RP" Then
-	stMessage.sTitre		= "Choix R$$HEX1$$e900$$ENDHEX$$clamer CIE + R$$HEX1$$e900$$ENDHEX$$clamer Fourn."
+	stMessage.sTitre		= "Choix Réclamer CIE + Réclamer Fourn."
 	stMessage.sCode		= "REGU200"
 End If
 
@@ -1202,7 +1204,7 @@ End if
 // :[VDOC14621]
 
 /*------------------------------------------------------------------*/
-/* Remb ou R$$HEX1$$e900$$ENDHEX$$cl uniquement la CIE.                                  */
+/* Remb ou Récl uniquement la CIE.                                  */
 /*------------------------------------------------------------------*/
 If Not bCieEtFrn Then
 	idw_RegulFF.SetItem ( 1, "COD_MODE_REG", "C" )	
@@ -1216,8 +1218,8 @@ private function long uf_zn_rib ();//*------------------------------------------
 //* Fonction		: Uf_Zn_Rib (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 15/01/1998 18:23:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: V$$HEX1$$e900$$ENDHEX$$rification du RIB
+//* Libellé			: 
+//* Commentaires	: Vérification du RIB
 //*
 //* Arguments		: Aucun
 //*
@@ -1309,8 +1311,8 @@ private function long uf_zn_codmodereg ();//*-----------------------------------
 //* Fonction		: Uf_Zn_CodeModeReg (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 15/01/1998 18:23:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: V$$HEX1$$e900$$ENDHEX$$rification du Mode de R$$HEX1$$e800$$ENDHEX$$glement
+//* Libellé			: 
+//* Commentaires	: Vérification du Mode de Règlement
 //*
 //* Arguments		: Aucun
 //*
@@ -1362,8 +1364,8 @@ private function long uf_zn_mttotreg ();//*-------------------------------------
 //* Fonction		: Uf_Zn_MtTotReg (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 15/01/1998 18:23:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: V$$HEX1$$e900$$ENDHEX$$rification du montant
+//* Libellé			: 
+//* Commentaires	: Vérification du montant
 //*
 //* Arguments		: Aucun
 //*
@@ -1384,8 +1386,8 @@ iAction		= 2
 
 Choose Case isTypeRegul
 /*------------------------------------------------------------------*/
-/* Dans le cas d'une r$$HEX1$$e900$$ENDHEX$$gularisation (MOINS), le montant doit $$HEX1$$ea00$$ENDHEX$$tre   */
-/* strictement n$$HEX1$$e900$$ENDHEX$$gatif.                                             */
+/* Dans le cas d'une régularisation (MOINS), le montant doit être   */
+/* strictement négatif.                                             */
 /*------------------------------------------------------------------*/
 Case "2", "3"						// RM (Garantie) et RM (Frais)
 	If	dcMtTotReg >= 0	Then
@@ -1394,7 +1396,7 @@ Case "2", "3"						// RM (Garantie) et RM (Frais)
 	End If
 
 /*------------------------------------------------------------------*/
-/* Dans le cas d'une r$$HEX1$$e900$$ENDHEX$$gularisation (PLUS), le montant doit $$HEX1$$ea00$$ENDHEX$$tre    */
+/* Dans le cas d'une régularisation (PLUS), le montant doit être    */
 /* strictement positif.                                             */
 /*------------------------------------------------------------------*/
 Case "4", "5"						// RP (Garantie) et RP (Frais)
@@ -1422,7 +1424,7 @@ private function long uf_zn_idi ();//*------------------------------------------
 //* Fonction		: Uf_Zn_IdI (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 15/01/1998 18:23:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On modifie le type d'interlocuteur, il faut armer la zone COD_INTER
 //*
 //* Arguments		: Aucun
@@ -1442,7 +1444,7 @@ sText = idw_RegulFF.GetText ()
 lIdI	= Long ( sText )
 
 /*------------------------------------------------------------------*/
-/* L'interlocuteur doit $$HEX1$$ea00$$ENDHEX$$tre le m$$HEX1$$ea00$$ENDHEX$$me que celui du r$$HEX1$$e900$$ENDHEX$$glement         */
+/* L'interlocuteur doit être le même que celui du réglement         */
 /* d'origine.                                                       */
 /*------------------------------------------------------------------*/
 
@@ -1464,7 +1466,7 @@ sRech			= "ID_I = " + sText
 lLig			= idw_Inter.Find ( sRech, 1, lTotInter )
 
 /*------------------------------------------------------------------*/
-/* On doit forc$$HEX1$$e900$$ENDHEX$$ment trouver la ligne dans INTER.                   */
+/* On doit forcément trouver la ligne dans INTER.                   */
 /*------------------------------------------------------------------*/
 sCodInter	= idw_Inter.GetItemString ( lLig, "COD_INTER" )
 idw_RegulFF.SetItem ( 1, "COD_INTER", sCodInter )
@@ -1480,10 +1482,10 @@ public function long uf_zn_trt (ref s_pass astpass);//*-------------------------
 //* Fonction		: Uf_Zn_Trt (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 06/01/1998 09:27:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Traitement sur les zones de dw_RegulFF
 //*
-//* Arguments		: s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
@@ -1540,7 +1542,7 @@ public function boolean uf_droit_factu ();//*-----------------------------------
 //* Fonction		: u_gs_sp_regul_detail::uf_droit_factu
 //* Auteur			: F. Pinon
 //* Date				: 24/06/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [VDoc14621]
+//* Libellé			: [VDoc14621]
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -1555,8 +1557,8 @@ public function boolean uf_droit_factu ();//*-----------------------------------
 Long 		lTotLigne
 
 /*--------------------------------------------------------------------*/
-/* La pr$$HEX1$$e900$$ENDHEX$$sence d'une ligne 208 pour l'op$$HEX1$$e900$$ENDHEX$$rateur */
-/* connect$$HEX60$$e90020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000$$ENDHEX$$*/   
+/* La présence d'une ligne 208 pour l'opérateur */
+/* connecté                                                           */   
 /*--------------------------------------------------------------------*/
 
 SELECT count(*) INTO :lTotLigne

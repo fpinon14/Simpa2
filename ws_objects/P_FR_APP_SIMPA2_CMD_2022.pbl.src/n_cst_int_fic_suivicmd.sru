@@ -6239,12 +6239,6 @@ DateTime dtDteEnvCli
 String sCasRetour, sIdAppli, sBase, sCommentFrn 
 Long lStatusGc 
 
-Boolean bF_CLE_A_TRUE_PMO139_RS4926
-
-// [PMO139_RS4926]
-bF_CLE_A_TRUE_PMO139_RS4926 = F_CLE_A_TRUE ( "PMO139_RS4926" )
-
-
 sCasRetour = Fill ( " ", 50 )
 sIdAppli = "SIMPA2"
 sBase = Upper ( SQLCA.DataBase )		
@@ -6775,12 +6769,10 @@ For lCpt = 1 To lTotLig
 	End If
 
 	// [PMO139_RS4926]
-	If bF_CLE_A_TRUE_PMO139_RS4926 THEN
-		sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "DIAG_VIDEO_ENGAGE", ";") 		
-		If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
-			lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "DIAG_VIDEO_ENGAGE", sVal, ";")
-		End If
-	End If	
+	sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "DIAG_VIDEO_ENGAGE", ";") 		
+	If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
+		lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "DIAG_VIDEO_ENGAGE", sVal, ";")
+	End If
 	
 	/*------------------------------------------------------------------*/
 	/* ZONE 31 : INFO_FRN_SPB_CPLT ( zone multiple )[FNAC_PROD_ECH_TECH]*/
@@ -6997,10 +6989,6 @@ datastore	dsCode
 Long dcIdProd, lTot
 String sInfoSpbFrnCplt, sChaineBCV
 String sTabVal[], sTabNull[]
-Boolean bF_CLE_A_TRUE_PMO139_RS4926
-
-// [PMO139_RS4926]
-bF_CLE_A_TRUE_PMO139_RS4926 = F_CLE_A_TRUE ( "PMO139_RS4926" )
 
 Long	lIdSin, lIdSeq //#2
 datetime	dtVal, dtVal1
@@ -8422,28 +8410,24 @@ For lCpt = lTotLig To 1 Step -1
 	End Choose 
 
 	// [PMO139_RS4926]
-	If bF_CLE_A_TRUE_PMO139_RS4926 Then
-		sVal = Trim ( lnvPFCString.of_getkeyvalue (sInfoFrnSpbCpltLu, "DIAG_VIDEO_ENGAGE", ";"))
-	
-		If IsNull ( sVal ) Then sVal = ""
-		
-		If sVal <> "" Then
-			Choose Case sVal
-				Case "OUI", &
-					  "NON"
-				
-						// Ok
-						
-				Case Else 
-					iRet = -1
-					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé DIAG_VIDEO_ENGAGE, n'est pas valide. les valeurs autorisées sont OUI ou NON." )
-	
-			End Choose 
-		End If 	
-	End If		
-	
+	sVal = Trim ( lnvPFCString.of_getkeyvalue (sInfoFrnSpbCpltLu, "DIAG_VIDEO_ENGAGE", ";"))
 
+	If IsNull ( sVal ) Then sVal = ""
+	
+	If sVal <> "" Then
+		Choose Case sVal
+			Case "OUI", &
+				  "NON"
+			
+					// Ok
+					
+			Case Else 
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur la clé DIAG_VIDEO_ENGAGE, n'est pas valide. les valeurs autorisées sont OUI ou NON." )
+
+		End Choose 
+	End If 	
 
 	// Coder au dessus de cette ligne.
 

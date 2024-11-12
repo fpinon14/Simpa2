@@ -286,12 +286,10 @@ cb_Effacer.Height		= cb_CourPart.Height
 // #1 FIN
 
 // [PMO89_RS4822]
-If F_CLE_A_TRUE ( "PMO89_RS4822" ) Then
-	gb_coordonnees.X = 2903
-	gb_coordonnees.Y = 4
-	gb_coordonnees.Width = 649
-	gb_coordonnees.Height = 224
-End If
+gb_coordonnees.X = 2903
+gb_coordonnees.Y = 4
+gb_coordonnees.Width = 649
+gb_coordonnees.Height = 224
 
 end subroutine
 
@@ -901,14 +899,12 @@ If istypetrt<> 'S' Then dw_1.Modify("cb_iban.Visible=0")
 
 
 // 	[PMO89_RS4822]
-If F_CLE_A_TRUE ( "PMO89_RS4822" ) Then
-	dw_1.GetChild ( "COD_ETAT_CTRLE_INTER", dwChild_EF )
-	dwChild_EF.SetTransObject ( SQLCA)
-	dwChild_EF.Retrieve ( "-EF")
-	dwChild_EF.SetFilter ( "ID_TYP_CODE = '-EF' AND ID_CODE > 0" )
-	dwChild_EF.Filter ()
-	dwChild_EF.Sort ()
-End If
+dw_1.GetChild ( "COD_ETAT_CTRLE_INTER", dwChild_EF )
+dwChild_EF.SetTransObject ( SQLCA)
+dwChild_EF.Retrieve ( "-EF")
+dwChild_EF.SetFilter ( "ID_TYP_CODE = '-EF' AND ID_CODE > 0" )
+dwChild_EF.Filter ()
+dwChild_EF.Sort ()
 
 end event
 

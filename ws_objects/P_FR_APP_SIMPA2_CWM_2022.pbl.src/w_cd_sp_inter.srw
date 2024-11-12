@@ -214,14 +214,13 @@ dwNorm [ 2 ] = dw_Lst_Frais
 Uo_Consult_Euro.Uf_Initialiser ( dwNorm[] )
 
 // 	[PMO89_RS4822]
-If F_CLE_A_TRUE ( "PMO89_RS4822" ) Then
-	dw_1.GetChild ( "COD_ETAT_CTRLE_INTER", dwChild_EF )
-	dwChild_EF.SetTransObject ( SQLCA)
-	dwChild_EF.Retrieve ( "-EF")
-	dwChild_EF.SetFilter ( "ID_TYP_CODE = '-EF' AND ID_CODE > 0" )
-	dwChild_EF.Filter ()
-	dwChild_EF.Sort ()
-End If
+dw_1.GetChild ( "COD_ETAT_CTRLE_INTER", dwChild_EF )
+dwChild_EF.SetTransObject ( SQLCA)
+dwChild_EF.Retrieve ( "-EF")
+dwChild_EF.SetFilter ( "ID_TYP_CODE = '-EF' AND ID_CODE > 0" )
+dwChild_EF.Filter ()
+dwChild_EF.Sort ()
+
 end event
 
 event we_childactivate;call super::we_childactivate;//*-----------------------------------------------------------------

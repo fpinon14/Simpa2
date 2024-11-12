@@ -3077,11 +3077,13 @@ iRowcount = idw_LstCmdeDet.RowCount ( )
 lCodTel = idw_Produit.GetItemNumber ( 1, "COD_TEL" ) // JFF
 
 // [PM462-1][V3]
+/*
 If F_CLE_A_TRUE ( "PM462-1" ) Then
 	If iEtat = 500 And sPos = "" Then
 		This.Uf_ControlerGestion_Franchise_CB_EXTR ( sPos )
 	End IF 
 End If
+*/
 
 if	sPos = "" And isReferentiel = "IFR" And lCodTel > 0 then
 	if IsNull( sImei ) and ( iRowcount > 0 or iEtat = 500 ) then
@@ -17628,11 +17630,7 @@ If bPGCActif Then
 
 			// Controle Durée d'Origine
 			// [RS6175_GC_SCRP_SIM2]
-			If F_CLE_A_TRUE ( "RS6175_GC_SCRP_SIM2" ) Then
-				sFindString = "UPPER(NOM_ZONE) = 'DUREE_GTI_ORIG'"
-			Else
-				sFindString = "UPPER(NOM_ZONE) = 'DUREE_GTI_ORIGINE'"				
-			End If 				
+			sFindString = "UPPER(NOM_ZONE) = 'DUREE_GTI_ORIG'"
 			
 			lFound = idw_wDivSin.Find(sFindString, 1 , idw_wDivSin.RowCount())
 			if lFound > 0 Then
@@ -17744,11 +17742,7 @@ if lRet > 0 then // Oui, on effectue le calcul du refus
 	// Lecture de la valeur de la durée de garantie d'origine (lDuGC)
 
 	// [RS6175_GC_SCRP_SIM2]
-	If F_CLE_A_TRUE ( "RS6175_GC_SCRP_SIM2" ) Then
-		sFindString = "UPPER(NOM_ZONE) = 'DUREE_GTI_ORIG'"
-	Else 
-		sFindString = "UPPER(NOM_ZONE) = 'DUREE_GTI_ORIGINE'"	
-	End If
+	sFindString = "UPPER(NOM_ZONE) = 'DUREE_GTI_ORIG'"
 	
 	lRet = idw_wDivSin.Find(sFindString, 1 , idw_wDivSin.RowCount())
 	if lRet > 0 And &
@@ -17850,11 +17844,7 @@ dDteSurv = idw_wSin.GetItemDate ( 1, "DTE_SURV_DATE" )
 if isvalid(idw_wDivSin) then
 	
 	// [RS6175_GC_SCRP_SIM2]
-	If F_CLE_A_TRUE ( "RS6175_GC_SCRP_SIM2" ) Then
-		sFindString = "UPPER(NOM_ZONE) = 'DUREE_GTI_ORIG'"
-	Else 
-		sFindString = "UPPER(NOM_ZONE) = 'DUREE_GTI_ORIGINE'"	
-	End If
+	sFindString = "UPPER(NOM_ZONE) = 'DUREE_GTI_ORIG'"
 	
 	lRet = idw_wDivSin.Find(sFindString, 1 , idw_wDivSin.RowCount())
 End If
@@ -19804,11 +19794,7 @@ If lDeb > 0 And dcMtValPublique <= 0 Then
 	End If
 
 	// [RS6175_GC_SCRP_SIM2]
-	If F_CLE_A_TRUE ( "RS6175_GC_SCRP_SIM2" ) Then
-		lRowDS = idw_wDivSin.Find ( "NOM_ZONE = 'duree_gti_orig'", 1, idw_wDivSin.RowCount () )				
-	Else 
-		lRowDS = idw_wDivSin.Find ( "NOM_ZONE = 'duree_gti_origine'", 1, idw_wDivSin.RowCount () )						
-	End If 
+	lRowDS = idw_wDivSin.Find ( "NOM_ZONE = 'duree_gti_orig'", 1, idw_wDivSin.RowCount () )				
 	
 	If lRowDS <= 0 Then 
 		idw_wDetailFF.iiErreur = 24
@@ -20230,11 +20216,7 @@ Choose Case asData
 		If Not bSC2FoyerNomade Then
 			
 			// [RS6175_GC_SCRP_SIM2]
-			If F_CLE_A_TRUE ( "RS6175_GC_SCRP_SIM2" ) Then			
-				lRowDS = idw_wDivSin.Find ( "NOM_ZONE = 'duree_gti_orig'", 1, idw_wDivSin.RowCount () )				
-			Else
-				lRowDS = idw_wDivSin.Find ( "NOM_ZONE = 'duree_gti_origine'", 1, idw_wDivSin.RowCount () )								
-			End If
+			lRowDS = idw_wDivSin.Find ( "NOM_ZONE = 'duree_gti_orig'", 1, idw_wDivSin.RowCount () )				
 		
 			If lRowDS <= 0 Then 
 				idw_wDivDet.iiErreur = 24
@@ -20491,6 +20473,7 @@ If	lLig > 0 And Not bMobSinEgMobCmde Then  // #2
 	// [PM462-1] Cplt de paiement PayBox par CB sru le SCM ?
 	// SI oui, on le prend en compte pour éviter de forcer le dossier.
 	// [PM462-1]
+	/*
 	If F_CLE_A_TRUE ( "PM462-1" ) Then
 		lRow = idw_LstCmdeSin.Find ( & 
 		" ID_GTI = " + string ( lIdGti ) + & 
@@ -20509,6 +20492,7 @@ If	lLig > 0 And Not bMobSinEgMobCmde Then  // #2
 			End If 
 		End IF 
 	End If
+	*/
 
 	If dcPlafond > 0 Then
 			dcMtnPlaf = idw_wDetailFF.GetItemDecimal ( 1, "MT_NPLAF" )
@@ -20658,6 +20642,7 @@ If	lLig > 0 And Date ( idw_wSin.GetItemDateTime ( 1, "CREE_LE" ) ) >= Date ( sDt
 	// [PM462-1] Cplt de paiement PayBox par CB sru le SCM ?
 	// SI oui, on le prend en compte pour éviter de forcer le dossier.
 	// [PM462-1]
+/*	
 	If F_CLE_A_TRUE ( "PM462-1" ) Then
 		lRow = idw_LstCmdeSin.Find ( & 
 		" ID_GTI = " + string ( lIdGti ) + & 
@@ -20676,6 +20661,7 @@ If	lLig > 0 And Date ( idw_wSin.GetItemDateTime ( 1, "CREE_LE" ) ) >= Date ( sDt
 			End If 
 		End IF 
 	End If
+*/
 
 	If dcPlafond > 0 Then
 			dcMtnPlaf = idw_wDetailFF.GetItemDecimal ( 1, "MT_NPLAF" )

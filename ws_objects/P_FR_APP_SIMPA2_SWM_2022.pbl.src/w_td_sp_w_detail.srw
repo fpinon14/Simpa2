@@ -2452,23 +2452,20 @@ If bOk Then
 			End If
 
 			// [PMO139_RS4926]
-			If F_CLE_A_TRUE ( "PMO139_RS4926" ) Then
-				F_RechDetPro ( lDeb, lFin, idwDetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 152)
-				If lDeb > 0 Then
-					sChaineBcv = idwDetPro.GetItemString ( lDeb, "VAL_CAR" )
-					sVal = lnvPFCString.of_getkeyvalue (sChaineBcv, "PMO139", ";")
-					If sVal = "OUI" Then
-						lRow = idwWDivSin.Find ( "NOM_ZONE = 'taille_tv'", 1, idwWDivSin.RowCount () ) 
-						If lRow > 0 Then sVal=idwWDivSin.GetItemString(lRow,"VAL_CAR")
-						If IsNull ( sVal ) Then sVal = ""						
-						If sTypApp= "TLC" And sVal = "TI3" Then
-							bOk = False
-							stMessage.sCode = "COMD391"							
-						End IF 
-					End If 
+			F_RechDetPro ( lDeb, lFin, idwDetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 152)
+			If lDeb > 0 Then
+				sChaineBcv = idwDetPro.GetItemString ( lDeb, "VAL_CAR" )
+				sVal = lnvPFCString.of_getkeyvalue (sChaineBcv, "PMO139", ";")
+				If sVal = "OUI" Then
+					lRow = idwWDivSin.Find ( "NOM_ZONE = 'taille_tv'", 1, idwWDivSin.RowCount () ) 
+					If lRow > 0 Then sVal=idwWDivSin.GetItemString(lRow,"VAL_CAR")
+					If IsNull ( sVal ) Then sVal = ""						
+					If sTypApp= "TLC" And sVal = "TI3" Then
+						bOk = False
+						stMessage.sCode = "COMD391"							
+					End IF 
 				End If 
-			End If
-
+			End If 
 
 			// #12 [DCMP090051]			
 			F_RechDetPro ( lDeb, lFin, idwDetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 110 )

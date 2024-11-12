@@ -2373,11 +2373,11 @@ If bAnnulGen Then
 	End If
 
 	// [PM462-1][V3]
+	/*
 	If F_CLE_A_TRUE ( "PM462-1" ) Then
 		SQLCA.PS_S_ANNUL_PRESTA_CTRLE_FRANCHISE_CB ( lIdSin, iIdSeq, dcMtFranchiseARemb )
 		If dcMtFranchiseARemb > 0 Then
 			stMessage.sCode	= "COMD992"
-			//* #25  [MSS_DIAG]
 			stMessage.Icon			= Question!
 			stMessage.bErreurG	= FALSE
 			stMessage.Bouton		= YesNo!			
@@ -2385,7 +2385,8 @@ If bAnnulGen Then
 			iReponse = F_Message ( stMessage )
 		End If 
 	End If
-
+	*/
+	
 	if iReponse = 1 Then
 		idw_TrtCmde.SetItem ( 1, "COD_ETAT", "ANN" )
 		idw_TrtCmde.SetItem ( 1, "NOM_GEST", stGlb.sNomOper + " " +stGlb.sPrenomOper  )

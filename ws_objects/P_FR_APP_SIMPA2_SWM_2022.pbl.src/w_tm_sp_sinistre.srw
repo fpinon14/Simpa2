@@ -1795,19 +1795,11 @@ If iPresencePanne > 0 Then
 	If GCO2M <> "" Then
 		
 		// [RS6175_GC_SCRP_SIM2]
-		If F_CLE_A_TRUE ( "RS6175_GC_SCRP_SIM2" ) Then
-			lRow = dw_w_div_sin.Find("nom_zone = 'duree_gti_orig'", 1 , dw_w_div_sin.Rowcount()+1 )
-		Else
-			lRow = dw_w_div_sin.Find("nom_zone = 'duree_gti_origine'", 1 , dw_w_div_sin.Rowcount()+1 )	
-		End If		
+		lRow = dw_w_div_sin.Find("nom_zone = 'duree_gti_orig'", 1 , dw_w_div_sin.Rowcount()+1 )
 
 		If lRow > 0 then 
 			// [RS6175_GC_SCRP_SIM2]
-			If F_CLE_A_TRUE ( "RS6175_GC_SCRP_SIM2" ) Then			
-				iuoGsSpSinistre.uf_gestong_divers_majzone( "DUREE_GTI_ORIG", lRow, 2, GCO2M )
-			Else
-				iuoGsSpSinistre.uf_gestong_divers_majzone( "DUREE_GTI_ORIGINE", lRow, 2, GCO2M )
-			End If 				
+			iuoGsSpSinistre.uf_gestong_divers_majzone( "DUREE_GTI_ORIG", lRow, 2, GCO2M )
 		End If
 
 		dw_1.SetItem ( 1, "DTE_ACH_PORT", dDteRempl )
