@@ -1517,7 +1517,7 @@ type pb_annuler from picturebutton within w_sp_gs_w_commande2
 integer x = 978
 integer y = 8
 integer width = 233
-integer height = 136
+integer height = 144
 integer taborder = 210
 boolean bringtotop = true
 integer textsize = -7
