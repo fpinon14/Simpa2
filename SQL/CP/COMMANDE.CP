@@ -3940,6 +3940,7 @@ If CharIndex ( '[#REC#]', @sNeufRec ) > 0 Set @sNeufRec = 'REC' Else Set @sNeufR
  
  
 -- [PM462-1][V3]
+/*
 If sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') >= 0 
  Begin
 	If @adcMtPaiementPayBox > 0 
@@ -3953,6 +3954,7 @@ If sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') >= 0
 
 	  End 
  End 
+*/
 
 Update 	sysadm.commande
 Set

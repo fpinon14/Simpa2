@@ -11349,6 +11349,7 @@ Else
  End 
 
  -- [PM462-1][V3] Sommes-nous dans le cas d'une Franchise CB PayBox Site Choix de mobile (nouveau système franchise)
+/*
 If sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') >= 0 
  Begin
 	 If @sLibReg = 'RM/REMB. FRANCHISE CB A L''ASSUREUR'
@@ -11361,6 +11362,7 @@ If sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') >= 0
 		 Set @asChaine = SPACE ( 5 )
 	   End 
  End 
+ */
  Go
 
 --------------------------------------------------------------------

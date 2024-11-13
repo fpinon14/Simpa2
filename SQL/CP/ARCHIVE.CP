@@ -3056,8 +3056,8 @@ GO
 --
 -- JFF  31/08/2011  Shunt de l'insertion dans WKFS_w_wqueue
 -- JFF      12/02/2016   [PI062]
+-- JFF   08/11/2024   [20241108140717190] arrêt de ce traitement, on repasse en trt normal
 -------------------------------------------------------------------
-
 if exists (select * from dbo.sysobjects where id = object_id(N'[sysadm].[PS_D01_ARCHIVE_SOLDAGE]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 drop procedure [sysadm].[PS_D01_ARCHIVE_SOLDAGE]
 GO
@@ -3080,11 +3080,13 @@ Declare @sArchivePar    VarChar ( 4 )
 Declare @dcIdCie        Decimal ( 7,0 )
 Declare @dtValideLeSin  DateTime
 Declare @sValideParSin  VarChar(4)
+Declare @dcIdProd  Decimal (7) -- [20241108140717190]
  
 declare @iCountWkfs	integer -- # DCMP 60691 #
 
 SELECT  @dtValideLeSin  = sin.valide_le,
-        @sValideParSin  = sin.valide_par  
+        @sValideParSin  = sin.valide_par,
+		@dcIdProd		= sin.id_prod  -- [20241108140717190]
 FROM    sysadm.sinistre AS sin
 WHERE   sin.id_sin      = @dcIdSin
 
@@ -3114,7 +3116,11 @@ If @sAltQueue = 'N'
 		--------------------------------------------------
 		Update  sysadm.detail
 		Set	cod_etat 	= 900,
-			cod_mot_ssui  	= 90,
+			cod_mot_ssui  = 
+				Case  -- [20241108140717190] 
+					When @dcIdProd between 23400 and 23499 Then 11
+					Else 90
+				End,
 			alt_ssui	= 'O',
 			alt_att		= 'N',
 			alt_reg		= 'N',
@@ -3148,7 +3154,11 @@ If @sAltQueue = 'N'
 		-- Si Gar … 100 et aucun Det … 200 alors Gar … 900
 		Update  sysadm.gar_sin
 		Set	cod_etat 	= 900,
-			cod_mot_ssui  	= 90,
+			cod_mot_ssui = 
+				Case  -- [20241108140717190] 
+					When @dcIdProd between 23400 and 23499 Then 11
+					Else 90
+				End,
 			alt_ssui	= 'O',
 			valide_le	= @dtDateDuJour,
 			valide_par	= @sCodOper
@@ -3207,7 +3217,11 @@ If @sAltQueue = 'N'
 		-- Si Sin … 100 et aucune Gar … 200 alors Sin … 900
 		Update  sysadm.sinistre
 		Set	cod_etat 	= 900,
-			cod_mot_ssui  	= 90,
+			cod_mot_ssui = 
+				Case  -- [20241108140717190] 
+					When @dcIdProd between 23400 and 23499 Then 11
+					Else 90
+				End,
 			alt_ssui	= 'O',
 			valide_le	= @dtDateDuJour,
 			valide_par	= @sCodOper

@@ -1461,6 +1461,7 @@ GO
 -- JFF   19/11/2014   [VDOC15650]
 -- JFF	 12/02/2016   [PI062]
 -- JFF   23/01/2018   [PM407-1]
+-- JFF   08/11/2024   [20241108140717190] arrêt de ce traitement, on repasse en trt normal
 -------------------------------------------------------------------
 if exists (select * from dbo.sysobjects where id = object_id(N'[sysadm].[PS_SOLDAGE_PRESCRIRE]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 	drop procedure [sysadm].[PS_SOLDAGE_PRESCRIRE]
@@ -1475,259 +1476,262 @@ AS
 -- 'è' -> char(232)
 -- 'é' -> char(233)
 
+-- [20241108140717190] arrêt de ce traitement, on repasse en trt normal
+Return
 
-DECLARE @idProd			decimal(7,0),
-	@altRl2			varchar(1),
-	@altSold		varchar(1),
-	@durSoldRl		decimal(7,0),
-	@untSoldRl		varchar(1),
-	@durSoldPc		decimal(7,0),
-	@untSoldPc		varchar(1),
-	@dateJourServeur	datetime,
-	@altSoldRl		varchar(1),
-	@dateMaxSolPc		datetime,
-	@dateMaxSolRl		datetime,
-	@idSin			decimal(10,0), -- [PI062]
-	@nom			varchar(35),
-	@prenom			varchar(35),
-	@validePar		varchar(4),
-	@valideLe		datetime,
-	@dp4			integer,
-	@code	        	varchar(15),
-	@retour			integer,
-	@altQueue		varchar(1),
-	@typTrt			varchar(4),
-	@idTrt			integer,
-	@etatTrt		varchar(70),
-	@close_curs_prod	integer,
-	@close_curs_sin		integer,
-	@error			integer,
-	@iDelPres		integer,
-	@sUntDel		VarChar ( 1 )
 
-SET NOCOUNT ON
-
-SET @dateJourServeur	= getdate()
-SET @altQueue		= 'N'
-SET @typTrt		= 'SOL'
-SET @close_curs_prod	= 0
-SET @close_curs_sin	= 0
-
-EXEC sysadm.PS_X_INCREMENTER 'ID_SOLDAGE', @idTrt OUTPUT 
-
-DECLARE curs_prod CURSOR
-FOR SELECT	
-		id_prod,
-		Convert ( Integer, sysadm.FN_CLE_VAL ( 'DELAI_PRESCRIPTION', d.val_car, ';'))  del_pres,
-		sysadm.FN_CLE_VAL ( 'UNT_DELAI', d.val_car, ';') unt_del
-	FROM sysadm.det_pro d
-	WHERE d.id_code_dp = 244
-
-OPEN curs_prod
-SET @close_curs_prod = 1
--- PRINT '# DCMP 60691 # ouverture du cursor [curs_prod]'
-
-FETCH NEXT FROM curs_prod
-INTO	@idProd,
-	@iDelPres,
-	@sUntDel
--- PRINT '# DCMP 60691 # 1er fetch d''entrée du cursor [curs_prod]'
-
-WHILE @@FETCH_STATUS = 0
-BEGIN
-
-	-- Si -dp/244 présente, on enlève du paramètrage le soldage traditionnelle.
-	Update produit set alt_sold = 'N', dur_sold_rl = 0, dur_sold_pc = 0 where id_prod = @idProd
-
-		-- [PM407-1]
-	Delete sysadm.det_pro where id_prod = @idProd and id_code_dp = 323
-
-	-- on regarde si le produit possede l'option 4
-	SELECT @dp4 = count(id_prod) FROM sysadm.det_pro WHERE id_prod = @idProd AND id_typ_code_dp = '-DP' AND id_code_dp = '4'
-	-- PRINT '&&&&& Option 4 : ' + cast(@dp4 as varchar(2))
-
-	-- on recupere les dossiers à solder pour le produit
-	EXEC @retour = sysadm.PS_RECUP_DOSSIER_A_PRESCRIRE @idProd, @iDelPres, @sUntDel
-	-- PRINT '&&&&& @retour de PS_RECUP_DOSSIER_A_PRESCRIRE : ' + cast(@retour as varchar(2))
-
-	-- On annule la transaction par l'étiquette ONERROR en cas d'erreur
-	-- annulation de la transaction
-	IF @retour = -1 GOTO ONERROR
-	-- validation de la transaction
-	-- ELSE COMMIT TRANSACTION
-	------------------------------------------------------------------------
-	
-	DECLARE curs_sin CURSOR
-	FOR SELECT	id_sin,
-			nom,
-			prenom,
-			valide_par,
-			valide_le
-		FROM sysadm.tmp_soldage
-	
-	-- PRINT '# DCMP 60691 # déclaration du cursor [curs_sin]'
-
-	OPEN curs_sin
-	SET @close_curs_sin = 1
-	-- PRINT '# DCMP 60691 # ouverture du cursor [curs_sin]'
-	
-	FETCH NEXT FROM curs_sin
-	INTO	@idSin,
-		@nom,
-		@prenom,
-		@validePar,
-		@valideLe
-	-- PRINT '# DCMP 60691 # 1er fetch d''entrée du cursor [curs_sin]'
-
-	WHILE @@FETCH_STATUS = 0
-	BEGIN
-		-- PRINT '# DCMP 60691 # démarrage de la boucle du cursor [curs_sin]'
-		-- PRINT '&&&&& Sinistre : ' + cast(@idSin as varchar(10))
-		
-		-- récuperation de la boite archive
-		--- cf ps_s01_boite_archive @idsin, @operateur
-		IF @dp4 <> 0
-			BEGIN
-				EXEC @retour = sysadm.PS_BOITE_ARCHIVE @idSin, 'SQLS', @code OUTPUT
-				-- PRINT '&&&&& @code de PS_BOITE_ARCHIVE : ' + cast(@code as varchar(10))
-				-- PRINT '&&&&& @retour de PS_BOITE_ARCHIVE : ' + cast(@retour as varchar(10))
-				
-				IF @retour = -1
-				BEGIN
-				
-				------------------------------------------------------------------------
-				-- Début de la transaction
-				-- 	On annule la transaction par l'étiquette ONERROR en cas d'erreur
-				-- BEGIN TRANSACTION
-				-- tracer le non soldage du dossier
-				
-				SET @etatTrt = 'Dossier ' + cast(@idSin as varchar(10)) + ', Non Sold' + char(233)+ ', Probl' + char(232)+ 'me ARCHIVAGE : ' + @code -- [PI062]
-				EXEC @retour = sysadm.PS_I01_TRACE_SOLDAGE @idTrt, @typTrt, @idProd, @idSin, @nom, @prenom, @validePar, @valideLe, @dateJourServeur, 'N', 'N', @etatTrt
-				
-				-- annulation de la transaction
-				IF @retour = -1 GOTO ONERROR
-				-- validation de la transaction
-				-- ELSE COMMIT TRANSACTION
-				------------------------------------------------------------------------
-				
-		
-				FETCH NEXT FROM curs_sin
-				INTO	@idSin,
-					@nom,
-					@prenom,
-					@validePar,
-					@valideLe
-				CONTINUE
-				-- PRINT '# DCMP 60691 # fetch next du cursor [curs_sin] sur non soldage'
-				END
-				
-			END
-		ELSE
-			BEGIN
-				SET @code = null
-			END
-
-		------------------------------------------------------------------------
-		-- Début de la transaction 
-		-- 	On annule la transaction par l'étiquette ONERROR en cas d'erreur
-		-- BEGIN TRANSACTION
-		EXEC @retour = sysadm.PS_D01_SOLDAGE_PRESCRIPTION @idSin, 'SQLS', @dateJourServeur, @altQueue OUTPUT, @code
-		-- PRINT '&&&&& @retour de PS_D01_SOLDAGE_PRESCRIPTION : ' + cast(@retour as varchar(10))
-
-		-- [VDOC15650]
-		Exec sysadm.PS_I_DIV_SIN_ETAT_ASS @idSin, 'SQL'
-		
-		-- annulation de la transaction
-		IF @retour = -1 GOTO ONERROR
-		-- -- validation de la transaction
-		-- ELSE COMMIT TRANSACTION
-		------------------------------------------------------------------------
-
-		------------------------------------------------------------------------
-		-- Début de la transaction 
-		-- 	On annule la transaction par l'étiquette ONERROR en cas d'erreur
-		-- BEGIN TRANSACTION
-		-- tracer le non soldage du dossier
-		IF @altQueue = 'N'
-			BEGIN
-				SET @etatTrt = 'Dossier ' + cast(@idSin as varchar(10)) + ': Sold' + char(233) -- [PI062]
-			END
-		ELSE
-			BEGIN
-				SET @etatTrt = 'Dossier ' + cast(@idSin as varchar(10)) + ': Non Sold' + char(233)+ ', Travail en cours.' -- [PI062]
-			END
-				
-		EXEC @retour = sysadm.PS_I01_TRACE_SOLDAGE @idTrt, @typTrt, @idProd, @idSin, @nom, @prenom, @validePar, @valideLe, @dateJourServeur, @dateMaxSolRl, @dateMaxSolPc, @etatTrt
-		-- PRINT '&&&&& PS_I01_TRACE_SOLDAGE'		
-		-- PRINT '&&&&& @retour de PS_I01_TRACE_SOLDAGE : ' + cast(@retour as varchar(10))
-
-		-- annulation de la transaction
-		IF @retour = -1 GOTO ONERROR
-		-- validation de la transaction
-		-- ELSE COMMIT TRANSACTION
-		------------------------------------------------------------------------
-		
-		FETCH NEXT FROM curs_sin
-		INTO	@idSin,
-			@nom,
-			@prenom,
-			@validePar,
-			@valideLe
-		-- PRINT '# DCMP 60691 # fetch next du cursor [curs_sin]'
-
-	END
-	-- PRINT '# DCMP 60691 # fin de la boucle du cursor [curs_sin]'
-	
-	CLOSE curs_sin
-	DEALLOCATE curs_sin
-	-- PRINT '# DCMP 60691 # fermeture et desalocation du cursor [curs_sin]'
-
-	FETCH NEXT FROM curs_prod
-	INTO @idProd,
-		 @iDelPres,
-		 @sUntDel
-	-- PRINT '# DCMP 60691 # fetch next du cursor [curs_prod]'
-	
-END
--- PRINT '# DCMP 60691 # fin de la boucle du cursor [curs_prod]'
-
-CLOSE curs_prod
-DEALLOCATE curs_prod
--- PRINT '# DCMP 60691 # fermeture et desalocation du cursor [curs_prod]'
-
--- PRINT '# DCMP 60691 # return'
-RETURN 0
-
-------------------------------------------------------------------------
-ONERROR:
--- ROLLBACK TRANSACTION
--- PRINT '# DCMP 60691 # ONERROR # fin anormal de la procedure'
-
-IF @close_curs_prod = 1
-	BEGIN
-		CLOSE curs_prod
-		DEALLOCATE curs_prod
-		-- PRINT '# DCMP 60691 # ONERROR # fermeture et desalocation du cursor [curs_prod]'
-	END
-	
-IF @close_curs_sin = 1
-	BEGIN
-		CLOSE curs_sin
-		DEALLOCATE curs_sin
-		-- PRINT '# DCMP 60691 # ONERROR # fermeture et desalocation du cursor [curs_sin]'
-	END
-
-------------------------------------------------------------------------
--- BEGIN TRANSACTION
--- tracer l'erreur
-SET @etatTrt = 'Erreur sur le dossier ' + cast(@idSin as varchar(10)) -- [PI062]
-EXEC @retour = sysadm.PS_I01_TRACE_SOLDAGE @idTrt, @typTrt, @idProd, @idSin, @nom, @prenom, @validePar, @valideLe, @dateJourServeur, @dateMaxSolRl, @dateMaxSolPc, @etatTrt
--- PRINT '&&&&& # ONERROR # PS_I01_TRACE_SOLDAGE'
--- annulation de la transaction
--- IF @@ERROR <> 0 ROLLBACK TRANSACTION
--- validation de la transaction
--- ELSE COMMIT TRANSACTION
-------------------------------------------------------------------------
+DECLARE @idProd   decimal(7,0),  
+ @altRl2   varchar(1),  
+ @altSold  varchar(1),  
+ @durSoldRl  decimal(7,0),  
+ @untSoldRl  varchar(1),  
+ @durSoldPc  decimal(7,0),  
+ @untSoldPc  varchar(1),  
+ @dateJourServeur datetime,  
+ @altSoldRl  varchar(1),  
+ @dateMaxSolPc  datetime,  
+ @dateMaxSolRl  datetime,  
+ @idSin   decimal(10,0), -- [PI062]  
+ @nom   varchar(35),  
+ @prenom   varchar(35),  
+ @validePar  varchar(4),  
+ @valideLe  datetime,  
+ @dp4   integer,  
+ @code          varchar(15),  
+ @retour   integer,  
+ @altQueue  varchar(1),  
+ @typTrt   varchar(4),  
+ @idTrt   integer,  
+ @etatTrt  varchar(70),  
+ @close_curs_prod integer,  
+ @close_curs_sin  integer,  
+ @error   integer,  
+ @iDelPres  integer,  
+ @sUntDel  VarChar ( 1 )  
+  
+SET NOCOUNT ON  
+  
+SET @dateJourServeur = getdate()  
+SET @altQueue  = 'N'  
+SET @typTrt  = 'SOL'  
+SET @close_curs_prod = 0  
+SET @close_curs_sin = 0  
+  
+EXEC sysadm.PS_X_INCREMENTER 'ID_SOLDAGE', @idTrt OUTPUT   
+  
+DECLARE curs_prod CURSOR  
+FOR SELECT   
+  id_prod,  
+  Convert ( Integer, sysadm.FN_CLE_VAL ( 'DELAI_PRESCRIPTION', d.val_car, ';'))  del_pres,  
+  sysadm.FN_CLE_VAL ( 'UNT_DELAI', d.val_car, ';') unt_del  
+ FROM sysadm.det_pro d  
+ WHERE d.id_code_dp = 244  
+  
+OPEN curs_prod  
+SET @close_curs_prod = 1  
+-- PRINT '# DCMP 60691 # ouverture du cursor [curs_prod]'  
+  
+FETCH NEXT FROM curs_prod  
+INTO @idProd,  
+ @iDelPres,  
+ @sUntDel  
+-- PRINT '# DCMP 60691 # 1er fetch d''entrée du cursor [curs_prod]'  
+  
+WHILE @@FETCH_STATUS = 0  
+BEGIN  
+  
+ -- Si -dp/244 présente, on enlève du paramètrage le soldage traditionnelle.  
+ Update produit set alt_sold = 'N', dur_sold_rl = 0, dur_sold_pc = 0 where id_prod = @idProd  
+  
+  -- [PM407-1]  
+ Delete sysadm.det_pro where id_prod = @idProd and id_code_dp = 323  
+  
+ -- on regarde si le produit possede l'option 4  
+ SELECT @dp4 = count(id_prod) FROM sysadm.det_pro WHERE id_prod = @idProd AND id_typ_code_dp = '-DP' AND id_code_dp = '4'  
+ -- PRINT '&&&&& Option 4 : ' + cast(@dp4 as varchar(2))  
+  
+ -- on recupere les dossiers à solder pour le produit  
+ EXEC @retour = sysadm.PS_RECUP_DOSSIER_A_PRESCRIRE @idProd, @iDelPres, @sUntDel  
+ -- PRINT '&&&&& @retour de PS_RECUP_DOSSIER_A_PRESCRIRE : ' + cast(@retour as varchar(2))  
+  
+ -- On annule la transaction par l'étiquette ONERROR en cas d'erreur  
+ -- annulation de la transaction  
+ IF @retour = -1 GOTO ONERROR  
+ -- validation de la transaction  
+ -- ELSE COMMIT TRANSACTION  
+ ------------------------------------------------------------------------  
+   
+ DECLARE curs_sin CURSOR  
+ FOR SELECT id_sin,  
+   nom,  
+   prenom,  
+   valide_par,  
+   valide_le  
+  FROM sysadm.tmp_soldage  
+   
+ -- PRINT '# DCMP 60691 # déclaration du cursor [curs_sin]'  
+  
+ OPEN curs_sin  
+ SET @close_curs_sin = 1  
+ -- PRINT '# DCMP 60691 # ouverture du cursor [curs_sin]'  
+   
+ FETCH NEXT FROM curs_sin  
+ INTO @idSin,  
+  @nom,  
+  @prenom,  
+  @validePar,  
+  @valideLe  
+ -- PRINT '# DCMP 60691 # 1er fetch d''entrée du cursor [curs_sin]'  
+  
+ WHILE @@FETCH_STATUS = 0  
+ BEGIN  
+  -- PRINT '# DCMP 60691 # démarrage de la boucle du cursor [curs_sin]'  
+  -- PRINT '&&&&& Sinistre : ' + cast(@idSin as varchar(10))  
+    
+  -- récuperation de la boite archive  
+  --- cf ps_s01_boite_archive @idsin, @operateur  
+  IF @dp4 <> 0  
+   BEGIN  
+    EXEC @retour = sysadm.PS_BOITE_ARCHIVE @idSin, 'SQLS', @code OUTPUT  
+    -- PRINT '&&&&& @code de PS_BOITE_ARCHIVE : ' + cast(@code as varchar(10))  
+    -- PRINT '&&&&& @retour de PS_BOITE_ARCHIVE : ' + cast(@retour as varchar(10))  
+      
+    IF @retour = -1  
+    BEGIN  
+      
+    ------------------------------------------------------------------------  
+    -- Début de la transaction  
+    --  On annule la transaction par l'étiquette ONERROR en cas d'erreur  
+    -- BEGIN TRANSACTION  
+    -- tracer le non soldage du dossier  
+      
+    SET @etatTrt = 'Dossier ' + cast(@idSin as varchar(10)) + ', Non Sold' + char(233)+ ', Probl' + char(232)+ 'me ARCHIVAGE : ' + @code -- [PI062]  
+    EXEC @retour = sysadm.PS_I01_TRACE_SOLDAGE @idTrt, @typTrt, @idProd, @idSin, @nom, @prenom, @validePar, @valideLe, @dateJourServeur, 'N', 'N', @etatTrt  
+      
+    -- annulation de la transaction  
+    IF @retour = -1 GOTO ONERROR  
+    -- validation de la transaction  
+    -- ELSE COMMIT TRANSACTION  
+    ------------------------------------------------------------------------  
+      
+    
+    FETCH NEXT FROM curs_sin  
+    INTO @idSin,  
+     @nom,  
+     @prenom,  
+     @validePar,  
+     @valideLe  
+    CONTINUE  
+    -- PRINT '# DCMP 60691 # fetch next du cursor [curs_sin] sur non soldage'  
+    END  
+      
+   END  
+  ELSE  
+   BEGIN  
+    SET @code = null  
+   END  
+  
+  ------------------------------------------------------------------------  
+  -- Début de la transaction   
+  --  On annule la transaction par l'étiquette ONERROR en cas d'erreur  
+  -- BEGIN TRANSACTION  
+  EXEC @retour = sysadm.PS_D01_SOLDAGE_PRESCRIPTION @idSin, 'SQLS', @dateJourServeur, @altQueue OUTPUT, @code  
+  -- PRINT '&&&&& @retour de PS_D01_SOLDAGE_PRESCRIPTION : ' + cast(@retour as varchar(10))  
+  
+  -- [VDOC15650]  
+  Exec sysadm.PS_I_DIV_SIN_ETAT_ASS @idSin, 'SQL'  
+    
+  -- annulation de la transaction  
+  IF @retour = -1 GOTO ONERROR  
+  -- -- validation de la transaction  
+  -- ELSE COMMIT TRANSACTION  
+  ------------------------------------------------------------------------  
+  
+  ------------------------------------------------------------------------  
+  -- Début de la transaction   
+  --  On annule la transaction par l'étiquette ONERROR en cas d'erreur  
+  -- BEGIN TRANSACTION  
+  -- tracer le non soldage du dossier  
+  IF @altQueue = 'N'  
+   BEGIN  
+    SET @etatTrt = 'Dossier ' + cast(@idSin as varchar(10)) + ': Sold' + char(233) -- [PI062]  
+   END  
+  ELSE  
+   BEGIN  
+    SET @etatTrt = 'Dossier ' + cast(@idSin as varchar(10)) + ': Non Sold' + char(233)+ ', Travail en cours.' -- [PI062]  
+   END  
+      
+  EXEC @retour = sysadm.PS_I01_TRACE_SOLDAGE @idTrt, @typTrt, @idProd, @idSin, @nom, @prenom, @validePar, @valideLe, @dateJourServeur, @dateMaxSolRl, @dateMaxSolPc, @etatTrt  
+  -- PRINT '&&&&& PS_I01_TRACE_SOLDAGE'    
+  -- PRINT '&&&&& @retour de PS_I01_TRACE_SOLDAGE : ' + cast(@retour as varchar(10))  
+  
+  -- annulation de la transaction  
+  IF @retour = -1 GOTO ONERROR  
+  -- validation de la transaction  
+  -- ELSE COMMIT TRANSACTION  
+  ------------------------------------------------------------------------  
+    
+  FETCH NEXT FROM curs_sin  
+  INTO @idSin,  
+   @nom,  
+   @prenom,  
+   @validePar,  
+   @valideLe  
+  -- PRINT '# DCMP 60691 # fetch next du cursor [curs_sin]'  
+  
+ END  
+ -- PRINT '# DCMP 60691 # fin de la boucle du cursor [curs_sin]'  
+   
+ CLOSE curs_sin  
+ DEALLOCATE curs_sin  
+ -- PRINT '# DCMP 60691 # fermeture et desalocation du cursor [curs_sin]'  
+  
+ FETCH NEXT FROM curs_prod  
+ INTO @idProd,  
+   @iDelPres,  
+   @sUntDel  
+ -- PRINT '# DCMP 60691 # fetch next du cursor [curs_prod]'  
+   
+END  
+-- PRINT '# DCMP 60691 # fin de la boucle du cursor [curs_prod]'  
+  
+CLOSE curs_prod  
+DEALLOCATE curs_prod  
+-- PRINT '# DCMP 60691 # fermeture et desalocation du cursor [curs_prod]'  
+  
+-- PRINT '# DCMP 60691 # return'  
+RETURN 0  
+  
+------------------------------------------------------------------------  
+ONERROR:  
+-- ROLLBACK TRANSACTION  
+-- PRINT '# DCMP 60691 # ONERROR # fin anormal de la procedure'  
+  
+IF @close_curs_prod = 1  
+ BEGIN  
+  CLOSE curs_prod  
+  DEALLOCATE curs_prod  
+  -- PRINT '# DCMP 60691 # ONERROR # fermeture et desalocation du cursor [curs_prod]'  
+ END  
+   
+IF @close_curs_sin = 1  
+ BEGIN  
+  CLOSE curs_sin  
+  DEALLOCATE curs_sin  
+  -- PRINT '# DCMP 60691 # ONERROR # fermeture et desalocation du cursor [curs_sin]'  
+ END  
+  
+------------------------------------------------------------------------  
+-- BEGIN TRANSACTION  
+-- tracer l'erreur  
+SET @etatTrt = 'Erreur sur le dossier ' + cast(@idSin as varchar(10)) -- [PI062]  
+EXEC @retour = sysadm.PS_I01_TRACE_SOLDAGE @idTrt, @typTrt, @idProd, @idSin, @nom, @prenom, @validePar, @valideLe, @dateJourServeur, @dateMaxSolRl, @dateMaxSolPc, @etatTrt  
+-- PRINT '&&&&& # ONERROR # PS_I01_TRACE_SOLDAGE'  
+-- annulation de la transaction  
+-- IF @@ERROR <> 0 ROLLBACK TRANSACTION  
+-- validation de la transaction  
+-- ELSE COMMIT TRANSACTION  
+------------------------------------------------------------------------  
 
 GO
 

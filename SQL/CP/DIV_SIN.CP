@@ -416,6 +416,7 @@ Set @lPceAdhADemander = 0
 Set @lPcePBoxADemander = 0 
 
 -- [PC151425-1]
+/*
 If sysadm.FN_CLE_NUMERIQUE ( 'PC151425-1') > 0 
  Begin
 	-- Lire
@@ -725,6 +726,7 @@ If sysadm.FN_CLE_NUMERIQUE ( 'PC151425-1') > 0
  End 
 Else 
  Begin
+*/
 	-- Lire
 	If UPPER ( @sCas ) = 'L' 
 	 Begin
@@ -773,32 +775,29 @@ Else
 			  End
 
 			-- [RS5928_FRCH_CHQ]
-			If sysadm.FN_CLE_NUMERIQUE ( 'RS5928_FRCH_CHQ') > 0 
-			 Begin
-				If Exists ( Select * From sysadm.w_sin ws Where ws.id_sin = @dcIdSin  )	
+			If Exists ( Select * From sysadm.w_sin ws Where ws.id_sin = @dcIdSin  )	
+				Begin
+				If Exists ( Select * From sysadm.w_div_sin wds Where wds.id_sin = @dcIdSin And nom_zone = 'mode_paiement' )
 					Begin
-					If Exists ( Select * From sysadm.w_div_sin wds Where wds.id_sin = @dcIdSin And nom_zone = 'mode_paiement' )
-						Begin
-						Update sysadm.w_div_sin Set val_car = 'CB', maj_le = GETDATE(), maj_par = 'AUTO' Where id_sin = @dcIdSin And nom_zone = 'mode_paiement'
-						End 
-					Else
-						Begin	 
-						Insert into sysadm.w_div_sin values ( @dcIdSin, 'mode_paiement', 'Mode de paiement franchise', '-WO', 'O', 'LC', 'N', 'O', 122, null, null, null, 'CB', 1, getdate(), getdate(), 'AUTO' ) 
-						End
+					Update sysadm.w_div_sin Set val_car = 'CB', maj_le = GETDATE(), maj_par = 'AUTO' Where id_sin = @dcIdSin And nom_zone = 'mode_paiement'
+					End 
+				Else
+					Begin	 
+					Insert into sysadm.w_div_sin values ( @dcIdSin, 'mode_paiement', 'Mode de paiement franchise', '-WO', 'O', 'LC', 'N', 'O', 122, null, null, null, 'CB', 1, getdate(), getdate(), 'AUTO' ) 
 					End
+				End
 
-				If Exists ( Select * From sysadm.sinistre ws Where ws.id_sin = @dcIdSin  )	
+			If Exists ( Select * From sysadm.sinistre ws Where ws.id_sin = @dcIdSin  )	
+				Begin
+				If Exists ( Select * From sysadm.div_sin wds Where wds.id_sin = @dcIdSin And nom_zone = 'mode_paiement')
 					Begin
-					If Exists ( Select * From sysadm.div_sin wds Where wds.id_sin = @dcIdSin And nom_zone = 'mode_paiement')
-						Begin
-						Update sysadm.div_sin Set val_car = 'CB' , maj_le = GETDATE(), maj_par = 'AUTO' Where id_sin = @dcIdSin And nom_zone = 'mode_paiement'
-						End 
-					Else
-						Begin	 
-						Insert into sysadm.div_sin values ( @dcIdSin, 'mode_paiement', 'Mode de paiement franchise', '-WO', 'O', 'LC', 'N', 'O', 122, null, null, null, 'CB', getdate(), getdate(), 'AUTO', getdate(), 'AUTO' ) 
-						End
+					Update sysadm.div_sin Set val_car = 'CB' , maj_le = GETDATE(), maj_par = 'AUTO' Where id_sin = @dcIdSin And nom_zone = 'mode_paiement'
+					End 
+				Else
+					Begin	 
+					Insert into sysadm.div_sin values ( @dcIdSin, 'mode_paiement', 'Mode de paiement franchise', '-WO', 'O', 'LC', 'N', 'O', 122, null, null, null, 'CB', getdate(), getdate(), 'AUTO', getdate(), 'AUTO' ) 
 					End
-			 End 
+				End
 
 		  End
 
@@ -826,7 +825,7 @@ Else
 		END
 	  		 
 	 End 
- End
+ -- End
 Go
 
 --------------------------------------------------------------------

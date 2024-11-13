@@ -880,6 +880,7 @@ AS
 			End
 
 		-- [DT386_EXTR_AXA_V8]
+		/*
 		If sysadm.FN_CLE_NUMERIQUE ( 'DT386_EXTR_AXA') >= 2  
 		 Begin
 			-- Contrôle de la présence du type de la pièce d'identité
@@ -920,6 +921,7 @@ AS
 					Return -1
 				End
 		 End
+		 */
 
 		-- Contrôle de la présence du type de la pièce d'identité
 		-- [DT386_EXTR_AXA]

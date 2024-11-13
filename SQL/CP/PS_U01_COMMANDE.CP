@@ -1908,34 +1908,32 @@ IF	@sIdRefFour in ( 'A_REPARER' )
  End 
 
 -- [PMO89_RS4822]
-If sysadm.FN_CLE_NUMERIQUE ( 'PMO89_RS4822') > 0 
- Begin
-	IF ( ( @iStatusGc = 810 And @iStatusGCActuel <> 810 ) Or ( @iStatusGc = 820 And @iStatusGCActuel <> 820 ) ) and  @sIdFour = 'CDF'
-	  Begin
+IF ( ( @iStatusGc = 810 And @iStatusGCActuel <> 810 ) Or ( @iStatusGc = 820 And @iStatusGCActuel <> 820 ) ) and  @sIdFour = 'CDF'
+	Begin
 		
 		Select @sNomInter = lTrim ( rTrim ( i.nom)),
-			   @dcIdInter  = i.id_i,
-			   @sCodInter = i.cod_inter
+				@dcIdInter  = i.id_i,
+				@sCodInter = i.cod_inter
 		From sysadm.inter i,
-			 sysadm.commande c
+				sysadm.commande c
 		Where c.id_sin = @dcIdSin
 		And c.id_seq = @iIdSeq
 		And i.id_sin = c.id_sin 
 		And i.id_i = Convert ( decimal (2), sysadm.FN_CLE_VAL ( 'ID_INTER', c.info_spb_frn_cplt, ';'))
 
 		If @iStatusGc = 810 
-		  Begin 
+			Begin 
 			Set @sMess = 'Contact crée automatiquement, Process [' + @sLibFour + '] -> '+ @sLibFour + ' a contrôlé et accepté (OK) l''interlocuteur ' + @sNomInter + ' (' +  Convert ( varchar (5), @dcIdInter) + ') de type ' + sysadm.FN_CODE_CAR ( @sCodInter, '-IN' ) + ', prenez note des réponses de l''assureur avant de poursuivre l''instruction de votre dossier.'
 			Update sysadm.w_inter set cod_etat_ctrle_inter = 300 where id_sin = @dcIdSin and id_i = @dcIdInter
 			Update sysadm.inter set cod_etat_ctrle_inter = 300 where id_sin = @dcIdSin and id_i = @dcIdInter
-		  End 
+			End 
 
 		If @iStatusGc = 820 
-		  Begin 
+			Begin 
 			Set @sMess = 'Contact crée automatiquement, Process [' + @sLibFour + '] -> '+ @sLibFour + ' a contrôlé et rejeté (KO) l''interlocuteur ' + @sNomInter + ' (' +  Convert ( varchar (5), @dcIdInter) + ') de type ' + sysadm.FN_CODE_CAR ( @sCodInter, '-IN' ) + ', prenez note des réponses de l''assureur avant de poursuivre l''instruction de votre dossier.'
 			Update sysadm.w_inter set cod_etat_ctrle_inter = 200 where id_sin = @dcIdSin and id_i = @dcIdInter
 			Update sysadm.inter set cod_etat_ctrle_inter = 200 where id_sin = @dcIdSin and id_i = @dcIdInter
-		  End 
+			End 
 
 
 		IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
@@ -1947,8 +1945,7 @@ If sysadm.FN_CLE_NUMERIQUE ( 'PMO89_RS4822') > 0
 			EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @dcIdSin, 2, @sMess, 'PRS', @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C'
 		END
 
-	  End
- End  
+	End
 -- /[PMO89_RS4822]
 
 -- [VDOC8041]
@@ -2630,6 +2627,7 @@ IF @iStatusGc = 176 And @iStatusGCActuel <> 176
 		End 
 
     -- [PM462-1][V3]
+/*
 	If sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') >= 0 
 	 Begin
 		If Convert ( decimal (11,2 ), @sMtPaiementPayBox  ) > 0 
@@ -2640,6 +2638,7 @@ IF @iStatusGc = 176 And @iStatusGCActuel <> 176
 			Exec sysadm.PS_I_CREATION_AUTO_PARAM_CONDITION @dcIdProd, @dcIdRev, @dcIdGti, '+EV', 1461, 'N'
 		  End
 	 End 
+*/
 
 	IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 	BEGIN
@@ -2834,6 +2833,7 @@ IF ( @iStatusGc = 402 And @iStatusGCActuel <> 402)
 	End
 
 -- [DT424]
+/*
 If sysadm.FN_CLE_NUMERIQUE ( 'DT424') > 0 
  Begin
 
@@ -2938,6 +2938,7 @@ If sysadm.FN_CLE_NUMERIQUE ( 'DT424') > 0
 	update sysadm.div_sin   set val_dte=Convert ( DateTime, nullif ( @sVal1, '' )) where id_sin=@dcIdSin and nom_zone='cra_last_dte'
 
  End 
+*/
 -- /[DT424]
 
 -- #6 [DCMP080077] Gestion des codes alpha dans le commentaire fournisseur.

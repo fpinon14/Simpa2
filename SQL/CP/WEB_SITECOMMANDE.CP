@@ -250,8 +250,8 @@ If Upper ( @asCas ) in ( 'TEST_DISPOS' )
 				                                ct.id_code_frn as 'Fourn',
 				                                ct.id_code_art as 'Typ_Article',
 				                                Case -- [PM462-1]
-													When sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') > 0 
-														Then 15000 -- Valeur haute pour tout ramener
+													-- When sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') > 0 Then 15000 -- Valeur haute pour tout ramener
+													When 1=0 Then 15000 -- Valeur haute pour tout ramener (je fais ce la pour ne pas refair le case)
 													Else c.mt_ttc_cmde  
 												End as 'Plafond'
 												
@@ -428,8 +428,8 @@ If Upper ( @asCas ) in ( 'CHRG_LST_MARQUES' )
 				                                ct.id_code_frn as 'Fourn',
 				                                ct.id_code_art as 'Typ_Article',
 				                                Case -- [PM462-1]
-													When sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') > 0 
-														Then 15000 -- Valeur haute pour tout ramener
+													-- When sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') > 0 Then 15000 -- Valeur haute pour tout ramener
+													When 1=0 Then 15000 -- Valeur haute pour tout ramener (je fais ce la pour ne pas refair le case)
 													Else c.mt_ttc_cmde  
 												End as 'Plafond'
 
@@ -659,8 +659,8 @@ If Upper ( @asCas ) = 'CHRG_LST_MOBILES'
 					                        ct.id_code_frn as 'Fourn',
 					                        ct.id_code_art as 'Typ_Article',
 					                        Case -- [PM462-1]
-												When sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') > 0 
-													Then 15000 -- Valeur haute pour tout ramener
+												-- When sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') > 0 Then 15000 -- Valeur haute pour tout ramener
+												When 1= 0 Then 15000 -- Valeur haute pour tout ramener(je fais ce la pour ne pas refair le case)
 												Else c.mt_ttc_cmde  
 											End as 'Plafond'
 					                From    sysadm.commande c,
@@ -823,8 +823,8 @@ If Upper ( @asCas ) = 'CHRG_LST_MOBILES'
 				                                ct.id_code_frn as 'Fourn',
 				                                ct.id_code_art as 'Typ_Article',
 												Case -- [PM462-1]
-													When sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') > 0 
-														Then 15000 -- Valeur haute pour tout ramener
+													-- When sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') > 0 Then 15000 -- Valeur haute pour tout ramener
+													When 1=0 Then 15000 -- Valeur haute pour tout ramener
 													Else c.mt_ttc_cmde  
 												End as 'Plafond'
 				                        From    sysadm.commande c,
@@ -1024,8 +1024,8 @@ If Upper ( @asCas ) = 'CHRG_LST_MOBILES'
 					                        ct.id_code_frn as 'Fourn',
 					                        ct.id_code_art as 'Typ_Article',
 					                        Case -- [PM462-1]
-												When sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') > 0 
-													Then 15000 -- Valeur haute pour tout ramener
+												-- When sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') > 0 Then 15000 -- Valeur haute pour tout ramener
+												When 1 = 0 Then 15000 -- Valeur haute pour tout ramener
 												Else c.mt_ttc_cmde  
 											End as 'Plafond'
 					                From    sysadm.commande c,
@@ -1182,8 +1182,8 @@ If Upper ( @asCas ) = 'CHRG_LST_MOBILES'
 				                                ct.id_code_frn as 'Fourn',
 				                                ct.id_code_art as 'Typ_Article',
 												Case -- [PM462-1]
-													When sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') > 0 
-														Then 15000 -- Valeur haute pour tout ramener
+													-- When sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') > 0 Then 15000 -- Valeur haute pour tout ramener
+													When 1 = 0 Then 15000 -- Valeur haute pour tout ramener
 													Else c.mt_ttc_cmde  
 												End as 'Plafond'
 				                        From    sysadm.commande c,
@@ -1382,8 +1382,8 @@ If Upper ( @asCas ) = 'CHRG_LST_MOBILES'
 				                                ct.id_code_frn as 'Fourn',
 				                                ct.id_code_art as 'Typ_Article',
 												Case -- [PM462-1]
-													When sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') > 0 
-														Then 15000 -- Valeur haute pour tout ramener
+													-- When sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') > 0 Then 15000 -- Valeur haute pour tout ramener
+													When 1 = 0 Then 15000 -- Valeur haute pour tout ramener
 													Else c.mt_ttc_cmde  
 												End as 'Plafond'
 				                        From    sysadm.commande c,
@@ -1579,8 +1579,8 @@ If Upper ( @asCas ) = 'CHRG_LST_MOBILES'
 				                                ct.id_code_frn as 'Fourn',
 				                                ct.id_code_art as 'Typ_Article',
 												Case -- [PM462-1]
-													When sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') > 0 
-														Then 15000 -- Valeur haute pour tout ramener
+													-- When sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') > 0 Then 15000 -- Valeur haute pour tout ramener
+													When 1 = 0 Then 15000 -- Valeur haute pour tout ramener
 													Else c.mt_ttc_cmde  
 												End as 'Plafond'
 				                        From    sysadm.commande c,
@@ -1741,8 +1741,8 @@ If Upper ( @asCas ) = 'TEST_CHOIX_DEF'
 						ct.id_code_frn as 'Fourn',
 						ct.id_code_art as 'Typ_Article',
 					    Case -- [PM462-1]
-							When sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') > 0 
-								Then 15000 -- Valeur haute pour tout ramener
+							-- When sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') > 0 Then 15000 -- Valeur haute pour tout ramener
+							When 1 = 0 Then 15000 -- Valeur haute pour tout ramener
 							Else c.mt_ttc_cmde  
 						End as 'Plafond'
 

@@ -405,11 +405,13 @@ BEGIN
 		If @iRet < 0 Break
 
 		-- [PM462-1]
+/*
 		If sysadm.FN_CLE_NUMERIQUE ( 'PM462-1') > 0 
 		 Begin
 			 Exec @iRet = sysadm.PS_I_CPLT_PAYBOX_SCM_PM462_1 @dcIdSin, @dcIdI, @sCodInter, @dcCptRegTour, @dtValideLe, @dcMtAReg, @dcCptReg OUTPUT 
 			 If @iRet < 0 Break
 		 End 
+*/
 		-- [PM462-1]
 
 		-- [PC947&977]]                        
@@ -1559,6 +1561,7 @@ and   id_gti = @dcIdGtiBase
 Select @iCtrle = COUNT ( * ) From sysadm.reglement where id_sin = @adcIdSin and id_reg = @dcIdReg 
 
 -- [PM462-1][V3]
+/*
 If sysadm.FN_CLE_NUMERIQUE ( 'PM462-1' ) >= 0 
  Begin
 		-- Cas du RP/FM (Tag FR) donc pas dans APF quotidien, mais RP/FM au mensuel tagué FR
@@ -1581,7 +1584,7 @@ If sysadm.FN_CLE_NUMERIQUE ( 'PM462-1' ) >= 0
 		End 
 	  
  End 
-
+ */
 
 If @iCtrle = 1 
  Begin 
@@ -1602,6 +1605,7 @@ If @iCtrle = 1
 	Set @asResult = @asResult + 'Libellé du RM : ' + @asLibRM + '.'
 
 	-- [PM462-1][V3]
+/*
 	If sysadm.FN_CLE_NUMERIQUE ( 'PM462-1' ) >= 0 
 	 Begin
 		If @iCtrleRPFranchise > 0 
@@ -1609,6 +1613,7 @@ If @iCtrle = 1
 			Set @asResult = @asResult + 'Cette action génère un rendu de franchise à l''assureur de ' + @sMtPaiementPayBox + '€.'		
 		  End 
 	 End 
+*/
 
 	Set @sMess = Right ( rtrim( @asResult ), LEN ( rtrim( @asResult )) - 9 )
 
