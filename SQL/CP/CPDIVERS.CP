@@ -6897,6 +6897,64 @@ While Exists ( Select Top 1 1 From @TbRepCour where marquage = 0 )
 
 Go
 
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_REDRESS_W_QUEUE_STATUT_IWD
+-- Auteur               :       FABRY JF
+-- Date                 :       13/11/2024
+-- Libellé              :       extraction trigramme IWD
+-- Commentaires         :       [LGY11]
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_REDRESS_W_QUEUE_STATUT_IWD' AND type = 'P' )
+        DROP procedure sysadm.PS_S_REDRESS_W_QUEUE_STATUT_IWD
+GO
+  
+CREATE procedure sysadm.PS_S_REDRESS_W_QUEUE_STATUT_IWD  
+AS
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+	Begin
+		Select	ct.id_cli 'Client',
+				ct.id_sin 'Sinistre',
+				ct.maj_par 'Réinitialisé_par',
+				sysadm.FN_AFF_DATE ( ct.maj_le, 'AVEC_HEURE' ) 'Reinitialisé_le',
+				Convert ( Varchar ( 70 ), Substring ( concat ( lTrim ( rTrim (ct.txt_mess)), lTrim ( rTrim (ct.txt_mess2))), 19,  CharIndex ( 'a terminé', concat (lTrim ( rTrim ( ct.txt_mess)), lTrim ( rTrim (ct.txt_mess2 )))) - 19 )) 'GT_en_cause',
+				wq.etat_iwd 'nouvel_etat_iwd',
+				wq.id_iwd 'nouvel_id_iwd',
+				concat ( lTrim ( rTrim (ct.txt_mess)), lTrim ( rTrim (ct.txt_mess2))) 'Contact_Sherpa_laissé_par_la_redistribution_IWD'
+
+		from	sysadm.w_queue wq ,
+				SHERPA_PRO.sysadm.contact ct 
+		where	wq.trv_maj_par = 'IWD'
+		And		ct.id_sin = wq.id_sin
+		And		ct.maj_par = 'IWD'
+		Order by maj_le desc
+	End 
+Else
+	Begin
+		Select	Convert ( VarChar ( 15 ), ct.id_cli ) 'Client',
+				Convert ( VarChar ( 15 ), ct.id_sin ) 'Sinistre',
+				Convert ( VarChar ( 4 ), ct.maj_par ) 'Réinitialisé_par',
+				Convert ( VarChar ( 20 ), sysadm.FN_AFF_DATE ( ct.maj_le, 'AVEC_HEURE' )) 'Reinitialisé_le',
+				Convert ( Varchar ( 70 ), Substring ( concat ( lTrim ( rTrim (ct.txt_mess)), lTrim ( rTrim (ct.txt_mess2))), 19,  CharIndex ( 'a terminé', concat (lTrim ( rTrim ( ct.txt_mess)), lTrim ( rTrim (ct.txt_mess2 )))) - 19 )) 'GT_en_cause',
+				Convert ( Varchar ( 5 ), wq.etat_iwd ) 'nouvel_etat_iwd',
+				Convert ( Varchar ( 70 ), wq.id_iwd ) 'nouvel_id_iwd',
+				concat ( lTrim ( rTrim (ct.txt_mess)), lTrim ( rTrim (ct.txt_mess2))) 'Contact_Sherpa_laissé_par_la_redistribution_IWD'
+
+		from	sysadm.w_queue wq ,
+				SHERPA_SIM.sysadm.contact ct 
+		where	wq.trv_maj_par = 'IWD'
+		And		ct.id_sin = wq.id_sin
+		And		ct.maj_par = 'IWD'
+		Order by maj_le desc
+	End 
+
+GO
+
+
 --------------------------------------------------------------------
 --
 -- Procédure            :       PS_U_REDRESS_W_QUEUE_STATUT_IWD
@@ -6951,6 +7009,18 @@ And	  cco.interaction_id = wq.id_iwd
 And   cco.media_cd = 'EMAIL'
 And   cco.interaction_end_ts is not null
 */
+
+ DECLARE @sCommande   VarChar(250),
+        @sMessage    Varchar(1000),
+        @sObjet      VarChar(255),
+        @sFicOut     VarChar(255),
+		@sRetourErrMail VarChar(255),
+		@sNomServeur VarChar(255),
+        @sPath  VarChar(255),
+        @sFileName   VarChar(255),
+        @sFileExt    VarChar(3),
+		@sOsqlOption VarChar(255),
+		@iRetOsql	int	
 
 If Not ( sysadm.FN_CLE_NUMERIQUE ( 'LGY11_IDW_WQ') > 0 ) Return
 
@@ -7028,6 +7098,53 @@ While Exists ( Select Top 1 1 From @TbTrt where marquage = 0 )
 
 	Update @TbTrt Set marquage = 1 Where id_seq = @iIdSeq
  End
+
+
+-- chemin d'enregistrement du Result Set
+Set @sPath 	= master.sysadm.SPB_FN_GET_ROOT() + 'Sinistre\Extraction_RS2980_IFR\'
+Set @sFileName	= 'TRAVAUX_SIMPA2_IWD_REDISTRIBUES_' + Replace ( convert( varchar ( 10), CONVERT ( Datetime, Getdate(), 103 ), 112 ) + convert( varchar ( 10), getdate(), 8 ), ':', '' )
+Set @sFileExt	= 'xls'
+
+SET @sFicOut = @sPath + @sFileName + '.' + @sFileExt
+
+SET @sNomServeur = @@servername
+-- Options additionelles pour osql
+-- /s"	" 	=> Separateur Tabulation
+-- /b 	=> Genere un code ERRORLEVEL exploitable par batch.
+-- /u	=> Unicode
+
+Set @sOsqlOption = ' ' + '/s"	"'+ ' /b' + ' /u'
+	
+SET @sCommande = 	'sqlcmd /S' + @sNomServeur + ' /E /Q"' + 
+	db_name(db_id()) + '.sysadm.PS_S_REDRESS_W_QUEUE_STATUT_IWD ' + 
+	'" /o' + @sFicOut + ' -w5000' + @sOsqlOption
+
+EXEC @iRetOsql = master.dbo.xp_cmdshell @sCommande, no_output
+
+Set @sObjet    = 'Extraction des travaux SIMPA2/IWD/CCO redistribués le ' + Convert ( VarChar ( 10), Getdate (), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108)
+
+set @sMessage  = 'Bonjour,'
+set @sMessage  = @sMessage + char ( 10) + char ( 10)
+set @sMessage  = @sMessage + 'Veuillez-trouver en pièce-jointe la liste des travaux (tâches) SIMPA2 en lien avec IWD/CCO redistribués vers la DGRC pour cause de fermeture de tâche IWD/CCO SANS validation du dossier SIMPA2.'
+set @sMessage  = @sMessage + char ( 10) + char ( 10)
+set @sMessage  = @sMessage + 'Cordialement,'
+set @sMessage  = @sMessage + char ( 10) + char ( 10)
+Set @sMessage = @sMessage + 'Fabry Jean-François'
+Set @sMessage = @sMessage + CHAR ( 10 )
+Set @sMessage = @sMessage + 'DSI/Etudes SIMPA2'
+
+EXEC master.dbo.SPB_PS_MAIL 
+			@sRetourErrMail OUTPUT, 
+			'MPVASSEUR@spb.eu,LTASSERIE@spb.eu,EDUBOC@spb.eu,IHACHANI@spb.eu,CLASSALE@spb.eu,cbourdoiseau@spb.eu,opons@spb.eu,dibersien@spb.eu,FDEMEDEIROS@spb.eu', -- 'jff@spb.fr',
+			@sMessage, 
+			@sObjet, 
+			null, 
+			'jfabry@spb.eu,SBARTHELEMY@spb.eu', -- 'jff@spb.fr' , 
+			@sFicOut, 
+			NULL, 
+			NULL, 
+			NULL, 
+			NULL
 
 Go
 
