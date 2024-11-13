@@ -21336,6 +21336,17 @@ If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
 		End IF 			
 	End IF 	
 
+	// [MCO602_PNEU][FERM_PREST_LBE]
+	If bRet Then
+		lDeb = idw_LstwCommande.Find("ID_FOUR='LBE' AND COD_ETAT = 'CNV'", 1, idw_LstwCommande.rowCount()+1)
+		If lDeb > 0 Then 
+			sSql = "Exec sysadm.PS_U19_COMMANDE_VIRTUELLE_STD " + String ( idw_wsin.GetItemNumber  ( 1, "ID_SIN" ) ) + "., 'LBE',0"
+		
+			F_Execute ( sSql, SQLCA )
+	
+			bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
+		End If
+	End If	
 	
 End If
 
