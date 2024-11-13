@@ -332,7 +332,6 @@ public function boolean uf_controlergestion_sanction_eco_usa ()
 private function boolean uf_controler_sepa (string ascodebq, string ascodeag, long alidinter)
 private subroutine uf_determiner_courrier_forcage_dp250 (ref string aspos, integer alcpt, ref string asidnatcour, ref string asidcour)
 private function long uf_zn_trt_divsin_coqnonadpate (string asdata, string asnomcol, long alrow)
-private function long uf_zn_trt_divsin_coqneprotgpas (string asdata, string asnomcol, long alrow)
 private subroutine uf_controler_eco_msg_cg60 ()
 private function boolean uf_validation_finale_mail_srr ()
 private function boolean uf_validation_finale_advise_mail ()
@@ -393,7 +392,6 @@ public function boolean uf_controlergestion_refareexp_cordon ()
 private function boolean uf_validation_finale_advise_aas_mail ()
 private function boolean uf_validation_finale_samsung_infopec ()
 private function boolean uf_controlergestion_pm445 ()
-private function long uf_zn_trt_divsin_personne_sin (string asdata, string asnomcol, long alrow)
 private function string uf_controlergestion_redrbtqcentralpsm ()
 private function boolean uf_validation_finale_adviserepa_mail (string ascas)
 private subroutine uf_ajoutdynamiquedivpro ()
@@ -18928,7 +18926,7 @@ Choose Case asNomCol
 				// [DT269]
 				Case "PERSONNE_SIN"
 					// [PC171999]
-					ll_ret = This.Uf_Zn_Trt_DivSin_Personne_Sin ( Upper ( asData ), Upper( asNomCol ), alRow )
+					ll_ret = iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_Personne_Sin ( Upper ( asData ), Upper( asNomCol ), alRow )
 
 				// [MCO602_PNEU]
 				Case "TYP_PRESTA"
@@ -18987,7 +18985,7 @@ Choose Case asNomCol
 			// [VDOC20980]
 			// [PC947&977]
 			Case "COQUE_NE_PROTEGE"
-				ll_ret = This.Uf_Zn_Trt_DivSin_CoqNeProtgPas ( Upper ( asData ), Upper( asNomCol ), alRow )
+				ll_ret = iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_CoqNeProtgPas ( Upper ( asData ), Upper( asNomCol ), alRow )
 
 			// [PC786-1_AUCHAN_GEM]
 			Case "TELEDIAG_OK"
@@ -39703,45 +39701,6 @@ Return iAction
 
 end function
 
-private function long uf_zn_trt_divsin_coqneprotgpas (string asdata, string asnomcol, long alrow);
-//*-----------------------------------------------------------------
-//*
-//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_CoqNeProtgPas (PRIVATE)
-//* Auteur			: FABRY JF
-//* Date				: 28/12/2006
-//* Libellé			: 
-//* Commentaires	: [PC947&977]
-//*
-//* Arguments		: String 		asData			Val
-//*					  String 		asNomCol			Val
-//*					  Long			alRow				Val
-//*
-//* Retourne		: long
-//*
-//*-----------------------------------------------------------------
-//* MAJ   PAR      Date	     Modification
-//* #..   ...   ../../....   
-//*-----------------------------------------------------------------
-
-Integer iAction
-
-Long lRow, lDeb, lFin, lVal1, lVal2
-
-asData = Upper ( asData )
-iAction = 0
-
-lVal1 = idw_wDivDet.Find ( "UPPER ( NOM_ZONE ) = 'PEC' AND VAL_CAR = 'O'", 1, idw_wDivDet.RowCount () )
-lVal2 = idw_LstGti.Find ( "COD_ETAT IN ( 500, 550, 600 )", 1, idw_LstGti.RowCount () )
-
-If lVal1 > 0 Or lVal2 > 0 Then
-		idw_wDivSin.iiErreur = 7
-		iAction = 1
-End If
-
-Return iAction
-
-end function
-
 private subroutine uf_controler_eco_msg_cg60 ();//*-----------------------------------------------------------------
 //*
 //* Fonction      : u_gs_sp_sinistre::uf_controler_eco_msg_cg60  (PRIVATE)
@@ -51552,92 +51511,6 @@ End If
 Return bRet 
 end function
 
-private function long uf_zn_trt_divsin_personne_sin (string asdata, string asnomcol, long alrow);
-//*-----------------------------------------------------------------
-//*
-//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_Personne_Sin (PRIVATE)
-//* Auteur			: FABRY JF
-//* Date				: 16/10/2018
-//* Libellé			: 
-//* Commentaires	: [PC171999]
-//*
-//* Arguments		: String 		asData			Val
-//*					  String 		asNomCol			Val
-//*					  Long			alRow				Val
-//*
-//* Retourne		: long
-//*
-//*-----------------------------------------------------------------
-//* MAJ   PAR      Date	     Modification
-//*-----------------------------------------------------------------
-
-Integer iAction
-String sVariante 
-n_cst_string lnvPFCString
-
-Long lRow, lDeb, lFin, lVal1, lVal2, lVal3, lTot, lCpt
-
-asData = Upper ( asData )
-iAction = 0
-
-lVal1 = idw_wDivDet.Find ( "UPPER ( NOM_ZONE ) = 'PEC' AND VAL_CAR = 'O'", 1, idw_wDivDet.RowCount () )
-lVal2 = idw_LstGti.Find ( "COD_ETAT IN ( 500, 550, 600 )", 1, idw_LstGti.RowCount () )
-lVal3 = idw_LstwCommande.Find ( "COD_ETAT <> 'ANN' ", 1, idw_LstwCommande.RowCount () ) 
-
-If lVal1 > 0 Or lVal2 > 0 Or lVal3 > 0 Then
-		idw_wDivSin.iiErreur = 11
-		iAction = 1
-End If
-
-If iAction = 0 Then
-	idw_LstGti.SetFilter ( "COD_ETAT IN ( 100, 200)" )
-	idw_LstGti.Filter ()
-	
-	lTot = idw_LstGti.RowCount ()
-	
-	For lCpt = 1 To lTot
-		idw_LstGti.SetItem ( lCpt, "COD_ETAT", 0 )
-	Next 
-
-	idw_LstGti.SetFilter ( "" )
-	idw_LstGti.Filter ()
-	
-	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 330 )	
-	If lDeb > 0 Then
-		sVariante = lnvPFCString.of_getkeyvalue (idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "VARIANTE", ";")
-		If sVariante = "FAMILLE" Then
-			Choose Case asData
-				Case "ASS"
-		
-					stMessage.sTitre		= "PC171999 / Assuré principal"
-					stMessage.Icon		= Information!
-					stMessage.bErreurG	= FALSE
-					stMessage.Bouton		= OK!
-					stMessage.sCode		= "WSIN833"
-					
-					F_Message ( stMessage )
-					
-				Case "AUP"
-		
-					stMessage.sTitre		= "PC171999 / Autres assurés"
-					stMessage.Icon		= Information!
-					stMessage.bErreurG	= FALSE
-					stMessage.Bouton		= OK!
-					stMessage.sCode		= "WSIN834"
-					
-					F_Message ( stMessage )
-				
-			End Choose 
-		End If
-	End If 	
-
-End If
-
-Return iAction
-
-
-end function
-
 private function string uf_controlergestion_redrbtqcentralpsm ();//*-----------------------------------------------------------------
 //*
 //* Fonction		: u_gs_sp_sinistre::uf_ControlerGestion_RedrBtqCentralPSM
@@ -54248,7 +54121,8 @@ iUoGsSpSinistre2.uf_initialiser_1 (	&
 	istypetrt, &
 	isreferentielapp, &
 	K_MAJZONE, &
-	idw_wDetail &
+	idw_wDetail, &
+	idw_LstGti &
 	)
 // /[20241112110249883][DIVOBJ][JFF]
 end subroutine

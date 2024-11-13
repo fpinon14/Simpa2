@@ -19,6 +19,7 @@ u_DataWindow idw_wDivSin
 
 u_DataWindow_Detail idw_LstwCommande
 u_DataWindow_Detail idw_wDivDet
+u_DataWindow_Detail idw_LstGti
 
 DataWindow idw_DetPro
 DataWindow idw_wDetail
@@ -34,11 +35,13 @@ end variables
 
 forward prototypes
 public function long uf_zn_trt_divsin_typeapp (string asdata, string asnomcol, long alrow, boolean abforcer)
-public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail)
 public function long uf_zn_trt_divsin_accessoire (string asdata, string asnomcol, long alrow)
 public function long uf_zn_trt_divsin_accord_chubb (string asdata, string asnomcol, long alrow)
 public function long uf_zn_trt_divsin_bloquedretude (string asdata, string asnomcol, long alrow)
 public function long uf_zn_trt_divsin_choixpack (string asdata, string asnomcol, long alrow, boolean abforcer)
+public function long uf_zn_trt_divsin_coqneprotgpas (string asdata, string asnomcol, long alrow)
+public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti)
+public function integer uf_zn_trt_divsin_personne_sin (string asdata, string asnomcol, long alrow)
 end prototypes
 
 public function long uf_zn_trt_divsin_typeapp (string asdata, string asnomcol, long alrow, boolean abforcer);//*-----------------------------------------------------------------
@@ -420,41 +423,6 @@ Return iAction
 
 end function
 
-public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail);//*-----------------------------------------------------------------
-//*
-//* Fonction		: uf_initialiser_1 (Public)
-//* Auteur			: FABRY JF
-//* Date				: 12/11/2024
-//* Libellé			: 
-//* Commentaires	: Initialisation des instances pour l'objet numéro 2
-//*
-//* Arguments		: Voir arguments
-//*
-//* Retourne		: Rien
-//*
-//*-----------------------------------------------------------------
-
-iuoSpGsSinistre		= auoSpGsSinistre
-
-idw_detpro 				= adw_detpro
-idw_wsin   				= adw_wsin
-idw_lstwcommande 		= adw_lstwcommande
-idw_wdivsin 			= adw_wdivsin
-idw_wdivdet 			= adw_wdivdet
-
-ibCodicDartyValide	= abCodicDartyValide
-isTypeTrt				= asTypeTrt
-isReferentielApp		= asReferentielApp
-K_MAJZONE				= aK_MAJZONE
-idw_wDetail				= adw_wDetail
-
-
-
-
-
-
-end subroutine
-
 public function long uf_zn_trt_divsin_accessoire (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
 //*
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_Accessoire (PRIVATE)
@@ -641,6 +609,164 @@ If lRow > 0 Then
 End If
 // [PC694][SFR2012]
 
+
+Return iAction
+
+
+end function
+
+public function long uf_zn_trt_divsin_coqneprotgpas (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
+//*
+//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_CoqNeProtgPas (PRIVATE)
+//* Auteur			: FABRY JF
+//* Date				: 28/12/2006
+//* Libellé			: 
+//* Commentaires	: [PC947&977]
+//*
+//* Arguments		: String 		asData			Val
+//*					  String 		asNomCol			Val
+//*					  Long			alRow				Val
+//*
+//* Retourne		: long
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//* #..   ...   ../../....   
+//*-----------------------------------------------------------------
+
+Integer iAction
+
+Long lRow, lDeb, lFin, lVal1, lVal2
+
+asData = Upper ( asData )
+iAction = 0
+
+lVal1 = idw_wDivDet.Find ( "UPPER ( NOM_ZONE ) = 'PEC' AND VAL_CAR = 'O'", 1, idw_wDivDet.RowCount () )
+lVal2 = idw_LstGti.Find ( "COD_ETAT IN ( 500, 550, 600 )", 1, idw_LstGti.RowCount () )
+
+If lVal1 > 0 Or lVal2 > 0 Then
+		idw_wDivSin.iiErreur = 7
+		iAction = 1
+End If
+
+Return iAction
+
+end function
+
+public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti);//*-----------------------------------------------------------------
+//*
+//* Fonction		: uf_initialiser_1 (Public)
+//* Auteur			: FABRY JF
+//* Date				: 12/11/2024
+//* Libellé			: 
+//* Commentaires	: Initialisation des instances pour l'objet numéro 2
+//*
+//* Arguments		: Voir arguments
+//*
+//* Retourne		: Rien
+//*
+//*-----------------------------------------------------------------
+
+iuoSpGsSinistre		= auoSpGsSinistre
+
+idw_detpro 				= adw_detpro
+idw_wsin   				= adw_wsin
+idw_lstwcommande 		= adw_lstwcommande
+idw_wdivsin 			= adw_wdivsin
+idw_wdivdet 			= adw_wdivdet
+
+ibCodicDartyValide	= abCodicDartyValide
+isTypeTrt				= asTypeTrt
+isReferentielApp		= asReferentielApp
+K_MAJZONE				= aK_MAJZONE
+idw_wDetail				= adw_wDetail
+
+idw_LstGti				= adw_LstGti
+
+
+
+
+end subroutine
+
+public function integer uf_zn_trt_divsin_personne_sin (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
+//*
+//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_Personne_Sin (PRIVATE)
+//* Auteur			: FABRY JF
+//* Date				: 16/10/2018
+//* Libellé			: 
+//* Commentaires	: [PC171999]
+//*
+//* Arguments		: String 		asData			Val
+//*					  String 		asNomCol			Val
+//*					  Long			alRow				Val
+//*
+//* Retourne		: long
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//*-----------------------------------------------------------------
+
+Integer iAction
+String sVariante 
+n_cst_string lnvPFCString
+
+Long lRow, lDeb, lFin, lVal1, lVal2, lVal3, lTot, lCpt
+
+asData = Upper ( asData )
+iAction = 0
+
+lVal1 = idw_wDivDet.Find ( "UPPER ( NOM_ZONE ) = 'PEC' AND VAL_CAR = 'O'", 1, idw_wDivDet.RowCount () )
+lVal2 = idw_LstGti.Find ( "COD_ETAT IN ( 500, 550, 600 )", 1, idw_LstGti.RowCount () )
+lVal3 = idw_LstwCommande.Find ( "COD_ETAT <> 'ANN' ", 1, idw_LstwCommande.RowCount () ) 
+
+If lVal1 > 0 Or lVal2 > 0 Or lVal3 > 0 Then
+		idw_wDivSin.iiErreur = 11
+		iAction = 1
+End If
+
+If iAction = 0 Then
+	idw_LstGti.SetFilter ( "COD_ETAT IN ( 100, 200)" )
+	idw_LstGti.Filter ()
+	
+	lTot = idw_LstGti.RowCount ()
+	
+	For lCpt = 1 To lTot
+		idw_LstGti.SetItem ( lCpt, "COD_ETAT", 0 )
+	Next 
+
+	idw_LstGti.SetFilter ( "" )
+	idw_LstGti.Filter ()
+	
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 330 )	
+	If lDeb > 0 Then
+		sVariante = lnvPFCString.of_getkeyvalue (idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "VARIANTE", ";")
+		If sVariante = "FAMILLE" Then
+			Choose Case asData
+				Case "ASS"
+		
+					stMessage.sTitre		= "PC171999 / Assuré principal"
+					stMessage.Icon		= Information!
+					stMessage.bErreurG	= FALSE
+					stMessage.Bouton		= OK!
+					stMessage.sCode		= "WSIN833"
+					
+					F_Message ( stMessage )
+					
+				Case "AUP"
+		
+					stMessage.sTitre		= "PC171999 / Autres assurés"
+					stMessage.Icon		= Information!
+					stMessage.bErreurG	= FALSE
+					stMessage.Bouton		= OK!
+					stMessage.sCode		= "WSIN834"
+					
+					F_Message ( stMessage )
+				
+			End Choose 
+		End If
+	End If 	
+
+End If
 
 Return iAction
 
