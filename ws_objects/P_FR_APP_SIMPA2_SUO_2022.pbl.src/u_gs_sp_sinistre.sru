@@ -16441,6 +16441,8 @@ If isReferentielApp = "REF_SIMPA2_CODE_MB" Then
 	idw_Wsin.SetItem ( 1, "MODL_PORT", sVal ) 
 End If 
 
+iUoGsSpSinistre2.uf_Set_ValInstance ( "isReferentielApp", isReferentielApp )
+
 Return isReferentielApp 
 
 end function

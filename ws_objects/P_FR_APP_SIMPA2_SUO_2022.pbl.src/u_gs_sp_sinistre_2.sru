@@ -42,6 +42,7 @@ public function long uf_zn_trt_divsin_choixpack (string asdata, string asnomcol,
 public function long uf_zn_trt_divsin_coqneprotgpas (string asdata, string asnomcol, long alrow)
 public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti)
 public function integer uf_zn_trt_divsin_personne_sin (string asdata, string asnomcol, long alrow)
+public subroutine uf_set_valinstance (string ascas, string asval)
 end prototypes
 
 public function long uf_zn_trt_divsin_typeapp (string asdata, string asnomcol, long alrow, boolean abforcer);//*-----------------------------------------------------------------
@@ -772,6 +773,35 @@ Return iAction
 
 
 end function
+
+public subroutine uf_set_valinstance (string ascas, string asval);//*-----------------------------------------------------------------
+//*
+//* Fonction		: uf_set_valinstance (Public)
+//* Auteur			: FABRY JF
+//* Date				: 12/11/2024
+//* Libellé			: 
+//* Commentaires	: Valeur d'instance changeante
+//*
+//* Arguments		: Voir arguments
+//*
+//* Retourne		: Rien
+//*
+//*-----------------------------------------------------------------
+
+
+If IsNull ( asCas ) Then Return
+
+asCas = Trim ( asCas ) 
+
+If asCas = "" Then Return
+
+Choose Case asCas 
+
+	Case "isReferentielApp"
+		isReferentielApp = asVal
+		
+End Choose 
+end subroutine
 
 on u_gs_sp_sinistre_2.create
 call super::create
