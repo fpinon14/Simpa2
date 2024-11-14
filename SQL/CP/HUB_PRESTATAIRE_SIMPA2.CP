@@ -171,7 +171,15 @@ Declare
 
 Declare @sCouleur	Varchar ( 50 ), 
 		@sCapacite	Varchar ( 50 ), 
-		@sDualSim	Varchar ( 50 )
+		@sDualSim	Varchar ( 50 ),
+		@dtDteAdh	DateTime,
+		@dtCreele	DateTime,
+		@dtDteSurv	DateTime,
+		@dtFinGti	DateTime,
+		@dtFinGC	DateTime,
+		@iDureeGc   Integer,
+		@sNumFaxSpb VarChar ( 30 ),
+		@sNumTelSpb VarChar ( 30 )
 
 Select	@iIdSin			= Convert ( integer, @adcIdsin),
 		@sLibPersoGti	= cg.lib_gti,
@@ -196,7 +204,19 @@ Select	@iIdSin			= Convert ( integer, @adcIdsin),
 		@dtDateAchat	= s.dte_ach_port,
 		@iIdAssureur	= sysadm.FN_ID_CIE_V02 (s.id_sin, 'P'),
 		@sLibAssureur   = sysadm.FN_LIB_CIE_V02 (s.id_sin, 'P'),
-		@sLibPolice		= sysadm.FN_LIB_POLICE_V02 (s.id_sin, 'P')
+		@sLibPolice		= sysadm.FN_LIB_POLICE_V02 (s.id_sin, 'P'),
+		@dtDteAdh		= s.dte_adh,
+		@dtCreele		= s.cree_le,
+		@dtDteSurv		= s.dte_surv,
+		@dtFinGti		= s.dte_fin_gti,
+		@sNumFaxSpb		= Case Left ( pr.num_fax, 2 )
+  								When '08' Then Left ( pr.num_fax, 1 ) + ' ' + SubString ( pr.num_fax, 2, 3 ) + ' ' + SubString ( pr.num_fax, 5, 3 ) + ' ' + SubString ( pr.num_fax, 8, 3 )
+  									Else Left ( pr.num_fax, 2 ) + ' ' + SubString ( pr.num_fax, 3, 2 ) + ' ' + SubString ( pr.num_fax, 5, 2 ) + ' ' + SubString ( pr.num_fax, 7, 2 ) + ' ' + SubString ( pr.num_fax, 9, 2 )
+						  End,
+		@sNumTelSpb		= Case Left ( pr.num_tel, 2 )
+  								When '08' Then Left ( pr.num_tel, 1 ) + ' ' + SubString ( pr.num_tel, 2, 3 ) + ' ' + SubString ( pr.num_tel, 5, 3 ) + ' ' + SubString ( pr.num_tel, 8, 3 )
+  									Else Left ( pr.num_tel, 2 ) + ' ' + SubString ( pr.num_tel, 3, 2 ) + ' ' + SubString ( pr.num_tel, 5, 2 ) + ' ' + SubString ( pr.num_tel, 7, 2 ) + ' ' + SubString ( pr.num_tel, 9, 2 )
+						  End
 
 From	sysadm.sinistre s, 
 		sysadm.commande c,
@@ -326,6 +346,24 @@ Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'CAPACITE', @sCapacite, rTrim ( 
 Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DUALSIM', @sDualSim, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
 Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'HP_ID_PROCESS_ACHEM', @sProcessAchem, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
 -- /[20240910134438210]
+
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DTE_ADH', Convert ( Varchar ( 10 ), @dtDteAdh, 103), rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DOS_CREE_LE', Convert ( Varchar ( 10 ), @dtCreele, 103), rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DTE_SURV', Convert ( Varchar ( 10 ), @dtDteSurv, 103), rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DTE_FIN_GTI', Convert ( Varchar ( 10 ), @dtFinGti, 103), rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'NUM_FAX_SPB', @sNumFaxSpb, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'NUM_TEL_SPB', @sNumTelSpb, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+
+Set @iDureeGc = Case 
+					When IsNumeric ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'duree_gti_orig', 'P', '' ) ) > 0
+						Then Convert ( Integer, sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'duree_gti_orig', 'P', '' ) )
+					Else null
+				End
+
+If @iDureeGc > 0 And @dtDateAchat is not null Set @dtFinGC = DateAdd ( Month, @iDureeGc, @dtDateAchat ) 
+
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DTE_FIN_GC', Convert ( Varchar ( 10 ), @dtFinGC, 103), rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+
 
 Select 
 	@aiCas	'iCas',
@@ -509,7 +547,15 @@ Declare
 
 Declare @sCouleur	Varchar ( 50 ), 
 		@sCapacite	Varchar ( 50 ), 
-		@sDualSim	Varchar ( 50 )
+		@sDualSim	Varchar ( 50 ),
+		@dtDteAdh	DateTime,
+		@dtCreele	DateTime,
+		@dtDteSurv	DateTime,
+		@dtFinGti	DateTime,
+		@dtFinGC	DateTime,
+		@iDureeGc   Integer,
+		@sNumFaxSpb VarChar ( 30 ),
+		@sNumTelSpb VarChar ( 30 )
 
 Select	@iIdSin			= Convert ( integer, @adcIdsin),
 		@sLibPersoGti	= cg.lib_gti,
@@ -534,8 +580,19 @@ Select	@iIdSin			= Convert ( integer, @adcIdsin),
 		@dtDateAchat	= s.dte_ach_port,
 		@iIdAssureur	= sysadm.FN_ID_CIE_V02 (s.id_sin, 'W'),
 		@sLibAssureur   = sysadm.FN_LIB_CIE_V02 (s.id_sin, 'W'),
-		@sLibPolice		= sysadm.FN_LIB_POLICE_V02 (s.id_sin, 'W')
-
+		@sLibPolice		= sysadm.FN_LIB_POLICE_V02 (s.id_sin, 'W'),
+		@dtDteAdh		= s.dte_adh,
+		@dtCreele		= s.cree_le,
+		@dtDteSurv		= s.dte_surv,
+		@dtFinGti		= s.dte_fin_gti,
+		@sNumFaxSpb		= Case Left ( pr.num_fax, 2 )
+  								When '08' Then Left ( pr.num_fax, 1 ) + ' ' + SubString ( pr.num_fax, 2, 3 ) + ' ' + SubString ( pr.num_fax, 5, 3 ) + ' ' + SubString ( pr.num_fax, 8, 3 )
+  									Else Left ( pr.num_fax, 2 ) + ' ' + SubString ( pr.num_fax, 3, 2 ) + ' ' + SubString ( pr.num_fax, 5, 2 ) + ' ' + SubString ( pr.num_fax, 7, 2 ) + ' ' + SubString ( pr.num_fax, 9, 2 )
+						  End,
+		@sNumTelSpb		= Case Left ( pr.num_tel, 2 )
+  								When '08' Then Left ( pr.num_tel, 1 ) + ' ' + SubString ( pr.num_tel, 2, 3 ) + ' ' + SubString ( pr.num_tel, 5, 3 ) + ' ' + SubString ( pr.num_tel, 8, 3 )
+  									Else Left ( pr.num_tel, 2 ) + ' ' + SubString ( pr.num_tel, 3, 2 ) + ' ' + SubString ( pr.num_tel, 5, 2 ) + ' ' + SubString ( pr.num_tel, 7, 2 ) + ' ' + SubString ( pr.num_tel, 9, 2 )
+						  End
 From	sysadm.w_sin s, 
 		sysadm.w_commande c,
 		sysadm.code_garantie cg,
@@ -663,6 +720,23 @@ Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'CAPACITE', @sCapacite, rTrim ( 
 Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DUALSIM', @sDualSim, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
 Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'HP_ID_PROCESS_ACHEM', @sProcessAchem, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
 -- /[20240910134438210]
+
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DTE_ADH', Convert ( Varchar ( 10 ), @dtDteAdh, 103), rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DOS_CREE_LE', Convert ( Varchar ( 10 ), @dtCreele, 103), rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DTE_SURV', Convert ( Varchar ( 10 ), @dtDteSurv, 103), rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DTE_FIN_GTI', Convert ( Varchar ( 10 ), @dtFinGti, 103), rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'NUM_FAX_SPB', @sNumFaxSpb, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'NUM_TEL_SPB', @sNumTelSpb, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+
+Set @iDureeGc = Case 
+					When IsNumeric ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'duree_gti_orig', 'P', '' ) ) > 0
+						Then Convert ( Integer, sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'duree_gti_orig', 'P', '' ) )
+					Else null
+				End
+
+If @iDureeGc > 0 And @dtDateAchat is not null Set @dtFinGC = DateAdd ( Month, @iDureeGc, @dtDateAchat ) 
+
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DTE_FIN_GC', Convert ( Varchar ( 10 ), @dtFinGC, 103), rTrim ( @sInfo_spb_frn_cplt ) , ';' )
 
 Select 
 	@aiCas	'iCas',

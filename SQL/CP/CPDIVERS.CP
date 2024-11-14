@@ -7099,6 +7099,8 @@ While Exists ( Select Top 1 1 From @TbTrt where marquage = 0 )
 	Update @TbTrt Set marquage = 1 Where id_seq = @iIdSeq
  End
 
+-- On envoie le mail qu'une seule à 05h45
+If Not ( Getdate () between Convert( DateTime, COnvert ( VarChar ( 10 ), Getdate(), 103 ) + ' 05:15:00' ) and Convert( DateTime, COnvert ( VarChar ( 10 ), Getdate(), 103 ) + ' 06:15:00' )) Return
 
 -- chemin d'enregistrement du Result Set
 Set @sPath 	= master.sysadm.SPB_FN_GET_ROOT() + 'Sinistre\Extraction_RS2980_IFR\'
@@ -7135,7 +7137,7 @@ Set @sMessage = @sMessage + 'DSI/Etudes SIMPA2'
 
 EXEC master.dbo.SPB_PS_MAIL 
 			@sRetourErrMail OUTPUT, 
-			'MPVASSEUR@spb.eu,LTASSERIE@spb.eu,EDUBOC@spb.eu,IHACHANI@spb.eu,CLASSALE@spb.eu,cbourdoiseau@spb.eu,opons@spb.eu,dibersien@spb.eu,FDEMEDEIROS@spb.eu', -- 'jff@spb.fr',
+			'MPVASSEUR@spb.eu,LTASSERIE@spb.eu,EDUBOC@spb.eu,IHACHANI@spb.eu,CLASSALE@spb.eu,cbourdoiseau@spb.eu,opons@spb.eu,dibersien@spb.eu,FDEMEDEIROS@spb.eu,ISCRESFRDISTRIB@spb.eu', -- 'jff@spb.fr',
 			@sMessage, 
 			@sObjet, 
 			null, 

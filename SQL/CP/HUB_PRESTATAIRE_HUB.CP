@@ -1184,6 +1184,12 @@ Select
 	edi.FN_CLE_VAL ( 'COULEUR', info_spb_frn_cplt, ';') couleur,	
 	edi.FN_CLE_VAL ( 'CAPACITE', info_spb_frn_cplt, ';') capacite,	
 	edi.FN_CLE_VAL ( 'DUALSIM', info_spb_frn_cplt, ';') dualsim,
+	Convert ( Datetime, edi.FN_CLE_VAL ( 'DTE_ADH', info_spb_frn_cplt , ';' ), 103 ) dte_adh,
+	Convert ( Datetime, edi.FN_CLE_VAL ( 'DOS_CREE_LE', info_spb_frn_cplt , ';' ), 103 ) dos_cree_le,
+	Convert ( Datetime, edi.FN_CLE_VAL ( 'DTE_SURV', info_spb_frn_cplt , ';' ), 103 )  dte_surv,
+	Convert ( Datetime, edi.FN_CLE_VAL ( 'DTE_FIN_GTI', info_spb_frn_cplt , ';' ), 103 )  dte_fin_gti,
+	edi.FN_CLE_VAL ( 'NUM_FAX_SPB', info_spb_frn_cplt , ';' ) num_fax_spb,
+	edi.FN_CLE_VAL ( 'NUM_TEL_SPB', info_spb_frn_cplt , ';' ) num_tel_spb,
 	info_spb_frn_cplt
 
 From edi.DepotSimpa2ToHubPresta dps2
