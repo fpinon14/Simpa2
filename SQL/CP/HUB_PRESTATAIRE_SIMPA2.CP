@@ -1509,6 +1509,10 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 				Set @sPerteAller = sysadm.FN_CLE_VAL ( 'PERTE_ALLER', @sChaineBCVretourDetStatut, ';' )
 				Set @sPrbleLivraison = sysadm.FN_CLE_VAL ( 'PRBLE_LIVRAISON', @sChaineBCVretourDetStatut, ';' )
 				Set @sPecPrbleLivraison = sysadm.FN_CLE_VAL ( 'PEC_PRBLE_LIVRAISON', @sChaineBCVretourDetStatut, ';' )
+				Set @sDiagVideoEngage = sysadm.FN_CLE_VAL ( 'DIAG_VIDEO_ENGAGE', @sChaineBCVretourDetStatut, ';' )
+				Set @sResoluDiagVideo = sysadm.FN_CLE_VAL ( 'RESOLU_DIAG_VIDEO', @sChaineBCVretourDetStatut, ';' )
+				Set @sAppSwap = sysadm.FN_CLE_VAL ( 'APP_SWAP', @sChaineBCVretourDetStatut, ';' )
+				Set @sAppIncomplet = sysadm.FN_CLE_VAL ( 'APP_INCOMPLET', @sChaineBCVretourDetStatut, ';' )
 
 				If Len ( sysadm.FN_CLE_VAL ( 'DTE_RCP_FRN', @sChaineBCVretourDetStatut, ';' )) > 0 
 				  Begin
@@ -1524,8 +1528,6 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 				  Begin
 					Set @dtDteRcpAppCli = Convert ( DateTime, sysadm.FN_CLE_VAL ( 'DTE_RCP_APP_CLI', @sChaineBCVretourDetStatut, ';' ))
 				  End 
-
-				Set @sAppSwap = sysadm.FN_CLE_VAL ( 'APP_SWAP', @sChaineBCVretourDetStatut, ';' )
 
 				If sysadm.FN_CLE_VAL ( 'DDE_SAV', @sChaineBCVretourDetStatut, ';' ) = 'OUI' 
 					Begin
@@ -1976,9 +1978,9 @@ If	@asActivityCode = 'DEVICE_RECEPTION' And
 
 
 -- Cas de l'incomplet
-If	@asActivityCode = 'RETURN_OF_CONFORMITY' And 
+If	@asActivityCode in ( 'RETURN_OF_CONFORMITY', 'VIDEO_DIAGNOSIS' ) And 
 	@asActivityReturnCode = 'KO' And
-	@asActivityReasonCode = 'INCOMPLETE_DEVICE'
+	@asActivityReasonCode = 'INCOMPLETE_DEVICE' 
 	Begin
 		Set @sSql = 
 		'Update ' + @asInstanceHub + 'edi.DepotHubToSimpa2Presta '  +
@@ -2044,6 +2046,27 @@ If	@asActivityCode in ( 'CUSTOMER_ACKNOWLEDGMENT', 'CARRIER_ACKNOWLEDGMENT' ) An
 		'Update ' + @asInstanceHub + 'edi.DepotHubToSimpa2Presta '  +
 		'Set dte_rcp_app_cli = '''+ Convert ( varchar ( 10 ), GETDATE(), 110 ) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00' + '''' + 
 		'    where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @aiIdDepotHub )  
+		Exec ( @sSql )
+	End 
+
+-- Cas Diag vidéo : marquage engagé&non engagé
+If	@asActivityCode in ( 'CONTACT_VIDEO_DIAGNOSIS', 'VIDEO_DIAGNOSIS' )
+	Begin
+		Set @sSql = 
+		'Update ' + @asInstanceHub + 'edi.DepotHubToSimpa2Presta '  +
+		'Set diag_video_engage = '''+ sysadm.FN_CLE_VAL ( 'DIAG_VIDEO_ENGAGE', @sBCVserial, ';') + '''' +
+		'where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @aiIdDepotHub )  
+		Exec ( @sSql )
+	End 
+
+-- Cas Diag vidéo : Résoluation par diag vidéo
+If	@asActivityCode in ( 'VIDEO_DIAGNOSIS' ) and 
+	@asActivityReturnCode in ( 'CONCLUSIVE_RESOLVED' )
+	Begin
+		Set @sSql = 
+		'Update ' + @asInstanceHub + 'edi.DepotHubToSimpa2Presta '  +
+		'Set resolu_diag_video = '''+ sysadm.FN_CLE_VAL ( 'RESOLU_DIAG_VIDEO', @sBCVserial, ';') + '''' +
+		'where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @aiIdDepotHub )  
 		Exec ( @sSql )
 	End 
 	
