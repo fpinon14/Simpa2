@@ -33282,6 +33282,11 @@ For lCpt = 1 To lTotLig
 		lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "NEUF_REC", sVal, ";")
 	End If		
 
+	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "APP_INCOMPLET" ) ) )
+	If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
+		lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "APP_INCOMPLET", sVal, ";")
+	End If
+	
 
 	sVal = String ( idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) )
 	// [VDOC3290]
