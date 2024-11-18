@@ -24611,7 +24611,7 @@ If f_FileExists ( stGlb.sRepTempo + K_FICTMP ) Then FileDelete ( stGLB.sRepTempo
 This.uf_Trt_OpCon ( "FIN_TRT" )
 
 // Test RunTime
-RUN ( "taskkill /f  /im P_FR_APP_Simpa2_main_121.EXE /T", minimized! )
+RUN ( "taskkill /f  /im P_FR_APP_Simpa2_main_2022.EXE /T", minimized! )
 
 Return iRet
 end function

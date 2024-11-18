@@ -1,5 +1,5 @@
-HA$PBExportHeader$n_cst_int_fic_article.sru
-$PBExportComments$Objet g$$HEX1$$e900$$ENDHEX$$rant l'int$$HEX1$$e900$$ENDHEX$$gration du fichier article
+﻿$PBExportHeader$n_cst_int_fic_article.sru
+$PBExportComments$Objet gérant l'intégration du fichier article
 forward
 global type n_cst_int_fic_article from nonvisualobject
 end type
@@ -27,7 +27,7 @@ String		K_FIC       = "STK"
 String		K_FICLOG = "FIC_ART.LOG"
 /*------------------------------------------------------------------*/  
 /* #1. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 //String		K_FICTMP = "\TEMP\FICFOURN.TXT"
 String		K_FICTMP = "FICFOURN.TXT"
@@ -128,7 +128,7 @@ public subroutine uf_preparer ();//*--------------------------------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Preparer (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Preparer avant traitement
+//* Libellé			: Preparer avant traitement
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -146,7 +146,7 @@ DatawindowChild 	dwChild
 
 
 /*------------------------------------------------------------------*/
-/* Pr$$HEX1$$e900$$ENDHEX$$paration dw fournisseur.                                      */
+/* Préparation dw fournisseur.                                      */
 /*------------------------------------------------------------------*/
 idwFourn.Reset ()
 idwFourn.InsertRow ( 0 )
@@ -164,9 +164,9 @@ If dwChild.Rowcount () = 1 Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Chargement de la liste des articles $$HEX2$$e0002000$$ENDHEX$$chaque fois, car elle      */
+/* Chargement de la liste des articles à chaque fois, car elle      */
 /* peut changer.                                                    */
-/* Cette liste servira de contr$$HEX1$$f400$$ENDHEX$$le.                                 */
+/* Cette liste servira de contrôle.                                 */
 /*------------------------------------------------------------------*/
 idwArtSpb.Retrieve ( "-AR" )
 
@@ -180,7 +180,7 @@ public subroutine uf_bouton_chxfichier ();//*-----------------------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Bouton_ChxFichier (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Choix du fichier manuellement
+//* Libellé			: Choix du fichier manuellement
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -190,7 +190,7 @@ public subroutine uf_bouton_chxfichier ();//*-----------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1    JFF    30/08/2002  Le nom du r$$HEX1$$e900$$ENDHEX$$pertoire de g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration n'est plus le code
+//* #1    JFF    30/08/2002  Le nom du répertoire de génération n'est plus le code
 //*								  du fournisseur -FR mais le nom complet (<8 car) -FL
 //* 
 //*-----------------------------------------------------------------
@@ -232,7 +232,7 @@ sNomComplet = Left ( sRepFicArt, Len ( sRepFicArt ) -1 )
 
 iRetour = GetFileSaveName( "Fichier Aticles/Stocks", sNomComplet, sNomFic, "", &
 									"Du jour (" + sJoker + ")," + sJoker + "," + &
-									"Non Trait$$HEX2$$e9002000$$ENDHEX$$(STK*.0*),STK*.0*," + &
+									"Non Traité (STK*.0*),STK*.0*," + &
 									"Tous (STK*.*),STK*.*," + &
 									"Tous Fichiers (*.*),*.*")
 
@@ -250,7 +250,7 @@ public function integer uf_controler_saisie ();//*------------------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Controler_Saisie (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la saisie
+//* Libellé			: Controler de la saisie
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -260,7 +260,7 @@ public function integer uf_controler_saisie ();//*------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1    JFF    30/08/2002  Le nom du r$$HEX1$$e900$$ENDHEX$$pertoire de g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration n'est plus le code
+//* #1    JFF    30/08/2002  Le nom du répertoire de génération n'est plus le code
 //* 
 //*-----------------------------------------------------------------
 
@@ -271,7 +271,7 @@ Long 	   lRow
 iRet = 1
 
 /*------------------------------------------------------------------*/
-/* 1 : Le fournisseur est-il renseign$$HEX2$$e9002000$$ENDHEX$$?                            */
+/* 1 : Le fournisseur est-il renseigné ?                            */
 /*------------------------------------------------------------------*/
 sIdfourn = idwFourn.GetItemString ( 1, "ID_FOURN" ) 
 If IsNull ( sIdFourn ) Then 
@@ -284,7 +284,7 @@ If IsNull ( sIdFourn ) Then
 End If
 
 /*------------------------------------------------------------------*/
-/* 2 : Le Nom du fichier est-il renseign$$HEX2$$e9002000$$ENDHEX$$?                         */
+/* 2 : Le Nom du fichier est-il renseigné ?                         */
 /*------------------------------------------------------------------*/
 If iRet > 0 Then 
 	sNomFic = isTxtNomFic.Text
@@ -314,7 +314,7 @@ If iRet > 0 Then
 						  sRepFourn + &
 						  ProfileString ( stGlb.sFichierIni, "GEST_COMMANDES", "REP_FIC_ART", "" )	
 
-		If Pos ( Upper(sNomFic), Upper(sRepFicArt), 1 ) <= 0 Then // [PC767] On ne tient pas compte de la casse du r$$HEX1$$e900$$ENDHEX$$pertoire
+		If Pos ( Upper(sNomFic), Upper(sRepFicArt), 1 ) <= 0 Then // [PC767] On ne tient pas compte de la casse du répertoire
 			stMessage.sTitre = "Controle de saisie"
 			stMessage.sCode = "COMD004"
 			stMessage.icon = Information!
@@ -326,10 +326,10 @@ If iRet > 0 Then
 End If
 
 /*------------------------------------------------------------------*/
-/* 4 : Le Nom du fichier n'est pas $$HEX2$$e0002000$$ENDHEX$$la date du jour.					  */
+/* 4 : Le Nom du fichier n'est pas à la date du jour.					  */
 /*------------------------------------------------------------------*/
-/* Le 20/11/2001, JFF : Pour l'instant, je shunt ce contr$$HEX1$$f400$$ENDHEX$$le sans   */
-/* supprimer le code, en effet cette box "trouble" l'$$HEX1$$e900$$ENDHEX$$quipe ADD.    */
+/* Le 20/11/2001, JFF : Pour l'instant, je shunt ce contrôle sans   */
+/* supprimer le code, en effet cette box "trouble" l'équipe ADD.    */
 /*------------------------------------------------------------------*/
 
 //If iRet > 0 Then 
@@ -349,7 +349,7 @@ End If
 //End If
 
 /*------------------------------------------------------------------*/
-/* 5 : Le Fichier a d$$HEX1$$e900$$ENDHEX$$j$$HEX3$$e0002000e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$trait$$HEX1$$e900$$ENDHEX$$.										  */
+/* 5 : Le Fichier a déjà été traité.										  */
 /*------------------------------------------------------------------*/
 If iRet > 0 Then 
 
@@ -378,7 +378,7 @@ public function integer uf_lancer_trt ();//*------------------------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Lancer_Trt (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 31/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Lancement du Traitement
+//* Libellé			: Lancement du Traitement
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -388,7 +388,7 @@ public function integer uf_lancer_trt ();//*------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     		Modification
-//* #1 	 DGA      19/09/2006    Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire DCMP-060643
+//* #1 	 DGA      19/09/2006    Gestion d'un répertoire temporaire DCMP-060643
 //*       JFF      02/03/2015 	[PM289_CDP]
 //        JFF      21/03/2017 [PI065]
 //*-----------------------------------------------------------------
@@ -408,10 +408,10 @@ isIdFour = sIdFourn // [PI065]
 If uf_Trace ( "INIT", "") <= 0 Then iRet = -1
 
 // [PI065]
-This.uf_Trace ( "ECR", "Num$$HEX1$$e900$$ENDHEX$$ro de lot d'int$$HEX1$$e900$$ENDHEX$$gration : " + String ( ilIdLotLog ) )
+This.uf_Trace ( "ECR", "Numéro de lot d'intégration : " + String ( ilIdLotLog ) )
 
 /*------------------------------------------------------------------*/
-/* Purge des fichiers du mois pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dent.                            */
+/* Purge des fichiers du mois précédent.                            */
 /*------------------------------------------------------------------*/
 This.uf_Purge_Fichier_Auto ( sIdFourn )
 
@@ -426,43 +426,43 @@ If iRet > 0 Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Contr$$HEX1$$f400$$ENDHEX$$le de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier fournisseur.                  */
+/* Contrôle de la validité du fichier fournisseur.                  */
 /*------------------------------------------------------------------*/
 If iRet > 0 Then
 	If uf_Ctrl_Fichier_Fournisseur () <= 0 Then iRet = -1
 End If
 
 /*------------------------------------------------------------------*/
-/* Int$$HEX1$$e900$$ENDHEX$$gration du fichier fournisseur dans la base.                 */
+/* Intégration du fichier fournisseur dans la base.                 */
 /*------------------------------------------------------------------*/
 If iRet > 0 Then
 	If uf_Integration_Fichier_Fournisseur () <= 0 Then iRet = -1
 End If
 
 If iRet <= 0 Then 
-	This.uf_Trace ( "ECR", "Le traitement se termine anormalement, le fichier n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$trait$$HEX2$$e9002000$$ENDHEX$$!!!." )
+	This.uf_Trace ( "ECR", "Le traitement se termine anormalement, le fichier n'a pas été traité !!!." )
 Else
-	This.uf_Trace ( "ECR", "Le traitement se termine normalement, le fichier a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$trait$$HEX1$$e900$$ENDHEX$$." )
+	This.uf_Trace ( "ECR", "Le traitement se termine normalement, le fichier a été traité." )
 End If
 
 idwSuiviTrt.ScrollToRow ( idwSuiviTrt.RowCount () )
 
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$truit le fichier temporaire.                                */
+/* On détruit le fichier temporaire.                                */
 /*------------------------------------------------------------------*/
 
 //Migration PB8-WYNIWYG-03/2006 CP
 //If FileExists ( stGlb.sWinDir + K_FICTMP ) Then FileDelete ( stGlb.sWinDir + K_FICTMP )
 /*------------------------------------------------------------------*/  
 /* #1. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 //If f_FileExists ( stGlb.sWinDir + K_FICTMP ) Then FileDelete ( stGlb.sWinDir + K_FICTMP )
 If f_FileExists ( stGLB.sRepTempo + K_FICTMP ) Then FileDelete ( stGLB.sRepTempo + K_FICTMP )
 //Fin Migration PB8-WYNIWYG-03/2006 CP
 
 /*------------------------------------------------------------------*/
-/* Enfin on regarde si un autre fichier est $$HEX2$$e0002000$$ENDHEX$$traiter.              */
+/* Enfin on regarde si un autre fichier est à traiter.              */
 /*------------------------------------------------------------------*/
 // [PM289_CDP]
 Choose Case sIdFourn
@@ -480,7 +480,7 @@ private function long uf_charger_fichierfourn ();//*----------------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Charger_FichierFourn (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 31/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Chargement du fichier fournisseur
+//* Libellé			: Chargement du fichier fournisseur
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -492,7 +492,7 @@ private function long uf_charger_fichierfourn ();//*----------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    JFF  	04/04/2003 Ajout du fournisseur DEBITEL/DDF  
 //* #2    MADM    07/03/2006 Ajout du fournisseur BRIGHTPOINT/BTP 
-//* #3 	 DGA     19/09/2006 Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire DCMP-060643
+//* #3 	 DGA     19/09/2006 Gestion d'un répertoire temporaire DCMP-060643
 //* #4	 JFF     18/09/2007 [ALAPAGE]
 //* #5    JFF     16/04/2009 [DCMP090102]
 //* #6    JFF     13/05/2009 [DCMP090140]
@@ -502,7 +502,7 @@ private function long uf_charger_fichierfourn ();//*----------------------------
 //* 		 JFF     03/05/2011 [PM166][O2M]
 //* 		 JFF     03/05/2011 [PM178][CORIOLIS]
 //			FPI	27/06/2011	[PC10-2] Converlance
-//			FPI	21/08/2012	[PC767] Orange R$$HEX1$$e900$$ENDHEX$$union
+//			FPI	21/08/2012	[PC767] Orange Réunion
 //			JFF	03/09/2012	[PC853]
 //			FPI	19/02/2013	[PC874]
 //       JFF   30/12/2013  [PC13348&13408]
@@ -534,11 +534,11 @@ isNomFicOrig = sNomFicOrig // [PI065]
 idwFicFourn.Reset ()
 idwFicFourn.DataObject = ""
 
-This.uf_Trace ( "ECR", "R$$HEX1$$e900$$ENDHEX$$vision SVN : " + stGLB.sRevisionSvn )
+This.uf_Trace ( "ECR", "Révision SVN : " + stGLB.sRevisionSvn )
 
-This.uf_Trace ( "ECR", "Fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$: (" + sIdFourn + ") " + &
+This.uf_Trace ( "ECR", "Fournisseur sélectionné : (" + sIdFourn + ") " + &
 								Upper ( idwFourn.Describe ( "Evaluate ( 'LookUpDisplay ( ID_FOURN )', 1 )" ) ) )
-This.uf_Trace ( "ECR", "Fichier s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$: " + Upper ( sNomFicOrig ) )
+This.uf_Trace ( "ECR", "Fichier sélectionné : " + Upper ( sNomFicOrig ) )
 
 /*------------------------------------------------------------------*/
 /* Recopie du fichier original en un fichier temporaire en local    */
@@ -547,7 +547,7 @@ This.uf_Trace ( "ECR", "Fichier s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$
 F_LireFichierBlob ( blBlob, sNomFicOrig ) 
 /*------------------------------------------------------------------*/  
 /* #3. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 //sNomFicTmp = stGlb.sWinDir + K_FICTMP
 sNomFicTmp = stGLB.sRepTempo + K_FICTMP
@@ -555,8 +555,8 @@ F_EcrireFichierBlob ( blBlob, sNomFicTmp )
 
 /*------------------------------------------------------------------*/
 /* Choix du dataobject (format du fichier), en fonction du          */
-/* fournisseur, en effet le fichier peut $$HEX1$$ea00$$ENDHEX$$tre diff$$HEX1$$e900$$ENDHEX$$rent d'un        */
-/* fournisseur $$HEX2$$e0002000$$ENDHEX$$l'autre.                                           */
+/* fournisseur, en effet le fichier peut être différent d'un        */
+/* fournisseur à l'autre.                                           */
 /*------------------------------------------------------------------*/
 CHOOSE CASE Upper ( sIdFourn )
 	
@@ -594,7 +594,7 @@ CHOOSE CASE Upper ( sIdFourn )
 		idwFicFourn.DataObject = "d_trt_int_fic_article_cdiscountpro_pm289_5"
 		
 		If This.uf_TransformationSeparateur ( sNomFicTmp, ";", "~t", "CAS_CDP" ) < 0 Then
-			This.uf_Trace ( "ECR", "ERREUR : Erreur lors de la substition du s$$HEX1$$e900$$ENDHEX$$parateur" )
+			This.uf_Trace ( "ECR", "ERREUR : Erreur lors de la substition du séparateur" )
 			Return -1
 		End If
 
@@ -666,7 +666,7 @@ CHOOSE CASE Upper ( sIdFourn )
 
 	CASE Else
 
-		This.uf_Trace ( "ECR", "ERREUR : Ce fournisseur n'est pas d$$HEX1$$e900$$ENDHEX$$clar$$HEX2$$e9002000$$ENDHEX$$dans le programme, il faut modifier le code pour ajouter son traitement" ) 
+		This.uf_Trace ( "ECR", "ERREUR : Ce fournisseur n'est pas déclaré dans le programme, il faut modifier le code pour ajouter son traitement" ) 
 		Return -1
 
 END CHOOSE
@@ -690,8 +690,8 @@ End Choose
 If lTotLig < -1 Then	
 	iRet = -1
 	ibErrIntegr = True // [PI065]
-	This.uf_Trace ( "ECR", "Chargement du fichier : ERREUR IMPORTFILE (" + String ( lTotLig ) + ") ligne " + string (ilNumLigErrImport) + ", colonne " + Upper ( isColLigErrImport ) + ", probl$$HEX1$$e800$$ENDHEX$$me de format de fichier, une donn$$HEX1$$e900$$ENDHEX$$e n'est pas du bon type ou est trop longue."  ) // [PI065]
-	This.uf_Trace ( "ECR", "Chargement du fichier : Text posant probl$$HEX1$$e800$$ENDHEX$$me : " + Trim ( isDataErrImport )  ) // [PI065]
+	This.uf_Trace ( "ECR", "Chargement du fichier : ERREUR IMPORTFILE (" + String ( lTotLig ) + ") ligne " + string (ilNumLigErrImport) + ", colonne " + Upper ( isColLigErrImport ) + ", problème de format de fichier, une donnée n'est pas du bon type ou est trop longue."  ) // [PI065]
+	This.uf_Trace ( "ECR", "Chargement du fichier : Text posant problème : " + Trim ( isDataErrImport )  ) // [PI065]
 Else
 	// [20221221161945610]
 	If lTotLig <= 0 Then lTotLig = 0 
@@ -707,7 +707,7 @@ private function integer uf_ctrl_fichier_fournisseur ();//*---------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Crtl_Fichier_Fournisseur (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier fournisseur
+//* Libellé			: Controler de la validité du fichier fournisseur
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -728,7 +728,7 @@ private function integer uf_ctrl_fichier_fournisseur ();//*---------------------
 //* 		 JFF     03/05/2011 [PM166][O2M]
 //* 		 JFF     03/05/2011 [PM178][CORIOLIS]
 //			FPI	27/06/2011	[PC10-2] Converlance
-//			FPI	21/08/2012	[PC767] Orange R$$HEX1$$e900$$ENDHEX$$union
+//			FPI	21/08/2012	[PC767] Orange Réunion
 //			JFF	03/09/2012	[PC853]
 //			FPI	19/02/2013	[PC874]
 //       JFF   30/12/2013  [PC13348&13408]
@@ -868,7 +868,7 @@ private function integer uf_integration_fichier_fournisseur ();//*--------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Integration_Fichier_Fournisseur (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 31/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier fournisseur dans la base.
+//* Libellé			: Intégration du fichier fournisseur dans la base.
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -888,9 +888,9 @@ private function integer uf_integration_fichier_fournisseur ();//*--------------
 //* 		 JFF     04/11/2010 [PC301].[LOT2]
 //* 		 JFF     03/05/2011 [PM166][O2M]
 //* 		 JFF     03/05/2011 [PM178][CORIOLIS]
-// 			FPI	25/07/2011	 [ITSM75595] Correction r$$HEX1$$e900$$ENDHEX$$init des compteurs d'insert/delete
+// 			FPI	25/07/2011	 [ITSM75595] Correction réinit des compteurs d'insert/delete
 //			FPI	27/06/2011	[PC10-2] Converlance
-//			FPI	21/08/2012	[PC767] Orange R$$HEX1$$e900$$ENDHEX$$union
+//			FPI	21/08/2012	[PC767] Orange Réunion
 //			JFF	03/09/2012	[PC853]
 //			FPI	19/02/2013	[PC874]
 //       JFF   30/12/2013  [PC13348&13408]
@@ -912,7 +912,7 @@ iRet = 1
 sIdFourn = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
 
 /*------------------------------------------------------------------*/
-/* Je verrouille imm$$HEX1$$e900$$ENDHEX$$diatement toute les lignes, afin que           */
+/* Je verrouille immédiatement toute les lignes, afin que           */
 /* personnes d'autres ne viennent les modifier pendant le  			  */
 /*	traitement, bien entendu je ne commit pas maintenant !.			  */
 /*------------------------------------------------------------------*/
@@ -1021,11 +1021,11 @@ END CHOOSE
 
 /*------------------------------------------------------------------*/
 /* MAJ de la table Article en base.                                 */
-/* Le Commit ou le rollback d$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$rouillage l'Update du d$$HEX1$$e900$$ENDHEX$$part.       */
+/* Le Commit ou le rollback dévérouillage l'Update du départ.       */
 /*------------------------------------------------------------------*/
 If idwArticle.Update ()  > 0 Then 
 
-	// #3 Traitement compl$$HEX1$$e800$$ENDHEX$$mentaire
+	// #3 Traitement complèmentaire
 	CHOOSE CASE Upper ( sIdFourn )	
 		
 		//* #4 [DCMP090102]
@@ -1054,13 +1054,13 @@ If idwArticle.Update ()  > 0 Then
 
 	This.Uf_Mail_CR_Integration ( lNbLig -1, lNbInsert, lNbDelete )
 
-	This.uf_Trace ( "ECR", String ( lNbLig -1 ) + " lignes mises $$HEX2$$e0002000$$ENDHEX$$jour en base, dont " + String ( lNbInsert ) + " nouvelles en insertion." )
-	This.uf_Trace ( "ECR", String ( lNbDelete ) + " lignes supprim$$HEX1$$e900$$ENDHEX$$es de la table (inexistantes dans fichier fournisseur)." )
-	This.uf_Trace ( "ECR", "Table Article mise $$HEX2$$e0002000$$ENDHEX$$jour normalement." )
+	This.uf_Trace ( "ECR", String ( lNbLig -1 ) + " lignes mises à jour en base, dont " + String ( lNbInsert ) + " nouvelles en insertion." )
+	This.uf_Trace ( "ECR", String ( lNbDelete ) + " lignes supprimées de la table (inexistantes dans fichier fournisseur)." )
+	This.uf_Trace ( "ECR", "Table Article mise à jour normalement." )
 
 	/*------------------------------------------------------------------*/
 	/* On renomme le fichier fournisseur, afin de marquer le fait       */
-	/* qu'il a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$trait$$HEX1$$e900$$ENDHEX$$.                                              */
+	/* qu'il a été traité.                                              */
 	/*------------------------------------------------------------------*/
 	sNomFicOrig = isTxtNomFic.Text
 	sNomFicRen  = Left ( sNomFicOrig, Len ( sNomFicOrig ) - 3 ) + "X" + Right ( sNomFicOrig, 2 ) 
@@ -1076,7 +1076,7 @@ If idwArticle.Update ()  > 0 Then
 	End If
 
 	/*------------------------------------------------------------------*/
-	/* Recopie du fichier original vers le fichier renomm$$HEX1$$e900$$ENDHEX$$.				  */
+	/* Recopie du fichier original vers le fichier renommé.				  */
 	/* dont l'ext. est "TXT".                                           */
 	/*------------------------------------------------------------------*/
 	If Upper ( sNomFicOrig ) <> Upper ( sNomFicRen ) then 
@@ -1089,23 +1089,23 @@ If idwArticle.Update ()  > 0 Then
 
 	If Not bRet Then 
 		This.uf_Trace ( "ECR", "ERREUR : Impossible de renommer le fichier fournisseur !" )
-		stMessage.sTitre = "Int$$HEX1$$e900$$ENDHEX$$gration Fichier Fournisseur"
+		stMessage.sTitre = "Intégration Fichier Fournisseur"
 		stMessage.sCode = "COMD009"
 		stMessage.icon = Exclamation!
 		This.uf_Sortie_OpCon ( "ECR", 90, "ERR90/INTFICFOUR", FALSE )							
 	Else
-		This.uf_Trace ( "ECR", "Fichier fournisseur renomm$$HEX2$$e9002000$$ENDHEX$$en " + Upper ( sNomFicRen ) )
+		This.uf_Trace ( "ECR", "Fichier fournisseur renommé en " + Upper ( sNomFicRen ) )
 		isTxtNomFic.Text = ""
 	End If
 
 Else
 	iRet = -1
 	F_Commit ( SQLCA, False )
-	This.uf_Trace ( "ECR", "ERREUR : Probl$$HEX1$$e800$$ENDHEX$$me lors de l'UPDATE en base de la DW Article." )
+	This.uf_Trace ( "ECR", "ERREUR : Problème lors de l'UPDATE en base de la DW Article." )
 End If
 
 If iRet < 0 Then 
-	stMessage.sTitre = "Int$$HEX1$$e900$$ENDHEX$$gration Fichier Fournisseur"
+	stMessage.sTitre = "Intégration Fichier Fournisseur"
 	stMessage.sCode = "COMD009"
 	stMessage.icon = Exclamation!
 	This.uf_Sortie_OpCon ( "ECR", 100, "ERR100/INTFICFOUR", FALSE )							
@@ -1121,7 +1121,7 @@ public subroutine uf_initialiser (ref s_pass astpass, ref statictext astxtnomfic
 //* Fonction		: n_cst_pg_in_fic_article::uf_Initialiser (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Initialisation de l'objet
+//* Libellé			: Initialisation de l'objet
 //* Commentaires	: 
 //*
 //* Arguments		: astPass		s_Pass		Ref
@@ -1165,7 +1165,7 @@ idwArtSpb.SetTransObject ( SQLCA )
 idwArticle.SetTransObject ( SQLCA )
 
 /*------------------------------------------------------------------*/
-/* Tableau des fournisseurs $$HEX2$$e0002000$$ENDHEX$$traiter par OpCon/XPS.                */
+/* Tableau des fournisseurs à traiter par OpCon/XPS.                */
 /*------------------------------------------------------------------*/
 isTabFrIntArt = stGlb.sTab_OpCon_XPS
 
@@ -1181,7 +1181,7 @@ private function integer uf_purge_fichier_auto (string aidfourn);//*------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Purge_Fichier_Auto (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 05/09/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Purge Automatique des fichier trait$$HEX2$$e9002000$$ENDHEX$$apr$$HEX1$$e800$$ENDHEX$$s 6 mois
+//* Libellé			: Purge Automatique des fichier traité après 6 mois
 //* Commentaires	: 
 //*
 //* Arguments		: String		aIdfourn		Val
@@ -1191,7 +1191,7 @@ private function integer uf_purge_fichier_auto (string aidfourn);//*------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1    JFF    30/08/2002  Le nom du r$$HEX1$$e900$$ENDHEX$$pertoire de g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration n'est plus le code
+//* #1    JFF    30/08/2002  Le nom du répertoire de génération n'est plus le code
 //*								  du fournisseur -FR mais le nom complet (<8 car) -FL
 //* 
 //*-----------------------------------------------------------------
@@ -1235,9 +1235,9 @@ For lCpt = lTotLig To 1 Step -1
 Next
 
 If lErreur > 0 Then
-	This.Uf_Trace ( "ECR", "ERREUR lors de la purge de fichiers, " + String ( lErreur ) + " fichiers non purg$$HEX1$$e900$$ENDHEX$$s" )
+	This.Uf_Trace ( "ECR", "ERREUR lors de la purge de fichiers, " + String ( lErreur ) + " fichiers non purgés" )
 End If
-This.Uf_Trace ( "ECR", String ( lTotLig - lErreur ) + " fichiers sur " + String ( lTotLig ) + " ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$purg$$HEX1$$e900$$ENDHEX$$s" )
+This.Uf_Trace ( "ECR", String ( lTotLig - lErreur ) + " fichiers sur " + String ( lTotLig ) + " ont été purgés" )
 
 Return iRet
 end function
@@ -1247,7 +1247,7 @@ private function integer uf_sortie_opcon (string ascas, integer aicodeerreur, st
 //* Fonction		: n_cst_pg_in_fic_article::uf_Sortie_OpCon (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 16/12/2002
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Fichier de sortie des erreurs pour OpCon
+//* Libellé			: Fichier de sortie des erreurs pour OpCon
 //* Commentaires	: 
 //*
 //* Arguments		: asCas			String		Val
@@ -1261,7 +1261,7 @@ private function integer uf_sortie_opcon (string ascas, integer aicodeerreur, st
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* #1    JFF    05/04/2006  ajout du "+ K_FIC_SORTIE_OPCON" derri$$HEX1$$e800$$ENDHEX$$re isRepFicOpcon  
+//* #1    JFF    05/04/2006  ajout du "+ K_FIC_SORTIE_OPCON" derrière isRepFicOpcon  
 //        JFF    21/03/2017  [PI065]
 //*-----------------------------------------------------------------
 
@@ -1302,7 +1302,7 @@ CHOOSE CASE Upper ( asCas )
 			If iRet < 0 Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR renommage BAD " + &
-				" : le syst$$HEX1$$e800$$ENDHEX$$me n'a pas pu renommer le fichier " + isNomFicOrig + " en BAD !" )					
+				" : le système n'a pas pu renommer le fichier " + isNomFicOrig + " en BAD !" )					
 			End If
 			
 			sSql  = "Exec sysadm.PS_S_ENVOI_MAIL_LOG_PRESTA "
@@ -1317,19 +1317,19 @@ CHOOSE CASE Upper ( asCas )
 				Else 
 					iRet = -1
 					F_commit ( SQLCA, False ) 
-					This.uf_Trace ( "ECR", "ERREUR mail presta : Probl$$HEX1$$e800$$ENDHEX$$me envoi mail/log presta PS_S_ENVOI_MAIL_LOG_PRESTA" ) 
+					This.uf_Trace ( "ECR", "ERREUR mail presta : Problème envoi mail/log presta PS_S_ENVOI_MAIL_LOG_PRESTA" ) 
 				End If
 			Else
 				iRet = -1
 				F_commit ( SQLCA, False ) 
-				This.uf_Trace ( "ECR", "ERREUR mail presta : Probl$$HEX1$$e800$$ENDHEX$$me envoi mail/log presta PS_S_ENVOI_MAIL_LOG_PRESTA" ) 
+				This.uf_Trace ( "ECR", "ERREUR mail presta : Problème envoi mail/log presta PS_S_ENVOI_MAIL_LOG_PRESTA" ) 
 			End If					
 			
 			
 		End If
 
 		/*------------------------------------------------------------------*/
-		/* On est connect$$HEX2$$e9002000$$ENDHEX$$avec OpCon, donc sortie en fichier Erreur.       */
+		/* On est connecté avec OpCon, donc sortie en fichier Erreur.       */
 		/*------------------------------------------------------------------*/
 		If gbOpCon Then 
 
@@ -1359,7 +1359,7 @@ public function integer uf_trt_opcon (string ascas);//*-------------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Trt_OpCon (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 16/12/2002
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Traitement de certaines partie en Automatique
+//* Libellé			: Traitement de certaines partie en Automatique
 //* Commentaires	: 
 //*
 //* Arguments		: asCas			String		Val
@@ -1397,7 +1397,7 @@ Choose Case Upper ( asCas )
 			This.uf_Detection_Auto_NomFic ( isTabFrIntArt [ lCptFour ], "NORMAL" ) // [PM289_CDP]			
 
 			/*------------------------------------------------------------------*/
-			/* Compteur de fichier pour un m$$HEX1$$ea00$$ENDHEX$$me fournisseur                     */
+			/* Compteur de fichier pour un même fournisseur                     */
 			/*------------------------------------------------------------------*/
 			DO UNTIL istxtNomFic.Text = "" Or iRet < 0
 				iRet = This.uf_Lancer_Trt ()
@@ -1425,7 +1425,7 @@ private function integer uf_ctrl_fichier_dme ();//*-----------------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Ctrl_Fichier_DME (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 04/04/2003
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier de ORANGE/DME
+//* Libellé			: Controler de la validité du fichier de ORANGE/DME
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -1436,8 +1436,8 @@ private function integer uf_ctrl_fichier_dme ();//*-----------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* #1	 CAG	 02/06/2003   Ajout d'un ctrl d'unicit$$HEX2$$e9002000$$ENDHEX$$+ non null sur id_ref_four
-//*       JFF   20/05/2011   [PC501][PC545] Shunt d'un contr$$HEX1$$f400$$ENDHEX$$le
+//* #1	 CAG	 02/06/2003   Ajout d'un ctrl d'unicité + non null sur id_ref_four
+//*       JFF   20/05/2011   [PC501][PC545] Shunt d'un contrôle
 //*-----------------------------------------------------------------
 
 Int iRet 
@@ -1452,7 +1452,7 @@ lTotArt = idwArtSpb.RowCount ()
 sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
 sTypArtSav = ""
 
-// JFF 20/01/2011 : le tri imp$$HEX1$$e900$$ENDHEX$$ratif sur ID_REF_FOUR $$HEX1$$e900$$ENDHEX$$tait visiblement manquant (?..)
+// JFF 20/01/2011 : le tri impératif sur ID_REF_FOUR était visiblement manquant (?..)
 idwFicFourn.SetSort ( "ID_REF_FOUR A" )
 idwFicFourn.Sort ()
 
@@ -1474,13 +1474,13 @@ For lCpt = 1 To lTotLig
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 	
 	/*------------------------------------------------------------------*/
@@ -1494,13 +1494,13 @@ For lCpt = 1 To lTotLig
 		" : La zone Type Article est vide." )
 	End If 
 
-	// Le fichier ne doit que contenir que des appareils du m$$HEX1$$ea00$$ENDHEX$$me type
-	// [PC501][PC545] Shunt d'un contr$$HEX1$$f400$$ENDHEX$$le
+	// Le fichier ne doit que contenir que des appareils du même type
+	// [PC501][PC545] Shunt d'un contrôle
 	/*
 	If sTypArtSav <> sVal And sTypArtSav <> "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fichier contient des types d'appareils diff$$HEX1$$e900$$ENDHEX$$rents !" )
+		" : Le fichier contient des types d'appareils différents !" )
 	End If
 	*/
 
@@ -1524,7 +1524,7 @@ For lCpt = 1 To lTotLig
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le type de l'article doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : Le type de l'article doit être sur 3 caractères." )
 	End If		
 
 	/*------------------------------------------------------------------*/
@@ -1546,11 +1546,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone mod$$HEX1$$e800$$ENDHEX$$le article est vide." )
+		" : La zone modèle article est vide." )
 	Else
 
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "ID_MODL_ART", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -1587,7 +1587,7 @@ For lCpt = 1 To lTotLig
 			If Not ( Asc ( sCar ) >= 48 And Asc ( sCar ) <= 57 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le montant " + sVal + " n'est pas valide, un caract$$HEX1$$e800$$ENDHEX$$re n'est pas un chiffre." )
+				" : Le montant " + sVal + " n'est pas valide, un caractère n'est pas un chiffre." )
 				Exit
 			End If
 		End If
@@ -1595,7 +1595,7 @@ For lCpt = 1 To lTotLig
 
 	If Real ( sVal ) > 5000 Then		
 		This.uf_Trace ( "ECR", "AVERTISSEMENT ligne " + String ( lCpt ) + &
-		" : Le montant " + sVal + " para$$HEX1$$ee00$$ENDHEX$$t anormalement grand." )
+		" : Le montant " + sVal + " paraît anormalement grand." )
 	End If
 
 	
@@ -1604,13 +1604,13 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "UNT_MONNAIE" ) ) )
 	// [SUISSE].LOT3 Controle de la monnaie du fichier
-	// Si pas de coh$$HEX1$$e900$$ENDHEX$$rence : erreur bloquante d'int$$HEX1$$e900$$ENDHEX$$gration.
+	// Si pas de cohérence : erreur bloquante d'intégration.
 	if uf_controler_monnaie_fichier (sVal, lCpt) < 0 Then iRet = -1
 	
 //	If IsNull ( sVal ) Or sVal = "" Then
 //		iRet = -1
 //		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-//		" : L'unit$$HEX2$$e9002000$$ENDHEX$$de la monnaie est vide." )
+//		" : L'unité de la monnaie est vide." )
 //	End If 
 //
 //	If sVal <> "FRF" And sVal <> "EUR" Then
@@ -1633,7 +1633,7 @@ For lCpt = 1 To lTotLig
 	If Not IsNumber ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La quantit$$HEX2$$e9002000$$ENDHEX$$" + sVal + " n'est pas valide, ce n'est pas un nombre." )
+		" : La quantité " + sVal + " n'est pas valide, ce n'est pas un nombre." )
 		
 	End If
 
@@ -1644,7 +1644,7 @@ For lCpt = 1 To lTotLig
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "OBSERV_FRN", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -1660,11 +1660,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur est vide." )
+		" : La zone Référence fournisseur est vide." )
 	ElseIf sIdRefFourPrec <> "" And sVal = sIdRefFourPrec Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sVal + " n'est pas unique." )
+		" : La référence " + sVal + " n'est pas unique." )
 		
 	End If
 
@@ -1672,7 +1672,7 @@ For lCpt = 1 To lTotLig
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -1684,7 +1684,7 @@ private function integer uf_ctrl_fichier_darty ();//*---------------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Ctrl_Fichier_DARTY (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 04/04/2003
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier de DARTY
+//* Libellé			: Controler de la validité du fichier de DARTY
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -1708,7 +1708,7 @@ lTotArt = idwArtSpb.RowCount ()
 sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
 sTypArtSav = ""
 
-// JFF 20/01/2011 : le tri imp$$HEX1$$e900$$ENDHEX$$ratif sur ID_REF_FOUR $$HEX1$$e900$$ENDHEX$$tait visiblement manquant (?..)
+// JFF 20/01/2011 : le tri impératif sur ID_REF_FOUR était visiblement manquant (?..)
 idwFicFourn.SetSort ( "ID_REF_FOUR A" )
 idwFicFourn.Sort ()
 
@@ -1730,13 +1730,13 @@ For lCpt = 1 To lTotLig
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 	
 	/*------------------------------------------------------------------*/
@@ -1750,12 +1750,12 @@ For lCpt = 1 To lTotLig
 		" : La zone Type Article est vide." )
 	End If 
 
-	// Le fichier ne doit que contenir que des appareils du m$$HEX1$$ea00$$ENDHEX$$me type
+	// Le fichier ne doit que contenir que des appareils du même type
 /* DT066
 	If sTypArtSav <> sVal And sTypArtSav <> "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fichier contient des types d'appareils diff$$HEX1$$e900$$ENDHEX$$rents !" )
+		" : Le fichier contient des types d'appareils différents !" )
 	End If
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
@@ -1779,7 +1779,7 @@ For lCpt = 1 To lTotLig
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le type de l'article doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : Le type de l'article doit être sur 3 caractères." )
 	End If		
 
 	/*------------------------------------------------------------------*/
@@ -1801,11 +1801,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone mod$$HEX1$$e800$$ENDHEX$$le article est vide." )
+		" : La zone modèle article est vide." )
 	Else
 
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "ID_MODL_ART", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -1842,7 +1842,7 @@ For lCpt = 1 To lTotLig
 			If Not ( Asc ( sCar ) >= 48 And Asc ( sCar ) <= 57 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le montant " + sVal + " n'est pas valide, un caract$$HEX1$$e800$$ENDHEX$$re n'est pas un chiffre." )
+				" : Le montant " + sVal + " n'est pas valide, un caractère n'est pas un chiffre." )
 				Exit
 			End If
 		End If
@@ -1850,7 +1850,7 @@ For lCpt = 1 To lTotLig
 
 	If Real ( sVal ) > 5000 Then		
 		This.uf_Trace ( "ECR", "AVERTISSEMENT ligne " + String ( lCpt ) + &
-		" : Le montant " + sVal + " para$$HEX1$$ee00$$ENDHEX$$t anormalement grand." )
+		" : Le montant " + sVal + " paraît anormalement grand." )
 	End If
 
 	
@@ -1859,13 +1859,13 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "UNT_MONNAIE" ) ) )
 	// [SUISSE].LOT3 Controle de la monnaie du fichier
-	// Si pas de coh$$HEX1$$e900$$ENDHEX$$rence : erreur bloquante d'int$$HEX1$$e900$$ENDHEX$$gration.
+	// Si pas de cohérence : erreur bloquante d'intégration.
 	if uf_controler_monnaie_fichier (sVal, lCpt) < 0 Then iRet = -1
 	
 //	If IsNull ( sVal ) Or sVal = "" Then
 //		iRet = -1
 //		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-//		" : L'unit$$HEX2$$e9002000$$ENDHEX$$de la monnaie est vide." )
+//		" : L'unité de la monnaie est vide." )
 //	End If 
 //
 //	If sVal <> "FRF" And sVal <> "EUR" Then
@@ -1888,7 +1888,7 @@ For lCpt = 1 To lTotLig
 	If Not IsNumber ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La quantit$$HEX2$$e9002000$$ENDHEX$$" + sVal + " n'est pas valide, ce n'est pas un nombre." )
+		" : La quantité " + sVal + " n'est pas valide, ce n'est pas un nombre." )
 		
 	End If
 
@@ -1899,7 +1899,7 @@ For lCpt = 1 To lTotLig
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "OBSERV_FRN", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -1915,11 +1915,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur est vide." )
+		" : La zone Référence fournisseur est vide." )
 	ElseIf sIdRefFourPrec <> "" And sVal = sIdRefFourPrec Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sVal + " n'est pas unique." )
+		" : La référence " + sVal + " n'est pas unique." )
 		
 	End If
 
@@ -1927,7 +1927,7 @@ For lCpt = 1 To lTotLig
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -1939,7 +1939,7 @@ private function integer uf_trace (string ascas, string astexte);//*------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Trace (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Trace des op$$HEX1$$e900$$ENDHEX$$rations
+//* Libellé			: Trace des opérations
 //* Commentaires	: 
 //*
 //* Arguments		: asCas			String		Val
@@ -1995,7 +1995,7 @@ CHOOSE CASE Upper ( asCas )
 				This.uf_Sortie_OpCon ( "ECR", 62, "ERR62/TRACE/INIT", TRUE )
 
 			ELSE
-				F_COMMIT ( SQLCA, TRUE  ) // Commit du num$$HEX1$$e900$$ENDHEX$$ro de lot
+				F_COMMIT ( SQLCA, TRUE  ) // Commit du numéro de lot
 				
 				sSql  = "Exec sysadm.PS_I_TRACE_LOG_MPR "
 				sSql += "'" + isIdFour + "'," 
@@ -2010,12 +2010,12 @@ CHOOSE CASE Upper ( asCas )
 					Else 
 						iRet = -1
 						F_commit ( SQLCA, False ) 
-						This.uf_Trace ( "ECR", "ERREUR Trace1/Base : Probl$$HEX1$$e800$$ENDHEX$$me d'Insert sur la table de trace sysadm.trace_log_mpr" ) 
+						This.uf_Trace ( "ECR", "ERREUR Trace1/Base : Problème d'Insert sur la table de trace sysadm.trace_log_mpr" ) 
 					End If
 				Else
 					iRet = -1
 					F_commit ( SQLCA, False ) 
-					This.uf_Trace ( "ECR", "ERREUR Trace1/Base : Probl$$HEX1$$e800$$ENDHEX$$me d'Insert sur la table de trace sysadm.trace_log_mpr" ) 
+					This.uf_Trace ( "ECR", "ERREUR Trace1/Base : Problème d'Insert sur la table de trace sysadm.trace_log_mpr" ) 
 				End If					
 				
 			End If				
@@ -2049,12 +2049,12 @@ CHOOSE CASE Upper ( asCas )
 				Else 
 					iRet = -1
 					F_commit ( SQLCA, False ) 
-					This.uf_Trace ( "ECR", "ERREUR Trace2/Base : Probl$$HEX1$$e800$$ENDHEX$$me d'Insert sur la table de trace sysadm.trace_log_mpr" ) 
+					This.uf_Trace ( "ECR", "ERREUR Trace2/Base : Problème d'Insert sur la table de trace sysadm.trace_log_mpr" ) 
 				End If
 			Else
 				iRet = -1
 				F_commit ( SQLCA, False ) 
-				This.uf_Trace ( "ECR", "ERREUR Trace2/Base : Probl$$HEX1$$e800$$ENDHEX$$me d'Insert sur la table de trace sysadm.trace_log_mpr" ) 
+				This.uf_Trace ( "ECR", "ERREUR Trace2/Base : Problème d'Insert sur la table de trace sysadm.trace_log_mpr" ) 
 			End If					
 
 END CHOOSE
@@ -2069,7 +2069,7 @@ private function integer uf_trace_2 (string ascas, integer aicodetat, string asi
 //* Fonction		: n_cst_pg_in_fic_article::uf_Trace_2 (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Fichier retracant une seule int$$HEX1$$e900$$ENDHEX$$gration.
+//* Libellé			: Fichier retracant une seule intégration.
 //* Commentaires	: sur W:\LOGCMD\TRACE\FIC_ART\<< fournisseur >>\STKjjmma.TRi
 //*
 //* Arguments		: asCas			String		Val
@@ -2153,15 +2153,15 @@ CHOOSE CASE Upper ( asCas )
 			FileWrite ( iiFicTrc, sMes )
 
 			FileWrite ( iiFicTrc, "Fournisseur       : " + sNomFour  )		
-			FileWrite ( iiFicTrc, "Dt&He int$$HEX1$$e900$$ENDHEX$$gration : " + "Le " + String ( Today () ) + " $$HEX2$$e0002000$$ENDHEX$$" + String ( Now () ))		
-			FileWrite ( iiFicTrc, "Fichier trait$$HEX5$$e9002000200020002000$$ENDHEX$$: " + Upper ( isTxtNomFic.Text ) )
+			FileWrite ( iiFicTrc, "Dt&He intégration : " + "Le " + String ( Today () ) + " à " + String ( Now () ))		
+			FileWrite ( iiFicTrc, "Fichier traité    : " + Upper ( isTxtNomFic.Text ) )
 			FileWrite ( iiFicTrc, "" )
 
 			FileClose ( iiFicTrc )
 		End If
 
 /*------------------------------------------------------------------*/
-/* Ecritue automatique format$$HEX1$$e900$$ENDHEX$$e.												  */
+/* Ecritue automatique formatée.												  */
 /*------------------------------------------------------------------*/
 	CASE "ECR_AUTO"
 
@@ -2172,9 +2172,9 @@ CHOOSE CASE Upper ( asCas )
 			Choose Case aiCodEtat 
 
 				Case 100
-					sMes += "[100:MAJ_OK]" + "~t" + "Mobile fournisseur " +  sMobile + " existant dans la table article SIMPA2 et mis $$HEX2$$e0002000$$ENDHEX$$jour"
+					sMes += "[100:MAJ_OK]" + "~t" + "Mobile fournisseur " +  sMobile + " existant dans la table article SIMPA2 et mis à jour"
 				Case 200
-					sMes += "[200:NOV_MB]" + "~t" + "Nouveau Mobile fournisseur " + sMobile + " inexistant dans la table article SIMPA2. R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence IFR $$HEX2$$e0002000$$ENDHEX$$placer $$HEX2$$e0002000$$ENDHEX$$la main."
+					sMes += "[200:NOV_MB]" + "~t" + "Nouveau Mobile fournisseur " + sMobile + " inexistant dans la table article SIMPA2. Référence IFR à placer à la main."
 				Case 300
 					sMes += "[300:SUP_OK]" + "~t" + "Suppression du mobile " + sMobile + " de la table article SIMPA2, car inexistant dans le fichier fournisseur."
 
@@ -2209,7 +2209,7 @@ private subroutine uf_mail_cr_integration (integer ainbmaj, integer ainbinsert, 
 //* Fonction		: n_cst_int_fic_article::Uf_Mail_CR_Integration (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 28/07/2004 10:49:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Envoi d'un compte rendu d'int$$HEX1$$e900$$ENDHEX$$gration par mail.
+//* Libellé			: Envoi d'un compte rendu d'intégration par mail.
 //* Commentaires	: 
 //*
 //* Arguments		: Integer 	aiNbmaj			Val
@@ -2230,30 +2230,30 @@ If aiNbInsert <= 0 Then Return
 
 
 sMail = ProfileString ( stGlb.sFichierIni, "GEST_COMMANDES", "MAIL_CR_INT_FIC_ARTICLE", "jff@spb.fr" )
-sIfr  = "  (donc r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence IFR $$HEX2$$e0002000$$ENDHEX$$placer $$HEX2$$e0002000$$ENDHEX$$la main sur " + String ( aiNbInsert ) + " mobile(s))"
+sIfr  = "  (donc référence IFR à placer à la main sur " + String ( aiNbInsert ) + " mobile(s))"
 
 /*------------------------------------------------------------------*/
 /* Nom du fournisseur (-FR)                                         */
 /*------------------------------------------------------------------*/
 sNomFour = Upper ( idwFourn.Describe ( "Evaluate ('LookUpDisplay ( ID_FOURN )', 1)" ) )
-sDh = String ( Today ()) + " $$HEX2$$e0002000$$ENDHEX$$" + String ( Now () )
+sDh = String ( Today ()) + " à " + String ( Now () )
 
 bMail = False
-sSubject = "SIMPA2/CR Int$$HEX1$$e900$$ENDHEX$$gration fichier article " + sNomFour + " le " + sDh 
+sSubject = "SIMPA2/CR Intégration fichier article " + sNomFour + " le " + sDh 
 sTo = sMail
 sCc = ""
 sFrom = "SIMPA2_ARTICLE@SPB.FR"
 sEnt = "~n~r"
 
 /*------------------------------------------------------------------*/
-/* Pr$$HEX1$$e900$$ENDHEX$$paration du corps du mail.                                    */
+/* Préparation du corps du mail.                                    */
 /*------------------------------------------------------------------*/
 sTextBody  = "Fournisseur : " + sNomFour + sEnt
-sTextBody += "Date et Heure d''int$$HEX1$$e900$$ENDHEX$$gration : " + sDh + sEnt + sEnt
+sTextBody += "Date et Heure d''intégration : " + sDh + sEnt + sEnt
 //sTextBody += sEnt + sEnt
 sTextBody += "Trace consultable : " + isNomTrace2 + sEnt + sEnt
 sTextBody += sEnt + sEnt
-sTextBody += "Nombre de mises $$HEX2$$e0002000$$ENDHEX$$jour sur la table : " + String ( aiNbmaj )    + sEnt 
+sTextBody += "Nombre de mises à jour sur la table : " + String ( aiNbmaj )    + sEnt 
 sTextBody += "Nombre de nouvels articles (inclus) : " + String ( aiNbInsert ) 
 
 If aiNbInsert > 0 Then
@@ -2299,7 +2299,7 @@ private function integer uf_integration_fichier_darty (ref long alnblig, ref lon
 //* Fonction		: n_cst_pg_in_fic_article::uf_Integration_Fichier_DARTY (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 04/04/2003
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier DEBITEL dans la base
+//* Libellé			: Intégration du fichier DEBITEL dans la base
 //* Commentaires	: 
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -2311,7 +2311,7 @@ private function integer uf_integration_fichier_darty (ref long alnblig, ref lon
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1	 JCA	01/09/2006	Si id_typ_art = 'PCP' on force la disponibilit$$HEX4$$e9002000e0002000$$ENDHEX$$oui
+//* #1	 JCA	01/09/2006	Si id_typ_art = 'PCP' on force la disponibilité à oui
 //* #2	 JFF	02/02/2007	on remplace les " par P
 //* #3    JFF  28/01/2007  [DCMP080028]
 //* #4    JFF  10/03/2008  Modif suite Bug [SUISSE].LOT3
@@ -2339,13 +2339,13 @@ dt = DateTime ( Today (), Now () )
 dcTvaParDefaut = 0
 
 /*------------------------------------------------------------------*/
-/* Article de R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence pour le filtre sur l'existant en base       */
+/* Article de Référence pour le filtre sur l'existant en base       */
 /*------------------------------------------------------------------*/
 // #3
 sIdTypArtRef = Upper ( Trim ( idwFicFourn.GetItemString ( 1, "ID_TYP_ART"  ) ) )
 
 idwArticle.Reset ()
-// [SUISSE].LOT3 Suppression mecanique conversion $$HEX2$$e0002000$$ENDHEX$$l'integration article
+// [SUISSE].LOT3 Suppression mecanique conversion à l'integration article
 ///*------------------------------------------------------------------*/
 ///* Euro ou Frf ?                                                    */
 ///*------------------------------------------------------------------*/
@@ -2378,7 +2378,7 @@ lTotLigFourn = idwFicFourn.RowCount ()
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Initilisation de la trace d'int$$HEX1$$e900$$ENDHEX$$gration.                         */
+/* Initilisation de la trace d'intégration.                         */
 /*------------------------------------------------------------------*/
 This.uf_Trace_2 ( "INIT", 0, sIdFour, "", "", "", "" )
 
@@ -2421,11 +2421,11 @@ For alNbLig = 1 To lTotLigFourn
 	End If
 
 	If lRow > 0 Then 
-// [SUISSE].LOT3 Suppression mecanique conversion $$HEX2$$e0002000$$ENDHEX$$l'integration article
+// [SUISSE].LOT3 Suppression mecanique conversion à l'integration article
 //		dcPrixHt = idwFicFourn.GetItemDecimal ( alNbLig, "MT_PRIX_HT" )
 //		sUntMonnaie = Upper ( idwFicFourn.GetItemString ( alNbLig, "UNT_MONNAIE" ) )
 //
-//		// Base SIMPA2 en FRANCS Fran$$HEX1$$e700$$ENDHEX$$ais
+//		// Base SIMPA2 en FRANCS Français
 //		If Not bBaseEuro Then
 //		
 //			CHOOSE CASE  sUntMonnaie 
@@ -2452,7 +2452,7 @@ For alNbLig = 1 To lTotLigFourn
 		// :#4
 
 		/*------------------------------------------------------------------*/
-		/* Code $$HEX1$$e900$$ENDHEX$$tat (-EI)                                                  */
+		/* Code état (-EI)                                                  */
 		/* 200 Nouveau                                                      */
 		/* 100 MAj_Ok sur existant                                          */
 		/*------------------------------------------------------------------*/
@@ -2466,8 +2466,8 @@ For alNbLig = 1 To lTotLigFourn
 			sIdModlIfr = Trim ( idwArticle.GetItemString  ( lRow, "ID_MODL_ART_IFR" ) )
 
 			/*------------------------------------------------------------------*/
-			/* Si les marques et mod$$HEX1$$e800$$ENDHEX$$les IFR sont absent de l'enregistrement    */
-			/* exisant, on force ALT_DIPSPO $$HEX2$$e0002000$$ENDHEX$$NON.                              */
+			/* Si les marques et modèles IFR sont absent de l'enregistrement    */
+			/* exisant, on force ALT_DIPSPO à NON.                              */
 			/*------------------------------------------------------------------*/
 			If Isnull ( sIdMqIfr ) Or sIdMqIfr = "" Or Isnull ( sIdModlIfr ) Or sIdModlIfr = "" Then
 				idwArticle.SetItem ( lRow, "ALT_DISPO", "N" )				
@@ -2480,7 +2480,7 @@ For alNbLig = 1 To lTotLigFourn
 		// [VDOC6993]
 		Choose Case sIdTypArt 
 			Case "TEL", "PC1", "PC2" 
-				// Doit $$HEX1$$ea00$$ENDHEX$$tre mis $$HEX2$$e0002000$$ENDHEX$$la main pas Cell. Parte.
+				// Doit être mis à la main pas Cell. Parte.
 
 				// [VDOC6993]
 				If bInsert Then
@@ -2519,12 +2519,12 @@ For alNbLig = 1 To lTotLigFourn
 Next
 
 /*------------------------------------------------------------------*/
-/* Nbre de ligne dans la Table (r$$HEX1$$e900$$ENDHEX$$actualis$$HEX1$$e900$$ENDHEX$$)                        */
+/* Nbre de ligne dans la Table (réactualisé)                        */
 /*------------------------------------------------------------------*/
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Suppression des lignes pr$$HEX1$$e900$$ENDHEX$$sentes dans la table articles et       */
+/* Suppression des lignes présentes dans la table articles et       */
 /* absentes du fichier.                                             */
 /*------------------------------------------------------------------*/
 For lCpt = lTotLigArticle To 1 Step -1
@@ -2561,7 +2561,7 @@ private function integer uf_integration_fichier_dme (ref long alnblig, ref long 
 //* Fonction		: n_cst_pg_in_fic_article::uf_Integration_Fichier_DME (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 04/04/2003
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier ORANGE/DME dans la base
+//* Libellé			: Intégration du fichier ORANGE/DME dans la base
 //* Commentaires	: 
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -2599,7 +2599,7 @@ dcTvaParDefaut = 20
 dt = DateTime ( Today (), Now () )
 
 /*------------------------------------------------------------------*/
-/* Article de R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence pour le filtre sur l'existant en base       */
+/* Article de Référence pour le filtre sur l'existant en base       */
 /*------------------------------------------------------------------*/
 // [PC505]
 // sIdTypArtRef = Upper ( Trim ( idwFicFourn.GetItemString ( 1, "ID_TYP_ART"  ) ) )
@@ -2628,7 +2628,7 @@ lTotLigFourn = idwFicFourn.RowCount ()
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Initilisation de la trace d'int$$HEX1$$e900$$ENDHEX$$gration.                         */
+/* Initilisation de la trace d'intégration.                         */
 /*------------------------------------------------------------------*/
 This.uf_Trace_2 ( "INIT", 0, sIdFour, "", "", "", "" )
 
@@ -2669,11 +2669,11 @@ For alNbLig = 1 To lTotLigFourn
 	End If
 
 	If lRow > 0 Then 
-// [SUISSE].LOT3 Suppression mecanique conversion $$HEX2$$e0002000$$ENDHEX$$l'integration article
+// [SUISSE].LOT3 Suppression mecanique conversion à l'integration article
 //		dcPrixHt = idwFicFourn.GetItemDecimal ( alNbLig, "MT_PRIX_HT" )
 //		sUntMonnaie = Upper ( idwFicFourn.GetItemString ( alNbLig, "UNT_MONNAIE" ) )
 //
-//		// Base SIMPA2 en FRANCS Fran$$HEX1$$e700$$ENDHEX$$ais
+//		// Base SIMPA2 en FRANCS Français
 //		If Not bBaseEuro Then
 //		
 //			CHOOSE CASE  sUntMonnaie 
@@ -2700,7 +2700,7 @@ For alNbLig = 1 To lTotLigFourn
 		// :#1
 
 		/*------------------------------------------------------------------*/
-		/* Code $$HEX1$$e900$$ENDHEX$$tat (-EI)                                                  */
+		/* Code état (-EI)                                                  */
 		/* 200 Nouveau                                                      */
 		/* 100 MAj_Ok sur existant                                          */
 		/*------------------------------------------------------------------*/
@@ -2714,8 +2714,8 @@ For alNbLig = 1 To lTotLigFourn
 			sIdModlIfr = Trim ( idwArticle.GetItemString  ( lRow, "ID_MODL_ART_IFR" ) )
 
 			/*------------------------------------------------------------------*/
-			/* Si les marques et mod$$HEX1$$e800$$ENDHEX$$les IFR sont absent de l'enregistrement    */
-			/* exisant, on force ALT_DIPSPO $$HEX2$$e0002000$$ENDHEX$$NON.                              */
+			/* Si les marques et modèles IFR sont absent de l'enregistrement    */
+			/* exisant, on force ALT_DIPSPO à NON.                              */
 			/*------------------------------------------------------------------*/
 			If Isnull ( sIdMqIfr ) Or sIdMqIfr = "" Or Isnull ( sIdModlIfr ) Or sIdModlIfr = "" Then
 				idwArticle.SetItem ( lRow, "ALT_DISPO", "N" )				
@@ -2726,7 +2726,7 @@ For alNbLig = 1 To lTotLigFourn
 
 		Choose Case sIdTypArt 
 			Case "TEL", "PC1", "PC2" 
-				// Doit $$HEX1$$ea00$$ENDHEX$$tre mis $$HEX2$$e0002000$$ENDHEX$$la main pas Cell. Parte.
+				// Doit être mis à la main pas Cell. Parte.
 				// [VDOC6993]
 				If bInsert Then
 					sIdMarqArtIFr = Space (35) 
@@ -2760,12 +2760,12 @@ For alNbLig = 1 To lTotLigFourn
 Next
 
 /*------------------------------------------------------------------*/
-/* Nbre de ligne dans la Table (r$$HEX1$$e900$$ENDHEX$$actualis$$HEX1$$e900$$ENDHEX$$)                        */
+/* Nbre de ligne dans la Table (réactualisé)                        */
 /*------------------------------------------------------------------*/
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Suppression des lignes pr$$HEX1$$e900$$ENDHEX$$sentes dans la table articles et       */
+/* Suppression des lignes présentes dans la table articles et       */
 /* absentes du fichier.                                             */
 /*------------------------------------------------------------------*/
 For lCpt = lTotLigArticle To 1 Step -1
@@ -2802,7 +2802,7 @@ private function integer uf_ctrl_fichier_cegetel ();//*-------------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Ctrl_Fichier_CEGETEL (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 16/06/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier Article de CEGETEL
+//* Libellé			: Controler de la validité du fichier Article de CEGETEL
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -2829,20 +2829,20 @@ lTotArt = idwArtSpb.RowCount ()
 sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
 sTypArtSav = ""
 
-// JFF 20/01/2011 : le tri imp$$HEX1$$e900$$ENDHEX$$ratif sur ID_REF_FOUR $$HEX1$$e900$$ENDHEX$$tait visiblement manquant (?..)
+// JFF 20/01/2011 : le tri impératif sur ID_REF_FOUR était visiblement manquant (?..)
 idwFicFourn.SetSort ( "ID_REF_FOUR A" )
 idwFicFourn.Sort ()
 
 sIdRefFourPrec = ""
 
 /*------------------------------------------------------------------*/
-/* Attention, pour ce fournisseur, l'int$$HEX1$$e900$$ENDHEX$$gration d'article n'est pos*/
-/* n'est possible que s'il ne reste pas de commande $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer       */
+/* Attention, pour ce fournisseur, l'intégration d'article n'est pos*/
+/* n'est possible que s'il ne reste pas de commande à générer       */
 /*------------------------------------------------------------------*/
 If SQLCA.PS_S08_COMMANDE ( sIdFour ) > 0  Then
 		iRet = -1
-		This.uf_Trace ( "ECR", "ARRET ! : Chargement Fic article impossible, il reste des commandes $$HEX2$$e0002000$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer pour le fournisseur " + sIdFour )
-		This.uf_Trace ( "ECR", "ARRET ! : G$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer d'abord un fichier de commande pour " + sIdFour + " et relancer le trt d int$$HEX1$$e900$$ENDHEX$$gration article." )
+		This.uf_Trace ( "ECR", "ARRET ! : Chargement Fic article impossible, il reste des commandes à générer pour le fournisseur " + sIdFour )
+		This.uf_Trace ( "ECR", "ARRET ! : Générer d'abord un fichier de commande pour " + sIdFour + " et relancer le trt d intégration article." )
 		Return iRet
 End IF
 
@@ -2863,13 +2863,13 @@ For lCpt = 1 To lTotLig
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 	
 	/*------------------------------------------------------------------*/
@@ -2883,13 +2883,13 @@ For lCpt = 1 To lTotLig
 		" : La zone Type Article est vide." )
 	End If 
 
-	// Le fichier ne doit que contenir que des appareils du m$$HEX1$$ea00$$ENDHEX$$me type
+	// Le fichier ne doit que contenir que des appareils du même type
 	/*
 	// #1 [DCMP090615]
 	If sTypArtSav <> sVal And sTypArtSav <> "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fichier contient des types d'appareils diff$$HEX1$$e900$$ENDHEX$$rents !" )
+		" : Le fichier contient des types d'appareils différents !" )
 	End If
 	*/
 
@@ -2913,7 +2913,7 @@ For lCpt = 1 To lTotLig
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le type de l'article doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : Le type de l'article doit être sur 3 caractères." )
 	End If		
 
 	/*------------------------------------------------------------------*/
@@ -2935,11 +2935,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone mod$$HEX1$$e800$$ENDHEX$$le article est vide." )
+		" : La zone modèle article est vide." )
 	Else
 
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "ID_MODL_ART", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -2976,7 +2976,7 @@ For lCpt = 1 To lTotLig
 			If Not ( Asc ( sCar ) >= 48 And Asc ( sCar ) <= 57 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le montant " + sVal + " n'est pas valide, un caract$$HEX1$$e800$$ENDHEX$$re n'est pas un chiffre." )
+				" : Le montant " + sVal + " n'est pas valide, un caractère n'est pas un chiffre." )
 				Exit
 			End If
 		End If
@@ -2984,7 +2984,7 @@ For lCpt = 1 To lTotLig
 
 	If Real ( sVal ) > 5000 Then		
 		This.uf_Trace ( "ECR", "AVERTISSEMENT ligne " + String ( lCpt ) + &
-		" : Le montant " + sVal + " para$$HEX1$$ee00$$ENDHEX$$t anormalement grand." )
+		" : Le montant " + sVal + " paraît anormalement grand." )
 	End If
 
 	
@@ -2993,13 +2993,13 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "UNT_MONNAIE" ) ) )
 	// [SUISSE].LOT3 Controle de la monnaie du fichier
-	// Si pas de coh$$HEX1$$e900$$ENDHEX$$rence : erreur bloquante d'int$$HEX1$$e900$$ENDHEX$$gration.
+	// Si pas de cohérence : erreur bloquante d'intégration.
 	if uf_controler_monnaie_fichier (sVal, lCpt) < 0 Then iRet = -1
 	
 //	If IsNull ( sVal ) Or sVal = "" Then
 //		iRet = -1
 //		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-//		" : L'unit$$HEX2$$e9002000$$ENDHEX$$de la monnaie est vide." )
+//		" : L'unité de la monnaie est vide." )
 //	End If 
 //
 //	If sVal <> "FRF" And sVal <> "EUR" Then
@@ -3016,7 +3016,7 @@ For lCpt = 1 To lTotLig
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "OBSERV_FRN", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -3037,11 +3037,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur est vide." )
+		" : La zone Référence fournisseur est vide." )
 	ElseIf sIdRefFourPrec <> "" And sVal = sIdRefFourPrec Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sVal + " n'est pas unique." )
+		" : La référence " + sVal + " n'est pas unique." )
 		
 	End If
 
@@ -3049,7 +3049,7 @@ For lCpt = 1 To lTotLig
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -3061,7 +3061,7 @@ private function integer uf_integration_fichier_cegetel (ref long alnblig, ref l
 //* Fonction		: n_cst_pg_in_fic_article::uf_Integration_Fichier_CEGETEL (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 04/04/2003
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier DEBITEL dans la base
+//* Libellé			: Intégration du fichier DEBITEL dans la base
 //* Commentaires	: 
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -3073,13 +3073,13 @@ private function integer uf_integration_fichier_cegetel (ref long alnblig, ref l
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1		JCA	01/09/2006	On force la quantit$$HEX4$$e9002000e0002000$$ENDHEX$$5000
-//* #2		JFF	12/09/2006	[DCMP070645] On ajoute 20 Euros au montant HT lors de l'int$$HEX1$$e900$$ENDHEX$$gration
+//* #1		JCA	01/09/2006	On force la quantité à 5000
+//* #2		JFF	12/09/2006	[DCMP070645] On ajoute 20 Euros au montant HT lors de l'intégration
 //*									sur demain d'OMG (Mathias)
 //* #3    JFF    10/03/2008  Modif suite Bug [SUISSE].LOT3
 //* #4    JFF    17/04/2008  [DCMP080322] suppression des 20 Euros
 //* #5    JFF    19/10/2009  [DCMP090615]
-//			FPI	24/01/2012	[PC581] Int$$HEX1$$e900$$ENDHEX$$gration de TPC
+//			FPI	24/01/2012	[PC581] Intégration de TPC
 //       JFF   26/08/2013 [DT57_CMDE_IPHONE_SFR]
 //        JFF   19/11/2013 [DT_60_AUGM_TVA]
 //*-----------------------------------------------------------------
@@ -3104,7 +3104,7 @@ dcTvaParDefaut = 20
 dt = DateTime ( Today (), Now () )
 
 /*------------------------------------------------------------------*/
-/* Article de R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence pour le filtre sur l'existant en base       */
+/* Article de Référence pour le filtre sur l'existant en base       */
 /*------------------------------------------------------------------*/
 //* #5    JFF    19/10/2009  [DCMP090615]
 // sIdTypArtRef = Upper ( Trim ( idwFicFourn.GetItemString ( 1, "ID_TYP_ART" ) ) )
@@ -3134,7 +3134,7 @@ lTotLigFourn = idwFicFourn.RowCount ()
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Initilisation de la trace d'int$$HEX1$$e900$$ENDHEX$$gration.                         */
+/* Initilisation de la trace d'intégration.                         */
 /*------------------------------------------------------------------*/
 This.uf_Trace_2 ( "INIT", 0, sIdFour, "", "", "", "" )
 
@@ -3182,7 +3182,7 @@ For alNbLig = 1 To lTotLigFourn
 		// :#3
 
 		/*------------------------------------------------------------------*/
-		/* Code $$HEX1$$e900$$ENDHEX$$tat (-EI)                                                  */
+		/* Code état (-EI)                                                  */
 		/* 200 Nouveau                                                      */
 		/* 100 MAj_Ok sur existant                                          */
 		/*------------------------------------------------------------------*/
@@ -3195,8 +3195,8 @@ For alNbLig = 1 To lTotLigFourn
 			sIdModlIfr = Trim ( idwArticle.GetItemString  ( lRow, "ID_MODL_ART_IFR" ) )
 
 			/*------------------------------------------------------------------*/
-			/* Si les marques et mod$$HEX1$$e800$$ENDHEX$$les IFR sont absent de l'enregistrement    */
-			/* exisant, on force ALT_DIPSPO $$HEX2$$e0002000$$ENDHEX$$NON.                              */
+			/* Si les marques et modèles IFR sont absent de l'enregistrement    */
+			/* exisant, on force ALT_DIPSPO à NON.                              */
 			/*------------------------------------------------------------------*/
 			If Isnull ( sIdMqIfr ) Or sIdMqIfr = "" Or Isnull ( sIdModlIfr ) Or sIdModlIfr = "" Then
 				idwArticle.SetItem ( lRow, "ALT_DISPO", "N" )				
@@ -3205,10 +3205,10 @@ For alNbLig = 1 To lTotLigFourn
 			This.uf_Trace_2 ( "ECR_AUTO", 100, sIdFour, sIdRefFour, sIdMarqArt, sIdModlArt, "" )
 		End If
 
-		// [PC581] - Int$$HEX1$$e900$$ENDHEX$$gration de TPC -> ALT_DISPO $$HEX2$$e0002000$$ENDHEX$$Oui
+		// [PC581] - Intégration de TPC -> ALT_DISPO à Oui
 		Choose Case sIdTypArt 
 			Case "TEL", "PC1", "PC2" 
-				// Doit $$HEX1$$ea00$$ENDHEX$$tre mis $$HEX2$$e0002000$$ENDHEX$$la main pas Cell. Parte.
+				// Doit être mis à la main pas Cell. Parte.
 				// [VDOC6993]
 				If bInsert Then
 					sIdMarqArtIFr = Space (35) 
@@ -3243,12 +3243,12 @@ For alNbLig = 1 To lTotLigFourn
 Next
 
 /*------------------------------------------------------------------*/
-/* Nbre de ligne dans la Table (r$$HEX1$$e900$$ENDHEX$$actualis$$HEX1$$e900$$ENDHEX$$)                        */
+/* Nbre de ligne dans la Table (réactualisé)                        */
 /*------------------------------------------------------------------*/
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Suppression des lignes pr$$HEX1$$e900$$ENDHEX$$sentes dans la table articles et       */
+/* Suppression des lignes présentes dans la table articles et       */
 /* absentes du fichier.                                             */
 /*------------------------------------------------------------------*/
 For lCpt = lTotLigArticle To 1 Step -1
@@ -3285,7 +3285,7 @@ private function integer uf_integration_fichier_mobistore (ref long alnblig, ref
 //* Fonction		: n_cst_pg_in_fic_article::uf_Integration_Fichier_MOBISTORE (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 09/11/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier DEBITEL dans la base
+//* Libellé			: Intégration du fichier DEBITEL dans la base
 //* Commentaires	: 
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -3324,7 +3324,7 @@ dt = DateTime ( Today (), Now () )
 dcTvaParDefaut = 0
 
 /*------------------------------------------------------------------*/
-/* Article de R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence pour le filtre sur l'existant en base       */
+/* Article de Référence pour le filtre sur l'existant en base       */
 /*------------------------------------------------------------------*/
 
 // [PC10][DIAG_NOMADE]
@@ -3332,7 +3332,7 @@ dcTvaParDefaut = 0
 
 idwArticle.Reset ()
 
-// [SUISSE].LOT3 Suppression mecanique conversion $$HEX2$$e0002000$$ENDHEX$$l'integration article
+// [SUISSE].LOT3 Suppression mecanique conversion à l'integration article
 ///*------------------------------------------------------------------*/
 ///* Euro ou Frf ?                                                    */
 ///*------------------------------------------------------------------*/
@@ -3366,7 +3366,7 @@ lTotLigFourn = idwFicFourn.RowCount ()
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Initilisation de la trace d'int$$HEX1$$e900$$ENDHEX$$gration.                         */
+/* Initilisation de la trace d'intégration.                         */
 /*------------------------------------------------------------------*/
 This.uf_Trace_2 ( "INIT", 0, sIdFour, "", "", "", "" )
 
@@ -3407,11 +3407,11 @@ For alNbLig = 1 To lTotLigFourn
 	End If
 
 	If lRow > 0 Then 
-// [SUISSE].LOT3 Suppression mecanique conversion $$HEX2$$e0002000$$ENDHEX$$l'integration article
+// [SUISSE].LOT3 Suppression mecanique conversion à l'integration article
 //		dcPrixHt = idwFicFourn.GetItemDecimal ( alNbLig, "MT_PRIX_HT" )
 //		sUntMonnaie = Upper ( idwFicFourn.GetItemString ( alNbLig, "UNT_MONNAIE" ) )
 //
-//		// Base SIMPA2 en FRANCS Fran$$HEX1$$e700$$ENDHEX$$ais
+//		// Base SIMPA2 en FRANCS Français
 //		If Not bBaseEuro Then
 //		
 //			CHOOSE CASE  sUntMonnaie 
@@ -3438,7 +3438,7 @@ For alNbLig = 1 To lTotLigFourn
 		// :#1
 
 		/*------------------------------------------------------------------*/
-		/* Code $$HEX1$$e900$$ENDHEX$$tat (-EI)                                                  */
+		/* Code état (-EI)                                                  */
 		/* 200 Nouveau                                                      */
 		/* 100 MAj_Ok sur existant                                          */
 		/*------------------------------------------------------------------*/
@@ -3452,8 +3452,8 @@ For alNbLig = 1 To lTotLigFourn
 			sIdModlIfr = Trim ( idwArticle.GetItemString  ( lRow, "ID_MODL_ART_IFR" ) )
 
 			/*------------------------------------------------------------------*/
-			/* Si les marques et mod$$HEX1$$e800$$ENDHEX$$les IFR sont absent de l'enregistrement    */
-			/* exisant, on force ALT_DIPSPO $$HEX2$$e0002000$$ENDHEX$$NON.                              */
+			/* Si les marques et modèles IFR sont absent de l'enregistrement    */
+			/* exisant, on force ALT_DIPSPO à NON.                              */
 			/*------------------------------------------------------------------*/
 			If Isnull ( sIdMqIfr ) Or sIdMqIfr = "" Or Isnull ( sIdModlIfr ) Or sIdModlIfr = "" Then
 				idwArticle.SetItem ( lRow, "ALT_DISPO", "N" )				
@@ -3465,7 +3465,7 @@ For alNbLig = 1 To lTotLigFourn
 		// [PC10][DIAG_NOMADE]
 		Choose Case sIdTypArt 
 			Case "TEL", "PC1", "PC2" 
-				// Doit $$HEX1$$ea00$$ENDHEX$$tre mis $$HEX2$$e0002000$$ENDHEX$$la main pas Cell. Parte.
+				// Doit être mis à la main pas Cell. Parte.
 				// [VDOC6993]
 				If bInsert Then
 					sIdMarqArtIFr = Space (35) 
@@ -3499,12 +3499,12 @@ For alNbLig = 1 To lTotLigFourn
 Next
 
 /*------------------------------------------------------------------*/
-/* Nbre de ligne dans la Table (r$$HEX1$$e900$$ENDHEX$$actualis$$HEX1$$e900$$ENDHEX$$)                        */
+/* Nbre de ligne dans la Table (réactualisé)                        */
 /*------------------------------------------------------------------*/
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Suppression des lignes pr$$HEX1$$e900$$ENDHEX$$sentes dans la table articles et       */
+/* Suppression des lignes présentes dans la table articles et       */
 /* absentes du fichier.                                             */
 /*------------------------------------------------------------------*/
 For lCpt = lTotLigArticle To 1 Step -1
@@ -3547,7 +3547,7 @@ private function integer uf_ctrl_fichier_mobistore ();//*-----------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Ctrl_Fichier_MOBISTORE (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 10/11/2005
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier de MOBISTORE
+//* Libellé			: Controler de la validité du fichier de MOBISTORE
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -3572,7 +3572,7 @@ lTotArt = idwArtSpb.RowCount ()
 sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
 sTypArtSav = ""
 
-// JFF 20/01/2011 : le tri imp$$HEX1$$e900$$ENDHEX$$ratif sur ID_REF_FOUR $$HEX1$$e900$$ENDHEX$$tait visiblement manquant (?..)
+// JFF 20/01/2011 : le tri impératif sur ID_REF_FOUR était visiblement manquant (?..)
 idwFicFourn.SetSort ( "ID_REF_FOUR A" )
 idwFicFourn.Sort ()
 
@@ -3594,13 +3594,13 @@ For lCpt = 1 To lTotLig
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 	
 	/*------------------------------------------------------------------*/
@@ -3614,13 +3614,13 @@ For lCpt = 1 To lTotLig
 		" : La zone Type Article est vide." )
 	End If 
 
-	// Le fichier ne doit que contenir que des appareils du m$$HEX1$$ea00$$ENDHEX$$me type
+	// Le fichier ne doit que contenir que des appareils du même type
 	// [PC10][DIAG_NOMADE]
 	/*
 	If sTypArtSav <> sVal And sTypArtSav <> "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fichier contient des types d'appareils diff$$HEX1$$e900$$ENDHEX$$rents !" )
+		" : Le fichier contient des types d'appareils différents !" )
 	End If
 	*/
 
@@ -3644,7 +3644,7 @@ For lCpt = 1 To lTotLig
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le type de l'article doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : Le type de l'article doit être sur 3 caractères." )
 	End If		
 
 	/*------------------------------------------------------------------*/
@@ -3666,11 +3666,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone mod$$HEX1$$e800$$ENDHEX$$le article est vide." )
+		" : La zone modèle article est vide." )
 	Else
 
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "ID_MODL_ART", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -3707,7 +3707,7 @@ For lCpt = 1 To lTotLig
 			If Not ( Asc ( sCar ) >= 48 And Asc ( sCar ) <= 57 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le montant " + sVal + " n'est pas valide, un caract$$HEX1$$e800$$ENDHEX$$re n'est pas un chiffre." )
+				" : Le montant " + sVal + " n'est pas valide, un caractère n'est pas un chiffre." )
 				Exit
 			End If
 		End If
@@ -3715,7 +3715,7 @@ For lCpt = 1 To lTotLig
 
 	If Real ( sVal ) > 5000 Then		
 		This.uf_Trace ( "ECR", "AVERTISSEMENT ligne " + String ( lCpt ) + &
-		" : Le montant " + sVal + " para$$HEX1$$ee00$$ENDHEX$$t anormalement grand." )
+		" : Le montant " + sVal + " paraît anormalement grand." )
 	End If
 
 	
@@ -3724,13 +3724,13 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "UNT_MONNAIE" ) ) )
 	// [SUISSE].LOT3 Controle de la monnaie du fichier
-	// Si pas de coh$$HEX1$$e900$$ENDHEX$$rence : erreur bloquante d'int$$HEX1$$e900$$ENDHEX$$gration.
+	// Si pas de cohérence : erreur bloquante d'intégration.
 	if uf_controler_monnaie_fichier (sVal, lCpt) < 0 Then iRet = -1
 	
 //	If IsNull ( sVal ) Or sVal = "" Then
 //		iRet = -1
 //		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-//		" : L'unit$$HEX2$$e9002000$$ENDHEX$$de la monnaie est vide." )
+//		" : L'unité de la monnaie est vide." )
 //	End If 
 //
 //	If sVal <> "FRF" And sVal <> "EUR" Then
@@ -3753,7 +3753,7 @@ For lCpt = 1 To lTotLig
 	If Not IsNumber ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La quantit$$HEX2$$e9002000$$ENDHEX$$" + sVal + " n'est pas valide, ce n'est pas un nombre." )
+		" : La quantité " + sVal + " n'est pas valide, ce n'est pas un nombre." )
 		
 	End If
 
@@ -3765,7 +3765,7 @@ For lCpt = 1 To lTotLig
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "OBSERV_FRN", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -3781,11 +3781,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur est vide." )
+		" : La zone Référence fournisseur est vide." )
 	ElseIf sIdRefFourPrec <> "" And sVal = sIdRefFourPrec Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sVal + " n'est pas unique." )
+		" : La référence " + sVal + " n'est pas unique." )
 		
 	End If
 
@@ -3793,7 +3793,7 @@ For lCpt = 1 To lTotLig
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -3805,7 +3805,7 @@ private function integer uf_ctrl_fichier_cordon ();//*--------------------------
 //* Fonction		: n_cst_int_fic_article::uf_Ctrl_Fichier_CORDON (PRIVATE)
 //* Auteur			: MADM
 //* Date				: 10/05/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler la validit$$HEX2$$e9002000$$ENDHEX$$du fichier de CORDON
+//* Libellé			: Controler la validité du fichier de CORDON
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -3830,7 +3830,7 @@ lTotArt = idwArtSpb.RowCount ()
 sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
 sTypArtSav = ""
 
-// JFF 20/01/2011 : le tri imp$$HEX1$$e900$$ENDHEX$$ratif sur ID_REF_FOUR $$HEX1$$e900$$ENDHEX$$tait visiblement manquant (?..)
+// JFF 20/01/2011 : le tri impératif sur ID_REF_FOUR était visiblement manquant (?..)
 idwFicFourn.SetSort ( "ID_REF_FOUR A" )
 idwFicFourn.Sort ()
 
@@ -3852,13 +3852,13 @@ For lCpt = 1 To lTotLig
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 	
 	/*------------------------------------------------------------------*/
@@ -3872,11 +3872,11 @@ For lCpt = 1 To lTotLig
 		" : La zone Type Article est vide." )
 	End If 
 
-	// Le fichier ne doit que contenir que des appareils du m$$HEX1$$ea00$$ENDHEX$$me type
+	// Le fichier ne doit que contenir que des appareils du même type
 	If sTypArtSav <> sVal And sTypArtSav <> "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fichier contient des types d'appareils diff$$HEX1$$e900$$ENDHEX$$rents !" )
+		" : Le fichier contient des types d'appareils différents !" )
 	End If
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
@@ -3899,7 +3899,7 @@ For lCpt = 1 To lTotLig
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le type de l'article doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : Le type de l'article doit être sur 3 caractères." )
 	End If		
 
 	/*------------------------------------------------------------------*/
@@ -3921,11 +3921,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone mod$$HEX1$$e800$$ENDHEX$$le article est vide." )
+		" : La zone modèle article est vide." )
 	Else
 
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "ID_MODL_ART", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -3962,7 +3962,7 @@ For lCpt = 1 To lTotLig
 			If Not ( Asc ( sCar ) >= 48 And Asc ( sCar ) <= 57 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le montant " + sVal + " n'est pas valide, un caract$$HEX1$$e800$$ENDHEX$$re n'est pas un chiffre." )
+				" : Le montant " + sVal + " n'est pas valide, un caractère n'est pas un chiffre." )
 				Exit
 			End If
 		End If
@@ -3970,7 +3970,7 @@ For lCpt = 1 To lTotLig
 
 	If Real ( sVal ) > 5000 Then		
 		This.uf_Trace ( "ECR", "AVERTISSEMENT ligne " + String ( lCpt ) + &
-		" : Le montant " + sVal + " para$$HEX1$$ee00$$ENDHEX$$t anormalement grand." )
+		" : Le montant " + sVal + " paraît anormalement grand." )
 	End If
 
 	
@@ -3979,13 +3979,13 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "UNT_MONNAIE" ) ) )
 	// [SUISSE].LOT3 Controle de la monnaie du fichier
-	// Si pas de coh$$HEX1$$e900$$ENDHEX$$rence : erreur bloquante d'int$$HEX1$$e900$$ENDHEX$$gration.
+	// Si pas de cohérence : erreur bloquante d'intégration.
 	if uf_controler_monnaie_fichier (sVal, lCpt) < 0 Then iRet = -1
 	
 //	If IsNull ( sVal ) Or sVal = "" Then
 //		iRet = -1
 //		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-//		" : L'unit$$HEX2$$e9002000$$ENDHEX$$de la monnaie est vide." )
+//		" : L'unité de la monnaie est vide." )
 //	End If 
 //
 //	If sVal <> "FRF" And sVal <> "EUR" Then
@@ -4008,7 +4008,7 @@ For lCpt = 1 To lTotLig
 	If Not IsNumber ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La quantit$$HEX2$$e9002000$$ENDHEX$$" + sVal + " n'est pas valide, ce n'est pas un nombre." )
+		" : La quantité " + sVal + " n'est pas valide, ce n'est pas un nombre." )
 		
 	End If
 
@@ -4019,7 +4019,7 @@ For lCpt = 1 To lTotLig
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "OBSERV_FRN", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -4035,11 +4035,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur est vide." )
+		" : La zone Référence fournisseur est vide." )
 	ElseIf sIdRefFourPrec <> "" And sVal = sIdRefFourPrec Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sVal + " n'est pas unique." )
+		" : La référence " + sVal + " n'est pas unique." )
 		
 	End If
 
@@ -4047,7 +4047,7 @@ For lCpt = 1 To lTotLig
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -4059,15 +4059,15 @@ public function integer uf_controler_monnaie_fichier (string asunt_monnaie, inte
 //* Fonction		: n_cst_int_fic_article::uf_controler_monnaie_fichier
 //* Auteur			: 
 //* Date				: 19/02/2008 17:09:10
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controle la coh$$HEX1$$e900$$ENDHEX$$rence entre la monnaie du fichier $$HEX2$$e0002000$$ENDHEX$$integrer
-//*					  et la monnaie de la base de donn$$HEX1$$e900$$ENDHEX$$e
-//* Commentaires	: [SUISSE].LOT3 focntion de Controle de Coh$$HEX1$$e900$$ENDHEX$$rence Monnaie avec le fichier fournisseur
+//* Libellé			: Controle la cohérence entre la monnaie du fichier à integrer
+//*					  et la monnaie de la base de donnée
+//* Commentaires	: [SUISSE].LOT3 focntion de Controle de Cohérence Monnaie avec le fichier fournisseur
 //*
 //* Arguments		: value string asunt_monnaie	 */
 //*
 //* Retourne		: integer	
-// Si l'Unit$$HEX2$$e9002000$$ENDHEX$$n'est pas d$$HEX1$$e900$$ENDHEX$$finie : On retourne -1
-// Si ps de coh$$HEX1$$e900$$ENDHEX$$rence monnaie   : On retourne -2
+// Si l'Unité n'est pas définie : On retourne -1
+// Si ps de cohérence monnaie   : On retourne -2
 // Si Ok								  : On retourne 1
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
@@ -4076,18 +4076,18 @@ public function integer uf_controler_monnaie_fichier (string asunt_monnaie, inte
 //*-----------------------------------------------------------------
 
 //
-// Gestion de l'historique Fran$$HEX1$$e700$$ENDHEX$$ais : 
+// Gestion de l'historique Français : 
 //
-// Les codes d'unit$$HEX1$$e900$$ENDHEX$$s de monnaie des fournisseurs sont :
+// Les codes d'unités de monnaie des fournisseurs sont :
 // -	FRF pour Francs
 // -	EUR pour Euros
-// Pour ces deux cas on fait un code sp$$HEX1$$e900$$ENDHEX$$cifique d'association
+// Pour ces deux cas on fait un code spécifique d'association
 // EUR s'associe avec le Format desire EURO
 // FRF s'associe avec la format desire F
 //
 // Logique de la fonction sinon :
 //
-// L'unit$$HEX2$$e9002000$$ENDHEX$$de monnaie du Fournisseur *DOIT* matcher avec le contenu de la Cl$$HEX1$$e900$$ENDHEX$$
+// L'unité de monnaie du Fournisseur *DOIT* matcher avec le contenu de la Clé
 // [MONNAIE] -> Format_Desire du .INI de l'application.
 // qui lui meme matche forcement avec La Monnaie de la base ( Voir F_coherence_monnaie )
 //
@@ -4100,10 +4100,10 @@ n_cst_string	lnv_string
 if lnv_String.of_isempty(asUnt_Monnaie) then 
 	lRet = -1
 	This.uf_Trace ( "ECR", "ERREUR ligne " + String ( alCpt ) + &
-		" : L'unit$$HEX2$$e9002000$$ENDHEX$$de la monnaie est vide." )
+		" : L'unité de la monnaie est vide." )
 End If
 
-// Test de Coh$$HEX1$$e900$$ENDHEX$$rence
+// Test de Cohérence
 if lRet > 0 then
 	choose Case asUnt_Monnaie
 		case "FRF"
@@ -4128,7 +4128,7 @@ private function integer uf_ctrl_fichier_phoneandphone ();//*-------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Ctrl_Fichier_PHONEANDPHONE (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 07/03/2006
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier de PHONEANDPHONE
+//* Libellé			: Controler de la validité du fichier de PHONEANDPHONE
 //* Commentaires	: [DCMP090140]
 //*
 //* Arguments		: 
@@ -4153,7 +4153,7 @@ lTotArt = idwArtSpb.RowCount ()
 sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
 sTypArtSav = ""
 
-// JFF 20/01/2011 : le tri imp$$HEX1$$e900$$ENDHEX$$ratif sur ID_REF_FOUR $$HEX1$$e900$$ENDHEX$$tait visiblement manquant (?..)
+// JFF 20/01/2011 : le tri impératif sur ID_REF_FOUR était visiblement manquant (?..)
 idwFicFourn.SetSort ( "ID_REF_FOUR A" )
 idwFicFourn.Sort ()
 
@@ -4175,13 +4175,13 @@ For lCpt = 1 To lTotLig
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 	
 	/*------------------------------------------------------------------*/
@@ -4195,13 +4195,13 @@ For lCpt = 1 To lTotLig
 		" : La zone Type Article est vide." )
 	End If 
 
-	// Le fichier ne doit que contenir que des appareils du m$$HEX1$$ea00$$ENDHEX$$me type
+	// Le fichier ne doit que contenir que des appareils du même type
 	// #2 [DCMP090615]
 	/*
 	If sTypArtSav <> sVal And sTypArtSav <> "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fichier contient des types d'appareils diff$$HEX1$$e900$$ENDHEX$$rents !" )
+		" : Le fichier contient des types d'appareils différents !" )
 	End If
 	*/
 	// :#2 [DCMP090615]
@@ -4226,7 +4226,7 @@ For lCpt = 1 To lTotLig
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le type de l'article doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : Le type de l'article doit être sur 3 caractères." )
 	End If		
 
 	/*------------------------------------------------------------------*/
@@ -4248,11 +4248,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone mod$$HEX1$$e800$$ENDHEX$$le article est vide." )
+		" : La zone modèle article est vide." )
 	Else
 
 		If Pos ( sVal, "'", 1 ) > 0 Then
-//			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+//			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "ID_MODL_ART", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -4289,7 +4289,7 @@ For lCpt = 1 To lTotLig
 			If Not ( Asc ( sCar ) >= 48 And Asc ( sCar ) <= 57 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le montant " + sVal + " n'est pas valide, un caract$$HEX1$$e800$$ENDHEX$$re n'est pas un chiffre." )
+				" : Le montant " + sVal + " n'est pas valide, un caractère n'est pas un chiffre." )
 				Exit
 			End If
 		End If
@@ -4297,7 +4297,7 @@ For lCpt = 1 To lTotLig
 
 	If Real ( sVal ) > 5000 Then		
 		This.uf_Trace ( "ECR", "AVERTISSEMENT ligne " + String ( lCpt ) + &
-		" : Le montant " + sVal + " para$$HEX1$$ee00$$ENDHEX$$t anormalement grand." )
+		" : Le montant " + sVal + " paraît anormalement grand." )
 	End If
 
 	
@@ -4306,13 +4306,13 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "UNT_MONNAIE" ) ) )
 	// [SUISSE].LOT3 Controle de la monnaie du fichier
-	// Si pas de coh$$HEX1$$e900$$ENDHEX$$rence : erreur bloquante d'int$$HEX1$$e900$$ENDHEX$$gration.
+	// Si pas de cohérence : erreur bloquante d'intégration.
 	if uf_controler_monnaie_fichier (sVal, lCpt) < 0 Then iRet = -1
 	
 //	If IsNull ( sVal ) Or sVal = "" Then
 //		iRet = -1
 //		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-//		" : L'unit$$HEX2$$e9002000$$ENDHEX$$de la monnaie est vide." )
+//		" : L'unité de la monnaie est vide." )
 //	End If 
 //
 //	If sVal <> "FRF" And sVal <> "EUR" Then
@@ -4335,7 +4335,7 @@ For lCpt = 1 To lTotLig
 	If Not IsNumber ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La quantit$$HEX2$$e9002000$$ENDHEX$$" + sVal + " n'est pas valide, ce n'est pas un nombre." )
+		" : La quantité " + sVal + " n'est pas valide, ce n'est pas un nombre." )
 		
 	End If
 
@@ -4346,7 +4346,7 @@ For lCpt = 1 To lTotLig
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "OBSERV_FRN", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -4359,11 +4359,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur est vide." )
+		" : La zone Référence fournisseur est vide." )
 	ElseIf sIdRefFourPrec <> "" And sVal = sIdRefFourPrec Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sVal + " n'est pas unique." )
+		" : La référence " + sVal + " n'est pas unique." )
 		
 	End If
 
@@ -4371,7 +4371,7 @@ For lCpt = 1 To lTotLig
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -4383,7 +4383,7 @@ private function integer uf_integration_fichier_phoneandphone (ref long alnblig,
 //* Fonction		: n_cst_pg_in_fic_article::uf_Integration_Fichier_PHONEANDPHONE (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 17/04/2009
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier PHONEANDPHONE dans la base
+//* Libellé			: Intégration du fichier PHONEANDPHONE dans la base
 //* Commentaires	: [DCMP090140]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -4421,13 +4421,13 @@ dcTvaParDefaut = 20
 dt = DateTime ( Today (), Now () )
 
 /*------------------------------------------------------------------*/
-/* Article de R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence pour le filtre sur l'existant en base       */
+/* Article de Référence pour le filtre sur l'existant en base       */
 /*------------------------------------------------------------------*/
 sIdTypArtRef = Upper ( Trim ( idwFicFourn.GetItemString ( 1, "ID_TYP_ART"  ) ) )
 
 idwArticle.Reset ()
 
-// [SUISSE].LOT3 Suppression mecanique conversion $$HEX2$$e0002000$$ENDHEX$$l'integration article
+// [SUISSE].LOT3 Suppression mecanique conversion à l'integration article
 ///*------------------------------------------------------------------*/
 ///* Euro ou Frf ?                                                    */
 ///*------------------------------------------------------------------*/
@@ -4459,7 +4459,7 @@ lTotLigFourn = idwFicFourn.RowCount ()
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Initilisation de la trace d'int$$HEX1$$e900$$ENDHEX$$gration.                         */
+/* Initilisation de la trace d'intégration.                         */
 /*------------------------------------------------------------------*/
 This.uf_Trace_2 ( "INIT", 0, sIdFour, "", "", "", "" )
 
@@ -4500,14 +4500,14 @@ For alNbLig = 1 To lTotLigFourn
 	End If
 
 	If lRow > 0 Then 
-// [SUISSE].LOT3 Suppression mecanique conversion $$HEX2$$e0002000$$ENDHEX$$l'integration article
+// [SUISSE].LOT3 Suppression mecanique conversion à l'integration article
 //		dcPrixHt = idwFicFourn.GetItemDecimal ( alNbLig, "MT_PRIX_HT" )
 //		sUntMonnaie = Upper ( idwFicFourn.GetItemString ( alNbLig, "UNT_MONNAIE" ) )
 //		
 //		// [SUISSE].LOT3 
 //		idwArticle.SetItem ( lRow, "MT_PRIX_HT", dcPrixHt   )
-//		// Ci-dessous d$$HEX1$$e900$$ENDHEX$$sactiv$$HEX2$$e9002000$$ENDHEX$$:
-//		// Base SIMPA2 en FRANCS Fran$$HEX1$$e700$$ENDHEX$$ais
+//		// Ci-dessous désactivé :
+//		// Base SIMPA2 en FRANCS Français
 //		If Not bBaseEuro Then
 //		
 //			CHOOSE CASE  sUntMonnaie 
@@ -4535,7 +4535,7 @@ For alNbLig = 1 To lTotLigFourn
 
 
 		/*------------------------------------------------------------------*/
-		/* Code $$HEX1$$e900$$ENDHEX$$tat (-EI)                                                  */
+		/* Code état (-EI)                                                  */
 		/* 200 Nouveau                                                      */
 		/* 100 MAj_Ok sur existant                                          */
 		/*------------------------------------------------------------------*/
@@ -4548,8 +4548,8 @@ For alNbLig = 1 To lTotLigFourn
 			sIdModlIfr = Trim ( idwArticle.GetItemString  ( lRow, "ID_MODL_ART_IFR" ) )
 
 			/*------------------------------------------------------------------*/
-			/* Si les marques et mod$$HEX1$$e800$$ENDHEX$$les IFR sont absent de l'enregistrement    */
-			/* exisant, on force ALT_DIPSPO $$HEX2$$e0002000$$ENDHEX$$NON.                              */
+			/* Si les marques et modèles IFR sont absent de l'enregistrement    */
+			/* exisant, on force ALT_DIPSPO à NON.                              */
 			/*------------------------------------------------------------------*/
 			If Isnull ( sIdMqIfr ) Or sIdMqIfr = "" Or Isnull ( sIdModlIfr ) Or sIdModlIfr = "" Then
 				idwArticle.SetItem ( lRow, "ALT_DISPO", "N" )				
@@ -4561,7 +4561,7 @@ For alNbLig = 1 To lTotLigFourn
 		// [VDOC6993]
 		Choose Case sIdTypArt 
 			Case "TEL", "PC1", "PC2" 
-				// Doit $$HEX1$$ea00$$ENDHEX$$tre mis $$HEX2$$e0002000$$ENDHEX$$la main pas Cell. Parte.
+				// Doit être mis à la main pas Cell. Parte.
 				// [VDOC6993]
 				If bInsert Then
 					sIdMarqArtIFr = Space (35) 
@@ -4599,12 +4599,12 @@ For alNbLig = 1 To lTotLigFourn
 Next
 
 /*------------------------------------------------------------------*/
-/* Nbre de ligne dans la Table (r$$HEX1$$e900$$ENDHEX$$actualis$$HEX1$$e900$$ENDHEX$$)                        */
+/* Nbre de ligne dans la Table (réactualisé)                        */
 /*------------------------------------------------------------------*/
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Suppression des lignes pr$$HEX1$$e900$$ENDHEX$$sentes dans la table articles et       */
+/* Suppression des lignes présentes dans la table articles et       */
 /* absentes du fichier.                                             */
 /*------------------------------------------------------------------*/
 For lCpt = lTotLigArticle To 1 Step -1
@@ -4641,7 +4641,7 @@ private function string uf_correspondance_code (string asidfour, string ascas, s
 //* Fonction		: n_cst_int_fic_article::uf_correspondance_code (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 20/04/2009
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Correspondance des codes
+//* Libellé			: Correspondance des codes
 //* Commentaires	: [DCMP090102]
 //*
 //* Arguments		: String		asIdFour		Val
@@ -4656,7 +4656,7 @@ private function string uf_correspondance_code (string asidfour, string ascas, s
 //* #2	 JFF    11/08/2009  [DMDI26381]
 //*          SBA   17/06/2010	 [DCMP100437]	
 // 			FPI	01/07/2010	[Bug.stock] Correction taille tableau 
-//			FPI	08/11/2010	[VDoc1276] Mise $$HEX2$$e0002000$$ENDHEX$$jour totale des sous-rayons
+//			FPI	08/11/2010	[VDoc1276] Mise à jour totale des sous-rayons
 //			FPI	19/04/2013	[VDoc10476] Renommage rayon TPC
 //			JFF   16/05/2014  [VDOC14454]
 //       JFF   21/03/2016  [PM289-3]
@@ -4698,7 +4698,7 @@ private function integer uf_ctrl_fichier_carrefour ();//*-----------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Ctrl_Fichier_Carrefour (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 04/11/2010
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier de CARREFOUR
+//* Libellé			: Controler de la validité du fichier de CARREFOUR
 //* Commentaires	: [PC301].[LOT2]
 //*
 //* Arguments		: 
@@ -4722,7 +4722,7 @@ lTotArt = idwArtSpb.RowCount ()
 sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
 sTypArtSav = ""
 
-// JFF 20/01/2011 : le tri imp$$HEX1$$e900$$ENDHEX$$ratif sur ID_REF_FOUR $$HEX1$$e900$$ENDHEX$$tait visiblement manquant (?..)
+// JFF 20/01/2011 : le tri impératif sur ID_REF_FOUR était visiblement manquant (?..)
 idwFicFourn.SetSort ( "ID_REF_FOUR A" )
 idwFicFourn.Sort ()
 
@@ -4744,13 +4744,13 @@ For lCpt = 1 To lTotLig
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 	
 	/*------------------------------------------------------------------*/
@@ -4764,13 +4764,13 @@ For lCpt = 1 To lTotLig
 		" : La zone Type Article est vide." )
 	End If 
 
-	// Le fichier ne doit que contenir que des appareils du m$$HEX1$$ea00$$ENDHEX$$me type
+	// Le fichier ne doit que contenir que des appareils du même type
 	// #2 [DCMP090615]
 	/*
 	If sTypArtSav <> sVal And sTypArtSav <> "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fichier contient des types d'appareils diff$$HEX1$$e900$$ENDHEX$$rents !" )
+		" : Le fichier contient des types d'appareils différents !" )
 	End If
 	*/
 	// :#2 [DCMP090615]
@@ -4795,7 +4795,7 @@ For lCpt = 1 To lTotLig
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le type de l'article doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : Le type de l'article doit être sur 3 caractères." )
 	End If		
 
 	/*------------------------------------------------------------------*/
@@ -4817,11 +4817,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone mod$$HEX1$$e800$$ENDHEX$$le article est vide." )
+		" : La zone modèle article est vide." )
 	Else
 
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "ID_MODL_ART", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -4858,7 +4858,7 @@ For lCpt = 1 To lTotLig
 			If Not ( Asc ( sCar ) >= 48 And Asc ( sCar ) <= 57 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le montant " + sVal + " n'est pas valide, un caract$$HEX1$$e800$$ENDHEX$$re n'est pas un chiffre." )
+				" : Le montant " + sVal + " n'est pas valide, un caractère n'est pas un chiffre." )
 				Exit
 			End If
 		End If
@@ -4866,7 +4866,7 @@ For lCpt = 1 To lTotLig
 
 	If Real ( sVal ) > 5000 Then		
 		This.uf_Trace ( "ECR", "AVERTISSEMENT ligne " + String ( lCpt ) + &
-		" : Le montant " + sVal + " para$$HEX1$$ee00$$ENDHEX$$t anormalement grand." )
+		" : Le montant " + sVal + " paraît anormalement grand." )
 	End If
 
 	
@@ -4875,13 +4875,13 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "UNT_MONNAIE" ) ) )
 	// [SUISSE].LOT3 Controle de la monnaie du fichier
-	// Si pas de coh$$HEX1$$e900$$ENDHEX$$rence : erreur bloquante d'int$$HEX1$$e900$$ENDHEX$$gration.
+	// Si pas de cohérence : erreur bloquante d'intégration.
 	if uf_controler_monnaie_fichier (sVal, lCpt) < 0 Then iRet = -1
 	
 //	If IsNull ( sVal ) Or sVal = "" Then
 //		iRet = -1
 //		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-//		" : L'unit$$HEX2$$e9002000$$ENDHEX$$de la monnaie est vide." )
+//		" : L'unité de la monnaie est vide." )
 //	End If 
 //
 //	If sVal <> "FRF" And sVal <> "EUR" Then
@@ -4904,7 +4904,7 @@ For lCpt = 1 To lTotLig
 	If Not IsNumber ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La quantit$$HEX2$$e9002000$$ENDHEX$$" + sVal + " n'est pas valide, ce n'est pas un nombre." )
+		" : La quantité " + sVal + " n'est pas valide, ce n'est pas un nombre." )
 		
 	End If
 
@@ -4915,7 +4915,7 @@ For lCpt = 1 To lTotLig
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "OBSERV_FRN", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -4930,11 +4930,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur est vide." )
+		" : La zone Référence fournisseur est vide." )
 	ElseIf sIdRefFourPrec <> "" And sVal = sIdRefFourPrec Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sVal + " n'est pas unique." )
+		" : La référence " + sVal + " n'est pas unique." )
 		
 	End If
 
@@ -4942,7 +4942,7 @@ For lCpt = 1 To lTotLig
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -4954,7 +4954,7 @@ private function integer uf_integration_fichier_carrefour (ref long alnblig, ref
 //* Fonction		: n_cst_pg_in_fic_article::uf_Integration_Fichier_CARREFOUR (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 07/03/2010
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier CARREFOUR dans la base
+//* Libellé			: Intégration du fichier CARREFOUR dans la base
 //* Commentaires	: 
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -4986,16 +4986,16 @@ alNbInsert = 0
 alNbDelete = 0
 SetNull ( sNull )
 
-// !!!!!!!!!!!!!!!!!!!! Particularit$$HEX2$$e9002000$$ENDHEX$$de CARREFOUR !!!!!!!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!!! Particularité de CARREFOUR !!!!!!!!!!!!!!!!!!!!!!!
 // dcTvaParDefaut = 19.6 
 dcTvaParDefaut = 0 
-// Le montant re$$HEX1$$e700$$ENDHEX$$u est TTC, pas d'ajout de TVA.
+// Le montant reçu est TTC, pas d'ajout de TVA.
 
 
 dt = DateTime ( Today (), Now () )
 
 /*------------------------------------------------------------------*/
-/* Article de R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence pour le filtre sur l'existant en base       */
+/* Article de Référence pour le filtre sur l'existant en base       */
 /*------------------------------------------------------------------*/
 //* #2 [DCMP090615]
 // sIdTypArtRef = Upper ( Trim ( idwFicFourn.GetItemString ( 1, "ID_TYP_ART"  ) ) )
@@ -5003,7 +5003,7 @@ dt = DateTime ( Today (), Now () )
 
 idwArticle.Reset ()
 
-// [SUISSE].LOT3 Suppression mecanique conversion $$HEX2$$e0002000$$ENDHEX$$l'integration article
+// [SUISSE].LOT3 Suppression mecanique conversion à l'integration article
 ///*------------------------------------------------------------------*/
 ///* Euro ou Frf ?                                                    */
 ///*------------------------------------------------------------------*/
@@ -5038,7 +5038,7 @@ lTotLigFourn = idwFicFourn.RowCount ()
 // lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Initilisation de la trace d'int$$HEX1$$e900$$ENDHEX$$gration.                         */
+/* Initilisation de la trace d'intégration.                         */
 /*------------------------------------------------------------------*/
 This.uf_Trace_2 ( "INIT", 0, sIdFour, "", "", "", "" )
 F_Execute ( "Exec sysadm.PS_D02_ARTICLE 'CAR'", SQLCA )
@@ -5056,10 +5056,10 @@ For alNbLig = 1 To lTotLigFourn
 	dcPrixHt    = idwFicFourn.GetItemDecimal ( alNbLig, "MT_PRIX_HT" )
 	lQtDisp		= idwFicFourn.GetItemNumber ( alNbLig, "QT_DISP" )
 
-	// !!!!!!!!!! R$$HEX1$$e800$$ENDHEX$$gles donn$$HEX1$$e900$$ENDHEX$$es lors de la r$$HEX1$$e900$$ENDHEX$$union du Mercredi 27/10/2010, 
-	// On arr$$HEX1$$ea00$$ENDHEX$$te les stocks $$HEX2$$e0002000$$ENDHEX$$un seuil de 50 pour carrefour, ne pas descendre en dessous.
-	// Pour g$$HEX1$$e900$$ENDHEX$$rer cela, je r$$HEX1$$e900$$ENDHEX$$duis d'entr$$HEX1$$e900$$ENDHEX$$e le stock de chaque article de -50 unit$$HEX1$$e900$$ENDHEX$$s.
-	lQtDisp		= lQtDisp - 20 // [VDoc9492] - Passage de 50 $$HEX2$$e0002000$$ENDHEX$$20 unit$$HEX1$$e900$$ENDHEX$$s
+	// !!!!!!!!!! Règles données lors de la réunion du Mercredi 27/10/2010, 
+	// On arrête les stocks à un seuil de 50 pour carrefour, ne pas descendre en dessous.
+	// Pour gérer cela, je réduis d'entrée le stock de chaque article de -50 unités.
+	lQtDisp		= lQtDisp - 20 // [VDoc9492] - Passage de 50 à 20 unités
 	
 	If lQtDisp < 0 Then lQtDisp = 0
 	
@@ -5084,7 +5084,7 @@ For alNbLig = 1 To lTotLigFourn
 	idwArticle.SetItem ( lRow, "ALT_DISPO",	 "O"	 )
 	
 	idwArticle.SetItem ( lRow, "QT_DISP", lQtDisp )
-	idwArticle.SetItem ( lRow, "OBSERV_FRN", Upper ( idwFicFourn.GetItemString ( alNbLig, "OBSERV_FRN" ) ) + " (Prix : " + String ( dcPrixHt, "######.00" ) + " $$HEX1$$ac20$$ENDHEX$$)" ) 	// [VDOC4063] ajout du prix pour info
+	idwArticle.SetItem ( lRow, "OBSERV_FRN", Upper ( idwFicFourn.GetItemString ( alNbLig, "OBSERV_FRN" ) ) + " (Prix : " + String ( dcPrixHt, "######.00" ) + " €)" ) 	// [VDOC4063] ajout du prix pour info
 	idwArticle.SetItem ( lRow, "VERROU", 1 )
 	idwArticle.SetItem ( lRow, "MAJ_LE", dt )		
 	idwArticle.SetItem ( lRow, "MAJ_PAR", stGlb.sCodOper )		
@@ -5102,7 +5102,7 @@ private function integer uf_ctrl_fichier_o2m ();//*-----------------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Ctrl_Fichier_O2M (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 03/05/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier de O2M
+//* Libellé			: Controler de la validité du fichier de O2M
 //* Commentaires	: [PM166][O2M]
 //*
 //* Arguments		: 
@@ -5135,7 +5135,7 @@ lTotArt = idwArtSpb.RowCount ()
 sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
 sTypArtSav = ""
 
-// JFF 20/01/2011 : le tri imp$$HEX1$$e900$$ENDHEX$$ratif sur ID_REF_FOUR $$HEX1$$e900$$ENDHEX$$tait visiblement manquant (?..)
+// JFF 20/01/2011 : le tri impératif sur ID_REF_FOUR était visiblement manquant (?..)
 idwFicFourn.SetSort ( "ID_REF_FOUR A" )
 idwFicFourn.Sort ()
 
@@ -5157,13 +5157,13 @@ For lCpt = 1 To lTotLig
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 	
 	/*------------------------------------------------------------------*/
@@ -5177,13 +5177,13 @@ For lCpt = 1 To lTotLig
 		" : La zone Type Article est vide." )
 	End If 
 
-	// Le fichier ne doit que contenir que des appareils du m$$HEX1$$ea00$$ENDHEX$$me type
+	// Le fichier ne doit que contenir que des appareils du même type
 	// #2 [DCMP090615]
 	/*
 	If sTypArtSav <> sVal And sTypArtSav <> "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fichier contient des types d'appareils diff$$HEX1$$e900$$ENDHEX$$rents !" )
+		" : Le fichier contient des types d'appareils différents !" )
 	End If
 	*/
 	// :#2 [DCMP090615]
@@ -5208,7 +5208,7 @@ For lCpt = 1 To lTotLig
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le type de l'article doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : Le type de l'article doit être sur 3 caractères." )
 	End If		
 
 	/*------------------------------------------------------------------*/
@@ -5230,11 +5230,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone mod$$HEX1$$e800$$ENDHEX$$le article est vide." )
+		" : La zone modèle article est vide." )
 	Else
 
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "ID_MODL_ART", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -5271,7 +5271,7 @@ For lCpt = 1 To lTotLig
 			If Not ( Asc ( sCar ) >= 48 And Asc ( sCar ) <= 57 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le montant " + sVal + " n'est pas valide, un caract$$HEX1$$e800$$ENDHEX$$re n'est pas un chiffre." )
+				" : Le montant " + sVal + " n'est pas valide, un caractère n'est pas un chiffre." )
 				Exit
 			End If
 		End If
@@ -5279,14 +5279,14 @@ For lCpt = 1 To lTotLig
 
 	If Real ( sVal ) > 5000 Then		
 		This.uf_Trace ( "ECR", "AVERTISSEMENT ligne " + String ( lCpt ) + &
-		" : Le montant " + sVal + " para$$HEX1$$ee00$$ENDHEX$$t anormalement grand." )
+		" : Le montant " + sVal + " paraît anormalement grand." )
 	End If
 
 	// [BUG_RST_PRIX_O2M]
 	If Real ( sVal ) <= 0 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone Prix Hors Taxe doit $$HEX1$$ea00$$ENDHEX$$tre un montant positif." )
+		" : La zone Prix Hors Taxe doit être un montant positif." )
 	End If 
 	
 	/*------------------------------------------------------------------*/
@@ -5294,13 +5294,13 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "UNT_MONNAIE" ) ) )
 	// [SUISSE].LOT3 Controle de la monnaie du fichier
-	// Si pas de coh$$HEX1$$e900$$ENDHEX$$rence : erreur bloquante d'int$$HEX1$$e900$$ENDHEX$$gration.
+	// Si pas de cohérence : erreur bloquante d'intégration.
 	if uf_controler_monnaie_fichier (sVal, lCpt) < 0 Then iRet = -1
 	
 //	If IsNull ( sVal ) Or sVal = "" Then
 //		iRet = -1
 //		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-//		" : L'unit$$HEX2$$e9002000$$ENDHEX$$de la monnaie est vide." )
+//		" : L'unité de la monnaie est vide." )
 //	End If 
 //
 //	If sVal <> "FRF" And sVal <> "EUR" Then
@@ -5323,7 +5323,7 @@ For lCpt = 1 To lTotLig
 	If Not IsNumber ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La quantit$$HEX2$$e9002000$$ENDHEX$$" + sVal + " n'est pas valide, ce n'est pas un nombre." )
+		" : La quantité " + sVal + " n'est pas valide, ce n'est pas un nombre." )
 		
 	End If
 
@@ -5334,7 +5334,7 @@ For lCpt = 1 To lTotLig
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "OBSERV_FRN", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -5347,7 +5347,7 @@ For lCpt = 1 To lTotLig
 			iRet = -1
 			If IsNull ( sVal ) Then sVal = "'vide'"
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" (vDoc25657/PM471-1) : La valeur " + sVal + " n'est pas autoris$$HEX1$$e900$$ENDHEX$$e pour le mot cl$$HEX2$$e9002000$$ENDHEX$$[#GR#]. La valeur doit $$HEX1$$ea00$$ENDHEX$$tre num$$HEX1$$e900$$ENDHEX$$rique entre 0 et 9." )
+				" (vDoc25657/PM471-1) : La valeur " + sVal + " n'est pas autorisée pour le mot clé [#GR#]. La valeur doit être numérique entre 0 et 9." )
 		End If 
 	End If 
 
@@ -5364,7 +5364,7 @@ For lCpt = 1 To lTotLig
 			Case Else
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" (vDoc25770) : La valeur " + sVal + " n'est pas autoris$$HEX1$$e900$$ENDHEX$$e pour le mot cl$$HEX2$$e9002000$$ENDHEX$$[#PR#]. La valeur doit $$HEX1$$ea00$$ENDHEX$$tre AIG ou O2M." )
+					" (vDoc25770) : La valeur " + sVal + " n'est pas autorisée pour le mot clé [#PR#]. La valeur doit être AIG ou O2M." )
 		End CHoose 
 			
 	End If 
@@ -5379,12 +5379,12 @@ For lCpt = 1 To lTotLig
 		If IsNull ( sVal ) Then sVal = "'vide'"
 		
 		Choose Case sVal
-			Case "AIG", "CARDIF", "PACIFICA", "PARISIENNE", "AMTRUST", "DAS" // D$$HEX1$$e900$$ENDHEX$$finir ici les autres assureurs
+			Case "AIG", "CARDIF", "PACIFICA", "PARISIENNE", "AMTRUST", "DAS" // Définir ici les autres assureurs
 				// OK
 			Case Else
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" (PM471-1) : La valeur " + sVal + " n'est pas autoris$$HEX1$$e900$$ENDHEX$$e pour le mot cl$$HEX2$$e9002000$$ENDHEX$$[#RSASS#]. La valeur doit $$HEX1$$ea00$$ENDHEX$$tre un libell$$HEX2$$e9002000$$ENDHEX$$assureur donn$$HEX2$$e9002000$$ENDHEX$$par SPB." )
+					" (PM471-1) : La valeur " + sVal + " n'est pas autorisée pour le mot clé [#RSASS#]. La valeur doit être un libellé assureur donné par SPB." )
 		End CHoose 
 			
 	End If 
@@ -5395,7 +5395,7 @@ For lCpt = 1 To lTotLig
 
 	/* [ITSM114795]
 	
-	Classe enlev$$HEX1$$e900$$ENDHEX$$e par Lisette sur ITSM 114795
+	Classe enlevée par Lisette sur ITSM 114795
 	"IPHONE 4G 16GO- BLANC",&
 	"IPHONE 4G 16GO- NOIR",&
 	*/
@@ -5417,7 +5417,7 @@ For lCpt = 1 To lTotLig
 								sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "ID_REF_FOUR" ) ) )
 								iRet = -1
 								This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-								" : Le nouveau code filtre SFR [#CMx#] est absent de la r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$nce " + sVal + "." )
+								" : Le nouveau code filtre SFR [#CMx#] est absent de la référénce " + sVal + "." )
 							End If
 						End If
 					
@@ -5433,11 +5433,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur est vide." )
+		" : La zone Référence fournisseur est vide." )
 	ElseIf sIdRefFourPrec <> "" And sVal = sIdRefFourPrec Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sVal + " n'est pas unique." )
+		" : La référence " + sVal + " n'est pas unique." )
 		
 	End If
 
@@ -5445,7 +5445,7 @@ For lCpt = 1 To lTotLig
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -5457,7 +5457,7 @@ private function integer uf_integration_fichier_o2m (string ascas, ref long alnb
 //* Fonction		: n_cst_pg_in_fic_article::uf_Integration_Fichier_O2M (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 03/05/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier O2M dans la base
+//* Libellé			: Intégration du fichier O2M dans la base
 //* Commentaires	: // [PM166][O2M]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -5500,7 +5500,7 @@ dcTvaParDefaut = 20
 dt = DateTime ( Today (), Now () )
 
 /*------------------------------------------------------------------*/
-/* Article de R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence pour le filtre sur l'existant en base       */
+/* Article de Référence pour le filtre sur l'existant en base       */
 /*------------------------------------------------------------------*/
 //* #2 [DCMP090615]
 // sIdTypArtRef = Upper ( Trim ( idwFicFourn.GetItemString ( 1, "ID_TYP_ART"  ) ) )
@@ -5508,7 +5508,7 @@ dt = DateTime ( Today (), Now () )
 
 idwArticle.Reset ()
 
-// [SUISSE].LOT3 Suppression mecanique conversion $$HEX2$$e0002000$$ENDHEX$$l'integration article
+// [SUISSE].LOT3 Suppression mecanique conversion à l'integration article
 ///*------------------------------------------------------------------*/
 ///* Euro ou Frf ?                                                    */
 ///*------------------------------------------------------------------*/
@@ -5543,7 +5543,7 @@ lTotLigFourn = idwFicFourn.RowCount ()
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Initilisation de la trace d'int$$HEX1$$e900$$ENDHEX$$gration.                         */
+/* Initilisation de la trace d'intégration.                         */
 /*------------------------------------------------------------------*/
 If asCas = "1ER_TOUR" Then
 	This.uf_Trace_2 ( "INIT", 0, sIdFour, "", "", "", "" )
@@ -5596,7 +5596,7 @@ For alNbLig = 1 To lTotLigFourn
 	
 	
 			/*------------------------------------------------------------------*/
-			/* Code $$HEX1$$e900$$ENDHEX$$tat (-EI)                                                  */
+			/* Code état (-EI)                                                  */
 			/* 200 Nouveau                                                      */
 			/* 100 MAj_Ok sur existant                                          */
 			/*------------------------------------------------------------------*/
@@ -5609,8 +5609,8 @@ For alNbLig = 1 To lTotLigFourn
 				sIdModlIfr = Trim ( idwArticle.GetItemString  ( lRow, "ID_MODL_ART_IFR" ) )
 	
 				/*------------------------------------------------------------------*/
-				/* Si les marques et mod$$HEX1$$e800$$ENDHEX$$les IFR sont absent de l'enregistrement    */
-				/* exisant, on force ALT_DIPSPO $$HEX2$$e0002000$$ENDHEX$$NON.                              */
+				/* Si les marques et modèles IFR sont absent de l'enregistrement    */
+				/* exisant, on force ALT_DIPSPO à NON.                              */
 				/*------------------------------------------------------------------*/
 				If Isnull ( sIdMqIfr ) Or sIdMqIfr = "" Or Isnull ( sIdModlIfr ) Or sIdModlIfr = "" Then
 					idwArticle.SetItem ( lRow, "ALT_DISPO", "N" )				
@@ -5622,7 +5622,7 @@ For alNbLig = 1 To lTotLigFourn
 			// [VDOC6993]
 			Choose Case sIdTypArt 
 				Case "TEL", "PC1", "PC2" 
-					// Doit $$HEX1$$ea00$$ENDHEX$$tre mis $$HEX2$$e0002000$$ENDHEX$$la main pas Cell. Parte.
+					// Doit être mis à la main pas Cell. Parte.
 					// [VDOC6993]
 					If bInsert Then
 						sIdMarqArtIFr = Space (35) 
@@ -5671,7 +5671,7 @@ For alNbLig = 1 To lTotLigFourn
 
 		lRow = SQLCA.PS_S01_DET_ARTICLE_TEST_PRESENCE ( sIdFour, sIdRefFour) 
 
-		// On n'int$$HEX1$$e900$$ENDHEX$$gre que certaines c$$HEX1$$e900$$ENDHEX$$t$$HEX1$$e900$$ENDHEX$$gorie.
+		// On n'intégre que certaines cétégorie.
 		If lRow <= 0 Then 
 		
 			sSql  = "Exec sysadm.DW_I01_DET_ARTICLE "
@@ -5698,13 +5698,13 @@ For alNbLig = 1 To lTotLigFourn
 Next
 
 /*------------------------------------------------------------------*/
-/* Nbre de ligne dans la Table (r$$HEX1$$e900$$ENDHEX$$actualis$$HEX1$$e900$$ENDHEX$$)                        */
+/* Nbre de ligne dans la Table (réactualisé)                        */
 /*------------------------------------------------------------------*/
 If asCas = "1ER_TOUR" Then
 	lTotLigArticle = idwArticle.RowCount ()
 	
 	/*------------------------------------------------------------------*/
-	/* Suppression des lignes pr$$HEX1$$e900$$ENDHEX$$sentes dans la table articles et       */
+	/* Suppression des lignes présentes dans la table articles et       */
 	/* absentes du fichier.                                             */
 	/*------------------------------------------------------------------*/
 	For lCpt = lTotLigArticle To 1 Step -1
@@ -5749,7 +5749,7 @@ private function integer uf_ctrl_fichier_coriolis ();//*------------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Ctrl_Fichier_Coriolis (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 03/05/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier de O2M
+//* Libellé			: Controler de la validité du fichier de O2M
 //* Commentaires	: [PM178][CORIOLIS]
 //*
 //* Arguments		: 
@@ -5774,7 +5774,7 @@ lTotArt = idwArtSpb.RowCount ()
 sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
 sTypArtSav = ""
 
-// JFF 20/01/2011 : le tri imp$$HEX1$$e900$$ENDHEX$$ratif sur ID_REF_FOUR $$HEX1$$e900$$ENDHEX$$tait visiblement manquant (?..)
+// JFF 20/01/2011 : le tri impératif sur ID_REF_FOUR était visiblement manquant (?..)
 idwFicFourn.SetSort ( "ID_REF_FOUR A" )
 idwFicFourn.Sort ()
 
@@ -5796,13 +5796,13 @@ For lCpt = 1 To lTotLig
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 	
 	/*------------------------------------------------------------------*/
@@ -5816,13 +5816,13 @@ For lCpt = 1 To lTotLig
 		" : La zone Type Article est vide." )
 	End If 
 
-	// Le fichier ne doit que contenir que des appareils du m$$HEX1$$ea00$$ENDHEX$$me type
+	// Le fichier ne doit que contenir que des appareils du même type
 	// #2 [DCMP090615]
 	/*
 	If sTypArtSav <> sVal And sTypArtSav <> "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fichier contient des types d'appareils diff$$HEX1$$e900$$ENDHEX$$rents !" )
+		" : Le fichier contient des types d'appareils différents !" )
 	End If
 	*/
 	// :#2 [DCMP090615]
@@ -5847,7 +5847,7 @@ For lCpt = 1 To lTotLig
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le type de l'article doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : Le type de l'article doit être sur 3 caractères." )
 	End If		
 
 	/*------------------------------------------------------------------*/
@@ -5869,11 +5869,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone mod$$HEX1$$e800$$ENDHEX$$le article est vide." )
+		" : La zone modèle article est vide." )
 	Else
 
 		If Pos ( sVal, "'", 1 ) > 0 Then
-//			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+//			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "ID_MODL_ART", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -5910,7 +5910,7 @@ For lCpt = 1 To lTotLig
 			If Not ( Asc ( sCar ) >= 48 And Asc ( sCar ) <= 57 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le montant " + sVal + " n'est pas valide, un caract$$HEX1$$e800$$ENDHEX$$re n'est pas un chiffre." )
+				" : Le montant " + sVal + " n'est pas valide, un caractère n'est pas un chiffre." )
 				Exit
 			End If
 		End If
@@ -5918,7 +5918,7 @@ For lCpt = 1 To lTotLig
 
 	If Real ( sVal ) > 5000 Then		
 		This.uf_Trace ( "ECR", "AVERTISSEMENT ligne " + String ( lCpt ) + &
-		" : Le montant " + sVal + " para$$HEX1$$ee00$$ENDHEX$$t anormalement grand." )
+		" : Le montant " + sVal + " paraît anormalement grand." )
 	End If
 
 	
@@ -5927,13 +5927,13 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "UNT_MONNAIE" ) ) )
 	// [SUISSE].LOT3 Controle de la monnaie du fichier
-	// Si pas de coh$$HEX1$$e900$$ENDHEX$$rence : erreur bloquante d'int$$HEX1$$e900$$ENDHEX$$gration.
+	// Si pas de cohérence : erreur bloquante d'intégration.
 	if uf_controler_monnaie_fichier (sVal, lCpt) < 0 Then iRet = -1
 	
 //	If IsNull ( sVal ) Or sVal = "" Then
 //		iRet = -1
 //		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-//		" : L'unit$$HEX2$$e9002000$$ENDHEX$$de la monnaie est vide." )
+//		" : L'unité de la monnaie est vide." )
 //	End If 
 //
 //	If sVal <> "FRF" And sVal <> "EUR" Then
@@ -5956,7 +5956,7 @@ For lCpt = 1 To lTotLig
 	If Not IsNumber ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La quantit$$HEX2$$e9002000$$ENDHEX$$" + sVal + " n'est pas valide, ce n'est pas un nombre." )
+		" : La quantité " + sVal + " n'est pas valide, ce n'est pas un nombre." )
 		
 	End If
 
@@ -5967,7 +5967,7 @@ For lCpt = 1 To lTotLig
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "OBSERV_FRN", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -5980,11 +5980,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur est vide." )
+		" : La zone Référence fournisseur est vide." )
 	ElseIf sIdRefFourPrec <> "" And sVal = sIdRefFourPrec Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sVal + " n'est pas unique." )
+		" : La référence " + sVal + " n'est pas unique." )
 		
 	End If
 
@@ -5992,7 +5992,7 @@ For lCpt = 1 To lTotLig
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -6004,7 +6004,7 @@ private function integer uf_integration_fichier_coriolis (string ascas, ref long
 //* Fonction		: n_cst_pg_in_fic_article::uf_Integration_Fichier_Coriolis (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 03/05/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier O2M dans la base
+//* Libellé			: Intégration du fichier O2M dans la base
 //* Commentaires	: //[PM178][CORIOLIS]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -6023,7 +6023,7 @@ private function integer uf_integration_fichier_coriolis (string ascas, ref long
 //*       JFF    01/02/2012  [VDOC6846]
 //        JFF    19/11/2013  [DT_60_AUGM_TVA]
 //        JFF    21/09/2016  [VDOC21822]
-//        JFF    28/10/2020  [VDOC29759] On lib$$HEX1$$e800$$ENDHEX$$re la marque APPLE
+//        JFF    28/10/2020  [VDOC29759] On libère la marque APPLE
 //*-----------------------------------------------------------------
 
 Int iRet
@@ -6046,7 +6046,7 @@ dcTvaParDefaut = 20
 dt = DateTime ( Today (), Now () )
 
 /*------------------------------------------------------------------*/
-/* Article de R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence pour le filtre sur l'existant en base       */
+/* Article de Référence pour le filtre sur l'existant en base       */
 /*------------------------------------------------------------------*/
 //* #2 [DCMP090615]
 // sIdTypArtRef = Upper ( Trim ( idwFicFourn.GetItemString ( 1, "ID_TYP_ART"  ) ) )
@@ -6054,7 +6054,7 @@ dt = DateTime ( Today (), Now () )
 
 idwArticle.Reset ()
 
-// [SUISSE].LOT3 Suppression mecanique conversion $$HEX2$$e0002000$$ENDHEX$$l'integration article
+// [SUISSE].LOT3 Suppression mecanique conversion à l'integration article
 ///*------------------------------------------------------------------*/
 ///* Euro ou Frf ?                                                    */
 ///*------------------------------------------------------------------*/
@@ -6087,7 +6087,7 @@ lTotLigFourn = idwFicFourn.RowCount ()
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Initilisation de la trace d'int$$HEX1$$e900$$ENDHEX$$gration.                         */
+/* Initilisation de la trace d'intégration.                         */
 /*------------------------------------------------------------------*/
 If asCas = "1ER_TOUR" Then
 	This.uf_Trace_2 ( "INIT", 0, sIdFour, "", "", "", "" )
@@ -6140,7 +6140,7 @@ For alNbLig = 1 To lTotLigFourn
 	
 	
 			/*------------------------------------------------------------------*/
-			/* Code $$HEX1$$e900$$ENDHEX$$tat (-EI)                                                  */
+			/* Code état (-EI)                                                  */
 			/* 200 Nouveau                                                      */
 			/* 100 MAj_Ok sur existant                                          */
 			/*------------------------------------------------------------------*/
@@ -6153,8 +6153,8 @@ For alNbLig = 1 To lTotLigFourn
 				sIdModlIfr = Trim ( idwArticle.GetItemString  ( lRow, "ID_MODL_ART_IFR" ) )
 	
 				/*------------------------------------------------------------------*/
-				/* Si les marques et mod$$HEX1$$e800$$ENDHEX$$les IFR sont absent de l'enregistrement    */
-				/* exisant, on force ALT_DIPSPO $$HEX2$$e0002000$$ENDHEX$$NON.                              */
+				/* Si les marques et modèles IFR sont absent de l'enregistrement    */
+				/* exisant, on force ALT_DIPSPO à NON.                              */
 				/*------------------------------------------------------------------*/
 				If Isnull ( sIdMqIfr ) Or sIdMqIfr = "" Or Isnull ( sIdModlIfr ) Or sIdModlIfr = "" Then
 					idwArticle.SetItem ( lRow, "ALT_DISPO", "N" )				
@@ -6166,7 +6166,7 @@ For alNbLig = 1 To lTotLigFourn
 			// [VDOC6846]
 			Choose Case sIdTypArt 
 				Case "TEL", "PC1", "PC2" 
-					// Doit $$HEX1$$ea00$$ENDHEX$$tre mis $$HEX2$$e0002000$$ENDHEX$$la main pas Cell. Parte.
+					// Doit être mis à la main pas Cell. Parte.
 					// [VDOC6993]
 					If bInsert Then
 						sIdMarqArtIFr = Space (35) 
@@ -6211,7 +6211,7 @@ For alNbLig = 1 To lTotLigFourn
 
 		lRow = SQLCA.PS_S01_DET_ARTICLE_TEST_PRESENCE ( sIdFour, sIdRefFour) 
 
-		// On n'int$$HEX1$$e900$$ENDHEX$$gre que certaines c$$HEX1$$e900$$ENDHEX$$t$$HEX1$$e900$$ENDHEX$$gorie.
+		// On n'intégre que certaines cétégorie.
 		If lRow <= 0 Then 
 		
 			sSql  = "Exec sysadm.DW_I01_DET_ARTICLE "
@@ -6238,13 +6238,13 @@ For alNbLig = 1 To lTotLigFourn
 Next
 
 /*------------------------------------------------------------------*/
-/* Nbre de ligne dans la Table (r$$HEX1$$e900$$ENDHEX$$actualis$$HEX1$$e900$$ENDHEX$$)                        */
+/* Nbre de ligne dans la Table (réactualisé)                        */
 /*------------------------------------------------------------------*/
 If asCas = "1ER_TOUR" Then
 	lTotLigArticle = idwArticle.RowCount ()
 	
 	/*------------------------------------------------------------------*/
-	/* Suppression des lignes pr$$HEX1$$e900$$ENDHEX$$sentes dans la table articles et       */
+	/* Suppression des lignes présentes dans la table articles et       */
 	/* absentes du fichier.                                             */
 	/*------------------------------------------------------------------*/
 	For lCpt = lTotLigArticle To 1 Step -1
@@ -6289,7 +6289,7 @@ private function integer uf_ctrl_fichier_converlance ();//*---------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Ctrl_Fichier_Converlance (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 27/06/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier de CONVERLANCE
+//* Libellé			: Controler de la validité du fichier de CONVERLANCE
 //* Commentaires	: [PC10-2]
 //*
 //* Arguments		: 
@@ -6334,13 +6334,13 @@ For lCpt = 1 To lTotLig
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 	
 	/*------------------------------------------------------------------*/
@@ -6374,7 +6374,7 @@ For lCpt = 1 To lTotLig
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le type de l'article doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : Le type de l'article doit être sur 3 caractères." )
 	End If		
 
 	/*------------------------------------------------------------------*/
@@ -6396,11 +6396,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone mod$$HEX1$$e800$$ENDHEX$$le article est vide." )
+		" : La zone modèle article est vide." )
 	Else
 
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "ID_MODL_ART", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -6437,7 +6437,7 @@ For lCpt = 1 To lTotLig
 			If Not ( Asc ( sCar ) >= 48 And Asc ( sCar ) <= 57 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le montant " + sVal + " n'est pas valide, un caract$$HEX1$$e800$$ENDHEX$$re n'est pas un chiffre." )
+				" : Le montant " + sVal + " n'est pas valide, un caractère n'est pas un chiffre." )
 				Exit
 			End If
 		End If
@@ -6445,7 +6445,7 @@ For lCpt = 1 To lTotLig
 
 	If Real ( sVal ) > 5000 Then		
 		This.uf_Trace ( "ECR", "AVERTISSEMENT ligne " + String ( lCpt ) + &
-		" : Le montant " + sVal + " para$$HEX1$$ee00$$ENDHEX$$t anormalement grand." )
+		" : Le montant " + sVal + " paraît anormalement grand." )
 	End If
 
 	
@@ -6468,7 +6468,7 @@ For lCpt = 1 To lTotLig
 	If Not IsNumber ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La quantit$$HEX2$$e9002000$$ENDHEX$$" + sVal + " n'est pas valide, ce n'est pas un nombre." )
+		" : La quantité " + sVal + " n'est pas valide, ce n'est pas un nombre." )
 		
 	End If
 
@@ -6480,7 +6480,7 @@ For lCpt = 1 To lTotLig
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "OBSERV_FRN", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -6493,11 +6493,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur est vide." )
+		" : La zone Référence fournisseur est vide." )
 	ElseIf sIdRefFourPrec <> "" And sVal = sIdRefFourPrec Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sVal + " n'est pas unique." )
+		" : La référence " + sVal + " n'est pas unique." )
 		
 	End If
 
@@ -6505,7 +6505,7 @@ For lCpt = 1 To lTotLig
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -6517,7 +6517,7 @@ private function integer uf_integration_fichier_converlance (ref long alnblig, r
 //* Fonction		: n_cst_pg_in_fic_article::uf_Integration_Fichier_converlance (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 27/06/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier CONVERLANCE dans la base
+//* Libellé			: Intégration du fichier CONVERLANCE dans la base
 //* Commentaires	: [PC10-2]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -6552,7 +6552,7 @@ dt = DateTime ( Today (), Now () )
 dcTvaParDefaut = 0
 
 /*------------------------------------------------------------------*/
-/* Article de R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence pour le filtre sur l'existant en base       */
+/* Article de Référence pour le filtre sur l'existant en base       */
 /*------------------------------------------------------------------*/
 
 
@@ -6575,7 +6575,7 @@ lTotLigFourn = idwFicFourn.RowCount ()
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Initilisation de la trace d'int$$HEX1$$e900$$ENDHEX$$gration.                         */
+/* Initilisation de la trace d'intégration.                         */
 /*------------------------------------------------------------------*/
 This.uf_Trace_2 ( "INIT", 0, sIdFour, "", "", "", "" )
 
@@ -6620,7 +6620,7 @@ For alNbLig = 1 To lTotLigFourn
 		idwArticle.SetItem ( lRow, "MT_PRIX_HT", dcPrixHt   )								
 
 		/*------------------------------------------------------------------*/
-		/* Code $$HEX1$$e900$$ENDHEX$$tat (-EI)                                                  */
+		/* Code état (-EI)                                                  */
 		/* 200 Nouveau                                                      */
 		/* 100 MAj_Ok sur existant                                          */
 		/*------------------------------------------------------------------*/
@@ -6634,8 +6634,8 @@ For alNbLig = 1 To lTotLigFourn
 			sIdModlIfr = Trim ( idwArticle.GetItemString  ( lRow, "ID_MODL_ART_IFR" ) )
 
 			/*------------------------------------------------------------------*/
-			/* Si les marques et mod$$HEX1$$e800$$ENDHEX$$les IFR sont absent de l'enregistrement    */
-			/* exisant, on force ALT_DIPSPO $$HEX2$$e0002000$$ENDHEX$$NON.                              */
+			/* Si les marques et modèles IFR sont absent de l'enregistrement    */
+			/* exisant, on force ALT_DIPSPO à NON.                              */
 			/*------------------------------------------------------------------*/
 			If Isnull ( sIdMqIfr ) Or sIdMqIfr = "" Or Isnull ( sIdModlIfr ) Or sIdModlIfr = "" Then
 				idwArticle.SetItem ( lRow, "ALT_DISPO", "N" )				
@@ -6647,7 +6647,7 @@ For alNbLig = 1 To lTotLigFourn
 		// [PC10][DIAG_NOMADE]
 		Choose Case sIdTypArt 
 			Case "TEL", "PC1", "PC2" 
-				// Doit $$HEX1$$ea00$$ENDHEX$$tre mis $$HEX2$$e0002000$$ENDHEX$$la main pas Cell. Parte.
+				// Doit être mis à la main pas Cell. Parte.
 				// [VDOC6993]
 				If bInsert Then
 					sIdMarqArtIFr = Space (35) 
@@ -6681,12 +6681,12 @@ For alNbLig = 1 To lTotLigFourn
 Next
 
 /*------------------------------------------------------------------*/
-/* Nbre de ligne dans la Table (r$$HEX1$$e900$$ENDHEX$$actualis$$HEX1$$e900$$ENDHEX$$)                        */
+/* Nbre de ligne dans la Table (réactualisé)                        */
 /*------------------------------------------------------------------*/
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Suppression des lignes pr$$HEX1$$e900$$ENDHEX$$sentes dans la table articles et       */
+/* Suppression des lignes présentes dans la table articles et       */
 /* absentes du fichier.                                             */
 /*------------------------------------------------------------------*/
 For lCpt = lTotLigArticle To 1 Step -1
@@ -6729,7 +6729,7 @@ private function integer uf_ctrl_fichier_ore ();//*-----------------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Ctrl_Fichier_ORE (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 21/08/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier de ORE
+//* Libellé			: Controler de la validité du fichier de ORE
 //* Commentaires	: [PC767]
 //*
 //* Arguments		: 
@@ -6757,7 +6757,7 @@ lTotArt = idwArtSpb.RowCount ()
 sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
 sTypArtSav = ""
 
-// JFF 20/01/2011 : le tri imp$$HEX1$$e900$$ENDHEX$$ratif sur ID_REF_FOUR $$HEX1$$e900$$ENDHEX$$tait visiblement manquant (?..)
+// JFF 20/01/2011 : le tri impératif sur ID_REF_FOUR était visiblement manquant (?..)
 idwFicFourn.SetSort ( "ID_REF_FOUR A" )
 idwFicFourn.Sort ()
 
@@ -6779,13 +6779,13 @@ For lCpt = 1 To lTotLig
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	/*------------------------------------------------------------------*/
@@ -6796,11 +6796,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur est vide." )
+		" : La zone Référence fournisseur est vide." )
 	ElseIf sIdRefFourPrec <> "" And sVal = sIdRefFourPrec Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sVal + " n'est pas unique." )
+		" : La référence " + sVal + " n'est pas unique." )
 		
 	End If
 
@@ -6817,11 +6817,11 @@ For lCpt = 1 To lTotLig
 		" : La zone Type Article est vide." )
 	End If 
 
-	// Le fichier ne doit que contenir que des appareils du m$$HEX1$$ea00$$ENDHEX$$me type
+	// Le fichier ne doit que contenir que des appareils du même type
 	If sTypArtSav <> sVal And sTypArtSav <> "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fichier contient des types d'appareils diff$$HEX1$$e900$$ENDHEX$$rents !" )
+		" : Le fichier contient des types d'appareils différents !" )
 	End If
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
@@ -6844,7 +6844,7 @@ For lCpt = 1 To lTotLig
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le type de l'article doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : Le type de l'article doit être sur 3 caractères." )
 	End If		
 
 	/*------------------------------------------------------------------*/
@@ -6866,11 +6866,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone mod$$HEX1$$e800$$ENDHEX$$le article est vide." )
+		" : La zone modèle article est vide." )
 	Else
 
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "ID_MODL_ART", F_Remplace ( sVal, "'", " " ) )
 		End If
 		
@@ -6896,7 +6896,7 @@ For lCpt = 1 To lTotLig
 	
 	If Real ( sVal ) > 5000 Then		
 		This.uf_Trace ( "ECR", "AVERTISSEMENT ligne " + String ( lCpt ) + &
-		" : Le montant " + sVal + " para$$HEX1$$ee00$$ENDHEX$$t anormalement grand." )
+		" : Le montant " + sVal + " paraît anormalement grand." )
 	End If
 	
 	/*------------------------------------------------------------------*/
@@ -6919,7 +6919,7 @@ For lCpt = 1 To lTotLig
 	If Not IsNumber ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La quantit$$HEX2$$e9002000$$ENDHEX$$" + sVal + " n'est pas valide, ce n'est pas un nombre." )
+		" : La quantité " + sVal + " n'est pas valide, ce n'est pas un nombre." )
 		
 	End If
 
@@ -6930,14 +6930,14 @@ For lCpt = 1 To lTotLig
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "OBSERV_FRN", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -6949,7 +6949,7 @@ private function boolean uf_check_montant (string asval, ref string aserr);//*--
 //* Fonction		: n_cst_pg_in_fic_article::uf_check_montant (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 21/08/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$d'un montant
+//* Libellé			: Controler de la validité d'un montant
 //* Commentaires	: [PC767]
 //*
 //* Arguments		: 
@@ -6984,7 +6984,7 @@ For lCptVal = 1 To lLen
 	Else
 		If Not ( Asc ( sCar ) >= 48 And Asc ( sCar ) <= 57 ) Then
 			bRet=FALSE
-			asErr="Le montant " + asVal + " n'est pas valide, un caract$$HEX1$$e800$$ENDHEX$$re n'est pas un chiffre." 
+			asErr="Le montant " + asVal + " n'est pas valide, un caractère n'est pas un chiffre." 
 			Exit
 		End If
 	End If
@@ -6998,7 +6998,7 @@ private function integer uf_integration_fichier_ore (ref long alnblig, ref long 
 //* Fonction		: n_cst_int_fic_article::uf_Integration_Fichier_ORE (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 30/10/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier ORE dans la base
+//* Libellé			: Intégration du fichier ORE dans la base
 //* Commentaires	: 
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -7033,7 +7033,7 @@ dcTvaParDefaut = 20
 dt = DateTime ( Today (), Now () )
 
 /*------------------------------------------------------------------*/
-/* Article de R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence pour le filtre sur l'existant en base       */
+/* Article de Référence pour le filtre sur l'existant en base       */
 /*------------------------------------------------------------------*/
 sIdTypArtRef = Upper ( Trim ( idwFicFourn.GetItemString ( 1, "ID_TYP_ART"  ) ) )
 
@@ -7058,7 +7058,7 @@ lTotLigFourn = idwFicFourn.RowCount ()
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Initilisation de la trace d'int$$HEX1$$e900$$ENDHEX$$gration.                         */
+/* Initilisation de la trace d'intégration.                         */
 /*------------------------------------------------------------------*/
 This.uf_Trace_2 ( "INIT", 0, sIdFour, "", "", "", "" )
 
@@ -7073,7 +7073,7 @@ For alNbLig = 1 To lTotLigFourn
 	sIdModlArt  = Upper ( Trim ( idwFicFourn.GetItemString ( alNbLig, "ID_MODL_ART" ) ) )
 	sIdRefFour  = Upper ( Trim ( idwFicFourn.GetItemString ( alNbLig, "ID_REF_FOUR" ) ) )
 
-	// Ajustement du mod$$HEX1$$e800$$ENDHEX$$le
+	// Ajustement du modèle
 	If Pos(sIdModlArt,sIdMarqArt) = 1 Then
 		sIdModlArt=Mid(sIdModlArt,Len(sIdMarqArt)+1)
 		sIdModlArt=nvString.of_globalreplace( sIdModlArt , "(", "")
@@ -7118,7 +7118,7 @@ For alNbLig = 1 To lTotLigFourn
 
 
 		/*------------------------------------------------------------------*/
-		/* Code $$HEX1$$e900$$ENDHEX$$tat (-EI)                                                  */
+		/* Code état (-EI)                                                  */
 		/* 200 Nouveau                                                      */
 		/* 100 MAj_Ok sur existant                                          */
 		/*------------------------------------------------------------------*/
@@ -7132,8 +7132,8 @@ For alNbLig = 1 To lTotLigFourn
 			sIdModlIfr = Trim ( idwArticle.GetItemString  ( lRow, "ID_MODL_ART_IFR" ) )
 
 			/*------------------------------------------------------------------*/
-			/* Si les marques et mod$$HEX1$$e800$$ENDHEX$$les IFR sont absent de l'enregistrement    */
-			/* exisant, on force ALT_DIPSPO $$HEX2$$e0002000$$ENDHEX$$NON.                              */
+			/* Si les marques et modèles IFR sont absent de l'enregistrement    */
+			/* exisant, on force ALT_DIPSPO à NON.                              */
 			/*------------------------------------------------------------------*/
 			If Isnull ( sIdMqIfr ) Or sIdMqIfr = "" Or Isnull ( sIdModlIfr ) Or sIdModlIfr = "" Then
 				idwArticle.SetItem ( lRow, "ALT_DISPO", "N" )				
@@ -7153,12 +7153,12 @@ For alNbLig = 1 To lTotLigFourn
 Next
 
 /*------------------------------------------------------------------*/
-/* Nbre de ligne dans la Table (r$$HEX1$$e900$$ENDHEX$$actualis$$HEX1$$e900$$ENDHEX$$)                        */
+/* Nbre de ligne dans la Table (réactualisé)                        */
 /*------------------------------------------------------------------*/
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Suppression des lignes pr$$HEX1$$e900$$ENDHEX$$sentes dans la table articles et       */
+/* Suppression des lignes présentes dans la table articles et       */
 /* absentes du fichier.                                             */
 /*------------------------------------------------------------------*/
 For lCpt = lTotLigArticle To 1 Step -1
@@ -7195,7 +7195,7 @@ private function integer uf_ctrl_fichier_omt ();//*-----------------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Ctrl_Fichier_OMT (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 19/02/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier de OMT
+//* Libellé			: Controler de la validité du fichier de OMT
 //* Commentaires	: [PC874]
 //*
 //* Arguments		: 
@@ -7244,13 +7244,13 @@ For lCpt = 1 To lTotLig
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 
 	/*------------------------------------------------------------------*/
@@ -7261,11 +7261,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur est vide." )
+		" : La zone Référence fournisseur est vide." )
 	ElseIf sIdRefFourPrec <> "" And sVal = sIdRefFourPrec Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sVal + " n'est pas unique." )
+		" : La référence " + sVal + " n'est pas unique." )
 		
 	End If
 
@@ -7282,11 +7282,11 @@ For lCpt = 1 To lTotLig
 		" : La zone Type Article est vide." )
 	End If 
 
-	// Le fichier ne doit que contenir que des appareils du m$$HEX1$$ea00$$ENDHEX$$me type
+	// Le fichier ne doit que contenir que des appareils du même type
 	If sTypArtSav <> sVal And sTypArtSav <> "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fichier contient des types d'appareils diff$$HEX1$$e900$$ENDHEX$$rents !" )
+		" : Le fichier contient des types d'appareils différents !" )
 	End If
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
@@ -7309,7 +7309,7 @@ For lCpt = 1 To lTotLig
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le type de l'article doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : Le type de l'article doit être sur 3 caractères." )
 	End If		
 
 	/*------------------------------------------------------------------*/
@@ -7331,11 +7331,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone mod$$HEX1$$e800$$ENDHEX$$le article est vide." )
+		" : La zone modèle article est vide." )
 	Else
 
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "ID_MODL_ART", F_Remplace ( sVal, "'", " " ) )
 		End If
 		
@@ -7361,11 +7361,11 @@ For lCpt = 1 To lTotLig
 	
 	If Real ( sVal ) > 5000 Then		
 		This.uf_Trace ( "ECR", "AVERTISSEMENT ligne " + String ( lCpt ) + &
-		" : Le montant " + sVal + " para$$HEX1$$ee00$$ENDHEX$$t anormalement grand." )
+		" : Le montant " + sVal + " paraît anormalement grand." )
 	End If
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -7377,7 +7377,7 @@ private function integer uf_integration_fichier_omt (ref long alnblig, ref long 
 //* Fonction		: n_cst_int_fic_article::uf_Integration_Fichier_OMT (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 19/02/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier OMT dans la base
+//* Libellé			: Intégration du fichier OMT dans la base
 //* Commentaires	: [PC874]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -7406,11 +7406,11 @@ alNbInsert = 0
 alNbDelete = 0
 SetNull ( sNull )
 // 1.196
-dcTvaParDefaut = 9.0 // Taux sp$$HEX1$$e900$$ENDHEX$$cifique $$HEX2$$e0002000$$ENDHEX$$OMT
+dcTvaParDefaut = 9.0 // Taux spécifique à OMT
 dt = DateTime ( Today (), Now () )
 
 /*------------------------------------------------------------------*/
-/* Article de R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence pour le filtre sur l'existant en base       */
+/* Article de Référence pour le filtre sur l'existant en base       */
 /*------------------------------------------------------------------*/
 sIdTypArtRef = Upper ( Trim ( idwFicFourn.GetItemString ( 1, "ID_TYP_ART"  ) ) )
 
@@ -7435,7 +7435,7 @@ lTotLigFourn = idwFicFourn.RowCount ()
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Initilisation de la trace d'int$$HEX1$$e900$$ENDHEX$$gration.                         */
+/* Initilisation de la trace d'intégration.                         */
 /*------------------------------------------------------------------*/
 This.uf_Trace_2 ( "INIT", 0, sIdFour, "", "", "", "" )
 
@@ -7450,7 +7450,7 @@ For alNbLig = 1 To lTotLigFourn
 	sIdModlArt  = Upper ( Trim ( idwFicFourn.GetItemString ( alNbLig, "ID_MODL_ART" ) ) )
 	sIdRefFour  = Upper ( Trim ( idwFicFourn.GetItemString ( alNbLig, "ID_REF_FOUR" ) ) )
 
-	// Ajustement du mod$$HEX1$$e800$$ENDHEX$$le
+	// Ajustement du modèle
 	If Pos(sIdModlArt,sIdMarqArt) = 1 Then
 		sIdModlArt=Mid(sIdModlArt,Len(sIdMarqArt)+1)
 		sIdModlArt=nvString.of_globalreplace( sIdModlArt , "(", "")
@@ -7495,7 +7495,7 @@ For alNbLig = 1 To lTotLigFourn
 
 
 		/*------------------------------------------------------------------*/
-		/* Code $$HEX1$$e900$$ENDHEX$$tat (-EI)                                                  */
+		/* Code état (-EI)                                                  */
 		/* 200 Nouveau                                                      */
 		/* 100 MAj_Ok sur existant                                          */
 		/*------------------------------------------------------------------*/
@@ -7509,8 +7509,8 @@ For alNbLig = 1 To lTotLigFourn
 			sIdModlIfr = Trim ( idwArticle.GetItemString  ( lRow, "ID_MODL_ART_IFR" ) )
 
 			/*------------------------------------------------------------------*/
-			/* Si les marques et mod$$HEX1$$e800$$ENDHEX$$les IFR sont absent de l'enregistrement    */
-			/* exisant, on force ALT_DIPSPO $$HEX2$$e0002000$$ENDHEX$$NON.                              */
+			/* Si les marques et modèles IFR sont absent de l'enregistrement    */
+			/* exisant, on force ALT_DIPSPO à NON.                              */
 			/*------------------------------------------------------------------*/
 			If Isnull ( sIdMqIfr ) Or sIdMqIfr = "" Or Isnull ( sIdModlIfr ) Or sIdModlIfr = "" Then
 				idwArticle.SetItem ( lRow, "ALT_DISPO", "N" )				
@@ -7530,12 +7530,12 @@ For alNbLig = 1 To lTotLigFourn
 Next
 
 /*------------------------------------------------------------------*/
-/* Nbre de ligne dans la Table (r$$HEX1$$e900$$ENDHEX$$actualis$$HEX1$$e900$$ENDHEX$$)                        */
+/* Nbre de ligne dans la Table (réactualisé)                        */
 /*------------------------------------------------------------------*/
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Suppression des lignes pr$$HEX1$$e900$$ENDHEX$$sentes dans la table articles et       */
+/* Suppression des lignes présentes dans la table articles et       */
 /* absentes du fichier.                                             */
 /*------------------------------------------------------------------*/
 For lCpt = lTotLigArticle To 1 Step -1
@@ -7572,7 +7572,7 @@ private function integer uf_ctrl_fichier_mtt ();//*-----------------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Ctrl_Fichier_MTT (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 30/12/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier Article de CEGETEL
+//* Libellé			: Controler de la validité du fichier Article de CEGETEL
 //* Commentaires	: [PC13348&13408]
 //*
 //* Arguments		: 
@@ -7599,7 +7599,7 @@ lTotArt = idwArtSpb.RowCount ()
 sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
 sTypArtSav = ""
 
-// JFF 20/01/2011 : le tri imp$$HEX1$$e900$$ENDHEX$$ratif sur ID_REF_FOUR $$HEX1$$e900$$ENDHEX$$tait visiblement manquant (?..)
+// JFF 20/01/2011 : le tri impératif sur ID_REF_FOUR était visiblement manquant (?..)
 idwFicFourn.SetSort ( "ID_REF_FOUR A" )
 idwFicFourn.Sort ()
 
@@ -7622,13 +7622,13 @@ For lCpt = 1 To lTotLig
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 	
 	/*------------------------------------------------------------------*/
@@ -7642,13 +7642,13 @@ For lCpt = 1 To lTotLig
 		" : La zone Type Article est vide." )
 	End If 
 
-	// Le fichier ne doit que contenir que des appareils du m$$HEX1$$ea00$$ENDHEX$$me type
+	// Le fichier ne doit que contenir que des appareils du même type
 	/*
 	// #1 [DCMP090615]
 	If sTypArtSav <> sVal And sTypArtSav <> "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fichier contient des types d'appareils diff$$HEX1$$e900$$ENDHEX$$rents !" )
+		" : Le fichier contient des types d'appareils différents !" )
 	End If
 	*/
 
@@ -7672,7 +7672,7 @@ For lCpt = 1 To lTotLig
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le type de l'article doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : Le type de l'article doit être sur 3 caractères." )
 	End If		
 
 	/*------------------------------------------------------------------*/
@@ -7694,11 +7694,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone mod$$HEX1$$e800$$ENDHEX$$le article est vide." )
+		" : La zone modèle article est vide." )
 	Else
 
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "ID_MODL_ART", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -7735,7 +7735,7 @@ For lCpt = 1 To lTotLig
 			If Not ( Asc ( sCar ) >= 48 And Asc ( sCar ) <= 57 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le montant " + sVal + " n'est pas valide, un caract$$HEX1$$e800$$ENDHEX$$re n'est pas un chiffre." )
+				" : Le montant " + sVal + " n'est pas valide, un caractère n'est pas un chiffre." )
 				Exit
 			End If
 		End If
@@ -7743,7 +7743,7 @@ For lCpt = 1 To lTotLig
 
 	If Real ( sVal ) > 5000 Then		
 		This.uf_Trace ( "ECR", "AVERTISSEMENT ligne " + String ( lCpt ) + &
-		" : Le montant " + sVal + " para$$HEX1$$ee00$$ENDHEX$$t anormalement grand." )
+		" : Le montant " + sVal + " paraît anormalement grand." )
 	End If
 
 	
@@ -7752,13 +7752,13 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "UNT_MONNAIE" ) ) )
 	// [SUISSE].LOT3 Controle de la monnaie du fichier
-	// Si pas de coh$$HEX1$$e900$$ENDHEX$$rence : erreur bloquante d'int$$HEX1$$e900$$ENDHEX$$gration.
+	// Si pas de cohérence : erreur bloquante d'intégration.
 	if uf_controler_monnaie_fichier (sVal, lCpt) < 0 Then iRet = -1
 	
 //	If IsNull ( sVal ) Or sVal = "" Then
 //		iRet = -1
 //		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-//		" : L'unit$$HEX2$$e9002000$$ENDHEX$$de la monnaie est vide." )
+//		" : L'unité de la monnaie est vide." )
 //	End If 
 //
 //	If sVal <> "FRF" And sVal <> "EUR" Then
@@ -7775,7 +7775,7 @@ For lCpt = 1 To lTotLig
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "OBSERV_FRN", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -7791,11 +7791,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur est vide." )
+		" : La zone Référence fournisseur est vide." )
 	ElseIf sIdRefFourPrec <> "" And sVal = sIdRefFourPrec Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sVal + " n'est pas unique." )
+		" : La référence " + sVal + " n'est pas unique." )
 		
 	End If
 
@@ -7803,7 +7803,7 @@ For lCpt = 1 To lTotLig
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -7815,7 +7815,7 @@ private function integer uf_integration_fichier_mtt (ref long alnblig, ref long 
 //* Fonction		: n_cst_pg_in_fic_article::uf_Integration_Fichier_MTT (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 30/12/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PC13348&13408]
+//* Libellé			: [PC13348&13408]
 //* Commentaires	: 
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -7827,13 +7827,13 @@ private function integer uf_integration_fichier_mtt (ref long alnblig, ref long 
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1		JCA	01/09/2006	On force la quantit$$HEX4$$e9002000e0002000$$ENDHEX$$5000
-//* #2		JFF	12/09/2006	[DCMP070645] On ajoute 20 Euros au montant HT lors de l'int$$HEX1$$e900$$ENDHEX$$gration
+//* #1		JCA	01/09/2006	On force la quantité à 5000
+//* #2		JFF	12/09/2006	[DCMP070645] On ajoute 20 Euros au montant HT lors de l'intégration
 //*									sur demain d'OMG (Mathias)
 //* #3    JFF    10/03/2008  Modif suite Bug [SUISSE].LOT3
 //* #4    JFF    17/04/2008  [DCMP080322] suppression des 20 Euros
 //* #5    JFF    19/10/2009  [DCMP090615]
-//			FPI	24/01/2012	[PC581] Int$$HEX1$$e900$$ENDHEX$$gration de TPC
+//			FPI	24/01/2012	[PC581] Intégration de TPC
 //       JFF   26/08/2013 [DT57_CMDE_IPHONE_SFR]
 //        JFF   19/11/2013 [DT_60_AUGM_TVA]
 //*-----------------------------------------------------------------
@@ -7858,7 +7858,7 @@ dcTvaParDefaut = 20
 dt = DateTime ( Today (), Now () )
 
 /*------------------------------------------------------------------*/
-/* Article de R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence pour le filtre sur l'existant en base       */
+/* Article de Référence pour le filtre sur l'existant en base       */
 /*------------------------------------------------------------------*/
 //* #5    JFF    19/10/2009  [DCMP090615]
 // sIdTypArtRef = Upper ( Trim ( idwFicFourn.GetItemString ( 1, "ID_TYP_ART" ) ) )
@@ -7888,7 +7888,7 @@ lTotLigFourn = idwFicFourn.RowCount ()
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Initilisation de la trace d'int$$HEX1$$e900$$ENDHEX$$gration.                         */
+/* Initilisation de la trace d'intégration.                         */
 /*------------------------------------------------------------------*/
 This.uf_Trace_2 ( "INIT", 0, sIdFour, "", "", "", "" )
 
@@ -7936,7 +7936,7 @@ For alNbLig = 1 To lTotLigFourn
 		// :#3
 
 		/*------------------------------------------------------------------*/
-		/* Code $$HEX1$$e900$$ENDHEX$$tat (-EI)                                                  */
+		/* Code état (-EI)                                                  */
 		/* 200 Nouveau                                                      */
 		/* 100 MAj_Ok sur existant                                          */
 		/*------------------------------------------------------------------*/
@@ -7949,8 +7949,8 @@ For alNbLig = 1 To lTotLigFourn
 			sIdModlIfr = Trim ( idwArticle.GetItemString  ( lRow, "ID_MODL_ART_IFR" ) )
 
 			/*------------------------------------------------------------------*/
-			/* Si les marques et mod$$HEX1$$e800$$ENDHEX$$les IFR sont absent de l'enregistrement    */
-			/* exisant, on force ALT_DIPSPO $$HEX2$$e0002000$$ENDHEX$$NON.                              */
+			/* Si les marques et modèles IFR sont absent de l'enregistrement    */
+			/* exisant, on force ALT_DIPSPO à NON.                              */
 			/*------------------------------------------------------------------*/
 			If Isnull ( sIdMqIfr ) Or sIdMqIfr = "" Or Isnull ( sIdModlIfr ) Or sIdModlIfr = "" Then
 				idwArticle.SetItem ( lRow, "ALT_DISPO", "N" )				
@@ -7959,10 +7959,10 @@ For alNbLig = 1 To lTotLigFourn
 			This.uf_Trace_2 ( "ECR_AUTO", 100, sIdFour, sIdRefFour, sIdMarqArt, sIdModlArt, "" )
 		End If
 
-		// [PC581] - Int$$HEX1$$e900$$ENDHEX$$gration de TPC -> ALT_DISPO $$HEX2$$e0002000$$ENDHEX$$Oui
+		// [PC581] - Intégration de TPC -> ALT_DISPO à Oui
 		Choose Case sIdTypArt 
 			Case "TEL", "PC1", "PC2" 
-				// Doit $$HEX1$$ea00$$ENDHEX$$tre mis $$HEX2$$e0002000$$ENDHEX$$la main pas Cell. Parte.
+				// Doit être mis à la main pas Cell. Parte.
 				// [VDOC6993]
 				If bInsert Then
 					sIdMarqArtIFr = Space (35) 
@@ -7997,12 +7997,12 @@ For alNbLig = 1 To lTotLigFourn
 Next
 
 /*------------------------------------------------------------------*/
-/* Nbre de ligne dans la Table (r$$HEX1$$e900$$ENDHEX$$actualis$$HEX1$$e900$$ENDHEX$$)                        */
+/* Nbre de ligne dans la Table (réactualisé)                        */
 /*------------------------------------------------------------------*/
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Suppression des lignes pr$$HEX1$$e900$$ENDHEX$$sentes dans la table articles et       */
+/* Suppression des lignes présentes dans la table articles et       */
 /* absentes du fichier.                                             */
 /*------------------------------------------------------------------*/
 For lCpt = lTotLigArticle To 1 Step -1
@@ -8040,7 +8040,7 @@ private function integer uf_ctrl_fichier_srr ();//*-----------------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Ctrl_Fichier_SRR (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 11/02/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier Article de SRR
+//* Libellé			: Controler de la validité du fichier Article de SRR
 //* Commentaires	: 
 //*
 //* Arguments		: [PC925]
@@ -8085,13 +8085,13 @@ For lCpt = 1 To lTotLig
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 	
 	/*------------------------------------------------------------------*/
@@ -8125,7 +8125,7 @@ For lCpt = 1 To lTotLig
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le type de l'article doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : Le type de l'article doit être sur 3 caractères." )
 	End If		
 
 	/*------------------------------------------------------------------*/
@@ -8147,11 +8147,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone mod$$HEX1$$e800$$ENDHEX$$le article est vide." )
+		" : La zone modèle article est vide." )
 	Else
 
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			//This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			//This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "ID_MODL_ART", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -8188,7 +8188,7 @@ For lCpt = 1 To lTotLig
 			If Not ( Asc ( sCar ) >= 48 And Asc ( sCar ) <= 57 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le montant " + sVal + " n'est pas valide, un caract$$HEX1$$e800$$ENDHEX$$re n'est pas un chiffre." )
+				" : Le montant " + sVal + " n'est pas valide, un caractère n'est pas un chiffre." )
 				Exit
 			End If
 		End If
@@ -8196,7 +8196,7 @@ For lCpt = 1 To lTotLig
 
 	If Real ( sVal ) > 5000 Then		
 		This.uf_Trace ( "ECR", "AVERTISSEMENT ligne " + String ( lCpt ) + &
-		" : Le montant " + sVal + " para$$HEX1$$ee00$$ENDHEX$$t anormalement grand." )
+		" : Le montant " + sVal + " paraît anormalement grand." )
 	End If
 
 	
@@ -8220,7 +8220,7 @@ For lCpt = 1 To lTotLig
 	If Not IsNumber ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La quantit$$HEX2$$e9002000$$ENDHEX$$" + sVal + " n'est pas valide, ce n'est pas un nombre." )
+		" : La quantité " + sVal + " n'est pas valide, ce n'est pas un nombre." )
 		
 	End If
 
@@ -8231,7 +8231,7 @@ For lCpt = 1 To lTotLig
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			//This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			//This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "OBSERV_FRN", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -8250,11 +8250,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur est vide." )
+		" : La zone Référence fournisseur est vide." )
 	ElseIf sIdRefFourPrec <> "" And sVal = sIdRefFourPrec Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sVal + " n'est pas unique." )
+		" : La référence " + sVal + " n'est pas unique." )
 		
 	End If
 
@@ -8262,7 +8262,7 @@ For lCpt = 1 To lTotLig
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -8274,7 +8274,7 @@ private function integer uf_integration_fichier_srr (ref long alnblig, ref long 
 //* Fonction		: n_cst_int_fic_article::uf_Integration_Fichier_SRR (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 11/02/2014
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier SRR dans la base
+//* Libellé			: Intégration du fichier SRR dans la base
 //* Commentaires	: [PC925]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -8304,13 +8304,13 @@ alNbDelete = 0
 SetNull ( sNull )
 
 // [DT_60_AUGM_TVA] 1.196
-// Vu avec St$$HEX1$$e900$$ENDHEX$$phanie Vabre le 11/02/2014, prix TTC dans le fichier
+// Vu avec Stéphanie Vabre le 11/02/2014, prix TTC dans le fichier
 dcTvaParDefaut=0
 
 dt = DateTime ( Today (), Now () )
 
 /*------------------------------------------------------------------*/
-/* Article de R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence pour le filtre sur l'existant en base       */
+/* Article de Référence pour le filtre sur l'existant en base       */
 /*------------------------------------------------------------------*/
 sIdTypArtRef = Upper ( Trim ( idwFicFourn.GetItemString ( 1, "ID_TYP_ART"  ) ) )
 
@@ -8335,7 +8335,7 @@ lTotLigFourn = idwFicFourn.RowCount ()
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Initilisation de la trace d'int$$HEX1$$e900$$ENDHEX$$gration.                         */
+/* Initilisation de la trace d'intégration.                         */
 /*------------------------------------------------------------------*/
 This.uf_Trace_2 ( "INIT", 0, sIdFour, "", "", "", "" )
 
@@ -8352,7 +8352,7 @@ For alNbLig = 1 To lTotLigFourn
 	dcPrixHt    = idwFicFourn.GetItemDecimal ( alNbLig, "MT_PRIX_HT" )
 	lQtDisp		= idwFicFourn.GetItemNumber ( alNbLig, "QT_DISP" )
 	
-	// Ajustement du mod$$HEX1$$e800$$ENDHEX$$le
+	// Ajustement du modèle
 	If Pos(sIdModlArt,sIdMarqArt) = 1 Then
 		sIdModlArt=Mid(sIdModlArt,Len(sIdMarqArt)+1)
 		sIdModlArt=nvString.of_globalreplace( sIdModlArt , "(", "")
@@ -8396,7 +8396,7 @@ For alNbLig = 1 To lTotLigFourn
 
 
 		/*------------------------------------------------------------------*/
-		/* Code $$HEX1$$e900$$ENDHEX$$tat (-EI)                                                  */
+		/* Code état (-EI)                                                  */
 		/* 200 Nouveau                                                      */
 		/* 100 MAj_Ok sur existant                                          */
 		/*------------------------------------------------------------------*/
@@ -8410,8 +8410,8 @@ For alNbLig = 1 To lTotLigFourn
 			sIdModlIfr = Trim ( idwArticle.GetItemString  ( lRow, "ID_MODL_ART_IFR" ) )
 
 			/*------------------------------------------------------------------*/
-			/* Si les marques et mod$$HEX1$$e800$$ENDHEX$$les IFR sont absent de l'enregistrement    */
-			/* exisant, on force ALT_DIPSPO $$HEX2$$e0002000$$ENDHEX$$NON.                              */
+			/* Si les marques et modèles IFR sont absent de l'enregistrement    */
+			/* exisant, on force ALT_DIPSPO à NON.                              */
 			/*------------------------------------------------------------------*/
 			If Isnull ( sIdMqIfr ) Or sIdMqIfr = "" Or Isnull ( sIdModlIfr ) Or sIdModlIfr = "" Then
 				idwArticle.SetItem ( lRow, "ALT_DISPO", "N" )				
@@ -8429,7 +8429,7 @@ For alNbLig = 1 To lTotLigFourn
 		// [VDOC6993]
 		Choose Case sIdTypArt 
 				Case "TEL", "PC1", "PC2" 
-					// Doit $$HEX1$$ea00$$ENDHEX$$tre mis $$HEX2$$e0002000$$ENDHEX$$la main pas Cell. Parte.
+					// Doit être mis à la main pas Cell. Parte.
 					// [VDOC6993]
 					If bInsert Then
 						sIdMarqArtIFr = Space (35) 
@@ -8457,12 +8457,12 @@ For alNbLig = 1 To lTotLigFourn
 Next
 
 /*------------------------------------------------------------------*/
-/* Nbre de ligne dans la Table (r$$HEX1$$e900$$ENDHEX$$actualis$$HEX1$$e900$$ENDHEX$$)                        */
+/* Nbre de ligne dans la Table (réactualisé)                        */
 /*------------------------------------------------------------------*/
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Suppression des lignes pr$$HEX1$$e900$$ENDHEX$$sentes dans la table articles et       */
+/* Suppression des lignes présentes dans la table articles et       */
 /* absentes du fichier.                                             */
 /*------------------------------------------------------------------*/
 For lCpt = lTotLigArticle To 1 Step -1
@@ -8499,7 +8499,7 @@ public function string uf_detection_auto_nomfic (string aidfourn, string ascas);
 //* Fonction		: n_cst_pg_in_fic_article::uf_Detection_Auto_nomFic (PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: D$$HEX1$$e900$$ENDHEX$$tection automatique du nom de fichier
+//* Libellé			: Détection automatique du nom de fichier
 //* Commentaires	: 
 //*
 //* Arguments		: aIdFourn		String		Val
@@ -8508,7 +8508,7 @@ public function string uf_detection_auto_nomfic (string aidfourn, string ascas);
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #1    JFF    30/08/2002  Le nom du r$$HEX1$$e900$$ENDHEX$$pertoire de g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration n'est plus le code
+//* #1    JFF    30/08/2002  Le nom du répertoire de génération n'est plus le code
 //*								  du fournisseur -FR mais le nom complet (<8 car) -FL
 //* 		FPI	  31/10/2012	[PC767] Ajout des .csv
 //*      JFF     24/03/2016  [VDOC20359]
@@ -8537,7 +8537,7 @@ sRepFicArt =  ProfileString ( stGlb.sFichierIni, "GEST_COMMANDES", "REP_GEN", ""
 // [PC767]
 For lCptCas = 1 TO 2
 
-// Ordre extr$$HEX1$$ea00$$ENDHEX$$mement important !
+// Ordre extrêmement important !
 	CHOOSE CASE lCptCas
 		CASE 1
 			sVar = K_FIC
@@ -8576,7 +8576,7 @@ For lCpt = lTotLig To 1 Step -1
 		// [PM289_CDP]
 		Case "CAS_CDP"
 			// [VDOC20359]
-			// Je prends les 50 premiers, $$HEX2$$e0002000$$ENDHEX$$savoir : toutes les chaine 
+			// Je prends les 50 premiers, à savoir : toutes les chaine 
 			idwTri.SetItem ( lRow, "TYPE_FIC", Upper ( Left ( sItem, 50 ) ) )
 			
 		Case "CSV"
@@ -8636,7 +8636,7 @@ private function integer uf_transformationseparateur (string asfichiersource, st
 //* Fonction		: n_cst_int_fic_article::uf_TransformationSeparateur (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 18/09/2008 13:46:43
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 	value string asFichierSource
@@ -8709,7 +8709,7 @@ private function integer uf_ctrl_fichier_pp_orange ();//*-----------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Ctrl_Fichier_PP_Orange (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 28/09/2015
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PM319-1]
 //*
 //* Arguments		: 
@@ -8733,7 +8733,7 @@ lTotArt = idwArtSpb.RowCount ()
 sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
 sTypArtSav = ""
 
-// JFF 20/01/2011 : le tri imp$$HEX1$$e900$$ENDHEX$$ratif sur ID_REF_FOUR $$HEX1$$e900$$ENDHEX$$tait visiblement manquant (?..)
+// JFF 20/01/2011 : le tri impératif sur ID_REF_FOUR était visiblement manquant (?..)
 idwFicFourn.SetSort ( "ID_REF_FOUR A" )
 idwFicFourn.Sort ()
 
@@ -8755,13 +8755,13 @@ For lCpt = 1 To lTotLig
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 	
 	/*------------------------------------------------------------------*/
@@ -8775,13 +8775,13 @@ For lCpt = 1 To lTotLig
 		" : La zone Type Article est vide." )
 	End If 
 
-	// Le fichier ne doit que contenir que des appareils du m$$HEX1$$ea00$$ENDHEX$$me type
+	// Le fichier ne doit que contenir que des appareils du même type
 	// #2 [DCMP090615]
 	/*
 	If sTypArtSav <> sVal And sTypArtSav <> "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fichier contient des types d'appareils diff$$HEX1$$e900$$ENDHEX$$rents !" )
+		" : Le fichier contient des types d'appareils différents !" )
 	End If
 	*/
 	// :#2 [DCMP090615]
@@ -8806,7 +8806,7 @@ For lCpt = 1 To lTotLig
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le type de l'article doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : Le type de l'article doit être sur 3 caractères." )
 	End If		
 
 	/*------------------------------------------------------------------*/
@@ -8828,11 +8828,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone mod$$HEX1$$e800$$ENDHEX$$le article est vide." )
+		" : La zone modèle article est vide." )
 	Else
 
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "ID_MODL_ART", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -8869,7 +8869,7 @@ For lCpt = 1 To lTotLig
 			If Not ( Asc ( sCar ) >= 48 And Asc ( sCar ) <= 57 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le montant " + sVal + " n'est pas valide, un caract$$HEX1$$e800$$ENDHEX$$re n'est pas un chiffre." )
+				" : Le montant " + sVal + " n'est pas valide, un caractère n'est pas un chiffre." )
 				Exit
 			End If
 		End If
@@ -8877,7 +8877,7 @@ For lCpt = 1 To lTotLig
 
 	If Real ( sVal ) > 5000 Then		
 		This.uf_Trace ( "ECR", "AVERTISSEMENT ligne " + String ( lCpt ) + &
-		" : Le montant " + sVal + " para$$HEX1$$ee00$$ENDHEX$$t anormalement grand." )
+		" : Le montant " + sVal + " paraît anormalement grand." )
 	End If
 
 	
@@ -8886,7 +8886,7 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "UNT_MONNAIE" ) ) )
 	// [SUISSE].LOT3 Controle de la monnaie du fichier
-	// Si pas de coh$$HEX1$$e900$$ENDHEX$$rence : erreur bloquante d'int$$HEX1$$e900$$ENDHEX$$gration.
+	// Si pas de cohérence : erreur bloquante d'intégration.
 	if uf_controler_monnaie_fichier (sVal, lCpt) < 0 Then iRet = -1
 	
 	/*------------------------------------------------------------------*/
@@ -8896,7 +8896,7 @@ For lCpt = 1 To lTotLig
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "OBSERV_FRN", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -8909,11 +8909,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur est vide." )
+		" : La zone Référence fournisseur est vide." )
 	ElseIf sIdRefFourPrec <> "" And sVal = sIdRefFourPrec Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sVal + " n'est pas unique." )
+		" : La référence " + sVal + " n'est pas unique." )
 		
 	End If
 
@@ -8921,7 +8921,7 @@ For lCpt = 1 To lTotLig
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -8933,7 +8933,7 @@ private function integer uf_integration_fichier_pp_orange (ref long alnblig, ref
 //* Fonction		: n_cst_pg_in_fic_article::uf_Integration_Fichier_PP_Orange (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 28/09/2015
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier de prix public Orange dans la base
+//* Libellé			: Intégration du fichier de prix public Orange dans la base
 //* Commentaires	: //[PM319-1]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -8977,7 +8977,7 @@ dcTvaParDefaut = 0
 dt = DateTime ( Today (), Now () )
 
 /*------------------------------------------------------------------*/
-/* Article de R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence pour le filtre sur l'existant en base       */
+/* Article de Référence pour le filtre sur l'existant en base       */
 /*------------------------------------------------------------------*/
 sIdTypArtRef = Upper ( Trim ( idwFicFourn.GetItemString ( 1, "ID_TYP_ART"  ) ) )
 
@@ -9002,7 +9002,7 @@ lTotLigFourn = idwFicFourn.RowCount ()
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Initilisation de la trace d'int$$HEX1$$e900$$ENDHEX$$gration.                         */
+/* Initilisation de la trace d'intégration.                         */
 /*------------------------------------------------------------------*/
 This.uf_Trace_2 ( "INIT", 0, sIdFour, "", "", "", "" )
 
@@ -9019,7 +9019,7 @@ For alNbLig = 1 To lTotLigFourn
 	dcPrixHt    = idwFicFourn.GetItemDecimal ( alNbLig, "MT_PRIX_HT" )
 	lQtDisp		= 1
 	
-	// Ajustement du mod$$HEX1$$e800$$ENDHEX$$le
+	// Ajustement du modèle
 	If Pos(sIdModlArt,sIdMarqArt) = 1 Then
 		sIdModlArt=Mid(sIdModlArt,Len(sIdMarqArt)+1)
 		sIdModlArt=nvString.of_globalreplace( sIdModlArt , "(", "")
@@ -9030,8 +9030,8 @@ For alNbLig = 1 To lTotLigFourn
 	End if
 	
 //	 "UPPER ( TRIM ( ID_REF_FOUR ))= '" + sIdRefFour   + "' And " + &
-// Je supprime l'ID_REF_FOUR car le fichier original n'en a pas et c'est un num$$HEX1$$e900$$ENDHEX$$ro bidon g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$par l'ETL mais pas forc$$HEX1$$e900$$ENDHEX$$ment 
-// sur le m$$HEX1$$ea00$$ENDHEX$$me tel.
+// Je supprime l'ID_REF_FOUR car le fichier original n'en a pas et c'est un numéro bidon généré par l'ETL mais pas forcément 
+// sur le même tel.
 	lRow = idwArticle.Find ( "UPPER ( TRIM ( ID_FOUR ))    = '" + sIdFour 		+ "' And " + &
 									 "UPPER ( TRIM ( ID_TYP_ART )) = '" + sIdTypArt	 	+ "' And " + &
 									 "UPPER ( TRIM ( ID_MARQ_ART ))= '" + sIdMarqArt   + "' And " + &
@@ -9065,7 +9065,7 @@ For alNbLig = 1 To lTotLigFourn
 
 
 		/*------------------------------------------------------------------*/
-		/* Code $$HEX1$$e900$$ENDHEX$$tat (-EI)                                                  */
+		/* Code état (-EI)                                                  */
 		/* 200 Nouveau                                                      */
 		/* 100 MAj_Ok sur existant                                          */
 		/*------------------------------------------------------------------*/
@@ -9079,8 +9079,8 @@ For alNbLig = 1 To lTotLigFourn
 			sIdModlIfr = Trim ( idwArticle.GetItemString  ( lRow, "ID_MODL_ART_IFR" ) )
 
 			/*------------------------------------------------------------------*/
-			/* Si les marques et mod$$HEX1$$e800$$ENDHEX$$les IFR sont absent de l'enregistrement    */
-			/* exisant, on force ALT_DIPSPO $$HEX2$$e0002000$$ENDHEX$$NON.                              */
+			/* Si les marques et modèles IFR sont absent de l'enregistrement    */
+			/* exisant, on force ALT_DIPSPO à NON.                              */
 			/*------------------------------------------------------------------*/
 			If Isnull ( sIdMqIfr ) Or sIdMqIfr = "" Or Isnull ( sIdModlIfr ) Or sIdModlIfr = "" Then
 				idwArticle.SetItem ( lRow, "ALT_DISPO", "N" )				
@@ -9092,7 +9092,7 @@ For alNbLig = 1 To lTotLigFourn
 		// [VDOC6846]
 		Choose Case sIdTypArt 
 			Case "TEL"
-				// Doit $$HEX1$$ea00$$ENDHEX$$tre mis $$HEX2$$e0002000$$ENDHEX$$la main pas Cell. Parte.
+				// Doit être mis à la main pas Cell. Parte.
 				// [VDOC6993]
 				If bInsert Then
 					sIdMarqArtIFr = Space (35) 
@@ -9116,7 +9116,7 @@ For alNbLig = 1 To lTotLigFourn
 		End Choose
 		// :[VDOC6846]
 
-		idwArticle.SetItem ( lRow, "QT_DISP", 1 ) // On n'a pas besoin de quantit$$HEX1$$e900$$ENDHEX$$.
+		idwArticle.SetItem ( lRow, "QT_DISP", 1 ) // On n'a pas besoin de quantité.
 		idwArticle.SetItem ( lRow, "OBSERV_FRN", Upper ( idwFicFourn.GetItemString ( alNbLig, "OBSERV_FRN" ) ) )
 		idwArticle.SetItem ( lRow, "VERROU", 1 )
 		idwArticle.SetItem ( lRow, "MAJ_LE", dt )		
@@ -9127,12 +9127,12 @@ For alNbLig = 1 To lTotLigFourn
 Next
 
 /*------------------------------------------------------------------*/
-/* Nbre de ligne dans la Table (r$$HEX1$$e900$$ENDHEX$$actualis$$HEX1$$e900$$ENDHEX$$)                        */
+/* Nbre de ligne dans la Table (réactualisé)                        */
 /*------------------------------------------------------------------*/
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Suppression des lignes pr$$HEX1$$e900$$ENDHEX$$sentes dans la table articles et       */
+/* Suppression des lignes présentes dans la table articles et       */
 /* absentes du fichier.                                             */
 /*------------------------------------------------------------------*/
 For lCpt = lTotLigArticle To 1 Step -1
@@ -9169,7 +9169,7 @@ private function integer uf_ctrl_fichier_pp_bouygues ();//*---------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Ctrl_Fichier_PP_Orange (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 28/09/2015
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PM319-2]
 //*
 //* Arguments		: 
@@ -9193,7 +9193,7 @@ lTotArt = idwArtSpb.RowCount ()
 sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
 sTypArtSav = ""
 
-// JFF 20/01/2011 : le tri imp$$HEX1$$e900$$ENDHEX$$ratif sur ID_REF_FOUR $$HEX1$$e900$$ENDHEX$$tait visiblement manquant (?..)
+// JFF 20/01/2011 : le tri impératif sur ID_REF_FOUR était visiblement manquant (?..)
 idwFicFourn.SetSort ( "ID_REF_FOUR A" )
 idwFicFourn.Sort ()
 
@@ -9215,13 +9215,13 @@ For lCpt = 1 To lTotLig
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 	
 	/*------------------------------------------------------------------*/
@@ -9235,13 +9235,13 @@ For lCpt = 1 To lTotLig
 		" : La zone Type Article est vide." )
 	End If 
 
-	// Le fichier ne doit que contenir que des appareils du m$$HEX1$$ea00$$ENDHEX$$me type
+	// Le fichier ne doit que contenir que des appareils du même type
 	// #2 [DCMP090615]
 	/*
 	If sTypArtSav <> sVal And sTypArtSav <> "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fichier contient des types d'appareils diff$$HEX1$$e900$$ENDHEX$$rents !" )
+		" : Le fichier contient des types d'appareils différents !" )
 	End If
 	*/
 	// :#2 [DCMP090615]
@@ -9266,7 +9266,7 @@ For lCpt = 1 To lTotLig
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le type de l'article doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : Le type de l'article doit être sur 3 caractères." )
 	End If		
 
 	/*------------------------------------------------------------------*/
@@ -9288,11 +9288,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone mod$$HEX1$$e800$$ENDHEX$$le article est vide." )
+		" : La zone modèle article est vide." )
 	Else
 
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "ID_MODL_ART", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -9329,7 +9329,7 @@ For lCpt = 1 To lTotLig
 			If Not ( Asc ( sCar ) >= 48 And Asc ( sCar ) <= 57 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le montant " + sVal + " n'est pas valide, un caract$$HEX1$$e800$$ENDHEX$$re n'est pas un chiffre." )
+				" : Le montant " + sVal + " n'est pas valide, un caractère n'est pas un chiffre." )
 				Exit
 			End If
 		End If
@@ -9337,7 +9337,7 @@ For lCpt = 1 To lTotLig
 
 	If Real ( sVal ) > 5000 Then		
 		This.uf_Trace ( "ECR", "AVERTISSEMENT ligne " + String ( lCpt ) + &
-		" : Le montant " + sVal + " para$$HEX1$$ee00$$ENDHEX$$t anormalement grand." )
+		" : Le montant " + sVal + " paraît anormalement grand." )
 	End If
 
 	
@@ -9346,7 +9346,7 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "UNT_MONNAIE" ) ) )
 	// [SUISSE].LOT3 Controle de la monnaie du fichier
-	// Si pas de coh$$HEX1$$e900$$ENDHEX$$rence : erreur bloquante d'int$$HEX1$$e900$$ENDHEX$$gration.
+	// Si pas de cohérence : erreur bloquante d'intégration.
 	if uf_controler_monnaie_fichier (sVal, lCpt) < 0 Then iRet = -1
 	
 	/*------------------------------------------------------------------*/
@@ -9356,7 +9356,7 @@ For lCpt = 1 To lTotLig
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "OBSERV_FRN", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -9369,11 +9369,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur est vide." )
+		" : La zone Référence fournisseur est vide." )
 	ElseIf sIdRefFourPrec <> "" And sVal = sIdRefFourPrec Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sVal + " n'est pas unique." )
+		" : La référence " + sVal + " n'est pas unique." )
 		
 	End If
 
@@ -9381,7 +9381,7 @@ For lCpt = 1 To lTotLig
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -9393,7 +9393,7 @@ private function integer uf_integration_fichier_pp_bouygues (ref long alnblig, r
 //* Fonction		: n_cst_pg_in_fic_article::uf_Integration_Fichier_PP_Bouygues (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 28/09/2015
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier de prix public Orange dans la base
+//* Libellé			: Intégration du fichier de prix public Orange dans la base
 //* Commentaires	: //[PM319-2]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -9429,14 +9429,14 @@ alNbDelete = 0
 SetNull ( sNull )
 
 // [DT_60_AUGM_TVA] 1.196
-// Marion le 18/12/15 : Renseignements pris, les tarifs communiqu$$HEX1$$e900$$ENDHEX$$s par Bouygues sont TTC.
+// Marion le 18/12/15 : Renseignements pris, les tarifs communiqués par Bouygues sont TTC.
 // dcTvaParDefaut=20
 dcTvaParDefaut=0
 
 dt = DateTime ( Today (), Now () )
 
 /*------------------------------------------------------------------*/
-/* Article de R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence pour le filtre sur l'existant en base       */
+/* Article de Référence pour le filtre sur l'existant en base       */
 /*------------------------------------------------------------------*/
 sIdTypArtRef = Upper ( Trim ( idwFicFourn.GetItemString ( 1, "ID_TYP_ART"  ) ) )
 
@@ -9461,7 +9461,7 @@ lTotLigFourn = idwFicFourn.RowCount ()
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Initilisation de la trace d'int$$HEX1$$e900$$ENDHEX$$gration.                         */
+/* Initilisation de la trace d'intégration.                         */
 /*------------------------------------------------------------------*/
 This.uf_Trace_2 ( "INIT", 0, sIdFour, "", "", "", "" )
 
@@ -9478,7 +9478,7 @@ For alNbLig = 1 To lTotLigFourn
 	dcPrixHt    = idwFicFourn.GetItemDecimal ( alNbLig, "MT_PRIX_HT" )
 	lQtDisp		= 1
 	
-	// Ajustement du mod$$HEX1$$e800$$ENDHEX$$le
+	// Ajustement du modèle
 	If Pos(sIdModlArt,sIdMarqArt) = 1 Then
 		sIdModlArt=Mid(sIdModlArt,Len(sIdMarqArt)+1)
 		sIdModlArt=nvString.of_globalreplace( sIdModlArt , "(", "")
@@ -9522,7 +9522,7 @@ For alNbLig = 1 To lTotLigFourn
 
 
 		/*------------------------------------------------------------------*/
-		/* Code $$HEX1$$e900$$ENDHEX$$tat (-EI)                                                  */
+		/* Code état (-EI)                                                  */
 		/* 200 Nouveau                                                      */
 		/* 100 MAj_Ok sur existant                                          */
 		/*------------------------------------------------------------------*/
@@ -9536,8 +9536,8 @@ For alNbLig = 1 To lTotLigFourn
 			sIdModlIfr = Trim ( idwArticle.GetItemString  ( lRow, "ID_MODL_ART_IFR" ) )
 
 			/*------------------------------------------------------------------*/
-			/* Si les marques et mod$$HEX1$$e800$$ENDHEX$$les IFR sont absent de l'enregistrement    */
-			/* exisant, on force ALT_DIPSPO $$HEX2$$e0002000$$ENDHEX$$NON.                              */
+			/* Si les marques et modèles IFR sont absent de l'enregistrement    */
+			/* exisant, on force ALT_DIPSPO à NON.                              */
 			/*------------------------------------------------------------------*/
 			If Isnull ( sIdMqIfr ) Or sIdMqIfr = "" Or Isnull ( sIdModlIfr ) Or sIdModlIfr = "" Then
 				idwArticle.SetItem ( lRow, "ALT_DISPO", "N" )				
@@ -9549,7 +9549,7 @@ For alNbLig = 1 To lTotLigFourn
 		// [VDOC6846]
 		Choose Case sIdTypArt 
 			Case "TEL"
-				// Doit $$HEX1$$ea00$$ENDHEX$$tre mis $$HEX2$$e0002000$$ENDHEX$$la main pas Cell. Parte.
+				// Doit être mis à la main pas Cell. Parte.
 				// [VDOC6993]
 				If bInsert Then
 					sIdMarqArtIFr = Space (35) 
@@ -9573,7 +9573,7 @@ For alNbLig = 1 To lTotLigFourn
 		End Choose
 		// :[VDOC6846]
 
-		idwArticle.SetItem ( lRow, "QT_DISP", 1 ) // On n'a pas besoin de quantit$$HEX1$$e900$$ENDHEX$$.
+		idwArticle.SetItem ( lRow, "QT_DISP", 1 ) // On n'a pas besoin de quantité.
 		idwArticle.SetItem ( lRow, "OBSERV_FRN", Upper ( idwFicFourn.GetItemString ( alNbLig, "OBSERV_FRN" ) ) )
 		idwArticle.SetItem ( lRow, "VERROU", 1 )
 		idwArticle.SetItem ( lRow, "MAJ_LE", dt )		
@@ -9584,12 +9584,12 @@ For alNbLig = 1 To lTotLigFourn
 Next
 
 /*------------------------------------------------------------------*/
-/* Nbre de ligne dans la Table (r$$HEX1$$e900$$ENDHEX$$actualis$$HEX1$$e900$$ENDHEX$$)                        */
+/* Nbre de ligne dans la Table (réactualisé)                        */
 /*------------------------------------------------------------------*/
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Suppression des lignes pr$$HEX1$$e900$$ENDHEX$$sentes dans la table articles et       */
+/* Suppression des lignes présentes dans la table articles et       */
 /* absentes du fichier.                                             */
 /*------------------------------------------------------------------*/
 For lCpt = lTotLigArticle To 1 Step -1
@@ -9626,7 +9626,7 @@ private function integer uf_ctrl_fichier_atech ();//*---------------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Ctrl_Fichier_ATECH (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 25/11/2015
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier de ATECH 
+//* Libellé			: Controler de la validité du fichier de ATECH 
 //* Commentaires	: [PC13442-2]
 //*
 //* Arguments		: 
@@ -9671,13 +9671,13 @@ For lCpt = 1 To lTotLig
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 	
 	/*------------------------------------------------------------------*/
@@ -9711,7 +9711,7 @@ For lCpt = 1 To lTotLig
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le type de l'article doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : Le type de l'article doit être sur 3 caractères." )
 	End If		
 
 	/*------------------------------------------------------------------*/
@@ -9733,11 +9733,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone mod$$HEX1$$e800$$ENDHEX$$le article est vide." )
+		" : La zone modèle article est vide." )
 	Else
 
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "ID_MODL_ART", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -9774,7 +9774,7 @@ For lCpt = 1 To lTotLig
 			If Not ( Asc ( sCar ) >= 48 And Asc ( sCar ) <= 57 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le montant " + sVal + " n'est pas valide, un caract$$HEX1$$e800$$ENDHEX$$re n'est pas un chiffre." )
+				" : Le montant " + sVal + " n'est pas valide, un caractère n'est pas un chiffre." )
 				Exit
 			End If
 		End If
@@ -9782,7 +9782,7 @@ For lCpt = 1 To lTotLig
 
 	If Real ( sVal ) > 5000 Then		
 		This.uf_Trace ( "ECR", "AVERTISSEMENT ligne " + String ( lCpt ) + &
-		" : Le montant " + sVal + " para$$HEX1$$ee00$$ENDHEX$$t anormalement grand." )
+		" : Le montant " + sVal + " paraît anormalement grand." )
 	End If
 
 	
@@ -9805,7 +9805,7 @@ For lCpt = 1 To lTotLig
 	If Not IsNumber ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La quantit$$HEX2$$e9002000$$ENDHEX$$" + sVal + " n'est pas valide, ce n'est pas un nombre." )
+		" : La quantité " + sVal + " n'est pas valide, ce n'est pas un nombre." )
 		
 	End If
 
@@ -9817,7 +9817,7 @@ For lCpt = 1 To lTotLig
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "OBSERV_FRN", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -9830,11 +9830,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur est vide." )
+		" : La zone Référence fournisseur est vide." )
 	ElseIf sIdRefFourPrec <> "" And sVal = sIdRefFourPrec Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sVal + " n'est pas unique." )
+		" : La référence " + sVal + " n'est pas unique." )
 		
 	End If
 
@@ -9842,7 +9842,7 @@ For lCpt = 1 To lTotLig
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -9854,7 +9854,7 @@ private function integer uf_integration_fichier_atech (ref long alnblig, ref lon
 //* Fonction		: n_cst_pg_in_fic_article::uf_Integration_Fichier_Atech (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 25/11/2015
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier ATECH dans la base
+//* Libellé			: Intégration du fichier ATECH dans la base
 //* Commentaires	: [PC13442-2]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -9888,7 +9888,7 @@ dt = DateTime ( Today (), Now () )
 dcTvaParDefaut = 0
 
 /*------------------------------------------------------------------*/
-/* Article de R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence pour le filtre sur l'existant en base       */
+/* Article de Référence pour le filtre sur l'existant en base       */
 /*------------------------------------------------------------------*/
 
 
@@ -9911,7 +9911,7 @@ lTotLigFourn = idwFicFourn.RowCount ()
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Initilisation de la trace d'int$$HEX1$$e900$$ENDHEX$$gration.                         */
+/* Initilisation de la trace d'intégration.                         */
 /*------------------------------------------------------------------*/
 This.uf_Trace_2 ( "INIT", 0, sIdFour, "", "", "", "" )
 
@@ -9956,7 +9956,7 @@ For alNbLig = 1 To lTotLigFourn
 		idwArticle.SetItem ( lRow, "MT_PRIX_HT", dcPrixHt   )								
 
 		/*------------------------------------------------------------------*/
-		/* Code $$HEX1$$e900$$ENDHEX$$tat (-EI)                                                  */
+		/* Code état (-EI)                                                  */
 		/* 200 Nouveau                                                      */
 		/* 100 MAj_Ok sur existant                                          */
 		/*------------------------------------------------------------------*/
@@ -9970,8 +9970,8 @@ For alNbLig = 1 To lTotLigFourn
 			sIdModlIfr = Trim ( idwArticle.GetItemString  ( lRow, "ID_MODL_ART_IFR" ) )
 
 			/*------------------------------------------------------------------*/
-			/* Si les marques et mod$$HEX1$$e800$$ENDHEX$$les IFR sont absent de l'enregistrement    */
-			/* exisant, on force ALT_DIPSPO $$HEX2$$e0002000$$ENDHEX$$NON.                              */
+			/* Si les marques et modèles IFR sont absent de l'enregistrement    */
+			/* exisant, on force ALT_DIPSPO à NON.                              */
 			/*------------------------------------------------------------------*/
 			If Isnull ( sIdMqIfr ) Or sIdMqIfr = "" Or Isnull ( sIdModlIfr ) Or sIdModlIfr = "" Then
 				idwArticle.SetItem ( lRow, "ALT_DISPO", "N" )				
@@ -9983,7 +9983,7 @@ For alNbLig = 1 To lTotLigFourn
 		// [PC10][DIAG_NOMADE]
 		Choose Case sIdTypArt 
 			Case "TEL", "PC1", "PC2" 
-				// Doit $$HEX1$$ea00$$ENDHEX$$tre mis $$HEX2$$e0002000$$ENDHEX$$la main pas Cell. Parte.
+				// Doit être mis à la main pas Cell. Parte.
 				// [VDOC6993]
 				If bInsert Then
 					sIdMarqArtIFr = Space (35) 
@@ -10017,12 +10017,12 @@ For alNbLig = 1 To lTotLigFourn
 Next
 
 /*------------------------------------------------------------------*/
-/* Nbre de ligne dans la Table (r$$HEX1$$e900$$ENDHEX$$actualis$$HEX1$$e900$$ENDHEX$$)                        */
+/* Nbre de ligne dans la Table (réactualisé)                        */
 /*------------------------------------------------------------------*/
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Suppression des lignes pr$$HEX1$$e900$$ENDHEX$$sentes dans la table articles et       */
+/* Suppression des lignes présentes dans la table articles et       */
 /* absentes du fichier.                                             */
 /*------------------------------------------------------------------*/
 For lCpt = lTotLigArticle To 1 Step -1
@@ -10065,7 +10065,7 @@ private function integer uf_ctrl_fichier_boost ();//*---------------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Ctrl_Fichier_BOOST (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 28/06/2016
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier de BOOST
+//* Libellé			: Controler de la validité du fichier de BOOST
 //* Commentaires	: [PC151549]
 //*
 //* Arguments		: 
@@ -10111,13 +10111,13 @@ For lCpt = 1 To lTotLig
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 	
 	/*------------------------------------------------------------------*/
@@ -10151,7 +10151,7 @@ For lCpt = 1 To lTotLig
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le type de l'article doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : Le type de l'article doit être sur 3 caractères." )
 	End If		
 
 	/*------------------------------------------------------------------*/
@@ -10173,11 +10173,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone mod$$HEX1$$e800$$ENDHEX$$le article est vide." )
+		" : La zone modèle article est vide." )
 	Else
 
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "ID_MODL_ART", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -10214,7 +10214,7 @@ For lCpt = 1 To lTotLig
 			If Not ( Asc ( sCar ) >= 48 And Asc ( sCar ) <= 57 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le montant " + sVal + " n'est pas valide, un caract$$HEX1$$e800$$ENDHEX$$re n'est pas un chiffre." )
+				" : Le montant " + sVal + " n'est pas valide, un caractère n'est pas un chiffre." )
 				Exit
 			End If
 		End If
@@ -10222,7 +10222,7 @@ For lCpt = 1 To lTotLig
 
 	If Real ( sVal ) > 5000 Then		
 		This.uf_Trace ( "ECR", "AVERTISSEMENT ligne " + String ( lCpt ) + &
-		" : Le montant " + sVal + " para$$HEX1$$ee00$$ENDHEX$$t anormalement grand." )
+		" : Le montant " + sVal + " paraît anormalement grand." )
 	End If
 
 	
@@ -10246,7 +10246,7 @@ For lCpt = 1 To lTotLig
 	If Not IsNumber ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La quantit$$HEX2$$e9002000$$ENDHEX$$" + sVal + " n'est pas valide, ce n'est pas un nombre." )
+		" : La quantité " + sVal + " n'est pas valide, ce n'est pas un nombre." )
 		
 	End If
 */
@@ -10258,7 +10258,7 @@ For lCpt = 1 To lTotLig
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "OBSERV_FRN", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -10271,11 +10271,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur est vide." )
+		" : La zone Référence fournisseur est vide." )
 	ElseIf sIdRefFourPrec <> "" And sVal = sIdRefFourPrec Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sVal + " n'est pas unique." )
+		" : La référence " + sVal + " n'est pas unique." )
 		
 	End If
 
@@ -10283,7 +10283,7 @@ For lCpt = 1 To lTotLig
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -10295,7 +10295,7 @@ private function integer uf_integration_fichier_boost (ref long alnblig, ref lon
 //* Fonction		: n_cst_pg_in_fic_article::uf_Integration_Fichier_Boost (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 28/06/2016
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier BOOST dans la base
+//* Libellé			: Intégration du fichier BOOST dans la base
 //* Commentaires	: [PC151549]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -10332,7 +10332,7 @@ dcTvaParDefaut = 0
 dt = DateTime ( Today (), Now () )
 
 /*------------------------------------------------------------------*/
-/* Article de R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence pour le filtre sur l'existant en base       */
+/* Article de Référence pour le filtre sur l'existant en base       */
 /*------------------------------------------------------------------*/
 
 
@@ -10355,7 +10355,7 @@ lTotLigFourn = idwFicFourn.RowCount ()
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Initilisation de la trace d'int$$HEX1$$e900$$ENDHEX$$gration.                         */
+/* Initilisation de la trace d'intégration.                         */
 /*------------------------------------------------------------------*/
 This.uf_Trace_2 ( "INIT", 0, sIdFour, "", "", "", "" )
 
@@ -10400,7 +10400,7 @@ For alNbLig = 1 To lTotLigFourn
 		idwArticle.SetItem ( lRow, "MT_PRIX_HT", dcPrixHt   )								
 
 		/*------------------------------------------------------------------*/
-		/* Code $$HEX1$$e900$$ENDHEX$$tat (-EI)                                                  */
+		/* Code état (-EI)                                                  */
 		/* 200 Nouveau                                                      */
 		/* 100 MAj_Ok sur existant                                          */
 		/*------------------------------------------------------------------*/
@@ -10414,8 +10414,8 @@ For alNbLig = 1 To lTotLigFourn
 			sIdModlIfr = Trim ( idwArticle.GetItemString  ( lRow, "ID_MODL_ART_IFR" ) )
 
 			/*------------------------------------------------------------------*/
-			/* Si les marques et mod$$HEX1$$e800$$ENDHEX$$les IFR sont absent de l'enregistrement    */
-			/* exisant, on force ALT_DIPSPO $$HEX2$$e0002000$$ENDHEX$$NON.                              */
+			/* Si les marques et modèles IFR sont absent de l'enregistrement    */
+			/* exisant, on force ALT_DIPSPO à NON.                              */
 			/*------------------------------------------------------------------*/
 			If Isnull ( sIdMqIfr ) Or sIdMqIfr = "" Or Isnull ( sIdModlIfr ) Or sIdModlIfr = "" Then
 				idwArticle.SetItem ( lRow, "ALT_DISPO", "N" )				
@@ -10427,7 +10427,7 @@ For alNbLig = 1 To lTotLigFourn
 		// [PC10][DIAG_NOMADE]
 		Choose Case sIdTypArt 
 			Case "TEL", "PC1", "PC2", "TPC", "MCS" 
-				// Doit $$HEX1$$ea00$$ENDHEX$$tre mis $$HEX2$$e0002000$$ENDHEX$$la main pas Cell. Parte.
+				// Doit être mis à la main pas Cell. Parte.
 				// [VDOC6993]
 				If bInsert Then
 					sIdMarqArtIFr = Space (35) 
@@ -10466,12 +10466,12 @@ For alNbLig = 1 To lTotLigFourn
 Next
 
 /*------------------------------------------------------------------*/
-/* Nbre de ligne dans la Table (r$$HEX1$$e900$$ENDHEX$$actualis$$HEX1$$e900$$ENDHEX$$)                        */
+/* Nbre de ligne dans la Table (réactualisé)                        */
 /*------------------------------------------------------------------*/
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Suppression des lignes pr$$HEX1$$e900$$ENDHEX$$sentes dans la table articles et       */
+/* Suppression des lignes présentes dans la table articles et       */
 /* absentes du fichier.                                             */
 /*------------------------------------------------------------------*/
 For lCpt = lTotLigArticle To 1 Step -1
@@ -10514,7 +10514,7 @@ private function integer uf_ctrl_fichier_bak2 ();//*----------------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Ctrl_Fichier_BAK2 (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 11/10/2016
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier de O2M
+//* Libellé			: Controler de la validité du fichier de O2M
 //* Commentaires	: [DT076-2]
 //*
 //* Arguments		: 
@@ -10538,7 +10538,7 @@ lTotArt = idwArtSpb.RowCount ()
 sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
 sTypArtSav = ""
 
-// JFF 20/01/2011 : le tri imp$$HEX1$$e900$$ENDHEX$$ratif sur ID_REF_FOUR $$HEX1$$e900$$ENDHEX$$tait visiblement manquant (?..)
+// JFF 20/01/2011 : le tri impératif sur ID_REF_FOUR était visiblement manquant (?..)
 idwFicFourn.SetSort ( "ID_REF_FOUR A" )
 idwFicFourn.Sort ()
 
@@ -10560,13 +10560,13 @@ For lCpt = 1 To lTotLig
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 	
 	/*------------------------------------------------------------------*/
@@ -10580,13 +10580,13 @@ For lCpt = 1 To lTotLig
 		" : La zone Type Article est vide." )
 	End If 
 
-	// Le fichier ne doit que contenir que des appareils du m$$HEX1$$ea00$$ENDHEX$$me type
+	// Le fichier ne doit que contenir que des appareils du même type
 	// #2 [DCMP090615]
 	/*
 	If sTypArtSav <> sVal And sTypArtSav <> "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fichier contient des types d'appareils diff$$HEX1$$e900$$ENDHEX$$rents !" )
+		" : Le fichier contient des types d'appareils différents !" )
 	End If
 	*/
 	// :#2 [DCMP090615]
@@ -10611,7 +10611,7 @@ For lCpt = 1 To lTotLig
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le type de l'article doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : Le type de l'article doit être sur 3 caractères." )
 	End If		
 
 	/*------------------------------------------------------------------*/
@@ -10633,11 +10633,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone mod$$HEX1$$e800$$ENDHEX$$le article est vide." )
+		" : La zone modèle article est vide." )
 	Else
 
 		If Pos ( sVal, "'", 1 ) > 0 Then
-//			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+//			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "ID_MODL_ART", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -10674,7 +10674,7 @@ For lCpt = 1 To lTotLig
 			If Not ( Asc ( sCar ) >= 48 And Asc ( sCar ) <= 57 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le montant " + sVal + " n'est pas valide, un caract$$HEX1$$e800$$ENDHEX$$re n'est pas un chiffre." )
+				" : Le montant " + sVal + " n'est pas valide, un caractère n'est pas un chiffre." )
 				Exit
 			End If
 		End If
@@ -10682,7 +10682,7 @@ For lCpt = 1 To lTotLig
 
 	If Real ( sVal ) > 5000 Then		
 		This.uf_Trace ( "ECR", "AVERTISSEMENT ligne " + String ( lCpt ) + &
-		" : Le montant " + sVal + " para$$HEX1$$ee00$$ENDHEX$$t anormalement grand." )
+		" : Le montant " + sVal + " paraît anormalement grand." )
 	End If
 
 	
@@ -10691,13 +10691,13 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "UNT_MONNAIE" ) ) )
 	// [SUISSE].LOT3 Controle de la monnaie du fichier
-	// Si pas de coh$$HEX1$$e900$$ENDHEX$$rence : erreur bloquante d'int$$HEX1$$e900$$ENDHEX$$gration.
+	// Si pas de cohérence : erreur bloquante d'intégration.
 	if uf_controler_monnaie_fichier (sVal, lCpt) < 0 Then iRet = -1
 	
 //	If IsNull ( sVal ) Or sVal = "" Then
 //		iRet = -1
 //		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-//		" : L'unit$$HEX2$$e9002000$$ENDHEX$$de la monnaie est vide." )
+//		" : L'unité de la monnaie est vide." )
 //	End If 
 //
 //	If sVal <> "FRF" And sVal <> "EUR" Then
@@ -10720,7 +10720,7 @@ For lCpt = 1 To lTotLig
 	If Not IsNumber ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La quantit$$HEX2$$e9002000$$ENDHEX$$" + sVal + " n'est pas valide, ce n'est pas un nombre." )
+		" : La quantité " + sVal + " n'est pas valide, ce n'est pas un nombre." )
 		
 	End If
 
@@ -10731,7 +10731,7 @@ For lCpt = 1 To lTotLig
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "OBSERV_FRN", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -10744,11 +10744,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur est vide." )
+		" : La zone Référence fournisseur est vide." )
 	ElseIf sIdRefFourPrec <> "" And sVal = sIdRefFourPrec Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sVal + " n'est pas unique." )
+		" : La référence " + sVal + " n'est pas unique." )
 		
 	End If
 
@@ -10756,7 +10756,7 @@ For lCpt = 1 To lTotLig
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -10768,7 +10768,7 @@ private function integer uf_integration_fichier_bak2 (ref long alnblig, ref long
 //* Fonction		: n_cst_pg_in_fic_article::uf_Integration_Fichier_BAK2 (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 11/10/2016
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier O2M dans la base
+//* Libellé			: Intégration du fichier O2M dans la base
 //* Commentaires	: //[DT076-2]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -10782,7 +10782,7 @@ private function integer uf_integration_fichier_bak2 (ref long alnblig, ref long
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//			FPI	19/12/2016	[FPI.20161219] Multiplication des r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rences par 10
+//			FPI	19/12/2016	[FPI.20161219] Multiplication des références par 10
 //       JFF   12/09/2017  [PC151259-3]
 //*-----------------------------------------------------------------
 
@@ -10842,7 +10842,7 @@ lTotLigFourn = idwFicFourn.RowCount ()
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Initilisation de la trace d'int$$HEX1$$e900$$ENDHEX$$gration.                         */
+/* Initilisation de la trace d'intégration.                         */
 /*------------------------------------------------------------------*/
 This.uf_Trace_2 ( "INIT", 0, sIdFour, "", "", "", "" )
 
@@ -10892,7 +10892,7 @@ For alNbLig = 1 To lTotLigFourn
 
 
 		/*------------------------------------------------------------------*/
-		/* Code $$HEX1$$e900$$ENDHEX$$tat (-EI)                                                  */
+		/* Code état (-EI)                                                  */
 		/* 200 Nouveau                                                      */
 		/* 100 MAj_Ok sur existant                                          */
 		/*------------------------------------------------------------------*/
@@ -10905,8 +10905,8 @@ For alNbLig = 1 To lTotLigFourn
 			sIdModlIfr = Trim ( idwArticle.GetItemString  ( lRow, "ID_MODL_ART_IFR" ) )
 
 			/*------------------------------------------------------------------*/
-			/* Si les marques et mod$$HEX1$$e800$$ENDHEX$$les IFR sont absent de l'enregistrement    */
-			/* exisant, on force ALT_DIPSPO $$HEX2$$e0002000$$ENDHEX$$NON.                              */
+			/* Si les marques et modèles IFR sont absent de l'enregistrement    */
+			/* exisant, on force ALT_DIPSPO à NON.                              */
 			/*------------------------------------------------------------------*/
 			If Isnull ( sIdMqIfr ) Or sIdMqIfr = "" Or Isnull ( sIdModlIfr ) Or sIdModlIfr = "" Then
 				idwArticle.SetItem ( lRow, "ALT_DISPO", "N" )				
@@ -10918,7 +10918,7 @@ For alNbLig = 1 To lTotLigFourn
 		// [VDOC6846]
 		Choose Case sIdTypArt 
 			Case "TEL", "PC1", "PC2" 
-				// Doit $$HEX1$$ea00$$ENDHEX$$tre mis $$HEX2$$e0002000$$ENDHEX$$la main pas Cell. Parte.
+				// Doit être mis à la main pas Cell. Parte.
 				// [VDOC6993]
 				If bInsert Then
 					sIdMarqArtIFr = Space (35) 
@@ -10966,7 +10966,7 @@ private function integer uf_ctrl_fichier_rt_bouygues ();//*---------------------
 //* Fonction		: n_cst_int_fic_article::uf_Ctrl_Fichier_rt_bouygues (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 15/09/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [DT328-1]
 //*
 //* Arguments		: 
@@ -10986,7 +10986,7 @@ n_cst_string nvString
 
 iRet = 1
 
-// Suppression de la ligne d'ent$$HEX1$$ea00$$ENDHEX$$te
+// Suppression de la ligne d'entête
 idwFicFourn.DeleteRow(1)
 
 lTotLig = idwFicFourn.RowCount ()
@@ -10994,7 +10994,7 @@ lTotArt = idwArtSpb.RowCount ()
 sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
 sTypArtSav = ""
 
-// JFF 20/01/2011 : le tri imp$$HEX1$$e900$$ENDHEX$$ratif sur ID_REF_FOUR $$HEX1$$e900$$ENDHEX$$tait visiblement manquant (?..)
+// JFF 20/01/2011 : le tri impératif sur ID_REF_FOUR était visiblement manquant (?..)
 idwFicFourn.SetSort ( "GENCOD A" )
 idwFicFourn.Sort ()
 
@@ -11040,7 +11040,7 @@ For lCpt = 1 To lTotLig
 		sVal=nvString.of_globalreplace( sVal, "~"", "p")
 		sVal=nvString.of_globalreplace( sVal, "''", "p")
 		sVal=nvString.of_globalreplace( sVal, "'", "p")
-		idwFicFourn.SetItem ( lCpt, "Libelle_commercial", sVal) // On coupe $$HEX2$$e0002000$$ENDHEX$$35 au cas o$$HEX1$$f900$$ENDHEX$$
+		idwFicFourn.SetItem ( lCpt, "Libelle_commercial", sVal) // On coupe à 35 au cas où
 	End If 
 
 	sVal = Trim ( Upper ( Left ( idwFicFourn.GetItemString ( lCpt, "Designation" ), 35 ) ) )
@@ -11053,7 +11053,7 @@ For lCpt = 1 To lTotLig
 		sVal=nvString.of_globalreplace( sVal, "~"", "p")
 		sVal=nvString.of_globalreplace( sVal, "''", "p")
 		sVal=nvString.of_globalreplace( sVal, "'", "p")
-		idwFicFourn.SetItem ( lCpt, "Designation", sVal) // On coupe $$HEX2$$e0002000$$ENDHEX$$35 au cas o$$HEX1$$f900$$ENDHEX$$
+		idwFicFourn.SetItem ( lCpt, "Designation", sVal) // On coupe à 35 au cas où
 	End If 
 Next
 
@@ -11065,7 +11065,7 @@ For lCpt = lTotLig To 2 STEP -1
 	End if
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rentiel des terminaux Bouygues n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier référentiel des terminaux Bouygues n'a pas été chargé.")
 
 Return iRet
 
@@ -11077,7 +11077,7 @@ private function integer uf_integration_fichier_rt_bouygues (ref long alnblig, r
 //* Fonction		: n_cst_int_fic_article::uf_Integration_Fichier_rt_Bouygues (PRIVATE)
 //* Auteur			: FPI
 //* Date				: 28/09/2015
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier de prix public Orange dans la base
+//* Libellé			: Intégration du fichier de prix public Orange dans la base
 //* Commentaires	: [DT328-1]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -11111,7 +11111,7 @@ dcTvaParDefaut=0
 dt = DateTime ( Today (), Now () )
 
 /*------------------------------------------------------------------*/
-/* Article de R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence pour le filtre sur l'existant en base       */
+/* Article de Référence pour le filtre sur l'existant en base       */
 /*------------------------------------------------------------------*/
 sIdTypArtRef = "TEL"
 
@@ -11134,7 +11134,7 @@ lTotLigFourn = idwFicFourn.RowCount ()
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Initilisation de la trace d'int$$HEX1$$e900$$ENDHEX$$gration.                         */
+/* Initilisation de la trace d'intégration.                         */
 /*------------------------------------------------------------------*/
 This.uf_Trace_2 ( "INIT", 0, sIdFour, "", "", "", "" )
 
@@ -11190,7 +11190,7 @@ For alNbLig = 1 To lTotLigFourn
 
 
 		/*------------------------------------------------------------------*/
-		/* Code $$HEX1$$e900$$ENDHEX$$tat (-EI)                                                  */
+		/* Code état (-EI)                                                  */
 		/* 200 Nouveau                                                      */
 		/* 100 MAj_Ok sur existant                                          */
 		/*------------------------------------------------------------------*/
@@ -11204,8 +11204,8 @@ For alNbLig = 1 To lTotLigFourn
 			sIdModlIfr = Trim ( idwArticle.GetItemString  ( lRow, "ID_MODL_ART_IFR" ) )
 
 			/*------------------------------------------------------------------*/
-			/* Si les marques et mod$$HEX1$$e800$$ENDHEX$$les IFR sont absent de l'enregistrement    */
-			/* exisant, on force ALT_DIPSPO $$HEX2$$e0002000$$ENDHEX$$NON.                              */
+			/* Si les marques et modèles IFR sont absent de l'enregistrement    */
+			/* exisant, on force ALT_DIPSPO à NON.                              */
 			/*------------------------------------------------------------------*/
 			If Isnull ( sIdMqIfr ) Or sIdMqIfr = "" Or Isnull ( sIdModlIfr ) Or sIdModlIfr = "" Then
 				idwArticle.SetItem ( lRow, "ALT_DISPO", "N" )				
@@ -11214,7 +11214,7 @@ For alNbLig = 1 To lTotLigFourn
 			This.uf_Trace_2 ( "ECR_AUTO", 100, sIdFour, sIdRefFour, sIdMarqArt, sIdModlArt, "" )
 		End If
 
-		idwArticle.SetItem ( lRow, "QT_DISP", 1 ) // On n'a pas besoin de quantit$$HEX1$$e900$$ENDHEX$$.
+		idwArticle.SetItem ( lRow, "QT_DISP", 1 ) // On n'a pas besoin de quantité.
 		idwArticle.SetItem ( lRow, "VERROU", 1 )
 		idwArticle.SetItem ( lRow, "MAJ_LE", dt )		
 		idwArticle.SetItem ( lRow, "MAJ_PAR", stGlb.sCodOper )		
@@ -11224,12 +11224,12 @@ For alNbLig = 1 To lTotLigFourn
 Next
 
 /*------------------------------------------------------------------*/
-/* Nbre de ligne dans la Table (r$$HEX1$$e900$$ENDHEX$$actualis$$HEX1$$e900$$ENDHEX$$)                        */
+/* Nbre de ligne dans la Table (réactualisé)                        */
 /*------------------------------------------------------------------*/
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Suppression des lignes pr$$HEX1$$e900$$ENDHEX$$sentes dans la table articles et       */
+/* Suppression des lignes présentes dans la table articles et       */
 /* absentes du fichier.                                             */
 /*------------------------------------------------------------------*/
 /*For lCpt = lTotLigArticle To 1 Step -1
@@ -11266,7 +11266,7 @@ private function integer uf_ctrl_fichier_agora_place ();//*---------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Ctrl_Fichier_Agora_Place (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 17/09/2018
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier de AGORA PLACE
+//* Libellé			: Controler de la validité du fichier de AGORA PLACE
 //* Commentaires	: [PM444-1]
 //*
 //* Arguments		: 
@@ -11291,7 +11291,7 @@ lTotArt = idwArtSpb.RowCount ()
 sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
 sTypArtSav = ""
 
-// JFF 20/01/2011 : le tri imp$$HEX1$$e900$$ENDHEX$$ratif sur ID_REF_FOUR $$HEX1$$e900$$ENDHEX$$tait visiblement manquant (?..)
+// JFF 20/01/2011 : le tri impératif sur ID_REF_FOUR était visiblement manquant (?..)
 idwFicFourn.SetSort ( "ID_REF_FOUR A" )
 idwFicFourn.Sort ()
 
@@ -11313,13 +11313,13 @@ For lCpt = 1 To lTotLig
 	If sVal <> sIdFour Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$" + sIdFour )
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
 	End If 
 
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La longueur du fournisseur doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : La longueur du fournisseur doit être sur 3 caractères." )
 	End If
 	
 	/*------------------------------------------------------------------*/
@@ -11333,13 +11333,13 @@ For lCpt = 1 To lTotLig
 		" : La zone Type Article est vide." )
 	End If 
 
-	// Le fichier ne doit que contenir que des appareils du m$$HEX1$$ea00$$ENDHEX$$me type
+	// Le fichier ne doit que contenir que des appareils du même type
 	// #2 [DCMP090615]
 	/*
 	If sTypArtSav <> sVal And sTypArtSav <> "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fichier contient des types d'appareils diff$$HEX1$$e900$$ENDHEX$$rents !" )
+		" : Le fichier contient des types d'appareils différents !" )
 	End If
 	*/
 	// :#2 [DCMP090615]
@@ -11364,7 +11364,7 @@ For lCpt = 1 To lTotLig
 	If Len ( sVal ) > 3 Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le type de l'article doit $$HEX1$$ea00$$ENDHEX$$tre sur 3 caract$$HEX1$$e800$$ENDHEX$$res." )
+		" : Le type de l'article doit être sur 3 caractères." )
 	End If		
 
 	/*------------------------------------------------------------------*/
@@ -11386,11 +11386,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone mod$$HEX1$$e800$$ENDHEX$$le article est vide." )
+		" : La zone modèle article est vide." )
 	Else
 
 		If Pos ( sVal, "'", 1 ) > 0 Then
-//			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+//			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "ID_MODL_ART", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -11427,7 +11427,7 @@ For lCpt = 1 To lTotLig
 			If Not ( Asc ( sCar ) >= 48 And Asc ( sCar ) <= 57 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le montant " + sVal + " n'est pas valide, un caract$$HEX1$$e800$$ENDHEX$$re n'est pas un chiffre." )
+				" : Le montant " + sVal + " n'est pas valide, un caractère n'est pas un chiffre." )
 				Exit
 			End If
 		End If
@@ -11435,7 +11435,7 @@ For lCpt = 1 To lTotLig
 
 	If Real ( sVal ) > 5000 Then		
 		This.uf_Trace ( "ECR", "AVERTISSEMENT ligne " + String ( lCpt ) + &
-		" : Le montant " + sVal + " para$$HEX1$$ee00$$ENDHEX$$t anormalement grand." )
+		" : Le montant " + sVal + " paraît anormalement grand." )
 	End If
 
 	
@@ -11444,13 +11444,13 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "UNT_MONNAIE" ) ) )
 	// [SUISSE].LOT3 Controle de la monnaie du fichier
-	// Si pas de coh$$HEX1$$e900$$ENDHEX$$rence : erreur bloquante d'int$$HEX1$$e900$$ENDHEX$$gration.
+	// Si pas de cohérence : erreur bloquante d'intégration.
 	if uf_controler_monnaie_fichier (sVal, lCpt) < 0 Then iRet = -1
 	
 //	If IsNull ( sVal ) Or sVal = "" Then
 //		iRet = -1
 //		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-//		" : L'unit$$HEX2$$e9002000$$ENDHEX$$de la monnaie est vide." )
+//		" : L'unité de la monnaie est vide." )
 //	End If 
 //
 //	If sVal <> "FRF" And sVal <> "EUR" Then
@@ -11473,7 +11473,7 @@ For lCpt = 1 To lTotLig
 	If Not IsNumber ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La quantit$$HEX2$$e9002000$$ENDHEX$$" + sVal + " n'est pas valide, ce n'est pas un nombre." )
+		" : La quantité " + sVal + " n'est pas valide, ce n'est pas un nombre." )
 		
 	End If
 
@@ -11484,7 +11484,7 @@ For lCpt = 1 To lTotLig
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
 		If Pos ( sVal, "'", 1 ) > 0 Then
-			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+			// This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "OBSERV_FRN", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -11497,7 +11497,7 @@ For lCpt = 1 To lTotLig
 			iRet = -1
 			If IsNull ( sVal ) Then sVal = "'vide'"
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" (vDoc25657) : La valeur " + sVal + " n'est pas autoris$$HEX1$$e900$$ENDHEX$$e pour le mot cl$$HEX2$$e9002000$$ENDHEX$$[#GR#]. La valeur doit $$HEX1$$ea00$$ENDHEX$$tre num$$HEX1$$e900$$ENDHEX$$rique entre 0 et 9." )
+				" (vDoc25657) : La valeur " + sVal + " n'est pas autorisée pour le mot clé [#GR#]. La valeur doit être numérique entre 0 et 9." )
 		End If 
 	End If 
 
@@ -11511,12 +11511,12 @@ For lCpt = 1 To lTotLig
 		If IsNull ( sVal ) Then sVal = "'vide'"
 		
 		Choose Case sVal
-			Case "AIG", "CARDIF", "PACIFICA", "PARISIENNE", "AMTRUST", "DAS"  // D$$HEX1$$e900$$ENDHEX$$finir ici les autres assureurs
+			Case "AIG", "CARDIF", "PACIFICA", "PARISIENNE", "AMTRUST", "DAS"  // Définir ici les autres assureurs
 				// OK
 			Case Else
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" (PM471-1) : La valeur " + sVal + " n'est pas autoris$$HEX1$$e900$$ENDHEX$$e pour le mot cl$$HEX2$$e9002000$$ENDHEX$$[#RSASS#]. La valeur doit $$HEX1$$ea00$$ENDHEX$$tre un libell$$HEX2$$e9002000$$ENDHEX$$assureur donn$$HEX2$$e9002000$$ENDHEX$$par SPB." )
+					" (PM471-1) : La valeur " + sVal + " n'est pas autorisée pour le mot clé [#RSASS#]. La valeur doit être un libellé assureur donné par SPB." )
 		End CHoose 
 			
 	End If 
@@ -11529,11 +11529,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur est vide." )
+		" : La zone Référence fournisseur est vide." )
 	ElseIf sIdRefFourPrec <> "" And sVal = sIdRefFourPrec Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sVal + " n'est pas unique." )
+		" : La référence " + sVal + " n'est pas unique." )
 		
 	End If
 
@@ -11543,7 +11543,7 @@ For lCpt = 1 To lTotLig
 
 Next
 
-If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$charg$$HEX1$$e900$$ENDHEX$$.")
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
 Return iRet
 
@@ -11555,7 +11555,7 @@ private function integer uf_integration_fichier_agora_place (string ascas, ref l
 //* Fonction		: n_cst_pg_in_fic_article::uf_Integration_Fichier_AGORA_PLACE (PRIVATE)
 //* Auteur			: JFF
 //* Date				: 17/09/2018
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier AGORA PLACE dans la base
+//* Libellé			: Intégration du fichier AGORA PLACE dans la base
 //* Commentaires	: //[PM444-1]
 //*
 //* Arguments		: Long		alNbLig		Ref
@@ -11586,12 +11586,12 @@ alNbDelete = 0
 SetNull ( sNull )
 
 // [DT_60_AUGM_TVA] 1.196
-dcTvaParDefaut = 0 // Le prix est net TTC, pas de tva $$HEX2$$e0002000$$ENDHEX$$ajouter
+dcTvaParDefaut = 0 // Le prix est net TTC, pas de tva à ajouter
 
 dt = DateTime ( Today (), Now () )
 
 /*------------------------------------------------------------------*/
-/* Article de R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence pour le filtre sur l'existant en base       */
+/* Article de Référence pour le filtre sur l'existant en base       */
 /*------------------------------------------------------------------*/
 //* #2 [DCMP090615]
 // sIdTypArtRef = Upper ( Trim ( idwFicFourn.GetItemString ( 1, "ID_TYP_ART"  ) ) )
@@ -11599,7 +11599,7 @@ dt = DateTime ( Today (), Now () )
 
 idwArticle.Reset ()
 
-// [SUISSE].LOT3 Suppression mecanique conversion $$HEX2$$e0002000$$ENDHEX$$l'integration article
+// [SUISSE].LOT3 Suppression mecanique conversion à l'integration article
 ///*------------------------------------------------------------------*/
 ///* Euro ou Frf ?                                                    */
 ///*------------------------------------------------------------------*/
@@ -11632,7 +11632,7 @@ lTotLigFourn = idwFicFourn.RowCount ()
 lTotLigArticle = idwArticle.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Initilisation de la trace d'int$$HEX1$$e900$$ENDHEX$$gration.                         */
+/* Initilisation de la trace d'intégration.                         */
 /*------------------------------------------------------------------*/
 If asCas = "1ER_TOUR" Then
 	This.uf_Trace_2 ( "INIT", 0, sIdFour, "", "", "", "" )
@@ -11685,7 +11685,7 @@ For alNbLig = 1 To lTotLigFourn
 	
 	
 			/*------------------------------------------------------------------*/
-			/* Code $$HEX1$$e900$$ENDHEX$$tat (-EI)                                                  */
+			/* Code état (-EI)                                                  */
 			/* 200 Nouveau                                                      */
 			/* 100 MAj_Ok sur existant                                          */
 			/*------------------------------------------------------------------*/
@@ -11698,8 +11698,8 @@ For alNbLig = 1 To lTotLigFourn
 				sIdModlIfr = Trim ( idwArticle.GetItemString  ( lRow, "ID_MODL_ART_IFR" ) )
 	
 				/*------------------------------------------------------------------*/
-				/* Si les marques et mod$$HEX1$$e800$$ENDHEX$$les IFR sont absent de l'enregistrement    */
-				/* exisant, on force ALT_DIPSPO $$HEX2$$e0002000$$ENDHEX$$NON.                              */
+				/* Si les marques et modèles IFR sont absent de l'enregistrement    */
+				/* exisant, on force ALT_DIPSPO à NON.                              */
 				/*------------------------------------------------------------------*/
 				If Isnull ( sIdMqIfr ) Or sIdMqIfr = "" Or Isnull ( sIdModlIfr ) Or sIdModlIfr = "" Then
 					idwArticle.SetItem ( lRow, "ALT_DISPO", "N" )				
@@ -11711,7 +11711,7 @@ For alNbLig = 1 To lTotLigFourn
 			// [VDOC6846]
 			Choose Case sIdTypArt 
 				Case "TEL", "PC1", "PC2" 
-					// Doit $$HEX1$$ea00$$ENDHEX$$tre mis $$HEX2$$e0002000$$ENDHEX$$la main pas Cell. Parte.
+					// Doit être mis à la main pas Cell. Parte.
 					// [VDOC6993]
 					If bInsert Then
 						sIdMarqArtIFr = Space (35) 
@@ -11754,7 +11754,7 @@ For alNbLig = 1 To lTotLigFourn
 
 		lRow = SQLCA.PS_S01_DET_ARTICLE_TEST_PRESENCE ( sIdFour, sIdRefFour) 
 
-		// On n'int$$HEX1$$e900$$ENDHEX$$gre que certaines c$$HEX1$$e900$$ENDHEX$$t$$HEX1$$e900$$ENDHEX$$gorie.
+		// On n'intégre que certaines cétégorie.
 		If lRow <= 0 Then 
 		
 			sSql  = "Exec sysadm.DW_I01_DET_ARTICLE "
@@ -11781,13 +11781,13 @@ For alNbLig = 1 To lTotLigFourn
 Next
 
 /*------------------------------------------------------------------*/
-/* Nbre de ligne dans la Table (r$$HEX1$$e900$$ENDHEX$$actualis$$HEX1$$e900$$ENDHEX$$)                        */
+/* Nbre de ligne dans la Table (réactualisé)                        */
 /*------------------------------------------------------------------*/
 If asCas = "1ER_TOUR" Then
 	lTotLigArticle = idwArticle.RowCount ()
 	
 	/*------------------------------------------------------------------*/
-	/* Suppression des lignes pr$$HEX1$$e900$$ENDHEX$$sentes dans la table articles et       */
+	/* Suppression des lignes présentes dans la table articles et       */
 	/* absentes du fichier.                                             */
 	/*------------------------------------------------------------------*/
 	For lCpt = lTotLigArticle To 1 Step -1
@@ -11832,7 +11832,7 @@ private function integer uf_ctrl_fichier_cdiscountpro ();//*--------------------
 //* Fonction		: n_cst_pg_in_fic_article::uf_Ctrl_Fichier_CDISCOUNTPRO (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 16/04/2008
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controler de la validit$$HEX2$$e9002000$$ENDHEX$$du fichier de ALAPAGE
+//* Libellé			: Controler de la validité du fichier de ALAPAGE
 //* Commentaires	: [DCMP090102]
 //*
 //* Arguments		: 
@@ -11845,7 +11845,7 @@ private function integer uf_ctrl_fichier_cdiscountpro ();//*--------------------
 //*       JFF    13/04/2012  [ITSM112677]
 //        JFF    21/03/2016  [PM289-3]
 //        JFF    10/02/2020  [PM289-5]
-//			 JFF    09/03/2020  [VDOC29116] Demande d'H$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e800$$ENDHEX$$ne, les erreurs ne sont plus bloquantes,
+//			 JFF    09/03/2020  [VDOC29116] Demande d'Hélène, les erreurs ne sont plus bloquantes,
 //							 	     On les signale, mais on ne bloque pas.
 //*-----------------------------------------------------------------
 
@@ -11863,7 +11863,7 @@ lTotArt = idwArtSpb.RowCount ()
 sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
 sTypArtSav = ""
 
-// JFF 20/01/2011 : le tri imp$$HEX1$$e900$$ENDHEX$$ratif sur ID_REF_FOUR $$HEX1$$e900$$ENDHEX$$tait visiblement manquant (?..)
+// JFF 20/01/2011 : le tri impératif sur ID_REF_FOUR était visiblement manquant (?..)
 idwFicFourn.SetSort ( "ID_REF_FOUR A" )
 idwFicFourn.Sort ()
 
@@ -11880,11 +11880,11 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence fournisseur est vide." )
+		" : La zone Référence fournisseur est vide." )
 	ElseIf sIdRefFourPrec <> "" And sVal = sIdRefFourPrec Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence " + sVal + " n'est pas unique." )
+		" : La référence " + sVal + " n'est pas unique." )
 		
 	End If
 
@@ -11894,7 +11894,7 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	/* ZONE 2 : ID_TYP_ART                                              */
 	/*------------------------------------------------------------------*/
-	// !! Pas d'upper volontairement, tr$$HEX1$$e800$$ENDHEX$$s important.
+	// !! Pas d'upper volontairement, très important.
 	// [PM289-3]
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "ID_CTG3" ) )		
 
@@ -11904,12 +11904,12 @@ For lCpt = 1 To lTotLig
 		" : La zone Type Article est vide." )
 	End If 
 
-	// Le fichier ne doit que contenir que des appareils du m$$HEX1$$ea00$$ENDHEX$$me type
+	// Le fichier ne doit que contenir que des appareils du même type
 /* Pas pour CDP !
 	If sTypArtSav <> sVal And sTypArtSav <> "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Le fichier contient des types d'appareils diff$$HEX1$$e900$$ENDHEX$$rents !" )
+		" : Le fichier contient des types d'appareils différents !" )
 	End If
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
@@ -11942,17 +11942,17 @@ For lCpt = 1 To lTotLig
 	If IsNull ( sVal ) Or sVal = "" Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone mod$$HEX1$$e800$$ENDHEX$$le article est vide." )
+		" : La zone modèle article est vide." )
 	Else
 
 		If Pos ( sVal, "'", 1 ) > 0 Then
-//			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+//			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "ID_MODL_ART", F_Remplace ( sVal, "'", " " ) )
 		End If
 		
 		// [ITSM112677] JFF 13/04/12
 		If Pos ( sVal, '"', 1 ) > 0 Then
-//			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les double quote d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des P" )
+//			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (ID_MODL_ART) Les double quote détectés ont été substitués par des P" )
 			idwFicFourn.SetItem ( lCpt, "ID_MODL_ART", F_Remplace ( sVal, '"', "P" ) )
 		End If
 		
@@ -11992,7 +11992,7 @@ For lCpt = 1 To lTotLig
 			If Not ( Asc ( sCar ) >= 48 And Asc ( sCar ) <= 57 ) Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le montant " + sVal + " n'est pas valide, un caract$$HEX1$$e800$$ENDHEX$$re n'est pas un chiffre." )
+				" : Le montant " + sVal + " n'est pas valide, un caractère n'est pas un chiffre." )
 				Exit
 			End If
 		End If
@@ -12000,7 +12000,7 @@ For lCpt = 1 To lTotLig
 
 	If Real ( sVal ) > 5000 Then		
 		This.uf_Trace ( "ECR", "AVERTISSEMENT ligne " + String ( lCpt ) + &
-		" : Le montant " + sVal + " para$$HEX1$$ee00$$ENDHEX$$t anormalement grand." )
+		" : Le montant " + sVal + " paraît anormalement grand." )
 	End If
 
 
@@ -12011,7 +12011,7 @@ For lCpt = 1 To lTotLig
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
 		If Pos ( sVal, "'", 1 ) > 0 Then
-//			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+//			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (OBSERV_FRN) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "OBSERV_FRN", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -12024,7 +12024,7 @@ For lCpt = 1 To lTotLig
 
 	If Not IsNull ( sVal ) And sVal <> "" Then
 		If Pos ( sVal, "'", 1 ) > 0 Then
-//			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (FICHE PRODUIT) Les apostrophes d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$s ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$substitu$$HEX1$$e900$$ENDHEX$$s par des blancs" )
+//			This.uf_Trace ( "ECR", "INFO ligne " + String ( lCpt ) + " : (FICHE PRODUIT) Les apostrophes détectés ont été substitués par des blancs" )
 			idwFicFourn.SetItem ( lCpt, "FICHE_PRODUIT", F_Remplace ( sVal, "'", " " ) )
 		End If
 	End If 
@@ -12045,7 +12045,7 @@ For lCpt = 1 To lTotLig
 	If sVal <> "" And Not IsNumber ( sVal )  Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : La zone INDICATION_STOCK doit $$HEX1$$ea00$$ENDHEX$$tre un nombre." )
+		" : La zone INDICATION_STOCK doit être un nombre." )
 	End If 
 		
 
@@ -12060,7 +12060,7 @@ For lCpt = 1 To lTotLig
 		If Not IsNumber ( sVal ) Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : La remise doit $$HEX1$$ea00$$ENDHEX$$tre un montant (donc un nombre, $$HEX1$$e900$$ENDHEX$$ventuellement d$$HEX1$$e900$$ENDHEX$$cimal)" )
+			" : La remise doit être un montant (donc un nombre, éventuellement décimal)" )
 		End IF 
 	End If 		
 
@@ -12071,14 +12071,14 @@ For lCpt = 1 To lTotLig
 	If Not IsNumber ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : L'ID Cat$$HEX1$$e900$$ENDHEX$$gorie3 doit $$HEX1$$ea00$$ENDHEX$$tre un num$$HEX1$$e900$$ENDHEX$$rique" )
+		" : L'ID Catégorie3 doit être un numérique" )
 	End If 
 
 	If IsNumber ( sVal ) Then
 		If Long ( sVal ) < 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : L'ID Cat$$HEX1$$e900$$ENDHEX$$gorie3 doit $$HEX1$$ea00$$ENDHEX$$tre un num$$HEX1$$e900$$ENDHEX$$rique strictement positif" )
+			" : L'ID Catégorie3 doit être un numérique strictement positif" )
 		End If 
 	End If 
 
@@ -12097,7 +12097,7 @@ idwFicFourn.Filter ( )
 
 If idwFicFourn.RowCount() > 0 Then
 	iRet = -1
-	This.uf_Trace ( "ECR", "SUCCES : Des erreurs ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$d$$HEX1$$e900$$ENDHEX$$tect$$HEX1$$e900$$ENDHEX$$es, les lignes en erreurs ont $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$supprim$$HEX1$$e900$$ENDHEX$$es et le fichier est tout de m$$HEX1$$ea00$$ENDHEX$$me trait$$HEX1$$e900$$ENDHEX$$.")
+	This.uf_Trace ( "ECR", "SUCCES : Des erreurs ont été détectées, les lignes en erreurs ont été supprimées et le fichier est tout de même traité.")
 	idwFicFourn.RowsDiscard ( 1, idwFicFourn.RowCount(), Primary!)
 End If 
 
@@ -12115,7 +12115,7 @@ private function integer uf_integration_fichier_cdiscountpro (string ascas, ref 
 //* Fonction		: n_cst_pg_in_fic_article::uf_Integration_Fichier_CDISCOUNTPRO (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 18/09/2007
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Int$$HEX1$$e900$$ENDHEX$$gration du fichier CDISCOUNTPRO dans la base
+//* Libellé			: Intégration du fichier CDISCOUNTPRO dans la base
 //* Commentaires	: 18/09/2007 [DCMP090102]
 //*
 //* Arguments		: String		asCas			Val  "1ER_TOUR", "2EME_TOUR"
@@ -12184,13 +12184,13 @@ End If
 lTotLigFourn = idwFicFourn.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Initilisation de la trace d'int$$HEX1$$e900$$ENDHEX$$gration.                         */
+/* Initilisation de la trace d'intégration.                         */
 /*------------------------------------------------------------------*/
 If asCas = "1ER_TOUR" Then
 	This.uf_Trace_2 ( "INIT", 0, sIdFour, "", "", "", "" )
 
 /*------------------------------------------------------------------*/
-/* Suppression des lignes pr$$HEX1$$e900$$ENDHEX$$sentes dans la table articles et       */
+/* Suppression des lignes présentes dans la table articles et       */
 /* absentes du fichier.                                             */
 /*------------------------------------------------------------------*/
 	F_Execute ( "Exec sysadm.PS_D01_ARTICLE_CDISCOUNTPRO", SQLCA )
@@ -12216,7 +12216,7 @@ For alNbLig = 1 To lTotLigFourn
 	sIdModlArt1  = F_REMPLACE ( sIdModlArt1, "STOCKAGE", "STK" )		
 	sIdModlArt1  = F_REMPLACE ( sIdModlArt1, "COQUE", "COQ" )		
 	sIdModlArt1  = F_REMPLACE ( sIdModlArt1, "ANDROID", "ANDR" )		
-	sIdModlArt1  = F_REMPLACE ( sIdModlArt1, "G$$HEX1$$c900$$ENDHEX$$N$$HEX1$$c900$$ENDHEX$$RATION", "GEN" )		
+	sIdModlArt1  = F_REMPLACE ( sIdModlArt1, "GÉNÉRATION", "GEN" )		
 	sIdModlArt1  = F_REMPLACE ( sIdModlArt1, "CELLULAR", "CELL" )		
 	sIdModlArt1  = F_REMPLACE ( sIdModlArt1, "CELLULAIRE", "CELL" )		
 	sIdModlArt1  = F_REMPLACE ( sIdModlArt1, "NOUVEAU", "" )		
@@ -12226,7 +12226,7 @@ For alNbLig = 1 To lTotLigFourn
 	
 	
 	sIdModlArt  = Right ( sIdModlArt1, 35 )
-	sIdModlArt1 = Left ( sIdModlArt1, 35 ) // servira plus bas $$HEX2$$e0002000$$ENDHEX$$coller dans le commentaire
+	sIdModlArt1 = Left ( sIdModlArt1, 35 ) // servira plus bas à coller dans le commentaire
 	
 	sIdRefFour  = Upper ( Trim ( idwFicFourn.GetItemString ( alNbLig, "ID_REF_FOUR" ) ) )
 	sIdRefFourRacine = sIdRefFour  // [PM289-3]
@@ -12240,7 +12240,7 @@ For alNbLig = 1 To lTotLigFourn
 	// [PM289-3]
 	sIdCtg3 = Trim ( idwFicFourn.GetItemString ( alNbLig, "ID_CTG3"  ) )
 	sIdTypArt = sIdCtg3
-	dcEcoTaxeTTC = 0 // On ne tient plus compte de l'$$HEX1$$e900$$ENDHEX$$cotaxe, elle est $$HEX2$$e0002000$$ENDHEX$$pr$$HEX1$$e900$$ENDHEX$$sent comprise dans le TTC.
+	dcEcoTaxeTTC = 0 // On ne tient plus compte de l'écotaxe, elle est à présent comprise dans le TTC.
 
 	// [PM289-5]
 	sVal = idwFicFourn.GetItemString ( alNbLig, "REMISE" )
@@ -12297,7 +12297,7 @@ For alNbLig = 1 To lTotLigFourn
 												 1, idwArticle.RowCount () )
 			End If
 	
-			// On n'int$$HEX1$$e900$$ENDHEX$$gre que certaines c$$HEX1$$e900$$ENDHEX$$t$$HEX1$$e900$$ENDHEX$$gorie.
+			// On n'intégre que certaines cétégorie.
 			If lRow <= 0 Then 
 				bInsert = True
 				lRow = idwArticle.InsertRow ( 0 )
@@ -12324,7 +12324,7 @@ For alNbLig = 1 To lTotLigFourn
 			
 			// [PM289-3]
 			// [PM289-5]
-			// Mail H$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e800$$ENDHEX$$ne le 11/02/2020 08:59
+			// Mail Hélène le 11/02/2020 08:59
 			If dcRemiseTTC > 0 Then dcPrixHt = dcRemiseTTC 
 			
 			// [VDOC8076] // [PM289_CDP]
@@ -12337,7 +12337,7 @@ For alNbLig = 1 To lTotLigFourn
 			// :#1
 		
 			/*------------------------------------------------------------------*/
-			/* Code $$HEX1$$e900$$ENDHEX$$tat (-EI)                                                  */
+			/* Code état (-EI)                                                  */
 			/* 200 Nouveau                                                      */
 			/* 100 MAj_Ok sur existant                                          */
 			/*------------------------------------------------------------------*/
@@ -12350,8 +12350,8 @@ For alNbLig = 1 To lTotLigFourn
 				sIdModlIfr = Trim ( idwArticle.GetItemString  ( lRow, "ID_MODL_ART_IFR" ) )
 		
 				/*------------------------------------------------------------------*/
-				/* Si les marques et mod$$HEX1$$e800$$ENDHEX$$les IFR sont absent de l'enregistrement    */
-				/* exisant, on force ALT_DIPSPO $$HEX2$$e0002000$$ENDHEX$$NON.                              */
+				/* Si les marques et modèles IFR sont absent de l'enregistrement    */
+				/* exisant, on force ALT_DIPSPO à NON.                              */
 				/*------------------------------------------------------------------*/
 				If Isnull ( sIdMqIfr ) Or sIdMqIfr = "" Or Isnull ( sIdModlIfr ) Or sIdModlIfr = "" Then
 					idwArticle.SetItem ( lRow, "ALT_DISPO", "N" )				
@@ -12363,7 +12363,7 @@ For alNbLig = 1 To lTotLigFourn
 			// [VDOC6993]
 			Choose Case sIdTypArt 
 				Case "TEL", "PC1", "PC2" 
-					// Doit $$HEX1$$ea00$$ENDHEX$$tre mis $$HEX2$$e0002000$$ENDHEX$$la main pas Cell. Parte.
+					// Doit être mis à la main pas Cell. Parte.
 					// [VDOC6993]
 					If bInsert Then
 						sIdMarqArtIFr = Space (35) 
@@ -12419,7 +12419,7 @@ For alNbLig = 1 To lTotLigFourn
 		Loop // [PM289-3]
 	End If
 
-// Maj det_article pour le m$$HEX1$$e900$$ENDHEX$$dia code et le category code
+// Maj det_article pour le média code et le category code
 	If asCas = "2EME_TOUR" Then
 
 		dcPrixHTTrsp = dcPrixHTTrspFixePM289
@@ -12429,7 +12429,7 @@ For alNbLig = 1 To lTotLigFourn
 			lRow = SQLCA.PS_S01_DET_ARTICLE_TEST_PRESENCE ( sIdFour, sIdRefFour) 
 		End If
 
-		// On n'int$$HEX1$$e900$$ENDHEX$$gre que certaines c$$HEX1$$e900$$ENDHEX$$t$$HEX1$$e900$$ENDHEX$$gorie.
+		// On n'intégre que certaines cétégorie.
 		If lRow <= 0 Then 
 		
 			sSql  = "Exec sysadm.DW_I01_DET_ARTICLE "
@@ -12482,7 +12482,7 @@ Next
 
 
 /*------------------------------------------------------------------*/
-/* Suppression des lignes pr$$HEX1$$e900$$ENDHEX$$sentes dans la table articles et       */
+/* Suppression des lignes présentes dans la table articles et       */
 /* absentes du fichier.                                             */
 /*------------------------------------------------------------------*/
 /*
@@ -12535,7 +12535,7 @@ public function long uf_charger_fichierfournhalt (long alnumligerrimport, string
 //* Fonction		: n_cst_int_fic_article::uf_Charger_FichierFournHALT (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 18/02/2020
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Stoppe l'appli sans blocage sur la fen$$HEX1$$ea00$$ENDHEX$$tre Continue de l'importfile.
+//* Libellé			: Stoppe l'appli sans blocage sur la fenêtre Continue de l'importfile.
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -12550,19 +12550,19 @@ public function long uf_charger_fichierfournhalt (long alnumligerrimport, string
 Int		iRet
 Long     lTotLig 
 
-iRet = 1 // C'est le 1 du return ItemError, mais $$HEX1$$e700$$ENDHEX$$a n'aura pas d'importance, je stoppe l'appli $$HEX2$$e0002000$$ENDHEX$$cet endroit
+iRet = 1 // C'est le 1 du return ItemError, mais ça n'aura pas d'importance, je stoppe l'appli à cet endroit
 
 If Not gbOpCon Then Return 0
 
 iRet = -1
 lTotLig = -4
 ibErrIntegr = True // [PI065]
-This.uf_Trace ( "ECR", "Chargement du fichier : ERREUR IMPORTFILE (" + String ( lTotLig ) + ") ligne " + string (alNumLigErrImport) + ", colonne " + Upper ( asColLigErrImport ) + ", probl$$HEX1$$e800$$ENDHEX$$me de format de fichier, une donn$$HEX1$$e900$$ENDHEX$$e n'est pas du bon type ou est trop longue."  ) // [PI065]
-This.uf_Trace ( "ECR", "Chargement du fichier : Text posant probl$$HEX1$$e800$$ENDHEX$$me : " + Trim ( asData)  ) // [PI065]
+This.uf_Trace ( "ECR", "Chargement du fichier : ERREUR IMPORTFILE (" + String ( lTotLig ) + ") ligne " + string (alNumLigErrImport) + ", colonne " + Upper ( asColLigErrImport ) + ", problème de format de fichier, une donnée n'est pas du bon type ou est trop longue."  ) // [PI065]
+This.uf_Trace ( "ECR", "Chargement du fichier : Text posant problème : " + Trim ( asData)  ) // [PI065]
 
 This.uf_Sortie_OpCon ( "ECR", 341, "ERR341/CHARGFICFOUR", FALSE )						
 
-This.uf_Trace ( "ECR", "Le traitement se termine anormalement, le fichier n'a pas $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$trait$$HEX2$$e9002000$$ENDHEX$$!!!." )
+This.uf_Trace ( "ECR", "Le traitement se termine anormalement, le fichier n'a pas été traité !!!." )
 
 // idwSuiviTrt.ScrollToRow ( idwSuiviTrt.RowCount () )
 
@@ -12571,7 +12571,7 @@ If f_FileExists ( stGlb.sRepTempo + K_FICTMP ) Then FileDelete ( stGLB.sRepTempo
 This.uf_Trt_OpCon ( "FIN_TRT" )
 
 // Test RunTime
-RUN ( "taskkill /f  /im P_FR_APP_Simpa2_main_121.EXE /T", minimized! )
+RUN ( "taskkill /f  /im P_FR_APP_Simpa2_main_2022.EXE /T", minimized! )
 
 Return iRet
 end function
@@ -12581,8 +12581,8 @@ public subroutine uf_set_numligerrimport (long alnumligerrimport, string ascolli
 //* Fonction		: n_cst_int_fic_suivicmd::uf_Set_NumLigErrImport (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 07/04/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//*					  retourn$$HEX2$$e9002000$$ENDHEX$$dans le fichier.
+//* Libellé			: 
+//*					  retourné dans le fichier.
 //* Commentaires	: 
 //*
 //* Arguments		: 
