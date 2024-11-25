@@ -2097,7 +2097,7 @@ Set @sMessage  = @sMessage + 'Pour rappel, les traitements issus du PM02 sont sa
 
 EXEC master.dbo.SPB_PS_MAIL 
 		@sRetourErrMail OUTPUT, 
-		'ETHEVENON@spb.eu,JFF@spb.eu,fluxfidis@spb.eu',
+		'JFF@spb.eu,fluxfidis@spb.eu',
 --		'JFF@spb.eu',
 		@sMessage, 
 		@sObjet, 
@@ -2134,6 +2134,9 @@ If @@ROWCOUNT > 0
 		NULL, 
 		NULL
  End 
+
+-- 2ème écriture pour preuve de dépot
+Exec sysadm.PS_S_PM02_RESSORTIR_UN_FICHIER @iIdPeriode
 
 Set nocount off
 
@@ -2830,7 +2833,7 @@ If @iIdTrt < 0 Or @iIdTrt is null Set @iIdTrt = 0
 
 Set @sChemin = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\PM02_Factu_Broker_Reprise_Mat\'
 -- Set @sFichierFactExcel = '[PER]_[ID_TRT]_[BRK]_PM02_Facturation_Reprise_Materiel.xls'
-Set @sFichierFactExcel = '[PER]_[ID_TRT]_[BRK]_PM02_Fact_Repr_Mat.xls' -- Réduction du nom car pose problème avec le chemin réel (trop long) en lieu et place du DFS (plus court)
+Set @sFichierFactExcel = '[PER]_[ID_TRT]_[BRK]_PM02_Fact_Repr_Mat2.xls' -- Réduction du nom car pose problème avec le chemin réel (trop long) en lieu et place du DFS (plus court)
 
 
 If sysadm.FN_CLE_NUMERIQUE ( 'PM478-1') > 0 

@@ -224,6 +224,7 @@ Go
 --   JFF  01/09/2020  [VDOC29600]
 --   JFF  26/04/2023  [RS5045_REF_MATP]
 --   JFF  28/10/2024  [MCO1053]
+--   JFF  18/11/2024  [KSV649_ORREUCARA]
 ------------------------------------------------------------------- 
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I03_ARCHIVE_BLOB_VAL' AND type = 'P' )
 DROP procedure sysadm.PS_I03_ARCHIVE_BLOB_VAL
@@ -502,7 +503,7 @@ Select Top 1 @sMailRefus=sysadm.FN_CLE_VAL('ADR_MAIL_REFUS',val_car,';')
 	Where  s.id_sin = @dcIdSin
 	And    s.cod_etat = 200 -- Si dossier refusé, c'est le critère, vu avec Christine Quertier.
 	And	   dp.id_prod = s.id_prod
-	And    dp.id_code_dp in (249,217)
+	And    dp.id_code_dp in (249,217, 387, 388) -- [KSV649_ORREUCARA]
 	
 if @sMailRefus is not null
  Begin
