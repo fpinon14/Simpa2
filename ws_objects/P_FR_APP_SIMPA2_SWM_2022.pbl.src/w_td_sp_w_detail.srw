@@ -125,6 +125,7 @@ private function boolean wf_condition_ouverture (string aschoixaction)
 public function boolean wf_vdoc17797 ()
 public subroutine wf_marquageetatpiecesherpa (integer aid_pce, string asetat_pce, integer aiidi)
 public subroutine wf_marquageetatpiecesherpa_rs5656 (integer aid_gti, integer aid_detail, integer aid_pce, string asetat_pce, integer aiidi)
+public function string wf_etat_param_hub ()
 end prototypes
 
 on ue_quitteronglet011;call w_8_traitement_detail::ue_quitteronglet011;//*-----------------------------------------------------------------
@@ -2983,6 +2984,40 @@ gdsPieceSherpa.SetItem ( iRow, "ID_I", aiIdI )
 
 end subroutine
 
+public function string wf_etat_param_hub ();//*-----------------------------------------------------------------
+//*
+//* Fonction		: W_Td_Sp_W_Detail::wf_Etat_Param_hub
+//* Auteur			: FABRY JF
+//* Date				: 19/11/2024
+//* Libellé			: [KSV649_ORREUCARA]
+//* Commentaires	: Checke si nous sommes dans le cas d'un CUT OFF O2M et d'une Pésecnde du HUB
+//*
+//* Arguments		: Rien
+//*
+//* Retourne		: Boolean		Vrai = CUT OFF O2M et d'une Pésecnde du HUB
+//*										Faux = sinon
+//*
+//*-----------------------------------------------------------------
+
+Integer iRowHubPresent 
+Long lDeb, lFin
+
+// Hub Présent ?
+idwFourn.SetFilter ( "" )
+idwFourn.Filter ( )
+iRowHubPresent = idwFourn.Find ( "ID_CODE_FRN = 'HUB'", 1, idwFourn.RowCount ()) 
+
+// Cut OFF O2M
+F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 379 )
+
+If iRowHubPresent > 0 And lDeb > 0 Then Return "HUB_ET_CUT_OFF_O2M"
+If iRowHubPresent > 0 Then Return "HUB_SEUL"
+
+Return "PAS_DE_HUB"
+
+
+end function
+
 event ue_item5;call super::ue_item5;//*------------------------------------------------------------------------------
 //*
 //* Objet 			: W_Td_Sp_W_Detail
@@ -3119,6 +3154,7 @@ event ue_item5;call super::ue_item5;//*-----------------------------------------
 // 		JFF	10/05/2019 [PM445-1]
 //       JFF   17/09/2019 [DT447]
 // 		JFF	29/10/2020 [VDOC29781] 
+//       JFF   18/11/2024 [KSV649_ORREUCARA][HP252_276_HUB_PRESTA]
 //*----------------------------------------------------------------------------------
 
 Boolean	bCommander, bCmd, bCdiscount, bSavRDC, bDartyIPAD, bPRSTropVieille ,bPRSSAVTropVieille, bDejaEuMsg
@@ -3136,6 +3172,10 @@ Boolean bCmdeRempl
 Boolean bDelaiSavLaParisienne // [PM395-1]
 Long  lCodEtat // [BUG_ID_I_REG]
 Decimal dcIdProd, dcIdRev, dcIdGti, dcIdCie // [PM395-1]
+String sEtatParamHUB // [KSV649_ORREUCARA]
+
+// [KSV649_ORREUCARA]
+sEtatParamHUB = This.wf_Etat_Param_hub ()
 
 bCmd = True
 bRefusIpad=FALSE
@@ -3392,6 +3432,11 @@ Choose Case sChoixAction
 		sRech = ""
 
 End Choose 
+
+
+// [KSV649_ORREUCARA][HP252_276_HUB_PRESTA]
+If sEtatParamHUB = "HUB_SEUL" Then sRech = ""
+
 
 // [PC442]
 F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 168 )

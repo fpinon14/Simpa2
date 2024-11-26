@@ -24,6 +24,8 @@ u_DataWindow_Detail idw_LstGti
 DataWindow idw_DetPro
 DataWindow idw_wDetail
 
+StaticText		istAttenteDiverse
+
 Boolean			ibCodicDartyValide
 
 String isTypeTrt
@@ -40,9 +42,11 @@ public function long uf_zn_trt_divsin_accord_chubb (string asdata, string asnomc
 public function long uf_zn_trt_divsin_bloquedretude (string asdata, string asnomcol, long alrow)
 public function long uf_zn_trt_divsin_choixpack (string asdata, string asnomcol, long alrow, boolean abforcer)
 public function long uf_zn_trt_divsin_coqneprotgpas (string asdata, string asnomcol, long alrow)
-public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti)
 public function integer uf_zn_trt_divsin_personne_sin (string asdata, string asnomcol, long alrow)
 public subroutine uf_set_valinstance (string ascas, string asval)
+public function long uf_zn_trt_divsin_cra_ctrl_imei (string asdata, string asnomcol, long alrow)
+public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse)
+public function long uf_zn_trt_divsin_cra_suivi_imei (string asdata, string asnomcol, long alrow)
 end prototypes
 
 public function long uf_zn_trt_divsin_typeapp (string asdata, string asnomcol, long alrow, boolean abforcer);//*-----------------------------------------------------------------
@@ -654,41 +658,6 @@ Return iAction
 
 end function
 
-public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti);//*-----------------------------------------------------------------
-//*
-//* Fonction		: uf_initialiser_1 (Public)
-//* Auteur			: FABRY JF
-//* Date				: 12/11/2024
-//* Libellé			: 
-//* Commentaires	: Initialisation des instances pour l'objet numéro 2
-//*
-//* Arguments		: Voir arguments
-//*
-//* Retourne		: Rien
-//*
-//*-----------------------------------------------------------------
-
-iuoSpGsSinistre		= auoSpGsSinistre
-
-idw_detpro 				= adw_detpro
-idw_wsin   				= adw_wsin
-idw_lstwcommande 		= adw_lstwcommande
-idw_wdivsin 			= adw_wdivsin
-idw_wdivdet 			= adw_wdivdet
-
-ibCodicDartyValide	= abCodicDartyValide
-isTypeTrt				= asTypeTrt
-isReferentielApp		= asReferentielApp
-K_MAJZONE				= aK_MAJZONE
-idw_wDetail				= adw_wDetail
-
-idw_LstGti				= adw_LstGti
-
-
-
-
-end subroutine
-
 public function integer uf_zn_trt_divsin_personne_sin (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
 //*
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_Personne_Sin (PRIVATE)
@@ -802,6 +771,260 @@ Choose Case asCas
 		
 End Choose 
 end subroutine
+
+public function long uf_zn_trt_divsin_cra_ctrl_imei (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
+//*
+//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_Cra_Ctrl_Imei (PRIVATE)
+//* Auteur			: PHG
+//* Date				: 28/12/2006
+//* Libellé			: Contrôle de la zone CRA_CTRL_IMEI ( [CRAO_LOT1]
+//* Commentaires	: 
+//*
+//* Arguments		: String 		asData			Val
+//*					  String 		asNomCol			Val
+//*					  Long			alRow				Val
+//*					  Boolean		abForcer			Val
+//*
+//* Retourne		: long
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//* #..   ...   ../../.... 
+//* #1	 PHG	 09/09/2008		[DCMP080625] Désactivation controle 
+//*										Marque/modele Obligatoire
+//*									- Si marq/modele non saisi, on ne
+//*										peut demander un ctrl IMEI.
+//*									Note : fonction vide auparavant => PAs de tag.
+//        JFF   18/11/2024   [KSV649_ORREUCARA]
+//*-----------------------------------------------------------------
+
+String sCraCtrlImei, sModl, sMArq, sIMEI, sIdAdh, sVal
+Integer iAction
+Long lRow, lDeb, lFin, lIdSin
+Date dDteSurv
+Boolean bStopTrt 
+n_cst_string lnvString
+n_cst_gs_appel_api_generique ObjAppelAPI
+
+sCraCtrlImei = Upper ( Trim(asData ))
+bStopTrt = False
+
+// [KSV649_ORREUCARA]
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 387)
+If lDeb <= 0 Then 
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 388)
+End If 
+
+// Code existant, non lié à Orange Réunion&Caraïbes 2025
+If lDeb <= 0 Then 
+
+	sModl = Trim ( Upper ( idw_wSin.GetItemString ( 1, "MODL_PORT" ) ) )
+	sMarq = Trim ( Upper ( idw_wSin.GetItemString ( 1, "MARQ_PORT" ) ) )
+	
+	if ( lnvString.of_IsEmpty(sModl) or lnvString.of_IsEmpty(sMarq) ) and sCraCtrlImei = 'O' Then
+		idw_wDivSin.iiErreur = 2 // Voir w_tm_spsinistre.dw_w_div_sin::itemerror => Cas "VAL_ALT", Case 2
+		iAction = 1
+	Else
+		iAction = 0
+	End If
+
+End If 
+
+// [KSV649_ORREUCARA] Orange Réunion&Caraïbes 2025
+If lDeb > 0 Then
+	
+	sVal = iuoSpGsSinistre.uf_GestOng_Divers_Trouver ( "CRA_SUIVI_IMEI" )
+	If IsNull ( sVal) Or sVal = "" Then sVal = "0"
+	
+	If sVal <> "5" Then
+		stMessage.sTitre		= "URL API ORANGE REUNION"
+		stMessage.Icon			= Information!
+		stMessage.bErreurG	= FALSE
+		stMessage.Bouton		= Ok!
+		stMessage.sCode		= "API0008"
+		
+		F_Message ( stMessage )
+		bStopTrt = True
+		iAction = 2
+	End If 
+	
+	
+	// Chargement données
+	If iAction = 0 Then	
+		lIdSin = idw_WSin.GetItemNumber ( 1, "ID_SIN" )
+		sIMEI  = Trim ( idw_WSin.GetItemString ( 1, "NUM_IMEI_PORT" ) )
+		sIdAdh = Trim ( idw_WSin.GetItemString ( 1, "ID_ADH" ) )
+		dDteSurv = idw_WSin.GetItemDate ( 1, "DTE_SURV_DATE" ) 
+		
+		IF IsNull ( sIMEI ) Or sIMEI = "" Or IsNull ( sIdAdh ) Or sIdAdh = "" OR IsNull ( dDteSurv ) OR  dDteSurv = 1900-01-01 Then
+			idw_wDivSin.iiErreur = 18
+			iAction = 1
+		End If 
+	End If 
+	
+	// Message d'alerte, plus aucune modif sur ces champs
+	If iAction = 0 Then
+		stMessage.sTitre		= "URL API ORANGE REUNION"
+		stMessage.Icon			= Exclamation!
+		stMessage.bErreurG	= FALSE
+		stMessage.Bouton		= YesNo!
+		stMessage.sVar [1]   = "API_ORANGE_REUNION"
+		stMessage.sCode		= "API0002"
+		
+		If F_Message ( stMessage ) = 2 Then
+			bStopTrt = True
+			iAction = 2
+		End If 
+	End If 
+	
+	
+	// APPEL APi Orange Réunion
+	If iAction = 0 And Not bStopTrt Then
+		
+		ObjAppelAPI = Create n_cst_gs_appel_api_generique
+	
+		ObjAppelAPI.uf_api_orange_reunion_caller ( iuoSpGsSinistre, istAttenteDiverse, idw_wDivSin, lIdSin, sIMEI, dDteSurv, sIdAdh )
+		
+		If IsValid ( ObjAppelAPI ) Then Destroy ( ObjAppelAPI )
+		
+		iAction = 2
+		
+	End If 	
+End IF 
+
+
+Return iAction
+
+end function
+
+public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse);//*-----------------------------------------------------------------
+//*
+//* Fonction		: uf_initialiser_1 (Public)
+//* Auteur			: FABRY JF
+//* Date				: 12/11/2024
+//* Libellé			: 
+//* Commentaires	: Initialisation des instances pour l'objet numéro 2
+//*
+//* Arguments		: Voir arguments
+//*
+//* Retourne		: Rien
+//*
+//*-----------------------------------------------------------------
+
+iuoSpGsSinistre		= auoSpGsSinistre
+
+idw_detpro 				= adw_detpro
+idw_wsin   				= adw_wsin
+idw_lstwcommande 		= adw_lstwcommande
+idw_wdivsin 			= adw_wdivsin
+idw_wdivdet 			= adw_wdivdet
+
+ibCodicDartyValide	= abCodicDartyValide
+isTypeTrt				= asTypeTrt
+isReferentielApp		= asReferentielApp
+K_MAJZONE				= aK_MAJZONE
+idw_wDetail				= adw_wDetail
+
+idw_LstGti				= adw_LstGti
+
+istAttenteDiverse    = astAttenteDiverse
+
+
+
+end subroutine
+
+public function long uf_zn_trt_divsin_cra_suivi_imei (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
+//*
+//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_cra_suivi_imei (PRIVATE)
+//* Auteur			: Fabry JF
+//* Date				: 18/06/2013
+//* Libellé			: Contrôle de la zone 
+//* Commentaires	: 	
+//*
+//* Arguments		: String 		asData			Val
+//*					  String 		asNomCol			Val
+//*					  Long			alRow				Val
+//*
+//* Retourne		: long
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//        JFF   18/11/2024   [KSV649_ORREUCARA]
+//*-----------------------------------------------------------------
+
+String sEtatSuiviChgt, sIdMarq, sVal, sEtatSuiviActuel
+DataWindowChild dwChild
+Integer iAction
+Long lRow, lDeb, lFin, lRowCount, lCpt, lVal
+n_cst_string lnvPFCString
+
+sEtatSuiviChgt = Upper ( asData )
+sEtatSuiviActuel = iuoSpGsSinistre.uf_GestOng_Divers_Trouver ( "CRA_SUIVI_IMEI" )
+
+iAction = 0
+
+F_RechdetPro (lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ),"-DP",239)
+sVal = lnvPFCString.of_getkeyvalue (idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "VARIANTE", ";")			
+
+If lDeb > 0 And sVal = "ORANGE_OPEN_PRO" Then
+	
+	lRowCount = idw_LstGti.RowCount()
+	
+	For lCpt = 1 To lRowCount 
+		lVal = idw_LstGti.GetItemNumber ( lCpt, "COD_ETAT" )
+		
+		Choose Case lVal
+			Case 600
+				// On ne touche plus
+			Case Else
+				idw_LstGti.SetItem ( lCpt, "COD_ETAT", 0 ) 
+		End Choose
+		
+	Next 
+End If
+
+// [KSV649_ORREUCARA]
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 387)
+If lDeb <= 0 Then 
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 388)
+End If 
+
+If lDeb > 0 Then
+	Choose Case sEtatSuiviActuel
+		Case "20"
+			
+			Choose Case sEtatSuiviChgt
+				Case "2", "100"
+					stMessage.sTitre		= "URL API ORANGE REUNION"
+					stMessage.Icon			= Exclamation!
+					stMessage.bErreurG	= FALSE
+					stMessage.Bouton		= YesNo!
+					stMessage.sCode		= "API0009"
+					
+					If F_Message ( stMessage ) = 2 Then
+						iAction = 2
+						iuoSpGsSinistre.uf_gestong_divers_majzone( "CRA_SUIVI_IMEI", alrow, 2, Long ( sEtatSuiviActuel ) )
+					Else
+						idw_wDivSin.SetItem ( alrow, "ALT_PROT", "O" )
+						idw_WSin.SetFocus ()
+					End If
+					
+				Case Else 	
+					iAction = 1
+					idw_wDivSin.iiErreur = 8
+			End Choose 
+			
+		Case Else 	
+			iAction = 1
+			idw_wDivSin.iiErreur = 8			
+	End Choose 
+End If 
+// /[KSV649_ORREUCARA]
+
+Return iAction
+
+
+end function
 
 on u_gs_sp_sinistre_2.create
 call super::create

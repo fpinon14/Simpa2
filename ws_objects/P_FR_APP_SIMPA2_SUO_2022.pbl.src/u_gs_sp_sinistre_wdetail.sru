@@ -4050,6 +4050,7 @@ If bSC2FoyerNomade And Not IsNull ( iIdIReg ) And sVal <> "O" Then
 End If 
 
 // [DT424]
+/*
 If F_CLE_A_TRUE ( "DT424" ) Then
 	If lIdEvt = 1457 And ibIdEvtInterditCreation	Then
 		stMessage.bErreurG	= FALSE
@@ -4060,6 +4061,7 @@ If F_CLE_A_TRUE ( "DT424" ) Then
 		sPos = "ID_I_REG"
 	End If 
 End If
+*/
 
 // [PC202553_SELECTRA]
 If Not bDetailBloque And Not bAltReg And iEtat = 500 Then
@@ -12930,11 +12932,13 @@ If lRow > 0 Then
 End IF
 
 // [DT424]
+/*
 If F_CLE_A_TRUE ( "DT424" ) Then
 	If lIdEvtGetText = 1457 And ( lIdEvtITem <> lIdEvtGetText Or IsNUll ( lIdEvtITem  ) ) Then
 		ibIdEvtInterditCreation	 = TRUE
 	End If 	
 End If
+*/
 
 // [RS1507]
 

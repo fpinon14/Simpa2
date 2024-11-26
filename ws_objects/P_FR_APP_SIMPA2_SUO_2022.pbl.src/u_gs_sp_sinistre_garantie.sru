@@ -3541,9 +3541,11 @@ If lDeb > 0 And Not bExcluRefus1676 Then
 End If
 
 // [DT424]
+/*
 If F_CLE_A_TRUE ( "DT424" ) Then
 	If Not This.Uf_Rf_1676_2eme_Declenchement () Then Return ( False )
 End If
+*/
 
 // [PC947&977]
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_wSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 254 )
@@ -16349,6 +16351,25 @@ If lDeb > 0 And sVal = "ORANGE_OPEN_PRO" Then
 		End CHoose
 	End if
 End If
+
+// [KSV649_ORREUCARA]
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 387)
+If lDeb <= 0 Then 
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 388)
+End If 
+If lDeb > 0 Then
+	lRow = idw_wdivsin.Find("UPPER(NOM_ZONE)='CRA_SUIVI_IMEI'", 1, idw_wdivsin.RowCount())
+	If lRow> 0 Then
+		lVal = idw_wdivsin.GetItemNumber (lRow, "VAL_NBRE") 
+		If IsNull ( lVal ) Then lVal = 0
+		Choose Case lVal
+			Case 100
+				bRet = Uf_RF_EcrireRefus ( 1676 )
+		End CHoose
+	End if	
+End IF 
+
+
 
 Return ( bRet )
 

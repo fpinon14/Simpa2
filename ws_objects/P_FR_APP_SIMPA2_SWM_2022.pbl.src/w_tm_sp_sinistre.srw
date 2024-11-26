@@ -4349,6 +4349,7 @@ event dw_1::itemerror;//*-------------------------------------------------------
 //*       JFF	  27/03/2014  [DT076]
 //*       JFF    07/06/2021  [RS-496] Blocage modif dte_surv, si présence pré-script avec notion de dte_surv exploitée.
 //        JFF    05/08/2024  [MCO602_PNEU]
+//        JFF    18/11/2024  [KSV649_ORREUCARA]
 //*-----------------------------------------------------------------
 
 Long ll_return
@@ -4464,6 +4465,12 @@ If	ibErreur Then
 		Case 7
 			stMessage.bErreurG= False
 			stMessage.sCode	= "WSIN871"
+			
+		// [KSV649_ORREUCARA]			
+		Case 8 
+			stMessage.bErreurG= False
+			stMessage.sCode	= "WSIN909"
+			
 
 		End Choose
 
@@ -4649,6 +4656,11 @@ If	ibErreur Then
 		Case 3
 			stMessage.bErreurG	= False
 			stMessage.sCode		= "SFRP081"
+			
+		// [KSV649_ORREUCARA]			
+		Case 4 
+			stMessage.bErreurG= False
+			stMessage.sCode	= "WSIN909"			
 		End Choose
 
 	// #4
@@ -8239,6 +8251,7 @@ event itemerror;call super::itemerror;//*---------------------------------------
 //       JFF   23/06/2020 [PC202553_SELECTRA]
 //       JFF   26/09/2023 [RS5928_FRCH_CHQ]
 //       JFF   05/08/2024 [MCO602_PNEU]
+//       JFF   18/11/2024 [KSV649_ORREUCARA]
 //*-----------------------------------------------------------------
 
 Choose Case isErrCol
@@ -8429,6 +8442,15 @@ Choose Case isErrCol
 				stMessage.Bouton		= OK!
 				stMessage.sCode		= "WSIN754"  
 				
+			// [KSV649_ORREUCARA]
+			Case 8 // Manque donnée pour ctrle IMEI API
+				stMessage.sTitre		= "Modification interdite"
+				stMessage.Icon			= Information!
+				stMessage.bErreurG	= FALSE
+				stMessage.Bouton		= OK!
+				stMessage.sCode		= "WSIN908"		
+			
+				
 		End Choose
 
 	Case "VAL_ALT"
@@ -8560,7 +8582,13 @@ Choose Case isErrCol
 				stMessage.Bouton		= OK!
 				stMessage.sCode		= "GENE185"				
 
-
+			// [KSV649_ORREUCARA]
+			Case 18	// Manque donnée pour ctrle IMEI API
+				stMessage.sTitre		= "Données absentes"
+				stMessage.Icon			= Information!
+				stMessage.bErreurG	= FALSE
+				stMessage.Bouton		= OK!
+				stMessage.sCode		= "WSIN907"	
 				
 		End Choose		
 		
@@ -8653,7 +8681,12 @@ Choose Case isErrCol
 
 End Choose	
 
-F_Message ( stMessage )
+// [KSV649_ORREUCARA]
+If Not This.ibPasDeMessage Then
+	F_Message ( stMessage )
+End If 
+
+This.ibPasDeMessage = False // [KSV649_ORREUCARA]
 
 //Migration PB8-WYNIWYG-03/2006 FM
 //This.Uf_Reinitialiser ()

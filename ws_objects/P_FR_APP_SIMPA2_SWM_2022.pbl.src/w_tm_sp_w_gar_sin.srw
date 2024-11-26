@@ -689,13 +689,14 @@ private function boolean wf_condition_ouverture ();//*--------------------------
 //       JFF   11/05/2022  [RS2980_IFR]
 //       JFF   06/04/2023 [PMO139_RS4926]
 //       JFF   05/08/2024  [MCO602_PNEU]
+//       JFF   18/11/2024 [KSV649_ORREUCARA]
 //*-----------------------------------------------------------------
 
 String sTypApp, sVal, sMarque, sModele, sIMEI, sIMEICorrige, sTypeApp, sIMEIOrigLu, sResult, sChaineBcv, sCodeRet
 Long   lRow, lCodTel, lDeb2, lFin2, lDeb, lFin, lVal, lRowDS, lRowDet, lIdGti, lCptDetPro, lRow1, lRow2, lIdSin, lVal1, lVal2, lVal3 
 Decimal {2} dcMtValPub
 Boolean bOk, bTelephonie, bAppSin, bAlimSin, bBattSin, bModeRempl, bAccSin, bRecupDonnee, bRecupMateriel, bVarOrange, bFin 
-Integer iNatSinCplt
+Integer iNatSinCplt, iVal
 Int iAppSin, iAlimSin, iBattSin, iAccSin 	//* #5 [FNAC_PROD_ECH_TECH]
 Int iMethode205 
 Date dDteTicket
@@ -1801,6 +1802,39 @@ If lDeb > 0 Then
 		bOk = False
 	End If 
 End If
+
+// [KSV649_ORREUCARA] Ctrle IMei a-t-il eu lieu
+F_RechDetPro ( lDeb, lFin, idwDetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 387 )
+If lDeb <= 0 Then 
+	F_RechDetPro ( lDeb, lFin, idwDetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 388 )
+End If 
+
+If lDeb > 0 Then
+	lRow = idwWDivSin.find ( " UPPER(NOM_ZONE)='CRA_SUIVI_IMEI'", 1, idwWDivSin.rowCount() )
+	if lRow > 0 Then
+		iVal = idwWDivSin.GetItemNumber ( lRow, "VAL_NBRE" )
+		If isNull ( iVal ) Then iVal=0
+		
+		Choose Case iVal 
+			Case 2, 100
+				// Effectué, Ok (bon ou faux)
+			Case Else 
+				// Non effectué
+				stMessage.sTitre		= "Contrôle utilisation IMEI"
+				stMessage.Icon			= Information!
+				stMessage.bErreurG	= FALSE
+				stMessage.Bouton		= OK!
+				stMessage.sCode		= "WGAR441 "
+		
+				F_Message ( stMessage )
+				bOk = False
+				
+		End Choose 
+		
+	End if	
+
+End If 
+// /[KSV649_ORREUCARA] 
 
 Return bOk
 

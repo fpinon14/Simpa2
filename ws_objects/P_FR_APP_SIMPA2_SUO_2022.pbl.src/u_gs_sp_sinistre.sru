@@ -232,7 +232,6 @@ public subroutine uf_getautorisation (string asidnatcour, ref string asbin, ref 
 private function boolean uf_validation_finale_trt_particuliers ()
 private function boolean uf_validation_finale_mds_mail_nomade (string ascasgestionmds)
 private function boolean uf_validation_finale_mvl_mail_cycle ()
-private function long uf_zn_trt_divsin_cra_ctrl_imei (string asdata, string asnomcol, long alrow)
 private function long uf_zn_numimei_numport ()
 private function long uf_zn_numport ()
 public subroutine uf_gestong_divers_setfocus (string asnomzone)
@@ -326,7 +325,6 @@ private function long uf_zn_trt_divsin_modepaiementpaybox (string asdata, string
 private function boolean uf_validation_finale_eco_mail_samsung ()
 private function long uf_zn_trt_divsin_gti_non_activee (string asdata, string asnomcol, long alrow)
 private function string uf_controlergestion_caution (ref boolean abmessage, string ascas)
-private function long uf_zn_trt_divsin_cra_suivi_imei (string asdata, string asnomcol, long alrow)
 private function long uf_zn_id_territ (boolean abmodified)
 public function boolean uf_controlergestion_sanction_eco_usa ()
 private function boolean uf_controler_sepa (string ascodebq, string ascodeag, long alidinter)
@@ -6756,6 +6754,7 @@ private subroutine uf_cast_dtesurv ();//*---------------------------------------
 DateTime dtDteSurv
 Time tHeure
 String sHeure, sMinute
+Time tTime
 
 dtDteSurv	= idw_wSin.GetItemDateTime ( 1, "DTE_SURV" )
 If	IsNull ( dtDteSurv )	Then
@@ -6764,11 +6763,10 @@ If	IsNull ( dtDteSurv )	Then
 Else
 	sHeure = Trim ( idw_wSin.GetItemString ( 1, "HEU_SURV" ) )
 
-	// JFF le 29/10
 	If Len ( sHeure ) = 4 And IsNumber ( sHeure ) And Not IsNull ( sHeure ) And Long ( Left ( sHeure, 2 ) ) <= 23 And Long ( Right ( sHeure, 2 ) ) <= 59 Then
 		idw_wSin.SetItem ( 1, "DTE_SURV", DateTime ( Date ( dtDteSurv ), Time ( Left ( sHeure, 2 ) + ":" + Right ( sHeure, 2 ) + ":00" ) ) )
 	End If
-
+	
 	// On lit de nouveau
 	dtDteSurv	= idw_wSin.GetItemDateTime ( 1, "DTE_SURV" )
 	tHeure = Time ( dtDteSurv )
@@ -15687,6 +15685,7 @@ private subroutine uf_gestong_divers_caspart_finaux ();//*----------------------
 //    JFF   28/06/2022 [RS3074_CASTO]
 //    JFF   26/09/2023 [RS5928_FRCH_CHQ]
 //    JFF   22/11/2023 [RS6175_GC_SCRP_SIM2]
+//    JFF   18/11/2024 [KSV649_ORREUCARA]
 //*-----------------------------------------------------------------
 
 Long lTot, lCpt
@@ -15778,13 +15777,23 @@ For lCpt = 1 To lTot
 		// #4 [GEST_VAL_ACH_ADH]
 		//[PC581].[ECO_AVANTAGE]
 		// [PC694][SFR2012]
-		case "CRA_CPT_DMDE", &
-			  "CRA_DAT_GEN", &
-			   "MT_VAL_ACHAT_ADH", &
+		case "CRA_DAT_GEN", &
+			  "MT_VAL_ACHAT_ADH", &
 			  "ECO_AVANTAGE"
 			  
 			// Protection contre saisie
 			idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "O" )
+
+		// [KSV649_ORREUCARA]
+		Case "CRA_CPT_DMDE"
+
+			// Protection contre saisie
+			idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "O" )
+
+			sData = Trim ( This.uf_GestOng_Divers_Trouver ( "CRA_CPT_DMDE" ) )
+			If sData="" or IsNull ( sData ) Then sData="0"
+			This.uf_gestong_divers_majzone( "CRA_CPT_DMDE", lCpt, K_MAJZONE, sData )
+			
 
 			//	[PC767][PC874]
 		Case  "CRA_LAST_DTE", &
@@ -15844,6 +15853,25 @@ For lCpt = 1 To lTot
 					idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "O" )
 				End If 
 			End If 
+			
+			// [KSV649_ORREUCARA]
+			F_RechdetPro (lDeb, lFin, idw_DetPro, lIdProd,"-DP",387)
+			If lDeb <= 0 Then
+				F_RechdetPro (lDeb, lFin, idw_DetPro, lIdProd,"-DP",388)
+			End IF 
+			If lDeb > 0 Then
+				sData = Trim ( This.uf_GestOng_Divers_Trouver ( "CRA_SUIVI_IMEI" ) )
+				If sData="" Or IsNull ( sData ) Then sData="5"
+				
+				If sData = "20" Then
+					idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "N" ) 
+				Else
+					idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "O" ) 
+				End if 
+
+				This.uf_gestong_divers_majzone( "CRA_SUIVI_IMEI", lCpt, K_MAJZONE, sData )				
+			End iF 
+
 			
 		Case "CLASSE_CTG_SFR"			
 
@@ -16039,7 +16067,8 @@ For lCpt = 1 To lTot
 			  "MT_FRANCHISE_PAYBOX",&
 			  "DT432_ID_SIN_EMETTEUR",&
 			  "DT432_ID_SEQ_BATCH", &
-			  "RS1921_AMTRUST"
+			  "RS1921_AMTRUST",&
+			  "CTRL_IMEI_MANUEL"
 			  
   			  idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "O" )
 
@@ -17775,6 +17804,7 @@ private function long uf_zn_dtesurv ();//*--------------------------------------
 //* 		FPI	20/05/2014	[PM261-1]
 //*      JFF   24/06/2019 [PC192235]
 //*      JFF   07/06/2021 [RS-496] Blocage modif dte_surv, si présence pré-script avec notion de dte_surv exploitée.
+//       JFF   18/11/2024 [KSV649_ORREUCARA]
 //*-----------------------------------------------------------------
 
 Date dDteSurv, dDteAdh, dDteDecl, dDteOpt, dDteEffet 
@@ -17791,7 +17821,7 @@ String sMsg // #1
 Time tTime
 // 	[PC582-583] 
 Long lDeb, lFin, iIdScriptDeb
-String sValCar, sEffet, sDteEffet, sIdCanal
+String sValCar, sEffet, sDteEffet, sIdCanal, sHeure
 n_cst_string nvString
 Date dDtePivot
 Boolean bErrDp158
@@ -17895,6 +17925,21 @@ If bSC2FoyerNomade And idw_wDivDet.Find ( "NOM_ZONE = 'vetuste'", 1, idw_wDivDet
 	idw_wSin.iiErreur= 6
 	iAction = 1
 End If 
+
+// [KSV649_ORREUCARA]
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 387)
+If lDeb <= 0 Then 
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 388)
+End If 
+If lDeb > 0 Then
+	Choose Case This.uf_GestOng_Divers_Trouver ( "CRA_SUIVI_IMEI" )
+		Case "20", "2", "100"
+			idw_wSin.iiErreur= 8
+			iAction = 1			
+	End Choose 
+End IF 
+// /[KSV649_ORREUCARA]
+
 
 // #1 [DCMP070914]
 If	idw_wSin.iiErreur = 0 Then
@@ -18000,6 +18045,7 @@ Else
 //				If	dcIdRev <> ilDernierIdRev Then 
 				If True Then
 					idw_wSin.SetItem ( 1, "ID_REV", dcIdRev )
+
 					Uf_ChargerRevision ()
 					ilDernierIdRev = dcIdRev
 				End If
@@ -18291,6 +18337,7 @@ private function long uf_zn_numimeiport ();//*----------------------------------
 //        JFF   02/10/2014   [VDOC15485]
 //        JFF   07/03/2015   [ITSM367948]
 //        JFF   07/03/2024   [HP252_276_HUB_PRESTA]
+//        JFF   18/11/2024 [KSV649_ORREUCARA]
 //*-----------------------------------------------------------------
 
 Int iAction 
@@ -18385,6 +18432,21 @@ If This.uf_GestOng_Divers_Trouver( "TYPE_APP" ) = "TEL" Then
 	if bOption75 and Not ( isnull(sData) or lLen=0 ) &
 		and Not ( isnull(sNumPort) or len(sNumPort)=0 ) and lRow > 0 then uf_zn_numimei_numport()
 End If
+
+// [KSV649_ORREUCARA]
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 387)
+If lDeb <= 0 Then 
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 388)
+End If 
+If lDeb > 0 Then
+	Choose Case This.uf_GestOng_Divers_Trouver ( "CRA_SUIVI_IMEI" )
+		Case "20", "2", "100"
+			idw_wSin.iiErreur= 4
+			iAction = 1			
+	End Choose 
+End IF 
+// /[KSV649_ORREUCARA]
+
 
 If lRow <= 0 Then
 	iAction = 1
@@ -18905,7 +18967,7 @@ Choose Case asNomCol
 				
 				// [PC946_ORANGE_OPPRO]
 				Case "CRA_SUIVI_IMEI"
-					ll_ret = This.Uf_Zn_Trt_DivSin_cra_suivi_imei ( Upper ( asData ), Upper( asNomCol ), alRow )
+					ll_ret = iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_cra_suivi_imei ( Upper ( asData ), Upper( asNomCol ), alRow )
 					
 				// [DT058]
 				Case "ACCORD_CHUBB"
@@ -18947,7 +19009,7 @@ Choose Case asNomCol
 		Choose Case Upper ( asNomZone ) 
 
 			Case "CRA_CTRL_IMEI" // #3 [CRAO_LOT1]: Gestion de la Case à cocher "Demande de Controle IMEI"
-				ll_ret = This.Uf_Zn_Trt_DivSin_Cra_Ctrl_Imei ( Upper ( asData ), Upper( asNomCol ), alRow )
+				ll_ret = iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_Cra_Ctrl_Imei ( Upper ( asData ), Upper( asNomCol ), alRow )
 
 
 			Case "RGN_MDP_NET" // #4 Regénération du mdp
@@ -21893,53 +21955,6 @@ If bRet Then
 End If
 
 Return bRet
-
-end function
-
-private function long uf_zn_trt_divsin_cra_ctrl_imei (string asdata, string asnomcol, long alrow);
-//*-----------------------------------------------------------------
-//*
-//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_Cra_Ctrl_Imei (PRIVATE)
-//* Auteur			: PHG
-//* Date				: 28/12/2006
-//* Libellé			: Contrôle de la zone CRA_CTRL_IMEI ( [CRAO_LOT1]
-//* Commentaires	: 
-//*
-//* Arguments		: String 		asData			Val
-//*					  String 		asNomCol			Val
-//*					  Long			alRow				Val
-//*					  Boolean		abForcer			Val
-//*
-//* Retourne		: long
-//*
-//*-----------------------------------------------------------------
-//* MAJ   PAR      Date	     Modification
-//* #..   ...   ../../.... 
-//* #1	 PHG	 09/09/2008		[DCMP080625] Désactivation controle 
-//*										Marque/modele Obligatoire
-//*									- Si marq/modele non saisi, on ne
-//*										peut demander un ctrl IMEI.
-//*									Note : fonction vide auparavant => PAs de tag.
-//*-----------------------------------------------------------------
-
-String sCraCtrlImei, sModl, sMArq
-Integer iAction
-Long lRow, lDeb, lFin
-n_cst_string lnvString
-
-sCraCtrlImei = Upper ( Trim(asData ))
-
-sModl = Trim ( Upper ( idw_wSin.GetItemString ( 1, "MODL_PORT" ) ) )
-sMarq = Trim ( Upper ( idw_wSin.GetItemString ( 1, "MARQ_PORT" ) ) )
-
-if ( lnvString.of_IsEmpty(sModl) or lnvString.of_IsEmpty(sMarq) ) and sCraCtrlImei = 'O' Then
-	idw_wDivSin.iiErreur = 2 // Voir w_tm_spsinistre.dw_w_div_sin::itemerror => Cas "VAL_ALT", Case 2
-	iAction = 1
-Else
-	iAction = 0
-End If
-
-Return iAction
 
 end function
 
@@ -28159,6 +28174,7 @@ public subroutine uf_gestong_divers_majzone (string asnomzone, long alrow, integ
 //       JFF   06/04/2023 [PMO139_RS4926]
 //       JFF   26/09/2023 [RS5928_FRCH_CHQ]
 //       JFF   22/11/2023 [RS6175_GC_SCRP_SIM2]
+//       JFF   18/11/2024 [KSV649_ORREUCARA]
 //*-----------------------------------------------------------------
 
 Boolean	bMajZone
@@ -28270,8 +28286,17 @@ Choose Case asNomZone
 
 		bMajZone = True
 
-		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 75 )
-		If lDeb <= 0 Then Return
+		// [KSV649_ORREUCARA]
+		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 387 )
+		If lDeb <=0 Then 
+			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 388 )
+		End If 
+
+		// [KSV649_ORREUCARA]
+		If lDeb <=0 Then 
+			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 75 )
+			If lDeb <= 0 Then Return
+		End If 
 		
 		Choose Case aiTrt
 			case K_MAJZONE
@@ -28282,8 +28307,17 @@ Choose Case asNomZone
 							    // si CRA_CTRL_IMEI est positionné à O automatiquement suite uf_zn_numimeiport_numport.
 		bMajZone = True
 
-		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 75 )
-		If lDeb <= 0 Then Return
+		// [KSV649_ORREUCARA]
+		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 387 )
+		If lDeb <=0 Then 
+			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 388 )
+		End If 
+
+		// [KSV649_ORREUCARA]
+		If lDeb <=0 Then 
+			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 75 )
+			If lDeb <= 0 Then Return
+		End If 
 		
 		Choose Case aiTrt
 			case K_MAJZONE
@@ -28294,8 +28328,17 @@ Choose Case asNomZone
 
 		bMajZone = True
 
-		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 75 )
-		If lDeb <= 0 Then Return
+		// [KSV649_ORREUCARA]
+		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 387 )
+		If lDeb <=0 Then 
+			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 388 )
+		End If 
+
+		// [KSV649_ORREUCARA]
+		If lDeb <=0 Then 
+			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 75 )
+			If lDeb <= 0 Then Return
+		End If 
 		
 		Choose Case aiTrt
 			case K_MAJZONE
@@ -28307,8 +28350,17 @@ Choose Case asNomZone
 
 		bMajZone = True
 
-		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 75 )
-		If lDeb <= 0 Then Return
+		// [KSV649_ORREUCARA]
+		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 387 )
+		If lDeb <=0 Then 
+			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 388 )
+		End If 
+
+		// [KSV649_ORREUCARA]
+		If lDeb <=0 Then 
+			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 75 )
+			If lDeb <= 0 Then Return
+		End If 
 		
 		Choose Case aiTrt
 			case K_MAJZONE
@@ -39181,58 +39233,6 @@ Choose Case asCas
 End Choose 
 
 return sPos
-end function
-
-private function long uf_zn_trt_divsin_cra_suivi_imei (string asdata, string asnomcol, long alrow);
-//*-----------------------------------------------------------------
-//*
-//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_cra_suivi_imei (PRIVATE)
-//* Auteur			: Fabry JF
-//* Date				: 18/06/2013
-//* Libellé			: Contrôle de la zone 
-//* Commentaires	: 	
-//*
-//* Arguments		: String 		asData			Val
-//*					  String 		asNomCol			Val
-//*					  Long			alRow				Val
-//*
-//* Retourne		: long
-//*
-//*-----------------------------------------------------------------
-//* MAJ   PAR      Date	     Modification
-//*-----------------------------------------------------------------
-
-String sTypeApp, sIdMarq, sVal
-DataWindowChild dwChild
-Integer iAction
-Long lRow, lDeb, lFin, lRowCount, lCpt, lVal
-n_cst_string lnvPFCString
-
-sTypeApp = Upper ( asData )
-iAction = 0
-
-F_RechdetPro (lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ),"-DP",239)
-sVal = lnvPFCString.of_getkeyvalue (idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "VARIANTE", ";")			
-If lDeb > 0 And sVal = "ORANGE_OPEN_PRO" Then
-	
-	lRowCount = idw_LstGti.RowCount()
-	
-	For lCpt = 1 To lRowCount 
-		lVal = idw_LstGti.GetItemNumber ( lCpt, "COD_ETAT" )
-		
-		Choose Case lVal
-			Case 600
-				// On ne touche plus
-			Case Else
-				idw_LstGti.SetItem ( lCpt, "COD_ETAT", 0 ) 
-		End Choose
-		
-	Next 
-End If
-
-Return iAction
-
-
 end function
 
 private function long uf_zn_id_territ (boolean abmodified);//*-----------------------------------------------------------------
@@ -54124,7 +54124,8 @@ iUoGsSpSinistre2.uf_initialiser_1 (	&
 	isreferentielapp, &
 	K_MAJZONE, &
 	idw_wDetail, &
-	idw_LstGti &
+	idw_LstGti, &
+	istAttenteDiverse &
 	)
 // /[20241112110249883][DIVOBJ][JFF]
 end subroutine
