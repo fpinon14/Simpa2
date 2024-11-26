@@ -23827,7 +23827,7 @@ If sIdfour="HUB" And &
 				Choose Case sIdRefFour
 					Case "A_DIAGNOSTIQUER", &
 						  "REFUSE_A_REEXP", &
-						  "PEC_A_RECYLER", &
+						  "PEC_A_RECYCLER", &
 						  "CODE_VERROU", &
 						  "A_REPARER_FORCE", &
 						  "A_DIAG_FORCE"
