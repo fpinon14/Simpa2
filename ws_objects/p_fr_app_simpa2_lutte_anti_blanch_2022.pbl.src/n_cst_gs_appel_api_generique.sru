@@ -41,9 +41,17 @@ asIdAdh = Right ( Fill ( "0", 12 ) + asIdAdh, 12 )
 sUrl = Trim ( ProfileString (stglb.sfichierini ,"API_ORANGE_REUNION","URL_API","*"))
 
 /*
+Pour la simulation : 
 User : spb
 PassWord : 2qGcN_tTIoi87A
 Crypté par PostMan en Format 64 : c3BiOjJxR2NOX3RUSW9pODdB
+
+Pour la production : 
+User : spb
+PassWord : 572jb5T8aASuCh
+Crypté par PostMan en Format 64 : c3BiOjU3MmpiNVQ4YUFTdUNo
+
+
 */
 sCleAuthent = Trim ( ProfileString (stglb.sfichierini,"API_ORANGE_REUNION","AUTHKEY","*"))
 
