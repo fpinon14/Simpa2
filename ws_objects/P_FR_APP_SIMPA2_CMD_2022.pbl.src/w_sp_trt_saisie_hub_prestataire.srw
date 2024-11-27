@@ -73,6 +73,14 @@ String isAdrMailAss
 String isIdHubPresta
 
 String isIdAdh, isLibGrpContractant
+String isPays
+String isEtatAppSin
+
+Decimal { 2 } idcMtValAchat
+Decimal { 2 } idcMtPec
+
+DateTime idtDteAchat
+
 Int 	 iiIdGrpContractant
 
 Long   ilIdprod
@@ -337,7 +345,7 @@ public subroutine wf_recuperation_point_service ();//*--------------------------
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #..   ...   ../../....   
+//* 		 JFF  27/11/2024  [20241127082353640]
 //*-----------------------------------------------------------------
 
 
@@ -381,6 +389,7 @@ dw_1.SetTransObject ( itrHubPrestataire )
 
 sTypDom = lnvPFCString.of_Getkeyvalue ( isChaineRetour, "HP_TYP_DOM", ";")
 
+// [20241127082353640] ajout idcMtValAchat à isEtatAppSin
 iTotRow = dw_1.Retrieve ( & 
 	iCle, &
 	ilIdprod, &
@@ -402,7 +411,11 @@ iTotRow = dw_1.Retrieve ( &
 	isAdrCplt, &
 	isAdrCp, &
 	isAdrVille, &
-	sCodePays )	
+	sCodePays, &
+	idcMtValAchat, &		
+	idcMtPec, &		
+	String ( idtDteAchat, "dd/mm/yyyy" ), &
+	isEtatAppSin )	
 
 If iTotRow = 1 And Upper ( dw_1.GetItemString ( 1, "idHubPresta" )) = "AUCUN" Then 
 	iTotRow = 0
@@ -823,7 +836,7 @@ public function boolean wf_valider_type_dommage_et_action ();//*----------------
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #..   ...   ../../....   
+//* 		 JFF  27/11/2024  [20241127082353640]
 //*-----------------------------------------------------------------
 
 
@@ -861,6 +874,15 @@ Choose Case isTypActionS2
 		stMessage.sVar[6]    = sSelectionTypDom
 		stMessage.sVar[7]    = isTypActionS2	
 
+		// [20241127082353640]
+		stMessage.sVar[8]    = isAdrCp
+		stMessage.sVar[9]    = isPays
+		stMessage.sVar[10]   = String ( idcMtValAchat, "#,##0.00 \"+stGlb.smonnaiesymboledesire )
+		stMessage.sVar[11]   = String ( idcMtPec, "#,##0.00 \"+stGlb.smonnaiesymboledesire )
+		stMessage.sVar[12]   = String ( idtDteAchat, "dd/mm/yyyy" )		
+		stMessage.sVar[13]   = isEtatAppSin 			
+		
+
 
 	Case Else
 		sSelectionTypDom = ""
@@ -870,7 +892,16 @@ Choose Case isTypActionS2
 		stMessage.sVar[3]    = isMarqAppSin
 		stMessage.sVar[4]    = isModlAppSin
 		stMessage.sVar[5]    = isTypAppSin	
-		stMessage.sVar[6]    = isTypActionS2	
+		stMessage.sVar[6]    = isTypActionS2
+
+		// [20241127082353640]		
+		stMessage.sVar[7]    = isAdrCp
+		stMessage.sVar[8]    = isPays
+		stMessage.sVar[9]   = String ( idcMtValAchat, "#,##0.00 \"+stGlb.smonnaiesymboledesire )
+		stMessage.sVar[10]   = String ( idcMtPec, "#,##0.00 \"+stGlb.smonnaiesymboledesire )
+		stMessage.sVar[11]   = String ( idtDteAchat, "dd/mm/yyyy" )		
+		stMessage.sVar[12]   = isEtatAppSin 			
+		
 	
 End Choose 
 
@@ -879,7 +910,24 @@ dsTypActionHub = Create dataStore
 dsTypActionHub.DataObject = "d_trt_saisie_hub_type_action"
 dsTypActionHub.SetTransObject ( itrHubPrestataire )
 
-iRow = dsTypActionHub.Retrieve ( iCle, ilIdprod, ilIdGti, isMarqAppSin, isModlAppSin, isTypAppSin, sSelectionTypDom, isTypActionS2 )
+// [20241127082353640] ajout isAdrCp à isEtatAppSin
+iRow = dsTypActionHub.Retrieve ( &
+		iCle, &
+		ilIdprod, &
+		ilIdGti, &
+		isMarqAppSin, &
+		isModlAppSin, &
+		isTypAppSin, &
+		sSelectionTypDom, &
+		isTypActionS2, &
+		isAdrCp, &
+		isPays, &
+		idcMtValAchat, &
+		idcMtPec, &				
+		String ( idtDteAchat, "dd/mm/yyyy" ), &
+		isEtatAppSin &
+		)
+
 
 Choose Case isTypActionS2
 	Case "PEC_A_RECYCLER", "REFUSE_A_REEXP"
@@ -1081,7 +1129,7 @@ public subroutine wf_recuperation_process_acheminement ();//*-------------------
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #..   ...   ../../....   
+//* 		 JFF  27/11/2024  [20241127082353640]
 //*-----------------------------------------------------------------
 
 String sTypDom, sVal, sCodePays, sVal1
@@ -1141,6 +1189,7 @@ sIdFour = F_CLE_VAL ( "HP_ID_FOUR", isChaineRetour, ";")
 sIdPointService = F_CLE_VAL ( "HP_ID_POINT_SERV", isChaineRetour, ";")
 sIdModeLogis = F_CLE_VAL ( "HP_ID_MODE_LOGIS", sIdModeLogis, ";")
 
+// [20241127082353640] ajout idcMtValAchat à isEtatAppSin
 iTotRow = dw_1.Retrieve ( & 
 	iCle, &
 	ilIdprod, &
@@ -1165,7 +1214,11 @@ iTotRow = dw_1.Retrieve ( &
 	sCodePays, &
 	sIdFour, &
 	sIdPointService, &
-	sIdModeLogis )	
+	sIdModeLogis, &
+	idcMtValAchat, &		
+	idcMtPec, &		
+	String ( idtDteAchat, "dd/mm/yyyy" ), &
+	isEtatAppSin )		
 
 If iTotRow <= 0 Then
 	stMessage.sTitre		= "Erreur Hub Prestataire"
@@ -1278,7 +1331,7 @@ event open;//*-----------------------------------------------------------------
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #..   ...   ../../....   
+//* 		 JFF  27/11/2024  [20241127082353640]
 //*-----------------------------------------------------------------
 
 s_pass stPass
@@ -1334,6 +1387,15 @@ Choose Case isTrtFen
 		isPrenomAssure = stPass.sTab[13]
 		
 		isAdrMailAss   = stPass.sTab[14]
+
+		isPays			= stPass.sTab[15] // [20241127082353640]
+		isEtatAppSin	= stPass.sTab[16] // [20241127082353640]
+		
+		idcMtValAchat	= stPass.dcTab[1] // [20241127082353640]
+		idcMtPec			= stPass.dcTab[2] // [20241127082353640]		
+
+		idtDteAchat    = stPass.dtTab[1] // [20241127082353640]		
+
 
 		If isTypActionS2 = "A_COMMANDER" Then
 			cb_valider.PostEvent ( clicked! )

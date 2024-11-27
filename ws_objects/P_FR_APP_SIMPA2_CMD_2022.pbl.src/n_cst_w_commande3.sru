@@ -28949,6 +28949,7 @@ private function integer uf_zn_choix_regle_hub (string ascas, long alidprod, lon
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
+//* 		 JFF  27/11/2024  [20241127082353640]
 //*---------------------------------------------------------------
 
 s_Pass	stPass
@@ -28956,6 +28957,7 @@ String   sRetHubPrestataire, sAdrMail, sVal, sVal1, sVar, sCodeVerrou, sRetHubPr
 String   sTabValRet []
 Integer  iRet, iRow, iTotTabValRet, iCpt, iIdSeqPrestaHubOrig 
 n_cst_string lnvPFCString 
+Long lRow
 
 stPass.ltab[1] = alIdProd
 stPass.ltab[2] = alIdGti
@@ -28975,7 +28977,6 @@ stPass.sTab[8] = idwCmde.GetItemString ( 1, "ADR_LIVR2" )
 stPass.sTab[9] = idwCmde.GetItemString ( 1, "ADR_LIVR_CPL" )
 stPass.sTab[10]= idwCmde.GetItemString ( 1, "ADR_CP" )
 stPass.sTab[11]= idwCmde.GetItemString ( 1, "ADR_VILLE" )
-
 stPass.sTab[12]= idwWsin.GetItemString  ( 1, "NOM" ) 
 stPass.sTab[13]= idwWsin.GetItemString  ( 1, "PRENOM" ) 
 
@@ -28988,7 +28989,24 @@ If iRow > 0 Then
 	End If
 End If	
 
+stPass.sTab[15]= "FR"  // Pays [20241127082353640]
+
+// Pays [20241127082353640]
+lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'TYPAPP_REC_NEU'", 1, idwWDivSin.RowCount () ) 
+If lRow > 0 Then
+	stPass.sTab[16] = idwWDivSin.GetItemString ( lRow, "VAL_LST_CAR" )
+End If
+
 stPass.sTab[50] = "CREATION_PRESTATION"
+
+
+stPass.dcTab[1]= idwDetail.GetItemDecimal ( 1, "MT_VAL_ACHAT" ) // [20241127082353640]
+stPass.dcTab[2]= idcMtPec // [20241127082353640]
+
+stPass.dtTab[1]= idwWsin.GetItemDateTime ( 1, "DTE_ACH_PORT" ) // [20241127082353640]
+
+
+
 
 Choose Case ascas
 	
@@ -29122,9 +29140,6 @@ Choose Case ascas
 
 
 End Choose 
-
-
-
 
 Return aiRet
 end function
