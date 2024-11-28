@@ -3000,18 +3000,59 @@ public function string wf_etat_param_hub ();//*---------------------------------
 //*-----------------------------------------------------------------
 
 Integer iRowHubPresent 
-Long lDeb, lFin
+Long lDeb, lFin, lRow
+String sLstAppHub, sVal, sTypApp, sIdFourO2mOuHubPresta
+Boolean bDp379
 
-// Hub Présent ?
-idwFourn.SetFilter ( "" )
-idwFourn.Filter ( )
-iRowHubPresent = idwFourn.Find ( "ID_CODE_FRN = 'HUB'", 1, idwFourn.RowCount ()) 
+If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
+	If F_CLE_A_TRUE ( "HP252_276_CUTOFF_O2M" ) Then
 
-// Cut OFF O2M
-F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 379 )
+		bDp379 = False
+		
+		lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'TYPE_APP'", 1, idwWDivSin.RowCount () ) 
+		//Si Row non trouvé alors HP interdit
+		If lRow <= 0 Then 
+			sTypApp = ""
+		Else
+			sTypApp = Upper ( idwWDivSin.GetItemString ( lRow, "VAL_LST_CAR" ) )
+		End If
+		
+		// Hub Présent ?
+		idwFourn.SetFilter ( "" )
+		idwFourn.Filter ( )
+		iRowHubPresent = idwFourn.Find ( "ID_CODE_FRN = 'HUB'", 1, idwFourn.RowCount ()) 
+		
+		
+		// Cut OFF O2M
+		F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 379 )
+		If lDeb > 0 Then
+			bDp379 = True
+			
+			sIdFourO2mOuHubPresta = "VERS_O2M"
+			
+			//[HP252_276_HUB_PRESTA][HUB577]
+			sVal = idwDetPro.GetItemString ( lDeb, "VAL_CAR" )
+			sLstAppHub = F_CLE_VAL ( "TYP_APP_HUB", sVal, ";" )
+			If IsNull ( sLstAppHub ) Then sLstAppHub = ""
+			
+			// Si Pas de liste Hub spécifie, tous les appareils vont vers le HUB
+			If sLstAppHub = "" Then
+				sIdFourO2mOuHubPresta = "VERS_LE_HUB"		
+		
+			// Sinon si AMU app Hub Spécifié, alors ce sont uniquement les app de la liste qui vont vers le HUB
+			Else
+				If Pos ( sLstAppHub, "#" + sTypApp + "#", 1 ) > 0 Then					
+					sIdFourO2mOuHubPresta = "VERS_LE_HUB"
+				End If 
+			End IF 
+		End If 
+		
+		If iRowHubPresent > 0 And bDp379 And sIdFourO2mOuHubPresta = "VERS_O2M" Then Return "HUB_ET_CUT_OFF_O2M_VERS_O2M"
+		If iRowHubPresent > 0 And bDp379 And sIdFourO2mOuHubPresta = "VERS_LE_HUB" Then Return "HUB_ET_CUT_OFF_O2M_VERS_HUB"
+		If iRowHubPresent > 0 Then Return "HUB_SEUL"
 
-If iRowHubPresent > 0 And lDeb > 0 Then Return "HUB_ET_CUT_OFF_O2M"
-If iRowHubPresent > 0 Then Return "HUB_SEUL"
+	End IF 
+End If 
 
 Return "PAS_DE_HUB"
 

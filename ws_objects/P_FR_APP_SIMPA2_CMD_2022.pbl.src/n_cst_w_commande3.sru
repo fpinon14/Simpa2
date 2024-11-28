@@ -19066,7 +19066,7 @@ If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 			If lDeb > 0 Then
 				
 				//[HP252_276_HUB_PRESTA][HUB577]
-				sVal = idw_DetPro.GetItemString ( lCptDetPro, "VAL_CAR" )
+				sVal = idw_DetPro.GetItemString ( lDeb, "VAL_CAR" )
 				sLstAppHub = F_CLE_VAL ( "TYP_APP_HUB", sVal, ";" )
 				If IsNull ( sLstAppHub ) Then sLstAppHub = ""
 				
