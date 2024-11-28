@@ -32087,7 +32087,8 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> "" Then
 		Choose Case sVal
 			Case "STATION", &
-				  "DOMICILE"
+				  "DOMICILE", &
+				  "DISTANCE" 
 			
 					// Ok
 					
@@ -33225,7 +33226,6 @@ For lCpt = 1 To lTotLig
 	If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
 		lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "SITE_ACTION", sVal, ";")
 	End If
-
 
 	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "AUTRES_INFOS_REMPL" ) ) )
 	If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
