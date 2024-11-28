@@ -8,12 +8,14 @@
 --
 -- Procédures           :       
 -------------------------------------------------------------------
--- edi.PS_HP276_SIU_EXECUTE_SQL_CMDE   
 -- edi.PS_HP276_I_HP_INSERTION_ACTIVITY_HUB_TO_SIMPA2
 -- edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2
+-- edi.PS_HP276_I_HP_TRANSFERT_PRESTA_VERS_HUB_PRESTATAIRE
 -- edi.PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATAIRE
+-- edi.PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_HUB_PRESTAIRE_A_SIMPA2
 -- edi.PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_SIMPA2_AU_HUB_PRESTAIRE
 -- edi.PS_HP276_S_HP_POINT_DE_SERVICE
+-- edi.PS_HP276_S_HP_PROCESS_ACHEMINEMENT
 -- edi.PS_HP276_S_HP_RECUPERER_EN_MASSE_LES_PRESTATIONS_A_TRAITER
 -- edi.PS_HP276_S_HP_TYPE_ACTION
 -- edi.PS_HP276_S_HP_TYPE_DOMMAGE
@@ -299,23 +301,13 @@ If @aiCas in ( 1, 2 )
 -------------------------------------------------------------------------------
 If @aiCas = 3 
   Begin
-	Select 'TOTO'
-	/*   ( SELECT exemple, fais ton propre SELECT )
-
-	SELECT id_code_typ_dom 'id_code_td_hp',
-		   lin_typ_dom 'lib_td_hp'
-
-	FROM
-
-	WHERE [produit_hub]=@adcIdProd
-	And   [garantie_hub]=@adcIdGti
-	And   [MarqAppSin_hub]=@asMarqAppSin
-	And   [ModlAppSin_hub]=@asModlAppSin
-	And   [TypAppSin_hub]=@asTypAppSin
-
-	ORDER BY
-
-	*/
+		Exec edi.PS_HP276_S_HP_TYPE_DOMMAGE_HUB
+			@aiCas				,
+			@aiIdProd			,
+			@aiIdGti			,
+			@asMarqAppSin		,
+			@asModlAppSin		,
+			@asTypAppSin		
   End
 Go
 
@@ -332,6 +324,8 @@ Go
 --
 -- Retourne             :       rien
 -------------------------------------------------------------------
+-- JFF  27/11/2024  [20241127082353640]
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_TYPE_ACTION' AND type = 'P' )
         DROP procedure edi.PS_HP276_S_HP_TYPE_ACTION
 GO
@@ -345,8 +339,18 @@ CREATE procedure edi.PS_HP276_S_HP_TYPE_ACTION
 		@asModlAppSin		VarChar ( 35 ),
 		@asTypAppSin		VarChar ( 35 ),
 		@asTypDommage		VarChar ( 100 ),
-		@asTypPrestation    VarChar ( 20 )
+		@asTypPrestation    VarChar ( 20 ),
+		@asAdrCP			VarChar ( 5 ),  -- [20241127082353640]
+		@asCodePays			VarChar ( 5 ), -- [20241127082353640]
+		@adcMtValAchat		Decimal ( 11, 2 ) , -- [20241127082353640]
+		@adcMtPriseEnCharge decimal ( 11, 2 ) , -- [20241127082353640]
+		@asDateAchat		VarChar ( 10 ),  -- [20241127082353640]
+		@asEtatAppSin		VarChar ( 20 ) -- [20241127082353640]
 AS
+
+Declare @dtDateAchat DateTime
+
+Set @dtDateAchat = convert ( DateTime, @asDateAchat, 103 )
 
 ---------------------------------------------------------------------------------
 -- Cas Test Pour JF sur la base SIMPA2 Et HUB PRESTA, Retour en dur (bouchon)  --
@@ -376,27 +380,20 @@ If @aiCas in ( 1, 2 )
 -------------------------------------------------------------------------------
 If @aiCas = 3 
   Begin
-	Select 'TOTO'
-		/*
-
-		( SELECT exemple, fais ton propre SELECT )
-
-		SELECT id_code_action_hp 'id_code_action_hp',
-			   lib_action_hp 'lib_action_hp'
-
-		FROM
-
-		WHERE [produit_hub]=@adcIdProd
-		And   [garantie_hub]=@adcIdGti
-		And   [MarqAppSin_hub]=@asMarqAppSin
-		And   [ModlAppSin_hub]=@asModlAppSin
-		And   [TypAppSin_hub]=@sTypAppSin
-		And   [typDommangeHub]=@asTypDommage
-
-		ORDER BY
-
-
-		*/
+		Exec edi.PS_HP276_S_HP_TYPE_ACTION_HUB
+			@adcIdProd			,
+			@adcIdGti			,
+			@asMarqAppSin		,
+			@asModlAppSin		,
+			@asTypAppSin		,
+			@asTypDommage		,
+			@asTypPrestation    ,
+			@asAdrCP			,  
+			@asCodePays			, 
+			@adcMtValAchat		, 
+			@adcMtPriseEnCharge , 
+			@dtDateAchat 		,  
+			@asEtatAppSin		
   End
 
 Go
@@ -413,6 +410,8 @@ Go
 --								Prévoir de changer le schéma sysdam en [edi] pour la compil sur la base du HUB
 --
 -- Retourne             :       rien
+-------------------------------------------------------------------
+-- JFF  27/11/2024  [20241127082353640]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_POINT_DE_SERVICE' AND type = 'P' )
         DROP procedure edi.PS_HP276_S_HP_POINT_DE_SERVICE
@@ -440,9 +439,16 @@ CREATE procedure edi.PS_HP276_S_HP_POINT_DE_SERVICE
 		@asAdrCplt			VarChar ( 35 ),
 		@asAdrCP			VarChar ( 5 ),
 		@asAdrVille			VarChar ( 35 ),
-		@asCodePays			VarChar ( 5 )
-
+		@asCodePays			VarChar ( 5 ),
+		@adcMtValAchat		Decimal ( 11, 2 ) , -- [20241127082353640]
+		@adcMtPriseEnCharge decimal ( 11, 2 ) , -- [20241127082353640]
+		@asDateAchat		VarChar ( 10 ),  -- [20241127082353640]
+		@asEtatAppSin		VarChar ( 20 ) -- [20241127082353640]
 AS
+
+Declare @dtDateAchat DateTime
+
+Set @dtDateAchat = convert ( DateTime, @asDateAchat, 103 )
 
 ---------------------------------------------------------------------------------
 -- Cas Test Pour JF sur la base SIMPA2 Et HUB PRESTA, Retour en dur (bouchon)  --
@@ -624,18 +630,31 @@ If @aiCas in ( 1, 2 )
 -------------------------------------------------------------------------------
 If @aiCas = 3 
   Begin
-	Select 'TOTO'
-	/*
-	SELECT 
-
-	FROM
-
-	WHERE 
-
-	ORDER BY
-
-
-	*/
+	Exec edi.PS_HP276_S_HP_POINT_DE_SERVICE_HUB
+		@adcIdProd			,
+		@adcIdGti			,
+		@asMarqAppSin		,
+		@asModlAppSin		,
+		@asTypAppSin		,
+		@asTypDommage		,
+		@asTypPrestation    ,
+		@asIdAdh			,
+		@aiIdSin			,
+		@aiIdGrpContractant ,
+		@asLibGrpContractant ,
+		@aiCiv				,
+		@asNom				,
+		@asPrenom			,
+		@asAdr1				,
+		@asAdr2				,
+		@asAdrCplt			,
+		@asAdrCP			,
+		@asAdrVille			,
+		@asCodePays			,
+		@adcMtValAchat		,
+		@adcMtPriseEnCharge , 
+		@dtDateAchat		,
+		@asEtatAppSin		
   End
 Go
 
@@ -1987,10 +2006,11 @@ Go
 --
 -- Retourne             :       rien
 -------------------------------------------------------------------
+-- JFF  27/11/2024  [20241127082353640]
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_PROCESS_ACHEMINEMENT' AND type = 'P' )
         DROP procedure edi.PS_HP276_S_HP_PROCESS_ACHEMINEMENT
 GO
-
 
 CREATE procedure edi.PS_HP276_S_HP_PROCESS_ACHEMINEMENT
 	    @aiCas				Tinyint,
@@ -2016,9 +2036,17 @@ CREATE procedure edi.PS_HP276_S_HP_PROCESS_ACHEMINEMENT
 		@asCodePays			VarChar ( 5 ),
 		@asIdFour			Varchar ( 3 ), -- Ajout pour Acheminement
 		@asIdPointService   VarChar ( 40 ), -- Ajout pour Acheminement
-		@asIdModeLogistique	VarChar ( 40 ) -- Ajout pour Acheminement
+		@asIdModeLogistique	VarChar ( 40 ), -- Ajout pour Acheminement
+		@adcMtValAchat		Decimal ( 11, 2 ) , -- [20241127082353640]
+		@adcMtPriseEnCharge decimal ( 11, 2 ) , -- [20241127082353640]
+		@asDateAchat		VarChar ( 10 ),  -- [20241127082353640]
+		@asEtatAppSin		VarChar ( 20 ) -- [20241127082353640]
 
 AS
+
+Declare @dtDateAchat DateTime
+
+Set @dtDateAchat = convert ( DateTime, @asDateAchat, 103 )
 
 ---------------------------------------------------------------------------------
 -- Cas Test Pour JF sur la base SIMPA2 Et HUB PRESTA, Retour en dur (bouchon)  --
@@ -2075,18 +2103,34 @@ If @aiCas in ( 1, 2 )
 -------------------------------------------------------------------------------
 If @aiCas = 3 
   Begin
-	Select 'TOTO'
-	/*
-	SELECT 
-
-	FROM
-
-	WHERE 
-
-	ORDER BY
-
-
-	*/
+		Exec edi.PS_HP276_S_HP_PROCESS_ACHEMINEMENT_HUB
+			@adcIdProd			,
+			@adcIdGti			,
+			@asMarqAppSin		,
+			@asModlAppSin		,
+			@asTypAppSin		,
+			@asTypDommage		,
+			@asTypPrestation    ,
+			@asIdAdh			,
+			@aiIdSin			,
+			@aiIdGrpContractant ,
+			@asLibGrpContractant ,
+			@aiCiv				,
+			@asNom				,
+			@asPrenom			,
+			@asAdr1				,
+			@asAdr2				,
+			@asAdrCplt			,
+			@asAdrCP			,
+			@asAdrVille			,
+			@asCodePays			,
+			@asIdFour			,
+			@asIdPointService   ,
+			@asIdModeLogistique	,
+			@adcMtValAchat		,
+			@adcMtPriseEnCharge ,
+			@dtDateAchat		,
+			@asEtatAppSin		
   End
 Go
 

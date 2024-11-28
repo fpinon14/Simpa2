@@ -16,10 +16,15 @@
 -- sysadm.PS_CORRECTION_BASE_TEMPS_3
 -- sysadm.PS_CORRECTION_BASE_TEMPS_4
 -- sysadm.PS_CPS
+-- sysadm.PS_D_NETTOYAGE_VIEUX_PARAM_INCOHERENT  
 -- sysadm.PS_D01_ERR_BAC
+-- sysadm.PS_DU_NETTOYAGE_CORBEILLES
 -- sysadm.PS_I_CREATION_AUTO_PARAM_CONDITION
+-- sysadm.PS_IU_REDRESS_PRS_153_154
 -- sysadm.PS_KILL_TOUTE_CNX_BASE_SIMPA2
--- sysadm.PS_LANCEUR_JOBS_SQL
+-- sysadm.PS_LANCEUR_JOBS_SQL  
+-- sysadm.PS_MAIL_PREUVE_TICKET_JOUE  
+-- sysadm.PS_NETTOYAGE_REPERTOIRE  
 -- sysadm.PS_PRESENCE_WSIN
 -- sysadm.PS_REDRESS_RN_NON_ATTACHE_DETAIL
 -- sysadm.PS_REDRESSEMENT_VDOC15650
@@ -39,16 +44,22 @@
 -- sysadm.PS_S_MARQUE_TEL
 -- sysadm.PS_S_MODELE_TEL
 -- sysadm.PS_S_NBRE_SIN_SANDRINE
+-- sysadm.PS_S_PROCHAIN_JOUR_OUVRE_DU_MEME_MOIS_CALENDAIRE
 -- sysadm.PS_S_RECUP_ADRESSE_FRN
+-- sysadm.PS_S_REDRESS_W_QUEUE_STATUT_IWD  
 -- sysadm.PS_S_RETURN_TRANCOUNT
+-- sysadm.PS_S_VERIF_ENVOI_MAIL_RECAP_DECLA  
 -- sysadm.PS_S_VERIF_REV_SVN
 -- sysadm.PS_S01_ADRESSE_O2M_V01
 -- sysadm.PS_S01_CORRECTION_IMEI
 -- sysadm.PS_S01_MAIL
 -- sysadm.PS_S01_VERIF_ANNUL_VIR
+-- sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
 -- sysadm.PS_T_REDRESS_FRAIS_ABSENT
+-- sysadm.PS_U_NETTOYAGE_DONNEES_ERRONEES_SUITE_DECLA_WEB  
 -- sysadm.PS_U_PM364_DORMANT_AUTO
 -- sysadm.PS_U_REDRESS_DET600_GTI100
+-- sysadm.PS_U_REDRESS_W_QUEUE_STATUT_IWD  
 -- sysadm.PS_U01_CORRECTION_W_DIV_SIN
 -------------------------------------------------------------------
 
@@ -1869,6 +1880,7 @@ CREATE procedure sysadm.PS_CORRECTION_BASE_TEMPS_4
 -- Retourne             :       Rien
 -------------------------------------------------------------------
 -- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
+-- JFF      28/11/2024   [LGY-11]
 -------------------------------------------------------------------
 AS
 
@@ -1964,6 +1976,8 @@ If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0
 	Exec sysadm.PS_HP276_SI_S2_MOTEUR_TRANSFERT_PARTICULIER_VERS_HUB
   End 
 
+-- [LGY11]
+Exec sysadm.PS_U_REDIRECTION_TRV_VERS_DR
 
 GO
 
@@ -6963,6 +6977,8 @@ GO
 -- Références           :       
 --
 -------------------------------------------------------------------
+-- JFF  28/11/2024  [LGY11] exclu DRE#
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_REDRESS_W_QUEUE_STATUT_IWD' AND type = 'P' )
         DROP procedure sysadm.PS_U_REDRESS_W_QUEUE_STATUT_IWD
 GO
@@ -7048,7 +7064,7 @@ Select  0,
 From	sysadm.w_queue wq,
 		[SQL14BI\SINISTRESBI].DATA_HUB.dbo.cco_w_queue_simpa2 cco
 Where wq.etat_iwd = 2
--- And   wq.id_iwd is not null  pas nécessaire
+And   wq.dos_maj_par Not in ( 'DRE#' )
 And	  cco.interaction_id = wq.id_iwd
 And   cco.media_cd = 'EMAIL'
 And   cco.interaction_end_ts is not null
@@ -7831,5 +7847,62 @@ Set @asCodeProjet = lTrim ( rTrim ( @asCodeProjet ))
 Set @sObjetTicket = @asNomFicSql + ' - ' + @asCodeProjet + ' - Joué en production - le ' + convert ( varchar(10), getdate(), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108) 
 
 EXEC master.dbo.SPB_PS_MAIL @sRetourErrMailTicket OUTPUT, 'jfabry@spb.eu', '', @sObjetTicket, @sExpediteurTicket, '', @sFicOutTicket, NULL, NULL, NULL, NULL
+
+Go
+
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_U_REDIRECTION_TRV_VERS_DR
+-- Auteur               :       FABRY JF
+-- Date                 :       28/11/2024
+-- Libellé              :       
+--                              
+-- Commentaires         :       
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_REDIRECTION_TRV_VERS_DR' AND type = 'P' )
+        DROP procedure sysadm.PS_U_REDIRECTION_TRV_VERS_DR
+GO
+  
+CREATE procedure sysadm.PS_U_REDIRECTION_TRV_VERS_DR  
+
+AS
+
+Update wq
+Set dos_maj_par = 'DRE#'
+from sysadm.w_queue wq
+where Exists ( -- Si exists AMU un contact DR pour le dossier
+             Select Top 1 1 
+             From SHERPA_SIM.sysadm.contact c
+             Where c.id_sin = wq.id_sin 
+             and   c.alt_mess = 'O'
+       )
+And wq.dos_maj_par not in ( 'DRE#', 'ML', 'DSA#' ) -- Trigrammes exclus
+And Not exists (   -- Exclu si déjà à un GT du DR, Exclu pendant 8 Jours seulement
+		Select Top 1 1 
+		From sysadm.autorisation a
+		Where a.id_oper = wq.dos_maj_par
+		And   a.id_nat_oper = 9
+		And   wq.dos_maj_le < DateAdd ( day, -8, Getdate())
+	)
+And Not exists (   -- Exclu si ce trv déjà routé à DGRC par un GT du DR
+		Select Top 1 1 
+		From sysadm.autorisation a
+		Where a.id_oper = wq.trv_route_par
+		And   a.id_nat_oper = 9
+	)
+And Not exists (   -- Exclu si dans la vie du dossier (pendant 6 mois), un travail a déjà été routé à DGRC par un GT du DR
+		Select Top 1 1 
+		From sysadm.autorisation a,
+			 sysadm.w_queue_histo wqh
+		Where wqh.id_sin = wq.id_sin
+		And   wqh.dos_maj_par = 'DSA#'
+		And   a.id_oper = wqh.trv_route_par
+		And   a.id_nat_oper = 9
+	)
+
+
 
 Go
