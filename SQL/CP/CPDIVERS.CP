@@ -1976,8 +1976,8 @@ If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0
 	Exec sysadm.PS_HP276_SI_S2_MOTEUR_TRANSFERT_PARTICULIER_VERS_HUB
   End 
 
--- [LGY11]
-Exec sysadm.PS_U_REDIRECTION_TRV_VERS_DR
+-- [LGY11] Annulé pour l'instant
+-- Exec sysadm.PS_U_REDIRECTION_TRV_VERS_DR
 
 GO
 
@@ -7064,7 +7064,7 @@ Select  0,
 From	sysadm.w_queue wq,
 		[SQL14BI\SINISTRESBI].DATA_HUB.dbo.cco_w_queue_simpa2 cco
 Where wq.etat_iwd = 2
-And   wq.dos_maj_par Not in ( 'DRE#' )
+-- And   wq.dos_maj_par Not in ( 'DRE#' ) Annulé pour l'instant
 And	  cco.interaction_id = wq.id_iwd
 And   cco.media_cd = 'EMAIL'
 And   cco.interaction_end_ts is not null
