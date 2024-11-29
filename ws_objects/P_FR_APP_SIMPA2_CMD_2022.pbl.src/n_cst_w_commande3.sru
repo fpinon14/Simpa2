@@ -19068,7 +19068,7 @@ If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 	If F_CLE_A_TRUE ( "HP252_276_CUTOFF_O2M" ) Then
 
 		// Détermination HUB ou O2M => O2M si déjà présence d'une presta O2M
-		If idwCmdeSin.Find( "ID_FOUR IN ('O2M')" ,1,idwCmdeSin.RowCount()) > 0 Then
+		If idwCmdeSin.Find( "ID_FOUR IN ( 'O2M', 'BLC')" ,1,idwCmdeSin.RowCount()) > 0 Then
 			sIdFourO2mOuHubPresta = "O2M"
 		Else 
 			F_RechDetPro ( lDeb, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 379 )
@@ -20027,16 +20027,19 @@ If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 		sIdFourModif = "HUB"
 	End If 
 	
-	IF bHubPossible And sIdFourModif = "O2M" And Not bChoixHubFait Then
-	
-		IF bCutOffO2M Then
-			sIdFourModif = sIdFourO2mOuHubPresta				
-		Else 
-			sIdFourModif = "HUB"				
-		End IF 
-		
-	End If 
-	
+	Choose Case sIdFourModif 
+		Case "O2M", "BLC"
+			IF bHubPossible And Not bChoixHubFait Then
+			
+				IF bCutOffO2M Then
+					If sIdFourModif = "BLC" And sIdFourO2mOuHubPresta = "O2M" Then sIdFourO2mOuHubPresta = sIdFourModif
+					sIdFourModif = sIdFourO2mOuHubPresta				
+				Else 
+					sIdFourModif = "HUB"				
+				End IF 
+				
+			End If 
+	End Choose 	
 End If
 
 sRech = "ID_GTI = " + sIdGti + " AND ID_CODE_FRN = '" + sIdFourModif + "' AND ID_CODE_ART = '" + sTypPresta + "' AND ID_TYP_CODE = '-XX' AND ID_CODE = -1"
