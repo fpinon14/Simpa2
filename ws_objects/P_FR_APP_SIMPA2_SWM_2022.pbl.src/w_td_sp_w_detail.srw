@@ -1111,6 +1111,7 @@ private function boolean wf_condition_ouverture (string aschoixaction);//*------
 //       JFF   07/03/2024 [HP252_276_HUB_PRESTA]
 //       JFF   05/08/2024 [MCO602_PNEU]
 //       JFF   06/09/2024 [KSV516]
+// 		JFF   29/11/2024 [HP252_276_HUB_PRESTA] Ajout HUB
 //*-----------------------------------------------------------------
 
 String sTypApp, sMarque, sModele, sMes, sTypArt, sFiltreFrn, sIdGti, sDteProdEqvFc, sBVIEPresent, sSortOri, sChaine, sInterdictionAutor
@@ -1514,8 +1515,9 @@ sLibEvt  = Upper ( dw_1.Describe ( "Evaluate ('LookUpDisplay ( ID_EVT )', 1)" ) 
 // [PC467-2] Ajout SAM
 // [PC13348&13408]
 // [DT141] Ajout SBE
+// [HP252_276_HUB_PRESTA] Ajout Hub
 bO2MPresent = idwFourn.Find("ID_GTI = " + sIdGti 		+		&
-											" AND ID_CODE_FRN IN ('O2M', 'SB1', 'MS1','TSF', 'BLC','SAM','MTT','SBE')" + 		& 
+											" AND ID_CODE_FRN IN ('O2M', 'SB1', 'MS1','TSF', 'BLC','SAM','MTT','SBE', 'HUB')" + 		& 
 											" AND ID_CODE_ART = 'EDI'" , &
 											1, idwFourn.RowCount()+1)>0
 

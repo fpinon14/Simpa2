@@ -119,7 +119,7 @@ For iTour = 1 To 3
 	
 	// MessageBox  ( "Retour", sResponseApi + ", Statut " + String ( iStatusApi ) + ", Retour " + String ( iRetApi ) )
 
-	If iStatusApi >= 300 Then
+	If iStatusApi >= 300 Or iStatusApi < 0 Or iRetApi < 0 Then
 		If iTour = 1 Then
 			sRequest = "Pas de requête de Json pour le GET, tout est dans l''URL"
 			f_trace_web_service("API ORANGE REUNION", "GET-" + sUrl, Dec(alIdSin) , 0, "", sRequest )

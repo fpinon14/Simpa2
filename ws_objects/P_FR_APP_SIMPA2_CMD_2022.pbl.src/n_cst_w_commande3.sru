@@ -18945,14 +18945,14 @@ String sValCar, sListeTypApp, sListeMarques, sCodeBtqCentral
 Decimal {2} dcMtValAchat 
 Decimal dcIdEts
 n_cst_string lnvPFCString // #30 [DCMP090327].[SBETV]
-Boolean bAutoriserSavSiFournAbsentParam, bFournAbsent, bPSM
+Boolean bAutoriserSavSiFournAbsentParam, bFournAbsent, bPSM, bChoixHubFait
 Long lCptDwPrs, lTotRowDwPrs, lDeb1, lFin1, lCpt1, lIdGti, lCptDetPro 
 Long lIdProcessPremierePrestaPRS // [2EME_PRESTA_SAV][ITSM166882]
 Integer iRet, iCptIphonePSM, iTotIphonePSM
 Boolean bAfficheMsgErreurFinal=TRUE // [PC786-2]
 String sTabIphonePSM []
 DateTime dtDt1, dtDt2, dtDt3, dtCreeLe 
-Boolean bOkPassCtrleDP315, bSAVInterdit, bTestSavInterdit, bPsmRepa, bHubPossible, bPrestaExisteNonHub 
+Boolean bOkPassCtrleDP315, bSAVInterdit, bTestSavInterdit, bPsmRepa, bHubPossible, bPrestaExisteNonHub, bCutOffO2M
 DateTime dtDtePivotDT1288, dtCreeLeDos, dtDtePivotDT401, dtDtePivotDT447 
 String sFind, sLibFour, sSysExploit, sIdFourO2mOuHubPresta, sLstAppHub 
 Int iFind
@@ -18977,6 +18977,8 @@ bSAVInterdit = False
 dtCreeLeDos = idwWSin.GetItemDateTime ( 1, "CREE_LE") // [DT401]
 bPsmRepa = False ;  bHubPossible = False // [HP252_276_HUB_PRESTA]
 bPrestaExisteNonHub = False // [HP252_276_HUB_PRESTA]
+bCutOffO2M = False 
+bChoixHubFait = False
 
 isFournParDefaut = "" // #30 [DCMP090327].[SBETV]
 
@@ -19005,6 +19007,11 @@ Choose case isChoixAction
 End Choose
 
 sRech = "ID_GTI = " + sIdGti + " AND ID_CODE_ART = '" + sTypPresta + "' AND ID_TYP_CODE = '-XX' AND ID_CODE = -1"
+
+If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
+	sRech += " AND ID_CODE_FRN <> 'HUB'"
+End IF 
+
 lRow = idwFourn.Find ( sRech, 1, lTotRow )
 If lRow > 0 Then
 	sIdFourModif = idwFourn.GetItemString ( lRow, "ID_CODE_FRN" ) 
@@ -19045,9 +19052,11 @@ If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 */
 
 	// Décision 
+	/*
 	If Not bPrestaExisteNonHub And bHubPossible And Not bPsmRepa Then 
 		sIdFourModif = "HUB"	
 	End If 
+	*/
 	
 End IF 
 
@@ -19064,7 +19073,8 @@ If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 		Else 
 			F_RechDetPro ( lDeb, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 379 )
 			If lDeb > 0 Then
-				
+				bCutOffO2M = True
+			
 				//[HP252_276_HUB_PRESTA][HUB577]
 				sVal = idw_DetPro.GetItemString ( lDeb, "VAL_CAR" )
 				sLstAppHub = F_CLE_VAL ( "TYP_APP_HUB", sVal, ";" )
@@ -19076,7 +19086,7 @@ If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 
 				// Sinon si AMU app Hub Spécifié, alors ce sont uniquement les app de la liste qui vont vers le HUB
 				Else
-					If Pos ( sLstAppHub, "#" + isTypApp + "#", 1 ) > 0 Then					
+					If Pos ( sLstAppHub, "#" + isTypApp + "#" ) > 0 Then					
 						sIdFourO2mOuHubPresta = "HUB"
 					End If 
 				End IF 
@@ -19498,7 +19508,7 @@ If isChoixAction = "I" Then
 		If lRow <=0 Then
 			If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 				If F_CLE_A_TRUE ( "HP252_276_CUTOFF_O2M" ) Then
-					If bHubPossible And Not bPrestaExisteNonHub And sIdFourO2mOuHubPresta = "HUB" Then
+					If bHubPossible And Not bPrestaExisteNonHub And bCutOffO2m And sIdFourO2mOuHubPresta = "HUB" Then
 						lnv_Key[3].iakeyvalue = sIdFourO2mOuHubPresta 
 						sTypPresta = "EDI"
 						bParticulier = True
@@ -19729,12 +19739,13 @@ If isChoixAction = "I" Then
 	End choose 
 
 	// [HP252_276_HUB_PRESTA] [ICI]
+/*
 	If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 		If Not bPrestaExisteNonHub And ( bPrestaExisteHub Or bHubPossible ) Then
 			sIdFourModif = "HUB"
 		End If 
 	End If 	
-	
+*/	
 
 
 End If
@@ -20000,9 +20011,32 @@ End If
 
 // [HP252_276_HUB_PRESTA]
 If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
+/*
 	If sIdFourModif = "O2M" Then
 		sIdFourModif = sIdFourO2mOuHubPresta	
 	End If 
+*/
+
+	If bPrestaExisteHub And Not bChoixHubFait Then
+		bChoixHubFait = True 
+		sIdFourModif = "HUB"
+	End If 
+
+	If bHubPossible And sIdFourModif = "" And Not bChoixHubFait Then
+		bChoixHubFait = True 
+		sIdFourModif = "HUB"
+	End If 
+	
+	IF bHubPossible And sIdFourModif = "O2M" And Not bChoixHubFait Then
+	
+		IF bCutOffO2M Then
+			sIdFourModif = sIdFourO2mOuHubPresta				
+		Else 
+			sIdFourModif = "HUB"				
+		End IF 
+		
+	End If 
+	
 End If
 
 sRech = "ID_GTI = " + sIdGti + " AND ID_CODE_FRN = '" + sIdFourModif + "' AND ID_CODE_ART = '" + sTypPresta + "' AND ID_TYP_CODE = '-XX' AND ID_CODE = -1"

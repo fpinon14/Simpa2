@@ -1,4 +1,4 @@
-HA$PBExportHeader$n_cst_opcon_xps.sru
+﻿$PBExportHeader$n_cst_opcon_xps.sru
 $PBExportComments$Gestion de l'automatisation des commandes via OpCon/XPS(SMA)
 forward
 global type n_cst_opcon_xps from nonvisualobject
@@ -12,19 +12,19 @@ global n_cst_opcon_xps n_cst_opcon_xps
 type variables
 Private :
 
-// Tableau des fournisseurs pour l'int$$HEX1$$e900$$ENDHEX$$gration des articles
+// Tableau des fournisseurs pour l'intégration des articles
 String isTabFrIntArt[]   
 
-// Tableau des fournisseurs pour l'int$$HEX1$$e900$$ENDHEX$$gration du suivi
+// Tableau des fournisseurs pour l'intégration du suivi
 String isTabFrIntSui[]   
 
-// Tableau des fournisseurs pour la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration des commandes
+// Tableau des fournisseurs pour la génération des commandes
 String isTabFrGenCmd[]   
 
-// Tableau des fournisseurs pour l'int$$HEX1$$e900$$ENDHEX$$gration IMEI
+// Tableau des fournisseurs pour l'intégration IMEI
 String isTabFrTrtImei[]   
 
-// Tableau des fournisseurs pour l'int$$HEX1$$e900$$ENDHEX$$gration des boutiques
+// Tableau des fournisseurs pour l'intégration des boutiques
 String isTabFrIntBtq[]   
 
 Menu	iMenu
@@ -62,10 +62,10 @@ public subroutine uf_initialiser (ref menu amenu);//*---------------------------
 //* Fonction      : n_cst_opcon_xps::uf_Initialiser (PUBLIC)
 //* Auteur        : Fabry JF
 //* Date          : 16/12/2002 10:21:52
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Initialisation des la gestion automatique des commandes.
+//* Libellé       : Initialisation des la gestion automatique des commandes.
 //* Commentaires  : 
 //*
-//* Arguments     : Ref		Menu		aMenu			// Menu de la fen$$HEX1$$ea00$$ENDHEX$$tre Main
+//* Arguments     : Ref		Menu		aMenu			// Menu de la fenêtre Main
 //*
 //* Retourne      : 
 //*
@@ -108,7 +108,7 @@ public subroutine uf_initialiser (ref menu amenu);//*---------------------------
 //       JFF   02/09/2019 [DT424]
 //       JFF   30/05/2023 [PMO89_RS4822]
 //       JFF   12/06/2023 [RS-5297-HP-178]
-//       JFF   12/04/2024 J'ajoute boost oubli$$HEX2$$e9002000$$ENDHEX$$pour les fichier articles
+//       JFF   12/04/2024 J'ajoute boost oublié pour les fichier articles
 //*-----------------------------------------------------------------
 
 String	sTabCode[], sCodeFr
@@ -123,12 +123,12 @@ iMenu = aMenu
 If This.uf_Sortie_OpCon ( "INIT", 0, "" ) < 0 Then Halt
 
 /*------------------------------------------------------------------*/
-/* Si Aucun profil n'est d$$HEX1$$e900$$ENDHEX$$fini, on ne va pas plus loin.            */
+/* Si Aucun profil n'est défini, on ne va pas plus loin.            */
 /*------------------------------------------------------------------*/
 If Not This.uf_GetProfil () Then Halt
 
 /*------------------------------------------------------------------*/
-/* Fournisseur $$HEX2$$e0002000$$ENDHEX$$traiter en automatique.                            */
+/* Fournisseur à traiter en automatique.                            */
 /*------------------------------------------------------------------*/
 sTabCode [1] = "CEG"
 sTabCode [2] = "DME"
@@ -173,12 +173,13 @@ sTabCode [40] = "CDP" // #7 [DCMP090102]
 sTabCode [41] = "TLS" // [RS3200]
 sTabCode [42] = "CDF" // [PMO89_RS4822]
 sTabCode [43] = "IFR" // [RS-5297-HP-178]
-sTabCode [44] = "BST" 
+sTabCode [44] = "BST" // 
+sTabCode [45] = "SPA" // [HP252_276_HUB_PRESTA]
 
 lTotFour = UpperBound ( sTabCode )
 
 /*------------------------------------------------------------------*/
-/* Pour chaque fournisseur, on charge le param$$HEX1$$e800$$ENDHEX$$trage du fichier INI */
+/* Pour chaque fournisseur, on charge le paramètrage du fichier INI */
 /*------------------------------------------------------------------*/
 For lCpt = 1 To lTotFour
 	sCodeFr = Upper ( sTabCode [lCpt] )
@@ -203,7 +204,7 @@ For lCpt = 1 To lTotFour
 	End If
 
 	/*------------------------------------------------------------------*/
-	/* Faudra-t-il faire la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration du fichier commande ?            */
+	/* Faudra-t-il faire la génération du fichier commande ?            */
 	/*------------------------------------------------------------------*/
 	If Trim ( ProfileString ( isRepFicProfilIni, sCodeFr, "GEN_CMD", "0" ) ) = "1" Then
 		isTabFrGenCmd [ UpperBound (isTabFrGenCmd) + 1 ] = sCodeFr
@@ -211,14 +212,14 @@ For lCpt = 1 To lTotFour
 
 	// [VDOC12140]
 	/*------------------------------------------------------------------*/
-	/* Faudra-t-il faire l'int$$HEX1$$e900$$ENDHEX$$gration du fichier de boutique ?            */
+	/* Faudra-t-il faire l'intégration du fichier de boutique ?            */
 	/*------------------------------------------------------------------*/
 	If Trim ( ProfileString ( isRepFicProfilIni, sCodeFr, "INT_BTQ", "0" ) ) = "1" Then
 		isTabFrIntBtq [ UpperBound (isTabFrIntBtq) + 1 ] = sCodeFr
 	End If
 
 	/*------------------------------------------------------------------*/
-	/* Faudra-t-il faire l'int$$HEX1$$e900$$ENDHEX$$gration du fichier d'IMEI ?            */
+	/* Faudra-t-il faire l'intégration du fichier d'IMEI ?            */
 	/*------------------------------------------------------------------*/
 	If Trim ( ProfileString ( isRepFicProfilIni, sCodeFr, "INT_IMEI", "0" ) ) = "1" Then
 		isTabFrTrtImei [ UpperBound (isTabFrTrtImei) + 1 ] = sCodeFr
@@ -248,7 +249,7 @@ private function integer uf_sortie_opcon (string ascas, integer aicodeerreur, st
 //* Fonction		: n_cst_OpCon_XPS::uf_Sortie_OpCon (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 16/12/2002
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Fichier de sortie des erreurs pour OpCon
+//* Libellé			: Fichier de sortie des erreurs pour OpCon
 //* Commentaires	: 
 //*
 //* Arguments		: asCas			String		Val
@@ -261,7 +262,7 @@ private function integer uf_sortie_opcon (string ascas, integer aicodeerreur, st
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* #1    JFF    05/04/2006  ajout du "+ K_FIC_SORTIE_OPCON" derri$$HEX1$$e800$$ENDHEX$$re isRepFicOpcon  
+//* #1    JFF    05/04/2006  ajout du "+ K_FIC_SORTIE_OPCON" derrière isRepFicOpcon  
 //* #2    JFF    05/04/2006  suppr. "+ K_FIC_SORTIE_OPCON" 
 //* 
 //*-----------------------------------------------------------------
@@ -297,7 +298,7 @@ CHOOSE CASE Upper ( asCas )
 	CASE "ECR"
 
 		/*------------------------------------------------------------------*/
-		/* On est connect$$HEX2$$e9002000$$ENDHEX$$avec OpCon, donc sortie en fichier Erreur.       */
+		/* On est connecté avec OpCon, donc sortie en fichier Erreur.       */
 		/*------------------------------------------------------------------*/
 		If gbOpCon Then 
 
@@ -319,7 +320,7 @@ CHOOSE CASE Upper ( asCas )
 	// On marque la fin du traitemnt (si pas de traitement)
 	CASE "FIN_TRT"			
 		iRet = 1
-//#1 [DCMP-060643]-19/09/2006-JFF Exeception $$HEX2$$e0002000$$ENDHEX$$la r$$HEX1$$e800$$ENDHEX$$gle pour OpCon
+//#1 [DCMP-060643]-19/09/2006-JFF Exeception à la règle pour OpCon
 /*
 		iFicFinTrt = FileOpen ( ProfileString ( stGlb.sFichierIni, "GEST_COMMANDES", "OPCON_OUT", & 
 										ProfileString ( stGlb.sWinDir + "\MAJPOST.INI", "PARAM", "DESTINATION", "C:" ) + "\" ) + K_FICFINTRT, LineMode!, Write!, Shared!, Replace! )
@@ -342,7 +343,7 @@ public subroutine uf_lancertrt (string ascas);//*-------------------------------
 //* Fonction      : n_cst_opcon_xps::uf_LancerTrt (PUBLIC)
 //* Auteur        : Fabry JF
 //* Date          : 16/12/2002 11:16:22
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Lancement du traitement
+//* Libellé       : Lancement du traitement
 //* Commentaires  : 
 //*
 //* Arguments     : Val		String		asCas
@@ -365,19 +366,19 @@ Choose Case asCas
 	Case "INT_FIC_ARTICLE"
 
 		/*------------------------------------------------------------------*/
-		/* Y a-t-il au moins un fournisseur pour l'int$$HEX1$$e900$$ENDHEX$$gration du fichier   */
+		/* Y a-t-il au moins un fournisseur pour l'intégration du fichier   */
 		/* article ?                                                        */
 		/*------------------------------------------------------------------*/
 		If UpperBound ( isTabFrIntArt ) > 0 And This.uf_Sortie_OpCon ( "ABSENCE", 0, "" ) > 0 Then
 
 			/*------------------------------------------------------------------*/
-			/*	Afin de pouvoir r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer le tableau arm$$HEX2$$e9002000$$ENDHEX$$sur la fen$$HEX1$$ea00$$ENDHEX$$tre de      */
+			/*	Afin de pouvoir récupérer le tableau armé sur la fenêtre de      */
 			/* traitement des articles.                                         */
 			/*------------------------------------------------------------------*/
 			stGlb.sTab_OpCon_Xps = isTabFrIntArt
 
 			/*------------------------------------------------------------------*/
-			/* Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre d'int$$HEX1$$e900$$ENDHEX$$gration du fichier article.        */
+			/* Ouverture de la fenêtre d'intégration du fichier article.        */
 			/* RDV sur l'w_trt_int_fic_article::ue_Initialiser pour la gestion  */
 			/* de l'automatisation.															  */
 			/*------------------------------------------------------------------*/
@@ -390,19 +391,19 @@ Choose Case asCas
 	Case "INT_FIC_SUIVICMD"
 
 		/*------------------------------------------------------------------*/
-		/* Y a-t-il au moins un fournisseur pour l'int$$HEX1$$e900$$ENDHEX$$gration du fichier   */
+		/* Y a-t-il au moins un fournisseur pour l'intégration du fichier   */
 		/* Suivi de commandes ?                                             */
 		/*------------------------------------------------------------------*/
 		If UpperBound ( isTabFrIntSui ) > 0 And This.uf_Sortie_OpCon ( "ABSENCE", 0, "" ) > 0 Then
 
 			/*------------------------------------------------------------------*/
-			/*	Afin de pouvoir r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer le tableau arm$$HEX2$$e9002000$$ENDHEX$$sur la fen$$HEX1$$ea00$$ENDHEX$$tre de      */
+			/*	Afin de pouvoir récupérer le tableau armé sur la fenêtre de      */
 			/* traitement 																		  */
 			/*------------------------------------------------------------------*/
 			stGlb.sTab_OpCon_Xps = isTabFrIntSui
 
 			/*------------------------------------------------------------------*/
-			/* Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre d'int$$HEX1$$e900$$ENDHEX$$gration du fichier article.        */
+			/* Ouverture de la fenêtre d'intégration du fichier article.        */
 			/* RDV sur l'w_trt_int_fic_SuiviCmd::ue_Initialiser pour la gestion */
 			/* de l'automatisation.															  */
 			/*------------------------------------------------------------------*/
@@ -415,18 +416,18 @@ Choose Case asCas
 	Case "GEN_FIC_CMD"
 
 		/*------------------------------------------------------------------*/
-		/* Y a-t-il au moins un fournisseur pour la g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration des commandes*/
+		/* Y a-t-il au moins un fournisseur pour la génération des commandes*/
 		/*------------------------------------------------------------------*/
 		If UpperBound ( isTabFrGenCmd ) > 0 And This.uf_Sortie_OpCon ( "ABSENCE", 0, "" ) > 0 Then
 
 			/*------------------------------------------------------------------*/
-			/*	Afin de pouvoir r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer le tableau arm$$HEX2$$e9002000$$ENDHEX$$sur la fen$$HEX1$$ea00$$ENDHEX$$tre de      */
+			/*	Afin de pouvoir récupérer le tableau armé sur la fenêtre de      */
 			/* traitement 																		  */
 			/*------------------------------------------------------------------*/
 			stGlb.sTab_OpCon_Xps = isTabFrGenCmd
 
 			/*------------------------------------------------------------------*/
-			/* Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre de g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ration des commandes.				  */
+			/* Ouverture de la fenêtre de génération des commandes.				  */
 			/* RDV sur l'w_trt_gen_fic_commande::ue_Initialiser pour la gestion */
 			/* de l'automatisation.															  */
 			/*------------------------------------------------------------------*/
@@ -437,7 +438,7 @@ Choose Case asCas
 		End If
 
 	// [PC175]
-	Case "INT_FIC_MAG_MCM" // [VDOC12140].MEP case $$HEX2$$e0002000$$ENDHEX$$supprimer lors de la suppr de cl$$HEX1$$e900$$ENDHEX$$
+	Case "INT_FIC_MAG_MCM" // [VDOC12140].MEP case à supprimer lors de la suppr de clé
 		if This.uf_Sortie_OpCon ( "ABSENCE", 0, "" ) > 0 Then
 			iMenu.Item [ ilmenudivers ].Item [ ilmenuintegration_autrefic ].TriggerEvent ( Clicked! )
 		Else
@@ -449,18 +450,18 @@ Choose Case asCas
 		If (UpperBound ( isTabFrIntBtq ) > 0 or UpperBound ( isTabFrTrtImei ) > 0) & 
 			And This.uf_Sortie_OpCon ( "ABSENCE", 0, "" ) > 0 Then
 			
-			// Int$$HEX1$$e900$$ENDHEX$$gration des boutiques
+			// Intégration des boutiques
 			If UpperBound ( isTabFrIntBtq ) > 0 Then
 				stGlb.sTab_OpCon_Xps = isTabFrIntBtq
-				stGlb.sMessageErreur="INT_BOUTIQUE" // Traitement $$HEX2$$e0002000$$ENDHEX$$effectuer
+				stGlb.sMessageErreur="INT_BOUTIQUE" // Traitement à effectuer
 				
 				iMenu.Item [ ilmenudivers ].Item [ ilmenuintegration_autrefic ].TriggerEvent ( Clicked! )
 			End if
 		
-			// Int$$HEX1$$e900$$ENDHEX$$gration des IMEI
+			// Intégration des IMEI
 			If UpperBound ( isTabFrTrtImei ) > 0 Then
 				stGlb.sTab_OpCon_Xps = isTabFrTrtImei
-				stGlb.sMessageErreur="INT_IMEI" // Traitement $$HEX2$$e0002000$$ENDHEX$$effectuer
+				stGlb.sMessageErreur="INT_IMEI" // Traitement à effectuer
 				
 				iMenu.Item [ ilmenudivers ].Item [ ilmenuintegration_autrefic ].TriggerEvent ( Clicked! )
 			End if
@@ -472,8 +473,8 @@ Choose Case asCas
 	Case "OK?"
 
 		/*------------------------------------------------------------------*/
-		/* Si Tout s'est bien d$$HEX1$$e900$$ENDHEX$$roul$$HEX1$$e900$$ENDHEX$$, donc si pas de fichier de sortie     */
-		/* pr$$HEX1$$e900$$ENDHEX$$sent, alors on $$HEX1$$e900$$ENDHEX$$crit le fichier de sortie pour OpCon avec OK  */
+		/* Si Tout s'est bien déroulé, donc si pas de fichier de sortie     */
+		/* présent, alors on écrit le fichier de sortie pour OpCon avec OK  */
 		/*------------------------------------------------------------------*/
 		If This.uf_Sortie_OpCon ( "ABSENCE", 0, "" ) > 0 Then
 			This.uf_Sortie_OpCon ( "ECR", 0, "OK" ) 
@@ -487,7 +488,7 @@ private function boolean uf_getprofil ();//*------------------------------------
 //* Fonction      : n_cst_opcon_xps::uf_GetProfil (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 31/12/2002 10:21:52
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Obtention du profil s$$HEX1$$e900$$ENDHEX$$lectionn$$HEX2$$e9002000$$ENDHEX$$pour le traitement
+//* Libellé       : Obtention du profil sélectionné pour le traitement
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -503,13 +504,13 @@ private function boolean uf_getprofil ();//*------------------------------------
 Boolean	bOk
 Int		iFicGetProfil 	// Fichier d'obtention du profil
 String	sProfil 			// Fichier de profil
-String	sRepProfil 		// R$$HEX1$$e900$$ENDHEX$$pertoire des profil Opcon
+String	sRepProfil 		// Répertoire des profil Opcon
 
 bOk = True
 
 //#1 [DCMP-060643]-19/09/2006-PHG Gestion repertoire temporaire
 //iFicGetProfil = FileOpen ( stGlb.sWinDir + K_FIC_PROFIL, LineMode!, Read!, Shared!, Append! )
-//#2 [DCMP-060643]-19/09/2006-JFF Exeception $$HEX2$$e0002000$$ENDHEX$$la r$$HEX1$$e800$$ENDHEX$$gle pour OpCon
+//#2 [DCMP-060643]-19/09/2006-JFF Exeception à la règle pour OpCon
 iFicGetProfil = FileOpen ( isRepFicOpcon + K_FIC_PROFIL, LineMode!, Read!, Shared!, Append! )
 
 If iFicGetProfil < 0 Then Return False
