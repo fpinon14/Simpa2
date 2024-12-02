@@ -139,6 +139,13 @@ dw_1.DataObject = "d_trt_saisie_hub_type_dommage"
 dw_1.SetTransObject ( itrHubPrestataire ) 
 lTotRow = dw_1.Retrieve ( iCle, ilIdprod, ilIdGti, isMarqAppSin, isModlAppSin, isTypAppSin )
 
+If lTotRow = 1 And Upper ( dw_1.GetItemString ( 1, "id_code_td_hp" )) = "AUCUN" Then 
+	dw_1.SelectRow ( 1, TRUE )
+	cb_valider.PostEvent ( Clicked!)	
+	Return
+End If 
+
+
 cb_valider.Show ()
 cb_abandonner.Show ()
 
@@ -146,8 +153,6 @@ st_attente_hub.Hide()
 dw_1.Show ()
 dw_1.BringToTop = TRUE
 dw_1.SetFocus ()
-
-If lTotRow = 1 And Upper ( dw_1.GetItemString ( 1, "id_code_td_hp" )) = "AUCUN" Then lTotRow = 0
 
 If lTotRow <= 0 Then
 	dw_1.Reset ()
@@ -349,7 +354,7 @@ public subroutine wf_recuperation_point_service ();//*--------------------------
 //*-----------------------------------------------------------------
 
 
-String sTypDom, sIdAdh, sLibGrpContractant, sVal, sCodePays, sVal1 
+String sTypDom, sLibGrpContractant, sVal, sCodePays, sVal1 
 n_cst_string lnvPFCString
 Int iCoefH, iCoefV, iTotRow, iAjoutCoefV 
 Int iCle, iIdGrpContractant, iCpt 
@@ -379,15 +384,15 @@ cb_abandonner.Hide()
 
 dw_1.Hide ()
 
-sIdAdh = Fill ( "", 50)
-sLibGrpContractant = Fill ( "", 35)
-SQLCA.PS_HP276_S_S2_DATA_DOSSIER  ( ilIdSin, sIdAdh, iIdGrpContractant, sLibGrpContractant )
-
+isIdAdh = Fill ( " ", 50)
+isLibGrpContractant = Fill ( " ", 35)
+SQLCA.PS_HP276_S_S2_DATA_DOSSIER  ( ilIdSin, isIdAdh, iiIdGrpContractant, isLibGrpContractant )
 
 dw_1.DataObject = "d_trt_saisie_hub_point_de_service"
 dw_1.SetTransObject ( itrHubPrestataire )
 
 sTypDom = lnvPFCString.of_Getkeyvalue ( isChaineRetour, "HP_TYP_DOM", ";")
+
 
 // [20241127082353640] ajout idcMtValAchat à isEtatAppSin
 iTotRow = dw_1.Retrieve ( & 
@@ -399,7 +404,7 @@ iTotRow = dw_1.Retrieve ( &
 	isTypAppSin, &
 	sTypDom, &
 	isTypActionS2, &
-	sIdAdh, &
+	isIdAdh, &
 	ilIdSin, &
 	iIdGrpContractant, &
 	sLibGrpContractant, &
@@ -865,6 +870,8 @@ Choose Case isTypActionS2
 			iCpt = iRowSelect 
 		Loop
 
+		If sSelectionTypDom = "#AUCUN#" Then sSelectionTypDom = ""
+
 		stMessage.sCode		= "HUBP001"
 		stMessage.sVar[1]    = string ( ilIdprod )
 		stMessage.sVar[2]    = string ( ilIdGti )
@@ -881,7 +888,7 @@ Choose Case isTypActionS2
 		stMessage.sVar[11]   = String ( idcMtPec, "#,##0.00 \"+stGlb.smonnaiesymboledesire )
 		stMessage.sVar[12]   = String ( idtDteAchat, "dd/mm/yyyy" )		
 		stMessage.sVar[13]   = isEtatAppSin 			
-		
+		stMessage.sVar[14]   = isTypActionS2	
 
 
 	Case Else
@@ -894,6 +901,7 @@ Choose Case isTypActionS2
 		stMessage.sVar[5]    = isTypAppSin	
 		stMessage.sVar[6]    = isTypActionS2
 
+
 		// [20241127082353640]		
 		stMessage.sVar[7]    = isAdrCp
 		stMessage.sVar[8]    = isPays
@@ -901,7 +909,7 @@ Choose Case isTypActionS2
 		stMessage.sVar[10]   = String ( idcMtPec, "#,##0.00 \"+stGlb.smonnaiesymboledesire )
 		stMessage.sVar[11]   = String ( idtDteAchat, "dd/mm/yyyy" )		
 		stMessage.sVar[12]   = isEtatAppSin 			
-		
+		stMessage.sVar[13]    = isTypActionS2
 	
 End Choose 
 
@@ -1174,10 +1182,11 @@ cb_abandonner.Hide()
 st_info.Hide ()
 dw_1.Hide ()
 
+/*
 isIdAdh = Fill ( "", 50)
 isLibGrpContractant = Fill ( "", 35)
 SQLCA.PS_HP276_S_S2_DATA_DOSSIER  ( ilIdSin, isIdAdh, iiIdGrpContractant, isLibGrpContractant )
-
+*/
 
 dw_1.DataObject = "d_trt_saisie_hub_process_acheminement"
 dw_1.SetTransObject ( itrHubPrestataire )

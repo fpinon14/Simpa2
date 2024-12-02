@@ -29030,8 +29030,16 @@ stPass.sTab[15]= "FR"  // Pays [20241127082353640]
 
 // Pays [20241127082353640]
 lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'TYPAPP_REC_NEU'", 1, idwWDivSin.RowCount () ) 
+
+If lRow <= 0 Then
+	lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'TYPAPP_AREC_ANEU'", 1, idwWDivSin.RowCount () ) 
+End iF 
+
 If lRow > 0 Then
-	stPass.sTab[16] = idwWDivSin.GetItemString ( lRow, "VAL_LST_CAR" )
+	sVal = idwWDivSin.GetItemString ( lRow, "VAL_LST_CAR" )
+	If sVal = "AREC" Then sVal = "REC"
+	If sVal = "ANEU" Then sVal = "NEU"	
+	stPass.sTab[16] = sVal
 End If
 
 stPass.sTab[50] = "CREATION_PRESTATION"
