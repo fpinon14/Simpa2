@@ -354,7 +354,7 @@ public subroutine wf_recuperation_point_service ();//*--------------------------
 //*-----------------------------------------------------------------
 
 
-String sTypDom, sLibGrpContractant, sVal, sCodePays, sVal1 
+String sTypDom, sVal, sCodePays, sVal1 
 n_cst_string lnvPFCString
 Int iCoefH, iCoefV, iTotRow, iAjoutCoefV 
 Int iCle, iIdGrpContractant, iCpt 
@@ -406,8 +406,8 @@ iTotRow = dw_1.Retrieve ( &
 	isTypActionS2, &
 	isIdAdh, &
 	ilIdSin, &
-	iIdGrpContractant, &
-	sLibGrpContractant, &
+	iiIdGrpContractant, &
+	isLibGrpContractant, &
 	ilAdrCodCiv, &
 	isAdrNom, &
 	isAdrPreNom, &
