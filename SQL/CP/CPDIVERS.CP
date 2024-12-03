@@ -7064,7 +7064,7 @@ Select  0,
 From	sysadm.w_queue wq,
 		[SQL14BI\SINISTRESBI].DATA_HUB.dbo.cco_w_queue_simpa2 cco
 Where wq.etat_iwd = 2
--- And   wq.dos_maj_par Not in ( 'DRE#' ) Annulé pour l'instant
+-- And   wq.dos_maj_par Not in ( 'DRE#' ) -- Annulé pour l'instant
 And	  cco.interaction_id = wq.id_iwd
 And   cco.media_cd = 'EMAIL'
 And   cco.interaction_end_ts is not null
@@ -7877,9 +7877,9 @@ where Exists ( -- Si exists AMU un contact DR pour le dossier
              Select Top 1 1 
              From SHERPA_SIM.sysadm.contact c
              Where c.id_sin = wq.id_sin 
-             and   c.alt_mess = 'O'
+             and   c.alt_quest = 0
        )
-And wq.dos_maj_par not in ( 'DRE#', 'ML', 'DSA#' ) -- Trigrammes exclus
+-- And wq.dos_maj_par not in ( 'DRE#', 'ML', 'DSA#' ) -- Trigrammes exclus
 And Not exists (   -- Exclu si déjà à un GT du DR, Exclu pendant 8 Jours seulement
 		Select Top 1 1 
 		From sysadm.autorisation a
@@ -7887,6 +7887,7 @@ And Not exists (   -- Exclu si déjà à un GT du DR, Exclu pendant 8 Jours seuleme
 		And   a.id_nat_oper = 9
 		And   wq.dos_maj_le < DateAdd ( day, -8, Getdate())
 	)
+/*
 And Not exists (   -- Exclu si ce trv déjà routé à DGRC par un GT du DR
 		Select Top 1 1 
 		From sysadm.autorisation a
@@ -7902,7 +7903,7 @@ And Not exists (   -- Exclu si dans la vie du dossier (pendant 6 mois), un trava
 		And   a.id_oper = wqh.trv_route_par
 		And   a.id_nat_oper = 9
 	)
-
+*/
 
 
 Go

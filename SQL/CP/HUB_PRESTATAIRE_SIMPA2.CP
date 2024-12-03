@@ -44,10 +44,10 @@ CREATE procedure sysadm.PS_HP276_S_S2_DATA_DOSSIER
 
 AS
 
-Select	@asIdAdh =	Convert ( Varchar ( 20 ), pr.cod_prod_dms ) + '-' +
-					Convert ( Varchar ( 20 ), ws.id_ets) + '-' +
-					ltrim ( rtrim ( ws.id_adh )) + '-' +
-					Convert ( Varchar ( 20 ), ws.id_sdos) + '-',
+Select	@asIdAdh =	IsNull ( Convert ( Varchar ( 20 ), pr.cod_prod_dms ), '') + '-' +
+					IsNull ( Convert ( Varchar ( 20 ), ws.id_ets), '' ) + '-' +
+					IsNull ( ltrim ( rtrim ( ws.id_adh )), '' ) + '-' +
+					IsNull ( Convert ( Varchar ( 20 ), ws.id_sdos), ''),
 		@aiIdGrpContractant = gr.id_grp,
 		@asLibGrpContractant = ltrim ( rtrim ( gr.lib_grp ))
 From	sysadm.w_sin ws,
@@ -912,7 +912,7 @@ Declare  @TbHubToSimpa2Work TABLE (
 	activity_code				VarChar ( 50 )				NULL,   -- Code HUB
 	activity_return_code		Varchar ( 50 )				NULL,	-- Code HUB
 	activity_reason_code		Varchar ( 50 )				NULL,	-- Code HUB
-	typ_ba_aller				Varchar ( 35 )				NULL,	-- RPICKUP ou BPPAYE, voire de nouveaux CODE
+	typ_ba_aller				Varchar ( 60 )				NULL,	-- RPICKUP ou BPPAYE, voire de nouveaux CODE
 	perte_aller					VarChar ( 3  )				NULL,   -- O/N Perte du colis à l'aller
 	diag_video_engage			VarChar ( 3  )				NULL,   -- O/N Diag vidéo engagé
 	resolu_diag_video			VarChar ( 3  )				NULL,   -- O/N résolu par Diag vidéo 
@@ -1005,7 +1005,7 @@ Declare @iIdWorkRow			int,
 		@sActivityCode		VarChar ( 50 ),
 		@sActivityReturnCode Varchar ( 50 ),
 		@sActivityReasonCode Varchar ( 50 ),
-		@sTypBaAller		Varchar ( 35 ),
+		@sTypBaAller		Varchar ( 60 ),
 		@sPerteAller		VarChar ( 3  ),
 		@sDiagVideoEngage	VarChar ( 3  ),
 		@sResoluDiagVideo	VarChar ( 3  ),
@@ -1045,8 +1045,8 @@ If @sEnv = 'PROD'
 		Set @sInstanceHub = '[LS-SAGA2].[PRESTATAIRE].'
 		Set @sCheminDepotFichierMPRRacine  = '\\F4T\SIMPA2\'
 		Exec [LS-SAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '-1', -1, '-1', '', '', @iIdLotTrc output
-		Set @sDestErrTech = 'cbourdoiseau@spb.eu,cfrappat@spb.eu,VANDRE@spb.eu,BKHELIFA_ext@spb.eu,OCHAOUACHI@spb.eu'
-		Set @sDestErrCoherenceHub = 'VANDRE@spb.eu,BKHELIFA_ext@spb.eu,OCHAOUACHI@spb.eu'
+		Set @sDestErrTech = 'NLEBERQUIER@spb.eu,DBOUCQ@spb.eu,jff@spb.fr'
+		Set @sDestErrCoherenceHub = 'JBERGERE@spb.eu,VANDRE@spb.eu,OCHAOUACHI@spb.eu,BKHELIFA_ext@spb.eu,LSMALL@spb.eu,DBOUCQ@spb.eu,JALLIX@spb.eu'
 		Set @sDestCc = 'jff@spb.fr'
 	End 
 Else
@@ -1057,7 +1057,7 @@ Else
 		Set @sCheminDepotFichierMPRRacine  = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'RECCMD\'
 
 		Exec [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '-1', -1, '-1', '', '', @iIdLotTrc output
-		Set @sDestErrTech = 'jff@spb.fr,VANDRE@spb.eu,BKHELIFA_ext@spb.eu,OCHAOUACHI@spb.eu'
+		Set @sDestErrTech = 'jff@spb.fr'
 		Set @sDestErrCoherenceHub = 'jff@spb.fr,VANDRE@spb.eu,BKHELIFA_ext@spb.eu,OCHAOUACHI@spb.eu'
 		Set @sDestCc = 'jff@spb.fr'
 	End
@@ -1844,7 +1844,7 @@ Declare @iStatut Integer
 Declare @sMotClecplt varChar ( 100 )
 Declare @sBCVserial  varChar ( 255 )
 Declare @sSql		Varchar ( 2000 )
-Declare @sTypBaAller VarChar ( 35 ) 
+Declare @sTypBaAller VarChar ( 60 ) 
 Declare @sLibActivity VarChar( 255 )
 Declare @iRowCount Integer
 Declare @dcIdSin  Decimal ( 10 )

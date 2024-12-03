@@ -302,7 +302,6 @@ If @aiCas in ( 1, 2 )
 If @aiCas = 3 
   Begin
 		Exec edi.PS_HP276_S_HP_TYPE_DOMMAGE_HUB
-			@aiCas				,
 			@aiIdProd			,
 			@aiIdGti			,
 			@asMarqAppSin		,
@@ -348,10 +347,6 @@ CREATE procedure edi.PS_HP276_S_HP_TYPE_ACTION
 		@asEtatAppSin		VarChar ( 20 ) -- [20241127082353640]
 AS
 
-Declare @dtDateAchat DateTime
-
-Set @dtDateAchat = convert ( DateTime, @asDateAchat, 103 )
-
 ---------------------------------------------------------------------------------
 -- Cas Test Pour JF sur la base SIMPA2 Et HUB PRESTA, Retour en dur (bouchon)  --
 -- /!\ A laisser !													           --
@@ -392,7 +387,7 @@ If @aiCas = 3
 			@asCodePays			, 
 			@adcMtValAchat		, 
 			@adcMtPriseEnCharge , 
-			@dtDateAchat 		,  
+			@asDateAchat 		,  
 			@asEtatAppSin		
   End
 
@@ -446,10 +441,6 @@ CREATE procedure edi.PS_HP276_S_HP_POINT_DE_SERVICE
 		@asEtatAppSin		VarChar ( 20 ) -- [20241127082353640]
 AS
 
-Declare @dtDateAchat DateTime
-
-Set @dtDateAchat = convert ( DateTime, @asDateAchat, 103 )
-
 ---------------------------------------------------------------------------------
 -- Cas Test Pour JF sur la base SIMPA2 Et HUB PRESTA, Retour en dur (bouchon)  --
 -- /!\ A laisser !													           --
@@ -476,6 +467,22 @@ If @aiCas in ( 1, 2 )
 				Left ( 'ACCEPTED', 20 ) 'statutPointServ' -- ACCEPTED, REJECTED, UNAVAILABLE, UNVERIFIED
 
 	Else
+	Select	LEFT ( 'AUYPSQZMJB', 20 ) 'idHubPresta',
+			Left ( 'SPA', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
+			null,
+			Left ( 'SPARKA_AT_HOME', 40) 'idPointServ', 
+			Left ( 'AT_HOME', 40 ) 'idModeLogis', 
+			Left ( 'Centralisation', 40 ) 'LibModeLogis', --  [A_REPRENDRE]
+			Left ( 'Nom point de service SPA', 255 ) 'nomPointServ',
+			Left ( 'Adresse1 point de service ANV', 255 ) 'adr1PointServ',
+			Left ( 'Adresse2 point de service ANV', 255 ) 'adr2PointServ',
+			Left ( 'Adresse3 point de service ANV', 255 ) 'adr3PointServ',
+			Left ( 'Code postal ANV', 20) 'adrCpPointServ',
+			Left ( 'Ville ANV', 50) 'adrVillePointServ',
+			Left ( 'FR', 50) 'CodePaysPointServ',
+			Left ( '595.65', 15 ) 'DistanceMetre',
+			Left ( 'ACCEPTED', 20 ) 'statutPointServ' -- ACCEPTED, REJECTED, UNAVAILABLE, UNVERIFIED
+	Union
 	Select	LEFT ( 'AUYPSQZMJB', 20 ) 'idHubPresta',
 			Left ( 'ANV', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
 			null,
@@ -653,7 +660,7 @@ If @aiCas = 3
 		@asCodePays			,
 		@adcMtValAchat		,
 		@adcMtPriseEnCharge , 
-		@dtDateAchat		,
+		@asDateAchat		,
 		@asEtatAppSin		
   End
 Go
@@ -2044,10 +2051,6 @@ CREATE procedure edi.PS_HP276_S_HP_PROCESS_ACHEMINEMENT
 
 AS
 
-Declare @dtDateAchat DateTime
-
-Set @dtDateAchat = convert ( DateTime, @asDateAchat, 103 )
-
 ---------------------------------------------------------------------------------
 -- Cas Test Pour JF sur la base SIMPA2 Et HUB PRESTA, Retour en dur (bouchon)  --
 -- /!\ A laisser !													           --
@@ -2129,7 +2132,7 @@ If @aiCas = 3
 			@asIdModeLogistique	,
 			@adcMtValAchat		,
 			@adcMtPriseEnCharge ,
-			@dtDateAchat		,
+			@asDateAchat		,
 			@asEtatAppSin		
   End
 Go
