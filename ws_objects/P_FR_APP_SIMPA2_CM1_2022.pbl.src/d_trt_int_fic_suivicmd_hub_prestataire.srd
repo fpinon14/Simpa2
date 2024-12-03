@@ -12,7 +12,7 @@ table(column=(type=char(20) updatewhereclause=no name=num_cmd_spb dbname="num_cm
  column=(type=char(3) updatewhereclause=no name=fournisseur dbname="fournisseur" )
  column=(type=char(20) updatewhereclause=no name=num_cmd_frn dbname="num_cmd_frn" )
  column=(type=number updatewhereclause=no name=status_gc dbname="status_gc" )
- column=(type=char(35) updatewhereclause=no name=typ_ba_aller dbname="typ_ba_aller" )
+ column=(type=char(60) updatewhereclause=no name=typ_ba_aller dbname="typ_ba_aller" )
  column=(type=char(3) updatewhereclause=no name=perte_aller dbname="perte_aller" )
  column=(type=char(3) updatewhereclause=no name=diag_video_engage dbname="diag_video_engage" )
  column=(type=char(3) updatewhereclause=no name=resolu_diag_video dbname="resolu_diag_video" )

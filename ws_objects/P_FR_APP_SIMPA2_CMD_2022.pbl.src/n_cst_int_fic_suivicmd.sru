@@ -31838,6 +31838,7 @@ For lCpt = lTotLig To 1 Step -1
 			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Un numéro de tracking ALLER doit être accompagné du champ TYP_BA_ALLER renseigné." )
 		End IF
 		
+		/*
 		If sVal <> "" Then
 			Choose Case sVal
 				Case "BPPAYE", &
@@ -31853,7 +31854,7 @@ For lCpt = lTotLig To 1 Step -1
 	
 			End Choose 
 		End If 
-
+		*/
 
 	/*------------------------------------------------------------------*/
 	/* PERTE_ALLER														              */
@@ -32004,8 +32005,8 @@ For lCpt = lTotLig To 1 Step -1
 
 	If sVal <> "" Then
 		Choose Case sVal
-			Case "PROXIMITE", &
-				  "CENTRALISATION"
+			Case "PROXIMITY", &
+				  "CENTRALIZATION"
 			
 					// Ok
 					
