@@ -529,7 +529,13 @@ GO
 	-- FS  le 10/10/2013 : [PM217-2] IWD : w_queue trigger insert : Maj cod_etat et etat_iwd
 	-- FS  le 07/11/2023 [Pmo70] Correctif prendre les corbeilles de famille 217 et 2172
 	-- JFF Le 28/11/2023 : [RS6179] Trace des données w_queue
+	-- JFF LE 04/12/2024 : [LGY11][20241204][JFF]
 	--------------------------------------------------------------------
+		Declare @iProd Integer 
+
+		Set @iProd = 0
+		IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' Set @iProd = 1
+	
 		-- [RS6179] JFF 28/11/2023
 		-- [RS6179_TRG_WQ]
 		If sysadm.FN_CLE_NUMERIQUE ( 'RS6179_TRG_WQ') > 0 
@@ -613,7 +619,39 @@ GO
 		  and sysadm.w_queue.dos_maj_par not in ( 'ML', 'IMGA', 'EADR' )
 		  and sysadm.w_queue.cod_recu <> 'T'
 
-	  
+		-- [LGY11][20241204][JFF]
+		-- [LGY11][20241204][JFF]
+		If sysadm.FN_CLE_NUMERIQUE ( 'LGY11_IDW_WQ') > 0 
+		Begin
+			If @iProd > 0 
+				Begin
+					Update	wq
+					Set		dos_maj_par = 'DRE#'
+					From	inserted i,
+							sysadm.w_queue wq
+					Where   wq.id_sin = i.id_sin
+					And     Exists ( -- Si exists AMU un contact en cours DR pour le dossier, alors on remet au DR
+								 Select Top 1 1 
+								 From SHERPA_PRO.sysadm.contact c
+								 Where c.id_sin = wq.id_sin 
+								 and   c.alt_quest = '0'
+						   )				
+				End 
+			Else
+				Begin
+					Update	wq
+					Set		dos_maj_par = 'DRE#'
+					From	inserted i,
+							sysadm.w_queue wq
+					Where   wq.id_sin = i.id_sin
+					And     Exists ( -- Si exists AMU un contact en cours DR pour le dossier, alors on remet au DR
+								 Select Top 1 1 
+								 From SHERPA_SIM.sysadm.contact c
+								 Where c.id_sin = wq.id_sin 
+								 and   c.alt_quest = '0'
+						   )				
+				End
+		End 	  
 	End
 
 	go	

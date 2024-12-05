@@ -7034,9 +7034,13 @@ And   cco.interaction_end_ts is not null
         @sFileName   VarChar(255),
         @sFileExt    VarChar(3),
 		@sOsqlOption VarChar(255),
-		@iRetOsql	int	
+		@iRetOsql	int,	
+		@iProd		Int
 
 If Not ( sysadm.FN_CLE_NUMERIQUE ( 'LGY11_IDW_WQ') > 0 ) Return
+
+Set @iProd = 0
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' Set @iProd = 1
 
 Declare @TbTrt Table ( 
 			id_seq integer identity (1,1) , 
@@ -7075,7 +7079,15 @@ And   ( wq.routage_iwd is null
 		  wq.trv_route_le < DateAdd ( day, -7, Getdate()) 
 		)
 	  )
-
+/* Supprimé par C. Bellet le 04/12 pas la peine, tout vers le DRE#
+And Not exists (  -- [LGY11][20241204] Exclu si déjà à un GT du DR dessus, même si tâche CCO, car DR prend via Sherpa, pas par le CCO, donc pas gênant si CCO fermé. Exclu pendant 8 Jours seulement
+		Select Top 1 1 
+		From sysadm.autorisation a
+		Where a.id_oper = wq.dos_maj_par
+		And   a.id_nat_oper = 9
+		And   wq.dos_maj_le > DateAdd ( day, -8, Getdate())
+	)
+*/
 
 While Exists ( Select Top 1 1 From @TbTrt where marquage = 0 )
  Begin
@@ -7098,6 +7110,32 @@ While Exists ( Select Top 1 1 From @TbTrt where marquage = 0 )
 	From	sysadm.w_queue wq
 	Where   wq.id_sin = @iIdSin
 	
+	IF @iProd > 0 -- [LGY11][20241204]
+		Begin
+			Update	wq
+			Set		dos_maj_par = 'DRE#'
+			From	sysadm.w_queue wq
+			Where   wq.id_sin = @iIdSin
+			And     Exists ( -- Si exists AMU un contact en cours DR pour le dossier, alors on remet au DR
+						 Select Top 1 1 
+						 From SHERPA_PRO.sysadm.contact c
+						 Where c.id_sin = wq.id_sin 
+						 and   c.alt_quest = '0'
+				   )
+		End 
+	Else -- [LGY11][20241204]
+		Begin
+			Update	wq
+			Set		dos_maj_par = 'DRE#'
+			From	sysadm.w_queue wq
+			Where   wq.id_sin = @iIdSin
+			And     Exists ( -- Si exists AMU un contact en cours DR pour le dossier, alors on remet au DR
+						 Select Top 1 1 
+						 From SHERPA_SIM.sysadm.contact c
+						 Where c.id_sin = wq.id_sin 
+						 and   c.alt_quest = '0'
+				   )
+		End 
 	set @sMess = 'Le/la gestionnaire ' + @sNomAgent + ' (' + @sTrg + ') a terminé et clôturé sa tâche IWD le ' + convert ( varchar(10), @dtFinTacheIwd, 103 ) + ' à ' + CONVERT (varchar(8), @dtFinTacheIwd, 108) 
 	set @sMess = @sMess + ', mais il/elle a oublié de valider son dossier, il n''y a eu aucune action, aucune décision de prise sur le dossier. Merci de redresser la situation en validant le dossier après avoir effectué votre action de gestion, c''est pourquoi la tâche est présentement redistribuée.'
 
@@ -7885,7 +7923,7 @@ And Not exists (   -- Exclu si déjà à un GT du DR, Exclu pendant 8 Jours seuleme
 		From sysadm.autorisation a
 		Where a.id_oper = wq.dos_maj_par
 		And   a.id_nat_oper = 9
-		And   wq.dos_maj_le < DateAdd ( day, -8, Getdate())
+		And   wq.dos_maj_le > DateAdd ( day, -8, Getdate())
 	)
 /*
 And Not exists (   -- Exclu si ce trv déjà routé à DGRC par un GT du DR

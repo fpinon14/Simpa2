@@ -1788,6 +1788,8 @@ Go
 -- Retourne             :       liste des fournisseurs pour la gestion des commandes Simpa2
 --
 -------------------------------------------------------------------
+--        JFF   03/12/2024   [HP252_276_HUB_PRESTA]
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'DW_S06_ARTICLE' AND type = 'P' )
         DROP procedure sysadm.DW_S06_ARTICLE
 GO
@@ -1802,7 +1804,12 @@ from   	sysadm.article a,
 	sysadm.code_car c
 where   a.id_four=c.id_code
 and c.id_typ_code='-FR'
-
+Union -- [HP252_276_HUB_PRESTA]
+Select	c.id_code,
+		sysadm.FN_CODE_CAR ( c.id_code, '-FR' ) 
+From sysadm.code_car c
+Where c.id_typ_code = '-WP'
+And c.id_code <> '-1'
 
 Go
 
