@@ -1051,12 +1051,18 @@ If @sEnv = 'PROD'
 	End 
 Else
 	Begin 
+		-- [INSTANCE]
 		Set @sInstanceHub = '[S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].'
+		-- Set @sInstanceHub = '[S2SQL14DEV\RECSAGA2].[PRESTATAIRE].' 
+		
 		-- [20240910162546267]
 		-- Set @sCheminDepotFichierMPRRacine  = '\\SPB.LAN\APPLIS\SPB\RECCMD\'
 		Set @sCheminDepotFichierMPRRacine  = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'RECCMD\'
 
+		-- [INSTANCE]
 		Exec [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '-1', -1, '-1', '', '', @iIdLotTrc output
+		-- Exec [S2SQL14DEV\RECSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '-1', -1, '-1', '', '', @iIdLotTrc output
+
 		Set @sDestErrTech = 'jff@spb.fr'
 		Set @sDestErrCoherenceHub = 'jff@spb.fr,VANDRE@spb.eu,BKHELIFA_ext@spb.eu,OCHAOUACHI@spb.eu'
 		Set @sDestCc = 'jff@spb.fr'
@@ -1477,6 +1483,8 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 				Set @sChaineBCVretourDetStatut = sysadm.FN_CLE_VAL_E ( 'ID_SIN', CONVERT( varchar ( 20), @dcIdSin), @sChaineBCVretourDetStatut, ';' )
 				Set @sChaineBCVretourDetStatut = sysadm.FN_CLE_VAL_E ( 'ID_SEQ', CONVERT( varchar ( 20), @iIdSeq), @sChaineBCVretourDetStatut, ';' )
 
+				Set @sChaineBCVretourDetStatut = sysadm.FN_CLE_VAL_E ( 'SITE_ACTION', @sSiteAction, @sChaineBCVretourDetStatut, ';' )
+
 				Set @sCommentFrn = Left ( ISNULL ( @sCommentFrn, '' ) + SPACE ( 255 ), 255)
 				Set @sChaineBCVretourDetStatut = Left ( ISNULL ( @sChaineBCVretourDetStatut, '' ) + SPACE ( 255 ), 255)
 
@@ -1492,13 +1500,38 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 
 				If @iRet <= 0 -- Au minimum 159 ou un statut 'en cours à créer' si non existant
 					Begin
-						Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', ''' + ISNULL ( @sIdFour, '(vide)') + ''', ' + Convert ( VarChar (20), @iIdDepotHub) + ', ''' + @sIdHubPresta + ''', ''ERR'', ''' + 
-									'Les 3 données @sActivityCode, @sActivityReturnCode, @sActivityReasonCode ne permettent pas de déterminer/mapper un statut pour la prestation SIMPA2.' +
-									''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
+						IF sysadm.FN_CLE_VAL ( 'CAS_ERR', @sChaineBCVretourDetStatut, ';' ) = 'NO_MAPPING'
+							Begin 
+								Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', ''' + ISNULL ( @sIdFour, '(vide)') + ''', ' + Convert ( VarChar (20), @iIdDepotHub) + ', ''' + @sIdHubPresta + ''', ''ERR'', ''' + 
+											'Les 3 données @sActivityCode, @sActivityReturnCode, @sActivityReasonCode ne permettent pas de déterminer/mapper un statut pour la prestation SIMPA2.' +
+											''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
 
-						Set @iAMUerrRowTrt = 1
-						Set @iAMUerrGen = 1
-						Break
+								Set @iAMUerrRowTrt = 1
+								Set @iAMUerrGen = 1
+								Break
+							End 
+
+						IF sysadm.FN_CLE_VAL ( 'CAS_ERR', @sChaineBCVretourDetStatut, ';' ) = 'NO_DTE_RCP_FRN'
+							Begin 
+								Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', ''' + ISNULL ( @sIdFour, '(vide)') + ''', ' + Convert ( VarChar (20), @iIdDepotHub) + ', ''' + @sIdHubPresta + ''', ''ERR'', ''' + 
+											'L''''activité DEVICE_RECEPTION/OK doit être accompagnée d''''une date de réception dte_rcp_frn, absente ici.' +
+											''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
+
+								Set @iAMUerrRowTrt = 1
+								Set @iAMUerrGen = 1
+								Break
+							End 
+
+						IF sysadm.FN_CLE_VAL ( 'CAS_ERR', @sChaineBCVretourDetStatut, ';' ) = 'NO_DTE_RCP_APP_CLI'
+							Begin 
+								Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', ''' + ISNULL ( @sIdFour, '(vide)') + ''', ' + Convert ( VarChar (20), @iIdDepotHub) + ', ''' + @sIdHubPresta + ''', ''ERR'', ''' + 
+											'L''''activité ******_ACKNOWLEDGMENT/RECEIVED_BY_CUSTOMER doit être accompagnée d''''une date de réception client dte_rcp_frn_cli, absente ici.' +
+											''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
+
+								Set @iAMUerrRowTrt = 1
+								Set @iAMUerrGen = 1
+								Break
+							End 
 					End 
 
 				Set @iStatusGC = convert ( Integer, sysadm.FN_CLE_VAL ( 'STATUS_GC', @sChaineBCVretourDetStatut, ';' ))
@@ -1928,6 +1961,7 @@ If @iRowCount <= 0
 
 If @iRowCount<= 0 
 	Begin
+		Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'CAS_ERR', 'NO_MAPPING', @asChaineBCVretour, ';')
 		Return -1 -- Pas de statut déterminé
 	End 
 
@@ -2016,12 +2050,16 @@ If	@asActivityCode in ( 'DEVICE_RECEPTION' ) And
 	@asActivityReturnCode in ( 'OK' )
 	And sysadm.FN_CLE_VAL ( 'DTE_RCP_FRN_PRESENTE', @asChaineBCVretour, ';' ) = 'NON'
 	Begin
+	/*
 		Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'DTE_RCP_FRN', CONVERT( Varchar (10), GETDATE(), 103) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00', @asChaineBCVretour, ';')		
 		Set @sSql = 
 		'Update ' + @asInstanceHub + 'edi.DepotHubToSimpa2Presta '  +
-		'Set dte_rcp_frn = '''+ Convert ( varchar ( 10 ), GETDATE(), 110 ) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00' + '''' + 
+		'Set dte_rcp_frn = Getdate() ' + 
 		'    where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @aiIdDepotHub )  
 		Exec ( @sSql )
+	*/
+		Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'CAS_ERR', 'NO_DTE_RCP_FRN', @asChaineBCVretour, ';')
+		Return -1
 	End 
 
 -- Si Dte_Fin_Trait obligatoire est Absente, on force à GetDate()
@@ -2031,7 +2069,8 @@ If	@iStatut in ( 151, 152, 2, 21, 178, 176 )
 		Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'DTE_FIN_TRAIT', CONVERT( Varchar (10), GETDATE(), 103) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00', @asChaineBCVretour, ';')		
 		Set @sSql = 
 		'Update ' + @asInstanceHub + 'edi.DepotHubToSimpa2Presta '  +
-		'Set dte_fin_trait = '''+ Convert ( varchar ( 10 ), GETDATE(), 110 ) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00' + '''' + 
+		-- 'Set dte_fin_trait = '''+ Convert ( varchar ( 10 ), GETDATE(), 110 ) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00' + '''' + 
+		'Set dte_fin_trait = Getdate()' + 
 		'    where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @aiIdDepotHub )  
 		Exec ( @sSql )
 	End 
@@ -2041,12 +2080,17 @@ If	@asActivityCode in ( 'CUSTOMER_ACKNOWLEDGMENT', 'CARRIER_ACKNOWLEDGMENT' ) An
 	@asActivityReturnCode in ( 'RECEIVED_BY_CUSTOMER' )
 	And sysadm.FN_CLE_VAL ( 'DTE_RCP_APP_CLI_PRESENTE', @asChaineBCVretour, ';' ) = 'NON'
 	Begin
+	/*
 		Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'DTE_RCP_APP_CLI', CONVERT( Varchar (10), GETDATE(), 103) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00', @asChaineBCVretour, ';')		
 		Set @sSql = 
 		'Update ' + @asInstanceHub + 'edi.DepotHubToSimpa2Presta '  +
 		'Set dte_rcp_app_cli = '''+ Convert ( varchar ( 10 ), GETDATE(), 110 ) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00' + '''' + 
 		'    where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @aiIdDepotHub )  
 		Exec ( @sSql )
+	*/
+		Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'CAS_ERR', 'NO_DTE_RCP_APP_CLI', @asChaineBCVretour, ';')
+		Return -1
+
 	End 
 
 -- Cas Diag vidéo : marquage engagé&non engagé
@@ -2070,6 +2114,16 @@ If	@asActivityCode in ( 'VIDEO_DIAGNOSIS' ) and
 		Exec ( @sSql )
 	End 
 	
+-- Cas très spécial de remapping : Si HUB me renvoie SITE_ACTION DOMICILE Alors RETURN OF CONFORMITY/KO Ferme la prestation (côté SIMPA2, cela ferme l’ordre pour être clair)
+If	@asActivityCode in ( 'RETURN_OF_CONFORMITY' ) and 
+	@asActivityReturnCode in ( 'KO' ) And 
+	sysadm.FN_CLE_VAL ( 'SITE_ACTION', @asChaineBCVretour, ';') = 'DOMICILE'
+	Begin
+		Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'STATUS_GC', '21', @asChaineBCVretour, ';')
+		Set @sMotClecplt = '[PNC]'
+		Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'MOT_CLE_CPLT', CONVERT( Varchar (100), @sMotClecplt ), @asChaineBCVretour, ';')
+	End 
+
 Return 1
 
 GO
@@ -2848,7 +2902,9 @@ While Exists ( Select Top 1 1 From @TB_EnAttenteTransfertVersHpWork where alt_tr
 		End 
 	Else
 		Begin
+			-- [INSTANCE]
 			Exec @iError = [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRANSFERT_PRESTA_VERS_HUB_PRESTATAIRE 
+			-- Exec @iError = [S2SQL14DEV\RECSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRANSFERT_PRESTA_VERS_HUB_PRESTATAIRE 
 				2, -- 2 ou 3, c'est pareil
 				@iIdSin,
 				@iIdSeq,
@@ -2986,4 +3042,119 @@ And	   activity_return_code = @asActivityReturnCode
 
 Go
 
+-------------------------------------------------------------------
+--
+-- Procédure            :       PS_HP276_S_S2_PRESTA_SIMPA2_RESTEES_EN_COURS_DE_GEN
+-- Auteur               :       JFF
+-- Date                 :       11/03/2024
+-- Libell‚              :       [HP252_276_HUB_PRESTA]
+-- Commentaires         :       
+--                              /!\ A COMPILER SUR LA BASE SIMPA2 /!\
+--								Cette est la PS d'appel SIMPA2 qui appel le HUB selon l'environnement
+--
+-- Retourne             :       rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_S2_PRESTA_SIMPA2_RESTEES_EN_COURS_DE_GEN' AND type = 'P' )
+        DROP procedure sysadm.PS_HP276_S_S2_PRESTA_SIMPA2_RESTEES_EN_COURS_DE_GEN
+GO
 
+CREATE procedure sysadm.PS_HP276_S_S2_PRESTA_SIMPA2_RESTEES_EN_COURS_DE_GEN
+AS
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' 
+Begin
+	Select * 
+	From [LS-SAGA2].edi.DepotSimpa2ToHubPresta Where alt_trt = 'E'
+End 
+Else 
+Begin
+	Select * 
+	From [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt = 'E'
+End 
+
+Go
+
+-------------------------------------------------------------------
+--
+-- Procédure            :       PS_HP276_S_S2_PRESTA_SIMPA2_RESTEES_EN_COURS_DE_GEN_MAIL
+-- Auteur               :       JFF
+-- Date                 :       11/03/2024
+-- Libell‚              :       [HP252_276_HUB_PRESTA]
+-- Commentaires         :       
+--                              /!\ A COMPILER SUR LA BASE SIMPA2 /!\
+--								Cette est la PS d'appel SIMPA2 qui appel le HUB selon l'environnement
+--
+-- Retourne             :       rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_S2_PRESTA_SIMPA2_RESTEES_EN_COURS_DE_GEN_MAIL' AND type = 'P' )
+        DROP procedure sysadm.PS_HP276_S_S2_PRESTA_SIMPA2_RESTEES_EN_COURS_DE_GEN_MAIL
+GO
+
+CREATE procedure sysadm.PS_HP276_S_S2_PRESTA_SIMPA2_RESTEES_EN_COURS_DE_GEN_MAIL
+AS
+ DECLARE @sCommande   VarChar(250),
+        @sMessage    Varchar(1000),
+        @sObjet      VarChar(255),
+        @sFicOut     VarChar(255),
+		@sRetourErrMail VarChar(255),
+		@sNomServeur VarChar(255),
+        @sPath  VarChar(255),
+        @sFileName   VarChar(255),
+        @sFileExt    VarChar(3),
+		@sOsqlOption VarChar(255),
+		@iRetOsql	int
+
+-- On envoie le mail qu'une seule à 05h45
+If Not ( Getdate () between Convert( DateTime, COnvert ( VarChar ( 10 ), Getdate(), 103 ) + ' 05:15:00' ) and Convert( DateTime, COnvert ( VarChar ( 10 ), Getdate(), 103 ) + ' 06:15:00' )) Return
+
+-- chemin d'enregistrement du Result Set
+Set @sPath 	= master.sysadm.SPB_FN_GET_ROOT() + 'Sinistre\Extract_presta_S2_vers_Hub_E\'
+Set @sFileName	= 'PRESTA_SIMPA2_HUB_EN_COURS' + Replace ( convert( varchar ( 10), CONVERT ( Datetime, Getdate(), 103 ), 112 ) + convert( varchar ( 10), getdate(), 8 ), ':', '' )
+Set @sFileExt	= 'xls'
+
+SET @sFicOut = @sPath + @sFileName + '.' + @sFileExt
+
+SET @sNomServeur = @@servername
+-- Options additionelles pour osql
+-- /s"	" 	=> Separateur Tabulation
+-- /b 	=> Genere un code ERRORLEVEL exploitable par batch.
+-- /u	=> Unicode
+
+Set @sOsqlOption = ' ' + '/s"	"'+ ' /b' + ' /u'
+	
+SET @sCommande = 	'sqlcmd /S' + @sNomServeur + ' /E /Q"' + 
+	db_name(db_id()) + '.sysadm.PS_HP276_S_S2_PRESTA_SIMPA2_RESTEES_EN_COURS_DE_GEN ' + 
+	'" /o' + @sFicOut + ' -w5000' + @sOsqlOption
+
+EXEC @iRetOsql = master.dbo.xp_cmdshell @sCommande, no_output
+
+Set @sObjet    = 'Prestations SIMPA2 vers le HUB réstées en EN COURS sur le HUB, non générées à ce jour ' + Convert ( VarChar ( 10), Getdate (), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108)
+
+IF NOT ( @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' ) Set @sObjet = '[RECETTE] ' + @sObjet    
+
+set @sMessage  = 'Bonjour,'
+set @sMessage  = @sMessage + char ( 10) + char ( 10)
+set @sMessage  = @sMessage + 'Veuillez-trouver en pièce-jointe la liste des prestations SIMPA2 données au HUB PRESTATAIRE, mais restées à ce jour EN COURS DE GENERATION, donc non générées.'
+set @sMessage  = @sMessage + char ( 10) + char ( 10)
+set @sMessage  = @sMessage + 'Cordialement,'
+set @sMessage  = @sMessage + char ( 10) + char ( 10)
+Set @sMessage = @sMessage + 'Fabry Jean-François'
+Set @sMessage = @sMessage + CHAR ( 10 )
+Set @sMessage = @sMessage + 'DSI/Etudes SIMPA2'
+
+
+EXEC master.dbo.SPB_PS_MAIL 
+			@sRetourErrMail OUTPUT, 
+			'jfabry@spb.eu,BKHELIFA_ext@spb.eu', -- 'jff@spb.fr', -- 
+			@sMessage, 
+			@sObjet, 
+			null, 
+			null, 
+			@sFicOut, 
+			NULL, 
+			NULL, 
+			NULL, 
+			NULL
+
+
+Go

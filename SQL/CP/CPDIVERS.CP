@@ -2842,6 +2842,12 @@ If sysadm.FN_CLE_NUMERIQUE ( 'RS6179_TRG_WQ') > 0
 -- [LGY11]
 Exec sysadm.PS_U_REDRESS_W_QUEUE_STATUT_IWD  
 
+-- [HP252_276_HUB_PRESTA]
+If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
+ Begin
+ 	Exec sysadm.PS_HP276_S_S2_PRESTA_SIMPA2_RESTEES_EN_COURS_DE_GEN_MAIL
+ End 
+
 GO
 
 grant execute on sysadm.PS_CORRECTION_BASE_NUIT_2 to rolebddsinistres

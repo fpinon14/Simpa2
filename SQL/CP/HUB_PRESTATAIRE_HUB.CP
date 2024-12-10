@@ -12,8 +12,8 @@
 -- edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2
 -- edi.PS_HP276_I_HP_TRANSFERT_PRESTA_VERS_HUB_PRESTATAIRE
 -- edi.PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATAIRE
--- edi.PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_HUB_PRESTAIRE_A_SIMPA2
--- edi.PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_SIMPA2_AU_HUB_PRESTAIRE
+-- edi.PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_HUB_PRESTATAIRE_A_SIMPA2
+-- edi.PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_SIMPA2_AU_HUB_PRESTATAIRE
 -- edi.PS_HP276_S_HP_POINT_DE_SERVICE
 -- edi.PS_HP276_S_HP_PROCESS_ACHEMINEMENT
 -- edi.PS_HP276_S_HP_RECUPERER_EN_MASSE_LES_PRESTATIONS_A_TRAITER
@@ -1001,7 +1001,7 @@ Go
 
 -------------------------------------------------------------------
 --
--- Procédure            :       PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_SIMPA2_AU_HUB_PRESTAIRE
+-- Procédure            :       PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_SIMPA2_AU_HUB_PRESTATAIRE
 -- Auteur               :       JFF
 -- Date                 :       11/03/2024
 -- Libell‚              :       [HP252_276_HUB_PRESTA]
@@ -1012,11 +1012,11 @@ Go
 --
 -- Retourne             :       rien
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_SIMPA2_AU_HUB_PRESTAIRE' AND type = 'P' )
-        DROP procedure edi.PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_SIMPA2_AU_HUB_PRESTAIRE
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_SIMPA2_AU_HUB_PRESTATAIRE' AND type = 'P' )
+        DROP procedure edi.PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_SIMPA2_AU_HUB_PRESTATAIRE
 GO
 
-CREATE procedure edi.PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_SIMPA2_AU_HUB_PRESTAIRE
+CREATE procedure edi.PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_SIMPA2_AU_HUB_PRESTATAIRE
 	    @iIdSin		Integer,
 		@iIdSeq		Integer,
 		@iIdDepotS2 Integer
@@ -1219,7 +1219,7 @@ Select
 	info_spb_frn_cplt
 
 From edi.DepotSimpa2ToHubPresta dps2
-Where dps2.alt_trt in ( 'N', 'E' ) 
+Where dps2.alt_trt in ( 'N', 'E' )
 Order by id_depot_simpa2
 
 Go
@@ -1928,7 +1928,7 @@ Go
 
 -------------------------------------------------------------------
 --
--- Procédure            :       PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_HUB_PRESTAIRE_A_SIMPA2
+-- Procédure            :       PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_HUB_PRESTATAIRE_A_SIMPA2
 -- Auteur               :       JFF
 -- Date                 :       11/03/2024
 -- Libell‚              :       [HP252_276_HUB_PRESTA]
@@ -1939,11 +1939,11 @@ Go
 --
 -- Retourne             :       rien
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_HUB_PRESTAIRE_A_SIMPA2' AND type = 'P' )
-        DROP procedure edi.PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_HUB_PRESTAIRE_A_SIMPA2
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_HUB_PRESTATAIRE_A_SIMPA2' AND type = 'P' )
+        DROP procedure edi.PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_HUB_PRESTATAIRE_A_SIMPA2
 GO
 
-CREATE procedure edi.PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_HUB_PRESTAIRE_A_SIMPA2
+CREATE procedure edi.PS_HP276_S_HP_DONNEES_TRANSMISES_PAR_HUB_PRESTATAIRE_A_SIMPA2
 	    @sIdHubPresta VarChar ( 20 )
 AS
 
