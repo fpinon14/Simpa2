@@ -999,7 +999,7 @@ iCoefV = 2700
 This.X = This.X - iCoefH / 2
 This.Y = This.Y - iCoefV / 2
 
-This.Width = This.Width + iCoefH
+This.Width = This.Width + iCoefH + 40
 dw_1.Width = dw_1.Width + iCoefH
 
 This.Height = This.Height + iCoefV 

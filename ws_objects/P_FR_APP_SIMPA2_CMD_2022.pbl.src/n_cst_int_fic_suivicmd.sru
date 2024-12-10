@@ -31977,21 +31977,29 @@ For lCpt = lTotLig To 1 Step -1
 	/* dte_rdv_conf   														        */
 	/*------------------------------------------------------------------*/
 	dtVal =  idwFicFourn.GetItemDatetime( lCpt, "dte_rdv_conf")			
-	lVal  =  idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) 
+	sVal = idwFicFourn.GetItemString ( lCpt, "SITE_ACTION" )
+	sVal1 = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCplt , "SITE_ACTION", ";")
 
 	If Not IsNull ( dtVal ) Then
-		Choose Case lVal
-			Case 955, 956, 957
-			
+		Choose Case sVal 
+			Case "DISTANCE", "DOMICILE"
 					// Ok
 					
 			Case Else 
-				iRet = -1
-				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il n'est pas logique d'avoir une date de confirmation de rdv en dehors des process 955, 956, 957." )
+				
+				Choose Case sVal1 
+					Case "DISTANCE", "DOMICILE"
+							// Ok
 
+					Case Else 
+				
+						iRet = -1
+						This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il n'est pas logique d'avoir une date de confirmation de rdv en dehors des site action DISTANCE et DOMICILE." )
+			End Choose 				
 		End Choose 
 	End If 	
+
 
 	/*------------------------------------------------------------------*/
 	/* mode_logis_ret																	  */
@@ -33226,6 +33234,12 @@ For lCpt = 1 To lTotLig
 	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "SITE_ACTION" ) ) )
 	If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
 		lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "SITE_ACTION", sVal, ";")
+		
+		// On mémorise pour ne pas le perdre qu'il y a eu inter par DISTANCE au début, même si ensuite on en a DOMICILE
+		IF sVal = "DISTANCE" Then
+			lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "SITE_ACTION_ORIG", sVal, ";")			
+		End IF 
+		
 	End If
 
 	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "AUTRES_INFOS_REMPL" ) ) )
