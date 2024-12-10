@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_t_sp_param_ftu_brk.srw
-$PBExportComments$[PM02] Fen$$HEX1$$ea00$$ENDHEX$$tre de traitement d$$HEX1$$e900$$ENDHEX$$tail pour le param$$HEX1$$e900$$ENDHEX$$trage des tarifs de reprises de mat$$HEX1$$e900$$ENDHEX$$riels
+﻿$PBExportHeader$w_t_sp_param_ftu_brk.srw
+$PBExportComments$[PM02] Fenêtre de traitement détail pour le paramétrage des tarifs de reprises de matériels
 forward
 global type w_t_sp_param_ftu_brk from w_traitement
 end type
@@ -22,7 +22,7 @@ end forward
 global type w_t_sp_param_ftu_brk from w_traitement
 integer width = 3881
 integer height = 2740
-string title = "Param$$HEX1$$e900$$ENDHEX$$trage des tarifs de reprises de mat$$HEX1$$e900$$ENDHEX$$riels sinistr$$HEX1$$e900$$ENDHEX$$s"
+string title = "Paramétrage des tarifs de reprises de matériels sinistrés"
 boolean ibmajaccueil = true
 event type long ue_supprimerdetail ( unsignedlong wparm,  long lparm )
 st_creation st_creation
@@ -66,7 +66,7 @@ event type long ue_supprimerdetail(unsignedlong wparm, long lparm);//*----------
 //* Evenement 		: ue_supprimerdetail
 //* Auteur			: F. Pinon
 //* Date				: 17/03/2011 16:54:26
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -91,7 +91,7 @@ public function boolean wf_preparermodifier ();//*------------------------------
 //* Fonction		: w_t_sp_param_ftu_brk::wf_preparermodifier
 //* Auteur			: F. Pinon
 //* Date				: 02/03/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -167,7 +167,7 @@ public function boolean wf_preparerinserer ();//*-------------------------------
 //* Fonction		: w_t_sp_param_ftu_brk::wf_preparerinserer
 //* Auteur			: F. Pinon
 //* Date				: 02/03/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -203,7 +203,7 @@ public function string wf_controlersaisie ();//*--------------------------------
 //* Fonction		: w_t_sp_param_ftu_brk::wf_controlersaisie
 //* Auteur			: F. Pinon
 //* Date				: 23/10/2009 08:59:56
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -240,7 +240,7 @@ public function string wf_controlergestion ();//*-------------------------------
 //* Fonction		: w_t_sp_param_ftu_brk::wf_controlergestion
 //* Auteur			: F. Pinon
 //* Date				: 02/03/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -273,7 +273,7 @@ public function boolean wf_preparersupprimer ();//*-----------------------------
 //* Fonction		: w_t_sp_param_ftu_brk::wf_preparersupprimer
 //* Auteur			: F. Pinon
 //* Date				: 02/03/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -287,14 +287,14 @@ public function boolean wf_preparersupprimer ();//*-----------------------------
 //*-----------------------------------------------------------------
 
 Boolean		bRet 			// Variable de retour de la fonction.
-Integer		iRet			// Confirmation de l'op$$HEX1$$e900$$ENDHEX$$rateur
+Integer		iRet			// Confirmation de l'opérateur
 
 bRet 		= True
 
 /*------------------------------------------------------------------*/
 /* Demande de Confirmation avant suppression                        */
 /*------------------------------------------------------------------*/
-stMessage.sTitre 		= "Suppression d'un param$$HEX1$$e900$$ENDHEX$$trage de tarif"
+stMessage.sTitre 		= "Suppression d'un paramétrage de tarif"
 stMessage.Bouton		= YesNo!
 stMessage.Icon			= Question!
 stMessage.sCode		= "PATF001"
@@ -302,7 +302,7 @@ stMessage.sCode		= "PATF001"
 iRet						= f_Message ( stMessage )
 
 /*------------------------------------------------------------------*/
-/* Traitement suivant confirmation ou non de l'op$$HEX1$$e900$$ENDHEX$$rateur            */
+/* Traitement suivant confirmation ou non de l'opérateur            */
 /*------------------------------------------------------------------*/
 If iRet = 2 Then 	
 
@@ -320,7 +320,7 @@ public function boolean wf_valider ();//*---------------------------------------
 //* Fonction		: w_t_sp_param_ftu_brk::wf_valider
 //* Auteur			: F. Pinon
 //* Date				: 02/03/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -330,7 +330,7 @@ public function boolean wf_valider ();//*---------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #..   ...   ../../....   
-//* 		FPI	24/10/2011	 [PM02.DP175] Autorisation d'ins$$HEX1$$e900$$ENDHEX$$rer une seule et unique ligne si DP 175
+//* 		FPI	24/10/2011	 [PM02.DP175] Autorisation d'insérer une seule et unique ligne si DP 175
 //*-----------------------------------------------------------------
 
 Boolean bRet
@@ -348,7 +348,7 @@ If bRet Then
 	dtNow =Datetime(Today(),Now())
 	
 	If istpass.binsert Then
-		st_creation.Text="Cr$$HEX1$$e900$$ENDHEX$$ation en base r$$HEX1$$e900$$ENDHEX$$ussie (ID=" + string(dw_1.GetItemnumber( 1, "ID_TARIF")) + ")"
+		st_creation.Text="Création en base réussie (ID=" + string(dw_1.GetItemnumber( 1, "ID_TARIF")) + ")"
 		if dw_1.GetItemString(1,"ALT_REINIT") = "O" Then 
 			iuospgsparamftubrk.uf_reinitialiser( )
 			wf_setmode_creation( FALSE )
@@ -358,15 +358,15 @@ If bRet Then
 		
 		dw_cree_le.SetItem(1,"CREE_LE",dtNow)
 	Else
-		st_creation.Text="Modification en base r$$HEX1$$e900$$ENDHEX$$ussie"
+		st_creation.Text="Modification en base réussie"
 	End if
 	st_creation.Textcolor = 32768
 	dw_cree_le.SetItem(1,"MAJ_LE",dtNow)
 Else
 	If istpass.binsert Then
-		st_creation.Text="Echec de cr$$HEX1$$e900$$ENDHEX$$ation du param$$HEX1$$e900$$ENDHEX$$trage"
+		st_creation.Text="Echec de création du paramétrage"
 	Else
-		st_creation.Text="Echec de modification du param$$HEX1$$e900$$ENDHEX$$trage"
+		st_creation.Text="Echec de modification du paramétrage"
 	End if
 	st_creation.Textcolor = 255
 End if
@@ -387,7 +387,7 @@ public function boolean wf_preparervalider ();//*-------------------------------
 //* Fonction		: w_t_sp_param_ftu_brk::wf_preparervalider
 //* Auteur			: F. Pinon
 //* Date				: 02/03/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	:
 //*
 //* Arguments		: 
@@ -408,7 +408,7 @@ private subroutine wf_proteger ();//*-------------------------------------------
 //* Fonction		: w_t_sp_param_ftu_brk::wf_proteger
 //* Auteur			: F. Pinon
 //* Date				: 10/03/2011 13:49:37
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -425,8 +425,8 @@ Long 		lTotLigne
 Long lTotCol, lCol
 
 /*--------------------------------------------------------------------*/
-/* La pr$$HEX1$$e900$$ENDHEX$$sence d'une ligne 220 pour l'op$$HEX1$$e900$$ENDHEX$$rateur */
-/* connect$$HEX60$$e90020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000$$ENDHEX$$*/   
+/* La présence d'une ligne 220 pour l'opérateur */
+/* connecté                                                           */   
 /*--------------------------------------------------------------------*/
 
 SELECT count(*) INTO :lTotLigne
@@ -469,7 +469,7 @@ private subroutine wf_setmode_creation (boolean bpassmodif);//*-----------------
 //* Fonction		: w_t_sp_param_ftu_brk::wf_setmode_creation
 //* Auteur			: F. Pinon
 //* Date				: 14/03/2011 17:31:15
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -499,7 +499,7 @@ If bPassModif Then
 	dw_1.uf_proteger ( {"ID_PROD","ID_REV","ID_GTI","ID_BRK","ID_TYP_ART","ID_MARQ_ART","ID_MODL_ART","DTE_DEB_EFF","DTE_FIN_EFF","TYP_EFF","ID_FOUR","ID_METHODE","ALT_SANS_VALIDITE","ALT_SANS_FIN_VALIDE"}, "1")
 	istpass.binsert = FALSE
 Else
-	This.Title="Cr$$HEX1$$e900$$ENDHEX$$ation de tarif"
+	This.Title="Création de tarif"
 	pb_supprimer.Visible=FALSE
 	dw_1.setItem( 1,"id_tarif",lNull)
 	dw_1.setItemStatus( 1, 0, Primary!,New!)
@@ -527,7 +527,7 @@ public function boolean wf_suite_valider ();//*---------------------------------
 //* Fonction		: w_t_sp_param_ftu_brk::wf_suite_valider
 //* Auteur			: F. Pinon
 //* Date				: 17/03/2011 10:59:24
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -540,7 +540,7 @@ public function boolean wf_suite_valider ();//*---------------------------------
 //* 
 //*-----------------------------------------------------------------
 
-// Pour $$HEX1$$e900$$ENDHEX$$viter que la fen$$HEX1$$ea00$$ENDHEX$$tre se ferme $$HEX2$$e0002000$$ENDHEX$$chaque cr$$HEX1$$e900$$ENDHEX$$ation
+// Pour éviter que la fenêtre se ferme à chaque création
 This.bringtotop = TRUE
 
 // On ne ferme qu'en modification
@@ -552,7 +552,7 @@ public function boolean wf_executervalider ();//*-------------------------------
 //* Fonction		: w_t_sp_param_ftu_brk::wf_executervalider
 //* Auteur			: F. Pinon
 //* Date				: 17/03/2011 11:29:13
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -591,7 +591,7 @@ private subroutine wf_set_cree_le ();//*----------------------------------------
 //* Fonction		: w_t_sp_param_ftu_brk::wf_set_cree_le
 //* Auteur			: F. Pinon
 //* Date				: 29/03/2011 15:54:23
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -643,8 +643,8 @@ public function boolean wf_preparerabandonner ();//*----------------------------
 //* Fonction		: w_t_sp_param_ftu_brk::wf_preparerabandonner
 //* Auteur			: F. Pinon
 //* Date				: 01/04/2011 09:51:02
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On a cliqu$$HEX2$$e9002000$$ENDHEX$$sur retour. On demande confirmation.
+//* Libellé			: 
+//* Commentaires	: On a cliqué sur retour. On demande confirmation.
 //*
 //* Arguments		: 
 //*
@@ -664,7 +664,7 @@ stmessage.berreurg=FALSE
 stmessage.bouton=YesNo!
 stmessage.icon=Question!
 stmessage.scode="PATF017"
-stMessage.sTitre="Param$$HEX1$$e900$$ENDHEX$$trage des tarifs de reprises"
+stMessage.sTitre="Paramétrage des tarifs de reprises"
 
 bRet=(f_message(stMessage) = 1)
 
@@ -680,7 +680,7 @@ private subroutine wf_afficher_doc (string asnomfichier);//*--------------------
 //* Evenement 		: wf_afficher_doc
 //* Auteur			: F. Pinon
 //* Date				: 01/04/2011 11:29:40
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -711,7 +711,7 @@ sFic = Upper ( Replace ( sFic, Pos ( sFic, "*", 1 ), 1, asnomfichier ))
 bOk = f_FileExists ( sFic )
 
 If Not bOk Then
-	stMessage.sTitre  	= "Aide Param$$HEX1$$e900$$ENDHEX$$trage des tarifs de reprise"
+	stMessage.sTitre  	= "Aide Paramétrage des tarifs de reprise"
 	stMessage.Icon			= Information!
 	stMessage.bErreurG	= TRUE
 	stMessage.Bouton		= Ok!
@@ -726,10 +726,10 @@ End If
 //sRepWord = ProFileString ( stGlb.sFichierIni, "DOCUMENTATION", "REP_WORD", "" )
 sRepWord = f_getwordexe()
 /*------------------------------------------------------------------*/
-/* Le chemin o$$HEX2$$f9002000$$ENDHEX$$trouver word est vide.                              */
+/* Le chemin où trouver word est vide.                              */
 /*------------------------------------------------------------------*/
 If sRepWord = "" Then 
-	stMessage.sTitre  	= "Aide Param$$HEX1$$e900$$ENDHEX$$trage des tarifs de reprise"
+	stMessage.sTitre  	= "Aide Paramétrage des tarifs de reprise"
 	stMessage.Icon			= Information!
 	stMessage.bErreurG	= TRUE
 	stMessage.Bouton		= Ok!
@@ -744,7 +744,7 @@ If f_FileExists ( sFicTmp ) Then
 	
 	bOk = FileDelete ( sFicTmp )
 	If Not bOk Then
-		stMessage.sTitre  	= "Aide Param$$HEX1$$e900$$ENDHEX$$trage des tarifs de reprise"
+		stMessage.sTitre  	= "Aide Paramétrage des tarifs de reprise"
 		stMessage.Icon			= Information!
 		stMessage.bErreurG	= TRUE
 		stMessage.Bouton		= Ok!
@@ -761,7 +761,7 @@ End If
 /*------------------------------------------------------------------*/
 bOk = F_LireFichierBlob ( blBlob, sFic )
 If Not bOk Then
-	stMessage.sTitre  	=  "Aide Param$$HEX1$$e900$$ENDHEX$$trage des tarifs de reprise"
+	stMessage.sTitre  	=  "Aide Paramétrage des tarifs de reprise"
 	stMessage.Icon			= Information!
 	stMessage.bErreurG	= TRUE
 	stMessage.Bouton		= Ok!
@@ -776,7 +776,7 @@ End If
 /*------------------------------------------------------------------*/
 bOk = F_EcrireFichierBlob ( blBlob, sFicTmp)
 If Not bOk Then
-	stMessage.sTitre  	= "Aide Param$$HEX1$$e900$$ENDHEX$$trage des tarifs de reprise"
+	stMessage.sTitre  	= "Aide Paramétrage des tarifs de reprise"
 	stMessage.Icon			= Information!
 	stMessage.bErreurG	= TRUE
 	stMessage.Bouton		= Ok!
@@ -799,7 +799,7 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		: ue_initialiser
 //* Auteur			: F. Pinon
 //* Date				: 20/10/2009 09:54:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -857,7 +857,7 @@ event close;call super::close;//*-----------------------------------------------
 //* Evenement 		: close
 //* Auteur			: F. Pinon
 //* Date				: 20/10/2009 09:55:34
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -879,7 +879,7 @@ event ue_majaccueil;call super::ue_majaccueil;//*-------------------------------
 //* Evenement 		: ue_majaccueil
 //* Auteur			: F. Pinon
 //* Date				: 20/10/2009 17:05:52
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -918,7 +918,7 @@ event open;call super::open;//*-------------------------------------------------
 //* Evenement 		: open
 //* Auteur			: F. Pinon
 //* Date				: 23/10/2009 10:19:13
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -932,11 +932,11 @@ event open;call super::open;//*-------------------------------------------------
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* Fen$$HEX1$$ea00$$ENDHEX$$tre.                                                         */
+/* Fenêtre.                                                         */
 /*------------------------------------------------------------------*/
 This.X					=    1
 This.Y					=    1
-This.Width				= 3870
+This.Width				= 3870 + 20
 This.Height				= 2800 
 
 end event
@@ -947,7 +947,7 @@ event ue_retour;//*-------------------------------------------------------------
 //* Evenement 		: ue_retour
 //* Auteur			: F. Pinon
 //* Date				: 02/03/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value unsignedlong wparam	 */
@@ -1014,7 +1014,7 @@ event hide;call super::hide;//*-------------------------------------------------
 //* Evenement 		: hide
 //* Auteur			: F. Pinon
 //* Date				: 02/03/2011 17:49:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -1027,9 +1027,14 @@ event hide;call super::hide;//*-------------------------------------------------
 //* 
 //*-----------------------------------------------------------------
 
-gWMdi.Width -=310
-gWMdi.Height -=1070
-iwparent.Height =1864
+gWMdi.Width -=260
+gWMdi.Height -=960
+gWMdi.y += 100
+
+iwparent.Width = 3720 
+iwparent.Height = 2010
+
+
 end event
 
 event show;call super::show;//*-----------------------------------------------------------------
@@ -1038,7 +1043,7 @@ event show;call super::show;//*-------------------------------------------------
 //* Evenement 		: Show
 //* Auteur			: F. Pinon
 //* Date				: 02/03/2011 17:49:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -1051,9 +1056,12 @@ event show;call super::show;//*-------------------------------------------------
 //* 
 //*-----------------------------------------------------------------
 
-gWMdi.Width +=310
-gWMdi.Height +=1070
-iwparent.Height=3000
+gWMdi.Width += 260
+gWMdi.Height += 960
+gWMdi.y -= 100
+
+iwparent.Height= 2960 
+iwparent.Width = 3980
 
 wf_proteger()
 end event
@@ -1063,7 +1071,7 @@ event ue_creer;call super::ue_creer;//*-----------------------------------------
 //* Fonction		: w_t_sp_param_ftu_brk::ue_creer
 //* Auteur			: F. Pinon
 //* Date				: 15/03/2011 10:45:06
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: value unsignedlong wparam	 */
@@ -1104,7 +1112,7 @@ event dw_1::itemchanged;call super::itemchanged;//*-----------------------------
 //* Evenement 		: itemchanged
 //* Auteur			: F. Pinon
 //* Date				: 02/03/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value long row	 */
@@ -1147,8 +1155,8 @@ event dw_1::dberror;//*---------------------------------------------------------
 //* Evenement 		: dberror
 //* Auteur			: F. Pinon
 //* Date				: 18/10/2010 14:20:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: [PM72.2] Les PS de m$$HEX1$$e000$$ENDHEX$$j renvoient une erreur SQL
+//* Libellé			: 
+//* Commentaires	: [PM72.2] Les PS de màj renvoient une erreur SQL
 //*				  
 //* Arguments		: value long sqldbcode	 */
 /* 	value string sqlerrtext	 */
@@ -1164,10 +1172,10 @@ event dw_1::dberror;//*---------------------------------------------------------
 //* 
 //*-----------------------------------------------------------------
 
-If sqldbcode =2601 Then // Cl$$HEX2$$e9002000$$ENDHEX$$d'index en double
+If sqldbcode =2601 Then // Clé d'index en double
 	stMessage.berreurg=FALSE
 	stMessage.scode="PATF003"
-	stMessage.sTitre="Param$$HEX1$$e900$$ENDHEX$$trage des tarifs de reprises"
+	stMessage.sTitre="Paramétrage des tarifs de reprises"
 	f_message(stMessage)
 End if
 
@@ -1180,7 +1188,7 @@ event dw_1::itemerror;//*-------------------------------------------------------
 //* Evenement 		: itemerror
 //* Auteur			: F. Pinon
 //* Date				: ?
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value long row	 */
@@ -1202,15 +1210,15 @@ String sCols[]={"DTE_DEB_EFF","DTE_FIN_EFF","PER_CPLT", &
 	"MT_PIVOT",  "MT_DECOTE","TX_DECOTE", &
 	"MT_FORFAITAIRE","TX_TVA","ID_PROD"}
 	
-String sLibCols[]={"date de d$$HEX1$$e900$$ENDHEX$$but de validit$$HEX1$$e900$$ENDHEX$$","date de fin de validit$$HEX1$$e900$$ENDHEX$$", "p$$HEX1$$e900$$ENDHEX$$riode compl$$HEX1$$e900$$ENDHEX$$mentaire", &
-	"tarif de reprise fixe", "montant de d$$HEX1$$e900$$ENDHEX$$cote num$$HEX1$$e900$$ENDHEX$$raire", "pourcentage de d$$HEX1$$e900$$ENDHEX$$cote", &
+String sLibCols[]={"date de début de validité","date de fin de validité", "période complémentaire", &
+	"tarif de reprise fixe", "montant de décote numéraire", "pourcentage de décote", &
 	"montant forfaitaire","taux de TVA","produit"}
 
 ll_return=2
 
 Choose Case Upper ( This.GetColumnName () ) 
 	Case "DTE_DEB_EFF"
-		stMessage.sVar[1] = "date de d$$HEX1$$e900$$ENDHEX$$but de validit$$HEX1$$e900$$ENDHEX$$"
+		stMessage.sVar[1] = "date de début de validité"
 		
 		// Gestion pour l'override
 		If This.GetText () = "" Then 
@@ -1225,7 +1233,7 @@ Choose Case Upper ( This.GetColumnName () )
 
 	Case "DTE_FIN_EFF"
 		stMessage.scode = "GENE002"
-		stMessage.sVar[1] = "date de fin de validit$$HEX1$$e900$$ENDHEX$$"
+		stMessage.sVar[1] = "date de fin de validité"
 		
 		// Gestion pour l'override
 		If This.GetText () = "" Then 
@@ -1243,13 +1251,13 @@ Choose Case Upper ( This.GetColumnName () )
 		ll_return = This.Uf_Reinitialiser ()
 	
 	Case Else
-		// Sinon on d$$HEX1$$e900$$ENDHEX$$clenche l'anc$$HEX1$$ea00$$ENDHEX$$tre, et la suite ci-dessous
+		// Sinon on déclenche l'ancêtre, et la suite ci-dessous
 		Call super::itemerror
 End Choose 
 
 If	ibErreur Then
 
-	stMessage.sTitre		= "Param$$HEX1$$e900$$ENDHEX$$trage des tarifs de reprises"
+	stMessage.sTitre		= "Paramétrage des tarifs de reprises"
 	stMessage.Icon			= Information!
 
 	stMessage.bErreurG	= TRUE
@@ -1277,7 +1285,7 @@ If	ibErreur Then
 		Case "ID_PROD"
 			Choose Case This.iiErreur
 			Case 1
-				// Les stMessage.sVar sont d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$param$$HEX1$$e900$$ENDHEX$$tr$$HEX1$$e900$$ENDHEX$$s
+				// Les stMessage.sVar sont déjà paramétrés
 				stMessage.bErreurG	= FALSE
 				stMessage.sCode	= "PATF021"
 	
@@ -1346,7 +1354,7 @@ fontfamily fontfamily = swiss!
 string facename = "MS Sans Serif"
 long textcolor = 16711680
 long backcolor = 12632256
-string text = "Cr$$HEX1$$e900$$ENDHEX$$ation du param$$HEX1$$e800$$ENDHEX$$tre r$$HEX1$$e900$$ENDHEX$$ussi"
+string text = "Création du paramètre réussi"
 boolean focusrectangle = false
 end type
 
@@ -1381,7 +1389,7 @@ event ue_modifiermenu;call super::ue_modifiermenu;//*---------------------------
 //* Fonction		: w_t_sp_param_ftu_brk::ue_modifiermenu
 //* Auteur			: F. Pinon
 //* Date				: 15/03/2011 10:52:55
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*16777215
 //* Arguments		: value unsignedlong wparam	 */
@@ -1410,7 +1418,7 @@ event itemchanged;call super::itemchanged;//*-----------------------------------
 //* Evenement 		: itemchanged
 //* Auteur			: F. Pinon
 //* Date				: 14/03/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: value long row	 */
@@ -1446,13 +1454,13 @@ String sCols[]={"IE_MT_PIVOT_MIN","IE_MT_PIVOT_MAX",  &
 	
 String sLibCols[]={"type d'inclusion du montant pivot minimum","type d'inclusion du montant pivot maximum",  &
 	"montant pivot minimum", "montant pivot maximum", "taux de reprise", & 
-	"p$$HEX1$$e900$$ENDHEX$$riode minimum","p$$HEX1$$e900$$ENDHEX$$riode maximum"}
+	"période minimum","période maximum"}
 
 ll_return=2
 
 If	ibErreur Then
 
-	stMessage.sTitre		= "Param$$HEX1$$e900$$ENDHEX$$trage des tarifs de reprises"
+	stMessage.sTitre		= "Paramétrage des tarifs de reprises"
 	stMessage.Icon			= Information!
 
 	stMessage.bErreurG	= TRUE
@@ -1472,13 +1480,13 @@ If	ibErreur Then
 		Case "DTE_SURV_DATE"
 			Choose Case This.iiErreur
 			Case 1
-				stMessage.sVar[1] = "date de survenance"				// Erreur de saisie - Date inf$$HEX1$$e900$$ENDHEX$$rieure au 01/01/1994
+				stMessage.sVar[1] = "date de survenance"				// Erreur de saisie - Date inférieure au 01/01/1994
 				stMessage.sCode	= "GENE002"
 	
 			Case 2
-				stMessage.sVar[1] = "date de survenance"				// Erreur de saisie - Date de survenance > Date de d$$HEX1$$e900$$ENDHEX$$claration
-				stMessage.sVar[2] = "inf$$HEX1$$e900$$ENDHEX$$rieure ou $$HEX1$$e900$$ENDHEX$$gale"
-				stMessage.sVar[3] = "date de d$$HEX1$$e900$$ENDHEX$$claration"
+				stMessage.sVar[1] = "date de survenance"				// Erreur de saisie - Date de survenance > Date de déclaration
+				stMessage.sVar[2] = "inférieure ou égale"
+				stMessage.sVar[3] = "date de déclaration"
 				stMessage.bErreurG= False
 				stMessage.sCode	= "WSIN140"
 	
@@ -1512,7 +1520,7 @@ fontfamily fontfamily = swiss!
 string facename = "Tahoma"
 long textcolor = 33554432
 long backcolor = 10789024
-string text = "Tranche montant pivot/v$$HEX1$$e900$$ENDHEX$$tust$$HEX1$$e900$$ENDHEX$$/Taux de reprise"
+string text = "Tranche montant pivot/vétusté/Taux de reprise"
 alignment alignment = center!
 boolean focusrectangle = false
 end type
@@ -1564,7 +1572,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 01/04/2011 11:29:40
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 
@@ -1603,7 +1611,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 01/04/2011 11:29:40
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 

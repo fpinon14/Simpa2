@@ -112,6 +112,9 @@ event open;call super::open;//*-------------------------------------------------
 //*-----------------------------------------------------------------
 itrTrans=SQLCA
 
+this.Width = 3720 
+this.Height = 2010
+
 /*------------------------------------------------------------------*/
 /* Fenêtre de recherche                                             */
 /*------------------------------------------------------------------*/
@@ -356,6 +359,9 @@ event ue_creer;call super::ue_creer;//*-----------------------------------------
 istPass.bInsert = True
 
 f_OuvreTraitement ( W_T_Sp_Param_ftu_brk, istPass )
+
+
+
 end event
 
 event ue_modifier;call super::ue_modifier;//*-----------------------------------------------------------------
@@ -391,6 +397,11 @@ end event
 
 event ue_enablefenetre;call super::ue_enablefenetre;this.height=1864
 this.triggerEvent("ue_taillerhauteur")
+end event
+
+event ue_interro;call super::ue_interro;this.Width = 3720 
+this.Height =  2010
+
 end event
 
 type cb_debug from w_8_accueil`cb_debug within w_a_sp_param_tarifs_reprises

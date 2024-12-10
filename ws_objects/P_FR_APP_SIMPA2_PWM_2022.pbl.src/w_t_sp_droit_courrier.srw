@@ -1,5 +1,5 @@
-HA$PBExportHeader$w_t_sp_droit_courrier.srw
-$PBExportComments$---} Param$$HEX1$$e900$$ENDHEX$$trage des droits courrier et validation autonome
+﻿$PBExportHeader$w_t_sp_droit_courrier.srw
+$PBExportComments$---} Paramétrage des droits courrier et validation autonome
 forward
 global type w_t_sp_droit_courrier from w_8_traitement
 end type
@@ -21,7 +21,8 @@ end forward
 
 global type w_t_sp_droit_courrier from w_8_traitement
 integer width = 3616
-integer height = 1776
+integer height = 1792
+event ue_retaillefenetre ( )
 dw_produit dw_produit
 dw_param_droit dw_param_droit
 dw_droit_existant dw_droit_existant
@@ -45,12 +46,16 @@ public subroutine wf_appliquer ()
 public subroutine wf_valider_desc ()
 end prototypes
 
+event ue_retaillefenetre();This.width = 3650
+This.height= 1850
+end event
+
 public function boolean wf_preparermodifier ();//*-----------------------------------------------------------------
 //*
 //* Fonction      : w_t_sp_droit_courrier::wf_preparer
 //* Auteur        : Fabry JF
 //* Date          : 19/02/2004 17:21:10
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -80,7 +85,7 @@ public subroutine wf_appliquer ();//*-------------------------------------------
 //* Fonction      : w_t_sp_droit_courrier::wf_Appliquer (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 20/02/2004 16:11:40
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Sauvegarde sans quitter la fen$$HEX1$$ea00$$ENDHEX$$tre
+//* Libellé       : Sauvegarde sans quitter la fenêtre
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -105,7 +110,7 @@ public subroutine wf_valider_desc ();//*----------------------------------------
 //* Fonction      : w_t_sp_droit_courrier::wf_Valider (PRIVATE)
 //* Auteur        : Fabry JF
 //* Date          : 20/02/2004 16:11:40
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -133,7 +138,7 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement     : ue_initialiser
 //* Auteur        : Fabry JF
 //* Date          : 19/02/2004 16:47:55
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: DCMP040020
+//* Libellé       : DCMP040020
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -148,7 +153,7 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 
 s_Pass stPass
 
-This.Title = "Param$$HEX1$$e800$$ENDHEX$$trage des droits li$$HEX1$$e900$$ENDHEX$$s $$HEX2$$e0002000$$ENDHEX$$la gestion des dossiers"
+This.Title = "Paramètrage des droits liés à la gestion des dossiers"
 
 st_temoin_sav.Text = ""
 
@@ -171,8 +176,8 @@ on we_childactivate;call w_8_traitement::we_childactivate;//*-------------------
 //* Evenement 		: We_ChildActivate
 //* Auteur			: Fabry JF
 //* Date				: 30/11/2002 11:13:35
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Si on d$$HEX1$$e900$$ENDHEX$$place la fen$$HEX1$$ea00$$ENDHEX$$tre, elle revient au m$$HEX1$$ea00$$ENDHEX$$me endroit. 
+//* Libellé			: 
+//* Commentaires	: Si on déplace la fenêtre, elle revient au même endroit. 
 //*				  
 //* Arguments		: Aucun
 //*
@@ -195,7 +200,7 @@ on ue_retour;call w_8_traitement::ue_retour;//*---------------------------------
 //* Evenement     : ue_retour
 //* Auteur        : Fabry JF
 //* Date          : 19/02/2004 17:43:30
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -248,7 +253,7 @@ event close;call super::close;//*-----------------------------------------------
 //* Evenement     : close
 //* Auteur        : Fabry JF
 //* Date          : 19/02/2004 16:47:12
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -266,6 +271,11 @@ event close;call super::close;//*-----------------------------------------------
 If IsValid(invDrtCour) Then Destroy ( invDrtCour )
 //Fin Migration PB8-WYNIWYG-03/2006 FM
 
+end event
+
+event open;call super::open;
+
+PostEvent ( "ue_RetailleFenetre" ) 
 end event
 
 type cb_debug from w_8_traitement`cb_debug within w_t_sp_droit_courrier
@@ -286,7 +296,7 @@ event dw_1::clicked;call super::clicked;//*-------------------------------------
 //* Evenement		: Clicked
 //* Auteur			: Fabry JF
 //* Date				: 20/02/2004 16:16:55
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Gestion du click sur un $$HEX1$$e900$$ENDHEX$$tat.
+//* Libellé			: Gestion du click sur un état.
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -333,7 +343,7 @@ on dw_1::rowfocuschanged;call w_8_traitement`dw_1::rowfocuschanged;//*----------
 //* Evenement     : RowFocusChanged
 //* Auteur        : Fabry JF
 //* Date          : 20/02/2004 09:26:41
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -388,7 +398,7 @@ on pb_valider::clicked;//*------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 20/02/2004 16:09:42
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -443,7 +453,7 @@ event rowfocuschanged;//*-------------------------------------------------------
 //* Evenement     : RowFocusChanged
 //* Auteur        : Fabry JF
 //* Date          : 20/02/2004 10:40:39
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -482,7 +492,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement		: Clicked
 //* Auteur			: Fabry JF
 //* Date				: 20/02/2004 16:16:55
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Gestion du click sur un $$HEX1$$e900$$ENDHEX$$tat.
+//* Libellé			: Gestion du click sur un état.
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -523,7 +533,7 @@ event itemchanged;//*-----------------------------------------------------------
 //* Evenement     : ItemChanged
 //* Auteur        : Fabry JF
 //* Date          : 20/02/2004 11:09:17
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -576,7 +586,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : Clicked
 //* Auteur        : Fabry JF
 //* Date          : 20/02/2004 16:09:42
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 

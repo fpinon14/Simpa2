@@ -32014,7 +32014,10 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal <> "" Then
 		Choose Case sVal
 			Case "PROXIMITY", &
-				  "CENTRALIZATION"
+				  "CENTRALIZATION", &
+				  "AT_HOME", &
+				  "REMOTELY", &
+				  "PROXI_CENTRALIZATION"
 			
 					// Ok
 					

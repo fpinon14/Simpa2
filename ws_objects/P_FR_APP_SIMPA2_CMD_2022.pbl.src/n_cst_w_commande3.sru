@@ -20016,7 +20016,11 @@ If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 		sIdFourModif = sIdFourO2mOuHubPresta	
 	End If 
 */
-
+	IF bPrestaExisteNonHub And Not bChoixHubFait  Then
+		bChoixHubFait = True 
+		// On laisse sIdFourModif tel qu'il a été initialisé
+	End IF 
+	
 	If bPrestaExisteHub And Not bChoixHubFait Then
 		bChoixHubFait = True 
 		sIdFourModif = "HUB"

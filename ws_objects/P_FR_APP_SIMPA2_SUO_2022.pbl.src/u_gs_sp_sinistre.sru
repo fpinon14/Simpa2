@@ -21440,11 +21440,10 @@ If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 			
 			iCleNum = F_CLE_NUMERIQUE ( "HP252_276_HUB_PRESTA" )			
 
-/*
-			dsHubDonneesPrestaSimpa2 = Create dataStore
-			dsHubDonneesPrestaSimpa2.DataObject = "d_stk_hub_presta_donnees_simpa2"				
-			dsHubDonneesPrestaSimpa2.SetTransObject ( this.itrTrans )
-*/			
+//			dsHubDonneesPrestaSimpa2 = Create dataStore
+//			dsHubDonneesPrestaSimpa2.DataObject = "d_stk_hub_presta_donnees_simpa2"				
+//			dsHubDonneesPrestaSimpa2.SetTransObject ( this.itrTrans )
+
 			lRow = idsHubDonneesPrestaSimpa2.Retrieve ( iCleNum, lIdSin, lIdSeq )
 			bRet = lRow > 0 
 		End If  
@@ -21486,11 +21485,25 @@ If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 				F_Execute ( sSql, SQLCA )
 				bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
 			End If 
+			
+			lDeb = idw_LstwCommande.Find("POS (INFO_SPB_FRN_CPLT, 'ID_HUB_PRESTA') > 0 AND COD_ETAT = 'CNV' AND ID_REF_FOUR IN ( 'REFUSE_A_REEXP', 'PEC_A_RECYCLER') ", 1, idw_LstwCommande.rowCount()+1)
+			If lDeb > 0 Then
+				lIdSeq = idw_LstwCommande.GetItemNumber ( lDeb, "ID_SEQ" ) 
+				sVal = "Fermeture automatique suite action SPB."
+						
+				sSql = "Exec sysadm.PS_U_FERMETURE_PRESTA " + String ( idw_wsin.GetItemNumber  ( 1, "ID_SIN" ) ) + "., " + String ( lIdSeq ) + ", '" + sVal + "'"
+		
+				F_Execute ( sSql, SQLCA )
+				bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
+			End If 
+			
+			
 		End If 
 		
 		
 	End IF 
 End If
+
 
 
 idw_LstwCommande.SetFilter ( sFiltreOrig )
