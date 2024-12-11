@@ -33665,6 +33665,7 @@ Boolean bRet
 String sTab [70,2], sChaineSqlRet, sVal
 Int iTot, iCpt
 
+
 sTab [1,1]="iCas"  ;  sTab [1,2]="number"
 sTab [2,1]="iIdSin"  ;  sTab [2,2]="number"
 sTab [3,1]="iIdSeq"  ;  sTab [3,2]="number"
@@ -33672,7 +33673,7 @@ sTab [4,1]="sIdHubPresta"  ;  sTab [4,2]="char(20)"
 sTab [5,1]="sIdFour"  ;  sTab [5,2]="char(3)"
 sTab [6,1]="sTypDommage"  ;  sTab [6,2]="char(100)"
 sTab [7,1]="sPointService"  ;  sTab [7,2]="char(20)"
-sTab [8,1]="sModeProcess"  ;  sTab [8,2]="char(20)"
+sTab [8,1]="sModeLogis"  ;  sTab [8,2]="char(20)"
 sTab [9,1]="sCodePickUp"  ;  sTab [9,2]="char(20)"
 sTab [10,1]="sAdrNomPickUp"  ;  sTab [10,2]="char(40)"
 sTab [11,1]="sAdrReferenceAssPickUp"  ;  sTab [11,2]="char(40)"

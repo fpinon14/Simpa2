@@ -29178,6 +29178,13 @@ Choose Case ascas
 			stMessage.bouton 		= Ok!
 			stMessage.sCode 		= "COMT003"
 			f_message(stMessage)					
+			
+			idwArticle.SetFilter ( "" ) 
+			idwArticle.Filter ()
+			If idwArticle.RowCount() > 0 Then idwArticle.RowsDiscard ( 1, idwArticle.RowCount(), primary! )
+			alrow = -1
+			Return 1
+			
 		Else 		
 
 			lnvPFCString.of_setkeyvalue( isInfoSpbFrnCplt, "HP_ID_HUB_PRESTA", sRetHubPrestaOrig, ";")
