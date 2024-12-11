@@ -2416,7 +2416,8 @@ For lCpt = 1 To lTotLig
 	This.uf_definir_codetat_DME ( sVal, lCpt )
 	sSql += "'" + sVal + "', "
 	//#1
-	sDestEnvoi	= Trim ( Upper ( idwFicFourn.GetItemString 	( lCpt, "DEST_ENVOI" ) ) )
+//	sDestEnvoi	= Trim ( Upper ( idwFicFourn.GetItemString 	( lCpt, "DEST_ENVOI" ) ) ) // [LGY15]
+	sDestEnvoi	= "CLIENT" // [LGY15] on force car sion le mail de swap ne part pas
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 9 : COMMENT_FRN															  */
@@ -4648,6 +4649,7 @@ private function integer uf_integration_fichier_cegetel (ref long alnblig, ref l
 //*       JFF    11/03/2011  [ITSM62176] ajout du point de décimal
 //        JFF    26/08/2013  [DT57_CMDE_IPHONE_SFR]
 //       JFF   18/08/2014 [PM254_V1]
+//       JFF   11/12/2024 [LGY15]
 //*-----------------------------------------------------------------
 
 Int iRet 
@@ -4754,8 +4756,8 @@ For lCpt = 1 To lTotLig
 //	This.uf_definir_codetat_CEGETEL ( sVal, lCpt )
 	sSql += "'" + sVal + "', "
 	// #1
-	sDestEnvoi	= Trim ( Upper ( idwFicFourn.GetItemString 	( lCpt, "DEST_ENVOI" ) ) )
-	
+//	sDestEnvoi	= Trim ( Upper ( idwFicFourn.GetItemString 	( lCpt, "DEST_ENVOI" ) ) ) // [LGY15]
+	sDestEnvoi	= "CLIENT" // [LGY15] on force car sion le mail de swap ne part pas	
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 9 : COMMENT_FRN															  */
@@ -13194,6 +13196,7 @@ private function integer uf_integration_fichier_carrefour (ref long alnblig, ref
 //* #4	FPI	10/12/2009	[SQLNRows] Correction sur le retour SQLNRows incorrect à cause des triggers
 //*       JFF    11/03/2011 [ITSM62176] ajout du point de décimal
 //       JFF   18/08/2014 [PM254_V1]
+//       JFF   11/12/2024 [LGY15]
 //*-----------------------------------------------------------------
 
 Int iRet 
@@ -13285,6 +13288,8 @@ For lCpt = 1 To lTotLig
 	sVal = ""
 	This.uf_definir_codetat_Carrefour ( sVal, lCpt )
 	sSql += "'" + sVal + "', "
+
+	sDestEnvoi	= "CLIENT" // [LGY15] on force car sion le mail de swap ne part pas
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 9 : COMMENT_FRN															  */
@@ -15864,6 +15869,7 @@ private function integer uf_integration_fichier_psm (ref long alnblig, ref long 
 //       JFF   01/10/2018 [PM445-1]
 //       JFF   28/01/2019 [PM450-1]
 //       JFF   25/03/2019 [DT398]
+//       JFF   11/12/2024 [LGY15]
 //*-----------------------------------------------------------------
 
 Int iRet 
@@ -15978,7 +15984,8 @@ For lCpt = 1 To lTotLig
 	This.uf_definir_codetat_PSM ( sVal, lCpt, lIdSin, lIdSeq ) // [PC938_ORANGE_V3]
 	sSql += "'" + sVal + "', "
 	//#4
-	sDestEnvoi	= Trim ( Upper ( idwFicFourn.GetItemString 	( lCpt, "DEST_ENVOI" ) ) )
+	// sDestEnvoi	= Trim ( Upper ( idwFicFourn.GetItemString 	( lCpt, "DEST_ENVOI" ) ) ) // [LGY15]
+	sDestEnvoi	= "CLIENT" // [LGY15] on force car sion le mail de swap ne part pas
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 9 : COMMENT_FRN															  */
@@ -27155,6 +27162,7 @@ private function integer uf_integration_fichier_agora_place (ref long alnblig, r
 //  			FPI	04/08/2011	[FPI.04082011] Prise en compte de la date de réception des mobiles par les assurés
 //       JFF   18/08/2014 [PM254_V1]
 //		FPI	18/07/2018	[ITSM546478]
+//       JFF   11/12/2024 [LGY15]
 //*-----------------------------------------------------------------
 Int iRet 
 String	sSql, sVal, sSqlOrig
@@ -27261,7 +27269,9 @@ For lCpt = 1 To lTotLig
 	
 	sSql += "'" + sVal + "', "
 	//#1
-	sDestEnvoi	= Trim ( Upper ( idwFicFourn.GetItemString 	( lCpt, "DEST_ENVOI" ) ) )
+	// sDestEnvoi	= Trim ( Upper ( idwFicFourn.GetItemString 	( lCpt, "DEST_ENVOI" ) ) )
+	sDestEnvoi	= "CLIENT" // [LGY15] on force car sion le mail de swap ne part pas
+
 
 	/*------------------------------------------------------------------*/
 	/* ZONE 9 : COMMENT_FRN															  */
@@ -30484,6 +30494,7 @@ private function integer uf_integration_fichier_telstore (ref long alnblig, ref 
 //       JFF   18/08/2014 [PM254_V1]
 //		FPI	18/07/2018	[ITSM546478]
 //       JFF   20/02/2023 [RS4616_RET_TLS]
+//       JFF   11/12/2024 [LGY15]
 //*-----------------------------------------------------------------
 Int iRet 
 String	sSql, sVal, sSqlOrig
@@ -30590,8 +30601,9 @@ For lCpt = 1 To lTotLig
 	
 	sSql += "'" + sVal + "', "
 	//#1
-	sDestEnvoi	= Trim ( Upper ( idwFicFourn.GetItemString 	( lCpt, "DEST_ENVOI" ) ) )
-
+	// sDestEnvoi	= Trim ( Upper ( idwFicFourn.GetItemString 	( lCpt, "DEST_ENVOI" ) ) )
+	sDestEnvoi	= "CLIENT" // [LGY15] on force car sion le mail de swap ne part pas
+	
 	/*------------------------------------------------------------------*/
 	/* ZONE 9 : COMMENT_FRN															  */
 	/*------------------------------------------------------------------*/
