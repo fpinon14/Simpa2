@@ -754,7 +754,7 @@ event ue_taillerhauteur;//******************************************************
 dw_1.Uf_Hauteur ( This.Height - 70 , 0 )
 
 // [PB2022_TAILLE_FEN] 
-dw_1.X += 50
+dw_1.X = 280
 
 If	dw_1.Visible = False Then
 	dw_1.Visible = True
