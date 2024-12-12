@@ -8019,6 +8019,13 @@ If @iIdSeqRAR = ( Select Max ( c.id_seq )
 If @iIdSeqRAR >= ( Select Max ( c.id_seq )
 					From  commande c
 					Where  c.id_sin = @adcIdSin ) - 1
+				 And Exists ( 
+				   Select Top 1 1 
+				    From   sysadm.commande c
+					Where  c.id_sin = @adcIdSin
+					And    c.id_ref_four = 'PEC_A_RECYCLER'
+					And    sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' ) = 'FICTIVE'
+				 )
 				And @iIdSeqHubPrestaOrig > 0 -- [HP252_276_HUB_PRESTA]
 	Begin
 		Return
@@ -8414,6 +8421,13 @@ If @iIdSeqRAR = ( Select Max ( c.id_seq )
 If @iIdSeqRAR >= ( Select Max ( c.id_seq )
 					From  commande c
 					Where  c.id_sin = @adcIdSin ) - 1
+				 And Exists ( 
+				   Select Top 1 1 
+				    From   sysadm.commande c
+					Where  c.id_sin = @adcIdSin
+					And    c.id_ref_four = 'REFUSE_A_REEXP'
+					And    sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' ) = 'FICTIVE'
+				 )
 				And @iIdSeqHubPrestaOrig > 0 -- [HP252_276_HUB_PRESTA]
 	Begin
 		Return
@@ -11561,13 +11575,21 @@ CREATE procedure sysadm.PS_U_FERMETURE_PRESTA
 As
 
 Update sysadm.commande 
-Set cod_etat = 'RPC' , 
-	comment_frn = IsNull ( rtrim ( comment_frn ) , '' ) + '.' + Convert ( varchar, getdate(), 103) + '=>' + rtrim ( @asCommentFrn )
+Set cod_etat = 
+		Case 
+			When id_ref_four in ( 'REFUSE_A_REEXP', 'PEC_A_RECYCLER' ) Then 'RFO'
+			Else 'RPC'
+		End, 
+		comment_frn = IsNull ( rtrim ( comment_frn ) , '' ) + '.' + Convert ( varchar, getdate(), 103) + '=>' + rtrim ( @asCommentFrn )
 Where id_sin = @adcIdSin
 And   id_seq = @aiIdSeq
 
 Update sysadm.w_commande 
-Set cod_etat = 'RPC', 
+Set cod_etat = 
+		Case 
+			When id_ref_four in ( 'REFUSE_A_REEXP', 'PEC_A_RECYCLER' ) Then 'RFO'
+			Else 'RPC'
+		End,  
 	comment_frn = IsNull ( rtrim ( comment_frn ), '' ) + '.' + Convert ( varchar, getdate(), 103) + '=>' + rtrim ( @asCommentFrn ) 
 Where id_sin = @adcIdSin
 And   id_seq = @aiIdSeq

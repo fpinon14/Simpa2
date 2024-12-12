@@ -1086,13 +1086,7 @@ Set @sSql =
 '		dsh.id_sin, '+
 '		dsh.id_seq, '+
 '		dsh.id_four, '+
-'		Case ' +
-'			When sysadm.FN_CLE_VAL ( ''A_REPARER_SAV'', dsh.info_spb_frn_cplt, '';'' ) = ''OUI'' ' +
-'				Then ''A_REPARER_SAV''  ' + 
-'			When sysadm.FN_CLE_VAL ( ''A_CONTROLER_SAV'', dsh.info_spb_frn_cplt, '';'' ) = ''OUI'' ' +
-'				Then ''A_REPARER_SAV'' ' + -- Normal, une seule action ici, c'est pour la jointure du mapping 
-'			Else dsh.ordre_action ' +
-'		End, ' + 
+'		dsh.ordre_action, ' +
 '		dhs.id_hub_presta, '+
 '		dhs.num_cmd_frn, '+
 '		dhs.activity_code, '+
@@ -1190,10 +1184,12 @@ If @iHandleObjet < 0
 		'Fin du traitement ' + IIF ( @iAMUerrGen =1, ' avec ERREUR ', '' ) + 'le ' + Convert ( VarChar ( 10), Getdate(), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108) + 
 		''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
 		
-		Set @sObjet = '[ALERTE][Traitement SIMPA2 HUB PRESTATAIRE] => Instanciation objet ADODB.Stream impossible'
+		Set @sObjet = '[ ALERTE ][ Traitement SIMPA2 HUB PRESTATAIRE ] => Instanciation objet ADODB.Stream impossible'
 
 		Set @sObjet = Left ( @sObjet + space ( 255 ), 255 )
 		Exec sysadm.PS_CASSER_REGLE_CHAINE @sObjet Output, '_', ' ' 
+
+		If @sEnv = 'SIM' Set @sObjet = '[RECETTE] ' + @sObjet 
 
 		Set @sMailBody = 'Bonjour ' + char (10)
 		Set @sMailBody = @sMailBody + char (10)
@@ -1500,6 +1496,16 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 
 				If @iRet <= 0 -- Au minimum 159 ou un statut 'en cours à créer' si non existant
 					Begin
+						IF sysadm.FN_CLE_VAL ( 'CAS_ERR', @sChaineBCVretourDetStatut, ';' ) <> ''
+							Begin 
+								Set @sSql = 
+								'Update ' + @sInstanceHub + 'edi.DepotHubToSimpa2Presta '  +
+								'Set alt_trt = '''+ 'R' + '''' + 
+								' where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @iIdDepotHub )  
+								Exec ( @sSql )
+							End 
+
+
 						IF sysadm.FN_CLE_VAL ( 'CAS_ERR', @sChaineBCVretourDetStatut, ';' ) = 'NO_MAPPING'
 							Begin 
 								Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', ''' + ISNULL ( @sIdFour, '(vide)') + ''', ' + Convert ( VarChar (20), @iIdDepotHub) + ', ''' + @sIdHubPresta + ''', ''ERR'', ''' + 
@@ -1800,10 +1806,12 @@ Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_
 
 If @iAMUerrGen = 1
 Begin
-	Set @sObjet = '[Traitement SIMPA2 HUB PRESTATAIRE] => Erreur dans le traitement lot ' + CONVERT ( Varchar ( 20 ), @iIdLotTrc )
+	Set @sObjet = '[ Traitement SIMPA2 HUB PRESTATAIRE ] => Erreur dans le traitement lot ' + CONVERT ( Varchar ( 20 ), @iIdLotTrc )
 
 	Set @sObjet = Left ( @sObjet + space ( 255 ), 255 )
 	Exec sysadm.PS_CASSER_REGLE_CHAINE @sObjet Output, '_', ' ' 
+
+	If @sEnv = 'SIM' Set @sObjet = '[RECETTE] ' + @sObjet 
 
 	Set @sMailBody = 'Bonjour ' + char (10)
 	Set @sMailBody = @sMailBody + char (10)

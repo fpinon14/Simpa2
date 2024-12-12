@@ -16827,9 +16827,9 @@ And		c.dte_rcp_frn is null
 And		c.cod_etat not in (  'ANN', 'RFO', 'RPC' )
 And		c.cree_le < dp.dte_delai_j
 And		(
-			( c.cree_le > dp.dte_pivot And c.id_four in ( 'O2M', 'PSM', 'SBE', 'SRR' ) )
+			( c.cree_le > dp.dte_pivot And c.id_four in ( 'O2M', 'PSM', 'SBE', 'SRR', 'SPA' ) )
 			Or 
-			( c.cree_le > dp.dte_pivot_dt364 And c.id_four in ( 'COR', 'SBE', 'SRR' ) ) -- [DT364] Ajout CORDON
+			( c.cree_le > dp.dte_pivot_dt364 And c.id_four in ( 'COR', 'SBE', 'SRR', 'SPA' ) ) -- [DT364] Ajout CORDON
 		)
 And		ds.id_sin = c.id_sin
 And     ds.nom_zone = 'etat_vu_assure'
