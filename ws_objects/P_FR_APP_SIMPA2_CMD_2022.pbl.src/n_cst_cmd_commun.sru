@@ -1,4 +1,4 @@
-HA$PBExportHeader$n_cst_cmd_commun.sru
+﻿$PBExportHeader$n_cst_cmd_commun.sru
 $PBExportComments$Objet Bibliotheque pour les fonctions communes pour la gestion des commandes.
 forward
 global type n_cst_cmd_commun from nonvisualobject
@@ -21,7 +21,7 @@ event info();//*----------------------------------------------------------------
 //* Evenement 		: info
 //* Auteur			: Pierre-Henri Gillot
 //* Date				: 05/12/2006 15:57:58
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Evenement vide, contient la documentation.
 //*				  
 //* Arguments		: 
@@ -36,13 +36,13 @@ event info();//*----------------------------------------------------------------
 
 /*-----------
 
-Objet destin$$HEX4$$e9002000e0002000$$ENDHEX$$recevoir toutes fonctions communes $$HEX2$$e0002000$$ENDHEX$$la fonctionalit$$HEX2$$e9002000$$ENDHEX$$"Gestion des Commandes"
-pour l'instant de mani$$HEX1$$e800$$ENDHEX$$re relativement in$$HEX1$$e900$$ENDHEX$$dpendante par rapport $$HEX2$$e0002000$$ENDHEX$$l'interace et/ou aux objet de gestions.
+Objet destiné à recevoir toutes fonctions communes à la fonctionalité "Gestion des Commandes"
+pour l'instant de manière relativement inédpendante par rapport à l'interace et/ou aux objet de gestions.
 
-Chaque fonction est autonome, toute r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence $$HEX2$$e0002000$$ENDHEX$$des objets ou des instances d'objets doivent
-etre pass$$HEX1$$e900$$ENDHEX$$e aux fonctions de cet objet.
+Chaque fonction est autonome, toute référence à des objets ou des instances d'objets doivent
+etre passée aux fonctions de cet objet.
 
-Pas de propri$$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$partag$$HEX1$$e900$$ENDHEX$$e dans cet objet.
+Pas de propriété partagée dans cet objet.
 
 --- Liste des Fonctions :
 
@@ -57,8 +57,8 @@ public subroutine uf_changer_lib_dw (ref datawindow adwtrtcmdfrn, long aiidprod,
 //* Auteur        : Catherine ABDMEZIEM
 //*					  Transcription en UserObject : PHG
 //* Date          : 20/05/2003 16:23:51
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Modification dynamique des statics text de la dw de 
-//* Commentaires  : la valeur -1 pass$$HEX1$$e900$$ENDHEX$$e en param$$HEX1$$e800$$ENDHEX$$tre, signifie que l'on garde les textes initiaux
+//* Libellé       : Modification dynamique des statics text de la dw de 
+//* Commentaires  : la valeur -1 passée en paramètre, signifie que l'on garde les textes initiaux
 //*
 //* Arguments     : ( Val )	Long 	   aiIdProd	:	Produit ou -1
 //*					  ( Val )	String	asIdFour	:	Fournisseur ou "-1"
@@ -77,11 +77,11 @@ public subroutine uf_changer_lib_dw (ref datawindow adwtrtcmdfrn, long aiidprod,
 //* #4	MADM	09/05/2006	[DCMP060356]: Rempl du frn AVM par CORDON/COR
 //* #5	PHG	09/10/2006  DCMP060670]: Modification de MT_DEVIS_T pour ANV, SBE, COR, MSS
 //* #6	PHG	05/12/2006  			  : Urbanisation : Unification de fonction.
-//*												 - Ce script a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$import$$HEX2$$e9002000$$ENDHEX$$et unifi$$HEX2$$e9002000$$ENDHEX$$de :
+//*												 - Ce script a été importé et unifié de :
 //*											 		W_Sp_C_Commande2::wf_Changer_Lib_Dw
 //*											 		N_Cst_W_Commande2::uf_Changer_Lib_Dw
-//* #7	JFF   18/12/2006  [DCMP060911] Modification de libell$$HEX2$$e9002000$$ENDHEX$$en fct des diff$$HEX1$$e900$$ENDHEX$$rent cas.
-//* #8	JFF   23/01/2007  Modif demand$$HEX2$$e9002000$$ENDHEX$$par MGA
+//* #7	JFF   18/12/2006  [DCMP060911] Modification de libellé en fct des différent cas.
+//* #8	JFF   23/01/2007  Modif demandé par MGA
 //* #9	PHG	03/12/2007	[O2M]
 //* #10  JFF   26/03/2008  [SURCOUF_ECH_EXPRESS]
 //* #11	PHG	24/04/2008	[DCMP080199] Ajout Zone "Nom Transporteur"
@@ -195,33 +195,33 @@ sModif = ""
 
 
 /*------------------------------------------------------------------*/
-/* Initialisation des libell$$HEX1$$e900$$ENDHEX$$s par d$$HEX1$$e900$$ENDHEX$$faut                           */
+/* Initialisation des libellés par défaut                           */
 /*------------------------------------------------------------------*/
-sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$commande fournisseur' "
-sModif += "ID_REF_FOUR_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$f. article chez le fournisseur' "
+sModif += "ID_CMD_FRN_T.Text 		= 'N° commande fournisseur' "
+sModif += "ID_REF_FOUR_T.Text 	= 'Réf. article chez le fournisseur' "
 sModif += "STATUS_GC_T.Text 		= 'Statut de la prestation' "
-sModif += "ID_SERIE_NOUV_T.Text 	= 'N$$HEX2$$b0002000$$ENDHEX$$IMEI' "
-sModif += "ID_BON_TRANSP_T.Text 	= 'Dernier N$$HEX2$$b0002000$$ENDHEX$$bon trans connu' "
+sModif += "ID_SERIE_NOUV_T.Text 	= 'N° IMEI' "
+sModif += "ID_BON_TRANSP_T.Text 	= 'Dernier N° bon trans connu' "
 sModif += "COMMENT_FRN_T.Text 	= 'Commentaire fournisseur' "
-sModif += "DTE_RCP_BTE_CLI_T.Text= 'R$$HEX1$$e900$$ENDHEX$$cep. bo$$HEX1$$ee00$$ENDHEX$$te vide par le client' "
-sModif += "DTE_DEP_BTE_CLI_T.Text= 'D$$HEX1$$e900$$ENDHEX$$p$$HEX1$$f400$$ENDHEX$$t bo$$HEX1$$ee00$$ENDHEX$$te pleine $$HEX2$$e0002000$$ENDHEX$$la poste par le client' "
-sModif += "DTE_ELV_MOBILE_T.Text = 'Enl$$HEX1$$e800$$ENDHEX$$vement mobile $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$parer par transp.' "
-sModif += "DTE_RCP_FRN_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$ception de l~~'appareil dans le CTR' "
-sModif += "DTE_ENV_ST_T.Text 	   = 'Envoi mobile vers CTR agr$$HEX2$$e900e900$$ENDHEX$$' "
+sModif += "DTE_RCP_BTE_CLI_T.Text= 'Récep. boîte vide par le client' "
+sModif += "DTE_DEP_BTE_CLI_T.Text= 'Dépôt boîte pleine à la poste par le client' "
+sModif += "DTE_ELV_MOBILE_T.Text = 'Enlèvement mobile à réparer par transp.' "
+sModif += "DTE_RCP_FRN_T.Text 	= 'Réception de l~~'appareil dans le CTR' "
+sModif += "DTE_ENV_ST_T.Text 	   = 'Envoi mobile vers CTR agréé' "
 sModif += "DTE_EMIS_DEVIS_T.Text = 'Date du diagnostic par le CTR' "
-sModif += "MT_DEVIS_T.Text 		= 'Montant du forfait de r$$HEX1$$e900$$ENDHEX$$paration HT' "
-sModif += "ALT_DEV_ACP_T.Text 	= 'Devis accept$$HEX1$$e900$$ENDHEX$$' "
-sModif += "DTE_DEV_ACP_T.Text 	= 'Prise de d$$HEX1$$e900$$ENDHEX$$cision sur le devis' "
+sModif += "MT_DEVIS_T.Text 		= 'Montant du forfait de réparation HT' "
+sModif += "ALT_DEV_ACP_T.Text 	= 'Devis accepté' "
+sModif += "DTE_DEV_ACP_T.Text 	= 'Prise de décision sur le devis' "
 sModif += "DTE_RET_LOGIS_T.Text 	= 'Retour de l~~'appareil du CTR vers le logisticien' "
-sModif += "DTE_RET_PRET_MIN_T.Text = 'R$$HEX1$$e900$$ENDHEX$$cup pr$$HEX1$$e900$$ENDHEX$$vue kit pr$$HEX1$$ea00$$ENDHEX$$t + rest mob r$$HEX1$$e900$$ENDHEX$$par$$HEX2$$e9002000$$ENDHEX$$(min)' "
-sModif += "DTE_RET_PRET_MAX_T.Text = 'R$$HEX1$$e900$$ENDHEX$$cup pr$$HEX1$$e900$$ENDHEX$$vue kit pr$$HEX1$$ea00$$ENDHEX$$t + rest mob r$$HEX1$$e900$$ENDHEX$$par$$HEX2$$e9002000$$ENDHEX$$(max)' "
-sModif += "DTE_ENV_CLI_T.Text 	= 'Envoi du mobile (Nouv./R$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$) chez le client' "
+sModif += "DTE_RET_PRET_MIN_T.Text = 'Récup prévue kit prêt + rest mob réparé (min)' "
+sModif += "DTE_RET_PRET_MAX_T.Text = 'Récup prévue kit prêt + rest mob réparé (max)' "
+sModif += "DTE_ENV_CLI_T.Text 	= 'Envoi du mobile (Nouv./Réparé) chez le client' "
 sModif += "ID_ORIAN_MODELE_T.Text = '' "
 sModif += "ADRFC_NOM_T.Text = '' " // #11 [CMP080199]
-sModif += "DTE_RCP_MOB_CLI_T.Text= 'R$$HEX1$$e900$$ENDHEX$$ception du mobile (nouveau/r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$) par le client' "
+sModif += "DTE_RCP_MOB_CLI_T.Text= 'Réception du mobile (nouveau/réparé) par le client' "
 
 /*------------------------------------------------------------------*/
-/* Ecriture sur la Dw des libell$$HEX1$$e900$$ENDHEX$$s par d$$HEX1$$e900$$ENDHEX$$faut pour tous             */
+/* Ecriture sur la Dw des libellés par défaut pour tous             */
 /* fournisseurs.                                                    */
 /*------------------------------------------------------------------*/
 aDwTrtCmdFrn.Modify ( sModif )
@@ -243,7 +243,7 @@ sModif += "ID_ORIAN_MODELE_T.Text 	= '' "
 Choose Case asTypArt
 	Case "PRS"
 //		sModif += "STATUS_GC_T.Text 	= 'Etat de l~~'appareil' " // #7
-		sModif += "DTE_RCP_MOB_CLI_T.Text= 'R$$HEX1$$e900$$ENDHEX$$ception de l~~'appareil r$$HEX1$$e900$$ENDHEX$$par$$HEX2$$e9002000$$ENDHEX$$par l~~'assur$$HEX1$$e900$$ENDHEX$$' "		
+		sModif += "DTE_RCP_MOB_CLI_T.Text= 'Réception de l~~'appareil réparé par l~~'assuré' "		
 
 		sModif += "DTE_EMIS_DEVIS_T.Text = '' " // #7
 		sModif += "MT_DEVIS_T.Text 		= '' " // #7				
@@ -252,21 +252,21 @@ Choose Case asTypArt
 
 		Choose Case True  // D#7
 			Case lStatusGc = 2 And ( sCodEtat = "ECL" Or sCodEtat = "RPC" )
-				sModif += "DTE_ENV_CLI_T.Text 	= 'Envoi de l~~'appareil r$$HEX1$$e900$$ENDHEX$$par$$HEX2$$e9002000$$ENDHEX$$chez l~~'assur$$HEX1$$e900$$ENDHEX$$'"
-				sModif += "DTE_RCP_MOB_CLI_T.Text= 'R$$HEX1$$e900$$ENDHEX$$ception de l~~'appareil r$$HEX1$$e900$$ENDHEX$$par$$HEX2$$e9002000$$ENDHEX$$par l~~'assur$$HEX1$$e900$$ENDHEX$$' "
+				sModif += "DTE_ENV_CLI_T.Text 	= 'Envoi de l~~'appareil réparé chez l~~'assuré'"
+				sModif += "DTE_RCP_MOB_CLI_T.Text= 'Réception de l~~'appareil réparé par l~~'assuré' "
 
 			Case lStatusGc = 21 And ( sCodEtat = "ECL" Or sCodEtat = "RPC" )
-				sModif += "DTE_ENV_CLI_T.Text 	= 'Envoi de l~~'appareil irr$$HEX1$$e900$$ENDHEX$$parable chez l~~'assur$$HEX1$$e900$$ENDHEX$$'"
-				sModif += "DTE_RCP_MOB_CLI_T.Text= 'R$$HEX1$$e900$$ENDHEX$$ception de l~~'appareil irr$$HEX1$$e900$$ENDHEX$$parable par l~~'assur$$HEX1$$e900$$ENDHEX$$' "
+				sModif += "DTE_ENV_CLI_T.Text 	= 'Envoi de l~~'appareil irréparable chez l~~'assuré'"
+				sModif += "DTE_RCP_MOB_CLI_T.Text= 'Réception de l~~'appareil irréparable par l~~'assuré' "
 
 			Case lStatusGc = 21 And sCodEtat = "RSP" 
-				sModif += "DTE_ENV_CLI_T.Text 	= 'Mis en stock de l~~'appareil irr$$HEX1$$e900$$ENDHEX$$parable'"
+				sModif += "DTE_ENV_CLI_T.Text 	= 'Mis en stock de l~~'appareil irréparable'"
 				sModif += "DTE_RCP_MOB_CLI_T.Text= '' "
 	
 		End Choose // D#7
 
-		// #20  JFF   20/09/2009 [20090916095232187] On r$$HEX1$$e900$$ENDHEX$$active le code, pour tt type de trt 
-		// #17 [20090901090248010] N'est plus n$$HEX1$$e900$$ENDHEX$$cessaire du fait que -GC/2 ait $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$renomm$$HEX1$$e900$$ENDHEX$$
+		// #20  JFF   20/09/2009 [20090916095232187] On réactive le code, pour tt type de trt 
+		// #17 [20090901090248010] N'est plus nécessaire du fait que -GC/2 ait été renommé
 //		If IsNull ( dtDteEnvCli ) And lStatusGc = 2 And asTypeTrt <> "S" Then 
 
 	Case "TEL"
@@ -278,8 +278,8 @@ Choose Case asTypArt
 		sModif += "ALT_DEV_ACP_T.Text 	= '' " // #7
 		If asTypeTrt <> "S" Then aDwTrtCmdFrn.SetItem ( 1, "ALT_DEV_ACP", "" )		
 		sModif += "DTE_RET_LOGIS_T.Text 	= '' " // #7
-      sModif += "DTE_ENV_CLI_T.Text 	= 'Envoi de l~~'appareil neuf chez l~~'assur$$HEX1$$e900$$ENDHEX$$' "
-		sModif += "DTE_RCP_MOB_CLI_T.Text= 'R$$HEX1$$e900$$ENDHEX$$ception du nouvel appareil par l~~'assur$$HEX1$$e900$$ENDHEX$$' "				
+      sModif += "DTE_ENV_CLI_T.Text 	= 'Envoi de l~~'appareil neuf chez l~~'assuré' "
+		sModif += "DTE_RCP_MOB_CLI_T.Text= 'Réception du nouvel appareil par l~~'assuré' "				
 
 	Case Else	
 		sModif += "DTE_EMIS_DEVIS_T.Text = '' " // #7
@@ -306,14 +306,14 @@ aDwTrtCmdFrn.Modify ( sModif )
 sModif = ""
 
 /*------------------------------------------------------------------*/
-/* En fonction du produit, certains libell$$HEX1$$e900$$ENDHEX$$s peuvent $$HEX1$$ea00$$ENDHEX$$tre modifi$$HEX1$$e900$$ENDHEX$$s. */
+/* En fonction du produit, certains libellés peuvent être modifiés. */
 /*------------------------------------------------------------------*/
 Choose Case aiIdProd
 	Case -1
 End Choose
 
 /*----------------------------------------------------------------------*/
-/* En fonction du Fournisseur, certains libell$$HEX1$$e900$$ENDHEX$$s peuvent $$HEX1$$ea00$$ENDHEX$$tre modifi$$HEX1$$e900$$ENDHEX$$s. */
+/* En fonction du Fournisseur, certains libellés peuvent être modifiés. */
 /*----------------------------------------------------------------------*/
 Choose Case asIdFour
 	Case "ASF"
@@ -321,116 +321,116 @@ Choose Case asIdFour
 		Choose Case lStatusGc
 			Case 3, 4, 5
 				sModif += "DTE_EMIS_DEVIS_T.Text = 'Emission du devis pour le client' "
-				sModif += "DTE_DEV_ACP_T.Text 	= 'Prise de d$$HEX1$$e900$$ENDHEX$$cision sur devis par le client' "
-				sModif += "ALT_DEV_ACP_T.Text 	= 'Devis accept$$HEX2$$e9002000$$ENDHEX$$par le client' "
+				sModif += "DTE_DEV_ACP_T.Text 	= 'Prise de décision sur devis par le client' "
+				sModif += "ALT_DEV_ACP_T.Text 	= 'Devis accepté par le client' "
 				sModif += "MT_DEVIS_T.Text 		= 'Montant du devis client, TTC' "
 			Case 7, 8, 9
 				sModif += "DTE_EMIS_DEVIS_T.Text = 'Emission du devis pour SPB' "
-				sModif += "DTE_DEV_ACP_T.Text 	= 'Prise de d$$HEX1$$e900$$ENDHEX$$cision devis par SPB' "
-				sModif += "ALT_DEV_ACP_T.Text 	= 'Devis accept$$HEX2$$e9002000$$ENDHEX$$par SPB' "
+				sModif += "DTE_DEV_ACP_T.Text 	= 'Prise de décision devis par SPB' "
+				sModif += "ALT_DEV_ACP_T.Text 	= 'Devis accepté par SPB' "
 				sModif += "MT_DEVIS_T.Text 		= 'Montant devis SPB, TTC' "
 			Case Else
 		End Choose
 
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$commande ARVATO' "
-		sModif += "ID_REF_FOUR_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$f. article chez ARVATO' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° commande ARVATO' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Réf. article chez ARVATO' "
 		sModif += "STATUS_GC_T.Text 		= 'Statut de la commande' "
 		sModif += "ID_SERIE_NOUV_T.Text 	= 'Nouvel IMEI' "
 		sModif += "COMMENT_FRN_T.Text 	= 'Commentaire ARVATO' "
-		sModif += "DTE_ELV_MOBILE_T.Text = 'Collecte mobile r$$HEX1$$e900$$ENDHEX$$alis$$HEX2$$e9002000$$ENDHEX$$le' "
-		sModif += "DTE_RCP_FRN_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$ception du mobile par le CTR' "		
+		sModif += "DTE_ELV_MOBILE_T.Text = 'Collecte mobile réalisé le' "
+		sModif += "DTE_RCP_FRN_T.Text 	= 'Réception du mobile par le CTR' "		
 		sModif += "DTE_RET_LOGIS_T.Text 	= 'Retour mobile du CTR vers ARVATO' "
 		sModif += "ID_ORIAN_MODELE_T.Text 	= '' "
 
 
 	Case "CET"
 
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$commande CETELEC' "
-		sModif += "ID_REF_FOUR_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$f. article chez CETELEC' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° commande CETELEC' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Réf. article chez CETELEC' "
 
 	Case "CEG"
 
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$commande SFR' "
-		sModif += "ID_REF_FOUR_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$f. article chez SFR' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° commande SFR' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Réf. article chez SFR' "
 		sModif += "COMMENT_FRN_T.Text 	= 'Commentaire SFR' " // #7
 		sModif += "DTE_RCP_FRN_T.Text 	= 'Traitement de la commande chez SFR' " // #7
 
 /*
 	Case "ANV"
 
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$commande A-NOVO' "
-		sModif += "ID_REF_FOUR_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$f. article chez A-NOVO' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° commande A-NOVO' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Réf. article chez A-NOVO' "
 
-		sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI figurant sur le mobile re$$HEX1$$e700$$ENDHEX$$u par A-NOVO' "
+		sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI figurant sur le mobile reçu par A-NOVO' "
 		sModif += "COMMENT_FRN_T.Text 	= 'Nom CTR + Commentaire A-NOVO + Swap IMEI' "
 
 		Choose Case asTypArt
 			Case "PRS"
-				sModif += "DTE_RCP_FRN_T.Text = 'R$$HEX1$$e900$$ENDHEX$$ception du mobile chez A-NOVO' "
+				sModif += "DTE_RCP_FRN_T.Text = 'Réception du mobile chez A-NOVO' "
 			Case "TEL"
-				sModif += "DTE_RCP_FRN_T.Text = 'R$$HEX1$$e900$$ENDHEX$$ception de la Cmde chez A-NOVO' "
+				sModif += "DTE_RCP_FRN_T.Text = 'Réception de la Cmde chez A-NOVO' "
 		End Choose
 
-		sModif += "DTE_ENV_ST_T.Text 	   = 'Envoi mobile par A-NOVO vers CTR agr$$HEX2$$e900e900$$ENDHEX$$' "		
-		sModif += "ALT_DEV_ACP_T.Text 	= 'Devis accept$$HEX2$$e9002000$$ENDHEX$$par A-NOVO' "
-		sModif += "DTE_DEV_ACP_T.Text 	= 'Prise de d$$HEX1$$e900$$ENDHEX$$cision sur le devis par A-NOVO' "
+		sModif += "DTE_ENV_ST_T.Text 	   = 'Envoi mobile par A-NOVO vers CTR agréé' "		
+		sModif += "ALT_DEV_ACP_T.Text 	= 'Devis accepté par A-NOVO' "
+		sModif += "DTE_DEV_ACP_T.Text 	= 'Prise de décision sur le devis par A-NOVO' "
 		sModif += "DTE_RET_LOGIS_T.Text 	= 'Retour du mobile du CTR vers A-NOVO' "
 */
 
 	Case "SBE"
 
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$commande SBE' "
-		sModif += "ID_REF_FOUR_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$f. article chez SBE' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° commande SBE' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Réf. article chez SBE' "
 
-		sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI figurant sur le mobile re$$HEX1$$e700$$ENDHEX$$u par SBE' "
+		sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI figurant sur le mobile reçu par SBE' "
 		sModif += "COMMENT_FRN_T.Text 	= 'Commentaire SBE' "
-		sModif += "DTE_RCP_FRN_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$ception du mobile chez SBE' "
+		sModif += "DTE_RCP_FRN_T.Text 	= 'Réception du mobile chez SBE' "
 		sModif += "DTE_RET_LOGIS_T.Text 	= '' "
 
 	Case "FTT"
 
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$commande FTT' "
-		sModif += "ID_REF_FOUR_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$f. article chez FTT' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° commande FTT' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Réf. article chez FTT' "
 		sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI du nouveau mobile' "
 		sModif += "DTE_RCP_FRN_T.Text 	= 'Traitement de la commande chez FTT' "		
 
 	Case "ORV"
 
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$commande ORANGE' "
-		sModif += "ID_REF_FOUR_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$f. article chez ORANGE' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° commande ORANGE' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Réf. article chez ORANGE' "
 		sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI du nouveau mobile' "
 		sModif += "DTE_RCP_FRN_T.Text 	= 'Traitement de la commande chez ORANGE' "
 
 	Case "DDF"
 
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$commande DANGAARD' "
-		sModif += "ID_REF_FOUR_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$f. article chez DANGAARD' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° commande DANGAARD' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Réf. article chez DANGAARD' "
 		sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI du nouveau mobile' "
 		sModif += "DTE_RCP_FRN_T.Text 	= 'Traitement de la commande chez DANGAARD' "		
 		sModif += "COMMENT_FRN_T.Text 	= 'Commentaire DANGAARD' " // #7
 
 	Case "CIS" // [PM444-1]
 
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$commande CORIOLIS' "
-		sModif += "ID_REF_FOUR_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$f. article chez CORIOLIS' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° commande CORIOLIS' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Réf. article chez CORIOLIS' "
 		sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI du nouveau mobile' "
 		sModif += "DTE_RCP_FRN_T.Text 	= 'Traitement de la commande chez CORIOLIS' "		
 		sModif += "COMMENT_FRN_T.Text 	= 'Commentaire CORIOLIS' " // #7
 
 	Case "AGP"
 
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$commande AGORA PLACE' "
-		sModif += "ID_REF_FOUR_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$f. article chez AGORA PLACE' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° commande AGORA PLACE' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Réf. article chez AGORA PLACE' "
 		sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI du nouveau mobile' "
-		sModif += "DTE_RCP_FRN_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$ception du flux SPB chez AGORA PLACE' "		
+		sModif += "DTE_RCP_FRN_T.Text 	= 'Réception du flux SPB chez AGORA PLACE' "		
 		sModif += "DTE_ENV_CLI_T.Text 	= 'Traitement/Envoi de la commande par AGORA PLACE' "				
 		sModif += "COMMENT_FRN_T.Text 	= 'Commentaire AGORA PLACE' " // #7
 
 
 	Case "BK2"
 // [DT076-2]
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$commande BAK2' "
-		sModif += "ID_REF_FOUR_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$f. article chez BAK2' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° commande BAK2' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Réf. article chez BAK2' "
 		sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI du nouveau mobile' "
 		sModif += "DTE_RCP_FRN_T.Text 	= 'Traitement de la commande chez BAK2' "		
 		sModif += "COMMENT_FRN_T.Text 	= 'Commentaire BAK2' " // #7
@@ -441,12 +441,12 @@ Choose Case asIdFour
 	/*------------------------------------------------------------------*/
 	Case "MSS"
 
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$commande MSS' "
-		sModif += "ID_REF_FOUR_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$f. article chez MSS' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° commande MSS' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Réf. article chez MSS' "
 		sModif += "COMMENT_FRN_T.Text 	= 'Commentaire MSS' "
-		sModif += "DTE_RCP_FRN_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$ception du notebook chez MSS' "
+		sModif += "DTE_RCP_FRN_T.Text 	= 'Réception du notebook chez MSS' "
 		sModif += "DTE_RET_LOGIS_T.Text 	= '' " // #7		
-		sModif += "DTE_ELV_MOBILE_T.Text = 'D$$HEX1$$e900$$ENDHEX$$p$$HEX1$$f400$$ENDHEX$$t du notebook par le client au SAV FNAC' "
+		sModif += "DTE_ELV_MOBILE_T.Text = 'Dépôt du notebook par le client au SAV FNAC' "
 		sModif += "DTE_RCP_MOB_CLI_T.Text= '' " // #7
 
 
@@ -456,18 +456,18 @@ Choose Case asIdFour
 				sModif += "DTE_ENV_CLI_T.Text 	= 'Envoi du notebook au SAV FNAC'"
 
 			Case lStatusGc = 21 And ( sCodEtat = "ECL" Or sCodEtat = "RPC" )
-				sModif += "DTE_ENV_CLI_T.Text 	= 'Envoi de l~~'appareil irr$$HEX1$$e900$$ENDHEX$$parable au SAV FNAC'"
+				sModif += "DTE_ENV_CLI_T.Text 	= 'Envoi de l~~'appareil irréparable au SAV FNAC'"
 
 			Case lStatusGc = 21 And sCodEtat = "RSP" 
-				sModif += "DTE_ENV_CLI_T.Text 	= 'Mis en stock du  notebook irr$$HEX1$$e900$$ENDHEX$$parable'"
+				sModif += "DTE_ENV_CLI_T.Text 	= 'Mis en stock du  notebook irréparable'"
 
 		End Choose // D#7
 
 
 	Case "CDS"
-		sModif += "ID_SERIE_NOUV_T.Text 	= 'N$$HEX2$$b0002000$$ENDHEX$$contrat assurance C-Discount' "
-		sModif += "DTE_ENV_CLI_T.Text 	= 'Derni$$HEX1$$e800$$ENDHEX$$re r$$HEX1$$e900$$ENDHEX$$ponse c-Discount' "
-		sModif += "ID_BON_TRANSP_T.Text 	= 'Valeur li$$HEX1$$e900$$ENDHEX$$e $$HEX2$$e0002000$$ENDHEX$$l~~'action c-Discount' "
+		sModif += "ID_SERIE_NOUV_T.Text 	= 'N° contrat assurance C-Discount' "
+		sModif += "DTE_ENV_CLI_T.Text 	= 'Dernière réponse c-Discount' "
+		sModif += "ID_BON_TRANSP_T.Text 	= 'Valeur liée à l~~'action c-Discount' "
 		sModif += "STATUS_GC_T.Text 		= 'Action c-Discount' "
 		sModif += "COMMENT_FRN_T.Text 	= 'Commentaire c-Discount' " // #7		
 
@@ -479,19 +479,19 @@ Choose Case asIdFour
 		
 	Case "COR"
 
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$commande CORDON' "
-		sModif += "ID_REF_FOUR_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$f. article chez CORDON' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° commande CORDON' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Réf. article chez CORDON' "
 
 		// [DT288]
-		sModif += "ID_SERIE_NOUV_T.Text 	= 'N$$HEX2$$b0002000$$ENDHEX$$IMEI/SERIE' "	
+		sModif += "ID_SERIE_NOUV_T.Text 	= 'N° IMEI/SERIE' "	
 	
 		// [DT288]
 		If bAppSwap Then 
-			sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI/SERIE appareil swap$$HEX1$$e900$$ENDHEX$$'"
+			sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI/SERIE appareil swapé'"
 		End If
 	
 		sModif += "COMMENT_FRN_T.Text 	= 'Commentaire CORDON' "
-		sModif += "DTE_RCP_FRN_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$ception du mobile chez CORDON' "
+		sModif += "DTE_RCP_FRN_T.Text 	= 'Réception du mobile chez CORDON' "
 		sModif += "DTE_RET_LOGIS_T.Text 	= '' " // #7
 
 	// [PC10][DIAG_NOMADE] 
@@ -505,34 +505,34 @@ Choose Case asIdFour
 		
 	Case "O2M" // #9 [O2M]
 		
-		sModif += "ID_REF_FOUR_T.Text 	= 'Action a $$HEX1$$e900$$ENDHEX$$ffectuer par O2M' "
-		sModif += "DTE_RCP_FRN_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$ception de l~~'appareil chez O2M' "		
+		sModif += "ID_REF_FOUR_T.Text 	= 'Action a éffectuer par O2M' "
+		sModif += "DTE_RCP_FRN_T.Text 	= 'Réception de l~~'appareil chez O2M' "		
 
-		sModif += "ID_SERIE_NOUV_T.Text 	= 'N$$HEX2$$b0002000$$ENDHEX$$IMEI/SERIE' "	
+		sModif += "ID_SERIE_NOUV_T.Text 	= 'N° IMEI/SERIE' "	
 		
 		If bAppSwap Then 
-			sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI/SERIE appareil swap$$HEX1$$e900$$ENDHEX$$'"
+			sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI/SERIE appareil swapé'"
 		End If
 		
-	   sModif += "DTE_ENV_CLI_T.Text 	= 'Action effectu$$HEX1$$e900$$ENDHEX$$e par O2M le' "
+	   sModif += "DTE_ENV_CLI_T.Text 	= 'Action effectuée par O2M le' "
 		sModif += "STATUS_GC_T.Text 		= 'Action O2M' "
 		sModif += "COMMENT_FRN_T.Text 	= 'Commentaire O2M' "		
 		sModif += "DTE_RET_LOGIS_T.Text 	= '' "
-		sModif += "ID_ORIAN_MODELE_T.Text = 'Pi$$HEX1$$e800$$ENDHEX$$ces jointes au dossier' "
+		sModif += "ID_ORIAN_MODELE_T.Text = 'Pièces jointes au dossier' "
 		sModif += "DTE_EMIS_DEVIS_T.Text = '' " // #7
 		sModif += "MT_DEVIS_T.Text 		= '' " // #7				
 		sModif += "ALT_DEV_ACP_T.Text 	= '' " // #7
 		sModif += "ADRFC_NOM_T.Text		= 'Nom Transporteur'" //#11 [DCMP080199]
 
 	Case "BLC" // [BLCODE]
-		sModif += "ID_REF_FOUR_T.Text 	= 'Action a $$HEX1$$e900$$ENDHEX$$ffectuer par BLCODE' "
-		sModif += "DTE_RCP_FRN_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$ception de l~~'appareil chez BLCODE' "		
-		sModif += "ID_SERIE_NOUV_T.Text 	= 'N$$HEX2$$b0002000$$ENDHEX$$IMEI/SERIE' "	
-	   sModif += "DTE_ENV_CLI_T.Text 	= 'Action effectu$$HEX1$$e900$$ENDHEX$$e par BLCODE le' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Action a éffectuer par BLCODE' "
+		sModif += "DTE_RCP_FRN_T.Text 	= 'Réception de l~~'appareil chez BLCODE' "		
+		sModif += "ID_SERIE_NOUV_T.Text 	= 'N° IMEI/SERIE' "	
+	   sModif += "DTE_ENV_CLI_T.Text 	= 'Action effectuée par BLCODE le' "
 		sModif += "STATUS_GC_T.Text 		= 'Action BLCODE' "
 		sModif += "COMMENT_FRN_T.Text 	= 'Commentaire BLCODE' "		
 		sModif += "DTE_RET_LOGIS_T.Text 	= '' "
-		sModif += "ID_ORIAN_MODELE_T.Text = 'Pi$$HEX1$$e800$$ENDHEX$$ces jointes au dossier' "
+		sModif += "ID_ORIAN_MODELE_T.Text = 'Pièces jointes au dossier' "
 		sModif += "DTE_EMIS_DEVIS_T.Text = '' " // #7
 		sModif += "MT_DEVIS_T.Text 		= '' " // #7				
 		sModif += "ALT_DEV_ACP_T.Text 	= '' " // #7
@@ -554,13 +554,13 @@ Choose Case asIdFour
 	//* #12 [MICROMANIA]
 	Case "MCM"
 		sModif += "STATUS_GC_T.Text 		= 'Action MICROMANIA' "
-		sModif += "ID_SERIE_NOUV_T.Text 	= 'N$$HEX2$$b0002000$$ENDHEX$$S$$HEX1$$e900$$ENDHEX$$rie' "
+		sModif += "ID_SERIE_NOUV_T.Text 	= 'N° Série' "
 
 //* #14  JFF   16/04/2009 [DCMP090102]
 	Case "CDP"
 
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$commande CDiscountPRO' "
-		sModif += "ID_REF_FOUR_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$f. article chez CDiscountPRO' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° commande CDiscountPRO' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Réf. article chez CDiscountPRO' "
 		sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI/SERIE du nouvel appareil' "
 		sModif += "DTE_RCP_FRN_T.Text 	= 'Traitement de la commande chez CDiscountPRO' "		
 		sModif += "COMMENT_FRN_T.Text 	= 'Commentaire CDiscountPRO' " // #7				
@@ -568,8 +568,8 @@ Choose Case asIdFour
 //* #15  JFF   16/04/2009 [DCMP090140]
 	Case "PAP"
 
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$commande Phone&Phone' "
-		sModif += "ID_REF_FOUR_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$f. article chez Phone&Phone' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° commande Phone&Phone' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Réf. article chez Phone&Phone' "
 		sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI du nouveau mobile' "
 		sModif += "DTE_RCP_FRN_T.Text 	= 'Traitement de la commande chez Phone&Phone' "		
 		sModif += "COMMENT_FRN_T.Text 	= 'Commentaire Phone&Phone' " // #7				
@@ -577,37 +577,37 @@ Choose Case asIdFour
 //* #16  JFF   10/06/2009     [RUEDUCOMMERCE]
 	Case "RDC"
 
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$commande RueDuCommerce' "
-		sModif += "ID_REF_FOUR_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$f. article chez RueDuCommerce' "
-		sModif += "ID_SERIE_NOUV_T.Text 	= 'N$$HEX2$$b0002000$$ENDHEX$$S$$HEX1$$e900$$ENDHEX$$rie nouvel appareil' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° commande RueDuCommerce' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Réf. article chez RueDuCommerce' "
+		sModif += "ID_SERIE_NOUV_T.Text 	= 'N° Série nouvel appareil' "
 		sModif += "DTE_RCP_FRN_T.Text 	= 'Traitement de la commande chez RueDuCommerce' "		
 		sModif += "COMMENT_FRN_T.Text 	= 'Commentaire RueDuCommerce' " // #7				
 
 	Case "SB1" // #18 [DCMP090327].[SBETV]
-		sModif += "ID_REF_FOUR_T.Text 	= 'Action a $$HEX1$$e900$$ENDHEX$$ffectuer par SBETV' "
-		sModif += "DTE_RCP_FRN_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$ception de l~~'appareil chez SBETV' "		
-		sModif += "ID_SERIE_NOUV_T.Text 	= 'N$$HEX2$$b0002000$$ENDHEX$$IMEI/SERIE' "	
-	   sModif += "DTE_ENV_CLI_T.Text 	= 'Action effectu$$HEX1$$e900$$ENDHEX$$e par SBETV le' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Action a éffectuer par SBETV' "
+		sModif += "DTE_RCP_FRN_T.Text 	= 'Réception de l~~'appareil chez SBETV' "		
+		sModif += "ID_SERIE_NOUV_T.Text 	= 'N° IMEI/SERIE' "	
+	   sModif += "DTE_ENV_CLI_T.Text 	= 'Action effectuée par SBETV le' "
 		sModif += "STATUS_GC_T.Text 		= 'Action SBETV' "
 		sModif += "COMMENT_FRN_T.Text 	= 'Commentaire SBETV' "		
 		sModif += "DTE_RET_LOGIS_T.Text 	= '' "
 		sModif += "DTE_RCP_MOB_CLI_T.Text= '' "
-		sModif += "ID_ORIAN_MODELE_T.Text = 'Pi$$HEX1$$e800$$ENDHEX$$ces jointes au dossier' "
+		sModif += "ID_ORIAN_MODELE_T.Text = 'Pièces jointes au dossier' "
 		sModif += "DTE_EMIS_DEVIS_T.Text = '' " // #7
 		sModif += "MT_DEVIS_T.Text 		= '' " // #7				
 		sModif += "ALT_DEV_ACP_T.Text 	= '' " // #7
 		sModif += "ADRFC_NOM_T.Text		= 'Nom Transporteur'" //#11 [DCMP080199]
 
 	Case "MS1" // [MSS_DIAG]
-		sModif += "ID_REF_FOUR_T.Text 	= 'Action a $$HEX1$$e900$$ENDHEX$$ffectuer par MSS' "
-		sModif += "DTE_RCP_FRN_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$ception de l~~'appareil chez MSS' "		
-		sModif += "ID_SERIE_NOUV_T.Text 	= 'N$$HEX2$$b0002000$$ENDHEX$$IMEI/SERIE' "	
-	   sModif += "DTE_ENV_CLI_T.Text 	= 'Action effectu$$HEX1$$e900$$ENDHEX$$e par MSS le' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Action a éffectuer par MSS' "
+		sModif += "DTE_RCP_FRN_T.Text 	= 'Réception de l~~'appareil chez MSS' "		
+		sModif += "ID_SERIE_NOUV_T.Text 	= 'N° IMEI/SERIE' "	
+	   sModif += "DTE_ENV_CLI_T.Text 	= 'Action effectuée par MSS le' "
 		sModif += "STATUS_GC_T.Text 		= 'Action MSS' "
 		sModif += "COMMENT_FRN_T.Text 	= 'Commentaire MSS' "		
 		sModif += "DTE_RET_LOGIS_T.Text 	= '' "
 		sModif += "DTE_RCP_MOB_CLI_T.Text= '' "
-		sModif += "ID_ORIAN_MODELE_T.Text = 'Pi$$HEX1$$e800$$ENDHEX$$ces jointes au dossier' "
+		sModif += "ID_ORIAN_MODELE_T.Text = 'Pièces jointes au dossier' "
 		sModif += "DTE_EMIS_DEVIS_T.Text = '' " // #7
 		sModif += "MT_DEVIS_T.Text 		= '' " // #7				
 		sModif += "ALT_DEV_ACP_T.Text 	= '' " // #7
@@ -623,74 +623,74 @@ Choose Case asIdFour
 		sModif += "STATUS_GC_T.Text 		= '' "
 		sModif += "ID_SERIE_NOUV_T.Text	= '' "
 		sModif += "ID_BON_TRANSP_T.Text 	= '' "
-		sModif += "DTE_ENV_CLI_T.Text    = 'BGE consomm$$HEX2$$e9002000$$ENDHEX$$le'"
+		sModif += "DTE_ENV_CLI_T.Text    = 'BGE consommé le'"
 		sModif += "ID_REF_FOUR_T.Text 	= '' "
-		aDwTrtCmdFrn.SetItem ( 1, "COMMENT_FRN", "BGE consomm$$HEX2$$e9002000$$ENDHEX$$par le client en magasin." )
+		aDwTrtCmdFrn.SetItem ( 1, "COMMENT_FRN", "BGE consommé par le client en magasin." )
 		aDwTrtCmdFrn.SetItem ( 1, "ID_REF_FOUR", "" )		
 
 	// [PC363_AUCHAN]
 	Case "AUC"
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$carte cadeau Auchan' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° carte cadeau Auchan' "
 		sModif += "DTE_ENV_CLI_T.Text 	= 'Date envoi carte cadeau' "
 		sModif += "DTE_RCP_MOB_CLI_T.Text= ''"
 
 	// [PC321]
 	Case "SCR"
-		sModif += "MT_DEVIS_T.Text 		= 'Montant de la r$$HEX1$$e900$$ENDHEX$$paration HT' "
-		sModif += "DTE_ENV_CLI_T.Text    = 'Date de disponibilit$$HEX2$$e9002000$$ENDHEX$$de l'appareil'"
+		sModif += "MT_DEVIS_T.Text 		= 'Montant de la réparation HT' "
+		sModif += "DTE_ENV_CLI_T.Text    = 'Date de disponibilité de l'appareil'"
 
 	// [CONFO][CUISINE]
 	Case "CFM"
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$carte cadeau Conforama (Dallas)' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° carte cadeau Conforama (Dallas)' "
 		
 	// [PM200][PSM]
 	Case "PSM"
 
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$commande PSM' "
-		sModif += "ID_REF_FOUR_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$f. article chez PSM' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° commande PSM' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Réf. article chez PSM' "
 
-		sModif += "ID_SERIE_NOUV_T.Text 	= 'N$$HEX2$$b0002000$$ENDHEX$$IMEI/SERIE' "	
+		sModif += "ID_SERIE_NOUV_T.Text 	= 'N° IMEI/SERIE' "	
 	
 		If bAppSwap Then 
-			sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI/SERIE appareil swap$$HEX1$$e900$$ENDHEX$$'"
+			sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI/SERIE appareil swapé'"
 		End If
 	
 		sModif += "COMMENT_FRN_T.Text 	= 'Commentaire PSM' "
-		sModif += "DTE_RCP_FRN_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$ception du mobile chez PSM' "
+		sModif += "DTE_RCP_FRN_T.Text 	= 'Réception du mobile chez PSM' "
 		sModif += "DTE_RET_LOGIS_T.Text 	= '' " // #7
 //		sModif += "DTE_ENV_CLI_T.Text 	= 'Retour PSM sur l~~'appareil' " // MANTIS3709
-		sModif += "DTE_ENV_CLI_T.Text 	= 'Envoi du mobile (Nouv./R$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$) chez le client' " // MANTIS3709
+		sModif += "DTE_ENV_CLI_T.Text 	= 'Envoi du mobile (Nouv./Réparé) chez le client' " // MANTIS3709
 
 		// [PC938_ORANGE_V3]
 		Choose Case asTypArt
 			Case "REL"
-				sModif += "DTE_RCP_FRN_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$ception de l~~'appareil de remplacement' " // #7
-				sModif += "DTE_ENV_CLI_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration app. rempl. par l~~'assur$$HEX1$$e900$$ENDHEX$$' "
+				sModif += "DTE_RCP_FRN_T.Text 	= 'Réception de l~~'appareil de remplacement' " // #7
+				sModif += "DTE_ENV_CLI_T.Text 	= 'Récupération app. rempl. par l~~'assuré' "
 		End CHoose 
 		
 	// [PC801_6_TAMET]
 	Case "TMT"
 
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$commande TAMET' "
-		sModif += "ID_REF_FOUR_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$f. article chez TAMET' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° commande TAMET' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Réf. article chez TAMET' "
 
-		sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI figurant sur le mobile re$$HEX1$$e700$$ENDHEX$$u par TAMET' "
+		sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI figurant sur le mobile reçu par TAMET' "
 		sModif += "COMMENT_FRN_T.Text 	= 'Commentaire TAMET' "
-		sModif += "DTE_RCP_FRN_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$ception du mobile chez TAMET' "
+		sModif += "DTE_RCP_FRN_T.Text 	= 'Réception du mobile chez TAMET' "
 		sModif += "DTE_RET_LOGIS_T.Text 	= '' " // #7
-		sModif += "DTE_ENV_CLI_T.Text 	= 'Envoi du mobile (Nouv./R$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$) chez le client' " // MANTIS3709
+		sModif += "DTE_ENV_CLI_T.Text 	= 'Envoi du mobile (Nouv./Réparé) chez le client' " // MANTIS3709
 
 		// [PC938_ORANGE_V3]
 		Choose Case asTypArt
 			Case "REL"
-				sModif += "DTE_RCP_FRN_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$ception de l~~'appareil de remplacement' " // #7
-				sModif += "DTE_ENV_CLI_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration app. rempl. par l~~'assur$$HEX1$$e900$$ENDHEX$$' "
+				sModif += "DTE_RCP_FRN_T.Text 	= 'Réception de l~~'appareil de remplacement' " // #7
+				sModif += "DTE_ENV_CLI_T.Text 	= 'Récupération app. rempl. par l~~'assuré' "
 		End CHoose 
 
 		
 		// [PC884]
 	Case "LBE"
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$bon achat abr$$HEX1$$e900$$ENDHEX$$g$$HEX1$$e900$$ENDHEX$$' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° bon achat abrégé' "
 		sModif += "DTE_ENV_CLI_T.Text 	= 'Date envoi bon achat' "
 		sModif += "STATUS_GC_T.Text= ''"
 		sModif += "ID_SERIE_NOUV_T.Text= ''"
@@ -698,13 +698,13 @@ Choose Case asIdFour
 		sModif += "DTE_RCP_FRN_T.Text= ''"
 		sModif += "DTE_RCP_MOB_CLI_T.Text= ''"
 		sModif += "DTE_RET_LOGIS_T.Text= ''"
-		sModif += "ADRFC_NOM_T.Text= 'Type exp$$HEX1$$e900$$ENDHEX$$dition'"
+		sModif += "ADRFC_NOM_T.Text= 'Type expédition'"
 
 	Case "MTT" // #9 [O2M]
-		sModif += "ID_REF_FOUR_T.Text 	= 'Action a $$HEX1$$e900$$ENDHEX$$ffectuer par MTT' "
-		sModif += "DTE_RCP_FRN_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$ception de l~~'appareil chez MTT' "		
-		sModif += "ID_SERIE_NOUV_T.Text 	= 'N$$HEX2$$b0002000$$ENDHEX$$IMEI/SERIE' "	
-	   sModif += "DTE_ENV_CLI_T.Text 	= 'Action effectu$$HEX1$$e900$$ENDHEX$$e par MTT le' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Action a éffectuer par MTT' "
+		sModif += "DTE_RCP_FRN_T.Text 	= 'Réception de l~~'appareil chez MTT' "		
+		sModif += "ID_SERIE_NOUV_T.Text 	= 'N° IMEI/SERIE' "	
+	   sModif += "DTE_ENV_CLI_T.Text 	= 'Action effectuée par MTT le' "
 		sModif += "STATUS_GC_T.Text 		= 'Action MTT' "
 		sModif += "COMMENT_FRN_T.Text 	= 'Commentaire MTT' "		
 		sModif += "DTE_RET_LOGIS_T.Text 	= '' "
@@ -715,12 +715,12 @@ Choose Case asIdFour
 		sModif += "ADRFC_NOM_T.Text		= 'Nom Transporteur'" //#11 [DCMP080199]
 		
 	Case "CMA" // [DT176]
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$de lot' "
-		sModif += "ID_BON_TRANSP_T.Text 	= 'N$$HEX2$$b0002000$$ENDHEX$$de recommand$$HEX2$$e9002000$$ENDHEX$$AR' "		 
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° de lot' "
+		sModif += "ID_BON_TRANSP_T.Text 	= 'N° de recommandé AR' "		 
 		sModif += "DTE_ENV_CLI_T.Text 	= 'Date d~~'envoi du/des bon(s) d~~'achat' "
 
 	Case "OMT" // [PC874_2_V1]
-		sModif += "ID_REF_FOUR_T.Text 	= 'Action a $$HEX1$$e900$$ENDHEX$$ffectuer' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Action a éffectuer' "
 		sModif += "STATUS_GC_T.Text 		= 'Satut de l~~'IMEI'"
 		sModif += "DTE_ENV_CLI_T.Text 	= 'Date Dern. Utilisation IMEI' "
 		sModif += "DTE_RCP_FRN_T.Text 	= ''"
@@ -737,20 +737,20 @@ Choose Case asIdFour
 	// [RS3200]
 	Case "TLS"
 
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$commande TELSTORE' "
-		sModif += "ID_REF_FOUR_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$f. article chez TELSTORE' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° commande TELSTORE' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Réf. article chez TELSTORE' "
 		sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI du nouveau mobile' "
-		sModif += "DTE_RCP_FRN_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$ception du flux SPB chez TELSTORE' "		
+		sModif += "DTE_RCP_FRN_T.Text 	= 'Réception du flux SPB chez TELSTORE' "		
 		sModif += "DTE_ENV_CLI_T.Text 	= 'Traitement/Envoi de la commande par TELSTORE' "				
 		sModif += "COMMENT_FRN_T.Text 	= 'Commentaire TELSTORE' " // #7
 
 	// [PMO89_RS4822]
 	Case "CDF"
 
-		sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$commande CARDIF' "
-		sModif += "ID_REF_FOUR_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$f. Dde chez CARDIF' "
+		sModif += "ID_CMD_FRN_T.Text 		= 'N° commande CARDIF' "
+		sModif += "ID_REF_FOUR_T.Text 	= 'Réf. Dde chez CARDIF' "
 		sModif += "ID_SERIE_NOUV_T.Text 	= '' "
-		sModif += "DTE_RCP_FRN_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$ception du flux SPB chez CARDIF' "		
+		sModif += "DTE_RCP_FRN_T.Text 	= 'Réception du flux SPB chez CARDIF' "		
 		sModif += "DTE_ENV_CLI_T.Text 	= 'Traitement de la demande par CARDIF' "				
 		sModif += "COMMENT_FRN_T.Text 	= 'Commentaire CARDIF' " // #7
 		
@@ -758,24 +758,25 @@ Choose Case asIdFour
 		
 		
 		// [HP252_276_HUB_PRESTA] 
-		// Fournisseur li$$HEX2$$e9002000$$ENDHEX$$au Hub Prestataire
+		// Fournisseur lié au Hub Prestataire
 		If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 
-			// Par d$$HEX1$$e900$$ENDHEX$$faut, si le fournisseur est li$$HEX2$$e9002000$$ENDHEX$$au HP
+			// Par défaut, si le fournisseur est lié au HP
 			If bFournHub Then
 				sModif = ""
-				sModif += "ID_CMD_FRN_T.Text 		= 'N$$HEX2$$b0002000$$ENDHEX$$prestation CTR' "
+				sModif += "ID_CMD_FRN_T.Text 		= 'N° prestation CTR' "
 				sModif += "ID_REF_FOUR_T.Text 	= 'Ordre intervention prestation' "
 				sModif += "STATUS_GC_T.Text 		= 'Statut de la prestation' "				
-				sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI/SERIE lu sur app. re$$HEX1$$e700$$ENDHEX$$u' "
-				sModif += "ID_BON_TRANSP_T.Text 	= 'Dernier N$$HEX2$$b0002000$$ENDHEX$$bon transp. connu' "
+				sModif += "ID_SERIE_NOUV_T.Text 	= 'IMEI/SERIE lu sur app. reçu' "
+				sModif += "ID_BON_TRANSP_T.Text 	= 'Dernier N° bon transp. connu' "
 				sModif += "ADRFC_NOM_T.Text 		= 'Nom du transporteur' " 
 				sModif += "COMMENT_FRN_T.Text 	= 'Commentaire du CTR' "
 
 				sModif += "DTE_RCP_BTE_CLI_T.Text= '' "		
 				sModif += "DTE_DEP_BTE_CLI_T.Text= '' "
-				sModif += "DTE_ELV_MOBILE_T.Text = '' "
-				sModif += "DTE_RCP_FRN_T.Text 	= 'R$$HEX1$$e900$$ENDHEX$$ception appareil en CTR (station)' "
+
+				sModif += "DTE_ELV_MOBILE_T.Text = 'Date du prochain RDV' " 
+				sModif += "DTE_RCP_FRN_T.Text 	= 'Réception appareil en CTR (station)' "
 		
 				sModif += "DTE_ENV_ST_T.Text 	   = '' "		
 				sModif += "ALT_DEV_ACP_T.Text 	= '' "
@@ -792,7 +793,7 @@ Choose Case asIdFour
 				sModif += "DTE_ENV_CLI_T.Text 	= 'Date fin de traitement / envoi colis' "
 				sModif += "ID_ORIAN_MODELE_T.Text = '' "
 				sModif += "ADRFC_NOM_T.Text = '' " // #11 [CMP080199]
-				sModif += "DTE_RCP_MOB_CLI_T.Text = 'R$$HEX1$$e900$$ENDHEX$$ception appareil (nouveau/r$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$) par le client' "
+				sModif += "DTE_RCP_MOB_CLI_T.Text = 'Réception appareil (nouveau/réparé) par le client' "
 
 			End If 
 		End IF 
@@ -803,7 +804,7 @@ End Choose
 //* #13 [FNAC_PROD_ECH_TECH] Gestion des nouvelles zones en chaine
 // #19  [20090914175511700]	
 // If asTypeTrt <> "S" Then
-// #25 [MSS_LOT2] On ne peut plus se permettre de modifier cette chaine en saisie $$HEX2$$e0002000$$ENDHEX$$pr$$HEX1$$e900$$ENDHEX$$sent
+// #25 [MSS_LOT2] On ne peut plus se permettre de modifier cette chaine en saisie à présent
 // du fait que des maj avec validation sont possibles maintenant.
 // If sCodEtat <> "CNV" Then
 
@@ -817,20 +818,20 @@ If Not F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 		// SPB vers FRN
 		sTabRech  [1] = ";"									; sTabSubst [1] = ", "
 		sTabRech  [2] = "=" 									; sTabSubst [2] = " : "
-		sTabRech  [3] = "MAT_SIN"							; sTabSubst [3] = "Mat$$HEX1$$e900$$ENDHEX$$riel sinistr$$HEX1$$e900$$ENDHEX$$"
+		sTabRech  [3] = "MAT_SIN"							; sTabSubst [3] = "Matériel sinistré"
 		sTabRech  [4] = "[SIN_APP]"						; sTabSubst [4] = "Appareil"
 		sTabRech  [5] = "[SIN_BATT]"						; sTabSubst [5] = "Batterie amovible"
 		sTabRech  [6] = "[SIN_ALIM]"						; sTabSubst [6] = "Alimentation"
-		sTabRech  [7] = "DTE_HEU_RDV"						; sTabSubst [7] = "Date/heure rdv > assur$$HEX1$$e900$$ENDHEX$$"
+		sTabRech  [7] = "DTE_HEU_RDV"						; sTabSubst [7] = "Date/heure rdv > assuré"
 	
 		// #16 [RUEDUCOMMERCE]
-		sTabRech  [8] = "REF_FDP"						   ; sTabSubst [8] = "R$$HEX1$$e900$$ENDHEX$$f Fdp"
+		sTabRech  [8] = "REF_FDP"						   ; sTabSubst [8] = "Réf Fdp"
 		sTabRech  [9] = "CODE_PAYS"						; sTabSubst [9] = "Code Pays"
 		// #18 [DCMP090327].[SBETV]
-		sTabRech  [10] = "DEPT_ENLEV"						; sTabSubst [10] = "D$$HEX1$$e900$$ENDHEX$$partement d'enl$$HEX1$$e800$$ENDHEX$$vement de l'appareil"
+		sTabRech  [10] = "DEPT_ENLEV"						; sTabSubst [10] = "Département d'enlèvement de l'appareil"
 	
 		// #21 [DCMP090421]
-		sTabRech  [11] = "MAIL_ASSURE"					; sTabSubst [11] = "Mail de l'assur$$HEX1$$e900$$ENDHEX$$"
+		sTabRech  [11] = "MAIL_ASSURE"					; sTabSubst [11] = "Mail de l'assuré"
 	
 		// #24 [O2M_DIAG_NOMADE].Lot2.JFF
 		sTabRech  [12] = "MAIL_BTQ_REL"					; sTabSubst [12] = "Mail boutique pour relance"
@@ -839,23 +840,23 @@ If Not F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 		// #25 [MSS_LOT2]	
 		sTabRech  [14] = "[SIN_AUT_ACC]"					; sTabSubst [14] = "Autre(s) accessoires(s)"		
 		sTabRech  [15] = "RETOUR_169"						; sTabSubst [15] = "Retour MSS mat. incomplet"		
-		sTabRech  [16] = "ASS_ENVOIE_ACC"				; sTabSubst [16] = "L'assur$$HEX2$$e9002000$$ENDHEX$$envoie le(s) acc."
-		sTabRech  [17] = "DIAG_EN_L_ETAT_ASS_N_ENVOIE_PAS_ACC" ; sTabSubst [17] = "MSS diag en l'$$HEX1$$e900$$ENDHEX$$tat, l'ass n'envoie pas le(s) acc(s)"
+		sTabRech  [16] = "ASS_ENVOIE_ACC"				; sTabSubst [16] = "L'assuré envoie le(s) acc."
+		sTabRech  [17] = "DIAG_EN_L_ETAT_ASS_N_ENVOIE_PAS_ACC" ; sTabSubst [17] = "MSS diag en l'état, l'ass n'envoie pas le(s) acc(s)"
 		sTabRech  [18] = "REL_C13" 						; sTabSubst [18] = "Nombre de relance Chrono13"	
 		sTabRech  [19] = "REL_RDV" 						; sTabSubst [19] = "Nombre de relance de rdv"	
-		sTabRech  [20] = "LIB_ART_CLT"					; sTabSubst [20] = "Libell$$HEX2$$e9002000$$ENDHEX$$article client"
+		sTabRech  [20] = "LIB_ART_CLT"					; sTabSubst [20] = "Libellé article client"
 	
 		// [WEBSIM2].[FRANCE]
-		sTabRech  [21] = "DTE_FIN_VAL_MDP_BTQ"			; sTabSubst [21] = "Date Fin validit$$HEX2$$e9002000$$ENDHEX$$mot de passe boutique"	
+		sTabRech  [21] = "DTE_FIN_VAL_MDP_BTQ"			; sTabSubst [21] = "Date Fin validité mot de passe boutique"	
 	
 		// [PC363_AUCHAN]
-		sTabRech  [22] = "DUR_VAL_CC"				     	; sTabSubst [22] = "Dur$$HEX1$$e900$$ENDHEX$$e validit$$HEX2$$e9002000$$ENDHEX$$Carte Cadeau"
+		sTabRech  [22] = "DUR_VAL_CC"				     	; sTabSubst [22] = "Durée validité Carte Cadeau"
 		// [PC321]
-		sTabRech  [23] = "NUM_DIAG"						; sTabSubst [23] = "Num$$HEX1$$e900$$ENDHEX$$ro Diag"	
-		sTabRech  [24] = "NUM_DOS_TECHNISOFT"			; sTabSubst [24] = "Num$$HEX1$$e900$$ENDHEX$$ro dossier TechniSoft"	
-		sTabRech  [25] = "BRIS_REP"						; sTabSubst [25] = "Bris r$$HEX1$$e900$$ENDHEX$$parable"		
-		sTabRech  [26] = "MT_REP"						   ; sTabSubst [26] = "Montant r$$HEX1$$e900$$ENDHEX$$paration"			
-		sTabRech  [27] = "DEL_IMMO_APP"				   ; sTabSubst [27] = "D$$HEX1$$e900$$ENDHEX$$lai immobilisation"			
+		sTabRech  [23] = "NUM_DIAG"						; sTabSubst [23] = "Numéro Diag"	
+		sTabRech  [24] = "NUM_DOS_TECHNISOFT"			; sTabSubst [24] = "Numéro dossier TechniSoft"	
+		sTabRech  [25] = "BRIS_REP"						; sTabSubst [25] = "Bris réparable"		
+		sTabRech  [26] = "MT_REP"						   ; sTabSubst [26] = "Montant réparation"			
+		sTabRech  [27] = "DEL_IMMO_APP"				   ; sTabSubst [27] = "Délai immobilisation"			
 		sTabRech  [28] = "DTE_DIAG"				      ; sTabSubst [28] = "Date Diag"			
 		sTabRech  [29] = "LIEU_DIAG"				      ; sTabSubst [29] = "Lieu Diag"			
 		sTabRech  [30] = "ETAT"				      		; sTabSubst [30] = "Etat presta"			
@@ -863,44 +864,44 @@ If Not F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 		sTabRech  [32] = "MT_DEVIS"						; sTabSubst [32] = "Montant devis"			
 		sTabRech  [33] = "MT_ENVOI"						; sTabSubst [33] = "Montant envoi"			
 		sTabRech  [34] = "SAV"								; sTabSubst [34] = "SAV"				
-		sTabRech  [35] = "TEL_SAV"							; sTabSubst [35] = "T$$HEX1$$e900$$ENDHEX$$l SAV"				
-		sTabRech  [36] = "IRREP"							; sTabSubst [36] = "Cause irr$$HEX1$$e900$$ENDHEX$$parabilit$$HEX1$$e900$$ENDHEX$$"				
+		sTabRech  [35] = "TEL_SAV"							; sTabSubst [35] = "Tél SAV"				
+		sTabRech  [36] = "IRREP"							; sTabSubst [36] = "Cause irréparabilité"				
 		
 		// [VDOC3290]
 		sTabRech  [37] = "APP_INCOMPLET"			     	; sTabSubst [37] = "Appareil incomplet"
-		sTabRech  [38] = "SYMP_NON_DETEC_EN_24H"		; sTabSubst [38] = "Sympt$$HEX1$$f400$$ENDHEX$$me non d$$HEX1$$e900$$ENDHEX$$tectable en 24h"
+		sTabRech  [38] = "SYMP_NON_DETEC_EN_24H"		; sTabSubst [38] = "Symptôme non détectable en 24h"
 		// [VDOC3290]
 		
 		// [PM82][LOT2]
-		sTabRech  [39] = "A_REPARER_SAV"					; sTabSubst [39] = "A r$$HEX1$$e900$$ENDHEX$$parer en mode SAV"
+		sTabRech  [39] = "A_REPARER_SAV"					; sTabSubst [39] = "A réparer en mode SAV"
 	
 		// [PM95]
 		// [PM287-2][MANTIS20212]
 		sTabRech  [40] = "CPT_REL_PM95"					; sTabSubst [40] = "Compteur Relance PM287-2"
 		sTabRech  [41] = "EXCL_REL"						; sTabSubst [41] = "Presta Exclue Relance PM287-2"
-		sTabRech  [42] = "ALERTE"							; sTabSubst [42] = "Derni$$HEX1$$e800$$ENDHEX$$re(s) Alerte PM287-2 d$$HEX1$$e900$$ENDHEX$$clench$$HEX1$$e900$$ENDHEX$$e(s)"
+		sTabRech  [42] = "ALERTE"							; sTabSubst [42] = "Dernière(s) Alerte PM287-2 déclenchée(s)"
 	
 		// [RECUP_DONNEE_O2M]
-		sTabRech  [43] = "RECUP_DONNEES"					; sTabSubst [43] = "R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration de donn$$HEX1$$e900$$ENDHEX$$es"
-		sTabRech  [44] = "RECUP_APP_PAR_ASSURE"		; sTabSubst [44] = "R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration de mat$$HEX1$$e900$$ENDHEX$$riel"
+		sTabRech  [43] = "RECUP_DONNEES"					; sTabSubst [43] = "Récupération de données"
+		sTabRech  [44] = "RECUP_APP_PAR_ASSURE"		; sTabSubst [44] = "Récupération de matériel"
 		
 		// [CONFO][CUISINE]
-		sTabRech  [45] = "DTE_CREATION_CARTE_CADEAU"	; sTabSubst [45] = "Date de cr$$HEX1$$e900$$ENDHEX$$ation carte cadeau dans le syt$$HEX1$$e800$$ENDHEX$$me Dallas"
+		sTabRech  [45] = "DTE_CREATION_CARTE_CADEAU"	; sTabSubst [45] = "Date de création carte cadeau dans le sytème Dallas"
 	
 		// [PM200][PSM]
 		sTabRech  [46] = "CODE_BTQ_PSM_CENTRALE"		; sTabSubst [46] = "Code Boutique Centrale PSM"	
 		sTabRech  [47] = "MT_PEC"							; sTabSubst [47] = "Montant de prise en charge"
-		sTabRech  [48] = "A_DESOXYDER_SAV"				; sTabSubst [48] = "A d$$HEX1$$e900$$ENDHEX$$soxyder en mode SAV"	
+		sTabRech  [48] = "A_DESOXYDER_SAV"				; sTabSubst [48] = "A désoxyder en mode SAV"	
 	
 		// [BLCODE]
-		sTabRech  [49] = "REF_MAT"							; sTabSubst [49] = "R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence mat$$HEX1$$e900$$ENDHEX$$riel"	
+		sTabRech  [49] = "REF_MAT"							; sTabSubst [49] = "Référence matériel"	
 		sTabRech  [50] = "MARQUAGE"						; sTabSubst [50] = "Marquage"
 	
 		// [PM103][1]	
 		sTabRech  [51] = "PRESTA_REPRISE_BASE_MANUELLE"	; sTabSubst [51] = "Presta. reprise base manuelle"	
 	
 		// [VDOC8041]
-		sTabRech  [52] = "MAJ_PRS"							; sTabSubst [52] = "Mise $$HEX2$$e0002000$$ENDHEX$$jour prestation"	
+		sTabRech  [52] = "MAJ_PRS"							; sTabSubst [52] = "Mise à jour prestation"	
 		sTabRech  [53] = "CODE_VERROU"					; sTabSubst [53] = "Code verrou"		
 	
 		sTabRech  [54] = "DONNEUR_ORDRE"					; sTabSubst [54] = "Donneur d'ordre" // [DT57]
@@ -913,40 +914,40 @@ If Not F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 		sTabRech  [58] = "CODE_BTQ_RELAI_PSM"			; sTabSubst [58] = "Boutique Relai PSM"
 		sTabRech  [59] = "RELAI_BTQ_PSM"					; sTabSubst [59] = "Relai en boutique PSM"
 		sTabRech  [60] = "TYP_RELAI"						; sTabSubst [60] = "Type action"
-		sTabRech  [61] = "NOM_ASS"							; sTabSubst [61] = "Nom assur$$HEX1$$e900$$ENDHEX$$"
-		sTabRech  [62] = "PRENOM_ASS"						; sTabSubst [62] = "Pr$$HEX1$$e900$$ENDHEX$$nom assur$$HEX1$$e900$$ENDHEX$$"
+		sTabRech  [61] = "NOM_ASS"							; sTabSubst [61] = "Nom assuré"
+		sTabRech  [62] = "PRENOM_ASS"						; sTabSubst [62] = "Prénom assuré"
 		sTabRech  [63] = "RST_INFO_SIMPLE"				; sTabSubst [63] = "Rupture de stock info simple"	
-		sTabRech  [64] = "PCE_PV_RECU"					; sTabSubst [64] = "Pi$$HEX1$$e800$$ENDHEX$$ce PV re$$HEX1$$e700$$ENDHEX$$u"
+		sTabRech  [64] = "PCE_PV_RECU"					; sTabSubst [64] = "Pièce PV reçu"
 		sTabRech  [65] = "RST_CMDE+SUIVI"				; sTabSubst [65] = "Rupture de stock+Cmde+Suivi"	
-		sTabRech  [66]	= "APP_SIN_A_RECUPERER"			; sTabSubst [66]	= "App. Sinistr$$HEX4$$e9002000e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer"							
+		sTabRech  [66]	= "APP_SIN_A_RECUPERER"			; sTabSubst [66]	= "App. Sinistré à récupérer"							
 	
-	// A laisser tjrs $$HEX2$$e0002000$$ENDHEX$$la fin	
-		sTabRech  [67] = "REC"								; sTabSubst [67] = "Reconditionn$$HEX1$$e900$$ENDHEX$$"						
+	// A laisser tjrs à la fin	
+		sTabRech  [67] = "REC"								; sTabSubst [67] = "Reconditionné"						
 		sTabRech  [68] = "A_CONTROLER_SAV"				; sTabSubst [68] = "A controler en mode SAV" // [PM222-1]
 		sTabRech  [69] = "MAIL_IOS7"						; sTabSubst [69] = "Mail IOS7" // [VDOC12443]
 	
 		sTabRech  [70] = "MAJOR_CONTRACTUELLE_EUROS"	; sTabSubst [70] = "Majoration contractuelle en euros"			
 	// [DT081_EVOL_PRET_BRIS]
-		sTabRech  [71] = "TYP_APP_PRET"					; sTabSubst [71] = "Type Appareil de pr$$HEX1$$ea00$$ENDHEX$$t"
+		sTabRech  [71] = "TYP_APP_PRET"					; sTabSubst [71] = "Type Appareil de prêt"
 		sTabRech  [72] = "PRC_ORIG"						; sTabSubst [72] = "Process d'origine"
-		sTabRech  [73] = "DTE_COUR_RESTIT_1REL"		; sTabSubst [73] = "Date cour. 1$$HEX1$$e800$$ENDHEX$$re Rel. restit."	
-		sTabRech  [74] = "DTE_COUR_RESTIT_2REL"		; sTabSubst [74] = "Date cour. 2$$HEX1$$e800$$ENDHEX$$me Rel. restit."	
+		sTabRech  [73] = "DTE_COUR_RESTIT_1REL"		; sTabSubst [73] = "Date cour. 1ère Rel. restit."	
+		sTabRech  [74] = "DTE_COUR_RESTIT_2REL"		; sTabSubst [74] = "Date cour. 2ème Rel. restit."	
 		sTabRech  [75] = "DTE_COUR_RESTIT"				; sTabSubst [75] = "Date cour. dem. restit."	
-		sTabRech  [76] = "RPC_SUR_DEBCAUT"				; sTabSubst [76] = "Ferm$$HEX2$$e9002000$$ENDHEX$$sur D$$HEX1$$e900$$ENDHEX$$bit Caution"		
+		sTabRech  [76] = "RPC_SUR_DEBCAUT"				; sTabSubst [76] = "Fermé sur Débit Caution"		
 		sTabRech  [77] = "CODE_PICK_UP"					; sTabSubst [77] = "Code Rel. PickUp"			
-		sTabRech  [78] = "SUR_DEM_ASS"					; sTabSubst [78] = "Sur Demande Assur$$HEX1$$e900$$ENDHEX$$"	 // [PC13274-2]		
+		sTabRech  [78] = "SUR_DEM_ASS"					; sTabSubst [78] = "Sur Demande Assuré"	 // [PC13274-2]		
 		sTabRech  [79] = "CODE_PARENTAL"					; sTabSubst [79] = "Code parental"	 // [PM259-1]		
-		sTabRech  [80] = "NUM_CC_ELD"					   ; sTabSubst [80] = "Carte Cadeau Electro D$$HEX1$$e900$$ENDHEX$$p$$HEX1$$f400$$ENDHEX$$t"	 // [PC13321]		
-		sTabRech  [81] = "REF_INDEM"					   ; sTabSubst [81] = "R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence indemnisation"	 // [PC13321]			
+		sTabRech  [80] = "NUM_CC_ELD"					   ; sTabSubst [80] = "Carte Cadeau Electro Dépôt"	 // [PC13321]		
+		sTabRech  [81] = "REF_INDEM"					   ; sTabSubst [81] = "Référence indemnisation"	 // [PC13321]			
 		sTabRech  [82] = "DTE_BGE"					   	; sTabSubst [82] = "Date envoi courrier KSL carte cadeau"	 // [PC13321]			
 		sTabRech  [83] = "PRC_ORIG"					   ; sTabSubst [83] = "Process Origine"	 // [DT81]			
 		sTabRech  [84] = "SKU_IFR"					   	; sTabSubst [84] = "Sku IFR"	
-		sTabRech  [85] = "CMDE_A_CPLT"					; sTabSubst [85] = "Commande $$HEX2$$e0002000$$ENDHEX$$compl$$HEX1$$e900$$ENDHEX$$ter"	// [DT141]
-		sTabRech  [86] = "MAJ_ADRESSE"					; sTabSubst [86] = "Mise $$HEX2$$e0002000$$ENDHEX$$jour adresse"	
+		sTabRech  [85] = "CMDE_A_CPLT"					; sTabSubst [85] = "Commande à compléter"	// [DT141]
+		sTabRech  [86] = "MAJ_ADRESSE"					; sTabSubst [86] = "Mise à jour adresse"	
 		sTabRech  [87] = "RET_REL_PICK_UP"				; sTabSubst [87] = "Retour par relais Pick Up"	// [DT191-1]
-		sTabRech  [88] = "GEOLOC"							; sTabSubst [88] = "G$$HEX1$$e900$$ENDHEX$$olocalisation"	// [PM287-3]
-		sTabRech  [89] = "SUPP"						   	; sTabSubst [89] = "Supprim$$HEX1$$e900$$ENDHEX$$e"   // [PM287-3]
-		sTabRech  [90] = "MT_PREFACT"						; sTabSubst [90] = "Montant de pr$$HEX1$$e900$$ENDHEX$$-facturation"   // [PM287-3]
+		sTabRech  [88] = "GEOLOC"							; sTabSubst [88] = "Géolocalisation"	// [PM287-3]
+		sTabRech  [89] = "SUPP"						   	; sTabSubst [89] = "Supprimée"   // [PM287-3]
+		sTabRech  [90] = "MT_PREFACT"						; sTabSubst [90] = "Montant de pré-facturation"   // [PM287-3]
 		sTabRech  [91] = "AUTO_ATLAS"						; sTabSubst [91] = "Presta auto par ATLAS"   // [PM234-7]
 		sTabRech  [92] = "GESTION_ENVOI_BA"				; sTabSubst [92] = "Gestion envoi BA"   
 		sTabRech  [93] = "BTQ_PSM_ADV"					; sTabSubst [93] = "Boutique PSM Advise"   // [ITSM494276]
@@ -954,15 +955,15 @@ If Not F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 		sTabRech  [95] = "PROV_REC"						; sTabSubst [95] = "Prov. Recond."	// [VDOC25770]			
 		sTabRech  [96] = "FLUX"								; sTabSubst [96] = "Flux" // [VDOC26276]
 		sTabRech  [97] = "AUTO_ATM"						; sTabSubst [97] = "Presta auto par ATM"   // [PC151379]
-		sTabRech  [98] = "MAIL_CHAP_ENVOYE"				; sTabSubst [98] = "Mail chapeau envoy$$HEX1$$e900$$ENDHEX$$"   // [DT339]
+		sTabRech  [98] = "MAIL_CHAP_ENVOYE"				; sTabSubst [98] = "Mail chapeau envoyé"   // [DT339]
 		sTabRech  [99] = "DTE_MAIL_CHAP"				   ; sTabSubst [99] = "Date envoi Mail chapeau"   // [DT339]	
 		sTabRech  [100] = "BUYBACK"				   	; sTabSubst [100] = "Buy Back"   // [DT386]		
 		sTabRech  [101] = "AUTO_AXA"						; sTabSubst [101] = "Presta auto par AXA"   // [DT386]
 		sTabRech  [102] = "MT_CPLT_PAYBOX_SCM"			; sTabSubst [102] = "Mt Cplt PayBox SCM"   // [PM462-1]
 		sTabRech  [103] = "TYP_PCE_IDENT"				; sTabSubst [103] = "Type pce ident"   // [DT386_EXTR_AXA_V8]
-		sTabRech  [104] = "AUTOR_PCE_IDENT"			   ; sTabSubst [104] = "Autorit$$HEX2$$e9002000$$ENDHEX$$pce ident"   // [DT386_EXTR_AXA_V8]
-		sTabRech  [105] = "NUM_PCE_IDENT"				; sTabSubst [105] = "Num$$HEX1$$e900$$ENDHEX$$ro pce ident"   // [DT386_EXTR_AXA_V8]
-		sTabRech  [106] = "DTE_DELIVR_PI"				; sTabSubst [106] = "Date d$$HEX1$$e900$$ENDHEX$$livr PI"   // [DT386_EXTR_AXA_V8]
+		sTabRech  [104] = "AUTOR_PCE_IDENT"			   ; sTabSubst [104] = "Autorité pce ident"   // [DT386_EXTR_AXA_V8]
+		sTabRech  [105] = "NUM_PCE_IDENT"				; sTabSubst [105] = "Numéro pce ident"   // [DT386_EXTR_AXA_V8]
+		sTabRech  [106] = "DTE_DELIVR_PI"				; sTabSubst [106] = "Date délivr PI"   // [DT386_EXTR_AXA_V8]
 		sTabRech  [107] = "DTE_FIN_VAL_PI"				; sTabSubst [107] = "Date Fin valid PI"   // [DT386_EXTR_AXA_V8]
 		sTabRech  [108] = "ID_REG_FRANCHISE"			; sTabSubst [108] = "IdReg Franchise"   // [PM462-1]
 		
@@ -980,9 +981,9 @@ If Not F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 		// FRN vers SPB
 		sTabRech  [1] = ";"									; sTabSubst [1] = ", "
 		sTabRech  [2] = "=" 									; sTabSubst [2] = " : "
-		sTabRech  [3] = "RDV_CONF"							; sTabSubst [3] = "Confirmation RDV " + asIdFour + "/assur$$HEX1$$e900$$ENDHEX$$"
+		sTabRech  [3] = "RDV_CONF"							; sTabSubst [3] = "Confirmation RDV " + asIdFour + "/assuré"
 	// #18 [DCMP090327].[SBETV]
-		sTabRech  [4] = "DTE_LIVR_BROKER"				; sTabSubst [4] = "Mat$$HEX1$$e900$$ENDHEX$$riel livr$$HEX2$$e9002000$$ENDHEX$$au broker le"
+		sTabRech  [4] = "DTE_LIVR_BROKER"				; sTabSubst [4] = "Matériel livré au broker le"
 	
 		// [WEBSIM2].[FRANCE]
 		sTabRech  [5] = "CODE_MAGASIN"					; sTabSubst [5] = "Code magasin"
@@ -990,41 +991,41 @@ If Not F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 	
 		// [PC363_AUCHAN]
 		sTabRech  [7] = "MARQUE_REMPL"					; sTabSubst [7] = "Marque remplacement"
-		sTabRech  [8] = "MODELE_REMPL"					; sTabSubst [8] = "Mod$$HEX1$$e800$$ENDHEX$$le remplacement"
+		sTabRech  [8] = "MODELE_REMPL"					; sTabSubst [8] = "Modèle remplacement"
 		sTabRech  [9] = "PRIX_TTC_FACTU_O2M"			; sTabSubst [9] = "Prix TTC Facture O2M"
 		sTabRech  [10] = "PRIX_TTC_PUBLIC"				; sTabSubst [10] = "Prix TTC public"
 		sTabRech  [11] = "APP_INCOMPLET"					; sTabSubst [11] = "Appareil incomplet"
 		// [PM82][LOT1]
-		sTabRech  [12] = "RETOUR_153"						; sTabSubst [12] = "IMEI/Num.S$$HEX1$$e900$$ENDHEX$$rie diff$$HEX1$$e900$$ENDHEX$$rent"	
-		sTabRech  [13] = "RETOUR_154"						; sTabSubst [13] = "IMEI/Num.S$$HEX1$$e900$$ENDHEX$$rie illisible"	
+		sTabRech  [12] = "RETOUR_153"						; sTabSubst [12] = "IMEI/Num.Série différent"	
+		sTabRech  [13] = "RETOUR_154"						; sTabSubst [13] = "IMEI/Num.Série illisible"	
 	
 		// [RECUP_DONNEE_O2M]
-		sTabRech  [14] = "CGU_PRESENT"					; sTabSubst [14] = "CGU Pr$$HEX1$$e900$$ENDHEX$$sent"
-		sTabRech  [15] = "DONNEES_RECUPEREES"			; sTabSubst [15] = "Donn$$HEX1$$e900$$ENDHEX$$es r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$es"
-		sTabRech  [16] = "DONNEES_TRANSFEREES_SUR_NOUVEL_APP"; sTabSubst [16] = "Donn$$HEX1$$e900$$ENDHEX$$es tranf$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$es sur nouvel appareil"		
-		sTabRech  [17] = "PCT_DONNEES_RECUP"			; sTabSubst [17] = "% donn$$HEX1$$e900$$ENDHEX$$es r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$es"		
+		sTabRech  [14] = "CGU_PRESENT"					; sTabSubst [14] = "CGU Présent"
+		sTabRech  [15] = "DONNEES_RECUPEREES"			; sTabSubst [15] = "Données récupérées"
+		sTabRech  [16] = "DONNEES_TRANSFEREES_SUR_NOUVEL_APP"; sTabSubst [16] = "Données tranférées sur nouvel appareil"		
+		sTabRech  [17] = "PCT_DONNEES_RECUP"			; sTabSubst [17] = "% données récupérées"		
 		sTabRech  [18] = "LOGIN_AXALOT"					; sTabSubst [18] = "Login Axalot"
 		sTabRech  [19]	= "MDP_AXALOT"						; sTabSubst [19] = "Mot de passe Axalot"
-		sTabRech  [20] = "APP_RECUPERE_PAR_ASSURE"   ; sTabSubst [20] = "Appareil r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$r$$HEX2$$e9002000$$ENDHEX$$par assur$$HEX1$$e900$$ENDHEX$$"			// [PM200][PSM]
-		sTabRech  [21]	= "ASSURE_EN_PDV"					; sTabSubst [21] = "Assur$$HEX2$$e9002000$$ENDHEX$$en point de vente"
+		sTabRech  [20] = "APP_RECUPERE_PAR_ASSURE"   ; sTabSubst [20] = "Appareil récupéré par assuré"			// [PM200][PSM]
+		sTabRech  [21]	= "ASSURE_EN_PDV"					; sTabSubst [21] = "Assuré en point de vente"
 		sTabRech  [22]	= "NOM_PDV"							; sTabSubst [22] = "Nom point de vente"
-		sTabRech  [23]	= "NUM_PDV"							; sTabSubst [23] = "Num$$HEX1$$e900$$ENDHEX$$ro point de vente"
-		sTabRech  [24]	= "ASSURE_ENVOIE_COLIS"			; sTabSubst [24] = "Assur$$HEX2$$e9002000$$ENDHEX$$envoie colis"		// [VDOC6449]
-		sTabRech  [25] = "DTE_LIVR_SBE"					; sTabSubst [25] = "Mat$$HEX1$$e900$$ENDHEX$$riel centralis$$HEX2$$e9002000$$ENDHEX$$chez SBE/2ES"	
+		sTabRech  [23]	= "NUM_PDV"							; sTabSubst [23] = "Numéro point de vente"
+		sTabRech  [24]	= "ASSURE_ENVOIE_COLIS"			; sTabSubst [24] = "Assuré envoie colis"		// [VDOC6449]
+		sTabRech  [25] = "DTE_LIVR_SBE"					; sTabSubst [25] = "Matériel centralisé chez SBE/2ES"	
 		sTabRech  [26] = "ETAT_SG"							; sTabSubst [26] = "Etat SG"	
 		sTabRech  [27] = "DATE_ETAT_SG"					; sTabSubst [27] = "Date Etat SG"		
 		sTabRech  [28] = "TV_HG"					      ; sTabSubst [28] = "TV HG"			
 		sTabRech  [29] = "DATE_TV_HG"						; sTabSubst [29] = "Date TV HG"			// [PM200][LOT2][DESOX]
-		sTabRech  [30] = "PRESENCE_OX"					; sTabSubst [30] = "Pr$$HEX1$$e900$$ENDHEX$$sence d'une oxydation"			
+		sTabRech  [30] = "PRESENCE_OX"					; sTabSubst [30] = "Présence d'une oxydation"			
 		sTabRech  [31] = "PRIX_TTC_FACTU_BLC"			; sTabSubst [31] = "Prix TTC Facture BLCODE"	
-		sTabRech  [32]	= "INTER_A_DOMICILE"				; sTabSubst [32] = "Intervention $$HEX2$$e0002000$$ENDHEX$$Domicile"			// [PC877]
-		sTabRech  [33]	= "DTE_RESTIT_APP_PRET"			; sTabSubst [33] = "Date restitution app. pr$$HEX1$$ea00$$ENDHEX$$t"	// [PC938_ORANGE_V3]		
-		sTabRech  [34]	= "ETAT_APP_PRET"					; sTabSubst [34] = "Etat app. pr$$HEX1$$ea00$$ENDHEX$$t"	
-		sTabRech  [35]	= "PCT_ENDOMM"						; sTabSubst [35] = "Pourcentage endommag$$HEX1$$e900$$ENDHEX$$"
-		sTabRech  [36]	= "MARQ_RST_FRN"					; sTabSubst [36] = "Marque Cmd$$HEX1$$e900$$ENDHEX$$e"
-		sTabRech  [37]	= "MODL_RST_FRN"					; sTabSubst [37] = "Mod$$HEX1$$e800$$ENDHEX$$le Cmd$$HEX1$$e900$$ENDHEX$$e"	
-		sTabRech  [38]	= "ID_REF_FOUR_RST_FRN"			; sTabSubst [38] = "Ref fourn Cmd$$HEX1$$e900$$ENDHEX$$e"		
-		sTabRech  [39]	= "PRIX_HT_RST_FRN"				; sTabSubst [39] = "Prix HT Cmd$$HEX1$$e900$$ENDHEX$$"			
+		sTabRech  [32]	= "INTER_A_DOMICILE"				; sTabSubst [32] = "Intervention à Domicile"			// [PC877]
+		sTabRech  [33]	= "DTE_RESTIT_APP_PRET"			; sTabSubst [33] = "Date restitution app. prêt"	// [PC938_ORANGE_V3]		
+		sTabRech  [34]	= "ETAT_APP_PRET"					; sTabSubst [34] = "Etat app. prêt"	
+		sTabRech  [35]	= "PCT_ENDOMM"						; sTabSubst [35] = "Pourcentage endommagé"
+		sTabRech  [36]	= "MARQ_RST_FRN"					; sTabSubst [36] = "Marque Cmdée"
+		sTabRech  [37]	= "MODL_RST_FRN"					; sTabSubst [37] = "Modèle Cmdée"	
+		sTabRech  [38]	= "ID_REF_FOUR_RST_FRN"			; sTabSubst [38] = "Ref fourn Cmdée"		
+		sTabRech  [39]	= "PRIX_HT_RST_FRN"				; sTabSubst [39] = "Prix HT Cmdé"			
 		sTabRech  [40]	= "PSM_NOM1"						; sTabSubst [40] = "PSM Nom1"
 		sTabRech  [41]	= "PSM_NOM2"						; sTabSubst [41] = "PSM Nom2"
 		sTabRech  [42]	= "PSM_ADR1"						; sTabSubst [42] = "PSM Adresse1"	
@@ -1034,88 +1035,88 @@ If Not F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 		sTabRech  [46] = "LIVRAISON_PSM"					; sTabSubst [46] = "Livraison PSM"
 		sTabRech  [47] = "DTE_RETOUR"					   ; sTabSubst [47] = "Date Retour"	// [VDOC9908]
 		sTabRech  [48] = "SITE"							   ; sTabSubst [48] = "Site"	// [VDOC9908]
-		sTabRech  [49] = "EN_RAPPORT_REPAR"			   ; sTabSubst [49] = "Panne en rapport avec la r$$HEX1$$e900$$ENDHEX$$paration"	// [PM222-1]
-		sTabRech  [50] = "PEC_PRBLE_LIVRAISON"			; sTabSubst [50] = "Prise en charge probl$$HEX1$$e800$$ENDHEX$$me de livraison"	// [PM450-1]	
+		sTabRech  [49] = "EN_RAPPORT_REPAR"			   ; sTabSubst [49] = "Panne en rapport avec la réparation"	// [PM222-1]
+		sTabRech  [50] = "PEC_PRBLE_LIVRAISON"			; sTabSubst [50] = "Prise en charge problème de livraison"	// [PM450-1]	
 		sTabRech  [51] = "COLIS_PND"			   		; sTabSubst [51] = "Colis en PND (NPAI)"	// [PM246]		
-		sTabRech  [52] = "COLIS_NRPAC"			   	; sTabSubst [52] = "Colis non r$$HEX1$$e900$$ENDHEX$$clam$$HEX2$$e9002000$$ENDHEX$$par le client"	// [PM246]			
+		sTabRech  [52] = "COLIS_NRPAC"			   	; sTabSubst [52] = "Colis non réclamé par le client"	// [PM246]			
 		sTabRech  [53] = "COLIS_PERDU"			   	; sTabSubst [53] = "Colis perdu"	// [PM246]				
-		sTabRech  [54] = "DTE_ARR_PLATFORM"				; sTabSubst [54] = "Date arriv$$HEX1$$e900$$ENDHEX$$e PlateForme Log."	// [PM250-1]				
-		sTabRech  [55] = "DTE_ARR_CENTR_DISTRIB"		; sTabSubst [55] = "Date arriv$$HEX1$$e900$$ENDHEX$$e Centre Distrib."	// [PM250-1]				
-		sTabRech  [56] = "DTE_DEP_CENTR_DISTRIB"		; sTabSubst [56] = "Date d$$HEX1$$e900$$ENDHEX$$part Centre Distrib."	// [PM250-1]					
-		sTabRech  [57] = "DTE_RCP_MOB_CLI"				; sTabSubst [57] = "Date arriv$$HEX1$$e900$$ENDHEX$$e chez l'assur$$HEX1$$e900$$ENDHEX$$"	   // [PM250-1]					
+		sTabRech  [54] = "DTE_ARR_PLATFORM"				; sTabSubst [54] = "Date arrivée PlateForme Log."	// [PM250-1]				
+		sTabRech  [55] = "DTE_ARR_CENTR_DISTRIB"		; sTabSubst [55] = "Date arrivée Centre Distrib."	// [PM250-1]				
+		sTabRech  [56] = "DTE_DEP_CENTR_DISTRIB"		; sTabSubst [56] = "Date départ Centre Distrib."	// [PM250-1]					
+		sTabRech  [57] = "DTE_RCP_MOB_CLI"				; sTabSubst [57] = "Date arrivée chez l'assuré"	   // [PM250-1]					
 		sTabRech  [58] = "CODE_ERREUR_LIVR"				; sTabSubst [58] = "Code Err. livraison"	   // [PM250-1]					
-		sTabRech  [59] = "REMIS_EN_STK"					; sTabSubst [59] = "Mat$$HEX1$$e900$$ENDHEX$$riel remis en stock"	   // [PM251-2]						
+		sTabRech  [59] = "REMIS_EN_STK"					; sTabSubst [59] = "Matériel remis en stock"	   // [PM251-2]						
 		sTabRech  [60] = "CDV_CODETA"						; sTabSubst [60] = "Etat CDV"	   // [PM289_CDP]
 		sTabRech  [61] = "EVE_CODETA"						; sTabSubst [61] = "Etat EVE"	   // [PM289_CDP]
 		sTabRech  [62] = "ANO_CDP"							; sTabSubst [62] = "Anomalie"	   // [PM289_CDP]
-		sTabRech  [63] = "FACT_PRESENTE"					; sTabSubst [63] = "Facture pr$$HEX1$$e900$$ENDHEX$$sente"	   // [DT141]	
+		sTabRech  [63] = "FACT_PRESENTE"					; sTabSubst [63] = "Facture présente"	   // [DT141]	
 		sTabRech  [64] = "MARQ_REMPL"						; sTabSubst [64] = "Marque Rempl."	   // [DT141]		
-		sTabRech  [65] = "MODL_REMPL"						; sTabSubst [65] = "Mod$$HEX1$$e800$$ENDHEX$$le Rempl."	   // [DT141]			
+		sTabRech  [65] = "MODL_REMPL"						; sTabSubst [65] = "Modèle Rempl."	   // [DT141]			
 		sTabRech  [66] = "MT_TTC_REMPL"					; sTabSubst [66] = "Mt TTC Rempl."	   // [DT141]			
 		sTabRech  [67] = "TYPE_SWAP"						; sTabSubst [67] = "Type de swap"	   // [DT141]				
-		sTabRech  [68] = "GEOLOC"						   ; sTabSubst [68] = "G$$HEX1$$e900$$ENDHEX$$olocalisation"   // [DT141]				
+		sTabRech  [68] = "GEOLOC"						   ; sTabSubst [68] = "Géolocalisation"   // [DT141]				
 		sTabRech  [69] = "A_SUPP"						   ; sTabSubst [69] = "A supprimer"   // [DT150]					
-		sTabRech  [70] = "SUPP"						   	; sTabSubst [70] = "Supprim$$HEX1$$e900$$ENDHEX$$e"   // [DT150]						
-		sTabRech  [71] = "CHGT_CM"						  	; sTabSubst [71] = "Changement carte m$$HEX1$$e800$$ENDHEX$$re"   // [PM295-1]							
-		sTabRech  [72] = "IFDNMQ_RET"					  	; sTabSubst [72] = "Info/Donn$$HEX1$$e900$$ENDHEX$$es Manquantes"   // [PM287-3]					
-		sTabRech  [73] = "IFDNMQ_ACT"					  	; sTabSubst [73] = "Info/Donn$$HEX1$$e900$$ENDHEX$$es Action"   // [PM287-3]						
-		sTabRech  [74] = "NO_BA"						   ; sTabSubst [74] = "N$$HEX2$$b0002000$$ENDHEX$$du/des bon(s) d'achat"   // [DT176]
+		sTabRech  [70] = "SUPP"						   	; sTabSubst [70] = "Supprimée"   // [DT150]						
+		sTabRech  [71] = "CHGT_CM"						  	; sTabSubst [71] = "Changement carte mère"   // [PM295-1]							
+		sTabRech  [72] = "IFDNMQ_RET"					  	; sTabSubst [72] = "Info/Données Manquantes"   // [PM287-3]					
+		sTabRech  [73] = "IFDNMQ_ACT"					  	; sTabSubst [73] = "Info/Données Action"   // [PM287-3]						
+		sTabRech  [74] = "NO_BA"						   ; sTabSubst [74] = "N° du/des bon(s) d'achat"   // [DT176]
 		sTabRech  [75] = "COLIS_BALNI"					; sTabSubst [75] = "Boites aux lettres non identifiables"   	// [DT111]
 		sTabRech  [76] = "COLIS_INCOR"					; sTabSubst [76] = "Adresse Incorrecte"   	// [DT111]
-		sTabRech  [77] = "COLIS_REFUS"					; sTabSubst [77] = "Refus$$HEX2$$e9002000$$ENDHEX$$par client"   	// [DT111]
-		sTabRech  [78] = "ANNUL_REFAIT"					; sTabSubst [78] = "Annul$$HEX2$$e9002000$$ENDHEX$$et refait"   	// [DT111]
-		sTabRech  [79] = "A_CHARGE"						; sTabSubst [79] = "Contestation $$HEX2$$e0002000$$ENDHEX$$charge"   	// [PM280-2]
+		sTabRech  [77] = "COLIS_REFUS"					; sTabSubst [77] = "Refusé par client"   	// [DT111]
+		sTabRech  [78] = "ANNUL_REFAIT"					; sTabSubst [78] = "Annulé et refait"   	// [DT111]
+		sTabRech  [79] = "A_CHARGE"						; sTabSubst [79] = "Contestation à charge"   	// [PM280-2]
 		sTabRech  [80] = "DECLASS_PCT"					; sTabSubst [80] = "Declassement %"   	// [PM280-2]	
-		sTabRech  [81] = "MARQSW"							; sTabSubst [81] = "Marque Swap$$HEX1$$e900$$ENDHEX$$e"   	// [DT276]	
-		sTabRech  [82] = "MODLSW"							; sTabSubst [82] = "Mod$$HEX1$$e800$$ENDHEX$$le Swap$$HEX1$$e900$$ENDHEX$$e"   	// [DT276]		
-		sTabRech  [83] = "APP_SWAP"						; sTabSubst [83] = "Appareil swap$$HEX1$$e900$$ENDHEX$$"   	// [DT276]			
+		sTabRech  [81] = "MARQSW"							; sTabSubst [81] = "Marque Swapée"   	// [DT276]	
+		sTabRech  [82] = "MODLSW"							; sTabSubst [82] = "Modèle Swapée"   	// [DT276]		
+		sTabRech  [83] = "APP_SWAP"						; sTabSubst [83] = "Appareil swapé"   	// [DT276]			
 		sTabRech  [84] = "SWAP_AUTO_CTR"					; sTabSubst [84] = "Swap CTR"   	// [DT276] // [DT280]
 		sTabRech  [85] = "SWAP_GSX"						; sTabSubst [85] = "Swap GSX"   	// [DT288]
 		sTabRech  [86] = "REF_ORANGE"						; sTabSubst [86] = "Ref. Orange"   	// [DT288]	
-		sTabRech  [87] = "NOTIF_REPA"						; sTabSubst [87] = "Notif. R$$HEX1$$e900$$ENDHEX$$pa"   	// [PC171933]		
+		sTabRech  [87] = "NOTIF_REPA"						; sTabSubst [87] = "Notif. Répa"   	// [PC171933]		
 		sTabRech  [88] = "NEUF_REC"						; sTabSubst [88] = "Neuf/Recond"	// [VDOC25657]
 		sTabRech  [89] = "GRADE_REC"						; sTabSubst [89] = "Grade Recond."	// [VDOC25657]	
 		sTabRech  [90] = "PROV_REC"						; sTabSubst [90] = "Prov. Recond."	// [VDOC25770]		
 	
 		// [VDoc26518]
-		sTabRech  [91] = "Probl$$HEX1$$e800$$ENDHEX$$me de livraison : J1"	; sTabSubst [91] = "Probl$$HEX1$$e800$$ENDHEX$$me de livraison : Demande SPB , restitu$$HEX1$$e900$$ENDHEX$$e au client"
-		sTabRech  [92] = "Probl$$HEX1$$e800$$ENDHEX$$me de livraison : J2"	; sTabSubst [92] = "Probl$$HEX1$$e800$$ENDHEX$$me de livraison : R$$HEX1$$e900$$ENDHEX$$par$$HEX1$$e900$$ENDHEX$$,restitu$$HEX2$$e9002000$$ENDHEX$$client"
-		sTabRech  [93] = "Probl$$HEX1$$e800$$ENDHEX$$me de livraison : J3"	; sTabSubst [93] = "Probl$$HEX1$$e800$$ENDHEX$$me de livraison : Refus SAV,restitu$$HEX2$$e9002000$$ENDHEX$$au client"
-		sTabRech  [94] = "Probl$$HEX1$$e800$$ENDHEX$$me de livraison : J4"	; sTabSubst [94] = "Probl$$HEX1$$e800$$ENDHEX$$me de livraison : Perte Produit par le PSM"
-		sTabRech  [95] = "Probl$$HEX1$$e800$$ENDHEX$$me de livraison : J5"	; sTabSubst [95] = "Probl$$HEX1$$e800$$ENDHEX$$me de livraison : Perte Produit par le PSM"
-		sTabRech  [96] = "Probl$$HEX1$$e800$$ENDHEX$$me de livraison : J6"	; sTabSubst [96] = "Probl$$HEX1$$e800$$ENDHEX$$me de livraison : Produit d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$exp$$HEX1$$e900$$ENDHEX$$di$$HEX2$$e9002000$$ENDHEX$$vers SPBS"
+		sTabRech  [91] = "Problème de livraison : J1"	; sTabSubst [91] = "Problème de livraison : Demande SPB , restituée au client"
+		sTabRech  [92] = "Problème de livraison : J2"	; sTabSubst [92] = "Problème de livraison : Réparé,restitué client"
+		sTabRech  [93] = "Problème de livraison : J3"	; sTabSubst [93] = "Problème de livraison : Refus SAV,restitué au client"
+		sTabRech  [94] = "Problème de livraison : J4"	; sTabSubst [94] = "Problème de livraison : Perte Produit par le PSM"
+		sTabRech  [95] = "Problème de livraison : J5"	; sTabSubst [95] = "Problème de livraison : Perte Produit par le PSM"
+		sTabRech  [96] = "Problème de livraison : J6"	; sTabSubst [96] = "Problème de livraison : Produit déjà expédié vers SPBS"
 		// :[VDoc26518]
 		
-		sTabRech  [97] = "ACCORD_INDEM_PECU"			; sTabSubst [97] = "Accord Indemnistation p$$HEX1$$e900$$ENDHEX$$cuniaire"	// [DT363]			
+		sTabRech  [97] = "ACCORD_INDEM_PECU"			; sTabSubst [97] = "Accord Indemnistation pécuniaire"	// [DT363]			
 		sTabRech  [98] = "TYP_BA_ALLER"					; sTabSubst [98] = "Type Tracking Aller"	// [PM445-1]				
-		sTabRech  [99] = "BPPAYE"							; sTabSubst [99] = "Bon Pr$$HEX1$$e900$$ENDHEX$$Pay$$HEX1$$e900$$ENDHEX$$"	// [PM445-1]					
+		sTabRech  [99] = "BPPAYE"							; sTabSubst [99] = "Bon PréPayé"	// [PM445-1]					
 		sTabRech  [100] = "RPICKUP"						; sTabSubst [100] = "Relais PickUp"	// [PM445-1]						
 		sTabRech  [101] = "PERTE_ALLER"					; sTabSubst [101] = "Perte Aller"	// [PM445-1]							
-		sTabRech  [102] = "PRBLE_LIVRAISON"			   ; sTabSubst [102] = "Probl$$HEX1$$e800$$ENDHEX$$me de livraison"	// [PM246]	
-		sTabRech  [103] = "TCH_BPP"			   		; sTabSubst [103] = "T$$HEX1$$e900$$ENDHEX$$l$$HEX1$$e900$$ENDHEX$$chargement BPP"	// [DT398]	
+		sTabRech  [102] = "PRBLE_LIVRAISON"			   ; sTabSubst [102] = "Problème de livraison"	// [PM246]	
+		sTabRech  [103] = "TCH_BPP"			   		; sTabSubst [103] = "Téléchargement BPP"	// [DT398]	
 	
 		// [DT424]
-		sTabRech  [104] = "DTE_1_UTIL_1"			  		; sTabSubst [104] = "Date 1$$HEX1$$e800$$ENDHEX$$re util(1)"	
+		sTabRech  [104] = "DTE_1_UTIL_1"			  		; sTabSubst [104] = "Date 1ère util(1)"	
 		sTabRech  [105] = "DTE_DDU_1"			  			; sTabSubst [105] = "Date dern util(1)"		
 		sTabRech  [106] = "IMSI_1"			  				; sTabSubst [106] = "Num carte SIM (IMSI)(1)"			
 		sTabRech  [107] = "MSISDN_1"			  			; sTabSubst [107] = "Num ligne (MSISDN)(1)"				
-		sTabRech  [108] = "PRENOM_CLI_1"			  		; sTabSubst [108] = "Pr$$HEX1$$e900$$ENDHEX$$nom client(1)"						
+		sTabRech  [108] = "PRENOM_CLI_1"			  		; sTabSubst [108] = "Prénom client(1)"						
 		sTabRech  [109] = "NOM_CLI_1"			  			; sTabSubst [109] = "Nom client(1)"					
-		sTabRech  [110] = "DTE_1_UTIL_2"			  		; sTabSubst [110] = "Date 1$$HEX1$$e800$$ENDHEX$$re util(2)"	
+		sTabRech  [110] = "DTE_1_UTIL_2"			  		; sTabSubst [110] = "Date 1ère util(2)"	
 		sTabRech  [111] = "DTE_DDU_2"			  			; sTabSubst [111] = "Date dern util(2)"		
 		sTabRech  [112] = "IMSI_2"			  				; sTabSubst [112] = "Num carte SIM (IMSI)(2)"			
 		sTabRech  [113] = "MSISDN_2"			  			; sTabSubst [113] = "Num ligne (MSISDN)(2)"				
-		sTabRech  [114] = "PRENOM_CLI_2"			  		; sTabSubst [114] = "Pr$$HEX1$$e900$$ENDHEX$$nom client(2)"						
+		sTabRech  [114] = "PRENOM_CLI_2"			  		; sTabSubst [114] = "Prénom client(2)"						
 		sTabRech  [115] = "NOM_CLI_2"			  			; sTabSubst [115] = "Nom client(2)"					
 		// /[DT424]
 	
 		// [RS4093_EVOL_ELD]
-		sTabRech  [116] = "NUM_CC_ELD_RET"	  			; sTabSubst [116] = "Carte Cadeau Electro D$$HEX1$$e900$$ENDHEX$$p$$HEX1$$f400$$ENDHEX$$t"					
-		sTabRech  [117] = "CODE_SECURITE"	  			; sTabSubst [117] = "code s$$HEX1$$e900$$ENDHEX$$curit$$HEX1$$e900$$ENDHEX$$"						
+		sTabRech  [116] = "NUM_CC_ELD_RET"	  			; sTabSubst [116] = "Carte Cadeau Electro Dépôt"					
+		sTabRech  [117] = "CODE_SECURITE"	  			; sTabSubst [117] = "code sécurité"						
 		// /[RS4093_EVOL_ELD]
 	
 		// [PMO139_RS4926]
-		sTabRech  [118] = "DIAG_VIDEO_ENGAGE"	  		; sTabSubst [118] = "Diag vid$$HEX1$$e900$$ENDHEX$$o engag$$HEX1$$e900$$ENDHEX$$"							
+		sTabRech  [118] = "DIAG_VIDEO_ENGAGE"	  		; sTabSubst [118] = "Diag vidéo engagé"							
 		
 		lTot = UpperBound ( sTabRech )
 		For lCpt = 1 To lTot
@@ -1142,7 +1143,7 @@ public subroutine uf_getadresseo2mbase (long alidsin, string ascas, ref string a
 //* Fonction      : n_cst_cmd_commun::uf_GetAdresseO2MBase
 //* Auteur        : FABRY JF
 //* Date          : 28/04/2010
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Renvoi l'adresse O2M en fonction du contexte.
+//* Libellé       : Renvoi l'adresse O2M en fonction du contexte.
 //* Commentaires  : [ADRESSE_O2M]
 //*
 //* Arguments     :    	alIdSin		Long		Val
@@ -1158,7 +1159,7 @@ public subroutine uf_getadresseo2mbase (long alidsin, string ascas, ref string a
 //*
 //*-----------------------------------------------------------------
 
-// D$$HEX1$$e900$$ENDHEX$$claration pour les appels
+// Déclaration pour les appels
 // String sNomLigne1, sNomLigne2, sAdrLigne1, sAdrLigne2, sCP, sVille	
 // n_cst_cmd_commun	lnvCmdCommun
 // lnvCmdCommun.uf_GetAdresseO2MBase ( lIdsin, sCas, sNomLigne1, sNomLigne2, sAdrLigne1, sAdrLigne2, sCP, sVille )
@@ -1186,7 +1187,7 @@ public subroutine uf_getadresseo2m_2 (string ascas, string asforcageidreffour, l
 //* Fonction      : n_cst_cmd_commun::uf_GetAdresseO2M_2
 //* Auteur        : FPI
 //* Date          : 11/07/2014
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Renvoi l"adresse O2M en fonction du contexte.
+//* Libellé       : Renvoi l"adresse O2M en fonction du contexte.
 //* Commentaires  : [VDOC14882] - MEP : recopier le code dans uf_GetAdresseO2M
 //*
 //* Arguments     :    	asCas			String	Val,
@@ -1214,7 +1215,7 @@ public subroutine uf_getadresseo2m_2 (string ascas, string asforcageidreffour, l
 //			FPI	19/04/2013	[VDOC10610] Modif adresse O2M
 //			FPI	14/06/2013	[VDOC11407] Modif adresse O2M
 //*       JFF  24/07/2013    [MANTIS8246][PC938]
-//		FPI 11/07/2014		 [VDOC14882] Refonte de la m$$HEX1$$e900$$ENDHEX$$thode
+//		FPI 11/07/2014		 [VDOC14882] Refonte de la méthode
 //		FPI 05/09/2014		[VDoc15221] On ne change pas le CP
 //       JFF   04/11/2014 [PM280-1]
 //       JFF   18/11/2014 [VDOC15981]
@@ -1242,13 +1243,13 @@ bTrouve=FALSE
 bCasIPad=FALSE
 bCasHorsTel=FALSE
 
-// Adresse r$$HEX2$$e900e900$$ENDHEX$$lle, standard, compl$$HEX1$$e800$$ENDHEX$$te
+// Adresse réélle, standard, complète
 If asCas = "COMPLETE" Then
 
 // [RS3337]
 asNomLigne1	= "LOXY"
 asAdrLigne1	= "21-23 Rue Saint-Hilaire" 
-asAdrLigne2 = "Saint-Ouen l'Aum$$HEX1$$f400$$ENDHEX$$ne" 
+asAdrLigne2 = "Saint-Ouen l'Aumône" 
 asCP        = "95041" 
 asVille	   = "CERGY-PONTOISE CEDEX 1"
 
@@ -1260,7 +1261,7 @@ End If
 // [RS3337]
 asNomLigne1	= "LOXY"
 asAdrLigne1	= "21-23 Rue Saint-Hilaire" 
-asAdrLigne2 = "Saint-Ouen l'Aum$$HEX1$$f400$$ENDHEX$$ne" 
+asAdrLigne2 = "Saint-Ouen l'Aumône" 
 asCP        = "95041" 
 asVille	   = "CERGY-PONTOISE CEDEX 1"
 
@@ -1400,7 +1401,7 @@ If bCasSPB2 And (not bTrouve) Then
 	bTrouve=TRUE
 End If
 
-// SPB 3 (D$$HEX1$$e900$$ENDHEX$$faut)
+// SPB 3 (Défaut)
 If not bTrouve Then asNomLigne1 = "SPB 3"
 
 // [PM280-1]
@@ -1411,7 +1412,7 @@ asNomLigne1 += sLettreCatg
 // [RS3337]
 asNomLigne1	= "LOXY - " + asNomLigne1
 asAdrLigne1	= "21-23 Rue Saint-Hilaire" 
-asAdrLigne2 = "Saint-Ouen l'Aum$$HEX1$$f400$$ENDHEX$$ne" 
+asAdrLigne2 = "Saint-Ouen l'Aumône" 
 asCP        = "95041" 
 asVille	   = "CERGY-PONTOISE CEDEX 1"
 
