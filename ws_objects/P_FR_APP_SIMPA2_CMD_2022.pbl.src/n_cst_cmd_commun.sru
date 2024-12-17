@@ -209,8 +209,6 @@ sModif += "DTE_ELV_MOBILE_T.Text = 'Enlèvement mobile à réparer par transp.' 
 sModif += "DTE_RCP_FRN_T.Text 	= 'Réception de l~~'appareil dans le CTR' "
 sModif += "DTE_ENV_ST_T.Text 	   = 'Envoi mobile vers CTR agréé' "
 sModif += "DTE_EMIS_DEVIS_T.Text = 'Date du diagnostic par le CTR' "
-sModif += "MT_DEVIS_T.Text 		= 'Montant du forfait de réparation HT' "
-sModif += "ALT_DEV_ACP_T.Text 	= 'Devis accepté' "
 sModif += "DTE_DEV_ACP_T.Text 	= 'Prise de décision sur le devis' "
 sModif += "DTE_RET_LOGIS_T.Text 	= 'Retour de l~~'appareil du CTR vers le logisticien' "
 sModif += "DTE_RET_PRET_MIN_T.Text = 'Récup prévue kit prêt + rest mob réparé (min)' "
@@ -224,7 +222,12 @@ sModif += "DTE_RCP_MOB_CLI_T.Text= 'Réception du mobile (nouveau/réparé) par 
 /* Ecriture sur la Dw des libellés par défaut pour tous             */
 /* fournisseurs.                                                    */
 /*------------------------------------------------------------------*/
-aDwTrtCmdFrn.Modify ( sModif )
+
+If sModif <> "" Then
+	sModif = F_REMPLACE ( sModif, char(9), " " )
+	aDwTrtCmdFrn.Modify ( sModif )
+End If
+
 sModif = ""
  
 // Pour tous les cas
@@ -243,24 +246,22 @@ sModif += "ID_ORIAN_MODELE_T.Text 	= '' "
 Choose Case asTypArt
 	Case "PRS"
 //		sModif += "STATUS_GC_T.Text 	= 'Etat de l~~'appareil' " // #7
-		sModif += "DTE_RCP_MOB_CLI_T.Text= 'Réception de l~~'appareil réparé par l~~'assuré' "		
+		sModif += "DTE_RCP_MOB_CLI_T.Text = 'Réception de l~~'appareil réparé par l~~'assuré' "		
 
 		sModif += "DTE_EMIS_DEVIS_T.Text = '' " // #7
-		sModif += "MT_DEVIS_T.Text 		= '' " // #7				
-		sModif += "ALT_DEV_ACP_T.Text 	= '' " // #7
 
 
 		Choose Case True  // D#7
 			Case lStatusGc = 2 And ( sCodEtat = "ECL" Or sCodEtat = "RPC" )
-				sModif += "DTE_ENV_CLI_T.Text 	= 'Envoi de l~~'appareil réparé chez l~~'assuré'"
+				sModif += "DTE_ENV_CLI_T.Text 	= 'Envoi de l~~'appareil réparé chez l~~'assuré' "
 				sModif += "DTE_RCP_MOB_CLI_T.Text= 'Réception de l~~'appareil réparé par l~~'assuré' "
 
 			Case lStatusGc = 21 And ( sCodEtat = "ECL" Or sCodEtat = "RPC" )
-				sModif += "DTE_ENV_CLI_T.Text 	= 'Envoi de l~~'appareil irréparable chez l~~'assuré'"
+				sModif += "DTE_ENV_CLI_T.Text 	= 'Envoi de l~~'appareil irréparable chez l~~'assuré' "
 				sModif += "DTE_RCP_MOB_CLI_T.Text= 'Réception de l~~'appareil irréparable par l~~'assuré' "
 
 			Case lStatusGc = 21 And sCodEtat = "RSP" 
-				sModif += "DTE_ENV_CLI_T.Text 	= 'Mis en stock de l~~'appareil irréparable'"
+				sModif += "DTE_ENV_CLI_T.Text 	= 'Mis en stock de l~~'appareil irréparable' "
 				sModif += "DTE_RCP_MOB_CLI_T.Text= '' "
 	
 		End Choose // D#7
@@ -273,9 +274,9 @@ Choose Case asTypArt
 //		sModif += "STATUS_GC_T.Text 	= '' " // #7
 		sModif += "DTE_RCP_FRN_T.Text 	= 'Traitement de la commande' " // #7
 		sModif += "DTE_EMIS_DEVIS_T.Text = '' " // #7
-		sModif += "MT_DEVIS_T.Text 		= '' " // #7		
+
 		If asTypeTrt <> "S" Then aDwTrtCmdFrn.SetItem ( 1, "MT_DEVIS", "" )
-		sModif += "ALT_DEV_ACP_T.Text 	= '' " // #7
+
 		If asTypeTrt <> "S" Then aDwTrtCmdFrn.SetItem ( 1, "ALT_DEV_ACP", "" )		
 		sModif += "DTE_RET_LOGIS_T.Text 	= '' " // #7
       sModif += "DTE_ENV_CLI_T.Text 	= 'Envoi de l~~'appareil neuf chez l~~'assuré' "
@@ -283,8 +284,6 @@ Choose Case asTypArt
 
 	Case Else	
 		sModif += "DTE_EMIS_DEVIS_T.Text = '' " // #7
-		sModif += "MT_DEVIS_T.Text 		= '' " // #7				
-		sModif += "ALT_DEV_ACP_T.Text 	= '' " // #7
 
 End Choose
 
@@ -302,7 +301,11 @@ Choose Case asIdFour
 End Choose
 // :#11
 
-aDwTrtCmdFrn.Modify ( sModif )
+If sModif <> "" Then
+	sModif = F_REMPLACE ( sModif, char(9), " " )
+	aDwTrtCmdFrn.Modify ( sModif )
+End If
+
 sModif = ""
 
 /*------------------------------------------------------------------*/
@@ -322,13 +325,11 @@ Choose Case asIdFour
 			Case 3, 4, 5
 				sModif += "DTE_EMIS_DEVIS_T.Text = 'Emission du devis pour le client' "
 				sModif += "DTE_DEV_ACP_T.Text 	= 'Prise de décision sur devis par le client' "
-				sModif += "ALT_DEV_ACP_T.Text 	= 'Devis accepté par le client' "
-				sModif += "MT_DEVIS_T.Text 		= 'Montant du devis client, TTC' "
+
 			Case 7, 8, 9
 				sModif += "DTE_EMIS_DEVIS_T.Text = 'Emission du devis pour SPB' "
 				sModif += "DTE_DEV_ACP_T.Text 	= 'Prise de décision devis par SPB' "
-				sModif += "ALT_DEV_ACP_T.Text 	= 'Devis accepté par SPB' "
-				sModif += "MT_DEVIS_T.Text 		= 'Montant devis SPB, TTC' "
+				
 			Case Else
 		End Choose
 
@@ -372,7 +373,6 @@ Choose Case asIdFour
 		End Choose
 
 		sModif += "DTE_ENV_ST_T.Text 	   = 'Envoi mobile par A-NOVO vers CTR agréé' "		
-		sModif += "ALT_DEV_ACP_T.Text 	= 'Devis accepté par A-NOVO' "
 		sModif += "DTE_DEV_ACP_T.Text 	= 'Prise de décision sur le devis par A-NOVO' "
 		sModif += "DTE_RET_LOGIS_T.Text 	= 'Retour du mobile du CTR vers A-NOVO' "
 */
@@ -520,8 +520,6 @@ Choose Case asIdFour
 		sModif += "DTE_RET_LOGIS_T.Text 	= '' "
 		sModif += "ID_ORIAN_MODELE_T.Text = 'Pièces jointes au dossier' "
 		sModif += "DTE_EMIS_DEVIS_T.Text = '' " // #7
-		sModif += "MT_DEVIS_T.Text 		= '' " // #7				
-		sModif += "ALT_DEV_ACP_T.Text 	= '' " // #7
 		sModif += "ADRFC_NOM_T.Text		= 'Nom Transporteur'" //#11 [DCMP080199]
 
 	Case "BLC" // [BLCODE]
@@ -534,8 +532,6 @@ Choose Case asIdFour
 		sModif += "DTE_RET_LOGIS_T.Text 	= '' "
 		sModif += "ID_ORIAN_MODELE_T.Text = 'Pièces jointes au dossier' "
 		sModif += "DTE_EMIS_DEVIS_T.Text = '' " // #7
-		sModif += "MT_DEVIS_T.Text 		= '' " // #7				
-		sModif += "ALT_DEV_ACP_T.Text 	= '' " // #7
 		sModif += "ADRFC_NOM_T.Text		= 'Nom Transporteur'" //#11 [DCMP080199]
 
 	Case "GOM"
@@ -543,8 +539,6 @@ Choose Case asIdFour
 		sModif += "DTE_RET_LOGIS_T.Text 	= '' "
 		sModif += "DTE_RCP_MOB_CLI_T.Text= '' "
 		sModif += "DTE_EMIS_DEVIS_T.Text = '' " 
-		sModif += "MT_DEVIS_T.Text 		= '' " 
-		sModif += "ALT_DEV_ACP_T.Text 	= '' " 
 
 	Case "SCF"
 
@@ -594,8 +588,6 @@ Choose Case asIdFour
 		sModif += "DTE_RCP_MOB_CLI_T.Text= '' "
 		sModif += "ID_ORIAN_MODELE_T.Text = 'Pièces jointes au dossier' "
 		sModif += "DTE_EMIS_DEVIS_T.Text = '' " // #7
-		sModif += "MT_DEVIS_T.Text 		= '' " // #7				
-		sModif += "ALT_DEV_ACP_T.Text 	= '' " // #7
 		sModif += "ADRFC_NOM_T.Text		= 'Nom Transporteur'" //#11 [DCMP080199]
 
 	Case "MS1" // [MSS_DIAG]
@@ -609,8 +601,6 @@ Choose Case asIdFour
 		sModif += "DTE_RCP_MOB_CLI_T.Text= '' "
 		sModif += "ID_ORIAN_MODELE_T.Text = 'Pièces jointes au dossier' "
 		sModif += "DTE_EMIS_DEVIS_T.Text = '' " // #7
-		sModif += "MT_DEVIS_T.Text 		= '' " // #7				
-		sModif += "ALT_DEV_ACP_T.Text 	= '' " // #7
 		sModif += "ADRFC_NOM_T.Text		= 'Nom Transporteur'" //#11 [DCMP080199]
 
 
@@ -636,7 +626,6 @@ Choose Case asIdFour
 
 	// [PC321]
 	Case "SCR"
-		sModif += "MT_DEVIS_T.Text 		= 'Montant de la réparation HT' "
 		sModif += "DTE_ENV_CLI_T.Text    = 'Date de disponibilité de l'appareil'"
 
 	// [CONFO][CUISINE]
@@ -710,8 +699,6 @@ Choose Case asIdFour
 		sModif += "DTE_RET_LOGIS_T.Text 	= '' "
 		sModif += "ID_ORIAN_MODELE_T.Text = '' "
 		sModif += "DTE_EMIS_DEVIS_T.Text = '' " // #7
-		sModif += "MT_DEVIS_T.Text 		= '' " // #7				
-		sModif += "ALT_DEV_ACP_T.Text 	= '' " // #7
 		sModif += "ADRFC_NOM_T.Text		= 'Nom Transporteur'" //#11 [DCMP080199]
 		
 	Case "CMA" // [DT176]
@@ -772,20 +759,17 @@ Choose Case asIdFour
 				sModif += "ADRFC_NOM_T.Text 		= 'Nom du transporteur' " 
 				sModif += "COMMENT_FRN_T.Text 	= 'Commentaire du CTR' "
 
-				sModif += "DTE_RCP_BTE_CLI_T.Text= '' "		
-				sModif += "DTE_DEP_BTE_CLI_T.Text= '' "
+				sModif += "DTE_RCP_BTE_CLI_T.Text = '' "		
+				sModif += "DTE_DEP_BTE_CLI_T.Text = '' "
 
 				sModif += "DTE_ELV_MOBILE_T.Text = 'Date du prochain RDV' " 
 				sModif += "DTE_RCP_FRN_T.Text 	= 'Réception appareil en CTR (station)' "
 		
 				sModif += "DTE_ENV_ST_T.Text 	   = '' "		
-				sModif += "ALT_DEV_ACP_T.Text 	= '' "
 				sModif += "DTE_DEV_ACP_T.Text 	= '' "
 				sModif += "DTE_RET_LOGIS_T.Text 	= '' "
 				sModif += "DTE_ENV_ST_T.Text 	   = '' "
 				sModif += "DTE_EMIS_DEVIS_T.Text = '' "
-				sModif += "MT_DEVIS_T.Text 		= '' "
-				sModif += "ALT_DEV_ACP_T.Text 	= '' "
 				sModif += "DTE_DEV_ACP_T.Text 	= '' "
 				sModif += "DTE_RET_LOGIS_T.Text 	= '' "
 				sModif += "DTE_RET_PRET_MIN_T.Text = '' "
@@ -1131,7 +1115,7 @@ End If
 
 
 // #19  [20090914175511700]	
-If sModif <> '' Then
+If sModif <> "" Then
 	sModif = F_REMPLACE ( sModif, char(9), " " )
 	aDwTrtCmdFrn.Modify ( sModif )
 End If
