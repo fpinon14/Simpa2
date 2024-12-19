@@ -26498,8 +26498,7 @@ select  Distinct
 From	sysadm.sinistre s with (nolock),
 		@det_pro dp,
 		sysadm.div_sin ds with (nolock),
-		sysadm.archive a  with (nolock),
-		sysadm.inter i  with (nolock)
+		sysadm.archive a  with (nolock)
 Where	dp.cas in ( 'REL_COMMERCANT', 'PROPO_INDEM') 
 And 	a.id_prod = dp.id_prod 
 And		CharIndex ( '#' + a.id_cour_orig + '#', dp.cour_rel ) > 0 
