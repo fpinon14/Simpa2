@@ -9,6 +9,8 @@
 -- Proc‚dures           :       
 -- sysadm.PS_AGENT_MAIL_CASTO_DT133
 -- sysadm.PS_ENVOI_MAILPUSH_SMS_PSM_1
+-- sysadm.PS_I_ENVOYER_RELANCE_PAR_MAIL
+-- sysadm.PS_I_MAIL_CAF_CMA_DEMAT_CHAPEAU
 -- sysadm.PS_I_MAIL_CASTO_DT133
 -- sysadm.PS_I_MAIL_CASTO_DT133_REL
 -- sysadm.PS_I_MAIL_COLI_SIN_FICHE_16
@@ -17,17 +19,28 @@
 -- sysadm.PS_I_MAIL_PRET_FICHE_15
 -- sysadm.PS_I_MAIL_RETOUR_PRET_FICHE_14
 -- sysadm.PS_I_MAIL_SWAP_FICHE_19
+-- sysadm.PS_I_MAILPUSH_DT339_VIRTUEL_SAGA2
+-- sysadm.PS_I_MAILPUSH_DT363_REMPL_AAS
+-- sysadm.PS_I_MAILPUSH_VDOC28556_BVI
+-- sysadm.PS_I_RS5045_MAIL_COUR_CARTE_CADEAU_ELD_KSL
+-- sysadm.PS_I_RS5045_MAIL_COUR_DEM_PCE_SFR_SBE_FACT_ACHAT_KSL
+-- sysadm.PS_I_RS5045_MAIL_COUR_PM287_3_INFO_MANQUANTE_KSL
 -- sysadm.PS_I01_MAILPUSH  
 -- sysadm.PS_I01_SMSPUSH
 -- sysadm.PS_I02_MAILPUSH
 -- sysadm.PS_I02_MAILPUSH_V01
 -- sysadm.PS_LIRE_UTILISATEUR_SITE
+-- sysadm.PS_RELANCE_INTERNE_GT_SPB
 -- sysadm.PS_S_MAILPUSH_ADVISE_RN_XA
 -- sysadm.PS_S_MAILPUSH_APP_IRREPARABLE
 -- sysadm.PS_S_MAILPUSH_APP_NON_RECP_EN_CTR
 -- sysadm.PS_S_MAILPUSH_ARR_PLATFORM
 -- sysadm.PS_S_MAILPUSH_CODE_ERR_LIVR_CHRONOPOST
+-- sysadm.PS_S_MAILPUSH_CONFORME_611
 -- sysadm.PS_S_MAILPUSH_DEP_CENTRDISTRIB
+-- sysadm.PS_S_MAILPUSH_DT288_4_INFO_REGL
+-- sysadm.PS_S_MAILPUSH_DT361_INFO_REGL
+-- sysadm.PS_S_MAILPUSH_DT361_INFO_REMPL
 -- sysadm.PS_S_MAILPUSH_ENV_APP_REMPL
 -- sysadm.PS_S_MAILPUSH_MAIL_AXALOT
 -- sysadm.PS_S_MAILPUSH_ORANGE_CTL_IMEI
@@ -40,7 +53,7 @@
 -- sysadm.PS_S01_RECUP_DONNEES_MAIL
 -- sysadm.PS_S01_RECUP_DONNEES_MAIL_XML
 -- sysadm.PS_S02_MAILPUSH_RECP_APP_EN_CTR
--- sysadm.PS_S03_MAILPUSH_ENVTEL_REMP_REPAR_V03
+-- sysadm.PS_S03_MAILPUSH_ENVTEL_REMP_REPAR_V03  
 -- sysadm.PS_S04_MAILPUSH_INFO_REPAR_PASSE
 -- sysadm.PS_S05_MAILPUSH_URL_MDP_SITE_CMDE
 -- sysadm.PS_S06_MAILPUSH_REGEN_MDP_SITE_CMDE
@@ -58,9 +71,9 @@
 -- sysadm.PS_S16_MAILPUSH_ORANGE_REUNION
 -- sysadm.PS_S17_MAILPUSH_ORE_CTL_IMEI
 -- sysadm.PS_S18_MAILPUSH_OUTREMER_TELECOM
--- sysadm.PS_S19_MAILPUSH_SAV_OUTREMER_TELECOM
+-- sysadm.PS_S19_MAILPUSH_SAV_OUTREMER_TELECOM  
 -- sysadm.PS_S20_MAILPUSH_OOP_CTL_IMEI
--- TRIGGER TR_U01_DIV_SIN_PUSH_S06
+-- sysadm.TR_U01_DIV_SIN_PUSH_S06
 -------------------------------------------------------------------
 
 
@@ -1930,7 +1943,10 @@ Declare
   @dcIdInter Decimal ( 2 ), -- [RS5045_REF_MATP]
   @sCodeMaquette VarChar ( 255 ), -- [RS5045_REF_MATP]
   @sErrOutPut VarChar ( 255 ), -- [RS5045_REF_MATP]
-  @sXMLVar   VarChar ( max ) -- [RS5045_REF_MATP]
+  @sXMLVar   VarChar ( max ), -- [RS5045_REF_MATP]
+  @sIdHubPresta VarChar ( 20 ),
+  @sTypMail VarChar ( 6 ),
+  @sSiteAction VarChar ( 50 )
 
   Set @asCasRetour = ''  
   Set @sMailBody = ''  
@@ -1942,7 +1958,8 @@ Declare
   Set @iLongMaxSMS = 160  
   Set @iVarianteSMS = 0  
   Set @iSwap = 0 -- [PM250-2]  
-   
+  Set @sTypMail = 'M3' -- Par défaut, type historique
+
   Set @sNumImeiNouv = sysadm.FN_CLE_VAL ( 'NUM_IMEI_NOU', @asChaine, ';' ) -- [DT361-1]  
   
   -- Option de déclenchement du mail -DP  
@@ -2015,8 +2032,8 @@ Declare
   -- Si ce n'est pas un envoi au client, il n'y a pas de mail à envoyer  
   If Upper ( sysadm.FN_TRIM ( @asDestCli ) ) <> 'CLIENT'  
    Begin  
- Set @asCasRetour = 'ENVOI_AUTRE_QUE_CLIENT'  
- Return 0  
+	 Set @asCasRetour = 'ENVOI_AUTRE_QUE_CLIENT'  
+	 Return 0  
    End  
   
   
@@ -2073,10 +2090,12 @@ Declare
   @sModlApp = s.modl_port, -- [PM250-2]  
   @sNumBonTrspActuel = c.id_bon_transp, -- [DT288-4]  
   @dcMtTTCcmde = c.mt_ttc_cmde, -- [RS4521]
-  @sBA_PhysiqueCMA = sysadm.FN_CLE_VAL ( 'TYPE_ENVOI', rtrim ( c.info_spb_frn_cplt ), ';') -- [RS4521]
-  
+  @sBA_PhysiqueCMA = sysadm.FN_CLE_VAL ( 'TYPE_ENVOI', rtrim ( c.info_spb_frn_cplt ), ';'), -- [RS4521]
+  @sIdHubPresta = sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' ),
+  @sSiteAction = sysadm.FN_CLE_VAL ( 'SITE_ACTION', c.info_frn_spb_cplt, ';' )
+
   From   sysadm.commande c,  
-   sysadm.sinistre s  
+		 sysadm.sinistre s  
   Where  c.id_sin = @adcIdSin  
   And    c.id_seq = @aiIdSeq  
   And    s.id_sin = c.id_sin  
@@ -2095,12 +2114,12 @@ Declare
 
  -- [PC202553_SELECTRA][CDCSINV3][MANTIS33658]  
   If Exists (   
-  Select Top 1 1   
-  From sysadm.det_pro dp  
-  Where dp.id_prod = @dcIdProd  
-  And dp.id_code_dp = 356  
-  And sysadm.FN_CLE_VAL ( 'ID_FOUR', rtrim ( val_car ) + rtrim ( val_car2 ), ';' ) = @sIdFour  
-  And sysadm.FN_CLE_VAL ( 'ID_TYP_ART', rtrim ( val_car ) + rtrim ( val_car2 ), ';' ) = @sIdTypArt   
+	  Select Top 1 1   
+	  From sysadm.det_pro dp  
+	  Where dp.id_prod = @dcIdProd  
+	  And dp.id_code_dp = 356  
+	  And sysadm.FN_CLE_VAL ( 'ID_FOUR', rtrim ( val_car ) + rtrim ( val_car2 ), ';' ) = @sIdFour  
+	  And sysadm.FN_CLE_VAL ( 'ID_TYP_ART', rtrim ( val_car ) + rtrim ( val_car2 ), ';' ) = @sIdTypArt   
    )  
    Begin  
 	  Set @asCasRetour = 'DP356_BLOQUANTE'  
@@ -2109,10 +2128,10 @@ Declare
 
   
   If sysadm.FN_CLE_VAL ( 'APP_SWAP', @asChaine, ';' )= 'OUI'   
- Begin   
-  Set @sMarque = sysadm.FN_CLE_VAL ( 'MARQSW', @asChaine, ';' )  
-  Set @sModele = sysadm.FN_CLE_VAL ( 'MODLSW', @asChaine, ';' )  
- End   
+	 Begin   
+	  Set @sMarque = sysadm.FN_CLE_VAL ( 'MARQSW', @asChaine, ';' )  
+	  Set @sModele = sysadm.FN_CLE_VAL ( 'MODLSW', @asChaine, ';' )  
+	 End   
   
   If CharIndex ( 'STOCK', @sMarque, 1 ) > 0 Set @sMarque = ''  
   If CharIndex ( 'STOCK', @sModele, 1 ) > 0 Set @sModele = ''    
@@ -2120,9 +2139,9 @@ Declare
   -- [DT141][MANTIS15361]  
   If @sIdRefFour = 'CMDE_A_CPLTER'  
    Begin  
-  Set @sMarque = sysadm.FN_CLE_VAL ( 'MARQ_REMPL', rtrim ( @asChaine ) , ';')  
-  Set @sModele = sysadm.FN_CLE_VAL ( 'MODL_REMPL', rtrim ( @asChaine ) , ';')  
- End          
+	  Set @sMarque = sysadm.FN_CLE_VAL ( 'MARQ_REMPL', rtrim ( @asChaine ) , ';')  
+	  Set @sModele = sysadm.FN_CLE_VAL ( 'MODL_REMPL', rtrim ( @asChaine ) , ';')  
+   End          
     
   -- [DT361]  
   -- Pour les fournisseurs qui remette la marque dans leur modele, on vire la marque du modèle  
@@ -2204,14 +2223,16 @@ Declare
   
    If @MailRep > 0 And @sIdTypArt = 'PRS' And @aiStatusGc = 2  
   Begin  
-       
+     
    -- [MANTIS14477]       
-   If @iInfoSpbFrn = 957  
+   If @iInfoSpbFrn = 957 Or ( Len ( @sIdHubPresta ) > 0 And @sSiteAction = 'DOMICILE' )
     Begin  
+	  Set @sTypMail = 'EVAPRP'
       Set @sMailBody  = @sMailBody  + 'Nous avons le plaisir de vous informer que votre appareil ' + @sMarque + ' ' + @sModele + ' a été réparé à l''adresse suivante :'  
     End   
    Else
     Begin  
+	  Set @sTypMail = 'EVAPRP'
       Set @sMailBody  = @sMailBody  + 'Nous avons le plaisir de vous informer que votre appareil ' + @sMarque + ' ' + @sModele + ' réparé va vous être renvoyé à l''adresse suivante :'  
 	End 
        
@@ -2288,13 +2309,15 @@ Declare
      -- [DT288-4]  
       If @sIdRefFour = 'REFUSE_A_REEXP'  
         Begin  
-       Set @sMailBody  = @sMailBody  + 'Nous vous informons que votre appareil sinistré ' + @sMarqApp + ' ' + @sModlApp + ' vous a été renvoyé le ' + Convert ( VarChar, @adtDteEnvCli, 103 ) + ' à l''adresse suivante :'  
+			Set @sTypMail = 'EVAPRF'
+			Set @sMailBody  = @sMailBody  + 'Nous vous informons que votre appareil sinistré ' + @sMarqApp + ' ' + @sModlApp + ' vous a été renvoyé le ' + Convert ( VarChar, @adtDteEnvCli, 103 ) + ' à l''adresse suivante :'  
         End   
       Else
         Begin
 		  -- [RS4521]
 		  If @sIdTypArt = 'CAF' And @sIdFour = 'CMA'  
 		   Begin
+				Set @sTypMail = 'EVBACC'
 				Set @sMailBody = @sMailBody + 'Nous allons vous faire parvenir d''ici quelques jours par courrier votre/vos bon(s) d''achat Carrefour pour un '
 				Set @sMailBody = @sMailBody + 'montant total de ' + convert ( VarChar ( 20 ), @dcMtTTCcmde ) + '€, correspondant au montant de l’indemnité qui vous est due au titre du contrat ' 
 				Set @sMailBody = @sMailBody + @sLibProd + ' à l''adresse suivante :'
@@ -2427,7 +2450,10 @@ Declare
   When isNumeric ( @asNumBonTrsp ) = 1 And Len ( @asNumBonTrsp ) = 14  
    Then 'http://www.ciblex.fr/extranet/client/corps.php?module=colis&amp;colis=' + @asNumBonTrsp  
   
-  Else null  
+  -- Site universel sinon
+  When @asNumBonTrsp is not null And rtrim ( ltrim ( @asNumBonTrsp )) <> '' Then 'https://t.17track.net/fr#nums=' + @asNumBonTrsp  
+
+  Else null
  End   
   
   If ( @asHREFURL is not null ) And sysadm.FN_TRIM ( @asHREFURL ) <> ''   
@@ -2558,7 +2584,7 @@ Declare
 					Exec @iIdXml = TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CREATION_CHAINE_DATA_XML_KSL_A_VIDE
 					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2 @adcIdSin, @dcIdInter, @iIdXml
 					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_OPTIMISER_CHAINE_DATA_XML_KSL @iIdXml, 'OUI', 'OUI', 'OUI'
-					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_CODE_MAQUETTE_KSL_A_PARTIR_TYP_MAIL 'M3', @sCodeMaquette OutPut
+					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_CODE_MAQUETTE_KSL_A_PARTIR_TYP_MAIL @sTypMail, @sCodeMaquette OutPut
 
 					-- Ajout personnalisé du client appelant le système
 					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
@@ -2598,7 +2624,7 @@ Declare
 						@sMailObjet,
 						@sMailBody,
 						@sBoiteMail,
-						'M3',
+						@sTypMail,
 						2,
 						-1,
 						@sXMLVar,
@@ -2625,7 +2651,7 @@ Declare
 				  @sMailBody,  
 				  @sAltQuarant,  
 				  @sBoiteMail, --#2  
-				  'M3', -- #2  
+				  @sTypMail, -- #2  
 				  2 -- #2    
 				End 
     
@@ -2648,7 +2674,7 @@ Declare
 			@sMdPasse,  
 			@sSmsBody,  
 			@sCodeTrt,  
-			'M3',   
+			@sTypMail,   
 			2  
         End   
     
@@ -2666,7 +2692,7 @@ Declare
 			Exec @iIdXml = TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CREATION_CHAINE_DATA_XML_KSL_A_VIDE
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2 @adcIdSin, @dcIdInter, @iIdXml
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_OPTIMISER_CHAINE_DATA_XML_KSL @iIdXml, 'OUI', 'OUI', 'OUI'
-			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_CODE_MAQUETTE_KSL_A_PARTIR_TYP_MAIL 'M3', @sCodeMaquette OutPut
+			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_CODE_MAQUETTE_KSL_A_PARTIR_TYP_MAIL @sTypMail, @sCodeMaquette OutPut
 
 			-- Ajout personnalisé du client appelant le système
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
@@ -2706,7 +2732,7 @@ Declare
 				@sMailObjet,
 				@sMailBody,
 				@sBoiteMail,
-				'M3',
+				@sTypMail,
 				2,
 				-1,
 				@sXMLVar,
@@ -2732,7 +2758,7 @@ Declare
 			  @sMailBody,  
 			  @sAltQuarant,  
 			  @sBoiteMail, --#2  
-			  'M3', -- #2  
+			  @sTypMail, -- #2  
 			  2 -- #2  
 		End 
     
@@ -2755,7 +2781,7 @@ Declare
 			@sMdPasse,  
 			@sSmsBody,  
 			@sCodeTrt,  
-			'M3',   
+			@sTypMail,   
 			2  
 		End  
 
@@ -26396,7 +26422,206 @@ Else
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Proc‚dure            :       PS_RELANCE_INTERNE_GT_SPB
+-- Auteur               :       Fabry JF
+-- Date                 :       29/09/2016
+-- Libelle              :
+-- Commentaires         :       
+-- References           :	[RS-6452]	
+--							Agent SQL : SIMPA2_PRO : DT262 Relances Dde Pces Orange V3
+-- Arguments            :       
+-- Retourne             :       
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RELANCE_INTERNE_GT_SPB' AND type = 'P' )
+        DROP procedure sysadm.PS_RELANCE_INTERNE_GT_SPB
+GO
 
+CREATE procedure sysadm.PS_RELANCE_INTERNE_GT_SPB
+AS
+
+DECLARE @det_pro TABLE 
+	( id_seq	integer identity,
+	  id_prod	decimal (7 ), -- [PI062]
+	  cas	varchar ( 40 ),
+	  dte_del_1ere_rel_j   datetime,
+	  dte_pivot_1 datetime,
+	  cour_rel VarChar ( 100 )
+	)
+
+DECLARE @tb TABLE 
+	( id_seq	integer identity,
+	  id_sin	decimal (10 ), 
+	  type_rel  VarChar ( 10 ),
+	  cas	varchar ( 40 ),
+	  marquage	integer null 
+	)
+
+Declare @sTypRel Varchar ( 10 )
+Declare @dcIdSin decimal (10 ) 
+Declare @iIdSeq  Integer
+Declare @sCas Varchar ( 40 )
+Declare @sNomZoneDivPro VarChar ( 35 )
+Declare @sLibZoneDivPro VarChar ( 35 )
+Declare @iIdNatTache integer
+Declare @sMess	VarChar ( 2000 )
+Declare @iIdTypContact Integer
+Declare @iCptTri Integer
+Declare @sGetDate VarChar ( 30 )
+Declare @iIdCt	integer	
+Declare @sErr Varchar(60)
+
+Insert into @det_pro
+Select dp.id_prod,
+	   sysadm.FN_CLE_VAL ( 'CAS', rtrim ( dp.val_car ) + rtrim ( dp.val_car2 ), ';'),
+	   DATEADD ( day, (-1) * Convert ( integer, sysadm.FN_CLE_VAL ( 'DELAI_REL1_J', rtrim ( dp.val_car ) + rtrim ( dp.val_car2 ), ';')) , Getdate() ),	   
+	   Convert ( DateTime,  sysadm.FN_CLE_VAL ( 'DTE_PIVOT_1', rtrim ( dp.val_car ) + rtrim ( dp.val_car2 ), ';')),
+	   sysadm.FN_CLE_VAL ( 'COUR_REL', rtrim ( dp.val_car ) + rtrim ( dp.val_car2 ), ';')
+From sysadm.det_pro dp with (nolock)
+Where dp.id_code_dp = 389
+
+Insert into @det_pro values 
+					  (	-1, 
+						'PEC_WEB', 
+						DATEADD ( day, (-1) * 30, getdate () ),
+						Convert ( DateTime,  '01/11/2024'),
+						''
+					  )
+
+Insert into @tb
+select  Distinct 
+		s.id_sin,
+		'REL1',
+		dp.cas,
+		0 'marquage'
+From	sysadm.sinistre s with (nolock),
+		@det_pro dp,
+		sysadm.div_sin ds with (nolock),
+		sysadm.archive a  with (nolock),
+		sysadm.inter i  with (nolock)
+Where	dp.cas in ( 'REL_COMMERCANT', 'PROPO_INDEM') 
+And 	a.id_prod = dp.id_prod 
+And		CharIndex ( '#' + a.id_cour_orig + '#', dp.cour_rel ) > 0 
+And		a.id_inter = 0 -- [KSV795]
+And		a.id_doc = ( -- [KSV795] -- le dernier courrier de dde de pce pour cet inter
+			select Max ( a1.id_doc ) 
+			From sysadm.archive a1  with (nolock)
+			Where a1.id_sin = a.id_sin
+			And	  a1.id_inter = a.id_inter
+		) -- [KSV795]
+And		a.dte_edit < dp.dte_del_1ere_rel_j 
+And		a.dte_edit > dte_pivot_1
+-- [KSV795] 
+-- And		Not Exists ( Select Top 1 1 From sysadm.div_sin ds3  with (nolock) Where ds3.id_sin = s.id_sin and ds3.nom_zone = 'dte_rel1_mail_ddepce_dt262' )
+-- ...Et que la précédente rel1 soit antérieure ou absente (donc pour absente je transforme en une date très antérieure pour passer donc 01/01/1990 )
+And		IsNull ( ( Select Top 1 val_dte From sysadm.div_sin ds3  with (nolock) Where ds3.id_sin = s.id_sin and ds3.nom_zone = 'dte_rel1_gt_spb' ), '01/01/1990' ) < a.dte_edit
+-- [KSV795] 
+And     s.id_sin = a.id_sin
+And		ds.id_sin = s.id_sin
+And     ds.nom_zone = 'etat_vu_assure'
+And     ds.val_nbre not in ( 200, 900, 1530 )
+And     Not Exists ( Select Top 1 1 From sysadm.w_queue wq where wq.id_sin = s.id_sin ) -- [RS-536]
+
+Insert into @tb
+select  Distinct 
+		s.id_sin,
+		'REL1',
+		dp.cas,
+		0 'marquage'
+From	sysadm.sinistre s with (nolock),
+		@det_pro dp,
+		sysadm.div_sin ds with (nolock),
+		sysadm.commande c with (nolock)
+Where	dp.cas in ( 'PEC_WEB' ) 
+And		c.id_sin = s.id_sin
+And		c.id_four = 'WBA'
+And		c.cod_etat = 'CWE'
+And		c.cree_le < dp.dte_del_1ere_rel_j 
+And		c.cree_le > dte_pivot_1
+-- [KSV795] 
+-- And		Not Exists ( Select Top 1 1 From sysadm.div_sin ds3  with (nolock) Where ds3.id_sin = s.id_sin and ds3.nom_zone = 'dte_rel1_mail_ddepce_dt262' )
+-- ...Et que la précédente rel1 soit antérieure ou absente (donc pour absente je transforme en une date très antérieure pour passer donc 01/01/1990 )
+And		IsNull ( ( Select Top 1 val_dte From sysadm.div_sin ds3  with (nolock) Where ds3.id_sin = s.id_sin and ds3.nom_zone = 'dte_rel1_gt_spb' ), '01/01/1990' ) < c.cree_le
+-- [KSV795] 
+And		ds.id_sin = s.id_sin
+And     ds.nom_zone = 'etat_vu_assure'
+And     ds.val_nbre not in ( 200, 900, 1530 )
+And     Not Exists ( Select Top 1 1 From sysadm.w_queue wq where wq.id_sin = s.id_sin ) -- [RS-536]
+
+While Exists ( Select * From @tb where marquage = 0 )
+ Begin
+	Select 	Top 1 
+		@iIdSeq = id_seq,
+		@dcIdSin = id_sin,
+		@sCas = cas,
+		@sTypRel = type_rel
+	From	@tb
+	Where	marquage = 0
+
+	If @sTypRel = 'REL1' 
+	 Begin
+		Set @sNomZoneDivPro = 'dte_rel1_gt_spb'
+		Set @sLibZoneDivPro = 'Date 1ère relance GT SPB'
+		Set @iIdNatTache = 3300
+		
+		Set @sMess = Case @sCas
+						When 'REL_COMMERCANT' Then '1ère Relance interne GT SPB suite demande faite au commerçant, contactez l''assuré afin de s''assurer s''il a été livré, à défaut poursuivre l’instruction du dossier.'
+						When 'PROPO_INDEM' Then '1ère Relance interne GT SPB suite proposition d''indemnisation vers l''assuré restée sans réponse à ce jour, contactez l''assuré afin de s''assurer qu''il a bien reçu le courrier de proposition.'
+						When 'PEC_WEB' Then '1ère Relance interne GT SPB suite presta WEB mise à disposition de l''assuré restée sans réponse à ce jour, contactez l''assuré afin de s''assurer qu''il a bien reçu accès au site de choix de mobile.'
+						Else 'Relance interne GT SPB.'
+					 End 
+
+		Set @iIdTypContact = 1613
+		Set @iCptTri = 2000
+	 End 
+
+
+
+	-- [KSV795] Nettoyage des marquages div_sin(w), si TYP = REL1 alors Del REL1=>REL5
+	If @sTypRel = 'REL1' 
+		Begin
+			Delete sysadm.div_sin where id_sin = @dcIdSin and nom_zone in ( 
+				'dte_rel1_gt_spb' )
+
+			Delete sysadm.w_div_sin where id_sin = @dcIdSin and nom_zone in ( 
+				'dte_rel1_gt_spb' )
+
+		End 
+
+	IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+	BEGIN
+		EXEC SHERPA_PRO.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @dcIdSin,2, @sMess, 'AUTO', @sErr output, @iIdCt OUTPUT , NULL, 'C'
+		Exec SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, @iIdTypContact, 'C', @dcIdSin, 2, @sMess,	'AUTO', 300, @iIdCt OUTPUT, @iIdNatTache
+	END
+	ELSE
+	BEGIN
+		EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @dcIdSin,2, @sMess, 'AUTO', @sErr output, @iIdCt OUTPUT , NULL, 'C'
+		Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, @iIdTypContact, 'C', @dcIdSin, 2, @sMess,	'AUTO', 300, @iIdCt OUTPUT, @iIdNatTache
+	END
+
+	Set @sGetDate = Convert ( VarChar ( 10 ), Getdate(), 103 ) + ' ' + Convert ( VarChar ( 10 ), Getdate(), 108 )
+
+	Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO 
+		@dcIdSin,
+		@sNomZoneDivPro,
+		@sLibZoneDivPro,
+		@sGetDate,
+		'O',
+		'D',
+		@iCptTri,
+		null
+
+	Exec sysadm.PS_I_DIV_SIN_ETAT_ASS @dcIdSin, 'SQLS'
+
+	-- [PI087_PM473_2]
+	Exec sysadm.PS_I_PI087_TRACE_DOSSIER @dcIdSin, 'VALIDATION', 'SQLS'
+
+	Update @tb Set marquage = 1	Where id_seq = @iIdSeq
+
+ End 
+
+ Go
 
 
 

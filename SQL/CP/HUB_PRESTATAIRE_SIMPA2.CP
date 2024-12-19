@@ -980,7 +980,7 @@ Declare @iCptIndice Int
 Declare @iFileExists Int
 Declare @iAMUenrMarqBase Int
 Declare @iError Int
-Declare @sChaineBCVretourDetStatut VarChar ( 255 ) 
+Declare @sChaineBCVretourDetStatut VarChar ( 800 ) 
 Declare @TbRepFicMovMPR Table ( nom_fic varchar ( 100) INDEX IX1 CLUSTERED ) 
 Declare @sDIR Varchar ( 255 )
 
@@ -1464,7 +1464,7 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 				*/
 
 				-- Détermination du statut SIMPA2 de la prestation
-				Set @sChaineBCVretourDetStatut = SPACE ( 255 )
+				Set @sChaineBCVretourDetStatut = SPACE ( 800 )
 				Set @sChaineBCVretourDetStatut = sysadm.FN_CLE_VAL_E ( 'TYP_BA_ALLER', Upper ( @sTypBaAller ), @sChaineBCVretourDetStatut, ';' ) 
 
 				If @dtDteRcpFrn is null Set @sChaineBCVretourDetStatut = sysadm.FN_CLE_VAL_E ( 'DTE_RCP_FRN_PRESENTE', 'NON', @sChaineBCVretourDetStatut, ';' ) 
@@ -1482,7 +1482,7 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 				Set @sChaineBCVretourDetStatut = sysadm.FN_CLE_VAL_E ( 'SITE_ACTION', @sSiteAction, @sChaineBCVretourDetStatut, ';' )
 
 				Set @sCommentFrn = Left ( ISNULL ( @sCommentFrn, '' ) + SPACE ( 255 ), 255)
-				Set @sChaineBCVretourDetStatut = Left ( ISNULL ( @sChaineBCVretourDetStatut, '' ) + SPACE ( 255 ), 255)
+				Set @sChaineBCVretourDetStatut = Left ( ISNULL ( @sChaineBCVretourDetStatut, '' ) + SPACE ( 800 ), 800 )
 
 				Exec @iRet = sysadm.PS_HP276_SU_S2_MOTEUR_TRT_RETOUR_HUB_DETERMINATION_STATUT 
 								@sActivityCode, 
@@ -1555,17 +1555,17 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 
 				If Len ( sysadm.FN_CLE_VAL ( 'DTE_RCP_FRN', @sChaineBCVretourDetStatut, ';' )) > 0 
 				  Begin
-					Set @dtDteRcpFrn = Convert ( DateTime, sysadm.FN_CLE_VAL ( 'DTE_RCP_FRN', @sChaineBCVretourDetStatut, ';' ))
+					Set @dtDteRcpFrn = sysadm.FN_CLE_VAL ( 'DTE_RCP_FRN', @sChaineBCVretourDetStatut, ';' )
 				  End 
 
 				If Len ( sysadm.FN_CLE_VAL ( 'DTE_FIN_TRAIT', @sChaineBCVretourDetStatut, ';' )) > 0 
 				  Begin
-					Set @dtDteFinTrait = Convert ( DateTime, sysadm.FN_CLE_VAL ( 'DTE_FIN_TRAIT', @sChaineBCVretourDetStatut, ';' ))
+					Set @dtDteFinTrait = sysadm.FN_CLE_VAL ( 'DTE_FIN_TRAIT', @sChaineBCVretourDetStatut, ';' )
 				  End 
 
 				If Len ( sysadm.FN_CLE_VAL ( 'DTE_RCP_APP_CLI', @sChaineBCVretourDetStatut, ';' )) > 0 
 				  Begin
-					Set @dtDteRcpAppCli = Convert ( DateTime, sysadm.FN_CLE_VAL ( 'DTE_RCP_APP_CLI', @sChaineBCVretourDetStatut, ';' ))
+					Set @dtDteRcpAppCli = sysadm.FN_CLE_VAL ( 'DTE_RCP_APP_CLI', @sChaineBCVretourDetStatut, ';' )
 				  End 
 
 				If sysadm.FN_CLE_VAL ( 'DDE_SAV', @sChaineBCVretourDetStatut, ';' ) = 'OUI' 
@@ -1878,7 +1878,7 @@ CREATE procedure sysadm.PS_HP276_SU_S2_MOTEUR_TRT_RETOUR_HUB_DETERMINATION_STATU
 	@asInstanceHub				VarChar ( 100 ),
 	@aiIdDepotHub				Integer,
 	@asCommentFrn				VarChar ( 255 ) OutPut,
-	@asChaineBCVretour			VarChar ( 255 ) OutPut
+	@asChaineBCVretour			VarChar ( 800 ) OutPut
 AS
 
 Declare @iStatut Integer
@@ -2082,6 +2082,7 @@ If	@iStatut in ( 151, 152, 2, 21, 178, 176 )
 		'    where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @aiIdDepotHub )  
 		Exec ( @sSql )
 	End 
+
 
 -- Si Dte_Rcp_App_Cli obligatoire est Absente, on force à GetDate()
 If	@asActivityCode in ( 'CUSTOMER_ACKNOWLEDGMENT', 'CARRIER_ACKNOWLEDGMENT' ) And 
