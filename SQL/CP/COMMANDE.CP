@@ -8349,6 +8349,7 @@ Declare @sIdFour VarChar ( 3 )
 Declare @sMess	VarChar ( 2000 )
 Declare @iIdCt	integer		
 Declare @iIdSeqHubPrestaOrig Integer
+Declare @sEtatPresta VarChar ( 10 )
 
 Set @sProbleme = ''
 Set @iEligible = 0
@@ -8588,7 +8589,9 @@ If @sQRelPickUpRet = 'OUI' And Len ( @sCodePickUp ) > 0 And @sIdFour <> 'COR'
 	Set @iIdProcess = 983
  End 
  -- [DT191-1]
-  		
+  	
+Set @sEtatPresta = 'ECT'	
+If 	@iIdSeqHubPrestaOrig > 0 Set @sEtatPresta = 'RFO'	
 
 Insert into commande
 select top 1 id_sin , @iNewIdSeq, id_gti, @dcNewIdDetail, id_four, id_typ_art= 'EDI', 'REFUSE A REEXPEDIER', '', mt_ttc_cmde=0, 
@@ -8599,7 +8602,7 @@ select top 1 id_sin , @iNewIdSeq, id_gti, @dcNewIdDetail, id_four, id_typ_art= '
 			adr_livr_cpl=@sAdrLivrCpl, 
 			adr_cp=@sAdrCp, 
 			adr_ville=@sAdrVille, 
-			adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, @sProbleme, null,  null, null, null, null, 'ECT', null, 'PRESTA AUTOMATIQUE', 0, null, null, Getdate(), Getdate(), 'AUTO',  Getdate(),  'AUTO', id_zone, id_bsp, dte_ret_pret, adr_cod_civ=@sAdrCodCiv, 'REFUSE_A_REEXP', id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, null, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli=null, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli, @iIdProcess, 'REFUSE A REEXPEDIER', id_modl_art_ifr,
+			adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, @sProbleme, null,  null, null, null, null, @sEtatPresta, null, 'PRESTA AUTOMATIQUE', 0, null, null, Getdate(), Getdate(), 'AUTO',  Getdate(),  'AUTO', id_zone, id_bsp, dte_ret_pret, adr_cod_civ=@sAdrCodCiv, 'REFUSE_A_REEXP', id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, null, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli=null, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli, @iIdProcess, 'REFUSE A REEXPEDIER', id_modl_art_ifr,
 			IIF ( @iIdSeqHubPrestaOrig > 0, 
 					( sysadm.FN_CLE_VAL_E ( 'HP_ID_FOUR', c.id_four, 
 						sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', '', 
@@ -8623,7 +8626,7 @@ If Exists ( Select * from w_commande where id_sin = @adcIdSin and id_seq = @iIdS
 				adr_livr_cpl=@sAdrLivrCpl, 
 				adr_cp=@sAdrCp, 
 				adr_ville=@sAdrVille, 
-				adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, @sProbleme, null,  null, null, null, null, 'ECT', null, 1, 'PRESTA AUTOMATIQUE', Getdate(), Getdate(), 'AUTO',  id_zone, id_bsp, dte_ret_pret, adr_cod_civ=@sAdrCodCiv, 'REFUSE_A_REEXP'   , id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, null, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli, @iIdProcess, 'REFUSE A REEXPEDIER', id_modl_art_ifr, 
+				adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, @sProbleme, null,  null, null, null, null, @sEtatPresta, null, 1, 'PRESTA AUTOMATIQUE', Getdate(), Getdate(), 'AUTO',  id_zone, id_bsp, dte_ret_pret, adr_cod_civ=@sAdrCodCiv, 'REFUSE_A_REEXP'   , id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, null, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli, @iIdProcess, 'REFUSE A REEXPEDIER', id_modl_art_ifr, 
 				IIF ( @iIdSeqHubPrestaOrig > 0, 
 						( sysadm.FN_CLE_VAL_E ( 'HP_ID_FOUR', c.id_four, 
 							sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', '', 

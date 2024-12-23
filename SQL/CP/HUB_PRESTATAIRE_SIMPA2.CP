@@ -1052,16 +1052,16 @@ If @sEnv = 'PROD'
 Else
 	Begin 
 		-- [INSTANCE]
-		Set @sInstanceHub = '[S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].'
-		-- Set @sInstanceHub = '[S2SQL14DEV\RECSAGA2].[PRESTATAIRE].' 
+		-- Set @sInstanceHub = '[S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].'
+		Set @sInstanceHub = '[S2SQL14DEV\RECSAGA2].[PRESTATAIRE].' 
 		
 		-- [20240910162546267]
 		-- Set @sCheminDepotFichierMPRRacine  = '\\SPB.LAN\APPLIS\SPB\RECCMD\'
 		Set @sCheminDepotFichierMPRRacine  = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'RECCMD\'
 
 		-- [INSTANCE]
-		Exec [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '-1', -1, '-1', '', '', @iIdLotTrc output
-		-- Exec [S2SQL14DEV\RECSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '-1', -1, '-1', '', '', @iIdLotTrc output
+		-- Exec [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '-1', -1, '-1', '', '', @iIdLotTrc output
+		Exec [S2SQL14DEV\RECSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '-1', -1, '-1', '', '', @iIdLotTrc output
 
 		Set @sDestErrTech = 'jff@spb.fr'
 		Set @sDestErrCoherenceHub = 'jff@spb.fr,VANDRE@spb.eu,BKHELIFA_ext@spb.eu,OCHAOUACHI@spb.eu'
@@ -1538,6 +1538,18 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 								Set @iAMUerrGen = 1
 								Break
 							End 
+
+						IF sysadm.FN_CLE_VAL ( 'CAS_ERR', @sChaineBCVretourDetStatut, ';' ) = 'HORS_DOMICILE'
+							Begin 
+								Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', ''' + ISNULL ( @sIdFour, '(vide)') + ''', ' + Convert ( VarChar (20), @iIdDepotHub) + ', ''' + @sIdHubPresta + ''', ''ERR'', ''' + 
+											'Certaines activités BACK_FROM_DEVICE_SCAN/KO ne sont autorisées qu''''avec un site action DOMICILE.' +
+											''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
+
+								Set @iAMUerrRowTrt = 1
+								Set @iAMUerrGen = 1
+								Break
+							End 
+
 					End 
 
 				Set @iStatusGC = convert ( Integer, sysadm.FN_CLE_VAL ( 'STATUS_GC', @sChaineBCVretourDetStatut, ';' ))
@@ -2074,7 +2086,7 @@ If	@asActivityCode in ( 'DEVICE_RECEPTION' ) And
 If	@iStatut in ( 151, 152, 2, 21, 178, 176 ) 
 	And sysadm.FN_CLE_VAL ( 'DTE_FIN_TRAIT_PRESENTE', @asChaineBCVretour, ';' ) = 'NON'
 	Begin
-		Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'DTE_FIN_TRAIT', CONVERT( Varchar (10), GETDATE(), 103) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00', @asChaineBCVretour, ';')		
+		Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'DTE_FIN_TRAIT', CONVERT( Varchar (10), GETDATE(), 103) + ' ' + Convert ( varchar ( 30 ), GETDATE(), 114 ), @asChaineBCVretour, ';')		
 		Set @sSql = 
 		'Update ' + @asInstanceHub + 'edi.DepotHubToSimpa2Presta '  +
 		-- 'Set dte_fin_trait = '''+ Convert ( varchar ( 10 ), GETDATE(), 110 ) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00' + '''' + 
@@ -2132,6 +2144,25 @@ If	@asActivityCode in ( 'RETURN_OF_CONFORMITY' ) and
 		Set @sMotClecplt = '[PNC]'
 		Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'MOT_CLE_CPLT', CONVERT( Varchar (100), @sMotClecplt ), @asChaineBCVretour, ';')
 	End 
+
+-- Vu avec Lisette le 23/12/2024, pour 4 activité, si l'action n'est pas A_DOMICILE, je rejète
+If	@asActivityCode in ( 'BACK_FROM_DEVICE_SCAN' ) And 
+	@asActivityReturnCode in ( 'KO' ) And 
+	@asActivityReasonCode in ( 'CHARACTERISTICS_NOT_MATCHED', 'MODEL_NOT_MATCHED', 'SERIAL_NUMBER_NOT_MATCHED', 'INCOMPLETE_DEVICE' ) And 
+	sysadm.FN_CLE_VAL ( 'SITE_ACTION', @asChaineBCVretour, ';') <> 'DOMICILE'
+	Begin
+	/*
+		Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'DTE_RCP_FRN', CONVERT( Varchar (10), GETDATE(), 103) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00', @asChaineBCVretour, ';')		
+		Set @sSql = 
+		'Update ' + @asInstanceHub + 'edi.DepotHubToSimpa2Presta '  +
+		'Set dte_rcp_frn = Getdate() ' + 
+		'    where id_depot_hub = ' +  CONVERT ( Varchar ( 20 ), @aiIdDepotHub )  
+		Exec ( @sSql )
+	*/
+		Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'CAS_ERR', 'HORS_DOMICILE', @asChaineBCVretour, ';')
+		Return -1
+	End 
+
 
 Return 1
 
@@ -2912,8 +2943,8 @@ While Exists ( Select Top 1 1 From @TB_EnAttenteTransfertVersHpWork where alt_tr
 	Else
 		Begin
 			-- [INSTANCE]
-			Exec @iError = [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRANSFERT_PRESTA_VERS_HUB_PRESTATAIRE 
-			-- Exec @iError = [S2SQL14DEV\RECSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRANSFERT_PRESTA_VERS_HUB_PRESTATAIRE 
+			-- Exec @iError = [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRANSFERT_PRESTA_VERS_HUB_PRESTATAIRE 
+			Exec @iError = [S2SQL14DEV\RECSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRANSFERT_PRESTA_VERS_HUB_PRESTATAIRE 
 				2, -- 2 ou 3, c'est pareil
 				@iIdSin,
 				@iIdSeq,

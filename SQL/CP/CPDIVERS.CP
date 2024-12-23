@@ -3891,7 +3891,7 @@ If @NbreFoisSupAn >= 2
 
 	Set @sObjet = 'Problème version SIMPA2 sur les Cluster/TS'
 
-	Set @sMessage = @sChaine
+	-- Set @sMessage = @sChaine
 
 	EXEC master.dbo.SPB_PS_MAIL 
 			@sRetourErrMail OUTPUT, 
@@ -7236,7 +7236,10 @@ Declare @sMess			VarChar ( 2000 ),
 		@sFaitGenerateur VarChar ( 35 )
 
 -- Ctrle Sinistre
-If Not Exists ( Select Top 1 1 From sysadm.w_sin where id_sin = @adcIdSin ) 
+If Not Exists ( Select Top 1 1 From sysadm.w_sin where id_sin = @adcIdSin
+				Union
+				Select Top 1 1 From sysadm.sinistre where id_sin = @adcIdSin
+			  ) 
   Begin
 	 Return -1
   End 
@@ -7251,91 +7254,177 @@ Declare @Tb Table (
 	marquage integer
 )
 
-
 -- [MCO602_PNEU]
-If Exists ( Select Top 1 1 From sysadm.w_div_sin wds where wds.id_sin = @adcIdSin And wds.nom_zone = 'type_app' )
+If Exists ( Select Top 1 1 From sysadm.w_sin wds where wds.id_sin = @adcIdSin )
 	Begin
-		Insert into @Tb
-		Select 
-				IsNull ( 
-					Case 
-						When Exists ( Select Top 1 1 From sysadm.det_pro dp where dp.id_prod = ws.id_prod and dp.id_code_dp = 106 and dp.id_code_car = wds.val_car ) 
-							Then ( Select lTrim ( rTrim ( val_car )) From sysadm.det_pro dp where dp.id_prod = ws.id_prod and dp.id_code_dp = 106 and dp.id_code_car = wds.val_car )
-						Else sysadm.FN_CODE_CAR ( wds.val_car, '-AR' )
-					End, '') 'lib_det',
-				IsNull ( convert ( varchar ( 10 ), ws.dte_ach_port, 103 ), '') 'dte_det',
-				sysadm.FN_GET_DIV_SIN (ws.id_sin, 'mt_val_achat_adh', 'W', '' ) 'mt_prej',
-				'' 'etat_du_bien',
-				'' 'moyen_de_paiement',
-				0
-
-		From sysadm.w_sin ws,
-			 sysadm.w_div_sin wds
-		Where ws.id_sin = @adcIdSin
-		And   wds.id_sin = ws.id_sin
-		And   wds.nom_zone = 'type_app'
-
-		If Exists ( Select Top 1 1 From @Tb ) 
+		If Exists ( Select Top 1 1 From sysadm.w_div_sin wds where wds.id_sin = @adcIdSin And wds.nom_zone = 'type_app' )
 			Begin
-				If Exists ( 
-						Select Top 1 1 
-						From @Tb
-						Where lib_det is not null
-						and   ltrim ( rtrim ( lib_det )) <> ''
-						and   dte_achat is not null
-						and   ltrim ( rtrim ( dte_achat )) <> ''
-						and   mt_prej is not null
-						and   ltrim ( rtrim ( mt_prej  )) <> ''
-				) Return 1
-				Else Return -2
+				Insert into @Tb
+				Select 
+						IsNull ( 
+							Case 
+								When Exists ( Select Top 1 1 From sysadm.det_pro dp where dp.id_prod = ws.id_prod and dp.id_code_dp = 106 and dp.id_code_car = wds.val_car ) 
+									Then ( Select lTrim ( rTrim ( val_car )) From sysadm.det_pro dp where dp.id_prod = ws.id_prod and dp.id_code_dp = 106 and dp.id_code_car = wds.val_car )
+								Else sysadm.FN_CODE_CAR ( wds.val_car, '-AR' )
+							End, '') 'lib_det',
+						IsNull ( convert ( varchar ( 10 ), ws.dte_ach_port, 103 ), '') 'dte_det',
+						sysadm.FN_GET_DIV_SIN (ws.id_sin, 'mt_val_achat_adh', 'W', '' ) 'mt_prej',
+						'' 'etat_du_bien',
+						'' 'moyen_de_paiement',
+						0
 
-			End
+				From sysadm.w_sin ws,
+					 sysadm.w_div_sin wds
+				Where ws.id_sin = @adcIdSin
+				And   wds.id_sin = ws.id_sin
+				And   wds.nom_zone = 'type_app'
+
+				If Exists ( Select Top 1 1 From @Tb ) 
+					Begin
+						If Exists ( 
+								Select Top 1 1 
+								From @Tb
+								Where lib_det is not null
+								and   ltrim ( rtrim ( lib_det )) <> ''
+								and   dte_achat is not null
+								and   ltrim ( rtrim ( dte_achat )) <> ''
+								and   mt_prej is not null
+								and   ltrim ( rtrim ( mt_prej  )) <> ''
+						) Return 1
+						Else Return -2
+
+					End
+				Else
+					Begin
+						Return -2
+					End
+			End 
 		Else
 			Begin
-				Return -2
-			End
-	End 
+				Insert into @Tb
+				Select distinct 
+					IsNull (lTrim ( rTrim ( lower ( wd.lib_det ))), '') ,
+					IsNull ( convert ( varchar ( 10 ), wd.dte_det, 103 ), ''),
+					IsNull ( convert ( varchar ( 20 ), wd.mt_prej ), ''),
+					IsNull ( ( Select Top 1 lTrim ( rTrim ( sysadm.FN_CODE_CAR ( wdt.val_car, '-G6' ))) From sysadm.w_div_det wdt where wdt.id_sin = wd.id_sin And wdt.id_gti = wd.id_gti And wdt.id_detail = wd.id_detail and wdt.nom_zone = 'etat_du_bien' ), ''), 
+					IsNull ( ( Select Top 1 lTrim ( rTrim ( sysadm.FN_CODE_CAR ( wdt.val_car, '-G7' ))) From sysadm.w_div_det wdt where wdt.id_sin = wd.id_sin And wdt.id_gti = wd.id_gti And wdt.id_detail = wd.id_detail and wdt.nom_zone = 'moyen_de_paiement'), '' ), 
+					0
+				FROM sysadm.w_detail wd,
+					 sysadm.w_sin ws
+				Where ws.id_sin = @adcIdSin
+				and   wd.id_sin = ws.id_sin
+
+				If Exists ( Select Top 1 1 From @Tb ) 
+					Begin
+						If Exists ( 
+								Select Top 1 1 
+								From @Tb
+								Where lib_det is not null
+								and   ltrim ( rtrim ( lib_det )) <> ''
+								and   dte_achat is not null
+								and   ltrim ( rtrim ( dte_achat )) <> ''
+								and   mt_prej is not null
+								and   ltrim ( rtrim ( mt_prej  )) <> ''
+								and   etat_du_bien is not null
+								and   ltrim ( rtrim ( etat_du_bien  )) <> ''
+								and   moyen_de_paiement is not null
+								and   ltrim ( rtrim ( moyen_de_paiement  )) <> ''
+						) Return 1
+						Else Return -2
+
+					End
+				Else
+					Begin
+						Return -2
+					End
+
+			End 
+	End
 Else
 	Begin
-		Insert into @Tb
-		Select distinct 
-			IsNull (lTrim ( rTrim ( lower ( wd.lib_det ))), '') ,
-			IsNull ( convert ( varchar ( 10 ), wd.dte_det, 103 ), ''),
-			IsNull ( convert ( varchar ( 20 ), wd.mt_prej ), ''),
-			IsNull ( ( Select Top 1 lTrim ( rTrim ( sysadm.FN_CODE_CAR ( wdt.val_car, '-G6' ))) From sysadm.w_div_det wdt where wdt.id_sin = wd.id_sin And wdt.id_gti = wd.id_gti And wdt.id_detail = wd.id_detail and wdt.nom_zone = 'etat_du_bien' ), ''), 
-			IsNull ( ( Select Top 1 lTrim ( rTrim ( sysadm.FN_CODE_CAR ( wdt.val_car, '-G7' ))) From sysadm.w_div_det wdt where wdt.id_sin = wd.id_sin And wdt.id_gti = wd.id_gti And wdt.id_detail = wd.id_detail and wdt.nom_zone = 'moyen_de_paiement'), '' ), 
-			0
-		FROM sysadm.w_detail wd,
-			 sysadm.w_sin ws
-		Where ws.id_sin = @adcIdSin
-		and   wd.id_sin = ws.id_sin
-
-		If Exists ( Select Top 1 1 From @Tb ) 
+		If Exists ( Select Top 1 1 From sysadm.div_sin wds where wds.id_sin = @adcIdSin And wds.nom_zone = 'type_app' )
 			Begin
-				If Exists ( 
-						Select Top 1 1 
-						From @Tb
-						Where lib_det is not null
-						and   ltrim ( rtrim ( lib_det )) <> ''
-						and   dte_achat is not null
-						and   ltrim ( rtrim ( dte_achat )) <> ''
-						and   mt_prej is not null
-						and   ltrim ( rtrim ( mt_prej  )) <> ''
-						and   etat_du_bien is not null
-						and   ltrim ( rtrim ( etat_du_bien  )) <> ''
-						and   moyen_de_paiement is not null
-						and   ltrim ( rtrim ( moyen_de_paiement  )) <> ''
-				) Return 1
-				Else Return -2
+				Insert into @Tb
+				Select 
+						IsNull ( 
+							Case 
+								When Exists ( Select Top 1 1 From sysadm.det_pro dp where dp.id_prod = ws.id_prod and dp.id_code_dp = 106 and dp.id_code_car = wds.val_car ) 
+									Then ( Select lTrim ( rTrim ( val_car )) From sysadm.det_pro dp where dp.id_prod = ws.id_prod and dp.id_code_dp = 106 and dp.id_code_car = wds.val_car )
+								Else sysadm.FN_CODE_CAR ( wds.val_car, '-AR' )
+							End, '') 'lib_det',
+						IsNull ( convert ( varchar ( 10 ), ws.dte_ach_port, 103 ), '') 'dte_det',
+						sysadm.FN_GET_DIV_SIN (ws.id_sin, 'mt_val_achat_adh', 'P', '' ) 'mt_prej',
+						'' 'etat_du_bien',
+						'' 'moyen_de_paiement',
+						0
 
-			End
+				From sysadm.sinistre ws,
+					 sysadm.div_sin wds
+				Where ws.id_sin = @adcIdSin
+				And   wds.id_sin = ws.id_sin
+				And   wds.nom_zone = 'type_app'
+
+				If Exists ( Select Top 1 1 From @Tb ) 
+					Begin
+						If Exists ( 
+								Select Top 1 1 
+								From @Tb
+								Where lib_det is not null
+								and   ltrim ( rtrim ( lib_det )) <> ''
+								and   dte_achat is not null
+								and   ltrim ( rtrim ( dte_achat )) <> ''
+								and   mt_prej is not null
+								and   ltrim ( rtrim ( mt_prej  )) <> ''
+						) Return 1
+						Else Return -2
+
+					End
+				Else
+					Begin
+						Return -2
+					End
+			End 
 		Else
 			Begin
-				Return -2
-			End
+				Insert into @Tb
+				Select distinct 
+					IsNull (lTrim ( rTrim ( lower ( wd.lib_det ))), '') ,
+					IsNull ( convert ( varchar ( 10 ), wd.dte_det, 103 ), ''),
+					IsNull ( convert ( varchar ( 20 ), wd.mt_prej ), ''),
+					IsNull ( ( Select Top 1 lTrim ( rTrim ( sysadm.FN_CODE_CAR ( wdt.val_car, '-G6' ))) From sysadm.w_div_det wdt where wdt.id_sin = wd.id_sin And wdt.id_gti = wd.id_gti And wdt.id_detail = wd.id_detail and wdt.nom_zone = 'etat_du_bien' ), ''), 
+					IsNull ( ( Select Top 1 lTrim ( rTrim ( sysadm.FN_CODE_CAR ( wdt.val_car, '-G7' ))) From sysadm.w_div_det wdt where wdt.id_sin = wd.id_sin And wdt.id_gti = wd.id_gti And wdt.id_detail = wd.id_detail and wdt.nom_zone = 'moyen_de_paiement'), '' ), 
+					0
+				FROM sysadm.detail wd,
+					 sysadm.sinistre ws
+				Where ws.id_sin = @adcIdSin
+				and   wd.id_sin = ws.id_sin
 
-	End 
+				If Exists ( Select Top 1 1 From @Tb ) 
+					Begin
+						If Exists ( 
+								Select Top 1 1 
+								From @Tb
+								Where lib_det is not null
+								and   ltrim ( rtrim ( lib_det )) <> ''
+								and   dte_achat is not null
+								and   ltrim ( rtrim ( dte_achat )) <> ''
+								and   mt_prej is not null
+								and   ltrim ( rtrim ( mt_prej  )) <> ''
+								and   etat_du_bien is not null
+								and   ltrim ( rtrim ( etat_du_bien  )) <> ''
+								and   moyen_de_paiement is not null
+								and   ltrim ( rtrim ( moyen_de_paiement  )) <> ''
+						) Return 1
+						Else Return -2
 
+					End
+				Else
+					Begin
+						Return -2
+					End
+
+			End 
+	End
 GO
 
 
