@@ -26566,8 +26566,8 @@ While Exists ( Select * From @tb where marquage = 0 )
 		
 		Set @sMess = Case @sCas
 						When 'REL_COMMERCANT' Then '1ère Relance interne GT SPB suite demande faite au commerçant, contactez l''assuré afin de s''assurer s''il a été livré, à défaut poursuivre l’instruction du dossier.'
-						When 'PROPO_INDEM' Then '1ère Relance interne GT SPB suite proposition d''indemnisation vers l''assuré restée sans réponse à ce jour, contactez l''assuré afin de s''assurer qu''il a bien reçu le courrier de proposition.'
-						When 'PEC_WEB' Then '1ère Relance interne GT SPB suite presta WEB mise à disposition de l''assuré restée sans réponse à ce jour, contactez l''assuré afin de s''assurer qu''il a bien reçu accès au site de choix de mobile.'
+						When 'PROPO_INDEM' Then 'Suite proposition d''indemnisation vers l''assuré restée sans réponse à ce jour, contacter l''assuré pour suite à donner.'
+						When 'PEC_WEB' Then 'Suite prestation PEC WEB sans réponse à ce jour, contacter l''assuré pour  suite à donner.'
 						Else 'Relance interne GT SPB.'
 					 End 
 

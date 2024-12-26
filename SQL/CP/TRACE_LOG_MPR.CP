@@ -154,6 +154,7 @@ If Upper ( sysadm.FN_TRIM ( db_name ( db_id () ) ) ) <> 'SIMPA2_PRO'
  Begin 
 	Set @sAppliEnv = 'SPB(S2/REC7)'
 	Set @sMailFrom = '<jff@spb.fr>'
+	Set @sMailObjet = '[RECETTE] '
  End 
  
 Set @sAliasFrom = @sAppliEnv + '=> Erreur Intrg. ' + sysadm.FN_CODE_CAR ( @asIdFour, '-FR' ) 
