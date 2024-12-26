@@ -3710,8 +3710,10 @@ private function boolean uf_rf_ecrirerefus (long alrefus);//*-------------------
 //*										Faux = Le refus n'existe pas.
 //*
 //*-----------------------------------------------------------------
+//* JFF  24/12/2024  [LGY19_PARAM_AUTO]
+//*-----------------------------------------------------------------
 
-Boolean bRet
+Boolean bRet, bFin
 
 Long lLig, lTotRefus
 
@@ -3728,18 +3730,23 @@ sRech 		= "ID_MOTIF = " + String ( alRefus )
 
 lLig 			= iuoTagRefus.dw_Trt.Find ( sRech, 1, lTotRefus )
 
+
 If	lLig > 0 Then
 	iuoTagRefus.dw_Trt.SetItem ( lLig, "ALT_MAC", "O" )
 Else
 	bRet = False
 
-	stMessage.sTitre		= "Contrôle de saisie de la garantie"
-	stMessage.Icon			= Information!
-	stMessage.sVar[1] 	= String ( alRefus )
-	stMessage.bErreurG	= False
-	stMessage.sCode		= "WDET140"
-
-	f_Message ( stMessage )
+	// [LGY19_PARAM_AUTO]
+	bFin = False
+	Do While Not bFin
+		stMessage.sTitre		= "Contrôle de saisie de la garantie"
+		stMessage.Icon			= Information!
+		stMessage.sVar[1] 	= String ( alRefus )			
+		stMessage.bErreurG	= FALSE
+		stMessage.Bouton		= YESNO!
+		stMessage.sCode		= "WDET140"
+		If F_Message ( stMessage ) = 1 Then bFin = TRUE
+	Loop
 
 End If
 

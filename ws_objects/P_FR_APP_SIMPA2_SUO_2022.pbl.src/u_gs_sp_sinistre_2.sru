@@ -27,6 +27,7 @@ DataWindow idw_wDetail
 StaticText		istAttenteDiverse
 
 Boolean			ibCodicDartyValide
+Boolean			ibMIG1_CourEmailing // [MIG1_COUR_EMAILING]
 
 String isTypeTrt
 String isReferentielApp
@@ -45,8 +46,8 @@ public function long uf_zn_trt_divsin_coqneprotgpas (string asdata, string asnom
 public function integer uf_zn_trt_divsin_personne_sin (string asdata, string asnomcol, long alrow)
 public subroutine uf_set_valinstance (string ascas, string asval)
 public function long uf_zn_trt_divsin_cra_ctrl_imei (string asdata, string asnomcol, long alrow)
-public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse)
 public function long uf_zn_trt_divsin_cra_suivi_imei (string asdata, string asnomcol, long alrow)
+public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse, ref boolean abmig1_couremailing)
 end prototypes
 
 public function long uf_zn_trt_divsin_typeapp (string asdata, string asnomcol, long alrow, boolean abforcer);//*-----------------------------------------------------------------
@@ -756,6 +757,8 @@ public subroutine uf_set_valinstance (string ascas, string asval);//*-----------
 //* Retourne		: Rien
 //*
 //*-----------------------------------------------------------------
+//       JFF   19/12/2024 [MIG1_COUR_EMAILING]
+//*-----------------------------------------------------------------
 
 
 If IsNull ( asCas ) Then Return
@@ -768,6 +771,10 @@ Choose Case asCas
 
 	Case "isReferentielApp"
 		isReferentielApp = asVal
+		
+	Case "ibMIG1_CourEmailing"
+		ibMIG1_CourEmailing = Upper ( asVal ) = "TRUE" // [MIG1_COUR_EMAILING]
+			
 		
 End Choose 
 end subroutine
@@ -897,42 +904,6 @@ Return iAction
 
 end function
 
-public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse);//*-----------------------------------------------------------------
-//*
-//* Fonction		: uf_initialiser_1 (Public)
-//* Auteur			: FABRY JF
-//* Date				: 12/11/2024
-//* Libellé			: 
-//* Commentaires	: Initialisation des instances pour l'objet numéro 2
-//*
-//* Arguments		: Voir arguments
-//*
-//* Retourne		: Rien
-//*
-//*-----------------------------------------------------------------
-
-iuoSpGsSinistre		= auoSpGsSinistre
-
-idw_detpro 				= adw_detpro
-idw_wsin   				= adw_wsin
-idw_lstwcommande 		= adw_lstwcommande
-idw_wdivsin 			= adw_wdivsin
-idw_wdivdet 			= adw_wdivdet
-
-ibCodicDartyValide	= abCodicDartyValide
-isTypeTrt				= asTypeTrt
-isReferentielApp		= asReferentielApp
-K_MAJZONE				= aK_MAJZONE
-idw_wDetail				= adw_wDetail
-
-idw_LstGti				= adw_LstGti
-
-istAttenteDiverse    = astAttenteDiverse
-
-
-
-end subroutine
-
 public function long uf_zn_trt_divsin_cra_suivi_imei (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
 //*
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_cra_suivi_imei (PRIVATE)
@@ -1025,6 +996,44 @@ Return iAction
 
 
 end function
+
+public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse, ref boolean abmig1_couremailing);//*-----------------------------------------------------------------
+//*
+//* Fonction		: uf_initialiser_1 (Public)
+//* Auteur			: FABRY JF
+//* Date				: 12/11/2024
+//* Libellé			: 
+//* Commentaires	: Initialisation des instances pour l'objet numéro 2
+//*
+//* Arguments		: Voir arguments
+//*
+//* Retourne		: Rien
+//*
+//*-----------------------------------------------------------------
+//       JFF   19/12/2024 [MIG1_COUR_EMAILING]
+//*-----------------------------------------------------------------
+
+iuoSpGsSinistre		= auoSpGsSinistre
+
+idw_detpro 				= adw_detpro
+idw_wsin   				= adw_wsin
+idw_lstwcommande 		= adw_lstwcommande
+idw_wdivsin 			= adw_wdivsin
+idw_wdivdet 			= adw_wdivdet
+
+ibCodicDartyValide	= abCodicDartyValide
+isTypeTrt				= asTypeTrt
+isReferentielApp		= asReferentielApp
+K_MAJZONE				= aK_MAJZONE
+idw_wDetail				= adw_wDetail
+
+idw_LstGti				= adw_LstGti
+
+istAttenteDiverse    = astAttenteDiverse
+
+ibMIG1_CourEmailing  = abMIG1_CourEmailing // [MIG1_COUR_EMAILING]
+
+end subroutine
 
 on u_gs_sp_sinistre_2.create
 call super::create

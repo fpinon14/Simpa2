@@ -1,5 +1,5 @@
-HA$PBExportHeader$n_cst_saisie_validation_interlocuteur.sru
-$PBExportComments$------} NVUO servant $$HEX2$$e0002000$$ENDHEX$$la m$$HEX1$$e900$$ENDHEX$$thode Saisie/Validation/Edition pour la gestion de l'interlocuteur.
+﻿$PBExportHeader$n_cst_saisie_validation_interlocuteur.sru
+$PBExportComments$------} NVUO servant à la méthode Saisie/Validation/Edition pour la gestion de l'interlocuteur.
 forward
 global type n_cst_saisie_validation_interlocuteur from nonvisualobject
 end type
@@ -52,7 +52,7 @@ private subroutine uf_majboutoncp ();//*----------------------------------------
 //* Fonction		: N_Cst_Saisie_Validation_Interlocuteur::uf_MajBoutonCP		(PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2000 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun
@@ -61,7 +61,7 @@ private subroutine uf_majboutoncp ();//*----------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR     Date	  		Modification
-//* #1 		 DGA     19/09/2006  Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire DCMP-060643
+//* #1 		 DGA     19/09/2006  Gestion d'un répertoire temporaire DCMP-060643
 //*-----------------------------------------------------------------
 
 String sRepTmp, sJoker, sNomFic, sNomFicComplet
@@ -77,7 +77,7 @@ idw_wInter.Modify ( "p_cpart.Visible = 0" )
 idw_wInter.Modify ( "t_cpart.Text = ''" )
 
 /*------------------------------------------------------------------*/
-/* Nous sommes en cr$$HEX1$$e900$$ENDHEX$$ation, pas de CP possible.                     */
+/* Nous sommes en création, pas de CP possible.                     */
 /*------------------------------------------------------------------*/
 If	isTypeTrt = "C"	Then
 	icbCourPart.Visible	= False
@@ -91,16 +91,16 @@ End If
 If	bContinuer	Then
 	lIdInter = idw_wInter.GetItemNumber  ( 1, isZn_IdInter ) 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re tous les fichiers du type                            */
+/* On récupére tous les fichiers du type                            */
 /* C:\WINNT\TEMP\XXXX99_X*.*.                                       */
 /*------------------------------------------------------------------*/
-/* XXXX = Code de l'application sur 4 caract$$HEX1$$e800$$ENDHEX$$res obligatoires.      */
+/* XXXX = Code de l'application sur 4 caractères obligatoires.      */
 /* 99   = ID_INTER sur deux positions obligatoires (Ex:02,12).      */
 /* 9    = COD_INTER.                                                */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/  
 /* #1. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 //	sRepTmp	= stGLB.sWinDir + "\TEMP\" 
 	sRepTmp	= stGLB.sRepTempo
@@ -120,7 +120,7 @@ If	bContinuer	Then
 		icbEffacer.Visible	= False
 
 		idw_wInter.Modify ( "p_cpart.Visible = 0" )
-		idw_wInter.Modify ( "t_cpart.Text = 'Probl$$HEX1$$e800$$ENDHEX$$me!!, il y a deux CP sur le disque'" )
+		idw_wInter.Modify ( "t_cpart.Text = 'Problème!!, il y a deux CP sur le disque'" )
 		bContinuer = FALSE
 	End If
 End If
@@ -136,8 +136,8 @@ If	bContinuer And lTotFichier < 1	Then
 	bContinuer = FALSE
 End If
 /*------------------------------------------------------------------*/
-/* Il y a un courrier particulier. On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re la date et l'heure   */
-/* de cr$$HEX1$$e900$$ENDHEX$$ation du fichier.                                          */
+/* Il y a un courrier particulier. On récupére la date et l'heure   */
+/* de création du fichier.                                          */
 /*------------------------------------------------------------------*/
 If	bContinuer	Then
 	ilb_Fichier.SelectItem ( 1 )
@@ -146,7 +146,7 @@ If	bContinuer	Then
 
 	invWin.uf_GetLastWriteDateTime ( sNomFicComplet, dDateFic, tHeureFic )
 /*------------------------------------------------------------------*/
-/* Si le document $$HEX3$$e0002000e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$modifi$$HEX2$$e9002000$$ENDHEX$$par l'utilisateur alors c'est un    */
+/* Si le document à été modifié par l'utilisateur alors c'est un    */
 /* CP.                                                              */
 /*------------------------------------------------------------------*/
 	If	dDateFic <> 2000-01-01 Or Left ( String ( tHeureFic ), 5 ) <> "23:59"	Then
@@ -154,7 +154,7 @@ If	bContinuer	Then
 		icbEffacer.Visible	= TRUE
 
 		idw_wInter.Modify ( "p_cpart.Visible = 1" )
-		idw_wInter.Modify ( "t_cpart.Text = 'Modifi$$HEX2$$e9002000$$ENDHEX$$le " + String ( dDateFic, "dd/mm/yyyy" ) + " $$HEX2$$e0002000$$ENDHEX$$" 										+ &
+		idw_wInter.Modify ( "t_cpart.Text = 'Modifié le " + String ( dDateFic, "dd/mm/yyyy" ) + " à " 										+ &
 																			 String ( Long ( Left ( String ( tHeureFic ), 2 ) ), "00" ) + "H"			+ &
 																			 String ( Long ( Mid  ( String ( tHeureFic ), 4, 2 ) ), "00" ) + "'" )
 		ibCpPresent	= TRUE
@@ -178,12 +178,12 @@ public subroutine uf_preparer (string asidsin, ref u_datawindow adw_winter, stri
 //* Fonction		: N_Cst_Saisie_Validation_Interlocuteur::uf_Preparer		(PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2000 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Pr$$HEX1$$e900$$ENDHEX$$paration des variables d'instances
+//* Libellé			: 
+//* Commentaires	: Préparation des variables d'instances
 //*
-//* Arguments		: (Val)		String					asIdSin			N$$HEX2$$b0002000$$ENDHEX$$de la r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence sinistre en cours de traitement
-//*					  (R$$HEX1$$e900$$ENDHEX$$f)		U_DataWindow			adw_wInter		FreeForm sur les interlocuteurs
-//*					  (Val)		String					asTypeTrt		Type de traitement sur la fen$$HEX1$$ea00$$ENDHEX$$tre (C)r$$HEX1$$e900$$ENDHEX$$ation/(M)odification
+//* Arguments		: (Val)		String					asIdSin			N° de la référence sinistre en cours de traitement
+//*					  (Réf)		U_DataWindow			adw_wInter		FreeForm sur les interlocuteurs
+//*					  (Val)		String					asTypeTrt		Type de traitement sur la fenêtre (C)réation/(M)odification
 //*
 //* Retourne		: Aucun
 //*
@@ -193,17 +193,17 @@ public subroutine uf_preparer (string asidsin, ref u_datawindow adw_winter, stri
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
-/* On arme les instances n$$HEX1$$e900$$ENDHEX$$cessaires au traitement des courriers.   */
+/* On arme les instances nécessaires au traitement des courriers.   */
 /*------------------------------------------------------------------*/
-/* Cette fonction est appel$$HEX1$$e900$$ENDHEX$$e sur le Wf_PreparerModifier () et      */
-/* Wf_PreparerInserer () de la fen$$HEX1$$ea00$$ENDHEX$$tre des interlocuteurs.          */
+/* Cette fonction est appelée sur le Wf_PreparerModifier () et      */
+/* Wf_PreparerInserer () de la fenêtre des interlocuteurs.          */
 /*------------------------------------------------------------------*/
 isIdSin		= asIdSin
 idw_wInter	= adw_wInter
 isTypeTrt	= asTypeTrt
 
 /*------------------------------------------------------------------*/
-/* Mise $$HEX2$$e0002000$$ENDHEX$$jour des Boutons.                                         */
+/* Mise à jour des Boutons.                                         */
 /*------------------------------------------------------------------*/
 This.uf_MajBoutonCP ()
 
@@ -216,8 +216,8 @@ public function boolean uf_get_cppresent ();//*---------------------------------
 //* Fonction		: N_Cst_Saisie_Validation_Interlocuteur::uf_Get_CpPresent			(PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2000 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration de la variables d'instance ibCpPresent (Arm$$HEX1$$e900$$ENDHEX$$e sur uf_MajBoutonCp ())
+//* Libellé			: 
+//* Commentaires	: Récupération de la variables d'instance ibCpPresent (Armée sur uf_MajBoutonCp ())
 //*
 //* Arguments		: Aucun
 //*
@@ -236,16 +236,16 @@ public subroutine uf_btsupcpart (integer aitypetrt);//*-------------------------
 //* Fonction		: N_Cst_Saisie_Validation_Interlocuteur::uf_BtSupCPart			(PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2000 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On va supprimer le courrier particulier
 //*
-//* Arguments		: (Val)		Integer				aiTypeTrt			Type de traitement demand$$HEX1$$e900$$ENDHEX$$
+//* Arguments		: (Val)		Integer				aiTypeTrt			Type de traitement demandé
 //*
 //* Retourne		: Rien
 //*
 //*-----------------------------------------------------------------
 //* MAJ     PAR      Date	  		Modification
-//* #1 		DGA      19/09/2006  Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire DCMP-060643
+//* #1 		DGA      19/09/2006  Gestion d'un répertoire temporaire DCMP-060643
 //*-----------------------------------------------------------------
 
 String sRepTmp, sJoker, sNomFic, sNomFicComplet, sNull
@@ -254,22 +254,22 @@ Long lIdInter, lTotFichier, lCpt
 SetNull ( sNull )
 
 /*------------------------------------------------------------------*/
-/* Cette fonction est appel$$HEX1$$e900$$ENDHEX$$e en appuyant sur le bouton Effacer de  */
-/* la fen$$HEX1$$ea00$$ENDHEX$$tre des Interlocuteurs. Elle est aussi appel$$HEX1$$e900$$ENDHEX$$e dans la    */
-/* fonction Uf_Supprimer de cette m$$HEX1$$ea00$$ENDHEX$$me fen$$HEX1$$ea00$$ENDHEX$$tre.                     */
+/* Cette fonction est appelée en appuyant sur le bouton Effacer de  */
+/* la fenêtre des Interlocuteurs. Elle est aussi appelée dans la    */
+/* fonction Uf_Supprimer de cette même fenêtre.                     */
 /*------------------------------------------------------------------*/
 lIdInter = idw_wInter.GetItemNumber  ( 1, isZn_IdInter )
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re tous les fichiers du type                            */
+/* On récupére tous les fichiers du type                            */
 /* C:\WINNT\TEMP\XXXX99_X*.*.                                       */
 /*------------------------------------------------------------------*/
-/* XXXX = Code de l'application sur 4 caract$$HEX1$$e800$$ENDHEX$$res obligatoires.      */
+/* XXXX = Code de l'application sur 4 caractères obligatoires.      */
 /* 99   = ID_INTER sur deux positions obligatoires (Ex:02,12).      */
 /* 9    = COD_INTER.                                                */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/  
 /* #1. DCMP-060643                                                  */
-/* Le 19/09/2006. Gestion d'un r$$HEX1$$e900$$ENDHEX$$pertoire temporaire parametrable.  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
 /*------------------------------------------------------------------*/
 //sRepTmp	= stGLB.sWinDir + "\TEMP\" 
 sRepTmp	= stGLB.sRepTempo
@@ -309,7 +309,7 @@ Next
 
 If aiTypeTrt = 1	Then
 /*------------------------------------------------------------------*/
-/* Mise $$HEX2$$e0002000$$ENDHEX$$jour du bouton CP.                                        */
+/* Mise à jour du bouton CP.                                        */
 /*------------------------------------------------------------------*/
 	This.uf_MajBoutonCp ()
 End If
@@ -320,17 +320,17 @@ public function integer uf_btcpart_savane (string astxtdata);//*----------------
 //* Fonction		: N_Cst_Saisie_Validation_Interlocuteur::uf_BtCPart_Savane			(PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2000 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On va ins$$HEX1$$e900$$ENDHEX$$rer le courrier particulier pour l'application SAVANE
+//* Libellé			: 
+//* Commentaires	: On va insérer le courrier particulier pour l'application SAVANE
 //*
 //* Arguments		: (Val)		String			asTxtData		Data de l'interlocuteur
 //*
 //* Retourne		: Integer							 1 = Tout est  OK
-//*															-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*															-1 = Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	  Modification
-//* #1       FS       02/11/2001 : Gestion des mod$$HEX1$$e800$$ENDHEX$$les ?C0000 pour les
+//* #1       FS       02/11/2001 : Gestion des modèles ?C0000 pour les
 //*                                courriers particuliers
 //*-----------------------------------------------------------------
 
@@ -348,16 +348,16 @@ This.uf_MajBoutonCp ()
 
 nvGenCourrier	= CREATE N_Cst_Edition_Courrier
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le type de l'interlocuteur.                          */
+/* On récupére le type de l'interlocuteur.                          */
 /*------------------------------------------------------------------*/
 sCodInter		= idw_wInter.GetItemString ( 1, isZn_CodInter )
 
 /*------------------------------------------------------------------*/
 /* En fonction du type de l'interlocuteur, on positionne une        */
-/* valeur de courrier type. Cette valeur devra $$HEX1$$ea00$$ENDHEX$$tre positionn$$HEX1$$e900$$ENDHEX$$e     */
+/* valeur de courrier type. Cette valeur devra être positionnée     */
 /* dans COUR_TYPE.                                                  */
 /* #1 FS le 02/11/2001                                              */
-/*    les mod$$HEX1$$e800$$ENDHEX$$les utilis$$HEX1$$e900$$ENDHEX$$s sont code inter + "C0000"                */
+/*    les modèles utilisés sont code inter + "C0000"                */
 /* AC0000     COURRIER ASSURE INFO                                  */
 /* BC0000     COURRIER INFO BANQUE                                  */
 /* CC0000     COURRIER INFO CIE AERIENNE                            */
@@ -371,7 +371,7 @@ sCodInter		= idw_wInter.GetItemString ( 1, isZn_CodInter )
 sIdCourType = sCodInter + "C0000"
 
 /*------------------------------------------------------------------*/
-/* Une fois la nature de courrier positionn$$HEX1$$e900$$ENDHEX$$e, on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re la       */
+/* Une fois la nature de courrier positionnée, on récupére la       */
 /* composition.                                                     */
 /*------------------------------------------------------------------*/
 idw_Compo.Reset ()
@@ -392,26 +392,26 @@ lIdSin	= Long ( isIdSin )
 lIdInter	= Long ( idw_wInter.GetItemString ( 1, isZn_IdInter ) )
 			
 /*------------------------------------------------------------------*/
-/* On positionne la DW permettannt de g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer le courrier           */
+/* On positionne la DW permettannt de générer le courrier           */
 /* particulier.                                                     */
 /*------------------------------------------------------------------*/
 idw_GenCourrier.Reset ()
 lLig = idw_GenCourrier.InsertRow ( 0 )
 /*------------------------------------------------------------------*/
-/* On donne un titre $$HEX2$$e0002000$$ENDHEX$$la fen$$HEX1$$ea00$$ENDHEX$$tre. (XXXX99_X*.*)                    */
+/* On donne un titre à la fenêtre. (XXXX99_X*.*)                    */
 /*------------------------------------------------------------------*/
-/* XXXX = Code de l'application sur 4 caract$$HEX1$$e800$$ENDHEX$$res obligatoires.      */
+/* XXXX = Code de l'application sur 4 caractères obligatoires.      */
 /* 99   = ID_INTER sur deux positions obligatoires (Ex:02,12).      */
 /* 9    = COD_INTER.                                                */
 /*------------------------------------------------------------------*/
 sTitre		= stGLB.sCodAppli + String ( lIdInter, "00" ) + "_" + sCodInter + ".DOC"
 /*------------------------------------------------------------------*/
-/* Tous les courriers sont $$HEX1$$e900$$ENDHEX$$dit$$HEX1$$e900$$ENDHEX$$s sur le bac du BAS.                */
+/* Tous les courriers sont édités sur le bac du BAS.                */
 /*------------------------------------------------------------------*/
 sCodBac		= "BAS"
 /*------------------------------------------------------------------*/
-/* Si un courrier particulier est d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$pr$$HEX1$$e900$$ENDHEX$$sent sur disque, il faut  */
-/* l'ouvrir et non l'$$HEX1$$e900$$ENDHEX$$craser.                                       */
+/* Si un courrier particulier est déjà présent sur disque, il faut  */
+/* l'ouvrir et non l'écraser.                                       */
 /*------------------------------------------------------------------*/
 If	This.uf_Get_CpPresent ()	Then
 	sAltGen = "N"
@@ -431,8 +431,8 @@ idw_GenCourrier.SetItem ( lLig, "FIC_ENTETE", isFicEntete )
 idw_GenCourrier.SetItem ( lLig, "ALT_GEN", sAltGen )
 
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il faut fermer des courriers ouverts et non         */
-/* enregistr$$HEX1$$e900$$ENDHEX$$s.                                                     */
+/* On vérifie s'il faut fermer des courriers ouverts et non         */
+/* enregistrés.                                                     */
 /*------------------------------------------------------------------*/
 iRet = nvGenCourrier.uf_Verifier_Word_AvantGeneration ( FALSE )
 /*------------------------------------------------------------------*/
@@ -456,20 +456,20 @@ public function integer uf_btcpart_simpa2 (string astxtdata);//*----------------
 //* Fonction		: N_Cst_Saisie_Validation_Interlocuteur::uf_BtCPart_Simpa2			(PUBLIC)
 //* Auteur			: Fabry JF
 //* Date				: 22/03/2004 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On va ins$$HEX1$$e900$$ENDHEX$$rer le courrier particulier pour l'application SIMPA2
+//* Libellé			: 
+//* Commentaires	: On va insérer le courrier particulier pour l'application SIMPA2
 //*
 //* Arguments		: (Val)		String			asTxtData		Data de l'interlocuteur
 //*
 //* Retourne		: Integer							 1 = Tout est  OK
-//*															-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*															-1 = Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	  Modification
-//* #1       FS       02/11/2001 : Gestion des mod$$HEX1$$e800$$ENDHEX$$les ?C0000 pour les
+//* #1       FS       02/11/2001 : Gestion des modèles ?C0000 pour les
 //*                                courriers particuliers
-//* DCMP030483 JFF  #2  07/01/04 Ajout d'une nouvelle fonctionnalit$$HEX2$$e9002000$$ENDHEX$$permettant
-//*										de choisir son mod$$HEX1$$e800$$ENDHEX$$le de CP parmi toutes les natures
+//* DCMP030483 JFF  #2  07/01/04 Ajout d'une nouvelle fonctionnalité permettant
+//*										de choisir son modèle de CP parmi toutes les natures
 //* 										dispo pour le produit.
 //* #3		 PHG		 15/11/2006 [DNTMAIL1-2] Prise en compte du canal pour la composition
 //* #4	    JCA	16/05/2007	DCMP 070051 - Fusion des tables [courrier] et composition] en [cour_prod]
@@ -477,6 +477,7 @@ public function integer uf_btcpart_simpa2 (string astxtdata);//*----------------
 //* 		    JFF     25/10/2011  [PC363][LOGO_AUCHAN]
 //*			 JFF  09/12/2012 [VDOC5983]
 //       JFF  26/04/2023 [RS5045_REF_MATP]
+//       JFF   19/12/2024 [MIG1_COUR_EMAILING]
 //*-----------------------------------------------------------------
 
 N_Cst_Edition_Courrier		nvGenCourrier
@@ -500,6 +501,7 @@ Int TInter []
 String TModele []
 String sAdrMailName, sAdrMailDomain
 Int iTot_gTInterCP, iCpt_gTInterCP, iTot_TInter, iCpt_TInter
+Long lGtDuDR
 
 Long lIdProd // #4
 lIdProd  = iidw_WSin.GetItemNumber ( 1, "ID_PROD" ) // #4
@@ -508,6 +510,28 @@ bgTInterCP_Trouve = False
 
 iRet = 1
 sTxtCompo = ""
+
+// [MIG1_COUR_EMAILING]
+F_RechDetPro ( lDeb, lFin, idwDetPro, lIdProd, "-DP", 390)
+If lDeb > 0 Then
+	SQLCA.PS_S01_AUTORISATION ( 9, stGlb.sCodOper, lIdprod, lGtDuDR )
+	
+	If lGtDuDR <= 0 Then
+		
+		stMessage.sTitre		= "CP Interdit"
+		stMessage.Icon			= Information!
+		stMessage.bErreurG	= False
+		stMessage.sCode		= "WINT314"
+		stMessage.bTrace		= False
+	
+		f_Message ( stMessage )
+		
+		Return 1		
+	End If 
+	
+End If 
+
+
 /*------------------------------------------------------------------*/
 /* On lance le rafraichissement des diverses informations.          */
 /*------------------------------------------------------------------*/
@@ -515,7 +539,7 @@ This.uf_MajBoutonCp ()
 
 nvGenCourrier	= CREATE N_Cst_Edition_Courrier
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re le type de l'interlocuteur.                          */
+/* On récupére le type de l'interlocuteur.                          */
 /*------------------------------------------------------------------*/
 sCodInter		= idw_wInter.GetItemString ( 1, isZn_CodInter )
 
@@ -555,7 +579,7 @@ If stModCour.sIdCour = "" And Not This.uf_Get_CpPresent ()	Then
 			sParaTempo[2]	=	"FP02"
 			sParaTempo[3]	=	"CR01"
 
-		Case Else					// tous les autres cas ( assur$$HEX2$$e9002000$$ENDHEX$$inclus )
+		Case Else					// tous les autres cas ( assuré inclus )
 
 
 			// [VDOC5983]
@@ -589,8 +613,8 @@ If stModCour.sIdCour = "" And Not This.uf_Get_CpPresent ()	Then
 		If	Not F_Procedure ( stMessage, SQLCA, "IM_S02_PARAGRAPHE" )	Then 
 
 /*------------------------------------------------------------------*/
-/* Il y a une erreur dans l'appel de la proc$$HEX1$$e900$$ENDHEX$$dure, la structure     */
-/* stMessage vient d'$$HEX1$$ea00$$ENDHEX$$tre arm$$HEX1$$e900$$ENDHEX$$e, on affiche le message.             */
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée, on affiche le message.             */
 /*------------------------------------------------------------------*/
 
 			f_Message ( stMessage )
@@ -606,12 +630,12 @@ If stModCour.sIdCour = "" And Not This.uf_Get_CpPresent ()	Then
 End If
 
 /*------------------------------------------------------------------*/
-/* Sinon il a choisi un mod$$HEX1$$e800$$ENDHEX$$le de courrier auto							  */
+/* Sinon il a choisi un modèle de courrier auto							  */
 /*------------------------------------------------------------------*/
 If stModCour.sIdCour <> "" And Not This.uf_Get_CpPresent ()	Then 
 
 	/*------------------------------------------------------------------*/
-	/* Une fois la nature de courrier positionn$$HEX1$$e900$$ENDHEX$$e, on r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re la       */
+	/* Une fois la nature de courrier positionnée, on récupére la       */
 	/* composition.                                                     */
 	/*------------------------------------------------------------------*/
 	idw_Compo.Reset ()
@@ -640,27 +664,27 @@ lIdSin	= Long ( isIdSin )
 lIdInter	= idw_wInter.GetItemNumber ( 1, isZn_IdInter ) 
 			
 /*------------------------------------------------------------------*/
-/* On positionne la DW permettannt de g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer le courrier           */
+/* On positionne la DW permettannt de générer le courrier           */
 /* particulier.                                                     */
 /*------------------------------------------------------------------*/
 idw_GenCourrier.Reset ()
 lLig = idw_GenCourrier.InsertRow ( 0 )
 /*------------------------------------------------------------------*/
-/* On donne un titre $$HEX2$$e0002000$$ENDHEX$$la fen$$HEX1$$ea00$$ENDHEX$$tre. (XXXX99_X*.*)                    */
+/* On donne un titre à la fenêtre. (XXXX99_X*.*)                    */
 /*------------------------------------------------------------------*/
-/* XXXX = Code de l'application sur 4 caract$$HEX1$$e800$$ENDHEX$$res obligatoires.      */
+/* XXXX = Code de l'application sur 4 caractères obligatoires.      */
 /* 99   = ID_INTER sur deux positions obligatoires (Ex:02,12).      */
 /* 9    = COD_INTER.                                                */
 /*------------------------------------------------------------------*/
 sTitre		= stGLB.sCodAppli + String ( lIdInter, "00" ) + "_" + sCodInter + ".DOC"
 /*------------------------------------------------------------------*/
-/* Tous les courriers sont $$HEX1$$e900$$ENDHEX$$dit$$HEX1$$e900$$ENDHEX$$s sur le bac du BAS.                */
+/* Tous les courriers sont édités sur le bac du BAS.                */
 /*------------------------------------------------------------------*/
 sCodBac		= "BAS"
 
 /*------------------------------------------------------------------*/
-/* Si un courrier particulier est d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$pr$$HEX1$$e900$$ENDHEX$$sent sur disque, il faut  */
-/* l'ouvrir et non l'$$HEX1$$e900$$ENDHEX$$craser.                                       */
+/* Si un courrier particulier est déjà présent sur disque, il faut  */
+/* l'ouvrir et non l'écraser.                                       */
 /*------------------------------------------------------------------*/
 If	This.uf_Get_CpPresent ()	Then
 	sAltGen = "N"
@@ -681,9 +705,9 @@ idw_GenCourrier.SetItem ( lLig, "ALT_GEN", sAltGen )
 
 /*--------------------------------------------------------------------------------------------------*/
 /* #3 15/11/2006 [DNTMAIL1-2] PHG                                                                   */
-/* Report code de l'open de la fenetre appelante suivante point 4.4.1 sp$$HEX1$$e900$$ENDHEX$$cification DNTMAIL1/2      */ 
-/* Initialisation du canal selon la r$$HEX1$$e900$$ENDHEX$$gle suivante : Si champ ADR_MAIL est renseign$$HEX17$$e9002000200020002000200020002000200020002000200020002000200020002000$$ENDHEX$$*/
-/* et que la zone ALT_SUIVI_MAIL est coch$$HEX2$$e9002000$$ENDHEX$$alors c'est un envoi par MAIL SINON envoi par COURRIER   */
+/* Report code de l'open de la fenetre appelante suivante point 4.4.1 spécification DNTMAIL1/2      */ 
+/* Initialisation du canal selon la régle suivante : Si champ ADR_MAIL est renseigné                */
+/* et que la zone ALT_SUIVI_MAIL est coché alors c'est un envoi par MAIL SINON envoi par COURRIER   */
 /*--------------------------------------------------------------------------------------------------*/
 
 sAltSuiviMail = idw_wInter.GetItemString (1 , "ALT_SUIVI_MAIL")
@@ -720,8 +744,8 @@ idw_GenCourrier.SetItem ( lLig, "ID_CANAL", sId_Canal )
 // Fin [DNTMAIL1-2] PHG 30/10/2006
 
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie s'il faut fermer des courriers ouverts et non         */
-/* enregistr$$HEX1$$e900$$ENDHEX$$s.                                                     */
+/* On vérifie s'il faut fermer des courriers ouverts et non         */
+/* enregistrés.                                                     */
 /*------------------------------------------------------------------*/
 iRet = nvGenCourrier.uf_Verifier_Word_AvantGeneration ( FALSE )
 /*------------------------------------------------------------------*/
@@ -733,11 +757,11 @@ If	iRet > 0	Then
 	If	nvGenCourrier.uf_InitialiserWord ( FALSE ) = 1	Then
 
 		// [RS5045_REF_MATP]
-		// Gestion des mod$$HEX1$$e800$$ENDHEX$$les pour le m$$HEX1$$e900$$ENDHEX$$dia MAIL
-		// R$$HEX1$$e800$$ENDHEX$$gles :
-		// Si M$$HEX1$$e900$$ENDHEX$$dia "Par mail" Et absence de DP368 Alors Mod$$HEX1$$e800$$ENDHEX$$le par d$$HEX1$$e900$$ENDHEX$$faut COURRIER_SPB.DOT pour A et T
-		// Si M$$HEX1$$e900$$ENDHEX$$dia "Par mail" Et pr$$HEX1$$e900$$ENDHEX$$sence de DP368 Alors Mod$$HEX1$$e800$$ENDHEX$$le de la DP368 pour l'Inter donn$$HEX1$$e900$$ENDHEX$$
-		// On n'emp$$HEX1$$ea00$$ENDHEX$$che l'armement plus g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$ral et existant de la DP188, mais la DP/368 l'emportera dans le traitement sur n_cst_edition_courrier
+		// Gestion des modèles pour le média MAIL
+		// Règles :
+		// Si Média "Par mail" Et absence de DP368 Alors Modèle par défaut COURRIER_SPB.DOT pour A et T
+		// Si Média "Par mail" Et présence de DP368 Alors Modèle de la DP368 pour l'Inter donné
+		// On n'empêche l'armement plus général et existant de la DP188, mais la DP/368 l'emportera dans le traitement sur n_cst_edition_courrier
 
 		F_RechDetPro ( lDebDp188, lFin, idwDetPro, lIdProd, "-DP", 188 )
 		
@@ -746,7 +770,7 @@ If	iRet > 0	Then
 
 			iTot_idwGenCourrier = idw_GenCourrier.RowCount ()	
 	
-			// LA boucle ne sert $$HEX2$$e0002000$$ENDHEX$$rien car il n'y a qu'un inter dans notre cas, mais code repris d'autre part
+			// LA boucle ne sert à rien car il n'y a qu'un inter dans notre cas, mais code repris d'autre part
 			For iCpt_idwGenCourrier = 1 To iTot_idwGenCourrier
 				dcIdI = idw_GenCourrier.GetItemNumber ( iCpt_idwGenCourrier, "ID_INTER" ) 
 				sIdCanal = idw_GenCourrier.GetItemString ( iCpt_idwGenCourrier, "ID_CANAL" ) 
@@ -754,19 +778,19 @@ If	iRet > 0	Then
 
 				If F_CLE_NUMERIQUE ( "RS5045_REF_MATP" ) >= 4 Then
 					If lDebDp188 <= 0 Then
-						// Par d$$HEX1$$e900$$ENDHEX$$faut, si le canal est mail, on mets au moins le mod$$HEX1$$e800$$ENDHEX$$le courrier_spb.dot qui pourrai $$HEX1$$ea00$$ENDHEX$$tre $$HEX1$$e900$$ENDHEX$$cras$$HEX2$$e9002000$$ENDHEX$$ensuite
+						// Par défaut, si le canal est mail, on mets au moins le modèle courrier_spb.dot qui pourrai être écrasé ensuite
 						TInter [iCpt_idwGenCourrier] = dcIdI
 						
 						Choose Case sIdCanal 
 							Case "MA"
 								TModele [iCpt_idwGenCourrier] = ProfileString ( stGLB.sFichierIni, "EDITION", "MODELE_MAIL",  "" )
-							Case Else // CO d$$HEX1$$e900$$ENDHEX$$faut
+							Case Else // CO défaut
 								TModele [iCpt_idwGenCourrier] = ProfileString ( stGLB.sFichierIni, "EDITION", "MODELE",  "" )
 						End Choose 
 					End If 
 				Else
 					If sIdCanal = "MA" And lDebDp188 <= 0 Then
-						// Par d$$HEX1$$e900$$ENDHEX$$faut, si le canal est mail, on mets au moins le mod$$HEX1$$e800$$ENDHEX$$le courrier_spb.dot qui pourrai $$HEX1$$ea00$$ENDHEX$$tre $$HEX1$$e900$$ENDHEX$$cras$$HEX2$$e9002000$$ENDHEX$$ensuite
+						// Par défaut, si le canal est mail, on mets au moins le modèle courrier_spb.dot qui pourrai être écrasé ensuite
 						TInter [iCpt_idwGenCourrier] = dcIdI
 						TModele [iCpt_idwGenCourrier] = ProfileString ( stGLB.sFichierIni, "EDITION", "MODELE_MAIL",  "" )
 					End If 
@@ -774,7 +798,7 @@ If	iRet > 0	Then
 
 	
 	
-				// Mais si l'option 368 dit autre chose en fonction du contexte..., on $$HEX1$$e900$$ENDHEX$$crase alors.
+				// Mais si l'option 368 dit autre chose en fonction du contexte..., on écrase alors.
 				F_RechDetPro ( lDeb, lFin, idwDetPro, lIdProd, "-DP", 368 )
 				If lDeb > 0 Then
 	
@@ -819,7 +843,7 @@ If	iRet > 0	Then
 		If lDeb > 0 Then
 			sIdCie = lnvPFCString.of_getkeyvalue (idwDetPro.GetItemString ( lDeb, "VAL_CAR" ), "ID_CIE", ";")
 			If sIdCie = "" Then 
-				lFin = lDeb // Si pas de param IdCir sur la premi$$HEX1$$e800$$ENDHEX$$re, on ne va pas plus loin
+				lFin = lDeb // Si pas de param IdCir sur la première, on ne va pas plus loin
 				bIdCieTrouve = TRUE
 			End If 
 			
@@ -841,7 +865,7 @@ If	iRet > 0	Then
 				Next 
 			End If 
 			
-			// Si pr$$HEX1$$e900$$ENDHEX$$sence de dp/188 avec "des" mod$$HEX1$$e800$$ENDHEX$$les mais aucune correspondance id_cie, alors on garde courrier.dot.
+			// Si présence de dp/188 avec "des" modèles mais aucune correspondance id_cie, alors on garde courrier.dot.
 			If bIdCieTrouve Then
 				sModele = lnvPFCString.of_getkeyvalue (idwDetPro.GetItemString ( lDeb, "VAL_CAR" ), "MODELE", ";")
 		
@@ -900,19 +924,19 @@ public function integer uf_initialiser (string asidappli, ref listbox albfichier
 //* Fonction		: N_Cst_Saisie_Validation_Interlocuteur::uf_Initialiser			(PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 15/10/2000 16:10:01
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On pr$$HEX1$$e900$$ENDHEX$$pare toutes les variables dont on va avoir besoin
+//* Libellé			: 
+//* Commentaires	: On prépare toutes les variables dont on va avoir besoin
 //*
 //* Arguments		: (Val)		String					asIdAppli				Nom de l'application
-//*					  (R$$HEX1$$e900$$ENDHEX$$f)		ListBox					albFichier				ListBox pos$$HEX2$$e9002000$$ENDHEX$$sur la fen$$HEX1$$ea00$$ENDHEX$$tre
-//*					  (R$$HEX1$$e900$$ENDHEX$$f)		CommandButton			acbCourPart				Bouton permettant de cr$$HEX1$$e900$$ENDHEX$$er un courrier particulier
-//*					  (R$$HEX1$$e900$$ENDHEX$$f)		CommandButton			acbEffacer				Bouton permettant d'effacer un courrier particulier
-//*					  (R$$HEX1$$e900$$ENDHEX$$f)		DataWindow				adwCompo					DataWindow permettant de r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer la composition
-//*					  (R$$HEX1$$e900$$ENDHEX$$f)		DataWindow				adwGenCourrier			DataWindow permettant de g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer le courrier particulier
-//*					  (R$$HEX1$$e900$$ENDHEX$$f)		DataWindow				aidw_wsin				DataWindow permettant de r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer le produit
+//*					  (Réf)		ListBox					albFichier				ListBox posé sur la fenêtre
+//*					  (Réf)		CommandButton			acbCourPart				Bouton permettant de créer un courrier particulier
+//*					  (Réf)		CommandButton			acbEffacer				Bouton permettant d'effacer un courrier particulier
+//*					  (Réf)		DataWindow				adwCompo					DataWindow permettant de récupérer la composition
+//*					  (Réf)		DataWindow				adwGenCourrier			DataWindow permettant de générer le courrier particulier
+//*					  (Réf)		DataWindow				aidw_wsin				DataWindow permettant de récupérer le produit
 //*
 //* Retourne		: Integer						 1 = Tout est OK
-//*														-1 = Il y a un probl$$HEX1$$e800$$ENDHEX$$me
+//*														-1 = Il y a un problème
 //*
 //*-----------------------------------------------------------------
 //* MAJ      PAR      Date	  		Modification
@@ -925,8 +949,8 @@ isIdAppli = asIdAppli
 
 /*------------------------------------------------------------------*/
 /* En fonction de l'application SAVANE, SIMPA2, SINDI les noms de   */
-/* colonnes sont diff$$HEX1$$e900$$ENDHEX$$rents. Il faut donc armer une constante pour  */
-/* que cette fen$$HEX1$$ea00$$ENDHEX$$tre puisse fonctionner dans tous les cas de        */
+/* colonnes sont différents. Il faut donc armer une constante pour  */
+/* que cette fenêtre puisse fonctionner dans tous les cas de        */
 /* figure.                                                          */
 /*------------------------------------------------------------------*/
 Choose Case isIdAppli
@@ -975,14 +999,14 @@ icbCourPart	= acbCourPart
 // #1 FIN
 
 /*------------------------------------------------------------------*/
-/* DataWindow permettant de g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer une composition pour un         */
+/* DataWindow permettant de générer une composition pour un         */
 /* courrier particulier.                                            */
 /*------------------------------------------------------------------*/
 idw_Compo = adwCompo
 idw_Compo.SetTransObject ( SQLCA )
 idw_Compo.SetSort ( "ID_ORDRE" )
 /*------------------------------------------------------------------*/
-/* DataWindow external permettant de g$$HEX1$$e900$$ENDHEX$$n$$HEX1$$e900$$ENDHEX$$rer le courrier            */
+/* DataWindow external permettant de générer le courrier            */
 /* particulier poir l'interlocuteur en cours de traitement.         */
 /*------------------------------------------------------------------*/
 idw_GenCourrier = adwGenCourrier

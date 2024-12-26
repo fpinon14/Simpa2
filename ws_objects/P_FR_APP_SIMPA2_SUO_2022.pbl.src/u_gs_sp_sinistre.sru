@@ -120,6 +120,9 @@ Private :
 	Boolean			ibPI052_GenEdtKsl2 // [PI052]
 	Boolean			ibPM506_AssureARisque // [PM506-1]
 	Boolean			ibDp385 // [MCO602_PNEU]
+	Boolean			ibMIG1_CourEmailing // [MIG1_COUR_EMAILING]
+	
+	
 	String			isTabVarOrange[7,2] // 3 Dim : D1=Inter, D2=Code cour Orange D3=Nb cour
 
 	String			isCodTypRecu		// [DCMP090616]
@@ -591,6 +594,7 @@ private subroutine uf_preparermodifier (ref s_pass astpass);//*-----------------
 //       JFF   04/09/2023 [RS5656_MOD_PCE_DIF]
 //       JFF   04/09/2023  [RS5656_MOD_PCE_DIF]
 //       JFF   05/08/2024  [MCO602_PNEU]
+//       JFF   19/12/2024 [MIG1_COUR_EMAILING]
 //*-----------------------------------------------------------------
 
 String sCol[], sValCar, sValCar2, sIdAdh, sSIREN, sVal, sVal2, sPctRisque, sAltPart 
@@ -656,6 +660,8 @@ ibPI052_GenEdtKsl2 = FALSE // [PI052]
 
 ibPM506_AssureARisque = False // [PM506-1]
 ibDp385 = False
+
+ibMIG1_CourEmailing = False // [MIG1_COUR_EMAILING]
 
 // Armement pour les ZVAR du courrier
 // [PM255]
@@ -832,6 +838,11 @@ If	bRet Then
 		// [MCO602_PNEU]
 		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 385 )
 		ibDp385 = lDeb > 0 // On ne demande pas le num_port
+	
+		// [MIG1_COUR_EMAILING]
+		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 390 )
+		ibMIG1_CourEmailing = lDeb > 0
+		iUoGsSpSinistre2.uf_Set_ValInstance ( "ibMIG1_CourEmailing", String ( ibMIG1_CourEmailing) )
 	
 
 		// [DT447]		
@@ -2762,12 +2773,12 @@ private subroutine uf_controlersaisie (ref s_pass astpass);//*------------------
 String 				sCol [], sErr [], sVal [], sValFinale, sValQuote, sFind, sMarq, sIdContratAbonne, sIMEI, s15Zero
 String 				sNouvelleLigne, sText, sPos, sOng, sHeure, sCodAdh, sCodModeReg, sIdAdh, sAltValide, sTC, sFUSION_Aqu, sFUSION_Orne, sFUSION
 String				sPosRef, sIMEICorrige, sTypeApp, sIMEIOrigLu,sIdEvtDetPro, sValTempo, sDtePivot
-String 				sVal1
+String 				sVal1, sVal2
 Long 					lCpt, lNbrCol, lTotInter, lTotGti, lCodEtat, lIdGti, lTotDetail, lIdProd, lIdCarte, lFUSIONProd, lFUSIONIdCarte
 Long					lCptQT1, iCptQT, iPosQT, lRow, lDeb2, lFin2, lDeb, lFin, lCodTel, lVal, lCodEtatSin, lCodEtatSinActuel, lIdGtiDetPro, lCpt2, lIdEvt
 Int					iTC, iFUSION, iFUSIONSLASH
 Time					tTime
-Boolean				bModifGti, bModifDteSurv, bAltBloc, bOkPourCtrl, bDejaRegleUnefois, bPresenceDuneCmdeAValider
+Boolean				bModifGti, bModifDteSurv, bAltBloc, bOkPourCtrl, bDejaRegleUnefois, bPresenceDuneCmdeAValider, bFin
 //Boolean 				bOption19 // #15 [CRAO_LOT2]
 DateTime 			dtDteSurv
 DataWindowChild	dwChild
@@ -3611,6 +3622,8 @@ end if
 // [CTL_MAIL]
 For lCpt=1 To lTotInter
 	sVal1=idw_lstinter.GetItemstring( lCpt, "ADR_MAIL")
+	sVal2=idw_lstinter.GetItemstring( lCpt, "COD_INTER")	 // [MIG1_COUR_EMAILING]
+	
 	if not isnull(sVal1) Then
 		If not f_mail_valide(sVal1) Then
 			stMessage.bErreurG	= false
@@ -3619,6 +3632,21 @@ For lCpt=1 To lTotInter
 			sPos="ALT_BLOC"
 		End if
 	End if
+	
+	// [MIG1_COUR_EMAILING]
+	IF ibMIG1_CourEmailing And sVal2 = "A" And IsNull ( sVal1 )Then
+		bFin = False
+		Do While Not bFin
+			stMessage.sTitre		= "Courrier Emailing"
+			stMessage.Icon			= Exclamation!
+			stMessage.bErreurG	= FALSE
+			stMessage.Bouton		= YESNO!
+			stMessage.sCode		= "WSIN910"
+			If F_Message ( stMessage ) = 1 Then bFin = TRUE
+		Loop
+
+	End If 
+	
 Next
 // :[CTL_MAIL]
 
@@ -3823,6 +3851,8 @@ If This.uf_GestOng_Divers_Trouver( "CRA_CTRL_IMEI" ) = "O" And &
 	idw_LstInter.SetItem ( idw_LstInter.Find ( "COD_INTER = 'A'", 1 , idw_LstInter.RowCount () ), "ALT_COURGEST", "N") 
 End If
 // :[PM50_CRAO]
+
+
 
 /*------------------------------------------------------------------*/
 /* FIN #2 																		     */
@@ -4048,6 +4078,7 @@ private subroutine uf_controlergestion (ref s_pass astpass);//*-----------------
 //       JFF   04/09/2023 [RS5656_MOD_PCE_DIF]
 //       JFF   04/12/2023 [RS6217_PARA_AUTO]
 //       JFF   07/03/2024 [HP252_276_HUB_PRESTA]
+//       JFF   19/12/2024 [MIG1_COUR_EMAILING]
 //*-----------------------------------------------------------------
 Long lTotCourrier, lCodEtat, lNbContact, lNbNat, lCptCTact, llig, lCpt, lVal1, lVal2, lVal3, lVal4, lIdOrianBout, lVal5, lVal6 
 Long lCptDetail, lTotDetail, lTotCmd, lDeb, lFin, lCptRegFrn, lCodeEtat, lRow, lVal, lIdGti, lIdInter, lRowAss, lTot, lIdDetail 
@@ -4479,8 +4510,8 @@ If	Not bBloque Then
 /*------------------------------------------------------------------*/
 		If ibSaisieValidation And bAltEdit And sPos = "" Then
 
-			// [PI052]
-			If Not ib2EmeTourPI052 Then
+			// [PI052] // [MIG1_COUR_EMAILING] 
+			If Not ib2EmeTourPI052 And Not ibMIG1_CourEmailing Then
 
 				invSaisieValSin.uf_Inscrire_DroitsModifCourrier ( iDroitInter )
 				/*----------------------------------------------------------------------------------------------*/
@@ -4499,8 +4530,8 @@ If	Not bBloque Then
 				// #6 ajout structure en param ref
 				// [PI052] ajout des deux tableau
 
-				// [PI052]
-				If Not ib2EmeTourPI052 Then
+				// [PI052] // [MIG1_COUR_EMAILING] 
+				If Not ib2EmeTourPI052 And Not ibMIG1_CourEmailing Then 
 
 					sPos = invSaisieValSin.uf_Generer_Courrier ( sDataInter, "CHOIX", FALSE, FALSE, bAuMoinUnCourrier, nvTrtAttribGenCour, TabVariable[], TabCodeVar[] )  
 
@@ -6208,6 +6239,7 @@ If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 		sPos = This.uf_controlergestion_Hub_Prestataire ( )
 	End IF 
 End If
+
 
 
 ib2EmeTourPI052 = False
@@ -53505,22 +53537,25 @@ n_cst_string	lnvString
 
 sPos = ""
 
-lRowCmd = idw_LstwCommande.Find ( "COD_ETAT = 'CNV'", 1, idw_LstwCommande.RowCount())
+lRowCmd = idw_LstwCommande.Find ( "COD_ETAT = 'CNV' AND POS (INFO_SPB_FRN_CPLT, 'ID_HUB_PRESTA') > 0", 1, idw_LstwCommande.RowCount())
 If lRowCmd <= 0 Then Return sPos 
 
 lRowAssure = idw_lstinter.Find( "COD_INTER='A'" , 1, idw_lstinter.RowCount())
 sAdrMail = Trim ( F_GetItem3 ( idw_lstinter, lRowAssure, "ADR_MAIL" ) )
 If IsNull ( sAdrMail ) Then sAdrMail = ""
 
+/* Modification demandé par Boulenouar le 23/12/24, l'adresse est obligatoire pour toute presta en lien avec le Hub (pour les relances par mail)
 sVal = idw_LstwCommande.GetItemString ( lRowAssure,"INFO_SPB_FRN_CPLT" )
 sVal = lnvString.of_getkeyvalue( sVal, "CODE_PICK_UP", ";")
 
 If Trim ( sVal ) <> "" And sAdrMail = "" Then
+*/
+If sAdrMail = "" Then
 	stMessage.sTitre  	= "Controle de gestion des commandes"
 	stMessage.Icon			= Information!
 	stMessage.bErreurG	= FALSE
 	stMessage.Bouton		= Ok!
-	stMessage.sCode = "HUBP005"		
+	stMessage.sCode = "HUBP020" // "HUBP005"		
 	sPos	= "ALT_BLOC"
 	F_Message ( stMessage )
 
@@ -54138,7 +54173,8 @@ iUoGsSpSinistre2.uf_initialiser_1 (	&
 	K_MAJZONE, &
 	idw_wDetail, &
 	idw_LstGti, &
-	istAttenteDiverse &
+	istAttenteDiverse, &
+	ibMIG1_CourEmailing &
 	)
 // /[20241112110249883][DIVOBJ][JFF]
 end subroutine
