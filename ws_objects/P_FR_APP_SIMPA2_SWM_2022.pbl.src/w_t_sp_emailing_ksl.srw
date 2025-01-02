@@ -48,32 +48,25 @@ Choose Case asCas
 	Case "TOUT"
 		
 		dw_rech.SetItem ( 1, "SAISIE_LIBRE", stNul.str )
-		dw_rech.SetItem ( 1, "TYPO_COURT", stNul.str )
-		dw_rech.SetItem ( 1, "TYPO_LONG", stNul.str )
+		dw_rech.SetItem ( 1, "CATEGORIE", stNul.str )
 		
 		dw_resultat.SetFilter ( "" ) 
 		dw_resultat.Filter ()
 		dw_resultat.Sort ()					
 	
-		dwchild.SetFilter ( "TYPO_COURT = ''" )
+		dwchild.SetFilter ( "CATEGORIE = ''" )
 		dwchild.Filter ()
 		dwchild.Sort ()					
 	
 	Case "SAISIE_LIBRE"
 		dw_rech.SetItem ( 1, "SAISIE_LIBRE", stNul.str )
 		
-	Case "TYPO_COURT"
-		dw_rech.SetItem ( 1, "TYPO_COURT", stNul.str )	
-		dwchild.SetFilter ( "TYPO_COURT = ''" )
+	Case "CATEGORIE"
+		dw_rech.SetItem ( 1, "CATEGORIE", stNul.str )	
+		dwchild.SetFilter ( "CATEGORIE = ''" )
 		dwchild.Filter ()
 		dwchild.Sort ()
 	
-		
-	Case "TYPO_LONG"
-		dw_rech.SetItem ( 1, "TYPO_LONG", stNul.str )	
-		dwchild.SetFilter ( "TYPO_COURT = ''" )
-		dwchild.Filter ()
-		dwchild.Sort ()		
 
 End Choose
 
@@ -91,12 +84,11 @@ Choose Case Upper ( asNomZone )
 		If IsNull ( sVal ) Then sVal = ""
 		
 		If sVal <> "" Then
-			This.wf_init_zone_saisie ( "TYPO_COURT" )
-			This.wf_init_zone_saisie ( "TYPO_LONG" )
+			This.wf_init_zone_saisie ( "CATEGORIE" )
 			
 			sVal = F_REMPLACE ( sVal, "'", "~~'" ) 
 			
-			dw_resultat.SetFilter ( "POS ( ID_COUR, '" + sVal + "' ) > 0 Or POS ( TYPO_COURT, '" + sVal + "' ) > 0 Or POS ( TYPO_LONG, '" + sVal + "' ) > 0" )
+			dw_resultat.SetFilter ( "POS ( UPPER ( COD_MAQ ), '" + Upper ( sVal ) + "' ) > 0 Or POS ( CATEGORIE, '" + Upper ( sVal ) + "' ) > 0 Or POS ( UPPER ( LIB_COURT ), '" + Upper ( sVal ) + "' ) > 0" )
 			dw_resultat.Filter ()
 			dw_resultat.Sort ()			
 			Return
@@ -106,40 +98,16 @@ Choose Case Upper ( asNomZone )
 			dw_resultat.Sort ()						
 		End If 
 
-	Case "TYPO_COURT"
-		sVal = Trim ( dw_rech.GetItemString ( 1, "TYPO_COURT" ))
+	Case "CATEGORIE"
+		sVal = Trim ( dw_rech.GetItemString ( 1, "CATEGORIE" ))
 		If IsNull ( sVal ) Then sVal = ""
 
 		This.wf_init_zone_saisie ( "SAISIE_LIBRE" )
-		This.wf_init_zone_saisie ( "TYPO_LONG" )
 		
 		sVal = F_REMPLACE ( sVal, "'", "~~'" ) 
-		dw_resultat.SetFilter ( "TYPO_COURT = '" + sVal + "'" )
+		dw_resultat.SetFilter ( "CATEGORIE = '" + sVal + "'" )
 		dw_resultat.Filter ()
 		dw_resultat.Sort ()					
-		
-		dw_rech.GetChild ( "TYPO_LONG", dwchild)
-		dwchild.SetFilter ( "TYPO_COURT = '" + sVal + "'" )
-		dwchild.Filter ()
-		dw_resultat.Sort ()
-		
-		Return
-
-	Case "TYPO_LONG"
-
-		sVal = Trim ( dw_rech.GetItemString ( 1, "TYPO_COURT" ))
-		If IsNull ( sVal ) Then sVal = ""
-
-		sVal1 = Trim ( dw_rech.GetItemString ( 1, "TYPO_LONG" ))
-		If IsNull ( sVal1 ) Then sVal1 = ""
-
-		sVal = F_REMPLACE ( sVal, "'", "~~'" ) 
-		sVal1 = F_REMPLACE ( sVal1, "'", "~~'" ) 
-	
-		This.wf_init_zone_saisie ( "SAISIE_LIBRE" )
-		dw_resultat.SetFilter ( "TYPO_COURT = '" + sVal + "' AND TYPO_LONG = '" + sVal1 + "'" )
-		dw_resultat.Filter ()
-		dw_resultat.Sort ()
 		
 		Return
 		
@@ -166,17 +134,14 @@ end on
 event open;//       JFF   18/08/2020 [PM497-1]
 
 
-DataWindowChild dwChildTypoCourt, dwChildTypoLong
+DataWindowChild dwChildCategorie
 
 istPass = Message.PowerObjectParm
 
 dw_rech.Insertrow (0)
-dw_rech.GetChild ( "TYPO_COURT", dwChildTypoCourt )
-dwChildTypoCourt.SetTransObject ( SQLCA )
-dwChildTypoCourt.Retrieve ( istPass.lTab[1] )
-dw_rech.GetChild ( "TYPO_LONG", dwChildTypoLong )
-dwChildTypoLong.SetTransObject ( SQLCA )
-dwChildTypoLong.Retrieve ( istPass.lTab[1] )
+dw_rech.GetChild ( "CATEGORIE", dwChildCategorie )
+dwChildCategorie.SetTransObject ( SQLCA )
+dwChildCategorie.Retrieve ( istPass.lTab[1] )
 
 dw_resultat.SetRedraw (False)
 dw_resultat.SetTransObject ( SQLCA )
@@ -225,12 +190,12 @@ end event
 
 type dw_resultat from datawindow within w_t_sp_emailing_ksl
 integer x = 18
-integer y = 740
+integer y = 572
 integer width = 4375
-integer height = 1040
+integer height = 1208
 integer taborder = 40
 string title = "none"
-string dataobject = "d_pm497_resultat"
+string dataobject = "d_sp_int_emailing_liste"
 boolean hscrollbar = true
 boolean vscrollbar = true
 boolean livescroll = true
@@ -277,10 +242,10 @@ type dw_rech from datawindow within w_t_sp_emailing_ksl
 integer x = 18
 integer y = 168
 integer width = 4375
-integer height = 572
+integer height = 404
 integer taborder = 30
 string title = "none"
-string dataobject = "d_pm497_recherche"
+string dataobject = "d_sp_int_emailing_rech"
 boolean border = false
 boolean livescroll = true
 end type
