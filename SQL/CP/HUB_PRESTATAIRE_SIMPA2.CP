@@ -3103,13 +3103,13 @@ AS
 
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' 
 Begin
-	Select * 
-	From [LS-SAGA2].edi.DepotSimpa2ToHubPresta Where alt_trt = 'E'
+	Select * From [LS-SAGA2].edi.DepotSimpa2ToHubPresta Where alt_trt = 'E'
 End 
 Else 
 Begin
-	Select * 
-	From [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt = 'E'
+	-- [INSTANCE]
+	-- Select * From [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt = 'E'
+	Select * From [S2SQL14DEV\RECSAGA2].[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt = 'E'
 End 
 
 Go
@@ -3198,3 +3198,36 @@ EXEC master.dbo.SPB_PS_MAIL
 
 
 Go
+
+-------------------------------------------------------------------
+--
+-- Procédure            :       TR_HP276_IU_MAPPING_RETOUR_HUB
+-- Auteur               :       JFF
+-- Date                 :       02/01/2025
+-- Libell‚              :       [HP252_276_HUB_PRESTA]
+-- Commentaires         :       
+--                              /!\ A COMPILER SUR LA BASE SIMPA2 /!\
+--								
+--
+-- Retourne             :       rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'TR_HP276_IU_MAPPING_RETOUR_HUB' AND type = 'TR' )
+        DROP Trigger sysadm.TR_HP276_IU_MAPPING_RETOUR_HUB
+GO
+
+CREATE Trigger sysadm.TR_HP276_IU_MAPPING_RETOUR_HUB
+	On sysadm.mapping_retour_hub
+For Insert, Update
+AS
+
+DECLARE @DBID INT
+DECLARE @DBNAME NVARCHAR(128)
+
+SET @DBID = DB_ID()
+SET @DBNAME = DB_NAME()
+
+RAISERROR ('La mise à jour de cette table se fait façon spéciale via un fichier Excel "Mapping activités Hub Prestataire avec SIMPA2.xlsx".', 16, 1, @DBID, @DBNAME)
+Rollback Tran
+
+Go
+

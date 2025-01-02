@@ -3929,3 +3929,52 @@ Else
 Go
 
 
+--------------------------------------------------------------------
+--
+-- Procedure            :       sysadm.TR_IU_CODE_MAQUETTE_KSL_RS5045
+-- Auteur               :       Fabry JF
+-- Date                 :       02/01/2025
+-- Libelle              :       
+-- Commentaires         :       
+-- References           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'TR_IU_CODE_MAQUETTE_KSL_RS5045' AND type = 'TR' )
+        DROP TRIGGER sysadm.TR_IU_CODE_MAQUETTE_KSL_RS5045
+GO
+
+CREATE Trigger sysadm.TR_IU_CODE_MAQUETTE_KSL_RS5045
+	on [sysadm].[code_maquette_ksl_rs5045]
+For Insert, Update
+As
+
+DECLARE @DBID INT
+DECLARE @DBNAME NVARCHAR(128)
+
+SET @DBID = DB_ID()
+SET @DBNAME = DB_NAME()
+
+	Update cm
+	Set cod_maq = rtrim ( ltrim ( Upper ( cm.cod_maq ) ))
+	From inserted i,
+		 sysadm.code_maquette_ksl_rs5045 cm
+	Where i.cod_maq = cm.cod_maq
+	And   i.typ_mail = cm.typ_mail
+
+	If Not Exists ( 
+		Select Top 1 1 
+		From inserted i,
+			 sysadm.code_car cc
+		Where cc.id_typ_code = '-TM'
+		And   cc.id_code = i.typ_mail
+	)
+	Begin
+		RAISERROR ('Déclarez d''abord les typ_mail sur sysadm.code_car, id_typ_code ''-TM''.', 16, 1, @DBID, @DBNAME)
+		Rollback Tran
+	End 
+
+Go
