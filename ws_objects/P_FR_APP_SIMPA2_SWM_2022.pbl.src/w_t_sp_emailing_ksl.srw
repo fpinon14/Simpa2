@@ -131,7 +131,7 @@ destroy(this.dw_rech)
 destroy(this.cb_retour)
 end on
 
-event open;//       JFF   18/08/2020 [PM497-1]
+event open;// MIG1
 
 
 DataWindowChild dwChildCategorie
