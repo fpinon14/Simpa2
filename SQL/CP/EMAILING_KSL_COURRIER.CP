@@ -41,8 +41,7 @@ Set @iProd = 0
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' Set @iProd = 1
 
 Update em
-Set em.cod_maq = rtrim ( ltrim ( Upper ( em.cod_maq ) )),
-	em.categorie = rtrim ( ltrim ( Upper ( em.categorie ) )),
+Set em.categorie = rtrim ( ltrim ( Upper ( em.categorie ) )),
 	em.regl = rtrim ( ltrim ( Upper ( em.regl ) )),
 	em.piece = rtrim ( ltrim ( Upper ( em.piece ) )),
 	em.refus = rtrim ( ltrim ( Upper ( em.refus ) ))

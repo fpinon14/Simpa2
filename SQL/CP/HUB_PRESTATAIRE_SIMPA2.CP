@@ -167,6 +167,7 @@ Declare
 	@sEtatAppSin				varChar ( 20 )			,	-- Etat de l'appareil sinistré, REConditionné ou NEUf
 	@sCodeVerrou				VarChar ( 20 )			,	-- Code vérou de l'appareil
 	@sDesimlocke				VarChar( 20 )			,	-- Appareil désimlocké OUI/NON
+	@sEmailProduit				VarChar ( 128 )			,   -- Adresse mail produit dp/136
 	@sInfo_spb_frn_cplt			VarChar ( 800 )				-- Chaîne sérialisée contenant de multiples informations
 
 Declare @sCouleur	Varchar ( 50 ), 
@@ -364,6 +365,9 @@ If @iDureeGc > 0 And @dtDateAchat is not null Set @dtFinGC = DateAdd ( Month, @i
 
 Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DTE_FIN_GC', Convert ( Varchar ( 10 ), @dtFinGC, 103), rTrim ( @sInfo_spb_frn_cplt ) , ';' )
 
+Select @sEmailProduit = sysadm.FN_CLE_VAL ('ADR_MAIL_PROD' , val_car, ';') From sysadm.det_pro dp Where dp.id_prod = @dcIdProd And dp.id_code_dp = 136
+If @sEmailProduit is null Set @sEmailProduit = ''
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'EMAIL_PRODUIT', @sEmailProduit, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
 
 Select 
 	@aiCas	'iCas',
@@ -543,6 +547,7 @@ Declare
 	@sEtatAppSin				varChar ( 20 )			,	-- Etat de l'appareil sinistré, REConditionné ou NEUf
 	@sCodeVerrou				VarChar ( 20 )			,	-- Code vérou de l'appareil
 	@sDesimlocke				VarChar( 20 )			,	-- Appareil désimlocké OUI/NON
+	@sEmailProduit				VarChar ( 128 )			,   -- Adresse mail produit dp/136
 	@sInfo_spb_frn_cplt			VarChar ( 800 )				-- Chaîne sérialisée contenant de multiples informations
 
 Declare @sCouleur	Varchar ( 50 ), 
@@ -737,6 +742,10 @@ Set @iDureeGc = Case
 If @iDureeGc > 0 And @dtDateAchat is not null Set @dtFinGC = DateAdd ( Month, @iDureeGc, @dtDateAchat ) 
 
 Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DTE_FIN_GC', Convert ( Varchar ( 10 ), @dtFinGC, 103), rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+
+Select @sEmailProduit = sysadm.FN_CLE_VAL ('ADR_MAIL_PROD' , val_car, ';') From sysadm.det_pro dp Where dp.id_prod = @dcIdProd And dp.id_code_dp = 136
+If @sEmailProduit is null Set @sEmailProduit = ''
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'EMAIL_PRODUIT', @sEmailProduit, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
 
 Select 
 	@aiCas	'iCas',

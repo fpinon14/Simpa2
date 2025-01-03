@@ -3958,23 +3958,16 @@ DECLARE @DBNAME NVARCHAR(128)
 SET @DBID = DB_ID()
 SET @DBNAME = DB_NAME()
 
-	Update cm
-	Set cod_maq = rtrim ( ltrim ( Upper ( cm.cod_maq ) ))
+If Not Exists ( 
+	Select Top 1 1 
 	From inserted i,
-		 sysadm.code_maquette_ksl_rs5045 cm
-	Where i.cod_maq = cm.cod_maq
-	And   i.typ_mail = cm.typ_mail
-
-	If Not Exists ( 
-		Select Top 1 1 
-		From inserted i,
-			 sysadm.code_car cc
-		Where cc.id_typ_code = '-TM'
-		And   cc.id_code = i.typ_mail
-	)
-	Begin
-		RAISERROR ('Déclarez d''abord les typ_mail sur sysadm.code_car, id_typ_code ''-TM''.', 16, 1, @DBID, @DBNAME)
-		Rollback Tran
-	End 
+			sysadm.code_car cc
+	Where cc.id_typ_code = '-TM'
+	And   cc.id_code = i.typ_mail
+)
+Begin
+	RAISERROR ('Déclarez d''abord les typ_mail sur sysadm.code_car, id_typ_code ''-TM''.', 16, 1, @DBID, @DBNAME)
+	Rollback Tran
+End 
 
 Go
