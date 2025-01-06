@@ -1011,6 +1011,7 @@ public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref da
 //*
 //*-----------------------------------------------------------------
 //       JFF   19/12/2024 [MIG1_COUR_EMAILING]
+// TOTO
 //*-----------------------------------------------------------------
 
 iuoSpGsSinistre		= auoSpGsSinistre
