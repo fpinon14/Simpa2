@@ -20,9 +20,12 @@ u_DataWindow idw_wDivSin
 u_DataWindow_Detail idw_LstwCommande
 u_DataWindow_Detail idw_wDivDet
 u_DataWindow_Detail idw_LstGti
+u_DataWindow_Detail idw_LstInter
 
 DataWindow idw_DetPro
 DataWindow idw_wDetail
+DataWindow idw_wPiece
+DataWindow idw_wRefus
 
 StaticText		istAttenteDiverse
 
@@ -47,7 +50,8 @@ public function integer uf_zn_trt_divsin_personne_sin (string asdata, string asn
 public subroutine uf_set_valinstance (string ascas, string asval)
 public function long uf_zn_trt_divsin_cra_ctrl_imei (string asdata, string asnomcol, long alrow)
 public function long uf_zn_trt_divsin_cra_suivi_imei (string asdata, string asnomcol, long alrow)
-public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse, ref boolean abmig1_couremailing)
+public function string uf_controlergestion_emailingksl ()
+public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse, ref boolean abmig1_couremailing, ref u_datawindow_detail adw_lstinter, ref datawindow adw_wpiece, ref datawindow adw_wrefus)
 end prototypes
 
 public function long uf_zn_trt_divsin_typeapp (string asdata, string asnomcol, long alrow, boolean abforcer);//*-----------------------------------------------------------------
@@ -997,7 +1001,100 @@ Return iAction
 
 end function
 
-public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse, ref boolean abmig1_couremailing);//*-----------------------------------------------------------------
+public function string uf_controlergestion_emailingksl ();//*-----------------------------------------------------------------
+//*
+//* Fonction		: uf_controlergestion_EmailingKSL (PRIVATE)
+//* Auteur			: JFF
+//* Date				: 07/01/2025
+//* Libellé			:  [MIG1_COUR_EMAILING]
+//* Commentaires	:  Contrôle de gestion lié au courrier Emailing KSL
+//*
+//* Arguments		: 
+//*
+//* Retourne		: Rien
+//*
+//*-----------------------------------------------------------------
+//* MAJ 					PAR		Date		  Modification
+//*-----------------------------------------------------------------
+Boolean bAMU_Regl, bAMU_Pce, bAMU_Ref, bMaqV, bMaqC, bMaqP, bMaqR, bFin 
+Long lDeb, lFin, lCpt, lTotInter 
+Int iNbreRef
+String sAdrMail, sCodInter, sNomInter, sPos
+
+sPos = ""
+
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 390 )
+if lDeb <=0 Then return ""
+
+
+// Contrôle mail
+lTotInter = idw_lstinter.RowCount () 
+For lCpt=1 To lTotInter
+	sAdrMail = idw_lstinter.GetItemstring( lCpt, "ADR_MAIL")
+	sCodInter = idw_lstinter.GetItemstring( lCpt, "COD_INTER")	 // [MIG1_COUR_EMAILING]
+	sNomInter = idw_lstinter.GetItemstring( lCpt, "NOM")	 // [MIG1_COUR_EMAILING]
+	
+	if not isnull(sAdrMail) Then
+		If not f_mail_valide(sAdrMail) Then
+			stMessage.sTitre		= "Emailing KSL : Contrôle adresse mail"
+			stMessage.bErreurG	= false
+			stMessage.Icon			= Information!
+			stMessage.sCode		= "WINT305"
+			stMessage.sVar[1] = "(" + sCodInter + ") " + sNomInter
+			sPos="ALT_BLOC"
+			f_Message ( stMessage )
+			
+			Return "ALT_BLOC"
+			
+		End if
+	End if
+	
+	// [MIG1_COUR_EMAILING]
+	IF IsNull ( sAdrMail )Then
+		bFin = False
+		Do While Not bFin
+			stMessage.sTitre		= "Courrier Emailing"
+			stMessage.Icon			= Exclamation!
+			stMessage.bErreurG	= FALSE
+			stMessage.Bouton		= YESNO!
+			stMessage.sCode		= "WSIN911"
+			stMessage.sVar[1] = "(" + sCodInter + ") " + sNomInter
+			If sCodInter = "A" Then stMessage.sCode = "WSIN910"
+			If F_Message ( stMessage ) = 1 Then bFin = TRUE
+		Loop
+
+		Return "ALT_BLOC"
+
+	End If 
+	
+	// Rester dans la boucle et regarder tout par inter.
+	
+Next
+
+
+// y a-t-il AMU un Règlement ?
+// bAMU_Regl
+bAMU_Regl = idw_LstGti.Find ( "COD_ETAT = 500", 1, idw_LstGti.RowCount ()) > 0 
+
+// y a-t-il AMU une dde pce affecté ?
+bAMU_Pce = idw_wPiece.Find ( "ALT_RECLAME = 'O' AND ID_I >= 0", 1, idw_wPiece.RowCount ()) > 0 
+
+// y a-t-il AMU un refus affecté ? et combien ?
+idw_wRefus.SetFilter ( " (ALT_OPE = 'O' OR ALT_MAC = 'O') AND ID_I >=0 " ) 
+idw_wRefus.Filter ()
+iNbreRef = idw_wRefus.RowCount()
+bAMU_Ref = iNbreRef > 0 
+
+
+// bMaqV, bMaqC, bMaqP, bMaqR Get Param
+
+
+
+
+Return sPos
+end function
+
+public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse, ref boolean abmig1_couremailing, ref u_datawindow_detail adw_lstinter, ref datawindow adw_wpiece, ref datawindow adw_wrefus);//*-----------------------------------------------------------------
 //*
 //* Fonction		: uf_initialiser_1 (Public)
 //* Auteur			: FABRY JF
@@ -1033,6 +1130,12 @@ idw_LstGti				= adw_LstGti
 istAttenteDiverse    = astAttenteDiverse
 
 ibMIG1_CourEmailing  = abMIG1_CourEmailing // [MIG1_COUR_EMAILING]
+
+idw_LstInter			= adw_LstInter
+
+idw_wPiece				= adw_wPiece
+idw_wRefus				= adw_wRefus
+
 
 end subroutine
 

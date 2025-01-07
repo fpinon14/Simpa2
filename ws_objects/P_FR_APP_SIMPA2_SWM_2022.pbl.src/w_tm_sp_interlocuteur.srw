@@ -1183,6 +1183,7 @@ event dw_1::itemerror;call super::itemerror;//*---------------------------------
 //	   JFF - 10/01/2018 - [SHUNT_WS_SEPA]
 //		JFF   31/10/2019	[VDOC28559]
 //    JFF   26/04/2023 [RS5045_REF_MATP]
+//    JFF   19/12/2024 [MIG1_COUR_EMAILING]
 //*-----------------------------------------------------------------
 
 If	ibErreur Then
@@ -1278,6 +1279,8 @@ If	ibErreur Then
 		stMessage.sCode	= "SVE0001"
 		
 		If iiErreur=2 Then 		stMessage.sCode	= "SVE0031" // [BLOC_COUR_FRN]
+		If iiErreur=3 Then 		stMessage.sCode	= "WINT316" // [MIG1_COUR_EMAILING]
+		
 	
 	// [PI052]
 	Case "ALT_QUEST"
@@ -1370,12 +1373,14 @@ event dw_1::buttonclicked;call super::buttonclicked;//*-------------------------
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
-//*				  
 //       JFF   18/08/2020 [PM497-1]
+//       JFF   19/12/2024 [MIG1_COUR_EMAILING]
 //*-----------------------------------------------------------------
 n_cst_spb_params		uParams	
 s_Pass stPass
-String sVal, sIdCour, sIdNatCour
+String sVal, sIdCour, sIdNatCour, sTypMail
+Boolean bEmailingKsl
+Long lDeb, lFin
 
 Choose Case upper(dwo.Name)
 	Case "CB_IBAN"
@@ -1421,6 +1426,48 @@ Choose Case upper(dwo.Name)
 		// [PM497-1]
 		stPass.lTab[1] = idw_WSin.GetItemNumber ( 1, "ID_PROD" )
 		
+		// [MIG1_COUR_EMAILING]
+		bEmailingKsl = False
+		If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
+			// [MIG1_COUR_EMAILING]
+			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_wSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 390 )
+			bEmailingKsl = lDeb > 0 
+			
+			If bEmailingKsl Then
+				OpenWithParm( w_t_sp_emailing_ksl, stPass )
+				
+				stPass = Message.Powerobjectparm
+				
+				If UpperBound ( stPass.sTab ) > 0 Then 
+				
+					sTypMail    = Trim ( stPass.sTab [1] )
+					
+					If IsNull ( sTypMail ) Then sTypMail = ""				
+		
+					If sTypMail <> "" Then				
+						this.SetItem ( 1, "ALT_COURGEST", "R" ) 
+	
+						This.SetItem ( 1, "ID_NAT_COUR", sTypMail ) 
+						This.SetColumn ( "ID_NAT_COUR" )
+
+						This.SetItem ( 1, "ID_COUR", sTypMail ) 
+						This.SetColumn ( "ID_COUR" )
+
+						This.SetFocus ( )
+						TriggerEvent ( This, "itemchanged" )
+					End If 
+					
+				End If 			
+				
+				Return									
+
+			End If 
+
+			
+		End IF 			
+		
+		
+		// Non Emailing, donc traitement normal SIMPA2
 		OpenWithParm( w_tm_sp_typo_courrier, stPass )
 		
 		stPass = Message.Powerobjectparm

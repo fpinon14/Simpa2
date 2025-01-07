@@ -3619,36 +3619,7 @@ if sPos = "" and not bDejaRegleUnefois then
 end if
 // #12 - FIN
 
-// [CTL_MAIL]
-For lCpt=1 To lTotInter
-	sVal1=idw_lstinter.GetItemstring( lCpt, "ADR_MAIL")
-	sVal2=idw_lstinter.GetItemstring( lCpt, "COD_INTER")	 // [MIG1_COUR_EMAILING]
-	
-	if not isnull(sVal1) Then
-		If not f_mail_valide(sVal1) Then
-			stMessage.bErreurG	= false
-			stMessage.sCode		= "WINT305"
-			sText=idw_lstinter.GetItemstring( lCpt, "NOM")
-			sPos="ALT_BLOC"
-		End if
-	End if
-	
-	// [MIG1_COUR_EMAILING]
-	IF ibMIG1_CourEmailing And sVal2 = "A" And IsNull ( sVal1 )Then
-		bFin = False
-		Do While Not bFin
-			stMessage.sTitre		= "Courrier Emailing"
-			stMessage.Icon			= Exclamation!
-			stMessage.bErreurG	= FALSE
-			stMessage.Bouton		= YESNO!
-			stMessage.sCode		= "WSIN910"
-			If F_Message ( stMessage ) = 1 Then bFin = TRUE
-		Loop
 
-	End If 
-	
-Next
-// :[CTL_MAIL]
 
 /*------------------------------------------------------------------*/
 /* Affichage de la chaîne correspondant au message d'erreur         */
@@ -6240,6 +6211,12 @@ If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 	End IF 
 End If
 
+// [MIG1_COUR_EMAILING]
+If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
+	sPos = iUoGsSpSinistre2.uf_controlergestion_EmailingKSL ()
+End If
+
+
 
 
 ib2EmeTourPI052 = False
@@ -6859,6 +6836,12 @@ String sId_canal, sAdrMail, sAltSuiviMail // #6	PHG 31/10/2006 [DNTMAIL1-2]
 long	 lLigTrv  									// #6	PHG 31/10/2006 [DNTMAIL1-2]
 
 long lIdProd // #7
+
+
+// [MIG1_COUR_EMAILING]
+If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
+	IF ibMIG1_CourEmailing Then Return ""
+End If 
 
 lTotInter	= idw_LstInter.RowCount ()
 sPos			= ""
@@ -54174,7 +54157,10 @@ iUoGsSpSinistre2.uf_initialiser_1 (	&
 	idw_wDetail, &
 	idw_LstGti, &
 	istAttenteDiverse, &
-	ibMIG1_CourEmailing &
+	ibMIG1_CourEmailing, &
+	idw_LstInter, &
+	idw_wPiece, &
+	idw_wRefus &
 	)
 // /[20241112110249883][DIVOBJ][JFF]
 end subroutine

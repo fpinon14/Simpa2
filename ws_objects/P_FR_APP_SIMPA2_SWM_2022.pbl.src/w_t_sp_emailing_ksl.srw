@@ -15,7 +15,7 @@ global type w_t_sp_emailing_ksl from window
 integer width = 4425
 integer height = 1888
 boolean titlebar = true
-string title = "Typologie courrier (PM497-1)"
+string title = "Courrier Emailing KSL"
 boolean controlmenu = true
 windowtype windowtype = response!
 long backcolor = 12632256
@@ -53,19 +53,13 @@ Choose Case asCas
 		dw_resultat.SetFilter ( "" ) 
 		dw_resultat.Filter ()
 		dw_resultat.Sort ()					
-	
-		dwchild.SetFilter ( "CATEGORIE = ''" )
-		dwchild.Filter ()
-		dwchild.Sort ()					
+				
 	
 	Case "SAISIE_LIBRE"
 		dw_rech.SetItem ( 1, "SAISIE_LIBRE", stNul.str )
 		
 	Case "CATEGORIE"
 		dw_rech.SetItem ( 1, "CATEGORIE", stNul.str )	
-		dwchild.SetFilter ( "CATEGORIE = ''" )
-		dwchild.Filter ()
-		dwchild.Sort ()
 	
 
 End Choose
@@ -88,7 +82,7 @@ Choose Case Upper ( asNomZone )
 			
 			sVal = F_REMPLACE ( sVal, "'", "~~'" ) 
 			
-			dw_resultat.SetFilter ( "POS ( UPPER ( COD_MAQ ), '" + Upper ( sVal ) + "' ) > 0 Or POS ( CATEGORIE, '" + Upper ( sVal ) + "' ) > 0 Or POS ( UPPER ( LIB_COURT ), '" + Upper ( sVal ) + "' ) > 0" )
+			dw_resultat.SetFilter ( "POS ( UPPER ( COD_MAQ ), '" + Upper ( sVal ) + "' ) > 0 Or POS ( CATEGORIE, '" + Upper ( sVal ) + "' ) > 0 Or POS ( UPPER ( LIB_COUR ), '" + Upper ( sVal ) + "' ) > 0" )
 			dw_resultat.Filter ()
 			dw_resultat.Sort ()			
 			Return
@@ -171,8 +165,7 @@ Choose Case isTypFermeture
 		
 	Case "[CHOIX]"
 
-		stPass.sTab[1] = dw_resultat.GetItemString ( iiRow, "ID_NAT_COUR" )
-		stPass.sTab[2] = dw_resultat.GetItemString ( iiRow, "ID_COUR" )
+		stPass.sTab[1] = dw_resultat.GetItemString ( iiRow, "typ_mail" )
 
 		Message.Powerobjectparm = stPass
 		
@@ -207,14 +200,14 @@ event buttonclicked;s_Pass stPass
 Choose Case Upper ( dwo.name ) 
 	Case "B_CHOISIR"
 	
-		stMessage.sTitre		= "Choix courrier (PM497-1)"
+		stMessage.sTitre		= "Choix du courrier Emailing KSL"
 		stMessage.Icon		= Question!
 		stMessage.bErreurG	= FALSE
 		stMessage.Bouton		= YESNO!
-		stMessage.sVar[1]    = This.GetItemString ( row, "ID_COUR" ) 
-		stMessage.sVar[2]    = This.GetItemString ( row, "TYPO_COURT" )
-		stMessage.sVar[3]    = This.GetItemString ( row, "TYPO_LONG" )		
-		stMessage.sCode		= "WINT308"
+		stMessage.sVar[1]    = This.GetItemString ( row, "cod_maq" ) 
+		stMessage.sVar[2]    = This.GetItemString ( row, "categorie" )
+		stMessage.sVar[3]    = This.GetItemString ( row, "lib_cour" )		
+		stMessage.sCode		= "WINT315"
 
 		If F_Message ( stMessage ) = 1 Then
 
@@ -262,8 +255,7 @@ end event
 
 event editchanged;Choose Case Upper ( dwo.name ) 
 	Case "SAISIE_LIBRE" 
-		Parent.wf_init_zone_saisie ( "TYPO_COURT" )
-		Parent.wf_init_zone_saisie ( "TYPO_LONG" )
+		Parent.wf_init_zone_saisie ( "CATEGORIE" )
 		Parent.wf_dw_rech_itemchanged ( Upper ( dwo.name )  )
 End Choose 
 

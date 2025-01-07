@@ -161,10 +161,11 @@ private subroutine uf_preparermodifier (ref s_pass astpass);//*-----------------
 //       JFF   05/02/2018 [PM360-2]
 //       JFF   18/08/2020 [PM497-1]
 //       JFF   30/05/2023 [PMO89_RS4822]
+//       JFF   19/12/2024 [MIG1_COUR_EMAILING]
 //*-----------------------------------------------------------------
 Boolean	bSupprime
 n_cst_string	lnvString 
-
+DataWindowChild dwChild
 String sFind, sValCar, sCodInter 
 
 Long lTotPiece, lTotRefus, lLig, lTotInter, lTotDetail, lIdSin, lDeb, lFin, lVal 
@@ -350,6 +351,22 @@ Else
 	idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
 End If 
 
+// [MIG1_COUR_EMAILING]
+If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
+	// [MIG1_COUR_EMAILING]
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 390 )
+	If lDeb > 0 Then
+		idw_wInter.modify ("b_typo_courrier.text = 'Courrier Emailing KSL'" )
+		idw_wInter.SetItem ( 1, "ALT_COURGEST", "R" )
+		idw_wInter.GetChild ( "ID_NAT_COUR", dwChild )
+		dwChild.RowsDiscard ( 1, dwChild.RowCount(), Primary! )
+		idw_wInter.Uf_Proteger ( { "ID_NAT_COUR", "ALT_QUEST", "ID_I_DB", "ID_COURJ" }, "1" )		
+		uf_zn_altcourgest ( "INIT" ) 
+	Else 
+		idw_wInter.modify ("b_typo_courrier.text = 'Typologie courrier'" )
+	End If 
+End If 
+	
 
 
 end subroutine
@@ -370,11 +387,13 @@ private subroutine uf_preparerinserer (ref s_pass astpass);//*------------------
 //* #1    JFF    22/03/2004  DCMP 040020 SVE
 //        JFF    05/02/2018  [PM360-2]
 //        JFF    18/08/2020  [PM497-1]
+//        JFF    19/12/2024  [MIG1_COUR_EMAILING]
 //*-----------------------------------------------------------------
 
 Long lIdSin, lIdInter, lTotInter, lDeb, lFin
 n_cst_string	lnvString 
 String sValCar, sCodInter 
+DataWindowChild dwChild
 
 /*------------------------------------------------------------------*/
 /* Le produit a t-il changé ?                                       */
@@ -474,7 +493,22 @@ Else
 	idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
 End If 
 
+// [MIG1_COUR_EMAILING]
+If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
+	// [MIG1_COUR_EMAILING]
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 390 )
+	If lDeb > 0 Then
+		idw_wInter.modify ("b_typo_courrier.text = 'Courrier Emailing KSL'" )
+		idw_wInter.SetItem ( 1, "ALT_COURGEST", "R" )
+		idw_wInter.GetChild ( "ID_NAT_COUR", dwChild )
+		dwChild.RowsDiscard ( 1, dwChild.RowCount(), Primary! )
+		idw_wInter.Uf_Proteger ( { "ID_NAT_COUR", "ALT_QUEST", "ID_I_DB", "ID_COURJ" }, "1" )		
+		uf_zn_altcourgest ( "INIT" ) 
+	Else 
+		idw_wInter.modify ("b_typo_courrier.text = 'Typologie courrier'" )
+	End If 
 
+End If 
 
 end subroutine
 
@@ -4091,22 +4125,36 @@ private function integer uf_zn_altcourgest (string ascas);//*-------------------
 
 String sAltCourGest
 Integer iAction
+Long lDeb, lFin
 
 iAction	= 0
 
-Choose Case asCas
-	Case "INIT"
-		sAltCourGest = idw_wInter.GetItemString ( 1, "ALT_COURGEST" ) 
-	Case Else
-		sAltCourGest = idw_wInter.GetText ()
-End CHoose 	
-
-Choose Case sAltCourGest
-	Case "R", "J"
-		idw_wInter.Modify ( "b_typo_courrier.enabled = yes" )
-	Case Else 
-		idw_wInter.Modify ( "b_typo_courrier.enabled = no" )		
-End Choose
+// [MIG1_COUR_EMAILING]
+If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
+	// [MIG1_COUR_EMAILING]
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 390 )
+	If lDeb > 0 Then
+		iAction = 1
+		idw_wInter.iiErreur = 3
+		idw_wInter.SetItem ( 1, "ALT_COURGEST", "R" )
+	End If 
+End If 
+	
+If iAction = 0 Then 
+	Choose Case asCas
+		Case "INIT"
+			sAltCourGest = idw_wInter.GetItemString ( 1, "ALT_COURGEST" ) 
+		Case Else
+			sAltCourGest = idw_wInter.GetText ()
+	End CHoose 	
+	
+	Choose Case sAltCourGest
+		Case "R", "J"
+			idw_wInter.Modify ( "b_typo_courrier.enabled = yes" )
+		Case Else 
+			idw_wInter.Modify ( "b_typo_courrier.enabled = no" )		
+	End Choose
+End If 
 
 Return iAction
 end function
