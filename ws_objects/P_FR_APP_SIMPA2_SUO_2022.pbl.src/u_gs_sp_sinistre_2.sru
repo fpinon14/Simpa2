@@ -1016,12 +1016,14 @@ public function string uf_controlergestion_emailingksl ();//*-------------------
 //*-----------------------------------------------------------------
 //* MAJ 					PAR		Date		  Modification
 //*-----------------------------------------------------------------
-Boolean bAMU_Regl, bAMU_Pce, bAMU_Ref, bMaqV, bMaqC, bMaqP, bMaqR, bFin 
+Boolean bAMU_Regl, bAMU_ReglV, bAMU_ReglC, bAMU_Pce, bAMU_Ref, bMaqG, bMaqV, bMaqC, bMaqP, bMaqR, bFin, bAMUPT_Courrier
 Long lDeb, lFin, lCpt, lTotInter 
-Int iNbreRef
-String sAdrMail, sCodInter, sNomInter, sPos
+Int iNbreRef, iIdInter
+String sAdrMail, sCodInter, sNomInter, sPos, sLibCodInter, sTypeMail, sRegl, sPce, sRef, sCodModeReg
+Decimal {2} dcMtARegInter
 
 sPos = ""
+bAMUPT_Courrier = False
 
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 390 )
 if lDeb <=0 Then return ""
@@ -1030,17 +1032,76 @@ if lDeb <=0 Then return ""
 // Contrôle mail
 lTotInter = idw_lstinter.RowCount () 
 For lCpt=1 To lTotInter
-	sAdrMail = idw_lstinter.GetItemstring( lCpt, "ADR_MAIL")
-	sCodInter = idw_lstinter.GetItemstring( lCpt, "COD_INTER")	 // [MIG1_COUR_EMAILING]
-	sNomInter = idw_lstinter.GetItemstring( lCpt, "NOM")	 // [MIG1_COUR_EMAILING]
+	sAdrMail = idw_lstinter.GetItemstring ( lCpt, "ADR_MAIL")
+	sCodInter = idw_lstinter.GetItemstring ( lCpt, "COD_INTER")	 // [MIG1_COUR_EMAILING]
+	sNomInter = idw_lstinter.GetItemstring ( lCpt, "NOM")	 // [MIG1_COUR_EMAILING]
+	iIdInter  = idw_lstinter.GetItemNumber ( lCpt, "ID_I")	 // [MIG1_COUR_EMAILING]
+	sTypeMail = idw_lstinter.GetItemstring ( lCpt, "ID_COUR")	 
+
+	If Not bAMUPT_Courrier Then bAMUPT_Courrier = Not ( IsNull ( sTypeMail ) Or sTypeMail = "" ) 
+
+	Choose Case sCodInter
+		Case "A" 
+			sLibCodInter = "Assuré"
+		Case "B"
+			sLibCodInter = "Banque"
+		Case "F" 			
+			sLibCodInter = "Fourn."
+			Continue
+		Case "T"
+			sLibCodInter = "Autre"
+		Case Else
+			sLibCodInter = sCodInter
+	End Choose 
 	
+	// Pour l'instant les courriers Emailing ne sont que pour l'assuré
+	Choose Case sCodInter
+		Case "A"
+			// Ok
+		Case Else 
+			If Not IsNull ( sTypeMail ) And sTypeMail <> ""	Then
+				stMessage.sTitre		= "Emailing KSL : Courrier<=>Typ Inter"
+				stMessage.Icon			= Information!
+				stMessage.bErreurG	= FALSE
+				stMessage.Bouton		= Ok!
+				stMessage.sCode		= "WSIN916"
+				stMessage.sVar[1] = "(" + sLibCodInter + ") " + sNomInter		
+				F_Message ( stMessage ) 
+				Return "ALT_BLOC"
+			End If 
+			
+	End Choose
+		
+	
+	// y a-t-il AMU un Règlement pour cet inter ?
+	dcMtARegInter = idw_lstinter.GetItemDecimal ( lCpt, "MT_A_REG")	 // [MIG1_COUR_EMAILING]
+	bAMU_Regl = dcMtARegInter > 0 
+
+	// Et par quel mode ?
+	sCodModeReg = idw_lstinter.GetItemString ( lCpt, "COD_MODE_REG")
+	bAMU_ReglV = bAMU_Regl And sCodModeReg = "VA"
+	bAMU_ReglC = bAMU_Regl And sCodModeReg = "C"	
+
+	// y a-t-il AMU une dde pce affecté pour cet inter ?
+	bAMU_Pce = idw_wPiece.Find ( "ALT_RECLAME = 'O' AND ID_I = " + String ( iIdInter ) , 1, idw_wPiece.RowCount ()) > 0 
+
+	// y a-t-il AMU un refus affecté ? et combien ?
+	idw_wRefus.SetFilter ( " (ALT_OPE = 'O' OR ALT_MAC = 'O') AND ID_I = " + String ( iIdInter ) ) 
+	idw_wRefus.Filter ()
+	iNbreRef = idw_wRefus.RowCount()
+	bAMU_Ref = iNbreRef > 0 
+	idw_wRefus.SetFilter ( "" ) 
+	idw_wRefus.Filter ()
+	idw_wRefus.Sort ()
+	
+	// Contrôle mail	
 	if not isnull(sAdrMail) Then
 		If not f_mail_valide(sAdrMail) Then
 			stMessage.sTitre		= "Emailing KSL : Contrôle adresse mail"
 			stMessage.bErreurG	= false
-			stMessage.Icon			= Information!
+			stMessage.Icon			= Exclamation!
 			stMessage.sCode		= "WINT305"
-			stMessage.sVar[1] = "(" + sCodInter + ") " + sNomInter
+			stMessage.sVar[1] = "(" + sLibCodInter + ") " + sNomInter
 			sPos="ALT_BLOC"
 			f_Message ( stMessage )
 			
@@ -1049,41 +1110,93 @@ For lCpt=1 To lTotInter
 		End if
 	End if
 	
-	// [MIG1_COUR_EMAILING]
 	IF IsNull ( sAdrMail )Then
 		bFin = False
 		Do While Not bFin
-			stMessage.sTitre		= "Courrier Emailing"
+			stMessage.sTitre		= "Emailing KSL : Contrôle adresse mail"
 			stMessage.Icon			= Exclamation!
 			stMessage.bErreurG	= FALSE
 			stMessage.Bouton		= YESNO!
 			stMessage.sCode		= "WSIN911"
-			stMessage.sVar[1] = "(" + sCodInter + ") " + sNomInter
+			stMessage.sVar[1] = "(" + sLibCodInter + ") " + sNomInter
 			If sCodInter = "A" Then stMessage.sCode = "WSIN910"
 			If F_Message ( stMessage ) = 1 Then bFin = TRUE
 		Loop
 
-		Return "ALT_BLOC"
+	End If 
 
+	// Contrôle cohérence courrier et contexte
+	
+	// Pas de courrier et AMU Regl ou pce ou refus
+	if ( IsNull ( sTypeMail ) Or sTypeMail = "" ) And ( bAMU_Regl Or bAMU_Pce Or bAMU_Ref ) Then
+		stMessage.sTitre		= "Emailing KSL : Pas de courrier"
+		stMessage.Icon			= Exclamation!
+		stMessage.bErreurG	= FALSE
+		stMessage.Bouton		= YESNO!
+		stMessage.sCode		= "WSIN913"
+		stMessage.sVar[1] = "(" + sLibCodInter + ") " + sNomInter		
+		stMessage.sVar[2] = ""
+		If bAMU_Regl Then stMessage.sVar[2] = ", présence de règlement(s)" 
+		If bAMU_Pce Then stMessage.sVar[2] += ", présence de demande de pièce(s)" 
+		If bAMU_Ref Then stMessage.sVar[2] += ", présence de refus" 		
+		stMessage.sVar[2] = Right ( stMessage.sVar[2], Len ( stMessage.sVar[2] ) - 2 )
+		
+		If F_Message ( stMessage ) = 2 Then Return "ALT_BLOC"		
 	End If 
 	
-	// Rester dans la boucle et regarder tout par inter.
+	// Un courrier présent Mais ne correspondant pas au contexte
+	sRegl = space ( 1 ); sPce = space ( 1 ); sRef = space ( 1 ) 
+	SQLCA.PS_MIG1_S_TYPE_COUR_EMAILING_KSL ( sTypeMail, sRegl, sPce, sRef ) 
+	bMaqV = sRegl = "V" ; bMaqC = sRegl = "C" ; bMaqP = sPce = "P" ; bMaqR = sRef = "R"
+
+	if Not IsNull ( sTypeMail ) And sTypeMail <> ""	And ( & 
+		( Not bAMU_Regl And ( bMaqG Or bMaqV Or bMaqC ) ) Or &
+		( bAMU_ReglV And ( Not bMaqV Or bMaqG ) ) Or &	
+		( bAMU_ReglC And ( Not bMaqC Or bMaqG ) ) Or &			
+		( Not bAMU_Pce And bMaqP ) Or &
+		( bAMU_Pce And Not bMaqP ) Or &
+		( Not bAMU_Ref And bMaqR ) Or &
+		( bAMU_Ref And Not bMaqR ) ) &
+	Then
+		stMessage.sTitre		= "Emailing KSL : courrier<=>contexte"
+		stMessage.Icon			= Exclamation!
+		stMessage.bErreurG	= FALSE
+		stMessage.Bouton		= YESNO!
+		stMessage.sCode		= "WSIN914"
+		stMessage.sVar[1] = sTypeMail
+		stMessage.sVar[2] = "(" + sLibCodInter + ") " + sNomInter		
+		If F_Message ( stMessage ) = 2 Then Return "ALT_BLOC"		
+	End If 
+
+
+	// On ne peut avoir qu'un seul refus affecté à un inter
+	If Not IsNull ( sTypeMail ) And sTypeMail <> ""	And bAMU_Ref And iNbreRef > 1 and bMaqR Then
+		stMessage.sTitre		= "Emailing KSL : courrier<=>Nbre de refus"
+		stMessage.Icon			= Information!
+		stMessage.bErreurG	= FALSE
+		stMessage.Bouton		= Ok!
+		stMessage.sCode		= "WSIN915"
+		stMessage.sVar[1] = "(" + sLibCodInter + ") " + sNomInter		
+		stMessage.sVar[2] = sTypeMail
+		stMessage.sVar[3] = "(" + sLibCodInter + ") " + sNomInter		
+		F_Message ( stMessage ) 
+		Return "ALT_BLOC"		
+		
+	End IF 
+
 	
 Next
 
 
-// y a-t-il AMU un Règlement ?
-// bAMU_Regl
-bAMU_Regl = idw_LstGti.Find ( "COD_ETAT = 500", 1, idw_LstGti.RowCount ()) > 0 
-
-// y a-t-il AMU une dde pce affecté ?
-bAMU_Pce = idw_wPiece.Find ( "ALT_RECLAME = 'O' AND ID_I >= 0", 1, idw_wPiece.RowCount ()) > 0 
-
-// y a-t-il AMU un refus affecté ? et combien ?
-idw_wRefus.SetFilter ( " (ALT_OPE = 'O' OR ALT_MAC = 'O') AND ID_I >=0 " ) 
-idw_wRefus.Filter ()
-iNbreRef = idw_wRefus.RowCount()
-bAMU_Ref = iNbreRef > 0 
+// Pas de courrier
+If Not bAMUPT_Courrier Then
+	stMessage.sTitre		= "Emailing KSL : Pas de courrier"
+	stMessage.Icon			= Question!
+	stMessage.bErreurG	= FALSE
+	stMessage.Bouton		= YESNO!
+	stMessage.sCode		= "WSIN912"
+	If F_Message ( stMessage ) = 2 Then Return "ALT_BLOC"
+End IF 
 
 
 // bMaqV, bMaqC, bMaqP, bMaqR Get Param

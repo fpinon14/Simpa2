@@ -6213,7 +6213,9 @@ End If
 
 // [MIG1_COUR_EMAILING]
 If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
-	sPos = iUoGsSpSinistre2.uf_controlergestion_EmailingKSL ()
+	If Not bBloque And sPos = "" Then	
+		sPos = iUoGsSpSinistre2.uf_controlergestion_EmailingKSL ()
+	End If 
 End If
 
 
@@ -6824,6 +6826,7 @@ private function string uf_determiner_composition ();//*------------------------
 //*       JFF   18/07/2010   [PM159]
 //        JFF   18/08/2021 [RS_950_INS_PAR_DYN][RS950]
 //       JFF  26/04/2023 [RS5045_REF_MATP]
+//       JFF   19/12/2024 [MIG1_COUR_EMAILING]
 //*-----------------------------------------------------------------
 
 String sIdCour, sTxtCompo1, sPos, sAltCourGest, sRech, sIdCourJ, sIdNatCour 
@@ -8128,6 +8131,12 @@ long	ll_ret
 
 sRet = ""
 sPos = ""
+
+// [MIG1_COUR_EMAILING]
+If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
+	IF ibMIG1_CourEmailing Then Return ""
+End If 
+
 
 /*------------------------------------------------------------------*/
 /* CODE POSTAL DE L'INTERLOCUTEUR                                   */
@@ -13933,6 +13942,7 @@ private function string uf_determiner_courrier (ref integer aidroitinter[]);//*-
 //* #4	 PHG    10/12/2007  [O2M] Determination des courrier a envoyer.
 //* #5	 FPI	  27/10/2009  [DCMP090629] Factorisation des appels de fonctions de forçage 
 //        JFF    09/02/2015  [DT133_CASTO]
+//       JFF   19/12/2024 [MIG1_COUR_EMAILING]
 //*-----------------------------------------------------------------
 
 String sAltQuest, sAltPart, sAltCourGest, sCodModeReg, sRech, sRechDetail, sIdNatCour, sIdCour, sRechGti
@@ -13959,6 +13969,12 @@ n_cst_string lnvPFCString
 DataWindowChild	dwChild
 
 Boolean bEnvoiCourrier
+
+// [MIG1_COUR_EMAILING]
+If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
+	IF ibMIG1_CourEmailing Then Return ""
+End If 
+
 
 isTabVarOrange = sTabVarOrangeNull 
 

@@ -1444,7 +1444,7 @@ Choose Case upper(dwo.Name)
 					
 					If IsNull ( sTypMail ) Then sTypMail = ""				
 		
-					If sTypMail <> "" Then				
+//					If sTypMail <> "" Then	On peut sortir de la fenêtre en effacer le code acutel			
 						this.SetItem ( 1, "ALT_COURGEST", "R" ) 
 	
 						This.SetItem ( 1, "ID_NAT_COUR", sTypMail ) 
@@ -1455,7 +1455,7 @@ Choose Case upper(dwo.Name)
 
 						This.SetFocus ( )
 						TriggerEvent ( This, "itemchanged" )
-					End If 
+//					End If 
 					
 				End If 			
 				

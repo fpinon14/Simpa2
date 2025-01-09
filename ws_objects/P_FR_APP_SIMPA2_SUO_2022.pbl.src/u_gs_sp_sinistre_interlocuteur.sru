@@ -715,6 +715,7 @@ private subroutine uf_controlersaisie (ref s_pass astpass);//*------------------
 //     JFF  11/01/2017     [VDOC22845]
 //     JFF  01/04/2022     [RS2194_SUPDBLEBQ]
 //     JFF  30/05/2023     [PMO89_RS4822]
+//     JFF  19/12/2024 		[MIG1_COUR_EMAILING]
 //*-----------------------------------------------------------------
 
 //String sCol [ 14 ], sErr [ 14 ], sVal [ 14 ] // #3
@@ -858,13 +859,26 @@ End If
 /* Si ALT_COURGEST est à R (Remplacer), alors ID_NAT_COUR ne doit   */
 /* pas être NULL.                                                   */
 /*------------------------------------------------------------------*/
-If	idw_wInter.GetItemString ( 1, "ALT_COURGEST" ) = "R" Then
-	If IsNull ( sVal[ 12 ] ) or sVal[ 12 ] = ""	Then
-		If sPos = "" Then sPos = sCol[ 12 ]
-		sText = sText + sErr[ 12 ] + sNouvelleLigne
+// [MIG1_COUR_EMAILING]
+If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
+	// [MIG1_COUR_EMAILING]
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 390 )
+	If lDeb <= 0 Then
+		If	idw_wInter.GetItemString ( 1, "ALT_COURGEST" ) = "R" Then
+			If IsNull ( sVal[ 12 ] ) or sVal[ 12 ] = ""	Then
+				If sPos = "" Then sPos = sCol[ 12 ]
+				sText = sText + sErr[ 12 ] + sNouvelleLigne
+			End If
+		End If
+	End IF 
+Else 
+	If	idw_wInter.GetItemString ( 1, "ALT_COURGEST" ) = "R" Then
+		If IsNull ( sVal[ 12 ] ) or sVal[ 12 ] = ""	Then
+			If sPos = "" Then sPos = sCol[ 12 ]
+			sText = sText + sErr[ 12 ] + sNouvelleLigne
+		End If
 	End If
-End If
-
+End If 
 /*------------------------------------------------------------------*/
 /* Si ALT_COURGEST est à J (Joindre), alors ID_COURJ ne doit pas    */
 /* être NULL.                                                       */

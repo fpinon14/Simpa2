@@ -3,6 +3,8 @@ $PBExportComments$[MIG1]
 forward
 global type w_t_sp_emailing_ksl from window
 end type
+type cbx_ret_sans_cour from checkbox within w_t_sp_emailing_ksl
+end type
 type dw_resultat from datawindow within w_t_sp_emailing_ksl
 end type
 type dw_rech from datawindow within w_t_sp_emailing_ksl
@@ -21,6 +23,7 @@ windowtype windowtype = response!
 long backcolor = 12632256
 string icon = "AppIcon!"
 boolean center = true
+cbx_ret_sans_cour cbx_ret_sans_cour
 dw_resultat dw_resultat
 dw_rech dw_rech
 cb_retour cb_retour
@@ -47,6 +50,8 @@ dw_rech.GetChild ( "TYPO_LONG", dwchild)
 Choose Case asCas
 	Case "TOUT"
 		
+		cbx_Ret_sans_cour.checked = False
+		
 		dw_rech.SetItem ( 1, "SAISIE_LIBRE", stNul.str )
 		dw_rech.SetItem ( 1, "CATEGORIE", stNul.str )
 		
@@ -57,9 +62,11 @@ Choose Case asCas
 	
 	Case "SAISIE_LIBRE"
 		dw_rech.SetItem ( 1, "SAISIE_LIBRE", stNul.str )
+		dw_resultat.Sort ()			
 		
 	Case "CATEGORIE"
 		dw_rech.SetItem ( 1, "CATEGORIE", stNul.str )	
+		dw_resultat.Sort ()	
 	
 
 End Choose
@@ -82,7 +89,7 @@ Choose Case Upper ( asNomZone )
 			
 			sVal = F_REMPLACE ( sVal, "'", "~~'" ) 
 			
-			dw_resultat.SetFilter ( "POS ( UPPER ( COD_MAQ ), '" + Upper ( sVal ) + "' ) > 0 Or POS ( CATEGORIE, '" + Upper ( sVal ) + "' ) > 0 Or POS ( UPPER ( LIB_COUR ), '" + Upper ( sVal ) + "' ) > 0" )
+			dw_resultat.SetFilter ( "POS ( UPPER ( COD_MAQ ), '" + Upper ( sVal ) + "' ) > 0 Or POS ( CATEGORIE, '" + Upper ( sVal ) + "' ) > 0 Or POS ( UPPER ( LIB_COUR ), '" + Upper ( sVal ) + "' ) > 0 Or POS ( UPPER ( TYP_MAIL ), '" + Upper ( sVal ) + "' ) > 0" )
 			dw_resultat.Filter ()
 			dw_resultat.Sort ()			
 			Return
@@ -111,15 +118,18 @@ End Choose
 end subroutine
 
 on w_t_sp_emailing_ksl.create
+this.cbx_ret_sans_cour=create cbx_ret_sans_cour
 this.dw_resultat=create dw_resultat
 this.dw_rech=create dw_rech
 this.cb_retour=create cb_retour
-this.Control[]={this.dw_resultat,&
+this.Control[]={this.cbx_ret_sans_cour,&
+this.dw_resultat,&
 this.dw_rech,&
 this.cb_retour}
 end on
 
 on w_t_sp_emailing_ksl.destroy
+destroy(this.cbx_ret_sans_cour)
 destroy(this.dw_resultat)
 destroy(this.dw_rech)
 destroy(this.cb_retour)
@@ -172,7 +182,8 @@ Choose Case isTypFermeture
 		CloseWithReturn(this, Message.Powerobjectparm )			
 
 	Case Else 
-		
+
+		If cbx_ret_sans_cour.checked Then stPass.sTab[1] = ""		
 		Message.Powerobjectparm = stPass
 		CloseWithReturn(this, Message.Powerobjectparm )
 
@@ -180,6 +191,24 @@ Choose Case isTypFermeture
 End Choose 
 
 end event
+
+type cbx_ret_sans_cour from checkbox within w_t_sp_emailing_ksl
+integer x = 3483
+integer y = 60
+integer width = 891
+integer height = 80
+integer textsize = -10
+integer weight = 400
+fontcharset fontcharset = ansi!
+fontpitch fontpitch = variable!
+fontfamily fontfamily = swiss!
+string facename = "Tahoma"
+long textcolor = 33554432
+long backcolor = 553648127
+string text = "Forcer un retour sans courrier"
+boolean lefttext = true
+boolean righttoleft = true
+end type
 
 type dw_resultat from datawindow within w_t_sp_emailing_ksl
 integer x = 18
@@ -208,6 +237,8 @@ Choose Case Upper ( dwo.name )
 		stMessage.sVar[2]    = This.GetItemString ( row, "categorie" )
 		stMessage.sVar[3]    = This.GetItemString ( row, "lib_cour" )		
 		stMessage.sCode		= "WINT315"
+
+		cbx_ret_sans_cour.checked = False
 
 		If F_Message ( stMessage ) = 1 Then
 

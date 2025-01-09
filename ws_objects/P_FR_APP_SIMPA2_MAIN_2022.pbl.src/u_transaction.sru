@@ -813,6 +813,9 @@ function String FN_GET_CHEMIN ( String asCleChem ) RPCFUNC ALIAS FOR "sysadm.FN_
 //  JFF  05/08/2024  [MCO1050]
 function Integer PS_S_VERIF_ENVOI_MAIL_RECAP_DECLA ( Long adcIdSin ) RPCFUNC ALIAS FOR "sysadm.PS_S_VERIF_ENVOI_MAIL_RECAP_DECLA"
 
+//   JFF   19/12/2024 [MIG1_COUR_EMAILING]
+subroutine PS_MIG1_S_TYPE_COUR_EMAILING_KSL ( String asTypMail, Ref String asRegl, Ref String asPiece, Ref String asRefus )  RPCFUNC ALIAS FOR "sysadm.PS_MIG1_S_TYPE_COUR_EMAILING_KSL"
+
 end prototypes
 type variables
 Private:
