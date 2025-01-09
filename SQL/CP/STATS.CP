@@ -3922,284 +3922,284 @@ go
 -- Retourne             :       Rien
 -------------------------------------------------------------------
 -- JFF  07/08/2020  [VDOC29539] 8200, 8201, 16100, 16101, 16300, 16301, 55100
+-- JFF  08/01/2025  [LGY23] retrait 38300
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S013_LSTREG_GAN_V01' AND type = 'P' )
         DROP procedure sysadm.PS_S013_LSTREG_GAN_V01
 GO
-
-
-CREATE procedure sysadm.PS_S013_LSTREG_GAN_V01
-	@dtDteDeb       DateTime        ,
-        @dtDteFin       DateTime	,
-	@dcPeriodeDeb   Decimal(7)      ,
-	@dcPeriodeFin   Decimal(7)      
-	
-AS
-
-SET NOCOUNT ON
-
-Select distinct 
- @dcPeriodeDeb,
- @dcPeriodeFin,
- 'LIB_POLICE'	= police.lib_police,
- 'ID_SIN'	= sinistre.id_sin,
- 'NOM'		= personne.nom,
- 'PRENOM'	= personne.prenom,
- 'ID_ADH'	= ( convert ( varchar (6), sinistre.id_prod ) + '-' +
-   		  Right ( '00000' + convert ( varchar (5), sinistre.id_ets ), 5 ) + '-' +
-   		  Right ( Replicate ( '0', 19 ) + sinistre.id_adh, 19 ) + '-' +
-  		  convert ( varchar (1), sinistre.id_sdos ) ),
- 'DTE_ADH'	= sinistre.dte_adh,
- 'DTE_FIN_GTI'  = sinistre.dte_fin_gti,
- 'GA' 		= code_Gs.lib_code,
- 'NS' 		= code_Ns.lib_code,
- 'DTE_SURV'	= sinistre.dte_surv,
- 'ID_MOISSURV'	= DatePart ( month, sinistre.dte_surv ),
- 'ID_EXERCICE'  = DatePart ( year, sinistre.dte_surv ),
- 'DTE_DECL'	= sinistre.dte_decl,
- 'MT_PREJ_GTI'  = gar_sin.mt_tot_prej,
- 'VAL_ACHAT'    = ( Select IsNull (max ( d.mt_val_achat),0 )
-  		    From   detail d
-  		    Where  d.id_sin = sinistre.id_sin
- 		    And    d.id_gti = gar_sin.id_gti ),
- 'VAL_PUBLIQUE' = ( Select IsNull (max ( d.mt_val_publique),0 )
- 		    From   detail d
- 		    Where  d.id_sin = sinistre.id_sin
- 		    And    d.id_gti = gar_sin.id_gti ),		    
- 'DTE_REG'	= reg_gti.maj_le,
- 'MT_REG_GTI'	= reg_gti.mt_reg,
- 'LIB_PROD'	= produit.lib_long,
- 'ID_REG'	= reg_gti.id_reg,
- 'TYP_REGL'	= sysadm.FN_CODE_CAR(reglement.cod_mode_reg, '-MR'), -- [DCMP080675]
- 'DEST_REG'	= inter.nom,
- 'ETAT_MACHINE_GTI' = sysadm.FN_CODE_NUM(gar_sin.cod_dec_mac,'-ET'),
- 'ETAT_OPER_GTI' = sysadm.FN_CODE_NUM(gar_sin.cod_dec_ope,'-ET'),
- 'ETAT_FINAL_GTI' = sysadm.FN_CODE_NUM(gar_sin.cod_etat,'-ET'),
- 'FORCAGE'=Case When gar_sin.cod_dec_mac=200 and gar_sin.cod_etat=600 Then 'Dossier forçé par le responsable' Else '' End
-From
- sysadm.reg_gti   ,
- sysadm.sinistre  ,
- sysadm.garantie,
- sysadm.gar_sin,
- sysadm.code code_Ns,
- sysadm.code code_Gs,
- sysadm.produit,
- sysadm.departement,
- sysadm.police,
- sysadm.compagnie,
- sysadm.reglement,
- sysadm.personne,
- sysadm.inter 
-Where 
- ( reg_gti.id_sin	=	sinistre.id_sin 	)	and
- ( gar_sin.id_sin	=	sinistre.id_sin 	)	and
- ( gar_sin.id_gti	=	reg_gti.id_gti	 	)	and
- ( sinistre.id_prod	=	produit.id_prod		)	and
- ( produit.id_dept	=	departement.id_dept	)	and
-  ( code_Ns.id_typ_code	=	'+NS'			)	and
- ( code_Ns.id_code	=	sinistre.id_natsin	)	and
- ( code_Gs.id_typ_code	=	'-GS'			)	and
- ( code_Gs.id_code	=	reg_gti.id_rgpt		)	and
- ( garantie.id_prod	=	sinistre.id_prod	)	and
- ( garantie.id_rev	=	sinistre.id_rev		)	and
- ( garantie.id_gti	=	reg_gti.id_gti		)	and
- ( garantie.id_police	=	police.id_police	)	and
- ( compagnie.id_cie	=	police.id_cie		)	and
--- ( sinistre.id_prod	in ( 551, 16100, 16101, 55100 )			)	and
--- [DCMP080611] remplacé par :
- ( produit.id_prod	=	sinistre.id_prod		)	and
-  produit.id_prod not in (551,5707,5709,5710,5711,5712,5720,5721,5722,5723,
-5724,5725,5726,5727,5728,5729,5730,5731,5732,5733,6900,
-8300,11001,11101,11300,11400,13700,14000,14300,14500,14600,15200,15600,
-15800,15900,16200,16500,17800,24600,38300,57600) and -- [VDoc9436] Ajout du produit 72200
- ( reglement.id_sin	=	reg_gti.id_sin 		)	and
- ( reglement.id_reg	=	reg_gti.id_reg		)	and
- ( reglement.cod_mot_reg = 'RN'				)	and
- ( reg_gti.maj_le    between    @dtDteDeb And @dtDteFin )	and
- ( personne.id_ordre    = 	sinistre.id_ordre	)	and
--- [BUG20080728].COD_MODE_REG  JFF
- ( reglement.cod_mode_reg in ('VA' , 'VM' , 'C', 'FM', 'BX', 'VV' ) )  and
--- :[BUG20080728].COD_MODE_REG  JFF
- ( inter.id_sin 	= 	sinistre.id_sin		)	and
- ( inter.id_i 		= 	reglement.id_i		)	and 
- compagnie.id_cie in (2,12,66,67) 
-
-UNION ALL
-
--- Select 2 COD_ADH = 3 (par carte)
-Select distinct
- @dcPeriodeDeb,
- @dcPeriodeFin,
- 'LIB_POLICE'	= police.lib_police,
- 'ID_SIN'	= sinistre.id_sin,
- 'NOM'		= personne.nom,
- 'PRENOM'	= personne.prenom,
- 'ID_ADH'	= ( convert ( varchar (6), sinistre.id_prod ) + '-' +
-    		  Right ( '00000' + convert ( varchar (5), sinistre.id_ets ), 5 ) + '-' +
-    		  Right ( Replicate ( '0', 19 ) + sinistre.id_adh, 19 ) + '-' +
-   		  convert ( varchar (1), sinistre.id_sdos ) ),
- 'DTE_ADH'	= sinistre.dte_adh, 
- 'DTE_FIN_GTI'  = sinistre.dte_fin_gti,
- 'GA' 		= code_Nf.lib_code,
- 'NS' 		= code_Ns.lib_code,
- 'DTE_SURV'	= sinistre.dte_surv,
- 'ID_MOISSURV'	= DatePart ( month, sinistre.dte_surv ),
- 'ID_EXERCICE'  = DatePart ( year, sinistre.dte_surv ),
- 'DTE_DECL'	= sinistre.dte_decl,
- 'MT_PREJ_GTI'  = 0,
- 'VAL_ACHAT'    = 0,
- 'VAL_PUBLIQUE' = 0,
- 'DTE_REG'	= reg_gti.maj_le,
- 'MT_REG_GTI'	= reg_gti.mt_reg,
- 'LIB_PROD'	= produit.lib_long,
- 'ID_REG'	= reg_gti.id_reg,
- 'TYP_REGL'	= sysadm.FN_CODE_CAR(reglement.cod_mode_reg, '-MR'), -- [DCMP080675]
- 'DEST_REG'	= inter.nom,
- 'ETAT_MACHINE_GTI' = sysadm.FN_CODE_NUM(gar_sin.cod_dec_mac,'-ET'),
- 'ETAT_OPER_GTI' = sysadm.FN_CODE_NUM(gar_sin.cod_dec_ope,'-ET'),
- 'ETAT_FINAL_GTI' = sysadm.FN_CODE_NUM(gar_sin.cod_etat,'-ET'),
- 'FORCAGE'=Case When gar_sin.cod_dec_mac=200 and gar_sin.cod_etat=600 Then 'Dossier forçé par le responsable' Else '' End
- 
-From
- sysadm.reglement ,
- sysadm.reg_gti   ,
- sysadm.sinistre  ,
- sysadm.frais     ,
- sysadm.garantie,
- sysadm.code code_Ns,
- sysadm.code code_Nf,
- sysadm.produit,
- sysadm.departement,
- sysadm.police,
- sysadm.compagnie,
- sysadm.personne,
- sysadm.inter ,
- sysadm.gar_sin
-Where 
- ( reg_gti.id_sin	=	sinistre.id_sin 	)	and
- ( reg_gti.id_sin	=	frais.id_sin		)	and
- ( reg_gti.id_reg	=	frais.id_reg		)	and
- ( reg_gti.id_gti	=	-1			)	and
- ( reglement.id_sin     =       reg_gti.id_sin		)	and
- ( reglement.id_reg     =       reg_gti.id_reg		)	and
- ( sinistre.id_prod	=	produit.id_prod		)	and
-  produit.id_prod not in (551,5707,5709,5710,5711,5712,5720,5721,5722,5723,
-5724,5725,5726,5727,5728,5729,5730,5731,5732,5733,6900,
-8300,11001,11101,11300,11400,13700,14000,14300,14500,14600,15200,15600,
-15800,15900,16200,16500,17800,24600,38300,57600) and -- [VDoc9436] Ajout du produit 72200
-( produit.id_dept	=	departement.id_dept	)	and
- ( code_Nf.id_typ_code	=	'+NF'			)	and
- ( code_Nf.id_code	=	frais.id_typ_frais	)	and
- ( code_Ns.id_typ_code	=	'+NS'			)	and
- ( code_Ns.id_code	=	sinistre.id_natsin	)	and
- ( garantie.id_prod	=	sinistre.id_prod	)	and
- ( garantie.id_rev	=	sinistre.id_rev		)	and
- ( garantie.id_gti	=	IsNull ( ( Select NullIf ( NullIf ( max ( a_reg_gti.id_gti ), 0), -1 )
-					   From   sysadm.reg_gti a_reg_gti
-					   Where  a_reg_gti.id_sin = reg_gti.id_sin
-					   And    a_reg_gti.id_reg = reg_gti.id_reg ), 
-
-		 			 ( Select max ( gar_sin.id_gti ) 
-					   From   sysadm.gar_sin
-					   Where  gar_sin.id_sin = sinistre.id_sin )))	and
- ( garantie.id_police	=	police.id_police	)	and
- ( compagnie.id_cie	=	police.id_cie		)	and
--- ( sinistre.id_prod	in ( 551, 16100, 16101, 55100 )			)	and
--- [DCMP080611] remplacé par :
- ( produit.id_prod	=	sinistre.id_prod		)	and
- ( reg_gti.maj_le    between    @dtDteDeb And @dtDteFin )	and
- ( personne.id_ordre    = 	sinistre.id_ordre	)	and
--- [BUG20080728].COD_MODE_REG  JFF
- ( reglement.cod_mode_reg in ('VA' , 'VM' , 'C', 'FM', 'BX', 'VV' ) )  and
--- :[BUG20080728].COD_MODE_REG  JFF
- ( inter.id_sin 	= 	sinistre.id_sin		)	and
- ( inter.id_i 		= 	reglement.id_i		)	and 
- compagnie.id_cie in (2,12,66,67) 				and
- ( gar_sin.id_sin = sinistre.id_sin 	)	and
- ( garantie.id_gti	=	gar_sin.id_gti)
-
-
-UNION ALL
-
--- Select 3 COD_ADH = 3 (par carte)
-Select distinct
- @dcPeriodeDeb,
- @dcPeriodeFin,
- 'LIB_POLICE'	= police.lib_police,
- 'ID_SIN'	= sinistre.id_sin,
- 'NOM'		= personne.nom,
- 'PRENOM'	= personne.prenom,
- 'ID_ADH'	= ( convert ( varchar (6), sinistre.id_prod ) + '-' +
-    		  Right ( '00000' + convert ( varchar (5), sinistre.id_ets ), 5 ) + '-' +
-    		  Right ( Replicate ( '0', 19 ) + sinistre.id_adh, 19 ) + '-' +
-   		  convert ( varchar (1), sinistre.id_sdos ) ),
- 'DTE_ADH'	= sinistre.dte_adh,  		  
- 'DTE_FIN_GTI'  = sinistre.dte_fin_gti,
- 'GA' 		= 'REGULARISATION',
- 'NS' 		= code_Ns.lib_code,
- 'DTE_SURV'	= sinistre.dte_surv,
- 'ID_MOISSURV'	= DatePart ( month, sinistre.dte_surv ),
- 'ID_EXERCICE'  = DatePart ( year, sinistre.dte_surv ),
- 'DTE_DECL'	= sinistre.dte_decl,
- 'MT_PREJ_GTI'  = 0,
- 'VAL_ACHAT'    = 0,
- 'VAL_PUBLIQUE' = 0,
- 'DTE_REG'	= reglement.dte_reg,
- 'MT_REG_GTI'	= reglement.mt_tot_reg,
- 'LIB_PROD'	= produit.lib_long, 		    
- 'ID_REG'	= reglement.id_reg,
- 'TYP_REGL'	= sysadm.FN_CODE_CAR(reglement.cod_mode_reg, '-MR'), -- [DCMP080675]
- 'DEST_REG'	= inter.nom,
- 'ETAT_MACHINE_GTI' = sysadm.FN_CODE_NUM(gar_sin.cod_dec_mac,'-ET'),
- 'ETAT_OPER_GTI' = sysadm.FN_CODE_NUM(gar_sin.cod_dec_ope,'-ET'),
- 'ETAT_FINAL_GTI' = sysadm.FN_CODE_NUM(gar_sin.cod_etat,'-ET'),
- 'FORCAGE'=Case When gar_sin.cod_dec_mac=200 and gar_sin.cod_etat=600 Then 'Dossier forçé par le responsable' Else '' End
- 
-From
- sysadm.reglement ,
- sysadm.sinistre  ,
- sysadm.garantie  ,
- sysadm.code code_Ns,
- sysadm.produit,
- sysadm.departement,
- sysadm.police,
- sysadm.compagnie,
- sysadm.personne,
- sysadm.inter, 
- sysadm.gar_sin
-Where 
- ( reglement.id_sin	=	sinistre.id_sin 	)	and
- ( sinistre.id_prod	=	produit.id_prod		)	and
- ( produit.id_dept	=	departement.id_dept	)	and
- ( code_Ns.id_typ_code	=	'+NS'			)	and
- ( code_Ns.id_code	=	sinistre.id_natsin	)	and
- ( garantie.id_prod	=	sinistre.id_prod	)	and
- ( garantie.id_rev	=	sinistre.id_rev		)	and
- ( garantie.id_gti	=	( Select max ( gar_sin.id_gti ) 
-				  From   sysadm.gar_sin
-				  Where  gar_sin.id_sin = sinistre.id_sin ))	and
- ( garantie.id_police	=	police.id_police	)	and
- ( compagnie.id_cie	=	police.id_cie		)	and
--- ( sinistre.id_prod	in ( 551, 16100, 16101, 55100 )			)	and
--- [DCMP080611] remplacé par :
- ( produit.id_prod	=	sinistre.id_prod		)	and
-  produit.id_prod not in (551,5707,5709,5710,5711,5712,5720,5721,5722,5723,
-5724,5725,5726,5727,5728,5729,5730,5731,5732,5733,6900,
-8300,11001,11101,11300,11400,13700,14000,14300,14500,14600,15200,15600,
-15800,15900,16200,16500,17800,24600,38300,57600) --[VDoc9436] Ajout du produit 72200
- and( reglement.dte_reg between    @dtDteDeb And @dtDteFin )	and
- ( reglement.cod_mot_reg in ( 'RE', 'RM', 'RP' )	)	and
- ( reglement.mt_tot_reg <> 0				)	and
- ( personne.id_ordre    = 	sinistre.id_ordre	)	and
--- [BUG20080728].COD_MODE_REG  JFF
- ( reglement.cod_mode_reg in ('VA' , 'VM' , 'C', 'FM', 'BX', 'VV' ) )  and
--- :[BUG20080728].COD_MODE_REG  JFF
- ( inter.id_sin 	= 	sinistre.id_sin		)	and
- ( inter.id_i 		= 	reglement.id_i		)	and 
- compagnie.id_cie in (2,12,66,67) 				and
- ( gar_sin.id_sin = sinistre.id_sin 	)	and
- ( garantie.id_gti	=	gar_sin.id_gti)
-
+  
+CREATE procedure sysadm.PS_S013_LSTREG_GAN_V01  
+ @dtDteDeb       DateTime        ,  
+ @dtDteFin       DateTime ,  
+ @dcPeriodeDeb   Decimal(7)      ,  
+ @dcPeriodeFin   Decimal(7)        
+   
+AS  
+  
+SET NOCOUNT ON  
+  
+Select distinct   
+ @dcPeriodeDeb,  
+ @dcPeriodeFin,  
+ 'LIB_POLICE' = police.lib_police,  
+ 'ID_SIN' = sinistre.id_sin,  
+ 'NOM'  = personne.nom,  
+ 'PRENOM' = personne.prenom,  
+ 'ID_ADH' = ( convert ( varchar (6), sinistre.id_prod ) + '-' +  
+       Right ( '00000' + convert ( varchar (5), sinistre.id_ets ), 5 ) + '-' +  
+       Right ( Replicate ( '0', 19 ) + sinistre.id_adh, 19 ) + '-' +  
+      convert ( varchar (1), sinistre.id_sdos ) ),  
+ 'DTE_ADH' = sinistre.dte_adh,  
+ 'DTE_FIN_GTI'  = sinistre.dte_fin_gti,  
+ 'GA'   = code_Gs.lib_code,  
+ 'NS'   = code_Ns.lib_code,  
+ 'DTE_SURV' = sinistre.dte_surv,  
+ 'ID_MOISSURV' = DatePart ( month, sinistre.dte_surv ),  
+ 'ID_EXERCICE'  = DatePart ( year, sinistre.dte_surv ),  
+ 'DTE_DECL' = sinistre.dte_decl,  
+ 'MT_PREJ_GTI'  = gar_sin.mt_tot_prej,  
+ 'VAL_ACHAT'    = ( Select IsNull (max ( d.mt_val_achat),0 )  
+        From   detail d  
+        Where  d.id_sin = sinistre.id_sin  
+       And    d.id_gti = gar_sin.id_gti ),  
+ 'VAL_PUBLIQUE' = ( Select IsNull (max ( d.mt_val_publique),0 )  
+       From   detail d  
+       Where  d.id_sin = sinistre.id_sin  
+       And    d.id_gti = gar_sin.id_gti ),        
+ 'DTE_REG' = reg_gti.maj_le,  
+ 'MT_REG_GTI' = reg_gti.mt_reg,  
+ 'LIB_PROD' = produit.lib_long,  
+ 'ID_REG' = reg_gti.id_reg,  
+ 'TYP_REGL' = sysadm.FN_CODE_CAR(reglement.cod_mode_reg, '-MR'), -- [DCMP080675]  
+ 'DEST_REG' = inter.nom,  
+ 'ETAT_MACHINE_GTI' = sysadm.FN_CODE_NUM(gar_sin.cod_dec_mac,'-ET'),  
+ 'ETAT_OPER_GTI' = sysadm.FN_CODE_NUM(gar_sin.cod_dec_ope,'-ET'),  
+ 'ETAT_FINAL_GTI' = sysadm.FN_CODE_NUM(gar_sin.cod_etat,'-ET'),  
+ 'FORCAGE'=Case When gar_sin.cod_dec_mac=200 and gar_sin.cod_etat=600 Then 'Dossier forçé par le responsable' Else '' End  
+From  
+ sysadm.reg_gti   ,  
+ sysadm.sinistre  ,  
+ sysadm.garantie,  
+ sysadm.gar_sin,  
+ sysadm.code code_Ns,  
+ sysadm.code code_Gs,  
+ sysadm.produit,  
+ sysadm.departement,  
+ sysadm.police,  
+ sysadm.compagnie,  
+ sysadm.reglement,  
+ sysadm.personne,  
+ sysadm.inter   
+Where   
+ ( reg_gti.id_sin = sinistre.id_sin  ) and  
+ ( gar_sin.id_sin = sinistre.id_sin  ) and  
+ ( gar_sin.id_gti = reg_gti.id_gti   ) and  
+ ( sinistre.id_prod = produit.id_prod  ) and  
+ ( produit.id_dept = departement.id_dept ) and  
+  ( code_Ns.id_typ_code = '+NS'   ) and  
+ ( code_Ns.id_code = sinistre.id_natsin ) and  
+ ( code_Gs.id_typ_code = '-GS'   ) and  
+ ( code_Gs.id_code = reg_gti.id_rgpt  ) and  
+ ( garantie.id_prod = sinistre.id_prod ) and  
+ ( garantie.id_rev = sinistre.id_rev  ) and  
+ ( garantie.id_gti = reg_gti.id_gti  ) and  
+ ( garantie.id_police = police.id_police ) and  
+ ( compagnie.id_cie = police.id_cie  ) and  
+-- ( sinistre.id_prod in ( 551, 16100, 16101, 55100 )   ) and  
+-- [DCMP080611] remplacé par :  
+ ( produit.id_prod = sinistre.id_prod  ) and  
+  produit.id_prod not in (551,5707,5709,5710,5711,5712,5720,5721,5722,5723,  
+5724,5725,5726,5727,5728,5729,5730,5731,5732,5733,6900,  
+8300,11001,11101,11300,11400,13700,14000,14300,14500,14600,15200,15600,  
+15800,15900,16200,16500,17800,24600,57600) and -- [VDoc9436] Ajout du produit 72200  [LGY23] retrait 38300
+ ( reglement.id_sin = reg_gti.id_sin   ) and  
+ ( reglement.id_reg = reg_gti.id_reg  ) and  
+ ( reglement.cod_mot_reg = 'RN'    ) and  
+ ( reg_gti.maj_le    between    @dtDteDeb And @dtDteFin ) and  
+ ( personne.id_ordre    =  sinistre.id_ordre ) and  
+-- [BUG20080728].COD_MODE_REG  JFF  
+ ( reglement.cod_mode_reg in ('VA' , 'VM' , 'C', 'FM', 'BX', 'VV' ) )  and  
+-- :[BUG20080728].COD_MODE_REG  JFF  
+ ( inter.id_sin  =  sinistre.id_sin  ) and  
+ ( inter.id_i   =  reglement.id_i  ) and   
+ compagnie.id_cie in (2,12,66,67)   
+  
+UNION ALL  
+  
+-- Select 2 COD_ADH = 3 (par carte)  
+Select distinct  
+ @dcPeriodeDeb,  
+ @dcPeriodeFin,  
+ 'LIB_POLICE' = police.lib_police,  
+ 'ID_SIN' = sinistre.id_sin,  
+ 'NOM'  = personne.nom,  
+ 'PRENOM' = personne.prenom,  
+ 'ID_ADH' = ( convert ( varchar (6), sinistre.id_prod ) + '-' +  
+        Right ( '00000' + convert ( varchar (5), sinistre.id_ets ), 5 ) + '-' +  
+        Right ( Replicate ( '0', 19 ) + sinistre.id_adh, 19 ) + '-' +  
+       convert ( varchar (1), sinistre.id_sdos ) ),  
+ 'DTE_ADH' = sinistre.dte_adh,   
+ 'DTE_FIN_GTI'  = sinistre.dte_fin_gti,  
+ 'GA'   = code_Nf.lib_code,  
+ 'NS'   = code_Ns.lib_code,  
+ 'DTE_SURV' = sinistre.dte_surv,  
+ 'ID_MOISSURV' = DatePart ( month, sinistre.dte_surv ),  
+ 'ID_EXERCICE'  = DatePart ( year, sinistre.dte_surv ),  
+ 'DTE_DECL' = sinistre.dte_decl,  
+ 'MT_PREJ_GTI'  = 0,  
+ 'VAL_ACHAT'    = 0,  
+ 'VAL_PUBLIQUE' = 0,  
+ 'DTE_REG' = reg_gti.maj_le,  
+ 'MT_REG_GTI' = reg_gti.mt_reg,  
+ 'LIB_PROD' = produit.lib_long,  
+ 'ID_REG' = reg_gti.id_reg,  
+ 'TYP_REGL' = sysadm.FN_CODE_CAR(reglement.cod_mode_reg, '-MR'), -- [DCMP080675]  
+ 'DEST_REG' = inter.nom,  
+ 'ETAT_MACHINE_GTI' = sysadm.FN_CODE_NUM(gar_sin.cod_dec_mac,'-ET'),  
+ 'ETAT_OPER_GTI' = sysadm.FN_CODE_NUM(gar_sin.cod_dec_ope,'-ET'),  
+ 'ETAT_FINAL_GTI' = sysadm.FN_CODE_NUM(gar_sin.cod_etat,'-ET'),  
+ 'FORCAGE'=Case When gar_sin.cod_dec_mac=200 and gar_sin.cod_etat=600 Then 'Dossier forçé par le responsable' Else '' End  
+   
+From  
+ sysadm.reglement ,  
+ sysadm.reg_gti   ,  
+ sysadm.sinistre  ,  
+ sysadm.frais     ,  
+ sysadm.garantie,  
+ sysadm.code code_Ns,  
+ sysadm.code code_Nf,  
+ sysadm.produit,  
+ sysadm.departement,  
+ sysadm.police,  
+ sysadm.compagnie,  
+ sysadm.personne,  
+ sysadm.inter ,  
+ sysadm.gar_sin  
+Where   
+ ( reg_gti.id_sin = sinistre.id_sin  ) and  
+ ( reg_gti.id_sin = frais.id_sin  ) and  
+ ( reg_gti.id_reg = frais.id_reg  ) and  
+ ( reg_gti.id_gti = -1   ) and  
+ ( reglement.id_sin     =       reg_gti.id_sin  ) and  
+ ( reglement.id_reg     =       reg_gti.id_reg  ) and  
+ ( sinistre.id_prod = produit.id_prod  ) and  
+  produit.id_prod not in (551,5707,5709,5710,5711,5712,5720,5721,5722,5723,  
+5724,5725,5726,5727,5728,5729,5730,5731,5732,5733,6900,  
+8300,11001,11101,11300,11400,13700,14000,14300,14500,14600,15200,15600,  
+15800,15900,16200,16500,17800,24600,57600) and -- [VDoc9436] Ajout du produit 72200  [LGY23] retrait 38300
+( produit.id_dept = departement.id_dept ) and  
+ ( code_Nf.id_typ_code = '+NF'   ) and  
+ ( code_Nf.id_code = frais.id_typ_frais ) and  
+ ( code_Ns.id_typ_code = '+NS'   ) and  
+ ( code_Ns.id_code = sinistre.id_natsin ) and  
+ ( garantie.id_prod = sinistre.id_prod ) and  
+ ( garantie.id_rev = sinistre.id_rev  ) and  
+ ( garantie.id_gti = IsNull ( ( Select NullIf ( NullIf ( max ( a_reg_gti.id_gti ), 0), -1 )  
+        From   sysadm.reg_gti a_reg_gti  
+        Where  a_reg_gti.id_sin = reg_gti.id_sin  
+        And    a_reg_gti.id_reg = reg_gti.id_reg ),   
+  
+       ( Select max ( gar_sin.id_gti )   
+        From   sysadm.gar_sin  
+        Where  gar_sin.id_sin = sinistre.id_sin ))) and  
+ ( garantie.id_police = police.id_police ) and  
+ ( compagnie.id_cie = police.id_cie  ) and  
+-- ( sinistre.id_prod in ( 551, 16100, 16101, 55100 )   ) and  
+-- [DCMP080611] remplacé par :  
+ ( produit.id_prod = sinistre.id_prod  ) and  
+ ( reg_gti.maj_le    between    @dtDteDeb And @dtDteFin ) and  
+ ( personne.id_ordre    =  sinistre.id_ordre ) and  
+-- [BUG20080728].COD_MODE_REG  JFF  
+ ( reglement.cod_mode_reg in ('VA' , 'VM' , 'C', 'FM', 'BX', 'VV' ) )  and  
+-- :[BUG20080728].COD_MODE_REG  JFF  
+ ( inter.id_sin  =  sinistre.id_sin  ) and  
+ ( inter.id_i   =  reglement.id_i  ) and   
+ compagnie.id_cie in (2,12,66,67)     and  
+ ( gar_sin.id_sin = sinistre.id_sin  ) and  
+ ( garantie.id_gti = gar_sin.id_gti)  
+  
+  
+UNION ALL  
+  
+-- Select 3 COD_ADH = 3 (par carte)  
+Select distinct  
+ @dcPeriodeDeb,  
+ @dcPeriodeFin,  
+ 'LIB_POLICE' = police.lib_police,  
+ 'ID_SIN' = sinistre.id_sin,  
+ 'NOM'  = personne.nom,  
+ 'PRENOM' = personne.prenom,  
+ 'ID_ADH' = ( convert ( varchar (6), sinistre.id_prod ) + '-' +  
+        Right ( '00000' + convert ( varchar (5), sinistre.id_ets ), 5 ) + '-' +  
+        Right ( Replicate ( '0', 19 ) + sinistre.id_adh, 19 ) + '-' +  
+       convert ( varchar (1), sinistre.id_sdos ) ),  
+ 'DTE_ADH' = sinistre.dte_adh,        
+ 'DTE_FIN_GTI'  = sinistre.dte_fin_gti,  
+ 'GA'   = 'REGULARISATION',  
+ 'NS'   = code_Ns.lib_code,  
+ 'DTE_SURV' = sinistre.dte_surv,  
+ 'ID_MOISSURV' = DatePart ( month, sinistre.dte_surv ),  
+ 'ID_EXERCICE'  = DatePart ( year, sinistre.dte_surv ),  
+ 'DTE_DECL' = sinistre.dte_decl,  
+ 'MT_PREJ_GTI'  = 0,  
+ 'VAL_ACHAT'    = 0,  
+ 'VAL_PUBLIQUE' = 0,  
+ 'DTE_REG' = reglement.dte_reg,  
+ 'MT_REG_GTI' = reglement.mt_tot_reg,  
+ 'LIB_PROD' = produit.lib_long,         
+ 'ID_REG' = reglement.id_reg,  
+ 'TYP_REGL' = sysadm.FN_CODE_CAR(reglement.cod_mode_reg, '-MR'), -- [DCMP080675]  
+ 'DEST_REG' = inter.nom,  
+ 'ETAT_MACHINE_GTI' = sysadm.FN_CODE_NUM(gar_sin.cod_dec_mac,'-ET'),  
+ 'ETAT_OPER_GTI' = sysadm.FN_CODE_NUM(gar_sin.cod_dec_ope,'-ET'),  
+ 'ETAT_FINAL_GTI' = sysadm.FN_CODE_NUM(gar_sin.cod_etat,'-ET'),  
+ 'FORCAGE'=Case When gar_sin.cod_dec_mac=200 and gar_sin.cod_etat=600 Then 'Dossier forçé par le responsable' Else '' End  
+   
+From  
+ sysadm.reglement ,  
+ sysadm.sinistre  ,  
+ sysadm.garantie  ,  
+ sysadm.code code_Ns,  
+ sysadm.produit,  
+ sysadm.departement,  
+ sysadm.police,  
+ sysadm.compagnie,  
+ sysadm.personne,  
+ sysadm.inter,   
+ sysadm.gar_sin  
+Where   
+ ( reglement.id_sin = sinistre.id_sin  ) and  
+ ( sinistre.id_prod = produit.id_prod  ) and  
+ ( produit.id_dept = departement.id_dept ) and  
+ ( code_Ns.id_typ_code = '+NS'   ) and  
+ ( code_Ns.id_code = sinistre.id_natsin ) and  
+ ( garantie.id_prod = sinistre.id_prod ) and  
+ ( garantie.id_rev = sinistre.id_rev  ) and  
+ ( garantie.id_gti = ( Select max ( gar_sin.id_gti )   
+      From   sysadm.gar_sin  
+      Where  gar_sin.id_sin = sinistre.id_sin )) and  
+ ( garantie.id_police = police.id_police ) and  
+ ( compagnie.id_cie = police.id_cie  ) and  
+-- ( sinistre.id_prod in ( 551, 16100, 16101, 55100 )   ) and  
+-- [DCMP080611] remplacé par :  
+ ( produit.id_prod = sinistre.id_prod  ) and  
+  produit.id_prod not in (551,5707,5709,5710,5711,5712,5720,5721,5722,5723,  
+5724,5725,5726,5727,5728,5729,5730,5731,5732,5733,6900,  
+8300,11001,11101,11300,11400,13700,14000,14300,14500,14600,15200,15600,  
+15800,15900,16200,16500,17800,24600,57600) --[VDoc9436] Ajout du produit 72200  [LGY23] retrait 38300
+ and( reglement.dte_reg between    @dtDteDeb And @dtDteFin ) and  
+ ( reglement.cod_mot_reg in ( 'RE', 'RM', 'RP' ) ) and  
+ ( reglement.mt_tot_reg <> 0    ) and  
+ ( personne.id_ordre    =  sinistre.id_ordre ) and  
+-- [BUG20080728].COD_MODE_REG  JFF  
+ ( reglement.cod_mode_reg in ('VA' , 'VM' , 'C', 'FM', 'BX', 'VV' ) )  and  
+-- :[BUG20080728].COD_MODE_REG  JFF  
+ ( inter.id_sin  =  sinistre.id_sin  ) and  
+ ( inter.id_i   =  reglement.id_i  ) and   
+ compagnie.id_cie in (2,12,66,67)     and  
+ ( gar_sin.id_sin = sinistre.id_sin  ) and  
+ ( garantie.id_gti = gar_sin.id_gti)  
+  
 go
 
 --------------------------------------------------------------------
@@ -17779,6 +17779,7 @@ Go
 -- Retourne             :       Rien
 -------------------------------------------------------------------
 -- JFF  07/08/2020  [VDOC29539] 8200, 8201, 16100, 16101, 16300, 16301, 55100
+-- JFF  08/01/2025  [LGY23] retrait 38300
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S013_LSTREG_GAN_RGPD' AND type = 'P' )
         DROP procedure sysadm.PS_S013_LSTREG_GAN_RGPD
@@ -17865,7 +17866,7 @@ Where
   produit.id_prod not in (551,5707,5709,5710,5711,5712,5720,5721,5722,5723,
 5724,5725,5726,5727,5728,5729,5730,5731,5732,5733,6900,
 8300,11001,11101,11300,11400,13700,14000,14300,14500,14600,15200,15600,
-15800,15900,16200,16500,17800,24600,38300,57600  ) and -- [VDoc9436] Ajout du produit 72200
+15800,15900,16200,16500,17800,24600,57600  ) and -- [VDoc9436] Ajout du produit 72200 [LGY23] retrait 38300
  ( reglement.id_sin	=	reg_gti.id_sin 		)	and
  ( reglement.id_reg	=	reg_gti.id_reg		)	and
  ( reglement.cod_mot_reg = 'RN'				)	and
@@ -17937,7 +17938,7 @@ Where
   produit.id_prod not in (551,5707,5709,5710,5711,5712,5720,5721,5722,5723,
 5724,5725,5726,5727,5728,5729,5730,5731,5732,5733,6900,
 8300,11001,11101,11300,11400,13700,14000,14300,14500,14600,15200,15600,
-15800,15900,16200,16500,17800,24600,38300,57600) and -- [VDoc9436] Ajout du produit 72200
+15800,15900,16200,16500,17800,24600,57600) and -- [VDoc9436] Ajout du produit 72200 [LGY23] retrait 38300
 ( produit.id_dept	=	departement.id_dept	)	and
  ( code_Nf.id_typ_code	=	'+NF'			)	and
  ( code_Nf.id_code	=	frais.id_typ_frais	)	and
@@ -18034,7 +18035,7 @@ Where
   produit.id_prod not in (551,5707,5709,5710,5711,5712,5720,5721,5722,5723,
 5724,5725,5726,5727,5728,5729,5730,5731,5732,5733,6900,
 8300,11001,11101,11300,11400,13700,14000,14300,14500,14600,15200,15600,
-15800,15900,16200,16500,17800,24600,38300,57600 ) --[VDoc9436] Ajout du produit 72200
+15800,15900,16200,16500,17800,24600,57600 ) --[VDoc9436] Ajout du produit 72200  [LGY23] retrait 38300
  and( reglement.dte_reg between    @dtDteDeb And @dtDteFin )	and
  ( reglement.cod_mot_reg in ( 'RE', 'RM', 'RP' )	)	and
  ( reglement.mt_tot_reg <> 0				)	and

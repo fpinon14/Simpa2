@@ -27,7 +27,7 @@ If Exists ( Select Top 1 1 From sys.objects where name = 'TR_IU_EMAILING_KSL_COU
 Go
 Create Trigger sysadm.TR_IU_EMAILING_KSL_COURRIER
 	on [sysadm].[emailing_ksl_courrier]
-For Insert, Update
+For Insert
 As
 
 Declare @iProd Integer 
@@ -81,3 +81,41 @@ Else
 	End 
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Procedure            :       sysadm.PS_MIG1_S_TYPE_COUR_EMAILING_KSL
+-- Auteur               :       Fabry JF
+-- Date                 :       02/01/2025
+-- Libelle              :        
+-- Commentaires         :       
+-- References           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_MIG1_S_TYPE_COUR_EMAILING_KSL' AND type = 'P' )
+        DROP procedure sysadm.PS_MIG1_S_TYPE_COUR_EMAILING_KSL
+GO
+
+CREATE procedure sysadm.PS_MIG1_S_TYPE_COUR_EMAILING_KSL
+	@asTypMail VarChar ( 6 ),
+	@asRegl	  VarChar ( 1 ) OutPut,
+	@asPiece  VarChar ( 1 ) OutPut,
+	@asRefus  VarChar ( 1 ) OutPut
+AS
+
+Select	@asRegl	= emc.regl,
+		@asPiece = emc.piece,
+		@asRefus = emc.refus
+
+From sysadm.emailing_ksl_courrier emc with ( nolock)
+Where emc.typ_mail = @asTypMail
+
+If lTrim ( rTrim ( @asRegl ) ) = '' Set @asRegl = null
+If lTrim ( rTrim ( @asPiece ) ) = '' Set @asPiece = null
+If lTrim ( rTrim ( @asRefus ) ) = '' Set @asRefus = null
+
+Go
+

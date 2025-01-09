@@ -73,6 +73,7 @@ Select	emc.typ_mail,
 From sysadm.emailing_ksl_courrier emc with ( nolock) ,
 	 sysadm.emailing_ksl_courprod emp with ( nolock)
 Where emp.id_prod = @adcIdProd
+And emc.typ_mail = emp.typ_mail
 And emc.cod_maq = emp.cod_maq
 
 Go

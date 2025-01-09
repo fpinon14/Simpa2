@@ -59,6 +59,13 @@ And   so.name = 'variable_xml_ksl_rs5045'
 And   sc.name not in ( 'id_xml', 'cree_le', 'xml_data' )
 order by 1
 
+/* Interroger pour trouver un variable
+Declare @Tb Table ( id_zone Varchar ( 100 ))
+Insert into @Tb exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_LISTE_VARIABLE_XML_KSL
+Select * from @Tb 
+Select * from @Tb where id_zone like '%no_commande%'
+*/
+
 Go
 
 --------------------------------------------------------------------
@@ -3971,3 +3978,98 @@ Begin
 End 
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Procedure            :       sysadm.PS_RS5045_U_AJOUT_TABL_PCES_XML
+-- Auteur               :       Fabry JF
+-- Date                 :       09/01/2025
+-- Libelle              :        
+-- Commentaires         :       [MIG1_COUR_EMAILING]
+-- References           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-- JFF      18/09/2023   [RS5875_DIF_DIV_DET]
+-- JFF      05/08/2024   [MCO602_PNEU]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_U_AJOUT_TABL_PCES_XML' AND type = 'P' )
+        DROP procedure sysadm.PS_RS5045_U_AJOUT_TABL_PCES_XML
+GO
+
+CREATE procedure sysadm.PS_RS5045_U_AJOUT_TABL_PCES_XML
+	@iIdXml integer,
+	@sCodeMaquette varchar ( 255 ), 
+	@dcIdSin Decimal ( 10 ),
+	@iIdAppliNum Integer
+	@xmlResult varchar(max) OUTPUT
+AS
+
+Declare @xmlTabPce VarChar ( 2000 ) 
+
+-- Uniquement pour SIMPA2&PEGASE
+If @iIdAppliNum Not in ( 2, 3 ) Return
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+BEGIN
+	If @iIdAppliNum = 2 
+		Begin
+			Select @xmlTabPce = 
+					(
+					Select id_pce as 't1lig/@col1'
+					from SIMPA2_PRO.sysadm.w_piece 
+					where id_sin = @dcIdSin
+					For xml path ( '' )
+					)
+		End 
+
+	If @iIdAppliNum = 3
+		Begin
+			Select @xmlTabPce = 
+					(
+					Select id_pce as 't1lig/@col1'
+					from PEGASE_PRO.sysadm.w_piece 
+					where id_sin = @dcIdSin
+					For xml path ( '' )
+					)
+		End 
+END 
+Else 
+BEGIN
+	If @iIdAppliNum = 2 
+		Begin
+			Select @xmlTabPce = 
+					(
+					Select id_pce as 't1lig/@col1'
+					from SIMPA2_TRT.sysadm.w_piece 
+					where id_sin = @dcIdSin
+					For xml path ( '' )
+					)
+		End 
+
+	If @iIdAppliNum = 3
+		Begin
+			Select @xmlTabPce = 
+					(
+					Select id_pce as 't1lig/@col1'
+					from PEGASE_TRT.sysadm.w_piece 
+					where id_sin = @dcIdSin
+					For xml path ( '' )
+					)
+		End 
+END 
+
+
+
+IF @xmlTabPce is null Return
+
+Set @xmlResult = Replace ( @xmlResult, '<T1></T1>', '<T1>' + @xmlTabPce + '</T1>' ) 
+
+Update sysadm.variable_xml_ksl_rs5045
+Set xml_data=@xmlResult
+Where id_xml = @iIdXml
+
+Go
+
