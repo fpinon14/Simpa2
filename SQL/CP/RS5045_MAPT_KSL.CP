@@ -1,3 +1,4 @@
+-- use TRACE_MAIL_TRT
 -------------------------------------------------------------------
 --
 -- Fichier              :       RS5045_MAPT_KSL.CP
@@ -119,6 +120,7 @@ Go
 --
 -- Retourne             :       Rien
 -- JFF      05/08/2024   [MCO602_PNEU]
+-- JFF      19/12/2024   [MIG1_COUR_EMAILING]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2' AND type = 'P' )
         DROP procedure sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2
@@ -173,6 +175,17 @@ Declare @sNotTelInterAssure varchar (35)
 Declare @sLibNature varchar (35)
 Declare @sCodeGarantie varchar (50)
 Declare @sGarantie varchar (50)
+Declare @sURLextranet varchar (100)
+Declare @sDateConnaissanceSinistre varchar (10)
+Declare @sDateFinGarantie varchar (10)
+Declare @sDateEffetGarantie varchar (10)
+Declare @sCivLivraison varchar (20)
+Declare @sPrenomLivraison varchar (100)
+Declare @sNomLivraison varchar (100)
+Declare @sAdresse1Livraison varchar (100)
+Declare @sAdresse2Livraison varchar (100)
+Declare @sAdresseCpltLivraison varchar (35)
+Declare @sCpVilleLivraison varchar (100)
 
 
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
@@ -268,7 +281,11 @@ BEGIN
 					Where p.id_prod = s.id_prod 
 					)
 			End,
-		   @sAssureur = SIMPA2_PRO.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'P' ) -- [MCO602_PNEU]
+		   @sAssureur = SIMPA2_PRO.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'P' ), -- [MCO602_PNEU]
+		   @sDateConnaissanceSinistre = '', -- [MIG1_COUR_EMAILING] En attente du retour Nathlie pour l'armement
+		   @sDateFinGarantie = convert ( VarChar ( 10 ), s.dte_fin_gti, 23 ),-- [MIG1_COUR_EMAILING]
+		   @sDateEffetGarantie = '' -- [MIG1_COUR_EMAILING] En attente du retour Nathlie pour l'armement
+	
 	From SIMPA2_PRO.sysadm.sinistre s
 	Where id_sin = @adcIdSin
 
@@ -298,7 +315,11 @@ BEGIN
 						Where p.id_prod = s.id_prod 
 						) 
 				End,
-			   @sAssureur = SIMPA2_PRO.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'W' ) -- [MCO602_PNEU]
+			   @sAssureur = SIMPA2_PRO.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'W' ), -- [MCO602_PNEU]
+			   @sDateConnaissanceSinistre = '', -- [MIG1_COUR_EMAILING] En attente du retour Nathlie pour l'armement
+			   @sDateFinGarantie = convert ( VarChar ( 10 ), s.dte_fin_gti, 23 ),-- [MIG1_COUR_EMAILING]
+			   @sDateEffetGarantie = '' -- [MIG1_COUR_EMAILING] En attente du retour Nathlie pour l'armement
+
 
 		From SIMPA2_PRO.sysadm.w_sin s
 		Where id_sin = @adcIdSin
@@ -327,6 +348,36 @@ BEGIN
 		And g.id_sin = s.id_sin
 	 End 
 
+	-- ********************************************************
+	-- ** Données liées à la première prestation si présente **
+    -- ********************************************************
+	Select 	@sCivLivraison = Case c.adr_cod_civ When '5' Then 'Messieurs' Else SIMPA2_PRO.sysadm.FN_CODE_NUM(Convert ( integer, c.adr_cod_civ) ,'-CI') End,
+			@sPrenomLivraison = c.adr_prenom,
+			@sNomLivraison  = c.adr_nom,
+			@sAdresse1Livraison = c.adr_livr1,
+			@sAdresse2Livraison = c.adr_lirv2,
+			@sAdresseCpltLivraison = c.adr_livr_cpl,
+			@sCpVilleLivraison = c.adr_cp + ' ' + adr_ville
+
+	From sysadm.commande c
+	Where c.id_sin = @adcIdSin
+	And   c.id_seq = 1
+
+	If @@RowCount <= 0
+	 Begin 
+		Select 	@sCivLivraison = Case c.adr_cod_civ When '5' Then 'Messieurs' Else SIMPA2_PRO.sysadm.FN_CODE_NUM(Convert ( integer, c.adr_cod_civ) ,'-CI') End,
+				@sPrenomLivraison = c.adr_prenom,
+				@sNomLivraison  = c.adr_nom,
+				@sAdresse1Livraison = c.adr_livr1,
+				@sAdresse2Livraison = c.adr_lirv2,
+				@sAdresseCpltLivraison = c.adr_livr_cpl,
+				@sCpVilleLivraison = c.adr_cp + ' ' + adr_ville
+
+		From sysadm.w_commande c
+		Where c.id_sin = @adcIdSin
+		And   c.id_seq = 1
+	 End 
+
     -- *************************************
 	-- ** Données liées au produit        **
     -- *************************************
@@ -344,7 +395,8 @@ BEGIN
 						Else 
 							RIGHT('000' + IsNull ( CONVERT(varchar(3), p.cod_prod_dms ), ''),3) -- [PI085] On laisse ainsi mail de P. Fauvel le 25/05/2020 à 09h16 archivé dans le projet.
 					End,
-			@sEmailProduit = (Select sysadm.FN_CLE_VAL ( 'ADR_MAIL_PROD', RTRIM ( dp.val_car ) + rtrim ( dp.val_car2), ';' ) From SIMPA2_PRO.sysadm.det_pro dp Where dp.id_prod = p.id_prod And dp.id_code_dp = 136 )					
+			@sEmailProduit = (Select sysadm.FN_CLE_VAL ( 'ADR_MAIL_PROD', RTRIM ( dp.val_car ) + rtrim ( dp.val_car2), ';' ) From SIMPA2_PRO.sysadm.det_pro dp Where dp.id_prod = p.id_prod And dp.id_code_dp = 136 ),
+			@sURLextranet = (Select sysadm.FN_CLE_VAL ( 'URL_EXTRANET', RTRIM ( dp.val_car ) + rtrim ( dp.val_car2), ';' ) From SIMPA2_PRO.sysadm.det_pro dp Where dp.id_prod = p.id_prod And dp.id_code_dp = 391 ) -- [MIG1_COUR_EMAILING]
 
 	From SIMPA2_PRO.sysadm.produit p
 
@@ -452,7 +504,11 @@ BEGIN
 					Where p.id_prod = s.id_prod 
 					) 
 			End,
-		   @sAssureur = SIMPA2_TRT.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'P' ) -- [MCO602_PNEU]
+		   @sAssureur = SIMPA2_TRT.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'P' ), -- [MCO602_PNEU]
+  		   @sDateConnaissanceSinistre = '', -- [MIG1_COUR_EMAILING] En attente du retour Nathlie pour l'armement
+		   @sDateFinGarantie = convert ( VarChar ( 10 ), s.dte_fin_gti, 23 ),-- [MIG1_COUR_EMAILING]
+		   @sDateEffetGarantie = '' -- [MIG1_COUR_EMAILING] En attente du retour Nathlie pour l'armement
+
 	From SIMPA2_TRT.sysadm.sinistre s
 	Where id_sin = @adcIdSin
 
@@ -482,7 +538,10 @@ BEGIN
 						Where p.id_prod = s.id_prod 
 						) 
 				End,
-			   @sAssureur = SIMPA2_TRT.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'W' ) -- [MCO602_PNEU]
+			   @sAssureur = SIMPA2_TRT.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'W' ), -- [MCO602_PNEU]
+  			   @sDateConnaissanceSinistre = '', -- [MIG1_COUR_EMAILING] En attente du retour Nathlie pour l'armement
+			   @sDateFinGarantie = convert ( VarChar ( 10 ), s.dte_fin_gti, 23 ),-- [MIG1_COUR_EMAILING]
+			   @sDateEffetGarantie = '' -- [MIG1_COUR_EMAILING] En attente du retour Nathlie pour l'armement
 
 		From SIMPA2_TRT.sysadm.w_sin s
 		Where id_sin = @adcIdSin
@@ -511,6 +570,36 @@ BEGIN
 		And g.id_sin = s.id_sin
 	 End 
 
+	-- ********************************************************
+	-- ** Données liées à la première prestation si présente **
+    -- ********************************************************
+	Select 	@sCivLivraison = Case c.adr_cod_civ When '5' Then 'Messieurs' Else SIMPA2_TRT.sysadm.FN_CODE_NUM(Convert ( integer, c.adr_cod_civ) ,'-CI') End,
+			@sPrenomLivraison = c.adr_prenom,
+			@sNomLivraison  = c.adr_nom,
+			@sAdresse1Livraison = c.adr_livr1,
+			@sAdresse2Livraison = c.adr_lirv2,
+			@sAdresseCpltLivraison = c.adr_livr_cpl,
+			@sCpVilleLivraison = c.adr_cp + ' ' + adr_ville
+
+	From sysadm.commande c
+	Where c.id_sin = @adcIdSin
+	And   c.id_seq = 1
+
+	If @@RowCount <= 0
+	 Begin 
+		Select 	@sCivLivraison = Case c.adr_cod_civ When '5' Then 'Messieurs' Else SIMPA2_TRT.sysadm.FN_CODE_NUM(Convert ( integer, c.adr_cod_civ) ,'-CI') End,
+				@sPrenomLivraison = c.adr_prenom,
+				@sNomLivraison  = c.adr_nom,
+				@sAdresse1Livraison = c.adr_livr1,
+				@sAdresse2Livraison = c.adr_lirv2,
+				@sAdresseCpltLivraison = c.adr_livr_cpl,
+				@sCpVilleLivraison = c.adr_cp + ' ' + adr_ville
+
+		From sysadm.w_commande c
+		Where c.id_sin = @adcIdSin
+		And   c.id_seq = 1
+	 End 
+
     -- *************************************
 	-- ** Données liées au produit        **
     -- *************************************
@@ -528,8 +617,8 @@ BEGIN
 						Else 
 							RIGHT('000' + IsNull ( CONVERT(varchar(3), p.cod_prod_dms ), ''),3) -- [PI085] On laisse ainsi mail de P. Fauvel le 25/05/2020 à 09h16 archivé dans le projet.
 					End,
-			@sEmailProduit = (Select sysadm.FN_CLE_VAL ( 'ADR_MAIL_PROD', RTRIM ( dp.val_car ) + rtrim ( dp.val_car2), ';' ) From SIMPA2_TRT.sysadm.det_pro dp Where dp.id_prod = p.id_prod And dp.id_code_dp = 136 )					
-
+			@sEmailProduit = (Select sysadm.FN_CLE_VAL ( 'ADR_MAIL_PROD', RTRIM ( dp.val_car ) + rtrim ( dp.val_car2), ';' ) From SIMPA2_TRT.sysadm.det_pro dp Where dp.id_prod = p.id_prod And dp.id_code_dp = 136 ),
+			@sURLextranet = (Select sysadm.FN_CLE_VAL ( 'URL_EXTRANET', RTRIM ( dp.val_car ) + rtrim ( dp.val_car2), ';' ) From SIMPA2_TRT.sysadm.det_pro dp Where dp.id_prod = p.id_prod And dp.id_code_dp = 391 ) -- [MIG1_COUR_EMAILING]
 	From SIMPA2_TRT.sysadm.produit p
 
 	Where p.id_prod = @dcIdProd 
@@ -543,10 +632,16 @@ BEGIN
 
 END	
 
+-- **************************************
+-- ** Retouches de certaines variables ** 
+-- **************************************
+
+Set @sNomLivraison = Concat ( rTrim ( lTrim (  @sCivLivraison )), ' ', @sPrenomLivraison, ' ', @sNomLivraison )
+Set @sAdresse2Livraison = Concat ( rTrim ( lTrim (  @sAdresse2Livraison )), ' ' , rTrim ( lTrim (  @sAdresseCpltLivraison )))
+
 -- *************************************
 -- ** mis à jour de l'enregistrement  **
 -- *************************************
-
 Update sysadm.variable_xml_ksl_rs5045 
 Set civ = @sCodCivCourt,
 	civilite_courte = @sCodCivCourt,
@@ -586,7 +681,19 @@ Set civ = @sCodCivCourt,
 	no_tel_inter_assure = @sNotTelInterAssure,
 	lib_nature = @sLibNature ,
 	code_garantie = @sCodeGarantie,  -- [MCO602_PNEU]
-	garantie = @sGarantie  -- [MCO602_PNEU]
+	garantie = @sGarantie,  -- [MCO602_PNEU]
+	url_extranet = @sURLextranet, -- [MIG1_COUR_EMAILING]
+  	date_connaissance_sinistre = @sDateConnaissanceSinistre, -- [MIG1_COUR_EMAILING] 
+	date_fin_garantie = @sDateFinGarantie,-- [MIG1_COUR_EMAILING]
+	date_effet_garantie = @sDateEffetGarantie, -- [MIG1_COUR_EMAILING] 
+	appli_sin_prov = 'SIMPA2', -- [MIG1_COUR_EMAILING]
+	civ_livraison = @sCivLivraison,  -- [MIG1_COUR_EMAILING]
+	prenom_livraison = @sPrenomLivraison, -- [MIG1_COUR_EMAILING]
+	nom_livraison = @sNomLivraison, -- [MIG1_COUR_EMAILING]
+	adresse1_livraison = @sAdresse1Livraison, -- [MIG1_COUR_EMAILING]
+	adresse2_livraison = @sAdresse2Livraison, -- [MIG1_COUR_EMAILING]
+	cp_ville_livraison = @sCpVilleLivraison -- [MIG1_COUR_EMAILING]
+
 
 Where id_xml = @aiIdXml
 
@@ -867,10 +974,6 @@ BEGIN
 
     -- *************************************
 	-- ** SIMULATION                      **
-    -- *************************************
-
-    -- *************************************
-	-- ** Données liées à l'interlocuteur **
     -- *************************************
 
     -- *************************************
@@ -1208,6 +1311,7 @@ Go
 --
 -- JFF      18/09/2023   [RS5875_DIF_DIV_DET]
 -- JFF      05/08/2024   [MCO602_PNEU]
+-- JFF      19/12/2024   [MIG1_COUR_EMAILING]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE' AND type = 'P' )
         DROP procedure sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE
@@ -1370,6 +1474,7 @@ Where cm.cod_maq = @sCodeMaquette
 			pj4 as 'entete/@PJ4',
 			pj5 as 'entete/@PJ5',
 			montant_carte_cadeau  as 'entete/@montant_carte_cadeau',
+			appli_sin_prov as 'entete/@appli_sin_prov', -- [MIG1_COUR_EMAILING]
 
 			-- Ci-dessous section <Courrier
 
@@ -1440,7 +1545,12 @@ Where cm.cod_maq = @sCodeMaquette
 			code_garantie as 'courrier/@code_garantie', -- [MCO602_PNEU]
 			garantie as 'courrier/@garantie', -- [MCO602_PNEU]
 			fait_generateur as 'courrier/@fait_generateur', -- [MCO602_PNEU]
-			circonstances as 'courrier/@circonstances' -- [MCO602_PNEU]
+			circonstances as 'courrier/@circonstances', -- [MCO602_PNEU]
+			url_extranet as 'courrier/@url_extranet', -- [MIG1_COUR_EMAILING]
+			date_connaissance_sinistre as 'courrier/@date_connaissance_sinistre', -- [MIG1_COUR_EMAILING]
+			date_fin_garantie as 'courrier/@date_fin_garantie', -- [MIG1_COUR_EMAILING]
+			date_effet_garantie as 'courrier/@date_effet_garantie', -- [MIG1_COUR_EMAILING]
+			appli_sin_prov as 'entete/@appli_sin_prov' -- [MIG1_COUR_EMAILING]
 
 		from sysadm.variable_xml_ksl_rs5045 v
 		Where id_xml = @iIdXml
@@ -4003,7 +4113,7 @@ CREATE procedure sysadm.PS_RS5045_U_AJOUT_TABL_PCES_XML
 	@iIdXml integer,
 	@sCodeMaquette varchar ( 255 ), 
 	@dcIdSin Decimal ( 10 ),
-	@iIdAppliNum Integer
+	@iIdAppliNum Integer,
 	@xmlResult varchar(max) OUTPUT
 AS
 

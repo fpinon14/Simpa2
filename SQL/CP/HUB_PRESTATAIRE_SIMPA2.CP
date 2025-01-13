@@ -3112,14 +3112,16 @@ AS
 
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' 
 Begin
-	Select * From [LS-SAGA2].edi.DepotSimpa2ToHubPresta Where alt_trt = 'E'
+	Select * From [LS-SAGA2].[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt = 'E'
 End 
+/*
 Else 
 Begin
 	-- [INSTANCE]
 	-- Select * From [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt = 'E'
 	Select * From [S2SQL14DEV\RECSAGA2].[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt = 'E'
 End 
+*/
 
 Go
 

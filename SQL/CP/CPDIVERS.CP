@@ -7196,7 +7196,7 @@ Set @sMessage = @sMessage + 'DSI/Etudes SIMPA2'
 
 EXEC master.dbo.SPB_PS_MAIL 
 			@sRetourErrMail OUTPUT, 
-			'MPVASSEUR@spb.eu,LTASSERIE@spb.eu,EDUBOC@spb.eu,IHACHANI@spb.eu,CLASSALE@spb.eu,cbourdoiseau@spb.eu,opons@spb.eu,dibersien@spb.eu,FDEMEDEIROS@spb.eu,ISCRESFRDISTRIB@spb.eu,redistributionlehavre@spb.eu,remonetique@spb.eu', -- 'jff@spb.fr',
+			'MPVASSEUR@spb.eu,LTASSERIE@spb.eu,EDUBOC@spb.eu,IHACHANI@spb.eu,CLASSALE@spb.eu,cbourdoiseau@spb.eu,opons@spb.eu,dibersien@spb.eu,FDEMEDEIROS@spb.eu,ISCRESFRDISTRIB@spb.eu,redistributionlehavre@spb.eu,remonetique@spb.eu,vvander@spb.eu', -- 'jff@spb.fr',
 			@sMessage, 
 			@sObjet, 
 			null, 
