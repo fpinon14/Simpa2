@@ -19800,7 +19800,7 @@ private function boolean uf_validation_finale_trt_particuliers ();//*-----------
 
 Date dtPivotFranchisePBox
 String sSql, sCasPart, sCasGestionMDS, SFiltreOrig, sIdFour, sNumCarte, sVal, sValOrig, sValTemp, sVal1, sVal2, sVal3, sMess, sValCtrle 
-String sTypMail
+String sTypMail, sMtAReg
 Boolean bRet, bMsg, bFermePrestaCMA, bResil
 Long lDeb, lFin, lRow, lVal, lIdSeq, lTot, lCpt, lTotRefus, lCptRefus, lIdNatSin, lIdGti, lIdMotif, lIdSin, lTotInter
 Decimal {2} dcMtAReg
@@ -21458,9 +21458,11 @@ If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
 				If IsNull ( sTypMail ) Or sTypMail = "" Then Continue
 				
 				iIdInter = idw_LstInter.GetItemNumber ( lCpt, "ID_I" ) 
-				sCodInter = idw_LstInter.GetItemString ( lCpt, "ID_COUR" ) 
+				sCodInter = idw_LstInter.GetItemString ( lCpt, "COD_INTER" ) 
 				sNomInter = idw_LstInter.GetItemString ( lCpt, "NOM" ) 
 				sNomInter = F_REMPLACE ( sNomInter, "'", "''" ) 
+				sMtAReg = ""
+				If sCodInter = "A" Then sMtAReg = String ( idw_LstInter.GetItemDecimal ( lCpt, "MT_A_REG" ), "##0.00" )
 				
 				sCodRefus = ""
 				lRow = idw_wRefus.Find ( " (ALT_OPE = 'O' OR ALT_MAC = 'O') AND ID_I = " + String ( iIdInter ), 1, idw_wRefus.RowCount() ) 
@@ -21482,7 +21484,9 @@ If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
 						 "'" + sNomInter + "', " + &
 						 "'" + sTypMail + "', " + &
 						 "'" + stGlb.sCodOper + "', " + &
-						 "'" + sCodRefus + "'"
+						 "'" + sCodRefus + "', " + &
+						 "'" + sMtAReg + "', " + &
+						 "''"
 						 
 				F_Execute ( sSql, SQLCA )
 		
