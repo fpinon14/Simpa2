@@ -324,7 +324,6 @@ private function boolean uf_validation_finale_sav_carrefour_mail2 ()
 private function boolean uf_validation_finale_lbe_mail ()
 private function long uf_zn_trt_divsin_typapprecneu (string asdata, string asnomcol, long alrow, boolean abforcer)
 private function boolean uf_validation_finale_oop_mail ()
-private function long uf_zn_trt_divsin_modepaiementpaybox (string asdata, string asnomcol, long alrow)
 private function boolean uf_validation_finale_eco_mail_samsung ()
 private function long uf_zn_trt_divsin_gti_non_activee (string asdata, string asnomcol, long alrow)
 private function string uf_controlergestion_caution (ref boolean abmessage, string ascas)
@@ -339,7 +338,6 @@ private function boolean uf_validation_finale_advise_mail ()
 private function long uf_zn_trt_divsin_telediag_ok (string asdata, string asnomcol, long alrow)
 private function boolean uf_validation_finale_advise_mail_2 ()
 private function long uf_zn_trt_divsin_cra_last_dte (string asdata, string asnomcol, long alrow)
-private function long uf_zn_trt_divsin_ech_express_48h (string asdata, string asnomcol, long alrow)
 public subroutine uf_police_orange_v2bis ()
 private function boolean uf_validation_finale_mbs_ech_express (long alidgti)
 private function long uf_zn_trt_divsin_dcnxdeclaatlas (string asdata, string asnomcol, long alrow)
@@ -18994,7 +18992,7 @@ Choose Case asNomCol
 					ll_ret = This.Uf_Zn_Trt_DivSin_ModeRemplacement ( Upper ( asData ), Upper( asNomCol ), alRow )
 
 				Case "MODE_PAIEMENT" // [PC801_V10]
-					ll_ret = This.Uf_Zn_Trt_DivSin_ModePaiementPayBox ( Upper ( asData ), Upper( asNomCol ), alRow )
+					ll_ret = iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_ModePaiementPayBox ( Upper ( asData ), Upper( asNomCol ), alRow )
 				
 				// [PC946_ORANGE_OPPRO]
 				Case "CRA_SUIVI_IMEI"
@@ -19088,7 +19086,7 @@ Choose Case asNomCol
 			
 			// [PC13442]
 			Case "ECH_EXPRESS_48H"
-				ll_ret = This.Uf_Zn_Trt_DivSin_Ech_express_48h ( Upper ( asData ), Upper( asNomCol ), alRow )
+				ll_ret = iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_Ech_express_48h ( Upper ( asData ), Upper( asNomCol ), alRow )
 
 			// [PM234-4_V1]
 			Case "DCNX_DECLA_ATLAS"
@@ -19797,20 +19795,23 @@ private function boolean uf_validation_finale_trt_particuliers ();//*-----------
 //       JFF   07/03/2024 [HP252_276_HUB_PRESTA]
 //       JFF   05/08/2024 [MCO602_PNEU]
 //       JFF   05/08/2024 [MCO602_PNEU][MCO1050]
+//       JFF   19/12/2024 [MIG1_COUR_EMAILING]
 //*-----------------------------------------------------------------
 
 Date dtPivotFranchisePBox
 String sSql, sCasPart, sCasGestionMDS, SFiltreOrig, sIdFour, sNumCarte, sVal, sValOrig, sValTemp, sVal1, sVal2, sVal3, sMess, sValCtrle 
+String sTypMail
 Boolean bRet, bMsg, bFermePrestaCMA, bResil
-Long lDeb, lFin, lRow, lVal, lIdSeq, lTot, lCpt, lTotRefus, lCptRefus, lIdNatSin, lIdGti, lIdMotif, lIdSin
+Long lDeb, lFin, lRow, lVal, lIdSeq, lTot, lCpt, lTotRefus, lCptRefus, lIdNatSin, lIdGti, lIdMotif, lIdSin, lTotInter
 Decimal {2} dcMtAReg
 dwItemStatus	Status
 n_cst_string lnvPFCString
 DateTime dtCreeLeDos, dtVal, dtPivotCourHTMLviaWSSaga2, dtDtePivotDT401, dtDteSurv, dtDtePivotDp386 
-String sZnDS_pceSherpaRacine, sZnDS_pceSherpa, sLibMemoire, sFiltre
+String sZnDS_pceSherpaRacine, sZnDS_pceSherpa, sLibMemoire, sFiltre, sCodInter, sNomInter, sCodRefus
 Int iZnDS_pceSherpa, iCodResilAdh, iCleNum
 Boolean bEnvMailChapeauDemat
 Long lIndentityHubPresta, lRowCountHubPresta, lErrorHubPresta, lTotRow
+Integer iIdInter, iIdSeqCmde 
 
 dtCreeLeDos = idw_WSin.GetItemDateTime ( 1, "CREE_LE")
 dtDteSurv = idw_WSin.GetItemDateTime ( 1, "DTE_SURV")
@@ -21443,6 +21444,57 @@ If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
 	
 End If
 
+
+// [MIG1_COUR_EMAILING]
+If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
+	If bRet Then
+		If ibMIG1_CourEmailing Then
+			lTotInter = idw_LstInter.RowCount ()
+			
+			For lCpt = 1 to lTotInter 
+				
+				sTypMail = Trim ( idw_LstInter.GetItemString ( lCpt, "ID_COUR" ) )
+				
+				If IsNull ( sTypMail ) Or sTypMail = "" Then Continue
+				
+				iIdInter = idw_LstInter.GetItemNumber ( lCpt, "ID_I" ) 
+				sCodInter = idw_LstInter.GetItemString ( lCpt, "ID_COUR" ) 
+				sNomInter = idw_LstInter.GetItemString ( lCpt, "NOM" ) 
+				sNomInter = F_REMPLACE ( sNomInter, "'", "''" ) 
+				
+				sCodRefus = ""
+				lRow = idw_wRefus.Find ( " (ALT_OPE = 'O' OR ALT_MAC = 'O') AND ID_I = " + String ( iIdInter ), 1, idw_wRefus.RowCount() ) 
+				If lRow > 0 Then
+					sCodRefus = String ( idw_wRefus.GetItemNumber ( lRow, "ID_MOTIF") )
+				End If 
+				
+				iIdSeqCmde = -1
+				lRow = idw_LstwCommande.Find("COD_ETAT = 'CNV'", 1, idw_LstwCommande.rowCount())
+				If lRow > 0 Then 
+					iIdSeqCmde = idw_LstwCommande.GetItemNumber ( lRow, "ID_SEQ" )
+				End IF 
+				
+				sSql = "sysadm.PS_MIG1_I_EMAILING_KSL_ARCHIVE_MAILPUSH " +&
+						 String ( idw_wsin.GetItemNumber  ( 1, "ID_SIN" ) ) + "., " + &
+						 String ( iIdSeqCmde ) + ", " + &
+						 String ( iIdInter ) + ", " + &
+						 "'" + sCodInter + "', " + &
+						 "'" + sNomInter + "', " + &
+						 "'" + sTypMail + "', " + &
+						 "'" + stGlb.sCodOper + "', " + &
+						 "'" + sCodRefus + "'"
+						 
+				F_Execute ( sSql, SQLCA )
+		
+				bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
+						 
+				
+			Next
+			
+		End IF 
+	End IF 
+
+End If
 
 
 // [HP252_276_HUB_PRESTA]
@@ -38405,95 +38457,6 @@ Return bRet
 
 end function
 
-private function long uf_zn_trt_divsin_modepaiementpaybox (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
-//*
-//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_ModePaiementPayBox (PRIVATE)
-//* Auteur			: FABRY JF
-//* Date				: 03/11/2013
-//* Libellé			: 
-//* Commentaires	: [FNAC_PROD_ECH_TECH]
-//*
-//* Arguments		: String 		asData			Val
-//*					  String 		asNomCol			Val
-//*					  Long			alRow				Val
-//*
-//* Retourne		: long
-//*
-//*-----------------------------------------------------------------
-//* MAJ   PAR      Date	     Modification
-//* #1    JFF   09/01/2009   [FNAC_PROD_ECH_TECH].[20090112170517890]
-//* #2    JFF   08/01/2010   [FNAC_TV_BGE]
-//        JFF   26/09/2023   [RS5928_FRCH_CHQ]
-//*-----------------------------------------------------------------
-
-Integer iAction
-Boolean bFnacTV
-Long lRow, lDeb, lFin, lCpt
-String sVal, sDataActuelle
-
-asData = Upper ( asData )
-iAction = 0
-
-If asData = "CB" Then
-	idw_wDivSin.iiErreur = 7
-	Return 1
-End If
-
-// [RS5928_FRCH_CHQ]
-F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 298)
-If lDeb > 0 Then
-
-	sVal = This.uf_GestOng_Divers_Trouver ( "DTE_CMPLT_ADH_PAYE_ASS_PAYBOX" )
-	sDataActuelle = This.uf_GestOng_Divers_Trouver ( "MODE_PAIEMENT" )
-
-	If IsNull ( sVal ) Then sVal = ""
-	If sVal <> "" Then
-		idw_wDivSin.iiErreur = 12
-		Return 1
-	End If 
-	
-	If asData = "CHQ" Then 
-
-		stMessage.sTitre  	= "Confirmation demandée"
-		stMessage.Icon			= Question!
-		stMessage.bErreurG	= FALSE
-		stMessage.Bouton		= YESNO!
-		stMessage.sCode = "WSIN896"		
-
-		If F_Message ( stMessage ) = 2 Then
-			idw_wDivSin.iiErreur = 0
-			This.uf_gestong_divers_majzone( "MODE_PAIEMENT", alRow, K_MAJZONE, sDataActuelle)
-			Return 2
-		End IF
-
-		This.uf_gestong_divers_majzone( "MODE_PAIEMENT", alRow, K_MAJZONE, asData )
-		idw_wDivSin.SetItem ( alRow,"ALT_PROT", "O" )					
-		idw_wDivSin.SetRow ( idw_wDivSin.GetRow() + 1 ) 
-
-		stMessage.Icon			= Information!
-		stMessage.bErreurG	= FALSE
-		stMessage.Bouton		= Ok!
-		stMessage.sCode = "WSIN898"		
-		F_Message ( stMessage )
-
-		lRow = idw_wPiece.Find ( "ID_PCE = 629" , 1, idw_wPiece.RowCount () ) 
-		If lRow > 0 Then
-			idw_wPiece.DeleteRow ( lRow ) 
-		End If 
-
-		lRow = idw_WDivSin.Find ( "NOM_ZONE = 'dte_cmplt_adh_paye_ass_paybox'", 1,  idw_WDivSin.RowCount () )					
-		If lRow > 0 Then
-			This.uf_gestong_divers_majzone( "DTE_CMPLT_ADH_PAYE_ASS_PAYBOX", lRow, K_MAJZONE, String ( Today()) )
-		End If
-
-	End If 
-
-End If 
-
-Return iAction
-
-end function
-
 private function boolean uf_validation_finale_eco_mail_samsung ();//*-----------------------------------------------------------------
 //*
 //* Fonction      : u_gs_sp_sinistre::uf_Validation_Finale_ECO_Mail_Samsung (PRIVATE)
@@ -40854,43 +40817,6 @@ Else
 		uf_gestong_divers_majzone( "CRA_SUIVI_IMEI", lRow, K_MAJZONE, 2)
 	End if
 End if
-
-Return iAction
-
-end function
-
-private function long uf_zn_trt_divsin_ech_express_48h (string asdata, string asnomcol, long alrow);
-//*-----------------------------------------------------------------
-//*
-//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_Ech_express_48h (PRIVATE)
-//* Auteur			: FPI
-//* Date				: 07/07/2014
-//* Libellé			: 
-//* Commentaires	: [PC13442]
-//*
-//* Arguments		: String 		asData			Val
-//*					  String 		asNomCol			Val
-//*					  Long			alRow				Val
-//*
-//* Retourne		: long
-//*
-//*-----------------------------------------------------------------
-//* MAJ   PAR      Date	     Modification
-//* #..   ...   ../../....   
-//*-----------------------------------------------------------------
-
-Integer iAction
-
-Long lRow, lDeb, lFin, lVal1, lVal2
-
-asData = Upper ( asData )
-iAction = 0
-
-if idw_wDetail.Find ( "COD_ETAT = 600 OR COD_ETAT = 500", 1, idw_wDetail.RowCount () ) + &
-		idw_LstwCommande.Find ( "COD_ETAT <> 'ANN' ", 1, idw_LstwCommande.RowCount () ) > 0 Then 
-		idw_wDivSin.iiErreur = 7
-		iAction = 1
-End If
 
 Return iAction
 

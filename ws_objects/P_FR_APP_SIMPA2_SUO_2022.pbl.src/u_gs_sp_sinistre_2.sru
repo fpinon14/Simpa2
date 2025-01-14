@@ -52,6 +52,8 @@ public function long uf_zn_trt_divsin_cra_ctrl_imei (string asdata, string asnom
 public function long uf_zn_trt_divsin_cra_suivi_imei (string asdata, string asnomcol, long alrow)
 public function string uf_controlergestion_emailingksl ()
 public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse, ref boolean abmig1_couremailing, ref u_datawindow_detail adw_lstinter, ref datawindow adw_wpiece, ref datawindow adw_wrefus)
+public function long uf_zn_trt_divsin_ech_express_48h (string asdata, string asnomcol, long alrow)
+public function long uf_zn_trt_divsin_modepaiementpaybox (string asdata, string asnomcol, long alrow)
 end prototypes
 
 public function long uf_zn_trt_divsin_typeapp (string asdata, string asnomcol, long alrow, boolean abforcer);//*-----------------------------------------------------------------
@@ -1016,14 +1018,16 @@ public function string uf_controlergestion_emailingksl ();//*-------------------
 //*-----------------------------------------------------------------
 //* MAJ 					PAR		Date		  Modification
 //*-----------------------------------------------------------------
-Boolean bAMU_Regl, bAMU_ReglV, bAMU_ReglC, bAMU_Pce, bAMU_Ref, bMaqG, bMaqV, bMaqC, bMaqP, bMaqR, bFin, bAMUPT_Courrier
-Long lDeb, lFin, lCpt, lTotInter 
+Boolean bAMU_Regl, bAMU_ReglV, bAMU_ReglC, bAMU_Pce, bAMU_Ref, bMaqG, bMaqV, bMaqC, bMaqP, bMaqR, bFin, bAMUPT_Courrier, bCtrleAltEdit
+Long lDeb, lFin, lCpt, lTotInter, lCpt2
 Int iNbreRef, iIdInter
-String sAdrMail, sCodInter, sNomInter, sPos, sLibCodInter, sTypeMail, sRegl, sPce, sRef, sCodModeReg
+String sAdrMail, sCodInter, sNomInter, sPos, sLibCodInter, sTypeMail, sRegl, sPce, sRef, sCodModeReg, sChaineEnvCourrier
 Decimal {2} dcMtARegInter
 
 sPos = ""
 bAMUPT_Courrier = False
+sChaineEnvCourrier = ""
+bCtrleAltEdit = False
 
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 390 )
 if lDeb <=0 Then return ""
@@ -1039,6 +1043,25 @@ For lCpt=1 To lTotInter
 	sTypeMail = idw_lstinter.GetItemstring ( lCpt, "ID_COUR")	 
 
 	If Not bAMUPT_Courrier Then bAMUPT_Courrier = Not ( IsNull ( sTypeMail ) Or sTypeMail = "" ) 
+
+	If idw_Wsin.GetItemString ( 1, "ALT_EDIT" ) <> "O" And bAMUPT_Courrier And Not bCtrleAltEdit Then
+		bCtrleAltEdit = True
+		stMessage.sTitre		= "Emailing KSL : Pas de génération de courrier"
+		stMessage.Icon			= Exclamation!
+		stMessage.bErreurG	= FALSE
+		stMessage.Bouton		= YesNo!
+		stMessage.sCode		= "WSIN918"
+		If F_Message ( stMessage ) = 1 Then 
+			For lCpt2 = 1 To idw_lstinter.RowCount ()
+				idw_lstinter.SetItem ( lCpt2, "ID_COUR", stNul.str ) 
+				idw_lstinter.SetItem ( lCpt2, "ID_NAT_COUR", stNul.str ) 				
+			Next 
+			
+			Return ""		
+		End If
+		
+		Return "ALT_BLOC"
+	End IF 
 
 	Choose Case sCodInter
 		Case "A" 
@@ -1184,6 +1207,9 @@ For lCpt=1 To lTotInter
 		
 	End IF 
 
+	If Not IsNull ( sTypeMail ) Then
+		sChaineEnvCourrier += "- Courrier " + sTypeMail + " pour (" + sLibCodInter + ") " + sNomInter	+ Char ( 10 )
+	End If 
 	
 Next
 
@@ -1196,10 +1222,16 @@ If Not bAMUPT_Courrier Then
 	stMessage.Bouton		= YESNO!
 	stMessage.sCode		= "WSIN912"
 	If F_Message ( stMessage ) = 2 Then Return "ALT_BLOC"
+Else 
+	stMessage.sTitre		= "Emailing KSL : Résumé des courriers"
+	stMessage.Icon			= Question!
+	stMessage.bErreurG	= FALSE
+	stMessage.Bouton		= YESNO!
+	stMessage.sVar [1]   = sChaineEnvCourrier
+	stMessage.sCode		= "WSIN917"
+	If F_Message ( stMessage ) = 2 Then Return "ALT_BLOC"
 End IF 
 
-
-// bMaqV, bMaqC, bMaqP, bMaqR Get Param
 
 
 
@@ -1251,6 +1283,131 @@ idw_wRefus				= adw_wRefus
 
 
 end subroutine
+
+public function long uf_zn_trt_divsin_ech_express_48h (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
+//*
+//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_Ech_express_48h (PRIVATE)
+//* Auteur			: FPI
+//* Date				: 07/07/2014
+//* Libellé			: 
+//* Commentaires	: [PC13442]
+//*
+//* Arguments		: String 		asData			Val
+//*					  String 		asNomCol			Val
+//*					  Long			alRow				Val
+//*
+//* Retourne		: long
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//* #..   ...   ../../....   
+//*-----------------------------------------------------------------
+
+Integer iAction
+
+Long lRow, lDeb, lFin, lVal1, lVal2
+
+asData = Upper ( asData )
+iAction = 0
+
+if idw_wDetail.Find ( "COD_ETAT = 600 OR COD_ETAT = 500", 1, idw_wDetail.RowCount () ) + &
+		idw_LstwCommande.Find ( "COD_ETAT <> 'ANN' ", 1, idw_LstwCommande.RowCount () ) > 0 Then 
+		idw_wDivSin.iiErreur = 7
+		iAction = 1
+End If
+
+Return iAction
+
+end function
+
+public function long uf_zn_trt_divsin_modepaiementpaybox (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
+//*
+//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_ModePaiementPayBox (PRIVATE)
+//* Auteur			: FABRY JF
+//* Date				: 03/11/2013
+//* Libellé			: 
+//* Commentaires	: [FNAC_PROD_ECH_TECH]
+//*
+//* Arguments		: String 		asData			Val
+//*					  String 		asNomCol			Val
+//*					  Long			alRow				Val
+//*
+//* Retourne		: long
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//* #1    JFF   09/01/2009   [FNAC_PROD_ECH_TECH].[20090112170517890]
+//* #2    JFF   08/01/2010   [FNAC_TV_BGE]
+//        JFF   26/09/2023   [RS5928_FRCH_CHQ]
+//*-----------------------------------------------------------------
+
+Integer iAction
+Boolean bFnacTV
+Long lRow, lDeb, lFin, lCpt
+String sVal, sDataActuelle
+
+asData = Upper ( asData )
+iAction = 0
+
+If asData = "CB" Then
+	idw_wDivSin.iiErreur = 7
+	Return 1
+End If
+
+// [RS5928_FRCH_CHQ]
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 298)
+If lDeb > 0 Then
+
+	sVal = iuoSpGsSinistre.uf_GestOng_Divers_Trouver ( "DTE_CMPLT_ADH_PAYE_ASS_PAYBOX" )
+	sDataActuelle = iuoSpGsSinistre.uf_GestOng_Divers_Trouver ( "MODE_PAIEMENT" )
+
+	If IsNull ( sVal ) Then sVal = ""
+	If sVal <> "" Then
+		idw_wDivSin.iiErreur = 12
+		Return 1
+	End If 
+	
+	If asData = "CHQ" Then 
+
+		stMessage.sTitre  	= "Confirmation demandée"
+		stMessage.Icon			= Question!
+		stMessage.bErreurG	= FALSE
+		stMessage.Bouton		= YESNO!
+		stMessage.sCode = "WSIN896"		
+
+		If F_Message ( stMessage ) = 2 Then
+			idw_wDivSin.iiErreur = 0
+			iuoSpGsSinistre.uf_gestong_divers_majzone( "MODE_PAIEMENT", alRow, K_MAJZONE, sDataActuelle)
+			Return 2
+		End IF
+
+		iuoSpGsSinistre.uf_gestong_divers_majzone( "MODE_PAIEMENT", alRow, K_MAJZONE, asData )
+		idw_wDivSin.SetItem ( alRow,"ALT_PROT", "O" )					
+		idw_wDivSin.SetRow ( idw_wDivSin.GetRow() + 1 ) 
+
+		stMessage.Icon			= Information!
+		stMessage.bErreurG	= FALSE
+		stMessage.Bouton		= Ok!
+		stMessage.sCode = "WSIN898"		
+		F_Message ( stMessage )
+
+		lRow = idw_wPiece.Find ( "ID_PCE = 629" , 1, idw_wPiece.RowCount () ) 
+		If lRow > 0 Then
+			idw_wPiece.DeleteRow ( lRow ) 
+		End If 
+
+		lRow = idw_WDivSin.Find ( "NOM_ZONE = 'dte_cmplt_adh_paye_ass_paybox'", 1,  idw_WDivSin.RowCount () )					
+		If lRow > 0 Then
+			iuoSpGsSinistre.uf_gestong_divers_majzone( "DTE_CMPLT_ADH_PAYE_ASS_PAYBOX", lRow, K_MAJZONE, String ( Today()) )
+		End If
+
+	End If 
+
+End If 
+
+Return iAction
+
+end function
 
 on u_gs_sp_sinistre_2.create
 call super::create
