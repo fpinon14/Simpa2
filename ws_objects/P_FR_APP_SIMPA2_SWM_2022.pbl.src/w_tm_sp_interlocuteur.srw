@@ -1442,7 +1442,7 @@ Choose Case upper(dwo.Name)
 				
 					sTypMail    = Trim ( stPass.sTab [1] )
 					
-					If IsNull ( sTypMail ) Then sTypMail = ""				
+					If sTypMail = "" Then sTypMail = stNul.str
 		
 //					If sTypMail <> "" Then	On peut sortir de la fenêtre en effacer le code acutel			
 						this.SetItem ( 1, "ALT_COURGEST", "R" ) 
