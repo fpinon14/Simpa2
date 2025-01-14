@@ -282,7 +282,7 @@ BEGIN
 					)
 			End,
 		   @sAssureur = SIMPA2_PRO.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'P' ), -- [MCO602_PNEU]
-		   @sDateConnaissanceSinistre = '', -- [MIG1_COUR_EMAILING] En attente du retour Nathlie pour l'armement
+  		   @sDateConnaissanceSinistre = Convert ( VarChar ( 10 ), s.dte_surv, 23 ), -- [MIG1_COUR_EMAILING] Nathalie dit de mettre la date de surv
 		   @sDateFinGarantie = convert ( VarChar ( 10 ), s.dte_fin_gti, 23 ),-- [MIG1_COUR_EMAILING]
 		   @sDateEffetGarantie = '' -- [MIG1_COUR_EMAILING] En attente du retour Nathlie pour l'armement
 	
@@ -316,7 +316,7 @@ BEGIN
 						) 
 				End,
 			   @sAssureur = SIMPA2_PRO.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'W' ), -- [MCO602_PNEU]
-			   @sDateConnaissanceSinistre = '', -- [MIG1_COUR_EMAILING] En attente du retour Nathlie pour l'armement
+  			   @sDateConnaissanceSinistre = Convert ( VarChar ( 10 ), s.dte_surv, 23 ), -- [MIG1_COUR_EMAILING] Nathalie dit de mettre la date de surv
 			   @sDateFinGarantie = convert ( VarChar ( 10 ), s.dte_fin_gti, 23 ),-- [MIG1_COUR_EMAILING]
 			   @sDateEffetGarantie = '' -- [MIG1_COUR_EMAILING] En attente du retour Nathlie pour l'armement
 
@@ -355,11 +355,11 @@ BEGIN
 			@sPrenomLivraison = c.adr_prenom,
 			@sNomLivraison  = c.adr_nom,
 			@sAdresse1Livraison = c.adr_livr1,
-			@sAdresse2Livraison = c.adr_lirv2,
+			@sAdresse2Livraison = c.adr_livr2,
 			@sAdresseCpltLivraison = c.adr_livr_cpl,
 			@sCpVilleLivraison = c.adr_cp + ' ' + adr_ville
 
-	From sysadm.commande c
+	From SIMPA2_PRO.sysadm.commande c
 	Where c.id_sin = @adcIdSin
 	And   c.id_seq = 1
 
@@ -505,7 +505,7 @@ BEGIN
 					) 
 			End,
 		   @sAssureur = SIMPA2_TRT.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'P' ), -- [MCO602_PNEU]
-  		   @sDateConnaissanceSinistre = '', -- [MIG1_COUR_EMAILING] En attente du retour Nathlie pour l'armement
+  		   @sDateConnaissanceSinistre = Convert ( VarChar ( 10 ), s.dte_surv, 23 ), -- [MIG1_COUR_EMAILING] Nathalie dit de mettre la date de surv
 		   @sDateFinGarantie = convert ( VarChar ( 10 ), s.dte_fin_gti, 23 ),-- [MIG1_COUR_EMAILING]
 		   @sDateEffetGarantie = '' -- [MIG1_COUR_EMAILING] En attente du retour Nathlie pour l'armement
 
@@ -539,7 +539,7 @@ BEGIN
 						) 
 				End,
 			   @sAssureur = SIMPA2_TRT.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'W' ), -- [MCO602_PNEU]
-  			   @sDateConnaissanceSinistre = '', -- [MIG1_COUR_EMAILING] En attente du retour Nathlie pour l'armement
+  			   @sDateConnaissanceSinistre = Convert ( VarChar ( 10 ), s.dte_surv, 23 ), -- [MIG1_COUR_EMAILING] Nathalie dit de mettre la date de surv
 			   @sDateFinGarantie = convert ( VarChar ( 10 ), s.dte_fin_gti, 23 ),-- [MIG1_COUR_EMAILING]
 			   @sDateEffetGarantie = '' -- [MIG1_COUR_EMAILING] En attente du retour Nathlie pour l'armement
 
@@ -577,11 +577,11 @@ BEGIN
 			@sPrenomLivraison = c.adr_prenom,
 			@sNomLivraison  = c.adr_nom,
 			@sAdresse1Livraison = c.adr_livr1,
-			@sAdresse2Livraison = c.adr_lirv2,
+			@sAdresse2Livraison = c.adr_livr2,
 			@sAdresseCpltLivraison = c.adr_livr_cpl,
 			@sCpVilleLivraison = c.adr_cp + ' ' + adr_ville
 
-	From sysadm.commande c
+	From SIMPA2_TRT.sysadm.commande c
 	Where c.id_sin = @adcIdSin
 	And   c.id_seq = 1
 
@@ -636,7 +636,7 @@ END
 -- ** Retouches de certaines variables ** 
 -- **************************************
 
-Set @sNomLivraison = Concat ( rTrim ( lTrim (  @sCivLivraison )), ' ', @sPrenomLivraison, ' ', @sNomLivraison )
+Set @sNomLivraison = Concat ( rTrim ( lTrim (  @sCivLivraison )), ' ', rTrim ( lTrim ( @sPrenomLivraison )), ' ', rTrim ( lTrim ( @sNomLivraison )))
 Set @sAdresse2Livraison = Concat ( rTrim ( lTrim (  @sAdresse2Livraison )), ' ' , rTrim ( lTrim (  @sAdresseCpltLivraison )))
 
 -- *************************************
@@ -1485,6 +1485,7 @@ Where cm.cod_maq = @sCodeMaquette
 			no_dossier_sinistre as 'courrier/@no_dossier_sinistre',
 			date_de_declaration as 'courrier/@date_de_declaration',
 			nom_produit as 'courrier/@nom_produit',
+			email_produit as 'courrier/@email_produit', -- [DT154][MANTIS16226] -- [MIG1_COUR_EMAILING]
 			nom as 'courrier/@nom',
 			prenom as 'courrier/@prenom',
 			code_operateur as 'courrier/@code_operateur',
@@ -1550,7 +1551,9 @@ Where cm.cod_maq = @sCodeMaquette
 			date_connaissance_sinistre as 'courrier/@date_connaissance_sinistre', -- [MIG1_COUR_EMAILING]
 			date_fin_garantie as 'courrier/@date_fin_garantie', -- [MIG1_COUR_EMAILING]
 			date_effet_garantie as 'courrier/@date_effet_garantie', -- [MIG1_COUR_EMAILING]
-			appli_sin_prov as 'entete/@appli_sin_prov' -- [MIG1_COUR_EMAILING]
+			appli_sin_prov as 'courrier/@appli_sin_prov', -- [MIG1_COUR_EMAILING]
+			montant_reglement as 'courrier/@montant_reglement', -- [MIG1_COUR_EMAILING]
+			date_rdv as 'courrier/@date_rdv' -- [MIG1_COUR_EMAILING]
 
 		from sysadm.variable_xml_ksl_rs5045 v
 		Where id_xml = @iIdXml

@@ -9345,7 +9345,10 @@ CREATE procedure sysadm.PS_MIG1_I_EMAILING_KSL_ARCHIVE_MAILPUSH
 	@asCodInter VarChar ( 1 ),
 	@asNomInter VarChar ( 71 ),
 	@asTypMail	VarChar ( 6 ),
-	@asCodOper  VarChar ( 4 )
+	@asCodOper  VarChar ( 4 ),
+	@asCodRefus VarChar ( 10 ),
+	@asMtRegAssure VarChar ( 20 ),
+	@asChaineSeria VarChar ( 800 )
 AS
 
 
@@ -9377,7 +9380,8 @@ Declare @sIdAdh VarChar ( 19 )
 Declare @asRegl	  VarChar ( 1 )
 Declare @asPiece  VarChar ( 1 )
 Declare @asRefus  VarChar ( 1 )
-
+Declare @iCodRefus Integer
+Declare @sDateRdv varChar ( 10 )
 
 Set @sSaut = Char (10)
 
@@ -9396,6 +9400,9 @@ Set @sIdArchComplSeria = null
 Set @asRegl = space ( 1 ); Set @asPiece = space ( 1 ); Set @asRefus = space ( 1 )
 Exec sysadm.PS_MIG1_S_TYPE_COUR_EMAILING_KSL @asTypMail, @asRegl Output, @asPiece Output, @asRefus Output
 
+If @asRefus <> 'R' Set @asCodRefus = ''
+
+IF @asMtRegAssure is not null and @asMtRegAssure <> '' Set @sDateRdv = convert ( VarChar ( 10 ), Getdate(), 23 )
 
 If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
  Begin
@@ -9418,13 +9425,26 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 
 		-- Ajout personnalisé du client appelant le système
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
-
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_refus', @asCodRefus 
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'montant_reglement', @asMtRegAssure 
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'date_rdv', @sDateRdv  
 
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'adr_mail', @sVal OutPut
 		Set @sMailSend = @sVal
 
 		-- Appel pour construire et récupérer le XML dans @xmlResult
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
+
+		-- Ajout des pièce si nécessaires
+		If @asPiece = 'P' 
+			Begin
+				Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_AJOUT_TABL_PCES_XML
+					@iIdXml, 
+					@sCodeMaquette, 
+					@adcIdSin,
+					2,
+					@sXMLVar OUTPUT
+			End 
 
 		Exec @iRet = TRACE_MAIL_PRO.sysadm.PS_RS5045_I_MAIL_PUSH_KSL_V01
 			@sIdAppli,
@@ -9474,13 +9494,26 @@ Else
 
 		-- Ajout personnalisé du client appelant le système
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
-
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_refus', @asCodRefus 
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'montant_reglement', @asMtRegAssure 
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'date_rdv', @sDateRdv  
 
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'adr_mail', @sVal OutPut
 		Set @sMailSend = @sVal
 
 		-- Appel pour construire et récupérer le XML dans @xmlResult
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
+
+		-- Ajout des pièce si nécessaires
+		If @asPiece = 'P' 
+			Begin
+				Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_AJOUT_TABL_PCES_XML
+					@iIdXml, 
+					@sCodeMaquette, 
+					@adcIdSin,
+					2,
+					@sXMLVar OUTPUT
+			End 
 
 		Exec @iRet = TRACE_MAIL_TRT.sysadm.PS_RS5045_I_MAIL_PUSH_KSL_V01
 			@sIdAppli,
