@@ -374,10 +374,23 @@ End If
 	dDteEdit = Date(Dw_3.GetItemDateTime ( Dw_3.ilLigneClick, "DTE_EDIT" )) // [PI056] - GetItemDate => GetItemDateTime
 	sDteEDit	= String ( Day ( dDteEdit ) ) + " " + F_Txt_Mois ( Month ( dDteEdit ) ) + " " + String ( Year ( dDteEdit ) )
 
+	// [MIG1_COUR_EMAILING]
+	// [PM407-1]
 	// [DECIMAL_PAPILLON]
 	dcIdsin = dec ( lIdSin )
 	dcIdinter = dec ( lIdInter )
-	dcIdDoc = dec ( lIdDoc )
+	dcIdDoc = dec ( lIdDoc )	
+	
+	If SQLCA.PS_S_PM407_CONSULT_KSL (dcIdsin, dcIdInter, dcIdDoc ) > 0 Then
+		stMessage.sTitre		= "wf_ConsulterCourrier_Sve"
+		stMessage.Icon			= Information!
+		stMessage.bErreurG	= FALSE
+		stMessage.sCode		= "GENE178 "
+		stMessage.bTrace  	= False
+		F_Message ( stMessage )
+		Return
+	End If 		
+
 	SELECTBLOB	txt_blob
 	INTO			:blFicConsult
 	FROM			sysadm.archive_blob
@@ -386,17 +399,6 @@ End If
 					sysadm.archive_blob.id_doc			= :dcIdDoc			AND
 					sysadm.archive_blob.id_typ_blob	= 'DO'
 	USING	itrtrans ;
-
-// [PM407-1]
-If iTrTrans.SQLCode = 0 And SQLCA.PS_S_PM407_CONSULT_KSL (dcIdsin, dcIdInter, dcIdDoc ) > 0 Then
-	stMessage.sTitre		= "wf_ConsulterCourrier_Sve"
-	stMessage.Icon			= Information!
-	stMessage.bErreurG	= FALSE
-	stMessage.sCode		= "GENE178 "
-	stMessage.bTrace  	= False
-	F_Message ( stMessage )
-	Return
-End If 		
 
 
 /*------------------------------------------------------------------*/
