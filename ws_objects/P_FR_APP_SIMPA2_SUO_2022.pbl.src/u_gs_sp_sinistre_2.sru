@@ -1170,12 +1170,12 @@ For lCpt=1 To lTotInter
 	// Un courrier présent Mais ne correspondant pas au contexte
 	sRegl = space ( 1 ); sPce = space ( 1 ); sRef = space ( 1 ) 
 	SQLCA.PS_MIG1_S_TYPE_COUR_EMAILING_KSL ( sTypeMail, sRegl, sPce, sRef ) 
-	bMaqV = sRegl = "V" ; bMaqC = sRegl = "C" ; bMaqP = sPce = "P" ; bMaqR = sRef = "R"
+	bMaqG = sRegl = "G" ; bMaqV = sRegl = "V" ; bMaqC = sRegl = "C" ; bMaqP = sPce = "P" ; bMaqR = sRef = "R"
 
 	if Not IsNull ( sTypeMail ) And sTypeMail <> ""	And ( & 
 		( Not bAMU_Regl And ( bMaqG Or bMaqV Or bMaqC ) ) Or &
-		( bAMU_ReglV And ( Not bMaqV Or bMaqG ) ) Or &	
-		( bAMU_ReglC And ( Not bMaqC Or bMaqG ) ) Or &			
+		( bAMU_ReglV And ( Not bMaqV And Not bMaqG ) ) Or &	
+		( bAMU_ReglC And ( Not bMaqC And Not bMaqG ) ) Or &			
 		( Not bAMU_Pce And bMaqP ) Or &
 		( bAMU_Pce And Not bMaqP ) Or &
 		( Not bAMU_Ref And bMaqR ) Or &

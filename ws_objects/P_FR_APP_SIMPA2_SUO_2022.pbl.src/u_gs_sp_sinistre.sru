@@ -21461,8 +21461,10 @@ If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
 				sCodInter = idw_LstInter.GetItemString ( lCpt, "COD_INTER" ) 
 				sNomInter = idw_LstInter.GetItemString ( lCpt, "NOM" ) 
 				sNomInter = F_REMPLACE ( sNomInter, "'", "''" ) 
+
 				sMtAReg = ""
 				If sCodInter = "A" Then sMtAReg = String ( idw_LstInter.GetItemDecimal ( lCpt, "MT_A_REG" ), "##0.00" )
+				If dec ( sMtAReg ) = 0 Then sMtAReg = ""
 				
 				sCodRefus = ""
 				lRow = idw_wRefus.Find ( " (ALT_OPE = 'O' OR ALT_MAC = 'O') AND ID_I = " + String ( iIdInter ), 1, idw_wRefus.RowCount() ) 
