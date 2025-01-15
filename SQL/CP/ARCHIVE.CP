@@ -9402,7 +9402,9 @@ Exec sysadm.PS_MIG1_S_TYPE_COUR_EMAILING_KSL @asTypMail, @asRegl Output, @asPiec
 
 If @asRefus <> 'R' Set @asCodRefus = ''
 
-IF @asMtRegAssure is not null and @asMtRegAssure <> '' Set @sDateRdv = convert ( VarChar ( 10 ), Getdate(), 23 )
+-- règle donné par Nathalie, ajout de 30 jours par rapport à la date du règlement donc date du jour
+Set @sDateRdv = ''
+IF @asMtRegAssure is not null and @asMtRegAssure <> '' Set @sDateRdv = convert ( VarChar ( 10 ), DateAdd ( day, 30, Getdate()), 23 ) 
 
 If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
  Begin

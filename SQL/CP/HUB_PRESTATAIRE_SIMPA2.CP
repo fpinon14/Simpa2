@@ -3179,7 +3179,7 @@ SET @sCommande = 	'sqlcmd /S' + @sNomServeur + ' /E /Q"' +
 
 EXEC @iRetOsql = master.dbo.xp_cmdshell @sCommande, no_output
 
-Set @sObjet    = 'Prestations SIMPA2 vers le HUB réstées en EN COURS sur le HUB, non générées à ce jour ' + Convert ( VarChar ( 10), Getdate (), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108)
+Set @sObjet    = 'Prestations SIMPA2 vers le HUB restées en EN COURS sur le HUB, non générées à ce jour ' + Convert ( VarChar ( 10), Getdate (), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108)
 
 IF NOT ( @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' ) Set @sObjet = '[RECETTE] ' + @sObjet    
 
