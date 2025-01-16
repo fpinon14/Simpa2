@@ -1789,6 +1789,8 @@ Go
 --
 -------------------------------------------------------------------
 --        JFF   03/12/2024   [HP252_276_HUB_PRESTA]
+--		  JFF   16/01/2025   [HUB832_HUB_ORG_REUN] 
+
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'DW_S06_ARTICLE' AND type = 'P' )
         DROP procedure sysadm.DW_S06_ARTICLE
@@ -1798,19 +1800,35 @@ CREATE procedure sysadm.DW_S06_ARTICLE
 
 AS
 
-select 	distinct a.id_four,
-	c.lib_code as lib_four
-from   	sysadm.article a,
-	sysadm.code_car c
-where   a.id_four=c.id_code
-and c.id_typ_code='-FR'
-Union -- [HP252_276_HUB_PRESTA]
-Select	c.id_code,
-		sysadm.FN_CODE_CAR ( c.id_code, '-FR' ) 
-From sysadm.code_car c
-Where c.id_typ_code = '-WP'
-And c.id_code <> '-1'
-
+If sysadm.FN_CLE_NUMERIQUE ( 'HUB832_HUB_ORG_REUN') > 0 
+	Begin
+		select 	distinct a.id_four,
+			c.lib_code as lib_four
+		from   	sysadm.article a,
+			sysadm.code_car c
+		where   a.id_four=c.id_code
+		and c.id_typ_code='-FR'
+		Union -- [HP252_276_HUB_PRESTA]
+		Select	f.id_code,
+				sysadm.FN_CODE_CAR ( f.id_code, '-FR' ) 
+		From sysadm.famille_car f
+		Where f.id_fam = 1
+	End 
+Else 
+	Begin
+		select 	distinct a.id_four,
+			c.lib_code as lib_four
+		from   	sysadm.article a,
+			sysadm.code_car c
+		where   a.id_four=c.id_code
+		and c.id_typ_code='-FR'
+		Union -- [HP252_276_HUB_PRESTA]
+		Select	c.id_code,
+				sysadm.FN_CODE_CAR ( c.id_code, '-FR' ) 
+		From sysadm.code_car c
+		Where c.id_typ_code = '-WP'
+		And c.id_code <> '-1'
+	End 
 Go
 
 --------------------------------------------------------------------

@@ -3108,18 +3108,43 @@ IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_S2_PRESTA_SIMPA2_R
 GO
 
 CREATE procedure sysadm.PS_HP276_S_S2_PRESTA_SIMPA2_RESTEES_EN_COURS_DE_GEN
+	@sCas VarChar ( 10 )
 AS
 
-IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' 
+-- IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' 
 Begin
-	Select * From [LS-SAGA2].[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt = 'E'
+	If @sCas = 'NBRE'
+		Begin
+			If Exists ( Select Top 1 1 From [LS-SAGA2].[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt in ( 'E', 'N' ) ) 
+				Return 1
+			Else
+				Return 0
+		End 
+
+	If @sCas = 'DATA'
+		Begin
+			Select * From [LS-SAGA2].[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt in ( 'E', 'N' )
+		End 
 End 
+
 /*
 Else 
 Begin
 	-- [INSTANCE]
 	-- Select * From [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt = 'E'
-	Select * From [S2SQL14DEV\RECSAGA2].[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt = 'E'
+	-- Select * From [S2SQL14DEV\RECSAGA2].[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt = 'E'
+	If @sCas = 'NBRE'
+		Begin
+			If Exists ( Select Top 1 1 From [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt in ( 'E', 'N' ) ) 
+				Return 1
+			Else
+				Return 0
+		End 
+
+	If @sCas = 'DATA'
+		Begin
+			Select * From [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt in ( 'E', 'N' )
+		End 
 End 
 */
 
@@ -3155,8 +3180,13 @@ AS
 		@sOsqlOption VarChar(255),
 		@iRetOsql	int
 
+Declare @iNbre Integer
+
 -- On envoie le mail qu'une seule à 05h45
 If Not ( Getdate () between Convert( DateTime, COnvert ( VarChar ( 10 ), Getdate(), 103 ) + ' 05:15:00' ) and Convert( DateTime, COnvert ( VarChar ( 10 ), Getdate(), 103 ) + ' 06:15:00' )) Return
+
+Exec @iNbre = sysadm.PS_HP276_S_S2_PRESTA_SIMPA2_RESTEES_EN_COURS_DE_GEN 'NBRE'
+If @iNbre = 0 Return
 
 -- chemin d'enregistrement du Result Set
 Set @sPath 	= master.sysadm.SPB_FN_GET_ROOT() + 'Sinistre\Extract_presta_S2_vers_Hub_E\'
@@ -3174,12 +3204,12 @@ SET @sNomServeur = @@servername
 Set @sOsqlOption = ' ' + '/s"	"'+ ' /b' + ' /u'
 	
 SET @sCommande = 	'sqlcmd /S' + @sNomServeur + ' /E /Q"' + 
-	db_name(db_id()) + '.sysadm.PS_HP276_S_S2_PRESTA_SIMPA2_RESTEES_EN_COURS_DE_GEN ' + 
+	db_name(db_id()) + '.sysadm.PS_HP276_S_S2_PRESTA_SIMPA2_RESTEES_EN_COURS_DE_GEN ''DATA''' + 
 	'" /o' + @sFicOut + ' -w5000' + @sOsqlOption
 
 EXEC @iRetOsql = master.dbo.xp_cmdshell @sCommande, no_output
 
-Set @sObjet    = 'Prestations SIMPA2 vers le HUB restées en EN COURS sur le HUB, non générées à ce jour ' + Convert ( VarChar ( 10), Getdate (), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108)
+Set @sObjet    = 'Prestations SIMPA2 vers le HUB restées en EN COURS ou NON GENEREES sur le HUB à ce jour ' + Convert ( VarChar ( 10), Getdate (), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108)
 
 IF NOT ( @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' ) Set @sObjet = '[RECETTE] ' + @sObjet    
 
@@ -3196,7 +3226,7 @@ Set @sMessage = @sMessage + 'DSI/Etudes SIMPA2'
 
 EXEC master.dbo.SPB_PS_MAIL 
 			@sRetourErrMail OUTPUT, 
-			'jfabry@spb.eu,BKHELIFA_ext@spb.eu', -- 'jff@spb.fr', -- 
+			'jfabry@spb.eu,BKHELIFA_ext@spb.eu', --  'jff@spb.fr', -- 
 			@sMessage, 
 			@sObjet, 
 			null, 

@@ -62,25 +62,67 @@ GO
 -- Retourne                            :     Rien
 --                                
 -------------------------------------------------------------------
+--		  JFF   16/01/2025   [HUB832_HUB_ORG_REUN] 
+-------------------------------------------------------------------
 
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'DD_S01_CODE_CAR_PAR_FAMILLE' AND type = 'P' )
             DROP procedure sysadm.DD_S01_CODE_CAR_PAR_FAMILLE
 GO
 
 CREATE PROC sysadm.DD_S01_CODE_CAR_PAR_FAMILLE
-            @sIdTypCode   Varchar ( 3 ),
+        @sIdTypCode   Varchar ( 3 ),
 	    @iIdFam	  integer -- Code Famille
-	    
 AS
 
 SELECT c.id_code,
        c.lib_code
-FROM   sysadm.code c,
+FROM   sysadm.code_car c,
        sysadm.famille_car famc
 WHERE  c.id_typ_code = @sIdTypCode
-And    c.id_code    >=0
+And    c.id_code    <> '-1'
 And    c.id_typ_code = famc.id_typ_code
 And    c.id_code = famc.id_code
 And    famc.id_fam = @iIdFam
+
+GO
+
+-------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_CODE_DANS_FAMILLE_CAR
+-- Auteur               :       FABRY JF
+-- Date                 :       16/01/2025
+-- Libellé              :       Recherche présence d'un code dans un famille
+-- Commentaires         :       
+--
+-- Arguments            : 	@sIdTypCode   Varchar ( 3 ) : Type de Code regroupé par famille
+--				@iIdFam	  integer
+--
+-- Retourne                            :     Rien
+--                                
+-------------------------------------------------------------------
+--		  JFF   16/01/2025   [HUB832_HUB_ORG_REUN] 
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_CODE_DANS_FAMILLE_CAR' AND type = 'P' )
+            DROP procedure sysadm.PS_S_CODE_DANS_FAMILLE_CAR
+GO
+
+CREATE PROC sysadm.PS_S_CODE_DANS_FAMILLE_CAR
+	    @aiIdFam	  integer,
+		@asIdCode	  VarChar ( 6 ) 
+AS
+
+Set @asIdCode = lTrim ( rTrim ( @asIdCode ))
+
+SELECT c.id_code,
+       c.lib_code
+FROM   sysadm.code_car c,
+       sysadm.famille_car famc
+WHERE  famc.id_fam = @aiIdFam
+And    famc.id_code = @asIdCode 
+And    c.id_typ_code = famc.id_typ_code
+And    c.id_code = famc.id_code
+And    c.id_code <> '-1'
+
+Return @@Rowcount
 
 GO
