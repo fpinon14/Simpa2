@@ -326,6 +326,7 @@ public function string uf_detection_auto_nomfic (string aidfourn);//*-----------
 //        JFF   26/11/2018   [PC874_2_V1]
 //        JFF   02/09/2019   [DT424]
 //        JFF   07/03/2024   [HP252_276_HUB_PRESTA]
+//        JFF   16/01/2025	  [HUB832_HUB_ORG_REUN] 
 //*-----------------------------------------------------------------
 
 String	sRepFic, sNomFic, sFichier, sInd, sVar, sJoker, sItem, sRepFourn, sCas
@@ -340,7 +341,12 @@ sCas = "" //* #2 [MICROMANIA]
 
 // [HP252_276_HUB_PRESTA]
 If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
-	ibPrestaHub = SQLCA.PS_S01_CODE_CAR ( aidfourn, '-WP') > 0 
+	//	[HUB832_HUB_ORG_REUN] 
+	If F_CLE_A_TRUE ( "HUB832_HUB_ORG_REUN" ) Then
+		ibPrestaHub = SQLCA.PS_S_CODE_DANS_FAMILLE_CAR ( 1, isIdFour ) > 0 		
+	Else
+		ibPrestaHub = SQLCA.PS_S01_CODE_CAR ( isIdFour, '-WP') > 0 
+	End If 
 End If 
 
 
@@ -726,8 +732,9 @@ public function integer uf_lancer_trt ();//*------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     		Modification
 //* #1 	DGA       19/09/2006    Gestion d'un répertoire temporaire DCMP-060643
-//       JFF       21/03/2017    [PI065]
-//       JFF   	 07/03/2024   	[HP252_276_HUB_PRESTA]
+//*      JFF       21/03/2017    [PI065]
+//*      JFF   	 07/03/2024   	[HP252_276_HUB_PRESTA]
+//*      JFF		 16/01/2025		[HUB832_HUB_ORG_REUN] 
 //*-----------------------------------------------------------------
 
 Int		iRet
@@ -741,7 +748,12 @@ isIdFour = sIdFourn // [PI065]
 ibPrestaHub = FALSE
 // [HP252_276_HUB_PRESTA]
 If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
-	ibPrestaHub = SQLCA.PS_S01_CODE_CAR ( isIdFour, '-WP') > 0 
+	//	[HUB832_HUB_ORG_REUN] 
+	If F_CLE_A_TRUE ( "HUB832_HUB_ORG_REUN" ) Then
+		ibPrestaHub = SQLCA.PS_S_CODE_DANS_FAMILLE_CAR ( 1, isIdFour ) > 0 		
+	Else
+		ibPrestaHub = SQLCA.PS_S01_CODE_CAR ( isIdFour, '-WP') > 0 
+	End If 
 End If 
 
 /*------------------------------------------------------------------*/
@@ -31503,6 +31515,7 @@ private function integer uf_ctrl_fichier_frn_hub ();//*-------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
+//*       JFF	16/01/2025	[HUB832_HUB_ORG_REUN] 
 //*-----------------------------------------------------------------
 
 Int iRet, iStatusGc, iInfoSpbFrn
@@ -31643,7 +31656,7 @@ For lCpt = lTotLig To 1 Step -1
 	If sVal = "HUB" and Not ibPrestaHub Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-		" : Ce fournisseur (" + sVal1 + ") n'est pas déclaré comme étant lié au Hub Prestataire (-WP)." )		
+		" : Ce fournisseur (" + sVal1 + ") n'est pas déclaré comme étant lié au Hub Prestataire (FamilleCar 1)." )	// [HUB832_HUB_ORG_REUN] 	
 	End If 
 	
 	If sVal <> "HUB" and ibPrestaHub Then

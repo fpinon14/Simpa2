@@ -164,6 +164,7 @@ public subroutine uf_changer_lib_dw (ref datawindow adwtrtcmdfrn, long aiidprod,
 //       JFF   06/04/2023 [PMO139_RS4926]
 //       JFF   30/05/2023 [PMO89_RS4822]
 //       JFF   07/03/2024 [HP252_276_HUB_PRESTA]
+//*      JFF	16/01/2025 [HUB832_HUB_ORG_REUN] 
 //*-----------------------------------------------------------------
 String	sModif, sCodEtat, sInfoSpbFrnCplt, sInfoFrnSpbCplt
 String   sTabRech [], sTabSubst [], sTabNull [], sRempl, sVal
@@ -182,7 +183,12 @@ bAppSwap = lnvPFCString.of_getkeyvalue (sInfoFrnSpbCplt, "APP_SWAP", ";") = "OUI
 bFournHub = FALSE
 // [HP252_276_HUB_PRESTA]
 If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
-	bFournHub = SQLCA.PS_S01_CODE_CAR ( asIdFour, '-WP') > 0 
+	//	[HUB832_HUB_ORG_REUN] 
+	If F_CLE_A_TRUE ( "HUB832_HUB_ORG_REUN" ) Then
+		bFournHub = SQLCA.PS_S_CODE_DANS_FAMILLE_CAR ( 1, asIdFour ) > 0 		
+	Else
+		bFournHub = SQLCA.PS_S01_CODE_CAR ( asIdFour, '-WP') > 0 
+	End If 	
 End If 
 
 

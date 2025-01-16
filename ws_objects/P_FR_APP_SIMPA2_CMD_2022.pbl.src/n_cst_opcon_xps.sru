@@ -175,6 +175,7 @@ sTabCode [42] = "CDF" // [PMO89_RS4822]
 sTabCode [43] = "IFR" // [RS-5297-HP-178]
 sTabCode [44] = "BST" // 
 sTabCode [45] = "SPA" // [HP252_276_HUB_PRESTA]
+sTabCode [46] = "MST" // [HP252_276_HUB_PRESTA][HUB832]
 
 lTotFour = UpperBound ( sTabCode )
 
