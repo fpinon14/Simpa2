@@ -28991,6 +28991,7 @@ private function integer uf_zn_choix_regle_hub (string ascas, long alidprod, lon
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* 		 JFF  27/11/2024  [20241127082353640]
+//* 		 JFF  17/01/2025  [HUB_TYP_APP_REMPL] (V01)
 //*---------------------------------------------------------------
 
 s_Pass	stPass
@@ -29033,18 +29034,37 @@ End If
 stPass.sTab[15]= "FR"  // Pays [20241127082353640]
 
 // Pays [20241127082353640]
-lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'TYPAPP_REC_NEU'", 1, idwWDivSin.RowCount () ) 
-
-If lRow <= 0 Then
+// [HUB_TYP_APP_REMPL]
+If F_CLE_A_TRUE ( "HUB_TYP_APP_REMPL" ) Then
 	lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'TYPAPP_AREC_ANEU'", 1, idwWDivSin.RowCount () ) 
-End iF 
+	
+	If lRow > 0 Then
+		sVal = idwWDivSin.GetItemString ( lRow, "VAL_LST_CAR" )
+		stPass.sTab[16] = sVal
+	End If
+Else	
+	lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'TYPAPP_REC_NEU'", 1, idwWDivSin.RowCount () ) 
+	
+	If lRow <= 0 Then
+		lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'TYPAPP_AREC_ANEU'", 1, idwWDivSin.RowCount () ) 
+	End iF 
+	
+	If lRow > 0 Then
+		sVal = idwWDivSin.GetItemString ( lRow, "VAL_LST_CAR" )
+		If sVal = "AREC" Then sVal = "REC"
+		If sVal = "ANEU" Then sVal = "NEU"	
+		stPass.sTab[16] = sVal
+	End If
+End If 
 
+// [HUB_TYP_APP_REMPL]
+lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'TYPAPP_REC_NEU'", 1, idwWDivSin.RowCount () ) 
 If lRow > 0 Then
 	sVal = idwWDivSin.GetItemString ( lRow, "VAL_LST_CAR" )
-	If sVal = "AREC" Then sVal = "REC"
-	If sVal = "ANEU" Then sVal = "NEU"	
-	stPass.sTab[16] = sVal
-End If
+	stPass.sTab[17] = sVal
+End If	
+	
+stPass.sTab[18] = "" // [HUB_TYP_APP_REMPL] Chaine séria vide pour l'instant, à remplir au besoin
 
 stPass.sTab[50] = "CREATION_PRESTATION"
 

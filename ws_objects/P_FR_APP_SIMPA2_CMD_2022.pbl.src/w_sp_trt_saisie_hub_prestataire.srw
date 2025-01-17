@@ -75,6 +75,8 @@ String isIdHubPresta
 String isIdAdh, isLibGrpContractant
 String isPays
 String isEtatAppSin
+String isChoixEtatAppRempl // [HUB_TYP_APP_REMPL]
+String isChaineSeria // [HUB_TYP_APP_REMPL]
 
 Decimal { 2 } idcMtValAchat
 Decimal { 2 } idcMtPec
@@ -351,6 +353,7 @@ public subroutine wf_recuperation_point_service ();//*--------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* 		 JFF  27/11/2024  [20241127082353640]
+//* 		 JFF  17/01/2025  [HUB_TYP_APP_REMPL] (V01)
 //*-----------------------------------------------------------------
 
 
@@ -388,40 +391,79 @@ isIdAdh = Fill ( " ", 50)
 isLibGrpContractant = Fill ( " ", 35)
 SQLCA.PS_HP276_S_S2_DATA_DOSSIER  ( ilIdSin, isIdAdh, iiIdGrpContractant, isLibGrpContractant )
 
-dw_1.DataObject = "d_trt_saisie_hub_point_de_service"
+// [HUB_TYP_APP_REMPL]
+If F_CLE_A_TRUE ( "HUB_TYP_APP_REMPL" ) Then
+	dw_1.DataObject = "d_trt_saisie_hub_point_de_service_v01"
+Else 
+	dw_1.DataObject = "d_trt_saisie_hub_point_de_service"
+End If 
+
 dw_1.SetTransObject ( itrHubPrestataire )
 
 sTypDom = lnvPFCString.of_Getkeyvalue ( isChaineRetour, "HP_TYP_DOM", ";")
 
 
 // [20241127082353640] ajout idcMtValAchat à isEtatAppSin
-iTotRow = dw_1.Retrieve ( & 
-	iCle, &
-	ilIdprod, &
-	ilIdGti, &
-	isMarqAppSin, &
-	isModlAppSin, &
-	isTypAppSin, &
-	sTypDom, &
-	isTypActionS2, &
-	isIdAdh, &
-	ilIdSin, &
-	iiIdGrpContractant, &
-	isLibGrpContractant, &
-	ilAdrCodCiv, &
-	isAdrNom, &
-	isAdrPreNom, &
-	isAdrLivr1, &
-	isAdrLivr2, &
-	isAdrCplt, &
-	isAdrCp, &
-	isAdrVille, &
-	sCodePays, &
-	idcMtValAchat, &		
-	idcMtPec, &		
-	String ( idtDteAchat, "dd/mm/yyyy" ), &
-	isEtatAppSin )	
-
+// [HUB_TYP_APP_REMPL]
+If F_CLE_A_TRUE ( "HUB_TYP_APP_REMPL" ) Then
+	iTotRow = dw_1.Retrieve ( & 
+		iCle, &
+		ilIdprod, &
+		ilIdGti, &
+		isMarqAppSin, &
+		isModlAppSin, &
+		isTypAppSin, &
+		sTypDom, &
+		isTypActionS2, &
+		isIdAdh, &
+		ilIdSin, &
+		iiIdGrpContractant, &
+		isLibGrpContractant, &
+		ilAdrCodCiv, &
+		isAdrNom, &
+		isAdrPreNom, &
+		isAdrLivr1, &
+		isAdrLivr2, &
+		isAdrCplt, &
+		isAdrCp, &
+		isAdrVille, &
+		sCodePays, &
+		idcMtValAchat, &		
+		idcMtPec, &		
+		String ( idtDteAchat, "dd/mm/yyyy" ), &
+		isEtatAppSin, &
+		isChoixEtatAppRempl, &
+		isChaineSeria &
+		)	
+Else
+	iTotRow = dw_1.Retrieve ( & 
+		iCle, &
+		ilIdprod, &
+		ilIdGti, &
+		isMarqAppSin, &
+		isModlAppSin, &
+		isTypAppSin, &
+		sTypDom, &
+		isTypActionS2, &
+		isIdAdh, &
+		ilIdSin, &
+		iiIdGrpContractant, &
+		isLibGrpContractant, &
+		ilAdrCodCiv, &
+		isAdrNom, &
+		isAdrPreNom, &
+		isAdrLivr1, &
+		isAdrLivr2, &
+		isAdrCplt, &
+		isAdrCp, &
+		isAdrVille, &
+		sCodePays, &
+		idcMtValAchat, &		
+		idcMtPec, &		
+		String ( idtDteAchat, "dd/mm/yyyy" ), &
+		isEtatAppSin )	
+End If 	
+		
 If iTotRow = 1 And Upper ( dw_1.GetItemString ( 1, "idHubPresta" )) = "AUCUN" Then 
 	iTotRow = 0
 	dw_1.Reset ()
@@ -842,6 +884,7 @@ public function boolean wf_valider_type_dommage_et_action ();//*----------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* 		 JFF  27/11/2024  [20241127082353640]
+//* 		 JFF  17/01/2025  [HUB_TYP_APP_REMPL] (V01)
 //*-----------------------------------------------------------------
 
 
@@ -915,26 +958,55 @@ End Choose
 
 // Détermination du type d'action et controle de cohérence
 dsTypActionHub = Create dataStore
-dsTypActionHub.DataObject = "d_trt_saisie_hub_type_action"
+
+// [HUB_TYP_APP_REMPL]
+If F_CLE_A_TRUE ( "HUB_TYP_APP_REMPL" ) Then
+	dsTypActionHub.DataObject = "d_trt_saisie_hub_type_action_v01"
+Else 
+	dsTypActionHub.DataObject = "d_trt_saisie_hub_type_action"
+End IF 
+
 dsTypActionHub.SetTransObject ( itrHubPrestataire )
 
 // [20241127082353640] ajout isAdrCp à isEtatAppSin
-iRow = dsTypActionHub.Retrieve ( &
-		iCle, &
-		ilIdprod, &
-		ilIdGti, &
-		isMarqAppSin, &
-		isModlAppSin, &
-		isTypAppSin, &
-		sSelectionTypDom, &
-		isTypActionS2, &
-		isAdrCp, &
-		isPays, &
-		idcMtValAchat, &
-		idcMtPec, &				
-		String ( idtDteAchat, "dd/mm/yyyy" ), &
-		isEtatAppSin &
-		)
+// [HUB_TYP_APP_REMPL]
+If F_CLE_A_TRUE ( "HUB_TYP_APP_REMPL" ) Then
+	iRow = dsTypActionHub.Retrieve ( &
+			iCle, &
+			ilIdprod, &
+			ilIdGti, &
+			isMarqAppSin, &
+			isModlAppSin, &
+			isTypAppSin, &
+			sSelectionTypDom, &
+			isTypActionS2, &
+			isAdrCp, &
+			isPays, &
+			idcMtValAchat, &
+			idcMtPec, &				
+			String ( idtDteAchat, "dd/mm/yyyy" ), &
+			isEtatAppSin, &
+			isChoixEtatAppRempl, &
+			isChaineSeria &			
+			)
+Else
+	iRow = dsTypActionHub.Retrieve ( &
+			iCle, &
+			ilIdprod, &
+			ilIdGti, &
+			isMarqAppSin, &
+			isModlAppSin, &
+			isTypAppSin, &
+			sSelectionTypDom, &
+			isTypActionS2, &
+			isAdrCp, &
+			isPays, &
+			idcMtValAchat, &
+			idcMtPec, &				
+			String ( idtDteAchat, "dd/mm/yyyy" ), &
+			isEtatAppSin &
+			)
+End If 
 
 
 Choose Case isTypActionS2
@@ -1138,6 +1210,7 @@ public subroutine wf_recuperation_process_acheminement ();//*-------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* 		 JFF  27/11/2024  [20241127082353640]
+//* 		 JFF  17/01/2025  [HUB_TYP_APP_REMPL] (V01)
 //*-----------------------------------------------------------------
 
 String sTypDom, sVal, sCodePays, sVal1
@@ -1188,7 +1261,13 @@ isLibGrpContractant = Fill ( "", 35)
 SQLCA.PS_HP276_S_S2_DATA_DOSSIER  ( ilIdSin, isIdAdh, iiIdGrpContractant, isLibGrpContractant )
 */
 
-dw_1.DataObject = "d_trt_saisie_hub_process_acheminement"
+// [HUB_TYP_APP_REMPL]
+If F_CLE_A_TRUE ( "HUB_TYP_APP_REMPL" ) Then
+	dw_1.DataObject = "d_trt_saisie_hub_process_acheminement_V01"
+Else 
+	dw_1.DataObject = "d_trt_saisie_hub_process_acheminement"
+End If 
+
 dw_1.SetTransObject ( itrHubPrestataire )
 
 
@@ -1199,35 +1278,71 @@ sIdPointService = F_CLE_VAL ( "HP_ID_POINT_SERV", isChaineRetour, ";")
 sIdModeLogis = F_CLE_VAL ( "HP_ID_MODE_LOGIS", sIdModeLogis, ";")
 
 // [20241127082353640] ajout idcMtValAchat à isEtatAppSin
-iTotRow = dw_1.Retrieve ( & 
-	iCle, &
-	ilIdprod, &
-	ilIdGti, &
-	isMarqAppSin, &
-	isModlAppSin, &
-	isTypAppSin, &
-	sTypDom, &
-	isTypActionS2, &
-	isIdAdh, &
-	ilIdSin, &
-	iiIdGrpContractant, &
-	isLibGrpContractant, &
-	ilAdrCodCiv, &
-	isAdrNom, &
-	isAdrPreNom, &
-	isAdrLivr1, &
-	isAdrLivr2, &
-	isAdrCplt, &
-	isAdrCp, &
-	isAdrVille, &
-	sCodePays, &
-	sIdFour, &
-	sIdPointService, &
-	sIdModeLogis, &
-	idcMtValAchat, &		
-	idcMtPec, &		
-	String ( idtDteAchat, "dd/mm/yyyy" ), &
-	isEtatAppSin )		
+// [HUB_TYP_APP_REMPL]
+If F_CLE_A_TRUE ( "HUB_TYP_APP_REMPL" ) Then
+	iTotRow = dw_1.Retrieve ( & 
+		iCle, &
+		ilIdprod, &
+		ilIdGti, &
+		isMarqAppSin, &
+		isModlAppSin, &
+		isTypAppSin, &
+		sTypDom, &
+		isTypActionS2, &
+		isIdAdh, &
+		ilIdSin, &
+		iiIdGrpContractant, &
+		isLibGrpContractant, &
+		ilAdrCodCiv, &
+		isAdrNom, &
+		isAdrPreNom, &
+		isAdrLivr1, &
+		isAdrLivr2, &
+		isAdrCplt, &
+		isAdrCp, &
+		isAdrVille, &
+		sCodePays, &
+		sIdFour, &
+		sIdPointService, &
+		sIdModeLogis, &
+		idcMtValAchat, &		
+		idcMtPec, &		
+		String ( idtDteAchat, "dd/mm/yyyy" ), &
+		isEtatAppSin, &
+		isChoixEtatAppRempl, &
+		isChaineSeria &		
+		)
+Else
+	iTotRow = dw_1.Retrieve ( & 
+		iCle, &
+		ilIdprod, &
+		ilIdGti, &
+		isMarqAppSin, &
+		isModlAppSin, &
+		isTypAppSin, &
+		sTypDom, &
+		isTypActionS2, &
+		isIdAdh, &
+		ilIdSin, &
+		iiIdGrpContractant, &
+		isLibGrpContractant, &
+		ilAdrCodCiv, &
+		isAdrNom, &
+		isAdrPreNom, &
+		isAdrLivr1, &
+		isAdrLivr2, &
+		isAdrCplt, &
+		isAdrCp, &
+		isAdrVille, &
+		sCodePays, &
+		sIdFour, &
+		sIdPointService, &
+		sIdModeLogis, &
+		idcMtValAchat, &		
+		idcMtPec, &		
+		String ( idtDteAchat, "dd/mm/yyyy" ), &
+		isEtatAppSin )		
+End If 
 
 If iTotRow <= 0 Then
 	stMessage.sTitre		= "Erreur Hub Prestataire"
@@ -1341,6 +1456,7 @@ event open;//*-----------------------------------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* 		 JFF  27/11/2024  [20241127082353640]
+//* 		 JFF  17/01/2025  [HUB_TYP_APP_REMPL] (V01)
 //*-----------------------------------------------------------------
 
 s_pass stPass
@@ -1399,6 +1515,9 @@ Choose Case isTrtFen
 
 		isPays			= stPass.sTab[15] // [20241127082353640]
 		isEtatAppSin	= stPass.sTab[16] // [20241127082353640]
+		isChoixEtatAppRempl = stPass.sTab[17] // [HUB_TYP_APP_REMPL]
+		isChaineSeria = stPass.sTab[18] // [HUB_TYP_APP_REMPL]
+		
 		
 		idcMtValAchat	= stPass.dcTab[1] // [20241127082353640]
 		idcMtPec			= stPass.dcTab[2] // [20241127082353640]		
