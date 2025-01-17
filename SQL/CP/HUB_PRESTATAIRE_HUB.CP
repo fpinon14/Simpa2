@@ -324,13 +324,14 @@ Go
 -- Retourne             :       rien
 -------------------------------------------------------------------
 -- JFF  27/11/2024  [20241127082353640]
+-- JFF  17/01/2025  [HUB_TYP_APP_REMPL] (V01)
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_TYPE_ACTION' AND type = 'P' )
-        DROP procedure edi.PS_HP276_S_HP_TYPE_ACTION
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_TYPE_ACTION_V01' AND type = 'P' )
+        DROP procedure edi.PS_HP276_S_HP_TYPE_ACTION_V01
 GO
 
 
-CREATE procedure edi.PS_HP276_S_HP_TYPE_ACTION
+CREATE procedure edi.PS_HP276_S_HP_TYPE_ACTION_V01
 	    @aiCas				Tinyint,
 		@adcIdProd			Integer,
 		@adcIdGti			Integer,
@@ -344,7 +345,9 @@ CREATE procedure edi.PS_HP276_S_HP_TYPE_ACTION
 		@adcMtValAchat		Decimal ( 11, 2 ) , -- [20241127082353640]
 		@adcMtPriseEnCharge decimal ( 11, 2 ) , -- [20241127082353640]
 		@asDateAchat		VarChar ( 10 ),  -- [20241127082353640]
-		@asEtatAppSin		VarChar ( 20 ) -- [20241127082353640]
+		@asEtatAppSin		VarChar ( 20 ), -- [20241127082353640]
+		@asChoixEtatAppRempl VarChar ( 20 ), -- [HUB_TYP_APP_REMPL]
+		@asChaineSeria		VarChar ( 800 ) -- [HUB_TYP_APP_REMPL]
 AS
 
 ---------------------------------------------------------------------------------
@@ -375,7 +378,7 @@ If @aiCas in ( 1, 2 )
 -------------------------------------------------------------------------------
 If @aiCas = 3 
   Begin
-		Exec edi.PS_HP276_S_HP_TYPE_ACTION_HUB
+		Exec edi.PS_HP276_S_HP_TYPE_ACTION_HUB_V01
 			@adcIdProd			,
 			@adcIdGti			,
 			@asMarqAppSin		,
@@ -388,7 +391,9 @@ If @aiCas = 3
 			@adcMtValAchat		, 
 			@adcMtPriseEnCharge , 
 			@asDateAchat 		,  
-			@asEtatAppSin		
+			@asEtatAppSin		,
+			@asChoixEtatAppRempl , -- [HUB_TYP_APP_REMPL]
+			@asChaineSeria		   -- [HUB_TYP_APP_REMPL]	
   End
 
 Go
@@ -407,13 +412,14 @@ Go
 -- Retourne             :       rien
 -------------------------------------------------------------------
 -- JFF  27/11/2024  [20241127082353640]
+-- JFF  17/01/2025  [HUB_TYP_APP_REMPL] (V01)
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_POINT_DE_SERVICE' AND type = 'P' )
-        DROP procedure edi.PS_HP276_S_HP_POINT_DE_SERVICE
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_POINT_DE_SERVICE_V01' AND type = 'P' )
+        DROP procedure edi.PS_HP276_S_HP_POINT_DE_SERVICE_V01
 GO
 
 
-CREATE procedure edi.PS_HP276_S_HP_POINT_DE_SERVICE
+CREATE procedure edi.PS_HP276_S_HP_POINT_DE_SERVICE_V01
 	    @aiCas				Tinyint,
 		@adcIdProd			Integer,
 		@adcIdGti			Integer,
@@ -438,7 +444,10 @@ CREATE procedure edi.PS_HP276_S_HP_POINT_DE_SERVICE
 		@adcMtValAchat		Decimal ( 11, 2 ) , -- [20241127082353640]
 		@adcMtPriseEnCharge decimal ( 11, 2 ) , -- [20241127082353640]
 		@asDateAchat		VarChar ( 10 ),  -- [20241127082353640]
-		@asEtatAppSin		VarChar ( 20 ) -- [20241127082353640]
+		@asEtatAppSin		VarChar ( 20 ), -- [20241127082353640]
+		@asChoixEtatAppRempl VarChar ( 20 ), -- [HUB_TYP_APP_REMPL]
+		@asChaineSeria		VarChar ( 800 ) -- [HUB_TYP_APP_REMPL]
+
 AS
 
 ---------------------------------------------------------------------------------
@@ -484,33 +493,33 @@ If @aiCas in ( 1, 2 )
 			Left ( 'ACCEPTED', 20 ) 'statutPointServ' -- ACCEPTED, REJECTED, UNAVAILABLE, UNVERIFIED
 	Union
 	Select	LEFT ( 'AUYPSQZMJB', 20 ) 'idHubPresta',
-			Left ( 'ANV', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
+			Left ( 'MST', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
 			null,
-			Left ( 'ANV0001', 40) 'idPointServ', 
+			Left ( 'MST0001', 40) 'idPointServ', 
 			Left ( 'CENTRALIZATION', 40 ) 'idModeLogis', 
 			Left ( 'Centralisation', 40 ) 'LibModeLogis', --  [A_REPRENDRE]
-			Left ( 'Nom point de service ANV', 255 ) 'nomPointServ',
-			Left ( 'Adresse1 point de service ANV', 255 ) 'adr1PointServ',
-			Left ( 'Adresse2 point de service ANV', 255 ) 'adr2PointServ',
-			Left ( 'Adresse3 point de service ANV', 255 ) 'adr3PointServ',
-			Left ( 'Code postal ANV', 20) 'adrCpPointServ',
-			Left ( 'Ville ANV', 50) 'adrVillePointServ',
+			Left ( 'Nom point de service MST', 255 ) 'nomPointServ',
+			Left ( 'Adresse1 point de service MST', 255 ) 'adr1PointServ',
+			Left ( 'Adresse2 point de service MST', 255 ) 'adr2PointServ',
+			Left ( 'Adresse3 point de service MST', 255 ) 'adr3PointServ',
+			Left ( 'Code postal MST', 20) 'adrCpPointServ',
+			Left ( 'Ville MST', 50) 'adrVillePointServ',
 			Left ( 'FR', 50) 'CodePaysPointServ',
 			Left ( '595.65', 15 ) 'DistanceMetre',
 			Left ( 'ACCEPTED', 20 ) 'statutPointServ' -- ACCEPTED, REJECTED, UNAVAILABLE, UNVERIFIED
 	Union
 	Select	LEFT ( 'AUYPSQZMJB', 20 ) 'idHubPresta',
-			Left ( 'ANV', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
+			Left ( 'MST', 3 ) 'idFour', -- Code fournisseur SPB officiel SIMPA2/VOLCANES
 			null,
-			Left ( 'ANV0002', 20) 'idPointServ', 
+			Left ( 'MST0002', 20) 'idPointServ', 
 			Left ( 'PROXIMITY', 40 ) 'idModeLogis', 
 			Left ( 'Proximité', 40 ) 'LibModeLogis', --  [A_REPRENDRE]
-			Left ( 'Nom point de service ANV', 255 ) 'nomPointServ',
-			Left ( 'Adresse1 point de service ANV', 255 ) 'adr1PointServ',
-			Left ( 'Adresse2 point de service ANV', 255 ) 'adr2PointServ',
-			Left ( 'Adresse3 point de service ANV', 255 ) 'adr3PointServ',
-			Left ( 'Code postal ANV', 20) 'adrCpPointServ',
-			Left ( 'Ville ANV', 50) 'adrVillePointServ',
+			Left ( 'Nom point de service MST', 255 ) 'nomPointServ',
+			Left ( 'Adresse1 point de service MST', 255 ) 'adr1PointServ',
+			Left ( 'Adresse2 point de service MST', 255 ) 'adr2PointServ',
+			Left ( 'Adresse3 point de service MST', 255 ) 'adr3PointServ',
+			Left ( 'Code postal MST', 20) 'adrCpPointServ',
+			Left ( 'Ville MST', 50) 'adrVillePointServ',
 			Left ( 'FR', 50) 'CodePaysPointServ',
 			Left ( '595.65', 15 ) 'DistanceMetre',
 			Left ( 'REJECTED', 20 ) 'statutPointServ' -- ACCEPTED, REJECTED, UNAVAILABLE, UNVERIFIED
@@ -637,7 +646,7 @@ If @aiCas in ( 1, 2 )
 -------------------------------------------------------------------------------
 If @aiCas = 3 
   Begin
-	Exec edi.PS_HP276_S_HP_POINT_DE_SERVICE_HUB
+	Exec edi.PS_HP276_S_HP_POINT_DE_SERVICE_HUB_V01
 		@adcIdProd			,
 		@adcIdGti			,
 		@asMarqAppSin		,
@@ -661,7 +670,9 @@ If @aiCas = 3
 		@adcMtValAchat		,
 		@adcMtPriseEnCharge , 
 		@asDateAchat		,
-		@asEtatAppSin		
+		@asEtatAppSin		,
+		@asChoixEtatAppRempl, -- [HUB_TYP_APP_REMPL]
+		@asChaineSeria		  -- [HUB_TYP_APP_REMPL]		
   End
 Go
 
@@ -2014,12 +2025,13 @@ Go
 -- Retourne             :       rien
 -------------------------------------------------------------------
 -- JFF  27/11/2024  [20241127082353640]
+-- JFF  17/01/2025  [HUB_TYP_APP_REMPL] (V01)
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_PROCESS_ACHEMINEMENT' AND type = 'P' )
-        DROP procedure edi.PS_HP276_S_HP_PROCESS_ACHEMINEMENT
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_PROCESS_ACHEMINEMENT_V01' AND type = 'P' )
+        DROP procedure edi.PS_HP276_S_HP_PROCESS_ACHEMINEMENT_V01
 GO
 
-CREATE procedure edi.PS_HP276_S_HP_PROCESS_ACHEMINEMENT
+CREATE procedure edi.PS_HP276_S_HP_PROCESS_ACHEMINEMENT_V01
 	    @aiCas				Tinyint,
 		@adcIdProd			Integer,
 		@adcIdGti			Integer,
@@ -2047,8 +2059,9 @@ CREATE procedure edi.PS_HP276_S_HP_PROCESS_ACHEMINEMENT
 		@adcMtValAchat		Decimal ( 11, 2 ) , -- [20241127082353640]
 		@adcMtPriseEnCharge decimal ( 11, 2 ) , -- [20241127082353640]
 		@asDateAchat		VarChar ( 10 ),  -- [20241127082353640]
-		@asEtatAppSin		VarChar ( 20 ) -- [20241127082353640]
-
+		@asEtatAppSin		VarChar ( 20 ), -- [20241127082353640]
+		@asChoixEtatAppRempl VarChar ( 20 ), -- [HUB_TYP_APP_REMPL]
+		@asChaineSeria		VarChar ( 800 ) -- [HUB_TYP_APP_REMPL]
 AS
 
 ---------------------------------------------------------------------------------
@@ -2106,7 +2119,7 @@ If @aiCas in ( 1, 2 )
 -------------------------------------------------------------------------------
 If @aiCas = 3 
   Begin
-		Exec edi.PS_HP276_S_HP_PROCESS_ACHEMINEMENT_HUB
+		Exec edi.PS_HP276_S_HP_PROCESS_ACHEMINEMENT_HUB_V01
 			@adcIdProd			,
 			@adcIdGti			,
 			@asMarqAppSin		,
@@ -2133,7 +2146,10 @@ If @aiCas = 3
 			@adcMtValAchat		,
 			@adcMtPriseEnCharge ,
 			@asDateAchat		,
-			@asEtatAppSin		
+			@asEtatAppSin		,
+			@asChoixEtatAppRempl, -- [HUB_TYP_APP_REMPL]
+			@asChaineSeria	  -- [HUB_TYP_APP_REMPL]
+
   End
 Go
 

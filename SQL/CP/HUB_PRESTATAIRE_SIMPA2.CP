@@ -198,7 +198,11 @@ Select	@iIdSin			= Convert ( integer, @adcIdsin),
 		@PrenomAss		= rtrim ( lTrim ( pe.prenom )),
 		@sTypAppSin		= nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'TYPE_APP', 'P',  'RETOUR=CODE'  ) , ''), 
 		@sLibTypAppSin  = nullif ( sysadm.FN_CODE_CAR ( @sTypAppSin, '-AR' ), '') ,
-		@sEtatAppSin	= nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'TYPAPP_REC_NEU', 'P',  'RETOUR=CODE'  ), ''),
+		@sEtatAppSin	= Case -- [HUB_TYP_APP_REMPL]
+							When sysadm.FN_CLE_NUMERIQUE ( 'HUB_TYP_APP_REMPL') > 0 
+								Then nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'TYPAPP_AREC_ANEU', 'P',  'RETOUR=CODE'  ), '')
+							Else nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'TYPAPP_REC_NEU', 'P',  'RETOUR=CODE'  ), '')
+						  End,
 		@sCodeVerrou	= IsNull ( nullif ( sysadm.FN_CLE_VAL ( 'CODE_VERROU', c.info_spb_frn_cplt, ';' ), ''), 
 						   		   nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'CODE_VERROU_SHERPA_SCRIPT', 'P', '' ), '' )),
 		@sDesimlocke	= nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'DESIMLOCKE', 'P', '' ), '' ),
@@ -368,6 +372,9 @@ Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DTE_FIN_GC', Convert ( Varchar 
 Select @sEmailProduit = sysadm.FN_CLE_VAL ('ADR_MAIL_PROD' , val_car, ';') From sysadm.det_pro dp Where dp.id_prod = @dcIdProd And dp.id_code_dp = 136
 If @sEmailProduit is null Set @sEmailProduit = ''
 Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'EMAIL_PRODUIT', @sEmailProduit, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'CHOIX_ETAT_APP_REMPL', nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'TYPAPP_REC_NEU', 'P',  'RETOUR=CODE'  ), ''), rTrim ( @sInfo_spb_frn_cplt ) , ';' ) -- [HUB_TYP_APP_REMPL]
+
 
 Select 
 	@aiCas	'iCas',
@@ -578,7 +585,11 @@ Select	@iIdSin			= Convert ( integer, @adcIdsin),
 		@PrenomAss		= rtrim ( lTrim ( s.prenom )),
 		@sTypAppSin		= nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'TYPE_APP', 'W',  'RETOUR=CODE'  ) , ''), 
 		@sLibTypAppSin  = nullif ( sysadm.FN_CODE_CAR ( @sTypAppSin, '-AR' ), '') ,
-		@sEtatAppSin	= nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'TYPAPP_REC_NEU', 'W',  'RETOUR=CODE'  ), ''),
+		@sEtatAppSin	= Case -- [HUB_TYP_APP_REMPL]
+							When sysadm.FN_CLE_NUMERIQUE ( 'HUB_TYP_APP_REMPL') > 0 
+								Then nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'TYPAPP_AREC_ANEU', 'W',  'RETOUR=CODE'  ), '')
+							Else nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'TYPAPP_REC_NEU', 'W',  'RETOUR=CODE'  ), '')
+						  End,
 		@sCodeVerrou	= IsNull ( nullif ( sysadm.FN_CLE_VAL ( 'CODE_VERROU', c.info_spb_frn_cplt, ';' ), ''), 
 						   		   nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'CODE_VERROU_SHERPA_SCRIPT', 'W', '' ), '' )),
 		@sDesimlocke	= nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'DESIMLOCKE', 'W', '' ), '' ),
@@ -734,8 +745,8 @@ Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'NUM_FAX_SPB', @sNumFaxSpb, rTri
 Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'NUM_TEL_SPB', @sNumTelSpb, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
 
 Set @iDureeGc = Case 
-					When IsNumeric ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'duree_gti_orig', 'P', '' ) ) > 0
-						Then Convert ( Integer, sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'duree_gti_orig', 'P', '' ) )
+					When IsNumeric ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'duree_gti_orig', 'W', '' ) ) > 0
+						Then Convert ( Integer, sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'duree_gti_orig', 'W', '' ) )
 					Else null
 				End
 
@@ -746,6 +757,8 @@ Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DTE_FIN_GC', Convert ( Varchar 
 Select @sEmailProduit = sysadm.FN_CLE_VAL ('ADR_MAIL_PROD' , val_car, ';') From sysadm.det_pro dp Where dp.id_prod = @dcIdProd And dp.id_code_dp = 136
 If @sEmailProduit is null Set @sEmailProduit = ''
 Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'EMAIL_PRODUIT', @sEmailProduit, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'CHOIX_ETAT_APP_REMPL', nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'TYPAPP_REC_NEU', 'W',  'RETOUR=CODE'  ), ''), rTrim ( @sInfo_spb_frn_cplt ) , ';' ) -- [HUB_TYP_APP_REMPL]
 
 Select 
 	@aiCas	'iCas',
