@@ -369,11 +369,11 @@ BEGIN
 				@sPrenomLivraison = c.adr_prenom,
 				@sNomLivraison  = c.adr_nom,
 				@sAdresse1Livraison = c.adr_livr1,
-				@sAdresse2Livraison = c.adr_lirv2,
+				@sAdresse2Livraison = c.adr_livr2,
 				@sAdresseCpltLivraison = c.adr_livr_cpl,
 				@sCpVilleLivraison = c.adr_cp + ' ' + adr_ville
 
-		From sysadm.w_commande c
+		From SIMPA2_PRO.sysadm.w_commande c
 		Where c.id_sin = @adcIdSin
 		And   c.id_seq = 1
 	 End 
@@ -591,11 +591,11 @@ BEGIN
 				@sPrenomLivraison = c.adr_prenom,
 				@sNomLivraison  = c.adr_nom,
 				@sAdresse1Livraison = c.adr_livr1,
-				@sAdresse2Livraison = c.adr_lirv2,
+				@sAdresse2Livraison = c.adr_livr2,
 				@sAdresseCpltLivraison = c.adr_livr_cpl,
 				@sCpVilleLivraison = c.adr_cp + ' ' + adr_ville
 
-		From sysadm.w_commande c
+		From SIMPA2_TRT.sysadm.w_commande c
 		Where c.id_sin = @adcIdSin
 		And   c.id_seq = 1
 	 End 
