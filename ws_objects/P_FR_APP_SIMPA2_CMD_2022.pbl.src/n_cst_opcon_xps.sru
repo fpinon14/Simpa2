@@ -176,6 +176,13 @@ sTabCode [43] = "IFR" // [RS-5297-HP-178]
 sTabCode [44] = "BST" // 
 sTabCode [45] = "SPA" // [HP252_276_HUB_PRESTA]
 sTabCode [46] = "MST" // [HP252_276_HUB_PRESTA][HUB832]
+sTabCode [47] = "SVS" 
+sTabCode [48] = "CO1"
+sTabCode [49] = "TL2"
+sTabCode [50] = "DIP"
+sTabCode [51] = "SB2"
+sTabCode [52] = "ITA"
+sTabCode [53] = "WEF"
 
 lTotFour = UpperBound ( sTabCode )
 
