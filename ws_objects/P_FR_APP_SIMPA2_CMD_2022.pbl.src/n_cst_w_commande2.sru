@@ -1426,6 +1426,7 @@ public function integer uf_annuler_cmde ();//*----------------------------------
 //       JFF   04/10/2019 [PM462-1][V3]
 //       JFF   30/05/2023 [PMO89_RS4822]
 //       JFF   05/08/2024 [MCO602_PNEU]
+//			JFF   28/01/2025 [ISM457148]
 //*-----------------------------------------------------------------
 
 Int		iRet,  iIdSeq
@@ -1438,6 +1439,7 @@ Boolean	bCasO2MDiagNonCloture //* #18 [DCMP090165]
 Boolean	bAnnulationParFluxEdi // #24 [FNAC_PROD_ECH_TECH].[BGE].[20091027112156767]
 Boolean  bPasseDroit  		// #24 [FNAC_PROD_ECH_TECH].[BGE].[20091027112156767]
 Boolean  bDT57_annulation // [DT57_CMDE_IPHONE_SFR]
+Boolean	bFin
 Long		lIdSin, lRow, lVal1, lVal2
 String	sIdTypArt, SIdFour, sIdRefFour, sVal 
 DataWindowChild	dwChild
@@ -2342,13 +2344,16 @@ Choose case sIdFour
 	// "DTY", "DST", "CDS", "MBS"
 	// JFF le 23/11/2006 : Je modifie en Else
 	Case Else
-
+		
+		// ISM457148
+		If Not ( SQLCA.PS_S_CODE_DANS_FAMILLE_CAR ( 1, sIdFour ) > 0 ) Then
 			bAnnulGen = False
 			iRet = -1
 			stMessage.Icon			= Information!
 			stMessage.Bouton		= Ok!
 			stMessage.sCode		= "COMD064"				
 			F_Message ( stMessage )
+		End If 
 
 End Choose
 
@@ -2422,12 +2427,17 @@ If bAnnulGen Then
 		If Not Upper ( idw_TrtCmde.GetItemString ( 1, "ID_FOUR" ) ) = "WBA" &
 			And Not Upper ( idw_TrtCmde.GetItemString ( 1, "ID_FOUR" ) ) = "WBB" &
 			And Not bAnnulationParFluxEdi Then
-			stMessage.sCode = "COMD478"
-			//* #25  [MSS_DIAG]
-			stMessage.Icon			= Information!
-			stMessage.bErreurG	= FALSE
-			stMessage.Bouton		= Ok!			
-			F_Message ( stMessage )
+
+			bFin = False
+			Do While Not bFin
+				stMessage.sTitre		= "vDoc29906 : Info importante"
+				stMessage.Icon			= Exclamation!
+				stMessage.bErreurG	= FALSE
+				stMessage.Bouton		= YESNO!
+				stMessage.sCode		= "COMD478"
+				If F_Message ( stMessage ) = 1 Then bFin = TRUE
+			Loop			
+
 		End If
 		//* :#6  [DCMP080479]
 

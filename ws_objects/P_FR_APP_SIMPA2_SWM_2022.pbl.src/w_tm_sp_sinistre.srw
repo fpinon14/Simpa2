@@ -173,8 +173,6 @@ type dw_wreg_frais_annexe_frn from datawindow within w_tm_sp_sinistre
 end type
 type st_attente_diverse from statictext within w_tm_sp_sinistre
 end type
-type cb_testhub from commandbutton within w_tm_sp_sinistre
-end type
 end forward
 
 global type w_tm_sp_sinistre from w_8_traitement_master
@@ -274,7 +272,6 @@ uo_consult_euro uo_consult_euro
 st_pause_api_lab st_pause_api_lab
 dw_wreg_frais_annexe_frn dw_wreg_frais_annexe_frn
 st_attente_diverse st_attente_diverse
-cb_testhub cb_testhub
 end type
 global w_tm_sp_sinistre w_tm_sp_sinistre
 
@@ -340,6 +337,7 @@ public subroutine wf_afficher_doc (string asnomfichier, string astitreerr)
 public function boolean wf_blocage_ouv_gti ()
 public function string wf_gti_denree_alim_auchan (string asfiltre)
 public function string wf_gti_somme_forfaitaire (string asfiltre)
+public subroutine wf_sav_bt_test_hub ()
 end prototypes
 
 event ue_quitteronglet011;//*-----------------------------------------------------------------
@@ -2142,6 +2140,44 @@ End If
 Return asFiltre
 end function
 
+public subroutine wf_sav_bt_test_hub ();/*
+Long lIndentityHubPresta, lRowCountHubPresta
+Long lErrorHubPresta 
+String sSql
+Boolean bRet
+
+u_Transaction_Hub_Prestataire itrHubPrestataire  // [HP252_276_HUB_PRESTA]
+
+If Not IsValid ( itrHubPrestataire ) Then
+	itrHubPrestataire = Create u_Transaction_Hub_Prestataire
+End IF 
+
+bRet = f_ConnectSqlServer_Hub_Prestataire ( stGLB.sFichierIni   , &
+									 "HUB PRESTATAIRE BASE" , &
+									 itrHubPrestataire    , &
+									 stGLB.sMessageErreur, &
+									 stGlb.slibcourtappli, &
+									 stGlb.sCodOper          ) 
+
+sSql = "Exec edi.PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATAIRE 2,7990868,1,'AUYPSQZMJB','ANV','#TD1#TD2#TD3#','ANV0001','Centralisation','4165R','U EXPRESS','7990868 TABOURET VICTOR','Avenue du President Kennedy','Place de L Europe',null,'17000','LA ROCHELLE',3520,'Ass. dépose colis en relais pickup',11,'DOMMAGE ACCIDENTEL',0,87900,'MOBIL ZEN 2 TEL C1',879,1001,'8628214',1,'PRS',1,'M.','Monsieur',null,'TABOURET','VICTOR','TABOURET','VICTOR','52 RUE DU MINAGE',null,null,'17000','LA ROCHELLE','0617239269',null,null,'victor.tabouret@gmail.com','355395071124049',null,'ECRAN TOMBE AU SOL ET CASSE','ECT','06/20/2024 13:13:52','JFF','06/20/2024 13:13:58','A_REPARER','A_REPARER',6,'AIG EUROPE SA','2 500 272','TEL','SMARTPHONE/TELEPHONE MOBILE','APPLE','IPHONE 11 128GO BLANC','IFR','0617239269',599.00,150.00,'12/28/2015 00:00:00','REC',null,null,'NEUF_REC=[#REC#];HP_ID_HUB_PRESTA=AUYPSQZMJB;HP_ID_FOUR=ANV;HP_TYP_DOM=#TD1#TD2#TD3#;HP_ID_POINT_SERV=ANV0001;HP_ID_MODE_PROCESS=Centralisation;CODE_PICK_UP=4165R;NOM_PICK_UP=U EXPRESS;REFASS_PICK_UP=7990868 TABOURET VICTOR;ADR1_PICK_UP=Avenue du President Kennedy;ADR2_PICK_UP=Place de L Europe;ADRCP_PICK_UP=17000;ADRVILLE_PICK_UP=LA ROCHELLE;HP_INFO_SPB_FRN=3520'"
+lErrorHubPresta = F_Execute_Hub_Prestataire ( sSql, itrHubPrestataire, lIndentityHubPresta, lRowCountHubPresta )
+bRet = lErrorHubPresta = 0 And itrHubPrestataire.SqlCode = 0 And itrHubPrestataire.SqlDBCode = 0
+
+F_Commit_Hub_Prestataire ( itrHubPrestataire, bRet)
+
+/*
+sSql = "Exec sysadm.PS_HP276_U_S2_MAJ_GEN_PRESTA 7990868., 1, " + String ( lIndentityHubPresta )
+F_Execute ( sSql, SQLCA )
+bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
+F_Commit ( SQLCA , bRet )
+	*/
+	
+Disconnect using itrHubPrestataire ;
+
+If IsValid ( itrHubPrestataire ) Then Destroy itrHubPrestataire
+*/
+end subroutine
+
 event ue_modifier;call super::ue_modifier;//*-----------------------------------------------------------------
 //*
 //* Objet 			: W_Tm_Sp_Sinistre::Ue_Modifier
@@ -2771,7 +2807,6 @@ cb_Aide.uf_Initialiser ( "AIDE", "Aide" )
 cb_Notice.uf_Initialiser ( "NOTICE", "Notice" )
 cb_Excel.uf_Initialiser ( "EXCEL", "Calculs" )
 
-If stGlb.sCodOper = "JFF" Then cb_testHub.Show() // [DBGHUB]
 
 //Migration PB8-WYNIWYG-03/2006 OR
 return 0
@@ -3840,7 +3875,6 @@ this.uo_consult_euro=create uo_consult_euro
 this.st_pause_api_lab=create st_pause_api_lab
 this.dw_wreg_frais_annexe_frn=create dw_wreg_frais_annexe_frn
 this.st_attente_diverse=create st_attente_diverse
-this.cb_testhub=create cb_testhub
 iCurrent=UpperBound(this.Control)
 this.Control[iCurrent+1]=this.pb_routage
 this.Control[iCurrent+2]=this.uo_ong
@@ -3927,7 +3961,6 @@ this.Control[iCurrent+82]=this.uo_consult_euro
 this.Control[iCurrent+83]=this.st_pause_api_lab
 this.Control[iCurrent+84]=this.dw_wreg_frais_annexe_frn
 this.Control[iCurrent+85]=this.st_attente_diverse
-this.Control[iCurrent+86]=this.cb_testhub
 end on
 
 on w_tm_sp_sinistre.destroy
@@ -4017,7 +4050,6 @@ destroy(this.uo_consult_euro)
 destroy(this.st_pause_api_lab)
 destroy(this.dw_wreg_frais_annexe_frn)
 destroy(this.st_attente_diverse)
-destroy(this.cb_testhub)
 end on
 
 event timer;call super::timer;//*-----------------------------------------------------------------
@@ -9784,57 +9816,4 @@ boolean border = true
 borderstyle borderstyle = styleraised!
 boolean focusrectangle = false
 end type
-
-type cb_testhub from commandbutton within w_tm_sp_sinistre
-boolean visible = false
-integer x = 1906
-integer y = 24
-integer width = 402
-integer height = 112
-integer taborder = 20
-boolean bringtotop = true
-integer textsize = -10
-integer weight = 400
-fontcharset fontcharset = ansi!
-fontpitch fontpitch = variable!
-fontfamily fontfamily = swiss!
-string facename = "Tahoma"
-string text = "Test Hub"
-end type
-
-event clicked;Long lIndentityHubPresta, lRowCountHubPresta
-Long lErrorHubPresta 
-String sSql
-Boolean bRet
-
-u_Transaction_Hub_Prestataire itrHubPrestataire  // [HP252_276_HUB_PRESTA]
-
-If Not IsValid ( itrHubPrestataire ) Then
-	itrHubPrestataire = Create u_Transaction_Hub_Prestataire
-End IF 
-
-bRet = f_ConnectSqlServer_Hub_Prestataire ( stGLB.sFichierIni   , &
-									 "HUB PRESTATAIRE BASE" , &
-									 itrHubPrestataire    , &
-									 stGLB.sMessageErreur, &
-									 stGlb.slibcourtappli, &
-									 stGlb.sCodOper          ) 
-
-sSql = "Exec edi.PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATAIRE 2,7990868,1,'AUYPSQZMJB','ANV','#TD1#TD2#TD3#','ANV0001','Centralisation','4165R','U EXPRESS','7990868 TABOURET VICTOR','Avenue du President Kennedy','Place de L Europe',null,'17000','LA ROCHELLE',3520,'Ass. dépose colis en relais pickup',11,'DOMMAGE ACCIDENTEL',0,87900,'MOBIL ZEN 2 TEL C1',879,1001,'8628214',1,'PRS',1,'M.','Monsieur',null,'TABOURET','VICTOR','TABOURET','VICTOR','52 RUE DU MINAGE',null,null,'17000','LA ROCHELLE','0617239269',null,null,'victor.tabouret@gmail.com','355395071124049',null,'ECRAN TOMBE AU SOL ET CASSE','ECT','06/20/2024 13:13:52','JFF','06/20/2024 13:13:58','A_REPARER','A_REPARER',6,'AIG EUROPE SA','2 500 272','TEL','SMARTPHONE/TELEPHONE MOBILE','APPLE','IPHONE 11 128GO BLANC','IFR','0617239269',599.00,150.00,'12/28/2015 00:00:00','REC',null,null,'NEUF_REC=[#REC#];HP_ID_HUB_PRESTA=AUYPSQZMJB;HP_ID_FOUR=ANV;HP_TYP_DOM=#TD1#TD2#TD3#;HP_ID_POINT_SERV=ANV0001;HP_ID_MODE_PROCESS=Centralisation;CODE_PICK_UP=4165R;NOM_PICK_UP=U EXPRESS;REFASS_PICK_UP=7990868 TABOURET VICTOR;ADR1_PICK_UP=Avenue du President Kennedy;ADR2_PICK_UP=Place de L Europe;ADRCP_PICK_UP=17000;ADRVILLE_PICK_UP=LA ROCHELLE;HP_INFO_SPB_FRN=3520'"
-lErrorHubPresta = F_Execute_Hub_Prestataire ( sSql, itrHubPrestataire, lIndentityHubPresta, lRowCountHubPresta )
-bRet = lErrorHubPresta = 0 And itrHubPrestataire.SqlCode = 0 And itrHubPrestataire.SqlDBCode = 0
-
-F_Commit_Hub_Prestataire ( itrHubPrestataire, bRet)
-
-/*
-sSql = "Exec sysadm.PS_HP276_U_S2_MAJ_GEN_PRESTA 7990868., 1, " + String ( lIndentityHubPresta )
-F_Execute ( sSql, SQLCA )
-bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
-F_Commit ( SQLCA , bRet )
-	*/
-	
-Disconnect using itrHubPrestataire ;
-
-If IsValid ( itrHubPrestataire ) Then Destroy itrHubPrestataire
-end event
 
