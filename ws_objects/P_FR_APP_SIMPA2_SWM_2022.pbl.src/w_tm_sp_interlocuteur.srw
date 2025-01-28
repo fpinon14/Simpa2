@@ -1425,6 +1425,7 @@ Choose Case upper(dwo.Name)
 		
 		// [PM497-1]
 		stPass.lTab[1] = idw_WSin.GetItemNumber ( 1, "ID_PROD" )
+		stPass.sTab[1] = dw_1.GetItemString ( 1, "COD_INTER" )
 		
 		// [MIG1_COUR_EMAILING]
 		bEmailingKsl = False

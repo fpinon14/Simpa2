@@ -36,6 +36,7 @@ Private :
 s_Pass istPass
 
 String isTypFermeture
+String isCodInter
 Int	 iiRow
 end variables
 
@@ -142,6 +143,8 @@ DataWindowChild dwChildCategorie
 
 istPass = Message.PowerObjectParm
 
+isCodInter = istPass.sTab[1]
+
 dw_rech.Insertrow (0)
 dw_rech.GetChild ( "CATEGORIE", dwChildCategorie )
 dwChildCategorie.SetTransObject ( SQLCA )
@@ -225,9 +228,32 @@ borderstyle borderstyle = stylelowered!
 end type
 
 event buttonclicked;s_Pass stPass
+String sCodInterLoc
 
 Choose Case Upper ( dwo.name ) 
 	Case "B_CHOISIR"
+	
+		sCodInterLoc = This.GetItemString ( row, "cod_inter" ) 
+	
+		If Pos ( This.GetItemString ( row, "cod_inter" ), "#" + isCodInter + "#" ) <= 0 And &
+			Not IsNull ( sCodInterLoc ) Then 
+			
+			stMessage.sTitre		= "Cohérence type interlocuteur"
+			stMessage.Icon			= Exclamation!
+			stMessage.bErreurG	= FALSE
+			stMessage.Bouton		= Ok!
+			stMessage.sCode		= "WINT317"
+			
+			F_Message ( stMessage )
+			
+			This.SelectRow ( row, FALSE)				
+			
+			Return
+			
+			
+		End If 
+	
+	
 	
 		stMessage.sTitre		= "Choix du courrier Emailing KSL"
 		stMessage.Icon		= Question!

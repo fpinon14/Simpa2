@@ -814,7 +814,7 @@ function String FN_GET_CHEMIN ( String asCleChem ) RPCFUNC ALIAS FOR "sysadm.FN_
 function Integer PS_S_VERIF_ENVOI_MAIL_RECAP_DECLA ( Long adcIdSin ) RPCFUNC ALIAS FOR "sysadm.PS_S_VERIF_ENVOI_MAIL_RECAP_DECLA"
 
 //   JFF   19/12/2024 [MIG1_COUR_EMAILING]
-subroutine PS_MIG1_S_TYPE_COUR_EMAILING_KSL ( String asTypMail, Ref String asRegl, Ref String asPiece, Ref String asRefus )  RPCFUNC ALIAS FOR "sysadm.PS_MIG1_S_TYPE_COUR_EMAILING_KSL"
+subroutine PS_MIG1_S_TYPE_COUR_EMAILING_KSL ( String asTypMail, Ref String asRegl, Ref String asPiece, Ref String asRefus, Ref String asCodinter )  RPCFUNC ALIAS FOR "sysadm.PS_MIG1_S_TYPE_COUR_EMAILING_KSL"
 
 //   JFF   16/01/2025 [HUB832_HUB_ORG_REUN] 
 function Integer PS_S_CODE_DANS_FAMILLE_CAR ( integer aiIdFam, String asIdCode ) RPCFUNC ALIAS FOR "sysadm.PS_S_CODE_DANS_FAMILLE_CAR"
