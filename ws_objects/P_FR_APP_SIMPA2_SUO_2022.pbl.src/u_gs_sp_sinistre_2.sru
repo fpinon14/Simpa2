@@ -1021,7 +1021,7 @@ public function string uf_controlergestion_emailingksl ();//*-------------------
 Boolean bAMU_Regl, bAMU_ReglV, bAMU_ReglC, bAMU_Pce, bAMU_Ref, bMaqG, bMaqV, bMaqC, bMaqP, bMaqR, bFin, bAMUPT_Courrier, bCtrleAltEdit
 Long lDeb, lFin, lCpt, lTotInter, lCpt2
 Int iNbreRef, iIdInter
-String sAdrMail, sCodInter, sNomInter, sPos, sLibCodInter, sTypeMail, sRegl, sPce, sRef, sCodModeReg, sChaineEnvCourrier
+String sAdrMail, sCodInter, sNomInter, sPos, sLibCodInter, sTypeMail, sRegl, sPce, sRef, sCodModeReg, sChaineEnvCourrier, sCodInterSeria
 Decimal {2} dcMtARegInter
 
 sPos = ""
@@ -1168,8 +1168,8 @@ For lCpt=1 To lTotInter
 	End If 
 	
 	// Un courrier présent Mais ne correspondant pas au contexte
-	sRegl = space ( 1 ); sPce = space ( 1 ); sRef = space ( 1 ) 
-	SQLCA.PS_MIG1_S_TYPE_COUR_EMAILING_KSL ( sTypeMail, sRegl, sPce, sRef ) 
+	sRegl = space ( 1 ); sPce = space ( 1 ); sRef = space ( 1 ) ; sCodInterSeria = Space ( 35 ) 
+	SQLCA.PS_MIG1_S_TYPE_COUR_EMAILING_KSL ( sTypeMail, sRegl, sPce, sRef, sCodInterSeria ) 
 	bMaqG = sRegl = "G" ; bMaqV = sRegl = "V" ; bMaqC = sRegl = "C" ; bMaqP = sPce = "P" ; bMaqR = sRef = "R"
 
 	if Not IsNull ( sTypeMail ) And sTypeMail <> ""	And ( & 
