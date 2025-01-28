@@ -68,7 +68,17 @@ Select	emc.typ_mail,
 		emc.lib_cour,
 		emc.regl,
 		emc.piece,
-		emc.refus
+		emc.refus,
+		emc.cod_inter,
+		( 
+		   Select stuff ( 
+					( SELECT Distinct ', ' + CAST(rtrim ( cc.lib_code ) AS VARCHAR(250)) 
+					  FROM sysadm.code_car cc
+					  Where cc.id_typ_code = '-IN'
+					  And CharIndex ( '#' + rtrim ( cc.id_code ) + '#', emc.cod_inter ) > 0 
+					  For XML PATH ('') )
+					, 1, 2, '' )
+		) lst_inter
 
 From sysadm.emailing_ksl_courrier emc with ( nolock) ,
 	 sysadm.emailing_ksl_courprod emp with ( nolock)

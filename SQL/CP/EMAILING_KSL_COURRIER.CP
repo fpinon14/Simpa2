@@ -44,7 +44,8 @@ Update em
 Set em.categorie = rtrim ( ltrim ( Upper ( em.categorie ) )),
 	em.regl = rtrim ( ltrim ( Upper ( em.regl ) )),
 	em.piece = rtrim ( ltrim ( Upper ( em.piece ) )),
-	em.refus = rtrim ( ltrim ( Upper ( em.refus ) ))
+	em.refus = rtrim ( ltrim ( Upper ( em.refus ) )),
+	em.cod_inter = rtrim ( ltrim ( Upper ( em.cod_inter ) ))
 From inserted i,
 	 sysadm.emailing_ksl_courrier em
 Where i.cod_maq = em.cod_maq
@@ -103,12 +104,14 @@ CREATE procedure sysadm.PS_MIG1_S_TYPE_COUR_EMAILING_KSL
 	@asTypMail VarChar ( 6 ),
 	@asRegl	  VarChar ( 1 ) OutPut,
 	@asPiece  VarChar ( 1 ) OutPut,
-	@asRefus  VarChar ( 1 ) OutPut
+	@asRefus  VarChar ( 1 ) OutPut,
+	@asCodinter VarChar ( 35 ) OutPut
 AS
 
 Select	@asRegl	= emc.regl,
 		@asPiece = emc.piece,
-		@asRefus = emc.refus
+		@asRefus = emc.refus,
+		@asCodinter = emc.cod_inter
 
 From sysadm.emailing_ksl_courrier emc with ( nolock)
 Where emc.typ_mail = @asTypMail
@@ -116,6 +119,7 @@ Where emc.typ_mail = @asTypMail
 If lTrim ( rTrim ( @asRegl ) ) = '' Set @asRegl = null
 If lTrim ( rTrim ( @asPiece ) ) = '' Set @asPiece = null
 If lTrim ( rTrim ( @asRefus ) ) = '' Set @asRefus = null
+If lTrim ( rTrim ( @asCodinter ) ) = '' Set @asCodinter = null
 
 Go
 
