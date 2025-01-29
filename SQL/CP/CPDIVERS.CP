@@ -6140,7 +6140,7 @@ Go
 
 --------------------------------------------------------------------
 --
--- Procedure            :       PS_S_LIB_CIE
+-- Procedure            :       PS_S_LIB_CIE_V01
 -- Auteur               :       Fabry JF
 -- Date                 :       19/12/2018
 -- Libelle              :       
@@ -6151,35 +6151,38 @@ Go
 -- Retourne             :       
 --
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_LIB_CIE' AND type = 'P' )
-        DROP procedure sysadm.PS_S_LIB_CIE
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_LIB_CIE_V01' AND type = 'P' )
+        DROP procedure sysadm.PS_S_LIB_CIE_V01
 GO
 
-CREATE procedure sysadm.PS_S_LIB_CIE
+CREATE procedure sysadm.PS_S_LIB_CIE_V01
 	@dcIdSin  Decimal ( 10 ),
 	@dcIdRev  Decimal ( 7 ),
 	@dcIdGti  Decimal ( 7 ),
+	@iIdCie   Integer OutPut,
 	@sLibCie  varChar ( 35 ) OUTPUT
 AS
 
-Select	Top 1 @sLibCie = c.lib_cie
+Select	Top 1 
+		@iIdCie = c.id_cie,
+		@sLibCie = c.lib_cie
 From	sysadm.w_sin s,
 		sysadm.garantie g,
-		sysadm.w_gar_sin gs,
 		sysadm.police p,
 		sysadm.compagnie c
 
 Where   s.id_sin = @dcIdSin
-And		gs.id_sin = s.id_sin
 And     g.id_prod = s.id_prod
-And		g.id_rev = s.id_rev
-And		g.id_gti  = gs.id_gti
+And		g.id_rev = @dcIdRev
+And		g.id_gti  =@dcIdGti
 And		p.id_police = g.id_police
 And		c.id_cie = p.id_cie
 
 If @sLibCie is null Set @sLibCie = ''
 
 Set @sLibCie = lTrim ( rtrim ( @sLibCie ))
+
+If @iIdCie <= 0 Set @iIdCie = -1
 
 Go
 
