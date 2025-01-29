@@ -648,7 +648,7 @@ function long PS_S_CONS_RESTR_EXCL(long dcIdSin, string sIdOper, String sTable )
 subroutine PS_S_DETECT_VERSION_BASE_SIM ( Ref datetime dtDteVersBaseSim, Ref Integer iAlerte ) RPCFUNC ALIAS FOR "sysadm.PS_S_DETECT_VERSION_BASE_SIM"
 
 //  JFF   18/12/2018 [PM471-1]
-subroutine PS_S_LIB_CIE ( decimal dcIdSin, decimal dcIdRev, decimal dcIdGti, ref String sLibCie ) RPCFUNC ALIAS FOR "sysadm.PS_S_LIB_CIE"
+subroutine PS_S_LIB_CIE_V01 ( decimal dcIdSin, decimal dcIdRev, decimal dcIdGti, Ref Long lIdCie, ref String sLibCie ) RPCFUNC ALIAS FOR "sysadm.PS_S_LIB_CIE_V01"
 
 //  JFF   10/01/2019 [SHUNT_WS_SEPA]
 function long PS_S02_AGENCE ( string sIdBq, string sIdAg ) RPCFUNC ALIAS FOR "sysadm.PS_S02_AGENCE"
@@ -818,6 +818,7 @@ subroutine PS_MIG1_S_TYPE_COUR_EMAILING_KSL ( String asTypMail, Ref String asReg
 
 //   JFF   16/01/2025 [HUB832_HUB_ORG_REUN] 
 function Integer PS_S_CODE_DANS_FAMILLE_CAR ( integer aiIdFam, String asIdCode ) RPCFUNC ALIAS FOR "sysadm.PS_S_CODE_DANS_FAMILLE_CAR"
+
 
 end prototypes
 type variables

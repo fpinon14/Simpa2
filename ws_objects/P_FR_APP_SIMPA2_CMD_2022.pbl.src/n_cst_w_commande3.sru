@@ -311,7 +311,7 @@ public subroutine uf_preparerinserer (ref s_pass astpass);//*-------------------
 //       JFF   18/12/2018 [PM471-1]
 //       JFF   17/09/2019 [DT447]
 //*-----------------------------------------------------------------
-Long		lDeb, lFin, lRow, lTot, lCpt, lVal, lIdGti, lRowMtPec, lRow2, lIdProd, lQteDisp, lIdEVt, lCpt2, lTot2
+Long		lDeb, lFin, lRow, lTot, lCpt, lVal, lIdGti, lRowMtPec, lRow2, lIdProd, lQteDisp, lIdEVt, lCpt2, lTot2, lIdCie
 String	sFiltre, sDteProdEqvFc, sFiltreFrn, sSortOrig, sSav, sFiltreTempo // #5
 String   sChaine, sVal, sVal2, sLibCie
 Integer	iPos, iPos1, iPos2
@@ -319,6 +319,7 @@ Boolean	bTrouve, bEQFDecx, bDT57, bCasAppleSfrSbe, bCasAppleCmdeChezSfrSuite176S
 Boolean  bCasAppleChoixDmeAvantO2m, bCasAppleChoixO2mSuiteDME176
 n_cst_string	lnv_string
 Long lIdSin, lIdRev
+
 
 isCodeBoutiqueCentralPSM = "" // [PM200][PSM]
 isCodeBoutiqueProximitePSM = "" // [PM200][PSM]
@@ -612,7 +613,7 @@ End If
 // [PM471-1]
 // La restriction assureur, supprime tous les appareils tague [#RSASS#...#] si l'assureur ne correspond pas
 sLibCie = Fill ( " ", 35 ) 
-SQLCA.PS_S_LIB_CIE ( lIdSin, lIdRev, lIdGti, sLibCie )
+SQLCA.PS_S_LIB_CIE_V01 ( lIdSin, lIdRev, lIdGti, lIdCie, sLibCie )
 
 If sLibCie <> "" Then
 	lTot = idwArticle.RowCount ()
@@ -28995,11 +28996,11 @@ private function integer uf_zn_choix_regle_hub (string ascas, long alidprod, lon
 //*---------------------------------------------------------------
 
 s_Pass	stPass
-String   sRetHubPrestataire, sAdrMail, sVal, sVal1, sVar, sCodeVerrou, sRetHubPrestaOrig, sIdFourOrig, sLibCie 
+String   sRetHubPrestataire, sAdrMail, sVal, sVal1, sVar, sCodeVerrou, sRetHubPrestaOrig, sIdFourOrig, sLibCie
 String   sTabValRet []
-Integer  iRet, iRow, iTotTabValRet, iCpt, iIdSeqPrestaHubOrig 
+Integer  iRet, iRow, iTotTabValRet, iCpt, iIdSeqPrestaHubOrig
 n_cst_string lnvPFCString 
-Long lRow, lIdRev
+Long lRow, lIdRev, lIdCie
 
 lIdRev = idwWsin.GetItemNumber ( 1, "ID_REV" )
 
@@ -29068,8 +29069,9 @@ End If
 stPass.sTab[18] = "" // [HUB_TYP_APP_REMPL] Chaine séria vide pour l'instant, à remplir au besoin
 
 sLibCie = Fill ( " ", 35 ) 
-SQLCA.PS_S_LIB_CIE ( alidsin, lIdRev, alIdGti, sLibCie )
+SQLCA.PS_S_LIB_CIE_V01 ( alidsin, lIdRev, alIdGti, lIdCie, sLibCie )
 stPass.sTab[19] = sLibCie
+stPass.lTab[5 ] = lIdCie
 
 stPass.sTab[50] = "CREATION_PRESTATION"
 
@@ -29078,6 +29080,8 @@ stPass.dcTab[1]= idwDetail.GetItemDecimal ( 1, "MT_VAL_ACHAT" ) // [202411270823
 stPass.dcTab[2]= idcMtPec // [20241127082353640]
 
 stPass.dtTab[1]= idwWsin.GetItemDateTime ( 1, "DTE_ACH_PORT" ) // [20241127082353640]
+
+
 
 
 Choose Case ascas

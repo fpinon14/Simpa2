@@ -92,6 +92,7 @@ Long   ilAdrCodCiv
 Long   ilIdSin		
 Long 	 ilIdSeq
 Long   ilIdDepotS2
+Long   ilIdCie
 
 
 u_Transaction_Hub_Prestataire itrHubPrestataire
@@ -1521,6 +1522,9 @@ Choose Case isTrtFen
 
 		isLibCie			= stPass.sTab[19]
 		lnvPFCString.of_setkeyvalue( isChaineSeria, "LIB_CIE", isLibCie, ";")	
+
+		ilIdCie			= stPass.lTab[5]
+		lnvPFCString.of_setkeyvalue( isChaineSeria, "ID_CIE", String ( ilIdCie ) , ";")			
 		
 		idcMtValAchat	= stPass.dcTab[1] // [20241127082353640]
 		idcMtPec			= stPass.dcTab[2] // [20241127082353640]		
