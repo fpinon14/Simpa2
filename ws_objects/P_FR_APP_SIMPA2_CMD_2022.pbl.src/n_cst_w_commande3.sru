@@ -28995,17 +28995,18 @@ private function integer uf_zn_choix_regle_hub (string ascas, long alidprod, lon
 //*---------------------------------------------------------------
 
 s_Pass	stPass
-String   sRetHubPrestataire, sAdrMail, sVal, sVal1, sVar, sCodeVerrou, sRetHubPrestaOrig, sIdFourOrig
+String   sRetHubPrestataire, sAdrMail, sVal, sVal1, sVar, sCodeVerrou, sRetHubPrestaOrig, sIdFourOrig, sLibCie 
 String   sTabValRet []
 Integer  iRet, iRow, iTotTabValRet, iCpt, iIdSeqPrestaHubOrig 
 n_cst_string lnvPFCString 
-Long lRow
+Long lRow, lIdRev
+
+lIdRev = idwWsin.GetItemNumber ( 1, "ID_REV" )
 
 stPass.ltab[1] = alIdProd
 stPass.ltab[2] = alIdGti
-stPass.lTab[3]	= idwCmde.GetItemNumber ( 1, "ID_SIN" ) 
+stPass.lTab[3]	= alidsin
 stPass.lTab[4]	= Long ( idwCmde.GetItemString ( 1, "ADR_COD_CIV" ))
-
 
 stPass.sTab[1]	= isMarqPortAdh
 stPass.sTab[2]	= isModlPortAdh
@@ -29066,6 +29067,10 @@ End If
 	
 stPass.sTab[18] = "" // [HUB_TYP_APP_REMPL] Chaine séria vide pour l'instant, à remplir au besoin
 
+sLibCie = Fill ( " ", 35 ) 
+SQLCA.PS_S_LIB_CIE ( alidsin, lIdRev, alIdGti, sLibCie )
+stPass.sTab[19] = sLibCie
+
 stPass.sTab[50] = "CREATION_PRESTATION"
 
 
@@ -29073,8 +29078,6 @@ stPass.dcTab[1]= idwDetail.GetItemDecimal ( 1, "MT_VAL_ACHAT" ) // [202411270823
 stPass.dcTab[2]= idcMtPec // [20241127082353640]
 
 stPass.dtTab[1]= idwWsin.GetItemDateTime ( 1, "DTE_ACH_PORT" ) // [20241127082353640]
-
-
 
 
 Choose Case ascas

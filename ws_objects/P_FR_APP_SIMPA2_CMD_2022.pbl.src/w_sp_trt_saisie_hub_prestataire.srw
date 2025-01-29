@@ -77,6 +77,7 @@ String isPays
 String isEtatAppSin
 String isChoixEtatAppRempl // [HUB_TYP_APP_REMPL]
 String isChaineSeria // [HUB_TYP_APP_REMPL]
+String isLibCie
 
 Decimal { 2 } idcMtValAchat
 Decimal { 2 } idcMtPec
@@ -1458,8 +1459,8 @@ event open;//*-----------------------------------------------------------------
 //* 		 JFF  27/11/2024  [20241127082353640]
 //* 		 JFF  17/01/2025  [HUB_TYP_APP_REMPL] (V01)
 //*-----------------------------------------------------------------
-
 s_pass stPass
+n_cst_string lnvPFCString 
 
 stPass=Message.PowerObjectParm
 
@@ -1516,8 +1517,10 @@ Choose Case isTrtFen
 		isPays			= stPass.sTab[15] // [20241127082353640]
 		isEtatAppSin	= stPass.sTab[16] // [20241127082353640]
 		isChoixEtatAppRempl = stPass.sTab[17] // [HUB_TYP_APP_REMPL]
-		isChaineSeria = stPass.sTab[18] // [HUB_TYP_APP_REMPL]
-		
+		isChaineSeria  = stPass.sTab[18] // [HUB_TYP_APP_REMPL]
+
+		isLibCie			= stPass.sTab[19]
+		lnvPFCString.of_setkeyvalue( isChaineSeria, "LIB_CIE", isLibCie, ";")	
 		
 		idcMtValAchat	= stPass.dcTab[1] // [20241127082353640]
 		idcMtPec			= stPass.dcTab[2] // [20241127082353640]		
