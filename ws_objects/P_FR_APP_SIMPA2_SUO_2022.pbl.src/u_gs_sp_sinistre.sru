@@ -42546,12 +42546,13 @@ public function string uf_controlergestion_ajoutparaauto ();//*-----------------
 //        JFF   09/06/2021   [RS_493_PARAINFOAUTO]
 //        JFF   18/08/2021 [RS_950_INS_PAR_DYN][RS950] Suppression de l'ancine traitement RS_493_PARAINFOAUTO
 //        JFF   04/12/2023 [RS6217_PARA_AUTO]
+//        JFF   30/01/2025 [MON311_SPL_PACI]
 //*-----------------------------------------------------------------
 
-String sPos, sVal, sVal1, sVal2, sIdPara
-Long lVal, lDeb, lFin, lRow, lRow1, lRow2, lRow3, lIdSin, lIdCas, lVal1 
+String sPos, sVal, sVal1, sVal2, sIdPara, sCleParaOrig, sCleParaWork
+Long lVal, lDeb, lFin, lRow, lRow1, lRow2, lRow3, lIdSin, lIdCas, lVal1, lCpt, lVal2, lRowGti1, lRowGti2, lDeb378, lFin378, lDeb392, lFin392
 n_cst_string	lnvString
-Decimal {2} dcVal
+Decimal {2} dcVal, dcMtPlafAReg
 
 sPos = ""
 
@@ -42588,69 +42589,136 @@ If lDeb > 0 Then
 End If
 
 // [RS6217_PARA_AUTO]
-F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 378 )
+F_RechDetPro ( lDeb378, lFin378, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 378 )
 
-If lDeb > 0 Then
-	lIdCas = Long ( lnvString.of_getkeyvalue( idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "CAS", ";"))
-	sIdPara = lnvString.of_getkeyvalue( idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "ID_PARA", ";")		
+If lDeb378 > 0 Then
+	// [MON311_SPL_PACI]
+	If F_CLE_A_TRUE ( "MON311_SPL_PACI" ) Then
+		lIdCas = Long ( lnvString.of_getkeyvalue( idw_DetPro.GetItemString ( lDeb378, "VAL_CAR" ), "CAS", ";"))
+		
+		sCleParaOrig = "ID_PARA"
+		sCleParaWork = sCleParaOrig
+		
+		For lCpt = 1 To 2 
+			If lCpt > 1 Then 
+				sCleParaWork = sCleParaOrig + String ( lCpt ) 
+			End If 
+			
+			sIdPara = lnvString.of_getkeyvalue( idw_DetPro.GetItemString ( lDeb378, "VAL_CAR" ), sCleParaWork, ";")		
+			
+			If sIdPara = "" Then Continue
+			
+			lRow1 = idw_wParaInfo.Find ( "ID_I = 0 AND ID_PARA = '" + sIdPara + "'", 1, idw_wParaInfo.Rowcount () )
+			lRow2 = idw_ParaProd.Find ( "ID_PARA = '" + sIdPara + "'", 1, idw_ParaProd.Rowcount () )
+			
+			Choose Case lIdCas 
+				
+				// RS6217
+				Case 1
+		
+					lVal = idw_wDetail.Find ( "( COD_ETAT = 200 )", 1, idw_wDetail.RowCount () ) + idw_LstGti.Find ( "( COD_ETAT = 200 )", 1, idw_LstGti.RowCount () )
+					lVal1 = idw_LstGti.Find ( "MT_PLAF_AREG > 0 ", 1, idw_LstGti.RowCount () )
+		
+					If lVal > 0 Or lVal1 > 0 Then lRow = 1 
+				
+				// [MON311_SPL_PACI]
+				Case 2
+					F_RechDetPro ( lDeb392, lFin392, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 392 )
+					If lDeb392 > 0 Then
+						
+						// Garantie du param dp/392 (1 (clé) en théorie
+						lVal = Long ( F_CLE_VAL ( "ID_GTI", idw_DetPro.GetItemString ( lDeb392, "VAL_CAR"), ";"))
+						
+						// Souplesse de saisie sur GTI du param (1)
+						lVal1 = idw_wDivDet.Find ( &
+						"ID_GTI = " + String ( lVal ) + " AND " + &
+						"UPPER ( NOM_ZONE ) = 'SOUPLESSE_1' " + " AND " + &
+						"LEN ( VAL_CAR ) > 0 AND VAL_CAR <> 'AAA'" &
+						, 1, idw_wDivDet.RowCount ())
+						
+						// lVal1 = idw_wDivDet.Find ( "ID_GTI = " + String ( lVal ) + " AND ID_SPL <> 'AAA' AND NOT ISNULL ( ID_SPL )", 1, idw_wDivDet.RowCount ()) 
 
-	lRow1 = idw_wParaInfo.Find ( "ID_I = 0 AND ID_PARA = '" + sIdPara + "'", 1, idw_wParaInfo.Rowcount () )
-	lRow2 = idw_ParaProd.Find ( "ID_PARA = '" + sIdPara + "'", 1, idw_ParaProd.Rowcount () )
+						// Souplesse de saisie sur autre GTI 
+						lVal2 = idw_wDivDet.Find ( &
+						"ID_GTI <> " + String ( lVal ) + " AND " + &
+						"UPPER ( NOM_ZONE ) = 'SOUPLESSE_1' " + " AND " + &
+						"LEN ( VAL_CAR ) > 0 AND VAL_CAR <> 'AAA'" &
+						, 1, idw_wDivDet.RowCount ())
+
+						// lVal2 = idw_wDivDet.Find ( "ID_GTI <> " + String ( lVal ) + " AND ID_SPL <> 'AAA' AND NOT ISNULL ( ID_SPL )", 1, idw_wDivDet.RowCount ()) 
+
+						// Row GTI de la Gti du param 392 (1) avec mt_a_reg 
+						lRowGti1 = idw_LstGti.Find ( "ID_GTI = " + String ( lVal ) + " AND MT_PLAF_AREG > 0", 1, idw_LstGti.RowCount () )
+
+						// Row GTI Autre Gti avec mt_a_reg 						
+						lRowGti2 = idw_LstGti.Find ( "ID_GTI <> " + String ( lVal ) + " AND MT_PLAF_AREG > 0", 1, idw_LstGti.RowCount () )						
+
+						// ID_PARA spécial pour la GTI 1
+						// ID_PARA2 pour tout Gti y compris 1
+						
+						If sCleParaWork = "ID_PARA" And lVal1 > 0 And lRowGti1 > 0 Then lRow = 1
+						If sCleParaWork = "ID_PARA2" And (( lVal1 > 0 And lRowGti1 > 0 ) Or ( lVal2 > 0 And lRowGti2 > 0 )) Then lRow = 1
+						
+					End If 	
+				
+			End Choose
+		
+			IF lRow > 0 And lRow1 <= 0 And lRow2 > 0 Then
+				sVal1 = idw_ParaProd.GetItemString ( lRow2, "CPT_VER" )
+				sVal2 = idw_ParaProd.GetItemString ( lRow2, "LIB_PARA" )
+				lIdSin = idw_wSin.GetItemNumber ( 1, "ID_SIN" )
+		
+				lRow3 = idw_wParaInfo.InsertRow ( 0 )
+				idw_wParaInfo.SetItem ( lRow3, "ID_SIN", lIdSin  )
+				idw_wParaInfo.SetItem ( lRow3, "ID_I", 0 )
+				idw_wParaInfo.SetItem ( lRow3, "ID_PARA", sIdPara )			
+				idw_wParaInfo.SetItem ( lRow3, "CPT_TRI", 1 )
+				idw_wParaInfo.SetItem ( lRow3, "MAJ_PAR", stGlb.sCodOper )			
+				idw_wParaInfo.SetItem ( lRow3, "LIB_PARA", sVal2 )						
+				idw_wParaInfo.SetItem ( lRow3, "CPT_VER", sVal1 )									
+			End If			
+			
+		Next 
+		
+
+	Else 
 	
-	Choose Case lIdCas 
+		lIdCas = Long ( lnvString.of_getkeyvalue( idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "CAS", ";"))
+		sIdPara = lnvString.of_getkeyvalue( idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "ID_PARA", ";")		
+	
+		lRow1 = idw_wParaInfo.Find ( "ID_I = 0 AND ID_PARA = '" + sIdPara + "'", 1, idw_wParaInfo.Rowcount () )
+		lRow2 = idw_ParaProd.Find ( "ID_PARA = '" + sIdPara + "'", 1, idw_ParaProd.Rowcount () )
 		
-		// RS6217
-		Case 1
-
-			lVal = idw_wDetail.Find ( "( COD_ETAT = 200 )", 1, idw_wDetail.RowCount () ) + idw_LstGti.Find ( "( COD_ETAT = 200 )", 1, idw_LstGti.RowCount () )
-			lVal1 = idw_LstGti.Find ( "MT_PLAF_AREG > 0 ", 1, idw_LstGti.RowCount () )
-
-			If lVal > 0 Or lVal1 > 0 Then lRow = 1 
-		
-		
-	End Choose
-
-	IF lRow > 0 And lRow1 <= 0 And lRow2 > 0 Then
-		sVal1 = idw_ParaProd.GetItemString ( lRow2, "CPT_VER" )
-		sVal2 = idw_ParaProd.GetItemString ( lRow2, "LIB_PARA" )
-		lIdSin = idw_wSin.GetItemNumber ( 1, "ID_SIN" )
-
-		lRow3 = idw_wParaInfo.InsertRow ( 0 )
-		idw_wParaInfo.SetItem ( lRow3, "ID_SIN", lIdSin  )
-		idw_wParaInfo.SetItem ( lRow3, "ID_I", 0 )
-		idw_wParaInfo.SetItem ( lRow3, "ID_PARA", sIdPara )			
-		idw_wParaInfo.SetItem ( lRow3, "CPT_TRI", 1 )
-		idw_wParaInfo.SetItem ( lRow3, "MAJ_PAR", stGlb.sCodOper )			
-		idw_wParaInfo.SetItem ( lRow3, "LIB_PARA", sVal2 )						
-		idw_wParaInfo.SetItem ( lRow3, "CPT_VER", sVal1 )									
-	End If
-
+		Choose Case lIdCas 
+			
+			// RS6217
+			Case 1
+	
+				lVal = idw_wDetail.Find ( "( COD_ETAT = 200 )", 1, idw_wDetail.RowCount () ) + idw_LstGti.Find ( "( COD_ETAT = 200 )", 1, idw_LstGti.RowCount () )
+				lVal1 = idw_LstGti.Find ( "MT_PLAF_AREG > 0 ", 1, idw_LstGti.RowCount () )
+	
+				If lVal > 0 Or lVal1 > 0 Then lRow = 1 
+			
+			
+		End Choose
+	
+		IF lRow > 0 And lRow1 <= 0 And lRow2 > 0 Then
+			sVal1 = idw_ParaProd.GetItemString ( lRow2, "CPT_VER" )
+			sVal2 = idw_ParaProd.GetItemString ( lRow2, "LIB_PARA" )
+			lIdSin = idw_wSin.GetItemNumber ( 1, "ID_SIN" )
+	
+			lRow3 = idw_wParaInfo.InsertRow ( 0 )
+			idw_wParaInfo.SetItem ( lRow3, "ID_SIN", lIdSin  )
+			idw_wParaInfo.SetItem ( lRow3, "ID_I", 0 )
+			idw_wParaInfo.SetItem ( lRow3, "ID_PARA", sIdPara )			
+			idw_wParaInfo.SetItem ( lRow3, "CPT_TRI", 1 )
+			idw_wParaInfo.SetItem ( lRow3, "MAJ_PAR", stGlb.sCodOper )			
+			idw_wParaInfo.SetItem ( lRow3, "LIB_PARA", sVal2 )						
+			idw_wParaInfo.SetItem ( lRow3, "CPT_VER", sVal1 )									
+		End If
+	End IF 
 End If 
 
-// [RS_950_INS_PAR_DYN][RS950]
-// [RS_493_PARAINFOAUTO]
-/*
-If F_CLE_A_TR___UE ( "RS_493_PARA**INFOAUTO" ) And Not F_CLE_A_TR__UE ( "RS_950_I**NS_PAR_DYN" ) Then
-	lRow = idw_wdivdet.Find ( "POS ( LOWER ( NOM_ZONE ), 'souplesse_') > 0 AND VAL_CAR IN ( 'PSN', 'VSN') ",1 , idw_wdivdet.RowCount())
-	lRow1 = idw_wParaInfo.Find ( "ID_I = 0 AND ID_PARA = 'Z153'", 1, idw_wParaInfo.Rowcount () )
-	lRow2 = idw_ParaProd.Find ( "ID_PARA = 'Z153'", 1, idw_ParaProd.Rowcount () )
-	
-	IF lRow > 0 And lRow1 <= 0 And lRow2 > 0 Then
-		sVal1 = idw_ParaProd.GetItemString ( lRow2, "CPT_VER" )
-		sVal2 = idw_ParaProd.GetItemString ( lRow2, "LIB_PARA" )
-		lIdSin = idw_wSin.GetItemNumber ( 1, "ID_SIN" )
-
-		lRow3 = idw_wParaInfo.InsertRow ( 0 )
-		idw_wParaInfo.SetItem ( lRow3, "ID_SIN", lIdSin  )
-		idw_wParaInfo.SetItem ( lRow3, "ID_I", 0 )
-		idw_wParaInfo.SetItem ( lRow3, "ID_PARA", "Z153" )			
-		idw_wParaInfo.SetItem ( lRow3, "CPT_TRI", 1 )
-		idw_wParaInfo.SetItem ( lRow3, "MAJ_PAR", stGlb.sCodOper )			
-		idw_wParaInfo.SetItem ( lRow3, "LIB_PARA", sVal2 )						
-		idw_wParaInfo.SetItem ( lRow3, "CPT_VER", sVal1 )									
-	End If
-End If 
-*/
 
 Return sPos
 end function

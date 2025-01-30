@@ -1017,6 +1017,7 @@ private subroutine uf_controlergestion (ref s_pass astpass);//*-----------------
 //       JFF   24/05/2019 [DT391-1]
 //       JFF   25/11/2021 [RS1383_FRANCHISE_30E]
 //       JFF   22/01/2024 [RS6366_PCEREFUS]
+//       JFF   30/01/2025 [MON311_SPL_PACI]
 //*-----------------------------------------------------------------
 String 		sPos, sVal, sMarque, sVal1, sSql
 Decimal {2} dcMtPlafAReg
@@ -1029,7 +1030,6 @@ DateTime dtDtePivotDT288-1_LOT2, dtCreeLeDos
 String sTypApp, sFiltreInitialDwPceDet, sFiltreInitialDwPce
 Boolean bBlocageGeoloc, bFin 
 Long lCodePcePB, lCodePceDBL, lCodePce, lLigPcePB, lLigPceDBL, iCodEtat, lTotdwPce, lTotdwPceDet, lCptPce, lTotRefGti 
-
 
 sPos						= ""
 bBitMap					= False
@@ -1649,6 +1649,37 @@ If F_CLE_A_TRUE ( "RS6366_PCEREFUS" ) Then
 	End If 
 	
 	
+End If
+
+// [MON311_SPL_PACI]
+If F_CLE_A_TRUE ( "MON311_SPL_PACI" ) Then
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 392 )
+	If lDeb > 0 Then
+		lVal = Long ( lnvPFCString.of_getkeyvalue( idw_DetPro.GetItemString(lDeb, "VAL_CAR"), "ID_GTI", ";"))
+		lVal1 = Long ( lnvPFCString.of_getkeyvalue( idw_DetPro.GetItemString(lDeb, "VAL_CAR"), "MT_PLAF_TEMPO", ";"))
+		dcMtPlafAReg = idw_wGarSin.GetItemDecimal ( 1, "MT_PLAF_AREG" ) 
+		
+//		lVal2 = idw_DivDetGti.Find ( "ID_GTI = " + String ( lVal ) + " AND ID_SPL <> 'AAA' AND NOT IS NULL ( ID_SPL )", 1, idw_DivDetGti.RowCount ()) 
+		
+		lVal2 = idw_DivDetGti.Find ( &
+		"ID_GTI = " + String ( lVal ) + " AND " + &
+		"UPPER ( NOM_ZONE ) = 'SOUPLESSE_1' " + " AND " + &
+		"LEN ( VAL_CAR ) > 0 AND VAL_CAR <> 'AAA'" &
+		, 1, idw_DivDetGti.RowCount ())
+		
+		If lIdGti = lVal And dcMtPlafAReg > lVal1 And lVal2 > 0 Then
+			
+			sPos = "MT_PROV"
+
+			stMessage.sTitre		= "Souplesse PACIFICA dp/392"
+			stMessage.Icon			= Information!
+			stMessage.bErreurG	= FALSE
+			stMessage.sCode		= "WGAR442"
+
+			F_Message ( stMessage )			
+			
+		End IF 		
+	End If 	
 End If
 
 	
