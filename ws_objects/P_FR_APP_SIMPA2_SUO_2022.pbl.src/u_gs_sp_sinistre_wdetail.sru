@@ -2907,7 +2907,7 @@ Boolean bSC2FoyerNomade // [PC192235]
 Boolean bFranchiseSelectra, bVarianteSelectra2024  // [PC202553]  [KSV516]
 String sRech
 Long lLig
-
+Decimal {2} dcMtPlafAReg 
 
 stMessage.sTitre		= "Contrôle de gestion d'un détail"
 stMessage.Icon			= Information!
@@ -3921,6 +3921,28 @@ End If
 // [DT344]
 If Not bDetailBloque Then
 	
+	// [MON311_SPL_PACI]
+	If F_CLE_A_TRUE ( "MON311_SPL_PACI" ) Then
+		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 392 )
+		If lDeb > 0 Then
+			
+			sVal = lnvPFCString.of_getkeyvalue( idw_DetPro.GetItemString(lDeb, "VAL_CAR"), "EVTS_GTI_7_SPL_FORCEE", ";")
+		
+			If iEtat = 500 And lIdGti = 7 And Pos ( sVal, "#" + String ( lIdEvt ) + "#" ) > 0 Then
+				lRow = idw_wDivDet.Find ( &
+				"ID_GTI = " + String ( lVal ) + " AND " + &
+				"UPPER ( NOM_ZONE ) = 'SOUPLESSE_1' " &
+				, 1, idw_wDivDet.RowCount ())
+	
+				lRow = idw_wDivDet.Find ( "UPPER ( NOM_ZONE ) = 'SOUPLESSE_1'", 1, idw_wDivDet.Rowcount () ) 
+				If lRow > 0 Then
+					This.uf_GestOng_Divers_MajZone ( "SOUPLESSE_1", lRow, "SIC" )
+				End If
+	
+			End IF 
+		End If 	
+	End If
+
 	If idw_wDivDet.Find ( "UPPER ( NOM_ZONE ) = 'SOUPLESSE_1'", 1, idw_wDivDet.RowCount() ) > 0 Then
 	
 		sTabSpl [1] = Trim (This.uf_GestOng_Divers_Trouver ( "SOUPLESSE_1" ))
@@ -4136,6 +4158,7 @@ If Not bDetailBloque Then
 		End Choose 				
 	End IF 
 End IF 
+
 
 astPass.sTab [ 1 ] = sPos
 
@@ -18007,7 +18030,8 @@ Choose Case asNomZone
 			"ENLV_BIEN", &
 			"ALT_PEC",&
 			"VAL_PUB_ORANGE_UTILISEE", &
-			"ALT_FRAUDE"
+			"ALT_FRAUDE", &
+			"SOUPLESSE_1"
 			
 
 		bMajZone = True

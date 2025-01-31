@@ -1652,6 +1652,8 @@ If F_CLE_A_TRUE ( "RS6366_PCEREFUS" ) Then
 End If
 
 // [MON311_SPL_PACI]
+// Plus utile
+/*
 If F_CLE_A_TRUE ( "MON311_SPL_PACI" ) Then
 	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 392 )
 	If lDeb > 0 Then
@@ -1681,7 +1683,7 @@ If F_CLE_A_TRUE ( "MON311_SPL_PACI" ) Then
 		End IF 		
 	End If 	
 End If
-
+*/
 	
 astPass.sTab [ 1 ] = sPos
 
