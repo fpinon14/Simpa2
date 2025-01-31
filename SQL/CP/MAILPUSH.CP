@@ -17203,7 +17203,7 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 	  Begin
 
 		-- [PM519-1]
-		If @sVariante = 'MOBILEO' And @sTypRel = 'REL1'
+		If @sVariante in ( 'MOBILEO', 'ATMATP' ) 
 		  Begin
 			Set @sMailBody  = @sMailBody  + 'A ce jour, nous vous informons que nous n''avons pas reçu votre ' + @sMarque + ' ' + @sModele + ' dans notre centre de réparation.' + @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
@@ -17281,7 +17281,7 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 	IF @sTypRel in ( 'REL2', 'REL3' ) 
 		Begin
 		-- [PM519-1]
-		If @sVariante = 'MOBILEO' And @sTypRel = 'REL2'
+		If @sVariante in ( 'MOBILEO', 'ATMATP' ) And @sTypRel = 'REL2'
 		  Begin
 			Set @sMailBody  = @sMailBody  + 'Dans le cadre de votre demande de prise en charge au titre de votre contrat ' + @sLibProd+ ', et malgré notre relance, nous n’avons toujours pas reçu votre '+ @sMarque + ' ' + @sModele + ' dans notre centre de réparation.' + @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
@@ -17389,7 +17389,7 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 		Begin
 
 		-- [PM519-1]
-		If @sVariante = 'MOBILEO' And @sTypRel = 'REL4'
+		If @sVariante in ( 'MOBILEO', 'ATMATP' ) And @sTypRel = 'REL4'
 		  Begin
 			Set @sMailBody  = @sMailBody  + 'Vous nous avez déclaré un sinistre le ' + @sDteDecl + ', au titre de votre contrat ' + @sLibProd + ' concernant votre appareil ' + @sMarque + ' ' + @sModele + '.' + @sSaut
 			Set @sMailBody  = @sMailBody  + @sSaut
