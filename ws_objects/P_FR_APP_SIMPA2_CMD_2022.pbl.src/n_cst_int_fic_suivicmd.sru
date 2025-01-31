@@ -304,7 +304,7 @@ end subroutine
 
 public function string uf_detection_auto_nomfic (string aidfourn);//*-----------------------------------------------------------------
 //*
-//* Fonction		: n_cst_int_fic_suivicmd::uf_Detection_Auto_nomFic (PUBLIC)
+//* Fonction		: n_cst_int_fic_suivicmd::uf_Detection_Auto_nomFic (PUBLIC) 
 //* Auteur			: Fabry JF
 //* Date				: 30/08/2001
 //* Libellé			: Détection automatique du nom de fichier
@@ -343,7 +343,7 @@ sCas = "" //* #2 [MICROMANIA]
 If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 	//	[HUB832_HUB_ORG_REUN] 
 	If F_CLE_A_TRUE ( "HUB832_HUB_ORG_REUN" ) Then
-		ibPrestaHub = SQLCA.PS_S_CODE_DANS_FAMILLE_CAR ( 1, isIdFour ) > 0 		
+		ibPrestaHub = SQLCA.PS_S_CODE_DANS_FAMILLE_CAR ( 1, aidfourn ) > 0 		
 	Else
 		ibPrestaHub = SQLCA.PS_S01_CODE_CAR ( isIdFour, '-WP') > 0 
 	End If 
