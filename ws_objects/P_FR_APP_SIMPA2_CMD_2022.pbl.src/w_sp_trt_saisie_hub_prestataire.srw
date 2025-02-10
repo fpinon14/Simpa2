@@ -109,6 +109,7 @@ public function boolean wf_valider_type_dommage_et_action ()
 public subroutine wf_consultation_aller_s2_vers_hub ()
 public function boolean wf_appel_relais_pickup ()
 public subroutine wf_recuperation_process_acheminement ()
+public subroutine wf_epurer (integer aicas, ref string asval)
 end prototypes
 
 event chargement_typ_dommage();//*-----------------------------------------------------------------
@@ -1421,6 +1422,36 @@ cb_abandonner.Show ()
 
 end subroutine
 
+public subroutine wf_epurer (integer aicas, ref string asval);//*-----------------------------------------------------------------
+//*
+//* Objet			: w_sp_trt_saisie_hub_prestataire
+//* Fonction 		: wf_epurer
+//* Auteur			: JFF
+//* Date				: 10/02/2025
+//* Libellé			: 
+//* Commentaires	: 
+//*
+//* Arguments		: 
+//*
+//* Retourne		: long
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//* #..   ...   ../../....   
+//*-----------------------------------------------------------------
+
+
+Choose Case aiCas
+	Case 1
+		asVal = F_Remplace ( asVal, "'", "''" ) 
+		asVal = F_Remplace ( asVal, '"', " " ) 
+		
+End CHoose 		
+	
+
+return
+end subroutine
+
 on w_sp_trt_saisie_hub_prestataire.create
 this.st_info=create st_info
 this.st_attente_hub=create st_attente_hub
@@ -1502,16 +1533,32 @@ Choose Case isTrtFen
 		isModlAppSin 	= stPass.sTab[2]
 		isTypAppSin 	= stPass.sTab[3]
 		isTypActionS2  = stPass.sTab[4]
+		
 		isAdrNom			= stPass.sTab[5]
+		this.wf_epurer ( 1, isAdrNom ) 
+	
 		isAdrPreNom		= stPass.sTab[6]
+		this.wf_epurer ( 1, isAdrPreNom ) 
+		
 		isAdrLivr1		= stPass.sTab[7]
+		this.wf_epurer ( 1, isAdrLivr1 ) 
+
 		isAdrLivr2		= stPass.sTab[8]
+		this.wf_epurer ( 1, isAdrLivr2 ) 
+		
 		isAdrCplt		= stPass.sTab[9]
+		this.wf_epurer ( 1, isAdrCplt ) 
+		
 		isAdrCp			= stPass.sTab[10]
+
 		isAdrVille		= stPass.sTab[11]
+		this.wf_epurer ( 1, isAdrVille ) 		
 		
 		isNomAssure    = stPass.sTab[12]
+		this.wf_epurer ( 1, isNomAssure ) 		
+		
 		isPrenomAssure = stPass.sTab[13]
+		this.wf_epurer ( 1, isPrenomAssure ) 		
 		
 		isAdrMailAss   = stPass.sTab[14]
 
