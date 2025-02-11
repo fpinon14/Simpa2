@@ -2669,11 +2669,11 @@ Set @sMessage = @sMessage + 'DSI/Etudes SIMPA2'
 
 EXEC master.dbo.SPB_PS_MAIL 
 			@sRetourErrMail OUTPUT, 
-			'sloison@spb.eu,ntonnetot@spb.eu', -- 'jff@spb.fr',
+			'ntonnetot@spb.eu,cmathe@spb.eu,ayvon@spb.eu', -- 'jff@spb.fr',
 			@sMessage, 
 			@sObjet, 
 			'IFR', 
-			'ayvon@spb.eu,cbourdoiseau@spb.eu,jff@spb.fr', -- 'jff@spb.fr' , 
+			'cbourdoiseau@spb.eu,jff@spb.fr', -- 'jff@spb.fr' , 
 			@sFicOut, 
 			NULL, 
 			NULL, 

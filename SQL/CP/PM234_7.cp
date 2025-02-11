@@ -1357,7 +1357,7 @@ AS
 		  End
 		Else
 		   Begin
-			Exec sysadm.PS_I_PM234_7_REJET @adcIdSin, 'Marq/Modl non dispo sur IFR', 'La marque et le modèle ne sont plus dispo sur IFR, contactez Sébastien Loison pour la réactiver. Automatisation du process Orange V3 via ATLAS/SIMPA2 impossible donc.'
+			Exec sysadm.PS_I_PM234_7_REJET @adcIdSin, 'Marq/Modl non dispo sur IFR', 'La marque et le modèle ne sont plus dispo sur IFR, contactez l''équipe paramétrage EPSIN pour la réactiver. Automatisation du process Orange V3 via ATLAS/SIMPA2 impossible donc.'
 			Return -1
 		   End 
 			

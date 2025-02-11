@@ -683,7 +683,7 @@ If Not Exists (
 
 	Set @sMessage = @sMessage + ''
 
-	Set @sMessage = 'Bonjour Sébastien, ' + CHAR ( 10 ) 
+	Set @sMessage = 'Bonjour, ' + CHAR ( 10 ) 
 	Set @sMessage = @sMessage + CHAR ( 10 )
 	Set @sMessage = @sMessage + CHAR ( 10 )
 	Set @sMessage = @sMessage + 'Une nouvelle référence Bouygues est à relier à IFR.'
@@ -710,7 +710,7 @@ If Not Exists (
 
 	EXEC master.dbo.SPB_PS_MAIL 
 			@sRetourErrMail OUTPUT, 
-			'sloison@spb.eu,ntonnetot.eu', -- 'jff@spb.fr', -- 
+			'ntonnetot@spb.eu,cmathe@spb.eu,ayvon@spb.eu', -- 'jff@spb.fr', -- 
 			@sMessage, 
 			@sObjet, 
 			'[BTRUN_344_REFBYGIFR]', 
@@ -1057,7 +1057,7 @@ If Not Exists (
 
 	Set @sMessage = @sMessage + ''
 
-	Set @sMessage = 'Bonjour Sébastien, Nathalie,' + CHAR ( 10 ) 
+	Set @sMessage = 'Bonjour,' + CHAR ( 10 ) 
 	Set @sMessage = @sMessage + CHAR ( 10 )
 	Set @sMessage = @sMessage + CHAR ( 10 )
 	Set @sMessage = @sMessage + 'Une nouvelle référence Externe du prestataire ' + @sLibPrestaExterne + ' est à relier à IFR.'
@@ -1088,7 +1088,7 @@ If Not Exists (
 
 	EXEC master.dbo.SPB_PS_MAIL 
 			@sRetourErrMail OUTPUT, 
-			'sloison@spb.eu,ntonnetot.eu', -- 'jff@spb.fr'
+			'ntonnetot@spb.eu,cmathe@spb.eu,ayvon@spb.eu', -- 'jff@spb.fr'
 			@sMessage, 
 			@sObjet, 
 			@sFrom, 

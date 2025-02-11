@@ -404,7 +404,7 @@ if @iRetOsql = 0
  BEGIN
 	EXEC master.dbo.SPB_PS_MAIL 
 			@sRetourErrMail OUTPUT, 
-			'sloison@spb.eu',
+			'ntonnetot@spb.eu,cmathe@spb.eu,ayvon@spb.eu',
 			@sMessage, 
 			@sObjet, 
 			'', 
