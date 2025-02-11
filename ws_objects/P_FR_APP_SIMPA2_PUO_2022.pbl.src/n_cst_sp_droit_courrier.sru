@@ -281,6 +281,7 @@ private function integer uf_zn_autoriser (string asdata, long alrow);//*--------
 //		FPI	03/07/2014		   [VDOC14806]
 //*	   JFF   29/10/2018     [CONS_REST_CARDIF]
 //*		JFF   21/08/2024		[SUPP_RESTRICTION]
+//*		JFF   11/02/2025		[RESTRICTION_COCHAGE]
 //*---------------------------------------------------------------
 
 Int iRet, iRet2
@@ -407,6 +408,39 @@ For lCptParam = lDebParam To lFinParam
 						Return 2
 				End Choose 
 			End If
+
+			// [RESTRICTION_COCHAGE]
+			If lIdNatOper = 9 Then
+				Choose Case stGlb.sCodOper
+					Case "JFF", "FS", "DUE", "CBE", "MF"
+						// Ok pour modifier
+					Case Else 
+						idwParamDroit.SetItem ( lCptParam, "AUTORISER", sValActuelleAuto )
+						stMessage.sTitre		= "!! Interdit !!"
+						stMessage.Icon			= Exclamation!
+						stMessage.bErreurG	= FALSE
+						stMessage.sCode		= "GENE188"
+						stMessage.sVar[1]		= "Christelle Bellet, Maryvonne Ferry, Elodie Duboc"
+						stMessage.bouton		= Ok!
+						
+						F_Message ( stMessage )							
+						Return 2
+				End Choose 
+			End If			
+			
+			// [RESTRICTION_COCHAGE]
+			If lIdNatOper = 19 Then
+				idwParamDroit.SetItem ( lCptParam, "AUTORISER", sValActuelleAuto )
+				stMessage.sTitre		= "!! Interdit !!"
+				stMessage.Icon			= Exclamation!
+				stMessage.bErreurG	= FALSE
+				stMessage.sCode		= "GENE189"
+				stMessage.bouton		= Ok!
+				
+				F_Message ( stMessage )							
+				Return 2
+			End If				
+			
 			
 			sRech    = "ID_NAT_OPER = " + String ( lIdNatOper ) + " AND " + &
 						  "ID_OPER     = '" + sIdOper + "' AND " + &
