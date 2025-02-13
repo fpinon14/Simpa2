@@ -664,7 +664,6 @@ GO
 -- Retourne             :       Rien
 -- 
 -------------------------------------------------------------------
-
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_D01_COMMANDE_TYPE' AND type = 'P' )
         DROP procedure sysadm.PS_D01_COMMANDE_TYPE
 GO
@@ -677,3 +676,61 @@ Delete from sysadm.commande_type
 Where id_prod=@dcIdProd
 
 GO
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_DETECTION_ERREUR_DP393
+-- Auteur               :       FABRY JF
+-- Date                 :       12/02/2025
+-- Libellé              :       [HUB875]
+-- Commentaires         :       Détecte une incohérence entre présence de l'option dp/393 et le contenu de command_type pour le produit
+-- Références           :       
+--
+-- Arguments            :       @adcIdProd        Decimal (  7,0 )        (Val)
+--
+-- Retourne             :       Rien
+-- 
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_DETECTION_ERREUR_DP393' AND type = 'P' )
+        DROP procedure sysadm.PS_DETECTION_ERREUR_DP393
+GO
+
+CREATE procedure sysadm.PS_DETECTION_ERREUR_DP393
+	@adcIdProd        Decimal (  7, 0 )
+AS
+
+Declare @Tb Table ( id_code_frn Varchar ( 10), id_code_art varchar ( 10 )) 
+
+
+Insert into @Tb
+Select distinct
+		id_code_frn, 
+		id_code_art
+from sysadm.commande_type 
+where id_prod = @adcIdProd
+And   id_code_art in ( 'EDI', 'PRS' ) 
+
+If Exists ( 
+		Select Top 1 1 
+		From @Tb
+		where id_code_frn <> 'HUB'
+	) 
+	And 
+	Exists (
+		Select Top 1 1 
+		From sysadm.det_pro dp
+		where dp.id_prod = @adcIdProd
+		And id_code_dp = 393
+	)
+ Begin
+	Return -1
+ End 
+
+Return 1
+
+GO
+
+
+
+
+

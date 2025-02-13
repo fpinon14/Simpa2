@@ -1643,7 +1643,6 @@ Go
 -- Retourne             :       1 si OK
 --
 -------------------------------------------------------------------
-
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I02_RECOPIE_PRODUIT' AND type = 'P' )
             DROP procedure sysadm.PS_I02_RECOPIE_PRODUIT
 GO
@@ -1786,10 +1785,7 @@ Set @sMessage = @sMessage + @sSaut + @sSaut +
 	'Pour les recetteurs, merci d''attendre le Go de l''équipe ES pour reprendre la recette de ce produit.'
 Set @sMessage = @sMessage + @sSaut + @sSaut + 'Cordialement'
 
-Set @sDest='GG_DSI-DEI-ES_Coll@spb.fr'
-Set @sDest = @sDest + ',cmathe@spb.eu,ntonnetot@spb.eu,flebarbay@spb.eu'
-Set @sDest = @sDest + ',mlgasnier@spb.eu'
-Set @sDest = @sDest + ',idezon@spb.eu, mcarpentier@spb.eu,vdevarieux@spb.eu'
+Set @sDest = 'ntonnetot@spb.eu,cmathe@spb.eu,ayvon@spb.eu'
 
 EXEC master.dbo.SPB_PS_MAIL_OUTLOOK 
 		@sRetourErrMail OUTPUT, 

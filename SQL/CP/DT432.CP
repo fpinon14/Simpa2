@@ -3113,7 +3113,7 @@ Select	id_lot_trt,
 		rtrim ( ltrim ( comment_refus_spb) ),
 		Case
 			When motif_refus_spb >0 And motif_refus_spb <= 99 Then 'clemarchand@spb.eu,sdelesque@spb.eu'
-			When motif_refus_spb >99 And motif_refus_spb <= 199 Then 'ntonnetot@spb.eu,flebarbay@spb.eu,ayvon@spb.eu,jff@spb.fr'
+			When motif_refus_spb >99 And motif_refus_spb <= 199 Then 'ntonnetot@spb.eu,cmathe@spb.eu,ayvon@spb.eu,jff@spb.fr,cbourdoiseau@spb.eu'
 			When motif_refus_spb >199 And motif_refus_spb <= 299 Then 'ilegall@spb.eu'
 			When motif_refus_spb >299 And motif_refus_spb <= 399 Then 'sbarthelemy@spb.eu,cbourdoiseau@spb.eu'
 			Else 'jff@spb.fr'
@@ -3136,7 +3136,7 @@ Group By
 		comment_refus_spb,
 		Case
 			When motif_refus_spb >0 And motif_refus_spb <= 99 Then 'clemarchand@spb.eu,sdelesque@spb.eu'
-			When motif_refus_spb >99 And motif_refus_spb <= 199 Then 'ntonnetot@spb.eu,flebarbay@spb.eu,ayvon@spb.eu,jff@spb.fr'
+			When motif_refus_spb >99 And motif_refus_spb <= 199 Then 'ntonnetot@spb.eu,cmathe@spb.eu,ayvon@spb.eu,jff@spb.fr,cbourdoiseau@spb.eu'
 			When motif_refus_spb >199 And motif_refus_spb <= 299 Then 'ilegall@spb.eu'
 			When motif_refus_spb >299 And motif_refus_spb <= 399 Then 'sbarthelemy@spb.eu,cbourdoiseau@spb.eu'
 			Else 'jff@spb.fr'
