@@ -819,6 +819,8 @@ subroutine PS_MIG1_S_TYPE_COUR_EMAILING_KSL ( String asTypMail, Ref String asReg
 //   JFF   16/01/2025 [HUB832_HUB_ORG_REUN] 
 function Integer PS_S_CODE_DANS_FAMILLE_CAR ( integer aiIdFam, String asIdCode ) RPCFUNC ALIAS FOR "sysadm.PS_S_CODE_DANS_FAMILLE_CAR"
 
+//   JFF   19/12/2024 [MIG1_COUR_EMAILING]
+function Integer PS_DETECTION_ERREUR_DP393 ( Long adcIdProd )  RPCFUNC ALIAS FOR "sysadm.PS_DETECTION_ERREUR_DP393"
 
 end prototypes
 type variables

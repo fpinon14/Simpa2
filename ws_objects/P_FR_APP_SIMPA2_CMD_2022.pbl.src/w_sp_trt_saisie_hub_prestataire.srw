@@ -93,7 +93,7 @@ Long   ilIdSin
 Long 	 ilIdSeq
 Long   ilIdDepotS2
 Long   ilIdCie
-
+Long   ilDp393
 
 u_Transaction_Hub_Prestataire itrHubPrestataire
 
@@ -110,6 +110,9 @@ public subroutine wf_consultation_aller_s2_vers_hub ()
 public function boolean wf_appel_relais_pickup ()
 public subroutine wf_recuperation_process_acheminement ()
 public subroutine wf_epurer (integer aicas, ref string asval)
+public function boolean wf_valider_type_dommage ()
+public function boolean wf_valider_action ()
+public subroutine wf_recuperation_action ()
 end prototypes
 
 event chargement_typ_dommage();//*-----------------------------------------------------------------
@@ -144,10 +147,12 @@ dw_1.DataObject = "d_trt_saisie_hub_type_dommage"
 dw_1.SetTransObject ( itrHubPrestataire ) 
 lTotRow = dw_1.Retrieve ( iCle, ilIdprod, ilIdGti, isMarqAppSin, isModlAppSin, isTypAppSin )
 
-If lTotRow = 1 And Upper ( dw_1.GetItemString ( 1, "id_code_td_hp" )) = "AUCUN" Then 
-	dw_1.SelectRow ( 1, TRUE )
-	cb_valider.PostEvent ( Clicked!)	
-	Return
+If lTotRow = 1 Then
+	IF Upper ( dw_1.GetItemString ( 1, "id_code_td_hp" )) = "AUCUN" Then 
+		dw_1.SelectRow ( 1, TRUE )
+		cb_valider.PostEvent ( Clicked!)	
+		Return
+	End IF 
 End If 
 
 
@@ -467,9 +472,11 @@ Else
 		isEtatAppSin )	
 End If 	
 		
-If iTotRow = 1 And Upper ( dw_1.GetItemString ( 1, "idHubPresta" )) = "AUCUN" Then 
-	iTotRow = 0
-	dw_1.Reset ()
+If iTotRow = 1 Then 
+	If Upper ( dw_1.GetItemString ( 1, "idHubPresta" )) = "AUCUN" Then 
+		iTotRow = 0
+		dw_1.Reset ()
+	End IF 
 End If 
 
 // Populiser Lib_four
@@ -888,7 +895,11 @@ public function boolean wf_valider_type_dommage_et_action ();//*----------------
 //* MAJ   PAR      Date	     Modification
 //* 		 JFF  27/11/2024  [20241127082353640]
 //* 		 JFF  17/01/2025  [HUB_TYP_APP_REMPL] (V01)
+//*       JFF   12/02/2025   [HUB875]
 //*-----------------------------------------------------------------
+
+// /!\ Cette fonction n'es tplus appelé, je la garde pour mémoire
+// /!\ éclaté sur 3 fonction de validation du dommage, récup des actions, et validations des actions
 
 
 String sSelectionTypDom
@@ -898,7 +909,7 @@ n_cst_string lnvPFCString
 Int iCle
 
 iCle = F_CLE_NUMERIQUE ( "HP252_276_HUB_PRESTA" )
-
+/*
 Choose Case isTypActionS2 
 	Case "A_REPARER", "A_DIAGNOSTIQUER"
 		sSelectionTypDom = "#"
@@ -958,9 +969,19 @@ Choose Case isTypActionS2
 		stMessage.sVar[13]    = isTypActionS2
 	
 End Choose 
+*/
 
 // Détermination du type d'action et controle de cohérence
 dsTypActionHub = Create dataStore
+
+// [HUB875]
+If F_CLE_A_TRUE ( "HUB875" ) Then
+	This.Title = "Connexion au HUB PRESTATAIRE : Choix du type d'action"
+	
+	cb_valider.Hide ()
+	cb_abandonner.Hide ()
+End If 
+
 
 // [HUB_TYP_APP_REMPL]
 If F_CLE_A_TRUE ( "HUB_TYP_APP_REMPL" ) Then
@@ -1035,15 +1056,14 @@ If iRow <= 0 Then
 	Return False	
 End If 
 
-
+/*
 Choose Case isTypActionS2 
 	Case "A_REPARER", "A_DIAGNOSTIQUER"
 		lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_TYP_DOM", sSelectionTypDom, ";")
 End Choose 
+*/
 
-
-
-Return True
+Return TRUE
 
 
 end function
@@ -1452,6 +1472,301 @@ End CHoose
 return
 end subroutine
 
+public function boolean wf_valider_type_dommage ();//*-----------------------------------------------------------------
+//*
+//* Objet			: w_sp_trt_saisie_hub_prestataire
+//* Fonction 		: wf_valider_type_dommage
+//* Auteur			: JFF
+//* Date				: 14/02/2025
+//* Libellé			: 
+//* Commentaires	: 
+//*
+//* Arguments		: 
+//*
+//* Retourne		: long
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//* #..   ...   ../../....   
+//*-----------------------------------------------------------------
+
+Int iTotRow, iCpt, iRowSelect 
+DataStore dsTypActionHub
+n_cst_string lnvPFCString
+String sSelectionTypDom
+
+Choose Case isTypActionS2 
+	Case "A_REPARER", "A_DIAGNOSTIQUER"
+		sSelectionTypDom = "#"
+		
+		dw_1.AcceptText()
+		iTotRow = dw_1.RowCount ()
+		
+		iCpt = 0
+		
+		Do While Dw_1.GetSelectedRow ( iCpt ) > 0 
+			iRowSelect = Dw_1.GetSelectedRow ( iCpt )
+			If iRowSelect > 0 Then
+				sSelectionTypDom += Dw_1.GetItemString ( iRowSelect, "id_code_td_hp" ) + "#"
+			End If 
+			iCpt = iRowSelect 
+		Loop
+
+		If sSelectionTypDom = "#AUCUN#" Then sSelectionTypDom = ""
+
+	Case Else
+		sSelectionTypDom = ""
+End Choose 
+
+Choose Case isTypActionS2 
+	Case "A_REPARER", "A_DIAGNOSTIQUER"
+		lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_TYP_DOM", sSelectionTypDom, ";")
+End Choose 
+
+Return TRUE
+end function
+
+public function boolean wf_valider_action ();//*-----------------------------------------------------------------
+//*
+//* Objet			: w_sp_trt_saisie_hub_prestataire
+//* Fonction 		: wf_valider_action
+//* Auteur			: JFF
+//* Date				: 14/02/2025
+//* Libellé			: 
+//* Commentaires	: 
+//*
+//* Arguments		: 
+//*
+//* Retourne		: long
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//* #..   ...   ../../....   
+//*-----------------------------------------------------------------
+
+Int iRow, iRowSelect
+String sTypDom 
+n_cst_String lnvPFCString
+
+sTypDom = lnvPFCString.of_Getkeyvalue ( isChaineRetour, "HP_TYP_DOM", ";")
+
+Choose Case isTypActionS2 
+	Case "A_REPARER", "A_DIAGNOSTIQUER"
+
+		stMessage.sCode		= "HUBP001"
+		stMessage.sVar[1]    = string ( ilIdprod )
+		stMessage.sVar[2]    = string ( ilIdGti )
+		stMessage.sVar[3]    = isMarqAppSin
+		stMessage.sVar[4]    = isModlAppSin
+		stMessage.sVar[5]    = isTypAppSin	
+		stMessage.sVar[6]    = sTypDom
+		stMessage.sVar[7]    = isTypActionS2	
+
+		// [20241127082353640]
+		stMessage.sVar[8]    = isAdrCp
+		stMessage.sVar[9]    = isPays
+		stMessage.sVar[10]   = String ( idcMtValAchat, "#,##0.00 \"+stGlb.smonnaiesymboledesire )
+		stMessage.sVar[11]   = String ( idcMtPec, "#,##0.00 \"+stGlb.smonnaiesymboledesire )
+		stMessage.sVar[12]   = String ( idtDteAchat, "dd/mm/yyyy" )		
+		stMessage.sVar[13]   = isEtatAppSin 			
+		stMessage.sVar[14]   = isTypActionS2	
+
+
+	Case Else
+		stMessage.sCode		= "HUBP008"
+		stMessage.sVar[1]    = string ( ilIdprod )
+		stMessage.sVar[2]    = string ( ilIdGti )
+		stMessage.sVar[3]    = isMarqAppSin
+		stMessage.sVar[4]    = isModlAppSin
+		stMessage.sVar[5]    = isTypAppSin	
+		stMessage.sVar[6]    = isTypActionS2
+
+
+		// [20241127082353640]		
+		stMessage.sVar[7]    = isAdrCp
+		stMessage.sVar[8]    = isPays
+		stMessage.sVar[9]   = String ( idcMtValAchat, "#,##0.00 \"+stGlb.smonnaiesymboledesire )
+		stMessage.sVar[10]   = String ( idcMtPec, "#,##0.00 \"+stGlb.smonnaiesymboledesire )
+		stMessage.sVar[11]   = String ( idtDteAchat, "dd/mm/yyyy" )		
+		stMessage.sVar[12]   = isEtatAppSin 			
+		stMessage.sVar[13]    = isTypActionS2
+	
+End Choose 
+
+// Mode PAS HUB unique REPA/DIAG (donc comme avant)
+If ilDp393 <= 0 Then
+	Choose Case isTypActionS2
+		Case "PEC_A_RECYCLER", "REFUSE_A_REEXP"
+			iRow = 1
+		
+		Case Else
+			iRow = dw_1.Find ( "id_code_action_hp = '" + isTypActionS2 + "'", 1, dw_1.RowCount() )
+	End CHoose 
+	
+	If iRow <= 0 Then
+		st_attente_hub.Hide()
+		stMessage.sTitre  	= "Incohérence type d'action HUB PRESTATAIRE"
+		stMessage.Icon			= Information!
+		stMessage.bErreurG	= FALSE
+		stMessage.bouton 		= Ok!
+		
+		F_message(stMessage)
+		cb_Abandonner.PostEvent ( Clicked!)
+		Return False	
+	End If 
+	
+
+// Mode HUB unique REPA/DIAG, donc choix GT possible (donc comme avant)
+Else
+
+	dw_1.AcceptText()
+	
+	iRowSelect = Dw_1.GetSelectedRow ( 0 ) 
+	
+	If iRowSelect <= 0 Then
+		st_attente_hub.Hide()
+		stMessage.sTitre  	= "Incohérence type d'action HUB PRESTATAIRE"
+		stMessage.Icon			= Information!
+		stMessage.bErreurG	= FALSE
+		stMessage.bouton 		= Ok!
+		
+		F_message(stMessage)
+		cb_Abandonner.PostEvent ( Clicked!)
+		Return False	
+	End If 
+
+	// On met à jour la variable d'instance avec le retour
+	isTypActionS2 = Dw_1.GetItemString ( iRowSelect, "id_code_action_hp" ) 
+	lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_ID_ACTION", isTypActionS2, ";")	
+
+End If 
+
+Return True
+end function
+
+public subroutine wf_recuperation_action ();//*-----------------------------------------------------------------
+//*
+//* Objet			: w_sp_trt_saisie_hub_prestataire
+//* Fonction 		: wf_recuperation_action
+//* Auteur			: JFF
+//* Date				: 14/02/2025
+//* Libellé			: 
+//* Commentaires	: 
+//*
+//* Arguments		: 
+//*
+//* Retourne		: long
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//*-----------------------------------------------------------------
+
+Int iTotRow, iCle
+String sTypDom
+n_cst_string lnvPFCString
+
+iCle = F_CLE_NUMERIQUE ( "HP252_276_HUB_PRESTA" )
+
+This.Title = "Connexion au HUB PRESTATAIRE : Choix du type d'action"
+
+isTrtFen = "ACTION"
+
+st_attente_hub.Height = 690
+st_attente_hub.Y = 200
+st_attente_hub.text  = "~n~rEn attente de réponse du HUB PRESTATAIRE....~n~r"
+st_attente_hub.text += "~n~r"
+st_attente_hub.text += "Appel extérieur par API~n~r"
+st_attente_hub.text += "Recherche des actions possibles~n~r"
+st_attente_hub.text += "~n~r"
+st_attente_hub.text += "Cela peut prendre quelques minutes...~n~r"
+st_attente_hub.Show()
+st_attente_hub.BringToTop = TRUE	
+
+cb_valider.Hide ()
+cb_abandonner.Hide ()
+
+sTypDom = lnvPFCString.of_Getkeyvalue ( isChaineRetour, "HP_TYP_DOM", ";")
+
+dw_1.Hide ()
+
+// [HUB_TYP_APP_REMPL]
+dw_1.DataObject = "d_trt_saisie_hub_type_action_v01"
+dw_1.SetTransObject ( itrHubPrestataire )
+
+
+// [20241127082353640] ajout isAdrCp à isEtatAppSin
+// [HUB_TYP_APP_REMPL]
+If F_CLE_A_TRUE ( "HUB_TYP_APP_REMPL" ) Then
+	iTotRow = dw_1.Retrieve ( &
+			iCle, &
+			ilIdprod, &
+			ilIdGti, &
+			isMarqAppSin, &
+			isModlAppSin, &
+			isTypAppSin, &
+			sTypDom, &
+			isTypActionS2, &
+			isAdrCp, &
+			isPays, &
+			idcMtValAchat, &
+			idcMtPec, &				
+			String ( idtDteAchat, "dd/mm/yyyy" ), &
+			isEtatAppSin, &
+			isChoixEtatAppRempl, &
+			isChaineSeria &			
+			)
+Else
+	iTotRow = dw_1.Retrieve ( &
+			iCle, &
+			ilIdprod, &
+			ilIdGti, &
+			isMarqAppSin, &
+			isModlAppSin, &
+			isTypAppSin, &
+			sTypDom, &
+			isTypActionS2, &
+			isAdrCp, &
+			isPays, &
+			idcMtValAchat, &
+			idcMtPec, &				
+			String ( idtDteAchat, "dd/mm/yyyy" ), &
+			isEtatAppSin &
+			)
+End If 
+
+
+// Mode PAS HUB unique REPA/DIAG (donc comme avant)
+If ilDp393 <= 0 Then cb_Valider.PostEvent ( Clicked! )
+
+
+If iTotRow = 1 Then
+	If Upper ( dw_1.GetItemString ( 1, "id_Code_Action_Hp" )) = "AUCUN" Then 
+		iTotRow = 0
+	End IF 
+End IF 
+
+If iTotRow = 0 Then
+	dw_1.Reset ()
+	cb_Valider.PostEvent ( Clicked! )
+End If 
+
+// Mode HUB unique REPA/DIAG, donc choix GT possible (donc comme avant)
+cb_valider.enabled = FALSE
+
+st_attente_hub.Hide()
+st_attente_hub.Height = 228
+st_attente_hub.Y = 412
+st_attente_hub.text = "~n~rEn attente de réponse du HUB PRESTATAIRE...."
+
+cb_valider.Show ()
+cb_abandonner.Show ()
+
+dw_1.Show ()
+dw_1.BringToTop = TRUE
+dw_1.SetFocus ()
+
+end subroutine
+
 on w_sp_trt_saisie_hub_prestataire.create
 this.st_info=create st_info
 this.st_attente_hub=create st_attente_hub
@@ -1527,6 +1842,7 @@ Choose Case isTrtFen
 		ilIdGti			= stPass.lTab[2]
 		ilIdSin			= stPass.lTab[3]
 		ilAdrCodCiv		= stPass.lTab[4]
+		ilDp393			= stPass.lTab[6]
 		
 		
 		isMarqAppSin 	= stPass.sTab[1]
@@ -1759,8 +2075,15 @@ Boolean bRet
 
 Choose Case isTrtFen
 	Case "TYPDOM"
-		bRet = Parent.wf_Valider_Type_Dommage_Et_Action()
+		bRet = Parent.wf_Valider_Type_Dommage ()
+
+		If bRet then
+			Parent.wf_Recuperation_Action ()
+		End If 
 		
+	Case "ACTION"	
+		bRet = Parent.wf_Valider_Action()
+
 		If bRet then
 			Parent.wf_Recuperation_Point_Service ()
 		End If 

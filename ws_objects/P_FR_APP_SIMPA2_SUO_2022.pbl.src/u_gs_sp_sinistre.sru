@@ -593,6 +593,7 @@ private subroutine uf_preparermodifier (ref s_pass astpass);//*-----------------
 //       JFF   04/09/2023  [RS5656_MOD_PCE_DIF]
 //       JFF   05/08/2024  [MCO602_PNEU]
 //       JFF   19/12/2024 [MIG1_COUR_EMAILING]
+//       JFF   12/02/2025 [HUB875]
 //*-----------------------------------------------------------------
 
 String sCol[], sValCar, sValCar2, sIdAdh, sSIREN, sVal, sVal2, sPctRisque, sAltPart 
@@ -2373,7 +2374,22 @@ If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 	End IF 	
 End If
 
-
+// [HUB875]
+If F_CLE_A_TRUE ( "HUB875" ) Then
+	If SQLCA.PS_DETECTION_ERREUR_DP393 ( lIdProd ) < 0 Then
+		
+		Do While Not bFin
+			stMessage.berreurg=FALSE
+			stMessage.bouton=YESNO!
+			stMessage.icon=Exclamation!
+			stMessage.stitre="Gestion des sinistres - SIMPA2"
+			stMessage.scode ="WSIN919"
+			If F_Message ( stMessage ) = 1 Then bFin = TRUE
+		Loop
+		
+		iPbControler.Enabled = False
+	End IF 
+End If
 
 // === A LAISSER A LA FIN ===== CODER AU DESSUS =====
 // [PI087_PM473_2]
@@ -2396,7 +2412,6 @@ If isTypeTrt = "C" Then
 		stMessage.sVar[3] 	= SQLCA.SqlErrText
 		stMessage.sCode		= "WSIN849"
 		F_Message ( stMessage )
-
 	End If 
 End If 	
 

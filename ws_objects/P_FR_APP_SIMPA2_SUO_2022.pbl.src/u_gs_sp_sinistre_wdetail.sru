@@ -277,6 +277,7 @@ private subroutine uf_gestion_dtedet ()
 public function boolean uf_rf_dp370_val_div_det ()
 public function string uf_epurezone (string asvaleur)
 public subroutine uf_gestong_divers_caspart_liste (string asnomzone, long alidprod, long alidrev, long alidgti)
+public subroutine uf_affichage_dw_choix_action (integer alidevt)
 end prototypes
 
 event ue_mt_prej();//*-----------------------------------------------------------------
@@ -1194,6 +1195,11 @@ idw_wDetailFF.SetFocus ()
 
 // [VDOC28827] et [VDOC28866]
 idw_wDivDet.setRow (1)
+
+// [HUB875]
+If F_CLE_A_TRUE ( "HUB875" ) Then
+	This.uf_affichage_dw_choix_action ( lIdEvt )
+End If
 
 end subroutine
 
@@ -12749,12 +12755,13 @@ private function long uf_zn_idevt_telephonie ();//*-----------------------------
 //        JFF   23/03/2022  [RS1507_CONS_MAN]
 //        JFF   20/12/2023  [RS6269_EVOL_CONFO]
 //        JFF   05/08/2024  [MCO602_PNEU]
+//        JFF   12/02/2025   [HUB875]
 //*-----------------------------------------------------------------
 
 Long	lNbreNouv, lTotCmdeDet, lSeqMax, lSeqMax1, lCpt, lIdEvt, lDeb, lFin, lRow, lIdEvtGetText, lIdEvtITem, lIdDetail 
 Boolean	bContinuer, bCasto
 Integer iAction
-String sVal
+String sVal, sLibEvt
 n_cst_string lnvPFCString
 
 bContinuer = TRUE
@@ -13008,6 +13015,11 @@ If F_CLE_A_TRUE ( "RS6269_EVOL_CONFO" ) Then
 			End Choose
 		End If 
 	End If 
+End If
+
+// [HUB875]
+If F_CLE_A_TRUE ( "HUB875" ) Then
+	If iAction = 0 Then This.uf_affichage_dw_choix_action ( lIdEvtGetText )
 End If
 
 
@@ -26096,6 +26108,60 @@ Choose Case asNomZone
 
 End Choose
 
+
+
+end subroutine
+
+public subroutine uf_affichage_dw_choix_action (integer alidevt);//*-----------------------------------------------------------------
+//*
+//* Fonction		: uf_affichage_dw_choix_action (PRIVATE)
+//* Auteur			: FABRY JF
+//* Date				: 14/02/2025
+//* Libellé			: 
+//* Commentaires	: Calcul du Montant à régler
+//*
+//* Arguments		: Aucun
+//*
+//* Retourne		: String					Nom de la zone sur laquelle on se positionne si Erreur
+//*
+//*-----------------------------------------------------------------
+Long lDeb, lFin
+String sLibEvt
+	
+If Not idw_ChoixAction.Visible Then Return
+
+idw_ChoixAction.dataobject = "d_choix_action"
+idw_ChoixAction.InsertRow ( 0 )
+idw_ChoixAction.SetItem ( 1, "CHOIX_ACTION", "R" )	
+icbCommander.Text = "Réparer >>"	
+
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 393 )
+
+If lDeb > 0 Then
+	
+	Choose Case alIdEvt
+		Case 1491
+			idw_ChoixAction.dataobject = "d_choix_action_service_hub"
+			idw_ChoixAction.InsertRow ( 0 )				
+
+			idw_ChoixAction.SetItem ( 1, "CHOIX_ACTION", "R" )
+			icbCommander.Text = "Serv. HUB >>"					
+			
+	End Choose
+	
+End If 	
+
+sLibEvt  = Upper ( SQLCA.FN_CODE_NUM ( alIdEvt, "+EV" ) )
+If Left ( sLibEvt, 5 ) = "REMPL" Then
+
+	idw_ChoixAction.dataobject = "d_choix_action_cmde_seule"
+	idw_ChoixAction.InsertRow ( 0 )
+
+	idw_ChoixAction.SetItem ( 1, "CHOIX_ACTION", "C" )
+	icbCommander.Text = "Commander >>"
+End If 
+idw_ChoixAction.Show() 
+idw_ChoixAction.BringToTop = True
 
 
 end subroutine

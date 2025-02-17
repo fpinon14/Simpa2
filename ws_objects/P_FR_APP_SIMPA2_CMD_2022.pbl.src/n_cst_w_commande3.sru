@@ -310,6 +310,7 @@ public subroutine uf_preparerinserer (ref s_pass astpass);//*-------------------
 //       JFF   08/11/2018 [BUG_PRS] obligé de rejour le This.Uf_RowfocusChanged ( "DWFOURN" ) sinon la preste de réparation n'apparait pas.
 //       JFF   18/12/2018 [PM471-1]
 //       JFF   17/09/2019 [DT447]
+//        JFF   12/02/2025   [HUB875]
 //*-----------------------------------------------------------------
 Long		lDeb, lFin, lRow, lTot, lCpt, lVal, lIdGti, lRowMtPec, lRow2, lIdProd, lQteDisp, lIdEVt, lCpt2, lTot2, lIdCie
 String	sFiltre, sDteProdEqvFc, sFiltreFrn, sSortOrig, sSav, sFiltreTempo // #5
@@ -486,6 +487,11 @@ End Choose
 if isChoixaction="R" Then iuoEqvFct.Hide ()
 // :[REPAR_GTI]
 
+// [HUB875]
+If F_CLE_A_TRUE ( "HUB875" ) Then
+	if isChoixaction="I" Then iuoEqvFct.Hide ()	
+End If
+
 // #5
 // DP/56 : Utilisation du filtre fournisseur
 sFiltreFrn = stNul.str
@@ -563,6 +569,19 @@ If bCasAppleSfrSbe Then sChaine = stNul.str
 // [PM471-1]
 idwArticle.Retrieve ( idwWSin.GetItemNumber ( 1, "ID_PROD" ), sChaine )
 // :#8
+
+// [HUB875]
+If F_CLE_A_TRUE ( "HUB875" ) Then
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 393 ) 
+	If lDeb > 0 Then 
+		idwArticle.SetFilter ( "ID_TYP_ART = 'EDI' AND ID_REF_FOUR = 'A_DIAGNOSTIQUER'" ) 
+		idwArticle.Filter ( ) 
+		idwArticle.RowsDiscard ( 1, idwArticle.RowCount (), Primary!)
+		idwArticle.SetFilter ( "" ) 
+		idwArticle.Filter ( ) 
+		idwArticle.Sort ( ) 
+	End If 
+End IF 
 
 // [DT386_EXTR_AXA]
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 337 ) 
@@ -12128,12 +12147,20 @@ Choose Case isChoixAction
 	Case "I"
 		idwArticle.Modify ( "mt_prix_ttc_t.visible = 0 qt_disp_t.visible = 0 ordre.visible = 0 qt_disp.visible = 0" )
 		idwArticle.Modify ( "observ_frn_t.text = 'Description zone' anc_app_t.visible = 0 descp_probl_t.visible = 0 probleme.visible = 0" )
-		idwArticle.Modify ( "id_marq_art_t.Text = 'Information'" )
+		idwArticle.Modify ( "id_marq_art_t.Text = 'Informations'" ) // [HUB875]
 		idwTypArt.Modify  ( "titre_t.Text = 'Types d~~'informations'" )
+
+	// [HUB875]
+	Case "R"
+		idwArticle.Modify ( "mt_prix_ttc_t.visible = 1 qt_disp_t.visible = 1 ordre.visible = 1 qt_disp.visible = 1" )
+		idwArticle.Modify ( "observ_frn_t.text = 'Obs. Fourn' anc_app_t.visible = 1 descp_probl_t.visible = 1 probleme.visible = 1" )
+		idwArticle.Modify ( "id_marq_art_t.Text = 'Types d'actions'" )
+		idwTypArt.Modify  ( "titre_t.Text = 'Types d~~'articles'" )
+
 	Case Else
 		idwArticle.Modify ( "mt_prix_ttc_t.visible = 1 qt_disp_t.visible = 1 ordre.visible = 1 qt_disp.visible = 1" )
 		idwArticle.Modify ( "observ_frn_t.text = 'Obs. Fourn' anc_app_t.visible = 1 descp_probl_t.visible = 1 probleme.visible = 1" )
-		idwArticle.Modify ( "id_marq_art_t.Text = 'Article'" )
+		idwArticle.Modify ( "id_marq_art_t.Text = 'Articles'" )
 		idwTypArt.Modify  ( "titre_t.Text = 'Types d~~'articles'" )
 End Choose
 
@@ -28993,6 +29020,7 @@ private function integer uf_zn_choix_regle_hub (string ascas, long alidprod, lon
 //* MAJ   PAR      Date	     Modification
 //* 		 JFF  27/11/2024  [20241127082353640]
 //* 		 JFF  17/01/2025  [HUB_TYP_APP_REMPL] (V01)
+//        JFF   12/02/2025   [HUB875]
 //*---------------------------------------------------------------
 
 s_Pass	stPass
@@ -29000,7 +29028,7 @@ String   sRetHubPrestataire, sAdrMail, sVal, sVal1, sVar, sCodeVerrou, sRetHubPr
 String   sTabValRet []
 Integer  iRet, iRow, iTotTabValRet, iCpt, iIdSeqPrestaHubOrig
 n_cst_string lnvPFCString 
-Long lRow, lIdRev, lIdCie
+Long lRow, lIdRev, lIdCie, lDeb, lFin
 
 lIdRev = idwWsin.GetItemNumber ( 1, "ID_REV" )
 
@@ -29008,6 +29036,11 @@ stPass.ltab[1] = alIdProd
 stPass.ltab[2] = alIdGti
 stPass.lTab[3]	= alidsin
 stPass.lTab[4]	= Long ( idwCmde.GetItemString ( 1, "ADR_COD_CIV" ))
+// stPass.lTab[5] pris plus bas
+
+// [HUB875]
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 393 ) 
+stPass.lTab[6] = lDeb 
 
 stPass.sTab[1]	= isMarqPortAdh
 stPass.sTab[2]	= isModlPortAdh
@@ -29124,6 +29157,7 @@ Choose Case ascas
 		sTabValRet [13] ="ADRVILLE_PICK_UP"
 		sTabValRet [14] ="HP_INFO_SPB_FRN"
 		sTabValRet [15] ="HP_ID_PROCESS_ACHEM" 
+		sTabValRet [16] ="HP_ID_ACTION" 
 
 		iTotTabValRet = UpperBound ( sTabValRet  )
 		For iCpt = 1 To iTotTabValRet 
@@ -29142,6 +29176,21 @@ Choose Case ascas
 		sVal = lnvPFCString.of_Getkeyvalue( sRetHubPrestataire, "HP_INFO_SPB_FRN", ";" )
 		adw.SetItem ( alRow, "INFO_SPB_FRN", Long ( sVal ))
 
+		// [HUB875]
+		sVal = Trim ( lnvPFCString.of_Getkeyvalue( sRetHubPrestataire, "HP_ID_ACTION", ";" ))
+		If sVal <> "" And Not IsNull ( sVal ) Then
+			adw.SetItem ( alRow, "ID_REF_FOUR", sVal )
+			
+			Choose Case sVal
+				Case "A_REPARER"
+					sVal = "PRS"
+					
+				Case "A_DIAGNOSTIQUER"
+					sVal = "EDI"
+			End Choose 
+					
+			adw.SetItem ( alRow, "ID_TYP_ART", sVal )
+		End IF 
 
 	Case "CODE_VERROU"
 

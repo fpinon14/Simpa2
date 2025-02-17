@@ -41,13 +41,13 @@ type aff_pg_cmd_t from statictext within w_sp_gs_w_commande3
 end type
 type pb_tout from picturebutton within w_sp_gs_w_commande3
 end type
-type uo_equiv_fonct from u_sp_ifr_pilote within w_sp_gs_w_commande3
-end type
 type st_altpec from statictext within w_sp_gs_w_commande3
 end type
 type st_mode_reprise from statictext within w_sp_gs_w_commande3
 end type
 type cb_aide_mode_reprise from commandbutton within w_sp_gs_w_commande3
+end type
+type uo_equiv_fonct from u_sp_ifr_pilote within w_sp_gs_w_commande3
 end type
 end forward
 
@@ -74,10 +74,10 @@ cb_dern cb_dern
 cb_prem cb_prem
 aff_pg_cmd_t aff_pg_cmd_t
 pb_tout pb_tout
-uo_equiv_fonct uo_equiv_fonct
 st_altpec st_altpec
 st_mode_reprise st_mode_reprise
 cb_aide_mode_reprise cb_aide_mode_reprise
+uo_equiv_fonct uo_equiv_fonct
 end type
 global w_sp_gs_w_commande3 w_sp_gs_w_commande3
 
@@ -136,9 +136,9 @@ event ue_taillefenetre();//*----------------------------------------------------
 // This.Height = 1810 // [PB2022_TAILLE_FEN] Je commente
 
 st_Titre.X     = 851
-st_Titre.Y     =   09
+st_Titre.Y     =   20
 st_Titre.Width = 1450
-st_Titre.Height=  109
+st_Titre.Height=  115
 
 
 end event
@@ -162,6 +162,7 @@ private function boolean wf_preparerinserer ();//*------------------------------
 //		FPI	19/08/2015	[REPAR_GTI] - pour une réparation on n'active pas la page d'équiv fonct
 //       JFF   17/05/2016 [PM280-2]
 //       JFF   17/09/2019 [DT447]
+//        JFF   12/02/2025   [HUB875]
 //*-----------------------------------------------------------------
 
 s_Pass  stPass
@@ -195,9 +196,32 @@ Choose Case isChoixAction
 	Case "S"
 		st_Titre.Text = "Sélection sur courrier"		
 	Case "R"
-		st_Titre.Text = "Réparer un appareil"		
+		st_Titre.Text = "Réparer un appareil"
+		
+		// [HUB875]
+		If F_CLE_A_TRUE ( "HUB875" ) Then		
+			F_RechDetPro ( lDeb, lFin, istPass.dwNorm [8], istPass.dwNorm [2].GetItemNumber ( 1, "ID_PROD" ), "-DP", 393 )
+			If lDeb > 0 Then
+				Choose Case lIdEvt
+					Case 1491
+						st_Titre.Text = "Ordre de service vers le HUB"
+				End Choose
+			End If 				
+		End If 
+		
 	Case "I"
 		st_Titre.Text = "Envoyer des informations"		
+
+		// [HUB875]
+		If F_CLE_A_TRUE ( "HUB875" ) Then				
+			F_RechDetPro ( lDeb, lFin, istPass.dwNorm [8], istPass.dwNorm [2].GetItemNumber ( 1, "ID_PROD" ), "-DP", 393 )
+			If lDeb > 0 Then
+				Choose Case lIdEvt
+					Case 1491
+						st_Titre.Text = "Complèment d’infos vers le HUB"
+				End Choose
+			End If 				
+		End If 
 
 End Choose 
 
@@ -252,7 +276,10 @@ Choose Case isTypApp
 		// [REPAR_GTI] - pour une réparation on n'active pas la page d'équiv fonct
 		if isChoixaction="R" Or lIdEvt = 1426 Then 
 			iiNbMinPg  = 2
-		else
+		// [HUB875]			
+		ElseIf F_CLE_A_TRUE ( "HUB875" ) And isChoixaction="I" Then
+			iiNbMinPg  = 2
+		else 
 			iiNbMinPg  = 1
 		End if
 		// :[REPAR_GTI] 
@@ -520,8 +547,8 @@ st_altpec.Width = 247
 st_altpec.Height = 136
 
 st_Titre.X     = 851
-st_Titre.Y     =   09
-st_Titre.Width = 1450
+st_Titre.Y     =   45
+st_Titre.Width = 1455
 st_Titre.Height=  109
 
 uo_equiv_fonct.X     = 23
@@ -1271,10 +1298,10 @@ this.cb_dern=create cb_dern
 this.cb_prem=create cb_prem
 this.aff_pg_cmd_t=create aff_pg_cmd_t
 this.pb_tout=create pb_tout
-this.uo_equiv_fonct=create uo_equiv_fonct
 this.st_altpec=create st_altpec
 this.st_mode_reprise=create st_mode_reprise
 this.cb_aide_mode_reprise=create cb_aide_mode_reprise
+this.uo_equiv_fonct=create uo_equiv_fonct
 iCurrent=UpperBound(this.Control)
 this.Control[iCurrent+1]=this.dw_type_article
 this.Control[iCurrent+2]=this.dw_article
@@ -1295,10 +1322,10 @@ this.Control[iCurrent+16]=this.cb_dern
 this.Control[iCurrent+17]=this.cb_prem
 this.Control[iCurrent+18]=this.aff_pg_cmd_t
 this.Control[iCurrent+19]=this.pb_tout
-this.Control[iCurrent+20]=this.uo_equiv_fonct
-this.Control[iCurrent+21]=this.st_altpec
-this.Control[iCurrent+22]=this.st_mode_reprise
-this.Control[iCurrent+23]=this.cb_aide_mode_reprise
+this.Control[iCurrent+20]=this.st_altpec
+this.Control[iCurrent+21]=this.st_mode_reprise
+this.Control[iCurrent+22]=this.cb_aide_mode_reprise
+this.Control[iCurrent+23]=this.uo_equiv_fonct
 end on
 
 on w_sp_gs_w_commande3.destroy
@@ -1322,10 +1349,10 @@ destroy(this.cb_dern)
 destroy(this.cb_prem)
 destroy(this.aff_pg_cmd_t)
 destroy(this.pb_tout)
-destroy(this.uo_equiv_fonct)
 destroy(this.st_altpec)
 destroy(this.st_mode_reprise)
 destroy(this.cb_aide_mode_reprise)
+destroy(this.uo_equiv_fonct)
 end on
 
 type cb_debug from w_8_traitement_detail`cb_debug within w_sp_gs_w_commande3
@@ -1343,11 +1370,12 @@ end type
 
 type st_titre from w_8_traitement_detail`st_titre within w_sp_gs_w_commande3
 integer x = 850
-integer y = 8
+integer y = 20
 integer width = 1449
 integer height = 108
 integer textsize = -14
-borderstyle borderstyle = styleshadowbox!
+long textcolor = 8388608
+long backcolor = 553648127
 end type
 
 type pb_retour from w_8_traitement_detail`pb_retour within w_sp_gs_w_commande3
@@ -2251,41 +2279,6 @@ This.Enabled = FALSE
 
 end on
 
-type uo_equiv_fonct from u_sp_ifr_pilote within w_sp_gs_w_commande3
-integer x = 69
-integer y = 220
-integer width = 302
-integer height = 260
-integer taborder = 140
-boolean border = false
-end type
-
-on ue_cocher;call u_sp_ifr_pilote::ue_cocher;//*-----------------------------------------------------------------
-//*
-//* Objet         : n_cst_w_command3
-//* Evenement     : 
-//* Auteur        : Fabry JF
-//* Date          : 25/10/2004 10:35:24
-//* Libellé       : 
-//* Commentaires  : 
-//*
-//* Arguments     : 
-//*
-//* Retourne      : 
-//*
-//*-----------------------------------------------------------------
-//* MAJ   PAR      Date	     Modification
-//* #..   ...   ../../....
-//*
-//*-----------------------------------------------------------------
-
-invCmd.uf_Zn_Cocher_Equiv_Fct ()
-end on
-
-on uo_equiv_fonct.destroy
-call u_sp_ifr_pilote::destroy
-end on
-
 type st_altpec from statictext within w_sp_gs_w_commande3
 integer x = 2331
 integer y = 8
@@ -2368,4 +2361,39 @@ stMessage.sCode		= "WSIN723"
 F_Message ( stMessage )
 
 end event
+
+type uo_equiv_fonct from u_sp_ifr_pilote within w_sp_gs_w_commande3
+integer x = 69
+integer y = 220
+integer width = 329
+integer height = 248
+integer taborder = 140
+boolean border = false
+end type
+
+on ue_cocher;call u_sp_ifr_pilote::ue_cocher;//*-----------------------------------------------------------------
+//*
+//* Objet         : n_cst_w_command3
+//* Evenement     : 
+//* Auteur        : Fabry JF
+//* Date          : 25/10/2004 10:35:24
+//* Libellé       : 
+//* Commentaires  : 
+//*
+//* Arguments     : 
+//*
+//* Retourne      : 
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//* #..   ...   ../../....
+//*
+//*-----------------------------------------------------------------
+
+invCmd.uf_Zn_Cocher_Equiv_Fct ()
+end on
+
+on uo_equiv_fonct.destroy
+call u_sp_ifr_pilote::destroy
+end on
 

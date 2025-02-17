@@ -1112,6 +1112,7 @@ private function boolean wf_condition_ouverture (string aschoixaction);//*------
 //       JFF   05/08/2024 [MCO602_PNEU]
 //       JFF   06/09/2024 [KSV516]
 // 		JFF   29/11/2024 [HP252_276_HUB_PRESTA] Ajout HUB
+//       JFF   12/02/2025 [HUB875]
 //*-----------------------------------------------------------------
 
 String sTypApp, sMarque, sModele, sMes, sTypArt, sFiltreFrn, sIdGti, sDteProdEqvFc, sBVIEPresent, sSortOri, sChaine, sInterdictionAutor
@@ -1573,6 +1574,15 @@ Choose Case asChoixAction
 
 	Case "R"
 		sMes = "Pour effectuer une réparation, "
+		
+		// [HUB875]
+		If F_CLE_A_TRUE ( "HUB875" ) Then
+			F_RechDetPro ( lDeb, lFin, idwDetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 393 )
+			
+			If lDeb > 0 And lIdEvt = 1491 Then
+				sMes = "Pour effectuer une réparation ou un diagnostic, "
+			End If 	
+		End If
 
 		bOk = dcMtValAchat <> 0
 		sMes += "la valeur d'achat est obligatoire."
@@ -2183,6 +2193,8 @@ If bOk Then
 	//[MCO602_PNEU]
 	sTbLibEvt [11] = "BANQUE EDEL" 
 
+	// [HUB875]
+	sTbLibEvt [12] = "ACTION HUB PRESTA"
 
 // [PM82][LOT1]
 // [ITSM274734]
@@ -2389,6 +2401,10 @@ If bOk Then
 					// [PC874_2_V1]
 					// OK
 				
+				// [HUB875]
+				Case "ACTION HUB PRESTA"
+					// OK
+				
 				Case Else
 					If Not bCDiscount Then
 						bOk = False
@@ -2405,7 +2421,8 @@ If bOk Then
 /*------------------------------------------------------------------*/
 		Case "R"  // #2
 			Choose Case sVal
-				Case  "REPAR", "RÉPAR"
+				Case  "REPAR", "RÉPAR", "ACTION HUB PRESTA"
+					// [HUB875]
 					// OK
 				Case Else
 					bOk = False
@@ -6586,7 +6603,7 @@ string dataobject = "d_choix_action"
 boolean border = false
 end type
 
-on itemchanged;//*-----------------------------------------------------------------
+event itemchanged;//*-----------------------------------------------------------------
 //*
 //* Objet         : dw_Choix_Action
 //* Evenement     : ItemChanged
@@ -6601,9 +6618,13 @@ on itemchanged;//*--------------------------------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #..   ...   ../../....
-//*
+//        JFF   12/02/2025   [HUB875]
 //*-----------------------------------------------------------------
+
+Int iIdEvt
+Long lDeb, lFin
+
+iIdEvt = Dw_1.GetItemNumber ( 1, "ID_EVT" )
 
 Choose Case Upper ( This.GetText () )
 	Case "C"
@@ -6611,13 +6632,38 @@ Choose Case Upper ( This.GetText () )
 	Case "S"
 		cb_Commander.Text = "Sél.Courrier >>"
 	Case "R"
-		cb_Commander.Text = "Réparer >>"
+
+		cb_Commander.Text = "Réparer >>"		
+		
+		// [HUB875]
+		F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 393 )
+		If lDeb > 0 Then
+			Choose Case iIdEvt 
+				Case 1491
+					cb_Commander.Text = "Serv. HUB >>"					
+
+			End Choose
+		End If 		
+		
+
 	Case "I"
+
 		cb_Commander.Text = "Informer >>"
+		
+		// [HUB875]
+		F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 393 )
+		If lDeb > 0 Then
+			Choose Case iIdEvt 
+				Case 1491
+					cb_Commander.Text = "Info HUB >>"					
+
+			End Choose
+		End If 		
+		
 End Choose
 
 
-end on
+end event
 
 type cb_valachdef from commandbutton within w_td_sp_w_detail
 integer x = 846
