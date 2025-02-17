@@ -2268,6 +2268,7 @@ event clicked;//*---------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //*       JFF    24/11/2015  [ITSM343686]
 //*       JFF    08/11/2018  [VDOC26900]
+//*		 JFF    17/02/2025  [20250217155600]
 //*-----------------------------------------------------------------
 
 String sCodEtat, sVal, sIdFour
@@ -2301,7 +2302,11 @@ End If
 //[VDOC26900]
 If sIdFour = "COR" Then
 	sVal = Dw_1.GetItemString ( 1, "INFO_FRN_SPB_CPLT" )
-	sVal = lnvPFCString.of_getkeyvalue (sVal, "PRBLE_LIVRAISON", ";")	
+	sVal = lnvPFCString.of_getkeyvalue (sVal, "PRBLE_LIVRAISON", ";")
+
+	// [20250217155600]
+	If IsNull ( sVal ) Then sVal = ""
+	
 	If Len ( sVal ) <= 0 Then
 		stMessage.sTitre		= "Blocage vDoc26900/R.Adam"
 		stMessage.Icon			= Information!
