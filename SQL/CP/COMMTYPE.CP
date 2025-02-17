@@ -182,7 +182,7 @@ Go
 -- #1  JFF   [SITE_CMDE] Jointure avec Det_pro sur les options 79, 80, 81
 -------------------------------------------------------------------
 
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S01_GESTION_ECHANGE_FLUX_V00' And type = "P" )
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S01_GESTION_ECHANGE_FLUX_V00' And type = 'P' )
 DROP PROCEDURE sysadm.PS_S01_GESTION_ECHANGE_FLUX_V00
 GO
 
