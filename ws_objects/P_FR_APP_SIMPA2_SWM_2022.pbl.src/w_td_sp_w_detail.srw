@@ -473,11 +473,12 @@ public function boolean wf_preparermodifier ();//*------------------------------
 //*		FPI	29/07/2010	 [20100729.FPI] Correction activation btn valid. factu
 //       JFF   23/05/2012 [PM103][1]
 //       JFF   17/09/2019 [DT447]
+//        JFF   12/02/2025   [HUB875]
 //*-----------------------------------------------------------------
 
 s_Pass	stPass_Dga
 String sMonnaie, sFind
-Long		lCodEtatDet, lIdGti, lNumLgn, lDeb, lFin
+Long		lCodEtatDet, lIdGti, lNumLgn, lDeb, lFin, lIdEvt
 Boolean	bVisible
 boolean bIdRev // #1
 
@@ -514,6 +515,9 @@ stPass_Dga.sTab [1] = isReferentiel
 iuoGsSpwDetail.Uf_Traitement ( 2, stPass_Dga )
 ilMarquaGeBLCODE = 0
 
+// [HUB875]
+lIdEvt = dw_1.GetItemNumber ( 1, "ID_EVT" ) 
+
 /*------------------------------------------------------------------*/
 /* L'accès au bouton 'COMMANDER' est donné en fonction du           */
 /* paramètrage (apparition seulement en saisie).                    */
@@ -536,10 +540,30 @@ Choose Case dw_1.GetItemNumber ( 1, "ID_GTI" )
 	Case 11
 		dw_Choix_Action.SetItem ( 1, "CHOIX_ACTION", "R" )
 		cb_Commander.Text = "Réparer >>"
+		
+		// [HUB875]
+		F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 393 )
+		If lDeb > 0 Then
+			Choose Case lIdEvt 
+				Case 1491
+					cb_Commander.Text = "Serv. HUB >>"					
+
+			End Choose
+		End If 		
 
 	Case else
 		dw_Choix_Action.SetItem ( 1, "CHOIX_ACTION", "R" )
 		cb_Commander.Text = "Réparer >>"
+
+		// [HUB875]
+		F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 393 )
+		If lDeb > 0 Then
+			Choose Case lIdEvt 
+				Case 1491
+					cb_Commander.Text = "Serv. HUB >>"					
+
+			End Choose
+		End If 		
 
 End Choose 
 
