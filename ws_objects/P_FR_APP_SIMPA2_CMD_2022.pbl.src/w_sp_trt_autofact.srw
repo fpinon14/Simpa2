@@ -1349,6 +1349,7 @@ private function boolean wf_controler ();//*------------------------------------
 //       JFF   29/05/2017 [PC151259-2]
 //			JFF   08/08/2017 [DT288] Facturation ORANGCE SCF (Cordon)
 //       JFF   09/09/2022 [PM80_FA12_FRANEX]
+//       JFF   18/02/2025 [202502181556]
 //*-----------------------------------------------------------------
 //*
 //* [FNAC_PROD_ECH_TECH] Fnac Attitude : Note de développement :
@@ -1743,8 +1744,9 @@ For lCpt = 1 to lTotRow
 			bBasculeFNC = TRUE
 			sIdFournFic = dw_charger.object.soc_cptable[lCpt]	
 		End If
-		
-		If SQLCA.PS_CTRLE_ID_FOUR_FCT_V01 ( lIdSin, sIdFournFic, sIdFourAG ) < 0 Then
+
+		// [202502181556]
+		If SQLCA.PS_CTRLE_ID_FOUR_FCT_V02 ( lIdSin, iIdSeq, sIdFournFic, sIdFourAG ) < 0 Then
 			bOk = False
 			sErreur += "Le sinistre " + String (lIdSin) + " n'a aucun lien avec le fournisseur " + sIdFournFic + " !"
 		End if 

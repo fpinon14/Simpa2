@@ -600,7 +600,8 @@ function long PS_S_VERIF_MARQ_MODL_IFR_V01 (decimal dcIdProd, String sIdTypArt, 
 subroutine PS_S_BOUTIQUE_ADRESSE_3 (long dcIdProd, String sIdFour, String sCodeMag, ref string sAdrMail, ref string sAdrNom, ref string sAdr1, ref string sAdr2, ref string sAdrVille, ref string sAdrCP ) RPCFUNC ALIAS FOR "sysadm.PS_S_BOUTIQUE_ADRESSE_3"
 
 // JFF 08/12/2016 [VDOC22083]
-function long PS_CTRLE_ID_FOUR_FCT_V01 ( long dcIdSin, String sIdFourFct, Ref String sIdFourAG  ) RPCFUNC ALIAS FOR "sysadm.PS_CTRLE_ID_FOUR_FCT_V01"
+// JFF   18/02/2025 [202502181556]
+function long PS_CTRLE_ID_FOUR_FCT_V02 ( long dcIdSin, Int iIdSeq, String sIdFourFct, Ref String sIdFourAG  ) RPCFUNC ALIAS FOR "sysadm.PS_CTRLE_ID_FOUR_FCT_V01"
 
 //       JFF   10/01/2017 [DT262][V3]
 subroutine PS_S01_SINISTRE_ZVAR_DT262 ( long dcIdSin, Ref String asZvarNbreIndem, Ref String asZvarIndem) RPCFUNC ALIAS FOR "sysadm.PS_S01_SINISTRE_ZVAR_DT262"
