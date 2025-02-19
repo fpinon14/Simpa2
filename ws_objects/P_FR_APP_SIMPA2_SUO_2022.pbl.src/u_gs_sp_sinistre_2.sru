@@ -1017,6 +1017,7 @@ public function string uf_controlergestion_emailingksl ();//*-------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ 					PAR		Date		  Modification
+//                   JFF     19/02/2025  [202502191703] J'autorise pour tout inter, un contrôle sur le courrier existant à présent.
 //*-----------------------------------------------------------------
 Boolean bAMU_Regl, bAMU_ReglV, bAMU_ReglC, bAMU_Pce, bAMU_Ref, bMaqG, bMaqV, bMaqC, bMaqP, bMaqR, bFin, bAMUPT_Courrier, bCtrleAltEdit
 Long lDeb, lFin, lCpt, lTotInter, lCpt2
@@ -1078,6 +1079,7 @@ For lCpt=1 To lTotInter
 	End Choose 
 	
 	// Pour l'instant les courriers Emailing ne sont que pour l'assuré
+	/* [202502191703]
 	Choose Case sCodInter
 		Case "A"
 			// Ok
@@ -1094,7 +1096,7 @@ For lCpt=1 To lTotInter
 			End If 
 			
 	End Choose
-		
+	*/ 	
 	
 	// y a-t-il AMU un Règlement pour cet inter ?
 	dcMtARegInter = idw_lstinter.GetItemDecimal ( lCpt, "MT_A_REG")	 // [MIG1_COUR_EMAILING]
@@ -1231,10 +1233,6 @@ Else
 	stMessage.sCode		= "WSIN917"
 	If F_Message ( stMessage ) = 2 Then Return "ALT_BLOC"
 End IF 
-
-
-
-
 
 Return sPos
 end function
