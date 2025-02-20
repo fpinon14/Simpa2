@@ -173,6 +173,8 @@ type dw_wreg_frais_annexe_frn from datawindow within w_tm_sp_sinistre
 end type
 type st_attente_diverse from statictext within w_tm_sp_sinistre
 end type
+type cb_1 from commandbutton within w_tm_sp_sinistre
+end type
 end forward
 
 global type w_tm_sp_sinistre from w_8_traitement_master
@@ -272,6 +274,7 @@ uo_consult_euro uo_consult_euro
 st_pause_api_lab st_pause_api_lab
 dw_wreg_frais_annexe_frn dw_wreg_frais_annexe_frn
 st_attente_diverse st_attente_diverse
+cb_1 cb_1
 end type
 global w_tm_sp_sinistre w_tm_sp_sinistre
 
@@ -3875,6 +3878,7 @@ this.uo_consult_euro=create uo_consult_euro
 this.st_pause_api_lab=create st_pause_api_lab
 this.dw_wreg_frais_annexe_frn=create dw_wreg_frais_annexe_frn
 this.st_attente_diverse=create st_attente_diverse
+this.cb_1=create cb_1
 iCurrent=UpperBound(this.Control)
 this.Control[iCurrent+1]=this.pb_routage
 this.Control[iCurrent+2]=this.uo_ong
@@ -3961,6 +3965,7 @@ this.Control[iCurrent+82]=this.uo_consult_euro
 this.Control[iCurrent+83]=this.st_pause_api_lab
 this.Control[iCurrent+84]=this.dw_wreg_frais_annexe_frn
 this.Control[iCurrent+85]=this.st_attente_diverse
+this.Control[iCurrent+86]=this.cb_1
 end on
 
 on w_tm_sp_sinistre.destroy
@@ -4050,6 +4055,7 @@ destroy(this.uo_consult_euro)
 destroy(this.st_pause_api_lab)
 destroy(this.dw_wreg_frais_annexe_frn)
 destroy(this.st_attente_diverse)
+destroy(this.cb_1)
 end on
 
 event timer;call super::timer;//*-----------------------------------------------------------------
@@ -9816,4 +9822,26 @@ boolean border = true
 borderstyle borderstyle = styleraised!
 boolean focusrectangle = false
 end type
+
+type cb_1 from commandbutton within w_tm_sp_sinistre
+integer x = 2112
+integer width = 402
+integer height = 112
+integer taborder = 11
+boolean bringtotop = true
+integer textsize = -10
+integer weight = 400
+fontcharset fontcharset = ansi!
+fontpitch fontpitch = variable!
+fontfamily fontfamily = swiss!
+string facename = "Tahoma"
+string text = "none"
+end type
+
+event clicked;Date d, d1
+
+d = F_Plus_Date ( 2025-01-31, 1, "M" )
+
+d1= d
+end event
 

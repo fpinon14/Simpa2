@@ -278,6 +278,7 @@ public function boolean uf_rf_dp370_val_div_det ()
 public function string uf_epurezone (string asvaleur)
 public subroutine uf_gestong_divers_caspart_liste (string asnomzone, long alidprod, long alidrev, long alidgti)
 public subroutine uf_affichage_dw_choix_action (integer alidevt)
+private function decimal uf_calcul_montantvetuste_2 (string ascas, decimal adcmtvalpivot, integer aidurgtigc, date addteachat, date addtesurv)
 end prototypes
 
 event ue_mt_prej();//*-----------------------------------------------------------------
@@ -19961,6 +19962,8 @@ private function decimal uf_calcul_montantvetuste (string ascas, decimal adcmtva
 //			 JFF 	  17/09/2015  [VDOC18560]
 //        JFF    24/06/2019  [PC192235]
 //        JFF    21/10/2020  [VDOC29747]
+//        JFF    18/02/2025  [PMO268_MIG25]
+//        JFF    18/02/2025  [PMO268_MIG20]
 //*-----------------------------------------------------------------
 Decimal {2} dcValRetour, dcMtValPublique
 Int iVetuste, iJour, iJour2
@@ -19970,8 +19973,14 @@ Long lRow, lDeb, lFin
 n_cst_string lnvPFCString
 Boolean 	bExclureCalcVetuste //	[VDOC18560]
 Boolean 	bSC2FoyerNomade // [PC192235]
-Boolean  bProtectEffPers // [VDOC29747]
+Boolean  bProtectEffPers, bEvollis, bOuiBike // [VDOC29747]
 
+
+If F_CLE_A_TRUE ( "MODIF_CALC_VETUSTE" ) Then
+	dcValRetour	= this.uf_Calcul_MontantVetuste_2 ( ascas, adcmtvalpivot, aidurgtigc, addteachat, addtesurv )
+	Return dcValRetour	
+End IF 
+	
 dcValRetour	= 0
 bExclureCalcVetuste = FALSE
 
@@ -19990,7 +19999,9 @@ F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" 
 If lDeb > 0 Then 
 	sVal= Upper ( lnvPFCString.of_getkeyvalue (idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "VARIANTE", ";"))
 	bProtectEffPers = sVal = "PROTECT_EFF_PERS"
-	If bProtectEffPers And asCas = "" Then
+	bEvollis = sVal = "EVOLLIS" // [PMO268_MIG25]
+	bOuiBike = sVal = "OUIBIKE" // [PMO268_MIG20]
+	If sVal <> "" And asCas = "" Then
 		asCas = sVal
 	End If 
 End IF 
@@ -26165,6 +26176,257 @@ idw_ChoixAction.BringToTop = True
 
 
 end subroutine
+
+private function decimal uf_calcul_montantvetuste_2 (string ascas, decimal adcmtvalpivot, integer aidurgtigc, date addteachat, date addtesurv);//*-----------------------------------------------------------------
+//*
+//* Fonction		: uf_Calcul_MontantVetuste (PRIVATE)
+//* Auteur			: Fabry JF
+//* Date				: 21/12/2010
+//* Libellé			: [PC301][VESTUSTE]
+//* Commentaires	: Calcul du Montant en fonction de la vestuste
+//*
+//* Arguments		: String		asCas					Val
+//*					  Decimal   adcMtValPivot		Val
+//*					  Integer   aiDurGtiGc			Val
+//*					  Date		adDteAchat			Val
+//*					  Date		adDteSurv			Val
+//*
+//* Retourne		: decimal dcValRetour
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//*       JFF    21/01/2011  [PC301].[V15_EVOL_VETUSTE]
+//			 JFF 	  17/09/2015  [VDOC18560]
+//        JFF    24/06/2019  [PC192235]
+//        JFF    21/10/2020  [VDOC29747]
+//        JFF    18/02/2025  [PMO268_MIG25]
+//        JFF    18/02/2025  [PMO268_MIG20]
+//			 JFF    20/02/2025  [MODIF_CALC_VETUSTE]
+//*-----------------------------------------------------------------
+Decimal {2} dcValRetour, dcMtValPublique
+Int iVetuste, iJour, iJour2
+String sVetuste, sValDte, sVetusteModifie, sVal
+Date dVal, dtVal
+Long lRow, lDeb, lFin
+n_cst_string lnvPFCString
+Boolean 	bExclureCalcVetuste //	[VDOC18560]
+Boolean 	bSC2FoyerNomade // [PC192235]
+Boolean  bProtectEffPers, bCarrefourGRTV, bEvollis, bOuiBike // [VDOC29747]
+
+dcValRetour	= 0
+bExclureCalcVetuste = FALSE
+
+bCarrefourGRTV = asCas = "CARREFOUR_GRTV"
+bSC2FoyerNomade = asCas = "S2C_FOYER_NOMADE"
+
+//	[VDOC18560]
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 152 )
+sVal= Upper ( lnvPFCString.of_getkeyvalue (idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "EXCL_CALC_VETUSTE", ";"))
+bExclureCalcVetuste = sVal = "OUI"
+
+// [PC192235]
+// /!\ DEFINITION DES CAS ICI si cas non passés en argument /!\
+If asCas = "" Then 
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 341 )
+	sVal= Upper ( lnvPFCString.of_getkeyvalue (idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "VARIANTE", ";"))
+	bSC2FoyerNomade = sVal = "FOYER_NOMADE"
+
+	// [VDOC29747]
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 355 )
+	If lDeb > 0 Then 
+		sVal= Upper ( lnvPFCString.of_getkeyvalue (idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "VARIANTE", ";"))
+		bProtectEffPers = sVal = "PROTECT_EFF_PERS"
+		bEvollis = sVal = "EVOLLIS" // [PMO268_MIG25]
+		bOuiBike = sVal = "OUIBIKE" // [PMO268_MIG20]
+	End IF 
+End IF 
+
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 102 )
+If lDeb > 0 Then
+	idw_wDetailFF.Uf_Proteger ( { "MT_VAL_PUBLIQUE" } , "0" )
+Else
+	idw_wDetailFF.Uf_Proteger ( { "MT_VAL_PUBLIQUE" } , "1" )	
+End If
+
+dcMtValPublique = idw_wDetailFF.GetItemDecimal ( 1, "MT_VAL_PUBLIQUE" )
+If IsNull ( dcMtValPublique ) Then dcMtValPublique = 0	
+
+// [PC192235] // [VDOC29747]
+Choose Case True
+	Case bCarrefourGRTV 
+		If dcMtValPublique > 0 Then
+			stMessage.sTitre		= "Prise en charge"
+			stMessage.Icon			= Exclamation!
+			stMessage.bErreurG	= FALSE
+			stMessage.Bouton		= OK!
+			stMessage.sCode		= "WDET590"
+			
+			//	[VDOC18560]
+			If Not bExclureCalcVetuste Then
+				F_Message (stMessage)
+			End If 
+		End If 			
+End Choose 
+
+
+iVetuste = 0
+dtVal = adDteAchat
+
+Choose Case True
+		
+	// [PMO268_MIG25] [PMO268_MIG20]		
+	Case bEvollis, bOuiBike
+		// 1% de vétusté par mois d’ancienneté à compter du 13ème mois après l’achat, 
+		// limité à 40 mois (on commence à Date d’achat + 12 mois).
+		dtVal = F_Plus_Date ( dtVal, 12, "M" )
+		
+End Choose 
+
+
+iJour = Day ( dtVal )
+Do While dtVal <= adDteSurv
+	dtVal = F_Plus_Date ( dtVal, 1, "M" )
+
+	If Day ( dtVal ) <> iJour Then
+		iJour2 = iJour
+		sValDte = ""
+
+		Do While Not IsDate ( sValDte )
+			sValDte = String ( iJour2 ) + "/" + String ( Month ( dtVal )) + "/" + String ( Year ( dtVal ))
+			If Not IsDate ( sValDte ) Then
+				iJour2 --	
+			End If						
+		Loop
+		
+		dtVal = Date ( sValDte )
+		
+	End If						
+		
+	If dtVal <= adDteSurv Then
+		iVetuste ++
+	End If
+Loop
+
+If dtVal > adDteSurv Then
+	dtVal = F_Plus_Date ( dtVal, -1, "M" )				
+End If
+
+
+sVetuste = String ( iVetuste )
+If adDteSurv > dtVal Then
+
+	Choose Case True 
+		Case bCarrefourGRTV 
+			iVetuste += 1
+	End CHoose 
+
+	sVetuste = "+" + String ( iVetuste )
+			
+End If		
+		
+lRow = idw_wDivDet.Find ( "Upper (nom_zone) = 'VETUSTE'", 1, idw_wDivDet.RowCount () )
+If lRow > 0 Then
+	This.uf_GestOng_Divers_MajZone ( "VETUSTE", lRow, sVetuste )
+End If 
+
+
+Choose Case True 
+		
+	Case bCarrefourGRTV 
+
+		Choose Case aiDurGtiGc
+			
+			Case 12
+		
+				// non géré par SPB, géré par carrefour à 0.9%
+				If iVetuste > 12 and iVetuste <= 24 Then
+					dcValRetour = 0
+				End If
+				
+				If iVetuste > 24 and iVetuste <= 36 Then
+					dcValRetour = adcMtValPivot * 0.8
+				End If
+
+			Case 24
+
+				If iVetuste > 24 and iVetuste <= 36 Then
+					dcValRetour = adcMtValPivot * 0.8
+				End If
+
+				If iVetuste > 36 and iVetuste <= 48 Then
+					dcValRetour = adcMtValPivot * 0.7
+				End If
+
+				If iVetuste > 48 and iVetuste <= 60 Then
+					dcValRetour = adcMtValPivot * 0.6
+				End If
+				
+		End Choose
+
+		//	[VDOC18560]
+		If bExclureCalcVetuste Then
+			dcValRetour = adcMtValPivot
+			sVetusteModifie = "+0"
+			
+			lRow = idw_wDivDet.Find ( "Upper (nom_zone) = 'VETUSTE'", 1, idw_wDivDet.RowCount () )
+			If lRow > 0 Then
+				This.uf_GestOng_Divers_MajZone ( "VETUSTE", lRow, sVetusteModifie )
+			End If
+		End If
+
+		If dcMtValPublique > 0 Then
+			sVetusteModifie = sVetuste + " /vPubliq.existante non calculée"
+		
+			lRow = idw_wDivDet.Find ( "Upper (nom_zone) = 'VETUSTE'", 1, idw_wDivDet.RowCount () )
+			If lRow > 0 Then
+				This.uf_GestOng_Divers_MajZone ( "VETUSTE", lRow, sVetusteModifie )
+			End If
+			
+			dcValRetour = dcMtValPublique 
+		End If		
+		
+
+	// [PC192235]
+	Case bSC2FoyerNomade
+		// 1% par mois d'ancienneté (vétusté Linéaire)
+		dcValRetour = adcMtValPivot * ( 1 - ( 0.01 * iVetuste ))
+
+
+	// [VDOC29747]			
+	Case bProtectEffPers
+		// 2% de vétusté par mois (vétusté composée)
+		dcValRetour = adcMtValPivot * 0.98^iVetuste
+		
+	// [PMO268_MIG25] [PMO268_MIG20]		
+	Case bEvollis, bOuiBike
+		If iVetuste > 40 Then iVetuste = 40 // Limité à 40 mois Max.
+
+		// 1% de vétusté par mois (vétusté composée)
+		dcValRetour = adcMtValPivot * 0.99^iVetuste
+		
+
+End Choose 
+
+
+// [PC192235]
+Choose Case True
+	Case bCarrefourGRTV 
+		If dcMtValPublique > 0 Then
+			sVetusteModifie = sVetuste + " /vPubliq.existante non calculée"
+		
+			lRow = idw_wDivDet.Find ( "Upper (nom_zone) = 'VETUSTE'", 1, idw_wDivDet.RowCount () )
+			If lRow > 0 Then
+				This.uf_GestOng_Divers_MajZone ( "VETUSTE", lRow, sVetusteModifie )
+			End If
+			
+			dcValRetour = dcMtValPublique 
+		End If
+		
+End Choose 
+
+Return dcValRetour
+
+end function
 
 on u_gs_sp_sinistre_wdetail.create
 call super::create
