@@ -143,13 +143,15 @@ Go
 -- JFF      29/05/2017   [PC151259-2]
 -- JFF      14/11/2017   Ajout gestion TOI
 -- JFF      20/06/2022   [RS3220_MODDEGR_TELST]
+-- JFF      18/02/2025   [202502181556]
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_CTRLE_ID_FOUR_FCT_V01' AND type = 'P' )
-        DROP procedure sysadm.PS_CTRLE_ID_FOUR_FCT_V01
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_CTRLE_ID_FOUR_FCT_V02' AND type = 'P' )
+        DROP procedure sysadm.PS_CTRLE_ID_FOUR_FCT_V02
 GO
 
-CREATE procedure sysadm.PS_CTRLE_ID_FOUR_FCT_V01
+CREATE procedure sysadm.PS_CTRLE_ID_FOUR_FCT_V02
 	@adcIdSin Decimal ( 10 ),
+	@aiIdSeq  Integer, -- [202502181556]
 	@asIdFourFct VarChar ( 3 ),
 	@asIdFourAG VarChar ( 3 ) OUTPUT
 As
@@ -279,6 +281,22 @@ If Exists (
 Begin
 	Return 1
 End 
+
+-- [202502181556] Cas HUB
+If Exists ( 
+		Select Top 1 1 
+		From sysadm.commande c,
+			 sysadm.famille_car fc
+		Where c.id_sin = @adcIdSin
+		And   c.id_seq = @aiIdSeq
+		And   Len ( sysadm.FN_CLE_VAL ( 'ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' )) > 0 -- C'est une presta HUB
+		And   fc.id_fam = 1
+		And   fc.id_typ_code = '-FR'
+		And   fc.id_code = @asIdFourFct  -- le fourn fact appartient à la famille des fourns du Hub
+	)
+	Begin
+		Return 1 
+	End
  
 -- Défaut
 If Exists ( 
