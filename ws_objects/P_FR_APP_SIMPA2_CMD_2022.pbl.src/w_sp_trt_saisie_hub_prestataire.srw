@@ -1736,8 +1736,10 @@ End If
 
 
 // Mode PAS HUB unique REPA/DIAG (donc comme avant)
-If ilDp393 <= 0 Then cb_Valider.PostEvent ( Clicked! )
-
+If ilDp393 <= 0 Then 
+	cb_Valider.PostEvent ( Clicked! )
+	Return
+End If 
 
 If iTotRow = 1 Then
 	If Upper ( dw_1.GetItemString ( 1, "id_Code_Action_Hp" )) = "AUCUN" Then 
