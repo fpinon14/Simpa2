@@ -24312,68 +24312,9 @@ If sIdfour="PSM" And &
 			// parser BOUTIQUES=#...#...#
 			isCodeBoutiqueProximitePSM = lnvPFCString.of_Getkeyvalue( sVar, "BOUTIQUES", ";") 
 			lnvPFCString.of_setkeyvalue( isInfoSpbFrnCplt, "CODE_BTQ_PSM_PROXIMITE", isCodeBoutiqueProximitePSM , ";")
-
-			// Info FPI - La boutique de centralisation devient la première boutique de proxi
-			// [PM257-1] Suppression du forçage de btq de centralisation
-			/*
-				sVal = lnvPFCString.of_Getkeyvalue( sVar, "BOUTIQUES", ";")
-				iPos = Pos ( sVal, "#")
-				If iPos > 0 Then
-					iPos = Pos ( sVal, "#", iPos + 1)
-					If iPos > 0 Then					
-						sVal = Left ( sVal, iPos )
-					End If
-				End If
-				
-				isCodeBoutiqueCentralPSM = F_REMPLACE ( sVal , "#", "" )
-				lnvPFCString.of_setkeyvalue( isInfoSpbFrnCplt, "CODE_BTQ_PSM_CENTRALE", isCodeBoutiqueCentralPSM, ";")
-			*/
-			// [PM257-1]
 			
 		End if
-
-		// [PM257-1] Suppression du forçage de btq de centralisation
-		/*	
-			// [PC938_ORANGE_V3] nouveau process
-			F_RechDetPro ( lDeb, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 239 )
-			
-			// [PC946_ORANGE_OPPRO]
-			sVal2 = lnvPFCString.of_getkeyvalue (idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "VARIANTE", ";")	
-			
-			// [PM234-4_V1] And Not bDeclaWebAtlas
-			If lDeb > 0 And isCodeBoutiqueProximitePSM = "" And sVal2 = "" And Not bDeclaWebAtlas Then
 	
-				stMessage.sTitre  	= "Controle de zone"
-				stMessage.Icon			= Information!
-				stMessage.bErreurG	= FALSE
-				stMessage.bouton 		= Ok!
-				stMessage.sCode="COMD807"
-				f_message(stMessage)
-	
-				
-				stPass.dctab[1]=idwWSin.GetItemNumber ( 1, "ID_SIN" )
-				stPass.ltab[1]=1 // Nb max de boutiques sélectionnables
-				stPass.sTab[1]="Saisie code(s) boutique(s) pour TRANSFORMATION en code de centralisation"
-		
-				// [PM200_5]
-				stPass.btab[1]=bMethode_BoutiquePSM_WS	
-				stPass.sTab[2]=sCpAssure
-					
-				OpenWithParm( w_sp_trt_saisie_boutiques,  stPass ) 	
-				
-				sVar = Message.StringParm
-			
-				If sVar = "" or sVar = "[RETOUR]" Then 
-					// Pas de boutique sélectionné
-				Else	
-					// parser BOUTIQUES=#...#...#
-					isCodeBoutiqueCentralPSM = F_REMPLACE ( lnvPFCString.of_Getkeyvalue( sVar, "BOUTIQUES", ";"), "#", "" )
-					lnvPFCString.of_setkeyvalue( isInfoSpbFrnCplt, "CODE_BTQ_PSM_CENTRALE", isCodeBoutiqueCentralPSM, ";")
-				End if				
-			*/
-			// [PC938_ORANGE_V3]
-		   // :[PM257-1]		
-			
 		
 	End If
 	// [PC694][SFR2012]
@@ -24536,18 +24477,6 @@ If iRet = 0 Then
 		/* #1 : Gestion particuliere DARTY -DP 11                           */
 		/*------------------------------------------------------------------*/
 		// #8 [MOBISQUARE]
-/*
-		If sTypArt = "TEL" And bSel3MobAuto Then 
-			ilCptOrdre ++
-			adw.SetItem ( alRow, "PROBLEME", String ( ilCptOrdre ) ) 
-		End If
-
-// #1, #3
-		If bSel3MobAuto and bGestionDartyNomade And Pos ( isCasGestionDartyNomade, "CMD_DTY", 1 ) > 0 Then 
-			ilCptOrdre ++
-			adw.SetItem ( alRow, "PROBLEME", String ( ilCptOrdre ) ) 
-		End If
-*/
 
 		// [PC13174]
 		If bGestionAxaVirtuelle Then
