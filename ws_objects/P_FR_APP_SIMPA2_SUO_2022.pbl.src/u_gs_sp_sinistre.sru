@@ -395,7 +395,6 @@ private function string uf_controlergestion_redrbtqcentralpsm ()
 private function boolean uf_validation_finale_adviserepa_mail (string ascas)
 private subroutine uf_ajoutdynamiquedivpro ()
 public function boolean uf_validation_finale_courhtmlviawssaga2 ()
-private function boolean uf_validation_finale_trt_partaprescommit (ref string ascasretour)
 private subroutine uf_preparermodifier_modifdynparam (string ascas)
 public function boolean uf_controlergestion_rembfranchisecb ()
 private function boolean uf_controlergestion_dt458 ()
@@ -4063,6 +4062,7 @@ private subroutine uf_controlergestion (ref s_pass astpass);//*-----------------
 //       JFF   04/12/2023 [RS6217_PARA_AUTO]
 //       JFF   07/03/2024 [HP252_276_HUB_PRESTA]
 //       JFF   19/12/2024 [MIG1_COUR_EMAILING]
+//       JFF   22/02/2025 [TRT_APRES_COMMIT][PMO268_MIG48]
 //*-----------------------------------------------------------------
 Long lTotCourrier, lCodEtat, lNbContact, lNbNat, lCptCTact, llig, lCpt, lVal1, lVal2, lVal3, lVal4, lIdOrianBout, lVal5, lVal6 
 Long lCptDetail, lTotDetail, lTotCmd, lDeb, lFin, lCptRegFrn, lCodeEtat, lRow, lVal, lIdGti, lIdInter, lRowAss, lTot, lIdDetail 
@@ -6231,8 +6231,36 @@ If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
 	End If 
 End If
 
+// [TRT_APRES_COMMIT][PMO268_MIG48]
 
-
+If F_CLE_A_TRUE ( "TRT_APRES_COMMIT" ) Then
+	If Not bBloque And sPos = "" Then		
+		lRow = idw_LstwCommande.Find ( "ID_FOUR = 'BTE' AND ID_TYP_ART = 'CAF' AND COD_ETAT = 'CNV'", 1, idw_LstwCommande.RowCount () ) 
+		If lRow > 0 Then
+			stMessage.Icon		   = Information!
+			stMessage.bErreurG	= FALSE
+			stMessage.Bouton		= Ok!
+	
+			sVal = idw_WSin.GetItemstring ( 1, "ID_CONTRAT_ABONNE" )		
+			
+			If IsNull ( sVal ) Or Trim ( sVal ) = "" Or Not IsNumber ( sVal ) Then
+				sPos	= "ALT_BLOC"
+				stMessage.sCode	= "WSIN920"		
+				F_Message ( stMessage )
+			End If 
+			
+			lRow = idw_LstInter.Find ( "COD_INTER = 'A'", 1, idw_LstInter.Rowcount () )
+			sAdrMail = idw_LstInter.GetItemString ( lRow, "ADR_MAIL" )
+	
+			If IsNull ( sAdrMail ) Or Trim ( sAdrMail ) = "" Then
+				sPos	= "ALT_BLOC"
+				stMessage.sCode	= "WSIN921"		
+				F_Message ( stMessage )			
+			End If 
+			
+		End If 
+	End If 		
+End IF 
 
 ib2EmeTourPI052 = False
 astPass.sTab [ 1 ] = sPos
@@ -29955,6 +29983,7 @@ private subroutine uf_validation_finale (ref s_pass astpass);//*----------------
 //      JFF 22/10/2019 [PI087_PM473_2]
 //      JFF 03/11/2023 [RS6114_MAIL_CMA]
 //      JFF 07/03/2024 [HP252_276_HUB_PRESTA]
+//      JFF 22/02/2025 [TRT_APRES_COMMIT][PMO268_MIG48]
 //*------------------------------------------------------------------
 
 //*------------------------------------------------------------------
@@ -30187,6 +30216,15 @@ For lCpt = 1 To 2
 					This.uf_GestionTransSqlHubPresta	( "DECONNEXION_HUB" )	
 				End If 
 			End If
+		
+		
+			// [TRT_APRES_COMMIT] 
+			// Traitement spécial très particulier après commit style, appeller une API par exemple
+			// Règle : La validation du dossier est acté, réussi, ce traitement, doit gérer seul en aval
+			//         ses trt sql s'il y en a sur Commit ou Rollback
+			If F_CLE_A_TRUE ( "TRT_APRES_COMMIT" ) Then
+					iUoGsSpSinistre2.uf_validation_finale_trt_partaprescommit () 
+			End If 
 		
 		Else
 	/*------------------------------------------------------------------*/
@@ -51658,7 +51696,7 @@ DataWindowChild dwChild
 Decimal{2}	dcMtMaxTTC, dcMtLu, dcMtMaxLu
 s_Plafond_Pec stPlafPec
 U_Datawindow udwNull
-n_cst_string lnvPFCString		
+n_cst_string lnvPFCString
 s_pass stPass
 Integer iidAppli
 String sMailCc, sMailCci, sLibProduit
@@ -52299,47 +52337,6 @@ If bRet Then
 	
 	// Volontairement, je n'exploite pas les retours SQL, car le WS a bien envoyé le mail, 
 	// Donc il ne serait pas envisageable de faire un rollback sur ces 2 marquages, ils doivent être commiter quoi qu'il arriv
-End If 
-
-Return bRet
-
-end function
-
-private function boolean uf_validation_finale_trt_partaprescommit (ref string ascasretour);//*-----------------------------------------------------------------
-//*
-//* Fonction      : u_gs_sp_sinistre::uf_Validation_Finale_Trt_PartApresCommit (PRIVATE)
-//* Auteur        : Fabry JF
-//* Date          : 12/03/2019 16:43:53
-//* Libellé       : Traitement validation post commit
-//* Commentaires  : 
-//*
-//* Arguments     : 
-//*
-//* Retourne      : Boolean	
-//*
-//*-----------------------------------------------------------------
-//* MAJ   PAR      Date	     Modification
-//        JFF   11/03/2019   [DT339]
-//*-----------------------------------------------------------------
-
-n_cst_string lnvPFCString
-DateTime dtCreeLeDos, dtPivotCourHTMLviaWSSaga2
-Boolean  bRet
-Long     lDeb, lFin
-
-dtCreeLeDos = idw_WSin.GetItemDateTime ( 1, "CREE_LE")
-asCasRetour = ""
-
-bRet=TRUE // [PC846/864]
-
-// [DT339]
-F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 333 )	
-If bRet and lDeb > 0 Then
-	dtPivotCourHTMLviaWSSaga2 = DateTime ( lnvPFCString.of_getkeyvalue(idw_DetPro.GetItemString(lDeb,"VAL_CAR" ), "DTE_PIVOT", ";") )
-	If dtCreeLeDos >= dtPivotCourHTMLviaWSSaga2 Then
-		bRet = This.uf_Validation_Finale_CourHTMLviaWSSaga2 ()
-		asCasRetour = "CARMA_WS_SAGA2"
-	End If
 End If 
 
 Return bRet

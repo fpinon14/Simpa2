@@ -54,6 +54,7 @@ public function string uf_controlergestion_emailingksl ()
 public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse, ref boolean abmig1_couremailing, ref u_datawindow_detail adw_lstinter, ref datawindow adw_wpiece, ref datawindow adw_wrefus)
 public function long uf_zn_trt_divsin_ech_express_48h (string asdata, string asnomcol, long alrow)
 public function long uf_zn_trt_divsin_modepaiementpaybox (string asdata, string asnomcol, long alrow)
+public function boolean uf_validation_finale_trt_partaprescommit ()
 end prototypes
 
 public function long uf_zn_trt_divsin_typeapp (string asdata, string asnomcol, long alrow, boolean abforcer);//*-----------------------------------------------------------------
@@ -1404,6 +1405,85 @@ If lDeb > 0 Then
 End If 
 
 Return iAction
+
+end function
+
+public function boolean uf_validation_finale_trt_partaprescommit ();//*-----------------------------------------------------------------
+//*
+//* Fonction      : u_gs_sp_sinistre::uf_Validation_Finale_Trt_PartApresCommit (PRIVATE)
+//* Auteur        : Fabry JF
+//* Date          : 12/03/2019 16:43:53
+//* Libellé       : Traitement validation post commit
+//* Commentaires  : 
+//*
+//* Arguments     : 
+//*
+//* Retourne      : Boolean	
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//        JFF   11/03/2019   [DT339]
+//        JFF   18/02/2025   [PMO268_MIG48]
+//*-----------------------------------------------------------------
+
+n_cst_string lnvPFCString
+DateTime dtCreeLeDos, dtPivotCourHTMLviaWSSaga2
+Boolean  bRet
+Long     lDeb, lFin, lRow, lIdContrantAbonne, lIdProd, lIdSin 
+n_cst_gs_appel_api_generique ObjAppelAPI
+String sAdrMail, sMarqModlApp 
+Integer iMtCmde, iIdSeq 
+
+dtCreeLeDos = idw_WSin.GetItemDateTime ( 1, "CREE_LE")
+
+bRet=TRUE // [PC846/864]
+
+// [DT339]
+/* Obsolète
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 333 )	
+If bRet and lDeb > 0 Then
+	dtPivotCourHTMLviaWSSaga2 = DateTime ( lnvPFCString.of_getkeyvalue(idw_DetPro.GetItemString(lDeb,"VAL_CAR" ), "DTE_PIVOT", ";") )
+	If dtCreeLeDos >= dtPivotCourHTMLviaWSSaga2 Then
+		bRet = This.uf_Validation_Finale_CourHTMLviaWSSaga2 ()
+		asCasRetour = "CARMA_WS_SAGA2"
+	End If
+End If 
+*/
+
+// [PMO268_MIG48]
+lDeb = idw_LstwCommande.Find("ID_FOUR='BTE' AND COD_ETAT IN ( 'CNV', 'ECT' ) ", 1, idw_LstwCommande.rowCount())
+If lDeb > 0 Then 
+	// Obtention des données
+		iIdSeq = lDeb
+		lRow = idw_LstInter.Find ( "COD_INTER = 'A'", 1, idw_LstInter.Rowcount () )
+		sAdrMail = idw_LstInter.GetItemString ( lRow, "ADR_MAIL" )
+		iMtCmde  = idw_LstwCommande.GetItemDecimal ( iIdSeq, "MT_TTC_CMDE" ) * 100 // En centimes
+		lIdContrantAbonne = Long ( idw_WSin.GetItemString ( 1, "ID_CONTRAT_ABONNE" ) )
+		sMarqModlApp = Trim ( idw_WSin.GetItemString ( 1, "MARQ_PORT" ) ) + " " + Trim (  idw_WSin.GetItemString ( 1, "MODL_PORT" ) )
+		lIdProd = idw_WSin.GetItemNumber ( 1, "ID_PROD" )  
+		lIdSin = idw_WSin.GetItemNumber ( 1, "ID_SIN" )  
+		
+	
+	// APPEL APi MAxi Coffee
+		ObjAppelAPI = Create n_cst_gs_appel_api_generique
+	
+		bRet = ObjAppelAPI.uf_api_maxi_coffee_caller ( & 
+				idw_LstwCommande, &
+				iIdSeq, &
+				istAttenteDiverse, &
+				sAdrMail, iMtCmde, &
+				lIdContrantAbonne, &
+				sMarqModlApp, &
+				lIdProd, &
+				lIdSin &
+		)
+		
+		If IsValid ( ObjAppelAPI ) Then Destroy ( ObjAppelAPI )
+	
+
+End If 	
+
+Return bRet
 
 end function
 

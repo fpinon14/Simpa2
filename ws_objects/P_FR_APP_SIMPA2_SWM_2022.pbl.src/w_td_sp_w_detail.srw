@@ -532,41 +532,46 @@ cb_Supp_Cmde.Enabled = bVisible
 dw_Info_Cmde.Visible = bVisible
 
 dw_Choix_Action.Visible = cb_Commander.Visible
-Choose Case dw_1.GetItemNumber ( 1, "ID_GTI" )
-	Case 10
-		dw_Choix_Action.SetItem ( 1, "CHOIX_ACTION", "C" )
-		cb_Commander.Text = "Commander >>"
 
-	Case 11
-		dw_Choix_Action.SetItem ( 1, "CHOIX_ACTION", "R" )
-		cb_Commander.Text = "Réparer >>"
-		
-		// [HUB875]
-		F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 393 )
-		If lDeb > 0 Then
-			Choose Case lIdEvt 
-				Case 1491
-					cb_Commander.Text = "Serv. HUB >>"					
-
-			End Choose
-		End If 		
-
-	Case else
-		dw_Choix_Action.SetItem ( 1, "CHOIX_ACTION", "R" )
-		cb_Commander.Text = "Réparer >>"
-
-		// [HUB875]
-		F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 393 )
-		If lDeb > 0 Then
-			Choose Case lIdEvt 
-				Case 1491
-					cb_Commander.Text = "Serv. HUB >>"					
-
-			End Choose
-		End If 		
-
-End Choose 
-
+// [HUB875]
+If F_CLE_NUMERIQUE ( "HUB875" ) >= 2 Then
+	iuoGsSpwDetail.uf_affichage_dw_choix_action ( lIdEvt )
+Else 
+	Choose Case dw_1.GetItemNumber ( 1, "ID_GTI" )
+		Case 10
+			dw_Choix_Action.SetItem ( 1, "CHOIX_ACTION", "C" )
+			cb_Commander.Text = "Commander >>"
+	
+		Case 11
+			dw_Choix_Action.SetItem ( 1, "CHOIX_ACTION", "R" )
+			cb_Commander.Text = "Réparer >>"
+			
+			// [HUB875]
+			F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 393 )
+			If lDeb > 0 Then
+				Choose Case lIdEvt 
+					Case 1491
+						cb_Commander.Text = "Serv. HUB >>"					
+	
+				End Choose
+			End If 		
+	
+		Case else
+			dw_Choix_Action.SetItem ( 1, "CHOIX_ACTION", "R" )
+			cb_Commander.Text = "Réparer >>"
+	
+			// [HUB875]
+			F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 393 )
+			If lDeb > 0 Then
+				Choose Case lIdEvt 
+					Case 1491
+						cb_Commander.Text = "Serv. HUB >>"					
+	
+				End Choose
+			End If 		
+	
+	End Choose 
+End If 
 
 /*------------------------------------------------------------------*/
 /* Zone MT prix publique visible uniquement si Cod_Tel > 0          */

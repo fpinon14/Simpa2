@@ -10,6 +10,8 @@ global n_cst_gs_appel_api_generique n_cst_gs_appel_api_generique
 
 forward prototypes
 public function boolean uf_api_orange_reunion_caller (ref u_gs_sp_sinistre aiuogssinistre, ref statictext astattentediverse, ref u_datawindow adw_wdivsin, long alidsin, string asimei, date addtesurv, string asidadh)
+public function boolean uf_api_maxi_coffee_caller (ref u_datawindow_detail adw_lstwcommande, integer aiidseq, ref statictext astattentediverse, string asemail, integer aiamoutcts, long alorderid, string asmodel, long alwarrantyid, long alsinistreid)
+public subroutine uf_api_maxi_coffee_maj_presta (long alsinistreid, integer aiidseq, integer aistatusapi, string asinfospbfrncplt, string asinfofrnspbcplt)
 end prototypes
 
 public function boolean uf_api_orange_reunion_caller (ref u_gs_sp_sinistre aiuogssinistre, ref statictext astattentediverse, ref u_datawindow adw_wdivsin, long alidsin, string asimei, date addtesurv, string asidadh);//*-----------------------------------------------------------------
@@ -17,12 +19,12 @@ public function boolean uf_api_orange_reunion_caller (ref u_gs_sp_sinistre aiuog
 //* Fonction		: u_gs_sp_sinistre::uf_api_orange_reunion_caller 
 //* Auteur			: FABRY JF
 //* Date				: 19/11/2024
-//* Libellé			: APPEL API Orange Réunion (et Caraïbes)
+//* Libellé			: APPEL API Orange Réunion 
 //* Commentaires	: [KSV649_ORREUCARA]
 //*
 //*-----------------------------------------------------------------
 
-String sDteSurv, sUrl, sCleAuthent, sResponseApi, sJson, sStatusApi, sRequest 
+String sDteSurv, sUrl, sCleAuthent, sResponseApi, sJson, sStatusApi, sRequest
 Int iRetApi, iStatusApi, iTour
 HTTPClient ObjApi
 JsonParser ObjJsonParser
@@ -245,6 +247,208 @@ If IsValid ( ObjJsonParser ) Then Destroy ObjJsonParser
 
 
 end function
+
+public function boolean uf_api_maxi_coffee_caller (ref u_datawindow_detail adw_lstwcommande, integer aiidseq, ref statictext astattentediverse, string asemail, integer aiamoutcts, long alorderid, string asmodel, long alwarrantyid, long alsinistreid);//*-----------------------------------------------------------------
+//*
+//* Fonction		: u_gs_sp_sinistre::uf_api_maxi_coffee_caller 
+//* Auteur			: FABRY JF
+//* Date				: 24/02/2025
+//* Libellé			: APPEL API MAXI COFFEE
+//* Commentaires	: [PMO268_MIG48]
+//*
+//*-----------------------------------------------------------------
+
+String sUrl, sCleAuthent, sResponseApiJSon, sJson, sStatusApi, sRequestResult, sRequestBody, sInfoSpbFrnCplt, sInfoFrnSpbCplt
+String sDtAppel, sDtRetour, sSql 
+Int iRetApi, iStatusApi
+HTTPClient ObjApi
+JSONPackage ObJsonPackage
+Long lRootObject, lRow, lCouponId
+Boolean bBAemis, bModeHorsAppel, bFin, bRet
+
+
+//bModeHorsAppel = False
+bModeHorsAppel = True
+
+sInfoSpbFrnCplt = adw_lstwcommande.GetItemString ( aiIdSeq, "INFO_SPB_FRN_CPLT" ) 
+sInfoFrnSpbCplt = adw_lstwcommande.GetItemString ( aiIdSeq, "INFO_FRN_SPB_CPLT" ) 
+asModel = F_REMPLACE ( asModel, "'", " " ) 
+
+If IsNull ( sInfoSpbFrnCplt ) Then sInfoSpbFrnCplt = ""
+If IsNull ( sInfoFrnSpbCplt ) Then sInfoFrnSpbCplt = ""
+
+bBAemis = False
+
+sUrl = Trim ( ProfileString (stglb.sfichierini ,"API_MAXI_COFFEE","URL_API","*"))
+
+/*
+Pour la simulation : 
+Token : K)psBRug$$L=HPaX8'gMc-t!Qn[Ng.]v
+
+Pour la production : 
+Token : pz5s<%~>(fX_U&x?p`{Bnr$PP:!rL4gj
+*/
+sCleAuthent = Trim ( ProfileString (stglb.sfichierini,"API_MAXI_COFFEE","AUTHKEY","*"))
+
+If sUrl = "*" Or sCleAuthent ="*" Then
+
+	// Maj de la prestation
+	iStatusApi = 1000
+	This.uf_api_maxi_coffee_maj_presta ( alsinistreid, aiidseq, iStatusApi, sInfoSpbFrnCplt, sInfoFrnSpbCplt )
+	
+	stMessage.sTitre		= "URL API MAXI COFFEE"
+	stMessage.Icon			= StopSign!
+	stMessage.bErreurG	= FALSE
+	stMessage.Bouton		= Ok!
+	stMessage.sVar [1]   = "URL API MAXI COFFEE"
+	stMessage.sCode		= "API0001"
+	F_Message ( stMessage ) 	
+	Return False
+End If 	
+
+// ajout des argument sur l'URL 
+// Aucun ajout sur l'URL de Maxi 
+// sUrl += 
+
+// Construction de la requête JSON (Resquest Body )
+ObJsonPackage = Create JSONPackage 
+
+ObJsonPackage.SetValueString ( "email", asEmail )
+ObJsonPackage.SetValueNumber ( "amoutCts", aiAmoutCts )
+ObJsonPackage.SetValueNumber ( "orderId", alOrderId )
+ObJsonPackage.SetValueString ( "model", asModel )
+ObJsonPackage.SetValueNumber ( "warrantyId", alWarrantyId )
+ObJsonPackage.SetValueNumber ( "sinistreId", alSinistreId )
+
+sRequestBody = ObJsonPackage.GetJsonString ()
+
+
+// Complèment sur la méthode d'autorisation donné par PostMan
+// Demander à Matthieu, Lisette, Marlène le type d’authentification
+sCleAuthent = "Basic " + sCleAuthent 
+
+ObjApi = Create HTTPClient 
+
+ObjApi.SetRequestHeader ( "Authorization", sCleAuthent )
+
+astAttenteDiverse.text = " ~n~rAppel de l'API Maxi Coffee (extérieure à l'entreprise)~n~rpour validation du bon d'achat~n~r~n~rVeuillez patienter...."
+astAttenteDiverse.X			=  941
+astAttenteDiverse.Y			=  390
+astAttenteDiverse.Height	=  300
+astAttenteDiverse.Width		= 1585
+astAttenteDiverse.BringToTop = True
+astAttenteDiverse.Show()
+
+sDtAppel = String ( Today (), "dd/mm/yyyy" ) + " " + String ( Now (), "hh:mm:ss" ) 
+
+If Not bModeHorsAppel Then
+	iRetApi = ObjApi.SendRequest( "POST", sUrl, sRequestBody )
+	iStatusApi = ObjApi.GetResponseStatusCode( ) 
+	sStatusApi = ObjApi.GetResponseStatusText()
+	ObjApi.GetResponseBody ( sResponseApiJSon )
+Else 
+	// Succès
+	// iStatusApi =200
+	// sResponseApiJSon = '{ "couponId": 1354895 }'
+	
+	// Erreur
+   iStatusApi =400
+	sResponseApiJSon = '{ "error" : { "code": "1AE58", "message": "Error Description" } }'
+	
+End If 
+
+sDtRetour = String ( Today (), "dd/mm/yyyy" ) + " " + String ( Now (), "hh:mm:ss" ) 
+
+
+astAttenteDiverse.Hide ()
+
+// Prépa Maj de la prestation
+F_CLE_VAL_E ( "REQUEST_BODY", sRequestBody, sInfoSpbFrnCplt, ";" )  // Aller 
+F_CLE_VAL_E ( "DTE_APPEL", sDtAppel, sInfoSpbFrnCplt, ";" )  // Aller 
+
+F_CLE_VAL_E ( "RESPONSE_API", sResponseApiJSon, sInfoFrnSpbCplt, ";" )	// Retour
+F_CLE_VAL_E ( "DTE_RETOUR", sDtRetour, sInfoFrnSpbCplt, ";" )	// Retour	
+F_CLE_VAL_E ( "STATUT_API", String ( iStatusApi ), sInfoFrnSpbCplt, ";" )	// Retour	
+
+
+// MessageBox  ( "Retour", sResponseApiJSon + ", Statut " + String ( iStatusApi ) + ", Retour " + String ( iRetApi ) )
+
+// Echec
+If iStatusApi >= 300 Or iStatusApi < 0 Or iRetApi < 0 Then
+	f_trace_web_service("API MAXI COFFEE", "POST-" + sUrl, alSinistreId, 0, "", sRequestBody )
+	f_trace_web_service("API MAXI COFFEE - reponse", "POST-" + sUrl, alSinistreId , iStatusApi, sStatusApi, sResponseApiJSon )			
+End If
+
+
+// Succès
+If iStatusApi = 200 Then
+	bBAemis = True
+	ObJsonPackage.LoadString (sResponseApiJSon )
+	lCouponId = ObJsonPackage.GetValueNumber ( "couponId")
+
+	F_CLE_VAL_E ( "COUPON_ID", String ( lCouponId ), sInfoFrnSpbCplt, ";" )	// Retour
+
+End If 
+
+// Maj de la prestation
+This. uf_api_maxi_coffee_maj_presta ( alsinistreid, aiidseq, iStatusApi, sInfoSpbFrnCplt, sInfoFrnSpbCplt )
+
+
+If bBAemis Then
+	stMessage.sTitre		= "APPEL API MAXI COFFEE SUCCES"
+	stMessage.Icon			= Information!
+	stMessage.bErreurG	= FALSE
+	stMessage.Bouton		= Ok!
+	stMessage.sCode		= "API0011 "
+	stMessage.sVar[1]		= Mid ( String ( aiAmoutCts ), 1, Len ( String ( aiAmoutCts ) ) - 2 ) + "." + Right ( String ( aiAmoutCts ), 2 )
+	F_Message ( stMessage )
+Else 
+	bFin = False
+	Do While Not bFin
+		stMessage.sTitre		= "APPEL API MAXI COFFEE ECHEC"
+		stMessage.Icon			= Exclamation!
+		stMessage.bErreurG	= FALSE
+		stMessage.Bouton		= YESNO!
+		stMessage.sCode		= "API0010 "
+		stMessage.sVar[1]		= stGlb.sCodOper
+		If F_Message ( stMessage ) = 1 Then bFin = TRUE
+	Loop	
+
+	
+End If 	
+
+If IsValid ( ObjApi ) Then Destroy ObjApi 
+If IsValid ( ObJsonPackage ) Then Destroy ObJsonPackage 
+
+Return bBAemis
+end function
+
+public subroutine uf_api_maxi_coffee_maj_presta (long alsinistreid, integer aiidseq, integer aistatusapi, string asinfospbfrncplt, string asinfofrnspbcplt);//*-----------------------------------------------------------------
+//*
+//* Fonction		: u_gs_sp_sinistre::uf_api_maxi_coffee_maj_presta 
+//* Auteur			: FABRY JF
+//* Date				: 24/02/2025
+//* Libellé			: APPEL API MAXI COFFEE
+//* Commentaires	: [PMO268_MIG48]
+//*
+//*-----------------------------------------------------------------
+
+String sSql
+Boolean bRet 
+
+sSql = "Exec sysadm.PS_U_MAJ_PRESTA_API_MAXI_COFFEE " + &
+			String ( alsinistreid ) + "., " + & 
+			String ( aiidseq ) + ", " + &
+			String ( aiStatusApi ) + ", " + &
+			"'" + asInfoSpbFrnCplt + "', " + &
+			"'" + asInfoFrnSpbCplt + "'," + &
+			"'" + stGlb.sCodOper + "'"
+
+F_Execute ( sSql, SQLCA )
+bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
+F_Commit ( SQLCA, bRet )
+
+end subroutine
 
 on n_cst_gs_appel_api_generique.create
 call super::create

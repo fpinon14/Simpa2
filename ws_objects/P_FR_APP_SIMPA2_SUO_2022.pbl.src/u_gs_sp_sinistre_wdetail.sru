@@ -26135,16 +26135,19 @@ public subroutine uf_affichage_dw_choix_action (integer alidevt);//*------------
 //*
 //* Retourne		: String					Nom de la zone sur laquelle on se positionne si Erreur
 //*
-//*-----------------------------------------------------------------
-Long lDeb, lFin
+//*-----------------d------------------------------------------------
+Long lDeb, lFin, lIGti
 String sLibEvt
 	
 If Not idw_ChoixAction.Visible Then Return
+
+lIGti = idw_wDetailFF.GetItemNumber ( 1, "ID_GTI" )
 
 idw_ChoixAction.dataobject = "d_choix_action"
 idw_ChoixAction.InsertRow ( 0 )
 idw_ChoixAction.SetItem ( 1, "CHOIX_ACTION", "R" )	
 icbCommander.Text = "Réparer >>"	
+
 
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 393 )
 
@@ -26163,7 +26166,7 @@ If lDeb > 0 Then
 End If 	
 
 sLibEvt  = Upper ( SQLCA.FN_CODE_NUM ( alIdEvt, "+EV" ) )
-If Left ( sLibEvt, 5 ) = "REMPL" Then
+If Left ( sLibEvt, 5 ) = "REMPL" Or lIGti = 10 Then
 
 	idw_ChoixAction.dataobject = "d_choix_action_cmde_seule"
 	idw_ChoixAction.InsertRow ( 0 )
