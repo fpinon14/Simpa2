@@ -4121,6 +4121,7 @@ event ue_ouvrir_fenvalidation pbm_custom69
 event ue_ibscriptclientfocus pbm_custom68
 event ue_majenabledbouton ( )
 event ue_fermerword ( )
+event ue_recreer_un_trv ( )
 integer x = 59
 integer y = 328
 integer width = 302
@@ -4351,6 +4352,43 @@ Next
 RUN ( "Del " + stGLB.sRepTempo + "*.doc /Q /F", minimized! )	
 
 
+end event
+
+event dw_1::ue_recreer_un_trv();//*-----------------------------------------------------------------
+//*
+//* Objet			: Dw_1
+//* Evenement 		: ue_ReCreer_un_trv
+//* Auteur			: FABRY JF
+//* Date				: 11/02/2025
+//* Libellé			: [PMO268_MIG48]
+//* Commentaires	: Recreer un travail POST Validation, la validation est déjà commitée ici
+//*				 
+//* Arguments		: 
+//*
+//* Retourne		: NotFound
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	      Modification
+//* 
+//*-----------------------------------------------------------------
+
+String sSql, sMessContact 
+Boolean bRet 
+
+sMessContact = F_CLE_VAL ( "MESS", gsSeriaTransfert, ";" )
+sMessContact = F_Remplace ( sMessContact, "'", "''" )
+
+sSql = "Exec sysadm.PS_I_RECREER_UN_TRAVAIL " + &
+			F_CLE_VAL ( "ID_SIN", gsSeriaTransfert, ";" ) + "., " + & 
+			F_CLE_VAL ( "ETAT", gsSeriaTransfert, ";" ) + ", " + &
+			"'" + F_CLE_VAL ( "OPER", gsSeriaTransfert, ";" ) + "', " + &
+			"'" + sMessContact + "'"
+
+gsSeriaTransfert = "" // RAZ
+
+F_Execute ( sSql, SQLCA )
+bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
+F_Commit ( SQLCA, bRet )
 end event
 
 event dw_1::itemerror;//*-----------------------------------------------------------------

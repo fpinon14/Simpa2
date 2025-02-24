@@ -1468,6 +1468,7 @@ If lDeb > 0 Then
 		ObjAppelAPI = Create n_cst_gs_appel_api_generique
 	
 		bRet = ObjAppelAPI.uf_api_maxi_coffee_caller ( & 
+				idw_WSin, &
 				idw_LstwCommande, &
 				iIdSeq, &
 				istAttenteDiverse, &

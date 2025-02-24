@@ -65,6 +65,7 @@ Boolean gbLstAffAutoConsultCourrier
 Int gTInterCP [] // [RS5045_REF_MATP]
 String gTModeleCP [] // [RS5045_REF_MATP]
 
+String gsSeriaTransfert // [PMO268_MIG48]
 
 end variables
 

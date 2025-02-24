@@ -34,7 +34,7 @@ If IsNull ( asvaleur ) Then asvaleur = ""
 
 
 asChaine = Trim ( asChaine ) 
-If IsNull ( asChaine ) Or asChaine = "" Then Return ""
+If IsNull ( asChaine ) Then asChaine = "" 
 
 assep = Trim ( assep ) 
 If IsNull ( assep ) Or assep = "" Then Return ""
