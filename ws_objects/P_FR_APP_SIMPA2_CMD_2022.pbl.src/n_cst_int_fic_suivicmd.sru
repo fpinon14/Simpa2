@@ -32330,12 +32330,23 @@ For lCpt = lTotLig To 1 Step -1
 	/* DTE_RCP_APP_CLI                                                  */
 	/*------------------------------------------------------------------*/
 	dtVal =  idwFicFourn.GetItemDatetime( lCpt, "DTE_RCP_APP_CLI")
-	lVal =  iStatusGc //idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
-
+	lVal =  iStatusGc
+	
 	If Date ( dtVal ) = 1900-01-01 Then SetNull ( dtVal ) 
 	If Date ( dtVal1 ) = 1900-01-01 Then SetNull ( dtVal1 ) 
 
 	If Not IsNull ( dtVal ) Then 
+
+		Choose Case lVal 
+			Case 178, 233, 263, 234, 2, 21
+				// Ok
+			Case Else
+				lRow = idwFicFourn.Find ( "NUM_CMD_SPB = '" + sNumCmdSpb + "' AND STATUS_GC IN ( 178, 233, 263, 234, 2, 21 )", 1, idwFicFourn.RowCount())
+				If lRow > 0 Then
+					lVal =  idwFicFourn.GetItemNumber ( lRow, "STATUS_GC")
+				End If 
+		End Choose	
+		
 		Choose Case lVal 
 			Case 178, 233, 263, 234, 2, 21
 				// Ok
