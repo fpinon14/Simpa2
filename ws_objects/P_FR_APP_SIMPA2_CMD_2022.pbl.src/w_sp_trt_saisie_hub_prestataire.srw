@@ -1298,7 +1298,7 @@ dw_1.SetTransObject ( itrHubPrestataire )
 sTypDom = lnvPFCString.of_Getkeyvalue ( isChaineRetour, "HP_TYP_DOM", ";")
 sIdFour = F_CLE_VAL ( "HP_ID_FOUR", isChaineRetour, ";")
 sIdPointService = F_CLE_VAL ( "HP_ID_POINT_SERV", isChaineRetour, ";")
-sIdModeLogis = F_CLE_VAL ( "HP_ID_MODE_LOGIS", sIdModeLogis, ";")
+sIdModeLogis = F_CLE_VAL ( "HP_ID_MODE_LOGIS", isChaineRetour, ";")
 
 // [20241127082353640] ajout idcMtValAchat à isEtatAppSin
 // [HUB_TYP_APP_REMPL]
@@ -1366,6 +1366,8 @@ Else
 		String ( idtDteAchat, "dd/mm/yyyy" ), &
 		isEtatAppSin )		
 End If 
+
+// dw_1.Saveas ( "c:\temp\dw_recup_acheminement.xls", Excel8!, TRUE)
 
 If iTotRow <= 0 Then
 	stMessage.sTitre		= "Erreur Hub Prestataire"
@@ -1734,7 +1736,7 @@ Else
 			)
 End If 
 
-// dw_1.Saveas ( "c:\temp\dw_recup_action", Excel8!, TRUE) 
+// dw_1.Saveas ( "c:\temp\dw_recup_action.xls", Excel8!, TRUE) 
 
 // Mode PAS HUB unique REPA/DIAG (donc comme avant)
 If ilDp393 <= 0 Then 
