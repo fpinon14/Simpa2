@@ -33600,7 +33600,7 @@ Choose Case lVal
 
 		// [VDOC9304_PM82_LOT1]
 		// [VDOC15485]
-		If ( lVal = 153 Or lVal = 154 ) Then 		// And sIdTypArt = "PRS" ) Then
+		If ( lVal = 153 ) Then 		// And sIdTypArt = "PRS" ) Then    sortie (Or lVal = 154 ) on ferme vu avec Olfa le 25/02/25
 			asVal = "ECT"  // EN COURS DE TRAITEMENT
 		Else
 			asVal = "RFO"  // REPONSE FOURNISSEUR (Cloture)
