@@ -26502,7 +26502,10 @@ From	sysadm.sinistre s with (nolock),
 Where	dp.cas in ( 'REL_COMMERCANT', 'PROPO_INDEM') 
 And 	a.id_prod = dp.id_prod 
 And		CharIndex ( '#' + a.id_cour_orig + '#', dp.cour_rel ) > 0 
-And		a.id_inter = 0 -- [KSV795]
+And		( ( a.id_inter = 0 And dp.cas = 'PROPO_INDEM' )
+		   OR
+		  ( a.id_inter > 0 And dp.cas = 'REL_COMMERCANT' )
+		) -- [KSV795] Vu avec Orlane, ce ne sera jamais l'assuré
 And		a.id_doc = ( -- [KSV795] -- le dernier courrier de dde de pce pour cet inter
 			select Max ( a1.id_doc ) 
 			From sysadm.archive a1  with (nolock)
