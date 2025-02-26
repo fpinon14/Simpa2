@@ -65,3 +65,41 @@ Insert into sysadm.trace_ba_api_nv
 	)
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Procedure            :       PS_S_TRACE_BA_API_NV_EXISTE_DEJA
+-- Auteur               :       JFF
+-- Date                 :       21/02/2025
+-- Libelle              :       
+-- Commentaires         :     Cohénrece entre présence dans la trace et/ou absence sur le dossier
+-- References           :       
+-- Arguments            :       
+--
+-- Retourne             :     1 : la clé id_sin/id_seq existe dans la trace, donc un BA a été émis
+--                           -1 : Aucune existe, on peut émettrte un BA sur cet Idsin/IdSeq
+-------------------------------------------------------------------
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_TRACE_BA_API_NV_EXISTE_DEJA' AND type = 'P' )
+        DROP procedure sysadm.PS_S_TRACE_BA_API_NV_EXISTE_DEJA
+GO
+
+CREATE procedure sysadm.PS_S_TRACE_BA_API_NV_EXISTE_DEJA
+	@adcIdSin decimal(10),
+	@aiIdSeq Integer
+AS
+
+If Exists ( 
+		Select Top 1 1
+		From sysadm.trace_ba_api_nv 
+		Where id_sin = @adcIdSin
+		And   id_seq = @aiIdSeq
+   )
+   Begin
+	Return 1
+   End 
+
+Return -1
+
+Go

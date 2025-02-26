@@ -12537,3 +12537,133 @@ If Exists ( Select * from w_sin where id_sin = @adcIdSin )
 	End 
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Procedure            :       PS_U_MAJ_PRESTA_API_MAXI_COFFEE
+-- Auteur               :       Fabry JF
+-- Date                 :       23/02/2025
+-- Libelle              :       Maj de la presta MAXI COFFEE après appel de L'API pour le BA
+-- Commentaires         :       
+-- References           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-- #1	JFF	20/10/2008	[FNAC_PROD_ECH_TECH]
+-------------------------------------------------------------------
+--  JFF		12/02/2016		[PI062]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_MAJ_PRESTA_API_MAXI_COFFEE' AND type = 'P' )
+        DROP procedure sysadm.PS_U_MAJ_PRESTA_API_MAXI_COFFEE
+GO
+
+CREATE procedure sysadm.PS_U_MAJ_PRESTA_API_MAXI_COFFEE
+        @adcIdSin        Decimal (  10, 0 ),
+		@aiIdSeq		 Integer,
+		@aiStatusApi	 Integer,
+		@asInfoSpbFrnCplt  Varchar ( 800 ),
+		@asInfoFrnSpbCplt  Varchar ( 800 ),
+		@asCodOper Varchar ( 4 ) 
+As
+
+Declare  @sCompteur VarChar ( 20 )
+Declare  @sMtCmde VarChar ( 20 )
+Declare  @sCommentFrn VarChar ( 200 )
+Declare  @MessContact VarChar ( 508 )
+Declare  @iIdCt Integer
+Declare  @sErr VarChar ( 255 )
+
+-- Maj du compteur
+Select	@sCompteur = sysadm.FN_CLE_VAL ( 'COMPTEUR', c.info_spb_frn_cplt, ';' ),
+		@sMtCmde = Convert ( VarChar ( 20 ), c.mt_ttc_cmde ) 
+From sysadm.commande c
+Where c.id_sin = @adcIdSin
+And   c.id_seq = @aiIdSeq
+
+If IsNumeric ( @sCompteur ) = 0 Set @sCompteur = '0'
+Set @sCompteur = convert ( VarChar ( 10 ),  convert ( Integer, @sCompteur ) + 1 )
+
+Set @asInfoSpbFrnCplt = sysadm.FN_CLE_VAL_E ( 'COMPTEUR', @sCompteur, @asInfoSpbFrnCplt, ';')
+
+-- Traitement Sans Appel, erreur de param
+If @aiStatusApi = 1000
+Begin
+		Set @sCommentFrn = 'L''appel et le retour de l''API Maxi Coffee n''a même pas pu se faire, l''URL/AUTH de l''API est/sont absent(s) du paramétrage, prévenez le service informatique.'
+
+		Update sysadm.commande 
+		Set status_gc = 902,
+			comment_frn = @sCommentFrn
+		Where id_sin = @adcIdSin and id_seq = @aiIdSeq 
+
+		Update sysadm.w_commande 
+		Set status_gc = 902,
+			comment_frn = @sCommentFrn
+		Where id_sin = @adcIdSin and id_seq = @aiIdSeq 
+
+End 
+
+
+-- Traitement du succès
+If @aiStatusApi = 200 
+	Begin
+		Set @sCommentFrn = 'L''appel et le retour de l''API Maxi Coffee s''est fait avec succès pour un montant de ' + @sMtCmde + '€,'
+		Set @sCommentFrn = @sCommentFrn + ' avec un retour de coupon dont le numéro est ' + sysadm.FN_CLE_VAL ( 'COUPON_ID', @asInfoFrnSpbCplt, ';') + '.'
+
+		Update sysadm.commande 
+		Set cod_etat = 'RFO',
+			status_gc = 901,
+			comment_frn = @sCommentFrn, 
+			info_spb_frn_cplt = @asInfoSpbFrnCplt,
+			info_frn_spb_cplt = @asInfoFrnSpbCplt
+		
+		Where id_sin = @adcIdSin and id_seq = @aiIdSeq 
+
+		Update sysadm.w_commande 
+		Set cod_etat = 'RFO',
+			status_gc = 901,
+			comment_frn = @sCommentFrn, 
+			info_spb_frn_cplt = @asInfoSpbFrnCplt,
+			info_frn_spb_cplt = @asInfoFrnSpbCplt
+			
+		Where id_sin = @adcIdSin and id_seq = @aiIdSeq 
+
+		Set @MessContact = 'L''Appel de l''API MAXI COFFEE s''est fait avec succès le ' + sysadm.FN_CLE_VAL ( 'DTE_APPEL', @asInfoSpbFrnCplt, ';') + ' pour un montant de ' + @sMtCmde + '€, avec un retour de coupon dont le numéro est ' + sysadm.FN_CLE_VAL ( 'COUPON_ID', @asInfoFrnSpbCplt, ';') + '.'
+
+		IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+		BEGIN
+			Exec SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @adcIdSin, 2, @MessContact, 'AUTO', 300, @iIdCt OUTPUT							
+		END
+		ELSE
+		BEGIN
+			Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @adcIdSin, 2, @MessContact,'AUTO', 300, @iIdCt OUTPUT							
+		END	
+
+
+	End 
+
+-- Traitement de l'échecs
+If ( @aiStatusApi >= 300 And @aiStatusApi < 1000 ) Or @aiStatusApi = -1
+	Begin
+		Set @sCommentFrn = 'L''appel et le retour de l''API Maxi Coffee s''est terminé en échec , il faut re-valider ce dossier pour tenter un nouvel appel. La prestation reste en cours jusqu''à un appel qui se termine avec succès.'
+
+		Update sysadm.commande 
+		Set status_gc = 902,
+			comment_frn = @sCommentFrn, 
+			info_spb_frn_cplt = @asInfoSpbFrnCplt,
+			info_frn_spb_cplt = @asInfoFrnSpbCplt
+		
+		Where id_sin = @adcIdSin and id_seq = @aiIdSeq 
+
+		Update sysadm.w_commande 
+		Set status_gc = 902,
+			comment_frn = @sCommentFrn, 
+			info_spb_frn_cplt = @asInfoSpbFrnCplt,
+			info_frn_spb_cplt = @asInfoFrnSpbCplt
+		
+		Where id_sin = @adcIdSin and id_seq = @aiIdSeq 
+
+	End 
+
+Go

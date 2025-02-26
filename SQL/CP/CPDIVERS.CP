@@ -5805,6 +5805,7 @@ Go
 -- JFF      11/03/2019   [DT339]
 -- JFF      06/04/2020   [PM506-1]
 -- JFF      28/02/2024   [MCO_190_191_BECLM]
+-- JFF      22/02/2025   [PMO268_MIG48][TRT_APRES_COMMIT]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_DETECT_ERREUR_WS' AND type = 'P' )
         DROP procedure sysadm.PS_S_DETECT_ERREUR_WS
@@ -5877,8 +5878,20 @@ While @iNbreTour <= 2
 					Then left ( upper ( nom_ws), 10 )
 				When left ( upper ( nom_ws), 30 ) = 'PM506 - LUTTE ANTI BLANCHIMENT' -- [PM506]
 					Then left ( upper ( nom_ws), 30 ) -- [PM506]
+				When left ( upper ( nom_ws), 18 ) = 'API ORANGE REUNION'
+					Then left ( upper ( nom_ws), 18 ) 
+				When left ( upper ( nom_ws), 15 ) = 'API MAXI COFFEE'
+					Then left ( upper ( nom_ws), 15 ) 
+
 			End,
-			Left ( url_ws, 68),  -- [MCO_190_191_BECLM] 87
+			Case 
+				When left ( upper ( nom_ws), 30 ) = 'PM506 - LUTTE ANTI BLANCHIMENT' -- [MCO_190_191_BECLM] 87
+					Then Left ( url_ws, 68)
+				When left ( upper ( nom_ws), 18 ) = 'API ORANGE REUNION'
+					Then Left ( url_ws, 31)
+				Else 
+					Left ( url_ws, 87)
+			End, 
 			@iDelaiMinParam * @iNbreTour,
 			count(*),
 			0
@@ -5894,6 +5907,10 @@ While @iNbreTour <= 2
 			left ( upper ( nom_ws), 10 ) = 'MAIL SAGA2'
 			OR 
 			left ( upper ( nom_ws), 30 ) = 'PM506 - LUTTE ANTI BLANCHIMENT' -- [PM506]
+			OR
+			left ( upper ( nom_ws), 18 ) = 'API ORANGE REUNION'
+		    OR
+			left ( upper ( nom_ws), 15 ) = 'API MAXI COFFEE'
 		  )
 	and   charindex ( 'reponse', nom_ws ) <= 0
 	And   cree_le between DateAdd ( minute, -1 * @iDelaiMinParam  * @iNbreTour, Getdate() ) and Convert ( datetime, Getdate()) 
@@ -5910,8 +5927,19 @@ While @iNbreTour <= 2
 					Then left ( upper ( nom_ws), 10 )
 				When left ( upper ( nom_ws), 30 ) = 'PM506 - LUTTE ANTI BLANCHIMENT' -- [PM506]
 					Then left ( upper ( nom_ws), 30 ) -- [PM506]
+				When left ( upper ( nom_ws), 18 ) = 'API ORANGE REUNION'
+					Then left ( upper ( nom_ws), 18 ) 
+				When left ( upper ( nom_ws), 15 ) = 'API MAXI COFFEE'
+					Then left ( upper ( nom_ws), 15 ) 
 			End,
-			Left ( url_ws, 68)  -- [MCO_190_191_BECLM] 87
+			Case 
+				When left ( upper ( nom_ws), 30 ) = 'PM506 - LUTTE ANTI BLANCHIMENT' 
+					Then Left ( url_ws, 68) -- [MCO_190_191_BECLM] 87
+				When left ( upper ( nom_ws), 18 ) = 'API ORANGE REUNION'
+					Then Left ( url_ws, 31)
+				Else 
+					Left ( url_ws, 87)
+			End  -- [MCO_190_191_BECLM] 87
 
 	Set @iNbreTour = @iNbreTour + 1
 

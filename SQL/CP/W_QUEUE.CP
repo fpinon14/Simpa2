@@ -10,10 +10,10 @@
 -- sysadm.PS_S02_W_QUEUE_TRACE_SOLDE_WKF
 -- sysadm.DW_S02_W_QUEUE_WKF_V01
 -- sysadm.PS_S02_W_QUEUE_POCHETTE
--- [sysadm].[DW_S03_W_QUEUE_WKF_V01]
--- [sysadm].[IM_U02_W_QUEUE]
--- [sysadm].[PS_S01_W_QUEUE_TRACE_SOLDE_WKF]
--- [sysadm].[PS_U01_W_QUEUE_WKF]
+-- sysadm.DW_S03_W_QUEUE_WKF_V01
+-- sysadm.IM_U02_W_QUEUE
+-- sysadm.PS_S01_W_QUEUE_TRACE_SOLDE_WKF
+-- sysadm.PS_U01_W_QUEUE_WKF
 -- sysadm.DW_S01_W_QUEUE
 -- sysadm.DW_S01_W_QUEUE_WKF
 -- sysadm.IM_D01_W_QUEUE
@@ -21,8 +21,10 @@
 -- sysadm.IM_U03_W_QUEUE
 -- sysadm.IM_U04_W_QUEUE_CAS1
 -- sysadm.PS_D01_W_QUEUE_WKF
+-- sysadm.PS_I_CONTACT_TRAVAIL_DT339
 -- sysadm.PS_I_DOS_PERDUS_ATLAS_SSUITE_OU_REFUS
 -- sysadm.PS_I_ERR_TRAVAIL_ABSENT
+-- sysadm.PS_I_RS4166_CTC_TRV_PND_CORUS
 -- sysadm.PS_I_VOL_PERDUS_ATLAS_ENCOURS
 -- sysadm.PS_I_VOL_PERDUS_ATLAS_SSUITE
 -- sysadm.PS_I01_W_QUEUE_WKF
@@ -3043,5 +3045,49 @@ END
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Proc‚dure            :       PS_I_RECREER_UN_TRAVAIL
+-- Auteur               :       JFF
+-- Date                 :       04/01/2023
+-- Libell‚              :        [PMO268_MIG48]
+-- Commentaires         :       Utilisé pour recréer un travail Immédiatement POST Validation 
+--                              dans des cas très précis.
+--
+-- Arguments            :       Rien
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_RECREER_UN_TRAVAIL' AND type = 'P' )
+        DROP procedure sysadm.PS_I_RECREER_UN_TRAVAIL
+GO
+
+CREATE procedure sysadm.PS_I_RECREER_UN_TRAVAIL
+	@adcIdSin  Decimal ( 10 ),
+	@aiEtat  Integer,
+	@asCodOper VarChar ( 4 ), 
+	@asMessContact VarChar ( 508 )
+AS
+
+Declare  @iIdCt Integer
+Declare  @sErr VarChar ( 255 )
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+BEGIN
+	EXEC SHERPA_PRO.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @adcIdSin, 2, @asMessContact, @asCodOper, @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C'
+
+END
+ELSE
+BEGIN
+	EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @adcIdSin, 2, @asMessContact, @asCodOper, @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C'
+END	
+
+If @aiEtat = 5 
+	Begin
+		Update sysadm.w_queue set cod_etat = Convert ( Varchar ( 10 ), @aiEtat ) where id_sin = @adcIdSin
+	End 
+
+Go
 
 
