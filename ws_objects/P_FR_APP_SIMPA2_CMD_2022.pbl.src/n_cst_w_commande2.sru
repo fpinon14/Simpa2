@@ -25,7 +25,7 @@ DataWindow		idw_Commune
 DataWindow		idw_TacImei
 DataWindow		idw_autorisation // [DCMP080479]
 
-u_DataWindow		idw_TrtCmde
+u_DataWindow		idw_TrtCmde 
 u_DataWindow		idw_TrtClient
 /*------------------------------------------------------------------*/
 /* DCMP 030207 : CAG 07/05/03                     */
@@ -139,6 +139,9 @@ isTypeTrt = astPass.sTab [2]
 /* dw_wGarSin de GARANTIE.                                          */
 /*------------------------------------------------------------------*/
 idw_TrtCmde.Uf_CopierLigne ()
+
+idw_TrtCmde.SaveAs ( "c:\temp\idw_TrtCmde.xls", Excel8!, True ) 
+idw_LstCmde.SaveAs ( "c:\temp\idw_LstCmde.xls", Excel8!, True ) 
 
 icbComLiv.Enabled = ibAltCommune
 icbComFac.Enabled = ibAltCommune

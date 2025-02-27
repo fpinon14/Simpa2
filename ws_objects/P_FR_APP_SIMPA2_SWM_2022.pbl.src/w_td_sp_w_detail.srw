@@ -1156,7 +1156,7 @@ Long lCountDiv1, lMarquageCC, lCptDiv1, lIdDetailDiv1, lRowDiv1, lRowDet1, lIdEv
 Decimal {2} dcMtPec1, dcMtVal, dcMtFran
 Boolean bCDiscountTachDech 
 Boolean bDeclaWebAtlas, bDcnxWebAtlas
-Boolean bManqueInfoAtlas, bPRS_Retour_21
+Boolean bManqueInfoAtlas, bPRS_Retour_21, bGeolocActive 
 String  sIMEI, sIMEICorrige, sRech, sChaineBcv
 DateTime dtMajLe
 Long lRowForPec 
@@ -2258,6 +2258,19 @@ If bOk Then
 
 		bPrestaHubCodeVerrouManquant = lRow2 > 0 
 	End If
+
+	// [HP252_276_HUB_PRESTA]
+	bGeolocActive = False
+	If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
+		lRow2 = idwLstCmdeSin.Find ( & 
+						"ID_GTI    = " + String ( lIdGti ) + " AND " + & 
+						"ID_DETAIL = " + String ( lIdDetail ) + " AND " + & 
+						"COD_ETAT  = 'ECT' AND " + &
+						"STATUS_GC IN ( 305 ) AND " + &
+						"POS ( info_spb_frn_cplt, 'HP_ID_HUB_PRESTA' ) > 0", 1, idwLstCmdeSin.RowCount() )
+
+		bGeolocActive = lRow2 > 0 
+	End If
 	
 	
 	lTotTb = UpperBound ( sTbLibEvt )
@@ -2381,11 +2394,15 @@ If bOk Then
 				// :[PC469]
 				
 				// [PM82][LOT1]
-				// [HP252_276_HUB_PRESTA] bPrestaHubCodeVerrouManquant 
+				// [HP252_276_HUB_PRESTA] bPrestaHubCodeVerrouManquant & bGeolocActive
 				Case "REPAR", "RÉPAR"
 				
 					// [PM330-1]
-					If Not bPRS_Retour_153_154 And Not bPRS_Retour_21 And Not bPrestaHubCodeVerrouManquant Then
+					If Not bPRS_Retour_153_154 And &
+						Not bPRS_Retour_21 And &
+						Not bPrestaHubCodeVerrouManquant And &
+						Not bGeolocActive &
+						Then
 						bOk = False
 						stMessage.sCode = "COMD390"
 					End If

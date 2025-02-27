@@ -303,7 +303,9 @@ Choose Case asIdFour
 	Case "O2M", "SB1", "MS1", "BLC","LBE"
 		// On laisse tel quel
 	Case Else
-		aDwTrtCmdFrn.SetItem ( 1, "ADRFC_NOM", "" )  
+		If Not bFournHub Then
+			aDwTrtCmdFrn.SetItem ( 1, "ADRFC_NOM", "" )  
+		End If 
 End Choose
 // :#11
 
@@ -782,7 +784,7 @@ Choose Case asIdFour
 				sModif += "DTE_RET_PRET_MAX_T.Text = '' "
 				sModif += "DTE_ENV_CLI_T.Text 	= 'Date fin de traitement / envoi colis' "
 				sModif += "ID_ORIAN_MODELE_T.Text = '' "
-				sModif += "ADRFC_NOM_T.Text = '' " // #11 [CMP080199]
+				sModif += "ADRFC_NOM_T.Text		= 'Nom Transporteur'" 
 				sModif += "DTE_RCP_MOB_CLI_T.Text = 'Réception appareil (nouveau/réparé) par le client' "
 
 			End If 

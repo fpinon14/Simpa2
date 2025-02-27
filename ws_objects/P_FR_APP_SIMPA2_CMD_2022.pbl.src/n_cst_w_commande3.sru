@@ -7330,6 +7330,11 @@ If lTot > 0 Then
 			
 			// [PM222-1]
 			lRow = idwCmdeSin.Find ( "( ID_REF_FOUR IN ( 'A_REPARER' ) OR POS ( INFO_SPB_FRN_CPLT, 'A_REPARER_SAV=OUI') > 0 OR POS ( INFO_SPB_FRN_CPLT, 'A_CONTROLER_SAV=OUI') > 0) AND COD_ETAT NOT IN ( 'RFO', 'RPC', 'ANN') AND STATUS_GC IN ( 153, 154 )", 1, idwCmdeSin.Rowcount() ) 
+
+			// [HP252_276_HUB_PRESTA]
+			If lRow <= 0 Then 
+				lRow = idwCmdeSin.Find ( "( ID_REF_FOUR = 'A_REPARER' AND POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0) AND COD_ETAT NOT IN ( 'RFO', 'RPC', 'ANN') AND STATUS_GC IN ( 305 )", 1, idwCmdeSin.Rowcount() ) 
+			End If 		
 			
 			If lRow > 0 Then
 				idwArticle.SetItem ( lCpt, "ID_MARQ_ART", isMarqPortAdh ) 
@@ -7346,6 +7351,11 @@ If lTot > 0 Then
 
 			// [PM222-1] // [HP252_276_HUB_PRESTA]
 			lRow = idwCmdeSin.Find ( "( ID_REF_FOUR = 'A_DIAGNOSTIQUER' AND POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0) AND COD_ETAT NOT IN ( 'RFO', 'RPC', 'ANN') AND STATUS_GC IN ( 153, 154 )", 1, idwCmdeSin.Rowcount() ) 
+
+			// [HP252_276_HUB_PRESTA]
+			If lRow <= 0 Then 
+				lRow = idwCmdeSin.Find ( "( ID_REF_FOUR = 'A_DIAGNOSTIQUER' AND POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0) AND COD_ETAT NOT IN ( 'RFO', 'RPC', 'ANN') AND STATUS_GC IN ( 305 )", 1, idwCmdeSin.Rowcount() ) 
+			End If 		
 				
 			If lRow > 0 Then
 				idwArticle.SetItem ( lCpt, "ID_MARQ_ART", isMarqPortAdh ) 

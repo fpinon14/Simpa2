@@ -5715,6 +5715,7 @@ String sInfoSpbFrnCplt, sChaineBCV, sVal1, sVal2, sIdFournTrt
 String sInfoFrnSpbCplt
 n_cst_string lnvPFCString
 DateTime dtVal 
+Int iVal 
 
 sIdFour = fill(" ", 3)
 sCodEtat = fill(" ", 3)
@@ -6122,6 +6123,20 @@ choose case sIdFour
 			// Par défaut, si le fournisseur est lié au HP
 			If ibPrestaHub Then
 				sVal1 = Trim ( Upper ( idwFicFourn.GetItemString ( alCpt, "INFO_FRN_SPB_CPLT" ) ) )
+
+				sVal = idwFicFourn.GetItemString ( alCpt, "NUM_BON_TRP" )
+				iVal = idwFicFourn.GetItemNumber  ( alCpt, "STATUS_GC" )
+				If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" And iVal = 0 Then
+					// On laisse, on accepte l'écrasement
+					Return bRet
+				End If
+
+				sVal = idwFicFourn.GetItemString ( alCpt, "NOM_TRANSPORTEUR" )
+				iVal = idwFicFourn.GetItemNumber  ( alCpt, "STATUS_GC" )
+				If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" And iVal = 0 Then
+					// On laisse, on accepte l'écrasement
+					Return bRet
+				End If
 				
 				// [PM246]
 				sVal = idwFicFourn.GetItemString ( alCpt, "PRBLE_LIVRAISON" )
