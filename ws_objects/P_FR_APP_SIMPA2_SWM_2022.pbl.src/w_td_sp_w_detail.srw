@@ -1156,11 +1156,12 @@ Long lCountDiv1, lMarquageCC, lCptDiv1, lIdDetailDiv1, lRowDiv1, lRowDet1, lIdEv
 Decimal {2} dcMtPec1, dcMtVal, dcMtFran
 Boolean bCDiscountTachDech 
 Boolean bDeclaWebAtlas, bDcnxWebAtlas
-Boolean bManqueInfoAtlas, bPRS_Retour_21, bGeolocActive 
+Boolean bManqueInfoAtlas, bPRS_Retour_21
 String  sIMEI, sIMEICorrige, sRech, sChaineBcv
 DateTime dtMajLe
 Long lRowForPec 
-Boolean bBlocageGeoloc, bFranchiseAuchan, bFranchiseSelectra, bPrestaHubCodeVerrouManquant
+Boolean bBlocageGeoloc, bFranchiseAuchan, bFranchiseSelectra
+Boolean bPrestaHubCodeVerrouManquant, bPrestaHubGeolocActive, bPrestaHubIncomplet
 Boolean bVarianteSelectra2024 // [KSV516]
 
 string sFiltreOri, sFiltrePrs // #7
@@ -2260,18 +2261,26 @@ If bOk Then
 	End If
 
 	// [HP252_276_HUB_PRESTA]
-	bGeolocActive = False
-	If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
-		lRow2 = idwLstCmdeSin.Find ( & 
-						"ID_GTI    = " + String ( lIdGti ) + " AND " + & 
-						"ID_DETAIL = " + String ( lIdDetail ) + " AND " + & 
-						"COD_ETAT  = 'ECT' AND " + &
-						"STATUS_GC IN ( 305 ) AND " + &
-						"POS ( info_spb_frn_cplt, 'HP_ID_HUB_PRESTA' ) > 0", 1, idwLstCmdeSin.RowCount() )
+	bPrestaHubGeolocActive= False
+	lRow2 = idwLstCmdeSin.Find ( & 
+					"ID_GTI    = " + String ( lIdGti ) + " AND " + & 
+					"ID_DETAIL = " + String ( lIdDetail ) + " AND " + & 
+					"COD_ETAT  = 'ECT' AND " + &
+					"STATUS_GC IN ( 305 ) AND " + &
+					"POS ( info_spb_frn_cplt, 'HP_ID_HUB_PRESTA' ) > 0", 1, idwLstCmdeSin.RowCount() )
 
-		bGeolocActive = lRow2 > 0 
-	End If
+	bPrestaHubGeolocActive= lRow2 > 0 
 	
+	// [HP252_276_HUB_PRESTA][20250228130407143]
+	bPrestaHubIncomplet = False
+	lRow2 = idwLstCmdeSin.Find ( & 
+					"ID_GTI    = " + String ( lIdGti ) + " AND " + & 
+					"ID_DETAIL = " + String ( lIdDetail ) + " AND " + & 
+					"COD_ETAT  = 'ECT' AND " + &
+					"STATUS_GC IN ( 169 ) AND " + &
+					"POS ( info_spb_frn_cplt, 'HP_ID_HUB_PRESTA' ) > 0", 1, idwLstCmdeSin.RowCount() )
+
+	bPrestaHubIncomplet= lRow2 > 0 
 	
 	lTotTb = UpperBound ( sTbLibEvt )
 
@@ -2397,11 +2406,12 @@ If bOk Then
 				// [HP252_276_HUB_PRESTA] bPrestaHubCodeVerrouManquant & bGeolocActive
 				Case "REPAR", "RÉPAR"
 				
-					// [PM330-1]
+					// [PM330-1][20250228130407143]
 					If Not bPRS_Retour_153_154 And &
 						Not bPRS_Retour_21 And &
 						Not bPrestaHubCodeVerrouManquant And &
-						Not bGeolocActive &
+						Not bPrestaHubGeolocActive And &
+						Not bPrestaHubIncomplet&
 						Then
 						bOk = False
 						stMessage.sCode = "COMD390"

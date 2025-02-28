@@ -11246,7 +11246,7 @@ If bOk And Not bPieceAReclamer Then
 End If	
 // [PM82][LOT1]
 
-// [HP252_276_HUB_PRESTA] 305 Géoloc
+// [HP252_276_HUB_PRESTA] 305 Géoloc Hub
 If bOk And Not bPieceAReclamer Then
 	If idw_LstwCommande.Find ( "POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0" , 1, idw_LstwCommande.rowCount() ) > 0 Then
 
@@ -11269,6 +11269,31 @@ If bOk And Not bPieceAReclamer Then
 		End If	
 	End If		
 End If 
+
+// [HP252_276_HUB_PRESTA] 169 Incomplet Hub [20250228130407143]
+If bOk And Not bPieceAReclamer Then
+	If idw_LstwCommande.Find ( "POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0" , 1, idw_LstwCommande.rowCount() ) > 0 Then
+
+		lVal1 = idw_LstwCommande.Find ( "ID_REF_FOUR = 'A_REPARER' AND POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0 AND COD_ETAT NOT IN ( 'RFO', 'RPC', 'ANN') AND STATUS_GC IN ( 169 )", 1, idw_LstwCommande.rowCount()+1 ) 								
+		
+		If lVal1 <= 0 Then
+			lVal1 = idw_LstwCommande.Find ( "ID_REF_FOUR = 'A_DIAGNOSTIQUER' AND POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0 AND COD_ETAT NOT IN ( 'RFO', 'RPC', 'ANN') AND STATUS_GC IN ( 169 )", 1, idw_LstwCommande.rowCount()+1 ) 
+			bDiag = lVal1 > 0 
+		End If 
+
+
+		lVal2 = idw_LstwCommande.Find ( "ID_REF_FOUR IN ( 'REFUSE_A_REEXP', 'A_REPARER_FORCE', 'A_DIAG_FORCE' ) AND COD_ETAT = 'CNV' ", 1, idw_LstwCommande.rowCount()+1 ) 	
+	
+		If ( lVal1 > 0 And lVal2 <= 0 ) Then
+			bOk = FALSE // JFF
+			stMessage.sVar[1] = "Vous avez reçu du prestataire une information indiquant un appareil incomplet, vous devez lui renvoyer une information. Pour ce cas vous ne pouvez renvoyer qu'un A_REPARER_FORCE s'il renvoie effectivement les accessoirement manquant, sinon un REFUSE_A_REEXP."
+			If bDiag Then 	// [HP252_276_HUB_PRESTA]
+				stMessage.sVar[1] = "Vous avez reçu du prestataire une information indiquant un appareil incomplet, vous devez lui renvoyer une information. Pour ce cas vous ne pouvez renvoyer qu'un A_DIAG_FORCE s'il renvoie effectivement les accessoirement manquant, sinon un REFUSE_A_REEXP."
+			End If 
+		End If	
+	End If		
+End If 
+
 
 // #15
 //* #22 [DCMP090327].[SBETV]
@@ -12371,8 +12396,8 @@ If bOk Then
 	idw_LstwCommande.Filter ()
 	lVal3 = idw_LstwCommande.RowCount ()
 	
-	// [ITSM147188]
-	idw_LstwCommande.SetFilter ( "ID_TYP_ART = 'PRS' AND COD_ETAT <> 'ANN' AND ( POS ( INFO_FRN_SPB_CPLT, 'RETOUR_153=OUI') > 0 OR POS ( INFO_FRN_SPB_CPLT, 'RETOUR_154=OUI') > 0)" )
+	// [ITSM147188][20250228130407143]
+	idw_LstwCommande.SetFilter ( "ID_TYP_ART = 'PRS' AND COD_ETAT <> 'ANN' AND ( POS ( INFO_FRN_SPB_CPLT, 'RETOUR_153=OUI') > 0 OR POS ( INFO_FRN_SPB_CPLT, 'RETOUR_154=OUI') > 0 OR ( POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0 AND POS ( INFO_FRN_SPB_CPLT, 'APP_INCOMPLET=OUI') > 0 ))" )
 	idw_LstwCommande.Filter ()
 	lVal4 = idw_LstwCommande.RowCount ()
 
@@ -46298,10 +46323,42 @@ bDiag = False
 bRet = True
 sPos = ""
 
-// [HP252_276_HUB_PRESTA] 'A_DIAG_FORCE'
+// [HP252_276_HUB_PRESTA] 'A_DIAG_FORCE' [20250228130407143]
+lVal1 = idw_LstwCommande.find( "ID_REF_FOUR IN ( 'A_REPARER_FORCE', 'A_DIAG_FORCE', 'REFUSE_A_REEXP' ) AND COD_ETAT = 'CNV'",1,  idw_LstwCommande.rowCount()+1 )
+
+// Controle Incomplet Hub 
+// [HP252_276_HUB_PRESTA]
+If idw_LstwCommande.Find ( "POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0", 1, idw_LstwCommande.RowCount () ) > 0 Then
+
+	lVal2 = idw_LstwCommande.Find ( "ID_REF_FOUR IN ( 'A_REPARER' ) AND POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0 AND COD_ETAT NOT IN ( 'RFO', 'RPC', 'ANN') AND STATUS_GC IN ( 169 )", 1, idw_LstwCommande.rowCount()+1 ) 								
+	If lVal2 = 0 Then
+		lVal2 = idw_LstwCommande.Find ( "ID_REF_FOUR = 'A_DIAGNOSTIQUER' AND POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0 AND COD_ETAT NOT IN ( 'RFO', 'RPC', 'ANN') AND STATUS_GC IN ( 169 )", 1, idw_LstwCommande.rowCount()+1 ) 							
+		If lVal2 > 0 Then bDiag = True 
+	End If 		
+	
+	If lVal1 <= 0 And lVal2 > 0 Then
+		bRet = False
+		
+		stMessage.sTitre		= "Hub Prestataire : Géoloc. Active"
+		stMessage.Icon			= Information!
+		stMessage.bErreurG	= FALSE
+		stMessage.sCode		= "WSIN924"
+		stMessage.sVar[1]		= "A_REPARER_FORCE"
+		If bDiag Then stMessage.sVar[1] = "A_DIAG_FORCE"
+		sPos	= "ALT_BLOC"				
+		Return sPos
+	End If 
+	
+ 	If lVal1 > 0 And lVal2 > 0 Then
+		Return sPos
+	End If 
+	
+End IF 
+
+// [HP252_276_HUB_PRESTA] 'A_DIAG_FORCE' [20250228130407143], pour GEOLOC pas de REFUSE_A_REXP possible (cf Olfa)
 lVal1 = idw_LstwCommande.find( "ID_REF_FOUR IN ( 'A_REPARER_FORCE', 'A_DESOXYDER_FORCE', 'A_DIAG_FORCE' ) AND COD_ETAT = 'CNV'",1,  idw_LstwCommande.rowCount()+1 )
 
-// Controle Géoloc
+// Controle Géoloc Hub
 // [HP252_276_HUB_PRESTA]
 If idw_LstwCommande.Find ( "POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0", 1, idw_LstwCommande.RowCount () ) > 0 Then
 
@@ -46329,6 +46386,9 @@ If idw_LstwCommande.Find ( "POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0", 1
 	End If 
 	
 End IF 
+
+// [HP252_276_HUB_PRESTA] 'A_DIAG_FORCE' [20250228130407143]
+lVal1 = idw_LstwCommande.find( "ID_REF_FOUR IN ( 'A_REPARER_FORCE', 'A_DESOXYDER_FORCE', 'A_DIAG_FORCE' ) AND COD_ETAT = 'CNV'",1,  idw_LstwCommande.rowCount()+1 )
 
 // Problème de parenthès, faux
 // lVal2 = idw_LstwCommande.Find ( "( ID_REF_FOUR = 'A_REPARER' OR POS ( INFO_SPB_FRN_CPLT, 'A_REPARER_SAV=OUI') > 0 OR ( POS ( INFO_SPB_FRN_CPLT, 'A_CONTROLER_SAV=OUI') > 0 ) AND ID_REF_FOUR = 'A_REPARER' ) AND ID_TYP_ART = 'PRS' AND COD_ETAT NOT IN ( 'RFO', 'RPC', 'ANN') AND STATUS_GC IN ( 154 )", 1, idw_LstwCommande.rowCount()+1 ) 		
