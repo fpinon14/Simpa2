@@ -20,7 +20,7 @@
 --								[THE_PS]
 -- Retourne             :       Rien
 -- MAJ			: 
--- #1  28/10/2003 JF  Ajout de "	And    id_four <> 'ASF'"  nécéssaire pour ARVATO
+-- #1  28/10/2003 JF  Ajout de "	And    id_four <> 'ASF'"  nécessaire pour ARVATO
 -- #2  PHG 22/03/2007 [DCMP070191] Gestion de l'enregistrement du Maj_le
 -- #3  PHG 05/12/2007 [O2M] Ajout enregistrement ID_ORIAN_MODELE
 --		     [O2M] Création Contact travail + mail
@@ -120,11 +120,11 @@
 --     JFF 30/05/2023   [PMO89_RS4822]
 --     JFF 07/03/2024   [HP252_276_HUB_PRESTA]
 --     JFF 04/11/2024   [20241104105246567]
+--     JFF 27/02/2025   [20250227094634600]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U01_COMMANDE' AND type = 'P' )
         DROP procedure sysadm.PS_U01_COMMANDE
 GO
-
 
 CREATE procedure sysadm.PS_U01_COMMANDE
 	@dcIdSin        Decimal (  10,0 ), -- [PI062]
@@ -765,7 +765,23 @@ If @iStatusGc in ( 301 ) Or @sCodEtatActuel in ( 'RPC', 'RFO', 'RSP' )
 			And	w_commande.id_seq = @iIdSeq
 		End
 
+	--  [20250227094634600]
+	If @iPrestaHUB > 0 And @iStatusGc = 0 And Len ( @idBonTransp ) > 0 
+		Begin
+			Update 	sysadm.w_commande
+			Set	sysadm.w_commande.id_bon_transp = @idBonTransp 
+			Where	w_commande.id_sin = @dcIdSin
+			And	w_commande.id_seq = @iIdSeq
+		End 
 
+	If @iPrestaHUB > 0 And @iStatusGc = 0 And Len ( @sAdrFcNom ) > 0 
+		Begin
+			Update 	sysadm.w_commande
+			Set	sysadm.w_commande.adrfc_nom = @sAdrFcNom 
+			Where	w_commande.id_sin = @dcIdSin
+			And	w_commande.id_seq = @iIdSeq
+		End 
+	--  /[20250227094634600]
  End
 Else
  Begin
@@ -897,6 +913,24 @@ If @iStatusGc in ( 301 ) Or @sCodEtatActuel in ( 'RPC', 'RFO', 'RSP' )
 			Where	commande.id_sin = @dcIdSin
 			And	commande.id_seq = @iIdSeq
 		End
+
+	--  [20250227094634600]
+	If @iPrestaHUB > 0 And @iStatusGc = 0 And Len ( @idBonTransp ) > 0 
+		Begin
+			Update 	sysadm.commande
+			Set	sysadm.commande.id_bon_transp = @idBonTransp 
+			Where	commande.id_sin = @dcIdSin
+			And	commande.id_seq = @iIdSeq
+		End 
+
+	If @iPrestaHUB > 0 And @iStatusGc = 0 And Len ( @sAdrFcNom ) > 0 
+		Begin
+			Update 	sysadm.commande
+			Set	sysadm.commande.adrfc_nom = @sAdrFcNom 
+			Where	commande.id_sin = @dcIdSin
+			And	commande.id_seq = @iIdSeq
+		End 
+	--  /[20250227094634600]
 
  End
 Else
@@ -1571,7 +1605,11 @@ BEGIN
 	-- [HP252_276_HUB_PRESTA]
 	IF @iStatusGCActuel <> 305 And @iStatusGc = 305 And @iPrestaHUB > 0
 	BEGIN 
-			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] -> La géolocation est active. Le prestataire se charge de contacter l''assuré pour la désactiver, aucune action spb.'
+			-- Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] -> La géolocalisation est active. Le prestataire se charge de contacter l''assuré pour la désactiver, aucune action spb.'
+			-- Process modifié par Olfa le 26/02
+			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] -> La géolocalisation est active, contactez l''assuré pour lui demander de DéGéolocaliser son appareil et renvoyez un A_DIAG_FORCE ou A_REPARER_FORCE selon le cas.'
+
+/*			Process modifié par Olfa le 26/02
 			IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 			BEGIN
 				Exec  SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT
@@ -1580,13 +1618,30 @@ BEGIN
 			BEGIN
 				Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT
 			END
+*/
+
+			-- Process modifié par Olfa le 26/02 => On créé un travail
+			IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+			BEGIN
+				EXEC SHERPA_PRO.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @dcIdSin, 2, @sMess, @sIdFour, @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C'
+			END
+			ELSE
+			BEGIN
+				EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @dcIdSin, 2, @sMess, @sIdFour, @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C'
+			END	
+
+
 	END
 	-- /[HP252_276_HUB_PRESTA]
 
-	-- [HP252_276_HUB_PRESTA]
+	-- [HP252_276_HUB_PRESTA] -- [20250228130407143] Modif par Olfa le 28/02/25
 	IF @iStatusGCActuel <> 169 And @iStatusGc = 169 And @iPrestaHUB > 0
 	BEGIN 
-			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] -> Appareil incomplet, process Hub Prestataire => Le HUB envoie automatiquement un mail à l''assuré lui demandant d''envoyer les éléments manquants au prestataire.'
+			-- Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] -> Appareil incomplet, process Hub Prestataire => Le HUB envoie automatiquement un mail à l''assuré lui demandant d''envoyer les éléments manquants au prestataire.'
+			-- Process modifié par Olfa le 26/02
+			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] -> Appareil incomplet, contactez l''assuré pour lui demander d''envoyer les éléments manquants au prestataire et envoyez un A_DIAG_FORCE ou A_REPARER_FORCE si l''assuré peut le faire ou bien un REFUSE_A_REEXP s''il ne peut pas.'
+
+			/* Process modifié par Olfa le 26/02
 			IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 			BEGIN
 				Exec  SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT
@@ -1595,6 +1650,17 @@ BEGIN
 			BEGIN
 				Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT
 			END
+			*/
+
+			IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+			BEGIN
+				EXEC SHERPA_PRO.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @dcIdSin, 2, @sMess, @sIdFour, @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C'
+			END
+			ELSE
+			BEGIN
+				EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @dcIdSin, 2, @sMess, @sIdFour, @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C'
+			END	
+
 	END
 	-- /[HP252_276_HUB_PRESTA]
 
@@ -3147,7 +3213,8 @@ IF    ( CharIndex ( '[BVIEOX]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[BVIEOX]'
 		If ( CharIndex ( '[OXY]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[OXY]', @sCommentFrnActuel, 1 ) = 0 ) 
 		  Begin 
 			-- [PC801-6][MANTIS14177] 		  
-			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] : Le centre de réparation a reçu le mobile pour traitement SAV (suite 1ère désoxydation récemment effectuée), mais a détecté une nouvelle oxydation, son mobile lui sera renvoyé.' 		  End 
+			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] : Le centre de réparation a reçu le mobile pour traitement SAV (suite 1ère désoxydation récemment effectuée), mais a détecté une nouvelle oxydation, son mobile lui sera renvoyé.' 
+		  End 
   
 		Set @sIRR  = 'OK'
 
@@ -3194,7 +3261,8 @@ IF       ( ( CharIndex ( '[BNV]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[BNV]',
 	-- [PC13321]
 	If CharIndex ( '[PNC]', @sCommentFrn, 1 ) > 0 -- [PC929_CDISCOUNT][PC929-2-V3]
 	  Begin
-		Set @sMess = 'Retour fournisseur [' + @sLibFour + '] : Attention, panne non constatée, ce qui entraîne un renvoi de l''appareil systématique à l''assuré par le prestataire et un refus de prise en charge. Vous pouvez continuer l''instruction du dossier'
+		Set @sMess = 'Retour fournisseur [' + @sLibFour + '] : Attention, panne non constatée, ce qui entraîne un renvoi de l''appareil systématique à l''assuré par le prestataire et un refus de prise en charge. Vous pouvez continuer l''instruction du dossier'
+
 		-- [MANTIS14489]
 		If @iInfoSpbFrnActuel = 957 
 		  Begin

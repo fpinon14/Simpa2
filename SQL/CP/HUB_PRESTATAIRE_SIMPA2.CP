@@ -1431,7 +1431,7 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 			@sSiteAction = ltrim ( rtrim ( site_action )),
 			@sAppIncomplet = ltrim ( rtrim ( app_incomplet )),
 			@dtDteFinTrait = dte_fin_trait,
-			@sCommentFrn = ltrim ( rtrim ( comment_frn )),
+			@sCommentFrn = replace ( ltrim ( rtrim ( comment_frn )), char ( 39 ), char ( 39 ) + char ( 39 ) ),  -- Remplace le simple quote en Deux simples quote
 			@sNumBonTrp = ltrim ( rtrim ( num_bon_trp )),
 			@sNomTransporteur = ltrim ( rtrim ( nom_transporteur )),
 			@dtDteRcpAppCli = dte_rcp_app_cli,
@@ -3124,42 +3124,34 @@ CREATE procedure sysadm.PS_HP276_S_S2_PRESTA_SIMPA2_RESTEES_EN_COURS_DE_GEN
 	@sCas VarChar ( 10 )
 AS
 
--- IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' 
+Declare @Tb Table ( ex Int ) 
+Declare @sInstance VarChar ( 50 ) 
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' 
 Begin
-	If @sCas = 'NBRE'
-		Begin
-			If Exists ( Select Top 1 1 From [LS-SAGA2].[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt in ( 'E', 'N' ) ) 
-				Return 1
-			Else
-				Return 0
-		End 
-
-	If @sCas = 'DATA'
-		Begin
-			Select * From [LS-SAGA2].[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt in ( 'E', 'N' )
-		End 
+	Set @sInstance = '[LS-SAGA2]'
 End 
-
-/*
 Else 
 Begin
-	-- [INSTANCE]
-	-- Select * From [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt = 'E'
-	-- Select * From [S2SQL14DEV\RECSAGA2].[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt = 'E'
-	If @sCas = 'NBRE'
-		Begin
-			If Exists ( Select Top 1 1 From [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt in ( 'E', 'N' ) ) 
-				Return 1
-			Else
-				Return 0
-		End 
-
-	If @sCas = 'DATA'
-		Begin
-			Select * From [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt in ( 'E', 'N' )
-		End 
+	-- Set @sInstance = '[S2SQL14PP1\PPRSAGA2]' -- PPR
+	Set @sInstance = '[S2SQL14DEV\RECSAGA2]' -- DEV/REC
 End 
-*/
+
+If @sCas = 'NBRE'
+	Begin
+
+		Insert into @Tb exec ( 'Select Top 1 1 From ' + @sInstance + '.[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt in ( ''E'', ''N'' )' )
+
+		If Exists ( Select Top 1 1 From @Tb ) 
+			Return 1
+		Else
+			Return 0
+	End 
+
+If @sCas = 'DATA'
+	Begin
+		Exec ( 'Select * From ' + @sInstance + '.[PRESTATAIRE].edi.DepotSimpa2ToHubPresta Where alt_trt in ( ''E'', ''N'' )' )
+	End 
 
 Go
 
