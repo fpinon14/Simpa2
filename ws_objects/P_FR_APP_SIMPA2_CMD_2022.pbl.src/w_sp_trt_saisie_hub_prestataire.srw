@@ -2162,9 +2162,10 @@ If isTrtFen = "POINTSERVICE" Then
 End If 
 
 
-If isTrtFen = "PROCESS_ACHEMINEMENT" Then 
-	If row > 0 Then This.SelectRow ( 0, False)
-End If 
+Choose Case isTrtFen 
+	Case "PROCESS_ACHEMINEMENT", "ACTION" 
+		If row > 0 Then This.SelectRow ( 0, False)
+End Choose 
 
 
 If row > 0 Then 
