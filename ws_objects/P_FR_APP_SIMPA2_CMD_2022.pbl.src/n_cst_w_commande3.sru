@@ -29174,7 +29174,9 @@ Choose Case ascas
 			stMessage.bErreurG	= FALSE
 			stMessage.bouton 		= Ok!
 			stMessage.sCode 		= "COMT002"
-			f_message(stMessage)					
+			f_message(stMessage)	
+			alrow = -1
+			Return 1			
 		End If 
 
 		
