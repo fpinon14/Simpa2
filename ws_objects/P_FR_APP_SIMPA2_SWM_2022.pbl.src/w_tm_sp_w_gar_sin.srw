@@ -690,14 +690,15 @@ private function boolean wf_condition_ouverture ();//*--------------------------
 //       JFF   06/04/2023 [PMO139_RS4926]
 //       JFF   05/08/2024  [MCO602_PNEU]
 //       JFF   18/11/2024 [KSV649_ORREUCARA]
+//       JFF   26/02/2025 [LGY27_DTE_OPPO]
 //*-----------------------------------------------------------------
 
 String sTypApp, sVal, sMarque, sModele, sIMEI, sIMEICorrige, sTypeApp, sIMEIOrigLu, sResult, sChaineBcv, sCodeRet
 Long   lRow, lCodTel, lDeb2, lFin2, lDeb, lFin, lVal, lRowDS, lRowDet, lIdGti, lCptDetPro, lRow1, lRow2, lIdSin, lVal1, lVal2, lVal3 
 Decimal {2} dcMtValPub
 Boolean bOk, bTelephonie, bAppSin, bAlimSin, bBattSin, bModeRempl, bAccSin, bRecupDonnee, bRecupMateriel, bVarOrange, bFin 
-Integer iNatSinCplt, iVal
-Int iAppSin, iAlimSin, iBattSin, iAccSin 	//* #5 [FNAC_PROD_ECH_TECH]
+Integer iNatSinCplt, iVal, iNbreDet 
+Int iAppSin, iAlimSin, iBattSin, iAccSin, iCptValide 	//* #5 [FNAC_PROD_ECH_TECH]
 Int iMethode205 
 Date dDteTicket
 DateTime dtValDte 
@@ -705,8 +706,10 @@ DateTime dtValDte
 boolean bSansSuite
 Boolean bDP150
 n_cst_string lnvPFCString
-DateTime dtCreeLeSin
+DateTime dtCreeLeSin, dDteOppo, dDteSurv 
 DateTime dtDt1, dtDt2, dtDt3
+String sHeureOppo, sHeureSurv 
+
 
 dtCreeLeSin = idw_wSin.GetItemDateTime ( 1, "CREE_LE") // [DT227]
 
@@ -900,6 +903,47 @@ If lRow >0 Then
 		Return bOk
 	End If
 End If
+
+// [LGY27_DTE_OPPO]
+If F_CLE_A_TRUE ( "LGY27_DTE_OPPO" ) Then
+	lIdGti = dw_1.GetItemNumber ( 1, "ID_GTI" )
+	iNbreDet = dw_lst_detail.Find ( "ID_GTI = " + String ( lIdGti ) + " AND COD_ETAT NOT IN ( 600, 200 ) ", 1, dw_lst_detail.RowCount()) 
+	
+	
+	dDteOppo = dw_1.GetItemDateTime ( 1, "DTE_OPPO" )
+	sHeureOppo = dw_1.GetItemString  ( 1, "HEU_OPPO" )
+	dDteSurv = idw_wSin.GetItemDateTime ( 1, "DTE_SURV" )
+	sHeureSurv = idw_wSin.GetItemString ( 1, "HEU_SURV") // [DT227]
+
+	If lIdGti = 7 and iNbreDet <= 0 And ( IsNull ( dDteOppo ) Or IsNull ( sHeureOppo ) Or Trim ( sHeureOppo ) = "" )  Then
+		stMessage.sTitre		= "LGY7 : Date&Heure oppo"
+		stMessage.Icon			= Information!
+		stMessage.bErreurG	= FALSE
+		stMessage.Bouton		= OK!
+		stMessage.sCode		= "WGAR443 "
+
+		F_Message ( stMessage )
+		bOk = False
+		Return bOk
+	End IF 	
+	
+	Choose case lIdGti
+		Case 2, 7, 4
+			If iNbreDet <= 0 And (IsNull ( dDteSurv ) Or IsNull ( sHeureSurv ) Or Trim ( sHeureSurv ) = "" ) Then
+				stMessage.sTitre		= "LGY7 : Date&Heure survenance"
+				stMessage.Icon			= Information!
+				stMessage.bErreurG	= FALSE
+				stMessage.Bouton		= OK!
+				stMessage.sCode		= "WGAR444 "
+		
+				F_Message ( stMessage )
+				bOk = False
+				Return bOk
+			End IF 
+	End Choose 
+
+End If
+
 
 
 // Téléphonie
@@ -1835,6 +1879,7 @@ If lDeb > 0 Then
 
 End If 
 // /[KSV649_ORREUCARA] 
+
 
 Return bOk
 
