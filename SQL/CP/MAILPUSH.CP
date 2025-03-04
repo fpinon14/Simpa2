@@ -26522,7 +26522,7 @@ And		IsNull ( ( Select Top 1 val_dte From sysadm.div_sin ds3  with (nolock) Wher
 And     s.id_sin = a.id_sin
 And		ds.id_sin = s.id_sin
 And     ds.nom_zone = 'etat_vu_assure'
-And     ds.val_nbre not in ( 200, 900, 1530 )
+And     ds.val_nbre in ( 100, 1540, 550 )
 And     Not Exists ( Select Top 1 1 From sysadm.w_queue wq where wq.id_sin = s.id_sin ) -- [RS-536]
 
 Insert into @tb
@@ -26548,7 +26548,7 @@ And		IsNull ( ( Select Top 1 val_dte From sysadm.div_sin ds3  with (nolock) Wher
 -- [KSV795] 
 And		ds.id_sin = s.id_sin
 And     ds.nom_zone = 'etat_vu_assure'
-And     ds.val_nbre not in ( 200, 900, 1530 )
+And     ds.val_nbre in ( 100, 1540, 550 )
 And     Not Exists ( Select Top 1 1 From sysadm.w_queue wq where wq.id_sin = s.id_sin ) -- [RS-536]
 
 While Exists ( Select * From @tb where marquage = 0 )
