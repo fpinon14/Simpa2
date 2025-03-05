@@ -9377,9 +9377,10 @@ Declare @dcNewIdDoc Decimal ( 7 )
 Declare @dcIdProd Decimal ( 7 ) 
 Declare @dcIdOrdre Decimal ( 7 ) 
 Declare @sIdAdh VarChar ( 19 )
-Declare @asRegl	  VarChar ( 1 )
-Declare @asPiece  VarChar ( 1 )
-Declare @asRefus  VarChar ( 1 )
+Declare @sRegl	  VarChar ( 1 )
+Declare @sPiece  VarChar ( 1 )
+Declare @sRefus  VarChar ( 1 )
+Declare @sCodInterLst  VarChar ( 35 )
 Declare @iCodRefus Integer
 Declare @sDateRdv varChar ( 10 )
 
@@ -9397,10 +9398,10 @@ Set @sMailObjet = 'Corps de l''Objet construit par KSL'
 Set @sMailBody = 'Corps du mail construit par KSL'
 Set @sIdArchComplSeria = null
 
-Set @asRegl = space ( 1 ); Set @asPiece = space ( 1 ); Set @asRefus = space ( 1 )
-Exec sysadm.PS_MIG1_S_TYPE_COUR_EMAILING_KSL @asTypMail, @asRegl Output, @asPiece Output, @asRefus Output
+Set @sRegl = space ( 1 ); Set @sPiece = space ( 1 ); Set @sRefus = space ( 1 )
+Exec sysadm.PS_MIG1_S_TYPE_COUR_EMAILING_KSL @asTypMail, @sRegl Output, @sPiece Output, @sRefus Output, @sCodInterLst OutPut
 
-If @asRefus <> 'R' Set @asCodRefus = ''
+If @sRefus <> 'R' Set @asCodRefus = ''
 
 -- règle donné par Nathalie, ajout de 30 jours par rapport à la date du règlement donc date du jour
 Set @sDateRdv = ''
@@ -9438,7 +9439,7 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
 
 		-- Ajout des pièce si nécessaires
-		If @asPiece = 'P' 
+		If @sPiece = 'P' 
 			Begin
 				Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_AJOUT_TABL_PCES_XML
 					@iIdXml, 
@@ -9507,7 +9508,7 @@ Else
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
 
 		-- Ajout des pièce si nécessaires
-		If @asPiece = 'P' 
+		If @sPiece = 'P' 
 			Begin
 				Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_AJOUT_TABL_PCES_XML
 					@iIdXml, 
