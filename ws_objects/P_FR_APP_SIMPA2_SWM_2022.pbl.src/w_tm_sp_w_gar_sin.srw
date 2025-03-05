@@ -691,6 +691,7 @@ private function boolean wf_condition_ouverture ();//*--------------------------
 //       JFF   05/08/2024  [MCO602_PNEU]
 //       JFF   18/11/2024 [KSV649_ORREUCARA]
 //       JFF   26/02/2025 [LGY27_DTE_OPPO]
+//       JFF   03/03/2025 [PMO268_MIG48]
 //*-----------------------------------------------------------------
 
 String sTypApp, sVal, sMarque, sModele, sIMEI, sIMEICorrige, sTypeApp, sIMEIOrigLu, sResult, sChaineBcv, sCodeRet
@@ -704,7 +705,7 @@ Date dDteTicket
 DateTime dtValDte 
 // #3 
 boolean bSansSuite
-Boolean bDP150
+Boolean bDP150, bSosh 
 n_cst_string lnvPFCString
 DateTime dtCreeLeSin, dDteOppo, dDteSurv 
 DateTime dtDt1, dtDt2, dtDt3
@@ -1853,6 +1854,12 @@ If lDeb <= 0 Then
 	F_RechDetPro ( lDeb, lFin, idwDetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 388 )
 End If 
 
+// [PMO268_MIG48]
+If lDeb <= 0 Then 
+	F_RechDetPro ( lDeb, lFin, idwDetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 394 )
+	bSosh = lDeb > 0
+End If 
+
 If lDeb > 0 Then
 	lRow = idwWDivSin.find ( " UPPER(NOM_ZONE)='CRA_SUIVI_IMEI'", 1, idwWDivSin.rowCount() )
 	if lRow > 0 Then
@@ -1869,6 +1876,8 @@ If lDeb > 0 Then
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
 				stMessage.sCode		= "WGAR441 "
+				
+				If bSosh Then stMessage.sCode	= "WGAR445"
 		
 				F_Message ( stMessage )
 				bOk = False

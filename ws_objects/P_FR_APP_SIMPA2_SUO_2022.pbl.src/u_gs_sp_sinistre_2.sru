@@ -928,6 +928,7 @@ public function long uf_zn_trt_divsin_cra_suivi_imei (string asdata, string asno
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //        JFF   18/11/2024   [KSV649_ORREUCARA]
+//        JFF   03/03/2025   [PMO268_MIG48]
 //*-----------------------------------------------------------------
 
 String sEtatSuiviChgt, sIdMarq, sVal, sEtatSuiviActuel
@@ -962,14 +963,24 @@ If lDeb > 0 And sVal = "ORANGE_OPEN_PRO" Then
 End If
 
 // [KSV649_ORREUCARA]
+stMessage.sVar[1] = ""
+
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 387)
 If lDeb <= 0 Then 
 	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 388)
+	stMessage.sVar[1] = "d'Orange"
 End If 
+
+// [PMO268_MIG48]
+If lDeb <= 0 Then 
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 394)
+	stMessage.sVar[1] = "de METAGATE"
+End If 
+
 
 If lDeb > 0 Then
 	Choose Case sEtatSuiviActuel
-		Case "20"
+		Case "20", "5"
 			
 			Choose Case sEtatSuiviChgt
 				Case "2", "100"
@@ -994,7 +1005,7 @@ If lDeb > 0 Then
 			
 		Case Else 	
 			iAction = 1
-			idw_wDivSin.iiErreur = 8			
+			idw_wDivSin.iiErreur = 9			
 	End Choose 
 End If 
 // /[KSV649_ORREUCARA]

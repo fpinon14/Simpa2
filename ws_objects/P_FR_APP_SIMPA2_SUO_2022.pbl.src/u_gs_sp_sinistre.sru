@@ -15813,6 +15813,7 @@ private subroutine uf_gestong_divers_caspart_finaux ();//*----------------------
 //    JFF   26/09/2023 [RS5928_FRCH_CHQ]
 //    JFF   22/11/2023 [RS6175_GC_SCRP_SIM2]
 //    JFF   18/11/2024 [KSV649_ORREUCARA]
+//    JFF   03/03/2025 [PMO268_MIG48]
 //*-----------------------------------------------------------------
 
 Long lTot, lCpt
@@ -15998,6 +15999,23 @@ For lCpt = 1 To lTot
 
 				This.uf_gestong_divers_majzone( "CRA_SUIVI_IMEI", lCpt, K_MAJZONE, sData )				
 			End iF 
+
+			// [PMO268_MIG48]
+			F_RechdetPro (lDeb, lFin, idw_DetPro, lIdProd,"-DP",394)
+			If lDeb > 0 Then
+				sData = Trim ( This.uf_GestOng_Divers_Trouver ( "CRA_SUIVI_IMEI" ) )
+				If sData="" Or IsNull ( sData ) Then sData="5"
+				
+				Choose Case sData 
+					Case "5", "20" 
+						idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "N" ) 
+					Case Else
+						idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "O" ) 
+				End Choose 
+
+				This.uf_gestong_divers_majzone( "CRA_SUIVI_IMEI", lCpt, K_MAJZONE, sData )				
+			End iF 
+
 
 			
 		Case "CLASSE_CTG_SFR"			
@@ -28375,6 +28393,7 @@ public subroutine uf_gestong_divers_majzone (string asnomzone, long alrow, integ
 //       JFF   26/09/2023 [RS5928_FRCH_CHQ]
 //       JFF   22/11/2023 [RS6175_GC_SCRP_SIM2]
 //       JFF   18/11/2024 [KSV649_ORREUCARA]
+//       JFF   03/03/2025 [PMO268_MIG48]
 //*-----------------------------------------------------------------
 
 Boolean	bMajZone
@@ -28513,11 +28532,17 @@ Choose Case asNomZone
 			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 388 )
 		End If 
 
+		// [PMO268_MIG48]
+		If lDeb <=0 Then 
+			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 394 )
+		End If 
+
 		// [KSV649_ORREUCARA]
 		If lDeb <=0 Then 
 			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 75 )
 			If lDeb <= 0 Then Return
 		End If 
+
 		
 		Choose Case aiTrt
 			case K_MAJZONE

@@ -8520,6 +8520,13 @@ Choose Case isErrCol
 				stMessage.Bouton		= OK!
 				stMessage.sCode		= "WSIN908"		
 			
+			// [KSV649_ORREUCARA]
+			Case 9 // Etat actuel ne permet pas de modifier
+				stMessage.sTitre		= "Modification interdite"
+				stMessage.Icon			= Information!
+				stMessage.bErreurG	= FALSE
+				stMessage.Bouton		= OK!
+				stMessage.sCode		= "WSIN925"		
 				
 		End Choose
 

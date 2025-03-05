@@ -3568,6 +3568,13 @@ If lDeb <= 0 Then F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_wSin.GetItemNumber 
 If lDeb <= 0 Then F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_wSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 263 )
 // :[DT031-2]
 
+// [KSV649_ORREUCARA]
+If lDeb <= 0 Then F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_wSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 388 )
+
+// [PMO268_MIG48]
+If lDeb <= 0 Then F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 394 )
+
+
 // [DT288-1][M25522] bExcluRefus1676 
 If lDeb > 0 And Not bExcluRefus1676 Then 
 	If Not This.Uf_Rf_1676 () Then Return ( False )
@@ -16227,6 +16234,7 @@ private function boolean uf_rf_1676 ();//*--------------------------------------
 //		FPI	27/11/2015 [VDOC19078]
 //		FPI	24/05/2016 [ITSM384602] - correction effacement de la DDU
 //    JFF   28/09/2016 [DT262]
+//    JFF   03/03/2025 [PMO268_MIG48]
 //*-----------------------------------------------------------------
 
 String sNumPort, sIMEI, sVal
@@ -16397,6 +16405,12 @@ F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), 
 If lDeb <= 0 Then 
 	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 388)
 End If 
+
+// [PMO268_MIG48]
+If lDeb <= 0 Then 
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 394 )
+End If 
+
 If lDeb > 0 Then
 	lRow = idw_wdivsin.Find("UPPER(NOM_ZONE)='CRA_SUIVI_IMEI'", 1, idw_wdivsin.RowCount())
 	If lRow> 0 Then
