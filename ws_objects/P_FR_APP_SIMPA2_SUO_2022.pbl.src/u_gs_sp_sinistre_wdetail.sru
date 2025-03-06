@@ -4449,9 +4449,7 @@ If not uf_rf_dp307() then Return False
 If not This.Uf_Rf_97 () Then Return False 
 
 // [RS5875_DIF_DIV_DET]
-If F_CLE_A_TRUE ( "RS5875_DIF_DIV_DET" ) Then
-	If not This.Uf_Rf_dp370_val_div_det () Then Return False 
-End If
+If not This.Uf_Rf_dp370_val_div_det () Then Return False 
 
 //////////////////////////////////// Coder les refus au dessus //////////////////////////////////////////
 

@@ -2105,18 +2105,10 @@ Choose Case sIdFourn
 				Else
 					
 					// [RS5295_NOMFIC_OMT]
-					If F_CLE_A_TRUE ( "RS5295_NOMFIC_OMT" ) Then
-						sNomFic = asNomFic + &
-							 String ( Day    ( Today () ), "00" ) + &
-							 String ( Month  ( Today () ), "00" ) + &
-							 String ( Year  ( Today () ) )
-					Else
-						sNomFic = asNomFic + &
-							 String ( Day    ( Today () ), "00" ) + &
-							 String ( Month  ( Today () ), "00" ) + &
-							 Right  ( String ( Year  ( Today () ) ), 1 )				
-					End If
-					
+					sNomFic = asNomFic + &
+						 String ( Day    ( Today () ), "00" ) + &
+						 String ( Month  ( Today () ), "00" ) + &
+						 String ( Year  ( Today () ) )
 					
 				End If 
 
@@ -8941,21 +8933,14 @@ Long	lTot, lCpt, lCptCas, lRow, lCptProd, lIdprodSav
 String	sNomFic, sNomFicOrig, sTypArt, sAction, sFiltre, sTypArtNul, sLibCplt, sFiltreSFR, sNomFicSav, sInfoSpbFrnCplt, sVal
 String sIdprodSav, sIdprodLu, sSep, sEnrg
 n_cst_string lnvPFCString  
-Boolean bF_CLE_A_TRUE_RS4093_EVOL_ELD 
 
 iRet = 1
 /*------------------------------------------------------------------*/
 /* Format du fichier de commandes pour le A-NOVO                   */
 /*------------------------------------------------------------------*/
 
-bF_CLE_A_TRUE_RS4093_EVOL_ELD = F_CLE_A_TRUE ( "RS4093_EVOL_ELD" )
-
 // [RS4093_EVOL_ELD]
-If bF_CLE_A_TRUE_RS4093_EVOL_ELD Then
-	idwFicGenCmde.DataObject = "d_trt_fichier_cmde_ElectroDepot_RS4093"
-Else	
-	idwFicGenCmde.DataObject = "d_trt_fichier_cmde_ElectroDepot"
-End If
+idwFicGenCmde.DataObject = "d_trt_fichier_cmde_ElectroDepot_RS4093"
 
 For lCptCas = 1 To 1
 	
@@ -9028,9 +9013,7 @@ For lCptCas = 1 To 1
 */		
 
 		// [RS4093_EVOL_ELD]
-		If bF_CLE_A_TRUE_RS4093_EVOL_ELD Then
-			idwFicGenCmde.SetItem ( lRow, "TYP_DEM", "C" )
-		End If 
+		idwFicGenCmde.SetItem ( lRow, "TYP_DEM", "C" )
 	Next
 
 	This.uf_nom_fichier ( sNomFic, lCptProd )
@@ -9057,9 +9040,7 @@ For lCptCas = 1 To 1
 		sEnrg +=idwFicGenCmde.GetItemString ( lCpt, "ID_SEQ" ) */
 
 		// [RS4093_EVOL_ELD]
-		If bF_CLE_A_TRUE_RS4093_EVOL_ELD Then
-			sEnrg +=idwFicGenCmde.GetItemString ( lCpt, "TYP_DEM" ) + sSep
-		End If 
+		sEnrg +=idwFicGenCmde.GetItemString ( lCpt, "TYP_DEM" ) + sSep
 
 		iRet = FileWrite ( iFic, sEnrg ) 
 

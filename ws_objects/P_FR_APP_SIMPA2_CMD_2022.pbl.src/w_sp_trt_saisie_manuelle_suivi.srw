@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_sp_trt_saisie_manuelle_suivi.srw
+﻿$PBExportHeader$w_sp_trt_saisie_manuelle_suivi.srw
 $PBExportComments$Saisie manuelle du suivi des commandes
 forward
 global type w_sp_trt_saisie_manuelle_suivi from w_8_accueil
@@ -72,7 +72,7 @@ public subroutine wf_init ();//*------------------------------------------------
 //* Fonction      : w_sp_trt_saisie_manuelle_suivi::wf_Init
 //* Auteur        : Fabry JF
 //* Date          : 27/01/2005 11:17:45
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -108,11 +108,11 @@ dwChild.Filter ()
 
 dw_Saisi.InsertRow ( 0 )
 
-dw_Saisi.Modify ( "t_num_interv_frn.text = 'N$$HEX2$$b0002000$$ENDHEX$$Intervention Fournisseur' t_num_interv_frn.visible = 1 id_cmd_frn.visible = 1")
-dw_Saisi.Modify ( "t_num_bon_trp.text = 'N$$HEX2$$b0002000$$ENDHEX$$Bon transporteur'  t_num_bon_trp.visible = 1 id_bon_trans.visible = 1")
+dw_Saisi.Modify ( "t_num_interv_frn.text = 'N° Intervention Fournisseur' t_num_interv_frn.visible = 1 id_cmd_frn.visible = 1")
+dw_Saisi.Modify ( "t_num_bon_trp.text = 'N° Bon transporteur'  t_num_bon_trp.visible = 1 id_bon_trans.visible = 1")
 dw_Saisi.Modify ( "t_dte_env_cli.text = 'Date d~~'envoi au client'  t_dte_env_cli.visible = 1  dte_env_cli.visible = 1")
 dw_Saisi.Modify ( "t_statut_gc.text = 'Statut de la commande'  t_statut_gc.visible = 1 status_gc.visible = 1" )
-dw_Saisi.Modify ( "t_etat.text = 'Code $$HEX1$$e900$$ENDHEX$$tat de la commande'  t_etat.visible = 1  cod_etat.visible = 1")
+dw_Saisi.Modify ( "t_etat.text = 'Code état de la commande'  t_etat.visible = 1  cod_etat.visible = 1")
 
 dw_Saisi.Modify("info_frn_spb_cplt.visible=0") // [DT176]
 dw_Saisi.Modify("comment_frn.visible=0") // [PC151259]
@@ -170,7 +170,7 @@ wf_setHeight(false,"")
 // [DT339]
 dw_Saisi.Modify ( "t_accord_indemn_pecu.visible=0 accord_indemn_pecu.visible=0")
 dw_Saisi.Modify ( "t_comment_frn_1.visible=0 comment_frn_1.visible=0 ")
-dw_Saisi.Modify ( "l_3.visible=1 cod_etat.protect='0' t_id_serie_nouv.text=~"Num$$HEX1$$e900$$ENDHEX$$ro s$$HEX1$$e900$$ENDHEX$$rie de l'appareil~"")
+dw_Saisi.Modify ( "l_3.visible=1 cod_etat.protect='0' t_id_serie_nouv.text=~"Numéro série de l'appareil~"")
 dw_saisi.Modify( "marque_swap.visible=1 marque_swap_1.visible=0")
 dw_saisi.Modify( "modele_swap.visible=1 modele_swap_1.visible=0")
 			
@@ -181,7 +181,7 @@ public subroutine wf_interro ();//*---------------------------------------------
 //*
 //* Fonction      : w_sp_trt_saisie_manuelle_suivi::wf_Interro
 //* Date          : 27/01/2005 11:17:45
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -252,12 +252,12 @@ if dw_saisi.GetItemString(1,"EST_IFR")="O" Then
 	dw_saisi.Modify( "marque_swap.visible=0 marque_swap_1.visible=1")
 	dw_saisi.Modify( "modele_swap.visible=0 modele_swap_1.visible=1")
 	dw_saisi.Modify( "t_marque_swap.text='Marque swap (IFR)'")
-	dw_saisi.Modify( "t_modele_swap.text='Mod$$HEX1$$e800$$ENDHEX$$le swap (IFR)'")
+	dw_saisi.Modify( "t_modele_swap.text='Modèle swap (IFR)'")
 Else
 	dw_saisi.Modify( "marque_swap.visible=1 marque_swap_1.visible=0")
 	dw_saisi.Modify( "modele_swap.visible=1 modele_swap_1.visible=0")
 	dw_saisi.Modify( "t_marque_swap.text='Marque swap'")
-	dw_saisi.Modify( "t_modele_swap.text='Mod$$HEX1$$e800$$ENDHEX$$le swap'")
+	dw_saisi.Modify( "t_modele_swap.text='Modèle swap'")
 End if
 
 if dw_saisi.getItemString(1,"ID_TYP_ART")="PRS" Then
@@ -346,14 +346,14 @@ Choose Case dw_Saisi.GetItemNumber ( 1, "ID_PROD" )
 			Case "MDS", "MBS","CVC","ATC"
 				If lIdGti = 11 Then
 
-					dw_Saisi.Modify ( "t_num_interv_frn.text = 'N$$HEX2$$b0002000$$ENDHEX$$Intervention Fournisseur' t_num_interv_frn.visible = 0 id_cmd_frn.visible = 0")
-					dw_Saisi.Modify ( "t_num_bon_trp.text = 'N$$HEX2$$b0002000$$ENDHEX$$Bon transporteur'  t_num_bon_trp.visible = 0 id_bon_trans.visible = 0")
+					dw_Saisi.Modify ( "t_num_interv_frn.text = 'N° Intervention Fournisseur' t_num_interv_frn.visible = 0 id_cmd_frn.visible = 0")
+					dw_Saisi.Modify ( "t_num_bon_trp.text = 'N° Bon transporteur'  t_num_bon_trp.visible = 0 id_bon_trans.visible = 0")
 					dw_Saisi.Modify ( "t_dte_env_cli.text = 'Date d~~'expertise'  t_dte_env_cli.visible = 1  dte_env_cli.visible = 1")
 					dw_Saisi.Modify ( "t_statut_gc.text = 'Statut de la commande'  t_statut_gc.visible = 1 status_gc.visible = 1" )
 					// #1 PHG [DCMP070191] Le Code Etat n'est plus visible.
-					//dw_Saisi.Modify ( "t_etat.text = 'Code $$HEX1$$e900$$ENDHEX$$tat de la commande'  t_etat.visible = 1  cod_etat.visible = 1")
-					// remplac$$HEX2$$e9002000$$ENDHEX$$par 
-					dw_Saisi.Modify ( "t_etat.text = 'Code $$HEX1$$e900$$ENDHEX$$tat de la commande'  t_etat.visible = 0  cod_etat.visible = 0")
+					//dw_Saisi.Modify ( "t_etat.text = 'Code état de la commande'  t_etat.visible = 1  cod_etat.visible = 1")
+					// remplacé par 
+					dw_Saisi.Modify ( "t_etat.text = 'Code état de la commande'  t_etat.visible = 0  cod_etat.visible = 0")
 				
 					dwC_StatusGc.SetFilter ( "ID_CODE IN ( 71, 72)" )
 					dwC_StatusGc.Filter ()
@@ -382,14 +382,14 @@ Choose Case dw_Saisi.GetItemNumber ( 1, "ID_PROD" )
 			Case "SCF"
 				If lIdGti = 18 Then
 
-					dw_Saisi.Modify ( "t_num_interv_frn.text = 'N$$HEX2$$b0002000$$ENDHEX$$Intervention Fournisseur' t_num_interv_frn.visible = 0 id_cmd_frn.visible = 0")
-					dw_Saisi.Modify ( "t_num_bon_trp.text = 'N$$HEX2$$b0002000$$ENDHEX$$Bon transporteur'  t_num_bon_trp.visible = 0 id_bon_trans.visible = 0")
+					dw_Saisi.Modify ( "t_num_interv_frn.text = 'N° Intervention Fournisseur' t_num_interv_frn.visible = 0 id_cmd_frn.visible = 0")
+					dw_Saisi.Modify ( "t_num_bon_trp.text = 'N° Bon transporteur'  t_num_bon_trp.visible = 0 id_bon_trans.visible = 0")
 					dw_Saisi.Modify ( "t_dte_env_cli.text = 'Date d~~'expertise'  t_dte_env_cli.visible = 1  dte_env_cli.visible = 1")
 					dw_Saisi.Modify ( "t_statut_gc.text = 'Statut de la commande'  t_statut_gc.visible = 1 status_gc.visible = 1" )
 					// #1 PHG [DCMP070191] Le Code Etat n'est plus visible.
-					//dw_Saisi.Modify ( "t_etat.text = 'Code $$HEX1$$e900$$ENDHEX$$tat de la commande'  t_etat.visible = 1  cod_etat.visible = 1")
-					// remplac$$HEX2$$e9002000$$ENDHEX$$par 
-					dw_Saisi.Modify ( "t_etat.text = 'Code $$HEX1$$e900$$ENDHEX$$tat de la commande'  t_etat.visible = 0  cod_etat.visible = 0")
+					//dw_Saisi.Modify ( "t_etat.text = 'Code état de la commande'  t_etat.visible = 1  cod_etat.visible = 1")
+					// remplacé par 
+					dw_Saisi.Modify ( "t_etat.text = 'Code état de la commande'  t_etat.visible = 0  cod_etat.visible = 0")
 				
 					dwC_StatusGc.SetFilter ( "ID_CODE IN ( 221, 222)" )
 					dwC_StatusGc.Filter ()
@@ -448,11 +448,11 @@ Choose Case sIdFour
 	Case "MDS", "MBS", "CVC","ATC" // [PC10-2] ajout de CVC // [PC13442-2] Ajout ATECH
 		If lIdGti = 11 Then
 
-			dw_Saisi.Modify ( "t_num_interv_frn.text = 'N$$HEX2$$b0002000$$ENDHEX$$Intervention Fournisseur' t_num_interv_frn.visible = 0 id_cmd_frn.visible = 0")
-			dw_Saisi.Modify ( "t_num_bon_trp.text = 'N$$HEX2$$b0002000$$ENDHEX$$Bon transporteur'  t_num_bon_trp.visible = 0 id_bon_trans.visible = 0")
+			dw_Saisi.Modify ( "t_num_interv_frn.text = 'N° Intervention Fournisseur' t_num_interv_frn.visible = 0 id_cmd_frn.visible = 0")
+			dw_Saisi.Modify ( "t_num_bon_trp.text = 'N° Bon transporteur'  t_num_bon_trp.visible = 0 id_bon_trans.visible = 0")
 			dw_Saisi.Modify ( "t_dte_env_cli.text = 'Date d~~'expertise'  t_dte_env_cli.visible = 1  dte_env_cli.visible = 1")
 			dw_Saisi.Modify ( "t_statut_gc.text = 'Statut de la commande'  t_statut_gc.visible = 1 status_gc.visible = 1" )
-			dw_Saisi.Modify ( "t_etat.text = 'Code $$HEX1$$e900$$ENDHEX$$tat de la commande'  t_etat.visible = 0  cod_etat.visible = 0")
+			dw_Saisi.Modify ( "t_etat.text = 'Code état de la commande'  t_etat.visible = 0  cod_etat.visible = 0")
 		
 			dwC_StatusGc.SetFilter ( "ID_CODE IN ( 71, 72)" )
 			dwC_StatusGc.Filter ()
@@ -468,7 +468,7 @@ Choose Case sIdFour
 		End If
 		
 	Case "OMT" // [PC874]
-			dw_Saisi.Modify ( "t_num_bon_trp.text = 'N$$HEX2$$b0002000$$ENDHEX$$Bon transporteur'  t_num_bon_trp.visible = 0 id_bon_trans.visible = 0")
+			dw_Saisi.Modify ( "t_num_bon_trp.text = 'N° Bon transporteur'  t_num_bon_trp.visible = 0 id_bon_trans.visible = 0")
 			dw_Saisi.Modify ( "t_dte_env_cli.text = 'Date d~~'expertise'  t_dte_env_cli.visible = 1  dte_env_cli.visible = 1")
 			
 			dwC_StatusGc.SetFilter ( "ID_CODE IN ( 2,251,252 )" )
@@ -480,7 +480,7 @@ Choose Case sIdFour
 			cb_Maj.Enabled = TRUE
 		
 		Case "SRR" // [PC925]
-			dw_Saisi.Modify ( "t_num_bon_trp.text = 'N$$HEX2$$b0002000$$ENDHEX$$Bon transporteur'  t_num_bon_trp.visible = 0 id_bon_trans.visible = 0")
+			dw_Saisi.Modify ( "t_num_bon_trp.text = 'N° Bon transporteur'  t_num_bon_trp.visible = 0 id_bon_trans.visible = 0")
 			dw_Saisi.Modify ( "t_dte_env_cli.visible = 1  dte_env_cli.visible = 1")
 			
 			dwC_StatusGc.SetFilter ( "ID_CODE IN ( 2,21, 152, 153, 154 )" )
@@ -492,7 +492,7 @@ Choose Case sIdFour
 			cb_Maj.Enabled = TRUE
 
 		Case "SOG" // [PC786-2]
-			dw_Saisi.Modify ( "t_num_bon_trp.text = 'N$$HEX2$$b0002000$$ENDHEX$$Bon transporteur'  t_num_bon_trp.visible = 0 id_bon_trans.visible = 0")
+			dw_Saisi.Modify ( "t_num_bon_trp.text = 'N° Bon transporteur'  t_num_bon_trp.visible = 0 id_bon_trans.visible = 0")
 			dw_Saisi.Modify ( "t_num_interv_frn.visible = 0 id_cmd_frn.visible = 0")
 			
 			dwC_StatusGc.SetFilter ( "ID_CODE IN (2,21,501 )" )
@@ -505,7 +505,7 @@ Choose Case sIdFour
 			
 		Case "CMA" // [DT176]
 			dw_Saisi.Modify ( "status_gc.visible=0 info_frn_spb_cplt.visible=1")
-			dw_Saisi.Modify ( "t_num_bon_trp.text = 'N$$HEX2$$b0002000$$ENDHEX$$de recommand$$HEX2$$e9002000$$ENDHEX$$AR' t_num_interv_frn.text='N$$HEX2$$b0002000$$ENDHEX$$de lot' t_statut_gc.text='N$$HEX2$$b0002000$$ENDHEX$$du/des bon(s) d~~'achat''")
+			dw_Saisi.Modify ( "t_num_bon_trp.text = 'N° de recommandé AR' t_num_interv_frn.text='N° de lot' t_statut_gc.text='N° du/des bon(s) d~~'achat''")
 			
 			dwC_CodeEtat.SetFilter ( "ID_CODE IN ( 'ANN', 'RPC','ECT' )" )
 			dwC_CodeEtat.Filter ()
@@ -574,7 +574,7 @@ Choose Case sIdFour
 			End if
 			
 			if dw_saisi.GetItemString(1,"type_app")="TEL" Then
-				dw_saisi.Modify("t_id_serie_nouv.text=~"Num$$HEX1$$e900$$ENDHEX$$ro IMEI de l'appareil~"")
+				dw_saisi.Modify("t_id_serie_nouv.text=~"Numéro IMEI de l'appareil~"")
 			End if
 			
 		// [DT363]
@@ -592,9 +592,9 @@ Choose Case sIdFour
 			dw_Saisi.Modify ( "cod_etat.protect='1'")
 			
 			if dw_saisi.GetItemString(1,"EST_IFR") = "O" Then
-				dw_Saisi.Modify ( "t_marque_swap.text = 'Marque Rempl. (IFR)' t_modele_swap.text='Mod$$HEX1$$e800$$ENDHEX$$le Rempl. (IFR)''")
+				dw_Saisi.Modify ( "t_marque_swap.text = 'Marque Rempl. (IFR)' t_modele_swap.text='Modèle Rempl. (IFR)''")
 			else
-				dw_Saisi.Modify ( "t_marque_swap.text = 'Marque Remplacement' t_modele_swap.text='Mod$$HEX1$$e800$$ENDHEX$$le Remplacement''")
+				dw_Saisi.Modify ( "t_marque_swap.text = 'Marque Remplacement' t_modele_swap.text='Modèle Remplacement''")
 			End if
 		
 			if dw_Saisi.getItemNumber(1,"status_gc")=178 Then 
@@ -606,7 +606,7 @@ Choose Case sIdFour
 			End if
 
 			if dw_saisi.GetItemString(1,"type_app")="TEL" Then
-				dw_saisi.Modify("t_id_serie_nouv.text=~"Num$$HEX1$$e900$$ENDHEX$$ro IMEI de l'appareil~"")
+				dw_saisi.Modify("t_id_serie_nouv.text=~"Numéro IMEI de l'appareil~"")
 			End if
 			
 			cb_Maj.Enabled = TRUE
@@ -618,7 +618,7 @@ public subroutine wf_maj ();//*-------------------------------------------------
 //*
 //* Fonction      : w_sp_trt_saisie_manuelle_suivi::wf_Maj
 //* Date          : 27/01/2005 11:17:45
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -634,8 +634,8 @@ public subroutine wf_maj ();//*-------------------------------------------------
 //		FPI	18/12/2012	[PC10-2] Ajout de CVC
 //		FPI	08/09/2015	[PC13442-2] Ajout ATECH
 //		FPI 	08/04/2016	[DT176]
-//		FPI	07/07/2016	[CORR_MAJ_MANU_CMD] ajout du recalcul de l'$$HEX1$$e900$$ENDHEX$$tat vu assur$$HEX1$$e900$$ENDHEX$$
-//		FPI	14/10/2016	[PC151255] m$$HEX1$$e000$$ENDHEX$$j commande SCR depuis commande CMA
+//		FPI	07/07/2016	[CORR_MAJ_MANU_CMD] ajout du recalcul de l'état vu assuré
+//		FPI	14/10/2016	[PC151255] màj commande SCR depuis commande CMA
 //		FPI	20/10/2016	[PC151259]
 //		FPI	10/10/2017	[PC171918].1
 //		FPI	06/08/2018	[DT339]
@@ -662,7 +662,7 @@ dw_Saisi.AcceptText ()
 // Controle avant Mise a jour
 if Not wf_Controler(sColumn, sErrMess) then
 
-	stMessage.sTitre		= "Mise $$HEX2$$e0002000$$ENDHEX$$jour des commandes"
+	stMessage.sTitre		= "Mise à jour des commandes"
 	stMessage.Icon			= Information!
 	stMessage.bErreurG	= FALSE
 	stMessage.Bouton		= Ok!
@@ -684,16 +684,14 @@ if dw_saisi.getItemString(1,"ID_FOUR") = "CMA" Then
 	dw_saisi.SetItem(1,"INFO_FRN_SPB_CPLT",sVal)
 	
 	// [RS6173_FERM_PRS_CMA]
-	If F_CLE_A_TRUE ( "RS6173_FERM_PRS_CMA" ) Then
-		If dw_saisi.getItemString(1,"COD_ETAT")="ANN" Then 
-			dw_Saisi.SetItem ( 1, "STATUS_GC", 176 )
-		End If 
-		
-		If dw_saisi.getItemString(1,"COD_ETAT")="ECT" Then 
-			dw_saisi.SetItem ( 1, "COD_ETAT", "RPC" )
-			dw_Saisi.SetItem ( 1, "STATUS_GC", 178 )
-		End If 
-	End If
+	If dw_saisi.getItemString(1,"COD_ETAT")="ANN" Then 
+		dw_Saisi.SetItem ( 1, "STATUS_GC", 176 )
+	End If 
+	
+	If dw_saisi.getItemString(1,"COD_ETAT")="ECT" Then 
+		dw_saisi.SetItem ( 1, "COD_ETAT", "RPC" )
+		dw_Saisi.SetItem ( 1, "STATUS_GC", 178 )
+	End If 
 End if
 // :[DT176]
 
@@ -947,7 +945,7 @@ End If
 sSql += sVal
 // :[DT176]
 
-// Suppression dela derni$$HEX1$$e800$$ENDHEX$$re Virgule
+// Suppression dela dernière Virgule
 sSql = Left ( sSql, Len ( sSql ) - 2 )
 
 // Maj
@@ -978,11 +976,11 @@ F_Commit ( SQLCA, bRet )
 dw_Saisi.Retrieve ( Long ( em_RefSin.Text ), Long ( em_Seq.Text ) ) 
 
 If bRet Then
-	st_ResMaj.Text = "Mise $$HEX2$$e0002000$$ENDHEX$$jour termin$$HEX1$$e900$$ENDHEX$$e avec succ$$HEX1$$e800$$ENDHEX$$s. V$$HEX1$$e900$$ENDHEX$$rifiez la validit$$HEX2$$e9002000$$ENDHEX$$des informations relues de la base ci-dessous"
+	st_ResMaj.Text = "Mise à jour terminée avec succès. Vérifiez la validité des informations relues de la base ci-dessous"
 	st_ResMaj.BackColor = 65280
 	st_ResMaj.Show ()
 Else
-	st_ResMaj.Text = "Echec lors de la mise $$HEX2$$e0002000$$ENDHEX$$jour !!"
+	st_ResMaj.Text = "Echec lors de la mise à jour !!"
 	st_ResMaj.BackColor = 255
 	st_ResMaj.Show ()
 End If
@@ -991,7 +989,7 @@ If dw_Saisi.GetItemString ( 1, "ID_TYP_ART" ) 	= "PRS" And &
 	dw_Saisi.GetItemString ( 1, "ID_FOUR" ) 		= "DST" And &
 	dw_Saisi.GetItemNumber ( 1, "STATUS_GC" ) 	= 30 Then
 
-	stMessage.sTitre		= "Mise $$HEX2$$e0002000$$ENDHEX$$jour des commandes"
+	stMessage.sTitre		= "Mise à jour des commandes"
 	stMessage.Icon			= Information!
 	stMessage.bErreurG	= FALSE
 	stMessage.Bouton		= Ok!
@@ -1005,7 +1003,7 @@ If dw_Saisi.GetItemString ( 1, "ID_TYP_ART" ) 	= "PRS" And &
 	dw_Saisi.GetItemString ( 1, "ID_FOUR" ) 		= "DTY" And &
 	dw_Saisi.GetItemNumber ( 1, "STATUS_GC" ) 	= 34 Then
 
-	stMessage.sTitre		= "Mise $$HEX2$$e0002000$$ENDHEX$$jour des commandes"
+	stMessage.sTitre		= "Mise à jour des commandes"
 	stMessage.Icon			= Information!
 	stMessage.bErreurG	= FALSE
 	stMessage.Bouton		= Ok!
@@ -1019,7 +1017,7 @@ If dw_Saisi.GetItemString ( 1, "ID_TYP_ART" ) 	= "AEF" And &
 	dw_Saisi.GetItemString ( 1, "ID_FOUR" ) 		= "MDS" And &
 	dw_Saisi.GetItemNumber ( 1, "STATUS_GC" ) 	= 72 Then
 
-	stMessage.sTitre		= "Mise $$HEX2$$e0002000$$ENDHEX$$jour des commandes"
+	stMessage.sTitre		= "Mise à jour des commandes"
 	stMessage.Icon			= Information!
 	stMessage.bErreurG	= FALSE
 	stMessage.Bouton		= Ok!
@@ -1035,7 +1033,7 @@ If dw_Saisi.GetItemString ( 1, "ID_TYP_ART" ) 	= "AEF" And &
 	dw_Saisi.GetItemString ( 1, "ID_FOUR" ) 		= "MBS" And &
 	dw_Saisi.GetItemNumber ( 1, "STATUS_GC" ) 	= 72 Then
 
-	stMessage.sTitre		= "Mise $$HEX2$$e0002000$$ENDHEX$$jour des commandes"
+	stMessage.sTitre		= "Mise à jour des commandes"
 	stMessage.Icon			= Information!
 	stMessage.bErreurG	= FALSE
 	stMessage.Bouton		= Ok!
@@ -1050,7 +1048,7 @@ If dw_Saisi.GetItemString ( 1, "ID_TYP_ART" ) 	= "AEF" And &
 	 dw_Saisi.GetItemString ( 1, "ID_FOUR" ) 		= "CVC"  And &
 	dw_Saisi.GetItemNumber ( 1, "STATUS_GC" ) 	= 72 Then
 
-	stMessage.sTitre		= "Mise $$HEX2$$e0002000$$ENDHEX$$jour des commandes"
+	stMessage.sTitre		= "Mise à jour des commandes"
 	stMessage.Icon			= Information!
 	stMessage.bErreurG	= FALSE
 	stMessage.Bouton		= Ok!
@@ -1065,7 +1063,7 @@ If dw_Saisi.GetItemString ( 1, "ID_TYP_ART" ) 	= "AEF" And &
 	 dw_Saisi.GetItemString ( 1, "ID_FOUR" ) 		= "ATC"  And &
 	dw_Saisi.GetItemNumber ( 1, "STATUS_GC" ) 	= 72 Then
 
-	stMessage.sTitre		= "Mise $$HEX2$$e0002000$$ENDHEX$$jour des commandes"
+	stMessage.sTitre		= "Mise à jour des commandes"
 	stMessage.Icon			= Information!
 	stMessage.bErreurG	= FALSE
 	stMessage.Bouton		= Ok!
@@ -1091,12 +1089,12 @@ public function integer wf_gestion_mds (long row, dwobject dwo, string data);//*
 //* Fonction		: w_sp_trt_saisie_manuelle_suivi::wf_gestion_mds
 //* Auteur			: Pierre-Henri Gillot
 //* Date				: 21/03/2007 15:07:11
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: 	Action $$HEX2$$e0002000$$ENDHEX$$r$$HEX1$$e900$$ENDHEX$$aliser pour M$$HEX1$$e900$$ENDHEX$$dia-Saturn sur saisie d'une donn$$HEX1$$e900$$ENDHEX$$e
-//*						[DCMP070191] : Sur Saisie Statut de Gestion de Commande, on d$$HEX1$$e900$$ENDHEX$$termine 
-//*							automatiquement le code $$HEX1$$e900$$ENDHEX$$tat de la commande.
+//* Libellé			: 
+//* Commentaires	: 	Action à réaliser pour Média-Saturn sur saisie d'une donnée
+//*						[DCMP070191] : Sur Saisie Statut de Gestion de Commande, on détermine 
+//*							automatiquement le code état de la commande.
 //*						
-//* R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence		: [DCMP070191] Optimisation pour Media Saturn
+//* Référence		: [DCMP070191] Optimisation pour Media Saturn
 //*
 //* Arguments		: 	value long row
 //* 						value dwobject dwo
@@ -1104,7 +1102,7 @@ public function integer wf_gestion_mds (long row, dwobject dwo, string data);//*
 //*
 //*						Cette Fonction est un Wrapper de dw_saisi.itemchanged
 //*						( d'ou les argument ci-dessus )
-//*						aisement d$$HEX1$$e900$$ENDHEX$$portable dans un objet metier 
+//*						aisement déportable dans un objet metier 
 //*						si cette fenetre prends de l'embonpoint...
 //*
 //* Retourne		: integer	
@@ -1135,14 +1133,14 @@ public function boolean wf_controler (ref string ascolumn, ref string aserrmess)
 //* Fonction		: w_sp_trt_saisie_manuelle_suivi::wf_controler
 //* Auteur			: Pierre-Henri Gillot
 //* Date				: 21/03/2007 15:37:14
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Controle des Valeurs $$HEX2$$e0002000$$ENDHEX$$la Validation
-//* Commentaires	: Ajout$$HEX2$$e9002000$$ENDHEX$$pour [DCMP070191]
+//* Libellé			: Controle des Valeurs à la Validation
+//* Commentaires	: Ajouté pour [DCMP070191]
 //*
-//* Arguments		: 	ref string ascolumn, derni$$HEX1$$e800$$ENDHEX$$re colonne en Erreur
-//* 						ref string aserrmess, Message d'erreur associ$$HEX1$$e900$$ENDHEX$$
-//*						Retourne par r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence la cause de l'erreur actuelle
+//* Arguments		: 	ref string ascolumn, dernière colonne en Erreur
+//* 						ref string aserrmess, Message d'erreur associé
+//*						Retourne par référence la cause de l'erreur actuelle
 //*						et la colonne en erreur
-//*						Le traitement de l'erreur est laiss$$HEX4$$e9002000e0002000$$ENDHEX$$l'appelant.
+//*						Le traitement de l'erreur est laissé à l'appelant.
 //*
 //* Retourne		: boolean : True : Ok pour valider, False erreur
 //*
@@ -1354,7 +1352,7 @@ If bOk Then
 			if isnull(dw_saisi.GetItemString(1,"id_bon_trans") ) or Trim(dw_saisi.GetItemString(1,"id_bon_trans")) ="" Then
 				bOk=FALSE
 				ascolumn="id_bon_trans"
-				stmessage.svar[1]="- le n$$HEX2$$b0002000$$ENDHEX$$de bon transporteur ~n" + stmessage.svar[1]
+				stmessage.svar[1]="- le n° de bon transporteur ~n" + stmessage.svar[1]
 			End if
 		End if
 		
@@ -1362,7 +1360,7 @@ If bOk Then
 			if isnull(dw_saisi.GetItemString(1,"id_cmd_frn") ) or Trim(dw_saisi.GetItemString(1,"id_cmd_frn")) ="" Then
 				bOk=FALSE
 				ascolumn="id_cmd_frn"
-				stmessage.svar[1]="- le n$$HEX2$$b0002000$$ENDHEX$$d'intervention fournisseur ~n" + stmessage.svar[1]
+				stmessage.svar[1]="- le n° d'intervention fournisseur ~n" + stmessage.svar[1]
 			End if
 		End if
 		
@@ -1427,10 +1425,10 @@ if dw_saisi.GetItemString(1,"APP_SWAP") = "OUI" Then
 			asErrMess="GENE001"
 	End if	
 Else
-	// App_swap d$$HEX1$$e900$$ENDHEX$$coch$$HEX1$$e900$$ENDHEX$$
+	// App_swap décoché
 	If dw_saisi.GetItemString(1,"VARIANTE") ="ADVISE_6" Then
 		stMessage.berreurg=FALSE
-		stMessage.stitre="Mise $$HEX2$$e0002000$$ENDHEX$$jour manuelle de commandes"
+		stMessage.stitre="Mise à jour manuelle de commandes"
 		stMessage.bouton=YesNo!
 		stMessage.sCode="COMD969"
 		
@@ -1504,7 +1502,7 @@ if bOk and dw_saisi.GetItemString(1,"ID_FOUR") = "AAS" and dw_saisi.GetItemNumbe
 			If not f_imei(dw_saisi.getitemstring(1,"ID_SERIE_NOUV") , sVal) Then
 				bOk=FALSE
 				ascolumn="id_serie_nouv"
-				stMessage.sVar[1]="- Un n$$HEX2$$b0002000$$ENDHEX$$IMEI valide (de 15 chiffres)"
+				stMessage.sVar[1]="- Un n° IMEI valide (de 15 chiffres)"
 				asErrMess="GENE001"
 			End if
 		End if
@@ -1534,9 +1532,9 @@ public function integer wf_gestion_scf (long row, dwobject dwo, string data);//*
 //* Fonction		: w_sp_trt_saisie_manuelle_suivi::wf_gestion_scf
 //* Auteur			: Fabry JF
 //* Date				: 25/06/2008
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [DCMP080287].FAX_MAIL
+//* Libellé			: [DCMP080287].FAX_MAIL
 //* Commentaires	: 	
-//* R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence		: 
+//* Référence		: 
 //*
 //* Arguments		: 	value long row
 //* 						value dwobject dwo
@@ -1572,9 +1570,9 @@ public function integer wf_gestion_axa (long row, dwobject dwo, string data);//*
 //* Fonction		: w_sp_trt_saisie_manuelle_suivi::wf_gestion_axa
 //* Auteur			: Fabry JF
 //* Date				: 25/06/2008
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [DCMP080287].FAX_MAIL
+//* Libellé			: [DCMP080287].FAX_MAIL
 //* Commentaires	: 	
-//* R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence		: 
+//* Référence		: 
 //*
 //* Arguments		: 	value long row
 //* 						value dwobject dwo
@@ -1608,10 +1606,10 @@ public function integer wf_gestion_mbs (long row, dwobject dwo, string data);//*
 //* Fonction		: w_sp_trt_saisie_manuelle_suivi::wf_gestion_Mbs
 //* Auteur			: Fabry JF
 //* Date				: 21/03/2007 15:07:11
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PC10][DIAG_NOMADE]	
 //*						
-//* R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence		: [DCMP070191] Optimisation pour Media Saturn
+//* Référence		: [DCMP070191] Optimisation pour Media Saturn
 //*
 //* Arguments		: 	value long row
 //* 						value dwobject dwo
@@ -1646,10 +1644,10 @@ public function integer wf_gestion_omt (long row, dwobject dwo, string data);//*
 //* Fonction		: w_sp_trt_saisie_manuelle_suivi::wf_gestion_OMT
 //* Auteur			: FPI
 //* Date				: 23/11/2012
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PC874]	
 //*						
-//* R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence		: 
+//* Référence		: 
 //*
 //* Arguments		: 	value long row
 //* 						value dwobject dwo
@@ -1697,9 +1695,9 @@ public function integer wf_gestion_aas (long row, dwobject dwo, string data);//*
 //* Fonction		: w_sp_trt_saisie_manuelle_suivi::wf_gestion_aas
 //* Auteur			: FPI
 //* Date				: 06/08/2018
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [DT339]
+//* Libellé			: [DT339]
 //* Commentaires	: 	
-//* R$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence		: 
+//* Référence		: 
 //*
 //* Arguments		: 	value long row
 //* 						value dwobject dwo
@@ -1741,7 +1739,7 @@ Choose Case upper(dwo.name)
 				
 				dw_saisi.SetItem(1,"comment_frn",sNull)
 				
-				// R$$HEX1$$e900$$ENDHEX$$init des zones de swap
+				// Réinit des zones de swap
 				dw_saisi.Modify("app_swap.protect='1'")	
 				dw_saisi.SetItem(1,"app_swap","NON")
 				wf_enableswap( false)
@@ -1750,7 +1748,7 @@ Choose Case upper(dwo.name)
 		End Choose
 	Case "MARQUE_SWAP_1"
 		
-		if isNull(data) Then // On ne s$$HEX1$$e900$$ENDHEX$$lectionne rien
+		if isNull(data) Then // On ne sélectionne rien
 			dw_saisi.GetChild ( "MODELE_SWAP_1", dwChild )
 			dwChild.SetFilter("MARQUE=''")
 			dwChild.Filter()
@@ -1792,7 +1790,7 @@ Choose Case upper(dwo.name)
 			dw_saisi.Modify("accord_indemn_pecu.protect='1'")	
 			dw_saisi.SetItem(1,"accord_indemn_pecu","NON")
 			
-			// R$$HEX1$$e900$$ENDHEX$$init des zones de swap
+			// Réinit des zones de swap
 			dw_saisi.Modify("app_swap.protect='1'")	
 			dw_saisi.SetItem(1,"app_swap","NON")
 			wf_enableswap( false)
@@ -1898,7 +1896,7 @@ event open;call super::open;//*-------------------------------------------------
 //* Evenement     : Open
 //* Auteur        : Fabry JF
 //* Date          : 27/01/2005 11:11:30
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -1915,7 +1913,7 @@ event open;call super::open;//*-------------------------------------------------
 
 DataWindowChild dwChild
 
-This.Title = "Mise $$HEX2$$e0002000$$ENDHEX$$jour manuelle des commandes/prestations"
+This.Title = "Mise à jour manuelle des commandes/prestations"
 
 dw_Saisi.GetChild ( "STATUS_GC", dwChild )
 dwChild.SetTransObject ( SQLCA )
@@ -2118,7 +2116,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : clicked
 //* Auteur        : Fabry JF
 //* Date          : 27/01/2005 11:30:39
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -2147,7 +2145,7 @@ fontfamily fontfamily = swiss!
 string facename = "Arial"
 long textcolor = 33554432
 long backcolor = 12632256
-string text = "N$$HEX1$$b000$$ENDHEX$$Commande"
+string text = "N°Commande"
 end type
 
 type dw_saisi from datawindow within w_sp_trt_saisie_manuelle_suivi
@@ -2168,7 +2166,7 @@ event itemchanged;//*-----------------------------------------------------------
 //* Evenement     : ItemChanged
 //* Auteur        : Fabry JF
 //* Date          : 27/01/2005 11:11:30
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -2269,20 +2267,20 @@ event itemerror;//*-------------------------------------------------------------
 //* Evenement 		: ItemError
 //* Auteur			: FPI
 //* Date				: 10/10/2017
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [PC171919].1
+//* Libellé			: [PC171919].1
 //* Commentaires	: Gestion des messages d'erreur
 //*				  
 //*-----------------------------------------------------------------
 long	ll_ret = 0
 n_cst_string lnv_String 
 
-stMessage.sTitre		= "Mise $$HEX2$$e0002000$$ENDHEX$$jour manuelle des commandes"
+stMessage.sTitre		= "Mise à jour manuelle des commandes"
 stMessage.Icon			= Information!
 stMessage.bErreurG	= TRUE
 
 Choose Case Upper ( This.GetColumnName () ) 
 	Case "PRIX_SWAP"
-			stMessage.sVar[1] = "prix TTC de l'appareil swapp$$HEX1$$e900$$ENDHEX$$"			// Erreur de Validation - 
+			stMessage.sVar[1] = "prix TTC de l'appareil swappé"			// Erreur de Validation - 
 			stMessage.sCode	= "GENE003"
 			ll_ret=1
 			
@@ -2290,7 +2288,7 @@ Choose Case Upper ( This.GetColumnName () )
 			
 			 This.SetItem(row, "PRIX_SWAP",stNul.dcm)
 	Case "MARQUE_SWAP", "MARQUE_SWAP_1"
-			stMessage.sVar[1] = "marque de l'appareil swapp$$HEX1$$e900$$ENDHEX$$"			// Erreur de Validation - 
+			stMessage.sVar[1] = "marque de l'appareil swappé"			// Erreur de Validation - 
 			stMessage.sCode	= "GENE002"
 			ll_ret=1
 			
@@ -2298,7 +2296,7 @@ Choose Case Upper ( This.GetColumnName () )
 			
 			 This.SetItem(row, "MARQUE_SWAP",stNul.str)
 	Case "MODELE_SWAP_1"
-			stMessage.sVar[1] = "mod$$HEX1$$e800$$ENDHEX$$le de l'appareil swapp$$HEX1$$e900$$ENDHEX$$"			// Erreur de Validation - 
+			stMessage.sVar[1] = "modèle de l'appareil swappé"			// Erreur de Validation - 
 			stMessage.sCode	= "GENE003"
 			ll_ret=1
 			
@@ -2326,7 +2324,7 @@ integer weight = 400
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
-string text = "Mettre $$HEX2$$e0002000$$ENDHEX$$jour la commande"
+string text = "Mettre à jour la commande"
 end type
 
 on clicked;//*-----------------------------------------------------------------
@@ -2335,7 +2333,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : clicked
 //* Auteur        : Fabry JF
 //* Date          : 27/01/2005 11:30:39
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -2373,7 +2371,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement     : clicked
 //* Auteur        : Fabry JF
 //* Date          : 27/01/2005 11:30:39
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -2423,7 +2421,7 @@ string facename = "Arial"
 long textcolor = 16777215
 long backcolor = 8421376
 boolean enabled = false
-string text = "Mise $$HEX2$$e0002000$$ENDHEX$$jour manuelle des commandes/prestations"
+string text = "Mise à jour manuelle des commandes/prestations"
 alignment alignment = center!
 boolean border = true
 boolean focusrectangle = false
@@ -2449,7 +2447,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: clicked
 //* Auteur			: F. Pinon
 //* Date				: 22/11/2011 15:48:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PM95]
 //*				  
 //* Arguments		: value integer xpos	 */
@@ -2473,12 +2471,12 @@ If upper(dwo.Name) = "B_ENREGISTRER" Then
 	
 	If lRet=1 Then
 		F_Commit ( SQLCA, TRUE )
-		st_ResMaj.Text = "Mise $$HEX2$$e0002000$$ENDHEX$$jour termin$$HEX1$$e900$$ENDHEX$$e avec succ$$HEX1$$e800$$ENDHEX$$s."
+		st_ResMaj.Text = "Mise à jour terminée avec succès."
 		st_ResMaj.BackColor = 65280
 		st_ResMaj.Show ()
 	Else
 		F_Commit ( SQLCA, FALSE )
-		st_ResMaj.Text = "Echec lors de la mise $$HEX2$$e0002000$$ENDHEX$$jour !!"
+		st_ResMaj.Text = "Echec lors de la mise à jour !!"
 		st_ResMaj.BackColor = 255
 		st_ResMaj.Show ()
 	End If
@@ -2497,7 +2495,7 @@ integer weight = 700
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
-string text = "Mettre $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro"
+string text = "Mettre à zéro"
 end type
 
 event clicked;//*-----------------------------------------------------------------
@@ -2506,7 +2504,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement     : clicked
 //* Auteur        : FPI
 //* Date          : 21/11/2012
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: 
+//* Libellé       : 
 //* Commentaires  : [ITSM_Status_GC_0] 
 //*
 //* Arguments     : 
@@ -2518,7 +2516,7 @@ event clicked;//*---------------------------------------------------------------
 //*-----------------------------------------------------------------
 Long lIdSin, lIdSeq
 
-stMessage.sTitre		= "Mise $$HEX2$$e0002000$$ENDHEX$$jour des commandes"
+stMessage.sTitre		= "Mise à jour des commandes"
 stMessage.Icon			= Exclamation!
 stMessage.bErreurG	= FALSE
 stMessage.Bouton		= YesNo!
@@ -2533,12 +2531,12 @@ if F_Message ( stMessage ) = 1 Then
 	If SQLCA.Sqlcode = 0 And SQLCA.Sqldbcode = 0 Then
 	
 		F_Commit ( SQLCA, TRUE )
-		st_ResMaj.Text = "Mise $$HEX2$$e0002000$$ENDHEX$$jour termin$$HEX1$$e900$$ENDHEX$$e avec succ$$HEX1$$e800$$ENDHEX$$s."
+		st_ResMaj.Text = "Mise à jour terminée avec succès."
 		st_ResMaj.BackColor = 65280
 		st_ResMaj.Show ()
 	Else
 		F_Commit ( SQLCA, FALSE )
-		st_ResMaj.Text = "Le contexte du dossier ne permet plus cette mise $$HEX2$$e0002000$$ENDHEX$$jour."
+		st_ResMaj.Text = "Le contexte du dossier ne permet plus cette mise à jour."
 		st_ResMaj.BackColor = 255
 		st_ResMaj.Show ()
 	End If
@@ -2559,6 +2557,6 @@ fontfamily fontfamily = swiss!
 string facename = "Arial"
 long textcolor = 33554432
 long backcolor = 12632256
-string text = "Mise $$HEX2$$e0002000$$ENDHEX$$0 status_gc"
+string text = "Mise à 0 status_gc"
 end type
 

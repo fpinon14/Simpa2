@@ -5028,7 +5028,7 @@ If lDeb > 0 And isChoixAction = "I" Then
 	End Choose 
 End If 
 
-
+/*
 If F_CLE_A_TRUE ( "DT361_M29347" ) Then
 	Choose Case idwDetail.GetItemNumber ( 1, "ID_GTI" ) 
 		Case 24
@@ -5057,7 +5057,7 @@ If F_CLE_A_TRUE ( "DT361_M29347" ) Then
 				
 		End Choose 
 End If 
-
+*/
 
 // [PM445-1] à supprimer 
 // [DT288-3_LOT1_2EME_VS]

@@ -1032,11 +1032,7 @@ CHOOSE CASE Upper ( sIdFourn )
 	CASE "ELD"
 
 		// [RS4093_EVOL_ELD]
-		If F_CLE_A_TRUE ( "RS4093_EVOL_ELD" ) Then
-			idwFicFourn.DataObject = "d_trt_int_fic_suivicmd_ELECTRODEPOT_rs4093"
-		Else	
-			idwFicFourn.DataObject = "d_trt_int_fic_suivicmd_ELECTRODEPOT"
-		End If
+		idwFicFourn.DataObject = "d_trt_int_fic_suivicmd_ELECTRODEPOT_rs4093"
 		
 		If This.uf_TransformationSeparateur ( sNomFicTmp, ";", "~t", "" ) < 0 Then
 			This.uf_Trace ( "ECR", "ERREUR : Erreur lors de la substition du séparateur" )
@@ -17736,48 +17732,34 @@ For lCpt = lTotLig To 1 Step -1
 	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CARTE_ED" ) )
 
 	// [RS4093_EVOL_ELD]
-	If F_CLE_A_TRUE ( "RS4093_EVOL_ELD" ) Then
-		If IsNull ( sVal ) Or Trim ( sVal ) = "" Then
+	If IsNull ( sVal ) Or Trim ( sVal ) = "" Then
+		iRet = -1
+		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
+		" : La zone NUM_CARTE_ED (référence prestation) est vide." )
+	End If
+
+	If iRet >= 1 Then
+		lPos = Pos ( sVal, "-", 1 )
+		If lPos <= 0 Then 
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" : La zone NUM_CARTE_ED (référence prestation) est vide." )
-		End If
-
-		If iRet >= 1 Then
-			lPos = Pos ( sVal, "-", 1 )
-			If lPos <= 0 Then 
+			" : Le n° de référence SPB id_sin-id_seq ne contient pas de '-'." )
+		Else
+			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-				" : Le n° de référence SPB id_sin-id_seq ne contient pas de '-'." )
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
+
+			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
 			Else
-				If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
-					iRet = -1
-					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
-	
-				ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
-					iRet = -1
-					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-					" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
-				Else
-					lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
-					lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
-				End If
+				lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
+				lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
 			End If
-		End If 
-	Else	
-		lIdSeq = 0
-		
-		// [PC13321]
-		SQLCA.PS_S_ID_SEQ_NUM_CARTE_ED ( lIdSin, sVal, lIdSeq ) 
-		
-		If IsNull ( lIdSeq ) Or lIdSeq <= 0 Then
-			iRet = -1
-			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-			" :  Impossible de déterminer la séquence de la commande." )
 		End If
-	End If
-	
+	End If 
 
 	idwFicFourn.SetItem ( lCpt, "ID_SEQ", String ( lIdSeq ) ) 
 
@@ -17957,10 +17939,6 @@ Int		iRetMailPush
 Long		lIdSin, lIdseq
 DateTime	dtDteRcpFrn, dtDteEnvCli
 
-// [RS4093_EVOL_ELD]
-Boolean bF_CLE_A_TRUE_RS4093_EVOL_ELD 
-bF_CLE_A_TRUE_RS4093_EVOL_ELD = F_CLE_A_TRUE ( "RS4093_EVOL_ELD" )
-
 
 iRet = 1
 sSqlOrig = "EXEC sysadm.PS_U01_COMMANDE "
@@ -18056,19 +18034,7 @@ For lCpt = 1 To lTotLig
 		Case "KO" 
 
 			// [RS4093_EVOL_ELD]
-			If bF_CLE_A_TRUE_RS4093_EVOL_ELD Then
-				sVal = "'Carte non autorisée, prestation automatiquement annulée'"
-			Else
-				sVal = "Carte non autorisée, prestation automatiquement annulée"
-				sVal1 = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "CODE_ERR" ) ) ) 
-				If IsNull ( sVal1 ) Then sVal1 = ""
-				sVal += ". Erreur (" + sVal1 + "), "
-				sVal1 = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "LIB_ERR" ) ) ) 
-				If IsNull ( sVal1 ) Then sVal1 = ""
-				sVal += sVal1 + "."
-				sVal = F_REMPLACE ( sVal, "'", "''" )
-				sVal = "'" + sVal + "'"
-			End If 
+			sVal = "'Carte non autorisée, prestation automatiquement annulée'"
 			
 		Case Else 
 			sVal = "null"					
@@ -18221,17 +18187,15 @@ For lCpt = 1 To lTotLig
 	lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "NOM_FIC_FRN", isNomFicOrig, ";")	
 
 	// [RS4093_EVOL_ELD]
-	If bF_CLE_A_TRUE_RS4093_EVOL_ELD Then
-		sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "NUM_CARTE_ED2" ) ) ) 	
-		If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
-			lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "NUM_CC_ELD_RET", sVal, ";")
-		End If	
-		
-		sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "CODE_SECURITE" ) )  	
-		If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
-			lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "CODE_SECURITE", sVal, ";")
-		End If	
-	End If 
+	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "NUM_CARTE_ED2" ) ) ) 	
+	If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
+		lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "NUM_CC_ELD_RET", sVal, ";")
+	End If	
+	
+	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "CODE_SECURITE" ) )  	
+	If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
+		lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "CODE_SECURITE", sVal, ";")
+	End If	
 	
 	If IsNull ( sInfoFrnSpbCplt ) Then sInfoFrnSpbCplt = ""
 	sSql += "'" + sInfoFrnSpbCplt + "'"

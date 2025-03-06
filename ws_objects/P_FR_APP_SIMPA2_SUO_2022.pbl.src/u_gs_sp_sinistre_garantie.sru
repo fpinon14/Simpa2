@@ -3615,9 +3615,11 @@ If lDeb > 0 Then
 End If
 
 //[PC171933-V6]
+/*
 If F_CLE_A_TRUE ( "PC171933_V6" ) Then
 	If Not This.uf_rf_1840 () Then Return ( False )		
 End If
+*/
 
 //[VDOC25662]
 If Not This.uf_rf_1335 () Then Return ( False )		

@@ -1,4 +1,4 @@
-HA$PBExportHeader$m_main_sp_sinistre.srm
+﻿$PBExportHeader$m_main_sp_sinistre.srm
 $PBExportComments$-} Menu pour le module de gestion des sinistres de l'application SIMPA 2.
 forward
 global type m_main_sp_sinistre from menu
@@ -164,7 +164,7 @@ type variables
 Public :
 
 w_a_Sp_Relances_2000	w_R1A
-w_a_Sp_Relances_2000	w_R1U   // DCMP00285 Uf avec Dem pce $$HEX2$$e0002000$$ENDHEX$$la banque.
+w_a_Sp_Relances_2000	w_R1U   // DCMP00285 Uf avec Dem pce à la banque.
 w_a_Sp_Relances_2000	w_R1T
 w_a_Sp_Relances_2000	w_R1P
 w_a_Sp_Relances_2000	w_R2
@@ -288,7 +288,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 10:52:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Modification d'un sinistre.
 //*				  
 //*-----------------------------------------------------------------
@@ -333,7 +333,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 10:52:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Edition d'un sinistre.
 //*				  
 //*-----------------------------------------------------------------
@@ -354,7 +354,7 @@ If stGLB.bSaiValEdt Then
 		f_ouvreaccueil ( W_Ae_Sp_Edition, This, stglb )
 	End If
 /*------------------------------------------------------------------*/
-/* Sinon m$$HEX1$$e900$$ENDHEX$$thode ancienne                                           */
+/* Sinon méthode ancienne                                           */
 /*------------------------------------------------------------------*/
 Else	
 	stGlb.sMessageErreur  = "EDTNORM"
@@ -395,7 +395,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 10:52:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Validation d'un sinistre.
 //*				  
 //*-----------------------------------------------------------------
@@ -467,8 +467,8 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: DBI
 //* Date				: 05/01/1998 10:52:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: R$$HEX2$$e900e900$$ENDHEX$$dition d'un sinistre.
+//* Libellé			: 
+//* Commentaires	: Réédition d'un sinistre.
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -488,7 +488,7 @@ If stGLB.bSaiValEdt Then
 		f_ouvreaccueil ( W_Ae_Sp_ReEdition, This, stglb )	
 	End If
 /*------------------------------------------------------------------*/
-/* Sinon m$$HEX1$$e900$$ENDHEX$$thode ancienne                                           */
+/* Sinon méthode ancienne                                           */
 /*------------------------------------------------------------------*/
 Else	
 	F_OuvreAccueil ( W_ae_Sp_ReEdit_Sinistre_Wkf_2000, This, stGlb )
@@ -497,7 +497,7 @@ end event
 
 on m_105.create
 call super::create
-this.text = "&R$$HEX2$$e900e900$$ENDHEX$$dition"
+this.text = "&Réédition"
 this.menutextcolor = 134217735
 this.menubackcolor = 134217732
 this.menuhighlightcolor = 134217741
@@ -528,7 +528,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Fabry JF
 //* Date				: 07/02/2002
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Edition des questionnaires avec coupon
 //*				  
 //*-----------------------------------------------------------------
@@ -543,10 +543,10 @@ SetPointer ( HourGlass! )
 /* Si on est en SVE                                                 */
 /*------------------------------------------------------------------*/
 If stGLB.bSaiValEdt Then
-	MessageBox ("", "N'est plus utiliser en m$$HEX1$$e900$$ENDHEX$$thode Saisie/Validation/Edition" )	
+	MessageBox ("", "N'est plus utiliser en méthode Saisie/Validation/Edition" )	
 
 /*------------------------------------------------------------------*/
-/* Sinon m$$HEX1$$e900$$ENDHEX$$thode ancienne                                           */
+/* Sinon méthode ancienne                                           */
 /*------------------------------------------------------------------*/
 Else	
 	stGlb.sMessageErreur = "EDTQUESTCOUPON"
@@ -615,7 +615,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		:	clicked
 //* Auteur			:	PLJ
 //* Date				:	15/09/2003
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Ouvre la fen$$HEX1$$ea00$$ENDHEX$$tre de classement pour les dossiers sold$$HEX1$$e900$$ENDHEX$$s
+//* Libellé			:	Ouvre la fenêtre de classement pour les dossiers soldés
 //* Commentaires	:	
 //*				  
 //*-----------------------------------------------------------------
@@ -631,7 +631,7 @@ end on
 
 on m_108.create
 call super::create
-this.text = "&Archiver les dossiers sold$$HEX1$$e900$$ENDHEX$$s"
+this.text = "&Archiver les dossiers soldés"
 this.menutextcolor = 134217735
 this.menubackcolor = 134217732
 this.menuhighlightcolor = 134217741
@@ -705,8 +705,8 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 10:52:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Gestion des cas particuliers. Modification d'un ID_ADH (N$$HEX2$$b0002000$$ENDHEX$$Carte)
+//* Libellé			: 
+//* Commentaires	: Gestion des cas particuliers. Modification d'un ID_ADH (N° Carte)
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -719,7 +719,7 @@ end on
 
 on m_201.create
 call super::create
-this.text = "&Modification N$$HEX2$$b0002000$$ENDHEX$$Carte"
+this.text = "&Modification N° Carte"
 this.menutextcolor = 134217735
 this.menubackcolor = 134217732
 this.menuhighlightcolor = 134217741
@@ -750,8 +750,8 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 10:52:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Gestion des r$$HEX1$$e900$$ENDHEX$$gularisations
+//* Libellé			: 
+//* Commentaires	: Gestion des régularisations
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -765,7 +765,7 @@ end on
 
 on m_202.create
 call super::create
-this.text = "&R$$HEX1$$e900$$ENDHEX$$gularisations"
+this.text = "&Régularisations"
 this.menutextcolor = 134217735
 this.menubackcolor = 134217732
 this.menuhighlightcolor = 134217741
@@ -796,8 +796,8 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: DBI
 //* Date				: 28/03/2000
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Modification Nom Assur$$HEX1$$e900$$ENDHEX$$
+//* Libellé			: 
+//* Commentaires	: Modification Nom Assuré
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -841,7 +841,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: FPI
 //* Date				: 17/08/2011
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [PM72.2]
 //*				  
 //*-----------------------------------------------------------------
@@ -855,7 +855,7 @@ end event
 
 on m_204.create
 call super::create
-this.text = "R$$HEX1$$e800$$ENDHEX$$&glement manuel frais d$$HEX1$$1920$$ENDHEX$$envoi sur prestation O2M"
+this.text = "Rè&glement manuel frais d’envoi sur prestation O2M"
 this.menutextcolor = 134217735
 this.menubackcolor = 134217732
 this.menuhighlightcolor = 134217741
@@ -931,7 +931,7 @@ end type
 
 on m_301.create
 call super::create
-this.text = "&Premi$$HEX1$$e800$$ENDHEX$$res Relances"
+this.text = "&Premières Relances"
 this.menutextcolor = 134217735
 this.menubackcolor = 134217732
 this.menuhighlightcolor = 134217741
@@ -980,8 +980,8 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Fabry JF
 //* Date				: 08/06/1999 10:52:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: 1$$HEX1$$e800$$ENDHEX$$re Relances automatiques
+//* Libellé			: 
+//* Commentaires	: 1ère Relances automatiques
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -996,17 +996,15 @@ dtDateJour=Datetime( Today(), Now() )
 tHeureCte = Time ( dtDateJour )
 
 // [OPTIM_TRT_RELANCE]
-If F_CLE_A_TRUE ( "OPTIM_TRT_RELANCE" ) Then
-	If tHeureCte < 07:00:00 And Upper ( SQLCA.DataBase ) = "SIMPA2_PRO" Then
-		stMessage.sTitre		= "En dehors de l'horaire"
-		stMessage.Icon			= Information!
-		stMessage.bErreurG	= FALSE
-		stMessage.Bouton		= Ok!
-		stMessage.sCode		= "WSIN901"
-		F_Message ( stMessage ) 
-		Return
-	End If 
-End If
+If tHeureCte < 07:00:00 And Upper ( SQLCA.DataBase ) = "SIMPA2_PRO" Then
+	stMessage.sTitre		= "En dehors de l'horaire"
+	stMessage.Icon			= Information!
+	stMessage.bErreurG	= FALSE
+	stMessage.Bouton		= Ok!
+	stMessage.sCode		= "WSIN901"
+	F_Message ( stMessage ) 
+	Return
+End If 
 
 sMessageErreur = stGlb.sMessageErreur
 
@@ -1022,7 +1020,7 @@ end event
 
 on m_3011.create
 call super::create
-this.text = "Premi$$HEX1$$e800$$ENDHEX$$res Relances &Automatiques normales"
+this.text = "Premières Relances &Automatiques normales"
 this.menutextcolor = 134217735
 this.menubackcolor = 134217732
 this.menuhighlightcolor = 134217741
@@ -1053,8 +1051,8 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Fabry JF
 //* Date				: 08/06/1999 10:52:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: 1$$HEX1$$e800$$ENDHEX$$re Relances automatiques Garanties UF (DCMP 000285)
+//* Libellé			: 
+//* Commentaires	: 1ère Relances automatiques Garanties UF (DCMP 000285)
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -1069,17 +1067,16 @@ dtDateJour=Datetime( Today(), Now() )
 tHeureCte = Time ( dtDateJour )
 
 // [OPTIM_TRT_RELANCE]
-If F_CLE_A_TRUE ( "OPTIM_TRT_RELANCE" ) Then
-	If tHeureCte < 07:00:00 And Upper ( SQLCA.DataBase ) = "SIMPA2_PRO" Then
-		stMessage.sTitre		= "En dehors de l'horaire"
-		stMessage.Icon			= Information!
-		stMessage.bErreurG	= FALSE
-		stMessage.Bouton		= Ok!
-		stMessage.sCode		= "WSIN901"
-		F_Message ( stMessage ) 
-		Return
-	End If 
-End If
+If tHeureCte < 07:00:00 And Upper ( SQLCA.DataBase ) = "SIMPA2_PRO" Then
+	stMessage.sTitre		= "En dehors de l'horaire"
+	stMessage.Icon			= Information!
+	stMessage.bErreurG	= FALSE
+	stMessage.Bouton		= Ok!
+	stMessage.sCode		= "WSIN901"
+	F_Message ( stMessage ) 
+	Return
+End If 
+
 sMessageErreur = stGlb.sMessageErreur
 
 stGlb.sMessageErreur = "R1U"
@@ -1093,7 +1090,7 @@ end event
 
 on m_30111.create
 call super::create
-this.text = "Premi$$HEX1$$e800$$ENDHEX$$res Relances &Automatiques Garanties UF"
+this.text = "Premières Relances &Automatiques Garanties UF"
 this.menutextcolor = 134217735
 this.menubackcolor = 134217732
 this.menuhighlightcolor = 134217741
@@ -1124,8 +1121,8 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Fabry JF
 //* Date				: 08/06/1999 10:52:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: 1$$HEX1$$e800$$ENDHEX$$re Relances Particuli$$HEX1$$e800$$ENDHEX$$res
+//* Libellé			: 
+//* Commentaires	: 1ère Relances Particulières
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -1147,7 +1144,7 @@ end on
 
 on m_3012.create
 call super::create
-this.text = "Premi$$HEX1$$e800$$ENDHEX$$res Relances &Particuli$$HEX1$$e800$$ENDHEX$$res"
+this.text = "Premières Relances &Particulières"
 this.enabled = false
 this.menutextcolor = 134217735
 this.menubackcolor = 134217732
@@ -1179,8 +1176,8 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Fabry JF
 //* Date				: 23/06/1999 15:51:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: 1$$HEX1$$e800$$ENDHEX$$re Relances Ponctuelles
+//* Libellé			: 
+//* Commentaires	: 1ère Relances Ponctuelles
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -1202,7 +1199,7 @@ end on
 
 on m_3013.create
 call super::create
-this.text = "Premi$$HEX1$$e800$$ENDHEX$$res Relances &Ponctuelles"
+this.text = "Premières Relances &Ponctuelles"
 this.enabled = false
 this.menutextcolor = 134217735
 this.menubackcolor = 134217732
@@ -1261,8 +1258,8 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Fabry JF
 //* Date				: 24/06/1999 15:51:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Annulation d'une 1$$HEX1$$e800$$ENDHEX$$re Relances
+//* Libellé			: 
+//* Commentaires	: Annulation d'une 1ère Relances
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -1284,7 +1281,7 @@ end on
 
 on m_3015.create
 call super::create
-this.text = "&Annuler une premi$$HEX1$$e800$$ENDHEX$$re relance"
+this.text = "&Annuler une première relance"
 this.menutextcolor = 134217735
 this.menubackcolor = 134217732
 this.menuhighlightcolor = 134217741
@@ -1315,8 +1312,8 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Fabry JF
 //* Date				: 22/06/1999 10:52:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: 2$$HEX1$$e800$$ENDHEX$$mes Relances
+//* Libellé			: 
+//* Commentaires	: 2èmes Relances
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -1331,17 +1328,15 @@ dtDateJour=Datetime( Today(), Now() )
 tHeureCte = Time ( dtDateJour )
 
 // [OPTIM_TRT_RELANCE]
-If F_CLE_A_TRUE ( "OPTIM_TRT_RELANCE" ) Then
-	If tHeureCte < 07:00:00 And Upper ( SQLCA.DataBase ) = "SIMPA2_PRO" Then
-		stMessage.sTitre		= "En dehors de l'horaire"
-		stMessage.Icon			= Information!
-		stMessage.bErreurG	= FALSE
-		stMessage.Bouton		= Ok!
-		stMessage.sCode		= "WSIN901"
-		F_Message ( stMessage ) 
-		Return
-	End If 
-End If
+If tHeureCte < 07:00:00 And Upper ( SQLCA.DataBase ) = "SIMPA2_PRO" Then
+	stMessage.sTitre		= "En dehors de l'horaire"
+	stMessage.Icon			= Information!
+	stMessage.bErreurG	= FALSE
+	stMessage.Bouton		= Ok!
+	stMessage.sCode		= "WSIN901"
+	F_Message ( stMessage ) 
+	Return
+End If 
 
 sMessageErreur = stGlb.sMessageErreur
 
@@ -1356,7 +1351,7 @@ end event
 
 on m_302.create
 call super::create
-this.text = "&Deuxi$$HEX1$$e800$$ENDHEX$$mes Relances"
+this.text = "&Deuxièmes Relances"
 this.menutextcolor = 134217735
 this.menubackcolor = 134217732
 this.menuhighlightcolor = 134217741
@@ -1414,12 +1409,12 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Fabry JF
 //* Date				: 28/06/1999 10:52:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: soldage des dossiers
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ	PAR		Date		Modification
-//* #1	JCA	22/10/2007	DCMP 06691 - Soldage des dossiers est effectu$$HEX2$$e9002000$$ENDHEX$$en automatique
+//* #1	JCA	22/10/2007	DCMP 06691 - Soldage des dossiers est effectué en automatique
 //*-----------------------------------------------------------------
 
 String	sMessageErreur
@@ -1512,7 +1507,7 @@ end type
 
 on m_401.create
 call super::create
-this.text = "&Premi$$HEX1$$e800$$ENDHEX$$res Relances"
+this.text = "&Premières Relances"
 this.menutextcolor = 134217735
 this.menubackcolor = 134217732
 this.menuhighlightcolor = 134217741
@@ -1558,8 +1553,8 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Fabry JF
 //* Date				: 08/06/1999 10:52:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: 1$$HEX1$$e800$$ENDHEX$$re Relances automatiques
+//* Libellé			: 
+//* Commentaires	: 1ère Relances automatiques
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -1569,7 +1564,7 @@ event clicked;//*---------------------------------------------------------------
 String	sMessageErreur
 
 // [PI052]
-stMessage.sTitre		= "Fonctionnalit$$HEX2$$e9002000$$ENDHEX$$obsol$$HEX1$$e800$$ENDHEX$$te"
+stMessage.sTitre		= "Fonctionnalité obsolète"
 stMessage.Icon			= Information!
 stMessage.sCode		= "GENE173"
 F_Message ( stMessage )
@@ -1588,7 +1583,7 @@ end event
 
 on m_411.create
 call super::create
-this.text = "Premi$$HEX1$$e800$$ENDHEX$$res Relances &Normales"
+this.text = "Premières Relances &Normales"
 this.menutextcolor = 134217735
 this.menubackcolor = 134217732
 this.menuhighlightcolor = 134217741
@@ -1619,8 +1614,8 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Fabry JF
 //* Date				: 08/06/1999 10:52:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: 1$$HEX1$$e800$$ENDHEX$$re Relances Particuli$$HEX1$$e800$$ENDHEX$$res
+//* Libellé			: 
+//* Commentaires	: 1ère Relances Particulières
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -1630,7 +1625,7 @@ event clicked;//*---------------------------------------------------------------
 String	sMessageErreur
 
 // [PI052]
-stMessage.sTitre		= "Fonctionnalit$$HEX2$$e9002000$$ENDHEX$$obsol$$HEX1$$e800$$ENDHEX$$te"
+stMessage.sTitre		= "Fonctionnalité obsolète"
 stMessage.Icon			= Information!
 stMessage.sCode		= "GENE173"
 F_Message ( stMessage )
@@ -1649,7 +1644,7 @@ end event
 
 on m_412.create
 call super::create
-this.text = "Premi$$HEX1$$e800$$ENDHEX$$res Relances &Particuli$$HEX1$$e800$$ENDHEX$$res"
+this.text = "Premières Relances &Particulières"
 this.menutextcolor = 134217735
 this.menubackcolor = 134217732
 this.menuhighlightcolor = 134217741
@@ -1680,8 +1675,8 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Fabry JF
 //* Date				: 23/06/1999 15:51:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: 1$$HEX1$$e800$$ENDHEX$$re Relances Ponctuelles
+//* Libellé			: 
+//* Commentaires	: 1ère Relances Ponctuelles
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -1704,7 +1699,7 @@ end event
 on m_413.create
 call super::create
 this.visible = false
-this.text = "Premi$$HEX1$$e800$$ENDHEX$$res Relances &Ponctuelles"
+this.text = "Premières Relances &Ponctuelles"
 this.menutextcolor = 134217735
 this.menubackcolor = 134217732
 this.menuhighlightcolor = 134217741
@@ -1763,8 +1758,8 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Fabry JF
 //* Date				: 24/06/1999 15:51:30
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Annulation d'une 1$$HEX1$$e800$$ENDHEX$$re Relances
+//* Libellé			: 
+//* Commentaires	: Annulation d'une 1ère Relances
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -1787,7 +1782,7 @@ end event
 on m_415.create
 call super::create
 this.visible = false
-this.text = "&Annuler une premi$$HEX1$$e800$$ENDHEX$$re relance"
+this.text = "&Annuler une première relance"
 this.menutextcolor = 134217735
 this.menubackcolor = 134217732
 this.menuhighlightcolor = 134217741
@@ -1818,8 +1813,8 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: Fabry JF
 //* Date				: 22/06/1999 10:52:38
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: 2$$HEX1$$e800$$ENDHEX$$mes Relances
+//* Libellé			: 
+//* Commentaires	: 2èmes Relances
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -1829,7 +1824,7 @@ event clicked;//*---------------------------------------------------------------
 String	sMessageErreur
 
 // [PI052]
-stMessage.sTitre		= "Fonctionnalit$$HEX2$$e9002000$$ENDHEX$$obsol$$HEX1$$e800$$ENDHEX$$te"
+stMessage.sTitre		= "Fonctionnalité obsolète"
 stMessage.Icon			= Information!
 stMessage.sCode		= "GENE173"
 F_Message ( stMessage )
@@ -1848,7 +1843,7 @@ end event
 
 on m_402.create
 call super::create
-this.text = "&Deuxi$$HEX1$$e800$$ENDHEX$$mes Relances"
+this.text = "&Deuxièmes Relances"
 this.menutextcolor = 134217735
 this.menubackcolor = 134217732
 this.menuhighlightcolor = 134217741
@@ -1911,7 +1906,7 @@ end type
 
 on m_quitter.create
 call super::create
-this.text = "F&en$$HEX1$$ea00$$ENDHEX$$tre"
+this.text = "F&enêtre"
 this.menutextcolor = 134217735
 this.menubackcolor = 134217732
 this.menuhighlightcolor = 134217741
@@ -1958,7 +1953,7 @@ end on
 
 on m_raffichemenu.create
 call super::create
-this.text = "&R$$HEX1$$e900$$ENDHEX$$affiche Menu"
+this.text = "&Réaffiche Menu"
 this.menutextcolor = 134217735
 this.menubackcolor = 134217732
 this.menuhighlightcolor = 134217741
@@ -1988,7 +1983,7 @@ end on
 
 on m_mosaque.create
 call super::create
-this.text = "&Mosa$$HEX1$$ef00$$ENDHEX$$que"
+this.text = "&Mosaïque"
 this.menutextcolor = 134217735
 this.menubackcolor = 134217732
 this.menuhighlightcolor = 134217741
@@ -2078,7 +2073,7 @@ end on
 
 on m_rorgicones.create
 call super::create
-this.text = "R$$HEX1$$e900$$ENDHEX$$org. &Icones"
+this.text = "Réorg. &Icones"
 this.menutextcolor = 134217735
 this.menubackcolor = 134217732
 this.menuhighlightcolor = 134217741
