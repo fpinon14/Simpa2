@@ -543,27 +543,6 @@ Set @asModeleDescripBouyguesOuIfr = sysadm.FN_EPURE_CHAINE_V01 ( @asModeleDescri
 Set @asModeleDescripBouyguesOuIfr = rTrim ( ltrim ( upper ( @asModeleDescripBouyguesOuIfr )))
 If @asModeleDescripBouyguesOuIfr = '' Or Len ( @asModeleDescripBouyguesOuIfr ) > 105 Return -4
 
--- [REF_EXT_SAGA2]
-If NOT sysadm.FN_CLE_NUMERIQUE ( 'REF_EXT_SAGA2') > 0 
- Begin
-	-- 1ère recherche si IFR
-	If LEn ( @asMarqueBouyguesOuIfr ) <= 35 And Len ( @asModeleDescripBouyguesOuIfr ) <= 35
-	  Begin
-		If Exists ( 
-				Select	top 1 1 
-				from	sysadm.ifr i with (nolock)
-				Where   i.marque = @asMarqueBouyguesOuIfr
-				And		i.reference = @asModeleDescripBouyguesOuIfr
-				And		i.alt_dispo = 'O'		
-			)
-		Begin
-			Set @asMarqueIfrRetour = @asMarqueBouyguesOuIfr
-			Set @asModeleIfrRetour = @asModeleDescripBouyguesOuIfr
-			Return 1	
-		End 
-	  End
-End 
-
 -- 2ème recherche lien IFR
 Select Top 1 
 		@asMarqueIfrRetour = ltrim ( rtrim ( a.id_marq_art_ifr )),
@@ -640,35 +619,32 @@ If Not Exists (
 		Set @iEnvoiMail = 1 
 
 		-- [REF_EXT_SAGA2]
-		If sysadm.FN_CLE_NUMERIQUE ( 'REF_EXT_SAGA2') > 0 
+		-- Recherche si Marqe/modl donné est une marque IFR auquel cas on fait le lien immédiatement
+		If LEn ( @asMarqueBouyguesOuIfr ) <= 35 And Len ( @asModeleDescripBouyguesOuIfr ) <= 35
 			Begin
-				-- Recherche si Marqe/modl donné est une marque IFR auquel cas on fait le lien immédiatement
-				If LEn ( @asMarqueBouyguesOuIfr ) <= 35 And Len ( @asModeleDescripBouyguesOuIfr ) <= 35
-					Begin
-						If Exists ( 
-								Select	top 1 1 
-								from	sysadm.ifr i with (nolock)
-								Where   i.marque = @asMarqueBouyguesOuIfr
-								And		i.reference = @asModeleDescripBouyguesOuIfr
-								And		i.alt_dispo = 'O'		
-							)
-						Begin
-							Set @iEnvoiMail = 0
-							Set @asMarqueIfrRetour = @asMarqueBouyguesOuIfr
-							Set @asModeleIfrRetour = @asModeleDescripBouyguesOuIfr
+				If Exists ( 
+						Select	top 1 1 
+						from	sysadm.ifr i with (nolock)
+						Where   i.marque = @asMarqueBouyguesOuIfr
+						And		i.reference = @asModeleDescripBouyguesOuIfr
+						And		i.alt_dispo = 'O'		
+					)
+				Begin
+					Set @iEnvoiMail = 0
+					Set @asMarqueIfrRetour = @asMarqueBouyguesOuIfr
+					Set @asModeleIfrRetour = @asModeleDescripBouyguesOuIfr
 
-							Update sysadm.article 
-							Set   id_marq_art_ifr = @asMarqueBouyguesOuIfr,
-								  id_modl_art_ifr = @asModeleDescripBouyguesOuIfr,
-								  alt_dispo		  = 'O'
-							Where id_four = 'BYG'
-							And   id_marq_art = @asMarqueBouyguesOuIfr
-							And   Left ( id_modl_art, Len (id_modl_art) -1 ) + isnull ( observ_frn, '' ) = @asModeleDescripBouyguesOuIfr
+					Update sysadm.article 
+					Set   id_marq_art_ifr = @asMarqueBouyguesOuIfr,
+							id_modl_art_ifr = @asModeleDescripBouyguesOuIfr,
+							alt_dispo		  = 'O'
+					Where id_four = 'BYG'
+					And   id_marq_art = @asMarqueBouyguesOuIfr
+					And   Left ( id_modl_art, Len (id_modl_art) -1 ) + isnull ( observ_frn, '' ) = @asModeleDescripBouyguesOuIfr
 
-							Return 1	
-						End
-					End
-			End 
+					Return 1	
+				End
+			End
   End 
 
  If @iEnvoiMail > 0 
@@ -724,7 +700,6 @@ If Not Exists (
   End 
 
 Return 3
-
 
 Go
 

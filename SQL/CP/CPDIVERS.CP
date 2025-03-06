@@ -2833,11 +2833,8 @@ Else
  End
 
  -- Purge Trace.
-If sysadm.FN_CLE_NUMERIQUE ( 'RS6179_TRG_WQ') > 0 
-	Begin
-		Delete sysadm.w_queue_histo Where cree_le_action < DATEADD ( month, -6, Getdate() )
-		Delete TRACE_MAIL_PRO.sysadm.trace_matp_es_sinistre_ksl_rs5045 Where cree_le < DATEADD ( month, -6, Getdate() )
-	End 
+Delete sysadm.w_queue_histo Where cree_le_action < DATEADD ( month, -6, Getdate() )
+Delete TRACE_MAIL_PRO.sysadm.trace_matp_es_sinistre_ksl_rs5045 Where cree_le < DATEADD ( month, -6, Getdate() )
 
 -- [LGY11]
 Exec sysadm.PS_U_REDRESS_W_QUEUE_STATUT_IWD  

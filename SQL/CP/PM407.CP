@@ -1163,8 +1163,6 @@ GO
 CREATE procedure sysadm.PS_SU_PM407_RELANCE_TRAITEMENT_RS6005
 As
 
-If Not ( sysadm.FN_CLE_NUMERIQUE ( 'RS6005_REL_BRED') > 0 ) Return
-
 Set NoCount On
 
 DECLARE @tb TABLE 

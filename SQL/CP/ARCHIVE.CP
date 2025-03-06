@@ -332,63 +332,60 @@ CREATE procedure sysadm.DW_S01_ARCHIVE_RELANCES
 AS
 
 --  [OPTIM_TRT_RELANCE]
-If sysadm.FN_CLE_NUMERIQUE ( 'OPTIM_TRT_RELANCE') > 0 
- Begin
-	Select 
-		ID_SIN 	=  id_sin,
-		ID_REV	=  id_rev,
-		ID_ORDRE	=  id_ordre,
-		COD_INTER	=  cod_inter,
-		NOM_INTER	=  nom_inter,
-		ID_COUR	=  id_cour,
-		ID_I	=  id_i,
-		ID_DOC	=  id_doc,
-		VALIDE_PAR	=  valide_par,
-		VALIDE_LE	=  valide_le,
-		TXT_COMPO	=  txt_compo,
-		ALT_PART	=  alt_part,
-		ALT_PCE	=  alt_pce,
-		ALT_PS	=  alt_ps,
-		INT_CIVIL	=  int_civil,
-		INT_ADR1	=  int_adr1,
-		INT_ADR2	=  int_adr2,
-		INT_ADR_CP	=  int_adr_cp,
-		INT_ADR_VILLE	=  int_adr_ville,
-		INT_VREF1	=  int_vref1,
-		INT_VREF2	=  int_vref2,
-		INT_RIB_BQ	=  int_rib_bq,
-		INT_RIB_CLE	=  int_rib_cle,
-		INT_RIB_CPT	=  int_rib_cpt,
-		INT_RIB_GUI	=  int_rib_gui,
-		PERS_CIVIL	=  pers_civil,
-		PERS_NOM	=  pers_nom,
-		PERS_PRENOM	=  pers_prenom,
-		DTE_EDIT	=  dte_edit,
-		INTASS_RIB_BQ	=  intass_rib_bq,
-		INTASS_RIB_CLE	=  intass_rib_cle,
-		INTASS_RIB_CPT	=  intass_rib_cpt,
-		INTASS_RIB_GUI	=  intass_rib_gui,
-		PROD_ID_DEPTS	=  prod_id_depts,
-		PROD_ID_DEPT	=  prod_id_dept,
-		ID_PROD	=  id_prod,
-		PROD_COURT	=  prod_court,
-		PROD_LONG	=  prod_long,
-		PROD_FAX	=  prod_fax,
-		PROD_TEL	=  prod_tel,
-		DTE_ADH	=  dte_adh,
-		DTE_SURV	=  dte_surv,
-		ID_ADH	=  id_adh,
-		ID_ETS	=  id_ets,
-		LIB_GRP	=  lib_grp,
-		TRI	= tri
+Select 
+	ID_SIN 	=  id_sin,
+	ID_REV	=  id_rev,
+	ID_ORDRE	=  id_ordre,
+	COD_INTER	=  cod_inter,
+	NOM_INTER	=  nom_inter,
+	ID_COUR	=  id_cour,
+	ID_I	=  id_i,
+	ID_DOC	=  id_doc,
+	VALIDE_PAR	=  valide_par,
+	VALIDE_LE	=  valide_le,
+	TXT_COMPO	=  txt_compo,
+	ALT_PART	=  alt_part,
+	ALT_PCE	=  alt_pce,
+	ALT_PS	=  alt_ps,
+	INT_CIVIL	=  int_civil,
+	INT_ADR1	=  int_adr1,
+	INT_ADR2	=  int_adr2,
+	INT_ADR_CP	=  int_adr_cp,
+	INT_ADR_VILLE	=  int_adr_ville,
+	INT_VREF1	=  int_vref1,
+	INT_VREF2	=  int_vref2,
+	INT_RIB_BQ	=  int_rib_bq,
+	INT_RIB_CLE	=  int_rib_cle,
+	INT_RIB_CPT	=  int_rib_cpt,
+	INT_RIB_GUI	=  int_rib_gui,
+	PERS_CIVIL	=  pers_civil,
+	PERS_NOM	=  pers_nom,
+	PERS_PRENOM	=  pers_prenom,
+	DTE_EDIT	=  dte_edit,
+	INTASS_RIB_BQ	=  intass_rib_bq,
+	INTASS_RIB_CLE	=  intass_rib_cle,
+	INTASS_RIB_CPT	=  intass_rib_cpt,
+	INTASS_RIB_GUI	=  intass_rib_gui,
+	PROD_ID_DEPTS	=  prod_id_depts,
+	PROD_ID_DEPT	=  prod_id_dept,
+	ID_PROD	=  id_prod,
+	PROD_COURT	=  prod_court,
+	PROD_LONG	=  prod_long,
+	PROD_FAX	=  prod_fax,
+	PROD_TEL	=  prod_tel,
+	DTE_ADH	=  dte_adh,
+	DTE_SURV	=  dte_surv,
+	ID_ADH	=  id_adh,
+	ID_ETS	=  id_ets,
+	LIB_GRP	=  lib_grp,
+	TRI	= tri
 
-	From sysadm.pre_trt_relance
-	Where typ_rel = 'R1A'
-	And   id_prod = @dcIdProd
-	Return
- End 
+From sysadm.pre_trt_relance
+Where typ_rel = 'R1A'
+And   id_prod = @dcIdProd
+Return
 
-
+-- Obsolète dessous, avec le return au-dessus
 Declare @sCodAdh	VarChar ( 1 )
 
 
@@ -1178,64 +1175,61 @@ CREATE procedure sysadm.DW_S02_ARCHIVE_RELANCES
 AS
 
 --  [OPTIM_TRT_RELANCE]
-If sysadm.FN_CLE_NUMERIQUE ( 'OPTIM_TRT_RELANCE') > 0 
- Begin
-	Select 
-		ID_SIN 	=  id_sin,
-		ID_REV	=  id_rev,
-		ID_ORDRE	=  id_ordre,
-		COD_INTER	=  cod_inter,
-		NOM_INTER	=  nom_inter,
-		ID_COUR	=  id_cour,
-		ID_I	=  id_i,
-		ID_DOC	=  id_doc,
-		VALIDE_PAR	=  valide_par,
-		VALIDE_LE	=  valide_le,
-		TXT_COMPO	=  txt_compo,
-		ALT_PART	=  alt_part,
-		ALT_PCE	=  alt_pce,
-		ALT_PS	=  alt_ps,
-		INT_CIVIL	=  int_civil,
-		INT_ADR1	=  int_adr1,
-		INT_ADR2	=  int_adr2,
-		INT_ADR_CP	=  int_adr_cp,
-		INT_ADR_VILLE	=  int_adr_ville,
-		INT_VREF1	=  int_vref1,
-		INT_VREF2	=  int_vref2,
-		INT_RIB_BQ	=  int_rib_bq,
-		INT_RIB_CLE	=  int_rib_cle,
-		INT_RIB_CPT	=  int_rib_cpt,
-		INT_RIB_GUI	=  int_rib_gui,
-		PERS_CIVIL	=  pers_civil,
-		PERS_NOM	=  pers_nom,
-		PERS_PRENOM	=  pers_prenom,
-		DTE_EDIT	=  dte_edit,
-		INTASS_RIB_BQ	=  intass_rib_bq,
-		INTASS_RIB_CLE	=  intass_rib_cle,
-		INTASS_RIB_CPT	=  intass_rib_cpt,
-		INTASS_RIB_GUI	=  intass_rib_gui,
-		PROD_ID_DEPTS	=  prod_id_depts,
-		PROD_ID_DEPT	=  prod_id_dept,
-		ID_PROD	=  id_prod,
-		PROD_COURT	=  prod_court,
-		PROD_LONG	=  prod_long,
-		PROD_FAX	=  prod_fax,
-		PROD_TEL	=  prod_tel,
-		DTE_ADH	=  dte_adh,
-		DTE_SURV	=  dte_surv,
-		ID_ADH	=  id_adh,
-		ID_ETS	=  id_ets,
-		LIB_GRP	=  lib_grp,
-		TRI	= tri
+Select 
+	ID_SIN 	=  id_sin,
+	ID_REV	=  id_rev,
+	ID_ORDRE	=  id_ordre,
+	COD_INTER	=  cod_inter,
+	NOM_INTER	=  nom_inter,
+	ID_COUR	=  id_cour,
+	ID_I	=  id_i,
+	ID_DOC	=  id_doc,
+	VALIDE_PAR	=  valide_par,
+	VALIDE_LE	=  valide_le,
+	TXT_COMPO	=  txt_compo,
+	ALT_PART	=  alt_part,
+	ALT_PCE	=  alt_pce,
+	ALT_PS	=  alt_ps,
+	INT_CIVIL	=  int_civil,
+	INT_ADR1	=  int_adr1,
+	INT_ADR2	=  int_adr2,
+	INT_ADR_CP	=  int_adr_cp,
+	INT_ADR_VILLE	=  int_adr_ville,
+	INT_VREF1	=  int_vref1,
+	INT_VREF2	=  int_vref2,
+	INT_RIB_BQ	=  int_rib_bq,
+	INT_RIB_CLE	=  int_rib_cle,
+	INT_RIB_CPT	=  int_rib_cpt,
+	INT_RIB_GUI	=  int_rib_gui,
+	PERS_CIVIL	=  pers_civil,
+	PERS_NOM	=  pers_nom,
+	PERS_PRENOM	=  pers_prenom,
+	DTE_EDIT	=  dte_edit,
+	INTASS_RIB_BQ	=  intass_rib_bq,
+	INTASS_RIB_CLE	=  intass_rib_cle,
+	INTASS_RIB_CPT	=  intass_rib_cpt,
+	INTASS_RIB_GUI	=  intass_rib_gui,
+	PROD_ID_DEPTS	=  prod_id_depts,
+	PROD_ID_DEPT	=  prod_id_dept,
+	ID_PROD	=  id_prod,
+	PROD_COURT	=  prod_court,
+	PROD_LONG	=  prod_long,
+	PROD_FAX	=  prod_fax,
+	PROD_TEL	=  prod_tel,
+	DTE_ADH	=  dte_adh,
+	DTE_SURV	=  dte_surv,
+	ID_ADH	=  id_adh,
+	ID_ETS	=  id_ets,
+	LIB_GRP	=  lib_grp,
+	TRI	= tri
 
-	From sysadm.pre_trt_relance
-	Where typ_rel = 'R2'
-	And   id_prod = @dcIdProd
-	Return
- End 
+From sysadm.pre_trt_relance
+Where typ_rel = 'R2'
+And   id_prod = @dcIdProd
+Return
 
 
-
+-- Obsolète dessous, avec le return au-dessus
 Declare @sCodAdh	VarChar ( 1 )
 
 
@@ -3486,62 +3480,61 @@ CREATE procedure sysadm.DW_S07_ARCHIVE_RELANCES
 AS
 
 --  [OPTIM_TRT_RELANCE]
-If sysadm.FN_CLE_NUMERIQUE ( 'OPTIM_TRT_RELANCE') > 0 
- Begin
-	Select 
-		ID_SIN 	=  id_sin,
-		ID_REV	=  id_rev,
-		ID_ORDRE	=  id_ordre,
-		COD_INTER	=  cod_inter,
-		NOM_INTER	=  nom_inter,
-		ID_COUR	=  id_cour,
-		ID_I	=  id_i,
-		ID_DOC	=  id_doc,
-		VALIDE_PAR	=  valide_par,
-		VALIDE_LE	=  valide_le,
-		TXT_COMPO	=  txt_compo,
-		ALT_PART	=  alt_part,
-		ALT_PCE	=  alt_pce,
-		ALT_PS	=  alt_ps,
-		INT_CIVIL	=  int_civil,
-		INT_ADR1	=  int_adr1,
-		INT_ADR2	=  int_adr2,
-		INT_ADR_CP	=  int_adr_cp,
-		INT_ADR_VILLE	=  int_adr_ville,
-		INT_VREF1	=  int_vref1,
-		INT_VREF2	=  int_vref2,
-		INT_RIB_BQ	=  int_rib_bq,
-		INT_RIB_CLE	=  int_rib_cle,
-		INT_RIB_CPT	=  int_rib_cpt,
-		INT_RIB_GUI	=  int_rib_gui,
-		PERS_CIVIL	=  pers_civil,
-		PERS_NOM	=  pers_nom,
-		PERS_PRENOM	=  pers_prenom,
-		DTE_EDIT	=  dte_edit,
-		INTASS_RIB_BQ	=  intass_rib_bq,
-		INTASS_RIB_CLE	=  intass_rib_cle,
-		INTASS_RIB_CPT	=  intass_rib_cpt,
-		INTASS_RIB_GUI	=  intass_rib_gui,
-		PROD_ID_DEPTS	=  prod_id_depts,
-		PROD_ID_DEPT	=  prod_id_dept,
-		ID_PROD	=  id_prod,
-		PROD_COURT	=  prod_court,
-		PROD_LONG	=  prod_long,
-		PROD_FAX	=  prod_fax,
-		PROD_TEL	=  prod_tel,
-		DTE_ADH	=  dte_adh,
-		DTE_SURV	=  dte_surv,
-		ID_ADH	=  id_adh,
-		ID_ETS	=  id_ets,
-		LIB_GRP	=  lib_grp,
-		TRI	= tri
+Select 
+	ID_SIN 	=  id_sin,
+	ID_REV	=  id_rev,
+	ID_ORDRE	=  id_ordre,
+	COD_INTER	=  cod_inter,
+	NOM_INTER	=  nom_inter,
+	ID_COUR	=  id_cour,
+	ID_I	=  id_i,
+	ID_DOC	=  id_doc,
+	VALIDE_PAR	=  valide_par,
+	VALIDE_LE	=  valide_le,
+	TXT_COMPO	=  txt_compo,
+	ALT_PART	=  alt_part,
+	ALT_PCE	=  alt_pce,
+	ALT_PS	=  alt_ps,
+	INT_CIVIL	=  int_civil,
+	INT_ADR1	=  int_adr1,
+	INT_ADR2	=  int_adr2,
+	INT_ADR_CP	=  int_adr_cp,
+	INT_ADR_VILLE	=  int_adr_ville,
+	INT_VREF1	=  int_vref1,
+	INT_VREF2	=  int_vref2,
+	INT_RIB_BQ	=  int_rib_bq,
+	INT_RIB_CLE	=  int_rib_cle,
+	INT_RIB_CPT	=  int_rib_cpt,
+	INT_RIB_GUI	=  int_rib_gui,
+	PERS_CIVIL	=  pers_civil,
+	PERS_NOM	=  pers_nom,
+	PERS_PRENOM	=  pers_prenom,
+	DTE_EDIT	=  dte_edit,
+	INTASS_RIB_BQ	=  intass_rib_bq,
+	INTASS_RIB_CLE	=  intass_rib_cle,
+	INTASS_RIB_CPT	=  intass_rib_cpt,
+	INTASS_RIB_GUI	=  intass_rib_gui,
+	PROD_ID_DEPTS	=  prod_id_depts,
+	PROD_ID_DEPT	=  prod_id_dept,
+	ID_PROD	=  id_prod,
+	PROD_COURT	=  prod_court,
+	PROD_LONG	=  prod_long,
+	PROD_FAX	=  prod_fax,
+	PROD_TEL	=  prod_tel,
+	DTE_ADH	=  dte_adh,
+	DTE_SURV	=  dte_surv,
+	ID_ADH	=  id_adh,
+	ID_ETS	=  id_ets,
+	LIB_GRP	=  lib_grp,
+	TRI	= tri
 
-	From sysadm.pre_trt_relance
-	Where typ_rel = 'R1U'
-	And   id_prod = @dcIdProd
-	Return
- End 
+From sysadm.pre_trt_relance
+Where typ_rel = 'R1U'
+And   id_prod = @dcIdProd
+Return
 
+
+-- Obsolète dessous, avec le return au-dessus
 Declare @sCodAdh	VarChar ( 1 )
 
 
@@ -5298,17 +5291,14 @@ CREATE procedure sysadm.DDDW_S_PRODUIT_RELANCE
 AS
 
 --  [OPTIM_TRT_RELANCE]
-If sysadm.FN_CLE_NUMERIQUE ( 'OPTIM_TRT_RELANCE') > 0 
- Begin
-	Select distinct 
-		id_prod,
-		prod_long
-	From sysadm.pre_trt_relance
-	Where typ_rel = @sCodeTrt
-	Return
- End 
+Select distinct 
+	id_prod,
+	prod_long
+From sysadm.pre_trt_relance
+Where typ_rel = @sCodeTrt
+Return
 
-
+-- Obsolète dessous, avec le return au-dessus
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 BEGIN
 
