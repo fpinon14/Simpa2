@@ -9337,7 +9337,7 @@ CREATE procedure sysadm.PS_MIG1_I_EMAILING_KSL_ARCHIVE_MAILPUSH
 	@asTypMail	VarChar ( 6 ),
 	@asCodOper  VarChar ( 4 ),
 	@asCodRefus VarChar ( 10 ),
-	@asMtRegAssure VarChar ( 20 ),
+	@asMtAReg VarChar ( 20 ),
 	@asChaineSeria VarChar ( 800 )
 AS
 
@@ -9395,7 +9395,7 @@ If @sRefus <> 'R' Set @asCodRefus = ''
 
 -- règle donné par Nathalie, ajout de 30 jours par rapport à la date du règlement donc date du jour
 Set @sDateRdv = ''
-IF @asMtRegAssure is not null and @asMtRegAssure <> '' Set @sDateRdv = convert ( VarChar ( 10 ), DateAdd ( day, 30, Getdate()), 23 ) 
+IF @asMtAReg is not null and @asMtAReg <> '' Set @sDateRdv = convert ( VarChar ( 10 ), DateAdd ( day, 30, Getdate()), 23 ) 
 
 If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
  Begin
@@ -9419,7 +9419,7 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 		-- Ajout personnalisé du client appelant le système
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_refus', @asCodRefus 
-		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'montant_reglement', @asMtRegAssure 
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'montant_reglement', @asMtAReg 
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'date_rdv', @sDateRdv  
 
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'adr_mail', @sVal OutPut
@@ -9488,7 +9488,7 @@ Else
 		-- Ajout personnalisé du client appelant le système
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_maquette', @sCodeMaquette
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_refus', @asCodRefus 
-		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'montant_reglement', @asMtRegAssure 
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'montant_reglement', @asMtAReg 
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'date_rdv', @sDateRdv  
 
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'adr_mail', @sVal OutPut

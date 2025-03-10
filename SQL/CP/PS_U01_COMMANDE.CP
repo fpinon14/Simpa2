@@ -1793,6 +1793,12 @@ BEGIN
 		BEGIN
 			EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @dcIdSin, 2, @sMess, @sIdFour, @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C'
 		END	
+
+		-- [LGY38]
+		If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+			Begin
+				Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @dcIdSin
+			End 
 				
 		Exec sysadm.PS_I_COMMANDE_APP_INCOMPLET_CORDON @dcIdSin, @dcIdGti
 	END

@@ -54,6 +54,7 @@
 -- JFF      26/09/2017   [DF006]
 -- JFF      14/12/2017   [DF005-1-LOT2]
 -- JFF      15/06/2018   [DF005-1-LOT3]
+-- JFF      07/03/2025   [LGY38]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_PM234_7_AUTOMATISATION_ORV3' AND type = 'P' )
         DROP procedure sysadm.PS_I_PM234_7_AUTOMATISATION_ORV3
@@ -97,6 +98,12 @@ If Exists (
 	-- Audit Assureur (Fraude)
 	Exec @iRet = sysadm.PS_S_PM234_7_AUDIT_ASSUREUR_ELSA @adcIdSin
 	If @iRet = -1 Return @iRet
+
+	-- [LGY38]
+	If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+		Begin
+			Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @adcIdSin
+		End 
 
 -- Je n'ai pas besoin d'être sous transaction, en effet, personne ne peut écrire ni lire ces données fraîchement écrites par ATLAS.
 -- Set Transaction Isolation level Read UnCommitted
@@ -4677,6 +4684,7 @@ Go
 -- JFF      14/12/2017   [DF005-1-LOT2]
 -- JFF      15/06/2018   [DF005-1-LOT3]
 -- JFF      22/10/2019   [PI087_PM473_2]
+-- JFF      07/03/2025   [LGY38]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_PM234_7_ETAT_VALIDATION_V02' AND type = 'P' )
         DROP procedure sysadm.PS_I_PM234_7_ETAT_VALIDATION_V02
@@ -4812,6 +4820,12 @@ Where	wg.id_sin = @adcIdSin
 					,@dDteRecu
 					,0
 	END
+
+	-- [LGY38]
+	If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+		Begin
+			Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @adcIdSin
+		End 
 
 	-- Le travail doit être occupé !!
 	Update w_queue set alt_occupe = 'O' where id_sin = @adcIdSin

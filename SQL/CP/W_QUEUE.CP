@@ -1723,6 +1723,8 @@ GO
 --
 -------------------------------------------------------------------
 -- JFF      22/10/2019   [PI087_PM473_2]
+-- JFF      07/05/2013   [PC938_ORANGE_V3]
+-- JFF      07/03/2023   [LGY38]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_VOL_PERDUS_ATLAS_SSUITE' AND type = 'P' )
         DROP procedure sysadm.PS_I_VOL_PERDUS_ATLAS_SSUITE
@@ -1875,6 +1877,7 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 					,'E'
 					,@dDteRecu
 					,0
+	
 	END
 	ELSE
 	BEGIN
@@ -1889,7 +1892,14 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 					,'E'
 					,@dDteRecu
 					,0
+
 	END
+
+	-- [LGY38]
+	If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+		Begin
+			Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @dcIdSin
+		End 
 
 	-- Le travail doit être occupé !!
 	Update w_queue set alt_occupe = 'O' where id_sin = @dcIdSin
@@ -2000,6 +2010,7 @@ Go
 --
 -------------------------------------------------------------------
 -- JFF      22/10/2019   [PI087_PM473_2]
+-- JFF      07/03/2023   [LGY38]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_VOL_PERDUS_ATLAS_ENCOURS' AND type = 'P' )
         DROP procedure sysadm.PS_I_VOL_PERDUS_ATLAS_ENCOURS
@@ -2178,6 +2189,7 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 					,'E'
 					,@dDteRecu
 					,0
+
 	END
 	ELSE
 	BEGIN
@@ -2192,7 +2204,15 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 					,'E'
 					,@dDteRecu
 					,0
+
 	END
+
+
+	-- [LGY38]
+	If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+		Begin
+			Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @dcIdSin
+		End 
 
 -- Taguer que le dossier a subi l'automatisation avec succès + contact (sans travail bien sûr)
 	Insert into sysadm.w_div_sin 
@@ -2298,6 +2318,7 @@ Go
 --
 -------------------------------------------------------------------
 -- JFF      22/10/2019   [PI087_PM473_2]
+-- JFF      07/03/2023   [LGY38]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_DOS_PERDUS_ATLAS_SSUITE_OU_REFUS' AND type = 'P' )
         DROP procedure sysadm.PS_I_DOS_PERDUS_ATLAS_SSUITE_OU_REFUS
@@ -2459,6 +2480,7 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 					,'E'
 					,@dDteRecu
 					,0
+
 	END
 	ELSE
 	BEGIN
@@ -2473,7 +2495,14 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 					,'E'
 					,@dDteRecu
 					,0
+
 	END
+
+	-- [LGY38]
+	If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+		Begin
+			Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @dcIdSin
+		End 
 
 	-- Le travail doit être occupé !!
 	Update w_queue set alt_occupe = 'O' where id_sin = @dcIdSin
@@ -2581,6 +2610,7 @@ Go
 --
 -------------------------------------------------------------------
 -- JFF      22/10/2019   [PI087_PM473_2]
+-- JFF      07/03/2023   [LGY38]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_ERR_TRAVAIL_ABSENT' AND type = 'P' )
         DROP procedure sysadm.PS_I_ERR_TRAVAIL_ABSENT
@@ -2726,6 +2756,7 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 					,@sCodIDecl
 					,@dDteRecu
 					,0
+
 	END
 	ELSE
 	BEGIN
@@ -2740,7 +2771,14 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 					,@sCodIDecl
 					,@dDteRecu
 					,0
+
 	END
+
+	-- [LGY38]
+	If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+		Begin
+			Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @dcIdSin
+		End 
 
 	If Not Exists ( 
 		Select Top 1 1 

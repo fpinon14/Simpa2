@@ -45,6 +45,8 @@
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
+-- JFF      07/03/2023   [LGY38]
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_DT386_AUTOMATISATION_AXA' AND type = 'P' )
         DROP procedure sysadm.PS_I_DT386_AUTOMATISATION_AXA
 GO
@@ -72,6 +74,13 @@ If @iRet = -1 Return @iRet
 -- Set Transaction Isolation level Read UnCommitted
 
 -- Dossier éligible à l'automatisme
+
+	-- [LGY38]
+	If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+		Begin
+			Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @adcIdSin
+		End 
+
 	Exec @iRet = sysadm.PS_I_DT386_DOSSIER_ELIGIBLE @adcIdSin
 	If @iRet = -1 Return @iRet
 
@@ -2820,6 +2829,7 @@ Go
 --
 -------------------------------------------------------------------
 -- JFF      22/10/2019   [PI087_PM473_2]
+-- JFF      07/03/2025   [LGY38]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_DT386_ETAT_VALIDATION' AND type = 'P' )
         DROP procedure sysadm.PS_I_DT386_ETAT_VALIDATION
@@ -2955,6 +2965,12 @@ Where	wg.id_sin = @adcIdSin
 					,@dDteRecu
 					,0
 	END
+
+	-- [LGY38]
+	If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+		Begin
+			Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @adcIdSin
+		End 
 
 	-- Le travail doit être occupé !!
 	Update w_queue set alt_occupe = 'O' where id_sin = @adcIdSin

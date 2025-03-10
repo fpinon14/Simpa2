@@ -48,6 +48,8 @@
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
+-- JFF      07/03/2025   [LGY38]
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_PC151379_AUTOMATISATION_CRCA' AND type = 'P' )
         DROP procedure sysadm.PS_I_PC151379_AUTOMATISATION_CRCA
 GO
@@ -73,6 +75,12 @@ If @iRet = -1 Return @iRet
 
 -- Je n'ai pas besoin d'être sous transaction, en effet, personne ne peut écrire ni lire ces données fraîchement écrites par ATLAS.
 -- Set Transaction Isolation level Read UnCommitted
+
+	-- [LGY38]
+	If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+		Begin
+			Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @adcIdSin
+		End 
 
 -- Dossier éligible à l'automatisme
 	Exec @iRet = sysadm.PS_I_PC151379_DOSSIER_ELIGIBLE @adcIdSin
@@ -3229,6 +3237,7 @@ Go
 --
 -------------------------------------------------------------------
 -- JFF      22/10/2019   [PI087_PM473_2]
+-- JFF      07/03/2025   [LGY38]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_PC151379_ETAT_VALIDATION' AND type = 'P' )
         DROP procedure sysadm.PS_I_PC151379_ETAT_VALIDATION
@@ -3364,6 +3373,12 @@ Where	wg.id_sin = @adcIdSin
 					,@dDteRecu
 					,0
 	END
+
+	-- [LGY38]
+	If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+		Begin
+			Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @adcIdSin
+		End 
 
 	-- Le travail doit être occupé !!
 	Update w_queue set alt_occupe = 'O' where id_sin = @adcIdSin

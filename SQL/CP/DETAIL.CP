@@ -692,6 +692,7 @@ Go
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
 -- JFF      30/05/2023   [PMO89_RS4822]
+-- JFF      07/03/2023   [LGY38]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U03_DETAIL_MAJ_FACTU_V02' AND type = 'P' )
         DROP procedure sysadm.PS_U03_DETAIL_MAJ_FACTU_V02
@@ -805,7 +806,12 @@ AS
   Else  
        EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V02 @dcIdSin, 2, @sVal, 'ML', 'X' , 0 , null, 'C', null, 12  
 -- Définir les valeurs de paramètre  
-  
+
+	-- [LGY38]
+	If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+		Begin
+			Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @dcIdSin
+		End   
         
     End  
   Else  
@@ -1030,6 +1036,7 @@ Go
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
 -- JFF      30/05/2023   [PMO89_RS4822]
+-- JFF      07/03/2023   [LGY38]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U031_DETAIL_MAJ_FACTU_V02' AND type = 'P' )
         DROP procedure sysadm.PS_U031_DETAIL_MAJ_FACTU_V02
@@ -1142,6 +1149,11 @@ AS
  		    EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V02 @dcIdSin, 2, @sVal, 'ML', 'X' , 0 , null, 'C', null, 12
 -- Définir les valeurs de paramètre
 
+		-- [LGY38]
+		If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+			Begin
+				Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @dcIdSin
+			End 
 		    
 	   End
 	 Else
@@ -1354,6 +1366,7 @@ Go
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
 -- JFF      30/05/2023   [PMO89_RS4822]
+-- JFF      07/03/2023   [LGY38]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U032_DETAIL_MAJ_FACTU_V02' AND type = 'P' )
         DROP procedure sysadm.PS_U032_DETAIL_MAJ_FACTU_V02
@@ -1498,7 +1511,12 @@ AS
  		    EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V02 @dcIdSin, 2, @sVal, 'ML', 'X' , 0 , null, 'C', null, 12
 -- Définir les valeurs de paramètre
 
-		    
+		-- [LGY38]
+		If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+			Begin
+				Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @dcIdSin
+			End 
+	    
 	   End
 	 Else
 	 Begin 
@@ -1719,6 +1737,7 @@ Go
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
 -- JFF      30/05/2023   [PMO89_RS4822]
+-- JFF      07/03/2023   [LGY38]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U04_DETAIL_MAJ_FACTU_V03' AND type = 'P' )
         DROP procedure sysadm.PS_U04_DETAIL_MAJ_FACTU_V03
@@ -1881,9 +1900,15 @@ AS
 --		    Exec SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @dcIdSin,2, @sVal ,'ML', 'X', 0
  		    EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V02 @dcIdSin, 2, @sVal, 'ML', 'X' , 0 , null, 'C', null, 12
 -- Définir les valeurs de paramètre
-	  
+
+		-- [LGY38]
+		If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+			Begin
+				Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @dcIdSin
+			End 
 
 	   End
+
 	 Else
 	 Begin 
 	  Set @sAltTraite = 'N'	
@@ -2084,8 +2109,8 @@ Go
 -- JFF      11/04/2016   [PM336-1]
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
+-- JFF      07/03/2025   [LGY38]
 -------------------------------------------------------------------
-
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U05_DETAIL_MAJ_FACTU_V01' AND type = 'P' )
         DROP procedure sysadm.PS_U05_DETAIL_MAJ_FACTU_V01
 GO
@@ -2138,6 +2163,12 @@ AS
  		    EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V02 @dcIdSin, 2, @sVal, 'ML', 'X' , 0 , null, 'C', null, 12
 -- Définir les valeurs de paramètre
 
+		-- [LGY38]
+		If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+			Begin
+				Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @dcIdSin
+			End 
+
 	End
 	Else
 	Begin 
@@ -2173,6 +2204,7 @@ Go
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
 -- JFF      30/05/2023   [PMO89_RS4822]
+-- JFF      07/03/2025   [LGY38]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U06_DETAIL_MAJ_FACTU_V02' AND type = 'P' )
         DROP procedure sysadm.PS_U06_DETAIL_MAJ_FACTU_V02
@@ -2299,6 +2331,12 @@ AS
 --		    Exec SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @dcIdSin,2, @sVal ,'ML', 'X', 0
  		    EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V02 @dcIdSin, 2, @sVal, 'ML', 'X' , 0 , null, 'C', null, 12
 -- Définir les valeurs de paramètre
+
+		-- [LGY38]
+		If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+			Begin
+				Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @dcIdSin
+			End 
 
 	   End
 	 Else
@@ -2999,6 +3037,7 @@ Go
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
 -- JFF      30/05/2023   [PMO89_RS4822]
+-- JFF      07/03/2025   [LGY38]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U08_DETAIL_MAJ_FACTU_V03' AND type = 'P' )
         DROP procedure sysadm.PS_U08_DETAIL_MAJ_FACTU_V03
@@ -3226,6 +3265,12 @@ AS
 				EXEC SHERPA_PRO.sysadm.PS_I04_CONTACT_TRAVAIL_V02 @dcIdSin, 2, @sVal, 'ML', 'X' , 0 , null, 'C', null, 12
 			Else
  				EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V02 @dcIdSin, 2, @sVal, 'ML', 'X' , 0 , null, 'C', null, 12
+
+			-- [LGY38]
+			If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+				Begin
+					Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @dcIdSin
+				End 		
 
 	   End
 	 Else
@@ -3463,6 +3508,7 @@ Go
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
 -- JFF      30/05/2023   [PMO89_RS4822]
+-- JFF      07/03/2023   [LGY38]
 -------------------------------------------------------------------
 
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U09_DETAIL_MAJ_FACTU_V02' AND type = 'P' )
@@ -3602,6 +3648,13 @@ AS
 				EXEC SHERPA_PRO.sysadm.PS_I04_CONTACT_TRAVAIL_V02 @dcIdSin, 2, @sVal, 'ML', 'X' , 0 , null, 'C', null, 12
 			Else
  				EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V02 @dcIdSin, 2, @sVal, 'ML', 'X' , 0 , null, 'C', null, 12
+
+
+			-- [LGY38]
+			If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+				Begin
+					Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @dcIdSin
+				End 
 
 	   End
 	 Else
@@ -3810,11 +3863,11 @@ Go
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
 -- JFF      30/05/2023   [PMO89_RS4822]
+-- JFF      07/03/2025   [LGY38]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_DETAIL_MAJ_FACTU_SANS_REGL_DT44_V02' AND type = 'P' )
         DROP procedure sysadm.PS_U_DETAIL_MAJ_FACTU_SANS_REGL_DT44_V02
 GO
-
 
 CREATE procedure sysadm.PS_U_DETAIL_MAJ_FACTU_SANS_REGL_DT44_V02
 	@dcIdSin Decimal (10), -- [PI062]
@@ -3922,6 +3975,12 @@ AS
  		    EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V02 @dcIdSin, 2, @sVal, 'ML', 'X' , 0 , null, 'C', null, 12
 -- Définir les valeurs de paramètre
 
+
+		-- [LGY38]
+		If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+			Begin
+				Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @dcIdSin
+			End 
 		    
 	   End
 	 Else
@@ -4190,6 +4249,7 @@ Go
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
 -- JFF      30/05/2023   [PMO89_RS4822]
+-- JFF      07/03/2023   [LGY38]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_DETAIL_MAJ_FACTU_DIAG_O2M_V02' AND type = 'P' )
         DROP procedure sysadm.PS_U_DETAIL_MAJ_FACTU_DIAG_O2M_V02
@@ -4304,6 +4364,12 @@ AS
 		Else
  		    EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V02 @dcIdSin, 2, @sVal, 'ML', 'X' , 0 , null, 'C', null, 12
 -- Définir les valeurs de paramètre
+
+		-- [LGY38]
+		If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+			Begin
+				Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @dcIdSin
+			End 
 
 		    
 	   End
@@ -4525,6 +4591,7 @@ Go
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
 -- JFF      30/05/2023   [PMO89_RS4822]
+-- JFF      07/03/2023   [LGY38]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_DETAIL_MAJ_FACTU_BNP_SECU_V03' AND type = 'P' )
         DROP procedure sysadm.PS_U_DETAIL_MAJ_FACTU_BNP_SECU_V03
@@ -4642,7 +4709,12 @@ AS
  		    EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V02 @dcIdSin, 2, @sVal, 'ML', 'X' , 0 , null, 'C', null, 12
 -- Définir les valeurs de paramètre
 
-		    
+		-- [LGY38]
+		If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+			Begin
+				Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @dcIdSin
+			End 		  
+		  
 	   End
 	 Else
 	 Begin 
@@ -4913,6 +4985,7 @@ Go
 -- JFF      12/02/2016   [PI062]
 -- JFF      09/09/2022   [PM80_FA12_FRANEX]
 -- JFF      30/05/2023   [PMO89_RS4822]
+-- JFF      07/03/2023   [LGY38]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U10_DETAIL_MAJ_FACTU_ADVISE_V01' AND type = 'P' )
         DROP procedure sysadm.PS_U10_DETAIL_MAJ_FACTU_ADVISE_V01
@@ -5096,6 +5169,11 @@ AS
  		    EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V02 @dcIdSin, 2, @sVal, 'ML', 'X' , 0 , null, 'C', null, 12
 -- Définir les valeurs de paramètre
 	  
+		-- [LGY38]
+		If sysadm.FN_CLE_NUMERIQUE ( 'LGY38') > 0 
+			Begin
+				Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @dcIdSin
+			End 
 
 	   End
 	 Else
