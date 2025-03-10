@@ -7161,6 +7161,7 @@ public function string uf_controlergestionedi ();//*----------------------------
 //       JFF   26/11/2018 [PC874_2_V1]
 //       JFF   20/06/2022 [RS3220_MODDEGR_TELST]
 //       JFF   07/03/2024 [HP252_276_HUB_PRESTA]
+// 		JFF	10/03/2025 [HUB1117]
 //*-----------------------------------------------------------------
 
 Int					iRet
@@ -7168,7 +7169,7 @@ String				sIdFour, sVal, sVal1, sPos, sDw, sNouvCmde, sMarq, sModl, sFind, sNull
 String				sIdMarqArt, sIdTypArt, sIdFourModif, sRech, sIdGti, sPasseDroit, sFiltreOrig , sSortOrig
 Date					dDate1, dDate2
 Long					lTot, lCpt, lRow, lDeb, lFin, lTotRow, lRow1, lCpt2, lRow2, lRow3, lRow4
-Long lIdEvt, lIdGti, lIdDetail
+Long lIdEvt, lIdGti, lIdDetail, lVal 
 Decimal {2} dcMtValAchat 
 DataWindowChild	dwChild
 n_cst_attrib_key	lnv_Key[] 			
@@ -7339,6 +7340,11 @@ If lTot > 0 Then
 			If lRow > 0 Then
 				idwArticle.SetItem ( lCpt, "ID_MARQ_ART", isMarqPortAdh ) 
 				idwArticle.SetItem ( lCpt, "ID_MODL_ART", isModlPortAdh )
+				
+				// [HUB1117]
+				lVal = idwCmdeSin.GetItemNumber ( lRow, "STATUS_GC" ) 
+				lnv_String.of_setkeyvalue( isInfoSpbFrnCplt, "QUALIF_FORCAGE", String ( lVal ) , ";")
+				
 			Else
 				stMessage.sCode = "COMD713"
 				idwArticle.SetRedraw(TRUE)
@@ -7349,17 +7355,17 @@ If lTot > 0 Then
 		// [HP252_276_HUB_PRESTA]
 		Case "A_DIAG_FORCE"
 
-			// [PM222-1] // [HP252_276_HUB_PRESTA]
-			lRow = idwCmdeSin.Find ( "( ID_REF_FOUR = 'A_DIAGNOSTIQUER' AND POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0) AND COD_ETAT NOT IN ( 'RFO', 'RPC', 'ANN') AND STATUS_GC IN ( 153, 154 )", 1, idwCmdeSin.Rowcount() ) 
-
-			// [HP252_276_HUB_PRESTA][20250228130407143]
-			If lRow <= 0 Then 
-				lRow = idwCmdeSin.Find ( "( ID_REF_FOUR = 'A_DIAGNOSTIQUER' AND POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0) AND COD_ETAT NOT IN ( 'RFO', 'RPC', 'ANN') AND STATUS_GC IN ( 305, 169 )", 1, idwCmdeSin.Rowcount() ) 
-			End If 		
+			// [PM222-1] // [HP252_276_HUB_PRESTA][20250228130407143]
+			lRow = idwCmdeSin.Find ( "( ID_REF_FOUR = 'A_DIAGNOSTIQUER' AND POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0) AND COD_ETAT NOT IN ( 'RFO', 'RPC', 'ANN') AND STATUS_GC IN ( 153, 305, 169 )", 1, idwCmdeSin.Rowcount() ) 
 				
 			If lRow > 0 Then
 				idwArticle.SetItem ( lCpt, "ID_MARQ_ART", isMarqPortAdh ) 
 				idwArticle.SetItem ( lCpt, "ID_MODL_ART", isModlPortAdh )
+				
+				// [HUB1117]
+				lVal = idwCmdeSin.GetItemNumber ( lRow, "STATUS_GC" ) 
+				lnv_String.of_setkeyvalue( isInfoSpbFrnCplt, "QUALIF_FORCAGE", String ( lVal ) , ";")
+				
 			Else
 				stMessage.sCode = "COMT004"
 				idwArticle.SetRedraw(TRUE)
@@ -7436,6 +7442,21 @@ If lTot > 0 Then
 			Else 
 				sPasseDroit = "#O2M#"
 			End If 
+
+		// [HP252_276_HUB_PRESTA]
+		Case "REFUSE_A_REEXP"
+			// [PM222-1] // [HP252_276_HUB_PRESTA][20250228130407143]
+			lRow = idwCmdeSin.Find ( "( ID_REF_FOUR IN ( 'A_DIAGNOSTIQUER', 'A_REPARER' ) AND POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0) AND COD_ETAT NOT IN ( 'RFO', 'RPC', 'ANN') AND STATUS_GC IN ( 153, 154, 305, 169  )", 1, idwCmdeSin.Rowcount() ) 
+
+			If lRow > 0 Then
+				
+				// [HUB1117]
+				lVal = idwCmdeSin.GetItemNumber ( lRow, "STATUS_GC" ) 
+				lnv_String.of_setkeyvalue( isInfoSpbFrnCplt, "QUALIF_FORCAGE", String ( lVal ) , ";")
+				
+			End If 
+			
+			
 	End Choose
 
 
