@@ -2006,6 +2006,7 @@ private subroutine uf_nom_fichier (ref string asnomfic, long alcas);//*---------
 //       JFF   30/05/2023 [PMO89_RS4822]
 //       JFF   07/05/2013 [RS5295_NOMFIC_OMT]
 //       JFF   12/06/2023 [RS-5297-HP-178]
+//       JFF   18/02/2025 [PMO268_MIG65]
 //*-----------------------------------------------------------------
 
 String	sRepFic, sFichier, sFichierRen, sInd, sIdFourn, sNomFic, sRepfourn, sNomVariable, sExt
@@ -2205,7 +2206,11 @@ Choose Case sIdFourn
 				sExt = ".XLS"
 			Case "AUC"
 				// [PC363_AUC].[ECL_FICH]
-				sNomVariable = "[PRODUIT]Bons_Cadeaux_" 
+				// sNomVariable = "[PRODUIT]Bons_Cadeaux_" 
+
+				// [PMO268_MIG65]				
+				sNomVariable = "Remboursements_SPB_" 
+				
 				sExt = ".XLS"				
 			Case "CAR"
 				sNomVariable = "Commande_Carrefour_" 
@@ -2226,11 +2231,24 @@ Choose Case sIdFourn
 		
 		Do While bFicTrouve 
 
-			sNomFic = sNomVariable + &
-			  String ( year    ( Today () ), "0000" ) + &
-			  String ( Month  ( Today () ), "00" ) + &
-			  String ( Day    ( Today () ), "00" ) + &
-			  String ( Now(), "hhmmss")
+			Choose Case sIdFourn 
+					
+				Case "AUC" 		// [PMO268_MIG65]				
+					sNomFic = sNomVariable + &
+					  String ( year    ( Today () ), "0000" ) + &
+					  String ( Month  ( Today () ), "00" ) + &
+					  String ( Day    ( Today () ), "00" ) + &
+					  "_" + &
+					  String ( Now(), "hhmmss")					
+					  
+				Case Else
+
+					sNomFic = sNomVariable + &
+					  String ( year    ( Today () ), "0000" ) + &
+					  String ( Month  ( Today () ), "00" ) + &
+					  String ( Day    ( Today () ), "00" ) + &
+					  String ( Now(), "hhmmss")
+			End Choose 			
 			
 			sFichier = sRepFic + sNomFic + sExt
 			
@@ -5323,6 +5341,7 @@ private function integer uf_generer_fichier_auchan (long alidlotcmd);//*--------
 //*       JFF     22/02/2011 [PC363_AUC].[ECL_FICH]
 // 		FPI		05/10/2011	[VDoc5352] correction (déplacer)
 //*	FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
+//       JFF   18/02/2025 [PMO268_MIG65]
 //*-----------------------------------------------------------------
 
 Int	iRet
@@ -5458,11 +5477,12 @@ For lCptCas = 1 To 1
 	// :[PC363_AUC].[ECL_FICH]
 
 	// ON continue en écrivant le fichier XML pour les courriers.
+	/* [PMO268_MIG65]
 	If iRet > 0 Then
 		sNomFic = Left ( sNomFicOrig, Len ( sNomFicOrig ) - 4 ) + ".XML"
 		iRet = This.uf_Generer_Fichier_Auchan_XML ( sNomFic, alIdLotCmd )
 	End If
-
+	*/
 
 	If iRet = -1 Then Exit
 
@@ -6194,7 +6214,7 @@ dsDonneeCourrier.Sort ()
 //======================================= Param TAG =============================================
 
 // Entête 
-sTGEnteteVersion = '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'
+sTGEnteteVersion = '<?xml version="1.0" encoding="UTF-8"?>'
 
 // Symboles
 sFin = "/" ; sDeb = "<" ; sFerm = ">" ; sEgaleGuill = '="' ; FinGuill = '"'

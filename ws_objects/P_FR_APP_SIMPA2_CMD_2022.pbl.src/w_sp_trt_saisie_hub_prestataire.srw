@@ -1564,6 +1564,10 @@ Choose Case isTypActionS2
 		stMessage.sVar[6]    = sTypDom
 		stMessage.sVar[7]    = isTypActionS2	
 
+		If ilDp393 > 0 Then 
+			stMessage.sVar[7] = "A renvoyer par le HUB"
+		End If 
+
 		// [20241127082353640]
 		stMessage.sVar[8]    = isAdrCp
 		stMessage.sVar[9]    = isPays
@@ -1572,6 +1576,11 @@ Choose Case isTypActionS2
 		stMessage.sVar[12]   = String ( idtDteAchat, "dd/mm/yyyy" )		
 		stMessage.sVar[13]   = isEtatAppSin 			
 		stMessage.sVar[14]   = isTypActionS2	
+
+		If ilDp393 > 0 Then 
+			stMessage.sVar[14] = "A renvoyer par le HUB"
+		End If 
+
 
 
 	Case Else
@@ -1583,6 +1592,9 @@ Choose Case isTypActionS2
 		stMessage.sVar[5]    = isTypAppSin	
 		stMessage.sVar[6]    = isTypActionS2
 
+		If ilDp393 > 0 Then 
+			stMessage.sVar[6] = "A renvoyer par le HUB"
+		End If 
 
 		// [20241127082353640]		
 		stMessage.sVar[7]    = isAdrCp
@@ -1592,6 +1604,10 @@ Choose Case isTypActionS2
 		stMessage.sVar[11]   = String ( idtDteAchat, "dd/mm/yyyy" )		
 		stMessage.sVar[12]   = isEtatAppSin 			
 		stMessage.sVar[13]    = isTypActionS2
+	
+		If ilDp393 > 0 Then 
+			stMessage.sVar[13] = "A renvoyer par le HUB"
+		End If 	
 	
 End Choose 
 

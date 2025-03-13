@@ -15379,6 +15379,7 @@ private function string uf_controlergestion_auchan (long alcpt);//*-------------
 //* MAJ	PAR	Date			Modification
 //       JFF   03/06/2010  [PC397/443_IPAD]
 //       JFF   23/11/2015 [DT185]
+//       JFF   18/02/2025 [PMO268_MIG65]
 //*-----------------------------------------------------------------
 String sPos, sFiltreOrig, sSortOrig, sTypAction, sNumGsm, sVal
 Long   lRow, lModeRempl, lDeb, lFin
@@ -15414,12 +15415,17 @@ Choose Case sTypAction
 			End If
 		End If
 
+		// [PMO268_MIG65] shunt
+		/*
 		F_RechDetPro ( lDeb, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 140 )
 		If lDeb <= 0 Then Return sPos
-		
 		sVal = idw_DetPro.GetItemString ( lDeb, "VAL_CAR" )
 		sVal = Trim ( lnv_string.of_Getkeyvalue( sVal, "DUREE_VALIDITE_CARTE_CADEAU", ";") )
 		lnv_string.of_setkeyvalue( isInfoSpbFrnCplt, "DUR_VAL_CC", sVal, ";")
+		*/
+		
+		// [PMO268_MIG65] 
+		lnv_string.of_setkeyvalue( isInfoSpbFrnCplt, "DUR_VAL_CC", "1A", ";")
 	
 
 End CHoose

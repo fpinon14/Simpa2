@@ -34,6 +34,7 @@ String 		K_FIC9		 = "SUIVIANOMALIES_" // [PM289]
 String 		K_FIC10		 = "RET_CTRLE_IMEI_OMT_" // [PC874_2_V1]
 String 		K_FIC11		 = "RET_CTRLE_IMEI_OGP_" // [DT424]
 String 		K_FIC12		 = "RET_CTRLE_IMEI_OOP_" // [DT424]
+String 		K_FIC13		 = "Remboursements_SPB_retour_" // [PMO268_MIG65]
 
 
 String		K_FICLOG = "LOGCMD\FIC_MOV.LOG"
@@ -327,6 +328,7 @@ public function string uf_detection_auto_nomfic (string aidfourn);//*-----------
 //        JFF   02/09/2019   [DT424]
 //        JFF   07/03/2024   [HP252_276_HUB_PRESTA]
 //        JFF   16/01/2025	  [HUB832_HUB_ORG_REUN] 
+//        JFF   18/02/2025   [PMO268_MIG65]
 //*-----------------------------------------------------------------
 
 String	sRepFic, sNomFic, sFichier, sInd, sVar, sJoker, sItem, sRepFourn, sCas
@@ -376,8 +378,14 @@ For lCptCas = 1 TO 13
 			sCas = ""
 
 		CASE 3  // [PC363_AUCHAN]
+			/* [PMO268_MIG65]
 			sVar = K_FIC6
 			sNomFic = sVar + "*.0*"
+			*/
+		
+			// [PMO268_MIG65]
+			sVar = K_FIC13
+			sNomFic = sVar + "*.TXT"
 			sCas = "AUCHAN"			
 
 		CASE 4  // Micromania //* #2 [MICROMANIA]
@@ -465,11 +473,19 @@ For lCpt = lTotLig To 1 Step -1
 			idwTri.SetItem ( lRow, "EXTENTION",   Mid  ( sItem, 14, 10 ) ) 
 
 		Case "AUCHAN" // [PC363_AUCHAN]
+			/* // [PMO268_MIG65]
 			idwTri.SetItem ( lRow, "TYPE_FIC", Upper ( Left ( sItem, 9 ) ) )
 			idwTri.SetItem ( lRow, "JOUR",     Mid  ( sItem, 10, 2 ) ) 
 			idwTri.SetItem ( lRow, "MOIS",     Mid  ( sItem, 12, 2 ) ) 
 			idwTri.SetItem ( lRow, "ANNEE",    Mid  ( sItem, 14, 1 ) ) 
 			idwTri.SetItem ( lRow, "EXTENTION",   Right  ( sItem, 4 ) ) 
+			*/
+			idwTri.SetItem ( lRow, "TYPE_FIC", Upper ( Left ( sItem, 26 ) ) )
+			idwTri.SetItem ( lRow, "JOUR",     "" ) 
+			idwTri.SetItem ( lRow, "MOIS",     "" ) 
+			idwTri.SetItem ( lRow, "ANNEE",    Mid  ( sItem, 27, 14 ) ) 
+			idwTri.SetItem ( lRow, "EXTENTION",   Right  ( sItem, 4 ) ) 
+			
 
 		Case "FNAC" 
 			idwTri.SetItem ( lRow, "TYPE_FIC", Upper ( Left ( sItem, 6 ) ) )
@@ -567,6 +583,12 @@ If idwTri.Rowcount () > 0 Then
 						  idwTri.GetItemString ( 1, "ANNEE" )	  + &
 						  idwTri.GetItemString ( 1, "MOIS" )	  + &
 						  idwTri.GetItemString ( 1, "JOUR" )	  + &
+						  idwTri.GetItemString ( 1, "EXTENTION" )
+						  
+		Case "AUCHAN"  // [PMO268_MIG65]
+
+			sFichier = idwTri.GetItemString ( 1, "TYPE_FIC" ) + &
+						  idwTri.GetItemString ( 1, "ANNEE" )	  + &
 						  idwTri.GetItemString ( 1, "EXTENTION" )
 
 		Case Else
@@ -869,6 +891,7 @@ private function long uf_charger_fichierfourn ();//*----------------------------
 //       JFF   19/12/2022 [RS4093_EVOL_ELD]
 //       JFF   30/05/2023 [PMO89_RS4822]
 //       JFF   07/03/2024 [HP252_276_HUB_PRESTA]
+//       JFF   18/02/2025 [PMO268_MIG65]
 //*-----------------------------------------------------------------
 
 Int		iRet
@@ -1000,7 +1023,9 @@ CHOOSE CASE Upper ( sIdFourn )
 
 // [PC363_AUCHAN]
 	CASE "AUC" 
-		idwFicFourn.DataObject = "d_trt_int_fic_suivicmd_auchan"
+		// [PMO268_MIG65]
+		// idwFicFourn.DataObject = "d_trt_int_fic_suivicmd_auchan"
+		idwFicFourn.DataObject = "d_trt_int_fic_suivicmd_auchan_2"
 
 	// [PC301].[LOT2]
 	CASE "CAR"
@@ -1515,6 +1540,7 @@ private function integer uf_integration_fichier_fournisseur ();//*--------------
 //       JFF   26/11/2018 [PC874_2_V1]
 //       JFF   02/09/2019 [DT424]
 //       JFF   30/05/2023 [PMO89_RS4822]
+//       JFF   18/02/2025 [PMO268_MIG65]
 //*-----------------------------------------------------------------
 Int iRet 
 String	sIdFourn, sNomFicOrig, sNomFicRen, sMetRet, sNomFic, sDateHeureTrt, sMessRet
@@ -1716,11 +1742,13 @@ If iRet > 0 Then
 	/*------------------------------------------------------------------*/
 	sNomFicOrig = isTxtNomFic.Text
 	
-	If sIdFourn="LBE" Then // [PC884]
-		sNomFicRen  = Left ( sNomFicOrig, Len ( sNomFicOrig ) - 3 ) + "OK"
-	Else
-		sNomFicRen  = Left ( sNomFicOrig, Len ( sNomFicOrig ) - 3 ) + "X" + Right ( sNomFicOrig, 2 ) 
-	End if
+	Choose Case sIdFourn
+		// [PC884] 	// [PMO268_MIG65]
+		Case "LBE", "AUC"
+			sNomFicRen  = Left ( sNomFicOrig, Len ( sNomFicOrig ) - 3 ) + "OK"
+		Case Else
+			sNomFicRen  = Left ( sNomFicOrig, Len ( sNomFicOrig ) - 3 ) + "X" + Right ( sNomFicOrig, 2 ) 
+	End Choose 
 	
 	/*------------------------------------------------------------------*/
 	/* Recopie du fichier original vers le fichier renommé.				  */
@@ -12476,6 +12504,7 @@ private function integer uf_ctrl_fichier_auchan ();//*--------------------------
 //* #3    JFF   28/12/2009  [20091228114718123]
 //*   		SBA	25/06/2010 [BUG.CTRLFICSUIVI]
 // 		JFF	22/09/2017 [CTRLE_DATE_INTRG_FOU]
+//       JFF   18/02/2025 [PMO268_MIG65]
 //*-----------------------------------------------------------------
 
 Int iRet 
@@ -12497,6 +12526,8 @@ sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
 
 //For lCpt = 1 To lTotLig // #2
 For lCpt = lTotLig To 1 Step -1
+
+//	If lCpt = 1 Then continue // On passe la première ligne qui est la ligne d'entête.
 
 	sCodEtat = fill(" ",3)
 	sIdRefFour = fill(" ",20)
@@ -12570,7 +12601,7 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 3 : DTE_ENV_CC															  */
 	/*------------------------------------------------------------------*/
-	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "DTE_ENV_CC" ) )
+	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "DTE_ENV_CC_AUC" ) )
 
 	If IsNull ( sVal) or Not IsDate ( sVal ) or Trim ( sVal ) = "" Then
 		iRet = -1
@@ -12581,8 +12612,10 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 4 : NUM_CMDE_CC															  */
 	/*------------------------------------------------------------------*/
-	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMDE_CC" ) )
+	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_CC_AUC" ) )
 
+	// [PMO268_MIG65]
+	/*
 	If IsNull ( sVal) or Not IsNumber ( sVal ) Then
 		iRet = -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
@@ -12594,6 +12627,21 @@ For lCpt = lTotLig To 1 Step -1
 		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
 		" :Numéro carte cadeau non valide, nous attendons un numérique de 6 chiffre (cf NDC PC363 Auchan)" )
 	End If
+	*/
+
+	// [PMO268_MIG65]
+	If IsNull ( sVal) Then
+		iRet = -1
+		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
+		" :Numéro carte cadeau obligatoire" )
+	End If
+	
+	If Len ( sVal ) <> 10 Or Left ( sVal, 2 ) <> "MA" Or Not IsNumber ( Right ( sVal, 8 ) ) Then
+		iRet = -1
+		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
+		" :Numéro carte cadeau non valide, nous attendons le format MA00000000" )
+	End If
+	
 
 	If iRet > 0 Then
 		if not uf_ctrl_general_bloquant (lIdSin, lIdSeq, lCpt, sIdFourCtrl ) Then
@@ -12666,7 +12714,8 @@ private function integer uf_integration_fichier_auchan (ref long alnblig, ref lo
 
 Int iRet
 DateTime dtDteRcpFrn, dtDteEnvCli
-String	sSql, sVal, sSqlOrig, sIdFour, sVal2 
+String	sSql, sVal, sSqlOrig, sIdFour, sVal2, sVal1 
+String sInfoFrnSpbCplt
 Long		lTotLig, lCpt, lVal, lIdSin, lIdSeq
 Decimal {2}  dcMtFrais 
 n_cst_string lnvPFCString  
@@ -12684,6 +12733,10 @@ alNbLigMod = 0
 alNbLigNonTraitee	= 0
 
 For lCpt = 1 To lTotLig 
+
+//	If lCpt = 1 Then continue // On passe la première ligne qui est la ligne d'entête.
+
+	sInfoFrnSpbCplt = "" 
 	
 	If lCpt = 1 Then sIdFour = idwFicFourn.GetItemString ( lCpt, "FOURNISSEUR" ) 
 	sSql = sSqlOrig
@@ -12717,7 +12770,7 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	/* ZONE 3 : ID_CMD_FRN															  */
 	/*------------------------------------------------------------------*/
-	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMDE_CC" ) ) 
+	sVal = "null"
 	If IsNull ( sVal ) Then sVal = "null"
 	sSql += sVal + ", "
 
@@ -12737,7 +12790,7 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	/* ZONE 6 : DTE_ENV_CLI 														  */
 	/*------------------------------------------------------------------*/
-	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "DTE_ENV_CC" ) )
+	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "DTE_ENV_CC_AUC" ) )
 	If IsNull ( sVal ) Then 
 		sVal = "null"
 	Else
@@ -12787,7 +12840,13 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	/* ZONE 13 : STATUS_GC															  */
 	/*------------------------------------------------------------------*/
-	sVal = "0"
+	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_CC_AUC" ) ) 
+	sVal1 = Trim ( idwFicFourn.GetItemString ( lCpt, "DTE_ENV_CC_AUC" ) )
+	IF Not IsNull ( sVal ) And Trim ( sVal ) <> "" and Not IsNull ( sVal1 ) And Trim ( sVal1 ) <> "" Then
+		sVal = "401"
+	Else 
+		sVal = "402"		
+	End IF 
 	sSql += sVal + ", "
 
 	/*------------------------------------------------------------------*/
@@ -12924,11 +12983,18 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	/* ZONE 31 : INFO_FRN_SPB_CPLT ( zone multiple )[FNAC_PROD_ECH_TECH]*/
 	/*------------------------------------------------------------------*/
+	
+	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_CC_AUC" ) ) 
+	lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "NUM_CMD_CC_AUC", sVal, ";")
+	
+	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "DTE_ENV_CC_AUC" ) )
+	lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "DTE_ENV_CC_AUC", sVal, ";")
+	
 	// [PM254_V1]
-	sVal = "null"
 	If IsNull ( isNomFicOrig ) Then isNomFicOrig = ""
-	lnvPFCString.of_Setkeyvalue ( sVal, "NOM_FIC_FRN", isNomFicOrig, ";")		
-	sSql += "'" + sVal + "'"
+	lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "NOM_FIC_FRN", isNomFicOrig, ";")		
+
+	sSql += "'" + sInfoFrnSpbCplt + "'"
 
 	/*------------------------------------------------------------------*/
 	/* #1 : Reglement automatique                                       */
