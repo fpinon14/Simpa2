@@ -36099,10 +36099,6 @@ dwChild.Filter ( )
 
 sMailBody+="APPAREIL_A_REMPLACER : " + Upper ( sVal ) + " " + Upper ( idw_wSin.GetItemString ( 1, "MARQ_PORT" ) ) + " " + Upper ( idw_wSin.GetItemString ( 1, "MODL_PORT" ) ) + sSaut
 sMailBody+=sSaut
-sMailBody+=sSaut
-sMailBody+="Cordialement," + sSaut
-sMailBody+=sSaut
-sMailBody+="Service Assurance " + sLibProd + "."
 
 
 /*------------------------------------------------------------------*/
@@ -36193,6 +36189,13 @@ SQLCA.PS_S01_BOUTIQUE ( idw_WSin.GetItemNumber ( 1, "ID_PROD" ) , idw_WSin.GetIt
 If sNomMagasin = "" Or IsNull ( sNomMagasin ) Then sNomMagasin = "AUCUNE REF. SUR CE CODE MAG."
 
 sMailBody+="NOM_DU_MAGASIN : " + Upper ( sNomMagasin ) + sSaut
+
+sMailBody+=sSaut
+sMailBody+=sSaut
+sMailBody+="Cordialement," + sSaut
+sMailBody+=sSaut
+sMailBody+="Service Assurance " + sLibProd + "."
+
 
 // Construction du XML
 stPass.ltab[1] = idw_LstwCommande.GetItemNumber ( 1, "ID_SEQ" )
