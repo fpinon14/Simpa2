@@ -19912,6 +19912,7 @@ private function boolean uf_validation_finale_trt_particuliers ();//*-----------
 //       JFF   05/08/2024 [MCO602_PNEU]
 //       JFF   05/08/2024 [MCO602_PNEU][MCO1050]
 //       JFF   19/12/2024 [MIG1_COUR_EMAILING]
+//       JFF   14/03/2025 [PMO268_MIG56]
 //*-----------------------------------------------------------------
 
 Date dtPivotFranchisePBox
@@ -20285,15 +20286,25 @@ Choose Case True
 		// [PC10][DIAG_NOMADE]
 		// [PM103][1]
 		
-		// [PC151549]
-		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 302 )
-		If lDeb <= 0 and bRet Then
-			If Not gbModeReprise_223 Then
-				If bRet Then
-					bRet = This.uf_Validation_Finale_MBS_Mail ()
+		// [PC151549] // [PMO268_MIG56] 
+		If F_CLE_A_TRUE ( "RS6448_MBZ3_MAILPEC" ) Then
+			If bRet Then
+				If Not gbModeReprise_223 Then
+					If bRet Then
+						bRet = This.uf_Validation_Finale_MBS_Mail ()
+					End If
 				End If
 			End If
-		End If
+		Else 
+			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 302 )
+			If lDeb <= 0 and bRet Then
+				If Not gbModeReprise_223 Then
+					If bRet Then
+						bRet = This.uf_Validation_Finale_MBS_Mail ()
+					End If
+				End If
+			End If
+		End IF 
 		// :[PM103][1]
 		
 
@@ -35851,6 +35862,7 @@ private function boolean uf_validation_finale_mbs_mail_tel2_pm191 ();//*--------
 //		  FPI	19/06/2012		[PM191-2] Refonte des mails pour KSL
 //		FPI	05/12/2014	[VDOC16132] CHARTIS devient AIG dans l'objet du mail
 //        JFF   28/06/2016   [PC151549]
+//       JFF   14/03/2025 [PMO268_MIG56]
 //*-----------------------------------------------------------------
 
 Boolean bRet, bMobistore
@@ -35869,7 +35881,7 @@ Decimal{2}	dcMtLu, dcMtMaxLu
 Integer iIdAppli
 s_pass stPass
 Blob bMailBody
-String sMailCc, sMailCci
+String sMailCc, sMailCci, sLibProd 
 
 sMailCc=""
 bRet = True
@@ -35879,6 +35891,7 @@ sTypMail="CMDMBS"
 iIdAppli=2
 
 sIdSin = String ( idw_WSin.GetItemNumber ( 1, "ID_SIN" ))
+sLibProd = ""
 
 /*------------------------------------------------------------------*/
 /* Filtre pour ne récupérer que les mobiles qui nous intéressent.   */
@@ -35893,11 +35906,18 @@ sFiltre = "ID_TYP_ART = 'CAF' AND " + &
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 302 )
 If lDeb > 0 Then
 	sTypMail="CMDBST"
+	sLibProd="Mobil’Zen 3" // [PMO268_MIG56]
 	sFiltre = "ID_TYP_ART = 'CAF' AND " + &		
 				 "COD_ETAT   = 'CNV' AND " + &  
 				 "CPT_VALIDE <= 0    AND " + &
 				 "ID_FOUR    = 'BST'"
 	
+End If 
+
+// [PMO268_MIG56]
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 395 )
+If lDeb > 0 Then
+	sLibProd="Mobil’Zen 4"
 End If 
 
 /*------------------------------------------------------------------*/
@@ -35927,7 +35947,7 @@ If lTotCmd <= 0 Then
 	stMessage.Icon			= Exclamation!
 	stMessage.bErreurG	= FALSE
 	stMessage.Bouton		= YESNO!
-	stMessage.sVar[1]    = "MOBISTORE"
+	stMessage.sVar[1]    = "BOOST" // [PMO268_MIG56]
 	stMessage.sVar[2]    = 	stMessage.sVar[1]
 	stMessage.sCode		= "COMD311"
 
@@ -36079,6 +36099,11 @@ dwChild.Filter ( )
 
 sMailBody+="APPAREIL_A_REMPLACER : " + Upper ( sVal ) + " " + Upper ( idw_wSin.GetItemString ( 1, "MARQ_PORT" ) ) + " " + Upper ( idw_wSin.GetItemString ( 1, "MODL_PORT" ) ) + sSaut
 sMailBody+=sSaut
+sMailBody+=sSaut
+sMailBody+="Cordialement," + sSaut
+sMailBody+=sSaut
+sMailBody+="Service Assurance " + sLibProd + "."
+
 
 /*------------------------------------------------------------------*/
 /* 7 : Montant Maximum majoré													  */
@@ -41034,6 +41059,7 @@ private function boolean uf_validation_finale_mbs_ech_express (long alidgti);//*
 //* MAJ   PAR      Date	     Modification
 //*       JFF    19/05/2015  [PC13442-1][MANTIS15248]
 //*       JFF    28/06/2016  [PC151549]
+//       JFF   14/03/2025 [PMO268_MIG56]
 //*-----------------------------------------------------------------
 
 Boolean bRet, bMobistore
@@ -41082,6 +41108,12 @@ If lDeb > 0 Then
 				 "CPT_VALIDE <= 0    AND " + &
 				 "ID_FOUR    = 'BST'" 
 End If
+
+// [PMO268_MIG56]
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 395 )
+If lDeb > 0 Then
+	sLibProd="Mobil’Zen 4"
+End If 
 
 /*------------------------------------------------------------------*/
 /* Recherche sur liste des commandes se trouvant au niveau du       */

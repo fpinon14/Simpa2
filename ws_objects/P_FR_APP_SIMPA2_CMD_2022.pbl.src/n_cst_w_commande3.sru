@@ -3166,6 +3166,7 @@ public function boolean uf_preparervalider ();//*-------------------------------
 //        JFF   25/04/2018   [VDOC26046]
 // 		 JFF   23/11/2018   [ITSM574876]
 //        JFF   07/03/2024   [HP252_276_HUB_PRESTA]
+//        JFF   14/03/2025   [PMO268_MIG56]
 //*---------------------------------------------------------------
 
 Boolean bRet
@@ -3391,6 +3392,12 @@ idwCmde.SetItem ( 1, "ADR_TEL3", F_Format_Num_Tel ( idwCmde.GetItemString ( 1, "
 For lCpt = 1 To lTot - 1
 	idwCmde.RowsCopy ( 1, 1, Primary!, idwCmde, idwCmde.RowCount (), Primary! )
 Next
+
+// [PMO268_MIG56] On arrête la presta auto vers O2M pour le diag de principe avec la fin d'O2M au 27/02/2025
+If F_CLE_A_TRUE ( "RS6448_MBZ3_MAILPEC" ) Then
+	sCasPrestaSuppl = "" 
+End If 
+// /[PMO268_MIG56]
 
 Choose Case sCasPrestaSuppl 
 	// [PC13442-1]
