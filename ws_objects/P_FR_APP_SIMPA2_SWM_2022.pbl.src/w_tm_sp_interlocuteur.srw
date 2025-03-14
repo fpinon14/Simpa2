@@ -1184,6 +1184,7 @@ event dw_1::itemerror;call super::itemerror;//*---------------------------------
 //		JFF   31/10/2019	[VDOC28559]
 //    JFF   26/04/2023 [RS5045_REF_MATP]
 //    JFF   19/12/2024 [MIG1_COUR_EMAILING]
+//    JFF   14/03/2024  [DP344_MODIF]
 //*-----------------------------------------------------------------
 
 If	ibErreur Then
@@ -1271,6 +1272,9 @@ If	ibErreur Then
 			stMessage.bErreurG	= False
 			stMessage.sCode  		= "WINT307"
 			
+		Case 4   //	[DP344_MODIF] 
+			stMessage.bErreurG	= False
+			stMessage.sCode  		= "WINT318"			
 
 		End Choose
 

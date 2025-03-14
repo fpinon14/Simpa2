@@ -3067,6 +3067,7 @@ private function long uf_zn_rib ();//*------------------------------------------
 //		FPI	11/10/2013	[VDoc12394]
 //	   JFF - 10/01/2018  [SHUNT_WS_SEPA]
 //		JFF   31/10/2019	[VDOC28559]
+//    JFF   14/03/2024  [DP344_MODIF]
 //*-----------------------------------------------------------------
 Integer iAction, iIdCie, iRet
 String sRibBq, sRibGui, sRibCpt, sRibCle, sIdCie
@@ -3120,12 +3121,24 @@ Case "RIB_CLE"
 		Else 
 			iRet = 1 
 		End IF 
-		
-		If iRet = 1 And Pos ( sIdCie, "#" + String ( lIdCie ) + "#" ) > 0 Or IsNull ( lIdCie ) Or lIdCie = 0 Then
-			iAction	= 1
-			idw_wInter.iiErreur = 3	
-		End If 
 
+		// [PMO268_MIG25]
+		// [DP344_MODIF]
+		If F_CLE_A_TRUE ( "DP344_MODIF" ) Then
+			If iRet = 1 And ( sIdCie = "" Or Pos ( sIdCie, "#" + String ( lIdCie ) + "#" ) > 0 Or IsNull ( lIdCie ) Or lIdCie = 0 ) Then
+				iAction	= 1
+				idw_wInter.iiErreur = 3	
+				
+				If sIdCie = "" Then
+					idw_wInter.iiErreur = 4
+				End If 
+			End If 
+		Else		
+			If iRet = 1 And Pos ( sIdCie, "#" + String ( lIdCie ) + "#" ) > 0 Or IsNull ( lIdCie ) Or lIdCie = 0 Then
+				iAction	= 1
+				idw_wInter.iiErreur = 3	
+			End If 
+		End If		
 	End If 
 	
 	If	iAction = 2 And Not IsNull ( sRibBq + sRibGui + sRibCpt + sRibCle ) Then
