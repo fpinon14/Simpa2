@@ -31865,6 +31865,7 @@ For lCpt = lTotLig To 1 Step -1
 			End Choose
 	End Choose			
 
+/* Je Shunte, on demande le code verrou même pour des Diag.
 	lVal =  idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) 
 	Choose Case lVal 
 		Case 232
@@ -31885,9 +31886,8 @@ For lCpt = lTotLig To 1 Step -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
 				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autorisé que sur une action de REPARATION." )
 			End If
-
 	End Choose
-
+*/
 
 	/*------------------------------------------------------------------*/
 	/* TYP_BA_ALLER													              */
