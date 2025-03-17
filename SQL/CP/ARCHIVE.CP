@@ -9373,6 +9373,7 @@ Declare @sRefus  VarChar ( 1 )
 Declare @sCodInterLst  VarChar ( 35 )
 Declare @iCodRefus Integer
 Declare @sDateRdv varChar ( 10 )
+Declare @sCodeDocument VarChar ( 20 ) -- Pour doc joint, voit N. Tonnetot, méthode SAGA2
 
 Set @sSaut = Char (10)
 
@@ -9396,6 +9397,13 @@ If @sRefus <> 'R' Set @asCodRefus = ''
 -- règle donné par Nathalie, ajout de 30 jours par rapport à la date du règlement donc date du jour
 Set @sDateRdv = ''
 IF @asMtAReg is not null and @asMtAReg <> '' Set @sDateRdv = convert ( VarChar ( 10 ), DateAdd ( day, 30, Getdate()), 23 ) 
+
+-- Pour doc joint, voit N. Tonnetot, méthode SAGA2
+Select Top 1 @sCodeDocument = Convert ( VarChar ( 20 ), id_pce )
+from sysadm.w_piece 
+where id_sin = @adcIdSin
+And id_pce in ( 447 ) -- Pièce 447, c'est le doc joint
+If @sCodeDocument  is null Set @sCodeDocument = ''
 
 If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
  Begin
@@ -9421,6 +9429,7 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_refus', @asCodRefus 
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'montant_reglement', @asMtAReg 
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'date_rdv', @sDateRdv  
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_document', @sCodeDocument  
 
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'adr_mail', @sVal OutPut
 		Set @sMailSend = @sVal
@@ -9490,6 +9499,7 @@ Else
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_refus', @asCodRefus 
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'montant_reglement', @asMtAReg 
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'date_rdv', @sDateRdv  
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_document', @sCodeDocument  
 
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'adr_mail', @sVal OutPut
 		Set @sMailSend = @sVal

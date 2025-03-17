@@ -1553,7 +1553,8 @@ Where cm.cod_maq = @sCodeMaquette
 			date_effet_garantie as 'courrier/@date_effet_garantie', -- [MIG1_COUR_EMAILING]
 			appli_sin_prov as 'courrier/@appli_sin_prov', -- [MIG1_COUR_EMAILING]
 			montant_reglement as 'courrier/@montant_reglement', -- [MIG1_COUR_EMAILING]
-			date_rdv as 'courrier/@date_rdv' -- [MIG1_COUR_EMAILING]
+			date_rdv as 'courrier/@date_rdv', -- [MIG1_COUR_EMAILING]
+			code_document as 'courrier/@code_document' -- [MIG1_COUR_EMAILING]
 
 		from sysadm.variable_xml_ksl_rs5045 v
 		Where id_xml = @iIdXml
