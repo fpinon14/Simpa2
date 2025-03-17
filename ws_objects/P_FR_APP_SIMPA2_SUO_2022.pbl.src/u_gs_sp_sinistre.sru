@@ -41276,6 +41276,7 @@ Else
 End if
 
 // [PC13442-1][MANTIS15248]
+/* Vu avec Elodie Duboc et Lisette, je shunte cette partie.
 sMailBody+=sSaut
 sMailBody+=sSaut
 sMailBody+="De plus, en cas d’acceptation du dossier, nous vous remercions de transmettre l’appareil endommagé,"
@@ -41283,6 +41284,7 @@ sMailBody+="en l’envoyant dans un colis de taille adaptée à celle du bien, e
 sMailBody+="aurez téléchargé et imprimé (modalités de récupération du bon définies dans le mail qui vous a été transmis "
 sMailBody+="par notre centre technique)."
 sMailBody+=sSaut
+*/
 
 sMailBody+=sSaut
 sMailBody+="Cordialement," + sSaut
