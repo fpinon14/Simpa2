@@ -32383,22 +32383,22 @@ For lCpt = lTotLig To 1 Step -1
 	If Not IsNull ( dtVal ) Then 
 
 		Choose Case lVal 
-			Case 178, 233, 263, 234, 2, 21
+			Case 178, 233, 263, 234, 2, 21, 152
 				// Ok
 			Case Else
-				lRow = idwFicFourn.Find ( "NUM_CMD_SPB = '" + sNumCmdSpb + "' AND STATUS_GC IN ( 178, 233, 263, 234, 2, 21 )", 1, idwFicFourn.RowCount())
+				lRow = idwFicFourn.Find ( "NUM_CMD_SPB = '" + sNumCmdSpb + "' AND STATUS_GC IN ( 178, 233, 263, 234, 2, 21, 152 )", 1, idwFicFourn.RowCount())
 				If lRow > 0 Then
 					lVal =  idwFicFourn.GetItemNumber ( lRow, "STATUS_GC")
 				End If 
 		End Choose	
 		
 		Choose Case lVal 
-			Case 178, 233, 263, 234, 2, 21
+			Case 178, 233, 263, 234, 2, 21, 152
 				// Ok
 			Case Else
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le champ DTE_RCP_APP_CLI ne peut être renseigné sans le statut 178, 233, 263, 234, 2, 21" )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le champ DTE_RCP_APP_CLI ne peut être renseigné sans le statut 178, 233, 263, 234, 2, 21, 152" )
 		End Choose
 	End If
 
