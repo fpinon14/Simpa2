@@ -15814,6 +15814,7 @@ private subroutine uf_gestong_divers_caspart_finaux ();//*----------------------
 //    JFF   22/11/2023 [RS6175_GC_SCRP_SIM2]
 //    JFF   18/11/2024 [KSV649_ORREUCARA]
 //    JFF   03/03/2025 [PMO268_MIG48]
+//    JFF   18/03/2025 [PAN_125]
 //*-----------------------------------------------------------------
 
 Long lTot, lCpt
@@ -16531,6 +16532,11 @@ For lCpt = 1 To lTot
 				End If 
 				
 			End If 
+			
+		// [PAN_125]			
+		Case "RET_DEVIS_APP_IRREPARABLE"
+			
+			iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_ret_devis_app_irrep ( "", "", 0, "INIT" )
 	
 	End Choose
 
@@ -19065,6 +19071,7 @@ public function long uf_zn_trt_divsin (string asdata, string asnomcol, long alro
 //       JFF   26/08/2021 [RS962_DYSFONC_EXTRA]
 //       JFF   22/11/2023 [RS6175_GC_SCRP_SIM2]
 //       JFF   05/08/2024 [MCO602_PNEU]
+//       JFF   18/03/2025 [PAN_125]
 //*-----------------------------------------------------------------
 
 //Migration PB8-WYNIWYG-03/2006 FM
@@ -19246,7 +19253,10 @@ Choose Case asNomCol
 			Case "DYSFONC_EXTRANET_FRANCHISE"
 				ll_ret = This.Uf_Zn_Trt_DivSin_dysfonc_extranet_franch ( Upper ( asData ), Upper( asNomCol ), alRow )
 
-				
+			// [PAN_125]
+			Case "RET_DEVIS_APP_IRREPARABLE"
+				ll_ret = iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_ret_devis_app_irrep ( Upper ( asData ), Upper( asNomCol ), alRow, "COCHAGE" )
+						
 
 		End Choose 
 
@@ -54397,7 +54407,8 @@ iUoGsSpSinistre2.uf_initialiser_1 (	&
 	ibMIG1_CourEmailing, &
 	idw_LstInter, &
 	idw_wPiece, &
-	idw_wRefus &
+	idw_wRefus, &
+	idw_Plafond &
 	)
 // /[20241112110249883][DIVOBJ][JFF]
 end subroutine

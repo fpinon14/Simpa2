@@ -8322,6 +8322,7 @@ event itemerror;call super::itemerror;//*---------------------------------------
 //       JFF   26/09/2023 [RS5928_FRCH_CHQ]
 //       JFF   05/08/2024 [MCO602_PNEU]
 //       JFF   18/11/2024 [KSV649_ORREUCARA]
+//       JFF   18/02/2025 [PAN_125]
 //*-----------------------------------------------------------------
 
 Choose Case isErrCol
@@ -8665,8 +8666,17 @@ Choose Case isErrCol
 				stMessage.Icon			= Information!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
-				stMessage.sCode		= "WSIN907"	
+				stMessage.sCode		= "WSIN907"
 				
+			// [PAN_125]
+			Case 19	// Modif interdite sur PEC, PRESTA, REGL
+				stMessage.sTitre		= "Modification interdit"
+				stMessage.Icon			= Information!
+				stMessage.bErreurG	= FALSE
+				stMessage.Bouton		= OK!
+				stMessage.sCode		= "WSIN926"
+
+			
 		End Choose		
 		
 	Case "VAL_DTE"

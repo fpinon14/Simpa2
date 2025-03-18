@@ -26,6 +26,7 @@ DataWindow idw_DetPro
 DataWindow idw_wDetail
 DataWindow idw_wPiece
 DataWindow idw_wRefus
+DataWindow idw_Plafond
 
 StaticText		istAttenteDiverse
 
@@ -51,10 +52,11 @@ public subroutine uf_set_valinstance (string ascas, string asval)
 public function long uf_zn_trt_divsin_cra_ctrl_imei (string asdata, string asnomcol, long alrow)
 public function long uf_zn_trt_divsin_cra_suivi_imei (string asdata, string asnomcol, long alrow)
 public function string uf_controlergestion_emailingksl ()
-public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse, ref boolean abmig1_couremailing, ref u_datawindow_detail adw_lstinter, ref datawindow adw_wpiece, ref datawindow adw_wrefus)
 public function long uf_zn_trt_divsin_ech_express_48h (string asdata, string asnomcol, long alrow)
 public function long uf_zn_trt_divsin_modepaiementpaybox (string asdata, string asnomcol, long alrow)
 public function boolean uf_validation_finale_trt_partaprescommit ()
+public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse, ref boolean abmig1_couremailing, ref u_datawindow_detail adw_lstinter, ref datawindow adw_wpiece, ref datawindow adw_wrefus, ref datawindow adw_plafond)
+public function integer uf_zn_trt_divsin_ret_devis_app_irrep (string asdata, string asnomcol, long alrow, string ascas)
 end prototypes
 
 public function long uf_zn_trt_divsin_typeapp (string asdata, string asnomcol, long alrow, boolean abforcer);//*-----------------------------------------------------------------
@@ -1249,51 +1251,6 @@ End IF
 Return sPos
 end function
 
-public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse, ref boolean abmig1_couremailing, ref u_datawindow_detail adw_lstinter, ref datawindow adw_wpiece, ref datawindow adw_wrefus);//*-----------------------------------------------------------------
-//*
-//* Fonction		: uf_initialiser_1 (Public)
-//* Auteur			: FABRY JF
-//* Date				: 12/11/2024
-//* Libellé			: 
-//* Commentaires	: Initialisation des instances pour l'objet numéro 2
-//*
-//* Arguments		: Voir arguments
-//*
-//* Retourne		: Rien
-//*
-//*-----------------------------------------------------------------
-//       JFF   19/12/2024 [MIG1_COUR_EMAILING]
-// TOTO
-//*-----------------------------------------------------------------
-
-iuoSpGsSinistre		= auoSpGsSinistre
-
-idw_detpro 				= adw_detpro
-idw_wsin   				= adw_wsin
-idw_lstwcommande 		= adw_lstwcommande
-idw_wdivsin 			= adw_wdivsin
-idw_wdivdet 			= adw_wdivdet
-
-ibCodicDartyValide	= abCodicDartyValide
-isTypeTrt				= asTypeTrt
-isReferentielApp		= asReferentielApp
-K_MAJZONE				= aK_MAJZONE
-idw_wDetail				= adw_wDetail
-
-idw_LstGti				= adw_LstGti
-
-istAttenteDiverse    = astAttenteDiverse
-
-ibMIG1_CourEmailing  = abMIG1_CourEmailing // [MIG1_COUR_EMAILING]
-
-idw_LstInter			= adw_LstInter
-
-idw_wPiece				= adw_wPiece
-idw_wRefus				= adw_wRefus
-
-
-end subroutine
-
 public function long uf_zn_trt_divsin_ech_express_48h (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
 //*
 //* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_Ech_express_48h (PRIVATE)
@@ -1496,6 +1453,132 @@ If lDeb > 0 Then
 End If 	
 
 Return bRet
+
+end function
+
+public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse, ref boolean abmig1_couremailing, ref u_datawindow_detail adw_lstinter, ref datawindow adw_wpiece, ref datawindow adw_wrefus, ref datawindow adw_plafond);//*-----------------------------------------------------------------
+//*
+//* Fonction		: uf_initialiser_1 (Public)
+//* Auteur			: FABRY JF
+//* Date				: 12/11/2024
+//* Libellé			: 
+//* Commentaires	: Initialisation des instances pour l'objet numéro 2
+//*
+//* Arguments		: Voir arguments
+//*
+//* Retourne		: Rien
+//*
+//*-----------------------------------------------------------------
+//       JFF   19/12/2024 [MIG1_COUR_EMAILING]
+// TOTO
+//*-----------------------------------------------------------------
+
+iuoSpGsSinistre		= auoSpGsSinistre
+
+idw_detpro 				= adw_detpro
+idw_wsin   				= adw_wsin
+idw_lstwcommande 		= adw_lstwcommande
+idw_wdivsin 			= adw_wdivsin
+idw_wdivdet 			= adw_wdivdet
+
+ibCodicDartyValide	= abCodicDartyValide
+isTypeTrt				= asTypeTrt
+isReferentielApp		= asReferentielApp
+K_MAJZONE				= aK_MAJZONE
+idw_wDetail				= adw_wDetail
+
+idw_LstGti				= adw_LstGti
+
+istAttenteDiverse    = astAttenteDiverse
+
+ibMIG1_CourEmailing  = abMIG1_CourEmailing // [MIG1_COUR_EMAILING]
+
+idw_LstInter			= adw_LstInter
+
+idw_wPiece				= adw_wPiece
+idw_wRefus				= adw_wRefus
+idw_Plafond				= adw_Plafond
+
+end subroutine
+
+public function integer uf_zn_trt_divsin_ret_devis_app_irrep (string asdata, string asnomcol, long alrow, string ascas);//*-----------------------------------------------------------------
+//*
+//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_ret_devis_app_irrep (PRIVATE)
+//* Auteur			: FABRY JF
+//* Date				: 18/03/2025
+//* Libellé			: 
+//* Commentaires	: [PAN_125]
+//*
+//* Arguments		: String 		asData			Val
+//*					  String 		asNomCol			Val
+//*					  Long			alRow				Val
+//*
+//* Retourne		: long
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//*-----------------------------------------------------------------
+
+Integer iAction, iIdRev, iTotRow, iIdRevLu, iIdTypPlafLu 
+String sVariante 
+n_cst_string lnvPFCString
+Decimal {2} dcTxVetuste, dcMtPlaf 
+
+Long lRow, lDeb, lFin, lVal1, lVal2, lVal3, lTot, lCpt, lVal4 
+
+asData = Upper ( asData )
+iAction = 0
+
+Choose Case asCas 
+	Case "COCHAGE"
+
+		lVal1 = idw_wDivDet.Find ( "UPPER ( NOM_ZONE ) = 'PEC' AND VAL_CAR = 'O'", 1, idw_wDivDet.RowCount () )
+		lVal2 = idw_LstGti.Find ( "COD_ETAT IN ( 500, 550, 600 )", 1, idw_LstGti.RowCount () )
+		lVal3 = idw_LstwCommande.Find ( "COD_ETAT <> 'ANN' ", 1, idw_LstwCommande.RowCount () ) 
+		lVal4 = idw_wDetail.Find ( "COD_ETAT IN ( 500, 550, 600 )", 1, idw_LstGti.RowCount () )
+		
+		If lVal1 > 0 Or lVal2 > 0 Or lVal3 > 0 OR lVal4 > 0 Then
+				idw_wDivSin.iiErreur = 19
+				iAction = 1
+				Return iAction 
+		End If
+End Choose 
+
+Choose Case asCas 
+	Case "COCHAGE", "INIT"
+
+		// MAxi Coffee
+		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 395 )
+		If lDeb > 0 Then 
+			
+			dcTxVetuste = 0
+			
+			If asCas = "INIT" Then
+				asData = iuoSpGsSinistre.uf_GestOng_Divers_Trouver ( "RET_DEVIS_APP_IRREPARABLE" )
+			End IF 
+			
+			If asData = "O" Then 
+				dcTxVetuste = Dec ( F_CLE_VAL ( "VETUSTE_VAL_PUBLIQUE_SUR_IRREP", idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), ";" ) )
+			End If 
+			
+			iIdRev = idw_WSin.GetItemNumber ( 1, "ID_REV" )
+			
+			iTotRow = idw_Plafond.RowCount ()
+			For lCpt = 1 To iTotRow 
+				iIdRevLu = idw_Plafond.GetItemNumber ( lCpt, "id_rev" ) 
+				iIdTypPlafLu = Integer ( idw_Plafond.GetItemString ( lCpt, "id_typ_plaf" ) )
+
+				// Chgt dyn du plafond pour le sinistre
+				If ( iIdRevLu = iIdRev or iIdRevLu = -1 ) And iIdTypPlafLu = 675 Then
+					idw_Plafond.SetItem ( lCpt, "MT_PLAF", dcTxVetuste )
+				End If 
+				
+			Next 
+		End If 
+End Choose 
+
+Return iAction
+
 
 end function
 
