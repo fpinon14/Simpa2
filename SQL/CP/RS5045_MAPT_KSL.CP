@@ -284,7 +284,16 @@ BEGIN
 		   @sAssureur = SIMPA2_PRO.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'P' ), -- [MCO602_PNEU]
   		   @sDateConnaissanceSinistre = Convert ( VarChar ( 10 ), s.dte_surv, 23 ), -- [MIG1_COUR_EMAILING] Nathalie dit de mettre la date de surv
 		   @sDateFinGarantie = convert ( VarChar ( 10 ), s.dte_fin_gti, 23 ),-- [MIG1_COUR_EMAILING]
-		   @sDateEffetGarantie = '' -- [MIG1_COUR_EMAILING] En attente du retour Nathlie pour l'armement
+		   @sDateEffetGarantie = 
+				Case When Exists ( 
+						Select Top 1 1 
+						From sysadm.det_pro dp
+						Where dp.id_prod = s.id_prod
+						And dp.id_code_dp = 85 
+						) -- Gestion de PGC donc...
+						Then IsNull ( DATEADD ( month, Convert ( Integer, sysadm.FN_GET_DIV_SIN (@adcIdSin, 'duree_gti_orig', 'P', 'RETOUR=CODE' )), s.dte_adh ), '' )
+					 Else ''
+				End -- [MIG1_COUR_EMAILING] 
 	
 	From SIMPA2_PRO.sysadm.sinistre s
 	Where id_sin = @adcIdSin
@@ -318,7 +327,17 @@ BEGIN
 			   @sAssureur = SIMPA2_PRO.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'W' ), -- [MCO602_PNEU]
   			   @sDateConnaissanceSinistre = Convert ( VarChar ( 10 ), s.dte_surv, 23 ), -- [MIG1_COUR_EMAILING] Nathalie dit de mettre la date de surv
 			   @sDateFinGarantie = convert ( VarChar ( 10 ), s.dte_fin_gti, 23 ),-- [MIG1_COUR_EMAILING]
-			   @sDateEffetGarantie = '' -- [MIG1_COUR_EMAILING] En attente du retour Nathlie pour l'armement
+			   @sDateEffetGarantie = 
+					Case When Exists ( 
+							Select Top 1 1 
+							From sysadm.det_pro dp
+							Where dp.id_prod = s.id_prod
+							And dp.id_code_dp = 85 
+							) -- Gestion de PGC donc...
+							Then IsNull ( DATEADD ( month, Convert ( Integer, sysadm.FN_GET_DIV_SIN (@adcIdSin, 'duree_gti_orig', 'W', 'RETOUR=CODE' )), s.dte_adh ), '' )
+						 Else ''
+					End -- [MIG1_COUR_EMAILING] 
+
 
 
 		From SIMPA2_PRO.sysadm.w_sin s
@@ -507,7 +526,18 @@ BEGIN
 		   @sAssureur = SIMPA2_TRT.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'P' ), -- [MCO602_PNEU]
   		   @sDateConnaissanceSinistre = Convert ( VarChar ( 10 ), s.dte_surv, 23 ), -- [MIG1_COUR_EMAILING] Nathalie dit de mettre la date de surv
 		   @sDateFinGarantie = convert ( VarChar ( 10 ), s.dte_fin_gti, 23 ),-- [MIG1_COUR_EMAILING]
-		   @sDateEffetGarantie = '' -- [MIG1_COUR_EMAILING] En attente du retour Nathlie pour l'armement
+		   @sDateEffetGarantie = 
+				Case When Exists ( 
+						Select Top 1 1 
+						From sysadm.det_pro dp
+						Where dp.id_prod = s.id_prod
+						And dp.id_code_dp = 85 
+						) -- Gestion de PGC donc...
+						Then IsNull ( DATEADD ( month, Convert ( Integer, sysadm.FN_GET_DIV_SIN (@adcIdSin, 'duree_gti_orig', 'P', 'RETOUR=CODE' )), s.dte_adh ), '' )
+					 Else ''
+				End -- [MIG1_COUR_EMAILING] 
+
+
 
 	From SIMPA2_TRT.sysadm.sinistre s
 	Where id_sin = @adcIdSin
@@ -541,7 +571,17 @@ BEGIN
 			   @sAssureur = SIMPA2_TRT.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'W' ), -- [MCO602_PNEU]
   			   @sDateConnaissanceSinistre = Convert ( VarChar ( 10 ), s.dte_surv, 23 ), -- [MIG1_COUR_EMAILING] Nathalie dit de mettre la date de surv
 			   @sDateFinGarantie = convert ( VarChar ( 10 ), s.dte_fin_gti, 23 ),-- [MIG1_COUR_EMAILING]
-			   @sDateEffetGarantie = '' -- [MIG1_COUR_EMAILING] En attente du retour Nathlie pour l'armement
+			   @sDateEffetGarantie = 
+					Case When Exists ( 
+							Select Top 1 1 
+							From sysadm.det_pro dp
+							Where dp.id_prod = s.id_prod
+							And dp.id_code_dp = 85 
+							) -- Gestion de PGC donc...
+							Then IsNull ( DATEADD ( month, Convert ( Integer, sysadm.FN_GET_DIV_SIN (@adcIdSin, 'duree_gti_orig', 'W', 'RETOUR=CODE' )), s.dte_adh ), '' )
+						 Else ''
+					End -- [MIG1_COUR_EMAILING] 
+
 
 		From SIMPA2_TRT.sysadm.w_sin s
 		Where id_sin = @adcIdSin
@@ -4064,7 +4104,7 @@ Go
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'TR_IU_CODE_MAQUETTE_KSL_RS5045' AND type = 'TR' )
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'TR_IU_CODE_MAQUETTE_KSL_RS5045' AND xtype = 'TR' )
         DROP TRIGGER sysadm.TR_IU_CODE_MAQUETTE_KSL_RS5045
 GO
 
