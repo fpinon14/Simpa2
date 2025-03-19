@@ -1048,9 +1048,8 @@ Go
 --		JCA changement repertoire cible (norme UNC)
 -------------------------------------------------------------------
 --	FPI	16/02/2012	[20120216.FPI] Appel de PS_S03_W_QUEUE_TRACE_SOLDE_WKF
+-- JFF      19/03/2025   [LGY_40]
 -------------------------------------------------------------------
-
-
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S02_W_QUEUE_TRACE_SOLDE_WKF' AND type = 'P' )
         DROP procedure sysadm.PS_S02_W_QUEUE_TRACE_SOLDE_WKF
 GO
@@ -1072,11 +1071,16 @@ DECLARE @dJour       DateTime,
         @sFicOut2    VarChar(255)	-- [20120216.FPI] 
         
 DECLARE @sRetourErrMail         VarChar(255)
+DECLARE @sRoot VarChar(255)
 
 Set @dJour  = GetDate ()
 Set @dJour  = DateADD ( Day, -1, @dJour )
 
-Set @sTracePath = master.sysadm.SPB_FN_GET_ROOT()+'SIMPA2\TRACE\TRACE_S\'
+-- Set @sTracePath = master.sysadm.SPB_FN_GET_ROOT()+'SIMPA2\TRACE\TRACE_S\'
+-- [LGY_40]
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_PROD_EXTRACTION' ) Else Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_SIM_EXTRACTION' )
+Set @sTracePath = @sRoot + 'SIMPA2\TRACE\TRACE_S\'
+
 Set @sFileName	= CONVERT (char(4), DatePart (year,getdate())  ) +
                RIGHT ( '00' + CONVERT (varchar(2),DatePart(month,getdate()) ),  2 ) +
                RIGHT ( '00' + CONVERT (varchar(2),DatePart(day,getdate())   ),  2 )

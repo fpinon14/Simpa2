@@ -11386,6 +11386,7 @@ Go
 --  FPI 05/09/2016	Suppression de l'envoi par mail
 --	FPI - 12/09/2016 [VDoc21259] appel de PS_S_IRREP_PSM
 --  JFF	- 10/09/2024 [20240910162546267] Changement chemin UNC Serveur fichier prod
+--  JFF      19/03/2025   [LGY_40]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MENS_VDOC9850_PSM_MAIL' AND type = 'P' )
         DROP procedure sysadm.PS_S_MENS_VDOC9850_PSM_MAIL
@@ -11428,7 +11429,9 @@ Set @sFileName	= @sFileName + '_' + convert(varchar(10),getdate(),112) -- ITSM27
 
 SET @sFicOut = @sPath + @sFileName + '.' + @sFileExt
 
-Set @sFicOut2 = '\\F4T\Simpa2\O2M\irrep_PSM_Mensuel\' + @sFileName + '.' + @sFileExt
+-- Set @sFicOut2 = '\\F4T\Simpa2\O2M\irrep_PSM_Mensuel\' + @sFileName + '.' + @sFileExt
+-- [LGY_40]
+Set @sFicOut2 = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PRESTA' ) + 'O2M\irrep_PSM_Mensuel\' + @sFileName + '.' + @sFileExt
 
 SET @sNomServeur = @@servername
 -- Options additionelles pour osql
@@ -15569,6 +15572,7 @@ Go
 --
 -------------------------------------------------------------------
 -- MAJ	LE		    PAR		 Description
+-- JFF      19/03/2025   [LGY_40]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_RESTIT_DATA_O2M_FIC' AND type = 'P' )
         DROP procedure sysadm.PS_S_RESTIT_DATA_O2M_FIC
@@ -15594,7 +15598,10 @@ DECLARE @sCommande   VarChar(250),
 
 -- chemin d'enregistrement du Result Set
 -- Set @sPath 	= '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\'
-Set @sPath 	= '\\F4T\SIMPA2\O2M\Restit_data\'
+-- Set @sPath 	= '\\F4T\SIMPA2\O2M\Restit_data\'
+-- [LGY_40]
+Set @sPath 	= sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PRESTA' ) + 'O2M\Restit_data\'
+
 Set @sFileName	= 'Restitution_data_O2M_' + convert( varchar ( 10), GETDATE(), 112 ) + replace ( convert( varchar ( 10), GETDATE(), 108 ) , ':', '' ) 
 Set @sFileExt	= 'xls'
 
@@ -16223,6 +16230,7 @@ Go
 --
 -------------------------------------------------------------------
 -- MAJ	LE		PAR	Description
+-- JFF      19/03/2025   [LGY_40]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_VDOC16087_CQUERTIER_FIC' AND type = 'P' )
         DROP procedure sysadm.PS_S_VDOC16087_CQUERTIER_FIC
@@ -16246,7 +16254,10 @@ DECLARE @sCommande   VarChar(250),
 
 -- chemin d'enregistrement du Result Set
 -- Set @sPath 	= master.sysadm.SPB_FN_GET_ROOT()+ 'SIMPA2\Extraction_vDoc16087_C_QUERTIER\'
-Set @sPath 	= '\\F4T\SIMPA2\O2M\Extraction_vDoc16087_C_QUERTIER\'
+-- Set @sPath 	= '\\F4T\SIMPA2\O2M\Extraction_vDoc16087_C_QUERTIER\'
+-- [LGY_40]
+Set @sPath 	= sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PRESTA' ) + 'O2M\Extraction_vDoc16087_C_QUERTIER\'
+
 Set @sFileName	= 'VDOC16087_C_QUERTIER' + convert( varchar ( 10), GETDATE(), 112 ) + replace ( convert( varchar ( 10), GETDATE(), 108 ) , ':', '' ) 
 Set @sFileExt	= 'xls'
 
@@ -16338,6 +16349,7 @@ Go
 --
 -------------------------------------------------------------------
 -- MAJ	LE		PAR	Description
+-- JFF      19/03/2025   [LGY_40]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_VDOC16294_CQUERTIER_FIC' AND type = 'P' )
         DROP procedure sysadm.PS_S_VDOC16294_CQUERTIER_FIC
@@ -16379,7 +16391,10 @@ Set @dtDateFin = CONVERT( DateTime,
 Set @dtDateDeb = DATEADD(month,-1,@dtDateFin)
 				 
 -- chemin d'enregistrement du Result Set
-Set @sPath 	= '\\F4T\SIMPA2\O2M\Extraction_vDoc16294_Orange_Ent\'
+-- Set @sPath 	= '\\F4T\SIMPA2\O2M\Extraction_vDoc16294_Orange_Ent\'
+-- [LGY_40]
+Set @sPath 	= sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PRESTA' ) + 'O2M\Extraction_vDoc16294_Orange_Ent\'
+
 Set @sFileName	= 'Orange_Entreprise' + convert( varchar ( 10), GETDATE(), 112 ) + replace ( convert( varchar ( 10), GETDATE(), 108 ) , ':', '' ) 
 Set @sFileExt	= 'xls'
 
@@ -16803,6 +16818,7 @@ Go
 --
 -------------------------------------------------------------------
 -- MAJ	LE		PAR	Description
+-- JFF      19/03/2025   [LGY_40]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_VDOC16171_HLIEGEARD_FIC' AND type = 'P' )
         DROP procedure sysadm.PS_S_VDOC16171_HLIEGEARD_FIC
@@ -16827,7 +16843,10 @@ DECLARE @sCommande   VarChar(250),
 
 				 
 -- chemin d'enregistrement du Result Set
-Set @sPath 	= '\\F4T\SIMPA2\O2M\traites_PSM\'
+-- Set @sPath 	= '\\F4T\SIMPA2\O2M\traites_PSM\'
+-- [LGY_40]
+Set @sPath 	= sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PRESTA' ) + 'O2M\traites_PSM\'
+
 Set @sFileName	= 'TRAITE_PSM_' + convert( varchar ( 10), GETDATE(), 112 ) + replace ( convert( varchar ( 10), GETDATE(), 108 ) , ':', '' ) 
 Set @sFileExt	= 'xls'
 
@@ -18914,7 +18933,10 @@ DECLARE @sCommande   VarChar(250),
 Set @dtRef=DATEADD(day,-7,getdate())
 
 -- chemin d'enregistrement du Result Set
-Set @sPath 	= '\\f4t\Simpa2\O2M\irrep_PSM_Hebdomadaire\'
+-- Set @sPath 	= '\\f4t\Simpa2\O2M\irrep_PSM_Hebdomadaire\'
+-- [LGY_40]
+Set @sPath 	= sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PRESTA' ) + 'O2M\irrep_PSM_Hebdomadaire\'
+
 Set @sFileName	= 'Irrep_PSM_Simpa_' +  convert(varchar(4),year(@dtRef)) + 
 				Right('0' + convert(varchar(4),month(@dtRef)),2) + 
 				Right('0' + convert(varchar(2),datepart(wk,@dtRef)),2)

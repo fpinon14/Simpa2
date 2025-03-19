@@ -6395,6 +6395,8 @@ Go
 -- Références           :       
 --
 -------------------------------------------------------------------
+-- JFF      19/03/2025   [LGY_40]
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_COMMANDES_VIPP_QUOTIDIEN' AND type = 'P' )
         DROP procedure sysadm.PS_S_COMMANDES_VIPP_QUOTIDIEN
 GO
@@ -6421,7 +6423,10 @@ Set @dteDeb=DATEADD(day,-1,@dteFin)
 
 -- Un job chez PI effectuera le déplacement vers le bon répertoire
 --Set @sFicOut='\\spb.lan\production\flux_applis\teletran\recept\cdiscount\Resil_CDiscount_'
-Set @sFicOut='\\F4T\Simpa2\Cdiscount\Resiliations\Resil_CDiscount_'
+-- Set @sFicOut='\\F4T\Simpa2\Cdiscount\Resiliations\Resil_CDiscount_'
+-- [LGY_40]
+Set @sFicOut = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PRESTA' ) + 'Cdiscount\Resiliations\Resil_CDiscount_'
+
 Set @sFicOut=@sFicOut + convert(varchar(10),@dteDeb,112) + '.txt'
 
 Set @sRequete='PS_S_COMMANDES_VIPP ''' + 
@@ -6755,6 +6760,8 @@ Go
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
+-- JFF      19/03/2025   [LGY_40]
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_COMMANDES_SPBS_VEILLE_MAIL' AND type = 'P' )
         DROP procedure sysadm.PS_COMMANDES_SPBS_VEILLE_MAIL
 GO
@@ -6778,7 +6785,10 @@ Declare @sFichierExcel VarChar ( 255 )
 Set NoCount On
 
 --Set @sChemin = master.sysadm.SPB_FN_GET_ROOT() + '\Sinistre\Export_Cmd_O2M_Veille\'
-Set @sChemin='\\F4T\SIMPA2\O2M\Export_Cmd_O2M_Veille\'
+-- Set @sChemin='\\F4T\SIMPA2\O2M\Export_Cmd_O2M_Veille\'
+-- [LGY_40]
+Set @sChemin=sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PRESTA' ) + 'Export_Cmd_O2M_Veille\'
+
 Set @sFichierExcel = 'Export_Cmd_O2M_' + Convert ( VarChar ( 10), DateAdd ( day,-1, getdate()), 112 ) + '.xls'
 Set @sNomServeur = @@servername
 

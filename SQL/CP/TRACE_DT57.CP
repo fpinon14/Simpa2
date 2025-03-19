@@ -178,6 +178,7 @@ Go
 -- Retourne                            :     Rien
 --                                
 --		JCA changement repertoire cible (norme UNC)
+-- JFF      19/03/2025   [LGY_40]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S02_TRACE_DT57_ECR_FIC' AND type = 'P' )
         DROP procedure sysadm.PS_S02_TRACE_DT57_ECR_FIC
@@ -191,9 +192,14 @@ DECLARE @sCommande   VarChar(250),
         @sNomServeur VarChar(255),
         @sOsqlOption VarChar(255),
         @iRetOsql	int	
- 
-SET @sFicOut = '\\F4T\SIMPA2\O2M\fic_RET_IPHONE_SFR_O2M\' + 
+
+DECLARE @sRoot VarChar(255)
+
+-- SET @sFicOut = '\\F4T\SIMPA2\O2M\fic_RET_IPHONE_SFR_O2M\' + 
+-- [LGY_40]
 --SET @sFicOut = master.sysadm.SPB_FN_GET_ROOT() + 'SIMPA2\O2M\fic_RET_IPHONE_SFR_O2M\' + 
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_PROD_EXTRACTION' ) Else Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_SIM_EXTRACTION' )
+SET @sFicOut = @sRoot + 'SIMPA2\O2M\fic_RET_IPHONE_SFR_O2M\' + 
                CONVERT (varchar(4), DatePart (year,getdate())  ) +
                RIGHT ( '00' + CONVERT (varchar(2),DatePart(month,getdate()) ),  2 )    + 
                RIGHT ( '00' + CONVERT (varchar(2),DatePart(day,getdate())   ),  2 )   + 

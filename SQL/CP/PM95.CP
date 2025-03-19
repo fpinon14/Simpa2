@@ -56,6 +56,7 @@
 -- JFF  15/05/2017  [PC13321-3]
 -- JFF  28/02/2022  [RS1985]
 -- JFF	10/09/2024  [20240910162546267] Changement chemin UNC Serveur fichier prod
+-- JFF  19/03/2025  [LGY_40]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_PM95_BATCH_LANCEMENT' AND type = 'P' )
         DROP procedure sysadm.PS_U_PM95_BATCH_LANCEMENT
@@ -314,7 +315,10 @@ If @RecProd = 'PROD'
 	-- Set @sCheminR2 = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\PM287_Rel_Four\Relance2\' -- [PM287-2]
 	Set @sCheminR2 = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\PM287_Rel_Four\Relance2\' -- [PM287-2]
 
-	Set @sCheminR3 = '\\F4T\Simpa2\PSM\fic_relances\Relance1\' -- [PM287-2][MANTIS20794]
+	-- Set @sCheminR3 = '\\F4T\Simpa2\PSM\fic_relances\Relance1\' -- [PM287-2][MANTIS20794]
+	-- [LGY_40]
+	Set	@sCheminR3 = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PRESTA' ) + 'PSM\fic_relances\Relance1\'
+
   End
 Else
   Begin 
@@ -4905,6 +4909,7 @@ Go
 -- JFF  19/12/2012  [VDOC9779]
 -- JFF  12/02/2016  [PI062]
 -- JFF	10/09/2024  [20240910162546267] Changement chemin UNC Serveur fichier prod
+-- JFF  19/03/2025   [LGY_40]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PM95_PM287_PS_REECRIRE_LES_FICHIERS' AND type = 'P' )
         DROP procedure sysadm.PM95_PM287_PS_REECRIRE_LES_FICHIERS
@@ -4991,7 +4996,10 @@ If @RecProd = 'PROD'
 	-- Set @sCheminR2 = '\\spb.lan\applis\spb\SIMPA2\XLS\Autres\PM287_Rel_Four\Relance2\' -- [PM287-2]
 	Set @sCheminR2 = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'SIMPA2\XLS\Autres\PM287_Rel_Four\Relance2\' -- [PM287-2]
 
-	Set @sCheminR3 = '\\F4T\Simpa2\PSM\fic_relances\Relance1\' -- [PM287-2][MANTIS20794]
+	-- Set @sCheminR3 = '\\F4T\Simpa2\PSM\fic_relances\Relance1\' -- [PM287-2][MANTIS20794]
+	-- [LGY_40]
+	Set	@sCheminR3 = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PRESTA' ) + 'PSM\fic_relances\Relance1\'
+
   End
 Else
   Begin 

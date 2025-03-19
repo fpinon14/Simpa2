@@ -80,6 +80,8 @@ Go
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
+-- JFF      19/03/2025   [LGY_40]
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_CTL_BOUTIQUE_PSM' AND type = 'P' )
         DROP procedure sysadm.PS_I_CTL_BOUTIQUE_PSM
 GO
@@ -99,12 +101,17 @@ As
 		@sFicOutRequest     VarChar(255),
 		@sFicOutReponse     VarChar(255)
 
+	DECLARE @sRoot VarChar(255)
+
 	Insert into @tbBoutiquesFermees values ('79'),('FR79'),('FR079')
 
 	if not exists (select 1 from @tbBoutiquesFermees where code_mag=@sCodeMag) return 1
 
 	-- Création du fichier d'appel
-	Set @sFicOutRequest=master.sysadm.SPB_FN_GET_ROOT() + 'Simpa2\Trace\Trace_Web\PSM_request_' + 
+	-- Set @sFicOutRequest=master.sysadm.SPB_FN_GET_ROOT() + 'Simpa2\Trace\Trace_Web\PSM_request_' + 
+	-- [LGY_40]
+	IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_PROD_EXTRACTION' ) Else Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_SIM_EXTRACTION' )
+	Set @sFicOutRequest=@sRoot + 'Simpa2\Trace\Trace_Web\PSM_request_' + 
 		convert(varchar(10),getdate(), 112) + '_' + Replace(convert(varchar(10),getdate(), 108),':','') +
 		'.xml'
 

@@ -397,7 +397,8 @@ GO
 -- Retourne             :       Result Set
 --
 -------------------------------------------------------------------
-
+-- JFF      19/03/2025   [LGY_40]
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_X_O2M_ECRIREANN' AND type = 'P' )
         DROP procedure sysadm.PS_X_O2M_ECRIREANN
 GO
@@ -409,11 +410,16 @@ Declare @dDateJour	datetime,
 	@sCommande	VarChar(250),
         @sFicOut	VarChar(255)
 
+DECLARE @sRoot VarChar(255)
+
 set NOCOUNT ON
 
 SET @dDateJour = GetDate()
 -- [I027] - France - Chemins Relatifs
-SET @sFicOut = master.sysadm.SPB_FN_GET_ROOT()+ '\Simpa2\O2M\fic_annul\ANNO2M-' + 
+-- SET @sFicOut = master.sysadm.SPB_FN_GET_ROOT()+ '\Simpa2\O2M\fic_annul\ANNO2M-' + 
+-- [LGY_40]
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_PROD_EXTRACTION' ) Else Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_SIM_EXTRACTION' )
+Set @sFicOut = @sRoot + '\Simpa2\O2M\fic_annul\ANNO2M-' + 
                CONVERT (char(4), DatePart (year,@dDateJour)  ) + '-' +
                RIGHT ( '00' + CONVERT (varchar(2),DatePart(month,@dDateJour) ),  2 ) + '-' +
                RIGHT ( '00' + CONVERT (varchar(2),DatePart(day,@dDateJour ) ),  2 ) + '.TXT'

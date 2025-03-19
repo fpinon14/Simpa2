@@ -604,6 +604,8 @@ GO
 --
 -- format de fichier 	:	\\F4T\SIMPA2\3SUISSE\FIC_REGL
 -------------------------------------------------------------------
+-- JFF      19/03/2025   [LGY_40]
+-------------------------------------------------------------------
 
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S02_3S_LISTEBABX' AND type = 'P' )
         DROP procedure sysadm.PS_S02_3S_LISTEBABX
@@ -624,11 +626,16 @@ DECLARE @sCommande	VarChar(250),
 	@dtDatFichier	DateTime
         
 DECLARE @sRetourErrMail         VarChar(255)
+DECLARE @sRoot VarChar(255)
 
 Set @sCommande = NULL
 Set @dtDatFichier = getdate()
 Set @sNomServeur = @@servername
-Set @sTracePath = master.sysadm.SPB_FN_GET_ROOT()+'\SIMPA2\3SUISSE\FIC_REGL\' -- [I027] - France - Chemins Relatifs
+-- Set @sTracePath = master.sysadm.SPB_FN_GET_ROOT()+'\SIMPA2\3SUISSE\FIC_REGL\' -- [I027] - France - Chemins Relatifs
+-- [LGY_40]
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_PROD_EXTRACTION' ) Else Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_SIM_EXTRACTION' )
+Set @sTracePath =@sRoot +'\SIMPA2\3SUISSE\FIC_REGL\' -- [I027] - France - Chemins Relatifs
+
 Set @sFileName	= 'SPB-3SF-IND-J-' + 
 			CONVERT (char(4), DatePart (year,getdate())  ) +
 			RIGHT ( '00' + CONVERT (varchar(2),DatePart(month,	@dtDatFichier)),  2 ) +

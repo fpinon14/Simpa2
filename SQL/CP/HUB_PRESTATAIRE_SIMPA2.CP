@@ -902,6 +902,7 @@ Go
 -- Retourne             :       rien
 -------------------------------------------------------------------
 -- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
+-- JFF      19/03/2025   [LGY_40]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_SU_S2_MOTEUR_TRT_RETOUR_HUB' AND type = 'P' )
         DROP procedure sysadm.PS_HP276_SU_S2_MOTEUR_TRT_RETOUR_HUB
@@ -1065,10 +1066,13 @@ IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id(
 If @sEnv = 'PROD'
 	Begin 
 		Set @sInstanceHub = '[LS-SAGA2].[PRESTATAIRE].'
-		Set @sCheminDepotFichierMPRRacine  = '\\F4T\SIMPA2\'
+		-- Set @sCheminDepotFichierMPRRacine  = '\\F4T\SIMPA2\'
+		-- [LGY_40]
+		Set @sCheminDepotFichierMPRRacine  = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PRESTA' )
+
 		Exec [LS-SAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '-1', -1, '-1', '', '', @iIdLotTrc output
 		Set @sDestErrTech = 'NLEBERQUIER@spb.eu,DBOUCQ@spb.eu,jff@spb.fr'
-		Set @sDestErrCoherenceHub = 'JBERGERE@spb.eu,VANDRE@spb.eu,OCHAOUACHI@spb.eu,BKHELIFA_ext@spb.eu,LSMALL@spb.eu,DBOUCQ@spb.eu,JALLIX@spb.eu'
+		Set @sDestErrCoherenceHub = 'JBERGERE@spb.eu,OCHAOUACHI@spb.eu,BKHELIFA_ext@spb.eu,LSMALL@spb.eu,DBOUCQ@spb.eu,JALLIX@spb.eu'
 		Set @sDestCc = 'jff@spb.fr'
 	End 
 Else

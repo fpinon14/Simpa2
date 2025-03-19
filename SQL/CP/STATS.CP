@@ -15296,7 +15296,8 @@ go
 -- Retourne             :       
 --
 -------------------------------------------------------------------
-
+-- JFF      19/03/2025   [LGY_40]
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_X_PSM_ECRIREANN' AND type = 'P' )
         DROP procedure sysadm.PS_X_PSM_ECRIREANN
 GO
@@ -15306,13 +15307,18 @@ as
 
 Declare @dDateJour	datetime,
 	@sCommande	VarChar(250),
-        @sFicOut	VarChar(255)
+    @sFicOut	VarChar(255)
+
+DECLARE @sRoot VarChar(255)
 
 set NOCOUNT ON
 
 SET @dDateJour = GetDate()
 
-SET @sFicOut = master.sysadm.SPB_FN_GET_ROOT()+ '\Simpa2\PSM\fic_annul\ANNPSM-' + 
+-- SET @sFicOut = master.sysadm.SPB_FN_GET_ROOT()+ '\Simpa2\PSM\fic_annul\ANNPSM-' + 
+-- [LGY_40]
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_PROD_EXTRACTION' ) Else Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_SIM_EXTRACTION' )
+SET @sFicOut =  @sRoot + '\Simpa2\PSM\fic_annul\ANNPSM-' + 
                CONVERT (char(4), DatePart (year,@dDateJour)  ) + '-' +
                RIGHT ( '00' + CONVERT (varchar(2),DatePart(month,@dDateJour) ),  2 ) + '-' +
                RIGHT ( '00' + CONVERT (varchar(2),DatePart(day,@dDateJour ) ),  2 ) + '.TXT'
@@ -15843,12 +15849,17 @@ DECLARE @sCommande   VarChar(250),
 	@iRetOsql	int	
 
 
-
+DECLARE @sRoot VarChar(255)
 
 -- chemin d'enregistrement du Result Set
 --Set @sPath 	= master.sysadm.SPB_FN_GET_ROOT()+'Sinistre\Extraction_PSM_Mens_vDoc9850\'
-Set @sPath 	= master.sysadm.SPB_FN_GET_ROOT() + 'SIMPA2\O2M\Irrep_PSM_quot\'
-Set @sPath2 	= master.sysadm.SPB_FN_GET_ROOT() + 'SIMPA2\PSM\Irrep_PSM_quot\'
+-- Set @sPath 	= master.sysadm.SPB_FN_GET_ROOT() + 'SIMPA2\O2M\Irrep_PSM_quot\'
+-- Set @sPath2 	= master.sysadm.SPB_FN_GET_ROOT() + 'SIMPA2\PSM\Irrep_PSM_quot\'
+-- [LGY_40]
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_PROD_EXTRACTION' ) Else Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_SIM_EXTRACTION' )
+Set @sPath 	= @sRoot + 'SIMPA2\O2M\Irrep_PSM_quot\'
+Set @sPath2 = @sRoot + 'SIMPA2\PSM\Irrep_PSM_quot\'
+
 Set @sFileName	= 'Irrep_PSM_'
 Set @sFileExt	= 'xls'
 
@@ -15936,6 +15947,7 @@ Go
 --
 -------------------------------------------------------------------
 -- MAJ	LE		PAR	Description
+-- JFF      19/03/2025   [LGY_40]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MENS_LISTE_PROD_PSM_EXCEL' AND type = 'P' )
         DROP procedure sysadm.PS_S_MENS_LISTE_PROD_PSM_EXCEL
@@ -15956,11 +15968,14 @@ DECLARE @sCommande   VarChar(250),
 	@iRetOsql	int	
 
 
-
+DECLARE @sRoot VarChar(255)
 
 -- chemin d'enregistrement du Result Set
 --Set @sPath 	= master.sysadm.SPB_FN_GET_ROOT()+'Sinistre\Extraction_PSM_Mens_vDoc9850\'
-Set @sPath 	= master.sysadm.SPB_FN_GET_ROOT() + 'Simpa2\PSM\Produits\'
+--Set @sPath 	= master.sysadm.SPB_FN_GET_ROOT() + 'Simpa2\PSM\Produits\'
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_PROD_EXTRACTION' ) Else Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_SIM_EXTRACTION' )
+Set @sPath 	= @sRoot + 'Simpa2\PSM\Produits\'
+
 Set @sFileName	= 'Produits_PSM_'
 Set @sFileExt	= 'xls'
 
@@ -16487,6 +16502,7 @@ Go
 --
 -------------------------------------------------------------------
 -- MAJ	LE		PAR	Description
+-- JFF      19/03/2025   [LGY_40]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_JOURN_IRREP_REFUSE_A_REEXP_FICHIER' AND type = 'P' )
         DROP procedure sysadm.PS_S_JOURN_IRREP_REFUSE_A_REEXP_FICHIER
@@ -16508,13 +16524,19 @@ DECLARE @sCommande   VarChar(250),
 	@sOsqlOption VarChar(255),
 	@iRetOsql	int	
 
-
-
+	
+DECLARE @sRoot VarChar(255)
 
 -- chemin d'enregistrement du Result Set
 --Set @sPath 	= master.sysadm.SPB_FN_GET_ROOT()+'Sinistre\Extraction_PSM_Mens_vDoc9850\'
-Set @sPath 	= master.sysadm.SPB_FN_GET_ROOT() + 'SIMPA2\O2M\Refus_a_reexpedier\'
-Set @sPath2 	= master.sysadm.SPB_FN_GET_ROOT() + 'SIMPA2\PSM\Refus_a_reexpedier\'
+--Set @sPath 	= master.sysadm.SPB_FN_GET_ROOT() + 'SIMPA2\O2M\Refus_a_reexpedier\'
+--Set @sPath2 	= master.sysadm.SPB_FN_GET_ROOT() + 'SIMPA2\PSM\Refus_a_reexpedier\'
+-- [LGY_40]
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_PROD_EXTRACTION' ) Else Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_SIM_EXTRACTION' )
+Set @sPath 	= @sRoot + 'SIMPA2\O2M\Refus_a_reexpedier\'
+Set @sPath2 = @sRoot + 'SIMPA2\PSM\Refus_a_reexpedier\'
+
+
 Set @sFileName	= 'Refuse_a_reexp_'
 Set @sFileExt	= 'xls'
 

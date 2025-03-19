@@ -29,8 +29,8 @@
 -- #1 Le 30/11/2004 DGA : Modification de la procédure SPB_PS_MAIL. Paramêtre @asRetourErr
 -- #2 Le 23/03/2006 FS  : Retrait trigrammes KAV et BRE de la liste de diffusion
 -- #3 JCA changement repertoire cible (norme UNC)
+-- JFF      19/03/2025   [LGY_40]
 -------------------------------------------------------------------
-
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S01_ORANGE' AND type = 'P' )
         DROP procedure sysadm.PS_S01_ORANGE
 GO
@@ -49,40 +49,45 @@ DECLARE @dJour       DateTime,
         
 DECLARE @sRetourErrMail         VarChar(255)
 DECLARE @sRoot Varchar(255)
+DECLARE @sRoot2 VarChar(255)
 
 Set @dJour  = GetDate ()
 Set @dJour  = DateADD ( Day, -1, @dJour )
-Set @sdMin  = Convert ( Varchar (10), @dJour, 103 ) + " 00:00:00"
-set @sdMax  = Convert ( Varchar (10), @dJour, 103 ) + " 23:59:59"
+Set @sdMin  = Convert ( Varchar (10), @dJour, 103 ) + ' 00:00:00'
+set @sdMax  = Convert ( Varchar (10), @dJour, 103 ) + ' 23:59:59'
 Set @sRoot = master.sysadm.SPB_FN_GET_ROOT()+'SINISTRE\EXPORT_SPB_PS_MAIL\orange.OUT'
 
-IF @@servername = master.dbo.SPB_FN_ServerName ('PRO')
-   Set @sCommande = "SIMPA2_PRO.sysadm.PS_S02_ORANGE '" + @sdMin + "', '" + @sdMax + "'"
-Else
-   Set @sCommande = "SIMPA2_TRT.sysadm.PS_S02_ORANGE '" + @sdMin + "', '" + @sdMax + "'"
 
-Set @sObjet    = "SPB/ORANGE : IMEI sinistres Orange Securité du " + @sdMin + " au " + @sdMax
-set @sMessage  = "Extraction des IMEI Orange Sécurité des sinistres créés entre le " + @sdMin + " et le " + @sdMax + Char(13)+ Char(10) +
-                 "Veuillez détacher sur votre disque le fichier pour pouvoir l'ouvrir"
+IF @@servername = master.dbo.SPB_FN_ServerName ('PRO')
+   Set @sCommande = 'SIMPA2_PRO.sysadm.PS_S02_ORANGE ''' + @sdMin + ''', ''' + @sdMax + ''''
+Else
+   Set @sCommande = 'SIMPA2_TRT.sysadm.PS_S02_ORANGE ''' + @sdMin + ''', ''' + @sdMax + ''''
+
+Set @sObjet    = 'SPB/ORANGE : IMEI sinistres Orange Securité du ' + @sdMin + ' au ' + @sdMax
+set @sMessage  = 'Extraction des IMEI Orange Sécurité des sinistres créés entre le ' + @sdMin + ' et le ' + @sdMax + Char(13)+ Char(10) +
+                 'Veuillez détacher sur votre disque le fichier pour pouvoir l''ouvrir'
 
 EXEC master.dbo.SPB_PS_MAIL @sRetourErrMail OUTPUT, 'SLT@spb.fr, VPA@spb.fr, MSL@spb.fr, MPR@spb.fr, LAS@Spb.fr, SZE@Spb.fr, KGR@Spb.fr, NTA@Spb.fr, ACA@Spb.fr, CAV@Spb.fr, JOC@Spb.fr, CAS@Spb.fr, CBR@Spb.fr, PDE@Spb.fr, IHO@spb.fr, NCA@spb.fr, DUM@spb.fr, CBN@spb.fr, SAL@spb.fr, SRA@spb.fr, bruno.hanin@spb.fr, karima.zouaoui@spb.fr, myriam.occolier@spb.fr', @sMessage, @sObjet, '', '', '', @sCommande, @sRoot, 2, ''
 
 
-SET @sFicOut = master.sysadm.SPB_FN_GET_ROOT()+'Simpa2\Orange\IMEI\IMEI-' + 
-               CONVERT (char(4), DatePart (year,getdate())  ) + "-" +
-               RIGHT ( '00' + CONVERT (varchar(2),DatePart(month,getdate()) ),  2 )    + "-" +
-               RIGHT ( '00' + CONVERT (varchar(2),DatePart(day,getdate())   ),  2 )    + ".TXT"
+--SET @sFicOut = master.sysadm.SPB_FN_GET_ROOT()+'Simpa2\Orange\IMEI\IMEI-' + 
+-- [LGY_40]
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' Set @sRoot2 = sysadm.FN_GET_CHEMIN ( 'ROOT_PROD_EXTRACTION' ) Else Set @sRoot2 = sysadm.FN_GET_CHEMIN ( 'ROOT_SIM_EXTRACTION' )
+Set @sFicOut = @sRoot2 +'Simpa2\Orange\IMEI\IMEI-' + 
+               CONVERT (char(4), DatePart (year,getdate())  ) + '-' +
+               RIGHT ( '00' + CONVERT (varchar(2),DatePart(month,getdate()) ),  2 )    + '-' +
+               RIGHT ( '00' + CONVERT (varchar(2),DatePart(day,getdate())   ),  2 )    + '.TXT'
 
 
 SET @sNomServeur = @@servername
 
 IF @@servername = master.dbo.SPB_FN_ServerName ('PRO')
    SET @sCommande = 'sqlcmd /S' + @sNomServeur + ' /E /Q"' + 
-                    "SIMPA2_PRO.sysadm.PS_S02_ORANGE '" + @sdMin + "', '" + @sdMax + "'" +
+                    'SIMPA2_PRO.sysadm.PS_S02_ORANGE ''' + @sdMin + ''', ''' + @sdMax + '''' +
                     '" /o' + @sFicOut + ' -w5000 -u'
 Else
    SET @sCommande = 'sqlcmd /S' + @sNomServeur + ' /E /Q"' + 
-                    "SIMPA2_TRT.sysadm.PS_S02_ORANGE '" + @sdMin + "', '" + @sdMax + "'" +
+                    'SIMPA2_TRT.sysadm.PS_S02_ORANGE ''' + @sdMin + ''', ''' + @sdMax + '''' +
                     '" /o' + @sFicOut + ' -w5000 -u'
 
                                        
@@ -168,6 +173,8 @@ Go
 --
 --		JCA changement repertoire cible (norme UNC)
 -------------------------------------------------------------------
+-- JFF      19/03/2025   [LGY_40]
+-------------------------------------------------------------------
 
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S03_ORANGE' AND type = 'P' )
         DROP procedure sysadm.PS_S03_ORANGE
@@ -186,6 +193,7 @@ DECLARE @dJour       DateTime,
         @sNomServeur VarChar(255)
         
 DECLARE @sRetourErrMail         VarChar(255)
+DECLARE @sRoot VarChar(255)
 
 Set @dJour  = GetDate ()
 Set @dJour  = DateADD ( Day, -1, @dJour )
@@ -205,21 +213,24 @@ set @sMessage  = "Extraction des Dossiers ORANGE créés entre le " + @sdMin + " e
 EXEC master.dbo.SPB_PS_MAIL @sRetourErrMail OUTPUT, 'adhesion.orangesecurite@francetelecom.com', @sMessage, @sObjet, '', 'JFF@Spb.fr', '', @sCommande, 'D:\SINISTRE\EXPORT_SPB_PS_MAIL\orange.OUT', 2, ''
 */
 
-SET @sFicOut = master.sysadm.SPB_FN_GET_ROOT()+'Simpa2\Orange\DOSSIERS_OUVERTS\DOSSIERS_OUVERTS-' + 
-               CONVERT (char(4), DatePart (year,getdate())  ) + "-" +
-               RIGHT ( '00' + CONVERT (varchar(2),DatePart(month,getdate()) ),  2 )    + "-" +
-               RIGHT ( '00' + CONVERT (varchar(2),DatePart(day,getdate())   ),  2 )    + ".TXT"
+-- SET @sFicOut = master.sysadm.SPB_FN_GET_ROOT()+'Simpa2\Orange\DOSSIERS_OUVERTS\DOSSIERS_OUVERTS-' + 
+-- [LGY_40]
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_PROD_EXTRACTION' ) Else Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_SIM_EXTRACTION' )
+SET @sFicOut = @sRoot + 'Simpa2\Orange\DOSSIERS_OUVERTS\DOSSIERS_OUVERTS-' + 
+               CONVERT (char(4), DatePart (year,getdate())  ) + '-' +
+               RIGHT ( '00' + CONVERT (varchar(2),DatePart(month,getdate()) ),  2 )    + '-' +
+               RIGHT ( '00' + CONVERT (varchar(2),DatePart(day,getdate())   ),  2 )    + '.TXT'
 
 
 SET @sNomServeur = @@servername
 
 IF @@servername = master.dbo.SPB_FN_ServerName ('PRO')
    SET @sCommande = 'sqlcmd /S' + @sNomServeur + ' /E /Q"' + 
-                    "SIMPA2_PRO.sysadm.PS_S04_ORANGE '" + @sdMin + "', '" + @sdMax + "'" +
+                    '''SIMPA2_PRO.sysadm.PS_S04_ORANGE ''' + @sdMin + ''', ''' + @sdMax + '''' +
                     '" /o' + @sFicOut + ' -w5000'
 Else
    SET @sCommande = 'sqlcmd /S' + @sNomServeur + ' /E /Q"' + 
-                    "SIMPA2_TRT.sysadm.PS_S04_ORANGE '" + @sdMin + "', '" + @sdMax + "'" +
+                    '''SIMPA2_TRT.sysadm.PS_S04_ORANGE ''' + @sdMin + ''', ''' + @sdMax + '''' +
                     '" /o' + @sFicOut + ' -w5000'
 
                                        
