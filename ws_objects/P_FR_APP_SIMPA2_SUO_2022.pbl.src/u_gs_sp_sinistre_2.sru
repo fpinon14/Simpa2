@@ -1198,13 +1198,15 @@ For lCpt=1 To lTotInter
 		( bAMU_Ref And Not bMaqR ) ) &
 	Then
 		stMessage.sTitre		= "Emailing KSL : courrier<=>contexte"
-		stMessage.Icon			= Exclamation!
+		stMessage.Icon			= Information!
 		stMessage.bErreurG	= FALSE
-		stMessage.Bouton		= YESNO!
+		stMessage.Bouton		= Ok! // YesNo!
 		stMessage.sCode		= "WSIN914"
 		stMessage.sVar[1] = sTypeMail
 		stMessage.sVar[2] = "(" + sLibCodInter + ") " + sNomInter		
-		If F_Message ( stMessage ) = 2 Then Return "ALT_BLOC"		
+		F_Message ( stMessage )
+		// If F_Message ( stMessage ) = 2 Then Return "ALT_BLOC"		
+		Return "ALT_BLOC"	
 	End If 
 
 
