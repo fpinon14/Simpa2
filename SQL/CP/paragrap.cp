@@ -259,12 +259,12 @@ IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_PARA_REELS_REP_COUR_JUST
 GO
 
 CREATE PROC sysadm.PS_S_PARA_REELS_REP_COUR_JUSTE_LES_MANQUANTS
-	@asRepCourDest VarChar ( 200 )
+	@asRepCourDest VarChar ( 255 )
 AS
 
-	Declare @sDIR Varchar ( 100 )
-	Declare @TbRepCour Table ( nom_fic varchar ( 100) INDEX IX1 CLUSTERED ) 
-	Declare @TbLstFicBase Table ( nom_fic varchar ( 100) INDEX IX1 CLUSTERED, ext varchar (3), autre varchar ( 10) ) 
+	Declare @sDIR Varchar ( 255 )
+	Declare @TbRepCour Table ( nom_fic varchar ( 255 ) INDEX IX1 CLUSTERED ) 
+	Declare @TbLstFicBase Table ( nom_fic varchar ( 255 ) INDEX IX1 CLUSTERED, ext varchar (3), autre varchar ( 10) ) 
 	Set @sDIR = 'DIR "' + @asRepCourDest + '*.*" /b'
 
 	-- @TbRepCour se charge avec la liste des fichiers du répertoire

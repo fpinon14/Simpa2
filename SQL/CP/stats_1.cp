@@ -15433,6 +15433,7 @@ Go
 -- MAJ	LE		PAR	Description
 -- FPI	12/12/2015	FPI	[VDoc18886] 
 -- FPI 	12/09/2016 	FPI	[VDoc21259] appel de PS_S_IRREP_PSM
+-- JFF      19/03/2025   [LGY_40]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_JOURN_IRREP_PSM_EXCEL' AND type = 'P' )
         DROP procedure sysadm.PS_S_JOURN_IRREP_PSM_EXCEL
@@ -15454,13 +15455,17 @@ DECLARE @sCommande   VarChar(250),
 	@sOsqlOption VarChar(255),
 	@iRetOsql	int	
 
-
-
+DECLARE @sRoot VarChar(255)
 
 -- chemin d'enregistrement du Result Set
 --Set @sPath 	= master.sysadm.SPB_FN_GET_ROOT()+'Sinistre\Extraction_PSM_Mens_vDoc9850\'
-Set @sPath 	= master.sysadm.SPB_FN_GET_ROOT() + 'SIMPA2\O2M\Irrep_PSM\'
-Set @sPath2 	= master.sysadm.SPB_FN_GET_ROOT() + 'SIMPA2\PSM\Irrep_PSM\'
+--Set @sPath 	= master.sysadm.SPB_FN_GET_ROOT() + 'SIMPA2\O2M\Irrep_PSM\'
+--Set @sPath2 	= master.sysadm.SPB_FN_GET_ROOT() + 'SIMPA2\PSM\Irrep_PSM\'
+-- [LGY_40]
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_PROD_EXTRACTION' ) Else Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_SIM_EXTRACTION' )
+Set @sPath 	= @sRoot + 'SIMPA2\O2M\Irrep_PSM\'
+Set @sPath2 = @sRoot + 'SIMPA2\PSM\Irrep_PSM\'
+
 Set @sFileName	= 'Irrep_PSM_'
 Set @sFileExt	= 'xls'
 
