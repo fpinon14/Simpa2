@@ -1,4 +1,5 @@
--- use TRACE_MAIL_TRT
+use TRACE_MAIL_TRT
+Go
 -------------------------------------------------------------------
 --
 -- Fichier              :       RS5045_MAPT_KSL.CP
@@ -287,11 +288,11 @@ BEGIN
 		   @sDateEffetGarantie = 
 				Case When Exists ( 
 						Select Top 1 1 
-						From sysadm.det_pro dp
+						From SIMPA2_PRO.sysadm.det_pro dp
 						Where dp.id_prod = s.id_prod
 						And dp.id_code_dp = 85 
 						) -- Gestion de PGC donc...
-						Then IsNull ( DATEADD ( month, Convert ( Integer, sysadm.FN_GET_DIV_SIN (@adcIdSin, 'duree_gti_orig', 'P', 'RETOUR=CODE' )), s.dte_adh ), '' )
+					 Then IsNull ( Convert ( Varchar ( 10), DATEADD ( month, Convert ( Integer, SIMPA2_PRO.sysadm.FN_GET_DIV_SIN (@adcIdSin, 'duree_gti_orig', 'P', 'RETOUR=CODE' )), s.dte_adh ), 23 ), '' )
 					 Else ''
 				End -- [MIG1_COUR_EMAILING] 
 	
@@ -330,15 +331,13 @@ BEGIN
 			   @sDateEffetGarantie = 
 					Case When Exists ( 
 							Select Top 1 1 
-							From sysadm.det_pro dp
+							From SIMPA2_PRO.sysadm.det_pro dp
 							Where dp.id_prod = s.id_prod
 							And dp.id_code_dp = 85 
 							) -- Gestion de PGC donc...
-							Then IsNull ( DATEADD ( month, Convert ( Integer, sysadm.FN_GET_DIV_SIN (@adcIdSin, 'duree_gti_orig', 'W', 'RETOUR=CODE' )), s.dte_adh ), '' )
+							Then IsNull ( Convert ( Varchar ( 10), DATEADD ( month, Convert ( Integer, SIMPA2_PRO.sysadm.FN_GET_DIV_SIN (@adcIdSin, 'duree_gti_orig', 'W', 'RETOUR=CODE' )), s.dte_adh ), 23 ), '' )
 						 Else ''
 					End -- [MIG1_COUR_EMAILING] 
-
-
 
 		From SIMPA2_PRO.sysadm.w_sin s
 		Where id_sin = @adcIdSin
@@ -529,11 +528,11 @@ BEGIN
 		   @sDateEffetGarantie = 
 				Case When Exists ( 
 						Select Top 1 1 
-						From sysadm.det_pro dp
+						From SIMPA2_TRT.sysadm.det_pro dp
 						Where dp.id_prod = s.id_prod
 						And dp.id_code_dp = 85 
 						) -- Gestion de PGC donc...
-						Then IsNull ( DATEADD ( month, Convert ( Integer, sysadm.FN_GET_DIV_SIN (@adcIdSin, 'duree_gti_orig', 'P', 'RETOUR=CODE' )), s.dte_adh ), '' )
+					 Then IsNull ( Convert ( Varchar ( 10), DATEADD ( month, Convert ( Integer, SIMPA2_TRT.sysadm.FN_GET_DIV_SIN (@adcIdSin, 'duree_gti_orig', 'P', 'RETOUR=CODE' )), s.dte_adh ), 23 ), '' )
 					 Else ''
 				End -- [MIG1_COUR_EMAILING] 
 
@@ -574,11 +573,11 @@ BEGIN
 			   @sDateEffetGarantie = 
 					Case When Exists ( 
 							Select Top 1 1 
-							From sysadm.det_pro dp
+							From SIMPA2_TRT.sysadm.det_pro dp
 							Where dp.id_prod = s.id_prod
 							And dp.id_code_dp = 85 
 							) -- Gestion de PGC donc...
-							Then IsNull ( DATEADD ( month, Convert ( Integer, sysadm.FN_GET_DIV_SIN (@adcIdSin, 'duree_gti_orig', 'W', 'RETOUR=CODE' )), s.dte_adh ), '' )
+						 Then IsNull ( Convert ( Varchar ( 10), DATEADD ( month, Convert ( Integer, SIMPA2_TRT.sysadm.FN_GET_DIV_SIN (@adcIdSin, 'duree_gti_orig', 'W', 'RETOUR=CODE' )), s.dte_adh ), 23 ), '' )
 						 Else ''
 					End -- [MIG1_COUR_EMAILING] 
 

@@ -1074,16 +1074,16 @@ If @sEnv = 'PROD'
 Else
 	Begin 
 		-- [INSTANCE]
-		-- Set @sInstanceHub = '[S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].'
-		Set @sInstanceHub = '[S2SQL14DEV\RECSAGA2].[PRESTATAIRE].' 
+		Set @sInstanceHub = '[S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].'
+		--Set @sInstanceHub = '[S2SQL14DEV\RECSAGA2].[PRESTATAIRE].' 
 		
 		-- [20240910162546267]
 		-- Set @sCheminDepotFichierMPRRacine  = '\\SPB.LAN\APPLIS\SPB\RECCMD\'
 		Set @sCheminDepotFichierMPRRacine  = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'RECCMD\'
 
 		-- [INSTANCE]
-		-- Exec [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '-1', -1, '-1', '', '', @iIdLotTrc output
-		Exec [S2SQL14DEV\RECSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '-1', -1, '-1', '', '', @iIdLotTrc output
+		Exec [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '-1', -1, '-1', '', '', @iIdLotTrc output
+		-- Exec [S2SQL14DEV\RECSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '-1', -1, '-1', '', '', @iIdLotTrc output
 
 		Set @sDestErrTech = 'jff@spb.fr'
 		Set @sDestErrCoherenceHub = 'jff@spb.fr,VANDRE@spb.eu,BKHELIFA_ext@spb.eu,OCHAOUACHI@spb.eu'
@@ -2965,8 +2965,8 @@ While Exists ( Select Top 1 1 From @TB_EnAttenteTransfertVersHpWork where alt_tr
 	Else
 		Begin
 			-- [INSTANCE]
-			-- Exec @iError = [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRANSFERT_PRESTA_VERS_HUB_PRESTATAIRE 
-			Exec @iError = [S2SQL14DEV\RECSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRANSFERT_PRESTA_VERS_HUB_PRESTATAIRE 
+			Exec @iError = [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRANSFERT_PRESTA_VERS_HUB_PRESTATAIRE 
+			-- Exec @iError = [S2SQL14DEV\RECSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRANSFERT_PRESTA_VERS_HUB_PRESTATAIRE 
 				2, -- 2 ou 3, c'est pareil
 				@iIdSin,
 				@iIdSeq,
