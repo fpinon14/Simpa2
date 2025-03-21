@@ -46477,7 +46477,7 @@ If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 	End IF 
 End If
 
-lVal3 = idw_LstwCommande.Find ( "( ID_REF_FOUR = 'A_DESOXYDER' OR POS ( INFO_SPB_FRN_CPLT, 'A_DESOXYDER_SAV=OUI') > 0 OR ( POS ( INFO_SPB_FRN_CPLT, 'A_CONTROLER_SAV=OUI') > 0) AND ID_REF_FOUR = 'A_DESOXYDER' ) AND ID_TYP_ART = 'PRS' AND COD_ETAT NOT IN ( 'RFO', 'RPC', 'ANN') AND STATUS_GC IN ( 154 )", 1, idw_LstwCommande.rowCount()+1 )
+lVal3 = idw_LstwCommande.Find ( "( ID_REF_FOUR = 'A_DESOXYDER' OR POS ( INFO_SPB_FRN_CPLT, 'A_DESOXYDER_SAV=OUI') > 0 OR ( POS ( INFO_SPB_FRN_CPLT, 'A_CONTROLER_SAV=OUI') > 0) AND ID_REF_FOUR = 'A_DESOXYDER' ) AND ID_TYP_ART = 'PRS' AND COD_ETAT NOT IN ( 'RFO', 'RPC', 'ANN') AND STATUS_GC IN ( 153, 154 )", 1, idw_LstwCommande.rowCount()+1 )
 
 /*
 If lVal1 > 0 And ( lVal2 <= 0 And lVal3 <= 0 ) And &
