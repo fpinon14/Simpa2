@@ -1399,10 +1399,10 @@ public function boolean uf_validation_finale_trt_partaprescommit ();//*---------
 n_cst_string lnvPFCString
 DateTime dtCreeLeDos, dtPivotCourHTMLviaWSSaga2
 Boolean  bRet
-Long     lDeb, lFin, lRow, lIdContrantAbonne, lIdProd, lIdSin 
+Long     lDeb, lFin, lRow, lIdContrantAbonne, lIdProd, lIdSin, lMtCmde
 n_cst_gs_appel_api_generique ObjAppelAPI
 String sAdrMail, sMarqModlApp 
-Integer iMtCmde, iIdSeq 
+Integer iIdSeq 
 
 dtCreeLeDos = idw_WSin.GetItemDateTime ( 1, "CREE_LE")
 
@@ -1427,7 +1427,7 @@ If lDeb > 0 Then
 		iIdSeq = lDeb
 		lRow = idw_LstInter.Find ( "COD_INTER = 'A'", 1, idw_LstInter.Rowcount () )
 		sAdrMail = idw_LstInter.GetItemString ( lRow, "ADR_MAIL" )
-		iMtCmde  = idw_LstwCommande.GetItemDecimal ( iIdSeq, "MT_TTC_CMDE" ) * 100 // En centimes
+		lMtCmde  = idw_LstwCommande.GetItemDecimal ( iIdSeq, "MT_TTC_CMDE" ) * 100 // En centimes
 		lIdContrantAbonne = Long ( idw_WSin.GetItemString ( 1, "ID_CONTRAT_ABONNE" ) )
 		sMarqModlApp = Trim ( idw_WSin.GetItemString ( 1, "MARQ_PORT" ) ) + " " + Trim (  idw_WSin.GetItemString ( 1, "MODL_PORT" ) )
 		lIdProd = idw_WSin.GetItemNumber ( 1, "ID_PROD" )  
@@ -1442,7 +1442,7 @@ If lDeb > 0 Then
 				idw_LstwCommande, &
 				iIdSeq, &
 				istAttenteDiverse, &
-				sAdrMail, iMtCmde, &
+				sAdrMail, lMtCmde, &
 				lIdContrantAbonne, &
 				sMarqModlApp, &
 				lIdProd, &

@@ -10,8 +10,8 @@ global n_cst_gs_appel_api_generique n_cst_gs_appel_api_generique
 
 forward prototypes
 public function boolean uf_api_orange_reunion_caller (ref u_gs_sp_sinistre aiuogssinistre, ref statictext astattentediverse, ref u_datawindow adw_wdivsin, long alidsin, string asimei, date addtesurv, string asidadh)
-public function boolean uf_api_maxi_coffee_caller (ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, integer aiidseq, ref statictext astattentediverse, string asemail, integer aiamoutcts, long alorderid, string asmodel, long alwarrantyid, long alsinistreid)
 public subroutine uf_api_maxi_coffee_maj_presta (string ascas, ref u_datawindow adw_wsin, long alsinistreid, integer aiidseq, integer aistatusapi, string asinfospbfrncplt, string asinfofrnspbcplt)
+public function boolean uf_api_maxi_coffee_caller (ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, integer aiidseq, ref statictext astattentediverse, string asemail, long alamoutcts, long alorderid, string asmodel, long alwarrantyid, long alsinistreid)
 end prototypes
 
 public function boolean uf_api_orange_reunion_caller (ref u_gs_sp_sinistre aiuogssinistre, ref statictext astattentediverse, ref u_datawindow adw_wdivsin, long alidsin, string asimei, date addtesurv, string asidadh);//*-----------------------------------------------------------------
@@ -248,7 +248,56 @@ If IsValid ( ObjJsonParser ) Then Destroy ObjJsonParser
 
 end function
 
-public function boolean uf_api_maxi_coffee_caller (ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, integer aiidseq, ref statictext astattentediverse, string asemail, integer aiamoutcts, long alorderid, string asmodel, long alwarrantyid, long alsinistreid);//*-----------------------------------------------------------------
+public subroutine uf_api_maxi_coffee_maj_presta (string ascas, ref u_datawindow adw_wsin, long alsinistreid, integer aiidseq, integer aistatusapi, string asinfospbfrncplt, string asinfofrnspbcplt);//*-----------------------------------------------------------------
+//*
+//* Fonction		: u_gs_sp_sinistre::uf_api_maxi_coffee_maj_presta 
+//* Auteur			: FABRY JF
+//* Date				: 24/02/2025
+//* Libellé			: APPEL API MAXI COFFEE
+//* Commentaires	: [PMO268_MIG48]
+//*
+//*-----------------------------------------------------------------
+
+String sSql, sMessContact, sVal
+Boolean bRet 
+
+Choose Case asCas
+	Case "PRESTA"
+
+		sSql = "Exec sysadm.PS_U_MAJ_PRESTA_API_MAXI_COFFEE " + &
+					String ( alsinistreid ) + "., " + & 
+					String ( aiidseq ) + ", " + &
+					String ( aiStatusApi ) + ", " + &
+					"'" + asInfoSpbFrnCplt + "', " + &
+					"'" + asInfoFrnSpbCplt + "'," + &
+					"'" + stGlb.sCodOper + "'"
+		
+		F_Execute ( sSql, SQLCA )
+		bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
+		F_Commit ( SQLCA, bRet )
+
+	Case "TRAVAIL"
+
+		sMessContact  = "/!\ ATTENTION, l'appel automatique de l'API MAXI COFFEE après la validation du dossier, a échoué le " + F_CLE_VAL ( "DTE_APPEL", asInfoSpbFrnCplt, ";") + ", l'assuré n'a donc pas le BA."
+		sMessContact += "Le système a donc recréé un travail (workflow) en phase de validation afin que vous validiez de nouveau ce dossier pour appeler l'API MAXI COFFEE et générer le BA."
+		
+		If aiStatusApi = 1000 Then
+			sMessContact  = "/!\ ATTENTION, l'appel automatique de l'API MAXI COFFEE après la validation du dossier, n'a même pas pu se faire car l'URL/AUTH de l'API est absente du paramétrage, prévenez le service informatique, l'assuré n'a donc pas le BA."
+			sMessContact += " Le système a donc recréé un travail (workflow) en phase de validation afin que vous validiez de nouveau ce dossier pour appeler l'API MAXI COFFEE et générer le BA."
+		End If 
+	
+		gsSeriaTransfert = "" 
+		F_CLE_VAL_E ( "ID_SIN", String ( alsinistreid ), gsSeriaTransfert, ";" )
+		F_CLE_VAL_E ( "ETAT", String ( 5 ), gsSeriaTransfert, ";" )	
+		F_CLE_VAL_E ( "OPER", stGlb.sCodOper, gsSeriaTransfert, ";" )		
+		F_CLE_VAL_E ( "MESS", sMessContact, gsSeriaTransfert, ";" )		
+		
+		adw_WSin.PostEvent ( "ue_ReCreer_un_trv", 0, 0 ) 
+
+End Choose 
+end subroutine
+
+public function boolean uf_api_maxi_coffee_caller (ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, integer aiidseq, ref statictext astattentediverse, string asemail, long alamoutcts, long alorderid, string asmodel, long alwarrantyid, long alsinistreid);//*-----------------------------------------------------------------
 //*
 //* Fonction		: u_gs_sp_sinistre::uf_api_maxi_coffee_caller 
 //* Auteur			: FABRY JF
@@ -320,7 +369,7 @@ End If
 ObJsonPackage = Create JSONPackage 
 
 ObJsonPackage.SetValueString ( "email", asEmail )
-ObJsonPackage.SetValueNumber ( "amoutCts", aiAmoutCts )
+ObJsonPackage.SetValueNumber ( "amoutCts", alAmoutCts )
 ObJsonPackage.SetValueNumber ( "orderId", alOrderId )
 ObJsonPackage.SetValueString ( "model", asModel )
 ObJsonPackage.SetValueNumber ( "warrantyId", alWarrantyId )
@@ -406,7 +455,7 @@ If bBAemis Then
 	stMessage.bErreurG	= FALSE
 	stMessage.Bouton		= Ok!
 	stMessage.sCode		= "API0011 "
-	stMessage.sVar[1]		= Mid ( String ( aiAmoutCts ), 1, Len ( String ( aiAmoutCts ) ) - 2 ) + "." + Right ( String ( aiAmoutCts ), 2 )
+	stMessage.sVar[1]		= Mid ( String ( alAmoutCts ), 1, Len ( String ( alAmoutCts ) ) - 2 ) + "." + Right ( String ( alAmoutCts ), 2 )
 	F_Message ( stMessage )
 Else 
 	bFin = False
@@ -436,55 +485,6 @@ If IsValid ( ObJsonPackage ) Then Destroy ObJsonPackage
 
 Return bBAemis
 end function
-
-public subroutine uf_api_maxi_coffee_maj_presta (string ascas, ref u_datawindow adw_wsin, long alsinistreid, integer aiidseq, integer aistatusapi, string asinfospbfrncplt, string asinfofrnspbcplt);//*-----------------------------------------------------------------
-//*
-//* Fonction		: u_gs_sp_sinistre::uf_api_maxi_coffee_maj_presta 
-//* Auteur			: FABRY JF
-//* Date				: 24/02/2025
-//* Libellé			: APPEL API MAXI COFFEE
-//* Commentaires	: [PMO268_MIG48]
-//*
-//*-----------------------------------------------------------------
-
-String sSql, sMessContact, sVal
-Boolean bRet 
-
-Choose Case asCas
-	Case "PRESTA"
-
-		sSql = "Exec sysadm.PS_U_MAJ_PRESTA_API_MAXI_COFFEE " + &
-					String ( alsinistreid ) + "., " + & 
-					String ( aiidseq ) + ", " + &
-					String ( aiStatusApi ) + ", " + &
-					"'" + asInfoSpbFrnCplt + "', " + &
-					"'" + asInfoFrnSpbCplt + "'," + &
-					"'" + stGlb.sCodOper + "'"
-		
-		F_Execute ( sSql, SQLCA )
-		bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
-		F_Commit ( SQLCA, bRet )
-
-	Case "TRAVAIL"
-
-		sMessContact  = "/!\ ATTENTION, l'appel automatique de l'API MAXI COFFEE après la validation du dossier, a échoué le " + F_CLE_VAL ( "DTE_APPEL", asInfoSpbFrnCplt, ";") + ", l'assuré n'a donc pas le BA."
-		sMessContact += "Le système a donc recréé un travail (workflow) en phase de validation afin que vous validiez de nouveau ce dossier pour appeler l'API MAXI COFFEE et générer le BA."
-		
-		If aiStatusApi = 1000 Then
-			sMessContact  = "/!\ ATTENTION, l'appel automatique de l'API MAXI COFFEE après la validation du dossier, n'a même pas pu se faire car l'URL/AUTH de l'API est absente du paramétrage, prévenez le service informatique, l'assuré n'a donc pas le BA."
-			sMessContact += " Le système a donc recréé un travail (workflow) en phase de validation afin que vous validiez de nouveau ce dossier pour appeler l'API MAXI COFFEE et générer le BA."
-		End If 
-	
-		gsSeriaTransfert = "" 
-		F_CLE_VAL_E ( "ID_SIN", String ( alsinistreid ), gsSeriaTransfert, ";" )
-		F_CLE_VAL_E ( "ETAT", String ( 5 ), gsSeriaTransfert, ";" )	
-		F_CLE_VAL_E ( "OPER", stGlb.sCodOper, gsSeriaTransfert, ";" )		
-		F_CLE_VAL_E ( "MESS", sMessContact, gsSeriaTransfert, ";" )		
-		
-		adw_WSin.PostEvent ( "ue_ReCreer_un_trv", 0, 0 ) 
-
-End Choose 
-end subroutine
 
 on n_cst_gs_appel_api_generique.create
 call super::create
