@@ -1379,12 +1379,14 @@ event dw_1::buttonclicked;call super::buttonclicked;//*-------------------------
 //* MAJ PAR		Date		Modification
 //       JFF   18/08/2020 [PM497-1]
 //       JFF   19/12/2024 [MIG1_COUR_EMAILING]
+//       JFF   26/03/2025 [20250326111126190] Modif contrôle IBAN avec dp/344
 //*-----------------------------------------------------------------
 n_cst_spb_params		uParams	
 s_Pass stPass
 String sVal, sIdCour, sIdNatCour, sTypMail
 Boolean bEmailingKsl
 Long lDeb, lFin
+Int iErreur, iAction
 
 Choose Case upper(dwo.Name)
 	Case "CB_IBAN"
@@ -1417,11 +1419,27 @@ Choose Case upper(dwo.Name)
 		End if
 	
 		uParams = Message.Powerobjectparm
-	
-		dw_1.SetItem(1,"RIB_BQ",uParams.uf_getvaluestr(1,"RIB_BQ"))
-		dw_1.SetItem(1,"RIB_GUI",uParams.uf_getvaluestr(1,"RIB_GUI"))
-		dw_1.SetItem(1,"RIB_CPT",uParams.uf_getvaluestr(1,"RIB_CPT"))
-		dw_1.SetItem(1,"RIB_CLE",uParams.uf_getvaluestr(1,"RIB_CLE"))
+
+		// [20250326111126190]
+		iuoGsSpInterlocuteur.uf_controle_dp344 ( iAction, iErreur )
+
+		If iAction = 1 Then
+
+			// [20250326111126190]
+			stMessage.berreurg=FALSE
+			If iErreur = 3 Then stMessage.sCode= "WINT307"					
+			If iErreur = 4 Then stMessage.sCode= "WINT318"		
+			stMessage.bouton=Ok!
+			stMessage.icon=Information!			
+			
+			F_message ( stMessage ) 
+
+		Else 
+			dw_1.SetItem(1,"RIB_BQ",uParams.uf_getvaluestr(1,"RIB_BQ"))
+			dw_1.SetItem(1,"RIB_GUI",uParams.uf_getvaluestr(1,"RIB_GUI"))
+			dw_1.SetItem(1,"RIB_CPT",uParams.uf_getvaluestr(1,"RIB_CPT"))
+			dw_1.SetItem(1,"RIB_CLE",uParams.uf_getvaluestr(1,"RIB_CLE"))
+		End IF 
 		
 		Destroy uParams
 		

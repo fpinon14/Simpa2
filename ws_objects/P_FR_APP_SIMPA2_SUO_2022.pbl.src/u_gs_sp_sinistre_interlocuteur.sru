@@ -88,6 +88,7 @@ private function integer uf_zn_codciv ()
 private function integer uf_zn_altcourgest (string ascas)
 private function long uf_zn_adr_mail_name ()
 private function long uf_zn_adr_mail_domain ()
+public subroutine uf_controle_dp344 (ref integer aiaction, ref integer aierreur)
 end prototypes
 
 public subroutine uf_traitement (integer aitype, ref s_pass astpass);//*-----------------------------------------------------------------
@@ -3068,8 +3069,9 @@ private function long uf_zn_rib ();//*------------------------------------------
 //	   JFF - 10/01/2018  [SHUNT_WS_SEPA]
 //		JFF   31/10/2019	[VDOC28559]
 //    JFF   14/03/2024  [DP344_MODIF]
+//    JFF   26/03/2025  [20250326111126190] Modif contrôle IBAN avec dp/344
 //*-----------------------------------------------------------------
-Integer iAction, iIdCie, iRet
+Integer iAction, iIdCie, iRet, iErreur
 String sRibBq, sRibGui, sRibCpt, sRibCle, sIdCie
 n_cst_string lnvPFCString
 Long lDeb, lFin, lIdCie, dcIdSin, dcIdRev, dcIdGti
@@ -3100,6 +3102,11 @@ Case "RIB_CLE"
 
 	sRibCle	= idw_wInter.GetText ()
 
+	// [20250326111126190]
+	This.uf_controle_dp344 ( iAction, iErreur ) 
+	If iAction = 1 Then idw_wInter.iiErreur = iErreur
+
+/*  Dans uf_controle_dp344 donc à supprimer plus tard [20250326111126190]
 	// [VDOC28559]
 	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 344 )
 	If lDeb > 0 Then
@@ -3140,6 +3147,7 @@ Case "RIB_CLE"
 			End If 
 		End If		
 	End If 
+*/	
 	
 	If	iAction = 2 And Not IsNull ( sRibBq + sRibGui + sRibCpt + sRibCle ) Then
 		If	Not F_Rib ( sRibBq, sRibGui, sRibCpt, sRibCle ) Then
@@ -4283,6 +4291,68 @@ End If
 Return iAction
 
 end function
+
+public subroutine uf_controle_dp344 (ref integer aiaction, ref integer aierreur);//*-----------------------------------------------------------------
+//*
+//* Fonction		: uf_controle_dp344 (PRIVATE)
+//* Auteur			: JFF
+//* Date				: 26/03/2025
+//* Libellé			: [20250326111126190]
+//* Commentaires	: 	
+//*
+//* Arguments		: Aucun
+//*
+//*-----------------------------------------------------------------
+
+Long lDeb, lFin
+String sIdCie 
+Long dcIdSin, dcIdRev, dcIdGti, lIdCie
+Int iRet
+n_cst_string lnvPFCString
+	
+// [VDOC28559]
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 344 )
+If lDeb > 0 Then
+	sIdCie = lnvPFCString.of_getkeyvalue (idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "ID_CIE", ";")
+	dcIdSin = idw_wSin.GetItemNumber ( 1, "ID_SIN" ) 
+	dcIdRev = idw_wSin.GetItemNumber ( 1, "ID_REV" ) 
+	SetNull ( dcIdGti )
+	SQLCA.PS_S_ID_CIE ( dcIdSin, dcIdRev, dcIdGti, lIdCie )
+
+	If Upper ( SQLCA.DataBase ) <> "SIMPA2_PRO" Then
+		
+		stMessage.sTitre		= "MESSAGE DE RECETTE UNIQUEMENT"
+		stMessage.Icon			= Question!
+		stMessage.Bouton		= YesNo!
+		stMessage.bErreurG	= False
+		stMessage.sCode		= "WINT310"
+
+		iRet = F_Message ( stMessage )
+	Else 
+		iRet = 1 
+	End IF 
+
+	// [PMO268_MIG25]
+	// [DP344_MODIF]
+	If F_CLE_A_TRUE ( "DP344_MODIF" ) Then
+		If iRet = 1 And ( sIdCie = "" Or Pos ( sIdCie, "#" + String ( lIdCie ) + "#" ) > 0 Or IsNull ( lIdCie ) Or lIdCie = 0 ) Then
+			aiAction	= 1
+			aiErreur = 3	
+			
+			If sIdCie = "" Then
+				aiErreur = 4
+			End If 
+		End If 
+	Else		
+		If iRet = 1 And Pos ( sIdCie, "#" + String ( lIdCie ) + "#" ) > 0 Or IsNull ( lIdCie ) Or lIdCie = 0 Then
+			aiAction	= 1
+			aiErreur = 3	
+		End If 
+	End If		
+End If 
+
+
+end subroutine
 
 on u_gs_sp_sinistre_interlocuteur.create
 call super::create
