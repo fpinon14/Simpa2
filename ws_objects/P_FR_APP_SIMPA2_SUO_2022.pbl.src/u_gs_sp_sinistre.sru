@@ -52924,14 +52924,16 @@ private function string uf_controlergestion_pm506 ();//*------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //        JFF   28/02/2024 [MCO_190_191_BECLM]
+//        JFF   27/03/2025 [PMO32_SPB175]
 //*-----------------------------------------------------------------
 
 Boolean bPresencePrestaCNV, bRetApplAPI
 Decimal {2} dcMtAReg, dcMtDeclement, dcMtPec
 String sVal, sNomAss, sPrenomAss, sPctRisque, sMess, sMtDeclement, sFlowNameBeCLM 
-String sPos, sSaut, sMailBody, sIdSin, sMailBodyOrig, sObjet, sSql, sIdProd, sAdrMail
+String sPos, sSaut, sMailBody, sIdSin, sMailBodyOrig, sObjet, sSql, sIdProd, sAdrMail, sNaissLieu, sNaissPays, sNaissDate
 Long lIdCLient, lIdSin, lRow, lDeb, lFin, lRowCmd, lIdGti, lIdDetail, lRowDDet
 Int iMaxMatchingScore, iPctRisque, iIdRev 
+DateTime dtNaissDate
 n_cst_string lnvPFCString
 
 sPos = ""
@@ -52966,6 +52968,7 @@ If Upper ( SQLCA.DataBase ) <> "SIMPA2_PRO" And NOT F_CLE_A_TRUE ( "BECLM_EN_SIM
 	
 	Return sPos	
 End If 
+
 
 // Déclaration ici, car autoinstancitation (couteuse).
 n_cst_sp_ws_lutte_anti_blanch_caller uLuttAntiBlanch
@@ -53053,6 +53056,18 @@ SQLCA.PS_S_RECUP_ID_CLIENT ( lIdSin , lIdCLient )
 sNomAss = Trim ( F_GetItem3 ( idw_Wsin, 1, "NOM" ))
 sPrenomAss = Trim ( F_GetItem3 ( idw_Wsin, 1, "PRENOM" ))
 
+// [PMO32_SPB175]
+If F_CLE_A_TRUE ( "PMO32_SPB175" ) Then
+	lRow = idw_lstinter.Find ( "COD_INTER='A'",1 , idw_lstinter.RowCount())
+	If lRow > 0 Then
+		dtNaissDate = idw_lstinter.GetItemDateTime ( lRow, "DTE_NAISS" )
+		sNaissDate  = String ( dtNaissDate, "dd/mm/yyyy" )
+		If IsNull ( sNaissDate ) Then sNaissDate = ""
+		sNaissLieu  = Trim ( F_GetItem3 ( idw_lstinter, lRow, "VILLE_NAISS" ))
+		sNaissPays  = Trim ( F_GetItem3 ( idw_lstinter, lRow, "PAYS_NAISS" )) 	
+	End IF 
+End IF 	
+
 /*
 // Pour les tests, retourne 100%
 sNomAss = "AHMADI"
@@ -53071,6 +53086,13 @@ uLuttAntiBlanch.uf_Add_Data ( "id_sin", String ( lIdSin ) )
 uLuttAntiBlanch.uf_Add_Data ( "id_client", String ( lIdCLient ) )
 uLuttAntiBlanch.uf_Add_Data ( "IdentNom", sNomAss)
 uLuttAntiBlanch.uf_Add_Data ( "IdentPrenom", sPrenomAss )
+
+// [PMO32_SPB175]
+If F_CLE_A_TRUE ( "PMO32_SPB175" ) Then
+	If sNaissDate <> "" Then uLuttAntiBlanch.uf_Add_Data ( "NaissDate", sNaissDate )
+	uLuttAntiBlanch.uf_Add_Data ( "NaissLieu", sNaissLieu )
+	uLuttAntiBlanch.uf_Add_Data ( "NaissPays", sNaissPays )
+End If 
 
 // On appelle l'API
 lRow = idw_WDivSin.Find ( "NOM_ZONE = 'pm506_apirest_lab_appelee_le'", 1,  idw_WDivSin.RowCount () )

@@ -163,13 +163,14 @@ private subroutine uf_preparermodifier (ref s_pass astpass);//*-----------------
 //       JFF   18/08/2020 [PM497-1]
 //       JFF   30/05/2023 [PMO89_RS4822]
 //       JFF   19/12/2024 [MIG1_COUR_EMAILING]
+//       JFF   27/03/2025 [PMO32_SPB175]
 //*-----------------------------------------------------------------
 Boolean	bSupprime
 n_cst_string	lnvString 
 DataWindowChild dwChild
-String sFind, sValCar, sCodInter 
+String sFind, sValCar, sCodInter, sVal 
 
-Long lTotPiece, lTotRefus, lLig, lTotInter, lTotDetail, lIdSin, lDeb, lFin, lVal 
+Long lTotPiece, lTotRefus, lLig, lTotInter, lTotDetail, lIdSin, lDeb, lFin, lVal, lRowDS 
 
 bSupprime = True
 
@@ -328,9 +329,10 @@ End If
 This.Uf_Zn_AltCourGest ( "INIT" )
 
 // [PMO89_RS4822]
-idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
 lVal = idw_wInter.GetItemNumber ( 1, "COD_ETAT_CTRLE_INTER" ) 
 If IsNull ( lVal ) Then idw_wInter.SetItem ( 1, "COD_ETAT_CTRLE_INTER", 0 ) 
+
+idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
 
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 365 )
 If lDeb > 0 And isTypeTrt = "S" Then
@@ -349,7 +351,21 @@ If lDeb > 0 And isTypeTrt = "S" Then
 	End If 
 	
 Else 
-	idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
+	// [PMO32_SPB175]
+	If F_CLE_A_TRUE ( "PMO32_SPB175" ) Then
+		lRowDS = idw_wDivSin.Find ( "Upper ( NOM_ZONE ) = 'PM506_ETAT_APPEL_APIREST_LAB'", 1, idw_wDivSin.RowCount () ) 
+		If lRowDS > 0 Then
+			sVal = idw_wDivSin.GetItemString ( lRowDs, "VAL_CAR" ) 
+			If IsNull ( sVal ) Then sVal = ""
+			If sVal = "" Then
+				idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "0")
+			Else 
+				idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")				
+			End If 
+		End If 
+	Else 
+		idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
+	End If
 End If 
 
 // [MIG1_COUR_EMAILING]
@@ -389,11 +405,12 @@ private subroutine uf_preparerinserer (ref s_pass astpass);//*------------------
 //        JFF    05/02/2018  [PM360-2]
 //        JFF    18/08/2020  [PM497-1]
 //        JFF    19/12/2024  [MIG1_COUR_EMAILING]
+//        JFF    27/03/2025  [PMO32_SPB175]
 //*-----------------------------------------------------------------
 
-Long lIdSin, lIdInter, lTotInter, lDeb, lFin
+Long lIdSin, lIdInter, lTotInter, lDeb, lFin, lRowDs
 n_cst_string	lnvString 
-String sValCar, sCodInter 
+String sValCar, sCodInter, sVal
 DataWindowChild dwChild
 
 /*------------------------------------------------------------------*/
@@ -478,6 +495,7 @@ This.Uf_Zn_AltCourGest ( "INIT" )
 astPass.bRetour = True
 
 // [PMO89_RS4822]
+
 idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
 
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 365 )
@@ -491,7 +509,21 @@ If lDeb > 0 Then
 		idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
 	End If 
 Else 
-	idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
+	// [PMO32_SPB175]
+	If F_CLE_A_TRUE ( "PMO32_SPB175" ) Then
+		lRowDS = idw_wDivSin.Find ( "Upper ( NOM_ZONE ) = 'PM506_ETAT_APPEL_APIREST_LAB'", 1, idw_wDivSin.RowCount () ) 
+		If lRowDS > 0 Then
+			sVal = idw_wDivSin.GetItemString ( lRowDs, "VAL_CAR" ) 
+			If IsNull ( sVal ) Then sVal = ""
+			If sVal = "" Then
+				idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "0")
+			Else 
+				idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")				
+			End If 
+		End If 
+	Else 
+		idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
+	End If
 End If 
 
 // [MIG1_COUR_EMAILING]
@@ -717,12 +749,15 @@ private subroutine uf_controlersaisie (ref s_pass astpass);//*------------------
 //     JFF  01/04/2022     [RS2194_SUPDBLEBQ]
 //     JFF  30/05/2023     [PMO89_RS4822]
 //     JFF  19/12/2024 		[MIG1_COUR_EMAILING]
+//     JFF  27/03/2025     [PMO32_SPB175]
 //*-----------------------------------------------------------------
 
 //String sCol [ 14 ], sErr [ 14 ], sVal [ 14 ] // #3
 String sCol [ 19 ], sErr [ 19 ], sVal [ 19 ]   //  [PMO89_RS4822]
 String sAdr_Col[ 8 ], sAdr_Val[ 8 ], sAdr_Prec[ 8 ] // #3
 //String sAdr_Col[ 10 ], sAdr_Val[ 10 ], sAdr_Prec[ 10 ]
+String sVal2
+Long lRowDs
 
 String 		sNouvelleLigne, sText, sPos, sOng, sCodInterDouble, sCodInter, sRech, sNumPortSms, sMailName, sMaildomaine, sMail, sValDp361
 Long 			lCpt, lNbrCol, lLig, lTotInter
@@ -925,6 +960,7 @@ This.uf_ControlerSaisie_Commune ( sText, sPos )
 
 // [PMO89_RS4822]
 idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
+
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 365 )
 If lDeb > 0 Then
 	sValCar = lnvString.of_getkeyvalue(idw_DetPro.GetItemString(lDeb,"VAL_CAR" ), "TYP_INTER", ";") 
@@ -955,7 +991,21 @@ If lDeb > 0 Then
 		idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
 	End If 
 Else 
-	idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
+	// [PMO32_SPB175]
+	If F_CLE_A_TRUE ( "PMO32_SPB175" ) Then
+		lRowDS = idw_wDivSin.Find ( "Upper ( NOM_ZONE ) = 'PM506_ETAT_APPEL_APIREST_LAB'", 1, idw_wDivSin.RowCount () ) 
+		If lRowDS > 0 Then
+			sVal2 = idw_wDivSin.GetItemString ( lRowDs, "VAL_CAR" ) 
+			If IsNull ( sVal2 ) Then sVal2 = ""
+			If sVal2 = "" Then
+				idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "0")
+			Else 
+				idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")				
+			End If 
+		End If 
+	Else 
+		idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
+	End If
 End If 
 
 
@@ -1382,10 +1432,11 @@ private subroutine uf_zn_codinter ();//*----------------------------------------
 //*
 //*-----------------------------------------------------------------
 //       JFF   30/05/2023 [PMO89_RS4822]
+//       JFF   27/03/2025 [PMO32_SPB175]
 //*-----------------------------------------------------------------
 
-String sCodInter, sCodModeReg, sValCar
-Long lDeb, lFin
+String sCodInter, sCodModeReg, sValCar, sVal
+Long lDeb, lFin, lRowDs
 n_cst_string	lnvString 
 Boolean bFin
 
@@ -1397,7 +1448,8 @@ If	sCodinter = idw_Produit.GetItemString ( 1, "COD_DEST_REG" ) And IsNull ( idw_
 End If
 
 // [PMO89_RS4822]
-idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")	
+idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
+
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 365 )
 If lDeb > 0 Then
 	sValCar = lnvString.of_getkeyvalue(idw_DetPro.GetItemString(lDeb,"VAL_CAR" ), "TYP_INTER", ";") 
@@ -1420,7 +1472,21 @@ If lDeb > 0 Then
 		idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
 	End If 
 Else 
-	idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
+	// [PMO32_SPB175]
+	If F_CLE_A_TRUE ( "PMO32_SPB175" ) Then
+		lRowDS = idw_wDivSin.Find ( "Upper ( NOM_ZONE ) = 'PM506_ETAT_APPEL_APIREST_LAB'", 1, idw_wDivSin.RowCount () ) 
+		If lRowDS > 0 Then
+			sVal = idw_wDivSin.GetItemString ( lRowDs, "VAL_CAR" ) 
+			If IsNull ( sVal ) Then sVal = ""
+			If sVal = "" Then
+				idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "0")
+			Else 
+				idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")				
+			End If 
+		End If 
+	Else 
+		idw_wInter.uf_proteger( {"DTE_NAISS", "VILLE_NAISS", "PAYS_NAISS" }, "1")
+	End If
 End If 
 
 
