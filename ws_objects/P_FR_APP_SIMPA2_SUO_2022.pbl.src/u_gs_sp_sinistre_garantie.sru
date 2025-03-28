@@ -222,6 +222,7 @@ private function string uf_plaf_nbrglt_adhesion_par_surv ()
 private function string uf_plaf_nbsinrgl_adhesi_renouv_splref611 ()
 private function string uf_plaf_nbsin_adhesion_annee_civile_gti ()
 private function string uf_plaf_adhesion_survenance_ttegti_mp ()
+private subroutine uf_controlergestion_carrefour_carma ()
 end prototypes
 
 public subroutine uf_traitement (integer aitype, ref s_pass astpass);//*-----------------------------------------------------------------
@@ -1018,6 +1019,7 @@ private subroutine uf_controlergestion (ref s_pass astpass);//*-----------------
 //       JFF   25/11/2021 [RS1383_FRANCHISE_30E]
 //       JFF   22/01/2024 [RS6366_PCEREFUS]
 //       JFF   30/01/2025 [MON311_SPL_PACI]
+//       JFF   28/03/2025 [MCO1219]
 //*-----------------------------------------------------------------
 String 		sPos, sVal, sMarque, sVal1, sSql
 Decimal {2} dcMtPlafAReg
@@ -1057,6 +1059,11 @@ idw_wGarSin.SetItem ( 1, "ALT_VALIDE", "O" )
 /*------------------------------------------------------------------*/
 If	idw_wGarSin.GetItemString ( 1, "ALT_BLOC" ) = "N"	Then
 	If	Not Uf_GestionRefus ()	Then	sPos = "MT_PROV"
+End If
+
+// [MCO1219]
+If F_CLE_A_TRUE ( "MCO1219" ) Then
+	This.uf_ControlerGestion_Carrefour_Carma ()
 End If
 
 /*------------------------------------------------------------------*/
@@ -21010,6 +21017,62 @@ Return ( sPos )
 	
 
 end function
+
+private subroutine uf_controlergestion_carrefour_carma ();//*-----------------------------------------------------------------
+//*
+//* Fonction		: U_Gs_Sp_Sinistre_wDetail::uf_ControlerGestion_Carrefour_Carma (PRIVATE)
+//* Auteur			: Fabry JF
+//* Date				: 28/03/2025 09:31:39
+//* Libellé			: [MCO1219]
+//* Commentaires	: Controle de gestion spécifique à Carrefour_Carma
+//*
+//* Arguments		: Aucun
+//*
+//* Retourne		: Integer
+//*
+//*-----------------------------------------------------------------
+
+Long lRowCmde, lRowDet, lIdGti, lIdDetail, lEtatDet, lTotPiece, lCpt
+
+lRowCmde = idw_LstCmdeGti.find ( "ID_FOUR IN ( 'CAR', 'CMA' ) AND COD_ETAT IN ( 'CNV', 'RPC' )", 1, idw_LstCmdeGti.RowCount ())
+If lRowCmde <= 0 Then Return
+
+lIdGti = idw_LstCmdeGti.GetItemNumber ( lRowCmde, "ID_GTI" )
+lIdDetail = idw_LstCmdeGti.GetItemNumber ( lRowCmde, "ID_DETAIL" )
+
+lRowDet = idw_LstDetail.Find ( &
+				"ID_GTI = " + String ( lIdGti ) + " AND " + &
+				"ID_DETAIL = " + String ( lIdDetail ), &
+				1, idw_LstDetail.RowCount ())
+
+If lRowDet <= 0 Then Return
+
+lEtatDet = idw_LstDetail.GetItemNumber ( lRowDet, "COD_ETAT" ) 
+
+If lEtatDet <> 500 Then Return
+
+idw_wGarSin.SetItem ( 1, "ALT_BLOC", "N" )
+idw_wGarSin.SetItem ( 1, "ALT_ATT", "N" )
+idw_wGarSin.SetItem ( 1, "ALT_SSUI", "N" )
+idw_wGarSin.SetItem ( 1, "COD_MOT_SSUI", 0 )
+
+lTotPiece = iuoTagPiece.dw_Trt.RowCount ()
+For	lCpt = 1 To lTotPiece
+		iuoTagPiece.dw_Trt.SetItem ( lCpt, "ALT_RECLAME", "N" )
+		iuoTagPiece.dw_Trt.SetItem ( lCpt, "ID_I", stNul.iNum )
+Next 
+
+iuoOng.Uf_ChangerBitmap ( "02", "" )
+
+lTotPiece = idw_wPiece.RowCount ()
+For lCpt = lTotPiece To 1 Step -1
+	idw_wPiece.DeleteRow ( lCpt )
+Next
+
+
+
+
+end subroutine
 
 on u_gs_sp_sinistre_garantie.create
 call super::create
