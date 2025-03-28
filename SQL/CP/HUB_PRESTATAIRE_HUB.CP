@@ -678,6 +678,150 @@ If @aiCas = 3
   End
 Go
 
+
+-------------------------------------------------------------------
+--
+-- Procédure            :       PS_HP276_S_HP_PROCESS_ACHEMINEMENT
+-- Auteur               :       JFF
+-- Date                 :       12/09/2024
+-- Libell‚              :       [HP252_276_HUB_PRESTA]
+-- Commentaires         :       Renvoie vers SIMPA2, à partir du HUB, les process d'acheminement possibles que propose le HUB selon "n" critères
+--                              /!\ A COMPILER SUR LA BASE PRESTATAIRE /!\
+--
+--								Prévoir de changer le schéma sysdam en [edi] pour la compil sur la base du HUB
+--
+-- Retourne             :       rien
+-------------------------------------------------------------------
+-- JFF  27/11/2024  [20241127082353640]
+-- JFF  17/01/2025  [HUB_TYP_APP_REMPL] (V01)
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_PROCESS_ACHEMINEMENT_V01' AND type = 'P' )
+        DROP procedure edi.PS_HP276_S_HP_PROCESS_ACHEMINEMENT_V01
+GO
+
+CREATE procedure edi.PS_HP276_S_HP_PROCESS_ACHEMINEMENT_V01
+	    @aiCas				Tinyint,
+		@adcIdProd			Integer,
+		@adcIdGti			Integer,
+		@asMarqAppSin		VarChar ( 35 ),
+		@asModlAppSin		VarChar ( 35 ),
+		@asTypAppSin		VarChar ( 35 ),
+		@asTypDommage		VarChar ( 100 ),
+		@asTypPrestation    VarChar ( 20 ),
+		@asIdAdh			VarChar ( 19 ),
+		@aiIdSin			Integer,
+		@aiIdGrpContractant Integer,
+		@asLibGrpContractant Varchar ( 35 ),
+		@aiCiv				Integer,
+		@asNom				VarChar ( 35 ),
+		@asPrenom			VarChar ( 35 ),
+		@asAdr1				VarChar ( 35 ),
+		@asAdr2				VarChar ( 35 ),
+		@asAdrCplt			VarChar ( 35 ),
+		@asAdrCP			VarChar ( 5 ),
+		@asAdrVille			VarChar ( 35 ),
+		@asCodePays			VarChar ( 5 ),
+		@asIdFour			Varchar ( 3 ), -- Ajout pour Acheminement
+		@asIdPointService   VarChar ( 40 ), -- Ajout pour Acheminement
+		@asIdModeLogistique	VarChar ( 40 ), -- Ajout pour Acheminement
+		@adcMtValAchat		Decimal ( 11, 2 ) , -- [20241127082353640]
+		@adcMtPriseEnCharge decimal ( 11, 2 ) , -- [20241127082353640]
+		@asDateAchat		VarChar ( 10 ),  -- [20241127082353640]
+		@asEtatAppSin		VarChar ( 20 ), -- [20241127082353640]
+		@asChoixEtatAppRempl VarChar ( 20 ), -- [HUB_TYP_APP_REMPL]
+		@asChaineSeria		VarChar ( 800 ) -- [HUB_TYP_APP_REMPL]
+AS
+
+---------------------------------------------------------------------------------
+-- Cas Test Pour JF sur la base SIMPA2 Et HUB PRESTA, Retour en dur (bouchon)  --
+-- /!\ A laisser !													           --
+---------------------------------------------------------------------------------
+If @aiCas in ( 1, 2 )
+  Begin
+	WaitFor Delay '00:00:00'
+
+	-- Select 'AUCUN', null
+	-- Select null, null from edi.DepotHubToSimpa2Presta
+
+	
+	Select	LEFT ( 'POST_OFFICE', 30 ) 'Id_Process_Achem_Hp',
+			Left ( 'Bureau de poste', 40 ) 'Lib_Process_Achem_Hp' --  [A_REPRENDRE]
+	Union
+	Select	LEFT ( 'PICK_UP_POINT', 30 ), 
+			Left ( 'Point relais', 40 ) 
+	Union
+	Select	LEFT ( 'PICK_UP_TRANSPORTATION', 30 ),
+			Left ( 'Enlèvement transporteur', 40 ) 
+/*
+	Union
+	Select	REPLICATE ( 'A', 29 ) + 'B',
+			REPLICATE ( 'a', 39 ) + 'b'
+
+
+	Union
+	Select	LEFT ( 'PICK_UP_POIjjjjNT', 30 ), 
+			Left ( 'Point relais', 40 ) 
+	Union
+	Select	LEFT ( 'PICK_UP_TRANSPeeeORTATION', 30 ),
+			Left ( 'Enlèvement transporteur', 40 ) 
+	Union
+	Select	REPLICATE ( 'A', 29 ) + 'B',
+			REPLICATE ( 'a', 39 ) + 'b'
+	Union
+	Select	LEFT ( 'PICK_ffffUP_POINT', 30 ), 
+			Left ( 'Point relais', 40 ) 
+	Union
+	Select	LEFT ( 'PICK_UP_TRANzzzSPORTATION', 30 ),
+			Left ( 'Enlèvement transporteur', 40 ) 
+	Union
+	Select	REPLICATE ( 'A', 29 ) + 'B',
+			REPLICATE ( 'a', 39 ) + 'b'			
+
+*/
+
+  End
+
+-------------------------------------------------------------------------------
+-- Cas réél de retour pour Boulenouar, SELECT Réél sur la base  HUB Presta   --
+-- à créer par BLN en respectant les formats des champs/colonnes du SELECT.  --
+-------------------------------------------------------------------------------
+If @aiCas = 3 
+  Begin
+		Exec edi.PS_HP276_S_HP_PROCESS_ACHEMINEMENT_HUB_V01
+			@adcIdProd			,
+			@adcIdGti			,
+			@asMarqAppSin		,
+			@asModlAppSin		,
+			@asTypAppSin		,
+			@asTypDommage		,
+			@asTypPrestation    ,
+			@asIdAdh			,
+			@aiIdSin			,
+			@aiIdGrpContractant ,
+			@asLibGrpContractant ,
+			@aiCiv				,
+			@asNom				,
+			@asPrenom			,
+			@asAdr1				,
+			@asAdr2				,
+			@asAdrCplt			,
+			@asAdrCP			,
+			@asAdrVille			,
+			@asCodePays			,
+			@asIdFour			,
+			@asIdPointService   ,
+			@asIdModeLogistique	,
+			@adcMtValAchat		,
+			@adcMtPriseEnCharge ,
+			@asDateAchat		,
+			@asEtatAppSin		,
+			@asChoixEtatAppRempl, -- [HUB_TYP_APP_REMPL]
+			@asChaineSeria	  -- [HUB_TYP_APP_REMPL]
+
+  End
+Go
+
+
 -------------------------------------------------------------------
 --
 -- Procédure            :       PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATAIRE
@@ -2012,146 +2156,4 @@ Order by id_depot_hub
 
 Go
 
-
--------------------------------------------------------------------
---
--- Procédure            :       PS_HP276_S_HP_PROCESS_ACHEMINEMENT
--- Auteur               :       JFF
--- Date                 :       12/09/2024
--- Libell‚              :       [HP252_276_HUB_PRESTA]
--- Commentaires         :       Renvoie vers SIMPA2, à partir du HUB, les process d'acheminement possibles que propose le HUB selon "n" critères
---                              /!\ A COMPILER SUR LA BASE PRESTATAIRE /!\
---
---								Prévoir de changer le schéma sysdam en [edi] pour la compil sur la base du HUB
---
--- Retourne             :       rien
--------------------------------------------------------------------
--- JFF  27/11/2024  [20241127082353640]
--- JFF  17/01/2025  [HUB_TYP_APP_REMPL] (V01)
--------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_HP_PROCESS_ACHEMINEMENT_V01' AND type = 'P' )
-        DROP procedure edi.PS_HP276_S_HP_PROCESS_ACHEMINEMENT_V01
-GO
-
-CREATE procedure edi.PS_HP276_S_HP_PROCESS_ACHEMINEMENT_V01
-	    @aiCas				Tinyint,
-		@adcIdProd			Integer,
-		@adcIdGti			Integer,
-		@asMarqAppSin		VarChar ( 35 ),
-		@asModlAppSin		VarChar ( 35 ),
-		@asTypAppSin		VarChar ( 35 ),
-		@asTypDommage		VarChar ( 100 ),
-		@asTypPrestation    VarChar ( 20 ),
-		@asIdAdh			VarChar ( 19 ),
-		@aiIdSin			Integer,
-		@aiIdGrpContractant Integer,
-		@asLibGrpContractant Varchar ( 35 ),
-		@aiCiv				Integer,
-		@asNom				VarChar ( 35 ),
-		@asPrenom			VarChar ( 35 ),
-		@asAdr1				VarChar ( 35 ),
-		@asAdr2				VarChar ( 35 ),
-		@asAdrCplt			VarChar ( 35 ),
-		@asAdrCP			VarChar ( 5 ),
-		@asAdrVille			VarChar ( 35 ),
-		@asCodePays			VarChar ( 5 ),
-		@asIdFour			Varchar ( 3 ), -- Ajout pour Acheminement
-		@asIdPointService   VarChar ( 40 ), -- Ajout pour Acheminement
-		@asIdModeLogistique	VarChar ( 40 ), -- Ajout pour Acheminement
-		@adcMtValAchat		Decimal ( 11, 2 ) , -- [20241127082353640]
-		@adcMtPriseEnCharge decimal ( 11, 2 ) , -- [20241127082353640]
-		@asDateAchat		VarChar ( 10 ),  -- [20241127082353640]
-		@asEtatAppSin		VarChar ( 20 ), -- [20241127082353640]
-		@asChoixEtatAppRempl VarChar ( 20 ), -- [HUB_TYP_APP_REMPL]
-		@asChaineSeria		VarChar ( 800 ) -- [HUB_TYP_APP_REMPL]
-AS
-
----------------------------------------------------------------------------------
--- Cas Test Pour JF sur la base SIMPA2 Et HUB PRESTA, Retour en dur (bouchon)  --
--- /!\ A laisser !													           --
----------------------------------------------------------------------------------
-If @aiCas in ( 1, 2 )
-  Begin
-	WaitFor Delay '00:00:00'
-
-	-- Select 'AUCUN', null
-	-- Select null, null from edi.DepotHubToSimpa2Presta
-
-	
-	Select	LEFT ( 'POST_OFFICE', 30 ) 'Id_Process_Achem_Hp',
-			Left ( 'Bureau de poste', 40 ) 'Lib_Process_Achem_Hp' --  [A_REPRENDRE]
-	Union
-	Select	LEFT ( 'PICK_UP_POINT', 30 ), 
-			Left ( 'Point relais', 40 ) 
-	Union
-	Select	LEFT ( 'PICK_UP_TRANSPORTATION', 30 ),
-			Left ( 'Enlèvement transporteur', 40 ) 
-/*
-	Union
-	Select	REPLICATE ( 'A', 29 ) + 'B',
-			REPLICATE ( 'a', 39 ) + 'b'
-
-
-	Union
-	Select	LEFT ( 'PICK_UP_POIjjjjNT', 30 ), 
-			Left ( 'Point relais', 40 ) 
-	Union
-	Select	LEFT ( 'PICK_UP_TRANSPeeeORTATION', 30 ),
-			Left ( 'Enlèvement transporteur', 40 ) 
-	Union
-	Select	REPLICATE ( 'A', 29 ) + 'B',
-			REPLICATE ( 'a', 39 ) + 'b'
-	Union
-	Select	LEFT ( 'PICK_ffffUP_POINT', 30 ), 
-			Left ( 'Point relais', 40 ) 
-	Union
-	Select	LEFT ( 'PICK_UP_TRANzzzSPORTATION', 30 ),
-			Left ( 'Enlèvement transporteur', 40 ) 
-	Union
-	Select	REPLICATE ( 'A', 29 ) + 'B',
-			REPLICATE ( 'a', 39 ) + 'b'			
-
-*/
-
-  End
-
--------------------------------------------------------------------------------
--- Cas réél de retour pour Boulenouar, SELECT Réél sur la base  HUB Presta   --
--- à créer par BLN en respectant les formats des champs/colonnes du SELECT.  --
--------------------------------------------------------------------------------
-If @aiCas = 3 
-  Begin
-		Exec edi.PS_HP276_S_HP_PROCESS_ACHEMINEMENT_HUB_V01
-			@adcIdProd			,
-			@adcIdGti			,
-			@asMarqAppSin		,
-			@asModlAppSin		,
-			@asTypAppSin		,
-			@asTypDommage		,
-			@asTypPrestation    ,
-			@asIdAdh			,
-			@aiIdSin			,
-			@aiIdGrpContractant ,
-			@asLibGrpContractant ,
-			@aiCiv				,
-			@asNom				,
-			@asPrenom			,
-			@asAdr1				,
-			@asAdr2				,
-			@asAdrCplt			,
-			@asAdrCP			,
-			@asAdrVille			,
-			@asCodePays			,
-			@asIdFour			,
-			@asIdPointService   ,
-			@asIdModeLogistique	,
-			@adcMtValAchat		,
-			@adcMtPriseEnCharge ,
-			@asDateAchat		,
-			@asEtatAppSin		,
-			@asChoixEtatAppRempl, -- [HUB_TYP_APP_REMPL]
-			@asChaineSeria	  -- [HUB_TYP_APP_REMPL]
-
-  End
-Go
 
