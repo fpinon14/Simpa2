@@ -9323,6 +9323,7 @@ Go
 --
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
+-- JFF      31/03/2025   [MIG1][20250331] Ajout 447 et 11 pour pce doc joint
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_MIG1_I_EMAILING_KSL_ARCHIVE_MAILPUSH' AND type = 'P' )
         DROP procedure sysadm.PS_MIG1_I_EMAILING_KSL_ARCHIVE_MAILPUSH
@@ -9375,6 +9376,12 @@ Declare @iCodRefus Integer
 Declare @sDateRdv varChar ( 10 )
 Declare @sCodeDocument VarChar ( 20 ) -- Pour doc joint, voit N. Tonnetot, méthode SAGA2
 
+-- [MIG1][20250331]
+Declare @TbPceDocJoint Table ( 
+		id_seq Integer Identity,
+		id_pce Decimal ( 7 )
+		) 
+
 Set @sSaut = Char (10)
 
 -- Appel Obligatoire Pour pré-armer certaines variables technique non xml
@@ -9399,10 +9406,14 @@ Set @sDateRdv = ''
 IF @asMtAReg is not null and @asMtAReg <> '' Set @sDateRdv = convert ( VarChar ( 10 ), DateAdd ( day, 30, Getdate()), 23 ) 
 
 -- Pour doc joint, voit N. Tonnetot, méthode SAGA2
-Select Top 1 @sCodeDocument = Convert ( VarChar ( 20 ), id_pce )
-from sysadm.w_piece 
-where id_sin = @adcIdSin
-And id_pce in ( 447 ) -- Pièce 447, c'est le doc joint
+Insert into @TbPceDocJoint values ( 447 )
+Insert into @TbPceDocJoint values ( 11 )
+
+Select Top 1 @sCodeDocument = Convert ( VarChar ( 20 ), wp.id_pce )
+from sysadm.w_piece wp, 
+	 @TbPceDocJoint pj
+where wp.id_sin = @adcIdSin
+And wp.id_pce = pj.id_pce
 If @sCodeDocument  is null Set @sCodeDocument = ''
 
 If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
