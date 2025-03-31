@@ -4063,6 +4063,7 @@ private subroutine uf_controlergestion (ref s_pass astpass);//*-----------------
 //       JFF   07/03/2024 [HP252_276_HUB_PRESTA]
 //       JFF   19/12/2024 [MIG1_COUR_EMAILING]
 //       JFF   22/02/2025 [TRT_APRES_COMMIT][PMO268_MIG48]
+//       JFF   31/03/2025 [MON374]
 //*-----------------------------------------------------------------
 Long lTotCourrier, lCodEtat, lNbContact, lNbNat, lCptCTact, llig, lCpt, lVal1, lVal2, lVal3, lVal4, lIdOrianBout, lVal5, lVal6 
 Long lCptDetail, lTotDetail, lTotCmd, lDeb, lFin, lCptRegFrn, lCodeEtat, lRow, lVal, lIdGti, lIdInter, lRowAss, lTot, lIdDetail 
@@ -4080,7 +4081,7 @@ string	sCraCtrlImei // #13 [CRAO_LOT1]
 n_cst_string	lnvString // #21 [DCMP080625]
 string	sNumPort, sNumImeiPort // #21 [DCMP080625]
 Long		lMtreg, lTotPce, lCptPce
-String	sIdAdh, sAltBloc, sVal1, sVal2, sCodAdh, sChainePce, sEtatPce
+String	sIdAdh, sAltBloc, sVal1, sVal2, sVal3, sCodAdh, sChainePce, sEtatPce
 Long lTotInter, lCptInter, lCptDetPro
 String sMtFraisAjoute, sAdrMail 
 boolean bBlocageGeoloc
@@ -5129,6 +5130,15 @@ End If
 // [ITSM325581] Ajout du test sur sPos
 If sPos="" Then
 	lTotInter = idw_LstInter.RowCount ()
+	// [MON374]
+	If F_CLE_A_TRUE ( "MON374" ) Then
+		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 396 )	
+		sVal = ""
+		If lDeb > 0 Then
+			sVal = lnvPFCString.of_getkeyvalue (idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "CODE_BANQUE_AUTORISE", ";")
+		End IF 
+	End IF 
+	
 	For lCptInter = 1 To lTotInter
 	
 			sVal1		= idw_LstInter.GetItemString ( lCptInter, "ID_FOUR" )
@@ -5153,7 +5163,31 @@ If sPos="" Then
 						stMessage.sCode		= "WSIN708"
 						Exit
 				End If	
-			End If	
+			End If
+			
+			// [MON374]
+			If F_CLE_A_TRUE ( "MON374" ) Then
+				sVal3 = Trim ( idw_LstInter.GetItemString ( lCptInter, "RIB_BQ" ))
+				IF Not IsNull ( sVal ) Then 
+					If Pos ( sVal, "#" + sVal3 + "#" ) <= 0 Then
+						sPos = "ALT_BLOC"
+						stMessage.sTitre		= "Contrôle des RIB"
+						stMessage.Icon			= Information!
+						stMessage.bErreurG	= FALSE
+						stMessage.sVar[1]    = sVal3
+						
+						sVal = F_REMPLACE ( sVal, "#", "," )
+						sVal = Left ( sVal, len ( sVal ) - 1 )
+						sVal = Right ( sVal, len ( sVal ) - 1 )
+						stMessage.sVar[2]	   = sVal
+						
+						stMessage.sCode		= "WSIN927"
+						Exit
+					End If 
+				End If 					
+			End If
+
+			
 	Next
 End if
 // :[ITSM_MARYSE]
