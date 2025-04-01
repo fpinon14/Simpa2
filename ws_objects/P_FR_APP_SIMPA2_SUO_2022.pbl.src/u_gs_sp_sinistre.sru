@@ -11298,9 +11298,9 @@ If bOk And Not bPieceAReclamer Then
 	
 		If ( lVal1 > 0 And lVal2 <= 0 ) Then
 			bOk = FALSE // JFF
-			stMessage.sVar[1] = "Vous avez reçu du prestataire une information indiquant une géolocalisation, vous devez lui renvoyer une information. Pour ce cas vous ne pouvez renvoyer qu'un A_REPARER_FORCE après avoir contacté l'assuré pour lui dire de DéGéolocaliser son appareil."
+			stMessage.sVar[1] = "Vous avez reçu du prestataire une information indiquant une géolocalisation, vous devez lui renvoyer une information. Pour ce cas vous devez renvoyer un A_REPARER_FORCE après avoir contacté l'assuré pour lui dire de DéGéolocaliser son appareil, et si après plusieurs aller/retour il ne fait pas l'action de DéGéolocaliser l'appareil alors renvoyer un REFUSE_A_REEXP."
 			If bDiag Then 	// [HP252_276_HUB_PRESTA]
-				stMessage.sVar[1] = "Vous avez reçu du prestataire une information indiquant une géolocalisation, vous devez lui renvoyer une information. Pour ce cas vous ne pouvez renvoyer qu'un A_DIAG_FORCE après avoir contacté l'assuré pour lui dire de DéGéolocaliser son appareil."
+				stMessage.sVar[1] = "Vous avez reçu du prestataire une information indiquant une géolocalisation, vous devez lui renvoyer une information. Pour ce cas vous devez renvoyer un A_DIAG_FORCE après avoir contacté l'assuré pour lui dire de DéGéolocaliser son appareil, et si après plusieurs aller/retour il ne fait pas l'action de DéGéolocaliser l'appareil alors renvoyer un REFUSE_A_REEXP."
 			End If 
 		End If	
 	End If		
@@ -46464,7 +46464,8 @@ If idw_LstwCommande.Find ( "POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0", 1
 End IF 
 
 // [HP252_276_HUB_PRESTA] 'A_DIAG_FORCE' [20250228130407143], pour GEOLOC pas de REFUSE_A_REXP possible (cf Olfa)
-lVal1 = idw_LstwCommande.find( "ID_REF_FOUR IN ( 'A_REPARER_FORCE', 'A_DESOXYDER_FORCE', 'A_DIAG_FORCE' ) AND COD_ETAT = 'CNV'",1,  idw_LstwCommande.rowCount()+1 )
+// MIG82 01/04/2025, je rajoute suite demande Lisette le REFUSE_A_REXP
+lVal1 = idw_LstwCommande.find( "ID_REF_FOUR IN ( 'REFUSE_A_REXP', 'A_REPARER_FORCE', 'A_DESOXYDER_FORCE', 'A_DIAG_FORCE' ) AND COD_ETAT = 'CNV'",1,  idw_LstwCommande.rowCount()+1 )
 
 // Controle Géoloc Hub
 // [HP252_276_HUB_PRESTA]
