@@ -31,89 +31,108 @@
 -- Retourne             :       Rien
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
+-- JFF      31/03/2025   [MIG82_JOURN_EVT]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U01_ROUTAGE_WKF' AND type = 'P' )
         DROP procedure sysadm.PS_U01_ROUTAGE_WKF
 GO
 
-CREATE procedure sysadm.PS_U01_ROUTAGE_WKF
-        @dcIdSin        Decimal (  10,0 ), -- [PI062]
-        @dcIdCorb       Decimal (  3,0 ),
-        @sCodTravail    Varchar (  3   ),
-        @dtCreeLe       DateTime        ,
-        @sCodOper       Varchar (  4   )
-AS
+  
+CREATE procedure sysadm.PS_U01_ROUTAGE_WKF  
+        @dcIdSin        Decimal (  10,0 ), -- [PI062]  
+        @dcIdCorb       Decimal (  3,0 ),  
+        @sCodTravail    Varchar (  3   ),  
+        @dtCreeLe       DateTime        ,  
+        @sCodOper       Varchar (  4   )  
+AS  
+  
+Declare @sCodTravailActuel      VarChar (  3 )  
+Declare @sNoBoite               VarChar ( 10 )  
+Declare @sVar					VarChar ( 255 )
+Declare @iRowCountRoutage		Integer
 
-Declare @sCodTravailActuel      VarChar (  3 )
-Declare @sNoBoite               VarChar ( 10 )
-/*------------------------------------------------------------------*/
-/* Le 25/08/2003. Modification pour la gestion des boites à archive.*/
-/* Si le dossier est clos (COD_TRAVAIL=CAS) et que l'on posséde des */
-/* références d'archivage précédentes, on sauvegarde ces valeurs    */
-/* dans la table wkfs_histo.                                        */
-/*------------------------------------------------------------------*/
-SELECT  @sCodTravailActuel      = rou.cod_travail,
-        @sNoBoite               = rou.no_boite
-FROM    sysadm.routage  AS rou
-WHERE   rou.id_sin      = @dcIdSin
+/*------------------------------------------------------------------*/  
+/* Le 25/08/2003. Modification pour la gestion des boites à archive.*/  
+/* Si le dossier est clos (COD_TRAVAIL=CAS) et que l'on posséde des */  
+/* références d'archivage précédentes, on sauvegarde ces valeurs    */  
+/* dans la table wkfs_histo.                                        */  
+/*------------------------------------------------------------------*/  
+SELECT  @sCodTravailActuel      = rou.cod_travail,  
+        @sNoBoite               = rou.no_boite  
+FROM    sysadm.routage  AS rou  
+WHERE   rou.id_sin      = @dcIdSin  
+  
+IF      @sCodTravailActuel = 'CAS' And @sNoBoite IS NOT NULL  
+        BEGIN  
+/*------------------------------------------------------------------*/  
+/* Trace des valeurs dans WKFS_HISTO.                               */  
+/*------------------------------------------------------------------*/  
+                INSERT INTO     sysadm.wkfs_histo  
+                                (  
+                                sysadm.wkfs_histo.id_sin,  
+                                sysadm.wkfs_histo.no_boite,  
+                                sysadm.wkfs_histo.rang_boite,  
+                                sysadm.wkfs_histo.archive_le,  
+                                sysadm.wkfs_histo.archive_par,  
+                                sysadm.wkfs_histo.cree_le,  
+                                sysadm.wkfs_histo.maj_le,  
+                                sysadm.wkfs_histo.maj_par  
+                                )  
+                SELECT          rou.id_sin,  
+                                IsNull(rou.no_boite,'-1'), -- [PC393]  
+                                IsNull(rou.rang_boite,-1), -- [PC393]  
+                                rou.archive_le,  
+                                rou.archive_par,  
+                                @dtCreeLe,  
+                                @dtCreeLe,  
+                                @sCodOper  
+                FROM            sysadm.routage  AS rou  
+                WHERE           rou.id_sin      = @dcIdSin  
+/*------------------------------------------------------------------*/  
+/* RAZ des valeurs pour les boites à archives.                      */  
+/*------------------------------------------------------------------*/  
+                UPDATE          rou  
+                SET             rou.no_boite    = NULL,  
+                                rou.rang_boite  = NULL,  
+                                rou.archive_le  = NULL,  
+                                rou.archive_par = NULL  
+                FROM            sysadm.routage  AS rou  
+        WHERE           rou.id_sin      = @dcIdSin  
+        END  
+/*------------------------------------------------------------------*/  
+/* S'il existe une ligne dans la table wkfs_w_queue, il faut la     */  
+/* supprimer.                                                       */  
+/*------------------------------------------------------------------*/  
+IF      @sCodTravail = 'CAS' And ( SELECT COUNT(*) FROM sysadm.wkfs_w_queue WHERE    wkfs_w_queue.id_sin = @dcIdSin ) = 1  
+        BEGIN  
+                DELETE FROM     sysadm.wkfs_w_queue  
+                WHERE           sysadm.wkfs_w_queue.id_sin      = @dcIdSin  
+        END  
+  
+ UPDATE         sysadm.routage  
+ SET            sysadm.routage.id_corb          = @dcIdCorb,  
+                sysadm.routage.alt_queue        = 'O',  
+                sysadm.routage.cod_travail      = @sCodTravail,  
+                sysadm.routage.maj_le           = @dtCreeLe,  
+                sysadm.routage.maj_par          = @sCodOper  
+ WHERE          routage.id_sin                  = @dcIdSin  
 
-IF      @sCodTravailActuel = 'CAS' And @sNoBoite IS NOT NULL
-        BEGIN
-/*------------------------------------------------------------------*/
-/* Trace des valeurs dans WKFS_HISTO.                               */
-/*------------------------------------------------------------------*/
-                INSERT INTO     sysadm.wkfs_histo
-                                (
-                                sysadm.wkfs_histo.id_sin,
-                                sysadm.wkfs_histo.no_boite,
-                                sysadm.wkfs_histo.rang_boite,
-                                sysadm.wkfs_histo.archive_le,
-                                sysadm.wkfs_histo.archive_par,
-                                sysadm.wkfs_histo.cree_le,
-                                sysadm.wkfs_histo.maj_le,
-                                sysadm.wkfs_histo.maj_par
-                                )
-                SELECT          rou.id_sin,
-                                IsNull(rou.no_boite,'-1'), -- [PC393]
-                                IsNull(rou.rang_boite,-1), -- [PC393]
-                                rou.archive_le,
-                                rou.archive_par,
-                                @dtCreeLe,
-                                @dtCreeLe,
-                                @sCodOper
-                FROM            sysadm.routage  AS rou
-                WHERE           rou.id_sin      = @dcIdSin
-/*------------------------------------------------------------------*/
-/* RAZ des valeurs pour les boites à archives.                      */
-/*------------------------------------------------------------------*/
-                UPDATE          rou
-                SET             rou.no_boite    = NULL,
-                                rou.rang_boite  = NULL,
-                                rou.archive_le  = NULL,
-                                rou.archive_par = NULL
-                FROM            sysadm.routage  AS rou
-        WHERE           rou.id_sin      = @dcIdSin
-        END
-/*------------------------------------------------------------------*/
-/* S'il existe une ligne dans la table wkfs_w_queue, il faut la     */
-/* supprimer.                                                       */
-/*------------------------------------------------------------------*/
-IF      @sCodTravail = 'CAS' And ( SELECT COUNT(*) FROM sysadm.wkfs_w_queue WHERE    wkfs_w_queue.id_sin = @dcIdSin ) = 1
-        BEGIN
-                DELETE FROM     sysadm.wkfs_w_queue
-                WHERE           sysadm.wkfs_w_queue.id_sin      = @dcIdSin
-        END
+ Set @iRowCountRoutage = @@RowCount  
+  
+ -- [MIG82_JOURN_EVT]
+ If Not Exists ( 
+	Select Top 1 1 
+	From sysadm.journal_evtsin jevt
+	Where jevt.id_sin = @dcIdSin
+	And   jevt.code_evt = 'DSDECL'
+ )  And @sCodTravail = 'DEC'
+	Begin
+		Set @sVar = 'DTE_DECL=' + Convert ( Varchar ( 10 ), GetDate(), 103)
+		Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'DSDECL', @sVar, '', 'PS_U01_ROUTAGE_WKF', @sCodOper
+	End 
 
- UPDATE         sysadm.routage
- SET            sysadm.routage.id_corb          = @dcIdCorb,
-                sysadm.routage.alt_queue        = 'O',
-                sysadm.routage.cod_travail      = @sCodTravail,
-                sysadm.routage.maj_le           = @dtCreeLe,
-                sysadm.routage.maj_par          = @sCodOper
- WHERE          routage.id_sin                  = @dcIdSin
-
- Return @@RowCount
-
+ Return @iRowCountRoutage 
+  
 GO
 
 
@@ -135,6 +154,7 @@ GO
 --
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
+-- JFF      31/03/2025   [MIG82_JOURN_EVT]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I01_ROUTAGE_WKF' AND type = 'P' )
         DROP procedure sysadm.PS_I01_ROUTAGE_WKF
@@ -146,6 +166,10 @@ CREATE procedure sysadm.PS_I01_ROUTAGE_WKF
         @sCodTravail    Varchar (  3   ),
         @dtCreeLe       DateTime
 AS
+
+Declare @sVar					VarChar ( 255 )
+Declare @iRowCountRoutage		Integer
+
  INSERT INTO    sysadm.routage
         (       routage.id_sin,
                 routage.alt_supp,
@@ -170,7 +194,22 @@ AS
                 null,
                 null)
 
- Return @@RowCount
+ 
+ Set @iRowCountRoutage = @@RowCount  
+  
+ -- [MIG82_JOURN_EVT]
+ If Not Exists ( 
+	Select Top 1 1 
+	From sysadm.journal_evtsin jevt
+	Where jevt.id_sin = @dcIdSin
+	And   jevt.code_evt = 'DSDECL'
+ )  And @sCodTravail = 'DEC'
+	Begin
+		Set @sVar = 'DTE_DECL=' + Convert ( Varchar ( 10 ), GetDate(), 103)
+		Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'DSDECL', @sVar, '', 'PS_I01_ROUTAGE_WKF', 'CREE'
+	End 
+
+ Return @iRowCountRoutage
 
 GO
 
@@ -193,6 +232,7 @@ GO
 --
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
+-- JFF      31/03/2025   [MIG82_JOURN_EVT]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U02_ROUTAGE_VAL' AND type = 'P' )
         DROP procedure sysadm.PS_U02_ROUTAGE_VAL
@@ -213,6 +253,8 @@ Declare @dtArchiveLe    DateTime
 Declare @sArchivePar    VarChar ( 4 )
 Declare @iRangBoite     Integer
 Declare @dcIdCie        Decimal ( 7,0 )
+Declare @sVar					VarChar ( 255 )
+Declare @iRowCountRoutage		Integer
 /*------------------------------------------------------------------*/
 /* Gestion PRIVEE.                                                  */
 /*------------------------------------------------------------------*/
@@ -282,7 +324,21 @@ IF      @sCodTravail = 'CAS' And @sNoBoite = 'CENTRALISE' And @sNoBoite IS NOT N
                 Convert ( Char(10), routage.id_sin ) = w_queue.id_sin   AND -- [PI062]
                 w_queue.alt_occupe      = 'O'
 
- Return @@RowCount
+  Set @iRowCountRoutage = @@RowCount  
+  
+ -- [MIG82_JOURN_EVT]
+ If Not Exists ( 
+	Select Top 1 1 
+	From sysadm.journal_evtsin jevt
+	Where jevt.id_sin = @dcIdSin
+	And   jevt.code_evt = 'DSDECL'
+ )  And @sCodTravail = 'DEC'
+	Begin
+		Set @sVar = 'DTE_DECL=' + Convert ( Varchar ( 10 ), GetDate(), 103)
+		Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'DSDECL', @sVar, '', 'PS_U02_ROUTAGE_VAL', @sCodOper
+	End 
+
+ Return @iRowCountRoutage 
 
 GO
 
@@ -355,5 +411,4 @@ from 	sysadm.routage
 where 	id_sin = @dcIdSin
 
 GO
-
 
