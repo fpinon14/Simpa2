@@ -4080,7 +4080,7 @@ long		lCraCptDmde  // #13 [CRAO_LOT1]
 string	sCraCtrlImei // #13 [CRAO_LOT1]
 n_cst_string	lnvString // #21 [DCMP080625]
 string	sNumPort, sNumImeiPort // #21 [DCMP080625]
-Long		lMtreg, lTotPce, lCptPce
+Long		lMtreg, lTotPce, lCptPce, lDeb396 
 String	sIdAdh, sAltBloc, sVal1, sVal2, sVal3, sCodAdh, sChainePce, sEtatPce
 Long lTotInter, lCptInter, lCptDetPro
 String sMtFraisAjoute, sAdrMail 
@@ -5132,9 +5132,9 @@ If sPos="" Then
 	lTotInter = idw_LstInter.RowCount ()
 	// [MON374]
 	If F_CLE_A_TRUE ( "MON374" ) Then
-		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 396 )	
+		F_RechDetPro ( lDeb396, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 396 )	
 		sVal = ""
-		If lDeb > 0 Then
+		If lDeb396 > 0 Then
 			sVal = lnvPFCString.of_getkeyvalue (idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "CODE_BANQUE_AUTORISE", ";")
 		End IF 
 	End IF 
@@ -5167,24 +5167,26 @@ If sPos="" Then
 			
 			// [MON374]
 			If F_CLE_A_TRUE ( "MON374" ) Then
-				sVal3 = Trim ( idw_LstInter.GetItemString ( lCptInter, "RIB_BQ" ))
-				IF Not IsNull ( sVal ) Then 
-					If Pos ( sVal, "#" + sVal3 + "#" ) <= 0 Then
-						sPos = "ALT_BLOC"
-						stMessage.sTitre		= "Contrôle des RIB"
-						stMessage.Icon			= Information!
-						stMessage.bErreurG	= FALSE
-						stMessage.sVar[1]    = sVal3
-						
-						sVal = F_REMPLACE ( sVal, "#", "," )
-						sVal = Left ( sVal, len ( sVal ) - 1 )
-						sVal = Right ( sVal, len ( sVal ) - 1 )
-						stMessage.sVar[2]	   = sVal
-						
-						stMessage.sCode		= "WSIN927"
-						Exit
-					End If 
-				End If 					
+				If lDeb396 > 0 Then
+					sVal3 = Trim ( idw_LstInter.GetItemString ( lCptInter, "RIB_BQ" ))
+					IF Not IsNull ( sVal ) Then 
+						If Pos ( sVal, "#" + sVal3 + "#" ) <= 0 Then
+							sPos = "ALT_BLOC"
+							stMessage.sTitre		= "Contrôle des RIB"
+							stMessage.Icon			= Information!
+							stMessage.bErreurG	= FALSE
+							stMessage.sVar[1]    = sVal3
+							
+							sVal = F_REMPLACE ( sVal, "#", "," )
+							sVal = Left ( sVal, len ( sVal ) - 1 )
+							sVal = Right ( sVal, len ( sVal ) - 1 )
+							stMessage.sVar[2]	   = sVal
+							
+							stMessage.sCode		= "WSIN927"
+							Exit
+						End If 
+					End If 					
+				End If 
 			End If
 
 			
