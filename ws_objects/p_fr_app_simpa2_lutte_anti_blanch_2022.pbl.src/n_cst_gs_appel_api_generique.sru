@@ -369,7 +369,7 @@ End If
 ObJsonPackage = Create JSONPackage 
 
 ObJsonPackage.SetValueString ( "email", asEmail )
-ObJsonPackage.SetValueNumber ( "amoutCts", alAmoutCts )
+ObJsonPackage.SetValueNumber ( "amountCts", alAmoutCts )
 ObJsonPackage.SetValueNumber ( "orderId", alOrderId )
 ObJsonPackage.SetValueString ( "model", asModel )
 ObJsonPackage.SetValueNumber ( "warrantyId", alWarrantyId )
