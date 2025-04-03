@@ -1072,25 +1072,37 @@ If @sEnv = 'PROD'
 
 		Exec [LS-SAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '-1', -1, '-1', '', '', @iIdLotTrc output
 		Set @sDestErrTech = 'NLEBERQUIER@spb.eu,DBOUCQ@spb.eu,jff@spb.fr'
-		Set @sDestErrCoherenceHub = 'JBERGERE@spb.eu,OCHAOUACHI@spb.eu,BKHELIFA_ext@spb.eu,LSMALL@spb.eu,DBOUCQ@spb.eu,JALLIX@spb.eu'
+		Set @sDestErrCoherenceHub = 'JBERGERE@spb.eu,OCHAOUACHI@spb.eu,LSMALL@spb.eu,DBOUCQ@spb.eu,JALLIX@spb.eu,SGUESMI@spb.eu'
 		Set @sDestCc = 'jff@spb.fr'
 	End 
 Else
 	Begin 
 		-- [INSTANCE]
-		Set @sInstanceHub = '[S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].'
-		--Set @sInstanceHub = '[S2SQL14DEV\RECSAGA2].[PRESTATAIRE].' 
+		If sysadm.FN_CLE_NUMERIQUE ( 'INSTANCE_PPR_REC_HUB') = 1
+			Begin 
+				Set @sInstanceHub = '[S2SQL14DEV\RECSAGA2].[PRESTATAIRE].' 
+			End 
+		Else
+			Begin 
+				Set @sInstanceHub = '[S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].'
+			End 
 		
 		-- [20240910162546267]
 		-- Set @sCheminDepotFichierMPRRacine  = '\\SPB.LAN\APPLIS\SPB\RECCMD\'
 		Set @sCheminDepotFichierMPRRacine  = sysadm.FN_GET_CHEMIN ( 'SERV_FIC_PROD' ) + 'RECCMD\'
 
 		-- [INSTANCE]
-		Exec [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '-1', -1, '-1', '', '', @iIdLotTrc output
-		-- Exec [S2SQL14DEV\RECSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '-1', -1, '-1', '', '', @iIdLotTrc output
+		If sysadm.FN_CLE_NUMERIQUE ( 'INSTANCE_PPR_REC_HUB') = 1
+			Begin 
+				Exec [S2SQL14DEV\RECSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '-1', -1, '-1', '', '', @iIdLotTrc output
+			End 
+		Else 
+			Begin 
+				Exec [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '-1', -1, '-1', '', '', @iIdLotTrc output
+			End 
 
 		Set @sDestErrTech = 'jff@spb.fr'
-		Set @sDestErrCoherenceHub = 'jff@spb.fr,VANDRE@spb.eu,BKHELIFA_ext@spb.eu,OCHAOUACHI@spb.eu'
+		Set @sDestErrCoherenceHub = 'jff@spb.fr,OCHAOUACHI@spb.eu'
 		Set @sDestCc = 'jff@spb.fr'
 	End
 
@@ -2969,80 +2981,159 @@ While Exists ( Select Top 1 1 From @TB_EnAttenteTransfertVersHpWork where alt_tr
 	Else
 		Begin
 			-- [INSTANCE]
-			Exec @iError = [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRANSFERT_PRESTA_VERS_HUB_PRESTATAIRE 
-			-- Exec @iError = [S2SQL14DEV\RECSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRANSFERT_PRESTA_VERS_HUB_PRESTATAIRE 
-				2, -- 2 ou 3, c'est pareil
-				@iIdSin,
-				@iIdSeq,
-				@sIdHubPresta,
-				@sIdFour,
-				@sTypDommage,
-				@sPointService,
-				@sModeLogis,
-				@sCodePickUp,
-				@sAdrNomPickUp,
-				@sAdrReferenceAssPickUp,
-				@sAdr1PickUp,
-				@sAdr2PickUp,
-				@sAdrCpltPickUp,
-				@sAdrCpPickUp,
-				@sAdrVillePickUp,
-				@sCodeProcess,
-				@sLibCodeProcess,
-				@iIdGti,
-				@sLibPersoGti,
-				@iIdDetail,
-				@iIdProd,
-				@sLibProd,
-				@sIdProdAdh,
-				@iIdEts,
-				@sIdAdh,
-				@iIdSdos,
-				@sIdTypArt,
-				@iCodCivLivr,
-				@sLibCivLivrCourt,
-				@sLibCivLivrLong,
-				@IdContratAbonne,
-				@NomAss,
-				@PrenomAss,
-				@NomLivr,
-				@PrenomLivr,
-				@sAdr1Livr,
-				@sAdr2Livr,
-				@sAdr3Livr,
-				@sAdrCpLivr,
-				@sAdrVilleLivr,
-				@sNumTel1Ass,
-				@sNumTel2Ass,
-				@sNumTel3Ass,
-				@sMailAssure,
-				@sNumImeiAppSin,
-				@sNumSerieAppSin,
-				@sDescriptionProbleme,
-				@sCodEtat,
-				@dtValideLe,
-				@sValidePar,
-				@dtCmdGenLe,
-				@sIdRefFour,
-				@sOrdreAction,
-				@iIdAssureur,
-				@sLibAssureur,
-				@sLibPolice,
-				@sTypAppSin,
-				@sLibTypAppSin,
-				@sMarqAppSin,
-				@sModlAppSin,
-				@sRefAppSin,
-				@sNumTelSin,
-				@mtValAchat,
-				@mtPriseEnCharge,
-				@dtDateAchat,
-				@sEtatAppSin,
-				@sCodeVerrou,
-				@sDesimlocke,
-				@sInfo_spb_frn_cplt,
-				@iIdentity Output,
-				@iRowCount Output
+			If sysadm.FN_CLE_NUMERIQUE ( 'INSTANCE_PPR_REC_HUB') = 1
+				Begin 
+					Exec @iError = [S2SQL14DEV\RECSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRANSFERT_PRESTA_VERS_HUB_PRESTATAIRE 
+						2, -- 2 ou 3, c'est pareil
+						@iIdSin,
+						@iIdSeq,
+						@sIdHubPresta,
+						@sIdFour,
+						@sTypDommage,
+						@sPointService,
+						@sModeLogis,
+						@sCodePickUp,
+						@sAdrNomPickUp,
+						@sAdrReferenceAssPickUp,
+						@sAdr1PickUp,
+						@sAdr2PickUp,
+						@sAdrCpltPickUp,
+						@sAdrCpPickUp,
+						@sAdrVillePickUp,
+						@sCodeProcess,
+						@sLibCodeProcess,
+						@iIdGti,
+						@sLibPersoGti,
+						@iIdDetail,
+						@iIdProd,
+						@sLibProd,
+						@sIdProdAdh,
+						@iIdEts,
+						@sIdAdh,
+						@iIdSdos,
+						@sIdTypArt,
+						@iCodCivLivr,
+						@sLibCivLivrCourt,
+						@sLibCivLivrLong,
+						@IdContratAbonne,
+						@NomAss,
+						@PrenomAss,
+						@NomLivr,
+						@PrenomLivr,
+						@sAdr1Livr,
+						@sAdr2Livr,
+						@sAdr3Livr,
+						@sAdrCpLivr,
+						@sAdrVilleLivr,
+						@sNumTel1Ass,
+						@sNumTel2Ass,
+						@sNumTel3Ass,
+						@sMailAssure,
+						@sNumImeiAppSin,
+						@sNumSerieAppSin,
+						@sDescriptionProbleme,
+						@sCodEtat,
+						@dtValideLe,
+						@sValidePar,
+						@dtCmdGenLe,
+						@sIdRefFour,
+						@sOrdreAction,
+						@iIdAssureur,
+						@sLibAssureur,
+						@sLibPolice,
+						@sTypAppSin,
+						@sLibTypAppSin,
+						@sMarqAppSin,
+						@sModlAppSin,
+						@sRefAppSin,
+						@sNumTelSin,
+						@mtValAchat,
+						@mtPriseEnCharge,
+						@dtDateAchat,
+						@sEtatAppSin,
+						@sCodeVerrou,
+						@sDesimlocke,
+						@sInfo_spb_frn_cplt,
+						@iIdentity Output,
+						@iRowCount Output
+
+				End 
+			Else 
+				Begin 
+					Exec @iError = [S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRANSFERT_PRESTA_VERS_HUB_PRESTATAIRE 
+						2, -- 2 ou 3, c'est pareil
+						@iIdSin,
+						@iIdSeq,
+						@sIdHubPresta,
+						@sIdFour,
+						@sTypDommage,
+						@sPointService,
+						@sModeLogis,
+						@sCodePickUp,
+						@sAdrNomPickUp,
+						@sAdrReferenceAssPickUp,
+						@sAdr1PickUp,
+						@sAdr2PickUp,
+						@sAdrCpltPickUp,
+						@sAdrCpPickUp,
+						@sAdrVillePickUp,
+						@sCodeProcess,
+						@sLibCodeProcess,
+						@iIdGti,
+						@sLibPersoGti,
+						@iIdDetail,
+						@iIdProd,
+						@sLibProd,
+						@sIdProdAdh,
+						@iIdEts,
+						@sIdAdh,
+						@iIdSdos,
+						@sIdTypArt,
+						@iCodCivLivr,
+						@sLibCivLivrCourt,
+						@sLibCivLivrLong,
+						@IdContratAbonne,
+						@NomAss,
+						@PrenomAss,
+						@NomLivr,
+						@PrenomLivr,
+						@sAdr1Livr,
+						@sAdr2Livr,
+						@sAdr3Livr,
+						@sAdrCpLivr,
+						@sAdrVilleLivr,
+						@sNumTel1Ass,
+						@sNumTel2Ass,
+						@sNumTel3Ass,
+						@sMailAssure,
+						@sNumImeiAppSin,
+						@sNumSerieAppSin,
+						@sDescriptionProbleme,
+						@sCodEtat,
+						@dtValideLe,
+						@sValidePar,
+						@dtCmdGenLe,
+						@sIdRefFour,
+						@sOrdreAction,
+						@iIdAssureur,
+						@sLibAssureur,
+						@sLibPolice,
+						@sTypAppSin,
+						@sLibTypAppSin,
+						@sMarqAppSin,
+						@sModlAppSin,
+						@sRefAppSin,
+						@sNumTelSin,
+						@mtValAchat,
+						@mtPriseEnCharge,
+						@dtDateAchat,
+						@sEtatAppSin,
+						@sCodeVerrou,
+						@sDesimlocke,
+						@sInfo_spb_frn_cplt,
+						@iIdentity Output,
+						@iRowCount Output
+				End 
 
 		End 
 	

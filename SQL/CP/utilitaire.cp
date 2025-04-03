@@ -7080,3 +7080,61 @@ Return @sChemin
 END
 Go
 
+--------------------------------------------------------------------
+--
+-- Fonction             :       FN_SIGNATURE_MAIL
+-- Auteur               :       JFF
+-- Date                 :       03/04/2025
+-- Libellé              :		
+-- Commentaires         :       
+-- Références           :       
+--
+--------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_SIGNATURE_MAIL' AND type = 'FN' )
+        DROP function sysadm.FN_SIGNATURE_MAIL
+Go
+
+CREATE FUNCTION sysadm.FN_SIGNATURE_MAIL (   
+	@asCas VarChar  ( 255 ) -- Si besoin
+	)
+RETURNS varchar(1000)  
+AS  
+BEGIN  
+
+Declare @sSign VarChar ( 1000 )
+
+Set @sSign = ''
+
+If @asCas = 'JFF'
+	Begin 
+		Set @sSign = @sSign + 'Jean-François FABRY' + char (10)
+		Set @sSign = @sSign + 'Leader technique' + char (10)
+		Set @sSign = @sSign + 'Application sinistre SIMPA2' + char (10)
+		Set @sSign = @sSign + '71, Quai Colbert - 76600 Le Havre - France' + char (10)
+		Set @sSign = @sSign + 'Tél. : +33 (0)2 32 74 20 20 (choix serv. Voc. 2)' + char (10)
+		Set @sSign = @sSign + 'mail : jfabry@spb.eu' + char ( 10 ) 
+		Set @sSign = @sSign + 'Suivez-nous sur LinkedIn & www.spb.eu' + char (10)
+		Set @sSign = @sSign + '----------------------------------------------------------' + char (10)
+		Set @sSign = @sSign + 'SAS au capital de 1 000 000 euros soumise au contrôle de l’ACPR.' + char (10)
+		Set @sSign = @sSign + 'Siège social : 71, quai Colbert - CS 90000 - 76600 Le Havre. Tél. : +33 (0)2 32 74 20 20' + char (10)
+		Set @sSign = @sSign + 'N° RCS 305 109 779 (Le Havre) – N°ORIAS 07 002 642 (www.orias.fr).' + char (10)
+	End
+
+If @asCas = 'PIED_PAGE_MAIL_AUTO'
+	Begin 
+		Set @sSign = @sSign +  Char (10)    
+		Set @sSign = @sSign +  Char (10)    
+		Set @sSign = @sSign +  '****************************************************************'    
+		Set @sSign = @sSign +  Char (10)    
+		Set @sSign = @sSign +  'AVERTISSEMENT : NE PAS REPONDRE A CE MAIL'    
+		Set @sSign = @sSign +  Char (10)    
+		Set @sSign = @sSign +  '****************************************************************'    
+		Set @sSign = @sSign +  Char (10)    
+		Set @sSign = @sSign +  'Cet e-mail étant généré de façon automatique, nous vous remercions de ne pas utiliser l''adresse d''origine pour nous contacter, votre message ne pouvant être traité en retour.'    
+		Set @sSign = @sSign +  Char (10) 
+	End 
+
+Return @sSign 
+
+END
+Go

@@ -129,6 +129,7 @@ IF      @sCodTravail = 'CAS' And ( SELECT COUNT(*) FROM sysadm.wkfs_w_queue WHER
 	Begin
 		Set @sVar = 'DTE_DECL=' + Convert ( Varchar ( 10 ), GetDate(), 103)
 		Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'DSDECL', @sVar, '', 'PS_U01_ROUTAGE_WKF', @sCodOper
+		Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'ECTTRT', @sVar, '', 'PS_U01_ROUTAGE_WKF', @sCodOper
 	End 
 
  Return @iRowCountRoutage 
@@ -207,6 +208,7 @@ Declare @iRowCountRoutage		Integer
 	Begin
 		Set @sVar = 'DTE_DECL=' + Convert ( Varchar ( 10 ), GetDate(), 103)
 		Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'DSDECL', @sVar, '', 'PS_I01_ROUTAGE_WKF', 'CREE'
+		Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'ECTTRT', @sVar, '', 'PS_I01_ROUTAGE_WKF', 'CREE'
 	End 
 
  Return @iRowCountRoutage
@@ -336,6 +338,7 @@ IF      @sCodTravail = 'CAS' And @sNoBoite = 'CENTRALISE' And @sNoBoite IS NOT N
 	Begin
 		Set @sVar = 'DTE_DECL=' + Convert ( Varchar ( 10 ), GetDate(), 103)
 		Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'DSDECL', @sVar, '', 'PS_U02_ROUTAGE_VAL', @sCodOper
+		Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'ECTTRT', @sVar, '', 'PS_U02_ROUTAGE_VAL', @sCodOper
 	End 
 
  Return @iRowCountRoutage 

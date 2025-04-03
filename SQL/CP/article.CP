@@ -2097,6 +2097,7 @@ Go
 -- Retourne             :       Rien
 -- [VDOC14454] JFF 19/05/2014
 -- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
+-- JFF      03/04/2025   [LGY44]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_RS4616_MAJ_CMDE_TLS' AND type = 'P' )
         DROP procedure sysadm.PS_U_RS4616_MAJ_CMDE_TLS
@@ -2199,7 +2200,6 @@ And a.id_modl_art_ifr is not null
 
 
 -- Relevés des articles non liés + mail Séb
-
 Insert into @tb
 select a.id_marq_art,
 	   a.id_modl_art,
@@ -2208,6 +2208,7 @@ From  sysadm.article a
 Where a.id_four = @sIdFour 
 And   CHARINDEX ( '#' + rtrim ( a.id_typ_art ) + '#', @TypArtIfr ) > 0 -- [HP252_276_HUB_PRESTA]
 And   ( a.id_marq_art_ifr is null or a.id_modl_art_ifr is null )
+And   sysadm.FN_CLE_VAL ( 'MAIL_ENVOYE', a.observ_frn, ';' ) <> 'OUI' -- [LGY44]
 
 While Exists ( Select Top 1 1 From @tb where marquage = 0 )
  Begin
@@ -2219,7 +2220,11 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 	Where	marquage = 0
 
 	-- Envoi du mail à Sébastien en production 
-	Set @sObjet = 'Demande de création de référence Externe<=>IFR'
+	Set @sObjet = 'Demande de création de référence Externe <=> IFR'
+
+	-- On casse la chaine objet et la chaine expediteur
+	Set @sObjet = Left ( @sObjet + space ( 255 ), 255 )
+	Exec sysadm.PS_CASSER_REGLE_CHAINE @sObjet Output, '_', ' ' 
 
 	IF @@servername <> master.dbo.SPB_FN_ServerName ('PRO')	
 		Begin 
@@ -2262,6 +2267,16 @@ While Exists ( Select Top 1 1 From @tb where marquage = 0 )
 		Continue
 	  End 
 
+	-- [LGY44]
+	Update a
+	Set	   a.observ_frn = sysadm.FN_CLE_VAL_E ( 'MAIL_ENVOYE', 'OUI', a.observ_frn, ';' )
+	From   sysadm.article a
+	Where  a.id_four = @sIdFour 
+	And	   a.id_marq_art = @sIdMarqArt
+	And    a.id_modl_art = @sIdModlArt
+	And    CHARINDEX ( '#' + rtrim ( a.id_typ_art ) + '#', @TypArtIfr ) > 0 -- [HP252_276_HUB_PRESTA]
+	And    ( a.id_marq_art_ifr is null or a.id_modl_art_ifr is null )
+	And    sysadm.FN_CLE_VAL ( 'MAIL_ENVOYE', a.observ_frn, ';' ) <> 'OUI'
 
 	EXEC master.dbo.SPB_PS_MAIL 
 			@sRetourErrMail OUTPUT, 

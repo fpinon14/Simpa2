@@ -8068,3 +8068,70 @@ And Not exists (   -- Exclu si dans la vie du dossier (pendant 6 mois), un trava
 
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_MAIL_AUTO_VERS_CORUS_PAS_DE_COURRIER
+-- Auteur               :       FABRY JF
+-- Date                 :       03/04/2025
+-- Libellé              :       
+--                              
+-- Commentaires         :       
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAIL_AUTO_VERS_CORUS_PAS_DE_COURRIER' AND type = 'P' )
+        DROP procedure sysadm.PS_S_MAIL_AUTO_VERS_CORUS_PAS_DE_COURRIER
+GO
+  
+CREATE procedure \  
+AS
+
+Declare @sObjet VarChar ( 255 ) 
+Declare @sRetourErrMail VarChar ( 255 )
+Declare @sFicOut VarChar ( 255 )
+Declare @sMailBody VarChar ( 8000 ) 
+Declare @sNomZip VarChar ( 100 ) 
+
+If DATEPART(WEEKDAY, GetDate () ) in ( 6,7 ) Return -- Pas le Week End
+
+If Not Exists ( 
+		Select Top 1 1 
+		From sysadm.trace_edt_decentralisee_pm425
+		Where cree_le between DateAdd ( hour, -24, getdate() ) and getdate()
+		)
+	Begin
+		Set @sNomZip = 'SIMPA2_' + Convert ( VarChar ( 10 ), GetDate(), 112 ) + '_1800.zip'
+	
+		Set @sObjet = 'SPB/CORUS : Transfert du fichier ' + @sNomZip
+	
+		Set @sMailBody = ''
+		Set @sMailBody = @sMailBody + 'Bonjour,' + char (10)
+		Set @sMailBody = @sMailBody + char (10)
+		Set @sMailBody = @sMailBody + char (10)
+		Set @sMailBody = @sMailBody + 'Le fichier ' + @sNomZip + ' est vide, nous vous confirmons que vous pouvez le supprimer.' + char (10)
+		Set @sMailBody = @sMailBody + char (10)
+		Set @sMailBody = @sMailBody + char (10)
+		Set @sMailBody = @sMailBody + sysadm.FN_SIGNATURE_MAIL ( 'JFF' ) + char (10)
+		Set @sMailBody = @sMailBody + char (10)
+		Set @sMailBody = @sMailBody + char (10)
+		Set @sMailBody = @sMailBody + sysadm.FN_SIGNATURE_MAIL ( 'PIED_PAGE_MAIL_AUTO' ) + char (10)
+
+		EXEC master.dbo.SPB_PS_MAIL 
+				@sRetourErrMail OUTPUT, 
+				'paris@corus.fr',
+				@sMailBody, 
+				@sObjet, 
+				null, 
+				'cbourdoiseau@spb.eu,SDIDIER@spb.eu,GG_DSI-DO-IPD_KSL@spb.eu,productioninformatique@spb.eu,HLIEGEARD@spb.eu,CMOUTON@spb.eu',
+				@sFicOut, 
+				NULL, 
+				NULL, 
+				NULL, 
+				NULL
+
+
+	End 
+
+Go
+
