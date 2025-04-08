@@ -26133,7 +26133,9 @@ public subroutine uf_affichage_dw_choix_action (integer alidevt);//*------------
 //*
 //* Retourne		: String					Nom de la zone sur laquelle on se positionne si Erreur
 //*
-//*-----------------d------------------------------------------------
+//*-----------------------------------------------------------------
+//*  JFF    08/04/205 ISM462637
+//*-----------------------------------------------------------------
 Long lDeb, lFin, lIGti
 String sLibEvt
 	
@@ -26159,11 +26161,36 @@ If lDeb > 0 Then
 			idw_ChoixAction.SetItem ( 1, "CHOIX_ACTION", "R" )
 			icbCommander.Text = "Serv. HUB >>"					
 			
+			idw_ChoixAction.Show() 
+			idw_ChoixAction.BringToTop = True			
+			
+			Return
 	End Choose
 	
 End If 	
 
-sLibEvt  = Upper ( SQLCA.FN_CODE_NUM ( alIdEvt, "+EV" ) )
+sLibEvt = Upper ( SQLCA.FN_CODE_NUM ( alIdEvt, "+EV" ) )
+
+// ISM462637
+If F_CLE_NUMERIQUE ( "HUB875" ) >= 3 Then
+	Choose Case alIdEvt
+		Case 1451, 1439
+			idw_ChoixAction.dataobject = "d_choix_action_cmde_seule"
+			idw_ChoixAction.InsertRow ( 0 )
+		
+			idw_ChoixAction.SetItem ( 1, "CHOIX_ACTION", "I" )
+			icbCommander.Text = "Informer >>"			
+
+			idw_ChoixAction.Show() 
+			idw_ChoixAction.BringToTop = True			
+			
+			Return			
+			
+	End Choose 
+
+End If
+
+
 If Left ( sLibEvt, 5 ) = "REMPL" Or lIGti = 10 Then
 
 	idw_ChoixAction.dataobject = "d_choix_action_cmde_seule"
@@ -26172,6 +26199,7 @@ If Left ( sLibEvt, 5 ) = "REMPL" Or lIGti = 10 Then
 	idw_ChoixAction.SetItem ( 1, "CHOIX_ACTION", "C" )
 	icbCommander.Text = "Commander >>"
 End If 
+
 idw_ChoixAction.Show() 
 idw_ChoixAction.BringToTop = True
 
