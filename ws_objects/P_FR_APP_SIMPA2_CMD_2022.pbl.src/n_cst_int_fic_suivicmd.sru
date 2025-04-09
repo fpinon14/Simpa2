@@ -33688,6 +33688,7 @@ private function boolean uf_hub_gestiontranssqlhubpresta (string ascas);//*-----
 //*-----------------------------------------------------------------
 
 Boolean bRet
+String sSection
 
 Choose Case asCas
 	Case "CONNEXION_HUB"
@@ -33696,8 +33697,19 @@ Choose Case asCas
 			itrHubPrestataire = Create u_Transaction_Hub_Prestataire
 		End IF 
 
+		If Upper(SQLCA.Database) = "SIMPA2_PRO" Then
+			sSection = "HUB PRESTATAIRE BASE"
+		Else
+			If F_CLE_NUMERIQUE ( "INSTANCE_PPR_REC_HUB" ) = 1 Then
+				sSection = "HUB PRESTATAIRE BASE REC"
+			Else
+				sSection = "HUB PRESTATAIRE BASE PPR"				
+			End If 
+				
+		End IF 
+
 		bRet = f_ConnectSqlServer_Hub_Prestataire ( stGLB.sFichierIni   , &
-											 "HUB PRESTATAIRE BASE" , &
+											 sSection, &
 											 itrHubPrestataire    , &
 											 stGLB.sMessageErreur, &
 											 stGlb.slibcourtappli, &

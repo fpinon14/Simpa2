@@ -321,15 +321,30 @@ public function boolean wf_connexion_hub_prestataire ();//*---------------------
 //* #..   ...   ../../....   
 //*-----------------------------------------------------------------
 
+Boolean bRet
+String sSection
+
 itrHubPrestataire = Create u_Transaction_Hub_Prestataire 
 
-If Not f_ConnectSqlServer_Hub_Prestataire ( stGLB.sFichierIni   , &
-									 "HUB PRESTATAIRE BASE" , &
+If Upper(SQLCA.Database) = "SIMPA2_PRO" Then
+	sSection = "HUB PRESTATAIRE BASE"
+Else
+	If F_CLE_NUMERIQUE ( "INSTANCE_PPR_REC_HUB" ) = 1 Then
+		sSection = "HUB PRESTATAIRE BASE REC"
+	Else
+		sSection = "HUB PRESTATAIRE BASE PPR"				
+	End If 
+		
+End IF 
+
+bRet = f_ConnectSqlServer_Hub_Prestataire ( stGLB.sFichierIni   , &
+									 sSection, &
 									 itrHubPrestataire    , &
 									 stGLB.sMessageErreur, &
 									 stGlb.slibcourtappli, &
-									 stGlb.sCodOper          ) Then
+									 stGlb.sCodOper          ) 
 
+If Not bRet Then
 	
 	stMessage.sTitre  	= "Connexion Hub Presta impossible"
 	stMessage.Icon			= Exclamation!
