@@ -410,6 +410,7 @@ private function string uf_validation_finale_sql_hubprestataire (ref datastore a
 private function boolean uf_gestiontranssqlhubpresta (string ascas)
 public subroutine uf_initialiser_dw_desc (ref u_datawindow_detail adw_inter, ref u_datawindow_detail adw_gti, ref datawindow adw_norm[], ref u_libelle_dga aulibelle, ref u_datawindow_detail adw_contact, ref datawindow adw_corbeille, ref u_datawindow adw_dossuivipar, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_boitearchive, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref picturebutton apbcontroler, ref statictext astpauseapi_lab, ref statictext astattente_diverse)
 private function long uf_zn_trt_divsin_typ_presta (string asdata, string asnomcol, long alrow)
+public subroutine uf_set_valinstance (string ascas, string asval)
 end prototypes
 
 public subroutine uf_traitement (integer aitype, ref s_pass astpass);//*-----------------------------------------------------------------
@@ -21629,6 +21630,11 @@ If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
 				sTypMail = Trim ( idw_LstInter.GetItemString ( lCpt, "ID_COUR" ) )
 				
 				If IsNull ( sTypMail ) Or sTypMail = "" Then Continue
+				
+				// EXIT car soit tout est Emailing ou aucun inter
+				// [20250408214307247]
+				If SQLCA.PS_MIG1_S_VERIF_SI_COURRIER_EMAILING ( sTypMail ) <= 0 Then Exit
+					
 				
 				iIdInter = idw_LstInter.GetItemNumber ( lCpt, "ID_I" ) 
 				sCodInter = idw_LstInter.GetItemString ( lCpt, "COD_INTER" ) 
@@ -54510,6 +54516,41 @@ End If
 Return iAction
 
 end function
+
+public subroutine uf_set_valinstance (string ascas, string asval);//*-----------------------------------------------------------------
+//*
+//* Fonction		: uf_set_valinstance (Public)
+//* Auteur			: FABRY JF
+//* Date				: 12/11/2024
+//* Libellé			: 
+//* Commentaires	: Valeur d'instance changeante
+//*
+//* Arguments		: Voir arguments
+//*
+//* Retourne		: Rien
+//*
+//*-----------------------------------------------------------------
+//       JFF   19/12/2024 [MIG1_COUR_EMAILING]
+//*-----------------------------------------------------------------
+
+
+If IsNull ( asCas ) Then Return
+
+asCas = Trim ( asCas ) 
+
+If asCas = "" Then Return
+
+Choose Case asCas 
+
+	Case "isReferentielApp"
+		isReferentielApp = asVal
+		
+	Case "ibMIG1_CourEmailing"
+		ibMIG1_CourEmailing = Upper ( asVal ) = "TRUE" // [MIG1_COUR_EMAILING]
+
+		
+End Choose 
+end subroutine
 
 on u_gs_sp_sinistre.create
 call super::create

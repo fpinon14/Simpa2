@@ -170,7 +170,8 @@ n_cst_string	lnvString
 DataWindowChild dwChild
 String sFind, sValCar, sCodInter, sVal 
 
-Long lTotPiece, lTotRefus, lLig, lTotInter, lTotDetail, lIdSin, lDeb, lFin, lVal, lRowDS 
+Long lTotPiece, lTotRefus, lLig, lTotInter, lTotDetail, lIdSin, lDeb, lFin, lVal, lRowDS
+Long lGtDuDR, lIdProd 
 
 bSupprime = True
 
@@ -179,7 +180,8 @@ bSupprime = True
 /*------------------------------------------------------------------*/
 isCodRecu = astPass.sTab [ 4 ]
 
-lIdSin = idw_wSin.GetItemNumber ( 1, "ID_SIN" )
+lIdSin  = idw_wSin.GetItemNumber ( 1, "ID_SIN" )
+lIdProd = idw_wsin.GetItemNumBer ( 1,"ID_PROD")
 
 /*------------------------------------------------------------------*/
 /* On recopie la ligne du détail de la fenêtre parent dans dw_wInter de  */
@@ -375,9 +377,15 @@ If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
 	If lDeb > 0 Then
 		idw_wInter.modify ("b_typo_courrier.text = 'Courrier Emailing KSL'" )
 		idw_wInter.SetItem ( 1, "ALT_COURGEST", "R" )
-		idw_wInter.GetChild ( "ID_NAT_COUR", dwChild )
-		dwChild.RowsDiscard ( 1, dwChild.RowCount(), Primary! )
-		idw_wInter.Uf_Proteger ( { "ID_NAT_COUR", "ALT_QUEST", "ID_I_DB", "ID_COURJ" }, "1" )		
+		This.Uf_Tb_Questionnaire ()
+
+		SQLCA.PS_S01_AUTORISATION ( 9, stGlb.sCodOper, lIdprod, lGtDuDR )
+		
+		If lGtDuDR <= 0 Then
+			idw_wInter.GetChild ( "ID_NAT_COUR", dwChild )
+			dwChild.RowsDiscard ( 1, dwChild.RowCount(), Primary! )
+			idw_wInter.Uf_Proteger ( { "ID_NAT_COUR", "ALT_QUEST", "ID_I_DB", "ID_COURJ" }, "1" )		
+		End IF 
 		uf_zn_altcourgest ( "INIT" ) 
 	Else 
 		idw_wInter.modify ("b_typo_courrier.text = 'Typologie courrier'" )
@@ -412,6 +420,8 @@ Long lIdSin, lIdInter, lTotInter, lDeb, lFin, lRowDs
 n_cst_string	lnvString 
 String sValCar, sCodInter, sVal
 DataWindowChild dwChild
+Long lGtDuDR, lIdProd 
+
 
 /*------------------------------------------------------------------*/
 /* Le produit a t-il changé ?                                       */
@@ -424,6 +434,9 @@ Uf_ChangerProduit ()
 /* W_Tm_sp_Sinistre.                                                */
 /*------------------------------------------------------------------*/
 lIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
+lIdProd = idw_wsin.GetItemNumBer ( 1,"ID_PROD")
+
+
 lTotInter	= idw_wInter.iudwDetailSource.RowCount ()
 If	lTotInter > 0 Then
 	lIdInter = idw_wInter.iudwDetailSource.GetItemNumber ( lTotInter, "ID_I" )
@@ -533,14 +546,19 @@ If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
 	If lDeb > 0 Then
 		idw_wInter.modify ("b_typo_courrier.text = 'Courrier Emailing KSL'" )
 		idw_wInter.SetItem ( 1, "ALT_COURGEST", "R" )
-		idw_wInter.GetChild ( "ID_NAT_COUR", dwChild )
-		dwChild.RowsDiscard ( 1, dwChild.RowCount(), Primary! )
-		idw_wInter.Uf_Proteger ( { "ID_NAT_COUR", "ALT_QUEST", "ID_I_DB", "ID_COURJ" }, "1" )		
+		This.Uf_Tb_Questionnaire ()
+
+		SQLCA.PS_S01_AUTORISATION ( 9, stGlb.sCodOper, lIdprod, lGtDuDR )
+		
+		If lGtDuDR <= 0 Then
+			idw_wInter.GetChild ( "ID_NAT_COUR", dwChild )
+			dwChild.RowsDiscard ( 1, dwChild.RowCount(), Primary! )
+			idw_wInter.Uf_Proteger ( { "ID_NAT_COUR", "ALT_QUEST", "ID_I_DB", "ID_COURJ" }, "1" )		
+		End IF 
 		uf_zn_altcourgest ( "INIT" ) 
 	Else 
 		idw_wInter.modify ("b_typo_courrier.text = 'Typologie courrier'" )
 	End If 
-
 End If 
 
 end subroutine
@@ -4227,8 +4245,12 @@ private function integer uf_zn_altcourgest (string ascas);//*-------------------
 String sAltCourGest
 Integer iAction
 Long lDeb, lFin
+Long lGtDuDR
+Long lIdProd // #4
 
 iAction	= 0
+
+lIdProd  = idw_wsin.GetItemNumBer( 1,"ID_PROD")
 
 // [MIG1_COUR_EMAILING]
 If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
@@ -4238,6 +4260,12 @@ If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
 		iAction = 1
 		idw_wInter.iiErreur = 3
 		idw_wInter.SetItem ( 1, "ALT_COURGEST", "R" )
+
+		SQLCA.PS_S01_AUTORISATION ( 9, stGlb.sCodOper, lIdprod, lGtDuDR )
+
+		If lGtDuDR > 0 Then This.Uf_Tb_Questionnaire ()
+		
+		
 	End If 
 End If 
 	

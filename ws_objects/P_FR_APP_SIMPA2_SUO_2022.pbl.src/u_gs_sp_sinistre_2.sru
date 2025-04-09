@@ -1034,8 +1034,9 @@ public function string uf_controlergestion_emailingksl ();//*-------------------
 //                   JFF     19/02/2025  [202502191703] J'autorise pour tout inter, un contrôle sur le courrier existant à présent.
 //*-----------------------------------------------------------------
 Boolean bAMU_Regl, bAMU_ReglV, bAMU_ReglC, bAMU_Pce, bAMU_Ref, bMaqG, bMaqV, bMaqC, bMaqP, bMaqR, bFin, bAMUPT_Courrier, bCtrleAltEdit
+Boolean bAMU_CourEmailing, bAMU_CourNormal
 Long lDeb, lFin, lCpt, lTotInter, lCpt2
-Int iNbreRef, iIdInter
+Int iNbreRef, iIdInter, iCtrle 
 String sAdrMail, sCodInter, sNomInter, sPos, sLibCodInter, sTypeMail, sRegl, sPce, sRef, sCodModeReg, sChaineEnvCourrier, sCodInterSeria
 Decimal {2} dcMtARegInter
 
@@ -1044,13 +1045,58 @@ bAMUPT_Courrier = False
 sChaineEnvCourrier = ""
 bCtrleAltEdit = False
 
-F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 390 )
-if lDeb <=0 Then return ""
+// [20250408214307247]
+// F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 390 )
+// if lDeb <=0 Then return ""
 
+// [20250408214307247]
+if Not ibMIG1_CourEmailing Then return ""
 
 // Contrôle mail
 lTotInter = idw_lstinter.RowCount () 
-For lCpt=1 To lTotInter
+
+// [20250408214307247]
+For lCpt = 1 To lTotInter
+	sTypeMail = idw_lstinter.GetItemstring ( lCpt, "ID_COUR")
+	If IsNull ( sTypeMail ) Then sTypeMail = ""
+	iCtrle =  SQLCA.PS_MIG1_S_VERIF_SI_COURRIER_EMAILING ( sTypeMail ) 
+	
+	If iCtrle > 0  And sTypeMail <> "" And Not bAMU_CourEmailing Then bAMU_CourEmailing = TRUE
+	If iCtrle <= 0 And sTypeMail <> "" And Not bAMU_CourNormal   Then bAMU_CourNormal = TRUE	
+
+Next 
+
+// [20250408214307247]
+If bAMU_CourEmailing And bAMU_CourNormal Then
+	stMessage.sTitre		= "Emailing KSL : Incohérence type courrier"
+	stMessage.Icon			= Information!
+	stMessage.bErreurG	= FALSE
+	stMessage.Bouton		= Ok! 
+	stMessage.sCode		= "WSIN928"
+	F_Message ( stMessage )
+	Return "ALT_BLOC"	
+End If 
+
+// [20250408214307247]
+If bAMU_CourNormal And Not bAMU_CourEmailing Then
+	bFin = False
+	Do While Not bFin
+		stMessage.sTitre		= "Emailing KSL : Choix mode Emailing"
+		stMessage.Icon			= Exclamation!
+		stMessage.bErreurG	= FALSE
+		stMessage.Bouton		= YesNo! 
+		stMessage.sCode		= "WSIN929"
+		ibMIG1_CourEmailing = False
+		iuoSpGsSinistre.uf_Set_ValInstance ( "ibMIG1_CourEmailing", "FALSE" )	
+	
+		If F_Message ( stMessage ) = 1 Then bFin = TRUE
+	Loop
+
+	
+	Return "ALT_BLOC"	
+End If 
+
+For lCpt = 1 To lTotInter
 	sAdrMail = idw_lstinter.GetItemstring ( lCpt, "ADR_MAIL")
 	sCodInter = idw_lstinter.GetItemstring ( lCpt, "COD_INTER")	 // [MIG1_COUR_EMAILING]
 	sNomInter = idw_lstinter.GetItemstring ( lCpt, "NOM")	 // [MIG1_COUR_EMAILING]

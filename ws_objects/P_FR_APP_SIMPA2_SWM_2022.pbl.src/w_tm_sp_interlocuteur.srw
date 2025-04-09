@@ -1469,15 +1469,15 @@ Choose Case upper(dwo.Name)
 		
 //					If sTypMail <> "" Then	On peut sortir de la fenêtre en effacer le code acutel			
 						this.SetItem ( 1, "ALT_COURGEST", "R" ) 
-	
-						This.SetItem ( 1, "ID_NAT_COUR", sTypMail ) 
-						This.SetColumn ( "ID_NAT_COUR" )
 
 						This.SetItem ( 1, "ID_COUR", sTypMail ) 
 						This.SetColumn ( "ID_COUR" )
 
+						This.SetItem ( 1, "ID_NAT_COUR", sTypMail ) 
+						This.SetColumn ( "ID_NAT_COUR" )
+
 						This.SetFocus ( )
-						TriggerEvent ( This, "itemchanged" )
+//						TriggerEvent ( This, "itemchanged" )
 //					End If 
 					
 				End If 			

@@ -823,6 +823,10 @@ function Integer PS_S_CODE_DANS_FAMILLE_CAR ( integer aiIdFam, String asIdCode )
 //   JFF   19/12/2024 [MIG1_COUR_EMAILING]
 function Integer PS_DETECTION_ERREUR_DP393 ( Long adcIdProd )  RPCFUNC ALIAS FOR "sysadm.PS_DETECTION_ERREUR_DP393"
 
+//   JFF   08/04/2025 [MIG1_COUR_EMAILING]
+function Integer PS_MIG1_S_VERIF_SI_COURRIER_EMAILING ( String asTypMail )  RPCFUNC ALIAS FOR "sysadm.PS_MIG1_S_VERIF_SI_COURRIER_EMAILING"
+
+
 end prototypes
 type variables
 Private:
