@@ -123,3 +123,30 @@ If lTrim ( rTrim ( @asCodinter ) ) = '' Set @asCodinter = null
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procedure            :       sysadm.PS_MIG1_S_VERIF_SI_COURRIER_EMAILING
+-- Auteur               :       Fabry JF
+-- Date                 :       08/04/2025
+-- Libelle              :        
+-- Commentaires         :       
+-- References           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_MIG1_S_VERIF_SI_COURRIER_EMAILING' AND type = 'P' )
+        DROP procedure sysadm.PS_MIG1_S_VERIF_SI_COURRIER_EMAILING
+GO
+CREATE procedure sysadm.PS_MIG1_S_VERIF_SI_COURRIER_EMAILING
+	@asTypMail VarChar ( 6 )
+AS
+
+Select  Top 1 1 
+from	sysadm.emailing_ksl_courrier 
+Where	typ_mail = @asTypMail
+
+Return @@RowCount
+
+Go
