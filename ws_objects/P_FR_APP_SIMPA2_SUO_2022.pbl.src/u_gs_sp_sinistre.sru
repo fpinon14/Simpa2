@@ -16251,7 +16251,8 @@ For lCpt = 1 To lTot
 			  "DT432_ID_SIN_EMETTEUR",&
 			  "DT432_ID_SEQ_BATCH", &
 			  "RS1921_AMTRUST",&
-			  "CTRL_IMEI_MANUEL"
+			  "CTRL_IMEI_MANUEL", &
+			  "SKU_GARANTIE_SAGA2" 
 			  
   			  idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "O" )
 
@@ -49162,6 +49163,7 @@ public function long uf_zn_marqport (string ascas);//*--------------------------
 //        JFF   15/05/2019   [DT386_EXTR_AXA]
 //        JFF   11/05/2022   [RS2980_IFR]
 //        JFF   07/03/2024   [HP252_276_HUB_PRESTA]
+//        JFF   18/02/2025   [PMO268_MIG48][20250410100203163]
 //*-----------------------------------------------------------------
 
 String				sFind, sGetText, sTypeApp, sVal, sCodeRet, sModele, sMarque
@@ -49358,17 +49360,26 @@ If Not IsNull ( sGetText ) and sGetText <> "" And lRow <> -1 Then
 
 		Case Else
 
-			// [DT386_EXTR_AXA]
-			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 336 )
-			If lDeb > 0 Then
-				// Saisie Libre sans Contrôle
-				lRow = 1				
-			Else 
-				idw_wSin.GetChild ( "MARQ_PORT", dwChild )
-				sFind = "LIB_CODE = '" + sGetText + "'"
-				lRow = dwChild.Find ( sFind, 1, dwChild.RowCount () )
-			End If 
+			// [PMO268_MIG48][20250410100203163] Cas Maxi Coffe, on ne modifia le model de l'adhésion (API)
+			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 395 )
+			If lRow <> -1 And lDeb > 0 Then
+				lRow = -1
+				idw_wSin.iiErreur = 6									
+			End IF 
 
+			// [DT386_EXTR_AXA]
+			// [PMO268_MIG48]
+			If lRow <> -1 Then
+				F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 336 )
+				If lDeb > 0 Then
+					// Saisie Libre sans Contrôle
+					lRow = 1	
+				Else 
+					idw_wSin.GetChild ( "MARQ_PORT", dwChild )
+					sFind = "LIB_CODE = '" + sGetText + "'"
+					lRow = dwChild.Find ( sFind, 1, dwChild.RowCount () )
+				End If 
+			End If 
 	End Choose 
 
 End If
@@ -49440,6 +49451,7 @@ public function long uf_zn_modlport ();//*--------------------------------------
 //       JFF   17/01/2020   [EPURE_MODL_MB]
 //       JFF   11/05/2022   [RS2980_IFR]
 //       JFF   07/03/2024   [HP252_276_HUB_PRESTA]
+//       JFF   18/02/2025   [PMO268_MIG48][20250410100203163]
 //*-----------------------------------------------------------------
 
 String				sFind, sGetText, sVal, sCodeRet, sMarque, sModele
@@ -49613,6 +49625,14 @@ If Not IsNull ( sGetText ) and sGetText <> "" And lRow <> -1 Then
 		Case Else
 			// Saisie Libre sans Contrôle
 			lRow = 1
+			
+			// [PMO268_MIG48][20250410100203163] Cas Maxi Coffe, on ne modifia le model de l'adhésion (API)
+			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 395 )
+			If lRow <> -1 And lDeb > 0 Then
+				lRow = -1
+				idw_wSin.iiErreur = 6
+			End IF 
+
 	End Choose 
 
 End If

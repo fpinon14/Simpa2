@@ -332,10 +332,10 @@ sUrl = Trim ( ProfileString (stglb.sfichierini ,"API_MAXI_COFFEE","URL_API","*")
 
 /*
 Pour la simulation : 
-Token : K)psBRug$$L=HPaX8'gMc-t!Qn[Ng.]v
+apiKey : %JR9&_[#dP(IpR^=V(I&Nqa!x_AaaoDqX
 
 Pour la production : 
-Token : pz5s<%~>(fX_U&x?p`{Bnr$PP:!rL4gj
+apiKey : s}:,8e-BByrfrg83;*|z=BEg9j[fg32@AsV0
 */
 sCleAuthent = Trim ( ProfileString (stglb.sfichierini,"API_MAXI_COFFEE","AUTHKEY","*"))
 
@@ -380,11 +380,13 @@ sRequestBody = ObJsonPackage.GetJsonString ()
 
 // Complèment sur la méthode d'autorisation donné par PostMan
 // Demander à Matthieu, Lisette, Marlène le type d’authentification
-sCleAuthent = "Basic " + sCleAuthent 
+// sCleAuthent = "Basic " + sCleAuthent  [20250410100203163]
 
 ObjApi = Create HTTPClient 
 
-ObjApi.SetRequestHeader ( "Authorization", sCleAuthent )
+ObjApi.SetRequestHeader ( "apiKey", sCleAuthent )
+ObjApi.SetRequestHeader ( "Content-Type", "application/json") // [20250410100203163]
+ObjApi.SetRequestHeader ( "Accept-Encoding", "gzip, deflate, br") // [20250410100203163]
 
 astAttenteDiverse.text = " ~n~rAppel de l'API Maxi Coffee (extérieure à l'entreprise)~n~rpour validation du bon d'achat~n~r~n~rVeuillez patienter...."
 astAttenteDiverse.X			=  941

@@ -1445,9 +1445,9 @@ public function boolean uf_validation_finale_trt_partaprescommit ();//*---------
 n_cst_string lnvPFCString
 DateTime dtCreeLeDos, dtPivotCourHTMLviaWSSaga2
 Boolean  bRet
-Long     lDeb, lFin, lRow, lIdContrantAbonne, lIdProd, lIdSin, lMtCmde
+Long     lDeb, lFin, lRow, lIdContrantAbonne, lIdWarranty, lIdSin, lMtCmde
 n_cst_gs_appel_api_generique ObjAppelAPI
-String sAdrMail, sMarqModlApp 
+String sAdrMail, sModlApp 
 Integer iIdSeq 
 
 dtCreeLeDos = idw_WSin.GetItemDateTime ( 1, "CREE_LE")
@@ -1475,8 +1475,8 @@ If lDeb > 0 Then
 		sAdrMail = idw_LstInter.GetItemString ( lRow, "ADR_MAIL" )
 		lMtCmde  = idw_LstwCommande.GetItemDecimal ( iIdSeq, "MT_TTC_CMDE" ) * 100 // En centimes
 		lIdContrantAbonne = Long ( idw_WSin.GetItemString ( 1, "ID_CONTRAT_ABONNE" ) )
-		sMarqModlApp = Trim ( idw_WSin.GetItemString ( 1, "MARQ_PORT" ) ) + " " + Trim (  idw_WSin.GetItemString ( 1, "MODL_PORT" ) )
-		lIdProd = idw_WSin.GetItemNumber ( 1, "ID_PROD" )  
+		sModlApp = Trim (  idw_WSin.GetItemString ( 1, "MODL_PORT" ) ) // [20250410100203163]
+		lIdWarranty = Long ( iuoSpGsSinistre.uf_GestOng_Divers_Trouver ( "SKU_GARANTIE_SAGA2" ) ) // [20250410100203163]
 		lIdSin = idw_WSin.GetItemNumber ( 1, "ID_SIN" )  
 		
 	
@@ -1488,10 +1488,11 @@ If lDeb > 0 Then
 				idw_LstwCommande, &
 				iIdSeq, &
 				istAttenteDiverse, &
-				sAdrMail, lMtCmde, &
+				sAdrMail, &
+				lMtCmde, &
 				lIdContrantAbonne, &
-				sMarqModlApp, &
-				lIdProd, &
+				sModlApp, &
+				lIdWarranty, &
 				lIdSin &
 		)
 		

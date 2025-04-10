@@ -4420,6 +4420,7 @@ event dw_1::itemerror;//*-------------------------------------------------------
 //*       JFF    07/06/2021  [RS-496] Blocage modif dte_surv, si présence pré-script avec notion de dte_surv exploitée.
 //        JFF    05/08/2024  [MCO602_PNEU]
 //        JFF    18/11/2024  [KSV649_ORREUCARA]
+//        JFF    18/02/2025  [PMO268_MIG48][20250410100203163]
 //*-----------------------------------------------------------------
 
 Long ll_return
@@ -4673,6 +4674,10 @@ If	ibErreur Then
 			
 			stMessage.sCode		= "WSIN890"			
 			
+		Case 6
+			// [PMO268_MIG48][20250410100203163]
+			stMessage.bErreurG	= False
+			stMessage.sCode		= "WSIN930"
 
 		End Choose
 
@@ -4712,7 +4717,13 @@ If	ibErreur Then
 				stMessage.sVar[4] = "10"									
 			End If
 			
-			stMessage.sCode		= "WSIN890"			
+			stMessage.sCode		= "WSIN890"
+			
+		Case 6
+			// [PMO268_MIG48][20250410100203163]
+			stMessage.bErreurG	= False
+			stMessage.sCode		= "WSIN930"
+			
 
 		End Choose
 
