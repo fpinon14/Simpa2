@@ -19961,6 +19961,7 @@ private function boolean uf_validation_finale_trt_particuliers ();//*-----------
 //       JFF   05/08/2024 [MCO602_PNEU][MCO1050]
 //       JFF   19/12/2024 [MIG1_COUR_EMAILING]
 //       JFF   14/03/2025 [PMO268_MIG56]
+//       JFF   31/03/2025 [MIG82_JOURN_EVT]
 //*-----------------------------------------------------------------
 
 Date dtPivotFranchisePBox
@@ -21773,7 +21774,16 @@ If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 	End IF 
 End If
 
+// [MIG82_JOURN_EVT]
+If F_CLE_A_TRUE ( "MIG82_JOURN_EVT" ) Then
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 397)
+	If bRet And lDeb > 0 Then
+		sSql = "Exec sysadm.PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION " + String ( idw_wsin.GetItemNumber  ( 1, "ID_SIN" ) ) + "., '" + stGlb.sCodOper + "'"
 
+		F_Execute ( sSql, SQLCA )
+		bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
+	End IF 
+End If
 
 idw_LstwCommande.SetFilter ( sFiltreOrig )
 idw_LstwCommande.Filter ()

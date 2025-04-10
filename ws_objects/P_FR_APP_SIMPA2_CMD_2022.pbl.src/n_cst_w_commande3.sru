@@ -28994,6 +28994,7 @@ private function integer uf_zn_choix_regle_hub (string ascas, long alidprod, lon
 //* 		 JFF  27/11/2024  [20241127082353640]
 //* 		 JFF  17/01/2025  [HUB_TYP_APP_REMPL] (V01)
 //        JFF   12/02/2025   [HUB875]
+//        JFF   31/03/2025   [MIG82_JOURN_EVT]
 //*---------------------------------------------------------------
 
 s_Pass	stPass
@@ -29131,6 +29132,7 @@ Choose Case ascas
 		sTabValRet [14] ="HP_INFO_SPB_FRN"
 		sTabValRet [15] ="HP_ID_PROCESS_ACHEM" 
 		sTabValRet [16] ="HP_ID_ACTION" 
+		sTabValRet [17] ="HP_RDV_DIAG_VIDEO" // [MIG82_JOURN_EVT]		
 
 		iTotTabValRet = UpperBound ( sTabValRet  )
 		For iCpt = 1 To iTotTabValRet 

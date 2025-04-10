@@ -751,67 +751,6 @@ Return True
 
 
 
-/*
-Choose case isTypActionS2 
-	Case "A_REPARER", "A_DIAGNOSTIQUER"
-
-		sIdModeLogis = Upper( lnvPFCString.of_Getkeyvalue ( isChaineRetour, "HP_ID_MODE_LOGIS", ";")) 
-		
-		If sIdModeLogis = "PROXIMITY" Then
-			lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_INFO_SPB_FRN", "3530", ";")
-			Return True
-		End If 
-		
-		If sIdModeLogis = "CENTRALIZATION" Then
-			
-			Do While NOT bDecision
-			
-				stMessage.sTitre		= "Choix mode logistique Centralisation" 
-				stMessage.Icon			= Question!
-				stMessage.bErreurG	= FALSE
-				stMessage.Bouton		= YESNO!
-				stMessage.sCode		= "HUBP003"
-				
-				// Bureau de Poste
-				If F_Message ( stMessage ) = 1 Then 
-					lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_INFO_SPB_FRN", "3510", ";")
-					bDecision = True
-					Return True
-				End IF 
-	
-				bDecision = This.wf_appel_relais_pickup ()
-			   
-				If bDecision Then lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_INFO_SPB_FRN", "3520", ";")
-				
-			Loop 		
-		End If 
-
-	Case "A_COMMANDER"
-
-			Do While NOT bDecision
-		
-				stMessage.sTitre		= "Choix mode logistique Centralisation" 
-				stMessage.Icon			= Question!
-				stMessage.bErreurG	= FALSE
-				stMessage.Bouton		= YESNO!
-				stMessage.sCode		= "HUBP009"
-				
-				// Bureau de Poste
-				If F_Message ( stMessage ) = 1 Then 
-					lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_INFO_SPB_FRN", "3540", ";")
-					bDecision = True
-					Return True
-				End IF 
-	
-				bDecision = This.wf_appel_relais_pickup ()
-			
-				If bDecision Then lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_INFO_SPB_FRN", "3550", ";")
-				
-			Loop 		
-
-End CHoose 
-*/
-
 
 end function
 
@@ -830,10 +769,10 @@ public function boolean wf_valider_point_service ();//*-------------------------
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #..   ...   ../../....   
+//        JFF   31/03/2025   [MIG82_JOURN_EVT]
 //*-----------------------------------------------------------------
 
-String sIdFour, sIdPointService, sIdModeLogis, sIdHubPresta, sMesErr
+String sIdFour, sIdPointService, sIdModeLogis, sIdHubPresta, sMesErr, sRdvDiagVideo, sChaineSeria
 Integer iTotRow, iCpt, iRowSelect, iRow
 n_cst_string lnvPFCString
 Boolean bRet
@@ -851,6 +790,8 @@ sIdFour = Dw_1.GetItemString ( iRowSelect, "idFour" )
 sIdPointService = Dw_1.GetItemString ( iRowSelect, "idPointServ" ) 
 sIdModeLogis = Dw_1.GetItemString ( iRowSelect, "idModeLogis" ) 
 sIdHubPresta = Dw_1.GetItemString ( iRowSelect, "idHubPresta" ) 
+sChaineSeria = Dw_1.GetItemString ( iRowSelect, "chaineseria" ) 
+sRdvDiagVideo   = F_CLE_VAL ( "RDV_DIAG_VIDEO", sChaineSeria, ";" ) // [MIG82_JOURN_EVT]
 
 IF IsNull ( sIdFour ) Or sIdFour = "" Then
 	bRet = False
@@ -889,6 +830,8 @@ lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_ID_HUB_PRESTA", sIdHubPresta ,
 lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_ID_FOUR", sIdFour, ";")
 lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_ID_POINT_SERV", sIdPointService, ";")
 lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_ID_MODE_LOGIS", sIdModeLogis, ";")
+lnvPFCString.of_Setkeyvalue ( isChaineRetour, "HP_RDV_DIAG_VIDEO", sRdvDiagVideo, ";") // [MIG82_JOURN_EVT]
+
 
 Return True
 end function
