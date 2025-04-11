@@ -61,7 +61,7 @@ If Not Exists (
 	Select Top 1 1 
 	From sysadm.det_pro dp
 	Where dp.id_prod = @dcIdProd
-	And   dp.id_code_dp = 396
+	And   dp.id_code_dp = 397
 ) Begin
 	Return -6
   End 
@@ -73,7 +73,7 @@ And		jevt.id_seq = ( Select Max ( id_seq )
 						From sysadm.journal_evtsin jevt2
 						Where jevt2.id_sin = jevt.id_sin )
 
--- C'est le dernier evt connu donc on ne réinsère pas le même
+-- le dernier evt connu est le même donc on ne réinsère pas le même
 If @sDernCodEvtActuel = @asCodEvt Return -7
 
 Select	@sLibEvt = lTrim ( rTrim ( jevt.lib_evt ))
@@ -132,7 +132,7 @@ Go
 
 --------------------------------------------------------------------
 --
--- Proc‚dure            :       PS_S_INSERTION_JOURNAL_EVTSIN
+-- Proc‚dure            :       PS_S_JOURNAL_EVTSIN
 -- Auteur               :       Fabry JF
 -- Date                 :       31/03/2025
 -- Libell‚              :       
@@ -141,16 +141,17 @@ Go
 -- Retour				: 1 Succès
 --						 -1 Erreur
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_INSERTION_JOURNAL_EVTSIN' AND type = 'P' )
-        DROP procedure sysadm.PS_S_INSERTION_JOURNAL_EVTSIN
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_JOURNAL_EVTSIN' AND type = 'P' )
+        DROP procedure sysadm.PS_S_JOURNAL_EVTSIN
 GO
 
-CREATE procedure sysadm.PS_S_INSERTION_JOURNAL_EVTSIN
+CREATE procedure sysadm.PS_S_JOURNAL_EVTSIN
 	@adcIdSin			Decimal ( 10 )
 AS
 
-Select	lTrim ( rTrim ( jevt.lib_evt )), 
-		jevt.cree_le
+Select	jevt.cree_le 'Date évènement',
+		lTrim ( rTrim ( jevt.lib_evt )) 'libellé évènement'
+		
 From   sysadm.journal_evtsin jevt
 Where  jevt.id_sin = @adcIdSin
 Order  by jevt.id_seq
@@ -204,7 +205,7 @@ IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_CAS_JOURNAL_EVT_SIN_SUR_
         DROP procedure sysadm.PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION
 GO
 
-CREATE procedure sysadm.PS_S_INSERTION_JOURNAL_EVTSIN
+CREATE procedure sysadm.PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION
 	@adcIdSin			Decimal ( 10 ),
 	@asCodOper			Varchar (  4 )
 AS
@@ -250,7 +251,7 @@ If Exists (
 -- Règlement
 If @iEtatVuAssure in ( 550, 600, 1500, 1510, 1520 )
 	Begin
-
+	 select 1
 	End 
 
 -- En cours
