@@ -1167,177 +1167,180 @@ if exists (select * from dbo.sysobjects where id = object_id(N'[sysadm].[PS_U01_
 drop procedure [sysadm].[PS_U01_IFR_SUPP_SPB]
 GO
 
-CREATE PROC sysadm.PS_U01_IFR_SUPP_SPB
---------------------------------------------------------------------
---
--- Procédure            :      PS_U01_IFR_SUPP_SPB
--- Auteur               :      ???
--- Date                 :      ???
--- Libellé              :      Mise à jour des dossiers suite fusion de marque/modele IFR
--- Commentaires         :      
--- Arguments            :      
--------------------------------------------------------------------
--- [ITSM358824] Nettoyage des tables lien_article, param_ftu_brk & substitution
--- JFF      16/01/2016   [PM251-5]
--------------------------------------------------------------------
-	@sMarq		varchar(30),
-	@sRef		varchar(30),
-	@sNewMarq	varchar(30),
-	@sNewRef	varchar(30)
-AS
-
-DECLARE @iTot INTEGER
-
-	SELECT @iTot = COUNT(*)
-	FROM	sysadm.article
-	WHERE	id_marq_art_ifr = @sMarq
-	AND		id_modl_art_ifr = @sRef
- 
-	IF @iTot > 0 
-	BEGIN
-		UPDATE	sysadm.article
-		SET		id_marq_art_ifr = @sNewMarq,
-				id_modl_art_ifr = @sNewRef
-		WHERE	id_marq_art_ifr = @sMarq 
-		AND		id_modl_art_ifr = @sRef
-	END
-
-	SELECT @iTot = COUNT(*)
-	FROM	sysadm.w_sin
-	WHERE	marq_port = @sMarq
-	AND		modl_port = @sRef
-
-	IF @iTot > 0 
-	BEGIN
-		UPDATE	sysadm.w_sin
-		SET		marq_port = @sNewMarq,
-				modl_port = @sNewRef
-		WHERE	marq_port = @sMarq 
-		AND		modl_port = @sRef
-	END
-
-	SELECT @iTot = COUNT(*)
-	FROM	sysadm.sinistre
-	WHERE	marq_port = @sMarq
-	AND		modl_port = @sRef
-
-	IF @iTot > 0 
-	BEGIN
-		UPDATE	sysadm.sinistre
-		SET		marq_port = @sNewMarq,
-				modl_port = @sNewRef
-		WHERE	marq_port = @sMarq 
-		AND		modl_port = @sRef
-	END
-
-	SELECT @iTot = COUNT(*)
-	FROM	sysadm.w_commande
-	WHERE	id_marq_art_ifr = @sMarq
-	AND		id_modl_art_ifr = @sRef
-
-	IF @iTot > 0 
-	BEGIN
-		UPDATE	sysadm.w_commande
-		SET		id_marq_art_ifr = @sNewMarq,
-				id_modl_art_ifr = @sNewRef
-		WHERE	id_marq_art_ifr = @sMarq 
-		AND		id_modl_art_ifr = @sRef
-	END
-	
-	SELECT @iTot = COUNT(*)
-	FROM	sysadm.commande
-	WHERE	id_marq_art_ifr = @sMarq
-	AND		id_modl_art_ifr = @sRef
-
-	IF @iTot > 0 
-	BEGIN
-		UPDATE	sysadm.commande
-		SET		id_marq_art_ifr = @sNewMarq,
-				id_modl_art_ifr = @sNewRef
-		WHERE	id_marq_art_ifr = @sMarq 
-		AND		id_modl_art_ifr = @sRef
-	END	
-	
-	UPDATE	sysadm.substitution
-	SET		marq_app_orig = @sNewMarq,
-			modl_app_orig = @sNewRef
-	FROM sysadm.substitution s
-	WHERE	marq_app_orig = @sMarq 
-		AND		modl_app_orig = @sRef
-		AND not exists (select 1 from sysadm.substitution s2 
-			where s2.id_prod=s.id_prod
-			and s2.marq_app_orig=@sNewMarq and s2.modl_app_orig=@sNewRef
-			and s2.marq_app_subs=s.marq_app_subs and s2.modl_app_subs=s.modl_app_subs)
-
-	UPDATE	sysadm.substitution
-	SET		marq_app_subs = @sNewMarq,
-			modl_app_subs = @sNewRef
-	FROM sysadm.substitution s
-	WHERE	marq_app_subs = @sMarq 
-		AND		modl_app_subs = @sRef
-		AND not exists (select 1 from sysadm.substitution s2 
-			where s2.id_prod=s.id_prod
-				and s2.marq_app_orig=s.marq_app_orig and s2.modl_app_orig=s.modl_app_orig
-				and s2.marq_app_subs=@sNewMarq and s2.modl_app_subs=@sNewRef)
-
-	-- Nettoyage de la table substitution
-	delete sysadm.substitution
-	from sysadm.substitution s
-	where not exists (select 1 from ifr i where i.marque=s.marq_app_orig and i.reference=s.modl_app_orig)
-
-	delete sysadm.substitution
-	from sysadm.substitution s
-	where not exists (select 1 from ifr i where i.marque=s.marq_app_subs and i.reference=s.modl_app_subs)
-
-	delete from sysadm.substitution 
-	where marq_app_orig=marq_app_subs and modl_app_orig=modl_app_subs
-	
-	--  Nettoyage de la table lien_article
-	UPDATE	sysadm.lien_article
-	SET		marq_ifr = @sNewMarq,
-			modl_ifr = @sNewRef
-	FROM sysadm.lien_article s
-	WHERE	marq_ifr = @sMarq 
-		AND		modl_ifr = @sRef
-		AND not exists (select 1 from sysadm.lien_article l2 
-			where l2.marq_ifr=@sNewMarq and l2.modl_ifr=@sNewRef)
-
-	delete sysadm.lien_article
-	from sysadm.lien_article l
-	where not exists (select 1 from ifr i where i.marque=l.marq_ifr and i.reference=l.modl_ifr)
-
-	-- param_ftu_brk
-
-	UPDATE	sysadm.param_ftu_brk
-	SET		id_marq_art = @sNewMarq,
-			id_modl_art = @sNewRef
-	FROM sysadm.param_ftu_brk s
-	WHERE	id_marq_art = @sMarq 
-		AND		id_modl_art = @sRef
-		AND not exists (select 1 from sysadm.param_ftu_brk p2 
-			where p2.id_marq_art=@sNewMarq and p2.id_modl_art=@sNewRef)
-
-	delete sysadm.param_ftu_brk
-	from sysadm.param_ftu_brk p
-	where p.id_marq_art <> '-1'
-		and p.id_modl_art <> '-1'
-		and not exists (select 1 from ifr i where i.marque=p.id_marq_art and i.reference=p.id_modl_art)
-
-
-	-- [PM251-5]
-	Update sysadm.ctg_factu
-	Set    marq_app = @sNewMarq,
-		   modl_app = @sNewRef
-	From	sysadm.ctg_factu cf
-	Where  marq_app = @sMarq 
-	AND	   modl_app = @sRef
-	AND not exists (select Top 1 1 from sysadm.ctg_factu cf2 
-			where cf2.marq_app=@sNewMarq and cf2.modl_app=@sNewRef)
-
-	delete sysadm.ctg_factu
-	from sysadm.ctg_factu cf
-	where not exists (select top 1 1 from ifr i where i.marque=cf.marq_app and i.reference=cf.modl_app )
-
+  
+CREATE PROC sysadm.PS_U01_IFR_SUPP_SPB  
+--------------------------------------------------------------------  
+--  
+-- Procédure            :      PS_U01_IFR_SUPP_SPB  
+-- Auteur               :      ???  
+-- Date                 :      ???  
+-- Libellé              :      Mise à jour des dossiers suite fusion de marque/modele IFR  
+-- Commentaires         :        
+-- Arguments            :        
+-------------------------------------------------------------------  
+-- [ITSM358824] Nettoyage des tables lien_article, param_ftu_brk & substitution  
+-- JFF      16/01/2016   [PM251-5]  
+-- JFF      [20250410174752420]
+-------------------------------------------------------------------  
+ @sMarq  varchar(35),  -- [20250410174752420] 30 => 35
+ @sRef  varchar(35),  -- [20250410174752420] 30 => 35
+ @sNewMarq varchar(35),  -- [20250410174752420] 30 => 35
+ @sNewRef varchar(35)  -- [20250410174752420] 30 => 35
+AS  
+  
+DECLARE @iTot INTEGER  
+  
+ SELECT @iTot = COUNT(*)  
+ FROM sysadm.article  
+ WHERE id_marq_art_ifr = @sMarq  
+ AND  id_modl_art_ifr = @sRef  
+   
+ IF @iTot > 0   
+ BEGIN  
+  UPDATE sysadm.article  
+  SET  id_marq_art_ifr = @sNewMarq,  
+    id_modl_art_ifr = @sNewRef  
+  WHERE id_marq_art_ifr = @sMarq   
+  AND  id_modl_art_ifr = @sRef  
+ END  
+  
+ SELECT @iTot = COUNT(*)  
+ FROM sysadm.w_sin  
+ WHERE marq_port = @sMarq  
+ AND  modl_port = @sRef  
+  
+ IF @iTot > 0   
+ BEGIN  
+  UPDATE sysadm.w_sin  
+  SET  marq_port = @sNewMarq,  
+    modl_port = @sNewRef  
+  WHERE marq_port = @sMarq   
+  AND  modl_port = @sRef  
+ END  
+  
+ SELECT @iTot = COUNT(*)  
+ FROM sysadm.sinistre  
+ WHERE marq_port = @sMarq  
+ AND  modl_port = @sRef  
+  
+ IF @iTot > 0   
+ BEGIN  
+  UPDATE sysadm.sinistre  
+  SET  marq_port = @sNewMarq,  
+    modl_port = @sNewRef  
+  WHERE marq_port = @sMarq   
+  AND  modl_port = @sRef  
+ END  
+  
+ SELECT @iTot = COUNT(*)  
+ FROM sysadm.w_commande  
+ WHERE id_marq_art_ifr = @sMarq  
+ AND  id_modl_art_ifr = @sRef  
+  
+ IF @iTot > 0   
+ BEGIN  
+  UPDATE sysadm.w_commande  
+  SET  id_marq_art_ifr = @sNewMarq,  
+    id_modl_art_ifr = @sNewRef  
+  WHERE id_marq_art_ifr = @sMarq   
+  AND  id_modl_art_ifr = @sRef  
+ END  
+   
+ SELECT @iTot = COUNT(*)  
+ FROM sysadm.commande  
+ WHERE id_marq_art_ifr = @sMarq  
+ AND  id_modl_art_ifr = @sRef  
+  
+ IF @iTot > 0   
+ BEGIN  
+  UPDATE sysadm.commande  
+  SET  id_marq_art_ifr = @sNewMarq,  
+    id_modl_art_ifr = @sNewRef  
+  WHERE id_marq_art_ifr = @sMarq   
+  AND  id_modl_art_ifr = @sRef  
+ END   
+   
+ UPDATE sysadm.substitution  
+ SET  marq_app_orig = @sNewMarq,  
+   modl_app_orig = @sNewRef  
+ FROM sysadm.substitution s  
+ WHERE marq_app_orig = @sMarq   
+  AND  modl_app_orig = @sRef  
+  AND not exists (select 1 from sysadm.substitution s2   
+   where s2.id_prod=s.id_prod  
+   and s2.marq_app_orig=@sNewMarq and s2.modl_app_orig=@sNewRef  
+   and s2.marq_app_subs=s.marq_app_subs and s2.modl_app_subs=s.modl_app_subs)  
+  
+ UPDATE sysadm.substitution  
+ SET  marq_app_subs = @sNewMarq,  
+   modl_app_subs = @sNewRef  
+ FROM sysadm.substitution s  
+ WHERE marq_app_subs = @sMarq   
+  AND  modl_app_subs = @sRef  
+  AND not exists (select 1 from sysadm.substitution s2   
+   where s2.id_prod=s.id_prod  
+    and s2.marq_app_orig=s.marq_app_orig and s2.modl_app_orig=s.modl_app_orig  
+    and s2.marq_app_subs=@sNewMarq and s2.modl_app_subs=@sNewRef)  
+  
+ -- Nettoyage de la table substitution  
+ delete sysadm.substitution  
+ from sysadm.substitution s  
+ where not exists (select 1 from ifr i where i.marque=s.marq_app_orig and i.reference=s.modl_app_orig)  
+  
+ delete sysadm.substitution  
+ from sysadm.substitution s  
+ where not exists (select 1 from ifr i where i.marque=s.marq_app_subs and i.reference=s.modl_app_subs)  
+  
+ delete from sysadm.substitution   
+ where marq_app_orig=marq_app_subs and modl_app_orig=modl_app_subs  
+   
+ --  Nettoyage de la table lien_article  
+ UPDATE sysadm.lien_article  
+ SET  marq_ifr = @sNewMarq,  
+   modl_ifr = @sNewRef  
+ FROM sysadm.lien_article s  
+ WHERE marq_ifr = @sMarq   
+  AND  modl_ifr = @sRef  
+  AND not exists (select 1 from sysadm.lien_article l2   
+   where l2.marq_ifr=@sNewMarq and l2.modl_ifr=@sNewRef)  
+  
+ delete sysadm.lien_article  
+ from sysadm.lien_article l  
+ where not exists (select 1 from ifr i where i.marque=l.marq_ifr and i.reference=l.modl_ifr)  
+  
+ -- param_ftu_brk  
+  
+ UPDATE sysadm.param_ftu_brk  
+ SET  id_marq_art = @sNewMarq,  
+   id_modl_art = @sNewRef  
+ FROM sysadm.param_ftu_brk s  
+ WHERE id_marq_art = @sMarq   
+  AND  id_modl_art = @sRef  
+  AND not exists (select 1 from sysadm.param_ftu_brk p2   
+   where p2.id_marq_art=@sNewMarq and p2.id_modl_art=@sNewRef)  
+  
+ delete sysadm.param_ftu_brk  
+ from sysadm.param_ftu_brk p  
+ where p.id_marq_art <> '-1'  
+  and p.id_modl_art <> '-1'  
+  and not exists (select 1 from ifr i where i.marque=p.id_marq_art and i.reference=p.id_modl_art)  
+  
+  
+ -- [PM251-5]  
+ Update sysadm.ctg_factu  
+ Set    marq_app = @sNewMarq,  
+     modl_app = @sNewRef  
+ From sysadm.ctg_factu cf  
+ Where  marq_app = @sMarq   
+ AND    modl_app = @sRef  
+ AND not exists (select Top 1 1 from sysadm.ctg_factu cf2   
+   where cf2.marq_app=@sNewMarq and cf2.modl_app=@sNewRef)  
+  
+ delete sysadm.ctg_factu  
+ from sysadm.ctg_factu cf  
+ where not exists (select top 1 1 from ifr i where i.marque=cf.marq_app and i.reference=cf.modl_app )  
+  
+  
 
 Go	
 
