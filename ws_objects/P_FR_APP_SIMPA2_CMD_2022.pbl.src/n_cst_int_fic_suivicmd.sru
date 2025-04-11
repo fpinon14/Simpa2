@@ -32601,12 +32601,12 @@ For lCpt = lTotLig To 1 Step -1
 
 		sVal = idwFicFourn.GetItemString ( lCpt, "NEUF_REC_REMPL" )  
 		Choose Case sVal
-			Case "NEU", "REC"
+			Case "NEU", "REC", "NDI"
 				// Ok
 			Case Else
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") sur un SWAP ou un Remplacement le champ NEUF_REC_REMPL est obligatoire et doit contenir les valeurs NEU ou REC." )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") sur un SWAP ou un Remplacement le champ NEUF_REC_REMPL est obligatoire et doit contenir les valeurs NEU ou REC ou NDI." )
 		End Choose 
 		
 	End If		
