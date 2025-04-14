@@ -245,6 +245,7 @@ private function string uf_controlergestion_ceat (long alcpt)
 private function integer uf_zn_adrcodciv (ref datawindow adw, string asdata, long alrow)
 private function string uf_controlergestion_hub (long alcpt)
 private function integer uf_zn_choix_regle_hub (string ascas, long alidprod, long alidsin, long alidgti, long aliddetail, integer airet, datawindow adw, ref long alrow)
+private function string uf_controlergestion_tag_fiable_rempl (long alcpt)
 end prototypes
 
 public subroutine uf_preparerinserer (ref s_pass astpass);//*-----------------------------------------------------------------
@@ -2004,6 +2005,7 @@ public function string uf_controlergestion ();//*-------------------------------
 //			JFF   23/11/2018 [ITSM574876]
 //       JFF   19/12/2022 [RS4093_EVOL_ELD]
 //       JFF   07/03/2024 [HP252_276_HUB_PRESTA]
+//       JFF   31/03/2025 [MIG82_JOURN_EVT]
 //*---------------------------------------------------------------
 
 Int					iRet
@@ -2855,6 +2857,11 @@ For lCpt = 1 To lTot
 
 	END CHOOSE
 
+	// [MIG82_JOURN_EVT]
+	If F_CLE_A_TRUE ( "MIG82_JOURN_EVT" ) Then
+		This.Uf_ControlerGestion_Tag_Fiable_Rempl ( lCpt )  		
+	End If
+
 	If sPos <> "" Then Exit
 
 Next
@@ -3108,6 +3115,9 @@ If sIdRefFour = "REFUSE_A_REEXP" Then
 		sVal = idwCmdeSin.GetItemString ( lRow, "ID_SERIE_ANC" ) 
 	End IF 		
 End If 
+
+
+
 
 Return sPos
 
@@ -29251,6 +29261,47 @@ Choose Case ascas
 End Choose 
 
 Return aiRet
+end function
+
+private function string uf_controlergestion_tag_fiable_rempl (long alcpt);//*-----------------------------------------------------------------
+//*
+//* Fonction		: n_cst_w_commande3::Uf_ControlerGestion_Tag_Fiable_Rempl (PRIVATE)
+//* Auteur			: Fabry JF
+//* Date				: 14/04/2025
+//* Libellé			: [MIG82_JOURN_EVT]
+//* Commentaires	: Tag fiable pour le type de remplacement
+//*					  
+//*
+//* Arguments		: Long		alCpt			val
+//*					  
+//*
+//* Retourne		: String
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//*-----------------------------------------------------------------
+
+String sPos, sIdFour, sTypRempl, sIdRefFour 
+n_cst_string lnv_string
+
+sPos = ""
+
+If isChoixAction <> "C" Then Return sPos 
+
+sIdRefFour = Upper ( idwArticle.GetItemString ( alCpt, "ID_REF_FOUR" ) )
+
+Choose Case sIdRefFour 
+	Case "CARTE_CADEAU", "BON_ACHAT"
+		sTypRempl = sIdRefFour 
+
+	Case Else
+		sTypRempl = "REMPL_APPAREIL"
+End Choose 
+
+lnv_string.of_setkeyvalue( isInfoSpbFrnCplt, "TYPE_REMPL", sTypRempl, ";")				
+
+Return sPos
+
 end function
 
 on n_cst_w_commande3.create
