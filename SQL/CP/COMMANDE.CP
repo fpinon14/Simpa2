@@ -7944,6 +7944,7 @@ Go
 -- JFF   21/10/2019  [VDOC28556] Hélène
 -- JFF   29/10/2019  J'ajoute SBE, si problème on l'enlèvera
 -- JFF   07/03/2024  [HP252_276_HUB_PRESTA]
+-- JFF   14/04/2025  [1083_PEC_REF]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_PEC_A_RECYCLER_PM330' AND type = 'P' )
         DROP procedure sysadm.PS_I_PEC_A_RECYCLER_PM330
@@ -8179,50 +8180,57 @@ Else
 			)
   End 
 
-Select	@dcNewIdDetail = max ( id_detail ) 
-From	sysadm.detail
-where   id_sin = @adcIdSin
-and     id_gti = @dcIdGti 
 
-If @dcNewIdDetail is null Set @dcNewIdDetail = 0
-Set @dcNewIdDetail = @dcNewIdDetail + 1
-
-Insert into sysadm.detail 
-Select id_sin,   id_gti,   @dcNewIdDetail,   1083,   id_reg=null,   id_i_reg=null,   lib_det,   dte_det,   heu_det, num_carte,   mt_prej=0,   mt_fran=0,   mt_nplaf=0,   mt_plaf=0,   alt_plaf='N',   alt_reg= 'N',   'O',   alt_ssui='O',   cod_mot_ssui=12,   cod_dec_mac=900,   cod_dec_ope=900,   cod_etat=900,   id_carte,   id_type_carte,   getdate(),   'AUTO',   getdate(),   getdate(),   'AUTO',   dte_cmd=null,   dte_livr=null,   mt_val_achat,   mt_val_publique,   num_facture=null
-From sysadm.detail d
-Where d.id_sin = @adcIdSin
-And   d.id_gti = @dcIdGti
-And   d.id_detail = @dcIdDetail
-
-If Exists ( Select * from w_detail where id_sin = @adcIdSin  and id_gti = @dcIdGti  and id_detail = @dcIdDetail  )
+IF @iIdSeqHubPrestaOrig > 0 And sysadm.FN_CLE_NUMERIQUE ( '1083_PEC_REF') > 0 -- [1083_PEC_REF]
 	Begin
-	Insert into sysadm.w_detail 
-	Select id_sin,   id_gti,   @dcNewIdDetail,   1083,   lib_det,   dte_det,   heu_det, num_carte,   mt_prej=0,   mt_fran=0,   mt_nplaf=0,   mt_plaf=0,   null, 'N', 'N', alt_plaf='N',   alt_reg='N',   'O', alt_valide,  1,  alt_ssui='O',   cod_mot_ssui=12,   cod_dec_mac=900,   cod_dec_ope=900,   cod_etat=900,   id_carte,   id_type_carte, getdate(),   getdate(),   'AUTO',   dte_cmd=null,   dte_livr=null,   mt_val_achat,   mt_val_publique,   num_facture=null
-	From sysadm.w_detail d
-	Where d.id_sin = @adcIdSin
-	And   d.id_gti = @dcIdGti
-	And   d.id_detail = @dcIdDetail
+		Set @dcNewIdDetail = @dcIdDetail
+	End 
+Else
+	Begin 
+		Select	@dcNewIdDetail = max ( id_detail ) 
+		From	sysadm.detail
+		where   id_sin = @adcIdSin
+		and     id_gti = @dcIdGti 
+
+		If @dcNewIdDetail is null Set @dcNewIdDetail = 0
+		Set @dcNewIdDetail = @dcNewIdDetail + 1
+
+		Insert into sysadm.detail 
+		Select id_sin,   id_gti,   @dcNewIdDetail,   1083,   id_reg=null,   id_i_reg=null,   lib_det,   dte_det,   heu_det, num_carte,   mt_prej=0,   mt_fran=0,   mt_nplaf=0,   mt_plaf=0,   alt_plaf='N',   alt_reg= 'N',   'O',   alt_ssui='O',   cod_mot_ssui=12,   cod_dec_mac=900,   cod_dec_ope=900,   cod_etat=900,   id_carte,   id_type_carte,   getdate(),   'AUTO',   getdate(),   getdate(),   'AUTO',   dte_cmd=null,   dte_livr=null,   mt_val_achat,   mt_val_publique,   num_facture=null
+		From sysadm.detail d
+		Where d.id_sin = @adcIdSin
+		And   d.id_gti = @dcIdGti
+		And   d.id_detail = @dcIdDetail
+
+		If Exists ( Select * from w_detail where id_sin = @adcIdSin  and id_gti = @dcIdGti  and id_detail = @dcIdDetail  )
+			Begin
+			Insert into sysadm.w_detail 
+			Select id_sin,   id_gti,   @dcNewIdDetail,   1083,   lib_det,   dte_det,   heu_det, num_carte,   mt_prej=0,   mt_fran=0,   mt_nplaf=0,   mt_plaf=0,   null, 'N', 'N', alt_plaf='N',   alt_reg='N',   'O', alt_valide,  1,  alt_ssui='O',   cod_mot_ssui=12,   cod_dec_mac=900,   cod_dec_ope=900,   cod_etat=900,   id_carte,   id_type_carte, getdate(),   getdate(),   'AUTO',   dte_cmd=null,   dte_livr=null,   mt_val_achat,   mt_val_publique,   num_facture=null
+			From sysadm.w_detail d
+			Where d.id_sin = @adcIdSin
+			And   d.id_gti = @dcIdGti
+			And   d.id_detail = @dcIdDetail
+			End 
+
+		Insert into sysadm.div_det 
+		Select id_sin,   id_gti, @dcNewIdDetail, nom_zone, lib_label, id_typ_liste, alt_liste_codecar, id_typ_zone, alt_oblig, alt_prot , cpt_tri, val_nbre, val_mt, val_dte, val_car, getdate(), getdate(),  'AUTO', getdate(), 'AUTO'
+		From sysadm.div_det d
+		Where d.id_sin = @adcIdSin
+		And   d.id_gti = @dcIdGti
+		And   d.id_detail = @dcIdDetail
+
+		If Exists ( Select * from w_div_det where id_sin = @adcIdSin  and id_gti = @dcIdGti  and id_detail = @dcIdDetail  )
+			Begin
+			Insert into sysadm.w_div_det 
+			Select id_sin,   id_gti, @dcNewIdDetail, nom_zone, lib_label, id_typ_liste, alt_liste_codecar, id_typ_zone, alt_oblig, alt_prot , cpt_tri, val_nbre, val_mt, val_dte, val_car, 1, getdate(),   getdate(), 'AUTO'
+			From sysadm.w_div_det d
+			Where d.id_sin = @adcIdSin
+			And   d.id_gti = @dcIdGti
+			And   d.id_detail = @dcIdDetail			  
+			End 
 	End 
 
-Insert into sysadm.div_det 
-Select id_sin,   id_gti, @dcNewIdDetail, nom_zone, lib_label, id_typ_liste, alt_liste_codecar, id_typ_zone, alt_oblig, alt_prot , cpt_tri, val_nbre, val_mt, val_dte, val_car, getdate(), getdate(),  'AUTO', getdate(), 'AUTO'
-From sysadm.div_det d
-Where d.id_sin = @adcIdSin
-And   d.id_gti = @dcIdGti
-And   d.id_detail = @dcIdDetail
-
-If Exists ( Select * from w_div_det where id_sin = @adcIdSin  and id_gti = @dcIdGti  and id_detail = @dcIdDetail  )
-	Begin
-	Insert into sysadm.w_div_det 
-	Select id_sin,   id_gti, @dcNewIdDetail, nom_zone, lib_label, id_typ_liste, alt_liste_codecar, id_typ_zone, alt_oblig, alt_prot , cpt_tri, val_nbre, val_mt, val_dte, val_car, 1, getdate(),   getdate(), 'AUTO'
-	From sysadm.w_div_det d
-	Where d.id_sin = @adcIdSin
-	And   d.id_gti = @dcIdGti
-	And   d.id_detail = @dcIdDetail			  
-	End 
-	  
 Select @iNewIdSeq = max ( id_seq ) From sysadm.commande where id_sin = @adcIdSin 
-
 
 If @iNewIdSeq is null Set @iNewIdSeq = 0
 Set @iNewIdSeq = @iNewIdSeq + 1
@@ -8322,6 +8330,7 @@ Go
 -- JFF	    09/08/2018   [ITSM551169]
 -- JFF		19/09/2018	 [DT361]
 -- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
+-- JFF      14/04/2025   [1083_PEC_REF]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_REFUSE_A_REEXP_PM330' AND type = 'P' )
         DROP procedure sysadm.PS_I_REFUSE_A_REEXP_PM330
@@ -8545,47 +8554,54 @@ And     (
 
 If @iIdSeqHubPrestaOrig > 0 Set @sQRelPickUpRet = 'NON'
 
-Select	@dcNewIdDetail = max ( id_detail ) 
-From	sysadm.detail
-where   id_sin = @adcIdSin
-and     id_gti = @dcIdGti 
-
-If @dcNewIdDetail is null Set @dcNewIdDetail = 0
-Set @dcNewIdDetail = @dcNewIdDetail + 1
-
-Insert into sysadm.detail 
-Select id_sin,   id_gti,   @dcNewIdDetail,   1083,   id_reg=null,   id_i_reg=null,   lib_det,   dte_det,   heu_det, num_carte,   mt_prej=0,   mt_fran=0,   mt_nplaf=0,   mt_plaf=0,   alt_plaf='N',   alt_reg= 'N',   alt_att= 'N',   alt_ssui='O',   cod_mot_ssui=12,   cod_dec_mac=900,   cod_dec_ope=900,   cod_etat=900,   id_carte,   id_type_carte,   getdate(),   'AUTO',   getdate(),   getdate(),   'AUTO',   dte_cmd=null,   dte_livr=null,   mt_val_achat,   mt_val_publique,   num_facture=null
-From sysadm.detail d
-Where d.id_sin = @adcIdSin
-And   d.id_gti = @dcIdGti
-And   d.id_detail = @dcIdDetail
-
-If Exists ( Select * from w_detail where id_sin = @adcIdSin  and id_gti = @dcIdGti  and id_detail = @dcIdDetail  )
+IF @iIdSeqHubPrestaOrig > 0 And sysadm.FN_CLE_NUMERIQUE ( '1083_PEC_REF') > 0 -- [1083_PEC_REF]
 	Begin
-	Insert into sysadm.w_detail 
-	Select id_sin,   id_gti,   @dcNewIdDetail,   1083,   lib_det,   dte_det,   heu_det, num_carte,   mt_prej=0,   mt_fran=0,   mt_nplaf=0,   mt_plaf=0,   null, 'N', 'N', alt_plaf='N',   alt_reg='N',   alt_att= 'N', alt_valide,  1,  alt_ssui='O',   cod_mot_ssui=12,   cod_dec_mac=900,   cod_dec_ope=900,   cod_etat=900,   id_carte,   id_type_carte, getdate(),   getdate(),   'AUTO',   dte_cmd=null,   dte_livr=null,   mt_val_achat,   mt_val_publique,   num_facture=null
-	From sysadm.w_detail d
-	Where d.id_sin = @adcIdSin
-	And   d.id_gti = @dcIdGti
-	And   d.id_detail = @dcIdDetail
+		Set @dcNewIdDetail = @dcIdDetail
 	End 
+Else
+	Begin 
+		Select	@dcNewIdDetail = max ( id_detail ) 
+		From	sysadm.detail
+		where   id_sin = @adcIdSin
+		and     id_gti = @dcIdGti 
 
-Insert into sysadm.div_det 
-Select id_sin,   id_gti, @dcNewIdDetail, nom_zone, lib_label, id_typ_liste, alt_liste_codecar, id_typ_zone, alt_oblig, alt_prot , cpt_tri, val_nbre, val_mt, val_dte, val_car, getdate(), getdate(),  'AUTO', getdate(), 'AUTO'
-From sysadm.div_det d
-Where d.id_sin = @adcIdSin
-And   d.id_gti = @dcIdGti
-And   d.id_detail = @dcIdDetail
+		If @dcNewIdDetail is null Set @dcNewIdDetail = 0
+		Set @dcNewIdDetail = @dcNewIdDetail + 1
 
-If Exists ( Select * from w_div_det where id_sin = @adcIdSin  and id_gti = @dcIdGti  and id_detail = @dcIdDetail  )
-	Begin
-	Insert into sysadm.w_div_det 
-	Select id_sin,   id_gti, @dcNewIdDetail, nom_zone, lib_label, id_typ_liste, alt_liste_codecar, id_typ_zone, alt_oblig, alt_prot , cpt_tri, val_nbre, val_mt, val_dte, val_car, 1, getdate(),   getdate(), 'AUTO'
-	From sysadm.w_div_det d
-	Where d.id_sin = @adcIdSin
-	And   d.id_gti = @dcIdGti
-	And   d.id_detail = @dcIdDetail			  
-	End 
+		Insert into sysadm.detail 
+		Select id_sin,   id_gti,   @dcNewIdDetail,   1083,   id_reg=null,   id_i_reg=null,   lib_det,   dte_det,   heu_det, num_carte,   mt_prej=0,   mt_fran=0,   mt_nplaf=0,   mt_plaf=0,   alt_plaf='N',   alt_reg= 'N',   alt_att= 'N',   alt_ssui='O',   cod_mot_ssui=12,   cod_dec_mac=900,   cod_dec_ope=900,   cod_etat=900,   id_carte,   id_type_carte,   getdate(),   'AUTO',   getdate(),   getdate(),   'AUTO',   dte_cmd=null,   dte_livr=null,   mt_val_achat,   mt_val_publique,   num_facture=null
+		From sysadm.detail d
+		Where d.id_sin = @adcIdSin
+		And   d.id_gti = @dcIdGti
+		And   d.id_detail = @dcIdDetail
+
+		If Exists ( Select * from w_detail where id_sin = @adcIdSin  and id_gti = @dcIdGti  and id_detail = @dcIdDetail  )
+			Begin
+			Insert into sysadm.w_detail 
+			Select id_sin,   id_gti,   @dcNewIdDetail,   1083,   lib_det,   dte_det,   heu_det, num_carte,   mt_prej=0,   mt_fran=0,   mt_nplaf=0,   mt_plaf=0,   null, 'N', 'N', alt_plaf='N',   alt_reg='N',   alt_att= 'N', alt_valide,  1,  alt_ssui='O',   cod_mot_ssui=12,   cod_dec_mac=900,   cod_dec_ope=900,   cod_etat=900,   id_carte,   id_type_carte, getdate(),   getdate(),   'AUTO',   dte_cmd=null,   dte_livr=null,   mt_val_achat,   mt_val_publique,   num_facture=null
+			From sysadm.w_detail d
+			Where d.id_sin = @adcIdSin
+			And   d.id_gti = @dcIdGti
+			And   d.id_detail = @dcIdDetail
+			End 
+
+		Insert into sysadm.div_det 
+		Select id_sin,   id_gti, @dcNewIdDetail, nom_zone, lib_label, id_typ_liste, alt_liste_codecar, id_typ_zone, alt_oblig, alt_prot , cpt_tri, val_nbre, val_mt, val_dte, val_car, getdate(), getdate(),  'AUTO', getdate(), 'AUTO'
+		From sysadm.div_det d
+		Where d.id_sin = @adcIdSin
+		And   d.id_gti = @dcIdGti
+		And   d.id_detail = @dcIdDetail
+
+		If Exists ( Select * from w_div_det where id_sin = @adcIdSin  and id_gti = @dcIdGti  and id_detail = @dcIdDetail  )
+			Begin
+			Insert into sysadm.w_div_det 
+			Select id_sin,   id_gti, @dcNewIdDetail, nom_zone, lib_label, id_typ_liste, alt_liste_codecar, id_typ_zone, alt_oblig, alt_prot , cpt_tri, val_nbre, val_mt, val_dte, val_car, 1, getdate(),   getdate(), 'AUTO'
+			From sysadm.w_div_det d
+			Where d.id_sin = @adcIdSin
+			And   d.id_gti = @dcIdGti
+			And   d.id_detail = @dcIdDetail			  
+			End 
+	End
 	  
 Select @iNewIdSeq = max ( id_seq ) From commande where id_sin = @adcIdSin
 
@@ -12571,6 +12587,7 @@ Go
 -- #1	JFF	20/10/2008	[FNAC_PROD_ECH_TECH]
 -------------------------------------------------------------------
 --  JFF		12/02/2016		[PI062]
+-- JFF      31/03/2025   [MIG82_JOURN_EVT]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_MAJ_PRESTA_API_MAXI_COFFEE' AND type = 'P' )
         DROP procedure sysadm.PS_U_MAJ_PRESTA_API_MAXI_COFFEE
@@ -12657,6 +12674,11 @@ If @aiStatusApi = 200
 			Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @adcIdSin, 2, @MessContact,'AUTO', 300, @iIdCt OUTPUT							
 		END	
 
+		-- [MIG82_JOURN_EVT]
+		If sysadm.FN_CLE_NUMERIQUE ( 'MIG82_JOURN_EVT') > 0 
+			Begin
+				Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, 'BAEMIS', '', '', 'PS_U_MAJ_PRESTA_API_MAXI_COFFEE', @asCodOper			
+			End 
 
 	End 
 

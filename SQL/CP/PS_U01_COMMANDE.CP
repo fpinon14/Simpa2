@@ -1128,9 +1128,15 @@ If sysadm.FN_CLE_NUMERIQUE ( 'RS4093_EVOL_ELD') > 0
 -- [RS5045_REF_MATP]
 If sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') > 0 
  Begin
-	If @sIdFour = 'ELD' And @iStatusGc = 401 
+	If @iStatusGc = 401 
 	  Begin
-		 Exec @iRet=sysadm.PS_I_RS5045_MAIL_COUR_CARTE_CADEAU_ELD_KSL @dcIdSin, @iIdSeq 
+	    If @sIdFour = 'ELD' Exec @iRet=sysadm.PS_I_RS5045_MAIL_COUR_CARTE_CADEAU_ELD_KSL @dcIdSin, @iIdSeq 
+
+		-- [MIG82_JOURN_EVT]
+		If sysadm.FN_CLE_NUMERIQUE ( 'MIG82_JOURN_EVT') > 0 
+			Begin
+			 Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'CCEMIS', '', '', 'PS_U01_COMMANDE', 'AUTO'	
+			End 
 	  End 
  End 
 
@@ -1648,8 +1654,12 @@ BEGIN
 			BEGIN
 				Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT
 			END
+
 			-- [MIG82_JOURN_EVT]
-			Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'DEGEOL', '', '', 'PS_U01_COMMANDE', @sIdFour	
+			If sysadm.FN_CLE_NUMERIQUE ( 'MIG82_JOURN_EVT') > 0 
+			 Begin
+				Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'DEGEOL', '', '', 'PS_U01_COMMANDE', 'AUTO'
+			 End 
 
 	END
 	-- /[HP252_276_HUB_PRESTA][MIG82_JOURN_EVT]
@@ -2632,6 +2642,30 @@ IF @iStatusGc = 178 And @iStatusGCActuel <> 178
 			And   a.id_ref_four = c.id_ref_four
 		End 
    End
+
+-- [MIG82_JOURN_EVT]
+If sysadm.FN_CLE_NUMERIQUE ( 'MIG82_JOURN_EVT') > 0 
+	Begin
+		IF @iStatusGc = 178 Or @iStatusGCActuel = 178
+		   and sysadm.FN_CLE_VAL ( 'TYPE_REMPL', rtrim ( @sInfoSpbFrnCpltActuel ) , ';') = 'REMPL_APPAREIL'
+		   and Len ( sysadm.FN_CLE_VAL ( 'DTE_RCP_MOB_CLI', @sInfoFrnSpbCplt, ';')) > 0 
+		   and Len ( sysadm.FN_CLE_VAL ( 'DTE_RCP_MOB_CLI', @sInfoFrnSpbCpltActuel, ';')) = 0 
+		   Begin
+			Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'CDRPLV', '', '', 'PS_U01_COMMANDE', 'AUTO'
+		   End 
+
+		IF @iStatusGc = 2 And @iStatusGCActuel <> 2
+		   Begin
+			Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'APPREP', '', '', 'PS_U01_COMMANDE', 'AUTO'
+		   End 
+
+		IF @iStatusGc = 2 Or @iStatusGCActuel = 2
+		   and Len ( sysadm.FN_CLE_VAL ( 'DTE_RCP_MOB_CLI', @sInfoFrnSpbCplt, ';')) > 0 
+		   and Len ( sysadm.FN_CLE_VAL ( 'DTE_RCP_MOB_CLI', @sInfoFrnSpbCpltActuel, ';')) = 0 
+		   Begin
+			Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'APPRPL', '', '', 'PS_U01_COMMANDE', 'AUTO'	
+		   End 
+	End
 
 IF @iStatusGc = 176 And @iStatusGCActuel <> 176
   Begin
