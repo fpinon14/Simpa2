@@ -9719,6 +9719,7 @@ Go
 -- FPI		24/10/2017	 [FPI.COR.20171024] Mail Helène : les commandes pour régularisation suite swap ne doivent pas être envoyés à Cordon
 -- JFF		31/10/2017	 [JFF.COR.20171031] Mail Christine: les commandes pour régularisation suite swap doivent être envoyés à Cordon
 -- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
+-- JFF      31/03/2025   [MIG82_JOURN_EVT]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_COMMANDE_DT276_SWAP_CTR' AND type = 'P' )
         DROP procedure sysadm.PS_I_COMMANDE_DT276_SWAP_CTR
@@ -10005,6 +10006,12 @@ END
 -- [HP252_276_HUB_PRESTA]
 If @iPrestaHUB > 0 
 	Begin 
+		-- [MIG82_JOURN_EVT]
+		If sysadm.FN_CLE_NUMERIQUE ( 'MIG82_JOURN_EVT') > 0 
+		 Begin
+			Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'APPSWP', '', '', 'PS_I_COMMANDE_DT276_SWAP_CTR', @sIdFour		
+		 End 
+
 	   -- [HP252_276_HUB_PRESTA]
 	   Set @iMarqModlIFr = 0
 	   If Exists  (

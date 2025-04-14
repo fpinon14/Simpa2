@@ -227,6 +227,9 @@ AS
 Declare @iDdePceEc Integer
 Declare @iEtatVuAssure Integer 
 Declare @iPrestaEncours Integer 
+Declare @iRdvDiagVideo Integer
+Declare @iAppRecuEnCTR Integer
+Declare @iGeolocTjrsActiveReexp Integer
 Declare @sVar	VarChar ( 255 )
 
 Set @iEtatVuAssure = sysadm.FN_LIB_ETAT_DOS_ASSURE ( @adcIdSin, 'CODE' )
@@ -248,6 +251,44 @@ If Exists (
 	And c.cod_etat in ( 'ECT', 'ECL' ) 
 	) Set @iPrestaEncours = 1
 
+Set @iRdvDiagVideo = 0
+If Exists ( 
+	Select Top 1 1 
+	From sysadm.commande c
+	Where c.id_sin = @adcIdSin
+	And Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' )) > 0
+	And c.cod_etat in ( 'ECT', 'ECL' ) 
+	And sysadm.FN_CLE_VAL ( 'RDV_DIAG_VIDEO', c.info_spb_frn_cplt, ';' ) = 'OUI'
+	And sysadm.FN_CLE_VAL ( 'DIAG_VIDEO_ENGAGE', c.info_spb_frn_cplt, ';' ) <> 'OUI'
+	) Set @iRdvDiagVideo = 1
+
+Set @iAppRecuEnCTR = 0
+If Exists ( 
+	Select Top 1 1 
+	From sysadm.commande c
+	Where c.id_sin = @adcIdSin
+	And Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' )) > 0
+	And c.cod_etat in ( 'ECT', 'ECL' ) 
+	And c.dte_rcp_frn is not null
+	And ( c.status_gc in ( 0, 159 ) Or c.status_gc is null ) 
+	) Set @iAppRecuEnCTR = 1
+
+Set @iGeolocTjrsActiveReexp = 0
+If Exists ( 
+	Select Top 1 1 
+	From sysadm.commande cOrig,
+		 sysadm.commande cRefReexp
+	Where cOrig.id_sin = @adcIdSin
+	And Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', cOrig.info_spb_frn_cplt, ';' )) > 0
+	And cOrig.cod_etat in ( 'RFO', 'RPC' ) 
+	And cOrig.status_gc = 305
+	And cRefReexp.id_sin = cOrig.id_sin 
+	and cRefReexp.id_seq > cOrig.id_seq
+	And cRefReexp.id_seq = ( Select max ( id_seq ) From sysadm.commande c2 Where c2.id_sin = cRefReexp.id_sin ) 
+	And Convert( VarChar ( 10 ), cRefReexp.cree_le , 103 ) = Convert( VarChar ( 10 ), Getdate() , 103 )
+	) Set @iGeolocTjrsActiveReexp = 1
+
+	
 -- Règlement
 If @iEtatVuAssure in ( 550, 600, 1500, 1510, 1520 )
 	Begin
@@ -267,7 +308,15 @@ If @iEtatVuAssure in ( 100, 550, 1540 )
 				Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, 'ATTDOC', @sVar, '', 'PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION', @asCodOper				
 			End 
 
-	 
+		If @iRdvDiagVideo > 0 
+			Begin
+				Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, 'RDVDGV', @sVar, '', 'PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION', @asCodOper				
+			End 
+
+		If @iAppRecuEnCTR > 0 
+			Begin
+				Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, 'APPCTR', @sVar, '', 'PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION', @asCodOper				
+			End 
 	End 
 
 -- Dormant
@@ -279,5 +328,7 @@ If @iEtatVuAssure in ( 1550 )
 			End 
 	End 
 
+-- Autres
+Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, 'GEORXP', @sVar, '', 'PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION', @asCodOper				
 
 Go

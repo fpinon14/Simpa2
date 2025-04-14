@@ -4632,7 +4632,7 @@ If Upper ( @sTable ) = 'W'
 				  Or 
 				  ( c.id_four = 'DTY' And c.id_typ_art = 'PRS' and status_gc = 33 )
 				  Or 
-				  ( charindex ( 'SWAP', sysadm.FN_CLE_VAL ( c.info_frn_spb_cplt, 'TYPE_SWAP', ';' ) ) > 0 ) -- JFF 04/10/2017
+				  ( charindex ( 'SWAP', sysadm.FN_CLE_VAL (  'TYPE_SWAP', c.info_frn_spb_cplt, ';' ) ) > 0 ) -- JFF 04/10/2017
 				  Or
 				  ( c.id_four = 'CAR' )
 				)
@@ -4658,7 +4658,7 @@ Else
 				  Or 
 				  ( c.id_four = 'DTY' And c.id_typ_art = 'PRS' and status_gc = 33 )
 				  Or 
-				  ( charindex ( 'SWAP', sysadm.FN_CLE_VAL ( c.info_frn_spb_cplt, 'TYPE_SWAP', ';' ) ) > 0 ) -- JFF 04/10/2017
+				  ( charindex ( 'SWAP', sysadm.FN_CLE_VAL (  'TYPE_SWAP', c.info_frn_spb_cplt, ';' ) ) > 0 ) -- JFF 04/10/2017
 				  Or
 				  ( c.id_four = 'CAR' )
 				)

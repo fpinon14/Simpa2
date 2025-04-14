@@ -121,6 +121,7 @@
 --     JFF 07/03/2024   [HP252_276_HUB_PRESTA]
 --     JFF 04/11/2024   [20241104105246567]
 --     JFF 27/02/2025   [20250227094634600]
+--     JFF 31/03/2025   [MIG82_JOURN_EVT]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U01_COMMANDE' AND type = 'P' )
         DROP procedure sysadm.PS_U01_COMMANDE
@@ -1633,6 +1634,25 @@ BEGIN
 
 	END
 	-- /[HP252_276_HUB_PRESTA]
+
+	-- [HP252_276_HUB_PRESTA][MIG82_JOURN_EVT]
+	IF @iStatusGCActuel <> 858 And @iStatusGc = 858 And @iPrestaHUB > 0
+	BEGIN 
+			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] -> La géolocalisation de l''appareil est bien désactivée.'
+
+			IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+			BEGIN
+				Exec  SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT
+			END
+			ELSE
+			BEGIN
+				Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT
+			END
+			-- [MIG82_JOURN_EVT]
+			Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'DEGEOL', '', '', 'PS_U01_COMMANDE', @sIdFour	
+
+	END
+	-- /[HP252_276_HUB_PRESTA][MIG82_JOURN_EVT]
 
 	-- [HP252_276_HUB_PRESTA] -- [20250228130407143] Modif par Olfa le 28/02/25
 	IF @iStatusGCActuel <> 169 And @iStatusGc = 169 And @iPrestaHUB > 0
