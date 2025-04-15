@@ -248,6 +248,8 @@ Declare @sDernIdRefFour VarChar ( 20 ) -- [HP252_276_HUB_PRESTA]
 Declare @dtDteSource DateTime
 Declare @iPJOMMC Integer  -- Prochain jour ouvré sur le même mois calendaire ? 1:Oui, 0: Non
 Declare @dtDtePossible DateTime -- Prochaine date possible pour passer le règlement
+Declare @sVal VarChar ( 100 )
+Declare @sVar VarChar ( 255 )
 
 
 Set @iCasPropoAutoO2m = 0 -- [PC877]
@@ -2646,6 +2648,23 @@ IF @iStatusGc = 178 And @iStatusGCActuel <> 178
 -- [MIG82_JOURN_EVT]
 If sysadm.FN_CLE_NUMERIQUE ( 'MIG82_JOURN_EVT') > 0 
 	Begin
+		
+		IF ( @iStatusGc = 2 And @iStatusGCActuel <> 2 ) Or ( @iStatusGc = 178 And @iStatusGCActuel <> 178 )
+		   Begin
+				Select  @sVal = lTrim ( rTrim ( cGti.lib_gti ))
+				From sysadm.sinistre s with (nolock),
+					 sysadm.code_garantie cGti with (nolock)
+				Where s.id_sin = @dcIdSin
+				And   cGti.id_prod = s.id_prod
+				And   cGti.id_gti = @dcIdGti
+
+				Set @sVar = ''
+				Set @sVar = sysadm.FN_CLE_VAL_E ( 'LIB_GARANTIE', @sVal, @sVar, ';' )
+
+				Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, 'GTINDM', @sVar, '', 'PS_U01_COMMANDE', 'AUTO'	
+		   End 
+
+
 		IF @iStatusGc = 178 Or @iStatusGCActuel = 178
 		   and sysadm.FN_CLE_VAL ( 'TYPE_REMPL', rtrim ( @sInfoSpbFrnCpltActuel ) , ';') = 'REMPL_APPAREIL'
 		   and Len ( sysadm.FN_CLE_VAL ( 'DTE_RCP_MOB_CLI', @sInfoFrnSpbCplt, ';')) > 0 

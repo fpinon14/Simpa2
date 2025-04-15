@@ -251,6 +251,11 @@ Declare @sVal VarChar ( 100 )
 Declare @iCodEtat Integer
 Declare @dcIdGti Decimal ( 7 )
 Declare @sLibGti VarChar ( 35 )
+Declare @iDosRefus Integer
+Declare @iDosSansSuite Integer
+Declare @iDosSansSuiteClient Integer
+Declare @iDosSansSuitePrescrit Integer
+Declare @iEnAttAppCTR Integer
 
 Set @iEtatVuAssure = sysadm.FN_LIB_ETAT_DOS_ASSURE ( @adcIdSin, 'CODE' )
 
@@ -281,6 +286,19 @@ If Exists (
 	And sysadm.FN_CLE_VAL ( 'RDV_DIAG_VIDEO', c.info_spb_frn_cplt, ';' ) = 'OUI'
 	And sysadm.FN_CLE_VAL ( 'DIAG_VIDEO_ENGAGE', c.info_spb_frn_cplt, ';' ) <> 'OUI'
 	) Set @iRdvDiagVideo = 1
+
+Set @iEnAttAppCTR = 0
+If Exists ( 
+	Select Top 1 1 
+	From sysadm.commande c with (nolock)
+	Where c.id_sin = @adcIdSin
+	And Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' )) > 0
+	And c.cod_etat in ( 'ECT', 'ECL' ) 
+	And sysadm.FN_CLE_VAL ( 'HP_ID_MODE_LOGIS', c.info_spb_frn_cplt, ';' ) not in ( 'AT_HOME', 'REMOTELY' ) 
+	And Len ( sysadm.FN_CLE_VAL ( 'TYPE_REMPL', c.info_spb_frn_cplt, ';' ) ) <= 0 
+	And c.dte_rcp_frn is null
+	) Set @iEnAttAppCTR = 1
+
 
 Set @iAppRecuEnCTR = 0
 If Exists ( 
@@ -331,6 +349,14 @@ And Len ( sysadm.FN_CLE_VAL ( 'TYPE_REMPL', c.info_spb_frn_cplt, ';' )) in ( 'CA
 -- And Convert( VarChar ( 10 ), c.cree_le , 103 ) = Convert( VarChar ( 10 ), Getdate() , 103 )
 And c.cree_le >= DateAdd ( minute, -30, Getdate() )
 
+
+Select	@iDosRefus = IIF ( s.cod_etat = 200, 1, 0 ),
+		@iDosSansSuite = IIF ( s.cod_etat = 900, 1, 0 ),
+		@iDosSansSuiteClient = IIF ( s.cod_etat = 900 and s.cod_mot_ssui = 2 , 1, 0 ),
+		@iDosSansSuitePrescrit = IIF ( s.cod_etat = 900 and s.cod_mot_ssui in ( 11, 900 ) , 1, 0 )
+From sysadm.sinistre s with (nolock)
+Where s.id_sin = @adcIdSin
+
 IF @iMaxIdSeqIdemBACC > 0 
 	Begin
 		Select @sBAouCC = sysadm.FN_CLE_VAL ( 'TYPE_REMPL', c.info_spb_frn_cplt, ';' ),
@@ -358,6 +384,11 @@ If @iEtatVuAssure in ( 100, 550, 1540 )
 		If @iRdvDiagVideo > 0 
 			Begin
 				Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, 'RDVDGV', @sVar, '', 'PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION', @asCodOper				
+			End 
+
+		If @iEnAttAppCTR > 0 
+			Begin
+				Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, 'ATTAPS', @sVar, '', 'PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION', @asCodOper				
 			End 
 
 		If @iAppRecuEnCTR > 0 
@@ -452,8 +483,8 @@ Select  r.id_reg,
 		ltrim ( rtrim ( i.nom )),
 		i.ordre_cheque,
 		0
-From sysadm.reglement r,
-	 sysadm.inter i
+From sysadm.reglement r with (nolock),
+	 sysadm.inter i with (nolock)
 Where r.id_sin = @adcIdSin
 and	  r.cod_inter in ( 'A', 'T' ) 
 And   r.cod_mot_reg = 'RN'
@@ -511,13 +542,14 @@ Select  g.id_gti,
 		lTrim ( rTrim ( cGti.lib_gti )),
 		g.cod_etat,
 		0
-From sysadm.sinistre s,
-	 sysadm.code_garantie cGti,
-	 sysadm.gar_sin g
+From sysadm.sinistre s with (nolock),
+	 sysadm.code_garantie cGti with (nolock),
+	 sysadm.gar_sin g with (nolock)
 Where s.id_sin = @adcIdSin
 And   g.id_sin = s.id_sin
 And   g.valide_le >= DateAdd ( minute, -30, Getdate() )
 And   cGti.id_prod = s.id_prod
+and   cGti.id_gti = g.id_gti
 
 While Exists ( Select Top 1 1 From @TbGti where marquage = 0 )
  Begin
@@ -540,6 +572,29 @@ While Exists ( Select Top 1 1 From @TbGti where marquage = 0 )
 
 	Update @TbReglNum Set marquage = 1 Where id_seq = @iIdSeq
  End
+
+ -- Trt dossier
+ If @iDosRefus > 0 
+	Begin
+		Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, 'DSREFU', @sVar, '', 'PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION', @asCodOper				
+	End 
+
+ If @iDosSansSuiteClient > 0 
+	Begin
+		Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, 'DSSSUA', @sVar, '', 'PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION', @asCodOper				
+	End 
+
+ If @iDosSansSuitePrescrit > 0 
+	Begin
+		Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, 'DSPRES', @sVar, '', 'PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION', @asCodOper				
+	End 
+
+ If @iDosSansSuite > 0 And @iDosSansSuiteClient <= 0 And @iDosSansSuitePrescrit <= 0
+	Begin
+		Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, 'DSSSUI', @sVar, '', 'PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION', @asCodOper				
+	End 
+
+
 
 
 Go

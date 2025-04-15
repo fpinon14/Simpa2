@@ -855,6 +855,7 @@ GO
 -- JFF   19/11/2014    	[VDOC15650]
 -- JFF      12/02/2016   [PI062]
 -- JFF      23/01/2018   [PM407-1]
+-- JFF      31/03/2025   [MIG82_JOURN_EVT]
 if exists (select * from dbo.sysobjects where id = object_id(N'[sysadm].[PS_SOLDAGE]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 	drop procedure [sysadm].[PS_SOLDAGE]
 GO
@@ -1105,7 +1106,12 @@ BEGIN
 		-- [VDOC15650]
 		Exec sysadm.PS_I_DIV_SIN_ETAT_ASS @idSin, 'SQL'
 
-		
+		-- [MIG82_JOURN_EVT]
+		If sysadm.FN_CLE_NUMERIQUE ( 'MIG82_JOURN_EVT') > 0 
+		 Begin
+			Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @idSin, 'DSPRES', '', '', 'PS_SOLDAGE', 'SQL'
+		 End 
+
 		-- annulation de la transaction
 		IF @retour = -1 GOTO ONERROR
 		-- -- validation de la transaction
