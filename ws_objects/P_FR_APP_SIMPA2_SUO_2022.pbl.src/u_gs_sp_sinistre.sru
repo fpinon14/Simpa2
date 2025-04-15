@@ -49371,11 +49371,13 @@ If Not IsNull ( sGetText ) and sGetText <> "" And lRow <> -1 Then
 		Case Else
 
 			// [PMO268_MIG48][20250410100203163] Cas Maxi Coffe, on ne modifia le model de l'adhésion (API)
+/*
 			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 395 )
 			If lRow <> -1 And lDeb > 0 Then
 				lRow = -1
 				idw_wSin.iiErreur = 6									
 			End IF 
+*/
 
 			// [DT386_EXTR_AXA]
 			// [PMO268_MIG48]
