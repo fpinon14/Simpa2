@@ -12433,8 +12433,8 @@ If bOk Then
 	idw_LstwCommande.Filter ()
 	lVal3 = idw_LstwCommande.RowCount ()
 	
-	// [ITSM147188][20250228130407143]
-	idw_LstwCommande.SetFilter ( "ID_TYP_ART = 'PRS' AND COD_ETAT <> 'ANN' AND ( POS ( INFO_FRN_SPB_CPLT, 'RETOUR_153=OUI') > 0 OR POS ( INFO_FRN_SPB_CPLT, 'RETOUR_154=OUI') > 0 OR ( POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0 AND POS ( INFO_FRN_SPB_CPLT, 'APP_INCOMPLET=OUI') > 0 ))" )
+	// [ITSM147188][20250228130407143][20250416135954333]
+	idw_LstwCommande.SetFilter ( "ID_TYP_ART = 'PRS' AND COD_ETAT <> 'ANN' AND ( POS ( INFO_FRN_SPB_CPLT, 'RETOUR_153=OUI') > 0 OR POS ( INFO_FRN_SPB_CPLT, 'RETOUR_154=OUI') > 0 OR ( POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0 AND ( POS ( INFO_FRN_SPB_CPLT, 'APP_INCOMPLET=OUI') > 0 OR POS ( INFO_FRN_SPB_CPLT, 'RETOUR_305=OUI') > 0 )))" )
 	idw_LstwCommande.Filter ()
 	lVal4 = idw_LstwCommande.RowCount ()
 
@@ -46482,7 +46482,7 @@ End IF
 
 // [HP252_276_HUB_PRESTA] 'A_DIAG_FORCE' [20250228130407143], pour GEOLOC pas de REFUSE_A_REXP possible (cf Olfa)
 // MIG82 01/04/2025, je rajoute suite demande Lisette le REFUSE_A_REXP
-lVal1 = idw_LstwCommande.find( "ID_REF_FOUR IN ( 'REFUSE_A_REXP', 'A_REPARER_FORCE', 'A_DESOXYDER_FORCE', 'A_DIAG_FORCE' ) AND COD_ETAT = 'CNV'",1,  idw_LstwCommande.rowCount()+1 )
+lVal1 = idw_LstwCommande.find( "ID_REF_FOUR IN ( 'REFUSE_A_REEXP', 'A_REPARER_FORCE', 'A_DESOXYDER_FORCE', 'A_DIAG_FORCE' ) AND COD_ETAT = 'CNV'",1,  idw_LstwCommande.rowCount()+1 )
 
 // Controle Géoloc Hub
 // [HP252_276_HUB_PRESTA]

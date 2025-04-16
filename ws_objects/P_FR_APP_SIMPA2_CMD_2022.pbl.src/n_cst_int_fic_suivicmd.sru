@@ -33401,6 +33401,10 @@ For lCpt = 1 To lTotLig
 		Case "154" 
 			lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "RETOUR_154", "OUI", ";")
 
+		// [20250416135954333]
+		Case "305" 
+			lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "RETOUR_305", "OUI", ";")
+
 		
 	End Choose
 	// [VDOC3290]
