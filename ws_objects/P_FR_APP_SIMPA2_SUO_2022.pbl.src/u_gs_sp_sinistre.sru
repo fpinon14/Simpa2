@@ -16614,7 +16614,10 @@ isReferentielApp = ""
 /*------------------------------------------------------------------*/
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 28 )
 
-If lDeb <= 0 Or lFin <= 0 Then Return ""
+If lDeb <= 0 Or lFin <= 0 Then 
+	iUoGsSpSinistre2.uf_Set_ValInstance ( "isReferentielApp", isReferentielApp ) // [20250416172303990]
+	Return ""
+End If 
 
 For lCpt = lDeb To lFin
 
