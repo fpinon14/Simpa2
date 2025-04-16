@@ -195,7 +195,7 @@ If isTypeTrt = "S" then
 		// #4 ajout de "DEF" wf_GetAutorisation
 		// [VDOC5013] Ajout "ECL"
 		// [PC543][MANTIS5739] RPC
-		Case "RCF", "ECT", "CWE", "DEF", "ECL", "RPC"
+		Case "RCF", "ECT", "CWE", "DEF", "ECL", "RPC", "RFO"
 
 			bPasseDroit = False
 			lIdProcess=dw_1.GetItemNumber ( 1, "INFO_SPB_FRN" )  			
