@@ -154,7 +154,7 @@ Select	jevt.cree_le 'Date évènement',
 		
 From   sysadm.journal_evtsin jevt
 Where  jevt.id_sin = @adcIdSin
-Order  by jevt.id_seq
+Order  by jevt.id_seq desc
 
 GO
 
@@ -283,7 +283,7 @@ If Exists (
 	Where c.id_sin = @adcIdSin
 	And Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' )) > 0
 	And c.cod_etat in ( 'ECT', 'ECL' ) 
-	And sysadm.FN_CLE_VAL ( 'RDV_DIAG_VIDEO', c.info_spb_frn_cplt, ';' ) = 'OUI'
+	And sysadm.FN_CLE_VAL ( 'HP_RDV_DIAG_VIDEO', c.info_spb_frn_cplt, ';' ) = 'OUI'
 	And sysadm.FN_CLE_VAL ( 'DIAG_VIDEO_ENGAGE', c.info_spb_frn_cplt, ';' ) <> 'OUI'
 	) Set @iRdvDiagVideo = 1
 
@@ -309,6 +309,8 @@ If Exists (
 	And c.cod_etat in ( 'ECT', 'ECL' ) 
 	And c.dte_rcp_frn is not null
 	And ( c.status_gc in ( 0, 159 ) Or c.status_gc is null ) 
+	And sysadm.FN_CLE_VAL ( 'HP_ID_MODE_LOGIS', c.info_spb_frn_cplt, ';' ) not in ( 'AT_HOME', 'REMOTELY' ) 
+	And Len ( sysadm.FN_CLE_VAL ( 'TYPE_REMPL', c.info_spb_frn_cplt, ';' ) ) <= 0 
 	) Set @iAppRecuEnCTR = 1
 
 Set @iGeolocTjrsActiveReexp = 0
@@ -333,9 +335,9 @@ If Exists (
 	Select Top 1 1 
 	From sysadm.commande c with (nolock)
 	Where c.id_sin = @adcIdSin
-	And Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' )) > 0
+--	And Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' )) > 0
 	And c.cod_etat in ( 'ECT', 'ECL' ) 
-	And Len ( sysadm.FN_CLE_VAL ( 'TYPE_REMPL', c.info_spb_frn_cplt, ';' )) = 'REMPL_APPAREIL'
+	And sysadm.FN_CLE_VAL ( 'TYPE_REMPL', c.info_spb_frn_cplt, ';' ) = 'REMPL_APPAREIL'
 --	And Convert( VarChar ( 10 ), c.cree_le , 103 ) = Convert( VarChar ( 10 ), Getdate() , 103 )
 	And c.cree_le >= DateAdd ( minute, -30, Getdate() )
 	) Set @iCmdeRemplAppEnCours = 1
@@ -345,7 +347,7 @@ Select @iMaxIdSeqIdemBACC = max ( c.id_seq )
 From sysadm.commande c with (nolock)
 Where c.id_sin = @adcIdSin
 And c.cod_etat Not in ( 'ANN' ) 
-And Len ( sysadm.FN_CLE_VAL ( 'TYPE_REMPL', c.info_spb_frn_cplt, ';' )) in ( 'CARTE_CADEAU', 'BON_ACHAT' )
+And sysadm.FN_CLE_VAL ( 'TYPE_REMPL', c.info_spb_frn_cplt, ';' ) in ( 'CARTE_CADEAU', 'BON_ACHAT' )
 -- And Convert( VarChar ( 10 ), c.cree_le , 103 ) = Convert( VarChar ( 10 ), Getdate() , 103 )
 And c.cree_le >= DateAdd ( minute, -30, Getdate() )
 
@@ -570,7 +572,7 @@ While Exists ( Select Top 1 1 From @TbGti where marquage = 0 )
 
 	Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, @sCodEvt, @sVar, '', 'PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION', @asCodOper	
 
-	Update @TbReglNum Set marquage = 1 Where id_seq = @iIdSeq
+	Update @TbGti Set marquage = 1 Where id_seq = @iIdSeq
  End
 
  -- Trt dossier

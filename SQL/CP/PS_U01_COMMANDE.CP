@@ -1708,6 +1708,13 @@ BEGIN
 			BEGIN
 				Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT
 			END
+
+			-- [MIG82_JOURN_EVT]
+			If sysadm.FN_CLE_NUMERIQUE ( 'MIG82_JOURN_EVT') > 0 
+				Begin
+				 Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'APPCTR', '', '', 'PS_U01_COMMANDE', 'AUTO'	
+				End 
+
 	END
 	-- /[HP252_276_HUB_PRESTA]
 
@@ -2661,14 +2668,14 @@ If sysadm.FN_CLE_NUMERIQUE ( 'MIG82_JOURN_EVT') > 0
 				Set @sVar = ''
 				Set @sVar = sysadm.FN_CLE_VAL_E ( 'LIB_GARANTIE', @sVal, @sVar, ';' )
 
-				Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, 'GTINDM', @sVar, '', 'PS_U01_COMMANDE', 'AUTO'	
+				Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'GTINDM', @sVar, '', 'PS_U01_COMMANDE', 'AUTO'	
 		   End 
 
 
-		IF @iStatusGc = 178 Or @iStatusGCActuel = 178
+		IF ( @iStatusGc = 178 Or @iStatusGCActuel = 178 )
 		   and sysadm.FN_CLE_VAL ( 'TYPE_REMPL', rtrim ( @sInfoSpbFrnCpltActuel ) , ';') = 'REMPL_APPAREIL'
-		   and Len ( sysadm.FN_CLE_VAL ( 'DTE_RCP_MOB_CLI', @sInfoFrnSpbCplt, ';')) > 0 
-		   and Len ( sysadm.FN_CLE_VAL ( 'DTE_RCP_MOB_CLI', @sInfoFrnSpbCpltActuel, ';')) = 0 
+		   and 	@dtDteRcpMobCli	is not null
+		   And  @dtDteRcpMobCliActuel is null 
 		   Begin
 			Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'CDRPLV', '', '', 'PS_U01_COMMANDE', 'AUTO'
 		   End 
@@ -2678,9 +2685,9 @@ If sysadm.FN_CLE_NUMERIQUE ( 'MIG82_JOURN_EVT') > 0
 			Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'APPREP', '', '', 'PS_U01_COMMANDE', 'AUTO'
 		   End 
 
-		IF @iStatusGc = 2 Or @iStatusGCActuel = 2
-		   and Len ( sysadm.FN_CLE_VAL ( 'DTE_RCP_MOB_CLI', @sInfoFrnSpbCplt, ';')) > 0 
-		   and Len ( sysadm.FN_CLE_VAL ( 'DTE_RCP_MOB_CLI', @sInfoFrnSpbCpltActuel, ';')) = 0 
+		IF ( @iStatusGc = 2 Or @iStatusGCActuel = 2 )
+		   and 	@dtDteRcpMobCli	is not null
+		   And  @dtDteRcpMobCliActuel is null 
 		   Begin
 			Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'APPRPL', '', '', 'PS_U01_COMMANDE', 'AUTO'	
 		   End 

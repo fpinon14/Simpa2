@@ -5627,6 +5627,7 @@ Go
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
 -- JFF      07/03/2024   [HP252_276_HUB_PRESTA]
+-- JFF      31/03/2025   [MIG82_JOURN_EVT]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_COMMANDE_PM82_LOT1_CLOTURE_PRS' AND type = 'P' )
         DROP procedure sysadm.PS_U_COMMANDE_PM82_LOT1_CLOTURE_PRS
@@ -5650,7 +5651,7 @@ UPDATE sysadm.commande
  AND    commande.id_sin = @dcIdSin
  AND 	commande.id_typ_art = 'PRS'
  AND    commande.id_ref_four in ( 'A_REPARER' )
- AND 	commande.status_gc in ( 153, 154 ) 
+ AND 	commande.status_gc in ( 153, 154, 305 ) -- [MIG82_JOURN_EVT] 305
  AND	commande.cod_etat not in ( 'ANN' )
  
 UPDATE sysadm.w_commande
@@ -5667,7 +5668,7 @@ UPDATE sysadm.w_commande
  AND    w_commande.id_sin = @dcIdSin
  AND 	w_commande.id_typ_art = 'PRS'
  AND    w_commande.id_ref_four in ( 'A_REPARER' )
- AND 	w_commande.status_gc in ( 153, 154 ) 
+ AND 	w_commande.status_gc in ( 153, 154, 305 ) -- [MIG82_JOURN_EVT] 305
  AND	w_commande.cod_etat not in ( 'ANN' )
 
 
@@ -5687,7 +5688,7 @@ If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0
 	 WHERE  s.id_sin = commande.id_sin
 	 AND    commande.id_sin = @dcIdSin
 	 AND    commande.id_ref_four in ( 'A_DIAGNOSTIQUER' )
-	 AND 	commande.status_gc in ( 153, 154 ) 
+	 AND 	commande.status_gc in ( 153, 154, 305 ) -- [MIG82_JOURN_EVT] 305
 	 AND	commande.cod_etat not in ( 'ANN' )
  
 	UPDATE sysadm.w_commande
@@ -5703,7 +5704,7 @@ If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0
 	 WHERE  s.id_sin = w_commande.id_sin
 	 AND    w_commande.id_sin = @dcIdSin
 	 AND    w_commande.id_ref_four in ( 'A_DIAGNOSTIQUER' )
-	 AND 	w_commande.status_gc in ( 153, 154 ) 
+	 AND 	w_commande.status_gc in ( 153, 154, 305 ) -- [MIG82_JOURN_EVT] 305
 	 AND	w_commande.cod_etat not in ( 'ANN' )
 
  End
