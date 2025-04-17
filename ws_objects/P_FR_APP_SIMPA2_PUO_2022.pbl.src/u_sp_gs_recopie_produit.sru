@@ -1,4 +1,4 @@
-HA$PBExportHeader$u_sp_gs_recopie_produit.sru
+﻿$PBExportHeader$u_sp_gs_recopie_produit.sru
 $PBExportComments$---} User Object pour la recopie de produits
 forward
 global type u_sp_gs_recopie_produit from u_spb_gs_anc
@@ -33,7 +33,7 @@ public subroutine uf_initialisation (u_transaction atrtrans, ref u_datawindow ad
 //* Fonction		: u_sp_gs_recopie_produit::uf_initialisation
 //* Auteur			: F. Pinon
 //* Date				: 10/12/2008 10:32:13
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: value u_transaction atrtrans	 */
@@ -48,8 +48,8 @@ public subroutine uf_initialisation (u_transaction atrtrans, ref u_datawindow ad
 //*-----------------------------------------------------------------
 Datawindowchild dwChild
 
-itrtrans		= atrTrans					// Objet de transaction $$HEX2$$e0002000$$ENDHEX$$utiliser.
-iDw_1			= adwDatawindow			// Datawindow $$HEX2$$e0002000$$ENDHEX$$contr$$HEX1$$f400$$ENDHEX$$ler.
+itrtrans		= atrTrans					// Objet de transaction à utiliser.
+iDw_1			= adwDatawindow			// Datawindow à contrôler.
 
 iDw_1.InsertRow(0)
 
@@ -71,7 +71,7 @@ public function integer uf_zn_trt ();//*----------------------------------------
 //* Fonction		: u_sp_gs_recopie_produit::uf_zn_trt
 //* Auteur			: F. Pinon
 //* Date				: 10/12/2008 10:41:57
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -104,7 +104,7 @@ public function integer uf_zn_cod_prod_src ();//*-------------------------------
 //* Fonction		: u_sp_gs_recopie_produit::uf_zn_cod_prod_src
 //* Auteur			: F. Pinon
 //* Date				: 10/12/2008 11:51:41
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -126,19 +126,19 @@ if idw_1.GetText () <> "" Then
 	
 	dcIdProd = dec(idw_1.GetText ())
 	
-	// Contr$$HEX1$$f400$$ENDHEX$$le de validit$$HEX2$$e9002000$$ENDHEX$$de la saisie
+	// Contrôle de validité de la saisie
 	idw_1.getchild("code_prod_src",dwChild)
 	if dwChild.find( "id_prod=" + string(dcIdProd), 1,dwChild.RowCount()) <=0 Then
 		// Erreur
 		Return 1
 	end if
 
-	// Mise $$HEX2$$e0002000$$ENDHEX$$jour de la liste des r$$HEX1$$e900$$ENDHEX$$visions
+	// Mise à jour de la liste des révisions
 	idw_1.getchild("rev_prod_src",dwchild)
 	dwchild.SetTransObject(itrtrans)
 	dwchild.Retrieve(dcIdProd)
 
-	// Mise $$HEX2$$e0002000$$ENDHEX$$jour de la boutique
+	// Mise à jour de la boutique
 	if uf_zn_gestion_boutique(dcIdProd) Then
 		idw_1.SetItem(1,"PRES_BOUTIQUE","O")
 	else
@@ -162,7 +162,7 @@ public function string uf_gs_id_produit (decimal adcidprod);//*-----------------
 //* Fonction		:	UF_GS_ID_PRODUIT
 //* Auteur			:	FPI
 //* Date				:	11/12/2008
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	V$$HEX1$$e900$$ENDHEX$$rification de l'unicit$$HEX2$$e9002000$$ENDHEX$$de l'identifiant des
+//* Libellé			:	Vérification de l'unicité de l'identifiant des
 //*					 	produits.
 //* Commentaires	:	
 //*
@@ -173,15 +173,15 @@ public function string uf_gs_id_produit (decimal adcidprod);//*-----------------
 //*
 //*-----------------------------------------------------------------
 
-String  sLibCourt		// Libell$$HEX2$$e9002000$$ENDHEX$$du produit correspondant $$HEX2$$e0002000$$ENDHEX$$l'identifiant 
-							// pass$$HEX2$$e9002000$$ENDHEX$$en param$$HEX1$$e800$$ENDHEX$$tre
+String  sLibCourt		// Libellé du produit correspondant à l'identifiant 
+							// passé en paramètre
 
 
 sLibCourt	= space ( 35 )
 
 /*------------------------------------------------------------------*/
-/* Recherche s'il existe d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$un produit avec l'identifiant         */
-/* pass$$HEX2$$e9002000$$ENDHEX$$en param$$HEX1$$ea00$$ENDHEX$$tre                                               */
+/* Recherche s'il existe déjà un produit avec l'identifiant         */
+/* passé en paramêtre                                               */
 /*------------------------------------------------------------------*/
 itrtrans.IM_S03_PRODUIT ( adcIdProd, slibCourt )
 
@@ -193,7 +193,7 @@ public function boolean uf_zn_gestion_boutique (decimal adcidprod);//*----------
 //* Fonction		:	uf_zn_gestion_boutique
 //* Auteur			:	FPI
 //* Date				:	11/12/2008
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Controle l'existence de boutique
+//* Libellé			:	Controle l'existence de boutique
 //*
 //* Arguments		:	long		aiIdProd	
 //*
@@ -217,7 +217,7 @@ public subroutine uf_zn_suppr (string ascol);//*--------------------------------
 //* Fonction		: u_sp_gs_recopie_produit::uf_zn_suppr
 //* Auteur			: F. Pinon
 //* Date				: 11/12/2008 10:48:00
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Supprime les caract$$HEX1$$e800$$ENDHEX$$res invalides dans les zones de suppression de garantie et d'options
+//* Libellé			: Supprime les caractères invalides dans les zones de suppression de garantie et d'options
 //* Commentaires	: 
 //*
 //* Arguments		: value string ascol	 */
@@ -238,7 +238,7 @@ sTexteSrc = idw_1.GetText ()
 lLen=Len(sTexteSrc)
 sTexte=""
 
-// 1. On supprime les caract$$HEX1$$e800$$ENDHEX$$res invalides
+// 1. On supprime les caractères invalides
 For lPos= 1 To lLen
 	sCar=Mid(sTexteSrc,lPos,1)
 	if IsNumber(sCar) Or sCar=',' Then sTexte +=sCar
@@ -249,7 +249,7 @@ Do While Pos(sTexte,",,") > 0
 	sTexte=uString.of_globalreplace(sTexte,",,",",")
 Loop
 
-// 3. Suppression de la , au d$$HEX1$$e900$$ENDHEX$$but et $$HEX2$$e0002000$$ENDHEX$$la fin du texte
+// 3. Suppression de la , au début et à la fin du texte
 if Left(sTexte,1) = ',' Then sTexte=Right(sTexte,Len(sTexte) -1)
 if Right(sTexte,1) = ',' Then sTexte=Left(sTexte,Len(sTexte) -1)
 
@@ -263,7 +263,7 @@ public function integer uf_valider ();//*---------------------------------------
 //* Fonction		: u_sp_gs_recopie_produit::uf_valider
 //* Auteur			: F. Pinon
 //* Date				: 11/12/2008 13:52:32
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -364,7 +364,7 @@ if iRet = -1 Then
 	uf_trace(lIdCle,sErr + SQLCA.sqlerrtext)
 else
 	f_commit(itrTrans,TRUE)
-	uf_trace(lIdCle,"Recopie effectu$$HEX1$$e900$$ENDHEX$$e avec succ$$HEX1$$e800$$ENDHEX$$s")
+	uf_trace(lIdCle,"Recopie effectuée avec succès")
 end if
 
 Return iRet
@@ -375,7 +375,7 @@ public function integer uf_ps_suppr (string asnomproc, decimal adcidprod, string
 //* Fonction		: u_sp_gs_recopie_produit::uf_ps_suppr
 //* Auteur			: F. Pinon
 //* Date				: 11/12/2008 14:02:25
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: value string asnomproc	 */
@@ -424,7 +424,7 @@ public subroutine uf_trace (long lidcle, string sresultat);//*------------------
 //* Fonction		: u_sp_gs_recopie_produit::uf_trace
 //* Auteur			: F. Pinon
 //* Date				: 16/12/2008 11:05:26
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: value long lidcle	 */
@@ -454,7 +454,7 @@ public subroutine uf_initialisation (u_transaction atrtrans, ref u_datawindow ad
 //* Fonction		: u_sp_gs_recopie_produit::uf_initialisation
 //* Auteur			: F. Pinon
 //* Date				: 19/04/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: value u_transaction atrtrans	 */
@@ -479,7 +479,7 @@ public function string uf_controlergestion (boolean abrecopiebase);//*----------
 //* Fonction		: u_sp_gs_recopie_produit::uf_controlergestion
 //* Auteur			: F. Pinon
 //* Date				: 19/04/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: [RECOPIE_BASE]
 //*
 //* Arguments		: 
@@ -508,7 +508,7 @@ If abRecopieBase Then
 	iRet=SQLCA.PS_V01_RECOPIE_PRODUIT(dcidProd, sBaseSource)
 	
 	If iRet=0 Then
-		stMessage.sTitre  = "Contr$$HEX1$$f400$$ENDHEX$$le de Gestion de Recopie de Produits"
+		stMessage.sTitre  = "Contrôle de Gestion de Recopie de Produits"
 		stMessage.sCode	= "REPR005"
 
 		f_Message ( stMessage )
@@ -523,17 +523,17 @@ End if
 // Cas 2 : Recopie de produit
 //--------------------------------
 
-// Contr$$HEX1$$f400$$ENDHEX$$le d'unicit$$HEX2$$e9002000$$ENDHEX$$du code produit
+// Contrôle d'unicité du code produit
 dcidProd 		= idw_1.GetItemNumber ( 1, "CODE_PROD_DEST" )
 
 sLibProduit = uf_gs_Id_Produit ( dcidProd )
 
 /*------------------------------------------------------------------*/
-/* Si l'identifiant existe d$$HEX1$$e900$$ENDHEX$$j$$HEX1$$e000$$ENDHEX$$, on d$$HEX1$$e900$$ENDHEX$$clenche le message d'erreur   */
+/* Si l'identifiant existe déjà, on déclenche le message d'erreur   */
 /*------------------------------------------------------------------*/
 If ( sLibProduit <> "" ) Then
 
-	stMessage.sTitre  = "Contr$$HEX1$$f400$$ENDHEX$$le de Gestion de Recopie de Produits"
+	stMessage.sTitre  = "Contrôle de Gestion de Recopie de Produits"
 	stMessage.sVar[1] = String ( long(dcIdProd ))
 	stMessage.sVar[2] = "au produit"
 	stMessage.sVar[3] = sLibProduit
@@ -545,14 +545,14 @@ If ( sLibProduit <> "" ) Then
 
 End If
 
-// Contr$$HEX1$$f400$$ENDHEX$$le du libell$$HEX1$$e900$$ENDHEX$$
+// Contrôle du libellé
 sLibProduit =  idw_1.GetItemString ( 1, "LIB_LONG" )
 
 idw_1.getchild("CODE_PROD_SRC",dwChild)
 dwChild.Retrieve( )
 
 If dwChild.Find("LIB_LONG='" + sLibProduit + "'",1,dwChild.RowCount()) > 0 Then
-	stMessage.sTitre  = "Contr$$HEX1$$f400$$ENDHEX$$le de Gestion de Recopie de Produits"
+	stMessage.sTitre  = "Contrôle de Gestion de Recopie de Produits"
 	stMessage.sCode	= "REPR002"
 
 	f_Message ( stMessage )
@@ -568,7 +568,7 @@ public function integer uf_valider (boolean abinterbase);//*--------------------
 //* Fonction		: u_sp_gs_recopie_produit::uf_valider
 //* Auteur			: F. Pinon
 //* Date				: 19/04/2013
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: [RECOPIE_BASE]
+//* Libellé			: [RECOPIE_BASE]
 //* Commentaires	: 
 //*
 //* Arguments		: 
@@ -598,11 +598,15 @@ if abInterBase Then
 	//
 	Choose case sBaseDest
 		Case "SIM"
-			if sqlca.servername <> "S2K8RE\SIMSINISTRES2K8" And sqlca.servername <> "SQL14DEV\SIMSINISTRES" Then // [PI056]
+			if sqlca.servername <> "S2K8RE\SIMSINISTRES2K8" And &
+				sqlca.servername <> "SQL14DEV\SIMSINISTRES"  And &
+				sqlca.servername <> "SQLDEV01\DEVINSTANCE006" Then  
 				itrtrans.Autocommit=TRUE
 			End if
 		Case "REC"
-			if sqlca.servername <> "S2K8RE\RECSINISTRES" And sqlca.servername <> "SQL14DEV\RECSINISTRES" Then // [PI056]
+			if sqlca.servername <> "S2K8RE\RECSINISTRES" And &
+				sqlca.servername <> "SQL14DEV\RECSINISTRES" And &
+				sqlca.servername <> "SQLDEV01\DEVINSTANCE006" Then 
 				itrtrans.Autocommit=TRUE
 			End if
 	End Choose
@@ -614,7 +618,7 @@ if abInterBase Then
 	stMessage.sVar[2]=sLibBaseSrc
 	stMessage.sVar[3]=sLibBaseDest
 	stMessage.bouton=YesNo!
-	stMessage.stitre="Recopie de produit d'une base $$HEX2$$e0002000$$ENDHEX$$une autre"
+	stMessage.stitre="Recopie de produit d'une base à une autre"
 	stMessage.Icon=Exclamation!
 	
 	iReponse=f_message(stMessage)
@@ -631,7 +635,7 @@ if abInterBase Then
 	If iReponse=1 Then
 		stMessage.scode="REPR008"
 		stMessage.sVar[1]="ES"
-		stMessage.sVar[2]="le param$$HEX1$$e900$$ENDHEX$$trage quotidien sur ce produit"
+		stMessage.sVar[2]="le paramétrage quotidien sur ce produit"
 		stMessage.bouton=YesNo!
 		iReponse=f_message(stMessage)
 	End if
