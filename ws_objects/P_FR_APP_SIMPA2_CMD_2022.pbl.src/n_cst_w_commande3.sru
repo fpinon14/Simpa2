@@ -29098,7 +29098,7 @@ stPass.dcTab[2]= idcMtPec // [20241127082353640]
 
 stPass.dtTab[1]= idwWsin.GetItemDateTime ( 1, "DTE_ACH_PORT" ) // [20241127082353640]
 
-
+stPass.sTab[20] = isNumIMEIAdh // [20250417153623050]
 
 
 Choose Case ascas

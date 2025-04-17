@@ -78,6 +78,7 @@ String isEtatAppSin
 String isChoixEtatAppRempl // [HUB_TYP_APP_REMPL]
 String isChaineSeria // [HUB_TYP_APP_REMPL]
 String isLibCie
+String isNumImeiAdh // [20250417153623050]
 
 Decimal { 2 } idcMtValAchat
 Decimal { 2 } idcMtPec
@@ -1872,7 +1873,15 @@ Choose Case isTrtFen
 		idcMtPec			= stPass.dcTab[2] // [20241127082353640]		
 
 		idtDteAchat    = stPass.dtTab[1] // [20241127082353640]		
-
+		
+		isNumImeiAdh	= stPass.sTab[20] // [20250417153623050]
+		Choose Case isTypAppSin 
+			Case "TEL" 
+				lnvPFCString.of_setkeyvalue( isChaineSeria, "NUM_IMEI", isNumImeiAdh , ";")			
+			Case Else 
+				lnvPFCString.of_setkeyvalue( isChaineSeria, "NUM_SERIE", isNumImeiAdh , ";")			
+		End Choose 
+		// /[20250417153623050]
 
 		If isTypActionS2 = "A_COMMANDER" Then
 			cb_valider.PostEvent ( clicked! )
