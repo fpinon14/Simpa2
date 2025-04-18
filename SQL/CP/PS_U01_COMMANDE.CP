@@ -1284,6 +1284,14 @@ BEGIN
 	    And @iStatusGc in ( 151,152,153,154,170,171) )
 	     
 	BEGIN
+		-- [MIG82_JOURN_EVT]
+		If sysadm.FN_CLE_NUMERIQUE ( 'MIG82_JOURN_EVT') > 0 
+			Begin
+				IF @iPrestaHUB > 0 and @iStatusGc = 151 and @iStatusGCActuel <> 151 
+					Begin
+					 Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'PECIND', '', '', 'PS_U01_COMMANDE', 'AUTO'	
+					End
+			End 	
 
 		-- #3 [O2M] : Pas de Pièce Jointes
 		-- #17 [MSS_DIAG]
@@ -1639,6 +1647,11 @@ BEGIN
 				EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @dcIdSin, 2, @sMess, @sIdFour, @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C'
 			END	
 
+			-- [MIG82_JOURN_EVT]
+			If sysadm.FN_CLE_NUMERIQUE ( 'MIG82_JOURN_EVT') > 0 
+				Begin
+				 Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'GEOLOC', '', '', 'PS_U01_COMMANDE', 'AUTO'	
+				End
 
 	END
 	-- /[HP252_276_HUB_PRESTA]
@@ -2671,6 +2684,11 @@ If sysadm.FN_CLE_NUMERIQUE ( 'MIG82_JOURN_EVT') > 0
 				Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'GTINDM', @sVar, '', 'PS_U01_COMMANDE', 'AUTO'	
 		   End 
 
+		IF ( @iStatusGc = 178 Or @iStatusGCActuel = 178 )
+		   and sysadm.FN_CLE_VAL ( 'TYPE_REMPL', rtrim ( @sInfoSpbFrnCpltActuel ) , ';') = 'REMPL_APPAREIL'
+		   Begin
+			Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'CMDAPP', '', '', 'PS_U01_COMMANDE', 'AUTO'
+		   End 
 
 		IF ( @iStatusGc = 178 Or @iStatusGCActuel = 178 )
 		   and sysadm.FN_CLE_VAL ( 'TYPE_REMPL', rtrim ( @sInfoSpbFrnCpltActuel ) , ';') = 'REMPL_APPAREIL'
@@ -3151,21 +3169,45 @@ IF (
 	If CharIndex ( '[BVIE]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[BVIE]', @sCommentFrnActuel, 1 ) = 0 
 	 Begin
 		Set @sMess = 'Message automatique suite retour fournisseur : Attention, dossier bris visible irréparable économique, vous pouvez continuer l''instruction du dossier'
+
+		-- [MIG82_JOURN_EVT]
+		If sysadm.FN_CLE_NUMERIQUE ( 'MIG82_JOURN_EVT') > 0 
+			Begin
+				Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'IRPIND', '', '', 'PS_U01_COMMANDE', 'AUTO'	
+			End 
 	 End
 
 	If CharIndex ( '[BVID]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[BVID]', @sCommentFrnActuel, 1 ) = 0 
 	 Begin
 		Set @sMess = 'Message automatique suite retour fournisseur : Attention, dossier bris visible irréparable délai, vous pouvez continuer l''instruction du dossier'
+
+		-- [MIG82_JOURN_EVT]
+		If sysadm.FN_CLE_NUMERIQUE ( 'MIG82_JOURN_EVT') > 0 
+			Begin
+				Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'IRPIND', '', '', 'PS_U01_COMMANDE', 'AUTO'	
+			End 
 	 End 
 
 	If  CharIndex ( '[BVIP]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[BVIP]', @sCommentFrnActuel, 1 ) = 0 
 	 Begin
 		Set @sMess = 'Message automatique suite retour fournisseur : Attention, dossier bris visible irréparable pièce indisponible, vous pouvez continuer l''instruction du dossier'
+
+		-- [MIG82_JOURN_EVT]
+		If sysadm.FN_CLE_NUMERIQUE ( 'MIG82_JOURN_EVT') > 0 
+			Begin
+				Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'IRPIND', '', '', 'PS_U01_COMMANDE', 'AUTO'	
+			End 
 	 End 
 
 	If  CharIndex ( '[BVIT]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[BVIT]', @sCommentFrnActuel, 1 ) = 0 
 	 Begin
 		Set @sMess = 'Message automatique suite retour fournisseur : Attention, dossier bris visible irréparable technique, vous pouvez continuer l''instruction du dossier'
+
+		-- [MIG82_JOURN_EVT]
+		If sysadm.FN_CLE_NUMERIQUE ( 'MIG82_JOURN_EVT') > 0 
+			Begin
+				Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'IRPIND', '', '', 'PS_U01_COMMANDE', 'AUTO'	
+			End 
 	 End 
 	   
 

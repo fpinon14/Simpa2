@@ -424,9 +424,11 @@ If @iEtatVuAssure Not in ( 200, 900 )
 		
 		IF @iMaxIdSeqIdemBACC > 0 
 			Begin
+				Set @sVar = sysadm.FN_CLE_VAL_E ( 'MT_BA', @sMtCmdeBACC, @sVar, ';' )
+
 				If @sBAouCC = 'BON_ACHAT' 
 					Begin 
-						Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, 'INDMBA', @sMtCmdeBACC, '', 'PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION', @asCodOper				
+						Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, 'INDMBA', @sVar, '', 'PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION', @asCodOper				
 
 						If @sCodeEtatBACC in ( 'ECT', 'ECL' ) 
 							Begin
@@ -441,7 +443,7 @@ If @iEtatVuAssure Not in ( 200, 900 )
 
 				If @sBAouCC = 'CARTE_CADEAU' 
 					Begin 				
-						Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, 'INDMCC', @sMtCmdeBACC, '', 'PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION', @asCodOper				
+						Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, 'INDMCC', @sVar, '', 'PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION', @asCodOper				
 
 						If @sCodeEtatBACC in ( 'ECT', 'ECL' ) 
 							Begin
@@ -521,7 +523,7 @@ While Exists ( Select Top 1 1 From @TbReglNum where marquage = 0 )
 	Set @sVar = sysadm.FN_CLE_VAL_E ( 'NOM', @sNom, @sVar, ';' )
 	Set @sVar = sysadm.FN_CLE_VAL_E ( 'MT_REG', CONVERT ( VarChar ( 20 ), @dcMtTotReg ), @sVar, ';' )
 
-	Set @sVal = @iRibBq + '-' + @iRibGui + '-' + @sRibCpt + '-' + @iCle
+	Set @sVal = Convert ( varChar ( 5 ), @iRibBq ) + '-' + Convert ( varChar ( 5 ), @iRibGui ) + '-' + @sRibCpt + '-' + Convert ( varChar ( 2 ), @iCle )
 	If @sCodModeReg = 'VA' Set @sVar = sysadm.FN_CLE_VAL_E ( 'RIB_XXX', @sVal, @sVar, ';' )
 	If @sCodModeReg = 'C' Set @sVar = sysadm.FN_CLE_VAL_E ( 'ORDRE', @sOrdrechq, @sVar, ';' )
 
