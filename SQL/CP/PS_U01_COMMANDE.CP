@@ -574,6 +574,19 @@ While ( @iRech1 > 0 And @iRech2 > 0 )
 												When 'J6' Then 'Produit déjà expédié vers SPBS' -- [vDoc26518]
 												Else @sVal1 + '(valeur non décodée)'
 											 End 
+
+
+							-- [MIG82_JOURN_EVT]
+							If sysadm.FN_CLE_NUMERIQUE ( 'MIG82_JOURN_EVT') > 0 
+								Begin
+									IF @iPrestaHUB > 0 
+										Begin
+											If @sVal1 in ( 'COLIS_PERDU', 'COLIS_NRPAC' ) Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'APRTET', '', '', 'PS_U01_COMMANDE', 'AUTO'	
+											If @sVal1 in ( 'COLIS_PND', 'COLIS_INCOR' ) Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'ADERET', '', '', 'PS_U01_COMMANDE', 'AUTO'	
+											If @sVal1 in ( 'COLIS_PERDU' ) Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'PBTRET', '', '', 'PS_U01_COMMANDE', 'AUTO'	
+										End
+								End 
+
 						End 
 
 					-- [PM445-1]
@@ -2709,6 +2722,53 @@ If sysadm.FN_CLE_NUMERIQUE ( 'MIG82_JOURN_EVT') > 0
 		   Begin
 			Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'APPRPL', '', '', 'PS_U01_COMMANDE', 'AUTO'	
 		   End 
+
+		IF ( @iStatusGc = 851 And @iStatusGCActuel <> 851 ) Or ( @iStatusGc = 855 And @iStatusGCActuel <> 855 )
+		   Begin
+			Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'RDVIND', '', '', 'PS_U01_COMMANDE', 'AUTO'
+		   End 
+
+		IF @iStatusGc = 853 And @iStatusGCActuel <> 853
+		   Begin
+			Set @sVal = sysadm.FN_CLE_VAL ( 'RDV_CONF', @sInfoFrnSpbCplt, ';' )
+			IF @sVal is not null and LEN ( @sVal ) > 0 
+				Begin
+					Set @sVar = sysadm.FN_CLE_VAL_E ( 'DTE_RDV', @sVal, @sVar, ';' )
+					Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'DVISIO', @sVar, '', 'PS_U01_COMMANDE', 'AUTO'
+				End 
+		   End 
+
+		IF @iStatusGc = 854 And @iStatusGCActuel <> 854
+		   Begin
+			Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'CDPCEC', '', '', 'PS_U01_COMMANDE', 'AUTO'
+		   End 
+
+		IF @iStatusGc = 152 And @iStatusGCActuel <> 152 And CharIndex ( '[PRDV]', @sCommentFrn, 1 ) > 0
+		   Begin			
+			Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'DRSDVI', '', '', 'PS_U01_COMMANDE', 'AUTO'
+		   End 
+
+		IF @iStatusGc = 157 And @iStatusGCActuel <> 157 
+		   Begin			
+			Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'NRDVCF', '', '', 'PS_U01_COMMANDE', 'AUTO'
+		   End 
+
+		IF @iStatusGc = 156 And @iStatusGCActuel <> 156
+		   Begin
+			Set @sVal = sysadm.FN_CLE_VAL ( 'RDV_CONF', @sInfoFrnSpbCplt, ';' )
+			IF @sVal is not null and LEN ( @sVal ) > 0 
+				Begin
+					Set @sVar = sysadm.FN_CLE_VAL_E ( 'DTE_RDV', @sVal, @sVar, ';' )
+					Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'RDVDOM', @sVar, '', 'PS_U01_COMMANDE', 'AUTO'
+				End 
+		   End 
+
+		-- APPECT - APPEXP - APPCNS
+		Set @sVal = sysadm.FN_CLE_VAL ( 'INFO_JOURNAL', @sInfoFrnSpbCplt, ';' )
+		IF @sVal is not null and LEN ( @sVal ) > 0 
+			Begin
+				Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, @sVal, '', '', 'PS_U01_COMMANDE', 'AUTO'				
+			End 
 	End
 
 IF @iStatusGc = 176 And @iStatusGCActuel <> 176
@@ -3436,6 +3496,7 @@ IF       ( ( CharIndex ( '[BNV]', @sCommentFrn, 1 ) > 0 And CharIndex ( '[BNV]',
 	  Begin
 		Set @sMess = 'Retour fournisseur [' + @sLibFour + '] : Attention, panne résolue par Diagnostic Vidéo, ce qui entraîne un refus de prise en charge, le sinistre n''est pas considéré comme réparé. Vous pouvez continuer l''instruction du dossier'
 		Set @sIRR = 'OK'
+		Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'DRSDVI', '', '', 'PS_U01_COMMANDE', 'AUTO'
 	  End 
 
 	If CharIndex ( '[DNCAD]', @sCommentFrn, 1 ) > 0 -- [HP252_276_HUB_PRESTA]
