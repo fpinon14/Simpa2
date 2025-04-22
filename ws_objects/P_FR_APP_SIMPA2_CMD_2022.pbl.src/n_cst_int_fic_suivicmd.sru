@@ -32968,6 +32968,7 @@ private function integer uf_integration_fichier_frn_hub (ref long alnblig, ref l
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
+//       JFF   31/03/2025 [MIG82_JOURN_EVT]
 //*-----------------------------------------------------------------
 
 Int iRet, iCleNum, iIdSeqSavRet
@@ -32984,6 +32985,10 @@ String sDestEnvoi
 String sCasRetour, sIdAppli, sBase, sCommentFrn 
 Long lStatusGc 
 DataStore dsHubDonneesPrestaSimpa2 	
+Boolean bF_CLE_A_TRUE_MIG82_JOURN_EVT
+
+// [MIG82_JOURN_EVT]
+bF_CLE_A_TRUE_MIG82_JOURN_EVT = F_CLE_A_TRUE ( "MIG82_JOURN_EVT" )
 
 sCasRetour = Fill ( " ", 50 )
 sIdAppli = "SIMPA2"
@@ -33386,6 +33391,13 @@ For lCpt = 1 To lTotLig
 		lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "APP_INCOMPLET", sVal, ";")
 	End If
 	
+	// [MIG82_JOURN_EVT]
+	If bF_CLE_A_TRUE_MIG82_JOURN_EVT Then
+		sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "INFO_JOURNAL", ";") 		
+		If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
+			lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "INFO_JOURNAL", sVal, ";")
+		End If
+	End IF 	
 
 	sVal = String ( idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) )
 	// [VDOC3290]
