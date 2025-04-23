@@ -56,6 +56,8 @@ public function long uf_zn_trt_divsin_ech_express_48h (string asdata, string asn
 public function long uf_zn_trt_divsin_modepaiementpaybox (string asdata, string asnomcol, long alrow)
 public function boolean uf_validation_finale_trt_partaprescommit ()
 public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse, ref boolean abmig1_couremailing, ref u_datawindow_detail adw_lstinter, ref datawindow adw_wpiece, ref datawindow adw_wrefus, ref datawindow adw_plafond)
+public function long uf_zn_trt_divsin_decassureur (string asdata, string asnomcol, long alrow)
+public function long uf_zn_trt_divsin_lieu_repar (string asdata, string asnomcol, long alrow)
 end prototypes
 
 public function long uf_zn_trt_divsin_typeapp (string asdata, string asnomcol, long alrow, boolean abforcer);//*-----------------------------------------------------------------
@@ -1548,6 +1550,101 @@ idw_wRefus				= adw_wRefus
 idw_Plafond				= adw_Plafond
 
 end subroutine
+
+public function long uf_zn_trt_divsin_decassureur (string asdata, string asnomcol, long alrow);
+//*-----------------------------------------------------------------
+//*
+//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_DecAssureur (PRIVATE)
+//* Auteur			: FABRY JF
+//* Date				: 29/08/2007
+//* Libellé			: Contrôle de la zone DecAssureur [DCMP070587]
+//* Commentaires	: 
+//*
+//* Arguments		: String 		asData			Val
+//*					  String 		asNomCol			Val
+//*					  Long			alRow				Val
+//*
+//* Retourne		: long
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//* #..   ...   ../../....   
+//*-----------------------------------------------------------------
+
+Integer iAction
+
+Long lRow, lDeb, lFin, lValActuel
+
+asData = Upper ( asData )
+iAction = 0
+
+// Droit 211/-NA Autoriser de saisir la décision assureur
+If Not iuoSpGsSinistre.uf_GetAutorisation2 ( 211 ) Then 
+	idw_wDivSin.iiErreur = 2
+	iAction = 1
+End If
+
+// Si décision déjà prise, on ne peut plus modifier.
+lValActuel = Long ( iuoSpGsSinistre.uf_GestOng_Divers_Trouver ( "DEC_ASSUREUR" ) )
+If iAction = 0 And lValActuel <> 1 Then
+	idw_wDivSin.iiErreur = 3
+	iAction = 1
+End If	
+
+If iAction = 0 Then
+	stMessage.sTitre		= "Décision assureur"
+	stMessage.Icon			= Information!
+	stMessage.bErreurG	= FALSE
+	stMessage.Bouton		= YESNO!
+	stMessage.sCode		= "WSIN605"
+
+	If F_Message ( stMessage ) = 2 Then
+		lRow = idw_wDivSin.Find ( "UPPER ( NOM_ZONE ) = 'DEC_ASSUREUR'", 1, idw_wDivSin.Rowcount () )
+		idw_wDivSin.SetItem ( lRow, "VAL_NBRE", lValActuel )
+		idw_wDivSin.iiErreur = 4
+		iAction = 1
+	End If
+End IF
+
+Return iAction
+
+end function
+
+public function long uf_zn_trt_divsin_lieu_repar (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
+//*
+//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_Lieu_Repar (PRIVATE)
+//* Auteur			: FABRY JF
+//* Date				: 07/06/2016
+//* Libellé			: 
+//* Commentaires	: [DT227]
+//*
+//* Arguments		: String 		asData			Val
+//*					  String 		asNomCol			Val
+//*					  Long			alRow				Val
+//*
+//* Retourne		: long
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//*-----------------------------------------------------------------
+
+Integer iAction
+
+Long lRow, lDeb, lFin
+
+asData = Upper ( asData )
+iAction = 0
+
+lRow = idw_LstwCommande.Find ( "COD_ETAT <> 'ANN'", 1, idw_LstwCommande.RowCount () ) 
+
+If lRow > 0 Then
+	idw_wDivSin.iiErreur = 3
+	iAction = 1
+End If
+
+Return iAction
+
+end function
 
 on u_gs_sp_sinistre_2.create
 call super::create

@@ -246,7 +246,6 @@ private function long uf_zn_codmotssui ()
 private function long uf_zn_trt_divsin_duree_gti_origine (string asdata, string asnomcol, long alrow)
 public function boolean uf_controlergestion_ctrlreglfactu ()
 private function boolean uf_controlergestion_accordassureur (string ascas)
-private function long uf_zn_trt_divsin_decassureur (string asdata, string asnomcol, long alrow)
 private subroutine uf_determiner_courrier_forcage_o2m (ref string aspos, integer alcpt, ref string asidnatcour, ref string asidcour)
 public function datetime uf_lire_date_achat ()
 private function boolean uf_validation_finale_horaire ()
@@ -372,7 +371,6 @@ public subroutine uf_determiner_data_recup_adr_pickup ()
 public function long uf_zn_marqport (string ascas)
 public function long uf_zn_modlport ()
 private subroutine uf_determiner_courrier_forcage_o2m_pm280 (ref string aspos, integer alcpt, ref string asidnatcour, ref string asidcour)
-private function long uf_zn_trt_divsin_lieu_repar (string asdata, string asnomcol, long alrow)
 public function string uf_getreponse_script (string asclequest, boolean abcode)
 public function string uf_controlergestion_interdirereglpresta ()
 private function long uf_zn_trt_divsin_degolocalisation (string asdata, string asnomcol, long alrow)
@@ -19145,7 +19143,7 @@ Choose Case asNomCol
 					ll_ret = This.Uf_Zn_Trt_DivSin_TypAppRecNeu ( Upper ( asData ), Upper( asNomCol ), alRow, FALSE )
 
 				Case "DEC_ASSUREUR" // #7
-					ll_ret = This.Uf_Zn_Trt_DivSin_DecAssureur ( Upper ( asData ), Upper( asNomCol ), alRow )
+					ll_ret = iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_DecAssureur ( Upper ( asData ), Upper( asNomCol ), alRow )
 
 				Case "MODE_REMPL" 	//* #8 [FNAC_PROD_ECH_TECH]
 					ll_ret = This.Uf_Zn_Trt_DivSin_ModeRemplacement ( Upper ( asData ), Upper( asNomCol ), alRow )
@@ -19164,7 +19162,7 @@ Choose Case asNomCol
 				// [DT227]
 				Case "LIEU_REPAR"
 					// [DT227]
-					ll_ret = This.Uf_Zn_Trt_DivSin_Lieu_Repar	( Upper ( asData ), Upper( asNomCol ), alRow )
+					ll_ret = iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_Lieu_Repar	( Upper ( asData ), Upper( asNomCol ), alRow )
 
 				// [DT269]
 /*				
@@ -23301,65 +23299,6 @@ End If
 
 Return bLock
 
-
-end function
-
-private function long uf_zn_trt_divsin_decassureur (string asdata, string asnomcol, long alrow);
-//*-----------------------------------------------------------------
-//*
-//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_DecAssureur (PRIVATE)
-//* Auteur			: FABRY JF
-//* Date				: 29/08/2007
-//* Libellé			: Contrôle de la zone DecAssureur [DCMP070587]
-//* Commentaires	: 
-//*
-//* Arguments		: String 		asData			Val
-//*					  String 		asNomCol			Val
-//*					  Long			alRow				Val
-//*
-//* Retourne		: long
-//*
-//*-----------------------------------------------------------------
-//* MAJ   PAR      Date	     Modification
-//* #..   ...   ../../....   
-//*-----------------------------------------------------------------
-
-Integer iAction
-
-Long lRow, lDeb, lFin, lValActuel
-
-asData = Upper ( asData )
-iAction = 0
-
-// Droit 211/-NA Autoriser de saisir la décision assureur
-If Not This.uf_GetAutorisation2 ( 211 ) Then 
-	idw_wDivSin.iiErreur = 2
-	iAction = 1
-End If
-
-// Si décision déjà prise, on ne peut plus modifier.
-lValActuel = Long ( uf_GestOng_Divers_Trouver ( "DEC_ASSUREUR" ) )
-If iAction = 0 And lValActuel <> 1 Then
-	idw_wDivSin.iiErreur = 3
-	iAction = 1
-End If	
-
-If iAction = 0 Then
-	stMessage.sTitre		= "Décision assureur"
-	stMessage.Icon			= Information!
-	stMessage.bErreurG	= FALSE
-	stMessage.Bouton		= YESNO!
-	stMessage.sCode		= "WSIN605"
-
-	If F_Message ( stMessage ) = 2 Then
-		lRow = idw_wDivSin.Find ( "UPPER ( NOM_ZONE ) = 'DEC_ASSUREUR'", 1, idw_wDivSin.Rowcount () )
-		idw_wDivSin.SetItem ( lRow, "VAL_NBRE", lValActuel )
-		idw_wDivSin.iiErreur = 4
-		iAction = 1
-	End If
-End IF
-
-Return iAction
 
 end function
 
@@ -49817,42 +49756,6 @@ End If
 
 
 end subroutine
-
-private function long uf_zn_trt_divsin_lieu_repar (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
-//*
-//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_Lieu_Repar (PRIVATE)
-//* Auteur			: FABRY JF
-//* Date				: 07/06/2016
-//* Libellé			: 
-//* Commentaires	: [DT227]
-//*
-//* Arguments		: String 		asData			Val
-//*					  String 		asNomCol			Val
-//*					  Long			alRow				Val
-//*
-//* Retourne		: long
-//*
-//*-----------------------------------------------------------------
-//* MAJ   PAR      Date	     Modification
-//*-----------------------------------------------------------------
-
-Integer iAction
-
-Long lRow, lDeb, lFin
-
-asData = Upper ( asData )
-iAction = 0
-
-lRow = idw_LstwCommande.Find ( "COD_ETAT <> 'ANN'", 1, idw_LstwCommande.RowCount () ) 
-
-If lRow > 0 Then
-	idw_wDivSin.iiErreur = 3
-	iAction = 1
-End If
-
-Return iAction
-
-end function
 
 public function string uf_getreponse_script (string asclequest, boolean abcode);//*-----------------------------------------------------------------
 //*
