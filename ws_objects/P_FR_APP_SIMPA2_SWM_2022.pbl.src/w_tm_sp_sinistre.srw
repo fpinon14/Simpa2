@@ -8678,14 +8678,6 @@ Choose Case isErrCol
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
 				stMessage.sCode		= "WSIN907"
-				
-			// [PAN_125]
-			Case 19	// Modif interdite sur PEC, PRESTA, REGL
-				stMessage.sTitre		= "Modification interdit"
-				stMessage.Icon			= Information!
-				stMessage.bErreurG	= FALSE
-				stMessage.Bouton		= OK!
-				stMessage.sCode		= "WSIN926"
 
 			
 		End Choose		

@@ -16570,11 +16570,6 @@ For lCpt = 1 To lTot
 				End If 
 				
 			End If 
-			
-		// [PAN_125]			
-		Case "RET_DEVIS_APP_IRREPARABLE"
-			
-			iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_ret_devis_app_irrep ( "", "", 0, "INIT" )
 	
 	End Choose
 
@@ -19294,10 +19289,6 @@ Choose Case asNomCol
 			Case "DYSFONC_EXTRANET_FRANCHISE"
 				ll_ret = This.Uf_Zn_Trt_DivSin_dysfonc_extranet_franch ( Upper ( asData ), Upper( asNomCol ), alRow )
 
-			// [PAN_125]
-			Case "RET_DEVIS_APP_IRREPARABLE"
-				ll_ret = iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_ret_devis_app_irrep ( Upper ( asData ), Upper( asNomCol ), alRow, "COCHAGE" )
-						
 
 		End Choose 
 
