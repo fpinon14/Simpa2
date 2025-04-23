@@ -31560,7 +31560,8 @@ private function integer uf_ctrl_fichier_frn_hub ();//*-------------------------
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//*       JFF	16/01/2025	[HUB832_HUB_ORG_REUN] 
+//*       JFF	16/01/2025	[HUB832_HUB_ORG_REUN]
+//        JFF  23/04/2025  [HUB1267]
 //*-----------------------------------------------------------------
 
 Int iRet, iStatusGc, iInfoSpbFrn
@@ -31575,7 +31576,10 @@ String sIdDepotHub, sIdHubPresta
 Boolean bRet 
 String sSqlHub
 Long lErrorHubPresta, lIndentityHubPresta, lRowCountHubPresta
+Boolean  bF_CLE_A_TRUE_HUB1267
 
+// [HUB1267]
+bF_CLE_A_TRUE_HUB1267 = F_CLE_A_TRUE ( "HUB1267" )
 
 iRet = 1
 lTotLig = idwFicFourn.RowCount ()
@@ -32911,9 +32915,46 @@ For lCpt = lTotLig To 1 Step -1
 		idwFicFourn.SetItem  ( lCpt, "INFO_FRN_SPB_CPLT", sInfoFrnSpbCpltLu )
 	End If 
 
+	// [HUB1267]
+	If bF_CLE_A_TRUE_HUB1267 Then
+		sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "CMDE_REMPL_AUTO", ";") 
+		If sVal = "OUI" Then
+			sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ID_FOUR_REMPL", ";")
+			If IsNull ( sVal ) Then sVal = ""
+			
+			If SQLCA.PS_S_CODE_DANS_FAMILLE_CAR ( 1, sVal ) <= 0 Then
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Dans le cadre du remplacement automatique, le prestataire " + sVal + " n'est pas un prestataire existant sur le HUB en lien avec SIMPA2." )
+			End If 
+			
+			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ID_HUB_PRESTA_REMPL", ";"))
+			If IsNull ( sVal ) Then sVal = ""
+			
+			IF sVal = "" Then 
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Dans le cadre du remplacement automatique, l'ID_HUB_PRESTA_REMPL (id_benefit) de la prestation de remplacement engagée, est obligatoire." )
+			End If 
+			
+			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ID_POINT_SERV_REMPL", ";"))
+			If IsNull ( sVal ) Then sVal = ""
+			
+			IF sVal = "" Then 
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Dans le cadre du remplacement automatique, l'ID_POINT_SERV_REMPL de la prestation de remplacement engagée, est obligatoire." )
+			End If 
+		
+		End IF		
+		
+	End If 
+	
+	
 
-	// Coder au dessus de cette ligne.
-
+	//////////////////////////////////////////////////////
+	// Coder au dessus de cette ligne pour les contrôle //
+	//////////////////////////////////////////////////////
 	
 	// #6 [MSS_DIAG].[20091207111441740]
 	// [20091228114718123]
@@ -32969,6 +33010,7 @@ private function integer uf_integration_fichier_frn_hub (ref long alnblig, ref l
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //       JFF   31/03/2025 [MIG82_JOURN_EVT]
+//       JFF   23/04/2025 [HUB1267]
 //*-----------------------------------------------------------------
 
 Int iRet, iCleNum, iIdSeqSavRet
@@ -32979,13 +33021,17 @@ Long		lTotLig, lCpt, lVal, lIdSin, lIdSeq, lErrorHubPresta, lIndentityHubPresta,
 Decimal {2} dcMtFrais
 String sInfoFrnSpbCplt  	
 n_cst_string lnvPFCString  
-Boolean bSwap, bDemandeSavHubPresta, bRet, bDdeCreationReellePrestaSav 
+Boolean bSwap, bDemandeSavHubPresta, bRet, bDdeCreationReellePrestaSav, bCmdeRemplAuto
 Int iRetMailPush 
 String sDestEnvoi 
 String sCasRetour, sIdAppli, sBase, sCommentFrn 
 Long lStatusGc 
 DataStore dsHubDonneesPrestaSimpa2 	
 Boolean bF_CLE_A_TRUE_MIG82_JOURN_EVT
+Boolean  bF_CLE_A_TRUE_HUB1267
+
+// [HUB1267]
+bF_CLE_A_TRUE_HUB1267 = F_CLE_A_TRUE ( "HUB1267" )
 
 // [MIG82_JOURN_EVT]
 bF_CLE_A_TRUE_MIG82_JOURN_EVT = F_CLE_A_TRUE ( "MIG82_JOURN_EVT" )
@@ -33033,6 +33079,7 @@ For lCpt = 1 To lTotLig
 
 	bSwap = False
 	bDemandeSavHubPresta = False
+	bCmdeRemplAuto = False // [HUB1267]
 	bDdeCreationReellePrestaSav = False
 	sInfoFrnSpbCplt = "" //* #3 [FNAC_PROD_ECH_TECH]
 	sInfoFrnSpbCpltLu = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "INFO_FRN_SPB_CPLT" ) ) )
@@ -33399,6 +33446,32 @@ For lCpt = 1 To lTotLig
 		End If
 	End IF 	
 
+	// [HUB1267]
+	If bF_CLE_A_TRUE_HUB1267 Then
+		sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "CMDE_REMPL_AUTO", ";") 
+		If sVal = "OUI" Then
+			bCmdeRemplAuto = True
+			lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "CMDE_REMPL_AUTO", sVal, ";")
+
+			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ID_FOUR_REMPL", ";"))
+			If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
+				lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "ID_FOUR_REMPL", sVal, ";")
+			End If
+			
+			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ID_HUB_PRESTA_REMPL", ";"))
+			If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
+				lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "ID_HUB_PRESTA_REMPL", sVal, ";")
+			End If
+			
+			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ID_POINT_SERV_REMPL", ";"))
+			If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
+				lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "ID_POINT_SERV_REMPL", sVal, ";")
+			End If
+
+		End IF 
+	End If 
+
+
 	sVal = String ( idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) )
 	// [VDOC3290]
 	Choose Case sVal 
@@ -33485,19 +33558,33 @@ For lCpt = 1 To lTotLig
 		If SQLCA.SQLCode = 0 And SQLCA.SQLDBCode = 0 Then
 
 			// Cas Standard, normal, sans SAV Hub
-			If Not bDemandeSavHubPresta Then
+			// [HUB1267]
+			If Not bDemandeSavHubPresta And Not bCmdeRemplAuto Then
 				alNbLigMod ++				// #4				
 				F_commit ( SQLCA, True )
 				Continue
 			End If 
 			
 			// Traitement particulier pour le SAV, Insertion de la Presta dans la base du HUB
-			If bDemandeSavHubPresta Then
+			// [HUB1267] C'est exactement le même traitement pour le rempl auto que le SAV
+			//           même la PS_HP276_S_S2_RECUPERER_ID_SEQ_SAV ne fait que récupérer l'ID_SEQ max en fait, 
+			//           rien à voir avec le "SAV"
+			If bDemandeSavHubPresta or bCmdeRemplAuto Then
 				SQLCA.PS_HP276_S_S2_RECUPERER_ID_SEQ_SAV  ( lIdSin, iIdSeqSavRet ) 
 				
 				If Not ( iIdSeqSavRet > 0 ) Then
 					iRet = -1
-					This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème de récupération de l'iIdSeqSavRet sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) )
+
+					// [HUB1267]
+					If bDemandeSavHubPresta Then 
+						This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème de récupération de l'iIdSeqSavRet sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) )
+					End If 
+
+					// [HUB1267]
+					If bCmdeRemplAuto Then 
+						This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème de récupération de l'iIdSeqSavRet (Cas de Rempl. Auto, pas de SAV) sur " + Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) ) )
+					End If 
+					
 		
 					F_commit ( SQLCA, False )					
 					Continue
@@ -33745,7 +33832,7 @@ end function
 
 private function string uf_hub_sql_hubprestataire (ref datastore adshubdonneesprestasimpa2);//*-----------------------------------------------------------------
 //*
-//* Fonction      : n_cst_int_fic_suivicmd:: (PRIVATE)
+//* Fonction      : n_cst_int_fic_suivicmd::uf_hub_sql_hubprestataire (PRIVATE)
 //* Auteur        : JFF
 //* Date          : 20/03/2024
 //* Libellé       : Construction du SQL qui sera injecté dans le Hub Prestataire
