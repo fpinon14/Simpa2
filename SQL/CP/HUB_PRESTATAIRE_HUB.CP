@@ -835,6 +835,8 @@ Go
 --
 -- Retourne             :       rien
 -------------------------------------------------------------------
+-- JFF      23/04/2025   [HUB1267]
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATAIRE' AND type = 'P' )
         DROP procedure edi.PS_HP276_I_HP_VALIDATION_PRESTA_DANS_LE_HUB_PRESTATAIRE
 GO
@@ -920,15 +922,17 @@ Declare @sAltTrt VarChar ( 1 )
 Declare @dtTraiteLe DateTime 
 Declare @sTraitePar VarChar ( 4 )
 Declare @iAReparerSav Integer
+Declare @iGenAutoCmdeRempl Integer  
 
 Set @iAReparerSav = IIF ( edi.FN_CLE_VAL ( 'A_REPARER_SAV', @sInfo_spb_frn_cplt, ';') = 'OUI', 1, 0)
+Set @iGenAutoCmdeRempl = IIF ( edi.FN_CLE_VAL ( 'GEN_AUTO_CMDE_REMPL', @sInfo_spb_frn_cplt, ';') = 'OUI', 1, 0) --  [HUB1267]
 
 Set @sAltTrt = 'N'
 Set @dtTraiteLe = null 
 Set @sTraitePar = null
 
 
-If @iAReparerSav > 0 
+If @iAReparerSav > 0 Or @iGenAutoCmdeRempl > 0  --  [HUB1267]
 	Begin
 		Set @sAltTrt = 'O'
 		Set @dtTraiteLe = GETDATE()
