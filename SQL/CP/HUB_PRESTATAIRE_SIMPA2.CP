@@ -716,6 +716,14 @@ From sysadm.w_commande c
 Where c.id_sin = @adcIdsin
 And   c.id_seq = @aiIdSeq
 
+-- [20250424140201407]
+If @@ROWCOUNT <= 0 
+	Begin
+		-- Cas particulier où l'enregistrement n'est plus en w_, cas des PEC_A_RECYCLER avec cloture de dossier
+		Exec sysadm.PS_HP276_S_S2_OBTENTION_DONNEES_PRESTA_SIMPA2_POUR_PREPARATION_CREATION_HUB_PRESTATAIRE @aiCas, @adcIdsin, @aiIdSeq
+		Return
+	End 
+
 -- [20240910134438210]
 If @sRefAppSin = 'IFR' 
 	Begin
@@ -903,6 +911,7 @@ Go
 -------------------------------------------------------------------
 -- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
 -- JFF      19/03/2025   [LGY_40]
+-- JFF      23/04/2025   [HUB1267]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_SU_S2_MOTEUR_TRT_RETOUR_HUB' AND type = 'P' )
         DROP procedure sysadm.PS_HP276_SU_S2_MOTEUR_TRT_RETOUR_HUB
@@ -1637,6 +1646,14 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 					Begin
 						Set @sInfoFrnSpbCpltlu = sysadm.FN_CLE_VAL_E ( 'ID_DEPOT_HUB', Convert ( VarChar ( 20), @iIdDepotHub), @sInfoFrnSpbCpltlu, ';' )
 					End 
+
+				-- [HUB1267]
+				If sysadm.FN_CLE_VAL ( 'CMDE_REMPL_AUTO', @sChaineBCVretourDetStatut, ';' ) = 'OUI' 
+					Begin
+						Set @sInfoFrnSpbCpltlu = sysadm.FN_CLE_VAL_E ( 'CMDE_REMPL_AUTO', sysadm.FN_CLE_VAL ( 'CMDE_REMPL_AUTO', @sChaineBCVretourDetStatut, ';' ), @sInfoFrnSpbCpltlu, ';' )
+					End 
+
+
 
 				Break
 			End 

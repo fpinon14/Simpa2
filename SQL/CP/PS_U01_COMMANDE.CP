@@ -4005,15 +4005,17 @@ If @iRemplacementAutomatiqueHub > 0
 		Set @iNewIdSeq = @iNewIdSeq + 1
 
 		Insert into sysadm.commande
-		select top 1 id_sin , @iNewIdSeq, id_gti, @dcNewIdDetail, id_four=sysadm.FN_CLE_VAL ( 'ID_FOUR_REMPL', @sInfoFrnSpbCplt, ';' ), id_typ_art, id_marq_art, id_modl_art, mt_ttc_cmde, adr_nom, adr_prenom, adr_livr1, adr_livr2, adr_livr_cpl, adr_cp, adr_ville, adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, 'Prestation de remplacement automatique créé par le HUB PRESTATAIRE.', null,  null, null, null, null, 'ECT', null, 'PRESTA AUTOMATIQUE', 0, null, null, Getdate(), Getdate(), 'AUTO',  Getdate(),  'AUTO', id_zone, id_bsp, dte_ret_pret, adr_cod_civ, id_ref_four='CMDE_A_CPLTER', id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, alt_dev_acp, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli=null, 990 , id_marq_art_ifr, id_modl_art_ifr, 
+		select top 1 id_sin , @iNewIdSeq, id_gti, @dcNewIdDetail, id_four=sysadm.FN_CLE_VAL ( 'ID_FOUR_REMPL', @sInfoFrnSpbCplt, ';' ), id_typ_art='CAF', id_marq_art, id_modl_art, mt_ttc_cmde, adr_nom, adr_prenom, adr_livr1, adr_livr2, adr_livr_cpl, adr_cp, adr_ville, adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, 'Prestation de remplacement automatique créée par le HUB PRESTATAIRE.', null,  null, null, null, null, 'ECT', null, 'PRESTA AUTOMATIQUE', 0, null, null, Getdate(), Getdate(), 'AUTO',  Getdate(),  'AUTO', id_zone, id_bsp, dte_ret_pret, adr_cod_civ, id_ref_four='A_COMMANDER', id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, alt_dev_acp, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli=null, 990 , id_marq_art_ifr, id_modl_art_ifr, 
 						 sysadm.FN_CLE_VAL_E ( 'GEN_AUTO_CMDE_REMPL', 'OUI', 
-							 sysadm.FN_CLE_VAL_E ( 'HP_ID_POINT_SERV', sysadm.FN_CLE_VAL ( 'ID_POINT_SERV_REMPL', @sInfoFrnSpbCplt, ';' ),
-								 sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', '', 
-									sysadm.FN_CLE_VAL_E ( 'HP_ID_HUB_PRESTA', sysadm.FN_CLE_VAL ( 'ID_HUB_PRESTA_REMPL', @sInfoFrnSpbCplt, ';' ) , 
-										'' -- on part d'une chaine vide
-										, ';' ) 
-								 , ';' )
-							  , ';' )
+							 sysadm.FN_CLE_VAL_E ( 'HP_ID_MODE_LOGIS', sysadm.FN_CLE_VAL ( 'ID_MODE_LOGIS_REMPL', @sInfoFrnSpbCplt, ';' ),
+								 sysadm.FN_CLE_VAL_E ( 'HP_ID_POINT_SERV', sysadm.FN_CLE_VAL ( 'ID_POINT_SERV_REMPL', @sInfoFrnSpbCplt, ';' ),
+									 sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', '', 
+										sysadm.FN_CLE_VAL_E ( 'HP_ID_HUB_PRESTA', sysadm.FN_CLE_VAL ( 'ID_HUB_PRESTA_REMPL', @sInfoFrnSpbCplt, ';' ) , 
+											'' -- on part d'une chaine vide
+											, ';' ) 
+									 , ';' )
+								  , ';' )
+							 , ';' )
 						 ,';' ),
 					 ''
 		From sysadm.commande c
@@ -4023,15 +4025,17 @@ If @iRemplacementAutomatiqueHub > 0
 		If Exists ( Select * from w_commande where id_sin = @dcIdSin   and id_seq = @iIdSeq )
 		  Begin
 			Insert into sysadm.w_commande
-			select top 1 id_sin , @iNewIdSeq, id_gti, @dcNewIdDetail, id_four=sysadm.FN_CLE_VAL ( 'ID_FOUR_REMPL', @sInfoFrnSpbCplt, ';' ), id_typ_art, id_marq_art, id_modl_art, mt_ttc_cmde, adr_nom, adr_prenom, adr_livr1, adr_livr2, adr_livr_cpl, adr_cp, adr_ville, adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, 'Prestation de remplacement automatique créé par le HUB PRESTATAIRE.', null,  null, null, null, null, 'ECT', null, 1, 'PRESTA AUTOMATIQUE', Getdate(), Getdate(), 'AUTO',  id_zone, id_bsp, dte_ret_pret, adr_cod_civ, id_ref_four='CMDE_A_CPLTER', id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, alt_dev_acp, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli=null, 990, id_marq_art_ifr, id_modl_art_ifr, 
+			select top 1 id_sin , @iNewIdSeq, id_gti, @dcNewIdDetail, id_four=sysadm.FN_CLE_VAL ( 'ID_FOUR_REMPL', @sInfoFrnSpbCplt, ';' ), id_typ_art='CAF', id_marq_art, id_modl_art, mt_ttc_cmde, adr_nom, adr_prenom, adr_livr1, adr_livr2, adr_livr_cpl, adr_cp, adr_ville, adr_tel1, adr_tel2, adr_tel3, adr_mail, dte_rdv_cli, hrdv_cli_min, hrdv_cli_max, id_serie_anc, 'Prestation de remplacement automatique créée par le HUB PRESTATAIRE.', null,  null, null, null, null, 'ECT', null, 1, 'PRESTA AUTOMATIQUE', Getdate(), Getdate(), 'AUTO',  id_zone, id_bsp, dte_ret_pret, adr_cod_civ, id_ref_four='A_COMMANDER', id_orian_marque, id_orian_modele, dte_elv_mobile, 0, dte_emis_devis, mt_devis, alt_dev_acp, dte_dev_acp, adrfc_cod_civ, adrfc_nom, adrfc_prenom, adrfc_livr1, adrfc_livr2, adrfc_livr_cpl, adrfc_cp, adrfc_ville, dte_ret_logis, dte_ret_pret_min, dte_ret_pret_max, id_ann, dte_env_bte_frn, dte_rcp_bte_cli, dte_dep_bte_cli, dte_env_st, dte_rcp_mob_cli=null, 990, id_marq_art_ifr, id_modl_art_ifr, 
 						 sysadm.FN_CLE_VAL_E ( 'GEN_AUTO_CMDE_REMPL', 'OUI', 
-							 sysadm.FN_CLE_VAL_E ( 'HP_ID_POINT_SERV', sysadm.FN_CLE_VAL ( 'ID_POINT_SERV_REMPL', @sInfoFrnSpbCplt, ';' ),
-								 sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', '', 
-									sysadm.FN_CLE_VAL_E ( 'HP_ID_HUB_PRESTA', sysadm.FN_CLE_VAL ( 'ID_HUB_PRESTA_REMPL', @sInfoFrnSpbCplt, ';' ) , 
-										'' -- on part d'une chaine vide
-										, ';' ) 
-								 , ';' )
-							  , ';' )
+							 sysadm.FN_CLE_VAL_E ( 'HP_ID_MODE_LOGIS', sysadm.FN_CLE_VAL ( 'ID_MODE_LOGIS_REMPL', @sInfoFrnSpbCplt, ';' ),
+								 sysadm.FN_CLE_VAL_E ( 'HP_ID_POINT_SERV', sysadm.FN_CLE_VAL ( 'ID_POINT_SERV_REMPL', @sInfoFrnSpbCplt, ';' ),
+									 sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', '', 
+										sysadm.FN_CLE_VAL_E ( 'HP_ID_HUB_PRESTA', sysadm.FN_CLE_VAL ( 'ID_HUB_PRESTA_REMPL', @sInfoFrnSpbCplt, ';' ) , 
+											'' -- on part d'une chaine vide
+											, ';' ) 
+									 , ';' )
+								  , ';' )
+							 , ';' )
 						 ,';' ),
 					 ''
 			From w_commande c

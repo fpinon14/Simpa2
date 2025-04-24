@@ -12707,3 +12707,42 @@ If ( @aiStatusApi >= 300 And @aiStatusApi < 1000 ) Or @aiStatusApi = -1
 	End 
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Procedure            :       PS_S_RECH_ID_HUB_PRESTA_SUR_UN_DOSSIER
+-- Auteur               :       Fabry JF
+-- Date                 :       24/04/2025
+-- Libelle              :       
+-- Commentaires         :       
+-- References           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_RECH_ID_HUB_PRESTA_SUR_UN_DOSSIER' AND type = 'P' )
+        DROP procedure sysadm.PS_S_RECH_ID_HUB_PRESTA_SUR_UN_DOSSIER
+GO
+
+CREATE procedure sysadm.PS_S_RECH_ID_HUB_PRESTA_SUR_UN_DOSSIER
+        @adcIdSin        Decimal (  10, 0 ),
+		@asIdHubPrestaRech VarChar ( 20 )
+AS
+
+Declare @iIdSeq Integer
+
+Select @iIdSeq = c.id_seq
+From sysadm.commande c
+Where c.id_sin = @adcIdSin
+And   sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' ) = @asIdHubPrestaRech 
+
+If @iIdSeq > 0 Return @iIdSeq 
+
+Return -1
+
+GO
+
+
+
