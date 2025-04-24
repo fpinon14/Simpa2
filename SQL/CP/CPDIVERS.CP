@@ -4228,6 +4228,7 @@ If @aiCas = 1
 	delete from sysadm.w_cour_blob_arch where id_sin=@dcIdsin
 	delete from sysadm.w_cour_blob where id_sin=@dcIdsin
 	delete from sysadm.w_courrier where id_sin=@dcIdsin
+	delete from sysadm.w_para_info where id_sin=@dcIdsin  
 	delete from sysadm.w_frais where id_sin=@dcIdsin
 	delete from sysadm.w_refus where id_sin=@dcIdsin
 	delete from sysadm.w_inter where id_sin=@dcIdsin
