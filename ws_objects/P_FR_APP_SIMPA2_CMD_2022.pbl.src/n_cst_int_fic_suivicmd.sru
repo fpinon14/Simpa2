@@ -32937,6 +32937,14 @@ For lCpt = lTotLig To 1 Step -1
 				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Dans le cadre du remplacement automatique, l'ID_HUB_PRESTA_REMPL (id_benefit) de la prestation de remplacement engagée, est obligatoire." )
 			End If 
 			
+			If SQLCA.PS_S_RECH_ID_HUB_PRESTA_SUR_UN_DOSSIER ( lidsin, sVal ) > 0 Then
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Dans le cadre du remplacement automatique, l'ID_HUB_PRESTA_REMPL (id_benefit) de la prestation de remplacement, existe déjà pour ce dossier de sinistre." )
+			End If 
+			
+			
+			
 			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ID_POINT_SERV_REMPL", ";"))
 			If IsNull ( sVal ) Then sVal = ""
 			
@@ -32945,6 +32953,15 @@ For lCpt = lTotLig To 1 Step -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
 				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Dans le cadre du remplacement automatique, l'ID_POINT_SERV_REMPL de la prestation de remplacement engagée, est obligatoire." )
 			End If 
+
+			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ID_MODE_LOGIS_REMPL", ";"))
+			If IsNull ( sVal ) Then sVal = ""
+			
+			IF sVal = "" Then 
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Dans le cadre du remplacement automatique, l'ID_MODE_LOGIS_REMPL de la prestation de remplacement engagée, est obligatoire." )
+			End If 		
 		
 		End IF		
 		
@@ -33468,6 +33485,11 @@ For lCpt = 1 To lTotLig
 				lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "ID_POINT_SERV_REMPL", sVal, ";")
 			End If
 
+			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ID_MODE_LOGIS_REMPL", ";"))
+			If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
+				lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "ID_MODE_LOGIS_REMPL", sVal, ";")
+			End If
+
 		End IF 
 	End If 
 
@@ -33533,11 +33555,11 @@ For lCpt = 1 To lTotLig
 			lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "AUTO_PEC_RAR", sVal, ";")
 		End If 
 		
-			// PRESTA_AUTO lié à AUTO_PEC_RAR
-			sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "PRESTA_AUTO", ";")
-			If Len ( Trim ( sVal ) ) > 0 Then
-				lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "PRESTA_AUTO", sVal, ";")
-			End If 
+		// PRESTA_AUTO lié à AUTO_PEC_RAR
+		sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "PRESTA_AUTO", ";")
+		If Len ( Trim ( sVal ) ) > 0 Then
+			lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "PRESTA_AUTO", sVal, ";")
+		End If 
 		
 		
 	End IF 

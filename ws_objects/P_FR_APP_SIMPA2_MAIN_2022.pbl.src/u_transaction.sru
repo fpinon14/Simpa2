@@ -826,6 +826,9 @@ function Integer PS_DETECTION_ERREUR_DP393 ( Long adcIdProd )  RPCFUNC ALIAS FOR
 //   JFF   08/04/2025 [MIG1_COUR_EMAILING]
 function Integer PS_MIG1_S_VERIF_SI_COURRIER_EMAILING ( String asTypMail )  RPCFUNC ALIAS FOR "sysadm.PS_MIG1_S_VERIF_SI_COURRIER_EMAILING"
 
+//   JFF   23/04/2025 [HUB1267]
+function Integer PS_S_RECH_ID_HUB_PRESTA_SUR_UN_DOSSIER ( Long adcIdSin, String asIdHubPrestaRech )  RPCFUNC ALIAS FOR "sysadm.PS_S_RECH_ID_HUB_PRESTA_SUR_UN_DOSSIER"
+
 
 end prototypes
 type variables
