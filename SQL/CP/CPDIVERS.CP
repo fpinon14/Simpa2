@@ -8084,7 +8084,7 @@ IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAIL_AUTO_VERS_CORUS_PAS
         DROP procedure sysadm.PS_S_MAIL_AUTO_VERS_CORUS_PAS_DE_COURRIER
 GO
   
-CREATE procedure \  
+CREATE procedure sysadm.PS_S_MAIL_AUTO_VERS_CORUS_PAS_DE_COURRIER
 AS
 
 Declare @sObjet VarChar ( 255 ) 
@@ -8135,3 +8135,54 @@ If Not Exists (
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_EXTRACTION_SESAME_2110_DROITS_OPER
+-- Auteur               :       FABRY JF
+-- Date                 :       23/04/2025
+-- Libellé              :       
+--                              
+-- Commentaires         :       
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_EXTRACTION_SESAME_2110_DROITS_OPER' AND type = 'P' )
+        DROP procedure sysadm.PS_S_EXTRACTION_SESAME_2110_DROITS_OPER
+GO
+CREATE procedure sysadm.PS_S_EXTRACTION_SESAME_2110_DROITS_OPER
+AS
+
+Select rtrim ( cnx.id_appli ) id_appli,
+	   rtrim ( ap.lib_appli ) lib_appli ,
+	   rtrim ( aut.id_oper ) id_oper ,
+	   rtrim ( op.nom ) nom ,
+	   rtrim ( op.prenom ) prenom ,
+	   cnx.typ_oper 'Niveau GT',
+	   SESAME_PRO.sysadm.FN_CODE_NUM ( cnx.typ_oper , '-NO' ) 'Lib_niveau_GT',
+	   rtrim ( aut.id_mod ) module,
+	   rtrim ( mo.lib_mod ) lib_mod,
+	   rtrim ( mn.lib_menu )  lib_menu
+
+From   SESAME_PRO.sysadm.connexion cnx,
+	   SESAME_PRO.sysadm.autorisation aut,
+	   SESAME_PRO.sysadm.menu mn,
+	   SESAME_PRO.sysadm.operateur op,
+	   SESAME_PRO.sysadm.application ap,
+	   SESAME_PRO.sysadm.module mo
+	   
+Where  cnx.id_appli in ( 'SIM8', 'SHPP', 'PGAP', 'PSND' ) 
+And    aut.id_oper = cnx.id_oper 
+And    aut.id_appli = cnx.id_appli
+And    mn.id_appli = aut.id_appli
+And    mn.id_mod = aut.id_mod
+And    op.id_oper = cnx.id_oper
+And    ap.id_appli = cnx.id_appli
+And    mo.id_appli = aut.id_appli
+And    mo.id_mod = aut.id_mod
+And    Substring ( mn.bin_acces, aut.id_acces, 1 ) = 1
+And    rtrim ( lib_menu ) <> '-'
+And    rtrim ( lib_menu ) not like '%----%'
+
+Order by 1,3,6,7,9
+
+Go
