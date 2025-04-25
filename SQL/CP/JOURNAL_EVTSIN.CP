@@ -150,6 +150,7 @@ CREATE procedure sysadm.PS_S_JOURNAL_EVTSIN
 AS
 
 Select	jevt.cree_le 'Date évènement',
+		jevt.code_evt 'code_evt',
 		lTrim ( rTrim ( jevt.lib_evt )) 'libellé évènement'
 		
 From   sysadm.journal_evtsin jevt
