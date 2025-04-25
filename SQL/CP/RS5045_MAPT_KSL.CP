@@ -2568,7 +2568,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 
 	Set @sServeurProduction = 'SIM'
   
-	Set @sDestinataire = 'jff@spb.fr'
+	Set @sDestinataire = 'jff@spb.fr,nleberquier@spb.eu'
 
 
 	-- Obtention répertoire local pour le cas des courriers Word 
