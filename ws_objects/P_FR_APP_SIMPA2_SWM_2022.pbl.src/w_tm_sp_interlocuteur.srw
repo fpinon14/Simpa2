@@ -263,7 +263,7 @@ dw_Lst_Frais.Height	= Dw_1.Height
 /* On positionne le bouton des communes									  */
 /*------------------------------------------------------------------*/
 cb_Commune.X			= 2385
-cb_Commune.Y			= 518
+cb_Commune.Y			= 518 - 5 // [20250425132807117][RETAILLE_FEN]
 cb_Commune.Width		= 83
 cb_Commune.Height		= 73
 
@@ -2537,8 +2537,8 @@ integer width = 82
 integer height = 72
 integer taborder = 120
 boolean bringtotop = true
-integer textsize = -10
-integer weight = 400
+integer textsize = -12
+integer weight = 700
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
