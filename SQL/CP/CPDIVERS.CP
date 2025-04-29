@@ -2556,6 +2556,8 @@ CREATE procedure sysadm.PS_CORRECTION_BASE_NUIT_2
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
+-- JFF      24/04/2025   [LGY53_EQU_CNX]
+-------------------------------------------------------------------
 AS
 
 SET NOCOUNT ON
@@ -2835,6 +2837,7 @@ Else
  -- Purge Trace.
 Delete sysadm.w_queue_histo Where cree_le_action < DATEADD ( month, -6, Getdate() )
 Delete TRACE_MAIL_PRO.sysadm.trace_matp_es_sinistre_ksl_rs5045 Where cree_le < DATEADD ( month, -6, Getdate() )
+Delete SESAME_PRO.sysadm.equi_cnx_ts -- [LGY53_EQU_CNX]
 
 -- [LGY11]
 Exec sysadm.PS_U_REDRESS_W_QUEUE_STATUT_IWD  
