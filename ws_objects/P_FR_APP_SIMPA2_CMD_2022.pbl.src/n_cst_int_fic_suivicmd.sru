@@ -31562,6 +31562,7 @@ private function integer uf_ctrl_fichier_frn_hub ();//*-------------------------
 //* MAJ   PAR      Date	     Modification
 //*       JFF	16/01/2025	[HUB832_HUB_ORG_REUN]
 //        JFF  23/04/2025  [HUB1267]
+//			 JFF  12/05/2025  [20250512134745313] On reprend le bon de trans de la presta en base.
 //*-----------------------------------------------------------------
 
 Int iRet, iStatusGc, iInfoSpbFrn
@@ -31948,6 +31949,10 @@ For lCpt = lTotLig To 1 Step -1
 	
 			sVal3 = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "NUM_BON_TRP" ) ) )
 			If IsNull ( sVal3 ) Then sVal3 = ""	
+			// [20250512134745313]
+			If sVal3 = "" Then sVal3 = lnvPFCString.of_getkeyvalue (sChaineBCV, "ID_BON_TRANSP", ";") 
+			If IsNull ( sVal3 ) Then sVal3 = ""	
+			// /[20250512134745313]
 	
 			// dtVal =  idwFicFourn.GetItemDatetime( lCpt, "DTE_RCP_FRN")
 			dtVal =  dtDteRcpFrn
