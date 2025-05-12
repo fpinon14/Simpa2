@@ -1430,6 +1430,7 @@ public function integer uf_annuler_cmde ();//*----------------------------------
 //       JFF   30/05/2023 [PMO89_RS4822]
 //       JFF   05/08/2024 [MCO602_PNEU]
 //			JFF   28/01/2025 [ISM457148]
+// 		JFF	12/05/2025 [HUB1489]
 //*-----------------------------------------------------------------
 
 Int		iRet,  iIdSeq
@@ -1470,6 +1471,7 @@ stMessage.Bouton		= Ok!
 
 lIdSin = idw_TrtCmde.GetItemNumber ( 1, "ID_SIN")
 iIdSeq = idw_TrtCmde.GetItemNumber ( 1, "ID_SEQ")
+sInfoSpbFrnCplt = idw_TrtCmde.GetItemString ( 1, "INFO_SPB_FRN_CPLT") // [HUB1489]
 iIdLotCmd = -1
 
 // [DECIMAL_PAPILLON]
@@ -1540,6 +1542,21 @@ If Not bPasseDroit And &
 	Return iRet
 End If	
 // :#6  [DCMP080479]
+
+
+// [HUB1489]
+If F_CLE_VAL ( "HP_ID_HUB_PRESTA", sInfoSpbFrnCplt, ";") <> "" Then
+	stMessage.sTitre		= "Annulation d'une commande"
+	stMessage.Icon			= Information!
+	stMessage.bErreurG	= FALSE
+	stMessage.Bouton		= Ok!	
+	stMessage.sCode		= "COMT006"
+	F_Message ( stMessage )
+	iRet = -1
+	Return iRet
+End IF 
+
+// /[HUB1489]
 
 /*------------------------------------------------------------------*/
 /* #3 CAG : 03/06/2003                                              */
