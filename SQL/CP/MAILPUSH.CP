@@ -16713,6 +16713,7 @@ Go
 -- JFF      24/09/2024   [KSV793]
 -- JFF      24/09/2024   [KSV795]
 -- JFF		28/10/2024	 [MCO1054]
+-- JFF		13/05/2025	 [AGM83]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAILPUSH_APP_NON_RECP_EN_CTR' AND type = 'P' )
         DROP procedure sysadm.PS_S_MAILPUSH_APP_NON_RECP_EN_CTR
@@ -16853,9 +16854,11 @@ And		c.dte_rcp_frn is null
 And		c.cod_etat not in (  'ANN', 'RFO', 'RPC' )
 And		c.cree_le < dp.dte_delai_j
 And		(
-			( c.cree_le > dp.dte_pivot And c.id_four in ( 'O2M', 'PSM', 'SBE', 'SRR', 'SPA' ) )
+			( c.cree_le > dp.dte_pivot And c.id_four in ( 'O2M', 'PSM', 'SBE', 'SRR' ) )
 			Or 
-			( c.cree_le > dp.dte_pivot_dt364 And c.id_four in ( 'COR', 'SBE', 'SRR', 'SPA' ) ) -- [DT364] Ajout CORDON
+			( c.cree_le > dp.dte_pivot_dt364 And c.id_four in ( 'COR', 'SBE', 'SRR' ) ) -- [DT364] Ajout CORDON
+			Or 
+			( c.cree_le > dp.dte_pivot_dt364 And Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' ) ) > 0 ) -- [AGM83]
 		)
 And		ds.id_sin = c.id_sin
 And     ds.nom_zone = 'etat_vu_assure'
@@ -16901,7 +16904,11 @@ From	sysadm.commande c with (nolock),
 Where	c.id_ref_four in ( 'A_DIAGNOSTIQUER', 'A_REPARER', 'A_DESOXYDER' )
 And		c.dte_rcp_frn is null
 And		c.cod_etat not in (  'ANN', 'RFO', 'RPC' )
-And		c.id_four in ( 'O2M', 'PSM', 'COR', 'SBE', 'SRR' ) -- [DT364] Ajout CORDON
+And		( 
+			c.id_four in ( 'O2M', 'PSM', 'COR', 'SBE', 'SRR' ) -- [DT364] Ajout CORDON
+			Or
+		    Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' ) ) > 0  -- [AGM83]
+		)
 And		c.cree_le > dp.dte_pivot_dt364
 And		ds2.id_sin = c.id_sin
 And     ds2.nom_zone = 'dte_rel_mail_app_non_rcp_en_ctr'
@@ -16951,7 +16958,11 @@ From	sysadm.commande c with (nolock),
 Where	c.id_ref_four in ( 'A_DIAGNOSTIQUER', 'A_REPARER', 'A_DESOXYDER' )
 And		c.dte_rcp_frn is null
 And		c.cod_etat not in (  'ANN', 'RFO', 'RPC' )
-And		c.id_four in ( 'O2M', 'PSM', 'COR', 'SBE', 'SRR' ) -- [DT364] Ajout CORDON
+And		( 
+			c.id_four in ( 'O2M', 'PSM', 'COR', 'SBE', 'SRR' ) -- [DT364] Ajout CORDON
+			Or
+		    Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' ) ) > 0 -- [AGM83]
+		)
 And		ds2.id_sin = c.id_sin
 And     ds2.nom_zone = 'dte_rel2_mail_app_non_rcp_en_ctr'
 And		ds2.val_dte < dp.dte_del_3eme_rel_j
@@ -17001,7 +17012,11 @@ From	sysadm.commande c with (nolock),
 Where	c.id_ref_four in ( 'A_DIAGNOSTIQUER', 'A_REPARER', 'A_DESOXYDER' )
 And		c.dte_rcp_frn is null
 And		c.cod_etat not in (  'ANN', 'RFO', 'RPC' )
-And		c.id_four in ( 'O2M', 'PSM', 'COR', 'SBE', 'SRR' ) -- [DT364] Ajout CORDON
+And		( 
+			c.id_four in ( 'O2M', 'PSM', 'COR', 'SBE', 'SRR' ) -- [DT364] Ajout CORDON
+			Or
+		    Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' ) ) > 0 -- [AGM83]
+		)
 And		ds2.id_sin = c.id_sin
 -- [PM519-1]
 --And     ds2.nom_zone = 'dte_rel3_mail_app_non_rcp_en_ctr'

@@ -4053,6 +4053,9 @@ If @iRemplacementAutomatiqueHub > 0
 		BEGIN
 			Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT						
 		END
+		
+		-- [MIG82_JOURN_EVT]
+		Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'CDRPEC', @sVar, '', 'PS_U01_COMMANDE', 'AUTO'
 
 	End 
 
