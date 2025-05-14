@@ -5340,8 +5340,9 @@ private function integer uf_generer_fichier_auchan (long alidlotcmd);//*--------
 //*       JFF     10/06/2010 [PC419/440/418/439_MICROMANIA]
 //*       JFF     22/02/2011 [PC363_AUC].[ECL_FICH]
 // 		FPI		05/10/2011	[VDoc5352] correction (déplacer)
-//*	FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
+//*		FPI	23/07/2024	[MIG_PB2022] Sauvegarde Excel! remplacée par Excel8!
 //       JFF   18/02/2025 [PMO268_MIG65]
+//			JFF 	14/05/2025 [AGM83][20250514174847937]
 //*-----------------------------------------------------------------
 
 Int	iRet
@@ -5412,6 +5413,7 @@ For lCptCas = 1 To 1
 		idwFicGenCmde.SetItem ( lRow, "NOM_PROD", 		idwFicCharg.GetItemString ( lCpt, "LIB_PROD" ) ) 
 		idwFicGenCmde.SetItem ( lRow, "NUM_CONTRAT", 	idwFicCharg.GetItemString ( lCpt, "LIB_POLICE" ) ) 
 		idwFicGenCmde.SetItem ( lRow, "NUM_PROD", 		String ( idwFicCharg.GetItemNumber ( lCpt, "ID_PROD" ) ) )
+		idwFicGenCmde.SetItem ( lRow, "ADR_MAIL",			idwFicCharg.GetItemString ( lCpt, "ADR_MAIL" ) ) // [AGM83][20250514174847937]
 		idwFicGenCmde.SetItem ( lRow, "CIV_LONGUE",		idwFicCharg.GetItemString ( lCpt, "ADR_COD_CIV_LG" ) )
 		idwFicGenCmde.SetItem ( lRow, "NOM",			idwFicCharg.GetItemString ( lCpt, "ADR_NOM" ) )
 		idwFicGenCmde.SetItem ( lRow, "PRENOM",			idwFicCharg.GetItemString ( lCpt, "ADR_PRENOM" ) )
