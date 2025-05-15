@@ -19954,6 +19954,7 @@ private function boolean uf_validation_finale_trt_particuliers ();//*-----------
 //       JFF   19/12/2024 [MIG1_COUR_EMAILING]
 //       JFF   14/03/2025 [PMO268_MIG56]
 //       JFF   31/03/2025 [MIG82_JOURN_EVT]
+//       JFF   15/05/2025 [MCO1570_FERM_PRS_CMA]
 //*-----------------------------------------------------------------
 
 Date dtPivotFranchisePBox
@@ -20252,6 +20253,10 @@ If lDeb > 0 Then
 End If 
 // :[DT176]
 
+// [MCO1570_FERM_PRS_CMA] Carma ne répond plus, donc on ferme dans tous les cas
+If F_CLE_A_TRUE ( "MCO1570_FERM_PRS_CMA" ) Then
+	bFermePrestaCMA=TRUE
+End If
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
