@@ -13,8 +13,7 @@
 -- Proc‚dure            :       PS_I_INSERTION_JOURNAL_EVTSIN
 -- Auteur               :       Fabry JF
 -- Date                 :       31/03/2025
--- Libell‚              :       
--- Commentaires         :       [MIG82_JOURN_EVT]
+-- Libell‚              :       -- Commentaires         :       [MIG82_JOURN_EVT]
 --
 -- Retour				: 1 Succès
 --						 -1 Erreur
