@@ -1117,7 +1117,7 @@ Else
 
 Set @sSql = 'Exec ' + @sInstanceHub + 'edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 '''', ''-1'', -1, ''-1'', ''OK'', '''+ 
 			'Lancement du traitement le ' + Convert ( VarChar ( 10), Getdate(), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108) + 
-			''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) ; Exec ( @sSql )
+			''', ' + Convert ( VarChar ( 20 ), @iIdLotTrc ) + ' sur instance ' + @@SERVERNAME ; Exec ( @sSql )
 
 
 Set @sDateHeureDebTrt = Convert ( varchar ( 10 ), GETDATE(), 112 ) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00'

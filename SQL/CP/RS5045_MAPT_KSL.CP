@@ -2414,7 +2414,7 @@ Set @sDateHeureDebTrt = Convert ( varchar ( 10 ), GETDATE(), 103 ) + ' ' + Left 
 
 Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL 'OBTENTION_ID_LOT_TRC', -1, '', '', '', @iIdLotTrc output
 
-Set @sMsgTrc = 'Lancement du traitement le ' + Convert ( VarChar ( 10), Getdate(), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108) 
+Set @sMsgTrc = 'Lancement du traitement le ' + Convert ( VarChar ( 10), Getdate(), 103 ) + ' à ' + CONVERT (varchar(8), getdate(), 108) + ' sur instance ' + @@servername
 Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'LNCTRT', 'OK', @sMsgTrc, @iIdLotTrc  
 
 Set @sMsgTrc = 'Obtention d''un Identifiant de lot de trace : ' + CONVERT ( varchar ( 20 ), @iIdLotTrc  )
@@ -2993,10 +2993,12 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 */
 
 			-- Création du répertoire de travail local au serveur
+			/* J'arrête la suppression et création du répertoire afin de ne pas perdre les droits du répertoires
 			Set @sCmdDos = 'RD ' + @sRepBlobLocal
 			EXEC master.dbo.xp_cmdshell @sCmdDos 
 			Set @sCmdDos = 'MD ' + @sRepBlobLocal
 			EXEC master.dbo.xp_cmdshell @sCmdDos 
+			*/
 			Set @sCmdDos = 'Del ' + @sRepBlobLocal + '\*.* /F /Q'
 			EXEC master.dbo.xp_cmdshell @sCmdDos 
 
