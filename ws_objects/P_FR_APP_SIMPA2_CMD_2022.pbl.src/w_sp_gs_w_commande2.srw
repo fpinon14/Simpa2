@@ -46,6 +46,8 @@ end type
 end forward
 
 global type w_sp_gs_w_commande2 from w_8_traitement_master
+integer x = 1075
+integer y = 481
 integer width = 3648
 integer height = 1836
 event ue_taillefenetre ( )
@@ -2269,14 +2271,17 @@ event clicked;//*---------------------------------------------------------------
 //*       JFF    24/11/2015  [ITSM343686]
 //*       JFF    08/11/2018  [VDOC26900]
 //*		 JFF    17/02/2025  [20250217155600]
+//        JFF    17/05/2025  [HUB1505]
 //*-----------------------------------------------------------------
 
-String sCodEtat, sVal, sIdFour
+String sCodEtat, sVal, sIdFour, sInfoSpbFrnCplt, sInfoFrnSpbCplt, sIdHubPresta 
 Int	 iCptValide
 n_cst_string lnvPFCString
 
 sCodEtat = Dw_1.GetItemString ( 1, "COD_ETAT" )
 sIdFour = Dw_1.GetItemString  ( 1, "ID_FOUR" )
+sInfoSpbFrnCplt = Dw_1.GetItemString  ( 1, "INFO_SPB_FRN_CPLT" ) // [HUB1505]
+sInfoFrnSpbCplt = Dw_1.GetItemString  ( 1, "INFO_FRN_SPB_CPLT" ) // [HUB1505]
 
 // [ITSM343686]
 If sCodEtat = "CNV" Then
@@ -2318,6 +2323,43 @@ If sIdFour = "COR" Then
 	End If 
 End If 
 
+
+// [HUB1505]
+If F_CLE_A_TRUE ( "HUB1505" ) Then
+	sIdHubPresta = F_CLE_VAL ( "HP_ID_HUB_PRESTA", sInfoSpbFrnCplt, ";" )
+	If Len ( sIdHubPresta ) > 0 Then
+		sVal = F_CLE_VAL ( "PRBLE_LIVRAISON", sInfoFrnSpbCplt, ";" )
+		IF Len ( sVal ) > 0 Then 
+			Choose Case sVal
+				Case "COLIS_PERDU"
+					stMessage.sTitre		= "HUB1505 : Cause non autorisée"
+					stMessage.Icon			= Information!
+					stMessage.bErreurG	= FALSE
+					stMessage.sCode		= "COMT008"
+					stMessage.Bouton		= Ok!
+					stMessage.sVar [1]   = sVal
+					F_Message ( stMessage )
+					Return					
+				Case Else 
+					
+					// OK
+					
+			End Choose 
+					
+		Else
+			stMessage.sTitre		= "HUB1505 : Aucun problème de livraions"
+			stMessage.Icon			= Information!
+			stMessage.bErreurG	= FALSE
+			stMessage.sCode		= "COMT007"
+			stMessage.Bouton		= Ok!
+			F_Message ( stMessage )
+			Return					
+		End IF 
+		
+	End If 
+End If
+
+
 iCptValide = Dw_1.GetItemNumber ( 1, "CPT_VALIDE" )
 sVal = Dw_1.GetItemString ( 1, "INFO_SPB_FRN_CPLT" )
 
@@ -2327,6 +2369,7 @@ cb_modif_adr.Enabled = False
 
 lnvPFCString.of_Setkeyvalue ( sVal, "COD_ETAT", sCodEtat, ";")
 lnvPFCString.of_Setkeyvalue ( sVal, "MAJ_PRS", "OUI", ";")
+lnvPFCString.of_Setkeyvalue ( sVal, "MAJ_PRSHUB", "OUI", ";") // [HUB1505]
 lnvPFCString.of_Setkeyvalue ( sVal, "MAJ_ADRESSE", "OUI", ";")
 Dw_1.SetItem ( 1, "INFO_SPB_FRN_CPLT", sVal )
 

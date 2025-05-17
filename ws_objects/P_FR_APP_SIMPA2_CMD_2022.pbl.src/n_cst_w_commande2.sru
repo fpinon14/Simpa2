@@ -263,12 +263,13 @@ private subroutine uf_protegerzone ();//*---------------------------------------
 //       JFF   03/09/2018 [DT361]
 //       JFF   30/05/2023 [PMO89_RS4822]
 //       JFF   07/03/2024 [HP252_276_HUB_PRESTA]
+//       JFF   17/05/2025 [HUB1505]
 //*-----------------------------------------------------------------
 
 Int	iCptValide
 String	sProt, sCodEtat, sIdFour, sInfoSpbFrnCplt 
 Long iIdLotCmde, lIdSin, lIdSeq
-boolean bFournAutoriseModifAdresse
+boolean bFournAutoriseModifAdresse, bFournHub 
 n_cst_string	lnvString
 
 iCptValide = idw_TrtCmde.GetItemNumber ( 1, "CPT_VALIDE" )
@@ -283,12 +284,16 @@ bFournAutoriseModifAdresse = TRUE
 
 SQLCA.PS_S_LECTURE_LOT_CMD ( lIdSin, lIdSeq, iIdLotCmde )
 
+// [HUB1505]
+bFournHub = SQLCA.PS_S_CODE_DANS_FAMILLE_CAR ( 1, sIdFour ) > 0 		
+
+
 // [DT076-2] // [PC171933] [RS3200]
 Choose Case sIdFour
 	Case "SBE", "O2M", "SB1", "TMT", "PSM", "CIS", "BK2", "COR", "PAP", "CEA", "AGP", "TLS", "CDF"
 		bFournAutoriseModifAdresse = TRUE
 	Case Else
-		bFournAutoriseModifAdresse = FALSE
+		bFournAutoriseModifAdresse = bFournHub // [HUB1505]
 End choose 
 
 CHOOSE CASE Upper ( isTypeTrt )
