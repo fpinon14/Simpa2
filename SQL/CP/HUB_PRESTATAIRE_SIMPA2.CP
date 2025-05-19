@@ -3389,7 +3389,7 @@ Set @sMessage = @sMessage + 'DSI/Etudes SIMPA2'
 
 EXEC master.dbo.SPB_PS_MAIL 
 			@sRetourErrMail OUTPUT, 
-			'jfabry@spb.eu,BKHELIFA_ext@spb.eu', --  'jff@spb.fr', -- 
+			'jfabry@spb.eu,sguesmi@spb.eu', --  'jff@spb.fr', -- 
 			@sMessage, 
 			@sObjet, 
 			null, 
