@@ -383,7 +383,7 @@ If @dtDteEnvCli is not null And @dtDteEnvCliActuel is null
 		Begin
 		Set @sMess = 'Presta ' + convert ( varchar (10), @dcIdSin ) + '-' + convert ( varchar (10), @iIdSeq ) + ': La date de traitement (ou envoi de l''appareil chez l''assuré), renvoyée par le fournisseur (' 
 		Set @sMess = @sMess + convert ( varchar(10), @dtDteEnvCli, 103 ) + ') est antérieure à plus de 5 jours par rapport au présent jour d''intégration de la donnée en base ('
-		Set @sMess = @sMess +  convert ( varchar(10), getdate(), 103 ) + '), elle sera donc ajustée en base au : '  
+		Set @sMess = @sMess + convert ( varchar(10), getdate(), 103 ) + '), elle sera donc ajustée en base au : '  
 			
 		Set @dtDteEnvCli = DateAdd ( day, -5, GetDate() ) 
 
