@@ -3317,7 +3317,7 @@ As
 -- Pour un traitement normal, tu exécutes la PS sans argument 
 -- La PS peut être exécuté n'importe quand, aucune contrainte horaire avant ou après minuit, mais de préférence la nuit.
 -- Elle peut ne pas tourner pendant plusieurs jours, c’est géré, en la relançant normalement, elle retrouve "ses petits" toute seule par un point d’arrêt, aucune perte de donnée pour BRED, ils auront les règlement même apès 5 jours d’arrêt.
--- Toujours l’exécuter sur la base de production [LS-SINISTRES].SIMPA2_PRO 
+-- Toujours l’exécuter sur la base de production [LSTAGF005001,65004].SIMPA2_PRO 
 -- Tu dois COMMITER ton appel à cette PS pour un trt normal (sans argument), en effet, elle écrit en base.
 -- Le Return de la PS te renvoie un id_extraction, stocke le temps de ta génération de fichier, si tu as un problème, tu pourras retrouver ton extraction par cet id_extract (voir pourquoi à la ligne suivante).
 -- On peut ressortir une précédente extraction "des réglés" déjà faite par un traitement « normal », en connaissant l'ID_Extraction, le passer alors en paramètre, la PS n'écrit rien, juste un SELECT, pas besoin de COMMIT, et elle ressort la même extraction.

@@ -1647,161 +1647,176 @@ IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I02_RECOPIE_PRODUIT' AND t
             DROP procedure sysadm.PS_I02_RECOPIE_PRODUIT
 GO
 
-CREATE PROC sysadm.PS_I02_RECOPIE_PRODUIT 
-	@dcIdProdSource		Decimal (7),
-	@sBaseSource varchar(10),
-	@sBaseDest varchar(10),
-	@sMajPar varchar(10)
-AS
-
-DECLARE @sMessage    Varchar(8000),
-    @sRetourErrMail VarChar(255), 
-	@sSaut varchar(1),
-	@sObjet varchar(255),
-	@sDest varchar(1000)
-Declare @sNomTable varchar(50),
-	@sSql varchar(255)
-	
-Set @sSaut = Char (10)
   
--- Tables à recopier
-Declare @tbTable TABLE (nom_table varchar(50), 
-	tri int, 
-	del_ok char(1) DEFAULT 'N', 
-	insert_ok char(1) DEFAULT 'N')
+CREATE PROC sysadm.PS_I02_RECOPIE_PRODUIT   
+ @dcIdProdSource  Decimal (7),  
+ @sBaseSource varchar(10),  
+ @sBaseDest varchar(10),  
+ @sMajPar varchar(10)  
+AS  
+  
+DECLARE @sMessage    Varchar(8000),  
+    @sRetourErrMail VarChar(255),   
+ @sSaut varchar(1),  
+ @sObjet varchar(255),  
+ @sDest varchar(1000)  
+Declare @sNomTable varchar(50),  
+ @sSql varchar(255)  
+   
+Set @sSaut = Char (10)  
+    
+-- Tables à recopier  
+Declare @tbTable TABLE (nom_table varchar(50),   
+ tri int,   
+ del_ok char(1) DEFAULT 'N',   
+ insert_ok char(1) DEFAULT 'N')  
+  
+Insert into @tbTable (nom_table, tri) values ('boutique',1),  
+ ('div_pdet',2),  
+ ('autorisation',3),  
+ ('commande_type',4),  
+ ('franchise',5),  
+ ('plafond',6),  
+ ('delai',7),  
+ ('piece',8),  
+ ('motif',9),  
+ ('code_garantie',10),  
+ ('affilier',11),  
+ ('condition',12),  
+ ('garantie',13),  
+ ('para_prod',14),  
+ ('cour_prod',15),  
+ ('option_adh',16),  
+ ('etablissement',17),  
+ ('revision',18),  
+ ('code_condition',19),  
+ ('det_pro',20),  
+ ('div_pro',21),  
+ ('det_article',22),  
+ ('produit',23)  
+  
+-- Préfixe des bases  
+Declare @sPrefixeBaseSource varchar(200),  
+ @sPrefixeBaseDest varchar(200),  
+ @sIdProdSource varchar(7)  
 
-Insert into @tbTable (nom_table, tri) values ('boutique',1),
-	('div_pdet',2),
-	('autorisation',3),
-	('commande_type',4),
-	('franchise',5),
-	('plafond',6),
-	('delai',7),
-	('piece',8),
-	('motif',9),
-	('code_garantie',10),
-	('affilier',11),
-	('condition',12),
-	('garantie',13),
-	('para_prod',14),
-	('cour_prod',15),
-	('option_adh',16),
-	('etablissement',17),
-	('revision',18),
-	('code_condition',19),
-	('det_pro',20),
-	('div_pro',21),
-	('det_article',22),
-	('produit',23)
-
--- Préfixe des bases
-Declare @sPrefixeBaseSource varchar(200),
-	@sPrefixeBaseDest varchar(200),
-	@sIdProdSource varchar(7)
-
-Select @sPrefixeBaseSource=Case @sBaseSource 
-	When 'PROD' Then '[SQL14BI\SINISTRESBI].SIMPA2_PRO.sysadm.'
-	When 'SIM' Then '[SQL14DEV\SIMSINISTRES].SIMPA2_TRT.sysadm.'
-	When 'REC' Then '[SINSQL19REC\RECSINISTRES19].SIMPA2_TRT.sysadm.'
-	Else '' End,
-	@sPrefixeBaseDest=Case @sBaseDest
-	When 'PROD' Then Case When @@SERVERNAME='SQL14SINISTRES\SINISTRES' Then 'SIMPA2_PRO.sysadm.' Else '[LS-SINISTRES].SIMPA2_PRO.sysadm.' End
-	When 'SIM' Then '[SQL14DEV\SIMSINISTRES].SIMPA2_TRT.sysadm.'
-	When 'REC' Then '[SINSQL19REC\RECSINISTRES19].SIMPA2_TRT.sysadm.'
-	Else '' End,
-	@sIdProdSource=CONVERT(varchar(7),@dcIdProdSource)
-
-If @sPrefixeBaseSource='' or @sPrefixeBaseDest='' Return -1
-
--- Cas particuliers de nouveaux cour_type
-Set @sSql='insert into ' + @sPrefixeBaseDest + 'cour_type select * from ' + @sPrefixeBaseSource + 'cour_type c '
-Set @sSql= @sSql + 'where not exists (select * from ' + @sPrefixeBaseDest + 'cour_type c2 where c2.id_cour=c.id_cour)'
-exec(@sSql)
-	
--- Suppr
-While Exists ( Select * From @tbTable where del_ok = 'N' )
+-- [MIGR_SQL2022]
+If sysadm.FN_CLE_NUMERIQUE ( 'MIGR_SQL2022') > 0 
  Begin
-	Select 	Top 1 @sNomTable=nom_table
-	From @tbTable
-	where del_ok = 'N'
-	order by tri
-
-	Set @sSql='delete from ' + @sPrefixeBaseDest + @sNomTable + ' where id_prod=' + @sIdProdSource
-	exec(@sSql)
-	
-	Update @tbTable set del_ok='O' where nom_table=@sNomTable
-End
-
--- Insert
-While Exists ( Select * From @tbTable where insert_ok = 'N' )
+	Select @sPrefixeBaseSource=Case @sBaseSource   
+	 When 'PROD' Then '[LSTAGF005001,65004].SIMPA2_PRO.sysadm.'  
+	 When 'SIM' Then '[SQLDEV01\DEVINSTANCE006,50005].SIMPA2_TRT.sysadm.'  
+	 Else '' End,  
+	 @sPrefixeBaseDest=Case @sBaseDest  
+	 When 'PROD' Then Case When @@SERVERNAME in ( 'SQLPRD03\INSTANCE05', 'SQLPRD04\INSTANCE05') Then 'SIMPA2_PRO.sysadm.' Else '[LSTAGF005001,65004].SIMPA2_PRO.sysadm.' End  
+	 When 'SIM' Then '[SQLDEV01\DEVINSTANCE006,50005].SIMPA2_TRT.sysadm.'  
+	 Else '' End,  
+	 @sIdProdSource=CONVERT(varchar(7),@dcIdProdSource)  
+ End   
+Else 
  Begin
-	Select 	Top 1 @sNomTable=nom_table
-	From @tbTable
-	where insert_ok = 'N'
-	order by tri DESC
+	Select @sPrefixeBaseSource=Case @sBaseSource   
+	 When 'PROD' Then '[SQL14BI\SINISTRESBI].SIMPA2_PRO.sysadm.'  
+	 When 'SIM' Then '[SQLDEV01\DEVINSTANCE006,50005].SIMPA2_TRT.sysadm.'  
+	 Else '' End,  
+	 @sPrefixeBaseDest=Case @sBaseDest  
+	 When 'PROD' Then Case When @@SERVERNAME='SQL14SINISTRES\SINISTRES' Then 'SIMPA2_PRO.sysadm.' Else '[LS-SINISTRES].SIMPA2_PRO.sysadm.' End  
+	 When 'SIM' Then '[SQLDEV01\DEVINSTANCE006,50005].SIMPA2_TRT.sysadm.'  
+	 Else '' End,  
+	 @sIdProdSource=CONVERT(varchar(7),@dcIdProdSource)  
+ End 
 
-	Set @sSql='insert into ' + @sPrefixeBaseDest + @sNomTable + 
-		' select * from ' + @sPrefixeBaseSource + @sNomTable + ' where id_prod=' + @sIdProdSource
-	exec (@sSql)
-	
-	Update @tbTable set insert_ok='O' where nom_table=@sNomTable
-End
-
--- Mail
-Set @sMessage = 'Bonjour,' + @sSaut + @sSaut
-Set @sMessage = @sMessage + 'Nous vous informons que '
-
-Select @sMessage = @sMessage + rtrim(prenom) + ' ' + rtrim(nom)
-From [SQL14BI\SINISTRESBI].SESAME_PRO.sysadm.operateur
-where id_oper=@sMajPar
-
-
-Set @sMessage = @sMessage + ' vient d''effectuer la recopie du produit ' + @sIdProdSource
-Select @sMessage = @sMessage + ' - ' + rtrim(isnull(lib_long,'?'))
-From sysadm.produit
-where id_prod=@dcIdProdSource
-
-Set @sMessage = @sMessage + ' de la base de '
-Select @sMessage = @sMessage +Case @sBaseSource 
-	When 'PROD' Then 'production'
-	When 'SIM' Then 'simulation'
-	When 'REC' Then 'recette (1 et 2)'
-	Else '' End
-
-Set @sMessage = @sMessage + ' vers la base de '
-Select @sMessage = @sMessage + Case @sBaseDest
-	When 'PROD' Then 'production.'
-	When 'SIM' Then 'simulation.'
-	When 'REC' Then 'recette (1 et 2).'
-	Else '' End,
-	@sObjet='Recopie du produit ' + @sIdProdSource + ' en base de ' +
-		Case @sBaseDest
-			When 'PROD' Then 'production'
-			When 'SIM' Then 'simulation'
-			When 'REC' Then 'recette (1 et 2)'
-			Else '' End
-
-Set @sMessage = @sMessage + @sSaut + @sSaut + 
-	'Pour les recetteurs, merci d''attendre le Go de l''équipe ES pour reprendre la recette de ce produit.'
-Set @sMessage = @sMessage + @sSaut + @sSaut + 'Cordialement'
-
-Set @sDest = 'ntonnetot@spb.eu,cmathe@spb.eu,ayvon@spb.eu'
-
-EXEC master.dbo.SPB_PS_MAIL_OUTLOOK 
-		@sRetourErrMail OUTPUT, 
-		@sDest,
-		@sMessage, 
-		@sObjet, 
-		'', 
-		'', 
-		NULL, 
-		NULL, 
-		NULL, 
-		NULL, 
-		NULL
-		
-Return 1
-
+If @sPrefixeBaseSource='' or @sPrefixeBaseDest='' Return -1  
+  
+-- Cas particuliers de nouveaux cour_type  
+Set @sSql='insert into ' + @sPrefixeBaseDest + 'cour_type select * from ' + @sPrefixeBaseSource + 'cour_type c '  
+Set @sSql= @sSql + 'where not exists (select * from ' + @sPrefixeBaseDest + 'cour_type c2 where c2.id_cour=c.id_cour)'  
+exec(@sSql)  
+   
+-- Suppr  
+While Exists ( Select * From @tbTable where del_ok = 'N' )  
+ Begin  
+ Select  Top 1 @sNomTable=nom_table  
+ From @tbTable  
+ where del_ok = 'N'  
+ order by tri  
+  
+ Set @sSql='delete from ' + @sPrefixeBaseDest + @sNomTable + ' where id_prod=' + @sIdProdSource  
+ exec(@sSql)  
+   
+ Update @tbTable set del_ok='O' where nom_table=@sNomTable  
+End  
+  
+-- Insert  
+While Exists ( Select * From @tbTable where insert_ok = 'N' )  
+ Begin  
+ Select  Top 1 @sNomTable=nom_table  
+ From @tbTable  
+ where insert_ok = 'N'  
+ order by tri DESC  
+  
+ Set @sSql='insert into ' + @sPrefixeBaseDest + @sNomTable +   
+  ' select * from ' + @sPrefixeBaseSource + @sNomTable + ' where id_prod=' + @sIdProdSource  
+ exec (@sSql)  
+   
+ Update @tbTable set insert_ok='O' where nom_table=@sNomTable  
+End  
+  
+-- Mail  
+Set @sMessage = 'Bonjour,' + @sSaut + @sSaut  
+Set @sMessage = @sMessage + 'Nous vous informons que '  
+  
+Select @sMessage = @sMessage + rtrim(prenom) + ' ' + rtrim(nom)  
+From [SQL14BI\SINISTRESBI].SESAME_PRO.sysadm.operateur  
+where id_oper=@sMajPar  
+  
+  
+Set @sMessage = @sMessage + ' vient d''effectuer la recopie du produit ' + @sIdProdSource  
+Select @sMessage = @sMessage + ' - ' + rtrim(isnull(lib_long,'?'))  
+From sysadm.produit  
+where id_prod=@dcIdProdSource  
+  
+Set @sMessage = @sMessage + ' de la base de '  
+Select @sMessage = @sMessage +Case @sBaseSource   
+ When 'PROD' Then 'production'  
+ When 'SIM' Then 'simulation'  
+ When 'REC' Then 'recette (1 et 2)'  
+ Else '' End  
+  
+Set @sMessage = @sMessage + ' vers la base de '  
+Select @sMessage = @sMessage + Case @sBaseDest  
+ When 'PROD' Then 'production.'  
+ When 'SIM' Then 'simulation.'  
+ When 'REC' Then 'recette (1 et 2).'  
+ Else '' End,  
+ @sObjet='Recopie du produit ' + @sIdProdSource + ' en base de ' +  
+  Case @sBaseDest  
+   When 'PROD' Then 'production'  
+   When 'SIM' Then 'simulation'  
+   When 'REC' Then 'recette (1 et 2)'  
+   Else '' End  
+  
+Set @sMessage = @sMessage + @sSaut + @sSaut +   
+ 'Pour les recetteurs, merci d''attendre le Go de l''équipe ES pour reprendre la recette de ce produit.'  
+Set @sMessage = @sMessage + @sSaut + @sSaut + 'Cordialement'  
+  
+Set @sDest = 'ntonnetot@spb.eu,cmathe@spb.eu,ayvon@spb.eu'  
+  
+EXEC master.dbo.SPB_PS_MAIL_OUTLOOK   
+  @sRetourErrMail OUTPUT,   
+  @sDest,  
+  @sMessage,   
+  @sObjet,   
+  '',   
+  '',   
+  NULL,   
+  NULL,   
+  NULL,   
+  NULL,   
+  NULL  
+    
+Return 1  
+  
 GO
 
 grant execute on sysadm.PS_I02_RECOPIE_PRODUIT to rolebddsinistres
@@ -1837,8 +1852,7 @@ Declare @sPrefixeBaseSource varchar(200),
 -- [PI056] changement noms de serveurs
 Select @sPrefixeBaseSource=Case @sBaseSource 
 	When 'PROD' Then '[SQL14BI\SINISTRESBI].SIMPA2_PRO.sysadm.'
-	When 'SIM' Then '[SQL14DEV\SIMSINISTRES].SIMPA2_TRT.sysadm.'
-	When 'REC' Then '[SINSQL19REC\RECSINISTRES19].SIMPA2_TRT.sysadm.'
+	When 'SIM' Then '[SQLDEV01\DEVINSTANCE006,50005].SIMPA2_TRT.sysadm.'
 	Else '' End,
 	@sIdProdSource=CONVERT(varchar(7),@dcIdProdSource)
 
@@ -1870,10 +1884,11 @@ Go
 --
 -- Arguments            :       
 --
--- Retourne             :       A lancer sur [LS-SINISTRES].SIMPA2_PRO absolument
+-- Retourne             :       A lancer sur [LSTAGF005001,65004].SIMPA2_PRO absolument
 --
 -------------------------------------------------------------------
 --  JFF 27/02/2024 [20240227151332937] Modif de la requête Volcanes sur demande Sylvie
+--  JFF 19/05/2025 [MIGR_SQL2022] [LSTAGF005001,65004]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_LISTE_DE_TOUS_LES_PRODUITS' AND type = 'P' )
             DROP procedure sysadm.PS_S_LISTE_DE_TOUS_LES_PRODUITS
@@ -1884,9 +1899,9 @@ AS
 
 /* Auteur : FABRY JF
    Le     : 16/12/2019
-   Info   : Lancer sur [LS-SINISTRES].SIMPA2_PRO
+   Info   : Lancer sur [LSTAGF005001,65004].SIMPA2_PRO
    Comment: Ramène tous les produits des applis SPB entre 1 et 99999.
-		    A lancer en production sur LS-SINISTRE avec votre trigramme perso, le traitement est en lecture sale (Dirty Read), aucun risque de blocage
+		    A lancer en production sur [LSTAGF005001,65004] avec votre trigramme perso, le traitement est en lecture sale (Dirty Read), aucun risque de blocage
 			S'il vous manque des droits d'accès à certaines bases, demandez à qqun qui a ces droits de lancer le programme.
    Temps  : Temps de traitement environ 5m30 minutes
    Présentation fichier excel : 
@@ -2301,10 +2316,12 @@ From
 		Select p.code
 		from [SQL14BI\SAGA2BI].[SAGA2_PVC].ref.product p with (nolock)
 		Where p.code >= 1000
+		/* le Lien nest plus actif
 		Union
 		Select p.code
-		from [SQL14DEV\SIMSINISTRES].SIMPA2_TRT.sysadm.v_produit_saga2_recette p with (nolock)
+		from [SQLDEV01\DEVINSTANCE006,50005].SIMPA2_TRT.sysadm.v_produit_saga2_recette p with (nolock)
 		Where p.code >= 1000
+		*/
 		) as p
 
  ) as TbTempo
@@ -2645,6 +2662,7 @@ While Exists ( Select Top 1 1 From @TbCacheProduitATraiter where marquage_trt = 
 		From [SQL14BI\SAGA2BI].[SAGA2_PVC].ref.product pr with (nolock)
 		Where code = @dcIdProdSherpaSinistre
 
+		/* le Lien nest plus actif
 		If @sExistantSaga2 is null
 		  Begin
 			Select 
@@ -2653,9 +2671,10 @@ While Exists ( Select Top 1 1 From @TbCacheProduitATraiter where marquage_trt = 
 			@sLibProdCourtSaga2  = rtrim ( ltrim ( pr.short_label )),
 			@sLibProdLongSaga2   = rtrim ( ltrim ( pr.long_label )),
 			@sCodeVolcanesSaga2  = Convert ( varchar ( 50), pr.volcanes_code )
-			From [SQL14DEV\SIMSINISTRES].SIMPA2_TRT.sysadm.v_produit_saga2_recette pr with (nolock)
+			From [SQLDEV01\DEVINSTANCE006,50005].SIMPA2_TRT.sysadm.v_produit_saga2_recette pr with (nolock)
 			Where code = @dcIdProdSherpaSinistre
 		  End 
+		*/
 
 		If @sExistantSaga2  is null Set @sExistantSaga2  = 'Non'
 

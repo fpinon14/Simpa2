@@ -20108,6 +20108,8 @@ Go
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
+-- JFF      19/05/2025   [MIGR_SQL2022]
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_GT_UE_ET_HORS_UE' AND type = 'P' )
         DROP procedure sysadm.PS_S_GT_UE_ET_HORS_UE
 GO
@@ -20124,7 +20126,8 @@ BEGIN
 END 
 Else
 BEGIN
-	Set @sInstance = '[LS-SINISTRES].'
+	-- [MIGR_SQL2022]
+	Set @sInstance = '[SQL14BI\SINISTRESBI].'
 END 
 
 Set @sSql = '

@@ -79,7 +79,8 @@ Go
 -- Retourne             :       rien
 -------------------------------------------------------------------
 -- [20240910134438210]   JFF  10/09/2024 Ajout COULEUR, DUALSIM, CAPACITE sur demande Boulenouar
--- [HUB1505]			 JFF  17/05/2025   
+-- [HUB1505]			 JFF  17/05/2025
+-- [HUB1544]			 JFF  19/05/2025
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_S2_OBTENTION_DONNEES_PRESTA_SIMPA2_POUR_PREPARATION_CREATION_HUB_PRESTATAIRE' AND type = 'P' )
         DROP procedure sysadm.PS_HP276_S_S2_OBTENTION_DONNEES_PRESTA_SIMPA2_POUR_PREPARATION_CREATION_HUB_PRESTATAIRE
@@ -170,7 +171,9 @@ Declare
 	@sDesimlocke				VarChar( 20 )			,	-- Appareil désimlocké OUI/NON
 	@sEmailProduit				VarChar ( 128 )			,   -- Adresse mail produit dp/136
 	@sInfo_spb_frn_cplt			VarChar ( 800 )			,	-- Chaîne sérialisée contenant de multiples informations
-	@sMajPrsHub					VarChar ( 20 )				-- [HUB1505]
+	@sMajPrsHub					VarChar ( 20 )			,	-- [HUB1505]
+	@sIdContractant				VarChar ( 10 )			,   -- [HUB1544]	
+	@sLibContractant			VarChar ( 35 )			    -- [HUB1544]	
 
 Declare @sCouleur	Varchar ( 50 ), 
 		@sCapacite	Varchar ( 50 ), 
@@ -223,7 +226,8 @@ Select	@iIdSin			= Convert ( integer, @adcIdsin),
 		@sNumTelSpb		= Case Left ( pr.num_tel, 2 )
   								When '08' Then Left ( pr.num_tel, 1 ) + ' ' + SubString ( pr.num_tel, 2, 3 ) + ' ' + SubString ( pr.num_tel, 5, 3 ) + ' ' + SubString ( pr.num_tel, 8, 3 )
   									Else Left ( pr.num_tel, 2 ) + ' ' + SubString ( pr.num_tel, 3, 2 ) + ' ' + SubString ( pr.num_tel, 5, 2 ) + ' ' + SubString ( pr.num_tel, 7, 2 ) + ' ' + SubString ( pr.num_tel, 9, 2 )
-						  End
+						  End,
+		@sIdContractant = CONVERT ( VarChar ( 10 ), pr.id_grp ) -- [HUB1544]
 
 From	sysadm.sinistre s, 
 		sysadm.commande c,
@@ -333,6 +337,7 @@ From sysadm.commande c
 Where c.id_sin = @adcIdsin
 And   c.id_seq = @aiIdSeq
 
+
 -- [20240910134438210]
 If @sRefAppSin = 'IFR' 
 	Begin
@@ -381,6 +386,17 @@ Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'CHOIX_ETAT_APP_REMPL', nullif (
 Set @sMajPrsHub = sysadm.FN_CLE_VAL ( 'MAJ_PRSHUB', @sInfo_spb_frn_cplt, ';' ) 
 If @sMajPrsHub = 'OUI' Set @sOrdreAction = 'MAJ_ADRESSE'
 -- /[HUB1505]
+
+-- [HUB1544]
+Select @sLibContractant = rtrim ( ltrim ( grp.lib_grp ))
+From sysadm.groupe grp
+Where grp.id_grp = CONVERT ( decimal (7), @sIdContractant )
+
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'ID_CONTRACTANT', @sIdContractant, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'LIB_CONTRACTANT', @sLibContractant, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+-- [HUB1544]
+
+
 
 Select 
 	@aiCas	'iCas',
@@ -475,6 +491,7 @@ Go
 -------------------------------------------------------------------
 -- [20240910134438210]   JFF  10/09/2024 Ajout COULEUR, DUALSIM, CAPACITE sur demande Boulenouar
 -- [HUB1505]			 JFF  17/05/2025   
+-- [HUB1544]			 JFF  19/05/2025
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_S2_OBTENTION_DONNEES_PRESTA_SIMPA2_POUR_PREPARATION_CREATION_HUB_PRESTATAIRE_SUR_TABLE_W' AND type = 'P' )
         DROP procedure sysadm.PS_HP276_S_S2_OBTENTION_DONNEES_PRESTA_SIMPA2_POUR_PREPARATION_CREATION_HUB_PRESTATAIRE_SUR_TABLE_W
@@ -565,7 +582,10 @@ Declare
 	@sDesimlocke				VarChar( 20 )			,	-- Appareil désimlocké OUI/NON
 	@sEmailProduit				VarChar ( 128 )			,   -- Adresse mail produit dp/136
 	@sInfo_spb_frn_cplt			VarChar ( 800 )			,	-- Chaîne sérialisée contenant de multiples informations
-	@sMajPrsHub					VarChar ( 20 )				-- [HUB1505]
+	@sMajPrsHub					VarChar ( 20 )			,	-- [HUB1505]
+	@sIdContractant				VarChar ( 10 )			,   -- [HUB1544]	
+	@sLibContractant			VarChar ( 35 )			    -- [HUB1544]	
+
 
 Declare @sCouleur	Varchar ( 50 ), 
 		@sCapacite	Varchar ( 50 ), 
@@ -618,7 +638,9 @@ Select	@iIdSin			= Convert ( integer, @adcIdsin),
 		@sNumTelSpb		= Case Left ( pr.num_tel, 2 )
   								When '08' Then Left ( pr.num_tel, 1 ) + ' ' + SubString ( pr.num_tel, 2, 3 ) + ' ' + SubString ( pr.num_tel, 5, 3 ) + ' ' + SubString ( pr.num_tel, 8, 3 )
   									Else Left ( pr.num_tel, 2 ) + ' ' + SubString ( pr.num_tel, 3, 2 ) + ' ' + SubString ( pr.num_tel, 5, 2 ) + ' ' + SubString ( pr.num_tel, 7, 2 ) + ' ' + SubString ( pr.num_tel, 9, 2 )
-						  End
+						  End,
+		@sIdContractant = CONVERT ( VarChar ( 10 ), pr.id_grp ) -- [HUB1544]
+
 From	sysadm.w_sin s, 
 		sysadm.w_commande c,
 		sysadm.code_garantie cg,
@@ -782,6 +804,15 @@ Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'CHOIX_ETAT_APP_REMPL', nullif (
 Set @sMajPrsHub = sysadm.FN_CLE_VAL ( 'MAJ_PRSHUB', @sInfo_spb_frn_cplt, ';' ) 
 If @sMajPrsHub = 'OUI' Set @sOrdreAction = 'MAJ_ADRESSE'
 -- /[HUB1505]
+
+-- [HUB1544]
+Select @sLibContractant = rtrim ( ltrim ( grp.lib_grp ))
+From sysadm.groupe grp
+Where grp.id_grp = CONVERT ( decimal (7), @sIdContractant )
+
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'ID_CONTRACTANT', @sIdContractant, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'LIB_CONTRACTANT', @sLibContractant, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+-- [HUB1544]
 
 Select 
 	@aiCas	'iCas',
