@@ -90,6 +90,7 @@ Go
 
 --------------------------------------------------------------------------------------------
 -- PS_L_CLE	      JFF 07/10/2011 : Lecture global des clé SQL.
+-- MIGR_SQL2022   JFF 21/05/2025
 --------------------------------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_L_CLE' AND type = 'P' )
         DROP Procedure sysadm.PS_L_CLE
@@ -220,7 +221,7 @@ If rTrim ( @sParam1 ) is null
 		cs.cree_par 'Qui',
 		cs.lib_cle,
 		cs.cree_le
-	from [SQL14DEV\SIMSINISTRES].SIMPA2_TRT.sysadm.cle cs
+	from SIMPA2_TRT.sysadm.cle cs
 	Order by cs.cree_le desc
  End
 
@@ -233,7 +234,7 @@ If rTrim ( @sParam1 ) = 'R'
 		cs.cree_par 'Qui',
 		cs.lib_cle,
 		cs.cree_le
-	from [SQL14DEV\SIMSINISTRES].SIMPA2_TRT.sysadm.cle cs
+	from SIMPA2_TRT.sysadm.cle cs
 	Where ( cs.valeur = 0 )
 	Or ( cs.valeur > 0
 	     And (
@@ -331,6 +332,7 @@ If Upper ( rTrim ( @sParam1 ) ) = 'PS'
  End
 */
 
+/*
 If Upper ( rTrim ( @sParam1 ) ) = 'ACT'
  Begin 
 	If LEN ( @sParam2 ) = 0 Or @sParam2 is null
@@ -371,10 +373,7 @@ If Upper ( rTrim ( @sParam1 ) ) = 'ACT'
 	
 		Set @sObjet = 'Activation en production de la clé "' + @sParam3 + '" le ' + convert ( varchar(10), GETDATE(), 103 ) + ' à ' + CONVERT (varchar(8), GETDATE(), 108)
 		Set @sMessage = 'Bonjour' + CHAR ( 13 ) + CHAR ( 13 )
-		Set @sMessage = @sMessage + 'Le trigramme ' + Upper ( Rtrim ( @sParam2 ) ) + ' vient d''activer en production la clé "' + Upper ( @sParam3 ) + '", ce jour le ' + convert ( varchar(10), GETDATE(), 103 ) + ' à ' + CONVERT (varchar(8), GETDATE(), 108)+ '.'
-
-
- + CHAR ( 13 ) + CHAR ( 13 )
+		Set @sMessage = @sMessage + 'Le trigramme ' + Upper ( Rtrim ( @sParam2 ) ) + ' vient d''activer en production la clé "' + Upper ( @sParam3 ) + '", ce jour le ' + convert ( varchar(10), GETDATE(), 103 ) + ' à ' + CONVERT (varchar(8), GETDATE(), 108)+ '.' + CHAR ( 13 ) + CHAR ( 13 )
 		Set @sMessage = @sMessage + 'La révision de la clé "' + Upper ( @sParam3 ) + '" est à présent à ' + @sParam4 + ' en production.'
 		
 		EXEC master.dbo.SPB_PS_MAIL 
@@ -392,7 +391,9 @@ If Upper ( rTrim ( @sParam1 ) ) = 'ACT'
 				NULL	  
 	  End 
  End 
+*/
 
+/*
 If Upper ( rTrim ( @sParam1 ) ) = 'DES'
  Begin 
 	If LEN ( @sParam2 ) = 0 Or @sParam2 is null
@@ -433,15 +434,12 @@ If Upper ( rTrim ( @sParam1 ) ) = 'DES'
 	
 		Set @sObjet = 'Désactivation en production de la clé "' + @sParam3 + '" le ' + convert ( varchar(10), GETDATE(), 103 ) + ' à ' + CONVERT (varchar(8), GETDATE(), 108)
 		Set @sMessage = 'Bonjour' + CHAR ( 13 ) + CHAR ( 13 )
-		Set @sMessage = @sMessage + 'Le trigramme ' + Upper ( Rtrim ( @sParam2 ) ) + ' vient de désactiver en production la clé "' + Upper ( @sParam3 ) + '", ce jour le ' + convert ( varchar(10), GETDATE(), 103 ) + ' à ' + CONVERT (varchar(8), GETDATE(), 108)+ 
-
-
-'.' + CHAR ( 13 ) + CHAR ( 13 )
+		Set @sMessage = @sMessage + 'Le trigramme ' + Upper ( Rtrim ( @sParam2 ) ) + ' vient de désactiver en production la clé "' + Upper ( @sParam3 ) + '", ce jour le ' + convert ( varchar(10), GETDATE(), 103 ) + ' à ' + CONVERT (varchar(8), GETDATE(), 108)+ '.' + CHAR ( 13 ) + CHAR ( 13 )
 		Set @sMessage = @sMessage + 'La révision de la clé "' + Upper ( @sParam3 ) + '" est à présent à ' + @sParam4 + ' en production.'
 		
 		EXEC master.dbo.SPB_PS_MAIL 
 				@sRetourErrMail OUTPUT, 
-				'jff@spb.eu, fpinon@spb.eu',
+				'jff@spb.eu',
 --				'jff@spb.eu',
 				@sMessage, 
 				@sObjet, 
@@ -455,8 +453,8 @@ If Upper ( rTrim ( @sParam1 ) ) = 'DES'
 	  End 
  
  End 
-
-
+ */
+ /*
 If Upper ( rTrim ( @sParam1 ) ) = 'SUP'
  Begin 
 	If LEN ( @sParam2 ) = 0 Or @sParam2 is null
@@ -473,14 +471,10 @@ If Upper ( rTrim ( @sParam1 ) ) = 'SUP'
 		Set @sObjet = 'Suppression en production de la clé "' + @sParam2 + '" le ' + convert ( varchar(10), GETDATE(), 103 ) + ' à ' + CONVERT (varchar(8), GETDATE(), 108)
 		Set @sMessage = 'Bonjour' + CHAR ( 13 ) + CHAR ( 13 )
 		Set @sMessage = @sMessage + 'La clé "' + Upper ( @sParam2 ) + '" vient d''être supprimer (physiquement) en production, ce jour le ' + convert ( varchar(10), GETDATE(), 103 ) + ' à ' + CONVERT (varchar(8), GETDATE(), 108)+ '.' + CHAR ( 13 ) + CHAR ( 13 )
-
-
-
-
-		
+			   		 	  		
 		EXEC master.dbo.SPB_PS_MAIL 
 				@sRetourErrMail OUTPUT, 
-				'jff@spb.eu, fpinon@spb.eu',
+				'jff@spb.eu',
 --				'jff@spb.eu',
 				@sMessage, 
 				@sObjet, 
@@ -495,6 +489,7 @@ If Upper ( rTrim ( @sParam1 ) ) = 'SUP'
 
 
  End 
+ */
 
 If Upper ( rTrim ( @sParam1 ) ) = 'L'
  Begin 
@@ -519,7 +514,7 @@ If Upper ( rTrim ( @sParam1 ) ) = 'L'
 		cs.cree_par 'Qui',
 		cs.lib_cle,
 		cs.cree_le
-	from [SQL14DEV\SIMSINISTRES].SIMPA2_TRT.sysadm.cle cs
+	from SIMPA2_TRT.sysadm.cle cs
 	Where cs.id_cle = @sParam2
 	Order by cs.cree_le desc
 
@@ -533,7 +528,7 @@ If Upper ( rTrim ( @sParam1 ) ) = 'TRCSVN'
 	Order   by revsvn
  End
 
-
+/*
 If Upper ( rTrim ( @sParam1 ) ) = 'EXE'
  Begin 
 	If LEN ( @sParam2 ) = 0 Or @sParam2 is null
@@ -581,11 +576,517 @@ If Upper ( rTrim ( @sParam1 ) ) = 'EXE'
 	 End 
 
  End
+*/
 
 Go
 
 grant execute on sysadm.PS_L_CLE to rolebddsinistres
 Go
+
+
+--------------------------------------------------------------------------------------------
+-- PS_L_CLE2			JFF 21/05/2025 : Lecture global des clé SQL.
+-- MIGR_SQL2022			JFF 21/05/2025
+--------------------------------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_L_CLE2' AND type = 'P' )
+        DROP Procedure sysadm.PS_L_CLE2
+Go
+
+
+CREATE PROCEDURE sysadm.PS_L_CLE2
+	@sParam1 VarChar ( 10 ) = null,
+	@sParam2 VarChar ( 50 ) = null,
+	@sParam3 VarChar ( 50 ) = null,
+	@sParam4 VarChar ( 50 ) = null
+	WITH RECOMPILE
+As
+
+-- La base PRO est : SIMPA2_PRO
+-- La base SIM est : SIMPA2_TRT
+-- Le code appli de PRO est : SIM8
+-- Le code appli de SIM est : TSP8
+
+DECLARE @sMessage    Varchar(255),
+        @sObjet      VarChar(255),
+        @sFicOut     VarChar(255),
+		@sRetourErrMail VarChar(255),
+		@sEnv		 VarChar ( 5 ) 
+
+
+If rTrim ( @sParam1 ) = '?'
+ Begin
+ 	Select 'Exec sysadm.PS_L_CLE2 ' 'Aide'
+ 	Union all
+ 	Select '=> Visu par défaut de toutes les clés en base de production et en base de simulation'
+ 	Union all
+ 	Select ''
+ 	Union all 	
+ 	Select 'Exec sysadm.PS_L_CLE2 ''SVN'''
+ 	Union all
+ 	Select '=> Visu du nbre d''utilisateurs ayant utilisés la dernière révision placée, donc sur poste hôte'
+ 	Union all
+ 	Select ''
+ 	Union all 	
+ 	Select 'Exec sysadm.PS_L_CLE2 ''SVN_ACTIF'''
+ 	Union all
+ 	Select '=> Visu du nbre d''utilisateurs actuellement connectés'
+ 	Union all
+ 	Select ''
+	Union all
+	Select 'Exec sysadm.PS_L_CLE2 ''L'', ''MA_CLE'''
+ 	Union all
+ 	Select '=> Lit et affiche la clé spécifiée'
+ 	Union all
+ 	Select ''
+	Union all
+ 	Select 'Exec sysadm.PS_L_CLE2 ''TRCSVN'''
+ 	Union all
+ 	Select '=> Lit et affiche la table trace_revsvn. Elle contient les dernières versions SVN placées'
+ 	Union all
+ 	Select ''
+	
+ End 
+
+Set @sEnv = 'SIM'
+IF @@servername = master.dbo.SPB_FN_ServerName ('PRO')
+	Begin
+		Set @sEnv = 'PROD'
+	End 
+
+
+If rTrim ( @sParam1 ) is null
+ Begin
+	If @sEnv = 'PROD'
+		Begin 
+			select 	IsNull ( ( Select CONVERT ( VarChar ( 10), cp.cree_le, 103 ) 
+					   from sysadm.cle cp
+					   where cp.id_cle = cs.id_cle), 'Absente' ) 'Création P',
+				IsNull ( ( Select CONVERT ( VarChar ( 10), cp.maj_le, 103 ) 
+					   from sysadm.cle cp
+					   where cp.id_cle = cs.id_cle), 'Absente' ) 'Dern maj P',	      
+				cs.id_cle,
+				Cast ( cs.valeur as VarChar (4) ) 'valeur Prod.',		   
+				cs.cree_par 'Qui',
+				cs.lib_cle,
+				cs.cree_le
+			from sysadm.cle cs
+			Order by cs.cree_le desc
+		End 
+	Else
+		Begin 
+			select 	IsNull ( ( Select CONVERT ( VarChar ( 10), cp.cree_le, 103 ) 
+					   from sysadm.cle cp
+					   where cp.id_cle = cs.id_cle), 'Absente' ) 'Création P',
+				IsNull ( ( Select CONVERT ( VarChar ( 10), cp.maj_le, 103 ) 
+					   from sysadm.cle cp
+					   where cp.id_cle = cs.id_cle), 'Absente' ) 'Dern maj P',	      
+				cs.id_cle,
+				Cast ( cs.valeur as VarChar (4) ) 'valeur Sim',		   
+				cs.cree_par 'Qui',
+				cs.lib_cle,
+				cs.cree_le
+			from sysadm.cle cs
+			Order by cs.cree_le desc
+		End 
+
+ End
+
+ /*
+If rTrim ( @sParam1 ) = 'R'
+ Begin
+	select 	IsNull (  CONVERT ( VarChar ( 10), cs.cree_le, 103 ), 'Absente' ) 'Création R',
+		IsNull (  CONVERT ( VarChar ( 10), cs.maj_le, 103 ), 'Absente' ) 'Dern maj R',	       
+		cs.id_cle,
+		Cast ( cs.valeur as VarChar (4) ) 'Rec7',		   
+		cs.cree_par 'Qui',
+		cs.lib_cle,
+		cs.cree_le
+	from SIMPA2_TRT.sysadm.cle cs
+	Where ( cs.valeur = 0 )
+	Or ( cs.valeur > 0
+	     And (
+		     Not Exists ( 
+				  Select * 
+				  From [SQL14BI\SINISTRESBI].SIMPA2_PRO.sysadm.cle cp
+				  Where cp.id_cle = cs.id_cle
+				  And cp.valeur > 0
+				)
+		   OR
+		     Exists ( 
+				  Select * 
+				  From [SQL14BI\SINISTRESBI].SIMPA2_PRO.sysadm.cle cp
+				  Where cp.id_cle = cs.id_cle
+				  And cs.valeur > cp.valeur
+				)
+		  )
+		   
+	   )
+	
+	Order by cs.cree_le desc
+ End
+*/
+
+/*
+If rTrim ( @sParam1 ) = 'P'
+ Begin
+	select 	IsNull (  CONVERT ( VarChar ( 10), cp.cree_le, 103 ), 'Absente' ) 'Création P',
+		IsNull (  CONVERT ( VarChar ( 10), cp.maj_le, 103 ), 'Absente' ) 'Dern maj P',	       
+		cp.id_cle,
+		Cast ( cp.valeur as VarChar (4) ) 'Prod',
+		cp.cree_par 'Qui',		   
+		cp.lib_cle,
+		cp.cree_le
+	from [SQL14BI\SINISTRESBI].SIMPA2_PRO.sysadm.cle cp
+	Where valeur > 0
+	Order by cp.maj_le desc
+ End
+*/
+
+If Upper ( rTrim ( @sParam1 ) ) = 'SVN'
+ Begin 
+	If @sEnv = 'PROD'
+		Begin
+			Select 	Convert ( VarChar ( 10), date_der_cnx, 112 ) 'Dte Dern. Cnx',
+				id_appli,
+				rev_svn_cnx 'Rev SVN' ,
+				Convert ( VarChar ( 4), count (*) ) 'Nbre cnx'
+
+			From 	SESAME_PRO.sysadm.connexion
+			Where   rev_svn_cnx is not null
+			And     rev_svn_cnx > 0 
+			And	id_appli in ( 'SIM8', 'TSP8' )
+			And	date_der_cnx > DATEADD ( day, -5, getdate() )
+			Group by rev_svn_cnx, 
+				 id_appli,
+				 Convert ( VarChar ( 10), date_der_cnx, 112 )
+			Order by 'Dte Dern. Cnx' desc , rev_svn_cnx desc
+		End 
+	Else 
+		Begin
+			Select 'A lancer en production'
+		End 
+ End
+
+If Upper ( rTrim ( @sParam1 ) ) = 'SVN_ACTIF'
+ Begin 
+	If @sEnv = 'PROD'
+		Begin
+			Select 	Convert ( VarChar ( 10), date_der_cnx, 112 ) 'Dte Dern. Cnx',
+					id_appli,
+					rev_svn_cnx 'Rev SVN' ,
+					Convert ( VarChar ( 4), count (*) ) 'Nbre cnx'
+
+			From 	SESAME_PRO.sysadm.connexion
+			Where   rev_svn_cnx is not null
+			And     rev_svn_cnx > 0 
+			And	id_appli in ( 'SIM8', 'TSP8' )
+			And	date_der_cnx > DATEADD ( day, -5, getdate() )
+			And	date_der_cnx > date_der_sor 
+			Group by rev_svn_cnx, 
+				 id_appli,
+				 Convert ( VarChar ( 10), date_der_cnx, 112 )
+			Order by 'Dte Dern. Cnx' desc , rev_svn_cnx desc
+		End 
+	Else 
+		Begin
+			Select 'A lancer en production'
+		End 
+
+ End
+
+/*
+If Upper ( rTrim ( @sParam1 ) ) = 'PS'
+ Begin 
+	select os.crdate as date_sim, op.crdate as date_pro, op.name 'PS/Vue/Fonction à recompiler sur [SINSQL19REC\RECSINISTRES19].SIMPA2_TRT'
+	from [SINSQL19REC\RECSINISTRES19].SIMPA2_TRT.dbo.sysobjects os,
+	     [SQL14BI\SINISTRESBI].SIMPA2_PRO.dbo.sysobjects op
+	Where op.crdate > os.crdate
+	and   op.name = os.name
+	and   os.xtype in  ('P','FN','V')
+	Union 
+	Select null as date_sim, op.crdate as date_pro, op.name + ' (n''existe pas sur Recette1)' 'PS/Vue/Fonction à recompiler sur [SINSQL19REC\RECSINISTRES19].SIMPA2_TRT'
+	from  [SQL14BI\SINISTRESBI].SIMPA2_PRO.dbo.sysobjects op
+	Where op.xtype in  ('P','FN')
+	And   Not exists ( 
+		Select *
+		From [SINSQL19REC\RECSINISTRES19].SIMPA2_TRT.dbo.sysobjects os
+		Where os.name = op.name
+		and   os.xtype in  ('P','FN','V')
+			 )
+ End
+*/
+
+/*
+If Upper ( rTrim ( @sParam1 ) ) = 'ACT'
+ Begin 
+	If LEN ( @sParam2 ) = 0 Or @sParam2 is null
+	 Begin
+		Select 'Deuxième paramètre non valide'
+		Return
+	 End 
+
+	If LEN ( @sParam3 ) = 0 Or @sParam3 is null
+	 Begin
+		Select 'Troisième paramètre non valide'
+		Return
+	 End 
+
+	If Not ( LEN ( @sParam4 ) = 0 Or @sParam4 is null ) 
+	 Begin
+		If ISNUMERIC ( @sParam4 ) = 0 
+		  Begin
+			Select 'Quatrième paramètre non valide (doit être un numérique)'
+		 	Return
+		  End
+
+		If Convert( Integer, @sParam4 ) <= 0 
+		  Begin
+			Select 'Quatrième paramètre non valide (doit être un numérique strictement positif)'
+		 	Return
+		  End
+	 End
+	Else
+	 Begin
+		Set @sParam4 = '1'
+	 End  
+
+	 Update sysadm.cle Set valeur = CONVERT ( integer,@sParam4 ) , maj_le = getdate(), maj_par = Upper ( Rtrim ( @sParam2 ) ) Where id_cle = @sParam3
+
+	 IF @@servername = master.dbo.SPB_FN_ServerName ('PRO')
+	  Begin
+	
+		Set @sObjet = 'Activation en production de la clé "' + @sParam3 + '" le ' + convert ( varchar(10), GETDATE(), 103 ) + ' à ' + CONVERT (varchar(8), GETDATE(), 108)
+		Set @sMessage = 'Bonjour' + CHAR ( 13 ) + CHAR ( 13 )
+		Set @sMessage = @sMessage + 'Le trigramme ' + Upper ( Rtrim ( @sParam2 ) ) + ' vient d''activer en production la clé "' + Upper ( @sParam3 ) + '", ce jour le ' + convert ( varchar(10), GETDATE(), 103 ) + ' à ' + CONVERT (varchar(8), GETDATE(), 108)+ '.' + CHAR ( 13 ) + CHAR ( 13 )
+		Set @sMessage = @sMessage + 'La révision de la clé "' + Upper ( @sParam3 ) + '" est à présent à ' + @sParam4 + ' en production.'
+		
+		EXEC master.dbo.SPB_PS_MAIL 
+				@sRetourErrMail OUTPUT, 
+				'jff@spb.eu, fpinon@spb.eu',
+--				'jff@spb.eu',
+				@sMessage, 
+				@sObjet, 
+				'', 
+				'', 
+				@sFicOut, 
+				NULL, 
+				NULL, 
+				NULL, 
+				NULL	  
+	  End 
+ End 
+*/
+
+/*
+If Upper ( rTrim ( @sParam1 ) ) = 'DES'
+ Begin 
+	If LEN ( @sParam2 ) = 0 Or @sParam2 is null
+	 Begin
+		Select 'Deuxième paramètre non valide'
+		Return
+	 End 
+
+	If LEN ( @sParam3 ) = 0 Or @sParam3 is null
+	 Begin
+		Select 'Troisième paramètre non valide'
+		Return
+	 End 
+
+	If Not ( LEN ( @sParam4 ) = 0 Or @sParam4 is null ) 
+	 Begin
+		If ISNUMERIC ( @sParam4 ) = 0 
+		  Begin
+			Select 'Quatrième paramètre non valide (doit être un numérique)'
+		 	Return
+		  End
+
+		If Convert( Integer, @sParam4 ) < 0 
+		  Begin
+			Select 'Quatrième paramètre non valide (doit être un numérique strictement positif)'
+		 	Return
+		  End
+	 End
+	Else
+	 Begin
+		Set @sParam4 = '0'
+	 End  
+
+	 Update sysadm.cle Set valeur = CONVERT ( integer,@sParam4 ) , maj_le = getdate(), maj_par = Upper ( Rtrim ( @sParam2 ) ) Where id_cle = @sParam3
+	 
+	 IF @@servername = master.dbo.SPB_FN_ServerName ('PRO')
+	  Begin
+	
+		Set @sObjet = 'Désactivation en production de la clé "' + @sParam3 + '" le ' + convert ( varchar(10), GETDATE(), 103 ) + ' à ' + CONVERT (varchar(8), GETDATE(), 108)
+		Set @sMessage = 'Bonjour' + CHAR ( 13 ) + CHAR ( 13 )
+		Set @sMessage = @sMessage + 'Le trigramme ' + Upper ( Rtrim ( @sParam2 ) ) + ' vient de désactiver en production la clé "' + Upper ( @sParam3 ) + '", ce jour le ' + convert ( varchar(10), GETDATE(), 103 ) + ' à ' + CONVERT (varchar(8), GETDATE(), 108)+ '.' + CHAR ( 13 ) + CHAR ( 13 )
+		Set @sMessage = @sMessage + 'La révision de la clé "' + Upper ( @sParam3 ) + '" est à présent à ' + @sParam4 + ' en production.'
+		
+		EXEC master.dbo.SPB_PS_MAIL 
+				@sRetourErrMail OUTPUT, 
+				'jff@spb.eu',
+--				'jff@spb.eu',
+				@sMessage, 
+				@sObjet, 
+				'', 
+				'', 
+				@sFicOut, 
+				NULL, 
+				NULL, 
+				NULL, 
+				NULL	  
+	  End 
+ 
+ End 
+ */
+ /*
+If Upper ( rTrim ( @sParam1 ) ) = 'SUP'
+ Begin 
+	If LEN ( @sParam2 ) = 0 Or @sParam2 is null
+	 Begin
+		Select 'Deuxième paramètre non valide'
+		Return
+	 End 
+
+	Delete from sysadm.cle Where id_cle = Upper ( @sParam2 )
+	
+	IF @@servername = master.dbo.SPB_FN_ServerName ('PRO')
+	  Begin
+	
+		Set @sObjet = 'Suppression en production de la clé "' + @sParam2 + '" le ' + convert ( varchar(10), GETDATE(), 103 ) + ' à ' + CONVERT (varchar(8), GETDATE(), 108)
+		Set @sMessage = 'Bonjour' + CHAR ( 13 ) + CHAR ( 13 )
+		Set @sMessage = @sMessage + 'La clé "' + Upper ( @sParam2 ) + '" vient d''être supprimer (physiquement) en production, ce jour le ' + convert ( varchar(10), GETDATE(), 103 ) + ' à ' + CONVERT (varchar(8), GETDATE(), 108)+ '.' + CHAR ( 13 ) + CHAR ( 13 )
+			   		 	  		
+		EXEC master.dbo.SPB_PS_MAIL 
+				@sRetourErrMail OUTPUT, 
+				'jff@spb.eu',
+--				'jff@spb.eu',
+				@sMessage, 
+				@sObjet, 
+				'', 
+				'', 
+				@sFicOut, 
+				NULL, 
+				NULL, 
+				NULL, 
+				NULL	  
+	  End 
+
+
+ End 
+ */
+
+If Upper ( rTrim ( @sParam1 ) ) = 'L'
+ Begin 
+	If LEN ( @sParam2 ) = 0 Or @sParam2 is null
+	 Begin
+		Select 'Deuxième paramètre non valide'
+		Return
+	 End 
+
+	If @sEnv = 'PROD'
+		Begin 
+			select 	IsNull ( ( Select CONVERT ( VarChar ( 10), cp.cree_le, 103 ) 
+					   from sysadm.cle cp
+					   where cp.id_cle = cs.id_cle), 'Absente' ) 'Création P',
+				IsNull ( ( Select CONVERT ( VarChar ( 10), cp.maj_le, 103 ) 
+					   from sysadm.cle cp
+					   where cp.id_cle = cs.id_cle), 'Absente' ) 'Dern maj P',	      
+				cs.id_cle,
+				Cast ( cs.valeur as VarChar (4) ) 'valeur Prod.',		   
+				cs.cree_par 'Qui',
+				cs.lib_cle,
+				cs.cree_le
+			from sysadm.cle cs
+			Where cs.id_cle = @sParam2
+			Order by cs.cree_le desc
+		End 
+	Else
+		Begin 
+			select 	IsNull ( ( Select CONVERT ( VarChar ( 10), cp.cree_le, 103 ) 
+					   from sysadm.cle cp
+					   where cp.id_cle = cs.id_cle), 'Absente' ) 'Création P',
+				IsNull ( ( Select CONVERT ( VarChar ( 10), cp.maj_le, 103 ) 
+					   from sysadm.cle cp
+					   where cp.id_cle = cs.id_cle), 'Absente' ) 'Dern maj P',	      
+				cs.id_cle,
+				Cast ( cs.valeur as VarChar (4) ) 'valeur Sim',		   
+				cs.cree_par 'Qui',
+				cs.lib_cle,
+				cs.cree_le
+			from sysadm.cle cs
+			Where cs.id_cle = @sParam2
+			Order by cs.cree_le desc
+		End 
+ End 
+
+If Upper ( rTrim ( @sParam1 ) ) = 'TRCSVN'
+ Begin 
+	If @sEnv = 'PROD'
+		Begin
+			Select 	*
+			From 	SIMPA2_PRO.sysadm.trace_revsvn
+			Order   by revsvn
+		End 
+	Else 
+		Begin
+			Select 'A lancer en production'
+		End 
+
+ End
+
+/*
+If Upper ( rTrim ( @sParam1 ) ) = 'EXE'
+ Begin 
+	If LEN ( @sParam2 ) = 0 Or @sParam2 is null
+	 Begin
+		Select 'Deuxième paramètre non valide'
+		Return
+	 End 
+
+	If @sParam2 = 'L' 
+	 Begin
+		select * from [SQL14BI\SINISTRESBI].SESAME_PRO.sysadm.application where id_appli in ( 'SPT8', 'SIM8', 'TSP8', 'SIRP' )		
+		Return
+	 End 
+
+	If LEN ( @sParam3 ) = 0 Or @sParam3 is null Or @sParam3 not in ( 'E' )
+	 Begin
+		Select 'Troisième paramètre non valide, doit être renseigné E'
+		Return
+	 End 
+ 
+	If @sParam3 = 'E' And ( LEN ( @sParam4 ) = 0 Or @sParam4 is null Or @sParam4 not in ( 'M', 'P' ) )
+	 Begin
+		Select 'Quatrième paramètre non valide, doit être renseigné par M ou P si param3 = E'
+		Return
+	 End 	 
+
+	If @sParam3 = 'E' And SERVERPROPERTY('ServerName' ) <> 'SQL14BI\SINISTRESBI' 
+	 Begin 
+		Select 'La commande d''écriture ne peut être lancée que de l''instance de production'
+		Return
+	 End
+
+	If @sParam3 = 'E' And @sParam4 = 'M' 
+	 Begin
+		Exec sysadm.PS_L_CLE 'DES', @sParam2, 'VERIF_REVSVN'
+		Select 'Action d''écriture M effectuée en production'	 
+		Update SESAME_PRO.sysadm.application set lib_commande = 'C:\SPB\M_FR_APP_Simpa2_main_121.EXE' where id_appli in ( 'SPT8', 'SIM8', 'TSP8', 'SIRP' )
+	 End 
+
+	If @sParam3 = 'E' And @sParam4 = 'P' 
+	 Begin
+		Exec sysadm.PS_L_CLE 'ACT', @sParam2, 'VERIF_REVSVN'
+		Select 'Action d''écriture P effectuée en production'	 
+		Update SESAME_PRO.sysadm.application set lib_commande = 'C:\SPB\P_FR_APP_Simpa2_main_121.EXE' where id_appli in ( 'SPT8', 'SIM8', 'TSP8', 'SIRP' )
+	 End 
+
+ End
+*/
+
+Go
+
+
 
 --------------------------------------------------------------------
 --

@@ -4422,6 +4422,163 @@ If @aiCas = 1
 
 Go
 
+
+--------------------------------------------------------------------
+--
+-- Proc‚dure            :       PS_CPS2
+-- Auteur               :       Fabry JF
+-- Date                 :       21/05/2025
+-- Libelle              :		Copie d'un dossier de la production vers la sim.
+-- Commentaires         :       
+--
+-- References           :
+--
+-- Arguments            :       
+-- Retourne             :       Integer
+--					  
+--
+-------------------------------------------------------------------
+-- JFF      12/02/2016   [PI062]
+-- JFF      09/09/2022   [PM80_FA12_FRANEX]
+-- JFF		21/05/2025	 MIGR_SQL2022
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_CPS2' AND type = 'P' )
+        DROP procedure sysadm.PS_CPS2
+GO
+
+CREATE procedure sysadm.PS_CPS2
+	@dcIdsin Decimal ( 10 ),  -- [PI062]
+	@aiCas   Integer -- 1 : Rappatriement + Travail, 
+					 -- 2 : Création d'un travail uniquement
+As
+
+-- Sécurité
+If Upper ( sysadm.FN_TRIM ( db_name ( db_id () ) ) ) <> 'SIMPA2_TRT' Return
+
+Declare @bCreerTravail varchar(1)
+DECLARE @sMajPar varchar(4)
+DECLARE @sErr varchar(60)
+DECLARE @iIdCt int
+DECLARE @dDteFinGti datetime
+DECLARE @sIdCanal char(1)
+DECLARE @dDteRecu datetime
+
+If @aiCas = 2 
+ Begin
+	Set @sMajPar = 'AUTO'
+
+	Select  @dDteRecu=getdate(),
+		@dDteFinGti=s.dte_fin_gti
+	From sysadm.sinistre s
+	Where s.id_sin = @dcIdsin
+
+
+	exec SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V03
+				@dcIdsin
+				,2
+				,''
+				,@sMajPar
+				,@sErr OUTPUT
+				,@iIdCt OUTPUT
+				,@dDteFinGti
+				,'C'
+				,@dDteRecu
+				,0
+ End 
+ 
+ 
+If @aiCas = 1
+ Begin  
+
+	-- Tables tempo
+	delete from sysadm.w_a_virer where id_sin=@dcIdsin
+	delete from sysadm.w_para_plafond where id_sin=@dcIdsin
+
+	delete from sysadm.routage where id_sin=@dcIdsin
+	delete from sysadm.w_commande where id_sin=@dcIdsin
+	delete from sysadm.w_piece where id_sin=@dcIdsin
+	delete from sysadm.w_div_det where id_sin=@dcIdsin
+	delete from sysadm.w_detail where id_sin=@dcIdsin
+	delete from sysadm.w_div_sin where id_sin=@dcIdsin
+	delete from sysadm.w_cour_blob_arch where id_sin=@dcIdsin
+	delete from sysadm.w_cour_blob where id_sin=@dcIdsin
+	delete from sysadm.w_courrier where id_sin=@dcIdsin
+	delete from sysadm.w_para_info where id_sin=@dcIdsin  
+	delete from sysadm.w_frais where id_sin=@dcIdsin
+	delete from sysadm.w_refus where id_sin=@dcIdsin
+	delete from sysadm.w_inter where id_sin=@dcIdsin
+	delete from sysadm.w_reg_frais_annexe_frn where id_sin=@dcIdsin  -- [PM80_FA12_FRANEX]
+	delete from sysadm.w_reg_gti where id_sin=@dcIdsin
+	delete from sysadm.w_gar_sin where id_sin=@dcIdsin
+	delete from sysadm.w_sin where id_sin=@dcIdsin
+	delete from sysadm.w_queue where id_sin=@dcIdsin
+
+	delete from sysadm.commande where id_sin=@dcIdsin
+	delete from sysadm.div_det where id_sin=@dcIdsin
+	delete from sysadm.detail where id_sin=@dcIdsin
+	delete from sysadm.div_sin where id_sin=@dcIdsin
+	delete from sysadm.frais where id_sin=@dcIdsin
+	delete from sysadm.refus where id_sin=@dcIdsin
+	delete from sysadm.reg_frais_annexe_frn where id_sin=@dcIdsin  -- [PM80_FA12_FRANEX]
+	delete from sysadm.reg_gti where id_sin=@dcIdsin
+	delete from sysadm.reglement where id_sin=@dcIdsin
+	delete from sysadm.inter where id_sin=@dcIdsin
+	delete from sysadm.gar_sin where id_sin=@dcIdsin
+	delete from sysadm.cra_imei_trt_import where id_sin=@dcIdsin
+	delete from sysadm.trace_cra_imei where id_sin=@dcIdsin
+	delete from sysadm.sinistre where id_sin=@dcIdsin
+ End 
+
+ -- Injecter à la main le sinistre puis appeler 3
+
+ If @aiCas = 3
+ Begin  
+
+ 	Set @bCreerTravail = 'O'
+	Set @sMajPar = 'AUTO'	
+
+
+	If @dcIdsin >= (select cpt_val from sysadm.parametre where ref_cpt='ID_SIN')
+	Begin
+		Exec SHERPA_SIM.sysadm.PS_VERIF_CPT_SIN
+	End
+
+	-- Création du travail et son contact
+	if @bCreerTravail='O' 
+	Begin
+		if not exists (select * from sysadm.w_queue where id_sin=@dcIdsin)
+		Begin
+			select @dDteRecu=getdate(),
+				@dDteFinGti=s.dte_fin_gti
+			from sysadm.sinistre s
+			Where s.id_sin = @dcIdsin
+			
+			exec SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V03
+				@dcIdsin
+				,2
+				,''
+				,@sMajPar
+				,@sErr OUTPUT
+				,@iIdCt OUTPUT
+				,@dDteFinGti
+				,'C'
+				,@dDteRecu
+				,0
+		End 
+		Else
+		Begin
+			If exists (select * from sysadm.w_queue where id_sin=@dcIdsin and cod_etat=1 )
+				print 'Travail existant en saisie'
+			Else print 'Travail existant en validation' 
+		End 
+	End
+
+	update sysadm.w_queue set alt_occupe='N' where id_sin=@dcIdsin
+ End 
+
+Go
+
+
 --------------------------------------------------------------------
 --
 -- Procedure            :       PS_S_NBRE_SIN_SANDRINE
