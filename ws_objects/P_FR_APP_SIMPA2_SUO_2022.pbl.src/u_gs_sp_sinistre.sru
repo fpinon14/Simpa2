@@ -12852,7 +12852,7 @@ private subroutine uf_activerbmgme (boolean abactiv);//*------------------------
 //* Auteur        : Catherine ABDMEZIEM
 //* Date          : 27/09/2002 14:35:15
 //* Libellé       : Activation de la bitmap des gammes
-//* Commentaires  : 
+//* Commentaires  :  
 //*
 //* Arguments     : ( Val )	Boolean	abActiv	:	Indique si l'on doit activer la bitmap
 //*
