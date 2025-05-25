@@ -123,6 +123,7 @@
 --     JFF 27/02/2025   [20250227094634600]
 --     JFF 31/03/2025   [MIG82_JOURN_EVT]
 --	   JFF 23/04/2025   [HUB1267]
+--	   JFF 23/05/2025   [HUB1530]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U01_COMMANDE' AND type = 'P' )
         DROP procedure sysadm.PS_U01_COMMANDE
@@ -1746,7 +1747,21 @@ BEGIN
 	END
 	-- /[HP252_276_HUB_PRESTA]
 
+	-- [HP252_276_HUB_PRESTA][HUB1530]
+	IF @iStatusGCActuel <> 859 And @iStatusGc = 859 And @iPrestaHUB > 0
+	BEGIN 
+			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] -> URL du bon PréPayé généré (récupérable par copier/coller si besoin).'
+			IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+			BEGIN
+				Exec  SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT
+			END
+			ELSE
+			BEGIN
+				Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT
+			END
 
+	END
+	-- /[HP252_276_HUB_PRESTA][HUB1530]
 
 	-- #13 JFF 14/05/2009 [DCMP090085]
 	IF @sIdRefFour = 'A_DIAGNOSTIQUER' AND @iStatusGCActuel <> 169 And @iStatusGc = 169 And @iPrestaHUB <= 0  -- [HP252_276_HUB_PRESTA]

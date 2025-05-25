@@ -171,9 +171,11 @@ Declare
 	@sDesimlocke				VarChar( 20 )			,	-- Appareil désimlocké OUI/NON
 	@sEmailProduit				VarChar ( 128 )			,   -- Adresse mail produit dp/136
 	@sInfo_spb_frn_cplt			VarChar ( 800 )			,	-- Chaîne sérialisée contenant de multiples informations
-	@sMajPrsHub					VarChar ( 20 )			,	-- [HUB1505]
+	@sMajPrsHubAdr				VarChar ( 20 )			,	-- [HUB1505]
 	@sIdContractant				VarChar ( 10 )			,   -- [HUB1544]	
-	@sLibContractant			VarChar ( 35 )			    -- [HUB1544]	
+	@sLibContractant			VarChar ( 35 )			,   -- [HUB1544]	
+	@sMajPrsHubAnn VarChar ( 10 )  -- HUB1528
+
 
 Declare @sCouleur	Varchar ( 50 ), 
 		@sCapacite	Varchar ( 50 ), 
@@ -383,9 +385,14 @@ Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'EMAIL_PRODUIT', @sEmailProduit,
 Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'CHOIX_ETAT_APP_REMPL', nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'TYPAPP_REC_NEU', 'P',  'RETOUR=CODE'  ), ''), rTrim ( @sInfo_spb_frn_cplt ) , ';' ) -- [HUB_TYP_APP_REMPL]
 
 -- [HUB1505]
-Set @sMajPrsHub = sysadm.FN_CLE_VAL ( 'MAJ_PRSHUB', @sInfo_spb_frn_cplt, ';' ) 
-If @sMajPrsHub = 'OUI' Set @sOrdreAction = 'MAJ_ADRESSE'
+Set @sMajPrsHubAdr = sysadm.FN_CLE_VAL ( 'MAJ_PRSHUBADR', @sInfo_spb_frn_cplt, ';' ) 
+If @sMajPrsHubAdr = 'OUI' Set @sOrdreAction = 'MAJ_ADRESSE'
 -- /[HUB1505]
+
+-- [HUB1528]
+Set @sMajPrsHubAnn = sysadm.FN_CLE_VAL ( 'MAJ_PRSHUBANN', @sInfo_spb_frn_cplt, ';' ) 
+If @sMajPrsHubAnn = 'OUI' Set @sOrdreAction = 'A_ANNULER'
+-- /[HUB1528]
 
 -- [HUB1544]
 Select @sLibContractant = rtrim ( ltrim ( grp.lib_grp ))
@@ -582,9 +589,10 @@ Declare
 	@sDesimlocke				VarChar( 20 )			,	-- Appareil désimlocké OUI/NON
 	@sEmailProduit				VarChar ( 128 )			,   -- Adresse mail produit dp/136
 	@sInfo_spb_frn_cplt			VarChar ( 800 )			,	-- Chaîne sérialisée contenant de multiples informations
-	@sMajPrsHub					VarChar ( 20 )			,	-- [HUB1505]
+	@sMajPrsHubAdr					VarChar ( 20 )		,	-- [HUB1505]
 	@sIdContractant				VarChar ( 10 )			,   -- [HUB1544]	
-	@sLibContractant			VarChar ( 35 )			    -- [HUB1544]	
+	@sLibContractant			VarChar ( 35 )			,   -- [HUB1544]	
+	@sMajPrsHubAnn VarChar ( 10 )  -- HUB1528
 
 
 Declare @sCouleur	Varchar ( 50 ), 
@@ -801,9 +809,14 @@ Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'EMAIL_PRODUIT', @sEmailProduit,
 Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'CHOIX_ETAT_APP_REMPL', nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'TYPAPP_REC_NEU', 'W',  'RETOUR=CODE'  ), ''), rTrim ( @sInfo_spb_frn_cplt ) , ';' ) -- [HUB_TYP_APP_REMPL]
 
 -- [HUB1505]
-Set @sMajPrsHub = sysadm.FN_CLE_VAL ( 'MAJ_PRSHUB', @sInfo_spb_frn_cplt, ';' ) 
-If @sMajPrsHub = 'OUI' Set @sOrdreAction = 'MAJ_ADRESSE'
+Set @sMajPrsHubAdr = sysadm.FN_CLE_VAL ( 'MAJ_PRSHUBADR', @sInfo_spb_frn_cplt, ';' ) 
+If @sMajPrsHubAdr = 'OUI' Set @sOrdreAction = 'MAJ_ADRESSE'
 -- /[HUB1505]
+
+-- [HUB1528]
+Set @sMajPrsHubAnn = sysadm.FN_CLE_VAL ( 'MAJ_PRSHUBANN', @sInfo_spb_frn_cplt, ';' ) 
+If @sMajPrsHubAnn = 'OUI' Set @sOrdreAction = 'A_ANNULER'
+-- /[HUB1528]
 
 -- [HUB1544]
 Select @sLibContractant = rtrim ( ltrim ( grp.lib_grp ))
@@ -901,7 +914,8 @@ Go
 --
 -- Retourne             :       rien
 -------------------------------------------------------------------
--- [HUB1505]			 JFF  17/05/2025   
+-- JFF		17/05/2025   [HUB1505]			 
+-- JFF      23/05/2025   [HUB1528]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_U_S2_MAJ_GEN_PRESTA' AND type = 'P' )
         DROP procedure sysadm.PS_HP276_U_S2_MAJ_GEN_PRESTA
@@ -914,19 +928,21 @@ CREATE procedure sysadm.PS_HP276_U_S2_MAJ_GEN_PRESTA
 
 AS
 
-Declare @sMajHubPrs VarChar ( 10 )
+Declare @sMajPrsHubAdr VarChar ( 10 )
+Declare @sMajPrsHubAnn VarChar ( 10 )
 Declare @sIdentityOrig VarChar ( 20 )
 Declare @lIdentityOrig Integer
 
 -- [HUB1505]
 -- En cas de mise à jour de la presta, pour une adresse par exemple, on n'écrase pas l'HP_IDENTITY, on remet l'original
-Select @sMajHubPrs = sysadm.FN_CLE_VAL ( 'MAJ_PRSHUB', c.info_spb_frn_cplt, ';'),
+Select @sMajPrsHubAdr = sysadm.FN_CLE_VAL ( 'MAJ_PRSHUBADR', c.info_spb_frn_cplt, ';'),
+	   @sMajPrsHubAnn = sysadm.FN_CLE_VAL ( 'MAJ_PRSHUBANN', c.info_spb_frn_cplt, ';'), -- HUB1528
 	   @sIdentityOrig = sysadm.FN_CLE_VAL ( 'HP_IDENTITY', c.info_spb_frn_cplt, ';')
 From sysadm.commande c
 Where   id_sin = @adcIdSin
 And		id_seq = @alIdSeq
 
-If @sMajHubPrs = 'OUI'
+If @sMajPrsHubAdr = 'OUI'
   Begin
 	 If ISNUMERIC ( @sIdentityOrig ) = 1
 		Begin
@@ -938,20 +954,36 @@ If @sMajHubPrs = 'OUI'
 -- /[HUB1505]
 
 Update	sysadm.commande 
-Set		id_lot_cmd  = 999800, 
+Set		id_lot_cmd  = 999800,
+		cod_etat = -- [HUB1528]
+			Case
+				When @sMajPrsHubAnn = 'OUI' 
+					Then 'ANN'
+				Else cod_etat 
+			End, 
 		cmd_gen_le = GETDATE(), 
 		cmd_gen_par = 'HUB',
 		info_spb_frn_cplt = 
-				sysadm.FN_CLE_VAL_E ( 'MAJ_PRSHUB', 'NON', -- [HUB1505]
+			sysadm.FN_CLE_VAL_E ( 'MAJ_PRSHUBADR', 'NON', -- [HUB1505]
+			sysadm.FN_CLE_VAL_E ( 'MAJ_PRSHUBANN', 'NON', -- [HUB1528]
 					sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', convert ( VarChar ( 20) , @alIdentityHubPresta ), RTRIM ( ltrim ( info_spb_frn_cplt )), ';'),
+				';'),
 				';')
 Where   id_sin = @adcIdSin
 And		id_seq = @alIdSeq
 
 Update	sysadm.w_commande 
-Set		info_spb_frn_cplt = 
-				sysadm.FN_CLE_VAL_E ( 'MAJ_PRSHUB', 'NON', -- [HUB1505]
+Set		cod_etat = -- [HUB1528]
+			Case
+				When @sMajPrsHubAnn = 'OUI' 
+					Then 'ANN'
+				Else cod_etat 
+			End, 
+		info_spb_frn_cplt = 
+			sysadm.FN_CLE_VAL_E ( 'MAJ_PRSHUBADR', 'NON', -- [HUB1505]
+			sysadm.FN_CLE_VAL_E ( 'MAJ_PRSHUBANN', 'NON', -- [HUB1528]
 					sysadm.FN_CLE_VAL_E ( 'HP_IDENTITY', convert ( VarChar ( 20) , @alIdentityHubPresta ), RTRIM ( ltrim ( info_spb_frn_cplt )), ';'),
+				';'),
 				';')
 Where   id_sin = @adcIdSin
 And		id_seq = @alIdSeq
@@ -3466,3 +3498,68 @@ Rollback Tran
 
 Go
 
+-------------------------------------------------------------------
+--
+-- Procédure            :       PS_HP276_S_S2_CONDITION_ANNULATION_PRS_HUB
+-- Auteur               :       JFF
+-- Date                 :       25/05/2025
+-- Libell‚              :       [HP252_276_HUB_PRESTA][HUB1528]
+-- Commentaires         :       
+--                              /!\ A COMPILER SUR LA BASE SIMPA2 /!\
+--								
+--
+-- Retourne             :       rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_S2_CONDITION_ANNULATION_PRS_HUB' AND type = 'P' )
+        DROP procedure sysadm.PS_HP276_S_S2_CONDITION_ANNULATION_PRS_HUB
+GO
+
+CREATE procedure sysadm.PS_HP276_S_S2_CONDITION_ANNULATION_PRS_HUB
+	@sIdHubPresta	VarChar ( 20 )
+AS
+
+Declare  @TbHubToSimpa2Work TABLE (
+	id_work						int IDENTITY (1,1)			NOT NULL, -- Id Local Tempo
+	activity_code				VarChar ( 50 )				NULL,   -- Code HUB
+	activity_return_code		Varchar ( 50 )				NULL,	-- Code HUB
+	activity_reason_code		Varchar ( 50 )				NULL	-- Code HUB
+	)
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' Set @sEnv = 'PROD' ELSE Set @sEnv = 'SIM'
+
+If @sEnv = 'PROD'
+	Begin 
+		Set @sInstanceHub = '[LS-SAGA2].[PRESTATAIRE].'
+	End 
+Else
+	Begin 
+		-- [INSTANCE]
+		If sysadm.FN_CLE_NUMERIQUE ( 'INSTANCE_PPR_REC_HUB') = 1
+			Begin 
+				Set @sInstanceHub = '[S2SQL14DEV\RECSAGA2].[PRESTATAIRE].' 
+			End 
+		Else
+			Begin 
+				Set @sInstanceHub = '[S2SQL14PP1\PPRSAGA2].[PRESTATAIRE].'
+			End 
+	End
+
+Set @sSql = 
+'Select ' + 
+'		dhs.activity_code, '+
+'		dhs.activity_return_code, '+
+'		dhs.activity_reason_code '+
+'From	' + @sInstanceHub + 'edi.DepotHubToSimpa2Presta dhs ' + 
+'Where  dhs.id_hub_presta = ''' + @sIdHubPresta + ''''
+
+Insert into @TbHubToSimpa2Work Exec ( @sSql )
+
+Select @iCountVoucher = count ( * ) 
+From @TbHubToSimpa2Work 
+Where Not ( activity_code = 'GENERATION_OF_THE_PREPAID_VOUCHER' And activity_return_code = 'OK' )
+
+If @iCountVoucher <= 0 Return 1 -- Ok, rien ou que Voucher
+
+Return -1
+
+Go
