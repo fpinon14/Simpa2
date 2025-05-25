@@ -33033,6 +33033,7 @@ private function integer uf_integration_fichier_frn_hub (ref long alnblig, ref l
 //* MAJ   PAR      Date	     Modification
 //       JFF   31/03/2025 [MIG82_JOURN_EVT]
 //       JFF   23/04/2025 [HUB1267]
+//       JFF   23/05/2025 [HUB1530]
 //*-----------------------------------------------------------------
 
 Int iRet, iCleNum, iIdSeqSavRet
@@ -33565,6 +33566,12 @@ For lCpt = 1 To lTotLig
 		If Len ( Trim ( sVal ) ) > 0 Then
 			lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "PRESTA_AUTO", sVal, ";")
 		End If 
+		
+		// [HUB1530]
+		sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "URL_BPPAYE", ";"))
+		If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
+			lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "URL_BPPAYE", sVal, ";")
+		End If
 		
 		
 	End IF 

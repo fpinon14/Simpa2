@@ -1092,14 +1092,18 @@ end type
 
 event buttonclicked;call super::buttonclicked;//       JFF   17/12/2018 [PM458-1]
 //       JFF   02/09/2019 [DT424]
-
+//       JFF   23/05/2025 [HUB1530]
 
 String sInfoSpbCplt, sURLtracking , sIdBonTransp, sPathIE, sVal
 s_Pass stPass
 String sRepExcel
 DataStore  dsTracePresta 
-String sInfoSpbFrnCplt 
+String sInfoSpbFrnCplt, sInfoFrnSpbCplt, sUrlBpPaye
 String sIdHubPresta
+
+sInfoSpbFrnCplt = This.GetItemString (row, "INFO_SPB_FRN_CPLT") 
+sInfoFrnSpbCplt = dw_cmd_frn.GetItemString ( row, "INFO_FRN_SPB_CPLT" ) 
+sIdHubPresta = F_CLE_VAL ( "HP_ID_HUB_PRESTA", sInfoSpbFrnCplt, ";" )
 
 Choose Case  dwo.name
 
@@ -1176,9 +1180,6 @@ Choose Case  dwo.name
 
 	Case "b_voir_hub"
 		
-		sInfoSpbFrnCplt = This.GetItemString (row, "INFO_SPB_FRN_CPLT") 
-		sIdHubPresta = F_CLE_VAL ( "HP_ID_HUB_PRESTA", sInfoSpbFrnCplt, ";" )
-
 		If sIdHubPresta = "FICTIVE" Then
 			stMessage.sTitre		= "Prestation Inexistante sur le Hub"
 			stMessage.Icon			= Information!
@@ -1196,6 +1197,47 @@ Choose Case  dwo.name
 			OpenWithParm( w_sp_trt_saisie_hub_prestataire,  stPass ) 
 		End If 
 
+	// [HUB1530]
+	Case "b_url_bp"
+		
+		If Len ( sIdHubPresta ) <= 0 Or IsNull ( sIdHubPresta ) Then
+			stMessage.sTitre		= "Prestation Hors Hub"
+			stMessage.Icon			= Information!
+			stMessage.bErreurG	= FALSE
+			stMessage.sCode		= "HUBP021"
+			stMessage.Bouton		= OK!
+			
+			F_Message ( stMessage ) 
+			
+			Return
+		End If 
+		
+		sUrlBpPaye = F_CLE_VAL ( "URL_BPPAYE", sInfoFrnSpbCplt, ";" )	
+		
+		If sUrlBpPaye = "" Then
+			stMessage.sTitre		= "URL Bon PréPayé vide"
+			stMessage.Icon			= Information!
+			stMessage.bErreurG	= FALSE
+			stMessage.sCode		= "HUBP022"
+			stMessage.Bouton		= OK!
+			
+			F_Message ( stMessage ) 
+			
+			Return
+			
+		End If 
+	
+		ClipBoard ( sUrlBpPaye ) 
+	
+		stMessage.sTitre		= "URL Bon PréPayé"
+		stMessage.Icon			= Information!
+		stMessage.bErreurG	= FALSE
+		stMessage.sCode		= "HUBP023"
+		stMessage.Bouton		= OK!
+		stMessage.sVar[1]		= sUrlBpPaye
+		
+		F_Message ( stMessage ) 
+		
 		
 End Choose 
 end event

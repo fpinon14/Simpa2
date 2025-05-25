@@ -2187,10 +2187,13 @@ event buttonclicked;//*---------------------------------------------------------
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
-//* #..   ...   ../../....   
+//       JFF   23/05/2025 [HUB1530]
 //*-----------------------------------------------------------------
 
-String sVal 
+String sVal, sInfoFrnSpbCplt, sIdHubPresta, sUrlBpPaye 
+
+sInfoFrnSpbCplt = dw_1.GetItemString ( row, "INFO_FRN_SPB_CPLT" )  // [HUB1530]
+
 
 Choose Case  dwo.name
 
@@ -2211,6 +2214,36 @@ Choose Case  dwo.name
 		dw_1.ScrollToRow ( Row )
 		dw_1.SetFocus ()
 		
+
+	// [HUB1530]
+	Case "b_url_bp"
+		
+		sUrlBpPaye = F_CLE_VAL ( "URL_BPPAYE", sInfoFrnSpbCplt, ";" )	
+		
+		If sUrlBpPaye = "" Then
+			stMessage.sTitre		= "URL Bon PréPayé vide"
+			stMessage.Icon			= Information!
+			stMessage.bErreurG	= FALSE
+			stMessage.sCode		= "HUBP022"
+			stMessage.Bouton		= OK!
+			
+			F_Message ( stMessage ) 
+			
+			Return
+			
+		End If 
+	
+		ClipBoard ( sUrlBpPaye ) 
+	
+		stMessage.sTitre		= "URL Bon PréPayé"
+		stMessage.Icon			= Information!
+		stMessage.bErreurG	= FALSE
+		stMessage.sCode		= "HUBP023"
+		stMessage.Bouton		= OK!
+		stMessage.sVar[1]		= sUrlBpPaye
+		
+		F_Message ( stMessage ) 
+			
 		
 End Choose 
 end event

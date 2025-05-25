@@ -46,8 +46,6 @@ end type
 end forward
 
 global type w_sp_gs_w_commande2 from w_8_traitement_master
-integer x = 1075
-integer y = 481
 integer width = 3648
 integer height = 1836
 event ue_taillefenetre ( )
@@ -1565,14 +1563,18 @@ end type
 event buttonclicked;call super::buttonclicked;//       JFF   17/12/2018 [PM458-1]
 //       JFF   02/09/2019 [DT424]
 //       JFF   07/03/2024 [HP252_276_HUB_PRESTA]
-
+//       JFF   23/05/2025 [HUB1530]
 
 String sInfoSpbCplt, sURLtracking , sIdBonTransp, sPathIE
 s_Pass stPass
 String sRepExcel, sVal
 DataStore  dsTracePresta 
-String sInfoSpbFrnCplt 
+String sInfoSpbFrnCplt, sInfoFrnSpbCplt, sUrlBpPaye
 String sIdHubPresta
+
+sInfoSpbFrnCplt = This.GetItemString (row, "INFO_SPB_FRN_CPLT") 
+sInfoFrnSpbCplt = dw_cmd_frn.GetItemString ( row, "INFO_FRN_SPB_CPLT" ) 
+sIdHubPresta = F_CLE_VAL ( "HP_ID_HUB_PRESTA", sInfoSpbFrnCplt, ";" )
 
 Choose Case  dwo.name
 
@@ -1592,13 +1594,12 @@ Choose Case  dwo.name
 	// [DT424]
 	Case "b_consultifsc"
 
-		sVal = dw_cmd_frn.GetItemString ( 1, "INFO_FRN_SPB_CPLT" ) 
 		stMessage.sTitre		= "Infos fournisseur supplémentaires"
 		stMessage.Icon			= Information!
 		stMessage.bErreurG	= FALSE
 		stMessage.sCode		= "GENE013"
 		stMessage.Bouton		= OK!
-		stMessage.sVar[1]    = sVal
+		stMessage.sVar[1]    = sInfoFrnSpbCplt
 	
 		F_Message ( stMessage ) 
 	
@@ -1650,9 +1651,6 @@ Choose Case  dwo.name
 
 		
 	Case "b_voir_hub"
-		
-		sInfoSpbFrnCplt = This.GetItemString (row, "INFO_SPB_FRN_CPLT") 
-		sIdHubPresta = F_CLE_VAL ( "HP_ID_HUB_PRESTA", sInfoSpbFrnCplt, ";" )
 
 		If sIdHubPresta = "FICTIVE" Then
 			stMessage.sTitre		= "Prestation Inexistante sur le Hub"
@@ -1672,6 +1670,49 @@ Choose Case  dwo.name
 		End If 
 
 		
+	// [HUB1530]
+	Case "b_url_bp"
+		
+		If Len ( sIdHubPresta ) <= 0 Or IsNull ( sIdHubPresta ) Then
+			stMessage.sTitre		= "Prestation Hors Hub"
+			stMessage.Icon			= Information!
+			stMessage.bErreurG	= FALSE
+			stMessage.sCode		= "HUBP021"
+			stMessage.Bouton		= OK!
+			
+			F_Message ( stMessage ) 
+			
+			Return
+		End If 
+		
+		sUrlBpPaye = F_CLE_VAL ( "URL_BPPAYE", sInfoFrnSpbCplt, ";" )	
+		
+		If sUrlBpPaye = "" Then
+			stMessage.sTitre		= "URL Bon PréPayé vide"
+			stMessage.Icon			= Information!
+			stMessage.bErreurG	= FALSE
+			stMessage.sCode		= "HUBP022"
+			stMessage.Bouton		= OK!
+			
+			F_Message ( stMessage ) 
+			
+			Return
+			
+		End If 
+	
+		ClipBoard ( sUrlBpPaye ) 
+	
+		stMessage.sTitre		= "URL Bon PréPayé"
+		stMessage.Icon			= Information!
+		stMessage.bErreurG	= FALSE
+		stMessage.sCode		= "HUBP023"
+		stMessage.Bouton		= OK!
+		stMessage.sVar[1]		= sUrlBpPaye
+		
+		F_Message ( stMessage ) 
+	
+		
+	
 End Choose 
 		
 
