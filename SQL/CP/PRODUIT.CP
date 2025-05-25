@@ -1643,6 +1643,8 @@ Go
 -- Retourne             :       1 si OK
 --
 -------------------------------------------------------------------
+-- JFF		21/05/2025	 MIGR_SQL2022
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I02_RECOPIE_PRODUIT' AND type = 'P' )
             DROP procedure sysadm.PS_I02_RECOPIE_PRODUIT
 GO
@@ -1703,14 +1705,18 @@ Declare @sPrefixeBaseSource varchar(200),
 -- [MIGR_SQL2022]
 If sysadm.FN_CLE_NUMERIQUE ( 'MIGR_SQL2022') > 0 
  Begin
-	Select @sPrefixeBaseSource=Case @sBaseSource   
-	 When 'PROD' Then '[LSTAGF005001,65004].SIMPA2_PRO.sysadm.'  
-	 When 'SIM' Then '[SQLDEV01\DEVINSTANCE006,50005].SIMPA2_TRT.sysadm.'  
-	 Else '' End,  
-	 @sPrefixeBaseDest=Case @sBaseDest  
-	 When 'PROD' Then Case When @@SERVERNAME in ( 'SQLPRD03\INSTANCE05', 'SQLPRD04\INSTANCE05') Then 'SIMPA2_PRO.sysadm.' Else '[LSTAGF005001,65004].SIMPA2_PRO.sysadm.' End  
-	 When 'SIM' Then '[SQLDEV01\DEVINSTANCE006,50005].SIMPA2_TRT.sysadm.'  
-	 Else '' End,  
+	Select @sPrefixeBaseSource=
+		Case @sBaseSource   
+			 When 'PROD' Then 'SIMPA2_PRO.sysadm.'  
+			 When 'SIM' Then 'SIMPA2_TRT.sysadm.'  
+			 Else '' 
+		End,  
+	 @sPrefixeBaseDest=
+		Case @sBaseDest  
+			When 'PROD' Then 'SIMPA2_PRO.sysadm.' 
+			When 'SIM' Then 'SIMPA2_TRT.sysadm.'  
+			Else '' 
+		End,  
 	 @sIdProdSource=CONVERT(varchar(7),@dcIdProdSource)  
  End   
 Else 
@@ -1765,10 +1771,19 @@ End
 -- Mail  
 Set @sMessage = 'Bonjour,' + @sSaut + @sSaut  
 Set @sMessage = @sMessage + 'Nous vous informons que '  
-  
-Select @sMessage = @sMessage + rtrim(prenom) + ' ' + rtrim(nom)  
-From [SQL14BI\SINISTRESBI].SESAME_PRO.sysadm.operateur  
-where id_oper=@sMajPar  
+
+If @sBaseSource = 'PROD' 
+	Begin 
+		Select @sMessage = @sMessage + rtrim(prenom) + ' ' + rtrim(nom)  
+		From SESAME_PRO.sysadm.operateur  
+		where id_oper=@sMajPar  
+	End 
+Else
+	Begin 
+		Select @sMessage = @sMessage + rtrim(prenom) + ' ' + rtrim(nom)  
+		From SESAME_SIM.sysadm.operateur  
+		where id_oper=@sMajPar  
+	End 
   
   
 Set @sMessage = @sMessage + ' vient d''effectuer la recopie du produit ' + @sIdProdSource  
@@ -1835,6 +1850,8 @@ Go
 -- Retourne             :       1 si OK
 --
 -------------------------------------------------------------------
+--  JFF 19/05/2025 [MIGR_SQL2022] 
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_V01_RECOPIE_PRODUIT' AND type = 'P' )
             DROP procedure sysadm.PS_V01_RECOPIE_PRODUIT
 GO
@@ -1850,11 +1867,23 @@ Declare @sPrefixeBaseSource varchar(200),
 	@iRet	integer
 
 -- [PI056] changement noms de serveurs
-Select @sPrefixeBaseSource=Case @sBaseSource 
-	When 'PROD' Then '[SQL14BI\SINISTRESBI].SIMPA2_PRO.sysadm.'
-	When 'SIM' Then '[SQLDEV01\DEVINSTANCE006,50005].SIMPA2_TRT.sysadm.'
-	Else '' End,
-	@sIdProdSource=CONVERT(varchar(7),@dcIdProdSource)
+-- [MIGR_SQL2022]
+If sysadm.FN_CLE_NUMERIQUE ( 'MIGR_SQL2022') > 0 
+ Begin
+	Select @sPrefixeBaseSource=Case @sBaseSource 
+		When 'PROD' Then 'SIMPA2_PRO.sysadm.'
+		When 'SIM' Then 'SIMPA2_TRT.sysadm.'
+		Else '' End,
+		@sIdProdSource=CONVERT(varchar(7),@dcIdProdSource)
+ End 
+Else 
+ Begin
+	Select @sPrefixeBaseSource=Case @sBaseSource 
+		When 'PROD' Then '[SQL14BI\SINISTRESBI].SIMPA2_PRO.sysadm.'
+		When 'SIM' Then '[SQLDEV01\DEVINSTANCE006,50005].SIMPA2_TRT.sysadm.'
+		Else '' End,
+		@sIdProdSource=CONVERT(varchar(7),@dcIdProdSource)
+ End 
 
 If @sPrefixeBaseSource='' Return -1
 

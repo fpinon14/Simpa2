@@ -4462,6 +4462,7 @@ DECLARE @iIdCt int
 DECLARE @dDteFinGti datetime
 DECLARE @sIdCanal char(1)
 DECLARE @dDteRecu datetime
+DECLARE @dcIdOrdre Decimal ( 7 )
 
 If @aiCas = 2 
  Begin
@@ -4526,7 +4527,14 @@ If @aiCas = 1
 	delete from sysadm.gar_sin where id_sin=@dcIdsin
 	delete from sysadm.cra_imei_trt_import where id_sin=@dcIdsin
 	delete from sysadm.trace_cra_imei where id_sin=@dcIdsin
+	Select @dcIdOrdre = s.id_ordre From sysadm.sinistre s where id_sin=@dcIdsin
 	delete from sysadm.sinistre where id_sin=@dcIdsin
+	delete from sysadm.personne where id_ordre = @dcIdOrdre 
+
+	Select 'Delete effectués, appelez maintenant sur SIMPA2_PRO : '
+	Select 'Exec sysadm.PS_S_GENERATEUR_INSERT_SINISTRE ' + convert ( varChar ( 10 ) , @dcIdsin )
+	Select 'Exec sysadm.PS_CPS2 ' + convert ( varChar ( 10 ) , @dcIdsin ) + ', 3'
+
  End 
 
  -- Injecter à la main le sinistre puis appeler 3
@@ -8347,3 +8355,162 @@ And    rtrim ( lib_menu ) not like '%----%'
 Order by 1,3,6,7,9
 
 Go
+
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_GENERATEUR_INSERT_SINISTRE
+-- Auteur               :       FABRY JF
+-- Date                 :       22/05/2025
+-- Libellé              :       
+--                              
+-- Commentaires         :       
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_GENERATEUR_INSERT_SINISTRE' AND type = 'P' )
+        DROP procedure sysadm.PS_S_GENERATEUR_INSERT_SINISTRE
+GO
+CREATE procedure sysadm.PS_S_GENERATEUR_INSERT_SINISTRE
+	@adcIdSin    Decimal ( 7 ) 
+AS
+
+Declare @sNomTable VarChar ( 50 ) 
+Declare @dcIdOrdre    Decimal ( 7 ) 
+Declare @sIdSin    VarChar ( 50 ) 
+Declare @sIdOrdre    VarChar ( 50 ) 
+Declare @iIdSeq	   Integer
+Declare @sVal VarChar ( max )
+
+set @sIdSin = CONVERT ( VarChar ( 10 ), @adcIdSin )
+
+Declare @TbLesTables Table ( 
+	id_seq integer identity (1,1 ),
+	nom_table Varchar ( 255 ),
+	marquage integer
+	)
+
+Declare @TbValTemp Table ( 
+	id_seq integer identity (1,1 ),
+	chaine_insert Varchar ( max )
+	)
+
+Declare @TbLesInsert Table ( 
+	id_seq integer identity (1,1 ),
+	chaine_insert Varchar ( max )
+	)
+
+-- Respecter l'intégrité dans l'ordre d'insertion	
+-- = "Insert into @TbLesTables values ( '"&A1&"', 0)"
+Insert into @TbLesTables values ( 'w_sin', 0)
+Insert into @TbLesTables values ( 'w_inter_encrypt', 0)
+Insert into @TbLesTables values ( 'w_courrier', 0)
+Insert into @TbLesTables values ( 'w_cour_blob', 0)
+Insert into @TbLesTables values ( 'w_cour_blob_arch', 0)
+Insert into @TbLesTables values ( 'w_div_sin', 0)
+Insert into @TbLesTables values ( 'w_gar_sin', 0)
+Insert into @TbLesTables values ( 'w_reg_gti', 0)
+Insert into @TbLesTables values ( 'w_reg_frais_annexe_frn', 0)
+Insert into @TbLesTables values ( 'w_detail', 0)
+Insert into @TbLesTables values ( 'w_div_det', 0)
+Insert into @TbLesTables values ( 'w_piece', 0)
+Insert into @TbLesTables values ( 'w_frais', 0)
+Insert into @TbLesTables values ( 'w_refus', 0)
+Insert into @TbLesTables values ( 'w_commande', 0)
+Insert into @TbLesTables values ( 'w_a_virer_encrypt', 0)
+Insert into @TbLesTables values ( 'w_queue', 0)
+Insert into @TbLesTables values ( 'personne', 0)
+Insert into @TbLesTables values ( 'sinistre', 0)
+Insert into @TbLesTables values ( 'inter_encrypt', 0)
+Insert into @TbLesTables values ( 'div_sin', 0)
+Insert into @TbLesTables values ( 'gar_sin', 0)
+Insert into @TbLesTables values ( 'detail', 0)
+Insert into @TbLesTables values ( 'div_det', 0)
+Insert into @TbLesTables values ( 'frais', 0)
+Insert into @TbLesTables values ( 'refus', 0)
+Insert into @TbLesTables values ( 'reglement_encrypt', 0)
+Insert into @TbLesTables values ( 'reg_gti', 0)
+Insert into @TbLesTables values ( 'reg_frais_annexe_frn', 0)
+Insert into @TbLesTables values ( 'commande', 0)
+Insert into @TbLesTables values ( 'routage', 0)
+
+Set @iIdSeq = 1
+
+-- Moteur générant les Insert
+While Exists ( Select Top 1 1 From @TbLesTables where marquage = 0 )
+ Begin
+	Delete @TbValTemp 
+
+	Select 	Top 1 
+			@sNomTable = nom_table
+	From	@TbLesTables
+	Where	marquage = 0
+	And		id_seq = @iIdSeq
+
+	If @sNomTable = 'personne'
+		Begin 
+			Set @dcIdOrdre = null
+
+			Select @dcIdOrdre = s.id_ordre
+			From sysadm.sinistre s
+			Where id_sin = @adcIdSin
+
+			If @dcIdOrdre is null
+				Begin
+					Select @dcIdOrdre = s.id_ordre
+					From sysadm.w_sin s
+					Where id_sin = @adcIdSin
+				End 
+
+			If @dcIdOrdre is null Continue
+
+			If @dcIdOrdre is not null Set @sIdOrdre = CONVERT ( VarChar ( 10 ), @dcIdOrdre ) 
+		End 
+
+	Select @sVal = 
+		'Select '
+		+
+		Stuff (
+				( 
+				Select 	' + '', '' +' +
+						Case 
+							-- DateTime
+							When sc.system_type_id in ( 61 ) 
+								Then ' IsNull ( QUOTENAME ( Convert ( VarChar ( 10 ), ' + sc.name + ', 103 ) + '' '' + Right ( Convert ( VarChar ( 30 ),' + sc.name + ', 21 ), 12 ), '''''''' ) , ''null'' ) '
+							-- Numérique
+							When sc.system_type_id in ( 106, 108, 62, 59, 56, 52, 48, 127  ) 
+								Then ' IsNull ( Convert ( Varchar ( 100 ), ' + sc.name + '), ''null'' ) '
+							-- Image et Varbinary
+							When sc.system_type_id in ( 34, 165  ) 
+								Then ' ''null'' '
+							-- Autres (chaine)
+							Else
+								' IsNull (QUOTENAME ( ltrim ( rtrim (' + sc.name  + ')), '''''''' ) , ''null'' ) '
+						end 
+				From sys.objects so,
+					 sys.columns sc
+				Where so.name = @sNomTable
+				And	  so.type = 'U'
+				And   so.object_id = sc.object_id
+				Order by sc.column_id
+				For Xml path ( '' )
+				),
+			1, 9, '' )
+		+ Case @sNomTable
+			When 'personne' 
+				Then ' From sysadm.' + @sNomTable + ' Where id_ordre = ' + @sIdOrdre
+			Else ' From sysadm.' + @sNomTable + ' Where id_sin = ' + @sIdSin 
+		  End
+
+	Insert into @TbValTemp Exec ( @sVal  )
+	Update @TbValTemp Set chaine_insert = 'Insert into sysadm.' + @sNomTable + ' values ( '  + chaine_insert + ' ) '
+		
+	Insert into @TbLesInsert Select chaine_insert from @TbValTemp 
+
+	Update @TbLesTables Set marquage = 1 Where id_seq = @iIdSeq
+	Set @iIdSeq = @iIdSeq + 1
+ End
+
+ Select * from @TbLesInsert 
+
+ Go

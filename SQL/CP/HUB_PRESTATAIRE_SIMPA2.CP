@@ -1318,7 +1318,7 @@ If @iHandleObjet < 0
 		Set @sMailBody = 'Bonjour ' + char (10)
 		Set @sMailBody = @sMailBody + char (10)
 		Set @sMailBody = @sMailBody + 'Serveur : ' + @@SERVERNAME 
-		If @@SERVERNAME = 'SQL14SINISTRES\SINISTRES' Set @sMailBody = @sMailBody + ' (Alias [LS-SINISTRES])' + char (10)		
+		If @@SERVERNAME in (  'SQLPRD04\INSTANCE05', 'SQLPRD03\INSTANCE05' ) Set @sMailBody = @sMailBody + ' (Alias [LSTAGF005001])' + char (10)		
 		Set @sMailBody = @sMailBody + 'base SIMPA2 : ' + DB_NAME () + char (10)
 		Set @sMailBody = @sMailBody + 'Instance et base HUB PRESTATAIRE : ' + @sInstanceHub + char (10)
 		Set @sMailBody = @sMailBody + char (10)
@@ -1335,7 +1335,7 @@ If @iHandleObjet < 0
 		Set @sMailBody = @sMailBody + 'la valeur config_value doit être à 1 (activée) à présent' + char (10)
 		Set @sMailBody = @sMailBody + CHAR ( 10 )
 		Set @sMailBody = @sMailBody + '- Sinon vérifiez les actions SQL récemment engagées par l''équipe INFRA sur ' + @@Servername  
-		If @@SERVERNAME = 'SQL14SINISTRES\SINISTRES' Set @sMailBody = @sMailBody + ' (Alias [LS-SINISTRES])'
+		If @@SERVERNAME in (  'SQLPRD04\INSTANCE05', 'SQLPRD03\INSTANCE05' ) Set @sMailBody = @sMailBody + ' (Alias [LSTAGF005001])' + char (10)
 		Set @sMailBody = @sMailBody + ' .' + CHAR ( 10 )
 		Set @sMailBody = @sMailBody + '  Consultez la trace du traitement avec ces 2 Select pour voir depuis quand le problème se produit ' + CHAR ( 10 )
 		Set @sMailBody = @sMailBody + CHAR ( 10 )
@@ -1960,7 +1960,7 @@ Begin
 	Set @sMailBody = 'Bonjour ' + char (10)
 	Set @sMailBody = @sMailBody + char (10)
 	Set @sMailBody = @sMailBody + 'Serveur : ' + @@SERVERNAME 
-	If @@SERVERNAME = 'SQL14SINISTRES\SINISTRES' Set @sMailBody = @sMailBody + ' (Alias [LS-SINISTRES])' 
+	If @@SERVERNAME in (  'SQLPRD04\INSTANCE05', 'SQLPRD03\INSTANCE05' ) Set @sMailBody = @sMailBody + ' (Alias [LSTAGF005001])' + char (10)		
 	Set @sMailBody = @sMailBody + char (10) + 'base SIMPA2 : ' + DB_NAME () + char (10)
 	Set @sMailBody = @sMailBody + 'Instance et base HUB PRESTATAIRE : ' + @sInstanceHub + char (10)
 	Set @sMailBody = @sMailBody + char (10) 

@@ -19813,6 +19813,8 @@ Go
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
+-- JFF		21/05/2025	 MIGR_SQL2022
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_RS1465_STAT_FORCAGE' AND type = 'P' )
         DROP procedure sysadm.PS_S_RS1465_STAT_FORCAGE
 GO
@@ -19842,9 +19844,17 @@ Select 'Forçage de refus par niveau utilisateur vs niveau produit' 'Type_forcage
 	   'Décision machine : ' + sysadm.FN_CODE_NUM ( g.cod_dec_mac, '-ET' ) + ' / Décision forcée par l''opérateur : ' + sysadm.FN_CODE_NUM ( g.cod_etat, '-ET' ) 'Action_Forcage',
 	   g.valide_le 'Dernière_validation',
 	   g.valide_par 'Valide_par',
-	   ( Select rtrim ( nom) + ' ' + rtrim ( prenom ) from [SQL14BI\SINISTRESBI].SESAME_PRO.sysadm.operateur where id_oper = g.valide_par ) 'Nom_valideur',
-	   'Le système refusait la garantie, mais l''utilisateur par son niveau par rapport au niveau du produit, a pu priviligié la décision du détail de garantie qui demander à règler' 'Infomation_Forcage',
-	   'Le dernier valideur n''est pas forcément celui qui a forcé' 'Information_sur_dernier_valideur'
+	   Case -- MIGR_SQL2022
+			When @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+				Then 
+				   ( Select rtrim ( nom) + ' ' + rtrim ( prenom ) from SESAME_PRO.sysadm.operateur where id_oper = g.valide_par ) 
+			Else
+				   ( Select rtrim ( nom) + ' ' + rtrim ( prenom ) from SESAME_SIM.sysadm.operateur where id_oper = g.valide_par ) 
+		End 'Nom_valideur',
+		'Le système refusait la garantie, mais l''utilisateur par son niveau par rapport au niveau du produit, a pu priviligié la décision du détail de garantie qui demander à règler' 'Infomation_Forcage',
+		'Le dernier valideur n''est pas forcément celui qui a forcé' 'Information_sur_dernier_valideur'
+
+
 
 From sysadm.gar_sin g with (nolock ),
 	 sysadm.sinistre s with (nolock )
@@ -19867,9 +19877,15 @@ Select 'Forçage de prise en charge par niveau utilisateur vs niveau produit' 'Ty
 	   'L''utilisateur a coché le forçage de prise en charge sur le détail de garantie.' 'Action_Forcage',
 	   dvpd.valide_le 'Dernière_validation',
 	   dvpd.valide_par 'Valide_par',
-	   ( Select rtrim ( nom) + ' ' + rtrim ( prenom ) from [SQL14BI\SINISTRESBI].SESAME_PRO.sysadm.operateur where id_oper = dvpd.valide_par ) 'Nom_valideur',
-	   'Le système donnait un montant de PEC après plafond de 0.00€ ou bien le montant donné ne convenait pas (positif mais trop bas), l''utilisateur a forcé la PEC et évenuellement mis son propre montant de PEC.' 'Infomation_Forcage',
-	   'Le dernier valideur n''est pas forcément celui qui a forcé'
+	   Case -- MIGR_SQL2022
+			When @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+				Then 
+				   ( Select rtrim ( nom) + ' ' + rtrim ( prenom ) from SESAME_PRO.sysadm.operateur where id_oper = dvpd.valide_par )
+			Else 
+				   ( Select rtrim ( nom) + ' ' + rtrim ( prenom ) from SESAME_SIM.sysadm.operateur where id_oper = dvpd.valide_par )
+		End 'Nom_valideur',
+		'Le système donnait un montant de PEC après plafond de 0.00€ ou bien le montant donné ne convenait pas (positif mais trop bas), l''utilisateur a forcé la PEC et évenuellement mis son propre montant de PEC.' 'Infomation_Forcage',
+		'Le dernier valideur n''est pas forcément celui qui a forcé'
 
 From sysadm.div_det dvpd with (nolock ),
 	 sysadm.sinistre s with (nolock )
@@ -19891,9 +19907,18 @@ Select 'Forçage de règlement par niveau utilisateur vs niveau produit' 'Type_for
 	   'L''utilisateur a coché le forçage de règlement sur le détail de garantie.' 'Action_Forcage',
 	   det.valide_le 'Dernière_validation',
 	   det.valide_par 'Valide_par',
-	   ( Select rtrim ( nom) + ' ' + rtrim ( prenom ) from [SQL14BI\SINISTRESBI].SESAME_PRO.sysadm.operateur where id_oper = det.valide_par ) 'Nom_valideur',
-	   'Le système donnait un montant de règlement après plafond de 0.00€ ou bien le montant donné ne convenait pas (positif mais trop bas), l''utilisateur a forcé le règlement et mis son propre montant de règlement.' 'Infomation_Forcage',
-	   'Le dernier valideur n''est pas forcément celui qui a forcé'
+	   Case -- MIGR_SQL2022
+			When @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+				Then 
+				   ( Select rtrim ( nom) + ' ' + rtrim ( prenom ) from SESAME_PRO.sysadm.operateur where id_oper = det.valide_par ) 
+			Else
+				   ( Select rtrim ( nom) + ' ' + rtrim ( prenom ) from SESAME_SIM.sysadm.operateur where id_oper = det.valide_par ) 
+		End 'Nom_valideur',
+		'Le système donnait un montant de règlement après plafond de 0.00€ ou bien le montant donné ne convenait pas (positif mais trop bas), l''utilisateur a forcé le règlement et mis son propre montant de règlement.' 'Infomation_Forcage',
+		'Le dernier valideur n''est pas forcément celui qui a forcé'
+
+
+
 
 From sysadm.detail det with (nolock ),
 	 sysadm.sinistre s with (nolock )
@@ -20122,12 +20147,12 @@ Declare @sInstance VarChar ( 50 )
 
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 BEGIN
-	Set @sInstance = ''
+	Set @sInstance = 'SESAME_PRO'
 END 
 Else
 BEGIN
 	-- [MIGR_SQL2022]
-	Set @sInstance = '[SQL14BI\SINISTRESBI].'
+	Set @sInstance = 'SESAME_SIM'
 END 
 
 Set @sSql = '
@@ -20140,8 +20165,8 @@ Set @sSql = '
 				Else ''GT UE''
 			End ''Profil_GT''
 
-	from ' + @sInstance + 'SESAME_PRO.sysadm.connexion co,' 
-		   + @sInstance + 'SESAME_PRO.sysadm.operateur op 
+	from ' + @sInstance + '.sysadm.connexion co,' 
+		   + @sInstance + '.sysadm.operateur op 
 	where co.id_appli = ''SIM8''
 	and op.id_oper = co.id_oper'
 

@@ -1274,6 +1274,17 @@ If @@Rowcount > 0 Set @asPresentSurSIMPA2= 'OUI'
 
 Go
 
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_SAGA2_MARQUE_IFR_V01
+-- Auteur               :       FABRY JF
+-- Date                 :       05/2025
+-- Libellé              :       
+-- Commentaires         :       
+-- Références           :       
+--
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_SAGA2_MARQUE_IFR_V01' AND type = 'P' )
         DROP procedure sysadm.PS_S_SAGA2_MARQUE_IFR_V01
 GO
@@ -1295,6 +1306,16 @@ Order by i.marque
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_SAGA2_MODELE_IFR_V01
+-- Auteur               :       FABRY JF
+-- Date                 :       05/2025
+-- Libellé              :       
+-- Commentaires         :       
+-- Références           :       
+--
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_SAGA2_MODELE_IFR_V01' AND type = 'P' )
         DROP procedure sysadm.PS_S_SAGA2_MODELE_IFR_V01
 GO
@@ -1320,5 +1341,37 @@ Order by i.reference
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_SAGA2_EXTRANET_LST_MARQ_MODL_IFR_SUR_TYPE_APP
+-- Auteur               :       FABRY JF
+-- Date                 :       05/2025
+-- Libellé              :       
+-- Commentaires         :       
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_SAGA2_EXTRANET_LST_MARQ_MODL_IFR_SUR_TYPE_APP' AND type = 'P' )
+        DROP procedure sysadm.PS_S_SAGA2_EXTRANET_LST_MARQ_MODL_IFR_SUR_TYPE_APP
+GO
+
+CREATE procedure sysadm.PS_S_SAGA2_EXTRANET_LST_MARQ_MODL_IFR_SUR_TYPE_APP
+	@asLstTypApp Varchar ( 100 ) 
+AS
+
+Set nocount on
+
+Set @asLstTypApp = LTRIM ( rTrim ( Upper ( @asLstTypApp  )))
+If LEFT ( @asLstTypApp, 1 ) <> '#' Set @asLstTypApp = '#' + @asLstTypApp
+If right ( @asLstTypApp, 1 ) <> '#' Set @asLstTypApp = @asLstTypApp + '#'
+
+Select	i.sku_saga 'typ_app', 
+		i.marque 'marque_ifr',
+		i.reference 'modele_ifr'
+from sysadm.ifr i
+where CharIndex ( '#' + ltrim ( rtrim ( i.sku_saga )) + '#', @asLstTypApp , 1 )  > 0 
+Order by 1, 2, 3
+
+Go
 
 
