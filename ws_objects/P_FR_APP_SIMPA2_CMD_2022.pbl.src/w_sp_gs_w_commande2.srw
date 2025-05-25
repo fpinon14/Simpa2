@@ -2410,7 +2410,7 @@ cb_modif_adr.Enabled = False
 
 lnvPFCString.of_Setkeyvalue ( sVal, "COD_ETAT", sCodEtat, ";")
 lnvPFCString.of_Setkeyvalue ( sVal, "MAJ_PRS", "OUI", ";")
-lnvPFCString.of_Setkeyvalue ( sVal, "MAJ_PRSHUB", "OUI", ";") // [HUB1505]
+lnvPFCString.of_Setkeyvalue ( sVal, "MAJ_PRSHUBADR", "OUI", ";") // [HUB1505]
 lnvPFCString.of_Setkeyvalue ( sVal, "MAJ_ADRESSE", "OUI", ";")
 Dw_1.SetItem ( 1, "INFO_SPB_FRN_CPLT", sVal )
 

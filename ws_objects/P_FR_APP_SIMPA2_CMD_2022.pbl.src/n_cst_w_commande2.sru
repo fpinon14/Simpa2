@@ -1436,6 +1436,7 @@ public function integer uf_annuler_cmde ();//*----------------------------------
 //       JFF   05/08/2024 [MCO602_PNEU]
 //			JFF   28/01/2025 [ISM457148]
 // 		JFF	12/05/2025 [HUB1489]
+//       JFF   23/05/2025 [HUB1528]
 //*-----------------------------------------------------------------
 
 Int		iRet,  iIdSeq
@@ -1450,11 +1451,11 @@ Boolean  bPasseDroit  		// #24 [FNAC_PROD_ECH_TECH].[BGE].[20091027112156767]
 Boolean  bDT57_annulation // [DT57_CMDE_IPHONE_SFR]
 Boolean	bFin
 Long		lIdSin, lRow, lVal1, lVal2
-String	sIdTypArt, SIdFour, sIdRefFour, sVal 
+String	sIdTypArt, SIdFour, sIdRefFour, sVal, sCodEtat 
 DataWindowChild	dwChild
 Int		iReponse // #13	[DCMP080174] : On stocke la reponse à la question posée en fin de trt pour l'annulation
 Decimal {2} dcIdsin, dcMtFranchiseARemb
-string	sModele, sInfoSpbFrnCplt // [DT57_CMDE_IPHONE_SFR]
+string	sModele, sInfoSpbFrnCplt, sIdHubPresta
 n_cst_string lnvPFCString
 
 bAffichMsg = True // #13	[DCMP080174] : Par defaut on affiche le mesasge quand on doit l'afficher.
@@ -1467,6 +1468,7 @@ iRet = 1
 
 sIdFour = Upper(idw_TrtCmde.GetItemString ( 1, "ID_FOUR" )) // #26
 sIdRefFour = idw_TrtCmde.GetItemString ( 1, "ID_REF_FOUR" )
+sIdHubPresta = F_CLE_VAL ( "HP_ID_HUB_PRESTA", sInfoSpbFrnCplt, ";") // [HUB1489]
 
 stMessage.sTitre		= "Annulation d'une commande"
 stMessage.Icon			= Information!
@@ -1550,17 +1552,35 @@ End If
 
 
 // [HUB1489]
-If F_CLE_VAL ( "HP_ID_HUB_PRESTA", sInfoSpbFrnCplt, ";") <> "" Then
-	stMessage.sTitre		= "Annulation d'une commande"
-	stMessage.Icon			= Information!
-	stMessage.bErreurG	= FALSE
-	stMessage.Bouton		= Ok!	
-	stMessage.sCode		= "COMT006"
-	F_Message ( stMessage )
-	iRet = -1
-	Return iRet
-End IF 
-
+// [HUB1528]
+If F_CLE_A_TRUE ( "HUB1528" ) Then
+	If sIdHubPresta <> "" Then
+		If SQLCA.PS_HP276_S_S2_CONDITION_ANNULATION_PRS_HUB ( sIdHubPresta ) < 0 Then
+			stMessage.sTitre		= "Annulation impossible"
+			stMessage.Icon			= Information!
+			stMessage.bErreurG	= FALSE
+			stMessage.Bouton		= Ok!	
+			stMessage.sCode		= "HUBP025"
+			F_Message ( stMessage )
+			iRet = -1
+			Return iRet
+		End If 
+		
+	End If 
+	
+Else 
+	If sIdHubPresta <> "" Then
+		stMessage.sTitre		= "Annulation d'une commande"
+		stMessage.Icon			= Information!
+		stMessage.bErreurG	= FALSE
+		stMessage.Bouton		= Ok!	
+		stMessage.sCode		= "COMT006"
+		F_Message ( stMessage )
+		iRet = -1
+		Return iRet
+	End IF 
+End If
+// [HUB1528]
 // /[HUB1489]
 
 /*------------------------------------------------------------------*/
@@ -2370,8 +2390,27 @@ Choose case sIdFour
 	// JFF le 23/11/2006 : Je modifie en Else
 	Case Else
 		
-		// ISM457148
-		If Not ( SQLCA.PS_S_CODE_DANS_FAMILLE_CAR ( 1, sIdFour ) > 0 ) Then
+		// ISM457148 // FOurn est est FOurn Hub
+		If ( SQLCA.PS_S_CODE_DANS_FAMILLE_CAR ( 1, sIdFour ) > 0 ) Then
+			// HUB
+			// [HUB1528]
+			
+			sCodEtat = idw_TrtCmde.GetItemString ( 1, "COD_ETAT" )
+			idw_TrtCmde.SetItem ( 1, "COD_ETAT", "CNV" )
+			
+			lnvPFCString.of_Setkeyvalue ( sInfoSpbFrnCplt, "COD_ETAT", sCodEtat, ";")
+			lnvPFCString.of_Setkeyvalue ( sInfoSpbFrnCplt, "MAJ_PRSHUBANN", "OUI", ";") // [
+			lnvPFCString.of_Setkeyvalue ( sInfoSpbFrnCplt, "MAJ_A_ANNULER", "OUI", ";")
+			idw_TrtCmde.SetItem ( 1, "INFO_SPB_FRN_CPLT", sInfoSpbFrnCplt )
+
+			stMessage.Icon			= Information!
+			stMessage.Bouton		= Ok!
+			stMessage.sCode		= "HUBP024"				
+			F_Message ( stMessage )
+			
+			// /[HUB1528]
+		Else 
+			// Hors Hub
 			bAnnulGen = False
 			iRet = -1
 			stMessage.Icon			= Information!

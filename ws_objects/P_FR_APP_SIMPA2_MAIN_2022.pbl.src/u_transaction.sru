@@ -832,6 +832,8 @@ function Integer PS_S_RECH_ID_HUB_PRESTA_SUR_UN_DOSSIER ( Long adcIdSin, String 
 //   JFF   24/04/2025 [LGY53_EQU_CNX] sur SESAME
 subroutine PS_IU_EQUI_TS_CNX ( String asCas, String asIdOper, String asIdAppli, Long alNumRevCnx, String asTsVmCnx, Ref Long alIdCnx )  RPCFUNC ALIAS FOR "sysadm.PS_IU_EQUI_TS_CNX"
 
+//   JFF   23/05/2025 [HUB1528]
+function Integer PS_HP276_S_S2_CONDITION_ANNULATION_PRS_HUB ( String sIdHubPresta ) RPCFUNC ALIAS FOR "sysadm.PS_HP276_S_S2_CONDITION_ANNULATION_PRS_HUB"
 
 end prototypes
 type variables
