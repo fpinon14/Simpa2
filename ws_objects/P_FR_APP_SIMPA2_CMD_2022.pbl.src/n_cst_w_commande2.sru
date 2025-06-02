@@ -1449,7 +1449,7 @@ Boolean	bCasO2MDiagNonCloture //* #18 [DCMP090165]
 Boolean	bAnnulationParFluxEdi // #24 [FNAC_PROD_ECH_TECH].[BGE].[20091027112156767]
 Boolean  bPasseDroit  		// #24 [FNAC_PROD_ECH_TECH].[BGE].[20091027112156767]
 Boolean  bDT57_annulation // [DT57_CMDE_IPHONE_SFR]
-Boolean	bFin
+Boolean	bFin, bFournHub
 Long		lIdSin, lRow, lVal1, lVal2
 String	sIdTypArt, SIdFour, sIdRefFour, sVal, sCodEtat 
 DataWindowChild	dwChild
@@ -1468,7 +1468,8 @@ iRet = 1
 
 sIdFour = Upper(idw_TrtCmde.GetItemString ( 1, "ID_FOUR" )) // #26
 sIdRefFour = idw_TrtCmde.GetItemString ( 1, "ID_REF_FOUR" )
-sIdHubPresta = F_CLE_VAL ( "HP_ID_HUB_PRESTA", sInfoSpbFrnCplt, ";") // [HUB1489]
+sInfoSpbFrnCplt = idw_TrtCmde.GetItemString ( 1, "INFO_SPB_FRN_CPLT" ) // [HUB1528]
+sIdHubPresta = F_CLE_VAL ( "HP_ID_HUB_PRESTA", sInfoSpbFrnCplt, ";") // [HUB1528]
 
 stMessage.sTitre		= "Annulation d'une commande"
 stMessage.Icon			= Information!
@@ -1553,7 +1554,7 @@ End If
 
 // [HUB1489]
 // [HUB1528]
-If F_CLE_A_TRUE ( "HUB1528" ) Then
+If F_CLE_A_TRUE ( "HUB1528_ANN_PRSHUB" ) Then
 	If sIdHubPresta <> "" Then
 		If SQLCA.PS_HP276_S_S2_CONDITION_ANNULATION_PRS_HUB ( sIdHubPresta ) < 0 Then
 			stMessage.sTitre		= "Annulation impossible"
@@ -2390,13 +2391,15 @@ Choose case sIdFour
 	// JFF le 23/11/2006 : Je modifie en Else
 	Case Else
 		
+		// [HUB1528]
+		bFournHub = SQLCA.PS_S_CODE_DANS_FAMILLE_CAR ( 1, sIdFour ) > 0 
+		
 		// ISM457148 // FOurn est est FOurn Hub
-		If ( SQLCA.PS_S_CODE_DANS_FAMILLE_CAR ( 1, sIdFour ) > 0 ) Then
+		If bFournHub Then
 			// HUB
 			// [HUB1528]
 			
 			sCodEtat = idw_TrtCmde.GetItemString ( 1, "COD_ETAT" )
-			idw_TrtCmde.SetItem ( 1, "COD_ETAT", "CNV" )
 			
 			lnvPFCString.of_Setkeyvalue ( sInfoSpbFrnCplt, "COD_ETAT", sCodEtat, ";")
 			lnvPFCString.of_Setkeyvalue ( sInfoSpbFrnCplt, "MAJ_PRSHUBANN", "OUI", ";") // [
@@ -2426,8 +2429,10 @@ End Choose
 /* #2                                                               */
 /*------------------------------------------------------------------*/
 If bAnnulGen Then
-	// #13 [DCMP080174]
-	if bAffichMsg Then
+	// #13 [DCMP080174] 
+	// [HUB1528]
+	
+	if bAffichMsg And Not bFournHub Then
 		//* #17 [20090209142923553]
 		If Not bMessParticulier Then
 			stMessage.sCode		= "COMD477"		// #6  [DCMP080479] On force le message à présent
@@ -2457,7 +2462,14 @@ If bAnnulGen Then
 	*/
 	
 	if iReponse = 1 Then
-		idw_TrtCmde.SetItem ( 1, "COD_ETAT", "ANN" )
+
+		// [HUB1528]
+		If bFournHub Then 
+			idw_TrtCmde.SetItem ( 1, "COD_ETAT", "CNV" )
+		Else 
+			idw_TrtCmde.SetItem ( 1, "COD_ETAT", "ANN" )
+		End If 
+		
 		idw_TrtCmde.SetItem ( 1, "NOM_GEST", stGlb.sNomOper + " " +stGlb.sPrenomOper  )
 		idw_TrtCmde.SetItem ( 1, "MAJ_LE", dtNow )	
 		idw_TrtCmde.SetItem ( 1, "MAJ_PAR", stGlb.sCodOper )	
@@ -2498,7 +2510,13 @@ If bAnnulGen Then
 				stMessage.Icon			= Exclamation!
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= YESNO!
-				stMessage.sCode		= "COMD478"
+				
+				If bFournHub then 
+					stMessage.sCode		= "COMT009"
+				Else 
+					stMessage.sCode		= "COMD478"
+				End If 
+				
 				If F_Message ( stMessage ) = 1 Then bFin = TRUE
 			Loop			
 
