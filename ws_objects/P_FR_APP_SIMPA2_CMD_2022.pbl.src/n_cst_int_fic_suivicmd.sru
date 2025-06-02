@@ -30137,7 +30137,7 @@ private function integer uf_ctrl_fichier_telstore ();//*------------------------
 
 n_cst_string lnvPFCString
 Int iRet 
-String	sIdFour, sVal, sCar, sIMEICorr, sIdFourCtrl, sVal2, sInfoFrnSpbCpltLu, sVal3
+String	sIdFour, sVal, sCar, sIMEICorr, sIdFourCtrl, sVal2, sInfoFrnSpbCpltLu, sVal3, sIdTypArtSin
 Long		lTotLig, lCpt, lCptVal, lLen, lPos, lVal
 Boolean	bTrouve
 datetime	dtVal, dtVal1, dtNull
@@ -30217,6 +30217,8 @@ For lCpt = lTotLig To 1 Step -1
 
 	SQLCA.PS_S11_COMMANDE_V07 ( lidsin, lidseq, sIdFourBase, sCodEtat, iStatusGc, sIdRefFour, iInfoSpbFrn, sIdTypArt, dcIdprod, sInfoSpbFrnCplt, sInfoFrnSpbCplt, sChaineBCV )
 
+	sIdTypArtSin = lnvPFCString.of_getkeyvalue (sChaineBCV, "TYP_APP_DS", ";") 
+
 	Choose Case iStatusGc
 		Case 176, 178
 
@@ -30265,20 +30267,22 @@ For lCpt = lTotLig To 1 Step -1
 	/*------------------------------------------------------------------*/
 	/* ZONE 4 : NUM_IMEI_NOU														  */
 	/*------------------------------------------------------------------*/
-	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_IMEI_NOU" ) )
-
-	If Len ( sVal ) <> 15 And Len ( sVal ) > 0 Then
-		iRet = -1
-		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Un numéro d'IMEI doit contenir 15 chiffres" )
-	End If
-
-	If Not F_IMEI ( sVal, sIMEICorr ) And Len ( sVal ) > 0 Then
-		iRet = -1
-		This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
-		" : Numéro d'IMEI non valide" )
+	If sIdTypArtSin = "TEL" Then 
+		sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_IMEI_NOU" ) )
+	
+		If Len ( sVal ) <> 15 And Len ( sVal ) > 0 Then
+			iRet = -1
+			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
+			" : Un numéro d'IMEI doit contenir 15 chiffres" )
+		End If
+	
+		If Not F_IMEI ( sVal, sIMEICorr ) And Len ( sVal ) > 0 Then
+			iRet = -1
+			This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
+			" : Numéro d'IMEI non valide" )
+		End If 
 	End If 
-
+	
 	/*------------------------------------------------------------------*/
 	/* ZONE 5 : DTE_RCP_FRN															  */
 	/*------------------------------------------------------------------*/
