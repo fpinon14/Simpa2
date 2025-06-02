@@ -19597,35 +19597,68 @@ CREATE procedure sysadm.PS_S_STAT_REFUS_VDOC29595
     @dtDteFin       DateTime
 As
 
-Select Convert ( Varchar ( 4 ), Year ( a.cree_le)) +  Right ( '00' + Convert ( Varchar ( 4 ), Month ( a.cree_le )), 2 )  'Période_(mois)',	
-	   '''' + Upper ( Left ( DateName ( month, a.cree_le ),1)) + Right ( DateName ( month, a.cree_le ), Len ( DateName ( month, a.cree_le ) ) -1) + ' ' + Convert ( varchar ( 20), Year ( a.cree_le ) ) 'lib_mois',
-	   a.id_sin 'Identifiant_sinistre',
-	   a.id_cour 'Identification courrier',
-	   a.id_prod 'Identification produits',
-	   p.lib_long 'lib_produit',
-	   a.id_cour_orig 'Identification courrier d’origine',
-	   sysadm.FN_CODE_CAR ( a.id_cour_orig, '-CC' ) 'Lib_courrier',
-	   a.valide_par 'Trigramme',
-	   ( Select rtrim ( o.nom ) + ' ' + rtrim ( o.prenom ) From [LS-SINISTRES].SESAME_PRO.sysadm.operateur o with (nolock) where o.id_oper = a.valide_par ) 'Nom_Gestionnaire',
-	   sysadm.FN_CODE_NUM (  ds.val_nbre, '-ET' )  'Etat_dos_vu_assuré',
-	   sysadm.FN_CODE_NUM ( s.cod_etat, '-ET' )  'Etat_vu_assureur'
+If @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+	Begin
+		Select Convert ( Varchar ( 4 ), Year ( a.cree_le)) +  Right ( '00' + Convert ( Varchar ( 4 ), Month ( a.cree_le )), 2 )  'Période_(mois)',	
+			   '''' + Upper ( Left ( DateName ( month, a.cree_le ),1)) + Right ( DateName ( month, a.cree_le ), Len ( DateName ( month, a.cree_le ) ) -1) + ' ' + Convert ( varchar ( 20), Year ( a.cree_le ) ) 'lib_mois',
+			   a.id_sin 'Identifiant_sinistre',
+			   a.id_cour 'Identification courrier',
+			   a.id_prod 'Identification produits',
+			   p.lib_long 'lib_produit',
+			   a.id_cour_orig 'Identification courrier d’origine',
+			   sysadm.FN_CODE_CAR ( a.id_cour_orig, '-CC' ) 'Lib_courrier',
+			   a.valide_par 'Trigramme',
+			   ( Select rtrim ( o.nom ) + ' ' + rtrim ( o.prenom ) From SESAME_PRO.sysadm.operateur o with (nolock) where o.id_oper = a.valide_par ) 'Nom_Gestionnaire',
+			   sysadm.FN_CODE_NUM (  ds.val_nbre, '-ET' )  'Etat_dos_vu_assuré',
+			   sysadm.FN_CODE_NUM ( s.cod_etat, '-ET' )  'Etat_vu_assureur'
 	
-From sysadm.archive a with (nolock),	
-	 sysadm.produit p with (nolock),
-	 sysadm.sinistre s with (nolock),
-	 sysadm.div_sin ds with (nolock)
+		From sysadm.archive a with (nolock),	
+			 sysadm.produit p with (nolock),
+			 sysadm.sinistre s with (nolock),
+			 sysadm.div_sin ds with (nolock)
 	 
-Where p.id_grp = 254	
-And   a.id_prod = p.id_prod	
-And   a.cree_le between DateAdd ( year, -1, @dtDteFin ) and @dtDteFin	
-And   s.id_sin = a.id_sin 	
-And   ds.id_sin = a.id_sin	
-And   ds.nom_zone = 'etat_vu_assure'	
-And   ds.val_nbre in ( 200, 1530 )	
-And   Not exists ( Select Top 1 1 From sysadm.commande c with (nolock) where c.id_sin = s.id_sin )	
-And   Not exists ( Select Top 1 1 From sysadm.div_det dd with (nolock) where dd.id_sin = s.id_sin and dd.nom_zone = 'pec' and dd.val_car = 'O' ) 	
-Order by 1	
-
+		Where p.id_grp = 254	
+		And   a.id_prod = p.id_prod	
+		And   a.cree_le between DateAdd ( year, -1, @dtDteFin ) and @dtDteFin	
+		And   s.id_sin = a.id_sin 	
+		And   ds.id_sin = a.id_sin	
+		And   ds.nom_zone = 'etat_vu_assure'	
+		And   ds.val_nbre in ( 200, 1530 )	
+		And   Not exists ( Select Top 1 1 From sysadm.commande c with (nolock) where c.id_sin = s.id_sin )	
+		And   Not exists ( Select Top 1 1 From sysadm.div_det dd with (nolock) where dd.id_sin = s.id_sin and dd.nom_zone = 'pec' and dd.val_car = 'O' ) 	
+		Order by 1	
+	End
+Else
+	Begin
+		Select Convert ( Varchar ( 4 ), Year ( a.cree_le)) +  Right ( '00' + Convert ( Varchar ( 4 ), Month ( a.cree_le )), 2 )  'Période_(mois)',	
+			   '''' + Upper ( Left ( DateName ( month, a.cree_le ),1)) + Right ( DateName ( month, a.cree_le ), Len ( DateName ( month, a.cree_le ) ) -1) + ' ' + Convert ( varchar ( 20), Year ( a.cree_le ) ) 'lib_mois',
+			   a.id_sin 'Identifiant_sinistre',
+			   a.id_cour 'Identification courrier',
+			   a.id_prod 'Identification produits',
+			   p.lib_long 'lib_produit',
+			   a.id_cour_orig 'Identification courrier d’origine',
+			   sysadm.FN_CODE_CAR ( a.id_cour_orig, '-CC' ) 'Lib_courrier',
+			   a.valide_par 'Trigramme',
+			   ( Select rtrim ( o.nom ) + ' ' + rtrim ( o.prenom ) From SESAME_SIM.sysadm.operateur o with (nolock) where o.id_oper = a.valide_par ) 'Nom_Gestionnaire',
+			   sysadm.FN_CODE_NUM (  ds.val_nbre, '-ET' )  'Etat_dos_vu_assuré',
+			   sysadm.FN_CODE_NUM ( s.cod_etat, '-ET' )  'Etat_vu_assureur'
+	
+		From sysadm.archive a with (nolock),	
+			 sysadm.produit p with (nolock),
+			 sysadm.sinistre s with (nolock),
+			 sysadm.div_sin ds with (nolock)
+	 
+		Where p.id_grp = 254	
+		And   a.id_prod = p.id_prod	
+		And   a.cree_le between DateAdd ( year, -1, @dtDteFin ) and @dtDteFin	
+		And   s.id_sin = a.id_sin 	
+		And   ds.id_sin = a.id_sin	
+		And   ds.nom_zone = 'etat_vu_assure'	
+		And   ds.val_nbre in ( 200, 1530 )	
+		And   Not exists ( Select Top 1 1 From sysadm.commande c with (nolock) where c.id_sin = s.id_sin )	
+		And   Not exists ( Select Top 1 1 From sysadm.div_det dd with (nolock) where dd.id_sin = s.id_sin and dd.nom_zone = 'pec' and dd.val_car = 'O' ) 	
+		Order by 1	
+	End
 Go
 
 --------------------------------------------------------------------
@@ -19825,109 +19858,170 @@ CREATE procedure sysadm.PS_S_RS1465_STAT_FORCAGE
 As
 
 -- Forçage Refus par niveau
-Select 'Forçage de refus par niveau utilisateur vs niveau produit' 'Type_forcage',
-	   s.id_prod,
-	   sysadm.FN_LIB_PROD ( s.id_prod ) 'lib_prod',
-	   sysadm.FN_LIB_POLE ( s.id_prod ) 'lib_pole',	
-	   g.id_sin,
-	   g.id_gti,
-	   -1 'id_detail',
-	   sysadm.FN_CODE_NUM ( g.id_gti, '-GA' ) 'lib_gti',
-		( 
-		   Select stuff ( 
-					( SELECT Distinct ', (' + CAST(rtrim ( r.id_motif ) AS VARCHAR(250)) +') ' + CAST(rtrim ( sysadm.FN_CODE_NUM ( r.id_motif, '+RE' ) ) AS VARCHAR(250)) 
-					  FROM sysadm.refus r
-					  Where r.id_sin = g.id_sin
-					  And   r.alt_mac = 'O'
-					  For XML PATH ('') )
-				, 1, 2, '' ))  'Liste_Refus_Forcee',
-	   'Décision machine : ' + sysadm.FN_CODE_NUM ( g.cod_dec_mac, '-ET' ) + ' / Décision forcée par l''opérateur : ' + sysadm.FN_CODE_NUM ( g.cod_etat, '-ET' ) 'Action_Forcage',
-	   g.valide_le 'Dernière_validation',
-	   g.valide_par 'Valide_par',
-	   Case -- MIGR_SQL2022
-			When @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
-				Then 
-				   ( Select rtrim ( nom) + ' ' + rtrim ( prenom ) from SESAME_PRO.sysadm.operateur where id_oper = g.valide_par ) 
-			Else
-				   ( Select rtrim ( nom) + ' ' + rtrim ( prenom ) from SESAME_SIM.sysadm.operateur where id_oper = g.valide_par ) 
-		End 'Nom_valideur',
-		'Le système refusait la garantie, mais l''utilisateur par son niveau par rapport au niveau du produit, a pu priviligié la décision du détail de garantie qui demander à règler' 'Infomation_Forcage',
-		'Le dernier valideur n''est pas forcément celui qui a forcé' 'Information_sur_dernier_valideur'
+If @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+	Begin
+		Select 'Forçage de refus par niveau utilisateur vs niveau produit' 'Type_forcage',
+			   s.id_prod,
+			   sysadm.FN_LIB_PROD ( s.id_prod ) 'lib_prod',
+			   sysadm.FN_LIB_POLE ( s.id_prod ) 'lib_pole',	
+			   g.id_sin,
+			   g.id_gti,
+			   -1 'id_detail',
+			   sysadm.FN_CODE_NUM ( g.id_gti, '-GA' ) 'lib_gti',
+				( 
+				   Select stuff ( 
+							( SELECT Distinct ', (' + CAST(rtrim ( r.id_motif ) AS VARCHAR(250)) +') ' + CAST(rtrim ( sysadm.FN_CODE_NUM ( r.id_motif, '+RE' ) ) AS VARCHAR(250)) 
+							  FROM sysadm.refus r
+							  Where r.id_sin = g.id_sin
+							  And   r.alt_mac = 'O'
+							  For XML PATH ('') )
+						, 1, 2, '' ))  'Liste_Refus_Forcee',
+			   'Décision machine : ' + sysadm.FN_CODE_NUM ( g.cod_dec_mac, '-ET' ) + ' / Décision forcée par l''opérateur : ' + sysadm.FN_CODE_NUM ( g.cod_etat, '-ET' ) 'Action_Forcage',
+			   g.valide_le 'Dernière_validation',
+			   g.valide_par 'Valide_par',
+			   ( Select rtrim ( nom) + ' ' + rtrim ( prenom ) from SESAME_PRO.sysadm.operateur where id_oper = g.valide_par ) 'Nom_valideur',
+				'Le système refusait la garantie, mais l''utilisateur par son niveau par rapport au niveau du produit, a pu priviligié la décision du détail de garantie qui demander à règler' 'Infomation_Forcage',
+				'Le dernier valideur n''est pas forcément celui qui a forcé' 'Information_sur_dernier_valideur'
 
+		From sysadm.gar_sin g with (nolock ),
+			 sysadm.sinistre s with (nolock )
+		Where g.cod_etat in ( 550, 600 )
+		And   g.cod_dec_mac <> g.cod_etat
+		And   g.cod_dec_mac = 200
+		And   g.valide_le between @dtDteDeb and @dtDteFin
+		And   s.id_sin = g.id_sin
+		Union all 
+		-- Forçage Prise en charge
+		Select 'Forçage de prise en charge par niveau utilisateur vs niveau produit' 'Type_forcage',
+			   s.id_prod,
+			   sysadm.FN_LIB_PROD ( s.id_prod ) 'lib_prod',
+			   sysadm.FN_LIB_POLE ( s.id_prod ) 'lib_pole',	
+			   dvpd.id_sin,
+			   dvpd.id_gti,
+			   dvpd.id_detail,
+			   sysadm.FN_CODE_NUM ( dvpd.id_gti, '-GA' ) 'lib_gti',
+			   'Non concerné',
+			   'L''utilisateur a coché le forçage de prise en charge sur le détail de garantie.' 'Action_Forcage',
+			   dvpd.valide_le 'Dernière_validation',
+			   dvpd.valide_par 'Valide_par',
+			   ( Select rtrim ( nom) + ' ' + rtrim ( prenom ) from SESAME_PRO.sysadm.operateur where id_oper = dvpd.valide_par ) 'Nom_valideur',
+				'Le système donnait un montant de PEC après plafond de 0.00€ ou bien le montant donné ne convenait pas (positif mais trop bas), l''utilisateur a forcé la PEC et évenuellement mis son propre montant de PEC.' 'Infomation_Forcage',
+				'Le dernier valideur n''est pas forcément celui qui a forcé'
 
+		From sysadm.div_det dvpd with (nolock ),
+			 sysadm.sinistre s with (nolock )
+		Where dvpd.nom_zone = 'alt_pec'
+		And   dvpd.val_car = 'O'
+		And   dvpd.valide_le between @dtDteDeb and @dtDteFin
+		And   s.id_sin = dvpd.id_sin
+		Union all
+		-- Forçage de règlement
+		Select 'Forçage de règlement par niveau utilisateur vs niveau produit' 'Type_forcage',
+			   s.id_prod,
+			   sysadm.FN_LIB_PROD ( s.id_prod ) 'lib_prod',
+			   sysadm.FN_LIB_POLE ( s.id_prod ) 'lib_pole',	
+			   det.id_sin,
+			   det.id_gti,
+			   det.id_detail,
+			   sysadm.FN_CODE_NUM ( det.id_gti, '-GA' ) 'lib_gti',
+			   'Non concerné',
+			   'L''utilisateur a coché le forçage de règlement sur le détail de garantie.' 'Action_Forcage',
+			   det.valide_le 'Dernière_validation',
+			   det.valide_par 'Valide_par',
+			   ( Select rtrim ( nom) + ' ' + rtrim ( prenom ) from SESAME_PRO.sysadm.operateur where id_oper = det.valide_par ) 'Nom_valideur',
+				'Le système donnait un montant de règlement après plafond de 0.00€ ou bien le montant donné ne convenait pas (positif mais trop bas), l''utilisateur a forcé le règlement et mis son propre montant de règlement.' 'Infomation_Forcage',
+				'Le dernier valideur n''est pas forcément celui qui a forcé'
 
-From sysadm.gar_sin g with (nolock ),
-	 sysadm.sinistre s with (nolock )
-Where g.cod_etat in ( 550, 600 )
-And   g.cod_dec_mac <> g.cod_etat
-And   g.cod_dec_mac = 200
-And   g.valide_le between @dtDteDeb and @dtDteFin
-And   s.id_sin = g.id_sin
-Union all 
--- Forçage Prise en charge
-Select 'Forçage de prise en charge par niveau utilisateur vs niveau produit' 'Type_forcage',
-	   s.id_prod,
-	   sysadm.FN_LIB_PROD ( s.id_prod ) 'lib_prod',
-	   sysadm.FN_LIB_POLE ( s.id_prod ) 'lib_pole',	
-	   dvpd.id_sin,
-	   dvpd.id_gti,
-	   dvpd.id_detail,
-	   sysadm.FN_CODE_NUM ( dvpd.id_gti, '-GA' ) 'lib_gti',
-	   'Non concerné',
-	   'L''utilisateur a coché le forçage de prise en charge sur le détail de garantie.' 'Action_Forcage',
-	   dvpd.valide_le 'Dernière_validation',
-	   dvpd.valide_par 'Valide_par',
-	   Case -- MIGR_SQL2022
-			When @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
-				Then 
-				   ( Select rtrim ( nom) + ' ' + rtrim ( prenom ) from SESAME_PRO.sysadm.operateur where id_oper = dvpd.valide_par )
-			Else 
-				   ( Select rtrim ( nom) + ' ' + rtrim ( prenom ) from SESAME_SIM.sysadm.operateur where id_oper = dvpd.valide_par )
-		End 'Nom_valideur',
-		'Le système donnait un montant de PEC après plafond de 0.00€ ou bien le montant donné ne convenait pas (positif mais trop bas), l''utilisateur a forcé la PEC et évenuellement mis son propre montant de PEC.' 'Infomation_Forcage',
-		'Le dernier valideur n''est pas forcément celui qui a forcé'
+		From sysadm.detail det with (nolock ),
+			 sysadm.sinistre s with (nolock )
+		Where det.alt_reg = 'O'
+		And   det.valide_le between @dtDteDeb and @dtDteFin
+		And   s.id_sin = det.id_sin
+		Order by 5,8,7
+		-- Order by 7,2,3,4
+	End
+Else
+	Begin
+		Select 'Forçage de refus par niveau utilisateur vs niveau produit' 'Type_forcage',
+			   s.id_prod,
+			   sysadm.FN_LIB_PROD ( s.id_prod ) 'lib_prod',
+			   sysadm.FN_LIB_POLE ( s.id_prod ) 'lib_pole',	
+			   g.id_sin,
+			   g.id_gti,
+			   -1 'id_detail',
+			   sysadm.FN_CODE_NUM ( g.id_gti, '-GA' ) 'lib_gti',
+				( 
+				   Select stuff ( 
+							( SELECT Distinct ', (' + CAST(rtrim ( r.id_motif ) AS VARCHAR(250)) +') ' + CAST(rtrim ( sysadm.FN_CODE_NUM ( r.id_motif, '+RE' ) ) AS VARCHAR(250)) 
+							  FROM sysadm.refus r
+							  Where r.id_sin = g.id_sin
+							  And   r.alt_mac = 'O'
+							  For XML PATH ('') )
+						, 1, 2, '' ))  'Liste_Refus_Forcee',
+			   'Décision machine : ' + sysadm.FN_CODE_NUM ( g.cod_dec_mac, '-ET' ) + ' / Décision forcée par l''opérateur : ' + sysadm.FN_CODE_NUM ( g.cod_etat, '-ET' ) 'Action_Forcage',
+			   g.valide_le 'Dernière_validation',
+			   g.valide_par 'Valide_par',
+			   ( Select rtrim ( nom) + ' ' + rtrim ( prenom ) from SESAME_SIM.sysadm.operateur where id_oper = g.valide_par ) 'Nom_valideur',
+				'Le système refusait la garantie, mais l''utilisateur par son niveau par rapport au niveau du produit, a pu priviligié la décision du détail de garantie qui demander à règler' 'Infomation_Forcage',
+				'Le dernier valideur n''est pas forcément celui qui a forcé' 'Information_sur_dernier_valideur'
 
-From sysadm.div_det dvpd with (nolock ),
-	 sysadm.sinistre s with (nolock )
-Where dvpd.nom_zone = 'alt_pec'
-And   dvpd.val_car = 'O'
-And   dvpd.valide_le between @dtDteDeb and @dtDteFin
-And   s.id_sin = dvpd.id_sin
-Union all
--- Forçage de règlement
-Select 'Forçage de règlement par niveau utilisateur vs niveau produit' 'Type_forcage',
-	   s.id_prod,
-	   sysadm.FN_LIB_PROD ( s.id_prod ) 'lib_prod',
-	   sysadm.FN_LIB_POLE ( s.id_prod ) 'lib_pole',	
-	   det.id_sin,
-	   det.id_gti,
-	   det.id_detail,
-	   sysadm.FN_CODE_NUM ( det.id_gti, '-GA' ) 'lib_gti',
-	   'Non concerné',
-	   'L''utilisateur a coché le forçage de règlement sur le détail de garantie.' 'Action_Forcage',
-	   det.valide_le 'Dernière_validation',
-	   det.valide_par 'Valide_par',
-	   Case -- MIGR_SQL2022
-			When @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
-				Then 
-				   ( Select rtrim ( nom) + ' ' + rtrim ( prenom ) from SESAME_PRO.sysadm.operateur where id_oper = det.valide_par ) 
-			Else
-				   ( Select rtrim ( nom) + ' ' + rtrim ( prenom ) from SESAME_SIM.sysadm.operateur where id_oper = det.valide_par ) 
-		End 'Nom_valideur',
-		'Le système donnait un montant de règlement après plafond de 0.00€ ou bien le montant donné ne convenait pas (positif mais trop bas), l''utilisateur a forcé le règlement et mis son propre montant de règlement.' 'Infomation_Forcage',
-		'Le dernier valideur n''est pas forcément celui qui a forcé'
+		From sysadm.gar_sin g with (nolock ),
+			 sysadm.sinistre s with (nolock )
+		Where g.cod_etat in ( 550, 600 )
+		And   g.cod_dec_mac <> g.cod_etat
+		And   g.cod_dec_mac = 200
+		And   g.valide_le between @dtDteDeb and @dtDteFin
+		And   s.id_sin = g.id_sin
+		Union all 
+		-- Forçage Prise en charge
+		Select 'Forçage de prise en charge par niveau utilisateur vs niveau produit' 'Type_forcage',
+			   s.id_prod,
+			   sysadm.FN_LIB_PROD ( s.id_prod ) 'lib_prod',
+			   sysadm.FN_LIB_POLE ( s.id_prod ) 'lib_pole',	
+			   dvpd.id_sin,
+			   dvpd.id_gti,
+			   dvpd.id_detail,
+			   sysadm.FN_CODE_NUM ( dvpd.id_gti, '-GA' ) 'lib_gti',
+			   'Non concerné',
+			   'L''utilisateur a coché le forçage de prise en charge sur le détail de garantie.' 'Action_Forcage',
+			   dvpd.valide_le 'Dernière_validation',
+			   dvpd.valide_par 'Valide_par',
+			   ( Select rtrim ( nom) + ' ' + rtrim ( prenom ) from SESAME_SIM.sysadm.operateur where id_oper = dvpd.valide_par ) 'Nom_valideur',
+				'Le système donnait un montant de PEC après plafond de 0.00€ ou bien le montant donné ne convenait pas (positif mais trop bas), l''utilisateur a forcé la PEC et évenuellement mis son propre montant de PEC.' 'Infomation_Forcage',
+				'Le dernier valideur n''est pas forcément celui qui a forcé'
 
+		From sysadm.div_det dvpd with (nolock ),
+			 sysadm.sinistre s with (nolock )
+		Where dvpd.nom_zone = 'alt_pec'
+		And   dvpd.val_car = 'O'
+		And   dvpd.valide_le between @dtDteDeb and @dtDteFin
+		And   s.id_sin = dvpd.id_sin
+		Union all
+		-- Forçage de règlement
+		Select 'Forçage de règlement par niveau utilisateur vs niveau produit' 'Type_forcage',
+			   s.id_prod,
+			   sysadm.FN_LIB_PROD ( s.id_prod ) 'lib_prod',
+			   sysadm.FN_LIB_POLE ( s.id_prod ) 'lib_pole',	
+			   det.id_sin,
+			   det.id_gti,
+			   det.id_detail,
+			   sysadm.FN_CODE_NUM ( det.id_gti, '-GA' ) 'lib_gti',
+			   'Non concerné',
+			   'L''utilisateur a coché le forçage de règlement sur le détail de garantie.' 'Action_Forcage',
+			   det.valide_le 'Dernière_validation',
+			   det.valide_par 'Valide_par',
+			   ( Select rtrim ( nom) + ' ' + rtrim ( prenom ) from SESAME_SIM.sysadm.operateur where id_oper = det.valide_par ) 'Nom_valideur',
+				'Le système donnait un montant de règlement après plafond de 0.00€ ou bien le montant donné ne convenait pas (positif mais trop bas), l''utilisateur a forcé le règlement et mis son propre montant de règlement.' 'Infomation_Forcage',
+				'Le dernier valideur n''est pas forcément celui qui a forcé'
 
-
-
-From sysadm.detail det with (nolock ),
-	 sysadm.sinistre s with (nolock )
-Where det.alt_reg = 'O'
-And   det.valide_le between @dtDteDeb and @dtDteFin
-And   s.id_sin = det.id_sin
-Order by 5,8,7
--- Order by 7,2,3,4
-
+		From sysadm.detail det with (nolock ),
+			 sysadm.sinistre s with (nolock )
+		Where det.alt_reg = 'O'
+		And   det.valide_le between @dtDteDeb and @dtDteFin
+		And   s.id_sin = det.id_sin
+		Order by 5,8,7
+		-- Order by 7,2,3,4
+	End
 Go
 
 
