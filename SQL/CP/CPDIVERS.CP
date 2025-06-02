@@ -6915,7 +6915,7 @@ AS
 Update p
 Set id_corb = 998
 from sysadm.produit p
-where p.cree_le < DateAdd ( month, -3, Getdate() )
+where p.cree_le <= DateAdd ( month, -3, Getdate() )
 And not exists ( 
        Select Top 1 1 
        From sysadm.code co 
@@ -6926,7 +6926,7 @@ And not exists (
 Delete fa
 from sysadm.famille fa
 where fa.id_typ_code = '-CO'
-And fa.cree_le < DateAdd ( month, -6, Getdate() )
+And fa.cree_le <= DateAdd ( month, -6, Getdate() )
 And not exists ( 
        Select Top 1 1 
        From sysadm.produit p 
@@ -6939,7 +6939,7 @@ where co.id_typ_code = '-CO'
 And fa.id_typ_code = co.id_typ_code
 And fa.id_code = co.id_code
 And co.id_code not in ( 997, 998, 999 )
-And co.cree_le < DateAdd ( month, -6, Getdate() )
+And co.cree_le <= DateAdd ( month, -6, Getdate() )
 And not exists ( 
        Select Top 1 1 
        From sysadm.produit p 
@@ -6948,7 +6948,7 @@ And not exists (
 Delete co
 from sysadm.code co
 where co.id_typ_code = '-CO'
-And co.cree_le < DateAdd ( month, -6, Getdate() )
+And co.cree_le <= DateAdd ( month, -6, Getdate() )
 And co.id_code not in ( 997, 998, 999 )
 And not exists ( 
        Select Top 1 1 
@@ -6957,7 +6957,7 @@ And not exists (
 
 Delete coop
 From sysadm.corb_oper coop
-Where coop.cree_le < DateAdd ( month, -3, Getdate() )
+Where coop.cree_le <= DateAdd ( month, -3, Getdate() )
 And   Not Exists ( 
        Select Top 1 1 
        From sysadm.code co 

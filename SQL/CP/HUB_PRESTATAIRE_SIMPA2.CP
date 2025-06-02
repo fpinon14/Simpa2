@@ -3518,6 +3518,11 @@ CREATE procedure sysadm.PS_HP276_S_S2_CONDITION_ANNULATION_PRS_HUB
 	@sIdHubPresta	VarChar ( 20 )
 AS
 
+Declare @sEnv				VarChar ( 10 )
+Declare @sInstanceHub		VarChar ( 100 ) 
+Declare @sSql				Varchar ( 2000 )
+Declare @iCountVoucher		Integer
+
 Declare  @TbHubToSimpa2Work TABLE (
 	id_work						int IDENTITY (1,1)			NOT NULL, -- Id Local Tempo
 	activity_code				VarChar ( 50 )				NULL,   -- Code HUB

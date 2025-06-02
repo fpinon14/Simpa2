@@ -1750,7 +1750,9 @@ BEGIN
 	-- [HP252_276_HUB_PRESTA][HUB1530]
 	IF @iStatusGCActuel <> 859 And @iStatusGc = 859 And @iPrestaHUB > 0
 	BEGIN 
-			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] -> URL du bon PréPayé généré (récupérable par copier/coller si besoin).'
+			Set @sMess = 'Contact créé automatiquement. Process [' + @sLibFour + '] -> URL du bon PréPayé généré (récupérable par copier/coller si besoin) : '
+			Set @sMess = @sMess + IsNull ( Lower ( sysadm.FN_CLE_VAL ( 'URL_BPPAYE', @sInfoFrnSpbCplt, ';' ) ), '' )
+
 			IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 			BEGIN
 				Exec  SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT
@@ -4058,7 +4060,7 @@ If @iRemplacementAutomatiqueHub > 0
 			And   c.id_seq = @iIdSeq
 		  End 
 
-		Set @sMess = 'Contact crée automatiquement -> '+ 'Le HUB Prestataire a engagé une commande de remplacement chez un autre prestataire que le prestataire de la prestation originale.' 
+		Set @sMess = 'Contact crée automatiquement -> '+ 'Le HUB Prestataire a engagé une commande de remplacement chez un autre prestataire que le prestataire de la prestation originale. De ce fait le système supprime l''éventuel travail qui a pu être créé.' 
 
 		IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 		BEGIN
@@ -4068,6 +4070,10 @@ If @iRemplacementAutomatiqueHub > 0
 		BEGIN
 			Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @dcIdSin, 2, @sMess,	@sIdFour, 300, @iIdCt OUTPUT						
 		END
+
+		-- Dans tous les cas on delete le travail créé par le retour irréparable ou non conforme
+		Update sysadm.w_queue Set txt_mess2 = ISNULL ( txt_mess2, '' ) + '. Travail delete par PS_U01_COMMANDE sur cmde de remplacement auto HUB' where id_sin = @dcIdSin
+		Delete sysadm.w_queue where id_sin = @dcIdSin
 		
 		-- [MIG82_JOURN_EVT]
 		Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'CDRPEC', @sVar, '', 'PS_U01_COMMANDE', 'AUTO'
