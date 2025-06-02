@@ -1,4 +1,4 @@
-HA$PBExportHeader$u_sp_gs_trait_stat_sin.sru
+﻿$PBExportHeader$u_sp_gs_trait_stat_sin.sru
 forward
 global type u_sp_gs_trait_stat_sin from u_sp_gs_trait_anc
 end type
@@ -50,18 +50,18 @@ public subroutine uf_traitement (integer aitype, ref s_pass astpass);//*--------
 //* Fonction		: U_Sp_Gs_Traitement_Sta_Sin::Uf_Traitement (PUBLIC)
 //* Auteur			: Erick John Stark
 //* Date				: 07/01/1998 10:29:33
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Integer		aiType			(Val)	Type de traitement
-//*					  s_Pass			astPass			(R$$HEX1$$e900$$ENDHEX$$f) Structure de passage
+//*					  s_Pass			astPass			(Réf) Structure de passage
 //*
 //* Retourne		: Rien
 //*
 //*-----------------------------------------------------------------
 
 Choose Case aiType
-Case 1					// INITIALISATION		(Ue_Initialiser de la fen$$HEX1$$ea00$$ENDHEX$$tre)
+Case 1					// INITIALISATION		(Ue_Initialiser de la fenêtre)
 
 
 Case 2					// LANCEMENT DU TRAITEMENT
@@ -79,10 +79,10 @@ private function long uf_trt_etape01 (long alligne);//*-------------------------
 //* Fonction		: U_Sp_Gs_Trait_Stat_Sin::Uf_Trt_Etape01 (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 27/11/1998 16:54:56
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
-//* Arguments		: Long			alLigne				(Val)	N$$HEX2$$b0002000$$ENDHEX$$de la Ligne
+//* Arguments		: Long			alLigne				(Val)	N° de la Ligne
 //*
 //* Retourne		: Long			-1 = Il y a une erreur
 //*										 1 = Tout va bien
@@ -101,21 +101,21 @@ lCodEtat = idw_GarSinStat.GetItemNumber	( alLigne, "COD_ETAT" )
 dDteOuv	= idw_GarSinStat.GetItemDate 		( alLigne, "DTE_OUV" )
 
 /*------------------------------------------------------------------*/
-/* La zone CPT_OUV permet de savoir si la garantie vient d'$$HEX1$$ea00$$ENDHEX$$tre     */
-/* ouverte sur la p$$HEX1$$e900$$ENDHEX$$riode. (1=OUI/0=NON).                           */
+/* La zone CPT_OUV permet de savoir si la garantie vient d'être     */
+/* ouverte sur la période. (1=OUI/0=NON).                           */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* La zone CPT_REG permet de savoir s'il s'agit du premier          */
-/* r$$HEX1$$e800$$ENDHEX$$glement pour la garantie (1=OUI/0=NON). Cela ne concerne que   */
-/* les garanties avec un COD_ETAT $$HEX2$$e0002000$$ENDHEX$$550 ou 600.                     */
+/* règlement pour la garantie (1=OUI/0=NON). Cela ne concerne que   */
+/* les garanties avec un COD_ETAT à 550 ou 600.                     */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* La zone CPT_ETAT concerne les garanties avec un COD_ETAT $$HEX2$$e0002000$$ENDHEX$$100   */
+/* La zone CPT_ETAT concerne les garanties avec un COD_ETAT à 100   */
 /* ou 200. Cette valeur permettra de faire un cumul sur les         */
-/* garanties avec le m$$HEX1$$ea00$$ENDHEX$$me COD_ETAT. (Si COD_ETAT = 100, CPT_ETAT =  */
-/* 1) (Si COD_ETAT = 200, si c'est la premi$$HEX1$$e800$$ENDHEX$$re fois que l'on        */
-/* refuse la garantie (QQue soit la p$$HEX1$$e900$$ENDHEX$$riode de traitement), la      */
-/* zone prend la valeur 1, sinon (Garantie d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$refus$$HEX1$$e900$$ENDHEX$$e) on met 0.  */
+/* garanties avec le même COD_ETAT. (Si COD_ETAT = 100, CPT_ETAT =  */
+/* 1) (Si COD_ETAT = 200, si c'est la première fois que l'on        */
+/* refuse la garantie (QQue soit la période de traitement), la      */
+/* zone prend la valeur 1, sinon (Garantie déjà refusée) on met 0.  */
 /*------------------------------------------------------------------*/
 lCptEtat	= 0
 lCptOuv	= 0
@@ -130,13 +130,13 @@ If	lIdGti = 7	Then
 	lRet = Uf_Cas_Uf_Etape01 ( alLigne )
 /*------------------------------------------------------------------*/
 /* Il y a une erreur dans le traitement de la garantie UF sur les   */
-/* d$$HEX1$$e900$$ENDHEX$$tails. (Le retrieve vient d'$$HEX1$$e900$$ENDHEX$$chouer, ou alors il y a une       */
-/* erreur dans les commandes pr$$HEX1$$e900$$ENDHEX$$compile$$HEX1$$e900$$ENDHEX$$s). On arrete le            */
+/* détails. (Le retrieve vient d'échouer, ou alors il y a une       */
+/* erreur dans les commandes précompileés). On arrete le            */
 /* traitement.                                                      */
 /*------------------------------------------------------------------*/
 	If	lRet = -1 Then Return ( -1 )
 /*------------------------------------------------------------------*/
-/* Il n'existe aucun d$$HEX1$$e900$$ENDHEX$$tail pour cette garantie UF. On va la        */
+/* Il n'existe aucun détail pour cette garantie UF. On va la        */
 /* traiter comme un cas particulier.                                */
 /*------------------------------------------------------------------*/
 	If	lRet = 0	Then bTrt = True
@@ -148,8 +148,8 @@ If	bTrt	Then
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /* Si la date d'ouverture du dossier est comprise entre la date de  */
-/* d$$HEX1$$e900$$ENDHEX$$but de p$$HEX1$$e900$$ENDHEX$$riode et la date de fin de p$$HEX1$$e900$$ENDHEX$$riode alors on           */
-/* positionne la zone CPT_OUV $$HEX2$$e0002000$$ENDHEX$$1.                                  */
+/* début de période et la date de fin de période alors on           */
+/* positionne la zone CPT_OUV à 1.                                  */
 /*------------------------------------------------------------------*/
 	If	( dDteOuv >= idDteDeb ) And ( dDteOuv <= idDteFin )	Then
 		lCptOuv = 1
@@ -228,7 +228,7 @@ If	bTrt	Then
 	End Choose
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re une ligne uniquement pour les garanties autres que     */
+/* On insére une ligne uniquement pour les garanties autres que     */
 /* les Utilisations Frauduleuses.                                   */
 /*------------------------------------------------------------------*/
 	lLig = idw_StatSin.InsertRow ( 0 )
@@ -261,10 +261,10 @@ private function long uf_trt_etape02 (long alligne);//*-------------------------
 //* Fonction		: U_Sp_Gs_Trait_Stat_Sin::Uf_Trt_Etape02 (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 27/11/1998 16:54:56
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
-//* Arguments		: Long			alLigne				(Val)	N$$HEX2$$b0002000$$ENDHEX$$de la Ligne
+//* Arguments		: Long			alLigne				(Val)	N° de la Ligne
 //*
 //* Retourne		: Long			-1 = Il y a une erreur
 //*										 1 = Tout va bien
@@ -308,7 +308,7 @@ Else
 	End Choose
 
 /*------------------------------------------------------------------*/
-/* On ins$$HEX1$$e900$$ENDHEX$$re une ligne uniquement pour les garanties autres que     */
+/* On insére une ligne uniquement pour les garanties autres que     */
 /* les Utilisations Frauduleuses.                                   */
 /*------------------------------------------------------------------*/
 	lLig = idw_StatSin.InsertRow ( 0 )
@@ -341,13 +341,13 @@ private function long uf_cas_uf_etape01 (long alligne);//*----------------------
 //* Fonction		: U_Sp_Gs_Trait_Stat_Sin::Uf_Cas_Uf_Etape01 (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 27/11/1998 16:54:56
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
-//* Arguments		: Long			alLigne				(Val)	N$$HEX2$$b0002000$$ENDHEX$$de la Ligne
+//* Arguments		: Long			alLigne				(Val)	N° de la Ligne
 //*
-//* Retourne		: Long			-1 = Il y a une erreur dans les commandes pr$$HEX1$$e900$$ENDHEX$$compil$$HEX1$$e900$$ENDHEX$$es
-//*										 0 = Il n'y a aucune ligne de d$$HEX1$$e900$$ENDHEX$$tail pour la garantie UF
+//* Retourne		: Long			-1 = Il y a une erreur dans les commandes précompilées
+//*										 0 = Il n'y a aucune ligne de détail pour la garantie UF
 //*										 1 = Tout est OK
 //*
 //*-----------------------------------------------------------------
@@ -371,9 +371,9 @@ lCodRgpt[2]	= 720
 lCodRgpt[3]	= 740
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re les d$$HEX1$$e900$$ENDHEX$$tails pour le traitement des utilisations      */
+/* On récupére les détails pour le traitement des utilisations      */
 /* frauduleuses. La DW contient une zone ID_RGPT correspondant au   */
-/* regroupement des ID_EVT. Cette DW est tri$$HEX1$$e900$$ENDHEX$$e sur cette colonne.   */
+/* regroupement des ID_EVT. Cette DW est triée sur cette colonne.   */
 /*------------------------------------------------------------------*/
 sFiltre = ""
 idw_UfStat.SetFilter ( sFiltre )
@@ -386,7 +386,7 @@ idw_UfStat.Sort ()
 lTotDetail = idw_UfStat.RowCount ()
 
 /*------------------------------------------------------------------*/
-/* Il n'y a aucune ligne de d$$HEX1$$e900$$ENDHEX$$tail pour la garantie UF. On va       */
+/* Il n'y a aucune ligne de détail pour la garantie UF. On va       */
 /* traiter cette garantie comme les autres.                         */
 /*------------------------------------------------------------------*/
 If	lTotDetail < 0	Then Return ( -1 )
@@ -404,7 +404,7 @@ For	lCptRgpt = 1 To 3
 /*------------------------------------------------------------------*/
 /* Le 29/03/1999                                                    */
 /* Modif DGA.                                                       */
-/* Suite v$$HEX1$$e900$$ENDHEX$$rif DBI, la zone IdRgpt n'est pas arm$$HEX1$$e900$$ENDHEX$$e.                 */
+/* Suite vérif DBI, la zone IdRgpt n'est pas armée.                 */
 /*------------------------------------------------------------------*/
 		lIdRgpt	= lCodRgpt[ lCptRgpt ]
 	
@@ -412,10 +412,10 @@ For	lCptRgpt = 1 To 3
 /* CAS 1                                                            */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* On recherche au moins un d$$HEX1$$e900$$ENDHEX$$tail avec COD_ETAT = 200 et valid$$HEX5$$e9002000200020002000$$ENDHEX$$*/
-/* dans la p$$HEX1$$e900$$ENDHEX$$riode de traitement.                                   */
-/* De plus, il ne doit y avoir aucun d$$HEX1$$e900$$ENDHEX$$tail avec COD_ETAT = 600 Ou  */
-/* COD_ETAT = 100, quelle que soit la p$$HEX1$$e900$$ENDHEX$$riode.                      */
+/* On recherche au moins un détail avec COD_ETAT = 200 et validé    */
+/* dans la période de traitement.                                   */
+/* De plus, il ne doit y avoir aucun détail avec COD_ETAT = 600 Ou  */
+/* COD_ETAT = 100, quelle que soit la période.                      */
 /*------------------------------------------------------------------*/
 		sRech1 = "VALIDE_LE >= DateTime ( '" + String ( idtTrtDeb ) + "' ) And VALIDE_LE <= DateTime ( '" + String ( idtTrtFin ) + &
 					"' ) And COD_ETAT = 200 And ID_RGPT = " + String ( lCodRgpt[ lCptRgpt ] )
@@ -445,9 +445,9 @@ For	lCptRgpt = 1 To 3
 /* CAS 2                                                            */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* On recherche au moins un d$$HEX1$$e900$$ENDHEX$$tail avec COD_ETAT = 100. De plus,    */
-/* il ne doit y avoir aucun d$$HEX1$$e900$$ENDHEX$$tail avec COD_ETAT = 600. Quelle que  */
-/* soit la p$$HEX1$$e900$$ENDHEX$$riode dans les deux cas.                               */
+/* On recherche au moins un détail avec COD_ETAT = 100. De plus,    */
+/* il ne doit y avoir aucun détail avec COD_ETAT = 600. Quelle que  */
+/* soit la période dans les deux cas.                               */
 /*------------------------------------------------------------------*/
 		If	Not bInsert	Then
 			sRech1 = "COD_ETAT = 100 And ID_RGPT = " + String ( lCodRgpt[ lCptRgpt ] )
@@ -470,8 +470,8 @@ For	lCptRgpt = 1 To 3
 /* CAS 3                                                            */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* On recherche au moins un d$$HEX1$$e900$$ENDHEX$$tail avec COD_ETAT = 100 et au moins  */
-/* un d$$HEX1$$e900$$ENDHEX$$tail avec COD_ETAT = 600. Quelle que soit la p$$HEX1$$e900$$ENDHEX$$riode dans   */
+/* On recherche au moins un détail avec COD_ETAT = 100 et au moins  */
+/* un détail avec COD_ETAT = 600. Quelle que soit la période dans   */
 /* les deux cas.                                                    */
 /*------------------------------------------------------------------*/
 		If	Not bInsert	Then
@@ -506,8 +506,8 @@ For	lCptRgpt = 1 To 3
 /* CAS 4                                                            */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* Aucun des cas pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dents ne se pr$$HEX1$$e900$$ENDHEX$$sentent et il existe au moins  */
-/* un d$$HEX1$$e900$$ENDHEX$$tail avec COD_ETAT = 600. Quelle que soit la p$$HEX1$$e900$$ENDHEX$$riode de     */
+/* Aucun des cas précédents ne se présentent et il existe au moins  */
+/* un détail avec COD_ETAT = 600. Quelle que soit la période de     */
 /* traitement.                                                      */
 /*------------------------------------------------------------------*/
 		If	Not bInsert	Then
@@ -539,8 +539,8 @@ For	lCptRgpt = 1 To 3
 /* CAS 5                                                            */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* Aucun des cas pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dents ne se pr$$HEX1$$e900$$ENDHEX$$sentent et tous les d$$HEX1$$e900$$ENDHEX$$tails    */
-/* poss$$HEX1$$e900$$ENDHEX$$dent un COD_ETAT = 900. Quelle que soit la p$$HEX1$$e900$$ENDHEX$$riode de       */
+/* Aucun des cas précédents ne se présentent et tous les détails    */
+/* possédent un COD_ETAT = 900. Quelle que soit la période de       */
 /* traitement.                                                      */
 /*------------------------------------------------------------------*/
 		If	Not bInsert	Then
@@ -587,13 +587,13 @@ For	lCptRgpt = 1 To 3
 			lCptOuv		= 0
 			lTot			= 0
 /*------------------------------------------------------------------*/
-/* On d$$HEX1$$e900$$ENDHEX$$termine la valeur pour CPT_OUV. Pour cela, on v$$HEX1$$e900$$ENDHEX$$rifie s'il  */
-/* existe d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$une ligne dans STAT_SIN avec le m$$HEX1$$ea00$$ENDHEX$$me ID_SIN et le    */
-/* m$$HEX1$$ea00$$ENDHEX$$me ID_RGPT.                                                    */
+/* On détermine la valeur pour CPT_OUV. Pour cela, on vérifie s'il  */
+/* existe déjà une ligne dans STAT_SIN avec le même ID_SIN et le    */
+/* même ID_RGPT.                                                    */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* On utilise la proc$$HEX1$$e900$$ENDHEX$$dure PS_S02_STAT_SIN_STAT avec le param$$HEX1$$e800$$ENDHEX$$tre   */
-/* 2 qui permet de faire un s$$HEX1$$e900$$ENDHEX$$lect sans se pr$$HEX1$$e900$$ENDHEX$$occuper du COD_ETAT.  */
+/* On utilise la procédure PS_S02_STAT_SIN_STAT avec le paramètre   */
+/* 2 qui permet de faire un sélect sans se préoccuper du COD_ETAT.  */
 /*------------------------------------------------------------------*/
 			itrTrans.PS_S02_STAT_SIN_STAT ( lIdSin, lIdRgpt, 0, 0, 2, 0, lTot )
 
@@ -628,9 +628,9 @@ For	lCptRgpt = 1 To 3
 Next
 
 /*------------------------------------------------------------------*/
-/* On v$$HEX1$$e900$$ENDHEX$$rifie si on vient de traiter au moins un de ces cas, quel   */
-/* que le soit le regroupement trait$$HEX1$$e900$$ENDHEX$$. Si oui, on v$$HEX1$$e900$$ENDHEX$$rifie pour la   */
-/* p$$HEX1$$e900$$ENDHEX$$riode pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dente s'il existe au moins une ligne pour le m$$HEX1$$ea00$$ENDHEX$$me   */
+/* On vérifie si on vient de traiter au moins un de ces cas, quel   */
+/* que le soit le regroupement traité. Si oui, on vérifie pour la   */
+/* période précédente s'il existe au moins une ligne pour le même   */
 /* ID_SIN, ID_GTI, ID_GRPT (7) et COD_ETAT = 100.                   */
 /*------------------------------------------------------------------*/
 
@@ -675,10 +675,10 @@ private function long uf_cas_uf_etape02 (long alligne);//*----------------------
 //* Fonction		: U_Sp_Gs_Trait_Stat_Sin::Uf_Cas_Uf_Etape02 (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 27/11/1998 16:54:56
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
-//* Arguments		: Long			alLigne				(Val)	N$$HEX2$$b0002000$$ENDHEX$$de la Ligne
+//* Arguments		: Long			alLigne				(Val)	N° de la Ligne
 //*
 //* Retourne		: Long			-1 = Il y a une erreur quelque part
 //*										 1 = Tout est OK
@@ -701,9 +701,9 @@ lCodRgpt[2]	= 720
 lCodRgpt[3]	= 740
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re les d$$HEX1$$e900$$ENDHEX$$tails pour le traitement des utilisations      */
+/* On récupére les détails pour le traitement des utilisations      */
 /* frauduleuses. La DW contient une zone ID_RGPT correspondant au   */
-/* regroupement des ID_EVT. Cette DW est tri$$HEX1$$e900$$ENDHEX$$e sur cette colonne.   */
+/* regroupement des ID_EVT. Cette DW est triée sur cette colonne.   */
 /*------------------------------------------------------------------*/
 idw_UfStat.Reset ()
 idw_UfStat.Retrieve ( lIdSin )
@@ -718,10 +718,10 @@ For	lCptRgpt = 1 To 3
 /* CAS 1                                                            */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* On recherche au moins un d$$HEX1$$e900$$ENDHEX$$tail avec COD_ETAT = 100 et valid$$HEX5$$e9002000200020002000$$ENDHEX$$*/
-/* avant la date de d$$HEX1$$e900$$ENDHEX$$but de p$$HEX1$$e900$$ENDHEX$$riode.                               */
-/* De plus, il ne doit y avoir aucun d$$HEX1$$e900$$ENDHEX$$tail avec COD_ETAT = 600 et  */
-/* valid$$HEX2$$e9002000$$ENDHEX$$avant la date de d$$HEX1$$e900$$ENDHEX$$but de p$$HEX1$$e900$$ENDHEX$$riode.                        */
+/* On recherche au moins un détail avec COD_ETAT = 100 et validé    */
+/* avant la date de début de période.                               */
+/* De plus, il ne doit y avoir aucun détail avec COD_ETAT = 600 et  */
+/* validé avant la date de début de période.                        */
 /*------------------------------------------------------------------*/
 		sRech1 = "VALIDE_LE <= DateTime ( '" + String ( idtTrtDeb ) + "' ) And COD_ETAT = 100 And ID_RGPT = " + String ( lCodRgpt[ lCptRgpt ] )
 		sRech2 = "VALIDE_LE <= DateTime ( '" + String ( idtTrtDeb ) + "' ) And COD_ETAT = 600 And ID_RGPT = " + String ( lCodRgpt[ lCptRgpt ] )
@@ -738,10 +738,10 @@ For	lCptRgpt = 1 To 3
 /* CAS 2                                                            */
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
-/* On recherche au moins un d$$HEX1$$e900$$ENDHEX$$tail avec COD_ETAT = 100 et valid$$HEX5$$e9002000200020002000$$ENDHEX$$*/
-/* avant la date de d$$HEX1$$e900$$ENDHEX$$but de p$$HEX1$$e900$$ENDHEX$$riode.                               */
-/* De plus, il ne doit avoir au moins und$$HEX1$$e900$$ENDHEX$$tail avec COD_ETAT = 600  */
-/* et valid$$HEX2$$e9002000$$ENDHEX$$avant la date de d$$HEX1$$e900$$ENDHEX$$but de p$$HEX1$$e900$$ENDHEX$$riode.                      */
+/* On recherche au moins un détail avec COD_ETAT = 100 et validé    */
+/* avant la date de début de période.                               */
+/* De plus, il ne doit avoir au moins undétail avec COD_ETAT = 600  */
+/* et validé avant la date de début de période.                      */
 /*------------------------------------------------------------------*/
 		If	Not bInsert	Then
 			sRech1 = "VALIDE_LE <= DateTime ( '" + String ( idtTrtDeb ) + "' ) And COD_ETAT = 100 And ID_RGPT = " + String ( lCodRgpt[ lCptRgpt ] )
@@ -792,8 +792,8 @@ private subroutine uf_periodeprecedente ();//*----------------------------------
 //* Fonction		: U_Sp_Gs_Trait_Stat_Sin::Uf_PeriodePrecedente (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 13/01/1999 17:01:02
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Obtenir la valeur de la p$$HEX1$$e900$$ENDHEX$$riode pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dente
+//* Libellé			: 
+//* Commentaires	: Obtenir la valeur de la période précédente
 //*
 //* Arguments		: Aucun
 //*
@@ -809,7 +809,7 @@ lLig 			= dwChild.GetRow ()
 lIdPeriode 	= dwChild.GetItemNumber ( lLig, "ID_PERIODE" )
 
 /*------------------------------------------------------------------*/
-/* On calcule la valeur de la p$$HEX1$$e900$$ENDHEX$$riode pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dente. On positionne la  */
+/* On calcule la valeur de la période précédente. On positionne la  */
 /* valeur dans une variable d'instance.                             */
 /*------------------------------------------------------------------*/
 lTot = dwChild.RowCount ()
@@ -830,10 +830,10 @@ public subroutine uf_initialiser_dw_desc (ref datawindow adw_norm[6]);//*-------
 //* Fonction		: Uf_Initialiser_Dw_Desc (Public)
 //* Auteur			: Erick John Stark
 //* Date				: 19/10/1997 18:47:02
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Initialisation des instances pour le NVUO
 //*
-//* Arguments		: DataWindow				adw_Norm[6]			(R$$HEX1$$e900$$ENDHEX$$f)	Tableau de DataWindow
+//* Arguments		: DataWindow				adw_Norm[6]			(Réf)	Tableau de DataWindow
 //*
 //* Retourne		: Rien
 //*
@@ -886,10 +886,10 @@ private function long uf_trt_etape03 (long alligne);//*-------------------------
 //* Fonction		: U_Sp_Gs_Trait_Stat_Sin::Uf_Trt_Etape03 (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 27/11/1998 16:54:56
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
-//* Arguments		: Long			alLigne				(Val)	N$$HEX2$$b0002000$$ENDHEX$$de la Ligne
+//* Arguments		: Long			alLigne				(Val)	N° de la Ligne
 //*
 //* Retourne		: Long			-1 = Il y a une erreur
 //*										 1 = Tout va bien
@@ -951,7 +951,7 @@ private function decimal uf_somme_reggti (long alIdSin, long alidrgpt);//*------
 //* Fonction		: U_Sp_Gs_Trait_Stat_Sin::Uf_Somme_RegGti (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 27/11/1998 16:54:56
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Long			alIdSin				(Val)	Identifiant du sinistre en cours de traitement
@@ -977,11 +977,11 @@ Next
 
 /*------------------------------------------------------------------*/
 /* Il est possible que l'on ne trouve aucune ligne dans REG_GTI.    */
-/* Voila la manipulation exacte, insertion d'un d$$HEX1$$e900$$ENDHEX$$tail (REGLE)      */
-/* pour le traitement N-1, puis insertion d'un d$$HEX1$$e900$$ENDHEX$$tail (REFUSE)      */
-/* pour le traitement N. La garantie reste positionn$$HEX1$$e900$$ENDHEX$$e avec un      */
-/* COD_ETAT $$HEX2$$e0002000$$ENDHEX$$600 (NORMAL). Donc on conserve la ligne dans          */
-/* STAT_SIN mais avec un montant $$HEX2$$e0002000$$ENDHEX$$z$$HEX1$$e900$$ENDHEX$$ro.                            */
+/* Voila la manipulation exacte, insertion d'un détail (REGLE)      */
+/* pour le traitement N-1, puis insertion d'un détail (REFUSE)      */
+/* pour le traitement N. La garantie reste positionnée avec un      */
+/* COD_ETAT à 600 (NORMAL). Donc on conserve la ligne dans          */
+/* STAT_SIN mais avec un montant à zéro.                            */
 /*------------------------------------------------------------------*/
 If	dcMtTotReg = 0 Then dcMtTotReg = 0
 
@@ -993,8 +993,8 @@ public subroutine uf_trace ();//*-----------------------------------------------
 //* Fonction		: U_Sp_Gs_Trait_Stat_Sin::Uf_Trace (Private)
 //* Auteur			: Erick John Stark
 //* Date				: 18/01/1999 15:48:57
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: On vient de terminer le traitement. On $$HEX1$$e900$$ENDHEX$$crit une trace r$$HEX1$$e900$$ENDHEX$$capitulative.
+//* Libellé			: 
+//* Commentaires	: On vient de terminer le traitement. On écrit une trace récapitulative.
 //*
 //* Arguments		: Aucun
 //*
@@ -1017,7 +1017,7 @@ sNomMachine 			= stGLB.uoWin.uf_getenvironment( "SQL" )
 //Destroy					uoDeclarationFuncky
 
 /*------------------------------------------------------------------*/
-/* On $$HEX1$$e900$$ENDHEX$$crit dans un fichier TRT_GEN.LOG. On se sert de la fonction  */
+/* On écrit dans un fichier TRT_GEN.LOG. On se sert de la fonction  */
 /* Uf_Log ().                                                       */
 /*------------------------------------------------------------------*/
 
@@ -1027,7 +1027,7 @@ sNomMachine 			= stGLB.uoWin.uf_getenvironment( "SQL" )
 Uf_Log ( 1, "", "GEN" )
 
 /*------------------------------------------------------------------*/
-/* Ecriture de l'en-t$$HEX1$$ea00$$ENDHEX$$te.                                           */
+/* Ecriture de l'en-tête.                                           */
 /*------------------------------------------------------------------*/
 Uf_Log ( 2, "", "" )
 
@@ -1038,16 +1038,16 @@ ilIdPeriode = 199812
 iPeriode = Integer ( Right ( String ( ilIdPeriode ), 2 ) )
 
 sText =	"Le " + String ( Datetime ( Today (), Now () ), "dd/mm/yyyy hh:mm" ) 											+	&
-			" Lanc$$HEX2$$e9002000$$ENDHEX$$par Op$$HEX1$$e900$$ENDHEX$$rateur " + stGLB.sCodOper + " ( Machine " + sNomMachine + " ) " 								+	&
+			" Lancé par Opérateur " + stGLB.sCodOper + " ( Machine " + sNomMachine + " ) " 								+	&
 			"Traitement du " + String ( idtTrtDeb, "dd/mm/yyyy" ) + " au " + String ( idtTrtFin, "dd/mm/yyyy" )	+	&
 			sNouvelleLigne																														+	&
-			"P$$HEX1$$e900$$ENDHEX$$riode de " + F_Mois_En_Lettre ( iPeriode ) + " " + Left ( String ( ilIdPeriode ), 4 )
+			"Période de " + F_Mois_En_Lettre ( iPeriode ) + " " + Left ( String ( ilIdPeriode ), 4 )
 
 Uf_Log ( 3, sText, "" )
 Uf_Log ( 2, "", "" )
 
 /*------------------------------------------------------------------*/
-/* On va maintenant $$HEX1$$e900$$ENDHEX$$crire le contenu de la DW du suivi de          */
+/* On va maintenant écrire le contenu de la DW du suivi de          */
 /* traitement.                                                      */
 /*------------------------------------------------------------------*/
 lTotLig	= idw_SuiviTrt.RowCount ()
@@ -1072,7 +1072,7 @@ private subroutine uf_suivi_trt (integer aichoix, string aslib, long alnbr, long
 //* Fonction		: U_Sp_Gs_Trtai_Stat_Sin::Uf_Suivi_Trt (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 22/12/1998 14:45:35
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Suivi visuel du traitement
 //*
 //* Arguments		: Integer		aiChoix				(Val)	Type de traitement attendu
@@ -1098,7 +1098,7 @@ Choose Case aiChoix
 		idw_SuiviTrt.SetItem ( lLig, "DEBUT", dtMaintenant )
 		idw_SuiviTrt.SetItem ( lLig, "ETAT", "En Cours" )
 /*------------------------------------------------------------------*/
-/* On met une boucle de temporisation. En effet, il y a un d$$HEX1$$e900$$ENDHEX$$calage */
+/* On met une boucle de temporisation. En effet, il y a un décalage */
 /* entre le InsertRow() el les SetItem ().                          */
 /*------------------------------------------------------------------*/
 		For	lCpt = 1 To 2
@@ -1123,7 +1123,7 @@ Choose Case aiChoix
 
 
 /*------------------------------------------------------------------*/
-/* On met une boucle de temporisation. En effet, il y a un d$$HEX1$$e900$$ENDHEX$$calage */
+/* On met une boucle de temporisation. En effet, il y a un décalage */
 /* entre le InsertRow() el les SetItem ().                          */
 /*------------------------------------------------------------------*/
 		For	lCpt = 1 To 2
@@ -1140,21 +1140,21 @@ private subroutine uf_lancertraitement (ref s_pass astpass);//*-----------------
 //* Fonction		: U_Sp_Gs_Traitement_Stat_Sin::Uf_LancerTraitement (PRIVATE)
 //* Auteur			: Erick John Stark
 //* Date				: 24/11/1998 15:36:26
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: On lance le traitement pour la table STAT_SIN
 //*
-//* Arguments		: s_Pass			astPass				(R$$HEX1$$e900$$ENDHEX$$f)	Structure de passage
+//* Arguments		: s_Pass			astPass				(Réf)	Structure de passage
 //*
 //* Retourne		: Rien
 //*
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1	 CAG	 08/03/2004		Ctrl de l'heure de lancement du trt
-//*									pour $$HEX1$$ea00$$ENDHEX$$tre s$$HEX1$$fb00$$ENDHEX$$r que la base est arr$$HEX1$$ea00$$ENDHEX$$t$$HEX1$$e900$$ENDHEX$$e
+//*									pour être sûr que la base est arrêtée
 //*-----------------------------------------------------------------
-//* #2	 DGA	 31/11/2004		Modification de la proc$$HEX1$$e900$$ENDHEX$$dure SPB_PS_MAIL. Ajout du param$$HEX1$$e800$$ENDHEX$$tre @asRetourErr.
-//*									Dans l'utilisation actuelle - passage par r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence - ce param$$HEX1$$e800$$ENDHEX$$tre ne peut $$HEX1$$ea00$$ENDHEX$$tre correctement utilis$$HEX1$$e900$$ENDHEX$$.
-//*									L'envoi pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dent du mail ne fonctionne pas. Probl$$HEX1$$e800$$ENDHEX$$me dans les quotes et doubles quotes
+//* #2	 DGA	 31/11/2004		Modification de la procédure SPB_PS_MAIL. Ajout du paramètre @asRetourErr.
+//*									Dans l'utilisation actuelle - passage par référence - ce paramètre ne peut être correctement utilisé.
+//*									L'envoi précédent du mail ne fonctionne pas. Problème dans les quotes et doubles quotes
  //* 			FPI	15/09/2014	[OPTIM_SQL]
  //				FPI	21/07/2016	[VDoc21291] ajout du redressement de stat_sin
  //*-----------------------------------------------------------------
@@ -1165,6 +1165,7 @@ Boolean bRet
 
 /*------------------------------------------------------------------*/
 /* #1 CAG 08/03/2004 : Ctrl de l'heure du serveur                   */
+/* JFF	[20250602094116] Shunt car on le lance en production à présent. */
 /*------------------------------------------------------------------*/
 DateTime dtDateJour
 Time		tHeureCte
@@ -1176,7 +1177,8 @@ dtDateJour=Datetime( Today(), Now() )
 	
 tHeureCte = Time ( dtDateJour )
 
-// si les heures sont modifi$$HEX1$$e900$$ENDHEX$$es ici, il faut les modifier aussi dans le message envoy$$HEX2$$e9002000$$ENDHEX$$(cf qq lgn plus bas)
+// si les heures sont modifiées ici, il faut les modifier aussi dans le message envoyé (cf qq lgn plus bas)
+/* [20250602094116] Shunt car on le lance en production à présent.
 If ( tHeureCte < 22:00:00 And tHeureCte > 05:30:00 ) And Upper ( itrTrans.DataBase ) = "SIMPA2_PRO" Then
 
 	stMessage.sTitre		= "Gestion des traitements - SIMPA2"
@@ -1191,7 +1193,7 @@ If ( tHeureCte < 22:00:00 And tHeureCte > 05:30:00 ) And Upper ( itrTrans.DataBa
 	Uf_Suivi_Trt ( 1, sMess, stNul.Lng, stNul.iNum  )
 	Uf_Suivi_Trt ( 2, stNul.str, stNul.Lng, -1 )
 
-	sContenu	= "'Le traitement a $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$lanc$$HEX2$$e9002000$$ENDHEX$$en dehors des heures autoris$$HEX1$$e900$$ENDHEX$$es, il a donc $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$annul$$HEX1$$e900$$ENDHEX$$. Il doit $$HEX1$$ea00$$ENDHEX$$tre lanc$$HEX2$$e9002000$$ENDHEX$$entre 22h et 5h30.'"
+	sContenu	= "'Le traitement a été lancé en dehors des heures autorisées, il a donc été annulé. Il doit être lancé entre 22h et 5h30.'"
 	sObjet	= "'Traitement Mensuel Simpa2'"
 
 	sSql = "EXECUTE master.dbo.SPB_PS_MAIL '', 'productioninformatique@spb.fr', " + sContenu + ", " + sObjet + ", '', 'jf.fabry@spb.fr'"
@@ -1200,32 +1202,33 @@ If ( tHeureCte < 22:00:00 And tHeureCte > 05:30:00 ) And Upper ( itrTrans.DataBa
 	
 	Return
 End If
+*/
 
 bRet 		= True
 dcNbrLig = 0
 lRet		= 1
 
 /*------------------------------------------------------------------*/
-/* On va d'abord v$$HEX1$$e900$$ENDHEX$$rifier les dates de traitement. On va aussi      */
-/* armer la date de d$$HEX1$$e900$$ENDHEX$$but de traitement et la periode.              */
+/* On va d'abord vérifier les dates de traitement. On va aussi      */
+/* armer la date de début de traitement et la periode.              */
 /*------------------------------------------------------------------*/
 bRet = Uf_VerifierDatesTrt ( "M" )
 
 /*------------------------------------------------------------------*/
-/* Le traitement a t-il d$$HEX1$$e900$$ENDHEX$$j$$HEX3$$e0002000e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$lanc$$HEX2$$e9002000$$ENDHEX$$?                            */
+/* Le traitement a t-il déjà été lancé ?                            */
 /*------------------------------------------------------------------*/
 If	bRet	Then
 	idw_SuiviTrt.Visible	= True
 
-	sMess	= "V$$HEX1$$e900$$ENDHEX$$rification si le traitement n'a pas d$$HEX1$$e900$$ENDHEX$$j$$HEX3$$e0002000e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$lanc$$HEX1$$e900$$ENDHEX$$"
+	sMess	= "Vérification si le traitement n'a pas déjà été lancé"
 	Uf_Suivi_Trt ( 1, sMess, stNul.Lng, stNul.iNum  )
 
 	ilIdPeriode = idw_Dates.GetItemNumber ( 1, "ID_PERIODE" )
 	itrTrans.PS_S01_STAT_SIN_STAT ( ilIdPeriode, dcNbrLig )
 	If	Not	F_Procedure ( stMessage, itrTrans, "PS_S01_STAT_SIN_STAT" )	Then
 /*------------------------------------------------------------------*/
-/* La commande DW_S01_STAT_SIN_STAT vient d'$$HEX1$$e900$$ENDHEX$$chouer. La structure   */
-/* de message est arm$$HEX1$$e900$$ENDHEX$$e sur F_Procedure.                            */
+/* La commande DW_S01_STAT_SIN_STAT vient d'échouer. La structure   */
+/* de message est armée sur F_Procedure.                            */
 /*------------------------------------------------------------------*/
 		bRet = False
 
@@ -1250,16 +1253,16 @@ End If
 If	bRet Then
 	Uf_Suivi_Trt ( 2, stNul.str, stNul.Lng, 1 )
 /*------------------------------------------------------------------*/
-/* On s'occupe de la premi$$HEX1$$e800$$ENDHEX$$re partie du traitement, c'est $$HEX2$$e0002000$$ENDHEX$$dire    */
-/* toutes les garanties trait$$HEX1$$e900$$ENDHEX$$es dans la p$$HEX1$$e900$$ENDHEX$$riode.                   */
+/* On s'occupe de la première partie du traitement, c'est à dire    */
+/* toutes les garanties traitées dans la période.                   */
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
-/* On r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$re la valeur de la p$$HEX1$$e900$$ENDHEX$$riode pr$$HEX1$$e900$$ENDHEX$$c$$HEX1$$e900$$ENDHEX$$dente.                  */
+/* On récupére la valeur de la période précédente.                  */
 /*------------------------------------------------------------------*/
 	Uf_PeriodePrecedente ()
 
-	sMess	= "R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration des garanties valid$$HEX1$$e900$$ENDHEX$$es dans la p$$HEX1$$e900$$ENDHEX$$riode"
+	sMess	= "Récupération des garanties validées dans la période"
 	Uf_Suivi_Trt ( 1, sMess, stNul.Lng, stNul.iNum  )
 
 	idDteDeb = idw_Dates.GetItemDate ( 1, "DTE_DEB" )
@@ -1281,7 +1284,7 @@ If	bRet Then
 /*------------------------------------------------------------------*/
 	idtCreeLe = DateTime ( Today (), Now () )
 
-	sMess	= "Traitement sur les garanties valid$$HEX1$$e900$$ENDHEX$$es dans la p$$HEX1$$e900$$ENDHEX$$riode"
+	sMess	= "Traitement sur les garanties validées dans la période"
 	Uf_Suivi_Trt ( 1, sMess, stNul.Lng, stNul.iNum  )
 
 	iuoDefil.Visible = True
@@ -1298,9 +1301,9 @@ If	bRet Then
 	Next
 
 /*------------------------------------------------------------------*/
-/* On s'occupe de la seconde partie du traitement, c'est $$HEX2$$e0002000$$ENDHEX$$dire     */
-/* les garanties avec un COD_ETAT $$HEX2$$e0002000$$ENDHEX$$100 ou 550 et dont VALIDE_LE    */
-/* est inf$$HEX1$$e900$$ENDHEX$$rieur strictement $$HEX2$$e0002000$$ENDHEX$$la date de d$$HEX1$$e900$$ENDHEX$$but de traitement.      */
+/* On s'occupe de la seconde partie du traitement, c'est à dire     */
+/* les garanties avec un COD_ETAT à 100 ou 550 et dont VALIDE_LE    */
+/* est inférieur strictement à la date de début de traitement.      */
 /*------------------------------------------------------------------*/
 	If	bRet	Then
 		Uf_Suivi_Trt ( 2, stNul.Str, stNul.Lng, lRet  )
@@ -1308,7 +1311,7 @@ If	bRet Then
 		idw_GarSinStat.DataObject = "D_Sp_Gar_Sin_Stat_Etape02"
 		idw_GarSinStat.SetTransObject ( This.itrTrans )
 
-		sMess	= "R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration des garanties EN ATTENTE (Valid$$HEX1$$e900$$ENDHEX$$es avant la p$$HEX1$$e900$$ENDHEX$$riode)"
+		sMess	= "Récupération des garanties EN ATTENTE (Validées avant la période)"
 		Uf_Suivi_Trt ( 1, sMess, stNul.Lng, stNul.iNum  )
 
 		lTotGarSin	= idw_GarSinStat.Retrieve ( idtTrtDeb )
@@ -1317,7 +1320,7 @@ If	bRet Then
 		Uf_Suivi_Trt ( 2, stNul.Str, lTotGarSin, lTotGarSin )
 		iuoDefil.Uf_Init ( lTotGarSin )
 
-		sMess	= "Traitement sur les garanties EN ATTENTE (Valid$$HEX1$$e900$$ENDHEX$$es avant la p$$HEX1$$e900$$ENDHEX$$riode)"
+		sMess	= "Traitement sur les garanties EN ATTENTE (Validées avant la période)"
 		Uf_Suivi_Trt ( 1, sMess, stNul.Lng, stNul.iNum  )
 
 		For	lCpt = 1 To lTotGarSin
@@ -1332,13 +1335,13 @@ If	bRet Then
 	End If
 
 /*------------------------------------------------------------------*/
-/* On s'occupe de la derni$$HEX1$$e800$$ENDHEX$$re partie du traitement, c'est $$HEX2$$e0002000$$ENDHEX$$dire    */
-/* que l'on va traiter les frais valid$$HEX1$$e900$$ENDHEX$$s dans la p$$HEX1$$e900$$ENDHEX$$riode.           */
+/* On s'occupe de la dernière partie du traitement, c'est à dire    */
+/* que l'on va traiter les frais validés dans la période.           */
 /*------------------------------------------------------------------*/
 	If	bRet	Then
 		Uf_Suivi_Trt ( 2, stNul.Str, stNul.Lng, lRet  )
 
-		sMess	= "R$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$ration des frais (Valid$$HEX1$$e900$$ENDHEX$$s dans la p$$HEX1$$e900$$ENDHEX$$riode)"
+		sMess	= "Récupération des frais (Validés dans la période)"
 		Uf_Suivi_Trt ( 1, sMess, stNul.Lng, stNul.iNum  )
 
 		lTotFrais	= idw_RegGti_Frais.Retrieve ( idtTrtDeb, idtTrtFin )
@@ -1347,7 +1350,7 @@ If	bRet Then
 		Uf_Suivi_Trt ( 2, stNul.Str, lTotFrais, lTotFrais )
 		iuoDefil.Uf_Init ( lTotFrais )
 
-		sMess	= "Traitement sur les frais (Valid$$HEX1$$e900$$ENDHEX$$es dans la p$$HEX1$$e900$$ENDHEX$$riode)"
+		sMess	= "Traitement sur les frais (Validées dans la période)"
 		Uf_Suivi_Trt ( 1, sMess, stNul.Lng, stNul.iNum  )
 
 		For	lCpt = 1 To lTotFrais
@@ -1362,10 +1365,10 @@ If	bRet Then
 	End If
 
 /*------------------------------------------------------------------*/
-/* On envoie l'UPDATE sur idw_Stat_Sin. On va ins$$HEX1$$e900$$ENDHEX$$rer quelques      */
-/* milliers de lignes. La commande SQL est positionn$$HEX1$$e900$$ENDHEX$$e sur          */
-/* l'$$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement SqlPreview de la DW. La progression de la barre de   */
-/* d$$HEX1$$e900$$ENDHEX$$filement se fait aussi sur cet $$HEX1$$e900$$ENDHEX$$v$$HEX1$$e900$$ENDHEX$$nement.                      */
+/* On envoie l'UPDATE sur idw_Stat_Sin. On va insérer quelques      */
+/* milliers de lignes. La commande SQL est positionnée sur          */
+/* l'événement SqlPreview de la DW. La progression de la barre de   */
+/* défilement se fait aussi sur cet événement.                      */
 /*------------------------------------------------------------------*/
 	If	bRet	Then
 		Uf_Suivi_Trt ( 2, stNul.Str, stNul.Lng, lRet  )
@@ -1403,7 +1406,7 @@ End if
 // :[VDOC21291]
 
 /*------------------------------------------------------------------*/
-/* On appelle maintenant la cr$$HEX1$$e900$$ENDHEX$$ation des lignes sur CUM_PERIODE.    */
+/* On appelle maintenant la création des lignes sur CUM_PERIODE.    */
 /*------------------------------------------------------------------*/
 	If	bRet	Then
 		sMess	= "Insertion des lignes dans CUM_PERIODE"
@@ -1412,7 +1415,7 @@ End if
 		sSql = 'sysadm.PS_I01_CUM_PERIODE ' + 	String ( ilIdPeriode ) 	+ ', '	+ 	&
 												'"'	+	stGLB.sCodOper				+ '"'
 
-		// [MIGPB11] [EMD] : Debut Migration : [SNC] contourne le fait que SNC ne mette pas $$HEX2$$e0002000$$ENDHEX$$jour SqlnRows
+		// [MIGPB11] [EMD] : Debut Migration : [SNC] contourne le fait que SNC ne mette pas à jour SqlnRows
 		//EXECUTE IMMEDIATE :sSql USING	itrTrans	;
 		f_execute( sSql, itrTrans )
 		// [MIGPB11] [EMD] : Fin Migration
@@ -1432,7 +1435,7 @@ End if
 End If
 
 /*------------------------------------------------------------------*/
-/* Si le traitement $$HEX1$$e900$$ENDHEX$$choue, on affiche le message d'erreur          */
+/* Si le traitement échoue, on affiche le message d'erreur          */
 /* maintenant.                                                      */
 /*------------------------------------------------------------------*/
 If	lRet <= 0	And bRet = False	Then
