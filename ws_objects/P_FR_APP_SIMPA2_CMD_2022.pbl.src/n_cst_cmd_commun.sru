@@ -779,7 +779,6 @@ Choose Case asIdFour
 				sModif += "DTE_RET_LOGIS_T.Text 	= '' "
 				sModif += "DTE_ENV_ST_T.Text 	   = '' "
 				sModif += "DTE_EMIS_DEVIS_T.Text = '' "
-				sModif += "DTE_DEV_ACP_T.Text 	= '' "
 				sModif += "DTE_RET_LOGIS_T.Text 	= '' "
 				sModif += "DTE_RET_PRET_MIN_T.Text = '' "
 				sModif += "DTE_RET_PRET_MAX_T.Text = '' "

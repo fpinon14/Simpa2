@@ -2233,7 +2233,7 @@ Choose Case  dwo.name
 			
 		End If 
 	
-		ClipBoard ( sUrlBpPaye ) 
+		F_ClipBoard ( sUrlBpPaye ) 
 	
 		stMessage.sTitre		= "URL Bon PréPayé"
 		stMessage.Icon			= Information!

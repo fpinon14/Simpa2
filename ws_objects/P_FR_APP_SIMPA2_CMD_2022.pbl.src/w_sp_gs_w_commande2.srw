@@ -1685,7 +1685,7 @@ Choose Case  dwo.name
 			Return
 		End If 
 		
-		sUrlBpPaye = F_CLE_VAL ( "URL_BPPAYE", sInfoFrnSpbCplt, ";" )	
+		sUrlBpPaye = Lower ( F_CLE_VAL ( "URL_BPPAYE", sInfoFrnSpbCplt, ";" ) )
 		
 		If sUrlBpPaye = "" Then
 			stMessage.sTitre		= "URL Bon PréPayé vide"
@@ -1700,7 +1700,7 @@ Choose Case  dwo.name
 			
 		End If 
 	
-		ClipBoard ( sUrlBpPaye ) 
+		F_ClipBoard ( sUrlBpPaye ) 
 	
 		stMessage.sTitre		= "URL Bon PréPayé"
 		stMessage.Icon			= Information!
