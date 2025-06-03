@@ -1482,6 +1482,7 @@ GO
 --  JFF		12/02/2016		[PI062]
 -- FPI 		08/11/1016		[PI056]
 --  JFF		30/09/2019		[PI097]
+-- FPI			03/06/2025	[MIG_SQL_2022] Suppression de l'adhérence au nom de serveur
 ---------------------------------------------------------------------------
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[sysadm].[DW_S03_W_QUEUE_WKF_V01]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [sysadm].[DW_S03_W_QUEUE_WKF_V01]
@@ -1650,13 +1651,17 @@ Begin
 			Select 10 as tri,''DRS#'',''DEPARTEMENT RECLAMATION SUPPORT'' as nom, '''' as prenom Where @iDr > 0 And @Flag_VDOC17582 = 1 
 			'
 
+			/** FPI - MIG_SQL_2022 **/
 			-- Simulation 2014 ou 2019, base SESAME_SIM présente, donc pas de préfixe lien serveur.
-			If @@SERVERNAME in ('SQL14DEV\SIMSINISTRES', 'SINSQL19REC\SIMSINISTRES19' )  Set @sCmdFfm = Replace ( @sCmdFfm, '[SERVEUR_BASE]', 'SESAME_SIM')
+			--If @@SERVERNAME in ('SQL14DEV\SIMSINISTRES', 'SINSQL19REC\SIMSINISTRES19' )  Set @sCmdFfm = Replace ( @sCmdFfm, '[SERVEUR_BASE]', 'SESAME_SIM')
 			-- Recette 2014 : lien SIM 2014 pour trouver SESAME_SIM
-			If @@SERVERNAME = 'SQL14DEV\RECSINISTRES' Set @sCmdFfm = Replace ( @sCmdFfm, '[SERVEUR_BASE]', '[SQL14DEV\SIMSINISTRES].SESAME_SIM')
+			--If @@SERVERNAME = 'SQL14DEV\RECSINISTRES' Set @sCmdFfm = Replace ( @sCmdFfm, '[SERVEUR_BASE]', '[SQL14DEV\SIMSINISTRES].SESAME_SIM')
 			-- Recette 2014 : lien SIM 2014 pour trouver SESAME_SIM
-			If @@SERVERNAME = 'SINSQL19REC\RECSINISTRES19' Set @sCmdFfm = Replace ( @sCmdFfm, '[SERVEUR_BASE]', '[SINSQL19REC\SIMSINISTRES19].SESAME_SIM')
-
+			--If @@SERVERNAME = 'SINSQL19REC\RECSINISTRES19' Set @sCmdFfm = Replace ( @sCmdFfm, '[SERVEUR_BASE]', '[SINSQL19REC\SIMSINISTRES19].SESAME_SIM')
+			
+			If master.dbo.SPB_FN_TYPEBASE(db_id()) ='SIM' Set @sCmdFfm = Replace ( @sCmdFfm, '[SERVEUR_BASE]', 'SESAME_SIM')  
+			/** Fin FPI **/
+			
 			Set @sCmdFfm = Replace ( @sCmdFfm, '@asCodeOper' , '''' + Isnull ( @asCodeOper, '') + '''' )
 			Set @sCmdFfm = Replace ( @sCmdFfm, '@Flag_No_RSP' , CONVERT ( Varchar (50), @Flag_No_RSP ) )
 			Set @sCmdFfm = Replace ( @sCmdFfm, '@Flag_No_DRE' , CONVERT ( Varchar (50), @Flag_No_DRE ) )

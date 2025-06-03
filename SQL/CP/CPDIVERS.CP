@@ -6246,6 +6246,7 @@ Go
 -- Retourne             :       
 --
 -- JFF  30/09/2020  [PI097]
+-- FPI	03/06/2025	[MIG_SQL_2022] Suppression de l'adhérence au nom de serveur
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_DETECT_VERSION_BASE_SIM' AND type = 'P' )
         DROP procedure sysadm.PS_S_DETECT_VERSION_BASE_SIM
@@ -6262,11 +6263,14 @@ Declare @dtFin DateTime
 Set @adtDteVersBaseSim = null
 Set @aiAlerte = 0
 
-If Not (
+/* FPI - MIG_SQL_2022 - utilisation de SPB_FN_ServerName*/
+/*If Not (
 			( ( Select SERVERPROPERTY('ServerName' ) ) = 'SQL14DEV\SIMSINISTRES' And  ( Select ( Upper ( sysadm.FN_TRIM ( db_name ( db_id () ) ) ))) = 'SIMPA2_TRT')
 			Or 
 			( ( Select SERVERPROPERTY('ServerName' ) ) = 'SINSQL19REC\SIMSINISTRES19' And  ( Select ( Upper ( sysadm.FN_TRIM ( db_name ( db_id () ) ) ))) = 'SIMPA2_TRT')  -- [PI097]
    ) Return 
+*/
+IF Not ( @@SERVERNAME = master.dbo.SPB_FN_ServerName('SIM') and sysadm.FN_TRIM ( db_name ( db_id () ) )  = 'SIMPA2_TRT' ) Return
 
 
 -- Select @adtDteVersBaseSim = max ( valide_le ) from sysadm.sinistre where valide_le between Convert ( varchar, DateAdd ( day, -1, GetDate() ), 103 ) And Convert ( varchar, getdate(), 103 ) 
@@ -6294,6 +6298,7 @@ Go
 -- Retourne             :       
 -- 
 -- JFF  30/09/2020  [PI097]
+-- FPI	03/06/2025	[MIG_SQL_2022] Suppression de l'adhérence au nom de serveur
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_DETECT_SQL_QUOT_BASE_SIM' AND type = 'P' )
         DROP procedure sysadm.PS_S_DETECT_SQL_QUOT_BASE_SIM
@@ -6310,11 +6315,14 @@ Declare @dtFin DateTime
 Set @adtDteSqlQuotBaseSim = null
 Set @aiAlerte = 0
 
-If Not (
+/* FPI - MIG_SQL_2022 - utilisation de SPB_FN_ServerName*/
+/* If Not (
 			( ( Select SERVERPROPERTY('ServerName' ) ) = 'SQL14DEV\SIMSINISTRES' And  ( Select ( Upper ( sysadm.FN_TRIM ( db_name ( db_id () ) ) ))) = 'SIMPA2_TRT')
 			Or 
 			( ( Select SERVERPROPERTY('ServerName' ) ) = 'SINSQL19REC\SIMSINISTRES19' And  ( Select ( Upper ( sysadm.FN_TRIM ( db_name ( db_id () ) ) ))) = 'SIMPA2_TRT')  -- [PI097]
    ) Return 
+*/
+IF Not ( @@SERVERNAME = master.dbo.SPB_FN_ServerName('SIM') and sysadm.FN_TRIM ( db_name ( db_id () ) )  = 'SIMPA2_TRT' ) Return
 
 Select @adtDteSqlQuotBaseSim  = dte_1 from sysadm.date_pivot where id_cle = 'SQL_QUOT_SIM'
 
