@@ -19589,6 +19589,8 @@ Go
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
+-- JFF		21/05/2025	 MIGR_SQL2022
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_STAT_REFUS_VDOC29595' AND type = 'P' )
         DROP procedure sysadm.PS_S_STAT_REFUS_VDOC29595
 GO
