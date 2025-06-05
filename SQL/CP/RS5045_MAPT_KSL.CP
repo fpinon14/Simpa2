@@ -754,6 +754,8 @@ Go
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
+-- JFF		06/06/2025   [RS6130] Divers ajout
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_PEGASE' AND type = 'P' )
         DROP procedure sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_PEGASE
 GO
@@ -799,6 +801,26 @@ Declare @sIMEI VarChar ( 20 )
 Declare @sMajPar VarChar ( 4 )
 Declare @sNature VarChar ( 10 )
 Declare @sIdInter Varchar ( 10 )
+
+Declare @sNoAdhesion varchar (50)
+Declare @sDateDeSurvenanceSinistre varchar (35)
+Declare @sHeureDeSurvenanceSinistre varchar (20)
+Declare @sNotTelInterAssure varchar (35)
+Declare @sLibNature varchar (35)
+Declare @sCodeGarantie varchar (50)
+Declare @sGarantie varchar (50)
+Declare @sURLextranet varchar (100)
+Declare @sDateConnaissanceSinistre varchar (10)
+Declare @sDateFinGarantie varchar (10)
+Declare @sDateEffetGarantie varchar (10)
+Declare @sCivLivraison varchar (20)
+Declare @sPrenomLivraison varchar (100)
+Declare @sNomLivraison varchar (100)
+Declare @sAdresse1Livraison varchar (100)
+Declare @sAdresse2Livraison varchar (100)
+Declare @sAdresseCpltLivraison varchar (35)
+Declare @sCpVilleLivraison varchar (100)
+
 
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 BEGIN
@@ -880,7 +902,32 @@ BEGIN
 		   @DateDeDeclaration = convert ( VarChar ( 10 ), s.dte_dec, 23 ),
 		   @sIMEI = '',
 		   @sMajPar = s.maj_par,
-		   @sNature = Convert ( varchar (10), s.id_nat_sin ) 
+		   @sNature = Convert ( varchar (10), s.id_nat_sin ),
+		   @sLibNature = Upper (Left ( PEGASE_PRO.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ), 1 )) + Lower ( Right ( PEGASE_PRO.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ), len (PEGASE_PRO.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ))-1 )),
+		   @sDateDeSurvenanceSinistre = convert ( VarChar ( 10 ), s.dte_surv, 23 ),
+		   @sHeureDeSurvenanceSinistre =  nullif (Convert ( VarChar (5), s.dte_surv, 108 ), '00:00'),
+		   @sNoAdhesion  = 
+					Case 
+						When SIMPA2_PRO.sysadm.FN_CLE_NUMERIQUE ( 'PI085') > 0 Then 
+							(
+							Select Top 1 RIGHT('00000' + IsNull ( CONVERT(varchar(5), Convert ( integer, dp.val_calc) ), ''),5)   -- [PI085] passage de 3 à 5
+							From PEGASE_PRO.sysadm.det_pro dp
+							Where dp.id_calc = 6
+							And   dp.id_prod = p.id_prod
+							) + '-' + convert ( varchar ( 5), s.id_ets ) + '-' + lTrim ( rTrim ( s.id_adh )) + '-' + Convert ( varchar (2), s.id_sdos )
+						Else 
+							(
+							Select Top 1 RIGHT('000' + IsNull ( CONVERT(varchar(5), Convert ( integer, dp.val_calc) ), ''),3) -- [PI085] On laisse ainsi mail de P. Fauvel le 25/05/2020 à 09h16 archivé dans le projet.
+							From PEGASE_PRO.sysadm.det_pro dp
+							Where dp.id_calc = 6
+							And   dp.id_prod = p.id_prod
+							) + '-' + convert ( varchar ( 5), s.id_ets ) + '-' + lTrim ( rTrim ( s.id_adh )) + '-' + Convert ( varchar (2), s.id_sdos )
+					End,
+		   @sAssureur = PEGASE_PRO.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'P' ), 
+		   @sNoPolice = PEGASE_PRO.sysadm.FN_LIB_POLICE_V02 ( @dcIdSin, 'P' ), 
+  		   @sDateConnaissanceSinistre = Convert ( VarChar ( 10 ), s.dte_surv, 23 ), -- [MIG1_COUR_EMAILING] Nathalie dit de mettre la date de surv
+		   @sDateFinGarantie = convert ( VarChar ( 10 ), s.dte_fin_gti, 23 ),-- [MIG1_COUR_EMAILING]
+		   @sDateEffetGarantie = ''
 
 	From PEGASE_PRO.sysadm.sinistre s
 	Where id_sin = @adcIdSin
@@ -898,10 +945,56 @@ BEGIN
 			   @DateDeDeclaration = convert ( VarChar ( 10 ), s.dte_dec, 23 ),
 			   @sIMEI = '',
 			   @sMajPar = s.maj_par,
-			   @sNature = Convert ( varchar (10), s.id_nat_sin ) 
-
+			   @sNature = Convert ( varchar (10), s.id_nat_sin ),
+			   @sLibNature = Upper (Left ( PEGASE_PRO.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ), 1 )) + Lower ( Right ( PEGASE_PRO.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ), len (PEGASE_PRO.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ))-1 )),
+			   @sDateDeSurvenanceSinistre = convert ( VarChar ( 10 ), s.dte_surv, 23 ),
+			   @sHeureDeSurvenanceSinistre =  nullif (Convert ( VarChar (5), s.dte_surv, 108 ), '00:00'),
+			   @sNoAdhesion  = 
+						Case 
+							When SIMPA2_PRO.sysadm.FN_CLE_NUMERIQUE ( 'PI085') > 0 Then 
+								(
+								Select Top 1 RIGHT('00000' + IsNull ( CONVERT(varchar(5), Convert ( integer, dp.val_calc) ), ''),5)   -- [PI085] passage de 3 à 5
+								From PEGASE_PRO.sysadm.det_pro dp
+								Where dp.id_calc = 6
+								And   dp.id_prod = p.id_prod
+								) + '-' + convert ( varchar ( 5), s.id_ets ) + '-' + lTrim ( rTrim ( s.id_adh )) + '-' + Convert ( varchar (2), s.id_sdos )
+							Else 
+								(
+								Select Top 1 RIGHT('000' + IsNull ( CONVERT(varchar(5), Convert ( integer, dp.val_calc) ), ''),3) -- [PI085] On laisse ainsi mail de P. Fauvel le 25/05/2020 à 09h16 archivé dans le projet.
+								From PEGASE_PRO.sysadm.det_pro dp
+								Where dp.id_calc = 6
+								And   dp.id_prod = p.id_prod
+								) + '-' + convert ( varchar ( 5), s.id_ets ) + '-' + lTrim ( rTrim ( s.id_adh )) + '-' + Convert ( varchar (2), s.id_sdos )
+						End,
+			   @sAssureur = PEGASE_PRO.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'W' ), 
+			   @sNoPolice = PEGASE_PRO.sysadm.FN_LIB_POLICE_V02 ( @dcIdSin, 'W' ), 
+  			   @sDateConnaissanceSinistre = Convert ( VarChar ( 10 ), s.dte_surv, 23 ), -- [MIG1_COUR_EMAILING] Nathalie dit de mettre la date de surv
+			   @sDateFinGarantie = convert ( VarChar ( 10 ), s.dte_fin_gti, 23 ),-- [MIG1_COUR_EMAILING]
+			   @sDateEffetGarantie = ''
 		From PEGASE_PRO.sysadm.w_sin s
 		Where id_sin = @adcIdSin
+	 End 
+
+    -- *************************************
+	-- ** Données liées au garantie       **
+    -- *************************************
+	Select Top 1 
+		   @sCodeGarantie = Convert ( varchar (50), g.id_gti ),
+	       @sGarantie = ( Select Upper ( lTrim ( rTrim ( cg.lib_gti))) From PEGASE_PRO.sysadm.code_garantie cg Where cg.id_prod = s.id_prod and cg.id_gti = g.id_gti )
+	From PEGASE_PRO.sysadm.gar_sin g,
+		 PEGASE_PRO.sysadm.sinistre s
+	Where s.id_sin = @adcIdSin
+	And g.id_sin = s.id_sin
+
+	If @@RowCount <= 0
+	 Begin 
+		Select Top 1 
+			   @sCodeGarantie = Convert ( varchar (50), g.id_gti ),
+		       @sGarantie = ( Select Upper ( lTrim ( rTrim ( cg.lib_gti))) From PEGASE_PRO.sysadm.code_garantie cg Where cg.id_prod = s.id_prod and cg.id_gti = g.id_gti )
+		From PEGASE_PRO.sysadm.w_gar_sin g,
+			 PEGASE_PRO.sysadm.w_sin s
+		Where s.id_sin = @adcIdSin
+		And g.id_sin = s.id_sin
 	 End 
 
     -- *************************************
@@ -916,7 +1009,7 @@ BEGIN
 			@sCoutTelephonique = '',
 			@sCodeProduit = 
 					Case 
-						When SIMPA2_TRT.sysadm.FN_CLE_NUMERIQUE ( 'PI085') > 0 Then 
+						When SIMPA2_PRO.sysadm.FN_CLE_NUMERIQUE ( 'PI085') > 0 Then 
 							(
 							Select Top 1 RIGHT('00000' + IsNull ( CONVERT(varchar(5), Convert ( integer, dp.val_calc) ), ''),5)   -- [PI085] passage de 3 à 5
 							From PEGASE_PRO.sysadm.det_pro dp
@@ -937,76 +1030,13 @@ BEGIN
 							   Where dp.id_prod = p.id_prod
 							   And   dp.id_calc = 6
 							   And   c.id_code = dp.val_calc 
-							   And   c.id_typ_code = '+MP' )
+							   And   c.id_typ_code = '+MP' ),
+			@sURLextranet = ''
 
 	From PEGASE_PRO.sysadm.produit p
 
 	Where p.id_prod = @dcIdProd 
 
-	-- *************************************
-	-- ** Données liées assureur/police   **
-    -- *************************************
-	Select Distinct cie.lib_cie
-	From PEGASE_PRO.sysadm.sinistre s,
-		 PEGASE_PRO.sysadm.gar_sin g,
-		 PEGASE_PRO.sysadm.garantie ga,
-		 PEGASE_PRO.sysadm.police po,
-		 PEGASE_PRO.sysadm.compagnie cie
-	Where s.id_sin = @dcIdSin
-	And   g.id_sin = s.id_sin
-	And   ga.id_prod = s.id_prod
-	And   ga.id_rev = s.id_rev
-	And   ga.id_gti = g.id_gti
-	And   po.id_police = ga.id_police
-	And   cie.id_cie = po.id_cie
-
-	If @@ROWCOUNT = 1
-		Begin
-			Select @sAssureur = cie.lib_cie
-			From PEGASE_PRO.sysadm.sinistre s,
-				 PEGASE_PRO.sysadm.gar_sin g,
-				 PEGASE_PRO.sysadm.garantie ga,
-				 PEGASE_PRO.sysadm.police po,
-				 PEGASE_PRO.sysadm.compagnie cie
-			Where s.id_sin = @dcIdSin
-			And   g.id_sin = s.id_sin
-			And   ga.id_prod = s.id_prod
-			And   ga.id_rev = s.id_rev
-			And   ga.id_gti = g.id_gti
-			And   po.id_police = ga.id_police
-			And   cie.id_cie = po.id_cie
-		End 
-
-	Select Distinct po.lib_police
-	From PEGASE_PRO.sysadm.sinistre s,
-		 PEGASE_PRO.sysadm.gar_sin g,
-		 PEGASE_PRO.sysadm.garantie ga,
-		 PEGASE_PRO.sysadm.police po,
-		 PEGASE_PRO.sysadm.compagnie cie
-	Where s.id_sin = @dcIdSin
-	And   g.id_sin = s.id_sin
-	And   ga.id_prod = s.id_prod
-	And   ga.id_rev = s.id_rev
-	And   ga.id_gti = g.id_gti
-	And   po.id_police = ga.id_police
-	And   cie.id_cie = po.id_cie
-
-	If @@ROWCOUNT = 1
-		Begin
-			Select @sNoPolice = po.lib_police
-			From PEGASE_PRO.sysadm.sinistre s,
-				 PEGASE_PRO.sysadm.gar_sin g,
-				 PEGASE_PRO.sysadm.garantie ga,
-				 PEGASE_PRO.sysadm.police po,
-				 PEGASE_PRO.sysadm.compagnie cie
-			Where s.id_sin = @dcIdSin
-			And   g.id_sin = s.id_sin
-			And   ga.id_prod = s.id_prod
-			And   ga.id_rev = s.id_rev
-			And   ga.id_gti = g.id_gti
-			And   po.id_police = ga.id_police
-			And   cie.id_cie = po.id_cie
-		End 
 END
 ELSE
 BEGIN
@@ -1089,7 +1119,32 @@ BEGIN
 		   @DateDeDeclaration = convert ( VarChar ( 10 ), s.dte_dec, 23 ),
 		   @sIMEI = '',
 		   @sMajPar = s.maj_par,
-		   @sNature = Convert ( varchar (10), s.id_nat_sin ) 
+		   @sNature = Convert ( varchar (10), s.id_nat_sin ),
+		   @sLibNature = Upper (Left ( PEGASE_TRT.sysadm.FN_CODE_NUM ( s.id_nat_sin, '+NS' ), 1 )) + Lower ( Right ( PEGASE_TRT.sysadm.FN_CODE_NUM ( s.id_nat_sin, '+NS' ), len (PEGASE_TRT.sysadm.FN_CODE_NUM ( s.id_nat_sin, '+NS' ))-1 )),
+		   @sDateDeSurvenanceSinistre = convert ( VarChar ( 10 ), s.dte_surv, 23 ),
+		   @sHeureDeSurvenanceSinistre =  nullif (Convert ( VarChar (5), s.dte_surv, 108 ), '00:00'),
+		   @sNoAdhesion  = 
+					Case 
+						When SIMPA2_TRT.sysadm.FN_CLE_NUMERIQUE ( 'PI085') > 0 Then 
+							(
+							Select Top 1 RIGHT('00000' + IsNull ( CONVERT(varchar(5), Convert ( integer, dp.val_calc) ), ''),5)   -- [PI085] passage de 3 à 5
+							From PEGASE_TRT.sysadm.det_pro dp
+							Where dp.id_calc = 6
+							And   dp.id_prod = s.id_prod
+							) + '-' + convert ( varchar ( 5), s.id_ets ) + '-' + lTrim ( rTrim ( s.id_adh )) + '-' + Convert ( varchar (2), s.id_sdos )
+						Else 
+							(
+							Select Top 1 RIGHT('000' + IsNull ( CONVERT(varchar(5), Convert ( integer, dp.val_calc) ), ''),3) -- [PI085] On laisse ainsi mail de P. Fauvel le 25/05/2020 à 09h16 archivé dans le projet.
+							From PEGASE_TRT.sysadm.det_pro dp
+							Where dp.id_calc = 6
+							And   dp.id_prod = s.id_prod
+							) + '-' + convert ( varchar ( 5), s.id_ets ) + '-' + lTrim ( rTrim ( s.id_adh )) + '-' + Convert ( varchar (2), s.id_sdos )
+					End,
+		   @sAssureur = PEGASE_TRT.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'P' ), 
+		   @sNoPolice = PEGASE_TRT.sysadm.FN_LIB_POLICE_V02 ( @dcIdSin, 'P' ), 
+  		   @sDateConnaissanceSinistre = Convert ( VarChar ( 10 ), s.dte_surv, 23 ), -- [MIG1_COUR_EMAILING] Nathalie dit de mettre la date de surv
+		   @sDateFinGarantie = convert ( VarChar ( 10 ), s.dte_fin_gti, 23 ),-- [MIG1_COUR_EMAILING]
+		   @sDateEffetGarantie = ''
 
 	From PEGASE_TRT.sysadm.sinistre s
 	Where id_sin = @adcIdSin
@@ -1107,10 +1162,56 @@ BEGIN
 			   @DateDeDeclaration = convert ( VarChar ( 10 ), s.dte_dec, 23 ),
 			   @sIMEI = '',
 			   @sMajPar = s.maj_par,
-			   @sNature = Convert ( varchar (10), s.id_nat_sin ) 
-
+			   @sNature = Convert ( varchar (10), s.id_nat_sin ),
+			   @sLibNature = Upper (Left ( PEGASE_TRT.sysadm.FN_CODE_NUM ( s.id_nat_sin, '+NS' ), 1 )) + Lower ( Right ( PEGASE_TRT.sysadm.FN_CODE_NUM ( s.id_nat_sin, '+NS' ), len (PEGASE_TRT.sysadm.FN_CODE_NUM ( s.id_nat_sin, '+NS' ))-1 )),
+			   @sDateDeSurvenanceSinistre = convert ( VarChar ( 10 ), s.dte_surv, 23 ),
+			   @sHeureDeSurvenanceSinistre =  nullif (Convert ( VarChar (5), s.dte_surv, 108 ), '00:00'),
+			   @sNoAdhesion  = 
+						Case 
+							When SIMPA2_TRT.sysadm.FN_CLE_NUMERIQUE ( 'PI085') > 0 Then 
+								(
+								Select Top 1 RIGHT('00000' + IsNull ( CONVERT(varchar(5), Convert ( integer, dp.val_calc) ), ''),5)   -- [PI085] passage de 3 à 5
+								From PEGASE_TRT.sysadm.det_pro dp
+								Where dp.id_calc = 6
+								And   dp.id_prod = s.id_prod
+								) + '-' + convert ( varchar ( 5), s.id_ets ) + '-' + lTrim ( rTrim ( s.id_adh )) + '-' + Convert ( varchar (2), s.id_sdos )
+							Else 
+								(
+								Select Top 1 RIGHT('000' + IsNull ( CONVERT(varchar(5), Convert ( integer, dp.val_calc) ), ''),3) -- [PI085] On laisse ainsi mail de P. Fauvel le 25/05/2020 à 09h16 archivé dans le projet.
+								From PEGASE_TRT.sysadm.det_pro dp
+								Where dp.id_calc = 6
+								And   dp.id_prod = s.id_prod
+								) + '-' + convert ( varchar ( 5), s.id_ets ) + '-' + lTrim ( rTrim ( s.id_adh )) + '-' + Convert ( varchar (2), s.id_sdos )
+						End,
+			   @sAssureur = PEGASE_TRT.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'W' ), 
+			   @sNoPolice = PEGASE_TRT.sysadm.FN_LIB_POLICE_V02 ( @dcIdSin, 'W' ), 
+  			   @sDateConnaissanceSinistre = Convert ( VarChar ( 10 ), s.dte_surv, 23 ), -- [MIG1_COUR_EMAILING] Nathalie dit de mettre la date de surv
+			   @sDateFinGarantie = convert ( VarChar ( 10 ), s.dte_fin_gti, 23 ),-- [MIG1_COUR_EMAILING]
+			   @sDateEffetGarantie = ''
 		From PEGASE_TRT.sysadm.w_sin s
 		Where id_sin = @adcIdSin
+	 End 
+
+    -- *************************************
+	-- ** Données liées au garantie       **
+    -- *************************************
+	Select Top 1 
+		   @sCodeGarantie = Convert ( varchar (50), g.id_gti ),
+	       @sGarantie = ( Select Upper ( lTrim ( rTrim ( cg.lib_gti))) From PEGASE_TRT.sysadm.code_garantie cg Where cg.id_prod = s.id_prod and cg.id_gti = g.id_gti )
+	From PEGASE_TRT.sysadm.gar_sin g,
+		 PEGASE_TRT.sysadm.sinistre s
+	Where s.id_sin = @adcIdSin
+	And g.id_sin = s.id_sin
+
+	If @@RowCount <= 0
+	 Begin 
+		Select Top 1 
+			   @sCodeGarantie = Convert ( varchar (50), g.id_gti ),
+		       @sGarantie = ( Select Upper ( lTrim ( rTrim ( cg.lib_gti))) From PEGASE_TRT.sysadm.code_garantie cg Where cg.id_prod = s.id_prod and cg.id_gti = g.id_gti )
+		From PEGASE_TRT.sysadm.w_gar_sin g,
+			 PEGASE_TRT.sysadm.w_sin s
+		Where s.id_sin = @adcIdSin
+		And g.id_sin = s.id_sin
 	 End 
 
     -- *************************************
@@ -1146,76 +1247,12 @@ BEGIN
 							   Where dp.id_prod = p.id_prod
 							   And   dp.id_calc = 6
 							   And   c.id_code = dp.val_calc 
-							   And   c.id_typ_code = '+MP' )
+							   And   c.id_typ_code = '+MP' ),
+			@sURLextranet = ''
 
 	From PEGASE_TRT.sysadm.produit p
 
 	Where p.id_prod = @dcIdProd 
-
-	-- *************************************
-	-- ** Données liées assureur/police   **
-    -- *************************************
-	Select Distinct cie.lib_cie
-	From PEGASE_TRT.sysadm.sinistre s,
-		 PEGASE_TRT.sysadm.gar_sin g,
-		 PEGASE_TRT.sysadm.garantie ga,
-		 PEGASE_TRT.sysadm.police po,
-		 PEGASE_TRT.sysadm.compagnie cie
-	Where s.id_sin = @dcIdSin
-	And   g.id_sin = s.id_sin
-	And   ga.id_prod = s.id_prod
-	And   ga.id_rev = s.id_rev
-	And   ga.id_gti = g.id_gti
-	And   po.id_police = ga.id_police
-	And   cie.id_cie = po.id_cie
-
-	If @@ROWCOUNT = 1
-		Begin
-			Select @sAssureur = cie.lib_cie
-			From PEGASE_TRT.sysadm.sinistre s,
-				 PEGASE_TRT.sysadm.gar_sin g,
-				 PEGASE_TRT.sysadm.garantie ga,
-				 PEGASE_TRT.sysadm.police po,
-				 PEGASE_TRT.sysadm.compagnie cie
-			Where s.id_sin = @dcIdSin
-			And   g.id_sin = s.id_sin
-			And   ga.id_prod = s.id_prod
-			And   ga.id_rev = s.id_rev
-			And   ga.id_gti = g.id_gti
-			And   po.id_police = ga.id_police
-			And   cie.id_cie = po.id_cie
-		End 
-
-	Select Distinct po.lib_police
-	From PEGASE_TRT.sysadm.sinistre s,
-		 PEGASE_TRT.sysadm.gar_sin g,
-		 PEGASE_TRT.sysadm.garantie ga,
-		 PEGASE_TRT.sysadm.police po,
-		 PEGASE_TRT.sysadm.compagnie cie
-	Where s.id_sin = @dcIdSin
-	And   g.id_sin = s.id_sin
-	And   ga.id_prod = s.id_prod
-	And   ga.id_rev = s.id_rev
-	And   ga.id_gti = g.id_gti
-	And   po.id_police = ga.id_police
-	And   cie.id_cie = po.id_cie
-
-	If @@ROWCOUNT = 1
-		Begin
-			Select @sNoPolice = po.lib_police
-			From PEGASE_TRT.sysadm.sinistre s,
-				 PEGASE_TRT.sysadm.gar_sin g,
-				 PEGASE_TRT.sysadm.garantie ga,
-				 PEGASE_TRT.sysadm.police po,
-				 PEGASE_TRT.sysadm.compagnie cie
-			Where s.id_sin = @dcIdSin
-			And   g.id_sin = s.id_sin
-			And   ga.id_prod = s.id_prod
-			And   ga.id_rev = s.id_rev
-			And   ga.id_gti = g.id_gti
-			And   po.id_police = ga.id_police
-			And   cie.id_cie = po.id_cie
-		End 
 
 END	
 
@@ -1254,10 +1291,29 @@ Set civ = @sCodCivCourt,
 	imei = @sIMEI,
 	maj_par = @sMajPar,
 	nature = @sNature,
-	id_inter = @sIdInter
+	id_inter = @sIdInter,
+	no_ligne_assuree = @sNoLigneAssuree,
+	no_adhesion = @sNoAdhesion,
+	date_de_survenance_sinistre = @sDateDeSurvenanceSinistre,
+	heure_de_survenance_sinistre = @sHeureDeSurvenanceSinistre,
+	no_tel_inter_assure = @sNotTelInterAssure,
+	lib_nature = @sLibNature ,
+	code_garantie = @sCodeGarantie,  -- [MCO602_PNEU]
+	garantie = @sGarantie,  -- [MCO602_PNEU]
+	url_extranet = @sURLextranet, -- [MIG1_COUR_EMAILING]
+  	date_connaissance_sinistre = @sDateConnaissanceSinistre, -- [MIG1_COUR_EMAILING] 
+	date_fin_garantie = @sDateFinGarantie,-- [MIG1_COUR_EMAILING]
+	date_effet_garantie = @sDateEffetGarantie, -- [MIG1_COUR_EMAILING] 
+	appli_sin_prov = 'PEGASE', -- [MIG1_COUR_EMAILING]
+	civ_livraison = @sCivLivraison,  -- [MIG1_COUR_EMAILING]
+	prenom_livraison = @sPrenomLivraison, -- [MIG1_COUR_EMAILING]
+	nom_livraison = @sNomLivraison, -- [MIG1_COUR_EMAILING]
+	adresse1_livraison = @sAdresse1Livraison, -- [MIG1_COUR_EMAILING]
+	adresse2_livraison = @sAdresse2Livraison, -- [MIG1_COUR_EMAILING]
+	cp_ville_livraison = @sCpVilleLivraison -- [MIG1_COUR_EMAILING]
+
 
 Where id_xml = @aiIdXml
-
 
 Go
 
@@ -2323,6 +2379,7 @@ Go
 --
 -------------------------------------------------------------------
 -- JFF      18/10/2023   [RS6044_REL_MAIL]
+-- JFF		06/06/2025   [RS6130]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V04' AND type = 'P' )
         DROP procedure sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V04
@@ -2389,6 +2446,8 @@ Declare @dtCrtle4000 DateTime
 Declare @dtCrtle0015 DateTime
 Declare @dtCrtle2015 DateTime
 Declare @dtCrtle4015 DateTime
+Declare @iRS6130 Integer -- [RS6130]
+
 
 -- Contrôle sur l'horaire pour éviter les lancements à la main et donc désynchronisés par rapport au Job Windows (uniquement ebn production)
 
@@ -2453,6 +2512,8 @@ Declare @TbWork Table (
 If @@servername = master.dbo.SPB_FN_ServerName ('PRO')  
  Begin    
   
+	Set @iRS6130 = SIMPA2_PRO.sysadm.FN_CLE_NUMERIQUE ( 'RS6130') -- [RS6130]
+
 	Set @sServeurProduction = 'PRO'
 
 	Set @sDestinataire = 'jff@spb.fr,cbourdoiseau@spb.eu,DBOUCQ@spb.eu,GG_DSI-DO-INFRA-SERVEUR_Coll@spb.eu,GG_DSI-DO-INFRA-SERVEUR_Ext@spb.eu'
@@ -2556,6 +2617,84 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 		Update @TbWork Set marquage = 1, dte_edit_compl = rtrim ( @sDteEditComplSeria ) Where id_seq = @iIdSeq
 	 End 
 
+    ------------------------------------------------------------------------------
+	--------- Traitement mail avec courrier PEGASE [RS6130]				  --------
+	------------------------------------------------------------------------------
+	If @iRS6130 > 0 
+		Begin 
+			Insert into @TbWork		
+			Select  
+			mp.id_seq,  
+			mp.id_sin,  
+			mp.id_appli_num,
+			mp.typ_mail,
+			IsNull ( mp.id_arch, -1 ),
+			mp.id_arch_compl, -- [RS6044_REL_MAIL]
+			a.dte_edit,
+			null, -- [RS6044_REL_MAIL]
+			mp.xml_data + IsNull ( mp.xml_data2, ''),
+			IsNull ( ( Select Case @sServeurProduction
+								When 'PRO' Then chemin_pro
+								Else chemin_sim
+								End
+						From sysadm.chem_depot_ksl_rs5045 
+						where id_chemin = mp.id_chemin ), '') chemin_depot,
+			IsNull ( ( Select ltrim ( rtrim ( nom_fichier )) + '.' + ltrim ( rtrim ( extension_fichier )) From sysadm.code_maquette_ksl_rs5045 where typ_mail = mp.typ_mail and id_cpt = 1 ), '') fichier_depot,
+			mp.dateh_exec 'dateh_exec',
+			0
+ 
+			From sysadm.mail_push mp with (nolock),  
+				PEGASE_PRO.sysadm.archive a with (nolock)  
+			Where  mp.methode = 'KSL2'  -- Important, Nouveau RS5045
+			And ( mp.mail_trt_ok = 'N' or mp.mail_trt_ok is null )  
+			And mp.id_appli_num = 3  -- PEGASE
+			And mp.id_arch > 0 
+			And a.id_arch2 = mp.id_arch  
+			And mp.cree_le > DateAdd ( month, -2, getdate() )  
+
+			Set @iRowCountWord  = @@Rowcount
+
+			Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountWord  ) + ' enregistrement(s) (mails) représentant des courriers WORD PEGASE'
+			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'LCTCWD', 'OK', @sMsgTrc, @iIdLotTrc  
+
+			If Exists ( Select Top 1 1 From @TbWork where marquage = 0 And id_arch_compl is not null )
+				Begin
+					Set @sMsgTrc = 'Présence de courriers WORD PEGASE complèmentaires à une archive principale, ramassage des dates d''édition correspondantes'
+					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INFO', 'OK', @sMsgTrc, @iIdLotTrc  
+				End 
+
+			-- [RS6044_REL_MAIL] Armement des DTE_EDIT des ID_ARCH_COMPL
+			While Exists ( Select Top 1 1 From @TbWork where marquage = 0 And id_arch_compl is not null )
+			 Begin
+				Select 	Top 1 
+					@iIdSeq = id_seq,
+					@sIdArchComplSeria = id_arch_compl -- [RS6044_REL_MAIL]
+				From	@TbWork
+				Where	marquage = 0
+				And id_arch_compl is not null
+
+				Set @sDteEditComplSeria = ''
+
+				Set @iCptArch = 2 -- [RS6044_REL_MAIL] la 1 étant réservée, la chaine sérialisée des pièces jointes commence à 2
+				While 0=0 -- [RS6044_REL_MAIL]
+				 Begin
+					Set @sIdArchComplWk = sysadm.FN_CLE_VAL ( 'ID_ARCH_CPL_' + CONVERT ( varchar ( 20 ), @iCptArch), @sIdArchComplSeria, ';' ) 
+					If @sIdArchComplWk is null OR ltrim ( rtrim ( @sIdArchComplWk )) = '' Break
+
+					Set @iIdArchComplWk = CONVERT ( Integer, @sIdArchComplWk )
+
+					Select @sDteEditComplWk = CONVERT ( Varchar ( 10 ), a.dte_edit, 105 )
+					From PEGASE_PRO.sysadm.archive a with (nolock)  
+					Where a.id_arch2 = @iIdArchComplWk
+
+					Set @sDteEditComplSeria = sysadm.FN_CLE_VAL_E ( 'DTE_EDIT_CPL_'+ CONVERT ( varchar ( 20 ), @iCptArch), @sDteEditComplWk, rtrim ( @sDteEditComplSeria), ';' ) 
+					Set @iCptArch = @iCptArch + 1
+				 End 
+
+				Update @TbWork Set marquage = 1, dte_edit_compl = rtrim ( @sDteEditComplSeria ) Where id_seq = @iIdSeq
+			 End 
+			 -- /RS6130
+		End
  End  
 
 ----------------------------------------------------------------------------------------------
@@ -2565,6 +2704,8 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 ----------------------------------------------------------------------------------------------
 If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')  
  Begin
+
+	Set @iRS6130 = SIMPA2_TRT.sysadm.FN_CLE_NUMERIQUE ( 'RS6130') -- [RS6130]
 
 	Set @sServeurProduction = 'SIM'
   
@@ -2670,6 +2811,86 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		Update @TbWork Set marquage = 1, dte_edit_compl = rtrim ( @sDteEditComplSeria ) Where id_seq = @iIdSeq
 	 End  
 
+    ------------------------------------------------------------------------------
+	--------- Traitement mail avec courrier PEGASE [RS6130]				  --------
+	------------------------------------------------------------------------------
+	If @iRS6130 > 0 
+		Begin 
+			Insert into @TbWork		
+			Select  
+			mp.id_seq,  
+			mp.id_sin,  
+			mp.id_appli_num,
+			mp.typ_mail,
+			IsNull ( mp.id_arch, -1 ),
+			mp.id_arch_compl, -- [RS6044_REL_MAIL]
+			a.dte_edit,
+			null, -- [RS6044_REL_MAIL]
+			mp.xml_data + IsNull ( mp.xml_data2, ''),
+			IsNull ( ( Select Case @sServeurProduction
+								When 'PRO' Then chemin_pro
+								Else chemin_sim
+								End
+						From sysadm.chem_depot_ksl_rs5045 
+						where id_chemin = mp.id_chemin ), '') chemin_depot,
+			IsNull ( ( Select ltrim ( rtrim ( nom_fichier )) + '.' + ltrim ( rtrim ( extension_fichier )) From sysadm.code_maquette_ksl_rs5045 where typ_mail = mp.typ_mail and id_cpt = 1 ), '') fichier_depot,
+			mp.dateh_exec 'dateh_exec',
+			0
+ 
+			From sysadm.mail_push mp with (nolock),  
+				PEGASE_TRT.sysadm.archive a with (nolock)  
+			Where  mp.methode = 'KSL2'  -- Important, Nouveau RS5045
+			And ( mp.mail_trt_ok = 'N' or mp.mail_trt_ok is null )  
+			And mp.id_appli_num = 3  -- PEGASE
+			And mp.id_arch > 0 
+			And a.id_doc = mp.id_arch  
+			And mp.cree_le > DateAdd ( month, -2, getdate() )  
+
+			Set @iRowCountWord  = @@Rowcount
+
+			Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountWord  ) + ' enregistrement(s) (mails) représentant des courriers WORD PEGASE'
+			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'LCTCWD', 'OK', @sMsgTrc, @iIdLotTrc  
+
+			If Exists ( Select Top 1 1 From @TbWork where marquage = 0 And id_arch_compl is not null )
+				Begin
+					Set @sMsgTrc = 'Présence de courriers WORD PEGASE complèmentaires à une archive principale, ramassage des dates d''édition correspondantes'
+					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INFO', 'OK', @sMsgTrc, @iIdLotTrc  
+				End 
+
+			-- [RS6044_REL_MAIL] Armement des DTE_EDIT des ID_ARCH_COMPL
+			While Exists ( Select Top 1 1 From @TbWork where marquage = 0 And id_arch_compl is not null )
+			 Begin
+				Select 	Top 1 
+					@iIdSeq = id_seq,
+					@sIdArchComplSeria = id_arch_compl -- [RS6044_REL_MAIL]
+				From	@TbWork
+				Where	marquage = 0
+				And id_arch_compl is not null
+
+				Set @sDteEditComplSeria = ''
+
+				Set @iCptArch = 2 -- [RS6044_REL_MAIL] la 1 étant réservée, la chaine sérialisée des pièces jointes commence à 2
+				While 0=0 -- [RS6044_REL_MAIL]
+				 Begin
+					Set @sIdArchComplWk = sysadm.FN_CLE_VAL ( 'ID_ARCH_CPL_' + CONVERT ( varchar ( 20 ), @iCptArch), @sIdArchComplSeria, ';' ) 
+					If @sIdArchComplWk is null OR ltrim ( rtrim ( @sIdArchComplWk )) = '' Break
+
+					Set @iIdArchComplWk = CONVERT ( Integer, @sIdArchComplWk )
+
+					Select @sDteEditComplWk = CONVERT ( Varchar ( 10 ), a.dte_edit, 105 )
+					From PEGASE_TRT.sysadm.archive a with (nolock)  
+					Where a.id_doc = @iIdArchComplWk
+
+					Set @sDteEditComplSeria = sysadm.FN_CLE_VAL_E ( 'DTE_EDIT_CPL_'+ CONVERT ( varchar ( 20 ), @iCptArch), @sDteEditComplWk, rtrim ( @sDteEditComplSeria), ';' ) 
+					Set @iCptArch = @iCptArch + 1
+				 End 
+
+				Update @TbWork Set marquage = 1, dte_edit_compl = rtrim ( @sDteEditComplSeria ) Where id_seq = @iIdSeq
+			 End 
+			 -- /RS6130
+		End
+
+
  End  
 
 ----------------------------------------------------------------------------------------------
@@ -2748,6 +2969,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		Set @sMailBody = @sMailBody + char (10)
 		Set @sMailBody = @sMailBody + 'Serveur : ' + @@SERVERNAME 
 		If @@SERVERNAME = 'SQL14SINISTRES\SINISTRES' Set @sMailBody = @sMailBody + ' (Alias [LS-SINISTRES])'
+		If @@SERVERNAME In ( 'SQLPRD03\INSTANCE05', 'SQLPRD04\INSTANCE05') Set @sMailBody = @sMailBody + ' (Alias [LSTAGF005001])'
 		Set @sMailBody = @sMailBody + char (10)		
 		Set @sMailBody = @sMailBody + 'base    : ' + DB_NAME () + char (10)
 		Set @sMailBody = @sMailBody + char (10)
@@ -2766,6 +2988,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		Set @sMailBody = @sMailBody + CHAR ( 10 )
 		Set @sMailBody = @sMailBody + '- Sinon vérifiez les actions SQL récemment engagées par l''équipe INFRA sur ' + @@Servername  
 		If @@SERVERNAME = 'SQL14SINISTRES\SINISTRES' Set @sMailBody = @sMailBody + ' (Alias [LS-SINISTRES])'
+		If @@SERVERNAME In ( 'SQLPRD03\INSTANCE05', 'SQLPRD04\INSTANCE05') Set @sMailBody = @sMailBody + ' (Alias [LSTAGF005001])'
 		Set @sMailBody = @sMailBody + ' .' + CHAR ( 10 )
 		Set @sMailBody = @sMailBody + '  Consultez la trace du traitement avec ces 2 Select pour voir depuis quand le problème se produit ' + CHAR ( 10 )
 		Set @sMailBody = @sMailBody + CHAR ( 10 )
@@ -2779,7 +3002,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		Set @sMailBody = @sMailBody + CHAR ( 10 )
 		Set @sMailBody = @sMailBody + 'Fabry Jean-François'
 		Set @sMailBody = @sMailBody + CHAR ( 10 )
-		Set @sMailBody = @sMailBody + 'DSI/IPDDEV Team SIMPA2' + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + 'DSI Team SIMPA2' + CHAR ( 10 )
 		Set @sMailBody = @sMailBody + 'Legacy Application Tech Lead' + CHAR ( 10 )
 
 
@@ -3647,6 +3870,8 @@ Go
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
+-- JFF		06/06/2025   [RS6130]
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_S_RECUPERER_LE_BLOB_COURRIER' AND type = 'P' )
         DROP procedure sysadm.PS_RS5045_S_RECUPERER_LE_BLOB_COURRIER
 GO
@@ -3656,6 +3881,8 @@ CREATE procedure sysadm.PS_RS5045_S_RECUPERER_LE_BLOB_COURRIER
 	@iIdArch		integer,
 	@blBlobCourrier VarBinary (max) OutPut
 AS
+
+Declare @iBlobId Integer -- [RS6130]
 
 -- Production
 If @@servername = master.dbo.SPB_FN_ServerName ('PRO')  
@@ -3704,13 +3931,29 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 				Return @@Error    
 			End
 
-		-- PEGASE
-		/*
+		-- PEGASE [RS6130]
 		If @aiIdAppliNum = 3 
 			Begin
 
+				Select  @blBlobCourrier = wb.txt_blob    
+				From PEGASE_PRO.sysadm.w_cour_blob_arch wb  with (nolock)    
+				Where wb.id_arch2 = @iIdArch    
+
+				If @@RowCount = 1 Return @@Error  
+
+				Select @iBlobId = a.blob_id
+				From PEGASE_PRO.sysadm.archive a
+				Where a.id_arch2 = @iIdArch
+
+				If @iBlobId is null OR @iBlobId <= 0 Return -1
+
+				Select @blBlobCourrier = data 
+				From [LS-SAGA2].SAGA2_BLOB.dbo.document doc with (nolock) 
+				where doc.code = @iBlobId
+
+				If @@RowCount = 1 Return @@Error  
+
 			End 
-		*/
 
 	End 
 
@@ -3730,20 +3973,26 @@ Else
 				From SIMPA2_TRT.sysadm.archive a  with (nolock),    
 					 SIMPA2_TRT.sysadm.archive_blob ab  with (nolock)    
 				Where a.id_arch = @iIdArch    
-				And   ab.id_sin = a.id_sin    
-				And   ab.id_inter = a.id_inter    
-				And   ab.id_doc = a.id_doc    
+				And   ab.id_sin = a.id_sin
+				And   ab.id_inter = a.id_inter
+				And   ab.id_doc = a.id_doc
  
 				Return @@Error    
 			End
 
-		-- PEGASE
-		/*
+		-- PEGASE [RS6130]
 		If @aiIdAppliNum = 3 
 			Begin
 
+				Select  @blBlobCourrier = wb.txt_blob    
+				From PEGASE_TRT.sysadm.w_cour_blob_arch wb  with (nolock)    
+				Where wb.id_arch2 = @iIdArch    
+
+				If @@RowCount = 1 Return @@Error  
+
+				-- Pas d'alternative à SAGA2_BLOB en simulation
+
 			End 
-		*/
 
 
 	End 
