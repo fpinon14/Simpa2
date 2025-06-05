@@ -6246,7 +6246,6 @@ Go
 -- Retourne             :       
 --
 -- JFF  30/09/2020  [PI097]
--- FPI	03/06/2025	[MIG_SQL_2022] Suppression de l'adhérence au nom de serveur
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_DETECT_VERSION_BASE_SIM' AND type = 'P' )
         DROP procedure sysadm.PS_S_DETECT_VERSION_BASE_SIM
@@ -6263,14 +6262,11 @@ Declare @dtFin DateTime
 Set @adtDteVersBaseSim = null
 Set @aiAlerte = 0
 
-/* FPI - MIG_SQL_2022 - utilisation de SPB_FN_ServerName*/
-/*If Not (
+If Not (
 			( ( Select SERVERPROPERTY('ServerName' ) ) = 'SQL14DEV\SIMSINISTRES' And  ( Select ( Upper ( sysadm.FN_TRIM ( db_name ( db_id () ) ) ))) = 'SIMPA2_TRT')
 			Or 
 			( ( Select SERVERPROPERTY('ServerName' ) ) = 'SINSQL19REC\SIMSINISTRES19' And  ( Select ( Upper ( sysadm.FN_TRIM ( db_name ( db_id () ) ) ))) = 'SIMPA2_TRT')  -- [PI097]
    ) Return 
-*/
-IF Not ( @@SERVERNAME = master.dbo.SPB_FN_ServerName('SIM') and sysadm.FN_TRIM ( db_name ( db_id () ) )  = 'SIMPA2_TRT' ) Return
 
 
 -- Select @adtDteVersBaseSim = max ( valide_le ) from sysadm.sinistre where valide_le between Convert ( varchar, DateAdd ( day, -1, GetDate() ), 103 ) And Convert ( varchar, getdate(), 103 ) 
@@ -6298,7 +6294,6 @@ Go
 -- Retourne             :       
 -- 
 -- JFF  30/09/2020  [PI097]
--- FPI	03/06/2025	[MIG_SQL_2022] Suppression de l'adhérence au nom de serveur
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_DETECT_SQL_QUOT_BASE_SIM' AND type = 'P' )
         DROP procedure sysadm.PS_S_DETECT_SQL_QUOT_BASE_SIM
@@ -6315,14 +6310,11 @@ Declare @dtFin DateTime
 Set @adtDteSqlQuotBaseSim = null
 Set @aiAlerte = 0
 
-/* FPI - MIG_SQL_2022 - utilisation de SPB_FN_ServerName*/
-/* If Not (
+If Not (
 			( ( Select SERVERPROPERTY('ServerName' ) ) = 'SQL14DEV\SIMSINISTRES' And  ( Select ( Upper ( sysadm.FN_TRIM ( db_name ( db_id () ) ) ))) = 'SIMPA2_TRT')
 			Or 
 			( ( Select SERVERPROPERTY('ServerName' ) ) = 'SINSQL19REC\SIMSINISTRES19' And  ( Select ( Upper ( sysadm.FN_TRIM ( db_name ( db_id () ) ) ))) = 'SIMPA2_TRT')  -- [PI097]
    ) Return 
-*/
-IF Not ( @@SERVERNAME = master.dbo.SPB_FN_ServerName('SIM') and sysadm.FN_TRIM ( db_name ( db_id () ) )  = 'SIMPA2_TRT' ) Return
 
 Select @adtDteSqlQuotBaseSim  = dte_1 from sysadm.date_pivot where id_cle = 'SQL_QUOT_SIM'
 
@@ -8522,3 +8514,83 @@ While Exists ( Select Top 1 1 From @TbLesTables where marquage = 0 )
  Select * from @TbLesInsert 
 
  Go
+
+ --------------------------------------------------------------------
+--
+-- Procédure            :       PS_GINS
+-- Auteur               :       FABRY JF
+-- Date                 :       22/05/2025
+-- Libellé              :       Générateur d'insert rapide pour toute jointure
+--                              
+-- Commentaires         :       
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_GINS' AND type = 'P' )
+        DROP procedure sysadm.PS_GINS
+GO
+
+CREATE procedure sysadm.PS_GINS
+	@sSchema VarChar ( 255 ),    -- nom schéma sans point
+	@sNomTable VarChar ( 255 ),  -- nom seul sans schéma
+	@sClauseWhere VarChar ( 5000 ) -- avec le WHERE : WHERE a=2
+AS
+
+Declare @sVal VarChar ( max )
+
+Set @sNomTable = LOWER ( @sNomTable )
+
+Declare @TbValTemp Table ( 
+	id_seq integer identity (1,1 ),
+	chaine_insert Varchar ( max )
+	)
+
+Declare @TbLesInsert Table ( 
+	id_seq integer identity (1,1 ),
+	chaine_insert Varchar ( max )
+	)
+
+
+
+Select @sVal = 
+	'Select '
+	+
+	Stuff (
+			( 
+			Select 	' + '', '' +' +
+					Case 
+						-- DateTime
+						When sc.system_type_id in ( 61 ) 
+							Then ' IsNull ( QUOTENAME ( Convert ( VarChar ( 10 ), ' + sc.name + ', 103 ) + '' '' + Right ( Convert ( VarChar ( 30 ),' + sc.name + ', 21 ), 12 ), '''''''' ) , ''null'' ) '
+						-- Numérique
+						When sc.system_type_id in ( 106, 108, 62, 59, 56, 52, 48, 127  ) 
+							Then ' IsNull ( Convert ( Varchar ( 100 ), ' + sc.name + '), ''null'' ) '
+						-- Image et Varbinary
+						When sc.system_type_id in ( 34, 165  ) 
+							Then ' ''null'' '
+						-- Autres (chaine)
+						Else
+							' IsNull (QUOTENAME ( ltrim ( rtrim (' + sc.name  + ')), '''''''' ) , ''null'' ) '
+					end 
+			From sys.objects so,
+					sys.columns sc
+			Where so.name = @sNomTable
+			And	  so.type = 'U'
+			And   so.object_id = sc.object_id
+			Order by sc.column_id
+			For Xml path ( '' )
+			),
+		1, 9, '' )
+		+ ' From ' + @sSchema + '.' + @sNomTable + ' ' + @sClauseWhere
+
+Insert into @TbValTemp Exec ( @sVal  )
+Update @TbValTemp Set chaine_insert = 'Insert into ' + @sSchema + '.' + @sNomTable + ' values ( '  + chaine_insert + ' ) '
+		
+Insert into @TbLesInsert Select chaine_insert from @TbValTemp 
+
+Select * from @TbLesInsert 
+ 
+
+Go
+
+
