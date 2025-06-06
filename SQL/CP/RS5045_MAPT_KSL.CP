@@ -2843,7 +2843,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 			And ( mp.mail_trt_ok = 'N' or mp.mail_trt_ok is null )  
 			And mp.id_appli_num = 3  -- PEGASE
 			And mp.id_arch > 0 
-			And a.id_doc = mp.id_arch  
+			And a.id_arch2 = mp.id_arch  
 			And mp.cree_le > DateAdd ( month, -2, getdate() )  
 
 			Set @iRowCountWord  = @@Rowcount
@@ -2879,7 +2879,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 
 					Select @sDteEditComplWk = CONVERT ( Varchar ( 10 ), a.dte_edit, 105 )
 					From PEGASE_TRT.sysadm.archive a with (nolock)  
-					Where a.id_doc = @iIdArchComplWk
+					Where a.id_arch2 = @iIdArchComplWk
 
 					Set @sDteEditComplSeria = sysadm.FN_CLE_VAL_E ( 'DTE_EDIT_CPL_'+ CONVERT ( varchar ( 20 ), @iCptArch), @sDteEditComplWk, rtrim ( @sDteEditComplSeria), ';' ) 
 					Set @iCptArch = @iCptArch + 1
