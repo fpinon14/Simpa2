@@ -124,6 +124,7 @@
 --     JFF 31/03/2025   [MIG82_JOURN_EVT]
 --	   JFF 23/04/2025   [HUB1267]
 --	   JFF 23/05/2025   [HUB1530]
+--     JFF 06/06/2025   [20250606091224420] Modif sur ajustement de date
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U01_COMMANDE' AND type = 'P' )
         DROP procedure sysadm.PS_U01_COMMANDE
@@ -352,7 +353,8 @@ If @dtDteEnvCliActuel is not null
 		Set @dtDteEnvCli = @dtDteEnvCliActuel
 	End
 
--- [VDOC24784]
+-- [VDOC24784][20250606091224420]
+/*
 If @dtDteRcpFrn is not null And @dtDteRcpFrnActuel is null
 	Begin
 	If DateDiff ( day, @dtDteRcpFrn, GetDate()) > 5 
@@ -376,6 +378,7 @@ If @dtDteRcpFrn is not null And @dtDteRcpFrnActuel is null
 
 		End 
 	End 
+*/
 
 If @dtDteEnvCli is not null And @dtDteEnvCliActuel is null 
 	And @iStatusGc not in ( 621, 622 )
@@ -401,7 +404,6 @@ If @dtDteEnvCli is not null And @dtDteEnvCliActuel is null
 
 		End 
 	End 
-
 
 If @dtDteRcpMobCli is not null And ( @dtDteRcpMobCliActuel is null or @dtDteRcpMobCliActuelBCV is null or @dtDteRcpMobCliActuelBCV = '' )
 	Begin
