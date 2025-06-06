@@ -14608,6 +14608,7 @@ private function integer uf_ctrl_fichier_psm ();//*-----------------------------
 //       JFF   28/01/2019 [PM450-1]
 //       JFF   25/03/2019 [DT398]
 //       JFF   20/09/2021 [BUG_RST_PRIX_O2M]
+//       JFF   06/06/2025 [20250606091224420] Modif sur ajustement de date
 //*-----------------------------------------------------------------
 
 Int iRet 
@@ -14625,9 +14626,10 @@ String sInfoSpbFrnCplt
 datetime	dtVal, dtVal1
 String sInfoFrnSpbCplt
 Long lNbreLignDeb, lNbreLignFin
-Boolean bF_CLE_A_TRUE_PM445_1_PSM
+Boolean bF_CLE_A_TRUE_PM445_1_PSM, bF_CLE_A_TRUE_20250606091224420 
 
 bF_CLE_A_TRUE_PM445_1_PSM = F_CLE_A_TRUE ( "PM445_1_PSM" )
+bF_CLE_A_TRUE_20250606091224420 = F_CLE_A_TRUE ( "20250606091224420" )
 
 iRet = 1
 
@@ -14783,6 +14785,7 @@ For lCpt = lTotLig To 1 Step -1
 	End If
 
 	SQLCA.PS_S11_COMMANDE_V07 ( lidsin, lidseq, sIdFourBase, sCodEtat, iStatusGc, sIdRefFour, iInfoSpbFrn, sIdTypArt, dcIdprod, sInfoSpbFrnCplt, sInfoFrnSpbCplt, sChaineBCV )
+
 	
 	sIdTypArtSin = lnvPFCString.of_getkeyvalue (sChaineBCV, "TYP_APP_DS", ";") 
 	
@@ -14811,7 +14814,7 @@ For lCpt = lTotLig To 1 Step -1
 
 	//* [20091228114718123]
 	sIdFourCtrl = sVal
-	
+
 	/*------------------------------------------------------------------*/
 	/* ZONE 3 : NUM_CMD_FRN															  */
 	/*------------------------------------------------------------------*/
@@ -15718,10 +15721,21 @@ For lCpt = lTotLig To 1 Step -1
 	End IF 
 
 	// [CTRLE_DATE_INTRG_FOU]
-	sVal = String ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_RCP_FRN" ) )  			
-	sVal1 = String ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_ENV_CLI" ) )  		
-	iRet = This.Uf_Ctrl_Date ( "CAS1", iRet, lCpt, lIdSin, lIdseq, sIdRefFour, sChaineBCV, sVal, sVal1 )
-
+	// [20250606091224420]
+	If bF_CLE_A_TRUE_20250606091224420 Then
+		choose case sCodEtat 
+			case "RPC", "ANN", "RFO", "RSP"
+				// Pas de contrôle
+			Case Else
+				sVal = String ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_RCP_FRN" ) )  			
+				sVal1 = String ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_ENV_CLI" ) )  		
+				iRet = This.Uf_Ctrl_Date ( "CAS1", iRet, lCpt, lIdSin, lIdseq, sIdRefFour, sChaineBCV, sVal, sVal1 )
+		End Choose 
+	Else
+		sVal = String ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_RCP_FRN" ) )  			
+		sVal1 = String ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_ENV_CLI" ) )  		
+		iRet = This.Uf_Ctrl_Date ( "CAS1", iRet, lCpt, lIdSin, lIdseq, sIdRefFour, sChaineBCV, sVal, sVal1 )
+	End IF 
 	// PRBLE_LIVRAISON 
 	sVal = Trim ( lnvPFCString.of_getkeyvalue (sInfoFrnSpbCpltLu, "PRBLE_LIVRAISON", ";"))
 
