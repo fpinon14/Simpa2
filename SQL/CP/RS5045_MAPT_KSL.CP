@@ -2100,21 +2100,7 @@ If ( @asMailSend = 'XX@XX.COM' Or @asMailSend = '' Or @asMailSend is null ) And 
   End 
 
 -- [RS6212_ARCH_MPUSH]
-IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
-	Begin
-
-		If SIMPA2_PRO.sysadm.FN_CLE_NUMERIQUE ( 'RS6212_ARCH_MPUSH') > 0 
-			Begin
-				Exec sysadm.PS_RS5045_I_MAIL_ARCHIVE_CONTACT_SHERPA @iIdSeq
-			End 
-	End 
-Else
-	Begin
-		If SIMPA2_TRT.sysadm.FN_CLE_NUMERIQUE ( 'RS6212_ARCH_MPUSH') > 0 
-			Begin
-				Exec sysadm.PS_RS5045_I_MAIL_ARCHIVE_CONTACT_SHERPA @iIdSeq
-			End 
-	End 
+Exec sysadm.PS_RS5045_I_MAIL_ARCHIVE_CONTACT_SHERPA @iIdSeq
 
 RETURN @iErr  
 

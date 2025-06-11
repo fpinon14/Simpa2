@@ -646,3 +646,82 @@ End
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procedure            :       PS_I_BATCH_PM260_ANONYMISATION_SIMULATION
+-- Auteur               :       JFF
+-- Date                 :       11/06/2025
+-- Libelle              :       Anonymation de tous les dossiers en simulation
+-- Commentaires         :       [PM260]
+-- References           :       
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_BATCH_PM260_ANONYMISATION_SIMULATION' AND type = 'P' )
+        DROP procedure sysadm.PS_I_BATCH_PM260_ANONYMISATION_SIMULATION
+GO
+
+CREATE procedure sysadm.PS_I_BATCH_PM260_ANONYMISATION_SIMULATION  
+	@asForcage Varchar ( 50 )
+As
+
+-- Si c'est lancé en production par erreur, on sort immédiatement
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' Return
+
+If @asForcage is null or @asForcage <> 'CC4815C1-8156-42E2-9A74-8AFB613F03F1' Return
+
+Declare @dtDeb DateTime
+Declare @dcIdSin Decimal (10) -- [PI062]
+Declare @iNbre integer
+Declare @iNbreTot integer
+Declare @iArretSuitErr integer
+Declare @iErr integer
+DECLARE @sMessage    Varchar(1000),
+	    @sObjet      VarChar(255),
+	    @sRetourErrMail VarChar(255),
+		@sValideLe   VarChar ( 30 ),
+		@sPeriodeMois VarChar ( 30 ),
+		@sIdCie VarChar ( 30 ),
+		@sDtePivot VarChar ( 30 ),
+		@sDonneesAno VarChar ( 35 )
+
+Set @dtDeb = GetDate()
+Set @iNbre = 0
+Set @iArretSuitErr = 0
+
+DECLARE @Cache TABLE 
+	( id_sin	decimal (10 ) )
+
+
+Insert into @Cache
+Select id_sin
+From sysadm.w_sin ws
+Where Not Exists ( 
+			Select Top 1 1 
+			From sysadm.pm260_traite pm
+			Where pm.id_sin = ws.id_sin 
+		)
+Union
+Select id_sin 
+From sysadm.sinistre ws
+Where Not Exists ( 
+			Select Top 1 1 
+			From sysadm.pm260_traite pm
+			Where pm.id_sin = ws.id_sin 
+		)
+
+While Exists ( Select Top 1 1 From @Cache ) 
+ Begin
+ 
+	Set @dcIdSin = null
+
+	Select top 1 @dcIdSin = id_sin From @Cache
+
+	Exec sysadm.PS_U_TRT_PM260 @dcIdSin, 'SIM'
+
+	Delete @Cache where id_sin = @dcIdSin
+End
+
+
+Go

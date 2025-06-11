@@ -1374,4 +1374,131 @@ Order by 1, 2, 3
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_SAGA2_PLAFOND_PAR_ANNEE_SUR_SAGA2
+-- Auteur               :       FABRY JF
+-- Date                 :       05/2025
+-- Libellé              :       
+-- Commentaires         :       
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_SAGA2_PLAFOND_PAR_ANNEE_SUR_SAGA2' AND type = 'P' )
+        DROP procedure sysadm.PS_S_SAGA2_PLAFOND_PAR_ANNEE_SUR_SAGA2
+GO
 
+CREATE procedure sysadm.PS_S_SAGA2_PLAFOND_PAR_ANNEE_SUR_SAGA2
+	@adcIdSin Decimal ( 10 ),
+	@asSubscriptionNumber VARCHAR(50)
+AS
+
+Declare @sEnv VarChar ( 10 )
+Declare @dcIdProd Decimal ( 7 )
+Declare @sSql Varchar ( 3000 )
+Declare @sInstanceSaga2 Varchar ( 50 )
+
+Declare @TbRetSaga2 Table ( 
+	id_seq Integer identity (1, 1 ),
+	id_sin integer,
+	subscription_number varchar ( 50 ),
+	indemnise VarChar ( 10 ),
+	mt_reg_assure Decimal ( 11, 2 ),
+	mode_indemnisation VarChar ( 50 ),
+	mode_indemnisation_long VarChar ( 50 ),
+	dte_adh DateTime,
+	dte_decl DateTime,
+	dte_surv DateTime
+)
+
+Set @asSubscriptionNumber = Right ( REPLICATE ( '0', 12 ) + LTRIM ( rtrim ( @asSubscriptionNumber ) ), 12 ) 
+
+Select  @dcIdProd = ws.id_prod
+From sysadm.w_sin ws
+Where ws.id_sin = @adcIdSin
+
+If @dcIdProd is null 
+  Begin
+	Select  @dcIdProd = ws.id_prod
+	From sysadm.sinistre ws
+	Where ws.id_sin = @adcIdSin
+  End 
+
+If @dcIdProd is null Return -1
+
+If @@servername = master.dbo.SPB_FN_ServerName ('PRO') Set @sEnv = 'PRO' Else Set @sEnv = 'SIM'
+
+If @sEnv = 'PRO' 
+ Begin 
+ 	If NOT ( SHERPA_PRO.sysadm.FN_IS_SAGA ( @dcIdProd ) > 0 ) Return 1
+
+	Set @sInstanceSaga2 = '[LS-SAGA2]'
+
+ End 
+Else
+ Begin
+	If NOT ( SHERPA_SIM.sysadm.FN_IS_SAGA ( @dcIdProd ) > 0 ) Return 1
+
+	-- [INSTANCE]
+	If sysadm.FN_CLE_NUMERIQUE ( 'INSTANCE_PPR_REC_HUB') = 1
+		Begin 
+			Set @sInstanceSaga2 = '[S2SQL14DEV\RECSAGA2]' 
+		End 
+	Else
+		Begin 
+			Set @sInstanceSaga2 = '[S2SQL14PP1\PPRSAGA2]'
+		End 	
+
+ End 
+
+Set @sSql = 
+' Select' +
+'  c.spb_claim_number AS id_sin,' +
+'  s.subscription_number, ' +
+'  Case rcs.code' +
+'    When 117 Then ''OUI''' +
+'    ELSE ''NON''' +
+'  End as indemnise,' +
+'  ISNULL(SUM(pc.amount),0) as mt_reg_assure, ' +
+'  Case ' +
+'    When rcs.code = 117 ' +
+'     Then coalesce(upper(rpm.short_label), ''REMP/REP'')' +
+'    Else upper(rpm.short_label) ' +
+'  End as mode_indemnisation ,' +
+'  upper(rpm.long_label) as mode_indemnisation_long,' +
+'  s.subscription_date as dte_adh,' +
+'  c.declaration_date as dte_decl,' +
+'  c.occurence_date as dte_surv' +
+' ' +
+'from ' + @sInstanceSaga2 + '.SAGA2_PVC.oth_cla.claim c ' +
+'inner join ' + @sInstanceSaga2 + '.SAGA2_PVC.oth_sub.subscription s on s.id_subscription = c.id_subscription ' +
+'inner join ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.product p on p.id_product = s.id_product ' +
+'inner join ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.product_group pg on pg.id_product_group = p.id_product_group ' +
+'inner join ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_claim_status rcs on rcs.id_ref_claim_status = c.id_ref_claim_status ' +
+'left join ' + @sInstanceSaga2 + '.SAGA2_PVC.oth_cla.damaged_cover dc on dc.id_claim = c.id_claim ' +
+'left join ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_benefit_type rbt on rbt.id_ref_benefit_type= dc.id_ref_benefit_type ' +
+'left join ' + @sInstanceSaga2 + '.SAGA2_PVC.oth_cla.payment_claim pc on pc.id_claim = c.id_claim ' +
+'left join ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_type rpt on rpt.id_ref_payment_type = pc.id_ref_payment_type ' +
+'LEFT join ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_nature rpn on rpn.id_ref_payment_nature = pc.id_ref_payment_nature ' +
+'left join ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_status rps on rps.id_ref_payment_status = pc.ffl_ref_payment_status ' +
+'LEFT join ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_mode rpm on rpm.id_ref_payment_mode = pc.id_ref_payment_mode ' +
+'LEFT join ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_claim_status rpcs on rpcs.id_ref_payment_claim_status = pc.id_ref_payment_claim_status ' +
+'where s.subscription_number = ''' + @asSubscriptionNumber + ''' ' +
+' ' +
+'group by c.spb_claim_number, ' +
+'s.subscription_number, ' +
+'c.product_code, ' +
+'p.long_label,pg.label,' +
+'rps.long_label, ' +
+'rpcs.long_label,' +
+'rcs.code,' +
+'s.subscription_date ,' +
+'c.declaration_date ,' +
+'c.occurence_date ,' +
+'c.id_claim , ' +
+'rpm.long_label,rpm.short_label ' +
+'order by dte_surv '
+
+Exec ( @sSql ) 
+
+Go
