@@ -11802,11 +11802,12 @@ private function string uf_plaf_nbsin_adhesion ();//*---------------------------
 //  		 JFF		29/05/2012  [VDOC6662]
 //*-----------------------------------------------------------------
 
-Long lTotPlaf, lLig, lCpt, lLigFinale
+Long lTotPlaf, lLig, lCpt, lLigFinale, lDeb, lFin, lRow 
 Decimal {2} dcPlafond, dcPlafSav, dcPlafTmp
 Integer iNbAutreSin, iSinEnCours
 Long dcIdSin, dcIdProd, dcIdEts
-String sRech, sPos, sIdAdh, sIdPara, sCptVer, sIdNivPlaf, sIdRefPlaf
+String sRech, sPos, sIdAdh, sIdPara, sCptVer, sIdNivPlaf, sIdRefPlaf, sVal
+DateTime dtMajLe
 
 sPos = ""
 
@@ -11918,6 +11919,26 @@ If	lLig > 0 Then
 			
 			// [PLAF_REF] // [VDOC6662]
 			sPos = Uf_Plaf_Refus ( "715", "NORMAL" )
+			
+			// [MIG19_PSPLAF_SAGA2]
+			If F_CLE_A_TRUE ( "MIG19_PSPLAF_SAGA2" ) Then
+				F_RechDetPro(lDeb, lFin, idw_detpro, idw_produit.getItemNumber(1,"ID_PROD"),"-DP", 395)
+				If lDeb > 0 Then	
+			
+					lRow = idw_wdivsin.Find("UPPER(NOM_ZONE)='ADH_DEJA_INDEM'", 1, idw_wdivsin.RowCount())
+					If lRow> 0 Then
+						sVal = idw_wdivsin.GetItemString (lRow, "VAL_CAR") 
+					
+						If sVal <> "O" Then
+							idw_wdivSin.SetItem ( lRow, "VAL_CAR", "O" )
+							dtMajLe = DateTime ( Today (), Now () )
+							idw_wDivSin.SetItem ( lRow, "MAJ_LE", dtMajLe  )
+							idw_wDivSin.SetItem ( lRow, "MAJ_PAR", stGlb.sCodOper )
+							idw_wDivSin.SetItem ( lRow, "ALT_SUPP", "N" )
+						End If
+					End If
+				End If 			
+			End If			
 			
 		End If
 	End If
@@ -12472,12 +12493,15 @@ private function boolean uf_rf_1419 ();//*--------------------------------------
 //*										Faux = Le refus n'existe pas.
 //*
 //*-----------------------------------------------------------------
-Long lTotPlaf, lLig, lCpt
+//       JFF   07/05/2013 [MIG19_PSPLAF_SAGA2]
+//*-----------------------------------------------------------------
+Long lTotPlaf, lLig, lCpt, lDeb, lFin, lRow
 Boolean bRet
 Decimal dcIdSin, dcIdProd, dcIdEts, dcPlafond
-String sIdAdh 
+String sIdAdh, sVal
 Integer iNbAutreSin 
 String sRech
+DateTime dtMajLe 
 
 bRet				= True
 lTotPlaf 		= idw_Plafond.RowCount ()
@@ -12516,6 +12540,26 @@ If	lLig > 0 Then
 		
 		If	1 + iNbAutreSin > dcPlafond	Then
 			bRet = Uf_RF_EcrireRefus ( 1419 )
+
+			// [MIG19_PSPLAF_SAGA2]
+			If F_CLE_A_TRUE ( "MIG19_PSPLAF_SAGA2" ) Then
+				F_RechDetPro(lDeb, lFin, idw_detpro, idw_produit.getItemNumber(1,"ID_PROD"),"-DP", 395)
+				If lDeb > 0 Then	
+			
+					lRow = idw_wdivsin.Find("UPPER(NOM_ZONE)='ADH_DEJA_INDEM'", 1, idw_wdivsin.RowCount())
+					If lRow> 0 Then
+						sVal = idw_wdivsin.GetItemString (lRow, "VAL_CAR") 
+					
+						If sVal <> "O" Then
+							idw_wdivSin.SetItem ( lRow, "VAL_CAR", "O" )
+							dtMajLe = DateTime ( Today (), Now () )
+							idw_wDivSin.SetItem ( lRow, "MAJ_LE", dtMajLe  )
+							idw_wDivSin.SetItem ( lRow, "MAJ_PAR", stGlb.sCodOper )
+							idw_wDivSin.SetItem ( lRow, "ALT_SUPP", "N" )
+						End If
+					End If
+				End If 			
+			End If
 		End If
 	End if
 End If

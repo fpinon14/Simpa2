@@ -58,6 +58,7 @@ public function boolean uf_validation_finale_trt_partaprescommit ()
 public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse, ref boolean abmig1_couremailing, ref u_datawindow_detail adw_lstinter, ref datawindow adw_wpiece, ref datawindow adw_wrefus, ref datawindow adw_plafond)
 public function long uf_zn_trt_divsin_decassureur (string asdata, string asnomcol, long alrow)
 public function long uf_zn_trt_divsin_lieu_repar (string asdata, string asnomcol, long alrow)
+public function string uf_controlergestion_deja_indemnise ()
 end prototypes
 
 public function long uf_zn_trt_divsin_typeapp (string asdata, string asnomcol, long alrow, boolean abforcer);//*-----------------------------------------------------------------
@@ -1643,6 +1644,53 @@ If lRow > 0 Then
 End If
 
 Return iAction
+
+end function
+
+public function string uf_controlergestion_deja_indemnise ();//*-----------------------------------------------------------------
+//*
+//* Fonction		: uf_controlergestion_Deja_Indemnise (PRIVATE)
+//* Auteur			: JFF
+//* Date				: 11/06/2025
+//* Libellé			:  [MIG19_PSPLAF_SAGA2]
+//* Commentaires	:  Contrôle de gestion lié à une indemnisation.
+//*                  Dans des cas très précis, même sur forçage, on interdit l'indemnisation selon le moyen d'indemnisation
+//*
+//* Arguments		: 
+//*
+//* Retourne		: Rien
+//*
+//*-----------------------------------------------------------------
+
+String sPos
+Long lDeb, lFin
+
+sPos = ""
+
+// Pour MAxi Coffee, qu'il arrive, même sur forçage, on ne permet d'envoyer une dde de BA par l'api
+// Car Maxi vérifie les indemnisations déjà faite et refusera le BA, mais le courrier Emailing sera déjà parti.
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 395 )
+
+If lDeb > 0 Then
+	If iuoSpGsSinistre.uf_GestOng_Divers_Trouver ( "ADH_DEJA_INDEM" ) = "O" And &
+		idw_lstwcommande.Find( "ID_FOUR = 'BTE' AND COD_ETAT='CNV'",1,idw_lstwcommande.RowCount()) > 0 &
+	Then
+		
+		stMessage.sTitre		= "Adhésion déjà indemnisée"
+		stMessage.Icon			= Information!
+		stMessage.bErreurG	= FALSE
+		stMessage.Bouton		= Ok!
+		stMessage.sCode		= "WSIN931"
+		F_Message ( stMessage ) 		
+		
+		Return "ALT_BLOC"
+	End IF 
+End If 
+// Fin Maxi Coffee
+
+
+
+Return sPos
 
 end function
 

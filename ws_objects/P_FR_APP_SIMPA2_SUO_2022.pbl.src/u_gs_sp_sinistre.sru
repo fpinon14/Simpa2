@@ -4063,6 +4063,7 @@ private subroutine uf_controlergestion (ref s_pass astpass);//*-----------------
 //       JFF   19/12/2024 [MIG1_COUR_EMAILING]
 //       JFF   22/02/2025 [TRT_APRES_COMMIT][PMO268_MIG48]
 //       JFF   31/03/2025 [MON374]
+//       JFF   07/05/2013 [MIG19_PSPLAF_SAGA2]
 //*-----------------------------------------------------------------
 Long lTotCourrier, lCodEtat, lNbContact, lNbNat, lCptCTact, llig, lCpt, lVal1, lVal2, lVal3, lVal4, lIdOrianBout, lVal5, lVal6 
 Long lCptDetail, lTotDetail, lTotCmd, lDeb, lFin, lCptRegFrn, lCodeEtat, lRow, lVal, lIdGti, lIdInter, lRowAss, lTot, lIdDetail 
@@ -6296,6 +6297,14 @@ If F_CLE_A_TRUE ( "TRT_APRES_COMMIT" ) Then
 		End If 
 	End If 		
 End IF 
+
+// [MIG19_PSPLAF_SAGA2]
+If F_CLE_A_TRUE ( "MIG19_PSPLAF_SAGA2" ) Then
+	If Not bBloque And sPos = "" Then	
+		sPos = iUoGsSpSinistre2.uf_controlergestion_Deja_Indemnise ()
+	End If 
+End If
+
 
 ib2EmeTourPI052 = False
 astPass.sTab [ 1 ] = sPos
@@ -16250,7 +16259,8 @@ For lCpt = 1 To lTot
 			  "DT432_ID_SEQ_BATCH", &
 			  "RS1921_AMTRUST",&
 			  "CTRL_IMEI_MANUEL", &
-			  "SKU_GARANTIE_SAGA2" 
+			  "SKU_GARANTIE_SAGA2", &
+			  "ADH_DEJA_INDEM"
 			  
   			  idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "O" )
 
