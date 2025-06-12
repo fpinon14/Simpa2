@@ -720,7 +720,12 @@ While Exists ( Select Top 1 1 From @Cache )
 
 	Exec sysadm.PS_U_TRT_PM260 @dcIdSin, 'SIM'
 
+	Insert into sysadm.pm260_traite values ( @dcIdSin, GETDATE(), 0 )
+
 	Delete @Cache where id_sin = @dcIdSin
+
+	Select @dcIdSin, GETDATE()
+
 End
 
 
