@@ -1902,8 +1902,6 @@ IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S07_W_GTI_NBSIN' AND type 
         DROP procedure sysadm.PS_S07_W_GTI_NBSIN
 GO
 
-
-
 CREATE procedure sysadm.PS_S07_W_GTI_NBSIN
         @dcIdSin        Decimal (  10,0 ),  -- [PI062]
         @dcIdProd       Decimal (  7,0 ),
@@ -1992,9 +1990,8 @@ If sysadm.FN_CLE_NUMERIQUE ( 'MIG19_PSPLAF_SAGA2') > 0
 
 	 If @iNbSin is null Set @iNbSin = 0
 	 Insert into @TbRetSaga2 Exec sysadm.PS_S_SAGA2_PLAFOND_PAR_ANNEE_SUR_SAGA2 @dcIdSin, @sIdAdh 
---	 Insert into @TbRetSaga2 values ( '0002877259','000026819413','OUI',559.00,'BA', 'BON D''ACHAT', '31/10/2021', '12/05/2025', '11/05/2025' ) 
 
-	 Set @iNbSin = @iNbSin + IsNull ( ( Select COUNT (*) from @TbRetSaga2 ), 0 ) 
+	 Set @iNbSin = @iNbSin + IsNull ( ( Select COUNT (*) from @TbRetSaga2 where Upper ( indemnise ) = 'OUI' ), 0 ) 
 
  End 
 
