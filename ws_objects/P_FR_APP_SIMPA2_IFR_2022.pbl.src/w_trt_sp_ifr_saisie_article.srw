@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_trt_sp_ifr_saisie_article.srw
+﻿$PBExportHeader$w_trt_sp_ifr_saisie_article.srw
 forward
 global type w_trt_sp_ifr_saisie_article from w_8_traitement
 end type
@@ -76,7 +76,7 @@ private subroutine wf_positionnerobjets ();//*----------------------------------
 //* Fonction		: W_Trt_Sp_Ifr_SaisieArticle::Wf_PositionnerObjets (PRIVATE)
 //* Auteur			: PLJ
 //* Date				: 11/08/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun
@@ -132,7 +132,7 @@ private subroutine wf_enregistrer ();//*----------------------------------------
 //* Fonction		: W_Trt_Sp_Ifr_Saisie::Wf_Enregistrer (PRIVATE)
 //* Auteur			: PLJ
 //* Date				: 02/08/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun
@@ -148,19 +148,10 @@ String	sTexte
 DateTime dtMaxMajLeNow
 
 /*-------------------------------------------------------------------*/
-/* V$$HEX1$$e900$$ENDHEX$$rification qu'il n'y a pas eu de mises $$HEX2$$e0002000$$ENDHEX$$jour depuis le dernier */
+/* Vérification qu'il n'y a pas eu de mises à jour depuis le dernier */
 /* retrieve.                                                         */
 /*-------------------------------------------------------------------*/
-If F_CLE_A_TRUE ( "RS6244_FEN_ART" ) Then
-
-	SQLCA.PS_S_MAX_MAJ_LE  ( dtMaxMajLeNow ) 
-
-Else 
-	SELECT Max (maj_le) INTO :dtMaxMajLeNow
-	FROM sysadm.article
-	USING SQLCA;
-End If 
-
+SQLCA.PS_S_MAX_MAJ_LE  ( dtMaxMajLeNow ) 
 
 If idtMaxMajLeArticle = dtMaxMajLeNow Then
 
@@ -170,15 +161,7 @@ If idtMaxMajLeArticle = dtMaxMajLeNow Then
 	dw_1.Update ()
 	f_commit (SqlCa, True)
 
-	If F_CLE_A_TRUE ( "RS6244_FEN_ART" ) Then
-
-		SQLCA.PS_S_MAX_MAJ_LE  ( idtMaxMajLeArticle ) 
-	
-	Else
-		SELECT Max ( maj_le) INTO :idtMaxMajLeArticle
-		  FROM sysadm.article
-		 USING SQLCA;
-	End IF 
+	SQLCA.PS_S_MAX_MAJ_LE  ( idtMaxMajLeArticle ) 
 	
 	st_information.Text = sTexte
 Else
@@ -189,16 +172,8 @@ Else
 		
 	F_Message ( stMessage )
 
-	If F_CLE_A_TRUE ( "RS6244_FEN_ART" ) Then
-
-		SQLCA.PS_S_MAX_MAJ_LE  ( idtMaxMajLeArticle ) 
+	SQLCA.PS_S_MAX_MAJ_LE  ( idtMaxMajLeArticle ) 
 	
-	Else
-		SELECT Max ( maj_le) INTO :idtMaxMajLeArticle
-		  FROM sysadm.article
-		 USING SQLCA;
-	End IF 
-
 	dw_1.Retrieve ()
 	dw_1.Setrow   (dw_2.GetRow())
 
@@ -217,8 +192,8 @@ private subroutine wf_afficher_compteur ();//*----------------------------------
 //* Fonction		: W_Trt_Sp_Ifr_Saisie_Article::Wf_Afficher_Compteur (PRIVATE)
 //* Auteur			: PLJ
 //* Date				: 12/08/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Affiche le nombre de lignes charg$$HEX1$$e900$$ENDHEX$$es dans la datawindow de saisie
+//* Libellé			: 
+//* Commentaires	: Affiche le nombre de lignes chargées dans la datawindow de saisie
 //*
 //* Arguments		: Aucun
 //*
@@ -237,7 +212,7 @@ private subroutine wf_proteger ();//*-------------------------------------------
 //* Fonction		: W_Trt_Sp_Ifr_Saisie::Wf_Proteger (PRIVATE)
 //* Auteur			: PLJ
 //* Date				: 12/08/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Protection de la grille en fonction des droits de l'utilisateur
+//* Libellé			: Protection de la grille en fonction des droits de l'utilisateur
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun
@@ -258,8 +233,8 @@ Boolean bProtect = False
 ibOcc = False
 
 /*--------------------------------------------------------------------*/
-/* La pr$$HEX1$$e900$$ENDHEX$$sence d'une ligne 203(droit d'$$HEX1$$e900$$ENDHEX$$criture ARTICLE) pour         */
-/* l'op$$HEX1$$e900$$ENDHEX$$rateur connect$$HEX48$$e90020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000200020002000$$ENDHEX$$*/   
+/* La présence d'une ligne 203(droit d'écriture ARTICLE) pour         */
+/* l'opérateur connecté                                               */   
 /*--------------------------------------------------------------------*/
 
 SELECT count(*) INTO :lTotLigne
@@ -273,10 +248,10 @@ If lTotLigne = 0 Then
    bProtect = True
 Else
 	/*--------------------------------------------------------------*/
-	/* Est-ce qu'une autre personne est d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$sur la fen$$HEX1$$ea00$$ENDHEX$$tre         */
-   /* Avant de v$$HEX1$$e900$$ENDHEX$$rifier sans la table parametre qu'il n'existe pas */
-   /* d'autres personnes ayant ouvert la fen$$HEX1$$ea00$$ENDHEX$$tre j'ins$$HEX1$$e800$$ENDHEX$$re tout de  */
-   /* suite l'op$$HEX1$$e900$$ENDHEX$$rateur en cours au cas ou une autre personne      */
+	/* Est-ce qu'une autre personne est déjà sur la fenêtre         */
+   /* Avant de vérifier sans la table parametre qu'il n'existe pas */
+   /* d'autres personnes ayant ouvert la fenêtre j'insère tout de  */
+   /* suite l'opérateur en cours au cas ou une autre personne      */
    /* essaierait de se connecter entre le select et l'update       */
 	/*--------------------------------------------------------------*/
 	sCodParam = 'ART_' + stGlb.sCodOper
@@ -293,7 +268,7 @@ Else
 
 
 										/*-------------------------------------------------*/
-	If lTotLigne > 0 Then 		/* Il y a d$$HEX1$$e900$$ENDHEX$$j$$HEX2$$e0002000$$ENDHEX$$un autre utilisateur sur la fen$$HEX1$$ea00$$ENDHEX$$tre */
+	If lTotLigne > 0 Then 		/* Il y a déjà un autre utilisateur sur la fenêtre */
 										/*-------------------------------------------------*/
 		bProtect = True
 		DELETE
@@ -319,7 +294,7 @@ Else
 		F_Message ( stMessage )
 
 									/*-------------------------------------------------*/
-	Else							/* La fen$$HEX1$$ea00$$ENDHEX$$tre n'est pas occup$$HEX1$$e900$$ENDHEX$$e                    */
+	Else							/* La fenêtre n'est pas occupée                    */
 									/*-------------------------------------------------*/
 		bProtect = False
 		f_commit (SQLCA,TRUE)
@@ -367,7 +342,7 @@ private subroutine wf_preparer_recherche ();//*---------------------------------
 //* Fonction		: W_Trt_Sp_Ifr_Saisie::Wf_PreparerRecherche
 //* Auteur			: PLJ
 //* Date				: 30/07/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Aucun
@@ -383,7 +358,7 @@ DatawindowChild	dwChild, dwChild2
 Datawindow			dwTemp, dwTemp2		
 
 /*---------------------------------------------------*/
-/* Initialisation des DDDW des crit$$HEX1$$e800$$ENDHEX$$res de recherche */
+/* Initialisation des DDDW des critères de recherche */
 /*---------------------------------------------------*/
 For lCpt = 1 To ilNbCritere
 
@@ -451,7 +426,7 @@ private function string wf_construire_critere (string asvariable, string asopera
 //* Fonction		: W_Trt_Sp_Ifr_Saisie::Wf_Construire_Critere (PRIVATE)
 //* Auteur			: PLJ
 //* Date				: 02/08/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: String		asVariable
@@ -488,7 +463,7 @@ private subroutine wf_filtrer_modl_ifr (long alligne);//*-----------------------
 //* Fonction		: W_Trt_Sp_Ifr_Saisie::Wf_Filtrer_Modl_Ifr (PRIVATE)
 //* Auteur			: PLJ
 //* Date				: 04/09/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*
 //* Arguments		: Long		alLigne
@@ -527,7 +502,7 @@ public subroutine wf_interroarticle (long alnumlig, string ascas);//*-----------
 //* Fonction		: W_Trt_Sp_Ifr_Saisie::Wf_InterroArticle
 //* Auteur			: JFF
 //* Date				: 10/06/2021
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Protection de la grille en fonction des droits de l'utilisateur
+//* Libellé			: Protection de la grille en fonction des droits de l'utilisateur
 //* Commentaires	: [BTRUN_344_REF_BYGUES]
 //*
 //* Arguments		: alnumlig
@@ -560,7 +535,7 @@ sIdRefFour = Trim ( dw_1.GetItemString ( alnumlig, "ID_REF_FOUR" ) )
 sIdModlArt = Trim ( dw_1.GetItemString ( alnumlig, "ID_MODL_ART" ) )
 sObservFrn = Trim ( dw_1.GetItemString ( alnumlig, "OBSERV_FRN" ) )
 
-sIdModlArt = Left ( sIdModlArt, Len ( sIdModlArt ) - 1 ) // Supprimer le # qui sert $$HEX2$$e0002000$$ENDHEX$$conserver le/les espace(s ) de fin
+sIdModlArt = Left ( sIdModlArt, Len ( sIdModlArt ) - 1 ) // Supprimer le # qui sert à conserver le/les espace(s ) de fin
 
 If IsNull ( sIdRefFour  ) Then sIdRefFour  = ""
 If IsNull ( sIdModlArt ) Then sIdModlArt = ""
@@ -579,7 +554,7 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		: ue_initialiser
 //* Auteur			: PLJ
 //* Date				: 09/08/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -590,7 +565,7 @@ DatawindowChild		dwChild
 
 dw_1.SetTransObject ( SQLCA)
 //Migration PB8-WYNIWYG-03/2006 FM
-//Il faut r$$HEX1$$e900$$ENDHEX$$cup$$HEX1$$e900$$ENDHEX$$rer les donn$$HEX1$$e900$$ENDHEX$$es de la Child avant le partage!!
+//Il faut récupérer les données de la Child avant le partage!!
 DataWindowChild	ldwc_1
 long	ll_ret
 ll_ret = dw_2.GetChild ( "COD_ETAT", ldwc_1 )
@@ -622,8 +597,8 @@ wf_PositionnerObjets ()
 /*----------------------------------------------------------*/
 
 // __________________
-// R$$HEX1$$e900$$ENDHEX$$pertoire WINDOWS
-// $$HEX18$$af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00$$ENDHEX$$
+// Répertoire WINDOWS
+// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 //uoDeclarationFuncky	= Create u_DeclarationFuncky
 //isRepWin	= uoDeclarationFuncky.Uf_WinDir () 
 //Migration PB8-WYNIWYG-03/2006 FM
@@ -632,19 +607,19 @@ wf_PositionnerObjets ()
 //Fin Migration PB8-WYNIWYG-03/2006 FM
 
 // __________________________________
-// R$$HEX1$$e900$$ENDHEX$$pertoire o$$HEX2$$f9002000$$ENDHEX$$se situe l'exe Excel
-// $$HEX34$$af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00$$ENDHEX$$
+// Répertoire où se situe l'exe Excel
+// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 isRepExcel = ProfileString ( stGlb.sFichierIni, "GEST_COMMANDES", "REP_EXCEL", "" )
 
 
 // _____________________
-// Ensemble des crit$$HEX1$$e800$$ENDHEX$$res
-// $$HEX21$$af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00af00$$ENDHEX$$
+// Ensemble des critères
+// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-// Colonne 1 nom du crit$$HEX1$$e800$$ENDHEX$$re
-// Colonne 2 r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rence de la datawindow ( 1:dw_trt_ifr_critere_article_marge 2:dw_trt_ifr_critere_article )
+// Colonne 1 nom du critère
+// Colonne 2 référence de la datawindow ( 1:dw_trt_ifr_critere_article_marge 2:dw_trt_ifr_critere_article )
 // Colonne 3 type                       ( NUMBER, CHAR, DATE, DATETIME                    )
-// Colonne 4 op$$HEX1$$e900$$ENDHEX$$rateur de comparaison   ( =, <=, >=, <, >, pos                            )
+// Colonne 4 opérateur de comparaison   ( =, <=, >=, <, >, pos                            )
 // Colonne 5 valeur de retrieve         ( '' pour un retrieve sans valeur   '/\' pas de retrieve de DDDW
 
 isTabCritere = {	'id_four',			'1',	'STRING',	'=',	   '-FR',		  			&
@@ -666,7 +641,7 @@ ilNbCritere = 14
 
 /*------------------------------------------------------------------*/
 /* Ne pas Oublier de redimmensionner le tableau au niveau de la     */
-/* d$$HEX1$$e900$$ENDHEX$$claration.                                                     */
+/* déclaration.                                                     */
 /*------------------------------------------------------------------*/
 
 //Migration PB8-WYNIWYG-03/2006 FM
@@ -680,7 +655,7 @@ event show;call super::show;//*-------------------------------------------------
 //* Evenement 		: Show
 //* Auteur			: PLJ
 //* Date				: 09/08/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -689,20 +664,12 @@ wf_Preparer_recherche()
 
 /*-----------------------------------------------------------------*/
 /* Je charge le max ( maj_le) d'article, pour empecher toute       */
-/* modification au cas o$$HEX2$$f9002000$$ENDHEX$$la table aurait $$HEX1$$e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$remise $$HEX2$$e0002000$$ENDHEX$$jour par    */
+/* modification au cas où la table aurait été remise à jour par    */
 /* un batch.                                                       */
 /* Je fais l'affectation de la variable avant le retrieve au cas   */
-/* o$$HEX2$$f9002000$$ENDHEX$$une mise $$HEX2$$e0002000$$ENDHEX$$jour serait faites juste apr$$HEX1$$e800$$ENDHEX$$s le chargement      */
+/* où une mise à jour serait faites juste après le chargement      */
 /*-----------------------------------------------------------------*/
-If F_CLE_A_TRUE ( "RS6244_FEN_ART" ) Then
-
-	SQLCA.PS_S_MAX_MAJ_LE  ( idtMaxMajLeArticle ) 
-
-Else 
-	SELECT Max ( maj_le) INTO :idtMaxMajLeArticle
-	  FROM sysadm.article
-	 USING SQLCA;
-End If 
+SQLCA.PS_S_MAX_MAJ_LE  ( idtMaxMajLeArticle ) 
 
 dw_1.Retrieve ()
 dw_1.Setrow   (dw_2.GetRow())
@@ -723,7 +690,7 @@ event hide;call super::hide;//*-------------------------------------------------
 //* Evenement 		: Hide
 //* Auteur			: PLJ
 //* Date				: 14/10/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -739,9 +706,9 @@ gWMdi.Width  -= iMdiWidth   // 1100
 gWMdi.Height -= iMdiHeigth   // 1100
 
 /*----------------------------------------------------------------------*/
-/* Si la personne avait le droit d'$$HEX1$$ea00$$ENDHEX$$tre en modification sur la fen$$HEX1$$ea00$$ENDHEX$$tre  */
-/* c'est qu'elle l'avait bloqu$$HEX1$$e900$$ENDHEX$$e lors l'ouverture (wf_proteger) en      */ 
-/* ins$$HEX1$$e900$$ENDHEX$$rant une ligne dans parametre, on se charge donc dans ce cas de  */
+/* Si la personne avait le droit d'être en modification sur la fenêtre  */
+/* c'est qu'elle l'avait bloquée lors l'ouverture (wf_proteger) en      */ 
+/* insérant une ligne dans parametre, on se charge donc dans ce cas de  */
 /* supprimer la ligne.                                                  */
 /*----------------------------------------------------------------------*/
 If ibOcc = True Then
@@ -821,7 +788,7 @@ on dw_1::rowfocuschanged;call w_8_traitement`dw_1::rowfocuschanged;//*----------
 //* Evenement 		: RowFocusChanged
 //* Auteur			: PLJ
 //* Date				: 04/09/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Synchronisation du rowfocus entre dw_1 et dw_2
+//* Libellé			: Synchronisation du rowfocus entre dw_1 et dw_2
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -850,7 +817,7 @@ event dw_1::scrollvertical;call super::scrollvertical;//*-----------------------
 //* Evenement 		: ScrollVertical
 //* Auteur			: PLJ
 //* Date				: 11/08/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Synchronisation de la barre de scrolling entre dw_1 et dw_2
+//* Libellé			: Synchronisation de la barre de scrolling entre dw_1 et dw_2
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -868,7 +835,7 @@ event dw_1::doubleclicked;call super::doubleclicked;//*-------------------------
 //* Fonction		: W_Trt_Sp_Ifr_Saisie::doubleclicked
 //* Auteur			: JFF
 //* Date				: 10/06/2021
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Protection de la grille en fonction des droits de l'utilisateur
+//* Libellé			: Protection de la grille en fonction des droits de l'utilisateur
 //* Commentaires	: [BTRUN_344_REF_BYGUES]
 //*
 //* Arguments		: Aucun
@@ -959,7 +926,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: PLJ
 //* Date				: 13/08/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1015,7 +982,7 @@ on scrollhorizontal;call u_datawindow::scrollhorizontal;//*---------------------
 //* Evenement 		: ScrollHorizontal
 //* Auteur			: PLJ
 //* Date				: 11/08/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Synchronisation de la barre de scrolling entre dw_2 et dw_trt_critere
+//* Libellé			: Synchronisation de la barre de scrolling entre dw_2 et dw_trt_critere
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1033,7 +1000,7 @@ event itemchanged;call super::itemchanged;//*-----------------------------------
 //* Evenement 		: ItemChanged
 //* Auteur			: PLJ
 //* Date				: 13/08/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Filtre de la liste des r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rences en fonctions de la marque
+//* Libellé			: Filtre de la liste des références en fonctions de la marque
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1079,7 +1046,7 @@ event itemchanged;call super::itemchanged;//*-----------------------------------
 //* Evenement 		: ItemChanged
 //* Auteur			: PLJ
 //* Date				: 13/08/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1188,7 +1155,7 @@ event itemerror;call super::itemerror;//*---------------------------------------
 //* Evenement 		: ItemChanged
 //* Auteur			: PLJ
 //* Date				: 03/08/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1205,7 +1172,7 @@ Choose Case UPPER(isErrCol)
 	Case "ALT_DISPO"
 		Choose Case iiErreur
 			Case 0
-				stMessage.sVar[1] = "Disponibilit$$HEX1$$e900$$ENDHEX$$"				
+				stMessage.sVar[1] = "Disponibilité"				
 				stMessage.sCode	= "GENE002"
 			Case 1 
 				// [RS4616_RET_TLS]
@@ -1236,7 +1203,7 @@ on rowfocuschanged;call u_datawindow::rowfocuschanged;//*-----------------------
 //* Evenement 		: RowFocusChanged
 //* Auteur			: PLJ
 //* Date				: 11/08/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Synchronisation du rowfocus entre dw_1 et dw_2
+//* Libellé			: Synchronisation du rowfocus entre dw_1 et dw_2
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1269,7 +1236,7 @@ on scrollvertical;call u_datawindow::scrollvertical;//*-------------------------
 //* Evenement 		: ScrollVertical
 //* Auteur			: PLJ
 //* Date				: 11/08/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Synchronisation de la barre de scrolling entre dw_1 et dw_2
+//* Libellé			: Synchronisation de la barre de scrolling entre dw_1 et dw_2
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1287,7 +1254,7 @@ on scrollhorizontal;call u_datawindow::scrollhorizontal;//*---------------------
 //* Evenement 		: ScrollHorizontal
 //* Auteur			: PLJ
 //* Date				: 11/08/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Synchronisation de la barre de scrolling entre dw_2 et dw_trt_critere
+//* Libellé			: Synchronisation de la barre de scrolling entre dw_2 et dw_trt_critere
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1305,7 +1272,7 @@ event doubleclicked;call super::doubleclicked;//*-------------------------------
 //* Fonction		: W_Trt_Sp_Ifr_Saisie::doubleclicked
 //* Auteur			: JFF
 //* Date				: 10/06/2021
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Protection de la grille en fonction des droits de l'utilisateur
+//* Libellé			: Protection de la grille en fonction des droits de l'utilisateur
 //* Commentaires	: [BTRUN_344_REF_BYGUES]
 //*
 //* Arguments		: Aucun
@@ -1335,7 +1302,7 @@ on itemchanged;call u_datawindow::itemchanged;//*-------------------------------
 //* Evenement 		: ItemChanged
 //* Auteur			: PLJ
 //* Date				: 13/08/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Filtre de la liste des r$$HEX1$$e900$$ENDHEX$$f$$HEX1$$e900$$ENDHEX$$rences en fonctions de la marque
+//* Libellé			: Filtre de la liste des références en fonctions de la marque
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1380,7 +1347,7 @@ event clicked;//*---------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: PLJ
 //* Date				: 30/07/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1404,12 +1371,12 @@ dw_trt_critere.AcceptText       ()
 
 
 /*--------------------------------------------------------------*/
-/* Initialisation des DDDW des crit$$HEX1$$e800$$ENDHEX$$res de recherche            */
-/* CAS Sp$$HEX1$$e900$$ENDHEX$$cifiques :                                            */
+/* Initialisation des DDDW des critères de recherche            */
+/* CAS Spécifiques :                                            */
 /* marque  (1), reference(2),                                   */
 /* freqence(4), prix_min (5), prix max(6)                       */
 /*                                                              */
-/* Cas particulier du poids o$$HEX2$$f9002000$$ENDHEX$$la DDDW poss$$HEX1$$e800$$ENDHEX$$de des blancs devant*/
+/* Cas particulier du poids où la DDDW possède des blancs devant*/
 /*--------------------------------------------------------------*/
 dw_1.SetFilter ( "" )
 dw_1.Filter ()
@@ -1486,7 +1453,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: PLJ
 //* Date				: 10/08/2004
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -1525,7 +1492,7 @@ integer x = 549
 integer y = 32
 integer width = 1161
 boolean bringtotop = true
-string text = "Les montant sont exprim$$HEX1$$e900$$ENDHEX$$s en "
+string text = "Les montant sont exprimés en "
 end type
 
 event constructor;//*-----------------------------------------------------------------
@@ -1534,7 +1501,7 @@ event constructor;//*-----------------------------------------------------------
 //* Evenement 		: constructor
 //* Auteur			: 
 //* Date				: 27/02/2008 14:43:58
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //* Arguments		: 

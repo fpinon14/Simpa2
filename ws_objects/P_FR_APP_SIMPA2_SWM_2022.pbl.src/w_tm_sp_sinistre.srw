@@ -3258,18 +3258,9 @@ SetNull(lFamille)
 lIdSin=dw_1.GetItemNumber ( 1, "ID_SIN" ) 
 
 //	 JFF   29/11/2023  CCO => Ticket 399863, on ajoute 2172 [OPTIM_UE_ROUTAGE]
-If F_CLE_A_TRUE ( "OPTIM_UE_ROUTAGE" ) Then
-	sIdIwd = Space ( 50 )
-	sIdCorb = Space ( 3 ) 
-	SQLCA.PS_IWD_CORB_FAM ( lIdSin, sIdIwd, sIdCorb, lFamille )
-Else 
-	Select id_iwd, id_corb, id_fam
-	Into :sIdIwd, :sIdCorb, :lFamille
-	From sysadm.w_queue
-		LEFT outer join  sysadm.famille on sysadm.w_queue.id_corb=sysadm.famille.id_code and (id_fam=217 or id_fam=2172)
-	Where id_sin=:lIdSin
-	Using SQLCA;
-End If 
+sIdIwd = Space ( 50 )
+sIdCorb = Space ( 3 ) 
+SQLCA.PS_IWD_CORB_FAM ( lIdSin, sIdIwd, sIdCorb, lFamille )
 
 If not isnull(sIdIwd) Then bOuvrirIwd=TRUE
 

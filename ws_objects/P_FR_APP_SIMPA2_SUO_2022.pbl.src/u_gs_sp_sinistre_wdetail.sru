@@ -12999,6 +12999,7 @@ End Choose
 
 
 // [RS6269_EVOL_CONFO]
+/* projet annulé
 If F_CLE_A_TRUE ( "RS6269_EVOL_CONFO" ) Then
 	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 207 )
 	If iAction = 0 And lDeb > 0 Then
@@ -13015,6 +13016,7 @@ If F_CLE_A_TRUE ( "RS6269_EVOL_CONFO" ) Then
 		End If 
 	End If 
 End If
+*/
 
 // [HUB875]
 If F_CLE_A_TRUE ( "HUB875" ) Then
