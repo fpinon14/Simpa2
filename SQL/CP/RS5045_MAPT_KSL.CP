@@ -2387,6 +2387,7 @@ Declare @sMailBody VarChar ( 8000 )
 Declare @sDestinataire Varchar ( 200 )
 Declare @sMsgTrc varchar ( 255 ) 
 Declare @iRowCountWord Integer
+Declare @iRowCountWordTemp Integer
 Declare @iRowCountHWord Integer
 Declare @iRowCount Integer
 Declare @iHandle Integer
@@ -2455,6 +2456,7 @@ IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id(
 	End 
 
 Set @iCptTraite = 0 
+Set @iRowCountWord = 0 
 Set @sDateHeureDebTrt = Convert ( varchar ( 10 ), GETDATE(), 103 ) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00'
 
 Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL 'OBTENTION_ID_LOT_TRC', -1, '', '', '', @iIdLotTrc output
@@ -2561,9 +2563,10 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 	And a.id_arch = mp.id_arch  
 	And mp.cree_le > DateAdd ( month, -2, getdate() )  
 
-	Set @iRowCountWord  = @@Rowcount
+	Set @iRowCountWordTemp = @@Rowcount
+	Set @iRowCountWord = @iRowCountWord + @iRowCountWordTemp 
 
-	Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountWord  ) + ' enregistrement(s) (mails) représentant des courriers WORD SIMPA2'
+	Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountWordTemp  ) + ' enregistrement(s) (mails) représentant des courriers WORD SIMPA2'
 	Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'LCTCWD', 'OK', @sMsgTrc, @iIdLotTrc  
 
 	If Exists ( Select Top 1 1 From @TbWork where marquage = 0 And id_arch_compl is not null )
@@ -2638,9 +2641,10 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 			And a.id_arch2 = mp.id_arch  
 			And mp.cree_le > DateAdd ( month, -2, getdate() )  
 
-			Set @iRowCountWord  = @@Rowcount
+			Set @iRowCountWordTemp = @@Rowcount
+			Set @iRowCountWord = @iRowCountWord + @iRowCountWordTemp 
 
-			Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountWord  ) + ' enregistrement(s) (mails) représentant des courriers WORD PEGASE'
+			Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountWordTemp  ) + ' enregistrement(s) (mails) représentant des courriers WORD PEGASE'
 			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'LCTCWD', 'OK', @sMsgTrc, @iIdLotTrc  
 
 			If Exists ( Select Top 1 1 From @TbWork where marquage = 0 And id_arch_compl is not null )
@@ -2755,9 +2759,10 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 	And a.id_arch = mp.id_arch  
 	And mp.cree_le > DateAdd ( month, -2, getdate() )  
 
-	Set @iRowCountWord  = @@Rowcount
+	Set @iRowCountWordTemp = @@Rowcount
+	Set @iRowCountWord = @iRowCountWord + @iRowCountWordTemp 
 
-	Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountWord  ) + ' enregistrement(s) (mails) représentant des courriers WORD SIMPA2'
+	Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountWordTemp  ) + ' enregistrement(s) (mails) représentant des courriers WORD SIMPA2'
 	Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'LCTCWD', 'OK', @sMsgTrc, @iIdLotTrc 
 
 	If Exists ( Select Top 1 1 From @TbWork where marquage = 0 And id_arch_compl is not null )
@@ -2832,9 +2837,10 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 			And a.id_arch2 = mp.id_arch  
 			And mp.cree_le > DateAdd ( month, -2, getdate() )  
 
-			Set @iRowCountWord  = @@Rowcount
+			Set @iRowCountWordTemp = @@Rowcount
+			Set @iRowCountWord = @iRowCountWord + @iRowCountWordTemp 
 
-			Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountWord  ) + ' enregistrement(s) (mails) représentant des courriers WORD PEGASE'
+			Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountWordTemp ) + ' enregistrement(s) (mails) représentant des courriers WORD PEGASE'
 			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'LCTCWD', 'OK', @sMsgTrc, @iIdLotTrc  
 
 			If Exists ( Select Top 1 1 From @TbWork where marquage = 0 And id_arch_compl is not null )
