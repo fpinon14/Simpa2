@@ -1787,7 +1787,7 @@ Case 1
 	
 					// [RS5656_MOD_PCE_DIF]
 					sIdEvtAuto = idw_DetPro.object.id_code_car[lBoucle]
-					If sIdEvtAuto = "-1" Then Continue
+					If sIdEvtAuto <> "-1" And Not IsNull ( sIdEvtAuto ) And Trim ( sIdEvtAuto ) <> "" Then Continue
 
 					If lPieceAuto = lPiece And lGtiAuto = lGti Then
 						// [PM194] Evolution de la DP 77
