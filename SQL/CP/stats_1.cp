@@ -7766,6 +7766,7 @@ Go
 -- 28/09/2009 	FPI [DCMP090532] Ajout d'O2M
 -- 14/12/2009	FPI [DMDI27314] Modification de destinataire anovo
 -- 24/06/2015   JFF [VDOC17993]	
+-- 24/06/2025	JFF/FPI [MIG_SQL_2022] Changement de la taille de la commande SQL (nom de répertoire trop long)
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S04_EXTRACTION_REFUS_IRREPARABLE_MAIL' AND type = 'P' )
         DROP procedure sysadm.PS_S04_EXTRACTION_REFUS_IRREPARABLE_MAIL
@@ -7774,132 +7775,132 @@ GO
 SET QUOTED_IDENTIFIER OFF
 Go
 
-CREATE procedure sysadm.PS_S04_EXTRACTION_REFUS_IRREPARABLE_MAIL
-AS
-
-
-DECLARE @sCommande   VarChar(250),
-        @sMessage    Varchar(255),
-        @sObjet      VarChar(255),
-        @sFicOut     VarChar(255),
-	@sRetourErrMail VarChar(255),
-        @sNomServeur VarChar(255),
-        @sPath  VarChar(255),
-        @sFileName   VarChar(255),
-        @sFileExt    VarChar(4),
-	@sOsqlOption VarChar(255),
-	@iRetOsql	int	
-
-Declare @sLaVeille VarChar ( 10 )
-Declare @sLaVeilleDeb VarChar ( 23 )
-Declare @sLaVeilleFin VarChar ( 23 )
-Declare @iCpt	int -- [DCMP090280]
-DECLARE @sDebutCommande   VarChar(250),
-		@sListeMails		VarChar(500)
-
-
-Set @sLaVeille  = Convert ( VarChar ( 10), DateAdd ( day,-1, getdate()), 103 )
-Set @sLaVeilleDeb = @sLaVeille + ' 00:00:00:000' 
-Set @sLaVeilleFin = @sLaVeille + ' 23:59:59:000'
-
-
--- chemin d'enregistrement du Result Set
-Set @sPath 	= master.[sysadm].[SPB_FN_GET_ROOT] () + 'Sinistre\Export_Refus_Irreparable\'
-Set @sFileName	= 'DCMP080077_REFUS_IRREP_'
-Set @sFileExt	= '.XLS'
-
---SET @sFicOut = @sPath + @sFileName + '.' + @sFileExt
-
-SET @sNomServeur = @@servername
--- Options additionelles pour osql
--- /s"	" 	=> Separateur Tabulation
--- /b 	=> Genere un code ERRORLEVEL exploitable par batch.
--- /u	=> Unicode
-
-Set @sOsqlOption = ' ' + '/s"	"'+ ' /b' + ' /u'
-
-Set @sObjet    = "REFUS IRREPARABLE du " + @sLaVeille
-set @sMessage  = "Veuillez trouver ci-joint la liste des dossiers pour lesquels, à la suite d'un refus de prise en charge par SPB, les téléphones doivent être renvoyés à l'assuré au plus vite. Merci d'avance, cordialement."
-
--- [I027] Remplacement d'osql - les options sont identiques. Ajout de -W : Remove Trailing Space
-IF @@servername = master.dbo.SPB_FN_ServerName ('PRO')
-	SET @sDebutCommande = 	'sqlcmd /S' + @sNomServeur + ' /E /Q"' + 
-			"SIMPA2_PRO.sysadm.PS_S03_EXTRACTION_REFUS_IRREPARABLE '" + @sLaVeilleDeb + "', '" + @sLaVeilleFin + "'"
-Else
-   SET @sDebutCommande = 	'sqlcmd /S' + @sNomServeur + ' /E /Q"' + 
-			"SIMPA2_TRT.sysadm.PS_S03_EXTRACTION_REFUS_IRREPARABLE '" + @sLaVeilleDeb + "', '" + @sLaVeilleFin + "'"
-
--- [VDOC17993]			
--- Set @iCpt = 1
-Set @iCpt = 4 -- On shunt SBE, ANV, COR
-
-While @iCpt < 6
-begin
-	-- Affectation des variables
-	IF @iCpt = 1 
-	begin
-		SET @sCommande = @sDebutCommande + ",'ANV'"
-		--SET @sListeMails = 'svignal@anovo.com, suivi_prestataires@spb.fr' 
-		SET @sListeMails = 'Brive.SPB@anovo.com, suivi_prestataires@spb.fr' -- [DMDI27314]
-		SET @sFicOut = @sPath + @sFileName + 'ANV' + @sFileExt
-	End
-	
-	IF @iCpt = 2 
-	begin
-		SET @sCommande = @sDebutCommande + ",'SBE'"
-		SET @sListeMails = 'edi.informatique@sbe-online.com, saisie-sbe@sbe-online.com, pflahaut@sbe-online.com, rcuiburu@sbe-online.com, mdafonseca@sbe-online.com, mlgin@sbe-online.com, nbrassart@sbe-online.com, mprudhomme@sbe-online.com, suivi_prestataires@spb.fr'
-		SET @sFicOut = @sPath + @sFileName + 'SBE' + @sFileExt
-	End
-	
-	IF @iCpt = 3 
-	begin
-		SET @sCommande = @sDebutCommande + ",'COR'"
-		SET @sListeMails = 'spb@cordonweb.com, suivi_prestataires@spb.fr'
-		SET @sFicOut = @sPath + @sFileName + 'COR' + @sFileExt
-	End
-	
-	-- [DCMP090532] - ajout d'O2M
-	IF @iCpt = 4 
-	begin
-		SET @sCommande = @sDebutCommande + ",'O2M'"
-		SET @sListeMails = 'oxydation@o2m.fr, suivi_prestataires@spb.fr'
-		SET @sFicOut = @sPath + @sFileName + 'O2M' + '.TXT' -- 06/10/2009 - FPI - old : @sFileExt
-	End
-
-	-- [PM200][PSM]
-	IF @iCpt = 5 
-	begin
-		SET @sCommande = @sDebutCommande + "'PSM'"
-		SET @sListeMails = 'spb@allopsm.fr, suivi_prestataires@spb.fr'
-		SET @sFicOut = @sPath + @sFileName + 'PSM' + @sFileExt
-	End
-	
-	-- Création du fichier
-	Set @sCommande = @sCommande + '" /o' + @sFicOut + ' -n -w5000' + @sOsqlOption
-	
-	EXEC @iRetOsql = master.dbo.xp_cmdshell @sCommande, no_output
-	
-	if @iRetOsql <> 0
-	BEGIN
-		set @sMessage  = @sMessage + 'ATTENTION : Le fichier joint comporte des Erreurs SQL. Fichier non exploitable. Contacter Service DES.'
-	END
-
-	-- Envoi du mail
-	EXEC master.dbo.SPB_PS_MAIL 
-		@sRetourErrMail OUTPUT, 
-		@sListeMails, 
-		@sMessage, 
-		@sObjet, 
-		'', 
-		'', 
-		@sFicOut, 
-		NULL, 
-		NULL, 
-		NULL, 
-		NULL
-		
-	Set @iCpt = @iCpt + 1
-end
+CREATE procedure sysadm.PS_S04_EXTRACTION_REFUS_IRREPARABLE_MAIL 
+AS 
+  
+  
+DECLARE @sCommande   VarChar(500), 
+        @sMessage    Varchar(255), 
+        @sObjet      VarChar(255), 
+        @sFicOut     VarChar(255), 
+ @sRetourErrMail VarChar(255), 
+        @sNomServeur VarChar(255), 
+        @sPath  VarChar(255), 
+        @sFileName   VarChar(255), 
+        @sFileExt    VarChar(4), 
+ @sOsqlOption VarChar(255), 
+ @iRetOsql int  
+  
+Declare @sLaVeille VarChar ( 10 ) 
+Declare @sLaVeilleDeb VarChar ( 23 ) 
+Declare @sLaVeilleFin VarChar ( 23 ) 
+Declare @iCpt int -- [DCMP090280] 
+DECLARE @sDebutCommande   VarChar(250), 
+  @sListeMails  VarChar(500) 
+  
+  
+Set @sLaVeille  = Convert ( VarChar ( 10), DateAdd ( day,-1, getdate()), 103 ) 
+Set @sLaVeilleDeb = @sLaVeille + ' 00:00:00:000'  
+Set @sLaVeilleFin = @sLaVeille + ' 23:59:59:000' 
+  
+  
+-- chemin d'enregistrement du Result Set 
+Set @sPath  = master.[sysadm].[SPB_FN_GET_ROOT] () + 'Sinistre\Export_Refus_Irreparable\' 
+Set @sFileName = 'DCMP080077_REFUS_IRREP_' 
+Set @sFileExt = '.XLS' 
+  
+--SET @sFicOut = @sPath + @sFileName + '.' + @sFileExt 
+  
+SET @sNomServeur = @@servername 
+-- Options additionelles pour osql 
+-- /s" "  => Separateur Tabulation 
+-- /b  => Genere un code ERRORLEVEL exploitable par batch. 
+-- /u => Unicode 
+  
+Set @sOsqlOption = ' ' + '/s" "'+ ' /b' + ' /u' 
+  
+Set @sObjet    = 'REFUS IRREPARABLE du ' + @sLaVeille 
+set @sMessage  = 'Veuillez trouver ci-joint la liste des dossiers pour lesquels, à la suite d''un refus de prise en charge par SPB, les téléphones doivent être renvoyés à l''assuré au plus vite. Merci d''avance, cordialement.' 
+  
+-- [I027] Remplacement d'osql - les options sont identiques. Ajout de -W : Remove Trailing Space 
+IF @@servername = master.dbo.SPB_FN_ServerName ('PRO') 
+ SET @sDebutCommande =  'sqlcmd /S' + @sNomServeur + ' /E /Q"' +  
+   'SIMPA2_PRO.sysadm.PS_S03_EXTRACTION_REFUS_IRREPARABLE ''' + @sLaVeilleDeb + ''', ''' + @sLaVeilleFin + '''' 
+Else 
+   SET @sDebutCommande =  'sqlcmd /S' + @sNomServeur + ' /E /Q"' +  
+   'SIMPA2_TRT.sysadm.PS_S03_EXTRACTION_REFUS_IRREPARABLE ''' + @sLaVeilleDeb + ''', ''' + @sLaVeilleFin + '''' 
+  
+-- [VDOC17993]    
+-- Set @iCpt = 1 
+Set @iCpt = 4 -- On shunt SBE, ANV, COR 
+  
+While @iCpt < 6 
+begin 
+ -- Affectation des variables 
+ IF @iCpt = 1  
+ begin 
+  SET @sCommande = @sDebutCommande + ',''ANV''' 
+  --SET @sListeMails = 'svignal@anovo.com, suivi_prestataires@spb.fr'  
+  SET @sListeMails = 'Brive.SPB@anovo.com, suivi_prestataires@spb.fr' -- [DMDI27314] 
+  SET @sFicOut = @sPath + @sFileName + 'ANV' + @sFileExt 
+ End 
+   
+ IF @iCpt = 2  
+ begin 
+  SET @sCommande = @sDebutCommande + ',''SBE''' 
+  SET @sListeMails = 'edi.informatique@sbe-online.com, saisie-sbe@sbe-online.com, pflahaut@sbe-online.com, rcuiburu@sbe-online.com, mdafonseca@sbe-online.com, mlgin@sbe-online.com, nbrassart@sbe-online.com, mprudhomme@sbe-online.com, suivi_prestataires@spb.fr' 
+  SET @sFicOut = @sPath + @sFileName + 'SBE' + @sFileExt 
+ End 
+   
+ IF @iCpt = 3  
+ begin 
+  SET @sCommande = @sDebutCommande + ',''COR''' 
+  SET @sListeMails = 'spb@cordonweb.com, suivi_prestataires@spb.fr' 
+  SET @sFicOut = @sPath + @sFileName + 'COR' + @sFileExt 
+ End 
+   
+ -- [DCMP090532] - ajout d'O2M 
+ IF @iCpt = 4  
+ begin 
+  SET @sCommande = @sDebutCommande + ',''O2M''' 
+  SET @sListeMails = 'oxydation@o2m.fr, suivi_prestataires@spb.fr' 
+  SET @sFicOut = @sPath + @sFileName + 'O2M' + '.TXT' -- 06/10/2009 - FPI - old : @sFileExt 
+ End 
+  
+ -- [PM200][PSM] 
+ IF @iCpt = 5  
+ begin 
+  SET @sCommande = @sDebutCommande + '''PSM''' 
+  SET @sListeMails = 'spb@allopsm.fr, suivi_prestataires@spb.fr' 
+  SET @sFicOut = @sPath + @sFileName + 'PSM' + @sFileExt 
+ End 
+   
+ -- Création du fichier 
+ Set @sCommande = @sCommande + '" /o' + @sFicOut + ' -n -w5000' + @sOsqlOption 
+   
+ EXEC @iRetOsql = master.dbo.xp_cmdshell @sCommande, no_output 
+   
+ if @iRetOsql <> 0 
+ BEGIN 
+  set @sMessage  = @sMessage + 'ATTENTION : Le fichier joint comporte des Erreurs SQL. Fichier non exploitable. Contacter Service DES.' 
+ END 
+  
+ -- Envoi du mail 
+ EXEC master.dbo.SPB_PS_MAIL  
+  @sRetourErrMail OUTPUT,  
+  @sListeMails,  
+  @sMessage,  
+  @sObjet,  
+  '',  
+  '',  
+  @sFicOut,  
+  NULL,  
+  NULL,  
+  NULL,  
+  NULL 
+    
+ Set @iCpt = @iCpt + 1 
+end 
 
 Go
 
