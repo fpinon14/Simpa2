@@ -8523,7 +8523,7 @@ While Exists ( Select Top 1 1 From @TbLesTables where marquage = 0 )
 
  Go
 
- --------------------------------------------------------------------
+--------------------------------------------------------------------
 --
 -- Procédure            :       PS_GINS
 -- Auteur               :       FABRY JF
@@ -8600,5 +8600,87 @@ Select * from @TbLesInsert
  
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_BASCULE_REC_PPR
+-- Auteur               :       FABRY JF
+-- Date                 :       19/06/2025
+-- Libellé              :       Bascule REC vers PPR et inversement
+--                              
+-- Commentaires         :       
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_BASCULE_REC_PPR' AND type = 'P' )
+        DROP procedure sysadm.PS_BASCULE_REC_PPR
+GO
+
+CREATE procedure sysadm.PS_BASCULE_REC_PPR
+	@asInstance VarChar ( 3 ) 
+AS
+
+DECLARE @sCommande   VarChar(250),
+        @sMessage    Varchar(255),
+        @sObjet      VarChar(255),
+        @sFicOut     VarChar(255),
+		@sRetourErrMail VarChar(255),
+		@sMailBody VarChar ( 255 )
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' 
+Begin
+	Select 'Vous n''êtes pas dans un contexte permettant de faire cette action.'
+	Return -1
+End 
+
+If UPPER ( @asInstance ) Not in ( 'REC', 'PPR' ) 
+Begin
+	Select 'Paramètres incorrects.'
+	Return -1
+End 
+
+If UPPER ( @asInstance ) = 'REC'
+Begin
+	Update sysadm.cle Set valeur = 1, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'INSTANCE_PPR_REC_HUB' -- REC
+	Set @sMessage = 'Le lien SIMPA2 avec SAGA2&HUBPRESTATAIRE viens de de basculer sur l''instance de recette SAGA2 (REC).'
+	Set @sObjet = 'Bascule vers la REC SAGA2'
+End 
+
+If UPPER ( @asInstance ) = 'PPR'
+Begin
+	Update sysadm.cle Set valeur = 0, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'INSTANCE_PPR_REC_HUB' -- PPR
+	Set @sMessage = 'Le lien SIMPA2 avec SAGA2&HUBPRESTATAIRE viens de de basculer sur l''instance de pré-prod SAGA2 (PPR).'
+	Set @sObjet = 'Bascule vers la PPR SAGA2'
+End 
+
+Print @sMessage 
+
+Set @sMailBody = 'Bonjour ' + char (10)
+Set @sMailBody = @sMailBody + char (10)
+Set @sMailBody = @sMailBody + @sMessage + char (10)
+Set @sMailBody = @sMailBody + CHAR ( 10 )
+Set @sMailBody = @sMailBody + 'Cordialement,'
+Set @sMailBody = @sMailBody + CHAR ( 10 )
+Set @sMailBody = @sMailBody + CHAR ( 10 )
+Set @sMailBody = @sMailBody + 'Fabry Jean-François'
+Set @sMailBody = @sMailBody + CHAR ( 10 )
+Set @sMailBody = @sMailBody + 'DSI Team SIMPA2' + CHAR ( 10 )
+Set @sMailBody = @sMailBody + 'Tech Lead' + CHAR ( 10 )
+
+ EXEC master.dbo.SPB_PS_MAIL   
+	@sRetourErrMail OUTPUT,   
+	'jfabry@spb.eu,mhanouet@spb.eu,sguesmi@spb.eu,ochaouachi@spb.eu,hbadrane@spb.eu',  
+	@sMailBody, 
+	@sObjet, 
+	null, 
+	null, 
+	@sFicOut, 
+	NULL, 
+	NULL, 
+	NULL, 
+	NULL
+
+Go
+
 
 
