@@ -3775,6 +3775,8 @@ Go
 --					  
 --
 -------------------------------------------------------------------
+-- 24/06/2025	FPI [MIG_SQL_2022] Utilisation de PS_L_CLE2
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_CONTROLE_VERSION_CLUSTER' AND type = 'P' )
         DROP procedure sysadm.PS_S_CONTROLE_VERSION_CLUSTER
 GO
@@ -3791,7 +3793,7 @@ DECLARE @tb TABLE
 	  iNbreCnx   integer
 	)
 
-Insert @tb Exec sysadm.PS_L_CLE 'SVN'
+Insert @tb Exec sysadm.PS_L_CLE2 'SVN'
 
 Declare	@DteDernCnx Varchar ( 10 ),
 		@Appli		Varchar ( 10 ),
