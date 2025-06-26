@@ -1380,7 +1380,7 @@ Go
 -- Auteur               :       FABRY JF
 -- Date                 :       05/2025
 -- Libellé              :       
--- Commentaires         :       
+-- Commentaires         :       à appeler à partie de SIMPA2 !!!
 -- Références           :       
 --
 -------------------------------------------------------------------
@@ -1502,3 +1502,145 @@ Set @sSql =
 Exec ( @sSql ) 
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_MAJ_DES_BOUTIQUES_SAGA2_DANS_TABLE_BOUTIQUE_SIMPA2
+-- Auteur               :       FABRY JF
+-- Date                 :       25/06/2025
+-- Libellé              :   [MIG147_KRYS]     
+-- Commentaires         :       
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_MAJ_DES_BOUTIQUES_SAGA2_DANS_TABLE_BOUTIQUE_SIMPA2' AND type = 'P' )
+        DROP procedure sysadm.PS_MAJ_DES_BOUTIQUES_SAGA2_DANS_TABLE_BOUTIQUE_SIMPA2
+GO
+
+CREATE procedure sysadm.PS_MAJ_DES_BOUTIQUES_SAGA2_DANS_TABLE_BOUTIQUE_SIMPA2
+	@asChaineSeria	VarChar ( 800 ) -- Si besoin
+AS
+
+Declare @sEnv VarChar ( 10 )
+Declare @dcIdProd Decimal ( 7 )
+Declare @sSql Varchar ( 3000 )
+Declare @sInstanceSaga2 Varchar ( 50 )
+Declare @iIdSeq integer
+Declare @dcIdProdDp402 integer
+Declare @sCodMagParentAlphaSaga2 VarChar ( 50 )
+Declare @iNbreCtrle Integer
+
+Declare @TbTrt Table ( 
+	id_seq Integer identity (1, 1 ),
+	id_prod_dp402 integer,
+	code_magasin_parent_alpha_saga2_dp402 VarChar ( 50 ),
+	marquage int
+)
+
+If @@servername = master.dbo.SPB_FN_ServerName ('PRO') Set @sEnv = 'PRO' Else Set @sEnv = 'SIM'
+
+If @sEnv = 'PRO' 
+ Begin 
+	Set @sInstanceSaga2 = '[LS-SAGA2]'
+ End 
+Else
+ Begin
+	-- [INSTANCE]
+	If sysadm.FN_CLE_NUMERIQUE ( 'INSTANCE_PPR_REC_HUB') = 1
+		Begin 
+			Set @sInstanceSaga2 = '[S2SQL14DEV\RECSAGA2]' 
+		End 
+	Else
+		Begin 
+			Set @sInstanceSaga2 = '[S2SQL14PP1\PPRSAGA2]'
+		End 	
+ End 
+
+
+-- Récup du param	
+Insert into @TbTrt
+Select	id_prod,
+		sysadm.FN_CLE_VAL ( 'CODE_MAGASIN_PARENT_ALPHA_SAGA2', val_car, ';'),
+		0
+From sysadm.det_pro dp
+Where dp.id_code_dp = 402
+
+While Exists ( Select Top 1 1 From @TbTrt where marquage = 0 )
+ Begin
+	Select 	Top 1 
+		@iIdSeq = id_seq,
+		@dcIdProdDp402 = id_prod_dp402,
+		@sCodMagParentAlphaSaga2 = code_magasin_parent_alpha_saga2_dp402
+	From	@TbTrt
+	Where	marquage = 0
+
+	Set @sSql = 
+	' Select	COUNT (*) ' +
+	' from ' + @sInstanceSaga2 + '.saga2_pvc.crm.selling_point s ' +
+	' inner join ' + @sInstanceSaga2 + '.saga2_pvc.crm.person p on p.id_person = s.id_person ' +
+	' inner join ' + @sInstanceSaga2 + '.CRM_PRD.dbo.v_client c  on c.id_client = p.client_id ' +
+	' left join ' + @sInstanceSaga2 + '.CRM_PRD.dbo.v_client_details c_email on c_email.id_client = c.id_client and c_email.ref_crm_client_details_type_code = 3 ' +
+	' left join ' + @sInstanceSaga2 + '.CRM_PRD.dbo.v_client_details c_rib on c_rib.id_client = c.id_client and c_rib.ref_crm_client_details_type_code = 8 ' +
+	' left join ' + @sInstanceSaga2 + '.CRM_PRD.dbo.v_client_details c_tel on c_tel.id_client = c.id_client and c_tel.ref_crm_client_details_type_code = 1 ' +
+	' left join ' + @sInstanceSaga2 + '.CRM_PRD.dbo.v_address a on a.id_client = c.id_client  ' +
+	' where s.id_parent = (select id_selling_point from ' + @sInstanceSaga2 + '.SAGA2_PVC.crm.selling_point where code = ''' + @sCodMagParentAlphaSaga2 + ''' ) ' 
+
+	Exec ( @sSql ) 
+
+	Set @iNbreCtrle = @@ROWCOUNT
+
+	-- Si pas ligne, on laisse ainsi, on ne delete pas, mieux d'ancienne boutique, que plus de boutique du tout.
+	If @iNbreCtrle > 0  
+		Begin 
+
+			-- Delete Table boutique pour le produit ici
+			-- Suppression de la boutiques
+			Delete sysadm.boutique Where id_prod = @dcIdProdDp402
+
+			Set @sSql = 
+			' Select ' + Convert ( VarChar ( 10 ), @dcIdProdDp402) + ', ' + -- id_prod
+			'    s.id_selling_point, ' +  -- id_boutique => id_magasin_saga2
+			'    ''MAJ_AUTO_DP402_PAS_DE_MAJ_MANUELLE!'',' + -- region 
+			'    Left ( ltrim ( rtrim ( a.city )), 35 ), ' + -- adr_ville
+			'    Left ( ltrim ( rtrim ( a.zip_code )), 5 ) , ' +  -- adr_cp
+			'    Left ( ltrim ( rtrim ( c_tel.value )), 20 ), ' + -- adr_tel, 
+			'    null, ' + -- adr_fax
+			'    Left ( ltrim ( rtrim ( c_email.value )), 250 ),' +   -- adr_mail
+			'    null, ' + -- adr_mail_cc,
+			'    Left ( ltrim ( rtrim ( s.name )), 35 ),' + -- adr_nom,
+			'    Left ( ltrim ( rtrim ( s.code )), 20 ),' + -- cod_mag,
+			'    Left ( Concat ( ltrim ( rtrim ( a.complement_adr1)), '' '' ,ltrim ( rtrim ( a.complement_adr2 )), '' '', ltrim ( rtrim ( a.complement_adr3 )), '' '', ltrim ( rtrim ( a.complement_adr4 ))), 40 ), ' +  -- adr_1,
+			'    Substring ( Concat ( ltrim ( rtrim ( a.complement_adr1 )), '' '' , ltrim ( rtrim ( a.complement_adr2 )) , '' '', ltrim ( rtrim ( a.complement_adr3 )), '' '', ltrim ( rtrim ( a.complement_adr4 )) ), 41, 2000 ), ' +   -- adr_2,
+			'    null, ' + -- responsable,
+			'    null, ' + -- adr_mail2,
+			'    null, ' + -- adr_mail_cc2,
+			'    substring ( c_rib.value, 5, 5 ), ' + -- rib_bq,
+			'    substring ( c_rib.value, 10, 5 ), ' + -- rib_gui,
+			'    substring ( c_rib.value, 15, 11 ), ' + -- rib_cpt,
+			'    substring ( c_rib.value, 26, 2 ), ' + -- rib_cle,
+			'    Getdate (), ' + -- cree_le,
+			'    Getdate (), ' + -- maj_le,
+			'    ''AUTO'', ' +  -- maj_par,
+			'    null, ' + -- lib_police,
+			'    null ' + -- id_four_fact
+			' ' + 
+			' from ' + @sInstanceSaga2 + '.saga2_pvc.crm.selling_point s ' + 
+			' inner join ' + @sInstanceSaga2 + '.saga2_pvc.crm.person p on p.id_person = s.id_person ' +
+			' inner join ' + @sInstanceSaga2 + '.CRM_PRD.dbo.v_client c  on c.id_client = p.client_id ' +
+			' left join ' + @sInstanceSaga2 + '.CRM_PRD.dbo.v_client_details c_email on c_email.id_client = c.id_client and c_email.ref_crm_client_details_type_code = 3 ' +
+			' left join ' + @sInstanceSaga2 + '.CRM_PRD.dbo.v_client_details c_rib on c_rib.id_client = c.id_client and c_rib.ref_crm_client_details_type_code = 8 ' +
+			' left join ' + @sInstanceSaga2 + '.CRM_PRD.dbo.v_client_details c_tel on c_tel.id_client = c.id_client and c_tel.ref_crm_client_details_type_code = 1 ' +
+			' left join ' + @sInstanceSaga2 + '.CRM_PRD.dbo.v_address a on a.id_client = c.id_client  ' +
+			' where s.id_parent in (select id_selling_point from ' + @sInstanceSaga2 + '.SAGA2_PVC.crm.selling_point where code = ''' + @sCodMagParentAlphaSaga2 + ''' ) ' +
+			' Order by 2 ' 
+
+			Insert into sysadm.boutique Exec ( @sSql ) 
+
+		End
+
+	Update @TbTrt Set marquage = 1 Where id_seq = @iIdSeq
+ End
+
+Go
+
+
