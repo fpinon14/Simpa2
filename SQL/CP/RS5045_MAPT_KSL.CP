@@ -22,7 +22,7 @@ Go
 -- sysadm.PS_RS5045_S_RECUPERER_LE_BLOB_COURRIER
 -- sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE
 -- sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL
--- sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V04
+-- sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V05
 -- sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8
 -- sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL
 -- sysadm.PS_RS5045_U_OPTIMISER_CHAINE_DATA_XML_KSL
@@ -2302,6 +2302,7 @@ Go
 --
 -------------------------------------------------------------------
 --	18/10/2023 [RS6044_REL_MAIL]
+--  JFF		30/06/2025   [SCHEDULER_WORDTOPDF][V05]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL' AND type = 'P' )
         DROP procedure sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL
@@ -2319,6 +2320,14 @@ As
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 	Begin
 
+	/*
+		-- [SCHEDULER_WORDTOPDF][V05] pas mis en production
+		If SIMPA2_PRO.sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') >=6 
+			Begin
+				Exec sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V05
+				Return
+			End
+	*/
 		If SIMPA2_PRO.sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') >=5 
 			Begin
 				Exec sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V04
@@ -2333,6 +2342,15 @@ IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id(
 	End 
 Else
 	Begin
+
+	/*
+		-- [SCHEDULER_WORDTOPDF][V05] pas mis en production
+		If SIMPA2_TRT.sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') >=6 
+			Begin
+				Exec sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V05
+				Return
+			End
+	*/
 
 		If SIMPA2_TRT.sysadm.FN_CLE_NUMERIQUE ( 'RS5045_REF_MATP') >=5 
 			Begin
@@ -2366,6 +2384,7 @@ Go
 -------------------------------------------------------------------
 -- JFF      18/10/2023   [RS6044_REL_MAIL]
 -- JFF		06/06/2025   [RS6130]
+-- JFF		30/06/2025   [SCHEDULER_WORDTOPDF][V05]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V04' AND type = 'P' )
         DROP procedure sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V04
@@ -2406,9 +2425,12 @@ Declare @iIdLotTrc Integer
 Declare @iCptTraite Integer
 Declare @sRepBlobLocal Varchar ( 255 )
 Declare @blWordToPdf Varbinary ( max )
+Declare @blSchedulerWordToPdf Varbinary ( max ) -- [SCHEDULER_WORDTOPDF][V05]
 Declare @sNomFichierWordToPdf Varchar ( 255 )
+Declare @sNomFichierSchedulerWordToPdf Varchar ( 255 ) -- [SCHEDULER_WORDTOPDF][V05]
 Declare @sCmdDos Varchar ( 255 )
 Declare @sChemEtNomWordToPdf Varchar ( 255 )
+Declare @sChemEtNomSchedulerWordToPdf Varchar ( 255 ) -- [SCHEDULER_WORDTOPDF][V05]
 Declare @sNomFichierPDF Varchar ( 255 )
 Declare @iIdAppliNum Integer
 Declare @sTypMail Varchar ( 6 )
@@ -2472,6 +2494,7 @@ Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INFO', 'OK', @sMsgTr
 
 EXEC master.dbo.xp_cmdshell 'taskkill /F  /IM WINWORD.EXE /T'
 EXEC master.dbo.xp_cmdshell 'taskkill /F  /IM WORDTOPDF.EXE /T'
+-- EXEC master.dbo.xp_cmdshell 'taskkill /F  /IM SCHEDULER_WORDTOPDF.EXE /T'
 
 -- Nettoyage de ma la Table de stockage des xml temporaire, on garde que 15 jours.
 Set @sMsgTrc = 'Nettoyage des jetons XML (table sysadm.variable_xml_ksl_rs5045)'
@@ -3169,6 +3192,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 	--------- La présence de l'EXE est impérative pour ne pas faire planter la tache Window ------
 	--------- qui passe 5 minutes plus tard                                                 ------
 	----------------------------------------------------------------------------------------------
+	-- [SCHEDULER_WORDTOPDF][V05]
 	Delete @TbWork Where marquage = 100 
 	While 0 = 0
 		Begin
@@ -3253,6 +3277,71 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 
 			Set @sMsgTrc = 'Fichier WordToPdf.EXE écrit avec succès sur ' + @sChemEtNomWordToPdf 
 			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'ECREXE', 'OK', @sMsgTrc, @iIdLotTrc
+
+/*
+			-- [SCHEDULER_WORDTOPDF][V05]
+			Set @sMsgTrc = 'Récupération de Scheduler_WordToPdf.exe en cours...'
+			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'RCPEXE', 'ENC', @sMsgTrc, @iIdLotTrc
+
+			Select	@blSchedulerWordToPdf = binaire,
+					@sNomFichierSchedulerWordToPdf = nom
+			From sysadm.application_complementaire_RS5045
+			Where id_appcomp = 9
+
+			-- Obtention du Blob échouée 2ème cas
+			If @blSchedulerWordToPdf is null Or Datalength ( @blSchedulerWordToPdf ) <= 5
+			Begin
+				Set @sMsgTrc = 'Erreur lors de la récupération de Scheduler_WordToPdf.EXE, le blob est vide, aucun mail avec courrier Word n''a été traité, arrêt de traitement'
+				Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'RCPEXE', 'ERR', @sMsgTrc, @iIdLotTrc
+		
+				Delete @TbWork where marquage = 0 And id_arch > 0
+				Break
+			End
+
+			Set @sMsgTrc = 'Récupération de Scheduler_WordToPdf.EXE effectué avec succès'
+			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'RCPEXE', 'OK', @sMsgTrc, @iIdLotTrc
+
+			-- Ecriture de WordToPdf.exe sur disque
+			Set @sMsgTrc = 'Construction du fichier Scheduler_WordToPdf.EXE en cours...'
+			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'CONEXE', 'ENC', @sMsgTrc, @iIdLotTrc
+
+			Exec @iRet = sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM_V02 @iHandle, 1, 3, null, null, null, @blSchedulerWordToPdf
+
+			If @iRet <> 0 
+				Begin
+					Set @sMsgTrc = 'Erreur lors de la construction du fichier Scheduler_WordToPdf.EXE, code erreur ' + CONVERT ( Varchar ( 20 ), @iRet ) + ', le fichier n''a pas été écrit !, arrêt de traitement'
+					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'CONEXE', 'ERR', @sMsgTrc, @iIdLotTrc
+
+					Delete @TbWork where marquage = 0 And id_arch > 0
+					Break
+				End 
+
+			Set @sMsgTrc = 'Fichier Scheduler_WordToPdf.EXE construit avec succès'
+			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'CONEXE', 'OK', @sMsgTrc, @iIdLotTrc 
+
+			Set @sChemEtNomSchedulerWordToPdf = @sRepBlobLocal + '\' + @sNomFichierSchedulerWordToPdf
+
+			Set @sMsgTrc = 'Ecriture du fichier Scheduler_WordToPdf.EXE en cours... (sur ' + @sChemEtNomSchedulerWordToPdf  + ')'
+			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'ECREXE', 'ENC', @sMsgTrc, @iIdLotTrc
+
+			Exec @iRet = sysadm.PS_SAUVEGARDER_ET_FERMER_UN_FICHER_ADODB_STREAM @iHandle, @sChemEtNomSchedulerWordToPdf, 2
+
+			If @iRet <> 0 
+				Begin
+					Set @sMsgTrc = 'Erreur lors de l''écriture du fichier Scheduler_WordToPdf.EXE, code erreur ' + CONVERT ( Varchar ( 20 ), @iRet ) + ', le fichier n''a pas été écrit !, normal si un instance du scheduleur tourne déjà en mémoire.'
+					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'ECREXE', 'OK', @sMsgTrc, @iIdLotTrc
+					Set @iRet = 0
+				End 
+			Else
+				Begin
+					Set @sMsgTrc = 'Fichier Scheduler_WordToPdf.EXE écrit avec succès sur ' + @sChemEtNomSchedulerWordToPdf 
+					Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'ECREXE', 'OK', @sMsgTrc, @iIdLotTrc
+				End
+
+			-- Lancement du Scheduler, un contrôle est fait sur l'instance, une seule instance ne peut être lancée
+			Set @sCmdDos = 'start "" "' + @sChemEtNomSchedulerWordToPdf + '"'
+			EXEC master.dbo.xp_cmdshell  @sCmdDos 
+*/
 
 			Break
 

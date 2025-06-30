@@ -1528,7 +1528,15 @@ Declare @sInstanceSaga2 Varchar ( 50 )
 Declare @iIdSeq integer
 Declare @dcIdProdDp402 integer
 Declare @sCodMagParentAlphaSaga2 VarChar ( 50 )
-Declare @iNbreCtrle Integer
+Declare @iNbreCtrle1 Integer
+Declare @iNbreCtrle2 Integer
+Declare @sMessage VarChar ( 500 )
+Declare @sObjet VarChar ( 500 )
+DECLARE      @return_value int,
+             @asRetourErr varchar(255)
+
+
+Set NoCount On;
 
 Declare @TbTrt Table ( 
 	id_seq Integer identity (1, 1 ),
@@ -1575,7 +1583,7 @@ While Exists ( Select Top 1 1 From @TbTrt where marquage = 0 )
 	Where	marquage = 0
 
 	Set @sSql = 
-	' Select	COUNT (*) ' +
+	' Select s.id_selling_point ' +
 	' from ' + @sInstanceSaga2 + '.saga2_pvc.crm.selling_point s ' +
 	' inner join ' + @sInstanceSaga2 + '.saga2_pvc.crm.person p on p.id_person = s.id_person ' +
 	' inner join ' + @sInstanceSaga2 + '.CRM_PRD.dbo.v_client c  on c.id_client = p.client_id ' +
@@ -1583,14 +1591,76 @@ While Exists ( Select Top 1 1 From @TbTrt where marquage = 0 )
 	' left join ' + @sInstanceSaga2 + '.CRM_PRD.dbo.v_client_details c_rib on c_rib.id_client = c.id_client and c_rib.ref_crm_client_details_type_code = 8 ' +
 	' left join ' + @sInstanceSaga2 + '.CRM_PRD.dbo.v_client_details c_tel on c_tel.id_client = c.id_client and c_tel.ref_crm_client_details_type_code = 1 ' +
 	' left join ' + @sInstanceSaga2 + '.CRM_PRD.dbo.v_address a on a.id_client = c.id_client  ' +
-	' where s.id_parent = (select id_selling_point from ' + @sInstanceSaga2 + '.SAGA2_PVC.crm.selling_point where code = ''' + @sCodMagParentAlphaSaga2 + ''' ) ' 
+	' where s.id_parent in ( select id_selling_point from ' + @sInstanceSaga2 + '.SAGA2_PVC.crm.selling_point where code = ''' + @sCodMagParentAlphaSaga2 + ''' ) ' +
+	' And s.is_active = 1 '
 
 	Exec ( @sSql ) 
+	Set @iNbreCtrle1 = @@ROWCOUNT
 
-	Set @iNbreCtrle = @@ROWCOUNT
+	Set @sSql = 
+	' Select Distinct s.id_selling_point' +
+	' from ' + @sInstanceSaga2 + '.saga2_pvc.crm.selling_point s ' +
+	' inner join ' + @sInstanceSaga2 + '.saga2_pvc.crm.person p on p.id_person = s.id_person ' +
+	' inner join ' + @sInstanceSaga2 + '.CRM_PRD.dbo.v_client c  on c.id_client = p.client_id ' +
+	' left join ' + @sInstanceSaga2 + '.CRM_PRD.dbo.v_client_details c_email on c_email.id_client = c.id_client and c_email.ref_crm_client_details_type_code = 3 ' +
+	' left join ' + @sInstanceSaga2 + '.CRM_PRD.dbo.v_client_details c_rib on c_rib.id_client = c.id_client and c_rib.ref_crm_client_details_type_code = 8 ' +
+	' left join ' + @sInstanceSaga2 + '.CRM_PRD.dbo.v_client_details c_tel on c_tel.id_client = c.id_client and c_tel.ref_crm_client_details_type_code = 1 ' +
+	' left join ' + @sInstanceSaga2 + '.CRM_PRD.dbo.v_address a on a.id_client = c.id_client  ' +
+	' where s.id_parent in (select id_selling_point from ' + @sInstanceSaga2 + '.SAGA2_PVC.crm.selling_point where code = ''' + @sCodMagParentAlphaSaga2 + ''' ) ' +
+	' And s.is_active = 1 '
+
+	Exec ( @sSql ) 
+	Set @iNbreCtrle2 = @@ROWCOUNT
+
+	IF @iNbreCtrle1 > 0 And @iNbreCtrle1 <> @iNbreCtrle2
+		Begin
+
+			set @sObjet = @@SERVERNAME + ' problème maj boutique SAGA2 vers SIMPA2'
+			Set @sMessage = 'PS_MAJ_DES_BOUTIQUES_SAGA2_DANS_TABLE_BOUTIQUE_SIMPA2, code ' + @sCodMagParentAlphaSaga2 + ', Problème de clé distinct'
+
+			EXEC   @return_value = master.[dbo].[SPB_PS_MAIL]
+						 @asRetourErr = @asRetourErr OUTPUT,
+						 @asTo = N'jfabry@spb.eu',
+						 @asTextBody = @sMessage,
+						 @asSubject = @sObjet,
+						 @asFrom = null,
+						 @asCc = NULL,
+						 @asFicAttach = NULL,
+						 @asQuery = NULL,
+						 @asFicQueryOut = NULL,
+						 @aiTypeQuery = NULL,
+						 @asNomBaseQuery = NULL,
+						 @asBcc = NULL
+
+			Update @TbTrt Set marquage = 1 Where id_seq = @iIdSeq
+			Continue
+		end 
+
+	If	@iNbreCtrle1 <= 0
+		Begin
+			set @sObjet = @@SERVERNAME + ' problème maj boutique SAGA2 vers SIMPA2'
+			Set @sMessage = 'PS_MAJ_DES_BOUTIQUES_SAGA2_DANS_TABLE_BOUTIQUE_SIMPA2, code ' + @sCodMagParentAlphaSaga2 + ', Pas de boutique provenant de SAGA2'
+
+			EXEC   @return_value = master.[dbo].[SPB_PS_MAIL]
+						 @asRetourErr = @asRetourErr OUTPUT,
+						 @asTo = N'jfabry@spb.eu',
+						 @asTextBody = @sMessage,
+						 @asSubject = @sObjet,
+						 @asFrom = null,
+						 @asCc = NULL,
+						 @asFicAttach = NULL,
+						 @asQuery = NULL,
+						 @asFicQueryOut = NULL,
+						 @aiTypeQuery = NULL,
+						 @asNomBaseQuery = NULL,
+						 @asBcc = NULL
+
+			Update @TbTrt Set marquage = 1 Where id_seq = @iIdSeq
+			Continue
+		End 
 
 	-- Si pas ligne, on laisse ainsi, on ne delete pas, mieux d'ancienne boutique, que plus de boutique du tout.
-	If @iNbreCtrle > 0  
+	If @iNbreCtrle1 > 0  
 		Begin 
 
 			-- Delete Table boutique pour le produit ici
@@ -1610,7 +1680,7 @@ While Exists ( Select Top 1 1 From @TbTrt where marquage = 0 )
 			'    Left ( ltrim ( rtrim ( s.name )), 35 ),' + -- adr_nom,
 			'    Left ( ltrim ( rtrim ( s.code )), 20 ),' + -- cod_mag,
 			'    Left ( Concat ( ltrim ( rtrim ( a.complement_adr1)), '' '' ,ltrim ( rtrim ( a.complement_adr2 )), '' '', ltrim ( rtrim ( a.complement_adr3 )), '' '', ltrim ( rtrim ( a.complement_adr4 ))), 40 ), ' +  -- adr_1,
-			'    Substring ( Concat ( ltrim ( rtrim ( a.complement_adr1 )), '' '' , ltrim ( rtrim ( a.complement_adr2 )) , '' '', ltrim ( rtrim ( a.complement_adr3 )), '' '', ltrim ( rtrim ( a.complement_adr4 )) ), 41, 2000 ), ' +   -- adr_2,
+			'    Substring ( Concat ( ltrim ( rtrim ( a.complement_adr1 )), '' '' , ltrim ( rtrim ( a.complement_adr2 )) , '' '', ltrim ( rtrim ( a.complement_adr3 )), '' '', ltrim ( rtrim ( a.complement_adr4 )) ), 41, 40 ), ' +   -- adr_2,
 			'    null, ' + -- responsable,
 			'    null, ' + -- adr_mail2,
 			'    null, ' + -- adr_mail_cc2,
@@ -1632,10 +1702,11 @@ While Exists ( Select Top 1 1 From @TbTrt where marquage = 0 )
 			' left join ' + @sInstanceSaga2 + '.CRM_PRD.dbo.v_client_details c_tel on c_tel.id_client = c.id_client and c_tel.ref_crm_client_details_type_code = 1 ' +
 			' left join ' + @sInstanceSaga2 + '.CRM_PRD.dbo.v_address a on a.id_client = c.id_client  ' +
 			' where s.id_parent in (select id_selling_point from ' + @sInstanceSaga2 + '.SAGA2_PVC.crm.selling_point where code = ''' + @sCodMagParentAlphaSaga2 + ''' ) ' +
+			' And s.is_active = 1 ' +
 			' Order by 2 ' 
-
+--			Exec ( @sSql ) 
 			Insert into sysadm.boutique Exec ( @sSql ) 
-
+			
 		End
 
 	Update @TbTrt Set marquage = 1 Where id_seq = @iIdSeq
