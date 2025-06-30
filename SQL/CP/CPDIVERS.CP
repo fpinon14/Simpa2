@@ -7,60 +7,67 @@
 -- Commentaires         :       PS Diverses n'étant pas rattachées à une table en particuliers
 --
 -- Proc‚dures           :      
--- [sysadm].[PS_S01_RECH_ECART]
--- sysadm.DW_S01_FACT_DANGAARD
--- sysadm.PS_CORRECTION_BASE_NUIT_1
--- sysadm.PS_CORRECTION_BASE_NUIT_2
--- sysadm.PS_CORRECTION_BASE_TEMPS_1
--- sysadm.PS_CORRECTION_BASE_TEMPS_2
--- sysadm.PS_CORRECTION_BASE_TEMPS_3
--- sysadm.PS_CORRECTION_BASE_TEMPS_4
--- sysadm.PS_CPS
--- sysadm.PS_D_NETTOYAGE_VIEUX_PARAM_INCOHERENT  
--- sysadm.PS_D01_ERR_BAC
--- sysadm.PS_DU_NETTOYAGE_CORBEILLES
--- sysadm.PS_I_CREATION_AUTO_PARAM_CONDITION
--- sysadm.PS_IU_REDRESS_PRS_153_154
--- sysadm.PS_KILL_TOUTE_CNX_BASE_SIMPA2
--- sysadm.PS_LANCEUR_JOBS_SQL  
--- sysadm.PS_MAIL_PREUVE_TICKET_JOUE  
--- sysadm.PS_NETTOYAGE_REPERTOIRE  
--- sysadm.PS_PRESENCE_WSIN
--- sysadm.PS_REDRESS_RN_NON_ATTACHE_DETAIL
--- sysadm.PS_REDRESSEMENT_VDOC15650
--- sysadm.PS_REDRESSEMENT_VDOC15650_2
--- sysadm.PS_S_ADRESSE_CENTRALE_PSM
--- sysadm.PS_S_ADRESSE_PSM_PM234
--- sysadm.PS_S_CONSULT_RESTREINTE
--- sysadm.PS_S_CONTROLE_DISKIO_CPUTIME
--- sysadm.PS_S_CONTROLE_DISKIO_CPUTIME_MAIL
--- sysadm.PS_S_CONTROLE_VERSION_CLUSTER
--- sysadm.PS_S_CPT_SIN_RESTANT
--- sysadm.PS_S_DETECT_ERREUR_WS
--- sysadm.PS_S_DETECT_SQL_QUOT_BASE_SIM
--- sysadm.PS_S_DETECT_VERSION_BASE_SIM
--- sysadm.PS_S_ID_CIE
--- sysadm.PS_S_LIB_CIE
--- sysadm.PS_S_MARQUE_TEL
--- sysadm.PS_S_MODELE_TEL
--- sysadm.PS_S_NBRE_SIN_SANDRINE
--- sysadm.PS_S_PROCHAIN_JOUR_OUVRE_DU_MEME_MOIS_CALENDAIRE
--- sysadm.PS_S_RECUP_ADRESSE_FRN
--- sysadm.PS_S_REDRESS_W_QUEUE_STATUT_IWD  
--- sysadm.PS_S_RETURN_TRANCOUNT
--- sysadm.PS_S_VERIF_ENVOI_MAIL_RECAP_DECLA  
--- sysadm.PS_S_VERIF_REV_SVN
--- sysadm.PS_S01_ADRESSE_O2M_V01
--- sysadm.PS_S01_CORRECTION_IMEI
--- sysadm.PS_S01_MAIL
--- sysadm.PS_S01_VERIF_ANNUL_VIR
--- sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
--- sysadm.PS_T_REDRESS_FRAIS_ABSENT
--- sysadm.PS_U_NETTOYAGE_DONNEES_ERRONEES_SUITE_DECLA_WEB  
--- sysadm.PS_U_PM364_DORMANT_AUTO
--- sysadm.PS_U_REDRESS_DET600_GTI100
--- sysadm.PS_U_REDRESS_W_QUEUE_STATUT_IWD  
--- sysadm.PS_U01_CORRECTION_W_DIV_SIN
+--  [sysadm].[PS_S01_RECH_ECART]
+--  sysadm.DW_S01_FACT_DANGAARD
+--  sysadm.PS_BASCULE_REC_PPR
+--  sysadm.PS_CORRECTION_BASE_NUIT_1
+--  sysadm.PS_CORRECTION_BASE_NUIT_2
+--  sysadm.PS_CORRECTION_BASE_TEMPS_1
+--  sysadm.PS_CORRECTION_BASE_TEMPS_2
+--  sysadm.PS_CORRECTION_BASE_TEMPS_3
+--  sysadm.PS_CORRECTION_BASE_TEMPS_4
+--  sysadm.PS_CPS
+--  sysadm.PS_CPS2
+--  sysadm.PS_D_NETTOYAGE_VIEUX_PARAM_INCOHERENT  
+--  sysadm.PS_D01_ERR_BAC
+--  sysadm.PS_DU_NETTOYAGE_CORBEILLES
+--  sysadm.PS_GINS
+--  sysadm.PS_I_CREATION_AUTO_PARAM_CONDITION
+--  sysadm.PS_IU_REDRESS_PRS_153_154
+--  sysadm.PS_KILL_TOUTE_CNX_BASE_SIMPA2
+--  sysadm.PS_LANCEUR_JOBS_SQL  
+--  sysadm.PS_MAIL_PREUVE_TICKET_JOUE  
+--  sysadm.PS_NETTOYAGE_REPERTOIRE  
+--  sysadm.PS_PRESENCE_WSIN
+--  sysadm.PS_REDRESS_RN_NON_ATTACHE_DETAIL
+--  sysadm.PS_REDRESSEMENT_VDOC15650
+--  sysadm.PS_REDRESSEMENT_VDOC15650_2
+--  sysadm.PS_S_ADRESSE_CENTRALE_PSM
+--  sysadm.PS_S_ADRESSE_PSM_PM234
+--  sysadm.PS_S_CONSULT_RESTREINTE
+--  sysadm.PS_S_CONTROLE_DISKIO_CPUTIME
+--  sysadm.PS_S_CONTROLE_DISKIO_CPUTIME_MAIL
+--  sysadm.PS_S_CONTROLE_VERSION_CLUSTER
+--  sysadm.PS_S_CPT_SIN_RESTANT
+--  sysadm.PS_S_DETECT_ERREUR_WS
+--  sysadm.PS_S_DETECT_SQL_QUOT_BASE_SIM
+--  sysadm.PS_S_DETECT_VERSION_BASE_SIM
+--  sysadm.PS_S_EXTRACTION_SESAME_2110_DROITS_OPER
+--  sysadm.PS_S_GENERATEUR_INSERT_SINISTRE
+--  sysadm.PS_S_ID_CIE
+--  sysadm.PS_S_LIB_CIE_V01
+--  sysadm.PS_S_MAIL_AUTO_VERS_CORUS_PAS_DE_COURRIER
+--  sysadm.PS_S_MARQUE_TEL
+--  sysadm.PS_S_MODELE_TEL
+--  sysadm.PS_S_NBRE_SIN_SANDRINE
+--  sysadm.PS_S_PROCHAIN_JOUR_OUVRE_DU_MEME_MOIS_CALENDAIRE
+--  sysadm.PS_S_RECUP_ADRESSE_FRN
+--  sysadm.PS_S_REDRESS_W_QUEUE_STATUT_IWD  
+--  sysadm.PS_S_RETURN_TRANCOUNT
+--  sysadm.PS_S_VERIF_ENVOI_MAIL_RECAP_DECLA  
+--  sysadm.PS_S_VERIF_REV_SVN
+--  sysadm.PS_S01_ADRESSE_O2M_V01
+--  sysadm.PS_S01_CORRECTION_IMEI
+--  sysadm.PS_S01_MAIL
+--  sysadm.PS_S01_VERIF_ANNUL_VIR
+--  sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
+--  sysadm.PS_T_REDRESS_FRAIS_ABSENT
+--  sysadm.PS_U_NETTOYAGE_DONNEES_ERRONEES_SUITE_DECLA_WEB  
+--  sysadm.PS_U_PM364_DORMANT_AUTO
+--  sysadm.PS_U_REDIRECTION_TRV_VERS_DR  
+--  sysadm.PS_U_REDRESS_DET600_GTI100
+--  sysadm.PS_U_REDRESS_W_QUEUE_STATUT_IWD  
+--  sysadm.PS_U01_CORRECTION_W_DIV_SIN
 -------------------------------------------------------------------
 
 --------------------------------------------------------------------
@@ -8683,6 +8690,88 @@ Set @sMailBody = @sMailBody + 'Tech Lead' + CHAR ( 10 )
 	NULL
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_BASCULE_REC_PPR
+-- Auteur               :       FABRY JF
+-- Date                 :       19/06/2025
+-- Libellé              :       Bascule REC vers PPR et inversement
+--                              
+-- Commentaires         :       
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_BASCULE_REC_PPR' AND type = 'P' )
+        DROP procedure sysadm.PS_BASCULE_REC_PPR
+GO
+
+CREATE procedure sysadm.PS_BASCULE_REC_PPR
+	@asInstance VarChar ( 3 ) 
+AS
+
+DECLARE @sCommande   VarChar(250),
+        @sMessage    Varchar(255),
+        @sObjet      VarChar(255),
+        @sFicOut     VarChar(255),
+		@sRetourErrMail VarChar(255),
+		@sMailBody VarChar ( 255 )
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' 
+Begin
+	Select 'Vous n''êtes pas dans un contexte permettant de faire cette action.'
+	Return -1
+End 
+
+If UPPER ( @asInstance ) Not in ( 'REC', 'PPR' ) 
+Begin
+	Select 'Paramètres incorrects.'
+	Return -1
+End 
+
+If UPPER ( @asInstance ) = 'REC'
+Begin
+	Update sysadm.cle Set valeur = 1, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'INSTANCE_PPR_REC_HUB' -- REC
+	Set @sMessage = 'Le lien SIMPA2 avec SAGA2&HUBPRESTATAIRE viens de de basculer sur l''instance de recette SAGA2 (REC).'
+	Set @sObjet = 'Bascule vers la REC SAGA2'
+End 
+
+If UPPER ( @asInstance ) = 'PPR'
+Begin
+	Update sysadm.cle Set valeur = 0, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'INSTANCE_PPR_REC_HUB' -- PPR
+	Set @sMessage = 'Le lien SIMPA2 avec SAGA2&HUBPRESTATAIRE viens de de basculer sur l''instance de pré-prod SAGA2 (PPR).'
+	Set @sObjet = 'Bascule vers la PPR SAGA2'
+End 
+
+Print @sMessage 
+
+Set @sMailBody = 'Bonjour ' + char (10)
+Set @sMailBody = @sMailBody + char (10)
+Set @sMailBody = @sMailBody + @sMessage + char (10)
+Set @sMailBody = @sMailBody + CHAR ( 10 )
+Set @sMailBody = @sMailBody + 'Cordialement,'
+Set @sMailBody = @sMailBody + CHAR ( 10 )
+Set @sMailBody = @sMailBody + CHAR ( 10 )
+Set @sMailBody = @sMailBody + 'Fabry Jean-François'
+Set @sMailBody = @sMailBody + CHAR ( 10 )
+Set @sMailBody = @sMailBody + 'DSI Team SIMPA2' + CHAR ( 10 )
+Set @sMailBody = @sMailBody + 'Tech Lead' + CHAR ( 10 )
+
+ EXEC master.dbo.SPB_PS_MAIL   
+	@sRetourErrMail OUTPUT,   
+	'jfabry@spb.eu,mhanouet@spb.eu,sguesmi@spb.eu,ochaouachi@spb.eu,hbadrane@spb.eu',  
+	@sMailBody, 
+	@sObjet, 
+	null, 
+	null, 
+	@sFicOut, 
+	NULL, 
+	NULL, 
+	NULL, 
+	NULL
+
+Go
+
 
 
 
