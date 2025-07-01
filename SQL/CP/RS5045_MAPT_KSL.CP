@@ -22,7 +22,7 @@ Go
 -- sysadm.PS_RS5045_S_RECUPERER_LE_BLOB_COURRIER
 -- sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE
 -- sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL
--- sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V05
+-- sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V04
 -- sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8
 -- sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL
 -- sysadm.PS_RS5045_U_OPTIMISER_CHAINE_DATA_XML_KSL
@@ -3567,9 +3567,22 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 	Delete @TbWork Where marquage = 100
 	While Exists ( Select Top 1 1 From @TbWork where marquage = 1 And id_arch > 0 )
 	 Begin
-		-- Attente de n minutes
-		Set @iDelaiAttenteMinute = 8
-	    -- Set @iDelaiAttenteMinute = 2
+		-- Attente de n minutes 
+
+		/*
+			2m => descente 250 
+			5m => Conversion 250 
+			2m23 => déplacement 250
+ 
+			Donc je vois 
+			0 à 05 Descente ( 5 minutes )
+			05 à 13 conversion ( 8 minutes )
+			13 à ... déplacement (6 minutes max jusqu'à 20 pour déplacer)
+		*/
+
+		Set @iDelaiAttenteMinute = 13 -- nouveau délai [ICI][DELAI_CONVERSION]
+		-- Set @iDelaiAttenteMinute = 8 config avant
+	    -- Set @iDelaiAttenteMinute = 2 pour mes test
 		Set @sMsgTrc = 'Conversion de tous les courriers Word au format PDF en cours... (attente de ' + Convert ( Varchar (10), @iDelaiAttenteMinute ) + ' minutes avant reprise du traitement )'
 		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'CONPDF', 'ENC', @sMsgTrc, @iIdLotTrc
 
