@@ -2527,7 +2527,7 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 
 	Set @sServeurProduction = 'PRO'
 
-	Set @sDestinataire = 'jff@spb.fr,cbourdoiseau@spb.eu,DBOUCQ@spb.eu,GG_DSI-DO-INFRA-SERVEUR_Coll@spb.eu,GG_DSI-DO-INFRA-SERVEUR_Ext@spb.eu'
+	Set @sDestinataire = 'jff@spb.fr,cbourdoiseau@spb.eu,DBOUCQ@spb.eu,GG_DSI-DO-INFRA-SERVEUR_Coll@spb.eu,GG_DSI-DO-INFRA-SERVEUR_Ext@spb.eu,GG_DSI-DO-PI_Coll@spb.eu'
 
 	-- Obtention répertoire local pour le cas des courriers Word 
 	Select @sRepBlobLocal = 
@@ -2976,6 +2976,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INSOBJ', 'ERR', @sMsgTrc, @iIdLotTrc
 
 		Set @sObjet = '[ALERTE] [Traitement MATP SQL C#] => Instanciation objet ADODB.Stream impossible'
+		If @sServeurProduction = 'SIM' Set @sObjet = '[RECETTE] - ' + @sObjet 
 
 		Set @sObjet = Left ( @sObjet + space ( 255 ), 255 )
 		Exec sysadm.PS_CASSER_REGLE_CHAINE @sObjet Output, '_', ' ' 
@@ -2983,13 +2984,17 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		Set @sMailBody = 'Bonjour ' + char (10)
 		Set @sMailBody = @sMailBody + char (10)
 		Set @sMailBody = @sMailBody + 'Serveur : ' + @@SERVERNAME 
-		If @@SERVERNAME = 'SQL14SINISTRES\SINISTRES' Set @sMailBody = @sMailBody + ' (Alias [LS-SINISTRES])'
 		If @@SERVERNAME In ( 'SQLPRD03\INSTANCE05', 'SQLPRD04\INSTANCE05') Set @sMailBody = @sMailBody + ' (Alias [LSTAGF005001])'
 		Set @sMailBody = @sMailBody + char (10)		
+		Set @sMailBody = @sMailBody + 'Environnement : ' 
+			If @sServeurProduction = 'SIM' Set @sMailBody = @sMailBody + 'SIMULATION'
+			If @sServeurProduction = 'PRO' Set @sMailBody = @sMailBody + 'PRODUCTION'
+			Set @sMailBody = @sMailBody + char (10)
+
 		Set @sMailBody = @sMailBody + 'base    : ' + DB_NAME () + char (10)
 		Set @sMailBody = @sMailBody + char (10)
 		Set @sMailBody = @sMailBody + 'Contexte de l''erreur : L''objet SqlServer ADODB.Stream ne peut plus s''intancier, la conséquence est que les mails SHERPA/SIMPA2/PEGASE destinés aux assurés '
-		Set @sMailBody = @sMailBody + 'ne sont plus déposés pour que le scrutateur KSL les ramasse, les mails ne partent donc plus.' + char (10)
+		Set @sMailBody = @sMailBody + 'ne sont plus déposés pour que le scrutateur KSL les ramasse, les mails avec courriers PDF ne partent donc plus.' + char (10)
 		Set @sMailBody = @sMailBody + char (10)
 		Set @sMailBody = @sMailBody + 'Une des causes possibles :' + char (10)
 		Set @sMailBody = @sMailBody + '- Une soirée patch la veille a pu faire sauter le droit d''instanciation de cet objet OLE SqlServer lors d''un reboot du serveur qui s''est mal terminé (par exemple).' + char (10)
@@ -3002,7 +3007,6 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		Set @sMailBody = @sMailBody + 'la valeur config_value doit être à 1 (activée) à présent' + char (10)
 		Set @sMailBody = @sMailBody + CHAR ( 10 )
 		Set @sMailBody = @sMailBody + '- Sinon vérifiez les actions SQL récemment engagées par l''équipe INFRA sur ' + @@Servername  
-		If @@SERVERNAME = 'SQL14SINISTRES\SINISTRES' Set @sMailBody = @sMailBody + ' (Alias [LS-SINISTRES])'
 		If @@SERVERNAME In ( 'SQLPRD03\INSTANCE05', 'SQLPRD04\INSTANCE05') Set @sMailBody = @sMailBody + ' (Alias [LSTAGF005001])'
 		Set @sMailBody = @sMailBody + ' .' + CHAR ( 10 )
 		Set @sMailBody = @sMailBody + '  Consultez la trace du traitement avec ces 2 Select pour voir depuis quand le problème se produit ' + CHAR ( 10 )
@@ -3010,7 +3014,9 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		Set @sMailBody = @sMailBody + '  Select * from ' + DB_NAME () + '.sysadm.trace_matp_es_sinistre_ksl_rs5045 where cod_etat = ''ERR'' and cree_le > ''' + @sDateHeureDebTrt + ''' order by 1' + CHAR ( 10 )
 		Set @sMailBody = @sMailBody + '  Select * from ' + DB_NAME () + '.sysadm.trace_matp_es_sinistre_ksl_rs5045 where cree_le > ''' + @sDateHeureDebTrt + ''' order by 1 desc' + CHAR ( 10 )
 		Set @sMailBody = @sMailBody + CHAR ( 10 )
-		Set @sMailBody = @sMailBody + 'L''alerte reviendra dans 20 minutes tant que le problème ne sera pas résolu.' + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + 'Le problème peut malgré être juste ponctuel, s''il ne se reproduit pas au prochain tout, ce sera résolu automatiquement.' + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + 'A l''inverse, L''alerte reviendra toutes les 20 minutes tant que le problème ne sera pas résolu.' + CHAR ( 10 )
 		Set @sMailBody = @sMailBody + CHAR ( 10 )
 		Set @sMailBody = @sMailBody + 'Cordialement,'
 		Set @sMailBody = @sMailBody + CHAR ( 10 )
@@ -3844,12 +3850,12 @@ Exec @iRet = sysadm.PS_DETRUIRE_UN_OBJET_SQL_SERVER @iHandle
 
 If @iRet = 0 
 	Begin 
-		Set @sMsgTrc = 'La détruction de l''objet SqlServer ADODB.Stream a été effectuée avec succès'
+		Set @sMsgTrc = 'La destruction de l''objet SqlServer ADODB.Stream a été effectuée avec succès'
 		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'DESOBJ', 'OK', @sMsgTrc, @iIdLotTrc
 	End
 Else
 	Begin 
-		Set @sMsgTrc = 'La détruction de l''objet SqlServer ADODB.Stream se termine en échec'
+		Set @sMsgTrc = 'La destruction de l''objet SqlServer ADODB.Stream se termine en échec'
 		Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'DESOBJ', 'ERR', @sMsgTrc, @iIdLotTrc
 	End
 
@@ -3865,6 +3871,7 @@ If @iRowCountWord + @iRowCountHWord  > 0
 			Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INFO', 'ERR', @sMsgTrc, @iIdLotTrc
 
 			Set @sObjet = '[ERREUR] [Traitement MATP SQL C#] => Erreurs sur traitement Lot ' + CONVERT (VarChar ( 20), @iIdLotTrc ) + ', (' + Convert ( Varchar ( 20 ), @iCptTraite ) + '/' + Convert ( Varchar ( 20 ), @iRowCountWord + @iRowCountHWord ) + ')'
+			If @sServeurProduction = 'SIM' Set @sObjet = '[RECETTE] - ' + @sObjet 
 
 			Set @sObjet = Left ( @sObjet + space ( 255 ), 255 )
 			Exec sysadm.PS_CASSER_REGLE_CHAINE @sObjet Output, '_', ' ' 
@@ -3872,6 +3879,11 @@ If @iRowCountWord + @iRowCountHWord  > 0
 			Set @sMailBody = 'Bonjour ' + char (10)
 			Set @sMailBody = @sMailBody + char (10)
 			Set @sMailBody = @sMailBody + 'Serveur : ' + @@SERVERNAME + char (10)
+			Set @sMailBody = @sMailBody + 'Environnement : ' 
+				If @sServeurProduction = 'SIM' Set @sMailBody = @sMailBody + 'SIMULATION'
+				If @sServeurProduction = 'PRO' Set @sMailBody = @sMailBody + 'PRODUCTION'
+				Set @sMailBody = @sMailBody + char (10)
+
 			Set @sMailBody = @sMailBody + 'base    : ' + DB_NAME () + char (10)
 			Set @sMailBody = @sMailBody + char (10)
 			Set @sMailBody = @sMailBody + 'Le lot de traitement ' + CONVERT (VarChar ( 20), @iIdLotTrc ) + ' contient des erreurs, traitement de ' + Convert ( Varchar ( 20 ), @iCptTraite ) + ' mail(s) sur ' + Convert ( Varchar ( 20 ), @iRowCountWord + @iRowCountHWord ) + ' mail(s).' + char (10)
@@ -3886,12 +3898,17 @@ If @iRowCountWord + @iRowCountHWord  > 0
 			Set @sMailBody = @sMailBody + 'L''alerte reviendra dans 20 minutes tant que le problème ne sera pas résolu.' + CHAR ( 10 )
 			Set @sMailBody = @sMailBody + 'Le programme est fait de façon à résoudre seul certains problèmes, si l''alerte ne revient pas dans 20 minutes, le programme aura résolu le problème.' + CHAR ( 10 )
 			Set @sMailBody = @sMailBody + CHAR ( 10 )
+			Set @sMailBody = @sMailBody + 'A l''inverse, si l''erreur revient toutes les 20 minutes, voyez avec Nicolas (Lerberquier)' + CHAR ( 10 )
+			Set @sMailBody = @sMailBody + 'En l''absence de Nicolas, voyez pourquoi le JOB du Scheduler Windows (j''ai bien dit Windows et pas SMA) dont le nom est "MATP SQL JFF_PROD" sur opcoex2k12 ne tourne pas normalement.' + CHAR ( 10 )
+			Set @sMailBody = @sMailBody + 'Pour plus d''infos sur le process, lisez le fichier "C:\PB_OPCON\MATP ESvKSL\LISEZ_MOI.TXT" sur opcoex2k12 ' + CHAR ( 10 )
+			Set @sMailBody = @sMailBody + CHAR ( 10 )
+			Set @sMailBody = @sMailBody + CHAR ( 10 )	
 			Set @sMailBody = @sMailBody + 'Cordialement,'
 			Set @sMailBody = @sMailBody + CHAR ( 10 )
 			Set @sMailBody = @sMailBody + CHAR ( 10 )
 			Set @sMailBody = @sMailBody + 'Fabry Jean-François'
 			Set @sMailBody = @sMailBody + CHAR ( 10 )
-			Set @sMailBody = @sMailBody + 'DSI/IPDDEV Team SIMPA2' + CHAR ( 10 )
+			Set @sMailBody = @sMailBody + 'DSI Team SIMPA2' + CHAR ( 10 )
 			Set @sMailBody = @sMailBody + 'Legacy Application Tech Lead' + CHAR ( 10 )
 
 			EXEC master.dbo.SPB_PS_MAIL 
@@ -3917,7 +3934,6 @@ Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'FINTRT', 'OK', @sMsg
 
 
 Go
-
 
 --------------------------------------------------------------------
 --

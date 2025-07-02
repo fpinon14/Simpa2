@@ -1213,59 +1213,60 @@ Go
 --	                        
 -------------------------------------------------------------------
 
-Drop function sysadm.FN_TAG
-
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_TAG' AND type = 'FN' )
+        DROP function sysadm.FN_TAG
 Go
-
-CREATE  function sysadm.FN_TAG  (
-        @aiCas Integer,
-        @sVal Varchar(200),
-	@dtGetDate DateTime )
-RETURNS Varchar(200)
-
-AS
-
-Begin
-
-  Declare @sTag VarChar ( 100 )
-
-  If @sVal is null Set @sVal = ''
-
-  If @aiCas = 1 
-    Begin
   
-		  If sysadm.FN_TRIM ( @sVal ) <> '' Set @sVal = '[' + @sVal + '].'
-
-		  Select @sTag = Convert ( Varchar ( 100 ), @dtGetDate, 126 )
-		  
-		  Set @sTag = 	Left ( @sTag, 4 ) + 
-  				SubString ( @sTag, 6,2 ) +
-  				SubString ( @sTag, 9,2 ) +
-  				SubString ( @sTag, 12,2 ) +  		
-  				SubString ( @sTag, 15,2 ) +  
-  				SubString ( @sTag, 18,2 ) +  		
-  				SubString ( @sTag, 21,3 ) 
-
-		  Set @sVal = @sVal + '[' + @sTag + ']'
-	End
-	
-  If @aiCas = 2 
-    Begin
-		  Select @sTag = Convert ( Varchar ( 100 ), @dtGetDate, 126 )
-		  
-		  Set @sTag = 	Left ( @sTag, 4 ) + 
-  				SubString ( @sTag, 6,2 ) +
-  				SubString ( @sTag, 9,2 ) +
-  				SubString ( @sTag, 12,2 ) +  		
-  				SubString ( @sTag, 15,2 ) +  
-  				SubString ( @sTag, 18,2 ) +  		
-  				SubString ( @sTag, 21,3 ) 
-  		
-  		  Set @sVal = '[SQL][PROD][SQLSINISTRES\SINISTRES][SIMPA2_PRO]' + @sTag
-    End 	
-	
-  Return @sVal 
-End
+CREATE  function sysadm.FN_TAG  (  
+        @aiCas Integer,  
+        @sVal Varchar(200),  
+		 @dtGetDate DateTime )  
+RETURNS Varchar(200)  
+  
+AS  
+  
+Begin  
+  
+  Declare @sTag VarChar ( 100 )  
+  
+  If @sVal is null Set @sVal = ''  
+  
+  If @aiCas = 1   
+    Begin  
+    
+    If sysadm.FN_TRIM ( @sVal ) <> '' Set @sVal = '[' + @sVal + '].'  
+  
+    Select @sTag = Convert ( Varchar ( 100 ), @dtGetDate, 126 )  
+      
+    Set @sTag =  Left ( @sTag, 4 ) +   
+      SubString ( @sTag, 6,2 ) +  
+      SubString ( @sTag, 9,2 ) +  
+      SubString ( @sTag, 12,2 ) +      
+      SubString ( @sTag, 15,2 ) +    
+      SubString ( @sTag, 18,2 ) +      
+      SubString ( @sTag, 21,3 )   
+  
+    Set @sVal = @sVal + '[' + @sTag + ']'  
+ End  
+   
+  If @aiCas = 2   
+    Begin  
+    Select @sTag = Convert ( Varchar ( 100 ), @dtGetDate, 126 )  
+      
+    Set @sTag =  Left ( @sTag, 4 ) +   
+      SubString ( @sTag, 6,2 ) +  
+      SubString ( @sTag, 9,2 ) +  
+      SubString ( @sTag, 12,2 ) +      
+      SubString ( @sTag, 15,2 ) +    
+      SubString ( @sTag, 18,2 ) +      
+      SubString ( @sTag, 21,3 )   
+      
+      Set @sVal = '[SQL][PROD][LSTAGF005001][SIMPA2_PRO]' + @sTag  
+    End    
+   
+  Return @sVal   
+End  
+  
 
 Go
 	
