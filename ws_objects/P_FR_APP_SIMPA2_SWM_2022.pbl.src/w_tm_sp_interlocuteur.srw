@@ -107,6 +107,7 @@ public function boolean wf_preparervalider ()
 public function boolean wf_preparerabandonner ()
 private subroutine wf_tb_consultation ()
 private subroutine wf_verifiermodeleword ()
+public function string wf_controlergestion ()
 end prototypes
 
 on ue_banque;call w_8_traitement_master::ue_banque;//*-----------------------------------------------------------------
@@ -593,6 +594,30 @@ End Choose
 
 uo_Courrier_Word.uf_ChangerModele ( Upper ( sModele ) )
 end subroutine
+
+public function string wf_controlergestion ();//*-----------------------------------------------------------------
+//*
+//* Fonction		: Wf_ControlerGestion (PUBLIC)
+//* Auteur			: Fabry JF
+//* Date				: 25/06/2025
+//* Libellé			: // [MIG147_KRYS]
+//* Commentaires	: Contrôle de gestion
+//*
+//* Arguments		: Aucun
+//*
+//* Retourne		: String			"" = Tout va bien
+//*
+//*-----------------------------------------------------------------
+
+s_Pass	stPass_Dga
+
+stPass_Dga.bInsert = istPass.bInsert
+iuoGsSpInterlocuteur.Uf_Traitement ( 5, stPass_Dga )
+
+Return ( stPass_Dga.sTab [ 1 ] ) 
+
+
+end function
 
 event ue_creer;call super::ue_creer;//*-----------------------------------------------------------------
 //*

@@ -89,6 +89,7 @@ private function integer uf_zn_altcourgest (string ascas)
 private function long uf_zn_adr_mail_name ()
 private function long uf_zn_adr_mail_domain ()
 public subroutine uf_controle_dp344 (ref integer aiaction, ref integer aierreur)
+private subroutine uf_controlergestion (ref s_pass astpass)
 end prototypes
 
 public subroutine uf_traitement (integer aitype, ref s_pass astpass);//*-----------------------------------------------------------------
@@ -105,6 +106,8 @@ public subroutine uf_traitement (integer aitype, ref s_pass astpass);//*--------
 //* Retourne		: Rien
 //*
 //*-----------------------------------------------------------------
+//       JFF   20/06/2025 [MIG147_KRYS]
+//*-----------------------------------------------------------------
 
 Choose Case aiType
 Case 1					// INITIALISATION		(Ue_Initialiser de la fenêtre)
@@ -119,7 +122,8 @@ Case 3					// INSERTION			(Wf_PreparerInserer)
 Case 4					// CONTROLE SAISIE	(Wf_ControlerSaisie) + (Wf_ControlerGestion)
 	Uf_ControlerSaisie ( astPass )
 
-Case 5					// CONTROLE GESTION	(Wf_ControlerGestion)
+Case 5					// CONTROLE GESTION	(Wf_ControlerGestion) [MIG147_KRYS]
+	Uf_ControlerGestion ( astPass )
 
 Case 6					// PREPARER VALIDER	(Wf_PreparerValider)
 	Uf_PreparerValider ( astPass )
@@ -2232,9 +2236,11 @@ private subroutine uf_preparersupprimer (ref s_pass astpass);//*----------------
 //* #2	FPI	26/01/2010	[201001261350] Empêcher la suppr de l'inter assuré
 //*-----------------------------------------------------------------
 
-String sFiltre
-Long lTotwParaInfo, lCpt, lTotSupp, lIdI, lTotwFrais
+String sFiltre, sCodInter, sValCar, sPos, sLibInter
+Long lTotwParaInfo, lCpt, lTotSupp, lIdI, lTotwFrais, lDeb, lFin
 Integer iRet
+
+sCodInter = idw_wInter.GetItemString ( 1, "COD_INTER" ) 
 
 /*------------------------------------------------------------------*/
 /* On vérifie si on se trouve sur l'onglet N° 01. (Onglet           */
@@ -2259,10 +2265,55 @@ If idw_winter.GetItemString(1,"COD_INTER") = "A" Then
 	iRet = 2
 Else
 // Fin #2
-	stMessage.bouton	 	= YesNo!
-	stMessage.sCode		= "GENE020"
 
-	iRet = F_Message ( stMessage )
+	// [MIG147_KRYS]
+	If F_CLE_A_TRUE ( "MIG147_KRYS" ) Then
+		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 401 )
+		If lDeb > 0 Then
+			sValCar = idw_DetPro.GetItemString(lDeb,"VAL_CAR" )
+			sValCar = F_CLE_VAL ("TYP_INTER", sValCar, ";") 
+			
+			If sValCar = "" Then
+				iRet = 2
+				stMessage.berreurg=FALSE
+				stMessage.bouton=Ok!
+				stMessage.icon=Information!
+				stMessage.stitre="Gestion des interlocuteurs"
+				stMessage.scode ="WINT321"
+				F_Message ( stMessage )
+			End If 
+			
+			
+			If sValCar <> "" And Not IsNull ( sCodInter ) And Pos ( sValCar, "#" + sCodInter + "#" ) > 0 Then
+				
+				sLibInter = SQLCA.FN_CODE_CAR ( sCodInter, "-IN" )
+		
+				iRet = 2		
+				stMessage.berreurg=FALSE
+				stMessage.bouton=Ok!
+				stMessage.icon=Information!
+				stMessage.stitre="Gestion des interlocuteurs"
+				stMessage.sVar[1] = sLibInter
+				stMessage.scode ="WINT322"
+				F_Message ( stMessage )		
+		
+			End If 
+
+		Else
+			stMessage.bouton	 	= YesNo!
+			stMessage.sCode		= "GENE020"
+		
+			iRet = F_Message ( stMessage )
+
+		End If 
+	Else
+		stMessage.bouton	 	= YesNo!
+		stMessage.sCode		= "GENE020"
+	
+		iRet = F_Message ( stMessage )
+		
+	End If
+
 End if // #2
 
 /*------------------------------------------------------------------*/
@@ -4444,6 +4495,70 @@ If lDeb > 0 Then
 		End If 
 	End If		
 End If 
+
+
+end subroutine
+
+private subroutine uf_controlergestion (ref s_pass astpass);//*-----------------------------------------------------------------
+//*
+//* Fonction		: Uf_ControlerGestion (PRIVATE)
+//* Auteur			: Fabry JF
+//* Date				: 25/06/2025
+//* Libellé			: 
+//* Commentaires	: Contrôle de gestion d'un interlocuteur
+//*
+//* Arguments		: s_Pass			astPass			(Réf) Structure de passage
+//*
+//* Retourne		: Rien
+//*
+//*-----------------------------------------------------------------
+
+String sPos, sCodInter, sValCar, sLibInter 
+Long lDeb, lFin 
+
+sPos = ""
+
+sCodInter = idw_wInter.GetItemString ( 1, "COD_INTER" ) 
+
+// [MIG147_KRYS]
+If F_CLE_A_TRUE ( "MIG147_KRYS" ) Then
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 400 )
+	If lDeb > 0 And astPass.bInsert Then
+		sValCar = idw_DetPro.GetItemString(lDeb,"VAL_CAR" )
+		sValCar = F_CLE_VAL ("TYP_INTER", sValCar, ";") 
+		
+		If sValCar = "" Then
+			sPos = "NOM"
+			stMessage.berreurg=FALSE
+			stMessage.bouton=Ok!
+			stMessage.icon=Information!
+			stMessage.stitre="Gestion des interlocuteurs"
+			stMessage.scode ="WINT918"
+			F_Message ( stMessage )
+		End If 
+		
+		
+		If sValCar <> "" And Not IsNull ( sCodInter ) And Pos ( sValCar, "#" + sCodInter + "#" ) > 0 Then
+			
+			sLibInter = SQLCA.FN_CODE_CAR ( sCodInter, "-IN" )
+	
+			sPos = "NOM"
+			stMessage.berreurg=FALSE
+			stMessage.bouton=Ok!
+			stMessage.icon=Information!
+			stMessage.stitre="Gestion des interlocuteurs"
+			stMessage.sVar[1] = sLibInter
+			stMessage.scode ="WINT919"
+			F_Message ( stMessage )		
+	
+		End If 
+	
+	End If 
+End If
+
+
+astPass.sTab [ 1 ] = sPos
+
 
 
 end subroutine

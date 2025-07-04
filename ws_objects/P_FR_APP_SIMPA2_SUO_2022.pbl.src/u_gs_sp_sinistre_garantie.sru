@@ -223,6 +223,8 @@ private function string uf_plaf_nbsinrgl_adhesi_renouv_splref611 ()
 private function string uf_plaf_nbsin_adhesion_annee_civile_gti ()
 private function string uf_plaf_adhesion_survenance_ttegti_mp ()
 private subroutine uf_controlergestion_carrefour_carma ()
+private function string uf_controlergestion_des_opticiens ()
+private function string uf_plaf_krys_cdl_mt_spec_si_nb_sup_1_sin ()
 end prototypes
 
 public subroutine uf_traitement (integer aitype, ref s_pass astpass);//*-----------------------------------------------------------------
@@ -1020,10 +1022,11 @@ private subroutine uf_controlergestion (ref s_pass astpass);//*-----------------
 //       JFF   22/01/2024 [RS6366_PCEREFUS]
 //       JFF   30/01/2025 [MON311_SPL_PACI]
 //       JFF   28/03/2025 [MCO1219]
+//       JFF   20/06/2025 [MIG147_KRYS]
 //*-----------------------------------------------------------------
 String 		sPos, sVal, sMarque, sVal1, sSql
 Decimal {2} dcMtPlafAReg
-Boolean		bSup
+Boolean		bSup, bAltBloc 
 Long lTotwRefus, lCpt, lIdGti, lRow, lRow2, lDeb, lFin, lVal, lVal1, lVal2, lTotLigne, lLigPce, lRow912, lRowDS, lCptDetPro
 n_cst_string lnvPFCString
 Boolean bBitMap, bMsg
@@ -1036,6 +1039,8 @@ Long lCodePcePB, lCodePceDBL, lCodePce, lLigPcePB, lLigPceDBL, iCodEtat, lTotdwP
 sPos						= ""
 bBitMap					= False
 bMsg						= False
+bAltBloc = idw_wGarSin.GetItemString ( 1, "ALT_BLOC" ) = "O"
+
 
 // #3 [DCMP090572]
 lIdGti = idw_wGarSin.GetItemNumber ( 1, "ID_GTI" )
@@ -1057,13 +1062,20 @@ idw_wGarSin.SetItem ( 1, "ALT_VALIDE", "O" )
 /* Si la garantie n'est pas bloquée, on déclenche la gestion des    */
 /* refus.                                                           */
 /*------------------------------------------------------------------*/
-If	idw_wGarSin.GetItemString ( 1, "ALT_BLOC" ) = "N"	Then
+If	Not bAltBloc Then
 	If	Not Uf_GestionRefus ()	Then	sPos = "MT_PROV"
 End If
 
 // [MCO1219]
 If F_CLE_A_TRUE ( "MCO1219" ) Then
 	This.uf_ControlerGestion_Carrefour_Carma ()
+End If
+
+// [MIG147_KRYS]
+If F_CLE_A_TRUE ( "MIG147_KRYS" ) Then
+	If Not bAltBloc and sPos = "" Then 
+	 	sPos = This.uf_ControlerGestion_Des_Opticiens ()
+	End If 
 End If
 
 /*------------------------------------------------------------------*/
@@ -1691,6 +1703,8 @@ If F_CLE_A_TRUE ( "MON311_SPL_PACI" ) Then
 	End If 	
 End If
 */
+
+
 	
 astPass.sTab [ 1 ] = sPos
 
@@ -3399,6 +3413,7 @@ private function boolean uf_gestionrefus ();//*---------------------------------
 //       JFF   07/05/2013 [DT509]
 // 		JFF   02/11/2020 [VDOC29786]
 // 		JFF   06/10/2020 [PLAFOND762_ISM215077]
+//       JFF   20/06/2025 [MIG147_KRYS]
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
@@ -3738,6 +3753,10 @@ If sPos = "" Then sPos = Uf_Plaf_NbSin_Adhesion_annee_civile_gti ()
 // [PLAFOND762_ISM215077]
 If sPos = "" Then sPos = uf_plaf_adhesion_survenance_ttegti_mp ()
 
+// [MIG147_KRYS]
+If F_CLE_A_TRUE ( "MIG147_KRYS" ) Then
+	If sPos = "" Then sPos = Uf_Plaf_KRYS_CDL_MT_SPEC_SI_NB_SUP_1_SIN ()	
+End If
 
 If sPos <> "" Then Return False
 
@@ -5312,6 +5331,7 @@ private function string uf_calcul_montantregle ();//*---------------------------
 // 		 JFF   02/11/2020   [VDOC29786]
 // 		 JFF   06/10/2020   [PLAFOND762_ISM215077]
 // 		 JFF   12/01/2021   [FORCAGE_REFUS]
+//        JFF   20/06/2025   [MIG147_KRYS]
 //*-----------------------------------------------------------------
 
 String sPos
@@ -5508,6 +5528,10 @@ If sPos = "" Then sPos = Uf_Plaf_NbSin_Adhesion_annee_civile_gti ()
 // [PLAFOND762_ISM215077]
 If sPos = "" Then sPos = uf_plaf_adhesion_survenance_ttegti_mp ()
 
+// [MIG147_KRYS]
+If F_CLE_A_TRUE ( "MIG147_KRYS" ) Then
+	If sPos = "" Then sPos = Uf_Plaf_KRYS_CDL_MT_SPEC_SI_NB_SUP_1_SIN ()	
+End If
 
 /*------------------------------------------------------------------*/
 /* On calcule une franchise éventuelle.                             */
@@ -21117,6 +21141,238 @@ Next
 
 
 end subroutine
+
+private function string uf_controlergestion_des_opticiens ();//*-----------------------------------------------------------------
+//*
+//* Fonction		: U_Gs_Sp_Sinistre_wDetail::uf_ControlerGestion_Des_Opticiens (PRIVATE)
+//* Auteur			: Fabry JF
+//* Date				: 20/06/2025
+//* Libellé			: [MIG147_KRYS]
+//* Commentaires	: Controle de gestion spécifique aux opticiens
+//*
+//* Arguments		: Aucun
+//*
+//* Retourne		: Integer
+//*
+//*-----------------------------------------------------------------
+
+String sPos, sVariante
+Long lDeb, lFin, lCount, lCount2 
+
+
+sPos = ""
+
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 403 )
+If lDeb <= 0 Then Return sPos
+
+sVariante = F_CLE_VAL ( "VARIANTE", idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), ";" )
+
+Choose Case sVariante 
+	Case "KRYS"
+		
+		idw_LstDetail.SetFilter ( "COD_ETAT = 500 AND ALT_REG = 'N'" )
+		idw_LstDetail.Filter ()
+		lCount = idw_LstDetail.RowCount() 
+		
+		// Si 2 evt avec un A_REGLER (500)alors « vous ne pouvez pas régler 2 evt, dans ce cas, régler sur « Tout l’équipement » 
+		If lCount > 1 Then
+				stMessage.sTitre		= "Contrôle de gestion d'une garantie"
+				stMessage.Icon			= Information!
+				stMessage.bErreurG	= FALSE
+				stMessage.sCode		= "WGAR446"
+
+				F_Message ( stMessage )
+				
+				sPos = "MT_PROV"
+		End IF 
+
+		idw_LstDetail.SetFilter ( "COD_ETAT = 600 AND ALT_REG = 'N'" )
+		idw_LstDetail.Filter ()
+		lCount = idw_LstDetail.RowCount() 
+
+		idw_LstDetail.SetFilter ( "ALT_REG = 'O'" )
+		idw_LstDetail.Filter ()
+		lCount2 = idw_LstDetail.RowCount() 		
+		
+		// Si un evt déjà REGLE (600) alors « vous ne pouvez effectuer qu’un seul règlement (pour une question de calcul de plafond ) »
+		If lCount > 0 And lCount2 <=0 Then
+				stMessage.sTitre		= "Contrôle de gestion d'une garantie"
+				stMessage.Icon			= Information!
+				stMessage.bErreurG	= FALSE
+				stMessage.sCode		= "WGAR447"
+
+				F_Message ( stMessage )
+				
+				sPos = "MT_PROV"
+		End IF 
+		
+		
+End Choose 
+
+
+idw_LstDetail.SetFilter ( "" )
+idw_LstDetail.Filter ()
+idw_LstDetail.Sort ()
+
+Return sPos
+
+end function
+
+private function string uf_plaf_krys_cdl_mt_spec_si_nb_sup_1_sin ();//*-----------------------------------------------------------------
+//*
+//* Fonction		: Uf_Plaf_KRYS_CDL_MT_SPEC_SI_NB_SUP_1_SIN (PRIVATE)
+//* Auteur			: Fabry JF
+//* Date				: 04/07/2025
+//* Libellé			: [MIG147_KRYS]
+//* Commentaires	: Plafond spécial Opticiens KRYS et CDL, Si plus d'un 1 sin indem, alors les suivants sont sur un plafond fixe
+//*
+//* Arguments		: Aucun
+//*
+//* Retourne		: Rien
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//*-----------------------------------------------------------------
+Long lTotPlaf, lLig, lCpt, lLigFinale
+Decimal {2} dcPlafond, dcPlafSav, dcPlafTmp
+Integer iNbAutreSin, iSinEnCours
+Long dcIdSin, dcIdProd, dcIdEts
+DateTime dtDteSurv
+String sRech, sPos, sIdAdh, sIdPara, sCptVer, sIdNivPlaf, sIdRefPlaf
+
+sPos = ""
+
+/*------------------------------------------------------------------*/
+/* On vérifie s'il existe un plafond par sinistre.                  */
+/*------------------------------------------------------------------*/
+lTotPlaf = idw_Plafond.RowCount ()
+dcPlafSav = 0
+
+For lCpt = 1 to 4
+
+	Choose Case lCpt
+		Case 1
+			sIdNivPlaf = "-GA"  // Garantie
+			sIdRefPlaf = "-1"
+		Case 2
+			sIdNivPlaf = "+NS"  // Nature de sinistre
+			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_NATSIN" ) )
+		Case 3
+			sIdNivPlaf = "+TR"  // Territorialité
+			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_TERRIT" ) )
+		Case 4
+			sIdNivPlaf = "+DT"  // Détail
+			sIdRefPlaf = String ( idw_wSin.GetItemNumber ( 1, "ID_DETSIN" ) )
+
+	End Choose
+
+	If IsNull ( sIdRefPlaf ) Then Continue
+
+	/*------------------------------------------------------------------*/
+	/* On vérifie s'il existe un plafond										  */
+	/*------------------------------------------------------------------*/
+	sRech	=		"ID_PROD = "		+ String ( idw_wSin.GetItemNumber ( 1, "ID_PROD" ) ) 			+ " AND " 	+ &
+					"ID_REV = "			+ String ( idw_wSin.GetItemNumber ( 1, "ID_REV" ) ) 			+ " AND " 	+ &
+					"ID_GTI = "			+ String ( idw_wGarSin.GetItemNumber ( 1, "ID_GTI" ) )		+ " AND " 	+ &
+					"ID_NIV_PLAF = '"  + sIdNivPlaf 																+ "' AND " 	+ &
+					"ID_REF_PLAF = "	+ sIdRefPlaf 																+ " AND " 	+ &
+					"ID_CPT_PLAF = 0"	 																				+ " AND " 	+ &
+					"ID_TYP_PLAF = '764'"
+
+	lLig = idw_Plafond.Find ( sRech, 1, lTotPlaf )
+
+	If lLig > 0 Then	
+
+		dcPlafTmp		= idw_Plafond.GetItemDecimal ( lLig, "MT_PLAF" )
+
+		If dcPlafSav <> 0 Then
+
+			If dcPlafTmp < dcPlafSav Then 
+				dcPlafSav = dcPlafTmp 
+				lLigFinale = lLig
+			End If
+
+		Else
+			dcPlafSav = dcPlafTmp 
+			lLigFinale = lLig
+		End If
+	End If
+
+Next
+
+lLig = lLigFinale
+
+If	lLig > 0 Then
+/*------------------------------------------------------------------*/
+/* On recupére les autres sinistres si besoin, on fait appel à la   */
+/* procédure stockée.                                               */
+/*------------------------------------------------------------------*/
+	dcIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
+	dcIdProd		= idw_wSin.GetItemNumber ( 1, "ID_PROD" )
+	dcIdEts		= idw_wSin.GetItemNumber ( 1, "ID_ETS" )
+	sIdAdh		= idw_wSin.GetItemString ( 1, "ID_ADH" )
+				
+	iNbAutreSin = 0
+
+	itrTrans.PS_S764_W_GTI_KRYS_CDL_NBSIN ( dcIdSin, dcIdProd, dcIdEts, sIdAdh, iNbAutreSin )
+	If	Not F_Procedure ( stMessage, itrTrans, "PS_S764_W_GTI_KRYS_CDL_NBSIN" )	Then 
+/*------------------------------------------------------------------*/
+/* Il y a une erreur dans l'appel de la procédure, la structure     */
+/* stMessage vient d'être armée, on affiche le message.             */
+/*------------------------------------------------------------------*/
+		f_Message ( stMessage )
+		sPos = "MT_PROV"
+	Else
+/*------------------------------------------------------------------*/
+/* On détermine si on dépasse le plafond.                           */
+/*------------------------------------------------------------------*/
+
+/*------------------------------------------------------------------*/
+/* Modification DBI le 12/08/1998                                   */
+/*                                                                  */
+/* La zone à prendre en compte pour le calcul du montant plafonné   */
+/* n'est pas MT_NPLAF_AREG mais MT_PLAF_AREG sinon on ne            */
+/* tient pas compte des plafonds appliqués successivement           */
+/*------------------------------------------------------------------*/
+
+		dcPlafond		= idw_Plafond.GetItemDecimal ( lLig, "MT_PLAF"   )
+		iSinEnCours		= 1
+
+		If	iSinEnCours + iNbAutreSin > 1	Then
+			IF dcPlafond > 0 Then
+				idw_wGarSin.SetItem ( 1, "MT_PLAF_AREG", dcPlafond )
+	
+				// [PLAF_REF]  // [VDOC6662]
+				sPos = Uf_Plaf_Refus ( "764", "REF_PLAF_NUM_>0" )
+			Else
+				idw_wGarSin.SetItem ( 1, "MT_PLAF_AREG", 0 )
+				// [PLAF_REF]
+				sPos = Uf_Plaf_Refus ( "764", "NORMAL" )
+			End If					
+	
+			idw_wGarSin.SetItem ( 1, "ALT_PLAF", 	"O" )
+
+/*------------------------------------------------------------------*/
+/* On insére le paragraphe de plafond dans la DW.                   */
+/*------------------------------------------------------------------*/
+			sIdPara	= idw_Plafond.GetItemString ( lLig, "ID_PARA" )
+			sCptVer	= idw_Plafond.GetItemString ( lLig, "CPT_VER" )
+			Uf_Plaf_EcrirePara ( "764", sIdPara, sCptVer )
+			
+		End If
+	
+	End If
+End If
+
+If idw_wGarSin.GetItemDecimal ( 1, "MT_PLAF_AREG" ) < 0 Then
+	idw_wGarSin.SetItem ( 1, "MT_PLAF_AREG", 0 )	
+End If
+
+
+Return ( sPos )
+	
+
+end function
 
 on u_gs_sp_sinistre_garantie.create
 call super::create

@@ -16260,7 +16260,16 @@ For lCpt = 1 To lTot
 			  "RS1921_AMTRUST",&
 			  "CTRL_IMEI_MANUEL", &
 			  "SKU_GARANTIE_SAGA2", &
-			  "ADH_DEJA_INDEM"
+			  "ADH_DEJA_INDEM", &
+			  "DTE_ACH_ADH_ELT_1", &
+			  "DTE_ACH_ADH_ELT_2", &
+			  "DTE_ACH_ADH_ELT_3", &
+			  "ELEMENT_ADH_1", &
+			  "ELEMENT_ADH_2", &			  
+			  "ELEMENT_ADH_3", &			  
+			  "MT_VAL_ACHAT_ADH_ELT_1", &
+			  "MT_VAL_ACHAT_ADH_ELT_2", &
+			  "MT_VAL_ACHAT_ADH_ELT_3" &			  
 			  
   			  idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "O" )
 
@@ -18413,6 +18422,7 @@ private function long uf_zn_boutique ();//*-------------------------------------
 //* 		   JFF   04/11/2010  [PC301].[LOT2]
 //* 		   JFF   27/03/2014  [DT076]
 //          JFF   05/08/2024  [MCO602_PNEU]
+//          JFF   20/06/2025  [MIG147_KRYS]
 //*-----------------------------------------------------------------
 
 String	sFind, sGetText, sIdEntrepot 
@@ -18497,6 +18507,16 @@ If F_CLE_A_TRUE ( "MCO602_PNEU" ) Then
 			idw_wSin.iiErreur = 3
 			iAction = 1
 		End If 
+	End If
+End If
+
+
+// [MIG147_KRYS]
+If F_CLE_A_TRUE ( "MIG147_KRYS" ) Then
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 399 )
+	If lDeb > 0 Then
+		idw_wSin.iiErreur = 4
+		iAction = 1
 	End If
 End If
 

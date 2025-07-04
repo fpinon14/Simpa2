@@ -832,6 +832,9 @@ function Integer PS_S_RECH_ID_HUB_PRESTA_SUR_UN_DOSSIER ( Long adcIdSin, String 
 //   JFF   23/05/2025 [HUB1528]
 function Integer PS_HP276_S_S2_CONDITION_ANNULATION_PRS_HUB ( String sIdHubPresta ) RPCFUNC ALIAS FOR "sysadm.PS_HP276_S_S2_CONDITION_ANNULATION_PRS_HUB"
 
+//   JFF   20/06/2025 [MIG147_KRYS]
+subroutine PS_S764_W_GTI_KRYS_CDL_NBSIN ( long dcIdSin, long dcIdProd, long dcIdEts, string sIdAdh, Ref Integer iNbSin ) RPCFUNC ALIAS FOR "sysadm.PS_S764_W_GTI_KRYS_CDL_NBSIN"
+
 end prototypes
 type variables
 Private:

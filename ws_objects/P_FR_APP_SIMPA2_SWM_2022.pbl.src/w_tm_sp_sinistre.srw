@@ -4462,7 +4462,11 @@ Choose Case Upper ( This.GetColumnName () )
 					Else
 						// Sinon on déclenche l'ancêtre, et la suite ci-dessous
 						Call super::itemerror
-					End If 
+					End If
+				Case Else 
+					// Sinon on déclenche l'ancêtre, et la suite ci-dessous
+					Call super::itemerror
+				
 			End Choose	
 		End If
 
@@ -4618,6 +4622,13 @@ If	ibErreur Then
 			stMessage.bErreurG	= False
 			stMessage.sCode		= "WSIN902"
 			stMessage.Icon			= Information!
+
+		// [MIG147_KRYS]
+		Case 4
+			stMessage.bErreurG	= False
+			stMessage.sCode		= "WSIN932"
+			stMessage.Icon			= Information!
+
 
 		End Choose
 
