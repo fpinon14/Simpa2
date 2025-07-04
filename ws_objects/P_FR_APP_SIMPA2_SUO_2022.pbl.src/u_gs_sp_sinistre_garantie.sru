@@ -21168,7 +21168,7 @@ If lDeb <= 0 Then Return sPos
 sVariante = F_CLE_VAL ( "VARIANTE", idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), ";" )
 
 Choose Case sVariante 
-	Case "KRYS"
+	Case "KRYS", "COLLECTIF_DES_LUNETIERS"
 		
 		idw_LstDetail.SetFilter ( "COD_ETAT = 500 AND ALT_REG = 'N'" )
 		idw_LstDetail.Filter ()
