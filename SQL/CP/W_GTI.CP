@@ -1896,7 +1896,7 @@ GO
 -- JFF      20/01/2014   [PM208]
 -- JFF		09/02/2016   [ITSM361927]
 -- JFF      12/02/2016   [PI062]
--- JFF      07/05/2013   [MIG19_PSPLAF_SAGA2]
+-- JFF      07/05/2025   [MIG19_PSPLAF_SAGA2]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S07_W_GTI_NBSIN' AND type = 'P' )
         DROP procedure sysadm.PS_S07_W_GTI_NBSIN
@@ -6044,3 +6044,99 @@ AS
   End
 GO
 
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S764_W_GTI_KRYS_CDL_NBSIN
+-- Auteur               :       Fabry JF
+-- Date                 :       03/07/2025
+-- Libellé              :       [MIG147_KRYS]
+-- Commentaires         :       Plafond spécifique pour les Opticiens
+-- Références           :       W_TM_SP_W_GTI
+--
+--
+-- Retourne             :       Rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S764_W_GTI_KRYS_CDL_NBSIN' AND type = 'P' )
+        DROP procedure sysadm.PS_S764_W_GTI_KRYS_CDL_NBSIN
+GO
+
+CREATE procedure sysadm.PS_S764_W_GTI_KRYS_CDL_NBSIN
+        @dcIdSin        Decimal (  10,0 ), -- [PI062]
+        @dcIdProd       Decimal (  7,0 ),
+        @dcIdEts        Decimal (  7,0 ),
+        @sIdAdh         Varchar ( 19   ),
+		@iNbSin			Integer	 OUTPUT
+AS
+
+-- 764
+
+ Declare @sCodAdh   VarChar ( 1 )
+ Declare @sNom		VarChar ( 35 ) -- [ITSM361927]
+ Declare @sPrenom	VarChar ( 35 ) -- [ITSM361927]
+
+ Select @sCodAdh = p.cod_adh,
+		@sNom = s.nom,  -- [ITSM361927]
+		@sPrenom = s.prenom   -- [ITSM361927]
+ From	sysadm.produit p,
+		sysadm.w_sin s
+ Where  s.id_sin = @dcIdSin
+ And	p.id_prod = s.id_prod
+ 
+ If @sCodAdh <> '3' 
+  Begin
+	 SELECT @iNbSin  = count ( * )
+	 FROM   sysadm.sinistre,
+			sysadm.gar_sin
+	 WHERE  sinistre.id_sin        			= gar_sin.id_sin                        AND
+			sinistre.id_sin        			<> @dcIdSin                             AND
+			sinistre.id_prod        		= @dcIdProd                             AND
+			sinistre.id_ets         		= @dcIdEts                              AND
+			sinistre.id_adh         		= @sIdAdh                               AND  
+			sinistre.cod_etat				in ( 550, 600 )
+  End        	        
+	        
+
+ If @sCodAdh = '3' 
+  Begin
+	 SELECT @iNbSin  = count ( * )
+	 FROM   sysadm.sinistre,
+			sysadm.gar_sin,
+			sysadm.personne p
+				
+	 WHERE  sinistre.id_sin        			= gar_sin.id_sin                        AND
+			sinistre.id_sin        			<> @dcIdSin                             AND
+			sinistre.id_prod        		= @dcIdProd                             AND
+			sinistre.id_ets         		= @dcIdEts                              AND
+			sinistre.id_adh         		= @sIdAdh                               AND  -- [PI038][RELEVE]
+			sinistre.cod_etat				in ( 550, 600 )					AND
+			p.id_ordre				= sinistre.id_ordre						AND -- [ITSM361927]
+			p.nom					= @sNom									AND -- [ITSM361927]
+			p.prenom				= @sPrenom -- [ITSM361927]				
+	        
+  End
+
+-- [MIG19_PSPLAF_SAGA2]
+If sysadm.FN_CLE_NUMERIQUE ( 'MIG19_PSPLAF_SAGA2') > 0 
+ Begin
+
+	 Declare @TbRetSaga2 Table ( 
+		id_seq Integer identity (1, 1 ),
+		id_sin integer,
+		subscription_number varchar ( 50 ),
+		indemnise VarChar ( 10 ),
+		mt_reg_assure Decimal ( 11, 2 ),
+		mode_indemnisation VarChar ( 50 ),
+		mode_indemnisation_long VarChar ( 50 ),
+		dte_adh DateTime,
+		dte_decl DateTime,
+		dte_surv DateTime
+	    )
+
+	 If @iNbSin is null Set @iNbSin = 0
+	 Insert into @TbRetSaga2 Exec sysadm.PS_S_SAGA2_PLAFOND_PAR_ANNEE_SUR_SAGA2 @dcIdSin, @sIdAdh 
+
+	 Set @iNbSin = @iNbSin + IsNull ( ( Select COUNT (*) from @TbRetSaga2 where Upper ( indemnise ) = 'OUI' ), 0 ) 
+
+ End 
+
+GO

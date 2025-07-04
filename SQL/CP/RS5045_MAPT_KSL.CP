@@ -2385,6 +2385,7 @@ Go
 -- JFF      18/10/2023   [RS6044_REL_MAIL]
 -- JFF		06/06/2025   [RS6130]
 -- JFF		30/06/2025   [SCHEDULER_WORDTOPDF][V05]
+-- JFF      04/07/2025   [20250704132450540]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V04' AND type = 'P' )
         DROP procedure sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V04
@@ -2456,7 +2457,7 @@ Declare @dtCrtle0015 DateTime
 Declare @dtCrtle2015 DateTime
 Declare @dtCrtle4015 DateTime
 Declare @iRS6130 Integer -- [RS6130]
-
+Declare @iTopCourrier Integer -- [20250704132450540]
 
 -- Contrôle sur l'horaire pour éviter les lancements à la main et donc désynchronisés par rapport au Job Windows (uniquement ebn production)
 
@@ -2480,6 +2481,7 @@ IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id(
 Set @iCptTraite = 0 
 Set @iRowCountWord = 0 
 Set @sDateHeureDebTrt = Convert ( varchar ( 10 ), GETDATE(), 103 ) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00'
+Set @iTopCourrier = 200 -- [20250704132450540] Nombre max pour le ramassage des mails avec courrier
 
 Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL 'OBTENTION_ID_LOT_TRC', -1, '', '', '', @iIdLotTrc output
 
@@ -2542,7 +2544,7 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 	--------- Traitement mail avec courrier SIMPA2						  --------
 	------------------------------------------------------------------------------
 	Insert into @TbWork		
-	Select  
+	Select Top ( @iTopCourrier ) -- [20250704132450540]
 	mp.id_seq,  
 	mp.id_sin,  
 	mp.id_appli_num,
@@ -2587,6 +2589,7 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 	And mp.cree_le > DateAdd ( month, -2, getdate() )  
 
 	Set @iRowCountWordTemp = @@Rowcount
+	Set @iTopCourrier = @iTopCourrier - @iRowCountWordTemp  -- [20250704132450540]
 	Set @iRowCountWord = @iRowCountWord + @iRowCountWordTemp 
 
 	Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountWordTemp  ) + ' enregistrement(s) (mails) représentant des courriers WORD SIMPA2'
@@ -2635,7 +2638,7 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 	If @iRS6130 > 0 
 		Begin 
 			Insert into @TbWork		
-			Select  
+			Select Top ( @iTopCourrier ) -- [20250704132450540]
 			mp.id_seq,  
 			mp.id_sin,  
 			mp.id_appli_num,
@@ -2665,6 +2668,7 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 			And mp.cree_le > DateAdd ( month, -2, getdate() )  
 
 			Set @iRowCountWordTemp = @@Rowcount
+			Set @iTopCourrier = @iTopCourrier - @iRowCountWordTemp  -- [20250704132450540]
 			Set @iRowCountWord = @iRowCountWord + @iRowCountWordTemp 
 
 			Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountWordTemp  ) + ' enregistrement(s) (mails) représentant des courriers WORD PEGASE'
@@ -2738,7 +2742,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 	--------- Traitement mail avec courrier SIMPA2						  --------
 	------------------------------------------------------------------------------
 	Insert into @TbWork		
-	Select  
+	Select Top ( @iTopCourrier ) -- [20250704132450540]
 	mp.id_seq,  
 	mp.id_sin,  
 	mp.id_appli_num,
@@ -2783,6 +2787,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 	And mp.cree_le > DateAdd ( month, -2, getdate() )  
 
 	Set @iRowCountWordTemp = @@Rowcount
+	Set @iTopCourrier = @iTopCourrier - @iRowCountWordTemp  -- [20250704132450540]
 	Set @iRowCountWord = @iRowCountWord + @iRowCountWordTemp 
 
 	Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountWordTemp  ) + ' enregistrement(s) (mails) représentant des courriers WORD SIMPA2'
@@ -2831,7 +2836,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 	If @iRS6130 > 0 
 		Begin 
 			Insert into @TbWork		
-			Select  
+			Select Top ( @iTopCourrier ) -- [20250704132450540]
 			mp.id_seq,  
 			mp.id_sin,  
 			mp.id_appli_num,
@@ -2861,6 +2866,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 			And mp.cree_le > DateAdd ( month, -2, getdate() )  
 
 			Set @iRowCountWordTemp = @@Rowcount
+			Set @iTopCourrier = @iTopCourrier - @iRowCountWordTemp  -- [20250704132450540]
 			Set @iRowCountWord = @iRowCountWord + @iRowCountWordTemp 
 
 			Set @sMsgTrc = 'Ramassage de ' + convert ( varchar (20), @iRowCountWordTemp ) + ' enregistrement(s) (mails) représentant des courriers WORD PEGASE'

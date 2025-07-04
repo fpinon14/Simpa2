@@ -27,7 +27,7 @@ CREATE procedure sysadm.PS_I_INSERTION_JOURNAL_EVTSIN
 	@asCodEvt			VarChar ( 6 ),
 	@asSeriaVariable	VarChar ( 255 ),
 	@asSeriaLibre		VarChar ( 255 ),
-	@asProvenance		VarChar ( 40 ),
+	@asProvenance		VarChar ( 255 ),
 	@asCodOper			VarChar ( 4 )
 AS
 
@@ -602,3 +602,46 @@ While Exists ( Select Top 1 1 From @TbGti where marquage = 0 )
 
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Proc‚dure            :       PS_I_INSERTION_JOURNAL_EVTSIN_PROVENANCE_EXTRANET
+-- Auteur               :       Fabry JF
+-- Date                 :       04/07/2025
+-- Libell‚              :       [MIG82_JOURN_EVT][MIG324]
+--
+-- Retour				: 1 Succès
+--						 -1 Erreur
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_INSERTION_JOURNAL_EVTSIN_PROVENANCE_EXTRANET' AND type = 'P' )
+        DROP procedure sysadm.PS_I_INSERTION_JOURNAL_EVTSIN_PROVENANCE_EXTRANET
+GO
+
+CREATE procedure sysadm.PS_I_INSERTION_JOURNAL_EVTSIN_PROVENANCE_EXTRANET
+	@adcIdSin			Decimal ( 10 ),
+	@asCodEvt			VarChar ( 6 ),
+	@asSeriaVariable	VarChar ( 255 ),
+	@asSeriaLibre		VarChar ( 255 )
+AS
+
+Set @asCodEvt = UPPER ( lTrim ( rTrim ( @asCodEvt )))
+
+Declare @TbControle Table ( cod_evt	VarChar ( 6 ) )
+
+-- autorisé pour les codes suivants
+Insert into @TbControle values ( 'GEOLEX' ) 
+
+-- Controle
+If Not Exists ( 
+		Select Top 1 1 
+		From @TbControle 
+		Where cod_evt = @asCodEvt
+	) Return -1
+
+Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, @asCodEvt, @asSeriaVariable, @asSeriaLibre, 'PS_I_INSERTION_JOURNAL_EVTSIN_PROVENANCE_EXTRANET', 'WEB'
+
+Return 1
+
+Go
+
+
