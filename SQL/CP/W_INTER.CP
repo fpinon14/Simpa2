@@ -1272,3 +1272,95 @@ While Exists ( Select Top 1 1 From @Tb where marquage = 0 )
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procédure            :       TR_LGY86_IU_ORIG_ADH
+-- Auteur               :       Fabry JF
+-- Date                 :       07/07/2025
+-- Libellé              :       
+-- Commentaires         :        [LGY86]
+--				
+--	
+-- Références           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'TR_LGY86_IU_ORIG_ADH' AND xtype = 'TR' )
+        DROP TRIGGER sysadm.TR_LGY86_IU_ORIG_ADH
+GO
+
+CREATE TRIGGER sysadm.TR_LGY86_IU_ORIG_ADH
+ON sysadm.w_inter_encrypt
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    If Not Exists ( 
+		Select Top 1 1
+		From inserted i,
+			 sysadm.w_inter_orig_adh orig
+		Where orig.id_sin = i.id_sin
+		and   orig.id_i = i.id_i
+		and   orig.cod_inter = i.cod_inter
+		and   i.cod_inter = 'A'  -- Que pour les assuré pour l'instant
+	) 
+	Begin
+
+		Insert into sysadm.w_inter_orig_adh (
+			id_sin,
+			id_i,
+			cod_inter,
+			nom,
+			adr_1,
+			adr_2,
+			adr_cp,
+			adr_ville,
+			num_teld,
+			rib_bq,
+			rib_gui,
+			rib_cpt_encrypt,
+			rib_cle,
+			ordre_cheque,
+			adr_mail,
+			cree_le,
+			maj_le,
+			maj_par
+
+		)
+		Select Top 1 
+			i.id_sin,
+			i.id_i,
+			i.cod_inter,
+			i.nom,
+			ltrim ( rtrim ( i.adr_1 )),
+			ltrim ( rtrim ( i.adr_2 )),
+			ltrim ( rtrim ( i.adr_cp )),
+			ltrim ( rtrim ( i.adr_ville )),
+			ltrim ( rtrim ( i.num_teld )),
+			ltrim ( rtrim ( i.rib_bq )),
+			ltrim ( rtrim ( i.rib_gui )),
+			i.rib_cpt_encrypt,
+			ltrim ( rtrim ( i.rib_cle )),
+			ltrim ( rtrim ( i.ordre_cheque )),
+			ltrim ( rtrim ( i.adr_mail )),
+			i.cree_le,
+			i.maj_le,
+			i.maj_par
+		From inserted i
+		Where i.cod_inter = 'A' -- Que pour les assuré pour l'instant
+		And Not Exists ( 
+				Select Top 1 1
+				From sysadm.w_inter_orig_adh orig
+				Where orig.id_sin = i.id_sin
+				and   orig.id_i = i.id_i
+				and   orig.cod_inter = i.cod_inter
+			)
+	End 
+
+END
+
+

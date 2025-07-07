@@ -940,3 +940,333 @@ If @asAdrMail is null Set @asAdrMail = ''
 Go
 
 
+--------------------------------------------------------------------
+--
+-- Procédure            :       TR_LGY86_I_MODIF_COORD
+-- Auteur               :       Fabry JF
+-- Date                 :       07/07/2025
+-- Libellé              :       
+-- Commentaires         :        [LGY86]
+--				
+--	
+-- Références           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'TR_LGY86_I_MODIF_COORD' AND xtype = 'TR' )
+        DROP TRIGGER sysadm.TR_LGY86_I_MODIF_COORD
+GO
+
+CREATE TRIGGER sysadm.TR_LGY86_I_MODIF_COORD
+ON sysadm.inter_encrypt
+AFTER INSERT
+AS
+BEGIN
+
+Declare 
+	@dcIdSin      	Decimal (10),
+	@iIdi			Decimal ( 7),
+	@sAvant_Nom		varchar ( 71 ),
+	@sAvant_Adr1	VarChar ( 35 ),
+	@sAvant_Adr2	VarChar ( 35 ),
+	@sAvant_AdrCp	VarChar ( 5 ),
+	@sAvant_AdrVille	VarChar ( 35 ),
+	@sAvant_NumTelD	VarChar ( 20 ),
+	@sAvant_RibBq	VarChar ( 5 ),
+	@sAvant_RibGui	VarChar ( 5 ),
+	@sAvant_RibCpt	VarChar ( 11 ),
+	@sAvant_RibCle	VarChar ( 2 ),
+	@sAvant_OrdreCheque Varchar ( 35 ), 
+	@sAvant_AdrMail  VarChar ( 120 ),
+	@sApres_Nom		varchar ( 71 ),
+	@sApres_Adr1	VarChar ( 35 ),
+	@sApres_Adr2	VarChar ( 35 ),
+	@sApres_AdrCp	VarChar ( 5 ),
+	@sApres_AdrVille	VarChar ( 35 ),
+	@sApres_NumTelD	VarChar ( 20 ),
+	@sApres_RibBq	VarChar ( 5 ),
+	@sApres_RibGui	VarChar ( 5 ),
+	@sApres_RibCpt	VarChar ( 11 ),
+	@sApres_RibCle	VarChar ( 2 ),
+	@sApres_OrdreCheque Varchar ( 35 ), 
+	@sApres_AdrMail  VarChar ( 120 ),
+	@sChaineSeria VarChar ( 1000 )
+
+    SET NOCOUNT ON;
+
+	-- Insert inter Assuré
+    IF Exists ( 
+				Select Top 1 1
+				From inserted i,
+					 sysadm.w_inter_orig_adh orig
+				Where orig.id_sin = i.id_sin
+				and   orig.id_i = i.id_i
+				and   orig.cod_inter = i.cod_inter
+				And   i.cod_inter = 'A'
+				And Not Exists ( 
+						Select Top 1 1 
+						From deleted d
+						Where d.id_sin = i.id_sin
+						And   d.id_i = i.id_i
+						And   d.cod_inter = i.cod_inter
+					)
+			) 
+		
+    BEGIN
+
+        -- INSERT Assuré détecté
+		If Not Exists ( 
+				Select Top 1 1 
+				From inserted i,
+					 sysadm.w_inter_orig_adh orig
+				Where orig.id_sin = i.id_sin
+				and   orig.id_i = i.id_i
+				and   orig.cod_inter = i.cod_inter
+				And   i.cod_inter = 'A'
+				and	  IsNull ( UPPER ( ltrim ( rtrim ( i.nom ))), '' ) = IsNull ( UPPER ( ltrim ( rtrim ( orig.nom ))), '' )
+				and	  IsNull ( UPPER ( ltrim ( rtrim ( i.adr_1 ))), '' ) = IsNull ( UPPER ( ltrim ( rtrim ( orig.adr_1 ))), '' )
+				And	  IsNull ( UPPER ( ltrim ( rtrim ( i.adr_2 ))), '' ) = IsNull ( UPPER ( ltrim ( rtrim ( orig.adr_2 ))), '' )
+				And	  IsNull ( UPPER ( ltrim ( rtrim ( i.adr_cp ))), '' ) = IsNull ( UPPER ( ltrim ( rtrim ( orig.adr_cp ))), '' )
+				And	  IsNull ( UPPER ( ltrim ( rtrim ( i.adr_ville ))), '' ) = IsNull ( UPPER ( ltrim ( rtrim ( orig.adr_ville ))), '' )
+				And	  IsNull ( UPPER ( ltrim ( rtrim ( i.num_teld ))), '' ) = IsNull ( UPPER ( ltrim ( rtrim ( orig.num_teld ))), '' )
+				And	  IsNull ( UPPER ( ltrim ( rtrim ( i.rib_bq ))), '' ) = IsNull ( UPPER ( ltrim ( rtrim ( orig.rib_bq ))), '' )
+				And	  IsNull ( UPPER ( ltrim ( rtrim ( i.rib_gui ))), '' ) = IsNull ( UPPER ( ltrim ( rtrim ( orig.rib_gui ))), '' )
+				And	  IsNull ( ltrim ( rtrim ( CAST(DECRYPTBYKEYAUTOCERT(CERT_ID('SIMPA2_Col_Encrypt_Cert'), NULL, orig.rib_cpt_encrypt) AS VARCHAR(11)))), '' ) 
+					  =
+					  IsNull ( ltrim ( rtrim ( CAST(DECRYPTBYKEYAUTOCERT(CERT_ID('SIMPA2_Col_Encrypt_Cert'), NULL, i.rib_cpt_encrypt) AS VARCHAR(11)))), '' ) 
+				And	  IsNull ( UPPER ( ltrim ( rtrim ( i.rib_cle ))), '' ) = IsNull ( UPPER ( ltrim ( rtrim ( orig.rib_cle ))), '' )
+				And	  IsNull ( UPPER ( ltrim ( rtrim ( i.ordre_cheque ))), '' ) = IsNull ( UPPER ( ltrim ( rtrim ( orig.ordre_cheque  ))), '' )
+				And	  IsNull ( UPPER ( ltrim ( rtrim ( i.adr_mail ))), '' ) = IsNull ( UPPER ( ltrim ( rtrim ( orig.adr_mail ))), '' )
+			)
+			Begin
+
+				Select Top 1
+					@dcIdSin = i.id_sin,
+					@iIdi = i.id_i,
+					@sAvant_Nom = IsNull ( UPPER ( ltrim ( rtrim ( orig.nom))) , '' ),
+					@sAvant_Adr1 = IsNull ( UPPER ( ltrim ( rtrim ( orig.adr_1))) , '' ),
+					@sAvant_Adr2 = IsNull ( UPPER ( ltrim ( rtrim ( orig.adr_2))) , '' ),
+					@sAvant_AdrCp = IsNull ( UPPER ( ltrim ( rtrim ( orig.adr_cp))) , '' ),
+					@sAvant_AdrVille = IsNull ( UPPER ( ltrim ( rtrim ( orig.adr_ville))) , '' ),
+					@sAvant_NumTelD = IsNull ( UPPER ( ltrim ( rtrim ( orig.num_teld))) , '' ),
+					@sAvant_RibBq = IsNull ( UPPER ( ltrim ( rtrim ( orig.rib_bq))) , '' ),
+					@sAvant_RibGui = IsNull ( UPPER ( ltrim ( rtrim ( orig.rib_gui))) , '' ),
+					@sAvant_RibCpt = IsNull ( UPPER ( ltrim ( rtrim ( CAST(DECRYPTBYKEYAUTOCERT(CERT_ID('SIMPA2_Col_Encrypt_Cert'), NULL, orig.rib_cpt_encrypt) AS VARCHAR(11))))) , '' ),
+					@sAvant_RibCle = IsNull ( UPPER ( ltrim ( rtrim ( orig.rib_cle))) , '' ),
+					@sAvant_OrdreCheque = IsNull ( UPPER ( ltrim ( rtrim ( orig.ordre_cheque))) , '' ),
+					@sAvant_AdrMail = IsNull ( UPPER ( ltrim ( rtrim ( orig.adr_mail))) , '' ),
+					@sApres_Nom = IsNull ( UPPER ( ltrim ( rtrim ( i.nom))) , '' ),
+					@sApres_Adr1 = IsNull ( UPPER ( ltrim ( rtrim ( i.adr_1))) , '' ),
+					@sApres_Adr2 = IsNull ( UPPER ( ltrim ( rtrim ( i.adr_2))) , '' ),
+					@sApres_AdrCp = IsNull ( UPPER ( ltrim ( rtrim ( i.adr_cp))) , '' ),
+					@sApres_AdrVille = IsNull ( UPPER ( ltrim ( rtrim ( i.adr_ville))) , '' ),
+					@sApres_NumTelD = IsNull ( UPPER ( ltrim ( rtrim ( i.num_teld))) , '' ),
+					@sApres_RibBq = IsNull ( UPPER ( ltrim ( rtrim ( i.rib_bq))) , '' ),
+					@sApres_RibGui = IsNull ( UPPER ( ltrim ( rtrim ( i.rib_gui))) , '' ),
+					@sApres_RibCpt = IsNull ( UPPER ( ltrim ( rtrim ( CAST(DECRYPTBYKEYAUTOCERT(CERT_ID('SIMPA2_Col_Encrypt_Cert'), NULL, i.rib_cpt_encrypt) AS VARCHAR(11))))) , '' ),
+					@sApres_RibCle = IsNull ( UPPER ( ltrim ( rtrim ( i.rib_cle))) , '' ),
+					@sApres_OrdreCheque = IsNull ( UPPER ( ltrim ( rtrim ( i.ordre_cheque))) , '' ),
+					@sApres_AdrMail = IsNull ( UPPER ( ltrim ( rtrim ( i.adr_mail))) , '' )
+
+				From inserted i,
+					 sysadm.w_inter_orig_adh orig
+				Where orig.id_sin = i.id_sin
+				and   orig.id_i = i.id_i
+				and   orig.cod_inter = i.cod_inter
+				And   i.cod_inter = 'A'
+
+				If Not ( @sAvant_AdrMail = '' And @sApres_AdrMail = '' )
+					Begin 
+						Exec sysadm.PS_I_MAILPUSH_LGY86_MODIF_COORD_ASSURE
+								@dcIdSin,
+								@iIdi,		
+								@sAvant_Nom,
+								@sAvant_Adr1,
+								@sAvant_Adr2,	
+								@sAvant_AdrCp,	
+								@sAvant_AdrVille,
+								@sAvant_NumTelD,	
+								@sAvant_RibBq,	
+								@sAvant_RibGui,	
+								@sAvant_RibCpt,	
+								@sAvant_RibCle,	
+								@sAvant_OrdreCheque,
+								@sAvant_AdrMail, 
+								@sApres_Nom,
+								@sApres_Adr1,
+								@sApres_Adr2,
+								@sApres_AdrCp,
+								@sApres_AdrVille,
+								@sApres_NumTelD,
+								@sApres_RibBq,
+								@sApres_RibGui,
+								@sApres_RibCpt,
+								@sApres_RibCle,
+								@sApres_OrdreCheque,
+								@sApres_AdrMail,
+								@sChaineSeria
+					End
+			End 
+    END
+
+END;
+Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       TR_LGY86_U_MODIF_COORD
+-- Auteur               :       Fabry JF
+-- Date                 :       07/07/2025
+-- Libellé              :       
+-- Commentaires         :        [LGY86]
+--				
+--	
+-- Références           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'TR_LGY86_U_MODIF_COORD' AND xtype = 'TR' )
+        DROP TRIGGER sysadm.TR_LGY86_U_MODIF_COORD
+GO
+
+CREATE TRIGGER sysadm.TR_LGY86_U_MODIF_COORD
+ON sysadm.inter_encrypt
+AFTER UPDATE
+AS
+BEGIN
+
+Declare 
+	@dcIdSin      	Decimal (10),
+	@iIdi			Decimal ( 7),
+	@sAvant_Nom		varchar ( 71 ),
+	@sAvant_Adr1	VarChar ( 35 ),
+	@sAvant_Adr2	VarChar ( 35 ),
+	@sAvant_AdrCp	VarChar ( 5 ),
+	@sAvant_AdrVille	VarChar ( 35 ),
+	@sAvant_NumTelD	VarChar ( 20 ),
+	@sAvant_RibBq	VarChar ( 5 ),
+	@sAvant_RibGui	VarChar ( 5 ),
+	@sAvant_RibCpt	VarChar ( 11 ),
+	@sAvant_RibCle	VarChar ( 2 ),
+	@sAvant_OrdreCheque Varchar ( 35 ), 
+	@sAvant_AdrMail  VarChar ( 120 ),
+	@sApres_Nom		varchar ( 71 ),
+	@sApres_Adr1	VarChar ( 35 ),
+	@sApres_Adr2	VarChar ( 35 ),
+	@sApres_AdrCp	VarChar ( 5 ),
+	@sApres_AdrVille	VarChar ( 35 ),
+	@sApres_NumTelD	VarChar ( 20 ),
+	@sApres_RibBq	VarChar ( 5 ),
+	@sApres_RibGui	VarChar ( 5 ),
+	@sApres_RibCpt	VarChar ( 11 ),
+	@sApres_RibCle	VarChar ( 2 ),
+	@sApres_OrdreCheque Varchar ( 35 ), 
+	@sApres_AdrMail  VarChar ( 120 ),
+	@sChaineSeria VarChar ( 1000 )
+
+
+    SET NOCOUNT ON;
+
+    -- Update Assuré détecté
+	If Not Exists ( 
+			Select Top 1 1 
+			From deleted anc,
+				 sysadm.inter_encrypt maj
+			Where maj.id_sin = anc.id_sin
+			and   maj.id_i = anc.id_i
+			and   maj.cod_inter = anc.cod_inter
+			and   anc.cod_inter = 'A'
+			and	  IsNull ( UPPER ( ltrim ( rtrim ( anc.nom ))), '' ) = IsNull ( UPPER ( ltrim ( rtrim ( maj.nom ))), '' )
+			and	  IsNull ( UPPER ( ltrim ( rtrim ( anc.adr_1 ))), '' ) = IsNull ( UPPER ( ltrim ( rtrim ( maj.adr_1 ))), '' )
+			And	  IsNull ( UPPER ( ltrim ( rtrim ( anc.adr_2 ))), '' ) = IsNull ( UPPER ( ltrim ( rtrim ( maj.adr_2 ))), '' )
+			And	  IsNull ( UPPER ( ltrim ( rtrim ( anc.adr_cp ))), '' ) = IsNull ( UPPER ( ltrim ( rtrim ( maj.adr_cp ))), '' )
+			And	  IsNull ( UPPER ( ltrim ( rtrim ( anc.adr_ville ))), '' ) = IsNull ( UPPER ( ltrim ( rtrim ( maj.adr_ville ))), '' )
+			And	  IsNull ( UPPER ( ltrim ( rtrim ( anc.num_teld ))), '' ) = IsNull ( UPPER ( ltrim ( rtrim ( maj.num_teld ))), '' )
+			And	  IsNull ( UPPER ( ltrim ( rtrim ( anc.rib_bq ))), '' ) = IsNull ( UPPER ( ltrim ( rtrim ( maj.rib_bq ))), '' )
+			And	  IsNull ( UPPER ( ltrim ( rtrim ( anc.rib_gui ))), '' ) = IsNull ( UPPER ( ltrim ( rtrim ( maj.rib_gui ))), '' )
+			And   IsNull ( ltrim ( rtrim ( CAST(DECRYPTBYKEYAUTOCERT(CERT_ID('SIMPA2_Col_Encrypt_Cert'), NULL, maj.rib_cpt_encrypt) AS VARCHAR(11)))), '' ) 
+					=
+				  IsNull ( ltrim ( rtrim ( CAST(DECRYPTBYKEYAUTOCERT(CERT_ID('SIMPA2_Col_Encrypt_Cert'), NULL, maj.rib_cpt_encrypt) AS VARCHAR(11)))), '' ) 
+			And	  IsNull ( UPPER ( ltrim ( rtrim ( anc.rib_cle ))), '' ) = IsNull ( UPPER ( ltrim ( rtrim ( maj.rib_cle ))), '' )
+			And	  IsNull ( UPPER ( ltrim ( rtrim ( anc.ordre_cheque ))), '' ) = IsNull ( UPPER ( ltrim ( rtrim ( maj.ordre_cheque  ))), '' )
+			And	  IsNull ( UPPER ( ltrim ( rtrim ( anc.adr_mail ))), '' ) = IsNull ( UPPER ( ltrim ( rtrim ( maj.adr_mail ))), '' )
+		)
+		Begin
+
+			Select Top 1
+				@dcIdSin = anc.id_sin,
+				@iIdi = anc.id_i,
+				@sAvant_Nom = IsNull ( UPPER ( ltrim ( rtrim ( anc.nom))) , '' ),
+				@sAvant_Adr1 = IsNull ( UPPER ( ltrim ( rtrim ( anc.adr_1))) , '' ),
+				@sAvant_Adr2 = IsNull ( UPPER ( ltrim ( rtrim ( anc.adr_2))) , '' ),
+				@sAvant_AdrCp = IsNull ( UPPER ( ltrim ( rtrim ( anc.adr_cp))) , '' ),
+				@sAvant_AdrVille = IsNull ( UPPER ( ltrim ( rtrim ( anc.adr_ville))) , '' ),
+				@sAvant_NumTelD = IsNull ( UPPER ( ltrim ( rtrim ( anc.num_teld))) , '' ),
+				@sAvant_RibBq = IsNull ( UPPER ( ltrim ( rtrim ( anc.rib_bq))) , '' ),
+				@sAvant_RibGui = IsNull ( UPPER ( ltrim ( rtrim ( anc.rib_gui))) , '' ),
+				@sAvant_RibCpt = IsNull ( UPPER ( ltrim ( rtrim ( CAST(DECRYPTBYKEYAUTOCERT(CERT_ID('SIMPA2_Col_Encrypt_Cert'), NULL, anc.rib_cpt_encrypt) AS VARCHAR(11))))) , '' ),
+				@sAvant_RibCle = IsNull ( UPPER ( ltrim ( rtrim ( anc.rib_cle))) , '' ),
+				@sAvant_OrdreCheque = IsNull ( UPPER ( ltrim ( rtrim ( anc.ordre_cheque))) , '' ),
+				@sAvant_AdrMail = IsNull ( UPPER ( ltrim ( rtrim ( anc.adr_mail))) , '' ),
+				@sApres_Nom = IsNull ( UPPER ( ltrim ( rtrim ( maj.nom))) , '' ),
+				@sApres_Adr1 = IsNull ( UPPER ( ltrim ( rtrim ( maj.adr_1))) , '' ),
+				@sApres_Adr2 = IsNull ( UPPER ( ltrim ( rtrim ( maj.adr_2))) , '' ),
+				@sApres_AdrCp = IsNull ( UPPER ( ltrim ( rtrim ( maj.adr_cp))) , '' ),
+				@sApres_AdrVille = IsNull ( UPPER ( ltrim ( rtrim ( maj.adr_ville))) , '' ),
+				@sApres_NumTelD = IsNull ( UPPER ( ltrim ( rtrim ( maj.num_teld))) , '' ),
+				@sApres_RibBq = IsNull ( UPPER ( ltrim ( rtrim ( maj.rib_bq))) , '' ),
+				@sApres_RibGui = IsNull ( UPPER ( ltrim ( rtrim ( maj.rib_gui))) , '' ),
+				@sApres_RibCpt = IsNull ( UPPER ( ltrim ( rtrim ( CAST(DECRYPTBYKEYAUTOCERT(CERT_ID('SIMPA2_Col_Encrypt_Cert'), NULL, maj.rib_cpt_encrypt) AS VARCHAR(11))))) , '' ),
+				@sApres_RibCle = IsNull ( UPPER ( ltrim ( rtrim ( maj.rib_cle))) , '' ),
+				@sApres_OrdreCheque = IsNull ( UPPER ( ltrim ( rtrim ( maj.ordre_cheque))) , '' ),
+				@sApres_AdrMail = IsNull ( UPPER ( ltrim ( rtrim ( maj.adr_mail))) , '' )
+
+			From deleted anc,
+			  	 sysadm.inter_encrypt maj
+			Where maj.id_sin = anc.id_sin
+			and   maj.id_i = anc.id_i
+			and   maj.cod_inter = anc.cod_inter
+			And   anc.cod_inter = 'A'
+
+			If Not ( @sAvant_AdrMail = '' And @sApres_AdrMail = '' )
+				Begin 
+
+					Exec sysadm.PS_I_MAILPUSH_LGY86_MODIF_COORD_ASSURE
+							@dcIdSin,
+							@iIdi,	
+							@sAvant_Nom,
+							@sAvant_Adr1,
+							@sAvant_Adr2,	
+							@sAvant_AdrCp,	
+							@sAvant_AdrVille,
+							@sAvant_NumTelD,	
+							@sAvant_RibBq,	
+							@sAvant_RibGui,	
+							@sAvant_RibCpt,	
+							@sAvant_RibCle,
+							@sAvant_OrdreCheque,
+							@sAvant_AdrMail,
+							@sApres_Nom,
+							@sApres_Adr1,
+							@sApres_Adr2,
+							@sApres_AdrCp,
+							@sApres_AdrVille,
+							@sApres_NumTelD,
+							@sApres_RibBq,
+							@sApres_RibGui,
+							@sApres_RibCpt,
+							@sApres_RibCle,
+							@sApres_OrdreCheque,
+							@sApres_AdrMail,
+							@sChaineSeria
+				End
+		End 
+END;
+
+

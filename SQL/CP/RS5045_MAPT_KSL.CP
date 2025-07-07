@@ -2458,6 +2458,9 @@ Declare @dtCrtle2015 DateTime
 Declare @dtCrtle4015 DateTime
 Declare @iRS6130 Integer -- [RS6130]
 Declare @iTopCourrier Integer -- [20250704132450540]
+Declare @iAutoriseEnvoiMailAlerte Integer 
+Declare @tHeureCourante Time
+Declare @iJourSemaine Int
 
 -- Contrôle sur l'horaire pour éviter les lancements à la main et donc désynchronisés par rapport au Job Windows (uniquement ebn production)
 
@@ -2482,6 +2485,29 @@ Set @iCptTraite = 0
 Set @iRowCountWord = 0 
 Set @sDateHeureDebTrt = Convert ( varchar ( 10 ), GETDATE(), 103 ) + ' ' + Left ( Convert ( varchar ( 30 ), GETDATE(), 114 ), 6 ) + '00'
 Set @iTopCourrier = 200 -- [20250704132450540] Nombre max pour le ramassage des mails avec courrier
+Set @iAutoriseEnvoiMailAlerte = 1
+Set @tHeureCourante = CONVERT(TIME, GETDATE())
+Set @iJourSemaine = DATEPART(WEEKDAY, GETDATE())
+
+If ( 
+	    -- Tous les jours entre 20:00 et 08:00
+		(@tHeureCourante >= '20:00' OR @tHeureCourante < '08:00') Or 
+	
+		-- Vendredi après 20h
+		(@iJourSemaine = 5 AND @tHeureCourante >= '20:00') OR
+        
+        -- Samedi (toute la journée)
+        (@iJourSemaine = 6) OR
+        
+        -- Dimanche (toute la journée)
+        (@iJourSemaine = 7) OR
+        
+        -- Lundi avant 08h
+        (@iJourSemaine = 1 AND @tHeureCourante < '08:00')
+  )
+	Begin
+		Set @iAutoriseEnvoiMailAlerte = 0
+	End 
 
 Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL 'OBTENTION_ID_LOT_TRC', -1, '', '', '', @iIdLotTrc output
 
@@ -3032,20 +3058,21 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		Set @sMailBody = @sMailBody + 'DSI Team SIMPA2' + CHAR ( 10 )
 		Set @sMailBody = @sMailBody + 'Legacy Application Tech Lead' + CHAR ( 10 )
 
-
-		EXEC master.dbo.SPB_PS_MAIL 
-				@sRetourErrMail OUTPUT, 
-				@sDestinataire ,
-				@sMailBody, 
-				@sObjet, 
-				null, 
-				'', 
-				@sFicOut, 
-				NULL, 
-				NULL, 
-				NULL, 
-				NULL
-
+		If @iAutoriseEnvoiMailAlerte > 0 
+			Begin 
+				EXEC master.dbo.SPB_PS_MAIL 
+						@sRetourErrMail OUTPUT, 
+						@sDestinataire ,
+						@sMailBody, 
+						@sObjet, 
+						null, 
+						'', 
+						@sFicOut, 
+						NULL, 
+						NULL, 
+						NULL, 
+						NULL
+			End 
 		Return
 	 End 
 
@@ -3917,19 +3944,21 @@ If @iRowCountWord + @iRowCountHWord  > 0
 			Set @sMailBody = @sMailBody + 'DSI Team SIMPA2' + CHAR ( 10 )
 			Set @sMailBody = @sMailBody + 'Legacy Application Tech Lead' + CHAR ( 10 )
 
-			EXEC master.dbo.SPB_PS_MAIL 
-					@sRetourErrMail OUTPUT, 
-					@sDestinataire ,
-					@sMailBody, 
-					@sObjet, 
-					null, 
-					'', 
-					@sFicOut, 
-					NULL, 
-					NULL, 
-					NULL, 
-					NULL
-
+			If @iAutoriseEnvoiMailAlerte > 0 
+				Begin 
+					EXEC master.dbo.SPB_PS_MAIL 
+							@sRetourErrMail OUTPUT, 
+							@sDestinataire ,
+							@sMailBody, 
+							@sObjet, 
+							null, 
+							'', 
+							@sFicOut, 
+							NULL, 
+							NULL, 
+							NULL, 
+							NULL
+				End 
 
 		End 
 
