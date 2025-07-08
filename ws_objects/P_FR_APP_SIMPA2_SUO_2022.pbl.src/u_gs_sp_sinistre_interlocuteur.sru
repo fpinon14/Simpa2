@@ -4352,13 +4352,38 @@ private function long uf_zn_adr_mail_name ();//*--------------------------------
 //* Retourne		: long
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
+//      JFF   07/07/2025 	[LGY86]
 //*-----------------------------------------------------------------
 
 Integer iAction
 Boolean bPresenceCP
 iAction	= 0
-String sCodInter, sGetText 
+String sCodInter, sGetText, sValItem
 Long lDebDp368, lFinDp368
+
+
+// [LGY86] Interdiction de supprimer
+If F_CLE_A_TRUE ( "LGY86" ) Then
+	
+	sGetText = Trim ( idw_wInter.GetText ())
+	sValItem = Trim ( idw_wInter.GetItemString ( 1, "ADR_MAIL_NAME" ) )
+	
+	If  Not IsNull ( sValItem ) And sValItem <> ""  And ( IsNull ( sGetText ) Or sGetText = "" ) Then
+		iAction = 2
+
+		stMessage.sTitre 		= "LGY86 / Suppression adresse mail"
+		stMessage.bErreurG	= False
+		stMessage.Icon			= Exclamation!		
+		stMessage.sCode	= "WINT323"
+		F_Message ( stMessage ) 
+
+		idw_wInter.SetItem ( 1, "ADR_MAIL_NAME", sValItem )
+	
+		Return iAction 
+	End If 
+	
+End If
+
 
 F_RechDetPro ( lDebDp368, lFinDp368, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 368 )	
 
@@ -4400,14 +4425,39 @@ private function long uf_zn_adr_mail_domain ();//*------------------------------
 //*
 //* Retourne		: long
 //*-----------------------------------------------------------------
-//* MAJ PAR		Date		Modification
+//* MAJ PAR		Date			Modification
+//      JFF   07/07/2025 	[LGY86]
 //*-----------------------------------------------------------------
 
 Integer iAction
 Boolean bPresenceCP
 iAction	= 0
-String sCodInter, sGetText 
+String sCodInter, sGetText, sValItem
 Long lDebDp368, lFinDp368
+
+
+// [LGY86] Interdiction de supprimer
+If F_CLE_A_TRUE ( "LGY86" ) Then
+	
+	sGetText = Trim ( idw_wInter.GetText ())
+	sValItem = Trim ( idw_wInter.GetItemString ( 1, "ADR_MAIL_DOMAIN" ) )
+	
+	If  Not IsNull ( sValItem ) And sValItem <> ""  And ( IsNull ( sGetText ) Or sGetText = "" ) Then
+		iAction = 2
+
+		stMessage.sTitre 		= "LGY86 / Suppression adresse mail"
+		stMessage.bErreurG	= False
+		stMessage.Icon			= Exclamation!		
+		stMessage.sCode	= "WINT323"
+		F_Message ( stMessage ) 
+
+		idw_wInter.SetItem ( 1, "ADR_MAIL_DOMAIN", sValItem )
+	
+		Return iAction 
+	End If 
+	
+End If
+
 
 F_RechDetPro ( lDebDp368, lFinDp368, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 368 )	
 
@@ -4432,6 +4482,7 @@ If sGetText = "" And F_CLE_NUMERIQUE ( "RS5045_REF_MATP" ) >= 3 Then
 		idw_wInter.SetItem ( 1, "ADR_MAIL_DOMAIN", sGetText )
 	End If 
 End If 
+
 
 Return iAction
 
