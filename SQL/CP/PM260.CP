@@ -27,6 +27,7 @@
 -- JFF      11/02/2019   [PM473-1]
 -- JFF      05/11/2019   [PM260_5]
 -- JFF      05/03/2020   [PM260-5][V2]
+-- JFF      07/07/2025   [LGY86]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_TRT_PM260' AND type = 'P' )
         DROP procedure sysadm.PS_U_TRT_PM260
@@ -365,6 +366,23 @@ Set    rib_bq = null,
 From   sysadm.reglement t with (nolock)
 Where  t.id_sin = @adcIdSin
 
+-- [LGY86]
+Update sysadm.w_inter_orig_adh
+Set    nom = Convert ( varchar(10), Convert( integer, rand() * 10000000 )) + 'XXANONYMEXX', -- Nom
+	   adr_1 = '1 rue de Paris', -- Adresse
+	   adr_2 = '1 rue de Paris', -- Adresse	   	   
+	   adr_cp = '75001', -- Code Postal
+	   adr_ville = 'PARIS', -- Adresse	 	   
+	   num_teld = '0101010101', -- Tel
+	   rib_bq = null,
+	   rib_cpt_encrypt = null, -- Convert ( VarBinary ( 68 ), null),
+	   rib_gui = null,
+	   rib_cle = null,
+	   ordre_cheque = 'XXANONYMEXX', -- ordre
+	   adr_mail = 'XX@XX.COM' -- mail	   
+
+From   sysadm.w_inter_orig_adh with (nolock)
+Where  id_sin = @adcIdSin
 
 -- Traitement de l'anonymisation des bcv de la table commande
 Insert into @tb

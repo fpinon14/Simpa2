@@ -966,6 +966,9 @@ AFTER INSERT
 AS
 BEGIN
 
+-- [LGY86]
+If Not ( sysadm.FN_CLE_NUMERIQUE ( 'LGY86') > 0 ) Return
+
 Declare 
 	@dcIdSin      	Decimal (10),
 	@iIdi			Decimal ( 7),
@@ -1141,6 +1144,9 @@ AFTER UPDATE
 AS
 BEGIN
 
+-- [LGY86]
+If Not ( sysadm.FN_CLE_NUMERIQUE ( 'LGY86') > 0 ) Return
+
 Declare 
 	@dcIdSin      	Decimal (10),
 	@iIdi			Decimal ( 7),
@@ -1269,4 +1275,5 @@ Declare
 		End 
 END;
 
+Go
 
