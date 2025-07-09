@@ -4292,14 +4292,18 @@ private function integer uf_zn_altcourgest (string ascas);//*-------------------
 //* Retourne		: Rien
 //*
 //*-----------------------------------------------------------------
+//* JFF  09/07/2025  [20250709161727060]
+//*-----------------------------------------------------------------
 
 String sAltCourGest
 Integer iAction
 Long lDeb, lFin
 Long lGtDuDR
 Long lIdProd // #4
+Boolean bCaseDp390_EmailingKSL
 
 iAction	= 0
+bCaseDp390_EmailingKSL = False
 
 lIdProd  = idw_wsin.GetItemNumBer( 1,"ID_PROD")
 
@@ -4308,6 +4312,7 @@ If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
 	// [MIG1_COUR_EMAILING]
 	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 390 )
 	If lDeb > 0 Then
+		bCaseDp390_EmailingKSL =True
 		iAction = 1
 		idw_wInter.iiErreur = 3
 		idw_wInter.SetItem ( 1, "ALT_COURGEST", "R" )
@@ -4326,6 +4331,12 @@ If iAction = 0 Then
 			sAltCourGest = idw_wInter.GetItemString ( 1, "ALT_COURGEST" ) 
 		Case Else
 			sAltCourGest = idw_wInter.GetText ()
+			
+			// [20250709161727060]
+			If bCaseDp390_EmailingKSL Then
+				sAltCourGest = idw_wInter.GetItemString ( 1, "ALT_COURGEST" ) 
+			End If 
+			
 	End CHoose 	
 	
 	Choose Case sAltCourGest
