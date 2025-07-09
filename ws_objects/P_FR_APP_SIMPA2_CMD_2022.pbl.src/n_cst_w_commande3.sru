@@ -1208,6 +1208,7 @@ public function string uf_controlersaisie ();//*--------------------------------
 //*   JFF   25/10/2012  ITSM133780
 //*   JFF   21/03/2016  [370853_ITSM]
 //*   JFF   01/10/2024  [MCO602_PNEU]
+//    JFF   09/07/2025 [HUB1780_0607PRS]
 //*-----------------------------------------------------------------
 String sCol [ ], sErr [ ], sTabNull [], sIdFourAdr, sTabAdrFour[], s15Zero, sIdFour1, sIdTypArt1, sIdFour2, sIdTypArt2
 String 		sNouvelleLigne, sPos, sText, sVal, sDw, sAdrTel1, sAdrTel, sFind, sTriActuel, sIMEICorr, sMessErr
@@ -1339,6 +1340,7 @@ sErr[ 3 ] = " - L'adresse (Récup/Livr.)"
 sErr[ 4 ] = " - Le code postal (Récup/Livr.)"
 sErr[ 5 ] = " - La ville (Récup/Livr.)"
 sErr[ 6 ] = " - Le n° de téléphone"
+
 // #8
 sErr[ 7 ] = " - La civilité (Récup/Livr.)"
 sErr[ 8 ] = " - Le nom du client (Fact.)"
@@ -1380,7 +1382,7 @@ For lCptCol = 1 To lNbrCol
 
 		If sPos = "" Then sPos = sCol[ lCptCol ]
 		sText = sText + sErr[ lCptCol ] + sNouvelleLigne
-
+	
 	End If
 
 Next
@@ -1412,12 +1414,14 @@ sCol[ 2 ] = "ID_SERIE_ANC"
 sCol[ 3 ] = "ID_MARQ_ART"
 sCol[ 4 ] = "ID_MODL_ART"
 sCol[ 5 ] = "INFO_SPB_FRN"
+sCol[ 6 ] = "ADR_TEL1" // [HUB1780_0607PRS]
 
 sErr[ 1 ] = " - La description du problème"
 sErr[ 2 ] = " - Le n° de série de l'ancien appareil"
 sErr[ 3 ] = " - La marque de l'ancien appareil"
 sErr[ 4 ] = " - Le modèle de l'ancien appareil"
 sErr[ 5 ] = " - "
+sErr[ 6 ] = " - Le n° de téléphone portable (06 ou 07)" // [HUB1780_0607PRS]
 
 lNbrCol	 = UpperBound ( sCol )
 
@@ -1574,6 +1578,23 @@ For	lCpt = 1 To lTot
 				End Choose
 			End If
 	End Choose 
+
+	// [HUB1780_0607PRS]
+	If F_CLE_A_TRUE ( "HUB1780_0607PRS" ) Then
+
+		If sIdFour = "HUB" Then
+			sVal = Left ( Trim ( idwCmde.GetItemString ( 1, sCol [ 6] )), 2 ) 
+			
+			Choose Case sVal
+				Case "06", "07" 
+					// Ok
+				Case Else
+					If sPos = "" Then sPos = sCol[ 6 ]
+					sText = sText + sErr[ 6 ] + sNouvelleLigne
+			End Choose 
+		End If 
+		
+	End If 
 
 
 	If sPos <> "" Then 
