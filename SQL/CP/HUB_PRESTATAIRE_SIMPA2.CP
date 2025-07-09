@@ -589,7 +589,7 @@ Declare
 	@sDesimlocke				VarChar( 20 )			,	-- Appareil désimlocké OUI/NON
 	@sEmailProduit				VarChar ( 128 )			,   -- Adresse mail produit dp/136
 	@sInfo_spb_frn_cplt			VarChar ( 800 )			,	-- Chaîne sérialisée contenant de multiples informations
-	@sMajPrsHubAdr					VarChar ( 20 )		,	-- [HUB1505]
+	@sMajPrsHubAdr				VarChar ( 20 )			,	-- [HUB1505]
 	@sIdContractant				VarChar ( 10 )			,   -- [HUB1544]	
 	@sLibContractant			VarChar ( 35 )			,   -- [HUB1544]	
 	@sMajPrsHubAnn VarChar ( 10 )  -- HUB1528

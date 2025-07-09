@@ -8389,7 +8389,7 @@ IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_GENERATEUR_INSERT_SINIST
         DROP procedure sysadm.PS_S_GENERATEUR_INSERT_SINISTRE
 GO
 CREATE procedure sysadm.PS_S_GENERATEUR_INSERT_SINISTRE
-	@adcIdSin    Decimal ( 7 ) 
+	@adcIdSin    Decimal ( 10 ) 
 AS
 
 Declare @sNomTable VarChar ( 50 ) 
