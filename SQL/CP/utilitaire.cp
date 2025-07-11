@@ -7139,3 +7139,102 @@ Return @sSign
 
 END
 Go
+
+--------------------------------------------------------------------
+--
+-- Fonction             :       FN_GET_DIV_DET
+-- Auteur               :       Fabry JF
+-- Date                 :       11/07/2025
+-- Libellé              :		
+-- Commentaires         :       Ramène une donnée de Div_Det
+-- Références           :       
+--
+-- Arguments            :       Aucun
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+-- JFF      12/02/2016   [PI062]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_GET_DIV_DET' AND type = 'FN' )
+        DROP function sysadm.FN_GET_DIV_DET
+GO
+
+CREATE  function sysadm.FN_GET_DIV_DET (
+        @dcIdSin		Decimal ( 10 ), -- [PI062]
+		@dcIdGti		Decimal ( 7 ),
+		@dcIdDetail		Decimal ( 7 ),
+		@sNomZone		VarChar ( 50 ),
+		@sTable			VarChar ( 1 ),
+		@sChaineBcv		VarChar ( 50 )
+		)
+RETURNS VarChar ( 50 )
+AS
+Begin
+
+	Declare @sValeur Varchar ( 50 )
+
+	If @sTable = 'P' 
+		Begin
+			Select	@sValeur = Case id_typ_zone 
+									When 'C' Then sysadm.FN_TRIM ( ds.val_car )
+									When 'D' Then sysadm.FN_AFF_DATE ( ds.val_dte, 'SH' )
+									When 'LC' Then 
+										Case sysadm.FN_CLE_VAL ( 'RETOUR', @sChaineBcv, ';' )
+											When 'CODE' Then ds.val_car
+											Else sysadm.FN_TRIM ( sysadm.FN_CODE_CAR ( ds.val_car, ds.id_typ_liste ) )
+										End 
+									When 'LN' Then 
+										Case sysadm.FN_CLE_VAL ( 'RETOUR', @sChaineBcv, ';' )
+											When 'CODE' Then Convert  ( VarChar ( 35), ds.val_nbre )
+											Else Convert  ( VarChar ( 35), sysadm.FN_CODE_NUM ( ds.val_nbre, ds.id_typ_liste ))
+										End 
+									When 'N' Then Convert  ( VarChar ( 35), ds.val_nbre )
+									When 'P' Then Convert  ( VarChar ( 35), ds.val_mt )
+									When 'S' Then Convert  ( VarChar ( 35), ds.val_mt )
+									When 'X' Then sysadm.FN_TRIM ( ds.val_car )
+							   End 
+			From	sysadm.div_det ds
+			Where	ds.id_sin = @dcIdSin
+			And		ds.id_gti = @dcIdGti
+			And		ds.id_detail = @dcIdDetail
+			And		ds.nom_zone = lower  ( @sNomZone ) 
+		End 
+
+	If @sTable = 'W' 
+		Begin
+			Select	@sValeur = Case id_typ_zone 
+									When 'C' Then sysadm.FN_TRIM ( ds.val_car )
+									When 'D' Then sysadm.FN_AFF_DATE ( ds.val_dte, 'SH' )
+									When 'LC' Then 
+										Case sysadm.FN_CLE_VAL ( 'RETOUR', @sChaineBcv, ';' )
+											When 'CODE' Then ds.val_car
+											Else sysadm.FN_TRIM ( sysadm.FN_CODE_CAR ( ds.val_car, ds.id_typ_liste ) )
+										End 
+									When 'LN' Then 
+										Case sysadm.FN_CLE_VAL ( 'RETOUR', @sChaineBcv, ';' )
+											When 'CODE' Then Convert  ( VarChar ( 35), ds.val_nbre )
+											Else Convert  ( VarChar ( 35), sysadm.FN_CODE_NUM ( ds.val_nbre, ds.id_typ_liste ))
+										End 
+									When 'N' Then Convert  ( VarChar ( 35), ds.val_nbre )
+									When 'P' Then Convert  ( VarChar ( 35), ds.val_mt )
+									When 'S' Then Convert  ( VarChar ( 35), ds.val_mt )
+									When 'X' Then sysadm.FN_TRIM ( ds.val_car )
+							   End 
+			From	sysadm.w_div_det ds
+			Where	ds.id_sin = @dcIdSin
+			And		ds.id_gti = @dcIdGti
+			And		ds.id_detail = @dcIdDetail
+			And		ds.nom_zone = lower  ( @sNomZone ) 
+		End 
+
+	If @sValeur is null Set @sValeur = ''
+
+	Return @sValeur 
+
+End 
+
+Go
+
+
+
