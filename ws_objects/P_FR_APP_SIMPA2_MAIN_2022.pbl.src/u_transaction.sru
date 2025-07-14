@@ -835,6 +835,9 @@ function Integer PS_HP276_S_S2_CONDITION_ANNULATION_PRS_HUB ( String sIdHubPrest
 //   JFF   20/06/2025 [MIG147_KRYS]
 subroutine PS_S764_W_GTI_KRYS_CDL_NBSIN ( long dcIdSin, long dcIdProd, long dcIdEts, string sIdAdh, Ref Integer iNbSin ) RPCFUNC ALIAS FOR "sysadm.PS_S764_W_GTI_KRYS_CDL_NBSIN"
 
+//       JFF   15/07/2025 [CONVERT_PDF_STOCK]
+function Long PS_I_COURRIER_PDF ( long dcIdSin, long dcIdI, long dcIdCpt, string sCodOper, Ref Integer aiIdentity ) RPCFUNC ALIAS FOR "sysadm.PS_I_COURRIER_PDF"
+
 end prototypes
 type variables
 Private:

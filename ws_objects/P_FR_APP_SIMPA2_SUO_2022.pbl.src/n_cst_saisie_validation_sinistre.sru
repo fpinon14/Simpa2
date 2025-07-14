@@ -122,6 +122,7 @@ public function integer uf_pi052_recuperationcourrier ()
 public function integer uf_pi052_verif_presence_courrier ()
 public function integer uf_pi052_afficherdoc ()
 public subroutine uf_set_typetrt (string astypetrt)
+private function integer uf_courword_ctrle_docpdf_et_date_docword ()
 end prototypes
 
 private function integer uf_populiser_dwgenerationcourrier ();//*-----------------------------------------------------------------
@@ -290,8 +291,8 @@ private function string uf_courword (integer aitypetrt);//*---------------------
 //*														
 //*
 //*-----------------------------------------------------------------
-//* MAJ      PAR      Date	  Modification
-//* 
+//* MAJ      PAR      Date	  	Modification
+//           JFF   15/07/2025 [CONVERT_PDF_STOCK]
 //*-----------------------------------------------------------------
 
 String sRet
@@ -341,8 +342,15 @@ Case 3
 		iRet = This.uf_CourWord_ViderWord ( FALSE )
 
 		If iRet = 1 Then iRet = uf_CourWord_MajwCourrier ()
+		
 
 Case 4
+
+		// [CONVERT_PDF_STOCK]
+		If F_CLE_A_TRUE ( "CONVERT_PDF_STOCK_1" ) Then
+			If iRet = 1 Then iRet = uf_CourWord_Ctrle_docPDF_et_Date_DocWord ()			
+		End If	
+
 /*------------------------------------------------------------------*/
 /* On est positionné dans la fonction Wf_SuiteValider () de la      */
 /* fenêtre de sinistre. On va updater la table W_COUR_BLOB et       */
@@ -798,6 +806,7 @@ public function integer uf_courword_purgercourrierslocal (boolean abforcer);//*-
 //* MAJ      PAR      Date	  		Modification
 //* #1 		 DGA      19/09/2006 Gestion d'un répertoire temporaire DCMP-060643
 //           JFF      12/06/2014 [PI052]
+//           JFF      15/07/2025 [CONVERT_PDF_STOCK]
 //*-----------------------------------------------------------------
 
 String sRepTmp, sNomFic, sJoker, sNomFicComplet, sRech
@@ -827,8 +836,15 @@ If F_CLE_A_TRUE ( "PI052" ) Then
 	lTot2 = 3
 Else
 */	
+// [CONVERT_PDF_STOCK]
+If F_CLE_A_TRUE ( "CONVERT_PDF_STOCK_1" ) Then
+	lTot2 = 2
+Else
 	lTot2 = 1
+End If	
 // End If 
+
+
 
 // [PI052]
 For lCpt2 = 1 To lTot2
@@ -841,9 +857,18 @@ For lCpt2 = 1 To lTot2
 		Case 1
 			sJoker	= sRepTmp + stGLB.sCodAppli + "*.DOC"	
 		Case 2			
-			sJoker	= sRepTmp + "*.PDF"	
+			// [CONVERT_PDF_STOCK]
+			If F_CLE_A_TRUE ( "CONVERT_PDF_STOCK_1" ) Then
+				// sJoker	= sRepTmp + stGLB.sCodAppli + "*.PDF"	
+				sJoker	= sRepTmp + "*.PDF"
+			Else 
+				sJoker	= sRepTmp + "*.PDF"					
+			End If
+			
 		Case 3
+		
 			sJoker	= sRepTmp + "*.DOC"	
+			
 	End Choose 
 		
 	ilb_Fichier.Reset ()
@@ -950,11 +975,12 @@ private function integer uf_courword_majwcourblob ();//*------------------------
 //* #2 		 DGA      19/09/2006 Gestion d'un répertoire temporaire DCMP-060643
 //*    		 JFF   11/01/2011    [DECIMAL_PAPILLON]
 //           JFF     12/06/2014 [PI052]
+//           JFF   15/07/2025 [CONVERT_PDF_STOCK]
 //*-----------------------------------------------------------------
 
 Long lTotFichier, lCpt, lIdInter, lTotInter, lIdProd
-String sIdI, sNomFic, sNomFicComplet, sRepTmp, sJoker
-Integer iRet
+String sIdI, sNomFic, sNomFicComplet, sRepTmp, sJoker, sNomFicCompletPDF
+Integer iRet, iIdSeqCourrierPdf
 Blob blBlob
 Decimal {2} dcIdsin2, dcIdInter2, dcIdCpt2 
 
@@ -1011,6 +1037,8 @@ For	lCpt = 1 To lTotFichier
 		sNomFicComplet = Upper ( sRepTmp + sNomFic )
 		lIdInter			= Long ( Mid ( sNomFic, 5, 2 ) )
 		
+		sNomFicCompletPDF = F_Remplace ( sNomFicComplet, ".DOC", ".PDF" ) // [CONVERT_PDF_STOCK]
+		
 		// [PI052]
 		/*
 		If F_CLE_A_TRUE ( "PI052" ) Then
@@ -1052,6 +1080,40 @@ For	lCpt = 1 To lTotFichier
 		Else
 			iRet = -1
 		End If
+		
+		// [CONVERT_PDF_STOCK]
+		If F_CLE_A_TRUE ( "CONVERT_PDF_STOCK_1" ) Then
+			If iRet > 0 Then
+				SetNull ( blBlob )
+				invWin.uf_SetFileAttributes ( sNomFicCompletPDF, 0 ) 
+		
+				If F_LireFichierBlob ( blBlob, sNomFicCompletPDF )	Then
+					
+					iRet = SQLCA.PS_I_COURRIER_PDF ( dcIdSin2, dcIdInter2, dcIdCpt2, stGlb.sCodOper, iIdSeqCourrierPdf ) 
+					
+					If	iRet <> 0 Or SQLCA.SqlCode <> 0 Or SQLCA.SqlDbCode <> 0	Then
+						iRet = -1
+					End If
+					
+					If iRet = 0 Then iRet = 1
+					
+					If iRet > 0 Then
+						UPDATEBLOB	sysadm.courrier_pdf
+						SET			txt_blob 	= :blBlob
+						WHERE			id_seq 		= :iIdSeqCourrierPdf
+						USING SQLCA		;
+					End If  
+				
+					If	SQLCA.SqlCode <> 0 Or SQLCA.SqlDbCode <> 0	Then
+						iRet = -1
+					End If
+				Else
+					iRet = -1
+				End If
+			End If 
+		End If
+		
+		
 Next
 
 
@@ -2017,6 +2079,7 @@ public function integer uf_courword_purgertouslescourriers ();//*---------------
 //* MAJ      PAR      Date	  		Modification
 //* #1 		 DGA      19/09/2006 Gestion d'un répertoire temporaire DCMP-060643
 //           JFF      12/06/2014 [PI052]
+//           JFF      15/07/2025 [CONVERT_PDF_STOCK]
 //*-----------------------------------------------------------------
 
 String sRepTmp, sNomFic, sJoker, sNomFicComplet, sRech
@@ -2024,6 +2087,7 @@ Long lTotFichier, lCpt, lIdSin, lTot2, lCpt2
 Date dDateFic
 Time tHeureFic
 Integer iRet
+Long dcIdSin 
 
 /*------------------------------------------------------------------*/
 /* On récupére tous les fichiers du type                            */
@@ -2034,6 +2098,8 @@ Integer iRet
 /* 9    = COD_INTER.                                                */
 /*------------------------------------------------------------------*/
 iRet		= 1
+dcIdSin = idw_1.GetItemNumber ( 1, "ID_SIN" ) 
+
 /*------------------------------------------------------------------*/  
 /* #1. DCMP-060643                                                  */
 /* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
@@ -2045,9 +2111,15 @@ iRet		= 1
 If F_CLE_A_TRUE ( "PI052" ) Then
 	lTot2 = 3
 Else */
+// [CONVERT_PDF_STOCK]
+If F_CLE_A_TRUE ( "CONVERT_PDF_STOCK_1" ) Then
+	lTot2 = 2
+Else
 	lTot2 = 1
+End If	
 // End If 
 
+// End If 
 
 // [PI052]
 For lCpt2 = 1 To lTot2
@@ -2058,9 +2130,26 @@ For lCpt2 = 1 To lTot2
 		Case 1
 			sJoker	= sRepTmp + stGLB.sCodAppli + "*.DOC"	
 		Case 2			
-			sJoker	= sRepTmp + "*.PDF"	
+			
+			// [CONVERT_PDF_STOCK]
+			If F_CLE_A_TRUE ( "CONVERT_PDF_STOCK_1" ) Then
+				// sJoker	= sRepTmp + stGLB.sCodAppli + "*.PDF"	
+				sJoker	= sRepTmp + "*.PDF"
+			Else 
+				sJoker	= sRepTmp + "*.PDF"	
+			End If
+			
 		Case 3			
-			sJoker	= sRepTmp + "*.DOC"	
+
+			// [CONVERT_PDF_STOCK]
+			If F_CLE_A_TRUE ( "CONVERT_PDF_STOCK_1" ) Then
+				sJoker	= sRepTmp + String ( dcIdSin ) + "*.PDF"	
+			Else 
+				sJoker	= sRepTmp + "*.DOC"	
+			End If
+			
+			
+			
 	End Choose 
 	
 	ilb_Fichier.Reset ()
@@ -2875,7 +2964,7 @@ ibAltBloc	= abAltBloc
 /*------------------------------------------------------------------*/
 
 // [POSITION_SIMPA2]
-istPause.text = space (70 ) + "Génération des courriers en cours, veuillez patienter... ~n~r~n~r(ne faites aucune action au clavier et à la souris pendant la génération des courriers svp !)" + space (150 )
+istPause.text = space (70 ) + "Génération des courriers en cours, veuillez patienter... ~n~r~n~r(ne faites aucune action au clavier, ni à la souris pendant la génération des courriers svp !)" + space (150 )
 
 istPause.BackColor 	= 12639424
 istPause.X				=  950
@@ -3000,10 +3089,46 @@ Case "CHOIX_FIN"
 */	
 
 Case "VALIDER"
-	sRet = uf_CourWord ( 3 )
+	
+	// [CONVERT_PDF_STOCK]
+	If F_CLE_A_TRUE ( "CONVERT_PDF_STOCK_1" ) Then
+		istPause.text = space (70 ) + "~n~rLe système travaille, veuillez patienter svp... ~n~r~n~r(ne faites aucune action au clavier, ni à la souris, svp !)" + space (150 )
+		
+		istPause.BackColor 	= 12639424
+		istPause.X				=  950
+		istPause.Y				=  400
+		istPause.Height		=  350	
+		
+		istPause.Show ()
+		istPause.BringToTop	= TRUE
+		
+		sRet = uf_CourWord ( 3 )
+
+	Else 		
+		sRet = uf_CourWord ( 3 )
+	End If	
 
 Case "SUITE_VALIDER"
-	sRet = uf_CourWord ( 4 )
+	
+	// [CONVERT_PDF_STOCK]
+	If F_CLE_A_TRUE ( "CONVERT_PDF_STOCK_1" ) Then
+		istPause.text = space (70 ) + "~n~rLe système travaille, veuillez patienter svp... ~n~r~n~r(ne faites aucune action au clavier, ni à la souris, svp !)" + space (150 )
+		
+		istPause.BackColor 	= 12639424
+		istPause.X				=  950
+		istPause.Y				=  400
+		istPause.Height		=  350	
+		
+		istPause.Show ()
+		istPause.BringToTop	= TRUE
+		
+		sRet = uf_CourWord ( 4 )
+
+		istPause.Hide ()		
+
+	Else 		
+		sRet = uf_CourWord ( 4 )
+	End If	
 
 End Choose
 
@@ -3841,6 +3966,103 @@ isTypeTrt = asTypeTrt
 
 
 end subroutine
+
+private function integer uf_courword_ctrle_docpdf_et_date_docword ();//*-----------------------------------------------------------------
+//*
+//* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_CourWord_Ctrle_docPDF_et_Date_DocWord	(PRIVATE)
+//* Auteur			: Fabry JF
+//* Date				: 15/07/2025
+//* Libellé			: 
+//* Commentaires	: contrôle de la présence des PDF et des dates des Doc Word
+//*
+//* Arguments		: Aucun
+//*
+//* Retourne		: Integer
+//*
+//*-----------------------------------------------------------------
+//* MAJ      PAR      Date	  Modification
+//*-----------------------------------------------------------------
+Long lTotFichier, lCpt, lIdInter, lTotInter, lIdProd
+String sIdI, sNomFic, sNomFicComplet, sRepTmp, sJoker, sNomFicCompletPDF
+Integer iRet, iIdSeqCourrierPdf
+Blob blBlob
+Decimal {2} dcIdsin2, dcIdInter2, dcIdCpt2 
+DateTime dtDateFichier
+Date dDateFic
+Time tHeureFic
+OLEObject ole_word, ole_doc
+Integer li_rc
+
+/*------------------------------------------------------------------*/  
+/* #2. DCMP-060643                                                  */
+/* Le 19/09/2006. Gestion d'un répertoire temporaire parametrable.  */
+/*------------------------------------------------------------------*/
+//sRepTmp		= stGLB.sWinDir + "\TEMP\"
+sRepTmp		= stGLB.sRepTempo
+sJoker		= sRepTmp + stGLB.sCodAppli + "*.DOC"
+lIdProd = iDw_1.GetItemNumber( 1, "ID_PROD" )
+
+iRet			= 1
+
+ilb_Fichier.Reset ()
+ilb_Fichier.DirList ( sJoker, 0 )
+
+lTotFichier = ilb_Fichier.TotalItems ()
+
+For	lCpt = 1 To lTotFichier
+/*------------------------------------------------------------------*/
+/* Il vient d'y avoir une erreur dans le traitement précédent.      */
+/* (lCpt-1). On arrête tout et on envoi un ROLLBACK.                */
+/*------------------------------------------------------------------*/
+		If	iRet = -1	Then Exit
+
+		ilb_Fichier.SelectItem ( lCpt )
+		sNomFic			= Upper ( ilb_Fichier.SelectedItem () )
+		sNomFicComplet = Upper ( sRepTmp + sNomFic )
+		lIdInter			= Long ( Mid ( sNomFic, 5, 2 ) )
+		
+		sNomFicCompletPDF = F_Remplace ( sNomFicComplet, ".DOC", ".PDF" ) // [CONVERT_PDF_STOCK]
+		
+		sIdI				= String ( lIdInter )
+
+		invWin.uf_SetFileAttributes ( sNomFicComplet, 0 ) 
+
+/*
+		invWin.uf_GetLastWriteDateTime ( sNomFicComplet, dDateFic, tHeureFic )
+		If	dDateFic = 2000-01-01 And FileExists ( sNomFicCompletPDF ) Then Continue
+		If dDateFic <> 2000-01-01 Or Not FileExists ( sNomFicCompletPDF )Then
+*/			
+		FileDelete ( sNomFicCompletPDF )
+		
+		// Construction du PDF, Instanciation de Word via OLE
+		If Not IsValid ( ole_word ) Then
+			ole_word = CREATE OLEObject
+			li_rc = ole_word.ConnectToNewObject ( "Word.Application" )
+			ole_word.Visible = FALSE
+		End IF 
+		
+		// Ouvrir le document Word
+		ole_doc = ole_word.Documents.Open ( sNomFicComplet )
+	
+		// Sauvegarder au format PDF
+		// Format 17 = wdFormatPDF
+		ole_doc.SaveAs ( sNomFicCompletPDF, 17 )
+	
+		// Fermer le document
+		ole_doc.Close(FALSE)
+			
+Next 
+
+If IsValid ( ole_word ) Then 
+	ole_word.Quit()
+   SetNull ( ole_doc ) 
+   ole_word.DisconnectObject()
+   DESTROY ole_word	
+End If 
+
+
+Return ( iRet )
+end function
 
 on n_cst_saisie_validation_sinistre.create
 call super::create
