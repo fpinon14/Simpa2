@@ -75,7 +75,6 @@ constant Long 	K_FrequenceTimer = 0.5 // [PI052] en seconde
 
 Boolean 			ibEnvRelParMail // [RS6044_REL_MAIL]
 
-
 Public : 	
 	Boolean			ibTimerPI052 // [PI052]
 	Boolean			ibPI052_GenEdtKsl // [PI052]
@@ -1500,7 +1499,7 @@ Boolean 	bRel1
 Long	  	dcIdSin		
 Long	  	dcIdInter
 Long	  	dcIdDocOrig // [RS6044_REL_MAIL]
-Long	  	dcIdOrdre
+Long	  	dcIdOrdre, lIdentityCourPdf
 Long 		lIdArchCourRel // [RS6044_REL_MAIL]
 Long 		lIdArchCourOrig // [RS6044_REL_MAIL]
 String  	sIdAdh
@@ -1515,7 +1514,15 @@ String   sIdCanal // [RS6044_REL_MAIL]
 Int		iRet
 Decimal {2} dcIdsin2, dcIdInter2, dcIdDoc2
 Long lIdProd
-String sSQL  
+String sSQL, sNomFicCompletDOC, sNomFicCompletPDF, sNomFicCompletDOCOrig, sNomFicCompletPDFOrig
+long lRet
+
+Boolean bF_CLE_A_TRUE_CONVERT_PDF_STOCK_2 // [CONVERT_PDF_STOCK]
+Blob blBlobPdf, bBlobDocCourOrig // [CONVERT_PDF_STOCK]
+OLEObject ole_word, ole_doc, ole_field, ole_fields // [CONVERT_PDF_STOCK]
+Int lCptField // [CONVERT_PDF_STOCK]
+String sDteEdit, sMoisDteEdit  // [CONVERT_PDF_STOCK]
+bF_CLE_A_TRUE_CONVERT_PDF_STOCK_2 = F_CLE_A_TRUE ( "CONVERT_PDF_STOCK_2" ) // [CONVERT_PDF_STOCK]
 
 idcIdDoc = -1   // idcId_Doc sera passé par Ref à PS_S02_ARCHIVE_RELANCES.
 					 // et reviendra avec le nouvel Id_Doc créé.
@@ -1672,6 +1679,33 @@ End If
 /* On update maintenant le blob.                                    */
 /* dcIdDoc a été armé par PS_I02_ARCHIVE_RELANCES						  */
 /*------------------------------------------------------------------*/
+// [CONVERT_PDF_STOCK]
+If bF_CLE_A_TRUE_CONVERT_PDF_STOCK_2 Then
+	sNomFicCompletDOC = stGLB.sRepTempo + "SIM2_REL.DOC"
+	sNomFicCompletPDF = stGLB.sRepTempo + "SIM2_REL.PDF"
+
+	If Not IsValid ( ole_word ) Then
+		ole_word = CREATE OLEObject
+		ole_word.ConnectToNewObject ( "Word.Application" )
+		ole_word.Visible = FALSE
+	End IF 	
+	
+	// Ouvrir le document Word
+	ole_doc = ole_word.Documents.Open ( sNomFicCompletDOC )
+	
+	// Sauvegarder au format PDF
+	// Format 17 = wdFormatPDF
+	ole_doc.SaveAs ( sNomFicCompletPDF, 17 )
+	
+	// Fermer le document
+	ole_doc.Close(FALSE)
+
+	SetNull ( blBlobPdf )
+	
+	F_LireFichierBlob ( blBlobPdf, sNomFicCompletPDF )
+End If
+
+
 If bOk Then
 	// [DECIMAL_PAPILLON]
 	dcIdsin2 = dec (dcIdSin)
@@ -1687,6 +1721,30 @@ If bOk Then
 
 End If
 
+// [CONVERT_PDF_STOCK]
+If bF_CLE_A_TRUE_CONVERT_PDF_STOCK_2 Then
+	lRet = itrTrans.PS_I_COURRIER_PDF_AVEC_ID_ARCH ( dcIdsin2, dcIdInter2, stGlb.sCodOper, lIdArchCourRel, lIdentityCourPdf )
+
+	If	lRet <> 0 Or itrTrans.SqlCode <> 0 Or itrTrans.SqlDbCode <> 0	Then
+		iRet = -1
+		bOk = False
+	End If
+	
+	If iRet = 0 Then iRet = 1
+	
+	If iRet > 0 Then
+		UPDATEBLOB	sysadm.courrier_pdf
+		SET			txt_blob 	= :blBlobPdf
+		WHERE			id_seq 		= :lIdentityCourPdf
+		USING SQLCA		;
+	End If  
+
+	If	itrTrans.SqlCode <> 0 Or itrTrans.SqlDbCode <> 0	Then
+		iRet = -1
+		bOk = False
+	End If
+
+End IF 
 
 If	Not F_Procedure ( stMessage, itrTrans, "UPDATEBLOB, uf_EcrireCourrierDansArchive, u_Rl_Sp_Rel_Anc" )	Then
 	bOk = False
@@ -1695,6 +1753,11 @@ If	Not F_Procedure ( stMessage, itrTrans, "UPDATEBLOB, uf_EcrireCourrierDansArch
 
 Else
 	F_Commit ( iTrTrans, True )
+
+	// [CONVERT_PDF_STOCK]
+	If bF_CLE_A_TRUE_CONVERT_PDF_STOCK_2 Then
+		FileDelete ( sNomFicCompletPDF )
+	End If 
 End If
 
 
@@ -1714,15 +1777,122 @@ If bOk Then
 			
 		End CHoose 
 
-		sSql  = "Exec sysadm.PS_I_ENVOYER_RELANCE_PAR_MAIL "
-		sSql += String ( dcIdSin ) + ".,"
-		sSql += String ( dcIdInter ) + ".,"
-		sSql += String ( lIdArchCourRel ) + ","
-		sSql += String ( lIdArchCourOrig ) + ","
-		sSql += "'" + String ( isIdCour ) + "'"
+		// [CONVERT_PDF_STOCK]
+		// Conversion en PDF du courrier d'origne
+		If bF_CLE_A_TRUE_CONVERT_PDF_STOCK_2 Then
+				SELECTBLOB	txt_blob
+						INTO	:bBlobDocCourOrig
+						FROM	sysadm.archive_blob
+					  WHERE  sysadm.archive_blob.id_sin      = :dcIdSin 
+				 		 AND	sysadm.archive_blob.id_inter    = :dcIdInter 
+					 	 AND	sysadm.archive_blob.id_doc      = :dcIdDocOrig
+						 AND	sysadm.archive_blob.id_typ_blob = 'DO'
+					  USING	itrtrans	;
+			
+				sNomFicCompletDOCOrig = stGLB.sRepTempo + "SIM2_COUR_ORIG.DOC"
+				sNomFicCompletPDFOrig = stGLB.sRepTempo + "SIM2_COUR_ORIG.PDF"
 
-		F_Execute ( sSql, SQLCA )
-		F_Commit ( SQLCA, SQLCA.SQLCode = 0 And SQLCA.SQLDBCode = 0 ) 			
+				F_EcrireFichierBlob ( bBlobDocCourOrig, sNomFicCompletDOCOrig )
+				
+				// Ouvrir le document Word
+				ole_doc = ole_word.Documents.Open ( sNomFicCompletDOCOrig )
+
+				
+				 // Parcourir tous les champs du document
+				 ole_fields = ole_doc.Fields
+
+				 sDteEdit = String ( iDw1.GetItemDate ( alRow, "DTE_EDIT" ), "dd/mm/yyyy" ) 
+				 sMoisDteEdit = F_Mois_En_Lettre ( Integer ( Mid ( sDteEdit, 4, 2 )))
+				 sMoisDteEdit = Lower ( Left ( sMoisDteEdit, 1 ) ) + Right ( sMoisDteEdit, Len ( sMoisDteEdit ) - 1 ) 
+				 sDteEdit = Left ( sDteEdit, 2 ) + " " + sMoisDteEdit + " " + Right ( sDteEdit, 4 )
+				 
+				 // Replacer la date d'édition
+				 FOR lCptField = ole_fields.Count TO 1 STEP -1
+					  ole_field = ole_fields.Item(lCptField)
+			
+					  IF Pos(Upper(ole_field.Code.Text), "DATE") > 0 THEN
+							ole_field.Select()
+							ole_word.Selection.Text = sDteEdit
+					  END IF
+				 NEXT
+				
+				// Sauvegarder au format PDF
+				// Format 17 = wdFormatPDF
+				ole_doc.SaveAs ( sNomFicCompletPDFOrig, 17 )
+				
+				// Fermer le document
+				ole_doc.Close(FALSE)
+
+				If IsValid ( ole_word ) Then 
+					ole_word.Quit()
+					SetNull ( ole_doc ) 
+					ole_word.DisconnectObject()
+					DESTROY ole_word	
+				End If 
+		
+				SetNull ( blBlobPdf )
+				
+				F_LireFichierBlob ( blBlobPdf, sNomFicCompletPDFOrig )
+
+				lIdentityCourPdf = 0
+				lRet = itrTrans.PS_I_COURRIER_PDF_AVEC_ID_ARCH ( dcIdSin, dcIdInter, stGlb.sCodOper, lIdArchCourOrig, lIdentityCourPdf )
+				
+				If	lRet <> 0 Or itrTrans.SqlCode <> 0 Or itrTrans.SqlDbCode <> 0	Then
+					iRet = -1
+					bOk = False
+				End If
+				
+				If iRet = 0 Then iRet = 1
+				
+				If iRet > 0 Then
+					UPDATEBLOB	sysadm.courrier_pdf
+					SET			txt_blob 	= :blBlobPdf
+					WHERE			id_seq 		= :lIdentityCourPdf
+					USING SQLCA		;
+				End If  
+				
+				If	itrTrans.SqlCode <> 0 Or itrTrans.SqlDbCode <> 0	Then
+					iRet = -1
+					bOk = False
+				End If
+
+				If	Not F_Procedure ( stMessage, itrTrans, "UPDATEBLOB, uf_EcrireCourrierDansArchive, u_Rl_Sp_Rel_Anc" )	Then
+					bOk = False
+					F_Commit ( iTrTrans, False )
+					F_Message ( stMessage )
+				
+				Else
+					F_Commit ( iTrTrans, True )
+				
+					// [CONVERT_PDF_STOCK]
+					FileDelete ( sNomFicCompletDOCOrig )
+					FileDelete ( sNomFicCompletPDFOrig )
+				End If			
+
+				If bOk Then
+					sSql  = "Exec sysadm.PS_I_ENVOYER_RELANCE_PAR_MAIL "
+					sSql += String ( dcIdSin ) + ".,"
+					sSql += String ( dcIdInter ) + ".,"
+					sSql += String ( lIdArchCourRel ) + ","
+					sSql += String ( lIdArchCourOrig ) + ","
+					sSql += "'" + String ( isIdCour ) + "'"
+					
+					F_Execute ( sSql, SQLCA )
+					F_Commit ( SQLCA, SQLCA.SQLCode = 0 And SQLCA.SQLDBCode = 0 ) 						
+					
+				End IF 
+
+		Else			
+			sSql  = "Exec sysadm.PS_I_ENVOYER_RELANCE_PAR_MAIL "
+			sSql += String ( dcIdSin ) + ".,"
+			sSql += String ( dcIdInter ) + ".,"
+			sSql += String ( lIdArchCourRel ) + ","
+			sSql += String ( lIdArchCourOrig ) + ","
+			sSql += "'" + String ( isIdCour ) + "'"
+			
+			F_Execute ( sSql, SQLCA )
+			F_Commit ( SQLCA, SQLCA.SQLCode = 0 And SQLCA.SQLDBCode = 0 ) 				
+		End If 
 		
 	End If 
 	

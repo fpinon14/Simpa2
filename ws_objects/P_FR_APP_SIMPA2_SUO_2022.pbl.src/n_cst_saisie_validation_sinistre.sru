@@ -978,7 +978,7 @@ private function integer uf_courword_majwcourblob ();//*------------------------
 //           JFF   15/07/2025 [CONVERT_PDF_STOCK]
 //*-----------------------------------------------------------------
 
-Long lTotFichier, lCpt, lIdInter, lTotInter, lIdProd
+Long lTotFichier, lCpt, lIdInter, lTotInter, lIdProd, lRet
 String sIdI, sNomFic, sNomFicComplet, sRepTmp, sJoker, sNomFicCompletPDF
 Integer iRet, iIdSeqCourrierPdf
 Blob blBlob
@@ -1089,13 +1089,13 @@ For	lCpt = 1 To lTotFichier
 		
 				If F_LireFichierBlob ( blBlob, sNomFicCompletPDF )	Then
 					
-					iRet = SQLCA.PS_I_COURRIER_PDF ( dcIdSin2, dcIdInter2, dcIdCpt2, stGlb.sCodOper, iIdSeqCourrierPdf ) 
+					lRet = SQLCA.PS_I_COURRIER_PDF ( dcIdSin2, dcIdInter2, dcIdCpt2, stGlb.sCodOper, iIdSeqCourrierPdf ) 
 					
-					If	iRet <> 0 Or SQLCA.SqlCode <> 0 Or SQLCA.SqlDbCode <> 0	Then
+					If	lRet <> 0 Or SQLCA.SqlCode <> 0 Or SQLCA.SqlDbCode <> 0	Then
 						iRet = -1
 					End If
 					
-					If iRet = 0 Then iRet = 1
+					If lRet = 0 Then iRet = 1
 					
 					If iRet > 0 Then
 						UPDATEBLOB	sysadm.courrier_pdf
