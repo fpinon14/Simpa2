@@ -37,116 +37,132 @@
 -- MAJ	PAR	LE		Description
 -- #1	PHG	02/11/2006	[DNTMAIL1-2] On enregistre le media ( Id_Canal )
 -- JFF      12/02/2016   [PI062]
+-- JFF      15/07/2025   [CONVERT_PDF_STOCK]
 -------------------------------------------------------------------
-
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I01_W_COUR_BLOB_ARCH' AND type = 'P' )
         DROP procedure sysadm.PS_I01_W_COUR_BLOB_ARCH
 GO
+  
+CREATE procedure sysadm.PS_I01_W_COUR_BLOB_ARCH  
+        @dcIdSin        Decimal (  10,0 ), -- [PI062]  
+        @dcIdI          Decimal (  7,0 ),  
+        @dcIdCpt        Decimal (  4,0 ),  
+        @iCptArch Integer,  
+        @sCodOper       Varchar (  4   ),  
+        @dtValideLe     DateTime,  
+		@sId_Canal Varchar(2) -- #1 PHG 02/11/2006 [DNTMAIL1-2] On enregistre le media ( Id_Canal )  
+          
+AS  
+  
+-- #1  PHG 02/11/2006 [DNTMAIL1-2] On enregistre le media ( Id_Canal )  
+-- Selon le point 5.2.3 des spécifications, on duplique l'insert pour spécifier id_lot, dte_edit et Alt_fn selon IdCanal  
+IF @sId_Canal = 'MA'   
+BEGIN  
+ INSERT INTO sysadm.w_cour_blob_arch    
+  (   
+   w_cour_blob_arch.id_arch,     
+  w_cour_blob_arch.id_sin,     
+  w_cour_blob_arch.id_inter,     
+  w_cour_blob_arch.id_seq,     
+  w_cour_blob_arch.id_typ_blob,     
+  w_cour_blob_arch.id_lot,  
+  w_cour_blob_arch.id_typ_doc,  
+  w_cour_blob_arch.txt_blob,     
+  w_cour_blob_arch.alt_fn,  
+  w_cour_blob_arch.dte_edit, -- #1 PHG 02/11/2006 [DNTMAIL1-2] Point 5.2.3  
+  w_cour_blob_arch.cree_le,     
+  w_cour_blob_arch.maj_le,     
+  w_cour_blob_arch.maj_par,  
+  w_cour_blob_arch.valide_le,     
+  w_cour_blob_arch.valide_par  
+  )    
+ SELECT  
+  @iCptArch,     
+  w_cour_blob.id_sin,     
+  w_cour_blob.id_i,     
+  w_cour_blob.id_cpt,     
+  w_cour_blob.id_typ_blob,     
+  -1 ,   -- #1 PHG 02/11/2006 [DNTMAIL1-2] Point 5.2.3 : Id_lot = -1  
+  w_cour_blob.id_typ_doc ,     
+  w_cour_blob.txt_blob   ,     
+  'N',   -- #1 PHG 02/11/2006 [DNTMAIL1-2] Point 5.2.3 : Alt_fn = 'N'  
+  GetDate(),  -- #1 PHG 02/11/2006 [DNTMAIL1-2] Point 5.2.3 : Dte_edit = GetDate()  
+  w_cour_blob.cree_le    ,     
+  w_cour_blob.maj_le     ,     
+  w_cour_blob.maj_par    ,  
+  @dtValideLe  ,  
+  @sCodOper  
+  
+ FROM     sysadm.w_cour_blob  
+ WHERE   w_cour_blob.id_sin   = @dcIdSin      
+ And  w_cour_blob.id_i        = @dcIdI  
+ And     w_cour_blob.id_cpt      = @dcIdCpt      
+ And     w_cour_blob.id_typ_blob = 'DO'  
+END  
+  
+IF @sId_Canal = 'CO'  -- JFF Le 16/11/2006, j'enlève le ELSE  
+BEGIN  
+  
+ INSERT INTO sysadm.w_cour_blob_arch    
+  (   
+   w_cour_blob_arch.id_arch,     
+  w_cour_blob_arch.id_sin,     
+  w_cour_blob_arch.id_inter,     
+  w_cour_blob_arch.id_seq,     
+  w_cour_blob_arch.id_typ_blob,     
+  w_cour_blob_arch.id_lot,  
+  w_cour_blob_arch.id_typ_doc,  
+  w_cour_blob_arch.txt_blob,     
+  w_cour_blob_arch.alt_fn,  
+  w_cour_blob_arch.dte_edit, -- #1 PHG 02/11/2006 [DNTMAIL1-2] Point 5.2.3  
+  w_cour_blob_arch.cree_le,     
+  w_cour_blob_arch.maj_le,     
+  w_cour_blob_arch.maj_par,  
+  w_cour_blob_arch.valide_le,     
+  w_cour_blob_arch.valide_par  
+  )    
+ SELECT  
+  @iCptArch,     
+  w_cour_blob.id_sin,     
+  w_cour_blob.id_i,     
+  w_cour_blob.id_cpt,     
+  w_cour_blob.id_typ_blob,     
+  0 ,  
+  w_cour_blob.id_typ_doc ,     
+  w_cour_blob.txt_blob   ,     
+  'N',  
+  NULL, -- #1 PHG 02/11/2006 [DNTMAIL1-2] Point 5.2.3  
+  w_cour_blob.cree_le    ,     
+  w_cour_blob.maj_le     ,     
+  w_cour_blob.maj_par    ,  
+  @dtValideLe  ,  
+  @sCodOper  
+  
+ FROM     sysadm.w_cour_blob  
+ WHERE   w_cour_blob.id_sin   = @dcIdSin      
+ And     w_cour_blob.id_i        = @dcIdI  
+ And     w_cour_blob.id_cpt      = @dcIdCpt      
+ And     w_cour_blob.id_typ_blob = 'DO'  
+  
+END  
+  
+If @@Error <> 0 Return @@Error  
 
-CREATE procedure sysadm.PS_I01_W_COUR_BLOB_ARCH
-        @dcIdSin        Decimal (  10,0 ), -- [PI062]
-        @dcIdI          Decimal (  7,0 ),
-        @dcIdCpt        Decimal (  4,0 ),
-        @iCptArch	Integer,
-        @sCodOper       Varchar (  4   ),
-        @dtValideLe     DateTime,
-	@sId_Canal	Varchar(2) -- #1 PHG 02/11/2006 [DNTMAIL1-2] On enregistre le media ( Id_Canal )
-        
-AS
-
--- #1  PHG 02/11/2006 [DNTMAIL1-2] On enregistre le media ( Id_Canal )
--- Selon le point 5.2.3 des spécifications, on duplique l'insert pour spécifier id_lot, dte_edit et Alt_fn selon IdCanal
-IF @sId_Canal = 'MA' 
-BEGIN
-	INSERT INTO sysadm.w_cour_blob_arch  
-	 ( 
-	 	w_cour_blob_arch.id_arch,   
-		w_cour_blob_arch.id_sin,   
-		w_cour_blob_arch.id_inter,   
-		w_cour_blob_arch.id_seq,   
-		w_cour_blob_arch.id_typ_blob,   
-		w_cour_blob_arch.id_lot,
-		w_cour_blob_arch.id_typ_doc,
-		w_cour_blob_arch.txt_blob,   
-		w_cour_blob_arch.alt_fn,
-		w_cour_blob_arch.dte_edit, -- #1 PHG 02/11/2006 [DNTMAIL1-2] Point 5.2.3
-		w_cour_blob_arch.cree_le,   
-		w_cour_blob_arch.maj_le,   
-		w_cour_blob_arch.maj_par,
-		w_cour_blob_arch.valide_le,   
-		w_cour_blob_arch.valide_par
-	 )  
-	SELECT
-		@iCptArch,   
-		w_cour_blob.id_sin,   
-		w_cour_blob.id_i,   
-		w_cour_blob.id_cpt,   
-		w_cour_blob.id_typ_blob,   
-		-1 , 		-- #1 PHG 02/11/2006 [DNTMAIL1-2] Point 5.2.3 : Id_lot = -1
-		w_cour_blob.id_typ_doc ,   
-		w_cour_blob.txt_blob   ,   
-		'N', 		-- #1 PHG 02/11/2006 [DNTMAIL1-2] Point 5.2.3 : Alt_fn = 'N'
-		GetDate(), 	-- #1 PHG 02/11/2006 [DNTMAIL1-2] Point 5.2.3 : Dte_edit = GetDate()
-		w_cour_blob.cree_le    ,   
-		w_cour_blob.maj_le     ,   
-		w_cour_blob.maj_par    ,
-		@dtValideLe	 ,
-		@sCodOper
-
-	FROM     sysadm.w_cour_blob
-	WHERE 	 w_cour_blob.id_sin 	 = @dcIdSin    
-	And	 w_cour_blob.id_i        = @dcIdI
-	And   	 w_cour_blob.id_cpt      = @dcIdCpt    
-	And   	 w_cour_blob.id_typ_blob = 'DO'
-END
-
-IF @sId_Canal = 'CO'  -- JFF Le 16/11/2006, j'enlève le ELSE
-BEGIN
-
-	INSERT INTO sysadm.w_cour_blob_arch  
-	 ( 
-	 	w_cour_blob_arch.id_arch,   
-		w_cour_blob_arch.id_sin,   
-		w_cour_blob_arch.id_inter,   
-		w_cour_blob_arch.id_seq,   
-		w_cour_blob_arch.id_typ_blob,   
-		w_cour_blob_arch.id_lot,
-		w_cour_blob_arch.id_typ_doc,
-		w_cour_blob_arch.txt_blob,   
-		w_cour_blob_arch.alt_fn,
-		w_cour_blob_arch.dte_edit, -- #1 PHG 02/11/2006 [DNTMAIL1-2] Point 5.2.3
-		w_cour_blob_arch.cree_le,   
-		w_cour_blob_arch.maj_le,   
-		w_cour_blob_arch.maj_par,
-		w_cour_blob_arch.valide_le,   
-		w_cour_blob_arch.valide_par
-	 )  
-	SELECT
-		@iCptArch,   
-		w_cour_blob.id_sin,   
-		w_cour_blob.id_i,   
-		w_cour_blob.id_cpt,   
-		w_cour_blob.id_typ_blob,   
-		0 ,
-		w_cour_blob.id_typ_doc ,   
-		w_cour_blob.txt_blob   ,   
-		'N',
-		NULL, -- #1 PHG 02/11/2006 [DNTMAIL1-2] Point 5.2.3
-		w_cour_blob.cree_le    ,   
-		w_cour_blob.maj_le     ,   
-		w_cour_blob.maj_par    ,
-		@dtValideLe	 ,
-		@sCodOper
-
-	FROM     sysadm.w_cour_blob
-	WHERE 	 w_cour_blob.id_sin 	 = @dcIdSin    
-	And	 w_cour_blob.id_i        = @dcIdI
-	And   	 w_cour_blob.id_cpt      = @dcIdCpt    
-	And   	 w_cour_blob.id_typ_blob = 'DO'
-
-END
-
-Return @@Error
+-- [CONVERT_PDF_STOCK]
+If sysadm.FN_CLE_NUMERIQUE ( 'CONVERT_PDF_STOCK_1') > 0 
+ Begin
+	Update pdf
+	Set id_arch = @iCptArch
+	FROM sysadm.w_cour_blob wcb,
+		 sysadm.courrier_pdf pdf
+	WHERE wcb.id_sin 	 = @dcIdSin    
+	And	  wcb.id_i        = @dcIdI
+	And   wcb.id_cpt      = @dcIdCpt    
+	And   wcb.id_typ_blob = 'DO'
+	And   pdf.id_seq = wcb.id_pdf
+ End 
+  
+Return @@Error  
 
 Go
 
