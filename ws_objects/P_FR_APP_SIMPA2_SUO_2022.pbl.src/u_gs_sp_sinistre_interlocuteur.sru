@@ -172,7 +172,7 @@ private subroutine uf_preparermodifier (ref s_pass astpass);//*-----------------
 Boolean	bSupprime
 n_cst_string	lnvString 
 DataWindowChild dwChild
-String sFind, sValCar, sCodInter, sVal 
+String sFind, sValCar, sCodInter, sVal, sLibInter
 
 Long lTotPiece, lTotRefus, lLig, lTotInter, lTotDetail, lIdSin, lDeb, lFin, lVal, lRowDS
 Long lGtDuDR, lIdProd 
@@ -396,7 +396,40 @@ If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
 	End If 
 End If 
 	
+// [MIG147_KRYS]
+If F_CLE_A_TRUE ( "MIG147_KRYS" ) Then
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 404 )
+	If lDeb > 0 Then
+		sValCar = idw_DetPro.GetItemString(lDeb,"VAL_CAR" )
+		sValCar = F_CLE_VAL ("TYP_INTER", sValCar, ";") 
+		sCodInter = idw_wInter.GetItemString ( 1, "COD_INTER" ) 
+		
+		If sValCar = "" Then
+			stMessage.berreurg=FALSE
+			stMessage.bouton=Ok!
+			stMessage.icon=Information!
+			stMessage.stitre="Gestion des interlocuteurs"
+			stMessage.scode ="WINT324"
+			F_Message ( stMessage )
+		End If 
+		
+		
+		If sValCar <> "" And Not IsNull ( sCodInter ) And Pos ( sValCar, "#" + sCodInter + "#" ) > 0 Then
+			
+			sLibInter = SQLCA.FN_CODE_CAR ( sCodInter, "-IN" )
+	
+			stMessage.berreurg=FALSE
+			stMessage.bouton=Ok!
+			stMessage.icon=Information!
+			stMessage.stitre="Gestion des interlocuteurs"
+			stMessage.sVar[1] = sLibInter
+			stMessage.scode ="WINT325"
+			F_Message ( stMessage )		
+	
+		End If 
 
+	End If 
+End If 
 
 end subroutine
 
@@ -4595,7 +4628,7 @@ If F_CLE_A_TRUE ( "MIG147_KRYS" ) Then
 			stMessage.bouton=Ok!
 			stMessage.icon=Information!
 			stMessage.stitre="Gestion des interlocuteurs"
-			stMessage.scode ="WINT918"
+			stMessage.scode ="WINT319"
 			F_Message ( stMessage )
 		End If 
 		
@@ -4610,13 +4643,48 @@ If F_CLE_A_TRUE ( "MIG147_KRYS" ) Then
 			stMessage.icon=Information!
 			stMessage.stitre="Gestion des interlocuteurs"
 			stMessage.sVar[1] = sLibInter
-			stMessage.scode ="WINT919"
+			stMessage.scode ="WINT320"
 			F_Message ( stMessage )		
 	
 		End If 
 	
 	End If 
-End If
+
+	If sPos = "" Then 
+		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 404 )
+		If lDeb > 0 Then
+			sValCar = idw_DetPro.GetItemString(lDeb,"VAL_CAR" )
+			sValCar = F_CLE_VAL ("TYP_INTER", sValCar, ";") 
+			
+			If sValCar = "" Then
+				sPos = "NOM"				
+				stMessage.berreurg=FALSE
+				stMessage.bouton=Ok!
+				stMessage.icon=Information!
+				stMessage.stitre="Gestion des interlocuteurs"
+				stMessage.scode ="WINT324"
+				F_Message ( stMessage )
+			End If 
+			
+			
+			If sValCar <> "" And Not IsNull ( sCodInter ) And Pos ( sValCar, "#" + sCodInter + "#" ) > 0 Then
+				
+				sLibInter = SQLCA.FN_CODE_CAR ( sCodInter, "-IN" )
+		
+				stMessage.berreurg=FALSE
+				sPos = "NOM"				
+				stMessage.bouton=Ok!
+				stMessage.icon=Information!
+				stMessage.stitre="Gestion des interlocuteurs"
+				stMessage.sVar[1] = sLibInter
+				stMessage.scode ="WINT325"
+				F_Message ( stMessage )		
+		
+			End If 
+		End If 
+	End If 
+End If 
+
 
 
 astPass.sTab [ 1 ] = sPos
