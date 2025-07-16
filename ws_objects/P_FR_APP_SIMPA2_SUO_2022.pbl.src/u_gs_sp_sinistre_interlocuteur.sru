@@ -4326,6 +4326,7 @@ private function integer uf_zn_altcourgest (string ascas);//*-------------------
 //*
 //*-----------------------------------------------------------------
 //* JFF  09/07/2025  [20250709161727060]
+//* JFF  09/07/2025  [20250716182457933]
 //*-----------------------------------------------------------------
 
 String sAltCourGest
@@ -4354,6 +4355,7 @@ If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
 
 		If lGtDuDR > 0 Then This.Uf_Tb_Questionnaire ()
 		
+		idw_wInter.Modify ( "b_typo_courrier.enabled = yes" )  // [20250716182457933]
 		
 	End If 
 End If 
