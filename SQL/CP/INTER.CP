@@ -1081,7 +1081,7 @@ Declare
 				and   orig.cod_inter = i.cod_inter
 				And   i.cod_inter = 'A'
 
-				If Not ( @sAvant_AdrMail = '' And @sApres_AdrMail = '' )
+				If Not ( @sAvant_AdrMail = '' And @sApres_AdrMail = '' ) and CharIndex ( 'XXANONYMEXX', @sApres_Nom ) <= 0 
 					Begin 
 						Exec sysadm.PS_I_MAILPUSH_LGY86_MODIF_COORD_ASSURE
 								@dcIdSin,
@@ -1240,7 +1240,7 @@ Declare
 			and   maj.cod_inter = anc.cod_inter
 			And   anc.cod_inter = 'A'
 
-			If Not ( @sAvant_AdrMail = '' And @sApres_AdrMail = '' )
+			If Not ( @sAvant_AdrMail = '' And @sApres_AdrMail = '' ) and CharIndex ( 'XXANONYMEXX', @sApres_Nom ) <= 0 
 				Begin 
 
 					Exec sysadm.PS_I_MAILPUSH_LGY86_MODIF_COORD_ASSURE
