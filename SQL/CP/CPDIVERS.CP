@@ -2005,7 +2005,7 @@ CREATE procedure sysadm.PS_CORRECTION_BASE_NUIT_1
 -- Date                 :       08/12/2010
 -- Libelle              :       Redressement base au nuit 1
 -- Commentaires         :       
--- References           :
+-- References           :		Passe une seule fois à 23h00
 --
 -- Arguments            :
 --
@@ -2556,7 +2556,7 @@ CREATE procedure sysadm.PS_CORRECTION_BASE_NUIT_2
 -- Date                 :       08/12/2010
 -- Libelle              :       Redressement base au nuit 2
 -- Commentaires         :       
--- References           :
+-- References           :		Passe 2 fois à 23h55 et 5h45
 --
 -- Arguments            :
 --
@@ -2564,6 +2564,7 @@ CREATE procedure sysadm.PS_CORRECTION_BASE_NUIT_2
 --
 -------------------------------------------------------------------
 -- JFF      24/04/2025   [LGY53_EQU_CNX]
+-- JFF      15/07/2025   [CONVERT_PDF_STOCK]
 -------------------------------------------------------------------
 AS
 
@@ -2846,8 +2847,18 @@ Delete sysadm.w_queue_histo Where cree_le_action < DATEADD ( month, -6, Getdate(
 Delete TRACE_MAIL_PRO.sysadm.trace_matp_es_sinistre_ksl_rs5045 Where cree_le < DATEADD ( month, -6, Getdate() )
 Delete SESAME_PRO.sysadm.equi_cnx_ts -- [LGY53_EQU_CNX]
 
--- [LGY11]
-Exec sysadm.PS_U_REDRESS_W_QUEUE_STATUT_IWD  
+-- [CONVERT_PDF_STOCK]
+Delete pdf From sysadm.courrier_pdf pdf where pdf.id_arch is null and Not exists ( Select Top 1 1 From sysadm.w_sin ws where ws.id_sin = pdf.id_sin ) 
+Delete pdf From sysadm.courrier_pdf pdf where cree_le < DATEADD ( month, -8, Getdate() )
+
+/* [CONVERT_PDF_STOCK]
+Delete pdf From PEGASE_PRO.sysadm.courrier_pdf pdf where pdf.id_arch is null and Not exists ( Select Top 1 1 From sysadm.w_sin ws where ws.id_sin = pdf.id_sin ) 
+Delete pdf From PEGASE_PRO.sysadm.courrier_pdf pdf where cree_le < DATEADD ( month, -8, Getdate() )
+*/
+
+
+-- [LGY11] Problème, en attente modif Stéf
+-- Exec sysadm.PS_U_REDRESS_W_QUEUE_STATUT_IWD  
 
 -- [HP252_276_HUB_PRESTA]
 If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
@@ -7286,7 +7297,7 @@ Select  0,
 		lTrim ( rtrim ( cco.trigramme )),
 		cco.interaction_end_ts
 From	sysadm.w_queue wq,
-		[SQL14BI\SINISTRESBI].DATA_HUB.dbo.cco_w_queue_simpa2 cco
+		[LEHBI19].DATA_HUB.dbo.cco_w_queue_simpa2 cco
 Where wq.etat_iwd = 2
 -- And   wq.dos_maj_par Not in ( 'DRE#' ) -- Annulé pour l'instant
 And	  cco.interaction_id = wq.id_iwd
