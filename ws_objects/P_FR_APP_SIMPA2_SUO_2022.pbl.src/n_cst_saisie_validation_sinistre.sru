@@ -3972,7 +3972,7 @@ private function integer uf_courword_ctrle_docpdf_et_date_docword ();//*--------
 //* Fonction		: N_Cst_Saisie_Validation_Sinistre::uf_CourWord_Ctrle_docPDF_et_Date_DocWord	(PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 15/07/2025
-//* Libellé			: 
+//* Libellé			: [CONVERT_PDF_STOCK]
 //* Commentaires	: contrôle de la présence des PDF et des dates des Doc Word
 //*
 //* Arguments		: Aucun
