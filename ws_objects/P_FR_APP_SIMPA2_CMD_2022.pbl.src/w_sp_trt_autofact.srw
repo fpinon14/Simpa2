@@ -69,6 +69,7 @@ integer	K_TYPFACT_H_PRESTA_IPHONE_O2M_SFR = 4 // [DT57_CMDE_IPHONE_SFR]
 integer	K_TYPFACT_PRESTA_NORM_SANS_REGL = 5 // [DT044-1_V5]
 integer	K_TYPFACT_DIAG_O2M = 6 // [PM210]
 integer	K_TYPFACT_BNP_SECU = 7 // [PC13174]
+integer	K_TYPFACT_HUB_PRESTATAIRE = 8 // [HUB1830_FACTU_HUB]
 
 datastore ids_charger
 
@@ -947,6 +948,7 @@ private function integer wf_chargerdw ();//*------------------------------------
 //       JFF   29/05/2017 [PC151259-2]
 //			JFF   08/08/2017 [DT288] Facturation ORANGCE SCF (Cordon)
 //       JFF   09/09/2022 [PM80_FA12_FRANEX]
+//       JFF   18/07/2025 [HUB1830_FACTU_HUB]
 //*-----------------------------------------------------------------
 
 string sFournisseur
@@ -1056,7 +1058,15 @@ Choose Case iIdTypFact   // [DCMP080461] Choix du type de Facturation
 		// [PM80_FA12_FRANEX]
 		dw_charger.dataobject = 'd_trt_charge_autofact_axa_3'
 		ids_charger.dataobject = 'd_stk_autofact_axa_3'
-		
+
+	// [HUB1830_FACTU_HUB]
+	Case K_TYPFACT_HUB_PRESTATAIRE		
+	
+		dw_charger.dataobject = 'd_trt_charge_autofact_hub_presta_4'
+		ids_charger.dataobject = 'd_stk_autofact_3'
+	
+	
+	
 End Choose
 
 return 0
@@ -1350,6 +1360,7 @@ private function boolean wf_controler ();//*------------------------------------
 //			JFF   08/08/2017 [DT288] Facturation ORANGCE SCF (Cordon)
 //       JFF   09/09/2022 [PM80_FA12_FRANEX]
 //       JFF   18/02/2025 [202502181556]
+//       JFF   18/07/2025 [HUB1830_FACTU_HUB]
 //*-----------------------------------------------------------------
 //*
 //* [FNAC_PROD_ECH_TECH] Fnac Attitude : Note de développement :
@@ -1370,12 +1381,12 @@ private function boolean wf_controler ();//*------------------------------------
 
 Long		lTotRow, lCpt, lPos, lAutorisation 
 Boolean	bOk, bError, bDroitForcage
-String	sIdSinIdSeq, sDteFact, sNumFacture, sMteFact, sIdFourn, sIdFournFic, sErreur
-String	sCatFact, sAForcer, sIdFourAG
+String	sIdSinIdSeq, sDteFact, sNumFacture, sMteFact, sIdFourn, sIdFournFic, sErreur, sErreurHub, sIdSin, sIdSeq
+String	sCatFact, sAForcer, sIdFourAG, sIdBenefit 
 Long 		lIdSinPrec, lLongueur // #8 [FNAC_BGE].[20091203110556880] 
 
 Long	 	lIdSin
-Integer 	iIdSeq
+Integer 	iIdSeq, iRetCtrlePrestaHub 
 Integer  iIdTypFact //[DCMP080461]
 boolean	bHpresta	  // #2 [DCMP080166]
 
@@ -1389,7 +1400,7 @@ Decimal {2} dcSoMTbFrais
 
 Long lIdProd, lIdEts
 String sIdAdh
-Boolean bBasculeFNC 
+Boolean bBasculeFNC, bAvecBenefitRef
 
 		
 
@@ -1421,7 +1432,7 @@ Boolean bBasculeFNC
 
 bBasculeFNC = FALSE
 bOk = True
-sErreur = ''
+sErreur = ""
 bDroitForcage = FALSE
 
 // [PM336-1]
@@ -1470,6 +1481,8 @@ ids_Charger.reset()
 SetPointer(HourGlass!)
 
 For lCpt = 1 to lTotRow
+	
+
 	
 	if bHpresta Then // [DCMP080461]
 		// Chargement dans les variables de controle
@@ -1680,6 +1693,86 @@ For lCpt = 1 to lTotRow
 
 		case else
 	
+			// [HUB1830_FACTU_HUB]
+			If iIdTypFact = K_TYPFACT_HUB_PRESTATAIRE Then
+				
+				// Chargement dans les variables de controle
+				sIdSin = trim ( dw_charger.object.id_sin[lCpt])
+				sIdSeq = trim ( dw_charger.object.id_seq[lCpt])
+				sIdBenefit = Trim ( dw_charger.object.id_benefit[lCpt] )
+				sDteFact		= Trim ( dw_charger.object.dte_fact[lCpt] )
+				sNumFacture	= Trim ( dw_charger.object.num_facture[lCpt])
+				sMteFact		= Trim ( dw_charger.object.mte_fact[lCpt])
+				// #2	[DCMP080166] Catégorie de Facture
+				sCatFact		= Trim ( dw_charger.object.cat_fact[lCpt])
+				
+				// [PM336-1]
+				sAForcer    = Trim ( dw_charger.object.a_forcer [lCpt])
+		
+				bAvecBenefitRef = False
+		
+				bOk = ( sIdBenefit <> "" and  Not IsNull (sIdBenefit) And &
+						  ( sIdSeq = "" Or  IsNull ( sIdSeq ) ) &
+						)  &
+						Or  &
+						( sIdSeq <> ""  and Not IsNull (sIdSeq) And  &
+						  ( sIdBenefit = "" Or IsNull ( sIdBenefit ) ) &
+						) 
+				
+				If IsNull ( bOk ) Then bOk = False
+				
+				If Not bOk Then sErreur += "Choisissez entre séquence ou bénéfit réf, mais pas les deux, et au moins un des deux"
+		
+		
+				bAvecBenefitRef = sIdBenefit <> "" and Not IsNull ( sIdBenefit )
+				If IsNull ( bAvecBenefitRef ) Then bAvecBenefitRef = False
+				
+				lIdSin = Long ( sIdSin )		
+				If Not bAvecBenefitRef Then iIdSeq = Integer ( sIdSeq )
+		
+				If bOk And bAvecBenefitRef Then
+		
+					lIdSin = Long ( sIdSin ) 
+					bOk = (lIdSin<>0) and ( Not IsNull (lIdSin) ) and &
+							(sIdBenefit <> "" ) and ( Not IsNull (sIdBenefit) ) 
+					
+					If IsNull ( bOk ) Then bOk = False
+					
+					If Not bOk Then sErreur += "référence sinistre et bénéfit prestation non valide"
+
+					If bOk Then
+						sErreurHub = Space ( 255 )
+						sIdFournFic = Space(3)
+						iRetCtrlePrestaHub = SQLCA.PS_S_CTRLE_PRESTA_HUB ( lIdSin, sIdBenefit, iIdSeq, sIdFournFic, sErreurHub )
+						
+						IF iRetCtrlePrestaHub < 0 Then
+							bOk = False
+							sErreur += sErreurHub
+						Else
+							dw_charger.SetItem ( lCpt, "ID_SEQ", String ( iIdSeq ) )
+						End IF
+					End If 
+				End If 
+				
+				If bOk Then
+	
+					bOk = (lIdSin<>0) and ( Not IsNull (lIdSin) ) and &
+							(iIdSeq<>0) and ( Not IsNull (iIdSeq) ) 
+
+					If IsNull ( bOk ) Then bOk = False					
+					
+					If Not bOk Then sErreur += "référence sinistre et séquence prestation non valide"
+				End If		
+		
+				If bOk And Not bAvecBenefitRef Then
+					sIdFournFic = Space(3) 
+					sqlca.PS_S07_COMMANDE(lIdSin,iIdSeq,sIdFournFic)
+				End IF 
+	
+			// /[HUB1830_FACTU_HUB]		
+		
+			Else
+	
 				// Chargement dans les variables de controle
 				sIdSinIdSeq = dw_charger.object.id_sin_id_seq[lCpt]
 				sDteFact		= dw_charger.object.dte_fact[lCpt]
@@ -1706,6 +1799,9 @@ For lCpt = 1 to lTotRow
 				sqlca.PS_S07_COMMANDE(lIdSin,iIdSeq,sIdFournFic)
 				bOk = ( sqlca.sqlcode = 0 )
 				if Not bOk then sErreur += 'Erreur SQL : '+SQLCA.SQLErrText
+				
+			End If 				
+				
 		end choose
 		// FIN - #1
 	End If
