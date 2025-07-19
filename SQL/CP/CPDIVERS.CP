@@ -2858,7 +2858,7 @@ Delete pdf From PEGASE_PRO.sysadm.courrier_pdf pdf where cree_le < DATEADD ( mon
 
 
 -- [LGY11] Problème, en attente modif Stéf
--- Exec sysadm.PS_U_REDRESS_W_QUEUE_STATUT_IWD  
+Exec sysadm.PS_U_REDRESS_W_QUEUE_STATUT_IWD  
 
 -- [HP252_276_HUB_PRESTA]
 If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 

@@ -3864,21 +3864,18 @@ Go
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S07_COMMANDE' AND type = 'P' )
         DROP procedure sysadm.PS_S07_COMMANDE
 GO
-
-CREATE procedure sysadm.PS_S07_COMMANDE
-        @dcIdSin        Decimal (  10,0 ),
-        @iIdSeq         Integer,
-        @sIdFour 	VarChar ( 3 ) OUTPUT
-AS
-	
-	Select @sIdFour = IsNull ( id_four, '-1' )
-	From sysadm.commande 
-	where id_sin = @dcIdSin 
-	and id_seq = @iIdSeq 
-	
+  
+CREATE procedure sysadm.PS_S07_COMMANDE  
+        @dcIdSin        Decimal (  10,0 ),  
+        @iIdSeq         Integer,  
+        @sIdFour  VarChar ( 3 ) OUTPUT  
+AS  
+   
+ Select @sIdFour = IsNull ( id_four, '-1' )  
+ From sysadm.commande   
+ where id_sin = @dcIdSin   
+ and id_seq = @iIdSeq   
 Go
-
-
 
 --------------------------------------------------------------------
 --
@@ -12744,5 +12741,62 @@ Return -1
 
 GO
 
+--------------------------------------------------------------------
+--
+-- Procedure            :       PS_S_CTRLE_PRESTA_HUB
+-- Auteur               :       FABRY JF
+-- Date                 :       21/11/2006
+-- Libelle              :       Renvoi le fournisseur de la 
+-- Commentaires         :       
+-- References           :      -- [HUB1830_FACTU_HUB] 
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_CTRLE_PRESTA_HUB' AND type = 'P' )
+        DROP procedure sysadm.PS_S_CTRLE_PRESTA_HUB
+GO
+CREATE procedure sysadm.PS_S_CTRLE_PRESTA_HUB
+        @dcIdSin        Decimal (  10,0 ),
+		@sIdBenefit		VarChar ( 10 ),
+        @iIdSeq         Integer OUTPUT,
+		@sIdFour		VarChar ( 3 ) OUTPUT  ,
+		@sErreur		VarChar ( 255 ) OUTPUT
+AS
+	Declare @iCount Integer
+
+	Set @sIdBenefit = Upper ( Trim ( @sIdBenefit ) )
+
+	Select @iCount = COUNT (*) 
+	From sysadm.commande c
+	Where c.id_sin = @dcIdSin
+	and sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' ) = @sIdBenefit
+	and c.id_ref_four in ( 'A_REPARER', 'A_DIAGNOSTIQUER', 'A_COMMANDER' ) 
+
+	If @iCount > 1 
+		Begin
+			Set @sErreur = 'le Benefit Réf ' + @sIdBenefit + ' n''est pas unique sur les types de presta A_REPARER, A_DIAGNOSTIQUER, A_COMMANDER, passez en manuel, consultez le dossier pour obtenir la bonne séquence, puis saisissez la dans votre fichier et enlevez le Benefit Réf.'
+			Return -1
+		End 
+
+	If @iCount <= 0 
+		Begin
+			Set @sErreur = 'le Benefit Réf ' + @sIdBenefit + ' n''existe pas sur le dossier ' + IsNull ( CONVERT ( VarChar ( 10 ), @dcIdSin ), '' ) + ', impossible donc de déterminer la séquence de la prestation'
+			Return -1
+		End 
+
+	Select @iIdSeq = c.id_seq ,
+		   @sIdFour  = c.id_four
+	From sysadm.commande c
+	Where c.id_sin = @dcIdSin
+	and sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' ) = @sIdBenefit
+	and c.id_ref_four in ( 'A_REPARER', 'A_DIAGNOSTIQUER', 'A_COMMANDER' ) 
+		
+	Set @sErreur = 'Ok'
+	Return 1
+
+Go
 
 
