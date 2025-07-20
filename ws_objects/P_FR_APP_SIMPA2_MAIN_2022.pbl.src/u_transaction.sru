@@ -836,7 +836,7 @@ function Integer PS_HP276_S_S2_CONDITION_ANNULATION_PRS_HUB ( String sIdHubPrest
 subroutine PS_S764_W_GTI_KRYS_CDL_NBSIN ( long dcIdSin, long dcIdProd, long dcIdEts, string sIdAdh, Ref Integer iNbSin ) RPCFUNC ALIAS FOR "sysadm.PS_S764_W_GTI_KRYS_CDL_NBSIN"
 
 //       JFF   15/07/2025 [CONVERT_PDF_STOCK]
-function Long PS_I_COURRIER_PDF ( long dcIdSin, long dcIdI, long dcIdCpt, string sCodOper, Ref Integer aiIdentity ) RPCFUNC ALIAS FOR "sysadm.PS_I_COURRIER_PDF"
+function Long PS_I_COURRIER_PDF ( long dcIdSin, long dcIdI, long dcIdCpt, string sCodOper, Ref Long alIdentity ) RPCFUNC ALIAS FOR "sysadm.PS_I_COURRIER_PDF"
 
 //       JFF   15/07/2025 [CONVERT_PDF_STOCK]
 function Long PS_I_COURRIER_PDF_AVEC_ID_ARCH ( long dcIdSin, long dcIdI, string sCodOper, Long lIdArch, Ref Long alIdentity ) RPCFUNC ALIAS FOR "sysadm.PS_I_COURRIER_PDF_AVEC_ID_ARCH"

@@ -978,9 +978,9 @@ private function integer uf_courword_majwcourblob ();//*------------------------
 //           JFF   15/07/2025 [CONVERT_PDF_STOCK]
 //*-----------------------------------------------------------------
 
-Long lTotFichier, lCpt, lIdInter, lTotInter, lIdProd, lRet
+Long lTotFichier, lCpt, lIdInter, lTotInter, lIdProd, lRet, lIdSeqCourrierPdf
 String sIdI, sNomFic, sNomFicComplet, sRepTmp, sJoker, sNomFicCompletPDF
-Integer iRet, iIdSeqCourrierPdf
+Integer iRet
 Blob blBlob
 Decimal {2} dcIdsin2, dcIdInter2, dcIdCpt2 
 
@@ -1089,7 +1089,7 @@ For	lCpt = 1 To lTotFichier
 		
 				If F_LireFichierBlob ( blBlob, sNomFicCompletPDF )	Then
 					
-					lRet = SQLCA.PS_I_COURRIER_PDF ( dcIdSin2, dcIdInter2, dcIdCpt2, stGlb.sCodOper, iIdSeqCourrierPdf ) 
+					lRet = SQLCA.PS_I_COURRIER_PDF ( dcIdSin2, dcIdInter2, dcIdCpt2, stGlb.sCodOper, lIdSeqCourrierPdf ) 
 					
 					If	lRet <> 0 Or SQLCA.SqlCode <> 0 Or SQLCA.SqlDbCode <> 0	Then
 						iRet = -1
@@ -1100,7 +1100,7 @@ For	lCpt = 1 To lTotFichier
 					If iRet > 0 Then
 						UPDATEBLOB	sysadm.courrier_pdf
 						SET			txt_blob 	= :blBlob
-						WHERE			id_seq 		= :iIdSeqCourrierPdf
+						WHERE			id_seq 		= :lIdSeqCourrierPdf
 						USING SQLCA		;
 					End If  
 				
@@ -3984,7 +3984,7 @@ private function integer uf_courword_ctrle_docpdf_et_date_docword ();//*--------
 //*-----------------------------------------------------------------
 Long lTotFichier, lCpt, lIdInter, lTotInter, lIdProd
 String sIdI, sNomFic, sNomFicComplet, sRepTmp, sJoker, sNomFicCompletPDF
-Integer iRet, iIdSeqCourrierPdf
+Integer iRet 
 Blob blBlob
 Decimal {2} dcIdsin2, dcIdInter2, dcIdCpt2 
 DateTime dtDateFichier
