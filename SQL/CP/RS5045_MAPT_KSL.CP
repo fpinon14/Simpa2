@@ -22,7 +22,7 @@ Go
 -- sysadm.PS_RS5045_S_RECUPERER_LE_BLOB_COURRIER
 -- sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE
 -- sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL
--- sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V05
+-- sysadm.PS_RS5045_SU_NOUV_SYS_MATP_ES_SINISTRE_KSL_V06
 -- sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8
 -- sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL
 -- sysadm.PS_RS5045_U_OPTIMISER_CHAINE_DATA_XML_KSL
@@ -3253,7 +3253,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 	Ici, soit enlever "and id_appli_num = 2" (x2) et le même trt traite SIMPA2 et PEGASE 
 	*/
 
-	While Exists ( Select Top 1 1 From @TbWork where marquage = 0 And id_arch > 0 and id_appli_num = 2 ) -- [CONVERT_PDF_STOCK]
+	While Exists ( Select Top 1 1 From @TbWork where marquage = 0 And id_arch > 0 ) -- [CONVERT_PDF_STOCK] --  and id_appli_num = 2
 	 Begin
 		Select 	Top 1 
 			@iIdSeq = id_seq,
@@ -3270,7 +3270,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 			@dtDatehExec = dateh_exec
 		From	@TbWork
 		Where	marquage = 0
-		and id_appli_num = 2 -- [CONVERT_PDF_STOCK]
+		-- and id_appli_num = 2 -- [CONVERT_PDF_STOCK]
 		And id_arch > 0
 
 		If @sIdArchComplSeria is null Set @sIdArchComplSeria = ''
@@ -3721,6 +3721,7 @@ CREATE procedure sysadm.PS_RS5045_S_RECUPERER_LE_BLOB_COURRIER_V01
 AS
 
 Declare @iBlobId Integer -- [RS6130]
+Declare @iRS6130 Integer 
 
 -- Production
 If @@servername = master.dbo.SPB_FN_ServerName ('PRO')  
@@ -3774,25 +3775,37 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 		-- PEGASE [RS6130]
 		If @aiIdAppliNum = 3 
 			Begin
+				Set @iRS6130 = SIMPA2_PRO.sysadm.FN_CLE_NUMERIQUE ( 'RS6130') -- [RS6130]
 
-				Select  @blBlobCourrier = wb.txt_blob    
-				From PEGASE_PRO.sysadm.w_cour_blob_arch wb  with (nolock)    
-				Where wb.id_arch2 = @iIdArch    
+				If @iRS6130 > 0
+					Begin
+						Select  @blBlobCourrier = txt_blob    
+						From PEGASE_PRO.sysadm.courrier_pdf  with (nolock)      -- [CONVERT_PDF_STOCK]
+						Where id_arch2 = @iIdArch    
 
-				If @@RowCount = 1 Return @@Error  
+						Return @@Error    
 
-				Select @iBlobId = a.blob_id
-				From PEGASE_PRO.sysadm.archive a
-				Where a.id_arch2 = @iIdArch
+					End 
+				Else 
+					Begin
+						Select  @blBlobCourrier = wb.txt_blob    
+						From PEGASE_PRO.sysadm.w_cour_blob_arch wb  with (nolock)    
+						Where wb.id_arch2 = @iIdArch    
 
-				If @iBlobId is null OR @iBlobId <= 0 Return -1
+						If @@RowCount = 1 Return @@Error  
 
-				Select @blBlobCourrier = data 
-				From [LS-SAGA2].SAGA2_BLOB.dbo.document doc with (nolock) 
-				where doc.code = @iBlobId
+						Select @iBlobId = a.blob_id
+						From PEGASE_PRO.sysadm.archive a
+						Where a.id_arch2 = @iIdArch
 
-				If @@RowCount = 1 Return @@Error  
+						If @iBlobId is null OR @iBlobId <= 0 Return -1
 
+						Select @blBlobCourrier = data 
+						From [LS-SAGA2].SAGA2_BLOB.dbo.document doc with (nolock) 
+						where doc.code = @iBlobId
+
+						If @@RowCount = 1 Return @@Error  
+					End 
 			End 
 
 	End 
@@ -3823,13 +3836,25 @@ Else
 		-- PEGASE [RS6130]
 		If @aiIdAppliNum = 3 
 			Begin
+				Set @iRS6130 = SIMPA2_TRT.sysadm.FN_CLE_NUMERIQUE ( 'RS6130') -- [RS6130]
 
-				Select  @blBlobCourrier = wb.txt_blob    
-				From PEGASE_TRT.sysadm.w_cour_blob_arch wb  with (nolock)    
-				Where wb.id_arch2 = @iIdArch    
+				If @iRS6130 > 0
+					Begin
+						Select  @blBlobCourrier = txt_blob    
+						From PEGASE_TRT.sysadm.courrier_pdf  with (nolock)      -- [CONVERT_PDF_STOCK]
+						Where id_arch2 = @iIdArch    
 
-				If @@RowCount = 1 Return @@Error  
+						Return @@Error    
 
+					End 
+				Else 
+					Begin
+						Select  @blBlobCourrier = wb.txt_blob    
+						From PEGASE_TRT.sysadm.w_cour_blob_arch wb  with (nolock)    
+						Where wb.id_arch2 = @iIdArch    
+
+						If @@RowCount = 1 Return @@Error  
+					End
 				-- Pas d'alternative à SAGA2_BLOB en simulation
 
 			End 
