@@ -5422,17 +5422,19 @@ Declare @sMaChaine VarChar ( 100 )
 -- Vérouille le lanceur  
 If Not ( sysadm.FN_CLE_NUMERIQUE ( 'LANCEUR_JOBS_SQL') > 0 ) Return  
   
--- Lancement valable pour une seule fois, on doit réamer le lanceur à chaque fois (par sécurité)  
-Update sysadm.cle Set valeur = 0, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'LANCEUR_JOBS_SQL'  
+-- Lancement valable pour une seule fois, on doit réarmer le lanceur à chaque fois (par sécurité)  
+-- Update sysadm.cle Set valeur = 0, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'LANCEUR_JOBS_SQL'  
+-- Update sysadm.cle Set valeur = 1, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'LANCEUR_JOBS_SQL'  
   
   
-Set @iTypeTrt = 2
+Set @iTypeTrt = 6
 /* @iTypeTrt   
 1  : Traitement pour PI085  
 2  : Redressement Blob plus vieux de 6 mois  
 3  : Test ADODB droit réseau
 4  : Test ADODB sur C:\ local Serveur de prod
 5  : Test Move de local vers rep dest
+6  : Cut Off BNP pour trt du 31/08/2025, modif param
 */  
   
 -----------------  
@@ -5830,6 +5832,35 @@ Select '@sRetourErrMail', @sRetourErrMail
   
   End   
 
+-- Traitement 6
+If @iTypeTrt = 6  
+  Begin 
+
+		If CONVERT(date, GETDATE()) = CONVERT(date, '31/08/2025')
+			Begin 
+				-- CHARLINE BNP 31/08 01:00 Lanceur SQL
+				Update sysadm.produit Set unt_sold_rl = 'J', dur_sold_pc = 1, unt_sold_pc = 'J' where id_prod between 200 and 299
+
+				-- Je coupe le Job
+				Update sysadm.cle Set valeur = 0, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'LANCEUR_JOBS_SQL'  
+
+				-- Mail info
+				 EXEC master.dbo.SPB_PS_MAIL   
+				   @sRetourErrMail OUTPUT,   
+				   'jff@spb.fr,clemarchand@spb.eu,rbreant@spb.eu',  
+				   'Param soldage BNP Modifié sur SIMPA2 à 1h00 du matin ce 31/08/25 à 1 Jour, le soldage de 04h00 du matin a dû donc solder tous les dossiers BNP SECU 201, 202, 203, 279, 280, 281, 282, 283',
+				   'Param soldage BNP Modifié à 1h00 du matin le 31/08/25',   
+				   null, -- From  
+				   '',   
+				   NULL,   
+				   NULL,   
+				   NULL,   
+				   NULL,   
+				   NULL  
+
+			End 
+
+  End 
 Go
 
 --------------------------------------------------------------------

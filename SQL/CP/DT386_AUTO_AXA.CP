@@ -46,6 +46,7 @@
 --
 -------------------------------------------------------------------
 -- JFF      07/03/2023   [LGY38]
+-- JFF      07/03/2023   [MON512]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_DT386_AUTOMATISATION_AXA' AND type = 'P' )
         DROP procedure sysadm.PS_I_DT386_AUTOMATISATION_AXA
@@ -112,8 +113,14 @@ If @iRet = -1 Return @iRet
 	If @iRet = -1 Return @iRet
 
 -- Création de la prestation
+	-- [MON512] on coupe la prestation, et on renvoie vers le dépt de gestion
+	/*
 	Exec @iRet = sysadm.PS_I_DT386_CREATION_PRESTA @adcIdSin
 	If @iRet = -1 Return @iRet
+	*/
+	Exec sysadm.PS_I_DT386_REJET @adcIdSin, 'Fin prestation automatique', 'La prestation automatique n''est plus possible (JIRA/MON512), un travail est créé pour le dépt de gestion par défaut dans tous les cas. Automatisation du process AXA via EXTR_AXA/SIMPA2 impossible donc.'
+	Return -1
+
 
 -- Création de l'état/status/validation.
 -- [DF005]

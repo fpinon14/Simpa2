@@ -1407,6 +1407,7 @@ Go
 -- JFF      18/09/2023   [RS5875_DIF_DIV_DET]
 -- JFF      05/08/2024   [MCO602_PNEU]
 -- JFF      19/12/2024   [MIG1_COUR_EMAILING]
+-- JFF      22/07/2025   [MIG165_BOUYGUES]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE' AND type = 'P' )
         DROP procedure sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE
@@ -1649,7 +1650,8 @@ Where cm.cod_maq = @sCodeMaquette
 			appli_sin_prov as 'courrier/@appli_sin_prov', -- [MIG1_COUR_EMAILING]
 			montant_reglement as 'courrier/@montant_reglement', -- [MIG1_COUR_EMAILING]
 			date_rdv as 'courrier/@date_rdv', -- [MIG1_COUR_EMAILING]
-			code_document as 'courrier/@code_document' -- [MIG1_COUR_EMAILING]
+			code_document as 'courrier/@code_document', -- [MIG1_COUR_EMAILING]
+			motif_reglement as 'courrier/@motif_reglement' -- [MIG165_BOUYGUES]
 
 		from sysadm.variable_xml_ksl_rs5045 v
 		Where id_xml = @iIdXml
@@ -2493,7 +2495,7 @@ Declare @TbWork Table (
 
 
 -- Contrôle sur l'horaire pour éviter les lancements à la main et donc désynchronisés par rapport au Job Windows (uniquement ebn production)
-
+/*  n'a plus tellement de sens à présent
 Set @dtGetDate = GETDATE()
 Set @dtCrtle0000 = CONVERT( Varchar (10 ), GetDate(), 103 ) + ' ' + Left ( CONVERT( Varchar (10 ), GetDate(), 24), 3) + '00:00'
 Set @dtCrtle2000 = CONVERT( Varchar (10 ), GetDate(), 103 ) + ' ' + Left ( CONVERT( Varchar (10 ), GetDate(), 24), 3) + '20:00'
@@ -2510,6 +2512,7 @@ IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id(
 				Return
 			End
 	End 
+*/
 
 Set @iCptTraite = 0 
 Set @iRowCountWord = 0 
@@ -2547,8 +2550,10 @@ Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'LNCTRT', 'OK', @sMsg
 Set @sMsgTrc = 'Obtention d''un Identifiant de lot de trace : ' + CONVERT ( varchar ( 20 ), @iIdLotTrc  )
 Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'OBTIDT', 'OK', @sMsgTrc, @iIdLotTrc 
 
+/*
 Set @sMsgTrc = 'Nettoyage mémoire Winword.exe et WordToPdf.exe'
 Exec sysadm.PS_RS5045_I_TRACE_MATP_ES_SINISTRE_KSL '', -1, 'INFO', 'OK', @sMsgTrc, @iIdLotTrc 
+*/
 
 -- Plus la peine depuis que le traitement n'est plus sur le serveur SQL de production
 -- Cette TaskKill sont dans un .BAT sur OpconEx2K12
@@ -3045,7 +3050,9 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		Set @sMailBody = @sMailBody + 'Contexte de l''erreur : L''objet SqlServer ADODB.Stream ne peut plus s''intancier, la conséquence est que les mails SHERPA/SIMPA2/PEGASE destinés aux assurés '
 		Set @sMailBody = @sMailBody + 'ne sont plus déposés pour que le scrutateur KSL les ramasse, les mails avec courriers PDF ne partent donc plus.' + char (10)
 		Set @sMailBody = @sMailBody + char (10)
-		Set @sMailBody = @sMailBody + 'Une des causes possibles :' + char (10)
+		Set @sMailBody = @sMailBody + 'Si le problème ne se reproduit pas dans 20 minutes, c''était ponctuel, tout refonctionne.' + char (10)
+		Set @sMailBody = @sMailBody + char (10)
+		Set @sMailBody = @sMailBody + 'Sinon, une des causes possibles :' + char (10)
 		Set @sMailBody = @sMailBody + '- Une soirée patch la veille a pu faire sauter le droit d''instanciation de cet objet OLE SqlServer lors d''un reboot du serveur qui s''est mal terminé (par exemple).' + char (10)
 		Set @sMailBody = @sMailBody + '  Le code suivant peut rétablir ce droit, à jouer par INFRA.' + char (10)
 		Set @sMailBody = @sMailBody + '    exec sp_configure ''Ole Automation Procedures'', 1 ' + char (10)
@@ -3064,7 +3071,7 @@ If @@servername <> master.dbo.SPB_FN_ServerName ('PRO')
 		Set @sMailBody = @sMailBody + '  Select * from ' + DB_NAME () + '.sysadm.trace_matp_es_sinistre_ksl_rs5045 where cree_le > ''' + @sDateHeureDebTrt + ''' order by 1 desc' + CHAR ( 10 )
 		Set @sMailBody = @sMailBody + CHAR ( 10 )
 		Set @sMailBody = @sMailBody + CHAR ( 10 )
-		Set @sMailBody = @sMailBody + 'Le problème peut malgré être juste ponctuel, s''il ne se reproduit pas au prochain tout, ce sera résolu automatiquement.' + CHAR ( 10 )
+		Set @sMailBody = @sMailBody + 'Le problème peut malgré tout être juste ponctuel, s''il ne se reproduit pas au prochain tout, ce sera résolu automatiquement.' + CHAR ( 10 )
 		Set @sMailBody = @sMailBody + 'A l''inverse, L''alerte reviendra toutes les 20 minutes tant que le problème ne sera pas résolu.' + CHAR ( 10 )
 		Set @sMailBody = @sMailBody + CHAR ( 10 )
 		Set @sMailBody = @sMailBody + 'Cordialement,'
@@ -3622,11 +3629,6 @@ If @iRowCountWord + @iRowCountHWord  > 0
 			Set @sMailBody = @sMailBody + 'Aucun mail n''est perdu, ils sont en attente de traitement.' + CHAR ( 10 )
 			Set @sMailBody = @sMailBody + 'L''alerte reviendra dans 20 minutes tant que le problème ne sera pas résolu.' + CHAR ( 10 )
 			Set @sMailBody = @sMailBody + 'Le programme est fait de façon à résoudre seul certains problèmes, si l''alerte ne revient pas dans 20 minutes, le programme aura résolu le problème.' + CHAR ( 10 )
-			Set @sMailBody = @sMailBody + CHAR ( 10 )
-			Set @sMailBody = @sMailBody + 'A l''inverse, si l''erreur revient toutes les 20 minutes, voyez avec Nicolas (Lerberquier)' + CHAR ( 10 )
-			Set @sMailBody = @sMailBody + 'En l''absence de Nicolas, voyez pourquoi le JOB du Scheduler Windows (j''ai bien dit Windows et pas SMA) dont le nom est "MATP SQL JFF_PROD" sur opcoex2k12 ne tourne pas normalement.' + CHAR ( 10 )
-			Set @sMailBody = @sMailBody + 'Pour plus d''infos sur le process, lisez le fichier "C:\PB_OPCON\MATP ESvKSL\LISEZ_MOI.TXT" sur opcoex2k12 ' + CHAR ( 10 )
-			Set @sMailBody = @sMailBody + CHAR ( 10 )
 			Set @sMailBody = @sMailBody + CHAR ( 10 )	
 			Set @sMailBody = @sMailBody + 'Cordialement,'
 			Set @sMailBody = @sMailBody + CHAR ( 10 )
