@@ -122,6 +122,7 @@ Go
 -- Retourne             :       Rien
 -- JFF      05/08/2024   [MCO602_PNEU]
 -- JFF      19/12/2024   [MIG1_COUR_EMAILING]
+-- JFF      22/07/2025   [MIG165_BOUYGUES]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2' AND type = 'P' )
         DROP procedure sysadm.PS_RS5045_I_PRE_ARMEMENT_CHAINE_DATA_XML_KSL_AVEC_DATA_SIN_ET_INTER_SIMPA2
@@ -187,7 +188,7 @@ Declare @sAdresse1Livraison varchar (100)
 Declare @sAdresse2Livraison varchar (100)
 Declare @sAdresseCpltLivraison varchar (35)
 Declare @sCpVilleLivraison varchar (100)
-
+Declare @sMotifReglement varchar (30) -- [MIG165_BOUYGUES]
 
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 BEGIN
@@ -210,7 +211,8 @@ BEGIN
 		   @sVille = i.adr_ville,
 		   @sAdrMail = i.adr_mail,
 		   @sIdInter = i.id_i,
-		   @sNotTelInterAssure = i.num_teld
+		   @sNotTelInterAssure = i.num_teld,
+		   @sMotifReglement = sysadm.FN_CLE_VAL ( 'MOTIF_REG', i.v_ref1, ';' ) -- [MIG165_BOUYGUES]
 
 	From SIMPA2_PRO.sysadm.inter i
 	Where id_sin = @adcIdSin
@@ -229,7 +231,8 @@ BEGIN
 				@sVille = i.adr_ville,
 				@sAdrMail = i.adr_mail,
 				@sIdInter = i.id_i,
-				@sNotTelInterAssure = i.num_teld
+				@sNotTelInterAssure = i.num_teld,
+			    @sMotifReglement = sysadm.FN_CLE_VAL ( 'MOTIF_REG', i.v_ref1, ';' ) -- [MIG165_BOUYGUES]
 
 		From SIMPA2_PRO.sysadm.w_inter i
 		Where id_sin = @adcIdSin
@@ -450,7 +453,8 @@ BEGIN
 		   @sVille = i.adr_ville,
 		   @sAdrMail = i.adr_mail,
 		   @sIdInter = i.id_i,
-		   @sNotTelInterAssure = i.num_teld
+		   @sNotTelInterAssure = i.num_teld,
+		   @sMotifReglement = sysadm.FN_CLE_VAL ( 'MOTIF_REG', i.v_ref1, ';' ) -- [MIG165_BOUYGUES]
 
 	From SIMPA2_TRT.sysadm.inter i
 	Where id_sin = @adcIdSin
@@ -469,7 +473,8 @@ BEGIN
 				@sVille = i.adr_ville,
 				@sAdrMail = i.adr_mail,
 				@sIdInter = i.id_i,
-				@sNotTelInterAssure = i.num_teld
+				@sNotTelInterAssure = i.num_teld,
+				@sMotifReglement = sysadm.FN_CLE_VAL ( 'MOTIF_REG', i.v_ref1, ';' ) -- [MIG165_BOUYGUES]
 
 		From SIMPA2_TRT.sysadm.w_inter i
 		Where id_sin = @adcIdSin
@@ -731,8 +736,8 @@ Set civ = @sCodCivCourt,
 	nom_livraison = @sNomLivraison, -- [MIG1_COUR_EMAILING]
 	adresse1_livraison = @sAdresse1Livraison, -- [MIG1_COUR_EMAILING]
 	adresse2_livraison = @sAdresse2Livraison, -- [MIG1_COUR_EMAILING]
-	cp_ville_livraison = @sCpVilleLivraison -- [MIG1_COUR_EMAILING]
-
+	cp_ville_livraison = @sCpVilleLivraison, -- [MIG1_COUR_EMAILING]
+	motif_reglement = @sMotifReglement -- [MIG165_BOUYGUES]
 
 Where id_xml = @aiIdXml
 
