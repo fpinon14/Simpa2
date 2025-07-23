@@ -4064,6 +4064,7 @@ private subroutine uf_controlergestion (ref s_pass astpass);//*-----------------
 //       JFF   22/02/2025 [TRT_APRES_COMMIT][PMO268_MIG48]
 //       JFF   31/03/2025 [MON374]
 //       JFF   07/05/2013 [MIG19_PSPLAF_SAGA2]
+//       JFF   22/07/2025 [MIG165_BOUYGUES]
 //*-----------------------------------------------------------------
 Long lTotCourrier, lCodEtat, lNbContact, lNbNat, lCptCTact, llig, lCpt, lVal1, lVal2, lVal3, lVal4, lIdOrianBout, lVal5, lVal6 
 Long lCptDetail, lTotDetail, lTotCmd, lDeb, lFin, lCptRegFrn, lCodeEtat, lRow, lVal, lIdGti, lIdInter, lRowAss, lTot, lIdDetail 
@@ -6302,6 +6303,13 @@ End IF
 If F_CLE_A_TRUE ( "MIG19_PSPLAF_SAGA2" ) Then
 	If Not bBloque And sPos = "" Then	
 		sPos = iUoGsSpSinistre2.uf_controlergestion_Deja_Indemnise ()
+	End If 
+End If
+
+// [MIG165_BOUYGUES]
+If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
+	If Not bBloque And sPos = "" Then	
+		sPos = iUoGsSpSinistre2.uf_controlergestion_Bouygues ()
 	End If 
 End If
 
@@ -54449,7 +54457,8 @@ iUoGsSpSinistre2.uf_initialiser_1 (	&
 	idw_LstInter, &
 	idw_wPiece, &
 	idw_wRefus, &
-	idw_Plafond &
+	idw_Plafond, &
+	idw_wFrais &
 	)
 // /[20241112110249883][DIVOBJ][JFF]
 end subroutine

@@ -3,10 +3,10 @@ global type f_cle_val_e from function_object
 end type
 
 forward prototypes
-global function string f_cle_val_e (string ascle, string asvaleur, ref string aschaine, string assep)
+global subroutine f_cle_val_e (string ascle, string asvaleur, ref string aschaine, string assep)
 end prototypes
 
-global function string f_cle_val_e (string ascle, string asvaleur, ref string aschaine, string assep);//*-----------------------------------------------------------------
+global subroutine f_cle_val_e (string ascle, string asvaleur, ref string aschaine, string assep);//*-----------------------------------------------------------------
 //*
 //* Fonction      : F_CLE_VAL
 //* Auteur        : JFF
@@ -23,11 +23,10 @@ global function string f_cle_val_e (string ascle, string asvaleur, ref string as
 //*
 //*-----------------------------------------------------------------
 
-String sVal
 n_cst_string lnvPFCString
 
 ascle = Trim ( ascle ) 
-If IsNull ( ascle ) Or ascle = "" Then Return ""
+If IsNull ( ascle ) Or ascle = "" Then Return
 
 asvaleur = Trim ( asvaleur ) 
 If IsNull ( asvaleur ) Then asvaleur = ""
@@ -37,14 +36,11 @@ asChaine = Trim ( asChaine )
 If IsNull ( asChaine ) Then asChaine = "" 
 
 assep = Trim ( assep ) 
-If IsNull ( assep ) Or assep = "" Then Return ""
+If IsNull ( assep ) Or assep = "" Then Return 
 
 
 lnvPFCString.of_setkeyvalue ( aschaine, ascle , asvaleur, assep )
 
-If IsNull ( sVal ) Then sVal = "" 
 
-Return sVal
-
-end function
+end subroutine
 

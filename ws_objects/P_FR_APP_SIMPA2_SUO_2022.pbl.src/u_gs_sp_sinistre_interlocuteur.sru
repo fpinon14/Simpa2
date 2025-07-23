@@ -168,6 +168,7 @@ private subroutine uf_preparermodifier (ref s_pass astpass);//*-----------------
 //       JFF   30/05/2023 [PMO89_RS4822]
 //       JFF   19/12/2024 [MIG1_COUR_EMAILING]
 //       JFF   27/03/2025 [PMO32_SPB175]
+//       JFF   22/07/2025 [MIG165_BOUYGUES]
 //*-----------------------------------------------------------------
 Boolean	bSupprime
 n_cst_string	lnvString 
@@ -431,6 +432,12 @@ If F_CLE_A_TRUE ( "MIG147_KRYS" ) Then
 	End If 
 End If 
 
+// [MIG165_BOUYGUES]
+If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
+	idw_wInter.uf_proteger( {"V_REF1" }, "1")
+End If
+
+
 end subroutine
 
 private subroutine uf_preparerinserer (ref s_pass astpass);//*-----------------------------------------------------------------
@@ -451,6 +458,7 @@ private subroutine uf_preparerinserer (ref s_pass astpass);//*------------------
 //        JFF    18/08/2020  [PM497-1]
 //        JFF    19/12/2024  [MIG1_COUR_EMAILING]
 //        JFF    27/03/2025  [PMO32_SPB175]
+//        JFF    22/07/2025  [MIG165_BOUYGUES]
 //*-----------------------------------------------------------------
 
 Long lIdSin, lIdInter, lTotInter, lDeb, lFin, lRowDs
@@ -597,6 +605,12 @@ If F_CLE_A_TRUE ( "MIG1_COUR_EMAILING" ) Then
 		idw_wInter.modify ("b_typo_courrier.text = 'Typologie courrier'" )
 	End If 
 End If 
+
+// [MIG165_BOUYGUES]
+If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
+	idw_wInter.uf_proteger( {"V_REF1" }, "1")
+End If
+
 
 end subroutine
 

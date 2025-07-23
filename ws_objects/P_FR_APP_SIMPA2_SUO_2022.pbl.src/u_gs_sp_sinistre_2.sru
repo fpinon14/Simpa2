@@ -27,6 +27,7 @@ DataWindow idw_wDetail
 DataWindow idw_wPiece
 DataWindow idw_wRefus
 DataWindow idw_Plafond
+DataWindow idw_wFrais
 
 StaticText		istAttenteDiverse
 
@@ -55,10 +56,11 @@ public function string uf_controlergestion_emailingksl ()
 public function long uf_zn_trt_divsin_ech_express_48h (string asdata, string asnomcol, long alrow)
 public function long uf_zn_trt_divsin_modepaiementpaybox (string asdata, string asnomcol, long alrow)
 public function boolean uf_validation_finale_trt_partaprescommit ()
-public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse, ref boolean abmig1_couremailing, ref u_datawindow_detail adw_lstinter, ref datawindow adw_wpiece, ref datawindow adw_wrefus, ref datawindow adw_plafond)
 public function long uf_zn_trt_divsin_decassureur (string asdata, string asnomcol, long alrow)
 public function long uf_zn_trt_divsin_lieu_repar (string asdata, string asnomcol, long alrow)
 public function string uf_controlergestion_deja_indemnise ()
+public function string uf_controlergestion_bouygues ()
+public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse, ref boolean abmig1_couremailing, ref u_datawindow_detail adw_lstinter, ref datawindow adw_wpiece, ref datawindow adw_wrefus, ref datawindow adw_plafond, datawindow adw_wfrais)
 end prototypes
 
 public function long uf_zn_trt_divsin_typeapp (string asdata, string asnomcol, long alrow, boolean abforcer);//*-----------------------------------------------------------------
@@ -1140,25 +1142,6 @@ For lCpt = 1 To lTotInter
 			sLibCodInter = sCodInter
 	End Choose 
 	
-	// Pour l'instant les courriers Emailing ne sont que pour l'assuré
-	/* [202502191703]
-	Choose Case sCodInter
-		Case "A"
-			// Ok
-		Case Else 
-			If Not IsNull ( sTypeMail ) And sTypeMail <> ""	Then
-				stMessage.sTitre		= "Emailing KSL : Courrier<=>Typ Inter"
-				stMessage.Icon			= Information!
-				stMessage.bErreurG	= FALSE
-				stMessage.Bouton		= Ok!
-				stMessage.sCode		= "WSIN916"
-				stMessage.sVar[1] = "(" + sLibCodInter + ") " + sNomInter		
-				F_Message ( stMessage ) 
-				Return "ALT_BLOC"
-			End If 
-			
-	End Choose
-	*/ 	
 	
 	// y a-t-il AMU un Règlement pour cet inter ?
 	dcMtARegInter = idw_lstinter.GetItemDecimal ( lCpt, "MT_A_REG")	 // [MIG1_COUR_EMAILING]
@@ -1507,51 +1490,6 @@ Return bRet
 
 end function
 
-public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse, ref boolean abmig1_couremailing, ref u_datawindow_detail adw_lstinter, ref datawindow adw_wpiece, ref datawindow adw_wrefus, ref datawindow adw_plafond);//*-----------------------------------------------------------------
-//*
-//* Fonction		: uf_initialiser_1 (Public)
-//* Auteur			: FABRY JF
-//* Date				: 12/11/2024
-//* Libellé			: 
-//* Commentaires	: Initialisation des instances pour l'objet numéro 2
-//*
-//* Arguments		: Voir arguments
-//*
-//* Retourne		: Rien
-//*
-//*-----------------------------------------------------------------
-//       JFF   19/12/2024 [MIG1_COUR_EMAILING]
-// TOTO
-//*-----------------------------------------------------------------
-
-iuoSpGsSinistre		= auoSpGsSinistre
-
-idw_detpro 				= adw_detpro
-idw_wsin   				= adw_wsin
-idw_lstwcommande 		= adw_lstwcommande
-idw_wdivsin 			= adw_wdivsin
-idw_wdivdet 			= adw_wdivdet
-
-ibCodicDartyValide	= abCodicDartyValide
-isTypeTrt				= asTypeTrt
-isReferentielApp		= asReferentielApp
-K_MAJZONE				= aK_MAJZONE
-idw_wDetail				= adw_wDetail
-
-idw_LstGti				= adw_LstGti
-
-istAttenteDiverse    = astAttenteDiverse
-
-ibMIG1_CourEmailing  = abMIG1_CourEmailing // [MIG1_COUR_EMAILING]
-
-idw_LstInter			= adw_LstInter
-
-idw_wPiece				= adw_wPiece
-idw_wRefus				= adw_wRefus
-idw_Plafond				= adw_Plafond
-
-end subroutine
-
 public function long uf_zn_trt_divsin_decassureur (string asdata, string asnomcol, long alrow);
 //*-----------------------------------------------------------------
 //*
@@ -1693,6 +1631,166 @@ End If
 Return sPos
 
 end function
+
+public function string uf_controlergestion_bouygues ();//*-----------------------------------------------------------------
+//*
+//* Fonction		: uf_controlergestion_Bouygues (PRIVATE)
+//* Auteur			: JFF
+//* Date				: 22/07/2025
+//* Libellé			:  [MIG165_BOUYGUES]
+//* Commentaires	:  Contrôle de gestion lié à Bouygyes
+//*                  
+//*
+//* Arguments		: 
+//*
+//* Retourne		: Rien
+//*
+//*-----------------------------------------------------------------
+
+String sPos, sVal
+Long lDeb, lFin
+Int NbreDetailARegler, NbreFraisARegler, iCasMotifReglt, iRow, iIdEvt, iCmd176NonHonorée 
+
+sPos = ""
+
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 405)
+
+If lDeb <= 0 Then Return sPos 
+
+// RAZ Variable motif_reglement
+iRow = idw_LstInter.Find ( "COD_INTER='A'", 1, idw_LstInter.Rowcount ())
+sVal = idw_LstInter.GetItemString ( iRow, "V_REF1" )
+If IsNull ( sVal ) Then sVal = ""
+sVal = F_CLE_VAL_E ( "MOTIF_REG", "0", sVal, ";" ) 
+idw_LstInter.SetItem ( 1, "V_REF1", sVal )
+
+// Interdit de règler plus détail à la fois pour de "cas" à passer à KSL
+idw_wDetail.SetFilter ( "COD_ETAT=500" ) 
+idw_wDetail.Filter ()
+NbreDetailARegler = idw_wDetail.RowCount () 
+idw_wDetail.SetFilter ( "" ) 
+idw_wDetail.Filter ()
+
+idw_wFrais.SetFilter ( "COD_ETAT=500" ) 
+idw_wFrais.Filter ()
+NbreFraisARegler = idw_wFrais.RowCount () 
+idw_wFrais.SetFilter ( "" ) 
+idw_wFrais.Filter ()
+
+
+If NbreDetailARegler + NbreFraisARegler > 1 Then
+	sPos = "ALT_BLOC"
+	
+	stMessage.sTitre		= "Nombre de règlements simultanés"
+	stMessage.Icon			= Information!
+	stMessage.bErreurG	= FALSE
+	stMessage.Bouton		= Ok!
+	stMessage.sCode		= "WSIN933"
+	F_Message ( stMessage )	
+
+End if 
+
+// Détection des cas à passer à KSL
+/* var xml motif_reglement
+2 : 940	(Remboursement Appareil garanti + Présence Remplacement en 176 )
+1 : 940   (Remboursement Appareil garanti)
+4 : 925	(UF sur Carte SIM)
+5 : 924	(Carte SIM)
+6 : 971	(Accessoires)
+7 : 1454 (Frais réparation) à ajouter par Agnès, et retirer le 1091
+*/
+iCasMotifReglt = 0
+
+iRow = idw_wDetail.Find ( "COD_ETAT=500" , 1, idw_wDetail.RowCount () )
+If iRow > 0 Then
+	iIdEvt = idw_wDetail.GetItemNumber ( iRow, "ID_EVT" ) 
+	iCmd176NonHonorée = idw_LstwCommande.Find ( "COD_ETAT <> 'ANN' AND STATUS_GC = 176", 1, idw_LstwCommande.RowCount () )
+	
+	Choose Case TRUE
+		Case iIdEvt = 940 and iCmd176NonHonorée > 0 
+			iCasMotifReglt = 2
+			
+		Case iIdEvt = 940 
+			iCasMotifReglt = 1
+			
+		Case iIdEvt = 925
+			iCasMotifReglt = 4
+	
+		Case iIdEvt = 924
+			iCasMotifReglt = 5
+
+		Case iIdEvt = 971
+			iCasMotifReglt = 6
+
+		Case iIdEvt = 1454
+			iCasMotifReglt = 7
+
+		Case Else 
+			iCasMotifReglt = 0
+	End Choose 
+	
+
+	// On arme sur l'inter Assuré le motif_reglement sur l'inter assuré qui sera relu plus tard
+	If iCasMotifReglt > 0 Then
+		iRow = idw_LstInter.Find ( "COD_INTER='A'", 1, idw_LstInter.Rowcount ())
+		sVal = idw_LstInter.GetItemString ( iRow, "V_REF1" )
+		If IsNull ( sVal ) Then sVal = ""
+		F_CLE_VAL_E ( "MOTIF_REG", String ( iCasMotifReglt ), sVal, ";" )
+		idw_LstInter.SetItem ( iRow, "V_REF1", sVal  )
+	End If
+	
+End IF 
+
+Return sPos
+
+
+end function
+
+public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse, ref boolean abmig1_couremailing, ref u_datawindow_detail adw_lstinter, ref datawindow adw_wpiece, ref datawindow adw_wrefus, ref datawindow adw_plafond, datawindow adw_wfrais);//*-----------------------------------------------------------------
+//*
+//* Fonction		: uf_initialiser_1 (Public)
+//* Auteur			: FABRY JF
+//* Date				: 12/11/2024
+//* Libellé			: 
+//* Commentaires	: Initialisation des instances pour l'objet numéro 2
+//*
+//* Arguments		: Voir arguments
+//*
+//* Retourne		: Rien
+//*
+//*-----------------------------------------------------------------
+//       JFF   19/12/2024 [MIG1_COUR_EMAILING]
+// TOTO
+//*-----------------------------------------------------------------
+
+iuoSpGsSinistre		= auoSpGsSinistre
+
+idw_detpro 				= adw_detpro
+idw_wsin   				= adw_wsin
+idw_lstwcommande 		= adw_lstwcommande
+idw_wdivsin 			= adw_wdivsin
+idw_wdivdet 			= adw_wdivdet
+
+ibCodicDartyValide	= abCodicDartyValide
+isTypeTrt				= asTypeTrt
+isReferentielApp		= asReferentielApp
+K_MAJZONE				= aK_MAJZONE
+idw_wDetail				= adw_wDetail
+
+idw_LstGti				= adw_LstGti
+
+istAttenteDiverse    = astAttenteDiverse
+
+ibMIG1_CourEmailing  = abMIG1_CourEmailing // [MIG1_COUR_EMAILING]
+
+idw_LstInter			= adw_LstInter
+
+idw_wPiece				= adw_wPiece
+idw_wRefus				= adw_wRefus
+idw_Plafond				= adw_Plafond
+idw_wFrais				= adw_wFrais // [MIG165_BOUYGUES]
+
+end subroutine
 
 on u_gs_sp_sinistre_2.create
 call super::create
