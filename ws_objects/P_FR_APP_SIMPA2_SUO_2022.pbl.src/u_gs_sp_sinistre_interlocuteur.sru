@@ -4409,6 +4409,7 @@ Long lDebDp368, lFinDp368
 
 
 // [LGY86] Interdiction de supprimer
+/* Couper car gêne la DGRC pour les BA Physique et les adresse mails erronées
 If F_CLE_A_TRUE ( "LGY86" ) Then
 	
 	sGetText = Trim ( idw_wInter.GetText ())
@@ -4429,7 +4430,7 @@ If F_CLE_A_TRUE ( "LGY86" ) Then
 	End If 
 	
 End If
-
+*/
 
 F_RechDetPro ( lDebDp368, lFinDp368, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 368 )	
 
