@@ -856,6 +856,7 @@ GO
 -- JFF      12/02/2016   [PI062]
 -- JFF      23/01/2018   [PM407-1]
 -- JFF      31/03/2025   [MIG82_JOURN_EVT]
+-- JFF		23/07/2025   Je mets @altSoldRl sur PS_RECUP_DOSSIER_ASOLDER, il y a @altSold avant c'était un bug
 if exists (select * from dbo.sysobjects where id = object_id(N'[sysadm].[PS_SOLDAGE]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 	drop procedure [sysadm].[PS_SOLDAGE]
 GO
@@ -1017,7 +1018,7 @@ BEGIN
 	-- BEGIN TRANSACTION
 
 	-- on recupere les dossiers à solder pour le produit
-	EXEC @retour = sysadm.PS_RECUP_DOSSIER_ASOLDER @idProd, @altRl2, @altSold, @dateMaxSolRl, @dateMaxSolPc
+	EXEC @retour = sysadm.PS_RECUP_DOSSIER_ASOLDER @idProd, @altRl2, @altSoldRl, @dateMaxSolRl, @dateMaxSolPc
 	-- PRINT '&&&&& @retour de PS_RECUP_DOSSIER_ASOLDER : ' + cast(@retour as varchar(2))
 
 	-- On annule la transaction par l'étiquette ONERROR en cas d'erreur
