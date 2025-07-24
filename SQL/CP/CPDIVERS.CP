@@ -2521,13 +2521,12 @@ Exec sysadm.PS_NETTOYAGE_REPERTOIRE @sVal
 -- Redressement param incohérent suite suppression
 Exec sysadm.PS_D_NETTOYAGE_VIEUX_PARAM_INCOHERENT  
 
+-- Aliminte table sysadm.param_dyn_demat à partir table maquette KSL TRACE_MAIL
+Exec sysadm.PS_ALIM_PARAM_DYN_DEMAT_SHERPA_AVEC_PARAM_TRACE_MAIL_MAQUETTE_KSL
 
 -- /!\ Laisser à la fin de préférence
 -- [HP252_276_HUB_PRESTA]
-If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
- Begin
-	Exec sysadm.PS_U_RS4616_MAJ_CMDE_TLS 'HUP', 2
- End 
+Exec sysadm.PS_U_RS4616_MAJ_CMDE_TLS 'HUP', 2
 
 GO
 
@@ -8815,6 +8814,55 @@ Set @sMailBody = @sMailBody + 'Tech Lead' + CHAR ( 10 )
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_ALIM_PARAM_DYN_DEMAT_SHERPA_AVEC_PARAM_TRACE_MAIL_MAQUETTE_KSL
+-- Auteur               :       FABRY JF
+-- Date                 :       24/07/2025
+-- Libellé              :       Bascule REC vers PPR et inversement
+--                              
+-- Commentaires         :       
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_ALIM_PARAM_DYN_DEMAT_SHERPA_AVEC_PARAM_TRACE_MAIL_MAQUETTE_KSL' AND type = 'P' )
+        DROP procedure sysadm.PS_ALIM_PARAM_DYN_DEMAT_SHERPA_AVEC_PARAM_TRACE_MAIL_MAQUETTE_KSL
+GO
 
+CREATE procedure sysadm.PS_ALIM_PARAM_DYN_DEMAT_SHERPA_AVEC_PARAM_TRACE_MAIL_MAQUETTE_KSL
+AS
 
+Insert into SHERPA_PRO.sysadm.param_dyn_demat
+Select distinct
+             Upper ( cod_maq ),
+             null, 
+             null, 
+             Case extension_sortie
+                    When 'HTM' Then 9
+					When 'HTML' Then 9
+                    Else -1
+             End,
+             Case extension_sortie
+                    When 'HTM' Then 180
+                    When 'HTML' Then 180
+                    Else -1
+             End,
+             Case extension_sortie
+                    When 'HTM' Then  'Mail HTML ' + Upper ( cod_maq )
+                    When 'HTML' Then  'Mail HTML ' + Upper ( cod_maq )
+                    Else '/!\ ALERTE /!\ Non défini, retirez cette ligne !!!'
+             End, 
+             GETDATE(), 
+             GETDATE(), 
+             'JFF' 
+             
+from TRACE_MAIL_PRO.sysadm.code_maquette_ksl_rs5045 cmq
+Where Not Exists ( 
+	Select Top 1 1 
+	From SHERPA_PRO.sysadm.param_dyn_demat pdyn
+	Where Upper ( pdyn.pattern1_id_lot ) = Upper ( cmq.cod_maq )
+)
+And cmq.extension_sortie in ( 'HTM', 'HTML' )
+
+Go
 
