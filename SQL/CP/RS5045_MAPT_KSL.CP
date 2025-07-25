@@ -2097,7 +2097,11 @@ Set @asChaineBCVretour = sysadm.FN_CLE_VAL_E ( 'ID_SEQ_MAIL', CONVERT ( varchar 
 -- Si l'adresse mail est anonymisée alors on marque directement l'enregistrement comme envoyé pour éviter qu'il ressorte en erreur côté KSL
 -- [ISM427064] Exception CC_ELD pas de marquage en erreur si pas d'adresse mail
 -- Exception pour ELD, où on laisse partir quand même, l'équipe KSL fera partir par courrier.
-If ( @asMailSend = 'XX@XX.COM' Or @asMailSend = '' Or @asMailSend is null ) And @asTypMail not in ( 'CC_ELD' )
+If ( Upper ( @asMailSend ) = 'XX@XX.COM' Or 
+	 @asMailSend = '' Or 
+	 @asMailSend is null Or 
+	 CharIndex ( 'NOREPLY', Upper ( @asMailSend ) ) > 0 
+   ) And @asTypMail not in ( 'CC_ELD' )
   Begin
 	Update sysadm.mail_push set 
 		mail_dte_trt = GETDATE(),

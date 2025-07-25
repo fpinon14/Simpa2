@@ -3568,3 +3568,247 @@ If @iCountVoucher <= 0 Return 1 -- Ok, rien ou que Voucher
 Return -1
 
 Go
+
+
+-------------------------------------------------------------------
+--
+-- Procédure            :       v_hub_prod_1
+-- Auteur               :       JFF
+-- Date                 :       25/07/2025
+-- Libell‚              :       [HP252_276_HUB_PRESTA][HUB1528]
+-- Commentaires         :       
+--                              /!\ A COMPILER SUR LA BASE SIMPA2 /!\
+--								
+--
+-- Retourne             :       rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'v_hub_prod_1' AND type = 'V' )
+            DROP view sysadm.v_hub_prod_1
+GO
+  
+CREATE view sysadm.v_hub_prod_1
+As  
+SELECT [id_depot_simpa2]
+      ,[id_sin]
+      ,[id_seq]
+      ,[depose_le]
+      ,[depose_par]
+      ,[cpt_essai]
+      ,[essai_le]
+      ,[alt_trt]
+      ,[traite_le]
+      ,[traite_par]
+      ,[id_hub_presta]
+      ,[id_four]
+      ,[typ_dommage]
+      ,[point_service]
+      ,[mode_logis]
+      ,[code_pickup]
+      ,[nom_pickup]
+      ,[ref_ass_pickup]
+      ,[adr1_pickup]
+      ,[adr2_pickup]
+      ,[adr3_pickup]
+      ,[adr_cp_pickup]
+      ,[adr_ville_pickup]
+      ,[code_process]
+      ,[lib_code_process]
+      ,[id_gti]
+      ,[lib_perso_gti]
+      ,[id_detail]
+      ,[id_prod]
+      ,[lib_prod]
+      ,[id_prod_adh]
+      ,[id_ets]
+      ,[id_adh]
+      ,[id_sdos]
+      ,[id_typ_art]
+      ,[cod_civ_livr]
+      ,[lib_civ_livr_court]
+      ,[lib_civ_livr_long]
+      ,[id_contrat_abonne]
+      ,[nom_ass]
+      ,[prenom_ass]
+      ,[nom_livr]
+      ,[prenom_livr]
+      ,[adr1_livr]
+      ,[adr2_livr]
+      ,[adr3_livr]
+      ,[adr_cp_livr]
+      ,[adr_ville_livr]
+      ,[num_tel1_ass]
+      ,[num_tel2_ass]
+      ,[num_tel3_ass]
+      ,[mail_assure]
+      ,[num_imei_app_sin]
+      ,[num_serie_app_sin]
+      ,[description_probleme]
+      ,[cod_etat]
+      ,[valide_le]
+      ,[valide_par]
+      ,[cmd_gen_le]
+      ,[id_ref_four]
+      ,[ordre_action]
+      ,[id_assureur]
+      ,[lib_assureur]
+      ,[lib_police]
+      ,[typ_app_sin]
+      ,[lib_typ_app_sin]
+      ,[marq_app_sin]
+      ,[modl_app_sin]
+      ,[ref_app_sin]
+      ,[num_tel_sin]
+      ,[mt_val_achat]
+      ,[mt_prise_en_charge]
+      ,[date_achat]
+      ,[etat_app_sin]
+      ,[code_verrou]
+      ,[desimlocke]
+      ,[info_spb_frn_cplt]
+  FROM [LS-SAGA2].[PRESTATAIRE].[edi].[DepotSimpa2ToHubPresta]
+
+Go
+
+-------------------------------------------------------------------
+--
+-- Procédure            :       v_hub_prod_2
+-- Auteur               :       JFF
+-- Date                 :       25/07/2025
+-- Libell‚              :       [HP252_276_HUB_PRESTA][HUB1528]
+-- Commentaires         :       
+--                              /!\ A COMPILER SUR LA BASE SIMPA2 /!\
+--								
+--
+-- Retourne             :       rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'v_hub_prod_2' AND type = 'V' )
+            DROP view sysadm.v_hub_prod_2
+GO
+  
+CREATE view sysadm.v_hub_prod_2
+As  
+SELECT [id_depot_hub]
+      ,[depose_le]
+      ,[depose_par]
+      ,[alt_trt]
+      ,[traite_le]
+      ,[traite_par]
+      ,[id_hub_presta]
+      ,[num_cmd_frn]
+      ,[activity_code]
+      ,[activity_return_code]
+      ,[activity_reason_code]
+      ,[typ_ba_aller]
+      ,[perte_aller]
+      ,[diag_video_engage]
+      ,[resolu_diag_video]
+      ,[dte_rdv_conf]
+      ,[mode_logis_ret]
+      ,[point_service_ret]
+      ,[dte_rcp_frn]
+      ,[site_action]
+      ,[app_incomplet]
+      ,[dte_fin_trait]
+      ,[comment_frn]
+      ,[num_bon_trp]
+      ,[nom_transporteur]
+      ,[dte_rcp_app_cli]
+      ,[app_swap]
+      ,[autres_infos_rempl]
+      ,[marque_rempl]
+      ,[modele_rempl]
+      ,[num_imei_rempl]
+      ,[num_serie_rempl]
+      ,[couleur_rempl]
+      ,[cap_stk_rempl]
+      ,[neuf_recond_rempl]
+      ,[prix_ttc_rempl]
+      ,[prble_livraison]
+      ,[pec_prble_livraison]
+      ,[id_hub_presta_sav]
+      ,[info_frn_spb_cplt]
+      ,[chemin_fic]
+      ,[nom_fic]
+  FROM [LS-SAGA2].[PRESTATAIRE].[edi].[DepotHubToSimpa2Presta]
+
+
+Go
+
+-------------------------------------------------------------------
+--
+-- Procédure            :       v_hub_prod_3
+-- Auteur               :       JFF
+-- Date                 :       25/07/2025
+-- Libell‚              :       [HP252_276_HUB_PRESTA][HUB1528]
+-- Commentaires         :       
+--                              /!\ A COMPILER SUR LA BASE SIMPA2 /!\
+--								
+--
+-- Retourne             :       rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'v_hub_prod_3' AND type = 'V' )
+            DROP view sysadm.v_hub_prod_3
+GO
+  
+CREATE view sysadm.v_hub_prod_3
+As  
+SELECT StoH.[id_depot_simpa2]
+      ,StoH.[id_sin]
+      ,StoH.[id_seq]
+      ,StoH.[depose_le] depose_le_sim2
+      ,StoH.[depose_par] depose_par_sim2
+      ,StoH.[cpt_essai]
+      ,StoH.[essai_le]
+      ,StoH.[alt_trt] alt_trt_sim2
+      ,StoH.[traite_le] traite_le_sim2
+      ,StoH.[traite_par] traite_par_sim2
+      ,StoH.[id_four]
+      ,StoH.[typ_dommage]
+	  ,HtoS.[id_depot_hub]
+      ,HtoS.[depose_le] depose_le_hub
+      ,HtoS.[depose_par] depose_par_hub
+      ,HtoS.[alt_trt]
+      ,HtoS.[traite_le]
+      ,HtoS.[traite_par]
+      ,HtoS.[id_hub_presta]
+      ,HtoS.[num_cmd_frn]
+      ,HtoS.[activity_code]
+      ,HtoS.[activity_return_code]
+      ,HtoS.[activity_reason_code]
+      ,HtoS.[typ_ba_aller]
+      ,HtoS.[perte_aller]
+      ,HtoS.[diag_video_engage]
+      ,HtoS.[resolu_diag_video]
+      ,HtoS.[dte_rdv_conf]
+      ,HtoS.[mode_logis_ret]
+      ,HtoS.[point_service_ret]
+      ,HtoS.[dte_rcp_frn]
+      ,HtoS.[site_action]
+      ,HtoS.[app_incomplet]
+      ,HtoS.[dte_fin_trait]
+      ,HtoS.[comment_frn]
+      ,HtoS.[num_bon_trp]
+      ,HtoS.[nom_transporteur]
+      ,HtoS.[dte_rcp_app_cli]
+      ,HtoS.[app_swap]
+      ,HtoS.[autres_infos_rempl]
+      ,HtoS.[marque_rempl]
+      ,HtoS.[modele_rempl]
+      ,HtoS.[num_imei_rempl]
+      ,HtoS.[num_serie_rempl]
+      ,HtoS.[couleur_rempl]
+      ,HtoS.[cap_stk_rempl]
+      ,HtoS.[neuf_recond_rempl]
+      ,HtoS.[prix_ttc_rempl]
+      ,HtoS.[prble_livraison]
+      ,HtoS.[pec_prble_livraison]
+      ,HtoS.[id_hub_presta_sav]
+      ,HtoS.[info_frn_spb_cplt]
+      ,HtoS.[chemin_fic]
+      ,HtoS.[nom_fic]
+  FROM [LS-SAGA2].[PRESTATAIRE].[edi].[DepotHubToSimpa2Presta] HtoS,
+	   [LS-SAGA2].[PRESTATAIRE].[edi].[DepotSimpa2ToHubPresta] StoH
+  WHERE StoH.id_hub_presta = HtoS.id_hub_presta
+
+Go
+

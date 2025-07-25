@@ -8835,7 +8835,7 @@ AS
 Insert into SHERPA_PRO.sysadm.param_dyn_demat
 Select distinct
              Upper ( cod_maq ),
-             null, 
+             'LMAI', 
              null, 
              Case extension_sortie
                     When 'HTM' Then 9
