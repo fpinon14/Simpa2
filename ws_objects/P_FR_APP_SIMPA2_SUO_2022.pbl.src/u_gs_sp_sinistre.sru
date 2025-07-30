@@ -10857,6 +10857,7 @@ private function string uf_controlergestion_commandes ();//*--------------------
 //    JFF   01/10/2018 [PM445-1]
 //    JFF   07/03/2024 [HP252_276_HUB_PRESTA]
 //    JFF   05/08/2024 [MCO602_PNEU]
+//    JFF   30/07/2025 [20250730153200137]
 //*-----------------------------------------------------------------
 
 String	sPos, sVar, sVar2, sRech, sTitreCplt, sVal1, sVal2, sVal 
@@ -12711,6 +12712,18 @@ If Not bOk And stMessage.sCode = "" Then
 	stMessage.Bouton		= Ok!
 	stMessage.sCode = "COMD023"		
 End If
+
+// [20250730153200137]
+If bOk Then
+	lVal1 = idw_LstwCommande.Find ( "COD_ETAT IN ( 'CNV' ) AND POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0 AND ID_REF_FOUR IN ( 'REFUSE_A_REEXP' )", 1, idw_LstwCommande.RowCount() )
+	lVal2 = idw_LstwCommande.Find ( "COD_ETAT IN ( 'ECT' ) AND POS ( INFO_SPB_FRN_CPLT, 'HP_ID_HUB_PRESTA') > 0 AND ID_REF_FOUR IN ( 'A_REPARER', 'A_DIAGNOSTIQUER' ) and status_gc in ( 153, 154, 169, 305 )", 1, idw_LstwCommande.RowCount() )
+	
+	If lVal2 > 0 And lVal1 > 0 Then
+		idw_LstwCommande.SetItem ( lVal2, "COD_ETAT", "RFO" )
+	End If
+End If
+// [20250730153200137]
+
 
 If Not bOk Then sPos = "ALT_BLOC" 
 
