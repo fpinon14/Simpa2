@@ -125,6 +125,7 @@
 --	   JFF 23/04/2025   [HUB1267]
 --	   JFF 23/05/2025   [HUB1530]
 --     JFF 06/06/2025   [20250606091224420] Modif sur ajustement de date
+--     JFF 30/07/2025   [20250730153200137]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U01_COMMANDE' AND type = 'P' )
         DROP procedure sysadm.PS_U01_COMMANDE
@@ -254,6 +255,7 @@ Declare @dtDtePossible DateTime -- Prochaine date possible pour passer le règlem
 Declare @sVal VarChar ( 100 )
 Declare @sVar VarChar ( 255 )
 Declare @iRemplacementAutomatiqueHub Integer  
+Declare @sAdrFcNomActuel VarChar ( 35 ) -- [20250730153200137]
 
 Set @iCasPropoAutoO2m = 0 -- [PC877]
 Set @iTraite = 0 
@@ -337,7 +339,9 @@ Select  @sIdSerieNouvActuel = c.id_serie_nouv,
 	@dtDteEnvCliActuel	= c.dte_env_cli, -- [VDOC24784]
 	@dtDteRcpMobCliActuel = c.dte_rcp_mob_cli, -- [VDOC24784]
 	@dtDteRcpMobCliActuelBCV = sysadm.FN_CLE_VAL ( 'DTE_RCP_MOB_CLI', c.info_frn_spb_cplt, ';'), -- [VDOC24784]
-	@sMtPaiementPayBox  = sysadm.FN_CLE_VAL ( 'MT_CPLT_PAYBOX_SCM', c.info_spb_frn_cplt, ';' ) -- [PM462-1][V3]
+	@sMtPaiementPayBox  = sysadm.FN_CLE_VAL ( 'MT_CPLT_PAYBOX_SCM', c.info_spb_frn_cplt, ';' ), -- [PM462-1][V3]
+	@sAdrFcNomActuel = c.adrfc_nom  -- [20250730153200137]
+
 From	sysadm.commande c,
 	sysadm.sinistre s
 Where   c.id_sin = @dcIdSin
@@ -750,6 +754,14 @@ If Len ( sysadm.FN_CLE_VAL ( 'DTE_RCP_MOB_CLI', @sInfoFrnSpbCplt, ';')) > 0
   Begin
 	Set @dtDteRcpMobCli = sysadm.FN_CLE_VAL ( 'DTE_RCP_MOB_CLI', @sInfoFrnSpbCplt, ';')
   End 
+
+-- [20250730153200137] Protection des données contre l'écrasement
+If @iPrestaHUB > 0
+	Begin
+		IF @idBonTransp is null And  LEN ( @idBonTranspActuel ) > 0 Set @idBonTransp = @idBonTranspActuel
+		IF @sAdrFcNom is null And  LEN ( @sAdrFcNomActuel ) > 0 Set @sAdrFcNom = @sAdrFcNomActuel
+		IF @dtDteRcpMobCli is null And  LEN ( @dtDteRcpMobCliActuel ) > 0 Set @dtDteRcpMobCli = @dtDteRcpMobCliActuel
+	End 
 
 If @iStatusGc in ( 301 ) Or @sCodEtatActuel in ( 'RPC', 'RFO', 'RSP' )
  Begin
