@@ -31582,6 +31582,7 @@ private function integer uf_ctrl_fichier_frn_hub ();//*-------------------------
 //        JFF  23/04/2025  [HUB1267]
 //			 JFF  12/05/2025  [20250512134745313] On reprend le bon de trans de la presta en base.
 //    	 JFF  30/07/2025  [20250730153200137]
+//    	 JFF  30/07/2025  [HUB1896]
 //*-----------------------------------------------------------------
 
 Int iRet, iStatusGc, iInfoSpbFrn
@@ -32354,14 +32355,17 @@ For lCpt = lTotLig To 1 Step -1
 	If IsNull ( sVal1 ) Then sVal1 = ""		
 
 	Choose Case lVal
-			
+
+		// [HUB1896] plus à ce moment
+		/*
 		Case 177, 178
 			If IsNull ( sVal ) Or Len ( sVal ) <= 0 And sVal1 <> "PROXIMITE" Then
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
 				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le champ NUM_BON_TRP doit être renseigné sur le statut " + String ( lVal ) )
 			End If
-
+		*/
+		
 		Case 165
 			If iInfoSpbFrn = 970 and (IsNull ( sVal ) Or Len ( sVal ) <= 0 ) Then
 				iRet = -1
