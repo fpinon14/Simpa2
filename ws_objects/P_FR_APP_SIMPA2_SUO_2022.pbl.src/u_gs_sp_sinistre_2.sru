@@ -1661,7 +1661,7 @@ If lDeb <= 0 Then Return sPos
 iRow = idw_LstInter.Find ( "COD_INTER='A'", 1, idw_LstInter.Rowcount ())
 sVal = idw_LstInter.GetItemString ( iRow, "V_REF1" )
 If IsNull ( sVal ) Then sVal = ""
-sVal = F_CLE_VAL_E ( "MOTIF_REG", "0", sVal, ";" ) 
+F_CLE_VAL_E ( "MOTIF_REG", "0", sVal, ";" ) 
 idw_LstInter.SetItem ( 1, "V_REF1", sVal )
 
 // Interdit de règler plus détail à la fois pour de "cas" à passer à KSL
