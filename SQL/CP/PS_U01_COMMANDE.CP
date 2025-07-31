@@ -256,6 +256,9 @@ Declare @sVal VarChar ( 100 )
 Declare @sVar VarChar ( 255 )
 Declare @iRemplacementAutomatiqueHub Integer  
 Declare @sAdrFcNomActuel VarChar ( 35 ) -- [20250730153200137]
+Declare @iIdBonTranspModifie Integer 
+Declare @iAdrFcNomModifie Integer 
+Declare @iDteRcpMobCliModifie Integer 
 
 Set @iCasPropoAutoO2m = 0 -- [PC877]
 Set @iTraite = 0 
@@ -756,11 +759,30 @@ If Len ( sysadm.FN_CLE_VAL ( 'DTE_RCP_MOB_CLI', @sInfoFrnSpbCplt, ';')) > 0
   End 
 
 -- [20250730153200137] Protection des données contre l'écrasement
+Set @iIdBonTranspModifie = 0
+Set @iAdrFcNomModifie = 0
+Set @iDteRcpMobCliModifie = 0
+
 If @iPrestaHUB > 0
 	Begin
-		IF @idBonTransp is null And  LEN ( @idBonTranspActuel ) > 0 Set @idBonTransp = @idBonTranspActuel
-		IF @sAdrFcNom is null And  LEN ( @sAdrFcNomActuel ) > 0 Set @sAdrFcNom = @sAdrFcNomActuel
-		IF @dtDteRcpMobCli is null And  LEN ( @dtDteRcpMobCliActuel ) > 0 Set @dtDteRcpMobCli = @dtDteRcpMobCliActuel
+		IF @idBonTransp is null And  LEN ( @idBonTranspActuel ) > 0 
+			Begin 
+				Set @iIdBonTranspModifie = 1
+				Set @idBonTransp = @idBonTranspActuel
+			End 
+
+		IF @sAdrFcNom is null And  LEN ( @sAdrFcNomActuel ) > 0 
+			Begin 
+				Set @iAdrFcNomModifie = 1
+				Set @sAdrFcNom = @sAdrFcNomActuel
+			End 
+	
+	
+		IF @dtDteRcpMobCli is null And  LEN ( @dtDteRcpMobCliActuel ) > 0 
+			Begin
+				Set @iDteRcpMobCliModifie = 1 
+				Set @dtDteRcpMobCli = @dtDteRcpMobCliActuel
+			End 
 	End 
 
 If @iStatusGc in ( 301 ) Or @sCodEtatActuel in ( 'RPC', 'RFO', 'RSP' )
@@ -906,7 +928,7 @@ If @iStatusGc in ( 301 ) Or @sCodEtatActuel in ( 'RPC', 'RFO', 'RSP' )
 	And	commande.id_seq = @iIdSeq
 		
 	-- [VDOC19112]
-	If @idBonTranspActuel <> @idBonTransp And LEN ( @idBonTranspActuel ) > 0 And LEN ( @idBonTransp ) > 0 
+	If @idBonTranspActuel <> @idBonTransp And LEN ( @idBonTranspActuel ) > 0 And LEN ( @idBonTransp ) > 0 And @iIdBonTranspModifie = 0 -- [20250730153200137]
 		Begin
 			Update 	sysadm.commande
 			Set	sysadm.commande.id_bon_transp = @idBonTransp
@@ -939,7 +961,7 @@ If @iStatusGc in ( 301 ) Or @sCodEtatActuel in ( 'RPC', 'RFO', 'RSP' )
 			And	commande.id_seq = @iIdSeq
 		End
 
-	If @dtDteRcpMobCliActuel <> @dtDteRcpMobCli Or ( @dtDteRcpMobCli is not null And @dtDteRcpMobCliActuel is null )
+	If @dtDteRcpMobCliActuel <> @dtDteRcpMobCli Or ( @dtDteRcpMobCli is not null And @dtDteRcpMobCliActuel is null ) 
 		Begin
 			Update 	sysadm.commande
 			Set	sysadm.commande.dte_rcp_mob_cli = @dtDteRcpMobCli
@@ -1025,6 +1047,29 @@ Begin
 		And	id_seq = @iIdSeq
 End
 -- :[DT111]
+
+-- [20250730153200137] On remet les données
+If @iPrestaHUB > 0
+	Begin 
+		If @iIdBonTranspModifie > 0
+			Begin 
+				Set @idBonTransp = null
+				Set @iIdBonTranspModifie = 0
+			End 
+
+		If @iAdrFcNomModifie > 0 
+			Begin 
+				Set @sAdrFcNom = null
+				Set @iAdrFcNomModifie  = 0
+			End 
+
+		IF @iDteRcpMobCliModifie > 0 
+			Begin 
+				Set @dtDteRcpMobCli = null
+				Set @iDteRcpMobCliModifie = 0 
+			End 
+	End 
+
 
 -- [PM254_V1]
 Set @sVal1 = Convert ( VarChar ( 15), @dtDteRcpFrn, 103 ) 

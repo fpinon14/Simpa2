@@ -1819,7 +1819,7 @@ CREATE procedure sysadm.PS_RS5045_I_MAIL_PUSH_KSL_V01
 		@adtDteHExec			DateTime, -- Forcé par le client appelant, sinon null et pris par défaut de TRACE_MAIL_xxx.sysadm.chem_depot_ksl_rs5045 si besoin (voir JFF), Date et heure avant laquelle le mail ne peut pas être envoyé, null si aucune critère
 		@asChaineBCValler		VarChar ( 255 ), -- [RS6044_REL_MAIL]
 		@asChaineBCVretour		VarChar ( 255 ) OutPut, -- [RS6044_REL_MAIL]
-		@asErrOutPut			VarChar ( 255 ) OutPut          
+		@asErrOutPut			VarChar ( 255 ) OutPut     
 AS  
 
 Declare @sCodeMaquette VarChar ( 100 )

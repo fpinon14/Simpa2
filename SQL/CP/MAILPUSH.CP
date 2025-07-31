@@ -1860,6 +1860,7 @@ Go
 --	   JFF  26/04/2023   [RS5045_REF_MATP]
 --     JFF  10/10/2023   [RS4521] Suppression critère restriction ISM [ISM344831] @sBA_PhysiqueCMA
 --     JFF  28/10/2024   [MCO1054]
+--     JFF  31/07/2025   [HUB1890]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S03_MAILPUSH_ENVTEL_REMP_REPAR_V03' AND type = 'P' )
         DROP procedure sysadm.PS_S03_MAILPUSH_ENVTEL_REMP_REPAR_V03
@@ -1946,7 +1947,11 @@ Declare
   @sXMLVar   VarChar ( max ), -- [RS5045_REF_MATP]
   @sIdHubPresta VarChar ( 20 ),
   @sTypMail VarChar ( 6 ),
-  @sSiteAction VarChar ( 50 )
+  @sSiteAction VarChar ( 50 ),
+  @dtHeureExec Datetime -- [HUB1890]
+
+  -- [HUB1890] Pour des raisons d'ordre d'envoi de mail, je décale l'envoi de ce mail de 30 minutes
+  Set @dtHeureExec = DATEADD ( MINUTE, 30, GETDATE() ) 
 
   Set @asCasRetour = ''  
   Set @sMailBody = ''  
@@ -2629,7 +2634,7 @@ Declare
 						-1,
 						@sXMLVar,
 						null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
-						null, -- dteh_exec
+						@dtHeureExec, -- [HUB1890] -- dteh_exec null, -- dteh_exec
 						@sErrOutPut OutPut
 
 						Set @asCasRetour = Left ( @sErrOutPut, 50 )
@@ -2737,7 +2742,7 @@ Declare
 				-1,
 				@sXMLVar,
 				null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
-				null, -- dteh_exec
+				@dtHeureExec, -- [HUB1890] -- dteh_exec null, -- dteh_exec
 				@sErrOutPut OutPut
 
 				Set @asCasRetour = Left ( @sErrOutPut, 50 )
@@ -14864,6 +14869,7 @@ Go
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
 -- JFF  28/10/2024  [MCO1054]
+-- JFF  31/07/2025  [HUB1890]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAILPUSH_ENV_APP_REMPL' AND type = 'P' )
         DROP procedure sysadm.PS_S_MAILPUSH_ENV_APP_REMPL
@@ -14931,10 +14937,11 @@ Declare
   @dcIdInter Decimal ( 2 ), -- [RS5045_REF_MATP]
   @sCodeMaquette VarChar ( 255 ), -- [RS5045_REF_MATP]
   @sErrOutPut VarChar ( 255 ), -- [RS5045_REF_MATP]
-  @sXMLVar   VarChar ( max ) -- [RS5045_REF_MATP]
+  @sXMLVar   VarChar ( max ), -- [RS5045_REF_MATP]
+  @dtHeureExec Datetime -- [HUB1890]
 
-
-
+  -- [HUB1890] Pour des raisons d'ordre d'envoi de mail, je décale l'envoi de ce mail de 30 minutes
+  Set @dtHeureExec = DATEADD ( MINUTE, 30, GETDATE() ) 
 
   Set @asCasRetour = ''
   Set @sMailBody = ''
@@ -15201,7 +15208,7 @@ Declare
 			-1,
 			@sXMLVar,
 			null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
-			null, -- dteh_exec
+			@dtHeureExec, -- [HUB1890] -- dteh_exec
 			@sErrOutPut OutPut
 
 			Set @asCasRetour = Left ( @sErrOutPut, 50 )
@@ -15304,7 +15311,7 @@ Declare
 			-1,
 			@sXMLVar,
 			null, -- id_chem, peut être forcé mais si null, sera pris par défaut sysadm.code_maquette_ksl_rs5045
-			null, -- dteh_exec
+			@dtHeureExec, -- [HUB1890] -- dteh_exec
 			@sErrOutPut OutPut
 
 			Set @asCasRetour = Left ( @sErrOutPut, 50 )
