@@ -1815,8 +1815,8 @@ Set @sDIR = 'DIR "' + @sRepCourDest + '*.DOT" /b'
 -- @TbRepCour se charge avec la liste des fichiers du répertoire
 Insert into @TbRepCour2 EXEC master.dbo.xp_cmdshell @sDIR 
 Delete @TbRepCour2 where nom_fic is null
-Delete @TbRepCour2 where left ( ltrim ( nom_fic ), 16 ) = 'ACCESS IS DENIED'
-Delete @TbRepCour2 where charindex ( 'NETWORK', nom_fic ) > 0 
+Delete @TbRepCour2 where left ( ltrim ( Upper ( nom_fic ) ), 16 ) = 'ACCESS IS DENIED'
+Delete @TbRepCour2 where charindex ( 'NETWORK', Upper ( nom_fic ) ) > 0 
 Update @TbRepCour2 Set nom_fic = Upper ( nom_fic )
 Insert into @TbRepCour Select nom_fic, 0  From @TbRepCour2
 
@@ -1844,6 +1844,10 @@ While Exists ( Select Top 1 1 From @TbRepCour where marquage = 0 )
 
 	Update @TbRepCour Set marquage = 1 Where id_seq = @iIdSeq
  End
+-- Nettoyage des valeurs ne devant pas être dans -W8
+Delete sysadm.code where id_typ_code = '-W8' And
+CharIndex ( 'DENIED', Upper ( lib_code ) ) > 0 Or 
+CharIndex ( 'NETWORK', Upper ( lib_code ) ) > 0 
 
 -- Détecte les objets SQL supprimé de façon malveillante
 Exec sysadm.PS_SI_DETECTEUR_SUPP_OBJ_SQL
