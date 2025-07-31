@@ -2779,6 +2779,7 @@ private subroutine uf_controlersaisie (ref s_pass astpass);//*------------------
 //					FPI		31/07/2017	[CTL_MAIL] Ajout contrôle des emails
 //       		JFF   	15/05/2019 	[DT386_EXTR_AXA]
 //        		JFF   	05/08/2024  [MCO602_PNEU]
+//        		JFF   	31/07/2025  [BUG_INTER]
 //*-----------------------------------------------------------------
 
 String 				sCol [], sErr [], sVal [], sValFinale, sValQuote, sFind, sMarq, sIdContratAbonne, sIMEI, s15Zero
@@ -3230,16 +3231,19 @@ End If
 /*------------------------------------------------------------------*/
 lTotInter = idw_LstInter.RowCount ()
 
-For	lCpt = 1	To lTotInter
-		sCodModeReg = idw_LstInter.GetItemString ( lCpt, "COD_MODE_REG" )
-		If	idw_LstInter.GetItemNumber ( lCpt, "MT_A_REG" ) > 0 Then
-			If	IsNull ( sCodModeReg ) Or sCodModeReg = ""	Then
-				If sPos = "" Then sPos = "REF_CIE"					// On se repositionne sur la zone REF_CIE
-				sText = sText + " - Le mode de règlement pour l'interlocuteur " + &
-							idw_LstInter.GetItemString ( lCpt, "NOM" ) + sNouvelleLigne
+// [BUG_INTER]
+If NOT F_CLE_A_TRUE ( "BUG_INTER" ) Then
+	For	lCpt = 1	To lTotInter
+			sCodModeReg = idw_LstInter.GetItemString ( lCpt, "COD_MODE_REG" )
+			If	idw_LstInter.GetItemNumber ( lCpt, "MT_A_REG" ) > 0 Then
+				If	IsNull ( sCodModeReg ) Or sCodModeReg = ""	Then
+					If sPos = "" Then sPos = "REF_CIE"					// On se repositionne sur la zone REF_CIE
+					sText = sText + " - Le mode de règlement pour l'interlocuteur " + &
+								idw_LstInter.GetItemString ( lCpt, "NOM" ) + sNouvelleLigne
+				End If
 			End If
-		End If
-Next
+	Next
+End IF 
 
 /*------------------------------------------------------------------*/
 /* On vérifie maintenant si les zones ID_NATSIN, ID_TERRIT,         */
@@ -4111,6 +4115,7 @@ String sLibMemoire, sValCtrle, sModeFctDp345
 Integer iCodResilAdh, iIdEvtPce 
 Boolean 	bDdePceUFAssure, bRefUFAssure, bRegUFAssure 
 n_cst_string lnvPFCString
+String sCodModeReg, sText
 
 stMessage.sTitre		= "Conrôle de saisie du sinistre"
 stMessage.Icon			= Information!
@@ -4281,6 +4286,33 @@ If	Not bBloque Then
 		If sPos = "" Then
 			sPos	=	Uf_Calcul_Montant_Inter ( )
 		End If
+	
+		// [BUG_INTER]
+		If F_CLE_A_TRUE ( "BUG_INTER" ) Then
+			If Not bBloque And sPos = "" Then
+				For	lCpt = 1	To lTotInter
+						sCodModeReg = idw_LstInter.GetItemString ( lCpt, "COD_MODE_REG" )
+						If	idw_LstInter.GetItemNumber ( lCpt, "MT_A_REG" ) > 0 Then
+							If	IsNull ( sCodModeReg ) Or sCodModeReg = ""	Then
+								If sPos = "" Then sPos = "REF_CIE"					// On se repositionne sur la zone REF_CIE
+								sText = " - Le mode de règlement pour l'interlocuteur " + idw_LstInter.GetItemString ( lCpt, "NOM" )
+											
+								stMessage.sTitre		= "Contrôle de saisie"
+								stMessage.Icon			= Information!
+								stMessage.bErreurG	= FALSE
+								stMessage.Bouton		= OK!
+								stMessage.sCode		= "GENE001"
+								stMessage.sVar[1]		= sText
+								F_Message ( stMessage )
+								sPos	= "ALT_BLOC"
+								Exit
+
+							End If
+						End If
+				Next
+			End IF 
+		End IF	
+	
 	
 /*------------------------------------------------------------------*/
 /* [DCMP070914].001 Verification paramétrage protocole AIG          */
