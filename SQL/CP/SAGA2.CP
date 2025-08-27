@@ -1513,6 +1513,8 @@ Go
 -- Références           :       
 --
 -------------------------------------------------------------------
+--  JFF   27/08/2025 [20250827140453367_MIG138]
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_MAJ_DES_BOUTIQUES_SAGA2_DANS_TABLE_BOUTIQUE_SIMPA2' AND type = 'P' )
         DROP procedure sysadm.PS_MAJ_DES_BOUTIQUES_SAGA2_DANS_TABLE_BOUTIQUE_SIMPA2
 GO
@@ -1707,6 +1709,23 @@ While Exists ( Select Top 1 1 From @TbTrt where marquage = 0 )
 --			Exec ( @sSql ) 
 			Insert into sysadm.boutique Exec ( @sSql ) 
 			
+			-- [20250827140453367_MIG138]
+			Set @sSql = 'Update sysadm.boutique Set ' + 
+						'adr_ville = Upper ( sysadm.FN_EPURE_CHAINE_V02 ( adr_ville , ''NATIF&RC_TAB_DQ'' )), ' +
+						'adr_cp = Upper ( sysadm.FN_EPURE_CHAINE_V02 ( adr_cp, ''NATIF&RC_TAB_DQ'' )), ' +
+						'adr_tel = sysadm.FN_EPURE_CHAINE_V02 ( adr_tel, ''NATIF&RC_TAB_DQ'' ), ' +
+						'adr_mail = Lower ( sysadm.FN_EPURE_CHAINE_V02 ( adr_mail, ''NATIF&RC_TAB_DQ'' )), ' +
+						'adr_nom = Upper ( sysadm.FN_EPURE_CHAINE_V02 ( adr_nom, ''NATIF&RC_TAB_DQ'' )), ' +
+						'cod_mag = Upper ( sysadm.FN_EPURE_CHAINE_V02 ( cod_mag, ''NATIF&RC_TAB_DQ'' )), ' +
+						'adr_1 = Upper ( sysadm.FN_EPURE_CHAINE_V02 ( adr_1, ''NATIF&RC_TAB_DQ'' )), ' +
+						'adr_2 = Upper ( sysadm.FN_EPURE_CHAINE_V02 ( adr_2, ''NATIF&RC_TAB_DQ'' )), ' +
+						'rib_bq = sysadm.FN_EPURE_CHAINE_V02 ( rib_bq, ''NATIF&RC_TAB_DQ'' ), ' +
+						'rib_gui = sysadm.FN_EPURE_CHAINE_V02 ( rib_gui, ''NATIF&RC_TAB_DQ'' ), ' +
+						'rib_cpt = Upper ( sysadm.FN_EPURE_CHAINE_V02 ( rib_cpt, ''NATIF&RC_TAB_DQ'' )), ' +
+						'rib_cle = sysadm.FN_EPURE_CHAINE_V02 ( rib_cle, ''NATIF&RC_TAB_DQ'' ) ' +
+						'Where id_prod = ' + Convert ( VarChar ( 10 ), @dcIdProdDp402)
+			Exec ( @sSql ) 
+
 		End
 
 	Update @TbTrt Set marquage = 1 Where id_seq = @iIdSeq

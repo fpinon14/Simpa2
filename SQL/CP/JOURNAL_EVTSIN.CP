@@ -627,6 +627,7 @@ AS
 Set @asCodEvt = UPPER ( lTrim ( rTrim ( @asCodEvt )))
 
 Declare @TbControle Table ( cod_evt	VarChar ( 6 ) )
+Declare @iRet Integer
 
 -- autorisé pour les codes suivants
 Insert into @TbControle values ( 'GEOLEX' ) 
@@ -636,11 +637,11 @@ If Not Exists (
 		Select Top 1 1 
 		From @TbControle 
 		Where cod_evt = @asCodEvt
-	) Return -1
+	) Return -100
 
-Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, @asCodEvt, @asSeriaVariable, @asSeriaLibre, 'PS_I_INSERTION_JOURNAL_EVTSIN_PROVENANCE_EXTRANET', 'WEB'
+Exec @iRet = sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, @asCodEvt, @asSeriaVariable, @asSeriaLibre, 'PS_I_INSERTION_JOURNAL_EVTSIN_PROVENANCE_EXTRANET', 'WEB'
 
-Return 1
+Return @iRet
 
 Go
 
