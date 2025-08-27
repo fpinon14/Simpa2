@@ -21865,7 +21865,8 @@ End If
 
 // [MCO1570_FERM_PRS_CMA] Carma ne répond plus, donc on ferme dans tous les cas
 If F_CLE_A_TRUE ( "MCO1570_FERM_PRS_CMA" ) Then
-	If bFermePrestaCMA Then // [DT176]
+	lDeb = idw_LstwCommande.Find("ID_FOUR = 'CMA' AND COD_ETAT IN ( 'CNV', 'ECT')", 1, idw_LstwCommande.rowCount()+1)
+	If lDeb > 0 And bFermePrestaCMA Then // [DT176]
 		sSql = "Exec sysadm.PS_U19_COMMANDE_VIRTUELLE_STD " + String ( idw_wsin.GetItemNumber  ( 1, "ID_SIN" ) ) + "., 'CMA',0"
 
 		F_Execute ( sSql, SQLCA )
