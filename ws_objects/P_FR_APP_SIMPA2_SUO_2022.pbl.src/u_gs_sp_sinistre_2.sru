@@ -61,6 +61,8 @@ public function long uf_zn_trt_divsin_lieu_repar (string asdata, string asnomcol
 public function string uf_controlergestion_deja_indemnise ()
 public function string uf_controlergestion_bouygues ()
 public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse, ref boolean abmig1_couremailing, ref u_datawindow_detail adw_lstinter, ref datawindow adw_wpiece, ref datawindow adw_wrefus, ref datawindow adw_plafond, datawindow adw_wfrais)
+public function long uf_zn_trt_divsin_codeboutiqueadh (string asdata, string asnomcol, long alrow)
+public function integer uf_zn_trt_divsin_coqnonadpate (string asdata, string asnomcol, long alrow)
 end prototypes
 
 public function long uf_zn_trt_divsin_typeapp (string asdata, string asnomcol, long alrow, boolean abforcer);//*-----------------------------------------------------------------
@@ -1791,6 +1793,77 @@ idw_Plafond				= adw_Plafond
 idw_wFrais				= adw_wFrais // [MIG165_BOUYGUES]
 
 end subroutine
+
+public function long uf_zn_trt_divsin_codeboutiqueadh (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
+//*
+//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_CodeBoutiqueAdh (PRIVATE)
+//* Auteur			: FABRY JF
+//* Date				: 12/05/2015
+//* Libellé			: 
+//* Commentaires	: [ITSM292811][ADVISE]
+//*
+//* Arguments		: String 		asData			Val
+//*					  String 		asNomCol			Val
+//*					  Long			alRow				Val
+//*
+//* Retourne		: long
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//*-----------------------------------------------------------------
+Integer iAction
+
+Long lRow, lDeb, lFin
+
+asData = Upper ( asData )
+iAction = 0
+
+If IsNumber ( asData ) Then
+	idw_wSin.SetItem ( 1, "ID_ORIAN_BOUTIQUE", Long ( asData ) )
+End If
+
+Return iAction
+
+end function
+
+public function integer uf_zn_trt_divsin_coqnonadpate (string asdata, string asnomcol, long alrow);
+//*-----------------------------------------------------------------
+//*
+//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_CoqNonAdpate (PRIVATE)
+//* Auteur			: FABRY JF
+//* Date				: 28/12/2006
+//* Libellé			: 
+//* Commentaires	: [PC947&977]
+//*
+//* Arguments		: String 		asData			Val
+//*					  String 		asNomCol			Val
+//*					  Long			alRow				Val
+//*
+//* Retourne		: long
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//* #..   ...   ../../....   
+//*-----------------------------------------------------------------
+
+Integer iAction
+
+Long lRow, lDeb, lFin, lVal1, lVal2
+
+asData = Upper ( asData )
+iAction = 0
+
+lVal1 = idw_wDivDet.Find ( "UPPER ( NOM_ZONE ) = 'PEC' AND VAL_CAR = 'O'", 1, idw_wDivDet.RowCount () )
+lVal2 = idw_LstGti.Find ( "COD_ETAT IN ( 500, 550, 600 )", 1, idw_LstGti.RowCount () )
+
+If lVal1 > 0 Or lVal2 > 0 Then
+		idw_wDivSin.iiErreur = 7
+		iAction = 1
+End If
+
+Return iAction
+
+end function
 
 on u_gs_sp_sinistre_2.create
 call super::create

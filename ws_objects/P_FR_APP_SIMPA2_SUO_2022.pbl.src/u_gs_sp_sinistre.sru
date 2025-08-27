@@ -330,7 +330,6 @@ private function long uf_zn_id_territ (boolean abmodified)
 public function boolean uf_controlergestion_sanction_eco_usa ()
 private function boolean uf_controler_sepa (string ascodebq, string ascodeag, long alidinter)
 private subroutine uf_determiner_courrier_forcage_dp250 (ref string aspos, integer alcpt, ref string asidnatcour, ref string asidcour)
-private function long uf_zn_trt_divsin_coqnonadpate (string asdata, string asnomcol, long alrow)
 private subroutine uf_controler_eco_msg_cg60 ()
 private function boolean uf_validation_finale_mail_srr ()
 private function boolean uf_validation_finale_advise_mail ()
@@ -354,7 +353,6 @@ private function long uf_zn_trt_divsin_dte_restit_app_pret (string asdata, strin
 public function string uf_controlergestion_mobilzen2 ()
 public function string uf_controlergestion_ajoutparaauto ()
 private subroutine uf_determiner_courrier_forcage_sbe_sfr (ref string aspos, integer alcpt, ref string asidnatcour, ref string asidcour)
-private function long uf_zn_trt_divsin_codeboutiqueadh (string asdata, string asnomcol, long alrow)
 private function boolean uf_validation_finale_mail_sogedep ()
 private function string uf_controlergestion_frais_compensation ()
 private function boolean uf_validation_finale_qdr_ibe_mail ()
@@ -19313,7 +19311,7 @@ Choose Case asNomCol
 				ll_ret = This.Uf_Zn_Trt_DivSin_Gti_non_activee ( Upper ( asData ), Upper( asNomCol ), alRow )
 	
 			Case "COQUE_NON_ADAPTE"
-				ll_ret = This.Uf_Zn_Trt_DivSin_CoqNonAdpate	( Upper ( asData ), Upper( asNomCol ), alRow )
+				ll_ret = iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_CoqNonAdpate	( Upper ( asData ), Upper( asNomCol ), alRow )
 
 			// [VDOC20980]
 			// [PC947&977]
@@ -19444,7 +19442,7 @@ Choose Case asNomCol
 			// [ITSM292811][ADVISE]
 			Case "COD_BOUTIQUE_ADH"
 				// [292811][ADVISE]
-				ll_ret = This.Uf_Zn_Trt_DivSin_CodeBoutiqueAdh ( Upper ( asData ), Upper( asNomCol ), alRow )
+				ll_ret = iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_CodeBoutiqueAdh ( Upper ( asData ), Upper( asNomCol ), alRow )
 
 		End Choose
 
@@ -39934,45 +39932,6 @@ End If
 
 end subroutine
 
-private function long uf_zn_trt_divsin_coqnonadpate (string asdata, string asnomcol, long alrow);
-//*-----------------------------------------------------------------
-//*
-//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_CoqNonAdpate (PRIVATE)
-//* Auteur			: FABRY JF
-//* Date				: 28/12/2006
-//* Libellé			: 
-//* Commentaires	: [PC947&977]
-//*
-//* Arguments		: String 		asData			Val
-//*					  String 		asNomCol			Val
-//*					  Long			alRow				Val
-//*
-//* Retourne		: long
-//*
-//*-----------------------------------------------------------------
-//* MAJ   PAR      Date	     Modification
-//* #..   ...   ../../....   
-//*-----------------------------------------------------------------
-
-Integer iAction
-
-Long lRow, lDeb, lFin, lVal1, lVal2
-
-asData = Upper ( asData )
-iAction = 0
-
-lVal1 = idw_wDivDet.Find ( "UPPER ( NOM_ZONE ) = 'PEC' AND VAL_CAR = 'O'", 1, idw_wDivDet.RowCount () )
-lVal2 = idw_LstGti.Find ( "COD_ETAT IN ( 500, 550, 600 )", 1, idw_LstGti.RowCount () )
-
-If lVal1 > 0 Or lVal2 > 0 Then
-		idw_wDivSin.iiErreur = 7
-		iAction = 1
-End If
-
-Return iAction
-
-end function
-
 private subroutine uf_controler_eco_msg_cg60 ();//*-----------------------------------------------------------------
 //*
 //* Fonction      : u_gs_sp_sinistre::uf_controler_eco_msg_cg60  (PRIVATE)
@@ -43113,38 +43072,6 @@ End If
 
 
 end subroutine
-
-private function long uf_zn_trt_divsin_codeboutiqueadh (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
-//*
-//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_CodeBoutiqueAdh (PRIVATE)
-//* Auteur			: FABRY JF
-//* Date				: 12/05/2015
-//* Libellé			: 
-//* Commentaires	: [ITSM292811][ADVISE]
-//*
-//* Arguments		: String 		asData			Val
-//*					  String 		asNomCol			Val
-//*					  Long			alRow				Val
-//*
-//* Retourne		: long
-//*
-//*-----------------------------------------------------------------
-//* MAJ   PAR      Date	     Modification
-//*-----------------------------------------------------------------
-Integer iAction
-
-Long lRow, lDeb, lFin
-
-asData = Upper ( asData )
-iAction = 0
-
-If IsNumber ( asData ) Then
-	idw_wSin.SetItem ( 1, "ID_ORIAN_BOUTIQUE", Long ( asData ) )
-End If
-
-Return iAction
-
-end function
 
 private function boolean uf_validation_finale_mail_sogedep ();//*-----------------------------------------------------------------
 //*
