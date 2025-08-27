@@ -80,7 +80,6 @@ IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_ENVOI_MAIL_LOG_PRESTA' A
         DROP procedure sysadm.PS_S_ENVOI_MAIL_LOG_PRESTA
 GO
 
-
 CREATE procedure sysadm.PS_S_ENVOI_MAIL_LOG_PRESTA
 	@asIdFour  varchar (3),
 	@alIdLotLog  decimal ( 10 ),
@@ -114,7 +113,7 @@ If @asNomFicOrigCourt is null Set @asNomFicOrigCourt = ''
 If Upper ( sysadm.FN_TRIM ( db_name ( db_id () ) ) ) <> 'SIMPA2_PRO' -- [HP252_276_HUB_PRESTA]
 	Begin
 		-- Hors Production
-		Set @sAdrMail = 'jff@spb.fr,VANDRE@spb.eu,BKHELIFA_ext@spb.eu,OCHAOUACHI@spb.eu'
+		Set @sAdrMail = 'jff@spb.fr,OCHAOUACHI@spb.eu,SGUESMI@spb.eu'
 		Set @sAdrMailCc = null
 	End 
 Else

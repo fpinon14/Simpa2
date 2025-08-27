@@ -1190,7 +1190,7 @@ If @sEnv = 'PROD'
 
 		Exec [LS-SAGA2].[PRESTATAIRE].edi.PS_HP276_I_HP_TRACE_RECUP_RETOUR_PAR_SIMPA2 'OBTENTION_ID_LOT_TRC', '-1', -1, '-1', '', '', @iIdLotTrc output
 		Set @sDestErrTech = 'NLEBERQUIER@spb.eu,DBOUCQ@spb.eu,jff@spb.fr'
-		Set @sDestErrCoherenceHub = 'JBERGERE@spb.eu,OCHAOUACHI@spb.eu,LSMALL@spb.eu,DBOUCQ@spb.eu,JALLIX@spb.eu,SGUESMI@spb.eu'
+		Set @sDestErrCoherenceHub = 'JBERGERE@spb.eu,OCHAOUACHI@spb.eu,LSMALL@spb.eu,DBOUCQ@spb.eu,SGUESMI@spb.eu'
 		Set @sDestCc = 'jff@spb.fr'
 	End 
 Else
@@ -1220,7 +1220,7 @@ Else
 			End 
 
 		Set @sDestErrTech = 'jff@spb.fr'
-		Set @sDestErrCoherenceHub = 'jff@spb.fr,OCHAOUACHI@spb.eu'
+		Set @sDestErrCoherenceHub = 'jff@spb.fr,OCHAOUACHI@spb.eu,SGUESMI@spb.eu'
 		Set @sDestCc = 'jff@spb.fr'
 	End
 

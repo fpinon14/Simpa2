@@ -7053,7 +7053,7 @@ Go
 -- Retourne             :       
 --
 -- JFF   04/11/2024   [20241104105246567] j'ajoute un 2ème jour, il faut que les 2 prochains jours ouvrés soit sur le même mois calendaires
--- 
+-- JFF   25/08/2025   [20250825094137793] 2 jours ne suffisent pas, il faut 3 car Volcanes prend la date GENVIR.
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_PROCHAIN_JOUR_OUVRE_DU_MEME_MOIS_CALENDAIRE' AND type = 'P' )
         DROP procedure sysadm.PS_S_PROCHAIN_JOUR_OUVRE_DU_MEME_MOIS_CALENDAIRE
@@ -7111,7 +7111,8 @@ While @iTrouve = 0
 		Set @iNbreJourOuvre = @iNbreJourOuvre + 1 
 
 		-- On est à +2 en jour ouvré, c'est bon.
-		If @iNbreJourOuvre = 2 Set @iTrouve = 1 
+		-- 20250825094137793 - On passe à +3 jours
+		If @iNbreJourOuvre = 3 Set @iTrouve = 1 
 	End 
 
 Set @iPJOMMC = 0
