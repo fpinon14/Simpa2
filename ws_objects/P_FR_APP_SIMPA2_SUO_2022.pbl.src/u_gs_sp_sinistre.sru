@@ -382,7 +382,6 @@ private function long uf_zn_trt_divsin_pceillisiblecasto (string asdata, string 
 private function long uf_zn_trt_divsin_forcer_refus_1676 (string asdata, string asnomcol, long alrow)
 private function boolean uf_controlergestion_orangeparnasse (string ascas)
 private function long uf_zn_trt_divsin_typapparecaneu (string asdata, string asnomcol, long alrow, boolean abforcer)
-private function boolean uf_controlergestion_carma (long alrow)
 public function boolean uf_controlergestion_refareexp_cordon ()
 private function boolean uf_validation_finale_advise_aas_mail ()
 private function boolean uf_validation_finale_samsung_infopec ()
@@ -401,7 +400,6 @@ private function boolean uf_gestionrepcourrierlocal ()
 public subroutine uf_modification_para_dynamique_dp359 (string asidnatcour, ref string astxtcompo)
 private function long uf_zn_trt_divsin_dysfonc_extranet_franch (string asdata, string asnomcol, long alrow)
 private function string uf_controlergestion_interassureur ()
-private function string uf_controlergestion_hub_prestataire ()
 private function string uf_validation_finale_sql_hubprestataire (ref datastore adshubdonneesprestasimpa2)
 private function boolean uf_gestiontranssqlhubpresta (string ascas)
 public subroutine uf_initialiser_dw_desc (ref u_datawindow_detail adw_inter, ref u_datawindow_detail adw_gti, ref datawindow adw_norm[], ref u_libelle_dga aulibelle, ref u_datawindow_detail adw_contact, ref datawindow adw_corbeille, ref u_datawindow adw_dossuivipar, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_boitearchive, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref picturebutton apbcontroler, ref statictext astpauseapi_lab, ref statictext astattente_diverse)
@@ -5599,7 +5597,7 @@ F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), 
 If lDeb > 0 Then
 	lRow=idw_LstwCommande.Find("ID_FOUR='CMA' AND COD_ETAT = 'CNV'", 1, idw_LstwCommande.rowCount()) 
 	If Not bBloque And sPos = "" And lRow > 0 Then
-		uf_controlergestion_carma(lRow)
+		iUoGsSpSinistre2.uf_controlergestion_carma(lRow)
 	End if
 End if
 // :[DT339]
@@ -6287,7 +6285,7 @@ End IF
 // [HP252_276_HUB_PRESTA]
 If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 	If Not bBloque And sPos = "" Then
-		sPos = This.uf_controlergestion_Hub_Prestataire ( )
+		sPos = iUoGsSpSinistre2.uf_controlergestion_Hub_Prestataire ( )
 	End IF 
 End If
 
@@ -51265,53 +51263,6 @@ Return iAction
 
 end function
 
-private function boolean uf_controlergestion_carma (long alrow);//*-----------------------------------------------------------------
-//*
-//* Fonction		: uf_controlergestion_carma (PRIVATE)
-//* Auteur			: FPI
-//* Date				: 27/03/2018
-//* Libellé			: 
-//* Commentaires	: [DT339] Contrôle de gestion de commande Carma
-//*
-//* Arguments		: alRow	Ligne de commande Carma à valider
-//*
-//* Retourne		: Rien
-//*
-//*-----------------------------------------------------------------
-//* MAJ 					PAR		Date		  Modification
-//*-----------------------------------------------------------------
-Boolean bRet=TRUE
-Long lDeb, lFin, lRow, lIdGti, lIdDetail 
-n_cst_string nvString
-String sAdrMail, sInfoSpbFrnCplt
-Decimal dcMtCmde
-
-F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 297 )
-if lDeb <=0 Then return TRUE
-
-sInfoSpbFrnCplt=idw_lstwcommande.getItemString( alRow, "INFO_SPB_FRN_CPLT")
-
-lDeb=idw_lstinter.Find("COD_INTER='A'",1,idw_lstinter.RowCount())
-sAdrMail=idw_lstinter.GetItemString(lDeb,"ADR_MAIL")
-if isNull(sAdrMail) Then sAdrMail=""
-
-dcMtCmde=idw_lstwcommande.GetItemDecimal(alRow,"MT_TTC_CMDE")
-
-lRow=idw_lstwcommande.Find("ID_FOUR='CMA' and COD_ETAT='RFO' and STATUS_GC=176",1,idw_lstwcommande.RowCount())
-
-// Si adresse mail, PEC < 1000 et pas de commande non honorée => commande dématérialisée
-// Sinon, commande Physique
-if dcMtCmde <= 1000 and sAdrMail <> "" and lRow <=0 Then
-	nvString.of_setkeyvalue( sInfoSpbFrnCplt, "TYPE_ENVOI", "DEMATERIALISE", ";")
-	idw_lstwcommande.SetItem(alRow,"ADR_MAIL",sAdrMail)
-Else
-	nvString.of_setkeyvalue( sInfoSpbFrnCplt, "TYPE_ENVOI", "PHYSIQUE", ";")
-End if
-
-idw_lstwcommande.SetItem(alRow, "INFO_SPB_FRN_CPLT", sInfoSpbFrnCplt)
-Return bRet
-end function
-
 public function boolean uf_controlergestion_refareexp_cordon ();//*-----------------------------------------------------------------
 //*
 //* Fonction		: u_gs_sp_sinistre::uf_ControlerGestion_RefAReexp_Cordon (PRIVATE)
@@ -53765,55 +53716,6 @@ Return sPos
 
 
 
-end function
-
-private function string uf_controlergestion_hub_prestataire ();//*-----------------------------------------------------------------
-//*
-//* Fonction		: uf_controlergestion_Hub_Prestataire (PRIVATE)
-//* Auteur			: JFF
-//* Date				: 14/03/2024
-//* Libellé			: 
-//* Commentaires	: [HP252_276_HUB_PRESTA]
-//*
-//* Arguments		: alRow	Ligne de commande à valider
-//*
-//* Retourne		: Rien
-//*
-//*-----------------------------------------------------------------
-//* MAJ 					PAR		Date		  Modification
-//*-----------------------------------------------------------------
-
-Long lRowAssure, lRowCmd
-String sAdrMail, sVal, sPos
-n_cst_string	lnvString
-
-sPos = ""
-
-lRowCmd = idw_LstwCommande.Find ( "COD_ETAT = 'CNV' AND POS (INFO_SPB_FRN_CPLT, 'ID_HUB_PRESTA') > 0", 1, idw_LstwCommande.RowCount())
-If lRowCmd <= 0 Then Return sPos 
-
-lRowAssure = idw_lstinter.Find( "COD_INTER='A'" , 1, idw_lstinter.RowCount())
-sAdrMail = Trim ( F_GetItem3 ( idw_lstinter, lRowAssure, "ADR_MAIL" ) )
-If IsNull ( sAdrMail ) Then sAdrMail = ""
-
-/* Modification demandé par Boulenouar le 23/12/24, l'adresse est obligatoire pour toute presta en lien avec le Hub (pour les relances par mail)
-sVal = idw_LstwCommande.GetItemString ( lRowAssure,"INFO_SPB_FRN_CPLT" )
-sVal = lnvString.of_getkeyvalue( sVal, "CODE_PICK_UP", ";")
-
-If Trim ( sVal ) <> "" And sAdrMail = "" Then
-*/
-If sAdrMail = "" Then
-	stMessage.sTitre  	= "Controle de gestion des commandes"
-	stMessage.Icon			= Information!
-	stMessage.bErreurG	= FALSE
-	stMessage.Bouton		= Ok!
-	stMessage.sCode = "HUBP020" // "HUBP005"		
-	sPos	= "ALT_BLOC"
-	F_Message ( stMessage )
-
-End If 
-
-Return sPos
 end function
 
 private function string uf_validation_finale_sql_hubprestataire (ref datastore adshubdonneesprestasimpa2);//*-----------------------------------------------------------------

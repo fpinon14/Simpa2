@@ -63,6 +63,8 @@ public function string uf_controlergestion_bouygues ()
 public subroutine uf_initialiser_1 (ref u_gs_sp_sinistre auospgssinistre, ref datawindow adw_detpro, ref u_datawindow adw_wsin, ref u_datawindow_detail adw_lstwcommande, ref u_datawindow adw_wdivsin, ref u_datawindow_detail adw_wdivdet, ref boolean abcodicdartyvalide, ref string astypetrt, ref string asreferentielapp, integer ak_majzone, ref datawindow adw_wdetail, u_datawindow_detail adw_lstgti, ref statictext astattentediverse, ref boolean abmig1_couremailing, ref u_datawindow_detail adw_lstinter, ref datawindow adw_wpiece, ref datawindow adw_wrefus, ref datawindow adw_plafond, datawindow adw_wfrais)
 public function long uf_zn_trt_divsin_codeboutiqueadh (string asdata, string asnomcol, long alrow)
 public function integer uf_zn_trt_divsin_coqnonadpate (string asdata, string asnomcol, long alrow)
+public function string uf_controlergestion_hub_prestataire ()
+public function boolean uf_controlergestion_carma (long alrow)
 end prototypes
 
 public function long uf_zn_trt_divsin_typeapp (string asdata, string asnomcol, long alrow, boolean abforcer);//*-----------------------------------------------------------------
@@ -1863,6 +1865,102 @@ End If
 
 Return iAction
 
+end function
+
+public function string uf_controlergestion_hub_prestataire ();//*-----------------------------------------------------------------
+//*
+//* Fonction		: uf_controlergestion_Hub_Prestataire (PRIVATE)
+//* Auteur			: JFF
+//* Date				: 14/03/2024
+//* Libellé			: 
+//* Commentaires	: [HP252_276_HUB_PRESTA]
+//*
+//* Arguments		: alRow	Ligne de commande à valider
+//*
+//* Retourne		: Rien
+//*
+//*-----------------------------------------------------------------
+//* MAJ 					PAR		Date		  Modification
+//*-----------------------------------------------------------------
+
+Long lRowAssure, lRowCmd
+String sAdrMail, sVal, sPos
+n_cst_string	lnvString
+
+sPos = ""
+
+lRowCmd = idw_LstwCommande.Find ( "COD_ETAT = 'CNV' AND POS (INFO_SPB_FRN_CPLT, 'ID_HUB_PRESTA') > 0", 1, idw_LstwCommande.RowCount())
+If lRowCmd <= 0 Then Return sPos 
+
+lRowAssure = idw_lstinter.Find( "COD_INTER='A'" , 1, idw_lstinter.RowCount())
+sAdrMail = Trim ( F_GetItem3 ( idw_lstinter, lRowAssure, "ADR_MAIL" ) )
+If IsNull ( sAdrMail ) Then sAdrMail = ""
+
+/* Modification demandé par Boulenouar le 23/12/24, l'adresse est obligatoire pour toute presta en lien avec le Hub (pour les relances par mail)
+sVal = idw_LstwCommande.GetItemString ( lRowAssure,"INFO_SPB_FRN_CPLT" )
+sVal = lnvString.of_getkeyvalue( sVal, "CODE_PICK_UP", ";")
+
+If Trim ( sVal ) <> "" And sAdrMail = "" Then
+*/
+If sAdrMail = "" Then
+	stMessage.sTitre  	= "Controle de gestion des commandes"
+	stMessage.Icon			= Information!
+	stMessage.bErreurG	= FALSE
+	stMessage.Bouton		= Ok!
+	stMessage.sCode = "HUBP020" // "HUBP005"		
+	sPos	= "ALT_BLOC"
+	F_Message ( stMessage )
+
+End If 
+
+Return sPos
+end function
+
+public function boolean uf_controlergestion_carma (long alrow);//*-----------------------------------------------------------------
+//*
+//* Fonction		: uf_controlergestion_carma (PRIVATE)
+//* Auteur			: FPI
+//* Date				: 27/03/2018
+//* Libellé			: 
+//* Commentaires	: [DT339] Contrôle de gestion de commande Carma
+//*
+//* Arguments		: alRow	Ligne de commande Carma à valider
+//*
+//* Retourne		: Rien
+//*
+//*-----------------------------------------------------------------
+//* MAJ 					PAR		Date		  Modification
+//*-----------------------------------------------------------------
+Boolean bRet=TRUE
+Long lDeb, lFin, lRow, lIdGti, lIdDetail 
+n_cst_string nvString
+String sAdrMail, sInfoSpbFrnCplt
+Decimal dcMtCmde
+
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 297 )
+if lDeb <=0 Then return TRUE
+
+sInfoSpbFrnCplt=idw_lstwcommande.getItemString( alRow, "INFO_SPB_FRN_CPLT")
+
+lDeb=idw_lstinter.Find("COD_INTER='A'",1,idw_lstinter.RowCount())
+sAdrMail=idw_lstinter.GetItemString(lDeb,"ADR_MAIL")
+if isNull(sAdrMail) Then sAdrMail=""
+
+dcMtCmde=idw_lstwcommande.GetItemDecimal(alRow,"MT_TTC_CMDE")
+
+lRow=idw_lstwcommande.Find("ID_FOUR='CMA' and COD_ETAT='RFO' and STATUS_GC=176",1,idw_lstwcommande.RowCount())
+
+// Si adresse mail, PEC < 1000 et pas de commande non honorée => commande dématérialisée
+// Sinon, commande Physique
+if dcMtCmde <= 1000 and sAdrMail <> "" and lRow <=0 Then
+	nvString.of_setkeyvalue( sInfoSpbFrnCplt, "TYPE_ENVOI", "DEMATERIALISE", ";")
+	idw_lstwcommande.SetItem(alRow,"ADR_MAIL",sAdrMail)
+Else
+	nvString.of_setkeyvalue( sInfoSpbFrnCplt, "TYPE_ENVOI", "PHYSIQUE", ";")
+End if
+
+idw_lstwcommande.SetItem(alRow, "INFO_SPB_FRN_CPLT", sInfoSpbFrnCplt)
+Return bRet
 end function
 
 on u_gs_sp_sinistre_2.create
