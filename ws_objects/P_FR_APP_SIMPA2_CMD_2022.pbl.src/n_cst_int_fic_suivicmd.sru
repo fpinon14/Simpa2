@@ -31583,6 +31583,7 @@ private function integer uf_ctrl_fichier_frn_hub ();//*-------------------------
 //			 JFF  12/05/2025  [20250512134745313] On reprend le bon de trans de la presta en base.
 //    	 JFF  30/07/2025  [20250730153200137]
 //    	 JFF  30/07/2025  [HUB1896]
+//    	 JFF  27/08/2025  [HUB1936]
 //*-----------------------------------------------------------------
 
 Int iRet, iStatusGc, iInfoSpbFrn
@@ -32615,6 +32616,7 @@ For lCpt = lTotLig To 1 Step -1
 			End Choose 
 		End If 
 
+/* [HUB1936] Shunté sur demande de Lisette
 		sVal = String ( idwFicFourn.GetItemDecimal ( lCpt, "PRIX_TTC_REMPL" ))
 		If IsNull ( sVal ) Then sVal = "0"
 
@@ -32631,7 +32633,7 @@ For lCpt = lTotLig To 1 Step -1
 				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") sur un SWAP ou un Remplacement le champ PRIX_TTC_REMPL doit être renseigné avec le montant TTC de l'appareil de remplacement avec un montant positif." )
 			End if		
 		End If 
-
+*/
 
 		sVal = idwFicFourn.GetItemString ( lCpt, "NEUF_REC_REMPL" )  
 		Choose Case sVal
@@ -33059,6 +33061,7 @@ private function integer uf_integration_fichier_frn_hub (ref long alnblig, ref l
 //       JFF   31/03/2025 [MIG82_JOURN_EVT]
 //       JFF   23/04/2025 [HUB1267]
 //       JFF   23/05/2025 [HUB1530]
+//    	JFF   27/08/2025 [HUB1936]
 //*-----------------------------------------------------------------
 
 Int iRet, iCleNum, iIdSeqSavRet
