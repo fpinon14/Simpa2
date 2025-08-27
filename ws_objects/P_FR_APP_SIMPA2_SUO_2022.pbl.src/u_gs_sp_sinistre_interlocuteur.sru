@@ -90,6 +90,7 @@ private function long uf_zn_adr_mail_name ()
 private function long uf_zn_adr_mail_domain ()
 public subroutine uf_controle_dp344 (ref integer aiaction, ref integer aierreur)
 private subroutine uf_controlergestion (ref s_pass astpass)
+public subroutine uf_interdire_modif (boolean abcas)
 end prototypes
 
 public subroutine uf_traitement (integer aitype, ref s_pass astpass);//*-----------------------------------------------------------------
@@ -169,6 +170,7 @@ private subroutine uf_preparermodifier (ref s_pass astpass);//*-----------------
 //       JFF   19/12/2024 [MIG1_COUR_EMAILING]
 //       JFF   27/03/2025 [PMO32_SPB175]
 //       JFF   22/07/2025 [MIG165_BOUYGUES]
+// 		JFF   27/08/2025 [20250827140453367_MIG138]
 //*-----------------------------------------------------------------
 Boolean	bSupprime
 n_cst_string	lnvString 
@@ -193,6 +195,11 @@ lIdProd = idw_wsin.GetItemNumBer ( 1,"ID_PROD")
 /* INTERLOCUTEUR.                                                   */
 /*------------------------------------------------------------------*/
 idw_wInter.Uf_CopierLigne ()
+
+If F_CLE_A_TRUE ( "MIG147_KRYS" ) Then
+		// [20250827140453367_MIG138]
+		This.uf_Interdire_Modif ( TRUE )
+End If 
 
 /*------------------------------------------------------------------*/
 /* Le produit a t-il changé ?                                       */
@@ -399,6 +406,7 @@ End If
 	
 // [MIG147_KRYS]
 If F_CLE_A_TRUE ( "MIG147_KRYS" ) Then
+
 	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 404 )
 	If lDeb > 0 Then
 		sValCar = idw_DetPro.GetItemString(lDeb,"VAL_CAR" )
@@ -406,6 +414,9 @@ If F_CLE_A_TRUE ( "MIG147_KRYS" ) Then
 		sCodInter = idw_wInter.GetItemString ( 1, "COD_INTER" ) 
 		
 		If sValCar = "" Then
+			// [20250827140453367_MIG138]
+			This.uf_Interdire_Modif ( TRUE )
+
 			stMessage.berreurg=FALSE
 			stMessage.bouton=Ok!
 			stMessage.icon=Information!
@@ -416,6 +427,9 @@ If F_CLE_A_TRUE ( "MIG147_KRYS" ) Then
 		
 		
 		If sValCar <> "" And Not IsNull ( sCodInter ) And Pos ( sValCar, "#" + sCodInter + "#" ) > 0 Then
+
+			// [20250827140453367_MIG138]
+			This.uf_Interdire_Modif ( TRUE )				
 			
 			sLibInter = SQLCA.FN_CODE_CAR ( sCodInter, "-IN" )
 	
@@ -480,6 +494,12 @@ Uf_ChangerProduit ()
 /*------------------------------------------------------------------*/
 lIdSin		= idw_wSin.GetItemNumber ( 1, "ID_SIN" )
 lIdProd = idw_wsin.GetItemNumBer ( 1,"ID_PROD")
+
+// 		JFF   27/08/2025 [20250827140453367_MIG138]
+If F_CLE_A_TRUE ( "MIG147_KRYS" ) Then
+		// [20250827140453367_MIG138]
+		This.uf_Interdire_Modif ( FALSE )
+End If 
 
 
 lTotInter	= idw_wInter.iudwDetailSource.RowCount ()
@@ -4668,6 +4688,7 @@ If F_CLE_A_TRUE ( "MIG147_KRYS" ) Then
 	
 	End If 
 
+/*
 	If sPos = "" Then 
 		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), '-DP', 404 )
 		If lDeb > 0 Then
@@ -4701,12 +4722,79 @@ If F_CLE_A_TRUE ( "MIG147_KRYS" ) Then
 			End If 
 		End If 
 	End If 
+*/	
 End If 
 
 
 
 astPass.sTab [ 1 ] = sPos
 
+
+
+end subroutine
+
+public subroutine uf_interdire_modif (boolean abcas);//*-----------------------------------------------------------------
+//*
+//* Fonction		: Uf_interdire_modif (PRIVATE)
+//* Auteur			: Fabry JF
+//* Date				: 27/08/2025
+//* Libellé			: 
+//* Commentaires	: Interdire modif champs inter
+//*
+//* Arguments		: Aucun
+//*
+//* Retourne		: Rien
+//*
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*-----------------------------------------------------------------
+
+// #2
+String sCol[32]
+
+/*------------------------------------------------------------------*/
+/* Cette fonction concerne toutes les zones.                        */
+/*------------------------------------------------------------------*/
+sCol [  1 ] = "COD_INTER"
+sCol [  2 ] = "COD_CIV"
+sCol [  3 ] = "NOM"
+sCol [  4 ] = "ADR_1"
+sCol [  5 ] = "ADR_2"
+sCol [  6 ] = "ADR_CP"
+sCol [  7 ] = "ADR_VILLE"
+sCol [  8 ] = "NUM_TELD"
+sCol [  9 ] = "NUM_TELB"
+sCol [ 10 ] = "NUM_FAX"
+sCol [ 11 ] = "ADR_ATT"
+sCol [ 12 ] = "V_REF1"
+sCol [ 13 ] = "V_REF2"
+sCol [ 14 ] = "COD_MODE_REG"
+sCol [ 15 ] = "RIB_BQ"
+sCol [ 16 ] = "RIB_GUI"
+sCol [ 17 ] = "RIB_CPT"
+sCol [ 18 ] = "RIB_CLE"
+sCol [ 19 ] = "ID_NAT_COUR"
+sCol [ 20 ] = "ALT_COURGEST"
+sCol [ 21 ] = "ID_I_DB"
+sCol [ 22 ] = "ID_COURJ"
+sCol [ 23 ] = "ALT_QUEST"
+sCol [ 24 ] = "ORDRE_CHEQUE"
+
+// #2
+sCol [ 25 ] = "ALT_SUIVI_MAIL"
+sCol [ 26 ] = "ADR_MAIL_NAME"
+sCol [ 27 ] = "ADR_MAIL_DOMAIN"
+sCol [ 28 ] = "NUM_PORT_SMS"
+sCol [ 29 ] = "ALT_SUIVI_SMS"
+sCol [ 30 ] = "DTE_NAISS"  // [PMO89_RS4822]
+sCol [ 31 ] = "VILLE_NAISS"  // [PMO89_RS4822]
+sCol [ 32 ] = "PAYS_NAISS"  // [PMO89_RS4822]
+
+If abCas Then
+	idw_wInter.Uf_Proteger ( sCol, "1" )
+Else 
+	idw_wInter.Uf_Proteger ( sCol, "0" )
+End If 
 
 
 end subroutine

@@ -1727,6 +1727,7 @@ event clicked;//*---------------------------------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date			Modification
 //* JFF			09/03/2015	[MANTIS14653][DT133_CASTO]
+//  JFF        27/08/2025  [20250827140453367_MIG138]
 //*-----------------------------------------------------------------
 
 s_Pass	stPass_Dga
@@ -1739,6 +1740,13 @@ n_cst_string	lnvString
 /*  - On est en saisie.                                             */
 /*  - L'interlocuteur n'a jamais été validé.                        */
 /*------------------------------------------------------------------*/
+
+// [20250827140453367_MIG138]
+sCodInter = dw_1.GetItemString ( 1, "COD_INTER" )
+If IsNull ( sCodInter ) Then sCodInter = ""
+If sCodInter <> "" Then Return
+
+
 
 If	dw_1.GetItemNumber ( 1, "CPT_VALIDE" ) = 0 And isTypeTrt = "S" Then
 	stPass_Dga.trTrans 	= itrTrans
@@ -1797,9 +1805,20 @@ event clicked;//*---------------------------------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ	PAR	Date			Modification
 //* #1	JCA	29/05/2006	DntMail 			  
+// 		JFF   27/08/2025 [20250827140453367_MIG138]
 //*-----------------------------------------------------------------
 
 s_Pass	stPass_Dga
+
+// [20250827140453367_MIG138]
+stMessage.berreurg=FALSE
+stMessage.bouton=Ok!
+stMessage.icon=Information!
+stMessage.stitre="Fonctionnalité désactivée"
+stMessage.scode ="WINT326"
+F_Message ( stMessage )		
+
+Return
 
 /*------------------------------------------------------------------*/
 /* On ne peut effacer les coordonnées que si :                      */
