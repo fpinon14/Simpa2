@@ -198,7 +198,7 @@ idw_wInter.Uf_CopierLigne ()
 
 If F_CLE_A_TRUE ( "MIG147_KRYS" ) Then
 		// [20250827140453367_MIG138]
-		This.uf_Interdire_Modif ( TRUE )
+		This.uf_Interdire_Modif ( FALSE )
 End If 
 
 /*------------------------------------------------------------------*/
