@@ -190,6 +190,7 @@ private function integer uf_integration_fichier_frn_hub (ref long alnblig, ref l
 private subroutine uf_definir_codetat_frn_hub (ref string asval, long alcpt, long alidsin, long alidseq)
 private function boolean uf_hub_gestiontranssqlhubpresta (string ascas)
 private function string uf_hub_sql_hubprestataire (ref datastore adshubdonneesprestasimpa2)
+private function integer uf_ctrl_fichier_frn_hub_2025082914032887 ()
 end prototypes
 
 public subroutine uf_preparer ();//*-----------------------------------------------------------------
@@ -1320,6 +1321,7 @@ private function integer uf_ctrl_fichier_fournisseur ();//*---------------------
 //       JFF   02/09/2019 [DT424]
 //       JFF   30/05/2023 [PMO89_RS4822]
 //       JFF   07/03/2024  [HP252_276_HUB_PRESTA]
+//       JFF   29/08/2025  [20250829140328870]
 //*-----------------------------------------------------------------
 
 Int iRet 
@@ -1477,7 +1479,12 @@ CHOOSE CASE Upper ( sIdFourn )
 
 			// Par défaut, si le fournisseur est lié au HP, on appelle le CTRLE HUB par défaut
 			If ibPrestaHub Then
-				iRet = This.uf_Ctrl_Fichier_FRN_HUB ()		
+				
+				If F_CLE_A_TRUE ( "20250829140328870" ) Then
+					iRet = This.uf_Ctrl_Fichier_frn_Hub_2025082914032887 ()
+				Else 
+					iRet = This.uf_Ctrl_Fichier_FRN_HUB ()		
+				End IF 
 			End If 
 			
 		End IF 
@@ -34028,6 +34035,1579 @@ Next
 
 
 Return sChaineSqlRet
+
+end function
+
+private function integer uf_ctrl_fichier_frn_hub_2025082914032887 ();//*-----------------------------------------------------------------
+//*
+//* Fonction		: n_cst_int_fic_suivicmd::uf_Ctrl_Fichier_frn_Hub (PRIVATE)
+//* Auteur			: JFF
+//* Date				: 30/04/2024
+//* Libellé			: [HP252_276_HUB_PRESTA]
+//* Commentaires	: 
+//*
+//* Arguments		: 
+//*					  
+//*
+//* Retourne		: integer	
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//*       JFF	16/01/2025	[HUB832_HUB_ORG_REUN]
+//        JFF  23/04/2025  [HUB1267]
+//			 JFF  12/05/2025  [20250512134745313] On reprend le bon de trans de la presta en base.
+//    	 JFF  30/07/2025  [20250730153200137]
+//    	 JFF  30/07/2025  [HUB1896]
+//    	 JFF  27/08/2025  [HUB1936]
+//        JFF  29/08/2025  [20250829140328870]
+//*-----------------------------------------------------------------
+
+Int iRet, iStatusGc, iInfoSpbFrn
+String	sIdFour, sVal, sIdFourCtrl, sInfoFrnSpbCpltLu, sIMEICorr, sNumCmdSpb 
+String   sCodEtat, sIdRefFour, sIdTypArt, sIdFourBase, sVal1, sVal2, sVal3
+String 	sInfoFrnSpbCplt, sIdTypArtSin
+Long		lTotLig, lCpt, lPos, lVal, dcIdProd, lIdSin, lIdSeq, lRow
+String 	sInfoSpbFrnCplt, sChaineBCV
+datetime	dtVal, dtVal1, dtDteRcpFrn
+n_cst_string lnvPFCString  
+String sIdDepotHub, sIdHubPresta
+Boolean bRet 
+String sSqlHub
+Long lErrorHubPresta, lIndentityHubPresta, lRowCountHubPresta
+Boolean  bF_CLE_A_TRUE_HUB1267
+Boolean  bOnLaissePasserCasPrestaFerme 
+
+// [HUB1267]
+bF_CLE_A_TRUE_HUB1267 = F_CLE_A_TRUE ( "HUB1267" )
+
+iRet = 1
+lTotLig = idwFicFourn.RowCount ()
+
+// [MODIF_SUITE_REDR]
+If lTotLig <= 0 And FileLength64 ( isTxtNomFic.Text ) > 0 Then
+	iRet = -1
+	This.uf_Trace ( "ECR", "ERREUR : 0 Ligne chargée ! , pour PI : Taille du fichier positive et chargement à 0 ligne => Anormal. Réessayez l'intégration (cause éventuelle => le fichier est peut-être en format Unicode au lieu d'Ansi, à vérifier)." )
+End If		
+
+// connexion au Hub Prestataire
+
+bRet = This.uf_Hub_GestionTransSqlHubPresta ( "CONNEXION_HUB" )
+
+If Not bRet Then
+	
+	iRet = -1
+
+	sVal = itrHubPrestataire.SQLErrText		
+	sVal = f_remplace(sVal,Char(9)," ")
+	sVal = f_remplace(sVal,Char(10)," ")		
+	sVal = f_remplace(sVal,Char(11)," ")				
+	sVal = f_remplace(sVal,Char(13)," ")	
+
+	This.uf_Trace ( "ECR", "ERREUR ligne " + string ( lCpt ) + " : Problème de connexion (Ctrl) au Hub Prestataire, msg SqlServer => : " + sVal )
+	
+	Return iRet
+			
+End If 
+
+
+sIdFour = Upper ( idwFourn.GetItemString ( 1, "ID_FOURN" ) )
+
+// [20250829140328870]
+// For lCpt = lTotLig To 1 Step -1
+For lCpt = 1 To lTotLig
+
+	sCodEtat = fill(" ",3)
+	sIdRefFour = fill(" ",20)
+	sIdFourBase = fill(" ",3)
+	sIdTypArt = fill(" ", 3) 
+	sInfoSpbFrnCplt = fill(" ", 800)
+	sInfoFrnSpbCplt = fill(" ", 800)
+	sChaineBCV = fill(" ", 255)
+	bOnLaissePasserCasPrestaFerme = False
+
+	sInfoFrnSpbCpltLu = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "INFO_FRN_SPB_CPLT" ) ) )
+	If IsNull( sInfoFrnSpbCpltLu ) Then sInfoFrnSpbCpltLu = "" 
+
+	sIdDepotHub = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "id_depot_hub" ) ) )
+	sIdHubPresta = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "id_hub_presta" ) ) )
+	
+	/*------------------------------------------------------------------*/
+	/* NUM_CMD_SPB                                             			  */
+	/*------------------------------------------------------------------*/
+	sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_CMD_SPB" ) )
+	sNumCmdSpb = sVal
+
+	// Le n° de Cmde peut être nulle, en effet système de gestion de commandes
+	// n'était peut-être pas encore en production au moment de cette cmde par les 
+	// gestionnaires.
+	If Not IsNull ( sVal ) And sVal <> "" Then
+	// Le n° de commande doit êtr du type ID_SIN + "-" + ID_SEQ soit 487497-2
+		lPos = Pos ( sVal, "-", 1 )
+		If lPos <= 0 Then 
+			iRet = -1
+			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+			" : Le n° de commande SPB ne contient pas de '-'." )
+		Else
+			lIdSin = Long ( Left ( sVal, lPos - 1 ) ) // #2
+			lIdSeq = Long ( Right ( sVal, Len ( sVal ) - lPos ) ) // #2
+
+			If Not IsNumber ( Left ( sVal, lPos - 1 ) ) Then 
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : Le n° de commande SPB est erroné sur la partie Ref.Sin." )
+
+			ElseIf Not IsNumber ( Right ( sVal, Len ( sVal ) - lPos ) ) Then 
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : Le n° de commande SPB est erroné sur la partie Id.Cmde." )
+			End If
+		End If
+	End If
+	
+   sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "DDE_SAV", ";") 
+	If sVal = "OUI" Then
+		sChaineBCV = Trim ( sChaineBCV )
+		lnvPFCString.of_Setkeyvalue ( sChaineBCV, "DDE_SAV", sVal, ";")
+		sChaineBCV = Left ( sChaineBCV + Space ( 255 ), 255 )
+	End If 
+	
+	// [PM82][LOT1]
+	SQLCA.PS_S11_COMMANDE_V07 ( lidsin, lidseq, sIdFourBase, sCodEtat, iStatusGc, sIdRefFour, iInfoSpbFrn, sIdTypArt, dcIdprod, sInfoSpbFrnCplt, sInfoFrnSpbCplt, sChaineBCV )
+
+	// [20250829140328870]
+	If Isnull ( sIdFourBase ) or Trim ( sIdFourBase ) = "" Then
+		iRet = -1
+		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+		" - Cet enregistrement (" + string (lidsin) + "-" + string ( lidseq ) + ") ne réfère aucune prestation en base." ) 
+	End If 
+	
+	/*------------------------------------------------------------------*/
+	/* Contrôle systeme HUB															  */
+	/*------------------------------------------------------------------*/
+	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "SYSTEME" ) ) )
+	sVal1= Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "FOURNISSEUR" ) ) )
+
+	If sVal = "HUB" and Not ibPrestaHub Then
+		iRet = -1
+		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+		" : Ce fournisseur (" + sVal1 + ") n'est pas déclaré comme étant lié au Hub Prestataire (FamilleCar 1)." )	// [HUB832_HUB_ORG_REUN] 	
+	End If 
+	
+	If sVal <> "HUB" and ibPrestaHub Then
+		iRet = -1
+		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+		" : Ce fichier ne provient du Hub Prestataire or le fournisseur (" + sVal1 + ") est déclaré comme étant lié au Hub Prestataire." )		
+	End If 
+	
+	/*------------------------------------------------------------------*/
+	/* FOURNISSEUR                                                      */
+	/*------------------------------------------------------------------*/
+	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "FOURNISSEUR" ) ) )
+
+	If IsNull ( sVal ) Or sVal = "" Then
+		iRet = -1
+		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+		" : La zone fournisseur est vide." )
+	End If 
+
+	If sVal <> sIdFour Then
+		iRet = -1
+		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+		" : Le fournisseur " + sVal + " ne correspond pas au fournisseur sélectionné " + sIdFour )
+	End If 
+
+	If Len ( sVal ) > 3 Then
+		iRet = -1
+		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+		" : La longueur du fournisseur doit être sur 3 caractères." )
+	End If
+
+	sIdFourCtrl = sVal
+	
+	// [20250829140328870]	
+	If ( Upper ( sIdFourCtrl ) <> Upper ( sIdFourBase ) ) Then // #5
+		iRet = -1
+		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" - Cet enregistrement " +  Upper ( sIdFourCtrl ) + "  (" + string (lidsin) + "-" + string ( lidseq ) + ") présent dans le fichier réfère en base une prestation " + sIdFourBase ) // #5 // #8
+	End If
+		
+	/*------------------------------------------------------------------*/
+	/* Cas presta en base fermée à laisser passer ou pas                */
+	/*------------------------------------------------------------------*/	
+	// [20250829140328870]	
+	sVal = idwFicFourn.GetItemString ( lCpt, "NUM_BON_TRP" )
+	lVal = idwFicFourn.GetItemNumber  ( lCpt, "STATUS_GC" ) 	
+	
+	If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" And lVal = 0 Then
+		// On laisse, on accepte l'écrasement
+		bOnLaissePasserCasPrestaFerme = True
+	End If
+
+	sVal = idwFicFourn.GetItemString ( lCpt, "NOM_TRANSPORTEUR" )
+	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) 	
+	If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" And lVal = 0 Then
+		// On laisse, on accepte l'écrasement
+		bOnLaissePasserCasPrestaFerme = True
+	End If
+	
+	// [PM246]
+	sVal = idwFicFourn.GetItemString ( lCpt, "PRBLE_LIVRAISON" )
+	If Not IsNull ( sVal ) And Len ( Trim ( sVal ) ) > 0 And sCodEtat <> "ANN" Then
+		// On laisse, on accepte l'écrasement
+		bOnLaissePasserCasPrestaFerme = True
+	End If
+
+	dtVal = idwFicFourn.GetItemDateTime ( lCpt, "DTE_RCP_APP_CLI" )
+	If Not IsNull ( dtVal ) And sCodEtat <> "ANN" Then
+		// On laisse, on accepte l'écrasement
+		bOnLaissePasserCasPrestaFerme = True
+	End If			
+
+	sVal = lnvPFCString.of_getkeyvalue (sInfoFrnSpbCpltLu, "DDE_SAV", ";")
+	If sVal="OUI" And sCodEtat <> "ANN" Then
+		// On laisse, on accepte l'écrasement
+		bOnLaissePasserCasPrestaFerme = True
+	End If			
+
+	sVal = lnvPFCString.of_getkeyvalue (sVal1, "AUTO_PEC_RAR", ";")
+	If sVal="OUI" And sCodEtat <> "ANN" Then
+		// On laisse, on accepte l'écrasement
+		bOnLaissePasserCasPrestaFerme = True
+	End If			
+
+	choose case sCodEtat 
+		case "RPC", "ANN", "RFO", "RSP"
+			If Not bOnLaissePasserCasPrestaFerme Then
+				idwFicFourn.SetItem ( lCpt , "FOURNISSEUR", "XXX" ) // On filtrera dessus pour deleter
+				Continue // Et on passe au suivant
+			End If 
+	end choose
+
+	Choose Case iStatusGc
+		Case 2, 11, 12, 21, 151, 152, 155, 157, 160, 161, 165, 166, 170, 171, 172, 173, 176, 175, 167, 168, 178, 179, 303, 304, 601, 602  // [PM01] Ajout de 167,168, [PM284-1]
+			
+			If Not bOnLaissePasserCasPrestaFerme Then
+				idwFicFourn.SetItem ( lCpt , "FOURNISSEUR", "XXX" ) // On filtrera dessus pour deleter
+				Continue // Et on passe au suivant				
+			End If 
+			
+	End Choose
+	// /[20250829140328870]	
+	
+	/*------------------------------------------------------------------*/
+	/* Stockage de certaines données                                    */
+	/*------------------------------------------------------------------*/	
+	// TYP_APP_DS
+	sIdTypArtSin = lnvPFCString.of_getkeyvalue (sChaineBCV, "TYP_APP_DS", ";") 
+	
+	// DTE_RCP_FRN
+	dtVal = idwFicFourn.GetItemDatetime( lCpt, "DTE_RCP_FRN")			
+	If IsNull ( dtVal ) Then 
+		sVal2 = lnvPFCString.of_getkeyvalue (sChaineBCV, "DTE_RCP_FRN", ";")
+		IF Not IsNull ( sVal2 ) And sVal2 <> "" Then
+			dtVal = Datetime ( sVal2 )
+		End If 
+	End IF 
+
+	If IsNull ( dtVal ) Then 
+		lRow = idwFicFourn.Find ( "NUM_CMD_SPB = '" + sNumCmdSpb + "' AND STATUS_GC = 159", 1, idwFicFourn.RowCount())
+		If lRow > 0 Then
+			dtVal =  idwFicFourn.GetItemDatetime( lRow, "DTE_RCP_FRN")
+		End If 
+	End IF 
+	SetNull ( dtDteRcpFrn )
+	If Not IsNull ( dtVal ) Then dtDteRcpFrn = dtVal
+	
+	/*------------------------------------------------------------------*/
+	/* NUM_CMD_FRN															           */
+	/*------------------------------------------------------------------*/
+	// Pas de contrôle particulier.
+
+	
+	/*------------------------------------------------------------------*/
+	/* STATUS_GC														              */
+	/*------------------------------------------------------------------*/
+	// Vérification de l'appartenance au paramétrage du code retourné .
+	sVal = String ( idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) )
+
+/*
+	sVal1 = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu , "AUTO_PEC_RAR", ";")	
+	dtVal =  idwFicFourn.GetItemDatetime( lCpt, "DTE_RCP_APP_CLI")
+
+	If ( IsNull ( sVal ) Or Trim ( sVal ) = "" ) And iStatusGc > 0 Then sVal = String ( iStatusGc )
+	If IsNull ( sVal ) Or Trim ( sVal ) = ""  Then sVal = "0"
+	
+	// Cas spécial à gérer où il n'y a pas de statut retourné mais il peux y avoir un date de fin de trait repris d'un précédent eng sur le hub
+	If sVal = "0" Then
+		Choose Case TRUE
+			Case sVal1 = "OUI" 
+				idwFicFourn.SetItem ( lCpt, "DTE_FIN_TRAIT", stNul.dtm )
+			Case Not IsNull ( dtVal )
+				idwFicFourn.SetItem ( lCpt, "DTE_FIN_TRAIT", stNul.dtm )				
+		End Choose
+	End If 
+*/
+	
+	Choose Case Upper ( sIdTypArt ) 
+		Case "EDI", "PRS"
+			Choose Case Long ( sVal ) 
+				Case 177, 178
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le Statut " + sVal + " n'est autorisé que pour les commandes de remplacement." )
+			End Choose
+		Case Else
+			Choose Case Long ( sVal ) 
+				Case 177, 178, 176
+					// C'est Ok
+				Case Else
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Statut " + sVal + " non autorisé pour une commande de remplacement." )
+
+			End Choose
+			
+	End Choose
+
+	Choose Case iInfoSpbFrn
+		Case 1503, 1504, 435, 1502, 1506
+			Choose Case Long ( sVal ) 
+				Case 166
+					// Autorisé
+				Case Else
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Statut " + sVal + " n'est pas autorisé en retour" )
+			End Choose
+			
+		Case 1505
+			Choose Case Long ( sVal ) 
+				Case 167, 168
+					// Autorisé
+				Case Else
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Statut " + sVal + " n'est pas autorisé en retour" )
+			End Choose
+		// [VDoc4752]
+		Case 970
+			Choose Case Long ( sVal )
+					// [VDoc6082] ajout du statut_gc 164
+				Case 165,164
+					// Autorisé
+				Case Else
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Statut " + sVal + " n'est pas autorisé en retour" )
+			End Choose
+			// :[VDoc4752]
+			
+		// [VDOC6300] // [PC877]
+		Case 964, 969
+			Choose Case Long ( sVal )
+				Case 179
+					// Autorisé
+				Case Else
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un code process " + String ( iInfoSpbFrn ) + " envoyé sur la prestation d'origine, le Statut " + sVal + " n'est pas autorisé en retour" )
+			End Choose			
+			
+	End Choose
+
+	Choose Case Long ( sVal ) 
+		Case 166
+			// [VDOC5774] 435, 1502
+			Choose Case iInfoSpbFrn
+				Case 1503, 1504, 435, 1502, 1506
+					// Autorisé
+				Case Else
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autorisé sur le process " + String ( iInfoSpbFrn ) )
+			End Choose
+			
+		Case 167, 168
+			Choose Case iInfoSpbFrn
+				Case 1505
+					// Autorisé
+				Case Else
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autorisé sur le process " + String ( iInfoSpbFrn ) )
+			End Choose
+			
+		Case 179
+			Choose Case iInfoSpbFrn
+				Case 964, 969
+					// Autorisé
+				Case Else
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est pas autorisé sur le process " + String ( iInfoSpbFrn ) )
+			End Choose
+	End Choose			
+
+/* Je Shunte, on demande le code verrou même pour des Diag.
+	lVal =  idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) 
+	Choose Case lVal 
+		Case 232
+			If Upper ( sIdTypArt ) <> "PRS" Then
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autorisé que sur une action de REPARATION." )
+			End If
+
+	End Choose
+
+	Choose Case sIdTypArt  
+		Case "PRS"
+			// OK
+		Case Else
+			If lVal = 232 Then
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut " + sVal + " n'est autorisé que sur une action de REPARATION." )
+			End If
+	End Choose
+*/
+
+	/*------------------------------------------------------------------*/
+	/* TYP_BA_ALLER													              */
+	/*------------------------------------------------------------------*/
+	// [PM445-1]
+	If lnvPFCString.of_getkeyvalue (sChaineBCV, "CMDE_REMPL", ";") <> "OUI" Then
+		sVal = idwFicFourn.GetItemString ( lCpt, "TYP_BA_ALLER" )
+		If IsNull ( sVal ) Then sVal = ""
+
+		sVal1 = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "NUM_BON_TRP" ) ) )
+		If IsNull ( sVal1 ) Then sVal1 = ""		
+
+		dtVal = dtDteRcpFrn
+		
+		If IsNull ( dtVal ) And sVal1 <> "" And sVal = "" And sIdRefFour <> "REFUSE_A_REEXP" Then
+			iRet = -1
+			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Un numéro de tracking ALLER doit être accompagné du champ TYP_BA_ALLER renseigné." )
+		End IF
+		
+		/*
+		If sVal <> "" Then
+			Choose Case sVal
+				Case "BPPAYE", &
+					  "RPICKUP"
+				
+						// Ok
+						
+				Case Else 
+	
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur le champ TYP_BA_ALLER, n'est pas valide." )
+	
+			End Choose 
+		End If 
+		*/
+
+	/*------------------------------------------------------------------*/
+	/* PERTE_ALLER														              */
+	/*------------------------------------------------------------------*/
+		
+		// [PM445-1]
+		sVal = idwFicFourn.GetItemString ( lCpt, "PERTE_ALLER" )
+		If IsNull ( sVal ) Then sVal = ""
+
+		IF sVal = "OUI" Then
+
+			sVal1 = idwFicFourn.GetItemString ( lCpt, "PRBLE_LIVRAISON" )
+			If IsNull ( sVal1 ) Then sVal1 = ""
+	
+			sVal2 = idwFicFourn.GetItemString ( lCpt, "TYP_BA_ALLER" )
+			If IsNull ( sVal2 ) Then sVal2 = ""
+	
+			sVal3 = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "NUM_BON_TRP" ) ) )
+			If IsNull ( sVal3 ) Then sVal3 = ""	
+			// [20250512134745313]
+			If sVal3 = "" Then sVal3 = lnvPFCString.of_getkeyvalue (sChaineBCV, "ID_BON_TRANSP", ";") 
+			If IsNull ( sVal3 ) Then sVal3 = ""	
+			// /[20250512134745313]
+	
+			// dtVal =  idwFicFourn.GetItemDatetime( lCpt, "DTE_RCP_FRN")
+			dtVal =  dtDteRcpFrn
+	
+			lVal =  idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) 
+			If IsNull ( lVal ) Then lVal = 0				
+			
+			If sVal2 = "" Then
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le type de BA aller n'est compatible avec une perte aller." )
+			End If 
+			
+			If sVal1 = "" Then
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le champ PRBLE_LIVRAISON doit être renseigné." )
+			End If 
+			
+			If sVal3 = "" Then
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le numéro de tracking (NUM_BON_TRP) doit être renseigné." )
+			End If 
+
+			If Not IsNull ( dtVal ) Then
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, la date de réception ne doit pas être renseigné." )
+			End If 
+			
+			sVal = idwFicFourn.GetItemString ( lCpt, "APP_SWAP" )		
+			If lVal <> 0 AND ( lVal <> 21 AND sVal <> "OUI" ) Then
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" (PM445-1) : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur une perte aller, le statut ne doit pas être renseigné." )
+			End If 
+		End IF 
+	End If	
+
+	/*------------------------------------------------------------------*/
+	/* DIAG_VIDEO_ENGAGE														        */
+	/*------------------------------------------------------------------*/
+	// [PMO139_RS4926]
+	sVal = idwFicFourn.GetItemString ( lCpt, "DIAG_VIDEO_ENGAGE" )
+
+	If IsNull ( sVal ) Then sVal = ""
+	
+	If sVal <> "" Then
+		Choose Case sVal
+			Case "OUI", &
+				  "NON"
+			
+					// Ok
+					
+			Case Else 
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur le champ DIAG_VIDEO_ENGAGE, n'est pas valide. les valeurs autorisées sont OUI ou NON." )
+
+		End Choose 
+	End If 	
+
+
+	/*------------------------------------------------------------------*/
+	/* RESOLU_DIAG_VIDEO														        */
+	/*------------------------------------------------------------------*/
+	sVal = idwFicFourn.GetItemString ( lCpt, "resolu_diag_video" )
+
+	If IsNull ( sVal ) Then sVal = ""
+	
+	If sVal <> "" Then
+		Choose Case sVal
+			Case "OUI", &
+				  "NON"
+			
+					// Ok
+					
+			Case Else 
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur le champ RESOLU_DIAG_VIDEO, n'est pas valide. les valeurs autorisées sont OUI ou NON." )
+
+		End Choose 
+	End If 	
+
+	sVal = idwFicFourn.GetItemString ( lCpt, "resolu_diag_video" )
+	sVal1 = String ( idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) )
+
+	If IsNull ( sVal ) Then sVal = ""
+	If IsNull ( sVal1) Then sVal1 = ""	
+	
+	If sVal = "OUI" And sVal1 = "2" THen
+		iRet = -1
+		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " (Oui) contenue sur le champ RESOLU_DIAG_VIDEO, n'est cohérente avec le statut (2) <<Réparé>> de la prestation." )
+	End IF 
+
+
+	/*------------------------------------------------------------------*/
+	/* dte_rdv_conf   														        */
+	/*------------------------------------------------------------------*/
+	dtVal =  idwFicFourn.GetItemDatetime( lCpt, "dte_rdv_conf")			
+	sVal = idwFicFourn.GetItemString ( lCpt, "SITE_ACTION" )
+	sVal1 = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCplt , "SITE_ACTION", ";")
+
+	If Not IsNull ( dtVal ) Then
+		Choose Case sVal 
+			Case "DISTANCE", "DOMICILE"
+					// Ok
+					
+			Case Else 
+				
+				Choose Case sVal1 
+					Case "DISTANCE", "DOMICILE"
+							// Ok
+
+					Case Else 
+				
+						iRet = -1
+						This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il n'est pas logique d'avoir une date de confirmation de rdv en dehors des site action DISTANCE et DOMICILE." )
+			End Choose 				
+		End Choose 
+	End If 	
+
+
+	/*------------------------------------------------------------------*/
+	/* mode_logis_ret																	  */
+   /* point_service_ret																  */
+	/*------------------------------------------------------------------*/
+	sVal  = idwFicFourn.GetItemString ( lCpt, "mode_logis_ret" )
+	sVal1 = idwFicFourn.GetItemString ( lCpt, "point_service_ret" )
+
+	If IsNull ( sVal ) Then sVal = ""
+	If IsNull ( sVal1 ) Then sVal1 = ""
+
+	If sVal <> "" Then
+		Choose Case sVal
+			Case "PROXIMITY", &
+				  "CENTRALIZATION", &
+				  "AT_HOME", &
+				  "REMOTELY", &
+				  "PROXI_CENTRALIZATION"
+			
+					// Ok
+					
+			Case Else 
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur le champ MODE_LOGIS_RET, n'est pas valide. les valeurs autorisées sont PROXIMITE (PROXIMITY) ou CENTRALISATION (CENTRALIZATION)." )
+
+		End Choose 
+	End If 
+
+	If sVal1 <> "" And iRet > 0 And sVal = "" Then
+			iRet = -1
+			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") si un point de service de retour est fourni (" + sVal1 + "), alors un mode logistique de retour doit aussi être fourni." )
+	End If 
+
+	If sVal <> "" And iRet > 0 And sVal1 = "" Then
+			iRet = -1
+			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") si un mode logistique de retour est fourni (" + sVal + "), alors un point de service de retour doit aussi être fourni." )
+	End If 
+
+
+	/*------------------------------------------------------------------*/
+	/* DTE_RCP_FRN										                          */
+	/*------------------------------------------------------------------*/
+	//dtVal =  idwFicFourn.GetItemDatetime( lCpt, "DTE_RCP_FRN")
+	dtVal = dtDteRcpFrn
+	lVal =  idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) 
+
+	Choose Case lVal
+		Case 155, 156, 157, 158, 160, 161, 163, 164, 165, 174, 177, 178
+			If Not isNull(dtVal) Then
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut " + String(lVal)  + ", la date de réception fournisseur (DTE_RCP_FRN) doit être vide.")
+			End if
+
+		Case 151, 152, 153, 154, 159, 162, 166, 167, 168, 169, 2, 21, 175, 232
+			sVal = idwFicFourn.GetItemString ( lCpt, "PERTE_ALLER" )
+			
+			If isNull(dtVal) And iInfoSpbFrn <> 957 And sVal <> "O" Then
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut " + String(lVal)  + ", la date de réception fournisseur (DTE_RCP_FRN) doit être renseigné.")
+			End if
+			
+			If Not isNull(dtVal) And iInfoSpbFrn = 957 Then
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut " + String(lVal)  + ", et pour le process spécifique 957, la date de réception fournisseur (DTE_RCP_FRN) doit être vide.")
+			End If			
+
+	End Choose
+
+	If Not IsNull ( dtVal ) And Date ( dtVal ) <> 1900-01-01 Then
+		If Year ( Date (dtVal )) < 2020 Then
+			iRet = -1
+			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") l'année de la date de réception n'est pas valide." )
+		End If
+	End If
+
+	If lVal = 159 And IsNull ( dtVal ) Then
+		iRet = -1
+		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le statut (159) de la récéption du matériel doit absolument s'accompagner de la date de réception du matériel (DTE_RCP_FRN)." )
+	End If 
+
+
+	/*------------------------------------------------------------------*/
+	/* SITE_ACTION										                          */
+	/*------------------------------------------------------------------*/
+	sVal = idwFicFourn.GetItemString ( lCpt, "SITE_ACTION" )
+
+	If IsNull ( sVal ) Then sVal = ""
+	
+	If sVal <> "" Then
+		Choose Case sVal
+			Case "STATION", &
+				  "DOMICILE", &
+				  "DISTANCE" 
+			
+					// Ok
+					
+			Case Else 
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur le champ SITE_ACTION, n'est pas valide. les valeurs autorisées sont STATION ou DOMICILE." )
+
+		End Choose 
+	End If 	
+
+	/*------------------------------------------------------------------*/
+	/* APP_INCOMPLET									                          */
+	/*------------------------------------------------------------------*/
+	sVal = idwFicFourn.GetItemString ( lCpt, "APP_INCOMPLET" )
+
+	If IsNull ( sVal ) Then sVal = ""
+	
+	If sVal <> "" Then
+		Choose Case sVal
+			Case "OUI", &
+				  "NON"
+			
+					// Ok
+					
+			Case Else 
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur le champ APP_INCOMPLET, n'est pas valide. les valeurs autorisées sont OUI ou NON." )
+
+		End Choose 
+	End If 	
+	
+	
+	/*------------------------------------------------------------------*/
+	/* NUM_IMEI_REMPL																	  */
+	/*------------------------------------------------------------------*/
+	If sIdTypArtSin = "TEL" Then 
+		sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_IMEI_REMPL" ) )
+		If IsNull ( sVal ) Then sVal = ""
+	
+		If Len ( sVal ) <> 15 And Len ( sVal ) > 0 Then
+			iRet = -1
+			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Un numéro d'IMEI doit contenir 15 chiffres (" + sVal + ")" )
+		End If
+	
+		If Not F_IMEI ( sVal, sIMEICorr ) And Len ( sVal ) > 0 Then
+			iRet = -1
+			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Numéro d'IMEI non valide (" + sVal + ")" )
+		End If 
+	End If
+
+	/*------------------------------------------------------------------*/
+	/* NUM_SERIE_REMPL																  */
+	/*------------------------------------------------------------------*/
+	If sIdTypArtSin = "TEL" Then 
+		sVal = Trim ( idwFicFourn.GetItemString ( lCpt, "NUM_SERIE_REMPL" ) )
+		If IsNull ( sVal ) Then sVal = ""
+
+		If Len ( sVal ) > 0 Then
+			iRet = -1
+			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour un appareil de type TEL, le numéro de série ne doit pas être renseigné  (" + sVal + "), seul l'IMEI doit être renseigné sur le champ NUM_IMEI_REMPL." )
+		End If
+		
+
+	End If 
+
+
+	/*------------------------------------------------------------------*/
+	/* DTE_FIN_TRAIT									  								  */
+	/*------------------------------------------------------------------*/
+	dtVal  =  idwFicFourn.GetItemDatetime( lCpt, "DTE_FIN_TRAIT")
+	// dtVal1 =  idwFicFourn.GetItemDatetime( lCpt, "DTE_RCP_FRN")
+	dtVal1 = dtDteRcpFrn
+	lVal =  idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) 
+
+	Choose Case lVal
+		Case 151, 152, 153, 154, 155, 160, 161, 165, 166, 167, 168, 2, 21, 167, 168, 177, 178, 175
+
+			If ( lVal = 153 Or lVal = 154 )  Then // And sIdTypArt = "PRS"
+				If Not Isnull (dtVal) Then
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut " + String(lVal)  + " en réparation, la date de fin de traitement (DTE_FIN_TRAIT) ne doit pas être renseigné.")
+				End If
+
+			Elseif Isnull(dtVal) Then
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit être renseigné.")
+			End if
+
+		Case 156, 157, 158, 159, 162, 163, 164, 169, 232, 174
+			if Not Isnull(dtVal) Then
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour le statut " + String(lVal)  + ", la date de fin de traitement (DTE_FIN_TRAIT) doit être vide.")
+			End if
+			
+		Case Else
+			If ( lVal = 0 Or IsNull ( lVal ) ) And Not IsNull ( dtVal ) Then
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Lorsque la date de fin de traitement (DTE_FIN_TRAIT) est renseigné, un statut est obligatoire.")
+			End If 
+			
+	End Choose
+
+	If Not IsNull ( dtVal ) and  Date ( dtVal ) <> 1900-01-01 Then
+		If Year ( Date (dtVal )) < 2020 Then
+			iRet = -1
+			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") l'année de la date DTE_FIN_TRAIT n'est pas valide." )
+		End If
+	End If
+
+	// dtVal =  idwFicFourn.GetItemDatetime( lCpt, "DTE_RCP_FRN")
+	dtVal = dtDteRcpFrn
+	dtVal1 =  idwFicFourn.GetItemDatetime( lCpt, "DTE_FIN_TRAIT")	
+	If Not IsNull ( dtVal ) And Not IsNull ( dtVal1 ) And dtVal > dtVal1 Then
+		iRet = -1
+		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la DTE_FIN_TRAIT doit être postérieure ou égale à la DTE_RCP_FRN." )
+	End If
+
+
+
+	/*------------------------------------------------------------------*/
+	/* COMMENT_FRN														     			  */
+	/*------------------------------------------------------------------*/
+	// Pas de Controle Particulier
+	// [MODIF_SUITE_REDR]
+	sVal = idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" )  
+	sVal = f_remplace(sVal,"'"," ")
+	sVal = f_remplace(sVal,'"'," ")
+	sVal = f_remplace(sVal,Char(9),"")
+	sVal = f_remplace(sVal,Char(10),"")		
+	sVal = f_remplace(sVal,Char(11),"")				
+	sVal = f_remplace(sVal,Char(13),"")				
+	idwFicFourn.SetItem ( lCpt, "COMMENT_FRN", Trim ( sVal ) )
+
+	/*------------------------------------------------------------------*/
+	/* NUM_BON_TRP 														  			  */
+	/*------------------------------------------------------------------*/
+	sVal = Upper ( idwFicFourn.GetItemString ( lCpt, "NUM_BON_TRP" ) )
+	sVal1 = idwFicFourn.GetItemString ( lCpt, "mode_logis_ret" )
+	lVal =  idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) 
+	
+	If IsNull ( sVal ) Then sVal = ""	
+	If IsNull ( sVal1 ) Then sVal1 = ""		
+
+	Choose Case lVal
+
+		// [HUB1896] plus à ce moment
+		/*
+		Case 177, 178
+			If IsNull ( sVal ) Or Len ( sVal ) <= 0 And sVal1 <> "PROXIMITE" Then
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le champ NUM_BON_TRP doit être renseigné sur le statut " + String ( lVal ) )
+			End If
+		*/
+		
+		Case 165
+			If iInfoSpbFrn = 970 and (IsNull ( sVal ) Or Len ( sVal ) <= 0 ) Then
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") La champ NUM_BON_TRP doit être renseigné sur le statut " + String ( lVal ) +  " pour le process 970.")
+			End If
+	End Choose
+
+	sVal = f_remplace(sVal,"'"," ")
+	sVal = f_remplace(sVal,'"'," ")
+	sVal = f_remplace(sVal,Char(9),"")
+	sVal = f_remplace(sVal,Char(10),"")		
+	sVal = f_remplace(sVal,Char(11),"")				
+	sVal = f_remplace(sVal,Char(13),"")				
+	idwFicFourn.SetItem ( lCpt, "NUM_BON_TRP", Trim ( sVal ) )
+
+	
+	/*------------------------------------------------------------------*/
+	/* NOM_TRANSPORTEUR													  			  */
+	/*------------------------------------------------------------------*/
+	sVal = Upper ( idwFicFourn.GetItemString ( lCpt, "NOM_TRANSPORTEUR" ) )
+	sVal1 = Upper ( idwFicFourn.GetItemString ( lCpt, "NUM_BON_TRP" ) )
+	If IsNull ( sVal ) Then sVal = ""
+	If IsNull ( sVal1 ) Then sVal1 = ""
+	
+	If sVal = "" And sVal1 <> "" Then
+		iRet = -1
+		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le NOM_TRANSPORTEUR doit être renseigné si un NUM_BON_TRP est renseigné.")
+	End If 
+
+	If sVal <> "" And sVal1 = "" Then
+		iRet = -1
+		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le NUM_BON_TRP doit être renseigné si un NOM_TRANSPORTEUR est renseigné.")
+	End If 
+
+	/*------------------------------------------------------------------*/
+	/* DTE_RCP_APP_CLI                                                  */
+	/*------------------------------------------------------------------*/
+	dtVal =  idwFicFourn.GetItemDatetime( lCpt, "DTE_RCP_APP_CLI")
+	lVal =  iStatusGc
+	
+	If Date ( dtVal ) = 1900-01-01 Then SetNull ( dtVal ) 
+	If Date ( dtVal1 ) = 1900-01-01 Then SetNull ( dtVal1 ) 
+
+	If Not IsNull ( dtVal ) Then 
+
+		Choose Case lVal 
+			// [20250730153200137], 153, 154, 169, 305
+			Case 178, 233, 263, 234, 2, 21, 152, 153, 154, 169, 305
+				// Ok
+			Case Else
+				lRow = idwFicFourn.Find ( "NUM_CMD_SPB = '" + sNumCmdSpb + "' AND STATUS_GC IN ( 178, 233, 263, 234, 2, 21, 152, 153, 154, 169, 305 )", 1, idwFicFourn.RowCount())
+				If lRow > 0 Then
+					lVal =  idwFicFourn.GetItemNumber ( lRow, "STATUS_GC")
+				End If 
+		End Choose	
+		
+		Choose Case lVal 
+			// [20250730153200137], 153, 154, 169, 305				
+			Case 178, 233, 263, 234, 2, 21, 152, 153, 154, 169, 305
+				// Ok
+			Case Else
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Le champ DTE_RCP_APP_CLI ne peut être renseigné sans le statut 178, 233, 263, 234, 2, 21, 152, 153, 154, 169, 305" )
+		End Choose
+	End If
+
+	/*------------------------------------------------------------------*/
+	/* APP_SWAP																			  */
+	/* MARQUE_REMPL																	  */
+	/* MODELE_REMPL																	  */
+	/* NUM_IMEI_REMPL																	  */
+ 	/* NUM_SERIE_REMPL																  */
+	/*	COULEUR_REMPL																	  */
+	/*	CAP_STK_REMPL																	  */
+	/* NEUF_REC_REMPL																	  */
+	/* PRIX_TTC_REMPL         														  */
+	/*------------------------------------------------------------------*/
+	sVal = idwFicFourn.GetItemString ( lCpt, "APP_SWAP" )
+	sVal1 = 	lnvPFCString.of_getkeyvalue (sChaineBCV, "CMDE_REMPL", ";") 
+
+	If sVal = "OUI" Then
+		
+		lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
+		sVal = idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) 	
+
+		// [VDOC27123]BVID/BVIP/BVIT
+		If ( &
+				( lVal = 21 ) And Not ( Pos (sVal,  "[BVIE]" ) > 0 Or Pos (sVal,  "[BVID]" ) > 0 Or Pos (sVal,  "[BVIP]" ) > 0 Or Pos (sVal,  "[BVIT]" ) > 0 Or Pos (sVal,  "[PIE]" ) > 0 ) &
+				Or &
+				( lVal = 23 ) And Not ( Pos (sVal,  "[BVIEOX]" ) > 0 Or Pos (sVal,  "[PIE]" ) > 0 ) &					
+				Or &
+				( lVal <> 21 And lVal <> 23 ) &
+			) Or sVal1 = "OUI" Then
+			iRet = -1
+			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") : Le SWAP n'est autorisé que sur un irréparable 21/23 avec un mot clé [BVIE]/[BVID]/[BVIP]/[BVIT]/[BVIEOX] ou [PIE]." )
+		End If 				
+		
+	End If 
+
+	If iRet > 0 Then
+		sVal1 = 	lnvPFCString.of_getkeyvalue (sChaineBCV, "CMDE_REMPL", ";") 
+		sVal = idwFicFourn.GetItemString ( lCpt, "APP_SWAP" )	
+
+		sVal2 = Trim ( idwFicFourn.GetItemString ( lCpt, "MARQUE_REMPL" )) + &
+				  Trim ( idwFicFourn.GetItemString ( lCpt, "MODELE_REMPL" )) + &		
+				  Trim ( idwFicFourn.GetItemString ( lCpt, "COULEUR_REMPL" )) + &		
+				  Trim ( idwFicFourn.GetItemString ( lCpt, "CAP_STK_REMPL" )) + &		
+				  Trim ( idwFicFourn.GetItemString ( lCpt, "NEUF_REC_REMPL" )) + &
+				  String ( idwFicFourn.GetItemDecimal ( lCpt, "PRIX_TTC_REMPL" ) )
+		
+		If IsNull ( sVal2 ) Then sVal2 = ""
+		If IsNull ( sVal ) Then sVal = ""
+		If IsNull ( sVal1 ) Then sVal1 = ""
+		
+		If Len ( sVal2 ) > 0 And sVal1 <> "OUI" And sVal <> "OUI" Then
+			iRet = -1
+			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") : Les champ MARQUE_REMPL, MODELE_REMPL, COULEUR_REMPL, CAP_STK_REMPL, NEUF_REC_REMPL, PRIX_TTC_REMPL, ne sont autorisés que sur un SWAP suite app irréparable OU une Commande de Remplacement." )
+		End If 	
+		
+	End If 
+
+
+	sVal1 = 	lnvPFCString.of_getkeyvalue (sChaineBCV, "CMDE_REMPL", ";") 
+	sVal = idwFicFourn.GetItemString ( lCpt, "APP_SWAP" )	
+	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
+	
+	If iRet > 0 And ( sVal1 = "OUI" Or sVal = "OUI" ) And lVal <> 176 Then
+			
+		sVal = idwFicFourn.GetItemString ( lCpt, "MARQUE_REMPL" )
+		If IsNull ( sVal ) Then sVal = ""		
+		If Trim ( sVal ) = "" Then
+			iRet = -1
+			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement le champ MARQUE_REMPL doit être renseigné avec la marque du nouveau matériel." )
+		End If 	
+		
+		sVal = idwFicFourn.GetItemString ( lCpt, "MODELE_REMPL" )
+		If IsNull ( sVal ) Then sVal = ""				
+		If Trim ( sVal ) = "" Then
+			iRet = -1
+			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement le champ MODELE_REMPL doit être renseigné avec la marque du nouveau matériel." )
+		End If 	
+
+		/*
+		If iRet > 0 Then
+			Choose Case sIdTypArtSin
+				Case "TEL", "TPC"
+					// Autorisé
+				Case Else 
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne " + String ( lCpt ) + &
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") (DT276) : Type d'appareil (" + sIdTypArt+ ") non autorisé pour un SWAP O2M." )
+			End Choose
+		End If 
+		*/
+
+		// Controle binome marq/modl appartient à IFR ou pas 
+		/*
+		sVal = idwFicFourn.GetItemString ( lCpt, "REF_APP_REMPL" )
+		If IsNull ( sVal ) Then sVal = ""			
+	
+		If sVal = "IFR" Then
+			sVal  = idwFicFourn.GetItemString ( lCpt, "MARQUE_REMPL" )
+			sVal1 = idwFicFourn.GetItemString ( lCpt, "MODELE_REMPL" )
+			If SQLCA.PS_S_VERIF_MARQ_MODL_IFR_V01 ( dcIdprod, sIdTypArtSin, sVal, sVal1 ) <= 0 Then
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement, si le champ REF_APP_REMPL indique le référentiel de contrôle IFR, alors la Marque et le Modèle du nouveau matériel (" + sVal + " " + sVal1 + ") doivent appartenir au référentiel IFR, ce qui n'est pas le cas." )
+			End If
+		End If
+
+		If sVal = "IFR" and sVal1 <> "" Then
+			iRet = -1
+			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement, si le champ REF_APP_REMPL indique le référentiel de contrôle IFR, alors le champ AUTRES_INFOS_REMPL doit être null." )
+		End If 
+		*/
+
+
+		Choose Case sIdTypArtSin
+			Case "TEL"
+				sVal = idwFicFourn.GetItemString ( lCpt, "NUM_IMEI_REMPL" )  // Le ctrle de validité est faite plus haut
+				If Trim ( sVal ) = "" Or IsNull ( sVal )  Then
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement le champ NUM_IMEI_REMPL doit être renseigné par l'IMEI du nouveau matériel." )
+				End If 					
+			Case Else 
+				sVal = idwFicFourn.GetItemString ( lCpt, "NUM_SERIE_REMPL" )  
+				If Trim ( sVal ) = "" Or IsNull ( sVal )  Then
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement le champ NUM_SERIE_REMPL (Hors TEL) doit être renseigné par le numéro de série du nouveau matériel." )
+				End If 					
+		End Choose
+
+		sVal = idwFicFourn.GetItemString ( lCpt, "AUTRES_INFOS_REMPL" )
+		If IsNull ( sVal ) Then sVal = ""		
+		
+		If sVal <> "" and iRet > 0 Then
+			Choose Case sVal
+				case "COULEUR_ET_CAPACITE"
+					sVal = idwFicFourn.GetItemString ( lCpt, "COULEUR_REMPL" )
+					If IsNull ( sVal ) Then sVal = ""		
+					If sVal = "" Then
+						iRet = -1
+						This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement, si le champ AUTRES_INFOS_REMPL est renseigné avec COULEUR_ET_CAPACITE, la couleur doit donc être renseignée." )
+					End If 					
+
+					sVal = idwFicFourn.GetItemString ( lCpt, "CAP_STK_REMPL" )
+					If IsNull ( sVal ) Then sVal = ""		
+					If sVal = "" Then
+						iRet = -1
+						This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement, si le champ AUTRES_INFOS_REMPL est renseigné avec COULEUR_ET_CAPACITE, la capacité de stockage doit donc être renseignée." )
+					End If 					
+					
+					
+				case "COULEUR"
+					
+					sVal = idwFicFourn.GetItemString ( lCpt, "COULEUR_REMPL" )
+					If IsNull ( sVal ) Then sVal = ""		
+					If sVal = "" Then
+						iRet = -1
+						This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement, si le champ AUTRES_INFOS_REMPL est renseigné avec COULEUR, la couleur doit donc être renseignée." )
+					End If 						
+					
+				case "CAPACITE"
+					
+					sVal = idwFicFourn.GetItemString ( lCpt, "CAP_STK_REMPL" )
+					If IsNull ( sVal ) Then sVal = ""		
+					If sVal = "" Then
+						iRet = -1
+						This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement, si le champ AUTRES_INFOS_REMPL est renseigné avec CAPACITE, la capacité de stockage doit donc être renseignée." )
+					End If 					
+										
+			End Choose 
+		End If 
+
+/* [HUB1936] Shunté sur demande de Lisette
+		sVal = String ( idwFicFourn.GetItemDecimal ( lCpt, "PRIX_TTC_REMPL" ))
+		If IsNull ( sVal ) Then sVal = "0"
+
+		If sVal = "" Or Not IsNumber ( sVal ) Or Pos ( sVal, ",") > 0 Or Pos ( sVal, "E") > 0 Or Pos ( sVal, "€") > 0 Then
+			iRet = -1
+			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Sur un SWAP ou un Remplacement le champ PRIX_TTC_REMPL doit être renseigné avec le montant TTC de l'appareil de remplacement avec un point en séparateur de décimal et aucun symbole de monnaie." )
+		End If 
+
+		If IsNumber ( sVal ) Then
+			If Long ( sVal) = 0 Then 
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") sur un SWAP ou un Remplacement le champ PRIX_TTC_REMPL doit être renseigné avec le montant TTC de l'appareil de remplacement avec un montant positif." )
+			End if		
+		End If 
+*/
+
+		sVal = idwFicFourn.GetItemString ( lCpt, "NEUF_REC_REMPL" )  
+		Choose Case sVal
+			Case "NEU", "REC", "NDI"
+				// Ok
+			Case Else
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") sur un SWAP ou un Remplacement le champ NEUF_REC_REMPL est obligatoire et doit contenir les valeurs NEU ou REC ou NDI." )
+		End Choose 
+		
+	End If		
+
+	/*------------------------------------------------------------------*/
+	/* PRBLE_LIVRAISON 																  */
+	/*------------------------------------------------------------------*/	
+	sVal = idwFicFourn.GetItemString ( lCpt, "PRBLE_LIVRAISON" )  
+
+	If IsNull ( sVal ) Then sVal = ""
+	
+	If sVal <> "" Then
+		Choose Case sVal
+			Case "COLIS_PND", &
+				  "COLIS_NRPAC", &
+				  "COLIS_PERDU", &
+				  "COLIS_BALNI", &
+				  "COLIS_INCOR", &
+				  "COLIS_REFUS", &
+				  "ANNUL_REFAIT", &
+				  "EN_ATTENTE", &
+				  "AUTRE"
+			Case Else 
+
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur le champ PRBLE_LIVRAISON n'est pas valide." )
+
+		End Choose 
+	End If 
+
+
+	/*------------------------------------------------------------------*/
+	/* PEC_PRBLE_LIVRAISON [PM450-1]												  */
+	/*------------------------------------------------------------------*/
+	sVal  = idwFicFourn.GetItemString ( lCpt, "PEC_PRBLE_LIVRAISON" )  
+	sVal1 = idwFicFourn.GetItemString ( lCpt, "PRBLE_LIVRAISON" )  
+
+	If IsNull ( sVal ) Then sVal = ""
+	If IsNull ( sVal1 ) Then sVal1 = ""		
+	
+	If sVal <> "" Then
+		Choose Case sVal
+			Case "OUI", &
+				  "NON"
+			
+					// Ok
+					
+			Case Else 
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la valeur " + Upper ( sVal ) + " contenue sur le champ PEC_PRBLE_LIVRAISON, n'est pas valide (attendu OUI ou NON)." )
+
+		End Choose 
+		
+		If sVal1 = "" Then
+			iRet = -1
+			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le champ PEC_PRBLE_LIVRAISON n'est autorisé que si précédemment il y a eu une valeur sur PRBLE_LIVRAISON, qui est justement absente." )
+		End If 			
+	End If 	
+
+
+	/*------------------------------------------------------------------*/
+	/* INFO_FRN_SPB_CPLT													  			  */
+	/*------------------------------------------------------------------*/
+	// Dde de SAV
+	sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu , "DDE_SAV", ";")
+	If IsNull ( sVal ) Then sVal = ""
+	
+	If sVal = "OUI" Then
+		Choose Case sCodEtat
+			Case "RFO", "RPC"
+				
+				Choose case iStatusGc
+					Case 2
+						// OK
+					Case Else 
+						iRet = -1
+						This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour demander un SAV, la prestation d'origine doit être en état <<Répara>> (2)" )
+				End Choose					
+			Case Else 
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour demander un SAV, la prestation d'origine doit Fermée (non annulée)" )
+				
+		End Choose
+	End If 
+	
+	// Demande automatique de PEC_A_RECYCLER ou REFUSE_A_REEXP par le fournisseur
+	sVal  = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu , "AUTO_PEC_RAR", ";")	
+	sVal1 = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu , "PRESTA_AUTO", ";")	
+//	sVal2 = lnvPFCString.of_Getkeyvalue ( sChaineBcv, "DERN_ID_REF_FOUR", ";")	
+
+	If IsNull ( sVal ) Then sVal = ""
+	If IsNull ( sVal1) Then sVal1 = ""
+//	If IsNull ( sVal2) Then sVal2 = ""	
+
+	If sVal = "OUI" Then
+		
+		Choose Case sVal1
+			Case "PEC_A_RECYCLER", "REFUSE_A_REEXP"
+				//
+			Case Else 
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le bcv AUTO_PEC_RAR ne peut attendre que deux valeurs qui sont PEC_A_RECYCLER et REFUSE_A_REEXP" )
+				
+		End CHoose 
+
+		If iRet = 0 Then
+			Choose Case iStatusGc 
+				Case 2, 11, 12, 21, 151, 152, 155, 157, 160, 161, 165, 166, 170, 171, 172, 173, 176, 175, 167, 168, 178, 179, 303, 304, 601, 602 
+	
+					Choose Case sIdRefFour
+						Case "A_DIAGNOSTIQUER", "A_REPARER"
+							// Ok
+						Case Else 
+							iRet = -1
+							This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+							" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Les demandes automatique de PEC_A_RECYCLER ou REFUSE_A_REEXP ne peuvent se faire que sur une prestation d'origine fermée" )
+					End CHoose 					
+			End Choose 
+			
+		End If 		
+		
+	End If 
+
+
+	/*------------------------------------------------------------------*/
+	/* AUTRES CONTROLES de comparaison de données                       */ 
+	/*------------------------------------------------------------------*/
+	
+	// - présence d’une clé de type [SAV_NO_OK] ou [BRIS] avec un status_gc différent de 21 
+	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
+	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )		
+	If lVal <> 21 And ( Pos ( sVal, "[SAV_NO_OK]" ) > 0 Or Pos ( sVal, "[BRIS]" ) > 0 ) Then
+		iRet = -1
+		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") présence d’une clé de type [SAV_NO_OK] ou [BRIS] avec un statut différent de 21 => interdit " )
+	End IF
+
+	// - présence d’une clé de type [SAV_NO_OK] ou [BRIS] dans un retour à une commande avec action = A_REPARER ou A_REPARER_FORCE 
+	sVal = String ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) )		
+	If ( Pos ( sVal, "[SAV_NO_OK]" ) > 0 Or Pos ( sVal, "[BRIS]" ) > 0 ) &
+		 And ( sIdRefFour = "A_REPARER" Or sIdRefFour = "A_REPARER_FORCE" ) &
+		 And lnvPFCString.of_Getkeyvalue ( sInfoSpbFrnCplt , "A_REPARER_SAV", ";") <> "OUI" &
+		 And lnvPFCString.of_Getkeyvalue ( sInfoSpbFrnCplt , "A_CONTROLER_SAV", ";") <> "OUI" &
+		 And lnvPFCString.of_Getkeyvalue ( sInfoSpbFrnCplt , "A_REP_GARANTIE", ";") <> "OUI" &		 
+	Then
+		iRet = -1
+		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") présence d’une clé de type [SAV_NO_OK] ou [BRIS] dans un retour sur une commande sans demande de SAV (donc n’impliquant pas d’action = A_REPARER_SAV ou A_CONTROLER_SAV ) => interdit" )
+	End IF 
+
+	// Le statut en base ne peut plus être modifié
+	Choose Case iStatusGc
+		Case 2, 11, 12, 21, 151, 152, 155, 157, 160, 161, 165, 166, 170, 171, 172, 173, 176, 175, 167, 168, 178, 179, 303, 304, 601, 602
+	
+			lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
+			
+			If iStatusGc <> lVal And lVal > 0 Then
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut en base (" + String ( iStatusGc ) + ") ne permet plus l'acceptation d'un autre statut (" + string (lVal) + "). Le fournisseur doit intégrer cette règle dans son système." )
+			End If
+
+	End CHoose
+	
+	
+	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
+	If lVal = 155 And sIdRefFour <> "REFUSE_A_REEXP" Then
+		iRet = -1
+		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " ne peut être renvoyé que sur une prestation de type REFUSE_A_REEXP" )
+	End If
+
+
+	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
+	If lVal <> 155 And sIdRefFour = "REFUSE_A_REEXP" Then
+		iRet = -1
+		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") une prestation de type REFUSE_A_REEXP ne peut recevoir qu'un Statut 155 en retour, et non " + String ( lVal ) + "." )
+	End If
+	
+	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
+	Choose Case sIdRefFour  
+		Case "A_REPARER_FORCE", "A_DIAG_FORCE"
+
+			If lVal > 0 Then
+				iRet = -1
+		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il est interdit de répondre sur les prestations de type A_REPARER_FORCE, et A_DIAG_FORCE, or vous renvoyez le Statut " + String ( lVal ) + ". Si une réponse doit être apportée, vous devez répondre sur la préstation d'origine liée à ce forçage." )
+			End If
+	End Choose		
+	
+	
+	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
+	sVal = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) ) )
+	Choose Case lVal
+		Case 152, 21, 612
+			
+			If IsNull ( sVal ) Or sVal = "" Then
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le Statut " + String ( lVal ) + " doit obligatoirement être accompagné d'un commentaire." )
+			End If
+			
+	End CHoose
+	
+	
+	// IRREP_QUALIFIE
+	sVal1= idwFicFourn.GetItemString ( lCpt, "COMMENT_FRN" ) 
+	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )		
+	
+	If lVal = 21 And &
+		( &
+		  Pos ( sVal1, "[BNVSOX]") <= 0 And &
+		  Pos ( sVal1, "[CRSMTPEC]") <= 0 And &
+		  Pos ( sVal1, "[BNV]") <= 0 And &
+		  Pos ( sVal1, "[OXY]") <= 0 And &
+		  Pos ( sVal1, "[PIE]") <= 0 And &
+		  Pos ( sVal1, "[PNC]") <= 0 And &
+		  Pos ( sVal1, "[BRIS]") <= 0 And &
+		  Pos ( sVal1, "[SAV_NO_OK]") <= 0 And &
+		  Pos ( sVal1, "[BVIEOX]") <= 0 And &
+		  Pos ( sVal1, "[EXP]") <= 0  And &			  
+		  Pos ( sVal1, "[BVIE]") <= 0  And &			  
+  		  Pos ( sVal1, "[PNV]") <= 0  And &			  
+		  Pos ( sVal1, "[NOSPBS]") <= 0 And & 
+		  Pos ( sVal1, "[BVID]") <= 0 And & 
+		  Pos ( sVal1, "[BVIP]") <= 0 And & 				 
+		  Pos ( sVal1, "[BVIT]") <= 0 And &
+		  Pos ( sVal1, "[PRDV]") <= 0 And &		  
+		  Pos ( sVal1, "[DNCAD]") <= 0 &		  
+		  ) &
+		  Then
+
+			iRet = -1
+			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Il manque dans le commentaire un des mots clés obligatoire qualifiant l'irréparable." )
+
+	End If 
+
+	// [CTRLE_DATE_INTRG_FOU]
+	// sVal = String ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_RCP_FRN" ) )  			
+	sVal = String ( dtDteRcpFrn )
+	sVal1 = String ( idwFicFourn.GetItemDateTime ( lCpt, "DTE_FIN_TRAIT" ) )  		
+	iRet = This.Uf_Ctrl_Date ( "CAS1", iRet, lCpt, lIdSin, lIdseq, sIdRefFour, sChaineBCV, sVal, sVal1 )
+	
+
+
+	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )				
+	Choose Case sIdRefFour 
+		Case "A_REPARER"
+			
+			Choose Case lVal 
+					
+				Case 151, 152, 170, 171
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le code retour " + String ( lVal ) + " n'est pas valide pour un retour de REPARATION (c'est un retour valable pour un diagnostic)." )
+			
+			End Choose 				
+			
+	End Choose 
+
+
+	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )				
+	Choose Case sIdRefFour 
+		Case "A_DIAGNOSTIQUER"
+			
+			Choose Case lVal 
+					
+				Case 2, 21
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le code retour " + String ( lVal ) + " n'est pas valide pour un retour de DIAGNOSTIC (c'est un retour valable pour un réparation)." )
+			
+			End Choose 				
+			
+	End Choose 	
+
+	// Contrôle des données liées au SAV
+   sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "DDE_SAV", ";") 
+	sVal1 = Trim ( Upper ( idwFicFourn.GetItemString ( lCpt, "id_hub_presta_sav" ) ) )
+	
+	If IsNull ( sVal1 ) Then sVal1 = ""
+	
+	If sVal = "OUI" And sVal1 = "" Then
+		iRet = -1
+		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") la demande d'une prestation de SAV doit obligatoirement s'accompagner d'un ID_HUB_PRESTA_SAV transmis par le Hub Prestataire." )
+	End IF 
+
+
+	// Marquage du nbre de SAV actuel, exploité dans l'intégration physique en Aval
+	If sVal = "OUI" And sVal1 <> "" Then
+		sVal = lnvPFCString.of_getkeyvalue (sChaineBCV, "NBRE_SAV_ACTUEL", ";")
+		lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCpltLu, "NBRE_SAV_ACTUEL", sVal, ";")
+		idwFicFourn.SetItem  ( lCpt, "INFO_FRN_SPB_CPLT", sInfoFrnSpbCpltLu )
+	End If 
+
+	// [HUB1267]
+	If bF_CLE_A_TRUE_HUB1267 Then
+		sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "CMDE_REMPL_AUTO", ";") 
+		If sVal = "OUI" Then
+			sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ID_FOUR_REMPL", ";")
+			If IsNull ( sVal ) Then sVal = ""
+			
+			If SQLCA.PS_S_CODE_DANS_FAMILLE_CAR ( 1, sVal ) <= 0 Then
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Dans le cadre du remplacement automatique, le prestataire " + sVal + " n'est pas un prestataire existant sur le HUB en lien avec SIMPA2." )
+			End If 
+			
+			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ID_HUB_PRESTA_REMPL", ";"))
+			If IsNull ( sVal ) Then sVal = ""
+			
+			IF sVal = "" Then 
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Dans le cadre du remplacement automatique, l'ID_HUB_PRESTA_REMPL (id_benefit) de la prestation de remplacement engagée, est obligatoire." )
+			End If 
+			
+			If SQLCA.PS_S_RECH_ID_HUB_PRESTA_SUR_UN_DOSSIER ( lidsin, sVal ) > 0 Then
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Dans le cadre du remplacement automatique, l'ID_HUB_PRESTA_REMPL (id_benefit) de la prestation de remplacement, existe déjà pour ce dossier de sinistre." )
+			End If 
+			
+			
+			
+			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ID_POINT_SERV_REMPL", ";"))
+			If IsNull ( sVal ) Then sVal = ""
+			
+			IF sVal = "" Then 
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Dans le cadre du remplacement automatique, l'ID_POINT_SERV_REMPL de la prestation de remplacement engagée, est obligatoire." )
+			End If 
+
+			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "ID_MODE_LOGIS_REMPL", ";"))
+			If IsNull ( sVal ) Then sVal = ""
+			
+			IF sVal = "" Then 
+				iRet = -1
+				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Dans le cadre du remplacement automatique, l'ID_MODE_LOGIS_REMPL de la prestation de remplacement engagée, est obligatoire." )
+			End If 		
+		
+		End IF		
+		
+	End If 
+	
+	
+
+	//////////////////////////////////////////////////////
+	// Coder au dessus de cette ligne pour les contrôle //
+	//////////////////////////////////////////////////////
+	
+	// #6 [MSS_DIAG].[20091207111441740]
+	// [20091228114718123]
+	// [20250829140328870]	
+	/*
+	If iRet > 0 Then
+		if not uf_ctrl_general_bloquant (lIdSin, lIdSeq, lCpt, sIdFourCtrl ) Then
+			iRet = -1
+		end if
+	End If
+	*/
+	
+	// [20250829140328870]	
+	idwFicFourn.SetFilter ( "FOURNISSEUR = 'XXX'" )
+	idwFicFourn.Filter ( )	
+	idwFicFourn.RowsDiscard ( 1, idwFicFourn.RowCount (), primary! )
+	idwFicFourn.SetFilter ( "" )
+	idwFicFourn.Filter ( )	
+	
+	
+	// Maj du rejet côté Hub
+	sVal = lnvPFCString.of_getkeyvalue (sInfoFrnSpbCpltLu, "ID_DEPOT_HUB", ";")	
+	If iRet = -1 Then // Rejet (R)
+		sSqlHub = "Update edi.DepotHubToSimpa2Presta Set alt_trt = 'R' where id_depot_hub = '" + sVal + "'"
+	Else // Traité (O)
+		sSqlHub = "Update edi.DepotHubToSimpa2Presta Set alt_trt = 'O' where id_depot_hub = '" + sVal + "'"		
+	End If 
+	lErrorHubPresta = F_Execute_Hub_Prestataire ( sSqlHub, itrHubPrestataire, lIndentityHubPresta, lRowCountHubPresta )
+	bRet = lErrorHubPresta = 0 And itrHubPrestataire.SqlCode = 0 And itrHubPrestataire.SqlDBCode = 0
+	
+	If bRet Then
+		F_Commit_Hub_Prestataire ( itrHubPrestataire, True)			
+	Else
+		F_Commit_Hub_Prestataire ( itrHubPrestataire, False )	
+		iRet = -1
+		This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Problème de mise à R/O sur le HUB lors du contrôle (id_depot_hub = " + String (sVal) + "." )
+	End If 
+Next
+
+If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
+
+
+// connexion au Hub Prestataire
+This.uf_Hub_GestionTransSqlHubPresta ( "DECONNEXION_HUB" )
+
+Return iRet
 
 end function
 
