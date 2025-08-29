@@ -126,6 +126,7 @@
 --	   JFF 23/05/2025   [HUB1530]
 --     JFF 06/06/2025   [20250606091224420] Modif sur ajustement de date
 --     JFF 30/07/2025   [20250730153200137]
+--     JFF 29/08/2025   [20250829140328870] Suppression de l'update du travail
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U01_COMMANDE' AND type = 'P' )
         DROP procedure sysadm.PS_U01_COMMANDE
@@ -4131,7 +4132,8 @@ If @iRemplacementAutomatiqueHub > 0
 		END
 
 		-- Dans tous les cas on delete le travail créé par le retour irréparable ou non conforme
-		Update sysadm.w_queue Set txt_mess2 = ISNULL ( txt_mess2, '' ) + '. Travail delete par PS_U01_COMMANDE sur cmde de remplacement auto HUB' where id_sin = @dcIdSin
+		-- 20250829140328870
+		-- Update sysadm.w_queue Set txt_mess2 = Right ( ISNULL ( txt_mess2, '' ) + '. Travail delete par PS_U01_COMMANDE sur cmde de remplacement auto HUB', 254) where id_sin = @dcIdSin
 		Delete sysadm.w_queue where id_sin = @dcIdSin
 		
 		-- [MIG82_JOURN_EVT]
