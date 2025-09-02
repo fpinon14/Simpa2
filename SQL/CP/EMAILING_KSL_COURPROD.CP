@@ -120,3 +120,44 @@ Order by categorie
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procedure            :       sysadm.PS_MIG1_S_EMAILING_KSL_COURPROD_EXISTE
+-- Auteur               :       Fabry JF
+-- Date                 :       22/07/2025 
+-- Libelle              :       [MIG165_BOUYGUES]
+-- Commentaires         :       
+-- References           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_MIG1_S_EMAILING_KSL_COURPROD_EXISTE' AND type = 'P' )
+        DROP procedure sysadm.PS_MIG1_S_EMAILING_KSL_COURPROD_EXISTE
+GO
+
+CREATE procedure sysadm.PS_MIG1_S_EMAILING_KSL_COURPROD_EXISTE
+	@adcIdProd Decimal ( 7 ),
+	@asTypMail VarChar ( 6 ),
+	@asCodMaq  VarChar ( 255 ) OutPut,
+	@asLibCour  VarChar ( 255 ) OutPut
+AS
+
+Select	Top 1 
+		@asCodMaq = Trim ( emc.cod_maq ),
+		@asLibCour = Trim ( emc.lib_cour )
+From sysadm.emailing_ksl_courrier emc with ( nolock) ,
+		sysadm.emailing_ksl_courprod emp with ( nolock)
+Where emp.id_prod = @adcIdProd
+And emp.typ_mail = @asTypMail
+And emc.typ_mail = emp.typ_mail
+And emc.cod_maq = emp.cod_maq
+
+If @@ROWCOUNT > 0 Return 1
+
+Return 0
+
+Go
+
+
