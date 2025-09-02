@@ -34061,6 +34061,7 @@ private function integer uf_ctrl_fichier_frn_hub_2025082914032887 ();//*--------
 //    	 JFF  27/08/2025  [HUB1936]
 //        JFF  29/08/2025  [20250829140328870]
 //        JFF  02/09/2025  [20250902105339530]
+//        JFF  02/09/2025  [20250902141005123]
 //*-----------------------------------------------------------------
 
 Int iRet, iStatusGc, iInfoSpbFrn
@@ -34330,6 +34331,11 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	// Vérification de l'appartenance au paramétrage du code retourné .
 	sVal = String ( idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" ) )
+	
+	// [20250902141005123]
+	If Long ( sVal ) = 0 Then
+		sVal = String ( iStatusGc )
+	End If 
 
 /*
 	sVal1 = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu , "AUTO_PEC_RAR", ";")	
