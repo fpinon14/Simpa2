@@ -34060,6 +34060,7 @@ private function integer uf_ctrl_fichier_frn_hub_2025082914032887 ();//*--------
 //    	 JFF  30/07/2025  [HUB1896]
 //    	 JFF  27/08/2025  [HUB1936]
 //        JFF  29/08/2025  [20250829140328870]
+//        JFF  02/09/2025  [20250902105339530]
 //*-----------------------------------------------------------------
 
 Int iRet, iStatusGc, iInfoSpbFrn
@@ -35006,7 +35007,8 @@ For lCpt = 1 To lTotLig
 	/* PRIX_TTC_REMPL         														  */
 	/*------------------------------------------------------------------*/
 	sVal = idwFicFourn.GetItemString ( lCpt, "APP_SWAP" )
-	sVal1 = 	lnvPFCString.of_getkeyvalue (sChaineBCV, "CMDE_REMPL", ";") 
+	// sVal1 = lnvPFCString.of_getkeyvalue (sChaineBCV, "CMDE_REMPL", ";")  [20250902105339530]
+	sVal1= lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "CMDE_REMPL_AUTO", ";") 	// [20250902105339530]
 
 	If sVal = "OUI" Then
 		
@@ -35029,7 +35031,8 @@ For lCpt = 1 To lTotLig
 	End If 
 
 	If iRet > 0 Then
-		sVal1 = 	lnvPFCString.of_getkeyvalue (sChaineBCV, "CMDE_REMPL", ";") 
+		// sVal1 = 	lnvPFCString.of_getkeyvalue (sChaineBCV, "CMDE_REMPL", ";") [20250902105339530]
+		sVal1= lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "CMDE_REMPL_AUTO", ";") // [20250902105339530]
 		sVal = idwFicFourn.GetItemString ( lCpt, "APP_SWAP" )	
 
 		sVal2 = Trim ( idwFicFourn.GetItemString ( lCpt, "MARQUE_REMPL" )) + &
@@ -35052,7 +35055,8 @@ For lCpt = 1 To lTotLig
 	End If 
 
 
-	sVal1 = 	lnvPFCString.of_getkeyvalue (sChaineBCV, "CMDE_REMPL", ";") 
+	// sVal1 = 	lnvPFCString.of_getkeyvalue (sChaineBCV, "CMDE_REMPL", ";") [20250902105339530]
+	sVal1= lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "CMDE_REMPL_AUTO", ";") // [20250902105339530]
 	sVal = idwFicFourn.GetItemString ( lCpt, "APP_SWAP" )	
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	
