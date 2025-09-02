@@ -4109,7 +4109,7 @@ Boolean bEnvoyer, bResil, bFin
 Long lCptRefus, lTotRefus, lIdMotif, lIdNatSin
 String sLibMemoire, sValCtrle, sModeFctDp345
 Integer iCodResilAdh, iIdEvtPce 
-Boolean 	bDdePceUFAssure, bRefUFAssure, bRegUFAssure 
+Boolean 	bDdePceUFAssure, bRefUFAssure, bRegUFAssure, bDP315
 n_cst_string lnvPFCString
 String sCodModeReg, sText
 
@@ -5820,6 +5820,15 @@ End IF
 
 // [DT288-1_LOT2]
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 315)
+BDp315 = lDeb > 0  // [MIG165_BOUYGUES]
+
+// [MIG165_BOUYGUES]
+If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
+	If lDeb <=0 Then
+		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 405 )
+	End If 
+End If 
+
 If lDeb > 0 Then
 	dtDtePivotDT288-1_LOT2 = DateTime ( lnvString.of_getkeyvalue (idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), "DTE_PIVOT_DT288_1_LOT2", ";") )
 
@@ -5840,6 +5849,7 @@ If lDeb > 0 Then
 
 	// Condition d'appel du WS revu avec Hélène par rapport à la NDC
 	// [DT288-1][MODIF_CHRISTINE]
+	// [MIG165_BOUYGUES] Or Not BDp315, ajout 550	
 	If ( ( sVal = "ORANGE_V3BIS" OR sVal = "ORANGE_V3TER" ) &
 		  Or &
 		  ( bBlocageGeoloc ) &
@@ -5847,8 +5857,8 @@ If lDeb > 0 Then
 		And &
 		sMarq = "APPLE" And & 
 		sTypApp = "TEL" And &
-		dtCreeLeDos >= dtDtePivotDT288-1_LOT2 And &
-		( lVal = 500 or lVal = 600 Or idw_LstwCommande.RowCount () > 0  ) And &
+		( dtCreeLeDos >= dtDtePivotDT288-1_LOT2 Or Not BDp315 ) And & 
+		( lVal = 500 or lVal = 550 or lVal = 600 Or idw_LstwCommande.RowCount () > 0  ) And &
 		sVal1 = "O" and &
 		lVal31 <= 0 And &
 		lVal21 <= 0 &
@@ -25377,6 +25387,7 @@ End If
 If asPos="" Then	
 	This.uf_Determiner_Courrier_Forcage_MBS ( asPos, alCpt, asIdNatCour, asIdCour )
 End If
+
 
 end subroutine
 

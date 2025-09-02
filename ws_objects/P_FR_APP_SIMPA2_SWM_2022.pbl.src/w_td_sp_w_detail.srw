@@ -1142,6 +1142,7 @@ private function boolean wf_condition_ouverture (string aschoixaction);//*------
 //       JFF   06/09/2024 [KSV516]
 // 		JFF   29/11/2024 [HP252_276_HUB_PRESTA] Ajout HUB
 //       JFF   12/02/2025 [HUB875]
+//       JFF   22/07/2025 [MIG165_BOUYGUES]
 //*-----------------------------------------------------------------
 
 String sTypApp, sMarque, sModele, sMes, sTypArt, sFiltreFrn, sIdGti, sDteProdEqvFc, sBVIEPresent, sSortOri, sChaine, sInterdictionAutor
@@ -1163,6 +1164,7 @@ Long lRowForPec
 Boolean bBlocageGeoloc, bFranchiseAuchan, bFranchiseSelectra
 Boolean bPrestaHubCodeVerrouManquant, bPrestaHubGeolocActive, bPrestaHubIncomplet
 Boolean bVarianteSelectra2024 // [KSV516]
+Boolean BDp315 
 
 string sFiltreOri, sFiltrePrs // #7
 String sPathIE 
@@ -2672,6 +2674,15 @@ If bOk Then
 
 			// [DT288-1_LOT2]
 			F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 315)
+			BDp315 = lDeb > 0  // [MIG165_BOUYGUES]
+			
+			// [MIG165_BOUYGUES]
+			If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
+				If lDeb <=0 Then
+					F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 405 )
+				End If 
+			End If 			
+			
 			If lDeb > 0 Then
 				dtDtePivotDT288-1_LOT2 = DateTime ( lnvPFCString.of_getkeyvalue (idwDetPro.GetItemString ( lDeb, "VAL_CAR" ), "DTE_PIVOT_DT288_1_LOT2", ";") )
 
@@ -2689,6 +2700,7 @@ If bOk Then
 
 				// Condition d'appel du WS revu avec Hélène par rapport à la NDC
 				// [DT288-1][MODIF_CHRISTINE]
+				// [MIG165_BOUYGUES] Or Not BDp315
 				If ( ( sVal = "ORANGE_V3BIS" OR sVal = "ORANGE_V3TER" ) &
 					  Or &
 					  ( bBlocageGeoloc ) &
@@ -2696,7 +2708,7 @@ If bOk Then
 					And &
 					sMarque = "APPLE" And & 
 					sTypApp = "TEL" And &
-					dtCreeLeDos >= dtDtePivotDT288-1_LOT2 And &
+					( dtCreeLeDos >= dtDtePivotDT288-1_LOT2 Or Not BDp315 ) And & 
 					idwLstCmdeSin.RowCount () <= 0 And &
 					lRowForPec <= 0 &
 					Then

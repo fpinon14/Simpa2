@@ -841,8 +841,9 @@ function Long PS_I_COURRIER_PDF ( long dcIdSin, long dcIdI, long dcIdCpt, string
 //       JFF   15/07/2025 [CONVERT_PDF_STOCK]
 function Long PS_I_COURRIER_PDF_AVEC_ID_ARCH ( long dcIdSin, long dcIdI, string sCodOper, Long lIdArch, Ref Long alIdentity ) RPCFUNC ALIAS FOR "sysadm.PS_I_COURRIER_PDF_AVEC_ID_ARCH"
 
-//       JFF   18/07/2025 [HUB1830_FACTU_HUB]
-function Int PS_S_CTRLE_PRESTA_HUB ( long dcIdSin, String sIdBenefit, Ref Int iIdSeq, Ref String sIdFour, Ref String sErreur ) RPCFUNC ALIAS FOR "sysadm.PS_S_CTRLE_PRESTA_HUB"
+//       JFF   22/07/2025 [MIG165_BOUYGUES]
+function Int PS_MIG1_S_EMAILING_KSL_COURPROD_EXISTE ( long adcIdProd, String asTypMail, ref String asCodMaq, ref String asLibCour ) RPCFUNC ALIAS FOR "sysadm.PS_MIG1_S_EMAILING_KSL_COURPROD_EXISTE"
+
 
 end prototypes
 type variables

@@ -65,6 +65,7 @@ public function long uf_zn_trt_divsin_codeboutiqueadh (string asdata, string asn
 public function integer uf_zn_trt_divsin_coqnonadpate (string asdata, string asnomcol, long alrow)
 public function string uf_controlergestion_hub_prestataire ()
 public function boolean uf_controlergestion_carma (long alrow)
+public subroutine uf_determiner_courrier_forcage_dp405 (integer alcpt, ref string asidnatcour, ref string asidcour)
 end prototypes
 
 public function long uf_zn_trt_divsin_typeapp (string asdata, string asnomcol, long alrow, boolean abforcer);//*-----------------------------------------------------------------
@@ -1040,12 +1041,14 @@ public function string uf_controlergestion_emailingksl ();//*-------------------
 //*-----------------------------------------------------------------
 //* MAJ 					PAR		Date		  Modification
 //                   JFF     19/02/2025  [202502191703] J'autorise pour tout inter, un contrôle sur le courrier existant à présent.
+//       				JFF     22/07/2025  [MIG165_BOUYGUES]
 //*-----------------------------------------------------------------
 Boolean bAMU_Regl, bAMU_ReglV, bAMU_ReglC, bAMU_Pce, bAMU_Ref, bMaqG, bMaqV, bMaqC, bMaqP, bMaqR, bFin, bAMUPT_Courrier, bCtrleAltEdit
 Boolean bAMU_CourEmailing, bAMU_CourNormal
-Long lDeb, lFin, lCpt, lTotInter, lCpt2
+Long lDeb, lFin, lCpt, lTotInter, lCpt2, lRow 
 Int iNbreRef, iIdInter, iCtrle 
 String sAdrMail, sCodInter, sNomInter, sPos, sLibCodInter, sTypeMail, sRegl, sPce, sRef, sCodModeReg, sChaineEnvCourrier, sCodInterSeria
+String sIdNatCour, sIdCour
 Decimal {2} dcMtARegInter
 
 sPos = ""
@@ -1200,6 +1203,18 @@ For lCpt = 1 To lTotInter
 	End If 
 
 	// Contrôle cohérence courrier et contexte
+
+	// [MIG165_BOUYGUES]
+	If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
+		lRow = idw_lstinter.Find ( "COD_INTER = 'A'", 1, idw_lstinter.RowCount ())
+		If lRow > 0 Then
+			sIdNatCour = idw_lstinter.GetItemString ( lRow, "ID_NAT_COUR" ) 
+			sIdCour = idw_lstinter.GetItemString ( lRow, "ID_COUR" ) 		
+			This.uf_Determiner_Courrier_Forcage_Dp405 ( lRow, sIdNatCour, sIdCour )
+			sTypeMail = sIdNatCour
+			bAMUPT_Courrier = Not ( IsNull ( sTypeMail ) Or sTypeMail = "" )
+		End IF 
+	End If	
 	
 	// Pas de courrier et AMU Regl ou pce ou refus
 	if ( IsNull ( sTypeMail ) Or sTypeMail = "" ) And ( bAMU_Regl Or bAMU_Pce Or bAMU_Ref ) Then
@@ -1266,9 +1281,9 @@ For lCpt = 1 To lTotInter
 	
 Next
 
-
 // Pas de courrier
 If Not bAMUPT_Courrier Then
+	
 	stMessage.sTitre		= "Emailing KSL : Pas de courrier"
 	stMessage.Icon			= Question!
 	stMessage.bErreurG	= FALSE
@@ -1962,6 +1977,78 @@ End if
 idw_lstwcommande.SetItem(alRow, "INFO_SPB_FRN_CPLT", sInfoSpbFrnCplt)
 Return bRet
 end function
+
+public subroutine uf_determiner_courrier_forcage_dp405 (integer alcpt, ref string asidnatcour, ref string asidcour);//*-----------------------------------------------------------------
+//*
+//* Fonction      : u_gs_sp_sinistre::uf_Determiner_Courrier_Forcage_DP405 (PRIVATE)
+//* Auteur        : JFF
+//* Date          : 22/07/2025 
+//* Libellé       : [MIG165_BOUYGUES]
+//* Commentaires  : 
+//*
+//* Arguments     : String 		asPos					Ref
+//*					  Integer  		alCpt					Val
+//*					  String			asIdNatCour			Ref
+//*					  Integer		asIdCour				Ref
+//*
+//* Retourne      : 
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//*
+//*-----------------------------------------------------------------
+
+Long   lDeb, lFin, lCodEtat, lIdProd
+String sTypMailForcage, sCodMaq, sLibCour
+
+sTypMailForcage = "GEOLO1"
+
+lIdProd = idw_WSin.GetItemNumber ( 1, "ID_PROD" )
+
+F_RechDetPro ( lDeb, lFin, idw_DetPro, lIdProd, "-DP", 405 ) // Bouygues
+If lDeb <= 0 Then Return 
+
+F_RechDetPro ( lDeb, lFin, idw_DetPro, lIdProd, "-DP", 390 ) // Emailing
+If lDeb <= 0 Then Return 
+
+
+// Ne s'applique qu'à l'assuré
+If idw_LstInter.GetItemString ( alCpt, "COD_INTER" ) <> "A" Then Return
+
+// Si déjà une valeur, le forçage ne fonctionne, on laisse toujours le GT maitre
+If Not ( ( IsNull ( asIdNatCour ) Or Trim ( asIdNatCour ) = "" ) And  ( IsNull ( asIdCour ) Or Trim ( asIdCour ) = "" ) )Then Return
+
+lCodEtat = idw_wsin.GetItemNumber ( 1, "COD_ETAT" )
+
+If Not ( lCodEtat = 100 And iuoSpGsSinistre.uf_GestOng_Divers_Trouver ( "geoloc_simpa2" ) = "O" ) Then Return
+
+sCodMaq = Space ( 255 ) ; sLibCour = Space ( 255 ) 
+IF SQLCA.PS_MIG1_S_EMAILING_KSL_COURPROD_EXISTE ( lIdProd, sTypMailForcage, sCodMaq, sLibCour ) <= 0  Then Return
+
+If IsNull ( sCodMaq ) Then sCodMaq = ""
+If IsNull ( sLibCour ) Then sLibCour = ""
+sCodMaq = Trim ( sCodMaq  )
+sLibCour = Trim ( sLibCour )
+
+stMessage.sTitre		= "Forçage courrier"
+stMessage.Icon			= Question!
+stMessage.bErreurG	= FALSE
+stMessage.Bouton		= YesNo!
+stMessage.sCode		= "WSIN934"
+stMessage.sVar[1]		= sCodMaq
+stMessage.sVar[2]		= sLibCour
+
+If F_Message ( stMessage ) = 1 Then
+	
+	asIdNatCour = sTypMailForcage 
+	asIdCour = sTypMailForcage 
+
+	idw_LstInter.SetItem ( alCpt, "ID_COUR", asIdNatCour )
+	idw_LstInter.SetItem ( alCpt, "ID_NAT_COUR", asIdCour )
+End If 
+
+
+end subroutine
 
 on u_gs_sp_sinistre_2.create
 call super::create
