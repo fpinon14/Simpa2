@@ -21378,6 +21378,7 @@ Go
 -- JFF      24/09/2024   [KSV793]
 -- JFF      24/09/2024   [KSV795]
 -- JFF		28/10/2024   [MCO1054]
+-- JFF      22/07/2025   [MIG165_BOUYGUES]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_MAILPUSH_RELANCE_PCE_DT262' AND type = 'P' )
         DROP procedure sysadm.PS_S_MAILPUSH_RELANCE_PCE_DT262
@@ -21395,6 +21396,8 @@ DECLARE @tb TABLE
 	  marque varchar ( 35 ),
 	  modele varchar ( 35 ),
 	  variante  varchar ( 35 ), -- [DT364)
+	  methode VarChar ( 50 ), -- [MIG165_BOUYGUES]
+	  typ_mail_rel Varchar ( 6 ), -- [MIG165_BOUYGUES]
 	  adr_mail_prod varchar ( 50 ), -- [RS398][RS905]
 	  adr_adrpostale_prod varchar ( 100 ), -- [RS5124_ATM_ATP]
 	  url_extranet_spb varchar ( 100 ), -- [RS5124_ATM_ATP]
@@ -21406,16 +21409,22 @@ DECLARE @det_pro TABLE
 	  id_prod	decimal (7 ), -- [PI062]
 	  dte_pivot datetime,
 	  dte_del_1ere_rel_j   datetime,
+	  typ_mail_rel1 Varchar ( 6 ), -- [MIG165_BOUYGUES]
 	  z2eme_rel  Varchar ( 5 ),
 	  dte_del_2eme_rel_j datetime,
+	  typ_mail_rel2 Varchar ( 6 ), -- [MIG165_BOUYGUES]
 	  dte_pivot_dt364 datetime,
 	  z3eme_rel Varchar ( 5 ),
 	  dte_del_3eme_rel_j datetime,
+	  typ_mail_rel3 Varchar ( 6 ), -- [MIG165_BOUYGUES]
 	  z4eme_rel Varchar ( 5 ),
 	  dte_del_4eme_rel_j datetime,
+	  typ_mail_rel4 Varchar ( 6 ), -- [MIG165_BOUYGUES]
 	  cloture_dos Varchar ( 5 ),
 	  dte_del_cloture_dos_j datetime,
+	  typ_mail_rel5 Varchar ( 6 ), -- [MIG165_BOUYGUES]
 	  variante_mail varchar ( 35),
+	  methode VarChar ( 50 ), -- [MIG165_BOUYGUES]
 	  lib_prod_dp66_Et_dp67 Varchar ( 71 ),
 	  adr_mail_prod_dp136 varchar ( 70 ),
 	  adr_adrpostale_prod varchar ( 100 ), -- [RS5124_ATM_ATP]
@@ -21468,6 +21477,8 @@ Declare @sLibZoneDivPro VarChar ( 35 )
 Declare @iIdNatTache integer
 Declare @iIdTypContact Integer
 Declare @sVariante varchar ( 35 ) -- [DT364]
+Declare @sMethode varchar ( 35 ) -- [MIG165_BOUYGUES]
+Declare @sTypMailRel varchar ( 6 ) -- [MIG165_BOUYGUES]
 Declare @sAltQueue VarChar ( 1 )
 Declare @dtDateJour DateTime
 Declare @iCptTri Integer
@@ -21498,16 +21509,22 @@ Insert into @det_pro
 Select dp.id_prod,
 	   Convert ( DateTime,  sysadm.FN_CLE_VAL ( 'DTE_PIVOT', rtrim ( dp.val_car ) + rtrim ( dp.val_car2 ), ';')),
        DATEADD ( day, (-1)* Convert ( integer, sysadm.FN_CLE_VAL ( 'DEL_1ERE_REL_J', rtrim ( dp.val_car ) + rtrim ( dp.val_car2 ), ';')) , Getdate() ),
+	   sysadm.FN_CLE_VAL ( 'TYP_MAIL_REL1', rtrim ( dp.val_car ) + rtrim ( dp.val_car2 ), ';'), -- [MIG165_BOUYGUES]
 	   sysadm.FN_CLE_VAL ( '2EME_REL', rtrim ( dp.val_car ) + rtrim ( dp.val_car2 ), ';'),
 	   DATEADD ( day, (-1)* Convert ( integer, sysadm.FN_CLE_VAL ( 'DEL_2EME_REL_J', rtrim ( dp.val_car ) + rtrim ( dp.val_car2 ), ';')) , Getdate() ),
+	   sysadm.FN_CLE_VAL ( 'TYP_MAIL_REL2', rtrim ( dp.val_car ) + rtrim ( dp.val_car2 ), ';'), -- [MIG165_BOUYGUES]
 	   Convert ( DateTime, sysadm.FN_CLE_VAL ( 'DTE_PIVOT_DT364', rtrim ( dp.val_car ) + rtrim ( dp.val_car2 ), ';')),
 	   sysadm.FN_CLE_VAL ( '3EME_REL', rtrim ( dp.val_car ) + rtrim ( dp.val_car2 ), ';'),
 	   DATEADD ( day, (-1)* Convert ( integer, sysadm.FN_CLE_VAL ( 'DEL_3EME_REL_J', rtrim ( dp.val_car ) + rtrim ( dp.val_car2 ), ';')) , Getdate() ),
+	   sysadm.FN_CLE_VAL ( 'TYP_MAIL_REL3', rtrim ( dp.val_car ) + rtrim ( dp.val_car2 ), ';'), -- [MIG165_BOUYGUES]
 	   sysadm.FN_CLE_VAL ( '4EME_REL', rtrim ( dp.val_car ) + rtrim ( dp.val_car2 ), ';'),
 	   DATEADD ( day, (-1)* Convert ( integer, sysadm.FN_CLE_VAL ( 'DEL_4EME_REL_J', rtrim ( dp.val_car ) + rtrim ( dp.val_car2 ), ';')) , Getdate() ),
+	   sysadm.FN_CLE_VAL ( 'TYP_MAIL_REL4', rtrim ( dp.val_car ) + rtrim ( dp.val_car2 ), ';'), -- [MIG165_BOUYGUES]
 	   sysadm.FN_CLE_VAL ( 'CLOTURE_DOS', rtrim ( dp.val_car ) + rtrim ( dp.val_car2 ), ';'),
 	   DATEADD ( day, (-1)* Convert ( integer, sysadm.FN_CLE_VAL ( 'DEL_CLOTURE_DOS_J', rtrim ( dp.val_car ) + rtrim ( dp.val_car2 ), ';')) , Getdate() ),
+	   sysadm.FN_CLE_VAL ( 'TYP_MAIL_REL5', rtrim ( dp.val_car ) + rtrim ( dp.val_car2 ), ';'), -- [MIG165_BOUYGUES]
 	   sysadm.FN_CLE_VAL ( 'VARIANTE_MAIL', rtrim ( dp.val_car ) + rtrim ( dp.val_car2 ), ';'),
+	   sysadm.FN_CLE_VAL ( 'METHODE', rtrim ( dp.val_car ) + rtrim ( dp.val_car2 ), ';'), -- [MIG165_BOUYGUES]
 		IsNull (
 		(select rtrim(dp66.val_car) 
 			from sysadm.det_pro dp66  with (nolock)
@@ -21547,6 +21564,8 @@ select  Distinct
 		IsNull ( ltrim ( rtrim ( s.marq_port )), ''),
 		IsNull ( ltrim ( rtrim ( s.modl_port )), ''),
 		dp.variante_mail, -- [DT364]
+		dp.methode, -- [MIG165_BOUYGUES]
+		dp.typ_mail_rel1, -- [MIG165_BOUYGUES]
 		dp.adr_mail_prod_dp136,
 		dp.adr_adrpostale_prod, -- [RS5124_ATM_ATP]
 		dp.url_extranet_spb, -- [RS5124_ATM_ATP]
@@ -21602,6 +21621,8 @@ select Distinct
 		IsNull ( ltrim ( rtrim ( s.marq_port )), ''),
 		IsNull ( ltrim ( rtrim ( s.modl_port )), ''),
 		dp.variante_mail, -- [DT364]
+		dp.methode, -- [MIG165_BOUYGUES]
+		dp.typ_mail_rel2, -- [MIG165_BOUYGUES]
 		dp.adr_mail_prod_dp136, 
 		dp.adr_adrpostale_prod, -- [RS5124_ATM_ATP]
 		dp.url_extranet_spb, -- [RS5124_ATM_ATP]
@@ -21641,6 +21662,8 @@ select Distinct
 		IsNull ( ltrim ( rtrim ( s.marq_port )), ''),
 		IsNull ( ltrim ( rtrim ( s.modl_port )), ''),
 		dp.variante_mail, -- [DT364]
+		dp.methode, -- [MIG165_BOUYGUES]
+		dp.typ_mail_rel3, -- [MIG165_BOUYGUES]
 		dp.adr_mail_prod_dp136, 
 		dp.adr_adrpostale_prod, -- [RS5124_ATM_ATP]
 		dp.url_extranet_spb, -- [RS5124_ATM_ATP]
@@ -21681,6 +21704,8 @@ select Distinct
 		IsNull ( ltrim ( rtrim ( s.marq_port )), ''),
 		IsNull ( ltrim ( rtrim ( s.modl_port )), ''),
 		dp.variante_mail, -- [DT364]
+		dp.methode, -- [MIG165_BOUYGUES]
+		dp.typ_mail_rel4, -- [MIG165_BOUYGUES]		
 		dp.adr_mail_prod_dp136,  
 		dp.adr_adrpostale_prod, -- [RS5124_ATM_ATP]
 		dp.url_extranet_spb, -- [RS5124_ATM_ATP]
@@ -21721,6 +21746,8 @@ select Distinct
 		IsNull ( ltrim ( rtrim ( s.marq_port )), ''),
 		IsNull ( ltrim ( rtrim ( s.modl_port )), ''),
 		dp.variante_mail, -- [DT364]
+		dp.methode, -- [MIG165_BOUYGUES]
+		dp.typ_mail_rel5, -- [MIG165_BOUYGUES]
 		dp.adr_mail_prod_dp136, 
 		dp.adr_adrpostale_prod, -- [RS5124_ATM_ATP]
 		dp.url_extranet_spb, -- [RS5124_ATM_ATP]
@@ -21767,6 +21794,8 @@ While Exists ( Select * From @tb where marquage = 0 )
 		@sMarque = marque,
 		@sModele = modele,
 		@sVariante = variante, -- [DT364]
+		@sMethode = methode, -- [MIG165_BOUYGUES]
+		@sTypMailRel = typ_mail_rel, -- [MIG165_BOUYGUES]
 		@sAdrMailProd = adr_mail_prod, -- [RS398][RS905]
 		@sAdrAdPostaleProd = adr_adrpostale_prod, -- [RS5124_ATM_ATP]
 	    @sUrlEctranetSpb = url_extranet_spb -- [RS5124_ATM_ATP]
@@ -21813,6 +21842,10 @@ While Exists ( Select * From @tb where marquage = 0 )
 	If @sTypRel = 'REL1' 
 	 Begin
 		Set @sCodeMail = 'OV3RL1'
+
+		-- [MIG165_BOUYGUES]
+		If @sMethode = 'EMAILING_KSL' Set @sCodeMail = @sTypMailRel
+		
 		Set @sNomZoneDivPro = 'dte_rel1_mail_ddepce_dt262'
 		Set @sLibZoneDivPro = 'Date 1ère relance mail DdePce'
 		Set @iIdNatTache = 864
@@ -21823,6 +21856,10 @@ While Exists ( Select * From @tb where marquage = 0 )
 	If @sTypRel = 'REL2' 
 	 Begin
 		Set @sCodeMail = 'OV3RL2'
+
+		-- [MIG165_BOUYGUES]
+		If @sMethode = 'EMAILING_KSL' Set @sCodeMail = @sTypMailRel
+
 		Set @sNomZoneDivPro = 'dte_rel2_mail_ddepce_dt262'
 		Set @sLibZoneDivPro = 'Date 2ème relance mail DdePce'
 		Set @iIdNatTache = 865
@@ -21835,6 +21872,10 @@ While Exists ( Select * From @tb where marquage = 0 )
  	If @sTypRel = 'REL3' 
 	 Begin
 		Set @sCodeMail = 'OV3RL3'
+
+		-- [MIG165_BOUYGUES]
+		If @sMethode = 'EMAILING_KSL' Set @sCodeMail = @sTypMailRel
+
 		Set @sNomZoneDivPro = 'dte_rel3_mail_ddepce_dt262'
 		Set @sLibZoneDivPro = 'Date 3ème relance mail DdePce'
 		Set @iIdNatTache = 916
@@ -21846,6 +21887,10 @@ While Exists ( Select * From @tb where marquage = 0 )
  	If @sTypRel = 'REL4' 
 	 Begin
 		Set @sCodeMail = 'OV3RL4'
+
+		-- [MIG165_BOUYGUES]
+		If @sMethode = 'EMAILING_KSL' Set @sCodeMail = @sTypMailRel
+
 		Set @sNomZoneDivPro = 'dte_rel4_mail_ddepce_dt262'
 		Set @sLibZoneDivPro = 'Date 4ème relance mail DdePce'
 		Set @iIdNatTache = 917
@@ -21857,6 +21902,10 @@ While Exists ( Select * From @tb where marquage = 0 )
  	If @sTypRel = 'REL5' 
 	 Begin
 		Set @sCodeMail = 'OV3RL5'
+
+		-- [MIG165_BOUYGUES]
+		If @sMethode = 'EMAILING_KSL' Set @sCodeMail = @sTypMailRel
+
 		Set @sNomZoneDivPro = 'dte_rel5_mail_ddepce_dt262'
 		Set @sLibZoneDivPro = 'Date relance clôture mail DdePce'
 		Set @iIdNatTache = 918
@@ -22551,11 +22600,28 @@ While Exists ( Select * From @tb where marquage = 0 )
 				End 
 
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
+			
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
-			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
+			
+			-- [MIG165_BOUYGUES] On laisse armer l'objet mais pas le body pour le cas KSL
+			If @sMethode <> 'EMAILING_KSL'  
+				Begin 
+					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
+				End 
 
 			-- Appel pour construire et récupérer le XML dans @xmlResult
 			Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
+
+			-- [MIG165_BOUYGUES] en cas EMAILING_KSL il faut renseigner les pièces
+			If @sMethode = 'EMAILING_KSL'  
+				Begin
+					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_AJOUT_TABL_PCES_XML
+						@iIdXml, 
+						@sCodeMaquette, 
+						@dcIdSin,
+						2,
+						@sXMLVar OUTPUT
+				End
 
 			Exec @iRet = TRACE_MAIL_PRO.sysadm.PS_RS5045_I_MAIL_PUSH_KSL
 				'SIMPA2',
@@ -22628,10 +22694,26 @@ While Exists ( Select * From @tb where marquage = 0 )
 
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_TRANSFORMATION_DES_CRLF_FORMAT_XML_UTF8 @sMailBody OutPut, @sSaut
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_subject', @sMailObjet
-			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
+
+			-- [MIG165_BOUYGUES] On laisse armer l'objet mais pas le body pour le cas KSL
+			If @sMethode <> 'EMAILING_KSL'  
+				Begin 
+					Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'mail_body', @sMailBody
+				End 
 
 			-- Appel pour construire et récupérer le XML dans @xmlResult
 			Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE @iIdXml, @sCodeMaquette, @sXMLVar OUTPUT
+
+			-- [MIG165_BOUYGUES] en cas EMAILING_KSL il faut renseigner les pièces
+			If @sMethode = 'EMAILING_KSL'  
+				Begin
+					Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_AJOUT_TABL_PCES_XML
+						@iIdXml, 
+						@sCodeMaquette, 
+						@dcIdSin,
+						2,
+						@sXMLVar OUTPUT
+				End
 
 			Exec @iRet = TRACE_MAIL_TRT.sysadm.PS_RS5045_I_MAIL_PUSH_KSL
 				'SIMPA2',
