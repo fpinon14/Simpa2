@@ -8725,7 +8725,7 @@ Set @sMailBody = @sMailBody + 'Tech Lead' + CHAR ( 10 )
 
  EXEC master.dbo.SPB_PS_MAIL   
 	@sRetourErrMail OUTPUT,   
-	'jfabry@spb.eu,mhanouet@spb.eu,sguesmi@spb.eu,ochaouachi@spb.eu,hbadrane@spb.eu',  
+	'jfabry@spb.eu,mhanouet@spb.eu,sguesmi@spb.eu,ochaouachi@spb.eu,hbadrane@spb.eu,ayvon@spb.eu',  
 	@sMailBody, 
 	@sObjet, 
 	null, 
