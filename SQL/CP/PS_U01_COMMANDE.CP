@@ -127,6 +127,7 @@
 --     JFF 06/06/2025   [20250606091224420] Modif sur ajustement de date
 --     JFF 30/07/2025   [20250730153200137]
 --     JFF 29/08/2025   [20250829140328870] Suppression de l'update du travail
+--	   JFF 05/09/2025   [20250905090403837][JFF][MIG82]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U01_COMMANDE' AND type = 'P' )
         DROP procedure sysadm.PS_U01_COMMANDE
@@ -2840,6 +2841,12 @@ If sysadm.FN_CLE_NUMERIQUE ( 'MIG82_JOURN_EVT') > 0
 					Set @sVar = sysadm.FN_CLE_VAL_E ( 'DTE_RDV', @sVal, @sVar, ';' )
 					Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'RDVDOM', @sVar, '', 'PS_U01_COMMANDE', 'AUTO'
 				End 
+		   End 
+
+		-- [20250905090403837][JFF][MIG82]
+		IF @iStatusGc = 859 And @iStatusGCActuel <> 859
+		   Begin			
+			Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @dcIdSin, 'ATTABP', '', '', 'PS_U01_COMMANDE', 'AUTO'
 		   End 
 
 		-- APPECT - APPEXP - APPCNS

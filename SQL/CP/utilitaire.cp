@@ -1263,6 +1263,21 @@ Begin
       
       Set @sVal = '[SQL][PROD][LSTAGF005001][SIMPA2_PRO]' + @sTag  
     End    
+
+  If @aiCas = 3   
+    Begin  
+    Select @sTag = Convert ( Varchar ( 100 ), @dtGetDate, 126 )  
+      
+    Set @sTag =  Left ( @sTag, 4 ) +   
+      SubString ( @sTag, 6,2 ) +  
+      SubString ( @sTag, 9,2 ) +  
+      SubString ( @sTag, 12,2 ) +      
+      SubString ( @sTag, 15,2 ) +    
+      SubString ( @sTag, 18,2 ) +      
+      SubString ( @sTag, 21,3 )   
+
+      Set @sVal = '[' + @sTag + '][JFF][' + @sVal + ']'
+    End    
    
   Return @sVal   
 End  

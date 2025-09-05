@@ -200,6 +200,9 @@ Go
 --
 -- Retour				: 1 Succès
 --						 -1 Erreur
+-- 
+-------------------------------------------------------------------
+-- [20250905090403837][JFF][MIG82]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION' AND type = 'P' )
         DROP procedure sysadm.PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION
@@ -294,11 +297,11 @@ If Exists (
 	Where c.id_sin = @adcIdSin
 	And Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', c.info_spb_frn_cplt, ';' )) > 0
 	And c.cod_etat in ( 'ECT', 'ECL' ) 
-	And sysadm.FN_CLE_VAL ( 'HP_ID_MODE_LOGIS', c.info_spb_frn_cplt, ';' ) not in ( 'AT_HOME', 'REMOTELY' ) 
+	-- And sysadm.FN_CLE_VAL ( 'HP_ID_MODE_LOGIS', c.info_spb_frn_cplt, ';' ) not in ( 'AT_HOME', 'REMOTELY' ) -- [20250905090403837][JFF][MIG82]
+	And sysadm.FN_CLE_VAL ( 'HP_ID_MODE_LOGIS', c.info_spb_frn_cplt, ';' ) in ( 'PROXIMITY' ) -- [20250905090403837][JFF][MIG82]
 	And Len ( sysadm.FN_CLE_VAL ( 'TYPE_REMPL', c.info_spb_frn_cplt, ';' ) ) <= 0 
 	And c.dte_rcp_frn is null
 	) Set @iEnAttAppCTR = 1
-
 
 Set @iAppRecuEnCTR = 0
 If Exists ( 
