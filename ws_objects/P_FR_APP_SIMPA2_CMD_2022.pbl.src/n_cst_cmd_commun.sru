@@ -166,6 +166,7 @@ public subroutine uf_changer_lib_dw (ref datawindow adwtrtcmdfrn, long aiidprod,
 //       JFF   07/03/2024 [HP252_276_HUB_PRESTA]
 //*      JFF	16/01/2025 [HUB832_HUB_ORG_REUN] 
 //       JFF   23/05/2025 [HUB1530]
+//			JFF	05/09/2025 [20250905110128880][JFF][HUB1862]
 //*-----------------------------------------------------------------
 String	sModif, sCodEtat, sInfoSpbFrnCplt, sInfoFrnSpbCplt
 String   sTabRech [], sTabSubst [], sTabNull [], sRempl, sVal
@@ -778,7 +779,7 @@ Choose Case asIdFour
 				sModif += "DTE_DEV_ACP_T.Text 	= 'Récupérer URL BP Payé par copier/coller' " // [HUB1530]
 				sModif += "DTE_RET_LOGIS_T.Text 	= '' "
 				sModif += "DTE_ENV_ST_T.Text 	   = '' "
-				sModif += "DTE_EMIS_DEVIS_T.Text = '' "
+				sModif += "DTE_EMIS_DEVIS_T.Text = 'Récupérer URL RDV Diag vidéo par copier/coller' " // [20250905110128880][JFF][HUB1862]	
 				sModif += "DTE_RET_LOGIS_T.Text 	= '' "
 				sModif += "DTE_RET_PRET_MIN_T.Text = '' "
 				sModif += "DTE_RET_PRET_MAX_T.Text = '' "

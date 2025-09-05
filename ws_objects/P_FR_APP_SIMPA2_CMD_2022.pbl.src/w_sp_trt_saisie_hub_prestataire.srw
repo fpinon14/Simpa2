@@ -2188,9 +2188,10 @@ event buttonclicked;//*---------------------------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //       JFF   23/05/2025 [HUB1530]
+//			JFF	05/09/2025 [20250905110128880][JFF][HUB1862]
 //*-----------------------------------------------------------------
 
-String sVal, sInfoFrnSpbCplt, sIdHubPresta, sUrlBpPaye 
+String sVal, sInfoFrnSpbCplt, sIdHubPresta, sUrlBpPaye, sUrlRdvDiagVideo
 
 sInfoFrnSpbCplt = dw_1.GetItemString ( row, "INFO_FRN_SPB_CPLT" )  // [HUB1530]
 
@@ -2244,6 +2245,35 @@ Choose Case  dwo.name
 		
 		F_Message ( stMessage ) 
 			
+
+	// [20250905110128880][JFF][HUB1862]
+	Case "b_url_rdv_diag_video"
+		
+		sUrlRdvDiagVideo = F_CLE_VAL ( "URL_RDV_DIAG_VIDEO", sInfoFrnSpbCplt, ";" )	
+		
+		If sUrlRdvDiagVideo = "" Then
+			stMessage.sTitre		= "URL Rdv Diag Vidéo vide"
+			stMessage.Icon			= Information!
+			stMessage.bErreurG	= FALSE
+			stMessage.sCode		= "HUBP026"
+			stMessage.Bouton		= OK!
+			
+			F_Message ( stMessage ) 
+			
+			Return
+			
+		End If 
+	
+		F_ClipBoard ( sUrlRdvDiagVideo ) 
+	
+		stMessage.sTitre		= "URL Rdv Diag Vidéo vide"
+		stMessage.Icon			= Information!
+		stMessage.bErreurG	= FALSE
+		stMessage.sCode		= "HUBP027"
+		stMessage.Bouton		= OK!
+		stMessage.sVar[1]		= sUrlRdvDiagVideo
+		
+		F_Message ( stMessage ) 		
 		
 End Choose 
 end event

@@ -33069,6 +33069,7 @@ private function integer uf_integration_fichier_frn_hub (ref long alnblig, ref l
 //       JFF   23/04/2025 [HUB1267]
 //       JFF   23/05/2025 [HUB1530]
 //    	JFF   27/08/2025 [HUB1936]
+//			JFF	05/09/2025 [20250905110128880][JFF][HUB1862]
 //*-----------------------------------------------------------------
 
 Int iRet, iCleNum, iIdSeqSavRet
@@ -33608,6 +33609,11 @@ For lCpt = 1 To lTotLig
 			lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "URL_BPPAYE", sVal, ";")
 		End If
 		
+		// [20250905110128880][JFF][HUB1862]		
+		sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "URL_RDV_DIAG_VIDEO", ";"))
+		If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
+			lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "URL_RDV_DIAG_VIDEO", sVal, ";")
+		End If
 		
 	End IF 
 

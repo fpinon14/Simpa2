@@ -22,6 +22,8 @@ end type
 end forward
 
 global type w_sp_c_commande2 from w_8_traitement_master
+integer x = 1075
+integer y = 481
 integer width = 3351
 integer height = 1336
 event ue_taillefenetre ( )
@@ -1093,13 +1095,14 @@ end type
 event buttonclicked;call super::buttonclicked;//       JFF   17/12/2018 [PM458-1]
 //       JFF   02/09/2019 [DT424]
 //       JFF   23/05/2025 [HUB1530]
+//			JFF	05/09/2025 [20250905110128880][JFF][HUB1862]
 
 String sInfoSpbCplt, sURLtracking , sIdBonTransp, sPathIE, sVal
 s_Pass stPass
 String sRepExcel
 DataStore  dsTracePresta 
 String sInfoSpbFrnCplt, sInfoFrnSpbCplt, sUrlBpPaye
-String sIdHubPresta
+String sIdHubPresta, sUrlRdvDiagVideo
 
 sInfoSpbFrnCplt = This.GetItemString (row, "INFO_SPB_FRN_CPLT") 
 sInfoFrnSpbCplt = dw_cmd_frn.GetItemString ( row, "INFO_FRN_SPB_CPLT" ) 
@@ -1238,6 +1241,48 @@ Choose Case  dwo.name
 		
 		F_Message ( stMessage ) 
 		
+
+	// [20250905110128880][JFF][HUB1862]
+	Case "b_url_rdv_diag_video"
+		
+		If Len ( sIdHubPresta ) <= 0 Or IsNull ( sIdHubPresta ) Then
+			stMessage.sTitre		= "Prestation Hors Hub"
+			stMessage.Icon			= Information!
+			stMessage.bErreurG	= FALSE
+			stMessage.sCode		= "HUBP021"
+			stMessage.Bouton		= OK!
+			
+			F_Message ( stMessage ) 
+			
+			Return
+		End If 
+		
+		sUrlRdvDiagVideo = Lower ( F_CLE_VAL ( "URL_RDV_DIAG_VIDEO", sInfoFrnSpbCplt, ";" ) )
+		
+		If sUrlRdvDiagVideo = "" Then
+			stMessage.sTitre		= "URL Rdv Diag Vidéo vide"
+			stMessage.Icon			= Information!
+			stMessage.bErreurG	= FALSE
+			stMessage.sCode		= "HUBP026"
+			stMessage.Bouton		= OK!
+			
+			F_Message ( stMessage ) 
+			
+			Return
+			
+		End If 
+	
+		F_ClipBoard ( sUrlRdvDiagVideo ) 
+	
+		stMessage.sTitre		= "URL Rdv Diag Vidéo vide"
+		stMessage.Icon			= Information!
+		stMessage.bErreurG	= FALSE
+		stMessage.sCode		= "HUBP027"
+		stMessage.Bouton		= OK!
+		stMessage.sVar[1]		= sUrlRdvDiagVideo
+		
+		F_Message ( stMessage ) 
+				
 		
 End Choose 
 end event
