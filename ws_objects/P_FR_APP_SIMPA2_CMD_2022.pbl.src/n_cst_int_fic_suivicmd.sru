@@ -33070,6 +33070,7 @@ private function integer uf_integration_fichier_frn_hub (ref long alnblig, ref l
 //       JFF   23/05/2025 [HUB1530]
 //    	JFF   27/08/2025 [HUB1936]
 //			JFF	05/09/2025 [20250905110128880][JFF][HUB1862]
+// 		JFF   08/09/2025 [20250905153321517][JFF][HUB1910]
 //*-----------------------------------------------------------------
 
 Int iRet, iCleNum, iIdSeqSavRet
@@ -33088,12 +33089,16 @@ Long lStatusGc
 DataStore dsHubDonneesPrestaSimpa2 	
 Boolean bF_CLE_A_TRUE_MIG82_JOURN_EVT
 Boolean  bF_CLE_A_TRUE_HUB1267
+Boolean  bF_CLE_A_TRUE_HUB1910  // [20250905153321517][JFF][HUB1910]
 
 // [HUB1267]
 bF_CLE_A_TRUE_HUB1267 = F_CLE_A_TRUE ( "HUB1267" )
 
 // [MIG82_JOURN_EVT]
 bF_CLE_A_TRUE_MIG82_JOURN_EVT = F_CLE_A_TRUE ( "MIG82_JOURN_EVT" )
+
+// [20250905153321517][JFF][HUB1910]
+bF_CLE_A_TRUE_HUB1910 = F_CLE_A_TRUE ( "HUB1910" )
 
 sCasRetour = Fill ( " ", 50 )
 sIdAppli = "SIMPA2"
@@ -33614,6 +33619,29 @@ For lCpt = 1 To lTotLig
 		If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
 			lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "URL_RDV_DIAG_VIDEO", sVal, ";")
 		End If
+
+		// [20250905153321517][JFF][HUB1910]
+		If bF_CLE_A_TRUE_HUB1910 Then
+			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "NUM_REL", ";"))
+			If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
+				lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "NUM_REL", sVal, ";")
+			End If
+
+			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "TRAVAIL", ";"))
+			If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
+				lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "TRAVAIL", sVal, ";")
+			End If
+			
+			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "CONTACT", ";"))
+			If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
+				lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "CONTACT", sVal, ";")
+			End If
+			
+			sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "CLOTURE", ";"))
+			If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
+				lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "CLOTURE", sVal, ";")
+			End If
+		End IF 	
 		
 	End IF 
 
@@ -34068,6 +34096,7 @@ private function integer uf_ctrl_fichier_frn_hub_2025082914032887 ();//*--------
 //        JFF  29/08/2025  [20250829140328870]
 //        JFF  02/09/2025  [20250902105339530]
 //        JFF  02/09/2025  [20250902141005123]
+// 		 JFF  08/09/2025  [20250905153321517][JFF][HUB1910]
 //*-----------------------------------------------------------------
 
 Int iRet, iStatusGc, iInfoSpbFrn
@@ -34083,10 +34112,14 @@ Boolean bRet
 String sSqlHub
 Long lErrorHubPresta, lIndentityHubPresta, lRowCountHubPresta
 Boolean  bF_CLE_A_TRUE_HUB1267
+Boolean  bF_CLE_A_TRUE_HUB1910  // [20250905153321517][JFF][HUB1910]
 Boolean  bOnLaissePasserCasPrestaFerme 
 
 // [HUB1267]
 bF_CLE_A_TRUE_HUB1267 = F_CLE_A_TRUE ( "HUB1267" )
+
+// [20250905153321517][JFF][HUB1910]
+bF_CLE_A_TRUE_HUB1910 = F_CLE_A_TRUE ( "HUB1910" )
 
 iRet = 1
 lTotLig = idwFicFourn.RowCount ()
@@ -35571,6 +35604,86 @@ For lCpt = 1 To lTotLig
 		End IF		
 		
 	End If 
+
+	// [20250905153321517][JFF][HUB1910]
+	If bF_CLE_A_TRUE_HUB1910 Then
+		
+		lVal = idwFicFourn.GetItemNumber  ( lCpt, "STATUS_GC" ) 		
+	
+		Choose Case lVal 
+			Case 861, 862
+				
+				sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu , "NUM_REL", ";")
+				If IsNull ( sVal ) Then sVal = ""
+				
+				If Not IsNumber ( sVal ) Then
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le bcv NUM_REL doit être un nombre positif représentant le numéro de la relance." )
+				Else
+					If Long ( sVal ) < 1 Then
+						iRet = -1
+						This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") NUM_REL doit être un nombre positif représentant le numéro de la relance." )
+					End If 
+				End IF 		
+				
+				
+				sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu , "TRAVAIL", ";")
+				If IsNull ( sVal ) Then sVal = ""
+				
+				Choose Case sVal 
+					Case "OUI", "NON"
+						// OK
+					Case Else 
+						iRet = -1
+						This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le bcv TRAVAIL ne peut avoir que les valeurs OUI ou NON." )
+				End Choose 
+				
+				sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu , "CONTACT", ";")
+				If IsNull ( sVal ) Then sVal = ""
+				
+				Choose Case sVal 
+					Case "OUI", "NON"
+						// OK
+					Case Else 
+						iRet = -1
+						This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le bcv CONTACT ne peut avoir que les valeurs OUI ou NON." )
+				End Choose 
+				
+				sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu , "CLOTURE", ";")
+				If IsNull ( sVal ) Then sVal = ""
+				
+				Choose Case sVal 
+					Case "OUI", "NON"
+						// OK
+					case Else 
+						iRet = -1
+						This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") le bcv CLOTURE ne peut avoir que les valeurs OUI ou NON." )
+				End Choose 
+								
+
+				sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu , "TRAVAIL", ";")
+				sVal1 = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu , "CONTACT", ";")				
+				sVal2 = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu , "CLOTURE", ";")
+
+				If sVal = "OUI" and sVal2 = "OUI" Then
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour les relances HUB, on ne peut pas cloturer (CLOTURE=OUI) et créer un travail (TRAVAIL=OUI), c'est l'un ou l'autre." )
+				End IF 
+				
+				If sVal = "NON" and sVal1 = "NON" and sVal2 = "NON" Then
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") les 3 bcv TRAVAIL/CONTACT/CLOTURE à NON n'a aucun sens et ne peuvent être traités." )
+				End IF 
+				
+		End Choose 				
+	End If 	
 	
 	
 
