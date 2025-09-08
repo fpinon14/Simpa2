@@ -128,6 +128,7 @@
 --     JFF 30/07/2025   [20250730153200137]
 --     JFF 29/08/2025   [20250829140328870] Suppression de l'update du travail
 --	   JFF 05/09/2025   [20250905090403837][JFF][MIG82]
+--	   JFF 07/05/2013   [20250905153321517][JFF][HUB1910]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U01_COMMANDE' AND type = 'P' )
         DROP procedure sysadm.PS_U01_COMMANDE
@@ -261,6 +262,7 @@ Declare @sAdrFcNomActuel VarChar ( 35 ) -- [20250730153200137]
 Declare @iIdBonTranspModifie Integer 
 Declare @iAdrFcNomModifie Integer 
 Declare @iDteRcpMobCliModifie Integer 
+Declare @sIdHubPresta VarChar ( 20 )
 
 Set @iCasPropoAutoO2m = 0 -- [PC877]
 Set @iTraite = 0 
@@ -355,6 +357,9 @@ And     s.id_sin = c.id_sin
 
 If IsNumeric ( @sMtPaiementPayBox ) = 0 Set @sMtPaiementPayBox = '0'
 Set @iPrestaHUB = IIF ( Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', @sInfoSpbFrnCpltActuel, ';' ) ) > 0, 1, 0 ) -- [HP252_276_HUB_PRESTA]
+
+-- [20250905153321517][JFF][HUB1910]
+If @iPrestaHUB > 0 Set @sIdHubPresta = sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', @sInfoSpbFrnCpltActuel, ';' )
 
 -- [VDOC25366]
 If @dtDteEnvCliActuel is not null
@@ -1826,6 +1831,16 @@ BEGIN
 	END
 	-- /[HP252_276_HUB_PRESTA][HUB1530]
 
+	-- [20250905153321517][JFF][HUB1910] Relance Hub Presta
+	If sysadm.FN_CLE_NUMERIQUE ( 'HUB1910') > 0 
+		Begin
+			IF @iStatusGCActuel in ( 861, 862 ) And @iPrestaHUB > 0
+			Begin
+				Exec sysadm.PS_HP276_I_S2_PS_I_HUB1910_RELANCE_HUB_PRESTATAIRE @dcIdSin, @iIdSeq, @iStatusGc, @sIdHubPresta, @sInfoFrnSpbCplt 
+			End 
+		End 
+	-- [20250905153321517][JFF][HUB1910]
+
 	-- #13 JFF 14/05/2009 [DCMP090085]
 	IF @sIdRefFour = 'A_DIAGNOSTIQUER' AND @iStatusGCActuel <> 169 And @iStatusGc = 169 And @iPrestaHUB <= 0  -- [HP252_276_HUB_PRESTA]
 	BEGIN 
@@ -2758,7 +2773,7 @@ IF @iStatusGc = 178 And @iStatusGCActuel <> 178
 		End 
    End
 
--- [MIG82_JOURN_EVT]
+-- [MIG82_JOURN_EVT] Traitement du journal d'évènement
 If sysadm.FN_CLE_NUMERIQUE ( 'MIG82_JOURN_EVT') > 0 
 	Begin
 		

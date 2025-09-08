@@ -3812,3 +3812,163 @@ SELECT StoH.[id_depot_simpa2]
 
 Go
 
+-------------------------------------------------------------------
+--
+-- Procédure            :       PS_HP276_I_S2_PS_I_HUB1910_RELANCE_HUB_PRESTATAIRE
+-- Auteur               :       JFF
+-- Date                 :       08/09/2025
+-- Libell‚              :       [20250905153321517][JFF][HUB1910]
+-- Commentaires         :       
+--                              /!\ A COMPILER SUR LA BASE SIMPA2 /!\
+--								
+--
+-- Retourne             :       rien
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_I_S2_PS_I_HUB1910_RELANCE_HUB_PRESTATAIRE' AND type = 'P' )
+        DROP procedure sysadm.PS_HP276_I_S2_PS_I_HUB1910_RELANCE_HUB_PRESTATAIRE
+GO
+
+CREATE procedure sysadm.PS_HP276_I_S2_PS_I_HUB1910_RELANCE_HUB_PRESTATAIRE
+	@adcIdSin		Decimal ( 10 ),
+	@aiIdSeq		Integer,
+	@aiStatusGc		Integer,
+	@asIdHubPresta  VarChar ( 20 ),
+	@asChaineSeria  VarChar ( 800 )
+AS
+
+Declare @iNumRel Integer
+Declare @sTravail Varchar ( 3 )
+Declare @sContact Varchar ( 3 )
+Declare @sCloture Varchar ( 3 )
+Declare @sMesRaisError VarChar ( 400 ) 
+Declare @sNombre Varchar ( 10 )
+Declare @MessContact Varchar ( 508 )
+Declare @sErr	Varchar(60)
+Declare @iIdCt	integer
+Declare @sAltQueue VarChar ( 1 )
+Declare @dtDateJour DateTime
+Declare @sNomZoneDivPro VarChar ( 100 )
+Declare @sLibZoneDivPro VarChar ( 100 )
+Declare @sNomZoneDivProWrk VarChar ( 100 )
+Declare @sLibZoneDivProWrk VarChar ( 100 )
+Declare @iCptTri Integer
+Declare @sIdDepotHub VarChar ( 20 )
+
+Set @iNumRel = Convert ( Integer, sysadm.FN_CLE_VAL ( 'NUM_REL', @asChaineSeria, ';' ) )
+Set @sTravail = Upper ( sysadm.FN_CLE_VAL ( 'TRAVAIL', @asChaineSeria, ';' ) )
+Set @sContact = Upper ( sysadm.FN_CLE_VAL ( 'CONTACT', @asChaineSeria, ';' ) )
+Set @sCloture = Upper ( sysadm.FN_CLE_VAL ( 'CLOTURE', @asChaineSeria, ';' ) )
+Set @sIdDepotHub = sysadm.FN_CLE_VAL ( 'ID_DEPOT_HUB', @asChaineSeria, ';' )
+Set @dtDateJour = GETDATE ()
+
+If @sCloture = 'OUI' Set @sContact = 'OUI' -- question de logique
+
+If @aiStatusGc = 861 
+	Begin
+		Set @sNomZoneDivPro = 'dte_rel#NumRel#_mail_rdv_diag_video'
+		Set @sLibZoneDivPro = 'Date #Nombre# rel mail RdvDiagVideo'
+	End 
+
+If @aiStatusGc = 862 
+	Begin
+		Set @sNomZoneDivPro = 'dte_rel#NumRel#_mail_app_non_rcp_en_ctr'
+		Set @sLibZoneDivPro = 'Date #Nombre# rel mail ApNoRcpCTR'
+	End 
+
+Set @sNombre = Convert ( varchar ( 5), @iNumRel ) + IIF ( @iNumRel = 1, 'ère', 'ème' )
+Set @sNomZoneDivProWrk = Replace ( @sNomZoneDivPro, '#NumRel#', CONVERT ( Varchar ( 5 ), @iNumRel ) )
+Set @sLibZoneDivProWrk = Replace ( @sLibZoneDivPro, '#Nombre#', @sNombre )
+
+-- Demande de Relance 1 et Relance 1 existe déjà, Traitement de la réinitialisation des zones sur SIMPA2 dans le cas de multi envoies
+If Exists ( 
+	Select Top 1 1 
+	From sysadm.commande c with (nolock)
+	Where c.id_sin = @adcIdSin
+	And   c.id_seq = @aiIdSeq
+	And   IsNull ( ( Select Top 1 val_dte From sysadm.div_sin ds with (nolock) Where ds.id_sin = @adcIdSin and ds.nom_zone = @sNomZoneDivPro ), '01/01/1990' ) < c.cree_le 
+   ) And 
+   @iNumRel = 1
+	Begin
+		Delete sysadm.div_sin where id_sin = @adcIdSin and CharIndex ( 'dte_rel', nom_zone ) > 0 And CharIndex ( SUBSTRING ( @sNomZoneDivPro, 16, LEN ( @sNomZoneDivPro) ), nom_zone ) > 0
+		Delete sysadm.w_div_sin where id_sin = @adcIdSin and CharIndex ( 'dte_rel', nom_zone ) > 0 And CharIndex ( SUBSTRING ( @sNomZoneDivPro, 16, LEN ( @sNomZoneDivPro) ), nom_zone ) > 0
+	End 
+
+-- Relance n existe déjà
+If Exists ( Select Top 1 1 From sysadm.div_sin ds with (nolock) Where ds.id_sin = @adcIdSin and ds.nom_zone = @sNomZoneDivProWrk ) 
+	Begin
+ 		Set @sMesRaisError  = Convert ( VarChar ( 10 ), @adcIdSin ) + '-' + Convert ( VarChar ( 10 ), @aiIdSeq ) + ' / ' + @asIdHubPresta + ' / ' + @sIdDepotHub + ' : La relance ' + Convert ( varchar ( 5), @iNumRel) + ' provenant du HUB existe déjà'
+		RAISERROR ( @sMesRaisError , 16, 1)
+		Return
+	End 
+
+-- Relance n-1 n'existe pas 
+Set @sNomZoneDivProWrk = Replace ( @sNomZoneDivPro, '#NumRel#', CONVERT ( Varchar ( 5 ), @iNumRel - 1 ) )
+If Not Exists ( Select Top 1 1 From sysadm.div_sin ds with (nolock) Where ds.id_sin = @adcIdSin and ds.nom_zone = @sNomZoneDivProWrk ) 
+   And 
+   @iNumRel > 1
+	Begin
+		Set @sMesRaisError  = Convert ( VarChar ( 10 ), @adcIdSin ) + '-' + Convert ( VarChar ( 10 ), @aiIdSeq ) + ' / ' + @asIdHubPresta + ' / ' + @sIdDepotHub + ' : La relance ' + Convert ( varchar ( 5), @iNumRel ) + ' provenant du HUB ne peut être traitée puisque la relance ' + Convert ( varchar ( 5), @iNumRel - 1) + ' n''existe pas'
+		RAISERROR ( @sMesRaisError , 16, 1)
+		Return
+	End 
+
+-- Traitement 
+Set @sNomZoneDivProWrk = Replace ( @sNomZoneDivPro, '#NumRel#', CONVERT ( Varchar ( 5 ), @iNumRel ) )
+
+If @aiStatusGc = 861 Set @MessContact = @sNombre + ' ' + 'relance prise de rdv diag vidéo par mail.'
+If @aiStatusGc = 863 Set @MessContact = @sNombre + ' ' + 'relance suite appareil non réceptionné en CTR.'
+
+If @sTravail = 'OUI' 
+ Begin
+	Set @MessContact = @MessContact + ' - appel sortant à effectuer.'
+
+	IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+		Begin
+			EXEC SHERPA_PRO.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @adcIdSin, 2, @MessContact, 'HUB', @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C'
+		End 
+	Else
+		Begin
+			EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @adcIdSin, 2, @MessContact, 'HUB', @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'C'
+		End 	
+ End
+
+
+If @sContact = 'OUI' and @sTravail <> 'OUI' 
+ Begin
+	If @sCloture = 'OUI' Set  @MessContact = @MessContact + ' - Clotûre du dossier.'
+
+	IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+		Begin
+			Exec  SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @adcIdSin, 2, @MessContact,	'HUB', 300, @iIdCt OUTPUT
+		End 
+	Else
+		Begin
+			Exec  SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 	-1, 2, 4, 'C', @adcIdSin, 2, @MessContact,	'HUB', 300, @iIdCt OUTPUT
+		End 
+ End
+
+If @sContact = 'OUI' Or @sTravail = 'OUI' 
+ Begin
+
+	Set @iCptTri = 759 + @iNumRel
+
+ 	Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO 
+		@adcIdSin,
+		@sNomZoneDivProWrk,
+		@sLibZoneDivProWrk,
+		@dtDateJour ,
+		'O',
+		'D',
+		@iCptTri,
+		null
+ End 
+
+If @sCloture = 'OUI' 
+	Begin
+		Set @sAltQueue = space (1)
+		Exec sysadm.PS_D01_ARCHIVE_SOLDAGE @adcIdSin, 'SHUBQLS', @dtDateJour, @sAltQueue Output, 'CENTRALISE'
+	End 
+
+GO
+
+
