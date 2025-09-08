@@ -313,7 +313,6 @@ private function boolean uf_validation_finale_converlance_mail ()
 private function boolean uf_validation_finale_msg_dp206 (string asvalcar)
 private function long uf_zn_trt_divsin_franchise_paybox (string asdata, string asnomcol, long alrow)
 private function long uf_zn_trt_divsin_dim_sup_150cm (string asdata, string asnomcol, long alrow)
-private function long uf_zn_trt_divsin_poids_sup_30kg (string asdata, string asnomcol, long alrow)
 private function boolean uf_validation_finale_ore_mail ()
 private function boolean uf_validation_finale_omt_mail ()
 private function boolean uf_validation_finale_mcprotect_mail_tn ()
@@ -340,7 +339,6 @@ public subroutine uf_police_orange_v2bis ()
 private function boolean uf_validation_finale_mbs_ech_express (long alidgti)
 private function long uf_zn_trt_divsin_dcnxdeclaatlas (string asdata, string asnomcol, long alrow)
 public function boolean uf_scripting_v2bis ()
-private function long uf_zn_trt_divsin_recredit_imm (string asdata, string asnomcol, long alrow)
 private function long uf_zn_trt_divsin_interv_serrurier (string asdata, string asnomcol, long alrow)
 private function long uf_zn_trt_divsin_pret_app_endommage (string asdata, string asnomcol, long alrow)
 private function long uf_zn_trt_divsin_paybox_cb_forcee (string asdata, string asnomcol, long alrow)
@@ -19313,7 +19311,7 @@ Choose Case asNomCol
 				
 			// [BLCODE]
 			Case "POIDS_SUP_30KG"
-				ll_ret = This.uf_zn_trt_divsin_poids_sup_30kg( Upper ( asData ), Upper( asNomCol ), alRow )
+				ll_ret = iUoGsSpSinistre2.uf_zn_trt_divsin_poids_sup_30kg( Upper ( asData ), Upper( asNomCol ), alRow )
 				
 			Case "GTI_NON_ACTIVEE_SITE" // [PC918]
 				ll_ret = This.Uf_Zn_Trt_DivSin_Gti_non_activee ( Upper ( asData ), Upper( asNomCol ), alRow )
@@ -19340,11 +19338,11 @@ Choose Case asNomCol
 				
 			// [DT081-1_CREDIMM]
 			Case "RECREDIT_IMM"				
-				ll_ret = This.Uf_Zn_Trt_DivSin_Recredit_Imm ( Upper ( asData ), Upper( asNomCol ), alRow )
+				ll_ret = iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_Recredit_Imm ( Upper ( asData ), Upper( asNomCol ), alRow )
 			
 			// [PC13174]
 			Case "INTERV_SERRURIER", "INT_SER_SUP_150"				
-				ll_ret = This.uf_zn_trt_divsin_interv_serrurier( Upper ( asData ), Upper( asNomCol ), alRow )
+				ll_ret = iUoGsSpSinistre2.uf_zn_trt_divsin_interv_serrurier( Upper ( asData ), Upper( asNomCol ), alRow )
 			
 			// [OV3.FPI]
 			Case "PRET_APP_ENDOMMAGE"
@@ -36984,42 +36982,6 @@ Return iAction
 
 end function
 
-private function long uf_zn_trt_divsin_poids_sup_30kg (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
-//*
-//* Fonction		: u_gs_sp_sinistre::uf_zn_trt_divsin_poids_sup_30kg (PRIVATE)
-//* Auteur			: FABRY JF
-//* Date				: 08/08/2012
-//* Libellé			: 
-//* Commentaires	: [BLCODE]
-//*
-//* Arguments		: String 		asData			Val
-//*					  String 		asNomCol			Val
-//*					  Long			alRow				Val
-//*
-//* Retourne		: long
-//*
-//*-----------------------------------------------------------------
-//* MAJ   PAR      Date	     Modification
-//*-----------------------------------------------------------------
-
-Integer iAction
-
-Long lRow, lDeb, lFin
-
-asData = Upper ( asData )
-iAction = 0
-
-lRow = idw_LstwCommande.Find ( "COD_ETAT <> 'ANN' AND ID_FOUR IN ( 'BLC') AND ID_REF_FOUR = 'A_DIAGNOSTIQUER'", 1, idw_LstwCommande.RowCount () ) 
-
-If lRow > 0 Then
-	idw_wDivSin.iiErreur = 3
-	iAction = 1
-End If
-
-Return iAction
-
-end function
-
 private function boolean uf_validation_finale_ore_mail ();//*-----------------------------------------------------------------
 //*
 //* Fonction      : u_gs_sp_sinistre::uf_validation_finale_ore_mail  (PRIVATE)
@@ -41752,72 +41714,6 @@ End If
 
 
 Return bFinScript
-end function
-
-private function long uf_zn_trt_divsin_recredit_imm (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
-//*
-//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_Recredit_Imm (PRIVATE)
-//* Auteur			: FABRY JF
-//* Date				: 30/09/2014
-//* Libellé			: [DT081-1_CREDIMM]
-//* Commentaires	: 
-//*
-//* Arguments		: String 		asData			Val
-//*					  String 		asNomCol			Val
-//*					  Long			alRow				Val
-//*
-//* Retourne		: long
-//*
-//*-----------------------------------------------------------------
-//* MAJ   PAR      Date	     Modification
-//*-----------------------------------------------------------------
-
-Integer iAction
-String sVal
-Long lRow, lDeb, lFin
-
-asData = Upper ( asData )
-iAction = 0
-sVal = This.uf_GestOng_Divers_Trouver ( "ETAT_CAUTION_PAYBOX" ) 
-
-If asData = "O" Then
-
-	Choose Case sVal
-		Case "DEBTOT", "DEBPAR", "RECRKO"
-			// OK on peut recréditer
-
-			If Not This.uf_GetAutorisation2 ( 30 )	Then
-					idw_wDivSin.iiErreur = 12
-					iAction = 1
-					Return iAction 
-			End If
-			
-		Case "RECRED"			
-
-			idw_wDivSin.iiErreur = 11
-			iAction = 1 
-			Return iAction
-			
-		Case Else
-
-			idw_wDivSin.iiErreur = 10
-			iAction = 1 
-			Return iAction
-			
-	End CHoose 
-	
-End If 
-
-If asData = "N" Then
-	If sVal = "RECRED" Then
-		idw_wDivSin.iiErreur = 11
-		iAction = 1 
-		Return iAction
-	End If
-End If
-
-Return iAction
-
 end function
 
 private function long uf_zn_trt_divsin_interv_serrurier (string asdata, string asnomcol, long alrow);

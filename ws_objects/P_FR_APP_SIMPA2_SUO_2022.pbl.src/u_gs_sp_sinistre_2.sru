@@ -66,6 +66,9 @@ public function integer uf_zn_trt_divsin_coqnonadpate (string asdata, string asn
 public function string uf_controlergestion_hub_prestataire ()
 public function boolean uf_controlergestion_carma (long alrow)
 public subroutine uf_determiner_courrier_forcage_dp405 (integer alcpt, ref string asidnatcour, ref string asidcour)
+public function integer uf_zn_trt_divsin_poids_sup_30kg (string asdata, string asnomcol, long alrow)
+public function long uf_zn_trt_divsin_interv_serrurier (string asdata, string asnomcol, long alrow)
+public function long uf_zn_trt_divsin_recredit_imm (string asdata, string asnomcol, long alrow)
 end prototypes
 
 public function long uf_zn_trt_divsin_typeapp (string asdata, string asnomcol, long alrow, boolean abforcer);//*-----------------------------------------------------------------
@@ -2049,6 +2052,142 @@ End If
 
 
 end subroutine
+
+public function integer uf_zn_trt_divsin_poids_sup_30kg (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
+//*
+//* Fonction		: u_gs_sp_sinistre::uf_zn_trt_divsin_poids_sup_30kg (PRIVATE)
+//* Auteur			: FABRY JF
+//* Date				: 08/08/2012
+//* Libellé			: 
+//* Commentaires	: [BLCODE]
+//*
+//* Arguments		: String 		asData			Val
+//*					  String 		asNomCol			Val
+//*					  Long			alRow				Val
+//*
+//* Retourne		: long
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//*-----------------------------------------------------------------
+
+Integer iAction
+
+Long lRow, lDeb, lFin
+
+asData = Upper ( asData )
+iAction = 0
+
+lRow = idw_LstwCommande.Find ( "COD_ETAT <> 'ANN' AND ID_FOUR IN ( 'BLC') AND ID_REF_FOUR = 'A_DIAGNOSTIQUER'", 1, idw_LstwCommande.RowCount () ) 
+
+If lRow > 0 Then
+	idw_wDivSin.iiErreur = 3
+	iAction = 1
+End If
+
+Return iAction
+end function
+
+public function long uf_zn_trt_divsin_interv_serrurier (string asdata, string asnomcol, long alrow);
+//*-----------------------------------------------------------------
+//*
+//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_interv_serrurier (PRIVATE)
+//* Auteur			: FPI
+//* Date				: 06/10/2014
+//* Libellé			: 
+//* Commentaires	: [PC13174]
+//*
+//* Arguments		: String 		asData			Val
+//*					  String 		asNomCol			Val
+//*					  Long			alRow				Val
+//*
+//* Retourne		: long
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//* #..   ...   ../../....   
+//*-----------------------------------------------------------------
+
+Integer iAction
+
+Long lRow, lDeb, lFin, lVal1, lVal2
+
+asData = Upper ( asData )
+iAction = 0
+
+if idw_wDetail.Find ( "ID_EVT=1419 And (COD_ETAT = 600 OR COD_ETAT = 500)", 1, idw_wDetail.RowCount () ) > 0  Then 
+		iAction = 2
+End If
+
+Return iAction
+
+end function
+
+public function long uf_zn_trt_divsin_recredit_imm (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
+//*
+//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_Recredit_Imm (PRIVATE)
+//* Auteur			: FABRY JF
+//* Date				: 30/09/2014
+//* Libellé			: [DT081-1_CREDIMM]
+//* Commentaires	: 
+//*
+//* Arguments		: String 		asData			Val
+//*					  String 		asNomCol			Val
+//*					  Long			alRow				Val
+//*
+//* Retourne		: long
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//*-----------------------------------------------------------------
+
+Integer iAction
+String sVal
+Long lRow, lDeb, lFin
+
+asData = Upper ( asData )
+iAction = 0
+sVal = iuoSpGsSinistre.uf_GestOng_Divers_Trouver ( "ETAT_CAUTION_PAYBOX" ) 
+
+If asData = "O" Then
+
+	Choose Case sVal
+		Case "DEBTOT", "DEBPAR", "RECRKO"
+			// OK on peut recréditer
+
+			If Not iuoSpGsSinistre.uf_GetAutorisation2 ( 30 )	Then
+					idw_wDivSin.iiErreur = 12
+					iAction = 1
+					Return iAction 
+			End If
+			
+		Case "RECRED"			
+
+			idw_wDivSin.iiErreur = 11
+			iAction = 1 
+			Return iAction
+			
+		Case Else
+
+			idw_wDivSin.iiErreur = 10
+			iAction = 1 
+			Return iAction
+			
+	End CHoose 
+	
+End If 
+
+If asData = "N" Then
+	If sVal = "RECRED" Then
+		idw_wDivSin.iiErreur = 11
+		iAction = 1 
+		Return iAction
+	End If
+End If
+
+Return iAction
+
+end function
 
 on u_gs_sp_sinistre_2.create
 call super::create
