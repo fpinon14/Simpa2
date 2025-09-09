@@ -15916,6 +15916,7 @@ private subroutine uf_gestong_divers_caspart_finaux ();//*----------------------
 //    JFF   18/11/2024 [KSV649_ORREUCARA]
 //    JFF   03/03/2025 [PMO268_MIG48]
 //    JFF   18/03/2025 [PAN_125]
+//    JFF   09/09/2025 [20250905153321517][JFF][HUB1910] zone grisées DTE_REL_xxx
 //*-----------------------------------------------------------------
 
 Long lTot, lCpt
@@ -16326,7 +16327,23 @@ For lCpt = 1 To lTot
 			  "ELEMENT_ADH_3", &			  
 			  "MT_VAL_ACHAT_ADH_ELT_1", &
 			  "MT_VAL_ACHAT_ADH_ELT_2", &
-			  "MT_VAL_ACHAT_ADH_ELT_3" &			  
+			  "MT_VAL_ACHAT_ADH_ELT_3", &			  
+			  "DTE_REL1_MAIL_RDV_DIAG_VIDEO", &
+			  "DTE_REL2_MAIL_RDV_DIAG_VIDEO", &
+			  "DTE_REL3_MAIL_RDV_DIAG_VIDEO", &
+			  "DTE_REL4_MAIL_RDV_DIAG_VIDEO", &			  			  
+			  "DTE_REL5_MAIL_RDV_DIAG_VIDEO", &			  			  			  
+			  "DTE_REL6_MAIL_RDV_DIAG_VIDEO", &			  			  			  			  
+			  "DTE_REL7_MAIL_RDV_DIAG_VIDEO", &			  			  			  			  			  
+			  "DTE_REL8_MAIL_RDV_DIAG_VIDEO", &			  			  			  			  			  			  
+			  "DTE_REL1_MAIL_APP_NON_RCP_EN_CTR", &
+			  "DTE_REL2_MAIL_APP_NON_RCP_EN_CTR", &
+			  "DTE_REL3_MAIL_APP_NON_RCP_EN_CTR", &
+			  "DTE_REL4_MAIL_APP_NON_RCP_EN_CTR", &			  			  
+			  "DTE_REL5_MAIL_APP_NON_RCP_EN_CTR", &			  			  			  
+			  "DTE_REL6_MAIL_APP_NON_RCP_EN_CTR", &			  			  			  			  
+			  "DTE_REL7_MAIL_APP_NON_RCP_EN_CTR", &			  			  			  			  			  
+			  "DTE_REL8_MAIL_APP_NON_RCP_EN_CTR" &			  			  			  			  			  			  
 			  
   			  idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "O" )
 
