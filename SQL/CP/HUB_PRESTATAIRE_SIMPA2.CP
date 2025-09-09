@@ -3915,12 +3915,12 @@ If Not Exists ( Select Top 1 1 From sysadm.div_sin ds with (nolock) Where ds.id_
 -- Traitement 
 Set @sNomZoneDivProWrk = Replace ( @sNomZoneDivPro, '#NumRel#', CONVERT ( Varchar ( 5 ), @iNumRel ) )
 
-If @aiStatusGc = 861 Set @MessContact = @sNombre + ' ' + 'relance prise de rdv diag vidéo par mail.'
-If @aiStatusGc = 863 Set @MessContact = @sNombre + ' ' + 'relance suite appareil non réceptionné en CTR.'
+If @aiStatusGc = 861 Set @MessContact = @sNombre + ' ' + 'relance prise de rdv diag vidéo par mail'
+If @aiStatusGc = 862 Set @MessContact = @sNombre + ' ' + 'relance suite appareil non réceptionné en CTR'
 
 If @sTravail = 'OUI' 
  Begin
-	Set @MessContact = @MessContact + ' - appel sortant à effectuer.'
+	Set @MessContact = @MessContact + ' - appel sortant à effectuer'
 
 	IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 		Begin
@@ -3935,7 +3935,7 @@ If @sTravail = 'OUI'
 
 If @sContact = 'OUI' and @sTravail <> 'OUI' 
  Begin
-	If @sCloture = 'OUI' Set  @MessContact = @MessContact + ' - Clotûre du dossier.'
+	If @sCloture = 'OUI' Set  @MessContact = @MessContact + ' - clotûre du dossier'
 
 	IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 		Begin

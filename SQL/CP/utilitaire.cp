@@ -1212,7 +1212,6 @@ Go
 -- Retour               : La chaine filtrée
 --	                        
 -------------------------------------------------------------------
-
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_TAG' AND type = 'FN' )
         DROP function sysadm.FN_TAG
 Go
@@ -1279,6 +1278,21 @@ Begin
       Set @sVal = '[' + @sTag + '][JFF][' + @sVal + ']'
     End    
    
+  If @aiCas = 4   
+    Begin  
+    Select @sTag = Convert ( Varchar ( 100 ), @dtGetDate, 126 )  
+      
+    Set @sTag =  Left ( @sTag, 4 ) +   
+      SubString ( @sTag, 6,2 ) +  
+      SubString ( @sTag, 9,2 ) +  
+      SubString ( @sTag, 12,2 ) +      
+      SubString ( @sTag, 15,2 ) +    
+      SubString ( @sTag, 18,2 ) +      
+      SubString ( @sTag, 21,3 )   
+
+      Set @sVal = @sVal + '_ISM_' + @sTag + '_MAJ_SQL'
+    End    
+
   Return @sVal   
 End  
   
