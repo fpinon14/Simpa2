@@ -35670,6 +35670,12 @@ For lCpt = 1 To lTotLig
 				sVal1 = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu , "CONTACT", ";")				
 				sVal2 = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu , "CLOTURE", ";")
 
+				If sVal1 <> "OUI" Then
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour les relances HUB, le bcv CONTACT=NON n'a pas de sens, il doit être à OUI, on créer toujours un contact." )
+				End IF 
+
 				If sVal = "OUI" and sVal2 = "OUI" Then
 					iRet = -1
 					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
