@@ -34097,6 +34097,7 @@ private function integer uf_ctrl_fichier_frn_hub_2025082914032887 ();//*--------
 //        JFF  02/09/2025  [20250902105339530]
 //        JFF  02/09/2025  [20250902141005123]
 // 		 JFF  08/09/2025  [20250905153321517][JFF][HUB1910]
+// 		 JFF  09/09/2025  [20250909154251167][JFF][BUG]
 //*-----------------------------------------------------------------
 
 Int iRet, iStatusGc, iInfoSpbFrn
@@ -35053,7 +35054,6 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	sVal = idwFicFourn.GetItemString ( lCpt, "APP_SWAP" )
 	// sVal1 = lnvPFCString.of_getkeyvalue (sChaineBCV, "CMDE_REMPL", ";")  [20250902105339530]
-	sVal1= lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "CMDE_REMPL_AUTO", ";") 	// [20250902105339530]
 
 	If sVal = "OUI" Then
 		
@@ -35067,7 +35067,7 @@ For lCpt = 1 To lTotLig
 				( lVal = 23 ) And Not ( Pos (sVal,  "[BVIEOX]" ) > 0 Or Pos (sVal,  "[PIE]" ) > 0 ) &					
 				Or &
 				( lVal <> 21 And lVal <> 23 ) &
-			) Or sVal1 = "OUI" Then
+			) Then
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
 			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") : Le SWAP n'est autorisé que sur un irréparable 21/23 avec un mot clé [BVIE]/[BVID]/[BVIP]/[BVIT]/[BVIEOX] ou [PIE]." )
@@ -35077,7 +35077,7 @@ For lCpt = 1 To lTotLig
 
 	If iRet > 0 Then
 		// sVal1 = 	lnvPFCString.of_getkeyvalue (sChaineBCV, "CMDE_REMPL", ";") [20250902105339530]
-		sVal1= lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "CMDE_REMPL_AUTO", ";") // [20250902105339530]
+		// sVal1= lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "CMDE_REMPL_AUTO", ";") // [20250902105339530] // [20250909154251167][JFF][BUG]
 		sVal = idwFicFourn.GetItemString ( lCpt, "APP_SWAP" )	
 
 		sVal2 = Trim ( idwFicFourn.GetItemString ( lCpt, "MARQUE_REMPL" )) + &
@@ -35089,9 +35089,10 @@ For lCpt = 1 To lTotLig
 		
 		If IsNull ( sVal2 ) Then sVal2 = ""
 		If IsNull ( sVal ) Then sVal = ""
-		If IsNull ( sVal1 ) Then sVal1 = ""
+		// If IsNull ( sVal1 ) Then sVal1 = "" // [20250909154251167][JFF][BUG]
 		
-		If Len ( sVal2 ) > 0 And sVal1 <> "OUI" And sVal <> "OUI" Then
+		// If Len ( sVal2 ) > 0 And sVal1 <> "OUI" And sVal <> "OUI" Then // [20250909154251167][JFF][BUG]
+		If Len ( sVal2 ) > 0 And sVal <> "OUI" Then 		
 			iRet = -1
 			This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
 			" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") : Les champ MARQUE_REMPL, MODELE_REMPL, COULEUR_REMPL, CAP_STK_REMPL, NEUF_REC_REMPL, PRIX_TTC_REMPL, ne sont autorisés que sur un SWAP suite app irréparable OU une Commande de Remplacement." )
@@ -35101,11 +35102,12 @@ For lCpt = 1 To lTotLig
 
 
 	// sVal1 = 	lnvPFCString.of_getkeyvalue (sChaineBCV, "CMDE_REMPL", ";") [20250902105339530]
-	sVal1= lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "CMDE_REMPL_AUTO", ";") // [20250902105339530]
+	// sVal1= lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "CMDE_REMPL_AUTO", ";") // [20250902105339530]  // [20250909154251167][JFF][BUG]
 	sVal = idwFicFourn.GetItemString ( lCpt, "APP_SWAP" )	
 	lVal = idwFicFourn.GetItemNumber ( lCpt, "STATUS_GC" )
 	
-	If iRet > 0 And ( sVal1 = "OUI" Or sVal = "OUI" ) And lVal <> 176 Then
+	// If iRet > 0 And ( sVal1 = "OUI" Or sVal = "OUI" ) And lVal <> 176 Then // [20250909154251167][JFF][BUG]
+	If iRet > 0 And sVal = "OUI" And lVal <> 176 Then // [20250909154251167][JFF][BUG]
 			
 		sVal = idwFicFourn.GetItemString ( lCpt, "MARQUE_REMPL" )
 		If IsNull ( sVal ) Then sVal = ""		
@@ -35714,7 +35716,8 @@ For lCpt = 1 To lTotLig
 	idwFicFourn.RowsDiscard ( 1, idwFicFourn.RowCount (), primary! )
 	idwFicFourn.SetFilter ( "" )
 	idwFicFourn.Filter ( )	
-	
+	idwFicFourn.SetSort ( "id_depot_hub A" ) // [20250909154251167][JFF][BUG]
+	idwFicFourn.Sort () // [20250909154251167][JFF][BUG]
 	
 	// Maj du rejet côté Hub
 	sVal = lnvPFCString.of_getkeyvalue (sInfoFrnSpbCpltLu, "ID_DEPOT_HUB", ";")	
