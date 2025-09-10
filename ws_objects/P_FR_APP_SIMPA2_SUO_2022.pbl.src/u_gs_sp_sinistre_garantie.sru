@@ -1024,11 +1024,12 @@ private subroutine uf_controlergestion (ref s_pass astpass);//*-----------------
 //       JFF   28/03/2025 [MCO1219]
 //       JFF   20/06/2025 [MIG147_KRYS]
 //       JFF   22/07/2025 [MIG165_BOUYGUES]
+// 		JFF   10/09/2025 [20250910084954827][JFF][MIG165_BOUYGUES]
 //*-----------------------------------------------------------------
-String 		sPos, sVal, sMarque, sVal1, sSql
+String 		sPos, sVal, sMarque, sVal1, sSql, sFiltreOrig
 Decimal {2} dcMtPlafAReg
 Boolean		bSup, bAltBloc 
-Long lTotwRefus, lCpt, lIdGti, lRow, lRow2, lDeb, lFin, lVal, lVal1, lVal2, lTotLigne, lLigPce, lRow912, lRowDS, lCptDetPro
+Long lTotwRefus, lCpt, lIdGti, lRow, lRow2, lDeb, lFin, lVal, lVal1, lVal2, lTotLigne, lLigPce, lRow912, lRowDS, lCptDetPro, lVal3
 n_cst_string lnvPFCString
 Boolean bBitMap, bMsg
 int iIdi
@@ -1715,7 +1716,74 @@ If F_CLE_A_TRUE ( "MON311_SPL_PACI" ) Then
 End If
 */
 
+// [20250910084954827][JFF][MIG165_BOUYGUES]
+If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 405 )		
+	If lDeb > 0 Then
+		iCodEtat = idw_wGarSin.GetItemNumber ( 1, "COD_ETAT" )
 
+		// La Gti (8) UFs : Régler si présence GTI 10 (Vol) avec AMU un détail PEC ( Rempl 178 RPC, RFO ou réglé evt 940)		
+		If lIdGti = 8 Then
+			Choose Case iCodEtat 
+				Case 500, 550
+					
+					lVal1 = idw_LstCmdeSin.find ( "ID_GTI = 10 AND STATUS_GC = 178 AND COD_ETAT IN ( 'RFO', 'RPC' ) ", 1, idw_LstCmdeSin.RowCount ())
+					lVal2 = idw_wDetail.find ( "ID_GTI = 10 And Id_Evt = 940 And Cod_etat in ( 500, 600 )", 1, idw_wDetail.RowCount ())
+					
+					If lVal1 <= 0 And lVal2 <= 0 Then
+						sPos = "MT_PROV"
+		
+						stMessage.sTitre		= "Règlement UF conditionné au VOL"
+						stMessage.Icon			= Information!
+						stMessage.bErreurG	= FALSE
+						stMessage.sCode		= "WGAR448"
+						stMessage.sVar[1]		= "la garantie UF"
+						F_Message ( stMessage )
+					End If 
+					
+			End Choose 
+		End IF 				
+		
+		// Carte SIM (10) : Régler si présence GTI 10 (Vol) avec AMU un détail PEC ( Rempl 178 RPC, RFO ou réglé evt 940)
+		lVal1 = idw_LstDetail.find ( "Id_Evt = 924 And Cod_etat in ( 500 )", 1, idw_LstDetail.RowCount ())		
+		
+		If lVal1 > 0 Then
+			lVal1 = idw_LstCmdeSin.find ( "ID_GTI = 10 AND STATUS_GC = 178 AND COD_ETAT IN ( 'RFO', 'RPC' ) ", 1, idw_LstCmdeSin.RowCount ())
+			lVal2 = idw_LstDetail.find ( "ID_GTI = 10 And Id_Evt = 940 And Cod_etat in ( 500, 600 )", 1, idw_LstDetail.RowCount ())					
+
+			If lVal1 <= 0 And lVal2 <= 0 Then
+				sPos = "MT_PROV"
+
+				stMessage.sTitre		= "Règlement Carte Sim conditionné au VOL"
+				stMessage.Icon			= Information!
+				stMessage.bErreurG	= FALSE
+				stMessage.sCode		= "WGAR448"
+				stMessage.sVar[1]		= "la carte SIM"
+				F_Message ( stMessage )
+			End If 
+		End IF 
+ 
+		// Accessoires : Régler si présence GTI 10, 11, 24 avec AMU (un détail PEC (Rempl (178)) ou Règlement du tel ou réparé)
+		lVal1 = idw_LstDetail.find ( "Id_Evt = 971 And Cod_etat in ( 500 )", 1, idw_LstDetail.RowCount ())		
+		
+		If lVal1 > 0 Then
+			lVal1 = idw_LstCmdeSin.find ( "ID_GTI = " + String ( lIdGti ) + " AND STATUS_GC in ( 178, 2 ) And COD_ETAT IN ( 'RFO', 'RPC' ) ", 1, idw_LstCmdeSin.RowCount ())
+			lVal2 = idw_LstDetail.find  ( "ID_GTI = " + String ( lIdGti ) + " And Id_Evt = 940 And Cod_etat in ( 500, 600 )", 1, idw_LstDetail.RowCount ())					
+
+			If lVal1 <= 0 And lVal2 <= 0 Then
+				sPos = "MT_PROV"
+
+				stMessage.sTitre		= "Règlement Accessoires conditionné"
+				stMessage.Icon			= Information!
+				stMessage.bErreurG	= FALSE
+				stMessage.sCode		= "WGAR449 "
+				stMessage.sVar[1]		= "d'accessoires"
+				F_Message ( stMessage )
+			End If 
+		End IF 
+		
+	End If 
+End IF 
 	
 astPass.sTab [ 1 ] = sPos
 
