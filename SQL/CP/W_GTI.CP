@@ -4303,6 +4303,7 @@ Go
 -- JFF      20/01/2014   [PM208]
 -- JFF		09/02/2016   [ITSM361927]
 -- JFF      12/02/2016   [PI062]
+-- JFF      10/09/2025   [20250910084954827][JFF][MIG165_BOUYGUES]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S03_W_GTI_NBSIN_DTE_SURV' AND type = 'P' )
         DROP procedure sysadm.PS_S03_W_GTI_NBSIN_DTE_SURV
@@ -4386,6 +4387,40 @@ AS
 				p.prenom				= @sPrenom -- [ITSM361927]				
 			) As Tb	  
   End
+
+-- [MIG19_PSPLAF_SAGA2]
+-- [20250910084954827][JFF][MIG165_BOUYGUES]
+If sysadm.FN_CLE_NUMERIQUE ( 'MIG19_PSPLAF_SAGA2') >= 2 
+ Begin
+
+	 Declare @TbRetSaga2 Table ( 
+		id_seq Integer identity (1, 1 ),
+		id_sin integer,
+		subscription_number varchar ( 50 ),
+		indemnise VarChar ( 10 ),
+		mt_reg_assure Decimal ( 11, 2 ),
+		mode_indemnisation VarChar ( 50 ),
+		mode_indemnisation_long VarChar ( 50 ),
+		dte_adh DateTime,
+		dte_decl DateTime,
+		dte_surv DateTime
+	    )
+
+	 If @iNbSin is null Set @iNbSin = 0
+	 Insert into @TbRetSaga2 Exec sysadm.PS_S_SAGA2_PLAFOND_PAR_ANNEE_SUR_SAGA2 @dcIdSin, @sIdAdh 
+
+	 Set @iNbSin = @iNbSin + 
+				   IsNull ( 
+								( Select COUNT (*) 
+								  From @TbRetSaga2 
+								  where Upper ( indemnise ) = 'OUI'
+								  And dte_surv <= @dtSurv                        
+								  And dte_surv >= @dtAdhRenouv
+								) 
+					, 0 ) 
+
+ End 
+
 GO
 
 --------------------------------------------------------------------

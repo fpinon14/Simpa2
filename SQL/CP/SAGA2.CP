@@ -1379,7 +1379,7 @@ Go
 -- Procédure            :       PS_S_SAGA2_PLAFOND_PAR_ANNEE_SUR_SAGA2
 -- Auteur               :       FABRY JF
 -- Date                 :       05/2025
--- Libellé              :       
+-- Libellé              :       MIG119
 -- Commentaires         :       à appeler à partie de SIMPA2 !!!
 -- Références           :       
 --
@@ -1733,4 +1733,421 @@ While Exists ( Select Top 1 1 From @TbTrt where marquage = 0 )
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procedure            :       PS_S_PRODUIT_ADH_SAGA2
+-- Auteur               :       Fabry JF
+-- Date                 :       22/08/2024
+-- Libelle              :       [MCO602_PNEU]
+-- Commentaires         :       
+-- References           :       
+--
+-- Arguments            :       @dcIdSin        Decimal (  7,0 )        (Val)
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_PRODUIT_ADH_SAGA2' AND type = 'P' )
+        DROP procedure sysadm.PS_S_PRODUIT_ADH_SAGA2
+GO
+
+CREATE procedure sysadm.PS_S_PRODUIT_ADH_SAGA2
+	@iIdProd	integer
+As
+
+IF @@servername = master.dbo.SPB_FN_ServerName ('PRO')
+	Begin
+		If SHERPA_PRO.sysadm.FN_IS_SAGA ( @iIdProd ) > 0 Return 1
+	End 
+Else
+	Begin
+		If SHERPA_SIM.sysadm.FN_IS_SAGA ( @iIdProd ) > 0 Return 1
+	End
+
+Return 0
+
+Go
+
+--------------------------------------------------------------------
+--
+-- Procedure            :       PS_I_RESIL_ADH_SAGA2
+-- Auteur               :       Fabry JF
+-- Date                 :       22/08/2024
+-- Libelle              :        [MCO602_PNEU]
+-- Commentaires         :       
+-- References           :       
+--
+-- Arguments            :       @dcIdSin        Decimal (  7,0 )        (Val)
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+--  JFF		12/02/2016		[PI062]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_RESIL_ADH_SAGA2' AND type = 'P' )
+        DROP procedure sysadm.PS_I_RESIL_ADH_SAGA2
+GO
+
+CREATE procedure sysadm.PS_I_RESIL_ADH_SAGA2
+        @dcIdSin        Decimal (  10 ) ,
+		@sIdOper		VarChar ( 4 ),
+		@sChaineSeria   varchar ( 100 ) 
+AS
+
+Declare @sCas VarChar ( 50 )
+Declare @iResil Integer
+Declare @iIdProdAdh	Integer
+Declare @iIdEts Integer
+Declare @sIdAdh	VarChar ( 19 )
+Declare @iIdSdos Integer
+Declare @dtDteRemb DateTime
+Declare @dtDteGti DateTime
+Declare @iIdMotifAdh Integer
+Declare @iIdMotifVieContrat Integer
+
+Set @iResil = 0
+Set @iIdMotifAdh = 0
+Set @iIdMotifVieContrat = 0
+
+Select @sCas = sysadm.FN_CLE_VAL ( 'CAS', rtrim ( val_car ) + rtrim ( val_car2), ';' ) 
+From sysadm.det_pro dp,
+	 sysadm.sinistre s
+Where s.id_sin = @dcIdSin
+And	  dp.id_prod = s.id_prod
+and   dp.id_code_dp = 380
+
+If @sCas = 'UNE_SEULE_INDEMNISATION' 
+	Begin
+
+		If Exists ( Select Top 1 1 From sysadm.resil_adh_saga2 Where id_sin = @dcIdSin ) Return
+
+		Exec sysadm.PS_I_DIV_SIN_ETAT_ASS @dcIdSin, @sIdOper
+	
+		If sysadm.FN_LIB_ETAT_DOS_ASSURE( @dcIdSin,'CODE' ) in ( 550, 600, 1500, 1510, 1520 )
+		 Begin
+			Set @iResil = 1
+			Set @iIdMotifAdh = 150
+			Set @iIdMotifVieContrat = 150
+		 End
+	End 
+
+If @iResil = 1 
+	Begin
+		
+		Select  
+				@iIdProdAdh	= p.cod_prod_dms,
+				@iIdEts		= s.id_ets,
+				@sIdAdh		= s.id_adh,
+				@iIdSdos	= s.id_sdos,
+				@dtDteRemb  = s.valide_le,
+				@dtDteGti   = s.valide_le  -- pas s.dte_fin_gti mais s.valide_le, souhait de Ludo Levesques
+		From	sysadm.sinistre s,
+				sysadm.produit p
+		Where   s.id_sin = @dcIdSin
+		And		p.id_prod = s.id_prod
+
+		Insert into sysadm.resil_adh_saga2 ( 
+			id_sin,
+			id_prod_adh,
+			id_ets,
+			id_adh,
+			id_sdos,
+			dte_remb,
+			dte_fin_gti,
+			id_motif_adh,
+			id_motif_vie_contrat,
+			cod_trt,
+			chaine_seria,
+			cree_le,
+			maj_le,
+			maj_par
+		)
+
+		Values (
+			@dcIdSin,
+			@iIdProdAdh,
+			@iIdEts,
+			rtrim ( ltrim ( @sIdAdh)),
+			@iIdSdos,
+			@dtDteRemb,
+			@dtDteGti,
+			@iIdMotifAdh,
+			@iIdMotifVieContrat,
+			'N',
+			rtrim ( ltrim ( @sChaineSeria)),
+			Getdate(),
+			Getdate(),
+			rtrim ( ltrim ( @sIdOper ))
+		)
+	End 
+Go
+
+
+--------------------------------------------------------------------
+--
+-- Procedure            :       PS_SI_MOTEUR_REPORT_ADH_RESIL_VERS_SAGA2
+-- Auteur               :       Fabry JF
+-- Date                 :       22/08/2024
+-- Libelle              :       [MCO602_PNEU]
+-- Commentaires         :       
+-- References           :       
+--
+-- Arguments            :       @dcIdSin        Decimal (  7,0 )        (Val)
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_SI_MOTEUR_REPORT_ADH_RESIL_VERS_SAGA2' AND type = 'P' )
+        DROP procedure sysadm.PS_SI_MOTEUR_REPORT_ADH_RESIL_VERS_SAGA2
+GO
+
+CREATE procedure sysadm.PS_SI_MOTEUR_REPORT_ADH_RESIL_VERS_SAGA2
+As
+Declare @isProdOuSim VarChar ( 20 ) 
+Declare @iError Integer
+
+Update sysadm.resil_adh_saga2 Set cod_trt = 'T' where cod_trt = 'N'
+
+Declare @TB_EnAttenteTransfert Table (
+	[id_seq] [Integer] NOT NULL,
+	[id_sin] decimal (10) not null,
+	[id_prod_adh] decimal (5) NOT NULL,
+	[id_ets] decimal (7) NOT NULL,
+	[id_adh] varchar(19) NOT NULL,
+	[id_sdos] decimal (7) NOT NULL,
+	[dte_remb] DateTime NOT NULL,
+	[dte_fin_gti] DateTime NOT NULL,
+	[id_motif_adh] integer NULL,
+	[id_motif_vie_contrat] integer NULL,
+	[cod_trt] varchar ( 1 ) NOT NULL,
+	[chaine_seria] varchar ( 100 ) null,
+	[cree_le] [datetime] NOT NULL,
+	[maj_le] [datetime] NOT NULL,
+	[maj_par] [char](4) NOT NULL
+)
+
+Declare 
+	@iIdSeq integer,
+	@iIdSin integer,
+	@iIdProdAdh integer,
+	@iIdEts integer,
+	@sIdAdh varchar(19),
+	@iIdSdos integer,
+	@sCodTrt varchar ( 1 ),
+	@sChaineSeria varchar ( 100 ),
+	@dtCreeLe datetime,
+	@dtMajLe datetime,
+	@sMajPar char(4), 
+	@dtDteRemb DateTime,
+	@dtDteGti DateTime,
+	@iIdMotifAdh Integer,
+	@iIdMotifVieContrat Integer
+
+Insert into @TB_EnAttenteTransfert
+Select 
+	id_seq,
+	id_sin,
+	id_prod_adh,
+	id_ets,
+	id_adh,
+	id_sdos,
+	dte_remb,
+	dte_fin_gti,
+	id_motif_adh,
+	id_motif_vie_contrat,
+	cod_trt,
+	chaine_seria,
+	cree_le,
+	maj_le,
+	maj_par
+From sysadm.resil_adh_saga2
+Where cod_trt = 'T'
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' Set @isProdOuSim = 'PROD' ELSE Set @isProdOuSim = 'SIM'
+
+While Exists ( Select Top 1 1 From @TB_EnAttenteTransfert where cod_trt = 'T' )
+ Begin
+	Select 	Top 1 
+		@iIdSeq = id_seq,
+		@iIdSin = id_sin,
+		@iIdProdAdh = id_prod_adh,
+		@iIdEts = id_ets,
+		@sIdAdh = Right ( Replicate ( '0', 12 ) + ltrim ( rtrim ( id_adh )), 12 ) ,
+		@iIdSdos = id_sdos,
+		@dtDteRemb  = dte_remb,
+		@dtDteGti = dte_fin_gti,
+		@iIdMotifAdh = id_motif_adh,
+		@iIdMotifVieContrat = id_motif_vie_contrat,
+		@sCodTrt ='N',
+		@sChaineSeria = chaine_seria,
+		@dtCreeLe = cree_le,
+		@dtMajLe = maj_le,
+		@sMajPar = maj_par
+	From @TB_EnAttenteTransfert 
+	where cod_trt = 'T'	
+
+	If @isProdOuSim = 'PROD' 
+		Begin 
+			Exec @iError = [LS-SAGA2].[SAGA2_PVC].edi.PS_I_SIMPA2_RESIL_ADH_SAGA2 
+				@iIdSin,
+				@iIdProdAdh,
+				@iIdEts,
+				@sIdAdh,
+				@iIdSdos,
+				@dtDteRemb,
+				@dtDteGti,
+				@iIdMotifAdh,
+				@iIdMotifVieContrat,
+				@sCodTrt,
+				@sChaineSeria,
+				@dtCreeLe,
+				@dtMajLe,
+				@sMajPar
+		End
+	Else
+		Begin 
+			Exec @iError = [S2SQL14PP1\PPRSAGA2].[SAGA2_PVC].edi.PS_I_SIMPA2_RESIL_ADH_SAGA2 
+				@iIdSin,
+				@iIdProdAdh,
+				@iIdEts,
+				@sIdAdh,
+				@iIdSdos,
+				@dtDteRemb,
+				@dtDteGti,
+				@iIdMotifAdh,
+				@iIdMotifVieContrat,
+				@sCodTrt,
+				@sChaineSeria,
+				@dtCreeLe,
+				@dtMajLe,
+				@sMajPar
+		End
+
+	-- Echec
+	If @iError <> 0 
+		Begin
+			Update @TB_EnAttenteTransfert Set cod_trt = 'O' Where id_seq = @iIdSeq
+			Update sysadm.resil_adh_saga2 Set cod_trt = 'N', maj_le = GETDATE() Where id_seq = @iIdSeq
+			Continue
+		End
+
+
+	-- Succès
+		
+	Update @TB_EnAttenteTransfert Set cod_trt = 'O' Where id_seq = @iIdSeq
+	Update sysadm.resil_adh_saga2 Set cod_trt = 'O', maj_le = GETDATE() Where id_seq = @iIdSeq
+ End
+Go
+
+--------------------------------------------------------------------
+--
+-- Procedure            :       PS_I_SIMPA2_RESIL_ADH_SAGA2
+-- Auteur               :       Fabry JF
+-- Date                 :       22/08/2024
+-- Libelle              :       [MCO602_PNEU]
+-- Commentaires         :       ===>>>> /!\ A Compiler sur SAGA2_PVC /!\
+-- References           :       
+--
+-- Arguments            :       @dcIdSin        Decimal (  7,0 )        (Val)
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+/*
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_SIMPA2_RESIL_ADH_SAGA2' AND type = 'P' )
+        DROP procedure edi.PS_I_SIMPA2_RESIL_ADH_SAGA2
+GO
+
+CREATE procedure edi.PS_I_SIMPA2_RESIL_ADH_SAGA2
+	@iIdSin integer,
+	@iIdProdAdh integer,
+	@iIdEts integer,
+	@sIdAdh varchar(19),
+	@iIdSdos integer,
+	@dtDteRemb DateTime,
+	@dtDteGti DateTime,
+	@iIdMotifAdh Integer,
+	@iIdMotifVieContrat Integer,
+	@sCodTrt varchar ( 1 ),
+	@sChaineSeria varchar ( 100 ),
+	@dtCreeLe datetime,
+	@dtMajLe datetime,
+	@sMajPar char(4) 
+As
+
+Insert into edi.simpa2_resil_adh_saga2 
+	(
+	id_sin,
+	id_prod_adh,
+	id_ets,
+	id_adh,
+	id_sdos,
+	dte_remb,
+	dte_fin_gti,
+	id_motif_adh,
+	id_motif_vie_contrat,
+	cod_trt,
+	chaine_seria,
+	cree_le,
+	maj_le,
+	maj_par
+	)
+Values 
+	(
+	@iIdSin,
+	@iIdProdAdh,
+	@iIdEts,
+	@sIdAdh,
+	@iIdSdos,
+	@dtDteRemb,
+	@dtDteGti,
+	@iIdMotifAdh,
+	@iIdMotifVieContrat,
+	@sCodTrt,
+	@sChaineSeria,
+	@dtCreeLe,
+	@dtMajLe,
+	@sMajPar
+	)
+
+Go
+*/
+
+--------------------------------------------------------------------
+--
+-- Procedure            :       PS_SI_MOTEUR_RESIL_ADH_SAGA2_DP406_REFERENCE_APPAREIL_NON_MAJ
+-- Auteur               :       Fabry JF
+-- Date                 :       22/08/2024
+-- Libelle              :       20250910084954827][JFF][MIG165_BOUYGUES]
+-- Commentaires         :       
+-- References           :       
+--
+-- Arguments            :       @dcIdSin        Decimal (  7,0 )        (Val)
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_SI_MOTEUR_RESIL_ADH_SAGA2_DP406_REFERENCE_APPAREIL_NON_MAJ' AND type = 'P' )
+        DROP procedure sysadm.PS_SI_MOTEUR_RESIL_ADH_SAGA2_DP406_REFERENCE_APPAREIL_NON_MAJ
+GO
+
+CREATE procedure sysadm.PS_SI_MOTEUR_RESIL_ADH_SAGA2_DP406_REFERENCE_APPAREIL_NON_MAJ
+As
+
+Select 
+From	sysadm.sinistre s,
+		sysadm.det_pro dp
+Where dp.id_prod = s.id_prod
+and   dp.id_code_dp = 380
+And   sysadm.FN_CLE_VAL ( 'CAS', rtrim ( val_car ) + rtrim ( val_car2), ';' ) = 'REFERENCE_APPAREIL_NON_MAJ'
+
+		
+
+ sysadm.PS_I_RESIL_ADH_SAGA2
+        @dcIdSin        Decimal (  10 ) ,
+		@sIdOper		VarChar ( 4 ),
+		@sChaineSeria   varchar ( 100 ) 
+
+
+Go
 
