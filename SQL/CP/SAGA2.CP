@@ -1783,6 +1783,7 @@ Go
 --
 -------------------------------------------------------------------
 --  JFF		12/02/2016		[PI062]
+--  JFF     11/09/2025      [20250911091447230][JFF][MIG165_BOUYGUES]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_RESIL_ADH_SAGA2' AND type = 'P' )
         DROP procedure sysadm.PS_I_RESIL_ADH_SAGA2
@@ -1794,7 +1795,7 @@ CREATE procedure sysadm.PS_I_RESIL_ADH_SAGA2
 		@sChaineSeria   varchar ( 100 ) 
 AS
 
-Declare @sCas VarChar ( 50 )
+Declare @sParamCas VarChar ( 50 )
 Declare @iResil Integer
 Declare @iIdProdAdh	Integer
 Declare @iIdEts Integer
@@ -1804,34 +1805,110 @@ Declare @dtDteRemb DateTime
 Declare @dtDteGti DateTime
 Declare @iIdMotifAdh Integer
 Declare @iIdMotifVieContrat Integer
+Declare @sValCar Varchar ( 510 )
+Declare @iIdSeq Integer 
+Declare @sParamDeclenchement VarChar ( 50 ) 
+Declare @sProvenanceDeclenchement VarChar ( 50 ) 
+Declare @sProvenanceCasForcage VarChar ( 50 ) 
+Declare @iIdCt Integer 
+Declare @sMess VarChar ( 508 )
+Declare @sGetDate VarChar ( 40 ) 
 
-Set @iResil = 0
-Set @iIdMotifAdh = 0
-Set @iIdMotifVieContrat = 0
+Set @sProvenanceDeclenchement = sysadm.FN_CLE_VAL ( 'DECLENCHEMENT', trim ( @sChaineSeria )  , ';' )
+If @sProvenanceDeclenchement is null Set @sProvenanceDeclenchement = ''
+If @sProvenanceDeclenchement = '' Set @sProvenanceDeclenchement = 'VALIDATION'
 
-Select @sCas = sysadm.FN_CLE_VAL ( 'CAS', rtrim ( val_car ) + rtrim ( val_car2), ';' ) 
+Set @sProvenanceCasForcage = sysadm.FN_CLE_VAL ( 'CAS_FORCAGE', trim ( @sChaineSeria )  , ';' )
+If @sProvenanceCasForcage is null Set @sProvenanceCasForcage = ''
+
+
+If Exists ( Select Top 1 1 From sysadm.resil_adh_saga2 Where id_sin = @dcIdSin ) Return
+
+-- [20250911091447230][JFF][MIG165_BOUYGUES]
+Declare @TbDP380 Table ( 
+	id_seq integer identity,
+	val_car Varchar ( 510 ),
+	marquage integer 
+	)
+
+Insert into @TbDP380
+Select rtrim ( val_car ) + rtrim ( val_car2),
+	   0	
 From sysadm.det_pro dp,
 	 sysadm.sinistre s
 Where s.id_sin = @dcIdSin
 And	  dp.id_prod = s.id_prod
 and   dp.id_code_dp = 380
 
-If @sCas = 'UNE_SEULE_INDEMNISATION' 
-	Begin
+Set @iResil = 0
+Set @iIdMotifAdh = 0
+Set @iIdMotifVieContrat = 0
 
-		If Exists ( Select Top 1 1 From sysadm.resil_adh_saga2 Where id_sin = @dcIdSin ) Return
+While Exists ( Select Top 1 1 From @TbDP380 where marquage = 0 ) And @iResil = 0
+ Begin
+	Select 	Top 1 
+		@iIdSeq = id_seq,
+		@sValCar = val_car
+	From	@TbDP380
+	Where	marquage = 0
 
-		Exec sysadm.PS_I_DIV_SIN_ETAT_ASS @dcIdSin, @sIdOper
+	If @sValCar is null Set @sValCar = ''
+
+	Set @sParamCas = sysadm.FN_CLE_VAL ( 'CAS', rtrim ( @sValCar )  , ';' )
+	Set @sParamDeclenchement = sysadm.FN_CLE_VAL ( 'DECLENCHEMENT', rtrim ( @sValCar )  , ';' )
+	If @sParamDeclenchement = '' Set @sParamDeclenchement = 'VALIDATION'
+
+	If	@sParamCas = 'UNE_SEULE_INDEMNISATION' And 
+		@sProvenanceDeclenchement = @sParamDeclenchement And 
+		@iResil <= 0 And 
+		( @sProvenanceCasForcage = '' Or @sProvenanceCasForcage = @sParamCas )
+		Begin
+
+			Exec sysadm.PS_I_DIV_SIN_ETAT_ASS @dcIdSin, @sIdOper
 	
-		If sysadm.FN_LIB_ETAT_DOS_ASSURE( @dcIdSin,'CODE' ) in ( 550, 600, 1500, 1510, 1520 )
-		 Begin
-			Set @iResil = 1
-			Set @iIdMotifAdh = 150
-			Set @iIdMotifVieContrat = 150
-		 End
-	End 
+			If sysadm.FN_LIB_ETAT_DOS_ASSURE( @dcIdSin,'CODE' ) in ( 550, 600, 1500, 1510, 1520 )
+			 Begin
+				Set @iResil = 1
+				Set @iIdMotifAdh = 150
+				Set @iIdMotifVieContrat = 150
+			 End
+		End 
 
-If @iResil = 1 
+	If  @sParamCas = 'DISPARITION_DU_BIEN' And 
+		@sProvenanceDeclenchement = @sParamDeclenchement And 
+		@iResil <= 0 And 
+		( @sProvenanceCasForcage = '' Or @sProvenanceCasForcage = @sParamCas )
+		Begin
+			Select 'TOTO' 
+			/*  /!\ A CODER
+			Exec sysadm.PS_I_DIV_SIN_ETAT_ASS @dcIdSin, @sIdOper
+	
+			If sysadm.FN_LIB_ETAT_DOS_ASSURE( @dcIdSin,'CODE' ) in ( 550, 600, 1500, 1510, 1520 )
+			 Begin
+				Set @iResil = 1
+				Set @iIdMotifAdh = 11
+				Set @iIdMotifVieContrat = 116
+			 End
+			 */
+		End 
+
+	If  @sParamCas = 'REFERENCE_APPAREIL_NON_MAJ' And 
+		@sProvenanceDeclenchement = @sParamDeclenchement And 
+		@iResil <= 0 And 
+		( @sProvenanceCasForcage = '' Or @sProvenanceCasForcage = @sParamCas )
+
+		Begin
+			-- Cas déterminer par autre PS MoteurAuto	
+			Set @iResil = 1
+			Set @iIdMotifAdh = 208
+			Set @iIdMotifVieContrat = 208
+
+		End 
+
+	Update @TbDP380 Set marquage = 1 Where id_seq = @iIdSeq
+ End
+
+ If @iResil = 1 
 	Begin
 		
 		Select  
@@ -1879,6 +1956,30 @@ If @iResil = 1
 			Getdate(),
 			rtrim ( ltrim ( @sIdOper ))
 		)
+
+		Set @sMess = 'Adhésion résiliée automatiquent pour cas : ' + IsNull ( @sParamCas, '' ) 
+
+		IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+		BEGIN
+			Exec SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @dcIdSin, 2, @sMess, 'AUTO', 300, @iIdCt OUTPUT							
+		END
+		ELSE
+		BEGIN
+			Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @dcIdSin, 2, @sMess, 'AUTO', 300, @iIdCt OUTPUT							
+		END	
+
+		Set @sGetDate = convert ( varchar(10), getdate(), 103 ) + '  ' + CONVERT (varchar(8), getdate(), 108) 
+
+		Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO 
+			@dcIdSin,
+			'adh_saga2_resiliee_auto',
+			'Adhésion résiliée automatiquement',
+			@sGetDate,
+			'O',
+			'D',
+			2000,
+			null
+
 	End 
 Go
 
@@ -2115,7 +2216,7 @@ Go
 
 --------------------------------------------------------------------
 --
--- Procedure            :       PS_SI_MOTEUR_RESIL_ADH_SAGA2_DP406_REFERENCE_APPAREIL_NON_MAJ
+-- Procedure            :       PS_SI_MOTEUR_RESIL_ADH_SAGA2_DP380_REFERENCE_APPAREIL_NON_MAJ
 -- Auteur               :       Fabry JF
 -- Date                 :       22/08/2024
 -- Libelle              :       20250910084954827][JFF][MIG165_BOUYGUES]
@@ -2127,27 +2228,128 @@ Go
 -- Retourne             :       Rien
 --
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_SI_MOTEUR_RESIL_ADH_SAGA2_DP406_REFERENCE_APPAREIL_NON_MAJ' AND type = 'P' )
-        DROP procedure sysadm.PS_SI_MOTEUR_RESIL_ADH_SAGA2_DP406_REFERENCE_APPAREIL_NON_MAJ
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_SI_MOTEUR_RESIL_ADH_SAGA2_DP380_REFERENCE_APPAREIL_NON_MAJ' AND type = 'P' )
+        DROP procedure sysadm.PS_SI_MOTEUR_RESIL_ADH_SAGA2_DP380_REFERENCE_APPAREIL_NON_MAJ
 GO
 
-CREATE procedure sysadm.PS_SI_MOTEUR_RESIL_ADH_SAGA2_DP406_REFERENCE_APPAREIL_NON_MAJ
+CREATE procedure sysadm.PS_SI_MOTEUR_RESIL_ADH_SAGA2_DP380_REFERENCE_APPAREIL_NON_MAJ
 As
 
-Select 
+
+
+Declare @TbTrtDp380 Table ( 
+	id_seq Integer Identity,
+	id_sin Decimal ( 10 ),
+	id_adh varchar ( 19 ),
+	val_car VarChar ( 510 ),
+	marquage integer
+)
+
+Declare @TbInfoResilSAGA2 Table ( val_ret_maj_ref integer ) 
+-- 1 signifie que la dernière maj des ref date de plus de “ma_valeur_en_jour” jours (donc je vais engager la résiliation de l’adhésion de mon côté)
+-- 2 signifie que la dernière maj des ref date de moins de “ma_valeur_en_jour” jours, donc pas de résilisation
+
+Declare @iIdSeq Integer
+Declare @dcIdSin Decimal ( 10 )
+Declare @sIdAdh Decimal ( 19 )
+Declare @sValCar VarChar ( 510 )
+Declare @sInstanceSaga2 Varchar ( 50 )
+Declare @sEnv VarChar ( 10 )
+Declare @sSubscriptionNumber VarChar ( 12 )
+Declare @sSql VarChar ( 2000 )
+Declare @iValRetMajRef Integer
+Declare @sChaineSeria  varchar ( 100 ) 
+Declare @sGetDate VarChar ( 40 ) 
+
+If @@servername = master.dbo.SPB_FN_ServerName ('PRO') Set @sEnv = 'PRO' Else Set @sEnv = 'SIM'
+
+If @sEnv = 'PRO' 
+ Begin 
+	Set @sInstanceSaga2 = '[LS-SAGA2]'
+ End 
+Else
+ Begin
+	-- [INSTANCE]
+	If sysadm.FN_CLE_NUMERIQUE ( 'INSTANCE_PPR_REC_HUB') = 1
+		Begin 
+			Set @sInstanceSaga2 = '[S2SQL14DEV\RECSAGA2]' 
+		End 
+	Else
+		Begin 
+			Set @sInstanceSaga2 = '[S2SQL14PP1\PPRSAGA2]'
+		End 	
+ End 
+
+Insert into @TbTrtDp380 
+Select  s.id_sin,
+		s.id_adh,
+		TRIM ( dp.val_car ) + TRIM ( dp.val_car2 ),
+		0
 From	sysadm.sinistre s,
+		sysadm.detail dt,
+		sysadm.reglement r,
 		sysadm.det_pro dp
 Where dp.id_prod = s.id_prod
 and   dp.id_code_dp = 380
 And   sysadm.FN_CLE_VAL ( 'CAS', rtrim ( val_car ) + rtrim ( val_car2), ';' ) = 'REFERENCE_APPAREIL_NON_MAJ'
+And   dt.id_sin = s.id_sin
+And   dt.id_evt = 940
+And	  dt.cod_etat = 600
+And   r.id_sin = dt.id_sin
+And   r.id_reg = dt.id_reg
+And   r.cree_le < DateAdd ( day, IsNull ( Convert ( Integer, sysadm.FN_CLE_VAL ( 'DELAI_JOURS', trim ( dp.val_car ) + trim ( dp.val_car2)  , ';' )), 0 ) * (-1), Getdate() )
+And   Not Exists ( Select Top 1 1 From sysadm.resil_adh_saga2 res Where res.id_sin = s.id_sin)
+And   Not Exists ( Select Top 1 1 From sysadm.div_sin ds Where ds.nom_zone = 'adh_saga2_resiliee_auto' and ds.val_dte is not null ) 
+And   Not Exists ( Select Top 1 1 From sysadm.div_sin ds Where ds.nom_zone = 'maj_ref_app_ok_sur_adh_saga2' and ds.val_dte is not null ) 
 
-		
+While Exists ( Select Top 1 1 From @TbTrtDp380 where marquage = 0 )
+ Begin
+	Select 	Top 1 
+		@iIdSeq = id_seq,
+		@dcIdSin = id_sin,
+		@sIdAdh = id_adh,
+		@sValCar = val_car
+	From	@TbTrtDp380
+	Where	marquage = 0
 
- sysadm.PS_I_RESIL_ADH_SAGA2
-        @dcIdSin        Decimal (  10 ) ,
-		@sIdOper		VarChar ( 4 ),
-		@sChaineSeria   varchar ( 100 ) 
+	Set @sSubscriptionNumber = Right ( Replicate ( '0', 12 ) + ltrim ( rtrim ( @sIdAdh )), 12 )
+	Set @sSql = -- En attente requête de Zied MIG222
+	' Select top 1 TbBidon.code ' + 
+	' From ' + @sInstanceSaga2 + '.[SAGA2_PVC].[ref].[product_group] as pr, ' + 
+	'	   ( Values ( 1, ''A_RESILIER''), ( 2, ''A_NE_PAS_RESILIER'' )) as TbBidon ( code, libelle ) ' +  
+	' Where TbBidon.code = 1' 
 
+--  Exec ( @sSql ) 
+	Delete @TbInfoResilSAGA2  
+	Insert into @TbInfoResilSAGA2  Exec ( @sSql ) 
+
+	Select Top 1 @iValRetMajRef = val_ret_maj_ref From @TbInfoResilSAGA2  
+	If @iValRetMajRef is null Set @iValRetMajRef = 0
+
+	If @iValRetMajRef = 1 -- signifie que la dernière maj des ref date de plus de “ma_valeur_en_jour” jours (donc je vais engager la résiliation de l’adhésion de mon côté)
+		Begin
+			Set @sChaineSeria = sysadm.FN_CLE_VAL_E ( 'DECLENCHEMENT', 'AUTOMATIQUE', trim ( @sChaineSeria ), ';' ) 
+			Set @sChaineSeria = sysadm.FN_CLE_VAL_E ( 'CAS_FORCAGE', 'REFERENCE_APPAREIL_NON_MAJ', trim ( @sChaineSeria ), ';' ) 
+
+			Exec sysadm.PS_I_RESIL_ADH_SAGA2 @dcIdSin, 'AUTO', @sChaineSeria
+		End 
+
+	If @iValRetMajRef = 2 -- signifie que la dernière maj des ref date de moins de “ma_valeur_en_jour” jours, donc pas de résilisation
+		Begin
+			Set @sGetDate = convert ( varchar(10), getdate(), 103 ) + '  ' + CONVERT (varchar(8), getdate(), 108) 
+			Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO 
+				@dcIdSin,
+				'maj_ref_app_ok_sur_adh_saga2',
+				'Maj Ref. App. Ok sur Adhésion',
+				@sGetDate,
+				'O',
+				'D',
+				2010,
+				null
+		End 
+
+	Update @TbTrtDp380 Set marquage = 1 Where id_seq = @iIdSeq
+ End
 
 Go
 
