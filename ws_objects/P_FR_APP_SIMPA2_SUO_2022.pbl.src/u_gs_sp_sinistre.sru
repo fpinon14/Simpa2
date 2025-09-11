@@ -16343,7 +16343,9 @@ For lCpt = 1 To lTot
 			  "DTE_REL5_MAIL_APP_NON_RCP_EN_CTR", &			  			  			  
 			  "DTE_REL6_MAIL_APP_NON_RCP_EN_CTR", &			  			  			  			  
 			  "DTE_REL7_MAIL_APP_NON_RCP_EN_CTR", &			  			  			  			  			  
-			  "DTE_REL8_MAIL_APP_NON_RCP_EN_CTR" &			  			  			  			  			  			  
+			  "DTE_REL8_MAIL_APP_NON_RCP_EN_CTR", &			  			  			  			  			  			  
+			  "ADH_SAGA2_RESILIEE_AUTO", &
+			  "MAJ_REF_APP_OK_SUR_ADH_SAGA2"
 			  
   			  idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "O" )
 
