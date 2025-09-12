@@ -2235,7 +2235,7 @@ GO
 CREATE procedure sysadm.PS_SI_MOTEUR_RESIL_ADH_SAGA2_DP380_REFERENCE_APPAREIL_NON_MAJ
 As
 
-
+If NOT ( sysadm.FN_CLE_NUMERIQUE ( 'MIG165_BOUYGUES') > 0 ) Return
 
 Declare @TbTrtDp380 Table ( 
 	id_seq Integer Identity,
@@ -2317,7 +2317,7 @@ While Exists ( Select Top 1 1 From @TbTrtDp380 where marquage = 0 )
 	' Select top 1 TbBidon.code ' + 
 	' From ' + @sInstanceSaga2 + '.[SAGA2_PVC].[ref].[product_group] as pr, ' + 
 	'	   ( Values ( 1, ''A_RESILIER''), ( 2, ''A_NE_PAS_RESILIER'' )) as TbBidon ( code, libelle ) ' +  
-	' Where TbBidon.code = 1' 
+	' Where TbBidon.code = 2' 
 
 --  Exec ( @sSql ) 
 	Delete @TbInfoResilSAGA2  
