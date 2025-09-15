@@ -707,6 +707,7 @@ GO
 --	FPI - 09/09/2014 [20140909.FPI] Désactivation des relances pour la recopie
 --	FPI	- 09/09/2016 [DP306] Suppression de la recopie de la DP 306
 --  JFF	  10/09/2024  [20240910162546267] Changement chemin UNC Serveur fichier prod
+--  JFF [20250915101130100][JFF]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I01_RECOPIE_PRODUIT' AND type = 'P' )
             DROP procedure sysadm.PS_I01_RECOPIE_PRODUIT
@@ -733,6 +734,16 @@ Declare 	@dtFin_Eff		Datetime
 Select 	@dtGetDate 	= GetDate ()
 Select  @dcIdCorb	= 999 -- Toujours en dur
 Select  @dtFin_Eff      = '01/01/3000' -- en dur
+
+-- [20250915101130100][JFF] souplesse
+DELETE
+FROM   sysadm.souplesse
+WHERE  id_prod = @dcIdProdDest
+
+-- [20250915101130100][JFF] traitement
+DELETE
+FROM   sysadm.traitement
+WHERE  id_prod = @dcIdProdDest
 
 DELETE
 FROM   sysadm.boutique
@@ -1256,6 +1267,31 @@ SELECT
 FROM	sysadm.delai
 WHERE  	id_prod = @dcIdProdSource
 AND 		id_rev  in (  @dcIdRevSource, -1 )
+
+-- [20250915101130100][JFF] souplesse
+INSERT INTO sysadm.souplesse ( 
+	   [id_prod]
+      ,[id_rev]
+      ,[id_gti]
+      ,[id_spl]
+      ,[cree_le]
+      ,[maj_le]
+      ,[maj_par]
+	  )
+Select 
+  	    @dcIdProdDest,
+		CASE id_rev
+		When -1 Then -1
+			Else @dcIdRevDest
+		End,
+        id_gti,
+        id_spl,
+		@dtGetDate,
+		@dtGetDate,
+		@sTrigramme
+FROM [sysadm].[souplesse]
+WHERE id_prod = @dcIdProdSource
+AND  id_rev  in (  @dcIdRevSource, -1 )
 
 INSERT INTO sysadm.commande_type(id_prod, 
 	id_gti, 
