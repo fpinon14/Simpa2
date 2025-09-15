@@ -1784,6 +1784,7 @@ Go
 -------------------------------------------------------------------
 --  JFF		12/02/2016		[PI062]
 --  JFF     11/09/2025      [20250911091447230][JFF][MIG165_BOUYGUES]
+--  JFF     15/09/2025      [20250915131212003][JFF][MIG165_BOUYGUES]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_RESIL_ADH_SAGA2' AND type = 'P' )
         DROP procedure sysadm.PS_I_RESIL_ADH_SAGA2
@@ -1879,17 +1880,23 @@ While Exists ( Select Top 1 1 From @TbDP380 where marquage = 0 ) And @iResil = 0
 		@iResil <= 0 And 
 		( @sProvenanceCasForcage = '' Or @sProvenanceCasForcage = @sParamCas )
 		Begin
-			Select 'TOTO' 
-			/*  /!\ A CODER
 			Exec sysadm.PS_I_DIV_SIN_ETAT_ASS @dcIdSin, @sIdOper
 	
-			If sysadm.FN_LIB_ETAT_DOS_ASSURE( @dcIdSin,'CODE' ) in ( 550, 600, 1500, 1510, 1520 )
+			If sysadm.FN_LIB_ETAT_DOS_ASSURE( @dcIdSin,'CODE' ) in ( 1530, 200 ) -- Le dossier doit être réfusé
+			   And  
+			   ( Exists ( Select Top 1 1 From sysadm.w_gar_sin Where id_sin = @dcIdSin And id_gti = 10 
+						  Union
+						  Select Top 1 1 From sysadm.gar_sin Where id_sin = @dcIdSin And id_gti = 10 
+						)
+				 Or 
+				 Exists ( Select Top 1 1 From sysadm.refus where id_sin = @dcIdSin and id_motif in ( 1705, 1713 ) and id_i >= 0 )
+			   )
+
 			 Begin
 				Set @iResil = 1
 				Set @iIdMotifAdh = 11
 				Set @iIdMotifVieContrat = 116
 			 End
-			 */
 		End 
 
 	If  @sParamCas = 'REFERENCE_APPAREIL_NON_MAJ' And 
