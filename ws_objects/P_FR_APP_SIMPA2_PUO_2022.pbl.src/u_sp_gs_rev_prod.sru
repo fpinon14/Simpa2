@@ -1,5 +1,5 @@
-HA$PBExportHeader$u_sp_gs_rev_prod.sru
-$PBExportComments$---} User Object pour les contr$$HEX1$$f400$$ENDHEX$$les de gestion relatifs aux r$$HEX1$$e900$$ENDHEX$$visions d'un produit.
+﻿$PBExportHeader$u_sp_gs_rev_prod.sru
+$PBExportComments$---} User Object pour les contrôles de gestion relatifs aux révisions d'un produit.
 forward
 global type u_sp_gs_rev_prod from u_spb_gs_anc
 end type
@@ -18,9 +18,9 @@ end prototypes
 public function boolean uf_terminervalider (long adcidprod, datetime adtmajle);//*-----------------------------------------------------------------
 //*
 //* Fonction		:	Uf_TerminerValider
-//* Auteur			:	N$$HEX1$$b000$$ENDHEX$$6
+//* Auteur			:	N°6
 //* Date				:	19/06/1997 14:05:59
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	:	Envoie tous les Inserts en cas de duplication des garanties.
 //*
 //* Arguments		:	Long		adcIdProd	( Val ) : identifant du produit.
@@ -28,23 +28,25 @@ public function boolean uf_terminervalider (long adcidprod, datetime adtmajle);/
 //*
 //* Retourne		: Boolean	Vrai la validation continue.
 //*
-//*-----------------------------------------------------------------
+//*-----------------------------------------------------------------------*/
+// 10/09/2025	FPI	[FPI_20250910] ajout de la table souplesse
+/*-----------------------------------------------------------------------*/
 
 Boolean	bRet				// Valeur de retour de la fonction.
 
-Long		dcIdRev			// Identifiant de la r$$HEX1$$e900$$ENDHEX$$vision.
-Long		dcIdRevAnc		// Identifiant de la r$$HEX1$$e900$$ENDHEX$$vision N-1.
+Long		dcIdRev			// Identifiant de la révision.
+Long		dcIdRevAnc		// Identifiant de la révision N-1.
 
-String	sCreeLe			// Date de cr$$HEX1$$e900$$ENDHEX$$ation.
-String	sMajLe			// Date de Mise $$HEX2$$e0002000$$ENDHEX$$jour.
-String	sTable			// Nom de la table $$HEX2$$e0002000$$ENDHEX$$tracer.
+String	sCreeLe			// Date de création.
+String	sMajLe			// Date de Mise à jour.
+String	sTable			// Nom de la table à tracer.
 String	sType				// Type d'action effectuer sur la table.
-String	sCle [ 2 ]		// Tableau de l'identifiant de l'enregistrement trac$$HEX1$$e900$$ENDHEX$$.
+String	sCle [ 2 ]		// Tableau de l'identifiant de l'enregistrement tracé.
 String	sCol [ 2 ]		// Tableau des colonnes de la table : nom de ces colonnes.
-String	sVal [ 2 ]		// Tableau des valeurs des colonnes $$HEX2$$e0002000$$ENDHEX$$tracer.
+String	sVal [ 2 ]		// Tableau des valeurs des colonnes à tracer.
 
 Long		lRet				// Valeur de retour du Find.
-Long		lNbrLig			// Nbre de ligne $$HEX2$$e0002000$$ENDHEX$$supprimer ou $$HEX2$$e0002000$$ENDHEX$$inserer.
+Long		lNbrLig			// Nbre de ligne à supprimer ou à inserer.
 
 bRet = True
 
@@ -106,7 +108,7 @@ If bRet	Then
 			If bRet	Then
 
 				/*------------------------------------------------------------------*/
-				/* Duplication des pi$$HEX1$$e800$$ENDHEX$$ces                                           */
+				/* Duplication des pièces                                           */
 				/*------------------------------------------------------------------*/
 	         itrTrans.IM_I01_PIECE ( adcIdProd , &
 			                           dcIdRev   , &
@@ -198,7 +200,7 @@ If bRet	Then
 			If bRet	Then
 
 				/*------------------------------------------------------------------*/
-				/* Duplication des d$$HEX1$$e900$$ENDHEX$$lais                                           */
+				/* Duplication des délais                                           */
 				/*------------------------------------------------------------------*/
 	         itrTrans.IM_I01_DELAI 	(	adcIdProd , &
 													dcIdRev   , &
@@ -291,7 +293,7 @@ If bRet	Then
 			If bRet	Then
 
 				/*------------------------------------------------------------------*/
-				/* Duplication des cartes affili$$HEX1$$e900$$ENDHEX$$es                                 */
+				/* Duplication des cartes affiliées                                 */
 				/*------------------------------------------------------------------*/
 	         itrTrans.IM_I01_AFFILIER (  adcIdProd , &
 													 dcIdRev   , &
@@ -319,8 +321,41 @@ If bRet	Then
 
 			End If
 
+			// [FPI_20250910] 
+			If bRet	Then
+
+				/*------------------------------------------------------------------*/
+				/* Duplication des souplesses                          */
+				/*------------------------------------------------------------------*/
+	         	itrTrans.IM_I01_SOUPLESSE (  adcIdProd , &
+													 dcIdRev   , &
+					                    		 dcIdRevAnc, &
+		               						 adtMajLe  , &
+	                             			 adtMajLe  , &
+	                            			 stGlb.sCodOper )
+
+				If itrTrans.SQLCode < 0 Then
+
+					F_DbErreur ( itrTrans.SQLDBCode, itrTrans.SQLErrText, itrTrans )
+					bRet = False
+
+				ElseIf iTrTrans.SQLCode = 0 Then
+
+					sTable 		= "SOUPLESSE"
+
+					If Not ( uogstrace.uf_Trace ( sType, sTable, sCle, sCol, sVal ) )	Then
+	
+						bRet = False
+
+					End If
+
+				End If
+
+			End If
+			// :[FPI_20250910] 
+			
 			/*------------------------------------------------------------------*/
-			/* On v$$HEX1$$e900$$ENDHEX$$rifie si d'autres revision existe : elle peuvent aussi      */
+			/* On vérifie si d'autres revision existe : elle peuvent aussi      */
 			/* impliquer une duplication.                                       */
 			/*------------------------------------------------------------------*/
 			If bRet And ( lRet < lNbrLig )	Then
@@ -345,10 +380,10 @@ end function
 public function boolean uf_preparervalider (long adcidprod);//*-----------------------------------------------------------------
 //*
 //* Fonction		:	Uf_PreparerValider ()
-//* Auteur			:	N$$HEX1$$b000$$ENDHEX$$6
+//* Auteur			:	N°6
 //* Date				:	19/06/1997 14:05:59
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	:	Supprime les ligne dans les tables d$$HEX1$$e900$$ENDHEX$$pendantes de Revision.
+//* Libellé			: 
+//* Commentaires	:	Supprime les ligne dans les tables dépendantes de Revision.
 //*
 //* Arguments		:	Long		adcIdProd	( Val ) : identifant du produit.
 //*
@@ -358,21 +393,21 @@ public function boolean uf_preparervalider (long adcidprod);//*-----------------
 
 Boolean	bRet				// Valeur de retour de la fonction.
 
-Long		dcIdRev			// Identifiant de la r$$HEX1$$e900$$ENDHEX$$vision.
+Long		dcIdRev			// Identifiant de la révision.
 
-String	sTable			// Nom de la table $$HEX2$$e0002000$$ENDHEX$$tracer.
+String	sTable			// Nom de la table à tracer.
 String	sType				// Type d'action effectuer sur la table.
-String	sCle [ 2 ]		// Tableau de l'identifiant de l'enregistrement trac$$HEX1$$e900$$ENDHEX$$.
+String	sCle [ 2 ]		// Tableau de l'identifiant de l'enregistrement tracé.
 String	sCol [ 2 ]		// Tableau des colonnes de la table : nom de ces colonnes.
-String	sVal [ 2 ]		// Tableau des valeurs des colonnes $$HEX2$$e0002000$$ENDHEX$$tracer.
+String	sVal [ 2 ]		// Tableau des valeurs des colonnes à tracer.
 
 Long		lCpt				// Compteur des lignes.
-Long		lNbrLig			// Nbre de ligne $$HEX2$$e0002000$$ENDHEX$$supprimer ou $$HEX2$$e0002000$$ENDHEX$$inserer.
+Long		lNbrLig			// Nbre de ligne à supprimer ou à inserer.
 
 bRet = True
 
 /*------------------------------------------------------------------*/
-/* Verifie si une r$$HEX1$$e900$$ENDHEX$$vision $$HEX3$$e0002000e900$$ENDHEX$$t$$HEX2$$e9002000$$ENDHEX$$supprim$$HEX1$$e900$$ENDHEX$$e.                         */
+/* Verifie si une révision à été supprimée.                         */
 /* Si oui supprimer les lignes dans les tables :                    */
 /*		ETABLISSEMENT                                                 */
 /*		GARANTIE                                                      */
@@ -392,7 +427,7 @@ If LNbrLig > 0	Then
 		dcIdRev  = idw_1.GetItemNumber ( lCpt, "ID_REV", DELETE!, False )
 
 		/*------------------------------------------------------------------*/
-		/* Suppression des enregistrements li$$HEX1$$e900$$ENDHEX$$s $$HEX2$$e0002000$$ENDHEX$$cette r$$HEX1$$e900$$ENDHEX$$vision et $$HEX2$$e0002000$$ENDHEX$$ce    */
+		/* Suppression des enregistrements liés à cette révision et à ce    */
 		/*	produit.                                                         */
 		/*------------------------------------------------------------------*/
 		itrTrans.PS_SUPREVISION ( adcIdProd, dcIdRev )
@@ -405,8 +440,8 @@ If LNbrLig > 0	Then
 		Else
 
 			/*------------------------------------------------------------------*/
-			/* Trace de la suppression des lignes li$$HEX1$$e900$$ENDHEX$$es $$HEX2$$e0002000$$ENDHEX$$la r$$HEX1$$e900$$ENDHEX$$vision           */
-			/* supprim$$HEX1$$e900$$ENDHEX$$e.                                                       */
+			/* Trace de la suppression des lignes liées à la révision           */
+			/* supprimée.                                                       */
 			/*------------------------------------------------------------------*/
 			sType 		= 'D'
 			sCle[ 1 ] 	= "'" + String ( adcIdProd ) + "'"
@@ -540,7 +575,25 @@ If LNbrLig > 0	Then
 				bRet = False
 
 			End If
+			
+			
+			// [FPI_20250910] ajout de la table souplesse
+			If bRet	Then
 
+				/*------------------------------------------------------------------*/
+				/* Trace suppression des lignes dans SOUPLESSE              */
+				/*------------------------------------------------------------------*/
+				sTable 		= "SOUPLESSE"
+
+				If Not ( uogstrace.uf_Trace ( sType, sTable, sCle, sCol, sVal ) )	Then
+
+					bRet = False
+
+				End If
+
+			End If
+			// :[FPI_20250910]
+			
 		End If
 		
 		If Not ( bRet )	Then Exit
@@ -557,7 +610,7 @@ public function string uf_gs_presencerevision ();//*----------------------------
 //* Fonction		:	Uf_Gs_PresenceRevision
 //* Auteur			:	YP
 //* Date				:	01/09/1997 17:13:46
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$:	Teste s'il existe au moins une r$$HEX1$$e900$$ENDHEX$$vision d$$HEX1$$e900$$ENDHEX$$finie pour le produit.
+//* Libellé			:	Teste s'il existe au moins une révision définie pour le produit.
 //*
 //* Commentaires	: 
 //*
@@ -571,7 +624,7 @@ String		sMess		// Valeur de retour de la fonction
 
 If iDw_1.RowCount () = 0 then
 
-	sMess = "- Il n'y a aucune r$$HEX1$$e900$$ENDHEX$$vision.~r~n"
+	sMess = "- Il n'y a aucune révision.~r~n"
 
 End If
 
@@ -580,10 +633,10 @@ Return ( sMess )
 end function
 
 on u_sp_gs_rev_prod.create
-TriggerEvent( this, "constructor" )
+call super::create
 end on
 
 on u_sp_gs_rev_prod.destroy
-TriggerEvent( this, "destructor" )
+call super::destroy
 end on
 
