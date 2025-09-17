@@ -55,3 +55,82 @@ Return -1
 
 Go
 
+--------------------------------------------------------------------
+-- Procédure            :       IM_I01_SOUPLESSE
+-- Auteur               :       FPI
+-- Date                 :       10/09/2025
+-- Libellé              :		Création d'une nouvelle révision de souplesse - copie toutes les garanties de la rev -1
+-- Commentaires         :       
+-- Références           :
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'IM_I01_SOUPLESSE' AND type = 'P' )
+        DROP procedure sysadm.IM_I01_SOUPLESSE
+GO
+
+CREATE procedure sysadm.IM_I01_SOUPLESSE 
+            @dcIdProd        decimal ( 7, 0 ),  
+            @dcIdRev         decimal ( 7, 0 ),  
+            @dcIdRevAnc      decimal ( 7, 0 ),  
+            @dtCreeLe        DateTime,  
+            @dtMajLe         DateTime,  
+            @sMajPar         Varchar ( 4 )  
+AS  
+  
+ INSERT INTO sysadm.souplesse  
+           ( id_prod,  
+             id_rev,  
+             id_gti,  
+             id_spl, 
+             cree_le,  
+             maj_le,  
+             maj_par )  
+      SELECT id_prod,  
+             @dcIdRev,  
+             id_gti,  
+             id_spl, 
+             @dtCreeLe,  
+             @dtMajLe,  
+             @sMajPar  
+        FROM sysadm.souplesse
+       WHERE id_prod = @dcIdProd   AND  
+             id_rev  = @dcIdRevAnc;
+Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       IM_D01_SOUPLESSE
+-- Auteur               :       FPI
+-- Date                 :       10/09/2025
+-- Libellé              :       Delete sur table SOUPLESSE.
+-- Commentaires         :
+-- Références           :       PS_SUPREVISION 
+--
+-- Arguments            :       @dcIdProd  decimal ( 7, 0 ),
+--                              @dcIdRev   decimal ( 7, 0 )
+--
+-- Retourne             :
+--
+-------------------------------------------------------------------
+
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'IM_D01_SOUPLESSE' AND type = 'P' )
+            DROP procedure sysadm.IM_D01_SOUPLESSE
+GO
+
+CREATE PROC sysadm.IM_D01_SOUPLESSE
+            @dcIdProd  decimal ( 7, 0 ),
+            @dcIdRev   decimal ( 7, 0 )
+AS
+
+ DELETE FROM sysadm.souplesse
+       WHERE id_prod = @dcIdProd AND
+             id_rev  = @dcIdRev
+
+
+GO

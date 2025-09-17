@@ -34,6 +34,8 @@
 -- Retourne             :
 --
 -------------------------------------------------------------------
+-- FPI - 10/09/2025 - ajout de la table souplesse
+-------------------------------------------------------------------
 
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_SUPREVISION' AND type = 'P' )
             DROP procedure sysadm.PS_SUPREVISION
@@ -117,4 +119,11 @@ AS
       RETURN
      END
 
+ /* Suppression des lignes dans la table SOUPLESSE      */
+   EXECUTE sysadm.IM_D01_SOUPLESSE @dcIdProd, @dcIdRev
+
+   IF @@ERROR <> 0
+     BEGIN
+      RETURN
+     END
 GO
