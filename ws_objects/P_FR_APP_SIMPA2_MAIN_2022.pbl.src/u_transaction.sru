@@ -847,6 +847,8 @@ function Int PS_S_CTRLE_PRESTA_HUB ( long dcIdSin, String sIdBenefit, Ref Int iI
 //       JFF   22/07/2025 [MIG165_BOUYGUES]
 function Int PS_MIG1_S_EMAILING_KSL_COURPROD_EXISTE ( long adcIdProd, String asTypMail, ref String asCodMaq, ref String asLibCour ) RPCFUNC ALIAS FOR "sysadm.PS_MIG1_S_EMAILING_KSL_COURPROD_EXISTE"
 
+//FPI 10/09/2025 [FPI_20250910]
+subroutine IM_I01_SOUPLESSE(long dcIdProd,long dcIdRev,long dcIdRevAnc,datetime dtCreeLe,datetime dtMajLe,string sMajPar) RPCFUNC ALIAS FOR "sysadm.IM_I01_SOUPLESSE"
 
 end prototypes
 type variables
