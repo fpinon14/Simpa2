@@ -911,23 +911,7 @@ BEGIN
 		   @sLibNature = Upper (Left ( PEGASE_PRO.sysadm.FN_CODE_NUM ( s.id_nat_sin, '+NS' ), 1 )) + Lower ( Right ( PEGASE_PRO.sysadm.FN_CODE_NUM ( s.id_nat_sin, '+NS' ), len (PEGASE_PRO.sysadm.FN_CODE_NUM ( s.id_nat_sin, '+NS' ))-1 )),
 		   @sDateDeSurvenanceSinistre = convert ( VarChar ( 10 ), s.dte_surv, 23 ),
 		   @sHeureDeSurvenanceSinistre =  nullif (Convert ( VarChar (5), s.dte_surv, 108 ), '00:00'),
-		   @sNoAdhesion  = 
-					Case 
-						When SIMPA2_PRO.sysadm.FN_CLE_NUMERIQUE ( 'PI085') > 0 Then 
-							(
-							Select Top 1 RIGHT('00000' + IsNull ( CONVERT(varchar(5), Convert ( integer, dp.val_calc) ), ''),5)   -- [PI085] passage de 3 à 5
-							From PEGASE_PRO.sysadm.det_pro dp
-							Where dp.id_calc = 6
-							And   dp.id_prod = p.id_prod
-							) + '-' + convert ( varchar ( 5), s.id_ets ) + '-' + lTrim ( rTrim ( s.id_adh )) + '-' + Convert ( varchar (2), s.id_sdos )
-						Else 
-							(
-							Select Top 1 RIGHT('000' + IsNull ( CONVERT(varchar(5), Convert ( integer, dp.val_calc) ), ''),3) -- [PI085] On laisse ainsi mail de P. Fauvel le 25/05/2020 à 09h16 archivé dans le projet.
-							From PEGASE_PRO.sysadm.det_pro dp
-							Where dp.id_calc = 6
-							And   dp.id_prod = p.id_prod
-							) + '-' + convert ( varchar ( 5), s.id_ets ) + '-' + lTrim ( rTrim ( s.id_adh )) + '-' + Convert ( varchar (2), s.id_sdos )
-					End,
+		   @sNoAdhesion  = s.id_adh,
 		   @sAssureur = PEGASE_PRO.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'P' ), 
 		   @sNoPolice = PEGASE_PRO.sysadm.FN_LIB_POLICE_V02 ( @dcIdSin, 'P' ), 
   		   @sDateConnaissanceSinistre = Convert ( VarChar ( 10 ), s.dte_surv, 23 ), -- [MIG1_COUR_EMAILING] Nathalie dit de mettre la date de surv
@@ -954,23 +938,7 @@ BEGIN
 			   @sLibNature = Upper (Left ( PEGASE_PRO.sysadm.FN_CODE_NUM ( s.id_nat_sin, '+NS' ), 1 )) + Lower ( Right ( PEGASE_PRO.sysadm.FN_CODE_NUM ( s.id_nat_sin, '+NS' ), len (PEGASE_PRO.sysadm.FN_CODE_NUM ( s.id_nat_sin, '+NS' ))-1 )),
 			   @sDateDeSurvenanceSinistre = convert ( VarChar ( 10 ), s.dte_surv, 23 ),
 			   @sHeureDeSurvenanceSinistre =  nullif (Convert ( VarChar (5), s.dte_surv, 108 ), '00:00'),
-			   @sNoAdhesion  = 
-						Case 
-							When SIMPA2_PRO.sysadm.FN_CLE_NUMERIQUE ( 'PI085') > 0 Then 
-								(
-								Select Top 1 RIGHT('00000' + IsNull ( CONVERT(varchar(5), Convert ( integer, dp.val_calc) ), ''),5)   -- [PI085] passage de 3 à 5
-								From PEGASE_PRO.sysadm.det_pro dp
-								Where dp.id_calc = 6
-								And   dp.id_prod = p.id_prod
-								) + '-' + convert ( varchar ( 5), s.id_ets ) + '-' + lTrim ( rTrim ( s.id_adh )) + '-' + Convert ( varchar (2), s.id_sdos )
-							Else 
-								(
-								Select Top 1 RIGHT('000' + IsNull ( CONVERT(varchar(5), Convert ( integer, dp.val_calc) ), ''),3) -- [PI085] On laisse ainsi mail de P. Fauvel le 25/05/2020 à 09h16 archivé dans le projet.
-								From PEGASE_PRO.sysadm.det_pro dp
-								Where dp.id_calc = 6
-								And   dp.id_prod = p.id_prod
-								) + '-' + convert ( varchar ( 5), s.id_ets ) + '-' + lTrim ( rTrim ( s.id_adh )) + '-' + Convert ( varchar (2), s.id_sdos )
-						End,
+			   @sNoAdhesion  = s.id_adh,
 			   @sAssureur = PEGASE_PRO.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'W' ), 
 			   @sNoPolice = PEGASE_PRO.sysadm.FN_LIB_POLICE_V02 ( @dcIdSin, 'W' ), 
   			   @sDateConnaissanceSinistre = Convert ( VarChar ( 10 ), s.dte_surv, 23 ), -- [MIG1_COUR_EMAILING] Nathalie dit de mettre la date de surv
@@ -1128,23 +1096,7 @@ BEGIN
 		   @sLibNature = Upper (Left ( PEGASE_TRT.sysadm.FN_CODE_NUM ( s.id_nat_sin, '+NS' ), 1 )) + Lower ( Right ( PEGASE_TRT.sysadm.FN_CODE_NUM ( s.id_nat_sin, '+NS' ), len (PEGASE_TRT.sysadm.FN_CODE_NUM ( s.id_nat_sin, '+NS' ))-1 )),
 		   @sDateDeSurvenanceSinistre = convert ( VarChar ( 10 ), s.dte_surv, 23 ),
 		   @sHeureDeSurvenanceSinistre =  nullif (Convert ( VarChar (5), s.dte_surv, 108 ), '00:00'),
-		   @sNoAdhesion  = 
-					Case 
-						When SIMPA2_TRT.sysadm.FN_CLE_NUMERIQUE ( 'PI085') > 0 Then 
-							(
-							Select Top 1 RIGHT('00000' + IsNull ( CONVERT(varchar(5), Convert ( integer, dp.val_calc) ), ''),5)   -- [PI085] passage de 3 à 5
-							From PEGASE_TRT.sysadm.det_pro dp
-							Where dp.id_calc = 6
-							And   dp.id_prod = s.id_prod
-							) + '-' + convert ( varchar ( 5), s.id_ets ) + '-' + lTrim ( rTrim ( s.id_adh )) + '-' + Convert ( varchar (2), s.id_sdos )
-						Else 
-							(
-							Select Top 1 RIGHT('000' + IsNull ( CONVERT(varchar(5), Convert ( integer, dp.val_calc) ), ''),3) -- [PI085] On laisse ainsi mail de P. Fauvel le 25/05/2020 à 09h16 archivé dans le projet.
-							From PEGASE_TRT.sysadm.det_pro dp
-							Where dp.id_calc = 6
-							And   dp.id_prod = s.id_prod
-							) + '-' + convert ( varchar ( 5), s.id_ets ) + '-' + lTrim ( rTrim ( s.id_adh )) + '-' + Convert ( varchar (2), s.id_sdos )
-					End,
+		   @sNoAdhesion  = s.id_adh,
 		   @sAssureur = PEGASE_TRT.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'P' ), 
 		   @sNoPolice = PEGASE_TRT.sysadm.FN_LIB_POLICE_V02 ( @dcIdSin, 'P' ), 
   		   @sDateConnaissanceSinistre = Convert ( VarChar ( 10 ), s.dte_surv, 23 ), -- [MIG1_COUR_EMAILING] Nathalie dit de mettre la date de surv
@@ -1171,23 +1123,7 @@ BEGIN
 			   @sLibNature = Upper (Left ( PEGASE_TRT.sysadm.FN_CODE_NUM ( s.id_nat_sin, '+NS' ), 1 )) + Lower ( Right ( PEGASE_TRT.sysadm.FN_CODE_NUM ( s.id_nat_sin, '+NS' ), len (PEGASE_TRT.sysadm.FN_CODE_NUM ( s.id_nat_sin, '+NS' ))-1 )),
 			   @sDateDeSurvenanceSinistre = convert ( VarChar ( 10 ), s.dte_surv, 23 ),
 			   @sHeureDeSurvenanceSinistre =  nullif (Convert ( VarChar (5), s.dte_surv, 108 ), '00:00'),
-			   @sNoAdhesion  = 
-						Case 
-							When SIMPA2_TRT.sysadm.FN_CLE_NUMERIQUE ( 'PI085') > 0 Then 
-								(
-								Select Top 1 RIGHT('00000' + IsNull ( CONVERT(varchar(5), Convert ( integer, dp.val_calc) ), ''),5)   -- [PI085] passage de 3 à 5
-								From PEGASE_TRT.sysadm.det_pro dp
-								Where dp.id_calc = 6
-								And   dp.id_prod = s.id_prod
-								) + '-' + convert ( varchar ( 5), s.id_ets ) + '-' + lTrim ( rTrim ( s.id_adh )) + '-' + Convert ( varchar (2), s.id_sdos )
-							Else 
-								(
-								Select Top 1 RIGHT('000' + IsNull ( CONVERT(varchar(5), Convert ( integer, dp.val_calc) ), ''),3) -- [PI085] On laisse ainsi mail de P. Fauvel le 25/05/2020 à 09h16 archivé dans le projet.
-								From PEGASE_TRT.sysadm.det_pro dp
-								Where dp.id_calc = 6
-								And   dp.id_prod = s.id_prod
-								) + '-' + convert ( varchar ( 5), s.id_ets ) + '-' + lTrim ( rTrim ( s.id_adh )) + '-' + Convert ( varchar (2), s.id_sdos )
-						End,
+			   @sNoAdhesion  = s.id_adh,
 			   @sAssureur = PEGASE_TRT.sysadm.FN_LIB_CIE_V02 ( @dcIdSin, 'W' ), 
 			   @sNoPolice = PEGASE_TRT.sysadm.FN_LIB_POLICE_V02 ( @dcIdSin, 'W' ), 
   			   @sDateConnaissanceSinistre = Convert ( VarChar ( 10 ), s.dte_surv, 23 ), -- [MIG1_COUR_EMAILING] Nathalie dit de mettre la date de surv
