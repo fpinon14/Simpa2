@@ -6,6 +6,24 @@
 --
 -- Commentaires         :       PS afférants à l'automatisation des déclaration SHERPA/SIMPA2 en liant avec un extranet
 --
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__COCHAGE_DES_PIECES
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__CONTROLE_ELIGIBILITE_DOSSIER
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__CONTROLE_INTEGRITE_DOSSIER
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__DECLENCHEMENT_AUTOMATISATION
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__DECLENCHEMENT_REFUS
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_601_ADHESION_RESILIEE
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_602_ADHESION_NON_SOUSCRITE_A_DATE_SINISTRE
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_603_PRIMES_NON_PERCUES
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_611_NATURE_DE_SINISTRE_NON_COUVERT
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_612_DETAIL_DE_SINISTRE_NON_COUVERT
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_613_TERRITORIALITE_NON_COUVERTE
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_641_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_SURVENANCE
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_642_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_ADHESION
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIEURE_DTE_ADHESION_DP131
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_REVISION
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__STOCKAGE_INFOS_PRESTATION
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__TRACE_STOCKAGE_INFOS_PRESTATION
 -------------------------------------------------------------------
 --
 -------------------------------------------------------------------
@@ -855,6 +873,22 @@ If @iRet = -1 Return @iRet
 Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__CONTROLE_INTEGRITE_DOSSIER @adcIdSin
 If @iRet = -1 Return @iRet
 
+-- Refus
+Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__DECLENCHEMENT_REFUS @adcIdSin
+If @iRet = -1 Return @iRet
+
+-- Piece
+Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__COCHAGE_DES_PIECES @adcIdSin
+If @iRet = -1 Return @iRet
+
+-- Presta
+Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__CREATION_DE_LA_PRESTATION @adcIdSin
+If @iRet = -1 Return @iRet
+
+
+-- Validation
+
+
 Go
 
 
@@ -963,12 +997,46 @@ If Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin )
 		Return -1
 	End		
 
+-- Absence de date de fin de garantie
+If Exists ( Select Top 1 1 
+			From sysadm.w_sin ws,
+				 sysadm.produit p 
+			Where ws.id_sin = @adcIdSin
+			And p.id_prod = ws.id_prod
+			And ws.dte_fin_gti is null
+			And p.cod_adh Not In ( 3, 6 )
+		  )
+	Begin
+		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Date de fin de gtie non renseignée', 'La date de fin de garantie est obligatoire pour la méthode d''adhésion paramétrée sur le produit. Automatisation impossible.'
+		Return -1
+	End		
+
 -- absence de nature de sinistre (id_natsin)
 If Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And id_natsin is not null And id_natsin <> 0 )
 	Begin
 		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Nature de sinistre non renseignée', 'La nature de sinistre n''a pas été renseignée par l''extranet. Automatisation impossible.'
 		Return -1
 	End	
+
+-- Contrôle nature de siniste existe dans le param
+If Not Exists ( 
+		Select	Top 1 1
+		From	sysadm.code_condition c,
+				sysadm.w_sin ws
+		Where	ws.id_sin = @adcIdSin
+		And		c.id_prod = ws.id_prod
+		And		c.id_typ_code = '+NS'
+		And		c.id_code = ws.id_natsin
+	)
+	Begin
+		Select @sVal = CONVERT ( Varchar ( 20 ), id_natsin ) From sysadm.w_sin Where id_sin = @adcIdSin 
+		If @sVal is null Set @sVal = ''
+		Set @sVal = 'La nature de sinistre (' + @sVal + ') transmise par l''extranet n''existe pas dans la paramètrage de ce contrat. Automatisation impossible.'
+		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Nature de sinistre non valide', @sVal 
+		Update sysadm.w_sin Set id_natsin = null Where id_sin = @adcIdSin 
+		Return -1
+	End 
+
 
 -- absence de territorialité de sinistre (id_territ)
 If Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And id_territ is not null And id_territ <> 0 )
@@ -977,12 +1045,51 @@ If Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And id
 		Return -1
 	End	
 
+-- Contrôle territorialité existe dans le param
+If Not Exists ( 
+		Select	Top 1 1
+		From	sysadm.code_condition c,
+				sysadm.w_sin ws
+		Where	ws.id_sin = @adcIdSin
+		And		c.id_prod = ws.id_prod
+		And		c.id_typ_code = '+TR'
+		And		c.id_code = ws.id_territ
+	)
+	Begin
+		Select @sVal = CONVERT ( Varchar ( 20 ), id_territ ) From sysadm.w_sin Where id_sin = @adcIdSin 
+		If @sVal is null Set @sVal = ''
+		Set @sVal = 'La territorialité de sinistre (' + @sVal + ') transmise par l''extranet n''existe pas dans la paramètrage de ce contrat. Automatisation impossible.'
+		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Territ. de sinistre non valide', @sVal 
+		Update sysadm.w_sin Set id_territ = null Where id_sin = @adcIdSin 
+		Return -1
+	End 
+
 -- absence de détail de sinistre (id_detsin)
 If Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And id_detsin is not null And id_detsin <> 0 )
 	Begin
 		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Détail de sinistre non renseigné', 'Le détail de sinistre n''a pas été renseigné par l''extranet. Automatisation impossible.'
 		Return -1
 	End	
+
+-- Contrôle territorialité existe dans le param
+If Not Exists ( 
+		Select	Top 1 1
+		From	sysadm.code_condition c,
+				sysadm.w_sin ws
+		Where	ws.id_sin = @adcIdSin
+		And		c.id_prod = ws.id_prod
+		And		c.id_typ_code = '+DT'
+		And		c.id_code = ws.id_detsin
+	)
+	Begin
+		Select @sVal = CONVERT ( Varchar ( 20 ), id_detsin ) From sysadm.w_sin Where id_sin = @adcIdSin 
+		If @sVal is null Set @sVal = ''
+		Set @sVal = 'Le détail de sinistre (' + @sVal + ') transmis par l''extranet n''existe pas dans la paramètrage de ce contrat. Automatisation impossible.'
+		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Detail de sinistre non valide', @sVal
+		Update sysadm.w_sin Set id_detsin = null Where id_sin = @adcIdSin 
+		Return -1
+	End 
+
 
 -- absence donnée dans dte_surv
 If Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And dte_surv is not null )
@@ -1013,7 +1120,10 @@ If Not Exists ( Select Top 1 1
 				And	  ets.id_rev = ws.id_rev
 				And   ets.id_ets = ws.id_ets  )
 	Begin
-		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'ETS non paramétré ', 'L''établissement adhésion transmis pas l''extranet n''existe pour ce produit. Automatisation impossible.'
+		Select @sVal = CONVERT ( Varchar ( 20 ), id_ets ) From sysadm.w_sin Where id_sin = @adcIdSin 
+		If @sVal is null Set @sVal = ''
+		Set @sVal = 'L''établissement adhésion (' + @sVal + ') transmis pas l''extranet n''existe pour ce produit. Automatisation impossible.'
+		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'ETS non paramétré ', @sVal
 		Return -1
 	End	
 
@@ -1133,6 +1243,20 @@ Begin
 		End	
 End
 
+-- MONACO
+If Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And upper ( adr_ville ) like '%MONACO%' )
+	Begin
+		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Ville MONACO (w_sin)', 'La ville de l''assuré est MONACO, pas d''automatisation pour cette ville. Automatisation impossible.'
+		Return -1
+	End	
+
+-- DOM TOM
+If Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And left ( adr_cp, 3 ) in ( '971', '972', '973', '974', '975', '976', '984', '986', '987', '988' ))
+	Begin
+		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'DOM-TOM Trait. Manuel.(w_sin)', 'Les départements DOM-TOM sont à traiter en manuel, pas d''automatisation pour ce cas. Automatisation impossible.'
+		Return -1
+	End	
+
 -- Absence donnée dans num_port ( 10 chiffre 06, 07)
 If Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And num_port is not null And ltrim ( num_port ) <> '' And Left ( num_port, 2 ) in ( '06', '07') )
 	Begin
@@ -1172,6 +1296,51 @@ If Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And mo
 		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Modèle non renseignée', 'Le modèle de l''appareil sinistré de l''assuré n''a pas été renseigné par l''extranet. Automatisation impossible.'
 		Return -1
 	End	
+
+-- Présence typ_app existant dans -dp/25
+If Not Exists ( 
+		Select Top 1 1 
+		From	sysadm.w_div_sin wds,
+				sysadm.w_sin ws,
+				sysadm.det_pro dp
+		Where  ws.id_sin = @adcIdSin 
+		And	   wds.id_sin = wds.id_sin
+		And	   wds.nom_zone = 'type_app'
+		And    dp.id_prod = ws.id_prod
+		And    dp.id_code_dp = 25
+		And    dp.id_code_car = wds.val_car
+		)
+	Begin
+		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Typ Mat Sin absent/non param', 'Le type de matériel sinistré transmis par l''extranet est absent ou non paramétré pour ce produit. Automatisation impossible.'
+		Return -1
+	End	
+
+-- Présence alt_decla_web cochée
+If Not Exists ( Select Top 1 1 From sysadm.w_div_sin Where id_sin = @adcIdSin And nom_zone = 'alt_decla_web' And val_car is not null And val_car = 'O' )
+	Begin
+		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'zone alt_decla_web non renseignée', 'La zone technique alt_decla_web n''a pas été renseignée par l''extranet. Automatisation impossible.'
+		Return -1
+	End
+
+-- Contrôle particuluer qu'on pourra enlever par la suite mais avec de gros modif pour accueillir une valeur publique non ifr pour le détail de garantie
+-- Si l'appareil n'est pas lié à IFR, on rejète pour l'instant
+-- binome marque/modèle doit appartenir à IFR
+If Not Exists ( 
+	Select Top 1 1
+	From sysadm.w_sin ws,
+		 sysadm.w_div_sin wds,
+		 sysadm.det_pro dp
+	Where ws.id_sin = @adcIdSin
+	And wds.id_sin = ws.id_sin
+	And wds.nom_zone = 'type_app'
+	And dp.id_prod = ws.id_prod
+	And dp.id_code_dp = 28
+	And dp.id_code_car = 'IFR' + trim ( dp.val_car )
+)
+	Begin
+		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Appareil non lié à IFR', 'Pour l''instant, seul les déclarations de sinistre dont l''appareil est à IFR peuvent se faire. Automatisation impossible.'
+		Return -1
+	End
 
 -- binome marque/modèle doit appartenir à IFR
 If Exists ( 
@@ -1227,6 +1396,107 @@ If Not Exists ( Select Top 1 1 From sysadm.w_gar_sin Where id_sin = @adcIdSin )
 		Return -1
 	End	
 
+-- Absence de garantie
+If ( Select COUNT ( * ) From sysadm.w_gar_sin Where id_sin = @adcIdSin ) > 1
+	Begin
+		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Plus d''une de garantie', 'L''extranet a créé plus d''une garantie. Automatisation impossible.'
+		Return -1
+	End	
+
+-- La garantie doit être paramétré sur le contrat
+If Not Exists ( 
+		Select	Top 1 1
+		From	sysadm.code_garantie c,
+				sysadm.w_sin ws,
+				sysadm.w_gar_sin wg
+		Where	ws.id_sin = @adcIdSin
+		And		wg.id_sin = ws.id_sin
+		And		c.id_prod = ws.id_prod
+		And		c.id_gti = wg.id_gti
+	)
+	Begin
+		Select Top 1 @sVal = CONVERT ( Varchar ( 20 ), id_gti ) From sysadm.w_gar_sin Where id_sin = @adcIdSin 
+		If @sVal is null Set @sVal = ''
+		Set @sVal = 'Le garantie (' + @sVal + ') transmis par l''extranet n''existe pas dans la paramètrage de ce contrat. Automatisation impossible.'
+		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Detail de sinistre non valide', @sVal
+
+		Delete sysadm.w_div_det 
+		From   sysadm.w_sin s,
+				sysadm.w_div_det w
+		where s.id_sin = @adcIdSin 
+		And   w.id_sin = s.id_sin
+		And   Not Exists ( 
+			Select Top 1 1 
+			From   sysadm.code_garantie cg
+			Where  cg.id_prod = s.id_prod
+			And    cg.id_gti  = w.id_gti
+		)
+
+		Delete sysadm.w_refus 
+		From   sysadm.w_sin s,
+				sysadm.w_refus w
+		where s.id_sin = @adcIdSin 
+		And   w.id_sin = s.id_sin
+		And   Not Exists ( 
+			Select Top 1 1 
+			From   sysadm.code_garantie cg
+			Where  cg.id_prod = s.id_prod
+			And    cg.id_gti  = w.id_gti
+		)
+
+
+		Delete sysadm.w_piece 
+		From   sysadm.w_sin s,
+				sysadm.w_piece w
+		where s.id_sin = @adcIdSin 
+		And   w.id_sin = s.id_sin
+		And   Not Exists ( 
+			Select Top 1 1 
+			From   sysadm.code_garantie cg
+			Where  cg.id_prod = s.id_prod
+			And    cg.id_gti  = w.id_gti
+		)
+
+		Delete sysadm.w_detail 
+		From   sysadm.w_sin s,
+				sysadm.w_detail w
+		where s.id_sin = @adcIdSin 
+		And   w.id_sin = s.id_sin
+		And   Not Exists ( 
+			Select Top 1 1 
+			From   sysadm.code_garantie cg
+			Where  cg.id_prod = s.id_prod
+			And    cg.id_gti  = w.id_gti
+		)
+
+		Delete sysadm.w_detail 
+		From   sysadm.w_sin s,
+				sysadm.w_detail w
+		where s.id_sin = @adcIdSin 
+		And   w.id_sin = s.id_sin
+		And   Not Exists ( 
+			Select Top 1 1 
+			From   sysadm.code_garantie cg
+			Where  cg.id_prod = s.id_prod
+			And    cg.id_gti  = w.id_gti
+		)
+
+
+		Delete sysadm.w_gar_sin 
+		From   sysadm.w_sin s,
+				sysadm.w_gar_sin w
+		where s.id_sin = @adcIdSin 
+		And   w.id_sin = s.id_sin
+		And   Not Exists ( 
+			Select Top 1 1 
+			From   sysadm.code_garantie cg
+			Where  cg.id_prod = s.id_prod
+			And    cg.id_gti  = w.id_gti
+		)
+
+		Return -1
+	End 
+
 -----------------------------------
 -- Contrôle interlocuteur Assuré --
 -----------------------------------
@@ -1280,6 +1550,20 @@ And    cod_inter = 'A'
 If Not Exists ( Select Top 1 1 From sysadm.w_inter Where id_sin = @adcIdSin And cod_inter = 'A' And adr_ville is not null And ltrim ( adr_ville ) <> '' )
 	Begin
 		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Ville non renseignée (w_interA)', 'La ville de l''assuré n''a pas été renseignée par l''extranet. Automatisation impossible.'
+		Return -1
+	End	
+
+-- MONACO
+If Exists ( Select Top 1 1 From sysadm.w_inter Where id_sin = @adcIdSin And cod_inter = 'A' And upper ( adr_ville ) like '%MONACO%' )
+	Begin
+		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Ville MONACO (w_interA)', 'La ville de l''interlocuteur assuré est MONACO, pas d''automatisation pour cette ville. Automatisation impossible.'
+		Return -1
+	End	
+
+-- DOM TOM
+If Exists ( Select Top 1 1 From sysadm.w_inter Where id_sin = @adcIdSin And cod_inter = 'A' And left ( adr_cp, 3 ) in ( '971', '972', '973', '974', '975', '976', '984', '986', '987', '988' ))
+	Begin
+		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'DOM-TOM Trait. Manuel.(w_interA)', 'Les départements DOM-TOM sont à traiter en manuel, pas d''automatisation pour ce cas. Automatisation impossible.'
 		Return -1
 	End	
 
@@ -1392,32 +1676,862 @@ Set nom =   UPPER ( sysadm.FN_EPURE_CHAINE_V02 (
 
 Where id_sin = @adcIdSin And cod_inter = 'A'
 
--- Présence typ_app existant dans -dp/25
-If Not Exists ( 
-		Select Top 1 1 
-		From	sysadm.w_div_sin wds,
-				sysadm.w_sin ws,
-				sysadm.det_pro dp
-		Where  ws.id_sin = @adcIdSin 
-		And	   wds.id_sin = wds.id_sin
-		And	   wds.nom_zone = 'type_app'
-		And    dp.id_prod = ws.id_prod
-		And    dp.id_code_dp = 25
-		And    dp.id_code_car = wds.val_car
-		)
-	Begin
-		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Typ Mat Sin absent/non param', 'Le type de matériel sinistré transmis par l''extranet est absent ou non paramétré pour ce produit. Automatisation impossible.'
-		Return -1
-	End	
 
--- Présence alt_decla_web cochée
-If Not Exists ( Select Top 1 1 From sysadm.w_div_sin Where id_sin = @adcIdSin And nom_zone = 'alt_decla_web' And val_car is not null And val_car = 'O' )
+Return 1
+
+Go
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__DECLENCHEMENT_REFUS
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__DECLENCHEMENT_REFUS' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__DECLENCHEMENT_REFUS
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__DECLENCHEMENT_REFUS
+	@adcIdSin Decimal ( 10 )
+AS
+
+Declare @iRet Integer
+
+-- Contrôle de la Révision/Avenant
+Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_REVISION @adcIdSin
+If @iRet = -1 Return @iRet
+
+-- Refus 601 : ADHESION RESILIEE
+Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_601_ADHESION_RESILIEE @adcIdSin
+If @iRet = -1 Return @iRet
+
+-- Refus 602 : ADHESION NON SOUSCRITE A DATE_SINISTRE
+Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_602_ADHESION_NON_SOUSCRITE_A_DATE_SINISTRE @adcIdSin
+If @iRet = -1 Return @iRet
+
+-- Refus 603 : PRIMES NON PERCUES
+Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_603_PRIMES_NON_PERCUES @adcIdSin
+If @iRet = -1 Return @iRet
+
+-- Refus 611 : NATURE DE SINISTRE NON COUVERT
+Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_611_NATURE_DE_SINISTRE_NON_COUVERT @adcIdSin
+If @iRet = -1 Return @iRet
+
+-- Refus 612 : DETAIL DE SINISTRE NON COUVERT
+Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_612_DETAIL_DE_SINISTRE_NON_COUVERT @adcIdSin
+If @iRet = -1 Return @iRet
+
+-- Refus 613 : TERRIT. NON COUVERTE
+Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_613_TERRITORIALITE_NON_COUVERTE @adcIdSin
+If @iRet = -1 Return @iRet
+
+-- Refus 641 : DTE ACHAT/OUVLIG > DTE SURVENANCE
+Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_641_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_SURVENANCE @adcIdSin
+If @iRet = -1 Return @iRet
+
+-- Refus 642 : DTE ACHAT/OUVLIG > DTE ADHESION
+Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_642_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_ADHESION @adcIdSin
+If @iRet = -1 Return @iRet
+
+-- Refus 643 : DTE ACHAT/OUVLIG < DTE ADHESION (sur option dp/131)
+Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIEURE_DTE_ADHESION_DP131 @adcIdSin
+If @iRet = -1 Return @iRet
+
+Go
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIEURE_DTE_ADHESION_DP131
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIEURE_DTE_ADHESION_DP131' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIEURE_DTE_ADHESION_DP131
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIEURE_DTE_ADHESION_DP131
+	@adcIdSin   Decimal (10)
+AS
+
+If Exists (   
+  Select Top 1 1  
+  From sysadm.w_sin ws,  
+    sysadm.produit p,  
+    sysadm.det_pro dp  
+  Where ws.id_sin = @adcIdSin  
+  And  p.id_prod = ws.id_prod  
+  And  p.cod_tel > 0  
+  And  dp.id_prod = ws.id_prod  
+  And  dp.id_code_dp = 131  
+  And  ( ws.dte_adh > ws.dte_ach_port Or ws.dte_adh > ws.dte_ouvlig_port )  
+ )  
+ Begin  
+	  Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Refus machine 643', 'Le refus machine 643 indiquant une date d''achat/Ouv. Ligne, antérieure à la date d''adhésion s''est déclenché. Automatisation impossible.'  
+	  Return -1      
+ End   
+
+Go
+
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_642_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_ADHESION
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__REFUS_642_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_ADHESION' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_642_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_ADHESION
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_642_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_ADHESION
+	@adcIdSin   Decimal (10)
+AS
+
+Declare @sValCar VarChar ( 10 )  
+Declare @iDp20 integer  
+  
+Set @iDp20 = 0  
+  
+Select @sValCar = dp.val_car, @iDp20 = 1  
+From sysadm.det_pro dp,  
+  sysadm.w_sin ws  
+Where ws.id_sin = @adcIdSin  
+And   dp.id_prod = ws.id_prod  
+And   dp.id_code_dp = 20  
+  
+If Exists (   
+  Select Top 1 1  
+  From sysadm.w_sin ws,  
+    sysadm.produit p  
+  Where ws.id_sin = @adcIdSin  
+  And  p.id_prod = ws.id_prod  
+  And  p.cod_tel > 0  
+  And  ( @sValCar = '641' Or @iDp20 = 0 )  
+  And  ( ws.dte_adh < ws.dte_ach_port Or ws.dte_adh < ws.dte_ouvlig_port )  
+ )  
+ Begin  
+	Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Refus machine 642', 'Le refus machine 642 indiquant une date d''achat/Ouv. Ligne, postérieure à la date d''adhésion s''est déclenché. Automatisation impossible.'  
+	Return -1      
+ End   
+
+Go
+
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_641_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_SURVENANCE
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__REFUS_641_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_SURVENANCE' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_641_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_SURVENANCE
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_641_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_SURVENANCE
+	@adcIdSin   Decimal (10)
+AS
+  
+Declare @sValCar VarChar ( 10 )  
+Declare @iDp20 integer  
+  
+Set @iDp20 = 0  
+  
+Select @sValCar = dp.val_car, @iDp20 = 1  
+From sysadm.det_pro dp,  
+  sysadm.w_sin ws  
+Where ws.id_sin = @adcIdSin  
+And   dp.id_prod = ws.id_prod  
+And   dp.id_code_dp = 20  
+  
+If Exists (   
+  Select Top 1 1  
+  From sysadm.w_sin ws,  
+    sysadm.produit p  
+  Where ws.id_sin = @adcIdSin  
+  And  p.id_prod = ws.id_prod  
+  And  p.cod_tel > 0  
+  And  ( @sValCar = '642' Or @iDp20 = 0 )  
+  And  ( ws.dte_surv < ws.dte_ach_port Or ws.dte_surv < ws.dte_ouvlig_port )  
+ )  
+ Begin  
+	  Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Refus machine 641', 'Le refus machine 641 indiquant une date d''achat/Ouv. Ligne, postérieure à la date de survenance s''est déclenché. Automatisation impossible.'  
+	  Return -1      
+ End   
+  
+
+Go
+
+
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_613_TERRITORIALITE_NON_COUVERTE
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__REFUS_613_TERRITORIALITE_NON_COUVERTE' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_613_TERRITORIALITE_NON_COUVERTE
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_613_TERRITORIALITE_NON_COUVERTE
+	@adcIdSin   Decimal (10)
+AS
+  
+If Not Exists (   
+  Select Top 1 1  
+  From sysadm.condition c,  
+    sysadm.w_sin ws,  
+    sysadm.w_gar_sin wg  
+  Where ws.id_sin = @adcIdSin  
+  And  wg.id_sin = ws.id_sin  
+  And  c.id_prod = ws.id_prod  
+  And  c.id_gti = wg.id_gti  
+  And  c.id_typ_code = '+TR'  
+  And  c.id_code = ws.id_territ  
+  And  c.alt_reg = 'O'  
+ )  
+ Begin  
+	  Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Refus machine 613', 'Refus machine 613', 'Le refus machine 613 pour territorialité de sinistre non couverte s''est déclenché. Automatisation impossible.'  
+	  Return -1      
+ End   
+  
+
+Go
+
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_612_DETAIL_DE_SINISTRE_NON_COUVERT
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__REFUS_612_DETAIL_DE_SINISTRE_NON_COUVERT' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_612_DETAIL_DE_SINISTRE_NON_COUVERT
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_612_DETAIL_DE_SINISTRE_NON_COUVERT
+	@adcIdSin   Decimal (10)
+AS
+
+If Not Exists (   
+  Select Top 1 1  
+  From sysadm.condition c,  
+    sysadm.w_sin ws,  
+    sysadm.w_gar_sin wg  
+  Where ws.id_sin = @adcIdSin  
+  And  wg.id_sin = ws.id_sin  
+  And  c.id_prod = ws.id_prod  
+  And  c.id_gti = wg.id_gti  
+  And  c.id_typ_code = '+DT'  
+  And  c.id_code = ws.id_detsin  
+  And  c.alt_reg = 'O'  
+ )  
+ Begin  
+  Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Refus machine 612', 'Le refus machine 612 pour détail de sinistre non couverte s''est déclenché. Automatisation impossible.'  
+  Return -1      
+ End   
+
+Go
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_611_NATURE_DE_SINISTRE_NON_COUVERT
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__REFUS_611_NATURE_DE_SINISTRE_NON_COUVERT' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_611_NATURE_DE_SINISTRE_NON_COUVERT
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_611_NATURE_DE_SINISTRE_NON_COUVERT
+	@adcIdSin   Decimal (10)
+AS
+
+If Not Exists (   
+  Select Top 1 1  
+  From sysadm.condition c,  
+    sysadm.w_sin ws,  
+    sysadm.w_gar_sin wg  
+  Where ws.id_sin = @adcIdSin  
+  And  wg.id_sin = ws.id_sin  
+  And  c.id_prod = ws.id_prod  
+  And  c.id_gti = wg.id_gti  
+  And  c.id_typ_code = '+NS'  
+  And  c.id_code = ws.id_natsin  
+  And  c.alt_reg = 'O'  
+ )  
+ Begin  
+	  Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Refus machine 611', 'Le refus machine 611 pour nature de sinistre non couverte s''est déclenché. Automatisation impossible.'  
+	  Return -1      
+ End  
+
+GO
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_603_PRIMES_NON_PERCUES
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__REFUS_603_PRIMES_NON_PERCUES' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_603_PRIMES_NON_PERCUES
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_603_PRIMES_NON_PERCUES
+	@adcIdSin   Decimal (10)
+AS
+Declare @dtDteFinGti DateTime  
+Declare @dtDteResil DateTime  
+Declare @dtDteSurv DateTime  
+  
+Select @dtDteFinGti = dte_fin_gti From sysadm.w_sin Where id_sin = @adcIdSin  
+Select @dtDteResil = dte_resil From sysadm.w_sin Where id_sin = @adcIdSin  
+Select @dtDteSurv = dte_surv From sysadm.w_sin Where id_sin = @adcIdSin  
+  
+If @dtDteFinGti is not null And   
+ @dtDteSurv is not null And  
+ @dtDteResil is null  
+ Begin  
+  If @dtDteFinGti < @dtDteSurv   
+   Begin  
+    Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Refus machine 603', 'Le refus machine 603 pour prime d''adhésion non perçues s''est déclenché. Automatisation impossible.'  
+    Return -1      
+   End   
+ End  
+
+GO
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_602_ADH_NON_SOUSCRITE_A_DATE_SINISTRE
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__REFUS_602_ADHESION_NON_SOUSCRITE_A_DATE_SINISTRE' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_602_ADHESION_NON_SOUSCRITE_A_DATE_SINISTRE
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_602_ADHESION_NON_SOUSCRITE_A_DATE_SINISTRE
+	@adcIdSin   Decimal (10)
+AS
+
+Declare @dtDteAdh DateTime  
+Declare @dtDteSurv DateTime  
+  
+If Not Exists (   
+ Select Top 1 1   
+ From sysadm.produit p ,  
+      sysadm.w_sin s   
+ where s.id_sin = @adcIdSin  
+ And   p.id_prod = s.id_prod  
+ And   p.cod_adh in ( 3 )  
+   )  
+ Begin   
+  Select @dtDteAdh = dte_adh From sysadm.w_sin Where id_sin = @adcIdSin  
+  Select @dtDteSurv = dte_surv From sysadm.w_sin Where id_sin = @adcIdSin  
+  
+  
+  If @dtDteAdh > @dtDteSurv   
+   Begin  
+    Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Refus machine 602', 'Le refus machine 602 pour adhésion non souscrite à date sinistre s''est déclenché impossible.'  
+    Return -1      
+   End  
+ End  
+
+Go
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_601_ADHESION_RESILIEE
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__REFUS_601_ADHESION_RESILIEE' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_601_ADHESION_RESILIEE
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_601_ADHESION_RESILIEE
+	@adcIdSin   Decimal (10)
+AS
+
+Declare @dtDteFinGti DateTime  
+Declare @dtDteResil DateTime  
+Declare @dtDteSurv DateTime  
+  
+Select @dtDteFinGti = dte_fin_gti From sysadm.w_sin Where id_sin = @adcIdSin  
+Select @dtDteResil = dte_resil From sysadm.w_sin Where id_sin = @adcIdSin  
+Select @dtDteSurv = dte_surv From sysadm.w_sin Where id_sin = @adcIdSin  
+  
+If @dtDteFinGti is not null And   
+ @dtDteResil is not null And  
+ @dtDteSurv is not null   
+ Begin  
+  If @dtDteFinGti < @dtDteSurv  
+   Begin  
+    Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Refus machine 601', 'Le refus machine 601 pour adhésion résiliée s''est déclenché. Automatisation impossible.'  
+
+    Return -1      
+   End   
+ End  
+
+Go
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_REVISION
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__REFUS_REVISION' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_REVISION
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_REVISION
+	@adcIdSin   Decimal (10)
+AS
+
+Declare @dtDteAdh DateTime
+Declare @dtDteSurv DateTime
+Declare @dcIdProd Decimal ( 7 )
+Declare @sRev     VarChar ( 10 )
+
+Select @dtDteSurv = dte_surv,
+	   @dtDteAdh = dte_adh,
+	   @dcIdProd = id_prod
+From   sysadm.w_sin Where id_sin = @adcIdSin
+
+Set @sRev = Space ( 10 )
+
+Exec sysadm.PS_X_CALC_REVISION @dcIdProd, @dtDteSurv, @dtDteAdh, @sRev OUTPUT
+
+If	@sRev is null Or @sRev = '-1'
 	Begin
-		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'zone alt_decla_web non renseignée', 'La zone technique alt_decla_web n''a pas été renseignée par l''extranet. Automatisation impossible.'
-		Return -1
+		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Avenant/Révision non déterminé', 'Le système n''a pas pu déterminer d''avenant (de révision) sur ce dossier. Automatisation impossible.'
+		Return -1				
 	End
+Else
+	Begin
+		Update sysadm.w_sin Set id_rev = Convert ( Decimal ( 7 ), @sRev ) Where id_sin = @adcIdSin
+	End
+
+Go
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__COCHAGE_DES_PIECES
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__COCHAGE_DES_PIECES' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__COCHAGE_DES_PIECES
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__COCHAGE_DES_PIECES
+	@adcIdSin Decimal ( 10 )
+AS
+
+Declare @sValCarDp406 VarChar ( 510 )
+Declare @sVariante  VarChar ( 50 )
+Declare @dcIdGti Decimal ( 7 )
+Declare @iRet Integer 
+
+Select	@sValCarDp406 = IsNull ( TRIM ( val_car ), '') + IsNull ( TRIM ( val_car2), '')
+From	sysadm.w_sin ws,
+		sysadm.det_pro dp
+Where	ws.id_sin = @adcIdSin
+And		dp.id_prod = ws.id_prod
+And		dp.id_code_dp = 406
+
+Set @sVariante = sysadm.FN_CLE_VAL ( 'VARIANTE', @sValCarDp406, ';')
+
+If @sVariante = 'BOUYGUES' 
+	Begin 
+		-- Pièces 6 réclamée pour le VOL : DECL. DE VOL AUPRES AUTORITES
+		Select Top 1 @dcIdGti = wg.id_gti From sysadm.w_sin ws, sysadm.w_gar_sin wg Where ws.id_sin = @adcIdSin and wg.id_sin = ws.id_sin
+		If @dcIdGti = 10 
+			Begin
+				Exec @iRet = sysadm.Atlas_Sinistre_Cocher_Pieces_Unitaire_V102 @adcIdSin, @dcIdGti , null, 6
+				If @iRet <= 0 
+					Begin
+						Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Demande de pièce impossible', 'Le système n''a pas pu cocher la pièce 6 (DECL. DE VOL AUPRES AUTORITES) sur ce dossier. Automatisation impossible.'
+						Return -1
+					End 
+				Else
+					Begin
+						-- Et Sion on renvoit en gestion quand même
+						Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Dossier en demande de pièce(s)', 'Le système a coché la pièce 6 (DECL. DE VOL AUPRES AUTORITES) sur ce dossier. Automatisation impossible.'
+						Return -1
+					End 
+			End 
+	End 
 
 
 Return 1
 
 Go
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__CREATION_DE_LA_PRESTATION
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__CREATION_DE_LA_PRESTATION' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__CREATION_DE_LA_PRESTATION
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__CREATION_DE_LA_PRESTATION
+	@adcIdSin Decimal ( 10 )
+AS
+
+DECLARE
+    @dcIdSin decimal(10,0),
+    @iIdSeq int,
+    @dcIdGti decimal(7,0),
+    @dcIdDetail decimal(7,0),
+    @sIdFour char(3),
+    @sIdTypArt char(3),
+    @sIdMarqArt char(35),
+    @sIdModlArt char(35),
+    @dcMtTtcCmde decimal(11,2),
+    @sAdrNom char(35),
+    @sAdrPrenom char(35),
+    @sAdrLivr1 char(35),
+    @sAdrLivr2 char(35),
+    @sAdrLivrCpl char(35),
+    @sAdrCp char(5),
+    @sAdrVille char(35),
+    @sAdrTel1 char(20),
+    @sAdrTel2 char(20),
+    @sAdrTel3 char(20),
+    @sAdrMail char(50),
+    @dtDteRdvCli datetime,
+    @sHrdvCliMin char(4),
+    @sHrdvCliMax char(4),
+    @sIdSerieAnc varchar(60),
+    @sProbleme char(255),
+    @sIdCmdFrn char(20),
+    @sIdSerieNouv varchar(60),
+    @sIdBonTransp char(35),
+    @dtDteRcpFrn datetime,
+    @dtDteEnvCli datetime,
+    @sCodEtat char(3),
+    @sCommentFrn char(255),
+    @iCptValide int,
+    @sNomGest char(40),
+    @dtCreeLe datetime,
+    @dtMajLe datetime,
+    @sMajPar char(4),
+    @sIdZone char(1),
+    @iIdBsp int,
+    @dtDteRetPret datetime,
+    @sAdrCodCiv char(1),
+    @sIdRefFour char(20),
+    @iIdOrianMarque int,
+    @iIdOrianModele int,
+    @dtDteElvMobile datetime,
+    @iStatusGc int,
+    @dtDteEmisDevis datetime,
+    @dcMtDevis decimal(11,2),
+    @sAltDevAcp char(1),
+    @dtDteDevAcp datetime,
+    @sAdrfcCodCiv char(1),
+    @sAdrfcNom char(35),
+    @sAdrfcPrenom char(35),
+    @sAdrfcLivr1 char(35),
+    @sAdrfcLivr2 char(35),
+    @sAdrfcLivrCpl char(35),
+    @sAdrfcCp char(5),
+    @sAdrfcVille char(35),
+    @dtDteRetLogis datetime,
+    @dtDteRetPretMin datetime,
+    @dtDteRetPretMax datetime,
+    @iIdAnn int,
+    @dtDteEnvBteFrn datetime,
+    @dtDteRcpBteCli datetime,
+    @dtDteDepBteCli datetime,
+    @dtDteEnvSt datetime,
+    @dtDteRcpMobCli datetime,
+    @iInfoSpbFrn int,
+    @sIdMarqArtIfr varchar(35),
+    @sIdModlArtIfr varchar(35),
+    @sInfoSpbFrnCplt char(800),
+    @sInfoFrnSpbCplt char(800)
+
+Declare @iRet Integer
+Declare @dcMtValAchat Decimal ( 11, 2 )
+Declare @idSeqStkPresta Integer
+Declare @sMarqAppSin VarChar ( 35 )
+Declare @sModlAppSin VarChar ( 35 )
+Declare @iRefIFR Integer
+Declare @dcPrixPublic Decimal ( 11, 2 )
+
+Select Top 1 @dcIdGti = wg.id_gti From sysadm.w_sin ws, sysadm.w_gar_sin wg Where ws.id_sin = @adcIdSin and wg.id_sin = ws.id_sin
+
+If Not Exists ( 
+		Select Top 1 1 
+		From sysadm.stk_data_hub_automate stk
+		Where stk.id_sin = @adcIdSin
+		And   stk.id_gti = @dcIdGti
+		And   stk.id_depot_s2tohub is null
+	)
+	Begin
+		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Aucune prestation disponible', 'L''extranet n''a donné aucun lien vers une prestation du HUB PRESTATAIRE. Automatisation impossible.'
+		Return -1
+	End 
+
+-- Obtention de toutes les données stockées concernant les presta HUB
+Select  @idSeqStkPresta = stk.id_seq,
+		@dcMtValAchat   = IsNull ( stk.mt_val_achat, 0 )
+From sysadm.stk_data_hub_automate stk
+Where stk.id_sin = @adcIdSin
+And   stk.id_gti = @dcIdGti
+And   stk.id_depot_s2tohub is null
+
+-- Couper CREATION DETAIL / DECLENCHEMENT PLAFOND / CREATION PRESTA
+
+-- Obtention données sinistre
+Select	@sMarqAppSin = ws.marq_port,
+		@sModlAppSin = ws.modl_port,
+		@iRefIFR = Case 
+						When Exists ( 
+							Select Top 1 1
+							From sysadm.w_sin ws,
+								 sysadm.w_div_sin wds,
+								 sysadm.det_pro dp
+							Where ws.id_sin = @adcIdSin
+							And wds.id_sin = ws.id_sin
+							And wds.nom_zone = 'type_app'
+							And dp.id_prod = ws.id_prod
+							And dp.id_code_dp = 28
+							And dp.id_code_car = 'IFR' + trim ( dp.val_car )
+						) Then 1
+						Else 0
+					End 
+
+From sysadm.w_sin ws
+Where id_sin = @adcIdSin
+
+-- Obtention d'un id_seq
+Set @iIdSeq = IsNull ( ( Select MAX ( id_seq ) From sysadm.w_commande where id_sin = @adcIdSin ), 0 ) + 1
+
+-- Création Obtention d'un Id_Detail d'un id_seq
+Exec @iRet = sysadm.Atlas_Gar_Sin_Creer_Detail_V102 @adcIdSin, @dcIdGti, 1491, null, 'de votre appareil', 0, @dcIdDetail OutPut
+If @iRet < 0 Or Not ( @dcIdDetail >= 0 )
+	Begin 
+		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Impossible de créér détail de gtie', 'Impossible de créer le détail de garantie 1491. Automatisation impossible.'
+		Return -1
+	End 
+
+-- Obtention valeur IFR si App lié à IFR
+if @iRefIFR > 0 
+	Begin 
+		Exec sysadm.PS_S_SAGA2_INTERRO_IFR_V100 @sMarqAppSin, @sModlAppSin, @dcPrixPublic OutPut
+		If @dcPrixPublic <= 0 
+			Begin
+				Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Impossible de déterm. Val. publique', 'Impossible de détemriner la valeur publique de l''appareil (ref. IFR). Automatisation impossible.'
+				Return -1
+			End 
+	End 
+Else 
+	Begin
+		Begin
+			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Appareil non lié à IFR', 'Pour l''instant, seul les déclarations de sinistre dont l''appareil est à IFR peuvent se faire. Automatisation impossible.'
+			Return -1
+		End
+	End 
+
+-- Mise à jour du détail avec les dernières valeurs
+Update sysadm.w_detail
+Set		mt_val_achat= @dcMtValAchat,
+		mt_val_publique = @dcPrixPublic
+Where	id_sin = @adcIdSin
+and		id_gti = @dcIdGti
+And		id_detail = @dcIdDetail
+
+----------------------------------------------------------
+-- Pris en charge du détail, déclenchement des plafonds --
+----------------------------------------------------------
+-- Voir PS_I_PM234_7_PLAFOND_PEC
+
+-------------------------------------------
+-- Création de la prestation dans SIMPA2 -- 
+-------------------------------------------
+INSERT INTO sysadm.w_commande (
+	id_sin,
+	id_seq,
+	id_gti,
+	id_detail,
+	id_four,
+	id_typ_art,
+	id_marq_art,
+	id_modl_art,
+	mt_ttc_cmde,
+	adr_nom,
+	adr_prenom,
+	adr_livr1,
+	adr_livr2,
+	adr_livr_cpl,
+	adr_cp,
+	adr_ville,
+	adr_tel1,
+	adr_tel2,
+	adr_tel3,
+	adr_mail,
+	dte_rdv_cli,
+	hrdv_cli_min,
+	hrdv_cli_max,
+	id_serie_anc,
+	probleme,
+	id_cmd_frn,
+	id_serie_nouv,
+	id_bon_transp,
+	dte_rcp_frn,
+	dte_env_cli,
+	cod_etat,
+	comment_frn,
+	cpt_valide,
+	nom_gest,
+	cree_le,
+	maj_le,
+	maj_par,
+	id_zone,
+	id_bsp,
+	dte_ret_pret,
+	adr_cod_civ,
+	id_ref_four,
+	id_orian_marque,
+	id_orian_modele,
+	dte_elv_mobile,
+	status_gc,
+	dte_emis_devis,
+	mt_devis,
+	alt_dev_acp,
+	dte_dev_acp,
+	adrfc_cod_civ,
+	adrfc_nom,
+	adrfc_prenom,
+	adrfc_livr1,
+	adrfc_livr2,
+	adrfc_livr_cpl,
+	adrfc_cp,
+	adrfc_ville,
+	dte_ret_logis,
+	dte_ret_pret_min,
+	dte_ret_pret_max,
+	id_ann,
+	dte_env_bte_frn,
+	dte_rcp_bte_cli,
+	dte_dep_bte_cli,
+	dte_env_st,
+	dte_rcp_mob_cli,
+	info_spb_frn,
+	id_marq_art_ifr,
+	id_modl_art_ifr,
+	info_spb_frn_cplt,
+	info_frn_spb_cplt
+)
+VALUES (
+	@adcIdSin,
+	@iIdSeq,
+	@dcIdGti,
+	@dcIdDetail,
+	@sIdFour,
+	@sIdTypArt,
+	@sIdMarqArt,
+	@sIdModlArt,
+	@dcMtTtcCmde,
+	@sAdrNom,
+	@sAdrPrenom,
+	@sAdrLivr1,
+	@sAdrLivr2,
+	@sAdrLivrCpl,
+	@sAdrCp,
+	@sAdrVille,
+	@sAdrTel1,
+	@sAdrTel2,
+	@sAdrTel3,
+	@sAdrMail,
+	@dtDteRdvCli,
+	@sHrdvCliMin,
+	@sHrdvCliMax,
+	@sIdSerieAnc,
+	@sProbleme,
+	@sIdCmdFrn,
+	@sIdSerieNouv,
+	@sIdBonTransp,
+	@dtDteRcpFrn,
+	@dtDteEnvCli,
+	@sCodEtat,
+	@sCommentFrn,
+	@iCptValide,
+	@sNomGest,
+	@dtCreeLe,
+	@dtMajLe,
+	@sMajPar,
+	@sIdZone,
+	@iIdBsp,
+	@dtDteRetPret,
+	@sAdrCodCiv,
+	@sIdRefFour,
+	@iIdOrianMarque,
+	@iIdOrianModele,
+	@dtDteElvMobile,
+	@iStatusGc,
+	@dtDteEmisDevis,
+	@dcMtDevis,
+	@sAltDevAcp,
+	@dtDteDevAcp,
+	@sAdrfcCodCiv,
+	@sAdrfcNom,
+	@sAdrfcPrenom,
+	@sAdrfcLivr1,
+	@sAdrfcLivr2,
+	@sAdrfcLivrCpl,
+	@sAdrfcCp,
+	@sAdrfcVille,
+	@dtDteRetLogis,
+	@dtDteRetPretMin,
+	@dtDteRetPretMax,
+	@iIdAnn,
+	@dtDteEnvBteFrn,
+	@dtDteRcpBteCli,
+	@dtDteDepBteCli,
+	@dtDteEnvSt,
+	@dtDteRcpMobCli,
+	@iInfoSpbFrn,
+	@sIdMarqArtIfr,
+	@sIdModlArtIfr,
+	@sInfoSpbFrnCplt,
+	@sInfoFrnSpbCplt
+)
+
+
+Go
+
