@@ -866,6 +866,7 @@ GO
 --
 -------------------------------------------------------------------
 -- FPI - 06/10/2014 V01 - VDoc18467 - ajout du site
+-- [20250922154839620][JFF][DDAH1256]
 -------------------------------------------------------------------
 If exists (select * from sysobjects where id = object_id('sysadm.DW_S02_W_QUEUE_WKF_V01') and sysstat & 0xf = 4)
 	drop procedure sysadm.DW_S02_W_QUEUE_WKF_V01
@@ -875,8 +876,6 @@ CREATE PROC sysadm.DW_S02_W_QUEUE_WKF_V01
 
 AS
 
-If master.dbo.SPB_FN_TYPEBASE( db_id() ) = 'PRO'
-Begin		
 	Select 
 		w.id_sin Ref_Sin,
 		w.id_corb Corbeille,
@@ -889,6 +888,12 @@ Begin
 		End Telephonie_ou_pas,
 		w.id_prod Code_Produit,
 		p.lib_long Produit,
+		IsNull ( ( Select stuff ( 
+				( SELECT Distinct ', ' + CAST(trim ( sysadm.FN_CODE_NUM ( wg.id_gti, '-GA' )) AS VARCHAR(250)) 
+					FROM sysadm.w_gar_sin wg
+					Where wg.id_sin = w.id_sin
+					For XML PATH ('') )
+			, 1, 2, '' )), '' ) 'les_garanties',
 		w.nom Nom_Assure,
 		sysadm.FN_CODE_CAR( w.cod_etat, '-CE') as Etat_Travail,
 		CONVERT(char(11), w.trv_cree_le, 103) + CONVERT(char(8), w.trv_cree_le, 108) Travail_Cree_Le,
@@ -904,55 +909,11 @@ Begin
 		sysadm.FN_CODE_CAR(w.cod_i_prov, '-IN') Venant_De ,
 		CONVERT(char(11), w.dte_recu, 103) + CONVERT(char(8), w.dte_recu, 108) Date_Reception,	
 		sysadm.FN_CODE_CAR(w.cod_typ_recu, '-CT') Type_ouverture ,
-		CONVERT(char(11), w.dte_cour_cli, 103) + CONVERT(char(8), w.dte_cour_cli, 108) Date_courrier_client	,
-		IsNull(CodeOFF.lib_code,'Inconnu') as Site
+		CONVERT(char(11), w.dte_cour_cli, 103) + CONVERT(char(8), w.dte_cour_cli, 108) Date_courrier_client	
 
-	from 	sysadm.w_queue w
-		inner join sysadm.produit p  on p.id_prod = w.id_prod
-		left outer join SESAME_PRO.sysadm.equipe_oper e on 	e.id_oper=w.trv_maj_par
-		left outer join SESAME_PRO.sysadm.code CodeOFF on CodeOFF.id_code=e.id_office
-			and CodeOFF.id_typ_code='-OF'
+	from sysadm.w_queue w
+		 inner join sysadm.produit p  on p.id_prod = w.id_prod
 	order by w.id_corb asc, w.id_prod asc , Etat_Travail asc, w.trv_cree_le asc
-End
-Else
-Begin
-	Select 
-		w.id_sin Ref_Sin,
-		w.id_corb Corbeille,
-		sysadm.FN_CODE_NUM(Convert ( decimal (7,0), w.id_corb ), '-CO') Lib_Corbeille ,
-		p.id_dept Departement, 
-		p.id_depts Sous_Departement, 
-		Case 
-		 When p.cod_tel = 0 Then 'Produit NON Telephonie'
-		 Else 'Produit de Telephonie'
-		End Telephonie_ou_pas,
-		w.id_prod Code_Produit,
-		p.lib_long Produit,
-		w.nom Nom_Assure,
-		sysadm.FN_CODE_CAR( w.cod_etat, '-CE') as Etat_Travail,
-		CONVERT(char(11), w.trv_cree_le, 103) + CONVERT(char(8), w.trv_cree_le, 108) Travail_Cree_Le,
-		CONVERT(char(11), w.trv_maj_le, 103) + CONVERT(char(8),	w.trv_maj_le, 108) Travail_Maj_Le,
-		w.trv_maj_par Travail_Maj_Par,
-		CONVERT(char(11), w.trv_route_le, 103) + CONVERT(char(8), w.trv_route_le, 108) Travail_Route_Le,
-		w.trv_route_par Travail_Route_Par,
-		CONVERT(char(11), w.trv_edite_le, 103) + CONVERT(char(8), w.trv_edite_le, 108) Dossier_Edite_Le,	
-		w.trv_edite_par Dossier_Edite_Par,
-		CONVERT(char(11), w.dos_maj_le, 103) + CONVERT(char(8), w.dos_maj_le, 108) Dossier_Maj_Le,	
-		w.dos_maj_par Dossier_Maj_Par,
-		sysadm.FN_CODE_CAR(w.cod_recu,'-CR') Recu_par ,
-		sysadm.FN_CODE_CAR(w.cod_i_prov, '-IN') Venant_De ,
-		CONVERT(char(11), w.dte_recu, 103) + CONVERT(char(8), w.dte_recu, 108) Date_Reception,	
-		sysadm.FN_CODE_CAR(w.cod_typ_recu, '-CT') Type_ouverture ,
-		CONVERT(char(11), w.dte_cour_cli, 103) + CONVERT(char(8), w.dte_cour_cli, 108) Date_courrier_client	,
-		IsNull(CodeOFF.lib_code,'Inconnu') as Site
-
-	from 	sysadm.w_queue w
-		inner join sysadm.produit p  on p.id_prod = w.id_prod
-		left outer join SESAME_SIM.sysadm.equipe_oper e on 	e.id_oper=w.trv_maj_par
-		left outer join SESAME_SIM.sysadm.code CodeOFF on CodeOFF.id_code=e.id_office
-			and CodeOFF.id_typ_code='-OF'
-	order by w.id_corb asc, w.id_prod asc , Etat_Travail asc, w.trv_cree_le asc
-End
 
 Go
 
