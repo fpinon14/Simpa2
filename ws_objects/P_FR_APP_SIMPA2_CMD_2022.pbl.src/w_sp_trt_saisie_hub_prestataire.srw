@@ -771,6 +771,7 @@ public function boolean wf_valider_point_service ();//*-------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //        JFF   31/03/2025   [MIG82_JOURN_EVT]
+//        JFF   22/09/2025   [20250922112955727][JFF][HUB1309] suite retour Lisette, on force à OUI
 //*-----------------------------------------------------------------
 
 String sIdFour, sIdPointService, sIdModeLogis, sIdHubPresta, sMesErr, sRdvDiagVideo, sChaineSeria
@@ -793,6 +794,10 @@ sIdModeLogis = Dw_1.GetItemString ( iRowSelect, "idModeLogis" )
 sIdHubPresta = Dw_1.GetItemString ( iRowSelect, "idHubPresta" ) 
 sChaineSeria = Dw_1.GetItemString ( iRowSelect, "chaineseria" ) 
 sRdvDiagVideo   = F_CLE_VAL ( "RDV_DIAG_VIDEO", sChaineSeria, ";" ) // [MIG82_JOURN_EVT]
+
+// [20250922112955727][JFF][HUB1309] suite retour Lisette, on force à OUI
+sRdvDiagVideo = "OUI"
+
 
 IF IsNull ( sIdFour ) Or sIdFour = "" Then
 	bRet = False
