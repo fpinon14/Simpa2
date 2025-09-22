@@ -35710,7 +35710,8 @@ For lCpt = 1 To lTotLig
 	End If
 	*/
 	
-	// [20250829140328870]	
+	/*
+	// [20250829140328870][20250922095401957][JFF]
 	idwFicFourn.SetFilter ( "FOURNISSEUR = 'XXX'" )
 	idwFicFourn.Filter ( )	
 	idwFicFourn.RowsDiscard ( 1, idwFicFourn.RowCount (), primary! )
@@ -35718,6 +35719,7 @@ For lCpt = 1 To lTotLig
 	idwFicFourn.Filter ( )	
 	idwFicFourn.SetSort ( "id_depot_hub A" ) // [20250909154251167][JFF][BUG]
 	idwFicFourn.Sort () // [20250909154251167][JFF][BUG]
+	*/
 	
 	// Maj du rejet côté Hub
 	sVal = lnvPFCString.of_getkeyvalue (sInfoFrnSpbCpltLu, "ID_DEPOT_HUB", ";")	
@@ -35738,6 +35740,16 @@ For lCpt = 1 To lTotLig
 		" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Problème de mise à R/O sur le HUB lors du contrôle (id_depot_hub = " + String (sVal) + "." )
 	End If 
 Next
+
+// [20250922095401957][JFF] déporté ici en dehors dela boucle tel que c'est fait à présent
+idwFicFourn.SetFilter ( "FOURNISSEUR = 'XXX'" )
+idwFicFourn.Filter ( )	
+idwFicFourn.RowsDiscard ( 1, idwFicFourn.RowCount (), primary! )
+idwFicFourn.SetFilter ( "" )
+idwFicFourn.Filter ( )	
+idwFicFourn.SetSort ( "id_depot_hub A" ) // [20250909154251167][JFF][BUG]
+idwFicFourn.Sort () // [20250909154251167][JFF][BUG]
+
 
 If iRet < 0 Then This.uf_Trace ( "ECR", "ERREUR : Le fichier fournisseur n'a pas été chargé.")
 
