@@ -586,6 +586,7 @@ private subroutine uf_preparermodifier (ref s_pass astpass);//*-----------------
 //       JFF   05/08/2024  [MCO602_PNEU]
 //       JFF   19/12/2024 [MIG1_COUR_EMAILING]
 //       JFF   12/02/2025 [HUB875]
+//       JFF   22/09/2025 [20250922143729383][JFF][PMO268_MIG56]
 //*-----------------------------------------------------------------
 
 String sCol[], sValCar, sValCar2, sIdAdh, sSIREN, sVal, sVal2, sPctRisque, sAltPart 
@@ -593,7 +594,7 @@ String sIdEntrepot, sChaineSin, sRetSql, sValMail, sChaineModeleCP, sIdGti, sIdD
 Long lIdProd, lIdRev, lIdEts, lDELTAProd, lDELTAEts, lVal, lCodTel, lIdCarte, lFUSIONProd, lFUSIONIdCarte, lCpt
 Long lIdOrianMarq, lIdOrianModl, lTotInter, lDeb, lFin, lTotDP, lCptDP, dcIdInter, dcIdDoc
 Long lRow, lRow2, lPresenceParamPM02, lRowDS, lCptInter, lIdSin, lIdProdAdh
-Long lCptDetPro, lCptDT288, lTotDT288, lRet, lIdArch, lIdSeq
+Long lCptDetPro, lCptDT288, lTotDT288, lRet, lIdArch, lIdSeq, lIdOrianBoutique
 Boolean bRet, bActiv, bVal, bScriptTrouve, bRet2
 DataWindowChild	dwChild, dwChild1
 Date dDteFinGti, dDteFinGtiPrec, sDteNull, dDteAdh, dDteAchPort, dDteOuvLig, dDteDecl // #21 - Ajout dDteOuvLig
@@ -2382,6 +2383,20 @@ If F_CLE_A_TRUE ( "HUB875" ) Then
 		iPbControler.Enabled = False
 	End IF 
 End If
+
+// [20250922143729383][JFF][PMO268_MIG56]
+If F_CLE_A_TRUE ( "PMO268_MIG56" ) Then
+	lVal = idw_WSin.GetItemNumber ( 1, "ID_ORIAN_BOUTIQUE" )
+	If IsNull ( lVal ) Then
+		dcIdSin = idw_wSin.GetItemNumber ( 1, "ID_SIN" )
+		SQLCA.PS_SI_MAJ_ID_BOUTIQUE_EN_FONCTION_COD_BOUTIQUE_ADH_DIV_PRO ( dcIdSin, "GET_ID_BOUTIQUE", lIdOrianBoutique )
+		
+		If Not IsNull ( lIdOrianBoutique ) and lIdOrianBoutique > 0 Then
+			idw_wsin.SetItem ( 1, "ID_ORIAN_BOUTIQUE", lIdOrianBoutique )		
+		End If 
+	End If 
+End IF 
+
 
 // === A LAISSER A LA FIN ===== CODER AU DESSUS =====
 // [PI087_PM473_2]
@@ -36036,7 +36051,7 @@ If lDeb > 0 Then
 End If 
 
 // [PMO268_MIG56]
-F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 395 )
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 407 )
 If lDeb > 0 Then
 	sLibProd="Mobil’Zen 4"
 End If 
@@ -41159,7 +41174,7 @@ If lDeb > 0 Then
 End If
 
 // [PMO268_MIG56]
-F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 395 )
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 407 )
 If lDeb > 0 Then
 	sLibProd="Mobil’Zen 4"
 End If 

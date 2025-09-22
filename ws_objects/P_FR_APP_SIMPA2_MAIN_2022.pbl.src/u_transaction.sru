@@ -850,6 +850,9 @@ function Int PS_MIG1_S_EMAILING_KSL_COURPROD_EXISTE ( long adcIdProd, String asT
 //FPI 10/09/2025 [FPI_20250910]
 subroutine IM_I01_SOUPLESSE(long dcIdProd,long dcIdRev,long dcIdRevAnc,datetime dtCreeLe,datetime dtMajLe,string sMajPar) RPCFUNC ALIAS FOR "sysadm.IM_I01_SOUPLESSE"
 
+//       JFF   22/07/2025 [20250922143729383][JFF][PMO268_MIG56]
+function Int PS_SI_MAJ_ID_BOUTIQUE_EN_FONCTION_COD_BOUTIQUE_ADH_DIV_PRO ( long adcIdSin, String asCasTrt, ref Long alIdOrianBoutique ) RPCFUNC ALIAS FOR "sysadm.PS_SI_MAJ_ID_BOUTIQUE_EN_FONCTION_COD_BOUTIQUE_ADH_DIV_PRO"
+
 end prototypes
 type variables
 Private:
