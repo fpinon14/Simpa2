@@ -3917,7 +3917,7 @@ private function boolean uf_rf_611 ();//*---------------------------------------
 //* [20250915131212003][JFF][MIG165_BOUYGUES]
 //*-----------------------------------------------------------------
 
-Long lLig, lTotCondition, lIdNatSin
+Long lLig, lTotCondition, lIdNatSin, lDeb, lFin
 
 String sRech
 
@@ -3950,16 +3950,19 @@ If	idw_wSin.GetItemNumber ( 1, "ID_REV" ) <> -1	Then
 		// [20250915131212003][JFF][MIG165_BOUYGUES]
 		// [MIG165_BOUYGUES]
 		If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
-			// Pour Bouyguesn en du 611 on peut déclencher selon le cas, 2 autres refus.
-			If bRet Then
-				Choose Case lIdNatSin 
-					Case 11 
-						bRet = Uf_RF_EcrireRefus ( 1713 )							
-						
-					Case 28
-						bRet = Uf_RF_EcrireRefus ( 1132 )							
-				End Choose 
-			End If 			
+			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_wSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 405 )
+			If lDeb > 0 Then 
+				// Pour Bouygues en du 611 on peut déclencher selon le cas, 2 autres refus.
+				If bRet Then
+					Choose Case lIdNatSin 
+						Case 11 
+							bRet = Uf_RF_EcrireRefus ( 1713 )							
+							
+						Case 28
+							bRet = Uf_RF_EcrireRefus ( 1132 )							
+					End Choose 
+				End If 			
+			End If 
 		End If 		
 	End If
 End If
