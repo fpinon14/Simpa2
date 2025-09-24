@@ -666,6 +666,8 @@ If Exists ( Select Top 1 1 From sysadm.sinistre ws Where ws.id_sin = @adcIdSin  
 								End,
 					maj_le  = Getdate(),
 					maj_par = @asMajPar
+
+				Where id_sin = @adcIdSin And nom_zone = @asNomZone
 			End 
 		Else
 			Begin	 

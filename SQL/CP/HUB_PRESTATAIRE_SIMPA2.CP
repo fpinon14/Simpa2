@@ -81,6 +81,7 @@ Go
 -- [20240910134438210]   JFF  10/09/2024 Ajout COULEUR, DUALSIM, CAPACITE sur demande Boulenouar
 -- [HUB1505]			 JFF  17/05/2025
 -- [HUB1544]			 JFF  19/05/2025
+-- [MIG165_BOUYGUES]     JFF  22/07/2025  
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_S2_OBTENTION_DONNEES_PRESTA_SIMPA2_POUR_PREPARATION_CREATION_HUB_PRESTATAIRE' AND type = 'P' )
         DROP procedure sysadm.PS_HP276_S_S2_OBTENTION_DONNEES_PRESTA_SIMPA2_POUR_PREPARATION_CREATION_HUB_PRESTATAIRE
@@ -315,7 +316,7 @@ Select 	@dtDeposeLe		= GETDATE(),
 			  And   dd.id_gti = c.id_gti
 			  And   dd.id_detail = c.id_detail 
 			  And   dd.nom_zone = 'mt_pec' ),
-		@dtDateAchat =
+		@dtDateAchat = -- [MIG165_BOUYGUES] je ramène bien une DateTime et pas une chaine
 			Case 
 				When ( 	Select 	count (*) 
 					From 	sysadm.det_pro dp  
@@ -323,15 +324,12 @@ Select 	@dtDeposeLe		= GETDATE(),
 		       			And 	dp.id_code_dp = 42 
 		       			and 	dp.id_code_car = 'A' 
 		       			and 	dp.id_code_num = c.id_gti ) > 0 Then
-		       				IsNull ( Convert ( VarChar ( 10 ) , 
-								(select d.dte_det 
+								IsNull ( ( select d.dte_det  -- [MIG165_BOUYGUES] 
 								from sysadm.detail d 
 								where d.id_sin = c.id_sin 
 								and d.id_gti = c.id_gti 
-								and d.id_detail = c.id_detail ) 
-								, 103),
-							 '' )
-				Else IsNull ( Convert ( VarChar ( 10 ) , @dtDateAchat , 103), '' )
+								and d.id_detail = c.id_detail ) ,  @dtDateAchat ) -- [MIG165_BOUYGUES] 
+				Else @dtDateAchat -- [MIG165_BOUYGUES] 
 			End,
 		@sInfo_spb_frn_cplt = rtrim ( lTrim ( c.info_spb_frn_cplt ))
 
@@ -499,6 +497,7 @@ Go
 -- [20240910134438210]   JFF  10/09/2024 Ajout COULEUR, DUALSIM, CAPACITE sur demande Boulenouar
 -- [HUB1505]			 JFF  17/05/2025   
 -- [HUB1544]			 JFF  19/05/2025
+-- [MIG165_BOUYGUES]     JFF  22/07/2025   
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_S_S2_OBTENTION_DONNEES_PRESTA_SIMPA2_POUR_PREPARATION_CREATION_HUB_PRESTATAIRE_SUR_TABLE_W' AND type = 'P' )
         DROP procedure sysadm.PS_HP276_S_S2_OBTENTION_DONNEES_PRESTA_SIMPA2_POUR_PREPARATION_CREATION_HUB_PRESTATAIRE_SUR_TABLE_W
@@ -732,7 +731,7 @@ Select 	@dtDeposeLe		= GETDATE(),
 			  And   dd.id_gti = c.id_gti
 			  And   dd.id_detail = c.id_detail 
 			  And   dd.nom_zone = 'mt_pec' ),
-		@dtDateAchat =
+		@dtDateAchat =    -- [MIG165_BOUYGUES] je ramène bien une DateTime et pas une chaine
 			Case 
 				When ( 	Select 	count (*) 
 					From 	sysadm.det_pro dp  
@@ -740,15 +739,13 @@ Select 	@dtDeposeLe		= GETDATE(),
 		       			And 	dp.id_code_dp = 42 
 		       			and 	dp.id_code_car = 'A' 
 		       			and 	dp.id_code_num = c.id_gti ) > 0 Then
-		       				IsNull ( Convert ( VarChar ( 10 ) , 
-								(select d.dte_det 
+								IsNull ( ( select d.dte_det  -- [MIG165_BOUYGUES] 
 								from sysadm.w_detail d 
 								where d.id_sin = c.id_sin 
 								and d.id_gti = c.id_gti 
-								and d.id_detail = c.id_detail ) 
-								, 103),
-							 '' )
-				Else IsNull ( Convert ( VarChar ( 10 ) , @dtDateAchat , 103), '' )
+								and d.id_detail = c.id_detail ),  @dtDateAchat ) -- [MIG165_BOUYGUES] 
+								
+				Else @dtDateAchat  -- [MIG165_BOUYGUES] 
 			End,
 		@sInfo_spb_frn_cplt = rtrim ( lTrim ( c.info_spb_frn_cplt ))
 
@@ -916,6 +913,7 @@ Go
 -------------------------------------------------------------------
 -- JFF		17/05/2025   [HUB1505]			 
 -- JFF      23/05/2025   [HUB1528]
+-- JFF      22/07/2025   [MIG165_BOUYGUES]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_U_S2_MAJ_GEN_PRESTA' AND type = 'P' )
         DROP procedure sysadm.PS_HP276_U_S2_MAJ_GEN_PRESTA
@@ -1003,6 +1001,12 @@ If ( Select id_ref_four From sysadm.commande Where id_sin = @adcIdSin And id_seq
 		Where   id_sin = @adcIdSin
 		And		id_seq = @alIdSeq
   End 
+
+-- [MIG165_BOUYGUES]
+If sysadm.FN_CLE_NUMERIQUE ( 'MIG165_BOUYGUES') > 0 
+ Begin
+	Update sysadm.stk_data_hub_automate Set id_depot_s2tohub = @alIdentityHubPresta Where id_sin = @adcIdSin and id_seq = @alIdSeq
+ End 
 
 Go
 

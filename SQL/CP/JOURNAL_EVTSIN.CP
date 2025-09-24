@@ -616,6 +616,8 @@ Go
 -- Retour				: 1 Succès
 --						 -1 Erreur
 -------------------------------------------------------------------
+-- JFF      22/07/2025   [MIG165_BOUYGUES]
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_INSERTION_JOURNAL_EVTSIN_PROVENANCE_EXTRANET' AND type = 'P' )
         DROP procedure sysadm.PS_I_INSERTION_JOURNAL_EVTSIN_PROVENANCE_EXTRANET
 GO
@@ -643,6 +645,18 @@ If Not Exists (
 	) Return -100
 
 Exec @iRet = sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, @asCodEvt, @asSeriaVariable, @asSeriaLibre, 'PS_I_INSERTION_JOURNAL_EVTSIN_PROVENANCE_EXTRANET', 'WEB'
+
+-- [MIG165_BOUYGUES]
+-- Cas du GEOLEX qui induit un autre marquage sur SIMPA2
+Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO
+        @adcIdSin,
+        'geoloc_simpa2', 
+		'Appareil géolocalisé',  
+        'O',
+		'O',
+		'X',
+		null,
+        'WEB'
 
 Return @iRet
 
