@@ -796,7 +796,12 @@ sChaineSeria = Dw_1.GetItemString ( iRowSelect, "chaineseria" )
 sRdvDiagVideo   = F_CLE_VAL ( "RDV_DIAG_VIDEO", sChaineSeria, ";" ) // [MIG82_JOURN_EVT]
 
 // [20250922112955727][JFF][HUB1309] suite retour Lisette, on force à OUI
-sRdvDiagVideo = "OUI"
+Choose Case sIdModeLogis
+	Case "AT_HOME", "REMOTELY"
+		sRdvDiagVideo = "OUI"
+	Case Else 
+		sRdvDiagVideo = "NON"
+End Choose 
 
 
 IF IsNull ( sIdFour ) Or sIdFour = "" Then
