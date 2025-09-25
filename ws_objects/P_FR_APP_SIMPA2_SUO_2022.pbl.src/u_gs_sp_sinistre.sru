@@ -2385,6 +2385,7 @@ If F_CLE_A_TRUE ( "HUB875" ) Then
 End If
 
 // [20250922143729383][JFF][PMO268_MIG56]
+/* Je stoppe cette modif, trop dangereux, Marlène revoit pour MBZ4
 If F_CLE_A_TRUE ( "PMO268_MIG56" ) Then
 	lVal = idw_WSin.GetItemNumber ( 1, "ID_ORIAN_BOUTIQUE" )
 	If IsNull ( lVal ) Then
@@ -2396,7 +2397,7 @@ If F_CLE_A_TRUE ( "PMO268_MIG56" ) Then
 		End If 
 	End If 
 End IF 
-
+*/
 
 // === A LAISSER A LA FIN ===== CODER AU DESSUS =====
 // [PI087_PM473_2]
