@@ -16375,6 +16375,17 @@ For lCpt = 1 To lTot
 					idw_wDivSin.SetItem ( lCpt, "ALT_SUPP", "O" )
 				End If
 			End If
+			
+			// [MIG165_BOUYGUES] CODE_EAN
+			If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
+				F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 405 )
+				If lDeb > 0 Then
+					If sNomZone = "CODE_EAN" Then
+						idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "N" )
+					End If 
+				End If 
+			End If 
+			
 
 			/* Debug JF à laisser 
 			If stGlb.sCodOper = "JFF" And sNomZone = "DTE_EFF_ARTICLE" Then
@@ -19230,6 +19241,7 @@ public function long uf_zn_trt_divsin (string asdata, string asnomcol, long alro
 //       JFF   22/11/2023 [RS6175_GC_SCRP_SIM2]
 //       JFF   05/08/2024 [MCO602_PNEU]
 //       JFF   18/03/2025 [PAN_125]
+//       JFF   22/07/2025 [MIG165_BOUYGUES]
 //*-----------------------------------------------------------------
 
 //Migration PB8-WYNIWYG-03/2006 FM
@@ -19486,6 +19498,10 @@ Choose Case asNomCol
 			Case "COD_BOUTIQUE_ADH"
 				// [292811][ADVISE]
 				ll_ret = iUoGsSpSinistre2.Uf_Zn_Trt_DivSin_CodeBoutiqueAdh ( Upper ( asData ), Upper( asNomCol ), alRow )
+
+			// [MIG165_BOUYGUES]
+			Case "CODE_EAN"
+				ll_ret = iUoGsSpSinistre2.uf_Zn_Trt_DivSin_Code_EAN ( Upper ( asData ), Upper( asNomCol ), alRow )
 
 		End Choose
 

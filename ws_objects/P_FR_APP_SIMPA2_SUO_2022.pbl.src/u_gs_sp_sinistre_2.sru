@@ -69,6 +69,7 @@ public subroutine uf_determiner_courrier_forcage_dp405 (integer alcpt, ref strin
 public function integer uf_zn_trt_divsin_poids_sup_30kg (string asdata, string asnomcol, long alrow)
 public function long uf_zn_trt_divsin_interv_serrurier (string asdata, string asnomcol, long alrow)
 public function long uf_zn_trt_divsin_recredit_imm (string asdata, string asnomcol, long alrow)
+public function long uf_zn_trt_divsin_code_ean (string asdata, string asnomcol, long alrow)
 end prototypes
 
 public function long uf_zn_trt_divsin_typeapp (string asdata, string asnomcol, long alrow, boolean abforcer);//*-----------------------------------------------------------------
@@ -1671,7 +1672,7 @@ public function string uf_controlergestion_bouygues ();//*----------------------
 
 String sPos, sVal
 Long lDeb, lFin
-Int NbreDetailARegler, NbreFraisARegler, iCasMotifReglt, iRow, iIdEvt, iCmd176NonHonorée 
+Int NbreDetailARegler, NbreFraisARegler, iCasMotifReglt, iRow, iIdEvt, iCmd176NonHonorée, iRowCmd
 
 sPos = ""
 
@@ -1709,6 +1710,8 @@ If NbreDetailARegler + NbreFraisARegler > 1 Then
 	stMessage.Bouton		= Ok!
 	stMessage.sCode		= "WSIN933"
 	F_Message ( stMessage )	
+	
+	Return sPos
 
 End if 
 
@@ -1762,6 +1765,25 @@ If iRow > 0 Then
 	End If
 	
 End IF 
+
+// Contrôle du GEN CODE obligatoire si PREST HUB engagée
+iRowCmd = idw_LstwCommande.Find ( "COD_ETAT = 'CNV' AND POS (INFO_SPB_FRN_CPLT, 'ID_HUB_PRESTA') > 0", 1, idw_LstwCommande.RowCount())
+If iRowCmd > 0 Then
+	sVal = Trim ( iuoSpGsSinistre.uf_Gestong_Divers_Trouver ( "CODE_EAN" ))
+	If Not IsNumber ( sVal ) Or Len ( sVal ) <> 13 Then
+		sPos = "ALT_BLOC"
+		
+		stMessage.sTitre		= "Code EAN non valide"
+		stMessage.Icon			= Information!
+		stMessage.bErreurG	= FALSE
+		stMessage.Bouton		= Ok!
+		stMessage.sCode		= "WSIN935"
+		F_Message ( stMessage )	
+		
+		Return sPos		
+	End If 
+End If 
+
 
 Return sPos
 
@@ -2183,6 +2205,41 @@ If asData = "N" Then
 		iAction = 1 
 		Return iAction
 	End If
+End If
+
+Return iAction
+
+end function
+
+public function long uf_zn_trt_divsin_code_ean (string asdata, string asnomcol, long alrow);//*-----------------------------------------------------------------
+//*
+//* Fonction		: u_gs_sp_sinistre::Uf_Zn_Trt_DivSin_Code_EAN (PRIVATE)
+//* Auteur			: FABRY JF
+//* Date				: 25/09/2025
+//* Libellé			: 
+//* Commentaires	: [MIG165_BOUYGUES]
+//*
+//* Arguments		: String 		asData			Val
+//*					  String 		asNomCol			Val
+//*					  Long			alRow				Val
+//*
+//* Retourne		: long
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//*-----------------------------------------------------------------
+
+Integer iAction
+
+Long lRow, lDeb, lFin
+
+asData = Upper ( asData )
+iAction = 0
+
+lRow = idw_LstwCommande.Find ( "COD_ETAT <> 'ANN'", 1, idw_LstwCommande.RowCount () ) 
+If lRow > 0 Then
+	idw_wDivSin.iiErreur = 2
+	iAction = 1
 End If
 
 Return iAction

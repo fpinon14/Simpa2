@@ -8336,6 +8336,7 @@ event itemerror;call super::itemerror;//*---------------------------------------
 //       JFF   05/08/2024 [MCO602_PNEU]
 //       JFF   18/11/2024 [KSV649_ORREUCARA]
 //       JFF   18/02/2025 [PAN_125]
+//       JFF   22/07/2025 [MIG165_BOUYGUES]
 //*-----------------------------------------------------------------
 
 Choose Case isErrCol
@@ -8466,7 +8467,14 @@ Choose Case isErrCol
 				stMessage.bErreurG	= FALSE
 				stMessage.Bouton		= OK!
 				stMessage.sCode		= "WSIN694"
-// :[DCMP100397] 
+
+// [MIG165_BOUYGUES]
+			Case 2 
+				stMessage.sTitre		= "Modification interdite"
+				stMessage.Icon			= Information!
+				stMessage.bErreurG	= FALSE
+				stMessage.Bouton		= OK!
+				stMessage.sCode		= "WSIN831"  // L'état de votre sinistre ne permet plus cette modification.
 
 			Case Else
 				stMessage.sTitre		= "Gestion des sinistres - SIMPA2"
