@@ -16363,7 +16363,8 @@ For lCpt = 1 To lTot
 			  "ADH_SAGA2_RESILIEE_AUTO", &
 			  "MAJ_REF_APP_OK_SUR_ADH_SAGA2", &
 			  "EXTRAUTO_SUCCES_DECL" ,&
-			  "EXTRAUTO_REJET_DECL"
+			  "EXTRAUTO_REJET_DECL",&
+			  "COD_BOUTIQUE_EXTRANET"
 
 			  
   			  idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "O" )
