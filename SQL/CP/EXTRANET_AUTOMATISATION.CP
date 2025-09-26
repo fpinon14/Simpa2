@@ -14,6 +14,7 @@
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__DECLENCHEMENT_AUTOMATISATION
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__DECLENCHEMENT_PLAFOND_ET_PEC
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__DECLENCHEMENT_REFUS
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__LECTURE_DW_PRESTATION_STOCKEE
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__RECHERCHE_REFUS_AVANT_DECLENCHEMENT
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_601_ADHESION_RESILIEE
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_601_ADHESION_RESILIEE_RECHERCHE
@@ -729,6 +730,7 @@ Insert into sysadm.stk_data_hub_automate (
        [id_sin]
       ,[id_seq]
       ,[id_gti]
+	  ,[id_detail]
       ,[id_hub_presta]
       ,[id_four]
       ,[typ_dommage]
@@ -776,6 +778,7 @@ Values  (
 		@adcIdSin,
 		null,
 		@adcIdGti,
+		null,
 		@asIdHubPresta, 
 		@asIdFour,
 		@asTypDommage,
@@ -869,6 +872,76 @@ Values (
 	GETDATE(),
 	'SQL'
 )
+
+Go
+
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__TRACE_STOCKAGE_INFOS_PRESTATION
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__TRACE_STOCKAGE_INFOS_PRESTATION' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__TRACE_STOCKAGE_INFOS_PRESTATION
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__LECTURE_DW_PRESTATION_STOCKEE
+	@adcIdSin Decimal ( 10 ),
+	@adcIdGti Decimal ( 7 ) 
+As
+
+Select Top 1 
+       [id_stk]
+      ,[id_sin]
+      ,[id_seq]
+      ,[id_gti]
+      ,[id_detail]
+      ,[id_hub_presta]
+      ,[id_four]
+      ,[typ_dommage]
+      ,[ordre_action]
+      ,[typ_app_sin]
+      ,[marq_app_sin]
+      ,[modl_app_sin]
+      ,[num_tel_app_sin]
+      ,[mt_val_achat]
+      ,[dte_achat]
+      ,[etat_app_sin]
+      ,[code_verrou]
+      ,[desimlocke]
+      ,[point_service]
+      ,[mode_logis]
+      ,[code_pickup]
+      ,[nom_pickup]
+      ,[ref_ass_pickup]
+      ,[adr1_pickup]
+      ,[adr2_pickup]
+      ,[adr3_pickup]
+      ,[adr_cp_pickup]
+      ,[adr_ville_pickup]
+      ,[cod_civ_livr]
+      ,[nom_livr]
+      ,[prenom_livr]
+      ,[adr1_livr]
+      ,[adr2_livr]
+      ,[adr3_livr]
+      ,[adr_cp_livr]
+      ,[adr_ville_livr]
+      ,[num_tel1_livr]
+      ,[num_imei_app_sin]
+      ,[num_serie_app_sin]
+      ,[description_probleme]
+      ,[process_acheminement]
+      ,[id_depot_s2tohub]
+      ,[chaine_seria]
+
+From sysadm.stk_data_hub_automate stk
+Where stk.id_sin = @adcIdSin 
+And   stk.id_gti = @adcIdGti
+And   stk.id_seq is null
 
 Go
 
@@ -2737,7 +2810,6 @@ If Not Exists (
 		From sysadm.stk_data_hub_automate stk
 		Where stk.id_sin = @adcIdSin
 		And   stk.id_gti = @adcIdGti
-		And   stk.id_depot_s2tohub is null
 		And   stk.id_seq is null
 	)
 	Begin
@@ -2746,12 +2818,12 @@ If Not Exists (
 	End 
 
 -- Obtention de toutes les données stockées concernant les presta HUB
-Select @dcMtValAchat   = IsNull ( stk.mt_val_achat, 0 ),
-	   @dtDteAchat	   = stk.dte_achat
+Select	Top 1
+		@dcMtValAchat   = IsNull ( stk.mt_val_achat, 0 ),
+		@dtDteAchat	   = stk.dte_achat
 From sysadm.stk_data_hub_automate stk
 Where stk.id_sin = @adcIdSin
 And   stk.id_gti = @adcIdGti
-And   stk.id_depot_s2tohub is null
 And   stk.id_seq is null
 
 If @dcMtValAchat is null Or @dcMtValAchat <= 0 
@@ -3105,11 +3177,11 @@ Declare @dcMtValAchat Decimal ( 11, 2 )
 Declare @idSeqStkPresta Integer
 Declare @sErrText VarChar ( 255 )
 
-Select  @idSeqStkPresta = stk.id_stk
+Select  Top 1 
+		@idSeqStkPresta = stk.id_stk
 From sysadm.stk_data_hub_automate stk
 Where stk.id_sin = @adcIdSin
 And   stk.id_gti = @adcIdGti
-And   stk.id_depot_s2tohub is null
 And   stk.id_seq is null
 
 If @idSeqStkPresta is null Or @idSeqStkPresta <= 0 
@@ -3207,7 +3279,6 @@ Select	@sIdFour = stk.id_four,
 							Else 3520
 						End,
 -- Select info_spb_frn_cplt from sysadm.commande where id_four = 'ITA' and id_ref_four = 'A_REPARER' 
--- Reprendre [ICI] avec les oublie dans PB, CODE_VERROU et autres.
 		@sInfoSpbFrnCplt =	sysadm.FN_CLE_VAL_E ( 'CODE_VERROU', isnull ( stk.code_verrou, '' ),
 							sysadm.FN_CLE_VAL_E ( 'HP_RDV_DIAG_VIDEO', IIF ( stk.mode_logis in ( 'AT_HOME', 'REMOTELY' ), 'OUI', 'NON' ),
 							sysadm.FN_CLE_VAL_E ( 'HP_ID_ACTION', isnull ( stk.ordre_action, '' ),
@@ -3420,7 +3491,11 @@ If @@ROWCOUNT <> 1
 		Return -1
 	End 
 
-Update sysadm.stk_data_hub_automate Set id_seq = @aiIdSeqPresta Where id_stk = @idSeqStkPresta
+-- Marquage important
+Update sysadm.stk_data_hub_automate 
+Set id_seq = @aiIdSeqPresta,
+	id_detail = @adcIdDetail
+Where id_stk = @idSeqStkPresta
 
 If @@ROWCOUNT <> 1
 	Begin

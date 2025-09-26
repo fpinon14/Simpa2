@@ -1008,7 +1008,23 @@ If ( Select id_ref_four From sysadm.commande Where id_sin = @adcIdSin And id_seq
 -- [MIG165_BOUYGUES]
 If sysadm.FN_CLE_NUMERIQUE ( 'MIG165_BOUYGUES') > 0 
  Begin
-	Update sysadm.stk_data_hub_automate Set id_depot_s2tohub = @alIdentityHubPresta Where id_sin = @adcIdSin and id_seq = @alIdSeq
+	IF Exists ( Select Top 1 1 
+				From sysadm.w_sin ws,
+					 sysadm.det_pro dp
+				Where ws.id_sin = @adcIdSin
+				And   dp.id_prod = ws.id_prod
+				And   dp.id_code_dp = 406
+				Union
+				Select Top 1 1 
+				From sysadm.sinistre s,
+					 sysadm.det_pro dp
+				Where s.id_sin = @adcIdSin
+				And   dp.id_prod = s.id_prod
+				And   dp.id_code_dp = 406
+			  )
+		Begin
+			Update sysadm.stk_data_hub_automate Set id_depot_s2tohub = @alIdentityHubPresta Where id_sin = @adcIdSin and id_seq = @alIdSeq
+		End 
  End 
 
 Go
