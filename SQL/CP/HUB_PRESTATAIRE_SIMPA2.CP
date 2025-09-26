@@ -365,6 +365,7 @@ Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DTE_SURV', Convert ( Varchar ( 
 Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DTE_FIN_GTI', Convert ( Varchar ( 10 ), @dtFinGti, 103), rTrim ( @sInfo_spb_frn_cplt ) , ';' )
 Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'NUM_FAX_SPB', @sNumFaxSpb, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
 Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'NUM_TEL_SPB', @sNumTelSpb, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'CODE_EAN', sysadm.FN_GET_DIV_SIN (@adcIdsin, 'code_ean', 'P', '' ), rTrim ( @sInfo_spb_frn_cplt ) , ';' ) -- [MIG165_BOUYGUES]
 
 Set @iDureeGc = Case 
 					When IsNumeric ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'duree_gti_orig', 'P', '' ) ) > 0
@@ -788,6 +789,8 @@ Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DTE_SURV', Convert ( Varchar ( 
 Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'DTE_FIN_GTI', Convert ( Varchar ( 10 ), @dtFinGti, 103), rTrim ( @sInfo_spb_frn_cplt ) , ';' )
 Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'NUM_FAX_SPB', @sNumFaxSpb, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
 Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'NUM_TEL_SPB', @sNumTelSpb, rTrim ( @sInfo_spb_frn_cplt ) , ';' )
+Set @sInfo_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'CODE_EAN', sysadm.FN_GET_DIV_SIN (@adcIdsin, 'code_ean', 'W', '' ), rTrim ( @sInfo_spb_frn_cplt ) , ';' ) -- [MIG165_BOUYGUES]
+
 
 Set @iDureeGc = Case 
 					When IsNumeric ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'duree_gti_orig', 'W', '' ) ) > 0

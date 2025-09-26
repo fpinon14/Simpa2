@@ -14,20 +14,32 @@
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__DECLENCHEMENT_AUTOMATISATION
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__DECLENCHEMENT_PLAFOND_ET_PEC
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__DECLENCHEMENT_REFUS
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__RECHERCHE_REFUS_AVANT_DECLENCHEMENT
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_601_ADHESION_RESILIEE
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_601_ADHESION_RESILIEE_RECHERCHE
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_602_ADHESION_NON_SOUSCRITE_A_DATE_SINISTRE
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_602_ADHESION_NON_SOUSCRITE_A_DATE_SINISTRE_RECHERCHE
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_603_PRIMES_NON_PERCUES
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_603_PRIMES_NON_PERCUES_RECHERCHE
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_611_NATURE_DE_SINISTRE_NON_COUVERT
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_611_NATURE_DE_SINISTRE_NON_COUVERT_RECHERCHE
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_612_DETAIL_DE_SINISTRE_NON_COUVERT
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_612_DETAIL_DE_SINISTRE_NON_COUVERT_RECHERCHE
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_613_TERRITORIALITE_NON_COUVERTE
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_613_TERRITORIALITE_NON_COUVERTE_RECHERCHE
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_641_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_SURVENANCE
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_641_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_SURVENANCE_RECHERCHE
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_642_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_ADHESION
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_642_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_ADHESION_RECHERCHE
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIEURE_DTE_ADHESION_DP131
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIEURE_DTE_ADHESION_DP131_RECHERCHE
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_REVISION
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_REVISION_RECHERCHE
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__STOCKAGE_INFOS_PRESTATION
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__TRACE_STOCKAGE_INFOS_PRESTATION
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__VALIDATION_DU_DOSSIER
+
 -------------------------------------------------------------------
 --
 -------------------------------------------------------------------
@@ -1020,6 +1032,14 @@ Declare @sMarqueAppSin Varchar ( 35 )
 Declare @sModlAppSin Varchar ( 35 ) 
 Declare @sCodeRetIfr Varchar ( 20 )
 Declare @sAdrMailInterAss Varchar ( 120 )
+Declare @sVarianteDp406 Varchar ( 50 )
+
+Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';')
+From sysadm.det_pro dp,
+	 sysadm.w_sin ws
+Where ws.id_sin = @adcIdSin
+And dp.id_prod = ws.id_prod
+	
 
 -- absence ligne dans w_sin
 If Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin )
@@ -1434,6 +1454,17 @@ If ( Select COUNT ( * ) From sysadm.w_gar_sin Where id_sin = @adcIdSin ) > 1
 		Return -1
 	End	
 
+-- Pour Bouygues GEN CODE obligatoire et valide au moins sur le format numx13
+If @sVarianteDp406 = 'BOUYGUES'
+	Begin
+		Set @sVal = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'code_ean', 'W', '' )
+		If IsNumeric ( @sVal ) = 0 Or Len ( Trim ( @sVal ) ) <> 13
+			Begin 
+				Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Code EAN non valide', 'L''extranet a transmis un Code EAN non valide au niveau du format (doit comporter 13 chiffres). Automatisation impossible.'
+				Return -1
+			End 
+	End 
+
 -- La garantie doit être paramétré sur le contrat
 If Not Exists ( 
 		Select	Top 1 1
@@ -1773,6 +1804,42 @@ If @iRet = -1 Return @iRet
 Go
 
 --------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIEURE_DTE_ADHESION_DP131_RECHERCHE
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIEURE_DTE_ADHESION_DP131_RECHERCHE' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIEURE_DTE_ADHESION_DP131_RECHERCHE
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIEURE_DTE_ADHESION_DP131_RECHERCHE
+	@adcIdProdSin		Decimal ( 7 ), -- Code produit sinistre
+	@adtDteAdh			DateTime, -- date de survenance
+	@adtDteAchat		DateTime, -- date d'achat
+	@adtDteOuvLigne		DateTime, -- date ouverture de ligne
+	@asChaineSeriaRetourRefus Varchar ( 500 ) OutPut
+AS
+
+If Exists (   
+  Select Top 1 1  
+  From sysadm.produit p,  
+    sysadm.det_pro dp  
+  Where p.id_prod = @adcIdProdSin
+  And  p.cod_tel > 0  
+  And  dp.id_prod = p.id_prod  
+  And  dp.id_code_dp = 131  
+  And  ( @adtDteAdh > @adtDteAchat Or @adtDteAdh > @adtDteOuvLigne )  
+ )  
+ Begin  
+	Set @asChaineSeriaRetourRefus = sysadm.FN_CLE_VAL_E ( '643', sysadm.FN_CODE_NUM ( 643, '+RE' ), Trim ( @asChaineSeriaRetourRefus ), ';' )
+ End   
+
+Go
+
+--------------------------------------------------------------------
 -- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIEURE_DTE_ADHESION_DP131
 -- Auteur               :       Fabry JF
 -- Date                 :       16/09/2025
@@ -1810,6 +1877,46 @@ If Exists (
  Begin  
 	  Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Refus machine 643', 'Le refus machine 643 indiquant une date d''achat/Ouv. Ligne, antérieure à la date d''adhésion s''est déclenché. Automatisation impossible.'  
 	  Return -1      
+ End   
+
+Go
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_642_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_ADHESION_RECHERCHE
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__REFUS_642_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_ADHESION_RECHERCHE' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_642_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_ADHESION_RECHERCHE
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_642_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_ADHESION_RECHERCHE
+	@adcIdProdSin		Decimal ( 7 ), -- Code produit sinistre
+	@adtDteAdh			DateTime, -- date de survenance
+	@adtDteAchat		DateTime, -- date d'achat
+	@adtDteOuvLigne		DateTime, -- date ouverture de ligne
+	@asChaineSeriaRetourRefus Varchar ( 500 ) OutPut
+AS
+
+If Exists (   
+  Select Top 1 1  
+  From sysadm.produit p  
+  Where p.id_prod = @adcIdProdSin
+  And  p.cod_tel > 0  
+  And  ( @adtDteAdh < @adtDteAchat Or @adtDteAdh < @adtDteOuvLigne )  
+ )  
+And Not Exists ( 
+	Select Top 1 1
+	From sysadm.det_pro dp
+	Where dp.id_prod = @adcIdProdSin
+	And   dp.id_code_dp = 20  
+	And   dp.val_car in ( 642, -1 ) 
+)
+ Begin  
+	Set @asChaineSeriaRetourRefus = sysadm.FN_CLE_VAL_E ( '642', sysadm.FN_CODE_NUM ( 642, '+RE' ), Trim ( @asChaineSeriaRetourRefus ), ';' )
  End   
 
 Go
@@ -1852,6 +1959,46 @@ And Not Exists (
  Begin  
 	Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Refus machine 642', 'Le refus machine 642 indiquant une date d''achat/Ouv. Ligne, postérieure à la date d''adhésion s''est déclenché. Automatisation impossible.'  
 	Return -1      
+ End   
+
+Go
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_641_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_SURVENANCE_RECHERCHE
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__REFUS_641_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_SURVENANCE_RECHERCHE' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_641_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_SURVENANCE_RECHERCHE
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_641_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_SURVENANCE_RECHERCHE
+	@adcIdProdSin		Decimal ( 7 ), -- Code produit sinistre
+	@adtDteSurv			DateTime, -- date de survenance
+	@adtDteAchat		DateTime, -- date d'achat
+	@adtDteOuvLigne		DateTime, -- date ouverture de ligne
+	@asChaineSeriaRetourRefus Varchar ( 500 ) OutPut
+AS
+  
+If Exists (   
+  Select Top 1 1  
+  From sysadm.produit p  
+  Where p.id_prod = @adcIdProdSin
+  And  p.cod_tel > 0  
+  And  ( @adtDteSurv < @adtDteAchat Or @adtDteSurv < @adtDteOuvLigne )  
+ )  
+And Not Exists ( 
+	Select Top 1 1
+	From sysadm.det_pro dp
+	Where dp.id_prod = @adcIdProdSin
+	And   dp.id_code_dp = 20  
+	And   dp.val_car in ( 641, -1 ) 
+)
+ Begin  
+	Set @asChaineSeriaRetourRefus = sysadm.FN_CLE_VAL_E ( '641', sysadm.FN_CODE_NUM ( 641, '+RE' ), Trim ( @asChaineSeriaRetourRefus ), ';' )
  End   
 
 Go
@@ -1899,7 +2046,39 @@ And Not Exists (
 
 Go
 
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_613_TERRITORIALITE_NON_COUVERTE_RECHERCHE
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__REFUS_613_TERRITORIALITE_NON_COUVERTE_RECHERCHE' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_613_TERRITORIALITE_NON_COUVERTE_RECHERCHE
+GO
 
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_613_TERRITORIALITE_NON_COUVERTE_RECHERCHE
+	@adcIdProdSin		Decimal ( 7 ),
+	@adIdTerritSin 		Decimal ( 7 ),
+	@adcIdGti			Decimal ( 7 ),
+	@asChaineSeriaRetourRefus Varchar ( 500 ) OutPut
+AS
+  
+If Not Exists (   
+  Select Top 1 1  
+  From sysadm.condition c
+  Where c.id_prod = @adcIdProdSin
+  And  c.id_gti = @adcIdGti 
+  And  c.id_typ_code = '+DT'  
+  And  c.id_code = @adIdTerritSin
+  And  c.alt_reg = 'O'    
+ )  
+ Begin  
+	Set @asChaineSeriaRetourRefus = sysadm.FN_CLE_VAL_E ( '613', sysadm.FN_CODE_NUM ( 613, '+RE' ), Trim ( @asChaineSeriaRetourRefus ), ';' )	
+ End  
+
+Go
 
 --------------------------------------------------------------------
 -- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_613_TERRITORIALITE_NON_COUVERTE
@@ -1938,6 +2117,39 @@ If Not Exists (
 
 Go
 
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_612_DETAIL_DE_SINISTRE_NON_COUVERT_RECHERCHE
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__REFUS_612_DETAIL_DE_SINISTRE_NON_COUVERT_RECHERCHE' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_612_DETAIL_DE_SINISTRE_NON_COUVERT_RECHERCHE
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_612_DETAIL_DE_SINISTRE_NON_COUVERT_RECHERCHE
+	@adcIdProdSin		Decimal ( 7 ),
+	@adcIdDetSin 		Decimal ( 7 ),
+	@adcIdGti			Decimal ( 7 ),
+	@asChaineSeriaRetourRefus Varchar ( 500 ) OutPut
+AS
+
+If Not Exists (   
+  Select Top 1 1  
+  From sysadm.condition c
+  Where c.id_prod = @adcIdProdSin
+  And  c.id_gti = @adcIdGti 
+  And  c.id_typ_code = '+DT'  
+  And  c.id_code = @adcIdDetSin
+  And  c.alt_reg = 'O'    
+ )  
+ Begin  
+	Set @asChaineSeriaRetourRefus = sysadm.FN_CLE_VAL_E ( '612', sysadm.FN_CODE_NUM ( 612, '+RE' ), Trim ( @asChaineSeriaRetourRefus ), ';' )	
+ End   
+
+Go
 
 --------------------------------------------------------------------
 -- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_612_DETAIL_DE_SINISTRE_NON_COUVERT
@@ -1974,6 +2186,60 @@ If Not Exists (
  End   
 
 Go
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_611_NATURE_DE_SINISTRE_NON_COUVERT_RECHERCHE
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__REFUS_611_NATURE_DE_SINISTRE_NON_COUVERT_RECHERCHE' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_611_NATURE_DE_SINISTRE_NON_COUVERT_RECHERCHE
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_611_NATURE_DE_SINISTRE_NON_COUVERT_RECHERCHE
+	@adcIdProdSin		Decimal ( 7 ),
+	@adcIdNatSin 		Decimal ( 7 ),
+	@adcIdGti			Decimal ( 7 ),
+	@asChaineSeriaRetourRefus Varchar ( 500 ) OutPut
+AS
+
+Declare @sVarianteDp406 Varchar ( 50 )
+
+If Not Exists (   
+  Select Top 1 1  
+  From sysadm.condition c
+  Where c.id_prod = @adcIdProdSin
+  And  c.id_gti = @adcIdGti 
+  And  c.id_typ_code = '+NS'  
+  And  c.id_code = @adcIdNatSin
+  And  c.alt_reg = 'O'  
+ )  
+ Begin  
+	Set @asChaineSeriaRetourRefus = sysadm.FN_CLE_VAL_E ( '611', sysadm.FN_CODE_NUM ( 611, '+RE' ), Trim ( @asChaineSeriaRetourRefus ), ';' )
+
+	  Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';')
+	  From sysadm.det_pro dp
+	  Where dp.id_prod = @adcIdProdSin
+	
+	  If @sVarianteDp406 = 'BOUYGUES'
+		Begin 
+			If @adcIdNatSin = 11 
+				Begin 
+					Set @asChaineSeriaRetourRefus = sysadm.FN_CLE_VAL_E ( '1713', sysadm.FN_CODE_NUM ( 1713, '+RE' ), Trim ( @asChaineSeriaRetourRefus ), ';' )
+				End 
+
+			If @adcIdNatSin = 28 
+				Begin 
+					Set @asChaineSeriaRetourRefus = sysadm.FN_CLE_VAL_E ( '1132', sysadm.FN_CODE_NUM ( 1132, '+RE' ), Trim ( @asChaineSeriaRetourRefus ), ';' )
+				End 
+		End 
+ End  
+
+GO
+
 
 --------------------------------------------------------------------
 -- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_611_NATURE_DE_SINISTRE_NON_COUVERT
@@ -2042,6 +2308,40 @@ If Not Exists (
 GO
 
 --------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_603_PRIMES_NON_PERCUES_RECHERCHE
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__REFUS_603_PRIMES_NON_PERCUES_RECHERCHE' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_603_PRIMES_NON_PERCUES_RECHERCHE
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_603_PRIMES_NON_PERCUES_RECHERCHE
+	@adcIdProdSin		Decimal ( 7 ),
+	@adtDteFinGti		DateTime,
+	@adtDteResil		DateTime,
+	@adtDteSurv			DateTime,
+	@asChaineSeriaRetourRefus Varchar ( 500 ) OutPut
+AS
+  
+  
+If @adtDteFinGti is not null And   
+ @adtDteSurv is not null And  
+ @adtDteResil is null  
+ Begin  
+  If @adtDteFinGti < @adtDteSurv   
+   Begin  
+		Set @asChaineSeriaRetourRefus = sysadm.FN_CLE_VAL_E ( '603', sysadm.FN_CODE_NUM ( 603, '+RE' ), Trim ( @asChaineSeriaRetourRefus ), ';' )
+   End   
+ End  
+
+GO
+
+
+--------------------------------------------------------------------
 -- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_603_PRIMES_NON_PERCUES
 -- Auteur               :       Fabry JF
 -- Date                 :       16/09/2025
@@ -2076,6 +2376,42 @@ If @dtDteFinGti is not null And
  End  
 
 GO
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_602_ADH_NON_SOUSCRITE_A_DATE_SINISTRE_RECHERCHE
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__REFUS_602_ADHESION_NON_SOUSCRITE_A_DATE_SINISTRE_RECHERCHE' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_602_ADHESION_NON_SOUSCRITE_A_DATE_SINISTRE_RECHERCHE
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_602_ADHESION_NON_SOUSCRITE_A_DATE_SINISTRE_RECHERCHE
+	@adcIdProdSin		Decimal ( 7 ),
+	@adtDteAdh			DateTime,
+	@adtDteSurv			DateTime,
+	@asChaineSeriaRetourRefus Varchar ( 500 ) OutPut
+AS
+
+  
+If Not Exists (   
+ Select Top 1 1   
+ From sysadm.produit p 
+ where p.id_prod = @adcIdProdSin
+ And   p.cod_adh in ( 3 )  
+   )  
+ Begin   
+ 
+  If @adtDteAdh > @adtDteSurv   
+   Begin  
+		Set @asChaineSeriaRetourRefus = sysadm.FN_CLE_VAL_E ( '602', sysadm.FN_CODE_NUM ( 602, '+RE' ), Trim ( @asChaineSeriaRetourRefus ), ';' )
+   End  
+ End  
+
+Go
 
 --------------------------------------------------------------------
 -- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_602_ADH_NON_SOUSCRITE_A_DATE_SINISTRE
@@ -2119,6 +2455,39 @@ If Not Exists (
 Go
 
 --------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_601_ADHESION_RESILIEE_RECHERCHE
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__REFUS_601_ADHESION_RESILIEE_RECHERCHE' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_601_ADHESION_RESILIEE_RECHERCHE
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_601_ADHESION_RESILIEE_RECHERCHE
+	@adcIdProdSin		Decimal ( 7 ),
+	@adtDteFinGti		DateTime,
+	@adtDteResil		DateTime,
+	@adtDteSurv			DateTime,
+	@asChaineSeriaRetourRefus Varchar ( 500 ) OutPut
+AS
+
+  
+If @adtDteFinGti is not null And   
+ @adtDteResil is not null And  
+ @adtDteSurv is not null   
+ Begin  
+  If @adtDteFinGti < @adtDteSurv  
+   Begin  
+		Set @asChaineSeriaRetourRefus = sysadm.FN_CLE_VAL_E ( '601', sysadm.FN_CODE_NUM ( 601, '+RE' ), Trim ( @asChaineSeriaRetourRefus ), ';' )
+   End   
+ End  
+
+Go
+
+--------------------------------------------------------------------
 -- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_601_ADHESION_RESILIEE
 -- Auteur               :       Fabry JF
 -- Date                 :       16/09/2025
@@ -2153,6 +2522,38 @@ If @dtDteFinGti is not null And
     Return -1      
    End   
  End  
+
+Go
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_REVISION_RECHERCHE
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__REFUS_REVISION_RECHERCHE' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_REVISION_RECHERCHE
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_REVISION_RECHERCHE
+	@adcIdProdSin	Decimal ( 7 ),
+	@adtDteAdh		DateTime, 
+	@adtDteSurv		DateTime, 
+	@asChaineSeriaRetourRefus Varchar ( 500 ) OutPut
+
+AS
+Declare @sRev     VarChar ( 10 )
+
+Set @sRev = Space ( 10 )
+
+Exec sysadm.PS_X_CALC_REVISION @adcIdProdSin, @adtDteSurv, @adtDteAdh, @sRev OUTPUT
+
+If	@sRev is null Or @sRev = '-1'
+	Begin
+		Set @asChaineSeriaRetourRefus = sysadm.FN_CLE_VAL_E ( '1945', sysadm.FN_CODE_NUM ( 1945, '+RE' ), Trim ( @asChaineSeriaRetourRefus ), ';' )
+	End
 
 Go
 
@@ -3255,23 +3656,48 @@ IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION_
 GO
 
 CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__RECHERCHE_REFUS_AVANT_DECLENCHEMENT
-	@dcIdProdSin	Decimal ( 7 ), -- Code produit sinistre
-	@dtDteAdh		DateTime, -- date d'adhésion
-	@dtDteSurv		DateTime, -- date de survenance
-	@dtDteAchat		DateTime, -- date d'achat
-	@dtDteOuvLigne	DateTime, -- date ouverture de ligne
-	@dtDteFinGti    DateTime, -- date de fin de garantie (date jusqu'à laquelle l'assuré est couvert en fonction du paiement de ses primes adhésion)
-	@dtDteResil     DateTime, -- date de résilisation de l'adhésion ( le cas échéant )
-	@dcIdGti		Decimal ( 7 ), -- code garantie
-	@dcIdTerrit		Decimal ( 7 ), -- code territorialité
-	@dcIdNatsin 	Decimal ( 7 ), -- code nature de sinistre
-	@dcIdDetSin		Decimal ( 7 ), -- code détail sinistre
+	@adcIdProdSin		Decimal ( 7 ), -- Code produit sinistre
+	@adtDteAdh			DateTime, -- date d'adhésion
+	@adtDteSurv			DateTime, -- date de survenance
+	@adtDteAchat		DateTime, -- date d'achat
+	@adtDteOuvLigne		DateTime, -- date ouverture de ligne
+	@adtDteFinGti		DateTime, -- date de fin de garantie (date jusqu'à laquelle l'assuré est couvert en fonction du paiement de ses primes adhésion)
+	@adtDteResil		DateTime, -- date de résilisation de l'adhésion ( le cas échéant )
+	@adcIdGti			Decimal ( 7 ), -- code garantie
+	@adIdTerritSin		Decimal ( 7 ), -- code territorialité
+	@adcIdNatSin 		Decimal ( 7 ), -- code nature de sinistre
+	@adcIdDetSin		Decimal ( 7 ), -- code détail sinistre
 	@asChaineSeriaArgSuppl VarChar ( 255 ), -- Si besoin un jour
-	@asChaineSeriaRetourRefus Varchar ( 500 ) -- ex : 611=NATURE DE SINISTRE NON COUVERT;1713=DISPARITIONS PERTES OUBLIS;603=PRIMES NON PERCUES
+	@asChaineSeriaRetourRefus Varchar ( 500 ) OutPut, -- ex : 611=NATURE DE SINISTRE NON COUVERT;1713=DISPARITIONS PERTES OUBLIS;603=PRIMES NON PERCUES
+	@asMessRetour VarChar ( 255 ) 
 AS
 
+-- 1 Arguments exploitable, retour @asChaineSeriaRetourRefus valide 
+-- < 0 Arguments inexploitable, retour @asChaineSeriaRetourRefus non valide 
 
+IF @adcIdProdSin is null or @adcIdProdSin <=0 Begin Set @asMessRetour = 'Code produit sinistre obligatoire' ; Return -10 End 
+If Exists ( Select Top 1 1 From sysadm.produit p where p.id_prod = @adcIdProdSin and cod_adh <> 3 ) and @adtDteAdh is null Begin Set @asMessRetour = 'Date d''adhésion obligatoire selon la méthode d''adhésion paramétré sur ce produit' ; Return -20 End 
+If @adtDteSurv is null Return -30 Begin Set @asMessRetour = 'Date de survenance obligatoire' ; Return -30 End 
+If Exists ( Select Top 1 1 From sysadm.produit p where p.id_prod = @adcIdProdSin and cod_adh not in ( 3, 6 ) ) and @adtDteFinGti is null Begin Set @asMessRetour = 'Date de fin de garantie obligatoire selon la méthode d''adhésion paramétré sur ce produit' ; Return -40 End 
+If @adcIdGti is null Or Not Exists ( Select Top 1 1 From sysadm.code_garantie cg Where cg.id_prod = @adcIdProdSin and cg.id_gti = @adcIdGti ) Begin Set @asMessRetour = 'Code garantie obligatoire et doit être paramétré sur produit ' + Convert ( Varchar ( 50 ), @adcIdProdSin) ; Return -50 End 
+If @adIdTerritSin is null Or Not Exists ( Select Top 1 1 From sysadm.code_condition cc Where cc.id_prod = @adcIdProdSin and cc.id_typ_code = '+TR' and cc.id_code = @adIdTerritSin ) Begin Set @asMessRetour = 'Code territorialité obligatoire et doit être paramétré sur produit ' + Convert ( Varchar ( 50 ), @adcIdProdSin) ; Return -60 End 
+If @adcIdNatSin is null Or Not Exists ( Select Top 1 1 From sysadm.code_condition cc Where cc.id_prod = @adcIdProdSin and cc.id_typ_code = '+NS' and cc.id_code = @adcIdNatSin ) Begin Set @asMessRetour = 'Code nature de sinistre obligatoire et doit être paramétré sur produit ' + Convert ( Varchar ( 50 ), @adcIdProdSin) ; Return -70 End 
+If @adcIdDetSin is null Or Not Exists ( Select Top 1 1 From sysadm.code_condition cc Where cc.id_prod = @adcIdProdSin and cc.id_typ_code = '+DT' and cc.id_code = @adcIdDetSin ) Begin Set @asMessRetour = 'Code détails de sinistre obligatoire et doit être paramétré sur produit ' + Convert ( Varchar ( 50 ), @adcIdProdSin) ; Return -80 End 
 
+Set @asChaineSeriaRetourRefus = ''
+
+Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_REVISION_RECHERCHE @adcIdProdSin, @adtDteAdh, @adtDteSurv, @asChaineSeriaRetourRefus OutPut
+Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_601_ADHESION_RESILIEE_RECHERCHE @adcIdProdSin, @adtDteFinGti, @adtDteResil, @adtDteSurv, @asChaineSeriaRetourRefus OutPut
+Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_602_ADHESION_NON_SOUSCRITE_A_DATE_SINISTRE_RECHERCHE  @adcIdProdSin, @adtDteAdh, @adtDteSurv, @asChaineSeriaRetourRefus OutPut
+Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_603_PRIMES_NON_PERCUES_RECHERCHE @adcIdProdSin, @adtDteFinGti, @adtDteResil, @adtDteSurv, @asChaineSeriaRetourRefus OutPut
+Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_611_NATURE_DE_SINISTRE_NON_COUVERT_RECHERCHE @adcIdProdSin, @adcIdNatSin, @adcIdGti, @asChaineSeriaRetourRefus OutPut
+Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_612_DETAIL_DE_SINISTRE_NON_COUVERT_RECHERCHE @adcIdProdSin, @adcIdDetSin, @adcIdGti, @asChaineSeriaRetourRefus OutPut
+Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_613_TERRITORIALITE_NON_COUVERTE_RECHERCHE @adcIdProdSin, @adIdTerritSin, @adcIdGti, @asChaineSeriaRetourRefus OutPut
+Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_641_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_SURVENANCE_RECHERCHE @adcIdProdSin, @adtDteSurv, @adtDteAchat, @adtDteOuvLigne, @asChaineSeriaRetourRefus OutPut
+Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_642_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_ADHESION_RECHERCHE @adcIdProdSin, @adtDteAdh, @adtDteAchat, @adtDteOuvLigne, @asChaineSeriaRetourRefus OutPut
+Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIEURE_DTE_ADHESION_DP131_RECHERCHE @adcIdProdSin, @adtDteAdh, @adtDteAchat, @adtDteOuvLigne, @asChaineSeriaRetourRefus OutPut
+
+Return 1
 
 Go
 
