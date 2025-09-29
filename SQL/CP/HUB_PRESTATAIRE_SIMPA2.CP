@@ -3605,6 +3605,7 @@ Go
 --
 -- Retourne             :       rien
 -------------------------------------------------------------------
+/*
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'v_hub_prod_1' AND type = 'V' )
             DROP view sysadm.v_hub_prod_1
 GO
@@ -3834,7 +3835,7 @@ SELECT StoH.[id_depot_simpa2]
   WHERE StoH.id_hub_presta = HtoS.id_hub_presta
 
 Go
-
+*/
 -------------------------------------------------------------------
 --
 -- Procédure            :       PS_HP276_I_S2_PS_I_HUB1910_RELANCE_HUB_PRESTATAIRE
