@@ -208,12 +208,14 @@ Select	@iIdSin			= Convert ( integer, @adcIdsin),
 		@sLibTypAppSin  = nullif ( sysadm.FN_CODE_CAR ( @sTypAppSin, '-AR' ), '') ,
 		@sEtatAppSin	= Case -- [HUB_TYP_APP_REMPL]
 							When sysadm.FN_CLE_NUMERIQUE ( 'HUB_TYP_APP_REMPL') > 0 
-								Then nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'TYPAPP_AREC_ANEU', 'P',  'RETOUR=CODE'  ), '')
+								Then  IsNull ( nullif ( sysadm.FN_CLE_VAL ( 'TYPAPP_AREC_ANEU', c.info_spb_frn_cplt, ';' ), ''), --  [MIG165_BOUYGUES]
+						   					   nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'TYPAPP_AREC_ANEU', 'P', '' ), '' ))  --  [MIG165_BOUYGUES]
 							Else nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'TYPAPP_REC_NEU', 'P',  'RETOUR=CODE'  ), '')
 						  End,
 		@sCodeVerrou	= IsNull ( nullif ( sysadm.FN_CLE_VAL ( 'CODE_VERROU', c.info_spb_frn_cplt, ';' ), ''), 
 						   		   nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'CODE_VERROU_SHERPA_SCRIPT', 'P', '' ), '' )),
-		@sDesimlocke	= nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'DESIMLOCKE', 'P', '' ), '' ),
+		@sDesimlocke	= IsNull ( nullif ( sysadm.FN_CLE_VAL ( 'DESIMLOCKE', c.info_spb_frn_cplt, ';' ), ''), --  [MIG165_BOUYGUES]
+						   		   nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'DESIMLOCKE', 'P', '' ), '' )), --  [MIG165_BOUYGUES]
 		@dtDateAchat	= s.dte_ach_port,
 		@iIdAssureur	= sysadm.FN_ID_CIE_V02 (s.id_sin, 'P'),
 		@sLibAssureur   = sysadm.FN_LIB_CIE_V02 (s.id_sin, 'P'),
@@ -625,12 +627,14 @@ Select	@iIdSin			= Convert ( integer, @adcIdsin),
 		@sLibTypAppSin  = nullif ( sysadm.FN_CODE_CAR ( @sTypAppSin, '-AR' ), '') ,
 		@sEtatAppSin	= Case -- [HUB_TYP_APP_REMPL]
 							When sysadm.FN_CLE_NUMERIQUE ( 'HUB_TYP_APP_REMPL') > 0 
-								Then nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'TYPAPP_AREC_ANEU', 'W',  'RETOUR=CODE'  ), '')
+								Then  IsNull ( nullif ( sysadm.FN_CLE_VAL ( 'TYPAPP_AREC_ANEU', c.info_spb_frn_cplt, ';' ), ''), --  [MIG165_BOUYGUES]
+						   					   nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'TYPAPP_AREC_ANEU', 'W', '' ), '' ))  --  [MIG165_BOUYGUES]
 							Else nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'TYPAPP_REC_NEU', 'W',  'RETOUR=CODE'  ), '')
 						  End,
 		@sCodeVerrou	= IsNull ( nullif ( sysadm.FN_CLE_VAL ( 'CODE_VERROU', c.info_spb_frn_cplt, ';' ), ''), 
 						   		   nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'CODE_VERROU_SHERPA_SCRIPT', 'W', '' ), '' )),
-		@sDesimlocke	= nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'DESIMLOCKE', 'W', '' ), '' ),
+		@sDesimlocke	= IsNull ( nullif ( sysadm.FN_CLE_VAL ( 'DESIMLOCKE', c.info_spb_frn_cplt, ';' ), ''), --  [MIG165_BOUYGUES]
+						   		   nullif ( sysadm.FN_GET_DIV_SIN ( @adcIdsin, 'DESIMLOCKE', 'W', '' ), '' )), --  [MIG165_BOUYGUES]
 		@dtDateAchat	= s.dte_ach_port,
 		@iIdAssureur	= sysadm.FN_ID_CIE_V02 (s.id_sin, 'W'),
 		@sLibAssureur   = sysadm.FN_LIB_CIE_V02 (s.id_sin, 'W'),
@@ -926,22 +930,33 @@ CREATE procedure sysadm.PS_HP276_U_S2_MAJ_GEN_PRESTA
 		@adcIdSin				Decimal ( 10 ),
 		@alIdSeq				Integer,
 		@alIdentityHubPresta	Integer
-
 AS
 
 Declare @sMajPrsHubAdr VarChar ( 10 )
 Declare @sMajPrsHubAnn VarChar ( 10 )
 Declare @sIdentityOrig VarChar ( 20 )
 Declare @lIdentityOrig Integer
+Declare @sUtilPrsStk   VarChar ( 50 )
+Declare @sIdPrsStk VarChar ( 50 )
+Declare @lIdPrsStk Integer 
+Declare @dcIdDetail Decimal ( 7 ) 
+
+Set @lIdPrsStk = 0
 
 -- [HUB1505]
 -- En cas de mise à jour de la presta, pour une adresse par exemple, on n'écrase pas l'HP_IDENTITY, on remet l'original
 Select @sMajPrsHubAdr = sysadm.FN_CLE_VAL ( 'MAJ_PRSHUBADR', c.info_spb_frn_cplt, ';'),
 	   @sMajPrsHubAnn = sysadm.FN_CLE_VAL ( 'MAJ_PRSHUBANN', c.info_spb_frn_cplt, ';'), -- HUB1528
-	   @sIdentityOrig = sysadm.FN_CLE_VAL ( 'HP_IDENTITY', c.info_spb_frn_cplt, ';')
+	   @sIdentityOrig = sysadm.FN_CLE_VAL ( 'HP_IDENTITY', c.info_spb_frn_cplt, ';'),
+	   @sUtilPrsStk = sysadm.FN_CLE_VAL ( 'UTIL_PRS_STK', c.info_spb_frn_cplt, ';'), -- [MIG165_BOUYGUES]
+	   @sIdPrsStk = sysadm.FN_CLE_VAL ( 'ID_PRS_STK', c.info_spb_frn_cplt, ';'), -- [MIG165_BOUYGUES]
+	   @dcIdDetail = c.id_detail -- [MIG165_BOUYGUES]
 From sysadm.commande c
 Where   id_sin = @adcIdSin
 And		id_seq = @alIdSeq
+
+-- [MIG165_BOUYGUES]
+If IsNumeric ( @sIdPrsStk ) = 1 Set @lIdPrsStk = Convert ( integer, @sIdPrsStk  )
 
 If @sMajPrsHubAdr = 'OUI'
   Begin
@@ -1023,7 +1038,30 @@ If sysadm.FN_CLE_NUMERIQUE ( 'MIG165_BOUYGUES') > 0
 				And   dp.id_code_dp = 406
 			  )
 		Begin
+			-- Cas pour l'automate
 			Update sysadm.stk_data_hub_automate Set id_depot_s2tohub = @alIdentityHubPresta Where id_sin = @adcIdSin and id_seq = @alIdSeq
+
+			-- Cas pour l'application SIMPA2
+			If @@ROWCOUNT <= 0 And @lIdPrsStk > 0 
+				Begin
+					If @sUtilPrsStk = 'SUCCES'
+						Begin 
+							Update sysadm.stk_data_hub_automate 
+							Set id_depot_s2tohub = @alIdentityHubPresta,
+								id_detail = @dcIdDetail, 
+								id_seq = @alIdSeq
+							Where id_stk = @lIdPrsStk
+						End 
+					Else -- 'ECHEC'
+						Begin 
+							Update sysadm.stk_data_hub_automate 
+							Set id_depot_s2tohub = -1,
+								id_detail = -1, 
+								id_seq = -1
+							Where id_stk = @lIdPrsStk
+						End 
+				End 
+
 		End 
  End 
 
