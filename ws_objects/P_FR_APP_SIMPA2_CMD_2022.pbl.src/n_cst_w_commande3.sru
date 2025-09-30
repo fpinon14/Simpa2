@@ -29031,12 +29031,16 @@ private function integer uf_zn_choix_regle_hub (string ascas, long alidprod, lon
 //*---------------------------------------------------------------
 
 s_Pass	stPass
-String   sRetHubPrestataire, sAdrMail, sVal, sVal1, sVar, sCodeVerrou, sRetHubPrestaOrig, sIdFourOrig, sLibCie
+String   sRetHubPrestataire, sAdrMail, sVal, sVal1, sVar, sCodeVerrou, sRetHubPrestaOrig, sIdFourOrig, sLibCie, sUtilPrsStk, sIdPrsStk
 String   sTabValRet []
 Integer  iRet, iRow, iTotTabValRet, iCpt, iIdSeqPrestaHubOrig, iRowStkPrestaStockee
 n_cst_string lnvPFCString 
-Long lRow, lIdRev, lIdCie, lDeb, lFin
+Long lRow, lIdRev, lIdCie, lDeb, lFin, lDebDp406 
 DataStore dsStkPrestaHubStockee
+
+sUtilPrsStk = ""
+sIdPrsStk = ""
+
 
 lIdRev = idwWsin.GetItemNumber ( 1, "ID_REV" )
 
@@ -29132,21 +29136,27 @@ Choose Case ascas
 		// [20250929100727247][JFF][MIG165_BOUYGUES]
 		// [MIG165_BOUYGUES]
 		If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
-			F_RechDetPro ( lDeb, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 406 )
-			If lDeb > 0 Then
+			iRowStkPrestaStockee = 0
+			F_RechDetPro ( lDebDp406, lFin, idw_DetPro, idwWSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 406 )
+			If lDebDp406 > 0 Then
 				dsStkPrestaHubStockee = Create DataStore
 				dsStkPrestaHubStockee.Dataobject = 'd_stk_presta_hub_stockee'
 				dsStkPrestaHubStockee.SetTransObject(SQLCA)
-				
+			
 				iRowStkPrestaStockee = dsStkPrestaHubStockee.retrieve( alidsin, alidGti ) 
 				
-				If This.uf_Controle_Matching_Donnees_Hub_Stockee ( dsStkPrestaHubStockee ) < 0 Then
-					iRowStkPrestaStockee = 0 
+				If iRowStkPrestaStockee > 0 Then
+					If This.uf_Controle_Matching_Donnees_Hub_Stockee ( dsStkPrestaHubStockee ) < 0 Then
+						iRowStkPrestaStockee = 0 
+						sUtilPrsStk = "ECHEC" ; sIdPrsStk = String ( dsStkPrestaHubStockee.GetItemNumber ( 1, "id_stk" ))
+					End If 
 				End If 
 			
 			End If 
 			
 			If iRowStkPrestaStockee > 0 Then
+				sUtilPrsStk = "SUCCES" ; sIdPrsStk = String ( dsStkPrestaHubStockee.GetItemNumber ( 1, "id_stk" ))
+			
 				sRetHubPrestataire = ""
 				F_CLE_VAL_E ( "HP_ID_HUB_PRESTA", dsStkPrestaHubStockee.GetItemString ( 1, "id_hub_presta" ) , sRetHubPrestataire, ";" )
 				F_CLE_VAL_E ( "HP_ID_FOUR", dsStkPrestaHubStockee.GetItemString ( 1, "id_four" ) , sRetHubPrestataire, ";" )
@@ -29161,6 +29171,9 @@ Choose Case ascas
 				F_CLE_VAL_E ( "ADR3_PICK_UP", dsStkPrestaHubStockee.GetItemString ( 1, "adr3_pickup" ) , sRetHubPrestataire, ";" )				
 				F_CLE_VAL_E ( "ADRCP_PICK_UP", dsStkPrestaHubStockee.GetItemString ( 1, "adr_cp_pickup" ) , sRetHubPrestataire, ";" )								
 				F_CLE_VAL_E ( "ADRVILLE_PICK_UP", dsStkPrestaHubStockee.GetItemString ( 1, "adr_ville_pickup" ) , sRetHubPrestataire, ";" )
+				F_CLE_VAL_E ( "CODE_VERROU", dsStkPrestaHubStockee.GetItemString ( 1, "code_verrou" ) , sRetHubPrestataire, ";" )
+				F_CLE_VAL_E ( "DESIMLOCKE", dsStkPrestaHubStockee.GetItemString ( 1, "desimlocke" ) , sRetHubPrestataire, ";" )				
+				F_CLE_VAL_E ( "TYPAPP_AREC_ANEU", dsStkPrestaHubStockee.GetItemString ( 1, "etat_app_sin" ) , sRetHubPrestataire, ";" )				
 				
 				sVal = dsStkPrestaHubStockee.GetItemString ( 1, "process_acheminement" )
 				If IsNull ( sVal ) Then sVal = ""
@@ -29184,7 +29197,7 @@ Choose Case ascas
 				End Choose 
 				F_CLE_VAL_E ( "HP_RDV_DIAG_VIDEO", sVal, sRetHubPrestataire, ";" )
 				
-				idwCmde.SetItem ( 1, "ADR_COD_CIV"		, dsStkPrestaHubStockee.GetItemString ( 1, "cod_civ_livr" ) )
+				idwCmde.SetItem ( 1, "ADR_COD_CIV"		, dsStkPrestaHubStockee.GetItemNumber ( 1, "cod_civ_livr" ) )
 				idwCmde.SetItem ( 1, "ADR_NOM"			, dsStkPrestaHubStockee.GetItemString ( 1, "nom_livr" ) )
 				idwCmde.SetItem ( 1, "ADR_PRENOM"		, dsStkPrestaHubStockee.GetItemString ( 1, "prenom_livr" ) )
 				idwCmde.SetItem ( 1, "ADR_LIVR1"			, dsStkPrestaHubStockee.GetItemString  ( 1, "adr1_livr" ) )
@@ -29194,6 +29207,15 @@ Choose Case ascas
 				idwCmde.SetItem ( 1, "ADR_VILLE"			, dsStkPrestaHubStockee.GetItemString  ( 1, "adr_ville_livr" ) )
 				idwCmde.SetItem ( 1, "ADR_TEL1"			, dsStkPrestaHubStockee.GetItemString  ( 1, "num_tel1_livr" ) )
 				idwCmde.SetItem ( 1, "PROBLEME"			, dsStkPrestaHubStockee.GetItemString  ( 1, "description_probleme" ) )
+				adw.SetItem ( alRow, "PROBLEME"			, dsStkPrestaHubStockee.GetItemString  ( 1, "description_probleme" ))
+				
+				stMessage.sTitre		= "Contrôle Hub Prestataire"
+				stMessage.Icon			= Information!
+				stMessage.bErreurG	= FALSE
+				stMessage.Bouton		= OK!
+				stMessage.sCode		= "HUBP028"
+				
+				F_Message ( stMessage )
 				
 			Else 
 				stMessage.sTitre		= "Contrôle Hub Prestataire"
@@ -29205,6 +29227,7 @@ Choose Case ascas
 				If F_Message ( stMessage ) = 2 Then Return 1
 				
 				OpenWithParm( w_sp_trt_saisie_hub_prestataire,  stPass ) 
+				sRetHubPrestataire = Message.StringParm				
 			End If 
 
 			If IsValid ( dsStkPrestaHubStockee ) Then Destroy dsStkPrestaHubStockee
@@ -29219,9 +29242,8 @@ Choose Case ascas
 			If F_Message ( stMessage ) = 2 Then Return 1
 			
 			OpenWithParm( w_sp_trt_saisie_hub_prestataire,  stPass ) 
+			sRetHubPrestataire = Message.StringParm
 		End If		
-		
-		sRetHubPrestataire = Message.StringParm
 		
 		
 		If sRetHubPrestataire = "" or sRetHubPrestataire = "[RETOUR]" Then 
@@ -29257,6 +29279,17 @@ Choose Case ascas
 				lnvPFCString.of_setkeyvalue( isInfoSpbFrnCplt, sTabValRet [iCpt], sVal, ";")
 			End IF 
 		Next 		
+
+		// [JFF][MIG165_BOUYGUES]
+		If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
+			If lDebDp406 > 0 Then
+				lnvPFCString.of_setkeyvalue( isInfoSpbFrnCplt, "UTIL_PRS_STK", sUtilPrsStk, ";")
+				lnvPFCString.of_setkeyvalue( isInfoSpbFrnCplt, "ID_PRS_STK", sIdPrsStk, ";")				
+				lnvPFCString.of_setkeyvalue( isInfoSpbFrnCplt, "CODE_VERROU", lnvPFCString.of_Getkeyvalue( sRetHubPrestataire, "CODE_VERROU", ";" ), ";")
+				lnvPFCString.of_setkeyvalue( isInfoSpbFrnCplt, "DESIMLOCKE", lnvPFCString.of_Getkeyvalue( sRetHubPrestataire, "DESIMLOCKE", ";" ), ";")
+				lnvPFCString.of_setkeyvalue( isInfoSpbFrnCplt, "TYPAPP_AREC_ANEU", lnvPFCString.of_Getkeyvalue( sRetHubPrestataire, "TYPAPP_AREC_ANEU", ";" ), ";")				
+			End If 
+		End If 
 
 		sVal = lnvPFCString.of_Getkeyvalue( sRetHubPrestataire, "CODE_PICK_UP", ";" )
 		If Trim ( sVal ) <> "" Then
@@ -29427,13 +29460,14 @@ public function integer uf_controle_matching_donnees_hub_stockee (ref datastore 
 //*---------------------------------------------------------------
 
 Integer iRet, iRow 
-String sMess, sValStk, sValStk2, sValSin
+String sMess, sValStk, sValStk2, sValSin, sSaut
 DateTime dtDteStk, dtDteSin
 Decimal {2} dcMtStk, dcMtSin
 Boolean bFin
 
 iRet = 1
 sMess = ""
+sSaut = Char ( 10 )
 
 sValStk = "" ; sValSin = "" 
 sValStk = Trim ( adsStkPrestaHubStockee.GetItemString ( 1, "typ_app_sin" ) )
@@ -29441,21 +29475,21 @@ If IsNull ( sValStk ) Then sValStk = ""
 iRow = idwWDivsin.Find ( "Upper (NOM_ZONE) = 'TYPE_APP'", 1, idwWDivSin.RowCount () )
 if iRow > 0 then sValSin = Upper ( Trim ( idwWDivSin.GetItemString ( iRow, "VAL_LST_CAR" ) ) )
 If IsNull ( sValSin ) Then sValSin = ""
-If sValStk <> sValSin Then sMess += "- Le type d'appareil sinistré ( (sin)" + sValSin + " vs (hub)" + sValStk + " )"
+If sValStk <> sValSin Then sMess += "- Le type d'appareil sinistré ( (sin)" + sValSin + " vs (hub)" + sValStk + " )" + sSaut 
 
 sValStk = "" ; sValSin = "" 
 sValStk = Trim ( adsStkPrestaHubStockee.GetItemString ( 1, "marq_app_sin" ) )
 If IsNull ( sValStk ) Then sValStk = ""
 sValSin = Trim ( idwWsin.GetItemString ( 1, "MARQ_PORT" ) )
 If IsNull ( sValSin ) Then sValSin = ""
-If sValStk <> sValSin Then sMess += "- La marque de l'appareil sinistré ( (sin)" + sValSin + " vs (hub)" + sValStk + " )"
+If sValStk <> sValSin Then sMess += "- La marque de l'appareil sinistré ( (sin)" + sValSin + " vs (hub)" + sValStk + " )" + sSaut 
 
 sValStk = "" ; sValSin = "" 
 sValStk = Trim ( adsStkPrestaHubStockee.GetItemString ( 1, "modl_app_sin" ) )
 If IsNull ( sValStk ) Then sValStk = ""
 sValSin = Trim ( idwWsin.GetItemString ( 1, "MODL_PORT" ) )
 If IsNull ( sValSin ) Then sValSin = ""
-If sValStk <> sValSin Then sMess += "- Le modèle de l'appareil sinistré ( (sin)" + sValSin + " vs (hub)" + sValStk + " )"
+If sValStk <> sValSin Then sMess += "- Le modèle de l'appareil sinistré ( (sin)" + sValSin + " vs (hub)" + sValStk + " )" + sSaut 
 
 // num_tel_app_sin, je ne contrôle pas volontairement (pour l'instant)
 
@@ -29466,18 +29500,18 @@ If IsNull ( sValStk ) Then sValStk = ""
 If IsNull ( sValStk2 ) Then sValStk2 = ""
 sValSin = Trim ( idwWsin.GetItemString ( 1, "NUM_IMEI_PORT" ) )
 If IsNull ( sValSin ) Then sValSin = ""
-If sValStk <> ""  And sValStk <> sValSin Then sMess += "- Le numéro IMEI de l'appareil sinistré ( (sin)" + sValSin + " vs (hub)" + sValStk + " )"
-If sValStk2 <> "" And sValStk2 <> sValSin Then sMess += "- Le numéro de SERIE de l'appareil sinistré ( (sin)" + sValSin + " vs (hub)" + sValStk2 + " )"
+If sValStk <> ""  And sValStk <> sValSin Then sMess += "- Le numéro IMEI de l'appareil sinistré ( (sin)" + sValSin + " vs (hub)" + sValStk + " )" + sSaut 
+If sValStk2 <> "" And sValStk2 <> sValSin Then sMess += "- Le numéro de SERIE de l'appareil sinistré ( (sin)" + sValSin + " vs (hub)" + sValStk2 + " )" + sSaut 
 
 SetNull ( dtDteStk ) ; SetNull ( dtDteSin ) 
 dtDteStk = adsStkPrestaHubStockee.GetItemDateTime ( 1, "dte_achat" ) 
-dtDteSin = idwDetail.GetItemDateTime ( 1, "DTE_ACH_PORT" )
-If dtDteStk <> dtDteSin Then sMess += "- La date d'achat de l'appareil sinistré ( (sin)" + String ( dtDteSin, "dd/mm/yyyy hh:mm:ss" ) + " vs (hub)" + String ( dtDteStk, "dd/mm/yyyy hh:mm:ss" )+ " )"
+dtDteSin = idwWsin.GetItemDateTime ( 1, "DTE_ACH_PORT" )
+If dtDteStk <> dtDteSin Then sMess += "- La date d'achat de l'appareil sinistré ( (sin)" + String ( dtDteSin, "dd/mm/yyyy hh:mm:ss" ) + " vs (hub)" + String ( dtDteStk, "dd/mm/yyyy hh:mm:ss" )+ " )" + sSaut 
 
 SetNull ( dcMtStk ) ; SetNull ( dcMtSin ) 
 dcMtStk = adsStkPrestaHubStockee.GetItemDecimal ( 1, "mt_val_achat" ) 
 dcMtSin = idwDetail.GetItemDecimal ( 1, "mt_val_achat" )
-If dcMtSin <> dcMtStk Then sMess += "- Le montant de valeur d'achat de l'appareil sinistré ( (sin)" + String ( dcMtSin ) + " vs (hub)" + String ( dcMtStk ) + " )"
+If dcMtSin <> dcMtStk Then sMess += "- Le montant de valeur d'achat de l'appareil sinistré ( (sin)" + String ( dcMtSin ) + " vs (hub)" + String ( dcMtStk ) + " )" + sSaut 
 
 sValStk = "" ; sValSin = "" 
 sValStk = Trim ( adsStkPrestaHubStockee.GetItemString ( 1, "etat_app_sin" ) )
@@ -29485,7 +29519,7 @@ If IsNull ( sValStk ) Then sValStk = ""
 iRow = idwWDivsin.Find ( "Upper (NOM_ZONE) = 'TYPAPP_AREC_ANEU'", 1, idwWDivSin.RowCount () )
 if iRow > 0 then sValSin = Upper ( Trim ( idwWDivSin.GetItemString ( iRow, "VAL_LST_CAR" ) ) )
 If IsNull ( sValSin ) Then sValSin = ""
-If sValStk <> sValSin Then sMess += "- Le type d'appareil sinistré ( (sin)" + sValSin + " vs (hub)" + sValStk + " )"
+If sValStk <> sValSin And sValStk <> "" And sValSin <> "" Then sMess += "- Le type d'appareil sinistré ( (sin)" + sValSin + " vs (hub)" + sValStk + " )" + sSaut 
 
 
 sValStk = "" ; sValSin = "" 
@@ -29499,7 +29533,7 @@ If sValSin = "" Then
 	if iRow > 0 then sValSin = Upper ( Trim ( idwWDivSin.GetItemString ( iRow, "VAL_LST_CAR" ) ) )
 	If IsNull ( sValSin ) Then sValSin = ""
 End IF 	
-If sValStk <> sValSin Then sMess += "- Le code verrou ( (sin)" + sValSin + " vs (hub)" + sValStk + " )"
+If sValStk <> sValSin And sValStk <> "" And sValSin <> "" Then sMess += "- Le code verrou ( (sin)" + sValSin + " vs (hub)" + sValStk + " )" + sSaut 
 
 
 sValStk = "" ; sValSin = "" 
@@ -29508,17 +29542,18 @@ If IsNull ( sValStk ) Then sValStk = ""
 iRow = idwWDivsin.Find ( "Upper (NOM_ZONE) = 'DESIMLOCKE'", 1, idwWDivSin.RowCount () )
 if iRow > 0 then sValSin = Upper ( Trim ( idwWDivSin.GetItemString ( iRow, "VAL_LST_CAR" ) ) )
 If IsNull ( sValSin ) Then sValSin = ""
-If sValStk <> sValSin Then sMess += "- L'information de désimlockage ( (sin)" + sValSin + " vs (hub)" + sValStk + " )"
+If sValStk <> sValSin And sValStk <> "" And sValSin <> "" Then sMess += "- L'information de désimlockage ( (sin)" + sValSin + " vs (hub)" + sValStk + " )" + sSaut 
 
 If sMess <> "" Then
 	iRet = -1
 
 	Do While Not bFin
-		stMessage.sTitre		= "Préstation HUB stockée"
+		stMessage.sTitre		= "Préstation HUB pré-stockée par l'extranet"
 		stMessage.Icon			= Exclamation!
 		stMessage.bErreurG	= FALSE
 		stMessage.Bouton		= YESNO!
 		stMessage.sCode		= "COMT010"
+		stMessage.sVar[1]		= sMess
 		If F_Message ( stMessage ) = 1 Then bFin = TRUE
 	Loop
 	
