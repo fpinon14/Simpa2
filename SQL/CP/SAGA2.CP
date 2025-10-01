@@ -1884,12 +1884,21 @@ While Exists ( Select Top 1 1 From @TbDP380 where marquage = 0 ) And @iResil = 0
 	
 			If sysadm.FN_LIB_ETAT_DOS_ASSURE( @dcIdSin,'CODE' ) in ( 1530, 200 ) -- Le dossier doit être réfusé
 			   And  
-			   ( Exists ( Select Top 1 1 From sysadm.w_gar_sin Where id_sin = @dcIdSin And id_gti = 10 
-						  Union
-						  Select Top 1 1 From sysadm.gar_sin Where id_sin = @dcIdSin And id_gti = 10 
-						)
+			   ( Exists ( Select Top 1 1 
+						  From sysadm.gar_sin 
+						  Where id_sin = @dcIdSin 
+						  And id_gti = 10 
+						  And cod_etat = 200	)
 				 Or 
-				 Exists ( Select Top 1 1 From sysadm.refus where id_sin = @dcIdSin and id_motif in ( 1705, 1713 ) and id_i >= 0 )
+				 Exists ( Select Top 1 1 
+						  From	sysadm.gar_sin g, 
+								sysadm.refus r 
+						  Where g.id_sin = @dcIdSin 
+						  and   g.cod_etat = 200
+						  and   r.id_sin = g.id_sin
+						  and   r.id_gti = g.id_gti
+						  and   r.id_motif in ( 1705, 1713 ) 
+						  and   r.id_i >= 0 )
 			   )
 
 			 Begin

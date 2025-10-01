@@ -967,6 +967,7 @@ Declare @dcIdGti Decimal ( 7 )
 Declare @dcIdDetail Decimal ( 7 )
 Declare @iIdSeqPresta Integer
 
+
 -- [LGY38] afin que le CCO ne ramasse un éventuel travail présent
 -- Même si DELETE ensuite, le Trv pourrait être affecté au CCO, donc le pus tôt possible il faut couper
 Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @adcIdSin
@@ -2708,16 +2709,16 @@ If @sVariante = 'BOUYGUES'
 		Select Top 1 @dcIdGti = wg.id_gti From sysadm.w_sin ws, sysadm.w_gar_sin wg Where ws.id_sin = @adcIdSin and wg.id_sin = ws.id_sin
 		If @dcIdGti = 10 
 			Begin
-				Exec @iRet = sysadm.Atlas_Sinistre_Cocher_Pieces_Unitaire_V102 @adcIdSin, @dcIdGti , null, 6
+				Exec @iRet = sysadm.Atlas_Sinistre_Cocher_Pieces_Unitaire_V102 @adcIdSin, @dcIdGti , null, 275
 				If @iRet <= 0 
 					Begin
-						Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Demande de pièce impossible', 'Le système n''a pas pu cocher la pièce 6 (DECL. DE VOL AUPRES AUTORITES) sur ce dossier. Automatisation impossible.'
+						Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Demande de pièce impossible', 'Le système n''a pas pu cocher la pièce 275 (DECL. DE VOL AUPRES AUTORITES) sur ce dossier. Automatisation impossible.'
 						Return -1
 					End 
 				Else
 					Begin
 						-- Et Sion on renvoit en gestion quand même
-						Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Dossier en demande de pièce(s)', 'Le système a coché la pièce 6 (DECL. DE VOL AUPRES AUTORITES) sur ce dossier. Automatisation impossible.'
+						Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Dossier en demande de pièce(s)', 'Le système a coché la pièce 275 (PROCES VERBAL DETAILLE) sur ce dossier. Automatisation impossible.'
 						Return -1
 					End 
 			End 
@@ -3772,6 +3773,7 @@ Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_641_DATE_ACHAT_OU_OUVLIG_POSTERI
 Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_642_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_ADHESION_RECHERCHE @adcIdProdSin, @adtDteAdh, @adtDteAchat, @adtDteOuvLigne, @asChaineSeriaRetourRefus OutPut
 Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIEURE_DTE_ADHESION_DP131_RECHERCHE @adcIdProdSin, @adtDteAdh, @adtDteAchat, @adtDteOuvLigne, @asChaineSeriaRetourRefus OutPut
 
+Set @asMessRetour = 'Recherche et contrôle des refus effectué avec succès.'
 Return 1
 
 Go
