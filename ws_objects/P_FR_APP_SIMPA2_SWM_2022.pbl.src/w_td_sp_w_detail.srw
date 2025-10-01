@@ -2680,6 +2680,18 @@ If bOk Then
 			If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
 				If lDeb <=0 Then
 					F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 405 )
+			
+					If lDeb > 0 Then 
+						lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'CODE_EAN'", 1, idwWDivSin.RowCount () ) 
+						If lRow > 0 Then 
+							sVal = Upper ( idwWDivSin.GetItemString ( lRow, "VAL_CAR" ) )
+							If Not IsNumber ( sVal ) Or Len ( sVal ) <> 13 Then
+								stMessage.sCode = "WSIN935"
+								bOk=False						
+							End If
+						End If
+					End If 
+					
 				End If 
 			End If 			
 			
