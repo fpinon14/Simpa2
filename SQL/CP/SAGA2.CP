@@ -2257,6 +2257,7 @@ Declare @TbTrtDp380 Table (
 	id_seq Integer Identity,
 	id_sin Decimal ( 10 ),
 	id_adh varchar ( 19 ),
+	id_prod_adh integer,
 	val_car VarChar ( 510 ),
 	marquage integer
 )
@@ -2276,6 +2277,8 @@ Declare @sSql VarChar ( 2000 )
 Declare @iValRetMajRef Integer
 Declare @sChaineSeria  varchar ( 100 ) 
 Declare @sGetDate VarChar ( 40 ) 
+Declare @iDelaiJours integer
+Declare @iIdProdadh Integer 
 
 If @@servername = master.dbo.SPB_FN_ServerName ('PRO') Set @sEnv = 'PRO' Else Set @sEnv = 'SIM'
 
@@ -2300,13 +2303,16 @@ Insert into @TbTrtDp380
 Select  s.id_sin,
 		s.id_adh,
 		TRIM ( dp.val_car ) + TRIM ( dp.val_car2 ),
+		p.cod_prod_dms,
 		0
 From	sysadm.sinistre s,
 		sysadm.detail dt,
 		sysadm.reglement r,
-		sysadm.det_pro dp
+		sysadm.det_pro dp,
+		sysadm.produit p
 Where dp.id_prod = s.id_prod
 and   dp.id_code_dp = 380
+and   p.id_prod = s.id_prod
 And   sysadm.FN_CLE_VAL ( 'CAS', rtrim ( val_car ) + rtrim ( val_car2), ';' ) = 'REFERENCE_APPAREIL_NON_MAJ'
 And   dt.id_sin = s.id_sin
 And   dt.id_evt = 940
@@ -2324,16 +2330,30 @@ While Exists ( Select Top 1 1 From @TbTrtDp380 where marquage = 0 )
 		@iIdSeq = id_seq,
 		@dcIdSin = id_sin,
 		@sIdAdh = id_adh,
-		@sValCar = val_car
+		@sValCar = val_car,
+		@iIdProdadh = id_prod_adh
 	From	@TbTrtDp380
 	Where	marquage = 0
 
 	Set @sSubscriptionNumber = Right ( Replicate ( '0', 12 ) + ltrim ( rtrim ( @sIdAdh )), 12 )
-	Set @sSql = -- En attente requête de Zied MIG222
-	' Select top 1 TbBidon.code ' + 
-	' From ' + @sInstanceSaga2 + '.[SAGA2_PVC].[ref].[product_group] as pr, ' + 
-	'	   ( Values ( 1, ''A_RESILIER''), ( 2, ''A_NE_PAS_RESILIER'' )) as TbBidon ( code, libelle ) ' +  
-	' Where TbBidon.code = 2' 
+	Set @iDelaiJours = sysadm.FN_CLE_VAL ( 'DELAI_JOURS', @sValCar, ';' )
+	Set @sSql = -- MIG222
+		' Select ' + 
+		' 	CASE ' + 
+		' 		WHEN Exists ( ' + 
+		' 				SELECT Top 1 1 ' + 
+		' 				FROM ' + @sInstanceSaga2 + '.saga2_pvc.oth_sub.subscription s ' + 
+		' 				INNER JOIN ' + @sInstanceSaga2 + '.saga2_pvc.ref.ref_subscription_status rss ON rss.id_ref_subscription_status = s.id_ref_subscription_status ' + 
+		' 				INNER JOIN ' + @sInstanceSaga2 + '.saga2_pvc.ref.product p ON p.id_product = s.id_product ' + 
+		' 				INNER JOIN ' + @sInstanceSaga2 + '.saga2_pvc.oth_sub.insured_element ie ON ie.id_subscription = s.id_subscription ' + 
+		' 				INNER JOIN ' + @sInstanceSaga2 + '.saga2_pvc.oth_sub.insured_good ig ON ig.id_insured_element = ie.id_insured_element ' + 
+		' 				inner join ' + @sInstanceSaga2 + '.saga2_pvc.ref.ref_good_nature gn on gn.id_ref_good_nature =ig.id_ref_good_nature and gn.code=18 ' + 
+		' 				WHERE p.code = ' + convert ( Varchar ( 20 ), @iIdProdadh ) + ' ' + 
+		' 				AND s.subscription_number = ''' + @sSubscriptionNumber + '''  ' + 
+		' 				AND ig.purchase_date >= DateAdd ( day, ' + convert ( VarChar ( 10 ), @iDelaiJours ) + ' * (-1), Getdate () )  ' + 
+		' 			) THEN 2 -- Maj des Références sur l adhésion dans les "n" dernier jours, donc pas de résiliation  ' + 
+		' 		ELSE 1 -- Pas de Maj des Références trouvé sur l adhésion dans les "n" dernier jours, donc résiliation ' + 
+		' END AS exists_flag '  
 
 --  Exec ( @sSql ) 
 	Delete @TbInfoResilSAGA2  

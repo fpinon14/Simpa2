@@ -108,6 +108,9 @@ Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO
 		EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @adcIdSin, 2, @sMsgSherpa, @sOper , @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'E'
 	END
 
+	-- Dans tous les on envoie le Récap (règles donnée par fiche confluence)
+	Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__ENVOI_RECAPITULATIF_DE_DECLARATION @adcIdSin
+
 Go
 
 
@@ -1004,6 +1007,11 @@ If @iRet = -1 Return @iRet
 Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__VALIDATION_DU_DOSSIER @adcIdSin, @dcIdGti, @dcIdDetail, @iIdSeqPresta
 If @iRet = -1 Return @iRet
 
+-- A laisser tout à la fin, car sinon la PS est appelé dans le Rejet
+-- Envoi du mail récap
+-- Pas d'exploitation du @iRet, la validation est déjà, on met juste un contact si erreur
+Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__ENVOI_RECAPITULATIF_DE_DECLARATION @adcIdSin
+
 Return @iRet 
 
 Go
@@ -1258,6 +1266,16 @@ If Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And dt
 		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Date adhésion non renseignée', 'La date d''adhésion n''a pas été renseignée par l''extranet. Automatisation impossible.'
 		Return -1
 	End	
+
+-- Pour Bouygues si Sinistre dans les 15 jours après l’adhésion, on rejète en gestion
+If @sVarianteDp406 = 'BOUYGUES'
+	Begin
+		If Exists ( Select Top 1 1 From sysadm.w_sin Where dte_surv > dte_adh and dte_adh >= DateAdd ( day, -15, dte_surv ) )
+			Begin
+				Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Sin ds les 15j après adh.', 'Le sinistre a eu lieu dans les 15 jours après l''adhésion. Automatisation impossible.'
+				Return -1
+			End	
+	End 
 
 -- Contrôle du texte de déclaration (22/05/2018 JFF)
 Select @sVal = 
@@ -3778,3 +3796,51 @@ Return 1
 
 Go
 
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__ENVOI_RECAPITULATIF_DE_DECLARATION
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__ENVOI_RECAPITULATIF_DE_DECLARATION' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__ENVOI_RECAPITULATIF_DE_DECLARATION
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__ENVOI_RECAPITULATIF_DE_DECLARATION
+	@adcIdSin Decimal ( 10 )
+AS
+
+Declare @sErrOutPut VarChar ( 255 ) 
+Declare @sMess VarChar ( 1000 ) -- Je left à 508 plus loin selon la longueur du retour du mess err.
+Declare @iRet Integer
+Declare @iIdCt Integer
+
+Exec @iRet = sysadm.Atlas_Envoi_Mail_Recap_Decla @adcIdSin, @sErrOutPut OutPut
+
+If @iRet < 0 
+	Begin
+
+		Set @sMess = 'Suite à l''automatisation de la déclaration par Extranet qui a fonctionné sur le sinistre ' + Convert ( Varchar ( 10 ), @adcIdSin ) + ', le récapitulatif de la déclaration n''a pas pu être envoyé à l''assuré, l''erreur suivante a été retournée : ' 
+		Set @sMess = @sMess + IsNull ( Trim ( @sErrOutPut ) , '' ) 
+		Set @sMess = Left ( @sMess, 508 )
+	End 
+
+If @iRet > 0 
+	Begin
+		Set @sMess = 'Suite à l''automatisation de la déclaration par Extranet qui a fonctionné sur le sinistre ' + Convert ( Varchar ( 10 ), @adcIdSin ) + ', le récapitulatif de la déclaration a bien été envoyé à l''assuré.' 
+		Set @sMess = Left ( @sMess, 508 )
+	End 
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+BEGIN
+	Exec SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @adcIdSin, 2, @sMess,	'WEB', 300, @iIdCt OUTPUT							
+END
+ELSE
+BEGIN
+	Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @adcIdSin, 2, @sMess,	'WEB', 300, @iIdCt OUTPUT							
+END	
+Return @iRet
+
+Go

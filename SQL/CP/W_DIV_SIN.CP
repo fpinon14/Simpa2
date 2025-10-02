@@ -825,3 +825,111 @@ If Exists ( Select Top 1 1 From sysadm.w_sin ws Where ws.id_sin = @adcIdSin  )
 
 Go
 
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_I_DIV_SIN_SANS_DIV_PRO_STOCKAGE_CHAINE_LONGUE
+-- Auteur               :       JFF
+-- Date                 :       02/10/2025
+-- Libellé              :        
+-- Commentaires         :        
+-- Références           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+-------------------------------------------------------------------
+-- JFF      12/02/2016   [PI062]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_DIV_SIN_SANS_DIV_PRO_STOCKAGE_CHAINE_LONGUE' AND type = 'P' )
+        DROP procedure sysadm.PS_I_DIV_SIN_SANS_DIV_PRO_STOCKAGE_CHAINE_LONGUE
+GO
+
+CREATE procedure sysadm.PS_I_DIV_SIN_SANS_DIV_PRO_STOCKAGE_CHAINE_LONGUE
+        @adcIdSin        Decimal ( 10,0 ),-- Référence sinistre. -- [PI062]
+        @asNomZone       Varchar ( 32 ) , -- Nom technique de la zone, je laisse 3 car pour la numérotation _99
+		@asLibZone		 Varchar ( 30 ) , -- libellé d'affichage de la zone, je laisse 3 car pour la numérotation ' (99)'
+        @asValeur        VarChar ( 1000 ) , -- Valeur à reporter
+		@aiRangTri		 Integer,         -- départ Tri 
+        @asMajPar        Varchar ( 4 )    -- Opérateur (null=AUTO)
+AS
+
+Declare @sValWrk VarChar ( 35 )
+Declare @iCpt Integer
+Declare @sNomZoneWrk Varchar ( 35 )
+Declare @sLibZoneWrk Varchar ( 35 )
+Declare @sAltProteger   VarChar ( 1 )
+Declare @sTypValeur     VarChar ( 2 )
+
+
+If @aiRangTri is null or @aiRangTri = 0 Set @aiRangTri = 100
+Set @sAltProteger = 'O'
+Set @sTypValeur = 'C'
+
+Set @iCpt = 0
+While Len ( @asValeur ) > 0 
+	Begin
+		Set @iCpt = @iCpt + 1
+		Set @sValWrk = Left ( @asValeur, 35 ) -- Récup partie valeur à stocker
+		Set @asValeur = SubString ( @asValeur, Len ( @sValWrk ) + 1, Len ( @asValeur ) ) -- Maj chaine longue
+
+		Set @sNomZoneWrk = @asNomZone + '_' + convert ( varchar ( 10 ),  @iCpt )
+		Set @sLibZoneWrk = Right ( @asLibZone + ' (' + convert ( varchar ( 10 ),  @iCpt ) + ')', 35 )
+		Set @aiRangTri = @aiRangTri + 1
+
+ 		Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO
+        @adcIdSin,        -- Decimal ( 10,0 ),-- Référence sinistre. -- [PI062]
+        @sNomZoneWrk,     -- Varchar ( 35 ) , -- Nom technique de la zone
+		@sLibZoneWrk,	  -- Varchar ( 35 ) , -- libellé d'affichage de la zone
+        @sValWrk,         -- VarChar ( 35 ) , -- Valeur à reporter
+		@sAltProteger,   -- VarChar ( 1 ),   -- O : Donnée protégée (non modifiable), 'N' ou null sinon
+		@sTypValeur,      -- VarChar ( 2 ),   -- Voir tableau
+		@aiRangTri,		--		 Integer,         -- Tri (null=Tri Auto)
+        @asMajPar        -- Varchar ( 4 )    -- Opérateur (null=AUTO)
+
+	End 
+Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_DIV_SIN_SANS_DIV_PRO_RECUPERATION_CHAINE_LONGUE
+-- Auteur               :       JFF
+-- Date                 :       02/10/2025
+-- Libellé              :        
+-- Commentaires         :        
+-- Références           :       
+--
+-- Arguments            :       
+--
+-- Retourne             :       Rien
+-------------------------------------------------------------------
+-- JFF      12/02/2016   [PI062]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_DIV_SIN_SANS_DIV_PRO_RECUPERATION_CHAINE_LONGUE' AND type = 'P' )
+        DROP procedure sysadm.PS_S_DIV_SIN_SANS_DIV_PRO_RECUPERATION_CHAINE_LONGUE
+GO
+
+CREATE procedure sysadm.PS_S_DIV_SIN_SANS_DIV_PRO_RECUPERATION_CHAINE_LONGUE
+        @adcIdSin        Decimal ( 10,0 ),-- Référence sinistre. -- [PI062]
+        @asNomZone       Varchar ( 32 ) , -- Nom technique de la zone, je laisse 3 car pour la numérotation _99
+		@asPermWrk		 VarChar ( 1 ), -- Table (P)erm ou (W)ork
+		@asChaineRetour  VarChar ( 1000 ) OutPut 
+AS
+
+Declare @iCpt Integer
+Declare @sValWrk VarChar ( 35 )
+Declare @sNomZoneWrk Varchar ( 35 )
+
+Set @asChaineRetour = ''
+
+Set @iCpt = 0
+While 1=1
+	Begin
+		Set @iCpt = @iCpt + 1
+		Set @sNomZoneWrk = @asNomZone + '_' + convert ( varchar ( 10 ),  @iCpt )
+
+		Select @sValWrk = sysadm.FN_GET_DIV_SIN (@adcIdSin, @sNomZoneWrk, @asPermWrk, 'RETOUR=LIB' )
+		If @@ROWCOUNT <> 1 Or @sValWrk is null Or trim ( @sValWrk) = '' Return 
+
+		Set @asChaineRetour = @asChaineRetour + trim ( @sValWrk ) 
+	End 
+Go
