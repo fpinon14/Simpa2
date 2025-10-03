@@ -16364,8 +16364,9 @@ For lCpt = 1 To lTot
 			  "MAJ_REF_APP_OK_SUR_ADH_SAGA2", &
 			  "EXTRAUTO_SUCCES_DECL" ,&
 			  "EXTRAUTO_REJET_DECL",&
-			  "COD_BOUTIQUE_EXTRANET"
-
+			  "COD_BOUTIQUE_EXTRANET",&
+			  "QUE_S_EST_T_IL_PASSE_LIB",&
+			  "QUE_S_EST_T_IL_PASSE_CODE"
 			  
   			  idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "O" )
 

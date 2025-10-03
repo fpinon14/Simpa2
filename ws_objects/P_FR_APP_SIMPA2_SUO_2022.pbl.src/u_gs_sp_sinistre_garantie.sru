@@ -225,6 +225,7 @@ private function string uf_plaf_adhesion_survenance_ttegti_mp ()
 private subroutine uf_controlergestion_carrefour_carma ()
 private function string uf_controlergestion_des_opticiens ()
 private function string uf_plaf_krys_cdl_mt_spec_si_nb_sup_1_sin ()
+private function boolean uf_rf_1165 ()
 end prototypes
 
 public subroutine uf_traitement (integer aitype, ref s_pass astpass);//*-----------------------------------------------------------------
@@ -3493,6 +3494,7 @@ private function boolean uf_gestionrefus ();//*---------------------------------
 // 		JFF   02/11/2020 [VDOC29786]
 // 		JFF   06/10/2020 [PLAFOND762_ISM215077]
 //       JFF   20/06/2025 [MIG147_KRYS]
+//       JFF   22/07/2025 [MIG165_BOUYGUES]
 //*-----------------------------------------------------------------
 
 /*------------------------------------------------------------------*/
@@ -3735,6 +3737,12 @@ If Not This.uf_rf_223 () Then Return ( False )
 
 // [PC202553_SELECTRA]
 If Not This.uf_rf_1898 () Then Return ( False )				
+
+
+// [MIG165_BOUYGUES]
+If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
+	If Not This.uf_rf_1165 () Then Return ( False )				
+End If 
 
 
 // [PLAF_REF]
@@ -21473,6 +21481,50 @@ End If
 Return ( sPos )
 	
 
+end function
+
+private function boolean uf_rf_1165 ();//*-----------------------------------------------------------------
+//*
+//* Fonction		: Uf_Rf_1165 (PRIVATE)
+//* Auteur			: Fabry JF
+//* Date				: 03/10/2025
+//* Libellé			: [MIG165_BOUYGUES]
+//* Commentaires	: Nature de sinistre non couverte
+//*
+//* Arguments		: Aucun
+//*
+//* Retourne		: Boolean		Vrai = Le refus existe, on vient de le cocher.
+//*										Faux = Le refus n'existe pas.
+//*
+//*-----------------------------------------------------------------
+//* [20250915131212003][JFF][MIG165_BOUYGUES]
+//*-----------------------------------------------------------------
+
+Long lLig, lTotCondition, lIdNatSin, lDeb, lFin, iIdGti, lRow
+String sVal
+Boolean bRet
+
+/*------------------------------------------------------------------*/
+/* On déclenche ce motif si la nature du sinistre n'est pas         */
+/* couverte. On envoie le test uniquement si la révision est        */
+/* connue.                                                          */
+/*------------------------------------------------------------------*/
+bRet = True
+
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_wSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 405 )
+If lDeb <= 0 Then Return bRet
+
+lRow = idw_wdivsin.Find("UPPER(NOM_ZONE)='QUE_S_EST_T_IL_PASSE_CODE'", 1, idw_wdivsin.RowCount())
+If lRow <= 0 Then Return bRet
+
+sVal = idw_wdivsin.GetItemString (lRow, "VAL_CAR") 
+iIdGti = idw_wGarSin.GetItemNumber ( 1, "ID_GTI" )
+
+If Pos ( sVal, "REE" ) > 0 And iIdGti = 11 Then
+	bRet = Uf_RF_EcrireRefus ( 1165 )
+End If 
+
+Return ( bRet )
 end function
 
 on u_gs_sp_sinistre_garantie.create
