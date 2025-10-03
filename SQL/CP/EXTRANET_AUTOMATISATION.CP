@@ -1109,7 +1109,7 @@ CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__CONTROLE_INTEGRITE_DOSSIER
 	@adcIdSin Decimal ( 10 )
 AS
 
-Declare @sVal Varchar ( 200 )
+Declare @sVal Varchar ( 1000 )
 Declare @sMarqueAppSin Varchar ( 35 ) 
 Declare @sModlAppSin Varchar ( 35 ) 
 Declare @sCodeRetIfr Varchar ( 20 )
@@ -1555,7 +1555,39 @@ If @sVarianteDp406 = 'BOUYGUES'
 				Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Code EAN non valide', 'L''extranet a transmis un Code EAN non valide au niveau du format (doit comporter 13 chiffres). Automatisation impossible.'
 				Return -1
 			End 
+
+		If	Exists ( Select Top 1 1 From sysadm.w_gar_sin Where id_sin = @adcIdSin And id_gti in ( 11 ) ) 
+			Begin 
+				Set @sVal = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'que_s_est_t_il_passe_code', 'W', '' )
+				If CHARINDEX ( '#', @sVal ) <= 0 Or Left ( @sVal, 1 ) <> '#' Or Right ( @sVal, 1 ) <> '#' Or CHARINDEX ( '##', @sVal ) > 0 
+				Begin
+					Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Chaine choc, pression.. non valide', 'L''extranet a transmis une chaine des Choc, Chute, Pression etc... non valide au niveau du format (doit comporter 13 chiffres). Automatisation impossible.'
+					Return -1
+				End 
+
+				-- Transformation de la Chaine 
+				SELECT @sVal = 
+					STUFF((
+						SELECT ', ' + TRIM (cc.lib_code)
+						FROM sysadm.code_car cc
+						WHERE cc.id_typ_code = '-WP'
+						AND CHARINDEX('#' + TRIM (cc.id_code) + '#', @sVal) > 0
+						FOR XML PATH(''), TYPE
+					).value('.', 'VARCHAR(1000)'), 1, 2, '')
+				Set @sVal = Upper (Left ( @sVal, 1)) + Lower ( Substring ( @sVal, 2, Len ( @sVal )))
+
+				exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO_STOCKAGE_CHAINE_LONGUE @adcIdSin, 'que_s_est_t_il_passe_lib', 'Que s''est-t-il passé (lib)', @sVal, 2500, 'WEB'
+			End 
+
 	End 
+
+-- Une seule Garantie.
+If ( Select	count (*) From sysadm.w_gar_sin wg Where	wg.id_sin = @adcIdSin ) > 1
+	Begin
+		Exec sysadm.PS_I_PM234_7_REJET @adcIdSin, 'Trop de garanties (1 max)', 'Le sinistre ne doit avoir qu''une seule garantie pour être éligible au système de l''automatisation du process. Automatisation impossible.'
+		Return -1
+	End		
+
 
 -- La garantie doit être paramétré sur le contrat
 If Not Exists ( 
@@ -1893,7 +1925,86 @@ If @iRet = -1 Return @iRet
 Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIEURE_DTE_ADHESION_DP131 @adcIdSin
 If @iRet = -1 Return @iRet
 
+-- Refus 1165 : DOMMAGE PARTIES EXTERIEURES
+Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_1165_DOMMAGE_PARTIES_EXTERIEURES @adcIdSin
+If @iRet = -1 Return @iRet
+
+
 Go
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_1165_DOMMAGE_PARTIES_EXTERIEURES_RECHERCHE
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__REFUS_1165_DOMMAGE_PARTIES_EXTERIEURES_RECHERCHE' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_1165_DOMMAGE_PARTIES_EXTERIEURES_RECHERCHE
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_1165_DOMMAGE_PARTIES_EXTERIEURES_RECHERCHE
+	@adcIdProdSin		Decimal ( 7 ), -- Code produit sinistre
+	@adcIdGti			Decimal ( 7 ), -- code garantie
+	@asChaineQueSestTilPasse VarChar ( 1000 ),
+	@asChaineSeriaRetourRefus Varchar ( 500 ) OutPut
+AS
+
+Declare @sVarianteDp406 Varchar ( 50 )
+Declare @sVal Varchar ( 1000 )
+
+Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';')
+From sysadm.det_pro dp
+Where dp.id_prod = @adcIdProdSin
+
+If @sVarianteDp406 = 'BOUYGUES'
+Begin 
+	If CHARINDEX ( '#REE#', @asChaineQueSestTilPasse ) > 0 And @adcIdGti = 11
+	Begin
+		Set @asChaineSeriaRetourRefus = sysadm.FN_CLE_VAL_E ( '1165', sysadm.FN_CODE_NUM ( 1165, '+RE' ), Trim ( @asChaineSeriaRetourRefus ), ';' )	
+	End 
+End 
+
+Go
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_1165_DOMMAGE_PARTIES_EXTERIEURES
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__REFUS_1165_DOMMAGE_PARTIES_EXTERIEURES' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_1165_DOMMAGE_PARTIES_EXTERIEURES
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_1165_DOMMAGE_PARTIES_EXTERIEURES
+	@adcIdSin   Decimal (10)
+AS
+
+Declare @sVarianteDp406 Varchar ( 50 )
+Declare @sVal Varchar ( 1000 )
+
+Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';')
+From sysadm.det_pro dp,
+	 sysadm.w_sin ws
+Where ws.id_sin = @adcIdSin
+And   dp.id_prod = ws.id_prod
+
+If @sVarianteDp406 = 'BOUYGUES'
+Begin 
+	Set @sVal = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'que_s_est_t_il_passe_code', 'W', '' )	
+	If CHARINDEX ( '#REE#', @sVal ) > 0 
+	Begin
+		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Refus machine 1165', 'Le refus machine 1165 indiquant un dommage de parties extérieures non couverte par le contrant s''est déclenché. Automatisation impossible.'  
+		Return -1   
+	End 
+End 
+
+Go
+
 
 --------------------------------------------------------------------
 -- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIEURE_DTE_ADHESION_DP131_RECHERCHE
@@ -1944,15 +2055,8 @@ IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION_
 GO
 
 CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIEURE_DTE_ADHESION_DP131
-	@adcIdSin   Decimal (10)/*,
-	@asCas		VarChar ( 50 ),
-	@asChaineSeriaCodeRefus Varchar ( 255 ) Output*/
+	@adcIdSin   Decimal (10)
 AS
-
-/*
-Set @asChaineSeriaCodeRefus = Trim ( @asChaineSeriaCodeRefus )
-If @asChaineSeriaCodeRefus is null Set @asChaineSeriaCodeRefus = ''
-*/
 
 If Exists (   
   Select Top 1 1  
@@ -2711,38 +2815,74 @@ Declare @sValCarDp406 VarChar ( 510 )
 Declare @sVariante  VarChar ( 50 )
 Declare @dcIdGti Decimal ( 7 )
 Declare @iRet Integer 
+Declare @dcIdProdSin Decimal ( 7 )
+Declare @sVal VarChar ( 255 ) 
+Declare @dcCodePiece Decimal ( 7 )
+Declare @iIdSeq integer 
+Declare @sLibPce VarChar ( 255 ) 
+Declare @sMess VarChar ( 508 )
 
-Select	@sValCarDp406 = IsNull ( TRIM ( val_car ), '') + IsNull ( TRIM ( val_car2), '')
-From	sysadm.w_sin ws,
-		sysadm.det_pro dp
-Where	ws.id_sin = @adcIdSin
-And		dp.id_prod = ws.id_prod
-And		dp.id_code_dp = 406
+Declare @TbDp77 Table ( 
+		id_seq integer identity,
+		code_pce decimal ( 7 ),
+		lib_pce varchar ( 255 ),
+		etat_pce varchar ( 50 ),
+		date_reclamee DateTime,
+		date_receptionnee DateTime,
+		date_analyse DateTime,
+		marquage integer null )
 
-Set @sVariante = sysadm.FN_CLE_VAL ( 'VARIANTE', @sValCarDp406, ';')
+-- Pour l'instant, ne fonctionne que sur le mode UNIQUE, donc V101
+If Not Exists ( 
+		Select Top 1 1 
+		From sysadm.det_pro dp,
+			 sysadm.w_sin ws
+		Where ws.id_sin = @adcIdSin
+		and dp.id_prod = ws.id_prod
+		and dp.id_code_dp = 345
+		And sysadm.FN_CLE_VAL ( 'MODE_FCT', trim ( dp.val_car ) + trim ( dp.val_car2), ';' ) = 'UNIQUE'
+	) Return 1
 
-If @sVariante = 'BOUYGUES' 
-	Begin 
-		-- Pièces 6 réclamée pour le VOL : DECL. DE VOL AUPRES AUTORITES
-		Select Top 1 @dcIdGti = wg.id_gti From sysadm.w_sin ws, sysadm.w_gar_sin wg Where ws.id_sin = @adcIdSin and wg.id_sin = ws.id_sin
-		If @dcIdGti = 10 
-			Begin
-				Exec @iRet = sysadm.Atlas_Sinistre_Cocher_Pieces_Unitaire_V102 @adcIdSin, @dcIdGti , null, 275
-				If @iRet <= 0 
-					Begin
-						Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Demande de pièce impossible', 'Le système n''a pas pu cocher la pièce 275 (DECL. DE VOL AUPRES AUTORITES) sur ce dossier. Automatisation impossible.'
-						Return -1
-					End 
-				Else
-					Begin
-						-- Et Sion on renvoit en gestion quand même
-						Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Dossier en demande de pièce(s)', 'Le système a coché la pièce 275 (PROCES VERBAL DETAILLE) sur ce dossier. Automatisation impossible.'
-						Return -1
-					End 
-			End 
-	End 
+Select Top 1 
+		@dcIdGti = wg.id_gti,
+		@dcIdProdSin = ws.id_prod
+From sysadm.w_sin ws, 
+	 sysadm.w_gar_sin wg 
+Where ws.id_sin = @adcIdSin 
+and   wg.id_sin = ws.id_sin
 
+Set @sVal = '#' + Convert ( VarChar ( 10 ), @dcIdGti ) + '#'
 
+Insert into @TbDp77 Exec sysadm.Atlas_Piece_Charger_Pieces_V101 @dcIdProdSin, @sVal, null, ''
+Update @TbDp77 Set marquage = 0
+
+While Exists ( Select Top 1 1 From @TbDp77 where marquage = 0 )
+ Begin
+	Select 	Top 1 
+		@iIdSeq = id_seq,
+		@dcCodePiece = code_pce,
+		@sLibPce = lib_pce
+	From	@TbDp77
+	Where	marquage = 0
+
+	Exec @iRet = sysadm.Atlas_Sinistre_Cocher_Pieces_Unitaire_V102 @adcIdSin, @dcIdGti , null, @dcCodePiece
+	If @iRet <= 0 
+		Begin
+			Set @sMess = 'Le système n''a pas pu cocher la pièce ' + Convert ( VarChar ( 10 ), @dcCodePiece ) + ' (' + @sLibPce + ') sur ce dossier. Automatisation impossible.'
+			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Demande de pièce impossible', @sMess 
+			Return -1
+		End 
+	Else
+		Begin
+			-- Et Sion on renvoit en gestion quand même
+			Set @sMess = 'Le système a coché la pièce ' + Convert ( VarChar ( 10 ), @dcCodePiece ) + ' (' + @sLibPce + ') sur ce dossier. Automatisation impossible.'
+			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Dossier en demande de pièce(s)', @sMess 
+			Return -1
+		End 
+
+	Update @TbDp77 Set marquage = 1 Where id_seq = @iIdSeq
+ End
+ 
 Return 1
 
 Go
@@ -3761,6 +3901,7 @@ CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__RECHERCHE_REFUS_AVANT_DECL
 	@adIdTerritSin		Decimal ( 7 ), -- code territorialité
 	@adcIdNatSin 		Decimal ( 7 ), -- code nature de sinistre
 	@adcIdDetSin		Decimal ( 7 ), -- code détail sinistre
+	@asChaineQueSestTilPasse VarChar ( 1000 ), -- Une chute ? Un choc ? Une pression ? En contact avec un liquide ? Une rayure, écaillure ou égratignure ?
 	@asChaineSeriaArgSuppl VarChar ( 255 ), -- Si besoin un jour
 	@asChaineSeriaRetourRefus Varchar ( 500 ) OutPut, -- ex : 611=NATURE DE SINISTRE NON COUVERT;1713=DISPARITIONS PERTES OUBLIS;603=PRIMES NON PERCUES
 	@asMessRetour VarChar ( 255 ) 
@@ -3768,6 +3909,12 @@ AS
 
 -- 1 Arguments exploitable, retour @asChaineSeriaRetourRefus valide 
 -- < 0 Arguments inexploitable, retour @asChaineSeriaRetourRefus non valide 
+
+Declare @sVarianteDp406 Varchar ( 50 )
+
+Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';')
+From sysadm.det_pro dp
+Where dp.id_prod = @adcIdProdSin
 
 IF @adcIdProdSin is null or @adcIdProdSin <=0 Begin Set @asMessRetour = 'Code produit sinistre obligatoire' ; Return -10 End 
 If Exists ( Select Top 1 1 From sysadm.produit p where p.id_prod = @adcIdProdSin and cod_adh <> 3 ) and @adtDteAdh is null Begin Set @asMessRetour = 'Date d''adhésion obligatoire selon la méthode d''adhésion paramétré sur ce produit' ; Return -20 End 
@@ -3790,6 +3937,7 @@ Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_613_TERRITORIALITE_NON_COUVERTE_
 Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_641_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_SURVENANCE_RECHERCHE @adcIdProdSin, @adtDteSurv, @adtDteAchat, @adtDteOuvLigne, @asChaineSeriaRetourRefus OutPut
 Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_642_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_ADHESION_RECHERCHE @adcIdProdSin, @adtDteAdh, @adtDteAchat, @adtDteOuvLigne, @asChaineSeriaRetourRefus OutPut
 Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIEURE_DTE_ADHESION_DP131_RECHERCHE @adcIdProdSin, @adtDteAdh, @adtDteAchat, @adtDteOuvLigne, @asChaineSeriaRetourRefus OutPut
+Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_1165_DOMMAGE_PARTIES_EXTERIEURES_RECHERCHE @adcIdProdSin, @adtDteAdh, @adcIdGti, @asChaineQueSestTilPasse, @asChaineSeriaRetourRefus OutPut
 
 Set @asMessRetour = 'Recherche et contrôle des refus effectué avec succès.'
 Return 1
