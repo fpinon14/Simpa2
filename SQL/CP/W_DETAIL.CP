@@ -1192,8 +1192,9 @@ GO
 -- JFF      20/01/2014   [PM208]
 -- JFF		09/02/2016   [ITSM361927]
 -- JFF      12/02/2016   [PI062]
+--[20251006144234][JFF][MIG119]
+-- JFF      22/07/2025   [MIG165_BOUYGUES]
 -------------------------------------------------------------------
-
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S09_W_DETAIL_NBEVT' AND type = 'P' )
         DROP procedure sysadm.PS_S09_W_DETAIL_NBEVT
 GO
@@ -1215,6 +1216,7 @@ AS
  Declare @sCodAdh   VarChar ( 1 )
  Declare @sNom		VarChar ( 35 ) -- [ITSM361927]
  Declare @sPrenom	VarChar ( 35 ) -- [ITSM361927]
+ Declare @iIdMotifRegSaga2 Integer 
 
  Select @sCodAdh = p.cod_adh,
 		@sNom = s.nom,  -- [ITSM361927]
@@ -1279,6 +1281,59 @@ AS
 			p.prenom				= @sPrenom -- [ITSM361927]				
 	        
   End
+
+--[20251006144234][JFF][MIG119]
+If sysadm.FN_CLE_NUMERIQUE ( 'MIG19_PSPLAF_SAGA2') >= 2 
+ Begin
+
+	-- Ce plafond est particulier et se fait par rapport à l'évènement, donc il n'a de sens sur SAGA2 que si je connais
+	-- le motif du règlement en lien avec SAGA2
+	Declare @TbLienEvtMotifRegSaga2 Table (
+		id_evt Integer,
+		id_motifreg_saga2 Integer
+	)
+
+	Insert into @TbLienEvtMotifRegSaga2 Values ( 971, 6 )
+	
+	Select Top 1 @iIdMotifRegSaga2 = id_motifreg_saga2 
+	From @TbLienEvtMotifRegSaga2 
+	Where id_evt = @dcIdEvt
+
+	If @iIdMotifRegSaga2 > 0 
+		Begin
+			 Declare @TbRetSaga2 Table ( 
+				id_seq Integer identity (1, 1 ),
+				id_sin integer,
+				subscription_number varchar ( 50 ),
+				indemnise VarChar ( 10 ),
+				mt_reg_assure Decimal ( 11, 2 ),
+				mode_indemnisation VarChar ( 50 ),
+				mode_indemnisation_long VarChar ( 50 ),
+				dte_adh DateTime,
+				dte_decl DateTime,
+				dte_surv DateTime,
+				chaine_seria Varchar ( 800 ) --[20251006144234][JFF][MIG119]
+				)
+
+			 If @iNbSin is null Set @iNbSin = 0
+			 Insert into @TbRetSaga2 Exec sysadm.PS_S_SAGA2_PLAFOND_PAR_ANNEE_SUR_SAGA2 @dcIdSin, @sIdAdh 
+
+			 --[20251006144234][JFF][MIG119]
+			 Set @iNbSin = @iNbSin + 
+						   IsNull (  ( Select count (* ) 
+									 From 
+										( Select Distinct id_sin 
+										  From @TbRetSaga2 
+										  where Upper ( indemnise ) = 'OUI'
+										  And dte_surv <= @dtSurv                        
+										  And dte_surv >= @dtAdhRenouv
+										  And CharIndex ( '#' + convert ( Varchar ( 10 ), @iIdMotifRegSaga2 ) + '#', chaine_seria ) > 0
+										) as T )
+							, 0 ) 
+		End 
+ End 
+
+
 GO
 
 

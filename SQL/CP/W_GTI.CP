@@ -1897,6 +1897,7 @@ GO
 -- JFF		09/02/2016   [ITSM361927]
 -- JFF      12/02/2016   [PI062]
 -- JFF      07/05/2025   [MIG19_PSPLAF_SAGA2]
+-- [20251006144234][JFF][MIG119]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S07_W_GTI_NBSIN' AND type = 'P' )
         DROP procedure sysadm.PS_S07_W_GTI_NBSIN
@@ -1985,13 +1986,16 @@ If sysadm.FN_CLE_NUMERIQUE ( 'MIG19_PSPLAF_SAGA2') > 0
 		mode_indemnisation_long VarChar ( 50 ),
 		dte_adh DateTime,
 		dte_decl DateTime,
-		dte_surv DateTime
+		dte_surv DateTime,
+		chaine_seria Varchar ( 800 ) --[20251006144234][JFF][MIG119]
 	    )
 
 	 If @iNbSin is null Set @iNbSin = 0
 	 Insert into @TbRetSaga2 Exec sysadm.PS_S_SAGA2_PLAFOND_PAR_ANNEE_SUR_SAGA2 @dcIdSin, @sIdAdh 
 
-	 Set @iNbSin = @iNbSin + IsNull ( ( Select COUNT (*) from @TbRetSaga2 where Upper ( indemnise ) = 'OUI' ), 0 ) 
+	 --[20251006144234][JFF][MIG119]
+	 Set @iNbSin = @iNbSin + IsNull ( ( Select Count ( * ) From ( Select Distinct id_sin from @TbRetSaga2 where Upper ( indemnise ) = 'OUI' ) as T ), 0 )
+			
 
  End 
 
@@ -4304,6 +4308,7 @@ Go
 -- JFF		09/02/2016   [ITSM361927]
 -- JFF      12/02/2016   [PI062]
 -- JFF      10/09/2025   [20250910084954827][JFF][MIG165_BOUYGUES]
+-- [20251006144234][JFF][MIG119]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S03_W_GTI_NBSIN_DTE_SURV' AND type = 'P' )
         DROP procedure sysadm.PS_S03_W_GTI_NBSIN_DTE_SURV
@@ -4403,20 +4408,23 @@ If sysadm.FN_CLE_NUMERIQUE ( 'MIG19_PSPLAF_SAGA2') >= 2
 		mode_indemnisation_long VarChar ( 50 ),
 		dte_adh DateTime,
 		dte_decl DateTime,
-		dte_surv DateTime
+		dte_surv DateTime,
+		chaine_seria Varchar ( 800 ) --[20251006144234][JFF][MIG119]
 	    )
 
 	 If @iNbSin is null Set @iNbSin = 0
 	 Insert into @TbRetSaga2 Exec sysadm.PS_S_SAGA2_PLAFOND_PAR_ANNEE_SUR_SAGA2 @dcIdSin, @sIdAdh 
 
+	 --[20251006144234][JFF][MIG119]
 	 Set @iNbSin = @iNbSin + 
-				   IsNull ( 
-								( Select COUNT (*) 
+				   IsNull (  ( Select count (* ) 
+							 From 
+								( Select Distinct id_sin 
 								  From @TbRetSaga2 
 								  where Upper ( indemnise ) = 'OUI'
 								  And dte_surv <= @dtSurv                        
 								  And dte_surv >= @dtAdhRenouv
-								) 
+								) as T )
 					, 0 ) 
 
  End 
@@ -6091,6 +6099,8 @@ GO
 --
 -- Retourne             :       Rien
 -------------------------------------------------------------------
+--[20251006144234][JFF][MIG119]
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S764_W_GTI_KRYS_CDL_NBSIN' AND type = 'P' )
         DROP procedure sysadm.PS_S764_W_GTI_KRYS_CDL_NBSIN
 GO
@@ -6164,13 +6174,15 @@ If sysadm.FN_CLE_NUMERIQUE ( 'MIG19_PSPLAF_SAGA2') > 0
 		mode_indemnisation_long VarChar ( 50 ),
 		dte_adh DateTime,
 		dte_decl DateTime,
-		dte_surv DateTime
+		dte_surv DateTime,
+		chaine_seria Varchar ( 800 ) --[20251006144234][JFF][MIG119]
 	    )
 
 	 If @iNbSin is null Set @iNbSin = 0
 	 Insert into @TbRetSaga2 Exec sysadm.PS_S_SAGA2_PLAFOND_PAR_ANNEE_SUR_SAGA2 @dcIdSin, @sIdAdh 
 
-	 Set @iNbSin = @iNbSin + IsNull ( ( Select COUNT (*) from @TbRetSaga2 where Upper ( indemnise ) = 'OUI' ), 0 ) 
+	 --[20251006144234][JFF][MIG119]
+	 Set @iNbSin = @iNbSin + IsNull ( ( Select Count ( * ) From ( Select Distinct id_sin from @TbRetSaga2 where Upper ( indemnise ) = 'OUI' ) as T ), 0 )
 
  End 
 
