@@ -29028,6 +29028,7 @@ private function integer uf_zn_choix_regle_hub (string ascas, long alidprod, lon
 //        JFF   12/02/2025   [HUB875]
 //        JFF   31/03/2025   [MIG82_JOURN_EVT]
 //			 JFF   29/09/2025   [20250929100727247][JFF][MIG165_BOUYGUES]
+//			 JFF   06/10/2025   [20251006135631643][JFF]
 //*---------------------------------------------------------------
 
 s_Pass	stPass
@@ -29311,6 +29312,10 @@ Choose Case ascas
 					
 				Case "A_DIAGNOSTIQUER"
 					sVal = "EDI"
+
+				//[20251006135631643][JFF]
+				Case "A_COMMANDER"
+					sVal = isTypapp
 			End Choose 
 					
 			adw.SetItem ( alRow, "ID_TYP_ART", sVal )
