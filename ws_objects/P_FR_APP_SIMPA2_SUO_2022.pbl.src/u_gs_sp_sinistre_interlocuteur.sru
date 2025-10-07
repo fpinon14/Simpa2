@@ -449,6 +449,11 @@ End If
 // [MIG165_BOUYGUES]
 If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
 	idw_wInter.uf_proteger( {"V_REF1" }, "1")
+	idw_wInter.uf_proteger( {"V_REF2" }, "1")
+	sCodInter = idw_wInter.GetItemString ( 1, "COD_INTER" ) 
+	If sCodInter <> "B" Then 
+		idw_wInter.uf_proteger( {"ADR_ATT" }, "1")
+	End If 
 End If
 
 
@@ -629,6 +634,11 @@ End If
 // [MIG165_BOUYGUES]
 If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
 	idw_wInter.uf_proteger( {"V_REF1" }, "1")
+	idw_wInter.uf_proteger( {"V_REF2" }, "1")
+	sCodInter = idw_wInter.GetItemString ( 1, "COD_INTER" ) 
+	If sCodInter <> "B" Then 
+		idw_wInter.uf_proteger( {"ADR_ATT" }, "1")
+	End If 
 End If
 
 
@@ -2907,11 +2917,12 @@ private subroutine uf_controlersaisie_commune (ref string astext, ref string asp
 //* #1	 JFF	  08/10/2003  Le fichier INSEE.TXT ne contient que les 25 premiers 
 //*								  caractères de la ville.
 //* #2	 JFF	  27/01/2004  DCMP 030581 : On prévoit un shunt pour le contrôle des communes.
+//        JFF   07/10/2025 [MIG147_KRYS]
 //*-----------------------------------------------------------------
 
 Integer		iCode
 Long 			lTotRow, lCpt, lDeb, lFin
-String 		sVille, sCP, sCodInter, sDept
+String 		sVille, sCP, sCodInter, sDept, sVref2, sCTLCP
 Boolean		bCommuneTrouve, bCodePostalTrouve
 
 If asPos <> "" Or Not ibAltCommune Then Return
@@ -2925,6 +2936,16 @@ If lDeb > 0 Then Return
 
 sCP	  	 = Upper ( Trim ( idw_wInter.GetItemString ( 1, "ADR_CP" )	) ) 
 sCodInter = idw_wInter.GetItemString ( 1, "COD_INTER" )
+sVref2	 = idw_wInter.GetItemString ( 1, "V_REF2" ) // [MIG147_KRYS]
+
+// [MIG147_KRYS]
+If F_CLE_A_TRUE ( "MIG147_KRYS" ) Then
+	// Cas particulier moins fort que la DP/16
+	// On peut couper le contrôle sur une inter si bcp v_ref contient CTLCP=0
+	sCTLCP = F_CLE_VAL ( "CTLCP", sVref2, ";" )
+	If sCTLCP = "0" Then Return
+End If
+
 
 /*------------------------------------------------------------------*/
 /* Si ce n'est pas un pays étranger, ni une banque on traite le cas */

@@ -4079,6 +4079,7 @@ private subroutine uf_controlergestion (ref s_pass astpass);//*-----------------
 //       JFF   31/03/2025 [MON374]
 //       JFF   07/05/2013 [MIG19_PSPLAF_SAGA2]
 //       JFF   22/07/2025 [MIG165_BOUYGUES]
+//       JFF   07/10/2025 [MIG147_KRYS]
 //*-----------------------------------------------------------------
 Long lTotCourrier, lCodEtat, lNbContact, lNbNat, lCptCTact, llig, lCpt, lVal1, lVal2, lVal3, lVal4, lIdOrianBout, lVal5, lVal6 
 Long lCptDetail, lTotDetail, lTotCmd, lDeb, lFin, lCptRegFrn, lCodeEtat, lRow, lVal, lIdGti, lIdInter, lRowAss, lTot, lIdDetail 
@@ -6181,7 +6182,8 @@ Else
 
 	ibAltCourrier  = ltotCourrier > 0
 
-	If	lCodEtat <> 1 And idw_wCourrier.RowCount () = 0 Then
+	// [MIG147_KRYS]
+	If	lCodEtat <> 1 And idw_wCourrier.RowCount () = 0 And Not ibMIG1_CourEmailing Then
 
 		// On n'affichage pas ce message en téléphonie ( perte de temps )
 		// [VDOC13534] 208
@@ -12981,10 +12983,11 @@ private subroutine uf_controlersaisie_commune (ref string astext, ref string asp
 //* #2	 JFF	  27/01/2004  DCMP 030581 : On prévoit un shunt pour le contrôle des communes.
 //* #3	 PHG	  17/06/2006  [DCMP060445] : Unification Sherpa/simpa Controle des communes
 //*								  Réécriture de la fonction.
+//        JFF   07/10/2025 [MIG147_KRYS]
 //*-----------------------------------------------------------------
 
 Long	lTotInter, lCptInter, lDeb, lFin
-String	sVille, sCP, sCodInter
+String	sVille, sCP, sCodInter, sVref2, sCTLCP
 
 If asPos <> "" Or Not ibAltCommune Then Return
 
@@ -13003,6 +13006,16 @@ lTotInter = idw_LstInter.RowCount ()
 For lCptInter = 1 To lTotInter
 	sCP	  	 = Upper ( Trim ( idw_LstInter.GetItemString ( lCptInter, "ADR_CP" )	) ) 
 	sCodInter = idw_LstInter.GetItemString ( lCptInter, "COD_INTER" )
+	sVref2	 = idw_LstInter.GetItemString ( lCptInter, "V_REF2" ) // [MIG147_KRYS]
+	
+	// [MIG147_KRYS]
+	If F_CLE_A_TRUE ( "MIG147_KRYS" ) Then
+		// Cas particulier moins fort que la DP/16
+		// On peut couper le contrôle sur une inter si bcp v_ref contient CTLCP=0
+		sCTLCP = F_CLE_VAL ( "CTLCP", sVref2, ";" )
+		If sCTLCP = "0" Then Continue
+	End If
+
 
 	/*------------------------------------------------------------------*/
 	/* Si ce n'est pas une banque on traite le cas */
