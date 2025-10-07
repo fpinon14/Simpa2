@@ -14,8 +14,10 @@
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__DECLENCHEMENT_AUTOMATISATION
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__DECLENCHEMENT_PLAFOND_ET_PEC
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__DECLENCHEMENT_REFUS
--- sysadm.PS_S_EXTRANET_AUTOMATISATION__LECTURE_DW_PRESTATION_STOCKEE
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__ENVOI_RECAPITULATIF_DE_DECLARATION
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__RECHERCHE_REFUS_AVANT_DECLENCHEMENT
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_1165_DOMMAGE_PARTIES_EXTERIEURES
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_1165_DOMMAGE_PARTIES_EXTERIEURES_RECHERCHE
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_601_ADHESION_RESILIEE
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_601_ADHESION_RESILIEE_RECHERCHE
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_602_ADHESION_NON_SOUSCRITE_A_DATE_SINISTRE
@@ -40,6 +42,7 @@
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__STOCKAGE_INFOS_PRESTATION
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__TRACE_STOCKAGE_INFOS_PRESTATION
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__VALIDATION_DU_DOSSIER
+-- sysadm.PS_S_EXTRANET_AUTOMATISATION__LECTURE_DW_PRESTATION_STOCKEE
 
 -------------------------------------------------------------------
 --
@@ -262,6 +265,24 @@ If @asOrdreAction is null Or @asOrdreAction = ''
 		Set @sDataErreur = @asOrdreAction
 		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__TRACE_STOCKAGE_INFOS_PRESTATION @adcIdSin, -90, @asMessRet, @sDataErreur
 		Return -90
+
+		If @asOrdreAction = 'A_COMMANDER' And @adcIdGti <> 10 
+		Begin
+			Set @asMessRet = 'L''ordre d''action A_COMMANDER n''est autorisé que pour la garantie VOL(10), pour une déclaration extranet.'
+			Set @sDataErreur = @asOrdreAction
+			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__TRACE_STOCKAGE_INFOS_PRESTATION @adcIdSin, -90, @asMessRet, @sDataErreur
+			Return -91
+		End 
+
+		If @asOrdreAction in ( 'A_REPARER', 'A_DIAGNOSTIQUER' ) And @adcIdGti Not in ( 11, 24 ) 
+		Begin
+			Set @asMessRet = 'Les ordres d''action A_REPARER et A_DIAGNOSTIQUER ne sont autorisés que pour les garanties BRIS(11) et Oxydation(24), pour une déclaration extranet.'
+			Set @sDataErreur = @asOrdreAction
+			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__TRACE_STOCKAGE_INFOS_PRESTATION @adcIdSin, -90, @asMessRet, @sDataErreur
+			Return -92
+		End 
+
+
 	End 
 
 Set @asTypAppSin = UPPER ( Trim ( @asTypAppSin ))
@@ -1068,26 +1089,6 @@ If Exists (
 		Return -1
 	End	
 
--- Blocage sur Géoloc
-If Exists ( 
-		Select	top 1 1 
-		From	sysadm.w_sin ws,
-				sysadm.w_div_sin wdsTypeApp,
-				sysadm.w_div_sin wdsGeolocAtlas
-		Where   ws.id_sin = @adcIdSin
-		And		ws.marq_port = 'APPLE'
-		And		wdsTypeApp.id_sin = ws.id_sin
-		And		wdsTypeApp.nom_zone = 'type_app'
-		And		wdsTypeApp.val_car = 'TEL'
-		And		wdsGeolocAtlas.id_sin = ws.id_sin
-		And		wdsGeolocAtlas.nom_zone = 'geoloc_simpa2'
-		And		wdsGeolocAtlas.val_car = 'O'
-	)
-	Begin
-		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'APPLE Géolocalisé', 'Les dossiers avec un APPLE géolocalisé ne sont pas éligibles à l''automatisation d''une déclaration par extranet.'
-		Return -1
-	End		
-
 Return 1
 
 Go
@@ -1464,6 +1465,26 @@ If Not Exists ( Select Top 1 1 From sysadm.w_div_sin Where id_sin = @adcIdSin An
 		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'zone alt_decla_web non renseignée', 'La zone technique alt_decla_web n''a pas été renseignée par l''extranet. Automatisation impossible.'
 		Return -1
 	End
+
+-- Blocage sur Géoloc
+If Exists ( 
+		Select	top 1 1 
+		From	sysadm.w_sin ws,
+				sysadm.w_div_sin wdsTypeApp,
+				sysadm.w_div_sin wdsGeolocAtlas
+		Where   ws.id_sin = @adcIdSin
+		And		ws.marq_port = 'APPLE'
+		And		wdsTypeApp.id_sin = ws.id_sin
+		And		wdsTypeApp.nom_zone = 'type_app'
+		And		wdsTypeApp.val_car = 'TEL'
+		And		wdsGeolocAtlas.id_sin = ws.id_sin
+		And		wdsGeolocAtlas.nom_zone = 'geoloc_simpa2'
+		And		wdsGeolocAtlas.val_car = 'O'
+	)
+	Begin
+		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'APPLE Géolocalisé', 'Les dossiers avec un APPLE géolocalisé ne sont pas éligibles à l''automatisation d''une déclaration par extranet.'
+		Return -1
+	End		
 
 -- Contrôle particuluer qu'on pourra enlever par la suite mais avec de gros modif pour accueillir une valeur publique non ifr pour le détail de garantie
 -- Si l'appareil n'est pas lié à IFR, on rejète pour l'instant
@@ -3964,6 +3985,10 @@ Declare @sErrOutPut VarChar ( 255 )
 Declare @sMess VarChar ( 1000 ) -- Je left à 508 plus loin selon la longueur du retour du mess err.
 Declare @iRet Integer
 Declare @iIdCt Integer
+
+-- [TODO]
+-- Return pour l'instant car ce sera "un" voire des "autres mail"
+Return 1 
 
 Exec @iRet = sysadm.Atlas_Envoi_Mail_Recap_Decla @adcIdSin, @sErrOutPut OutPut
 

@@ -272,8 +272,8 @@ BEGIN
 		   @DateDeDeclaration = convert ( VarChar ( 10 ), s.dte_decl, 23 ),
 		   @sIMEI = s.num_imei_port,
 		   @sMajPar = s.maj_par,
-		   @sNature = Convert ( varchar (10), s.id_nat_sin ),
-		   @sLibNature = Upper (Left ( SIMPA2_PRO.sysadm.FN_CODE_NUM ( s.id_nat_sin, '+NS' ), 1 )) + Lower ( Right ( SIMPA2_PRO.sysadm.FN_CODE_NUM ( s.id_nat_sin, '+NS' ), len (SIMPA2_PRO.sysadm.FN_CODE_NUM ( s.id_nat_sin, '+NS' ))-1 )),
+		   @sNature = Convert ( varchar (10), s.id_natsin ),
+		   @sLibNature = Upper (Left ( SIMPA2_PRO.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ), 1 )) + Lower ( Right ( SIMPA2_PRO.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ), len (SIMPA2_PRO.sysadm.FN_CODE_NUM ( s.id_natsin, '+NS' ))-1 )),
 		   @sDateDeSurvenanceSinistre = convert ( VarChar ( 10 ), s.dte_surv, 23 ),
 		   @sHeureDeSurvenanceSinistre =  nullif (Convert ( VarChar (5), s.dte_surv, 108 ), '00:00'),
 		   @sNoAdhesion  = 
