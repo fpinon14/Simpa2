@@ -21501,7 +21501,7 @@ private function boolean uf_rf_1165 ();//*--------------------------------------
 //*-----------------------------------------------------------------
 
 Long lLig, lTotCondition, lIdNatSin, lDeb, lFin, iIdGti, lRow
-String sVal
+String sVal, sVal1, sVal2
 Boolean bRet
 
 /*------------------------------------------------------------------*/
@@ -21515,12 +21515,23 @@ F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_wSin.GetItemNumber ( 1, "ID_PROD" ), 
 If lDeb <= 0 Then Return bRet
 
 lRow = idw_wdivsin.Find("UPPER(NOM_ZONE)='QUE_S_EST_T_IL_PASSE_CODE'", 1, idw_wdivsin.RowCount())
-If lRow <= 0 Then Return bRet
+If lRow > 0 Then 
+	sVal = idw_wdivsin.GetItemString (lRow, "VAL_CAR") 
+End If 
 
-sVal = idw_wdivsin.GetItemString (lRow, "VAL_CAR") 
+lRow = idw_wdivsin.Find("UPPER(NOM_ZONE)='DYSFONCTIONNEMENT_APPAREIL'", 1, idw_wdivsin.RowCount())
+If lRow > 0 Then 
+	sVal1 = idw_wdivsin.GetItemString (lRow, "VAL_CAR") 
+End If 
+
+lRow = idw_wdivsin.Find("UPPER(NOM_ZONE)='APP_INUTILISABLE_SUITE_DYSFONCT'", 1, idw_wdivsin.RowCount())
+If lRow > 0 Then 
+	sVal2 = idw_wdivsin.GetItemString (lRow, "VAL_CAR") 
+End If 
+
 iIdGti = idw_wGarSin.GetItemNumber ( 1, "ID_GTI" )
 
-If Pos ( sVal, "REE" ) > 0 And iIdGti = 11 Then
+If iIdGti = 11 And ( Pos ( sVal, "REE" ) > 0 Or ( sVal1 = "NON" and sVal2 = "NON" ) ) Then
 	bRet = Uf_RF_EcrireRefus ( 1165 )
 End If 
 

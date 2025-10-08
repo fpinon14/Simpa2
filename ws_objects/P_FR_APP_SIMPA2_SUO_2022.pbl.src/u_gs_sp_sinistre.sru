@@ -16375,11 +16375,16 @@ For lCpt = 1 To lTot
 			  "DTE_REL8_MAIL_APP_NON_RCP_EN_CTR", &			  			  			  			  			  			  
 			  "ADH_SAGA2_RESILIEE_AUTO", &
 			  "MAJ_REF_APP_OK_SUR_ADH_SAGA2", &
-			  "EXTRAUTO_SUCCES_DECL" ,&
-			  "EXTRAUTO_REJET_DECL",&
 			  "COD_BOUTIQUE_EXTRANET",&
 			  "QUE_S_EST_T_IL_PASSE_LIB",&
-			  "QUE_S_EST_T_IL_PASSE_CODE"
+			  "QUE_S_EST_T_IL_PASSE_CODE", &
+			  "DOMMAGES_APPAREIL_CODE", &
+			  "EXTRAUTO_ETAT", &
+			  "EXTRAUTO_LIB", &
+			  "DYSFONCTIONNEMENT_APPAREIL", &
+			  "APP_INUTILISABLE_SUITE_DYSFONCT", &
+			  "DOMMAGES_EXTERIEURS_VISIBLES"       
+			  
 			  
   			  idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "O" )
 
