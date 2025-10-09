@@ -226,6 +226,7 @@ private subroutine uf_controlergestion_carrefour_carma ()
 private function string uf_controlergestion_des_opticiens ()
 private function string uf_plaf_krys_cdl_mt_spec_si_nb_sup_1_sin ()
 private function boolean uf_rf_1165 ()
+private function boolean uf_rf_1844 ()
 end prototypes
 
 public subroutine uf_traitement (integer aitype, ref s_pass astpass);//*-----------------------------------------------------------------
@@ -3742,6 +3743,7 @@ If Not This.uf_rf_1898 () Then Return ( False )
 // [MIG165_BOUYGUES]
 If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
 	If Not This.uf_rf_1165 () Then Return ( False )				
+	If Not This.uf_rf_1844 () Then Return ( False )					
 End If 
 
 
@@ -21489,7 +21491,7 @@ private function boolean uf_rf_1165 ();//*--------------------------------------
 //* Auteur			: Fabry JF
 //* Date				: 03/10/2025
 //* Libellé			: [MIG165_BOUYGUES]
-//* Commentaires	: Nature de sinistre non couverte
+//* Commentaires	: 
 //*
 //* Arguments		: Aucun
 //*
@@ -21500,7 +21502,7 @@ private function boolean uf_rf_1165 ();//*--------------------------------------
 //* [20250915131212003][JFF][MIG165_BOUYGUES]
 //*-----------------------------------------------------------------
 
-Long lLig, lTotCondition, lIdNatSin, lDeb, lFin, iIdGti, lRow
+Long lLig, lTotCondition, lIdNatSin, lDeb, lFin, lIdGti, lRow
 String sVal, sVal1, sVal2
 Boolean bRet
 
@@ -21529,13 +21531,68 @@ If lRow > 0 Then
 	sVal2 = idw_wdivsin.GetItemString (lRow, "VAL_CAR") 
 End If 
 
-iIdGti = idw_wGarSin.GetItemNumber ( 1, "ID_GTI" )
+lIdGti = idw_wGarSin.GetItemNumber ( 1, "ID_GTI" )
 
-If iIdGti = 11 And ( Pos ( sVal, "REE" ) > 0 Or ( sVal1 = "NON" and sVal2 = "NON" ) ) Then
-	bRet = Uf_RF_EcrireRefus ( 1165 )
+Choose Case lIdGti 
+	Case 24
+		If sVal1 = "NON" and sVal2 = "NON" Then
+			bRet = Uf_RF_EcrireRefus ( 1165 )
+		End If 
+
+	Case 11, 24
+		If ( Pos ( sVal, "REE" ) > 0 Or ( sVal1 = "NON" and sVal2 = "NON" ) ) Then
+			bRet = Uf_RF_EcrireRefus ( 1165 )
+		End If 
+End Choose 
+
+Return ( bRet )
+end function
+
+private function boolean uf_rf_1844 ();//*-----------------------------------------------------------------
+//*
+//* Fonction		: Uf_Rf_1165 (PRIVATE)
+//* Auteur			: Fabry JF
+//* Date				: 03/10/2025
+//* Libellé			: [MIG165_BOUYGUES]
+//* Commentaires	: 
+//*
+//* Arguments		: Aucun
+//*
+//* Retourne		: Boolean		Vrai = Le refus existe, on vient de le cocher.
+//*										Faux = Le refus n'existe pas.
+//*
+//*-----------------------------------------------------------------
+//* [20250915131212003][JFF][MIG165_BOUYGUES]
+//*-----------------------------------------------------------------
+
+Long lLig, lTotCondition, lIdNatSin, lDeb, lFin, lIdGti, lRow
+String sVal, sVal1, sVal2
+Boolean bRet
+
+
+/*------------------------------------------------------------------*/
+/* On déclenche ce motif si la nature du sinistre n'est pas         */
+/* couverte. On envoie le test uniquement si la révision est        */
+/* connue.                                                          */
+/*------------------------------------------------------------------*/
+bRet = True
+
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_wSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 405 )
+If lDeb <= 0 Then Return bRet
+
+lRow = idw_wdivsin.Find("UPPER(NOM_ZONE)='DOMMAGES_EXTERIEURS_VISIBLES'", 1, idw_wdivsin.RowCount())
+If lRow > 0 Then 
+	sVal = idw_wdivsin.GetItemString (lRow, "VAL_CAR") 
+End If 
+
+lIdGti = idw_wGarSin.GetItemNumber ( 1, "ID_GTI" )
+
+If lIdGti = 11 And sVal = "NON" Then
+	bRet = Uf_RF_EcrireRefus ( 1844 )
 End If 
 
 Return ( bRet )
+
 end function
 
 on u_gs_sp_sinistre_garantie.create

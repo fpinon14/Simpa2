@@ -33071,6 +33071,7 @@ private function integer uf_integration_fichier_frn_hub (ref long alnblig, ref l
 //    	JFF   27/08/2025 [HUB1936]
 //			JFF	05/09/2025 [20250905110128880][JFF][HUB1862]
 // 		JFF   08/09/2025 [20250905153321517][JFF][HUB1910]
+// [20251009144110680][JFF][REMP_IDENTIQUE]
 //*-----------------------------------------------------------------
 
 Int iRet, iCleNum, iIdSeqSavRet
@@ -33642,6 +33643,12 @@ For lCpt = 1 To lTotLig
 				lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "CLOTURE", sVal, ";")
 			End If
 		End IF 	
+
+		// [20251009144110680][JFF][REMP_IDENTIQUE]		
+		sVal = Trim ( lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu, "REMP_IDENTIQUE", ";"))
+		If Not IsNull(sVal) and Trim ( sVal ) <> "" Then 
+			lnvPFCString.of_Setkeyvalue ( sInfoFrnSpbCplt, "REMP_IDENTIQUE", sVal, ";")
+		End If		
 		
 	End IF 
 
@@ -35336,7 +35343,7 @@ For lCpt = 1 To lTotLig
 			Case Else 
 				iRet = -1
 				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour demander un SAV, la prestation d'origine doit Fermée (non annulée)" )
+				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour demander un SAV, la prestation d'origine doit être fermée (non annulée)" )
 				
 		End Choose
 	End If 

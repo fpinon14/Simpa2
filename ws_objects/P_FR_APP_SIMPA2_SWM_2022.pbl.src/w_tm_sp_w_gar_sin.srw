@@ -1347,6 +1347,29 @@ If bOk Then
 End If
 // :[PC301].[LOT2]
 
+// [MIG165_BOUYGUES]
+If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
+	F_RechDetPro ( lDeb, lFin, idwDetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 405)
+
+	If lDeb > 0 Then 
+		lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'CODE_EAN'", 1, idwWDivSin.RowCount () ) 
+		If lRow > 0 Then 
+			sVal = Upper ( idwWDivSin.GetItemString ( lRow, "VAL_CAR" ) )
+			If Not IsNumber ( sVal ) Or Len ( sVal ) <> 13 Then
+				bOk = False
+				stMessage.sTitre		= "code EAN"
+				stMessage.Icon			= Information!
+				stMessage.bErreurG	= FALSE
+				stMessage.Bouton		= OK!
+				stMessage.sCode		= "WSIN935"
+		
+				F_Message ( stMessage )
+			End If
+		End If
+	End If 
+End If 
+
+
 // [RECUP_DONNEE_O2M]
 F_RechDetPro ( lDeb, lFin, idwDetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 205 )
 If lDeb > 0 Then

@@ -2677,6 +2677,7 @@ If bOk Then
 			BDp315 = lDeb > 0  // [MIG165_BOUYGUES]
 			
 			// [MIG165_BOUYGUES]
+			/*
 			If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
 				If lDeb <=0 Then
 					F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 405 )
@@ -2694,6 +2695,7 @@ If bOk Then
 					
 				End If 
 			End If 			
+			*/
 			
 			If lDeb > 0 Then
 				dtDtePivotDT288-1_LOT2 = DateTime ( lnvPFCString.of_getkeyvalue (idwDetPro.GetItemString ( lDeb, "VAL_CAR" ), "DTE_PIVOT_DT288_1_LOT2", ";") )

@@ -6320,6 +6320,7 @@ This. Uf_Initialiser2 ()
 /*------------------------------------------------------------------*/
 // [HP252_276_HUB_PRESTA]
 If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
+	// [20251009134215230][JFF][GRISER_ADR_PRS_HUB]  ADR_TEL1, 2, 3
 	idwCmde.uf_InitialiserCouleur		 	&
 		( {	"DTE_RDV_CLI"				,	&
 				"HRDV_CLI_MIN"				,	&
@@ -6337,7 +6338,10 @@ If F_CLE_A_TRUE ( "HP252_276_HUB_PRESTA" ) Then
 				"ADR_LIVR2"					,  &
 				"ADR_LIVR_CPL"				,  &
 				"ADR_CP"						,  &
-				"ADR_VILLE"						&
+				"ADR_VILLE"					,	&
+				"ADR_TEL1"					,  &
+				"ADR_TEL2"					,  &
+				"ADR_TEL3"					  &				
 			} )
 Else 
 	idwCmde.uf_InitialiserCouleur		 	&
@@ -29029,6 +29033,7 @@ private function integer uf_zn_choix_regle_hub (string ascas, long alidprod, lon
 //        JFF   31/03/2025   [MIG82_JOURN_EVT]
 //			 JFF   29/09/2025   [20250929100727247][JFF][MIG165_BOUYGUES]
 //			 JFF   06/10/2025   [20251006135631643][JFF]
+// [20251009134215230][JFF][GRISER_ADR_PRS_HUB]
 //*---------------------------------------------------------------
 
 s_Pass	stPass
@@ -29255,6 +29260,12 @@ Choose Case ascas
 			Return 1
 		End IF 
 
+		// [20251009134215230][JFF][GRISER_ADR_PRS_HUB]
+		If F_CLE_A_TRUE ( "GRISER_ADR_PRS_HUB" ) Then
+			idwCmde.Uf_Proteger ( { "ADR_COD_CIV", "ADR_NOM", "ADR_PRENOM", "ADR_LIVR1", "ADR_LIVR2", "ADR_LIVR_CPL", "ADR_CP", "ADR_VILLE", "ADR_TEL1", "ADR_TEL2", "ADR_TEL3" }, "1" )	
+			ibModifAdrInterdite = True
+		End IF 
+
 		sTabValRet [1] ="HP_ID_HUB_PRESTA"
 		sTabValRet [2] ="HP_ID_FOUR"
 		sTabValRet [3] ="HP_TYP_DOM"
@@ -29292,11 +29303,14 @@ Choose Case ascas
 			End If 
 		End If 
 
-		sVal = lnvPFCString.of_Getkeyvalue( sRetHubPrestataire, "CODE_PICK_UP", ";" )
-		If Trim ( sVal ) <> "" Then
-			idwCmde.Uf_Proteger ( { "ADR_COD_CIV", "ADR_NOM", "ADR_PRENOM", "ADR_LIVR1", "ADR_LIVR2", "ADR_LIVR_CPL", "ADR_CP", "ADR_VILLE" }, "1" )	
-			ibModifAdrInterdite = True
-		End If 
+		// [20251009134215230][JFF][GRISER_ADR_PRS_HUB]
+		If NOT F_CLE_A_TRUE ( "GRISER_ADR_PRS_HUB" ) Then
+			sVal = lnvPFCString.of_Getkeyvalue( sRetHubPrestataire, "CODE_PICK_UP", ";" )
+			If Trim ( sVal ) <> "" Then
+				idwCmde.Uf_Proteger ( { "ADR_COD_CIV", "ADR_NOM", "ADR_PRENOM", "ADR_LIVR1", "ADR_LIVR2", "ADR_LIVR_CPL", "ADR_CP", "ADR_VILLE" }, "1" )	
+				ibModifAdrInterdite = True
+			End If 
+		End IF 
 		
 		sVal = lnvPFCString.of_Getkeyvalue( sRetHubPrestataire, "HP_INFO_SPB_FRN", ";" )
 		adw.SetItem ( alRow, "INFO_SPB_FRN", Long ( sVal ))
@@ -29315,7 +29329,7 @@ Choose Case ascas
 
 				//[20251006135631643][JFF]
 				Case "A_COMMANDER"
-					sVal = isTypapp
+					sVal = "CAF"
 			End Choose 
 					
 			adw.SetItem ( alRow, "ID_TYP_ART", sVal )
