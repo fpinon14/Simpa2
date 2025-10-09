@@ -129,6 +129,7 @@
 --     JFF 29/08/2025   [20250829140328870] Suppression de l'update du travail
 --	   JFF 05/09/2025   [20250905090403837][JFF][MIG82]
 --	   JFF 07/05/2013   [20250905153321517][JFF][HUB1910]
+-- [20251009144110680][JFF][REMP_IDENTIQUE]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U01_COMMANDE' AND type = 'P' )
         DROP procedure sysadm.PS_U01_COMMANDE
@@ -263,6 +264,7 @@ Declare @iIdBonTranspModifie Integer
 Declare @iAdrFcNomModifie Integer 
 Declare @iDteRcpMobCliModifie Integer 
 Declare @sIdHubPresta VarChar ( 20 )
+Declare @iRemplacementHubIdentique Integer -- [20251009144110680][JFF][REMP_IDENTIQUE]
 
 Set @iCasPropoAutoO2m = 0 -- [PC877]
 Set @iTraite = 0 
@@ -275,6 +277,7 @@ Set @iNbreSavActuel = IIF ( IsNumeric ( sysadm.FN_CLE_VAL ( 'NBRE_SAV_ACTUEL', @
 Set @iDemandeAutoPECRAR = IIF ( sysadm.FN_CLE_VAL ( 'AUTO_PEC_RAR', @sInfoFrnSpbCplt, ';' ) = 'OUI', 1, 0) -- [HP252_276_HUB_PRESTA]
 Set @sPrestaAutoHub = sysadm.FN_CLE_VAL ( 'PRESTA_AUTO', @sInfoFrnSpbCplt, ';' )
 Set @iRemplacementAutomatiqueHub = IIF ( sysadm.FN_CLE_VAL ( 'CMDE_REMPL_AUTO', @sInfoFrnSpbCplt, ';' ) = 'OUI', 1, 0) -- [HUB1267]
+Set @iRemplacementHubIdentique = IIF ( sysadm.FN_CLE_VAL ( 'REMP_IDENTIQUE', @sInfoFrnSpbCplt, ';' ) = 'OUI', 1, 0) -- [20251009144110680][JFF][REMP_IDENTIQUE]
 
 -- #2 PHG 22/03/2007 [DCMP070191] Gestion de l'enregistrement du Maj_le
 Set @dtTimeStamp = GetDate()
@@ -2715,6 +2718,57 @@ IF @iStatusGc = 178 And @iStatusGCActuel <> 178
 
   End
   
+-- [20251009144110680][JFF][REMP_IDENTIQUE]
+If sysadm.FN_CLE_NUMERIQUE ( 'MAJ_REMP_IDENT_HUB') > 0 
+ Begin
+	IF @iStatusGc = 178 And @iStatusGCActuel <> 178 and @sIdTypArt = 'CAF' and @sIdRefFour = 'A_COMMANDER' And @iPrestaHUB > 0 and @iRemplacementHubIdentique > 0 
+	   Begin
+			Update c
+			Set	id_typ_art = sysadm.FN_GET_DIV_SIN ( s.id_sin, 'type_app', 'P', '' ),
+				id_marq_art = s.marq_port,
+				id_modl_art = s.modl_port,
+				id_marq_art_ifr = 
+						Case 
+							When Exists ( Select Top 1 1 From sysadm.ifr i Where i.marque = s.marq_port and i.reference = s.modl_port ) 
+								Then s.marq_port
+							Else null
+						End,
+				id_modl_art_ifr = 
+						Case 
+							When Exists ( Select Top 1 1 From sysadm.ifr i Where i.marque = s.marq_port and i.reference = s.modl_port ) 
+								Then s.modl_port
+							Else null
+						End
+			From sysadm.commande c,
+				 sysadm.sinistre s
+			Where	c.id_sin = @dcIdSin
+			And		c.id_seq = @iIdSeq	
+			And		s.id_sin = c.id_sin
+
+			Update c
+			Set	id_typ_art = sysadm.FN_GET_DIV_SIN ( s.id_sin, 'type_app', 'W', '' ),
+				id_marq_art = s.marq_port,
+				id_modl_art = s.modl_port,
+				id_marq_art_ifr = 
+						Case 
+							When Exists ( Select Top 1 1 From sysadm.ifr i Where i.marque = s.marq_port and i.reference = s.modl_port ) 
+								Then s.marq_port
+							Else null
+						End,
+				id_modl_art_ifr = 
+						Case 
+							When Exists ( Select Top 1 1 From sysadm.ifr i Where i.marque = s.marq_port and i.reference = s.modl_port ) 
+								Then s.modl_port
+							Else null
+						End
+			From sysadm.w_commande c,
+				 sysadm.w_sin s
+			Where	c.id_sin = @dcIdSin
+			And		c.id_seq = @iIdSeq	
+			And		s.id_sin = c.id_sin
+
+	   End 
+ End 
 -- [VDOC9908]
 IF @iStatusGc = 178 And @iStatusGCActuel <> 178
    and @sIdTypArt = 'RST' and sysadm.FN_CLE_VAL ( 'RST_CMDE+SUIVI', rtrim ( @sInfoSpbFrnCpltActuel ) , ';') = 'OUI'

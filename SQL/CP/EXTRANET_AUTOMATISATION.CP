@@ -79,8 +79,8 @@ Set @sMsgSherpa = Left ( 'ERREUR / Rejet Automatisation : ' + @asMsg2Sherpa, 508
 Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO
         @adcIdSin,
         'extrauto_etat', 
-		'ECHDEC',  
-        @asMsgSimpa2,
+		'Etat Automatis. Décla. Extranet',  
+        'ECHDEC',
 		'O',
 		'C',
 		null,
@@ -299,7 +299,7 @@ If @asOrdreAction is null Or @asOrdreAction = ''
 Set @asTypAppSin = UPPER ( Trim ( @asTypAppSin ))
 If @asTypAppSin is null Or @asTypAppSin = ''
 	Begin
-		Set @asMessRet = 'Le type de l''appareil doit être renseigné (VarChar ( 3 )) en code SIMPA2, exemple : TEL ou TPC ou MCS, etc....'
+		Set @asMessRet = 'Le type de l''appareil sinistré doit être renseigné (VarChar ( 3 )) en code SIMPA2, exemple : TEL ou TPC ou MCS, etc....'
 		Set @sDataErreur = @asTypAppSin
 		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__TRACE_STOCKAGE_INFOS_PRESTATION @adcIdSin, -160, @asMessRet, @sDataErreur
 		Return -160
@@ -317,7 +317,7 @@ If LEN ( @asTypAppSin ) > 0
 			And dp.id_code_car = @asTypAppSin
 		)
 		Begin 
-			Set @asMessRet = 'Le type l''appareil n''est pas valide en code SIMPA2 ou bien n''est pas géré sur le produit d''assurance liés à ce sinistre'
+			Set @asMessRet = 'Le type l''appareil sinistré n''est pas valide en code SIMPA2 ou bien n''est pas géré sur le produit d''assurance liés à ce sinistre'
 			Set @sDataErreur = @asTypAppSin
 			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__TRACE_STOCKAGE_INFOS_PRESTATION @adcIdSin, -165, @asMessRet, @sDataErreur
 			Return -165
@@ -327,7 +327,7 @@ If LEN ( @asTypAppSin ) > 0
 Set @asMarqAppSin = UPPER ( Trim ( @asMarqAppSin ))
 If @asMarqAppSin is null Or @asMarqAppSin = ''
 	Begin
-		Set @asMessRet = 'La marque de l''appareil doit être renseigné (VarChar ( 35 ))'
+		Set @asMessRet = 'La marque de l''appareil sinistré doit être renseigné (VarChar ( 35 ))'
 		Set @sDataErreur = @asMarqAppSin
 		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__TRACE_STOCKAGE_INFOS_PRESTATION @adcIdSin, -170, @asMessRet, @sDataErreur
 		Return -170
@@ -351,7 +351,7 @@ If LEN ( @asMarqAppSin ) > 0
 		)
 
 		Begin 
-			Set @asMessRet = 'le type de l''appareil est relié à IFR sur le paramètrage du produit, et la marque que vous donnez n''existe pas sur IFR, merci de transmettre une marque et modèle IFR pour ce type d''appareil, contactez EPSIN'
+			Set @asMessRet = 'le type de l''appareil sinistré est relié à IFR sur le paramètrage du produit, et la marque que vous donnez n''existe pas sur IFR, merci de transmettre une marque et modèle IFR pour ce type d''appareil, contactez EPSIN'
 			Set @sDataErreur = @asMarqAppSin
 			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__TRACE_STOCKAGE_INFOS_PRESTATION @adcIdSin, -180, @asMessRet, @sDataErreur
 			Return -180
@@ -374,7 +374,7 @@ If LEN ( @asMarqAppSin ) > 0
 		)
 
 		Begin 
-			Set @asMessRet = 'Le type de l''appareil est relié (pour la marque) au référentiel -MB et la marque que vous donnez n''existe pas sur ce référentiel, contactez EPSIN'
+			Set @asMessRet = 'Le type de l''appareil sinistré est relié (pour la marque) au référentiel -MB et la marque que vous donnez n''existe pas sur ce référentiel, contactez EPSIN'
 			Set @sDataErreur = @asMarqAppSin
 			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__TRACE_STOCKAGE_INFOS_PRESTATION @adcIdSin, -185, @asMessRet, @sDataErreur
 			Return -185
@@ -385,7 +385,7 @@ If LEN ( @asMarqAppSin ) > 0
 Set @asModlAppSin = UPPER ( Trim ( @asModlAppSin ))
 If @asModlAppSin is null Or @asModlAppSin = ''
 	Begin
-		Set @asMessRet = 'La modèle de l''appareil doit être renseigné (VarChar ( 35 ))'
+		Set @asMessRet = 'La modèle de l''appareil sinistré doit être renseigné (VarChar ( 35 ))'
 		Set @sDataErreur = @asModlAppSin
 		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__TRACE_STOCKAGE_INFOS_PRESTATION @adcIdSin, -190, @asMessRet, @sDataErreur
 		Return -190
@@ -410,7 +410,7 @@ If LEN ( @asModlAppSin ) > 0
 		)
 
 		Begin 
-			Set @asMessRet = 'le type de l''appareil est relié à IFR sur le paramètrage du produit, et le modèle que vous donnez n''existe pas sur IFR, merci de transmettre une marque et modèle IFR pour ce type d''appareil'
+			Set @asMessRet = 'le type de l''appareil sinistré est relié à IFR sur le paramètrage du produit, et le modèle que vous donnez n''existe pas sur IFR, merci de transmettre une marque et modèle IFR pour ce type d''appareil'
 			Set @sDataErreur = @asModlAppSin
 			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__TRACE_STOCKAGE_INFOS_PRESTATION @adcIdSin, -200, @asMessRet, @sDataErreur
 			Return -200
@@ -420,13 +420,13 @@ If LEN ( @asModlAppSin ) > 0
 Set @asNumImeiAppSin = UPPER ( Trim ( @asNumImeiAppSin ))
 If ( @asNumImeiAppSin is null Or @asNumImeiAppSin = '' ) And @asTypAppSin = 'TEL'
 	Begin
-		Set @asMessRet = 'Le numéro d''IMEI doit être renseigné (VarChar ( 20 )) pour un type d''appareil ' + @asTypAppSin 
+		Set @asMessRet = 'Le numéro d''IMEI de l''appareil sinistré doit être renseigné (VarChar ( 20 )) pour un type d''appareil ' + @asTypAppSin 
 		Set @sDataErreur = @asNumImeiAppSin
 		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__TRACE_STOCKAGE_INFOS_PRESTATION @adcIdSin, -320, @asMessRet, @sDataErreur
 		Return -320
 	End 
 
-If  @asNumImeiAppSin is Not null And @asNumImeiAppSin <> '' And @asTypAppSin = 'TEL'
+If  @asNumImeiAppSin is Not null And @asNumImeiAppSin <> '' And @asTypAppSin = 'TEL' And @asOrdreAction <> 'A_COMMANDER'
 	Begin
 		IF sysadm.FN_CORR_IMEI ( @asNumImeiAppSin, GETDATE() ) <> @asNumImeiAppSin
 		Begin 
@@ -438,16 +438,16 @@ If  @asNumImeiAppSin is Not null And @asNumImeiAppSin <> '' And @asTypAppSin = '
 	End 
 
 Set @asNumSerieAppSin = UPPER ( Trim ( @asNumSerieAppSin ))
-If ( @asNumSerieAppSin is null Or @asNumSerieAppSin = '' ) And @asTypAppSin <> 'TEL'
+If ( @asNumSerieAppSin is null Or @asNumSerieAppSin = '' ) And @asTypAppSin <> 'TEL' And @asOrdreAction <> 'A_COMMANDER'
 	Begin
-		Set @asMessRet = 'Le numéro de série doit être renseigné (VarChar ( 20 ))' 
+		Set @asMessRet = 'Le numéro de série de l''appareil sinistré doit être renseigné (VarChar ( 20 ))' 
 		Set @sDataErreur = @asNumSerieAppSin
 		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__TRACE_STOCKAGE_INFOS_PRESTATION @adcIdSin, -340, @asMessRet, @sDataErreur
 		Return -340
 	End 
 
 Set @asDescriptionProbleme = UPPER ( Trim ( @asDescriptionProbleme  ))
-If ( @asDescriptionProbleme is null Or @asDescriptionProbleme = '' ) 
+If ( @asDescriptionProbleme is null Or @asDescriptionProbleme = '' ) And @asOrdreAction <> 'A_COMMANDER'
 	Begin
 		Set @asMessRet = 'La description du problème doit être renseignée (VarChar ( 255 ))' 
 		Set @sDataErreur = @asDescriptionProbleme
@@ -481,7 +481,7 @@ If ( @adtDateAchat is null )
 	End 
 
 Set @asEtatAppSin = UPPER ( Trim ( @asEtatAppSin ))
-If @asEtatAppSin is not null And @asEtatAppSin <> ''
+If @asEtatAppSin is not null And @asEtatAppSin <> '' And @asOrdreAction <> 'A_COMMANDER'
 Begin
 	If @asEtatAppSin Not in ( 'ANEU', 'AREC' ) 
 		Begin
@@ -495,7 +495,7 @@ End
 -- @asCodeVerrou => Pas de contrôle, pas obligatoire
 
 Set @asDesimlocke = UPPER ( Trim ( @asDesimlocke ))
-If @asDesimlocke is not null And @asDesimlocke <> ''
+If @asDesimlocke is not null And @asDesimlocke <> '' And @asOrdreAction <> 'A_COMMANDER'
 Begin
 	If @asEtatAppSin Not in ( 'OUI', 'NON' ) 
 		Begin
@@ -1202,6 +1202,7 @@ Declare @sModlAppSin Varchar ( 35 )
 Declare @sCodeRetIfr Varchar ( 20 )
 Declare @sAdrMailInterAss Varchar ( 120 )
 Declare @sVarianteDp406 Varchar ( 50 )
+Declare @dcIdGti Decimal ( 7 )
 
 Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';')
 From sysadm.det_pro dp,
@@ -1357,7 +1358,7 @@ If Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And dt
 -- Pour Bouygues si Sinistre dans les 15 jours après l’adhésion, on rejète en gestion
 If @sVarianteDp406 = 'BOUYGUES'
 	Begin
-		If Exists ( Select Top 1 1 From sysadm.w_sin Where dte_surv > dte_adh and dte_adh >= DateAdd ( day, -15, dte_surv ) )
+		If Exists ( Select Top 1 1 From sysadm.w_sin Where  id_sin = @adcIdSin and dte_surv > dte_adh and dte_adh >= DateAdd ( day, -15, dte_surv ) )
 			Begin
 				Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Sin ds les 15j après adh.', 'Le sinistre a eu lieu dans les 15 jours après l''adhésion. Automatisation impossible.'
 				Return -1
@@ -1659,12 +1660,16 @@ If Not Exists ( Select Top 1 1 From sysadm.w_gar_sin Where id_sin = @adcIdSin )
 		Return -1
 	End	
 
--- Absence de garantie
+-- Plus d'une garantie
 If ( Select COUNT ( * ) From sysadm.w_gar_sin Where id_sin = @adcIdSin ) > 1
 	Begin
 		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Plus d''une de garantie', 'L''extranet a créé plus d''une garantie. Automatisation impossible.'
 		Return -1
-	End	
+	End
+Else
+	Begin 
+		Select Top 1 @dcIdGti = id_gti From sysadm.w_gar_sin Where id_sin = @adcIdSin
+	End 
 
 -- Pour Bouygues GEN CODE obligatoire et valide au moins sur le format numx13
 If @sVarianteDp406 = 'BOUYGUES'
@@ -1676,8 +1681,16 @@ If @sVarianteDp406 = 'BOUYGUES'
 				Return -1
 			End 
 
-		If	Exists ( Select Top 1 1 From sysadm.w_gar_sin Where id_sin = @adcIdSin And id_gti in ( 11 ) ) 
+		If	@dcIdGti in  ( 11 ) 
 			Begin 
+				-- Cas dommages_exterieurs_visibles
+				Set @sVal = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'dommages_exterieurs_visibles', 'W', '' )
+				If Upper ( @sVal ) Not in ( 'OUI', 'NON' ) 
+				Begin
+					Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Dom. ext. visible non valide', 'L''extranet a transmis une donnée non valide sur l''information des dommages extérieurement visibles de l''appareil. Automatisation impossible.'
+					Return -1
+				End
+
 				-- Cas que_s_est_t_il_passe_code
 				Set @sVal = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'que_s_est_t_il_passe_code', 'W', '' )
 				If CHARINDEX ( '#', @sVal ) <= 0 Or Left ( @sVal, 1 ) <> '#' Or Right ( @sVal, 1 ) <> '#' Or CHARINDEX ( '##', @sVal ) > 0 
@@ -1700,10 +1713,16 @@ If @sVarianteDp406 = 'BOUYGUES'
 				exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO_STOCKAGE_CHAINE_LONGUE @adcIdSin, 'que_s_est_t_il_passe_lib', 'Que s''est-t-il passé (lib)', @sVal, 2500, 'WEB'
 
 				-- Cas dommages_appareil_code
-				Set @sVal = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'dommages_appareil_code', 'W', '' )
+				Set @sVal = space ( 1000 )
+				Exec sysadm.PS_S_DIV_SIN_SANS_DIV_PRO_RECUPERATION_CHAINE_LONGUE
+						@adcIdSin, 
+						'dommages_appareil_code',
+						'W',
+						@sVal OutPut 
+
 				If CHARINDEX ( '#', @sVal ) <= 0 Or Left ( @sVal, 1 ) <> '#' Or Right ( @sVal, 1 ) <> '#' Or CHARINDEX ( '##', @sVal ) > 0 
 				Begin
-					Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Type de dommage non valide', 'L''extranet a transmis des types de dommages non valides. Automatisation impossible.'
+					Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Type de dommage non valide', 'L''extranet a transmis des types de dommages non valides sur le stockage de la prestation. Automatisation impossible.'
 					Return -1
 				End
 
@@ -1712,9 +1731,27 @@ If @sVarianteDp406 = 'BOUYGUES'
 					Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Ecran non cassé', 'L''extranet a transmis l''information que l''écran n''était pas cassé. Automatisation impossible.'
 					Return -1
 				End
-
 			End 
 
+		If	@dcIdGti in  ( 11, 24 ) 
+			Begin 
+
+				-- Cas dysfonctionnement_appareil
+				Set @sVal = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'dysfonctionnement_appareil', 'W', '' )
+				If Upper ( @sVal ) Not in ( 'OUI', 'NON' ) 
+				Begin
+					Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Dyfonct de l''appareil non valide', 'L''extranet a transmis une donnée non valide sur l''information du dysfonctionnement de l''appareil. Automatisation impossible.'
+					Return -1
+				End
+
+				-- Cas app_inutilisable_suite_dysfonct
+				Set @sVal = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'app_inutilisable_suite_dysfonct', 'W', '' )
+				If Upper ( @sVal ) Not in ( 'OUI', 'NON' ) 
+				Begin
+					Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'App. inutilisable non valide', 'L''extranet a transmis une donnée non valide sur l''information de l''appareil inutilisable. Automatisation impossible.'
+					Return -1
+				End
+			End 
 	End 
 
 -- Une seule Garantie.
@@ -2171,6 +2208,7 @@ CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_1165_DOMMAGE_PARTIES
 	@asChaineQueSestTilPasse VarChar ( 1000 ), -- Une chute ? Un choc ? Une pression ? En contact avec un liquide ? Une rayure, écaillure ou égratignure ?
 	@asDysFonctionnementAppareil VarChar ( 10 ), -- Dysfonctionnement appareil ? => OUI ou NON
 	@asAppInutilisableSuiteDysfonct VarChar ( 10 ), -- Appareil inutilisable suite à ce dysfonctionnement  => OUI ou NON
+	@asTypeDommagesAppareilCode VarChar ( 1000 ), -- #BROKEN_SCREEN#DEVICE_BROKEN#REAR_BROKEN# ou #OXIDATION# etc...
 	@asChaineSeriaRetourRefus Varchar ( 500 ) OutPut
 AS
 
@@ -2183,7 +2221,13 @@ Where dp.id_prod = @adcIdProdSin
 
 If @sVarianteDp406 = 'BOUYGUES'
 Begin 
-	If @adcIdGti = 11 And ( CHARINDEX ( '#REE#', @asChaineQueSestTilPasse ) > 0 OR ( @asDysFonctionnementAppareil = 'NON' And @asAppInutilisableSuiteDysfonct = 'NON' )) 
+	If @adcIdGti in ( 24 ) And ( @asDysFonctionnementAppareil = 'NON' And @asAppInutilisableSuiteDysfonct = 'NON' ) 
+	Begin
+		Set @asChaineSeriaRetourRefus = sysadm.FN_CLE_VAL_E ( '1165', sysadm.FN_CODE_NUM ( 1165, '+RE' ), Trim ( @asChaineSeriaRetourRefus ), ';' )	
+	End 
+
+
+	If @adcIdGti in ( 11 ) And ( CHARINDEX ( '#REE#', @asChaineQueSestTilPasse ) > 0 OR ( @asDysFonctionnementAppareil = 'NON' And @asAppInutilisableSuiteDysfonct = 'NON' AND CHARINDEX ( '#BROKEN_SCREEN#', @asTypeDommagesAppareilCode ) <= 0)) 
 	Begin
 		Set @asChaineSeriaRetourRefus = sysadm.FN_CLE_VAL_E ( '1165', sysadm.FN_CODE_NUM ( 1165, '+RE' ), Trim ( @asChaineSeriaRetourRefus ), ';' )	
 	End 
@@ -2211,23 +2255,58 @@ Declare @sVarianteDp406 Varchar ( 50 )
 Declare @sVal Varchar ( 1000 )
 Declare @sVal1 Varchar ( 50 )
 Declare @sVal2 Varchar ( 50 )
+Declare @sVal3 Varchar ( 50 )
+Declare @dcIdGti Decimal ( 7 ) 
+Declare @iRet Integer
 
-Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';')
+Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';'),
+	   @dcIdGti = wg.id_gti
 From sysadm.det_pro dp,
-	 sysadm.w_sin ws
+	 sysadm.w_sin ws,
+	 sysadm.w_gar_sin wg
 Where ws.id_sin = @adcIdSin
 And   dp.id_prod = ws.id_prod
+And   wg.id_sin = ws.id_sin
 
-If @sVarianteDp406 = 'BOUYGUES'
+If @sVarianteDp406 = 'BOUYGUES' and @dcIdGti in ( 11, 24 )
 Begin 
-	Set @sVal = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'que_s_est_t_il_passe_code', 'W', '' )	
+
+	Set @sVal3 = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'que_s_est_t_il_passe_code', 'W', '' )	
 	Set @sVal1 = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'dysfonctionnement_appareil', 'W', 'RETOUR=CODE' )	
 	Set @sVal2 = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'app_inutilisable_suite_dysfonct', 'W', 'RETOUR=CODE' )	
-	If CHARINDEX ( '#REE#', @sVal ) > 0 OR ( @sVal1 = 'NON' And @sVal2 = 'NON' )
+
+	-- Cas dommages_appareil_code
+	Set @sVal = space ( 1000 )
+	Exec sysadm.PS_S_DIV_SIN_SANS_DIV_PRO_RECUPERATION_CHAINE_LONGUE
+			@adcIdSin, 
+			'dommages_appareil_code',
+			'W',
+			@sVal OutPut 
+
+	If @dcIdGti in ( 24 )
 	Begin
-		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Refus machine 1165', 'Le refus machine 1165 indiquant un dommage de parties extérieures non couverte par le contrant s''est déclenché. Automatisation impossible.'  
-		Return -1   
+		If @sVal1 = 'NON' And @sVal2 = 'NON' 
+		Begin
+			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Refus machine 1165', 'Le refus machine 1165 indiquant un dommage de parties extérieures non couverte par le contrant s''est déclenché. Automatisation impossible.'  
+			Return -1   
+		End 
 	End 
+
+	If @dcIdGti in ( 11 )
+	Begin
+		If CHARINDEX ( '#REE#', @sVal3 ) > 0 OR ( @sVal1 = 'NON' And @sVal2 = 'NON' AND CHARINDEX ( '#BROKEN_SCREEN#', @sVal ) > 0)
+		Begin
+			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Refus machine 1165', 'Le refus machine 1165 indiquant un dommage de parties extérieures non couverte par le contrant s''est déclenché. Automatisation impossible.'  
+			Return -1   
+		End 
+
+		If @sVal1 = 'NON' And @sVal2 = 'NON' AND CHARINDEX ( '#BROKEN_SCREEN#', @sVal ) <= 0
+		Begin
+			Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__COCHER_UN_REFUS @adcIdSin, @dcIdGti
+			If @iRet = -1 Return @iRet		
+			Return 1165 -- Retour du code refus positif ( + Validation&Mail Refus )
+		End 
+	End
 End 
 
 Go
@@ -3103,8 +3182,8 @@ While Exists ( Select Top 1 1 From @TbDp77 where marquage = 0 )
 		Begin
 			-- Et Sion on renvoit en gestion quand même
 			Set @sMess = 'Le système a coché la pièce ' + Convert ( VarChar ( 10 ), @dcCodePiece ) + ' (' + @sLibPce + ') sur ce dossier. Automatisation impossible.'
-			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Dossier en demande de pièce(s)', @sMess 
-			Return -1
+--			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Dossier en demande de pièce(s)', @sMess 
+--			Return -1
 		End 
 
 	Update @TbDp77 Set marquage = 1 Where id_seq = @iIdSeq
@@ -3139,17 +3218,33 @@ Declare @sMarqAppSin VarChar ( 35 )
 Declare @sModlAppSin VarChar ( 35 )
 Declare @dcMtValAchat Decimal ( 11, 2 )
 Declare @dtDteAchat DateTime
+Declare @sVarianteDp406 Varchar ( 50 )
 
+-- Obtention de la variante
+Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';') From sysadm.det_pro dp, sysadm.w_sin ws Where ws.id_sin = @adcIdSin And dp.id_prod = ws.id_prod
 
 Select Top 1 @adcIdGti = wg.id_gti From sysadm.w_sin ws, sysadm.w_gar_sin wg Where ws.id_sin = @adcIdSin and wg.id_sin = ws.id_sin
 
 -- Création Obtention d'un Id_Detail d'un id_seq
-Exec @iRet = sysadm.Atlas_Gar_Sin_Creer_Detail_V102 @adcIdSin, @adcIdGti, 1491, null, 'de votre appareil', 0, @adcIdDetail OutPut
-If @iRet < 0 Or Not ( @adcIdDetail >= 0 )
-	Begin 
-		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Impossible de créér détail de gtie', 'Impossible de créer le détail de garantie 1491. Automatisation impossible.'
-		Return -1
-	End 
+If @sVarianteDp406 = 'BOUYGUES' And @adcIdGti in ( 11, 24 )
+Begin
+	Exec @iRet = sysadm.Atlas_Gar_Sin_Creer_Detail_V102 @adcIdSin, @adcIdGti, 1491, null, 'de votre appareil', 0, @adcIdDetail OutPut
+	If @iRet < 0 Or Not ( @adcIdDetail >= 0 )
+		Begin 
+			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Impossible de créér détail de gtie', 'Impossible de créer le détail de garantie 1491. Automatisation impossible.'
+			Return -1
+		End 
+End 
+
+If @sVarianteDp406 = 'BOUYGUES' And @adcIdGti in ( 10 )
+Begin
+	Exec @iRet = sysadm.Atlas_Gar_Sin_Creer_Detail_V102 @adcIdSin, @adcIdGti, 936, null, null, 0, @adcIdDetail OutPut
+	If @iRet < 0 Or Not ( @adcIdDetail >= 0 )
+		Begin 
+			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Impossible de créér détail de gtie', 'Impossible de créer le détail de garantie 936. Automatisation impossible.'
+			Return -1
+		End 
+End 
 
 -- Obtention données sinistre
 Select	@sMarqAppSin = ws.marq_port,
@@ -3206,7 +3301,8 @@ If Not Exists (
 -- Obtention de toutes les données stockées concernant les presta HUB
 Select	Top 1
 		@dcMtValAchat   = IsNull ( stk.mt_val_achat, 0 ),
-		@dtDteAchat	   = stk.dte_achat
+		@dtDteAchat		= stk.dte_achat
+
 From sysadm.stk_data_hub_automate stk
 Where stk.id_sin = @adcIdSin
 And   stk.id_gti = @adcIdGti
@@ -3325,7 +3421,8 @@ where	ws.id_sin = @adcIdSin
 and		p.id_prod = ws.id_prod 
 and		p.id_rev  = ws.id_rev
 And		wd.id_sin = ws.id_sin
-and		p.id_gti = wd.id_gti 
+and		p.id_gti = wd.id_gti
+and		p.id_gti = @adcIdGti
 and		( p.id_ref_plaf = wd.id_evt or id_niv_plaf = '-GA' ) 
 
 -- Stockage de données 
@@ -3556,7 +3653,17 @@ DECLARE
     @sIdMarqArtIfr varchar(35),
     @sIdModlArtIfr varchar(35),
     @sInfoSpbFrnCplt char(800),
-    @sInfoFrnSpbCplt char(800)
+    @sInfoFrnSpbCplt char(800),
+	@sTypAppSin VarChar ( 3 ),
+	@sNumImeiSerieSin VarChar ( 60 ),
+	@dtDteAchat DateTime,
+	@sTypAppSinStk VarChar ( 3 ),
+	@sMarqAppSinStk VarChar ( 35 ),
+	@sModlAppSinStk VarChar ( 35 ),
+	@sNumImeiSerieSinStk VarChar ( 60 ),
+	@dtDteAchatStk DateTime,
+	@dcMtValAchatStk Decimal ( 11, 2 )
+
 
 Declare @iRet Integer
 Declare @dcMtValAchat Decimal ( 11, 2 )
@@ -3581,19 +3688,19 @@ Select	@sIdFour = stk.id_four,
 		@sIdTypArt = Case stk.ordre_action
 						When 'A_REPARER' Then 'PRS'
 						When 'A_DIAGNOSTIQUER' Then 'EDI'
-						-- When 'A_COMMANDER' Then stk.typ_app_sin
+						When 'A_COMMANDER' Then 'CAF'
 						Else '???'
 					 End,
 		@sIdMarqArt = Case stk.ordre_action
 						When 'A_REPARER' Then stk.marq_app_sin
 						When 'A_DIAGNOSTIQUER' Then 'APPAREIL A DIAGNOSTIQUER'
-						-- When 'A_COMMANDER' Then 
+						When 'A_COMMANDER' Then 'COMMANDE DE REMPLACEMENT HUB'
 						Else '???'
 					 End,
 		@sIdModlArt = Case stk.ordre_action
 						When 'A_REPARER' Then stk.modl_app_sin
 						When 'A_DIAGNOSTIQUER' Then ''
-						-- When 'A_COMMANDER' Then 
+						When 'A_COMMANDER' Then ''
 						Else '???'
 					 End,
 		@dcMtTtcCmde = 0,
@@ -3692,8 +3799,12 @@ Where stk.id_stk = @idSeqStkPresta
 
 
 Select	Top 1 
-		@sIdMarqArtIfr = i.marque,
-		@sIdModlArtIfr = i.reference  
+		@sTypAppSin = Trim ( wds.val_car ),
+		@sIdMarqArtIfr = Trim ( i.marque ),
+		@sIdModlArtIfr = Trim ( i.reference ),
+		@sNumImeiSerieSin = Trim ( ws.num_imei_port ),
+		@dtDteAchat = ws.dte_ach_port
+
 From sysadm.w_sin ws,
 	 sysadm.w_div_sin wds,
 	 sysadm.det_pro dp,
@@ -3713,10 +3824,29 @@ And dp.id_code_car = 'IFR' + trim ( wds.val_car )
 -- Obtention d'un id_seq
 Set @aiIdSeqPresta = IsNull ( ( Select MAX ( id_seq ) From sysadm.w_commande where id_sin = @adcIdSin ), 0 ) + 1
 
-----------------------------------------------------------
--- Pris en charge du détail, déclenchement des plafonds --
-----------------------------------------------------------
--- Voir PS_I_PM234_7_PLAFOND_PEC
+-- Dernier contrôle avant création de la prestation
+Select Top 1 
+		@sTypAppSinStk = Trim ( stk.typ_app_sin ),
+		@sMarqAppSinStk = Trim ( stk.marq_app_sin ),
+		@sModlAppSinStk = Trim ( stk.modl_app_sin ) ,
+		@sNumImeiSerieSinStk = Trim ( IsNull ( stk.num_imei_app_sin, num_serie_app_sin )),
+		@dtDteAchatStk = stk.dte_achat,
+		@dcMtValAchatStk = stk.mt_val_achat
+From sysadm.stk_data_hub_automate stk
+Where stk.id_sin = @adcIdSin
+And   stk.id_gti = @adcIdGti
+And   stk.id_seq is null
+
+If	@sTypAppSinStk <> @sTypAppSin Or 
+	@sMarqAppSinStk <> @sIdMarqArtIfr Or 
+	@sModlAppSinStk <> @sIdModlArtIfr Or
+	@sNumImeiSerieSinStk <> @sNumImeiSerieSin Or 
+	@dtDteAchatStk <> @dtDteAchat
+	-- Pas la peine pour la valeur d'achat, vu qu'elle est maj à partir de stk sur le detail.
+Begin
+	Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Problème cohérence données', 'Les données transmises par l''extranet ne sont pas cohérence entre la prestation et le sinistre. Automatisation impossible.'
+	Return -1
+End 
 
 -------------------------------------------
 -- Création de la prestation dans SIMPA2 -- 
@@ -3928,6 +4058,7 @@ Declare @iRet Integer
 Declare @sMsgTemp VarChar ( 500 ) 
 Declare @iCtrle Integer
 Declare @sMsgSucces VarChar ( 35)
+Declare @sOrdreAction VarChar ( 50 )
 
 Set @iCodeEtat = 100
 
@@ -4041,6 +4172,8 @@ Exec @iRet = sysadm.PS_VALIDATION
 		@dtValideLe OUTPUT,
 		@sMethode
 
+-- Select '@iRet PS_VALIDATION' , @iRet 
+
 If @iRet < 0 
 	Begin
 		Set @sMsgTemp = 'Problème lors de la validation automatique suite à la déclaration par l''extranet, code (' + Convert ( VarChar ( 10 ), @iRet ) + '). Automatisation impossible.'
@@ -4065,8 +4198,12 @@ If @iCtrle < 0
 	End 
 
 -- Validation de la presta vers le HUB
-Insert into sysadm.en_attente_transfert_vers_hp ( id_cas, id_sin, id_seq, id_hub_presta, id_four, typ_dommage, point_service, mode_logis, code_pickup, nom_pickup, ref_ass_pickup, adr1_pickup, adr2_pickup, adr3_pickup, adr_cp_pickup, adr_ville_pickup, code_process, lib_code_process, id_gti, lib_perso_gti, id_detail, id_prod, lib_prod, id_prod_adh, id_ets, id_adh, id_sdos, id_typ_art, cod_civ_livr, lib_civ_livr_court, lib_civ_livr_long, id_contrat_abonne, nom_ass, prenom_ass, nom_livr, prenom_livr, adr1_livr, adr2_livr, adr3_livr, adr_cp_livr, adr_ville_livr, num_tel1_ass, num_tel2_ass, num_tel3_ass, mail_assure, num_imei_app_sin, num_serie_app_sin, description_probleme, cod_etat, valide_le, valide_par, cmd_gen_le, id_ref_four, ordre_action, id_assureur, lib_assureur, lib_police, typ_app_sin, lib_typ_app_sin, marq_app_sin, modl_app_sin, ref_app_sin, num_tel_sin, mt_val_achat, mt_prise_en_charge, date_achat, etat_app_sin, code_verrou, desimlocke, info_spb_frn_cplt )
-exec sysadm.PS_HP276_S_S2_OBTENTION_DONNEES_PRESTA_SIMPA2_POUR_PREPARATION_CREATION_HUB_PRESTATAIRE_SUR_TABLE_W 2, @adcIdSin, @aiIdSeqPresta
+Select @sOrdreAction = id_ref_four From sysadm.w_commande Where id_sin = @adcIdSin and id_seq = @aiIdSeqPresta
+If @sOrdreAction in ( 'A_REPARER', 'A_DIAGNOSTIQUER') 
+Begin
+	Insert into sysadm.en_attente_transfert_vers_hp ( id_cas, id_sin, id_seq, id_hub_presta, id_four, typ_dommage, point_service, mode_logis, code_pickup, nom_pickup, ref_ass_pickup, adr1_pickup, adr2_pickup, adr3_pickup, adr_cp_pickup, adr_ville_pickup, code_process, lib_code_process, id_gti, lib_perso_gti, id_detail, id_prod, lib_prod, id_prod_adh, id_ets, id_adh, id_sdos, id_typ_art, cod_civ_livr, lib_civ_livr_court, lib_civ_livr_long, id_contrat_abonne, nom_ass, prenom_ass, nom_livr, prenom_livr, adr1_livr, adr2_livr, adr3_livr, adr_cp_livr, adr_ville_livr, num_tel1_ass, num_tel2_ass, num_tel3_ass, mail_assure, num_imei_app_sin, num_serie_app_sin, description_probleme, cod_etat, valide_le, valide_par, cmd_gen_le, id_ref_four, ordre_action, id_assureur, lib_assureur, lib_police, typ_app_sin, lib_typ_app_sin, marq_app_sin, modl_app_sin, ref_app_sin, num_tel_sin, mt_val_achat, mt_prise_en_charge, date_achat, etat_app_sin, code_verrou, desimlocke, info_spb_frn_cplt )
+	exec sysadm.PS_HP276_S_S2_OBTENTION_DONNEES_PRESTA_SIMPA2_POUR_PREPARATION_CREATION_HUB_PRESTATAIRE_SUR_TABLE_W 2, @adcIdSin, @aiIdSeqPresta
+End 
 
 If @@ROWCOUNT <> 1
 	Begin
@@ -4081,8 +4218,8 @@ Set @sMsgTemp = 'Automatisation de la déclaration réussie, la prestation est cré
 Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO
 	@adcIdSin,
 	'extrauto_etat', 
-	'SUCDCL',  
-	@sMsgSucces,
+	'Etat Automatis. Décla. Extranet',  
+	'SUCDCL',
 	'O',
 	'C',
 	null,
@@ -4142,6 +4279,7 @@ CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__RECHERCHE_REFUS_AVANT_DECL
 	@asDysFonctionnementAppareil VarChar ( 10 ), -- Dysfonctionnement appareil ? => OUI ou NON
 	@asAppInutilisableSuiteDysfonct VarChar ( 10 ), -- Appareil inutilisable suite à ce dysfonctionnement  => OUI ou NON
 	@asDommagesExterieursVisibles  VarChar ( 10 ), -- Cela a-t-il causé des dommages extérieurs visibles  => OUI ou NON
+	@asTypeDommagesAppareilCode VarChar ( 1000 ), -- #BROKEN_SCREEN#DEVICE_BROKEN#REAR_BROKEN# ou #OXIDATION# etc...
 	@asChaineSeriaArgSuppl VarChar ( 255 ), -- Si besoin un jour
 	@asChaineSeriaRetourRefus Varchar ( 500 ) OutPut, -- ex : 611=NATURE DE SINISTRE NON COUVERT;1713=DISPARITIONS PERTES OUBLIS;603=PRIMES NON PERCUES
 	@asMessRetour VarChar ( 255 ) 
@@ -4165,16 +4303,25 @@ If @adIdTerritSin is null Or Not Exists ( Select Top 1 1 From sysadm.code_condit
 If @adcIdNatSin is null Or Not Exists ( Select Top 1 1 From sysadm.code_condition cc Where cc.id_prod = @adcIdProdSin and cc.id_typ_code = '+NS' and cc.id_code = @adcIdNatSin ) Begin Set @asMessRetour = 'Code nature de sinistre obligatoire et doit être paramétré sur produit ' + Convert ( Varchar ( 50 ), @adcIdProdSin) ; Return -70 End 
 If @adcIdDetSin is null Or Not Exists ( Select Top 1 1 From sysadm.code_condition cc Where cc.id_prod = @adcIdProdSin and cc.id_typ_code = '+DT' and cc.id_code = @adcIdDetSin ) Begin Set @asMessRetour = 'Code détails de sinistre obligatoire et doit être paramétré sur produit ' + Convert ( Varchar ( 50 ), @adcIdProdSin) ; Return -80 End 
 
-If @sVarianteDp406 = 'BOUYGUES' And @adcIdGti = 11
+If @sVarianteDp406 = 'BOUYGUES' 
 	Begin 
-		Set @asDysFonctionnementAppareil = Upper ( @asDysFonctionnementAppareil  )
-		If @asDysFonctionnementAppareil is null OR @asDysFonctionnementAppareil Not in ( 'OUI', 'NON' ) Begin Set @asMessRetour = 'Information sur le dysfonctionnement de l''appareil, obligatoire (OUI/NON) pour ce produit ' + Convert ( Varchar ( 50 ), @adcIdProdSin) ; Return -90 End 
+		If @adcIdGti in ( 11 ) 
+			Begin
+				Set @asTypeDommagesAppareilCode = Upper ( @asTypeDommagesAppareilCode  )
+				If @asTypeDommagesAppareilCode is null OR @asTypeDommagesAppareilCode = '' Begin Set @asMessRetour = 'Information sur les types de dommages de l''appareil, obligatoire (#...#...#..etc.) pour ce produit ' + Convert ( Varchar ( 50 ), @adcIdProdSin) ; Return -120 End 
 
-		Set @asAppInutilisableSuiteDysfonct = Upper ( @asAppInutilisableSuiteDysfonct  )
-		If @asAppInutilisableSuiteDysfonct is null OR @asAppInutilisableSuiteDysfonct Not in ( 'OUI', 'NON' ) Begin Set @asMessRetour = 'Information sur le fait que l''appareil soit encore utilisable (ou pas), obligatoire (OUI/NON) pour ce produit ' + Convert ( Varchar ( 50 ), @adcIdProdSin) ; Return -100 End 
+				Set @asDommagesExterieursVisibles = Upper ( @asDommagesExterieursVisibles  )
+				If @asDommagesExterieursVisibles is null OR @asDommagesExterieursVisibles Not in ( 'OUI', 'NON' ) Begin Set @asMessRetour = 'Information sur les dommages extérieurement visible de l''appareil, obligatoire (OUI/NON) pour ce produit ' + Convert ( Varchar ( 50 ), @adcIdProdSin) ; Return -110 End 
+			End 
 
-		Set @asDommagesExterieursVisibles = Upper ( @asDommagesExterieursVisibles  )
-		If @asDommagesExterieursVisibles is null OR @asDommagesExterieursVisibles Not in ( 'OUI', 'NON' ) Begin Set @asMessRetour = 'Information sur les dommages extérieurement visible de l''appareil, obligatoire (OUI/NON) pour ce produit ' + Convert ( Varchar ( 50 ), @adcIdProdSin) ; Return -100 End 
+		If @adcIdGti in ( 11, 24 ) 
+			Begin
+				Set @asDysFonctionnementAppareil = Upper ( @asDysFonctionnementAppareil  )
+				If @asDysFonctionnementAppareil is null OR @asDysFonctionnementAppareil Not in ( 'OUI', 'NON' ) Begin Set @asMessRetour = 'Information sur le dysfonctionnement de l''appareil, obligatoire (OUI/NON) pour ce produit ' + Convert ( Varchar ( 50 ), @adcIdProdSin) ; Return -90 End 
+
+				Set @asAppInutilisableSuiteDysfonct = Upper ( @asAppInutilisableSuiteDysfonct  )
+				If @asAppInutilisableSuiteDysfonct is null OR @asAppInutilisableSuiteDysfonct Not in ( 'OUI', 'NON' ) Begin Set @asMessRetour = 'Information sur le fait que l''appareil soit encore utilisable (ou pas), obligatoire (OUI/NON) pour ce produit ' + Convert ( Varchar ( 50 ), @adcIdProdSin) ; Return -100 End 
+			end 
 
 	End 
 
@@ -4193,7 +4340,7 @@ Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIE
 
 If @sVarianteDp406 = 'BOUYGUES' 
 	Begin 
-		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_1165_DOMMAGE_PARTIES_EXTERIEURES_RECHERCHE @adcIdProdSin, @adcIdGti, @asChaineQueSestTilPasse, @asDysFonctionnementAppareil, @asAppInutilisableSuiteDysfonct, @asChaineSeriaRetourRefus OutPut
+		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_1165_DOMMAGE_PARTIES_EXTERIEURES_RECHERCHE @adcIdProdSin, @adcIdGti, @asChaineQueSestTilPasse, @asDysFonctionnementAppareil, @asAppInutilisableSuiteDysfonct, @asTypeDommagesAppareilCode, @asChaineSeriaRetourRefus OutPut
 		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_1844_DOMMAGE_PAS_EXTERIEUREMENT_VISIBLE_RECHERCHE @adcIdProdSin, @adcIdGti, @asDommagesExterieursVisibles, @asChaineSeriaRetourRefus OutPut
 	End 
 
@@ -4539,8 +4686,8 @@ Set @sMsgTemp = 'Automatisation de la déclaration réussie, la prestation est cré
 Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO
 	@adcIdSin,
 	'extrauto_etat', 
-	'SUCDRE',  
-	@sMsgSucces,
+	'Etat Automatis. Décla. Extranet',  
+	'SUCDRE',
 	'O',
 	'C',
 	null,
