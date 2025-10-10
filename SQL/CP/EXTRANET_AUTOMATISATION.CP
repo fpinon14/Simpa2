@@ -7,6 +7,7 @@
 -- Commentaires         :       PS afférants à l'automatisation des déclaration SHERPA/SIMPA2 en liant avec un extranet
 --
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__COCHAGE_DES_PIECES
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__COCHER_UN_REFUS
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__CONTROLE_ELIGIBILITE_DOSSIER
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__CONTROLE_INTEGRITE_DOSSIER
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__CREATION_DE_LA_PRESTATION
@@ -18,6 +19,8 @@
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__RECHERCHE_REFUS_AVANT_DECLENCHEMENT
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_1165_DOMMAGE_PARTIES_EXTERIEURES
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_1165_DOMMAGE_PARTIES_EXTERIEURES_RECHERCHE
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_1844_DOMMAGE_PAS_EXTERIEUREMENT_VISIBLE
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_1844_DOMMAGE_PAS_EXTERIEUREMENT_VISIBLE_RECHERCHE
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_601_ADHESION_RESILIEE
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_601_ADHESION_RESILIEE_RECHERCHE
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_602_ADHESION_NON_SOUSCRITE_A_DATE_SINISTRE
@@ -42,8 +45,8 @@
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__STOCKAGE_INFOS_PRESTATION
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__TRACE_STOCKAGE_INFOS_PRESTATION
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__VALIDATION_DU_DOSSIER
+-- sysadm.PS_I_EXTRANET_AUTOMATISATION__VALIDATION_DU_DOSSIER_REFUSE_ET_ENVOI_MAIL_REFUS
 -- sysadm.PS_S_EXTRANET_AUTOMATISATION__LECTURE_DW_PRESTATION_STOCKEE
-
 -------------------------------------------------------------------
 --
 -------------------------------------------------------------------
@@ -90,7 +93,7 @@ Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO
 Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO
         @adcIdSin,
         'extrauto_Lib', 
-		'Rejet Automatis. Décla. Extranet',  
+		'Lib. Etat Autom. Décla. Extranet',  
         @asMsgSimpa2,
 		'O',
 		'C',
@@ -142,7 +145,6 @@ GO
 
 CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__STOCKAGE_INFOS_PRESTATION
 	@adcIdSin Decimal ( 10 ),
-	@adcIdGti Decimal ( 7 ),
 	@asIdHubPresta VarChar ( 20 ), 
 	@asIdFour VarChar ( 3 ),
 	@asTypDommage VarChar ( 100 ),
@@ -190,6 +192,7 @@ AS
 Declare @iRet Integer
 Declare @sRefAssPickUp VarChar ( 40 )
 Declare @sDataErreur VarChar ( 255 )
+Declare @adcIdGti Decimal ( 7 ) -- 'a' car ancien argument
 
 If Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin ) 
 	Begin
@@ -199,7 +202,8 @@ If Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin )
 		Return -10
 	End 
 
-If Not Exists ( Select Top 1 1 From sysadm.w_gar_sin Where id_sin = @adcIdSin and id_gti = @adcIdGti ) 
+Select Top 1 @adcIdGti = id_gti From sysadm.w_gar_sin Where id_sin = @adcIdSin 
+If @adcIdGti is null Or @adcIdGti <= 0 
 	Begin
 		Set @asMessRet = 'La garantie n''existe pas sur le sinistre'
 		Set @sDataErreur = Convert ( VarChar ( 255), @adcIdGti )
@@ -1015,6 +1019,7 @@ Declare @iValidationDossier Integer
 Declare @iEnvoiRecapDecl Integer
 Declare @iIdMotifRefus Decimal ( 7 )
 
+Set @iIdMotifRefus = -1
 
 -- [LGY38] afin que le CCO ne ramasse un éventuel travail présent
 -- Même si DELETE ensuite, le Trv pourrait être affecté au CCO, donc le pus tôt possible il faut couper
@@ -1025,7 +1030,7 @@ Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__CONTROLE_ELIGIBILITE_DOSSIER @
 If @iRet = -1 Return @iRet
 
 -- Obtention de la variante
-Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';') From sysadm.det_pro dp, sysadm.w_sin ws Where ws.id_sin = @adcIdSin And dp.id_prod = ws.id_prod
+Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';') From sysadm.det_pro dp, sysadm.w_sin ws Where ws.id_sin = @adcIdSin And dp.id_prod = ws.id_prod and dp.id_code_dp = 406 
 
 --------------------------
 -- BOUYGUES             --
@@ -1061,16 +1066,11 @@ If @iDeclenchRefus > 0
 	If @iRet > 1 And @iMailRefusEtValdDos > 0 -- Cas d'un Refus par mail (avec Validation, olbigé)
 	Begin 
 		Set @iIdMotifRefus = @iRet
-
-		-- [TODO] PS à creer
-		Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__VALIDATION_DU_DOSSIER_REFUSE_ET_ENVOI_MAIL_REFUS @adcIdSin, @iIdMotifRefus 
-		If @iRet = -1 Return @iRet		
-
 		Set @iCochagePiece = 0
-		Set @iCreerDetGti = 0
+		Set @iCreerDetGti = 1 -- Si on a des refus COCHÉS qui vont induire une validation et un mail auto, on permet la création du détail qui est obligatoire pour le calcul des état du dossiers
 		Set @iDeclenchPlafEtPec = 0
 		Set @iCreationPresta = 0
-		Set @iValidationDossier = 0
+		Set @iValidationDossier = 1
 
 	End 
 
@@ -1104,17 +1104,18 @@ If @iCreationPresta > 0
 	If @iRet = -1 Return @iRet
  End 
 
+
 -- Validation
 If @iValidationDossier > 0
  Begin
-	Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__VALIDATION_DU_DOSSIER @adcIdSin, @dcIdGti, @dcIdDetail, @iIdSeqPresta
+	Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__VALIDATION_DU_DOSSIER @adcIdSin, @dcIdGti, @dcIdDetail, @iIdSeqPresta, @iIdMotifRefus
 	If @iRet = -1 Return @iRet
  End 
 
 -- A laisser tout à la fin, car sinon la PS est appelé dans le Rejet
 -- Envoi du mail récap
 -- Pas d'exploitation du @iRet, la validation est déjà, on met juste un contact si erreur
-If @iEnvoiRecapDecl > 0
+If @iEnvoiRecapDecl > 0 And @dcIdGti <> 10
  Begin
 	Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__ENVOI_RECAPITULATIF_DE_DECLARATION @adcIdSin
  End
@@ -1203,12 +1204,16 @@ Declare @sCodeRetIfr Varchar ( 20 )
 Declare @sAdrMailInterAss Varchar ( 120 )
 Declare @sVarianteDp406 Varchar ( 50 )
 Declare @dcIdGti Decimal ( 7 )
+Declare @dcIdProdSin Decimal ( 7 )
+Declare @dcIdEts Decimal ( 7 )
+Declare @sIdAdh VarChar ( 19 )
 
 Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';')
 From sysadm.det_pro dp,
 	 sysadm.w_sin ws
 Where ws.id_sin = @adcIdSin
 And dp.id_prod = ws.id_prod
+And dp.id_code_dp = 406
 	
 
 -- absence ligne dans w_sin
@@ -1363,19 +1368,53 @@ If @sVarianteDp406 = 'BOUYGUES'
 				Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Sin ds les 15j après adh.', 'Le sinistre a eu lieu dans les 15 jours après l''adhésion. Automatisation impossible.'
 				Return -1
 			End	
-/* [TODO]
-
-1/A partir de la 3ème déclaration dans les 12 derniers mois 
-2/ Si sinistre précédent refusé
-
-		Select 
-		From sysadm.sinistre s,
-			 sysadm.w_sin ws
-		Where ws.id_sin = @adcIdSin
-		And s.id_adh = ws.id_adh -- Juste ça car je sais que c'est une adhésion SAGA2 pour Bouyges, sinon FFM (id_prod,ets,adh,sdos)
-		Order by 
-*/
-
+	
+		IF (
+			SELECT count (* )
+			FROM (
+					SELECT distinct dte_surv
+					FROM sysadm.w_sin
+					WHERE id_prod = @dcIdProdSin
+					And   id_ets = @dcIdEts 
+					And   id_adh = @sIdAdh
+					AND   dte_decl >= DATEADD(month, -12, GETDATE())
+					UNION 
+					SELECT distinct dte_surv
+					FROM sysadm.sinistre
+					WHERE id_prod = @dcIdProdSin
+					And   id_ets = @dcIdEts 
+					And   id_adh = @sIdAdh
+					AND   dte_decl >= DATEADD(month, -12, GETDATE())
+				) As TbDteSurv
+			) > 2
+			Begin
+				Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, '3ème déclaration en 12 mois', 'La déclaration transmis par l''extranet est la 3ème dans les 12 derniers mois. Automatisation impossible.'
+				Return -1
+			End	
+	
+		IF Exists (
+			SELECT Max ( dte_surv ) 
+			FROM (
+					SELECT distinct dte_surv, cod_etat
+					FROM sysadm.w_sin
+					WHERE id_prod = @dcIdProdSin
+					And   id_ets = @dcIdEts 
+					And   id_adh = @sIdAdh
+					AND id_sin <> @adcIdSin
+					UNION 
+					SELECT distinct dte_surv, cod_etat
+					FROM sysadm.sinistre
+					WHERE id_prod = @dcIdProdSin
+					And   id_ets = @dcIdEts 
+					And   id_adh = @sIdAdh
+					AND id_sin <> @adcIdSin
+				) As TbDteSurv
+			Where cod_etat = 200
+			) 
+			Begin
+				Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Dernier sinistre (surv) refusé', 'Le dernier sinistre en survenance a été refussé, de ce fait la déclaration transmis par l''extranet ne peut être traitée. Automatisation impossible.'
+				Return -1
+			End			
 	End 
 
 -- Contrôle du texte de déclaration (22/05/2018 JFF)
@@ -2135,6 +2174,7 @@ Declare @sVal Varchar ( 1000 )
 Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';')
 From sysadm.det_pro dp
 Where dp.id_prod = @adcIdProdSin
+and dp.id_code_dp = 406
 
 If @sVarianteDp406 = 'BOUYGUES'
 Begin 
@@ -2174,6 +2214,7 @@ From sysadm.det_pro dp,
 	 sysadm.w_gar_sin wg
 Where ws.id_sin = @adcIdSin
 And   dp.id_prod = ws.id_prod
+And   dp.id_code_dp = 406
 And   wg.id_sin = ws.id_sin
 
 If @sVarianteDp406 = 'BOUYGUES'
@@ -2181,7 +2222,7 @@ Begin
 	Set @sVal = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'dommages_exterieurs_visibles', 'W', 'RETOUR=CODE' )	
 	If @dcIdGti = 11 And @sVal = 'NON'
 	Begin
-		Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__COCHER_UN_REFUS @adcIdSin, @dcIdGti
+		Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__COCHER_UN_REFUS @adcIdSin, @dcIdGti, 1844
 		If @iRet = -1 Return @iRet		
 		Return 1844 -- Retour du code refus positif ( + Validation&Mail Refus )
 	End 
@@ -2218,6 +2259,7 @@ Declare @sVal Varchar ( 1000 )
 Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';')
 From sysadm.det_pro dp
 Where dp.id_prod = @adcIdProdSin
+and dp.id_code_dp = 406
 
 If @sVarianteDp406 = 'BOUYGUES'
 Begin 
@@ -2266,6 +2308,7 @@ From sysadm.det_pro dp,
 	 sysadm.w_gar_sin wg
 Where ws.id_sin = @adcIdSin
 And   dp.id_prod = ws.id_prod
+and   dp.id_code_dp = 406
 And   wg.id_sin = ws.id_sin
 
 If @sVarianteDp406 = 'BOUYGUES' and @dcIdGti in ( 11, 24 )
@@ -2302,7 +2345,7 @@ Begin
 
 		If @sVal1 = 'NON' And @sVal2 = 'NON' AND CHARINDEX ( '#BROKEN_SCREEN#', @sVal ) <= 0
 		Begin
-			Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__COCHER_UN_REFUS @adcIdSin, @dcIdGti
+			Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__COCHER_UN_REFUS @adcIdSin, @dcIdGti, 1165
 			If @iRet = -1 Return @iRet		
 			Return 1165 -- Retour du code refus positif ( + Validation&Mail Refus )
 		End 
@@ -2725,7 +2768,8 @@ If Not Exists (
 	  Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';')
 	  From sysadm.det_pro dp
 	  Where dp.id_prod = @adcIdProdSin
-	
+	  and dp.id_code_dp = 406
+
 	  If @sVarianteDp406 = 'BOUYGUES'
 		Begin 
 			If @adcIdNatSin = 11 
@@ -2787,6 +2831,7 @@ If Not Exists (
 		   sysadm.w_sin ws
 	  Where ws.id_sin = @adcIdSin  
 	  And dp.id_prod = ws.id_prod
+	  and dp.id_code_dp = 406
 	
 	  If @sVarianteDp406 = 'BOUYGUES'
 		Begin 
@@ -3127,8 +3172,21 @@ Declare @dcCodePiece Decimal ( 7 )
 Declare @iIdSeq integer 
 Declare @sLibPce VarChar ( 255 ) 
 Declare @sMess VarChar ( 508 )
+Declare @dtValideLe Datetime 
 
-Declare @TbDp77 Table ( 
+Set @dtValideLe  = getdate ()
+
+Declare @TbDp77_Chargement Table ( 
+		id_seq integer identity,
+		code_pce decimal ( 7 ),
+		lib_pce varchar ( 255 ),
+		etat_pce varchar ( 50 ),
+		date_reclamee DateTime,
+		date_receptionnee DateTime,
+		date_analyse DateTime )
+
+
+Declare @TbDp77_Traitement Table ( 
 		id_seq integer identity,
 		code_pce decimal ( 7 ),
 		lib_pce varchar ( 255 ),
@@ -3159,20 +3217,21 @@ and   wg.id_sin = ws.id_sin
 
 Set @sVal = '#' + Convert ( VarChar ( 10 ), @dcIdGti ) + '#'
 
-Insert into @TbDp77 Exec sysadm.Atlas_Piece_Charger_Pieces_V101 @dcIdProdSin, @sVal, null, ''
-Update @TbDp77 Set marquage = 0
+Insert into @TbDp77_Chargement Exec sysadm.Atlas_Piece_Charger_Pieces_V101 @dcIdProdSin, @sVal, null, ''
+Insert into @TbDp77_Traitement Select code_pce, lib_pce, etat_pce, date_reclamee, date_receptionnee, date_analyse, 0  from @TbDp77_Chargement 
 
-While Exists ( Select Top 1 1 From @TbDp77 where marquage = 0 )
+
+While Exists ( Select Top 1 1 From @TbDp77_Traitement where marquage = 0 )
  Begin
 	Select 	Top 1 
 		@iIdSeq = id_seq,
 		@dcCodePiece = code_pce,
 		@sLibPce = lib_pce
-	From	@TbDp77
+	From	@TbDp77_Traitement
 	Where	marquage = 0
 
 	Exec @iRet = sysadm.Atlas_Sinistre_Cocher_Pieces_Unitaire_V102 @adcIdSin, @dcIdGti , null, @dcCodePiece
-	If @iRet <= 0 
+	If @iRet <= -2 
 		Begin
 			Set @sMess = 'Le système n''a pas pu cocher la pièce ' + Convert ( VarChar ( 10 ), @dcCodePiece ) + ' (' + @sLibPce + ') sur ce dossier. Automatisation impossible.'
 			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Demande de pièce impossible', @sMess 
@@ -3186,8 +3245,11 @@ While Exists ( Select Top 1 1 From @TbDp77 where marquage = 0 )
 --			Return -1
 		End 
 
-	Update @TbDp77 Set marquage = 1 Where id_seq = @iIdSeq
+	Update @TbDp77_Traitement Set marquage = 1 Where id_seq = @iIdSeq
  End
+
+-- Mise à jour de l'histo des pièces
+Exec sysadm.PS_IU_PIECE_HISTO @adcIdSin, @dtValideLe
  
 Return 1
 
@@ -3221,7 +3283,7 @@ Declare @dtDteAchat DateTime
 Declare @sVarianteDp406 Varchar ( 50 )
 
 -- Obtention de la variante
-Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';') From sysadm.det_pro dp, sysadm.w_sin ws Where ws.id_sin = @adcIdSin And dp.id_prod = ws.id_prod
+Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';') From sysadm.det_pro dp, sysadm.w_sin ws Where ws.id_sin = @adcIdSin And dp.id_prod = ws.id_prod and dp.id_code_dp = 406
 
 Select Top 1 @adcIdGti = wg.id_gti From sysadm.w_sin ws, sysadm.w_gar_sin wg Where ws.id_sin = @adcIdSin and wg.id_sin = ws.id_sin
 
@@ -3234,6 +3296,9 @@ Begin
 			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Impossible de créér détail de gtie', 'Impossible de créer le détail de garantie 1491. Automatisation impossible.'
 			Return -1
 		End 
+
+	-- Si on a des refus COCHÉS qui vont induire une validation et un mail auto, on s'arrête là. mais detail obligatoire pour le calcul des état du dossiers
+	If Exists ( Select Top 1 1 From sysadm.w_refus Where id_sin = @adcIdSin and id_gti = @adcIdGti ) Return 1
 End 
 
 If @sVarianteDp406 = 'BOUYGUES' And @adcIdGti in ( 10 )
@@ -3244,6 +3309,9 @@ Begin
 			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Impossible de créér détail de gtie', 'Impossible de créer le détail de garantie 936. Automatisation impossible.'
 			Return -1
 		End 
+
+	-- Si on a des refus COCHÉS qui vont induire une validation et un mail auto, on s'arrête là. mais detail obligatoire pour le calcul des état du dossiers
+	If Exists ( Select Top 1 1 From sysadm.w_refus Where id_sin = @adcIdSin and id_gti = @adcIdGti ) Return 1
 End 
 
 -- Obtention données sinistre
@@ -3669,6 +3737,17 @@ Declare @iRet Integer
 Declare @dcMtValAchat Decimal ( 11, 2 )
 Declare @idSeqStkPresta Integer
 Declare @sErrText VarChar ( 255 )
+Declare @sVarianteDp406 Varchar ( 50 )
+
+-- Obtention de la variante
+Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';') From sysadm.det_pro dp, sysadm.w_sin ws Where ws.id_sin = @adcIdSin And dp.id_prod = ws.id_prod and dp.id_code_dp = 406
+If @sVarianteDp406 = 'BOUYGUES'
+ Begin
+	-- On ne créé pas la prestation puisqu'il y a aura validation et on ne veut pas qu'elle parte.
+	-- C'es tplus, par un acte de gestion que la presta stocké (cmde rempl) sera exploitée
+	If @adcIdGti = 10 Return 1
+ End 
+ 
 
 Select  Top 1 
 		@idSeqStkPresta = stk.id_stk
@@ -4039,7 +4118,8 @@ CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__VALIDATION_DU_DOSSIER
 	@adcIdSin Decimal ( 10 ),
 	@adcIdGti Decimal ( 7 ),
 	@adcIdDetail Decimal ( 7 ),
-	@aiIdSeqPresta Integer 
+	@aiIdSeqPresta Integer,
+	@aiIdMotifRefus Decimal ( 7 )
 AS
 
 Declare @iCodeEtat Integer 
@@ -4059,8 +4139,16 @@ Declare @sMsgTemp VarChar ( 500 )
 Declare @iCtrle Integer
 Declare @sMsgSucces VarChar ( 35)
 Declare @sOrdreAction VarChar ( 50 )
+Declare @sVarianteDp406 Varchar ( 50 )
+Declare @sNomInter varChar ( 71 )
+Declare @sExtrAutoEtat VarChar ( 10 )
 
 Set @iCodeEtat = 100
+If @aiIdMotifRefus > 0 Set @iCodeEtat = 200
+
+Set @dtValideLe = getdate()
+-- Obtention de la variante
+Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';') From sysadm.det_pro dp, sysadm.w_sin ws Where ws.id_sin = @adcIdSin And dp.id_prod = ws.id_prod and dp.id_code_dp = 406
 
 -- Détermination des codes états.
 Update sysadm.w_detail
@@ -4096,6 +4184,9 @@ Set	cod_dec_ope = cod_dec_mac,
 	maj_le = getdate(),
 	maj_par = 'WEB'
 Where  id_sin = @adcIdSin	
+
+-- Mise à jour de l'histo des pièces
+Exec sysadm.PS_IU_PIECE_HISTO @adcIdSin, @dtValideLe
 
 If Not Exists ( 
 		Select Top 1 1 
@@ -4172,8 +4263,6 @@ Exec @iRet = sysadm.PS_VALIDATION
 		@dtValideLe OUTPUT,
 		@sMethode
 
--- Select '@iRet PS_VALIDATION' , @iRet 
-
 If @iRet < 0 
 	Begin
 		Set @sMsgTemp = 'Problème lors de la validation automatique suite à la déclaration par l''extranet, code (' + Convert ( VarChar ( 10 ), @iRet ) + '). Automatisation impossible.'
@@ -4199,27 +4288,86 @@ If @iCtrle < 0
 
 -- Validation de la presta vers le HUB
 Select @sOrdreAction = id_ref_four From sysadm.w_commande Where id_sin = @adcIdSin and id_seq = @aiIdSeqPresta
-If @sOrdreAction in ( 'A_REPARER', 'A_DIAGNOSTIQUER') 
+If @sOrdreAction in ( 'A_REPARER', 'A_DIAGNOSTIQUER') And @aiIdMotifRefus < 0
 Begin
 	Insert into sysadm.en_attente_transfert_vers_hp ( id_cas, id_sin, id_seq, id_hub_presta, id_four, typ_dommage, point_service, mode_logis, code_pickup, nom_pickup, ref_ass_pickup, adr1_pickup, adr2_pickup, adr3_pickup, adr_cp_pickup, adr_ville_pickup, code_process, lib_code_process, id_gti, lib_perso_gti, id_detail, id_prod, lib_prod, id_prod_adh, id_ets, id_adh, id_sdos, id_typ_art, cod_civ_livr, lib_civ_livr_court, lib_civ_livr_long, id_contrat_abonne, nom_ass, prenom_ass, nom_livr, prenom_livr, adr1_livr, adr2_livr, adr3_livr, adr_cp_livr, adr_ville_livr, num_tel1_ass, num_tel2_ass, num_tel3_ass, mail_assure, num_imei_app_sin, num_serie_app_sin, description_probleme, cod_etat, valide_le, valide_par, cmd_gen_le, id_ref_four, ordre_action, id_assureur, lib_assureur, lib_police, typ_app_sin, lib_typ_app_sin, marq_app_sin, modl_app_sin, ref_app_sin, num_tel_sin, mt_val_achat, mt_prise_en_charge, date_achat, etat_app_sin, code_verrou, desimlocke, info_spb_frn_cplt )
 	exec sysadm.PS_HP276_S_S2_OBTENTION_DONNEES_PRESTA_SIMPA2_POUR_PREPARATION_CREATION_HUB_PRESTATAIRE_SUR_TABLE_W 2, @adcIdSin, @aiIdSeqPresta
-End 
 
-If @@ROWCOUNT <> 1
+	If @@ROWCOUNT <> 1
 	Begin
 		Set @sMsgTemp = 'Problème lors de la validation automatique de la prestation HUB. Automatisation impossible.'
 		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Problème validation prestation', @sMsgTemp 
 		Return -1
 	End 
+End 
+
+If @sVarianteDp406 = 'BOUYGUES'
+ Begin
+ 	Select @sNomInter = Trim ( nom ) From sysadm.w_inter i Where id_sin = @adcIdSin and id_i = 0
+	If @sNomInter is null Select @sNomInter = Trim ( nom ) From sysadm.inter i Where id_sin = @adcIdSin and id_i = 0
+	
+	If @aiIdMotifRefus > 0 
+		Begin 
+			 -- Envoi du mail de refus
+			Select @sNomInter = Trim ( nom ) From sysadm.w_inter i Where id_sin = @adcIdSin and id_i = 0
+			If @sNomInter is null Select @sNomInter = Trim ( nom ) From sysadm.inter i Where id_sin = @adcIdSin and id_i = 0
+			Exec sysadm.PS_MIG1_I_EMAILING_KSL_ARCHIVE_MAILPUSH 
+									@adcIdSin,
+									null, -- id_seq presta
+									0, -- inter
+									'A', -- cod_inter
+									@sNomInter, -- nom_inter
+									'REFUS', -- Typ_mail
+									'WEB', -- Oper
+									@aiIdMotifRefus, -- Motif Refus
+									0, -- Mt_Reg
+									'' -- chaine séria
+		End 
+
+	If @adcIdGti = 10 And 
+	   Exists ( Select Top 1 1 From sysadm.w_piece Where id_sin = @adcIdSin ) And @aiIdMotifRefus < 0
+	   Begin
+			Exec sysadm.PS_MIG1_I_EMAILING_KSL_ARCHIVE_MAILPUSH 
+									@adcIdSin,
+									null, -- id_seq presta
+									0, -- inter
+									'A', -- cod_inter
+									@sNomInter, -- nom_inter
+									'BTRCDC', -- Typ_mail
+									'WEB', -- Oper
+									null, -- Motif Refus
+									0, -- Mt_Reg
+									'' -- chaine séria
+	   End 
+ End 
+
 
 Set @sMsgSucces = 'Succès automatisation déclaration'
-Set @sMsgTemp = 'Automatisation de la déclaration réussie, la prestation est créée avec le HUB et le dossier est validé.'
+
+If @aiIdMotifRefus > 0 
+	Begin 
+		Set @sMsgTemp = 'Automatisation de la déclaration réussie, et le dossier est validé réfusé.'
+		Set @sExtrAutoEtat = 'SUCDRE'
+	End 
+Else 
+	Begin
+		If Exists ( Select * from sysadm.commande where id_sin = @adcIdSin ) 
+			Begin 
+				Set @sMsgTemp = 'Automatisation de la déclaration réussie, le dossier est validé et la prestatation envoyé vers le prestataire.'
+				Set @sExtrAutoEtat = 'SUCDCP'
+			End 
+		Else
+			Begin 
+				Set @sMsgTemp = 'Automatisation de la déclaration réussie, le dossier est validé'
+				Set @sExtrAutoEtat = 'SUCDCL'
+			End 
+	End 
 
 Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO
 	@adcIdSin,
 	'extrauto_etat', 
 	'Etat Automatis. Décla. Extranet',  
-	'SUCDCL',
+	@sExtrAutoEtat,
 	'O',
 	'C',
 	null,
@@ -4228,7 +4376,7 @@ Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO
 Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO
 	@adcIdSin,
 	'extrauto_Lib', 
-	'Succès Automatis. Décla. Extranet',  
+	'Lib. Etat Autom. Décla. Extranet',  
 	@sMsgSucces,
 	'O',
 	'C',
@@ -4237,11 +4385,18 @@ Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO
 
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 BEGIN
-	Exec SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @adcIdSin, 2, @sMsgTemp,	'WEB', 300, @iIdCt OUTPUT							
+	If @aiIdMotifRefus > 0 
+		Exec SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @adcIdSin, 2, @sMsgTemp,	'WEB', 300, @iIdCt OUTPUT
+	Else 
+		Exec SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @adcIdSin, 2, @sMsgTemp,	'WEB', 300, @iIdCt OUTPUT							
 END
 ELSE
 BEGIN
-	Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @adcIdSin, 2, @sMsgTemp,	'WEB', 300, @iIdCt OUTPUT							
+	If @aiIdMotifRefus > 0 
+		Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @adcIdSin, 2, @sMsgTemp,	'WEB', 300, @iIdCt OUTPUT
+	Else 
+		Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @adcIdSin, 2, @sMsgTemp,	'WEB', 300, @iIdCt OUTPUT							
+
 END	
 
 -- Journal pour l'extranet
@@ -4293,6 +4448,7 @@ Declare @sVarianteDp406 Varchar ( 50 )
 Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';')
 From sysadm.det_pro dp
 Where dp.id_prod = @adcIdProdSin
+and dp.id_code_dp = 406
 
 IF @adcIdProdSin is null or @adcIdProdSin <=0 Begin Set @asMessRetour = 'Code produit sinistre obligatoire' ; Return -10 End 
 If Exists ( Select Top 1 1 From sysadm.produit p where p.id_prod = @adcIdProdSin and cod_adh <> 3 ) and @adtDteAdh is null Begin Set @asMessRetour = 'Date d''adhésion obligatoire selon la méthode d''adhésion paramétré sur ce produit' ; Return -20 End 
@@ -4493,6 +4649,7 @@ Go
 -- Commentaires         :       
 -- Références           :
 -------------------------------------------------------------------
+/*
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__VALIDATION_DU_DOSSIER_REFUSE_ET_ENVOI_MAIL_REFUS' AND type = 'P' )
         DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__VALIDATION_DU_DOSSIER_REFUSE_ET_ENVOI_MAIL_REFUS
 GO
@@ -4528,7 +4685,7 @@ From sysadm.w_sin ws,
 Where ws.id_sin = @adcIdSin
 And   wg.id_sin = ws.id_sin
 
-
+Set @dtValideLe = getdate()
 Set @iCodeEtat = 200
 
 -- Détermination des codes états.
@@ -4565,6 +4722,9 @@ Set	cod_dec_ope = cod_dec_mac,
 	maj_le = getdate(),
 	maj_par = 'WEB'
 Where  id_sin = @adcIdSin	
+
+-- Mise à jour de l'histo des pièces
+Exec sysadm.PS_IU_PIECE_HISTO @adcIdSin, @dtValideLe
 
 If Not Exists ( 
 		Select Top 1 1 
@@ -4665,7 +4825,8 @@ If @iCtrle < 0
 	End 
 
 -- Envoi du mail de refus
-Select @sNomInter = Trim ( nom ) From sysadm.w_inter i Where id_sin = @adcIdSin
+Select @sNomInter = Trim ( nom ) From sysadm.w_inter i Where id_sin = @adcIdSin and id_i = 0
+If @sNomInter is null Select @sNomInter = Trim ( nom ) From sysadm.inter i Where id_sin = @adcIdSin and id_i = 0
 Exec sysadm.PS_MIG1_I_EMAILING_KSL_ARCHIVE_MAILPUSH 
 						@adcIdSin,
 						null, -- id_seq presta
@@ -4681,7 +4842,7 @@ Exec sysadm.PS_MIG1_I_EMAILING_KSL_ARCHIVE_MAILPUSH
 
 -- Validation de la presta vers le HUB
 Set @sMsgSucces = 'Succès automatisation déclaration'
-Set @sMsgTemp = 'Automatisation de la déclaration réussie, la prestation est créée avec le HUB et le dossier est validé.'
+Set @sMsgTemp = 'Automatisation de la déclaration réussie, et le dossier est validé réfusé.'
 
 Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO
 	@adcIdSin,
@@ -4696,7 +4857,7 @@ Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO
 Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO
 	@adcIdSin,
 	'extrauto_Lib', 
-	'Succès Auto.Décla. Extranet Refusée',  
+	'Lib. Etat Autom. Décla. Extranet',  
 	@sMsgSucces,
 	'O',
 	'C',
@@ -4718,4 +4879,4 @@ Exec sysadm.PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION @adcIdSin, 'WEB'
 Return 1
 
 Go
-
+*/
