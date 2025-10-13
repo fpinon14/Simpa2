@@ -394,7 +394,7 @@ For lCptParam = lDebParam To lFinParam
 			// [CONS_REST_CARDIF]
 			If lIdNatOper = 31 Then
 				Choose Case stGlb.sCodOper
-					Case "JFF", "FS", "YNA", "PPK", "HRT", "FFN" 
+					Case "JFF", "FS", "KCD", "DCY", "SDR"
 						// Ok pour modifier
 					Case Else 
 						idwParamDroit.SetItem ( lCptParam, "AUTORISER", sValActuelleAuto )
