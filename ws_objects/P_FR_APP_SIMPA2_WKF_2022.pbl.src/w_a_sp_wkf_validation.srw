@@ -1,4 +1,4 @@
-HA$PBExportHeader$w_a_sp_wkf_validation.srw
+﻿$PBExportHeader$w_a_sp_wkf_validation.srw
 forward
 global type w_a_sp_wkf_validation from w_a_spb_workflow
 end type
@@ -15,6 +15,8 @@ end type
 end forward
 
 global type w_a_sp_wkf_validation from w_a_spb_workflow
+integer x = 1
+integer y = 1
 integer height = 1888
 string title = "Validation de sinistres"
 event ue_saisie_automatique pbm_custom39
@@ -34,7 +36,7 @@ Private :
 	String			isAction
 	String			isParam
 
-// True : On cherche a ouvrir le dossier $$HEX2$$e0002000$$ENDHEX$$partir de Sherpa 
+// True : On cherche a ouvrir le dossier à partir de Sherpa 
 // False : On cherche a ouvrir le dossier en double cliquant
 // dessus, donc impossible.
 Boolean	ibVenuParSherpa
@@ -51,13 +53,17 @@ Boolean	New_ibRaccActif
 
 end variables
 
+forward prototypes
+public subroutine wf_anonymationensim (integer adcidsin)
+end prototypes
+
 event ue_saisie_automatique;//*-----------------------------------------------------------------
 //*
 //* Objet			: Dw_1
 //* Evenement 		: ue_SaisieAutomatique
 //* Auteur			: FABRY JF
 //* Date				: 09/05/2001 14:02:05
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Overture de la fen$$HEX1$$ea00$$ENDHEX$$tre de traitement de validation
+//* Libellé			: Overture de la fenêtre de traitement de validation
 //* Commentaires	: 
 //*				 
 //* Arguments		: 
@@ -67,8 +73,8 @@ event ue_saisie_automatique;//*-------------------------------------------------
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //* #1    PLJ   25/07/2002   Ouverture automatique pour les dossier venant de Sherpa 
-//* #2    FS    25/09/2002   M$$HEX1$$e900$$ENDHEX$$morisation de gsParam et gsAction en instance
-//*                          pour utilisation ult$$HEX1$$e900$$ENDHEX$$rieure sur ue_message_sherpa
+//* #2    FS    25/09/2002   Mémorisation de gsParam et gsAction en instance
+//*                          pour utilisation ultérieure sur ue_message_sherpa
 //* #3 	 JFF	 02/10/2002	  Utilisation d'un code indiquant d'ou l'on vient : ibVenuParSherpa
 //*-----------------------------------------------------------------
 
@@ -78,19 +84,19 @@ s_Pass stPass
 isAction = gsAction // ... #2
 isParam  = gsParam  // ... #2
 
-// ... #1 D$$HEX1$$e900$$ENDHEX$$but de modification
+// ... #1 Début de modification
 CHOOSE CASE gsaction
 
    CASE "TEST_VALIDER"
 
 		/*----------------------------------------------------------------------------*/
-		/* La fen$$HEX1$$ea00$$ENDHEX$$tre de validation est-elle ouverte ?                                */
+		/* La fenêtre de validation est-elle ouverte ?                                */
 		/*----------------------------------------------------------------------------*/
 
       gsParam = "FERME"
    
 
-		If IsValid ( iw_Tm_Sp_Sinistre_Validation ) Then	// ... La fen$$HEX1$$ea00$$ENDHEX$$tre de traitement est ouverte
+		If IsValid ( iw_Tm_Sp_Sinistre_Validation ) Then	// ... La fenêtre de traitement est ouverte
 
 				IF iw_Tm_Sp_Sinistre_Validation.visible then gsParam = "OUVERT"
 
@@ -108,7 +114,7 @@ CHOOSE CASE gsaction
 		/* Simulation automatique de l'ouverture de la validation                     */
 		/*----------------------------------------------------------------------------*/
 
-		// ... Si la fen$$HEX1$$ea00$$ENDHEX$$tre est encore ouverte : on n'ouvre pas le dossier
+		// ... Si la fenêtre est encore ouverte : on n'ouvre pas le dossier
 
 		If IsValid ( iw_Tm_Sp_Sinistre_Validation ) Then
 			IF iw_Tm_Sp_Sinistre_Validation.visible then
@@ -137,7 +143,7 @@ CHOOSE CASE gsaction
 		Message.PowerObjectParm = stPass
 		This.TriggerEvent ( "ue_Fin_Interro" )
 
-		// ... On provoque l'ouverture du dossier $$HEX2$$e0002000$$ENDHEX$$partir du travail de dw_1
+		// ... On provoque l'ouverture du dossier à partir du travail de dw_1
 
 		If dw_1.RowCount () > 0 Then
 			dw_1.ilLigneClick = 1
@@ -150,7 +156,7 @@ CHOOSE CASE gsaction
 			This.Event Ue_Modifier(0,0)
 /*------------------------------------------------------------------*/
 /* [MIGPB8COR]                                                      */
-/* DGA. Probl$$HEX1$$e800$$ENDHEX$$me affichage Word. On essaye avec un PostEvent.       */
+/* DGA. Problème affichage Word. On essaye avec un PostEvent.       */
 /*------------------------------------------------------------------*/
 //			This.TriggerEvent ( "ue_Modifier" )
 			ibVenuParSherpa = False
@@ -283,7 +289,7 @@ If isParam <> "" Then
 		
    End If
 
-   // Envoi du message $$HEX2$$e0002000$$ENDHEX$$sherpa
+   // Envoi du message à sherpa
 
 // DCMP 70647
 		lHandleSherpa = w_mdi_sp.Wf_Browse_Fenetre ( "SHERPA" )
@@ -312,13 +318,46 @@ return 0
 
 end event
 
+public subroutine wf_anonymationensim (integer adcidsin);//*-----------------------------------------------------------------
+//*
+//* Fonction		: W_T_Sp_Cree_Wkf::wf_AnonymationEnSim (PRIVATE)
+//* Auteur			: Fabry JF
+//* Date				: 13/02/2019
+//* Libellé			: 
+//* Commentaires	: [PM473-1]
+//*
+//* Arguments		: adcidsin
+//*
+//* Retourne		: Rien
+//*
+//*-----------------------------------------------------------------
+//* MAJ 			PAR		Date		Modification
+//*-----------------------------------------------------------------
+
+String sSql
+Boolean bRet 
+Long lRet
+
+lRet = SQLCA.PS_U_TRT_PM260 ( adcIdSin, "SIM" )
+
+If lRet > 0 Then
+	F_Execute ( sSql, SQLCA )
+	
+	bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
+	
+	F_Commit ( SQLCA, bRet )  // Commit/Rollback
+End If 
+
+
+end subroutine
+
 event ue_item6;call super::ue_item6;//*-----------------------------------------------------------------
 //*
-//* Objet			: Fen$$HEX1$$ea00$$ENDHEX$$tre
+//* Objet			: Fenêtre
 //* Evenement 		: ue_item6
 //* Auteur			: FABRY JF
 //* Date				: 09/05/2001 14:02:05
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Ouverture fen$$HEX1$$ea00$$ENDHEX$$tre en raccourci.
+//* Libellé			: Ouverture fenêtre en raccourci.
 //* Commentaires	: 
 //*				 
 //* Arguments		: 
@@ -332,7 +371,7 @@ event ue_item6;call super::ue_item6;//*-----------------------------------------
 //*-----------------------------------------------------------------
 
 /*----------------------------------------------------------------------------*/
-/* Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil de saisie de sinistre.                   */
+/* Ouverture de la fenêtre d'accueil de saisie de sinistre.                   */
 /*----------------------------------------------------------------------------*/
 SetPointer ( HourGlass! )
 
@@ -417,8 +456,8 @@ event ue_initialiser;call super::ue_initialiser;//*-----------------------------
 //* Evenement 		: ue_initialiser (EXTEND)
 //* Auteur			: JFF
 //* Date				: 09/07/2001
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre d'accueil
+//* Libellé			: 
+//* Commentaires	: Ouverture de la fenêtre d'accueil
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -468,15 +507,16 @@ event ue_modifier;//*-----------------------------------------------------------
 //* Evenement 		: Ue_Modifier
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 11:03:18
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Ouverture de la fen$$HEX1$$ea00$$ENDHEX$$tre de validation des sinistres
+//* Libellé			: 
+//* Commentaires	: Ouverture de la fenêtre de validation des sinistres
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
-//* #1	 JFF		05/09/2002 Acitvation/D$$HEX1$$e900$$ENDHEX$$sactivation de la Dw d'accueil
+//* #1	 JFF		05/09/2002 Acitvation/Désactivation de la Dw d'accueil
 //*-----------------------------------------------------------------
 
-Boolean	bActif
+Boolean	bActif, bRet
+
 
 /*------------------------------------------------------------------*/
 /* #1 : JFF le 04/09/2002														  */
@@ -490,7 +530,7 @@ If Not New_ibRaccActif And Not ibVenuParSherpa Then Return
 
 
 /*------------------------------------------------------------------*/
-/* #1 : JFF le 04/09/2002, on r$$HEX1$$e900$$ENDHEX$$appelle le script anc$$HEX1$$ea00$$ENDHEX$$tre sinon.	  */
+/* #1 : JFF le 04/09/2002, on réappelle le script ancêtre sinon.	  */
 /*------------------------------------------------------------------*/
 Call Super::ue_Modifier
 SetPointer ( HourGlass! )
@@ -503,8 +543,8 @@ If ibContinuerModifier Then
 	istPass.sTab[1] 	= dw_1.GetItemString ( dw_1.ilLigneClick, "ID_SIN" )
 	istPass.sTab[2] 	= "V"				// Nous sommes en validation
 /*------------------------------------------------------------------*/
-/* Le 16/06/1998 : Pour la d$$HEX1$$e900$$ENDHEX$$termination du Code courrier $$HEX10$$e000200020002000200020002000200020002000$$ENDHEX$$*/
-/* envoyer $$HEX2$$e0002000$$ENDHEX$$chacun des interlocuteurs, on a besoin de conna$$HEX1$$ee00$$ENDHEX$$tre    */
+/* Le 16/06/1998 : Pour la détermination du Code courrier à         */
+/* envoyer à chacun des interlocuteurs, on a besoin de connaître    */
 /* dans la fonction Uf_Determiner_Courrier de U_Gs_Sinistre la      */
 /* provenance du courrier.                                          */
 /*------------------------------------------------------------------*/
@@ -517,8 +557,44 @@ If ibContinuerModifier Then
 	istPass.sTab[4] 	= dw_1.GetItemString ( dw_1.ilLigneClick, "COD_RECU" )					// Type de courrier recu
 	istPass.sTab[5] 	= String ( dw_1.GetItemDateTime ( dw_1.ilLigneClick, "DTE_COUR_CLI" ), "dd/mm/yyyy"	)	// Date du dernier courrier client
 
-	F_OuvreTraitement ( iW_Tm_Sp_Sinistre_Validation, istpass )
-
+	If F_CLE_A_TRUE ( "HORS_UE_CTRLE_VALIDE" ) Then
+		If SQLCA.PS_S_CONS_RESTR_EXCL( Long ( istPass.sTab[1]), stGlb.sCodOper, "W" ) < 0 Then
+			stMessage.sTitre		= "Accès interdit"
+			stMessage.Icon		   = Exclamation!
+			stMessage.bErreurG	= FALSE
+			stMessage.Bouton		= OK!
+			stMessage.sCode		= "GENE180"
+			F_Message ( stMessage )
+			F_Execute ( "Exec sysadm.PS_U_CONS_RESTR_EXCL " + istPass.sTab[1] + ".", SQLCA )
+			bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDbCode = 0
+			If bRet Then
+				F_COMMIT ( SQLCA, True )
+				dw_1.SetItem ( dw_1.ilLigneClick, "ALT_OCCUPE", "N" )
+			Else 
+				F_COMMIT ( SQLCA, False )				
+			End If 
+	
+		Else 
+			// [PM473-1]
+			If Upper(SQLCA.Database) <> "SIMPA2_PRO" &
+			And Not F_CLE_A_TRUE ( "PM473-1_SPECIAL_TEST" ) Then
+			
+				Choose Case stGlb.sCodOper 
+					Case "JFF", "FPI"
+						If F_CLE_A_TRUE ( "BASE_SIM_ANONYME" ) Then
+							This.wf_AnonymationEnSim ( Long ( istPass.sTab[1]))
+						End If
+					Case Else
+						This.wf_AnonymationEnSim ( Long ( istPass.sTab[1]))
+				End Choose 
+			End If 
+		
+			F_OuvreTraitement ( iW_Tm_Sp_Sinistre_Validation, istpass )
+		End If
+	Else
+		F_OuvreTraitement ( iW_Tm_Sp_Sinistre_Validation, istpass )
+	End If 
+	
 End If
 
 //Migration PB8-WYNIWYG-03/2006 FM
@@ -533,8 +609,8 @@ event ue_workflow;call super::ue_workflow;//*-----------------------------------
 //* Evenement 		: Ue_WorkFlow
 //* Auteur			: Erick John Stark
 //* Date				: 05/01/1998 11:04:37
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
-//* Commentaires	: Gestion d'une fen$$HEX1$$ea00$$ENDHEX$$tre de workflow
+//* Libellé			: 
+//* Commentaires	: Gestion d'une fenêtre de workflow
 //*				  
 //*-----------------------------------------------------------------
 //* MAJ PAR		Date		Modification
@@ -550,7 +626,7 @@ isCodEtat = '5'
 
 ///*------------------------------------------------------------------*/
 ///* On initialise le DataObject pour l'interrogation des travaux,    */
-///* sinon par d$$HEX1$$e900$$ENDHEX$$faut on utilise celui des anc$$HEX1$$ea00$$ENDHEX$$tres.                  */
+///* sinon par défaut on utilise celui des ancêtres.                  */
 ///*------------------------------------------------------------------*/
 //
 //pb_Interro.istInterro.wAncetre				= This
@@ -591,7 +667,7 @@ event ue_preparer_interro;call super::ue_preparer_interro;//*-------------------
 //* Evenement 		: Ue_Preparer_Interro (EXTEND)
 //* Auteur			: Erick John Stark
 //* Date				: 24/10/1997 15:30:45
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: Populise la liste des corbeilles dans la dw d'interro
 //*				  
 //*-----------------------------------------------------------------
@@ -643,7 +719,7 @@ event ue_fermer_interro;call super::ue_fermer_interro;//*-----------------------
 //* Evenement 		: Ue_Fermer_Interro (EXTEND)
 //* Auteur			: Erick John Stark
 //* Date				: 24/10/1997 15:30:45
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				  
 //*-----------------------------------------------------------------
@@ -690,7 +766,7 @@ on dw_1::ue_modifiermenu;//*----------------------------------------------------
 //* Evenement     : ue_modifiermenu  (!! OVERRIDE !! )
 //* Auteur        : Fabry JF
 //* Date          : 02/10/2002 12:34:39
-//* Libell$$HEX8$$e9002000200020002000200020002000$$ENDHEX$$: Shunt Pour Mise en place Sherpa
+//* Libellé       : Shunt Pour Mise en place Sherpa
 //* Commentaires  : 
 //*
 //* Arguments     : 
@@ -724,9 +800,9 @@ on dw_1::constructor;call w_a_spb_workflow`dw_1::constructor;//*----------------
 //* Evenement 		: ::Constructor
 //* Auteur			: DBI
 //* Date				: 22/09/1999 16:47:40
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Suppression de la limitation $$HEX2$$e0002000$$ENDHEX$$150 lignes 
-//* Commentaires	: la limite pose des probl$$HEX1$$e800$$ENDHEX$$mes lors de la v$$HEX1$$e900$$ENDHEX$$rification des
-//*				     anciens travaux non trait$$HEX1$$e900$$ENDHEX$$s
+//* Libellé			: Suppression de la limitation à 150 lignes 
+//* Commentaires	: la limite pose des problèmes lors de la vérification des
+//*				     anciens travaux non traités
 //*				  
 //*-----------------------------------------------------------------
 
@@ -734,8 +810,8 @@ ilMaxLig = 0
 end on
 
 event dw_1::rbuttondown;//Migration PB8-WYNIWYG-03/2006 FM
-//ce code remplace le code de l'anc$$HEX1$$ea00$$ENDHEX$$tre, 
-//il permet la s$$HEX1$$e900$$ENDHEX$$lection de la ligne sur le click droit
+//ce code remplace le code de l'ancêtre, 
+//il permet la sélection de la ligne sur le click droit
 
 If Row > 0 Then
 	This.SetRow(Row)
@@ -797,7 +873,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: FABRY JF
 //* Date				: 09/05/2001 14:02:05
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				 
 //* Arguments		: 
@@ -837,7 +913,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: FABRY JF
 //* Date				: 09/05/2001 14:02:05
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				 
 //* Arguments		: 
@@ -867,7 +943,7 @@ integer weight = 400
 fontpitch fontpitch = variable!
 fontfamily fontfamily = swiss!
 string facename = "Arial"
-string text = "D$$HEX1$$e900$$ENDHEX$$cl.T$$HEX1$$e900$$ENDHEX$$l."
+string text = "Décl.Tél."
 boolean originalsize = true
 string picturename = "k:\pb4obj\bmp\8_tel.bmp"
 end type
@@ -878,7 +954,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: FABRY JF
 //* Date				: 09/05/2001 14:02:05
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				 
 //* Arguments		: 
@@ -918,7 +994,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: FABRY JF
 //* Date				: 09/05/2001 14:02:05
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				 
 //* Arguments		: 
@@ -959,7 +1035,7 @@ on clicked;//*-----------------------------------------------------------------
 //* Evenement 		: Clicked
 //* Auteur			: FABRY JF
 //* Date				: 09/05/2001 14:02:05
-//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: 
+//* Libellé			: 
 //* Commentaires	: 
 //*				 
 //* Arguments		: 
