@@ -8,6 +8,32 @@
 -- 
 --	DW_S01_IFR_SUPP_SPB
 --
+-- sysadm.DW_S01_IFR
+-- sysadm.DW_S01_IFR_LISTE_MARQUE
+-- sysadm.DW_S01_IFR_LISTE_REFERENCE
+-- sysadm.DW_S01_IFR_LISTE_VAL
+-- sysadm.DW_S01_IFR_SUPP_SPB
+-- sysadm.DW_S01_IFR_V02
+-- sysadm.DW_S02_IFR
+-- sysadm.DW_S02_IFR_LISTE_MARQUE
+-- sysadm.DW_S02_IFR_LISTE_REFERENCE
+-- sysadm.DW_S03_IFR
+-- sysadm.PS_I01_IFR_V01
+-- sysadm.PS_S01_VERIF_MODIF_MARQ_MODL
+-- sysadm.PS_U01_IFR_SUPP_SPB  
+-- sysadm.DW_S_EXTRAC_IFR_V01
+-- sysadm.PS_S_MARQUE_IFR_SKU_V01
+-- sysadm.PS_S_MODELE_IFR_SKU_V01
+-- sysadm.PS_S_MOTEUR_RECH_IFR
+-- sysadm.PS_S_MOTEUR_RECH_IFR_EXTRANET
+-- sysadm.PS_S_RELEVE_PRIX_IFR_A_REVOIR
+-- sysadm.PS_S_RELEVE_PRIX_IFR_A_REVOIR_MAIL
+-- sysadm.PS_S_SKU_IFR
+-- sysadm.PS_S_SYS_EXPLOIT_APP_IFR
+-- sysadm.PS_S_VERIF_MARQ_MODL_IFR_V01
+-- sysadm.PS_S_VERIF_TYPE_MARQ_MODL
+-- sysadm.PS_U_DT469_MAJ_AUTO_PRIX_IFR
+-- sysadm.PS_U_MARQUAGE_PRIX_IFR_A_REVOIR
 -------------------------------------------------------------------
 
 --------------------------------------------------------------------

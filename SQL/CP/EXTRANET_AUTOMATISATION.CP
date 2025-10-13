@@ -1393,26 +1393,44 @@ If @sVarianteDp406 = 'BOUYGUES'
 			End	
 	
 		IF Exists (
-			SELECT Max ( dte_surv ) 
-			FROM (
-					SELECT distinct dte_surv, cod_etat
-					FROM sysadm.w_sin
-					WHERE id_prod = @dcIdProdSin
-					And   id_ets = @dcIdEts 
-					And   id_adh = @sIdAdh
-					AND id_sin <> @adcIdSin
-					UNION 
-					SELECT distinct dte_surv, cod_etat
-					FROM sysadm.sinistre
-					WHERE id_prod = @dcIdProdSin
-					And   id_ets = @dcIdEts 
-					And   id_adh = @sIdAdh
-					AND id_sin <> @adcIdSin
-				) As TbDteSurv
-			Where cod_etat = 200
+				Select Top 1 1 
+				From ( 
+						SELECT max ( dte_surv ) maxDteSurv
+						FROM sysadm.sinistre
+						WHERE id_prod = @dcIdProdSin
+						And   id_ets = @dcIdEts 
+						And   id_adh = @sIdAdh
+						AND id_sin <> @adcIdSin
+					) As TbMaxDteSurv,
+					 sysadm.sinistre s
+				WHERE s.id_prod = @dcIdProdSin
+				And s.id_ets = @dcIdEts 
+				And s.id_adh = @sIdAdh
+				AND s.id_sin <> @adcIdSin
+				And s.dte_surv = TbMaxDteSurv.maxDteSurv
+				And s.cod_etat = 200
+			) 
+			Or 
+			Exists (
+				Select Top 1 1 
+				From ( 
+						SELECT max ( valide_le ) maxValideLe
+						FROM sysadm.sinistre
+						WHERE id_prod = @dcIdProdSin
+						And   id_ets = @dcIdEts 
+						And   id_adh = @sIdAdh
+						AND id_sin <> @adcIdSin
+					) As TbMaxValideLe,
+					 sysadm.sinistre s
+				WHERE s.id_prod = @dcIdProdSin
+				And s.id_ets = @dcIdEts 
+				And s.id_adh = @sIdAdh
+				AND s.id_sin <> @adcIdSin
+				And s.valide_le = TbMaxValideLe.maxValideLe
+				And s.cod_etat = 200
 			) 
 			Begin
-				Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Dernier sinistre (surv) refusé', 'Le dernier sinistre en survenance a été refussé, de ce fait la déclaration transmis par l''extranet ne peut être traitée. Automatisation impossible.'
+				Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Dernier sinistre refusé', 'Le dernier sinistre en date survenance ou en date de validation, a été refussé, de ce fait la déclaration transmis par l''extranet ne peut être traitée. Automatisation impossible.'
 				Return -1
 			End			
 	End 

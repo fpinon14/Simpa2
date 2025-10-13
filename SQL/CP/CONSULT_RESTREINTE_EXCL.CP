@@ -110,7 +110,7 @@ CREATE procedure sysadm.PS_U_CONS_RESTR_EXCL
 AS
 
 Update sysadm.w_queue Set alt_occupe = 'N' Where id_sin = @adcIdSin	
-Update sysadm.routage Set alt_queue = 'N' Where id_sin = @adcIdSin	
+-- Erreur Update sysadm.routage Set alt_queue = 'N' Where id_sin = @adcIdSin	
 
 Go
 
