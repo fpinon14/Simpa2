@@ -45,7 +45,6 @@
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__STOCKAGE_INFOS_PRESTATION
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__TRACE_STOCKAGE_INFOS_PRESTATION
 -- sysadm.PS_I_EXTRANET_AUTOMATISATION__VALIDATION_DU_DOSSIER
--- sysadm.PS_I_EXTRANET_AUTOMATISATION__VALIDATION_DU_DOSSIER_REFUSE_ET_ENVOI_MAIL_REFUS
 -- sysadm.PS_S_EXTRANET_AUTOMATISATION__LECTURE_DW_PRESTATION_STOCKEE
 -------------------------------------------------------------------
 --
@@ -126,7 +125,7 @@ Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO
 	END
 
 	-- Dans tous les on envoie le Récap (règles donnée par fiche confluence)
-	Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__ENVOI_RECAPITULATIF_DE_DECLARATION @adcIdSin
+	Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__ENVOI_RECAPITULATIF_DE_DECLARATION @adcIdSin, @adcIdGti, 'REJET=OUI'
 
 Go
 
@@ -1018,12 +1017,27 @@ Declare @iCreationPresta Integer
 Declare @iValidationDossier Integer
 Declare @iEnvoiRecapDecl Integer
 Declare @iIdMotifRefus Decimal ( 7 )
-
-Set @iIdMotifRefus = -1
+Declare @iCreationTravail Integer
 
 -- [LGY38] afin que le CCO ne ramasse un éventuel travail présent
 -- Même si DELETE ensuite, le Trv pourrait être affecté au CCO, donc le pus tôt possible il faut couper
 Update sysadm.w_queue Set etat_iwd = 99 Where id_sin = @adcIdSin
+
+
+Set @iIdMotifRefus = -1
+Set @dcIdGti = -1 
+Set @dcIdDetail = -1
+
+Set @iCtrleIntrDos = 0
+Set @iDeclenchRefus = 0;  Set @iMailRefusEtValdDos = 0
+Set @iCochagePiece = 0
+Set @iCreerDetGti = 0
+Set @iDeclenchPlafEtPec = 0
+Set @iCreationPresta = 0
+Set @iValidationDossier = 0
+Set @iEnvoiRecapDecl = 0
+Set @iCreationTravail = 0
+
 
 -- Contrôle éligibilité dossier à l'automatisme
 Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__CONTROLE_ELIGIBILITE_DOSSIER @adcIdSin
@@ -1045,7 +1059,25 @@ If @sVarianteDp406 = 'BOUYGUES'
 	Set @iCreationPresta = 1
 	Set @iValidationDossier = 1
 	Set @iEnvoiRecapDecl = 1
+	Set @iCreationTravail = 0
  End 
+
+--------------------------
+-- KRYS&CDL             --
+--------------------------
+If @sVarianteDp406 in ( 'KRYS', 'CDL' )
+ Begin
+	Set @iCtrleIntrDos = 1
+	Set @iDeclenchRefus = 0;  Set @iMailRefusEtValdDos = 0
+	Set @iCochagePiece = 1
+	Set @iCreerDetGti = 0
+	Set @iDeclenchPlafEtPec = 0
+	Set @iCreationPresta = 0
+	Set @iValidationDossier = 0
+	Set @iEnvoiRecapDecl = 1
+	Set @iCreationTravail = 1
+ End 
+
 
 --------------------------
 -- Traitement            --
@@ -1115,10 +1147,16 @@ If @iValidationDossier > 0
 -- A laisser tout à la fin, car sinon la PS est appelé dans le Rejet
 -- Envoi du mail récap
 -- Pas d'exploitation du @iRet, la validation est déjà, on met juste un contact si erreur
-If @iEnvoiRecapDecl > 0 And @dcIdGti <> 10
+If @iEnvoiRecapDecl > 0 
  Begin
-	Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__ENVOI_RECAPITULATIF_DE_DECLARATION @adcIdSin
+	Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__ENVOI_RECAPITULATIF_DE_DECLARATION @adcIdSin, @dcIdGti, ''
  End
+
+If @iCreationTravail > 0 
+Begin 
+	Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__CREATION_D_UN_TRAVAIL @adcIdSin
+End 
+
 
 Return @iRet 
 
@@ -4327,8 +4365,6 @@ If @sVarianteDp406 = 'BOUYGUES'
 	If @aiIdMotifRefus > 0 
 		Begin 
 			 -- Envoi du mail de refus
-			Select @sNomInter = Trim ( nom ) From sysadm.w_inter i Where id_sin = @adcIdSin and id_i = 0
-			If @sNomInter is null Select @sNomInter = Trim ( nom ) From sysadm.inter i Where id_sin = @adcIdSin and id_i = 0
 			Exec sysadm.PS_MIG1_I_EMAILING_KSL_ARCHIVE_MAILPUSH 
 									@adcIdSin,
 									null, -- id_seq presta
@@ -4342,21 +4378,6 @@ If @sVarianteDp406 = 'BOUYGUES'
 									'' -- chaine séria
 		End 
 
-	If @adcIdGti = 10 And 
-	   Exists ( Select Top 1 1 From sysadm.w_piece Where id_sin = @adcIdSin ) And @aiIdMotifRefus < 0
-	   Begin
-			Exec sysadm.PS_MIG1_I_EMAILING_KSL_ARCHIVE_MAILPUSH 
-									@adcIdSin,
-									null, -- id_seq presta
-									0, -- inter
-									'A', -- cod_inter
-									@sNomInter, -- nom_inter
-									'BTRCDC', -- Typ_mail
-									'WEB', -- Oper
-									null, -- Motif Refus
-									0, -- Mt_Reg
-									'' -- chaine séria
-	   End 
  End 
 
 
@@ -4536,18 +4557,52 @@ IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION_
 GO
 
 CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__ENVOI_RECAPITULATIF_DE_DECLARATION
-	@adcIdSin Decimal ( 10 )
+	@adcIdSin Decimal ( 10 ),
+	@adcIdGti Decimal ( 7 ),
+	@asChaineSeria VarChar ( 800 ) 
 AS
 
 Declare @sErrOutPut VarChar ( 255 ) 
 Declare @sMess VarChar ( 1000 ) -- Je left à 508 plus loin selon la longueur du retour du mess err.
 Declare @iRet Integer
 Declare @iIdCt Integer
+Declare @sVarianteDp406 Varchar ( 50 )
+Declare @sNomInter VarChar ( 71 )
 
--- [TODO]
--- Return pour l'instant car ce sera "un" voire des "autres mail"
-Return 1 
+-- Nominter A
+Select @sNomInter = Trim ( nom ) From sysadm.w_inter i Where id_sin = @adcIdSin and id_i = 0
+If @sNomInter is null Select @sNomInter = Trim ( nom ) From sysadm.inter i Where id_sin = @adcIdSin and id_i = 0
 
+-- Obtention de la variante
+Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';') From sysadm.det_pro dp, sysadm.w_sin ws Where ws.id_sin = @adcIdSin And dp.id_prod = ws.id_prod and dp.id_code_dp = 406 
+
+If @sVarianteDp406 = 'BOUYGUES' 
+Begin
+	-- Récap spécial VOL et Dde Pièces, confirmation d'enregistrement
+	If	@adcIdGti = 10 
+		And Exists ( Select Top 1 1 From sysadm.w_piece Where id_sin = @adcIdSin and id_gti = @adcIdGti )
+		And sysadm.FN_CLE_VAL ( 'REJET', @asChaineSeria, ';' ) <> 'OUI'
+	Begin
+		Exec sysadm.PS_MIG1_I_EMAILING_KSL_ARCHIVE_MAILPUSH 
+								@adcIdSin,
+								null, -- id_seq presta
+								0, -- inter
+								'A', -- cod_inter
+								@sNomInter, -- nom_inter
+								'BTRCDC', -- Typ_mail
+								'WEB', -- Oper
+								null, -- Motif Refus
+								0, -- Mt_Reg
+								'' -- chaine séria
+   End 
+End 
+
+If @sVarianteDp406 in ( 'KRYS', 'CDL' )
+Begin
+	Select 'TOTO'
+End 
+
+/*
 Exec @iRet = sysadm.Atlas_Envoi_Mail_Recap_Decla @adcIdSin, @sErrOutPut OutPut
 
 If @iRet < 0 
@@ -4572,7 +4627,8 @@ ELSE
 BEGIN
 	Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @adcIdSin, 2, @sMess,	'WEB', 300, @iIdCt OUTPUT							
 END	
-Return @iRet
+*/
+Return 1
 
 Go
 
@@ -4898,3 +4954,39 @@ Return 1
 
 Go
 */
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__CREATION_D_UN_TRAVAIL
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__CREATION_D_UN_TRAVAIL' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__CREATION_D_UN_TRAVAIL
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__CREATION_D_UN_TRAVAIL
+	@adcIdSin Decimal ( 10 )
+AS
+
+Declare @sMsgSherpa VarChar ( 508 )
+Declare @sOper VarChar ( 4 ) 
+Declare @sErr  Varchar(60)
+Declare @iIdCt Integer 
+
+Set @sMsgSherpa = 'Déclaration Extranet, création d''un travail par l''automate.'
+
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+BEGIN
+	EXEC SHERPA_PRO.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @adcIdSin, 2, @sMsgSherpa, @sOper , @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'E'
+END
+ELSE
+BEGIN
+	EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @adcIdSin, 2, @sMsgSherpa, @sOper , @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'E'
+END
+
+Go
+

@@ -1407,7 +1407,7 @@ AS
 
 Declare @sEnv VarChar ( 10 )
 Declare @dcIdProd Decimal ( 7 )
-Declare @sSql Varchar ( 3000 )
+Declare @sSql Varchar ( 8000 )
 Declare @sInstanceSaga2 Varchar ( 50 )
 
 Declare @TbRetSaga2 Table ( 
@@ -1514,7 +1514,7 @@ Set @sSql =
 '            FROM Tb_Reglement Tbr2	 ' +		
 '            WHERE Tbr2.id_claim = Tbr1.id_claim ' +			
 '			AND Tbr1.code_indem = Tbr2.code_indem ' +
-'            FOR XML PATH('')	 ' +		
+'            FOR XML PATH('''')	 ' +		
 '        ) AS chaine_seria	 ' +		
 '    FROM Tb_Reglement AS Tbr1	 ' +		
 '    GROUP BY Tbr1.id_claim,Tbr1.code_indem ' +
@@ -1528,7 +1528,6 @@ Set @sSql =
 '	   When 117 Then ''OUI''  ' +	
 '	   ELSE ''NON''	 ' +
 '	 End as indemnise, ' +
-'	 --ISNULL(SUM(pc.amount),0) as mt_reg_assure,  ' +		
 '	 tb_motif.MtTotReg as mt_reg_assure, ' +
 '	 Case ' +
 '	   When rcs.code = 117 ' +
