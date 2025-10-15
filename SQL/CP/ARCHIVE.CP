@@ -9324,6 +9324,7 @@ Go
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
 -- JFF      31/03/2025   [MIG1][20250331] Ajout 447 et 11 pour pce doc joint
+-- [20251014095728070][JFF][MIG147]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_MIG1_I_EMAILING_KSL_ARCHIVE_MAILPUSH' AND type = 'P' )
         DROP procedure sysadm.PS_MIG1_I_EMAILING_KSL_ARCHIVE_MAILPUSH
@@ -9459,6 +9460,20 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 					@sXMLVar OUTPUT
 			End 
 
+		-- [20251014095728070][JFF][MIG147]
+		If sysadm.FN_CLE_NUMERIQUE ( 'TAB_SPEC_XML_KSL') > 0 
+		 Begin
+			If Exists ( Select Top 1 1 From sysadm.emailing_ksl_tableau_special Where id_prod = Convert ( Decimal ( 7 ), @iIdProd ) And typ_mail = @asTypMail ) 
+				Begin 
+					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_AJOUT_TABLEAU_DONNEES_SPECIALES_XML
+						@aiIdXml,
+						@asTypMail, 
+						@adcIdSin,
+						2,
+						@sXMLVar OUTPUT
+				End 
+		End 
+
 		Exec @iRet = TRACE_MAIL_PRO.sysadm.PS_RS5045_I_MAIL_PUSH_KSL_V01
 			@sIdAppli,
 			@iIdSin,
@@ -9528,6 +9543,20 @@ Else
 					2,
 					@sXMLVar OUTPUT
 			End 
+
+		-- [20251014095728070][JFF][MIG147]
+		If sysadm.FN_CLE_NUMERIQUE ( 'TAB_SPEC_XML_KSL') > 0 
+		 Begin
+			If Exists ( Select Top 1 1 From sysadm.emailing_ksl_tableau_special Where id_prod = Convert ( Decimal ( 7 ), @iIdProd ) And typ_mail = @asTypMail ) 
+				Begin 
+					Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_AJOUT_TABLEAU_DONNEES_SPECIALES_XML
+						@aiIdXml,
+						@asTypMail, 
+						@adcIdSin,
+						2,
+						@sXMLVar OUTPUT
+				End 
+		End 
 
 		Exec @iRet = TRACE_MAIL_TRT.sysadm.PS_RS5045_I_MAIL_PUSH_KSL_V01
 			@sIdAppli,
@@ -9673,3 +9702,46 @@ If @iRet = 0
 	End 
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_U_AJOUT_TABLEAU_DONNEES_SPECIALES_XML
+-- Auteur               :       Fabry JF
+-- Date                 :       15/10/25 16:10
+-- Libellé              :        
+-- Commentaires         :       Insertion dans la table ARCHIVE et MAIL_PUSH
+-- Références           :       
+--
+-- Arguments            :       
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+-- [20251014095728070][JFF][MIG147]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_AJOUT_TABLEAU_DONNEES_SPECIALES_XML' AND type = 'P' )
+        DROP procedure sysadm.PS_U_AJOUT_TABLEAU_DONNEES_SPECIALES_XML
+GO
+
+CREATE procedure sysadm.PS_U_AJOUT_TABLEAU_DONNEES_SPECIALES_XML
+	@aiIdXml integer,
+	@asTypMail VarChar ( 6 ), 
+	@adcIdSin Decimal ( 10 ),
+	@aiIdAppliNum Integer,
+	@xmlResult varchar(max) OUTPUT
+AS
+
+Declare @dcIdProd Decimal ( 7 )
+Declare @iCptTableau Integer
+Declare @sTabWrk VarChar ( 8000 ) 
+
+Select @dcIdProd = id_prod From sysadm.w_sin where id_sin = @adcIdSin
+If @dcIdProd is null Or @dcIdProd = 0 Select @dcIdProd = id_prod From sysadm.w_sin where id_sin = @adcIdSin
+
+If Not Exists ( Select Top 1 1 From sysadm.emailing_ksl_tableau_special Where id_prod = @dcIdProd And typ_mail = @asTypMail ) Return
+
+
+
+
+Go
+
+

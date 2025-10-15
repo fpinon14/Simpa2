@@ -203,6 +203,7 @@ Go
 -- 
 -------------------------------------------------------------------
 -- [20250905090403837][JFF][MIG82]
+-- [20251015150606137][JFF][MIG147]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION' AND type = 'P' )
         DROP procedure sysadm.PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION
@@ -259,6 +260,7 @@ Declare @iDosSansSuite Integer
 Declare @iDosSansSuiteClient Integer
 Declare @iDosSansSuitePrescrit Integer
 Declare @iEnAttAppCTR Integer
+Declare @iPiece419PourKrysEtCDL Integer
 
 Set @iEtatVuAssure = sysadm.FN_LIB_ETAT_DOS_ASSURE ( @adcIdSin, 'CODE' )
 
@@ -345,6 +347,19 @@ If Exists (
 	And c.cree_le >= DateAdd ( minute, -30, Getdate() )
 	) Set @iCmdeRemplAppEnCours = 1
 
+-- Cas de l'horreur Krys&CDL, mettre une linge pour une pièce [20251015150606137][JFF][MIG147]
+Set @iPiece419PourKrysEtCDL = 0
+If Exists ( 
+	Select Top 1 1 
+	From sysadm.w_sin s,
+		 sysadm.det_pro dp,
+		 sysadm.w_piece wp
+	Where s.id_sin = @adcIdSin
+	And dp.id_prod = s.id_prod
+	And wp.id_sin = s.id_sin
+	And wp.id_pce = 419
+) Set @iPiece419PourKrysEtCDL = 1
+
 
 Select @iMaxIdSeqIdemBACC = max ( c.id_seq ) 
 From sysadm.commande c with (nolock)
@@ -372,7 +387,6 @@ IF @iMaxIdSeqIdemBACC > 0
 		and   c.id_seq = @iMaxIdSeqIdemBACC
 	End 
 
-
 -- En cours
 If @iEtatVuAssure in ( 100, 550, 1540 )
 	Begin
@@ -399,6 +413,12 @@ If @iEtatVuAssure in ( 100, 550, 1540 )
 		If @iAppRecuEnCTR > 0 
 			Begin
 				Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, 'APPCTR', @sVar, '', 'PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION', @asCodOper				
+			End 
+
+		--[20251015150606137][JFF][MIG147]
+		If @iPiece419PourKrysEtCDL > 0 
+			Begin
+				Exec sysadm.PS_I_INSERTION_JOURNAL_EVTSIN @adcIdSin, 'ATTFAC', @sVar, '', 'PS_I_CAS_JOURNAL_EVT_SIN_SUR_VALIDATION', @asCodOper				
 			End 
 
 	End 

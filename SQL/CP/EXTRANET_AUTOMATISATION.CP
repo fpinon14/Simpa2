@@ -74,6 +74,9 @@ Declare @dtCreeLeDos DateTime
 DECLARE @sOper varchar(4)
 Declare @sErr  Varchar(60)
 Declare @iIdCt Integer 
+Declare @dcIdGti Decimal ( 7 ) 
+
+Select Top 1 @dcIdGti = wg.id_gti From sysadm.w_sin ws, sysadm.w_gar_sin wg Where ws.id_sin = @adcIdSin and wg.id_sin = ws.id_sin
 
 Set @sOper = 'WEB'
 Set @sMsgSherpa = Left ( 'ERREUR / Rejet Automatisation : ' + @asMsg2Sherpa, 508 )
@@ -125,7 +128,7 @@ Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO
 	END
 
 	-- Dans tous les on envoie le Récap (règles donnée par fiche confluence)
-	Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__ENVOI_RECAPITULATIF_DE_DECLARATION @adcIdSin, @adcIdGti, 'REJET=OUI'
+	Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__ENVOI_RECAPITULATIF_DE_DECLARATION @adcIdSin, @dcIdGti, 'REJET=OUI'
 
 Go
 
@@ -1018,6 +1021,7 @@ Declare @iValidationDossier Integer
 Declare @iEnvoiRecapDecl Integer
 Declare @iIdMotifRefus Decimal ( 7 )
 Declare @iCreationTravail Integer
+Declare @iCasSpeciauxDeMAJ Integer
 
 -- [LGY38] afin que le CCO ne ramasse un éventuel travail présent
 -- Même si DELETE ensuite, le Trv pourrait être affecté au CCO, donc le pus tôt possible il faut couper
@@ -1037,11 +1041,11 @@ Set @iCreationPresta = 0
 Set @iValidationDossier = 0
 Set @iEnvoiRecapDecl = 0
 Set @iCreationTravail = 0
-
+Set @iCasSpeciauxDeMAJ = 0
 
 -- Contrôle éligibilité dossier à l'automatisme
 Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__CONTROLE_ELIGIBILITE_DOSSIER @adcIdSin
-If @iRet = -1 Return @iRet
+If @iRet = -1 Return 1
 
 -- Obtention de la variante
 Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';') From sysadm.det_pro dp, sysadm.w_sin ws Where ws.id_sin = @adcIdSin And dp.id_prod = ws.id_prod and dp.id_code_dp = 406 
@@ -1060,6 +1064,7 @@ If @sVarianteDp406 = 'BOUYGUES'
 	Set @iValidationDossier = 1
 	Set @iEnvoiRecapDecl = 1
 	Set @iCreationTravail = 0
+	Set @iCasSpeciauxDeMAJ = 0
  End 
 
 --------------------------
@@ -1070,12 +1075,13 @@ If @sVarianteDp406 in ( 'KRYS', 'CDL' )
 	Set @iCtrleIntrDos = 1
 	Set @iDeclenchRefus = 0;  Set @iMailRefusEtValdDos = 0
 	Set @iCochagePiece = 1
-	Set @iCreerDetGti = 0
+	Set @iCreerDetGti = 1
 	Set @iDeclenchPlafEtPec = 0
 	Set @iCreationPresta = 0
 	Set @iValidationDossier = 0
 	Set @iEnvoiRecapDecl = 1
 	Set @iCreationTravail = 1
+	Set @iCasSpeciauxDeMAJ = 1
  End 
 
 
@@ -1086,14 +1092,14 @@ If @sVarianteDp406 in ( 'KRYS', 'CDL' )
 If @iCtrleIntrDos > 0 
  Begin 
 	Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__CONTROLE_INTEGRITE_DOSSIER @adcIdSin
-	If @iRet = -1 Return @iRet
+	If @iRet = -1 Return 1
  End 
 
 -- Refus
 If @iDeclenchRefus > 0 
  Begin
 	Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__DECLENCHEMENT_REFUS @adcIdSin
-	If @iRet = -1 Return @iRet
+	If @iRet = -1 Return 1
 
 	If @iRet > 1 And @iMailRefusEtValdDos > 0 -- Cas d'un Refus par mail (avec Validation, olbigé)
 	Begin 
@@ -1119,29 +1125,36 @@ If @iCochagePiece > 0
 If @iCreerDetGti > 0
  Begin
 	Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__CREATION_DETAIL_DE_GARANTIE @adcIdSin, @dcIdGti OutPut, @dcIdDetail Output
-	If @iRet = -1 Return @iRet
+	If @iRet = -1 Return 1
  End 
 
 -- Plafond et PEC
 If @iDeclenchPlafEtPec > 0
  Begin
 	Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__DECLENCHEMENT_PLAFOND_ET_PEC @adcIdSin, @dcIdGti, @dcIdDetail
-	If @iRet = -1 Return @iRet
+	If @iRet = -1 Return 1
  End 
 
 -- Prestation
 If @iCreationPresta > 0
  Begin
 	Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__CREATION_DE_LA_PRESTATION @adcIdSin, @dcIdGti, @dcIdDetail, @iIdSeqPresta OutPut
-	If @iRet = -1 Return @iRet
+	If @iRet = -1 Return 1
  End 
+
+-- Maj diverses cas spéciaux
+If @iCasSpeciauxDeMAJ > 0 
+ Begin
+	Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__MISE_A_JOUR_PARTICULIERES_SPECIALES @adcIdSin, @dcIdGti, @dcIdDetail, @iIdSeqPresta OutPut
+	If @iRet = -1 Return 1
+ End
 
 
 -- Validation
 If @iValidationDossier > 0
  Begin
 	Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__VALIDATION_DU_DOSSIER @adcIdSin, @dcIdGti, @dcIdDetail, @iIdSeqPresta, @iIdMotifRefus
-	If @iRet = -1 Return @iRet
+	If @iRet = -1 Return 1
  End 
 
 -- A laisser tout à la fin, car sinon la PS est appelé dans le Rejet
@@ -3337,6 +3350,16 @@ Declare @sModlAppSin VarChar ( 35 )
 Declare @dcMtValAchat Decimal ( 11, 2 )
 Declare @dtDteAchat DateTime
 Declare @sVarianteDp406 Varchar ( 50 )
+Declare @sVal1 VarChar ( 50 )
+Declare @sVal2 VarChar ( 50 )
+Declare @sVal3 VarChar ( 50 )
+Declare @iVal1 Integer 
+Declare @iVal2 Integer 
+Declare @iVal3 Integer
+Declare @iVal4 Integer
+
+Set @sVal1 = ''; Set @sVal2 = ''; Set @sVal3 = '' 
+Set @iVal1 = 0; Set @iVal2 = 0; Set @iVal3 = 0
 
 -- Obtention de la variante
 Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';') From sysadm.det_pro dp, sysadm.w_sin ws Where ws.id_sin = @adcIdSin And dp.id_prod = ws.id_prod and dp.id_code_dp = 406
@@ -3370,118 +3393,201 @@ Begin
 	If Exists ( Select Top 1 1 From sysadm.w_refus Where id_sin = @adcIdSin and id_gti = @adcIdGti ) Return 1
 End 
 
--- Obtention données sinistre
-Select	@sMarqAppSin = ws.marq_port,
-		@sModlAppSin = ws.modl_port,
-		@iRefIFR = Case 
-						When Exists ( 
-							Select Top 1 1
-							From sysadm.w_sin ws,
-								 sysadm.w_div_sin wds,
-								 sysadm.det_pro dp
-							Where ws.id_sin = @adcIdSin
-							And wds.id_sin = ws.id_sin
-							And wds.nom_zone = 'type_app'
-							And dp.id_prod = ws.id_prod
-							And dp.id_code_dp = 28
-							And dp.id_code_car = 'IFR' + trim ( wds.val_car )
-						) Then 1
-						Else 0
-					End 
+If @sVarianteDp406 in ( 'KRYS', 'CDL' ) 
+Begin
+	Set @sVal1 = ''; Set @sVal2 = ''; Set @sVal3 = '' 
+	Set @iVal1 = 0; Set @iVal2 = 0; Set @iVal3 = 0
 
-From sysadm.w_sin ws
-Where id_sin = @adcIdSin
+	If Exists ( Select Top 1 1 From sysadm.w_div_sin where id_sin = @adcIdSin and nom_zone in ( 'element_adh_1' ) ) Set @iVal1 = 1  -- Verre droit
+	If Exists ( Select Top 1 1 From sysadm.w_div_sin where id_sin = @adcIdSin and nom_zone in ( 'element_adh_2' ) ) Set @iVal2 = 1  -- Verre gauche
+	If Exists ( Select Top 1 1 From sysadm.w_div_sin where id_sin = @adcIdSin and nom_zone in ( 'element_adh_3' ) ) Set @iVal3 = 1  -- monture 
+	Set @iVal4 = @iVal1 + @iVal2 + @iVal3
 
--- Obtention valeur IFR si App lié à IFR
-if @iRefIFR > 0 
-	Begin 
-		Exec sysadm.PS_S_SAGA2_INTERRO_IFR_V100 @sMarqAppSin, @sModlAppSin, @dcPrixPublic OutPut
-		If @dcPrixPublic <= 0 
-			Begin
-				Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Impossible de déterm. Val. publique', 'Impossible de détemriner la valeur publique de l''appareil (ref. IFR). Automatisation impossible.'
-				Return -1
-			End 
-	End 
-Else 
+	If @iVal1 > 0 Set @sVal1 = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'mt_val_achat_adh_elt_1', 'W', '' )
+	If @iVal2 > 0 Set @sVal2 = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'mt_val_achat_adh_elt_2', 'W', '' )
+	If @iVal3 > 0 Set @sVal3 = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'mt_val_achat_adh_elt_3', 'W', '' )
+
+	If @iVal4 >= 2
 	Begin
+		Exec @iRet = sysadm.Atlas_Gar_Sin_Creer_Detail_V102 @adcIdSin, @adcIdGti, 1497, null, 'de votre équipement', 0, @adcIdDetail OutPut
+		If IsNumeric ( @sVal1 ) = 1 And IsNumeric ( @sVal2 ) = 1 And IsNumeric ( @sVal3 ) = 1 
 		Begin
-			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Appareil non lié à IFR', 'Pour l''instant, seul les déclarations de sinistre dont l''appareil est à IFR peuvent se faire. Automatisation impossible.'
+			Set @dcMtValAchat = Convert ( Decimal ( 11, 2 ), @sVal1 ) + Convert ( Decimal ( 11, 2 ), @sVal2 ) + Convert ( Decimal ( 11, 2 ), @sVal3 )
+			Update sysadm.w_detail Set mt_prej = @dcMtValAchat, mt_val_achat = @dcMtValAchat Where id_sin = @adcIdSin and id_gti = @adcIdGti and id_detail = @adcIdDetail
+		End 
+		Else
+		Begin 
+			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__CONTACT_LIBRE_POUR_INFO @adcIdSin, 'Un des montants de valeur d''achat transmis par l''extranet (verre droit, gauche ou monture), n''est pas valide, aucun montant n''a pas être mis à jour sur le détail de garantie, faites le manuellement. Automatisation impossible.'
 			Return -1
 		End
 	End 
 
-If Not Exists ( 
-		Select Top 1 1 
-		From sysadm.stk_data_hub_automate stk
-		Where stk.id_sin = @adcIdSin
-		And   stk.id_gti = @adcIdGti
-		And   stk.id_seq is null
-	)
+	If @iVal4 = 1 And @iVal1 > 0 
 	Begin
-		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Aucune prestation disponible', 'L''extranet n''a donné aucun lien vers une prestation du HUB PRESTATAIRE. Automatisation impossible.'
-		Return -1
+		Exec @iRet = sysadm.Atlas_Gar_Sin_Creer_Detail_V102 @adcIdSin, @adcIdGti, 1495, null, 'de votre verre droit', 0, @adcIdDetail OutPut
+		If IsNumeric ( @sVal1 ) = 1 
+		Begin
+			Set @dcMtValAchat = Convert ( Decimal ( 11, 2 ), @sVal1 ) 
+			Update sysadm.w_detail Set mt_prej = @dcMtValAchat, mt_val_achat = @dcMtValAchat Where id_sin = @adcIdSin and id_gti = @adcIdGti and id_detail = @adcIdDetail
+		End 
+		Else
+		Begin 
+			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__CONTACT_LIBRE_POUR_INFO @adcIdSin, 'Le montant de valeur d''achat pour le verre droit n''est pas valide, aucun montant n''a pas être mis à jour sur le détail de garantie, faites le manuellement. Automatisation impossible.'
+		End
 	End 
 
--- Obtention de toutes les données stockées concernant les presta HUB
-Select	Top 1
-		@dcMtValAchat   = IsNull ( stk.mt_val_achat, 0 ),
-		@dtDteAchat		= stk.dte_achat
-
-From sysadm.stk_data_hub_automate stk
-Where stk.id_sin = @adcIdSin
-And   stk.id_gti = @adcIdGti
-And   stk.id_seq is null
-
-If @dcMtValAchat is null Or @dcMtValAchat <= 0 
+	If @iVal4 = 1 And @iVal2 > 0 
 	Begin
-		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Impossible récupérer valeur d''achat', 'Impossible de récupérer la valeur d''achat qui aurait normale dû être transmise avec les infos de stockage liées de la prestation. Automatisation impossible.'
-		Return -1
+		Exec @iRet = sysadm.Atlas_Gar_Sin_Creer_Detail_V102 @adcIdSin, @adcIdGti, 1496, null, 'de votre verre gauche', 0, @adcIdDetail OutPut
+		If IsNumeric ( @sVal2 ) = 1 
+		Begin
+			Set @dcMtValAchat = Convert ( Decimal ( 11, 2 ), @sVal2 ) 
+			Update sysadm.w_detail Set mt_prej = @dcMtValAchat, mt_val_achat = @dcMtValAchat Where id_sin = @adcIdSin and id_gti = @adcIdGti and id_detail = @adcIdDetail
+		End 
+		Else
+		Begin 
+			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__CONTACT_LIBRE_POUR_INFO @adcIdSin, 'Le montant de valeur d''achat pour le verre gauche n''est pas valide, aucun montant n''a pas être mis à jour sur le détail de garantie, faites le manuellement. Automatisation impossible.'
+		End
 	End 
 
-If @dtDteAchat is null 
+	If @iVal4 = 1 And @iVal3 > 0 
 	Begin
-		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Date d''achat non renseignée', 'Impossible de récupérer la date d''achat qui aurait normale dû être transmise avec les infos de stockage liées de la prestation. Automatisation impossible.'
-		Return -1
-	End 
+		Exec @iRet = sysadm.Atlas_Gar_Sin_Creer_Detail_V102 @adcIdSin, @adcIdGti, 1494, null, 'de votre monture', 0, @adcIdDetail OutPut
+		If IsNumeric ( @iVal3 ) = 1 
+		Begin
+			Set @dcMtValAchat = Convert ( Decimal ( 11, 2 ), @iVal3 ) 
+			Update sysadm.w_detail Set mt_prej = @dcMtValAchat, mt_val_achat = @dcMtValAchat Where id_sin = @adcIdSin and id_gti = @adcIdGti and id_detail = @adcIdDetail
+		End 
+		Else
+		Begin 
+			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__CONTACT_LIBRE_POUR_INFO @adcIdSin, 'Le montant de valeur d''achat pour la monture n''est pas valide, aucun montant n''a pas être mis à jour sur le détail de garantie, faites le manuellement. Automatisation impossible.'		End
+		End 
 
--- Maj date d'achat sur le sinistre
-Update sysadm.w_sin Set dte_ach_port = @dtDteAchat Where id_sin = @adcIdSin
+End 
 
--- Maj date achat sur Détail de garantie si dp/42 (A)achat
-If Exists ( 
-	Select 	Top 1 1 
-	From 	sysadm.det_pro dp ,
-			sysadm.w_sin ws
-	Where 	ws.id_sin = @adcIdSin
-	And     dp.id_prod = ws.id_prod
-	And 	dp.id_code_dp = 42 
-	and 	dp.id_code_car = 'A' 
-	and 	dp.id_code_num = @adcIdGti ) 
+-- Obtention données sinistre
+If @sVarianteDp406 = 'BOUYGUES'
 Begin
-	Update sysadm.w_detail Set dte_det = @dtDteAchat Where id_sin = @adcIdSin and id_gti = @adcIdGti
+	Select	@sMarqAppSin = ws.marq_port,
+			@sModlAppSin = ws.modl_port,
+			@iRefIFR = Case 
+							When Exists ( 
+								Select Top 1 1
+								From sysadm.w_sin ws,
+									 sysadm.w_div_sin wds,
+									 sysadm.det_pro dp
+								Where ws.id_sin = @adcIdSin
+								And wds.id_sin = ws.id_sin
+								And wds.nom_zone = 'type_app'
+								And dp.id_prod = ws.id_prod
+								And dp.id_code_dp = 28
+								And dp.id_code_car = 'IFR' + trim ( wds.val_car )
+							) Then 1
+							Else 0
+						End 
+
+	From sysadm.w_sin ws
+	Where id_sin = @adcIdSin
+End 
+
+-- Obtention valeur IFR si App lié à IFR
+If @sVarianteDp406 = 'BOUYGUES'
+Begin
+	if @iRefIFR > 0 
+		Begin 
+			Exec sysadm.PS_S_SAGA2_INTERRO_IFR_V100 @sMarqAppSin, @sModlAppSin, @dcPrixPublic OutPut
+			If @dcPrixPublic <= 0 
+				Begin
+					Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Impossible de déterm. Val. publique', 'Impossible de détemriner la valeur publique de l''appareil (ref. IFR). Automatisation impossible.'
+					Return -1
+				End 
+		End 
+	Else 
+		Begin
+			Begin
+				Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Appareil non lié à IFR', 'Pour l''instant, seul les déclarations de sinistre dont l''appareil est à IFR peuvent se faire. Automatisation impossible.'
+				Return -1
+			End
+		End 
+End 
+
+If @sVarianteDp406 = 'BOUYGUES'
+Begin
+	If Not Exists ( 
+			Select Top 1 1 
+			From sysadm.stk_data_hub_automate stk
+			Where stk.id_sin = @adcIdSin
+			And   stk.id_gti = @adcIdGti
+			And   stk.id_seq is null
+		)
+		Begin
+			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Aucune prestation disponible', 'L''extranet n''a donné aucun lien vers une prestation du HUB PRESTATAIRE. Automatisation impossible.'
+			Return -1
+		End 
+
+	-- Obtention de toutes les données stockées concernant les presta HUB
+	Select	Top 1
+			@dcMtValAchat   = IsNull ( stk.mt_val_achat, 0 ),
+			@dtDteAchat		= stk.dte_achat
+
+	From sysadm.stk_data_hub_automate stk
+	Where stk.id_sin = @adcIdSin
+	And   stk.id_gti = @adcIdGti
+	And   stk.id_seq is null
+
+	If @dcMtValAchat is null Or @dcMtValAchat <= 0 
+		Begin
+			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Impossible récupérer valeur d''achat', 'Impossible de récupérer la valeur d''achat qui aurait normale dû être transmise avec les infos de stockage liées de la prestation. Automatisation impossible.'
+			Return -1
+		End 
+
+	If @dtDteAchat is null 
+		Begin
+			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Date d''achat non renseignée', 'Impossible de récupérer la date d''achat qui aurait normale dû être transmise avec les infos de stockage liées de la prestation. Automatisation impossible.'
+			Return -1
+		End 
+
+	-- Maj date d'achat sur le sinistre
+	Update sysadm.w_sin Set dte_ach_port = @dtDteAchat Where id_sin = @adcIdSin
+
+	-- Maj date achat sur Détail de garantie si dp/42 (A)achat
+	If Exists ( 
+		Select 	Top 1 1 
+		From 	sysadm.det_pro dp ,
+				sysadm.w_sin ws
+		Where 	ws.id_sin = @adcIdSin
+		And     dp.id_prod = ws.id_prod
+		And 	dp.id_code_dp = 42 
+		and 	dp.id_code_car = 'A' 
+		and 	dp.id_code_num = @adcIdGti ) 
+	Begin
+		Update sysadm.w_detail Set dte_det = @dtDteAchat Where id_sin = @adcIdSin and id_gti = @adcIdGti
+	End 
 End 
 
 -- On rédéclenche ces 3 plafonds qui sont liés à la Date d'achat
+If @sVarianteDp406 = 'BOUYGUES'
+Begin
+	-- Refus 641 : DTE ACHAT/OUVLIG > DTE SURVENANCE
+	Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_641_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_SURVENANCE @adcIdSin
+	If @iRet = -1 Return @iRet
 
--- Refus 641 : DTE ACHAT/OUVLIG > DTE SURVENANCE
-Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_641_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_SURVENANCE @adcIdSin
-If @iRet = -1 Return @iRet
+	-- Refus 642 : DTE ACHAT/OUVLIG > DTE ADHESION
+	Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_642_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_ADHESION @adcIdSin
+	If @iRet = -1 Return @iRet
 
--- Refus 642 : DTE ACHAT/OUVLIG > DTE ADHESION
-Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_642_DATE_ACHAT_OU_OUVLIG_POSTERIEURE_DTE_ADHESION @adcIdSin
-If @iRet = -1 Return @iRet
+	-- Refus 643 : DTE ACHAT/OUVLIG < DTE ADHESION (sur option dp/131)
+	Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIEURE_DTE_ADHESION_DP131 @adcIdSin
+	If @iRet = -1 Return @iRet
 
--- Refus 643 : DTE ACHAT/OUVLIG < DTE ADHESION (sur option dp/131)
-Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIEURE_DTE_ADHESION_DP131 @adcIdSin
-If @iRet = -1 Return @iRet
-
--- Mise à jour du détail avec les dernières valeurs
-Update sysadm.w_detail
-Set		mt_val_achat= @dcMtValAchat,
-		mt_val_publique = @dcPrixPublic
-Where	id_sin = @adcIdSin
-and		id_gti = @adcIdGti
-And		id_detail = @adcIdDetail
+	-- Mise à jour du détail avec les dernières valeurs
+	Update sysadm.w_detail
+	Set		mt_val_achat= @dcMtValAchat,
+			mt_val_publique = @dcPrixPublic
+	Where	id_sin = @adcIdSin
+	and		id_gti = @adcIdGti
+	And		id_detail = @adcIdDetail
+End 
 
 Return 1
 
@@ -4424,18 +4530,11 @@ Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO
 
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 BEGIN
-	If @aiIdMotifRefus > 0 
-		Exec SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @adcIdSin, 2, @sMsgTemp,	'WEB', 300, @iIdCt OUTPUT
-	Else 
 		Exec SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @adcIdSin, 2, @sMsgTemp,	'WEB', 300, @iIdCt OUTPUT							
 END
 ELSE
 BEGIN
-	If @aiIdMotifRefus > 0 
-		Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @adcIdSin, 2, @sMsgTemp,	'WEB', 300, @iIdCt OUTPUT
-	Else 
 		Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @adcIdSin, 2, @sMsgTemp,	'WEB', 300, @iIdCt OUTPUT							
-
 END	
 
 -- Journal pour l'extranet
@@ -4599,6 +4698,7 @@ End
 
 If @sVarianteDp406 in ( 'KRYS', 'CDL' )
 Begin
+	-- [TODO]
 	Select 'TOTO'
 End 
 
@@ -4989,4 +5089,69 @@ BEGIN
 END
 
 Go
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__CONTACT_LIBRE_POUR_INFO
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__CONTACT_LIBRE_POUR_INFO' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__CONTACT_LIBRE_POUR_INFO
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__CONTACT_LIBRE_POUR_INFO
+	@adcIdSin Decimal ( 10 ),
+	@sMsgSherpa VarChar ( 508 )
+AS
+
+Declare @sOper VarChar ( 4 ) 
+Declare @sErr  Varchar(60)
+Declare @iIdCt Integer 
+
+Set @sOper = 'WEB'
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+BEGIN
+	Exec SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @adcIdSin, 2, @sMsgSherpa,	'WEB', 300, @iIdCt OUTPUT
+END
+ELSE
+BEGIN
+	Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @adcIdSin, 2, @sMsgSherpa,	'WEB', 300, @iIdCt OUTPUT
+END
+
+Go
+
+--------------------------------------------------------------------
+-- Procédure            :       PS_I_EXTRANET_AUTOMATISATION__MISE_A_JOUR_PARTICULIERES_SPECIALES
+-- Auteur               :       Fabry JF
+-- Date                 :       16/09/2025
+-- Libellé              :
+-- Commentaires         :       
+-- Références           :
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_I_EXTRANET_AUTOMATISATION__MISE_A_JOUR_PARTICULIERES_SPECIALES' AND type = 'P' )
+        DROP procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__MISE_A_JOUR_PARTICULIERES_SPECIALES
+GO
+
+CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__MISE_A_JOUR_PARTICULIERES_SPECIALES
+	@adcIdSin Decimal ( 10 )
+AS
+
+Declare @sVarianteDp406 Varchar ( 50 )
+Declare @asChaineSeria VarChar ( 500 )
+Declare @asRetour VarChar ( 255 ) 
+
+Set @asRetour = Space ( 255 ) 
+
+-- Obtention de la variante
+Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';') From sysadm.det_pro dp, sysadm.w_sin ws Where ws.id_sin = @adcIdSin And dp.id_prod = ws.id_prod and dp.id_code_dp = 406
+
+If @sVarianteDp406 = 'KRYS' Exec sysadm.Atlas_Declenchement_Special_Par_Cas 'KRYS_COMPLETER_INTER_AUTRE', @adcIdSin, @asChaineSeria, @asRetour  output
+If @sVarianteDp406 = 'CDL' Exec sysadm.Atlas_Declenchement_Special_Par_Cas 'CDL_COMPLETER_INTER_AUTRE', @adcIdSin, @asChaineSeria, @asRetour  output
+
+Go
+
 
