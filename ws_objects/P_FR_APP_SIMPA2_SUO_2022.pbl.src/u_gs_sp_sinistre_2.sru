@@ -1117,6 +1117,9 @@ For lCpt = 1 To lTotInter
 	sNomInter = idw_lstinter.GetItemstring ( lCpt, "NOM")	 // [MIG1_COUR_EMAILING]
 	iIdInter  = idw_lstinter.GetItemNumber ( lCpt, "ID_I")	 // [MIG1_COUR_EMAILING]
 	sTypeMail = idw_lstinter.GetItemstring ( lCpt, "ID_COUR")	 
+	sIdNatCour = idw_lstinter.GetItemString ( lCpt, "ID_NAT_COUR" ) 
+	sIdCour = idw_lstinter.GetItemString ( lCpt, "ID_COUR" ) 		
+
 
 	If Not bAMUPT_Courrier Then bAMUPT_Courrier = Not ( IsNull ( sTypeMail ) Or sTypeMail = "" ) 
 
@@ -1210,11 +1213,8 @@ For lCpt = 1 To lTotInter
 
 	// [MIG165_BOUYGUES]
 	If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
-		lRow = idw_lstinter.Find ( "COD_INTER = 'A'", 1, idw_lstinter.RowCount ())
-		If lRow > 0 Then
-			sIdNatCour = idw_lstinter.GetItemString ( lRow, "ID_NAT_COUR" ) 
-			sIdCour = idw_lstinter.GetItemString ( lRow, "ID_COUR" ) 		
-			This.uf_Determiner_Courrier_Forcage_Dp405 ( lRow, sIdNatCour, sIdCour )
+		If sCodInter = "A" Then
+			This.uf_Determiner_Courrier_Forcage_Dp405 ( lCpt, sIdNatCour, sIdCour )
 			sTypeMail = sIdNatCour
 			bAMUPT_Courrier = Not ( IsNull ( sTypeMail ) Or sTypeMail = "" )
 		End IF 
