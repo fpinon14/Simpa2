@@ -8352,7 +8352,7 @@ If Not Exists (
 
 		EXEC master.dbo.SPB_PS_MAIL 
 				@sRetourErrMail OUTPUT, 
-				'paris@corus.fr',
+				'service.client@corus.fr',
 				@sMailBody, 
 				@sObjet, 
 				null, 

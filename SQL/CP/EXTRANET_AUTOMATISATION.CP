@@ -1038,10 +1038,10 @@ Set @iCochagePiece = 0
 Set @iCreerDetGti = 0
 Set @iDeclenchPlafEtPec = 0
 Set @iCreationPresta = 0
+Set @iCasSpeciauxDeMAJ = 0
 Set @iValidationDossier = 0
 Set @iEnvoiRecapDecl = 0
 Set @iCreationTravail = 0
-Set @iCasSpeciauxDeMAJ = 0
 
 -- Contrôle éligibilité dossier à l'automatisme
 Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__CONTROLE_ELIGIBILITE_DOSSIER @adcIdSin
@@ -1061,10 +1061,10 @@ If @sVarianteDp406 = 'BOUYGUES'
 	Set @iCreerDetGti = 1
 	Set @iDeclenchPlafEtPec = 1
 	Set @iCreationPresta = 1
+	Set @iCasSpeciauxDeMAJ = 0
 	Set @iValidationDossier = 1
 	Set @iEnvoiRecapDecl = 1
 	Set @iCreationTravail = 0
-	Set @iCasSpeciauxDeMAJ = 0
  End 
 
 --------------------------
@@ -1078,10 +1078,10 @@ If @sVarianteDp406 in ( 'KRYS', 'CDL' )
 	Set @iCreerDetGti = 1
 	Set @iDeclenchPlafEtPec = 0
 	Set @iCreationPresta = 0
-	Set @iValidationDossier = 0
+	Set @iCasSpeciauxDeMAJ = 1
+	Set @iValidationDossier = 0 
 	Set @iEnvoiRecapDecl = 1
 	Set @iCreationTravail = 1
-	Set @iCasSpeciauxDeMAJ = 1
  End 
 
 
@@ -1145,7 +1145,7 @@ If @iCreationPresta > 0
 -- Maj diverses cas spéciaux
 If @iCasSpeciauxDeMAJ > 0 
  Begin
-	Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__MISE_A_JOUR_PARTICULIERES_SPECIALES @adcIdSin, @dcIdGti, @dcIdDetail, @iIdSeqPresta OutPut
+	Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__MISE_A_JOUR_PARTICULIERES_SPECIALES @adcIdSin
 	If @iRet = -1 Return 1
  End
 
@@ -1273,6 +1273,9 @@ If Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin )
 		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Le sinistre n''existe pas', 'La référence sinistre n''existe pas. La référence transmise à l''automate par l''extranet ne réfère aucun sinistre dans la base de données SIMPA2. Automatisation impossible.'
 		Return -1
 	End		
+
+-- Maj de l'adhésion, suppression des 0
+Update sysadm.w_sin Set id_adh = RIGHT( id_adh, LEN(id_adh) - PATINDEX('%[^0]%', id_adh ) + 1) where id_sin = @adcIdSin
 
 -- Absence de date de fin de garantie
 If Exists ( Select Top 1 1 
@@ -1510,7 +1513,7 @@ If @sVal = ''
 -- absence donnée dans id_sdos
 If Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And id_sdos is not null And id_sdos <> 0 )
 	Begin
-		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Co-adhérent non renseigné', 'Le co-adhérent n''a pas été renseigné par l''extranet. Automatisation impossible.'
+		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Adhérent non renseigné', 'L''adhérent n''a pas été renseigné par l''extranet. Automatisation impossible.'
 		Return -1
 	End	
 
@@ -1564,53 +1567,58 @@ If Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And ad
 	End	
 
 -- Contrôle cohérence cp/ville
-IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
-BEGIN
-	If Not Exists ( 
-			Select	Top 1 1 
-			From	SESAME_PRO.sysadm.commune c,
-					sysadm.w_sin ws
-			Where	ws.id_sin = @adcIdSin
-			And     c.code_postal = ws.adr_cp
-			And		c.nom_commune = ws.adr_ville
-			)
-		Begin
-			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Cohér. CP/Ville incorrect (w_sin)', 'La cohérence code postal/ville de l''assuré par rapport au référentiel, n''est pas respectée par l''extranet. Automatisation impossible.'
-			Return -1
-		End	
-END
-ELSE
+If @sVarianteDp406 Not in ( 'KRYS', 'CDL' ) -- Pas de validation, donc les GT repasse par l'application
 Begin
-	If Not Exists ( 
-			Select	Top 1 1 
-			From	SESAME_SIM.sysadm.commune c,
-					sysadm.w_sin ws
-			Where	ws.id_sin = @adcIdSin
-			And     c.code_postal = ws.adr_cp
-			And		c.nom_commune = ws.adr_ville
-			)
+	IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+	BEGIN
+		If Not Exists ( 
+				Select	Top 1 1 
+				From	SESAME_PRO.sysadm.commune c,
+						sysadm.w_sin ws
+				Where	ws.id_sin = @adcIdSin
+				And     c.code_postal = ws.adr_cp
+				And		c.nom_commune = ws.adr_ville
+				)
+			Begin
+				Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Cohér. CP/Ville incorrect (w_sin)', 'La cohérence code postal/ville de l''assuré par rapport au référentiel, n''est pas respectée par l''extranet. Automatisation impossible.'
+				Return -1
+			End	
+	END
+	ELSE
+	Begin
+		If Not Exists ( 
+				Select	Top 1 1 
+				From	SESAME_SIM.sysadm.commune c,
+						sysadm.w_sin ws
+				Where	ws.id_sin = @adcIdSin
+				And     c.code_postal = ws.adr_cp
+				And		c.nom_commune = ws.adr_ville
+				)
+			Begin
+				Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Cohér. CP/Ville incorrect (w_sin)', 'La cohérence code postal/ville de l''assuré par rapport au référentiel, n''est pas respectée par l''extranet. Automatisation impossible.'
+				Return -1
+			End	
+	End
+
+	-- MONACO
+	If Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And upper ( adr_ville ) like '%MONACO%' )
 		Begin
-			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Cohér. CP/Ville incorrect (w_sin)', 'La cohérence code postal/ville de l''assuré par rapport au référentiel, n''est pas respectée par l''extranet. Automatisation impossible.'
+			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Ville MONACO (w_sin)', 'La ville de l''assuré est MONACO, pas d''automatisation pour cette ville. Automatisation impossible.'
 			Return -1
 		End	
-End
 
--- MONACO
-If Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And upper ( adr_ville ) like '%MONACO%' )
-	Begin
-		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Ville MONACO (w_sin)', 'La ville de l''assuré est MONACO, pas d''automatisation pour cette ville. Automatisation impossible.'
-		Return -1
-	End	
-
--- DOM TOM
-If Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And left ( adr_cp, 3 ) in ( '971', '972', '973', '974', '975', '976', '984', '986', '987', '988' ))
-	Begin
-		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'DOM-TOM Trait. Manuel.(w_sin)', 'Les départements DOM-TOM sont à traiter en manuel, pas d''automatisation pour ce cas. Automatisation impossible.'
-		Return -1
-	End	
+	-- DOM TOM
+	If Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And left ( adr_cp, 3 ) in ( '971', '972', '973', '974', '975', '976', '984', '986', '987', '988' ))
+		Begin
+			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'DOM-TOM Trait. Manuel.(w_sin)', 'Les départements DOM-TOM sont à traiter en manuel, pas d''automatisation pour ce cas. Automatisation impossible.'
+			Return -1
+		End	
+End 
 
 -- Absence donnée dans num_port ( 10 chiffre 06, 07)
 If Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And num_port is not null And ltrim ( num_port ) <> '' And Left ( num_port, 2 ) in ( '06', '07') )
+   And 
+   sysadm.FN_GET_DIV_SIN (@adcIdSin, 'type_app', 'W', '' ) = 'TEL'
 	Begin
 		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'NumTelSin non valide/rens. (w_sin)', 'Le numéro de téléphone portable de l''assuré n''a pas été renseignée (ou n''est pas valide) par l''extranet. Automatisation impossible.'
 		Return -1
@@ -1618,7 +1626,10 @@ If Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And nu
 
 
 -- Absence donnée dans num_imei_port (num imei valide et 15)
-If  Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And num_imei_port is not null And ltrim ( num_imei_port ) <> '' )
+If  ( Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And num_imei_port is not null And ltrim ( num_imei_port ) <> '' )
+	  And 
+	  sysadm.FN_GET_DIV_SIN (@adcIdSin, 'type_app', 'W', '' ) <> ''
+	)
 	Or 
 	Exists ( Select Top 1 1 
 			From sysadm.w_sin ws,
@@ -1637,20 +1648,26 @@ If  Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And n
 	End	
 
 -- Absence donnée dans marq_port et modl_port
-If Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And marq_port is not null And ltrim ( marq_port ) <> '' )
+If  Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And marq_port is not null And ltrim ( marq_port ) <> '' )
+	And 
+	sysadm.FN_GET_DIV_SIN (@adcIdSin, 'type_app', 'W', '' ) <> ''
 	Begin
 		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Marque non renseignée', 'La marque de l''appareil sinistré de l''assuré n''a pas été renseignée par l''extranet. Automatisation impossible.'
 		Return -1
 	End	
 
 If Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin And modl_port is not null And ltrim ( modl_port ) <> '' )
+   And 
+   sysadm.FN_GET_DIV_SIN (@adcIdSin, 'type_app', 'W', '' ) <> ''
 	Begin
 		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Modèle non renseignée', 'Le modèle de l''appareil sinistré de l''assuré n''a pas été renseigné par l''extranet. Automatisation impossible.'
 		Return -1
 	End	
 
 -- Présence typ_app existant dans -dp/25
-If Not Exists ( 
+If  Exists ( Select Top 1 1 From sysadm.w_sin ws, sysadm.produit p Where ws.id_sin = @adcIdSin and p.id_prod = ws.id_prod and p.cod_tel > 0 )
+	And
+	Not Exists ( 
 		Select Top 1 1 
 		From	sysadm.w_div_sin wds,
 				sysadm.w_sin ws,
@@ -1675,7 +1692,9 @@ If Not Exists ( Select Top 1 1 From sysadm.w_div_sin Where id_sin = @adcIdSin An
 	End
 
 -- Blocage sur Géoloc
-If Exists ( 
+If  Exists ( Select Top 1 1 From sysadm.w_sin ws, sysadm.produit p Where ws.id_sin = @adcIdSin and p.id_prod = ws.id_prod and p.cod_tel > 0 )
+	And 
+	Exists ( 
 		Select	top 1 1 
 		From	sysadm.w_sin ws,
 				sysadm.w_div_sin wdsTypeApp,
@@ -1697,7 +1716,9 @@ If Exists (
 -- Contrôle particuluer qu'on pourra enlever par la suite mais avec de gros modif pour accueillir une valeur publique non ifr pour le détail de garantie
 -- Si l'appareil n'est pas lié à IFR, on rejète pour l'instant
 -- binome marque/modèle doit appartenir à IFR
-If Not Exists ( 
+If  Exists ( Select Top 1 1 From sysadm.w_sin ws, sysadm.produit p Where ws.id_sin = @adcIdSin and p.id_prod = ws.id_prod and p.cod_tel > 0 )
+	And 
+	Not Exists ( 
 	Select Top 1 1
 	From sysadm.w_sin ws,
 		 sysadm.w_div_sin wds,
@@ -2035,12 +2056,30 @@ If Exists ( Select Top 1 1 From sysadm.w_inter Where id_sin = @adcIdSin And cod_
 	End	
 
 -- Contrôle cohérence cp/ville
-IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+If @sVarianteDp406 Not in ( 'KRYS', 'CDL' ) -- Pas de validation, donc les GT repasse par l'application
 Begin
+	IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+	Begin
 					
-	If Not Exists ( 
+		If Not Exists ( 
+				Select	Top 1 1 
+				From	SESAME_PRO.sysadm.commune c,
+						sysadm.w_inter wi
+				Where	wi.id_sin = @adcIdSin
+				And		wi.cod_inter = 'A'
+				And     c.code_postal = wi.adr_cp
+				And		c.nom_commune = wi.adr_ville
+				)
+			Begin
+				Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Cohé. CP/Ville incorrect (w_interA)', 'La cohérence code postal/ville de l''assuré par rapport au référentiel, n''est pas respectée par l''extranet. Automatisation impossible.'
+				Return -1
+			End	
+	End
+	Else
+	Begin
+		If Not Exists ( 
 			Select	Top 1 1 
-			From	SESAME_PRO.sysadm.commune c,
+			From	SESAME_SIM.sysadm.commune c,
 					sysadm.w_inter wi
 			Where	wi.id_sin = @adcIdSin
 			And		wi.cod_inter = 'A'
@@ -2051,41 +2090,27 @@ Begin
 			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Cohé. CP/Ville incorrect (w_interA)', 'La cohérence code postal/ville de l''assuré par rapport au référentiel, n''est pas respectée par l''extranet. Automatisation impossible.'
 			Return -1
 		End	
-End
-Else
-Begin
-	If Not Exists ( 
-		Select	Top 1 1 
-		From	SESAME_SIM.sysadm.commune c,
-				sysadm.w_inter wi
-		Where	wi.id_sin = @adcIdSin
-		And		wi.cod_inter = 'A'
-		And     c.code_postal = wi.adr_cp
-		And		c.nom_commune = wi.adr_ville
-		)
-	Begin
-		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Cohé. CP/Ville incorrect (w_interA)', 'La cohérence code postal/ville de l''assuré par rapport au référentiel, n''est pas respectée par l''extranet. Automatisation impossible.'
-		Return -1
-	End	
 
-End
-
--- Présence adresse mail
-If Not Exists ( Select Top 1 1 From sysadm.w_inter Where id_sin = @adcIdSin And cod_inter = 'A' And adr_mail is not null And ltrim ( adr_mail ) <> '' )
-	Begin
-		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Adresse mail absente (w_interA)', 'L''adresse mail de l''assuré n''a pas été renseignée par l''extranet. Automatisation impossible.'
-		Return -1
 	End
+End 
+-- Présence adresse mail
+If @sVarianteDp406 Not in ( 'KRYS', 'CDL' ) 
+Begin
+	If Not Exists ( Select Top 1 1 From sysadm.w_inter Where id_sin = @adcIdSin And cod_inter = 'A' And adr_mail is not null And ltrim ( adr_mail ) <> '' )
+		Begin
+			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Adresse mail absente (w_interA)', 'L''adresse mail de l''assuré n''a pas été renseignée par l''extranet. Automatisation impossible.'
+			Return -1
+		End
 
-Select @sAdrMailInterAss = adr_mail	From sysadm.w_inter Where id_sin = @adcIdSin And cod_inter = 'A' And adr_mail is not null And ltrim ( adr_mail ) <> ''
-Set @sAdrMailInterAss = sysadm.FN_EPURE_CHAINE_V02 ( @sAdrMailInterAss, 'NATIF&RC_TAB_DQ' ) 
-If sysadm.FN_CTRLE_ADR_MAIL ( @sAdrMailInterAss ) < 0
-	Begin
-		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Adresse mail non valide (w_interA)', 'L''adresse mail de l''assuré renseignée par l''extranet, n''est pas valide. Automatisation impossible.'
-		Return -1
-	End 
-
-Update sysadm.w_inter Set adr_mail = @sAdrMailInterAss Where id_sin = @adcIdSin
+	Select @sAdrMailInterAss = adr_mail	From sysadm.w_inter Where id_sin = @adcIdSin And cod_inter = 'A' And adr_mail is not null And ltrim ( adr_mail ) <> ''
+	Set @sAdrMailInterAss = sysadm.FN_EPURE_CHAINE_V02 ( @sAdrMailInterAss, 'NATIF&RC_TAB_DQ' ) 
+	If sysadm.FN_CTRLE_ADR_MAIL ( @sAdrMailInterAss ) < 0
+		Begin
+			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Adresse mail non valide (w_interA)', 'L''adresse mail de l''assuré renseignée par l''extranet, n''est pas valide. Automatisation impossible.'
+			Return -1
+		End 
+	Update sysadm.w_inter Set adr_mail = @sAdrMailInterAss Where id_sin = @adcIdSin
+End 
 
 -- Epuration des caractères gênant
 Update sysadm.w_inter
@@ -3357,6 +3382,7 @@ Declare @iVal1 Integer
 Declare @iVal2 Integer 
 Declare @iVal3 Integer
 Declare @iVal4 Integer
+Declare @iVal5 Integer
 
 Set @sVal1 = ''; Set @sVal2 = ''; Set @sVal3 = '' 
 Set @iVal1 = 0; Set @iVal2 = 0; Set @iVal3 = 0
@@ -3401,13 +3427,15 @@ Begin
 	If Exists ( Select Top 1 1 From sysadm.w_div_sin where id_sin = @adcIdSin and nom_zone in ( 'element_adh_1' ) ) Set @iVal1 = 1  -- Verre droit
 	If Exists ( Select Top 1 1 From sysadm.w_div_sin where id_sin = @adcIdSin and nom_zone in ( 'element_adh_2' ) ) Set @iVal2 = 1  -- Verre gauche
 	If Exists ( Select Top 1 1 From sysadm.w_div_sin where id_sin = @adcIdSin and nom_zone in ( 'element_adh_3' ) ) Set @iVal3 = 1  -- monture 
-	Set @iVal4 = @iVal1 + @iVal2 + @iVal3
+	Set @iVal4 = @iVal1 + @iVal2 + @iVal3 -- Tout
+	Set @iVal5 = @iVal1 + @iVal2 -- Deux verres uniquement
 
 	If @iVal1 > 0 Set @sVal1 = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'mt_val_achat_adh_elt_1', 'W', '' )
 	If @iVal2 > 0 Set @sVal2 = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'mt_val_achat_adh_elt_2', 'W', '' )
 	If @iVal3 > 0 Set @sVal3 = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'mt_val_achat_adh_elt_3', 'W', '' )
 
-	If @iVal4 >= 2
+	-- Tout l'équipement mais sans avoir les deux verres sans la monture
+	If @iVal4 >= 2 And @iVal5 < 2
 	Begin
 		Exec @iRet = sysadm.Atlas_Gar_Sin_Creer_Detail_V102 @adcIdSin, @adcIdGti, 1497, null, 'de votre équipement', 0, @adcIdDetail OutPut
 		If IsNumeric ( @sVal1 ) = 1 And IsNumeric ( @sVal2 ) = 1 And IsNumeric ( @sVal3 ) = 1 
@@ -3422,7 +3450,23 @@ Begin
 		End
 	End 
 
-	If @iVal4 = 1 And @iVal1 > 0 
+	-- les deux verres sans la monture
+	If @iVal5 = 2 And @iVal3 = 0
+	Begin
+		Exec @iRet = sysadm.Atlas_Gar_Sin_Creer_Detail_V102 @adcIdSin, @adcIdGti, 1498, null, 'de vos deux verres', 0, @adcIdDetail OutPut
+		If IsNumeric ( @sVal1 ) = 1 And IsNumeric ( @sVal2 ) = 1
+		Begin
+			Set @dcMtValAchat = Convert ( Decimal ( 11, 2 ), @sVal1 ) + Convert ( Decimal ( 11, 2 ), @sVal2 )
+			Update sysadm.w_detail Set mt_prej = @dcMtValAchat, mt_val_achat = @dcMtValAchat Where id_sin = @adcIdSin and id_gti = @adcIdGti and id_detail = @adcIdDetail
+		End 
+		Else
+		Begin 
+			Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__CONTACT_LIBRE_POUR_INFO @adcIdSin, 'Le montant de valeur d''achat d''un des deux verres n''est pas valide, aucun montant n''a pas être mis à jour sur le détail de garantie, faites le manuellement. Automatisation impossible.'
+		End
+	End 
+
+	-- Verre droit uniquement
+	If @iVal4 = 1 And @iVal5 < 2 And @iVal1 > 0 
 	Begin
 		Exec @iRet = sysadm.Atlas_Gar_Sin_Creer_Detail_V102 @adcIdSin, @adcIdGti, 1495, null, 'de votre verre droit', 0, @adcIdDetail OutPut
 		If IsNumeric ( @sVal1 ) = 1 
@@ -3436,7 +3480,8 @@ Begin
 		End
 	End 
 
-	If @iVal4 = 1 And @iVal2 > 0 
+	-- Verre gauche uniquement
+	If @iVal4 = 1 And @iVal5 < 2 And @iVal2 > 0 
 	Begin
 		Exec @iRet = sysadm.Atlas_Gar_Sin_Creer_Detail_V102 @adcIdSin, @adcIdGti, 1496, null, 'de votre verre gauche', 0, @adcIdDetail OutPut
 		If IsNumeric ( @sVal2 ) = 1 
@@ -3450,7 +3495,8 @@ Begin
 		End
 	End 
 
-	If @iVal4 = 1 And @iVal3 > 0 
+	-- Monture
+	If @iVal4 = 1 And @iVal5 < 2 And @iVal3 > 0 
 	Begin
 		Exec @iRet = sysadm.Atlas_Gar_Sin_Creer_Detail_V102 @adcIdSin, @adcIdGti, 1494, null, 'de votre monture', 0, @adcIdDetail OutPut
 		If IsNumeric ( @iVal3 ) = 1 
@@ -4667,6 +4713,8 @@ Declare @iRet Integer
 Declare @iIdCt Integer
 Declare @sVarianteDp406 Varchar ( 50 )
 Declare @sNomInter VarChar ( 71 )
+Declare @iValideAMU Integer
+Declare @sChaineSeriaEmilaing VarChar ( 800 )
 
 -- Nominter A
 Select @sNomInter = Trim ( nom ) From sysadm.w_inter i Where id_sin = @adcIdSin and id_i = 0
@@ -4675,12 +4723,17 @@ If @sNomInter is null Select @sNomInter = Trim ( nom ) From sysadm.inter i Where
 -- Obtention de la variante
 Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';') From sysadm.det_pro dp, sysadm.w_sin ws Where ws.id_sin = @adcIdSin And dp.id_prod = ws.id_prod and dp.id_code_dp = 406 
 
+-- Y a-t-il une validation
+Set @iValideAMU = 0
+If Exists ( Select Top 1 1 From sysadm.sinistre where id_sin = @adcIdSin ) Set @iValideAMU = 1
+If @iValideAMU <= 0 Set @sChaineSeriaEmilaing = sysadm.FN_CLE_VAL_E ( 'ARCHIVAGE', 'NON', @sChaineSeriaEmilaing , ';' )
+
 If @sVarianteDp406 = 'BOUYGUES' 
 Begin
 	-- Récap spécial VOL et Dde Pièces, confirmation d'enregistrement
 	If	@adcIdGti = 10 
 		And Exists ( Select Top 1 1 From sysadm.w_piece Where id_sin = @adcIdSin and id_gti = @adcIdGti )
-		And sysadm.FN_CLE_VAL ( 'REJET', @asChaineSeria, ';' ) <> 'OUI'
+		-- And sysadm.FN_CLE_VAL ( 'REJET', @asChaineSeria, ';' ) <> 'OUI' vu avec Lisette le 16/10 13h45 : même en cas de rejet vers la DGRC, on envoie les récap.
 	Begin
 		Exec sysadm.PS_MIG1_I_EMAILING_KSL_ARCHIVE_MAILPUSH 
 								@adcIdSin,
@@ -4692,14 +4745,24 @@ Begin
 								'WEB', -- Oper
 								null, -- Motif Refus
 								0, -- Mt_Reg
-								'' -- chaine séria
+								@sChaineSeriaEmilaing  -- chaine séria
    End 
 End 
 
 If @sVarianteDp406 in ( 'KRYS', 'CDL' )
 Begin
-	-- [TODO]
-	Select 'TOTO'
+
+	Exec sysadm.PS_MIG1_I_EMAILING_KSL_ARCHIVE_MAILPUSH 
+							@adcIdSin,
+							null, -- id_seq presta
+							0, -- inter
+							'A', -- cod_inter
+							@sNomInter, -- nom_inter
+							'RCDEC1', -- Typ_mail
+							'WEB', -- Oper
+							null, -- Motif Refus
+							0, -- Mt_Reg
+							@sChaineSeriaEmilaing  -- chaine séria
 End 
 
 /*
@@ -5075,9 +5138,12 @@ Declare @sMsgSherpa VarChar ( 508 )
 Declare @sOper VarChar ( 4 ) 
 Declare @sErr  Varchar(60)
 Declare @iIdCt Integer 
+Declare @sMsgSucces VarChar ( 35)
+Declare @sExtrAutoEtat VarChar ( 10 )
+
 
 Set @sMsgSherpa = 'Déclaration Extranet, création d''un travail par l''automate.'
-
+Set @sOper = 'WEB'
 
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 BEGIN
@@ -5087,6 +5153,29 @@ ELSE
 BEGIN
 	EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @adcIdSin, 2, @sMsgSherpa, @sOper , @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'E'
 END
+
+Set @sMsgSucces = 'Succès automatisation déclaration'
+Set @sExtrAutoEtat = 'SUCDCL'
+
+Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO
+	@adcIdSin,
+	'extrauto_etat', 
+	'Etat Automatis. Décla. Extranet',  
+	@sExtrAutoEtat,
+	'O',
+	'C',
+	null,
+	'WEB'
+
+Exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO
+	@adcIdSin,
+	'extrauto_Lib', 
+	'Lib. Etat Autom. Décla. Extranet',  
+	@sMsgSucces,
+	'O',
+	'C',
+	null,
+	'WEB'
 
 Go
 

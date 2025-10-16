@@ -9466,9 +9466,10 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 			If Exists ( Select Top 1 1 From sysadm.emailing_ksl_tableau_special Where id_prod = Convert ( Decimal ( 7 ), @iIdProd ) And typ_mail = @asTypMail ) 
 				Begin 
 					Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_AJOUT_TABLEAU_DONNEES_SPECIALES_XML
-						@aiIdXml,
+						@iIdXml,
 						@asTypMail, 
 						@adcIdSin,
+						@adcIdInter,
 						2,
 						@sXMLVar OUTPUT
 				End 
@@ -9550,9 +9551,10 @@ Else
 			If Exists ( Select Top 1 1 From sysadm.emailing_ksl_tableau_special Where id_prod = Convert ( Decimal ( 7 ), @iIdProd ) And typ_mail = @asTypMail ) 
 				Begin 
 					Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_AJOUT_TABLEAU_DONNEES_SPECIALES_XML
-						@aiIdXml,
+						@iIdXml,
 						@asTypMail, 
 						@adcIdSin,
+						@adcIdInter,
 						2,
 						@sXMLVar OUTPUT
 				End 
@@ -9585,7 +9587,8 @@ Else
  End
 
  -- Insertion dans archive
- If @iRet = 0 
+ -- [20251014095728070][JFF][MIG147]
+ If @iRet = 0 And sysadm.FN_CLE_VAL ( 'ARCHIVAGE', @asChaineSeria, ';' ) <> 'NON'
 	Begin
 	
 		Select @dcNewIdDoc = Max ( IsNull ( a.id_doc, 0) ) 
@@ -9726,22 +9729,398 @@ CREATE procedure sysadm.PS_U_AJOUT_TABLEAU_DONNEES_SPECIALES_XML
 	@aiIdXml integer,
 	@asTypMail VarChar ( 6 ), 
 	@adcIdSin Decimal ( 10 ),
+	@adcIdInter Decimal ( 7 ),
 	@aiIdAppliNum Integer,
 	@xmlResult varchar(max) OUTPUT
 AS
 
 Declare @dcIdProd Decimal ( 7 )
+Declare @dcIdGti Decimal ( 7 )
+Declare @dcIdNatSin Decimal ( 7 )
 Declare @iCptTableau Integer
-Declare @sTabWrk VarChar ( 8000 ) 
+Declare @sXmlUnitWrk VarChar ( 8000 ) 
+Declare @sXmlTabWrkTot VarChar ( 8000 ) 
+Declare @iSinistre integer
+Declare @iCptIdSeq integer
+Declare @iIdSeq integer
+Declare @sTableauEnCours VarChar ( 10 )
+Declare @dcIdOrdre Decimal ( 7 )
+Declare @sCol1 VarChar ( 100 )
+Declare @sCol2codeDonnee VarChar ( 100 )
 
-Select @dcIdProd = id_prod From sysadm.w_sin where id_sin = @adcIdSin
-If @dcIdProd is null Or @dcIdProd = 0 Select @dcIdProd = id_prod From sysadm.w_sin where id_sin = @adcIdSin
-
-If Not Exists ( Select Top 1 1 From sysadm.emailing_ksl_tableau_special Where id_prod = @dcIdProd And typ_mail = @asTypMail ) Return
 
 
+Declare @TbWrk Table ( 
+	id_seq Integer identity ( 1, 1 ),
+	tableau Varchar ( 20 ),
+	tri_tableau integer,
+	col1 varchar ( 100 ),
+	col2_code_donnee varchar ( 100 ),
+	marquage integer
+)
+
+Set @iSinistre = 0
+
+If Exists ( Select Top 1 1 From sysadm.sinistre where id_sin = @adcIdSin ) 
+Begin 
+	Set @iSinistre = 1
+	Select	Top 1 
+			@dcIdProd = ws.id_prod,
+			@dcIdNatSin = ws.id_natsin,
+			@dcIdGti = wg.id_gti,
+			@dcIdOrdre = ws.id_ordre
+	From sysadm.sinistre ws,
+		 sysadm.gar_sin wg
+	where ws.id_sin = @adcIdSin
+	and   wg.id_sin = ws.id_sin
+End 
+Else
+Begin 
+	Set @iSinistre = 0
+	Select	Top 1 
+			@dcIdProd = ws.id_prod,
+			@dcIdNatSin = ws.id_natsin,
+			@dcIdGti = wg.id_gti
+	From sysadm.w_sin ws,
+		 sysadm.w_gar_sin wg
+	where ws.id_sin = @adcIdSin
+	and   wg.id_sin = ws.id_sin
+End 
+
+Insert into @TbWrk
+Select	tableau,
+		tri_tableau,
+		col1,
+		col2_code_donnee,
+		0
+From sysadm.emailing_ksl_tableau_special 
+Where id_prod = @dcIdProd 
+And ( id_natsin = @dcIdNatSin Or id_natsin is null ) 
+And ( id_gti = @dcIdGti Or id_gti is null ) 
+And typ_mail = @asTypMail	
+Order by tableau, tri_tableau
+
+If Not Exists ( Select Top 1 1 From @TbWrk ) Return
+
+Set @iCptTableau = 1
+Set @iCptIdSeq = 1
+
+While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTableau ) )
+ Begin
+ 	Set @sTableauEnCours = Concat ( 'T', @iCptTableau )
+	Set @sXmlTabWrkTot = ''
+
+	While Exists ( Select Top 1 1 From @TbWrk where tableau = @sTableauEnCours and marquage = 0 )
+	 Begin
+		Select 	Top 1 
+			@iIdSeq = id_seq,
+			@sCol1  = col1, 
+			@sCol2codeDonnee = col2_code_donnee
+		From	@TbWrk
+		Where	marquage = 0
+		And id_seq = @iCptIdSeq 
+
+		Set @sXmlUnitWrk = ''
+
+		-- Traitement
+		If @iSinistre = 1 
+		Begin
+			If @sCol2codeDonnee = 'CIV_LONG_ASS' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   sysadm.FN_CODE_NUM ( cod_civ, '-CL' ) as 'txxxlig/@col2'
+							from sysadm.personne 
+							where id_ordre = @dcIdOrdre
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'PRENOM_ASS' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( prenom ) as 'txxxlig/@col2'
+							from sysadm.personne 
+							where id_ordre = @dcIdOrdre
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'NOM_ASS' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( nom ) as 'txxxlig/@col2'
+							from sysadm.personne 
+							where id_ordre = @dcIdOrdre
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'ADR_ASS' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( adr_1 ) as 'txxxlig/@col2'
+							from sysadm.personne 
+							where id_ordre = @dcIdOrdre
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'ADR_CPL_ASS' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( adr_2 ) as 'txxxlig/@col2'
+							from sysadm.personne 
+							where id_ordre = @dcIdOrdre
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'CP_ASS' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( adr_cp ) as 'txxxlig/@col2'
+							from sysadm.personne 
+							where id_ordre = @dcIdOrdre
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'VILLE_ASS' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( adr_ville ) as 'txxxlig/@col2'
+							from sysadm.personne 
+							where id_ordre = @dcIdOrdre
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'NUM_TEL_ASS' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( num_teld ) as 'txxxlig/@col2'
+							from sysadm.personne 
+							where id_ordre = @dcIdOrdre
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'EMAIL_ASS' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( adr_mail ) as 'txxxlig/@col2'
+							from sysadm.inter
+							where id_sin = @adcIdSin 
+							And cod_inter = 'A'
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'DTE_ACHAT_MONTURE' 
+				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_3', 'P', '' ) <> '' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_3', 'P', '' ) as 'txxxlig/@col2'
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'PRIX_TTC_MONTURE' 
+				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_3', 'P', '' ) <> '' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_3', 'P', '' ) as 'txxxlig/@col2'
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'DTE_ACHAT_VERRE_DROIT' 
+				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_1', 'P', '' ) <> '' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_1', 'P', '' ) as 'txxxlig/@col2'
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'PRIX_TTC_VERRE_DROIT' 
+				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_1', 'P', '' ) <> '' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_1', 'P', '' ) as 'txxxlig/@col2'
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'DTE_ACHAT_VERRE_GAUCHE' 
+				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_2', 'P', '' ) <> '' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_2', 'P', '' ) as 'txxxlig/@col2'
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'PRIX_TTC_VERRE_GAUCHE' 
+				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_2', 'P', '' ) <> '' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_2', 'P', '' ) as 'txxxlig/@col2'
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'LIB_GTI_PERSO' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( lib_gti ) as 'txxxlig/@col2'
+							From sysadm.code_garantie 
+							Where id_prod = @dcIdProd
+							And id_gti = @dcIdGti
+							For xml path ( '' )
+						)
+
+		End 
 
 
+		If @iSinistre = 0 
+		Begin
+			If @sCol2codeDonnee = 'CIV_LONG_ASS' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   sysadm.FN_CODE_NUM ( cod_civ, '-CL' ) as 'txxxlig/@col2'
+							from sysadm.w_sin 
+							where id_sin = @adcIdSin
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'PRENOM_ASS' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( prenom ) as 'txxxlig/@col2'
+							from sysadm.w_sin 
+							where id_sin = @adcIdSin
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'NOM_ASS' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( nom ) as 'txxxlig/@col2'
+							from sysadm.w_sin 
+							where id_sin = @adcIdSin
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'ADR_ASS' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( adr_1 ) as 'txxxlig/@col2'
+							from sysadm.w_sin 
+							where id_sin = @adcIdSin
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'ADR_CPL_ASS' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( adr_2 ) as 'txxxlig/@col2'
+							from sysadm.w_sin 
+							where id_sin = @adcIdSin
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'CP_ASS' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( adr_cp ) as 'txxxlig/@col2'
+							from sysadm.w_sin 
+							where id_sin = @adcIdSin
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'VILLE_ASS' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( adr_ville ) as 'txxxlig/@col2'
+							from sysadm.w_sin 
+							where id_sin = @adcIdSin
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'NUM_TEL_ASS' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( num_teld ) as 'txxxlig/@col2'
+							from sysadm.w_sin 
+							where id_sin = @adcIdSin
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'EMAIL_ASS' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( adr_mail ) as 'txxxlig/@col2'
+							from sysadm.w_inter
+							where id_sin = @adcIdSin 
+							And cod_inter = 'A'
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'DTE_ACHAT_MONTURE' 
+				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_3', 'W', '' ) <> '' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_3', 'W', '' ) as 'txxxlig/@col2'
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'PRIX_TTC_MONTURE' 
+				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_3', 'W', '' ) <> '' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_3', 'W', '' ) as 'txxxlig/@col2'
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'DTE_ACHAT_VERRE_DROIT' 
+				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_1', 'W', '' ) <> '' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_1', 'W', '' ) as 'txxxlig/@col2'
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'PRIX_TTC_VERRE_DROIT' 
+				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_1', 'W', '' ) <> '' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_1', 'W', '' ) as 'txxxlig/@col2'
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'DTE_ACHAT_VERRE_GAUCHE' 
+				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_2', 'W', '' ) <> '' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_2', 'W', '' ) as 'txxxlig/@col2'
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'PRIX_TTC_VERRE_GAUCHE' 
+				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_2', 'W', '' ) <> '' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_2', 'W', '' ) as 'txxxlig/@col2'
+							For xml path ( '' )
+						)
+
+			If @sCol2codeDonnee = 'LIB_GTI_PERSO' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( lib_gti ) as 'txxxlig/@col2'
+							From sysadm.code_garantie 
+							Where id_prod = @dcIdProd
+							And id_gti = @dcIdGti
+							For xml path ( '' )
+						)
+		End 
+
+
+		Set @sXmlTabWrkTot = @sXmlTabWrkTot + @sXmlUnitWrk
+		Update @TbWrk Set marquage = 1 Where id_seq = @iIdSeq
+		Set @iCptIdSeq = @iCptIdSeq + 1
+	 End
+	Set @sXmlTabWrkTot = Replace ( @sXmlTabWrkTot, 'txxxlig', Concat ( Lower ( @sTableauEnCours ), 'lig')) 
+    Set @xmlResult = Replace ( @xmlResult, '<' + @sTableauEnCours + '></' + @sTableauEnCours + '>', '<' + @sTableauEnCours + '>' + @sXmlTabWrkTot  + '</' + @sTableauEnCours + '>' ) 
+	Set @iCptTableau = @iCptTableau + 1
+ End 
+ 
 Go
 
 

@@ -4310,33 +4310,34 @@ GO
 
 CREATE procedure sysadm.PS_RS5045_U_AJOUT_TABLEAU_DONNEES_SPECIALES_XML
 	@aiIdXml integer,
-	@asTypMail VarChar ( 6 ) 
+	@asTypMail VarChar ( 6 ), 
 	@adcIdSin Decimal ( 10 ),
+	@adcIdInter Decimal ( 7 ),
 	@aiIdAppliNum Integer,
 	@xmlResult varchar(max) OUTPUT
 AS
 
 -- Uniquement pour SIMPA2
-If @iIdAppliNum Not in ( 2 ) Return
+If @aiIdAppliNum Not in ( 2 ) Return
 
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 BEGIN
-	If @iIdAppliNum = 2 
+	If @aiIdAppliNum = 2 
 		Begin
-			Exec SIMPA2_PRO.sysadm.PS_U_AJOUT_TABLEAU_DONNEES_SPECIALES_XML @aiIdXml, @asTypMail, @adcIdSin, @aiIdAppliNum, @xmlResult OutPut
+			Exec SIMPA2_PRO.sysadm.PS_U_AJOUT_TABLEAU_DONNEES_SPECIALES_XML @aiIdXml, @asTypMail, @adcIdSin, @adcIdInter, @aiIdAppliNum, @xmlResult OutPut
 		End 
 END 
 Else 
 BEGIN
-	If @iIdAppliNum = 2 
+	If @aiIdAppliNum = 2 
 		Begin
-			Exec SIMPA2_TRT.sysadm.PS_U_AJOUT_TABLEAU_DONNEES_SPECIALES_XML @aiIdXml, @asTypMail, @adcIdSin, @aiIdAppliNum, @xmlResult OutPut
+			Exec SIMPA2_TRT.sysadm.PS_U_AJOUT_TABLEAU_DONNEES_SPECIALES_XML @aiIdXml, @asTypMail, @adcIdSin, @adcIdInter, @aiIdAppliNum, @xmlResult OutPut
 		End 
 END 
 
 Update sysadm.variable_xml_ksl_rs5045
 Set xml_data=@xmlResult
-Where id_xml = @iIdXml
+Where id_xml = @aiIdXml
 
 Go
 

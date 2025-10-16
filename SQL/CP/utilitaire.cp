@@ -4718,6 +4718,7 @@ Go
 --
 -------------------------------------------------------------------
 -- JFF      12/02/2016   [PI062]
+-- [20251016131853440][JFF][MIG147]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_GET_ETAT_GARANTIE_PM251' AND type = 'FN' )
         DROP function sysadm.FN_GET_ETAT_GARANTIE_PM251
@@ -4750,6 +4751,9 @@ If @sTable = 'P'
 	From   sysadm.detail d
 	Where  d.id_sin = @dcIdSin
 	And	   d.id_gti = @dcIdGti
+
+	If Not Exists ( Select Top 1 1 From sysadm.detail where id_sin = @dcIdSin ) Set @iCodEtat100 = 1 -- Pour fonctionner si aucun détail présent -- [20251016131853440][JFF][MIG147]
+
  End 
 Else
  Begin
@@ -4761,8 +4765,11 @@ Else
 	From   sysadm.w_detail wd
 	Where  wd.id_sin = @dcIdSin
 	And	   wd.id_gti = @dcIdGti
+	
+	If Not Exists ( Select Top 1 1 From sysadm.w_detail where id_sin = @dcIdSin ) Set @iCodEtat100 = 1 -- Pour fonctionner si aucun détail présent -- [20251016131853440][JFF][MIG147]
  End
--- Select @iCodEtat500, @iCodEtat600, @iCodEtat100, @iCodEtat200, @iCodEtat900
+
+
 
 If ( @iCodEtat600 > 0 Or @iCodEtat500 > 0 ) And @iCodEtat100 > 0 
 	Begin
