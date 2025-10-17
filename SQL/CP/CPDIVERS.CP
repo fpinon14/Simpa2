@@ -2856,19 +2856,18 @@ Delete pdf From sysadm.courrier_pdf pdf where pdf.id_arch is null and Not exists
 Delete pdf From sysadm.courrier_pdf pdf where cree_le < DATEADD ( month, -8, Getdate() )
 
 /* [CONVERT_PDF_STOCK]
-Delete pdf From PEGASE_PRO.sysadm.courrier_pdf pdf where pdf.id_arch is null and Not exists ( Select Top 1 1 From sysadm.w_sin ws where ws.id_sin = pdf.id_sin ) 
+Delete pdf From PEGASE_PRO.sysadm.courrier_pdf pdf where pdf.id_arch is null and Not exists ( Select Top 1 1 From  PEGASE_PRO.sysadm.w_sin ws where ws.id_sin = pdf.id_sin ) 
 Delete pdf From PEGASE_PRO.sysadm.courrier_pdf pdf where cree_le < DATEADD ( month, -8, Getdate() )
 */
 
+-- Redresse et met à jour l'autorisation 31 qui dit qu'un GT est Tunisien, en croisant avec la présence de SESAME
+Exec sysadm.PS_MAJ_AUTO_POUR_LES_TRG_CONCERNES_DU_TAG_HORS_UE
 
 -- [LGY11] Problème, en attente modif Stéf
 Exec sysadm.PS_U_REDRESS_W_QUEUE_STATUT_IWD  
 
 -- [HP252_276_HUB_PRESTA]
-If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
- Begin
- 	Exec sysadm.PS_HP276_S_S2_PRESTA_SIMPA2_RESTEES_EN_COURS_DE_GEN_MAIL
- End 
+Exec sysadm.PS_HP276_S_S2_PRESTA_SIMPA2_RESTEES_EN_COURS_DE_GEN_MAIL
 
 GO
 
@@ -8870,4 +8869,45 @@ Where Not Exists (
 And cmq.extension_sortie in ( 'HTM', 'HTML' )
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_MAJ_AUTO_POUR_LES_TRG_CONCERNES_DU_TAG_HORS_UE
+-- Auteur               :       FABRY JF
+-- Date                 :       17/10/2025
+-- Libellé              :       Bascule REC vers PPR et inversement
+--                              
+-- Commentaires         :       
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_MAJ_AUTO_POUR_LES_TRG_CONCERNES_DU_TAG_HORS_UE' AND type = 'P' )
+        DROP procedure sysadm.PS_MAJ_AUTO_POUR_LES_TRG_CONCERNES_DU_TAG_HORS_UE
+GO
+
+CREATE procedure sysadm.PS_MAJ_AUTO_POUR_LES_TRG_CONCERNES_DU_TAG_HORS_UE
+AS
+
+-- Redresse et met à jour l'autorisation 31 qui dit qu'un GT est Tunisien
+-- En croisant avec la présence de SESAME
+
+Insert into sysadm.autorisation 
+Select 31, Trigramme, -1, null, GETDATE (), GETDATE (), 'JFF'
+from [LEHBI19].SPB_BI.dsa.Collaborateur c,
+	 [LEHBI19].SPB_BI.dbo.Site s,
+	 SESAME_PRO.sysadm.operateur ope
+where s.IdSite=c.IdSite
+And s.LibelleSite = 'Tunisie'
+And left ( c.Trigramme, 1 ) <> '_'
+And ope.id_oper Collate French_CI_AS = c.Trigramme Collate French_CI_AS
+And ope.nom <> 'TRIGRAMME TECHNIQUE RESERVE'
+And Not Exists ( 
+	Select Top 1 1
+	From sysadm.autorisation a
+	Where a.id_oper Collate French_CI_AS = c.Trigramme Collate French_CI_AS
+	And a.id_nat_oper = 31
+)
+
+GO
+
 

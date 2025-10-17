@@ -3421,7 +3421,7 @@ End
 
 If @sVarianteDp406 in ( 'KRYS', 'CDL' ) 
 Begin
-	Set @sVal1 = ''; Set @sVal2 = ''; Set @sVal3 = '' 
+	Set @sVal1 = '0'; Set @sVal2 = '0'; Set @sVal3 = '0' 
 	Set @iVal1 = 0; Set @iVal2 = 0; Set @iVal3 = 0
 
 	If Exists ( Select Top 1 1 From sysadm.w_div_sin where id_sin = @adcIdSin and nom_zone in ( 'element_adh_1' ) ) Set @iVal1 = 1  -- Verre droit
@@ -3435,7 +3435,7 @@ Begin
 	If @iVal3 > 0 Set @sVal3 = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'mt_val_achat_adh_elt_3', 'W', '' )
 
 	-- Tout l'équipement mais sans avoir les deux verres sans la monture
-	If @iVal4 >= 2 And @iVal5 < 2
+	If ( @iVal4 = 2 And @iVal5 < 2 ) Or ( @iVal4 = 3 )
 	Begin
 		Exec @iRet = sysadm.Atlas_Gar_Sin_Creer_Detail_V102 @adcIdSin, @adcIdGti, 1497, null, 'de votre équipement', 0, @adcIdDetail OutPut
 		If IsNumeric ( @sVal1 ) = 1 And IsNumeric ( @sVal2 ) = 1 And IsNumeric ( @sVal3 ) = 1 
