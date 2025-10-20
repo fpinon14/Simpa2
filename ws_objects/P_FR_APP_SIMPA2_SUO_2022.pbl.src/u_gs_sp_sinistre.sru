@@ -16383,8 +16383,8 @@ For lCpt = 1 To lTot
 			  "EXTRAUTO_LIB", &
 			  "DYSFONCTIONNEMENT_APPAREIL", &
 			  "APP_INUTILISABLE_SUITE_DYSFONCT", &
-			  "DOMMAGES_EXTERIEURS_VISIBLES"       
-			  
+			  "DOMMAGES_EXTERIEURS_VISIBLES", &
+			  "DOMMAGES_APPAREIL_LIB"
 			  
   			  idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "O" )
 
