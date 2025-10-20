@@ -148,6 +148,8 @@ Go
 -- Retourne             :       
 --
 -------------------------------------------------------------------
+-- [20251020094815167][JFF][MIG147]
+-------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_MAJ_ETAT_PCE_SHERPA' AND type = 'P' )
         DROP procedure sysadm.PS_U_MAJ_ETAT_PCE_SHERPA
 GO
@@ -160,16 +162,74 @@ CREATE procedure sysadm.PS_U_MAJ_ETAT_PCE_SHERPA
 AS
 
 Declare @iIdSin Int
+Declare @dcIdProd Decimal ( 7 )
+Declare @iIdCli Integer 
 
 Set @iIdSin = Convert ( Integer, @adcIdSin )
+
+Select @dcIdProd = id_prod From sysadm.w_sin where id_sin = @adcIdSin  
+If @dcIdProd is null Select @dcIdProd = id_prod From sysadm.sinistre where id_sin = @adcIdSin  
 
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 	BEGIN
 		EXEC SHERPA_PRO.sysadm.PS_U_ARCHIVE_PIECE @iIdSin, @asChaineTrt1, @asChaineTrt2, @asChaineTrt3
+
+		-- [20251020094815167][JFF][MIG147] Maj particulière.
+		-- Si dp/345 présente ET présence de la sur piece histo avec dte_recption à null 
+		-- ET présence dans Archive de la piece avec un état non null
+		-- Alors on maj dte_demande= Getdate()
+		If sysadm.FN_CLE_NUMERIQUE ( 'EVOL_MODUL_PCE_WEB') > 0 
+		 Begin
+
+			 Select @iIdCli = id_cli From SHERPA_PRO.sysadm.sinistre where id_sin = @iIdSin and id_appli = 2  
+ 
+			 Update ph
+			 Set dte_demande = Getdate()
+			 From SHERPA_PRO.sysadm.archive a,  
+				  SHERPA_PRO.sysadm.contact c,
+				  sysadm.piece_histo ph,
+				  sysadm.det_pro dp
+			 Where ph.id_sin = @adcIdSin
+			 And   dp.id_prod = @dcIdProd
+			 And   dp.id_code_dp = 345
+			 And   c.id_cli = @iIdCli  
+			 And   c.id_sin = @iIdSin  
+			 And   a.id_cli = c.id_cli 
+			 And   a.id_contact = c.id_contact 
+			 And   a.id_pce = convert ( integer, ph.id_pce)  
+			 And   a.etat_pce is not null -- Traité (analysé conf ou non conf)
+		 End 
 	END
 ELSE
 	BEGIN
 		EXEC SHERPA_SIM.sysadm.PS_U_ARCHIVE_PIECE @iIdSin, @asChaineTrt1, @asChaineTrt2, @asChaineTrt3
+
+		-- [20251020094815167][JFF][MIG147] Maj particulière.
+		-- Si dp/345 présente ET présence de la sur piece histo avec dte_recption à null 
+		-- ET présence dans Archive de la piece avec un état non null
+		-- Alors on maj dte_demande= Getdate()
+		If sysadm.FN_CLE_NUMERIQUE ( 'EVOL_MODUL_PCE_WEB') > 0 
+		 Begin
+
+			 Select @iIdCli = id_cli From SHERPA_SIM.sysadm.sinistre where id_sin = @iIdSin and id_appli = 2  
+ 
+			 Update ph
+			 Set dte_demande = Getdate()
+			 From SHERPA_SIM.sysadm.archive a,  
+				  SHERPA_SIM.sysadm.contact c,
+				  sysadm.piece_histo ph,
+				  sysadm.det_pro dp
+			 Where ph.id_sin = @adcIdSin
+			 And   dp.id_prod = @dcIdProd
+			 And   dp.id_code_dp = 345
+			 And   c.id_cli = @iIdCli  
+			 And   c.id_sin = @iIdSin  
+			 And   a.id_cli = c.id_cli 
+			 And   a.id_contact = c.id_contact 
+			 And   a.id_pce = convert ( integer, ph.id_pce)  
+			 And   a.etat_pce is not null -- Traité (analysé conf ou non conf)
+		 End 
+
 	END	
 
 Declare @sZnDS_pceSherpaRacine Varchar ( 50 )

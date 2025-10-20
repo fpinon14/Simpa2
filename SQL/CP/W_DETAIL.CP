@@ -1312,7 +1312,8 @@ If sysadm.FN_CLE_NUMERIQUE ( 'MIG19_PSPLAF_SAGA2') >= 2
 				dte_adh DateTime,
 				dte_decl DateTime,
 				dte_surv DateTime,
-				chaine_seria Varchar ( 800 ) --[20251006144234][JFF][MIG119]
+				code_motif Integer,
+				label_motif VarChar ( 50 )
 				)
 
 			 If @iNbSin is null Set @iNbSin = 0
@@ -1327,7 +1328,7 @@ If sysadm.FN_CLE_NUMERIQUE ( 'MIG19_PSPLAF_SAGA2') >= 2
 										  where Upper ( indemnise ) = 'OUI'
 										  And dte_surv <= @dtSurv                        
 										  And dte_surv >= @dtAdhRenouv
-										  And CharIndex ( '#' + convert ( Varchar ( 10 ), @iIdMotifRegSaga2 ) + '#', chaine_seria ) > 0
+										  And code_motif = @iIdMotifRegSaga2  
 										) as T )
 							, 0 ) 
 		End 

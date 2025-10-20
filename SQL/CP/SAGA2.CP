@@ -1466,112 +1466,58 @@ Else
 
 -- [20251006144234][JFF][MIG119] 
 Set @sSql = 
-'WITH Tb_Reglement AS ( ' +
-'    SELECT * ' +			
-'    FROM (	' +
-'        SELECT ' + 			
-'               c.id_claim,	' +
-'			   c.spb_claim_number, ' +
-'               s.subscription_number, ' + 			
-'               pc.amount, ' +
-'               rpcm.code, ' +
-'               rpcm.long_label, ' +			
-'        rpm.code AS code_indem, ' +
-'        rpm.long_label AS label_indem ' +
-'			' +
-'        FROM  ' + @sInstanceSaga2 + '.SAGA2_PVC.oth_cla.claim c ' +
-'        INNER JOIN ' + @sInstanceSaga2 + '.SAGA2_PVC.oth_sub.subscription s ' +
-'            ON s.id_subscription = c.id_subscription ' +
-'        INNER JOIN ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.product p ' +
-'            ON p.id_product = s.id_product ' +
-'        INNER JOIN ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.product_group pg ' +
-'            ON pg.id_product_group = p.id_product_group ' +
-'        INNER JOIN ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_claim_status rcs ' +
-'            ON rcs.id_ref_claim_status = c.id_ref_claim_status ' +
-'        LEFT JOIN ' + @sInstanceSaga2 + '.SAGA2_PVC.oth_cla.damaged_cover dc ' +
-'            ON dc.id_claim = c.id_claim ' +
-'        LEFT JOIN ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_benefit_type rbt ' +
-'            ON rbt.id_ref_benefit_type= dc.id_ref_benefit_type ' +
-'        LEFT JOIN ' + @sInstanceSaga2 + '.SAGA2_PVC.oth_cla.payment_claim pc ' +
-'            ON pc.id_claim = c.id_claim ' +
-'        LEFT JOIN ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_motif rpcm ' +
-'            ON rpcm.id_ref_payment_motif = pc.id_ref_payment_motif ' +
-'		LEFT JOIN ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_mode rpm ' +
-'			ON rpm.id_ref_payment_mode = pc.id_ref_payment_mode ' +
-'        WHERE s.subscription_number = ''' + @asSubscriptionNumber + ''' ' +			
-'			 ' +
-'    ) AS SubQuery  ' +
-'),			 ' +
-'tb_motif AS ( ' +		
-'    SELECT  ' +
-'        Tbr1.id_claim, ' +
-'		Tbr1.code_indem, ' +
-'        ISNULL(SUM(Tbr1.amount),0) AS MtTotReg, ' +
-'        (	 ' +		
-'            SELECT DISTINCT  ' +			
-'                   ''#'' + CAST(RTRIM(Tbr2.code) AS VARCHAR(250)) ' +
-'                   + ''#='' + CAST(RTRIM(Tbr2.amount) AS VARCHAR(250)) + '';'' ' +		
-'            FROM Tb_Reglement Tbr2	 ' +		
-'            WHERE Tbr2.id_claim = Tbr1.id_claim ' +			
-'			AND Tbr1.code_indem = Tbr2.code_indem ' +
-'            FOR XML PATH('''')	 ' +		
-'        ) AS chaine_seria	 ' +		
-'    FROM Tb_Reglement AS Tbr1	 ' +		
-'    GROUP BY Tbr1.id_claim,Tbr1.code_indem ' +
-')	 ' +
+' Select ' +
+'  c.spb_claim_number AS id_sin, ' +
+'  s.subscription_number, ' +
+'  Case rcs.code ' +
+'    When 117 Then ''OUI'' ' +
+'    ELSE ''NON'' ' +
+'  End as indemnise, ' +
+'  ISNULL(SUM(pc.amount),0) as mt_reg_assure,  ' +
+'  Case  ' +
+'    When rcs.code = 117  ' +
+'	 Then coalesce(upper(rpm.short_label), ''REMP/REP'') ' +
+'    Else upper(rpm.short_label) ' + 
+'  End as mode_indemnisation, ' +
+' upper(rpm.long_label) as mode_indemnisation_long, ' +
+' s.subscription_date as dte_adh, ' +
+' c.declaration_date as dte_decl, ' +
+' c.occurence_date as dte_surv, ' +
+' rpcm.code, ' +
+' rpcm.long_label ' +
 ' ' +
-' ' +			
-'Select ' +
-'	 c.spb_claim_number AS id_sin, ' +
-'	 s.subscription_number, ' +
-'	 Case rcs.code ' +
-'	   When 117 Then ''OUI''  ' +	
-'	   ELSE ''NON''	 ' +
-'	 End as indemnise, ' +
-'	 tb_motif.MtTotReg as mt_reg_assure, ' +
-'	 Case ' +
-'	   When rcs.code = 117 ' +
-'		Then coalesce(upper(rpm.short_label), ''REMP/REP'') ' +
-'	   Else upper(rpm.short_label) ' +
-'	 End as mode_indemnisation , ' +
-'	 upper(rpm.long_label) as mode_indemnisation_long, ' +
-'	 s.subscription_date as dte_adh, ' +
-'	 c.declaration_date as dte_decl, ' +
-'	 c.occurence_date as dte_surv, ' +
-'	 tb_motif.chaine_seria ' +
-'	 ' +		
-'From  ' + @sInstanceSaga2 + '.SAGA2_PVC.oth_cla.claim c ' +
-'inner join tb_motif on tb_motif.id_claim= c.id_claim ' +
-'inner join  ' + @sInstanceSaga2 + '.SAGA2_PVC.oth_sub.subscription s on s.id_subscription = c.id_subscription ' +
-'inner join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.product p on p.id_product = s.id_product ' +
-'inner join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.product_group pg on pg.id_product_group = p.id_product_group ' +
-'inner join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_claim_status rcs on rcs.id_ref_claim_status = c.id_ref_claim_status ' +
-'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.oth_cla.damaged_cover dc on dc.id_claim = c.id_claim ' +
-'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_benefit_type rbt on rbt.id_ref_benefit_type= dc.id_ref_benefit_type ' +
-'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.oth_cla.payment_claim pc on pc.id_claim = c.id_claim ' +
-'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_type rpt on rpt.id_ref_payment_type = pc.id_ref_payment_type ' +
-'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_nature rpn on rpn.id_ref_payment_nature = pc.id_ref_payment_nature ' +
-'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_status rps on rps.id_ref_payment_status = pc.ffl_ref_payment_status ' +
-'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_mode rpm on rpm.id_ref_payment_mode = pc.id_ref_payment_mode ' +
-'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_claim_status rpcs on rpcs.id_ref_payment_claim_status = pc.id_ref_payment_claim_status ' +
+'From  ' + @sInstanceSaga2 + '.SAGA2_PVC.oth_cla.claim c  ' +
+'inner join  ' + @sInstanceSaga2 + '.SAGA2_PVC.oth_sub.subscription s on s.id_subscription = c.id_subscription  ' +
+'inner join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.product p on p.id_product = s.id_product  ' +
+'inner join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.product_group pg on pg.id_product_group = p.id_product_group  ' +
+'inner join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_claim_status rcs on rcs.id_ref_claim_status = c.id_ref_claim_status  ' +
+'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.oth_cla.damaged_cover dc on dc.id_claim = c.id_claim  ' +
+'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_benefit_type rbt on rbt.id_ref_benefit_type= dc.id_ref_benefit_type  ' +
+'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.oth_cla.payment_claim pc on pc.id_claim = c.id_claim  ' +
+'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_type rpt on rpt.id_ref_payment_type = pc.id_ref_payment_type  ' +
+'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_nature rpn on rpn.id_ref_payment_nature = pc.id_ref_payment_nature  ' +
+'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_status rps on rps.id_ref_payment_status = pc.ffl_ref_payment_status  ' +
+'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_mode rpm on rpm.id_ref_payment_mode = pc.id_ref_payment_mode  ' +
+'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_claim_status rpcs on rpcs.id_ref_payment_claim_status = pc.id_ref_payment_claim_status  ' +
+'LEFT JOIN ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_motif rpcm ON rpcm.id_ref_payment_motif = pc.id_ref_payment_motif ' +
+'Where s.subscription_number = ''' + @asSubscriptionNumber + ''' ' +	
 ' ' +
-' ' +
-'Where s.subscription_number = ''' + @asSubscriptionNumber + ''' ' +			
-'and tb_motif.code_indem = rpm.code ' +			
-' ' +			
-'group by c.spb_claim_number, ' +
-'s.subscription_number, ' +
-'c.product_code, ' +
+'group by c.spb_claim_number,  ' +
+'s.subscription_number,  ' +
+'c.product_code,  ' +
 'p.long_label,pg.label, ' +
-'rps.long_label, ' +
+'rps.long_label,  ' +
 'rpcs.long_label, ' +
 'rcs.code, ' +
 's.subscription_date , ' +
 'c.declaration_date , ' +
 'c.occurence_date , ' +
-'c.id_claim , ' +
-'rpm.long_label,rpm.short_label ,tb_motif.chaine_seria,tb_motif.MtTotReg ' +
-' ' +			
+'c.id_claim ,  ' +
+'rpm.long_label, ' +
+'rpm.short_label,  ' +
+'rpcm.code, ' +
+'rpcm.long_label ' +
+' ' +
 'order by dte_surv ' 
 
 Exec ( @sSql ) 

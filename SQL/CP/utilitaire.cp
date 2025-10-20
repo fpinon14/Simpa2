@@ -7273,4 +7273,49 @@ End
 Go
 
 
+--------------------------------------------------------------------
+--
+-- Fonction             :       FN_INSTANCE_SAGA2
+-- Auteur               :       Fabry JF
+-- Date                 :       20/10/2025
+-- Libellé              :		
+-- Commentaires         :       Ramène la bonne instance SAGA2 en fonction du contexte
+-- Références           :       
+--
+-- Arguments            :       Aucun
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+-- JFF      12/02/2016   [PI062]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_INSTANCE_SAGA2' AND type = 'FN' )
+        DROP function sysadm.FN_INSTANCE_SAGA2
+GO
 
+CREATE  function sysadm.FN_INSTANCE_SAGA2 ( )
+RETURNS VarChar ( 255 )
+AS
+Begin
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+BEGIN
+	Return '[LS-SAGA2]'
+End 
+Else
+Begin
+	If SIMPA2_TRT.sysadm.FN_CLE_NUMERIQUE ( 'INSTANCE_PPR_REC_HUB') = 1
+		Begin 
+			-- 1 = REC
+			Return '[S2SQL14DEV\RECSAGA2]'
+		End 
+	Else 
+		Begin 
+			-- Tout autre valeur = PPR par défaut
+			Return '[S2SQL14PP1\PPRSAGA2]'
+		End 
+End 
+
+Return '-1'
+
+End 

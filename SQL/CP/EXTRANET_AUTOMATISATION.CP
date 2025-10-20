@@ -874,7 +874,32 @@ If @@ROWCOUNT = 1 And @@ERROR = 0
 		Return -1000
 	End 
 
-exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO_STOCKAGE_CHAINE_LONGUE @adcIdSin, 'dommages_appareil_code', 'Dommages sur l''appareil (lib)', @asTypDommage, 2530, 'WEB'
+If @asTypDommage <> ''
+Begin
+	exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO_STOCKAGE_CHAINE_LONGUE @adcIdSin, 'dommages_appareil_code', 'Dommages sur l''appareil (code)', @asTypDommage, 2530, 'WEB'
+
+	Declare @sInstanceSaga2 Varchar ( 100 )
+	Declare @sSql VarChar ( 2000 )
+	Declare @TbBenefitReason Table ( lib_code_traduit VarChar ( 2000 ) )
+	Declare @sVal VarChar ( 2000 )
+
+	Set @sInstanceSaga2 = sysadm.FN_INSTANCE_SAGA2 ( )
+	
+	-- Transformation de la Chaine 
+	Set @sSql = 
+	'	SELECT ' + 
+	'		STUFF(( ' +
+	'			SELECT '', '' + ( LTRIM ( RTRIM (cc.BenefitReasonLabel))) ' +
+	'			FROM ' + @sInstanceSaga2 + '.PRESTATAIRE.ref.BenefitReason cc ' +
+	'			WHERE CHARINDEX(''#'' + TRIM (cc.BenefitReasonCode ) + ''#'', ''' + @asTypDommage + ''' ) > 0 ' +
+	'			FOR XML PATH(''''), TYPE ' +
+	'		).value(''.'', ''VARCHAR(1000)''), 1, 2, '''') '
+
+	Insert into @TbBenefitReason Exec @sSql
+	Set @sVal = Upper (Left ( @sVal, 1)) + Lower ( Substring ( @sVal, 2, Len ( @sVal )))
+
+	exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO_STOCKAGE_CHAINE_LONGUE @adcIdSin, 'dommages_appareil_lib', 'Dommages sur l''appareil (lib)', @sVal, 2550, 'WEB'
+End 
 
 Go
 
@@ -3607,7 +3632,7 @@ Begin
 		and 	dp.id_code_car = 'A' 
 		and 	dp.id_code_num = @adcIdGti ) 
 	Begin
-		Update sysadm.w_detail Set dte_det = @dtDteAchat Where id_sin = @adcIdSin and id_gti = @adcIdGti
+		Update sysadm.w_detail Set dte_det = @dtDteAchat Where id_sin = @adcIdSin and id_gti = @adcIdGti and id_detail = @adcIdDetail
 	End 
 End 
 

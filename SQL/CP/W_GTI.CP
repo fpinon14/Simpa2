@@ -1987,7 +1987,8 @@ If sysadm.FN_CLE_NUMERIQUE ( 'MIG19_PSPLAF_SAGA2') > 0
 		dte_adh DateTime,
 		dte_decl DateTime,
 		dte_surv DateTime,
-		chaine_seria Varchar ( 800 ) --[20251006144234][JFF][MIG119]
+		code_motif Integer,
+		label_motif VarChar ( 50 )
 	    )
 
 	 If @iNbSin is null Set @iNbSin = 0
@@ -1995,7 +1996,6 @@ If sysadm.FN_CLE_NUMERIQUE ( 'MIG19_PSPLAF_SAGA2') > 0
 
 	 --[20251006144234][JFF][MIG119]
 	 Set @iNbSin = @iNbSin + IsNull ( ( Select Count ( * ) From ( Select Distinct id_sin from @TbRetSaga2 where Upper ( indemnise ) = 'OUI' ) as T ), 0 )
-			
 
  End 
 
@@ -4409,7 +4409,8 @@ If sysadm.FN_CLE_NUMERIQUE ( 'MIG19_PSPLAF_SAGA2') >= 2
 		dte_adh DateTime,
 		dte_decl DateTime,
 		dte_surv DateTime,
-		chaine_seria Varchar ( 800 ) --[20251006144234][JFF][MIG119]
+		code_motif Integer,
+		label_motif VarChar ( 50 )
 	    )
 
 	 If @iNbSin is null Set @iNbSin = 0
@@ -6175,7 +6176,8 @@ If sysadm.FN_CLE_NUMERIQUE ( 'MIG19_PSPLAF_SAGA2') > 0
 		dte_adh DateTime,
 		dte_decl DateTime,
 		dte_surv DateTime,
-		chaine_seria Varchar ( 800 ) --[20251006144234][JFF][MIG119]
+		code_motif Integer,
+		label_motif VarChar ( 50 )
 	    )
 
 	 If @iNbSin is null Set @iNbSin = 0
