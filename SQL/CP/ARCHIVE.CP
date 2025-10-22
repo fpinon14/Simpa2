@@ -9748,7 +9748,7 @@ Declare @dcIdOrdre Decimal ( 7 )
 Declare @sCol1 VarChar ( 100 )
 Declare @sCol2codeDonnee VarChar ( 100 )
 Declare @sVal VarChar  ( 1000 )
-
+Declare @sTexteContactDecla VarChar ( 508 )
 
 
 Declare @TbWrk Table ( 
@@ -9805,6 +9805,15 @@ If Not Exists ( Select Top 1 1 From @TbWrk ) Return
 
 Set @iCptTableau = 1
 Set @iCptIdSeq = 1
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+BEGIN
+	Set @sTexteContactDecla = IsNull ( SHERPA_PRO.[sysadm].[FN_GET_TEXT_CONTACT_DECLA]  ( @adcIdSin, @aiIdAppliNum ), '' ) 
+End 
+Else 
+Begin
+	Set @sTexteContactDecla = IsNull ( SHERPA_SIM.[sysadm].[FN_GET_TEXT_CONTACT_DECLA]  ( @adcIdSin, @aiIdAppliNum ), '' ) 
+End 
 
 While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTableau ) )
  Begin
@@ -9922,6 +9931,50 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							from sysadm.inter
 							where id_sin = @adcIdSin 
 							And cod_inter = 'A'
+							For xml path ( '' )
+						)
+			End
+
+			If @sCol2codeDonnee = 'DTE_ACH_PORT' 
+			Begin
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   convert ( VarChar ( 10 ), dte_ach_port, 23 ) as 'txxxlig/@col2'
+							from sysadm.sinistre
+							where id_sin = @adcIdSin 
+							For xml path ( '' )
+						)
+			End
+
+			If @sCol2codeDonnee = 'MARQ_PORT' 
+			Begin
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( marq_port ) as 'txxxlig/@col2'
+							from sysadm.sinistre
+							where id_sin = @adcIdSin 
+							For xml path ( '' )
+						)
+			End
+
+			If @sCol2codeDonnee = 'MODL_PORT' 
+			Begin
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( modl_port ) as 'txxxlig/@col2'
+							from sysadm.sinistre
+							where id_sin = @adcIdSin 
+							For xml path ( '' )
+						)
+			End
+
+			If @sCol2codeDonnee = 'NUM_IMEI_PORT' 
+			Begin
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( num_imei_port ) as 'txxxlig/@col2'
+							from sysadm.sinistre
+							where id_sin = @adcIdSin 
 							For xml path ( '' )
 						)
 			End
@@ -10079,28 +10132,32 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							)
 			End
 
-			If Exists ( Select Top 1 1 From sysadm.detail dt Where dt.id_sin = @adcIdSin And dt.id_evt = 971 ) 
-			Begin
-				Set @sVal = 'Oui' 
-			End
-			Else 
-			Begin
-				Set @sVal = 'Non'
-			End 
+			If @sCol2codeDonnee = 'PRESENCE_DET_EVT_971' 
+			Begin 
+				If Exists ( Select Top 1 1 From sysadm.w_detail dt Where dt.id_sin = @adcIdSin And dt.id_evt = 971 ) 
+				Begin
+					Set @sVal = 'Oui' 
+				End
+				Else 
+				Begin
+					Set @sVal = 'Non'
+				End 
 
-			Select @sXmlUnitWrk = (
-						Select @sCol1 as 'txxxlig/@col1',
-								@sVal as 'txxxlig/@col2'
-						For xml path ( '' )
-					)
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+									@sVal as 'txxxlig/@col2'
+							For xml path ( '' )
+						)
+			End 
 
 			If @sCol2codeDonnee = 'TEXTE_DECLA' 
 			Begin
-				Select @sXmlUnitWrk = (
-							Select  @sCol1 as 'txxxlig/@col1',
-									sysadm.FN_GET_TEXT_CONTACT_DECLA ( @adcIdSin ) as 'txxxlig/@col2'
-							For xml path ( '' )
-						)
+				If @sTexteContactDecla <> ''
+					Select @sXmlUnitWrk = (
+								Select  @sCol1 as 'txxxlig/@col1',
+										@sTexteContactDecla as 'txxxlig/@col2'
+								For xml path ( '' )
+							)
 			End 
 
 		End 
@@ -10204,6 +10261,51 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							from sysadm.w_inter
 							where id_sin = @adcIdSin 
 							And cod_inter = 'A'
+							For xml path ( '' )
+						)
+			End
+
+			If @sCol2codeDonnee = 'DTE_ACH_PORT' 
+			Begin
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   convert ( VarChar ( 10 ), dte_ach_port, 23 ) as 'txxxlig/@col2'
+							from sysadm.w_sin
+							where id_sin = @adcIdSin 
+							For xml path ( '' )
+						)
+			End
+
+
+			If @sCol2codeDonnee = 'MARQ_PORT' 
+			Begin
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( marq_port ) as 'txxxlig/@col2'
+							from sysadm.w_sin
+							where id_sin = @adcIdSin 
+							For xml path ( '' )
+						)
+			End
+
+			If @sCol2codeDonnee = 'MODL_PORT' 
+			Begin
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( modl_port ) as 'txxxlig/@col2'
+							from sysadm.w_sin
+							where id_sin = @adcIdSin 
+							For xml path ( '' )
+						)
+			End
+
+			If @sCol2codeDonnee = 'NUM_IMEI_PORT' 
+			Begin
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+								   trim ( num_imei_port ) as 'txxxlig/@col2'
+							from sysadm.w_sin
+							where id_sin = @adcIdSin 
 							For xml path ( '' )
 						)
 			End
@@ -10366,35 +10468,39 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 			End
 
 
-			If Exists ( Select Top 1 1 From sysadm.w_detail dt Where dt.id_sin = @adcIdSin And dt.id_evt = 971 ) 
-			Begin
-				Set @sVal = 'Oui' 
-			End
-			Else 
-			Begin
-				Set @sVal = 'Non'
-			End 
+			If @sCol2codeDonnee = 'PRESENCE_DET_EVT_971' 
+			Begin 
+				If Exists ( Select Top 1 1 From sysadm.w_detail dt Where dt.id_sin = @adcIdSin And dt.id_evt = 971 ) 
+				Begin
+					Set @sVal = 'Oui' 
+				End
+				Else 
+				Begin
+					Set @sVal = 'Non'
+				End 
 
-			Select @sXmlUnitWrk = (
-						Select @sCol1 as 'txxxlig/@col1',
-								@sVal as 'txxxlig/@col2'
-						For xml path ( '' )
-					)
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+									@sVal as 'txxxlig/@col2'
+							For xml path ( '' )
+						)
+			End 
 
 
 			If @sCol2codeDonnee = 'TEXTE_DECLA' 
 			Begin
-				Select @sXmlUnitWrk = (
-							Select  @sCol1 as 'txxxlig/@col1',
-									sysadm.FN_GET_TEXT_CONTACT_DECLA ( @adcIdSin ) as 'txxxlig/@col2'
-							For xml path ( '' )
-						)
+				If @sTexteContactDecla <> ''
+					Select @sXmlUnitWrk = (
+								Select  @sCol1 as 'txxxlig/@col1',
+										@sTexteContactDecla as 'txxxlig/@col2'
+								For xml path ( '' )
+							)
 			End 
 
 		End 
 
 
-		Set @sXmlTabWrkTot = @sXmlTabWrkTot + @sXmlUnitWrk
+		Set @sXmlTabWrkTot = @sXmlTabWrkTot + IsNull ( @sXmlUnitWrk, '' ) 
 		Update @TbWrk Set marquage = 1 Where id_seq = @iIdSeq
 		Set @iCptIdSeq = @iCptIdSeq + 1
 	 End

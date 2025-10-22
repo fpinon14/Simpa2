@@ -958,6 +958,7 @@ And		id_seq = @alIdSeq
 -- [MIG165_BOUYGUES]
 If IsNumeric ( @sIdPrsStk ) = 1 Set @lIdPrsStk = Convert ( integer, @sIdPrsStk  )
 
+/* 22/10/25 - AU final, on préfère voir la dernier action MAJ_ADRESSE, et donc la ligne Hub avec l'adresse modifié surtout
 If @sMajPrsHubAdr = 'OUI'
   Begin
 	 If ISNUMERIC ( @sIdentityOrig ) = 1
@@ -966,6 +967,7 @@ If @sMajPrsHubAdr = 'OUI'
 			If @lIdentityOrig > 0 Set @alIdentityHubPresta = @lIdentityOrig
 		End 
   End 
+*/
 
 -- /[HUB1505]
 

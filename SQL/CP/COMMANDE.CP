@@ -1515,292 +1515,368 @@ GO
 -- JFF  24/11/2015  [ITSM343686]
 -- JFF      12/02/2016   [PI062]
 -- FPI	28/04/2017	[PC151255] Mise à jour de commandes SCR
+-- [20251022090102180][JFF][HUB1528]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U02_COMMANDE_VAL_V02' AND type = 'P' )
         DROP procedure sysadm.PS_U02_COMMANDE_VAL_V02
 GO
-
-
-CREATE  procedure sysadm.PS_U02_COMMANDE_VAL_V02
-        @dcIdSin        Decimal (  10,0 ), -- [PI062]
-        @sCodOper       Varchar (  4   ),
-        @dtValideLe     DateTime
-AS
-
-
-Declare @sVal 	VarChar ( 30 )
-
--- [VDOC5021] 
-If Exists ( Select * 
-	    From sysadm.w_commande w,
-		 sysadm.commande c
-	    Where w.id_sin = @dcIdSin 
-	    And   c.id_sin = w.id_sin
-	    And   c.id_seq = w.id_seq
-	    And   w.cod_etat = 'ANN'
-	    And   c.cod_etat <> 'ANN'
-	    And   c.id_lot_cmd > 0
-	    And   w.cpt_valide > 0
-	    And	  Not (     c.id_ref_four = 'A_DIAGNOSTIQUER' 
-	    		And c.status_gc <=0 
-	    		And Exists ( 
-				Select * 
-				From sysadm.autorisation a
-				Where a.id_oper = @sCodOper
-				And   a.id_nat_oper = 218
-	    		           )
-	    	      )
-	   )
-    And Not Exists ( 	Select * 
-    			From sysadm.autorisation a
-    		 	Where a.id_oper = @sCodOper
-    		 	And   a.id_nat_oper = 213 )
-  		 	
-	Begin
-		-- Cas ou l'annulation est passé alors que la commande n'est pas encore générée.
-		-- Mais la commande se trouve générée avant que l'annulation ne soit validée.
-		Return -1001
-	End 
-
--- #10 [MSS_LOT2]
-If Exists ( Select * 
-	    From sysadm.w_commande w,
-		 sysadm.commande c
-	    Where w.id_sin = @dcIdSin 
-	    And   c.id_sin = w.id_sin
-	    And   c.id_seq = w.id_seq
-	    And   w.cod_etat = 'ANN'
-	    And   c.cod_etat <> 'ANN'
-	    And   c.id_lot_cmd >= -1  	
-	    And   w.cpt_valide > 0 )
-
-	Begin
-		UPDATE sysadm.commande
-		 SET    
-			 sysadm.commande.cod_etat	=	w_commande.cod_etat	,
-			 sysadm.commande.id_ann		=	w_commande.id_ann	,
-			 sysadm.commande.nom_gest	=	w_commande.nom_gest 	,
-			 sysadm.commande.id_lot_cmd	=	
-			 	Case 
-					When id_lot_cmd in ( 0, -1) Then 999999
-					When id_lot_cmd > 0 And w_commande.id_four in ( 'FNC' ) AND w_commande.id_typ_art = 'CAF' Then 0
-					When id_lot_cmd > 0 Then id_lot_cmd 
-				End, 
-			 
-			 sysadm.commande.maj_le		=	w_commande.maj_le	,
-			 sysadm.commande.maj_par	=	w_commande.maj_par	,
-			 sysadm.commande.valide_le	=	@dtValideLe     	,
-			 sysadm.commande.valide_par	=	@sCodOper       	,
-		
-			 sysadm.commande.cmd_gen_le	=	
-				Case 
-					When id_lot_cmd > 0 And w_commande.id_four in ( 'FNC' ) AND w_commande.id_typ_art = 'CAF' Then null
-					Else cmd_gen_le
-				End,
-			 sysadm.commande.cmd_gen_par	=	
-				Case 
-					When id_lot_cmd > 0 And w_commande.id_four in ( 'FNC' ) AND w_commande.id_typ_art = 'CAF' Then null
-					Else cmd_gen_par
-				End 
-		
-		 FROM   sysadm.commande,
-			sysadm.w_commande
-		 WHERE  w_commande.id_sin         = @dcIdSin              AND
-			commande.id_sin		  = w_commande.id_sin	  AND
-			commande.id_seq		  = w_commande.id_seq	  AND
-			w_commande.cpt_valide     > 0			  AND
-			w_commande.cod_etat 	  = 'ANN'		  AND
-			commande.cod_etat 	  <> 'ANN'		  AND
-			commande.id_lot_cmd	  >= -1  		  
-	End
-
--- #10 [MSS_LOT2]
-If Exists ( Select * 
-	    From sysadm.w_commande w
-	    Where w.id_sin = @dcIdSin 
-	    And   w.cpt_valide > 0
-	    And   w.cod_etat = 'CNV'
-	    And   w.id_four = 'MS1'
-	    And   w.id_typ_art = 'EDI'
-	    And   w.id_ref_four = 'A_DIAGNOSTIQUER'
-	    And   sysadm.FN_CLE_VAL ( 'MAJ_PRS', w.info_spb_frn_cplt, ';') = 'OUI' ) 
-	Begin
-		
-		UPDATE sysadm.commande
-		 SET    
-			 sysadm.commande.cod_etat	=	'ECT'	,
-			 sysadm.commande.id_lot_cmd	=	0	,
-			 sysadm.commande.cmd_gen_le	=	null	,
-			 sysadm.commande.cmd_gen_par	=	null	,
-			 sysadm.commande.info_spb_frn   =       w_commande.info_spb_frn ,
-			 sysadm.commande.info_spb_frn_cplt= 	sysadm.FN_CLE_VAL_E ( 'MAJ_PRS', 'NON', rTrim ( w_commande.info_spb_frn_cplt ), ';')
-			 	 
-		 FROM   sysadm.commande,
-			sysadm.w_commande
-		 WHERE  w_commande.id_sin         = @dcIdSin              AND
-			commande.id_sin		  = w_commande.id_sin	  AND
-			commande.id_seq		  = w_commande.id_seq	  AND
-			w_commande.cpt_valide     > 0			  AND
-			w_commande.cod_etat 	  = 'CNV'		  AND
-			w_commande.id_four	  = 'MS1' 		  AND
-			w_commande.id_typ_art 	  = 'EDI'   		  AND
-			w_commande.id_ref_four 	  = 'A_DIAGNOSTIQUER'     AND
-			sysadm.FN_CLE_VAL ( 'MAJ_PRS', w_commande.info_spb_frn_cplt, ';') = 'OUI' AND
-			commande.id_lot_cmd	  > 0 	
-
-		UPDATE sysadm.w_commande
-		 SET     info_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'MAJ_PRS', 'NON', rTrim ( info_spb_frn_cplt ), ';')
-		FROM   sysadm.w_commande
-		 WHERE  w_commande.id_sin = @dcIdSin
-		And  sysadm.FN_CLE_VAL ( 'MAJ_PRS', info_spb_frn_cplt, ';') = 'OUI'
-	End
--- :#10 [MSS_LOT2]
-
--- #10 [MSS_LOT2]
-If Exists ( Select * 
-	    From sysadm.w_commande w,
-		 sysadm.commande c
-	    Where w.id_sin = @dcIdSin 
-	    And   c.id_sin = w.id_sin
-	    And   c.id_seq = w.id_seq
-	    And   w.cod_etat = 'RFO'
-	    And   c.cod_etat <> 'RFO' )
-	Begin
-		UPDATE sysadm.commande
-		 SET    sysadm.commande.cod_etat  = w_commande.cod_etat
-		 FROM   sysadm.commande,
-			sysadm.w_commande
-		 WHERE  w_commande.id_sin         = @dcIdSin              AND
-			commande.id_sin		  = w_commande.id_sin	  AND
-			commande.id_seq		  = w_commande.id_seq	  AND
-			w_commande.cod_etat 	  = 'RFO'		  AND
-			commande.cod_etat	  <> 'RFO'
-	End
--- :#10 [MSS_LOT2]
-
--- [PC321] 
-If Exists ( Select * 
-	    From sysadm.w_commande w,
-		 sysadm.commande c
-	    Where w.id_sin = @dcIdSin 
-	    And   c.id_sin = w.id_sin
-	    And   c.id_seq = w.id_seq
-	    And   w.id_four = 'SCR'
-	    --And   w.cod_etat = 'ECT'
-	    --And   w.id_typ_art = 'PRS'   		      
-	    And   w.cpt_valide > 0 )
-	Begin
-		UPDATE sysadm.commande
-		 SET    
-			 sysadm.commande.info_spb_frn   =	w_commande.info_spb_frn ,
-			 sysadm.commande.maj_le		=	w_commande.maj_le	,
-			 sysadm.commande.maj_par	=	w_commande.maj_par	,
-			 sysadm.commande.valide_le	=	@dtValideLe     	,
-			 sysadm.commande.valide_par	=	@sCodOper       	
-		
-		FROM   sysadm.commande,
-		       sysadm.w_commande
-		WHERE  w_commande.id_sin          = @dcIdSin              AND
-		       commande.id_sin		  = w_commande.id_sin	  AND
-		       commande.id_seq		  = w_commande.id_seq	  AND
-		       w_commande.cpt_valide     > 0			  AND
-		       --w_commande.cod_etat 	  = 'ECT'		  AND       
-		       --w_commande.id_typ_art 	  = 'PRS'		AND
-		       w_commande.id_four	  = 'SCR' 		 		       
-	End
--- [PC321]        
-
--- [PM103][1]
-If Exists ( Select * 
-    From sysadm.w_commande w
-    Where w.id_sin = @dcIdSin 
-    And   w.cpt_valide > 0
-	AND	  sysadm.FN_CLE_VAL ( 'PRESTA_REPRISE_BASE_MANUELLE', w.info_spb_frn_cplt, ';') = 'OUI' )
+  
+CREATE  procedure sysadm.PS_U02_COMMANDE_VAL_V02  
+        @dcIdSin        Decimal (  10,0 ), -- [PI062]  
+        @sCodOper       Varchar (  4   ),  
+        @dtValideLe     DateTime  
+AS  
+  
+  
+Declare @sVal  VarChar ( 30 )  
+  
+-- [VDOC5021]   
+If Exists ( Select *   
+     From sysadm.w_commande w,  
+   sysadm.commande c  
+     Where w.id_sin = @dcIdSin   
+     And   c.id_sin = w.id_sin  
+     And   c.id_seq = w.id_seq  
+     And   w.cod_etat = 'ANN'  
+     And   c.cod_etat <> 'ANN'  
+     And   c.id_lot_cmd > 0  
+     And   w.cpt_valide > 0  
+     And   Not (     c.id_ref_four = 'A_DIAGNOSTIQUER'   
+       And c.status_gc <=0   
+       And Exists (   
+    Select *   
+    From sysadm.autorisation a  
+    Where a.id_oper = @sCodOper  
+    And   a.id_nat_oper = 218  
+                  )  
+            )  
+    )  
+    And Not Exists (  Select *   
+       From sysadm.autorisation a  
+        Where a.id_oper = @sCodOper  
+        And   a.id_nat_oper = 213 )  
+        
+ Begin  
+  -- Cas ou l'annulation est passé alors que la commande n'est pas encore générée.  
+  -- Mais la commande se trouve générée avant que l'annulation ne soit validée.  
+  Return -1001  
+ End   
+  
+-- #10 [MSS_LOT2]  
+If Exists ( Select *   
+     From sysadm.w_commande w,  
+   sysadm.commande c  
+     Where w.id_sin = @dcIdSin   
+     And   c.id_sin = w.id_sin  
+     And   c.id_seq = w.id_seq  
+     And   w.cod_etat = 'ANN'  
+     And   c.cod_etat <> 'ANN'  
+     And   c.id_lot_cmd >= -1     
+     And   w.cpt_valide > 0 )  
+  
+ Begin  
+  UPDATE sysadm.commande  
+   SET      
+    sysadm.commande.cod_etat = w_commande.cod_etat ,  
+    sysadm.commande.id_ann  = w_commande.id_ann ,  
+    sysadm.commande.nom_gest = w_commande.nom_gest  ,  
+    sysadm.commande.id_lot_cmd =   
+     Case   
+     When id_lot_cmd in ( 0, -1) Then 999999  
+     When id_lot_cmd > 0 And w_commande.id_four in ( 'FNC' ) AND w_commande.id_typ_art = 'CAF' Then 0  
+     When id_lot_cmd > 0 Then id_lot_cmd   
+    End,   
+      
+    sysadm.commande.maj_le  = w_commande.maj_le ,  
+    sysadm.commande.maj_par = w_commande.maj_par ,  
+    sysadm.commande.valide_le = @dtValideLe      ,  
+    sysadm.commande.valide_par = @sCodOper        ,  
+    
+    sysadm.commande.cmd_gen_le =   
+    Case   
+     When id_lot_cmd > 0 And w_commande.id_four in ( 'FNC' ) AND w_commande.id_typ_art = 'CAF' Then null  
+     Else cmd_gen_le  
+    End,  
+    sysadm.commande.cmd_gen_par =   
+    Case   
+     When id_lot_cmd > 0 And w_commande.id_four in ( 'FNC' ) AND w_commande.id_typ_art = 'CAF' Then null  
+     Else cmd_gen_par  
+    End   
+    
+   FROM   sysadm.commande,  
+   sysadm.w_commande  
+   WHERE  w_commande.id_sin         = @dcIdSin              AND  
+   commande.id_sin    = w_commande.id_sin   AND  
+   commande.id_seq    = w_commande.id_seq   AND  
+   w_commande.cpt_valide     > 0     AND  
+   w_commande.cod_etat    = 'ANN'    AND  
+   commande.cod_etat    <> 'ANN'    AND  
+   commande.id_lot_cmd   >= -1        
+ End  
+  
+-- #10 [MSS_LOT2]  
+If NOT ( sysadm.FN_CLE_NUMERIQUE ( 'HUB1528_ANN_PRSHUB') > 0 ) -- A supp par la suite -- [20251022090102180][JFF][HUB1528]
  Begin
-	UPDATE sysadm.commande
-	 SET    
-		sysadm.commande.mt_ttc_cmde= w.mt_ttc_cmde,
-		sysadm.commande.id_cmd_frn= w.id_cmd_frn,
-		sysadm.commande.id_serie_nouv= w.id_serie_nouv,
-		sysadm.commande.id_bon_transp= w.id_bon_transp,
-		sysadm.commande.dte_rcp_frn= w.dte_rcp_frn,
-		sysadm.commande.dte_env_cli= w.dte_env_cli,
-		sysadm.commande.cod_etat= w.cod_etat,
-		sysadm.commande.comment_frn= w.comment_frn,
-		sysadm.commande.status_gc= w.status_gc,
-		sysadm.commande.dte_env_bte_frn= w.dte_env_bte_frn,
-		sysadm.commande.dte_rcp_mob_cli= w.dte_rcp_mob_cli,
-		sysadm.commande.info_frn_spb_cplt = w.info_frn_spb_cplt,
-		sysadm.commande.maj_le=w.maj_le,
-		sysadm.commande.maj_par=w.maj_par
+	If Exists ( Select *   
+		 From sysadm.w_commande w  
+		 Where w.id_sin = @dcIdSin   
+		 And   w.cpt_valide > 0  
+		 And   w.cod_etat = 'CNV'  
+		 And   w.id_four = 'MS1'  
+		 And   w.id_typ_art = 'EDI'  
+		 And   w.id_ref_four = 'A_DIAGNOSTIQUER'  
+		 And   sysadm.FN_CLE_VAL ( 'MAJ_PRS', w.info_spb_frn_cplt, ';') = 'OUI' )   
+	 Begin  
+    
+	  UPDATE sysadm.commande  
+	   SET      
+		sysadm.commande.cod_etat = 'ECT' ,  
+		sysadm.commande.id_lot_cmd = 0 ,  
+		sysadm.commande.cmd_gen_le = null ,  
+		sysadm.commande.cmd_gen_par = null ,  
+		sysadm.commande.info_spb_frn   =       w_commande.info_spb_frn ,  
+		sysadm.commande.info_spb_frn_cplt=  sysadm.FN_CLE_VAL_E ( 'MAJ_PRS', 'NON', rTrim ( w_commande.info_spb_frn_cplt ), ';')  
+        
+	   FROM   sysadm.commande,  
+	   sysadm.w_commande  
+	   WHERE  w_commande.id_sin         = @dcIdSin              AND  
+	   commande.id_sin    = w_commande.id_sin   AND  
+	   commande.id_seq    = w_commande.id_seq   AND  
+	   w_commande.cpt_valide     > 0     AND  
+	   w_commande.cod_etat    = 'CNV'    AND  
+	   w_commande.id_four   = 'MS1'     AND  
+	   w_commande.id_typ_art    = 'EDI'       AND  
+	   w_commande.id_ref_four    = 'A_DIAGNOSTIQUER'     AND  
+	   sysadm.FN_CLE_VAL ( 'MAJ_PRS', w_commande.info_spb_frn_cplt, ';') = 'OUI' AND  
+	   commande.id_lot_cmd   > 0    
+  
+	  UPDATE sysadm.w_commande  
+	   SET     info_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'MAJ_PRS', 'NON', rTrim ( info_spb_frn_cplt ), ';')  
+	  FROM   sysadm.w_commande  
+	   WHERE  w_commande.id_sin = @dcIdSin  
+	  And  sysadm.FN_CLE_VAL ( 'MAJ_PRS', info_spb_frn_cplt, ';') = 'OUI'  
+	 End  
+End 
+-- :#10 [MSS_LOT2]  
+  
+-- #10 [MSS_LOT2]  
+If Exists ( Select *   
+     From sysadm.w_commande w,  
+   sysadm.commande c  
+     Where w.id_sin = @dcIdSin   
+     And   c.id_sin = w.id_sin  
+     And   c.id_seq = w.id_seq  
+     And   w.cod_etat = 'RFO'  
+     And   c.cod_etat <> 'RFO' )  
+ Begin  
+  UPDATE sysadm.commande  
+   SET    sysadm.commande.cod_etat  = w_commande.cod_etat  
+   FROM   sysadm.commande,  
+   sysadm.w_commande  
+   WHERE  w_commande.id_sin         = @dcIdSin              AND  
+   commande.id_sin    = w_commande.id_sin   AND  
+   commande.id_seq    = w_commande.id_seq   AND  
+   w_commande.cod_etat    = 'RFO'    AND  
+   commande.cod_etat   <> 'RFO'  
+ End  
+-- :#10 [MSS_LOT2]  
+  
+-- [PC321]   
+If Exists ( Select *   
+     From sysadm.w_commande w,  
+   sysadm.commande c  
+     Where w.id_sin = @dcIdSin   
+     And   c.id_sin = w.id_sin  
+     And   c.id_seq = w.id_seq  
+     And   w.id_four = 'SCR'  
+     --And   w.cod_etat = 'ECT'  
+     --And   w.id_typ_art = 'PRS'             
+     And   w.cpt_valide > 0 )  
+ Begin  
+  UPDATE sysadm.commande  
+   SET      
+    sysadm.commande.info_spb_frn   = w_commande.info_spb_frn ,  
+    sysadm.commande.maj_le  = w_commande.maj_le ,  
+    sysadm.commande.maj_par = w_commande.maj_par ,  
+    sysadm.commande.valide_le = @dtValideLe      ,  
+    sysadm.commande.valide_par = @sCodOper          
+    
+  FROM   sysadm.commande,  
+         sysadm.w_commande  
+  WHERE  w_commande.id_sin          = @dcIdSin              AND  
+         commande.id_sin    = w_commande.id_sin   AND  
+         commande.id_seq    = w_commande.id_seq   AND  
+         w_commande.cpt_valide     > 0     AND  
+         --w_commande.cod_etat    = 'ECT'    AND         
+         --w_commande.id_typ_art    = 'PRS'  AND  
+         w_commande.id_four   = 'SCR'               
+ End  
+-- [PC321]          
+  
+-- [PM103][1]  
+If Exists ( Select *   
+    From sysadm.w_commande w  
+    Where w.id_sin = @dcIdSin   
+    And   w.cpt_valide > 0  
+ AND   sysadm.FN_CLE_VAL ( 'PRESTA_REPRISE_BASE_MANUELLE', w.info_spb_frn_cplt, ';') = 'OUI' )  
+ Begin  
+ UPDATE sysadm.commande  
+  SET      
+  sysadm.commande.mt_ttc_cmde= w.mt_ttc_cmde,  
+  sysadm.commande.id_cmd_frn= w.id_cmd_frn,  
+  sysadm.commande.id_serie_nouv= w.id_serie_nouv,  
+  sysadm.commande.id_bon_transp= w.id_bon_transp,  
+  sysadm.commande.dte_rcp_frn= w.dte_rcp_frn,  
+  sysadm.commande.dte_env_cli= w.dte_env_cli,  
+  sysadm.commande.cod_etat= w.cod_etat,  
+  sysadm.commande.comment_frn= w.comment_frn,  
+  sysadm.commande.status_gc= w.status_gc,  
+  sysadm.commande.dte_env_bte_frn= w.dte_env_bte_frn,  
+  sysadm.commande.dte_rcp_mob_cli= w.dte_rcp_mob_cli,  
+  sysadm.commande.info_frn_spb_cplt = w.info_frn_spb_cplt,  
+  sysadm.commande.maj_le=w.maj_le,  
+  sysadm.commande.maj_par=w.maj_par  
+  
+  FROM   sysadm.commande,  
+      sysadm.w_commande w  
+  WHERE  w.id_sin         = @dcIdSin                
+  And commande.id_sin    = w.id_sin  
+  And  commande.id_seq    = w.id_seq  
+  And    w.cpt_valide     > 0  
+ End   
+-- :[PM103][1]  
+  
+-- Si ça fonctionne bien, cela englobe la vDoc8041 qui n'est pas à activer.  
+-- [PC938_ORANGE_V3]  
+-- [PM246]  
+-- [DT141] SBE  
+If Exists ( Select *   
+  From sysadm.w_commande w  
+  Where w.id_sin = @dcIdSin   
+  And   w.cpt_valide > 0  
+  And   w.cod_etat = 'CNV'  
+  And   sysadm.FN_CLE_VAL ( 'MAJ_PRS', w.info_spb_frn_cplt, ';') = 'OUI'   
+  And   Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', w.info_spb_frn_cplt, ';' )) <= 0 -- [20251022090102180][JFF][HUB1528]
+  )
+ Begin  
+    
+  UPDATE sysadm.commande  
+   SET      
+    sysadm.commande.cod_etat = Case  -- [PM246]  
+            When sysadm.FN_CLE_VAL ( 'MAJ_ADRESSE', w_commande.info_spb_frn_cplt, ';') = 'OUI' Then sysadm.FN_CLE_VAL ( 'COD_ETAT', w_commande.info_spb_frn_cplt, ';')  
+            Else 'ECT'  
+           End ,  
+    sysadm.commande.id_lot_cmd = 0 ,  
+    sysadm.commande.cmd_gen_le = null ,  
+    sysadm.commande.cmd_gen_par = null ,  
+    sysadm.commande.adr_cod_civ = w_commande.adr_cod_civ, -- [PM246]  
+    sysadm.commande.adr_nom = w_commande.adr_nom, -- [PM246]  
+    sysadm.commande.adr_prenom = w_commande.adr_prenom , -- [PM246]  
+    sysadm.commande.adr_livr1 = w_commande.adr_livr1, -- [PM246]  
+    sysadm.commande.adr_livr2 = w_commande.adr_livr2, -- [PM246]      
+    sysadm.commande.adr_livr_cpl = w_commande.adr_livr_cpl, -- [PM246]      
+    sysadm.commande.adr_cp = w_commande.adr_cp, -- [PM246]          
+    sysadm.commande.adr_ville = w_commande.adr_ville, -- [PM246]  
+    sysadm.commande.adr_tel1 = w_commande.adr_tel1, -- [PM246]  
+    sysadm.commande.adr_tel2 = w_commande.adr_tel2, -- [PM246]      
+    sysadm.commande.adr_tel3 = w_commande.adr_tel3, -- [PM246]          
+    sysadm.commande.info_spb_frn_cplt= sysadm.FN_CLE_VAL_E ( 'MAJ_PRS', 'NON', rTrim ( w_commande.info_spb_frn_cplt ), ';')  
+        
+   FROM   sysadm.commande,  
+       sysadm.w_commande  
+   WHERE  w_commande.id_sin         = @dcIdSin              AND  
+   commande.id_sin    = w_commande.id_sin   AND  
+   commande.id_seq    = w_commande.id_seq   AND  
+   w_commande.cpt_valide     > 0     AND  
+   w_commande.cod_etat    = 'CNV'    AND  
+   sysadm.FN_CLE_VAL ( 'MAJ_PRS', w_commande.info_spb_frn_cplt, ';') = 'OUI' AND  
+   commande.id_lot_cmd   > 0    
+  
+  UPDATE sysadm.w_commande  
+   SET     info_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'MAJ_PRS', 'NON', rTrim ( info_spb_frn_cplt ), ';'),  
+      cod_etat = Case  -- [PM246]  
+         When sysadm.FN_CLE_VAL ( 'MAJ_ADRESSE', w_commande.info_spb_frn_cplt, ';') = 'OUI' Then sysadm.FN_CLE_VAL ( 'COD_ETAT', w_commande.info_spb_frn_cplt, ';')  
+         Else 'ECT'  
+        End   
+  FROM   sysadm.w_commande  
+  WHERE  w_commande.id_sin = @dcIdSin  
+  And  sysadm.FN_CLE_VAL ( 'MAJ_PRS', info_spb_frn_cplt, ';') = 'OUI'  
+    
+ End  
 
-	 FROM   sysadm.commande,
-		    sysadm.w_commande w
-	 WHERE  w.id_sin         = @dcIdSin              
-	 And	commande.id_sin		  = w.id_sin
-	 And 	commande.id_seq		  = w.id_seq
-	 And    w.cpt_valide     > 0
+-- [20251022090102180][JFF][HUB1528]
+If sysadm.FN_CLE_NUMERIQUE ( 'HUB1528_ANN_PRSHUB') > 0 
+ Begin
+	If Exists ( Select *   
+	  From sysadm.w_commande w  
+	  Where w.id_sin = @dcIdSin   
+	  And   w.cpt_valide > 0  
+	  And   w.cod_etat = 'CNV'  
+	  And   ( sysadm.FN_CLE_VAL ( 'MAJ_PRSHUBADR', w.info_spb_frn_cplt, ';' ) = 'OUI'
+			  Or 
+			  sysadm.FN_CLE_VAL ( 'MAJ_PRSHUBANN', w.info_spb_frn_cplt, ';' ) = 'OUI'
+			)
+	  And   Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', w.info_spb_frn_cplt, ';' ) ) > 0
+	)
+
+	Begin  
+
+	  UPDATE sysadm.commande  
+	   SET    
+	    sysadm.commande.cod_etat = Case  -- [PM246]  
+			When sysadm.FN_CLE_VAL ( 'MAJ_ADRESSE', w_commande.info_spb_frn_cplt, ';') = 'OUI' Then sysadm.FN_CLE_VAL ( 'COD_ETAT', w_commande.info_spb_frn_cplt, ';')  
+			Else 'ECT'  
+        End ,  
+		sysadm.commande.id_lot_cmd = 0 ,  
+		sysadm.commande.cmd_gen_le = null ,  
+		sysadm.commande.cmd_gen_par = null ,  
+		sysadm.commande.adr_cod_civ = w_commande.adr_cod_civ, 
+		sysadm.commande.adr_nom = w_commande.adr_nom, 
+		sysadm.commande.adr_prenom = w_commande.adr_prenom , 
+		sysadm.commande.adr_livr1 = w_commande.adr_livr1, 
+		sysadm.commande.adr_livr2 = w_commande.adr_livr2, 
+		sysadm.commande.adr_livr_cpl = w_commande.adr_livr_cpl, 
+		sysadm.commande.adr_cp = w_commande.adr_cp, 
+		sysadm.commande.adr_ville = w_commande.adr_ville, 
+		sysadm.commande.adr_tel1 = w_commande.adr_tel1, 
+		sysadm.commande.adr_tel2 = w_commande.adr_tel2, 
+		sysadm.commande.adr_tel3 = w_commande.adr_tel3, 
+		sysadm.commande.info_spb_frn_cplt= sysadm.FN_CLE_VAL_E ( 'MAJ_PRS', 'NON', rTrim ( w_commande.info_spb_frn_cplt ), ';')  
+        
+	   FROM sysadm.commande ,  
+		    sysadm.w_commande  
+	   WHERE  w_commande.id_sin = @dcIdSin
+	   And    commande.id_sin    = w_commande.id_sin
+	   And    commande.id_seq    = w_commande.id_seq
+	   And    commande.id_lot_cmd   > 0 
+	   And    w_commande.cpt_valide > 0
+	   And    w_commande.cod_etat = 'CNV'
+	   And   ( sysadm.FN_CLE_VAL ( 'MAJ_PRSHUBADR', w_commande.info_spb_frn_cplt, ';' ) = 'OUI'
+			  Or 
+			  sysadm.FN_CLE_VAL ( 'MAJ_PRSHUBANN', w_commande.info_spb_frn_cplt, ';' ) = 'OUI'
+		 	 )
+	   And   Len ( sysadm.FN_CLE_VAL ( 'HP_ID_HUB_PRESTA', w_commande.info_spb_frn_cplt, ';' ) ) > 0
+
+	  UPDATE sysadm.w_commande  
+	   SET   info_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'MAJ_PRS', 'NON', rTrim ( info_spb_frn_cplt ), ';'),  
+		     cod_etat = 
+				Case  -- [PM246]  
+				   When sysadm.FN_CLE_VAL ( 'MAJ_ADRESSE', w_commande.info_spb_frn_cplt, ';') = 'OUI' Then sysadm.FN_CLE_VAL ( 'COD_ETAT', w_commande.info_spb_frn_cplt, ';')  
+				   Else 'ECT'  
+				End   
+	  FROM   sysadm.w_commande  
+	  WHERE  w_commande.id_sin = @dcIdSin  
+	  And  sysadm.FN_CLE_VAL ( 'MAJ_PRS', info_spb_frn_cplt, ';') = 'OUI'  
+	  And  sysadm.FN_CLE_VAL ( 'MAJ_ADRESSE', w_commande.info_spb_frn_cplt, ';') = 'OUI'
+
+
+	End 
+	 	
  End 
--- :[PM103][1]
 
--- Si ça fonctionne bien, cela englobe la vDoc8041 qui n'est pas à activer.
--- [PC938_ORANGE_V3]
--- [PM246]
--- [DT141] SBE
-If Exists ( Select * 
-		From sysadm.w_commande w
-		Where w.id_sin = @dcIdSin 
-		And   w.cpt_valide > 0
-		And   w.cod_etat = 'CNV'
-		And   sysadm.FN_CLE_VAL ( 'MAJ_PRS', w.info_spb_frn_cplt, ';') = 'OUI' ) 
-	Begin
-		
-		UPDATE sysadm.commande
-		 SET    
-			 sysadm.commande.cod_etat	=	Case  -- [PM246]
-												When sysadm.FN_CLE_VAL ( 'MAJ_ADRESSE', w_commande.info_spb_frn_cplt, ';') = 'OUI' Then sysadm.FN_CLE_VAL ( 'COD_ETAT', w_commande.info_spb_frn_cplt, ';')
-												Else 'ECT'
-											End	,
-			 sysadm.commande.id_lot_cmd	=	0	,
-			 sysadm.commande.cmd_gen_le	=	null	,
-			 sysadm.commande.cmd_gen_par	=	null	,
-			 sysadm.commande.adr_cod_civ = w_commande.adr_cod_civ, -- [PM246]
-			 sysadm.commande.adr_nom = w_commande.adr_nom, -- [PM246]
-			 sysadm.commande.adr_prenom = w_commande.adr_prenom , -- [PM246]
-			 sysadm.commande.adr_livr1 = w_commande.adr_livr1, -- [PM246]
-			 sysadm.commande.adr_livr2 = w_commande.adr_livr2, -- [PM246]			 
-			 sysadm.commande.adr_livr_cpl = w_commande.adr_livr_cpl, -- [PM246]			 
-			 sysadm.commande.adr_cp = w_commande.adr_cp, -- [PM246]			 			 
-			 sysadm.commande.adr_ville = w_commande.adr_ville, -- [PM246]
-			 sysadm.commande.adr_tel1 = w_commande.adr_tel1, -- [PM246]
-			 sysadm.commande.adr_tel2 = w_commande.adr_tel2, -- [PM246]			 
-			 sysadm.commande.adr_tel3 = w_commande.adr_tel3, -- [PM246]			 			 
-			 sysadm.commande.info_spb_frn_cplt= sysadm.FN_CLE_VAL_E ( 'MAJ_PRS', 'NON', rTrim ( w_commande.info_spb_frn_cplt ), ';')
-			 	 
-		 FROM   sysadm.commande,
-			    sysadm.w_commande
-		 WHERE  w_commande.id_sin         = @dcIdSin              AND
-			commande.id_sin		  = w_commande.id_sin	  AND
-			commande.id_seq		  = w_commande.id_seq	  AND
-			w_commande.cpt_valide     > 0			  AND
-			w_commande.cod_etat 	  = 'CNV'		  AND
-			sysadm.FN_CLE_VAL ( 'MAJ_PRS', w_commande.info_spb_frn_cplt, ';') = 'OUI' AND
-			commande.id_lot_cmd	  > 0 	
-
-		UPDATE sysadm.w_commande
-		 SET     info_spb_frn_cplt = sysadm.FN_CLE_VAL_E ( 'MAJ_PRS', 'NON', rTrim ( info_spb_frn_cplt ), ';'),
- 				 cod_etat	=	Case  -- [PM246]
-									When sysadm.FN_CLE_VAL ( 'MAJ_ADRESSE', w_commande.info_spb_frn_cplt, ';') = 'OUI' Then sysadm.FN_CLE_VAL ( 'COD_ETAT', w_commande.info_spb_frn_cplt, ';')
-									Else 'ECT'
-								End	
-		FROM   sysadm.w_commande
-		WHERE  w_commande.id_sin = @dcIdSin
-		And  sysadm.FN_CLE_VAL ( 'MAJ_PRS', info_spb_frn_cplt, ';') = 'OUI'
-		
-	End
-
- Return @@Error
-
+  
+ Return @@Error  
+  
 GO
 
 grant execute on sysadm.PS_U02_COMMANDE_VAL_V02 to rolebddsinistres

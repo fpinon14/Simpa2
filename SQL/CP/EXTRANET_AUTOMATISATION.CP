@@ -1031,6 +1031,8 @@ CREATE procedure sysadm.PS_I_EXTRANET_AUTOMATISATION__DECLENCHEMENT_AUTOMATISATI
 	@adcIdSin Decimal ( 10 )
 AS
 
+-- Return 1
+
 Declare @iRet Integer 
 Declare @dcIdGti Decimal ( 7 )
 Declare @dcIdDetail Decimal ( 7 )
@@ -2161,6 +2163,23 @@ Begin
 	Update sysadm.w_inter Set adr_mail = @sAdrMailInterAss Where id_sin = @adcIdSin
 End 
 
+-- Adresse mail : Contrôle plus léger pour KRYS&CDL
+If @sVarianteDp406 in ( 'KRYS', 'CDL' ) 
+Begin
+	Select @sAdrMailInterAss = adr_mail	From sysadm.w_inter Where id_sin = @adcIdSin And cod_inter = 'A' And adr_mail is not null And ltrim ( adr_mail ) <> ''
+	Set @sAdrMailInterAss = sysadm.FN_EPURE_CHAINE_V02 ( @sAdrMailInterAss, 'NATIF&RC_TAB_DQ' ) 
+	If sysadm.FN_CTRLE_ADR_MAIL ( @sAdrMailInterAss ) < 0
+		Begin
+			Set @sVal = 'L''adresse mail ' + Isnull ( @sAdrMailInterAss, '') + ' de l''assuré renseignée par l''extranet n''est pas valide. Aucun récap ni courrier ne partira par mail.'
+			Exec sysadm.sysadm.PS_I_EXTRANET_AUTOMATISATION__CONTACT_LIBRE_POUR_INFO @adcIdSin, @sVal  
+			Update sysadm.w_inter Set adr_mail = null Where id_sin = @adcIdSin
+			Return -1
+		End
+	Else
+		Begin
+			Update sysadm.w_inter Set adr_mail = @sAdrMailInterAss Where id_sin = @adcIdSin
+		End 
+End 
 -- Epuration des caractères gênant
 Update sysadm.w_inter
 Set nom =   UPPER ( sysadm.FN_EPURE_CHAINE_V02 (
@@ -4764,10 +4783,19 @@ Declare @sVarianteDp406 Varchar ( 50 )
 Declare @sNomInter VarChar ( 71 )
 Declare @iValideAMU Integer
 Declare @sChaineSeriaEmilaing VarChar ( 800 )
+Declare @sAdrMailInterAss Varchar ( 71 )
 
 -- Nominter A
-Select @sNomInter = Trim ( nom ) From sysadm.w_inter i Where id_sin = @adcIdSin and id_i = 0
+Select @sNomInter = Trim ( nom ),
+	   @sAdrMailInterAss = Trim ( adr_mail ) 
+From sysadm.w_inter i 
+Where id_sin = @adcIdSin 
+and id_i = 0
+
 If @sNomInter is null Select @sNomInter = Trim ( nom ) From sysadm.inter i Where id_sin = @adcIdSin and id_i = 0
+If @sAdrMailInterAss is null Select  @sAdrMailInterAss = Trim ( adr_mail ) From sysadm.inter i Where id_sin = @adcIdSin and id_i = 0
+
+If @sAdrMailInterAss is null Or @sAdrMailInterAss = '' Return -1
 
 -- Obtention de la variante
 Select @sVarianteDp406 = sysadm.FN_CLE_VAL ( 'VARIANTE', Trim ( dp.val_car ) + Trim ( dp.val_car2 ) , ';') From sysadm.det_pro dp, sysadm.w_sin ws Where ws.id_sin = @adcIdSin And dp.id_prod = ws.id_prod and dp.id_code_dp = 406 
@@ -4796,6 +4824,24 @@ Begin
 								0, -- Mt_Reg
 								@sChaineSeriaEmilaing  -- chaine séria
    End 
+
+   -- Sinon autre VOL, autre récap (dit normal)
+   If @adcIdGti <> 10
+   Begin
+		Exec sysadm.PS_MIG1_I_EMAILING_KSL_ARCHIVE_MAILPUSH 
+								@adcIdSin,
+								null, -- id_seq presta
+								0, -- inter
+								'A', -- cod_inter
+								@sNomInter, -- nom_inter
+								'RCDEC1', -- Typ_mail
+								'WEB', -- Oper
+								null, -- Motif Refus
+								0, -- Mt_Reg
+								@sChaineSeriaEmilaing  -- chaine séria
+
+   End 
+
 End 
 
 If @sVarianteDp406 in ( 'KRYS', 'CDL' )
@@ -4814,32 +4860,6 @@ Begin
 							@sChaineSeriaEmilaing  -- chaine séria
 End 
 
-/*
-Exec @iRet = sysadm.Atlas_Envoi_Mail_Recap_Decla @adcIdSin, @sErrOutPut OutPut
-
-If @iRet < 0 
-	Begin
-
-		Set @sMess = 'Suite à l''automatisation de la déclaration par Extranet qui a fonctionné sur le sinistre ' + Convert ( Varchar ( 10 ), @adcIdSin ) + ', le récapitulatif de la déclaration n''a pas pu être envoyé à l''assuré, l''erreur suivante a été retournée : ' 
-		Set @sMess = @sMess + IsNull ( Trim ( @sErrOutPut ) , '' ) 
-		Set @sMess = Left ( @sMess, 508 )
-	End 
-
-If @iRet > 0 
-	Begin
-		Set @sMess = 'Suite à l''automatisation de la déclaration par Extranet qui a fonctionné sur le sinistre ' + Convert ( Varchar ( 10 ), @adcIdSin ) + ', le récapitulatif de la déclaration a bien été envoyé à l''assuré.' 
-		Set @sMess = Left ( @sMess, 508 )
-	End 
-
-IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
-BEGIN
-	Exec SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @adcIdSin, 2, @sMess,	'WEB', 300, @iIdCt OUTPUT							
-END
-ELSE
-BEGIN
-	Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @adcIdSin, 2, @sMess,	'WEB', 300, @iIdCt OUTPUT							
-END	
-*/
 Return 1
 
 Go
