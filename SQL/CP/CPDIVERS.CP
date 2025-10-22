@@ -2090,6 +2090,7 @@ insert into @tbCorb values ('EADR'),
 
 -- [VDOC15473]
 insert into @tbCorb values ('DSA#')
+insert into @tbCorb values ('MHN'), ('HBD' )
 
 insert into sysadm.corb_oper
 select oper.id_oper, 
@@ -6965,7 +6966,7 @@ Go
 -- Retourne             :       
 --
 -------------------------------------------------------------------
---
+-- 20251021094043560_MAJ_SQL
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_DU_NETTOYAGE_CORBEILLES' AND type = 'P' )
         DROP procedure sysadm.PS_DU_NETTOYAGE_CORBEILLES
@@ -7007,6 +7008,7 @@ And not exists (
        From sysadm.produit p 
        Where p.id_corb = co.id_code ) 
 
+
 Delete co
 from sysadm.code co
 where co.id_typ_code = '-CO'
@@ -7016,6 +7018,15 @@ And not exists (
        Select Top 1 1 
        From sysadm.produit p 
        Where p.id_corb = co.id_code ) 
+And Not Exists ( -- 20251021094043560_MAJ_SQL
+		Select Top 1 1 
+		From sysadm.det_pro dp,
+			 sysadm.produit p
+		Where dp.id_code_dp = 93
+		And Convert ( integer, dp.val_car ) = co.id_code 
+		And p.id_prod = dp.id_prod
+		And p.id_corb = 999
+)
 
 Delete coop
 From sysadm.corb_oper coop
@@ -7026,6 +7037,7 @@ And   Not Exists (
        Where co.id_typ_code = '-CO'
 	   and co.id_code = coop.id_corb	
 )
+Go
 
 Update p
 Set id_corb = 998

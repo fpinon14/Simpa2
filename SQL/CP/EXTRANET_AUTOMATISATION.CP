@@ -889,13 +889,14 @@ Begin
 	Set @sSql = 
 	'	SELECT ' + 
 	'		STUFF(( ' +
-	'			SELECT '', '' + ( LTRIM ( RTRIM (cc.BenefitReasonLabel))) ' +
+	'			SELECT '', '' + ( LTRIM ( RTRIM (cc.BenefitReasonLabel))) as maCol1 ' +
 	'			FROM ' + @sInstanceSaga2 + '.PRESTATAIRE.ref.BenefitReason cc ' +
 	'			WHERE CHARINDEX(''#'' + TRIM (cc.BenefitReasonCode ) + ''#'', ''' + @asTypDommage + ''' ) > 0 ' +
 	'			FOR XML PATH(''''), TYPE ' +
-	'		).value(''.'', ''VARCHAR(1000)''), 1, 2, '''') '
+	'		).value(''.'', ''VARCHAR(2000)''), 1, 2, '''') maCol2'
 
-	Insert into @TbBenefitReason Exec @sSql
+	Insert into @TbBenefitReason Exec ( @sSql )
+	Select @sVal = Trim ( lib_code_traduit ) From @TbBenefitReason
 	Set @sVal = Upper (Left ( @sVal, 1)) + Lower ( Substring ( @sVal, 2, Len ( @sVal )))
 
 	exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO_STOCKAGE_CHAINE_LONGUE @adcIdSin, 'dommages_appareil_lib', 'Dommages sur l''appareil (lib)', @sVal, 2550, 'WEB'
@@ -1849,22 +1850,23 @@ If @sVarianteDp406 = 'BOUYGUES'
 				Set @sVal = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'que_s_est_t_il_passe_code', 'W', '' )
 				If CHARINDEX ( '#', @sVal ) <= 0 Or Left ( @sVal, 1 ) <> '#' Or Right ( @sVal, 1 ) <> '#' Or CHARINDEX ( '##', @sVal ) > 0 
 				Begin
-					Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Chaine choc, pression.. non valide', 'L''extranet a transmis une chaine des Choc, Chute, Pression etc... non valide au niveau du format (doit comporter 13 chiffres). Automatisation impossible.'
+					Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, '<<Que s''est-il..>> non valide', 'L''extranet a transmis une chaine des Choc, Chute, Pression etc... non valide au niveau du format (doit comporter 13 chiffres). Automatisation impossible.'
 					Return -1
 				End 
 
-				-- Transformation de la Chaine 
-				SELECT @sVal = 
-					STUFF((
-						SELECT ', ' + TRIM (cc.lib_code)
-						FROM sysadm.code_car cc
-						WHERE cc.id_typ_code = '-WP'
-						AND CHARINDEX('#' + TRIM (cc.id_code) + '#', @sVal) > 0
-						FOR XML PATH(''), TYPE
-					).value('.', 'VARCHAR(1000)'), 1, 2, '')
-				Set @sVal = Upper (Left ( @sVal, 1)) + Lower ( Substring ( @sVal, 2, Len ( @sVal )))
+					-- Transformation de la Chaine 
+					SELECT @sVal = 
+						STUFF((
+							SELECT ', ' + TRIM (cc.lib_code)
+							FROM sysadm.code_car cc
+							WHERE cc.id_typ_code = '-WP'
+							AND CHARINDEX('#' + TRIM (cc.id_code) + '#', @sVal) > 0
+							FOR XML PATH(''), TYPE
+						).value('.', 'VARCHAR(1000)'), 1, 2, '')
+					Set @sVal = Upper (Left ( @sVal, 1)) + Lower ( Substring ( @sVal, 2, Len ( @sVal )))
 
-				exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO_STOCKAGE_CHAINE_LONGUE @adcIdSin, 'que_s_est_t_il_passe_lib', 'Que s''est-t-il passé (lib)', @sVal, 2500, 'WEB'
+					exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO_STOCKAGE_CHAINE_LONGUE @adcIdSin, 'que_s_est_t_il_passe_lib', 'Que s''est-t-il passé (lib)', @sVal, 2500, 'WEB'
+
 
 				-- Cas dommages_appareil_code
 				Set @sVal = space ( 1000 )
@@ -1905,6 +1907,28 @@ If @sVarianteDp406 = 'BOUYGUES'
 					Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'App. inutilisable non valide', 'L''extranet a transmis une donnée non valide sur l''information de l''appareil inutilisable. Automatisation impossible.'
 					Return -1
 				End
+
+				-- Cas quel_dysfonctionnement_code
+				Set @sVal = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'quel_dysfonctionnement_code', 'W', '' )
+				If CHARINDEX ( '#', @sVal ) <= 0 Or Left ( @sVal, 1 ) <> '#' Or Right ( @sVal, 1 ) <> '#' Or CHARINDEX ( '##', @sVal ) > 0 
+				Begin
+					Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, '<< Quel dysfonc..>> non valide', 'L''extranet a transmis une chaine des Choc, Chute, Pression etc... non valide au niveau du format (doit comporter 13 chiffres). Automatisation impossible.'
+					Return -1
+				End 
+
+					-- Transformation de la Chaine 
+					SELECT @sVal = 
+						STUFF((
+							SELECT ', ' + TRIM (cc.lib_code)
+							FROM sysadm.code_car cc
+							WHERE cc.id_typ_code = '-WQ'
+							AND CHARINDEX('#' + TRIM (cc.id_code) + '#', @sVal) > 0
+							FOR XML PATH(''), TYPE
+						).value('.', 'VARCHAR(1000)'), 1, 2, '')
+					Set @sVal = Upper (Left ( @sVal, 1)) + Lower ( Substring ( @sVal, 2, Len ( @sVal )))
+
+					exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO_STOCKAGE_CHAINE_LONGUE @adcIdSin, 'quel_dysfonctionnement_lib', 'Quel dysfonctionnement (lib)', @sVal, 2600, 'WEB'
+
 			End 
 	End 
 
@@ -3526,7 +3550,7 @@ Begin
 		Exec @iRet = sysadm.Atlas_Gar_Sin_Creer_Detail_V102 @adcIdSin, @adcIdGti, 1494, null, 'de votre monture', 0, @adcIdDetail OutPut
 		If IsNumeric ( @iVal3 ) = 1 
 		Begin
-			Set @dcMtValAchat = Convert ( Decimal ( 11, 2 ), @iVal3 ) 
+			Set @dcMtValAchat = Convert ( Decimal ( 11, 2 ), @sVal3 ) 
 			Update sysadm.w_detail Set mt_prej = @dcMtValAchat, mt_val_achat = @dcMtValAchat Where id_sin = @adcIdSin and id_gti = @adcIdGti and id_detail = @adcIdDetail
 		End 
 		Else

@@ -9747,6 +9747,7 @@ Declare @sTableauEnCours VarChar ( 10 )
 Declare @dcIdOrdre Decimal ( 7 )
 Declare @sCol1 VarChar ( 100 )
 Declare @sCol2codeDonnee VarChar ( 100 )
+Declare @sVal VarChar  ( 1000 )
 
 
 
@@ -9826,6 +9827,7 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 		If @iSinistre = 1 
 		Begin
 			If @sCol2codeDonnee = 'CIV_LONG_ASS' 
+			Begin
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 								   sysadm.FN_CODE_NUM ( cod_civ, '-CL' ) as 'txxxlig/@col2'
@@ -9833,8 +9835,10 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							where id_ordre = @dcIdOrdre
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'PRENOM_ASS' 
+			Begin
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 								   trim ( prenom ) as 'txxxlig/@col2'
@@ -9842,8 +9846,10 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							where id_ordre = @dcIdOrdre
 							For xml path ( '' )
 						)
+			End 
 
 			If @sCol2codeDonnee = 'NOM_ASS' 
+			Begin
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 								   trim ( nom ) as 'txxxlig/@col2'
@@ -9851,8 +9857,10 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							where id_ordre = @dcIdOrdre
 							For xml path ( '' )
 						)
+			End 
 
 			If @sCol2codeDonnee = 'ADR_ASS' 
+			Begin
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 								   trim ( adr_1 ) as 'txxxlig/@col2'
@@ -9860,8 +9868,10 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							where id_ordre = @dcIdOrdre
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'ADR_CPL_ASS' 
+			Begin
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 								   trim ( adr_2 ) as 'txxxlig/@col2'
@@ -9869,8 +9879,10 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							where id_ordre = @dcIdOrdre
 							For xml path ( '' )
 						)
+			End 
 
 			If @sCol2codeDonnee = 'CP_ASS' 
+			Begin
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 								   trim ( adr_cp ) as 'txxxlig/@col2'
@@ -9878,8 +9890,10 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							where id_ordre = @dcIdOrdre
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'VILLE_ASS' 
+			Begin
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 								   trim ( adr_ville ) as 'txxxlig/@col2'
@@ -9887,8 +9901,10 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							where id_ordre = @dcIdOrdre
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'NUM_TEL_ASS' 
+			Begin
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 								   trim ( num_teld ) as 'txxxlig/@col2'
@@ -9896,8 +9912,10 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							where id_ordre = @dcIdOrdre
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'EMAIL_ASS' 
+			Begin
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 								   trim ( adr_mail ) as 'txxxlig/@col2'
@@ -9906,56 +9924,70 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							And cod_inter = 'A'
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'DTE_ACHAT_MONTURE' 
+			Begin
 				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_3', 'P', '' ) <> '' 
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_3', 'P', '' ) as 'txxxlig/@col2'
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'PRIX_TTC_MONTURE' 
+			Begin
 				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_3', 'P', '' ) <> '' 
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_3', 'P', '' ) as 'txxxlig/@col2'
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'DTE_ACHAT_VERRE_DROIT' 
+			Begin
 				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_1', 'P', '' ) <> '' 
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_1', 'P', '' ) as 'txxxlig/@col2'
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'PRIX_TTC_VERRE_DROIT' 
+			Begin
 				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_1', 'P', '' ) <> '' 
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_1', 'P', '' ) as 'txxxlig/@col2'
 							For xml path ( '' )
 						)
+			End 
 
 			If @sCol2codeDonnee = 'DTE_ACHAT_VERRE_GAUCHE' 
+			Begin
 				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_2', 'P', '' ) <> '' 
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_2', 'P', '' ) as 'txxxlig/@col2'
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'PRIX_TTC_VERRE_GAUCHE' 
+			Begin
 				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_2', 'P', '' ) <> '' 
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_2', 'P', '' ) as 'txxxlig/@col2'
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'LIB_GTI_PERSO' 
+			Begin
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 								   trim ( lib_gti ) as 'txxxlig/@col2'
@@ -9964,6 +9996,112 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							And id_gti = @dcIdGti
 							For xml path ( '' )
 						)
+			End
+
+			If @sCol2codeDonnee = 'QUE_S_EST_T_IL_PASSE_LIB_IDC' 
+			Begin
+				Set @sVal = space ( 1000 )
+				Exec sysadm.PS_S_DIV_SIN_SANS_DIV_PRO_RECUPERATION_CHAINE_LONGUE
+						@adcIdSin, 
+						'que_s_est_t_il_passe_lib',
+						'P',
+						@sVal OutPut 			
+
+				If @sVal  <> '' 
+					Select @sXmlUnitWrk = (
+								Select @sCol1 as 'txxxlig/@col1',
+									   @sVal as 'txxxlig/@col2'
+								For xml path ( '' )
+							)
+			End
+
+			If @sCol2codeDonnee = 'DOMMAGES_EXTERIEURS_VISIBLES' 
+			Begin
+				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dommages_exterieurs_visibles', 'P', '' ) <> '' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dommages_exterieurs_visibles', 'P', '' ) as 'txxxlig/@col2'
+							For xml path ( '' )
+						)
+			End
+
+			If @sCol2codeDonnee = 'DOMMAGES_APPAREIL_LIB_IDC' 
+			Begin
+				Set @sVal = space ( 1000 )
+				Exec sysadm.PS_S_DIV_SIN_SANS_DIV_PRO_RECUPERATION_CHAINE_LONGUE
+						@adcIdSin, 
+						'dommages_appareil_lib',
+						'P',
+						@sVal OutPut 			
+
+				If @sVal  <> '' 
+					Select @sXmlUnitWrk = (
+								Select @sCol1 as 'txxxlig/@col1',
+									   @sVal as 'txxxlig/@col2'
+								For xml path ( '' )
+							)
+			End
+
+			If @sCol2codeDonnee = 'DYSFONCTIONNEMENT_APPAREIL'     
+			Begin
+				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dysfonctionnement_appareil', 'P', '' ) <> '' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dysfonctionnement_appareil', 'P', '' ) as 'txxxlig/@col2'
+							For xml path ( '' )
+						)
+			End
+
+			If @sCol2codeDonnee = 'APP_INUTILISABLE_SUITE_DYSFONCT'     
+			Begin
+				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'app_inutilisable_suite_dysfonct', 'P', '' ) <> '' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'app_inutilisable_suite_dysfonct', 'P', '' ) as 'txxxlig/@col2'
+							For xml path ( '' )
+						)
+			End
+
+			If @sCol2codeDonnee = 'QUEL_DYSFONCTIONNEMENT_LIB_IDC' 
+			Begin
+				Set @sVal = space ( 1000 )
+				Exec sysadm.PS_S_DIV_SIN_SANS_DIV_PRO_RECUPERATION_CHAINE_LONGUE
+						@adcIdSin, 
+						'quel_dysfonctionnement_lib',
+						'P',
+						@sVal OutPut 			
+
+				If @sVal  <> '' 
+					Select @sXmlUnitWrk = (
+								Select @sCol1 as 'txxxlig/@col1',
+									   @sVal as 'txxxlig/@col2'
+								For xml path ( '' )
+							)
+			End
+
+			If Exists ( Select Top 1 1 From sysadm.detail dt Where dt.id_sin = @adcIdSin And dt.id_evt = 971 ) 
+			Begin
+				Set @sVal = 'Oui' 
+			End
+			Else 
+			Begin
+				Set @sVal = 'Non'
+			End 
+
+			Select @sXmlUnitWrk = (
+						Select @sCol1 as 'txxxlig/@col1',
+								@sVal as 'txxxlig/@col2'
+						For xml path ( '' )
+					)
+
+			If @sCol2codeDonnee = 'TEXTE_DECLA' 
+			Begin
+				Select @sXmlUnitWrk = (
+							Select  @sCol1 as 'txxxlig/@col1',
+									sysadm.FN_GET_TEXT_CONTACT_DECLA ( @adcIdSin ) as 'txxxlig/@col2'
+							For xml path ( '' )
+						)
+			End 
 
 		End 
 
@@ -9971,6 +10109,7 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 		If @iSinistre = 0 
 		Begin
 			If @sCol2codeDonnee = 'CIV_LONG_ASS' 
+			Begin
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 								   sysadm.FN_CODE_NUM ( cod_civ, '-CL' ) as 'txxxlig/@col2'
@@ -9978,8 +10117,10 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							where id_sin = @adcIdSin
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'PRENOM_ASS' 
+			Begin
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 								   trim ( prenom ) as 'txxxlig/@col2'
@@ -9987,8 +10128,10 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							where id_sin = @adcIdSin
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'NOM_ASS' 
+			Begin
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 								   trim ( nom ) as 'txxxlig/@col2'
@@ -9996,8 +10139,10 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							where id_sin = @adcIdSin
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'ADR_ASS' 
+			Begin
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 								   trim ( adr_1 ) as 'txxxlig/@col2'
@@ -10005,8 +10150,10 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							where id_sin = @adcIdSin
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'ADR_CPL_ASS' 
+			Begin
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 								   trim ( adr_2 ) as 'txxxlig/@col2'
@@ -10014,8 +10161,10 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							where id_sin = @adcIdSin
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'CP_ASS' 
+			Begin
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 								   trim ( adr_cp ) as 'txxxlig/@col2'
@@ -10023,8 +10172,10 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							where id_sin = @adcIdSin
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'VILLE_ASS' 
+			Begin
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 								   trim ( adr_ville ) as 'txxxlig/@col2'
@@ -10032,8 +10183,10 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							where id_sin = @adcIdSin
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'NUM_TEL_ASS' 
+			Begin
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 								   trim ( num_teld ) as 'txxxlig/@col2'
@@ -10041,8 +10194,10 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							where id_sin = @adcIdSin
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'EMAIL_ASS' 
+			Begin
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 								   trim ( adr_mail ) as 'txxxlig/@col2'
@@ -10051,56 +10206,70 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							And cod_inter = 'A'
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'DTE_ACHAT_MONTURE' 
+			Begin
 				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_3', 'W', '' ) <> '' 
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_3', 'W', '' ) as 'txxxlig/@col2'
 							For xml path ( '' )
 						)
+			End
 
-			If @sCol2codeDonnee = 'PRIX_TTC_MONTURE' 
+			If @sCol2codeDonnee = 'PRIX_TTC_MONTURE'
+			Begin
 				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_3', 'W', '' ) <> '' 
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_3', 'W', '' ) as 'txxxlig/@col2'
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'DTE_ACHAT_VERRE_DROIT' 
+			Begin
 				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_1', 'W', '' ) <> '' 
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_1', 'W', '' ) as 'txxxlig/@col2'
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'PRIX_TTC_VERRE_DROIT' 
+			Begin
 				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_1', 'W', '' ) <> '' 
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_1', 'W', '' ) as 'txxxlig/@col2'
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'DTE_ACHAT_VERRE_GAUCHE' 
+			Begin
 				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_2', 'W', '' ) <> '' 
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dte_ach_adh_elt_2', 'W', '' ) as 'txxxlig/@col2'
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'PRIX_TTC_VERRE_GAUCHE' 
+			Begin
 				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_2', 'W', '' ) <> '' 
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'mt_val_achat_adh_elt_2', 'W', '' ) as 'txxxlig/@col2'
 							For xml path ( '' )
 						)
+			End
 
 			If @sCol2codeDonnee = 'LIB_GTI_PERSO' 
+			Begin
 				Select @sXmlUnitWrk = (
 							Select @sCol1 as 'txxxlig/@col1',
 								   trim ( lib_gti ) as 'txxxlig/@col2'
@@ -10109,6 +10278,119 @@ While Exists ( Select Top 1 1 From @TbWrk where tableau = Concat ( 'T', @iCptTab
 							And id_gti = @dcIdGti
 							For xml path ( '' )
 						)
+			End 
+
+
+			If @sCol2codeDonnee = 'QUE_S_EST_T_IL_PASSE_LIB_IDC' 
+			Begin
+				Set @sVal = space ( 1000 )
+				Exec sysadm.PS_S_DIV_SIN_SANS_DIV_PRO_RECUPERATION_CHAINE_LONGUE
+						@adcIdSin, 
+						'que_s_est_t_il_passe_lib',
+						'W',
+						@sVal OutPut 			
+
+				If @sVal  <> '' 
+					Select @sXmlUnitWrk = (
+								Select @sCol1 as 'txxxlig/@col1',
+									   @sVal as 'txxxlig/@col2'
+								For xml path ( '' )
+							)
+			End
+
+			If @sCol2codeDonnee = 'DOMMAGES_EXTERIEURS_VISIBLES' 
+			Begin
+				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dommages_exterieurs_visibles', 'W', '' ) <> '' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dommages_exterieurs_visibles', 'W', '' ) as 'txxxlig/@col2'
+							For xml path ( '' )
+						)
+			End
+
+
+			If @sCol2codeDonnee = 'DOMMAGES_APPAREIL_LIB_IDC' 
+			Begin
+				Set @sVal = space ( 1000 )
+				Exec sysadm.PS_S_DIV_SIN_SANS_DIV_PRO_RECUPERATION_CHAINE_LONGUE
+						@adcIdSin, 
+						'dommages_appareil_lib',
+						'W',
+						@sVal OutPut 			
+
+				If @sVal  <> '' 
+					Select @sXmlUnitWrk = (
+								Select @sCol1 as 'txxxlig/@col1',
+									   @sVal as 'txxxlig/@col2'
+								For xml path ( '' )
+							)
+			End
+
+
+			If @sCol2codeDonnee = 'DYSFONCTIONNEMENT_APPAREIL'     
+			Begin
+				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dysfonctionnement_appareil', 'W', '' ) <> '' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'dysfonctionnement_appareil', 'W', '' ) as 'txxxlig/@col2'
+							For xml path ( '' )
+						)
+			End
+
+
+			If @sCol2codeDonnee = 'APP_INUTILISABLE_SUITE_DYSFONCT'     
+			Begin
+				If sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'app_inutilisable_suite_dysfonct', 'W', '' ) <> '' 
+				Select @sXmlUnitWrk = (
+							Select @sCol1 as 'txxxlig/@col1',
+						    sysadm.FN_GET_DIV_SIN ( @adcIdSin, 'app_inutilisable_suite_dysfonct', 'W', '' ) as 'txxxlig/@col2'
+							For xml path ( '' )
+						)
+			End
+
+			If @sCol2codeDonnee = 'QUEL_DYSFONCTIONNEMENT_LIB_IDC'
+			Begin
+				Set @sVal = space ( 1000 )
+				Exec sysadm.PS_S_DIV_SIN_SANS_DIV_PRO_RECUPERATION_CHAINE_LONGUE
+						@adcIdSin, 
+						'quel_dysfonctionnement_lib',
+						'W',
+						@sVal OutPut 			
+
+				If @sVal  <> '' 
+					Select @sXmlUnitWrk = (
+								Select @sCol1 as 'txxxlig/@col1',
+									   @sVal as 'txxxlig/@col2'
+								For xml path ( '' )
+							)
+			End
+
+
+			If Exists ( Select Top 1 1 From sysadm.w_detail dt Where dt.id_sin = @adcIdSin And dt.id_evt = 971 ) 
+			Begin
+				Set @sVal = 'Oui' 
+			End
+			Else 
+			Begin
+				Set @sVal = 'Non'
+			End 
+
+			Select @sXmlUnitWrk = (
+						Select @sCol1 as 'txxxlig/@col1',
+								@sVal as 'txxxlig/@col2'
+						For xml path ( '' )
+					)
+
+
+			If @sCol2codeDonnee = 'TEXTE_DECLA' 
+			Begin
+				Select @sXmlUnitWrk = (
+							Select  @sCol1 as 'txxxlig/@col1',
+									sysadm.FN_GET_TEXT_CONTACT_DECLA ( @adcIdSin ) as 'txxxlig/@col2'
+							For xml path ( '' )
+						)
+			End 
+
 		End 
 
 
