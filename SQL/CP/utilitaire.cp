@@ -7319,3 +7319,73 @@ End
 Return '-1'
 
 End 
+
+
+--------------------------------------------------------------------
+--
+-- Fonction             :       FN_STRING_SPLIT
+-- Auteur               :       Fabry JF
+-- Date                 :       23/10/2025
+-- Libellé              :		
+-- Commentaires         :       SELECT * FROM sysadm.FN_SPLIT('A,B,C', ',');
+-- Références           :       
+--
+-- Arguments            :       Aucun
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+-- JFF      12/02/2016   [PI062]
+-------------------------------------------------------------------
+IF OBJECT_ID('sysadm.FN_STRING_SPLIT', 'TF') IS NOT NULL
+    DROP FUNCTION sysadm.FN_STRING_SPLIT;
+GO
+
+CREATE FUNCTION sysadm.FN_STRING_SPLIT
+(
+    @String     VARCHAR(MAX),
+    @Delimiter  NCHAR(1)
+)
+RETURNS @Result TABLE 
+(
+    ordre INT,
+    valeur   VARCHAR(MAX)
+)
+AS
+BEGIN
+    DECLARE 
+        @Start   INT = 1,
+        @End     INT,
+        @Ordinal INT = 1;
+
+    IF @String IS NULL RETURN;
+
+    WHILE 1 = 1
+    BEGIN
+        SET @End = CHARINDEX(@Delimiter, @String, @Start);
+
+        IF @End = 0
+        BEGIN
+            INSERT INTO @Result (ordre, valeur)
+            SELECT 
+                @Ordinal,
+                TRIM(SUBSTRING(@String, @Start, LEN(@String) - @Start + 1));
+            BREAK;
+        END
+        ELSE
+        BEGIN
+            INSERT INTO @Result (ordre, valeur)
+            SELECT 
+                @Ordinal,
+                TRIM(SUBSTRING(@String, @Start, @End - @Start))
+            WHERE TRIM(SUBSTRING(@String, @Start, @End - @Start)) <> '';
+
+            SET @Start = @End + 1;
+            SET @Ordinal += 1;
+        END
+    END;
+
+    RETURN;
+END;
+GO
+

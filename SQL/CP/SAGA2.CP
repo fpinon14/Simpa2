@@ -2410,3 +2410,84 @@ While Exists ( Select Top 1 1 From @TbTrtDp380 where marquage = 0 )
 
 Go
 
+
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_SAGA2_RECUPERER_LES_MARQUE_MODELE_IFR_A_PARTIR_DES_MARQUE_ET_MODELE_ADHESION
+-- Auteur               :       FABRY JF
+-- Date                 :       23/10/2025
+-- Libellé              :       [MIG165_BOUYGUES]
+-- Commentaires         :       
+-- Références           :       
+--
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_SAGA2_RECUPERER_LES_MARQUE_MODELE_IFR_A_PARTIR_DES_MARQUE_ET_MODELE_ADHESION' AND type = 'P' )
+        DROP procedure sysadm.PS_S_SAGA2_RECUPERER_LES_MARQUE_MODELE_IFR_A_PARTIR_DES_MARQUE_ET_MODELE_ADHESION
+GO
+
+CREATE procedure sysadm.PS_S_SAGA2_RECUPERER_LES_MARQUE_MODELE_IFR_A_PARTIR_DES_MARQUE_ET_MODELE_ADHESION
+	@asCodeRefExt			VarChar ( 3 ) , -- code référentiel extérieur
+	@asMarqueExt			VarChar ( 100 ), -- Marque extérieur
+	@asModeleExt			VarChar ( 100 ), -- Modèle extérieur
+	@asMarqueIfr			VarChar ( 35 ) OutPut,  -- Marque IFR en retour
+	@asModeleIfr			VarChar ( 35 ) OutPut	-- Modèle IFR en retour
+AS
+
+-- Code Retour de la PS
+--  1 : Succès de recherche : à savoir un seul binome Marque/modèle IFR est retourné pour ce GENCODE 
+-- -1 : Impossible de retourner un binome unique pour tout autre raison
+
+Set @asMarqueExt = Trim ( @asMarqueExt ) 
+Set @asModeleExt = Trim ( @asModeleExt ) 
+
+Declare @Tb Table ( marque_ifr  Varchar ( 35), modele_ifr Varchar ( 35 ) )
+
+-- Existe tel quel sur IFR
+If Exists (
+	Select Top 1 1 
+	From sysadm.ifr i
+	Where i.marque = @asMarqueExt
+	and i.reference = @asModeleExt )
+Begin 
+	Set @asMarqueIfr = @asMarqueExt
+	Set @asModeleIfr = @asModeleExt
+	Return 1
+End 
+
+-- Sinon autre recherche
+Insert into @Tb 
+Select	Distinct
+		a.id_marq_art_ifr,
+		a.id_modl_art_ifr
+from sysadm.article a 
+where a.id_four = @asCodeRefExt
+And a.id_marq_art = @asMarqueExt
+And rtrim ( Left ( Trim ( a.id_modl_art) , len (  Trim ( a.id_modl_art ) ) -1 )) + TRIM ( a.observ_frn) = @asModeleExt 
+And a.alt_dispo = 'O'
+and a.id_marq_art_ifr is not null
+and a.id_modl_art_ifr is not null
+
+If ( Select Count ( * ) From @Tb ) <> 1		
+	Begin 
+		Set @asMarqueIfr = null
+		Set @asModeleIfr = null
+		Return -1
+	End 
+
+Select	@asMarqueIfr = Trim ( marque_ifr ),
+		@asModeleIfr = Trim ( modele_ifr )
+from @Tb
+
+If @asMarqueIfr is null Or Trim ( @asMarqueIfr ) = '' Or @asModeleIfr is null Or Trim ( @asModeleIfr ) = ''
+	Begin 
+		Set @asMarqueIfr = null
+		Set @asModeleIfr = null
+		Return -1
+	End 
+
+Return 1
+
+Go
+
+

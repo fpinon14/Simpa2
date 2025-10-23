@@ -195,6 +195,14 @@ Declare @iRet Integer
 Declare @sRefAssPickUp VarChar ( 40 )
 Declare @sDataErreur VarChar ( 255 )
 Declare @adcIdGti Decimal ( 7 ) -- 'a' car ancien argument
+Declare @sInstanceSaga2 Varchar ( 100 )
+Declare @sSql VarChar ( 2000 )
+Declare @TbBenefitReason Table ( lib_code_traduit VarChar ( 2000 ) )
+Declare @sVal VarChar ( 2000 )
+
+Declare @TbBenefitReasonCode Table ( BenefitReasonCode VarChar ( 100 ) )
+
+Set @sInstanceSaga2 = sysadm.FN_INSTANCE_SAGA2 ( )
 
 If Not Exists ( Select Top 1 1 From sysadm.w_sin Where id_sin = @adcIdSin ) 
 	Begin
@@ -273,6 +281,31 @@ If @asTypDommage is not null
 				Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__TRACE_STOCKAGE_INFOS_PRESTATION @adcIdSin, -40, @asMessRet, @sDataErreur
 				Return -40
 			End 
+
+		-- Contrôle des codes
+		Set @sSql = 
+		'			SELECT ( LTRIM ( RTRIM (cc.BenefitReasonCode))) as maCol1 ' +
+		'			FROM ' + @sInstanceSaga2 + '.PRESTATAIRE.ref.BenefitReason cc '
+
+		Insert into @TbBenefitReasonCode Exec ( @sSql )		
+
+		If Exists ( 
+			Select Top 1 1 
+			from sysadm.FN_STRING_SPLIT ( @asTypDommage, '#' ) as chaine
+			Where chaine.valeur <> ''
+			and Not Exists ( 
+					Select Top 1 1 
+					From @TbBenefitReasonCode brc
+					Where brc.BenefitReasonCode = chaine.valeur
+				)
+		)
+			Begin
+					Set @asMessRet = 'Type Dommage non valide, s''il est non null, ce doit être une chaine concaténée (VarChar ( 100 )) séparées par un #, avec des valeurs devant exister sur PRESTATAIRE.ref.BenefitReason, ce qui n''est pas le cas ici'
+					Set @sDataErreur = @asTypDommage
+					Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__TRACE_STOCKAGE_INFOS_PRESTATION @adcIdSin, -45, @asMessRet, @sDataErreur
+					Return -45
+			End
+
 	End 
 
 Set @asOrdreAction = UPPER ( Trim ( @asOrdreAction ))
@@ -877,13 +910,6 @@ If @@ROWCOUNT = 1 And @@ERROR = 0
 If @asTypDommage <> ''
 Begin
 	exec sysadm.PS_I_DIV_SIN_SANS_DIV_PRO_STOCKAGE_CHAINE_LONGUE @adcIdSin, 'dommages_appareil_code', 'Dommages sur l''appareil (code)', @asTypDommage, 2530, 'WEB'
-
-	Declare @sInstanceSaga2 Varchar ( 100 )
-	Declare @sSql VarChar ( 2000 )
-	Declare @TbBenefitReason Table ( lib_code_traduit VarChar ( 2000 ) )
-	Declare @sVal VarChar ( 2000 )
-
-	Set @sInstanceSaga2 = sysadm.FN_INSTANCE_SAGA2 ( )
 	
 	-- Transformation de la Chaine 
 	Set @sSql = 
@@ -1759,35 +1785,77 @@ If  Exists ( Select Top 1 1 From sysadm.w_sin ws, sysadm.produit p Where ws.id_s
 	And dp.id_code_car = 'IFR' + trim ( wds.val_car )
 )
 	Begin
-		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Appareil non lié à IFR', 'Pour l''instant, seul les déclarations de sinistre dont l''appareil est à IFR peuvent se faire. Automatisation impossible.'
+		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Appareil non lié à IFR', 'Pour l''instant, seul les déclarations de sinistre dont le type d''appareil est lié à IFR peuvent se faire. Automatisation impossible.'
 		Return -1
 	End
 
 -- binome marque/modèle doit appartenir à IFR
-If Exists ( 
-	Select Top 1 1
-	From sysadm.w_sin ws,
-		 sysadm.w_div_sin wds,
-		 sysadm.det_pro dp
-	Where ws.id_sin = @adcIdSin
-	And wds.id_sin = ws.id_sin
-	And wds.nom_zone = 'type_app'
-	And dp.id_prod = ws.id_prod
-	And dp.id_code_dp = 28
-	And dp.id_code_car = 'IFR' + trim ( wds.val_car )
-)
-And Not Exists ( 
-	Select Top 1 1 
-	From sysadm.ifr i,
-		 sysadm.w_sin ws
-	Where ws.id_sin = @adcIdSin
-	And   i.marque = ws.marq_port
-	And   i.reference = ws.modl_port
-)
+If @sVarianteDp406 in ( 'BOUYGUES' )
 	Begin
-		Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Marque/Modèle incohérent Réf IFR', 'Le binôme marque/modèle de l''appareil sinistre de l''assuré transmis par l''extranet, n''est pas valide sous le référentiel IFR ou bien le type ne correspond pas au modèle. Automatisation impossible.'
-		Return -1
-	End	
+		If Exists ( 
+			Select Top 1 1
+			From sysadm.w_sin ws,
+				 sysadm.w_div_sin wds,
+				 sysadm.det_pro dp
+			Where ws.id_sin = @adcIdSin
+			And wds.id_sin = ws.id_sin
+			And wds.nom_zone = 'type_app'
+			And dp.id_prod = ws.id_prod
+			And dp.id_code_dp = 28
+			And dp.id_code_car = 'IFR' + trim ( wds.val_car )
+		)
+		And Not Exists ( 
+			Select Top 1 1 
+			From sysadm.ifr i,
+				 sysadm.w_sin ws
+			Where ws.id_sin = @adcIdSin
+			And   i.marque = ws.marq_port
+			And   i.reference = ws.modl_port
+		)
+			Begin
+				Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Marque/Modèle incohérent Réf IFR', 'Le binôme marque/modèle de l''appareil sinistre de l''assuré transmis par l''extranet, n''est pas valide sous le référentiel IFR ou bien le type ne correspond pas au modèle. Automatisation impossible.'
+				Return -1
+			End	
+	End
+
+-- binome marque/modèle doit être redresser en IFR si possible, sinon rejet vers la gestion (Lisette)
+/* Non utilisé pour l'instant après analyse avec Lisette.
+If @sVarianteDp406 in ( 'BOUYGUES' )
+	Begin
+		Declare 
+			@asMarqueIfr	VarChar ( 35 ), 
+			@asModeleIfr	VarChar ( 35 ),
+			@iRet			Integer,
+			@sCodeRefExt    Varchar ( 3 ) 
+
+		If @sVarianteDp406 = 'BOUYGUES' Set @sCodeRefExt = 'BYG'
+
+		Select	@sMarqueAppSin = ws.marq_port,
+				@sModlAppSin = ws.modl_port
+		From sysadm.w_sin ws
+		Where ws.id_sin = @adcIdSin
+
+		Select @asMarqueIfr = space ( 35 )
+		Select @asModeleIfr = space ( 35 )
+
+		Exec @iRet = sysadm.PS_S_SAGA2_RECUPERER_LES_MARQUE_MODELE_IFR_A_PARTIR_DES_MARQUE_ET_MODELE_ADHESION 
+			@sCodeRefExt, 
+			@sMarqueAppSin,
+			@sModlAppSin,
+			@asMarqueIfr  OutPut,  -- Marque IFR en retour
+			@asModeleIfr  OutPut	-- Modèle IFR en retour
+
+		If @iRet < 0 
+			Begin
+				Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, 'Redressement IFR impossible', 'Le binôme marque/modèle de l''appareil sinistre de l''assuré transmis par l''extranet ne peut pas être redressé en marque/modèle IFR, redressez manuellement. Automatisation impossible.'
+				Return -1
+			End
+
+		-- Maj marq/mdl Ifr sur le dossier
+		Update sysadm.w_sin Set marq_port = @asMarqueIfr, modl_port = @asModeleIfr where id_sin = @adcIdSin
+		
+	End 
+*/
 
 -- [RS2980_IFR] -- Ctrle Validité prix IFR
 Select	@sMarqueAppSin = ws.marq_port,
@@ -1852,9 +1920,26 @@ If @sVarianteDp406 = 'BOUYGUES'
 				Set @sVal = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'que_s_est_t_il_passe_code', 'W', '' )
 				If CHARINDEX ( '#', @sVal ) <= 0 Or Left ( @sVal, 1 ) <> '#' Or Right ( @sVal, 1 ) <> '#' Or CHARINDEX ( '##', @sVal ) > 0 
 				Begin
-					Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, '<<Que s''est-il..>> non valide', 'L''extranet a transmis une chaine des Choc, Chute, Pression etc... non valide au niveau du format (doit comporter 13 chiffres). Automatisation impossible.'
+					Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, '<<Que s''est-il..>> non valide', 'L''extranet a transmis une chaine des Choc, Chute, Pression etc... non valide au niveau du format (au niveau des #..#..#). Automatisation impossible.'
 					Return -1
 				End 
+
+				  -- 2ème contrôle au niveau des valeurs de la chaine
+				  If Exists ( 
+						Select Top 1 1 
+						from sysadm.FN_STRING_SPLIT ( @sVal, '#' ) as chaine
+						Where chaine.valeur <> ''
+						and Not Exists ( 
+								Select Top 1 1 
+								From sysadm.code_car cc
+								Where cc.id_typ_code = '-WP'
+								And cc.id_code = chaine.valeur
+							)
+					)
+					Begin
+						Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, '<<Que s''est-il..>> non valide', 'L''extranet a transmis une chaine des Choc, Chute, Pression etc... non valide, des valeurs de la chaines ne sont pas autorisées. Automatisation impossible.'
+						Return -1
+					End 
 
 					-- Transformation de la Chaine 
 					SELECT @sVal = 
@@ -1914,9 +1999,26 @@ If @sVarianteDp406 = 'BOUYGUES'
 				Set @sVal = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'quel_dysfonctionnement_code', 'W', '' )
 				If CHARINDEX ( '#', @sVal ) <= 0 Or Left ( @sVal, 1 ) <> '#' Or Right ( @sVal, 1 ) <> '#' Or CHARINDEX ( '##', @sVal ) > 0 
 				Begin
-					Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, '<< Quel dysfonc..>> non valide', 'L''extranet a transmis une chaine des Choc, Chute, Pression etc... non valide au niveau du format (doit comporter 13 chiffres). Automatisation impossible.'
+					Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, '<< Quel dysfonc..>> non valide', 'L''extranet a transmis une chaine non valide au niveau du format (au niveau des #..#..#). Automatisation impossible.'
 					Return -1
 				End 
+
+				  -- 2ème contrôle au niveau des valeurs de la chaine
+				  If Exists ( 
+						Select Top 1 1 
+						from sysadm.FN_STRING_SPLIT ( @sVal, '#' ) as chaine
+						Where chaine.valeur <> ''
+						and Not Exists ( 
+								Select Top 1 1 
+								From sysadm.code_car cc
+								Where cc.id_typ_code = '-WQ'
+								And cc.id_code = chaine.valeur
+							)
+					)
+					Begin
+						Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__REJET_VERS_DGRC @adcIdSin, '<<Quel dysfonc..>> non valide', 'L''extranet a transmis une chaine non valide, des valeurs de la chaines ne sont pas autorisées. Automatisation impossible.'
+						Return -1
+					End 
 
 					-- Transformation de la Chaine 
 					SELECT @sVal = 
