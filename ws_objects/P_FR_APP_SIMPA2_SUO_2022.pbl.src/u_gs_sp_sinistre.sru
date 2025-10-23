@@ -13515,9 +13515,10 @@ private subroutine uf_controlersaisie_boutique (integer alcas, ref string astext
 //*       JFF   05/07/2011   [PC292][AUCHAN]
 //*       JFF   18/06/2012   [CONFO][NV_PROCESS]
 //*       JFF   12/10/2012   [MANTIS5014]
+//* [20251023163743097][JFF][MCO1998]
 //*-----------------------------------------------------------------
 
-String	sCodAdh, sCodOrianBout, sNouvelleLigne, sAltCodBout, sIdFourDiag 
+String	sCodAdh, sCodOrianBout, sNouvelleLigne, sAltCodBout, sIdFourDiag, sVarianteDp12 
 Long		lIdOrianBout, lCodTel, lDeb, lFin, lProcessDiag, lRow, lRow1
 Boolean  bDartyTel, bDartyNomade, bCasto, bCmdeFNAC 
 s_Message stMessageSav
@@ -13601,6 +13602,14 @@ If lCodTel > 0 And sAltCodBout = "O" Then
 				/* Uniquement s'il y a des commandes pour DARTY.					 	  */
 				/*------------------------------------------------------------------*/
 				F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 12 )
+				
+				// [20251023163743097][JFF][MCO1998]
+				If F_CLE_A_TRUE ( "MCO1998" ) Then
+					If lDeb > 0 Then
+						sVarianteDp12 = F_CLE_VAL ( "OBLIG_SUR_RGLT_OU_PRESTA_UNIQ", idw_DetPro.GetItemString ( lDeb, "VAL_CAR" ), ";" )
+					End If 
+				End If 
+					
 				If lDeb > 0 And bDartyTel Then
 					If idw_LstwCommande.Find ( &
 							 "ID_TYP_ART = 'TEL' AND " + &		
@@ -13617,12 +13626,32 @@ If lCodTel > 0 And sAltCodBout = "O" Then
 
 					End If
 				ElseIf lDeb > 0 Then
-
-								stMessage.bouton		= OK!
-								stMessage.sCode		= "WSIN440"
-
-								asPos = "ID_ORIAN_BOUTIQUE"
-								asText = asText + " - Le code boutique" + sNouvelleLigne
+								// [20251023163743097][JFF][MCO1998]
+								If F_CLE_A_TRUE ( "MCO1998" ) Then
+									If sVarianteDp12 = "OUI" Then 
+										If ( idw_LstwCommande.RowCount () > 0 OR &
+										     idw_LstGti.Find ( "MT_PLAF_AREG > 0 OR MT_PLAF_REG > 0", 1, idw_LstGti.Rowcount () ) > 0 &
+										   ) Then 
+												stMessage.bouton		= OK!
+												stMessage.sCode		= "WSIN440"
+				
+												asPos = "ID_ORIAN_BOUTIQUE"
+												asText = asText + " - Le code boutique" + sNouvelleLigne
+										End If 
+									Else 
+										stMessage.bouton		= OK!
+										stMessage.sCode		= "WSIN440"
+		
+										asPos = "ID_ORIAN_BOUTIQUE"
+										asText = asText + " - Le code boutique" + sNouvelleLigne
+									End If 
+								Else 
+									stMessage.bouton		= OK!
+									stMessage.sCode		= "WSIN440"
+	
+									asPos = "ID_ORIAN_BOUTIQUE"
+									asText = asText + " - Le code boutique" + sNouvelleLigne
+								End If 
 
 
 				// Alerte, mais non obligatoire
