@@ -2384,6 +2384,12 @@ If F_CLE_A_TRUE ( "HUB875" ) Then
 	End IF 
 End If
 
+// [MIG165_BOUYGUES]
+If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
+	iUoGsSpSinistre2.Uf_Redressement_Marq_Modl_Ifr ( )
+End If 
+
+
 // [20250922143729383][JFF][PMO268_MIG56]
 /* Je stoppe cette modif, trop dangereux, Marlène revoit pour MBZ4
 If F_CLE_A_TRUE ( "PMO268_MIG56" ) Then
@@ -16716,7 +16722,17 @@ For lCpt = 1 To lTot
 				End If 
 				
 			End If 
-	
+		
+		
+		Case "TYPAPP_AREC_ANEU"
+			// [MIG165_BOUYGUES]
+			If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
+				F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 405 )
+				If lDeb > 0 Then
+					idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "O" )
+				End If 
+			End If 
+			
 	End Choose
 
 

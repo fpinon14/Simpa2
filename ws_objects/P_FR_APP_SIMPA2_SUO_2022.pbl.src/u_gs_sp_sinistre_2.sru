@@ -70,6 +70,7 @@ public function integer uf_zn_trt_divsin_poids_sup_30kg (string asdata, string a
 public function long uf_zn_trt_divsin_interv_serrurier (string asdata, string asnomcol, long alrow)
 public function long uf_zn_trt_divsin_recredit_imm (string asdata, string asnomcol, long alrow)
 public function long uf_zn_trt_divsin_code_ean (string asdata, string asnomcol, long alrow)
+public subroutine uf_redressement_marq_modl_ifr ()
 end prototypes
 
 public function long uf_zn_trt_divsin_typeapp (string asdata, string asnomcol, long alrow, boolean abforcer);//*-----------------------------------------------------------------
@@ -2245,6 +2246,75 @@ End If
 Return iAction
 
 end function
+
+public subroutine uf_redressement_marq_modl_ifr ();//*-----------------------------------------------------------------
+//*
+//* Fonction		: Uf_Redressement_Marq_Modl_Ifr (PRIVATE)
+//* Auteur			: JFF
+//* Date				: 23/10/2025
+//* Libellé			:  [MIG165_BOUYGUES]
+//* Commentaires	:  Contrôle de gestion lié à Bouygyes
+//*                  
+//*
+//* Arguments		: 
+//*
+//* Retourne		: Rien
+//*
+//*-----------------------------------------------------------------
+
+Long lDeb, lFin
+Int iRet, iVal1, iVal2 
+String sCodeRefExt, sMarqueExt, sModeleExt, sMarqueIfrRet, sModeleIfrRet
+
+// Bouygues
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 405)
+If lDeb <= 0 Then Return 
+If lDeb > 0 Then sCodeRefExt = "BYG"
+
+iVal1 = idw_WSin.GetItemNumber ( 1, "CPT_VALIDE" )
+If IsNull ( iVal1 ) Then iVal1 = 0
+iVal2 = idw_WSin.GetItemNumber ( 1, "COD_ETAT" )
+If IsNull ( iVal2 ) Then iVal2 = 0
+
+
+If iVal1 > 0 Or iVal2 > 0 Then Return
+
+sMarqueExt = idw_WSin.GetItemString ( 1, "MARQ_PORT" )
+sModeleExt = idw_WSin.GetItemString ( 1, "MODL_PORT" )
+sMarqueIfrRet = space ( 35 )
+sModeleIfrRet = space ( 35 )
+
+iRet = SQLCA.PS_S_SAGA2_RECUPERER_LES_MARQUE_MODELE_IFR_A_PARTIR_DES_MARQUE_ET_MODELE_ADHESION ( sCodeRefExt, sMarqueExt, sModeleExt, sMarqueIfrRet, sModeleIfrRet ) 
+
+// Déjà IFR
+If iRet > 0 And sMarqueExt = sMarqueIfrRet And sModeleExt = sModeleIfrRet Then 
+	stMessage.berreurg=FALSE
+	stMessage.bouton=Ok!
+	stMessage.icon=Information!
+	stMessage.stitre="Déjà IFR"
+	stMessage.scode ="WSIN937"
+	
+	f_message(stMessage)
+	Return
+End If 
+
+// Redressement
+If iRet > 0 Then
+	idw_WSin.SetItem ( 1, "MARQ_PORT", sMarqueIfrRet ) 
+	idw_WSin.SetItem ( 1, "MODL_PORT", sModeleIfrRet ) 
+	
+	stMessage.berreurg=FALSE
+	stMessage.bouton=Ok!
+	stMessage.icon=Information!
+	stMessage.stitre="Redressement IFR automatique"
+	stMessage.scode ="WSIN936"
+	
+	f_message(stMessage)
+	
+End If 
+
+
+end subroutine
 
 on u_gs_sp_sinistre_2.create
 call super::create

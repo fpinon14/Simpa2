@@ -853,6 +853,9 @@ subroutine IM_I01_SOUPLESSE(long dcIdProd,long dcIdRev,long dcIdRevAnc,datetime 
 //       JFF   22/07/2025 [20250922143729383][JFF][PMO268_MIG56]
 function Int PS_SI_MAJ_ID_BOUTIQUE_EN_FONCTION_COD_BOUTIQUE_ADH_DIV_PRO ( long adcIdSin, String asCasTrt, ref Long alIdOrianBoutique ) RPCFUNC ALIAS FOR "sysadm.PS_SI_MAJ_ID_BOUTIQUE_EN_FONCTION_COD_BOUTIQUE_ADH_DIV_PRO"
 
+//       JFF   22/07/2025 [MIG165_BOUYGUES]
+function Int PS_S_SAGA2_RECUPERER_LES_MARQUE_MODELE_IFR_A_PARTIR_DES_MARQUE_ET_MODELE_ADHESION ( String asCodeRefExt, String asMarqueExt, String asModeleExt, Ref String asMarqueIfr, Ref String asModeleIfr ) RPCFUNC ALIAS FOR "sysadm.PS_S_SAGA2_RECUPERER_LES_MARQUE_MODELE_IFR_A_PARTIR_DES_MARQUE_ET_MODELE_ADHESION"
+
 end prototypes
 type variables
 Private:
