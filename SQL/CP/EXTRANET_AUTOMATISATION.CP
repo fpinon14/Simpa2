@@ -1203,7 +1203,6 @@ If @iCasSpeciauxDeMAJ > 0
 	If @iRet = -1 Return 1
  End
 
-
 -- Validation
 If @iValidationDossier > 0
  Begin
@@ -1219,6 +1218,7 @@ If @iEnvoiRecapDecl > 0
 	Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__ENVOI_RECAPITULATIF_DE_DECLARATION @adcIdSin, @dcIdGti, ''
  End
 
+ 
 If @iCreationTravail > 0 
 Begin 
 	Exec sysadm.PS_I_EXTRANET_AUTOMATISATION__CREATION_D_UN_TRAVAIL @adcIdSin
@@ -5318,11 +5318,11 @@ Set @sOper = 'WEB'
 
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
 BEGIN
-	EXEC SHERPA_PRO.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @adcIdSin, 2, @sMsgSherpa, @sOper , @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'E'
+	EXEC SHERPA_PRO.sysadm.PS_I04_CONTACT_TRAVAIL_V03 @adcIdSin, 2, @sMsgSherpa, @sOper , @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'E', NULL, 0
 END
 ELSE
 BEGIN
-	EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V01 @adcIdSin, 2, @sMsgSherpa, @sOper , @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'E'
+	EXEC SHERPA_SIM.sysadm.PS_I04_CONTACT_TRAVAIL_V03 @adcIdSin, 2, @sMsgSherpa, @sOper , @sErr OUTPUT , @iIdCt OUTPUT , NULL, 'E', NULL, 0
 END
 
 Set @sMsgSucces = 'Succès automatisation déclaration'
