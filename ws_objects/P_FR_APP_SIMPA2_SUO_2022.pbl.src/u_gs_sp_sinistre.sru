@@ -3726,7 +3726,7 @@ End If
 		
 // [PC13279_MOBILEO]
 lRow = idw_wdivsin.Find("nom_zone='typapp_arec_aneu'", 1 , idw_wdivsin.Rowcount()+1 )
-If lRow > 0 Then
+If lRow > 0 And Not bAltBloc Then
 	sVal1 = This.uf_GestOng_Divers_Trouver ( "TYPAPP_AREC_ANEU" )				
 	If Trim ( sVal1 ) = "" Or IsNull ( sVal1 ) Then
 		stMessage.sTitre		= "Contrôle de saisie du sinistre"
@@ -16752,7 +16752,8 @@ For lCpt = 1 To lTot
 				
 			End If 
 		
-		
+
+		/*
 		Case "TYPAPP_AREC_ANEU"
 			// [MIG165_BOUYGUES]
 			If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
@@ -16761,6 +16762,7 @@ For lCpt = 1 To lTot
 					idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "O" )
 				End If 
 			End If 
+		*/ 
 			
 	End Choose
 

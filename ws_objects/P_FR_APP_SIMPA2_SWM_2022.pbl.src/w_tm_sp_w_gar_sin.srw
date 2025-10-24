@@ -3410,13 +3410,15 @@ event ue_dwtrt_itemchanged;call super::ue_dwtrt_itemchanged;//*-----------------
 //		FPI	01/09/2016	[VDoc21594]
 //		JFF   03/01/2020	[PC192290]
 //    JFF   04/09/2023  [RS5656_MOD_PCE_DIF]
+//    [20251024135148363][JFF][MIG165_BOUYGUES]
 //*-----------------------------------------------------------------
 
-String sNomCol, sVal, sRech, sEtatPce, sLibEtatPce, sModeFctDp345 
+String sNomCol, sVal, sRech, sEtatPce, sLibEtatPce, sModeFctDp345, sLstPrecisionDp345, sRetChoixPrecision 
 n_cst_string lnvPFCString
 Boolean bFin
 Long lLigne, lTot, lTotDetail, lCpt, lDeb, lFin
 Integer iRow, iIdI, iIdGti
+s_Pass stPass 
 
 //Migration PB8-WYNIWYG-03/2006 CP
 Long ll_return
@@ -3561,6 +3563,9 @@ Case "ALT_RECLAME"
 		// Determination de la Méthode  // [RS5656_MOD_PCE_DIF]
 		sModeFctDp345 = lnvPFCString.of_getkeyvalue (idwDetPro.GetItemString ( lDeb, "VAL_CAR" ), "MODE_FCT", ";")
 		If sModeFctDp345 = "" Then sModeFctDp345 = "UNIQUE"
+
+		// [20251024135148363][JFF][MIG165_BOUYGUES]
+		sLstPrecisionDp345 = lnvPFCString.of_getkeyvalue (idwDetPro.GetItemString ( lDeb, "VAL_CAR" ), "LISTE_PRECISION", ";")		
 		
 		If sVal = "O" Then 
 			// [RS5656_MOD_PCE_DIF]
@@ -3650,6 +3655,34 @@ Case "ALT_RECLAME"
 					
 					// OUI, de nouveau la réclamer
 					If F_Message ( stMessage ) = 1 Then
+						
+						// [20251024135148363][JFF][MIG165_BOUYGUES]
+						If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
+							If sLstPrecisionDp345 <> "" Then
+								
+								stMessage.sTitre		= "Précision sur la pièce"
+								stMessage.Icon			= Information!
+								stMessage.bErreurG	= False
+								stMessage.sCode		= "WGAR451"
+								stMessage.sVar[1]		= sCodePce
+								stMessage.bouton = YesNo!
+								
+								// OUI, de nouveau la réclamer
+								If F_Message ( stMessage ) = 1 Then								
+									stPass.sTab [1] = sLstPrecisionDp345
+									stPass.sTab [2] = "Apporter une précision sur la demande de pièce"
+									stPass.sTab [3] = "AUCUNE"
+									OpenWithParm ( w_t_choix_une_valeur_liste,  stPass ) 
+									sRetChoixPrecision = Message.StringParm				
+								
+									Messagebox ("sRetChoixPrecision", sRetChoixPrecision )
+									
+									// Traiter le retour
+								End If 
+
+							End If 
+						End If						
+						
 						
 						Do While Not bFin
 							stMessage.sTitre		= "Validation de la pièce"
