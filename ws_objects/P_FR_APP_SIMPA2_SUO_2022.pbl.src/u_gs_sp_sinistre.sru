@@ -587,6 +587,7 @@ private subroutine uf_preparermodifier (ref s_pass astpass);//*-----------------
 //       JFF   19/12/2024 [MIG1_COUR_EMAILING]
 //       JFF   12/02/2025 [HUB875]
 //       JFF   22/09/2025 [20250922143729383][JFF][PMO268_MIG56]
+// [20251024135148363][JFF][MIG165_BOUYGUES]
 //*-----------------------------------------------------------------
 
 String sCol[], sValCar, sValCar2, sIdAdh, sSIREN, sVal, sVal2, sPctRisque, sAltPart 
@@ -600,7 +601,7 @@ DataWindowChild	dwChild, dwChild1
 Date dDteFinGti, dDteFinGtiPrec, sDteNull, dDteAdh, dDteAchPort, dDteOuvLig, dDteDecl // #21 - Ajout dDteOuvLig
 Datetime dtDteSurv
 Long lDeb2			//	#21
-String	sCodAdh, sDELTA, sFUSION, sFUSION_Aqu, sFUSION_Orne, sNull
+String	sCodAdh, sDELTA, sFUSION, sFUSION_Aqu, sFUSION_Orne, sNull, sPrecision 
 Int		iDELTA, iDELTASLASH, iFUSION, iFUSIONSLASH
 Integer	iIdFam // #11 [DCMP060405] 
 n_cst_string	lnvString // #18 [DCMP090585]
@@ -2229,6 +2230,7 @@ If lDeb > 0 And isTypeTrt = "S" Then
 		sIdPce = lnvString.of_getkeyvalue (sValTemp, "IP", ";")
 		sEtatPce = lnvString.of_getkeyvalue (sValTemp, "EP", ";")
 		sDteAnalysePce = lnvString.of_getkeyvalue (sValTemp, "DA", ";")
+		sPrecision = lnvString.of_getkeyvalue (sValTemp, "PR", ";") // [20251024135148363][JFF][MIG165_BOUYGUES]
 		
 		iRow = gdsPieceSherpa.InsertRow ( 0 )
 
@@ -2240,6 +2242,7 @@ If lDeb > 0 And isTypeTrt = "S" Then
 		gdsPieceSherpa.SetItem ( iRow, "ETAT_PCE", sEtatPce ) 
 		gdsPieceSherpa.SetItem ( iRow, "DTE_ANALYSE_PCE", DateTime ( sDteAnalysePce ) ) 
 		gdsPieceSherpa.SetItem ( iRow, "ID_I", 0 )
+		gdsPieceSherpa.SetItem ( iRow, "ID_PRECISION", sPrecision ) // [20251024135148363][JFF][MIG165_BOUYGUES]
 		
 		sVal = Mid ( sVal, iPos + 1, Len ( sVal ) ) 
 		
@@ -4090,7 +4093,7 @@ private subroutine uf_controlergestion (ref s_pass astpass);//*-----------------
 Long lTotCourrier, lCodEtat, lNbContact, lNbNat, lCptCTact, llig, lCpt, lVal1, lVal2, lVal3, lVal4, lIdOrianBout, lVal5, lVal6 
 Long lCptDetail, lTotDetail, lTotCmd, lDeb, lFin, lCptRegFrn, lCodeEtat, lRow, lVal, lIdGti, lIdInter, lRowAss, lTot, lIdDetail 
 Long lVal31, lVal21, lIdI, lRow1, lRowIdEvtPce
-String 		sPos, sOng, sDosSuiviPar, sRech, sModl, sMarq, sNull, sVal, sBIN, sTypApp, sMail, sIdCour, sMess, sCraSuiviImei 
+String 		sPos, sOng, sDosSuiviPar, sRech, sModl, sMarq, sNull, sVal, sBIN, sTypApp, sMail, sIdCour, sMess, sCraSuiviImei, sPrecision 
 String		sDataInter[]   
 Integer iRet, iDroitInter[]	
 Boolean		bRetContact, bAltEdit, bVal, bAuMoinUnCourrier, bBloque, bMessage
@@ -6028,9 +6031,16 @@ if	not bBloque and sPos = "" then
 				
 				If lRow > 0 Then
 					sChainePce += ", " + SQLCA.FN_CODE_CAR ( "PRL", "-WJ" )
+					
+					// [20251024135148363][JFF][MIG165_BOUYGUES]
+					sPrecision = gdsPieceSherpa.GetItemString ( lCptPce, "ID_PRECISION" )
+					If Not IsNull ( sPrecision ) and Trim ( sPrecision ) <> ""Then
+						sChainePce += ", précision : " + SQLCA.FN_CODE_CAR ( sPrecision, "-WS" )
+					End If 
+					
 				End If 
 				
-				sChainePce = sChainePce + Char ( 10 )
+				sChainePce = sChainePce + Char ( 10 ) + Char ( 10 ) // [20251024135148363][JFF][MIG165_BOUYGUES]
 				
 			Next 
 		End If 
@@ -6058,11 +6068,13 @@ if	not bBloque and sPos = "" then
 				If lRow > 0 Then continue
 						
 				// [RS5656_MOD_PCE_DIF]
-				If iIdGtiPce > 0 Then
+				// [20251024135148363][JFF][MIG165_BOUYGUES] And sModeFctDp345 = "DET_GARANTIE"
+				If iIdGtiPce > 0 And sModeFctDp345 = "DET_GARANTIE" Then
 					sChainePce += "Garantie (" + String ( iIdGtiPce ) + ") " + SQLCA.FN_CODE_NUM ( iIdGtiPce, "-GA" ) + "/"						
 				End If 
 
-				If iIdDetailPce >= 0 Then
+				// [20251024135148363][JFF][MIG165_BOUYGUES] And sModeFctDp345 = "DET_GARANTIE"
+				If iIdDetailPce >= 0 And sModeFctDp345 = "DET_GARANTIE" Then
 					lRowIdEvtPce = idw_wDetail.Find ( "ID_GTI = " + String ( iIdGtiPce ) + " AND ID_DETAIL = " + String ( iIdDetailPce ), 1,  idw_wDetail.RowCount()) 
 					If lRowIdEvtPce > 0 Then
 						iIdEvtPce = idw_wDetail.GetItemNumber ( lRowIdEvtPce, "ID_EVT" ) 
@@ -6076,7 +6088,13 @@ if	not bBloque and sPos = "" then
 					
 				sChainePce += SQLCA.FN_CODE_CAR ( "PRL", "-WJ" )				
 				
-				sChainePce = sChainePce + Char ( 10 )
+				// [20251024135148363][JFF][MIG165_BOUYGUES]
+				sPrecision = gdsPieceSherpa.GetItemString ( lCptPce, "ID_PRECISION" )
+				If Not IsNull ( sPrecision ) and Trim ( sPrecision ) <> ""Then
+					sChainePce += ", précision : " + SQLCA.FN_CODE_CAR ( sPrecision, "-WS" )
+				End If 
+								
+				sChainePce = sChainePce + Char ( 10 ) + Char ( 10 ) // [20251024135148363][JFF][MIG165_BOUYGUES]
 				
 			Next 
 		End If 	
@@ -10342,6 +10360,7 @@ private subroutine uf_preparervalider (ref s_pass astpass);//*------------------
 //       JFF     28/09/2021  [20210928162035633] gestion d'un caractère de fin de chaine(@) pour ne pas perdre les espace de fin de chaine
 //       JFF     09/09/2022  [PM80_FA12_FRANEX]
 //       JFF   04/09/2023 [RS5656_MOD_PCE_DIF]
+// [20251024135148363][JFF][MIG165_BOUYGUES]
 //*-----------------------------------------------------------------
 
 Boolean bRet
@@ -10460,8 +10479,13 @@ If lDeb > 0 Then
 		sVal += "EP=" + sValTemp + ";"
 
 		sValTemp = String ( gdsPieceSherpa.GetItemDateTime ( lCpt, "DTE_ANALYSE_PCE" ), "dd/mm/yyyy hh:mm:ss" )
-		sVal += "DA=" + sValTemp 
+		sVal += "DA=" + sValTemp + ";"
 	
+		// [20251024135148363][JFF][MIG165_BOUYGUES]
+		sValTemp = gdsPieceSherpa.GetItemString ( lCpt, "ID_PRECISION" ) 
+		If IsNull ( sValTemp ) Then sValTemp = ""
+		sVal += "PR=" + sValTemp
+
 		sVal += "#"
 	
 	Next

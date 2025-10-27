@@ -34,9 +34,21 @@ on w_t_choix_une_valeur_liste.destroy
 destroy(this.dw_liste)
 end on
 
-event open;s_Pass stPass
+event open;//*-----------------------------------------------------------------
+//*
+//* Objet 			: w_t_choix_une_valeur_liste::Open
+//* Evenement 		: 
+//* Auteur			: Fabry JF
+//* Date				: 24/10/2025
+//* Libellé			: 
+//* Commentaires	: 
+//*				  
+//*-----------------------------------------------------------------
+//    [20251024135148363][JFF][MIG165_BOUYGUES]
+//*-----------------------------------------------------------------
+
+s_Pass stPass
 DataWindowChild dwChild
-String sCodeDefaut, sLibDefaut
 Int iRow
 
 stPass=Message.PowerObjectParm
@@ -44,26 +56,19 @@ stPass=Message.PowerObjectParm
 This.title = stPass.sTab [2]
 dw_liste.InsertRow ( 0 )
 
-dw_liste.GetChild ( "LIB_CODE", dwChild )
+dw_liste.GetChild ( "ID_CODE", dwChild )
 dwChild.SetTransObject ( SQLCA )
 dwChild.Retrieve ( stPass.sTab [1] )
 
-sCodeDefaut = stPass.sTab [3]
-iRow = dwChild.Find ( "ID_CODE = '" + sCodeDefaut + "'", 1, dwChild.RowCount () ) 
+dw_liste.SetItem ( 1, "ID_CODE",  stPass.sTab [3] )
 
-If iRow > 0 Then
-	sLibDefaut = dwChild.GetItemString ( iRow, "LIB_CODE" ) 
-
-	dw_liste.SetItem ( 1, "ID_CODE",  sCodeDefaut )
-	dw_liste.SetItem ( 1, "LIB_CODE",  sLibDefaut )	
-End IF 
 
 
 
 
 end event
 
-event close;//*-----------------------------------------------------------------
+event closequery;//*-----------------------------------------------------------------
 //*
 //* Objet 			: w_t_choix_une_valeur_liste::ItemChanged
 //* Evenement 		: 
@@ -77,10 +82,14 @@ event close;//*-----------------------------------------------------------------
 //*-----------------------------------------------------------------
 
 String sLibCode, sIdCode
+DataWindowChild dwChild
+Integer iRow 
 
 isRetour = dw_liste.GetItemString ( 1, "ID_CODE" ) 
-sLibCode = dw_liste.GetItemString ( 1, "LIB_CODE" ) 
 
+dw_liste.GetChild ( "ID_CODE", dwChild )
+iRow = dwChild.Find ( "ID_CODE = '" + isRetour + "'", 1, dwChild.Rowcount () )
+sLibCode = dwChild.GetItemString ( iRow, "LIB_CODE" ) 
 
 stMessage.sTitre		= "Validez votre choix"
 stMessage.Icon			= Information!
@@ -88,16 +97,31 @@ stMessage.bErreurG	= False
 stMessage.sCode		= "WGAR450"
 stMessage.sVar[1]		= sLibCode
 stMessage.bouton 		= YesNo!
+
 If F_Message ( stMessage ) = 1 Then 
-	CloseWithReturn(This, isRetour)
+	Return 0
 Else
-	Message.Processed = False
-	Message.ReturnValue 	= 0
+	Return 1
 ENd If 
 
 
 
+end event
 
+event close;//*-----------------------------------------------------------------
+//*
+//* Objet 			: w_t_choix_une_valeur_liste::Close
+//* Evenement 		: 
+//* Auteur			: Fabry JF
+//* Date				: 24/10/2025
+//* Libellé			: 
+//* Commentaires	: 
+//*				  
+//*-----------------------------------------------------------------
+//    [20251024135148363][JFF][MIG165_BOUYGUES]
+//*-----------------------------------------------------------------
+
+CloseWithReturn(This, isRetour)
 end event
 
 type dw_liste from datawindow within w_t_choix_une_valeur_liste
@@ -128,6 +152,9 @@ event itemchanged;//*-----------------------------------------------------------
 This.AcceptText() 
 
 Parent.PostEvent ( "Close" )
+
+Return 0
+
 
 
 

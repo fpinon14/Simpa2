@@ -127,7 +127,7 @@ private function boolean wf_condition_tac ()
 private function boolean wf_condition_ouverture_dt269 ()
 private function boolean wf_condition_ouverture_dt386 ()
 private subroutine wf_marquageetatpiecesherpa (integer aid_pce, string asetat_pce, integer aiidi)
-private subroutine wf_marquageetatpiecesherpa_rs5656 (integer aid_gti, integer aid_pce, string asetat_pce, integer aiidi)
+private subroutine wf_marquageetatpiecesherpa_rs5656 (integer aid_gti, integer aid_pce, string asetat_pce, integer aiidi, string asprecisionddepce)
 end prototypes
 
 on ue_quitteronglet011;call w_8_traitement_master::ue_quitteronglet011;//*-----------------------------------------------------------------
@@ -2295,7 +2295,7 @@ gdsPieceSherpa.SetItem ( iRow, "ID_I", aiIdI )
 
 end subroutine
 
-private subroutine wf_marquageetatpiecesherpa_rs5656 (integer aid_gti, integer aid_pce, string asetat_pce, integer aiidi);//*-----------------------------------------------------------------
+private subroutine wf_marquageetatpiecesherpa_rs5656 (integer aid_gti, integer aid_pce, string asetat_pce, integer aiidi, string asprecisionddepce);//*-----------------------------------------------------------------
 //*
 //* Fonction		: W_Tm_Sp_Garantie::Wf_MarquageEtatPieceSherpa_RS5656 (PRIVATE)
 //* Auteur			: Fabry JF
@@ -2310,6 +2310,7 @@ private subroutine wf_marquageetatpiecesherpa_rs5656 (integer aid_gti, integer a
 //*-----------------------------------------------------------------
 //* MAJ   PAR      Date	     Modification
 //        JFF   04/09/2023  [RS5656_MOD_PCE_DIF]
+//    [20251024135148363][JFF][MIG165_BOUYGUES]
 //*-----------------------------------------------------------------
 Int iRow
 DateTime dtJour
@@ -2336,7 +2337,8 @@ If iRow <= 0 Then
 	
 	gdsPieceSherpa.SetItem ( iRow, "ID_GTI", aid_gti ) 
 	gdsPieceSherpa.SetItem ( iRow, "ID_DETAIL", -1 ) 			
-	gdsPieceSherpa.SetItem ( iRow, "ID_PCE", aid_pce ) 
+	gdsPieceSherpa.SetItem ( iRow, "ID_PCE", aid_pce )
+	gdsPieceSherpa.SetItem ( iRow, "ID_PRECISION", asprecisionddepce )  //    [20251024135148363][JFF][MIG165_BOUYGUES]
 End If 
 
 dtJour = DateTime ( Today(), Now())
@@ -3638,7 +3640,8 @@ Case "ALT_RECLAME"
 					// TRT : Marquage id_sin, id_pce pour sherpa PVL
 					
 					// [RS5656_MOD_PCE_DIF]
-					Parent.Wf_MarquageEtatPieceSherpa_RS5656 ( iIdGti, Integer ( sCodePce ), "PVL", iIdI )
+					// [20251024135148363][JFF][MIG165_BOUYGUES]
+					Parent.Wf_MarquageEtatPieceSherpa_RS5656 ( iIdGti, Integer ( sCodePce ), "PVL", iIdI, sRetChoixPrecision )
 					
 					// Décochage natif
 					This.dw_Trt.SetItem ( lLigne, "ALT_RECLAME", "N" )
@@ -3673,11 +3676,8 @@ Case "ALT_RECLAME"
 									stPass.sTab [2] = "Apporter une précision sur la demande de pièce"
 									stPass.sTab [3] = "AUCUNE"
 									OpenWithParm ( w_t_choix_une_valeur_liste,  stPass ) 
-									sRetChoixPrecision = Message.StringParm				
-								
-									Messagebox ("sRetChoixPrecision", sRetChoixPrecision )
-									
-									// Traiter le retour
+									sRetChoixPrecision = Message.StringParm
+									If sRetChoixPrecision = "AUCUNE" Then SetNull ( sRetChoixPrecision )
 								End If 
 
 							End If 
@@ -3696,7 +3696,8 @@ Case "ALT_RECLAME"
 						
 					// [RS5656_MOD_PCE_DIF]
 					// TRT : Marquage id_sin, id_pce pour sherpa PNV
-					Parent.Wf_MarquageEtatPieceSherpa_RS5656 ( iIdGti, Integer ( sCodePce ), "PNV", iIdI )
+					//    [20251024135148363][JFF][MIG165_BOUYGUES]
+					Parent.Wf_MarquageEtatPieceSherpa_RS5656 ( iIdGti, Integer ( sCodePce ), "PNV", iIdI, sRetChoixPrecision )
 					
 					// TRT : on laisse cocher !!
 					This.dw_Trt.SetItem ( lLigne, "ALT_RECLAME", "O" )
@@ -3705,8 +3706,9 @@ Case "ALT_RECLAME"
 					Else 
 						
 						// [RS5656_MOD_PCE_DIF]
+						// [20251024135148363][JFF][MIG165_BOUYGUES]
 						// TRT : Marquage id_sin, id_pce pour sherpa PNV
-						Parent.Wf_MarquageEtatPieceSherpa_RS5656 ( iIdGti, Integer ( sCodePce ), "PNV", iIdI )
+						Parent.Wf_MarquageEtatPieceSherpa_RS5656 ( iIdGti, Integer ( sCodePce ), "PNV", iIdI, sRetChoixPrecision )
 						
 						// Décochage natif
 						This.dw_Trt.SetItem ( lLigne, "ALT_RECLAME", "N" )
