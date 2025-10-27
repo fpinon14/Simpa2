@@ -1483,8 +1483,8 @@ Set @sSql =
 ' s.subscription_date as dte_adh, ' +
 ' c.declaration_date as dte_decl, ' +
 ' c.occurence_date as dte_surv, ' +
-' rpcm.code, ' +
-' rpcm.long_label ' +
+' rpcm.code as code_motif, ' +
+' rpcm.long_label as lib_motif ' +
 ' ' +
 'From  ' + @sInstanceSaga2 + '.SAGA2_PVC.oth_cla.claim c  ' +
 'inner join  ' + @sInstanceSaga2 + '.SAGA2_PVC.oth_sub.subscription s on s.id_subscription = c.id_subscription  ' +

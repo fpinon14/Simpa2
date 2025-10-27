@@ -8,16 +8,17 @@
 --
 -------------------------------------------------------------------
 
-
 --------------------------------------------------------------------
 --
 -- Proc‚dure            :       PS_IU_PIECE_HISTO
--- Auteur               :       JFF
+-- Auteur               :       JFFPS_U_MAJ_ETAT_PCE_SHERPA
 -- Date                 :       22/04/2016
 -- Libelle              : 	[VDOC21884]
 -- Commentaires         :       
 -- References           :  (Non appelé, pas prod, car reportée en TRIGGER sur w_piece)
 --
+-------------------------------------------------------------------
+-- [20251024135148363][JFF][MIG165_BOUYGUES]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_IU_PIECE_HISTO' AND type = 'P' )
         DROP procedure sysadm.PS_IU_PIECE_HISTO
@@ -46,7 +47,21 @@ And		Not exists (
 		)
 
 -- Piece demandées : Absence dans sysadm.piece_histo et présence dans w_piece
-Insert into sysadm.piece_histo
+Insert into sysadm.piece_histo ( -- [20251024135148363][JFF][MIG165_BOUYGUES]
+	   [id_sin]
+      ,[id_gti]
+      ,[id_detail]
+      ,[id_pce]
+      ,[id_i]
+      ,[id_para]
+      ,[dte_demande]
+      ,[dte_reception]
+      ,[cree_le]
+      ,[maj_le]
+      ,[maj_par]
+      ,[valide_le]
+      ,[valide_par]
+) -- [20251024135148363][JFF][MIG165_BOUYGUES]
 Select	wp.id_sin,
 		wp.id_gti,
 		wp.id_detail,
@@ -149,6 +164,7 @@ Go
 --
 -------------------------------------------------------------------
 -- [20251020094815167][JFF][MIG147]
+-- [20251024135148363][JFF][MIG165_BOUYGUES]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U_MAJ_ETAT_PCE_SHERPA' AND type = 'P' )
         DROP procedure sysadm.PS_U_MAJ_ETAT_PCE_SHERPA
@@ -161,9 +177,15 @@ CREATE procedure sysadm.PS_U_MAJ_ETAT_PCE_SHERPA
 	@asChaineTrt3 VarChar ( 255 )
 AS
 
+Declare @sChaineTrt Varchar ( 765 ) 
 Declare @iIdSin Int
 Declare @dcIdProd Decimal ( 7 )
 Declare @iIdCli Integer 
+Declare @sZnDS_pceSherpaRacine Varchar ( 50 )
+Declare @sZnDS_pceSherpa Varchar ( 50 )
+Declare @iZnDS_pceSherpa integer 
+Declare @sPceReclAvecPrecision VarChar ( 508 )
+Declare @iIdCt Integer
 
 Set @iIdSin = Convert ( Integer, @adcIdSin )
 
@@ -232,10 +254,56 @@ ELSE
 
 	END	
 
-Declare @sZnDS_pceSherpaRacine Varchar ( 50 )
-Declare @sZnDS_pceSherpa Varchar ( 50 )
-Declare @iZnDS_pceSherpa integer 
+-- [MIG165_BOUYGUES]
+If sysadm.FN_CLE_NUMERIQUE ( 'MIG165_BOUYGUES') > 0 
+ Begin
+	-- Maj précision sur sysadm.piece_histo
+ 	Set @sChaineTrt = CONCAT ( @asChaineTrt1, @asChaineTrt2, @asChaineTrt3 ) 
+	Set @sChaineTrt = Replace ( @sChaineTrt, '@', '' )
+	;With tb1 
+	As ( 
+		Select valeur 
+		from sysadm.FN_STRING_SPLIT ( @sChaineTrt, '#' ) 
+		Where valeur <> ''
+	)
+	Update ph
+	Set id_precision = sysadm.FN_CLE_VAL ( 'PR', tb1.valeur, ';' ) 
+	From tb1, 
+		 sysadm.piece_histo ph
+	Where ph.id_pce = convert ( Decimal ( 7 ), sysadm.FN_CLE_VAL ( 'IP', tb1.valeur, ';' )  )
+	and ph.id_sin = @adcIdSin
 
+	-- trace par un contact des pièces réclamées avec précision
+	;With tb1 
+	As ( 
+		Select valeur 
+		from sysadm.FN_STRING_SPLIT ( @sChaineTrt, '#' ) 
+		Where valeur <> ''
+	)
+	SELECT @sPceReclAvecPrecision =
+		( SELECT 
+			   '(' + sysadm.FN_CLE_VAL ( 'IP', valeur, ';' ) + ') '  +
+			   Trim ( sysadm.FN_CODE_NUM ( sysadm.FN_CLE_VAL ( 'IP', valeur, ';' ), '+PC' )) + ' ' +
+			   '(précision : ' + sysadm.FN_CODE_CAR ( sysadm.FN_CLE_VAL ( 'PR', valeur, ';' ), '-WS' ) + ')' +
+			   char ( 10 )
+		FROM tb1 
+ 		WHERE len ( sysadm.FN_CLE_VAL ( 'PR', valeur, ';' )) > 0
+		FOR XML PATH(''))
+
+	If @sPceReclAvecPrecision is not null and @sPceReclAvecPrecision <> '' 
+	Begin
+		Set @sPceReclAvecPrecision  = 'Certaines pièces ont été réclamées avec une précision qui apparaîtra sur l''extranet : ' + Char ( 10 ) + @sPceReclAvecPrecision  
+	End 
+
+	IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO'
+	BEGIN
+			Exec SHERPA_PRO.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @adcIdSin, 2, @sPceReclAvecPrecision, 'AUTO', 300, @iIdCt OUTPUT							
+	END
+	ELSE
+	BEGIN
+			Exec SHERPA_SIM.sysadm.PS_I01_CONTACT_V01 -1, 2, 4, 'C', @adcIdSin, 2, @sPceReclAvecPrecision, 'AUTO', 300, @iIdCt OUTPUT							
+	END	
+ End 
 
 Set @sZnDS_pceSherpaRacine = 'sznds_pcesherpa_'
 Set @iZnDS_pceSherpa = 1 
