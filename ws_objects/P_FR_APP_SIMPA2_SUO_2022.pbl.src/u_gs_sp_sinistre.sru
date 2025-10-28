@@ -588,6 +588,7 @@ private subroutine uf_preparermodifier (ref s_pass astpass);//*-----------------
 //       JFF   12/02/2025 [HUB875]
 //       JFF   22/09/2025 [20250922143729383][JFF][PMO268_MIG56]
 // [20251024135148363][JFF][MIG165_BOUYGUES]
+// [20251028104420513][JFF][OPTIM_PLAF_SAGA2]
 //*-----------------------------------------------------------------
 
 String sCol[], sValCar, sValCar2, sIdAdh, sSIREN, sVal, sVal2, sPctRisque, sAltPart 
@@ -612,7 +613,7 @@ n_cst_attrib_key	lnv_Key[]
 Long dcIdSin, dcIdProd, dcIdEts
 Int  iNbAutreSin, iPctRisque, iIdInterModeleDP, iTot_gTInterCP 
 Long lVal1
-String sZnDS_pceSherpaRacine, sZnDS_pceSherpa, sValTemp, sIdPce, sEtatPCe, sDteAnalysePce, sVal1
+String sZnDS_pceSherpaRacine, sZnDS_pceSherpa, sValTemp, sIdPce, sEtatPCe, sDteAnalysePce, sVal1, sSql 
 Int iZnDS_pceSherpa, iPos, iRow
 Boolean bFin
 Int iTInterCPNull [] // [RS5045_REF_MATP]
@@ -2392,6 +2393,21 @@ If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
 	iUoGsSpSinistre2.Uf_Redressement_Marq_Modl_Ifr ( )
 End If 
 
+// [20251028104420513][JFF][OPTIM_PLAF_SAGA2]
+If F_CLE_A_TRUE ( "OPTIM_PLAF_SAGA2" ) Then
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 408)	
+	If lDeb > 0 Then
+		sVal = idw_wsin.GetItemString ( 1, "ID_ADH" )
+		If Not IsNull ( sVal ) And Trim ( sVal ) <> "" And IsNumber ( sVal ) Then
+			sVal = Trim ( sVal )
+			sSql = "Exec sysadm.PS_S_SAGA2_RECUPERER_DONNEES_POUR_PLAFOND_PAR_ANNEE '" + sVal + "'"
+	
+			F_Execute ( sSql, SQLCA )
+			bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0		
+			F_Commit ( SQLCA, bRet ) 
+		End If 
+	End If 
+End IF 	
 
 // [20250922143729383][JFF][PMO268_MIG56]
 /* Je stoppe cette modif, trop dangereux, Marlène revoit pour MBZ4
