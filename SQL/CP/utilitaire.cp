@@ -5,110 +5,94 @@
 --
 -- Libellé        : Fonctions & Procédures utilitaires
 --
--- FN_INT_DTE          FS 24/02/2004 : Conversion d'une date du format integer -> format datetime
--- FN_FILTRER_CAR      FS 27/05/2004 : Filtre les caractères à gauche d'une chaine ( débourrage ex 00012 -> 12 )
--- FN_GET_BASE_GRC     FS 29/06/2004 : Obtention du nom de la base GRC à partir de la base de gestion en cours
--- PS_X_NOM            FS 16/01/2001 : Séparation d'une chaine en nom + prenom
--- FN_DTE_RNV         JFF 26/12/2005 : Calcule une date de renouvellement à partir d'un n° de sinistre
--- FN_CODE_NUM 	       FS 18/11/2005 : Retourne le libellé d'un code numérique
--- FN_CODE_CAR 	       FS 18/11/2005 : Retourne le libellé d'un code caractère
--- FN_LIB_PROD        JFF 17/01/2006 : Retourne le libellé long du produit
--- FN_CORR_IMEI       JFF 23/01/2007 : Retourne un IMEI corrigé.
--- FN_CLE_VAL         JFF 21/02/2007 : Pour un clé fournie, qui se trouve dans une chaîne de caractères, retourne la valeur liée, en précisant le séparateur
--- FN_MESS            JFF 14/03/2007 : Accèlère la lecture d'une donné sur tb sysadm.message
--- FN_CORR_NUM_CARTE  JFF 15/01/2008 : Renvoi un n° de carte bancaire corrigé
--- FN_CLE_VAL_E       JFF 21/02/2007 : Pour un clé fournie, qui se trouve OU PAS dans une chaîne de caractères, écrit la valeur sur la clé et créé la clé si inexistante, en précisant le séparateur
--- FN_MASQUER_CARTE    FS 12/02/2008 : Masque partiellement un n° de carte
--- FN_TAG	      JFF 19/08/2009 : Générateur de TAG.
--- FN_GET_DOS_SUIVI_PAR  FS  le 24/09/2009 : Obtention du responsable du suivi de dossier
--- FN_GET_LIB_POLICE	FPI 08/10/2009 [EXPANSION5.LIB_POLICE]
--- FN_GET_LIB_POLICE_V01	SBA 21/07/2010 [PC202]
--- PS_CORRIGE_CPT_VALIDE	FPI	le 19/10/2008 : Correction de la valeur de CPT_valide dans les différentes tables
--- DW_S01_LIB_POLICE	FPI 28/10/2009 [EXPANSION5.LIB_POLICE]
--- DW_S01_LIB_POLICE_V01 	SBA 21/07/2010 [PC202]
--- PS_S01_LIB_POLICE	JFF 20/11/2009 [POLICE_PARTICULIERE] 	
--- FN_GET_DIVERS_SINISTRE SBA 30/06/2010 : Renvoi le détail d'un sinistre
--------------------------------------------------------------------
--- PROCEDURE sysadm.DW_S01_LIB_POLICE_V01
--- function sysadm.FN_A_COMMANDER
--- function sysadm.FN_AFF_DATE 
--- function sysadm.FN_AFF_DATE_CLOTURE_ASS 
--- function sysadm.FN_CLE_VAL
--- function sysadm.FN_CLE_VAL_E
--- function sysadm.FN_CLE_VAL_XML  
--- function sysadm.FN_CLE_VAL_XML_SUBST
--- function sysadm.FN_CODE_CAR  
--- function sysadm.FN_CODE_NUM  
--- function sysadm.FN_CORR_IMEI
--- function sysadm.FN_CORR_NUM_CARTE
--- function sysadm.FN_CORR_NUM_CARTE_19
--- function sysadm.FN_CTRLE_ADR_MAIL 
--- function sysadm.FN_DATEDIFF  
--- function sysadm.FN_DATEDIFF_V01  
--- function sysadm.FN_DECRYPTE_NUM_CARTE
--- function sysadm.FN_DEM_RCP_PIECE 
--- function sysadm.FN_DTE_1ER_REGL 
--- function sysadm.FN_DTE_CLO 
--- function sysadm.FN_DTE_RNV 
--- function sysadm.FN_EPURE_CHAINE_V02 
--- function sysadm.FN_EVT_REMPL 
--- function sysadm.FN_FILTRER_CAR 
--- function sysadm.FN_GET_ASCENSION 
--- function sysadm.FN_GET_BASE_GRC )
--- function sysadm.FN_GET_DIV_SIN
--- function sysadm.FN_GET_DIVERS_SINISTRE 
--- function sysadm.FN_GET_DOS_SUIVI_PAR  @iIdSin Integer )
--- function sysadm.FN_GET_ETAT_DOSSIER_PM251
--- function sysadm.FN_GET_ETAT_GARANTIE_PM251
--- function sysadm.FN_GET_ID_CORB  
--- function sysadm.FN_GET_LIB_POLICE_V01
--- function sysadm.FN_GET_LISTE_GTI 
--- function sysadm.FN_GET_LUNDI_DE_PAQUES 
--- function sysadm.FN_GET_LUNDI_DE_PENTECOTE 
--- function sysadm.FN_GET_NOM_PRENOM  
--- function sysadm.FN_GET_PAQUES  
--- function sysadm.FN_GET_PENTECOTE 
--- function sysadm.FN_ID_CIE 
--- function sysadm.FN_INT_DTE 
--- function sysadm.FN_IS_DATE  
--- function sysadm.FN_IS_REG_ASSURE
--- function sysadm.FN_LIB_CIE 
--- function sysadm.FN_LIB_ETAT_DOS 
--- function sysadm.FN_LIB_ETAT_DOS_ASSURE 
--- function sysadm.FN_LIB_ETAT_DOS_ASSURE_V07 
--- function sysadm.FN_LIB_GROUPE 
--- function sysadm.FN_LIB_POLE  
--- function sysadm.FN_LIB_POLE  
--- function sysadm.FN_LIB_POLICE 
--- function sysadm.FN_LIB_PROD  
--- function sysadm.FN_LIB_PROD_ASS  
--- function sysadm.FN_MASQUER_CARTE
--- function sysadm.FN_MASQUER_CARTE_2
--- function sysadm.FN_MESS
--- function sysadm.FN_SOM_REGL 
--- function sysadm.FN_TAG 
--- Procedure  sysadm.PS_S_CHAINE_ALEATOIRE
--- PROCEDURE sysadm.PS_CHARGER_UN_FICHIER_BINAIRE_ADODB_STREAM
--- PROCEDURE sysadm.PS_CHARGER_UN_FICHIER_TEXTE_ADODB_STREAM
--- PROCEDURE sysadm.PS_DETRUIRE_UN_OBJET_SQL_SERVER 
--- PROCEDURE sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM_V03
--- PROCEDURE sysadm.PS_FERMER_UN_FICHER_ADODB_STREAM 
--- PROCEDURE sysadm.PS_FILE_OPEN_REWRITE 
--- PROCEDURE sysadm.PS_INSTANCIER_UN_OBJET_SQL_SERVER 
--- PROCEDURE sysadm.PS_SAUVEGARDER_ET_FERMER_UN_FICHER_ADODB_STREAM 
--- function sysadm.FN_GET_LIB_POLICE
--- FUNCTION sysadm.FN_GET_PERIODE_TRT
--- PROC PS_X_NOM
--- procedure [sysadm].[PS_DATEDIFF]
--- PROCEDURE sysadm.DW_S01_LIB_POLICE
--- procedure sysadm.PS_CASSER_REGLE_CHAINE
--- PROCEDURE sysadm.PS_CORRIGE_CPT_VALIDE 
--- procedure sysadm.PS_DECRYPTE_NUM_CARTE
--- PROCEDURE sysadm.PS_FILE_CLOSE 
--- PROCEDURE sysadm.PS_FILE_EXISTS 
--- PROCEDURE sysadm.PS_FILE_WRITE_DATA 
--- PROCEDURE sysadm.PS_MAIL_RAPPORT_SIM(
--- PROCEDURE sysadm.PS_S01_LIB_POLICE_V01
+-- sysadm.DW_S01_LIB_POLICE_V01
+-- sysadm.FN_A_COMMANDER (
+-- sysadm.FN_AFF_DATE  (
+-- sysadm.FN_AFF_DATE_CLOTURE_ASS  (
+-- sysadm.FN_CLE_VAL
+-- sysadm.FN_CLE_VAL_E
+-- sysadm.FN_CLE_VAL_XML  
+-- sysadm.FN_CLE_VAL_XML_SUBST
+-- sysadm.FN_CODE_CAR  
+-- sysadm.FN_CODE_NUM  
+-- sysadm.FN_CORR_IMEI
+-- sysadm.FN_CORR_NUM_CARTE
+-- sysadm.FN_CORR_NUM_CARTE_19
+-- sysadm.FN_CTRLE_ADR_MAIL  (
+-- sysadm.FN_DATEDIFF  ( 
+-- sysadm.FN_DATEDIFF_V01  ( 
+-- sysadm.FN_DECRYPTE_NUM_CARTE
+-- sysadm.FN_DEM_RCP_PIECE  (
+-- sysadm.FN_DTE_1ER_REGL  (
+-- sysadm.FN_DTE_CLO  (
+-- sysadm.FN_DTE_RNV  (
+-- sysadm.FN_EPURE_CHAINE_V02  (
+-- sysadm.FN_EVT_REMPL  (
+-- sysadm.FN_FILTRER_CAR  (
+-- sysadm.FN_GET_ASCENSION ( 
+-- sysadm.FN_GET_BASE_GRC  ()
+-- sysadm.FN_GET_DIV_DET (
+-- sysadm.FN_GET_DIV_SIN (
+-- sysadm.FN_GET_DIVERS_SINISTRE 
+-- sysadm.FN_GET_DOS_SUIVI_PAR  ( @iIdSin Integer )
+-- sysadm.FN_GET_ETAT_DOSSIER_PM251 (
+-- sysadm.FN_GET_ETAT_GARANTIE_PM251 (
+-- sysadm.FN_GET_ID_CORB  
+-- sysadm.FN_GET_LIB_POLICE_V01
+-- sysadm.FN_GET_LISTE_GTI  (
+-- sysadm.FN_GET_LUNDI_DE_PAQUES ( 
+-- sysadm.FN_GET_LUNDI_DE_PENTECOTE ( 
+-- sysadm.FN_GET_NOM_PRENOM  
+-- sysadm.FN_GET_PAQUES  ( 
+-- sysadm.FN_GET_PENTECOTE ( 
+-- sysadm.FN_ID_CIE_V02  (
+-- sysadm.FN_INSTANCE_SAGA2 ( )
+-- sysadm.FN_INT_DTE  (
+-- sysadm.FN_IS_DATE  
+-- sysadm.FN_IS_REG_ASSURE
+-- sysadm.FN_LIB_CIE_V02  (
+-- sysadm.FN_LIB_ETAT_DOS  (
+-- sysadm.FN_LIB_ETAT_DOS_ASSURE  (
+-- sysadm.FN_LIB_ETAT_DOS_ASSURE_V07  (
+-- sysadm.FN_LIB_GROUPE  (
+-- sysadm.FN_LIB_POLE  
+-- sysadm.FN_LIB_POLE  
+-- sysadm.FN_LIB_POLICE_V02  (
+-- sysadm.FN_LIB_PROD  
+-- sysadm.FN_LIB_PROD_ASS  
+-- sysadm.FN_MASQUER_CARTE
+-- sysadm.FN_MASQUER_CARTE_2
+-- sysadm.FN_MESS
+-- sysadm.FN_SOM_REGL  (
+-- sysadm.FN_TAG  (  
+-- sysadm.PS_S_CHAINE_ALEATOIRE
+-- sysadm.PS_CHARGER_UN_FICHIER_BINAIRE_ADODB_STREAM
+-- sysadm.PS_CHARGER_UN_FICHIER_TEXTE_ADODB_STREAM
+-- sysadm.PS_DETRUIRE_UN_OBJET_SQL_SERVER 
+-- sysadm.PS_ECRIRE_UN_ENREGISTREMENT_ADODB_STREAM_V03
+-- sysadm.PS_FERMER_UN_FICHER_ADODB_STREAM 
+-- sysadm.PS_FILE_OPEN_REWRITE 
+-- sysadm.PS_INSTANCIER_UN_OBJET_SQL_SERVER 
+-- sysadm.PS_SAUVEGARDER_ET_FERMER_UN_FICHER_ADODB_STREAM 
+-- sysadm.FN_CHAMPSFIXE (   
+-- sysadm.FN_GET_CHEMIN (   
+-- sysadm.FN_GET_LIB_POLICE
+-- sysadm.FN_GET_PERIODE_TRT (@dtDate datetime) 
+-- sysadm.FN_SIGNATURE_MAIL (   
+-- sysadm.FN_STRING_SPLIT
+-- PS_X_NOM
+-- sysadm.PS_DATEDIFF
+-- sysadm.DW_S01_LIB_POLICE
+-- sysadm.PS_CASSER_REGLE_CHAINE
+-- sysadm.PS_CORRIGE_CPT_VALIDE 
+-- sysadm.PS_DECRYPTE_NUM_CARTE
+-- sysadm.PS_FILE_CLOSE 
+-- sysadm.PS_FILE_EXISTS 
+-- sysadm.PS_FILE_WRITE_DATA 
+-- sysadm.PS_MAIL_RAPPORT_SIM
+-- sysadm.PS_S01_LIB_POLICE_V01
+-- sysadm.FN_LIB_GROUP
+-- sysadm.FN_ID_GROUP
 -------------------------------------------------------------------
 
 
@@ -7389,3 +7373,121 @@ BEGIN
 END;
 GO
 
+
+--------------------------------------------------------------------
+--
+-- Fonction             :       FN_LIB_GROUP
+-- Auteur               :       Fabry JF
+-- Date                 :       28/10/2025
+-- Libellé              :		
+-- Commentaires         :       
+-- Références           :       
+--
+-- Arguments            :       Aucun
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+-- JFF      12/02/2016   [PI062]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_LIB_GROUP' AND type = 'FN' )
+        DROP function sysadm.FN_LIB_GROUP
+GO
+
+CREATE  function sysadm.FN_LIB_GROUP  (
+        @dcIdSin    Decimal (10) , -- [PI062]
+		@sCas		VarChar  ( 1 ) -- P/W
+		)
+RETURNS VarChar ( 35 )
+AS
+
+Begin
+
+Declare @sLibGrp VarChar (35)
+
+If @sCas is null Set @sCas = 'P' -- Défaut
+
+If @sCas = 'P'
+Begin
+	Select @sLibGrp = grp.lib_grp
+	From sysadm.produit p,
+		 sysadm.sinistre s,
+		 sysadm.groupe grp
+	Where s.id_sin = @dcIdSin
+	And   p.id_prod = s.id_prod 
+	And   grp.id_grp = p.id_grp
+End  
+
+If @sCas = 'W'
+Begin
+	Select @sLibGrp = grp.lib_grp
+	From sysadm.produit p,
+		 sysadm.w_sin s,
+		 sysadm.groupe grp
+	Where s.id_sin = @dcIdSin
+	And   p.id_prod = s.id_prod 
+	And   grp.id_grp = p.id_grp
+End  
+
+Return Trim ( @sLibGrp )
+
+End 
+
+GO
+
+--------------------------------------------------------------------
+--
+-- Fonction             :       FN_ID_GROUP
+-- Auteur               :       Fabry JF
+-- Date                 :       28/10/2025
+-- Libellé              :		
+-- Commentaires         :       
+-- Références           :       
+--
+-- Arguments            :       Aucun
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+-- JFF      12/02/2016   [PI062]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'FN_ID_GROUP' AND type = 'FN' )
+        DROP function sysadm.FN_ID_GROUP
+GO
+
+CREATE  function sysadm.FN_ID_GROUP  (
+        @dcIdSin    Decimal (10) , -- [PI062]
+		@sCas		VarChar  ( 1 ) -- P/W
+		)
+RETURNS integer
+AS
+
+Begin
+
+Declare @iIdGrp VarChar (35)
+
+If @sCas is null Set @sCas = 'P' -- Défaut
+
+If @sCas = 'P'
+Begin
+	Select @iIdGrp = p.id_grp
+	From sysadm.produit p,
+		 sysadm.sinistre s
+	Where s.id_sin = @dcIdSin
+	And   p.id_prod = s.id_prod 
+End  
+
+If @sCas = 'W'
+Begin
+	Select @iIdGrp = p.id_grp
+	From sysadm.produit p,
+		 sysadm.w_sin s
+	Where s.id_sin = @dcIdSin
+	And   p.id_prod = s.id_prod 
+End  
+
+Return @iIdGrp
+
+End 
+
+GO

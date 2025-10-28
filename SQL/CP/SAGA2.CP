@@ -1421,7 +1421,9 @@ Declare @TbRetSaga2 Table (
 	dte_adh DateTime,
 	dte_decl DateTime,
 	dte_surv DateTime,
-	chaine_seria Varchar ( 800 ) -- [20251006144234][JFF][MIG119] 
+	code_motif integer,
+	lib_motif VarChar ( 255 )
+
 )
 
 Set @asSubscriptionNumber = Right ( REPLICATE ( '0', 12 ) + LTRIM ( rtrim ( @asSubscriptionNumber ) ), 12 ) 
@@ -2489,5 +2491,97 @@ If @asMarqueIfr is null Or Trim ( @asMarqueIfr ) = '' Or @asModeleIfr is null Or
 Return 1
 
 Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_SAGA2_RECUPERER_DONNEES_POUR_PLAFOND_PAR_ANNEE
+-- Auteur               :       FABRY JF
+-- Date                 :       28/10/2025
+-- Libellé              :       
+-- Commentaires         :       à appeler à partie de SIMPA2 !!!
+-- Références           :       
+--
+-------------------------------------------------------------------
+-- [20251006144234][JFF][MIG119]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_SAGA2_RECUPERER_DONNEES_POUR_PLAFOND_PAR_ANNEE' AND type = 'P' )
+        DROP procedure sysadm.PS_S_SAGA2_RECUPERER_DONNEES_POUR_PLAFOND_PAR_ANNEE
+GO
+
+CREATE procedure sysadm.PS_S_SAGA2_RECUPERER_DONNEES_POUR_PLAFOND_PAR_ANNEE
+	@asSubscriptionNumber VARCHAR(50)
+AS
+
+Declare @sInstanceSaga2 Varchar ( 50 )
+Declare @sSql Varchar ( 8000 )
+
+If @asSubscriptionNumber is null Return -1
+Set @asSubscriptionNumber = Trim ( @asSubscriptionNumber )
+If ISNUMERIC ( @asSubscriptionNumber ) = 0 Return -1
+
+Set @asSubscriptionNumber = Right ( REPLICATE ( '0', 12 ) + LTRIM ( rtrim ( @asSubscriptionNumber ) ), 12 ) 
+
+Set @sInstanceSaga2 = sysadm.FN_INSTANCE_SAGA2 ( )
+
+Set @sSql = 
+' Select ' +
+'  c.spb_claim_number AS id_sin, ' +
+'  s.subscription_number, ' +
+'  Case rcs.code ' +
+'    When 117 Then ''OUI'' ' +
+'    ELSE ''NON'' ' +
+'  End as indemnise, ' +
+'  ISNULL(SUM(pc.amount),0) as mt_reg_assure,  ' +
+'  Case  ' +
+'    When rcs.code = 117  ' +
+'	 Then coalesce(upper(rpm.short_label), ''REMP/REP'') ' +
+'    Else upper(rpm.short_label) ' + 
+'  End as mode_indemnisation, ' +
+' upper(rpm.long_label) as mode_indemnisation_long, ' +
+' s.subscription_date as dte_adh, ' +
+' c.declaration_date as dte_decl, ' +
+' c.occurence_date as dte_surv, ' +
+' rpcm.code as code_motif, ' +
+' rpcm.long_label as lib_motif ' +
+' ' +
+'From  ' + @sInstanceSaga2 + '.SAGA2_PVC.oth_cla.claim c  ' +
+'inner join  ' + @sInstanceSaga2 + '.SAGA2_PVC.oth_sub.subscription s on s.id_subscription = c.id_subscription  ' +
+'inner join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.product p on p.id_product = s.id_product  ' +
+'inner join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.product_group pg on pg.id_product_group = p.id_product_group  ' +
+'inner join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_claim_status rcs on rcs.id_ref_claim_status = c.id_ref_claim_status  ' +
+'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.oth_cla.damaged_cover dc on dc.id_claim = c.id_claim  ' +
+'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_benefit_type rbt on rbt.id_ref_benefit_type= dc.id_ref_benefit_type  ' +
+'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.oth_cla.payment_claim pc on pc.id_claim = c.id_claim  ' +
+'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_type rpt on rpt.id_ref_payment_type = pc.id_ref_payment_type  ' +
+'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_nature rpn on rpn.id_ref_payment_nature = pc.id_ref_payment_nature  ' +
+'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_status rps on rps.id_ref_payment_status = pc.ffl_ref_payment_status  ' +
+'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_mode rpm on rpm.id_ref_payment_mode = pc.id_ref_payment_mode  ' +
+'left join  ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_claim_status rpcs on rpcs.id_ref_payment_claim_status = pc.id_ref_payment_claim_status  ' +
+'LEFT JOIN ' + @sInstanceSaga2 + '.SAGA2_PVC.ref.ref_payment_motif rpcm ON rpcm.id_ref_payment_motif = pc.id_ref_payment_motif ' +
+'Where s.subscription_number = ''' + @asSubscriptionNumber + ''' ' +	
+' ' +
+'group by c.spb_claim_number,  ' +
+'s.subscription_number,  ' +
+'c.product_code,  ' +
+'p.long_label,pg.label, ' +
+'rps.long_label,  ' +
+'rpcs.long_label, ' +
+'rcs.code, ' +
+'s.subscription_date , ' +
+'c.declaration_date , ' +
+'c.occurence_date , ' +
+'c.id_claim ,  ' +
+'rpm.long_label, ' +
+'rpm.short_label,  ' +
+'rpcm.code, ' +
+'rpcm.long_label ' +
+' ' +
+'order by dte_surv ' 
+
+Delete sysadm.stockage_plafond_saga2 where subscription_number = @asSubscriptionNumber
+Insert into sysadm.stockage_plafond_saga2 Exec ( @sSql ) 
+
+Go
+
 
 

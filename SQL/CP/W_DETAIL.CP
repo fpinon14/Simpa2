@@ -1194,11 +1194,11 @@ GO
 -- JFF      12/02/2016   [PI062]
 --[20251006144234][JFF][MIG119]
 -- JFF      22/07/2025   [MIG165_BOUYGUES]
+-- [20251028104420513][JFF][OPTIM_PLAF_SAGA2]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S09_W_DETAIL_NBEVT' AND type = 'P' )
         DROP procedure sysadm.PS_S09_W_DETAIL_NBEVT
 GO
-
 
 CREATE procedure sysadm.PS_S09_W_DETAIL_NBEVT
 	@dcIdSin        Decimal (  10,0 ), -- [PI062]
@@ -1209,7 +1209,7 @@ CREATE procedure sysadm.PS_S09_W_DETAIL_NBEVT
 	@dcIdEvt        Decimal (  7,0 ),
 	@dtSurv         DateTime        ,
 	@dtAdhRenouv    DateTime        ,
-        @iNbSin		Integer	 OUTPUT
+    @iNbSin			Integer	 OUTPUT
 AS
 
 -- Plafond 704
@@ -1217,6 +1217,7 @@ AS
  Declare @sNom		VarChar ( 35 ) -- [ITSM361927]
  Declare @sPrenom	VarChar ( 35 ) -- [ITSM361927]
  Declare @iIdMotifRegSaga2 Integer 
+ Declare @sIdSubscription Varchar ( 50 ) 
 
  Select @sCodAdh = p.cod_adh,
 		@sNom = s.nom,  -- [ITSM361927]
@@ -1301,36 +1302,60 @@ If sysadm.FN_CLE_NUMERIQUE ( 'MIG19_PSPLAF_SAGA2') >= 2
 
 	If @iIdMotifRegSaga2 > 0 
 		Begin
-			 Declare @TbRetSaga2 Table ( 
-				id_seq Integer identity (1, 1 ),
-				id_sin integer,
-				subscription_number varchar ( 50 ),
-				indemnise VarChar ( 10 ),
-				mt_reg_assure Decimal ( 11, 2 ),
-				mode_indemnisation VarChar ( 50 ),
-				mode_indemnisation_long VarChar ( 50 ),
-				dte_adh DateTime,
-				dte_decl DateTime,
-				dte_surv DateTime,
-				code_motif Integer,
-				label_motif VarChar ( 50 )
-				)
+			 -- [20251028104420513][JFF][OPTIM_PLAF_SAGA2]
+			If sysadm.FN_CLE_NUMERIQUE ( 'OPTIM_PLAF_SAGA2') > 0 
+			 Begin
+				 If @iNbSin is null Set @iNbSin = 0
+				 Set @sIdSubscription = Right ( REPLICATE ( '0', 12 ) + LTRIM ( rtrim ( @sIdAdh ) ), 12 ) 
 
-			 If @iNbSin is null Set @iNbSin = 0
-			 Insert into @TbRetSaga2 Exec sysadm.PS_S_SAGA2_PLAFOND_PAR_ANNEE_SUR_SAGA2 @dcIdSin, @sIdAdh 
 
-			 --[20251006144234][JFF][MIG119]
-			 Set @iNbSin = @iNbSin + 
-						   IsNull (  ( Select count (* ) 
-									 From 
-										( Select Distinct id_sin 
-										  From @TbRetSaga2 
-										  where Upper ( indemnise ) = 'OUI'
-										  And dte_surv <= @dtSurv                        
-										  And dte_surv >= @dtAdhRenouv
-										  And code_motif = @iIdMotifRegSaga2  
-										) as T )
-							, 0 ) 
+				 --[20251006144234][JFF][MIG119]
+				 Set @iNbSin = @iNbSin + 
+							   IsNull (  ( Select count (* ) 
+										 From 
+											( Select Distinct id_sin 
+											  From sysadm.stockage_plafond_saga2 
+											  where subscription_number = @sIdSubscription  
+											  And Upper ( indemnise ) = 'OUI'
+											  And dte_surv <= @dtSurv                        
+											  And dte_surv >= @dtAdhRenouv
+											  And code_motif = @iIdMotifRegSaga2  
+											) as T )
+								, 0 ) 
+			 End 
+			Else -- [20251028104420513][JFF][OPTIM_PLAF_SAGA2] à supprimer par la suite
+			 Begin 
+				 Declare @TbRetSaga2 Table ( 
+					id_seq Integer identity (1, 1 ),
+					id_sin integer,
+					subscription_number varchar ( 50 ),
+					indemnise VarChar ( 10 ),
+					mt_reg_assure Decimal ( 11, 2 ),
+					mode_indemnisation VarChar ( 50 ),
+					mode_indemnisation_long VarChar ( 50 ),
+					dte_adh DateTime,
+					dte_decl DateTime,
+					dte_surv DateTime,
+					code_motif Integer,
+					label_motif VarChar ( 50 )
+					)
+
+				 If @iNbSin is null Set @iNbSin = 0
+				 Insert into @TbRetSaga2 Exec sysadm.PS_S_SAGA2_PLAFOND_PAR_ANNEE_SUR_SAGA2 @dcIdSin, @sIdAdh 
+
+				 --[20251006144234][JFF][MIG119]
+				 Set @iNbSin = @iNbSin + 
+							   IsNull (  ( Select count (* ) 
+										 From 
+											( Select Distinct id_sin 
+											  From @TbRetSaga2 
+											  where Upper ( indemnise ) = 'OUI'
+											  And dte_surv <= @dtSurv                        
+											  And dte_surv >= @dtAdhRenouv
+											  And code_motif = @iIdMotifRegSaga2  
+											) as T )
+								, 0 ) 
+			 End
 		End 
  End 
 
