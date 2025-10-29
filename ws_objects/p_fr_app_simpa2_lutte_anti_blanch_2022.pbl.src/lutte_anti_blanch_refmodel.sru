@@ -34,7 +34,7 @@ iiMaxMatchingScore=iSailjson.getattribute( "maxMatchingScore")
 If IsNull ( iiMaxMatchingScore ) Then iiMaxMatchingScore = 0
 
 // [20251029152140480][JFF][SPB234]
-If F_CLE_A_TRUE ( "SPB276" ) Then
+If F_CLE_A_TRUE ( "SPB234" ) Then
 	isType = iSailjson.getattribute( "type")
 	If IsNull ( isType ) Then isType = ""
 End If
@@ -47,7 +47,7 @@ iiMaxMatchingScore=aojson.getattribute( "maxMatchingScore")
 If IsNull ( iiMaxMatchingScore ) Then iiMaxMatchingScore = 0
 
 // [20251029152140480][JFF][SPB234]
-If F_CLE_A_TRUE ( "SPB276" ) Then
+If F_CLE_A_TRUE ( "SPB234" ) Then
 	isType=aojson.getattribute( "type")
 	If IsNull ( isType ) Then isType = ""
 End If
