@@ -2851,15 +2851,16 @@ Else
 Delete sysadm.w_queue_histo Where cree_le_action < DATEADD ( month, -6, Getdate() )
 Delete TRACE_MAIL_PRO.sysadm.trace_matp_es_sinistre_ksl_rs5045 Where cree_le < DATEADD ( month, -6, Getdate() )
 Delete SESAME_PRO.sysadm.equi_cnx_ts -- [LGY53_EQU_CNX]
+Delete sysadm.stockage_plafond_saga2 
 
 -- [CONVERT_PDF_STOCK]
 Delete pdf From sysadm.courrier_pdf pdf where pdf.id_arch is null and Not exists ( Select Top 1 1 From sysadm.w_sin ws where ws.id_sin = pdf.id_sin ) 
 Delete pdf From sysadm.courrier_pdf pdf where cree_le < DATEADD ( month, -8, Getdate() )
 
-/* [CONVERT_PDF_STOCK]
-Delete pdf From PEGASE_PRO.sysadm.courrier_pdf pdf where pdf.id_arch is null and Not exists ( Select Top 1 1 From  PEGASE_PRO.sysadm.w_sin ws where ws.id_sin = pdf.id_sin ) 
+-- [CONVERT_PDF_STOCK]
+Delete pdf From PEGASE_PRO.sysadm.courrier_pdf pdf where pdf.id_arch2 is null and Not exists ( Select Top 1 1 From  PEGASE_PRO.sysadm.w_sin ws where ws.id_sin = pdf.id_sin ) 
 Delete pdf From PEGASE_PRO.sysadm.courrier_pdf pdf where cree_le < DATEADD ( month, -8, Getdate() )
-*/
+
 
 -- Redresse et met à jour l'autorisation 31 qui dit qu'un GT est Tunisien, en croisant avec la présence de SESAME
 Exec sysadm.PS_MAJ_AUTO_POUR_LES_TRG_CONCERNES_DU_TAG_HORS_UE

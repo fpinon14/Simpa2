@@ -4758,6 +4758,7 @@ Go
 -- JFF      12/11/2015   [VDOC19112]
 -- JFF      31/03/2016   [PM287-3]
 -- JFF      12/02/2016   [PI062]
+-- [20251029135226013][JFF][HUB2229]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S11_COMMANDE_V07' AND type = 'P' )
         DROP procedure sysadm.PS_S11_COMMANDE_V07
@@ -4786,6 +4787,7 @@ Declare @sVal3 VarChar ( 100 )
 Declare @iNbreARepSav Integer 
 Declare @iNbreACtlSav Integer 
 Declare @iNbreSavActuel Integer 
+Declare @iPRDV Integer -- [20251029135226013][JFF][HUB2229]
 -- 
 
 If @sChaineBCV is null Set @sChaineBCV = ''
@@ -4857,7 +4859,8 @@ And     nom_zone = 'type_app'
 Select @sVal = rtrim ( c.id_bon_transp ),
 		@sVal1 = nullif ( convert ( varchar, IsNull ( c.dte_rcp_frn, '' ), 103), '01/01/1900' ),
 		@sVal2 = nullif ( convert ( varchar, IsNull ( c.dte_env_cli, '' ), 103), '01/01/1900' ),
-		@sVal3 = nullif ( convert ( varchar, IsNull ( s.cree_le, '' ), 103), '01/01/1900' )
+		@sVal3 = nullif ( convert ( varchar, IsNull ( s.cree_le, '' ), 103), '01/01/1900' ),
+		@iPRDV = IIF ( CharIndex ( '[PRDV]', c.comment_frn ) > 0 , 1, 0 ) -- [20251029135226013][JFF][HUB2229]
 From   sysadm.commande c with (nolock),
 		sysadm.sinistre s with (nolock)
 Where  c.id_sin = @dcIdSin
@@ -4876,7 +4879,8 @@ Select @sChaineBCV = sysadm.FN_CLE_VAL_E ( 'DTE_ENV_CLI', @sVal2, RTRIM ( @sChai
 If @sVal3 is null Set @sVal3 = ''
 Select @sChaineBCV = sysadm.FN_CLE_VAL_E ( 'CREE_LE_SIN', @sVal3, RTRIM ( @sChaineBCV) , ';')
 
- 
+If @iPRDV > 0 Set @sChaineBCV = sysadm.FN_CLE_VAL_E ( 'PRDV', 'OUI', RTRIM ( @sChaineBCV) , ';') -- [20251029135226013][JFF][HUB2229]
+
 -- [PM287-3]
 Select @sVal = sysadm.FN_CLE_VAL ( 'DNCX_STATUS_GC', rtrim ( val_car ) + rtrim ( val_car2), ';' ) 
 From sysadm.det_pro d with (nolock), 
@@ -4889,47 +4893,33 @@ If @sVal is null Set @sVal = ''
 Select @sChaineBCV = sysadm.FN_CLE_VAL_E ( 'DNCX_STATUS_GC', @sVal, RTRIM ( @sChaineBCV) , ';')
 
 -- [HP252_276_HUB_PRESTA]
-If sysadm.FN_CLE_NUMERIQUE ( 'HP252_276_HUB_PRESTA') > 0 
- Begin
-	If sysadm.FN_CLE_VAL ( 'DDE_SAV', @sChaineBCV, ';' ) = 'OUI'
-		Begin 
-			Select	@iNbreARepSav = COUNT(*) 
-			From	sysadm.commande c with (nolock)
-			Where	c.id_sin = @dcIdSin
+If sysadm.FN_CLE_VAL ( 'DDE_SAV', @sChaineBCV, ';' ) = 'OUI'
+	Begin 
+		Select	@iNbreARepSav = COUNT(*) 
+		From	sysadm.commande c with (nolock)
+		Where	c.id_sin = @dcIdSin
 --			And 	c.id_seq = @iIdSeq
-			And		sysadm.FN_CLE_VAL ( 'A_REPARER_SAV', c.info_spb_frn_cplt, ';' ) = 'OUI'
-			And     c.cod_etat <> 'ANN'
+		And		sysadm.FN_CLE_VAL ( 'A_REPARER_SAV', c.info_spb_frn_cplt, ';' ) = 'OUI'
+		And     c.cod_etat <> 'ANN'
 
-			Select	@iNbreACtlSav = COUNT(*) 
-			From	sysadm.commande c with (nolock)
-			Where	c.id_sin = @dcIdSin
+		Select	@iNbreACtlSav = COUNT(*) 
+		From	sysadm.commande c with (nolock)
+		Where	c.id_sin = @dcIdSin
 --			And 	c.id_seq = @iIdSeq
-			And		sysadm.FN_CLE_VAL ( 'A_CONTROLER_SAV', c.info_spb_frn_cplt, ';' ) = 'OUI'
-			And     c.cod_etat <> 'ANN'
+		And		sysadm.FN_CLE_VAL ( 'A_CONTROLER_SAV', c.info_spb_frn_cplt, ';' ) = 'OUI'
+		And     c.cod_etat <> 'ANN'
 
-			If @iNbreARepSav is null Set @iNbreARepSav = 0 
-			If @iNbreACtlSav is null Set @iNbreACtlSav = 0 
+		If @iNbreARepSav is null Set @iNbreARepSav = 0 
+		If @iNbreACtlSav is null Set @iNbreACtlSav = 0 
 
-			If @iNbreARepSav = @iNbreACtlSav And @iNbreARepSav = 0 And @iNbreACtlSav = 0 Set @iNbreSavActuel = 0
-			If @iNbreARepSav = @iNbreACtlSav And @iNbreARepSav > 0 And @iNbreACtlSav > 0 Set @iNbreSavActuel = 2
-			If @iNbreARepSav > @iNbreACtlSav And @iNbreARepSav > 0 And @iNbreACtlSav = 0 Set @iNbreSavActuel = 1
+		If @iNbreARepSav = @iNbreACtlSav And @iNbreARepSav = 0 And @iNbreACtlSav = 0 Set @iNbreSavActuel = 0
+		If @iNbreARepSav = @iNbreACtlSav And @iNbreARepSav > 0 And @iNbreACtlSav > 0 Set @iNbreSavActuel = 2
+		If @iNbreARepSav > @iNbreACtlSav And @iNbreARepSav > 0 And @iNbreACtlSav = 0 Set @iNbreSavActuel = 1
 
-			If @iNbreSavActuel is null Set @iNbreSavActuel = 0 
+		If @iNbreSavActuel is null Set @iNbreSavActuel = 0 
 
-			Set @sChaineBCV = sysadm.FN_CLE_VAL_E ( 'NBRE_SAV_ACTUEL', Convert ( VarChar ( 10 ), @iNbreSavActuel ), rTrim ( @sChaineBCV ), ';' )
-		End 
-
-/*			
-	Select	@sDernIdRefFour = c.id_ref_four
-	From	sysadm.commande c with (nolock)
-	Where	c.id_sin = @dcIdSin
-	And     c.id_seq = (	Select MAX ( id_seq ) 
-							From sysadm.commande c1
-							Where c1.id_sin = c.id_sin ) 
-	If @sDernIdRefFour is null Set @sDernIdRefFour = ''
-	Set @sChaineBCV = sysadm.FN_CLE_VAL_E ( 'DERN_ID_REF_FOUR', @sDernIdRefFour, rTrim ( @sChaineBCV ), ';' )
-*/
- End 
+		Set @sChaineBCV = sysadm.FN_CLE_VAL_E ( 'NBRE_SAV_ACTUEL', Convert ( VarChar ( 10 ), @iNbreSavActuel ), rTrim ( @sChaineBCV ), ';' )
+	End 
 
 
 Select  @sIdFour = IsNull ( c.id_four , '') ,
