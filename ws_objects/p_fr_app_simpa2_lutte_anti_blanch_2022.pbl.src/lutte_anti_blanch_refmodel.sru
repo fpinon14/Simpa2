@@ -1,4 +1,4 @@
-HA$PBExportHeader$lutte_anti_blanch_refmodel.sru
+﻿$PBExportHeader$lutte_anti_blanch_refmodel.sru
 forward
 global type lutte_anti_blanch_refmodel from nonvisualobject
 end type
@@ -10,6 +10,7 @@ global lutte_anti_blanch_refmodel lutte_anti_blanch_refmodel
 
 type variables
 Int iiMaxMatchingScore
+String isType // [20251029152140480][JFF][SPB234]
 
 u_sailjson iSailJson
 end variables
@@ -32,11 +33,24 @@ iSailjson.parse(asjson)
 iiMaxMatchingScore=iSailjson.getattribute( "maxMatchingScore")
 If IsNull ( iiMaxMatchingScore ) Then iiMaxMatchingScore = 0
 
+// [20251029152140480][JFF][SPB234]
+If F_CLE_A_TRUE ( "SPB276" ) Then
+	isType = iSailjson.getattribute( "type")
+	If IsNull ( isType ) Then isType = ""
+End If
+
+
 end subroutine
 
 public subroutine uf_fillfromjson (u_sailjson aojson);
 iiMaxMatchingScore=aojson.getattribute( "maxMatchingScore")
 If IsNull ( iiMaxMatchingScore ) Then iiMaxMatchingScore = 0
+
+// [20251029152140480][JFF][SPB234]
+If F_CLE_A_TRUE ( "SPB276" ) Then
+	isType=aojson.getattribute( "type")
+	If IsNull ( isType ) Then isType = ""
+End If
 
 end subroutine
 

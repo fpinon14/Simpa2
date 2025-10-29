@@ -52947,11 +52947,12 @@ private function string uf_controlergestion_pm506 ();//*------------------------
 //* MAJ   PAR      Date	     Modification
 //        JFF   28/02/2024 [MCO_190_191_BECLM]
 //        JFF   27/03/2025 [PMO32_SPB175]
+// [20251029152140480][JFF][SPB234]
 //*-----------------------------------------------------------------
 
-Boolean bPresencePrestaCNV, bRetApplAPI
+Boolean bPresencePrestaCNV, bRetApplAPI, bHorsBlack
 Decimal {2} dcMtAReg, dcMtDeclement, dcMtPec
-String sVal, sNomAss, sPrenomAss, sPctRisque, sMess, sMtDeclement, sFlowNameBeCLM 
+String sVal, sNomAss, sPrenomAss, sPctRisque, sMess, sMtDeclement, sFlowNameBeCLM, sType
 String sPos, sSaut, sMailBody, sIdSin, sMailBodyOrig, sObjet, sSql, sIdProd, sAdrMail, sNaissLieu, sNaissPays, sNaissDate
 Long lIdCLient, lIdSin, lRow, lDeb, lFin, lRowCmd, lIdGti, lIdDetail, lRowDDet
 Int iMaxMatchingScore, iPctRisque, iIdRev 
@@ -52960,10 +52961,12 @@ n_cst_string lnvPFCString
 
 sPos = ""
 iMaxMatchingScore  = 0
+bHorsBlack = False
 
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 346 )
 If lDeb <= 0 Then Return ""
 
+/*
 If Upper ( SQLCA.DataBase ) <> "SIMPA2_PRO" And NOT F_CLE_A_TRUE ( "BECLM_EN_SIM" ) Then
 	istPauseAPI_LAB.Show ()
 	istPauseAPI_LAB.BringToTop	= TRUE
@@ -52990,7 +52993,7 @@ If Upper ( SQLCA.DataBase ) <> "SIMPA2_PRO" And NOT F_CLE_A_TRUE ( "BECLM_EN_SIM
 	
 	Return sPos	
 End If 
-
+*/
 
 // Déclaration ici, car autoinstancitation (couteuse).
 n_cst_sp_ws_lutte_anti_blanch_caller uLuttAntiBlanch
@@ -53154,6 +53157,12 @@ End If
 // On récupére le maxMAtching (le pctage)
 If IsValid ( uoResponseLAB.uoRefRisk ) Then
 	iMaxMatchingScore = uoResponseLAB.uoRefRisk.iiMaxMatchingScore
+	
+	// [20251029152140480][JFF][SPB234]	On récupère le Type
+	If F_CLE_A_TRUE ( "SPB276" ) Then	
+		sType = uoResponseLAB.uoRefRisk.isType
+		bHorsBlack = Upper ( sType ) <> "BLACKLIST" 
+	End If 
 End If 
 
 If IsNull ( iMaxMatchingScore ) Then iMaxMatchingScore = 0
@@ -53162,10 +53171,22 @@ If IsNull ( iMaxMatchingScore ) Then iMaxMatchingScore = 0
 lRow = idw_WDivSin.Find ( "NOM_ZONE = 'pm506_person_a_risque'", 1,  idw_WDivSin.RowCount () )
 If lRow > 0 Then
 	This.uf_gestong_divers_majzone( "PM506_PERSON_A_RISQUE", lRow, K_MAJZONE, String (iMaxMatchingScore) + "%" )
+
+	// [20251029152140480][JFF][SPB234]	On récupère le Type
+	If F_CLE_A_TRUE ( "SPB276" ) Then	
+		If bHorsBlack And  iMaxMatchingScore >= iPctRisque Then
+			This.uf_gestong_divers_majzone( "PM506_PERSON_A_RISQUE", lRow, K_MAJZONE, "Hors BLACKLIST (" + String (iMaxMatchingScore) + "% non bloquant)" )
+		End If 
+	End If 
 End If	
 
 // Ensuite on gère le pctage s'il dépasse le pctage max du param
-IF iMaxMatchingScore < iPctRisque Then Return ""
+// [20251029152140480][JFF][SPB234]	On récupère le Type
+If F_CLE_A_TRUE ( "SPB276" ) Then	
+	IF ( iMaxMatchingScore < iPctRisque ) Or bHorsBlack Then Return ""
+Else
+	IF iMaxMatchingScore < iPctRisque Then Return ""
+End If 
 
 // Je bloque le dossier pour le DR
 lRow = idw_WDivSin.Find ( "NOM_ZONE = 'dossier_bloque_dr'", 1,  idw_WDivSin.RowCount () )
