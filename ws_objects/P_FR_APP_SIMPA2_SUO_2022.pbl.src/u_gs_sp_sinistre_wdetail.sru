@@ -2343,10 +2343,11 @@ private subroutine uf_controlersaisie (ref s_pass astpass);//*------------------
 //			FPI	07/09/2011	[VDoc5257]
 //       JFF   24/01/2012  [CONFO][CUISINE][PC680]
 //		FPI	14/12/2015	[CTL_INTER_PC_REFUS]
+// [20251029111626280][JFF][MON564]
 //*-----------------------------------------------------------------
 
 String sCol [ 1 ], sErr [ 1 ], sVal [ 1 ]
-String 		sNouvelleLigne, sText, sPos, sOng, sAltReclame, sHeure, sRech, sAltAtt, sIdTypeCarte
+String 		sNouvelleLigne, sText, sPos, sOng, sAltReclame, sHeure, sRech, sAltAtt, sIdTypeCarte, sVal1
 Long 			lCpt, lNbrCol, lChoixDw, lTotPiece, lIdI, lIdPce, lTotRefus 
 Long  		lLigPce, lLigRef, lDeb, lFin, lIdGti, lIdEvt, lRow
 Time			tTime
@@ -2731,6 +2732,33 @@ If lDeb > 0 and lIdGti = 18 Then
 End if
 // Fin #7
 
+// [20251029111626280][JFF][MON564]
+If F_CLE_A_TRUE ( "MON564" ) Then
+ 	lRow = idw_wDivDet.Find ( "Upper (nom_zone) = 'PERSONNE_CONCERNEE'", 1, idw_wDivDet.RowCount () )
+	If lRow > 0 Then
+		sVal1 = Trim ( This.uf_GestOng_Divers_Trouver ("personne_concernee" ))
+		If IsNull ( sVal1 ) Then sVal1 = ""
+		
+		if sVal1 = "" Then
+			sText = sText + " - la personne concernée" + sNouvelleLigne
+			
+			stMessage.sCode		= "GENE001"
+			stMessage.bErreurG	= TRUE
+			stMessage.sVar[1] 	= sText 
+
+			If sPos = "" Then
+				sOng="04"
+				sPos = "VAL_CAR"		
+				lChoixDw=1
+				astPass.dwNorm[ 1 ] =idw_wdivdet
+			End if
+			//		sPos = "ALT_BLOC"
+			// Fin #8
+		End If
+	End If 		
+End If	
+
+
 // [VDoc5059]
 // [VDoc5257] - mise en commentaire
 /*
@@ -2791,8 +2819,9 @@ If	sPos = "" And idw_wDetailFF.GetItemString ( 1, "ALT_BLOC" ) <> "O" Then
 	End If 
 End If
 // :#4
+
+
 	
-		
 astPass.sTab [ 1 ] = sPos
 astPass.lTab [ 1 ] = lChoixDw
 
