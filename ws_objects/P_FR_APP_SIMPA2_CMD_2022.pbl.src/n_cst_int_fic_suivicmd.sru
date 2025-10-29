@@ -34105,6 +34105,7 @@ private function integer uf_ctrl_fichier_frn_hub_2025082914032887 ();//*--------
 //        JFF  02/09/2025  [20250902141005123]
 // 		 JFF  08/09/2025  [20250905153321517][JFF][HUB1910]
 // 		 JFF  09/09/2025  [20250909154251167][JFF][BUG]
+// [20251029135226013][JFF][HUB2229]
 //*-----------------------------------------------------------------
 
 Int iRet, iStatusGc, iInfoSpbFrn
@@ -34122,12 +34123,16 @@ Long lErrorHubPresta, lIndentityHubPresta, lRowCountHubPresta
 Boolean  bF_CLE_A_TRUE_HUB1267
 Boolean  bF_CLE_A_TRUE_HUB1910  // [20250905153321517][JFF][HUB1910]
 Boolean  bOnLaissePasserCasPrestaFerme 
+Boolean  bF_CLE_A_TRUE_HUB2229 // [20251029135226013][JFF][HUB2229]
 
 // [HUB1267]
 bF_CLE_A_TRUE_HUB1267 = F_CLE_A_TRUE ( "HUB1267" )
 
 // [20250905153321517][JFF][HUB1910]
 bF_CLE_A_TRUE_HUB1910 = F_CLE_A_TRUE ( "HUB1910" )
+
+// [20251029135226013][JFF][HUB2229]
+bF_CLE_A_TRUE_HUB2229 = F_CLE_A_TRUE ( "HUB2229" )
 
 iRet = 1
 lTotLig = idwFicFourn.RowCount ()
@@ -35324,29 +35329,67 @@ For lCpt = 1 To lTotLig
 	/*------------------------------------------------------------------*/
 	/* INFO_FRN_SPB_CPLT													  			  */
 	/*------------------------------------------------------------------*/
-	// Dde de SAV
+	// Dde de SAV 
 	sVal = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu , "DDE_SAV", ";")
-	If IsNull ( sVal ) Then sVal = ""
+	sVal1 = lnvPFCString.of_Getkeyvalue ( sChaineBCV, "PRDV", ";") // [20251029135226013][JFF][HUB2229]
 	
-	If sVal = "OUI" Then
-		Choose Case sCodEtat
-			Case "RFO", "RPC"
-				
-				Choose case iStatusGc
-					Case 2
-						// OK
-					Case Else 
-						iRet = -1
-						This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-						" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour demander un SAV, la prestation d'origine doit être en état <<Répara>> (2)" )
-				End Choose					
-			Case Else 
-				iRet = -1
-				This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-				" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour demander un SAV, la prestation d'origine doit être fermée (non annulée)" )
-				
-		End Choose
-	End If 
+	If IsNull ( sVal ) Then sVal = ""
+	If IsNull ( sVal1 ) Then sVal1 = ""	
+
+	// [20251029135226013][JFF][HUB2229]
+	If bF_CLE_A_TRUE_HUB2229 Then
+		If sVal1 <> "OUI" Then
+			lRow = idwFicFourn.Find ( "NUM_CMD_SPB = '" + sNumCmdSpb + "' AND POS ( COMMENT_FRN, '[PRDV]') > 0", 1, idwFicFourn.RowCount())
+			If lRow > 0 Then
+				sVal1 = "OUI"
+			End If 
+		End If 	
+	
+		If sVal = "OUI" Then
+			Choose Case sCodEtat
+				Case "RFO", "RPC"
+					
+					Choose case TRUE
+						Case ( iStatusGc = 2 ) Or ( iStatusGc = 21 And sVal1 = "OUI" ) // [20251029135226013][JFF][HUB2229]
+							// OK
+						Case Else 
+							iRet = -1
+							This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+							" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour demander un SAV, la prestation d'origine doit être en état <<Réparé>> (2)" )
+					End Choose					
+	
+				Case Else 
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour demander un SAV, la prestation d'origine doit être fermée (non annulée)" )
+					
+			End Choose
+		End If 		
+		
+		
+	Else // [20251029135226013][JFF][HUB2229] A supprimer
+		If sVal = "OUI" Then
+			Choose Case sCodEtat
+				Case "RFO", "RPC"
+					
+					Choose case iStatusGc
+						Case 2
+							// OK
+						Case Else 
+							iRet = -1
+							This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+							" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour demander un SAV, la prestation d'origine doit être en état <<Répara>> (2)" )
+					End Choose					
+				Case Else 
+					iRet = -1
+					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour demander un SAV, la prestation d'origine doit Fermée (non annulée)" )
+					
+			End Choose
+		End If		
+	End If
+
+
 	
 	// Demande automatique de PEC_A_RECYCLER ou REFUSE_A_REEXP par le fournisseur
 	sVal  = lnvPFCString.of_Getkeyvalue ( sInfoFrnSpbCpltLu , "AUTO_PEC_RAR", ";")	
