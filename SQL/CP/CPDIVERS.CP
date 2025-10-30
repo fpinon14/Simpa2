@@ -8671,7 +8671,7 @@ Go
 
 --------------------------------------------------------------------
 --
--- Procédure            :       PS_BASCULE_REC_PPR
+-- Procédure            :       PS_BASCULE_REC_PPR_V01
 -- Auteur               :       FABRY JF
 -- Date                 :       19/06/2025
 -- Libellé              :       Bascule REC vers PPR et inversement
@@ -8680,12 +8680,13 @@ Go
 -- Références           :       
 --
 -------------------------------------------------------------------
-IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_BASCULE_REC_PPR' AND type = 'P' )
-        DROP procedure sysadm.PS_BASCULE_REC_PPR
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_BASCULE_REC_PPR_V01' AND type = 'P' )
+        DROP procedure sysadm.PS_BASCULE_REC_PPR_V01
 GO
 
-CREATE procedure sysadm.PS_BASCULE_REC_PPR
-	@asInstance VarChar ( 3 ) 
+CREATE procedure sysadm.PS_BASCULE_REC_PPR_V01
+	@asInstance VarChar ( 3 ),
+	@asCodeOper  Varchar ( 4 )
 AS
 
 DECLARE @sCommande   VarChar(250),
@@ -8693,7 +8694,8 @@ DECLARE @sCommande   VarChar(250),
         @sObjet      VarChar(255),
         @sFicOut     VarChar(255),
 		@sRetourErrMail VarChar(255),
-		@sMailBody VarChar ( 255 )
+		@sMailBody VarChar ( 255 ),
+		@sNom VarChar ( 71 )
 
 IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' 
 Begin
@@ -8707,19 +8709,26 @@ Begin
 	Return -1
 End 
 
+Select @sNom = Trim ( prenom ) + ' ' + Trim ( nom ) 
+From SESAME_SIM.sysadm.operateur 
+Where id_oper = @asCodeOper
+If @sNom is null Set @sNom = ''
+
 If UPPER ( @asInstance ) = 'REC'
 Begin
 	Update sysadm.cle Set valeur = 1, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'INSTANCE_PPR_REC_HUB' -- REC
-	Set @sMessage = 'Le lien SIMPA2 avec SAGA2&HUBPRESTATAIRE viens de de basculer sur l''instance de recette SAGA2 (REC).'
+	Set @sMessage = 'Le lien SIMPA2 avec SAGA2&HUBPRESTATAIRE viens de basculer sur l''instance de recette SAGA2 (REC).'
 	Set @sObjet = 'Bascule vers la REC SAGA2'
 End 
 
 If UPPER ( @asInstance ) = 'PPR'
 Begin
 	Update sysadm.cle Set valeur = 0, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'INSTANCE_PPR_REC_HUB' -- PPR
-	Set @sMessage = 'Le lien SIMPA2 avec SAGA2&HUBPRESTATAIRE viens de de basculer sur l''instance de pré-prod SAGA2 (PPR).'
+	Set @sMessage = 'Le lien SIMPA2 avec SAGA2&HUBPRESTATAIRE viens de basculer sur l''instance de pré-prod SAGA2 (PPR).'
 	Set @sObjet = 'Bascule vers la PPR SAGA2'
 End 
+
+Set @sMessage = @sMessage + Char ( 10 ) + Char ( 10 ) + 'Cette bascule a été faite par ' + @sNom
 
 Print @sMessage 
 
@@ -8737,7 +8746,7 @@ Set @sMailBody = @sMailBody + 'Tech Lead' + CHAR ( 10 )
 
  EXEC master.dbo.SPB_PS_MAIL   
 	@sRetourErrMail OUTPUT,   
-	'jfabry@spb.eu,mhanouet@spb.eu,sguesmi@spb.eu,ochaouachi@spb.eu,hbadrane@spb.eu,ayvon@spb.eu',  
+	'jfabry@spb.eu,mhanouet@spb.eu,sguesmi@spb.eu,ochaouachi@spb.eu,hbadrane@spb.eu,ayvon@spb.eu,jBENHAMDA@spb.eu,LSMALL@spb.eu',  
 	@sMailBody, 
 	@sObjet, 
 	null, 
@@ -8791,14 +8800,14 @@ End
 If UPPER ( @asInstance ) = 'REC'
 Begin
 	Update sysadm.cle Set valeur = 1, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'INSTANCE_PPR_REC_HUB' -- REC
-	Set @sMessage = 'Le lien SIMPA2 avec SAGA2&HUBPRESTATAIRE viens de de basculer sur l''instance de recette SAGA2 (REC).'
+	Set @sMessage = 'Le lien SIMPA2 avec SAGA2&HUBPRESTATAIRE viens de basculer sur l''instance de recette SAGA2 (REC).'
 	Set @sObjet = 'Bascule vers la REC SAGA2'
 End 
 
 If UPPER ( @asInstance ) = 'PPR'
 Begin
 	Update sysadm.cle Set valeur = 0, maj_le = getdate(), maj_par = 'JFF' Where id_cle = 'INSTANCE_PPR_REC_HUB' -- PPR
-	Set @sMessage = 'Le lien SIMPA2 avec SAGA2&HUBPRESTATAIRE viens de de basculer sur l''instance de pré-prod SAGA2 (PPR).'
+	Set @sMessage = 'Le lien SIMPA2 avec SAGA2&HUBPRESTATAIRE viens de basculer sur l''instance de pré-prod SAGA2 (PPR).'
 	Set @sObjet = 'Bascule vers la PPR SAGA2'
 End 
 
@@ -8818,7 +8827,7 @@ Set @sMailBody = @sMailBody + 'Tech Lead' + CHAR ( 10 )
 
  EXEC master.dbo.SPB_PS_MAIL   
 	@sRetourErrMail OUTPUT,   
-	'jfabry@spb.eu,mhanouet@spb.eu,sguesmi@spb.eu,ochaouachi@spb.eu,hbadrane@spb.eu',  
+	'jfabry@spb.eu,mhanouet@spb.eu,sguesmi@spb.eu,ochaouachi@spb.eu,hbadrane@spb.eu,ayvon@spb.eu,jBENHAMDA@spb.eu,LSMALL@spb.eu',  
 	@sMailBody, 
 	@sObjet, 
 	null, 
