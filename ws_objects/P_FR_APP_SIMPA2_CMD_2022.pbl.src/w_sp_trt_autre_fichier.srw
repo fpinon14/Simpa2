@@ -162,6 +162,8 @@ String K_FICCHARG_LST_FACT ="LST_FACT.TXT" // Nom du fichier de données de list
 Integer K_TYPTRT_LST_PND_CORUS =29
 String K_FICCHARG_LST_PND_CORUS ="PND_CORUS.TXT" 
 
+// [20251030090626070][JFF][BASCRECPPR]
+Integer K_TYPTRT_BASC_REC_PPR = 30
 
 datastore ids_charger
 
@@ -275,12 +277,15 @@ private function boolean wf_chargerdonnees ();//*-------------------------------
 //       JFF   27/05/2019 [PM478-1]
 //			FPI		07/10/2019	[VDOC28472]
 //       JFF   02/01/2023 [RS_4166_PND_CORUS]
+// [20251030090626070][JFF][BASCRECPPR]
 //*-----------------------------------------------------------------
 
 Boolean bOk, bTrimChamps
 Long	lTotRow
-String sFicFourn
+String sFicFourn, sSql
+String sInstSaga2Actuelle, sInstSaga2Souhaitee, sCodeInstSaga2Actuelle, sCodeInstSaga2Souhaitee 
 long	lIdTt
+Boolean bRet
 
 stMessage.sTitre  	= "Controle de saisie"
 stMessage.Icon			= Information!
@@ -391,7 +396,53 @@ Choose Case  lIdTt
 	Case K_TYPTRT_LST_PND_CORUS
 		sFicFourn = stGlb.sRepTempo + K_FICCHARG_LST_PND_CORUS
 		bTrimChamps=FALSE
-		
+
+	// [20251030090626070][JFF][BASCRECPPR]
+	Case K_TYPTRT_BASC_REC_PPR 
+		If Upper(SQLCA.Database) <> "SIMPA2_PRO" Then
+			Choose Case stGlb.sCodOper
+				Case "OCC", "JBF", "MHN", "HBD", "SML", "AY", "JFF"
+	
+					If F_CLE_NUMERIQUE ( "INSTANCE_PPR_REC_HUB" ) = 1 Then
+						sInstSaga2Actuelle = "Recette (REC)" 
+						sInstSaga2Souhaitee = "Pré-Production (PPR)"
+						sCodeInstSaga2Actuelle = "REC" 
+						sCodeInstSaga2Souhaitee = "PPR"
+					Else 
+						sInstSaga2Actuelle = "Pré-Production (PPR)"
+						sInstSaga2Souhaitee = "Recette (REC)"
+						sCodeInstSaga2Actuelle = "PPR"						
+						sCodeInstSaga2Souhaitee = "REC" 
+					End IF 		
+	
+					cb_charger.Text = "Basculer en " + sCodeInstSaga2Souhaitee
+					
+					stMessage.sTitre		= "Action de bascule d'instance Saga2"
+					stMessage.Icon			= Exclamation!
+					stMessage.bErreurG	= FALSE
+					stMessage.Bouton		= YesNo!
+					stMessage.sVar[1]		= sInstSaga2Souhaitee
+					stMessage.sCode		= "GENE200"
+					
+					If F_Message ( stMessage ) = 1 Then 
+	
+						sSql = "exec sysadm.PS_BASCULE_REC_PPR_V01 '" + sCodeInstSaga2Souhaitee + "', '" + Trim ( stGlb.sCodOper) + "'"
+						F_Execute ( sSql, SQLCA )
+						bRet = SQLCA.SqlCode = 0 And SQLCA.SqlDBCode = 0
+						F_Commit ( SQLCA, bRet )
+	
+						stMessage.sTitre		= "Bascule en " + sInstSaga2Souhaitee
+						stMessage.Icon			= Information!
+						stMessage.bErreurG	= FALSE
+						stMessage.Bouton		= Ok! 
+						stMessage.sVar[1]		= sInstSaga2Souhaitee					
+						stMessage.sCode		= "GENE201"
+						F_Message ( stMessage )
+						
+					End if 
+	
+		End CHoose 		
+	End If 		
 End Choose
 
 st_1.visible = false
@@ -418,10 +469,19 @@ If lIdTt = K_TYPTRT_IMEI_ORANGE Then dw_charger.SetTransObject(SQLCA)
 /*------------------------------------------------------------------*/
 
 If Not f_FileExists ( sFicFourn ) Then
-	stMessage.sCode = "COMD036" 
-	stMessage.sVar [1] = sFicFourn
-	bOk = False
-	dw_Charger.dataobject = ''
+	Choose Case  lIdTt
+		// [20251030090626070][JFF][BASCRECPPR]
+		Case K_TYPTRT_BASC_REC_PPR 	
+			bOk = False
+			dw_Charger.dataobject = ''
+		
+		Case Else
+			
+			stMessage.sCode = "COMD036" 
+			stMessage.sVar [1] = sFicFourn
+			bOk = False
+			dw_Charger.dataobject = ''
+	End Choose 
 End If
 
 /*------------------------------------------------------------------*/
@@ -494,7 +554,17 @@ If bOk Then
 End If
 
 
-If (Not bOk) and (not gbOpcon) Then F_Message ( stMessage ) // [PC175] ajout controle Opcon
+If (Not bOk) and (not gbOpcon) Then 
+
+	Choose Case  lIdTt
+		// [20251030090626070][JFF][BASCRECPPR]
+		Case K_TYPTRT_BASC_REC_PPR 	
+			// Rien message en amont
+		Case Else 	
+			F_Message ( stMessage ) // [PC175] ajout controle Opcon
+	End Choose 
+	
+End If 
 
 Return bOk
 
@@ -6838,9 +6908,11 @@ event itemchanged;
 // 			FPI		26/12/2017	[VDOC24986]
 // 			FPI		21/02/2018	[VDOC25758]
 // 			FPI		07/10/2019	[VDOC28472]
+// [20251030090626070][JFF][BASCRECPPR]
 //*-----------------------------------------------------------------
 integer iActionCode
-boolean bOkToProcess
+boolean bOkToProcess, bFin
+String sInstSaga2Actuelle, sInstSaga2Souhaitee, sCodeInstSaga2Actuelle, sCodeInstSaga2Souhaitee 
 n_cst_string lnvString
 
 iActionCode=0
@@ -6859,6 +6931,46 @@ Choose case long(data)
 	Case  K_TYPTRT_LST_SIN, K_TYPTRT_LST_CMDE_O2M, K_TYPTRT_LST_CMDE_CDS, K_TYPTRT_LST_CMDE_CFM, K_TYPTRT_LST_SIN_CASTO, K_TYPTRT_LST_SIN_REG, K_TYPTRT_LST_RM, K_TYPTRT_LST_REG,K_TYPTRT_LST_CMDE, K_TYPTRT_LST_FACTU_CASTO, K_TYPTRT_LST_CMDE_AUC, K_TYPTRT_LST_FACT
 		cb_charger.Text = "Charger le fichier"
 		cb_maj.Text = "Lancer l'extraction"
+
+	// [20251030090626070][JFF][BASCRECPPR]
+	Case K_TYPTRT_BASC_REC_PPR 
+		If Upper(SQLCA.Database) <> "SIMPA2_PRO" Then
+			
+			Choose Case stGlb.sCodOper
+				Case "OCC", "JBF", "MHN", "HBD", "SML", "AY", "JFF"
+
+					If F_CLE_NUMERIQUE ( "INSTANCE_PPR_REC_HUB" ) = 1 Then
+						sInstSaga2Actuelle = "Recette (REC)" 
+						sInstSaga2Souhaitee = "Pré-Production (PPR)"
+						sCodeInstSaga2Actuelle = "REC" 
+						sCodeInstSaga2Souhaitee = "PPR"
+					Else 
+						sInstSaga2Actuelle = "Pré-Production (PPR)"
+						sInstSaga2Souhaitee = "Recette (REC)"
+						sCodeInstSaga2Actuelle = "PPR"						
+						sCodeInstSaga2Souhaitee = "REC" 
+					End IF 		
+
+					cb_charger.Text = "Basculer en " + sCodeInstSaga2Souhaitee
+					
+					bFin = False
+					Do While Not bFin
+
+						stMessage.sTitre		= "Bascule REC/PPR Instance SAGA2"
+						stMessage.Icon			= Exclamation!
+						stMessage.bErreurG	= FALSE
+						stMessage.Bouton		= YESNO! 
+						stMessage.sCode		= "GENE190"
+						stMessage.sVar[1]		= sInstSaga2Actuelle
+						stMessage.sVar[2]		= sInstSaga2Souhaitee
+					
+						If F_Message ( stMessage ) = 1 Then bFin = TRUE
+					Loop
+			
+
+				
+			End Choose 
+		End IF 
 	Case Else
 		// Textes par défaut
 		cb_charger.Text = "Charger le fichier"
