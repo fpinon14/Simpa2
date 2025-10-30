@@ -7397,6 +7397,7 @@ private function string uf_plaf_adhesion_renouvellement ();//*------------------
 //*       JFF    27/07/2011  [PLAF_REF]
 //  		 JFF	  29/05/2012 [VDOC6662]
 //        JFF    16/11/2015 [DT159-1]
+// [20251030161205990][JFF][OPTIM_DP_257]	
 //*-----------------------------------------------------------------
 
 Long lTotPlaf, lLig, lTotDetail, lCpt, lIdDetail, lLigFinale, lCptMax, lDeb, lFin
@@ -7404,12 +7405,13 @@ Decimal {2} dcPlafond, dcSommeDetail, dcMtPlaf, dcPlafSav, dcPlafTmp, dcEcoTaxe
 Long dcIdSin, dcIdProd, dcIdEts, dcIdGti, dcIdEvt
 DateTime dtDteSurv, dtDteAdhRenouv
 Date dDteAdh, dDteResult
-String sRech, sPos, sIdAdh, sIdPara, sCptVer, sIdNivPlaf, sIdRefPlaf
+String sRech, sPos, sIdAdh, sIdPara, sCptVer, sIdNivPlaf, sIdRefPlaf, sVal
 n_cst_string lnvPFCString
 Decimal{2} 	dcMtAutreSinistre
 String		sMtAutreSinistre
 Decimal{5}   dcDurPerRnv_Adh
 String       sUntPerRnv_Adh
+String       sIdEvtTab[]
 
 sPos = ""
 /*------------------------------------------------------------------*/
@@ -7581,6 +7583,28 @@ If	lLig > 0 Then
 			End If
 		End If
 
+		// [20251030161205990][JFF][OPTIM_DP_257]	
+		// Faut augmenter le plafond si dp/257 et EVT présentes ?
+		If F_CLE_A_TRUE ( "OPTIM_DP_257" ) Then
+			sRech="ID_PROD = " + String ( idw_wsin.GetItemNumber(1,"ID_PROD" ))
+			sRech+=" And ID_TYP_CODE_DP = '-DP' AND ID_CODE_DP = 257"
+			sRech+=" And ID_CODE_NUM=693"
+			lDeb=idw_detpro.find(sRech, 1, idw_detpro.RowCount())
+				
+			If lDeb > 0 Then
+				sVal=idw_detpro.GetItemString(lDeb, "VAL_CAR")
+				sVal=lnvPFCString.of_getkeyvalue( sVal, "ID_EVT", ";")
+				lnvPFCString.of_parsetoarray( sVal,"#", sIdEvtTab )
+	
+				For lCpt=1 to UpperBound(sIdEvtTab)
+					If sIdEvtTab[lCpt] ="" Then Continue
+					lDeb=idw_lstdetail.Find( "ID_GTI = " + String ( dcIdGti ) + "ID_EVT=" + sIdEvtTab[lCpt] + " And COD_ETAT in (500,600) And MT_PLAF > 0", 1, idw_lstdetail.RowCount() )
+					If lDeb > 0 Then
+						dcPlafond+=idw_lstdetail.GetItemDecimal(lDeb, "MT_PLAF")
+					End if
+				Next
+			End if			
+		End If 
 
 		If	dcSommeDetail + dcMtAutreSinistre + dcMtPlaf > dcPlafond	Then
 				

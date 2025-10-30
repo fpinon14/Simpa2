@@ -68,6 +68,7 @@ global function s_plafond_pec f_plafond_pec (string astyprech, ref u_datawindow 
 //        JFF    06/11/2017  [PC171933]
 //        JFF    03/08/2021  Ajout 750/751
 //        JFF    05/08/2024  [MCO602_PNEU]
+// [20251030161205990][JFF][OPTIM_DP_257]
 //*-----------------------------------------------------------------
 
 Long lTot, lCpt, lDeb1, lDeb2, lFin, lRow, lCptNivPlaf, lTotDivDet, lIdGti, lIdEvt, lRowDetail, lPos
@@ -84,6 +85,7 @@ Boolean bPriseEncompteForcagePec  // #3
 Boolean bFranchise_721, bAutoriserTRT, bCoqueNonAdapte, bCoqueNeProtegePas
 n_cst_string lnvPFCString
 DateTime dtDteSurv, dtDteAchat
+String sIdEvtTab[]
 
 string sTempTypParaVer, sTypParaVer, sIdPara, sCptVer // #4
 
@@ -353,9 +355,39 @@ Choose Case asTypRech
 				
 				sIdPara	= adwPlafond.GetItemString ( lCpt, "ID_PARA" ) // #4
 				sCptVer	= adwPlafond.GetItemString ( lCpt, "CPT_VER" ) // #4
+
+				// [20251030161205990][JFF][OPTIM_DP_257]	
+				// Faut augmenter le plafond si dp/257 et EVT présentes ?
+				If F_CLE_A_TRUE ( "OPTIM_DP_257" ) Then
+					sRech="ID_PROD = " + String ( adwsin.GetItemNumber(1,"ID_PROD" ))
+					sRech+=" And ID_TYP_CODE_DP = '-DP' AND ID_CODE_DP = 257"
+					sRech+=" And ID_CODE_NUM=" + String ( sIdTypPlaf ) 
+					lDeb=adwdetpro.find(sRech, 1, adwdetpro.RowCount())
+						
+					If lDeb > 0 Then
+						sVal=adwdetpro.GetItemString(lDeb, "VAL_CAR")
+						sVal= F_CLE_VAL ( "ID_EVT", sVal, ";")
+						lnvPFCString.of_parsetoarray( sVal,"#", sIdEvtTab )
+
+						For lCpt=1 to UpperBound(sIdEvtTab)
+							If sIdEvtTab[lCpt] ="" Then Continue
+							Choose Case sIdTypPlaf
+								Case "736", "680"
+									// Sans garantie, car Toute garantie
+									lDeb=adwdetail.Find("ID_EVT=" + sIdEvtTab[lCpt] + " And COD_ETAT in (500,600) And MT_PLAF > 0", 1, adwdetail.RowCount() )									
+								Case Else 
+									lDeb=adwdetail.Find("ID_GTI = " + sIdGti + " AND ID_EVT=" + sIdEvtTab[lCpt] + " And COD_ETAT in (500,600) And MT_PLAF > 0", 1, adwdetail.RowCount() )
+							End Choose 
+							If lDeb > 0 Then
+								dPlafParam+=adwdetail.GetItemDecimal(lDeb, "MT_PLAF")
+							End if
+						Next
+					End if					
+				End If				
+				
 			
 				sIdNivPlaf = "-GA" // Forçage indispensable.
-				dcPlafGti = F_Plafond_Pec_Numeraire_Annee ( sIdTypPlaf,	dPlafParam, sIdNivPlaf, aDwSin, aDwDetail, aDwProduit, lIdGti, lIdEvt ) 
+				dcPlafGti = F_Plafond_Pec_Numeraire_Annee ( sIdTypPlaf,	dPlafParam, sIdNivPlaf, aDwSin, aDwDetail, aDwProduit, adwdetpro, lIdGti, lIdEvt ) 
 
 				If ( dcPlafGti < dcPlafSav And dcPlafGti > 0 ) Or dcPlafSav = 0 Then
 					dcPlafSav = dcPlafGti
@@ -624,7 +656,7 @@ Choose Case asTypRech
 				sCptVer	= adwPlafond.GetItemString ( lCpt, "CPT_VER" ) // #4
 
 				sIdNivPlaf = "+EV" // Forçage indispensable.
-				dcPlafEvt = F_Plafond_Pec_Numeraire_Annee ( sIdTypPlaf,	dPlafParam, sIdNivPlaf, aDwSin, aDwDetail, aDwProduit, lIdGti, lIdEvt ) 
+				dcPlafEvt = F_Plafond_Pec_Numeraire_Annee ( sIdTypPlaf,	dPlafParam, sIdNivPlaf, aDwSin, aDwDetail, aDwProduit, adwdetpro, lIdGti, lIdEvt ) 
 	
 				If ( dcPlafEvt < dcPlafSav And dcPlafEvt > 0 ) Or dcPlafSav = 0 Then
 					dcPlafSav = dcPlafEvt 
