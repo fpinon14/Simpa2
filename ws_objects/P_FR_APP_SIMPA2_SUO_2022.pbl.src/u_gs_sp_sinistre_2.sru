@@ -2261,6 +2261,8 @@ public subroutine uf_redressement_marq_modl_ifr ();//*--------------------------
 //* Retourne		: Rien
 //*
 //*-----------------------------------------------------------------
+// [20251031115051973][JFF][MIG215_FREE]
+//*-----------------------------------------------------------------
 
 Long lDeb, lFin
 Int iRet, iVal1, iVal2 
@@ -2268,8 +2270,15 @@ String sCodeRefExt, sMarqueExt, sModeleExt, sMarqueIfrRet, sModeleIfrRet
 
 // Bouygues
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 405)
-If lDeb <= 0 Then Return 
 If lDeb > 0 Then sCodeRefExt = "BYG"
+
+If lDeb <= 0 Then 
+	// Free // [20251031115051973][JFF][MIG215_FREE]
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 409)
+	If lDeb > 0 Then sCodeRefExt = "FRE"	
+End IF 
+
+If lDeb <= 0 Then Return 
 
 iVal1 = idw_WSin.GetItemNumber ( 1, "CPT_VALIDE" )
 If IsNull ( iVal1 ) Then iVal1 = 0

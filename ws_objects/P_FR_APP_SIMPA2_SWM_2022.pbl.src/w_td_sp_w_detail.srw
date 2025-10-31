@@ -2677,11 +2677,11 @@ If bOk Then
 			BDp315 = lDeb > 0  // [MIG165_BOUYGUES]
 			
 			// [MIG165_BOUYGUES]
-			/*
+			// [20251031115051973][JFF][MIG215_FREE] Je réactive au jourd'hui, j'avoue tout commenté pour les tests
 			If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
 				If lDeb <=0 Then
 					F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 405 )
-			
+					
 					If lDeb > 0 Then 
 						lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'CODE_EAN'", 1, idwWDivSin.RowCount () ) 
 						If lRow > 0 Then 
@@ -2695,7 +2695,6 @@ If bOk Then
 					
 				End If 
 			End If 			
-			*/
 			
 			If lDeb > 0 Then
 				dtDtePivotDT288-1_LOT2 = DateTime ( lnvPFCString.of_getkeyvalue (idwDetPro.GetItemString ( lDeb, "VAL_CAR" ), "DTE_PIVOT_DT288_1_LOT2", ";") )
