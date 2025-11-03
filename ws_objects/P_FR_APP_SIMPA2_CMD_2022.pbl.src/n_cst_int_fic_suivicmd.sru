@@ -34106,6 +34106,7 @@ private function integer uf_ctrl_fichier_frn_hub_2025082914032887 ();//*--------
 // 		 JFF  08/09/2025  [20250905153321517][JFF][HUB1910]
 // 		 JFF  09/09/2025  [20250909154251167][JFF][BUG]
 // [20251029135226013][JFF][HUB2229]
+// [20251103102754827][JFF][OPTIM_RET_HUB]
 //*-----------------------------------------------------------------
 
 Int iRet, iStatusGc, iInfoSpbFrn
@@ -34329,6 +34330,27 @@ For lCpt = 1 To lTotLig
 		bOnLaissePasserCasPrestaFerme = True
 	End If			
 
+	// [20251103102754827][JFF][OPTIM_RET_HUB]
+	sVal = lnvPFCString.of_getkeyvalue (sInfoFrnSpbCpltLu, "RENV_APP_EMETT", ";")
+	If sVal="OUI" Then
+		// On laisse, on accepte l'écrasement
+		bOnLaissePasserCasPrestaFerme = True
+	End If	
+
+	// [20251103102754827][JFF][OPTIM_RET_HUB]
+	sVal = lnvPFCString.of_getkeyvalue (sInfoFrnSpbCpltLu, "MISE_A_DISPO_ASS", ";")
+	If sVal="OUI" Then
+		// On laisse, on accepte l'écrasement
+		bOnLaissePasserCasPrestaFerme = True
+	End If	
+
+	// [20251103102754827][JFF][OPTIM_RET_HUB]
+	sVal = lnvPFCString.of_getkeyvalue (sInfoFrnSpbCpltLu, "RENV_APP_CONSTR", ";")
+	If sVal="OUI" Then
+		// On laisse, on accepte l'écrasement
+		bOnLaissePasserCasPrestaFerme = True
+	End If
+
 	choose case sCodEtat 
 		case "RPC", "ANN", "RFO", "RSP"
 			If Not bOnLaissePasserCasPrestaFerme Then
@@ -34420,10 +34442,17 @@ For lCpt = 1 To lTotLig
 				Case 177, 178, 176
 					// C'est Ok
 				Case Else
-					iRet = -1
-					This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-					" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Statut " + sVal + " non autorisé pour une commande de remplacement." )
-
+					// [20251103102754827][JFF][OPTIM_RET_HUB] Cas où l'on laisse passer
+					sVal = lnvPFCString.of_getkeyvalue (sInfoFrnSpbCpltLu, "RENV_APP_EMETT", ";")
+					sVal1 = lnvPFCString.of_getkeyvalue (sInfoFrnSpbCpltLu, "MISE_A_DISPO_ASS", ";")					
+					Choose Case True
+						Case sVal = "OUI" Or sVal1 = "OUI"
+							// Ok
+						Case Else 
+							iRet = -1
+							This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
+							" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Statut " + sVal + " non autorisé pour une commande de remplacement." )
+					End Choose 
 			End Choose
 			
 	End Choose
