@@ -16462,7 +16462,8 @@ For lCpt = 1 To lTot
 			  "DOMMAGES_APPAREIL_LIB", &
 			  "QUEL_DYSFONCTIONNEMENT_CODE", &
 			  "QUEL_DYSFONCTIONNEMENT_LIB", &
-			  "NUMERO_DEVIS"
+			  "NUMERO_DEVIS", &
+			  "REF_EXTERNE"
 			  
   			  idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "O" )
 
