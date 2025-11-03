@@ -2693,6 +2693,14 @@ If bOk Then
 						End If
 					End If 
 					
+					// Hors Prod, juste pour la SIM, pour couper pour les recettes
+					// [20251103150918803][JFF][API_CORDON_GEOLOC]						
+					If Upper(SQLCA.Database) <> "SIMPA2_PRO" Then
+						If Not F_CLE_A_TRUE ( "API_CORDON_GEOLOC" ) Then
+							lDeb = 0 
+						End If 
+					End If 
+					
 				End If 
 			End If 			
 			
