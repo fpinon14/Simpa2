@@ -3132,7 +3132,8 @@ CREATE view sysadm.v_produit_1
 As  
 Select Distinct  
     g.id_prod 'id_prod',  
-    sysadm.FN_LIB_PROD ( g.id_prod ) 'lib_prod',  
+    sysadm.FN_LIB_PROD ( g.id_prod ) 'lib_prod',
+	num_tel 'num_tel_prod',
     Isnull ( ( Select sysadm.FN_CODE_NUM ( id_code_num, '-UO' ) From sysadm.det_pro dp where dp.id_prod = g.id_prod and dp.id_code_dp = 99 ), 'Aucun') 'pole_dept',  
     sysadm.FN_CODE_NUM ( p.id_corb, '-CO' ) 'id_corb',  
     po.id_police 'id_police',  
@@ -3169,7 +3170,7 @@ Go
 -- Date                 :       27/06/2024
 -- Libell‚              :       Vu complexe produit 2
 -- Commentaires         :
--- R‚f‚rences           :       
+-- R‚f‚rences           :       penser à mettre à jour M:\Simpa2\Compil_Simpa2_TRT_s2k8re.sql
 --
 -- Arguments            :       
 --
@@ -3214,6 +3215,7 @@ As
  Select Distinct  
      g.id_prod id_prod,  
      sysadm.FN_LIB_PROD ( g.id_prod ) 'lib_prod',  
+	 num_tel 'num_tel_prod',
      Isnull ( ( Select sysadm.FN_CODE_NUM ( id_code_num, '-UO' ) From sysadm.det_pro dp where dp.id_prod = g.id_prod and dp.id_code_dp = 99 ), 'Aucun') 'pole_dept',  
      p.id_corb,  
      sysadm.FN_CODE_NUM ( p.id_corb, '-CO' ) 'lib_corb',  

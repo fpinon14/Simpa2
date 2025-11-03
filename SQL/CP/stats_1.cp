@@ -20271,3 +20271,158 @@ Exec ( @sSql )
 
 Go
 
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_FLUX_CHAUD_KRYS_CDL_DATA
+-- Auteur               :       JFF
+-- Date                 :       08/06/2022
+-- Libellé              :        
+-- Commentaires         :     -- [20251103172936680][JFF][MIG385]  
+-- Références           :       
+--
+--	
+-- Arguments            :      
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+-- JFF      19/05/2025   [MIGR_SQL2022]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_FLUX_CHAUD_KRYS_CDL_DATA' AND type = 'P' )
+        DROP procedure sysadm.PS_S_FLUX_CHAUD_KRYS_CDL_DATA
+GO
+
+CREATE procedure sysadm.PS_S_FLUX_CHAUD_KRYS_CDL_DATA 
+	@adcIdProd Decimal ( 7 )
+As
+
+Set NoCount On
+
+Select	( Select Top 1 b.cod_mag From sysadm.boutique b where b.id_prod = s.id_prod and b.id_boutique = s.id_orian_boutique ) 'idClaimPoint',
+		Trim ( p.nom ) 'lastname',
+		Trim ( p.prenom ) 'firstname',
+		sysadm.FN_AFF_DATE ( i.dte_naiss, 'SANS_HEURE') 'birthdate',
+		sysadm.FN_GET_DIV_SIN ( s.id_sin, 'ref_externe', 'P', '' ) 'externalRef',
+		s.id_adh 'subscriptionNumber', 
+		sysadm.FN_LIB_POLICE_V02 (s.id_sin, 'P') 'policyid',
+		s.id_sin 'claimNumber',
+		sysadm.FN_AFF_DATE ( s.dte_decl, 'AVEC_HEURE' ) 'declarationDate',
+		sysadm.FN_AFF_DATE ( ( Select Top 1 arc.cree_le From sysadm.archive arc where arc.id_sin = s.id_sin and id_cour = 'REFUS' ), 'AVEC_HEURE' ) 'refusalDate',
+		( Select Top 1 r.id_motif r From sysadm.refus r where r.id_sin = s.id_sin and r.id_i is not null ) 'refusalType',
+		sysadm.FN_DTE_1ER_REGL ( s.id_sin ) 'compensationDate',
+		s.mt_reg 'Montant du règlement',
+		sysadm.FN_GET_DIV_SIN ( s.id_sin, 'numero_devis', 'P', '' ) 'N° de devis'
+		
+From sysadm.sinistre s,
+	 sysadm.personne p,
+	 sysadm.inter i
+Where s.id_prod = @adcIdProd
+and s.id_ordre = p.id_ordre
+and i.id_sin = s.id_sin
+And i.cod_inter = 'A'
+and Not Exists ( Select Top 1 1 From sysadm.w_sin ws Where ws.id_sin = s.id_sin )
+Union
+Select	( Select Top 1 b.cod_mag From sysadm.boutique b where b.id_prod = ws.id_prod and b.id_boutique = ws.id_orian_boutique ) 'idClaimPoint',
+		Trim ( ws.nom ) 'lastname',
+		Trim ( ws.prenom ) 'firstname',
+		sysadm.FN_AFF_DATE ( wi.dte_naiss, 'SANS_HEURE') 'birthdate',
+		sysadm.FN_GET_DIV_SIN ( ws.id_sin, 'ref_externe', 'P', '' ) 'externalRef',
+		ws.id_adh 'subscriptionNumber', 
+		sysadm.FN_LIB_POLICE_V02 ( ws.id_sin, 'P') 'policyid',
+		ws.id_sin 'claimNumber',
+		sysadm.FN_AFF_DATE ( ws.dte_decl, 'AVEC_HEURE' ) 'declarationDate',
+		sysadm.FN_AFF_DATE ( ( Select Top 1 arc.cree_le From sysadm.archive arc where arc.id_sin = ws.id_sin and id_cour = 'REFUS' ), 'AVEC_HEURE' ) 'refusalDate',
+		( Select Top 1 r.id_motif r From sysadm.refus r where r.id_sin = ws.id_sin and r.id_i is not null ) 'refusalType',
+		sysadm.FN_DTE_1ER_REGL ( ws.id_sin ) 'compensationDate',
+		ws.mt_reg 'Montant du règlement',
+		sysadm.FN_GET_DIV_SIN ( ws.id_sin, 'numero_devis', 'P', '' ) 'N° de devis'
+		
+From sysadm.w_sin ws,
+	 sysadm.w_inter wi
+Where ws.id_prod = @adcIdProd
+and wi.id_sin = ws.id_sin
+And wi.cod_inter = 'A'
+and Not Exists ( Select Top 1 1 From sysadm.sinistre s Where s.id_sin = ws.id_sin )
+
+
+Go
+
+--------------------------------------------------------------------
+--
+-- Procédure            :       PS_S_FLUX_CHAUD_KRYS_CDL_JOB
+-- Auteur               :       JFF
+-- Date                 :       08/06/2022
+-- Libellé              :        
+-- Commentaires         :     -- [20251103172936680][JFF][MIG385]  
+-- Références           :       
+--
+--	
+-- Arguments            :      
+--
+-- Retourne             :       Rien
+--
+-------------------------------------------------------------------
+-- JFF      19/05/2025   [MIGR_SQL2022]
+-------------------------------------------------------------------
+IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_S_FLUX_CHAUD_KRYS_CDL_JOB' AND type = 'P' )
+        DROP procedure sysadm.PS_S_FLUX_CHAUD_KRYS_CDL_JOB
+GO
+
+CREATE procedure sysadm.PS_S_FLUX_CHAUD_KRYS_CDL_JOB
+As
+
+DECLARE @sRoot VarChar(255)
+DECLARE @sPath Varchar ( 255 ) 
+DECLARE @sNomFic Varchar ( 255 ) 
+DECLARE @sRepertoire Varchar ( 255 ) 
+DECLARE @iCpt Integer
+DECLARE @sExtenstion VarChar ( 5 )
+DECLARE @Stamp Varchar ( 50 )
+Declare @sFicOut     VarChar(255),
+		@sOsqlOption VarChar(255),
+		@sCommande VarChar(500),
+		@iRetOsql	int,
+		@sNomServeur VarChar ( 100 ),
+		@dcIdProd decimal ( 7 )
+
+
+IF @@SERVERNAME = master.dbo.SPB_FN_ServerName('PRO') and RIGHT( db_name( db_id() ), 3 ) ='PRO' Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_PROD_EXTRACTION' ) Else Set @sRoot = sysadm.FN_GET_CHEMIN ( 'ROOT_SIM_EXTRACTION' )
+Set @sPath 	= @sRoot + 'SINISTRE\'
+
+Set @iCpt = 1
+
+While @iCpt <= 2
+	Begin
+
+		If @iCpt = 1 Set @dcIdProd = 44302 -- Krys
+		If @iCpt = 2 Set @dcIdProd = 44303 -- CDL
+
+		Set @sRepertoire = 'Export_Flux_Chaud_' + IIF ( @iCpt = 1, 'KRYS', 'CDL' ) + '\'
+		Set @sNomFic = 'Flux_Chaud_' + IIF ( @iCpt = 1, 'KRYS', 'CDL' ) 
+		Set @Stamp = Convert( varchar ( 10), CONVERT ( Datetime, Getdate(), 103 ), 112 ) + REPLACE(CONVERT(VARCHAR(12), GETDATE(), 114), ':', '')
+		Set @sExtenstion = 'CSV'
+
+		SET @sFicOut = @sPath + @sRepertoire + @sNomFic + '_' + @Stamp + '.' + @sExtenstion
+
+		SET @sNomServeur = @@servername
+		-- Options additionelles pour osql
+		-- /s"	" 	=> Separateur Tabulation
+		-- /b 	=> Genere un code ERRORLEVEL exploitable par batch.
+		-- /u	=> Unicode
+		-- -h-1 => pas d'entete
+		-- -d => indique la base
+
+		-- Set @sOsqlOption = ' ' + '/s";"'+ ' /b' + ' /u  ' + '-d' + db_name()
+		Set @sOsqlOption = ' ' + '/s";"'+ ' /b' + ' -h-1 ' + '-d' + db_name()  -- Génération en ANSI, je supprime -u
+
+		SET @sCommande = 'sqlcmd.exe /S' + @sNomServeur + ' /E /Q"' + 
+					'sysadm.PS_S_FLUX_CHAUD_KRYS_CDL_DATA ' + Convert ( VarChar ( 7 ), @dcIdProd ) +  
+					'" /o' + @sFicOut + ' -w5000 -W ' + @sOsqlOption
+
+		EXEC @iRetOsql = master.dbo.xp_cmdshell @sCommande, no_output
+
+		Set @iCpt = @iCpt + 1
+
+	End 
+Go

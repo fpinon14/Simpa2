@@ -1084,6 +1084,7 @@ Go
 -- JFF		10/09/2024   [20240910162546267] Changement chemin UNC Serveur fichier prod
 -- JFF      19/03/2025   [LGY_40]
 -- JFF      23/04/2025   [HUB1267]
+-- [20251103102754827][JFF][OPTIM_RET_HUB]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_HP276_SU_S2_MOTEUR_TRT_RETOUR_HUB' AND type = 'P' )
         DROP procedure sysadm.PS_HP276_SU_S2_MOTEUR_TRT_RETOUR_HUB
@@ -1825,7 +1826,23 @@ While Exists ( Select Top 1 1 From @TbFourn where marquage = 0 )
 						Set @sInfoFrnSpbCpltlu = sysadm.FN_CLE_VAL_E ( 'CMDE_REMPL_AUTO', sysadm.FN_CLE_VAL ( 'CMDE_REMPL_AUTO', @sChaineBCVretourDetStatut, ';' ), @sInfoFrnSpbCpltlu, ';' )
 					End 
 
+				-- [20251103102754827][JFF][OPTIM_RET_HUB]
+				If sysadm.FN_CLE_VAL ( 'RENV_APP_EMETT', @sChaineBCVretourDetStatut, ';' ) = 'OUI' 
+					Begin
+						Set @sInfoFrnSpbCpltlu = sysadm.FN_CLE_VAL_E ( 'RENV_APP_EMETT', sysadm.FN_CLE_VAL ( 'RENV_APP_EMETT', @sChaineBCVretourDetStatut, ';' ), @sInfoFrnSpbCpltlu, ';' )
+					End 
 
+				-- [20251103102754827][JFF][OPTIM_RET_HUB]
+				If sysadm.FN_CLE_VAL ( 'MISE_A_DISPO_ASS', @sChaineBCVretourDetStatut, ';' ) = 'OUI' 
+					Begin
+						Set @sInfoFrnSpbCpltlu = sysadm.FN_CLE_VAL_E ( 'MISE_A_DISPO_ASS', sysadm.FN_CLE_VAL ( 'MISE_A_DISPO_ASS', @sChaineBCVretourDetStatut, ';' ), @sInfoFrnSpbCpltlu, ';' )
+					End 
+
+				-- [20251103102754827][JFF][OPTIM_RET_HUB]
+				If sysadm.FN_CLE_VAL ( 'RENV_APP_CONSTR', @sChaineBCVretourDetStatut, ';' ) = 'OUI' 
+					Begin
+						Set @sInfoFrnSpbCpltlu = sysadm.FN_CLE_VAL_E ( 'RENV_APP_CONSTR', sysadm.FN_CLE_VAL ( 'RENV_APP_CONSTR', @sChaineBCVretourDetStatut, ';' ), @sInfoFrnSpbCpltlu, ';' )
+					End 
 
 				Break
 			End 

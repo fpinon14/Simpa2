@@ -8709,6 +8709,8 @@ Begin
 	Return -1
 End 
 
+Set @asCodeOper = Trim ( Upper ( @asCodeOper ))
+
 Select @sNom = Trim ( prenom ) + ' ' + Trim ( nom ) 
 From SESAME_SIM.sysadm.operateur 
 Where id_oper = @asCodeOper

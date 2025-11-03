@@ -130,6 +130,7 @@
 --	   JFF 05/09/2025   [20250905090403837][JFF][MIG82]
 --	   JFF 07/05/2013   [20250905153321517][JFF][HUB1910]
 -- [20251009144110680][JFF][REMP_IDENTIQUE]
+-- [20251103102754827][JFF][OPTIM_RET_HUB]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_U01_COMMANDE' AND type = 'P' )
         DROP procedure sysadm.PS_U01_COMMANDE
@@ -867,7 +868,7 @@ Else
 		sysadm.w_commande.id_bsp		= @iIdBsp,
 		sysadm.w_commande.dte_ret_pret		= @dtDteRetPret,
 		sysadm.w_commande.dte_elv_mobile	= @dtDteElvMobile,
-		sysadm.w_commande.status_gc     	= @iStatusGc,
+		sysadm.w_commande.status_gc     	= IIF ( @iStatusGc = 0, @iStatusGCActuel, IsNull ( @iStatusGc, 0 ) ), -- [20251103102754827][JFF][OPTIM_RET_HUB]
 		sysadm.w_commande.dte_emis_devis	= @dtDteEmisDevis,
 		sysadm.w_commande.mt_devis      	= @dcMtDevis,
 		sysadm.w_commande.alt_dev_acp   	= @sAltDevAcp,
@@ -1018,7 +1019,7 @@ Else
 		sysadm.commande.id_bsp			= @iIdBsp,
 		sysadm.commande.dte_ret_pret		= @dtDteRetPret,
 		sysadm.commande.dte_elv_mobile		= @dtDteElvMobile,
-		sysadm.commande.status_gc     		= @iStatusGc,
+		sysadm.commande.status_gc     		= IIF ( @iStatusGc = 0, @iStatusGCActuel, IsNull ( @iStatusGc, 0 ) ), -- [20251103102754827][JFF][OPTIM_RET_HUB]
 		sysadm.commande.dte_emis_devis		= @dtDteEmisDevis,
 		sysadm.commande.mt_devis      		= @dcMtDevis,
 		sysadm.commande.alt_dev_acp   		= @sAltDevAcp,
