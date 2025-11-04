@@ -1143,6 +1143,7 @@ private function boolean wf_condition_ouverture (string aschoixaction);//*------
 // 		JFF   29/11/2024 [HP252_276_HUB_PRESTA] Ajout HUB
 //       JFF   12/02/2025 [HUB875]
 //       JFF   22/07/2025 [MIG165_BOUYGUES]
+// [20251031115051973][JFF][MIG215_FREE]
 //*-----------------------------------------------------------------
 
 String sTypApp, sMarque, sModele, sMes, sTypArt, sFiltreFrn, sIdGti, sDteProdEqvFc, sBVIEPresent, sSortOri, sChaine, sInterdictionAutor
@@ -2671,16 +2672,13 @@ If bOk Then
 				stMessage.sCode = "COMD950"
 			End If
 			
-
-			// [DT288-1_LOT2]
-			F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 315)
-			BDp315 = lDeb > 0  // [MIG165_BOUYGUES]
-			
-			// [MIG165_BOUYGUES]
-			// [20251031115051973][JFF][MIG215_FREE] Je réactive au jourd'hui, j'avoue tout commenté pour les tests
+			// [MIG215_FREE]
 			If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
-				If lDeb <=0 Then
-					F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 405 )
+				F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 405 )
+					If lDeb <= 0 Then
+						// [20251031115051973][JFF][MIG215_FREE]
+						F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 409 )
+					End If 
 					
 					If lDeb > 0 Then 
 						lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'CODE_EAN'", 1, idwWDivSin.RowCount () ) 
@@ -2692,6 +2690,19 @@ If bOk Then
 							End If
 						End If
 					End If 
+				
+			End If
+
+
+			// [DT288-1_LOT2]
+			F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 315)
+			BDp315 = lDeb > 0  // [MIG165_BOUYGUES]
+			
+			// [MIG165_BOUYGUES]
+			// [20251031115051973][JFF][MIG215_FREE] Je réactive au jourd'hui, j'avoue tout commenté pour les tests
+			If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
+				If lDeb <=0 Then
+					F_RechDetPro ( lDeb, lFin, idwDetPro, idwProduit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 405 )
 					
 					// Hors Prod, juste pour la SIM, pour couper pour les recettes
 					// [20251103150918803][JFF][API_CORDON_GEOLOC]						

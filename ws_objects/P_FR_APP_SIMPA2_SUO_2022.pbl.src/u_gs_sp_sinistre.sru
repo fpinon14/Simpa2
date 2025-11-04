@@ -4105,6 +4105,7 @@ private subroutine uf_controlergestion (ref s_pass astpass);//*-----------------
 //       JFF   07/05/2013 [MIG19_PSPLAF_SAGA2]
 //       JFF   22/07/2025 [MIG165_BOUYGUES]
 //       JFF   07/10/2025 [MIG147_KRYS]
+// [20251031115051973][JFF][MIG215_FREE]
 //*-----------------------------------------------------------------
 Long lTotCourrier, lCodEtat, lNbContact, lNbNat, lCptCTact, llig, lCpt, lVal1, lVal2, lVal3, lVal4, lIdOrianBout, lVal5, lVal6 
 Long lCptDetail, lTotDetail, lTotCmd, lDeb, lFin, lCptRegFrn, lCodeEtat, lRow, lVal, lIdGti, lIdInter, lRowAss, lTot, lIdDetail 
@@ -5866,6 +5867,11 @@ BDp315 = lDeb > 0  // [MIG165_BOUYGUES]
 If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
 	If lDeb <=0 Then
 		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 405 )
+	End If 
+	
+	// [20251031115051973][JFF][MIG215_FREE]
+	If lDeb <=0 Then
+		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 409 )
 	End If 
 End If 
 
@@ -16021,6 +16027,7 @@ private subroutine uf_gestong_divers_caspart_finaux ();//*----------------------
 //    JFF   03/03/2025 [PMO268_MIG48]
 //    JFF   18/03/2025 [PAN_125]
 //    JFF   09/09/2025 [20250905153321517][JFF][HUB1910] zone grisées DTE_REL_xxx
+// [20251031115051973][JFF][MIG215_FREE]
 //*-----------------------------------------------------------------
 
 Long lTot, lCpt
@@ -16463,7 +16470,8 @@ For lCpt = 1 To lTot
 			  "QUEL_DYSFONCTIONNEMENT_CODE", &
 			  "QUEL_DYSFONCTIONNEMENT_LIB", &
 			  "NUMERO_DEVIS", &
-			  "REF_EXTERNE"
+			  "REF_EXTERNE"/*, &
+			  "PAIEMENT_ADH_FLEX_4X"*/
 			  
   			  idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "O" )
 
@@ -16479,6 +16487,11 @@ For lCpt = 1 To lTot
 			// [MIG165_BOUYGUES] CODE_EAN
 			If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
 				F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 405 )
+				// [20251031115051973][JFF][MIG215_FREE]
+				If lDeb <= 0 Then
+					F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 409 )
+				End If 
+								
 				If lDeb > 0 Then
 					If sNomZone = "CODE_EAN" Then
 						idw_wDivSin.SetItem ( lCpt,"ALT_PROT", "N" )

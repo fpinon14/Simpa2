@@ -1670,6 +1670,8 @@ public function string uf_controlergestion_bouygues ();//*----------------------
 //* Retourne		: Rien
 //*
 //*-----------------------------------------------------------------
+// [20251031115051973][JFF][MIG215_FREE]
+//*-----------------------------------------------------------------
 
 String sPos, sVal
 Long lDeb, lFin
@@ -1677,7 +1679,12 @@ Int NbreDetailARegler, NbreFraisARegler, iCasMotifReglt, iRow, iIdEvt, iCmd176No
 
 sPos = ""
 
-F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 405)
+F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 405) // BOUYGUES
+
+// [20251031115051973][JFF][MIG215_FREE]
+If lDeb <= 0 Then 
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 409)	// FREE
+End If 
 
 If lDeb <= 0 Then Return sPos 
 

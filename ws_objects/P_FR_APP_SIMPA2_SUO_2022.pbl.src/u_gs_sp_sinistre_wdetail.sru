@@ -2914,6 +2914,7 @@ private subroutine uf_controlergestion (ref s_pass astpass);//*-----------------
 //    JFF   05/08/2024  [MCO602_PNEU]
 //    JFF   29/08/2024  [CAR_SPEC_LCL]
 //    JFF   06/09/2024  [KSV516]
+// [20251031115051973][JFF][MIG215_FREE]
 //*-----------------------------------------------------------------
 String sPos, sOng, sPosPec, sFiltreOrig, sVal1, sVal 
 Long lTotwRefus, lCpt, lDeb, lFin, lCptDetPro, lVal, lIdProd, lTrouve, lVal1, lValOrig
@@ -4195,6 +4196,28 @@ If Not bDetailBloque Then
 	End IF 
 End IF 
 
+
+// [20251031115051973][JFF][MIG215_FREE]
+If F_CLE_A_TRUE ( "MIG215_FREE" ) Then
+	If Not bDetailBloque And Not bAltReg And iEtat = 500 Then
+		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 409 )
+		If lDeb > 0 Then		
+	
+			lRow = idw_WDivSin.Find ( "Upper (NOM_ZONE) = 'PAIEMENT_ADH_FLEX_4X'", 1, idw_WDivSin.RowCount () ) 
+			sVal = Upper ( idw_WDivSin.GetItemString ( lRow, "VAL_LST_CAR" ) )
+			
+			If sVal = "OUI" Then
+				stMessage.sTitre		= "Paiement adhésion Flexible ou en 4 fois"
+				stMessage.bErreurG	= FALSE
+				stMessage.sCode		= "WDET682 "
+				stMessage.Icon			= Exclamation!
+				stMessage.bouton = Ok!
+				F_Message ( stMessage )				
+				sPos = "ID_I_REG"
+			End If 
+		End IF 
+	End IF 
+End If	
 
 astPass.sTab [ 1 ] = sPos
 

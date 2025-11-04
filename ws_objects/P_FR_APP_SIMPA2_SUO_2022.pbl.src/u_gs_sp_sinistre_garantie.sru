@@ -1458,7 +1458,13 @@ BDp315 = lDeb > 0  // [MIG165_BOUYGUES]
 If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
 	If lDeb <=0 Then
 		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 405 )
-	End If 
+	End If
+	
+	// [20251031115051973][JFF][MIG215_FREE]	
+	If lDeb <=0 Then
+		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 409 )
+	End If
+	
 End If 
 
 If lDeb > 0 Then
@@ -1721,6 +1727,12 @@ End If
 // [20250910084954827][JFF][MIG165_BOUYGUES]
 If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
 	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 405 )		
+
+	// [20251031115051973][JFF][MIG215_FREE]
+	If lDeb <= 0 Then
+		F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_Produit.GetItemNumber ( 1, "ID_PROD" ), "-DP", 409 )		
+	End If 
+	
 	If lDeb > 0 Then
 		iCodEtat = idw_wGarSin.GetItemNumber ( 1, "COD_ETAT" )
 
@@ -3961,11 +3973,17 @@ If	idw_wSin.GetItemNumber ( 1, "ID_REV" ) <> -1	Then
 		// [MIG165_BOUYGUES]
 		If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
 			F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_wSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 405 )
+			// [20251031115051973][JFF][MIG215_FREE]
+			If lDeb <= 0 Then 
+				F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_wSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 409 )
+			End If 
+			
 			If lDeb > 0 Then 
 				// Pour Bouygues en du 611 on peut déclencher selon le cas, 2 autres refus.
 				If bRet Then
 					Choose Case lIdNatSin 
-						Case 11 
+						// [20251031115051973][JFF][MIG215_FREE]
+						Case 11, 95 
 							bRet = Uf_RF_EcrireRefus ( 1713 )							
 							
 						Case 28
@@ -21524,6 +21542,7 @@ private function boolean uf_rf_1165 ();//*--------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* [20250915131212003][JFF][MIG165_BOUYGUES]
+//* [20251031115051973][JFF][MIG215_FREE]
 //*-----------------------------------------------------------------
 
 Long lLig, lTotCondition, lIdNatSin, lDeb, lFin, lIdGti, lRow
@@ -21538,6 +21557,11 @@ Boolean bRet
 bRet = True
 
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_wSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 405 )
+// [20251031115051973][JFF][MIG215_FREE]
+If lDeb <= 0 Then
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_wSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 409 )
+End If 
+
 If lDeb <= 0 Then Return bRet
 
 lRow = idw_wdivsin.Find("UPPER(NOM_ZONE)='QUE_S_EST_T_IL_PASSE_CODE'", 1, idw_wdivsin.RowCount())
@@ -21574,7 +21598,7 @@ end function
 
 private function boolean uf_rf_1844 ();//*-----------------------------------------------------------------
 //*
-//* Fonction		: Uf_Rf_1165 (PRIVATE)
+//* Fonction		: Uf_Rf_1844 (PRIVATE)
 //* Auteur			: Fabry JF
 //* Date				: 03/10/2025
 //* Libellé			: [MIG165_BOUYGUES]
@@ -21587,6 +21611,7 @@ private function boolean uf_rf_1844 ();//*--------------------------------------
 //*
 //*-----------------------------------------------------------------
 //* [20250915131212003][JFF][MIG165_BOUYGUES]
+//  [20251031115051973][JFF][MIG215_FREE]
 //*-----------------------------------------------------------------
 
 Long lLig, lTotCondition, lIdNatSin, lDeb, lFin, lIdGti, lRow
@@ -21602,6 +21627,10 @@ Boolean bRet
 bRet = True
 
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_wSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 405 )
+// [20251031115051973][JFF][MIG215_FREE]
+If lDeb <= 0 Then 
+	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_wSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 409 )
+End If 
 If lDeb <= 0 Then Return bRet
 
 lRow = idw_wdivsin.Find("UPPER(NOM_ZONE)='DOMMAGES_EXTERIEURS_VISIBLES'", 1, idw_wdivsin.RowCount())

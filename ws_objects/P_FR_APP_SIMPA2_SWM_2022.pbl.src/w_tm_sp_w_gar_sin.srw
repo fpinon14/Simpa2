@@ -1348,8 +1348,12 @@ End If
 // :[PC301].[LOT2]
 
 // [MIG165_BOUYGUES]
-If F_CLE_A_TRUE ( "MIG165_BOUYGUES" ) Then
+If F_CLE_A_TRUE ( "MIG165_BOUYGUES" )  Then
 	F_RechDetPro ( lDeb, lFin, idwDetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 405)
+	If lDeb <= 0 Then
+		// [20251031115051973][JFF][MIG215_FREE]
+		F_RechDetPro ( lDeb, lFin, idwDetPro, idw_WSin.GetItemNumber ( 1, "ID_PROD" ), "-DP", 409)
+	End If 
 
 	If lDeb > 0 Then 
 		lRow = idwWDivSin.Find ( "Upper (NOM_ZONE) = 'CODE_EAN'", 1, idwWDivSin.RowCount () ) 
