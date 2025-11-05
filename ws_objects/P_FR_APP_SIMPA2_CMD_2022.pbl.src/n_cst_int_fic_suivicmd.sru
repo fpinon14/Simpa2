@@ -35379,12 +35379,12 @@ For lCpt = 1 To lTotLig
 				Case "RFO", "RPC"
 					
 					Choose case TRUE
-						Case ( iStatusGc = 2 ) Or ( iStatusGc = 21 And sVal1 = "OUI" ) // [20251029135226013][JFF][HUB2229]
+						Case ( iStatusGc = 151 ) Or ( iStatusGc = 152 And sVal1 = "OUI" ) Or ( iStatusGc = 2 ) Or ( iStatusGc = 21 And sVal1 = "OUI" ) // [20251029135226013][JFF][HUB2229]
 							// OK
 						Case Else 
 							iRet = -1
 							This.uf_Trace ( "ECR", "ERREUR ligne : " + String ( lCpt ) + " / IdDepotHub : " + sIdDepotHub + " / IdHubPresta : " + sIdHubPresta + & 
-							" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour demander un SAV, la prestation d'origine doit être en état <<Réparé>> (2)" )
+							" : (" + String ( lIdsin) + "-" + String (lIdSeq) + ") Pour demander un SAV, la prestation d'origine doit être en état <<Réparé>> (2) ou <<Conforme>>" )
 					End Choose					
 	
 				Case Else 
