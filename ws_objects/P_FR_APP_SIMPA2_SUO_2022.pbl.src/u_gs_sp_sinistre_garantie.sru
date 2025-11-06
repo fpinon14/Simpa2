@@ -21545,8 +21545,8 @@ private function boolean uf_rf_1165 ();//*--------------------------------------
 //* [20251031115051973][JFF][MIG215_FREE]
 //*-----------------------------------------------------------------
 
-Long lLig, lTotCondition, lIdNatSin, lDeb, lFin, lIdGti, lRow
-String sVal, sVal1, sVal2
+Long lLig, lTotCondition, lIdNatSin, lDeb, lFin, lIdGti, lRow, lIdSin
+String sVal, sVal1, sVal2, sVal3, sCas
 Boolean bRet
 
 /*------------------------------------------------------------------*/
@@ -21555,11 +21555,15 @@ Boolean bRet
 /* connue.                                                          */
 /*------------------------------------------------------------------*/
 bRet = True
+lIdSin = idw_wsin.GetItemNumber ( 1, "ID_SIN")
 
 F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_wSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 405 )
+If lDeb > 0 Then sCas = "BOUYGUES"
+
 // [20251031115051973][JFF][MIG215_FREE]
 If lDeb <= 0 Then
 	F_RechDetPro ( lDeb, lFin, idw_DetPro, idw_wSin.GetItemNumber ( 1, "ID_PROD" ), '-DP', 409 )
+	If lDeb > 0 Then sCas = "FREE"
 End If 
 
 If lDeb <= 0 Then Return bRet
@@ -21579,6 +21583,10 @@ If lRow > 0 Then
 	sVal2 = idw_wdivsin.GetItemString (lRow, "VAL_CAR") 
 End If 
 
+sVal3 = Space ( 1000 )
+SQLCA.PS_S_DIV_SIN_SANS_DIV_PRO_RECUPERATION_CHAINE_LONGUE ( lIdSin, "dommages_appareil_code", "W", sVal3 )
+
+
 lIdGti = idw_wGarSin.GetItemNumber ( 1, "ID_GTI" )
 
 Choose Case lIdGti 
@@ -21587,8 +21595,8 @@ Choose Case lIdGti
 			bRet = Uf_RF_EcrireRefus ( 1165 )
 		End If 
 
-	Case 11, 24
-		If ( Pos ( sVal, "REE" ) > 0 Or ( sVal1 = "NON" and sVal2 = "NON" ) ) Then
+	Case 11
+		If ( sCas = "BOUYGUES" And Pos ( sVal, "REE" ) > 0 ) Or ( Pos ( sVal3, "#BROKEN_SCREEN#" ) <=0 And sVal1 = "NON" and sVal2 = "NON" ) Then
 			bRet = Uf_RF_EcrireRefus ( 1165 )
 		End If 
 End Choose 
