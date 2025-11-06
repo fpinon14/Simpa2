@@ -2384,6 +2384,10 @@ Declare @iRet Integer
 -- Avec mail de refus auto possible, donc à mettre AVANT --
 -----------------------------------------------------------
 
+-- Refus 1165 : DOMMAGE PARTIES EXTERIEURES
+Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_1165_DOMMAGE_PARTIES_EXTERIEURES @adcIdSin
+If @iRet = -1 Or @iRet > 1 Return @iRet
+
 -- Refus 1844 : DOMMAGE PAS EXTERIEUREMENT VISIBLE
 Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_1844_DOMMAGE_PAS_EXTERIEUREMENT_VISIBLE @adcIdSin
 If @iRet = -1 Or @iRet > 1 Return @iRet
@@ -2436,9 +2440,6 @@ If @iRet = -1 Return @iRet
 Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_643_DATE_ACHAT_OU_OUVLIG_ANTERIEURE_DTE_ADHESION_DP131 @adcIdSin
 If @iRet = -1 Return @iRet
 
--- Refus 1165 : DOMMAGE PARTIES EXTERIEURES
-Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__REFUS_1165_DOMMAGE_PARTIES_EXTERIEURES @adcIdSin
-If @iRet = -1 Return @iRet
 
 
 Go
@@ -2470,7 +2471,7 @@ From sysadm.det_pro dp
 Where dp.id_prod = @adcIdProdSin
 and dp.id_code_dp = 406
 
-If @sVarianteDp406 = 'BOUYGUES'
+If @sVarianteDp406 in ( 'BOUYGUES', 'FREE' )
 Begin 
 	If @adcIdGti = 11 And @asDommagesExterieursVisibles = 'NON' 
 	Begin
@@ -2511,7 +2512,7 @@ And   dp.id_prod = ws.id_prod
 And   dp.id_code_dp = 406
 And   wg.id_sin = ws.id_sin
 
-If @sVarianteDp406 = 'BOUYGUES'
+If @sVarianteDp406 in ( 'BOUYGUES', 'FREE' )
 Begin 
 	Set @sVal = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'dommages_exterieurs_visibles', 'W', 'RETOUR=CODE' )	
 	If @dcIdGti = 11 And @sVal = 'NON'
@@ -2564,6 +2565,20 @@ Begin
 
 
 	If @adcIdGti in ( 11 ) And ( CHARINDEX ( '#REE#', @asChaineQueSestTilPasse ) > 0 OR ( @asDysFonctionnementAppareil = 'NON' And @asAppInutilisableSuiteDysfonct = 'NON' AND CHARINDEX ( '#BROKEN_SCREEN#', @asTypeDommagesAppareilCode ) <= 0)) 
+	Begin
+		Set @asChaineSeriaRetourRefus = sysadm.FN_CLE_VAL_E ( '1165', sysadm.FN_CODE_NUM ( 1165, '+RE' ), Trim ( @asChaineSeriaRetourRefus ), ';' )	
+	End 
+End 
+
+If @sVarianteDp406 = 'FREE'
+Begin 
+	If @adcIdGti in ( 24 ) And ( @asDysFonctionnementAppareil = 'NON' And @asAppInutilisableSuiteDysfonct = 'NON' ) 
+	Begin
+		Set @asChaineSeriaRetourRefus = sysadm.FN_CLE_VAL_E ( '1165', sysadm.FN_CODE_NUM ( 1165, '+RE' ), Trim ( @asChaineSeriaRetourRefus ), ';' )	
+	End 
+
+
+	If @adcIdGti in ( 11 ) And ( ( @asDysFonctionnementAppareil = 'NON' And @asAppInutilisableSuiteDysfonct = 'NON' AND CHARINDEX ( '#BROKEN_SCREEN#', @asTypeDommagesAppareilCode ) <= 0)) 
 	Begin
 		Set @asChaineSeriaRetourRefus = sysadm.FN_CLE_VAL_E ( '1165', sysadm.FN_CODE_NUM ( 1165, '+RE' ), Trim ( @asChaineSeriaRetourRefus ), ';' )	
 	End 
@@ -2637,6 +2652,42 @@ Begin
 			Return -1   
 		End 
 
+		If @sVal1 = 'NON' And @sVal2 = 'NON' AND CHARINDEX ( '#BROKEN_SCREEN#', @sVal ) <= 0
+		Begin
+			Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__COCHER_UN_REFUS @adcIdSin, @dcIdGti, 1165
+			If @iRet = -1 Return @iRet		
+			Return 1165 -- Retour du code refus positif ( + Validation&Mail Refus )
+		End 
+	End
+End 
+
+
+If @sVarianteDp406 = 'FREE' and @dcIdGti in ( 11, 24 )
+Begin 
+
+	Set @sVal1 = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'dysfonctionnement_appareil', 'W', 'RETOUR=CODE' )	
+	Set @sVal2 = sysadm.FN_GET_DIV_SIN (@adcIdSin, 'app_inutilisable_suite_dysfonct', 'W', 'RETOUR=CODE' )	
+
+	-- Cas dommages_appareil_code
+	Set @sVal = space ( 1000 )
+	Exec sysadm.PS_S_DIV_SIN_SANS_DIV_PRO_RECUPERATION_CHAINE_LONGUE
+			@adcIdSin, 
+			'dommages_appareil_code',
+			'W',
+			@sVal OutPut 
+
+	If @dcIdGti in ( 24 )
+	Begin
+		If @sVal1 = 'NON' And @sVal2 = 'NON' 
+		Begin
+			Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__COCHER_UN_REFUS @adcIdSin, @dcIdGti, 1165
+			If @iRet = -1 Return @iRet		
+			Return 1165 -- Retour du code refus positif ( + Validation&Mail Refus   
+		End 
+	End 
+
+	If @dcIdGti in ( 11 )
+	Begin
 		If @sVal1 = 'NON' And @sVal2 = 'NON' AND CHARINDEX ( '#BROKEN_SCREEN#', @sVal ) <= 0
 		Begin
 			Exec @iRet = sysadm.PS_I_EXTRANET_AUTOMATISATION__COCHER_UN_REFUS @adcIdSin, @dcIdGti, 1165
