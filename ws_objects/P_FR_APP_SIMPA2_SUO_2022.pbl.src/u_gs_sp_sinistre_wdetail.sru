@@ -4204,17 +4204,18 @@ If F_CLE_A_TRUE ( "MIG215_FREE" ) Then
 		If lDeb > 0 Then		
 	
 			lRow = idw_WDivSin.Find ( "Upper (NOM_ZONE) = 'PAIEMENT_ADH_FLEX_4X'", 1, idw_WDivSin.RowCount () ) 
-			sVal = Upper ( idw_WDivSin.GetItemString ( lRow, "VAL_LST_CAR" ) )
+			sVal = Upper ( idw_WDivSin.GetItemString ( lRow, "VAL_CAR" ) )
 			
-			If sVal = "OUI" Then
-				stMessage.sTitre		= "Paiement adhésion Flexible ou en 4 fois"
-				stMessage.bErreurG	= FALSE
-				stMessage.sCode		= "WDET682 "
-				stMessage.Icon			= Exclamation!
-				stMessage.bouton = Ok!
-				F_Message ( stMessage )				
-				sPos = "ID_I_REG"
-			End If 
+			Choose Case sVal 
+				Case "FLEX", "4X"
+					stMessage.sTitre		= "Paiement adhésion Flexible ou en 4 fois"
+					stMessage.bErreurG	= FALSE
+					stMessage.sCode		= "WDET682 "
+					stMessage.Icon			= Exclamation!
+					stMessage.bouton = Ok!
+					F_Message ( stMessage )				
+					sPos = "ID_I_REG"
+			End Choose 
 		End IF 
 	End IF 
 End If	
