@@ -9376,6 +9376,7 @@ Declare @sCodInterLst  VarChar ( 35 )
 Declare @iCodRefus Integer
 Declare @sDateRdv varChar ( 10 )
 Declare @sCodeDocument VarChar ( 20 ) -- Pour doc joint, voit N. Tonnetot, méthode SAGA2
+Declare @sStatusPce VarChar ( 10 ) 
 
 -- [MIG1][20250331]
 Declare @TbPceDocJoint Table ( 
@@ -9410,12 +9411,23 @@ IF @asMtAReg is not null and @asMtAReg <> '' Set @sDateRdv = convert ( VarChar (
 Insert into @TbPceDocJoint values ( 447 )
 Insert into @TbPceDocJoint values ( 11 )
 
+-- Armement spécial code_document
 Select Top 1 @sCodeDocument = Convert ( VarChar ( 20 ), wp.id_pce )
 from sysadm.w_piece wp, 
 	 @TbPceDocJoint pj
 where wp.id_sin = @adcIdSin
 And wp.id_pce = pj.id_pce
+And wp.id_i = 0
 If @sCodeDocument  is null Set @sCodeDocument = ''
+
+-- Armement spécial de variable pour certains codes maquettes ou produit (une horreur totale)
+If @asTypMail = 'RCDEC1' and Exists ( Select Top 1 1 From sysadm.w_sin ws, sysadm.det_pro dp where ws.id_sin = @adcIdSin and dp.id_prod = ws.id_prod and id_code_dp = 409 ) -- FREE
+ Begin
+   Set @sStatusPce = '1' 
+   If Exists ( Select Top 1 1 From sysadm.w_piece Where id_sin = @adcIdSin and id_i = 0 ) Set @sStatusPce = '2' 
+ End 
+If @sStatusPce is null Set @sStatusPce = '' 
+
 
 If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
  Begin
@@ -9442,7 +9454,8 @@ If @@servername = master.dbo.SPB_FN_ServerName ('PRO')
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'montant_reglement', @asMtAReg 
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'date_rdv', @sDateRdv  
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_document', @sCodeDocument  
-
+		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'status', @sStatusPce
+		
 		Exec TRACE_MAIL_PRO.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'adr_mail', @sVal OutPut
 		Set @sMailSend = @sVal
 
@@ -9527,6 +9540,7 @@ Else
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'montant_reglement', @asMtAReg 
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'date_rdv', @sDateRdv  
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'code_document', @sCodeDocument  
+		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_U_ARMER_UNE_VALEUR_DANS_CHAINE_DATA_XML_KSL @iIdXml, 'status', @sStatusPce
 
 		Exec TRACE_MAIL_TRT.sysadm.PS_RS5045_S_RECUPERER_UNE_DONNEE_D_UNE_VARIABLE_PRE_ARMEE @iIdXml, 'adr_mail', @sVal OutPut
 		Set @sMailSend = @sVal

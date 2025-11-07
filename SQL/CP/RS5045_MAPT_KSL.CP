@@ -1349,6 +1349,7 @@ Go
 -- JFF      05/08/2024   [MCO602_PNEU]
 -- JFF      19/12/2024   [MIG1_COUR_EMAILING]
 -- JFF      22/07/2025   [MIG165_BOUYGUES]
+-- [20251031115051973][JFF][MIG215_FREE]
 -------------------------------------------------------------------
 IF EXISTS ( SELECT * FROM sysobjects WHERE name = 'PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE' AND type = 'P' )
         DROP procedure sysadm.PS_RS5045_I_CONSTRUCTION_CHAINE_XML_KSL_DEFINITIVE
@@ -1592,7 +1593,8 @@ Where cm.cod_maq = @sCodeMaquette
 			montant_reglement as 'courrier/@montant_reglement', -- [MIG1_COUR_EMAILING]
 			date_rdv as 'courrier/@date_rdv', -- [MIG1_COUR_EMAILING]
 			code_document as 'courrier/@code_document', -- [MIG1_COUR_EMAILING]
-			motif_reglement as 'courrier/@motif_reglement' -- [MIG165_BOUYGUES]
+			motif_reglement as 'courrier/@motif_reglement', -- [MIG165_BOUYGUES]
+			status_pce 	as 'courrier/@status' -- [20251031115051973][JFF][MIG215_FREE]
 
 		from sysadm.variable_xml_ksl_rs5045 v
 		Where id_xml = @iIdXml
