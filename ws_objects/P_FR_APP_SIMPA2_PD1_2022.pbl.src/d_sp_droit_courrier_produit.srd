@@ -1,0 +1,23 @@
+HA$PBExportHeader$d_sp_droit_courrier_produit.srd
+$PBExportComments$Chargement des produits pour l'affectation des droits de modifications des courriers.
+release 8;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 97 print.margin.bottom = 97 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+header(height=152 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=64 color="536870912" )
+table(column=(type=char(4) updatewhereclause=yes name=id_oper dbname="id_oper" )
+ column=(type=number updatewhereclause=yes name=id_corb dbname="id_corb" )
+ column=(type=number updatewhereclause=yes name=id_prod dbname="id_prod" )
+ column=(type=char(65) updatewhereclause=yes name=lib_prod dbname="lib_prod" )
+ column=(type=char(1) updatewhereclause=yes name=alt_droit dbname="alt_droit" )
+ procedure="1 execute sysadm.DW_S01_DROIT_PRODUIT"  sort="id_oper A id_corb A id_prod A " )
+text(band=header alignment="2" text="text" border="6" color="16777215" x="14" y="8" height="56" width="1669" html.valueishtml="0"  name=oper_t visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="32768" )
+text(band=header alignment="2" text="Produit" border="6" color="16711680" x="14" y="84" height="56" width="187" html.valueishtml="0"  name=t_1 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Corbeille" border="6" color="16711680" x="224" y="84" height="56" width="206" html.valueishtml="0"  name=t_2 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Libell$$HEX1$$e900$$ENDHEX$$" border="6" color="16711680" x="457" y="84" height="56" width="1225" html.valueishtml="0"  name=t_3 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+compute(band=detail alignment="1" expression="if ( id_prod = -1, '', String ( id_prod ) )"border="0" color="16711680~tif ( alt_droit = 'N', 16711680, 255)" x="14" y="4" height="64" width="187" format="[GENERAL]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="1" tabsequence=32766 border="0" color="16711680~tif ( alt_droit = 'N', 16711680, 255)" x="224" y="4" height="56" width="206" format="[general]" html.valueishtml="0"  name=id_corb visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="16711680~tif ( alt_droit = 'N', 16711680, 255)" x="457" y="4" height="56" width="1225" format="[general]" html.valueishtml="0"  name=lib_prod visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="0" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" netscapelayers="0" )

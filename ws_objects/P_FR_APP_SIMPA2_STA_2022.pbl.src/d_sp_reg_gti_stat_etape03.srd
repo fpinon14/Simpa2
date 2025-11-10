@@ -1,0 +1,9 @@
+HA$PBExportHeader$d_sp_reg_gti_stat_etape03.srd
+release 4;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 97 print.margin.bottom = 97 print.paper.source = 0 print.paper.size = 0 print.prompt=no )
+header(height=1 color="536870912" )
+summary(height=1 color="536870912" )
+footer(height=1 color="536870912" )
+detail(height=1 color="536870912" )
+table(column=(type=decimal(0) name=id_sin dbname="id_sin" )
+ procedure="1 execute sysadm.DW_S03_REG_GTI_STAT @dtDteDeb = :dtDteDeb, @dtDteFin = :dtDteFin" arguments=(("dtDteDeb", datetime),("dtDteFin", datetime))  sort="id_sin A " )

@@ -1,0 +1,12 @@
+HA$PBExportHeader$d_sp_sin_message.srd
+$PBExportComments$-} Grille de saisie pour les zones TXT_MESS.                  ...................(SINISTRE)
+release 4;
+datawindow(units=0 timer_interval=0 color=12632256 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 97 print.margin.bottom = 97 print.paper.source = 0 print.paper.size = 0 print.prompt=no )
+header(height=1 color="536870912" )
+summary(height=1 color="536870912" )
+footer(height=1 color="536870912" )
+detail(height=777 color="536870912" )
+table(column=(type=char(254) name=txt_mess dbname="txt_mess" validation="F_Libelle ( GetText (), 2 )" )
+ )
+column(band=detail id=1 alignment="0" tabsequence=10 border="5" color="16711680" x="42" y="144" height="621" width="2218" format="[general]"  name=txt_mess edit.limit=254 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.nilisnull=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=detail alignment="2" text=""border="5" color="16777215" x="439" y="40" height="57" width="1431"  name=st_titre  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421376" )

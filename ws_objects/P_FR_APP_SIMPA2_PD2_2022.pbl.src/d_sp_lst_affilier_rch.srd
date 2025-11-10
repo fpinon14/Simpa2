@@ -1,0 +1,20 @@
+HA$PBExportHeader$d_sp_lst_affilier_rch.srd
+$PBExportComments$---} Liste des cartes disponibles ( Recherche ) .
+release 4;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 97 print.margin.bottom = 97 print.paper.source = 0 print.paper.size = 0 print.prompt=no )
+header(height=1 color="536870912" )
+summary(height=1 color="536870912" )
+footer(height=1 color="536870912" )
+detail(height=49 color="536870912" )
+table(column=(type=decimal(0) name=id_prod dbname="id_prod" )
+ column=(type=decimal(0) name=id_rev dbname="id_rev" )
+ column=(type=decimal(0) name=id_gti dbname="id_gti" )
+ column=(type=decimal(0) name=id_carte dbname="id_carte" )
+ column=(type=char(35) name=lib_carte dbname="lib_carte" )
+ column=(type=datetime name=dte_affiliation dbname="dte_affiliation" )
+ column=(type=datetime name=cree_le dbname="cree_le" )
+ column=(type=datetime name=maj_le dbname="maj_le" )
+ column=(type=char(4) name=maj_par dbname="maj_par" )
+ procedure="1 execute sysadm.DW_S01_AFFILIER;1 @dcIdProd = :dcIdProd, @dcIdRev = :dcIdRev, @dcIdGti = :dcIdGti" arguments=(("dcIdProd", number),("dcIdRev", number),("dcIdGti", number)) )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="16711680" x="14" y="4" height="45" width="151" format="[general]"  name=id_carte edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="16711680" x="174" y="4" height="45" width="988" format="[general]"  name=lib_carte edit.limit=35 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )

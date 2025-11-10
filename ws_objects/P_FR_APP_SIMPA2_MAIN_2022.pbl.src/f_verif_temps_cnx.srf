@@ -1,0 +1,61 @@
+HA$PBExportHeader$f_verif_temps_cnx.srf
+global type f_verif_temps_cnx from function_object
+end type
+
+forward prototypes
+global subroutine f_verif_temps_cnx (datetime adtdtedercnx)
+end prototypes
+
+global subroutine f_verif_temps_cnx (datetime adtdtedercnx);//*-----------------------------------------------------------------
+//*
+//* Fonction		: F_Verif_temps_cnx
+//* Auteur			: Fabry JF
+//* Date				: 09/07/2015
+//* Libell$$HEX4$$e900090009000900$$ENDHEX$$: Coupe SIMPA2 $$HEX2$$e0002000$$ENDHEX$$plus de 24h de cnx sans avoir quitt$$HEX1$$e900$$ENDHEX$$.
+//* Commentaires	: 
+//*
+//* Arguments		: 	String			asCle	   Val
+//*						
+//*
+//* Retourne		: Boolean
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//*-----------------------------------------------------------------
+
+DateTime dtDteActuelle
+Date     dDteDerCnx, dDteActuelle
+Time     tDteDerCnx, tDteActuelle
+Long 		lNbreHeure
+
+If Not F_CLE_A_TRUE ( "VERIF_TEMPS_CNX" ) Then Return 
+
+lNbreHeure = 24
+
+dtDteActuelle = DateTime ( Today (), Now () )
+dDteDerCnx = Date ( adtDteDerCnx )
+dDteActuelle = Date ( dtDteActuelle )
+tDteDerCnx = Time ( adtDteDerCnx )
+tDteActuelle = Time ( dtDteActuelle )
+
+long l
+l = F_DateDiff ( "h", "dt", dDteDerCnx, tDteDerCnx , dDteActuelle, tDteActuelle ) 
+
+If F_DateDiff ( "h", "dt", dDteDerCnx, tDteDerCnx , dDteActuelle, tDteActuelle ) > lNbreHeure Then
+	stMessage.berreurg=FALSE
+	stMessage.bouton=Ok!
+	stMessage.icon=Exclamation!
+	stMessage.stitre="Temps connexion > 1 journ$$HEX1$$e900$$ENDHEX$$e"
+	stMessage.scode ="COMD917"
+	stMessage.sVar [1] = String ( adtDteDerCnx )
+	stMessage.sVar [2] = String ( dtDteActuelle )	
+	
+	F_Message ( stMessage )
+	
+	HALT
+	
+End If
+
+
+end subroutine
+

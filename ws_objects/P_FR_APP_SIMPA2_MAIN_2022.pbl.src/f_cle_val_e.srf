@@ -1,0 +1,46 @@
+﻿$PBExportHeader$f_cle_val_e.srf
+global type f_cle_val_e from function_object
+end type
+
+forward prototypes
+global subroutine f_cle_val_e (string ascle, string asvaleur, ref string aschaine, string assep)
+end prototypes
+
+global subroutine f_cle_val_e (string ascle, string asvaleur, ref string aschaine, string assep);//*-----------------------------------------------------------------
+//*
+//* Fonction      : F_CLE_VAL
+//* Auteur        : JFF
+//* Date          : 22/03/2024
+//* Libellé       : Recherche dans une chaine sérialisée type BCV   c=v;c1=v1;etc..
+//* Commentaires  : Utile uniquement pour les formules de DataWindow mais peut être utilisé autre part
+//* Arguments     : 
+//*
+//* Retourne      : 		La valeur
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//* #..   ...   ../../....
+//*
+//*-----------------------------------------------------------------
+
+n_cst_string lnvPFCString
+
+ascle = Trim ( ascle ) 
+If IsNull ( ascle ) Or ascle = "" Then Return
+
+asvaleur = Trim ( asvaleur ) 
+If IsNull ( asvaleur ) Then asvaleur = ""
+
+
+asChaine = Trim ( asChaine ) 
+If IsNull ( asChaine ) Then asChaine = "" 
+
+assep = Trim ( assep ) 
+If IsNull ( assep ) Or assep = "" Then Return 
+
+
+lnvPFCString.of_setkeyvalue ( aschaine, ascle , asvaleur, assep )
+
+
+end subroutine
+

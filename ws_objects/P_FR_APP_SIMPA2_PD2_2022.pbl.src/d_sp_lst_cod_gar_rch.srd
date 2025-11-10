@@ -1,0 +1,19 @@
+HA$PBExportHeader$d_sp_lst_cod_gar_rch.srd
+$PBExportComments$---} Liste des codes garanties disponibles ( recherche ) .
+release 4;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 97 print.margin.bottom = 97 print.paper.source = 0 print.paper.size = 0 print.prompt=no )
+header(height=1 color="536870912" )
+summary(height=1 color="-1" )
+footer(height=1 color="-1" )
+detail(height=81 color="536870912" )
+table(column=(type=decimal(0) name=id_prod dbname="id_prod" )
+ column=(type=decimal(0) name=id_gti dbname="id_code" )
+ column=(type=char(35) name=lib_gti dbname="lib_code" )
+ column=(type=decimal(2) name=mt_cmt dbname="mt_cmt" )
+ column=(type=decimal(0) name=cod_rgpt_stat dbname="cod_rgpt_stat" )
+ column=(type=datetime name=cree_le dbname="cree_le" )
+ column=(type=datetime name=maj_le dbname="maj_le" )
+ column=(type=char(4) name=maj_par dbname="maj_par" )
+ procedure="1 execute sysadm.DW_S03_CODE;1 @dcIdProd = :dcIdProd" arguments=(("dcIdProd", number))  sort="id_gti A " )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="23" y="8" height="57" width="115" format="[general]"  name=id_gti edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="0" x="156" y="8" height="57" width="805" format="[general]"  name=lib_gti edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )

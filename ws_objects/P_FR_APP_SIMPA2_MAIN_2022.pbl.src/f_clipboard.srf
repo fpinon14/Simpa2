@@ -1,0 +1,31 @@
+﻿$PBExportHeader$f_clipboard.srf
+global type f_clipboard from function_object
+end type
+
+forward prototypes
+global subroutine f_clipboard (string asvaleurclipboard)
+end prototypes
+
+global subroutine f_clipboard (string asvaleurclipboard);//*-----------------------------------------------------------------
+//*
+//* Fonction      : F_CLIPBOARD
+//* Auteur        : JFF
+//* Date          : 02/06/2025
+//* Libellé       : Arme le ClipBoard, utile dans l'évènement d'une DW où l'on ne peut pas armer le clipboard à cet endroit, PB refuse.
+//* Commentaires  : 
+//* Arguments     : 
+//*
+//* Retourne      : 		La valeur
+//*
+//*-----------------------------------------------------------------
+//* MAJ   PAR      Date	     Modification
+//* #..   ...   ../../....
+//*
+//*-----------------------------------------------------------------
+
+ClipBoard ( asValeurClipBoard ) 
+
+
+
+end subroutine
+

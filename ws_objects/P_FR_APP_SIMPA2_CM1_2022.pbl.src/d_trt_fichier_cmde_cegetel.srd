@@ -1,0 +1,11 @@
+HA$PBExportHeader$d_trt_fichier_cmde_cegetel.srd
+$PBExportComments$Format du fichier de commande pour le fournisseur CEGETEL ( un seul chp car on ne veut pas des tabul fait par le SaveAs )
+release 4;
+datawindow(units=0 timer_interval=0 color=12632256 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 97 print.margin.bottom = 97 print.paper.source = 0 print.paper.size = 0 print.prompt=no )
+header(height=1 color="536870912" )
+summary(height=1 color="536870912" )
+footer(height=1 color="536870912" )
+detail(height=81 color="536870912" )
+table(column=(type=char(350) name=ligne dbname="LIGNE" )
+ )
+column(band=detail id=1 alignment="0" tabsequence=0 border="0" color="16711680" x="19" y="8" height="65" width="4389"  name=ligne  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )

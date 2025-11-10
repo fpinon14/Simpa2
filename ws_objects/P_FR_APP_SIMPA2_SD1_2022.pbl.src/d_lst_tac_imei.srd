@@ -1,0 +1,15 @@
+HA$PBExportHeader$d_lst_tac_imei.srd
+$PBExportComments$liste de tous les TAC IMEI existant sur le march$$HEX1$$e900$$ENDHEX$$
+release 4;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 97 print.margin.bottom = 97 print.paper.source = 0 print.paper.size = 0 print.prompt=no )
+header(height=1 color="536870912" )
+summary(height=1 color="536870912" )
+footer(height=1 color="536870912" )
+detail(height=1 color="536870912" )
+table(column=(type=number name=id_tac dbname="id_tac" )
+ column=(type=char(35) name=marque dbname="marque" )
+ column=(type=char(10) name=modele dbname="modele" )
+ procedure="1 execute sysadm.DW_S01_TAC_IMEI " )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="0" x="1" y="0" height="57" width="183" format="[general]"  name=id_tac edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="183" y="0" height="57" width="805" format="[general]"  name=marque edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="0" x="988" y="0" height="57" width="229" format="[general]"  name=modele edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )

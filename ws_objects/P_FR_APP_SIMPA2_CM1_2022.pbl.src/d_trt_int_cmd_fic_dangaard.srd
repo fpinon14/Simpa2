@@ -1,0 +1,12 @@
+HA$PBExportHeader$d_trt_int_cmd_fic_dangaard.srd
+$PBExportComments$Pour saisie fichier Dangaard $$HEX2$$e0002000$$ENDHEX$$traiter
+release 4;
+datawindow(units=0 timer_interval=0 color=12632256 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 97 print.margin.bottom = 97 print.paper.source = 0 print.paper.size = 0 print.prompt=no )
+header(height=1 color="536870912" )
+summary(height=1 color="536870912" )
+footer(height=1 color="536870912" )
+detail(height=93 color="536870912" )
+table(column=(type=char(90) name=nom_fichier dbname="nom_fichier" )
+ )
+column(band=detail id=1 alignment="0" tabsequence=10 border="5" color="16711680" x="458" y="12" height="65" width="1459" format="[general]"  name=nom_fichier edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=detail alignment="0" text="Fichier $$HEX2$$e0002000$$ENDHEX$$Traiter"border="0" color="0" x="19" y="12" height="65" width="412"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )

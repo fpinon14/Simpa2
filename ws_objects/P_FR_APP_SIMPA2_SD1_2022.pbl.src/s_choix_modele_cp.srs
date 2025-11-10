@@ -1,0 +1,7 @@
+HA$PBExportHeader$s_choix_modele_cp.srs
+$PBExportComments$Structure pour le choix des modeles de courriers particulier
+global type s_choix_modele_cp from structure
+    string sIdCour
+    datawindowchild dwnatcour
+end type
+

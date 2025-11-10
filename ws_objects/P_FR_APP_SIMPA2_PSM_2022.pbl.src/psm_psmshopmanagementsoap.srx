@@ -1,0 +1,23 @@
+HA$PBExportHeader$psm_psmshopmanagementsoap.srx
+$PBExportComments$Proxy imported from Web service using Web Service Proxy Generator.
+global type psm_PSMShopManagementSOAP from NonVisualObject
+end type
+
+type variables
+Protected:
+   string xmlns = ""
+   string wsdl = "http://schemas.xmlsoap.org/wsdl/"
+   string soap = "http://schemas.xmlsoap.org/wsdl/soap/"
+   string tns = "http://www.allopsm.fr/PSMShopManagement/"
+   string xsd = "http://www.w3.org/2001/XMLSchema"
+   string pb__TargetNamespace = "http://www.allopsm.fr/PSMShopManagement/"
+   string BindingStyle = "document"
+
+   string endpoint = "http://www.allopsm.fr/WebService/PSMShopManagement.php"
+end variables
+
+forward prototypes
+public:
+function string getPSMShop (string zipcode) alias for "getPSMShop([in] xsd:string zipcode) return xsd:string psmShopResponse@http://www.allopsm.fr/PSMShopManagement/@http://www.allopsm.fr/PSMShopManagement/getPSMShop*getPSMShop*http://www.allopsm.fr/PSMShopManagement/"
+end prototypes
+

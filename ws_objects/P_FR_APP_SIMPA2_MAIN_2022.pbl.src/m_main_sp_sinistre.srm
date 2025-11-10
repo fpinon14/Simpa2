@@ -1,0 +1,2158 @@
+﻿$PBExportHeader$m_main_sp_sinistre.srm
+$PBExportComments$-} Menu pour le module de gestion des sinistres de l'application SIMPA 2.
+forward
+global type m_main_sp_sinistre from menu
+end type
+type m_100 from menu within m_main_sp_sinistre
+end type
+type m_101 from menu within m_100
+end type
+type m_102 from menu within m_100
+end type
+type m_103 from menu within m_100
+end type
+type m_104 from menu within m_100
+end type
+type m_105 from menu within m_100
+end type
+type m_106 from menu within m_100
+end type
+type m_107 from menu within m_100
+end type
+type m_108 from menu within m_100
+end type
+type m_100 from menu within m_main_sp_sinistre
+m_101 m_101
+m_102 m_102
+m_103 m_103
+m_104 m_104
+m_105 m_105
+m_106 m_106
+m_107 m_107
+m_108 m_108
+end type
+type m_200 from menu within m_main_sp_sinistre
+end type
+type m_201 from menu within m_200
+end type
+type m_202 from menu within m_200
+end type
+type m_203 from menu within m_200
+end type
+type m_204 from menu within m_200
+end type
+type m_200 from menu within m_main_sp_sinistre
+m_201 m_201
+m_202 m_202
+m_203 m_203
+m_204 m_204
+end type
+type m_300 from menu within m_main_sp_sinistre
+end type
+type m_301 from menu within m_300
+end type
+type m_3011 from menu within m_301
+end type
+type m_30111 from menu within m_301
+end type
+type m_3012 from menu within m_301
+end type
+type m_3013 from menu within m_301
+end type
+type m_3014 from menu within m_301
+end type
+type m_3015 from menu within m_301
+end type
+type m_301 from menu within m_300
+m_3011 m_3011
+m_30111 m_30111
+m_3012 m_3012
+m_3013 m_3013
+m_3014 m_3014
+m_3015 m_3015
+end type
+type m_302 from menu within m_300
+end type
+type m_303 from menu within m_300
+end type
+type m_304 from menu within m_300
+end type
+type m_300 from menu within m_main_sp_sinistre
+m_301 m_301
+m_302 m_302
+m_303 m_303
+m_304 m_304
+end type
+type m_400 from menu within m_main_sp_sinistre
+end type
+type m_401 from menu within m_400
+end type
+type m_411 from menu within m_401
+end type
+type m_412 from menu within m_401
+end type
+type m_413 from menu within m_401
+end type
+type m_414 from menu within m_401
+end type
+type m_415 from menu within m_401
+end type
+type m_401 from menu within m_400
+m_411 m_411
+m_412 m_412
+m_413 m_413
+m_414 m_414
+m_415 m_415
+end type
+type m_402 from menu within m_400
+end type
+type m_400 from menu within m_main_sp_sinistre
+m_401 m_401
+m_402 m_402
+end type
+type m_fermer from menu within m_main_sp_sinistre
+end type
+type m_quitter from menu within m_main_sp_sinistre
+end type
+type m_raffichemenu from menu within m_quitter
+end type
+type m_mosaque from menu within m_quitter
+end type
+type m_cascade from menu within m_quitter
+end type
+type m_pleinecran from menu within m_quitter
+end type
+type m_rorgicones from menu within m_quitter
+end type
+type m_quitter from menu within m_main_sp_sinistre
+m_raffichemenu m_raffichemenu
+m_mosaque m_mosaque
+m_cascade m_cascade
+m_pleinecran m_pleinecran
+m_rorgicones m_rorgicones
+end type
+type m_44 from menu within m_main_sp_sinistre
+end type
+type m_aproposde from menu within m_44
+end type
+type m_44 from menu within m_main_sp_sinistre
+m_aproposde m_aproposde
+end type
+global type m_main_sp_sinistre from menu
+m_100 m_100
+m_200 m_200
+m_300 m_300
+m_400 m_400
+m_fermer m_fermer
+m_quitter m_quitter
+m_44 m_44
+end type
+end forward
+
+global type m_main_sp_sinistre from menu
+m_100 m_100
+m_200 m_200
+m_300 m_300
+m_400 m_400
+m_fermer m_fermer
+m_quitter m_quitter
+m_44 m_44
+end type
+global m_main_sp_sinistre m_main_sp_sinistre
+
+type variables
+Public :
+
+w_a_Sp_Relances_2000	w_R1A
+w_a_Sp_Relances_2000	w_R1U   // DCMP00285 Uf avec Dem pce à la banque.
+w_a_Sp_Relances_2000	w_R1T
+w_a_Sp_Relances_2000	w_R1P
+w_a_Sp_Relances_2000	w_R2
+w_a_Sp_Relances_2000	w_DR1
+w_a_Sp_Relances_2000	w_SOL
+
+W_ae_Sp_Edit_Sinistre_Wkf_2000 w_EdtNormale
+W_ae_Sp_Edit_Sinistre_Wkf_2000 w_EdtQuestCoupon
+end variables
+
+on m_main_sp_sinistre.create
+m_main_sp_sinistre=this
+call super::create
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_100=create m_100
+this.m_200=create m_200
+this.m_300=create m_300
+this.m_400=create m_400
+this.m_fermer=create m_fermer
+this.m_quitter=create m_quitter
+this.m_44=create m_44
+this.Item[UpperBound(this.Item)+1]=this.m_100
+this.Item[UpperBound(this.Item)+1]=this.m_200
+this.Item[UpperBound(this.Item)+1]=this.m_300
+this.Item[UpperBound(this.Item)+1]=this.m_400
+this.Item[UpperBound(this.Item)+1]=this.m_fermer
+this.Item[UpperBound(this.Item)+1]=this.m_quitter
+this.Item[UpperBound(this.Item)+1]=this.m_44
+end on
+
+on m_main_sp_sinistre.destroy
+call super::destroy
+destroy(this.m_100)
+destroy(this.m_200)
+destroy(this.m_300)
+destroy(this.m_400)
+destroy(this.m_fermer)
+destroy(this.m_quitter)
+destroy(this.m_44)
+end on
+
+type m_100 from menu within m_main_sp_sinistre
+m_101 m_101
+m_102 m_102
+m_103 m_103
+m_104 m_104
+m_105 m_105
+m_106 m_106
+m_107 m_107
+m_108 m_108
+end type
+
+on m_100.create
+call super::create
+this.text = "&Gestion"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_101=create m_101
+this.m_102=create m_102
+this.m_103=create m_103
+this.m_104=create m_104
+this.m_105=create m_105
+this.m_106=create m_106
+this.m_107=create m_107
+this.m_108=create m_108
+this.Item[UpperBound(this.Item)+1]=this.m_101
+this.Item[UpperBound(this.Item)+1]=this.m_102
+this.Item[UpperBound(this.Item)+1]=this.m_103
+this.Item[UpperBound(this.Item)+1]=this.m_104
+this.Item[UpperBound(this.Item)+1]=this.m_105
+this.Item[UpperBound(this.Item)+1]=this.m_106
+this.Item[UpperBound(this.Item)+1]=this.m_107
+this.Item[UpperBound(this.Item)+1]=this.m_108
+end on
+
+on m_100.destroy
+call super::destroy
+destroy(this.m_101)
+destroy(this.m_102)
+destroy(this.m_103)
+destroy(this.m_104)
+destroy(this.m_105)
+destroy(this.m_106)
+destroy(this.m_107)
+destroy(this.m_108)
+end on
+
+type m_101 from menu within m_100
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_Sinistre:m_101
+//* Evenement 		: Clicked
+//* Auteur			: Erick John Stark
+//* Date				: 05/01/1998 10:52:38
+//* Libellé			: 
+//* Commentaires	: Modification d'un sinistre.
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+F_OuvreAccueil ( W_a_Sp_Wkf_Saisie, This, stGlb )
+end on
+
+on m_101.create
+call super::create
+this.text = "&Saisie"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_101.destroy
+call super::destroy
+end on
+
+type m_102 from menu within m_100
+end type
+
+event clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_Sinistre:m_102
+//* Evenement 		: Clicked
+//* Auteur			: Erick John Stark
+//* Date				: 05/01/1998 10:52:38
+//* Libellé			: 
+//* Commentaires	: Edition d'un sinistre.
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+//F_OuvreAccueil ( W_ae_Sp_Edit_Sinistre_Wkf, This, stGlb )
+
+/*------------------------------------------------------------------*/
+/* Si on est en SVE                                                 */
+/*------------------------------------------------------------------*/
+If stGLB.bSaiValEdt Then
+	If	Upper ( ProfileString ( stGLB.sFichierIni, "EDITION", "CODE_BARRE_MEP", "NON" ) )	= "OUI"	THEN
+		F_ouvreaccueil ( W_Ae_Sp_Edition_Dcmp060589, This, stglb )
+	Else
+		f_ouvreaccueil ( W_Ae_Sp_Edition, This, stglb )
+	End If
+/*------------------------------------------------------------------*/
+/* Sinon méthode ancienne                                           */
+/*------------------------------------------------------------------*/
+Else	
+	stGlb.sMessageErreur  = "EDTNORM"
+	F_OuvreAccueil ( w_EdtNormale, This, stGlb )
+End If
+end event
+
+on m_102.create
+call super::create
+this.text = "&Edition"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_102.destroy
+call super::destroy
+end on
+
+type m_103 from menu within m_100
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_Sinistre:m_103
+//* Evenement 		: Clicked
+//* Auteur			: Erick John Stark
+//* Date				: 05/01/1998 10:52:38
+//* Libellé			: 
+//* Commentaires	: Validation d'un sinistre.
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+F_OuvreAccueil ( W_a_Sp_Wkf_Validation, This, stGlb )
+end on
+
+on m_103.create
+call super::create
+this.text = "&Validation"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_103.destroy
+call super::destroy
+end on
+
+type m_104 from menu within m_100
+end type
+
+on m_104.create
+call super::create
+this.text = "-"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_104.destroy
+call super::destroy
+end on
+
+type m_105 from menu within m_100
+end type
+
+event clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_Sinistre:m_104
+//* Evenement 		: Clicked
+//* Auteur			: DBI
+//* Date				: 05/01/1998 10:52:38
+//* Libellé			: 
+//* Commentaires	: Réédition d'un sinistre.
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+//F_OuvreAccueil ( W_ae_Sp_ReEdit_Sinistre_Wkf, This, stGlb )
+
+/*------------------------------------------------------------------*/
+/* Si on est en SVE                                                 */
+/*------------------------------------------------------------------*/
+If stGLB.bSaiValEdt Then
+	If	Upper ( ProfileString ( stGLB.sFichierIni, "EDITION", "CODE_BARRE_MEP", "NON" ) )	= "OUI"	THEN
+		F_ouvreaccueil ( W_Ae_Sp_ReEdition_Dcmp060589, This, stglb )	
+	Else	
+		f_ouvreaccueil ( W_Ae_Sp_ReEdition, This, stglb )	
+	End If
+/*------------------------------------------------------------------*/
+/* Sinon méthode ancienne                                           */
+/*------------------------------------------------------------------*/
+Else	
+	F_OuvreAccueil ( W_ae_Sp_ReEdit_Sinistre_Wkf_2000, This, stGlb )
+End If
+end event
+
+on m_105.create
+call super::create
+this.text = "&Réédition"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_105.destroy
+call super::destroy
+end on
+
+type m_106 from menu within m_100
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_Sinistre:m_106
+//* Evenement 		: Clicked
+//* Auteur			: Fabry JF
+//* Date				: 07/02/2002
+//* Libellé			: 
+//* Commentaires	: Edition des questionnaires avec coupon
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+//F_OuvreAccueil ( W_ae_Sp_Edit_Sinistre_Wkf, This, stGlb )
+
+/*------------------------------------------------------------------*/
+/* Si on est en SVE                                                 */
+/*------------------------------------------------------------------*/
+If stGLB.bSaiValEdt Then
+	MessageBox ("", "N'est plus utiliser en méthode Saisie/Validation/Edition" )	
+
+/*------------------------------------------------------------------*/
+/* Sinon méthode ancienne                                           */
+/*------------------------------------------------------------------*/
+Else	
+	stGlb.sMessageErreur = "EDTQUESTCOUPON"
+	F_OuvreAccueil ( w_EdtQuestCoupon, This, stGlb )
+
+End If 
+end on
+
+on m_106.create
+call super::create
+this.text = "Edition Questionnaire avec coupon"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_106.destroy
+call super::destroy
+end on
+
+type m_107 from menu within m_100
+end type
+
+on m_107.create
+call super::create
+this.text = "-"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_107.destroy
+call super::destroy
+end on
+
+type m_108 from menu within m_100
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet			:	m_108
+//* Evenement 		:	clicked
+//* Auteur			:	PLJ
+//* Date				:	15/09/2003
+//* Libellé			:	Ouvre la fenêtre de classement pour les dossiers soldés
+//* Commentaires	:	
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+
+
+f_OuvreAccueil ( W_A_Sp_Wkfs_w_queue_p, This, stglb )
+end on
+
+on m_108.create
+call super::create
+this.text = "&Archiver les dossiers soldés"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_108.destroy
+call super::destroy
+end on
+
+type m_200 from menu within m_main_sp_sinistre
+m_201 m_201
+m_202 m_202
+m_203 m_203
+m_204 m_204
+end type
+
+on m_200.create
+call super::create
+this.text = "&Cas Particuliers"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_201=create m_201
+this.m_202=create m_202
+this.m_203=create m_203
+this.m_204=create m_204
+this.Item[UpperBound(this.Item)+1]=this.m_201
+this.Item[UpperBound(this.Item)+1]=this.m_202
+this.Item[UpperBound(this.Item)+1]=this.m_203
+this.Item[UpperBound(this.Item)+1]=this.m_204
+end on
+
+on m_200.destroy
+call super::destroy
+destroy(this.m_201)
+destroy(this.m_202)
+destroy(this.m_203)
+destroy(this.m_204)
+end on
+
+type m_201 from menu within m_200
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_Sinistre:m_201
+//* Evenement 		: Clicked
+//* Auteur			: Erick John Stark
+//* Date				: 05/01/1998 10:52:38
+//* Libellé			: 
+//* Commentaires	: Gestion des cas particuliers. Modification d'un ID_ADH (N° Carte)
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+F_OuvreAccueil ( W_a_Sp_Cas_Id_Adh_Carte, This, stGlb )
+end on
+
+on m_201.create
+call super::create
+this.text = "&Modification N° Carte"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_201.destroy
+call super::destroy
+end on
+
+type m_202 from menu within m_200
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_Sinistre:m_202
+//* Evenement 		: Clicked
+//* Auteur			: Erick John Stark
+//* Date				: 05/01/1998 10:52:38
+//* Libellé			: 
+//* Commentaires	: Gestion des régularisations
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+F_OuvreAccueil ( W_a_Sp_Regul, This, stGlb )
+
+end on
+
+on m_202.create
+call super::create
+this.text = "&Régularisations"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_202.destroy
+call super::destroy
+end on
+
+type m_203 from menu within m_200
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_Sinistre:m_203
+//* Evenement 		: Clicked
+//* Auteur			: DBI
+//* Date				: 28/03/2000
+//* Libellé			: 
+//* Commentaires	: Modification Nom Assuré
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+F_OuvreAccueil ( W_a_Sp_Cas_Maj_Nom, This, stGlb )
+end on
+
+on m_203.create
+call super::create
+this.text = "&Modifications Nom"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_203.destroy
+call super::destroy
+end on
+
+type m_204 from menu within m_200
+end type
+
+event clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_Sinistre:m_204
+//* Evenement 		: Clicked
+//* Auteur			: FPI
+//* Date				: 17/08/2011
+//* Libellé			: 
+//* Commentaires	: [PM72.2]
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+SetPointer ( HourGlass! )
+F_OuvreAccueil ( W_t_Sp_Cas_Rm_Frais, This, stGlb )
+end event
+
+on m_204.create
+call super::create
+this.text = "Rè&glement manuel frais d’envoi sur prestation O2M"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_204.destroy
+call super::destroy
+end on
+
+type m_300 from menu within m_main_sp_sinistre
+m_301 m_301
+m_302 m_302
+m_303 m_303
+m_304 m_304
+end type
+
+on m_300.create
+call super::create
+this.text = "&Relances"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_301=create m_301
+this.m_302=create m_302
+this.m_303=create m_303
+this.m_304=create m_304
+this.Item[UpperBound(this.Item)+1]=this.m_301
+this.Item[UpperBound(this.Item)+1]=this.m_302
+this.Item[UpperBound(this.Item)+1]=this.m_303
+this.Item[UpperBound(this.Item)+1]=this.m_304
+end on
+
+on m_300.destroy
+call super::destroy
+destroy(this.m_301)
+destroy(this.m_302)
+destroy(this.m_303)
+destroy(this.m_304)
+end on
+
+type m_301 from menu within m_300
+m_3011 m_3011
+m_30111 m_30111
+m_3012 m_3012
+m_3013 m_3013
+m_3014 m_3014
+m_3015 m_3015
+end type
+
+on m_301.create
+call super::create
+this.text = "&Premières Relances"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_3011=create m_3011
+this.m_30111=create m_30111
+this.m_3012=create m_3012
+this.m_3013=create m_3013
+this.m_3014=create m_3014
+this.m_3015=create m_3015
+this.Item[UpperBound(this.Item)+1]=this.m_3011
+this.Item[UpperBound(this.Item)+1]=this.m_30111
+this.Item[UpperBound(this.Item)+1]=this.m_3012
+this.Item[UpperBound(this.Item)+1]=this.m_3013
+this.Item[UpperBound(this.Item)+1]=this.m_3014
+this.Item[UpperBound(this.Item)+1]=this.m_3015
+end on
+
+on m_301.destroy
+call super::destroy
+destroy(this.m_3011)
+destroy(this.m_30111)
+destroy(this.m_3012)
+destroy(this.m_3013)
+destroy(this.m_3014)
+destroy(this.m_3015)
+end on
+
+type m_3011 from menu within m_301
+end type
+
+event clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_Sinistre:m_3011
+//* Evenement 		: Clicked
+//* Auteur			: Fabry JF
+//* Date				: 08/06/1999 10:52:38
+//* Libellé			: 
+//* Commentaires	: 1ère Relances automatiques
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*    JFF   10/11/2023    [OPTIM_TRT_RELANCE]
+//*-----------------------------------------------------------------
+
+String	sMessageErreur
+DateTime dtDateJour
+Time		tHeureCte
+
+dtDateJour=Datetime( Today(), Now() )
+tHeureCte = Time ( dtDateJour )
+
+// [OPTIM_TRT_RELANCE]
+If tHeureCte < 07:00:00 And Upper ( SQLCA.DataBase ) = "SIMPA2_PRO" Then
+	stMessage.sTitre		= "En dehors de l'horaire"
+	stMessage.Icon			= Information!
+	stMessage.bErreurG	= FALSE
+	stMessage.Bouton		= Ok!
+	stMessage.sCode		= "WSIN901"
+	F_Message ( stMessage ) 
+	Return
+End If 
+
+sMessageErreur = stGlb.sMessageErreur
+
+stGlb.sMessageErreur = "R1A"
+
+SetPointer ( HourGlass! )
+
+F_OuvreAccueil ( w_R1A, This, stGlb )
+
+stGlb.sMessageErreur = sMessageErreur
+
+end event
+
+on m_3011.create
+call super::create
+this.text = "Premières Relances &Automatiques normales"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_3011.destroy
+call super::destroy
+end on
+
+type m_30111 from menu within m_301
+end type
+
+event clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_Sinistre:m_30111
+//* Evenement 		: Clicked
+//* Auteur			: Fabry JF
+//* Date				: 08/06/1999 10:52:38
+//* Libellé			: 
+//* Commentaires	: 1ère Relances automatiques Garanties UF (DCMP 000285)
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+String	sMessageErreur
+DateTime dtDateJour
+Time		tHeureCte
+
+dtDateJour=Datetime( Today(), Now() )
+tHeureCte = Time ( dtDateJour )
+
+// [OPTIM_TRT_RELANCE]
+If tHeureCte < 07:00:00 And Upper ( SQLCA.DataBase ) = "SIMPA2_PRO" Then
+	stMessage.sTitre		= "En dehors de l'horaire"
+	stMessage.Icon			= Information!
+	stMessage.bErreurG	= FALSE
+	stMessage.Bouton		= Ok!
+	stMessage.sCode		= "WSIN901"
+	F_Message ( stMessage ) 
+	Return
+End If 
+
+sMessageErreur = stGlb.sMessageErreur
+
+stGlb.sMessageErreur = "R1U"
+
+SetPointer ( HourGlass! )
+
+F_OuvreAccueil ( w_R1U, This, stGlb )
+
+stGlb.sMessageErreur = sMessageErreur
+end event
+
+on m_30111.create
+call super::create
+this.text = "Premières Relances &Automatiques Garanties UF"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_30111.destroy
+call super::destroy
+end on
+
+type m_3012 from menu within m_301
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_Sinistre:m_3012
+//* Evenement 		: Clicked
+//* Auteur			: Fabry JF
+//* Date				: 08/06/1999 10:52:38
+//* Libellé			: 
+//* Commentaires	: 1ère Relances Particulières
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+String	sMessageErreur
+
+sMessageErreur = stGlb.sMessageErreur
+
+stGlb.sMessageErreur = "R1T"
+
+SetPointer ( HourGlass! )
+
+F_OuvreAccueil ( w_R1T, This, stGlb )
+
+stGlb.sMessageErreur = sMessageErreur
+end on
+
+on m_3012.create
+call super::create
+this.text = "Premières Relances &Particulières"
+this.enabled = false
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_3012.destroy
+call super::destroy
+end on
+
+type m_3013 from menu within m_301
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_Sinistre:m_3013
+//* Evenement 		: Clicked
+//* Auteur			: Fabry JF
+//* Date				: 23/06/1999 15:51:30
+//* Libellé			: 
+//* Commentaires	: 1ère Relances Ponctuelles
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+String	sMessageErreur
+
+sMessageErreur = stGlb.sMessageErreur
+
+stGlb.sMessageErreur = "R1P"
+
+SetPointer ( HourGlass! )
+
+F_OuvreAccueil ( w_R1P, This, stGlb )
+
+stGlb.sMessageErreur = sMessageErreur
+
+end on
+
+on m_3013.create
+call super::create
+this.text = "Premières Relances &Ponctuelles"
+this.enabled = false
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_3013.destroy
+call super::destroy
+end on
+
+type m_3014 from menu within m_301
+end type
+
+on m_3014.create
+call super::create
+this.text = "-"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_3014.destroy
+call super::destroy
+end on
+
+type m_3015 from menu within m_301
+end type
+
+on clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_Sinistre:m_3015
+//* Evenement 		: Clicked
+//* Auteur			: Fabry JF
+//* Date				: 24/06/1999 15:51:30
+//* Libellé			: 
+//* Commentaires	: Annulation d'une 1ère Relances
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+String	sMessageErreur
+
+sMessageErreur = stGlb.sMessageErreur
+
+stGlb.sMessageErreur = "DR1"
+
+SetPointer ( HourGlass! )
+
+F_OuvreAccueil ( w_DR1, This, stGlb )
+
+stGlb.sMessageErreur = sMessageErreur
+end on
+
+on m_3015.create
+call super::create
+this.text = "&Annuler une première relance"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_3015.destroy
+call super::destroy
+end on
+
+type m_302 from menu within m_300
+end type
+
+event clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_Sinistre:m_302
+//* Evenement 		: Clicked
+//* Auteur			: Fabry JF
+//* Date				: 22/06/1999 10:52:38
+//* Libellé			: 
+//* Commentaires	: 2èmes Relances
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+String	sMessageErreur
+DateTime dtDateJour
+Time		tHeureCte
+
+dtDateJour=Datetime( Today(), Now() )
+tHeureCte = Time ( dtDateJour )
+
+// [OPTIM_TRT_RELANCE]
+If tHeureCte < 07:00:00 And Upper ( SQLCA.DataBase ) = "SIMPA2_PRO" Then
+	stMessage.sTitre		= "En dehors de l'horaire"
+	stMessage.Icon			= Information!
+	stMessage.bErreurG	= FALSE
+	stMessage.Bouton		= Ok!
+	stMessage.sCode		= "WSIN901"
+	F_Message ( stMessage ) 
+	Return
+End If 
+
+sMessageErreur = stGlb.sMessageErreur
+
+stGlb.sMessageErreur = "R2"
+
+SetPointer ( HourGlass! )
+
+F_OuvreAccueil ( w_R2, This, stGlb )
+
+stGlb.sMessageErreur = sMessageErreur
+end event
+
+on m_302.create
+call super::create
+this.text = "&Deuxièmes Relances"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_302.destroy
+call super::destroy
+end on
+
+type m_303 from menu within m_300
+end type
+
+on m_303.create
+call super::create
+this.text = "-"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_303.destroy
+call super::destroy
+end on
+
+type m_304 from menu within m_300
+end type
+
+event clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_Sinistre:m_304
+//* Evenement 		: Clicked
+//* Auteur			: Fabry JF
+//* Date				: 28/06/1999 10:52:38
+//* Libellé			: 
+//* Commentaires	: soldage des dossiers
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ	PAR		Date		Modification
+//* #1	JCA	22/10/2007	DCMP 06691 - Soldage des dossiers est effectué en automatique
+//*-----------------------------------------------------------------
+
+String	sMessageErreur
+
+// #1
+//sMessageErreur = stGlb.sMessageErreur
+//stGlb.sMessageErreur = "SOL"
+//SetPointer ( HourGlass! )
+//F_OuvreAccueil ( w_SOL, This, stGlb )
+//stGlb.sMessageErreur = sMessageErreur
+// FIN - #1
+
+stMessage.sTitre		= "Soldage des dossiers"
+stMessage.Icon			= Information!
+stMessage.sCode		= "SOLD001"
+stMessage.Bouton		= OK!
+stMessage.bTrace		= FALSE
+stMessage.bErreurG	= FALSE
+f_Message ( stMessage )
+
+
+end event
+
+on m_304.create
+call super::create
+this.text = "&Soldage des dossiers"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_304.destroy
+call super::destroy
+end on
+
+type m_400 from menu within m_main_sp_sinistre
+m_401 m_401
+m_402 m_402
+end type
+
+on m_400.create
+call super::create
+this.text = "&Relances Orange"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_401=create m_401
+this.m_402=create m_402
+this.Item[UpperBound(this.Item)+1]=this.m_401
+this.Item[UpperBound(this.Item)+1]=this.m_402
+end on
+
+on m_400.destroy
+call super::destroy
+destroy(this.m_401)
+destroy(this.m_402)
+end on
+
+type m_401 from menu within m_400
+m_411 m_411
+m_412 m_412
+m_413 m_413
+m_414 m_414
+m_415 m_415
+end type
+
+on m_401.create
+call super::create
+this.text = "&Premières Relances"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_411=create m_411
+this.m_412=create m_412
+this.m_413=create m_413
+this.m_414=create m_414
+this.m_415=create m_415
+this.Item[UpperBound(this.Item)+1]=this.m_411
+this.Item[UpperBound(this.Item)+1]=this.m_412
+this.Item[UpperBound(this.Item)+1]=this.m_413
+this.Item[UpperBound(this.Item)+1]=this.m_414
+this.Item[UpperBound(this.Item)+1]=this.m_415
+end on
+
+on m_401.destroy
+call super::destroy
+destroy(this.m_411)
+destroy(this.m_412)
+destroy(this.m_413)
+destroy(this.m_414)
+destroy(this.m_415)
+end on
+
+type m_411 from menu within m_401
+end type
+
+event clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_Sinistre:m_3011
+//* Evenement 		: Clicked
+//* Auteur			: Fabry JF
+//* Date				: 08/06/1999 10:52:38
+//* Libellé			: 
+//* Commentaires	: 1ère Relances automatiques
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+String	sMessageErreur
+
+// [PI052]
+stMessage.sTitre		= "Fonctionnalité obsolète"
+stMessage.Icon			= Information!
+stMessage.sCode		= "GENE173"
+F_Message ( stMessage )
+Return
+
+sMessageErreur = stGlb.sMessageErreur
+
+stGlb.sMessageErreur = "R1A"
+
+SetPointer ( HourGlass! )
+
+F_OuvreAccueil ( w_a_Sp_Relance, This, stGlb )
+
+stGlb.sMessageErreur = sMessageErreur
+end event
+
+on m_411.create
+call super::create
+this.text = "Premières Relances &Normales"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_411.destroy
+call super::destroy
+end on
+
+type m_412 from menu within m_401
+end type
+
+event clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_Sinistre:m_3012
+//* Evenement 		: Clicked
+//* Auteur			: Fabry JF
+//* Date				: 08/06/1999 10:52:38
+//* Libellé			: 
+//* Commentaires	: 1ère Relances Particulières
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+String	sMessageErreur
+
+// [PI052]
+stMessage.sTitre		= "Fonctionnalité obsolète"
+stMessage.Icon			= Information!
+stMessage.sCode		= "GENE173"
+F_Message ( stMessage )
+Return
+
+sMessageErreur = stGlb.sMessageErreur
+
+stGlb.sMessageErreur = "R1T"
+
+SetPointer ( HourGlass! )
+
+F_OuvreAccueil ( w_a_Sp_Relance, This, stGlb )
+
+stGlb.sMessageErreur = sMessageErreur
+end event
+
+on m_412.create
+call super::create
+this.text = "Premières Relances &Particulières"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_412.destroy
+call super::destroy
+end on
+
+type m_413 from menu within m_401
+end type
+
+event clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_Sinistre:m_3013
+//* Evenement 		: Clicked
+//* Auteur			: Fabry JF
+//* Date				: 23/06/1999 15:51:30
+//* Libellé			: 
+//* Commentaires	: 1ère Relances Ponctuelles
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+String	sMessageErreur
+
+sMessageErreur = stGlb.sMessageErreur
+
+stGlb.sMessageErreur = "R1P"
+
+SetPointer ( HourGlass! )
+
+F_OuvreAccueil ( w_a_Sp_Relance, This, stGlb )
+
+stGlb.sMessageErreur = sMessageErreur
+
+end event
+
+on m_413.create
+call super::create
+this.visible = false
+this.text = "Premières Relances &Ponctuelles"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_413.destroy
+call super::destroy
+end on
+
+type m_414 from menu within m_401
+end type
+
+on m_414.create
+call super::create
+this.visible = false
+this.text = "-"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_414.destroy
+call super::destroy
+end on
+
+type m_415 from menu within m_401
+end type
+
+event clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_Sinistre:m_3015
+//* Evenement 		: Clicked
+//* Auteur			: Fabry JF
+//* Date				: 24/06/1999 15:51:30
+//* Libellé			: 
+//* Commentaires	: Annulation d'une 1ère Relances
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+String	sMessageErreur
+
+sMessageErreur = stGlb.sMessageErreur
+
+stGlb.sMessageErreur = "DR1"
+
+SetPointer ( HourGlass! )
+
+F_OuvreAccueil ( w_a_Sp_Relance, This, stGlb )
+
+stGlb.sMessageErreur = sMessageErreur
+end event
+
+on m_415.create
+call super::create
+this.visible = false
+this.text = "&Annuler une première relance"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_415.destroy
+call super::destroy
+end on
+
+type m_402 from menu within m_400
+end type
+
+event clicked;//*-----------------------------------------------------------------
+//*
+//* Objet 			: M_Main_SP_Sinistre:m_302
+//* Evenement 		: Clicked
+//* Auteur			: Fabry JF
+//* Date				: 22/06/1999 10:52:38
+//* Libellé			: 
+//* Commentaires	: 2èmes Relances
+//*				  
+//*-----------------------------------------------------------------
+//* MAJ PAR		Date		Modification
+//*				  
+//*-----------------------------------------------------------------
+
+String	sMessageErreur
+
+// [PI052]
+stMessage.sTitre		= "Fonctionnalité obsolète"
+stMessage.Icon			= Information!
+stMessage.sCode		= "GENE173"
+F_Message ( stMessage )
+Return
+
+sMessageErreur = stGlb.sMessageErreur
+
+stGlb.sMessageErreur = "R2"
+
+SetPointer ( HourGlass! )
+
+F_OuvreAccueil ( w_a_Sp_Relance, This, stGlb )
+
+stGlb.sMessageErreur = sMessageErreur
+end event
+
+on m_402.create
+call super::create
+this.text = "&Deuxièmes Relances"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_402.destroy
+call super::destroy
+end on
+
+type m_fermer from menu within m_main_sp_sinistre
+end type
+
+on clicked;Close ( ParentWindow )
+
+end on
+
+on m_fermer.create
+call super::create
+this.text = "&Fermer"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_fermer.destroy
+call super::destroy
+end on
+
+type m_quitter from menu within m_main_sp_sinistre
+m_raffichemenu m_raffichemenu
+m_mosaque m_mosaque
+m_cascade m_cascade
+m_pleinecran m_pleinecran
+m_rorgicones m_rorgicones
+end type
+
+on m_quitter.create
+call super::create
+this.text = "F&enêtre"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_raffichemenu=create m_raffichemenu
+this.m_mosaque=create m_mosaque
+this.m_cascade=create m_cascade
+this.m_pleinecran=create m_pleinecran
+this.m_rorgicones=create m_rorgicones
+this.Item[UpperBound(this.Item)+1]=this.m_raffichemenu
+this.Item[UpperBound(this.Item)+1]=this.m_mosaque
+this.Item[UpperBound(this.Item)+1]=this.m_cascade
+this.Item[UpperBound(this.Item)+1]=this.m_pleinecran
+this.Item[UpperBound(this.Item)+1]=this.m_rorgicones
+end on
+
+on m_quitter.destroy
+call super::destroy
+destroy(this.m_raffichemenu)
+destroy(this.m_mosaque)
+destroy(this.m_cascade)
+destroy(this.m_pleinecran)
+destroy(this.m_rorgicones)
+end on
+
+type m_raffichemenu from menu within m_quitter
+end type
+
+on clicked;ParentWindow.ParentWindow ().ToolBarVisible 		= True
+ParentWindow.ParentWindow ().ToolBarAlignment 	= AlignAtTop!
+
+end on
+
+on m_raffichemenu.create
+call super::create
+this.text = "&Réaffiche Menu"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_raffichemenu.destroy
+call super::destroy
+end on
+
+type m_mosaque from menu within m_quitter
+end type
+
+on clicked;ParentWindow.ArrangeSheets ( Tile! )
+end on
+
+on m_mosaque.create
+call super::create
+this.text = "&Mosaïque"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_mosaque.destroy
+call super::destroy
+end on
+
+type m_cascade from menu within m_quitter
+end type
+
+on clicked;ParentWindow.ArrangeSheets ( Cascade! )
+end on
+
+on m_cascade.create
+call super::create
+this.text = "&Cascade"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_cascade.destroy
+call super::destroy
+end on
+
+type m_pleinecran from menu within m_quitter
+end type
+
+on clicked;ParentWindow.ArrangeSheets ( Layer! )
+end on
+
+on m_pleinecran.create
+call super::create
+this.text = "&Plein Ecran"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_pleinecran.destroy
+call super::destroy
+end on
+
+type m_rorgicones from menu within m_quitter
+end type
+
+on clicked;ParentWindow.ArrangeSheets ( Icons! )
+end on
+
+on m_rorgicones.create
+call super::create
+this.text = "Réorg. &Icones"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_rorgicones.destroy
+call super::destroy
+end on
+
+type m_44 from menu within m_main_sp_sinistre
+m_aproposde m_aproposde
+end type
+
+on m_44.create
+call super::create
+this.text = "&?"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_aproposde=create m_aproposde
+this.Item[UpperBound(this.Item)+1]=this.m_aproposde
+end on
+
+on m_44.destroy
+call super::destroy
+destroy(this.m_aproposde)
+end on
+
+type m_aproposde from menu within m_44
+end type
+
+on clicked;OpenWithParm ( w_a_Propos, stGlb )
+end on
+
+on m_aproposde.create
+call super::create
+this.text = "A Propos de ..."
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_aproposde.destroy
+call super::destroy
+end on
+

@@ -1,0 +1,68 @@
+HA$PBExportHeader$sepa_sepawebservice.srx
+$PBExportComments$Proxy imported from Web service using Web Service Proxy Generator.
+global type sepa_SepaWebService from NonVisualObject
+end type
+
+type variables
+Protected:
+        string pbws_ver = ".NET"
+        string cs_namespace = "WebService"
+        string cs_class = "SepaWebService"
+        string cs_assembly = "WSSepa.dll"
+        string pb_prefix = "sepa_"
+        string pb_usenvo = "YES"
+        string pb_target = "p:\dev\repository_pb\france\framework4\trunk\simpa2\pb_121"
+        string sepa_getBankCounter = "getBankCounter(System.String bankCode,System.String counterCode)"
+        string sepa_verifyRibResponse = "verifyRibResponse(System.Boolean return,System.Boolean returnSpecified)"
+        string sepa_verifyRib = "verifyRib(WebService.rib rib)"
+        string sepa_rib = "rib(System.String cle,System.String codeEtablissement,System.String codeGuichet,System.String numeroCompte)"
+        string sepa_verifyIbanResponse = "verifyIbanResponse(System.Boolean return,System.Boolean returnSpecified)"
+        string sepa_verifyIban = "verifyIban(System.String iban)"
+        string sepa_treatXmlFilesResponse = "treatXmlFilesResponse()"
+        string sepa_treatXmlFiles = "treatXmlFiles(System.String[] filesPath,WebService.xmlTreatmentType treatmentType,System.Boolean treatmentTypeSpecified)"
+        string sepa_treatXmlFileResponse = "treatXmlFileResponse()"
+        string sepa_treatXmlFile = "treatXmlFile(System.String filePath)"
+        string sepa_txtFileTreatmentResult = "txtFileTreatmentResult()"
+        string sepa_treatTxtFileResponse = "treatTxtFileResponse(WebService.txtFileTreatmentResult txtFileTreatmentResult)"
+        string sepa_treatTxtFile = "treatTxtFile(System.String filePath)"
+        string sepa_treatRepositoryFileResponse = "treatRepositoryFileResponse(System.Boolean processSuccess)"
+        string sepa_treatRepositoryFile = "treatRepositoryFile(System.String filePath)"
+        string sepa_ribToIbanResponse = "ribToIbanResponse(WebService.iban return)"
+        string sepa_iban = "iban(System.String bic,System.String iban1)"
+        string sepa_ribToIban = "ribToIban(WebService.rib rib)"
+        string sepa_isBicCodeExistResponse = "isBicCodeExistResponse(System.Boolean return,System.Boolean returnSpecified)"
+        string sepa_isBicCodeExist = "isBicCodeExist(System.String bic)"
+        string sepa_isBankCounterExistResponse = "isBankCounterExistResponse(System.Boolean return,System.Boolean returnSpecified)"
+        string sepa_isBankCounterExist = "isBankCounterExist(System.String bankCode,System.String counterCode)"
+        string sepa_ibanToRibResponse = "ibanToRibResponse(WebService.rib return)"
+        string sepa_ibanToRib = "ibanToRib(WebService.iban iban)"
+        string sepa_getCountryOfRibResponse = "getCountryOfRibResponse(WebService.refCountry return)"
+        string sepa_refCountry = "refCountry(WebService.bankCounter[] bankCounters,System.Int16 code,System.Int32 id,System.Boolean idSpecified,System.Boolean isActive,System.String isoCode,System.String longLabel,System.String shortLabel)"
+        string sepa_bankCounter = "bankCounter(System.String adress3,System.String adress4,System.String adress5,System.String adress6,System.String bankCode,System.String bic,System.String counterCode,WebService.dataset dataset,System.Int32 id,System.Boolean idSpecified,System.String name,WebService.refCountry refCountry,System.String shortName,System.Boolean xxx)"
+        string sepa_dataset = "dataset(WebService.bankCounter[] bankCounters,System.DateTime dateLoad,System.Boolean dateLoadSpecified,System.Int32 id,System.Boolean idSpecified,System.Boolean isValidLoad)"
+        string sepa_getCountryOfRib = "getCountryOfRib(WebService.rib rib)"
+        string sepa_getCountryOfIbanResponse = "getCountryOfIbanResponse(WebService.refCountry return)"
+        string sepa_getCountryOfIban = "getCountryOfIban(WebService.iban iban)"
+        string sepa_getBankCounterResponse = "getBankCounterResponse(WebService.bankCounter return)"
+end variables
+
+forward prototypes
+public:
+function sepa_treatXmlFilesResponse treatXmlFiles(  sepa_treatXmlFiles treatXmlFiles1) alias for "<method name='treatXmlFiles' ns='WebService' pbname='treatXmlFiles'><return name='returnvalue' type='WebService.treatXmlFilesResponse' isRef='False' ArrayDim='0' IsNullableType='False' /><param name='treatXmlFiles1' type='WebService.treatXmlFiles' pos='0' dir='in' ArrayDim='0' IsNullableType='False'/></method>"
+function sepa_verifyIbanResponse verifyIban(  sepa_verifyIban verifyIban1) alias for "<method name='verifyIban' ns='WebService' pbname='verifyIban'><return name='returnvalue' type='WebService.verifyIbanResponse' isRef='False' ArrayDim='0' IsNullableType='False' /><param name='verifyIban1' type='WebService.verifyIban' pos='0' dir='in' ArrayDim='0' IsNullableType='False'/></method>"
+function sepa_verifyRibResponse verifyRib(  sepa_verifyRib verifyRib1) alias for "<method name='verifyRib' ns='WebService' pbname='verifyRib'><return name='returnvalue' type='WebService.verifyRibResponse' isRef='False' ArrayDim='0' IsNullableType='False' /><param name='verifyRib1' type='WebService.verifyRib' pos='0' dir='in' ArrayDim='0' IsNullableType='False'/></method>"
+subroutine CancelAsync (  any userState) alias for "<method name='CancelAsync' ns='WebService' pbname='CancelAsync'><param name='userState' type='System.Object' pos='0' dir='in' ArrayDim='0' IsNullableType='False'/></method>"
+function sepa_getBankCounterResponse getBankCounter(  sepa_getBankCounter getBankCounter1) alias for "<method name='getBankCounter' ns='WebService' pbname='getBankCounter'><return name='returnvalue' type='WebService.getBankCounterResponse' isRef='False' ArrayDim='0' IsNullableType='False' /><param name='getBankCounter1' type='WebService.getBankCounter' pos='0' dir='in' ArrayDim='0' IsNullableType='False'/></method>"
+function sepa_getCountryOfIbanResponse getCountryOfIban(  sepa_getCountryOfIban getCountryOfIban1) alias for "<method name='getCountryOfIban' ns='WebService' pbname='getCountryOfIban'><return name='returnvalue' type='WebService.getCountryOfIbanResponse' isRef='False' ArrayDim='0' IsNullableType='False' /><param name='getCountryOfIban1' type='WebService.getCountryOfIban' pos='0' dir='in' ArrayDim='0' IsNullableType='False'/></method>"
+function sepa_getCountryOfRibResponse getCountryOfRib(  sepa_getCountryOfRib getCountryOfRib1) alias for "<method name='getCountryOfRib' ns='WebService' pbname='getCountryOfRib'><return name='returnvalue' type='WebService.getCountryOfRibResponse' isRef='False' ArrayDim='0' IsNullableType='False' /><param name='getCountryOfRib1' type='WebService.getCountryOfRib' pos='0' dir='in' ArrayDim='0' IsNullableType='False'/></method>"
+function sepa_ibanToRibResponse ibanToRib(  sepa_ibanToRib ibanToRib1) alias for "<method name='ibanToRib' ns='WebService' pbname='ibanToRib'><return name='returnvalue' type='WebService.ibanToRibResponse' isRef='False' ArrayDim='0' IsNullableType='False' /><param name='ibanToRib1' type='WebService.ibanToRib' pos='0' dir='in' ArrayDim='0' IsNullableType='False'/></method>"
+function sepa_isBankCounterExistResponse isBankCounterExist(  sepa_isBankCounterExist isBankCounterExist1) alias for "<method name='isBankCounterExist' ns='WebService' pbname='isBankCounterExist'><return name='returnvalue' type='WebService.isBankCounterExistResponse' isRef='False' ArrayDim='0' IsNullableType='False' /><param name='isBankCounterExist1' type='WebService.isBankCounterExist' pos='0' dir='in' ArrayDim='0' IsNullableType='False'/></method>"
+function sepa_isBicCodeExistResponse isBicCodeExist(  sepa_isBicCodeExist isBicCodeExist1) alias for "<method name='isBicCodeExist' ns='WebService' pbname='isBicCodeExist'><return name='returnvalue' type='WebService.isBicCodeExistResponse' isRef='False' ArrayDim='0' IsNullableType='False' /><param name='isBicCodeExist1' type='WebService.isBicCodeExist' pos='0' dir='in' ArrayDim='0' IsNullableType='False'/></method>"
+function sepa_ribToIbanResponse ribToIban(  sepa_ribToIban ribToIban1) alias for "<method name='ribToIban' ns='WebService' pbname='ribToIban'><return name='returnvalue' type='WebService.ribToIbanResponse' isRef='False' ArrayDim='0' IsNullableType='False' /><param name='ribToIban1' type='WebService.ribToIban' pos='0' dir='in' ArrayDim='0' IsNullableType='False'/></method>"
+function sepa_treatRepositoryFileResponse treatRepositoryFile(  sepa_treatRepositoryFile treatRepositoryFile1) alias for "<method name='treatRepositoryFile' ns='WebService' pbname='treatRepositoryFile'><return name='returnvalue' type='WebService.treatRepositoryFileResponse' isRef='False' ArrayDim='0' IsNullableType='False' /><param name='treatRepositoryFile1' type='WebService.treatRepositoryFile' pos='0' dir='in' ArrayDim='0' IsNullableType='False'/></method>"
+function sepa_treatTxtFileResponse treatTxtFile(  sepa_treatTxtFile treatTxtFile1) alias for "<method name='treatTxtFile' ns='WebService' pbname='treatTxtFile'><return name='returnvalue' type='WebService.treatTxtFileResponse' isRef='False' ArrayDim='0' IsNullableType='False' /><param name='treatTxtFile1' type='WebService.treatTxtFile' pos='0' dir='in' ArrayDim='0' IsNullableType='False'/></method>"
+function sepa_treatXmlFileResponse treatXmlFile(  sepa_treatXmlFile treatXmlFile1) alias for "<method name='treatXmlFile' ns='WebService' pbname='treatXmlFile'><return name='returnvalue' type='WebService.treatXmlFileResponse' isRef='False' ArrayDim='0' IsNullableType='False' /><param name='treatXmlFile1' type='WebService.treatXmlFile' pos='0' dir='in' ArrayDim='0' IsNullableType='False'/></method>"
+subroutine PBAddCookie(any cookie) alias for "<method name='PBAddCookie' ns='System.Runtime.Remoting.Messaging'  IsCookieFunction='True' pbname='PBAddCookie'><return name='returnvalue' type='System.Void' isRef='false' ArrayDim='0' IsNullableType='false' /><param name='cookie' type='any' pos='0' dir='in' ArrayDim='0' IsNullableType='False'/></method>"
+function any PBGetCookies(string Uri) alias for "<method name='PBGetCookies' ns='System.Runtime.Remoting.Messaging'  IsCookieFunction='True' pbname='PBGetCookies'><return name='returnvalue' type='System.Object' isRef='false' ArrayDim='0' IsNullableType='false' /><param name='cookie' type='System.String' pos='0' dir='in' ArrayDim='0' IsNullableType='False'/></method>"
+end prototypes
+
